@@ -235,12 +235,17 @@ function drawEsc2D(ctx,w,h,p,dark){
   spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN)));
     const snap=[0.05,0.1,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
   spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
-  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();setView(b.dataset.v);}));
+  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();showFig(false);setView(b.dataset.v);}));
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   $('#driveOn').addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');});
   /* about: sources and method in a dialog */
   const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});
   about.addEventListener('click',e=>{if(e.target===about)about.close();});
+  /* tabs: the 3D model, or the Smithsonian overview illustration over it (the model keeps time but isn't drawn meanwhile) */
+  let figOn=false;const fig=$('#fig'),fsc=fig.querySelector('.fsc');
+  const showFig=on=>{figOn=on;fig.classList.toggle('hidden',!on);$('#tabModel').setAttribute('aria-selected',!on);$('#tabFig').setAttribute('aria-selected',on);if(on)closeOpm();};
+  $('#tabModel').addEventListener('click',()=>showFig(false));$('#tabFig').addEventListener('click',()=>showFig(true));
+  fig.querySelector('img').addEventListener('click',e=>{const z=fsc.classList.toggle('zoom');e.target.title=z?'Click to fit':'Click to see it full size';if(!z)fsc.scrollTo(0,0);});
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;look();});
@@ -459,9 +464,9 @@ function drawEsc2D(ctx,w,h,p,dark){
     const cp=Math.cos(C.pitch);cam.position.set(C.target.x+C.dist*cp*Math.sin(C.yaw),C.target.y+C.dist*Math.sin(C.pitch),C.target.z+C.dist*cp*Math.cos(C.yaw));cam.lookAt(C.target);
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();}
-    r.render(scene,cam);
+    if(!figOn){r.render(scene,cam);
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
-    placeLabels(now);
+    placeLabels(now);}
     drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(56-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>, maintaining power driving the train':''}`;

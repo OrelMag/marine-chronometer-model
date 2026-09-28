@@ -29,6 +29,9 @@
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div></div>
     <div class="hud" id="hud"></div>
     <div class="tools"><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
+    <figure class="fig hidden" id="fig" role="tabpanel" aria-labelledby="tabFig"><div class="fsc"><img src="img/what-makes-it-precise.webp" width="930" height="1000" alt="Illustration titled What Makes a Marine Chronometer So Precise? A chronometer lifted out of its open box, with callouts: the fusee, chain and mainspring barrel, which even out the spring's force as it unwinds; the spring detent escapement, which gives the balance its impulse while touching it as little as possible; the balance wheel and hairspring, whose bimetallic rim compensates for temperature; and the gimballed box, which keeps the instrument level as the ship rolls." title="Click to see it full size"></div>
+      <figcaption>Illustration from <a href="https://timeandnavigation.si.edu/multimedia-asset/what-makes-a-sea-chronometer-so-precise" target="_blank" rel="noopener"><i>What Makes a Sea Chronometer So Precise?</i></a> by Bruce Morser, National Air and Space Museum, Smithsonian Institution (<i>Time and Navigation</i>). Shown here with credit; not covered by this model’s licence. A generic chronometer, not the Hamilton Model 21.</figcaption></figure>
+    <div class="tabs" role="tablist" aria-label="What the stage shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabFig" aria-selected="false" aria-controls="fig" title="An overview drawing of what makes a chronometer precise">Illustration</button></div>
     <div class="loading" id="loading">Assembling the movement…</div>
   </div>
   <div class="panel">
@@ -149,10 +152,12 @@
   </ul>
   <h3>Finish</h3>
   <p>Nickel plates with bold damascening and gilt wheels, as on the photographed movements. The gilt option matches the gilt movement in one of the reference photographs.</p>
+  <h3>Illustration</h3>
+  <p>The Illustration tab shows <a href="https://timeandnavigation.si.edu/multimedia-asset/what-makes-a-sea-chronometer-so-precise"><i>What Makes a Sea Chronometer So Precise?</i></a> by Bruce Morser, from the National Air and Space Museum’s <i>Time and Navigation</i> site (Smithsonian Institution), an overview of the four features the model shows in detail: the fusee and chain, the spring detent escapement, the compensated balance and the gimballed box. It draws a generic chronometer; where it differs from the Hamilton Model 21 (a cut bimetallic rim, a gilt movement), the model follows the manual.</p>
   <h3>Further reading</h3>
   <p><a href="marine-chronometer.html">The Marine Chronometer</a>, a long-form interactive essay on longitude, the balance, the fusee and the detent escapement.</p>
   <h3>Licence</h3>
-  <p>Code under the MIT licence; text, drawings and the model under Creative Commons Attribution 4.0. Built with three.js (MIT) and the Spectral and Instrument Sans typefaces (SIL Open Font License).</p>
+  <p>Code under the MIT licence; text, drawings and the model under Creative Commons Attribution 4.0, except the Smithsonian illustration, which remains the Smithsonian’s. Built with three.js (MIT) and the Spectral and Instrument Sans typefaces (SIL Open Font License).</p>
 </dialog>
 <script src="../../vendor/three.min.js"></script>
 <script src="js/core.js"></script>
