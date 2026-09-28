@@ -14,7 +14,7 @@ function buildBox(M){
   for(const sx of[1,-1]){const hp=mesh(root,new THREE.BoxGeometry(1.2,22,52),M.brass,sx*(W+0.6),-38,0);
     const hd=new THREE.Mesh(new THREE.TorusGeometry(20,2.2,10,32,Math.PI),M.brass);hd.rotation.set(Math.PI,Math.PI/2,0);hd.position.set(sx*(W+3),-34,0);root.add(hd);}
   /* winding key standing in a socket on a corner block at the back right (Fig. 1), low enough for the lids to close */
-  const KX=W-T-12;wood(24,60,24,KX,yF+T+30,-KX,root,M.woodEdge);mesh(root,cylY(4.2,4,20),M.brass2,KX,yF+T+62,-KX);
+  const KX=W-T-12;wood(24,59,24,KX,yF+T+30.5,-KX,root,M.woodEdge);   /* stands on the felt */mesh(root,cylY(4.2,4,20),M.brass2,KX,yF+T+62,-KX);
   const key=new THREE.Group();key.userData.partName='key';key.position.set(KX,-26,-KX);root.add(key);key.rotation.y=Math.PI/4;
   mesh(key,cylY(2.2,20,16),M.brass,0,10,0);
   const kt=mesh(key,new THREE.CylinderGeometry(3,3,20,20),M.brass,0,21,0);kt.rotation.x=Math.PI/2;for(const sz of[10,-10])mesh(key,new THREE.SphereGeometry(3,20,12),M.brass,0,21,sz);mesh(key,new THREE.SphereGeometry(4.2,20,14),M.brass,0,21,0);

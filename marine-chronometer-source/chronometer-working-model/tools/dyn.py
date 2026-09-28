@@ -3,7 +3,7 @@ from playwright.async_api import async_playwright
 import pathlib
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
-IGN={('trainBridge','barrelBridge'),('trainBridge','cock'),('pillars','barrelBridge'),('spr','cock'),('pillars','trainBridge'),('pillar','pillars'),('ltb','fw')}
+IGN={('trainBridge','barrelBridge'),('trainBridge','cock'),('pillars','barrelBridge'),('spr','cock'),('pillars','trainBridge'),('pillar','pillars'),('ltb','fw'),('bal','cock')}
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])

@@ -26,6 +26,7 @@ file. Regenerate it after editing with:
 | `js/app.js` | Renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, and the animation loop |
 | `build.py` | Inlines CSS and JS into `dist/` |
 | `tools/interference-check.js` | Voxel collision test used to find and remove overlapping parts |
+| `tools/audit.py`, `tools/geometry-audit*.js` | Geometry audit: overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
 
 ## Testing
 
@@ -90,3 +91,4 @@ The tools need Playwright with Chromium. Open the page as `index.html?snap&qa`.
 - The mainspring’s coils, which are drawn schematically.
 - The detent geometry, which follows a standard spring detent layout. Two of its settings are simplified against the manual's figures (Sec. VIII, Ops. 7, 85–87): the jewels on the two rollers are 75° apart (manual: about 90°, adjustable), and the unlocking jewel lifts the detent over about 8° of balance arc (manual: overall 26–30°, lock about 6°).
 - The balance rim diameter (29 mm), measured on the top-view photograph.
+- The sustaining pawl's position: 21 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel.
