@@ -19,17 +19,24 @@ copies and assembles the website (see the root README).
 
 | File | Contents |
 |---|---|
-| `index.html` | Page markup: stage, walkthrough card, controls (View, Time, Display, collapsible Cross-section and Variants), the About dialog with sources and method |
+| `index.html` | Page markup: the stage with its 3D model / Illustration tabs, walkthrough card, controls (View, Time, Display, and collapsible Parts, Rate and timing weights, Cross-section and Variants), the About dialog with sources and method |
 | `css/style.css` | Layout, theme tokens (light and dark), controls, labels |
+| `img/what-makes-it-precise.webp` | The Smithsonian overview drawing shown in the Illustration tab (credited in its caption) |
 | `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch |
 | `js/movement.js` | The movement: layout constants, detent-escapement kinematics (`ESC.state`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate), winding key |
 | `js/app.js` | Renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, and the animation loop |
-| `build.py` | Inlines the CSS, JS, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
-| `tools/interference-check.js` | Voxel collision test used to find and remove overlapping parts |
-| `tools/audit.py`, `tools/geometry-audit*.js` | Geometry audit: overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
+| `build.py` | Inlines the CSS, JS, image, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
+| `dist/chronometer-working-model.html` | The built single file (committed) |
+| `tools/bundle.py`, `tools/fit.py`, `tools/unproj.py` | Photo fitting: camera fits to the Fig. 2 and top-view photographs, triangulation of the balance, fusee and barrel axes, photo points projected onto the movement (see "How the layout was measured") |
+| `tools/solve.py` | Places the arbors from the measured positions and the centre distances the wheels need (no browser) |
+| `tools/p3map.json`, `tools/cock_outline.json`, `tools/engr.json` | Traced from the top-view photograph: its mapping into the model, the balance cock's outline, the engraving columns |
+| `tools/dyn.py`, `tools/interference-check.js` | Voxel collision check through a full escapement cycle |
+| `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
+| `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
 | `tools/social.py` | Renders the 1200 × 630 link-preview images into `site-assets/`: `social.png` (the dial in its box) and `social-movement.png` (the moving parts) |
+| `verification/` | Reference results: the top-view comparison, the Fig. 2 overlay and its camera fit |
 
 ## Controls
 
@@ -42,8 +49,19 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 
 ## Testing
 
-Append `?snap` to the URL to switch off camera and state easing. Views then settle
-immediately, which is useful for automated screenshots.
+Two URL flags help with testing:
+
+- `?snap` switches off camera and state easing, so views settle immediately
+  (useful for screenshots).
+- `?qa` exposes the movement (`__mv`), the photo-projection helpers (`__proj`,
+  `__unproj`) and camera controls (`__cam`, `__look`, `__camInfo()`) for the
+  tools.
+
+The browser tools in `tools/` open `index.html?snap&qa` themselves. They need
+Python with numpy, scipy and Playwright's Chromium, and write their output into
+the folder they're run from. `escapement.js` and `solve.py` need no browser. The
+root README's "Checking your changes" lists which to run and what they should
+report.
 
 ## Coordinates and units
 
@@ -125,8 +143,6 @@ Everything is driven from one model clock `tSim`, in local seconds.
    - Re-running `bundle.py` with the new heights puts the fusee and barrel axes within 0.8 mm of `L` and the balance within 2 mm. That is about the run-to-run spread of its random restarts.
 7. **Collision check.** `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. Only intended joints remain.
 8. **Visual check.** `tools/p3fit.py` renders the model from the top-view photograph's camera. The result is `verification/topview-comparison.png`.
-
-The tools need Playwright with Chromium. Open the page as `index.html?snap&qa`.
 
 ## Estimated, not from the manual
 
@@ -288,7 +304,7 @@ Update the step count in `index.html` ("Eight steps …") if it changes.
 
 **Change the escapement.** Its geometry and motion are solved in `ESC` near the
 top of `movement.js`, in a unit frame scaled to the escape wheel's radius.
-`ESC.state(p)` returns the balance angle, detent lift, passing-spring bend and
+`ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection and
 escape-wheel progress for balance phase `p`. The 2-D walkthrough diagram
 (`drawEsc2D` in `app.js`) draws from the same data, so the two stay in step.
 The detent's plan outlines are `ESC.pieces` (turning about the point of
@@ -297,8 +313,14 @@ After a change, run `node escapement.js` in `tools/`. It measures lock, let-off,
 overall, drop, roller shake and the horn clearance, and flags any outside the
 manual's figures. To try a setting before editing, pass it on the command line,
 for example `node escapement.js rT=0.29`. Record the results in the escapement
-entries under "Estimated, not from the manual".
+entries under "Estimated, not from the manual". The essay's detent figure (F7
+in `../marine-chronometer-essay/src/p4.js`) carries a copy of `ESC`: copy the
+change across too, keeping the essay's centre distance `EX` written out as
+9.3997 mm.
 
-**Update the link-preview images** after visible changes: from `tools/`, run
-`python social.py` for both, or `python social.py dial` / `python social.py movement` for one, then rebuild
-from the root. For a custom shot: `python social.py --out name.png --view movement --drive --cam YAW PITCH DIST FOV`.
+**Update the link-preview images** after visible changes. From `tools/`, run
+`python social.py` for both, or `python social.py dial` or
+`python social.py movement` for one, then rebuild from the root. For a custom
+shot:
+
+    python social.py --out name.png --view movement --drive --cam YAW PITCH DIST FOV
