@@ -1,0 +1,213 @@
+# Resolved issues
+
+Bugs and mistakes that have been found and fixed in this repository, gathered
+from the commit history. It is kept so they aren't brought back. Before changing
+a part, a control or a build step, look for it here. Each entry says what was
+wrong, what the fix was, and what to keep true from now on. The commit hash
+leads to the full change.
+
+**Keeping it up to date:** when a commit fixes a bug, add an entry under the
+right heading in the same commit, with the hash filled in once it exists. When
+a fix isn't committed yet, list it under
+[Fixed, not yet committed](#fixed-not-yet-committed) and move it into place when
+it is committed. Features and ideas don't go here. Ideas belong in `IDEAS.md`,
+open review findings in `Review-results.md`.
+
+Contents:
+[Escapement](#escapement) ·
+[Going train and heights](#going-train-and-heights) ·
+[Winding and maintaining work](#winding-and-maintaining-work) ·
+[Plates, bridges, screws and arbors](#plates-bridges-screws-and-arbors) ·
+[Setup, case and gimbals](#setup-case-and-gimbals) ·
+[Accuracy to the manual](#accuracy-to-the-manual) ·
+[Rate panel](#rate-panel) ·
+[Rendering](#rendering) ·
+[Controls and display](#controls-and-display) ·
+[Build, tools and docs](#build-tools-and-docs) ·
+[Fixed, not yet committed](#fixed-not-yet-committed)
+
+---
+
+## Escapement
+
+- **Escape wheel had 15 teeth** while the timing stepped 1/16 turn, so a tooth
+  didn't rest on the locking stone every beat. It now has 16, Hamilton's count.
+  Keep: the mesh's tooth count and the timing's step must agree. `5aab9f7`
+- **Discharge jewel cut through the horn and arm** on the return swing (reach
+  2.63 mm). Cut to 2.01 mm so it meets only the passing spring's tip.
+  `5aab9f7`
+- **Scripted detent motion.** Detent lift, wheel release and passing-spring
+  bending were scripted bumps. They are now solved from the jewel/spring-tip
+  contact, and release waits until the stone clears the tooth path. Keep: derive
+  motion from contact. Don't script it. `5aab9f7`
+- **Passing spring floated.** It now sits on an angle bracket from the blade.
+  `5aab9f7`
+- **Roller hollow on the wrong side.** The hollow was opposite the impulse
+  jewel; it is now beside it. The impulse jewel's driven face was also moved onto
+  the kinematic contact line. `5aab9f7`
+- **Escape wheel too far from the balance** (10.2 mm). At 9.40 mm the 0.249 in
+  impulse roller leaves the manual's 0.002 in roller shake (Op. 84), and the teeth
+  drop into its crescent (Ops. 76, 83). Keep: `node tools/escapement.js` must stay
+  within the manual's figures for lock, let-off, overall, drop, roller shake and
+  horn clearance. `7328e67`
+- **Detent not Hamilton's.** It is now laid out from the Fig. 90 plan view:
+  two-strip spring, round locking jewel with a flat at 10° of draw, Elinvar trip
+  spring on a Z bracket, and support block with stop button. `7328e67`
+- **Essay's detent figure drifted from the model.** It now carries a copy of the
+  model's `ESC` solver. Keep: after changing `ESC` in `movement.js`, copy it into
+  the essay's `src/p4.js` and rebuild (see CLAUDE.md). `219e4df`
+
+## Going train and heights
+
+- **Heights estimated wrongly.** Train bridge was 22.1 mm above the plate;
+  a side photograph scaled by the pillar plate's 3.86 mm edge gives 16.8 mm.
+  Barrel (13.2 mm tall, rising through a cut in the train bridge), train wheels,
+  lower balance bridge and cock were re-stacked to match. Keep: heights are the
+  named constants in `movement.js` (`TB_U`, `TB_T`, …). Don't reintroduce loose
+  numbers. `1340cb6`
+- **Seconds and wind-indicator hands too high.** The hour hand swept into
+  them. They were lowered. `84a7645`
+
+## Winding and maintaining work
+
+- **Sustaining spring ran forward from its pin,** so the sustaining ratchet
+  couldn't drive the fusee wheel through it. It now curves back to a free end
+  pressed by a pin on the ratchet. `967570c`
+- **Winding pawls cut 0.37 mm² into the fusee's winding ratchet.** The fusee
+  and sustaining ratchet had no phase relation. They are now locked in running
+  and held while winding. `967570c`
+- **Pawls fixed while their ratchets turned under them.** The sustaining and
+  winding pawls are now seated on their teeth each frame (`seatPawl`).
+  `967570c`
+- **Pawls pointing away from their ratchets, and ratchet teeth facing the
+  wrong way.** The sustaining pawl now engages its ratchet, the winding pawls
+  reach the fusee winding ratchet, and the teeth face so the pawls hold.
+  `84a7645`
+- **Setup click 0.8 mm² deep in the setup ratchet.** The ratchet is phased so a
+  steep face bears on the seated click. `967570c`
+- **Stop-bar missed the winding stop.** It was aimed 26° off (`84a7645`), then
+  hit the pin end-on 0.8 mm deep. It now meets the pin side-on at full wind.
+  `967570c`
+
+## Plates, bridges, screws and arbors
+
+- **Lower train bridge on the wrong side.** It belongs on the dial side of the
+  pillar plate (Figs. 29, 67, 110). `7a91d18`
+- **Arbors ending in nothing.** Every arbor now ends in a bushing or jewel. The
+  fusee arbor reaches the wind-indicator pinion, and the winding square joins the
+  arbor through the dust seal. Keep: `tools/audit.py` should report no new loose
+  arbor ends. `cc70482`
+- **Balance cock: two overlapping screws.** The parts list (42192) has one.
+  The cock foot also shared its top face with the cock (z-fighting). `cc70482`
+- **Balance cock foot overhung.** It now stands on the train bridge beside the
+  barrel bridge, with its screw at the photographed position. `84a7645`
+- **Train bridge opening round the balance too big.** The centre and escape
+  pivots fell in the hole. The opening was reduced; it is r 8.0 after the
+  escapement change. `84a7645`, `7328e67`
+- **Sustaining pawl arbor didn't span plate to bridge.** It was moved 6° and
+  its pivot put in solid train bridge. `cc70482`, `84a7645`
+- **Holes crossing outlines went unnoticed.** `polyGeo` / `discGeo` now warn
+  when a hole crosses an outline or another hole. `84a7645`
+
+## Setup, case and gimbals
+
+- **Setup cover shaped as a 220° fan.** The photos show a bow-shaped plate
+  straddling the barrel arbor, with a curved slot showing the ratchet and click,
+  and screws inside the outline. `9606cc3`, `cc70482`
+- **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
+  HOURS" were shortened so the flange no longer covers them. `9606cc3`
+- **Gimbals as blank blocks.** Replaced by a flat ring on pivot screws, with
+  washers, lock nuts, case support brackets and straps (Figs. 1, 94, 106). The
+  ring was raised so the case clears the box floor. `eae5358`
+
+## Accuracy to the manual
+
+- **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,
+  running clockwise round the bottom. `7a91d18`
+- **Balance screws.** Per the parts list: 10, in pairs, three head heights.
+  `7a91d18`
+- **Part numbers and descriptions** corrected, for example stop-bar 42024 and
+  winding stop 42099. `7a91d18`
+- **Escapement views looked from the wrong side.** They now look from the
+  pillar-plate side. `7a91d18`
+
+## Rate panel
+
+- **Balance far too light.** The screws and weights were drawn as cylinders
+  (19–39 mg instead of 125–255 mg), giving 576 g·mm². With the parts list's
+  masses (p. 82) it is 931 g·mm². `78ffd0f`
+- **Rate per turn didn't match the manual.** It was 59 s and 12.5 s a day.
+  Thread pitches were fitted so a full turn of a pair gives the manual's figures
+  (p. 70): about 40 s for the timing weights and 2.8 s for the verniers.
+  `78ffd0f`
+- **Weights sank into the rim** when turned in. They are now nuts on screws at
+  mid-travel (Fig. 3). `78ffd0f`
+- **Wording:** turning a weight out raises the moment of inertia, not the mass.
+  `78ffd0f`
+
+## Rendering
+
+- **Metals flat and dark after a lost WebGL context.** A restored context
+  loses its PMREM render targets. The environment map is now rebuilt on
+  `webglcontextrestored`. Keep that handler. `fcedc94`
+- **Gold streaks across the dial when zoomed out.** The silvered face is
+  0.02 mm above the brass disc, less than a depth-buffer step beyond about
+  600 mm. It is fixed with polygon offset on the face material. Keep: don't
+  close the gap by moving the geometry, and use polygon offset for any other
+  near-coplanar faces. `e036cf8`
+
+## Controls and display
+
+- **Mainspring invisible outside drive-train mode.** It is now drawn when a
+  cross-section is on, when the barrel or mainspring is picked
+  (`16119fc`), and when the barrel is faded or hidden (`336aad3`).
+- **Hairspring missing when seen through faded, hidden or sectioned parts.**
+  It is now built whenever it can be seen. Keep: anything hidden by default
+  must be built when a view can reveal it. `ec55b98`
+- **Right-click triggered left-click picking.** It no longer does, and a
+  right-click passes through a faded part to the one behind. `16119fc`
+
+## Build, tools and docs
+
+- **Root copy of the model was stale.** It is refreshed from `dist/`, and the
+  root build now does this. Keep: commit the regenerated root copies and `site/`
+  with source changes. `a3b22fc`, `f591611`
+- **Tools used hardcoded `/home/claude` paths.** They now resolve
+  `../index.html?snap&qa` from their own location. `a3b22fc`
+- **`build.py` failed on Windows.** It now reads and writes UTF-8 explicitly.
+  `a3b22fc`
+- **`escapement.js` failed on CRLF files.** It now reads `movement.js` with
+  CRLF line endings too. `219e4df`
+- **Pages loaded from the network.** three.js and fonts are vendored, and the
+  build fails if any page still loads a script, stylesheet, font or image from
+  the network. Local `<img>` files are inlined too (`d778beb`). `fcedc94`
+- **Link-preview URLs ended in `.html`,** which Cloudflare redirects. They now
+  don't, and `--keep-html` covers other hosts. `2c0f236`
+- **Essay linked to the wrong page for the model.** It now links to the site's
+  home page. `219e4df`
+
+---
+
+## Fixed, not yet committed
+
+These are findings 1–5 of `Review-results.md` (review at `f591611`). They are
+fixed in the working tree. Move each entry to its heading, with the hash, when
+it is committed.
+
+- **Dial style reverted when parts were see-through, singled out or faded,
+  and the plate finish didn't reach faded parts** (findings 1–2). Derived
+  materials (see-through, faded) kept an old texture and colour. `syncMat` in
+  `core.js` now copies the source's map and colour whenever a copy is used, and
+  the dial and finish buttons call `look()`. Keep: change the source material
+  (`userData.mat0`), never the copies.
+- **Escape upper bridge's screw heads 0.06 mm into the balance's path**
+  (finding 3). The heads are now 0.3 mm tall, 0.14 mm clear of the rim and
+  timing weights. `dyn.py` works in 0.4 mm cubes and can't see gaps this thin,
+  so check them by hand.
+- **Model stopped at 56 h, but its chain holds 60 h** (finding 4). `RUN_H`
+  (60 h, the fusee's 8¾ turns) now sets the run-down point, the power readouts
+  and the fusee chart. The dial's UP–DOWN scale still covers the rated 56 h.
+  Keep: use `RUN_H`, not a literal 56 or 60.
+- **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
+  stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
+  escape wheel's position leaves.

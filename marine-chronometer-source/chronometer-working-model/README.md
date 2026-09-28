@@ -89,7 +89,9 @@ Everything is driven from one model clock `tSim`, in local seconds.
   teeth. Every other arbor is a fixed ratio of `E`. The hands therefore advance
   in half-second steps, as the manual states (Sec. IX, p. 66).
 - The fusee and chain follow the hours since winding: one fusee turn per 96/14
-  = 6.86 hours.
+  = 6.86 hours. The model runs down after 60 h (`RUN_H`, the fusee's 8¾ turns),
+  when the chain is all on the barrel; the dial's UP–DOWN scale covers the rated
+  56 h.
 - Maintaining work: when running, the fusee's winding ratchet drives the
   sustaining ratchet through the two winding pawls, and a pin on that ratchet
   drives the fusee wheel through the sustaining spring. When winding, the
@@ -163,10 +165,10 @@ and the thread pitches are the model's. Things to know before changing it:
    - the engraving columns (`tools/engr.json`);
    - the damascene direction.
 4. **Dial orientation.** From Fig. 107: the wind-indicator wheel sits under the 12, driven from the fusee arbor.
-5. **Hidden wheels.** The third-wheel position and per-stage modules (0.29, 0.30, 0.31) are solved so every arbor clears every wheel, the barrel and the pillars.
+5. **Hidden wheels.** The third-wheel position and per-stage modules (0.29, 0.30, 0.3113) are solved so every arbor clears every wheel, the barrel and the pillars.
    - The escape wheel sits 9.40 mm from the balance. There the 0.249 in impulse roller clears the teeth either side of it by 0.002 in (roller shake, Op. 84), and the teeth dip into its crescent (Ops. 76, 83).
    - An earlier scaling of Rawlings' drawing gave 10.2 mm. Readings of the drawing vary with the feature used for scale; the manual's specifications fix the distance.
-   - The escape arbor keeps its depth with the fourth wheel.
+   - The escape arbor keeps its depth with the fourth wheel: that stage's module, 0.3113, fits the 10.585 mm centre distance the escape wheel's position leaves.
 6. **Heights.** A side photograph of an unmounted movement is scaled by the pillar plate's 3.86 mm edge (75 px; the plate's width gives the same scale to 2 %). On it, in mm above the pillar plate:
    - The pillars are 16.8 tall, the train bridge 3.1 thick, and the barrel bridge 3.4 thick on top of it.
    - The cock foot stands 14.2 tall on the train bridge.
@@ -187,7 +189,7 @@ and the thread pitches are the model's. Things to know before changing it:
 - Heights the side photograph doesn't show:
   - The third wheel (8.6 mm above the plate, between the centre pinion and the barrel).
   - The barrel (13.2 mm tall, from just above the third wheel to 1 mm under the barrel bridge; its chain band runs level with the fusee's cone).
-  - The balance rim, 0.4 mm clear of the escape upper bridge.
+  - The balance rim, 0.4 mm clear of the escape upper bridge. The bridge's two screws have low heads (0.3 mm), 0.14 mm clear of the rim and the timing weights, which pass over them.
   - The hairspring, 6.7 mm tall to the cock.
 - The train bridge's cut round the barrel: a 19.2 mm circle that holds the barrel, open to the rim and clear of the centre arbor. Figs. 108 and 110 show its presence, not its size.
 - The balance lower bridge: a 3 mm plate on a boss under the train bridge, with two screws (Op. 50). Fig. 110 shows it stepped and lobed; its outline is simplified.

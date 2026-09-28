@@ -38,6 +38,8 @@ Contents:
                                  dist/ (its built file); its README has the details
       marine-chronometer-essay/  the essay: src/ holds its four pieces, marine-chronometer.html is the built file
     References/                  source material: the 1948 manual, photographs, drawings; its README lists each file
+    RESOLVED.md                  bugs already found and fixed, from the commit history; check it before changing a part
+    IDEAS.md                     ways to improve the model and the application
 
 ## Setting up
 
@@ -145,11 +147,13 @@ continue, so none of the pieces works on its own. Edit them, then run
 
 Before committing a change to the model:
 
-1. **Build.** `python build.py` at the root must finish without errors.
-2. **Console.** Open the rebuilt `chronometer-working-model.html`, click through
+1. **Past fixes.** Look up the part, control or build step in
+   [RESOLVED.md](RESOLVED.md), so an old bug doesn't come back.
+2. **Build.** `python build.py` at the root must finish without errors.
+3. **Console.** Open the rebuilt `chronometer-working-model.html`, click through
    every view and the walkthrough, and check the console has no errors or
    warnings.
-3. **Geometry** (if you changed any part), run from
+4. **Geometry** (if you changed any part), run from
    `marine-chronometer-source/chronometer-working-model/tools/`:
 
        python dyn.py        # collisions through a full escapement cycle
@@ -165,9 +169,11 @@ Before committing a change to the model:
    coplanar-face hits are faces in contact. `escapement.js` marks each figure
    `ok` or not against the manual's value. The tools write their output files
    into the folder they're run from.
-4. **Preview images.** If the model's appearance changed, re-render them:
+5. **Preview images.** If the model's appearance changed, re-render them:
    `python social.py` (from the same `tools/` folder), then rebuild.
-5. **Commit** the source and the regenerated root copies together.
+6. **Record fixes.** If the change fixes a bug, add it to
+   [RESOLVED.md](RESOLVED.md) under the right heading, with the commit hash.
+7. **Commit** the source and the regenerated root copies together.
 
 ## Publishing the website
 

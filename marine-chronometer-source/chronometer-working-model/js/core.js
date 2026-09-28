@@ -73,7 +73,7 @@ function mats(){
     wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
     invar:S(0xa7aaa6,1,0.28)};
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
-  M.setPlateFinish=k=>{const c=sc(PLATE_FINISH[k]);for(const m of[M.plate,M.plateSolid]){m.color.copy(c);const g=GHOST.get(m);if(g)g.color.copy(c);}};
+  M.setPlateFinish=k=>{const c=sc(PLATE_FINISH[k]);for(const m of[M.plate,M.plateSolid])m.color.copy(c);};   /* see-through and faded copies follow on the next look() (syncMat) */
   const eng=t=>new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});
   /* engraving in columns as on the photographed movement (text runs along -x, lines stack toward +z; maker's name omitted); the two lines nearest the fusee are shortened to clear the dust-seal flange */
   M.engraveB=eng(engraveCanvas((x,S,k)=>{const cols=[["MODEL 21, 14 JEWELS",0.53,-30.50,17.84,1.64],["MARINE CHRONOMETER",-2.56,-26.57,17.58,2.2],["TWO-DAY, 56 HOURS",-2.03,-24.19,11.12,1.4],["\u24c3 1761-1941",-7.28,-17.85,13.54,2.79],["MADE IN U.S.A.",-11.74,-19.05,9.84,1.80]];
@@ -94,8 +94,10 @@ function patchSection(m,cap){
 }
 function setSection(on,plane){SEC.on.value=on?1:0;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
 const GHOST=new Map();
+/* a derived copy (see-through, faded) takes its source's current texture and colour, so a dial style or plate finish chosen while it is shown carries over */
+function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);return d;}
 function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,m.opacity??1);g.depthWrite=false;g.userData={};patchSection(g,false);
-  if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return g;}
+  if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return syncMat(g,m);}
 /* mainspring: w=1 fully wound (coils on the arbor), w=0 run down (coils against the wall) */
 function mainspringGeo(w,ra,Rw,y0,y1,turns){
   const N=900,pos=[],idx=[],tot=TAU*turns,pack=2.6;

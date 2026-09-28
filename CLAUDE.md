@@ -12,6 +12,7 @@ Two static, browser-only projects about the Hamilton Model 21 marine chronometer
 - `vendor/`: three.js r128 (verified against cdnjs's SRI hash) and Latin-subset woff2 fonts with their licences. Pages reference them as `../../vendor/...`; `inline.py` inlines them at build time (plus local `<img>` files, such as the model's `img/what-makes-it-precise.webp` shown in the Illustration tab), and the root build fails if any page still loads a script, stylesheet, font or image from the network.
 - `site-assets/`: `social.png` and `social-movement.png` (link previews for the model and essay pages, rendered by `tools/social.py`) and `_headers`, copied into `site/`.
 - `References/` holds the source material: the 1948 NAVSHIPS 250-624 overhaul manual PDF, reference photographs and drawings. Its README lists each file, what the model took from it and its original filename.
+- `RESOLVED.md` lists bugs already found and fixed (from the commit history), grouped by area, each with what to keep true. Read the relevant section before changing a part, control or build step, and don't reintroduce anything listed. When a change fixes a bug, add an entry in the same commit, under its heading, with the hash (entries for uncommitted fixes go under "Fixed, not yet committed"). `IDEAS.md` holds ideas and `Review-results.md` open review findings; neither belongs in `RESOLVED.md`.
 
 ## Build / run
 

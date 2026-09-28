@@ -136,7 +136,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   const FADE=new Map();
   function fadeOf(m0,p,op){const k=m0.uuid+p;let f=FADE.get(k);
     if(!f){f=m0.clone();f.userData={};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
-    f.opacity=(m0.opacity??1)*op;return f;}
+    f.opacity=(m0.opacity??1)*op;return syncMat(f,m0);}
   const base=m=>{const p=m.userData.part,m0=st.colr?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
   const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0;
   /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, the barrel or spring picked, or the barrel faded or hidden */
@@ -250,8 +250,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;look();});
   const DIAL_INFO={hamilton:[INFO.dial[1],INFO.hands[1]],roman:['Black on silver-white, in the German style of the A. Lange & Söhne deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads AUF (up) to AB (down). Its scale keeps this movement’s 240° sweep.','Gilt leaf hour hand and lance minute hand, gilt wind indicator hand, blued seconds hand. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.']};
-  document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>{mv.userData.dial(b.dataset.v);[INFO.dial[1],INFO.hands[1]]=DIAL_INFO[b.dataset.v];document.querySelectorAll('#dialSt button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
-  document.querySelectorAll('#finish button').forEach(b=>b.addEventListener('click',()=>{M.setPlateFinish(b.dataset.v);document.querySelectorAll('#finish button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
+  document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>{mv.userData.dial(b.dataset.v);look();[INFO.dial[1],INFO.hands[1]]=DIAL_INFO[b.dataset.v];document.querySelectorAll('#dialSt button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
+  document.querySelectorAll('#finish button').forEach(b=>b.addEventListener('click',()=>{M.setPlateFinish(b.dataset.v);look();document.querySelectorAll('#finish button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#lbls').addEventListener('change',e=>st.labels=e.target.checked);$('#rock').addEventListener('change',e=>st.rock=e.target.checked);
   const hIn=$('#hrs'),hOut=hIn.parentElement.querySelector('output');
   const showH=()=>{hOut.textContent=hrs.toFixed(1)+' h';hIn.value=hrs.toFixed(1);};
@@ -303,7 +303,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   const KWV=()=>{const f=1+3.6/Math.hypot(...L.Fu);return{yaw:0.53,pitch:0.32,dist:120,target:mvL(L.Fu[0]*f,-36,L.Fu[1]*f)};};   /* key and fusee, from the winding stop's side */
   const halfs=v=>Math.abs(v*2-Math.round(v*2))<0.02?(Math.floor(v+0.01)||'')+(v%1>0.25?'½':''):v.toFixed(1);
   function kwStart(){if(kw){kwStop();return;}if(st.tour>=0)tourEnd();closeInfo();
-    if($('#kwFull').checked||hrs<0.2)hrs=FUSEE_TURNS/FUSEE_PER_HOUR;   /* run down: the chain all on the barrel, 17½ half turns to wind */
+    if($('#kwFull').checked||hrs<0.2)hrs=RUN_H;   /* run down: the chain all on the barrel, 17½ half turns to wind */
     kw={t0:performance.now(),t:0,h0:hrs,end:0};winding=true;st.drive=false;setView('movement');st.see=true;st.focus=new Set(KWF);look();
     goCam(KWV());
     kwBtn.textContent='Stop winding';kwBtn.setAttribute('aria-pressed','true');kwOut.classList.remove('hidden');}
@@ -312,7 +312,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     const i=Math.floor(kw.t),tot=kw.h0/HT;hrs=Math.max(0,kw.h0-HT*(i+smooth(Math.min(1,(kw.t-i)/0.7))));showH();
     if(!kw.zoom&&hrs<HT*1.5){kw.zoom=true;const f=4/Math.hypot(...L.Fu);goCam({yaw:0.53,pitch:0.6,dist:48,target:mvL(L.Fu[0]*(1+f),-21,L.Fu[1]*(1+f))});}   /* close in on the fusee top for the catch */
     if(hrs===0){kw.end=kw.t+3;kwOut.innerHTML=`<b>Fully wound after ${halfs(tot)} half turns.</b> The chain has pushed the stop-bar in the fusee top out against the winding stop under the barrel bridge, and the key can turn no further.`;}
-    else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}, counterclockwise. ${(56-Math.min(56,hrs)).toFixed(1)} h of running stored. The sustaining spring drives the train meanwhile.`;}
+    else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}, counterclockwise. ${(RUN_H-hrs).toFixed(1)} h of running stored. The sustaining spring drives the train meanwhile.`;}
   kwBtn.addEventListener('click',kwStart);
   function partsSync(){for(const q of PROWS){const h=st.hid.has(q.p);q.ck.checked=!h;q.row.classList.toggle('off',h);q.b.setAttribute('aria-pressed',st.pick===q.p?'true':'false');q.b.disabled=st.drive&&(BOXP.has(q.p)||DRIVE_HIDE.has(q.p));}plist.classList.toggle('colr',st.colr);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
@@ -386,16 +386,16 @@ function drawEsc2D(ctx,w,h,p,dark){
 
   function drawInset(E,s,n){
     if(!insetKind)return;const dk=dark();
-    if(insetKind==='power'){const el=$('#pw');if(el){const I=R.fs.I(n),pull=1-(1-6.5/14)*n/FUSEE_TURNS;el.innerHTML=`Barrel has turned <b>${I.toFixed(2)}</b> of ${R.fs.IN.toFixed(2)} turns. Spring pull <b>${Math.round(pull*100)}%</b> of full. ${(56-hrs).toFixed(1)} h of running left.`;}}
+    if(insetKind==='power'){const el=$('#pw');if(el){const I=R.fs.I(n),pull=1-(1-6.5/14)*n/FUSEE_TURNS;el.innerHTML=`Barrel has turned <b>${I.toFixed(2)}</b> of ${R.fs.IN.toFixed(2)} turns. Spring pull <b>${Math.round(pull*100)}%</b> of full. ${(RUN_H-hrs).toFixed(1)} h of running left.`;}}
     else if(insetKind==='train'){const P2=ESC.P,esc=E*P2,v={ew:esc/TAU,fw:esc/7.5/TAU,tw:esc/56.25/TAU,cw:esc/450/TAU,gw:esc/450/(96/14)/TAU};inset.querySelectorAll('td[data-k]').forEach(td=>td.textContent=(((v[td.dataset.k]%1)+1)%1*360).toFixed(td.dataset.k==='gw'?2:1)+'°');}
     else if(insetCv){const ctx=insetCtx,w=insetCv._w,h=insetCv._h;
       if(insetKind==='esc'){drawEsc2D(ctx,w,h,s.p??0,dk);}
-      else if(insetKind==='fusee'){ctx.clearRect(0,0,w,h);const L0=34,R0=10,T0=12,B0=28,pw=w-L0-R0,ph=h-T0-B0,X=x=>L0+x/56*pw,Y=y=>T0+(1-y/1.1)*ph;
+      else if(insetKind==='fusee'){ctx.clearRect(0,0,w,h);const L0=34,R0=10,T0=12,B0=28,pw=w-L0-R0,ph=h-T0-B0,X=x=>L0+x/RUN_H*pw,Y=y=>T0+(1-y/1.1)*ph;
         ctx.font='11px "Instrument Sans",sans-serif';ctx.strokeStyle=dk?'#2a323a':'#dde1e4';ctx.fillStyle=dk?'#9aa4ad':'#5b656e';ctx.lineWidth=1;
-        for(const x of[0,14,28,42,56]){ctx.beginPath();ctx.moveTo(X(x),T0);ctx.lineTo(X(x),T0+ph);ctx.stroke();ctx.textAlign='center';ctx.fillText(x+' h',X(x),h-12);}
+        for(const x of[0,15,30,45,60]){ctx.beginPath();ctx.moveTo(X(x),T0);ctx.lineTo(X(x),T0+ph);ctx.stroke();ctx.textAlign='center';ctx.fillText(x+' h',X(x),h-12);}
         for(const y of[0,0.5,1]){ctx.beginPath();ctx.moveTo(L0,Y(y));ctx.lineTo(L0+pw,Y(y));ctx.stroke();ctx.textAlign='right';ctx.fillText(Math.round(y*100)+'%',L0-4,Y(y)+4);}
         const drop=1-6.5/14,nn=q=>q*FUSEE_PER_HOUR/FUSEE_TURNS,f=[[q=>1-drop*nn(q),'#c0392b','spring pull'],[q=>(6.5/14)/(1-drop*nn(q)),'#2e6bd8','radius on the fusee'],[q=>1,dk?'#e0b44f':'#8a5d10','torque (pull × radius)']];
-        f.forEach(([fn,col,nm],k)=>{ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.beginPath();for(let i=0;i<=100;i++){const q=56*i/100,yy=k===2?1:fn(q);i?ctx.lineTo(X(q),Y(yy)):ctx.moveTo(X(q),Y(yy));}ctx.stroke();
+        f.forEach(([fn,col,nm],k)=>{ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.beginPath();for(let i=0;i<=100;i++){const q=RUN_H*i/100,yy=k===2?1:fn(q);i?ctx.lineTo(X(q),Y(yy)):ctx.moveTo(X(q),Y(yy));}ctx.stroke();
           ctx.fillStyle=col;ctx.beginPath();ctx.arc(X(hrs),Y(k===2?1:fn(hrs)),4,0,TAU);ctx.fill();});
       }
       else if(insetKind==='bal'){const win=0.5*(st.speed<=0.05?1:2);ctx.clearRect(0,0,w,h);const X=t=>8+(1-(tSim-t)/win)*(w-16),Y=th=>h/2-th/(270*D2R)*(h/2-16);
@@ -446,9 +446,9 @@ function drawEsc2D(ctx,w,h,p,dark){
     const dt=Math.min(0.05,(now-last)/1000);last=now;const k=SNAP?1:1-Math.exp(-dt*3.0);
     for(const q of['lift','flip','explode','lidM','lidT'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
-    const run=hrs<56;
+    const run=hrs<RUN_H;
     if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
-    if(run){const dtS=dt*st.speed;tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(56,hrs+dtS/3600);if(st.speed>1)showH();}}
+    if(run){const dtS=dt*st.speed;tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}}
     tVis+=dt;
     let E,s;
     if(!run||st.speed===0){const kk=Math.floor(tSim/0.5),p=tSim/0.5-kk;s=run?ESC.state(p):{th:0,lift:0,psDef:0,prog:0};s.p=p;E=lastE??(kk+s.prog);}
@@ -474,7 +474,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     placeLabels(now);}
     drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(56-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>, maintaining power driving the train':''}`;
+    $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
     if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView('dial');},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}

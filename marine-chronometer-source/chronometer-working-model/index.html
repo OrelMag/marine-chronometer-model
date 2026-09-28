@@ -66,7 +66,7 @@
         <div class="seg" id="speeds">
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time: watch the escapement">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="spd"><span>Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
-        <div class="pow"><label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="56" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
+        <div class="pow"><label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="60" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
         <div class="clk"><label class="sl"><span>Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to your clock">Now</button></div>
         <div class="kw"><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button><label class="ck"><input type="checkbox" id="kwFull" checked> From run down</label></div>
         <p class="note hidden" id="kwOut" aria-live="polite" style="margin:6px 0 0"></p>

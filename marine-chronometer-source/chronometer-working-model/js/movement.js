@@ -16,7 +16,7 @@
    - Escape wheel: 16 teeth, 13.16 mm, 1.3 mm thick (Hamilton spec quoted in chronometerbook.com post 30).
    - Escapement: plan view of the manual's Fig. 90 (redrawn by Rawlings, chronometerbook.com post 4); escape wheel 9.40 mm from the balance,
      where the 0.249 in impulse roller leaves 0.002 in roller shake (Op. 84) and the teeth dip into its crescent (Ops. 76, 83).
-   - Third wheel, escape wheel position and the going-train modules (0.29 / 0.30 / 0.31): solved as a constraint problem
+   - Third wheel, escape wheel position and the going-train modules (0.29 / 0.30 / 0.3113): solved as a constraint problem
      so that every arbor clears every wheel and the barrel (solve.py).
    ===================================================================== */
 const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[-9.6,0]};
@@ -30,8 +30,9 @@ const PILLARS={barrel:[-15.3,-26.58],train:[[-16.63,22.48],[18.17,26.92],[32.11,
 const COCK_FOOT=[28.3,6.4],BAL_R=14.5;
 /* Fusee: 7 half-turns of the key per 24 h (manual Sec. III) = 6.857 h per fusee turn = fusee wheel 96 : centre pinion 14 */
 const FUSEE_PER_HOUR=14/96,FUSEE_TURNS=8.75; /* 17-1/2 half turns for a full wind */
+const RUN_H=FUSEE_TURNS/FUSEE_PER_HOUR;         /* 60 h: runs down when the chain is all on the barrel (the dial's UP-DOWN scale covers the rated 56 h) */
 const UD={pin:8,wheel:98,m:0.2319};             /* wind indicator: wheel radius 12.4 mm, as Fig. 107 */
-const MOD={fusee:0.4171,train:0.30,centre:0.29,fourth:0.31};
+const MOD={fusee:0.4171,train:0.30,centre:0.29,fourth:0.3113};   /* fourth: the escape pinion meshes at the 10.585 mm the escape wheel's 9.40 mm from the balance leaves */
 /* going train (counts give the ratios; centre-escape counts are not published): */
 const TRAIN={cw:80,tp:10,tw:75,fp:10,fw:60,ep:8,ew:16};
 const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);return[dx/l,dz/l];})(),BETA=Math.atan2(-EU[1],EU[0]);
@@ -209,7 +210,7 @@ function buildMovement(M){
   /* escape upper bridge with jewel and endstone cap */
   const eb=part('escBridge',-66);const eo=[L.E[0]-L.B[0],L.E[1]-L.B[1]],el=Math.hypot(...eo),eu=[eo[0]/el,eo[1]/el];
   R.escBridge=mesh(eb,stadium([L.E[0]-eu[0]*1.5,L.E[1]-eu[1]*1.5],[L.E[0]+eu[0]*7.5,L.E[1]+eu[1]*7.5],4.0,0.9),M.plate,0,TB_T-0.9,0);
-  for(const f of[4.3,6.6])screw(eb,L.E[0]+eu[0]*f,L.E[1]+eu[1]*f,TB_T-0.9,0.9,0.5);   /* two screws (Op. 22) */
+  for(const f of[4.3,6.6])screw(eb,L.E[0]+eu[0]*f,L.E[1]+eu[1]*f,TB_T-0.9,0.9,0.3);   /* two screws (Op. 22); low heads, 0.14 mm clear of the balance rim and timing weights that pass over them */
   /* escape upper setting and endstone cap with its two screws, kept on the 4 mm bridge */
   mesh(eb,ring(1.6,0.3,0.5),M.gilt,L.E[0],TB_T-1.15,L.E[1]);mesh(eb,cylY(0.95,0.25,16),M.ruby,L.E[0],TB_T-1.5,L.E[1]);
   for(const k of[1,-1]){const q=[L.E[0]+eu[0]*2.4-eu[1]*k,L.E[1]+eu[1]*2.4+eu[0]*k];mesh(eb,cylY(0.45,0.5,10),M.steel,q[0],TB_T-1.15,q[1]);}
@@ -238,7 +239,7 @@ function buildMovement(M){
   R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35,L.Ud[1]);hd.add(R.ud);dk(mesh(R.ud,handGeo(10.5,0.7,2.5,'plain'),M.blued),'hamilton');dk(mesh(R.ud,handGeo(10,0.6,2.5,'leaf'),hg),'roman');mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
   const DTEX={hamilton:dtex};hd.traverse(o=>{if(o.userData.dk==='roman')o.visible=false;});
   mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;}
-    for(const m of[dface.material,GHOST.get(dface.material)])if(m){m.map=DTEX[kind];m.needsUpdate=true;}hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===kind;});};
+    const m=dface.userData.mat0||dface.material;m.map=DTEX[kind];m.needsUpdate=true;hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===kind;});};   /* the face's own material (app.js may be showing a see-through or faded copy of it, which follows on the next look()) */
   const mw=part('motion',16);
   R.cannon=arbor(mw,M,...L.C,{pin:{n:12,m:0.4,y:1.2,th:2,bore:0.85}});mesh(R.cannon,ring(1.4,0.85,4.6),M.steel,0,2.6,0);
   R.minW=arbor(mw,M,...L.Mw,{wheel:{n:36,m:0.4,y:1.2,th:0.8,spokes:4},pin:{n:10,m:0.384,y:2.4,th:1.6},ar:[0,3.2],r:0.7});
@@ -266,7 +267,7 @@ function buildMovement(M){
   const SPt=[L.Fu[0]+16.35*Math.cos(54*D2R),L.Fu[1]+16.35*Math.sin(54*D2R)];
   R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2,0.6),M.steel,0,0,0);
   R.spawl.userData.base=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0]));R.spawl.rotation.y=R.spawl.userData.base;R.spawl.userData.pts=pawlPts(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2);
-  /* ---------- going train (modules 0.29 / 0.30 / 0.31): centre 80/14, third 75/10, fourth 60/10, escape pinion 8 ---------- */
+  /* ---------- going train (modules 0.29 / 0.30 / 0.3113): centre 80/14, third 75/10, fourth 60/10, escape pinion 8 ---------- */
   const m=MOD.train;
   const cw=part('cw',-26);R.cw=arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.2,th:1.0,spokes:5},pin:{n:14,m:MOD.fusee,y:-6.5,th:2.6},ar:[TB_T-0.1,4.8],r:0.75});
   const tw=part('tw',-34);R.tw=arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-8.6,th:0.9,spokes:4},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.2,th:1.6},ar:[TB_T-0.1,1.2]});
