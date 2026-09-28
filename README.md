@@ -35,7 +35,7 @@ Contents:
       chronometer-working-model/ the 3D model: index.html, css/, js/, img/, tools/, verification/ (reference renders),
                                  dist/ (its built file); its README has the details
       marine-chronometer-essay/  the essay: src/ holds its four pieces, marine-chronometer.html is the built file
-    References/                  source material (the 1948 manual, photographs); not in git
+    References/                  source material: the 1948 manual, photographs, drawings; its README lists each file
 
 ## Setting up
 
@@ -258,4 +258,5 @@ file with no connection.
   and the fonts are under the SIL Open Font License. See
   [`vendor/README.md`](vendor/README.md).
 - **Source material:** the 1948 NAVSHIPS 250-624 manual is a U.S. government
-  publication. The reference photographs in `References/` are not distributed.
+  publication. The photographs and drawings in `References/` belong to their
+  owners and are kept for reference; they are not covered by the licences above.

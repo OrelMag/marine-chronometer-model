@@ -11,7 +11,7 @@ Two static, browser-only projects about the Hamilton Model 21 marine chronometer
 - Root `chronometer-working-model.html` and `marine-chronometer.html` are published single-file copies of the two builds, fully self-contained (three.js, fonts and images inlined). The model's own `build.py` writes `dist/chronometer-working-model.html` (committed); the root build runs it. `python build.py` at the root regenerates both, the root copies and `site/` (the upload folder, gitignored); commit the regenerated root copies with source changes. The root `README.md` is the user guide: setup, build, checks and publishing.
 - `vendor/`: three.js r128 (verified against cdnjs's SRI hash) and Latin-subset woff2 fonts with their licences. Pages reference them as `../../vendor/...`; `inline.py` inlines them at build time (plus local `<img>` files, such as the model's `img/what-makes-it-precise.webp` shown in the Illustration tab), and the root build fails if any page still loads a script, stylesheet, font or image from the network.
 - `site-assets/`: `social.png` and `social-movement.png` (link previews for the model and essay pages, rendered by `tools/social.py`) and `_headers`, copied into `site/`.
-- `References/` (gitignored) holds the source material: the 1948 NAVSHIPS 250-624 overhaul manual PDF and reference photographs.
+- `References/` holds the source material: the 1948 NAVSHIPS 250-624 overhaul manual PDF, reference photographs and drawings. Its README lists each file, what the model took from it and its original filename.
 
 ## Build / run
 
