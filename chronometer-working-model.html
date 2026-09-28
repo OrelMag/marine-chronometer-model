@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Marine Chronometer: A Working Model</title>
+<meta name="description" content="An interactive 3D working model of the Hamilton Model 21 marine chronometer: fusee, chain, detent escapement and balance, running in real time, built from the 1948 U.S. Navy overhaul manual.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Marine Chronometer, working">
+<meta property="og:description" content="Explore the Hamilton Model 21 marine chronometer part by part, running in real time in your browser.">
+<meta name="theme-color" content="#dfe2e3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1115" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f4f4f1' stroke='%23b58325' stroke-width='3'/%3E%3Cpath d='M16 7v9l6 4' stroke='%2326479c' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -61,7 +68,32 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .panel{padding:14px 16px 0}
 @media(min-width:960px){.panel{padding:0}}
 .card{background:var(--panel);border-radius:14px;padding:14px 16px;margin:0 0 12px}
-.grp{margin:0 0 14px}.grp:last-child{margin-bottom:0}
+.grp{margin:0;padding:12px 0}.grp:first-child{padding-top:2px}.grp:last-child{padding-bottom:0}
+.grp+.grp{border-top:1px solid var(--rule)}
+.seg.grid3{display:grid;grid-template-columns:repeat(3,1fr)}
+.grid3 button{padding:6px 4px}
+.ck.sw{margin-top:10px}
+.ck.sub{margin:6px 0 0 24px;font-size:14px}
+.spd,.pow{display:flex;align-items:center;gap:8px;margin-top:10px}
+.spd>span:first-child,.pow .sl span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}
+.spd input[type=range]{flex:1;accent-color:var(--blue);min-width:0}
+.spd input[type=number]{width:5.6em;font:500 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums}
+.spd>span:last-child{color:var(--muted);margin-left:-4px}
+.pow .sl{flex:1;min-width:0;gap:8px}.pow .sl input{min-width:0;width:0}.pow .sl output{min-width:3.4em;flex-shrink:0}.pow button{flex-shrink:0}
+details.more>summary{cursor:pointer;list-style:none;font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);display:flex;align-items:center;gap:6px;user-select:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin:0 3px 0 1px}
+details.more[open]>summary::before{transform:rotate(45deg)}
+details.more[open]>summary{margin-bottom:9px}
+.sub-h{font:500 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:10px 0 6px}.sub-h:first-of-type{margin-top:0}
+.about-btn{display:block;width:100%;margin:0 0 12px;border-style:dashed;border-width:1.2px;font-weight:500}
+dialog#about{max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;padding:22px 26px 18px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);font-size:14.5px;line-height:1.55}
+dialog#about::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
+dialog#about h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
+dialog#about h3{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
+dialog#about p{margin:0 0 .6em}dialog#about ul,dialog#about ol{margin:0;padding-left:1.25em}dialog#about li{margin:0 0 .45em}
+dialog#about .dx{position:absolute;right:12px;top:12px;margin:0}
+dialog#about .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}
 h2{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:0 0 7px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 button{font:600 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--blue);background:transparent;border:1.5px solid var(--blue);border-radius:999px;padding:6px 13px;cursor:pointer}
@@ -128,42 +160,85 @@ table.rt td.n{text-align:right}
         <div class="seg" style="margin-top:10px"><button id="tExit">End walkthrough</button></div>
       </div>
     </div>
-    <div class="card">
-      <div class="grp"><h2>Show</h2><div class="seg" id="modes"><button data-v="full" aria-pressed="true">Complete instrument</button><button data-v="drive">Drive train only</button></div>
-        <label class="ck hidden" id="mwWrap" style="margin-top:8px"><input type="checkbox" id="mwOn"> Include motion work and hands</label></div>
-      <div class="grp"><h2>View</h2><div class="seg" id="views">
-        <button data-v="box">Box</button><button data-v="dial" aria-pressed="true">Dial</button><button data-v="movement">Movement</button>
-        <button data-v="train">Train</button><button data-v="escapement">Escapement</button><button data-v="exploded">Exploded</button></div></div>
-      <div class="grp"><h2>Cross-section</h2><div class="seg" id="secs">
-        <button data-v="off" aria-pressed="true">Off</button><button data-v="x">12–6 plane</button><button data-v="z">3–9 plane</button><button data-v="y">Across the train</button></div>
+    <div class="card ctl">
+      <section class="grp">
+        <h2>View</h2>
+        <div class="seg grid3" id="views">
+          <button data-v="box" title="The instrument in its mounting box">Box</button><button data-v="dial" aria-pressed="true" title="Read the dial through the glass">Dial</button><button data-v="exploded" title="Every part lifted apart along the arbors">Exploded</button>
+          <button data-v="movement" title="The movement lifted out of its case, train side up">Movement</button><button data-v="train" title="The going train, plates see-through">Train</button><button data-v="escapement" title="Close up on the detent escapement">Escapement</button></div>
+        <label class="ck sw" title="Hide the plates, bridges, dial and case to see the moving parts"><input type="checkbox" id="driveOn" role="switch"> Moving parts only</label>
+        <label class="ck sub hidden" id="mwWrap"><input type="checkbox" id="mwOn"> Include motion work and hands</label>
+      </section>
+      <section class="grp">
+        <h2>Time</h2>
+        <div class="seg" id="speeds">
+          <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time: watch the escapement">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
+        <div class="spd"><span>Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
+        <div class="pow"><label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="56" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
+      </section>
+      <section class="grp">
+        <h2>Display</h2>
+        <div class="cks">
+          <label class="ck"><input type="checkbox" id="lbls" checked> Labels</label>
+          <label class="ck"><input type="checkbox" id="ghost"> See-through plates</label>
+          <label class="ck"><input type="checkbox" id="colr"> Colour by part</label>
+          <label class="ck"><input type="checkbox" id="rock"> Ship motion</label>
+          <label class="ck"><input type="checkbox" id="snd"> Tick sound</label></div>
+      </section>
+      <details class="grp more" id="secDet">
+        <summary>Cross-section</summary>
+        <div class="seg" id="secs">
+          <button data-v="off" aria-pressed="true">Off</button><button data-v="x">12–6 plane</button><button data-v="z">3–9 plane</button><button data-v="y">Across the train</button></div>
         <div id="secOpts" class="hidden" style="margin-top:8px"><label class="sl"><span>Position</span><input type="range" id="secOff" min="-55" max="55" step="0.25" value="0"><output></output></label>
-        <label class="ck" style="margin-top:6px"><input type="checkbox" id="secFlip"> Show the other half</label>
-        <p class="note" style="margin:6px 0 0">Cut faces are hatched. The plane moves with the movement, so it works in every view, including in the box.</p></div></div>
-      <div class="grp"><h2>Speed</h2><div class="seg" id="speeds">
-        <button data-v="0.05">1/20</button><button data-v="1" aria-pressed="true">Real time</button><button data-v="60">60×</button><button data-v="3600">3600×</button><button data-v="0">Stop</button></div></div>
-      <div class="grp"><h2>Power</h2>
-        <label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="56" step="0.1" value="20"><output></output></label>
-        <div class="seg" style="margin-top:8px"><button id="wind">Wind</button></div></div>
-      <div class="grp"><h2>Plate finish</h2><div class="seg" id="finish">
-        <button data-v="nickel" aria-pressed="true">Nickel (Hamilton)</button><button data-v="gilt">Gilt (reference photo)</button></div></div>
-      <div class="grp"><h2>Balance</h2><div class="seg" id="bal">
-        <button data-v="uncut" aria-pressed="true">Uncut rim</button><button data-v="split">Split bimetallic rim</button></div></div>
-      <div class="grp"><div class="cks">
-        <label class="ck"><input type="checkbox" id="lbls" checked> Labels</label>
-        <label class="ck"><input type="checkbox" id="ghost"> See-through plates</label>
-        <label class="ck"><input type="checkbox" id="colr"> Colour by part</label>
-        <label class="ck"><input type="checkbox" id="rock"> Ship motion</label>
-        <label class="ck"><input type="checkbox" id="snd"> Tick sound</label></div></div>
+          <label class="ck" style="margin-top:6px"><input type="checkbox" id="secFlip"> Show the other half</label>
+          <p class="note" style="margin:6px 0 0">Cut faces are hatched. The plane moves with the movement, so it works in every view, including in the box.</p></div>
+      </details>
+      <details class="grp more">
+        <summary>Variants</summary>
+        <h3 class="sub-h">Plate finish</h3>
+        <div class="seg" id="finish"><button data-v="nickel" aria-pressed="true">Nickel (Hamilton)</button><button data-v="gilt">Gilt</button></div>
+        <h3 class="sub-h">Balance</h3>
+        <div class="seg" id="bal"><button data-v="uncut" aria-pressed="true">Uncut rim (Hamilton)</button><button data-v="split">Split bimetallic rim</button></div>
+      </details>
     </div>
-    <div class="card note">
-      <p><b>Sources.</b> <i>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</i>, NAVSHIPS 250-624 (1948): structure, maintaining work, stop-bar, detent, balance and hairspring, dial markings, winding figures, part numbers. New-old-stock pillar plate listing: 87.57 mm diameter, 3.86 mm thick. W. Rawlings’ plan of the Model 21 escapement and a restorer’s escape-wheel notes (chronometerbook.com): 16 teeth, 13.16 mm, 1.3 mm thick.</p>
-      <p><b>Measured.</b> The balance, fusee and barrel positions were triangulated from two photographs, the manual’s Fig. 2 and a near top-down view of a 1941 movement, each with its own fitted camera. The bridge outline, balance cock, setup cover, screws, engraving columns and damascene direction were traced on the top view and mapped into the model; rendered from that photograph’s camera, the model’s key axes land within 0.4 mm of it. The dial orientation follows Fig. 107. The hands advance in half-second steps (Sec. IX, p. 66); 7 half turns of the key per 24 h give one fusee turn per 6.86 h (96:14).</p>
-      <p><b>Solved.</b> The third and escape wheel positions and the going-train modules (0.29, 0.30, 0.31) were solved so that every arbor clears every wheel and the barrel; every part was then checked for interference through a full escapement cycle.</p>
-      <p><b>Estimated.</b> Tooth counts of the centre, third and fourth wheels and pinions (chosen to give the ratios), the fusee profile, the exact height of each level, and the mainspring’s coils. Above real time the balance is shown at a viewable rate.</p>
-      <p><b>Finish.</b> Nickel plates with bold damascening, gilt wheels, as photographed. The gilt option matches the reference photograph.</p>
-    </div>
+    <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
   </div>
 </div>
+<dialog id="about" aria-labelledby="aboutT">
+  <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
+  <h2 id="aboutT">About this model</h2>
+  <p>A working 3D model of the Hamilton Model 21 marine chronometer: a two-day fusee chronometer with a spring detent escapement, made in Lancaster, Pennsylvania, for the U.S. Navy from 1941. Every part runs from one clock: the balance beats twice a second, the hands step in half-seconds, and the fusee and chain follow the hours since winding.</p>
+  <h3>Using it</h3>
+  <ul>
+    <li>Drag to turn; pinch or scroll to zoom.</li>
+    <li>Tap a part to see what it does and its Hamilton part number.</li>
+    <li>Right-click a part to fade or hide it; right-click empty space to bring hidden parts back.</li>
+    <li>Space bar stops and restarts the movement.</li>
+  </ul>
+  <h3>Sources</h3>
+  <ol>
+    <li><i>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer, with Parts Catalog</i>, NAVSHIPS 250-624, Bureau of Ships, 1948. The structure and how it is assembled, the fusee and maintaining work, the winding stop, the detent, balance and hairspring, the gimbal mounting, the dial, the winding figures and the part numbers.</li>
+    <li>A new-old-stock Model 21 pillar plate listing: 87.57 mm across, 3.86 mm thick.</li>
+    <li>W. Rawlings’ plan of the Model 21 escapement (chronometerbook.com, post 4).</li>
+    <li>A restorer’s escape-wheel specification (chronometerbook.com, post 30): 16 teeth, 13.16 mm across, 1.3 mm thick.</li>
+    <li>Photographs: the manual’s Fig. 2, a near top-down view of a 1941 movement, and side and three-quarter views of others.</li>
+  </ol>
+  <h3>How it was made</h3>
+  <ul>
+    <li><b>Measured.</b> The balance, fusee and barrel positions were triangulated from two photographs, each with its own fitted camera. The bridge outline, balance cock, setup cover, screws, engraving and damascene direction were traced on the top view; rendered from that photograph’s camera, the model’s key axes land within 0.4 mm of it.</li>
+    <li><b>Solved.</b> The third and escape wheel positions and the train’s tooth sizes were solved so that every arbor clears every wheel and the barrel.</li>
+    <li><b>Checked.</b> Every part was tested for collisions through a full escapement cycle, and every screw, pivot and pawl for proper seating and engagement.</li>
+  </ul>
+  <h3>Estimated</h3>
+  <ul>
+    <li>The tooth counts of the centre, third and fourth wheels and pinions, chosen to give the ratios a half-second train needs. The 16-tooth escape wheel and the 96:14 first stage (seven half turns of the key a day) are Hamilton’s.</li>
+    <li>The fusee profile, the heights of the levels, and the mainspring’s coils.</li>
+    <li>The detent’s exact shape and settings, the balance rim diameter, and the sustaining pawl’s position.</li>
+    <li>Above real time, the balance is shown swinging at a viewable rate.</li>
+  </ul>
+  <h3>Finish</h3>
+  <p>Nickel plates with bold damascening and gilt wheels, as on the photographed movements. The gilt option matches the gilt movement in one of the reference photographs.</p>
+</dialog>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* core.js: helpers, materials (damascened nickel, gilt), textures, engraving, gear/spring/hand/pawl/escape-wheel geometry, dial, cross-section patch
@@ -282,7 +357,7 @@ function pawlGeo(len,w,th,centre){const s=new THREE.Shape(),r=w*0.72;s.moveTo(0,
 function mesh(p,geo,mat,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);p.add(m);return m;}
 function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
-function discGeo(r,th,holes=[]){const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
+function discGeo(r,th,holes=[]){if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
   const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
 /* gear: pitch radius = m*n/2 */
 function gearGeo(n,m,th,o={}){
@@ -438,7 +513,11 @@ function discClip(R,cuts,N=160){
     poly=out;}
   return poly;
 }
-function polyGeo(pts,th,holes=[],bev=0){const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
+/* a hole that crosses the outline or overlaps another hole silently breaks the triangulation: report it */
+function checkHoles(tag,holes,inside){holes.forEach(([x,z,r],i)=>{if(inside(x,z)<r+0.05)console.warn(tag+': hole at '+x.toFixed(2)+','+z.toFixed(2)+' r'+r+' crosses the outline');
+  holes.forEach(([x2,z2,r2],j)=>{if(j>i&&Math.hypot(x-x2,z-z2)<r+r2+0.05)console.warn(tag+': holes at '+x.toFixed(2)+','+z.toFixed(2)+' and '+x2.toFixed(2)+','+z2.toFixed(2)+' overlap');});});}
+function polyGeo(pts,th,holes=[],bev=0){checkHoles('polyGeo',holes,(x,z)=>{let d=1e9;for(let k=0;k<pts.length;k++){const[ax,az]=pts[k],[bx,bz]=pts[(k+1)%pts.length],l2=(bx-ax)**2+(bz-az)**2,t=l2?clamp(((x-ax)*(bx-ax)+(z-az)*(bz-az))/l2,0,1):0;d=Math.min(d,Math.hypot(x-ax-t*(bx-ax),z-az-t*(bz-az)));}return d-bev;});
+  const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
   for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
   const g=new THREE.ExtrudeGeometry(s,{depth:th-2*bev,bevelEnabled:bev>0,bevelThickness:bev,bevelSize:bev*0.8,bevelOffset:-bev*0.8,bevelSegments:1,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,bev,0);return g;}
 function stadium(p0,p1,w,th,holes=[]){const dx=p1[0]-p0[0],dz=p1[1]-p0[1],l=Math.hypot(dx,dz),nx=-dz/l*w/2,nz=dx/l*w/2,pts=[];
@@ -458,9 +537,9 @@ function buildMovement(M){
   const y0=-PP_T;
   /* ---------- pillar plate 87.57 x 3.86 mm, movement ring, lower train bridge ---------- */
   const pp=part('pillar',0);
-  /* sustaining pawl pivot: 21 mm from the fusee (so the pawl reaches the sustaining ratchet), at the one bearing that lets its arbor run up to the
-     train bridge (manual Sec. VIII, Op. 15 note) clear of the centre wheel */
-  const SPv=[L.Fu[0]+21*Math.cos(84*D2R),L.Fu[1]+21*Math.sin(84*D2R)];
+  /* sustaining pawl pivot: 21 mm from the fusee (so the pawl reaches the sustaining ratchet), where its arbor can run up to solid train bridge
+     (manual Sec. VIII, Op. 15 note) clear of the centre wheel, the chain and the opening round the balance */
+  const SPv=[L.Fu[0]+21*Math.cos(60*D2R),L.Fu[1]+21*Math.sin(60*D2R)];
   R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.T,0.8],[...L.F,1.2],[...L.Fu,1.4],[...L.Ud,0.57],[...L.Mw,0.72],[...L.Ba,1.9],[...L.E,1.3],[...SPv,0.72]]),M.plate,0,y0,0);
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
   const bushR=(p,x,z,y1,y2,ro,ri,mat)=>mesh(p,ringGeo(ro,ri,Math.abs(y2-y1)),mat||M.brass2,x,(y1+y2)/2,z);
@@ -475,12 +554,12 @@ function buildMovement(M){
   const pillar=(x,z,top)=>{const pr=[V2(0.01,y0),V2(3.4,y0),V2(3.4,y0-1.3),V2(2.9,y0-1.9),V2(2.7,(top+y0)*0.5),V2(2.3,top+2.4),V2(2.9,top+1.7),V2(2.9,top),V2(0.01,top)].reverse();
     mesh(pl,new THREE.LatheGeometry(pr,32),M.plateSolid,x,0,z);};
   PILLARS.train.forEach(([x,z])=>pillar(x,z,-26));pillar(...PILLARS.barrel,-29);
-  /* ---------- upper train bridge (y -29..-26) and barrel bridge (y -33..-29), split along z = -1.5 - 0.9x;
-               the barrel bridge rests on a 5 mm strip of the train bridge and is cut around the balance ---------- */
+  /* ---------- upper train bridge (y -29..-26) and barrel bridge (y -33..-29). The barrel bridge sits on the train bridge and is cut around the
+               balance; the train bridge's outline under it is not photographed, so it is drawn as a full disc ---------- */
   const tb=part('trainBridge',-62);
   const WSd=(()=>{const Fl=Math.hypot(...L.Fu);return[L.Fu[0]+7.2*L.Fu[0]/Fl,L.Fu[1]+7.2*L.Fu[1]/Fl];})();
-  const TBpoly=discClip(BR_R,[],240);
-  R.trainBridge=mesh(tb,polyGeo(TBpoly,3,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,11.5],[...L.Fu,1.3],[...L.Ba,1.7],[...WSd,1.0],[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,-29,0);
+  const TBpoly=discClip(BR_R,[],240);   /* opening round the balance staff and rollers, r 9.1: the centre and escape pivots (10.5 and 10.2 mm from the staff) stay in solid bridge */
+  R.trainBridge=mesh(tb,polyGeo(TBpoly,3,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,9.1],[...L.Fu,1.3],[...L.Ba,1.7],[...WSd,1.0],[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,-29,0);
   PILLARS.train.slice(0,2).forEach(([x,z])=>screw(tb,x,z,-29,2.9,1.6));screw(tb,-8.5,27.7,-29,2.9,1.6);
   /* centre and third upper bushings in the train bridge (42166, 42167); they lie in the opening round the balance, so they can be oiled with the barrel bridge on (Sec. VIII, Op. 46) */
   bushR(tb,...L.C,-29.1,-26,1.2,0.78);bushR(tb,...L.T,-29.1,-26,1.0,0.58);
@@ -510,13 +589,13 @@ function buildMovement(M){
   R.hour=new THREE.Group();R.hour.position.y=5.2;hd.add(R.hour);mesh(R.hour,handGeo(30,2.3,6,'spade'),M.blued);
   R.min=new THREE.Group();R.min.position.y=6.0;hd.add(R.min);mesh(R.min,handGeo(44,1.6,8,'plain'),M.blued);
   mesh(hd,cylY(2,1.2,24),M.blued,0,6.3,0);
-  R.sec=new THREE.Group();R.sec.position.set(L.F[0],5.0,L.F[1]);hd.add(R.sec);mesh(R.sec,handGeo(11.5,0.6,3.5,'plain'),M.blued);mesh(R.sec,cylY(0.9,0.8,16),M.blued,0,0.3,0);
-  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],5.0,L.Ud[1]);hd.add(R.ud);mesh(R.ud,handGeo(10.5,0.7,2.5,'plain'),M.blued);mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
+  R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2) */hd.add(R.sec);mesh(R.sec,handGeo(11.5,0.6,3.5,'plain'),M.blued);mesh(R.sec,cylY(0.9,0.8,16),M.blued,0,0.3,0);
+  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35,L.Ud[1]);hd.add(R.ud);mesh(R.ud,handGeo(10.5,0.7,2.5,'plain'),M.blued);mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
   const mw=part('motion',16);
   R.cannon=arbor(mw,M,...L.C,{pin:{n:12,m:0.4,y:1.2,th:2,bore:0.85}});mesh(R.cannon,ring(1.4,0.85,4.6),M.steel,0,2.6,0);
   R.minW=arbor(mw,M,...L.Mw,{wheel:{n:36,m:0.4,y:1.2,th:0.8,spokes:4},pin:{n:10,m:0.384,y:2.4,th:1.6},ar:[0,3.2],r:0.7});
   R.hourW=arbor(mw,M,...L.C,{wheel:{n:40,m:0.384,y:2.6,th:0.8,spokes:4,collet:0,bore:1.45}});mesh(R.hourW,ring(2.2,1.45,2.6),M.brass2,0,3.9,0);
-  R.udW=arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:4},ar:[y0,5]});
+  R.udW=arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:4},ar:[y0,4.6]});
   R.fp=arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:1.5,th:2,bore:0.56}});
   /* ---------- fusee wheel (96 : centre pinion 14, module 0.417) with its maintaining work ---------- */
   const gw=part('gw',-8);
@@ -526,16 +605,19 @@ function buildMovement(M){
   const sspg=new THREE.ExtrudeGeometry(ssp,{depth:1.2,bevelEnabled:false,curveSegments:48});sspg.rotateX(-Math.PI/2);R.sspring=mesh(R.gw,sspg,M.blued,0,-8.75,0);
   mesh(R.gw,cylY(0.4,1.5,10),M.steel,13.55*Math.cos(0.35),-8.1,-13.55*Math.sin(0.35));
   R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);gw.add(R.sr);
-  mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,bore:3}),M.steel,0,-9.45,0);
-  for(let k=0;k<2;k++){const a=k*Math.PI+0.4,pw=mesh(R.sr,pawlGeo(3.8,0.9,0.5,true),M.steel,11.2*Math.cos(a)-1.2*Math.sin(a),-10.05,-(11.2*Math.sin(a)+1.2*Math.cos(a)));pw.rotation.y=a+Math.PI/2+0.35;}
+  mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,flip:true,bore:3}),M.steel,0,-9.45,0);   /* steep faces lead against the running direction, so the sustaining pawl holds it */
+  /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4): pushed by its steep faces when running, slipping over them when winding */
+  for(let k=0;k<2;k++){const a=k*Math.PI+0.4,P=[12.3*Math.cos(a),12.3*Math.sin(a)],T=[8.95*Math.cos(a+0.3),8.95*Math.sin(a+0.3)],pw=mesh(R.sr,pawlGeo(Math.hypot(T[0]-P[0],T[1]-P[1])+0.2,0.9,0.5),M.steel,P[0],-10.05,P[1]);pw.rotation.y=Math.atan2(T[1]-P[1],-(T[0]-P[0]));}
   const sp=part('spawl',-9);cylBetween(sp,0.7,-27.5,y0+2,M.steel,...SPv);
-  R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(4.9,1.2,0.6),M.steel,0,0,0);
-  R.spawl.userData.base=Math.atan2(-(L.Fu[1]-SPv[1]),L.Fu[0]-SPv[0])-0.1;R.spawl.rotation.y=R.spawl.userData.base;
+  /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2), trailing the pivot so the teeth can only pass it one way */
+  const SPt=[L.Fu[0]+16.35*Math.cos(54*D2R),L.Fu[1]+16.35*Math.sin(54*D2R)];
+  R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2,0.6),M.steel,0,0,0);
+  R.spawl.userData.base=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0]));R.spawl.rotation.y=R.spawl.userData.base;
   /* ---------- going train (modules 0.29 / 0.30 / 0.31): centre 80/14, third 75/10, fourth 60/10, escape pinion 8 ---------- */
   const m=MOD.train;
   const cw=part('cw',-26);R.cw=arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-21.4,th:1.0,spokes:5},pin:{n:14,m:MOD.fusee,y:-6.5,th:2.6},ar:[-29.1,4.8],r:0.75});
   const tw=part('tw',-34);R.tw=arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-19.2,th:0.9,spokes:4},pin:{n:TRAIN.tp,m:MOD.centre,y:-21.4,th:2.0},ar:[-29.1,1.2]});
-  const fw=part('fw',-42);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-16.6,th:0.9,spokes:4},pin:{n:TRAIN.fp,m,y:-19.2,th:1.7},ar:[-22.6,5.0]});
+  const fw=part('fw',-42);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-16.6,th:0.9,spokes:4},pin:{n:TRAIN.fp,m,y:-19.2,th:1.7},ar:[-22.6,4.6]});
   const E=ESC,ew=part('escW',-52,true);
   R.esc=arbor(ew,M,E.EX*ES,0,{pin:{n:TRAIN.ep,m:MOD.fourth,y:-16.6,th:2.0},ar:[-29.4,y0+2]});
   R.esc.userData.wheel=escapeWheel(R.esc,M,ES,-25.1);
@@ -555,7 +637,7 @@ function buildMovement(M){
   /* ---------- balance (rim r 14.5, measured on the top-view photograph) and hairspring ---------- */
   const bl=part('bal',-80,true);
   R.staff=new THREE.Group();bl.add(R.staff);
-  cylBetween(R.staff,0.45,-43.2,-22.8,M.steel,0,0,12);
+  cylBetween(R.staff,0.45,-42.3,-22.8,M.steel,0,0,12);
   const rR=E.rRoll*ES,ir=new THREE.Shape();ir.absarc(0,0,rR,0.35,TAU-0.35,false);ir.lineTo(rR*0.55*Math.cos(-0.35),rR*0.55*Math.sin(-0.35));ir.absarc(0,0,rR*0.55,-0.35,0.35,false);
   const irg=new THREE.ExtrudeGeometry(ir,{depth:0.8,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.4,0);
   const irm=mesh(R.staff,irg,M.steel,0,-25.1,0);irm.rotation.y=-(E.aI)+Math.PI;
@@ -587,26 +669,29 @@ function buildMovement(M){
      in the photo), a straight edge to the endstone over the staff and a concave arc back to the rim. Outline shifted
      by the cock's parallax so the endstone sits over the balance staff. */
   const COCK_POLY=[[25.38, 31.05], [26.19, 30.36], [26.99, 29.66], [27.77, 28.93], [28.53, 28.18], [29.26, 27.42], [29.98, 26.63], [30.68, 25.82], [31.35, 25.0], [32.0, 24.16], [32.63, 23.3], [33.24, 22.43], [33.82, 21.54], [34.38, 20.63], [34.92, 19.71], [35.43, 18.78], [35.92, 17.83], [36.38, 16.87], [36.81, 15.9], [37.22, 14.92], [37.6, 13.93], [37.96, 12.92], [38.29, 11.91], [38.59, 10.89], [38.87, 9.86], [39.12, 8.83], [39.34, 7.79], [39.53, 6.74], [39.69, 5.69], [39.83, 4.63], [39.94, 3.58], [32.87, 3.03], [26.51, 2.76], [20.15, 2.49], [13.87, 2.62], [8.04, 2.86], [5.77, 3.99], [5.53, 5.72], [6.88, 7.11], [13.2, 9.07], [17.2, 11.96], [19.38, 16.1], [20.84, 20.82], [21.82, 25.22]];
-  R.cock=mesh(ck,polyGeo(COCK_POLY,3.2,[[...L.B,1.1]],0.3),M.plate,0,-45.1,0);mesh(ck,ring(1.1,0.47,3.2),M.gilt,L.B[0],-43.5,L.B[1]);   /* balance upper setting (42189) */
-  /* foot: the outer part of the crescent is a solid block down to the barrel bridge (Fig. 2) */
-  const FOOT=[];for(let k=0;k<=12;k++){const a=(5+15*k/12)*D2R;FOOT.push([39.8*Math.cos(a),39.8*Math.sin(a)]);}for(let k=12;k>=0;k--){const a=(5+15*k/12)*D2R;FOOT.push([30.5*Math.cos(a),30.5*Math.sin(a)]);}
-  R.cockFoot=mesh(ck,polyGeo(FOOT,8.9,[],0.2),M.plateSolid,0,-41.9,0);
-  /* one balance cock screw (parts list: 42192, one per movement), centred on the foot */
-  screw(ck,35.2*Math.cos(12.5*D2R),35.2*Math.sin(12.5*D2R),-45.1,2.8,1.5);
-  const Q=[35.2*Math.cos(12*D2R),35.2*Math.sin(12*D2R)];
+  R.cock=mesh(ck,polyGeo(COCK_POLY,3.2,[],0.3),M.plate,0,-45.1,0);   /* the staff's upper pivot runs in the setting pressed into the cock (not drawn: the staff is 0.7 mm from the cock's edge) */
+  /* foot: a solid block under the outer part of the crescent, standing on the upper train bridge beside the barrel bridge's straight edge
+     (the cock is mounted to the train bridge, manual Sec. II; its screw is where the top-view photograph shows it). Annular sector r 31-39.8,
+     up to 32 deg, kept 0.25 mm off the barrel bridge edge z = 14.5 - 0.1x */
+  const FOOT=[],edge=(r)=>{let lo=0,hi=32*D2R;for(let i=0;i<40;i++){const m=(lo+hi)/2;(r*Math.sin(m)-(14.75-0.1*r*Math.cos(m))>0)?hi=m:lo=m;}return hi;};
+  { const a0=edge(39.8),a1=edge(31),A=32*D2R;for(let k=0;k<=16;k++){const a=a0+(A-a0)*k/16;FOOT.push([39.8*Math.cos(a),39.8*Math.sin(a)]);}
+    for(let k=16;k>=0;k--){const a=a1+(A-a1)*k/16;FOOT.push([31*Math.cos(a),31*Math.sin(a)]);}}
+  R.cockFoot=mesh(ck,polyGeo(FOOT,12.9,[],0.2),M.plateSolid,0,-41.9,0);
+  /* one balance cock screw (parts list 42192), at its position on the top-view photograph (p3map scr_cockfoot) */
+  const Q=[33.11,12.32];screw(ck,...Q,-45.1,2.8,1.5);
   /* endstone plate over the staff: small steel plate with two screws and the cap jewel */
   const ep=new THREE.Group();ep.position.set(L.B[0],-45.1,L.B[1]);ep.rotation.y=Math.atan2(-(L.B[1]-Q[1]),L.B[0]-Q[0]);ck.add(ep);
   mesh(ep,new THREE.BoxGeometry(7.4,0.7,4.6),M.steel,1.2,-0.35,0);mesh(ep,cylY(1.0,0.3,16),M.ruby,0,-0.8,0);
   screw(ep,3.6,0,-0.7,0.7,0.4);screw(ep,-1.6,1.5,-0.7,0.7,0.4);
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, below the third wheel) ---------- */
   const fsP=part('fs',-16);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
-  const fs=makeFusee(M,{yS:-20.1,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:-17.9,bB:-7.4,d:fd});
+  const fs=makeFusee(M,{yS:-20.1,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:-17.9,bB:-7.4,d:fd,stopAng:Math.atan2(-fo[1],fo[0])-Math.atan2(-dz,dx)});   /* stop-bar faces the winding stop at full wind */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), measured on the top-view photograph:
      a bow-shaped cover straddling the arbor, ends ~13 mm out along 107 deg / 287 deg, the right end an arc about the arbor; the waist on the
      centre side just uncovers the ratchet teeth, and on the rim side a curved slot (r 7.1-7.95) shows the teeth and the click */
   const rt=part('ratchet',-76),P2=(r,a)=>[L.Ba[0]+r*Math.cos(a*D2R),L.Ba[1]+r*Math.sin(a*D2R)];
-  mesh(rt,gearGeo(52,0.289,1.0,{ratchet:true,bore:1.4}),M.steel,L.Ba[0],-33.85,L.Ba[1]);
+  mesh(rt,gearGeo(52,0.289,1.0,{ratchet:true,flip:true,bore:1.4}),M.steel,L.Ba[0],-33.85,L.Ba[1]);   /* steep faces meet the click against the mainspring's pull */
   cylBetween(rt,1.4,-35.5,-1,M.steel,L.Ba[0],L.Ba[1]);cylBetween(rt,2.3,-35.8,-34.35,M.steel,L.Ba[0],L.Ba[1],28);
   mesh(rt,new THREE.BoxGeometry(2.2,3.0,2.2),M.steel,L.Ba[0],-37.3,L.Ba[1]);
   { const Pv=P2(8.9,250.6),Tp=P2(7.5,220),clk=mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-33.85,Pv[1]);clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));}
@@ -696,7 +781,7 @@ function makeFusee(M,c){
   pr.push(V2(c.rmax+1.0,c.yB),V2(c.rmax+1.0,c.yB+0.5),V2(1.05,c.yB+0.5),V2(1.05,c.yS-0.2));
   mesh(fz,new THREE.LatheGeometry(pr,72),M.gilt);cylBetween(fz,1,-33,-PP_T-0.1,M.steel,0,0,12);cylBetween(fz,0.55,-PP_T-0.1,2.5,M.steel,0,0,12);   /* arbor, then its lower pivot through the plate bushing to the wind-indicator pinion */
   mesh(fz,gearGeo(40,0.47,0.5,{ratchet:true,bore:1}),M.steel,0,c.yB+0.85,0);
-  const stopBar=new THREE.Group();stopBar.position.y=c.yS-0.4;fz.add(stopBar);
+  const sbR=new THREE.Group();sbR.rotation.y=c.stopAng||0;fz.add(sbR);const stopBar=new THREE.Group();stopBar.position.y=c.yS-0.4;sbR.add(stopBar);
   mesh(stopBar,new THREE.BoxGeometry(3,0.4,1.4),M.steel,2.6,0,0);mesh(stopBar,new THREE.BoxGeometry(3,0.4,1.4),M.steel,-2.6,0,0);
   const bz=new THREE.Group();bz.position.x=bx;bz.userData.partName='barrel';g.add(bz);
   const bw=new THREE.Mesh(new THREE.CylinderGeometry(c.Rb,c.Rb,Math.abs(c.bT-c.bB),72,1,true),M.brassDS);bw.position.y=(c.bT+c.bB)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.noCap=true;
@@ -839,7 +924,7 @@ const INFO={
   det:['Detent','Beryllium-copper spring detent: the thin detent spring at its foot (the point of flexure), a long blade carrying the locking jewel, and the abutment arm (horn). Clamped to the support block under the upper train bridge, it rests against the stop button; the gold trip (passing) spring, of Hamilton Elinvar, is held on it by an angle bracket.','Detent 42087, trip spring 42088, block 42086'],
   bal:['Balance and hairspring assembly','Solid, uncut stainless-steel rim silver-soldered to an Invar arm, with tapped holes all round for balance screws, two timing weights and two vernier timing weights. Motion 1⅜ to 1½ turns. Impulse and unlocking rollers on the staff. Rim about 29 mm across, measured on a top-view photograph.','Wheel 42178 · staff 42186 · rollers 42263, 42252'],
   spr:['Hairspring','Cylindrical, of Hamilton Elinvar, pinned to its collet and stud without deformation, so its active length is the same winding and unwinding. There is no regulator: rate is set with the balance screws and weights.','No. 42188'],
-  cock:['Balance cock','Carries the balance upper jewel, endstone and the hairspring stud.','No. 42066'],
+  cock:['Balance cock','Carries the balance upper jewel, endstone and the hairspring stud. Its foot stands on the upper train bridge beside the barrel bridge, held by one screw.','No. 42066 · screw 42192'],
   fusee:['Fusee','Shaped so the moment of force on the fusee wheel is always about the same, fully wound or nearly run down. The winding stop-bar in its top moves out at full wind to catch the winding stop under the barrel bridge.','No. 42021 · stop-bar 42024'],
   barrel:['Mainspring barrel','Holds the mainspring and its brace. Turns clockwise while running, drawing the chain from the fusee.','No. 42168'],
   mainspring:['Mainspring','Inner end on the fixed barrel arbor, outer end on the barrel’s anchor pin. Coils drawn schematically.','No. 42038 · 0.0165 in. thick'],
@@ -888,7 +973,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   if(typeof THREE==='undefined'){$('#loading').textContent='The 3D library didn’t load. Reload the page to try again.';return;}
   try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2500))]);}catch(_){}
   const dark=()=>matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark';
-  const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});r.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
   r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
   r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
   const scene=new THREE.Scene();scene.environment=envTex(r);
@@ -961,7 +1046,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     sh.visible=!st.drive;
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
-    document.querySelectorAll('#modes button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='drive')===st.drive?'true':'false'));
+    $('#driveOn').checked=st.drive;
     $('#ghost').checked=st.see;stage.classList.toggle('colr',st.colr);
   }
 
@@ -1025,13 +1110,27 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(a==='hide'){if(opPart){st.hid.add(opPart);opPart=null;}}else if(a==='showall')st.hid.clear();else if(a==='all'){st.op={};st.hid.clear();}else if(opPart)delete st.op[opPart];
     look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();
+    /* space bar: stop and restart, unless typing or pressing a button */
+    if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}});
 
   /* ---------- controls ---------- */
-  const setSpeed=v=>{st.speed=v;document.querySelectorAll('#speeds button').forEach(x=>x.setAttribute('aria-pressed',parseFloat(x.dataset.v)===v?'true':'false'));};
+  /* speed: presets, or any value from 0.01x to 10000x on a log slider or typed in */
+  const spdR=$('#spdR'),spdN=$('#spdN'),SMIN=0.01,SMAX=10000;let lastSpeed=1;
+  const fmtSpd=v=>v===0?'stopped':(v<1?(1/v===Math.round(1/v)?'1/'+Math.round(1/v):String(+v.toPrecision(2))):v.toLocaleString('en',{maximumFractionDigits:v<10?2:0}))+'×';
+  const setSpeed=(v,from)=>{v=v>0?clamp(v,SMIN,SMAX):0;st.speed=v;if(v)lastSpeed=v;
+    document.querySelectorAll('#speeds button').forEach(x=>x.setAttribute('aria-pressed',Math.abs(parseFloat(x.dataset.v)-v)<1e-9?'true':'false'));
+    if(from!=='r'&&v)spdR.value=Math.round((Math.log10(v)-Math.log10(SMIN))/(Math.log10(SMAX)-Math.log10(SMIN))*1000);
+    if(from!=='n')spdN.value=v?+v.toPrecision(3):0;};
+  spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN)));
+    const snap=[0.05,0.1,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
+  spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
   document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();setView(b.dataset.v);}));
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
-  document.querySelectorAll('#modes button').forEach(b=>b.addEventListener('click',()=>{st.drive=b.dataset.v==='drive';closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');}));
+  $('#driveOn').addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');});
+  /* about: sources and method in a dialog */
+  const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});
+  about.addEventListener('click',e=>{if(e.target===about)about.close();});
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;look();});
@@ -1175,7 +1274,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
     const run=hrs<56;
     if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
-    if(run){const dtS=dt*st.speed;tSim+=dtS;if(!winding){hrs=Math.min(56,hrs+dtS/3600);if(st.speed>=60)showH();}}
+    if(run){const dtS=dt*st.speed;tSim+=dtS;if(!winding){hrs=Math.min(56,hrs+dtS/3600);if(st.speed>1)showH();}}
     tVis+=dt;
     let E,s;
     if(!run||st.speed===0){const kk=Math.floor(tSim/0.5),p=tSim/0.5-kk;s=run?ESC.state(p):{th:0,lift:0,psDef:0,prog:0};s.p=p;E=lastE??(kk+s.prog);}
@@ -1200,7 +1299,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     placeLabels(now);
     drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(56-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${winding?'&ensp;<b>Winding</b>, maintaining power driving the train':''}`;
+    $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(56-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>, maintaining power driving the train':''}`;
     if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView('dial');},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}
     requestAnimationFrame(frame);
   }

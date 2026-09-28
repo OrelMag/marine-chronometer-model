@@ -18,7 +18,7 @@ file. Regenerate it after editing with:
 
 | File | Contents |
 |---|---|
-| `index.html` | Page markup: stage, walkthrough card, controls, source notes |
+| `index.html` | Page markup: stage, walkthrough card, controls (View, Time, Display, collapsible Cross-section and Variants), the About dialog with sources and method |
 | `css/style.css` | Layout, theme tokens (light and dark), controls, labels |
 | `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch |
 | `js/movement.js` | The movement: layout constants, detent-escapement kinematics (`ESC.state`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
@@ -27,6 +27,10 @@ file. Regenerate it after editing with:
 | `build.py` | Inlines CSS and JS into `dist/` |
 | `tools/interference-check.js` | Voxel collision test used to find and remove overlapping parts |
 | `tools/audit.py`, `tools/geometry-audit*.js` | Geometry audit: overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
+
+## Controls
+
+Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Right-click a part to fade or hide it; right-click empty space to bring hidden parts back.
 
 ## Testing
 
@@ -91,4 +95,5 @@ The tools need Playwright with Chromium. Open the page as `index.html?snap&qa`.
 - The mainspring’s coils, which are drawn schematically.
 - The detent geometry, which follows a standard spring detent layout. Two of its settings are simplified against the manual's figures (Sec. VIII, Ops. 7, 85–87): the jewels on the two rollers are 75° apart (manual: about 90°, adjustable), and the unlocking jewel lifts the detent over about 8° of balance arc (manual: overall 26–30°, lock about 6°).
 - The balance rim diameter (29 mm), measured on the top-view photograph.
+- The upper train bridge's outline under the barrel bridge (drawn as a full disc) and its opening round the balance staff (r 9.1 mm).
 - The sustaining pawl's position: 21 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel.

@@ -29,7 +29,7 @@ const INFO={
   det:['Detent','Beryllium-copper spring detent: the thin detent spring at its foot (the point of flexure), a long blade carrying the locking jewel, and the abutment arm (horn). Clamped to the support block under the upper train bridge, it rests against the stop button; the gold trip (passing) spring, of Hamilton Elinvar, is held on it by an angle bracket.','Detent 42087, trip spring 42088, block 42086'],
   bal:['Balance and hairspring assembly','Solid, uncut stainless-steel rim silver-soldered to an Invar arm, with tapped holes all round for balance screws, two timing weights and two vernier timing weights. Motion 1⅜ to 1½ turns. Impulse and unlocking rollers on the staff. Rim about 29 mm across, measured on a top-view photograph.','Wheel 42178 · staff 42186 · rollers 42263, 42252'],
   spr:['Hairspring','Cylindrical, of Hamilton Elinvar, pinned to its collet and stud without deformation, so its active length is the same winding and unwinding. There is no regulator: rate is set with the balance screws and weights.','No. 42188'],
-  cock:['Balance cock','Carries the balance upper jewel, endstone and the hairspring stud.','No. 42066'],
+  cock:['Balance cock','Carries the balance upper jewel, endstone and the hairspring stud. Its foot stands on the upper train bridge beside the barrel bridge, held by one screw.','No. 42066 · screw 42192'],
   fusee:['Fusee','Shaped so the moment of force on the fusee wheel is always about the same, fully wound or nearly run down. The winding stop-bar in its top moves out at full wind to catch the winding stop under the barrel bridge.','No. 42021 · stop-bar 42024'],
   barrel:['Mainspring barrel','Holds the mainspring and its brace. Turns clockwise while running, drawing the chain from the fusee.','No. 42168'],
   mainspring:['Mainspring','Inner end on the fixed barrel arbor, outer end on the barrel’s anchor pin. Coils drawn schematically.','No. 42038 · 0.0165 in. thick'],
@@ -78,7 +78,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   if(typeof THREE==='undefined'){$('#loading').textContent='The 3D library didn’t load. Reload the page to try again.';return;}
   try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2500))]);}catch(_){}
   const dark=()=>matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark';
-  const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});r.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
   r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
   r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
   const scene=new THREE.Scene();scene.environment=envTex(r);
@@ -151,7 +151,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     sh.visible=!st.drive;
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
-    document.querySelectorAll('#modes button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='drive')===st.drive?'true':'false'));
+    $('#driveOn').checked=st.drive;
     $('#ghost').checked=st.see;stage.classList.toggle('colr',st.colr);
   }
 
@@ -215,13 +215,27 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(a==='hide'){if(opPart){st.hid.add(opPart);opPart=null;}}else if(a==='showall')st.hid.clear();else if(a==='all'){st.op={};st.hid.clear();}else if(opPart)delete st.op[opPart];
     look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();
+    /* space bar: stop and restart, unless typing or pressing a button */
+    if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}});
 
   /* ---------- controls ---------- */
-  const setSpeed=v=>{st.speed=v;document.querySelectorAll('#speeds button').forEach(x=>x.setAttribute('aria-pressed',parseFloat(x.dataset.v)===v?'true':'false'));};
+  /* speed: presets, or any value from 0.01x to 10000x on a log slider or typed in */
+  const spdR=$('#spdR'),spdN=$('#spdN'),SMIN=0.01,SMAX=10000;let lastSpeed=1;
+  const fmtSpd=v=>v===0?'stopped':(v<1?(1/v===Math.round(1/v)?'1/'+Math.round(1/v):String(+v.toPrecision(2))):v.toLocaleString('en',{maximumFractionDigits:v<10?2:0}))+'×';
+  const setSpeed=(v,from)=>{v=v>0?clamp(v,SMIN,SMAX):0;st.speed=v;if(v)lastSpeed=v;
+    document.querySelectorAll('#speeds button').forEach(x=>x.setAttribute('aria-pressed',Math.abs(parseFloat(x.dataset.v)-v)<1e-9?'true':'false'));
+    if(from!=='r'&&v)spdR.value=Math.round((Math.log10(v)-Math.log10(SMIN))/(Math.log10(SMAX)-Math.log10(SMIN))*1000);
+    if(from!=='n')spdN.value=v?+v.toPrecision(3):0;};
+  spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN)));
+    const snap=[0.05,0.1,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
+  spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
   document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();setView(b.dataset.v);}));
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
-  document.querySelectorAll('#modes button').forEach(b=>b.addEventListener('click',()=>{st.drive=b.dataset.v==='drive';closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');}));
+  $('#driveOn').addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');});
+  /* about: sources and method in a dialog */
+  const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});
+  about.addEventListener('click',e=>{if(e.target===about)about.close();});
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;look();});
@@ -365,7 +379,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
     const run=hrs<56;
     if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
-    if(run){const dtS=dt*st.speed;tSim+=dtS;if(!winding){hrs=Math.min(56,hrs+dtS/3600);if(st.speed>=60)showH();}}
+    if(run){const dtS=dt*st.speed;tSim+=dtS;if(!winding){hrs=Math.min(56,hrs+dtS/3600);if(st.speed>1)showH();}}
     tVis+=dt;
     let E,s;
     if(!run||st.speed===0){const kk=Math.floor(tSim/0.5),p=tSim/0.5-kk;s=run?ESC.state(p):{th:0,lift:0,psDef:0,prog:0};s.p=p;E=lastE??(kk+s.prog);}
@@ -390,7 +404,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     placeLabels(now);
     drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(56-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${winding?'&ensp;<b>Winding</b>, maintaining power driving the train':''}`;
+    $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(56-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>, maintaining power driving the train':''}`;
     if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView('dial');},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}
     requestAnimationFrame(frame);
   }

@@ -85,7 +85,11 @@ function discClip(R,cuts,N=160){
     poly=out;}
   return poly;
 }
-function polyGeo(pts,th,holes=[],bev=0){const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
+/* a hole that crosses the outline or overlaps another hole silently breaks the triangulation: report it */
+function checkHoles(tag,holes,inside){holes.forEach(([x,z,r],i)=>{if(inside(x,z)<r+0.05)console.warn(tag+': hole at '+x.toFixed(2)+','+z.toFixed(2)+' r'+r+' crosses the outline');
+  holes.forEach(([x2,z2,r2],j)=>{if(j>i&&Math.hypot(x-x2,z-z2)<r+r2+0.05)console.warn(tag+': holes at '+x.toFixed(2)+','+z.toFixed(2)+' and '+x2.toFixed(2)+','+z2.toFixed(2)+' overlap');});});}
+function polyGeo(pts,th,holes=[],bev=0){checkHoles('polyGeo',holes,(x,z)=>{let d=1e9;for(let k=0;k<pts.length;k++){const[ax,az]=pts[k],[bx,bz]=pts[(k+1)%pts.length],l2=(bx-ax)**2+(bz-az)**2,t=l2?clamp(((x-ax)*(bx-ax)+(z-az)*(bz-az))/l2,0,1):0;d=Math.min(d,Math.hypot(x-ax-t*(bx-ax),z-az-t*(bz-az)));}return d-bev;});
+  const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
   for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
   const g=new THREE.ExtrudeGeometry(s,{depth:th-2*bev,bevelEnabled:bev>0,bevelThickness:bev,bevelSize:bev*0.8,bevelOffset:-bev*0.8,bevelSegments:1,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,bev,0);return g;}
 function stadium(p0,p1,w,th,holes=[]){const dx=p1[0]-p0[0],dz=p1[1]-p0[1],l=Math.hypot(dx,dz),nx=-dz/l*w/2,nz=dx/l*w/2,pts=[];
@@ -105,9 +109,9 @@ function buildMovement(M){
   const y0=-PP_T;
   /* ---------- pillar plate 87.57 x 3.86 mm, movement ring, lower train bridge ---------- */
   const pp=part('pillar',0);
-  /* sustaining pawl pivot: 21 mm from the fusee (so the pawl reaches the sustaining ratchet), at the one bearing that lets its arbor run up to the
-     train bridge (manual Sec. VIII, Op. 15 note) clear of the centre wheel */
-  const SPv=[L.Fu[0]+21*Math.cos(84*D2R),L.Fu[1]+21*Math.sin(84*D2R)];
+  /* sustaining pawl pivot: 21 mm from the fusee (so the pawl reaches the sustaining ratchet), where its arbor can run up to solid train bridge
+     (manual Sec. VIII, Op. 15 note) clear of the centre wheel, the chain and the opening round the balance */
+  const SPv=[L.Fu[0]+21*Math.cos(60*D2R),L.Fu[1]+21*Math.sin(60*D2R)];
   R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.T,0.8],[...L.F,1.2],[...L.Fu,1.4],[...L.Ud,0.57],[...L.Mw,0.72],[...L.Ba,1.9],[...L.E,1.3],[...SPv,0.72]]),M.plate,0,y0,0);
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
   const bushR=(p,x,z,y1,y2,ro,ri,mat)=>mesh(p,ringGeo(ro,ri,Math.abs(y2-y1)),mat||M.brass2,x,(y1+y2)/2,z);
@@ -122,12 +126,12 @@ function buildMovement(M){
   const pillar=(x,z,top)=>{const pr=[V2(0.01,y0),V2(3.4,y0),V2(3.4,y0-1.3),V2(2.9,y0-1.9),V2(2.7,(top+y0)*0.5),V2(2.3,top+2.4),V2(2.9,top+1.7),V2(2.9,top),V2(0.01,top)].reverse();
     mesh(pl,new THREE.LatheGeometry(pr,32),M.plateSolid,x,0,z);};
   PILLARS.train.forEach(([x,z])=>pillar(x,z,-26));pillar(...PILLARS.barrel,-29);
-  /* ---------- upper train bridge (y -29..-26) and barrel bridge (y -33..-29), split along z = -1.5 - 0.9x;
-               the barrel bridge rests on a 5 mm strip of the train bridge and is cut around the balance ---------- */
+  /* ---------- upper train bridge (y -29..-26) and barrel bridge (y -33..-29). The barrel bridge sits on the train bridge and is cut around the
+               balance; the train bridge's outline under it is not photographed, so it is drawn as a full disc ---------- */
   const tb=part('trainBridge',-62);
   const WSd=(()=>{const Fl=Math.hypot(...L.Fu);return[L.Fu[0]+7.2*L.Fu[0]/Fl,L.Fu[1]+7.2*L.Fu[1]/Fl];})();
-  const TBpoly=discClip(BR_R,[],240);
-  R.trainBridge=mesh(tb,polyGeo(TBpoly,3,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,11.5],[...L.Fu,1.3],[...L.Ba,1.7],[...WSd,1.0],[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,-29,0);
+  const TBpoly=discClip(BR_R,[],240);   /* opening round the balance staff and rollers, r 9.1: the centre and escape pivots (10.5 and 10.2 mm from the staff) stay in solid bridge */
+  R.trainBridge=mesh(tb,polyGeo(TBpoly,3,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,9.1],[...L.Fu,1.3],[...L.Ba,1.7],[...WSd,1.0],[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,-29,0);
   PILLARS.train.slice(0,2).forEach(([x,z])=>screw(tb,x,z,-29,2.9,1.6));screw(tb,-8.5,27.7,-29,2.9,1.6);
   /* centre and third upper bushings in the train bridge (42166, 42167); they lie in the opening round the balance, so they can be oiled with the barrel bridge on (Sec. VIII, Op. 46) */
   bushR(tb,...L.C,-29.1,-26,1.2,0.78);bushR(tb,...L.T,-29.1,-26,1.0,0.58);
@@ -157,13 +161,13 @@ function buildMovement(M){
   R.hour=new THREE.Group();R.hour.position.y=5.2;hd.add(R.hour);mesh(R.hour,handGeo(30,2.3,6,'spade'),M.blued);
   R.min=new THREE.Group();R.min.position.y=6.0;hd.add(R.min);mesh(R.min,handGeo(44,1.6,8,'plain'),M.blued);
   mesh(hd,cylY(2,1.2,24),M.blued,0,6.3,0);
-  R.sec=new THREE.Group();R.sec.position.set(L.F[0],5.0,L.F[1]);hd.add(R.sec);mesh(R.sec,handGeo(11.5,0.6,3.5,'plain'),M.blued);mesh(R.sec,cylY(0.9,0.8,16),M.blued,0,0.3,0);
-  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],5.0,L.Ud[1]);hd.add(R.ud);mesh(R.ud,handGeo(10.5,0.7,2.5,'plain'),M.blued);mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
+  R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2) */hd.add(R.sec);mesh(R.sec,handGeo(11.5,0.6,3.5,'plain'),M.blued);mesh(R.sec,cylY(0.9,0.8,16),M.blued,0,0.3,0);
+  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35,L.Ud[1]);hd.add(R.ud);mesh(R.ud,handGeo(10.5,0.7,2.5,'plain'),M.blued);mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
   const mw=part('motion',16);
   R.cannon=arbor(mw,M,...L.C,{pin:{n:12,m:0.4,y:1.2,th:2,bore:0.85}});mesh(R.cannon,ring(1.4,0.85,4.6),M.steel,0,2.6,0);
   R.minW=arbor(mw,M,...L.Mw,{wheel:{n:36,m:0.4,y:1.2,th:0.8,spokes:4},pin:{n:10,m:0.384,y:2.4,th:1.6},ar:[0,3.2],r:0.7});
   R.hourW=arbor(mw,M,...L.C,{wheel:{n:40,m:0.384,y:2.6,th:0.8,spokes:4,collet:0,bore:1.45}});mesh(R.hourW,ring(2.2,1.45,2.6),M.brass2,0,3.9,0);
-  R.udW=arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:4},ar:[y0,5]});
+  R.udW=arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:4},ar:[y0,4.6]});
   R.fp=arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:1.5,th:2,bore:0.56}});
   /* ---------- fusee wheel (96 : centre pinion 14, module 0.417) with its maintaining work ---------- */
   const gw=part('gw',-8);
@@ -173,16 +177,19 @@ function buildMovement(M){
   const sspg=new THREE.ExtrudeGeometry(ssp,{depth:1.2,bevelEnabled:false,curveSegments:48});sspg.rotateX(-Math.PI/2);R.sspring=mesh(R.gw,sspg,M.blued,0,-8.75,0);
   mesh(R.gw,cylY(0.4,1.5,10),M.steel,13.55*Math.cos(0.35),-8.1,-13.55*Math.sin(0.35));
   R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);gw.add(R.sr);
-  mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,bore:3}),M.steel,0,-9.45,0);
-  for(let k=0;k<2;k++){const a=k*Math.PI+0.4,pw=mesh(R.sr,pawlGeo(3.8,0.9,0.5,true),M.steel,11.2*Math.cos(a)-1.2*Math.sin(a),-10.05,-(11.2*Math.sin(a)+1.2*Math.cos(a)));pw.rotation.y=a+Math.PI/2+0.35;}
+  mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,flip:true,bore:3}),M.steel,0,-9.45,0);   /* steep faces lead against the running direction, so the sustaining pawl holds it */
+  /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4): pushed by its steep faces when running, slipping over them when winding */
+  for(let k=0;k<2;k++){const a=k*Math.PI+0.4,P=[12.3*Math.cos(a),12.3*Math.sin(a)],T=[8.95*Math.cos(a+0.3),8.95*Math.sin(a+0.3)],pw=mesh(R.sr,pawlGeo(Math.hypot(T[0]-P[0],T[1]-P[1])+0.2,0.9,0.5),M.steel,P[0],-10.05,P[1]);pw.rotation.y=Math.atan2(T[1]-P[1],-(T[0]-P[0]));}
   const sp=part('spawl',-9);cylBetween(sp,0.7,-27.5,y0+2,M.steel,...SPv);
-  R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(4.9,1.2,0.6),M.steel,0,0,0);
-  R.spawl.userData.base=Math.atan2(-(L.Fu[1]-SPv[1]),L.Fu[0]-SPv[0])-0.1;R.spawl.rotation.y=R.spawl.userData.base;
+  /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2), trailing the pivot so the teeth can only pass it one way */
+  const SPt=[L.Fu[0]+16.35*Math.cos(54*D2R),L.Fu[1]+16.35*Math.sin(54*D2R)];
+  R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2,0.6),M.steel,0,0,0);
+  R.spawl.userData.base=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0]));R.spawl.rotation.y=R.spawl.userData.base;
   /* ---------- going train (modules 0.29 / 0.30 / 0.31): centre 80/14, third 75/10, fourth 60/10, escape pinion 8 ---------- */
   const m=MOD.train;
   const cw=part('cw',-26);R.cw=arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-21.4,th:1.0,spokes:5},pin:{n:14,m:MOD.fusee,y:-6.5,th:2.6},ar:[-29.1,4.8],r:0.75});
   const tw=part('tw',-34);R.tw=arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-19.2,th:0.9,spokes:4},pin:{n:TRAIN.tp,m:MOD.centre,y:-21.4,th:2.0},ar:[-29.1,1.2]});
-  const fw=part('fw',-42);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-16.6,th:0.9,spokes:4},pin:{n:TRAIN.fp,m,y:-19.2,th:1.7},ar:[-22.6,5.0]});
+  const fw=part('fw',-42);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-16.6,th:0.9,spokes:4},pin:{n:TRAIN.fp,m,y:-19.2,th:1.7},ar:[-22.6,4.6]});
   const E=ESC,ew=part('escW',-52,true);
   R.esc=arbor(ew,M,E.EX*ES,0,{pin:{n:TRAIN.ep,m:MOD.fourth,y:-16.6,th:2.0},ar:[-29.4,y0+2]});
   R.esc.userData.wheel=escapeWheel(R.esc,M,ES,-25.1);
@@ -202,7 +209,7 @@ function buildMovement(M){
   /* ---------- balance (rim r 14.5, measured on the top-view photograph) and hairspring ---------- */
   const bl=part('bal',-80,true);
   R.staff=new THREE.Group();bl.add(R.staff);
-  cylBetween(R.staff,0.45,-43.2,-22.8,M.steel,0,0,12);
+  cylBetween(R.staff,0.45,-42.3,-22.8,M.steel,0,0,12);
   const rR=E.rRoll*ES,ir=new THREE.Shape();ir.absarc(0,0,rR,0.35,TAU-0.35,false);ir.lineTo(rR*0.55*Math.cos(-0.35),rR*0.55*Math.sin(-0.35));ir.absarc(0,0,rR*0.55,-0.35,0.35,false);
   const irg=new THREE.ExtrudeGeometry(ir,{depth:0.8,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.4,0);
   const irm=mesh(R.staff,irg,M.steel,0,-25.1,0);irm.rotation.y=-(E.aI)+Math.PI;
@@ -234,26 +241,29 @@ function buildMovement(M){
      in the photo), a straight edge to the endstone over the staff and a concave arc back to the rim. Outline shifted
      by the cock's parallax so the endstone sits over the balance staff. */
   const COCK_POLY=[[25.38, 31.05], [26.19, 30.36], [26.99, 29.66], [27.77, 28.93], [28.53, 28.18], [29.26, 27.42], [29.98, 26.63], [30.68, 25.82], [31.35, 25.0], [32.0, 24.16], [32.63, 23.3], [33.24, 22.43], [33.82, 21.54], [34.38, 20.63], [34.92, 19.71], [35.43, 18.78], [35.92, 17.83], [36.38, 16.87], [36.81, 15.9], [37.22, 14.92], [37.6, 13.93], [37.96, 12.92], [38.29, 11.91], [38.59, 10.89], [38.87, 9.86], [39.12, 8.83], [39.34, 7.79], [39.53, 6.74], [39.69, 5.69], [39.83, 4.63], [39.94, 3.58], [32.87, 3.03], [26.51, 2.76], [20.15, 2.49], [13.87, 2.62], [8.04, 2.86], [5.77, 3.99], [5.53, 5.72], [6.88, 7.11], [13.2, 9.07], [17.2, 11.96], [19.38, 16.1], [20.84, 20.82], [21.82, 25.22]];
-  R.cock=mesh(ck,polyGeo(COCK_POLY,3.2,[[...L.B,1.1]],0.3),M.plate,0,-45.1,0);mesh(ck,ring(1.1,0.47,3.2),M.gilt,L.B[0],-43.5,L.B[1]);   /* balance upper setting (42189) */
-  /* foot: the outer part of the crescent is a solid block down to the barrel bridge (Fig. 2) */
-  const FOOT=[];for(let k=0;k<=12;k++){const a=(5+15*k/12)*D2R;FOOT.push([39.8*Math.cos(a),39.8*Math.sin(a)]);}for(let k=12;k>=0;k--){const a=(5+15*k/12)*D2R;FOOT.push([30.5*Math.cos(a),30.5*Math.sin(a)]);}
-  R.cockFoot=mesh(ck,polyGeo(FOOT,8.9,[],0.2),M.plateSolid,0,-41.9,0);
-  /* one balance cock screw (parts list: 42192, one per movement), centred on the foot */
-  screw(ck,35.2*Math.cos(12.5*D2R),35.2*Math.sin(12.5*D2R),-45.1,2.8,1.5);
-  const Q=[35.2*Math.cos(12*D2R),35.2*Math.sin(12*D2R)];
+  R.cock=mesh(ck,polyGeo(COCK_POLY,3.2,[],0.3),M.plate,0,-45.1,0);   /* the staff's upper pivot runs in the setting pressed into the cock (not drawn: the staff is 0.7 mm from the cock's edge) */
+  /* foot: a solid block under the outer part of the crescent, standing on the upper train bridge beside the barrel bridge's straight edge
+     (the cock is mounted to the train bridge, manual Sec. II; its screw is where the top-view photograph shows it). Annular sector r 31-39.8,
+     up to 32 deg, kept 0.25 mm off the barrel bridge edge z = 14.5 - 0.1x */
+  const FOOT=[],edge=(r)=>{let lo=0,hi=32*D2R;for(let i=0;i<40;i++){const m=(lo+hi)/2;(r*Math.sin(m)-(14.75-0.1*r*Math.cos(m))>0)?hi=m:lo=m;}return hi;};
+  { const a0=edge(39.8),a1=edge(31),A=32*D2R;for(let k=0;k<=16;k++){const a=a0+(A-a0)*k/16;FOOT.push([39.8*Math.cos(a),39.8*Math.sin(a)]);}
+    for(let k=16;k>=0;k--){const a=a1+(A-a1)*k/16;FOOT.push([31*Math.cos(a),31*Math.sin(a)]);}}
+  R.cockFoot=mesh(ck,polyGeo(FOOT,12.9,[],0.2),M.plateSolid,0,-41.9,0);
+  /* one balance cock screw (parts list 42192), at its position on the top-view photograph (p3map scr_cockfoot) */
+  const Q=[33.11,12.32];screw(ck,...Q,-45.1,2.8,1.5);
   /* endstone plate over the staff: small steel plate with two screws and the cap jewel */
   const ep=new THREE.Group();ep.position.set(L.B[0],-45.1,L.B[1]);ep.rotation.y=Math.atan2(-(L.B[1]-Q[1]),L.B[0]-Q[0]);ck.add(ep);
   mesh(ep,new THREE.BoxGeometry(7.4,0.7,4.6),M.steel,1.2,-0.35,0);mesh(ep,cylY(1.0,0.3,16),M.ruby,0,-0.8,0);
   screw(ep,3.6,0,-0.7,0.7,0.4);screw(ep,-1.6,1.5,-0.7,0.7,0.4);
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, below the third wheel) ---------- */
   const fsP=part('fs',-16);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
-  const fs=makeFusee(M,{yS:-20.1,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:-17.9,bB:-7.4,d:fd});
+  const fs=makeFusee(M,{yS:-20.1,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:-17.9,bB:-7.4,d:fd,stopAng:Math.atan2(-fo[1],fo[0])-Math.atan2(-dz,dx)});   /* stop-bar faces the winding stop at full wind */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), measured on the top-view photograph:
      a bow-shaped cover straddling the arbor, ends ~13 mm out along 107 deg / 287 deg, the right end an arc about the arbor; the waist on the
      centre side just uncovers the ratchet teeth, and on the rim side a curved slot (r 7.1-7.95) shows the teeth and the click */
   const rt=part('ratchet',-76),P2=(r,a)=>[L.Ba[0]+r*Math.cos(a*D2R),L.Ba[1]+r*Math.sin(a*D2R)];
-  mesh(rt,gearGeo(52,0.289,1.0,{ratchet:true,bore:1.4}),M.steel,L.Ba[0],-33.85,L.Ba[1]);
+  mesh(rt,gearGeo(52,0.289,1.0,{ratchet:true,flip:true,bore:1.4}),M.steel,L.Ba[0],-33.85,L.Ba[1]);   /* steep faces meet the click against the mainspring's pull */
   cylBetween(rt,1.4,-35.5,-1,M.steel,L.Ba[0],L.Ba[1]);cylBetween(rt,2.3,-35.8,-34.35,M.steel,L.Ba[0],L.Ba[1],28);
   mesh(rt,new THREE.BoxGeometry(2.2,3.0,2.2),M.steel,L.Ba[0],-37.3,L.Ba[1]);
   { const Pv=P2(8.9,250.6),Tp=P2(7.5,220),clk=mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-33.85,Pv[1]);clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));}
@@ -343,7 +353,7 @@ function makeFusee(M,c){
   pr.push(V2(c.rmax+1.0,c.yB),V2(c.rmax+1.0,c.yB+0.5),V2(1.05,c.yB+0.5),V2(1.05,c.yS-0.2));
   mesh(fz,new THREE.LatheGeometry(pr,72),M.gilt);cylBetween(fz,1,-33,-PP_T-0.1,M.steel,0,0,12);cylBetween(fz,0.55,-PP_T-0.1,2.5,M.steel,0,0,12);   /* arbor, then its lower pivot through the plate bushing to the wind-indicator pinion */
   mesh(fz,gearGeo(40,0.47,0.5,{ratchet:true,bore:1}),M.steel,0,c.yB+0.85,0);
-  const stopBar=new THREE.Group();stopBar.position.y=c.yS-0.4;fz.add(stopBar);
+  const sbR=new THREE.Group();sbR.rotation.y=c.stopAng||0;fz.add(sbR);const stopBar=new THREE.Group();stopBar.position.y=c.yS-0.4;sbR.add(stopBar);
   mesh(stopBar,new THREE.BoxGeometry(3,0.4,1.4),M.steel,2.6,0,0);mesh(stopBar,new THREE.BoxGeometry(3,0.4,1.4),M.steel,-2.6,0,0);
   const bz=new THREE.Group();bz.position.x=bx;bz.userData.partName='barrel';g.add(bz);
   const bw=new THREE.Mesh(new THREE.CylinderGeometry(c.Rb,c.Rb,Math.abs(c.bT-c.bB),72,1,true),M.brassDS);bw.position.y=(c.bT+c.bB)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.noCap=true;

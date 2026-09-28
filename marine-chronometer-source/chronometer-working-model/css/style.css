@@ -51,7 +51,32 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .panel{padding:14px 16px 0}
 @media(min-width:960px){.panel{padding:0}}
 .card{background:var(--panel);border-radius:14px;padding:14px 16px;margin:0 0 12px}
-.grp{margin:0 0 14px}.grp:last-child{margin-bottom:0}
+.grp{margin:0;padding:12px 0}.grp:first-child{padding-top:2px}.grp:last-child{padding-bottom:0}
+.grp+.grp{border-top:1px solid var(--rule)}
+.seg.grid3{display:grid;grid-template-columns:repeat(3,1fr)}
+.grid3 button{padding:6px 4px}
+.ck.sw{margin-top:10px}
+.ck.sub{margin:6px 0 0 24px;font-size:14px}
+.spd,.pow{display:flex;align-items:center;gap:8px;margin-top:10px}
+.spd>span:first-child,.pow .sl span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}
+.spd input[type=range]{flex:1;accent-color:var(--blue);min-width:0}
+.spd input[type=number]{width:5.6em;font:500 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums}
+.spd>span:last-child{color:var(--muted);margin-left:-4px}
+.pow .sl{flex:1;min-width:0;gap:8px}.pow .sl input{min-width:0;width:0}.pow .sl output{min-width:3.4em;flex-shrink:0}.pow button{flex-shrink:0}
+details.more>summary{cursor:pointer;list-style:none;font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);display:flex;align-items:center;gap:6px;user-select:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin:0 3px 0 1px}
+details.more[open]>summary::before{transform:rotate(45deg)}
+details.more[open]>summary{margin-bottom:9px}
+.sub-h{font:500 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:10px 0 6px}.sub-h:first-of-type{margin-top:0}
+.about-btn{display:block;width:100%;margin:0 0 12px;border-style:dashed;border-width:1.2px;font-weight:500}
+dialog#about{max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;padding:22px 26px 18px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);font-size:14.5px;line-height:1.55}
+dialog#about::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
+dialog#about h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
+dialog#about h3{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
+dialog#about p{margin:0 0 .6em}dialog#about ul,dialog#about ol{margin:0;padding-left:1.25em}dialog#about li{margin:0 0 .45em}
+dialog#about .dx{position:absolute;right:12px;top:12px;margin:0}
+dialog#about .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}
 h2{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:0 0 7px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 button{font:600 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--blue);background:transparent;border:1.5px solid var(--blue);border-radius:999px;padding:6px 13px;cursor:pointer}
