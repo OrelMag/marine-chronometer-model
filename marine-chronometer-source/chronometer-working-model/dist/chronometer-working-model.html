@@ -44,6 +44,13 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .info p{margin:0;font-size:13.5px;color:var(--ink)}
 .info .spec{margin-top:6px;color:var(--muted);font-size:12.5px}
 .info .x{position:absolute;right:8px;top:8px;border:0;padding:2px 8px;font-size:18px;line-height:1;color:var(--muted)}
+.opm{position:absolute;z-index:3;width:240px;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.14);display:none}
+.opm.on{display:block}
+.opm h4{font:600 15px/1.2 Spectral,Georgia,serif;margin:0 0 6px}
+.opm .sl{font-size:13px}
+.opm .sl output{min-width:3em}
+.opm .seg{margin-top:8px;display:flex;gap:6px}
+.opm .seg button{padding:4px 10px;font-size:12.5px}
 .hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:12.5px;color:var(--muted);background:color-mix(in srgb,var(--card) 80%,transparent);padding:4px 10px;border-radius:999px;pointer-events:none;transition:opacity .6s}
 .loading{position:absolute;inset:0;display:grid;place-items:center;font:italic 18px Spectral,Georgia,serif;color:var(--muted);background:var(--bg);transition:opacity .8s}
 .panel{padding:14px 16px 0}
@@ -94,7 +101,8 @@ table.rt td.n{text-align:right}
     <canvas aria-label="3D working model of a marine chronometer"></canvas>
     <div class="labels"></div>
     <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div></div>
-    <div class="hint" id="hint">Tap a part to see what it does and its Hamilton part number</div>
+    <div class="hint" id="hint">Tap a part to see what it does and its Hamilton part number. Right-click a part to change its opacity</div>
+    <div class="opm" id="opm" role="dialog" aria-label="Part opacity"><h4></h4><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div>
     <div class="hud" id="hud"></div>
     <div class="tools"><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
     <div class="loading" id="loading">Assembling the movement…</div>
@@ -851,12 +859,12 @@ function drawEsc2D(ctx,w,h,p,dark){
     secLocal.set(new THREE.Vector3(...d.n).multiplyScalar(k),-secOff*k);setSection(true,secPlane);secOut.textContent=secOff.toFixed(1)+' mm';}
   document.querySelectorAll('#secs button').forEach(b=>b.addEventListener('click',()=>{secMode=b.dataset.v;
     document.querySelectorAll('#secs button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
-    if(secMode!=='off'){const d=SECDEF[secMode];secIn.min=d.min;secIn.max=d.max;secOff=d.def;secIn.value=d.def;}applySec();}));
+    if(secMode!=='off'){const d=SECDEF[secMode];secIn.min=d.min;secIn.max=d.max;secOff=d.def;secIn.value=d.def;}applySec();look();}));
   secIn.addEventListener('input',()=>{secOff=parseFloat(secIn.value);applySec();});
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,op:{},focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   let hrs=20,winding=false,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   const PLATES=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','cock','dial']),DRIVE_HIDE=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','dial','cock','post']);
@@ -869,17 +877,25 @@ function drawEsc2D(ctx,w,h,p,dark){
   function colourOf(m0,p){if(!p||!PCOL[p]||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+p;let c=COLM.get(k);
     if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(PCOL[p]);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.emissive)c.emissive.setRGB(0,0,0);
       patchSection(c,!!m0.userData.secCap);c.userData.side0=m0.userData.side0??m0.side;c.side=m0.side;c.clippingPlanes=[...(m0.clippingPlanes||[])];COLM.set(k,c);}return c;}
-  const base=m=>st.colr?colourOf(m.userData.mat0,m.userData.part):m.userData.mat0;
+  /* per-part opacity, set from the right-click menu */
+  const FADE=new Map();
+  function fadeOf(m0,p,op){const k=m0.uuid+p;let f=FADE.get(k);
+    if(!f){f=m0.clone();f.userData={};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
+    f.opacity=(m0.opacity??1)*op;return f;}
+  const base=m=>{const p=m.userData.part,m0=st.colr?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
+  const opHide=m=>st.op[m.userData.part]===0;
+  /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, or the barrel or spring picked */
+  const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus;return st.drive||secMode!=='off'||!!(foc&&(foc.has('mainspring')||foc.has('barrel')));};
   function look(){
     const foc=st.pick?new Set([st.pick]):st.focus;
     for(const m of MVM){const p=m.userData.part;let vis=true;
       if(st.drive&&(DRIVE_HIDE.has(p)||(!st.mwOn&&(p==='motion'||p==='hands'))))vis=false;
-      if(m.userData.onlyDrive&&!(st.drive||(foc&&foc.has(p))))vis=false;
+      if(m.userData.onlyDrive&&!msShown())vis=false;
       if(st.drive&&m.userData.driveHide)vis=false;
-      const gh=(st.see&&PLATES.has(p))||(st.drive&&m.userData.driveGhost)||(foc&&!foc.has(p));
+      const gh=(st.see&&PLATES.has(p))||(st.drive&&m.userData.driveGhost)||(foc&&!foc.has(p)&&!(p==='mainspring'&&foc.has('barrel')));
       if(m.userData.noShadow&&gh)vis=false;
-      m.visible=vis;m.material=gh?ghostOf(base(m)):base(m);m.castShadow=!gh&&!m.userData.noShadow;}
-    for(const m of BOXM){m.visible=!st.drive;const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):base(m);m.castShadow=!gh&&m.userData.mat0!==M.glass;}
+      m.visible=vis&&!opHide(m);m.material=gh?ghostOf(base(m)):base(m);m.castShadow=!gh&&!m.userData.noShadow;}
+    for(const m of BOXM){m.visible=!st.drive&&!opHide(m);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):base(m);m.castShadow=!gh&&m.userData.mat0!==M.glass;}
     sh.visible=!st.drive;
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
@@ -908,14 +924,14 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(!keepSee){st.see=!!vv.see;}look();
     document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* pointer: orbit, pinch, tap to pick */
-  const ptrs=new Map();let pinch=0,down=null;
-  cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0};});
+  const ptrs=new Map();let pinch=0,down=null,rMoved=0;
+  cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0,btn:e.button};});
   cv.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;
     if(down)down.moved+=Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y);
     if(ptrs.size===1&&down&&down.moved>4){camFree=true;C.yaw-=(e.clientX-p.x)*0.008;C.pitch=clamp(C.pitch+(e.clientY-p.y)*0.008,-1.3,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
     p.x=e.clientX;p.y=e.clientY;
     if(ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)C.dist=G.dist=clamp(C.dist*pinch/d,30,1500);pinch=d;if(down)down.moved=99;}});
-  const up=e=>{const wasTap=down&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size){stage.classList.remove('grab');}
+  const up=e=>{if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size){stage.classList.remove('grab');}
     if(wasTap&&e.type==='pointerup')pick(e);if(!ptrs.size)down=null;};
   cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
   cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
@@ -928,6 +944,20 @@ function drawEsc2D(ctx,w,h,p,dark){
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');$('#hint').style.opacity=0;}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
+  /* right-click a part: opacity menu. Prefers the nearest solid part, so faded parts in front can be looked through */
+  const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output');let opPart=null;
+  const opShow=()=>{const v=Math.round((st.op[opPart]??1)*100);opIn.value=v;opOut.textContent=v+'%';};
+  function closeOpm(){opm.classList.remove('on');opPart=null;}
+  cv.addEventListener('contextmenu',e=>{e.preventDefault();if((down?down.moved:rMoved)>6)return;const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
+    const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&INFO[h.object.userData.part]);
+    const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>st.op[h.object.userData.part]!=null);
+    if(!hit){closeOpm();return;}
+    opPart=hit.object.userData.part;opm.querySelector('h4').textContent=INFO[opPart][0];opShow();opm.classList.add('on');
+    const sr=stage.getBoundingClientRect();opm.style.left=clamp(e.clientX-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(e.clientY-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';});
+  opIn.addEventListener('input',()=>{if(!opPart)return;const v=opIn.valueAsNumber/100;if(v>=1)delete st.op[opPart];else st.op[opPart]=v;opOut.textContent=opIn.value+'%';look();});
+  opm.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.a==='all')st.op={};else if(opPart)delete st.op[opPart];opShow();look();}));
+  cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();});
 
   /* ---------- controls ---------- */
   const setSpeed=v=>{st.speed=v;document.querySelectorAll('#speeds button').forEach(x=>x.setAttribute('aria-pressed',parseFloat(x.dataset.v)===v?'true':'false'));};
@@ -1085,7 +1115,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     else{const p=(tVis*0.9)%1;s=ESC.state(p);s.p=p;s.lift=0;s.psDef=0;E=tSim*2;}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
     lastE=E;const n=hrs*FUSEE_PER_HOUR;
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive,msOn:st.drive||(st.focus&&st.focus.has('mainspring'))});
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive,msOn:msShown()});
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));
     const L1=smooth(cur.lift/0.55),L2=smooth((cur.lift-0.35)/0.65);mv.position.y=L1*130+L2*95;mv.rotation.x=Math.min(smooth(cur.flip),L2)*Math.PI;
