@@ -41,6 +41,7 @@ Python scripts (numpy, scipy, Playwright + Chromium with SwiftShader WebGL) that
 
 - `bundle.py`: two-camera fit / triangulation of balance, fusee and barrel axes.
 - `dyn.py` + `interference-check.js`: 0.4 mm voxel collision check across a full escapement cycle; only intended joints (the `IGN` set) may overlap.
+- `escapement.js` (Node.js, no browser): evaluates `ESC` from `movement.js` and reports lock, let-off, overall, drop, roller shake and horn clearance against the manual's figures (Sec. VIII, Ops. 84–88, 97). `node escapement.js rT=0.29` tries a constant without editing.
 - `social.py`: renders the 1200×630 link previews `site-assets/social.png` (dial) and `social-movement.png` (moving parts).
 - `p3fit.py`: renders from the top-view photo camera; output in `verification/topview-comparison.png`.
 - `audit.py` + `geometry-audit.js` (`audit.py box` for the box and gimbals): flags overlapping screws, screws with nothing under their seat, arbor/pin ends that sit in nothing, coplanar overlapping faces, and parts touching nothing. Screws are found through `userData.screw` (set by `screw()` in `movement.js`). Expected leftovers: the winding-stop pin and balance-screw free ends; most coplanar hits are faces in contact.

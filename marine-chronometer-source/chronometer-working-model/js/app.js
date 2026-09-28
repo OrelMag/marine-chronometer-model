@@ -26,7 +26,7 @@ const INFO={
   tw:['Third wheel','Drives the fourth wheel pinion.','No. 42071'],
   fw:['Fourth wheel','Its long arbor passes through the dial to carry the second hand. Jewelled at both ends; its upper setting is in the balance lower bridge.','No. 42073 · 1 turn a minute'],
   escW:['Escape wheel','Released one tooth per oscillation of the balance, so the second hand advances in half-second steps. Sixteen teeth (most chronometers use 13 or 15), 13.16 mm across and 1.3 mm thick.','No. 42076 · 16 teeth, 1 turn / 8 s'],
-  det:['Detent','Beryllium-copper spring detent: the thin detent spring at its foot (the point of flexure), a long blade carrying the locking jewel, and the abutment arm (horn). Clamped to the support block under the upper train bridge, it rests against the stop button; the gold trip (passing) spring, of Hamilton Elinvar, is held on it by an angle bracket.','Detent 42087, trip spring 42088, block 42086'],
+  det:['Detent','Beryllium-copper spring detent. Its foot is clamped to the support block under the upper train bridge, and the detent-adjusting screw sets it lengthwise. Ahead of the foot: the two-strip detent spring (the point of flexure), the blade, the locking jewel (round, with a flat set at about 10° of draw) and the abutment arm (horn). It rests against the stop button, set by the lock-adjusting screw. The trip (passing) spring, of Hamilton Elinvar, is held on it by an angle bracket and rests on the horn.','Detent 42087, trip spring 42088, block 42086'],
   bal:['Balance and hairspring assembly','Solid, uncut stainless-steel rim silver-soldered to an Invar arm, with tapped holes all round for balance screws, two timing weights and two vernier timing weights. Motion 1⅜ to 1½ turns. Impulse and unlocking rollers on the staff. Rim about 29 mm across, measured on a top-view photograph.','Wheel 42178 · staff 42186 · rollers 42263, 42252'],
   spr:['Hairspring','Cylindrical, of Hamilton Elinvar, pinned to its collet and stud without deformation, so its active length is the same winding and unwinding. There is no regulator: rate is set with the balance screws and weights.','No. 42188'],
   cock:['Balance cock','Carries the balance upper jewel, endstone and the hairspring stud. Its foot stands on the upper train bridge beside the barrel bridge, held by one screw.','No. 42066 · screw 42192'],
@@ -43,22 +43,23 @@ const INFO={
 function drawEsc2D(ctx,w,h,p,dark){
   const E=ESC,s=E.state(p),NT=E.NT,P=E.P,EX=E.EX,RT=1,RR=0.77;
   ctx.clearRect(0,0,w,h);
-  const x0=-2.5,x1=0.95,y0=-2.05,y1=1.15,sc=Math.min(w/(x1-x0),h/(y1-y0)),ox=(w-(x1-x0)*sc)/2-x0*sc,oy=(h-(y1-y0)*sc)/2+y1*sc,X=x=>ox+x*sc,Y=y=>oy-y*sc;
-  const ink=dark?'#e4e8eb':'#141a20',brass=dark?'#d8a94f':'#b58325',steel=dark?'#8e98a3':'#8a939c',ruby='#c3163b',gold='#d8a93a',paper=dark?'#1b2127':'#ffffff';
+  const x0=-2.5,x1=0.95,y0=-2.45,y1=1.15,sc=Math.min(w/(x1-x0),h/(y1-y0)),ox=(w-(x1-x0)*sc)/2-x0*sc,oy=(h-(y1-y0)*sc)/2+y1*sc,X=x=>ox+x*sc,Y=y=>oy-y*sc;
+  const ink=dark?'#e4e8eb':'#141a20',brass=dark?'#d8a94f':'#b58325',steel=dark?'#8e98a3':'#8a939c',copper=dark?'#d49a63':'#b87840',ruby='#c3163b',paper=dark?'#1b2127':'#ffffff';
   const prog=(s.prog%1),phi=-prog*P;
   ctx.beginPath();let f=true;
   for(let k=0;k<NT;k++){const a=E.t0+k*P+phi,pts=[[RR,a-0.005],[RT,a]];for(let j=1;j<=6;j++){const q=j/6;pts.push([RT-(RT-RR)*Math.pow(q,0.6),a+P*0.72*q]);}pts.push([RR,a+P*0.99]);
     for(const[r,aa]of pts){const px=X(EX+r*Math.cos(aa)),py=Y(r*Math.sin(aa));f?ctx.moveTo(px,py):ctx.lineTo(px,py);f=false;}}
   ctx.closePath();ctx.fillStyle=brass;ctx.fill();ctx.fillStyle=paper;ctx.beginPath();ctx.arc(X(EX),Y(0),0.6*sc,0,TAU);ctx.fill();
   ctx.strokeStyle=brass;ctx.lineWidth=0.08*sc;for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(EX),Y(0));ctx.lineTo(X(EX+0.62*Math.cos(a)),Y(0.62*Math.sin(a)));ctx.stroke();}
-  ctx.fillStyle=steel;ctx.globalAlpha=0.25;ctx.beginPath();ctx.arc(X(0),Y(0),E.rRoll*sc,0,TAU);ctx.fill();ctx.globalAlpha=1;
+  { const arc=(r,a0,a1,n)=>{for(let i=0;i<=n;i++){const q=a0+(a1-a0)*i/n;ctx.lineTo(X(r*Math.cos(q)),Y(r*Math.sin(q)));}},a=E.aI+s.th,rr=E.rRoll;   /* impulse roller with its crescent, as built */
+    ctx.fillStyle=steel;ctx.globalAlpha=0.25;ctx.beginPath();arc(rr,a+0.16,a-0.6+TAU,60);arc(rr*0.55,a-0.6,a,12);arc(rr*0.86,a,a+0.16,4);ctx.closePath();ctx.fill();ctx.globalAlpha=1; }
   const jewel=(ang,r0,r1,wd)=>{const c=Math.cos(ang),sn=Math.sin(ang),px=-sn*wd/2,py=c*wd/2;ctx.fillStyle=ruby;ctx.beginPath();ctx.moveTo(X(r0*c+px),Y(r0*sn+py));ctx.lineTo(X(r1*c+px),Y(r1*sn+py));ctx.lineTo(X(r1*c-px),Y(r1*sn-py));ctx.lineTo(X(r0*c-px),Y(r0*sn-py));ctx.closePath();ctx.fill();};
   jewel(E.aIc+s.th,E.rRoll-0.08,E.rp,E.wI);
   const del=-s.lift/E.LEN,cd=Math.cos(del),sd=Math.sin(del),Ft=E.Ft,R=p2=>({x:Ft.x+(p2.x-Ft.x)*cd-(p2.y-Ft.y)*sd,y:Ft.y+(p2.x-Ft.x)*sd+(p2.y-Ft.y)*cd});
-  const poly=(pts,col)=>{ctx.beginPath();pts.forEach((q,i)=>{const r=R(q);i?ctx.lineTo(X(r.x),Y(r.y)):ctx.moveTo(X(r.x),Y(r.y));});ctx.closePath();ctx.fillStyle=col;ctx.fill();};
-  const Pc=E.pieces;poly(Pc.spring,steel);poly(Pc.blade,steel);poly(Pc.arm,steel);poly(Pc.horn,steel);poly(Pc.bracket,steel);poly(Pc.stone,ruby);
+  const poly=(pts,col,fix)=>{ctx.beginPath();pts.forEach((q,i)=>{const r=fix?q:R(q);i?ctx.lineTo(X(r.x),Y(r.y)):ctx.moveTo(X(r.x),Y(r.y));});ctx.closePath();ctx.fillStyle=col;ctx.fill();};
+  ctx.globalAlpha=0.35;for(const k in E.fixed)poly(E.fixed[k],k==='foot'?copper:steel,true);ctx.globalAlpha=1;for(const k in E.pieces)poly(E.pieces[k],k==='stone'?ruby:copper);   /* support block and stop button fixed; the detent turns about its point of flexure */
   const[a0,am,tp]=E.springPts(s);
-  ctx.strokeStyle=gold;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(X(a0.x),Y(a0.y));ctx.quadraticCurveTo(X(am.x),Y(am.y),X(tp.x),Y(tp.y));ctx.stroke();
+  ctx.strokeStyle=steel;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(X(a0.x),Y(a0.y));ctx.quadraticCurveTo(X(am.x),Y(am.y),X(tp.x),Y(tp.y));ctx.stroke();
   ctx.fillStyle=steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();jewel(E.aD+s.th,E.rDR-0.05,E.rd,E.wD);
   ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(0),Y(0),3,0,TAU);ctx.fill();
   ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='left';
@@ -69,7 +70,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   else if(s.prog>0&&s.prog<1)t=s.prog<0.25?'Unlocked: the wheel drops forward':'Impulse: a tooth drives the balance';
   else t=s.lift>0.005?'Detent returns and locks the next tooth':'Wheel locked, balance swinging free';
   ctx.fillStyle=ink;ctx.font='600 12px "Instrument Sans",sans-serif';ctx.fillText(t,8,h-8);
-  ctx.textAlign='right';ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.fillText('balance '+(th/D2R).toFixed(0)+'°',w-8,14);
+  ctx.textAlign='right';ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.fillText('balance '+(Math.round(th/D2R)||0)+'°',w-8,14);
 }
 
 /* ================= app ================= */
@@ -263,7 +264,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   const ef=k=>P[k].userData.ef;
   addL('Balance','2 Hz, 1⅜–1½ turns motion','bal',pw(ef('bal'),0,-31.5,-(BAL_R+1.6)),'mv');addL('Hairspring','Elinvar, cylindrical','spr',pw(ef('spr'),5.5,-37.5,0),'mv');
   addL('Balance cock','','cock',pw(P.cock,(L.B[0]+COCK_FOOT[0])/2,-45,(L.B[1]+COCK_FOOT[1])/2),'mv');
-  addL('Escape wheel','16 teeth, 1 turn / 8 s','escW',pw(ef('escW'),ESC.EX*ES,-25.1,-7),'mv');addL('Detent','','det',pw(ef('det'),ESC.Ft.x*ES+5,-24,ESC.Ft.y*ES+5),'mv');
+  addL('Escape wheel','16 teeth, 1 turn / 8 s','escW',pw(ef('escW'),ESC.EX*ES,-25.1,-7),'mv');addL('Detent','','det',pw(ef('det'),ESC.D(1.1,-0.045).x*ES,-23.9,ESC.D(1.1,-0.045).y*ES),'mv');
   addL('Fusee','1 turn / 6.86 h','fusee',pw(P.fs,L.Fu[0]+7,-14,L.Fu[1]-3),'mv');addL('Mainspring barrel','','barrel',pw(P.fs,L.Ba[0]-9,-12,L.Ba[1]-6),'mv');addL('Fusee chain','','chain',pw(P.fs,(L.Fu[0]+L.Ba[0])/2-6,-13,(L.Fu[1]+L.Ba[1])/2-10),'mv');
   addL('Fusee wheel','96 teeth, 1 turn / 6.86 h','gw',pw(P.gw,L.Fu[0]+14,-6.5,L.Fu[1]-11),'mv');addL('Centre wheel','80 teeth, 1 turn / h','cw',pw(P.cw,-8,-21.4,-8),'mv');addL('Third wheel','75 teeth, 1 turn / 7½ min','tw',pw(P.tw,L.T[0]-9,-19.2,L.T[1]+5),'mv');
   addL('Fourth wheel','60 teeth, 1 turn / min','fw',pw(P.fw,L.F[0]-7,-16.6,L.F[1]+5),'mv');addL('Upper train bridge','','trainBridge',pw(P.trainBridge,-20,-29,24),'mv');addL('Barrel bridge','','barrelBridge',pw(P.barrelBridge,-16,-33,-18),'mv');
@@ -295,7 +296,7 @@ function drawEsc2D(ctx,w,h,p,dark){
       drive:true,v:{lift:1,flip:1,explode:0,yaw:0.53,pitch:0.55,dist:125,target:mvL(11.6,-13,-19.8)},speed:60,focus:['gw','spawl','fusee','sq','chain','cw'],inset:'wind'},
     {t:'The going train',x:'<p>The fusee wheel drives the centre wheel pinion; the centre wheel drives the third wheel pinion; the third drives the fourth wheel pinion; the fourth meshes with the escape pinion. The centre wheel turns once an hour; the fourth once a minute, carrying the second hand.</p><p>Every mesh here is in phase: a tooth of each driver sits in a gap of the pinion it drives.</p>',
       drive:true,v:{lift:1,flip:1,explode:0,yaw:0.25,pitch:1.0,dist:200,target:mvL(0,-18,8)},speed:1,focus:['gw','cw','tw','fw','escW','fusee'],inset:'train'},
-    {t:'The detent escapement',x:'<p>The escape wheel is held by the locking jewel on the detent. As the balance swings one way, the unlocking jewel meets the gold trip spring, which bends aside and lets it pass: nothing else moves. Swinging back, the unlocking jewel strikes the trip spring again; now the abutment arm holds it, so the trip spring and detent move aside together and release the wheel.</p><p>A tooth catches up with the impulse jewel and drives the balance; the detent springs back in time to lock the next tooth. One impulse per oscillation, so the hands advance in half-second steps.</p>',
+    {t:'The detent escapement',x:'<p>The escape wheel is held by the locking jewel on the detent. As the balance swings one way, the unlocking jewel meets the trip spring, which bends aside and lets it pass: nothing else moves. Swinging back, the unlocking jewel strikes the trip spring again; now the abutment arm holds it, so the trip spring and detent move aside together and release the wheel.</p><p>A tooth drops into the crescent of the impulse roller, catches up with the impulse jewel and drives the balance; the detent springs back in time to lock the next tooth. One impulse per oscillation, so the hands advance in half-second steps.</p>',
       drive:true,v:{lift:1,flip:1,explode:0,yaw:1.9,pitch:-0.75,dist:70,target:mvL(8.0,-25,12)},speed:0.05,focus:['escW','det','bal'],inset:'esc'},
     {t:'The balance and hairspring',x:'<p>The balance is a solid, uncut stainless-steel rim silver-soldered to an Invar arm. Invar barely expands, so the rim’s diameter at the arm ends stays fixed while the rest of the rim moves with temperature; screws placed nearer or farther from the arm set the compensation. Free of the centrifugal effects of a split rim, it can swing 1⅜ to 1½ turns.</p><p>The cylindrical hairspring is Hamilton Elinvar, with good thermo-elastic qualities and minimum isochronal error. There is no regulator: rate is set with balance screws, timing weights and vernier weights. The older split bimetallic balance is available under Balance.</p>',
       drive:true,v:{lift:1,flip:1,explode:0,yaw:2.27,pitch:0.35,dist:118,target:mvL(8.0,-34,6.8)},speed:0.05,focus:['bal','spr','cock'],inset:'bal'},

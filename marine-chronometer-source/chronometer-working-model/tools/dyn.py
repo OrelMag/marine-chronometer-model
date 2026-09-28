@@ -12,7 +12,7 @@ async def main():
         await pg.goto(PAGE); await pg.wait_for_timeout(5000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         chk=open(HERE/'interference-check.js').read(); seen=set()
-        for ph in [0.0,0.24,0.26,0.28,0.4,0.6,0.74,0.76,0.9]:
+        for ph in [0.0,0.232,0.235,0.238,0.242,0.246,0.25,0.255,0.26,0.264,0.28,0.4,0.6,0.74,0.758,0.764,0.77,0.9]:   # unlocking 0.232-0.244, impulse 0.237-0.263, passing 0.756-0.773
             await pg.evaluate(f"""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}
                const s=ESC.state({ph});mv.userData._u({{E:1000+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n:2.5,winding:false,springOn:true,msOn:false}});}})()""")
             r=json.loads(await pg.evaluate(chk))

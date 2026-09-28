@@ -28,6 +28,7 @@ copies and assembles the website (see the root README).
 | `build.py` | Inlines the CSS, JS, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
 | `tools/interference-check.js` | Voxel collision test used to find and remove overlapping parts |
 | `tools/audit.py`, `tools/geometry-audit*.js` | Geometry audit: overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
+| `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
 | `tools/social.py` | Renders the 1200 × 630 link-preview images into `site-assets/`: `social.png` (the dial in its box) and `social-movement.png` (the moving parts) |
 
 ## Controls
@@ -68,13 +69,17 @@ Everything is driven from one model clock `tSim`, in local seconds.
 - *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948. Used for:
   - the structure: pillar plate, barrel bridge, upper and lower train bridges, balance lower bridge, escape upper bridge. The lower train bridge is screwed to the dial side of the pillar plate (Figs. 29, 67, 110);
   - the maintaining work and the winding stop-bar;
-  - the detent, the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing and 2 vernier weights (parts list, p. 82). The impulse roller is 0.249 in (6.32 mm) across, as modelled;
+  - the detent escapement. Its layout comes from the plan view, Fig. 90: the detent lies at 68° to the line of centres, with 11.3 mm from the point of flexure to the locking jewel, and the trip spring is 7.9 mm long, 2.3 mm to the side, on the line through the balance staff;
+  - the detent's construction, from Figs. 14, 54–60 and 110 and the parts list. The detent is beryllium copper with a two-strip detent spring and a round locking jewel with a flat. The trip spring is Elinvar, on an angle bracket. The support block hangs from the upper train bridge and carries the stop button, lock-adjusting and detent-adjusting screws;
+  - the escapement's adjustment figures (Sec. VIII, Ops. 76–97): roller shake about 0.002 in (Op. 84), lock about 6° (Op. 85), let-off at least 6° (Op. 86), overall 26–30° (Op. 87), horn clearance about 0.010 in (Op. 88) and drop about 2° (Op. 97). The teeth drop into the large portion of the impulse roller's crescent and never enter the small portion (Ops. 76, 83). The wheel is centred on the impulse jewel (Op. 82);
+  - the impulse roller, 0.249 in (6.32 mm) across (parts list, p. 82). Variants of .250–.253 in exist to set roller shake;
+  - the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing and 2 vernier weights (parts list, p. 82);
   - the barrel cap with its five screws on the pillar-plate end (Figs. 26, 109), and the dust seal with three packing rings around the fusee arbor (Fig. 24);
   - the gimbal mounting (Figs. 1, 94, 106): a flat ring hung on two pivot screws through the box sides (washer inside, lock nut outside), the case hung in it on front and rear pivot screws into brackets on the case, support straps at 3 and 6, the gimbal latch at the front right and the key at the back right;
   - the dial markings, winding figures and part numbers. The UP–DOWN scale runs clockwise round the bottom of its sub-dial from UP (upper right) to DOWN (upper left), so winding turns the hand counterclockwise back to UP (Fig. 107, Sec. III).
 - New-old-stock Hamilton Model 21 pillar plate listing: 87.57 mm diameter, 3.86 mm thick.
-- chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement.
-- chronometerbook.com, post 30: escape wheel specification of 16 teeth, 13.14-13.18 mm diameter, 1.27-1.32 mm thick.
+- chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement, a redrawing of the manual's Fig. 90, and a photograph of a Model 21 detent.
+- chronometerbook.com, post 30: escape wheel specification of 16 teeth, 13.14-13.18 mm diameter, 1.27-1.32 mm thick and no wider than the impulse roller; the locking jewel set at 8-12° of draw.
 - The manual's Fig. 2 photograph (layout) and Fig. 107 (dial side, wind-indicator wheel).
 
 ## How the layout was measured
@@ -89,7 +94,10 @@ Everything is driven from one model clock `tSim`, in local seconds.
    - the engraving columns (`tools/engr.json`);
    - the damascene direction.
 4. **Dial orientation.** From Fig. 107: the wind-indicator wheel sits under the 12, driven from the fusee arbor.
-5. **Hidden wheels.** The third-wheel and escape-wheel positions and per-stage modules (0.29, 0.30, 0.31) are solved so every arbor clears every wheel, the barrel and the pillars. The escape wheel sits 10.2 mm from the balance, per the Rawlings plan.
+5. **Hidden wheels.** The third-wheel position and per-stage modules (0.29, 0.30, 0.31) are solved so every arbor clears every wheel, the barrel and the pillars.
+   - The escape wheel sits 9.40 mm from the balance. There the 0.249 in impulse roller clears the teeth either side of it by 0.002 in (roller shake, Op. 84), and the teeth dip into its crescent (Ops. 76, 83).
+   - An earlier scaling of Rawlings' drawing gave 10.2 mm. Readings of the drawing vary with the feature used for scale; the manual's specifications fix the distance.
+   - The escape arbor keeps its depth with the fourth wheel.
 6. **Collision check.** `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. Only intended joints remain.
 7. **Visual check.** `tools/p3fit.py` renders the model from the top-view photograph's camera. The result is `verification/topview-comparison.png`.
 
@@ -101,9 +109,28 @@ The tools need Playwright with Chromium. Open the page as `index.html?snap&qa`.
 - Dimensions and positions, estimated from the figures and a 4-inch dial.
 - The fusee profile and the wind indicator ratio.
 - The mainspring’s coils, which are drawn schematically.
-- The detent geometry, which follows a standard spring detent layout. Hamilton's stop button, two-part detent spring and lengthwise depth adjustment are not modelled. The detent's lift, the wheel's release and the passing spring's bending are solved in `ESC` from the discharge jewel's contact with the passing spring's tip (the spring projects past the horn, so the jewel never touches the horn). Against the manual's figures (Sec. VIII, Ops. 7, 85–87): the jewels on the two rollers are 78° apart (manual: about 90°, adjustable); the discharge jewel meets the spring at −22.4° of balance, releases the wheel at −13.7° (about 8.7° of lock; manual: about 6°) and leaves it at −8.2°; impulse ends at +20.7°, so the balance is in contact for about 43° (manual: overall 26–30°). Depth of lock 0.2 mm, detent lift at the horn 0.5 mm.
+- The detent's dimensions.
+  - Its plan follows Fig. 90 and its construction Figs. 14 and 110 and the chronometerbook photograph. Thicknesses and heights are estimated.
+  - The foot and support block are shorter than in Fig. 90, so they clear the model's train pillar.
+  - The detent's lift, the wheel's release and the trip spring's bending are solved in `ESC` from the discharge jewel's contact with the trip spring's tip. The spring projects past the horn, so the jewel never touches the horn.
+  - The wheel's advance is solved from its teeth's contact with the impulse jewel.
+- The escapement's settings. They were chosen to meet the manual's adjustment figures, measured with its own definitions (Sec. VIII):
+
+  | Setting | Model | Manual |
+  |---|---|---|
+  | Lock: detent leaves the stop button, until the tooth drops off | 6.1° | about 6° (Op. 85) |
+  | Let-off: tooth drops off, until the detent falls back | 11.9° | at least 6° (Op. 86) |
+  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 27.8° | 26–30° (Op. 87) |
+  | Drop | 2.1° | about 2° (Op. 97) |
+  | Roller shake | 0.055 mm | about 0.002 in (Op. 84) |
+  | Horn clearance | 0.25 mm | about 0.010 in (Op. 88) |
+  | Angle between the jewels | 86° | about 90° in Fig. 90 (adjustable) |
+  | Locking-jewel draw | 10° | 8–12° (chronometerbook post 30) |
+
+  - Depth of lock is 0.125 mm, and the trip spring's tip lifts 0.20 mm to release.
+  - The discharge jewel meets the trip spring at −27.4° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.8°, centred on the dead point.
 - The balance rim diameter (29 mm), measured on the top-view photograph.
-- The upper train bridge's outline under the barrel bridge (drawn as a full disc) and its opening round the balance staff (r 9.1 mm).
+- The upper train bridge's outline under the barrel bridge (drawn as a full disc) and its opening round the balance staff (r 8.0 mm).
 - The sustaining pawl's position: 21 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel.
 
 ## Modifying the model
@@ -226,8 +253,13 @@ top of `movement.js`, in a unit frame scaled to the escape wheel's radius.
 `ESC.state(p)` returns the balance angle, detent lift, passing-spring bend and
 escape-wheel progress for balance phase `p`. The 2-D walkthrough diagram
 (`drawEsc2D` in `app.js`) draws from the same data, so the two stay in step.
-Record what you change in the escapement entry under "Estimated, not from the
-manual".
+The detent's plan outlines are `ESC.pieces` (turning about the point of
+flexure) and `ESC.fixed`; their heights are set where the detent is built.
+After a change, run `node escapement.js` in `tools/`. It measures lock, let-off,
+overall, drop, roller shake and the horn clearance, and flags any outside the
+manual's figures. To try a setting before editing, pass it on the command line,
+for example `node escapement.js rT=0.29`. Record the results in the escapement
+entries under "Estimated, not from the manual".
 
 **Update the link-preview images** after visible changes: from `tools/`, run
 `python social.py` for both, or `python social.py dial` / `python social.py movement` for one, then rebuild

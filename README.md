@@ -147,6 +147,7 @@ Before committing a change to the model:
        python audit.py      # screws, pivots, loose parts in the movement
        python audit.py box  # the same for the box and gimbals
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png)
+       node escapement.js   # the escapement's lock, let-off, overall, drop and clearances (Node.js only)
 
    `dyn.py` should list only intended joints: pivots in their jewels, collets
    on arbors, hands on their staffs. The model README lists what the other

@@ -4,7 +4,7 @@ C=(0,0); Fu=(12.0,-17.8); Ba=(-20.1,4.9); B=(7.9,8.6); F=(0,23.9); U=(0,-23.9)
 P1=(-24.4,-25.7); P2=(-11.2,35.0)
 RB=13.5      # barrel radius
 RBAL=18.0    # balance rim radius (measured 0.46 R_top)
-EB=1.55*6.58 # escape-to-balance distance from Rawlings plan (x escape radius 6.58)
+EB=9.40      # escape-to-balance distance: the 0.249 in impulse roller clears the teeth either side of it by 0.002 in (roller shake, manual Op. 84)
 d=lambda a,b:math.hypot(a[0]-b[0],a[1]-b[1])
 def circ(p,q,r1,r2,side):
     D=d(p,q); 

@@ -14,11 +14,12 @@
    - Dial orientation: wind-indicator wheel under the 12 (manual Fig. 107, radius ~12 mm), driven by the
      fusee-arbor pinion; seconds (fourth wheel) at 6.
    - Escape wheel: 16 teeth, 13.16 mm, 1.3 mm thick (Hamilton spec quoted in chronometerbook.com post 30).
-   - Escapement proportions: plan view after Rawlings (chronometerbook.com post 4).
+   - Escapement: plan view of the manual's Fig. 90 (redrawn by Rawlings, chronometerbook.com post 4); escape wheel 9.40 mm from the balance,
+     where the 0.249 in impulse roller leaves 0.002 in roller shake (Op. 84) and the teeth dip into its crescent (Ops. 76, 83).
    - Third wheel, escape wheel position and the going-train modules (0.29 / 0.30 / 0.31): solved as a constraint problem
      so that every arbor clears every wheel and the barrel (solve.py).
    ===================================================================== */
-const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[8.0,16.97],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[-9.6,0]};
+const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[-9.6,0]};
 const PP_R=87.57/2,PP_T=3.86,BR_R=40.5;   /* bridge radius: the top-view photograph (the fusee wheel is hidden under it, as photographed) */          /* pillar plate; bridges */
 const PILLARS={barrel:[-15.3,-26.58],train:[[-16.63,22.48],[18.17,26.92],[32.11,-4.1]]};
 const COCK_FOOT=[28.3,6.4],BAL_R=14.5;
@@ -29,31 +30,35 @@ const MOD={fusee:0.4171,train:0.30,centre:0.29,fourth:0.31};
 /* going train (counts give the ratios; centre-escape counts are not published): */
 const TRAIN={cw:80,tp:10,tw:75,fp:10,fw:60,ep:8,ew:16};
 const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);return[dx/l,dz/l];})(),BETA=Math.atan2(-EU[1],EU[0]);
-/* Spring detent escapement in a unit 2D frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius.
-   The detent's lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with
-   the passing spring's tip (tables below), so the parts touch where they are drawn. */
+/* Spring detent escapement in a unit 2D frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius. Layout after the
+   manual's Fig. 90 plan view. The detent's lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge
+   jewel with the passing spring's tip, and the wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
 const ES=13.16/2,ESC=(()=>{
-  /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude ~255 deg each side */
-  const NT=16,P=TAU/NT,EX=-1.55,A=255*D2R,G=3.5,rp=0.6,rRoll=0.48,rd=0.305,rDR=0.22,wI=0.06,wD=0.048,rho=0.1/ES,dL=0.03,t0=P/2,lockA=t0-2*P,aI=178*D2R,aD=256*D2R;
-  /* rd: the discharge jewel reaches past the passing spring's tip (r 0.292) but stops short of the horn (r 0.343); dL: depth of lock on the stone */
-  /* locking tooth at -33.75 deg (Rawlings plan: ~38 deg), the waiting tooth just outside the impulse jewel's path */
+  /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude ~255 deg each side. EX: the centre distance in L (9.40 mm).
+     rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
+     rT: passing-spring tip; rd: discharge jewel reach; dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
+  const NT=16,P=TAU/NT,EX=-Math.hypot(L.B[0]-L.E[0],L.B[1]-L.E[1])/ES,A=255*D2R,G=3.5,rRoll=0.48,rp=0.48,rT=0.286,rd=0.305,rDR=0.22,wI=0.06,wD=0.048,rho=0.1/ES,dL=0.019,DRAW=10*D2R,t0=P/2,lockA=t0-2*P,aI=181.3*D2R,aD=267.5*D2R;
+  /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
-  /* detent after the Rawlings plan: long blade from the foot to the locking jewel, then an arm bent toward the rollers */
-  const dirB={x:0.46,y:0.887},Ft={x:S.x-1.4*dirB.x,y:S.y-1.4*dirB.y},hornAng=247*D2R,H={x:0.36*Math.cos(hornAng),y:0.36*Math.sin(hornAng)};
-  const LEN=Math.hypot(H.x-Ft.x,H.y-Ft.y),vx=(H.x-Ft.x)/LEN,vy=(H.y-Ft.y)/LEN,nH={x:vy,y:-vx};   /* nH: direction the horn moves when unlocking */
-  const nB={x:dirB.y,y:-dirB.x};                                                                /* nB: direction the locking jewel moves (away from the wheel); the passing spring bends along -nB */
-  /* passing spring: parallel to the blade, pointing at the balance staff; its tip projects past the horn toward the staff. Root held on an angle bracket from the blade */
-  const Pt={x:H.x+0.06*dirB.x-0.035*nH.x,y:H.y+0.06*dirB.y-0.035*nH.y},Ps0={x:H.x-0.9*dirB.x-0.035*nH.x,y:H.y-0.9*dirB.y-0.035*nH.y};
-  const bT=(Ps0.x-S.x)*dirB.x+(Ps0.y-S.y)*dirB.y,bN=(Ps0.x-S.x)*nB.x+(Ps0.y-S.y)*nB.y;
+  /* detent (Fig. 90): straight, 68 deg to the line of centres, the locking face 11.3 mm from the point of flexure Ft. The passing spring runs parallel to it
+     on the line through the balance staff, 7.9 mm long, its tip at rT; the horn meets it behind the tip, 0.25 mm outside the discharge jewel's path (Op. 88) */
+  const dirB={x:Math.cos(68*D2R),y:Math.sin(68*D2R)},nB={x:dirB.y,y:-dirB.x},BL=1.72,Ft={x:S.x-BL*dirB.x,y:S.y-BL*dirB.y};   /* nB: direction the locking jewel moves (away from the wheel); the passing spring bends along -nB */
+  const Pt={x:-rT*dirB.x,y:-rT*dirB.y},Ps0={x:Pt.x-1.2*dirB.x,y:Pt.y-1.2*dirB.y};
+  const LEN=Math.hypot(Pt.x-Ft.x,Pt.y-Ft.y),nH={x:(Pt.y-Ft.y)/LEN,y:-(Pt.x-Ft.x)/LEN};   /* nH: direction the spring tip moves as the detent unlocks; lift = that travel */
   const aIc=aI+Math.asin(wI/2/rp);   /* impulse jewel centre line: its driven face runs through the pallet tip at aI */
   const rot=(q,l)=>{const d=-l/LEN,c=Math.cos(d),s=Math.sin(d);return{x:Ft.x+(q.x-Ft.x)*c-(q.y-Ft.y)*s,y:Ft.y+(q.x-Ft.x)*s+(q.y-Ft.y)*c};};
-  const off=(p,a,b)=>({x:p.x+dirB.x*a+nB.x*b,y:p.y+dirB.y*a+nB.y*b});
-  /* lift at which the stone's inner edge clears the tooth tips' path (with 0.02 mm to spare) */
-  const clear=l=>Math.min(...[off(S,0,-dL),off(S,-0.055,-dL)].map(q=>{const r=rot(q,l);return Math.hypot(r.x-EX,r.y);}))>1+0.003;
+  const off=(p,a,b)=>({x:p.x+dirB.x*a+nB.x*b,y:p.y+dirB.y*a+nB.y*b}),D=(t,n)=>off(Ft,t,n);
+  /* locking jewel: round, 0.6 mm, with a large flat (Figs. 57-59) set at 10 deg of draw (8-12 deg, chronometerbook post 30), so the tooth's pressure
+     holds the detent against its stop button. The tooth tip rests on the flat at S, whose inner end is dL inside the tip circle */
+  const cD=Math.cos(DRAW),sD=Math.sin(DRAW),nF={x:dirB.x*cD+nB.x*sD,y:dirB.y*cD+nB.y*sD},fF={x:dirB.x*sD-nB.x*cD,y:dirB.y*sD-nB.y*cD};   /* nF: the flat's normal, fF: along it into the wheel */
+  const rJ=0.046,eJ=0.012,hJ=Math.sqrt(rJ*rJ-eJ*eJ),Jc=off(S,0,0),stone=[];Jc.x+=(dL-hJ)*fF.x-eJ*nF.x;Jc.y+=(dL-hJ)*fF.y-eJ*nF.y;
+  { const al=Math.atan2(eJ,hJ);for(let k=0;k<=14;k++){const a=al-(Math.PI+2*al)*k/14;stone.push({x:Jc.x+rJ*(Math.cos(a)*fF.x+Math.sin(a)*nF.x),y:Jc.y+rJ*(Math.cos(a)*fF.y+Math.sin(a)*nF.y)});} }
+  /* lift at which the whole stone clears the tooth tips' path (with 0.02 mm to spare) */
+  const clear=l=>Math.min(...stone.map(q=>{const r=rot(q,l);return Math.hypot(r.x-EX,r.y);}))>1+0.003;
   let lo=0,hi=0.3;for(let i=0;i<40;i++){const m=(lo+hi)/2;clear(m)?hi=m:lo=m;}const lRel=hi;
   /* contact tables over the balance angle. Active swing (th rising): the jewel's leading face pushes the spring tip, and with it the horn,
-     along nH until the tip slides off the jewel's end; the detent then springs back to its banking. Return swing (th falling): the jewel
-     bends the spring tip along -nB, the detent staying on its banking, until the tip slides off. */
+     along nH until the tip slides off the jewel's end; the detent then springs back to its stop. Return swing (th falling): the jewel
+     bends the spring tip along -nB, the detent staying on its stop, until the tip slides off. */
   const TH0=-70*D2R,DT=0.02*D2R,NTB=5001,RET=1.5*D2R,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho;
   const push=(th,dir,sg)=>{const ps=aD+th,u={x:Math.cos(ps),y:Math.sin(ps)},m={x:-u.y,y:u.x},pm=Pt.x*m.x+Pt.y*m.y,dm=dir.x*m.x+dir.y*m.y;
     if(Pt.x*u.x+Pt.y*u.y<0)return 0;const d=sg>0?(wD/2+rho-pm)/dm:(pm+wD/2+rho)/dm;if(d<=0)return 0;
@@ -64,28 +69,34 @@ const ES=13.16/2,ESC=(()=>{
     sl=-1;lm=0;for(let i=NTB-1;i>=0;i--){const th=TH0+i*DT;if(sl<0){const d=push(th,nB,-1);if(d<0){sl=lm;thS=th;}else{PS[i]=d;lm=d;continue;}}PS[i]=hold(th,nB,-1,sl*Math.max(0,1-(thS-th)/RET),sl);} }
   const tab=(T,th)=>{const f=(th-TH0)/DT,i=Math.floor(f);return i<0||i>=NTB-1?0:T[i]+(T[i+1]-T[i])*(f-i);};
   let thRel=0;for(let i=0;i<NTB;i++)if(LI[i]>=lRel){thRel=TH0+i*DT;break;}
+  /* wheel angle (tooth tip, from the line of centres) at which a tooth meets the impulse jewel at balance angle th: its locking face on the jewel's
+     tip, or its tip on the jewel's driven face, whichever holds it back more; -1e9 while the jewel is outside the teeth's path */
+  const bite=th=>{const c=aIc+th,u={x:Math.cos(c),y:Math.sin(c)},h=wI/2,sT=Math.sqrt(rp*rp-h*h),ox=h*u.y,oy=-h*u.x;let a=-1e9;   /* driven face: s*u+(ox,oy) */
+    const qx=sT*u.x+ox,qy=sT*u.y+oy;if(qx<0&&Math.hypot(qx-EX,qy)<1)a=Math.atan2(qy,qx-EX);
+    const cx=ox-EX,b=u.x*cx+u.y*oy,dc=b*b-(cx*cx+oy*oy-1);if(dc>0){const s=-b-Math.sqrt(dc);if(s>0&&s<=sT){const px=s*u.x+ox;if(px<0)a=Math.max(a,Math.atan2(s*u.y+oy,px-EX));}}
+    return a;};
   function state(p){
     const th=-A*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0;
     const lift=ccw?tab(LI,th):0,psDef=ccw?0:tab(PS,th);let prog;
-    if(ccw&&th>thRel){const psi=aI+th,yp=rp*Math.sin(psi),xp=rp*Math.cos(psi),cx=EX+Math.sqrt(Math.max(0,1-yp*yp));
-      const inL=xp<cx&&Math.cos(psi)<0,pf=-(th-thRel)*G,pc=inL?Math.asin(clamp(yp,-1,1))-t0:-1e9,phi=Math.max(pf,pc);prog=phi<=-P?1:-phi/P;}
+    if(ccw&&th>thRel){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);prog=phi<=-P?1:-phi/P;}
     else prog=ccw?0:1;
     return{th,lift,psDef,prog};
   }
   /* passing spring as root, control point and tip (unit frame) for a state: rides with the detent, tip bent along -nB on the return swing */
   function springPts(s){const a0=rot(Ps0,s.lift),am=rot({x:(Ps0.x+Pt.x)/2,y:(Ps0.y+Pt.y)/2},s.lift),tp=rot(Pt,s.lift);tp.x-=nB.x*s.psDef;tp.y-=nB.y*s.psDef;return[a0,am,tp];}
-  /* detent outline pieces (unrotated, 2D unit frame); rotate about Ft by -lift/LEN when drawing */
-  const K=off(S,0.03,0.02),ax=(H.x-K.x),ay=(H.y-K.y),al=Math.hypot(ax,ay),an={x:-ay/al,y:ax/al};
-  const armP=(p,w)=>[{x:K.x+an.x*w,y:K.y+an.y*w},{x:H.x+an.x*w*0.7,y:H.y+an.y*w*0.7},{x:H.x-an.x*w*0.7,y:H.y-an.y*w*0.7},{x:K.x-an.x*w,y:K.y-an.y*w}];
+  /* plan outlines in detent coordinates (t along the detent from Ft, n toward nB), after Fig. 90 and the detent photograph in chronometerbook post 4.
+     Moving (rotate about Ft by -lift/LEN): two-strip detent spring, cross-piece, blade, jewel block, arm, horn, Z bracket. Fixed: foot, support block (shortened to clear the train pillar behind it) and stop button */
+  const rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],tR=(Ps0.x-Ft.x)*dirB.x+(Ps0.y-Ft.y)*dirB.y,nR=(Ps0.x-Ft.x)*nB.x+(Ps0.y-Ft.y)*nB.y;
+  const tH=tR+1.2-(rd+0.038-rT);   /* horn's inner face: 0.25 mm outside the discharge jewel's reach */
+  const thick=(pts,w)=>{const L2=[],R2=[];pts.forEach((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy);L2.push({x:p.x-dy/l*w,y:p.y+dx/l*w});R2.push({x:p.x+dy/l*w,y:p.y-dx/l*w});});return L2.concat(R2.reverse());};
   const pieces={
-    spring:[off(Ft,0,0.012),off(Ft,0.3,0.012),off(Ft,0.3,-0.012),off(Ft,0,-0.012)],
-    blade:[off(Ft,0.28,0.04),off(S,0.04,0.04),off(S,0.04,-0.04),off(Ft,0.28,-0.04)],
-    arm:armP(null,0.03),
-    horn:[{x:H.x-nH.x*0.01+an.x*0.02,y:H.y-nH.y*0.01+an.y*0.02},{x:H.x+nH.x*0.05+an.x*0.02,y:H.y+nH.y*0.05+an.y*0.02},{x:H.x+nH.x*0.05-an.x*0.02,y:H.y+nH.y*0.05-an.y*0.02},{x:H.x-nH.x*0.01-an.x*0.02,y:H.y-nH.y*0.01-an.y*0.02}],
-    bracket:[off(S,bT-0.035,0.03),off(S,bT+0.035,0.03),off(S,bT+0.035,bN+0.03),off(S,bT-0.035,bN+0.03)],
-    stone:[off(S,0,0.03),off(S,-0.055,0.03),off(S,-0.055,-dL),off(S,0,-dL)]   /* the tooth tip rests on its face, dL below the tip */
+    spring:rect(0,0.58,-0.058,-0.046),cross:rect(0.58,0.68,-0.075,0.083),blade:rect(0.66,BL-0.07,-0.06,-0.03),block:rect(BL-0.08,BL+0.08,-0.08,0.08),
+    arm:thick([D(BL+0.06,0),D(BL+0.2,0),D(tH-0.03,nR+rho+0.03)],0.025),horn:rect(tH-0.07,tH,nR+rho,nR+rho+0.05),
+    bracket:[D(0.62,0.083),D(0.72,0.083),D(0.72,nR+0.015),D(tR+0.06,nR+0.015),D(tR+0.06,nR+0.05),D(0.62,nR+0.05)],
+    stone
   };
-  return{NT,P,EX,A,rp,rRoll,rd,rDR,wI,wD,t0,aI,aIc,aD,S,Ft,H,Pt,Ps0,LEN,nH,nB,dirB,pieces,state,springPts,lRel,thRel,LI,PS,TH0,DT};
+  const fixed={foot:rect(-1.45,0,-0.083,0.083),blockMain:rect(-1.5,0.9,-0.5,-0.083),blockFront:rect(0.9,BL-0.1,-0.3,-0.083),button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
+  return{NT,P,EX,A,rp,rRoll,rd,rT,rDR,wI,wD,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,LI,PS,TH0,DT,bite};
 })();
 
 /* polygon minus a circle that crosses its boundary: keep the part outside the circle, close it with the arc that runs through the polygon */
@@ -185,8 +196,8 @@ function buildMovement(M){
                balance; the train bridge's outline under it is not photographed, so it is drawn as a full disc ---------- */
   const tb=part('trainBridge',-62);
   const WSd=(()=>{const Fl=Math.hypot(...L.Fu);return[L.Fu[0]+7.2*L.Fu[0]/Fl,L.Fu[1]+7.2*L.Fu[1]/Fl];})();
-  const TBpoly=discClip(BR_R,[],240);   /* opening round the balance staff and rollers, r 9.1: the centre and escape pivots (10.5 and 10.2 mm from the staff) stay in solid bridge */
-  R.trainBridge=mesh(tb,polyGeo(TBpoly,3,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,9.1],[...L.Fu,1.3],[...L.Ba,1.7],[...WSd,1.0],[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,-29,0);
+  const TBpoly=discClip(BR_R,[],240);   /* opening round the balance staff and rollers, r 8.0: the escape and centre pivots (9.4 and 10.5 mm from the staff) stay in solid bridge */
+  R.trainBridge=mesh(tb,polyGeo(TBpoly,3,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,8.0],[...L.Fu,1.3],[...L.Ba,1.7],[...WSd,1.0],[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,-29,0);
   PILLARS.train.slice(0,2).forEach(([x,z])=>screw(tb,x,z,-29,2.9,1.6));screw(tb,-8.5,27.7,-29,2.9,1.6);
   /* centre and third upper bushings in the train bridge (42166, 42167); they lie in the opening round the balance, so they can be oiled with the barrel bridge on (Sec. VIII, Op. 46) */
   bushR(tb,...L.C,-29.1,-26,1.2,0.78);bushR(tb,...L.T,-29.1,-26,1.0,0.58);
@@ -257,25 +268,40 @@ function buildMovement(M){
   const lb=part('lowerBridge',-46);R.lowerBridge=mesh(lb,stadium(L.B,L.F,4.6,1.1,[[...L.B,0.5],[...L.F,0.5]]),M.plate,0,-23.3,0);
   const lbd=[L.F[0]-L.B[0],L.F[1]-L.B[1]],lbl=Math.hypot(...lbd),LBm=[L.B[0]+lbd[0]*0.85,L.B[1]+lbd[1]*0.85];
   cylBetween(lb,1.3,-26,-23.3,M.plate,...LBm);
-  /* ---------- detent after the Rawlings plan: support block, detent spring, blade, bent arm, horn, locking jewel, passing spring ---------- */
+  /* ---------- detent (manual Figs. 14, 90, 110; detent photograph in chronometerbook post 4). Beryllium-copper detent (parts list 42087): foot clamped to the
+       support block, two-strip detent spring, cross-piece carrying the Z bracket of the Elinvar trip (passing) spring, blade, jewel block with the locking jewel,
+       and the arm whose horn the trip spring rests on. It lies between the escape wheel and the balance lower bridge (Op. 82); the arm crosses over the trip spring
+       and the horn drops to it (Fig. 14). Support block hung from the upper train bridge by one screw, with the stop button beside the jewel (Figs. 14, 90) ---------- */
   const dt=part('det',-48,true);
-  R.det=new THREE.Group();R.det.position.set(E.Ft.x*ES,-23.9,E.Ft.y*ES);dt.add(R.det);
-  const poly=(pts,depth,mat,y)=>{const s=new THREE.Shape();pts.forEach((p,i)=>{const x=(p.x-E.Ft.x)*ES,z=(p.y-E.Ft.y)*ES;i?s.lineTo(x,z):s.moveTo(x,z);});s.closePath();
-    const g=new THREE.ExtrudeGeometry(s,{depth,bevelEnabled:false});g.rotateX(Math.PI/2);g.translate(0,depth/2+(y||0),0);return mesh(R.det,g,mat);};
-  const Pc=E.pieces;poly(Pc.spring,0.35,M.steel);poly(Pc.blade,0.9,M.steel);poly(Pc.arm,0.8,M.steel);poly(Pc.horn,0.9,M.steel);poly(Pc.bracket,0.5,M.steel);poly(Pc.stone,1.6,M.ruby,-0.8);
-  const blk=new THREE.Group();blk.position.set(E.Ft.x*ES,-24.7,E.Ft.y*ES);blk.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(blk);
-  mesh(blk,new THREE.BoxGeometry(6,2.5,2.6),M.plateSolid,-2.4,0,0);screw(blk,-1.2,0,-1.25+1.1,0.9,0.5);
-  R.pspring=mesh(dt,new THREE.BufferGeometry(),M.gilt);
+  R.det=new THREE.Group();R.det.position.set(E.Ft.x*ES,0,E.Ft.y*ES);dt.add(R.det);const fx=new THREE.Group();fx.position.copy(R.det.position);dt.add(fx);   /* moving about the point of flexure; fixed */
+  const poly=(g,pts,ya,yb,mat)=>{const s=new THREE.Shape();pts.forEach((p,i)=>{const x=(p.x-E.Ft.x)*ES,z=(p.y-E.Ft.y)*ES;i?s.lineTo(x,z):s.moveTo(x,z);});s.closePath();
+    const ge=new THREE.ExtrudeGeometry(s,{depth:yb-ya,bevelEnabled:false,curveSegments:12});ge.rotateX(Math.PI/2);ge.translate(0,yb,0);return mesh(g,ge,mat);};
+  const Pc=E.pieces,Fx=E.fixed,Cu=M.copper;
+  poly(fx,Fx.foot,-25.4,-23.5,Cu);poly(R.det,Pc.spring,-25.4,-24.9,Cu);poly(R.det,Pc.spring,-24.0,-23.55,Cu);poly(R.det,Pc.cross,-25.4,-23.5,Cu);   /* bottoms staggered so no two faces are coplanar */
+  poly(R.det,Pc.blade,-24.35,-23.55,Cu);poly(R.det,Pc.block,-24.4,-23.5,Cu);poly(R.det,Pc.arm,-24.3,-24.0,Cu);poly(R.det,Pc.horn,-24.0,-23.55,Cu);poly(R.det,Pc.bracket,-24.0,-23.6,Cu);
+  poly(R.det,Pc.stone,-25.95,-23.47,M.ruby);
+  poly(fx,Fx.blockMain,-26,-23.6,M.plateSolid);poly(fx,Fx.blockFront,-24.4,-23.6,M.plateSolid);poly(fx,Fx.button,-24.3,-23.65,M.steel);
+  /* screws in detent coordinates (t along the detent, n across it): block screw from the train bridge's top; clamp screw and two steady pins across the foot;
+     detent-adjusting screw at the block's end; lock-adjusting screw and its clamp screw across the block's front, under the wheel; trip-spring screw on the bracket */
+  const dd=new THREE.Group();dd.position.copy(R.det.position);dd.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(dd);const T=(t,n)=>[t*ES,-n*ES];
+  screw(dd,...T(-1.2,-0.35),-29,0.9,0.5);   /* where the train bridge is uncovered by the barrel bridge: fitted with the movement assembled (Op. 81) */
+  const across=(g,t,n0,n1,r,y,mat)=>{const q=mesh(g,cylY(r,(n1-n0)*ES,16),mat,t*ES,y,-(n0+n1)/2*ES);q.rotation.x=Math.PI/2;return q;};
+  across(dd,-0.75,0.083,0.083+1.4/ES,0.95,-24.45,M.steel);across(dd,-0.75,0.083,0.083+0.25/ES,1.25,-24.45,M.steel);for(const t of[-1.2,-0.3])across(dd,t,-0.2,0.12,0.22,-24.45,M.steel);
+  { const q=mesh(dd,cylY(0.8,0.5,16),M.steel,-1.5*ES-0.25,-24.75,0.3*ES);q.rotation.z=Math.PI/2; }
+  for(const t of[E.BL-0.15,1.2])across(dd,t,-0.3-0.3/ES,-0.3,0.42,-23.95,M.steel);
+  { const rp=E.D(E.tR+0.01,E.nR+0.033);screw(R.det,(rp.x-E.Ft.x)*ES,(rp.y-E.Ft.y)*ES,-24.0,0.3,0.25); }
+  R.pspring=mesh(dt,new THREE.BufferGeometry(),M.steel);
   /* ---------- balance (rim r 14.5, measured on the top-view photograph) and hairspring ---------- */
   const bl=part('bal',-80,true);
   R.staff=new THREE.Group();bl.add(R.staff);
   cylBetween(R.staff,0.45,-42.3,-22.8,M.steel,0,0,12);
-  /* impulse roller with its hollow in front of the impulse jewel (shape angle = minus the unit-frame angle) */
-  const rR=E.rRoll*ES,ir=new THREE.Shape(),n0=-E.aI,n1=n0+0.6;ir.absarc(0,0,rR,n1,n0+TAU,false);ir.lineTo(rR*0.55*Math.cos(n0),rR*0.55*Math.sin(n0));ir.absarc(0,0,rR*0.55,n0,n1,false);
-  const irg=new THREE.ExtrudeGeometry(ir,{depth:0.8,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.4,0);
-  const irm=mesh(R.staff,irg,M.steel,0,-25.1,0);irm.rotation.y=0;
+  /* impulse roller (O.D. 0.249 in, as thick as the escape wheel, post 30) with its crescent: the large portion behind the impulse jewel, where each tooth
+     drops in and meets the jewel, and the small portion ahead of it, which the teeth never enter (Ops. 76, 83). Shape angle = minus the unit-frame angle */
+  const rR=E.rRoll*ES,ir=new THREE.Shape(),n0=-E.aI,n1=n0+0.6;ir.absarc(0,0,rR,n1,n0-0.16+TAU,false);ir.absarc(0,0,rR*0.86,n0-0.16,n0,false);ir.absarc(0,0,rR*0.55,n0,n1,false);
+  const irg=new THREE.ExtrudeGeometry(ir,{depth:1.3,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.65,0);
+  mesh(R.staff,irg,M.steel,0,-25.17,0);
   const pal=(ang,r0,r1,w,y,h)=>{const q=mesh(R.staff,new THREE.BoxGeometry(r1-r0,h,w),M.ruby,(r0+r1)/2*Math.cos(ang),y,(r0+r1)/2*Math.sin(ang));q.rotation.y=-ang;};
-  pal(E.aIc,rR-0.9,E.rp*ES,E.wI*ES,-25.1,0.9);
+  pal(E.aIc,rR-0.9,E.rp*ES,E.wI*ES,-25.19,1.56);   /* the wheel centred on the impulse jewel, jewel showing above and below it (Op. 82) */
   mesh(R.staff,cylY(E.rDR*ES,0.6,32),M.steel,0,-23.9,0);pal(E.aD,E.rDR*ES-0.4,E.rd*ES,E.wD*ES,-23.9,0.7);
   mesh(R.staff,new THREE.CylinderGeometry(1.4,1.4,0.9,6),M.brass2,0,-33.2,0);
   const BR=BAL_R,BY=-31.5;R.balU=new THREE.Group();R.balU.position.y=BY;R.staff.add(R.balU);
@@ -408,7 +434,7 @@ function buildMovement(M){
     if(s.msOn){const In=fs.I(s.n);fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(1-In/fs.IN,2.6,13.1,-8.2,-17.1,6+fs.IN-In);}
     if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,7.5,14,s.th,0.17);}
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing */
-    const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,-24.0,p.y*ES);
+    const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,-23.8,p.y*ES);
     R.pspring.geometry.dispose();R.pspring.geometry=new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(V(a0),V(am),V(tp2)),20,0.1,5,false);
   };
   mv.userData.explode(0);
