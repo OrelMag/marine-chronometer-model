@@ -418,7 +418,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     else{const p=(tVis*0.9)%1;s=ESC.state(p);s.p=p;s.lift=0;s.psDef=0;E=tSim*2;}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
     lastE=E;const n=hrs*FUSEE_PER_HOUR;
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive,msOn:msShown()});
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||Object.keys(st.op).length>0,msOn:msShown()});
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));
     const L1=smooth(cur.lift/0.55),L2=smooth((cur.lift-0.35)/0.65);mv.position.y=L1*130+L2*95;mv.rotation.x=Math.min(smooth(cur.flip),L2)*Math.PI;
