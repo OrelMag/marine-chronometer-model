@@ -298,7 +298,7 @@ function decalGeo(poly){const s=new THREE.Shape();poly.forEach(([x,z],i)=>i?s.li
   p.needsUpdate=uv.needsUpdate=n.needsUpdate=true;return g;}
 /* escape wheel after the manual's Fig. 14: thin four-spoke rim carrying tall crown teeth */
 function escapeWheel(parent,M,rt,y){
-  const teeth=new THREE.Mesh(gearGeo(15,1,1.3,{escape:true,flip:true,rt,depth:rt*0.23,bore:rt*0.7}),M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
+  const teeth=new THREE.Mesh(gearGeo(16,1,1.3,{escape:true,flip:true,rt,depth:rt*0.23,bore:rt*0.7}),M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
   const web=new THREE.Shape();web.absarc(0,0,rt*0.72,0,TAU,false);for(let j=0;j<4;j++){const a0=j/4*TAU+0.12,a1=(j+1)/4*TAU-0.12,h=new THREE.Path();h.absarc(0,0,rt*0.62,a0,a1,false);h.absarc(0,0,1.3,a1,a0,true);web.holes.push(h);}
   const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);
   const wg=new THREE.ExtrudeGeometry(web,{depth:0.5,bevelEnabled:false,curveSegments:24});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
@@ -457,28 +457,52 @@ const MOD={fusee:0.4171,train:0.30,centre:0.29,fourth:0.31};
 /* going train (counts give the ratios; centre-escape counts are not published): */
 const TRAIN={cw:80,tp:10,tw:75,fp:10,fw:60,ep:8,ew:16};
 const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);return[dx/l,dz/l];})(),BETA=Math.atan2(-EU[1],EU[0]);
-/* Spring detent escapement in a unit 2D frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius. */
+/* Spring detent escapement in a unit 2D frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius.
+   The detent's lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with
+   the passing spring's tip (tables below), so the parts touch where they are drawn. */
 const ES=13.16/2,ESC=(()=>{
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude ~255 deg each side */
-  const NT=16,P=TAU/NT,EX=-1.55,A=255*D2R,TU=-6*D2R,WB=4*D2R,G=3.5,rp=0.6,rRoll=0.48,rd=0.4,rDR=0.22,t0=P/2,lockA=t0-2*P,aI=178*D2R;
+  const NT=16,P=TAU/NT,EX=-1.55,A=255*D2R,G=3.5,rp=0.6,rRoll=0.48,rd=0.305,rDR=0.22,wI=0.06,wD=0.048,rho=0.1/ES,dL=0.03,t0=P/2,lockA=t0-2*P,aI=178*D2R,aD=256*D2R;
+  /* rd: the discharge jewel reaches past the passing spring's tip (r 0.292) but stops short of the horn (r 0.343); dL: depth of lock on the stone */
   /* locking tooth at -33.75 deg (Rawlings plan: ~38 deg), the waiting tooth just outside the impulse jewel's path */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
   /* detent after the Rawlings plan: long blade from the foot to the locking jewel, then an arm bent toward the rollers */
   const dirB={x:0.46,y:0.887},Ft={x:S.x-1.4*dirB.x,y:S.y-1.4*dirB.y},hornAng=247*D2R,H={x:0.36*Math.cos(hornAng),y:0.36*Math.sin(hornAng)};
   const LEN=Math.hypot(H.x-Ft.x,H.y-Ft.y),vx=(H.x-Ft.x)/LEN,vy=(H.y-Ft.y)/LEN,nH={x:vy,y:-vx};   /* nH: direction the horn moves when unlocking */
-  const nB={x:dirB.y,y:-dirB.x};                                                                /* nB: direction the locking jewel moves (away from the wheel) */
-  const aD=hornAng-TU,thRel=TU-WB*Math.sqrt(0.45);
+  const nB={x:dirB.y,y:-dirB.x};                                                                /* nB: direction the locking jewel moves (away from the wheel); the passing spring bends along -nB */
+  /* passing spring: parallel to the blade, pointing at the balance staff; its tip projects past the horn toward the staff. Root held on an angle bracket from the blade */
   const Pt={x:H.x+0.06*dirB.x-0.035*nH.x,y:H.y+0.06*dirB.y-0.035*nH.y},Ps0={x:H.x-0.9*dirB.x-0.035*nH.x,y:H.y-0.9*dirB.y-0.035*nH.y};
+  const bT=(Ps0.x-S.x)*dirB.x+(Ps0.y-S.y)*dirB.y,bN=(Ps0.x-S.x)*nB.x+(Ps0.y-S.y)*nB.y;
+  const aIc=aI+Math.asin(wI/2/rp);   /* impulse jewel centre line: its driven face runs through the pallet tip at aI */
+  const rot=(q,l)=>{const d=-l/LEN,c=Math.cos(d),s=Math.sin(d);return{x:Ft.x+(q.x-Ft.x)*c-(q.y-Ft.y)*s,y:Ft.y+(q.x-Ft.x)*s+(q.y-Ft.y)*c};};
+  const off=(p,a,b)=>({x:p.x+dirB.x*a+nB.x*b,y:p.y+dirB.y*a+nB.y*b});
+  /* lift at which the stone's inner edge clears the tooth tips' path (with 0.02 mm to spare) */
+  const clear=l=>Math.min(...[off(S,0,-dL),off(S,-0.055,-dL)].map(q=>{const r=rot(q,l);return Math.hypot(r.x-EX,r.y);}))>1+0.003;
+  let lo=0,hi=0.3;for(let i=0;i<40;i++){const m=(lo+hi)/2;clear(m)?hi=m:lo=m;}const lRel=hi;
+  /* contact tables over the balance angle. Active swing (th rising): the jewel's leading face pushes the spring tip, and with it the horn,
+     along nH until the tip slides off the jewel's end; the detent then springs back to its banking. Return swing (th falling): the jewel
+     bends the spring tip along -nB, the detent staying on its banking, until the tip slides off. */
+  const TH0=-70*D2R,DT=0.02*D2R,NTB=5001,RET=1.5*D2R,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho;
+  const push=(th,dir,sg)=>{const ps=aD+th,u={x:Math.cos(ps),y:Math.sin(ps)},m={x:-u.y,y:u.x},pm=Pt.x*m.x+Pt.y*m.y,dm=dir.x*m.x+dir.y*m.y;
+    if(Pt.x*u.x+Pt.y*u.y<0)return 0;const d=sg>0?(wD/2+rho-pm)/dm:(pm+wD/2+rho)/dm;if(d<=0)return 0;
+    const q={x:Pt.x+sg*d*dir.x,y:Pt.y+sg*d*dir.y};return q.x*u.x+q.y*u.y>reach?-d:d;};   /* negative: tip has slid off at that displacement */
+  const hold=(th,dir,sg,d,sl)=>{const ps=aD+th,u={x:Math.cos(ps),y:Math.sin(ps)},m={x:-u.y,y:u.x},q={x:Pt.x+sg*d*dir.x,y:Pt.y+sg*d*dir.y};   /* after sliding off: stay clear of the jewel's end while it moves away */
+    if(Math.abs(q.x*m.x+q.y*m.y)>=wD/2+rho||q.x*u.x+q.y*u.y>=reach)return d;return Math.min(sl,Math.max(d,(reach-Pt.x*u.x-Pt.y*u.y)/(sg*(dir.x*u.x+dir.y*u.y))));};
+  { let sl=-1,thS=0,lm=0;for(let i=0;i<NTB;i++){const th=TH0+i*DT;if(sl<0){const d=push(th,nH,1);if(d<0){sl=lm;thS=th;}else{LI[i]=d;lm=d;continue;}}LI[i]=hold(th,nH,1,sl*Math.max(0,1-(th-thS)/RET),sl);}
+    sl=-1;lm=0;for(let i=NTB-1;i>=0;i--){const th=TH0+i*DT;if(sl<0){const d=push(th,nB,-1);if(d<0){sl=lm;thS=th;}else{PS[i]=d;lm=d;continue;}}PS[i]=hold(th,nB,-1,sl*Math.max(0,1-(thS-th)/RET),sl);} }
+  const tab=(T,th)=>{const f=(th-TH0)/DT,i=Math.floor(f);return i<0||i>=NTB-1?0:T[i]+(T[i+1]-T[i])*(f-i);};
+  let thRel=0;for(let i=0;i<NTB;i++)if(LI[i]>=lRel){thRel=TH0+i*DT;break;}
   function state(p){
-    const th=-A*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0,bump=Math.max(0,1-((th-TU)/WB)**2);
-    const lift=ccw?0.13*bump:0,psDef=ccw?0:0.09*bump;let prog;
+    const th=-A*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0;
+    const lift=ccw?tab(LI,th):0,psDef=ccw?0:tab(PS,th);let prog;
     if(ccw&&th>thRel){const psi=aI+th,yp=rp*Math.sin(psi),xp=rp*Math.cos(psi),cx=EX+Math.sqrt(Math.max(0,1-yp*yp));
       const inL=xp<cx&&Math.cos(psi)<0,pf=-(th-thRel)*G,pc=inL?Math.asin(clamp(yp,-1,1))-t0:-1e9,phi=Math.max(pf,pc);prog=phi<=-P?1:-phi/P;}
     else prog=ccw?0:1;
     return{th,lift,psDef,prog};
   }
+  /* passing spring as root, control point and tip (unit frame) for a state: rides with the detent, tip bent along -nB on the return swing */
+  function springPts(s){const a0=rot(Ps0,s.lift),am=rot({x:(Ps0.x+Pt.x)/2,y:(Ps0.y+Pt.y)/2},s.lift),tp=rot(Pt,s.lift);tp.x-=nB.x*s.psDef;tp.y-=nB.y*s.psDef;return[a0,am,tp];}
   /* detent outline pieces (unrotated, 2D unit frame); rotate about Ft by -lift/LEN when drawing */
-  const off=(p,a,b)=>({x:p.x+dirB.x*a+nB.x*b,y:p.y+dirB.y*a+nB.y*b});
   const K=off(S,0.03,0.02),ax=(H.x-K.x),ay=(H.y-K.y),al=Math.hypot(ax,ay),an={x:-ay/al,y:ax/al};
   const armP=(p,w)=>[{x:K.x+an.x*w,y:K.y+an.y*w},{x:H.x+an.x*w*0.7,y:H.y+an.y*w*0.7},{x:H.x-an.x*w*0.7,y:H.y-an.y*w*0.7},{x:K.x-an.x*w,y:K.y-an.y*w}];
   const pieces={
@@ -486,9 +510,10 @@ const ES=13.16/2,ESC=(()=>{
     blade:[off(Ft,0.28,0.04),off(S,0.04,0.04),off(S,0.04,-0.04),off(Ft,0.28,-0.04)],
     arm:armP(null,0.03),
     horn:[{x:H.x-nH.x*0.01+an.x*0.02,y:H.y-nH.y*0.01+an.y*0.02},{x:H.x+nH.x*0.05+an.x*0.02,y:H.y+nH.y*0.05+an.y*0.02},{x:H.x+nH.x*0.05-an.x*0.02,y:H.y+nH.y*0.05-an.y*0.02},{x:H.x-nH.x*0.01-an.x*0.02,y:H.y-nH.y*0.01-an.y*0.02}],
-    stone:[off(S,0,-0.02),off(S,-0.055,-0.02),off(S,-0.055,-0.1),off(S,0,-0.1)]
+    bracket:[off(S,bT-0.035,0.03),off(S,bT+0.035,0.03),off(S,bT+0.035,bN+0.03),off(S,bT-0.035,bN+0.03)],
+    stone:[off(S,0,0.03),off(S,-0.055,0.03),off(S,-0.055,-dL),off(S,0,-dL)]   /* the tooth tip rests on its face, dL below the tip */
   };
-  return{NT,P,EX,A,rp,rRoll,rd,rDR,t0,aI,aD,S,Ft,H,Pt,Ps0,LEN,nH,nB,dirB,pieces,state};
+  return{NT,P,EX,A,rp,rRoll,rd,rDR,wI,wD,t0,aI,aIc,aD,S,Ft,H,Pt,Ps0,LEN,nH,nB,dirB,pieces,state,springPts,lRel,thRel,LI,PS,TH0,DT};
 })();
 
 /* polygon minus a circle that crosses its boundary: keep the part outside the circle, close it with the arc that runs through the polygon */
@@ -630,7 +655,7 @@ function buildMovement(M){
   R.det=new THREE.Group();R.det.position.set(E.Ft.x*ES,-23.9,E.Ft.y*ES);dt.add(R.det);
   const poly=(pts,depth,mat,y)=>{const s=new THREE.Shape();pts.forEach((p,i)=>{const x=(p.x-E.Ft.x)*ES,z=(p.y-E.Ft.y)*ES;i?s.lineTo(x,z):s.moveTo(x,z);});s.closePath();
     const g=new THREE.ExtrudeGeometry(s,{depth,bevelEnabled:false});g.rotateX(Math.PI/2);g.translate(0,depth/2+(y||0),0);return mesh(R.det,g,mat);};
-  const Pc=E.pieces;poly(Pc.spring,0.35,M.steel);poly(Pc.blade,0.9,M.steel);poly(Pc.arm,0.8,M.steel);poly(Pc.horn,0.9,M.steel);poly(Pc.stone,1.6,M.ruby,-0.8);
+  const Pc=E.pieces;poly(Pc.spring,0.35,M.steel);poly(Pc.blade,0.9,M.steel);poly(Pc.arm,0.8,M.steel);poly(Pc.horn,0.9,M.steel);poly(Pc.bracket,0.5,M.steel);poly(Pc.stone,1.6,M.ruby,-0.8);
   const blk=new THREE.Group();blk.position.set(E.Ft.x*ES,-24.7,E.Ft.y*ES);blk.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(blk);
   mesh(blk,new THREE.BoxGeometry(6,2.5,2.6),M.plateSolid,-2.4,0,0);screw(blk,-1.2,0,-1.25+1.1,0.9,0.5);
   R.pspring=mesh(dt,new THREE.BufferGeometry(),M.gilt);
@@ -638,12 +663,13 @@ function buildMovement(M){
   const bl=part('bal',-80,true);
   R.staff=new THREE.Group();bl.add(R.staff);
   cylBetween(R.staff,0.45,-42.3,-22.8,M.steel,0,0,12);
-  const rR=E.rRoll*ES,ir=new THREE.Shape();ir.absarc(0,0,rR,0.35,TAU-0.35,false);ir.lineTo(rR*0.55*Math.cos(-0.35),rR*0.55*Math.sin(-0.35));ir.absarc(0,0,rR*0.55,-0.35,0.35,false);
+  /* impulse roller with its hollow in front of the impulse jewel (shape angle = minus the unit-frame angle) */
+  const rR=E.rRoll*ES,ir=new THREE.Shape(),n0=-E.aI,n1=n0+0.6;ir.absarc(0,0,rR,n1,n0+TAU,false);ir.lineTo(rR*0.55*Math.cos(n0),rR*0.55*Math.sin(n0));ir.absarc(0,0,rR*0.55,n0,n1,false);
   const irg=new THREE.ExtrudeGeometry(ir,{depth:0.8,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.4,0);
-  const irm=mesh(R.staff,irg,M.steel,0,-25.1,0);irm.rotation.y=-(E.aI)+Math.PI;
+  const irm=mesh(R.staff,irg,M.steel,0,-25.1,0);irm.rotation.y=0;
   const pal=(ang,r0,r1,w,y,h)=>{const q=mesh(R.staff,new THREE.BoxGeometry(r1-r0,h,w),M.ruby,(r0+r1)/2*Math.cos(ang),y,(r0+r1)/2*Math.sin(ang));q.rotation.y=-ang;};
-  pal(E.aI+0.18,rR-0.9,E.rp*ES,0.4,-25.1,0.9);
-  mesh(R.staff,cylY(E.rDR*ES,0.6,32),M.steel,0,-23.9,0);pal(E.aD,E.rDR*ES-0.4,E.rd*ES,0.32,-23.9,0.7);
+  pal(E.aIc,rR-0.9,E.rp*ES,E.wI*ES,-25.1,0.9);
+  mesh(R.staff,cylY(E.rDR*ES,0.6,32),M.steel,0,-23.9,0);pal(E.aD,E.rDR*ES-0.4,E.rd*ES,E.wD*ES,-23.9,0.7);
   mesh(R.staff,new THREE.CylinderGeometry(1.4,1.4,0.9,6),M.brass2,0,-33.2,0);
   const BR=BAL_R,BY=-31.5;R.balU=new THREE.Group();R.balU.position.y=BY;R.staff.add(R.balU);
   mesh(R.balU,ring(BR,BR-1.4,2.4),M.steel);
@@ -762,10 +788,7 @@ function buildMovement(M){
     if(s.msOn){const In=fs.I(s.n);fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(1-In/fs.IN,2.6,13.1,-8.2,-17.1,6+fs.IN-In);}
     if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,7.5,14,s.th,0.17);}
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing */
-    const del=-s.lift/E.LEN,cd=Math.cos(del),sd=Math.sin(del),Ft=E.Ft;
-    const rot=p=>({x:Ft.x+(p.x-Ft.x)*cd-(p.y-Ft.y)*sd,y:Ft.y+(p.x-Ft.x)*sd+(p.y-Ft.y)*cd});
-    const a0=rot(E.Ps0),am=rot({x:(E.Ps0.x+E.Pt.x)/2,y:(E.Ps0.y+E.Pt.y)/2}),tp2=rot(E.Pt);tp2.x-=E.nH.x*s.psDef;tp2.y-=E.nH.y*s.psDef;
-    const V=p=>new THREE.Vector3(p.x*ES,-24.0,p.y*ES);
+    const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,-24.0,p.y*ES);
     R.pspring.geometry.dispose();R.pspring.geometry=new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(V(a0),V(am),V(tp2)),20,0.1,5,false);
   };
   mv.userData.explode(0);
@@ -948,13 +971,13 @@ function drawEsc2D(ctx,w,h,p,dark){
   ctx.strokeStyle=brass;ctx.lineWidth=0.08*sc;for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(EX),Y(0));ctx.lineTo(X(EX+0.62*Math.cos(a)),Y(0.62*Math.sin(a)));ctx.stroke();}
   ctx.fillStyle=steel;ctx.globalAlpha=0.25;ctx.beginPath();ctx.arc(X(0),Y(0),E.rRoll*sc,0,TAU);ctx.fill();ctx.globalAlpha=1;
   const jewel=(ang,r0,r1,wd)=>{const c=Math.cos(ang),sn=Math.sin(ang),px=-sn*wd/2,py=c*wd/2;ctx.fillStyle=ruby;ctx.beginPath();ctx.moveTo(X(r0*c+px),Y(r0*sn+py));ctx.lineTo(X(r1*c+px),Y(r1*sn+py));ctx.lineTo(X(r1*c-px),Y(r1*sn-py));ctx.lineTo(X(r0*c-px),Y(r0*sn-py));ctx.closePath();ctx.fill();};
-  jewel(E.aI+s.th,E.rRoll-0.08,E.rp,0.055);
+  jewel(E.aIc+s.th,E.rRoll-0.08,E.rp,E.wI);
   const del=-s.lift/E.LEN,cd=Math.cos(del),sd=Math.sin(del),Ft=E.Ft,R=p2=>({x:Ft.x+(p2.x-Ft.x)*cd-(p2.y-Ft.y)*sd,y:Ft.y+(p2.x-Ft.x)*sd+(p2.y-Ft.y)*cd});
   const poly=(pts,col)=>{ctx.beginPath();pts.forEach((q,i)=>{const r=R(q);i?ctx.lineTo(X(r.x),Y(r.y)):ctx.moveTo(X(r.x),Y(r.y));});ctx.closePath();ctx.fillStyle=col;ctx.fill();};
-  const Pc=E.pieces;poly(Pc.spring,steel);poly(Pc.blade,steel);poly(Pc.arm,steel);poly(Pc.horn,steel);poly(Pc.stone,ruby);
-  const a0=R(E.Ps0),tp=R(E.Pt);tp.x-=E.nH.x*s.psDef;tp.y-=E.nH.y*s.psDef;const am={x:(a0.x+tp.x)/2,y:(a0.y+tp.y)/2};
+  const Pc=E.pieces;poly(Pc.spring,steel);poly(Pc.blade,steel);poly(Pc.arm,steel);poly(Pc.horn,steel);poly(Pc.bracket,steel);poly(Pc.stone,ruby);
+  const[a0,am,tp]=E.springPts(s);
   ctx.strokeStyle=gold;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(X(a0.x),Y(a0.y));ctx.quadraticCurveTo(X(am.x),Y(am.y),X(tp.x),Y(tp.y));ctx.stroke();
-  ctx.fillStyle=steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();jewel(E.aD+s.th,E.rDR-0.05,E.rd,0.045);
+  ctx.fillStyle=steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();jewel(E.aD+s.th,E.rDR-0.05,E.rd,E.wD);
   ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(0),Y(0),3,0,TAU);ctx.fill();
   ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='left';
   ctx.fillText('escape wheel',X(-2.35),Y(1.02));ctx.fillText('detent',X(-2.4),Y(-1.2));ctx.fillText('balance rollers',X(0.1),Y(0.75));

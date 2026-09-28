@@ -53,13 +53,13 @@ function drawEsc2D(ctx,w,h,p,dark){
   ctx.strokeStyle=brass;ctx.lineWidth=0.08*sc;for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(EX),Y(0));ctx.lineTo(X(EX+0.62*Math.cos(a)),Y(0.62*Math.sin(a)));ctx.stroke();}
   ctx.fillStyle=steel;ctx.globalAlpha=0.25;ctx.beginPath();ctx.arc(X(0),Y(0),E.rRoll*sc,0,TAU);ctx.fill();ctx.globalAlpha=1;
   const jewel=(ang,r0,r1,wd)=>{const c=Math.cos(ang),sn=Math.sin(ang),px=-sn*wd/2,py=c*wd/2;ctx.fillStyle=ruby;ctx.beginPath();ctx.moveTo(X(r0*c+px),Y(r0*sn+py));ctx.lineTo(X(r1*c+px),Y(r1*sn+py));ctx.lineTo(X(r1*c-px),Y(r1*sn-py));ctx.lineTo(X(r0*c-px),Y(r0*sn-py));ctx.closePath();ctx.fill();};
-  jewel(E.aI+s.th,E.rRoll-0.08,E.rp,0.055);
+  jewel(E.aIc+s.th,E.rRoll-0.08,E.rp,E.wI);
   const del=-s.lift/E.LEN,cd=Math.cos(del),sd=Math.sin(del),Ft=E.Ft,R=p2=>({x:Ft.x+(p2.x-Ft.x)*cd-(p2.y-Ft.y)*sd,y:Ft.y+(p2.x-Ft.x)*sd+(p2.y-Ft.y)*cd});
   const poly=(pts,col)=>{ctx.beginPath();pts.forEach((q,i)=>{const r=R(q);i?ctx.lineTo(X(r.x),Y(r.y)):ctx.moveTo(X(r.x),Y(r.y));});ctx.closePath();ctx.fillStyle=col;ctx.fill();};
-  const Pc=E.pieces;poly(Pc.spring,steel);poly(Pc.blade,steel);poly(Pc.arm,steel);poly(Pc.horn,steel);poly(Pc.stone,ruby);
-  const a0=R(E.Ps0),tp=R(E.Pt);tp.x-=E.nH.x*s.psDef;tp.y-=E.nH.y*s.psDef;const am={x:(a0.x+tp.x)/2,y:(a0.y+tp.y)/2};
+  const Pc=E.pieces;poly(Pc.spring,steel);poly(Pc.blade,steel);poly(Pc.arm,steel);poly(Pc.horn,steel);poly(Pc.bracket,steel);poly(Pc.stone,ruby);
+  const[a0,am,tp]=E.springPts(s);
   ctx.strokeStyle=gold;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(X(a0.x),Y(a0.y));ctx.quadraticCurveTo(X(am.x),Y(am.y),X(tp.x),Y(tp.y));ctx.stroke();
-  ctx.fillStyle=steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();jewel(E.aD+s.th,E.rDR-0.05,E.rd,0.045);
+  ctx.fillStyle=steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();jewel(E.aD+s.th,E.rDR-0.05,E.rd,E.wD);
   ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(0),Y(0),3,0,TAU);ctx.fill();
   ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='left';
   ctx.fillText('escape wheel',X(-2.35),Y(1.02));ctx.fillText('detent',X(-2.4),Y(-1.2));ctx.fillText('balance rollers',X(0.1),Y(0.75));
