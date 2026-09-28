@@ -1,0 +1,71 @@
+:root{--bg:#dfe2e3;--panel:#f4f5f5;--card:#ffffff;--ink:#141a20;--muted:#5b656e;--blue:#26479c;--brass:#8a5d10;--rule:#cdd2d5;--hi:#b8860b;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0d1115;--panel:#151a1f;--card:#1b2127;--ink:#e4e8eb;--muted:#9aa4ad;--blue:#91adf2;--brass:#d8a94f;--rule:#2a323a;--hi:#e0b44f;}}
+:root[data-theme="dark"]{--bg:#0d1115;--panel:#151a1f;--card:#1b2127;--ink:#e4e8eb;--muted:#9aa4ad;--blue:#91adf2;--brass:#d8a94f;--rule:#2a323a;--hi:#e0b44f;}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Instrument Sans",system-ui,sans-serif}
+header{max-width:1240px;margin:0 auto;padding:22px 20px 14px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 24px;justify-content:space-between}
+h1{font:300 clamp(1.9rem,5vw,3rem)/1.02 Spectral,Georgia,serif;letter-spacing:-.015em;margin:0}
+h1 em{font-style:italic;font-weight:400}
+header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 0 40px}
+@media(min-width:960px){.wrap{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:0 18px;padding:0 20px 40px}}
+.stage{position:sticky;top:0;z-index:5;height:min(56vh,760px);min-height:340px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;
+  background:radial-gradient(ellipse 80% 70% at 50% 38%,color-mix(in srgb,var(--panel) 92%,#fff) 0%,var(--bg) 78%)}
+@media(min-width:960px){.stage{border-radius:16px;height:calc(100vh - 130px);max-height:880px;top:12px}}
+.stage canvas{display:block;width:100%;height:100%;cursor:grab}
+.stage.grab canvas{cursor:grabbing}
+.labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.lbl{position:absolute;left:0;top:0;font:12px/1.2 "Instrument Sans",system-ui,sans-serif;color:var(--ink);white-space:nowrap;transition:opacity .3s}
+.lbl::before{content:"";position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px var(--panel)}
+.lbl span{position:absolute;left:0;top:0;display:block;padding:2px 7px 3px;border-radius:5px;background:color-mix(in srgb,var(--card) 90%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.lbl i{display:block;font-style:normal;color:var(--muted);font-size:11px}
+.hud{position:absolute;left:14px;bottom:12px;right:120px;pointer-events:none;font:13px/1.4 "Instrument Sans",sans-serif;color:var(--muted);font-variant-numeric:tabular-nums}
+.hud b{color:var(--ink);font-weight:600}
+.tools{position:absolute;right:10px;bottom:10px;display:flex;gap:6px}
+.tools button{background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.info{position:absolute;left:12px;top:12px;max-width:min(340px,calc(100% - 24px));background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-radius:12px;padding:12px 14px 12px;box-shadow:0 6px 24px rgba(0,0,0,.14);display:none}
+.info.on{display:block}
+.info h3{font:600 18px/1.2 Spectral,Georgia,serif;margin:0 26px 4px 0}
+.info p{margin:0;font-size:13.5px;color:var(--ink)}
+.info .spec{margin-top:6px;color:var(--muted);font-size:12.5px}
+.info .x{position:absolute;right:8px;top:8px;border:0;padding:2px 8px;font-size:18px;line-height:1;color:var(--muted)}
+.hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:12.5px;color:var(--muted);background:color-mix(in srgb,var(--card) 80%,transparent);padding:4px 10px;border-radius:999px;pointer-events:none;transition:opacity .6s}
+.loading{position:absolute;inset:0;display:grid;place-items:center;font:italic 18px Spectral,Georgia,serif;color:var(--muted);background:var(--bg);transition:opacity .8s}
+.panel{padding:14px 16px 0}
+@media(min-width:960px){.panel{padding:0}}
+.card{background:var(--panel);border-radius:14px;padding:14px 16px;margin:0 0 12px}
+.grp{margin:0 0 14px}.grp:last-child{margin-bottom:0}
+h2{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:0 0 7px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+button{font:600 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--blue);background:transparent;border:1.5px solid var(--blue);border-radius:999px;padding:6px 13px;cursor:pointer}
+button[aria-pressed="true"]{background:var(--blue);color:var(--panel)}
+button:disabled{opacity:.35;cursor:default}
+button.primary{background:var(--blue);color:var(--panel);width:100%;padding:9px 14px;font-size:14.5px}
+button:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.sl{display:flex;align-items:center;gap:10px}
+.sl input{flex:1;accent-color:var(--blue)}
+.sl output{min-width:4.5em;text-align:right;font-variant-numeric:tabular-nums}
+.cks{display:flex;flex-wrap:wrap;gap:8px 18px}
+.ck{display:flex;align-items:center;gap:7px;cursor:pointer}
+.ck input{accent-color:var(--blue);width:17px;height:17px}
+.tour h3{font:600 21px/1.2 Spectral,Georgia,serif;margin:6px 0 6px}
+.tour .txt{font-size:14px;line-height:1.55}
+.tour .txt p{margin:0 0 .7em}
+.tnav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tnav span{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:5px;margin:10px 0 0}
+.dots i{flex:1;height:3px;border-radius:2px;background:var(--rule)}
+.dots i.on{background:var(--brass)}
+.inset{margin:10px 0 2px}
+.inset canvas{width:100%;display:block;border-radius:8px;background:var(--card)}
+table.rt{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+table.rt th,table.rt td{text-align:left;padding:4px 4px;border-bottom:1px solid var(--rule)}
+table.rt th{color:var(--muted);font-weight:500}
+table.rt td.n{text-align:right}
+.note{font-size:12.5px;color:var(--muted)}
+.note p{margin:0 0 .6em}
+.hidden{display:none!important}
+@media(max-width:600px){.lbl{font-size:11px}.lbl i{display:none}}
