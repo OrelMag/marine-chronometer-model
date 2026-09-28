@@ -7,7 +7,7 @@ PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 # photo points (the uploaded top view) and model points (movement frame)
 PH={'B':(640,830),'Fu':(1240,610),'Ba':(930,1440),'scr_ll2':(389,1505),'scr_left':(1060*0+ (-1)+0,0)}
 PH={'B':(640,830),'Fu':(1240,610),'Ba':(930,1440)}
-MD={'B':[8.0,-31.5,6.77],'Fu':[11.59,-33.0,-19.8],'Ba':[-18.56,-37.4,0.19]}
+MD={'B':[8.0,-26.3,6.77],'Fu':[11.59,-27.16,-19.8],'Ba':[-18.56,-31.56,0.19]}   # balance rim, top of the barrel bridge at the dust seal, barrel square (heights of the re-stacked model)
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])

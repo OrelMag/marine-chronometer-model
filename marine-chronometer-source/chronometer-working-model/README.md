@@ -43,7 +43,17 @@ immediately, which is useful for automated screenshots.
 ## Coordinates and units
 
 Millimetres. Movement frame: dial side is +y, 12 o’clock is −z, 3 o’clock is +x.
-Arbor positions are in `L` at the top of `movement.js`.
+Arbor positions are in `L` at the top of `movement.js`. The main levels are the
+constants beside it:
+
+| Constant | Level | Height above the pillar plate |
+|---|---|---|
+| `TB_U`, `TB_T` | Train bridge underside and top | 16.8 and 19.9 mm |
+| `BB_T` | Barrel bridge top | 23.3 mm |
+| `CK_T` | Cock top | 34.1 mm |
+| `EY` | Escape wheel | 15.1 mm |
+| `LB_T` | Balance lower bridge's top face | 10.9 mm |
+| `BAL_Y` | Balance rim | 22.4 mm |
 
 ## How the timing works
 
@@ -98,15 +108,33 @@ Everything is driven from one model clock `tSim`, in local seconds.
    - The escape wheel sits 9.40 mm from the balance. There the 0.249 in impulse roller clears the teeth either side of it by 0.002 in (roller shake, Op. 84), and the teeth dip into its crescent (Ops. 76, 83).
    - An earlier scaling of Rawlings' drawing gave 10.2 mm. Readings of the drawing vary with the feature used for scale; the manual's specifications fix the distance.
    - The escape arbor keeps its depth with the fourth wheel.
-6. **Collision check.** `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. Only intended joints remain.
-7. **Visual check.** `tools/p3fit.py` renders the model from the top-view photograph's camera. The result is `verification/topview-comparison.png`.
+6. **Heights.** A side photograph of an unmounted movement is scaled by the pillar plate's 3.86 mm edge (75 px; the plate's width gives the same scale to 2 %). On it, in mm above the pillar plate:
+   - The pillars are 16.8 tall, the train bridge 3.1 thick, and the barrel bridge 3.4 thick on top of it.
+   - The cock foot stands 14.2 tall on the train bridge.
+   - The fusee cone spans 6.7–15.8, which the model matches.
+   - The escape wheel runs 0.9 below the train bridge.
+   - The escape pinion meshes with the fourth wheel 3.6 above the plate, and a large wheel runs lowest, at 0.4–1.6. That is the centre wheel, which must pass under the fusee wheel and the barrel.
+   - A 3 mm plate at 7.9–10.9 is taken to be the balance lower bridge. It also carries the fourth wheel's upper pivot, and the train-blocking screw reaches down from it to the fourth wheel's spokes (Sec. II).
+   - Fig. 2 and Fig. 109 show a tall barrel that rises past the train bridge to the barrel bridge, and Figs. 108 and 110 show the train bridge cut round it.
+   - The plan positions (`L`) were fitted before the re-stack, with the old heights, which `bundle.py`, `fit.py` and `unproj.py` still use. They were not re-fitted.
+   - Re-running `bundle.py` with the new heights puts the fusee and barrel axes within 0.8 mm of `L` and the balance within 2 mm. That is about the run-to-run spread of its random restarts.
+7. **Collision check.** `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. Only intended joints remain.
+8. **Visual check.** `tools/p3fit.py` renders the model from the top-view photograph's camera. The result is `verification/topview-comparison.png`.
 
 The tools need Playwright with Chromium. Open the page as `index.html?snap&qa`.
 
 ## Estimated, not from the manual
 
 - Tooth counts of the centre, third and fourth wheels and pinions. They are chosen to give the half-second train's ratios. The escape wheel (16) is Hamilton's; the 96/14 first stage reproduces the manual's seven key half-turns per 24 h.
-- Dimensions and positions, estimated from the figures and a 4-inch dial.
+- Dimensions and positions, estimated from the figures and a 4-inch dial, except where the photographs give them (plan: "How the layout was measured", steps 1–5; heights: step 6).
+- Heights the side photograph doesn't show:
+  - The third wheel (8.6 mm above the plate, between the centre pinion and the barrel).
+  - The barrel (13.2 mm tall, from just above the third wheel to 1 mm under the barrel bridge; its chain band runs level with the fusee's cone).
+  - The balance rim, 0.4 mm clear of the escape upper bridge.
+  - The hairspring, 6.7 mm tall to the cock.
+- The train bridge's cut round the barrel: a 19.2 mm circle that holds the barrel, open to the rim and clear of the centre arbor. Figs. 108 and 110 show its presence, not its size.
+- The balance lower bridge: a 3 mm plate on a boss under the train bridge, with two screws (Op. 50). Fig. 110 shows it stepped and lobed; its outline is simplified.
+- The train-bridge and barrel-bridge screws. Their positions come from the top-view photograph; the manual gives three screws for each bridge. One train-bridge screw, at (−8.5, 27.7), has no pillar under it in the model.
 - The fusee profile and the wind indicator ratio.
 - The mainspring’s coils, which are drawn schematically.
 - The detent's dimensions.
