@@ -139,8 +139,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     f.opacity=(m0.opacity??1)*op;return f;}
   const base=m=>{const p=m.userData.part,m0=st.colr?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
   const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0;
-  /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, or the barrel or spring picked */
-  const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus;return st.drive||secMode!=='off'||!!(foc&&(foc.has('mainspring')||foc.has('barrel')));};
+  /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, the barrel or spring picked, or the barrel faded or hidden */
+  const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus,ob=st.op.barrel;return st.drive||secMode!=='off'||st.hid.has('barrel')||(ob!=null&&ob<1)||!!(foc&&(foc.has('mainspring')||foc.has('barrel')));};
   function look(){
     const foc=st.pick?new Set([st.pick]):st.focus;
     for(const m of MVM){const p=m.userData.part;let vis=true;
