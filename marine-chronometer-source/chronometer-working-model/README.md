@@ -54,6 +54,12 @@ Everything is driven from one model clock `tSim`, in local seconds.
   in half-second steps, as the manual states (Sec. IX, p. 66).
 - The fusee and chain follow the hours since winding: one fusee turn per 96/14
   = 6.86 hours.
+- Maintaining work: when running, the fusee's winding ratchet drives the
+  sustaining ratchet through the two winding pawls, and a pin on that ratchet
+  drives the fusee wheel through the sustaining spring. When winding, the
+  sustaining pawl holds the ratchet and the spring alone drives the train.
+  Every pawl is rested on its ratchet's teeth each frame (`seatPawl`), so it
+  rides over them or bears on a steep face.
 
 ## Sources
 
