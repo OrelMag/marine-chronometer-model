@@ -44,7 +44,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 
 - Keys 1–6 pick the views. Exploded has a Spread slider.
 - Time: set the hands to any time of day, or to now. Wind with the key turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 60 h of chain), with the plates see-through and the winding stop kept solid. For the last half turns the camera closes in on the stop-bar catching.
-- Rate and timing weights: turn the timing or vernier weight pair in or out by quarter turns. `R.timing(dt, dv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's own geometry (576 g·mm² as built). The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose. A quarter turn of the timing pair is about 15 s a day, of the vernier pair about 3 s a day.
+- Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (931 g·mm² as built). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.146 and 0.092 mm. The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose; the panel shows the daily rate and what the hands have gained since the weights were moved or the hands set.
 - Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme. Save writes the view as a PNG.
 
 ## Testing
@@ -97,6 +97,42 @@ Everything is driven from one model clock `tSim`, in local seconds.
   Every pawl is rested on its ratchet's teeth each frame (`seatPawl`), so it
   rides over them or bears on a steep face.
 
+### The rate panel
+
+`R.timing(nt, nv)` returns the balance's moment of inertia `I` with the timing
+and vernier pairs turned `nt` and `nv` turns out, and `tSim` runs √(I₀/I) as
+fast as real time. The rate for a turn is the manual's; the moment of inertia
+and the thread pitches are the model's. Things to know before changing it:
+
+- **"One full turn" is read as the pair.** The manual says "One full turn of
+  timing weight equals about 40 seconds. One full turn of vernier timing
+  weight equals about 2.8 seconds" (p. 70, under Table II, which is for pairs
+  of screws). The model takes this as both weights of a pair turned a turn
+  each, as they are in practice to keep the balance in poise. If it means one
+  weight, the pitches double, to 0.29 and 0.18 mm. The rates the panel shows
+  would not change, because the pitches are fitted to the manual's figures.
+- **The balance is probably heavier than drawn.** With the parts list's masses
+  the moment of inertia is 931 g·mm². Table II gives a second estimate:
+  replacing a pair of 0.100 in screws with 0.080 in ones changes the rate by
+  about 16 minutes a day (the model gives 22.6), and 0.100 in to 0.050 in by
+  about 43 (the model gives 55.6, going to the 0.049 in screws). Both imply
+  about 1,100–1,300 g·mm², so the rim's section (1.4 × 2.4 mm, estimated) is
+  likely too light. The drawn balance-screw heads are also too small. They
+  are 1.5 mm across, but screws of 125–255 mg with those head heights need
+  heads of about 3–4 mm, which is closer to what the photographs show.
+- **Changing the balance changes the pitches, not the rates.** A heavier rim
+  or larger screws raise `I₀`; `R.pitch` follows, and a turn stays 40 s and
+  2.8 s a day.
+- **Check clearances after any change to the balance.** The balance runs in
+  the barrel bridge's 17.7 mm cutout, at the bridge's own level. The weights'
+  screw tips reach 17.35 mm from the balance axis, and the 0.101 in screws
+  17.07 mm. `dyn.py` tests only mid-travel, so also run it with the weights at
+  both ends of their travel: call `__mv.userData.R.timing(3,3)`, then
+  `(-3,-3)`, after the page loads. `dyn.py` ignores balance–cock overlaps
+  (`IGN`). The cock foot is 20.7 mm from the balance axis.
+- **`audit.py` lists the weights' screw tips as loose ends.** They stand
+  beyond the nuts, as in Fig. 3, and are expected.
+
 ## Sources
 
 - *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948. Used for:
@@ -106,7 +142,7 @@ Everything is driven from one model clock `tSim`, in local seconds.
   - the detent's construction, from Figs. 14, 54–60 and 110 and the parts list. The detent is beryllium copper with a two-strip detent spring and a round locking jewel with a flat. The trip spring is Elinvar, on an angle bracket. The support block hangs from the upper train bridge and carries the stop button, lock-adjusting and detent-adjusting screws;
   - the escapement's adjustment figures (Sec. VIII, Ops. 76–97): roller shake about 0.002 in (Op. 84), lock about 6° (Op. 85), let-off at least 6° (Op. 86), overall 26–30° (Op. 87), horn clearance about 0.010 in (Op. 88) and drop about 2° (Op. 97). The teeth drop into the large portion of the impulse roller's crescent and never enter the small portion (Ops. 76, 83). The wheel is centred on the impulse jewel (Op. 82);
   - the impulse roller, 0.249 in (6.32 mm) across (parts list, p. 82). Variants of .250–.253 in exist to set roller shake;
-  - the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing and 2 vernier weights (parts list, p. 82);
+  - the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing weights (93 mg) and 2 vernier weights (10.5 mg), each a nut on a screw in one of the rim's holes (parts list, p. 82; Fig. 3);
   - the barrel cap with its five screws on the pillar-plate end (Figs. 26, 109), and the dust seal with three packing rings around the fusee arbor (Fig. 24);
   - the gimbal mounting (Figs. 1, 94, 106): a flat ring hung on two pivot screws through the box sides (washer inside, lock nut outside), the case hung in it on front and rear pivot screws into brackets on the case, support straps at 3 and 6, the gimbal latch at the front right and the key at the back right;
   - the dial markings, winding figures and part numbers. The UP–DOWN scale runs clockwise round the bottom of its sub-dial from UP (upper right) to DOWN (upper left), so winding turns the hand counterclockwise back to UP (Fig. 107, Sec. III).
@@ -179,7 +215,12 @@ Everything is driven from one model clock `tSim`, in local seconds.
   - Depth of lock is 0.125 mm, and the trip spring's tip lifts 0.20 mm to release.
   - The discharge jewel meets the trip spring at −27.4° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.8°, centred on the dead point.
 - The balance rim diameter (29 mm), measured on the top-view photograph.
-- The rate panel's figures: the timing weights' thread (0.2 mm a turn) and the weights' sizes are estimates. The moment of inertia leaves out the rim's holes and the staff, and treats every screw as a solid cylinder.
+- The rate panel's figures (see "The rate panel" under How the timing works). Sourced: the rate for a full turn (p. 70) and the screws' and weights' masses (parts list). Estimated:
+  - The moment of inertia: the rim's and arm's section, and each screw's or weight's mass spread along its drawn cylinder. It leaves out the rim's holes, the weights' screws and the staff. Table II's screw changes imply a larger moment, about 1,100–1,300 g·mm², so the rim is probably heavier than drawn. The drawn balance-screw heads (1.5 mm across) are also too small for their masses.
+  - The thread pitches (0.146 and 0.092 mm), which follow from the moment of inertia.
+  - Reading "one full turn of timing weight" as both weights of the pair turned a turn each.
+  - The weights' travel, 3 turns either way from the middle position the manual starts them at. At 40 s a turn, that covers the 2 minutes a day that screws and washers leave (Op. 5).
+  - The weights' drawn sizes.
 - The upper train bridge's outline under the barrel bridge (drawn as a full disc) and its opening round the balance staff (r 8.0 mm).
 - The sustaining pawl's position: 21 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel.
 

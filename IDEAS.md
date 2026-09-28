@@ -193,7 +193,11 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 The case's winding-hole shield plate "is turned clockwise to admit the key and springs back when the key is removed" (`INFO.bowl`). `box.js` builds it (`shutter`) but never moves it. Animate it in `kwStart`/`kwStop` and when the key appears.
 
 ### 1.7 Screws, washers and weights from the parts list (S)
-- **The manual's masses:** Sec. II gives balance screws "in six weights ranging from 100 mgs. to 300 mgs." and timing washers "in a range of six weights from 4 mgs. to 20 mgs". The moment of inertia in `R.timing` uses densities and solid cylinders instead ([movement.js:328](marine-chronometer-source/chronometer-working-model/js/movement.js#L328)). Use the masses, and map the parts list's three screw head heights onto the six weights.
+- **The manual's masses:** the moment of inertia in `R.timing` now uses the parts list's masses for the three screw sizes and the two weights (931 g·mm²). Still to do:
+  - Sec. II gives balance screws "in six weights ranging from 100 mgs. to 300 mgs." and timing washers "in a range of six weights from 4 mgs. to 20 mgs". Map the parts list's three screw head heights onto the six weights.
+  - Table II's screw changes imply about 1,100–1,300 g·mm², so the rim's section is probably too light.
+  - The drawn screw heads (1.5 mm) are too small for their masses: they should be about 3–4 mm across.
+  - Changing any of these moves `R.pitch`, not the rate for a turn. See "The rate panel" in the model's README for the clearance checks.
 - **Timing washers:** add them as an option in the rate panel ([2.6](#26-a-fuller-rate-panel-sm)).
 
 ### 1.8 Wheel teeth (M–L)
@@ -221,8 +225,8 @@ shows. These ideas add the dynamics where they teach something.
 
 `I·θ″ + c·θ′ + k·θ = τ(θ, θ′, state)`
 
-- `I`: the balance's moment of inertia (576 g·mm², already computed).
-- `k = I·(2π/0.5 s)²`: the hairspring's stiffness, about 9.1 × 10⁻⁵ N·m/rad.
+- `I`: the balance's moment of inertia (931 g·mm², already computed).
+- `k = I·(2π/0.5 s)²`: the hairspring's stiffness, about 1.5 × 10⁻⁴ N·m/rad.
 - `c`: losses, set so the amplitude settles at the manual's 1⅜–1½ turns.
 - `τ`: the impulse torque while `ESC` says a tooth is on the impulse jewel, minus the small unlocking resistance.
 
@@ -597,7 +601,6 @@ The HUD's `innerHTML` is rewritten every frame ([app.js:474](marine-chronometer-
 - Keep technical terms consistent with period horological usage in each language. German, for instance, has an established chronometer vocabulary (the Roman dial already uses AUF/AB).
 
 ### 6.6 Small fixes noticed while reading
-- **Now:** resets the time but not `rErr`, the accumulated rate error shown in the rate panel. Clear it too, or say "since the rate was changed".
 - **Keys 1–6:** these call `.click()` on buttons that may be disabled in **Moving parts only**. A disabled button ignores the click, as the comment says, but the key gives no feedback. Flash the button or show a brief HUD message.
 - **Walkthrough and user settings:** the walkthrough sets `st.see=false` and `st.rock`, and restores defaults on exit rather than what the user had before. Save and restore the user's settings around a tour.
 
@@ -667,7 +670,7 @@ Small browser or Node checks on the model's arithmetic:
 - **Hands:** at `tSim = t`, the hour, minute and second hands point where a clock reading `t` would: centre wheel 1 turn/h, fourth 1 turn/min, escape 16 teeth per 8 s.
 - **Wind indicator:** runs from 60° at UP to 300° at 56 h, which is the dial's scale.
 - **Fusee:** `FUSEE_TURNS / FUSEE_PER_HOUR` is 60 h of chain, and 17½ half turns wind it fully.
-- **Moment of inertia:** `R.timing(0,0)` is 576 g·mm² (catches accidental changes to the balance's geometry), and a quarter turn of the timing pair is about 15 s a day, as the README says.
+- **Moment of inertia:** `R.timing(0,0)` is 931 g·mm² (catches accidental changes to the balance's geometry), and a full turn of the timing pair is 40 s a day and of the vernier pair 2.8 s, the manual's figures.
 - **Pawls:** after `update()` at a spread of states, every pawl's tip sits within a tolerance of its ratchet's profile.
 
 ### 8.3 Visual regression (M)

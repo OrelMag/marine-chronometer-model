@@ -90,12 +90,12 @@
       </details>
       <details class="grp more" id="rateDet">
         <summary>Rate and timing weights</summary>
-        <p class="note" style="margin:0 0 4px">There is no regulator. The rate is set by turning the two timing weights on the rim, or the smaller vernier weights for fine changes, in or out in opposite pairs so the balance stays in poise. Out makes the balance heavier at the rim and slower: the hands lose.</p>
-        <label class="sl rw"><span>Timing weights</span><input type="range" id="twR" min="-12" max="12" step="1" value="0" aria-label="Timing weights, quarter turns out"><output></output></label>
-        <label class="sl rw"><span>Vernier weights</span><input type="range" id="vwR" min="-12" max="12" step="1" value="0" aria-label="Vernier weights, quarter turns out"><output></output></label>
+        <p class="note" style="margin:0 0 4px">There is no regulator. The rate is set with the weights on the balance rim, each a nut on a screw: the two timing weights, or the small vernier weights for fine changes. Both of a pair are turned alike, so the balance stays in poise. Out moves their mass further from the staff, which raises the balance's moment of inertia and slows it: the hands lose.</p>
+        <label class="sl rw"><span>Timing weights</span><input type="range" id="twR" min="-24" max="24" step="1" value="0" aria-label="Timing weights, eighth turns out"><output></output></label>
+        <label class="sl rw"><span>Vernier weights</span><input type="range" id="vwR" min="-24" max="24" step="1" value="0" aria-label="Vernier weights, eighth turns out"><output></output></label>
         <div class="rate" id="rateOut" aria-live="polite"></div>
         <div class="seg" style="margin-top:8px"><button id="rateZero">Zero</button><button id="rateLook">Show the balance</button></div>
-        <p class="note" style="margin:8px 0 0">The model's clock runs at the new rate, so the hands drift from real time; try 3600×. The moment of inertia is computed from the model's balance; the weights' thread, 0.2 mm a turn, is an estimate. The weights are drawn on the Hamilton balance only.</p>
+        <p class="note" style="margin:8px 0 0">The manual gives about 40 s a day for a full turn of the timing weights and 2.8 s for the verniers; the model's thread is set to match, and the moment of inertia comes from the model's balance and the parts list's masses. In an overhaul, balance screws and washers bring the rate within 2 minutes a day, then the timing weights within half a second, and the verniers make the final changes (Ops. 5, 6, 10). The model's clock runs at the new rate, so the hands drift from real time; try 3600×. The weights are drawn on the Hamilton balance only.</p>
       </details>
       <details class="grp more" id="secDet">
         <summary>Cross-section</summary>

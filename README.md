@@ -158,7 +158,8 @@ Before committing a change to the model:
 
    `dyn.py` should list only intended joints: pivots in their jewels, collets
    on arbors, hands on their staffs. `audit.py` is expected to report the
-   winding-stop pin and the free ends of the balance screws; most of its
+   winding-stop pin and the free ends of the balance screws and the timing
+   weights' screws; most of its
    coplanar-face hits are faces in contact. `escapement.js` marks each figure
    `ok` or not against the manual's value. The tools write their output files
    into the folder they're run from.
