@@ -114,10 +114,20 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   let hrs=20,winding=false,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   const PLATES=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','cock','dial']),DRIVE_HIDE=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','dial','cock','post']);
+  /* colour mode: one flat CAD-style colour per part; the part labels double as the legend */
+  const PCOL={box:'#a9745b',lid:'#8a5a44',lidGlass:'#c49a7a',ring:'#9aa1a8',bowl:'#c4b27a',key:'#6d7a8a',
+    pillar:'#9fb4c8',ltb:'#b6d7c9',pillars:'#707a84',trainBridge:'#c9d8a8',barrelBridge:'#e3cfa6',escBridge:'#c8b8e3',lowerBridge:'#a8d4e0',cock:'#d8b0c8',
+    gw:'#d9453b',fusee:'#e88a2e',barrel:'#b86bd1',mainspring:'#334f8f',chain:'#4a4f57',ratchet:'#a0922f',sq:'#5e6b2a',post:'#8c6b4a',spawl:'#1fa05a',
+    cw:'#f2c230',tw:'#7cc242',fw:'#2fb3a6',escW:'#2f7fe0',det:'#e0457b',bal:'#8a5cf0',spr:'#f25fd0',hands:'#1b1b1b',motion:'#a45a3c'};
+  const COLM=new Map();
+  function colourOf(m0,p){if(!p||!PCOL[p]||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+p;let c=COLM.get(k);
+    if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(PCOL[p]);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.emissive)c.emissive.setRGB(0,0,0);
+      patchSection(c,!!m0.userData.secCap);c.userData.side0=m0.userData.side0??m0.side;c.side=m0.side;c.clippingPlanes=[...(m0.clippingPlanes||[])];COLM.set(k,c);}return c;}
+  const base=m=>st.colr?colourOf(m.userData.mat0,m.userData.part):m.userData.mat0;
   function look(){
     const foc=st.pick?new Set([st.pick]):st.focus;
     for(const m of MVM){const p=m.userData.part;let vis=true;
@@ -126,13 +136,13 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(st.drive&&m.userData.driveHide)vis=false;
       const gh=(st.see&&PLATES.has(p))||(st.drive&&m.userData.driveGhost)||(foc&&!foc.has(p));
       if(m.userData.noShadow&&gh)vis=false;
-      m.visible=vis;m.material=gh?ghostOf(m.userData.mat0):m.userData.mat0;m.castShadow=!gh&&!m.userData.noShadow;}
-    for(const m of BOXM){m.visible=!st.drive;const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(m.userData.mat0):m.userData.mat0;m.castShadow=!gh&&m.userData.mat0!==M.glass;}
+      m.visible=vis;m.material=gh?ghostOf(base(m)):base(m);m.castShadow=!gh&&!m.userData.noShadow;}
+    for(const m of BOXM){m.visible=!st.drive;const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):base(m);m.castShadow=!gh&&m.userData.mat0!==M.glass;}
     sh.visible=!st.drive;
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     document.querySelectorAll('#modes button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='drive')===st.drive?'true':'false'));
-    $('#ghost').checked=st.see;
+    $('#ghost').checked=st.see;stage.classList.toggle('colr',st.colr);
   }
 
   /* ---------- camera ---------- */
@@ -184,7 +194,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   document.querySelectorAll('#modes button').forEach(b=>b.addEventListener('click',()=>{st.drive=b.dataset.v==='drive';closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');}));
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
-  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});
+  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;look();});
   document.querySelectorAll('#finish button').forEach(b=>b.addEventListener('click',()=>{M.setPlateFinish(b.dataset.v);document.querySelectorAll('#finish button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#lbls').addEventListener('change',e=>st.labels=e.target.checked);$('#rock').addEventListener('change',e=>st.rock=e.target.checked);
   const hIn=$('#hrs'),hOut=hIn.parentElement.querySelector('output');
@@ -200,7 +210,7 @@ function drawEsc2D(ctx,w,h,p,dark){
 
   /* ---------- labels ---------- */
   const labels=[];const lab=$('.labels');
-  const addL=(t,sub,part,fn,grp)=>{const el=document.createElement('div');el.className='lbl';el.innerHTML='<span>'+t+(sub?'<i>'+sub+'</i>':'')+'</span>';lab.appendChild(el);labels.push({el,sp:el.firstChild,fn,grp,part,w:0,h:0,occ:false});};
+  const addL=(t,sub,part,fn,grp)=>{const el=document.createElement('div');el.className='lbl';if(PCOL[part])el.style.setProperty('--pc',PCOL[part]);el.innerHTML='<span>'+t+(sub?'<i>'+sub+'</i>':'')+'</span>';lab.appendChild(el);labels.push({el,sp:el.firstChild,fn,grp,part,w:0,h:0,occ:false});};
   /* higher = placed first when labels compete for space */
   const PRI={bal:10,escW:9.5,det:9,fusee:8.5,barrel:8,chain:7.5,cw:7,fw:6.8,tw:6.5,gw:6.4,spr:6,cock:5,spawl:4.5,lowerBridge:3,trainBridge:2,barrelBridge:2,motion:5,hands:6,ring:5,bowl:5,key:4};
   const pw=(g,x,y,z)=>{const v=new THREE.Vector3(x,y,z);return()=>g.localToWorld(v.clone());};

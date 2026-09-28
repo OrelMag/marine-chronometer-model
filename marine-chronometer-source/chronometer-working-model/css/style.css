@@ -20,6 +20,8 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .lbl{position:absolute;left:0;top:0;font:12px/1.2 "Instrument Sans",system-ui,sans-serif;color:var(--ink);white-space:nowrap;transition:opacity .3s}
 .lbl::before{content:"";position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px var(--panel)}
 .lbl span{position:absolute;left:0;top:0;display:block;padding:2px 7px 3px;border-radius:5px;background:color-mix(in srgb,var(--card) 90%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.colr .lbl::before{background:var(--pc,var(--brass));width:10px;height:10px;left:-5px;top:-5px}
+.colr .lbl span{border-left:4px solid var(--pc,transparent)}
 .lbl i{display:block;font-style:normal;color:var(--muted);font-size:11px}
 .hud{position:absolute;left:14px;bottom:12px;right:120px;pointer-events:none;font:13px/1.4 "Instrument Sans",sans-serif;color:var(--muted);font-variant-numeric:tabular-nums}
 .hud b{color:var(--ink);font-weight:600}
