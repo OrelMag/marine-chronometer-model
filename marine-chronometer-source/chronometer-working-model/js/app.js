@@ -33,7 +33,7 @@ const INFO={
   barrel:['Mainspring barrel','Holds the mainspring and its brace. Turns clockwise while running, drawing the chain from the fusee.','No. 42168'],
   mainspring:['Mainspring','Inner end on the fixed barrel arbor, outer end on the barrel’s anchor pin. Coils drawn schematically.','No. 42038 · 0.0165 in. thick'],
   chain:['Fusee chain','Links the barrel to the fusee.','No. 42001'],
-  ratchet:['Setup ratchet','Setup ratchet wheel on the barrel arbor under the fan-shaped cover plate, with setup pawl and spring. Keeps the arbor from turning in winding and running.','Wheel 42026 · cover plate 42029'],
+  ratchet:['Setup ratchet','Setup ratchet wheel on the barrel arbor under the bow-shaped cover plate, with setup pawl (click) and spring. Keeps the arbor from turning in winding and running.','Wheel 42026 · cover plate 42029'],
   post:['Dust seal','Nickel dust seal on the barrel bridge where the fusee arbor rises through it, capped by three packing rings over a seal ring and helical spring. The key reaches the squared arbor through it.','Seal 42051 · packing rings 42054'],
   sq:['Fusee arbor square','Turned counterclockwise by the key to wind.','Arbor 42022']
 };

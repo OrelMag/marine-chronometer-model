@@ -70,7 +70,7 @@ Everything is driven from one model clock `tSim`, in local seconds.
 3. **Mapping the top view.** Using those three axes, a similarity transform maps the top-view photograph into the model, with under 0.4 mm residual (`tools/p3map.json`). The following were traced through it:
    - the bridge outline (radius about 40 mm);
    - the crescent balance cock (`tools/cock_outline.json`), shifted for its height parallax so its endstone lands over the staff;
-   - the fan-shaped setup cover;
+   - the bow-shaped setup cover over the ratchet, and the ratchet's size (about 52 teeth, 15.6 mm across);
    - the screw positions;
    - the engraving columns (`tools/engr.json`);
    - the damascene direction.

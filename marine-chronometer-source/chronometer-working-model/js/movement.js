@@ -238,23 +238,29 @@ function buildMovement(M){
   const fsP=part('fs',-16);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
   const fs=makeFusee(M,{yS:-20.1,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:-17.9,bB:-7.4,d:fd});
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
-  /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge */
-  const rt=part('ratchet',-76);
-  mesh(rt,gearGeo(40,0.42,1.4,{ratchet:true,bore:1.4}),M.steel,L.Ba[0],-34.3,L.Ba[1]);
-  cylBetween(rt,1.4,-38,y0,M.steel,L.Ba[0],L.Ba[1]);mesh(rt,new THREE.BoxGeometry(2.4,2.4,2.4),M.steel,L.Ba[0],-37.4,L.Ba[1]);
-  const clk=mesh(rt,pawlGeo(6,1.5,1,true),M.steel,L.Ba[0]-8.5,-34.3,L.Ba[1]-5);clk.rotation.y=-0.9;
+  /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), measured on the top-view photograph:
+     a bow-shaped cover straddling the arbor, ends ~13 mm out along 107 deg / 287 deg, concave sides whose waists just uncover the ratchet teeth;
+     the click shows through the opening on the rim side */
+  const rt=part('ratchet',-76),P2=(r,a)=>[L.Ba[0]+r*Math.cos(a*D2R),L.Ba[1]+r*Math.sin(a*D2R)];
+  mesh(rt,gearGeo(52,0.289,1.0,{ratchet:true,bore:1.4}),M.steel,L.Ba[0],-33.85,L.Ba[1]);
+  cylBetween(rt,1.4,-35.5,y0,M.steel,L.Ba[0],L.Ba[1]);cylBetween(rt,2.3,-35.8,-34.35,M.steel,L.Ba[0],L.Ba[1],28);
+  mesh(rt,new THREE.BoxGeometry(2.2,3.0,2.2),M.steel,L.Ba[0],-37.3,L.Ba[1]);
+  { const Pv=P2(9.5,245),Tp=P2(7.5,220),clk=mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-33.85,Pv[1]);clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));}
   const nBefore=rt.children.length;
-  { const cx=L.Ba[0],cz=L.Ba[1],A0=60*D2R,A1=280*D2R,ro=13.5,ri=2.3,pts=[];
-    for(let k=0;k<=60;k++){const a=A0+(A1-A0)*k/60;pts.push([cx+ro*Math.cos(a),cz+ro*Math.sin(a)]);}
-    for(let k=60;k>=0;k--){const a=A0+(A1-A0)*k/60,r=k===0||k===60?ri+1.5:ri+4.5;pts.push([cx+(k%60===0?ri+2:ri+2)*Math.cos(a),cz+(ri+2)*Math.sin(a)]);}
+  { /* outline in polar coordinates about the arbor: left end arc, rim-side concave edge, right end, centre-side concave edge */
+    const arc3=(a,b,c,n)=>{const[ax,az]=a,[bx,bz]=b,[cx2,cz2]=c,d=2*(ax*(bz-cz2)+bx*(cz2-az)+cx2*(az-bz)),
+        ux=((ax*ax+az*az)*(bz-cz2)+(bx*bx+bz*bz)*(cz2-az)+(cx2*cx2+cz2*cz2)*(az-bz))/d,uz=((ax*ax+az*az)*(cx2-bx)+(bx*bx+bz*bz)*(ax-cx2)+(cx2*cx2+cz2*cz2)*(bx-ax))/d,
+        r=Math.hypot(ax-ux,az-uz),t0=Math.atan2(az-uz,ax-ux),tm=Math.atan2(bz-uz,bx-ux);let t1=Math.atan2(cz2-uz,cx2-ux);
+      const w=t=>((t-t0)%TAU+TAU)%TAU;let dt=w(t1);if(w(tm)>dt)dt-=TAU;const o=[];for(let k=1;k<n;k++){const t=t0+dt*k/n;o.push([ux+r*Math.cos(t),uz+r*Math.sin(t)]);}return o;};
+    const TL=P2(12.8,69.4),BL=P2(13.4,142.7),BR=P2(12.8,249.4),TR=P2(12.7,325.3),pts=[];
+    pts.push(TL,...arc3(TL,P2(13.1,106),BL,20),BL,...arc3(BL,P2(6.9,197),BR,40),BR,...arc3(BR,P2(11.8,287),TR,12),TR,...arc3(TR,P2(6.4,17),TL,40));
     const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
-    const win=new THREE.Path(),W0=195*D2R,W1=250*D2R;win.moveTo(cx+9.6*Math.cos(W0),-(cz+9.6*Math.sin(W0)));
-    for(let k=0;k<=20;k++){const a=W0+(W1-W0)*k/20;win.lineTo(cx+9.6*Math.cos(a),-(cz+9.6*Math.sin(a)));}
-    for(let k=20;k>=0;k--){const a=W0+(W1-W0)*k/20;win.lineTo(cx+6.6*Math.cos(a),-(cz+6.6*Math.sin(a)));}
-    s.holes.push(win);
-    const cvg=new THREE.ExtrudeGeometry(s,{depth:0.5,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
-    R.cover=mesh(rt,cvg,M.plateSolid,0,-35.9,0);
-    screw(rt,cx+11*Math.cos(100*D2R),cz+11*Math.sin(100*D2R),-35.9,1.4,0.7);screw(rt,cx+11*Math.cos(250*D2R),cz+11*Math.sin(250*D2R),-35.9,1.4,0.7);}
+    const h=new THREE.Path();h.absarc(L.Ba[0],-L.Ba[1],2.6,0,TAU,true);s.holes.push(h);
+    const cvg=new THREE.ExtrudeGeometry(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
+    R.cover=mesh(rt,cvg,M.plateSolid,0,-35.5,0);
+    /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */
+    for(const[r,a]of[[11.1,107],[11.8,288]]){const q=P2(r,a);cylBetween(rt,1.7,-34.4,-33.35,M.plateSolid,...q);screw(rt,...q,-35.5,1.4,0.7);}
+    const pv=P2(9.5,245);cylBetween(rt,0.45,-35.65,-35.4,M.steel,...pv);}
   rt.children.slice(nBefore).forEach(o=>o.userData.driveHide=true);
   /* dust seal around the fusee arbor (manual Fig. 24): nickel body on a flange held by two screws, capped by three packing rings; the arbor's squared end takes the key */
   const wp=part('post',-78);

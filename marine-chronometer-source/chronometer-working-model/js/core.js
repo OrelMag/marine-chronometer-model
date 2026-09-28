@@ -75,8 +75,8 @@ function mats(){
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
   M.setPlateFinish=k=>{const c=sc(PLATE_FINISH[k]);for(const m of[M.plate,M.plateSolid]){m.color.copy(c);const g=GHOST.get(m);if(g)g.color.copy(c);}};
   const eng=t=>new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});
-  /* engraving in columns as on the photographed movement (text runs along -x, lines stack toward +z; maker's name omitted) */
-  M.engraveB=eng(engraveCanvas((x,S,k)=>{const cols=[["MODEL 21, 14 JEWELS",0.53,-30.50,17.84,1.64],["MARINE CHRONOMETER",0.27,-27.20,23.38,2.71],["TWO-DAY, 56 HOURS",0.75,-24.81,16.82,1.80],["\u24c3 1761-1941",-7.28,-17.85,13.54,2.79],["MADE IN U.S.A.",-11.74,-19.05,9.84,1.80]];
+  /* engraving in columns as on the photographed movement (text runs along -x, lines stack toward +z; maker's name omitted); the two lines nearest the fusee are shortened to clear the dust-seal flange */
+  M.engraveB=eng(engraveCanvas((x,S,k)=>{const cols=[["MODEL 21, 14 JEWELS",0.53,-30.50,17.84,1.64],["MARINE CHRONOMETER",-2.56,-26.57,17.58,2.2],["TWO-DAY, 56 HOURS",-2.03,-24.19,11.12,1.4],["\u24c3 1761-1941",-7.28,-17.85,13.54,2.79],["MADE IN U.S.A.",-11.74,-19.05,9.84,1.80]];
     x.save();for(const[t,cx,cz,len,sz]of cols){x.save();x.translate(S/2+cx*k,S/2-cz*k);x.rotate(Math.atan2(-0.2161,-0.9764));
       x.font=`600 ${sz*k}px "Instrument Sans", Arial, sans-serif`;const w=x.measureText(t).width;const f=Math.min(1,len*k/w);x.scale(f,1);x.fillText(t,0,0);x.restore();}x.restore();}));
   M.engraveT=eng(engraveCanvas(()=>{}));
