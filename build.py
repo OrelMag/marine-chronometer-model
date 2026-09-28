@@ -59,7 +59,8 @@ def main():
     if SITE.exists():shutil.rmtree(SITE)
     SITE.mkdir()
     write(SITE/'index.html',meta(model,a.site_url,'index.html',keep=a.keep_html))
-    write(SITE/'marine-chronometer.html',meta(essay,a.site_url,'marine-chronometer.html','social-movement.png',a.keep_html))
+    # the essay links to the model by its repository name; on the site the model is the home page
+    write(SITE/'marine-chronometer.html',meta(essay.replace('href="chronometer-working-model.html"','href="./"'),a.site_url,'marine-chronometer.html','social-movement.png',a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # link-preview images
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     print('site/ is ready to upload'+('' if a.site_url else ' (no --site-url given: link previews will show no image)'))

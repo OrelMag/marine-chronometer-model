@@ -8,19 +8,19 @@
 <style>
 :root{
   --bg:#e7eae5; --paper:#f4f5f1; --ink:#16202a; --muted:#56616a; --brass:#8a5d10;
-  --blue:#28479a; --red:#a3261d; --rule:#c6ccc5; --steel:#6d7680;
+  --blue:#28479a; --red:#a3261d; --rule:#c6ccc5; --steel:#6d7680; --copper:#a8672f;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0e141a; --paper:#151d25; --ink:#e1e6e8; --muted:#97a3ac; --brass:#d4a54a;
-    --blue:#89a8ef; --red:#ec7466; --rule:#2a3540; --steel:#9aa4ad;
+    --blue:#89a8ef; --red:#ec7466; --rule:#2a3540; --steel:#9aa4ad; --copper:#d49a63;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0e141a; --paper:#151d25; --ink:#e1e6e8; --muted:#97a3ac; --brass:#d4a54a;
-  --blue:#89a8ef; --red:#ec7466; --rule:#2a3540; --steel:#9aa4ad;
+  --blue:#89a8ef; --red:#ec7466; --rule:#2a3540; --steel:#9aa4ad; --copper:#d49a63;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
@@ -194,8 +194,8 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 
 <h2>The detent</h2>
 <p>An escapement has two jobs. It lets the train advance one tooth at a time, and it gives the balance a small push to replace the energy lost to friction. Every contact disturbs the balance a little, so the ideal escapement touches it as rarely and as briefly as possible. The <em>detent escapement</em> comes very close. It pushes the balance in only one direction of swing, and for the rest of each oscillation the balance swings almost entirely free.</p>
-<p>Here is one full cycle, seen from above. The escape wheel is held still by a jewel, the <em>locking stone</em>, mounted on the <em>detent</em>: a slender blade attached at its foot by a thin, flexible section so that it can swing slightly. The balance staff carries two rollers, each with a jewelled pallet.</p>
-<p>As the balance swings counterclockwise, the small <em>discharging pallet</em> strikes the tip of the gold <em>passing spring</em>. That spring rests against a <em>horn</em> on the detent, so the push lifts the whole detent. The locking stone moves clear, the wheel leaps forward, and a tooth catches the <em>impulse pallet</em> on the large roller and drives the balance on its way. By then the detent has sprung back, ready to catch the next tooth.</p>
+<p>Here is one full cycle, seen from above, drawn to scale from the Hamilton Model 21, the American chronometer made in large numbers for the US Navy during the Second World War. The escape wheel, 13.2 mm across, is held still by a jewel, the <em>locking stone</em>, mounted on the <em>detent</em>: a slender blade whose foot is clamped to a fixed block, joined to it by a thin, flexible spring at the <em>point of flexure</em> so that it can swing slightly. A <em>stop button</em> on the block sets how far the detent can fall back. The balance staff carries two rollers, each with a jewelled pallet.</p>
+<p>As the balance swings counterclockwise, the small <em>discharging pallet</em> strikes the tip of the fine <em>passing spring</em>. That spring rests against a <em>horn</em> on the detent, so the push lifts the whole detent off its stop. The locking stone moves clear, the wheel leaps forward, and a tooth drops into a notch cut in the large roller, its <em>crescent</em>, where it catches the <em>impulse pallet</em> and drives the balance on its way. By then the detent has sprung back, ready to catch the next tooth.</p>
 
 <figure>
   <div class="stage flat" id="f-esc"><canvas aria-label="Animated plan view of a spring detent escapement"></canvas></div>
@@ -205,10 +205,12 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
     <button class="play">Pause</button>
   </div>
   <div class="readout" id="esc-read"></div>
-  <figcaption>The balance wheel itself sits above this plane and is left out; the dial at the top right shows its angle. Drag the cycle slider to step through the motion.</figcaption>
+  <figcaption>The Hamilton Model 21 escapement, laid out from the plan view in its 1948 overhaul manual, with the escape wheel 9.4 mm from the balance. The contacts are solved, not animated by hand: each part moves only when another touches it. The balance wheel itself sits above this plane and is left out; the dial at the top right shows its angle. Drag the cycle slider to step through the motion.</figcaption>
 </figure>
 
 <p>On the return swing the discharging pallet meets the passing spring from the other side. This time the passing spring simply bends away from the horn. The detent never moves, the wheel stays locked, and the balance passes with almost no resistance.</p>
+<p>All of this happens in a few degrees of a swing of some 250° each way, and the tolerances are fine. The US Navy’s overhaul manual for the Model 21 gives a repairer the figures to set, measured as angles of the balance. The <em>lock</em>, from the moment the detent leaves its stop until the tooth drops off the stone, should be about 6°. The wheel’s <em>drop</em> onto the impulse pallet should be about 2°. The whole contact on both swings together, the <em>overall</em>, should be 26° to 30°. The impulse roller, 6.3 mm across, clears the teeth on either side of it by only 0.05 mm, and the horn clears the discharging pallet by a quarter of a millimetre. The figure above meets every one of those settings: its lock is 6.1°, its drop 2.1° and its overall 27.8°.</p>
+<p>Hamilton also chose its materials for the job. The detent is beryllium copper, a springy alloy that doesn’t rust, and the passing spring is Elinvar, a nickel-steel whose stiffness hardly changes with temperature. In English chronometers the passing spring was usually gold.</p>
 <p>The design has a price. A detent escapement isn’t self-starting: if the balance stops, it has to be swung by hand to set it going again. A hard jolt can also knock the detent and let the wheel slip a tooth. In a padded box in a ship’s chart room that’s an acceptable trade, and it is one reason the design stayed in the box instead of moving to the wrist.</p>
 
 <h2>Level on a moving ship</h2>
@@ -240,10 +242,11 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 </figure>
 
 <p>On a real voyage, the chronometer’s value lay less in having no error than in having a predictable one. Before sailing, the navigator established its <em>rate</em>, say a steady gain of 1.3 seconds a day, and applied it to every reading. A chronometer that gains steadily is perfectly usable; one whose rate wanders is not. Ships that could afford it carried two or three, compared daily, so that one misbehaving instrument would give itself away.</p>
+<p>For one real instrument built part by part, see the <a href="chronometer-working-model.html">working model of the Hamilton Model 21</a>. Its layout is fitted to photographs of the movement and its escapement is checked against the manual; every part can be picked out and named, and the hands keep your local time.</p>
 <p>Radio time signals in the early twentieth century, and satellite navigation later, finally retired the chronometer from its job. The instrument itself, a few ounces of oscillating brass keeping a ship’s place on the planet, remains one of the most elegant solutions ever built to a problem that once cost thousands of lives.</p>
 
 <hr>
-<p class="refs"><strong>Further reading.</strong> Rupert T. Gould, <em>The Marine Chronometer: Its History and Development</em> (1923). David Boettcher’s notes on <a href="https://vintagewatchstraps.com/MTEpdf.php">middle temperature error</a>. Bartosz Ciechanowski, <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>, whose approach inspired this page.</p>
+<p class="refs"><strong>Further reading.</strong> <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em>, NAVSHIPS 250-624, Bureau of Ships (1948), the source of the escapement figures above. Rupert T. Gould, <em>The Marine Chronometer: Its History and Development</em> (1923). David Boettcher’s notes on <a href="https://vintagewatchstraps.com/MTEpdf.php">middle temperature error</a>. Bartosz Ciechanowski, <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>, whose approach inspired this page.</p>
 </article>
 <script src="../../vendor/three.min.js"></script>
 <script>

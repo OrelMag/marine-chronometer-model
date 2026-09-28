@@ -153,16 +153,39 @@ function springGeo(R,H,N,th,wire){
 function handGeo(len,w,tail,kind){
   const s=new THREE.Shape();s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);
   if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
+  else if(kind==='leaf'||kind==='lance'){const b=kind==='leaf'?w*1.9:w*1.25,m=kind==='leaf'?0.68:0.8;   /* leaf widest at m·len, drawn to a point */
+    s.lineTo(w*0.35,len*(m-0.25));s.quadraticCurveTo(b,len*(m-0.06),b*0.85,len*m);s.quadraticCurveTo(b*0.45,len*(m+0.14),0,len);s.quadraticCurveTo(-b*0.45,len*(m+0.14),-b*0.85,len*m);s.quadraticCurveTo(-b,len*(m-0.06),-w*0.35,len*(m-0.25));}
   else{s.lineTo(w*0.3,len*0.85);s.lineTo(0,len);s.lineTo(-w*0.3,len*0.85);}
   s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
 }
-/* silvered dial, 4 inch */
-function dialCanvas(){
+/* silvered dial, 4 inch. kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
+   large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale keeps this model's 240° arc */
+function dialCanvas(kind){
   const S=1536,c=S/2,cv=document.createElement('canvas');cv.width=cv.height=S;const x=cv.getContext('2d');
   const g=x.createRadialGradient(c*0.7,c*0.6,S*0.05,c,c,c);g.addColorStop(0,'#f4f4f1');g.addColorStop(1,'#d9dad6');
   x.fillStyle=g;x.beginPath();x.arc(c,c,c,0,TAU);x.fill();
   x.globalAlpha=0.06;x.strokeStyle='#000';for(let r=6;r<c;r+=5){x.lineWidth=1;x.beginPath();x.arc(c,c,r,0,TAU);x.stroke();}x.globalAlpha=1;
   const ink='#17181a';x.strokeStyle=ink;x.fillStyle=ink;
+  if(kind==='roman'){
+    const ln=(cx,cy,a,ra,rb,w)=>{x.lineWidth=w;x.beginPath();x.moveTo(cx+ra*Math.sin(a),cy-ra*Math.cos(a));x.lineTo(cx+rb*Math.sin(a),cy-rb*Math.cos(a));x.stroke();};
+    const circ=(cx,cy,r,w,a0=0,a1=TAU)=>{x.lineWidth=w;x.beginPath();x.arc(cx,cy,r,a0-Math.PI/2,a1-Math.PI/2);x.stroke();};
+    const rad=(t,cx,cy,a,r,sx=1)=>{x.save();x.translate(cx+r*Math.sin(a),cy-r*Math.cos(a));x.rotate(a);x.scale(sx,1);x.fillText(t,0,0);x.restore();};
+    const r1=c*0.965,r2=c*0.925;circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0014);
+    for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,i%5?S*0.0016:S*0.0026);
+    x.beginPath();x.moveTo(c,c-r1-S*0.004);x.lineTo(c-S*0.006,c-r1-S*0.016);x.lineTo(c+S*0.006,c-r1-S*0.016);x.closePath();x.fill();   /* index at 60 */
+    x.font=`600 ${S*0.097}px Spectral, Georgia, serif`;x.textAlign='center';x.textBaseline='middle';
+    ['XII','I','II','III','IIII','V','','VII','VIII','IX','X','XI'].forEach((t,i)=>{if(t)rad(t,c,c,i/12*TAU,c*0.826,t.length>3?0.62:0.78);});
+    const k=0.472,sy=c+c*k,uy=c-c*k,rs=c*0.36,ru=c*0.25;
+    /* seconds: railroad track, 5 s marks long, figures upright every 10 */
+    circ(c,sy,rs,S*0.0018);circ(c,sy,rs*0.9,S*0.0012);circ(c,sy,rs*0.52,S*0.0012);
+    for(let i=0;i<60;i++)ln(c,sy,i/60*TAU,i%5?rs*0.9:rs*0.8,rs,i%5?S*0.0012:S*0.0024);
+    x.font=`400 ${S*0.03}px Spectral, Georgia, serif`;for(let q=1;q<=6;q++){const a=q/6*TAU,r=rs*0.67;x.fillText(String(q*10),c+r*Math.sin(a),sy-r*Math.cos(a)+S*0.002);}
+    /* wind: double arc with 2 h marks, figures every 8 h set radially; AUF at the wound end, AB at the run-down end */
+    const a0=60*D2R,a1=300*D2R;circ(c,uy,ru,S*0.0016,a0,a1);circ(c,uy,ru*0.84,S*0.0012,a0,a1);
+    for(let h=0;h<=56;h+=2){const a=(60+240*h/56)*D2R;ln(c,uy,a,h%8?ru*0.84:ru*0.76,ru,h%8?S*0.0011:S*0.0024);
+      if(h%8===0){x.font=`400 ${S*0.021}px Spectral, Georgia, serif`;rad(String(h),c,uy,a,ru*0.6);}}
+    x.font=`600 ${S*0.026}px Spectral, Georgia, serif`;x.fillText('AUF',c+ru*0.92,uy-ru*0.92);x.fillText('AB',c-ru*0.92,uy-ru*0.92);
+    return cv;}
   const r1=c*0.955,r2=c*0.905;x.lineWidth=S*0.0018;for(const r of[r1,r2]){x.beginPath();x.arc(c,c,r,0,TAU);x.stroke();}
   for(let i=0;i<60;i++){const a=i/60*TAU;x.lineWidth=i%5?S*0.0022:S*0.0055;const ra=i%5?r2:c*0.885;x.beginPath();x.moveTo(c+ra*Math.sin(a),c-ra*Math.cos(a));x.lineTo(c+r1*Math.sin(a),c-r1*Math.cos(a));x.stroke();}
   x.font=`600 ${S*0.085}px Spectral, Georgia, serif`;x.textAlign='center';x.textBaseline='middle';

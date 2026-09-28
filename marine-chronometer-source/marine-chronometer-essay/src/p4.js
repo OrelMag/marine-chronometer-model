@@ -24,86 +24,124 @@ function initTrain(){
 }
 
 /* ---------- F7 detent escapement (2D) ---------- */
+/* The Hamilton Model 21 escapement, solved as in the working model (chronometer-working-model/js/movement.js, ESC): unit = escape-wheel radius (6.58 mm),
+   balance at the origin, wheel 9.40 mm away. Layout after the manual's Fig. 90; the settings meet its adjustment figures (Sec. VIII), which
+   tools/escapement.js checks on the model. Keep the two copies in step. */
+const ESC=(()=>{
+  const ES=13.16/2,NT=16,P=TAU/NT,EX=-9.3997/ES,A=255*D2R,G=3.5,rRoll=0.48,rp=0.48,rT=0.286,rd=0.305,rDR=0.22,wI=0.06,wD=0.048,rho=0.1/ES,dL=0.019,DRAW=10*D2R,t0=P/2,lockA=t0-2*P,aI=181.3*D2R,aD=267.5*D2R;
+  const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
+  const dirB={x:Math.cos(68*D2R),y:Math.sin(68*D2R)},nB={x:dirB.y,y:-dirB.x},BL=1.72,Ft={x:S.x-BL*dirB.x,y:S.y-BL*dirB.y};
+  const Pt={x:-rT*dirB.x,y:-rT*dirB.y},Ps0={x:Pt.x-1.2*dirB.x,y:Pt.y-1.2*dirB.y};
+  const LEN=Math.hypot(Pt.x-Ft.x,Pt.y-Ft.y),nH={x:(Pt.y-Ft.y)/LEN,y:-(Pt.x-Ft.x)/LEN};
+  const aIc=aI+Math.asin(wI/2/rp);
+  const rot=(q,l)=>{const d=-l/LEN,c=Math.cos(d),s=Math.sin(d);return{x:Ft.x+(q.x-Ft.x)*c-(q.y-Ft.y)*s,y:Ft.y+(q.x-Ft.x)*s+(q.y-Ft.y)*c};};
+  const off=(p,a,b)=>({x:p.x+dirB.x*a+nB.x*b,y:p.y+dirB.y*a+nB.y*b}),D=(t,n)=>off(Ft,t,n);
+  const cD=Math.cos(DRAW),sD=Math.sin(DRAW),nF={x:dirB.x*cD+nB.x*sD,y:dirB.y*cD+nB.y*sD},fF={x:dirB.x*sD-nB.x*cD,y:dirB.y*sD-nB.y*cD};
+  const rJ=0.046,eJ=0.012,hJ=Math.sqrt(rJ*rJ-eJ*eJ),Jc=off(S,0,0),stone=[];Jc.x+=(dL-hJ)*fF.x-eJ*nF.x;Jc.y+=(dL-hJ)*fF.y-eJ*nF.y;
+  { const al=Math.atan2(eJ,hJ);for(let k=0;k<=14;k++){const a=al-(Math.PI+2*al)*k/14;stone.push({x:Jc.x+rJ*(Math.cos(a)*fF.x+Math.sin(a)*nF.x),y:Jc.y+rJ*(Math.cos(a)*fF.y+Math.sin(a)*nF.y)});} }
+  const clear=l=>Math.min(...stone.map(q=>{const r=rot(q,l);return Math.hypot(r.x-EX,r.y);}))>1+0.003;
+  let lo=0,hi=0.3;for(let i=0;i<40;i++){const m=(lo+hi)/2;clear(m)?hi=m:lo=m;}const lRel=hi;
+  const TH0=-70*D2R,DT=0.02*D2R,NTB=5001,RET=1.5*D2R,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho;
+  const push=(th,dir,sg)=>{const ps=aD+th,u={x:Math.cos(ps),y:Math.sin(ps)},m={x:-u.y,y:u.x},pm=Pt.x*m.x+Pt.y*m.y,dm=dir.x*m.x+dir.y*m.y;
+    if(Pt.x*u.x+Pt.y*u.y<0)return 0;const d=sg>0?(wD/2+rho-pm)/dm:(pm+wD/2+rho)/dm;if(d<=0)return 0;
+    const q={x:Pt.x+sg*d*dir.x,y:Pt.y+sg*d*dir.y};return q.x*u.x+q.y*u.y>reach?-d:d;};
+  const hold=(th,dir,sg,d,sl)=>{const ps=aD+th,u={x:Math.cos(ps),y:Math.sin(ps)},m={x:-u.y,y:u.x},q={x:Pt.x+sg*d*dir.x,y:Pt.y+sg*d*dir.y};
+    if(Math.abs(q.x*m.x+q.y*m.y)>=wD/2+rho||q.x*u.x+q.y*u.y>=reach)return d;return Math.min(sl,Math.max(d,(reach-Pt.x*u.x-Pt.y*u.y)/(sg*(dir.x*u.x+dir.y*u.y))));};
+  { let sl=-1,thS=0,lm=0;for(let i=0;i<NTB;i++){const th=TH0+i*DT;if(sl<0){const d=push(th,nH,1);if(d<0){sl=lm;thS=th;}else{LI[i]=d;lm=d;continue;}}LI[i]=hold(th,nH,1,sl*Math.max(0,1-(th-thS)/RET),sl);}
+    sl=-1;lm=0;for(let i=NTB-1;i>=0;i--){const th=TH0+i*DT;if(sl<0){const d=push(th,nB,-1);if(d<0){sl=lm;thS=th;}else{PS[i]=d;lm=d;continue;}}PS[i]=hold(th,nB,-1,sl*Math.max(0,1-(thS-th)/RET),sl);} }
+  const tab=(T,th)=>{const f=(th-TH0)/DT,i=Math.floor(f);return i<0||i>=NTB-1?0:T[i]+(T[i+1]-T[i])*(f-i);};
+  let thRel=0;for(let i=0;i<NTB;i++)if(LI[i]>=lRel){thRel=TH0+i*DT;break;}
+  const bite=th=>{const c=aIc+th,u={x:Math.cos(c),y:Math.sin(c)},h=wI/2,sT=Math.sqrt(rp*rp-h*h),ox=h*u.y,oy=-h*u.x;let a=-1e9;
+    const qx=sT*u.x+ox,qy=sT*u.y+oy;if(qx<0&&Math.hypot(qx-EX,qy)<1)a=Math.atan2(qy,qx-EX);
+    const cx=ox-EX,b=u.x*cx+u.y*oy,dc=b*b-(cx*cx+oy*oy-1);if(dc>0){const s=-b-Math.sqrt(dc);if(s>0&&s<=sT){const px=s*u.x+ox;if(px<0)a=Math.max(a,Math.atan2(s*u.y+oy,px-EX));}}
+    return a;};
+  function state(p){
+    const th=-A*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0;
+    const lift=ccw?tab(LI,th):0,psDef=ccw?0:tab(PS,th);let prog;
+    if(ccw&&th>thRel){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);prog=phi<=-P?1:-phi/P;}
+    else prog=ccw?0:1;
+    return{th,ccw,lift,psDef,prog};
+  }
+  function springPts(s){const a0=rot(Ps0,s.lift),am=rot({x:(Ps0.x+Pt.x)/2,y:(Ps0.y+Pt.y)/2},s.lift),tp=rot(Pt,s.lift);tp.x-=nB.x*s.psDef;tp.y-=nB.y*s.psDef;return[a0,am,tp];}
+  const rect=(t0,t1,n0,n1)=>[D(t0,n0),D(t1,n0),D(t1,n1),D(t0,n1)],tR=(Ps0.x-Ft.x)*dirB.x+(Ps0.y-Ft.y)*dirB.y,nR=(Ps0.x-Ft.x)*nB.x+(Ps0.y-Ft.y)*nB.y;
+  const tH=tR+1.2-(rd+0.038-rT);
+  const thick=(pts,w)=>{const L2=[],R2=[];pts.forEach((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy);L2.push({x:p.x-dy/l*w,y:p.y+dx/l*w});R2.push({x:p.x+dy/l*w,y:p.y-dx/l*w});});return L2.concat(R2.reverse());};
+  const pieces={
+    spring:rect(0,0.58,-0.058,-0.046),cross:rect(0.58,0.68,-0.075,0.083),blade:rect(0.66,BL-0.07,-0.06,-0.03),block:rect(BL-0.08,BL+0.08,-0.08,0.08),
+    arm:thick([D(BL+0.06,0),D(BL+0.2,0),D(tH-0.03,nR+rho+0.03)],0.025),horn:rect(tH-0.07,tH,nR+rho,nR+rho+0.05),
+    bracket:[D(0.62,0.083),D(0.72,0.083),D(0.72,nR+0.015),D(tR+0.06,nR+0.015),D(tR+0.06,nR+0.05),D(0.62,nR+0.05)],
+    stone
+  };
+  const fixed={foot:rect(-1.45,0,-0.083,0.083),blockMain:rect(-1.5,0.9,-0.5,-0.083),blockFront:rect(0.9,BL-0.1,-0.3,-0.083),button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
+  return{NT,P,EX,rp,rRoll,rd,rDR,wI,wD,t0,aIc,aD,S,Ft,LEN,nB,BL,tH,nR,rho,D,pieces,fixed,state,springPts,thRel};
+})();
 function initEsc(){
-  const st=$('#f-esc');const C=canvas2D(st,w=>w<520?0.98:0.78);
-  /* Hamilton Model 21 proportions: 16 teeth, centres 1.55 wheel radii apart (Rawlings plan), balance motion 1-3/8 turns */
-  const NT=16,P=TAU/NT,EX=-1.55,RT=1,RR=0.77,A=255*D2R,TU=-6*D2R,WB=4*D2R,G=3.5;
-  const rp=0.6,rRoll=0.48,rd=0.4,rDR=0.22,t0=P/2,lockA=t0-2*P,aI=178*D2R;
-  const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)},dl=Math.hypot(S.x,S.y),dir={x:-S.x/dl,y:-S.y/dl},u={x:dir.y,y:-dir.x};
-  const angD=Math.atan2(S.y,S.x),aD=angD-TU;
-  const Ft={x:S.x-1.25*dir.x,y:S.y-1.25*dir.y},H={x:-0.47*dir.x,y:-0.47*dir.y},Pt={x:-0.33*dir.x,y:-0.33*dir.y};
-  const LEN=Math.hypot(H.x-Ft.x,H.y-Ft.y),thRel=TU-WB*Math.sqrt(0.45);
+  const st=$('#f-esc');const C=canvas2D(st,w=>w<520?0.84:0.8);
+  const E=ESC,RT=1,RR=0.77;
   let phase=0.15,speed=0.08,playing=!RM;
   const phIn=$('.phase',st.parentElement),spIn=$('.speed',st.parentElement),btn=$('.play',st.parentElement),ro=$('#esc-read');
-  function state(p){
-    const th=-A*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0,bump=Math.max(0,1-((th-TU)/WB)**2);
-    const lift=ccw?0.13*bump:0,psDef=ccw?0:0.09*bump;let phi=0,stage;
-    if(ccw&&th>thRel){const psi=aI+th,yp=rp*Math.sin(psi),xp=rp*Math.cos(psi),cx=EX+Math.sqrt(Math.max(0,RT*RT-yp*yp));
-      const inL=xp<cx&&Math.cos(psi)<0;const pf=-(th-thRel)*G,pc=inL?Math.asin(clamp(yp/RT,-1,1))-t0:-1e9;phi=Math.max(pf,pc);
-      if(phi<=-P){phi=0;stage=lift>0.005?'relock':'free';}else stage=pc>=pf?'impulse':'drop';}
-    else stage=ccw?(lift>0.005?'unlock':'free'):(psDef>0.005?'passing':'free');
-    return{th,ccw,lift,psDef,phi,stage};
-  }
-  const TXT={free:'The wheel is locked and the balance swings freely.',unlock:'Unlocking: the discharging pallet pushes the passing spring against the horn and lifts the detent.',
-    drop:'Unlocked: the locking stone is clear and the escape wheel jumps forward.',impulse:'Impulse: a tooth drives the impulse pallet, pushing the balance.',
-    relock:'The detent springs back and the locking stone catches the next tooth.',passing:'Return swing: the passing spring bends away from the horn. The detent doesn’t move.'};
+  const stage=s=>!s.ccw?(s.psDef>0.002?'passing':'free'):s.prog>0&&s.prog<1?(s.prog<0.25?'drop':'impulse'):s.lift>0.002?(s.prog?'relock':'unlock'):'free';
+  const TXT={free:'The wheel is locked and the balance swings freely.',unlock:'Unlocking: the discharging pallet pushes the passing spring against the horn and lifts the detent off its stop.',
+    drop:'Unlocked: the locking stone is clear and the escape wheel drops forward into the roller’s crescent.',impulse:'Impulse: a tooth drives the impulse pallet, pushing the balance.',
+    relock:'The detent falls back onto its stop and the locking stone catches the next tooth.',passing:'Return swing: the passing spring bends away from the horn. The detent doesn’t move.'};
   const f=C.fig=addFig(st,dt=>{if(playing){phase=(phase+dt*speed/0.5)%1;phIn.value=Math.round(phase*1000);f.dirty=true;}if(!f.dirty)return;f.dirty=false;draw();});
   bindRange(phIn,v=>{phase=v/1000;f.dirty=true;return Math.round(v/10)+'%';});
   phIn.addEventListener('pointerdown',()=>{playing=false;upBtn();});
   bindRange(spIn,v=>{speed=v;return '×'+v.toFixed(2);});
   const upBtn=bindPlay(btn,()=>playing,v=>playing=v);
   function draw(){
-    const{ctx,w,h}=C;ctx.clearRect(0,0,w,h);const s=state(phase);
-    const x0=-2.75,x1=1.8,y0=-1.95,y1=1.2,sc=Math.min(w/(x1-x0),h/(y1-y0)),ox=(w-(x1-x0)*sc)/2-x0*sc,oy=(h-(y1-y0)*sc)/2+y1*sc;
+    const{ctx,w,h}=C;ctx.clearRect(0,0,w,h);const s=E.state(phase),narrow=w<520;
+    const x0=-2.85,x1=1.75,y0=-2.5,y1=1.2,sc=Math.min(w/(x1-x0),h/(y1-y0)),ox=(w-(x1-x0)*sc)/2-x0*sc,oy=(h-(y1-y0)*sc)/2+y1*sc;
     const X=x=>ox+x*sc,Y=y=>oy-y*sc;
-    const brass=PAL.brass,ink=PAL.ink,ruby='#c3163b',gold='#d8a93a';
+    const brass=PAL.brass,ink=PAL.ink,ruby='#c3163b',phi=-(s.prog%1)*E.P;
     // escape wheel
     ctx.beginPath();let first=true;
-    for(let k=0;k<NT;k++){const a=t0+k*P+s.phi;const pts=[[RR,a-0.005],[RT,a]];for(let j=1;j<=6;j++){const q=j/6;pts.push([RT-(RT-RR)*Math.pow(q,0.6),a+P*0.72*q]);}pts.push([RR,a+P*0.99]);
-      for(const[r,aa]of pts){const px=X(EX+r*Math.cos(aa)),py=Y(r*Math.sin(aa));first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;}}
+    for(let k=0;k<E.NT;k++){const a=E.t0+k*E.P+phi;const pts=[[RR,a-0.005],[RT,a]];for(let j=1;j<=6;j++){const q=j/6;pts.push([RT-(RT-RR)*Math.pow(q,0.6),a+E.P*0.72*q]);}pts.push([RR,a+E.P*0.99]);
+      for(const[r,aa]of pts){const px=X(E.EX+r*Math.cos(aa)),py=Y(r*Math.sin(aa));first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;}}
     ctx.closePath();ctx.fillStyle=brass;ctx.globalAlpha=0.85;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=ink;ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle=PAL.paper;ctx.beginPath();ctx.arc(X(EX),Y(0),0.62*sc,0,TAU);ctx.fill();
+    ctx.fillStyle=PAL.paper;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.62*sc,0,TAU);ctx.fill();
     ctx.strokeStyle=brass;ctx.lineWidth=0.09*sc;ctx.globalAlpha=0.85;
-    for(let k=0;k<4;k++){const a=s.phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(EX),Y(0));ctx.lineTo(X(EX+0.64*Math.cos(a)),Y(0.64*Math.sin(a)));ctx.stroke();}
-    ctx.globalAlpha=1;ctx.fillStyle=brass;ctx.beginPath();ctx.arc(X(EX),Y(0),0.14*sc,0,TAU);ctx.fill();ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(EX),Y(0),0.035*sc,0,TAU);ctx.fill();
-    // impulse roller
-    ctx.fillStyle=PAL.steel;ctx.globalAlpha=0.18;ctx.beginPath();ctx.arc(X(0),Y(0),rRoll*sc,0,TAU);ctx.fill();ctx.globalAlpha=0.6;ctx.strokeStyle=PAL.steel;ctx.lineWidth=1.2;ctx.stroke();ctx.globalAlpha=1;
-    const jewel=(ang,r0,r1,wd,col)=>{const c=Math.cos(ang),sn=Math.sin(ang),px=-sn*wd/2,py=c*wd/2;ctx.fillStyle=col;ctx.beginPath();
+    for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(E.EX),Y(0));ctx.lineTo(X(E.EX+0.64*Math.cos(a)),Y(0.64*Math.sin(a)));ctx.stroke();}
+    ctx.globalAlpha=1;ctx.fillStyle=brass;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.14*sc,0,TAU);ctx.fill();ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.035*sc,0,TAU);ctx.fill();
+    // impulse roller with its crescent: the teeth dip into it to reach the jewel, which ends flush with the roller
+    const arc=(r,a0,a1,n)=>{for(let i=0;i<=n;i++){const q=a0+(a1-a0)*i/n;ctx.lineTo(X(r*Math.cos(q)),Y(r*Math.sin(q)));}},ai=E.aIc+s.th,rr=E.rRoll;
+    ctx.beginPath();arc(rr,ai+0.16,ai-0.6+TAU,60);arc(rr*0.55,ai-0.6,ai,12);arc(rr*0.86,ai,ai+0.16,4);ctx.closePath();
+    ctx.fillStyle=PAL.steel;ctx.globalAlpha=0.25;ctx.fill();ctx.globalAlpha=0.7;ctx.strokeStyle=PAL.steel;ctx.lineWidth=1.2;ctx.stroke();ctx.globalAlpha=1;
+    const jewel=(ang,r0,r1,wd)=>{const c=Math.cos(ang),sn=Math.sin(ang),px=-sn*wd/2,py=c*wd/2;ctx.fillStyle=ruby;ctx.beginPath();
       ctx.moveTo(X(r0*c+px),Y(r0*sn+py));ctx.lineTo(X(r1*c+px),Y(r1*sn+py));ctx.lineTo(X(r1*c-px),Y(r1*sn-py));ctx.lineTo(X(r0*c-px),Y(r0*sn-py));ctx.closePath();ctx.fill();};
-    const psi=aI+s.th;jewel(psi,rRoll-0.08,rp,0.055,ruby);
-    // detent
-    const del=-s.lift/LEN,cd=Math.cos(del),sd=Math.sin(del);
-    const R=(p)=>({x:Ft.x+(p.x-Ft.x)*cd-(p.y-Ft.y)*sd,y:Ft.y+(p.x-Ft.x)*sd+(p.y-Ft.y)*cd});
-    const poly=(pts,col,stroke)=>{ctx.beginPath();pts.forEach((p,i)=>{const q=R(p);i?ctx.lineTo(X(q.x),Y(q.y)):ctx.moveTo(X(q.x),Y(q.y));});ctx.closePath();ctx.fillStyle=col;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}};
-    const at=(b,d,e)=>({x:b.x+dir.x*d+u.x*e,y:b.y+dir.y*d+u.y*e});
-    ctx.fillStyle=PAL.muted;ctx.fillRect(X(Ft.x)-0.1*sc,Y(Ft.y)-0.07*sc,0.2*sc,0.14*sc);
-    poly([at(Ft,0,0.012),at(Ft,0.22,0.012),at(Ft,0.3,0.03),at(H,0,0.022),at(H,0,-0.022),at(Ft,0.3,-0.03),at(Ft,0.22,-0.012),at(Ft,0,-0.012)],PAL.steel,ink);
-    poly([at(H,-0.02,-0.02),at(H,0,-0.02),at(H,0,-0.07),at(H,-0.02,-0.07)],PAL.steel,ink);
-    poly([at(S,0,0.02),at(S,-0.04,0.02),at(S,-0.04,-0.085),at(S,0,-0.085)],ruby);
-    const a0=R(at(S,0.12,-0.035)),am=R(at(H,0,-0.075)),tip=R(at(Pt,0,-0.075));tip.x-=u.x*s.psDef;tip.y-=u.y*s.psDef;
-    ctx.strokeStyle=gold;ctx.lineWidth=Math.max(2,0.018*sc);ctx.beginPath();ctx.moveTo(X(a0.x),Y(a0.y));ctx.quadraticCurveTo(X(am.x),Y(am.y),X(tip.x),Y(tip.y));ctx.stroke();
+    jewel(ai,rr-0.08,E.rp,E.wI);
+    // detent: foot, support block and stop button fixed; the rest turns about the point of flexure
+    const del=-s.lift/E.LEN,cd=Math.cos(del),sd=Math.sin(del),Ft=E.Ft;
+    const R=p=>({x:Ft.x+(p.x-Ft.x)*cd-(p.y-Ft.y)*sd,y:Ft.y+(p.x-Ft.x)*sd+(p.y-Ft.y)*cd});
+    const poly=(pts,col,fix)=>{ctx.beginPath();pts.forEach((q,i)=>{const r=fix?q:R(q);i?ctx.lineTo(X(r.x),Y(r.y)):ctx.moveTo(X(r.x),Y(r.y));});ctx.closePath();ctx.fillStyle=col;ctx.fill();};
+    ctx.globalAlpha=0.35;for(const k in E.fixed)poly(E.fixed[k],k==='foot'?PAL.copper:PAL.steel,true);ctx.globalAlpha=1;
+    for(const k in E.pieces)poly(E.pieces[k],k==='stone'?ruby:PAL.copper);
+    const[a0,am,tp]=E.springPts(s);
+    ctx.strokeStyle=PAL.steel;ctx.lineWidth=Math.max(2,0.014*sc);ctx.beginPath();ctx.moveTo(X(a0.x),Y(a0.y));ctx.quadraticCurveTo(X(am.x),Y(am.y),X(tp.x),Y(tp.y));ctx.stroke();
     // discharging roller
-    ctx.fillStyle=PAL.steel;ctx.beginPath();ctx.arc(X(0),Y(0),rDR*sc,0,TAU);ctx.fill();ctx.strokeStyle=ink;ctx.lineWidth=1;ctx.stroke();
-    jewel(aD+s.th,rDR-0.05,rd,0.045,ruby);
-    ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(0),Y(0),0.04*sc,0,TAU);ctx.fill();
+    ctx.fillStyle=PAL.steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();ctx.strokeStyle=ink;ctx.lineWidth=1;ctx.stroke();
+    jewel(E.aD+s.th,E.rDR-0.05,E.rd,E.wD);
+    ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(0),Y(0),0.03*sc,0,TAU);ctx.fill();
     // labels
-    ctx.font='12px "Instrument Sans",sans-serif';ctx.fillStyle=ink;ctx.strokeStyle=PAL.muted;ctx.lineWidth=0.8;
-    const lab=(t,px,py,lx,ly,al)=>{ctx.beginPath();ctx.moveTo(X(px),Y(py));ctx.lineTo(X(lx),Y(ly));ctx.stroke();ctx.textAlign=al||'left';ctx.textBaseline='middle';ctx.fillText(t,X(lx)+(al==='right'?-4:4),Y(ly));};
-    lab('Escape wheel',EX-0.5,0.78,EX-0.7,1.08,'left');
-    const sp=R(S);lab('Locking stone',sp.x-0.05,sp.y-0.06,-0.5,-1.25,'left');
-    const md=R(at(Ft,0.55,0));lab('Detent',md.x,md.y,-1.9,-0.35,'right');
-    const ft=Ft;lab('Foot',ft.x,ft.y,-2.2,-1.75,'right');
-    lab('Passing spring',tip.x,tip.y,0.35,-0.85,'left');
-    const ip={x:rp*Math.cos(psi),y:rp*Math.sin(psi)};lab('Impulse pallet',ip.x,ip.y,-0.2,0.95,'left');
-    const dp={x:rd*Math.cos(aD+s.th),y:rd*Math.sin(aD+s.th)};lab('Discharging pallet',dp.x,dp.y,0.3,-0.55,'left');
-    lab('Impulse roller',rRoll*0.8,rRoll*0.45,0.62,0.2,'left');
+    ctx.font=(narrow?11:12)+'px "Instrument Sans",sans-serif';ctx.fillStyle=ink;ctx.strokeStyle=PAL.muted;ctx.lineWidth=0.8;
+    const lab=(t,p,lx,ly,al)=>{ctx.beginPath();ctx.moveTo(X(p.x),Y(p.y));ctx.lineTo(X(lx),Y(ly));ctx.stroke();ctx.textAlign=al||'left';ctx.textBaseline='middle';ctx.fillText(t,X(lx)+(al==='right'?-4:4),Y(ly));};
+    lab('Escape wheel',{x:E.EX-0.5,y:0.78},E.EX-0.75,1.08);
+    lab('Locking stone',R(E.S),-1.55,-1.15,'right');
+    lab('Detent',R(E.D(1.2,-0.045)),-1.6,-1.6,'right');
+    lab('Point of flexure',E.D(0.3,-0.052),-1.75,-2.15,'right');
+    lab('Stop button',E.D(E.BL-0.15,-0.07),-0.2,-1.95,'left');
+    lab('Horn',R(E.D(E.tH-0.035,E.nR+E.rho+0.05)),0.55,-1.45,'left');
+    lab('Passing spring',R(E.D(E.tH-0.5,E.nR)),0.55,-1.05,'left');
+    const dp={x:E.rd*Math.cos(E.aD+s.th),y:E.rd*Math.sin(E.aD+s.th)};lab('Discharging pallet',dp,0.55,-0.6,'left');
+    const ip={x:E.rp*Math.cos(ai),y:E.rp*Math.sin(ai)};lab('Impulse pallet',ip,-0.25,0.95,'left');
+    lab('Impulse roller',{x:rr*Math.cos(ai+2.2),y:rr*Math.sin(ai+2.2)},0.62,0.2,'left');
     // balance gauge
-    const gx=X(1.4),gy=Y(0.95),gr=Math.min(30,0.24*sc);
+    const gx=X(1.35),gy=Y(0.9),gr=Math.min(30,0.24*sc);
     ctx.strokeStyle=PAL.rule;ctx.lineWidth=2;ctx.beginPath();ctx.arc(gx,gy,gr,0,TAU);ctx.stroke();
     ctx.strokeStyle=PAL.blue;ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+gr*Math.cos(-Math.PI/2-s.th),gy+gr*Math.sin(-Math.PI/2-s.th));ctx.stroke();
     ctx.fillStyle=PAL.muted;ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('balance',gx,gy+gr+4);
-    ctx.fillText((s.th/D2R).toFixed(0)+'°',gx,gy+gr+18);
-    ro.innerHTML=`<b>${s.ccw?'Counterclockwise swing.':'Clockwise swing.'}</b> ${TXT[s.stage]}`;
+    ctx.fillText((Math.round(s.th/D2R)||0)+'°',gx,gy+gr+18);
+    ro.innerHTML=`<b>${s.ccw?'Counterclockwise swing.':'Clockwise swing.'}</b> ${TXT[stage(s)]}`;
   }
 }
 

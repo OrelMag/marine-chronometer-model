@@ -3,7 +3,7 @@
 const fs=require('fs'),path=require('path');
 const SRC=fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8');
 const TAU=Math.PI*2,D2R=Math.PI/180,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-const lines=SRC.split('\n'),i0=lines.findIndex(l=>l.startsWith('const L=')),i1=lines.findIndex((l,i)=>i>i0&&l==='})();');
+const lines=SRC.split(/\r?\n/),i0=lines.findIndex(l=>l.startsWith('const L=')),i1=lines.findIndex((l,i)=>i>i0&&l==='})();');
 function build(ov={}){   /* L, ES and ESC from movement.js, with any of ESC's constants overridden */
   let code=lines.slice(i0,i1+1).join('\n');
   for(const[k,v]of Object.entries(ov)){const re=new RegExp('([,\\s])'+k+'=([-0-9.]+)(\\*D2R)?');if(!re.test(code))throw Error('no constant '+k);code=code.replace(re,(m,a,b,c)=>a+k+'='+v+(c||''));}

@@ -252,8 +252,12 @@ for the wind indicator; `MOD` holds the tooth sizes).
 
 **Change the dial.** The dial is painted on a canvas in `dialCanvas()` in
 `core.js`: chapter ring, numerals, the seconds and UP–DOWN sub-dials and the
-inscription. The hands are `handGeo()` shapes in `core.js`, placed in the
-"dial, hands, motion work" block of `movement.js`.
+inscription. `dialCanvas('roman')` draws the Variants panel's alternative, a
+Roman dial after the A. Lange & Söhne deck chronometers (no maker's name or
+number; its AUF–AB wind scale uses this movement's 240° sweep). The hands are
+`handGeo()` shapes in `core.js`, placed in the "dial, hands, motion work" block
+of `movement.js`; each dial style has its own set (`userData.dk`), switched with
+`mv.userData.dial(kind)`, which paints the Roman texture on first use.
 
 **Change materials and colours.** `mats()` in `core.js` defines every material
 (`M.plate`, `M.gilt`, `M.steel`, `M.blued`, `M.ruby`, …). Colours are sRGB hex

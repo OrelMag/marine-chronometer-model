@@ -7,7 +7,7 @@ const $=(s,r=document)=>r.querySelector(s);
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const HAS3D=typeof THREE!=='undefined';
 const PAL={};
-function readPal(){const s=getComputedStyle(document.documentElement);['ink','muted','brass','blue','red','rule','paper','bg','steel'].forEach(k=>PAL[k]=s.getPropertyValue('--'+k).trim());}
+function readPal(){const s=getComputedStyle(document.documentElement);['ink','muted','brass','blue','red','rule','paper','bg','steel','copper'].forEach(k=>PAL[k]=s.getPropertyValue('--'+k).trim());}
 readPal();
 
 const FIGS=[];
