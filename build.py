@@ -11,7 +11,8 @@ Writes:
   site/                                                         (the folder to upload to a web host)
      index.html            the working model, the site's home page
      marine-chronometer.html   the essay
-     social.png            the link-preview image
+     social.png            link-preview image of the model page (the dial in its box)
+     social-movement.png   link-preview image of the essay page (the mechanism), also for posting
 Each HTML file is self-contained: three.js and the fonts are inlined, so nothing is fetched from another server.
 """
 import argparse,os,pathlib,re,shutil,subprocess,sys
@@ -29,12 +30,12 @@ def check(name,html):
     r=remote_refs(html)
     if r:sys.exit(f'{name} still loads {r}: vendor the file and point the page at it')
 
-def meta(html,url,page):
+def meta(html,url,page,img='social.png'):
     """Link-preview and canonical tags that need the site's absolute address."""
     if not url:return html
     u=url.rstrip('/')+'/'+('' if page=='index.html' else page)
     tags=(f'<link rel="canonical" href="{u}">\n<meta property="og:url" content="{u}">\n'
-          f'<meta property="og:image" content="{url.rstrip("/")}/social.png">\n<meta property="og:image:width" content="1200">\n'
+          f'<meta property="og:image" content="{url.rstrip("/")}/{img}">\n<meta property="og:image:width" content="1200">\n'
           f'<meta property="og:image:height" content="630">\n<meta name="twitter:card" content="summary_large_image">\n')
     return html.replace('</head>',tags+'</head>',1)
 
@@ -55,8 +56,8 @@ def main():
     if SITE.exists():shutil.rmtree(SITE)
     SITE.mkdir()
     write(SITE/'index.html',meta(model,a.site_url,'index.html'))
-    write(SITE/'marine-chronometer.html',meta(essay,a.site_url,'marine-chronometer.html'))
-    shutil.copy(ROOT/'site-assets/social.png',SITE/'social.png')
+    write(SITE/'marine-chronometer.html',meta(essay,a.site_url,'marine-chronometer.html','social-movement.png'))
+    for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # link-preview images
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     print('site/ is ready to upload'+('' if a.site_url else ' (no --site-url given: link previews will show no image)'))
 

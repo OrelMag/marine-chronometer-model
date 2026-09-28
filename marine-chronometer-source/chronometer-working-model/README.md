@@ -28,7 +28,7 @@ copies and assembles the website (see the root README).
 | `build.py` | Inlines the CSS, JS, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
 | `tools/interference-check.js` | Voxel collision test used to find and remove overlapping parts |
 | `tools/audit.py`, `tools/geometry-audit*.js` | Geometry audit: overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
-| `tools/social.py` | Renders the 1200 × 630 link-preview image into `site-assets/social.png` |
+| `tools/social.py` | Renders the 1200 × 630 link-preview images into `site-assets/`: `social.png` (the dial in its box) and `social-movement.png` (the moving parts) |
 
 ## Controls
 
@@ -229,6 +229,6 @@ escape-wheel progress for balance phase `p`. The 2-D walkthrough diagram
 Record what you change in the escapement entry under "Estimated, not from the
 manual".
 
-**Update the link-preview image** after visible changes: from `tools/`, run
-`python social.py` (default view: dial), or for example
-`python social.py movement` for another view, then rebuild from the root.
+**Update the link-preview images** after visible changes: from `tools/`, run
+`python social.py` for both, or `python social.py dial` / `python social.py movement` for one, then rebuild
+from the root. For a custom shot: `python social.py --out name.png --view movement --drive --cam YAW PITCH DIST FOV`.
