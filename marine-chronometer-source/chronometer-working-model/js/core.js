@@ -68,7 +68,7 @@ function mats(){
   const stx=stripeTex(),st=stx.map,wt=woodTex();
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
-    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),blued:S(0x2b4cb0,0.8,0.28),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),
+    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),blued:S(0x1a2c7a,0.9,0.24),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),
     chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3,{side:THREE.DoubleSide}),
     wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
     invar:S(0xa7aaa6,1,0.28)};
@@ -152,7 +152,7 @@ function springGeo(R,H,N,th,wire){
 }
 function handGeo(len,w,tail,kind){
   const s=new THREE.Shape();s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);
-  if(kind==='spade'){s.lineTo(w*0.35,len*0.55);s.lineTo(w*1.9,len*0.72);s.lineTo(0,len);s.lineTo(-w*1.9,len*0.72);s.lineTo(-w*0.35,len*0.55);}
+  if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
   else{s.lineTo(w*0.3,len*0.85);s.lineTo(0,len);s.lineTo(-w*0.3,len*0.85);}
   s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
 }
@@ -171,10 +171,12 @@ function dialCanvas(){
   const k=0.472,rs=c*0.24,sy=c+c*k,uy=c-c*k;
   sub(sy,rs);for(let i=0;i<60;i++){const a=i/60*TAU,rb=i%5?rs*0.9:rs*0.82;x.lineWidth=i%5?S*0.0014:S*0.003;x.beginPath();x.moveTo(c+rs*Math.sin(a),sy-rs*Math.cos(a));x.lineTo(c+rb*Math.sin(a),sy-rb*Math.cos(a));x.stroke();}
   x.font=`${S*0.024}px Spectral, Georgia, serif`;for(let q=1;q<=12;q++){const a=q/12*TAU,r=rs*0.66;x.fillText(String(q*5),c+r*Math.sin(a),sy-r*Math.cos(a));}
-  x.lineWidth=S*0.0016;x.beginPath();x.arc(c,uy,rs,(-210)*D2R,(30)*D2R);x.stroke();
-  for(let h=0;h<=56;h+=2){const a=(-120+240*h/56)*D2R,rb=h%8?rs*0.9:rs*0.8;x.lineWidth=h%8?S*0.0012:S*0.003;x.beginPath();x.moveTo(c+rs*Math.sin(a),uy-rs*Math.cos(a));x.lineTo(c+rb*Math.sin(a),uy-rb*Math.cos(a));x.stroke();
+  /* up/down scale as Fig. 107: UP at the upper right, hours since winding increasing clockwise round the bottom to DOWN at the upper left
+     (winding turns the hand counterclockwise back to UP, manual Sec. III) */
+  x.lineWidth=S*0.0016;x.beginPath();x.arc(c,uy,rs,(-30)*D2R,(210)*D2R);x.stroke();
+  for(let h=0;h<=56;h+=2){const a=(60+240*h/56)*D2R,rb=h%8?rs*0.9:rs*0.8;x.lineWidth=h%8?S*0.0012:S*0.003;x.beginPath();x.moveTo(c+rs*Math.sin(a),uy-rs*Math.cos(a));x.lineTo(c+rb*Math.sin(a),uy-rb*Math.cos(a));x.stroke();
     if(h%8===0&&h>0&&h<56){const r=rs*0.62;x.font=`${S*0.024}px Spectral, Georgia, serif`;x.fillText(String(h),c+r*Math.sin(a),uy-r*Math.cos(a));}}
-  x.font=`600 ${S*0.024}px Spectral, Georgia, serif`;x.fillText('UP',c-rs*0.62,uy+rs*0.72);x.fillText('DOWN',c+rs*0.62,uy+rs*0.72);
+  x.font=`600 ${S*0.024}px Spectral, Georgia, serif`;x.fillText('UP',c+rs*0.62,uy-rs*0.72);x.fillText('DOWN',c-rs*0.62,uy-rs*0.72);
   x.font=`italic ${S*0.028}px Spectral, Georgia, serif`;x.fillText('Two-day marine chronometer',c,c+c*0.15);
   return cv;
 }

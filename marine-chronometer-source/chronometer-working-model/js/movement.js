@@ -105,10 +105,12 @@ function buildMovement(M){
   const y0=-PP_T;
   /* ---------- pillar plate 87.57 x 3.86 mm, movement ring, lower train bridge ---------- */
   const pp=part('pillar',0);
-  R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.F,1.2],[...L.Fu,1.4],[...L.Ud,1.0],[...L.Mw,0.8]]),M.plate,0,y0,0);
+  R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.T,0.8],[...L.F,1.2],[...L.Fu,1.4],[...L.Ud,1.0],[...L.Mw,0.8]]),M.plate,0,y0,0);
   R.flange=mesh(pp,ringGeo(47,PP_R-0.1,2.2),M.plate,0,y0+1.1,0);
-  const lt=part('ltb',-4);R.ltb=mesh(lt,stadium(L.T,L.F,6,1.2,[[...L.T,0.8],[...L.F,0.8]]),M.plate,0,y0-1.2,0);jewel(lt,...L.F,y0-1.2);jewel(lt,...L.T,y0-1.2);
-  screw(lt,(L.T[0]+L.F[0])/2,(L.T[1]+L.F[1])/2,y0-1.2,1.4,0.8);
+  /* lower train bridge on the dial side of the pillar plate, screwed from the dial side (manual Figs. 29, 67, 110); jewels and screw built in a flipped frame so they face the dial */
+  const lt=part('ltb',8);R.ltb=mesh(lt,stadium(L.T,L.F,6,1.2,[[...L.T,0.8],[...L.F,0.8]]),M.plate,0,0,0);
+  const ltf=new THREE.Group();ltf.rotation.x=Math.PI;lt.add(ltf);jewel(ltf,L.F[0],-L.F[1],-1.2);jewel(ltf,L.T[0],-L.T[1],-1.2);
+  screw(ltf,(L.T[0]+L.F[0])/2,-(L.T[1]+L.F[1])/2,-1.2,1.4,0.8);
   /* ---------- pillars (two measured on Fig. 2, two placed clear of the fusee wheel and balance) ---------- */
   const pl=part('pillars',-30);
   const pillar=(x,z,top)=>{const pr=[V2(0.01,y0),V2(3.4,y0),V2(3.4,y0-1.3),V2(2.9,y0-1.9),V2(2.7,(top+y0)*0.5),V2(2.3,top+2.4),V2(2.9,top+1.7),V2(2.9,top),V2(0.01,top)].reverse();
@@ -153,7 +155,7 @@ function buildMovement(M){
   R.hourW=arbor(mw,M,...L.C,{wheel:{n:40,m:0.384,y:2.6,th:0.8,spokes:4,collet:0,bore:1.45}});mesh(R.hourW,ring(2.2,1.45,2.6),M.brass2,0,3.9,0);
   R.udW=arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:4},ar:[y0,5]});
   R.fp=arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:1.5,th:2}});
-  /* ---------- fusee wheel (96 : centre pinion 14, module 0.389) with its maintaining work ---------- */
+  /* ---------- fusee wheel (96 : centre pinion 14, module 0.417) with its maintaining work ---------- */
   const gw=part('gw',-8);
   R.gw=arbor(gw,M,...L.Fu,{wheel:{n:96,m:MOD.fusee,y:-6.5,th:1.2,spokes:0,mat:M.copper,collet:0,bore:1.05}});
   mesh(R.gw,ring(17.3,15.2,1.8),M.copper,0,-8.0,0);mesh(R.gw,ring(15.2,1.05,0.5),M.copper,0,-7.35,0);
@@ -166,10 +168,10 @@ function buildMovement(M){
   const sp=part('spawl',-9);const spA=Math.atan2(fo[1],fo[0])+Math.PI*5/6,SPv=[L.Fu[0]+21*Math.cos(spA),L.Fu[1]+21*Math.sin(spA)];cylBetween(sp,0.7,-10,y0,M.steel,...SPv);
   R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(4.9,1.2,0.6),M.steel,0,0,0);
   R.spawl.userData.base=Math.atan2(-(L.Fu[1]-SPv[1]),L.Fu[0]-SPv[0])-0.1;R.spawl.rotation.y=R.spawl.userData.base;
-  /* ---------- going train (module 0.29): centre 80/14, third 75/10, fourth 60/10, escape pinion 8 ---------- */
+  /* ---------- going train (modules 0.29 / 0.30 / 0.31): centre 80/14, third 75/10, fourth 60/10, escape pinion 8 ---------- */
   const m=MOD.train;
   const cw=part('cw',-26);R.cw=arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-21.4,th:1.0,spokes:5},pin:{n:14,m:MOD.fusee,y:-6.5,th:2.6},ar:[-29,1.2],r:0.75});
-  const tw=part('tw',-34);R.tw=arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-19.2,th:0.9,spokes:4},pin:{n:TRAIN.tp,m:MOD.centre,y:-21.4,th:2.0},ar:[-29,y0-1.2]});
+  const tw=part('tw',-34);R.tw=arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-19.2,th:0.9,spokes:4},pin:{n:TRAIN.tp,m:MOD.centre,y:-21.4,th:2.0},ar:[-29,1.2]});
   const fw=part('fw',-42);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-16.6,th:0.9,spokes:4},pin:{n:TRAIN.fp,m,y:-19.2,th:1.7},ar:[-22.6,5.0]});
   const E=ESC,ew=part('escW',-52,true);
   R.esc=arbor(ew,M,E.EX*ES,0,{pin:{n:TRAIN.ep,m:MOD.fourth,y:-16.6,th:2.0},ar:[-29.4,y0]});
@@ -187,7 +189,7 @@ function buildMovement(M){
   const blk=new THREE.Group();blk.position.set(E.Ft.x*ES,-24.7,E.Ft.y*ES);blk.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(blk);
   mesh(blk,new THREE.BoxGeometry(6,2.5,2.6),M.plateSolid,-2.4,0,0);screw(blk,-1.2,0,-1.25+1.1,0.9,0.5);
   R.pspring=mesh(dt,new THREE.BufferGeometry(),M.gilt);
-  /* ---------- balance (rim r 18 from Fig. 2) and hairspring ---------- */
+  /* ---------- balance (rim r 14.5, measured on the top-view photograph) and hairspring ---------- */
   const bl=part('bal',-80,true);
   R.staff=new THREE.Group();bl.add(R.staff);
   cylBetween(R.staff,0.45,-41.9,-22.8,M.steel,0,0,12);
@@ -203,8 +205,9 @@ function buildMovement(M){
   mesh(R.balU,new THREE.BoxGeometry(2*BR-1,1.1,2.4),M.invar);mesh(R.balU,cylY(2.4,2.4,24),M.invar);
   for(let k=0;k<60;k++){const a=k/60*TAU;if(Math.abs(Math.sin(a))<0.05)continue;const h=mesh(R.balU,cylY(0.28,0.2,8),M.steelD,(BR+0.05)*Math.cos(a),0,(BR+0.05)*Math.sin(a));h.rotation.set(0,-a,Math.PI/2);}
   const bscrew=(a,len,rr,mat)=>{const q=mesh(R.balU,cylY(rr,len,12),mat,(BR+len/2)*Math.cos(a),0,(BR+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);};
-  /* 14 balance screws (Whitney) grouped about the quarters, 2 timing weights and 2 vernier timing weights (manual Fig. 3) */
-  for(const c of[Math.PI/2,-Math.PI/2])for(const d of[-0.63,-0.45,-0.27,0,0.27,0.45,0.63])bscrew(c+d,1.5,0.75,M.brass);
+  /* balance screws per the parts list: 6 of 0.049 in head height, 2 of 0.080 in, 2 of 0.101 in, in diametric pairs about the quarters;
+     2 timing weights and 2 vernier timing weights beside the arm ends (manual Fig. 3) */
+  for(const c of[Math.PI/2,-Math.PI/2])for(const[d,hh]of[[-0.5,1.24],[-0.25,2.57],[0,2.03],[0.25,1.24],[0.5,1.24]])bscrew(c+d,hh,0.75,M.brass);
   for(const c of[0,Math.PI]){bscrew(c+0.2,2.1,1.1,M.steelD);bscrew(c-0.2,1.3,0.65,M.steelD);}
   R.balS=new THREE.Group();R.balS.position.y=BY;R.balS.visible=false;R.staff.add(R.balS);
   mesh(R.balS,new THREE.BoxGeometry(2*BR-1,1.4,2.2),M.steel);mesh(R.balS,cylY(2.2,2.2,24),M.steel);
@@ -253,11 +256,12 @@ function buildMovement(M){
     R.cover=mesh(rt,cvg,M.plateSolid,0,-35.9,0);
     screw(rt,cx+11*Math.cos(100*D2R),cz+11*Math.sin(100*D2R),-35.9,1.4,0.7);screw(rt,cx+11*Math.cos(250*D2R),cz+11*Math.sin(250*D2R),-35.9,1.4,0.7);}
   rt.children.slice(nBefore).forEach(o=>o.userData.driveHide=true);
-  /* winding post (bushing and seal) around the fusee arbor; the arbor's squared end takes the key */
+  /* dust seal around the fusee arbor (manual Fig. 24): nickel body on a flange held by two screws, capped by three packing rings; the arbor's squared end takes the key */
   const wp=part('post',-78);
-  const post=mesh(wp,new THREE.LatheGeometry([V2(1.3,-33.02),V2(6.6,-33.02),V2(6.6,-34.2),V2(6.2,-34.6),V2(6.2,-41.8),V2(6.5,-42.2),V2(6.5,-43.6),V2(3.4,-43.6),V2(3.4,-41.4),V2(1.3,-41.4),V2(1.3,-33.02)].reverse(),56),M.brass2,L.Fu[0],0,L.Fu[1]);
-  const fl=mesh(wp,ringGeo(8.6,6.7,1.0),M.steel,L.Fu[0],-33.52,L.Fu[1]);screw(wp,L.Fu[0]+7.6*Math.cos(2.2),L.Fu[1]+7.6*Math.sin(2.2),-34.02,1.0,0.5);screw(wp,L.Fu[0]+7.6*Math.cos(-1.0),L.Fu[1]+7.6*Math.sin(-1.0),-34.02,1.0,0.5);
-  const sqP=part('sq',-84);R.sq=new THREE.Group();R.sq.position.set(L.Fu[0],0,L.Fu[1]);sqP.add(R.sq);cylBetween(R.sq,1.2,-42.4,-41.4,M.steel);mesh(R.sq,new THREE.BoxGeometry(2.4,1.6,2.4),M.steel,0,-43.0,0);
+  mesh(wp,new THREE.LatheGeometry([V2(1.3,-33.02),V2(6.6,-33.02),V2(6.6,-34.2),V2(6.2,-34.6),V2(5.9,-34.8),V2(5.9,-38.4),V2(1.3,-38.4),V2(1.3,-33.02)].reverse(),56),M.plateSolid,L.Fu[0],0,L.Fu[1]);
+  for(let k=0;k<3;k++){const a=-38.4-1.733*k,b=a-1.733;mesh(wp,new THREE.LatheGeometry([V2(3.4,a),V2(6.2,a),V2(6.45,a-0.22),V2(6.45,b+0.22),V2(6.2,b),V2(3.4,b),V2(3.4,a)].reverse(),56),M.brass2,L.Fu[0],0,L.Fu[1]);}
+  const fl=mesh(wp,ringGeo(8.6,6.7,1.0),M.plateSolid,L.Fu[0],-33.52,L.Fu[1]);screw(wp,L.Fu[0]+7.6*Math.cos(2.2),L.Fu[1]+7.6*Math.sin(2.2),-34.02,1.0,0.5);screw(wp,L.Fu[0]+7.6*Math.cos(-1.0),L.Fu[1]+7.6*Math.sin(-1.0),-34.02,1.0,0.5);
+  const sqP=part('sq',-84);R.sq=new THREE.Group();R.sq.position.set(L.Fu[0],0,L.Fu[1]);sqP.add(R.sq);cylBetween(R.sq,1.2,-42.4,-38.4,M.steel);mesh(R.sq,new THREE.BoxGeometry(2.4,1.6,2.4),M.steel,0,-43.0,0);
   /* winding key: its socket fits the fusee arbor square and turns it (never the barrel arbor, which the setup ratchet holds) */
   R.wkey=new THREE.Group();R.wkey.visible=false;R.sq.add(R.wkey);
   mesh(R.wkey,ringGeo(2.6,1.35,5),M.brass,0,-45.3,0);cylBetween(R.wkey,1.7,-47.8,-68,M.brass);
@@ -292,7 +296,7 @@ function buildMovement(M){
     R.staff.rotation.y=-s.th;
     R.det.rotation.y=s.lift/E.LEN;
     const fa=s.n*TAU;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;
-    const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=120*D2R-udA;
+    const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-60*D2R-udA;
     if(Math.abs(s.n-lastN)>0.0008){fs.setWind(s.n);lastN=s.n;}
     fs.stopBar.position.x=lerp(0,3.0,smooth(1-s.n/0.25));
     if(s.msOn){const In=fs.I(s.n);fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(1-In/fs.IN,2.6,13.1,-8.2,-17.1,6+fs.IN-In);}
@@ -325,7 +329,8 @@ function makeFusee(M,c){
   mesh(bz,new THREE.BoxGeometry(1.2,3,1.5),M.steel,0,(c.bT+c.bB)/2,-(c.Rb-0.9));
   const ms=new THREE.Mesh(new THREE.BufferGeometry(),M.mspring);ms.position.x=bx;ms.userData.partName='mainspring';ms.userData.onlyDrive=true;ms.userData.noCap=true;g.add(ms);
   mesh(bz,ringGeo(4,1.5,0.4),M.brass2,0,c.bT-0.25,0).userData.driveGhost=true;
-  for(let k=0;k<3;k++){const a=k/3*TAU;mesh(bz,cylY(0.7,0.4,10),M.steel,2.7*Math.cos(a),c.bT-0.5,2.7*Math.sin(a));}
+  /* barrel cap on the pillar-plate end, held by five screws (manual Figs. 26, 109) */
+  for(let k=0;k<5;k++){const a=k/5*TAU;mesh(bz,cylY(0.7,0.4,10),M.steel,12.4*Math.cos(a),c.bB+0.2,12.4*Math.sin(a));}
   const I=m=>(c.rmin*(-c.N/drop)*Math.log(1-drop*m/c.N))/c.Rb;
   const MAX=900,geoA=new THREE.BoxGeometry(1.5,1.0,0.34),geoB=new THREE.BoxGeometry(1.25,0.7,0.56);
   const imA=new THREE.InstancedMesh(geoA,M.chain,MAX),imB=new THREE.InstancedMesh(geoB,M.chain2,MAX);g.add(imA,imB);imA.userData.partName=imB.userData.partName='chain';

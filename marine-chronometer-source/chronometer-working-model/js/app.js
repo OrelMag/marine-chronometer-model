@@ -9,32 +9,32 @@ const INFO={
   ring:['Gimbal ring','Brass ring pivoted to the mounting box at two points 180° apart. The chronometer case pivots in it at two points 90° away, so the movement tends to stay level whatever the box does.','No. 42106'],
   bowl:['Chronometer case','Brass bowl and bezel with crystal. The winding-hole shield plate on its bottom is turned clockwise to admit the key and springs back when the key is removed.','Case No. 42101, bezel 42102'],
   key:['Winding key','Wind to the left (counterclockwise). Seven half turns restore 24 hours of running; 17½ half turns wind a run-down chronometer fully.','No. 42044'],
-  pillar:['Pillar plate','Foundation of the movement. The barrel and train bridges stand off it on four pillars; the lower train bridge is mounted directly on it.','87.57 mm diameter, 3.86 mm thick'],
-  ltb:['Lower train bridge','Mounted directly to the pillar plate; carries the third and fourth wheel lower settings (bar-hole jewels).',''],
+  pillar:['Pillar plate','Foundation of the movement. The barrel and train bridges stand off it on four pillars; the lower train bridge is mounted directly on its dial side.','No. 42060 · 87.57 mm diameter, 3.86 mm thick'],
+  ltb:['Lower train bridge','Screwed to the dial side of the pillar plate, under the dial; carries the third and fourth wheel lower settings (bar-hole jewels).','No. 42063'],
   pillars:['Pillars','Four pillars: three for the upper train bridge, one for the barrel bridge.','Nos. 42059, 42058'],
   trainBridge:['Upper train bridge','Carries the centre and third wheel upper bushings. The balance cock, balance lower bridge and escape upper bridge are mounted to it; the detent support block is fastened to its underside.','No. 42062'],
-  barrelBridge:['Barrel bridge','Holds the upper pivots of both the barrel and the fusee. The fusee winding stop is on its underside; the setup ratchet sits on top.','No. 42061'],
+  barrelBridge:['Barrel bridge','Holds the upper pivots of both the barrel and the fusee. The fusee winding stop is on its underside; the setup ratchet and the dust seal sit on top.','No. 42061 · winding stop 42099'],
   escBridge:['Escape upper bridge','Small bridge holding the escape wheel’s upper jewel and endstone.','No. 42064'],
   lowerBridge:['Balance lower bridge','Supports the lower cap jewel of the balance staff and the fourth wheel upper setting.','No. 42065'],
   dial:['Dial','Black on silver-white. Hours 1–12 with 60 minute graduations; UP–DOWN indicator below the 12, numbered 8 to 48; seconds at 6, numbered 5 to 60.','No. 42030'],
   hands:['Hands','Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff, wind indicator hand on its own wheel. The hands advance in half-second increments.','Nos. 42032–42035'],
   motion:['Motion work','Cannon pinion, minute wheel and hour wheel under the dial. A pinion on the dial end of the fusee arbor drives the wind indicator wheel.','Nos. 42077, 42078, 42080, 42081'],
   gw:['Fusee wheel','The first wheel of the train; it drives the centre wheel pinion. Under load the sustaining spring couples it to the sustaining ratchet wheel; during winding that spring alone drives the train.','No. 42015 · 96 teeth here'],
-  spawl:['Sustaining pawl','Holds the sustaining ratchet wheel from turning back while the fusee is wound, so the sustaining spring can only release its power forward into the train. It keeps the chronometer running 5 to 10 minutes.','No. 42096'],
+  spawl:['Sustaining pawl','Holds the sustaining ratchet wheel from turning back while the fusee is wound, so the sustaining spring can only release its power forward into the train, enough to run the chronometer 5 to 10 minutes.','No. 42096'],
   cw:['Centre wheel','Second wheel of the train. Its long arbor passes through the pillar plate and dial and carries the cannon pinion and hour wheel.','No. 42068 · 1 turn an hour'],
   tw:['Third wheel','Drives the fourth wheel pinion.','No. 42071'],
   fw:['Fourth wheel','Its long arbor passes through the dial to carry the second hand. Jewelled at both ends; its upper setting is in the balance lower bridge.','No. 42073 · 1 turn a minute'],
   escW:['Escape wheel','Released one tooth per oscillation of the balance, so the second hand advances in half-second steps. Sixteen teeth (most chronometers use 13 or 15), 13.16 mm across and 1.3 mm thick.','No. 42076 · 16 teeth, 1 turn / 8 s'],
-  det:['Detent','Nardin-type detent: a two-part detent spring at the foot, a long blade to the locking jewel, and an arm bent toward the rollers ending in the horn. Mounted to the support block under the upper train bridge; the gold trip (passing) spring is held on it by a bracket.','Detent 42087, trip spring 42088, block 42086'],
-  bal:['Balance and hairspring assembly','Solid, uncut stainless-steel rim silver-soldered to an Invar arm, with tapped holes all round for balance screws, two timing weights and two vernier timing weights. Motion 1⅜ to 1½ turns. Impulse and unlocking rollers on the staff. Rim about 36 mm across, measured on the manual’s Fig. 2.','Wheel 42178 · staff 42186 · rollers 42263, 42252'],
+  det:['Detent','Beryllium-copper spring detent: the thin detent spring at its foot (the point of flexure), a long blade carrying the locking jewel, and the abutment arm (horn). Clamped to the support block under the upper train bridge, it rests against the stop button; the gold trip (passing) spring, of Hamilton Elinvar, is held on it by an angle bracket.','Detent 42087, trip spring 42088, block 42086'],
+  bal:['Balance and hairspring assembly','Solid, uncut stainless-steel rim silver-soldered to an Invar arm, with tapped holes all round for balance screws, two timing weights and two vernier timing weights. Motion 1⅜ to 1½ turns. Impulse and unlocking rollers on the staff. Rim about 29 mm across, measured on a top-view photograph.','Wheel 42178 · staff 42186 · rollers 42263, 42252'],
   spr:['Hairspring','Cylindrical, of Hamilton Elinvar, pinned to its collet and stud without deformation, so its active length is the same winding and unwinding. There is no regulator: rate is set with the balance screws and weights.','No. 42188'],
   cock:['Balance cock','Carries the balance upper jewel, endstone and the hairspring stud.','No. 42066'],
-  fusee:['Fusee','Shaped so the moment of force on the fusee wheel is always about the same, fully wound or nearly run down. The winding stop-bar in its top moves out at full wind to catch the stop on the barrel bridge.','No. 42021 · stop-bar 42099'],
+  fusee:['Fusee','Shaped so the moment of force on the fusee wheel is always about the same, fully wound or nearly run down. The winding stop-bar in its top moves out at full wind to catch the winding stop under the barrel bridge.','No. 42021 · stop-bar 42024'],
   barrel:['Mainspring barrel','Holds the mainspring and its brace. Turns clockwise while running, drawing the chain from the fusee.','No. 42168'],
-  mainspring:['Mainspring','Inner end on the fixed barrel arbor, outer end on the barrel’s anchor. Coils drawn schematically.',''],
+  mainspring:['Mainspring','Inner end on the fixed barrel arbor, outer end on the barrel’s anchor pin. Coils drawn schematically.','No. 42038 · 0.0165 in. thick'],
   chain:['Fusee chain','Links the barrel to the fusee.','No. 42001'],
   ratchet:['Setup ratchet','Setup ratchet wheel on the barrel arbor under the fan-shaped cover plate, with setup pawl and spring. Keeps the arbor from turning in winding and running.','Wheel 42026 · cover plate 42029'],
-  post:['Fusee arbor post','Brass post on a steel flange where the fusee arbor rises through the barrel bridge; the key reaches the squared arbor through it.',''],
+  post:['Dust seal','Nickel dust seal on the barrel bridge where the fusee arbor rises through it, capped by three packing rings over a seal ring and helical spring. The key reaches the squared arbor through it.','Seal 42051 · packing rings 42054'],
   sq:['Fusee arbor square','Turned counterclockwise by the key to wind.','Arbor 42022']
 };
 
@@ -93,7 +93,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     const inv=new THREE.Matrix4().copy(mv.matrixWorld).invert();return pts.map(([sx,sy,h])=>{const ndc=new THREE.Vector2(sx/W*2-1,-(sy/Hh*2-1));const rc=new THREE.Raycaster();rc.setFromCamera(ndc,c2);
       const o=rc.ray.origin.clone().applyMatrix4(inv),dd=rc.ray.direction.clone().transformDirection(inv);const tt=(h-o.y)/dd.y;return[o.x+dd.x*tt,o.z+dd.z*tt];});};
   window.__camInfo=()=>JSON.stringify({fov:cam.fov,aspect:cam.aspect,pos:cam.position.toArray().map(v=>+v.toFixed(2)),tgt:C.target.toArray().map(v=>+v.toFixed(2)),C:{yaw:C.yaw,pitch:C.pitch,dist:C.dist},W,Hh});
-  window.__cam=(yaw,pitch,dist,fov)=>{cam.fov=fov;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:mvL(0,-26,0)});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=false;};}
+  window.__cam=(yaw,pitch,dist,fov)=>{cam.fov=fov;cam.updateProjectionMatrix();goCam({yaw,pitch,dist,target:mvL(0,-26,0)});G.dist=dist;C.dist=dist;C.yaw=G.yaw;C.pitch=pitch;camFree=false;};
+  window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:mvL(x,y,z)});};}
   const partOf=o=>{while(o){if(o.userData&&o.userData.partName)return o.userData.partName;o=o.parent;}return null;};
   const MVM=[];mv.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;MVM.push(o);}});
   BOXM.forEach(o=>{o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.castShadow=o.material!==M.glass;});
@@ -163,7 +164,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     dial:{lidM:1,lidT:1,lift:0,flip:0,explode:0,yaw:0.3,pitch:1.02,dist:330,target:fixed(0,-15,0)},
     movement:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:-0.62,pitch:0.64,dist:235,target:mvL(0,-24,2)},
     train:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:0.2,pitch:1.05,dist:210,target:mvL(0,-20,8),see:true},
-    escapement:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:1.57,pitch:0.45,dist:84,target:mvL(8.0,-25,11.9),see:true},
+    escapement:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:1.9,pitch:-0.75,dist:78,target:mvL(8.0,-25,12),see:true},   /* from the pillar-plate side: the balance is then behind the escapement, not in front of it */
     exploded:{lidM:1,lidT:1,lift:1,flip:1,explode:1,yaw:0.9,pitch:0.28,dist:520,target:mvL(0,-40,0)}};
   /* keep the same horizontal coverage on narrow screens: distance grows as the aspect ratio falls below 1.5 */
   const aspectK=()=>clamp(1.25/(W/Hh),1,2.2);
@@ -272,7 +273,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     {t:'The going train',x:'<p>The fusee wheel drives the centre wheel pinion; the centre wheel drives the third wheel pinion; the third drives the fourth wheel pinion; the fourth meshes with the escape pinion. The centre wheel turns once an hour; the fourth once a minute, carrying the second hand.</p><p>Every mesh here is in phase: a tooth of each driver sits in a gap of the pinion it drives.</p>',
       drive:true,v:{lift:1,flip:1,explode:0,yaw:0.25,pitch:1.0,dist:200,target:mvL(0,-18,8)},speed:1,focus:['gw','cw','tw','fw','escW','fusee'],inset:'train'},
     {t:'The detent escapement',x:'<p>The escape wheel is held by the locking jewel on the detent. As the balance swings one way, the unlocking jewel meets the gold trip spring, which bends aside and lets it pass: nothing else moves. Swinging back, the unlocking jewel strikes the trip spring again; now the abutment arm holds it, so the trip spring and detent move aside together and release the wheel.</p><p>A tooth catches up with the impulse jewel and drives the balance; the detent springs back in time to lock the next tooth. One impulse per oscillation, so the hands advance in half-second steps.</p>',
-      drive:true,v:{lift:1,flip:1,explode:0,yaw:1.57,pitch:0.5,dist:76,target:mvL(8.0,-25,11.9)},speed:0.05,focus:['escW','det','bal'],inset:'esc'},
+      drive:true,v:{lift:1,flip:1,explode:0,yaw:1.9,pitch:-0.75,dist:70,target:mvL(8.0,-25,12)},speed:0.05,focus:['escW','det','bal'],inset:'esc'},
     {t:'The balance and hairspring',x:'<p>The balance is a solid, uncut stainless-steel rim silver-soldered to an Invar arm. Invar barely expands, so the rim’s diameter at the arm ends stays fixed while the rest of the rim moves with temperature; screws placed nearer or farther from the arm set the compensation. Free of the centrifugal effects of a split rim, it can swing 1⅜ to 1½ turns.</p><p>The cylindrical hairspring is Hamilton Elinvar, with good thermo-elastic qualities and minimum isochronal error. There is no regulator: rate is set with balance screws, timing weights and vernier weights. The older split bimetallic balance is available under Balance.</p>',
       drive:true,v:{lift:1,flip:1,explode:0,yaw:2.27,pitch:0.35,dist:118,target:mvL(8.0,-34,6.8)},speed:0.05,focus:['bal','spr','cock'],inset:'bal'},
     {t:'Hands and the wind indicator',x:'<p>The centre wheel staff carries the minute hand and, through the motion work, the hour hand; the fourth wheel staff carries the second hand.</p><p>A pinion on the dial end of the fusee arbor drives the wind indicator wheel. Here an 8-leaf pinion and a 98-tooth wheel take the hand across the UP–DOWN scale as the fusee makes its 8.2 turns in 56 hours.</p>',

@@ -53,10 +53,11 @@ Everything is driven from one model clock `tSim`, in local seconds.
 ## Sources
 
 - *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948. Used for:
-  - the structure: pillar plate, barrel bridge, upper and lower train bridges, balance lower bridge, escape upper bridge;
+  - the structure: pillar plate, barrel bridge, upper and lower train bridges, balance lower bridge, escape upper bridge. The lower train bridge is screwed to the dial side of the pillar plate (Figs. 29, 67, 110);
   - the maintaining work and the winding stop-bar;
-  - the detent, the balance and hairspring;
-  - the dial markings, winding figures and part numbers.
+  - the detent, the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing and 2 vernier weights (parts list, p. 82). The impulse roller is 0.249 in (6.32 mm) across, as modelled;
+  - the barrel cap with its five screws on the pillar-plate end (Figs. 26, 109), and the dust seal with three packing rings around the fusee arbor (Fig. 24);
+  - the dial markings, winding figures and part numbers. The UP–DOWN scale runs clockwise round the bottom of its sub-dial from UP (upper right) to DOWN (upper left), so winding turns the hand counterclockwise back to UP (Fig. 107, Sec. III).
 - New-old-stock Hamilton Model 21 pillar plate listing: 87.57 mm diameter, 3.86 mm thick.
 - chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement.
 - chronometerbook.com, post 30: escape wheel specification of 16 teeth, 13.14-13.18 mm diameter, 1.27-1.32 mm thick.
@@ -86,4 +87,5 @@ The tools need Playwright with Chromium. Open the page as `index.html?snap&qa`.
 - Dimensions and positions, estimated from the figures and a 4-inch dial.
 - The fusee profile and the wind indicator ratio.
 - The mainspring’s coils, which are drawn schematically.
-- The detent geometry, which follows a standard spring detent layout.
+- The detent geometry, which follows a standard spring detent layout. Two of its settings are simplified against the manual's figures (Sec. VIII, Ops. 7, 85–87): the jewels on the two rollers are 75° apart (manual: about 90°, adjustable), and the unlocking jewel lifts the detent over about 8° of balance arc (manual: overall 26–30°, lock about 6°).
+- The balance rim diameter (29 mm), measured on the top-view photograph.
