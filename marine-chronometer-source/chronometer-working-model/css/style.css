@@ -74,6 +74,7 @@ dialog#about{max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);
 dialog#about::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
 dialog#about h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
 dialog#about h3{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
+dialog#about a{color:var(--blue);text-underline-offset:2px}
 dialog#about p{margin:0 0 .6em}dialog#about ul,dialog#about ol{margin:0;padding-left:1.25em}dialog#about li{margin:0 0 .45em}
 dialog#about .dx{position:absolute;right:12px;top:12px;margin:0}
 dialog#about .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}

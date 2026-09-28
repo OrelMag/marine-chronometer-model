@@ -82,6 +82,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
   r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
   const scene=new THREE.Scene();scene.environment=envTex(r);
+  /* a lost WebGL context (a phone switching apps, a GPU reset) comes back without the generated environment map that lights the metals: rebuild it */
+  cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);});
   scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28));
   const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
   const scam=key.shadow.camera;scam.left=-170;scam.right=170;scam.top=170;scam.bottom=-170;scam.near=1;scam.far=1200;scene.add(key,key.target);
