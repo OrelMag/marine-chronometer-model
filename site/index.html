@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Marine Chronometer: A Working Model</title>
 <meta name="description" content="An interactive 3D working model of the Hamilton Model 21 marine chronometer: fusee, chain, detent escapement and balance, running in real time, built from the 1948 U.S. Navy overhaul manual.">
+<meta name="author" content="Orel Magidish">
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Marine Chronometer, working">
 <meta property="og:description" content="Explore the Hamilton Model 21 marine chronometer part by part, running in real time in your browser.">
@@ -171,12 +172,13 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 details.more[open]>summary{margin-bottom:9px}
 .sub-h{font:500 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:10px 0 6px}.sub-h:first-of-type{margin-top:0}
 .about-btn{display:block;width:100%;margin:0 0 12px;border-style:dashed;border-width:1.2px;font-weight:500}
+.panel>.by{margin:-2px 0 12px;text-align:center;color:var(--muted);font-size:12.5px}.by span{white-space:nowrap}
 dialog#about{max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;padding:22px 26px 18px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);font-size:14.5px;line-height:1.55}
 dialog#about::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
 dialog#about h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
 dialog#about h3{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
 dialog#about a{color:var(--blue);text-underline-offset:2px}
-dialog#about p{margin:0 0 .6em}dialog#about ul,dialog#about ol{margin:0;padding-left:1.25em}dialog#about li{margin:0 0 .45em}
+dialog#about p{margin:0 0 .6em}dialog#about p.by{color:var(--muted);margin:-4px 0 12px}dialog#about ul,dialog#about ol{margin:0;padding-left:1.25em}dialog#about li{margin:0 0 .45em}
 dialog#about .dx{position:absolute;right:12px;top:12px;margin:0}
 dialog#about .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}
 h2{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:0 0 7px}
@@ -314,11 +316,13 @@ table.rt td.n{text-align:right}
       </details>
     </div>
     <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
+    <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span></p>
   </div>
 </div>
 <dialog id="about" aria-labelledby="aboutT">
   <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
   <h2 id="aboutT">About this model</h2>
+  <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span></p>
   <p>A working 3D model of the Hamilton Model 21 marine chronometer: a two-day fusee chronometer with a spring detent escapement, made in Lancaster, Pennsylvania, for the U.S. Navy from 1941. Every part runs from one clock: the balance beats twice a second, the hands step in half-seconds, and the fusee and chain follow the hours since winding.</p>
   <h3>Using it</h3>
   <ul>
