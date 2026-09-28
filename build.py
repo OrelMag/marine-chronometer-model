@@ -3,6 +3,7 @@
 
     python build.py                                  # rebuild everything
     python build.py --site-url https://example.org   # also set the site's public address (link previews, canonical URL)
+    python build.py --site-url https://example.org --keep-html   # for hosts that serve /page.html without redirecting to /page
 
 Writes:
   marine-chronometer-source/chronometer-working-model/dist/chronometer-working-model.html
@@ -30,10 +31,11 @@ def check(name,html):
     r=remote_refs(html)
     if r:sys.exit(f'{name} still loads {r}: vendor the file and point the page at it')
 
-def meta(html,url,page,img='social.png'):
+def meta(html,url,page,img='social.png',keep=False):
     """Link-preview and canonical tags that need the site's absolute address."""
     if not url:return html
-    u=url.rstrip('/')+'/'+('' if page=='index.html' else page)
+    # Cloudflare (Workers and Pages) redirects /page.html to /page, so name the address it ends up at, unless --keep-html
+    u=url.rstrip('/')+'/'+('' if page=='index.html' else page if keep else page.removesuffix('.html'))
     tags=(f'<link rel="canonical" href="{u}">\n<meta property="og:url" content="{u}">\n'
           f'<meta property="og:image" content="{url.rstrip("/")}/{img}">\n<meta property="og:image:width" content="1200">\n'
           f'<meta property="og:image:height" content="630">\n<meta name="twitter:card" content="summary_large_image">\n')
@@ -41,6 +43,7 @@ def meta(html,url,page,img='social.png'):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--keep-html',action='store_true',help="keep .html in page addresses (for hosts that don't redirect /page.html to /page)")
     ap.add_argument('--site-url',default=os.environ.get('SITE_URL',''),help='public address of the site, e.g. https://marine-chronometer.pages.dev (or set SITE_URL)')
     a=ap.parse_args()
     # working model: its own build script writes dist/
@@ -55,8 +58,8 @@ def main():
     # site/: what a web host serves
     if SITE.exists():shutil.rmtree(SITE)
     SITE.mkdir()
-    write(SITE/'index.html',meta(model,a.site_url,'index.html'))
-    write(SITE/'marine-chronometer.html',meta(essay,a.site_url,'marine-chronometer.html','social-movement.png'))
+    write(SITE/'index.html',meta(model,a.site_url,'index.html',keep=a.keep_html))
+    write(SITE/'marine-chronometer.html',meta(essay,a.site_url,'marine-chronometer.html','social-movement.png',a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # link-preview images
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     print('site/ is ready to upload'+('' if a.site_url else ' (no --site-url given: link previews will show no image)'))

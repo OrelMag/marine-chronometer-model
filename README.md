@@ -82,6 +82,11 @@ the link is shared, and search engines see the canonical address:
 
     python build.py --site-url https://marine-chronometer.pages.dev
 
+Page addresses are written without `.html` (`/marine-chronometer`), because
+Cloudflare redirects `/marine-chronometer.html` there. On a host that serves the
+`.html` address directly (Netlify, GitHub Pages, most plain web servers), add
+`--keep-html`.
+
 Rebuild after every change and commit the regenerated root copies with your
 source changes, so that the two stay identical.
 
