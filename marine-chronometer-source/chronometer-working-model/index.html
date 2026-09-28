@@ -20,8 +20,8 @@
     <canvas aria-label="3D working model of a marine chronometer"></canvas>
     <div class="labels"></div>
     <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div></div>
-    <div class="hint" id="hint">Tap a part to see what it does and its Hamilton part number. Right-click a part to change its opacity</div>
-    <div class="opm" id="opm" role="dialog" aria-label="Part opacity"><h4></h4><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div>
+    <div class="hint" id="hint">Tap a part to see what it does and its Hamilton part number. Right-click a part to fade or hide it</div>
+    <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div></div>
     <div class="hud" id="hud"></div>
     <div class="tools"><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
     <div class="loading" id="loading">Assembling the movement…</div>

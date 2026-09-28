@@ -57,6 +57,7 @@ Everything is driven from one model clock `tSim`, in local seconds.
   - the maintaining work and the winding stop-bar;
   - the detent, the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing and 2 vernier weights (parts list, p. 82). The impulse roller is 0.249 in (6.32 mm) across, as modelled;
   - the barrel cap with its five screws on the pillar-plate end (Figs. 26, 109), and the dust seal with three packing rings around the fusee arbor (Fig. 24);
+  - the gimbal mounting (Figs. 1, 94, 106): a flat ring hung on two pivot screws through the box sides (washer inside, lock nut outside), the case hung in it on front and rear pivot screws into brackets on the case, support straps at 3 and 6, the gimbal latch at the front right and the key at the back right;
   - the dial markings, winding figures and part numbers. The UP–DOWN scale runs clockwise round the bottom of its sub-dial from UP (upper right) to DOWN (upper left), so winding turns the hand counterclockwise back to UP (Fig. 107, Sec. III).
 - New-old-stock Hamilton Model 21 pillar plate listing: 87.57 mm diameter, 3.86 mm thick.
 - chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement.

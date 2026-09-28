@@ -13,19 +13,45 @@ function buildBox(M){
   for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,yF+H0/2,sz*W,H0);}
   for(const sx of[1,-1]){const hp=mesh(root,new THREE.BoxGeometry(1.2,22,52),M.brass,sx*(W+0.6),-38,0);
     const hd=new THREE.Mesh(new THREE.TorusGeometry(20,2.2,10,32,Math.PI),M.brass);hd.rotation.set(Math.PI,Math.PI/2,0);hd.position.set(sx*(W+3),-34,0);root.add(hd);}
-  /* key block and winding key */
-  wood(34,30,34,W-T-17,yF+T+15,W-T-17,root,M.woodEdge);
-  const key=new THREE.Group();key.userData.partName='key';key.position.set(W-T-17,yF+T+30.5,W-T-17);root.add(key);key.rotation.y=0.6;
-  const kb=mesh(key,cylY(2.2,34,16),M.brass,0,2.5,0);kb.rotation.z=Math.PI/2;
-  const kt=mesh(key,new THREE.CylinderGeometry(3,3,24,20),M.brass,-14,4,0);kt.rotation.x=Math.PI/2;for(const sz of[12,-12])mesh(key,new THREE.SphereGeometry(3,20,12),M.brass,-14,4,sz);mesh(key,new THREE.SphereGeometry(4.2,20,14),M.brass,-14,4,0);mesh(key,cylY(3.2,5,16),M.brass2,15,2.8,0).rotation.z=Math.PI/2;
-  /* gimbal ring and bowl */
-  const ring=new THREE.Group();ring.userData.partName='ring';ring.position.y=-24;root.add(ring);
+  /* winding key standing in a socket on a corner block at the back right (Fig. 1), low enough for the lids to close */
+  const KX=W-T-12;wood(24,60,24,KX,yF+T+30,-KX,root,M.woodEdge);mesh(root,cylY(4.2,4,20),M.brass2,KX,yF+T+62,-KX);
+  const key=new THREE.Group();key.userData.partName='key';key.position.set(KX,-26,-KX);root.add(key);key.rotation.y=Math.PI/4;
+  mesh(key,cylY(2.2,20,16),M.brass,0,10,0);
+  const kt=mesh(key,new THREE.CylinderGeometry(3,3,20,20),M.brass,0,21,0);kt.rotation.x=Math.PI/2;for(const sz of[10,-10])mesh(key,new THREE.SphereGeometry(3,20,12),M.brass,0,21,sz);mesh(key,new THREE.SphereGeometry(4.2,20,14),M.brass,0,21,0);
   const V2=(a,b)=>new THREE.Vector2(a,b);
-  mesh(ring,new THREE.LatheGeometry([V2(67,-6),V2(73,-6),V2(73,6),V2(67,6),V2(67,-6)],128),M.brass);
-  for(const sx of[1,-1]){const pin=mesh(ring,cylY(2.4,W-T-73+2,12),M.brass,sx*(73+(W-T-73)/2),0,0);pin.rotation.z=Math.PI/2;
-    mesh(root,new THREE.BoxGeometry(8,22,22),M.brass,sx*(W-T-4),-24,0);}
+  /* slotted screw head along an axis: 'x' or 'z', outward sign s, head from r0 to r0+h */
+  const sHead=(p,ax,s,r0,rad,h,y,t)=>{const X=ax==='x',m=mesh(p,cylY(rad,h,20),M.brass2,0,y,0),sl=mesh(p,X?new THREE.BoxGeometry(0.6,rad*2.02,rad*0.35):new THREE.BoxGeometry(rad*0.35,rad*2.02,0.6),M.steelD,0,y,0);
+    if(X){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);sl.position.x=s*(r0+h-0.25);m.position.z=sl.position.z=t||0;}
+    else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);sl.position.z=s*(r0+h-0.25);m.position.x=sl.position.x=t||0;}};
+  const knurl=(p,ax,s,r0,rad,h)=>{const m=mesh(p,cylY(rad,h,48),M.brass2,0,0,0);for(let k=0;k<30;k++){const a=k/30*TAU,q=mesh(p,new THREE.BoxGeometry(0.5,h,0.5),M.brass2,rad*Math.cos(a),0,rad*Math.sin(a));
+      const g=new THREE.Group();p.add(g);g.add(q);g.userData.k=1;q.position.set(rad*Math.cos(a),0,rad*Math.sin(a));if(ax==='x'){g.rotation.z=Math.PI/2;g.position.x=s*(r0+h/2);}else{g.rotation.x=Math.PI/2;g.position.z=s*(r0+h/2);}}
+    if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);}};
+  /* gimbal ring: a flat brass band (Fig. 106), pivoted at 3 and 9 on two screws that come in through the box sides, each with a washer and lock nut.
+     Slotted support straps on the ring carry the bushings for the gimbal pivot at 3 and the front case pivot at 6 (Fig. 94) */
+  const RY=-20,RI=80,RO=82;
+  const ring=new THREE.Group();ring.userData.partName='ring';ring.position.y=RY;root.add(ring);
+  mesh(ring,new THREE.LatheGeometry([V2(RI,-7),V2(RO,-7),V2(RO,7),V2(RI,7),V2(RI,-7)],160),M.brass);
+  const strap=(ax,s)=>{const b=mesh(ring,ax==='x'?new THREE.BoxGeometry(1.2,16,22):new THREE.BoxGeometry(22,16,1.2),M.brass2,ax==='x'?s*(RO+0.6):0,0,ax==='z'?s*(RO+0.6):0);
+    for(const t of[-7.5,7.5])sHead(ring,ax,s,RO+1.2,1.3,0.7,-4,t);};
+  const boss=(ax,s,r0,r1,rad)=>{const m=mesh(ring,cylY(rad,r1-r0,20),M.brass2,0,0,0);if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+r1)/2;}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+r1)/2;}};
+  strap('x',1);boss('x',1,RO+1.2,RO+3.2,3.2);boss('x',-1,RO,RO+2.4,3.2);
+  const gp=new THREE.Group();gp.userData.partName='ring';gp.position.y=RY;root.add(gp);
+  /* each gimbal pivot screw: washer between ring and box (its thickness sets the ring's freedom, Sec. VIII Op. 105), lock nut outside */
+  for(const sx of[1,-1]){const r0=sx>0?RO+3.2:RO+2.4,sh=mesh(gp,cylY(1.6,W+2-r0,12),M.steel,sx*(r0+W+2)/2,0,0);sh.rotation.z=Math.PI/2;
+    const ws=mesh(gp,cylY(5.5,0.8,24),M.brass2,sx*(W-T-0.4),0,0);ws.rotation.z=Math.PI/2;const g=new THREE.Group();gp.add(g);knurl(g,'x',sx,W,4.2,2);sHead(gp,'x',sx,W+2,3.6,2.2,0);}
+  /* gimbal latch at the front right (Fig. 1, item 6): bracket on the box side, lever shown released along the wall, knurled handle */
+  const lat=new THREE.Group();lat.userData.partName='latch';root.add(lat);
+  mesh(lat,new THREE.BoxGeometry(5,10,14),M.brass2,W-T-2.5,-9,58);for(const t of[53.5,62.5])sHead(lat,'x',-1,-(W-T-5),1.1,0.6,-11,t);
+  mesh(lat,new THREE.BoxGeometry(3,1.4,28),M.brass,W-T-4,-3.3,60);mesh(lat,cylY(0.9,1.6,12),M.steel,W-T-4,-3.3,52);
+  { const kn=new THREE.Group();kn.position.set(W-T-4,-1.5,71);lat.add(kn);knurl(kn,'y',1,0,2.6,2.2);}
+  /* case (bowl) pivoted in the ring at 6 and 12: support brackets on the case, pivot screws through the ring, each with a knurled lock nut (Figs. 94, 106, 107) */
   const bowl=new THREE.Group();bowl.userData.partName='bowl';ring.add(bowl);
-  for(const sz of[1,-1]){const pin=mesh(bowl,cylY(2.2,5,12),M.brass,0,0,sz*66);pin.rotation.x=Math.PI/2;}
+  for(const sz of[1,-1]){mesh(bowl,new THREE.BoxGeometry(14,12,8),M.brass2,0,-1,sz*67.5);for(const t of[-4.5,4.5])sHead(bowl,'z',sz,71.5,1.2,0.6,-4.5,t);
+    const sh=mesh(ring,cylY(1.6,RO-69,12),M.steel,0,0,sz*(RO+69)/2);sh.rotation.x=Math.PI/2;}
+  strap('z',1);boss('z',1,RO+1.2,RO+3.2,3.2);{const g=new THREE.Group();ring.add(g);knurl(g,'z',1,RO+3.2,5,2.5);}sHead(ring,'z',1,RO+5.7,3.4,2,0);
+  boss('z',-1,RO,RO+2.4,3.2);{const g=new THREE.Group();ring.add(g);knurl(g,'z',-1,RO+2.4,5,2.5);}sHead(ring,'z',-1,RO+4.9,3.4,2,0);
+  /* latch keeper on the case, facing the latch */
+  {const kp=mesh(bowl,new THREE.BoxGeometry(3,4,6),M.brass2,65.2*Math.cos(Math.PI/4),3,65.2*Math.sin(Math.PI/4));kp.rotation.y=-Math.PI/4;}
   const bp=[V2(0.01,-66)];for(let i=0;i<=12;i++){const a=i/12*Math.PI/2;bp.push(V2(44+20*Math.sin(a),-46-20*Math.cos(a)));}bp.push(V2(64,6),V2(66.5,6),V2(66.5,8.5),V2(62,8.5));
   mesh(bowl,new THREE.LatheGeometry(bp,120),M.brassDS);
   const shutter=mesh(bowl,cylY(5,0.8,24),M.brass2,L.Fu[0],-66.4,L.Fu[1]);

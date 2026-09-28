@@ -6,7 +6,8 @@ const INFO={
   box:['Mounting box','Mahogany with brass fittings and two hinged covers: an upper lid, and a second cover with a glass top so the dial can be read while it stays closed. Felt protects the outside bottom.','No. 42201 · scaled to 7¾ × 7¾ in.'],
   lid:['Upper lid','Protects the instrument. Kept closed except when reading, winding or comparing.',''],
   lidGlass:['Glass-top cover','The second cover. Usually kept closed; the dial is read through its glass.',''],
-  ring:['Gimbal ring','Brass ring pivoted to the mounting box at two points 180° apart. The chronometer case pivots in it at two points 90° away, so the movement tends to stay level whatever the box does.','No. 42106'],
+  ring:['Gimbal ring','Flat brass ring hung on two pivot screws that come in through the sides of the mounting box, with washers and lock nuts. The case pivots in it on front and rear pivot screws 90° away, each with a knurled lock nut, so the movement tends to stay level whatever the box does. Slotted support straps at 3 and 6 set the level.','Ring 42106 · straps 42107, 42108 · pivot screws 42120, 42118, 42119 · lock nuts 42121'],
+  latch:['Gimbal latch','Locks the gimbals so the case cannot swing, when the box is carried or the lid must be closed with the instrument out of its box. Shown released.','Lever 42111 · handle 42112 · brackets 42109, 42110'],
   bowl:['Chronometer case','Brass bowl and bezel with crystal. The winding-hole shield plate on its bottom is turned clockwise to admit the key and springs back when the key is removed.','Case No. 42101, bezel 42102'],
   key:['Winding key','Wind to the left (counterclockwise). Seven half turns restore 24 hours of running; 17½ half turns wind a run-down chronometer fully.','No. 42044'],
   pillar:['Pillar plate','Foundation of the movement. The barrel and train bridges stand off it on four pillars; the lower train bridge is mounted directly on its dial side.','No. 42060 · 87.57 mm diameter, 3.86 mm thick'],
@@ -115,12 +116,12 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,op:{},focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,op:{},hid:new Set(),focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   let hrs=20,winding=false,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   const PLATES=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','cock','dial']),DRIVE_HIDE=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','dial','cock','post']);
   /* colour mode: one flat CAD-style colour per part; the part labels double as the legend */
-  const PCOL={box:'#a9745b',lid:'#8a5a44',lidGlass:'#c49a7a',ring:'#9aa1a8',bowl:'#c4b27a',key:'#6d7a8a',
+  const PCOL={box:'#a9745b',lid:'#8a5a44',lidGlass:'#c49a7a',ring:'#9aa1a8',bowl:'#c4b27a',key:'#6d7a8a',latch:'#7d9a4a',
     pillar:'#9fb4c8',ltb:'#b6d7c9',pillars:'#707a84',trainBridge:'#c9d8a8',barrelBridge:'#e3cfa6',escBridge:'#c8b8e3',lowerBridge:'#a8d4e0',cock:'#d8b0c8',
     gw:'#d9453b',fusee:'#e88a2e',barrel:'#b86bd1',mainspring:'#334f8f',chain:'#4a4f57',ratchet:'#a0922f',sq:'#5e6b2a',post:'#8c6b4a',spawl:'#1fa05a',
     cw:'#f2c230',tw:'#7cc242',fw:'#2fb3a6',escW:'#2f7fe0',det:'#e0457b',bal:'#8a5cf0',spr:'#f25fd0',hands:'#1b1b1b',motion:'#a45a3c'};
@@ -134,7 +135,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(!f){f=m0.clone();f.userData={};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
     f.opacity=(m0.opacity??1)*op;return f;}
   const base=m=>{const p=m.userData.part,m0=st.colr?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
-  const opHide=m=>st.op[m.userData.part]===0;
+  const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0;
   /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, or the barrel or spring picked */
   const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus;return st.drive||secMode!=='off'||!!(foc&&(foc.has('mainspring')||foc.has('barrel')));};
   function look(){
@@ -195,18 +196,24 @@ function drawEsc2D(ctx,w,h,p,dark){
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');$('#hint').style.opacity=0;}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
-  /* right-click a part: opacity menu. Prefers the nearest solid part, so faded parts in front can be looked through */
-  const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output');let opPart=null;
+  /* right-click a part: opacity and hide. Prefers the nearest solid part, so faded parts in front can be looked through.
+     Hidden parts can't be clicked, so the menu lists them for unhiding; right-click empty space to reach that list alone */
+  const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output'),opP=$('#opPart'),opH=$('#opHid'),chips=opH.querySelector('.chips');let opPart=null;
   const opShow=()=>{const v=Math.round((st.op[opPart]??1)*100);opIn.value=v;opOut.textContent=v+'%';};
+  function opList(){chips.innerHTML='';for(const p of st.hid){const b=document.createElement('button');b.textContent=INFO[p][0];b.title='Show '+INFO[p][0];b.addEventListener('click',()=>{st.hid.delete(p);look();opRender();});chips.appendChild(b);}}
+  function opRender(){opP.classList.toggle('hidden',!opPart);opH.classList.toggle('hidden',!st.hid.size);opList();
+    opm.querySelector('h4').textContent=opPart?INFO[opPart][0]:'Hidden parts';if(opPart)opShow();if(!opPart&&!st.hid.size)closeOpm();}
   function closeOpm(){opm.classList.remove('on');opPart=null;}
   cv.addEventListener('contextmenu',e=>{e.preventDefault();if((down?down.moved:rMoved)>6)return;const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&INFO[h.object.userData.part]);
     const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>st.op[h.object.userData.part]!=null);
-    if(!hit){closeOpm();return;}
-    opPart=hit.object.userData.part;opm.querySelector('h4').textContent=INFO[opPart][0];opShow();opm.classList.add('on');
+    if(!hit&&!st.hid.size){closeOpm();return;}
+    opPart=hit?hit.object.userData.part:null;opm.classList.add('on');opRender();
     const sr=stage.getBoundingClientRect();opm.style.left=clamp(e.clientX-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(e.clientY-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';});
   opIn.addEventListener('input',()=>{if(!opPart)return;const v=opIn.valueAsNumber/100;if(v>=1)delete st.op[opPart];else st.op[opPart]=v;opOut.textContent=opIn.value+'%';look();});
-  opm.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.a==='all')st.op={};else if(opPart)delete st.op[opPart];opShow();look();}));
+  opm.querySelectorAll('button[data-a]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.a;
+    if(a==='hide'){if(opPart){st.hid.add(opPart);opPart=null;}}else if(a==='showall')st.hid.clear();else if(a==='all'){st.op={};st.hid.clear();}else if(opPart)delete st.op[opPart];
+    look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();});
 
@@ -245,8 +252,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   addL('Fusee wheel','96 teeth, 1 turn / 6.86 h','gw',pw(P.gw,L.Fu[0]+14,-6.5,L.Fu[1]-11),'mv');addL('Centre wheel','80 teeth, 1 turn / h','cw',pw(P.cw,-8,-21.4,-8),'mv');addL('Third wheel','75 teeth, 1 turn / 7½ min','tw',pw(P.tw,L.T[0]-9,-19.2,L.T[1]+5),'mv');
   addL('Fourth wheel','60 teeth, 1 turn / min','fw',pw(P.fw,L.F[0]-7,-16.6,L.F[1]+5),'mv');addL('Upper train bridge','','trainBridge',pw(P.trainBridge,-20,-29,24),'mv');addL('Barrel bridge','','barrelBridge',pw(P.barrelBridge,-16,-33,-18),'mv');
   addL('Sustaining pawl','','spawl',pw(R.spawl,-2.5,0,0),'mv');addL('Balance lower bridge','','lowerBridge',pw(P.lowerBridge,(L.B[0]+L.F[0])/2,-23,(L.B[1]+L.F[1])/2),'mv');
-  addL('Up/down indicator','','hands',pw(P.hands,0,6,-36),'dial');addL('Seconds','','hands',pw(P.hands,-10,6,34),'dial');addL('Gimbal ring','','ring',pw(BX.ring,72,6,0),'box');
-  addL('Bowl','','bowl',pw(BX.bowl,-48,-40,40),'box');addL('Winding key','','key',pw(BX.root,76,-50,80),'box');
+  addL('Up/down indicator','','hands',pw(P.hands,0,6,-36),'dial');addL('Seconds','','hands',pw(P.hands,-10,6,34),'dial');addL('Gimbal ring','','ring',pw(BX.ring,82,8,0),'box');
+  addL('Bowl','','bowl',pw(BX.bowl,-48,-40,40),'box');addL('Winding key','','key',pw(BX.root,76,-5,-76),'box');addL('Gimbal latch','','latch',pw(BX.root,84,-2,71),'box');
   addL('Cannon pinion','12 leaves','motion',pw(P.motion,2,1.2,-3),'motion');addL('Minute wheel','36 / 10','motion',pw(P.motion,L.Mw[0]-6,1.2,L.Mw[1]+4),'motion');addL('Up/down wheel','98 teeth','motion',pw(P.motion,L.Ud[0]+11,1.5,L.Ud[1]),'motion');
 
   /* ---------- walkthrough ---------- */

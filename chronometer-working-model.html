@@ -51,6 +51,11 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .opm .sl output{min-width:3em}
 .opm .seg{margin-top:8px;display:flex;gap:6px}
 .opm .seg button{padding:4px 10px;font-size:12.5px}
+.opm #opHid{margin-top:10px;padding-top:8px;border-top:1px solid color-mix(in srgb,currentColor 14%,transparent)}
+.opm #opPart.hidden+#opHid{margin-top:0;padding-top:0;border-top:0}
+.opm .hl{font-size:12px;opacity:.7;margin-bottom:5px}
+.opm .chips{display:flex;flex-wrap:wrap;gap:4px}
+.opm .chips button{padding:3px 9px;font-size:12px}
 .hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:12.5px;color:var(--muted);background:color-mix(in srgb,var(--card) 80%,transparent);padding:4px 10px;border-radius:999px;pointer-events:none;transition:opacity .6s}
 .loading{position:absolute;inset:0;display:grid;place-items:center;font:italic 18px Spectral,Georgia,serif;color:var(--muted);background:var(--bg);transition:opacity .8s}
 .panel{padding:14px 16px 0}
@@ -101,8 +106,8 @@ table.rt td.n{text-align:right}
     <canvas aria-label="3D working model of a marine chronometer"></canvas>
     <div class="labels"></div>
     <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div></div>
-    <div class="hint" id="hint">Tap a part to see what it does and its Hamilton part number. Right-click a part to change its opacity</div>
-    <div class="opm" id="opm" role="dialog" aria-label="Part opacity"><h4></h4><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div>
+    <div class="hint" id="hint">Tap a part to see what it does and its Hamilton part number. Right-click a part to fade or hide it</div>
+    <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div></div>
     <div class="hud" id="hud"></div>
     <div class="tools"><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
     <div class="loading" id="loading">Assembling the movement…</div>
@@ -725,19 +730,45 @@ function buildBox(M){
   for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,yF+H0/2,sz*W,H0);}
   for(const sx of[1,-1]){const hp=mesh(root,new THREE.BoxGeometry(1.2,22,52),M.brass,sx*(W+0.6),-38,0);
     const hd=new THREE.Mesh(new THREE.TorusGeometry(20,2.2,10,32,Math.PI),M.brass);hd.rotation.set(Math.PI,Math.PI/2,0);hd.position.set(sx*(W+3),-34,0);root.add(hd);}
-  /* key block and winding key */
-  wood(34,30,34,W-T-17,yF+T+15,W-T-17,root,M.woodEdge);
-  const key=new THREE.Group();key.userData.partName='key';key.position.set(W-T-17,yF+T+30.5,W-T-17);root.add(key);key.rotation.y=0.6;
-  const kb=mesh(key,cylY(2.2,34,16),M.brass,0,2.5,0);kb.rotation.z=Math.PI/2;
-  const kt=mesh(key,new THREE.CylinderGeometry(3,3,24,20),M.brass,-14,4,0);kt.rotation.x=Math.PI/2;for(const sz of[12,-12])mesh(key,new THREE.SphereGeometry(3,20,12),M.brass,-14,4,sz);mesh(key,new THREE.SphereGeometry(4.2,20,14),M.brass,-14,4,0);mesh(key,cylY(3.2,5,16),M.brass2,15,2.8,0).rotation.z=Math.PI/2;
-  /* gimbal ring and bowl */
-  const ring=new THREE.Group();ring.userData.partName='ring';ring.position.y=-24;root.add(ring);
+  /* winding key standing in a socket on a corner block at the back right (Fig. 1), low enough for the lids to close */
+  const KX=W-T-12;wood(24,60,24,KX,yF+T+30,-KX,root,M.woodEdge);mesh(root,cylY(4.2,4,20),M.brass2,KX,yF+T+62,-KX);
+  const key=new THREE.Group();key.userData.partName='key';key.position.set(KX,-26,-KX);root.add(key);key.rotation.y=Math.PI/4;
+  mesh(key,cylY(2.2,20,16),M.brass,0,10,0);
+  const kt=mesh(key,new THREE.CylinderGeometry(3,3,20,20),M.brass,0,21,0);kt.rotation.x=Math.PI/2;for(const sz of[10,-10])mesh(key,new THREE.SphereGeometry(3,20,12),M.brass,0,21,sz);mesh(key,new THREE.SphereGeometry(4.2,20,14),M.brass,0,21,0);
   const V2=(a,b)=>new THREE.Vector2(a,b);
-  mesh(ring,new THREE.LatheGeometry([V2(67,-6),V2(73,-6),V2(73,6),V2(67,6),V2(67,-6)],128),M.brass);
-  for(const sx of[1,-1]){const pin=mesh(ring,cylY(2.4,W-T-73+2,12),M.brass,sx*(73+(W-T-73)/2),0,0);pin.rotation.z=Math.PI/2;
-    mesh(root,new THREE.BoxGeometry(8,22,22),M.brass,sx*(W-T-4),-24,0);}
+  /* slotted screw head along an axis: 'x' or 'z', outward sign s, head from r0 to r0+h */
+  const sHead=(p,ax,s,r0,rad,h,y,t)=>{const X=ax==='x',m=mesh(p,cylY(rad,h,20),M.brass2,0,y,0),sl=mesh(p,X?new THREE.BoxGeometry(0.6,rad*2.02,rad*0.35):new THREE.BoxGeometry(rad*0.35,rad*2.02,0.6),M.steelD,0,y,0);
+    if(X){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);sl.position.x=s*(r0+h-0.25);m.position.z=sl.position.z=t||0;}
+    else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);sl.position.z=s*(r0+h-0.25);m.position.x=sl.position.x=t||0;}};
+  const knurl=(p,ax,s,r0,rad,h)=>{const m=mesh(p,cylY(rad,h,48),M.brass2,0,0,0);for(let k=0;k<30;k++){const a=k/30*TAU,q=mesh(p,new THREE.BoxGeometry(0.5,h,0.5),M.brass2,rad*Math.cos(a),0,rad*Math.sin(a));
+      const g=new THREE.Group();p.add(g);g.add(q);g.userData.k=1;q.position.set(rad*Math.cos(a),0,rad*Math.sin(a));if(ax==='x'){g.rotation.z=Math.PI/2;g.position.x=s*(r0+h/2);}else{g.rotation.x=Math.PI/2;g.position.z=s*(r0+h/2);}}
+    if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);}};
+  /* gimbal ring: a flat brass band (Fig. 106), pivoted at 3 and 9 on two screws that come in through the box sides, each with a washer and lock nut.
+     Slotted support straps on the ring carry the bushings for the gimbal pivot at 3 and the front case pivot at 6 (Fig. 94) */
+  const RY=-20,RI=80,RO=82;
+  const ring=new THREE.Group();ring.userData.partName='ring';ring.position.y=RY;root.add(ring);
+  mesh(ring,new THREE.LatheGeometry([V2(RI,-7),V2(RO,-7),V2(RO,7),V2(RI,7),V2(RI,-7)],160),M.brass);
+  const strap=(ax,s)=>{const b=mesh(ring,ax==='x'?new THREE.BoxGeometry(1.2,16,22):new THREE.BoxGeometry(22,16,1.2),M.brass2,ax==='x'?s*(RO+0.6):0,0,ax==='z'?s*(RO+0.6):0);
+    for(const t of[-7.5,7.5])sHead(ring,ax,s,RO+1.2,1.3,0.7,-4,t);};
+  const boss=(ax,s,r0,r1,rad)=>{const m=mesh(ring,cylY(rad,r1-r0,20),M.brass2,0,0,0);if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+r1)/2;}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+r1)/2;}};
+  strap('x',1);boss('x',1,RO+1.2,RO+3.2,3.2);boss('x',-1,RO,RO+2.4,3.2);
+  const gp=new THREE.Group();gp.userData.partName='ring';gp.position.y=RY;root.add(gp);
+  /* each gimbal pivot screw: washer between ring and box (its thickness sets the ring's freedom, Sec. VIII Op. 105), lock nut outside */
+  for(const sx of[1,-1]){const r0=sx>0?RO+3.2:RO+2.4,sh=mesh(gp,cylY(1.6,W+2-r0,12),M.steel,sx*(r0+W+2)/2,0,0);sh.rotation.z=Math.PI/2;
+    const ws=mesh(gp,cylY(5.5,0.8,24),M.brass2,sx*(W-T-0.4),0,0);ws.rotation.z=Math.PI/2;const g=new THREE.Group();gp.add(g);knurl(g,'x',sx,W,4.2,2);sHead(gp,'x',sx,W+2,3.6,2.2,0);}
+  /* gimbal latch at the front right (Fig. 1, item 6): bracket on the box side, lever shown released along the wall, knurled handle */
+  const lat=new THREE.Group();lat.userData.partName='latch';root.add(lat);
+  mesh(lat,new THREE.BoxGeometry(5,10,14),M.brass2,W-T-2.5,-9,58);for(const t of[53.5,62.5])sHead(lat,'x',-1,-(W-T-5),1.1,0.6,-11,t);
+  mesh(lat,new THREE.BoxGeometry(3,1.4,28),M.brass,W-T-4,-3.3,60);mesh(lat,cylY(0.9,1.6,12),M.steel,W-T-4,-3.3,52);
+  { const kn=new THREE.Group();kn.position.set(W-T-4,-1.5,71);lat.add(kn);knurl(kn,'y',1,0,2.6,2.2);}
+  /* case (bowl) pivoted in the ring at 6 and 12: support brackets on the case, pivot screws through the ring, each with a knurled lock nut (Figs. 94, 106, 107) */
   const bowl=new THREE.Group();bowl.userData.partName='bowl';ring.add(bowl);
-  for(const sz of[1,-1]){const pin=mesh(bowl,cylY(2.2,5,12),M.brass,0,0,sz*66);pin.rotation.x=Math.PI/2;}
+  for(const sz of[1,-1]){mesh(bowl,new THREE.BoxGeometry(14,12,8),M.brass2,0,-1,sz*67.5);for(const t of[-4.5,4.5])sHead(bowl,'z',sz,71.5,1.2,0.6,-4.5,t);
+    const sh=mesh(ring,cylY(1.6,RO-69,12),M.steel,0,0,sz*(RO+69)/2);sh.rotation.x=Math.PI/2;}
+  strap('z',1);boss('z',1,RO+1.2,RO+3.2,3.2);{const g=new THREE.Group();ring.add(g);knurl(g,'z',1,RO+3.2,5,2.5);}sHead(ring,'z',1,RO+5.7,3.4,2,0);
+  boss('z',-1,RO,RO+2.4,3.2);{const g=new THREE.Group();ring.add(g);knurl(g,'z',-1,RO+2.4,5,2.5);}sHead(ring,'z',-1,RO+4.9,3.4,2,0);
+  /* latch keeper on the case, facing the latch */
+  {const kp=mesh(bowl,new THREE.BoxGeometry(3,4,6),M.brass2,65.2*Math.cos(Math.PI/4),3,65.2*Math.sin(Math.PI/4));kp.rotation.y=-Math.PI/4;}
   const bp=[V2(0.01,-66)];for(let i=0;i<=12;i++){const a=i/12*Math.PI/2;bp.push(V2(44+20*Math.sin(a),-46-20*Math.cos(a)));}bp.push(V2(64,6),V2(66.5,6),V2(66.5,8.5),V2(62,8.5));
   mesh(bowl,new THREE.LatheGeometry(bp,120),M.brassDS);
   const shutter=mesh(bowl,cylY(5,0.8,24),M.brass2,L.Fu[0],-66.4,L.Fu[1]);
@@ -769,7 +800,8 @@ const INFO={
   box:['Mounting box','Mahogany with brass fittings and two hinged covers: an upper lid, and a second cover with a glass top so the dial can be read while it stays closed. Felt protects the outside bottom.','No. 42201 · scaled to 7¾ × 7¾ in.'],
   lid:['Upper lid','Protects the instrument. Kept closed except when reading, winding or comparing.',''],
   lidGlass:['Glass-top cover','The second cover. Usually kept closed; the dial is read through its glass.',''],
-  ring:['Gimbal ring','Brass ring pivoted to the mounting box at two points 180° apart. The chronometer case pivots in it at two points 90° away, so the movement tends to stay level whatever the box does.','No. 42106'],
+  ring:['Gimbal ring','Flat brass ring hung on two pivot screws that come in through the sides of the mounting box, with washers and lock nuts. The case pivots in it on front and rear pivot screws 90° away, each with a knurled lock nut, so the movement tends to stay level whatever the box does. Slotted support straps at 3 and 6 set the level.','Ring 42106 · straps 42107, 42108 · pivot screws 42120, 42118, 42119 · lock nuts 42121'],
+  latch:['Gimbal latch','Locks the gimbals so the case cannot swing, when the box is carried or the lid must be closed with the instrument out of its box. Shown released.','Lever 42111 · handle 42112 · brackets 42109, 42110'],
   bowl:['Chronometer case','Brass bowl and bezel with crystal. The winding-hole shield plate on its bottom is turned clockwise to admit the key and springs back when the key is removed.','Case No. 42101, bezel 42102'],
   key:['Winding key','Wind to the left (counterclockwise). Seven half turns restore 24 hours of running; 17½ half turns wind a run-down chronometer fully.','No. 42044'],
   pillar:['Pillar plate','Foundation of the movement. The barrel and train bridges stand off it on four pillars; the lower train bridge is mounted directly on its dial side.','No. 42060 · 87.57 mm diameter, 3.86 mm thick'],
@@ -878,12 +910,12 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,op:{},focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,op:{},hid:new Set(),focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   let hrs=20,winding=false,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   const PLATES=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','cock','dial']),DRIVE_HIDE=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','dial','cock','post']);
   /* colour mode: one flat CAD-style colour per part; the part labels double as the legend */
-  const PCOL={box:'#a9745b',lid:'#8a5a44',lidGlass:'#c49a7a',ring:'#9aa1a8',bowl:'#c4b27a',key:'#6d7a8a',
+  const PCOL={box:'#a9745b',lid:'#8a5a44',lidGlass:'#c49a7a',ring:'#9aa1a8',bowl:'#c4b27a',key:'#6d7a8a',latch:'#7d9a4a',
     pillar:'#9fb4c8',ltb:'#b6d7c9',pillars:'#707a84',trainBridge:'#c9d8a8',barrelBridge:'#e3cfa6',escBridge:'#c8b8e3',lowerBridge:'#a8d4e0',cock:'#d8b0c8',
     gw:'#d9453b',fusee:'#e88a2e',barrel:'#b86bd1',mainspring:'#334f8f',chain:'#4a4f57',ratchet:'#a0922f',sq:'#5e6b2a',post:'#8c6b4a',spawl:'#1fa05a',
     cw:'#f2c230',tw:'#7cc242',fw:'#2fb3a6',escW:'#2f7fe0',det:'#e0457b',bal:'#8a5cf0',spr:'#f25fd0',hands:'#1b1b1b',motion:'#a45a3c'};
@@ -897,7 +929,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(!f){f=m0.clone();f.userData={};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
     f.opacity=(m0.opacity??1)*op;return f;}
   const base=m=>{const p=m.userData.part,m0=st.colr?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
-  const opHide=m=>st.op[m.userData.part]===0;
+  const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0;
   /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, or the barrel or spring picked */
   const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus;return st.drive||secMode!=='off'||!!(foc&&(foc.has('mainspring')||foc.has('barrel')));};
   function look(){
@@ -958,18 +990,24 @@ function drawEsc2D(ctx,w,h,p,dark){
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');$('#hint').style.opacity=0;}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
-  /* right-click a part: opacity menu. Prefers the nearest solid part, so faded parts in front can be looked through */
-  const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output');let opPart=null;
+  /* right-click a part: opacity and hide. Prefers the nearest solid part, so faded parts in front can be looked through.
+     Hidden parts can't be clicked, so the menu lists them for unhiding; right-click empty space to reach that list alone */
+  const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output'),opP=$('#opPart'),opH=$('#opHid'),chips=opH.querySelector('.chips');let opPart=null;
   const opShow=()=>{const v=Math.round((st.op[opPart]??1)*100);opIn.value=v;opOut.textContent=v+'%';};
+  function opList(){chips.innerHTML='';for(const p of st.hid){const b=document.createElement('button');b.textContent=INFO[p][0];b.title='Show '+INFO[p][0];b.addEventListener('click',()=>{st.hid.delete(p);look();opRender();});chips.appendChild(b);}}
+  function opRender(){opP.classList.toggle('hidden',!opPart);opH.classList.toggle('hidden',!st.hid.size);opList();
+    opm.querySelector('h4').textContent=opPart?INFO[opPart][0]:'Hidden parts';if(opPart)opShow();if(!opPart&&!st.hid.size)closeOpm();}
   function closeOpm(){opm.classList.remove('on');opPart=null;}
   cv.addEventListener('contextmenu',e=>{e.preventDefault();if((down?down.moved:rMoved)>6)return;const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&INFO[h.object.userData.part]);
     const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>st.op[h.object.userData.part]!=null);
-    if(!hit){closeOpm();return;}
-    opPart=hit.object.userData.part;opm.querySelector('h4').textContent=INFO[opPart][0];opShow();opm.classList.add('on');
+    if(!hit&&!st.hid.size){closeOpm();return;}
+    opPart=hit?hit.object.userData.part:null;opm.classList.add('on');opRender();
     const sr=stage.getBoundingClientRect();opm.style.left=clamp(e.clientX-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(e.clientY-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';});
   opIn.addEventListener('input',()=>{if(!opPart)return;const v=opIn.valueAsNumber/100;if(v>=1)delete st.op[opPart];else st.op[opPart]=v;opOut.textContent=opIn.value+'%';look();});
-  opm.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.a==='all')st.op={};else if(opPart)delete st.op[opPart];opShow();look();}));
+  opm.querySelectorAll('button[data-a]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.a;
+    if(a==='hide'){if(opPart){st.hid.add(opPart);opPart=null;}}else if(a==='showall')st.hid.clear();else if(a==='all'){st.op={};st.hid.clear();}else if(opPart)delete st.op[opPart];
+    look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();});
 
@@ -1008,8 +1046,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   addL('Fusee wheel','96 teeth, 1 turn / 6.86 h','gw',pw(P.gw,L.Fu[0]+14,-6.5,L.Fu[1]-11),'mv');addL('Centre wheel','80 teeth, 1 turn / h','cw',pw(P.cw,-8,-21.4,-8),'mv');addL('Third wheel','75 teeth, 1 turn / 7½ min','tw',pw(P.tw,L.T[0]-9,-19.2,L.T[1]+5),'mv');
   addL('Fourth wheel','60 teeth, 1 turn / min','fw',pw(P.fw,L.F[0]-7,-16.6,L.F[1]+5),'mv');addL('Upper train bridge','','trainBridge',pw(P.trainBridge,-20,-29,24),'mv');addL('Barrel bridge','','barrelBridge',pw(P.barrelBridge,-16,-33,-18),'mv');
   addL('Sustaining pawl','','spawl',pw(R.spawl,-2.5,0,0),'mv');addL('Balance lower bridge','','lowerBridge',pw(P.lowerBridge,(L.B[0]+L.F[0])/2,-23,(L.B[1]+L.F[1])/2),'mv');
-  addL('Up/down indicator','','hands',pw(P.hands,0,6,-36),'dial');addL('Seconds','','hands',pw(P.hands,-10,6,34),'dial');addL('Gimbal ring','','ring',pw(BX.ring,72,6,0),'box');
-  addL('Bowl','','bowl',pw(BX.bowl,-48,-40,40),'box');addL('Winding key','','key',pw(BX.root,76,-50,80),'box');
+  addL('Up/down indicator','','hands',pw(P.hands,0,6,-36),'dial');addL('Seconds','','hands',pw(P.hands,-10,6,34),'dial');addL('Gimbal ring','','ring',pw(BX.ring,82,8,0),'box');
+  addL('Bowl','','bowl',pw(BX.bowl,-48,-40,40),'box');addL('Winding key','','key',pw(BX.root,76,-5,-76),'box');addL('Gimbal latch','','latch',pw(BX.root,84,-2,71),'box');
   addL('Cannon pinion','12 leaves','motion',pw(P.motion,2,1.2,-3),'motion');addL('Minute wheel','36 / 10','motion',pw(P.motion,L.Mw[0]-6,1.2,L.Mw[1]+4),'motion');addL('Up/down wheel','98 teeth','motion',pw(P.motion,L.Ud[0]+11,1.5,L.Ud[1]),'motion');
 
   /* ---------- walkthrough ---------- */
