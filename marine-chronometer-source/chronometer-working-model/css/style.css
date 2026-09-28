@@ -23,7 +23,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .colr .lbl::before{background:var(--pc,var(--brass));width:10px;height:10px;left:-5px;top:-5px}
 .colr .lbl span{border-left:4px solid var(--pc,transparent)}
 .lbl i{display:block;font-style:normal;color:var(--muted);font-size:11px}
-.hud{position:absolute;left:14px;bottom:12px;right:120px;pointer-events:none;font:13px/1.4 "Instrument Sans",sans-serif;color:var(--muted);font-variant-numeric:tabular-nums}
+.hud{position:absolute;left:14px;bottom:12px;right:190px;pointer-events:none;font:13px/1.4 "Instrument Sans",sans-serif;color:var(--muted);font-variant-numeric:tabular-nums}
 .hud b{color:var(--ink);font-weight:600}
 .tools{position:absolute;right:10px;bottom:10px;display:flex;gap:6px}
 .tools button{background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
@@ -63,6 +63,18 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .spd input[type=number]{width:5.6em;font:500 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums}
 .spd>span:last-child{color:var(--muted);margin-left:-4px}
 .pow .sl{flex:1;min-width:0;gap:8px}.pow .sl input{min-width:0;width:0}.pow .sl output{min-width:3.4em;flex-shrink:0}.pow button{flex-shrink:0}
+.clk{display:flex;align-items:center;gap:8px;margin-top:10px}.clk .sl{flex:1;min-width:0;gap:8px}.clk .sl span,#expWrap span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}
+.clk input[type=time]{flex:0 1 auto;min-width:0;font:500 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 6px;font-variant-numeric:tabular-nums;color-scheme:light dark}
+#expWrap output{min-width:3.4em}
+.plist-h{font:500 12px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 3px}.plist-h:first-child{margin-top:0}
+.prow{display:flex;align-items:center;gap:4px}
+.prow input{accent-color:var(--blue);width:16px;height:16px;margin:0 4px 0 0;flex-shrink:0;cursor:pointer}
+.prow .pn{flex:1;min-width:0;display:flex;align-items:center;gap:7px;text-align:left;border:0;border-radius:6px;padding:3px 7px;font-weight:500;font-size:13.5px;color:var(--ink)}
+.prow .pn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--rule);flex-shrink:0}
+#plist.colr .pn::before{background:var(--pc,var(--rule))}
+.prow .pn:hover{background:color-mix(in srgb,var(--blue) 12%,transparent)}
+.prow .pn[aria-pressed="true"]{background:var(--blue);color:var(--panel)}
+.prow.off .pn{color:var(--muted);text-decoration:line-through}
 details.more>summary{cursor:pointer;list-style:none;font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);display:flex;align-items:center;gap:6px;user-select:none}
 details.more>summary::-webkit-details-marker{display:none}
 details.more>summary::before{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin:0 3px 0 1px}
@@ -108,4 +120,4 @@ table.rt td.n{text-align:right}
 .note{font-size:12.5px;color:var(--muted)}
 .note p{margin:0 0 .6em}
 .hidden{display:none!important}
-@media(max-width:600px){.lbl{font-size:11px}.lbl i{display:none}}
+@media(max-width:600px){.lbl{font-size:11px}.lbl i{display:none}.hud{right:14px;bottom:50px}}

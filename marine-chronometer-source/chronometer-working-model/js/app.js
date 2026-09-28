@@ -119,7 +119,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,op:{},hid:new Set(),focus:null,pick:null,labels:true,rock:false,speed:1,sound:false,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,op:{},hid:new Set(),focus:null,pick:null,labels:true,rock:false,spin:false,speed:1,sound:false,view:'dial',tour:-1};
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   let hrs=20,winding=false,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   const PLATES=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','cock','dial']),DRIVE_HIDE=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','dial','cock','post']);
@@ -155,7 +155,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
-    $('#ghost').checked=st.see;stage.classList.toggle('colr',st.colr);
+    $('#ghost').checked=st.see;stage.classList.toggle('colr',st.colr);partsSync();
   }
 
   /* ---------- camera ---------- */
@@ -175,7 +175,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK()*(st.drive&&v.lift?0.8:1);G.follow=v.target;camFree=false;}
   let camFree=false;
   function setView(k,keepSee){const v=VIEWS[k];if(st.drive&&(k==='box'||k==='dial'))k='movement';const vv=VIEWS[k];
-    Object.assign(tgt,{lift:st.drive?1:vv.lift,flip:st.drive?1:vv.flip,explode:vv.explode,lidM:vv.lidM,lidT:vv.lidT});goCam(vv);st.view=k;
+    Object.assign(tgt,{lift:st.drive?1:vv.lift,flip:st.drive?1:vv.flip,explode:vv.explode*expV(),lidM:vv.lidM,lidT:vv.lidT});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',k!=='exploded');
     if(!keepSee){st.see=!!vv.see;}look();
     document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* pointer: orbit, pinch, tap to pick */
@@ -194,8 +194,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   function pick(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
     const hit=hits.find(h=>INFO[h.object.userData.part]);
-    if(!hit){closeInfo();return;}
-    const p=hit.object.userData.part;st.pick=p;look();const[t,d,sp]=INFO[p];
+    if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
+  function showPart(p){st.hid.delete(p);st.pick=p;look();const[t,d,sp]=INFO[p];
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');$('#hint').style.opacity=0;}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
@@ -220,7 +220,9 @@ function drawEsc2D(ctx,w,h,p,dark){
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();
     /* space bar: stop and restart, unless typing or pressing a button */
-    if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}});
+    if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
+    /* 1 to 6: the views, in the order of their buttons (a disabled button ignores the click) */
+    if(/^[1-6]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)document.querySelectorAll('#views button')[+e.key-1].click();});
 
   /* ---------- controls ---------- */
   /* speed: presets, or any value from 0.01x to 10000x on a log slider or typed in */
@@ -249,6 +251,32 @@ function drawEsc2D(ctx,w,h,p,dark){
   hIn.addEventListener('input',()=>{hrs=parseFloat(hIn.value);winding=false;showH();});showH();
   $('#wind').addEventListener('click',()=>{winding=true;});
   $('#reset').addEventListener('click',()=>{setView(st.view,true);});
+  /* exploded view: how far apart the parts spread */
+  const expR=$('#expR'),expO=$('#expWrap output');function expV(){return expR.valueAsNumber/100;}
+  const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(st.view==='exploded'&&st.tour<0)tgt.explode=expV();});
+  /* set the hands: only the time of day changes (the balance keeps its phase) and no power is used */
+  const todIn=$('#tod');let todS=-1;
+  todIn.addEventListener('change',()=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(todIn.value);if(!m)return;tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;});
+  $('#now').addEventListener('click',()=>{tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;lastE=null;todS=-1;});
+  $('#spin').addEventListener('change',e=>st.spin=e.target.checked);
+  /* theme: Auto follows the system; a choice is remembered in this browser */
+  const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));try{localStorage.setItem('cm-theme',v);}catch(_){}};
+  document.querySelectorAll('#theme button').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.v)));
+  try{const v=localStorage.getItem('cm-theme');if(v==='light'||v==='dark')setTheme(v);}catch(_){}
+  /* save the view as a PNG: render and copy in the same task, while the drawing buffer is still valid, over the page background */
+  $('#shot').addEventListener('click',()=>{r.render(scene,cam);const c2=document.createElement('canvas');c2.width=cv.width;c2.height=cv.height;const x=c2.getContext('2d');x.fillStyle=getComputedStyle(document.body).backgroundColor;x.fillRect(0,0,c2.width,c2.height);x.drawImage(cv,0,0);
+    c2.toBlob(b=>{if(!b)return;const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='hamilton-model-21.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);});});
+  /* parts list: every named part, grouped. A name singles the part out as a tap does; the box hides it, as the right-click menu does */
+  const PGRP=[['Box and gimbals',['box','lid','lidGlass','ring','latch','bowl','key']],['Plates and bridges',['pillar','ltb','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','cock','dial']],
+    ['Power and winding',['barrel','mainspring','ratchet','chain','fusee','sq','post','gw','spawl']],['Train and escapement',['cw','tw','fw','escW','det','bal','spr']],['Hands',['hands','motion']]];
+  const BOXP=new Set(PGRP[0][1]),plist=$('#plist'),PROWS=[];
+  for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);
+    for(const p of ps){const row=document.createElement('div');row.className='prow';row.innerHTML=`<input type="checkbox" checked aria-label="Show ${INFO[p][0]}"><button class="pn">${INFO[p][0]}</button>`;
+      if(PCOL[p])row.style.setProperty('--pc',PCOL[p]);const ck=row.firstChild,b=row.lastChild;
+      ck.addEventListener('change',()=>{if(ck.checked)st.hid.delete(p);else{st.hid.add(p);if(st.pick===p)closeInfo();}look();});
+      b.addEventListener('click',()=>{st.pick===p?closeInfo():showPart(p);});plist.appendChild(row);PROWS.push({p,row,ck,b});}}
+  $('#pShow').addEventListener('click',()=>{st.hid.clear();look();});
+  function partsSync(){for(const q of PROWS){const h=st.hid.has(q.p);q.ck.checked=!h;q.row.classList.toggle('off',h);q.b.setAttribute('aria-pressed',st.pick===q.p?'true':'false');q.b.disabled=st.drive&&(BOXP.has(q.p)||DRIVE_HIDE.has(q.p));}plist.classList.toggle('colr',st.colr);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}else{(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);}});
   let ac=null;$('#snd').addEventListener('change',e=>{st.sound=e.target.checked;if(st.sound&&!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(_){}}if(ac&&ac.state==='suspended')ac.resume();});
@@ -310,7 +338,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     st.drive=s.drive;st.mwOn=!!s.mw;$('#mwOn').checked=st.mwOn;st.focus=s.focus?new Set(s.focus):null;st.see=false;
     st.rock=!!s.rock;$('#rock').checked=st.rock;setSpeed(s.speed);
     Object.assign(tgt,{lift:s.v.lift,flip:s.v.flip,explode:s.v.explode,lidM:s.v.lidM??1,lidT:s.v.lidT??1});goCam(s.v);look();
-    document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));
+    document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');
     setInset(s.inset||null);
     if(innerWidth<960){const card=$('#tourCard'),y=card.getBoundingClientRect().top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:'smooth'});}}
   function tourEnd(){st.tour=-1;st.focus=null;st.drive=false;st.mwOn=false;st.rock=false;$('#rock').checked=false;setSpeed(1);setInset(null);
@@ -398,6 +426,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     BX.root.rotation.set(pitch,0,roll,'ZYX');BX.ring.rotation.x=-pitch;BX.bowl.rotation.z=-roll;
     BX.root.updateMatrixWorld(true);if(secMode!=='off')secPlane.copy(secLocal).applyMatrix4(mv.matrixWorld);
     if(G.follow)G.target.copy(G.follow());
+    if(st.spin&&!ptrs.size){G.yaw+=dt*0.2;if(camFree)C.yaw+=dt*0.2;}
     C.target.lerp(G.target,Math.min(1,k*1.5));if(!camFree){C.yaw+=(G.yaw-C.yaw)*k;C.pitch+=(G.pitch-C.pitch)*k;}C.dist+=(G.dist-C.dist)*k;
     const cp=Math.cos(C.pitch);cam.position.set(C.target.x+C.dist*cp*Math.sin(C.yaw),C.target.y+C.dist*Math.sin(C.pitch),C.target.z+C.dist*cp*Math.cos(C.yaw));cam.lookAt(C.target);
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
@@ -408,6 +437,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(56-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>, maintaining power driving the train':''}`;
+    if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
     if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView('dial');},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}
     requestAnimationFrame(frame);
   }

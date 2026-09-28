@@ -28,7 +28,7 @@
     <div class="hint" id="hint">Tap a part to see what it does and its Hamilton part number. Right-click a part to fade or hide it</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div></div>
     <div class="hud" id="hud"></div>
-    <div class="tools"><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
+    <div class="tools"><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
     <div class="loading" id="loading">Assembling the movement…</div>
   </div>
   <div class="panel">
@@ -53,6 +53,7 @@
         <div class="seg grid3" id="views">
           <button data-v="box" title="The instrument in its mounting box">Box</button><button data-v="dial" aria-pressed="true" title="Read the dial through the glass">Dial</button><button data-v="exploded" title="Every part lifted apart along the arbors">Exploded</button>
           <button data-v="movement" title="The movement lifted out of its case, train side up">Movement</button><button data-v="train" title="The going train, plates see-through">Train</button><button data-v="escapement" title="Close up on the detent escapement">Escapement</button></div>
+        <label class="sl hidden" id="expWrap" style="margin-top:10px"><span>Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
         <label class="ck sw" title="Hide the plates, bridges, dial and case to see the moving parts"><input type="checkbox" id="driveOn" role="switch"> Moving parts only</label>
         <label class="ck sub hidden" id="mwWrap"><input type="checkbox" id="mwOn"> Include motion work and hands</label>
       </section>
@@ -62,6 +63,7 @@
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time: watch the escapement">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="spd"><span>Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
         <div class="pow"><label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="56" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
+        <div class="clk"><label class="sl"><span>Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to your clock">Now</button></div>
       </section>
       <section class="grp">
         <h2>Display</h2>
@@ -70,8 +72,17 @@
           <label class="ck"><input type="checkbox" id="ghost"> See-through plates</label>
           <label class="ck"><input type="checkbox" id="colr"> Colour by part</label>
           <label class="ck"><input type="checkbox" id="rock"> Ship motion</label>
-          <label class="ck"><input type="checkbox" id="snd"> Tick sound</label></div>
+          <label class="ck"><input type="checkbox" id="snd"> Tick sound</label>
+          <label class="ck"><input type="checkbox" id="spin"> Turn slowly</label></div>
+        <h3 class="sub-h" style="margin-top:12px">Theme</h3>
+        <div class="seg" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
       </section>
+      <details class="grp more" id="partsDet">
+        <summary>Parts</summary>
+        <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
+        <div id="plist"></div>
+        <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
+      </details>
       <details class="grp more" id="secDet">
         <summary>Cross-section</summary>
         <div class="seg" id="secs">
@@ -100,7 +111,8 @@
     <li>Drag to turn; pinch or scroll to zoom.</li>
     <li>Tap a part to see what it does and its Hamilton part number.</li>
     <li>Right-click a part to fade or hide it; right-click empty space to bring hidden parts back.</li>
-    <li>Space bar stops and restarts the movement.</li>
+    <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons.</li>
+    <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
   </ul>
   <h3>Sources</h3>
   <ol>
