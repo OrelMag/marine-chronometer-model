@@ -80,6 +80,7 @@ table.rt td.n{text-align:right}
 .hidden{display:none!important}
 @media(max-width:600px){.lbl{font-size:11px}.lbl i{display:none}}
 </style>
+
 </head>
 <body>
 <header>
@@ -149,6 +150,8 @@ table.rt td.n{text-align:right}
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+/* core.js: helpers, materials (damascened nickel, gilt), textures, engraving, gear/spring/hand/pawl/escape-wheel geometry, dial, cross-section patch
+   Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 "use strict";
 const TAU=Math.PI*2,D2R=Math.PI/180;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t;
@@ -327,6 +330,11 @@ function dialCanvas(){
   x.font=`italic ${S*0.028}px Spectral, Georgia, serif`;x.fillText('Two-day marine chronometer',c,c+c*0.15);
   return cv;
 }
+
+</script>
+<script>
+/* movement.js: the Model 21 movement: photo-measured layout, Rawlings-based escapement, bridges, crescent cock, train, maintaining work, fusee, chain and winding key
+   Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 /* =====================================================================
    movement.js: the Hamilton Model 21 movement.
    Units: mm. Movement frame: dial side = +y, 12 o'clock = -z, 3 o'clock = +x.
@@ -676,6 +684,11 @@ function makeFusee(M,c){
   return{g,fz,bz,setWind,rf,yf,fx,bx,ms,I,IN,stopBar};
 }
 
+</script>
+<script>
+/* box.js: mounting box (glass lid hinged to the box, outer lid hinged to the glass lid), gimbal ring, case, winding key
+   Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
+
 /* ================= box, bowl, gimbals ================= */
 function buildBox(M){
   const root=new THREE.Group();root.userData.partName='box';const W=98.5,T=10,yF=-100,H0=100;
@@ -721,6 +734,11 @@ function buildBox(M){
 }
 function shadowTex(){const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');const g=x.createRadialGradient(128,128,20,128,128,128);g.addColorStop(0,'rgba(0,0,0,0.42)');g.addColorStop(0.6,'rgba(0,0,0,0.16)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,256,256);return new THREE.CanvasTexture(cv);}
 
+
+</script>
+<script>
+/* app.js: renderer, camera, controls, cross-sections, label placement, part info, walkthrough, animation loop; ?qa hooks for verification
+   Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 
 /* ================= part descriptions (tap to identify) ================= */
 const INFO={

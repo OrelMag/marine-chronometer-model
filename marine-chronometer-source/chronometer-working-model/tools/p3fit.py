@@ -1,6 +1,9 @@
 import asyncio,json,math
 import numpy as np
 from playwright.async_api import async_playwright
+import pathlib
+HERE=pathlib.Path(__file__).resolve().parent
+PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 # photo points (the uploaded top view) and model points (movement frame)
 PH={'B':(640,830),'Fu':(1240,610),'Ba':(930,1440),'scr_ll2':(389,1505),'scr_left':(1060*0+ (-1)+0,0)}
 PH={'B':(640,830),'Fu':(1240,610),'Ba':(930,1440)}
@@ -10,7 +13,7 @@ async def main():
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
         pg=await b.new_page(viewport={"width":1100,"height":1100},color_scheme='light')
         errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
-        await pg.goto("file:///home/claude/v8/all.html?snap&qa"); await pg.wait_for_timeout(4500)
+        await pg.goto(PAGE); await pg.wait_for_timeout(4500)
         c=lambda s: pg.evaluate(f"document.querySelector('{s}').click()")
         await c('#lbls');await c('#views button[data-v="movement"]');await pg.wait_for_timeout(2500)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")

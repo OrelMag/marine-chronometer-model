@@ -1,89 +1,41 @@
-# The Marine Chronometer, working
+# The Marine Chronometer
 
-Interactive 3D model of a two-day fusee marine chronometer with a spring detent
-escapement, running in real time inside its gimballed case and mounting box.
-Built with three.js r128 (loaded from cdnjs); no build tools are required.
+Two browser-based projects about the marine chronometer, centred on the
+Hamilton Model 21: a two-day fusee chronometer with a spring detent escapement.
+Both run from static files with three.js r128 (from cdnjs). No install is needed.
 
-## Run
+## Published files
 
-Open `index.html` in a browser. Everything loads from local files, except
-three.js (from cdnjs) and the fonts (from Google Fonts).
-
-`dist/chronometer-working-model.html` is the same thing as one self-contained
-file. Regenerate it after editing with:
-
-    python3 build.py
-
-## Files
-
-| File | Contents |
+| File | What it is |
 |---|---|
-| `index.html` | Page markup: stage, walkthrough card, controls, source notes |
-| `css/style.css` | Layout, theme tokens (light and dark), controls, labels |
-| `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch |
-| `js/movement.js` | The movement: layout constants, detent-escapement kinematics (`ESC.state`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
-| `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate), winding key |
-| `js/app.js` | Renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, and the animation loop |
-| `build.py` | Inlines CSS and JS into `dist/` |
-| `tools/interference-check.js` | Voxel collision test used to find and remove overlapping parts |
+| [`chronometer-working-model.html`](chronometer-working-model.html) | Interactive 3D model of the Model 21 running in real time inside its gimballed case and mounting box, with an eight-step walkthrough, cross-sections and part descriptions |
+| [`marine-chronometer.html`](marine-chronometer.html) | Long-form interactive essay covering longitude, the balance, the helical spring, temperature compensation, the fusee, the train, the detent escapement and the gimbals |
 
-## Testing
-
-Append `?snap` to the URL to switch off camera and state easing. Views then settle
-immediately, which is useful for automated screenshots.
-
-## Coordinates and units
-
-Millimetres. Movement frame: dial side is +y, 12 o’clock is −z, 3 o’clock is +x.
-Arbor positions are in `L` at the top of `movement.js`.
-
-## How the timing works
-
-Everything is driven from one model clock `tSim`, in local seconds.
-
-- The balance phase is `p = frac(tSim / 0.5)`, one oscillation per half-second.
-- `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection
-  and the escape wheel’s progress through its current tooth.
-- Escape wheel position is `E = completed oscillations + progress`, counted in
-  teeth. Every other arbor is a fixed ratio of `E`. The hands therefore advance
-  in half-second steps, as the manual states (Sec. IX, p. 66).
-- The fusee and chain follow the hours since winding: one fusee turn per 96/14
-  = 6.86 hours.
+Open either file in a browser.
 
 ## Sources
 
-- *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948. Used for:
-  - the structure: pillar plate, barrel bridge, upper and lower train bridges, balance lower bridge, escape upper bridge;
-  - the maintaining work and the winding stop-bar;
-  - the detent, the balance and hairspring;
-  - the dial markings, winding figures and part numbers.
-- New-old-stock Hamilton Model 21 pillar plate listing: 87.57 mm diameter, 3.86 mm thick.
-- chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement.
-- chronometerbook.com, post 30: escape wheel specification of 16 teeth, 13.14-13.18 mm diameter, 1.27-1.32 mm thick.
-- The manual's Fig. 2 photograph (layout) and Fig. 107 (dial side, wind-indicator wheel).
+The editable sources are in [`marine-chronometer-source/`](marine-chronometer-source/):
 
-## How the layout was measured
+- [`chronometer-working-model/`](marine-chronometer-source/chronometer-working-model/README.md):
+  the 3D model. Its README covers the files, coordinates, timing, the
+  references it draws on (principally the 1948 NAVSHIPS 250-624 Hamilton
+  overhaul manual), how the layout was measured from photographs, and which
+  details are estimated.
+- [`marine-chronometer-essay/`](marine-chronometer-source/marine-chronometer-essay/README.md):
+  the essay. It predates the Hamilton manual and the working model.
 
-1. **Two photographs.** The manual's Fig. 2 and a near top-down photograph of a 1941 movement. `tools/bundle.py` fits an independent camera to each photo and triangulates the balance, fusee and barrel axes. Point residuals are under 9 px in both photos.
-2. **Scale.** The fusee wheel is fixed at 96:14 by the manual's winding figures and must stay inside the 87.57 mm pillar plate. The two-view result is scaled to meet that (factor 0.955).
-3. **Mapping the top view.** Using those three axes, a similarity transform maps the top-view photograph into the model, with under 0.4 mm residual (`tools/p3map.json`). The following were traced through it:
-   - the bridge outline (radius about 40 mm);
-   - the crescent balance cock (`tools/cock_outline.json`), shifted for its height parallax so its endstone lands over the staff;
-   - the fan-shaped setup cover;
-   - the screw positions;
-   - the engraving columns (`tools/engr.json`);
-   - the damascene direction.
-4. **Dial orientation.** From Fig. 107: the wind-indicator wheel sits under the 12, driven from the fusee arbor.
-5. **Hidden wheels.** The third-wheel and escape-wheel positions and per-stage modules (0.29, 0.30, 0.31) are solved so every arbor clears every wheel, the barrel and the pillars. The escape wheel sits 10.2 mm from the balance, per the Rawlings plan.
-6. **Collision check.** `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. Only intended joints remain.
-7. **Visual check.** `tools/p3fit.py` renders the model from the top-view photograph's camera. The result is `verification/topview-comparison.png`.
+## Rebuilding the published files
 
-The tools need Playwright with Chromium. Open the page as `index.html?snap&qa`.
+Working model:
 
-## Estimated, not from the manual
+    cd marine-chronometer-source/chronometer-working-model
+    python3 build.py
+    cp dist/chronometer-working-model.html ../../
 
-- Tooth counts of the centre, third and fourth wheels and pinions. They are chosen to give the half-second train's ratios. The escape wheel (16) is Hamilton's; the 96/14 first stage reproduces the manual's seven key half-turns per 24 h.
-- Dimensions and positions, estimated from the figures and a 4-inch dial.
-- The fusee profile and the wind indicator ratio.
-- The mainspring’s coils, which are drawn schematically.
-- The detent geometry, which follows a standard spring detent layout.
+Essay:
+
+    cd marine-chronometer-source/marine-chronometer-essay
+    cat src/p1.html src/p2.js src/p3.js src/p4.js > marine-chronometer.html
+    printf '\n</script>\n</body>\n</html>\n' >> marine-chronometer.html
+    cp marine-chronometer.html ../../
