@@ -35,6 +35,11 @@ copies and assembles the website (see the root README).
 
 Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Right-click a part to fade or hide it; right-click empty space to bring hidden parts back.
 
+- Keys 1–6 pick the views. Exploded has a Spread slider.
+- Time: set the hands to any time of day, or to now. Wind with the key turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 60 h of chain), with the plates see-through and the winding stop kept solid. For the last half turns the camera closes in on the stop-bar catching.
+- Rate and timing weights: turn the timing or vernier weight pair in or out by quarter turns. `R.timing(dt, dv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's own geometry (576 g·mm² as built). The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose. A quarter turn of the timing pair is about 15 s a day, of the vernier pair about 3 s a day.
+- Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme. Save writes the view as a PNG.
+
 ## Testing
 
 Append `?snap` to the URL to switch off camera and state easing. Views then settle
@@ -158,6 +163,7 @@ The tools need Playwright with Chromium. Open the page as `index.html?snap&qa`.
   - Depth of lock is 0.125 mm, and the trip spring's tip lifts 0.20 mm to release.
   - The discharge jewel meets the trip spring at −27.4° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.8°, centred on the dead point.
 - The balance rim diameter (29 mm), measured on the top-view photograph.
+- The rate panel's figures: the timing weights' thread (0.2 mm a turn) and the weights' sizes are estimates. The moment of inertia leaves out the rim's holes and the staff, and treats every screw as a solid cylinder.
 - The upper train bridge's outline under the barrel bridge (drawn as a full disc) and its opening round the balance staff (r 8.0 mm).
 - The sustaining pawl's position: 21 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel.
 

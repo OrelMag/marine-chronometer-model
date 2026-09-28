@@ -64,6 +64,8 @@
         <div class="spd"><span>Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
         <div class="pow"><label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="56" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
         <div class="clk"><label class="sl"><span>Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to your clock">Now</button></div>
+        <div class="kw"><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button><label class="ck"><input type="checkbox" id="kwFull" checked> From run down</label></div>
+        <p class="note hidden" id="kwOut" aria-live="polite" style="margin:6px 0 0"></p>
       </section>
       <section class="grp">
         <h2>Display</h2>
@@ -82,6 +84,15 @@
         <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
         <div id="plist"></div>
         <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
+      </details>
+      <details class="grp more" id="rateDet">
+        <summary>Rate and timing weights</summary>
+        <p class="note" style="margin:0 0 4px">There is no regulator. The rate is set by turning the two timing weights on the rim, or the smaller vernier weights for fine changes, in or out in opposite pairs so the balance stays in poise. Out makes the balance heavier at the rim and slower: the hands lose.</p>
+        <label class="sl rw"><span>Timing weights</span><input type="range" id="twR" min="-12" max="12" step="1" value="0" aria-label="Timing weights, quarter turns out"><output></output></label>
+        <label class="sl rw"><span>Vernier weights</span><input type="range" id="vwR" min="-12" max="12" step="1" value="0" aria-label="Vernier weights, quarter turns out"><output></output></label>
+        <div class="rate" id="rateOut" aria-live="polite"></div>
+        <div class="seg" style="margin-top:8px"><button id="rateZero">Zero</button><button id="rateLook">Show the balance</button></div>
+        <p class="note" style="margin:8px 0 0">The model's clock runs at the new rate, so the hands drift from real time; try 3600×. The moment of inertia is computed from the model's balance; the weights' thread, 0.2 mm a turn, is an estimate. The weights are drawn on the Hamilton balance only.</p>
       </details>
       <details class="grp more" id="secDet">
         <summary>Cross-section</summary>
@@ -113,6 +124,7 @@
     <li>Right-click a part to fade or hide it; right-click empty space to bring hidden parts back.</li>
     <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons.</li>
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
+    <li>Wind with the key (under Time) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
   </ul>
   <h3>Sources</h3>
   <ol>

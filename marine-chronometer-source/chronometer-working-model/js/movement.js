@@ -221,7 +221,7 @@ function buildMovement(M){
   const eg2=mesh(bb,decalGeo(BBpoly),M.engraveB,0,BB_T-0.02,0);eg2.userData.noShadow=true;eg2.userData.noCap=true;eg2.userData.decal=true;
   /* winding stop on the underside of the barrel bridge, reached by the stop-bar in the fusee top */
   const Fl=Math.hypot(...L.Fu),fo=[L.Fu[0]/Fl,L.Fu[1]/Fl],WS=WSd;
-  cylBetween(bb,0.9,TB_T,-20.2,M.steel,...WS);mesh(bb,new THREE.BoxGeometry(2.2,1,2.2),M.steel,WS[0],TB_T-0.5,WS[1]);   /* down through the train bridge to the stop-bar's level */
+  for(const o of[cylBetween(bb,0.9,TB_T,-20.2,M.steel,...WS),mesh(bb,new THREE.BoxGeometry(2.2,1,2.2),M.steel,WS[0],TB_T-0.5,WS[1])])o.userData.wstop=true;   /* down through the train bridge to the stop-bar's level; kept solid while the key winds (app.js) */
   /* ---------- dial (4 in), hands, motion work ---------- */
   const dl=part('dial',32);
   mesh(dl,discGeo(50.8,0.6,[[...L.C,2.4],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,3.3,0);
@@ -313,11 +313,17 @@ function buildMovement(M){
   mesh(R.balU,ring(BR,BR-1.4,2.4),M.steel);
   mesh(R.balU,new THREE.BoxGeometry(2*BR-1,1.1,2.4),M.invar);mesh(R.balU,cylY(2.4,2.4,24),M.invar);
   for(let k=0;k<60;k++){const a=k/60*TAU;if(Math.abs(Math.sin(a))<0.05)continue;const h=mesh(R.balU,cylY(0.28,0.2,8),M.steelD,(BR+0.05)*Math.cos(a),0,(BR+0.05)*Math.sin(a));h.rotation.set(0,-a,Math.PI/2);}
-  const bscrew=(a,len,rr,mat)=>{const q=mesh(R.balU,cylY(rr,len,12),mat,(BR+len/2)*Math.cos(a),0,(BR+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);};
+  const BW=[],bscrew=(a,len,rr,mat,rho,kind)=>{const q=mesh(R.balU,cylY(rr,len,12),mat,(BR+len/2)*Math.cos(a),0,(BR+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);BW.push({q,a,len,rr,rho,kind});};
   /* balance screws per the parts list: 6 of 0.049 in head height, 2 of 0.080 in, 2 of 0.101 in, in diametric pairs about the quarters;
-     2 timing weights and 2 vernier timing weights beside the arm ends (manual Fig. 3) */
-  for(const c of[Math.PI/2,-Math.PI/2])for(const[d,hh]of[[-0.5,1.24],[-0.25,2.57],[0,2.03],[0.25,1.24],[0.5,1.24]])bscrew(c+d,hh,0.75,M.brass);
-  for(const c of[0,Math.PI]){bscrew(c+0.2,2.1,1.1,M.steelD);bscrew(c-0.2,1.3,0.65,M.steelD);}
+     2 timing weights and 2 vernier timing weights beside the arm ends (manual Fig. 3). Densities in mg/mm³ for the moment of inertia below */
+  for(const c of[Math.PI/2,-Math.PI/2])for(const[d,hh]of[[-0.5,1.24],[-0.25,2.57],[0,2.03],[0.25,1.24],[0.5,1.24]])bscrew(c+d,hh,0.75,M.brass,8.5);
+  for(const c of[0,Math.PI]){bscrew(c+0.2,2.1,1.1,M.steelD,7.9,'t');bscrew(c-0.2,1.3,0.65,M.steelD,7.9,'v');}
+  /* moment of inertia of the uncut balance about the staff, in g·mm², from the geometry above: steel rim (7.9), Invar arm and hub (8.1), screws and
+     weights as solid cylinders. The rim holes and the staff are left out. timing(dt,dv) moves the timing and vernier weights dt, dv mm out along their
+     radii (both of each pair, so the balance stays in poise) and returns the new moment */
+  const cylI=(w,dr)=>{const m=w.rho*Math.PI*w.rr*w.rr*w.len,d=BR+w.len/2+dr;return m*(d*d+w.len*w.len/12+w.rr*w.rr/4)/1000;};
+  const I_FIX=(7.9*Math.PI*2.4*(BR**4-(BR-1.4)**4)/2+8.1*(2*BR-1)*1.1*2.4*((2*BR-1)**2+2.4**2)/12+8.1*Math.PI*2.4*2.4**4/2)/1000;
+  R.timing=(dt,dv)=>{let I=I_FIX;for(const w of BW){const dr=w.kind==='t'?dt:w.kind==='v'?dv:0,d=BR+w.len/2+dr;I+=cylI(w,dr);w.q.position.set(d*Math.cos(w.a),0,d*Math.sin(w.a));}return I;};
   R.balS=new THREE.Group();R.balS.position.y=BY;R.balS.visible=false;R.staff.add(R.balS);
   mesh(R.balS,new THREE.BoxGeometry(2*BR-1,1.4,2.2),M.steel);mesh(R.balS,cylY(2.2,2.2,24),M.steel);
   const span=160*D2R,band=(a0,r0,r1)=>{const s=new THREE.Shape(),N=48;for(let i=0;i<=N;i++){const a=a0+span*i/N;i?s.lineTo(r1*Math.cos(a),r1*Math.sin(a)):s.moveTo(r1*Math.cos(a),r1*Math.sin(a));}

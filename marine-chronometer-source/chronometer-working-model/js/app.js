@@ -121,7 +121,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* ---------- state ---------- */
   const st={drive:false,mwOn:false,see:false,colr:false,op:{},hid:new Set(),focus:null,pick:null,labels:true,rock:false,spin:false,speed:1,sound:false,view:'dial',tour:-1};
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
-  let hrs=20,winding=false,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
+  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   const PLATES=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','cock','dial']),DRIVE_HIDE=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','dial','cock','post']);
   /* colour mode: one flat CAD-style colour per part; the part labels double as the legend */
   const PCOL={box:'#a9745b',lid:'#8a5a44',lidGlass:'#c49a7a',ring:'#9aa1a8',bowl:'#c4b27a',key:'#6d7a8a',latch:'#7d9a4a',
@@ -147,7 +147,7 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(st.drive&&(DRIVE_HIDE.has(p)||(!st.mwOn&&(p==='motion'||p==='hands'))))vis=false;
       if(m.userData.onlyDrive&&!msShown())vis=false;
       if(st.drive&&m.userData.driveHide)vis=false;
-      const gh=(st.see&&PLATES.has(p))||(st.drive&&m.userData.driveGhost)||(foc&&!foc.has(p)&&!(p==='mainspring'&&foc.has('barrel')));
+      const gh=!(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||(st.drive&&m.userData.driveGhost)||(foc&&!foc.has(p)&&!(p==='mainspring'&&foc.has('barrel'))));
       if(m.userData.noShadow&&gh)vis=false;
       m.visible=vis&&!opHide(m);m.material=gh?ghostOf(base(m)):base(m);m.castShadow=!gh&&!m.userData.noShadow;}
     for(const m of BOXM){m.visible=!st.drive&&!opHide(m);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):base(m);m.castShadow=!gh&&m.userData.mat0!==M.glass;}
@@ -248,8 +248,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#lbls').addEventListener('change',e=>st.labels=e.target.checked);$('#rock').addEventListener('change',e=>st.rock=e.target.checked);
   const hIn=$('#hrs'),hOut=hIn.parentElement.querySelector('output');
   const showH=()=>{hOut.textContent=hrs.toFixed(1)+' h';hIn.value=hrs.toFixed(1);};
-  hIn.addEventListener('input',()=>{hrs=parseFloat(hIn.value);winding=false;showH();});showH();
-  $('#wind').addEventListener('click',()=>{winding=true;});
+  hIn.addEventListener('input',()=>{if(kw)kwStop();hrs=parseFloat(hIn.value);winding=false;showH();});showH();
+  $('#wind').addEventListener('click',()=>{if(kw)kwStop();winding=true;});
   $('#reset').addEventListener('click',()=>{setView(st.view,true);});
   /* exploded view: how far apart the parts spread */
   const expR=$('#expR'),expO=$('#expWrap output');function expV(){return expR.valueAsNumber/100;}
@@ -276,6 +276,34 @@ function drawEsc2D(ctx,w,h,p,dark){
       ck.addEventListener('change',()=>{if(ck.checked)st.hid.delete(p);else{st.hid.add(p);if(st.pick===p)closeInfo();}look();});
       b.addEventListener('click',()=>{st.pick===p?closeInfo():showPart(p);});plist.appendChild(row);PROWS.push({p,row,ck,b});}}
   $('#pShow').addEventListener('click',()=>{st.hid.clear();look();});
+  /* rate: the timing and vernier weights turned in or out in quarter turns (thread 0.2 mm a turn, estimated). The period goes as √I, so the model
+     clock runs √(I0/I) as fast as a perfect one; rErr is what the hands have gained since the last change */
+  const PITCH=0.2,I0=R.timing(0,0),twR=$('#twR'),vwR=$('#vwR'),rateOut=$('#rateOut');let rI=I0,lastRS=0;
+  const qtr=v=>{if(!v)return'0';const a=Math.abs(v),w=Math.floor(a/4);return(w||'')+['','¼','½','¾'][a%4]+(v>0?' out':' in');};
+  function rateShow(){const d=86400*(rateK-1),dI=(rI/I0-1)*100,on=Math.abs(d)<0.05;
+    rateOut.innerHTML=`<b>${on?'On time':(d>0?'Gains ':'Loses ')+Math.abs(d).toFixed(1)+' s a day'}</b><span>Moment of inertia ${rI.toFixed(1)} g·mm² (${dI<0?'−':'+'}${Math.abs(dI).toFixed(3)}%)${on?'':`. Since the change the hands have ${rErr<0?'lost':'gained'} ${Math.abs(rErr).toFixed(Math.abs(rErr)<10?2:1)} s`}</span>`;}
+  function rateSet(){rI=R.timing(twR.valueAsNumber/4*PITCH,vwR.valueAsNumber/4*PITCH);rateK=Math.sqrt(I0/rI);rErr=0;
+    twR.nextElementSibling.textContent=qtr(twR.valueAsNumber);vwR.nextElementSibling.textContent=qtr(vwR.valueAsNumber);rateShow();}
+  twR.addEventListener('input',rateSet);vwR.addEventListener('input',rateSet);rateSet();
+  $('#rateZero').addEventListener('click',()=>{twR.value=0;vwR.value=0;rateSet();});
+  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('movement');showPart('bal');goCam({yaw:2.27,pitch:0.5,dist:100,target:mvL(L.B[0],BAL_Y,L.B[1])});});
+  /* wind with the key, on the wall clock so slow frames don't slow it: half turns of 0.7 s with a 0.3 s pause to change grip, until the chain pushes the stop-bar in the fusee top out against
+     the winding stop. Plates see-through, the winding stop kept solid (look), the parts that take part in winding picked out */
+  const HT=0.5/FUSEE_PER_HOUR,kwBtn=$('#kwBtn'),kwOut=$('#kwOut'),KWF=['fusee','chain','sq','barrel','mainspring','gw','spawl'];
+  const KWV=()=>{const f=1+3.6/Math.hypot(...L.Fu);return{yaw:0.53,pitch:0.32,dist:120,target:mvL(L.Fu[0]*f,-36,L.Fu[1]*f)};};   /* key and fusee, from the winding stop's side */
+  const halfs=v=>Math.abs(v*2-Math.round(v*2))<0.02?(Math.floor(v+0.01)||'')+(v%1>0.25?'½':''):v.toFixed(1);
+  function kwStart(){if(kw){kwStop();return;}if(st.tour>=0)tourEnd();closeInfo();
+    if($('#kwFull').checked||hrs<0.2)hrs=FUSEE_TURNS/FUSEE_PER_HOUR;   /* run down: the chain all on the barrel, 17½ half turns to wind */
+    kw={t0:performance.now(),t:0,h0:hrs,end:0};winding=true;st.drive=false;setView('movement');st.see=true;st.focus=new Set(KWF);look();
+    goCam(KWV());
+    kwBtn.textContent='Stop winding';kwBtn.setAttribute('aria-pressed','true');kwOut.classList.remove('hidden');}
+  function kwStop(){if(kw&&kw.zoom)goCam(KWV());kw=null;winding=false;st.focus=null;look();kwBtn.textContent='Wind with the key';kwBtn.setAttribute('aria-pressed','false');}
+  function kwStep(now){kw.t=(now-kw.t0)/1000;if(kw.end){if(kw.t>kw.end)kwStop();return;}
+    const i=Math.floor(kw.t),tot=kw.h0/HT;hrs=Math.max(0,kw.h0-HT*(i+smooth(Math.min(1,(kw.t-i)/0.7))));showH();
+    if(!kw.zoom&&hrs<HT*1.5){kw.zoom=true;const f=4/Math.hypot(...L.Fu);goCam({yaw:0.53,pitch:0.6,dist:48,target:mvL(L.Fu[0]*(1+f),-21,L.Fu[1]*(1+f))});}   /* close in on the fusee top for the catch */
+    if(hrs===0){kw.end=kw.t+3;kwOut.innerHTML=`<b>Fully wound after ${halfs(tot)} half turns.</b> The chain has pushed the stop-bar in the fusee top out against the winding stop under the barrel bridge, and the key can turn no further.`;}
+    else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}, counterclockwise. ${(56-Math.min(56,hrs)).toFixed(1)} h of running stored. The sustaining spring drives the train meanwhile.`;}
+  kwBtn.addEventListener('click',kwStart);
   function partsSync(){for(const q of PROWS){const h=st.hid.has(q.p);q.ck.checked=!h;q.row.classList.toggle('off',h);q.b.setAttribute('aria-pressed',st.pick===q.p?'true':'false');q.b.disabled=st.drive&&(BOXP.has(q.p)||DRIVE_HIDE.has(q.p));}plist.classList.toggle('colr',st.colr);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}else{(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);}});
@@ -409,8 +437,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     for(const q of['lift','flip','explode','lidM','lidT'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
     const run=hrs<56;
-    if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
-    if(run){const dtS=dt*st.speed;tSim+=dtS;if(!winding){hrs=Math.min(56,hrs+dtS/3600);if(st.speed>1)showH();}}
+    if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
+    if(run){const dtS=dt*st.speed;tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(56,hrs+dtS/3600);if(st.speed>1)showH();}}
     tVis+=dt;
     let E,s;
     if(!run||st.speed===0){const kk=Math.floor(tSim/0.5),p=tSim/0.5-kk;s=run?ESC.state(p):{th:0,lift:0,psDef:0,prog:0};s.p=p;E=lastE??(kk+s.prog);}
@@ -437,6 +465,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(56-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>, maintaining power driving the train':''}`;
+    if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
     if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView('dial');},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}
     requestAnimationFrame(frame);
