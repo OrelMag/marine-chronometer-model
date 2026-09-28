@@ -806,7 +806,8 @@ function buildMovement(M){
   const dl=part('dial',32);
   mesh(dl,discGeo(50.8,0.6,[[...L.C,2.4],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,3.3,0);
   const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;
-  const dface=mesh(dl,new THREE.RingGeometry(2.4,50.8,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42}),0,3.92,0);dface.userData.noCap=true;
+  /* the face lies 0.02 above the brass disc's top; polygon offset keeps it in front in the depth buffer, else the brass shows through in streaks when zoomed out */
+  const dface=mesh(dl,new THREE.RingGeometry(2.4,50.8,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,3.92,0);dface.userData.noCap=true;
   for(const a of[30,150,270])cylBetween(dl,0.9,0,3.3,M.brass,39*Math.cos(a*D2R),39*Math.sin(a*D2R));
   const hd=part('hands',48),hg=new THREE.MeshStandardMaterial({color:sc(0xd9b25e),metalness:1,roughness:0.2});
   const dk=(o,k)=>{const g=new THREE.Group();g.userData.dk=k;o.parent.add(g);g.add(o);return o;};   /* hands of one dial style ('hamilton' or 'roman'), grouped so app.js's per-mesh visibility leaves the choice alone */
