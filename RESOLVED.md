@@ -310,6 +310,12 @@ Contents:
   pixels from an unchanged model. The freeze now passes through a moment of
   winding first, which resets that history. Keep: a frozen state must not
   depend on the page's history. `d71d757`
+- **`views.py` failed to load the page.** It waited a fixed 5 s and used
+  headless Chromium's first WebGL context, which is lost a moment after it's
+  created, so `window.__mv` was often missing when it
+  froze the model. It now spends that context on a blank page, as `smoke.py`
+  does, and waits for the loading screen to go. Keep: every browser tool
+  warms up WebGL first and waits for the page, not for a fixed time. `ea04355`
 
 ---
 
@@ -336,9 +342,3 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
-- **`views.py` failed to load the page** (Build, tools and docs). It waited
-  a fixed 5 s and used headless Chromium's first WebGL context, which is lost
-  a moment after it's created, so `window.__mv` was often missing when it
-  froze the model. It now spends that context on a blank page, as `smoke.py`
-  does, and waits for the loading screen to go. Keep: every browser tool
-  warms up WebGL first and waits for the page, not for a fixed time.
