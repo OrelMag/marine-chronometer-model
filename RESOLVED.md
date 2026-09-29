@@ -127,7 +127,7 @@ Contents:
   pin, which the turned fusee wrap then brushed at full wind, now ends at
   −20.40 (was −20.2), still covering the stop-bar's thickness. Found by the
   barrel check in `tools/fine.py`. Keep: `fine.py` must report 0 barrel
-  problems. Fixed, not yet committed.
+  problems. `ba9634f`
 
 ## Plates, bridges, screws and arbors
 

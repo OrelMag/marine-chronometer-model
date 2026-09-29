@@ -416,7 +416,7 @@ finding 9.
 | Sustaining pawl's arbor into the fusee wheel's teeth | 0.12 mm | Pivot 21.35 mm from the fusee axis (was 21) | `329e77e` |
 | Stop-bar through the fusee arbor at full wind | 1 mm³ | One bar beside the arbor, re-aimed at the stop pin | `b39086a` |
 | Stop-bar through the chain's top turn at full wind | 0.18 mm | Raised top cap, thinner bar above the chain | `0371c16` |
-| Chain's straight run into the barrel (found by the barrel check) | 0.24 mm | Common tangent of the two drums; winding-stop pin 0.2 mm shorter | this pass |
+| Chain's straight run into the barrel (found by the barrel check) | 0.24 mm | Common tangent of the two drums; winding-stop pin 0.2 mm shorter | `ba9634f` |
 
 All were thinner than `dyn.py`'s 0.4 mm cubes, and the barrel wall was never tested before.
 
