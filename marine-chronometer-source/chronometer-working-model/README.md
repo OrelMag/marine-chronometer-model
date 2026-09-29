@@ -57,6 +57,13 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 
 ## Testing
 
+The page's state is kept in the URL hash, so a link opens the model as it
+was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part),
+`#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `sec=x:-3.5`
+(a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
+once the hands have been set. It is read at load and when edited, and
+rewritten (without adding to the history) 0.3 s after any change.
+
 Two URL flags help with testing:
 
 - `?snap` switches off camera and state easing, so views settle immediately

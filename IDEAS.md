@@ -587,7 +587,9 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - **Contrast (S):** check the label colours (`--pc` swatches) and muted text against both themes with a contrast checker. Several part colours are mid-tones.
 
 ### 6.2 Shareable links and remembered state
-- **URL hash (S):** `#view=escapement&speed=0.05&part=det&t=12:00:00&sec=x:-3.5`. Read it at load, and update it with `history.replaceState` as things change, throttled. Walkthrough steps: `#tour=6`. Teachers can then link straight to "the detent at 1/20×".
+> **Done.** The URL hash carries `view`, `tour` (1-based), `speed`, `part`, `drive=1`, `sec=x:-3.5[:f]`, `tz=local` and `t` (only once the hands were set). It is read at load (the opening move goes to the linked view) and on `hashchange`, and written with `replaceState` 0.3 s after any change. Remembering settings in `localStorage` is still open.
+
+- *Done:* **URL hash (S):** `#view=escapement&speed=0.05&part=det&t=12:00:00&sec=x:-3.5`. Read it at load, and update it with `history.replaceState` as things change, throttled. Walkthrough steps: `#tour=6`. Teachers can then link straight to "the detent at 1/20×".
 - **Remember (S):** in `localStorage`, alongside the theme already stored there, keep plate finish, dial style, balance and the last view. Always wrap it in `try`, as the theme code does.
 
 ### 6.3 Parts list (S)

@@ -1535,7 +1535,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   const st={drive:false,mwOn:false,see:false,colr:false,op:{},hid:new Set(),focus:null,pick:null,labels:false,rock:false,spin:false,speed:1,sound:false,view:'dial',tour:-1};
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
-  let wakeT=0;const wake=()=>{wakeT=performance.now()+600;};
+  let wakeT=0,hashReady=false,hashT=0,handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
   let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
@@ -1693,8 +1693,9 @@ function drawEsc2D(ctx,w,h,p,dark){
   const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(st.view==='exploded'&&st.tour<0)tgt.explode=expV();});
   /* set the hands: only the time of day changes (the balance keeps its phase) and no power is used */
   const todIn=$('#tod');let todS=-1;
-  todIn.addEventListener('change',()=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(todIn.value);if(!m)return;tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;rErr=0;});
-  $('#now').addEventListener('click',()=>{tSim=Date.now()/1000+tzOff();lastE=null;todS=-1;rErr=0;});
+  const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;};
+  todIn.addEventListener('change',()=>setTod(todIn.value));
+  $('#now').addEventListener('click',()=>{tSim=Date.now()/1000+tzOff();lastE=null;todS=-1;rErr=0;handsSet=false;});
   /* GMT or local: the hands move by the difference, as when they are set */
   const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
   document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
@@ -1872,6 +1873,33 @@ function drawEsc2D(ctx,w,h,p,dark){
   }
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
 
+  /* ---------- shareable links: the state in the URL hash ----------
+     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), sec=x:-3.5 (a section; :f shows the other half),
+     tz=local, t=12:00:00 (only once the hands have been set). Read at load and when the hash is edited; written 0.3 s after any change, with
+     replaceState, so the back button isn't filled with views */
+  function hashOf(){const h=new URLSearchParams();
+    if(st.tour>=0)h.set('tour',st.tour+1);
+    else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
+    if(st.pick)h.set('part',st.pick);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);return h.toString().split('%3A').join(':');}
+  function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{const h=hashOf();if(h!==location.hash.slice(1))history.replaceState(null,'',h?'#'+h:location.pathname+location.search);},300);}
+  /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
+  function applyHash(first){const h=new URLSearchParams(location.hash.slice(1)),g=k=>h.get(k),v=VIEWS[g('view')]?g('view'):'dial';
+    if(g('tz')==='gmt'||g('tz')==='local'){if(g('tz')!==tz)setTz(g('tz'));}
+    if(g('t'))setTod(g('t'));
+    const tr=parseInt(g('tour'));
+    if(tr>=1&&tr<=TOUR.length)tourGo(tr-1);
+    else{if(st.tour>=0)tourEnd();
+      st.drive=g('drive')==='1';$('#driveOn').checked=st.drive;
+      const sp=g('speed');setSpeed(sp!=null&&Number.isFinite(+sp)?+sp:1);
+      const sc=/^([xyz]):(-?[\d.]+)(:f)?$/.exec(g('sec')||'');
+      document.querySelector(`#secs button[data-v="${sc?sc[1]:'off'}"]`).click();
+      if(sc){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
+      if(!first)setView(v);}
+    const p=g('part');if(p&&INFO[p])showPart(p);else closeInfo();
+    return v;}
+  addEventListener('hashchange',()=>applyHash(false));
+  const startView=applyHash(true);
+
   /* ---------- loop ---------- */
   const SNAP=/[?&]snap\b/.test(location.search);
   let last=performance.now(),loaded=false,hudS='';const hud=$('#hud');
@@ -1920,7 +1948,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
-    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView('dial');},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}
+    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}
     requestAnimationFrame(frame);
   }
   look();
