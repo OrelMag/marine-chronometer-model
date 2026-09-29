@@ -59,10 +59,18 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 Two URL flags help with testing:
 
 - `?snap` switches off camera and state easing, so views settle immediately
-  (useful for screenshots).
+  (useful for screenshots), and draws every frame (see below).
 - `?qa` exposes the movement (`__mv`), the photo-projection helpers (`__proj`,
   `__unproj`) and camera controls (`__cam`, `__look`, `__camInfo()`) for the
-  tools.
+  tools, plus the parts registry (`__parts`), the renderer (`__r`) and a count
+  of frames drawn (`__renders()`).
+
+The stage is drawn only when something shown has changed: the camera, the
+lids and lift, the wheels and balance, the wind, ship motion or a section, or
+any input in the last 0.6 s. Otherwise it is redrawn once a second, and not at
+all while scrolled off screen. A stopped model with a still camera draws once a
+second instead of every frame. Code that changes the scene without input or a
+`look()` call should call `wake()`.
 
 The browser tools in `tools/` open `index.html?snap&qa` themselves. They need
 Python with numpy, scipy and Playwright's Chromium, and write their output into

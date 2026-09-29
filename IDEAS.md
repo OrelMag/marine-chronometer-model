@@ -558,6 +558,8 @@ The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving
 - **Mainspring:** rebuilt only when shown and when the wind changes. That's fine at 1×; at 3600× it rebuilds every frame. Rebuild only when the barrel has turned a visible amount.
 
 ### 5.4 Render only when something changes (S)
+> **Done.** Each frame compares a signature of everything shown (camera, lids and lift, wheels and balance, wind, ship motion, section plane). With nothing changed, no input for 0.6 s and a draw less than a second ago, it skips the render, the labels and the inset; an off-screen stage (`IntersectionObserver`) isn't drawn. Stopped with a still camera, headless Chromium drew 1 frame a second out of 52. `?snap` still draws every frame for the tools; `?qa` exposes `__renders()`.
+
 The loop renders every frame even when stopped with the camera still, which costs battery on laptops and phones for a page that is often left open.
 - Skip `r.render` when the speed is 0, the camera has settled (its easing deltas are below a threshold), no transition is running, and no input arrived.
 - At 1× the second hand moves every half second, but the balance moves continuously, so this only helps when stopped or when the Illustration tab is shown. The loop already skips rendering there; stop scheduling `drawInset` and the HUD too.

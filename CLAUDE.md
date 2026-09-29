@@ -25,8 +25,8 @@ From the repository root:
 The live site is https://www.marinechronometermodel.com, a Cloudflare Worker serving `site/` (`wrangler.jsonc`); `worker.js` redirects the bare domain, the old workers.dev address and plain http to it. Pushing doesn't deploy it: build with `--site-url https://www.marinechronometermodel.com`, commit, then `npx wrangler deploy`.
 
 Open `marine-chronometer-source/chronometer-working-model/index.html` directly in a browser for development. URL flags:
-- `?snap`: disables camera/state easing so views settle immediately (for screenshots).
-- `?qa`: exposes `window.__mv` (the movement group), `__proj` / `__unproj` (movement frame ↔ screen pixels for a given camera), `__cam(yaw,pitch,dist,fov)` / `__look(yaw,pitch,dist,x,y,z)` (set the camera) and `__camInfo()` (print it) for the verification tools and `social.py`.
+- `?snap`: disables camera/state easing so views settle immediately (for screenshots), and draws every frame (without it the loop skips frames in which nothing shown changed; see the README).
+- `?qa`: exposes `window.__mv` (the movement group), `__proj` / `__unproj` (movement frame ↔ screen pixels for a given camera), `__cam(yaw,pitch,dist,fov)` / `__look(yaw,pitch,dist,x,y,z)` (set the camera) and `__camInfo()` (print it) for the verification tools and `social.py`, plus `__parts` (the parts registry), `__r` (the renderer) and `__renders()` (frames drawn).
 
 Essay: edit `src/` and run the root build, which concatenates the pieces, closes the page and inlines the vendor files. `p1.html` opens the `<script>` tag that `p2`–`p4` continue; the pieces are not standalone files.
 
