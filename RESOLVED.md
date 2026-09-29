@@ -261,15 +261,15 @@ Contents:
   `Object.prototype`) and threw at load. The hash is now matched against own
   keys only (`hasOwnProperty`, not `Object.hasOwn`, which older iOS Safari
   lacks); an unknown value falls back to the default. Keep: never index a
-  table with URL text without an own-key check. `TBD-hash`
+  table with URL text without an own-key check. `650c005`
 - **A hash rewrite could overwrite a newer hash.** The page rewrites the hash
   0.3 s after a change; if the hash was changed meanwhile (a link followed,
   an edit), the pending rewrite could put the old state back before
   `hashchange` applied the new one. `smoke.py` hit it once under load; it
   wasn't reproduced on demand. The writer now stands down when the hash
-  differs from the one it last wrote or applied. `TBD-hash`
+  differs from the one it last wrote or applied. `650c005`
 - **Zoom keys matched an empty key name.** `'+=-_'.includes(e.key)` is true
-  for `''`; it is now an exact match. `TBD-hash`
+  for `''`; it is now an exact match. `650c005`
 
 ## Build, tools and docs
 
