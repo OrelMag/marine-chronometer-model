@@ -223,6 +223,7 @@ and the thread pitches are the model's. Things to know before changing it:
   - the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing weights (93 mg) and 2 vernier weights (10.5 mg), each a nut on a screw in one of the rim's holes (parts list, p. 82; Fig. 3);
   - the barrel cap with its five screws on the pillar-plate end (Figs. 26, 109), and the dust seal with three packing rings around the fusee arbor (Fig. 24);
   - the gimbal mounting (Figs. 1, 94, 106): a flat ring hung on two pivot screws through the box sides (washer inside, lock nut outside), the case hung in it on front and rear pivot screws into brackets on the case, support straps at 3 and 6, the gimbal latch at the front right and the key at the back right;
+  - the hand-setting square at the centre of the dial, which takes the winding key (Sec. III, Setting; Fig. 8);
   - the dial markings, winding figures and part numbers. The UP–DOWN scale runs clockwise round the bottom of its sub-dial from UP (upper right) to DOWN (upper left), so winding turns the hand counterclockwise back to UP (Fig. 107, Sec. III).
 - New-old-stock Hamilton Model 21 pillar plate listing: 87.57 mm diameter, 3.86 mm thick.
 - chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement, a redrawing of the manual's Fig. 90, and a photograph of a Model 21 detent.
@@ -306,6 +307,7 @@ and the thread pitches are the model's. Things to know before changing it:
   - The weights' travel, 3 turns either way from the middle position the manual starts them at. At 40 s a turn, that covers the 2 minutes a day that screws and washers leave (Op. 5).
   - The weights' drawn sizes.
 - The upper train bridge's outline under the barrel bridge (drawn as a full disc, cut round the barrel) and its opening round the balance staff (r 8.0 mm). Figs. 29 and 67 show a crescent. Round the fusee it has a pocket: the top plate (r 5.9), the winding stop and the stop-bar's sweep over the last quarter turn. The pocket stays 0.5 mm under the barrel bridge's straight edge, where the top-view photograph shows the train bridge, so it is smaller than the manual's opening.
+- The hand-setting square's size: 2.4 mm across, as the fusee arbor's square, since the one key fits both (Fig. 8), standing 1.4 mm proud of the hand boss on the minute hand's pipe.
 - The case's winding-hole shield plate. Sourced: its parts (plate, shoulder screw, stop screw, return spring; parts list) and its action, turned clockwise, seen from below, until its hole lines up with the case's, and returned by the spring (the case's description and the winding instructions). Estimated: everything else.
   - The plate's shape: a rounded triangle on a shoulder screw 9 mm from the key hole, covering the hole at rest and turning 0.75 rad to open it.
   - The stop screw runs in an arc slot in the plate, whose two ends set the rest and open positions.

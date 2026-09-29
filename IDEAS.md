@@ -187,7 +187,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Upper pivot setting:** the setting in the cock is "not drawn: the staff is 0.7 mm from the cock's edge" ([movement.js:346](marine-chronometer-source/chronometer-working-model/js/movement.js#L346)). That suggests the traced cock outline is slightly off near the endstone. Re-check the parallax shift in `cock_outline.json`.
 
 ### 1.5 Hand-setting square, balance locking arm, shipping wedges (S each)
-- **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
+- **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says). *(Done: the square is drawn on the minute hand's pipe, the fusee square's size so the one key fits both. Using it to set the hands waits for 3.1.)*
 - **Balance locking arm (Fig. 9):** later chronometers have a balance wheel locking arm, with locked and unlocked positions. Model it, with a toggle, as a part of the "Operation when received" story.
 - **Shipping wedges:** before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
 
