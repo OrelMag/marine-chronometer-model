@@ -530,6 +530,8 @@ Frame time on phones is dominated by draw calls and shadow rendering, not by
 the JavaScript `update()`.
 
 ### 5.1 Draw calls: merge and instance
+> **Done.** Knurled nuts and the balance rim's holes are merged (`mergeGeo` in `core.js`): 592 meshes down to 389. Rather than a fixed 1.5 mm, a mesh casts a shadow when its radius spans 6 texels of the shadow map, which follows the view (the escapement close-up's texel is 0.06 mm, so its small parts keep their shadows). Draw calls per frame, main and shadow passes: box view 1,239 to 652, dial 1,214 to 706, movement 830 to 612, escapement 571 to 451. Merging static parts and sharing geometries are still open.
+
 - **Knurling (S):** `knurl()` in [box.js:26](marine-chronometer-source/chronometer-working-model/js/box.js#L26) builds 30 separate box meshes, plus the body, for each knurled nut: 124 meshes for the four on the gimbal ring, 31 more on the latch. Build each nut as one merged geometry (knurled lathe profile or merged boxes). That removes about 150 draw calls, twice over with shadows.
 - **Balance rim holes (S):** 60 separate meshes. Merge them into one geometry in the balance's frame; it rotates with the staff anyway.
 - **Merge static parts (M):** at load, merge every static mesh of a part that shares a material into one geometry. Pillar plate, bridges, pillars and cock are all static relative to their part group. Keep `userData.part` on the merged mesh; picking, colouring, fading and sections all work per part already. Copy `BufferGeometryUtils.mergeBufferGeometries` from three r128's examples into `vendor/` (MIT), or write a 30-line merge. Expect the movement's 285 meshes to drop to well under 100.

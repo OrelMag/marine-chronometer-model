@@ -23,9 +23,9 @@ function buildBox(M){
   const sHead=(p,ax,s,r0,rad,h,y,t)=>{const X=ax==='x',m=mesh(p,cylY(rad,h,20),M.brass2,0,y,0),sl=mesh(p,X?new THREE.BoxGeometry(0.6,rad*2.02,rad*0.35):new THREE.BoxGeometry(rad*0.35,rad*2.02,0.6),M.steelD,0,y,0);
     if(X){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);sl.position.x=s*(r0+h-0.25);m.position.z=sl.position.z=t||0;}
     else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);sl.position.z=s*(r0+h-0.25);m.position.x=sl.position.x=t||0;}};
-  const knurl=(p,ax,s,r0,rad,h)=>{const m=mesh(p,cylY(rad,h,48),M.brass2,0,0,0);for(let k=0;k<30;k++){const a=k/30*TAU,q=mesh(p,new THREE.BoxGeometry(0.5,h,0.5),M.brass2,rad*Math.cos(a),0,rad*Math.sin(a));
-      const g=new THREE.Group();p.add(g);g.add(q);g.userData.k=1;q.position.set(rad*Math.cos(a),0,rad*Math.sin(a));if(ax==='x'){g.rotation.z=Math.PI/2;g.position.x=s*(r0+h/2);}else{g.rotation.x=Math.PI/2;g.position.z=s*(r0+h/2);}}
-    if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);}};
+  /* knurled lock nut: a body with 30 ridges, merged into one mesh */
+  const knurl=(p,ax,s,r0,rad,h)=>{const gs=[[cylY(rad,h,48),new THREE.Matrix4()]];for(let k=0;k<30;k++){const a=k/30*TAU;gs.push([new THREE.BoxGeometry(0.5,h,0.5),new THREE.Matrix4().makeTranslation(rad*Math.cos(a),0,rad*Math.sin(a))]);}
+    const m=mesh(p,mergeGeo(gs),M.brass2,0,0,0);if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);}};
   /* gimbal ring: a flat brass band (Fig. 106), pivoted at 3 and 9 on two screws that come in through the box sides, each with a washer and lock nut.
      Slotted support straps on the ring carry the bushings for the gimbal pivot at 3 and the front case pivot at 6 (Fig. 94) */
   const RY=-20,RI=80,RO=82;

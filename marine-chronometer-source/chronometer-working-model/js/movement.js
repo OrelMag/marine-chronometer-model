@@ -291,7 +291,7 @@ function buildMovement(M){
   const BR=BAL_R,BY=BAL_Y;R.balU=new THREE.Group();R.balU.position.y=BY;R.staff.add(R.balU);
   mesh(R.balU,ring(BR,BR-1.4,2.4),M.steel);
   mesh(R.balU,new THREE.BoxGeometry(2*BR-1,1.1,2.4),M.invar);mesh(R.balU,cylY(2.4,2.4,24),M.invar);
-  for(let k=0;k<60;k++){if(k%30===0||k%30===2||k%30===28)continue;const a=k/60*TAU,h=mesh(R.balU,cylY(0.28,0.2,8),M.steelD,(BR+0.05)*Math.cos(a),0,(BR+0.05)*Math.sin(a));h.rotation.set(0,-a,Math.PI/2);}   /* none at the arm ends or under the weights' screws */
+  { const hs=[];for(let k=0;k<60;k++){if(k%30===0||k%30===2||k%30===28)continue;const a=k/60*TAU;hs.push([cylY(0.28,0.2,8),new THREE.Matrix4().compose(new THREE.Vector3((BR+0.05)*Math.cos(a),0,(BR+0.05)*Math.sin(a)),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-a,Math.PI/2)),new THREE.Vector3(1,1,1))]);}mesh(R.balU,mergeGeo(hs),M.steelD); }   /* none at the arm ends or under the weights' screws */
   const radial=(a,r0,len,rr,mat,seg=12)=>{const q=mesh(R.balU,cylY(rr,len,seg),mat,(r0+len/2)*Math.cos(a),0,(r0+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);return q;};
   const BW=[],bscrew=(a,len,rr,mat,mg,kind,off=0)=>BW.push({q:radial(a,BR+off,len,rr,mat),a,len,rr,mg,kind,off});
   /* balance screws per the parts list (p. 82): 6 of 0.049 in head height (125-130 mg), 2 of 0.080 in (200-205 mg), 2 of 0.101 in (250-255 mg), in diametric
