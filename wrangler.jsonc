@@ -4,7 +4,7 @@
 //   npx wrangler deploy
 {
   "name": "marinechronometer",
-  "compatibility_date": "2026-09-01",
+  "compatibility_date": "2026-09-28",
   "assets": {
     "directory": "./site",
     // /page.html redirects to /page, which build.py's link-preview addresses assume
