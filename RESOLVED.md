@@ -118,7 +118,7 @@ Contents:
   thick, sits on it: 0.03 mm above the chain and 0.03 mm under the train
   bridge, still level with the winding stop pin. Keep: the bar has only the
   0.6 mm between the cone's top and the train bridge; run `tools/fine.py`
-  after touching the fusee, chain or bridge heights. Fixed, not yet committed.
+  after touching the fusee, chain or bridge heights. `0371c16`
 
 ## Plates, bridges, screws and arbors
 
