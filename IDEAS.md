@@ -60,6 +60,8 @@ fills in the manual's test card ([3.4](#34-the-30-day-performance-test)).
 - **Per-frame rebuilds.** The hairspring's geometry is rebuilt every frame whenever it can be seen. See [5.3](#53-dont-rebuild-geometry-every-frame-sm).
 
 ### Three copies of the escapement solver
+> **Done.** One solver, `makeEsc` in `marine-chronometer-source/shared/escapement.js`, used by the model, the essay and `tools/escapement.js`. See 7.3.
+
 The escapement solver exists in three places:
 - the model (`ESC` in `movement.js`);
 - the checking tool, `tools/escapement.js`, which cuts it out of `movement.js`'s source text and runs it with `eval`;
@@ -72,7 +74,7 @@ the manual's figures. See [7.3](#73-make-esc-a-factory-and-share-it) and
 
 ### No automated checks
 - **Nothing runs on its own.** There is no continuous integration, although the checking tools exist.
-- **The escapement check always reports success.** `node escapement.js` prints `!!` beside a figure out of tolerance, but always exits with success. A CI job would pass even when the escapement fails the manual's figures.
+- **The escapement check always reports success.** `node escapement.js` prints `!!` beside a figure out of tolerance, but always exits with success. A CI job would pass even when the escapement fails the manual's figures. *(Fixed: it now exits with 1.)*
 
 Giving it a failing exit code is the first thing to fix when setting up
 automated checks on GitHub. See [8.1](#81-continuous-integration).
@@ -628,6 +630,8 @@ The README warns that tooth counts appear as text in the labels, `INFO`, the rat
 - Then a change of tooth count, when better counts turn up (1.8), is a one-line edit.
 
 ### 7.3 Make `ESC` a factory and share it
+> **Done.** `makeEsc(settings)` lives in `marine-chronometer-source/shared/escapement.js` (angles in degrees; unknown settings throw). The model builds `ESC` with the centre distance from `L`, the essay's F7 calls `makeEsc()`, and `tools/escapement.js` `require`s it, reading only `L` from `movement.js`. Its output, the model's views and the essay's figure are unchanged.
+
 **Today, three copies of one solver:**
 - the model's `ESC` is an IIFE with its settings as local constants ([movement.js:45](marine-chronometer-source/chronometer-working-model/js/movement.js#L45));
 - `tools/escapement.js` builds it by slicing `movement.js`'s source from the line starting `const L=` to the next `})();`, regex-replacing constants and calling `eval` ([escapement.js:6](marine-chronometer-source/chronometer-working-model/tools/escapement.js#L6));
@@ -657,7 +661,7 @@ At 62 KB and 484 dense lines, `app.js` holds the part descriptions, the 2-D esca
 ### 8.1 Continuous integration
 A GitHub Actions workflow on every push, in increasing cost:
 1. **Build:** `python build.py`. It already fails if a page loads anything from the network.
-2. **Escapement:** `node tools/escapement.js`. It prints `!!` for a figure out of tolerance but always exits 0; set `process.exitCode=1` when any row fails.
+2. **Escapement:** `node tools/escapement.js`. It prints `!!` for a figure out of tolerance but always exits 0; set `process.exitCode=1` when any row fails. *Done: it now exits with 1 when a figure is out of tolerance.*
 3. **Built copies:** check that the committed root copies match a fresh build (`git diff --exit-code`). CLAUDE.md asks for them to be committed together, and this enforces it.
 4. **Smoke test:** Playwright opens `index.html?snap&qa` with SwiftShader and fails on any console error or warning. It clicks every view, every walkthrough step, both variants and every section plane, and checks that `#loading` goes away.
 5. **Nightly or manual:** `dyn.py` and `audit.py`, which are slower. Compare their output with a committed expected-leftovers file, so a new collision or loose screw fails rather than scrolling past.

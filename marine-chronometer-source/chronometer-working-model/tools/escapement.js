@@ -1,13 +1,12 @@
-// Measures the escapement in ../js/movement.js against the manual's adjustment figures (Sec. VIII), using the manual's definitions.
-// Needs only Node.js:   node escapement.js            (try a setting without editing:  node escapement.js rT=0.29 aD=268)
-const fs=require('fs'),path=require('path');
-const SRC=fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8');
-const TAU=Math.PI*2,D2R=Math.PI/180,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-const lines=SRC.split(/\r?\n/),i0=lines.findIndex(l=>l.startsWith('const L=')),i1=lines.findIndex((l,i)=>i>i0&&l==='})();');
-function build(ov={}){   /* L, ES and ESC from movement.js, with any of ESC's constants overridden */
-  let code=lines.slice(i0,i1+1).join('\n');
-  for(const[k,v]of Object.entries(ov)){const re=new RegExp('([,\\s])'+k+'=([-0-9.]+)(\\*D2R)?');if(!re.test(code))throw Error('no constant '+k);code=code.replace(re,(m,a,b,c)=>a+k+'='+v+(c||''));}
-  return eval(code+'\n;({L,ES,ESC})');
+// Measures the model's escapement (makeEsc in ../../shared/escapement.js, with the centre distance in ../js/movement.js) against the manual's adjustment figures (Sec. VIII), using the manual's definitions.
+// Needs only Node.js:   node escapement.js            (try a setting without editing:  node escapement.js rT=0.29 aD=268). Exits with 1 if any figure is out of tolerance.
+const fs=require('fs'),path=require('path'),{makeEsc}=require('../../shared/escapement.js');
+const TAU=Math.PI*2,D2R=Math.PI/180;
+/* the centre distance comes from the arbor positions L in movement.js, as the model's own ESC does */
+const L=Function('return '+/^const L=(\{.*?\});/m.exec(fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8'))[1])();
+function build(ov={}){   /* ESC as the model builds it, with any of makeEsc's settings overridden (angles in degrees) */
+  const o={};for(const[k,v]of Object.entries(ov)){o[k]=Number(v);if(!Number.isFinite(o[k]))throw Error('not a number: '+k+'='+v);}
+  const ESC=makeEsc({EX:-Math.hypot(L.B[0]-L.E[0],L.B[1]-L.E[1])/(13.16/2),...o});return{L,ES:ESC.ES,ESC};
 }
 function measure(ov){
   const{ES,ESC:E}=build(ov),mm=u=>u*ES,deg=a=>a/D2R,N=E.LI.length,th=i=>E.TH0+i*E.DT,r={};
@@ -28,7 +27,7 @@ function measure(ov){
 module.exports={build,measure};
 if(require.main===module){
   const ov={};process.argv.slice(2).forEach(a=>{const[k,v]=a.split('=');ov[k]=v;});
-  const r=measure(ov),f=(x,n=1)=>x.toFixed(n),row=(name,v,want,ok)=>console.log(`${ok?'  ok ':'  !! '} ${name.padEnd(46)}${v.padStart(10)}   ${want}`);
+  const r=measure(ov),f=(x,n=1)=>x.toFixed(n),row=(name,v,want,ok)=>{if(!ok)process.exitCode=1;console.log(`${ok?'  ok ':'  !! '} ${name.padEnd(46)}${v.padStart(10)}   ${want}`);};
   row('centre distance',f(r.D,2)+' mm','',true);
   row('roller shake (Op. 84)',f(r.shake,3)+' mm','about 0.002 in (0.051 mm)',r.shake>0.03&&r.shake<0.08);
   row('teeth dip into the roller\'s crescent (Op. 76)',f(r.dip,2)+' mm','> 0',r.dip>0);

@@ -37,6 +37,7 @@ Contents:
       chronometer-working-model/ the 3D model: index.html, css/, js/, img/, tools/, verification/ (reference renders),
                                  dist/ (its built file); its README has the details
       marine-chronometer-essay/  the essay: src/ holds its four pieces, marine-chronometer.html is the built file
+      shared/                    escapement.js: the detent escapement's solver, used by both pages and the model's tools
     References/                  source material: the 1948 manual, photographs, drawings; its README lists each file
     RESOLVED.md                  bugs already found and fixed, from the commit history; check it before changing a part
     IDEAS.md                     ways to improve the model and the application
@@ -129,11 +130,10 @@ explains how the code is organised. Its "Modifying the model" section walks
 through common changes: a part's shape, a new part, gear ratios, the dial, the
 walkthrough, views and materials.
 
-The essay's detent figure uses a copy of the model's escapement solver (`ESC`
-in `js/movement.js`). If you change `ESC`, copy it into
-`marine-chronometer-essay/src/p4.js` as well; the essay's
-[README](marine-chronometer-source/marine-chronometer-essay/README.md) says
-what differs.
+The escapement's solver, `makeEsc` in
+`marine-chronometer-source/shared/escapement.js`, is shared by the model, the
+essay's detent figure and the model's `tools/escapement.js`, so a change to it
+reaches all three.
 
 ### The essay
 

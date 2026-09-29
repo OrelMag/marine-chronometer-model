@@ -23,7 +23,8 @@ copies and assembles the website (see the root README).
 | `css/style.css` | Layout, theme tokens (light and dark), controls, labels |
 | `img/what-makes-it-precise.webp` | The Smithsonian overview drawing shown in the Illustration tab (credited in its caption) |
 | `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch |
-| `js/movement.js` | The movement: layout constants, detent-escapement kinematics (`ESC.state`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
+| `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
+| `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate), winding key |
 | `js/app.js` | Renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, and the animation loop |
 | `build.py` | Inlines the CSS, JS, image, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
@@ -256,7 +257,7 @@ edit; see "Changing things" in the root README for the loop and the checks.
 ### How the code fits together
 
 - **Load order.** The four scripts are classic scripts that share global names,
-  loaded in order: `core.js`, `movement.js`, `box.js`, `app.js`. A later file
+  loaded in order: `core.js`, `../shared/escapement.js`, `movement.js`, `box.js`, `app.js`. A later file
   may use anything an earlier one defines, never the reverse.
 - **Style.** The code is deliberately dense: long one-line statements and short
   names. Keep new code in the same style so it reads like the rest.
@@ -380,8 +381,11 @@ Update the step count in `index.html` ("Eight steps …") if it changes.
 3. To find good camera numbers: open `index.html?qa`, orbit to the view you
    want, and run `__camInfo()` in the console.
 
-**Change the escapement.** Its geometry and motion are solved in `ESC` near the
-top of `movement.js`, in a unit frame scaled to the escape wheel's radius.
+**Change the escapement.** Its geometry and motion are solved by `makeEsc` in
+`../shared/escapement.js`, in a unit frame scaled to the escape wheel's radius;
+`movement.js` builds `ESC` from it with the centre distance in `L`. Its settings
+(`rT`, `rd`, `dL`, `DRAW`, `aI`, `aD` and the rest, angles in degrees) are the
+defaults listed at the top of `makeEsc`.
 `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection and
 escape-wheel progress for balance phase `p`. The 2-D walkthrough diagram
 (`drawEsc2D` in `app.js`) draws from the same data, so the two stay in step.
@@ -392,9 +396,9 @@ overall, drop, roller shake and the horn clearance, and flags any outside the
 manual's figures. To try a setting before editing, pass it on the command line,
 for example `node escapement.js rT=0.29`. Record the results in the escapement
 entries under "Estimated, not from the manual". The essay's detent figure (F7
-in `../marine-chronometer-essay/src/p4.js`) carries a copy of `ESC`: copy the
-change across too, keeping the essay's centre distance `EX` written out as
-9.3997 mm.
+in `../marine-chronometer-essay/src/p4.js`) calls the same `makeEsc`, so it
+follows the change; rebuild with `python build.py` at the root. `node escapement.js`
+exits with 1 when a figure is out of tolerance.
 
 **Update the link-preview images** after visible changes. From `tools/`, run
 `python social.py` for both, or `python social.py dial` or

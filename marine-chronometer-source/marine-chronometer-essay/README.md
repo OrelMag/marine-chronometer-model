@@ -20,9 +20,9 @@ their own; always open the built file.
 
 This essay predates the Hamilton manual and the working model. For
 Hamilton-specific detail, use `../chronometer-working-model`. The one exception
-is the detent figure (F7 in `p4.js`): it carries a copy of the model's `ESC`
-solver from `js/movement.js`, so it draws the Model 21 escapement at the
-manual's settings. After changing `ESC` in the model, copy it across (only the
-centre distance `EX` differs, written out as 9.3997 mm) and rebuild. The essay
+is the detent figure (F7 in `p4.js`): it uses the model's own escapement
+solver, `makeEsc` in `../shared/escapement.js` (loaded by `p1.html` and inlined
+by the build), so it draws the Model 21 escapement at the manual's settings and
+follows any change to it. The essay
 links to the model as `chronometer-working-model.html`; `build.py` points that
 link at the site's home page in `site/`.
