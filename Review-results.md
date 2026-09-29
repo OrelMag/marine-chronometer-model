@@ -13,6 +13,10 @@ Status: findings 1–5 were fixed after the review; see
 finding 9 (the split-balance variant runs through the barrel bridge), which is
 not fixed yet. Findings 6–9 and the smaller issues are open.
 
+A later pass with a finer collision check found and fixed five more overlaps,
+and planned a check for the barrel wall; see
+[Fine interference pass](#fine-interference-pass).
+
 ## Summary
 
 No part of the model is broken. The mechanics hold up: ratios, directions of
@@ -379,3 +383,102 @@ not change.
   errors and make no network requests.
 - **Link-preview images**: not regenerated; the changes aren't visible at that
   size.
+
+## Fine interference pass
+
+29 September 2026, after `245442c`. It started from an escape pinion seen
+touching the third wheel, then reviewed every stage of the power train and the
+timekeeping parts.
+
+### The check
+
+`tools/fine.py` with `tools/fine-interference.js` (new). For every pair of
+meshes whose boxes meet, it casts vertical rays through only the shared box, on
+a 0.05 mm grid, and measures where both are solid. It runs:
+
+- the 18 escapement phases `dyn.py` uses;
+- 15 train positions, whole teeth apart, with wind states from run down to full
+  wind, and winding;
+- with `--dense`, 101 phases across a full balance swing.
+
+Unlike `dyn.py` it tests each link of the chain and the tube springs
+(hairspring, trip spring). Its `EXPECTED` table lists the intended contacts with
+their reasons and size limits; anything else fails. Planting the old escape
+pinion back makes it fail (0.31 mm, `escW × tw`), and `--split` reproduces
+finding 9.
+
+### Fixed
+
+| Overlap | Size | Fix | Commit |
+|---|---|---|---|
+| Escape pinion into the third wheel's teeth | 0.31 mm high, 0.37 mm deep | Pinion runs from the fourth wheel toward the plate | `329e77e` |
+| Fourth wheel's collet into the third wheel's teeth | 0.38 mm | Collet on the plate side only (`cside`) | `329e77e` |
+| Sustaining pawl's arbor into the fusee wheel's teeth | 0.12 mm | Pivot 21.35 mm from the fusee axis (was 21) | `329e77e` |
+| Stop-bar through the fusee arbor at full wind | 1 mm³ | One bar beside the arbor, re-aimed at the stop pin | `b39086a` |
+| Stop-bar through the chain's top turn at full wind | 0.18 mm | Raised top cap, thinner bar above the chain | this pass |
+
+All five were thinner than `dyn.py`'s 0.4 mm cubes.
+
+### Stage by stage
+
+Every mesh's centre distance equals its pitch sum (see [Gear meshes](#gear-meshes)),
+and each wheel's face lies wholly within its pinion. After the fixes, no wheel
+or pinion touches anything but its partner at any position tested:
+barrel → chain → fusee, the maintaining work, fusee wheel 96/14, centre 80/10,
+third 75/10, fourth 60/8, the motion work and the wind indicator.
+
+Timekeeping parts, over 101 balance phases: the escape wheel, rollers, detent,
+trip spring and balance touch nothing but their pivots. The hairspring's upper
+end sits 0.1 mm into the cock, pinned in its stud. `escapement.js`: all nine
+figures ok, unchanged.
+
+### Documented, not changed
+
+These are intended contacts, in `fine.py`'s `EXPECTED` table with their limits:
+
+- **Two pins graze the bevel of their train-bridge holes.** `polyGeo`'s bevel
+  narrows the train bridge's holes near one face. The sustaining pawl's arbor
+  (r 0.7 in a 0.72 hole) overlaps it by 0.058 mm³ over 0.18 mm of depth, and the
+  winding-stop pin (r 0.9 in a 1.0 hole) by 0.034 mm³ over 0.16 mm. Both are
+  inside the bridge and not visible. To remove them, widen the two holes by
+  0.2 mm, or leave the bevel off holes.
+- **Chain links on the fusee cone,** up to 0.5 mm. The groove is turned rings,
+  not a helix, and each link is an upright box on a slope of up to 60°, so its
+  lower edge dips into the cone. This stands for the chain lying in its groove.
+
+### Not tested: the barrel wall (plan)
+
+The barrel's wall is an open, double-sided cylinder (`noCap`, r 13.5 mm), and
+ray parity needs closed meshes, so neither check can test it. The same goes for
+the mainspring (an open ribbon) and the dial face (a flat ring). The review's
+hand check found the barrel 0.15 mm from the third wheel at its cap screws,
+1.7 mm inside the train bridge's cutout, and about 4 mm from the centre and
+third arbors. The plan:
+
+1. **Solid proxy.** In `fine-interference.js`, add a closed stand-in for every
+   open cylinder marked `noCap`: a solid cylinder with the same radius, height
+   and transform. The drum is closed in reality (wall, caps, contents), so
+   anything else inside it is a collision. The barrel's own contents (its
+   arbor under the setup ratchet, the mainspring, the hook, the caps and their
+   screws) go in `EXPECTED`, each with its reason.
+2. **Exact clearance, not only overlap.** For every other part's vertices within
+   the drum's height (bB to bT, and the caps' height at Rb + 0.7), take the
+   distance from the barrel axis minus the radius. Subdivide edges longer than
+   0.1 mm, so a flat face crossing the cylinder between vertices is caught.
+   Report the smallest clearance per part and fail below 0.05 mm. This gives
+   margins, which the grid can't: expect about 0.15 mm (third wheel against the
+   cap screws), 1.7 mm (train bridge cutout) and 4 mm (arbors), as found by
+   hand.
+3. **States.** The wall is round, but the cap screws and the hook turn with
+   the barrel, and the chain's wrap changes with the wind: use `fine.py`'s wind
+   states. The chain wraps at Rb + 0.3, so its links' inner faces sit about
+   0.02 mm off the drum. Record that as expected, with a limit.
+4. **Mainspring, analytically.** From `mainspringGeo`'s parameters over the
+   whole wind: the innermost coil stays outside the barrel arbor (2.6 mm), and
+   the outermost stays inside the wall (13.1 mm).
+5. **Prove it.** Plant a fault (barrel radius +0.3 mm) and confirm the check
+   fails on the cap screws or the third wheel. Then remove the fault and
+   confirm the margins match the hand check.
+6. **Record.** Add the result to `fine.py`'s output and `EXPECTED`, the model
+   README's collision step and finding 7. Apply the same proxy to the dial
+   face if it proves useful.

@@ -157,13 +157,15 @@ Before committing a change to the model:
    `marine-chronometer-source/chronometer-working-model/tools/`:
 
        python dyn.py        # collisions through a full escapement cycle
+       python fine.py       # the same at 0.05 mm, round the train and over the wind (exit code 1 on anything new)
        python audit.py      # screws, pivots, loose parts in the movement
        python audit.py box  # the same for the box and gimbals
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
        node escapement.js   # the escapement's lock, let-off, overall, drop and clearances (Node.js only)
 
    `dyn.py` should list only intended joints: pivots in their jewels, collets
-   on arbors, hands on their staffs. `audit.py` is expected to report the
+   on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
+   its table `EXPECTED` gives the reason for each intended contact. `audit.py` is expected to report the
    winding-stop pin and the free ends of the balance screws and the timing
    weights' screws; most of its
    coplanar-face hits are faces in contact. `escapement.js` marks each figure

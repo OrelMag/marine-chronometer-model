@@ -369,7 +369,7 @@ function buildMovement(M){
   screw(ep,3.6,0,-0.7,0.7,0.4);screw(ep,-1.6,1.5,-0.7,0.7,0.4);
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, below the third wheel) ---------- */
   const fsP=part('fs',-16);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
-  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:TB_T+1.0,bB:-9.6,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,sbZ:-1.8,stopAng:Math.atan2(-fo[1],fo[0])-Math.atan2(-dz,dx)+Math.asin((0.7+0.9-1.8)/7.2)});   /* at full wind the stop-bar's side (half-width 0.7, 1.8 off the axis beside the arbor) meets the winding stop pin (r 0.9, 7.2 mm out) */
+  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:TB_T+1.0,bB:-9.6,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.55,sbZ:-1.8,stopAng:Math.atan2(-fo[1],fo[0])-Math.atan2(-dz,dx)+Math.asin((0.7+0.9-1.8)/7.2)});   /* at full wind the stop-bar's side (half-width 0.7, 1.8 off the axis beside the arbor) meets the winding stop pin (r 0.9, 7.2 mm out) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), measured on the top-view photograph:
      a bow-shaped cover straddling the arbor, ends ~13 mm out along 107 deg / 287 deg, the right end an arc about the arbor; the waist on the
@@ -470,13 +470,13 @@ function buildMovement(M){
 function makeFusee(M,c){
   const g=new THREE.Group(),drop=1-c.rmin/c.rmax,rf=m=>c.rmin/(1-drop*m/c.N),yf=m=>c.yS+(c.yB-c.yS)*m/c.N,cT=c.cT??c.bT+1.2,cB=c.cB??c.bB-1.2,yb=m=>cT+(cB-cT)*m/c.N,fx=c.d/2,bx=-c.d/2;
   const fz=new THREE.Group();fz.position.x=fx;fz.userData.partName='fusee';g.add(fz);
-  const V2=(a,b)=>new THREE.Vector2(a,b),pr=[V2(1.05,c.yS-0.2),V2(c.rmin-0.6,c.yS-0.2),V2(c.rmin-0.6,c.yS)];
+  const cap=c.cap??0.2,V2=(a,b)=>new THREE.Vector2(a,b),pr=[V2(1.05,c.yS-cap),V2(c.rmin-0.6,c.yS-cap),V2(c.rmin-0.6,c.yS)];   /* top cap inside the chain, cap mm above the cone */
   const K=Math.round(c.N*28);for(let i=0;i<=K;i++){const m=c.N*i/K;pr.push(V2(rf(m)-0.4*(1-Math.cos(TAU*m))/2,yf(m)));}
-  pr.push(V2(c.rmax+1.0,c.yB),V2(c.rmax+1.0,c.yB+0.5),V2(1.05,c.yB+0.5),V2(1.05,c.yS-0.2));
+  pr.push(V2(c.rmax+1.0,c.yB),V2(c.rmax+1.0,c.yB+0.5),V2(1.05,c.yB+0.5),V2(1.05,c.yS-cap));
   mesh(fz,new THREE.LatheGeometry(pr,72),M.gilt);cylBetween(fz,1,c.aT??-33,-PP_T-0.1,M.steel,0,0,12);cylBetween(fz,0.55,-PP_T-0.1,2.5,M.steel,0,0,12);   /* arbor, then its lower pivot through the plate bushing to the wind-indicator pinion */
   mesh(fz,gearGeo(40,0.47,0.5,{ratchet:true,bore:1}),M.steel,0,c.yB+0.85,0);
-  const sbR=new THREE.Group();sbR.rotation.y=c.stopAng||0;fz.add(sbR);const stopBar=new THREE.Group();stopBar.position.y=c.yS-0.4;sbR.add(stopBar);
-  mesh(stopBar,new THREE.BoxGeometry(8.4,0.4,1.4),M.steel,0.1,0,c.sbZ||0);   /* one bar in a groove beside the arbor (r 1), 0.1 clear of it at full travel; across the axis it would run through it */
+  const sbR=new THREE.Group();sbR.rotation.y=c.stopAng||0;fz.add(sbR);const stopBar=new THREE.Group();stopBar.position.y=c.yS-cap-0.11;sbR.add(stopBar);   /* on the cap, clear above the chain's top turn (links are 1 mm tall, centred on the cone's top edge) */
+  mesh(stopBar,new THREE.BoxGeometry(8.4,0.22,1.4),M.steel,0.1,0,c.sbZ||0);   /* one bar in a groove beside the arbor (r 1), 0.1 clear of it at full travel; across the axis it would run through it */
   const bz=new THREE.Group();bz.position.x=bx;bz.userData.partName='barrel';g.add(bz);
   const bw=new THREE.Mesh(new THREE.CylinderGeometry(c.Rb,c.Rb,Math.abs(c.bT-c.bB),72,1,true),M.brassDS);bw.position.y=(c.bT+c.bB)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.noCap=true;
   for(const y of[c.bT+0.3,c.bB-0.3]){const cp=mesh(bz,ringGeo(c.Rb+0.7,1.5,0.6),M.gilt,0,y,0);cp.userData.driveGhost=true;}

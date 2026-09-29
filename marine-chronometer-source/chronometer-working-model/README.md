@@ -32,6 +32,7 @@ copies and assembles the website (see the root README).
 | `tools/solve.py` | Places the arbors from the measured positions and the centre distances the wheels need (no browser) |
 | `tools/p3map.json`, `tools/cock_outline.json`, `tools/engr.json` | Traced from the top-view photograph: its mapping into the model, the balance cock's outline, the engraving columns |
 | `tools/dyn.py`, `tools/interference-check.js` | Voxel collision check through a full escapement cycle |
+| `tools/fine.py`, `tools/fine-interference.js` | Fine (0.05 mm) collision check through the escapement cycle, round the train and over the wind, against a table of expected contacts |
 | `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
 | `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
@@ -179,7 +180,7 @@ and the thread pitches are the model's. Things to know before changing it:
    - Fig. 2 and Fig. 109 show a tall barrel that rises past the train bridge to the barrel bridge, and Figs. 108 and 110 show the train bridge cut round it.
    - The plan positions (`L`) were fitted before the re-stack, with the old heights, which `bundle.py`, `fit.py` and `unproj.py` still use. They were not re-fitted.
    - Re-running `bundle.py` with the new heights puts the fusee and barrel axes within 0.8 mm of `L` and the balance within 2 mm. That is about the run-to-run spread of its random restarts.
-7. **Collision check.** `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. Only intended joints remain.
+7. **Collision check.** `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. `tools/fine.py` checks at 0.05 mm, also at 15 train positions and wind states, and includes the chain and the tube springs; it found four overlaps of 0.1–0.4 mm that the coarser check could not see. Only intended contacts remain, listed with their reasons in `fine.py`. Open surfaces (the barrel wall, mainspring and dial face) are not collision-tested.
 8. **Visual check.** `tools/p3fit.py` renders the model from the top-view photograph's camera. The result is `verification/topview-comparison.png`.
 
 ## Estimated, not from the manual
@@ -195,6 +196,7 @@ and the thread pitches are the model's. Things to know before changing it:
 - The balance lower bridge: a 3 mm plate on a boss under the train bridge, with two screws (Op. 50). Fig. 110 shows it stepped and lobed; its outline is simplified.
 - The train-bridge and barrel-bridge screws. Their positions come from the top-view photograph; the manual gives three screws for each bridge. One train-bridge screw, at (−8.5, 27.7), has no pillar under it in the model.
 - The fusee profile and the wind indicator ratio.
+- The stop-bar's size and travel, and the fusee's top cap it sits on. Sec. IV describes the mechanism (the chain bears on one end, the other moves out to the winding stop), not its dimensions.
 - The mainspring’s coils, which are drawn schematically.
 - The detent's dimensions.
   - Its plan follows Fig. 90 and its construction Figs. 14 and 110 and the chronometerbook photograph. Thicknesses and heights are estimated.
@@ -306,8 +308,8 @@ for the wind indicator; `MOD` holds the tooth sizes).
   - the ratio table built in `setInset` (the `'train'` case);
   - the live angle readout in `drawInset`, which uses 7.5, 56.25 and 450;
   - the tooth counts in this README.
-- Any tooth count changes the wheel's radius, so re-run `tools/solve.py` or
-  check clearances with `dyn.py`.
+- Any tooth count changes the wheel's radius, so re-run `tools/solve.py` and
+  check clearances with `fine.py` (`dyn.py` can't see gaps under 0.4 mm).
 
 **Change the dial.** The dial is painted on a canvas in `dialCanvas()` in
 `core.js`: chapter ring, numerals, the seconds and UP–DOWN sub-dials and the

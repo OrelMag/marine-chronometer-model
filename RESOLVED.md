@@ -111,6 +111,14 @@ Contents:
   side still meets the winding stop pin at full wind (checked every 0.005
   turn over the last 0.3 turn: touching at full wind, clear before).
   `b39086a`
+- **Stop-bar slid out through the chain's top turn, 0.18 mm.** The links are
+  1 mm tall and centred on the cone's top edge, so at full wind the top turn
+  stood 0.3 mm above the fusee's top face, where the bar lay. The fusee's top
+  cap (inside the chain) is now 0.55 mm above the cone and the bar, 0.22 mm
+  thick, sits on it: 0.03 mm above the chain and 0.03 mm under the train
+  bridge, still level with the winding stop pin. Keep: the bar has only the
+  0.6 mm between the cone's top and the train bridge; run `tools/fine.py`
+  after touching the fusee, chain or bridge heights. Fixed, not yet committed.
 
 ## Plates, bridges, screws and arbors
 
