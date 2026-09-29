@@ -183,7 +183,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Detent foot and support block:** shortened to clear the train pillar. Once 1.1 is done, check whether the pillar or the block is really the one out of place.
 
 ### 1.4 The balance's collet, stud and upper setting (S–M)
-- **Collet and stud:** the manual (Sec. II, Fig. 5) says the collet's "curious shape" came from counterpoising experiments to remove position errors, and the stud's attachment to the cock is "unusual". Today the collet is a hexagonal prism. Model both after Fig. 5, with the collet clamp and wedge pin of Fig. 6.
+- **Collet and stud:** the manual (Sec. II, Fig. 5) says the collet's "curious shape" came from counterpoising experiments to remove position errors, and the stud's attachment to the cock is "unusual". Today the collet is a hexagonal prism. Model both after Fig. 5, with the collet clamp and wedge pin of Fig. 6. *(Done: the slotted collet with its plate, tongue, clamp and wedge pin, and the stud as a bar under the cock on the stud screw and a steady pin (Figs. 19, 84, 85), with its own clamp and wedge pin. The spring's ends reach the clamps, and it is 5.9 mm tall to clear the stud's bar. The collet's counterpoise is not modelled.)*
 - **Upper pivot setting:** the setting in the cock is "not drawn: the staff is 0.7 mm from the cock's edge" ([movement.js:346](marine-chronometer-source/chronometer-working-model/js/movement.js#L346)). That suggests the traced cock outline is slightly off near the endstone. Re-check the parallax shift in `cock_outline.json`.
 
 ### 1.5 Hand-setting square, balance locking arm, shipping wedges (S each)

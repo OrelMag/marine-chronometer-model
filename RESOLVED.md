@@ -354,6 +354,13 @@ Contents:
   froze the model. It now spends that context on a blank page, as `smoke.py`
   does, and waits for the loading screen to go. Keep: every browser tool
   warms up WebGL first and waits for the page, not for a fixed time. `ea04355`
+- **`illustration.py` failed at its first view.** Its render hook keeps the
+  last scene drawn, for the passes to redraw. With Edges on (the default except
+  on phones), the last scene drawn each frame is the Edges overlay's, two
+  objects with no parts in it, so the first label anchor on a part threw
+  (`localToWorld` of null). It now turns Edges off before each view, as the
+  sheet was drawn. Keep: a tool that hooks `render` must get the model's scene,
+  so switch off any overlay pass drawn after it.
 
 ---
 

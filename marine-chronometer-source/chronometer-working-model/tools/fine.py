@@ -40,7 +40,9 @@ EXPECTED={
  ('chain:Cylinder','fusee:Lathe'):("the chain's pin in the fusee's large end",0.12,0.45),
  ('chain:Box','chain:Cylinder'):("that pin through the chain's end link",0.07,0.55),
  ('chain:Box','chain:Box'):("the barrel-end hook riveted to the chain's last link",0.25,0.85),
- ('cock:Extrude','spr:Tube(tube)'):("hairspring's upper end pinned in its stud on the cock",0.021,0.1),
+ ('bal:Box','spr:Tube(tube)'):("hairspring's inner end in the clamp on the collet's tongue",0.06,0.35),
+ ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),
+ ('cock:Extrude','spr:Cylinder'):("hairspring stud's steady pin in the cock",0.23,0.8),
  ('chain:Box','fusee:Lathe'):("chain links on the fusee cone: the groove is turned rings, not a helix, and the links are upright boxes on a slope",0.27,0.5),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('spawl:Cylinder','trainBridge:Extrude'):('sustaining pawl arbor (r 0.7) in its 0.72 hole: grazes the bevel',0.06,0.18),

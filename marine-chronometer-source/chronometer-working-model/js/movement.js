@@ -281,6 +281,9 @@ function buildMovement(M){
   R.pspring=mesh(dt,new THREE.BufferGeometry(),M.steel);
   /* ---------- balance (rim r 14.5, measured on the top-view photograph) and hairspring ---------- */
   const bl=part('bal',-80,true);
+  /* the hairspring's ends: both at HS_R from the staff, in the direction of the stud, which runs along the cock toward its screw Q (SPD, in the movement frame; SPSI, the same
+     as a rotation in the balance's frame). The spring rises HS_H from HS_Y, below the collet, to the stud's clamp under the cock */
+  const Q=[33.11,12.32],SPD=(()=>{const d=[Q[0]-L.B[0],Q[1]-L.B[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),SPSI=Math.atan2(-SPD[1],SPD[0])-BETA,HS_R=3.6,HS_Y=BAL_Y-2.3,HS_H=5.9;
   R.staff=new THREE.Group();bl.add(R.staff);
   cylBetween(R.staff,0.45,CK_T+1.1,LB_T+0.5,M.steel,0,0,12);
   /* impulse roller (O.D. 0.249 in, as thick as the escape wheel, post 30) with its crescent: the large portion behind the impulse jewel, where each tooth
@@ -291,7 +294,17 @@ function buildMovement(M){
   const pal=(ang,r0,r1,w,y,h)=>{const q=mesh(R.staff,new THREE.BoxGeometry(r1-r0,h,w),M.ruby,(r0+r1)/2*Math.cos(ang),y,(r0+r1)/2*Math.sin(ang));q.rotation.y=-ang;};
   pal(E.aIc,rR-0.9,E.rp*ES,E.wI*ES,EY-0.09,1.56);   /* the wheel centred on the impulse jewel, jewel showing above and below it (Op. 82) */
   mesh(R.staff,cylY(E.rDR*ES,0.6,32),M.steel,0,EY+1.2,0);pal(E.aD,E.rDR*ES-0.4,E.rd*ES,E.wD*ES,EY+1.2,0.7);
-  mesh(R.staff,new THREE.CylinderGeometry(1.4,1.4,0.9,6),M.brass2,0,BAL_Y-1.7,0);
+  /* hairspring collet (manual Figs. 5, 6): a hub slotted to grip the staff, and a flat plate whose tongue carries the clamp that holds the spring's inner end,
+     locked by a wedge pin, the spring unbent (Sec. II). Turned to the stud's direction (SPSI), where the spring's ends lie. Outline estimated from Figs. 5 and 6 */
+  const cg=new THREE.Group();cg.rotation.y=SPSI;R.staff.add(cg);R.collet=cg;
+  { const hub=[],ho=1.15,hi=0.47,so=0.1/ho,si=0.1/hi;for(let k=0;k<=24;k++){const a=-Math.PI+so+(TAU-2*so)*k/24;hub.push([ho*Math.cos(a),ho*Math.sin(a)]);}
+    for(let k=0;k<=12;k++){const a=Math.PI-si-(TAU-2*si)*k/12;hub.push([hi*Math.cos(a),hi*Math.sin(a)]);}
+    mesh(cg,polyGeo(hub,1.4),M.steel,0,HS_Y-0.35,0);
+    const pl=[],P=(r,a)=>[r*Math.cos(a*D2R),r*Math.sin(a*D2R)],t=Math.asin(0.35/3)/D2R;
+    for(let k=0;k<=20;k++)pl.push(P(3,-120+(120-t)*k/20));pl.push([HS_R+0.5,-0.35],[HS_R+0.5,0.35]);for(let k=0;k<=3;k++)pl.push(P(3,t+(10-t)*k/3));
+    for(let k=0;k<=20;k++)pl.push(P(0.9,10-130*k/20));
+    mesh(cg,polyGeo(pl,0.45),M.steel,0,BAL_Y-1.7,0);   /* the plate under the balance hub (0.05 clear of it) */
+    mesh(cg,new THREE.BoxGeometry(1.0,1.4,1.3),M.steel,HS_R,BAL_Y-1.95,0);cylBetween(cg,0.15,BAL_Y-1.1,BAL_Y-2.8,M.steelD,HS_R,-0.4,10); }   /* clamp on the tongue's end, over the spring's end; wedge pin on the side away from the spring's run */
   const BR=BAL_R,BY=BAL_Y;R.balU=new THREE.Group();R.balU.position.y=BY;R.staff.add(R.balU);
   mesh(R.balU,ring(BR,BR-1.4,2.4),M.steel);
   mesh(R.balU,new THREE.BoxGeometry(2*BR-1,1.1,2.4),M.invar);mesh(R.balU,cylY(2.4,2.4,24),M.invar);
@@ -322,8 +335,12 @@ function buildMovement(M){
   for(let k=0;k<2;k++){const a0=k*Math.PI;mesh(R.balS,band(a0,BR-1.6,BR-0.9),M.steel);mesh(R.balS,band(a0,BR-0.9,BR),M.brass);
     const wa=a0+span*0.62,w=mesh(R.balS,cylY(2.3,4.2,24),M.brass2,(BR+1.9)*Math.cos(wa),0,-(BR+1.9)*Math.sin(wa));w.rotation.set(0,wa,Math.PI/2);}
   /* helical hairspring: ~8 mm tall, ~5.5 mm radius, many turns (Fig. 2) */
-  const spg=part('spr',-88,true);R.spring=mesh(spg,new THREE.BufferGeometry(),M.steel,0,BAL_Y-2.3,0);R.spring.rotation.x=Math.PI;
-  mesh(spg,new THREE.BoxGeometry(2.4,0.9,1.8),M.gilt,5.5*0.3+0.6,CK_T+3.05,0);
+  const spg=part('spr',-88,true),sg=new THREE.Group();sg.rotation.y=SPSI;spg.add(sg);R.spring=mesh(sg,new THREE.BufferGeometry(),M.steel,0,HS_Y,0);R.spring.rotation.x=Math.PI;
+  /* hairspring stud (Figs. 5, 19, 84, 85): a flat bar under the cock, held by the stud screw from the cock's top and a steady pin, with a clamp at its inner end
+     holding the spring's upper end by a wedge pin, as the collet does. Its bar runs from over the spring's end, across the top coil, along the cock toward its screw */
+  { const st=new THREE.Group();st.rotation.y=SPSI;spg.add(st);const yb=CK_T+2.6;
+    mesh(st,new THREE.BoxGeometry(5.7,0.5,1.6),M.steel,5.75,yb+0.25,0);mesh(st,new THREE.BoxGeometry(1.0,0.7,1.3),M.steel,HS_R,yb+0.85,0);
+    cylBetween(st,0.15,yb+0.5,yb+1.36,M.steelD,HS_R,0.4,10);cylBetween(st,0.3,yb-0.8,yb,M.steel,5.6,0,12); }   /* wedge pin through the clamp; steady pin up into the cock */
   /* balance cock: massive bridge from a foot at the right-back (Fig. 2) over the balance */
   const ck=part('cock',-96);
   /* balance cock traced on the top-view photograph: a broad crescent whose outer edge follows the plate rim (top-left
@@ -339,7 +356,8 @@ function buildMovement(M){
     for(let k=16;k>=0;k--){const a=a1+(A-a1)*k/16;FOOT.push([31*Math.cos(a),31*Math.sin(a)]);}}
   R.cockFoot=mesh(ck,polyGeo(FOOT,TB_T-CK_T-2.6,[],0.2),M.plateSolid,0,CK_T+2.6,0);
   /* one balance cock screw (parts list 42192), at its position on the top-view photograph (p3map scr_cockfoot) */
-  const Q=[33.11,12.32];screw(ck,...Q,CK_T,2.8,1.5);
+  screw(ck,...Q,CK_T,2.8,1.5);
+  screw(ck,L.B[0]+7.6*SPD[0],L.B[1]+7.6*SPD[1],CK_T,0.8,0.45);   /* hairspring stud screw, down through the cock into the stud (Figs. 19, 84) */
   /* endstone plate over the staff: small steel plate with two screws and the cap jewel */
   const ep=new THREE.Group();ep.position.set(L.B[0],CK_T,L.B[1]);ep.rotation.y=Math.atan2(-(L.B[1]-Q[1]),L.B[0]-Q[0]);ck.add(ep);
   mesh(ep,new THREE.BoxGeometry(7.4,0.7,4.6),M.steel,1.2,-0.35,0);mesh(ep,cylY(1.0,0.3,16),M.ruby,0,-0.8,0);
@@ -475,7 +493,7 @@ function buildMovement(M){
     const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-60*D2R-udA;
     fs.setBar(lerp(0,3.2,smooth(1-s.n/0.25)));
     if(s.msOn){const In=fs.I(s.n);fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(1-In/fs.IN,2.6,13.1,-10.4,TB_T+1.9,6+fs.IN-In);}
-    if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,6.7,14,s.th,0.17);}
+    if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,HS_H,14,s.th,0.17,HS_R,HS_R);}
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing */
     const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,EY+1.3,p.y*ES);
     R.pspring.geometry.dispose();R.pspring.geometry=new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(V(a0),V(am),V(tp2)),20,0.1,5,false);
