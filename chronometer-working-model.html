@@ -954,6 +954,9 @@ const TB_U=-20.66,TB_T=-23.76,BB_T=-27.16,CK_T=-37.96;
 const EY=-18.96,LB_T=-14.76,BAL_Y=-26.3;   /* escape wheel (teeth 0.95 below the train bridge), balance lower bridge's top face (photograph: 7.9-10.9 mm above the plate), balance rim */   /* bridge radius: the top-view photograph (the fusee wheel is hidden under it, as photographed) */          /* pillar plate; bridges */
 const PILLARS={barrel:[-15.3,-26.58],train:[[-16.63,22.48],[18.17,26.92],[32.11,-4.1]]};
 const COCK_FOOT=[28.3,6.4],BAL_R=14.5;
+/* the edge of the upper train bridge's notch round the fusee, traced on the manual's Fig. 67 (tools/train_bridge.py): from outside the rim, past the centre
+   arbor to the horn's tip, and into the barrel's cut; pushed 1 mm or more off every screw, bushing and pivot the bridge holds, and off the keyhole */
+const TB_EDGE=[[31.67, -26.34], [31.32, -25.19], [30.97, -24.04], [30.61, -22.9], [30.26, -21.75], [29.91, -20.6], [29.55, -19.46], [29.19, -18.31], [28.8, -17.18], [28.37, -16.06], [27.86, -14.96], [27.29, -13.85], [26.81, -12.68], [26.57, -11.42], [26.28, -10.19], [25.9, -8.98], [25.41, -7.82], [24.82, -6.7], [24.14, -5.64], [23.37, -4.67], [22.5, -3.79], [21.54, -3.01], [20.51, -2.33], [19.4, -1.74], [18.23, -1.28], [17.01, -0.95], [15.76, -0.78], [14.54, -0.78], [13.34, -0.97], [12.16, -1.31], [10.95, -1.73], [9.67, -2.07], [8.34, -2.22], [7.05, -2.19], [5.83, -2.16], [4.67, -2.27], [3.57, -2.57], [2.5, -3.06], [1.47, -3.7], [0.48, -4.44], [-0.46, -5.22], [-1.38, -6.0], [-2.29, -6.7], [-3.19, -7.19], [-4.06, -7.34], [-4.86, -7.1], [-5.51, -6.51], [-5.92, -5.69], [-6.02, -4.77], [-5.81, -3.81], [-5.38, -2.83], [-4.85, -1.81], [-4.3, -0.75]];
 /* going train (counts give the ratios; centre-escape counts are not published). fu : cp, fusee wheel 96 : centre pinion 14, from the winding figures:
    7 half-turns of the key per 24 h (manual Sec. III) = 6.857 h per fusee turn. Every count shown in the page (labels, part cards, walkthrough tables) comes from here */
 const TRAIN={fu:96,cp:14,cw:80,tp:10,tw:75,fp:10,fw:60,ep:8,ew:16};
@@ -989,6 +992,26 @@ function hull(P){P=[...P].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a
 /* outline with its stretch from point i0 to point i1 replaced by the outer side of the hull of those two points and pts */
 function hullSplice(poly,i0,i1,pts){const H=hull([poly[i0],...pts,poly[i1]]),n=H.length,a=H.indexOf(poly[i0]),b=H.indexOf(poly[i1]);
   const run=d=>{const r=[];for(let k=a;;k=(k+d+n)%n){r.push(H[k]);if(k===b)break;}return r;},f=run(1);return[...poly.slice(0,i0),...(f.length>2?f:run(-1)),...poly.slice(i1+1)];}
+/* the upper train bridge's outline (Figs. 29, 67, 110): the disc of radius R less the cut round the barrel (circle bc, br) and the notch round the fusee,
+   whose edge e (a polyline) starts outside the rim and ends inside the barrel's cut. The rim runs from the notch's mouth (angle rising) to where the barrel's
+   cut meets it, the cut's arc back toward the plate's centre to where the edge enters it, and the edge back to the mouth */
+function crescent(R,bc,br,e){
+  const hit=(p,q,f)=>{let a=0,b=1;for(let i=0;i<40;i++){const m=(a+b)/2;(f([p[0]+(q[0]-p[0])*m,p[1]+(q[1]-p[1])*m])>0)===(f(p)>0)?a=m:b=m;}return[p[0]+(q[0]-p[0])*a,p[1]+(q[1]-p[1])*a];};
+  const fR=x=>Math.hypot(...x)-R,fB=x=>Math.hypot(x[0]-bc[0],x[1]-bc[1])-br,ang=(x,c=[0,0])=>Math.atan2(x[1]-c[1],x[0]-c[0]);
+  let i0=0;while(fR(e[i0+1])>0)i0++;const M=hit(e[i0],e[i0+1],fR);
+  let i1=i0+1;while(fB(e[i1])>0)i1++;const H=hit(e[i1-1],e[i1],fB);
+  /* the rim and the barrel's cut meet where x = -(R²+|bc|²-br²)/(2|bc|) along bc; the meeting on the side the rim reaches first */
+  const d=Math.hypot(...bc),u=[bc[0]/d,bc[1]/d],a=(R*R+d*d-br*br)/(2*d),h=Math.sqrt(R*R-a*a),J=[[u[0]*a-u[1]*h,u[1]*a+u[0]*h],[u[0]*a+u[1]*h,u[1]*a-u[0]*h]];
+  const aM=ang(M),up=x=>((ang(x)-aM)%TAU+TAU)%TAU,Jr=up(J[0])<up(J[1])?J[0]:J[1],out=[];
+  const n1=Math.ceil(up(Jr)/0.02);for(let k=0;k<=n1;k++){const t=aM+up(Jr)*k/n1;out.push([R*Math.cos(t),R*Math.sin(t)]);}
+  let b0=ang(Jr,bc),b1=ang(H,bc);const db=((b1-b0)%TAU+TAU)%TAU-TAU;   /* the short way round the cut, toward the plate's centre */
+  const n2=Math.ceil(-db/0.02);for(let k=1;k<=n2;k++){const t=b0+db*k/n2;out.push([bc[0]+br*Math.cos(t),bc[1]+br*Math.sin(t)]);}
+  for(let k=i1-1;k>i0;k--)out.push(e[k]);return out;}
+/* the outline of two overlapping circles (a keyhole): each circle's arc outside the other */
+function twoCircles(c1,r1,c2,r2){
+  const d=Math.hypot(c2[0]-c1[0],c2[1]-c1[1]),a1=Math.atan2(c2[1]-c1[1],c2[0]-c1[0]),h1=Math.acos((r1*r1+d*d-r2*r2)/(2*r1*d)),h2=Math.acos((r2*r2+d*d-r1*r1)/(2*r2*d)),o=[];
+  for(let k=0;k<=80;k++){const t=a1+h1+(TAU-2*h1)*k/80;o.push([c1[0]+r1*Math.cos(t),c1[1]+r1*Math.sin(t)]);}
+  for(let k=1;k<40;k++){const t=a1+Math.PI+h2+(TAU-2*h2)*k/40;o.push([c2[0]+r2*Math.cos(t),c2[1]+r2*Math.sin(t)]);}return o;}
 /* polygon of a disc clipped by half-planes z*s > a + b*x  (s=+1 keeps above the line, -1 below) */
 function discClip(R,cuts,N=160){
   let poly=[];for(let i=0;i<N;i++){const a=i/N*TAU;poly.push([R*Math.cos(a),R*Math.sin(a)]);}
@@ -1085,8 +1108,9 @@ function buildMovement(M){
   const S={ltb:[0.35,0.65].map(f=>add(L.T,sub(L.F,L.T),f)),pil:[...PILLARS.train,PILLARS.barrel],tb:[PILLARS.train[0],PILLARS.train[1],[-8.5,27.7]],bb:[PILLARS.barrel,PILLARS.train[2],[29.24,-12.28]],
     ring:[90,210,330].map(a=>[42.0*Math.cos(a*D2R),42.0*Math.sin(a*D2R)]),eb:[4.3,6.6].map(f=>add(L.E,eu,f)),ebc:[2.1,-2.1].map(f=>add(L.E,eu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[1,-1].map(k=>add(LBm,lbn,1.1*k)),blc:[1.9,-1.9].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(-1.2,-0.35)),cock:[33.11,12.62]};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread clears the foot's edge */
-  /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff */
-  const ARM_S=0.8,TBS_R=0.84;S.arm=add(L.B,[Math.cos(-60*D2R),Math.sin(-60*D2R)],10.6);
+  /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff, at -30 deg, where the
+     bridge's notch round the fusee (Fig. 67) leaves it 2 mm of metal; at -60 deg it would stand in the notch */
+  const ARM_S=0.8,TBS_R=0.84;S.arm=add(L.B,[Math.cos(-30*D2R),Math.sin(-30*D2R)],10.6);
   /* train-blocking screw (42247): over the fourth wheel's spokes, 3.5 mm from its arbor on the 6 o'clock side, on a lobe of the balance lower bridge. Nearer the bridge's line it
      would come down through the third wheel (which runs between the bridge and the fourth wheel) or beside the escape wheel */
   const TBd=[0,1];S.tBlock=add(L.F,TBd,3.5);
@@ -1123,15 +1147,16 @@ function buildMovement(M){
     mesh(pl,new THREE.LatheGeometry(pr,32),M.plateSolid,x,0,z);};
   PILLARS.train.forEach(([x,z])=>pillar(x,z,TB_U));pillar(...PILLARS.barrel,TB_T);
   /* ---------- upper train bridge (y TB_T..TB_U) and barrel bridge (y BB_T..TB_T). The barrel bridge sits on the train bridge and is cut around the
-               balance; the train bridge's outline under it is not photographed: a disc cut round the barrel and the fusee (Figs. 24, 29) ---------- */
+               balance. The train bridge is the crescent of Figs. 29, 67 and 110, traced through an affine fit (tools/train_bridge.py): the disc less a cut round
+               the barrel and a notch round the fusee, open to the rim, with a horn between them that carries the centre wheel's upper bushing; the barrel
+               pillar stands in the open notch. Its keyhole opening frees the balance's staff and rollers and the escape arbor ---------- */
   const tb=part('trainBridge',-62);
   const WSd=(()=>{const Fl=Math.hypot(...L.Fu);return[L.Fu[0]+7.2*L.Fu[0]/Fl,L.Fu[1]+7.2*L.Fu[1]/Fl];})();
-  const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56],TBpoly=subtractCircle(discClip(BR_R,[],240),TBc,19.2);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */   /* opening round the balance staff and rollers, r 8.0: the escape and centre pivots (9.4 and 10.5 mm from the staff) stay in solid bridge */
-  /* the train bridge leaves the fusee open to the barrel bridge, which holds its upper bushing (Figs. 24, 29, 67, 77; parts list 108-45): a round hole
-     (Fig. 24 shows the fusee clear of the bridge, the top-view photograph its large end through the barrel bridge's cut). r 16.3 clears everything the fusee
-     carries at the bridge's height and leaves the tapped holes of the barrel bridge screw at (29.24, -12.28) and the locking arm's screw 1.4 and 0.75 mm of
-     bridge; opening it to the rim (r 17.6 or more) would cut into them, so a band 1.3 mm wide is left at the rim */
-  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,8.0],[...L.Fu,16.3],[...PILLARS.barrel,3.1],[...SPv,0.72],
+  const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56],TBpoly=crescent(BR_R,TBc,19.2,TB_EDGE);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */
+  /* the keyhole (Figs. 29, 67): the opening round the balance staff and rollers (r 8.0) joined to one round the escape arbor (r 3.0, 0.8 mm short of the escape upper
+     bridge's screws), which the escape upper bridge spans. Drawn from the model's centres: through the fit the drawing's keyhole lands about 5 mm off them */
+  const KEY=twoCircles(L.B,8.0,L.E,3.0);
+  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2],[...L.T,1],{pts:KEY},[...SPv,0.72],
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),hT(...S.tb[2],PSR),hC(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.eb.map(q=>hT(...q,0.9)),...S.lb.map(q=>hC(...q,0.8)),hC(...S.blk,0.9),hT(...S.cock,2.8,0.8),
     hT(...S.arm,ARM_S),[...S.tBlock,0.72]],0.22),M.plate,0,TB_T,0);
   {const C=[10.53,35.06],A=[-0.9764,0.2161],P=[0.2161,0.9764],q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */
@@ -1467,7 +1492,7 @@ function buildMovement(M){
     for(const[t,s,top]of[[8,19,TB_T],[62,-19,TB_U],[tB-8,19,TB_U]])cylBetween(dp,2.6,y0,top,M.plateSolid,...at(t,s),32); }
   dp.traverse(o=>{if(o.isMesh){o.userData.devPlate=true;o.userData.noCap=true;}});
   /* ---------- API ---------- */
-  mv.userData.parts=parts;mv.userData.R=R;mv.userData.DEV=DEV;
+  mv.userData.parts=parts;mv.userData.R=R;mv.userData.DEV=DEV;mv.userData.S=S;   /* S: screw positions, for the tools */
   mv.userData.explode=e=>{for(const k in parts)parts[k].position.y=parts[k].userData.off*e;for(const g of SCREWS)g.position.y=g.userData.y0-g.userData.lift*e;};
   /* develop(e): 0 as built, 1 laid out in a line; moves only x, z and the turn about y, so it combines with explode */
   mv.userData.develop=e=>{for(const[o,d]of DMV){o.position.x=o.userData.xz0[0]+d[0]*e;o.position.z=o.userData.xz0[1]+d[1]*e;}
