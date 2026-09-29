@@ -245,6 +245,14 @@ Contents:
   front-facing shells (outer, and the reversed profile for the inner). Keep: a
   surface that receives shadows on its inside gets its own front-facing shell,
   not `DoubleSide`. `4be54e9`
+- **Grey streaks across the dial with Edges on, zoomed out.** Edges gives
+  every mesh its own id and draws a line where the id changes. The id pass
+  draws with one override material, which had no polygon offset, so the face
+  and the brass disc 0.02 mm under it fought again, and each patch of disc that
+  won got outlined. `makeInk` in `core.js` now copies each mesh's polygon offset
+  onto the override as the mesh is drawn. Keep: a pass with an override material
+  takes each mesh's polygon offset (the offset on the face material from the
+  gold-streaks fix above). `HASH`
 
 ## Controls and display
 
