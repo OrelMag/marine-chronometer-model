@@ -110,7 +110,7 @@ Contents:
   arbor (1.8 mm off the axis, 0.1 mm clear at full travel), re-aimed so its
   side still meets the winding stop pin at full wind (checked every 0.005
   turn over the last 0.3 turn: touching at full wind, clear before).
-  Fixed, not yet committed.
+  `b39086a`
 
 ## Plates, bridges, screws and arbors
 
