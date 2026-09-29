@@ -104,6 +104,13 @@ Contents:
   from the fusee axis the 0.7 mm arbor reached inside the wheel's 20.42 mm
   tips; it is now at 21.35 mm (0.23 mm clear), and the pawl still seats in the
   sustaining ratchet. `329e77e`
+- **Stop-bar ran through the fusee arbor at full wind.** It was two blocks
+  either side of the axis with a 2.2 mm gap; sliding 3.2 mm out, the inner one
+  crossed the 2 mm arbor (1 mm³). It is now one bar in a groove beside the
+  arbor (1.8 mm off the axis, 0.1 mm clear at full travel), re-aimed so its
+  side still meets the winding stop pin at full wind (checked every 0.005
+  turn over the last 0.3 turn: touching at full wind, clear before).
+  Fixed, not yet committed.
 
 ## Plates, bridges, screws and arbors
 
