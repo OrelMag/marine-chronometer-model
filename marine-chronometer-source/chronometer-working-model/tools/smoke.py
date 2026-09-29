@@ -26,7 +26,7 @@ async def model(b,errs,steps):
         await pg.evaluate("s=>{const e=document.querySelector(s);if(!e)throw Error('missing '+s);e.click();}",sel);await pg.wait_for_timeout(ms);steps.append(label or sel)
     for drive in(False,True):
         if drive:await click('#driveOn','Moving parts only')
-        for v in['box','dial','movement','train','escapement','exploded']:await click(f'#views button[data-v="{v}"]',f'view {v}'+(' (moving parts)' if drive else ''))
+        for v in['box','dial','movement','train','escapement','exploded','laidout']:await click(f'#views button[data-v="{v}"]',f'view {v}'+(' (moving parts)' if drive else ''))
     await click('#mwOn','motion work and hands');await click('#mwOn');await click('#driveOn','Moving parts off')
     await click('#tStart','walkthrough')
     for i in range(7):await click('#tNext',f'walkthrough step {i+2}',400)

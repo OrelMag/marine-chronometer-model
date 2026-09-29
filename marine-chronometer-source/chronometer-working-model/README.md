@@ -50,18 +50,28 @@ copies and assembles the website (see the root README).
 Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Right-click a part to fade or hide it; right-click empty space to bring hidden parts back. On touch screens a long press (half a second, barely moving) does the same; Android's own long-press `contextmenu` and the page's timer open the menu once between them, and the press never picks.
 
 - The **?** button on the model (or the **?** key) opens a card listing every control, for a mouse and for touch, with this device's first; the header and the hint word the gestures for the device too (`.m-only` / `.t-only`, switched by `@media (hover:none)`). A tap in the model, × or Esc closes it; dragging doesn't, so the gestures can be tried with it open.
-- Keys 1–6 pick the views. Exploded has a Spread slider.
+- Keys 1–7 pick the views. Exploded has a Spread slider.
+- Laid out in a line (`#view=laidout`) is the textbooks' developed drawing of the train: the arbors set in one
+  line and seen square from the side, hands below. The barrel and fusee stay where they are, and the line runs
+  on from the barrel through the fusee; the centre, third, fourth and escape arbors follow, each at its real
+  centre distance from the one before, so every pair still meshes. The escape wheel, detent and balance turn
+  together about the escape arbor, so the escapement is unchanged and the balance ends the line.
+  - Each driven pinion is turned by the change in its line of centres times (1 + driver teeth / pinion teeth), so its leaves stay in the driver's gaps.
+  - The real plates and bridges are hidden, since their holes no longer meet the arbors, and so are the box and case.
+  - See-through schematic plates stand in for them: pillar plate, train bridge, barrel bridge, a cock over the balance, and pillars. They are drawn only in this view, carry no part name, and go with Moving parts only.
+  - The camera's field of view narrows from 32° to 20° so the elevation looks nearly flat.
+  - The Spread slider sets how far the train is laid out (`mv.userData.develop(e)` in `movement.js`, 0 as built, 1 laid out).
 - Time: set the hands to any time of day, or to now. The model keeps Greenwich Mean Time by default, as U.S. Navy chronometers were kept (the HUD says GMT); Keep: Local time switches to the viewer's time zone, moving the hands by the difference. Wind with the key turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 60 h of chain), with the plates see-through and the winding stop kept solid. For the last half turns the camera closes in on the stop-bar catching.
 - Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (931 g·mm² as built). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.146 and 0.092 mm. The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose; the panel shows the daily rate and what the hands have gained since the weights were moved or the hands set.
 - Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme. Save writes the view as a PNG.
 - Labels are off by default (Display turns them on, and the choice isn't remembered). The walkthrough shows the labels of each step's parts regardless.
-- Keyboard and reduced motion: Space stops and restarts, 1 to 6 pick the views; with the model focused (click it or Tab to it) the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, camera and state moves are instant (as with `?snap`), the walkthrough leaves ship motion off and scrolls without animation, and the page's fades are off.
+- Keyboard and reduced motion: Space stops and restarts, 1 to 7 pick the views; with the model focused (click it or Tab to it) the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, camera and state moves are instant (as with `?snap`), the walkthrough leaves ship motion off and scrolls without animation, and the page's fades are off.
 - Phones: below 600 px wide the part card is a sheet along the bottom of the stage; on touch screens buttons and checkboxes are finger-sized; in landscape with the height under 560 px the stage fills the height and the panel scrolls beside it. On a phone (coarse pointer, screen under 600 px on its short side) the pixel ratio is capped at 1.5 and the shadow map at 1024 px, against 2 and 2048 px elsewhere. A part casts a shadow only when its radius spans 6 texels of the shadow map, which follows the view: far views drop the screws and pins, close-ups keep them. The knurled nuts and the balance rim's holes are each one merged mesh (`mergeGeo` in `core.js`).
 
 ## Testing
 
 The page's state is kept in the URL hash, so a link opens the model as it
-was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part),
+was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part; `view=laidout` is the laid-out train),
 `#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `sec=x:-3.5`
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
@@ -299,7 +309,7 @@ edit; see "Changing things" in the root README for the loop and the checks.
   *parts*. `part(name, off, ef)` makes a group:
   - `name` is the part's id; it links the part to its description, colour,
     label and picking;
-  - `off` is how far the part rises in the Exploded view, in millimetres;
+  - `off` is how far the part rises in the Exploded view, in millimetres (the laid-out view moves parts only across, in x and z, so the two combine);
   - `ef` set to true puts the part in the escapement's rotated frame.
 
   Put meshes in a part with `mesh(parent, geometry, material, x, y, z)`.

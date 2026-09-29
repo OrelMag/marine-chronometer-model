@@ -77,6 +77,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .grp+.grp{border-top:1px solid var(--rule)}
 .seg.grid3{display:grid;grid-template-columns:repeat(3,1fr)}
 .grid3 button{padding:6px 4px}
+#views button:last-child{grid-column:1/-1}   /* the seventh view, Laid out, on a row of its own */
 .ck.sw{margin-top:10px}
 .ck.sub{margin:6px 0 0 24px;font-size:14px}
 .spd,.pow{display:flex;align-items:center;gap:8px;margin-top:10px}
