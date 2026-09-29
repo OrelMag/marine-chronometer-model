@@ -252,7 +252,7 @@ Contents:
   won got outlined. `makeInk` in `core.js` now copies each mesh's polygon offset
   onto the override as the mesh is drawn. Keep: a pass with an override material
   takes each mesh's polygon offset (the offset on the face material from the
-  gold-streaks fix above). `HASH`
+  gold-streaks fix above). `c039a73`
 
 ## Controls and display
 
