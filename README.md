@@ -4,7 +4,8 @@ Two browser-based projects about the marine chronometer, centred on the
 Hamilton Model 21: a two-day fusee chronometer with a spring detent escapement,
 made for the U.S. Navy from 1941.
 
-Orel Magidish (assisted by Claude Opus 5.5) – September 2026
+Orel Magidish (assisted by Claude Opus 5.5) – September 2026  
+[orelmag@gmail.com](mailto:orelmag@gmail.com)
 
 | File | What it is |
 |---|---|
