@@ -24,9 +24,9 @@ copies and assembles the website (see the root README).
 | `img/illustration.webp` | The overview drawing shown in the Illustration tab, rendered from the model by `tools/illustration.py` |
 | `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch, the Pen and wash drawing (`drawOf`, `makeInk`) |
 | `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
-| `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
+| `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), screw positions and holes, pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, train-blocking screw and balance locking arm, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate that turns to admit the winding key), winding key |
-| `js/app.js` | The parts registry (`PARTS`: every part's name, description, part numbers, group, colour and flags), renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, and the animation loop |
+| `js/app.js` | The parts registry (`PARTS`: every part's name, description, part numbers, group, colour and flags), renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, stopping and starting (the balance's amplitude, the locking arm, the train-blocking screw, the twist), and the animation loop |
 | `build.py` | Inlines the CSS, JS, image, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
 | `dist/chronometer-working-model.html` | The built single file (committed) |
 | `tools/bundle.py`, `tools/fit.py`, `tools/unproj.py` | Photo fitting: camera fits to the Fig. 2 and top-view photographs, triangulation of the balance, fusee and barrel axes, photo points projected onto the movement (see "How the layout was measured") |
@@ -63,7 +63,8 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
   - The camera's field of view narrows from 32° to 20° so the elevation looks nearly flat.
   - The Spread slider sets how far the train is laid out (`mv.userData.develop(e)` in `movement.js`, 0 as built, 1 laid out).
 - Time: set the hands to any time of day, or to now. The model keeps Greenwich Mean Time by default, as U.S. Navy chronometers were kept (the HUD says GMT); Keep: Local time switches to the viewer's time zone, moving the hands by the difference. Wind with the key turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 60 h of chain), with the plates see-through and the winding stop kept solid. For the last half turns the camera closes in on the stop-bar catching.
-- Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (931 g·mm² as built). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.146 and 0.092 mm. The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose; the panel shows the daily rate and what the hands have gained since the weights were moved or the hands set.
+- Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (930 g·mm² as built). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.146 and 0.092 mm. The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose; the panel shows the daily rate and what the hands have gained since the weights were moved or the hands set.
+- Stopping and starting (and Twist to start under Time): the balance locking arm (Fig. 9) and the train-blocking screw (Sec. II), and the twist that starts a stopped chronometer. See "Stopping and starting" under How the timing works.
 - Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme. Save writes the view as a PNG.
 - Gimbals latched (Display) swings the latch lever in through the slot in the gimbal ring to the keeper on the case, bringing ring and case level with the box first; latched, they tilt with the box, as Ship motion then shows. Unticked, the lever swings back along the wall and the gimbals are free. A walkthrough step with ship motion releases them.
 - Tick sound (Display) is on by default: a click at each beat, while the model runs at up to 1×. Browsers start audio only from a user gesture, so the page makes or resumes its audio context on the first click, tap or key press, and it is silent until then.
@@ -92,7 +93,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 ## Testing
 
 The page's state is kept in the URL hash, so a link opens the model as it
-was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part; `view=laidout` is the laid-out train),
+was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part; `view=laidout` is the laid-out train), `arm=1` (the balance locked, at rest), `block=1` (the train-blocking screw down),
 `#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `draw=1` (Pen and wash), `edges=0` / `edges=1` (Edges, when not its default), `sec=x:-3.5`
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
@@ -104,8 +105,9 @@ Two URL flags help with testing:
   (useful for screenshots), and draws every frame (see below).
 - `?qa` exposes the movement (`__mv`), the photo-projection helpers (`__proj`,
   `__unproj`) and camera controls (`__cam`, `__look`, `__camInfo()`) for the
-  tools, plus the parts registry (`__parts`), the renderer (`__r`) and a count
-  of frames drawn (`__renders()`).
+  tools, plus the parts registry (`__parts`), the renderer (`__r`), a count
+  of frames drawn (`__renders()`) and the stopping-and-starting state
+  (`__H()`: amplitude, whether the train is held, the arm and screw).
 
 The stage is drawn only when something shown has changed: the camera, the
 lids and lift, the wheels and balance, the wind, ship motion or a section, or
@@ -175,6 +177,42 @@ Everything is driven from one model clock `tSim`, in seconds of the time kept (G
   (Sec. II, p. 4: "the only time that the mainspring arbor turns is when
   manipulated during assembly, disassembly or adjustment"; Ops. 8, 53).
 
+### Stopping and starting
+
+A detent chronometer does not start by itself (Sec. III), so the balance's
+amplitude is kept as state (`H.amp` in `app.js`, 255° each way when running)
+and `ESC.state(p, amp)` gives the escapement at that amplitude.
+
+- **What keeps it going.** A swing must carry the discharge jewel past the trip
+  spring on the return (it falls off at −37.2°), unlock the wheel (−21.3°) and
+  see the impulse through (+20.8°). `makeEsc` works out that least amplitude
+  from its own tables: `ESC.AMIN`, 39.2° with 2° to spare.
+- **When the train stops.** It stops at a locked beat when there is no power
+  (run down), when the swing falls below `AMIN`, when the locking arm brakes
+  the balance, or when the train-blocking screw's dog point is down and the
+  next beat would bring a spoke onto it (`R.blockRoom(E)`, the beats left). It
+  stops at the last whole beat before a spoke meets the dog point, within 3° of
+  the fourth wheel.
+- **While it is stopped** `tSim` and the hands stand, so they lose the time it
+  stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
+  down. It runs down freely with the train held (1/e in 25 s, `TAU_FREE`,
+  estimated) and at once, within a swing or two, against the locking arm
+  (`TAU_ARM`, 0.2 s). The detent still lifts while the swing reaches the trip
+  spring, but the wheel can't turn.
+- **When it goes again.** The train runs again when there is power, the arm is
+  off, the screw is up and the swing is above `AMIN`. That happens at once if
+  the balance is still swinging: the screw raised, or the chronometer wound,
+  before the balance has run down. Otherwise it takes Twist to start. The twist
+  turns the box sharply and back and sets the balance swinging (160°), and the
+  impulses bring it up to 255° (`TAU_UP`, 3 s).
+- **Nothing jumps on restarting.** `H.bOff` and `H.eOff` carry the balance's
+  phase and the beat count across, so neither the balance nor the hands jump.
+- **Moving the controls.** The arm and screw move on frame time, not model
+  time, whatever the speed: the arm turns in 0.8 s, and the screw takes 2.5 s
+  over its 32 turns. The screw can't
+  come down on a spoke (`R.blockClear(E)`), so it waits just above the wheel
+  until a gap comes round.
+
 ### The rate panel
 
 `R.timing(nt, nv)` returns the balance's moment of inertia `I` with the timing
@@ -190,7 +228,7 @@ and the thread pitches are the model's. Things to know before changing it:
   weight, the pitches double, to 0.29 and 0.18 mm. The rates the panel shows
   would not change, because the pitches are fitted to the manual's figures.
 - **The balance is probably heavier than drawn.** With the parts list's masses
-  the moment of inertia is 931 g·mm². Table II gives a second estimate:
+  the moment of inertia is 930 g·mm². Table II gives a second estimate:
   replacing a pair of 0.100 in screws with 0.080 in ones changes the rate by
   about 16 minutes a day (the model gives 22.6), and 0.100 in to 0.050 in by
   about 43 (the model gives 55.6, going to the 0.049 in screws). Both imply
@@ -225,9 +263,12 @@ and the thread pitches are the model's. Things to know before changing it:
   - the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing weights (93 mg) and 2 vernier weights (10.5 mg), each a nut on a screw in one of the rim's holes (parts list, p. 82; Fig. 3);
   - the barrel cap with its five screws on the pillar-plate end (Figs. 26, 109), and the dust seal with three packing rings around the fusee arbor (Fig. 24);
   - the gimbal mounting (Figs. 1, 94, 106): a flat ring hung on two pivot screws through the box sides (washer inside, lock nut outside), the case hung in it on front and rear pivot screws into brackets on the case, support straps at 3 and 6, the gimbal latch at the front right (a lever on a support bracket, through a slot in the ring to the keeper on the case: Fig. 106 and the parts list) and the key at the back right;
+  - every part in the parts lists of Figs. 106–110, checked one by one (`Review-results.md`, "Every part against the manual"); among them the pillar, mounting-ring, dial and post screws, the endstone caps and settings, and the barrel and fusee upper bushings;
+  - the balance's hub, cap and hold-down screws (Fig. 4), the balance wheel locking arm with its screw, washer and stop pin (Sec. III, Fig. 9; parts list 108-31 to 108-34), and the train-blocking screw (Sec. II, Fig. 110): screwed down between the fourth wheel's spokes, head in a counterbore, the chamfer seating in the train bridge's access hole when raised;
   - the balance upper setting and jewel, pressed into the cock under the endstone cap and its two screws (Figs. 19, 36, 84, 85; parts list 42162, 42160), and the staff's pivot in it;
   - the hairspring's collet and stud (Sec. II; Figs. 5, 6, 19, 84, 85): the collet slotted to grip the staff, with a flat plate whose tongue carries a clamp and wedge pin for the spring's inner end; the stud under the cock, held by the stud screw from the cock's top and a steady pin, holding the upper end the same way;
   - the hand-setting square at the centre of the dial, which takes the winding key (Sec. III, Setting; Fig. 8);
+  - starting: a detent chronometer is not self-starting, and is started with "a single quick twist" of its box (Sec. III);
   - the dial markings, winding figures and part numbers. The UP–DOWN scale runs clockwise round the bottom of its sub-dial from UP (upper right) to DOWN (upper left), so winding turns the hand counterclockwise back to UP (Fig. 107, Sec. III).
 - New-old-stock Hamilton Model 21 pillar plate listing: 87.57 mm diameter, 3.86 mm thick.
 - chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement, a redrawing of the manual's Fig. 90, and a photograph of a Model 21 detent.
@@ -262,8 +303,8 @@ and the thread pitches are the model's. Things to know before changing it:
    - Fig. 2 and Fig. 109 show a tall barrel that rises past the train bridge to the barrel bridge, and Figs. 108 and 110 show the train bridge cut round it.
    - The plan positions (`L`) were fitted before the re-stack, with the old heights, which `bundle.py`, `fit.py` and `unproj.py` still use. They were not re-fitted.
    - Re-running `bundle.py` with the new heights puts the fusee and barrel axes within 0.8 mm of `L` and the balance within 2 mm. That is about the run-to-run spread of its random restarts.
-7. **Collision check.** `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. `tools/fine.py` checks at 0.05 mm, also at 15 train positions and wind states, and includes the chain and the tube springs; it found four overlaps of 0.1–0.4 mm that the coarser check could not see. Only intended contacts remain, listed with their reasons in `fine.py`. The barrel's wall is an open drum; `fine.py` tests it as the solid it encloses and measures every part's distance to the solid the barrel sweeps: the tightest are the third wheel (0.150 mm below the cap screws), the barrel bridge (0.55 mm above the boss), the detent's foot (0.98 mm) and the train bridge's cutout (1.0 mm from the caps' rim). The mainspring stays 1.2 mm off the arbor, 0.6 mm inside the wall and 0.2–0.3 mm from the caps at every wind. The dial face is the one open surface not tested.
-8. **Visual check.** `tools/topview.py` renders the model from above and warps it onto the top-view photograph through five barrel-bridge screws: `verification/topview-comparison.png` shows the photo, the model and the two blended. Parts far above or below the barrel bridge (the cock, the balance's endstone) are off by up to about 3 mm there, from the photograph's tilt. The photographed movement has the later balance locking arm (Fig. 9), which the model doesn't have. `tools/p3fit.py` renders from the camera fitted to the photograph the tracing was first done on.
+7. **Collision check.** `tools/fine.py --hold` runs the same check with the balance locking arm locked and the train-blocking screw down. `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. `tools/fine.py` checks at 0.05 mm, also at 15 train positions and wind states, and includes the chain and the tube springs; it found four overlaps of 0.1–0.4 mm that the coarser check could not see. Only intended contacts remain, listed with their reasons in `fine.py`. The barrel's wall is an open drum; `fine.py` tests it as the solid it encloses and measures every part's distance to the solid the barrel sweeps: the tightest are the third wheel (0.150 mm below the cap screws), the barrel bridge (0.55 mm above the boss), the detent's foot (0.98 mm) and the train bridge's cutout (1.0 mm from the caps' rim). The mainspring stays 1.2 mm off the arbor, 0.6 mm inside the wall and 0.2–0.3 mm from the caps at every wind. The dial face is the one open surface not tested.
+8. **Visual check.** `tools/topview.py` renders the model from above and warps it onto the top-view photograph through five barrel-bridge screws: `verification/topview-comparison.png` shows the photo, the model and the two blended. Parts far above or below the barrel bridge (the cock, the balance's endstone) are off by up to about 3 mm there, from the photograph's tilt. The photographed movement has the balance locking arm (Fig. 9), which the model now has too, though its shape is estimated. `tools/p3fit.py` renders from the camera fitted to the photograph the tracing was first done on.
 
 ## Estimated, not from the manual
 
@@ -275,8 +316,8 @@ and the thread pitches are the model's. Things to know before changing it:
   - The balance rim, 0.4 mm clear of the escape upper bridge. The bridge's two screws have low heads (0.3 mm), 0.14 mm clear of the rim and the timing weights, which pass over them.
   - The hairspring, 5.9 mm tall, from under the collet to the stud's clamp under the cock.
 - The train bridge's cut round the barrel: a 19.2 mm circle that holds the barrel, open to the rim and clear of the centre arbor. Figs. 108 and 110 show its presence, not its size.
-- The balance lower bridge: a 3 mm plate on a boss under the train bridge, with two screws (Op. 50). Fig. 110 shows it stepped and lobed; its outline is simplified.
-- The train-bridge and barrel-bridge screws. Their positions come from the top-view photograph; the manual gives three screws for each bridge. One train-bridge screw, at (−8.5, 27.7), has no pillar under it in the model.
+- The balance lower bridge: a 3 mm plate on a boss under the train bridge, with two screws (Op. 50), and a lobe at the fourth wheel's end for the train-blocking screw. Fig. 110 shows it stepped and lobed; its outline is simplified.
+- The train-bridge and barrel-bridge screws. Their positions come from the top-view photograph; the manual gives three screws for each bridge. One train-bridge screw, at (−8.5, 27.7), has no pillar under it in the model. It is drawn threaded into the bridge alone.
 - The fusee profile and the wind indicator ratio. The ratio gives the UP–DOWN hand a 240° sweep for 56 h; the photographed Hamilton dial's scale spans about 310°, so the model's scale is drawn on 240°, open wider round the 12.
 - The Hamilton dial's proportions. The sub-dial centres are fixed by their arbors (23.9 mm from the centre, 0.47 of the dial's radius), nearer the centre than on the photographed dial (about 0.54), so the sub-dials sit lower and the inscriptions closer together. The plate engraving's block is 2.5 mm nearer the rim than on the top-view tracing, to clear the dust-seal flange.
 - The stop-bar's size and travel, and the fusee's top: a turned boss, a slotted layer with a groove for the stop-bar spring, and the top plate (r 5.4) with its two screws. Sec. IV describes the mechanism (the chain bears on one end, the other moves out to the winding stop), not its dimensions. The stop-bar slides out over the last quarter turn, driven from the wind, not from contact with the chain.
@@ -325,6 +366,13 @@ and the thread pitches are the model's. Things to know before changing it:
   - The stop screw runs in an arc slot in the plate, whose two ends set the rest and open positions.
   - The spring is a torsion coil round the shoulder, with one leg on the stop screw and one on a pin in the plate.
   - The case bottom is 1 mm thick (the rest of the bowl is a sheet).
+- The screws' shanks: a thread of half the head's diameter (0.8 mm for the cock screw, 0.07 mm for the trip-spring screw in the bracket's thin leg), drawn as turned rings, and each one's length. The parts list gives the screws, not their threads or lengths. The cock screw sits 0.3 mm off its traced position (within the tracing's 0.4 mm) so its thread clears the foot's edge.
+- The pillar screws from the dial side (four), the mounting ring's lip and its three screws (on 42 mm, at 90°, 210° and 330°), the dial screws (one into each foot), and the posts of the minute and wind indicator wheels with their screws from the train side. The parts list and Figs. 107 and 110 give the parts, not their sizes or positions.
+- The endstone caps (escape upper and lower, balance lower): a steel plate 1.3 mm wide over the setting, its screws 2.1 mm (1.9 mm on the balance lower bridge) either side of the arbor.
+- The balance's hub, cap and hold-down screws (Fig. 4): a flange 0.6 mm thick under the arm, a boss through it, a cap 0.35 mm thick, screws 1.7 mm from the staff. The balance's moment of inertia counts them in place of the old hub.
+- The train-blocking screw (Sec. II, Fig. 110): its place on a lobe of the balance lower bridge, 3.5 mm from the fourth arbor on the 6 o'clock side, clear of the third wheel and the escape wheel; its size (head 1.7 mm, thread 0.84 mm, dog point 0.5 mm) and 5.6 mm travel; the counterbore (0.6 mm) and the access hole in the train bridge (r 0.72).
+- The balance locking arm (Fig. 9, which shows its screw, positions and stop, not its shape): a flat arm 3.6 mm long on the train bridge under the balance, turning 90° on its screw 10.6 mm from the staff, with a pad at its end that comes under the rim; the stop pin's place.
+- Stopping and starting: the balance's free run-down (1/e in 25 s), the arm's braking (0.2 s), the twist's swing (160°) and the build-up to 255° (3 s). `ESC.AMIN` is worked out from the escapement.
 - The sustaining pawl's position: 21.35 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel and of the fusee wheel's teeth.
 
 ## Modifying the model
@@ -374,10 +422,23 @@ box and gimbals.
 - **Arbor positions** come from the photo fit, in `L` at the top of
   `movement.js`. Don't move them without re-running the tools in `tools/`.
 
-**Add a screw.** Use `screw(parent, x, z, y, radius, headHeight)`:
+**Add a screw.** Use `screw(parent, x, z, y, radius, headHeight, length, thread)`:
 - `y` is the surface the head sits on;
-- the head extends from `y` towards −y, so it seats on the train side;
-- screws are tagged `userData.screw`, which is how the audit finds them.
+- the head extends from `y` towards −y, so it seats on the train side; build
+  in a frame turned over (`rotation.x = π`) for a screw put in from the other side;
+- `length` is the threaded shank, toward +y: through the parts it holds and
+  about 3 mm into the part it screws into;
+- `thread` is the thread's radius, half the head's (`sR`) unless given;
+- cut the holes: `hC(x, z, radius)` (clearance) in each part the shank passes
+  through and `hT(x, z, radius)` (tapped) in the part it screws into, in the
+  part's `polyGeo` / `discGeo` / `gearGeo` hole list (pass the same `thread`
+  if you gave one). `polyGeo` draws these holes 0.8 × its bevel larger, because
+  its bevel narrows every hole by that much at both faces;
+- work out the position once, in the `S` table at the top of
+  `buildMovement`, when a part built earlier needs its hole;
+- screws are tagged `userData.screw`, which is how the audit finds them, and
+  kept in `SCREWS`, which the Exploded view lifts out of their holes;
+- run `fine.py`: a shank in a part without its hole shows as a new overlap.
 
 **Add a new part.**
 1. Build it in a new `part('myPart', explodeOffset)` group in `movement.js`,

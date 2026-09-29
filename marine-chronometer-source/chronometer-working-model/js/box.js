@@ -22,10 +22,10 @@ function buildBox(M){
   mesh(key,cylY(2.2,20,16),M.brass,0,10,0);
   const kt=mesh(key,new THREE.CylinderGeometry(3,3,20,20),M.brass,0,21,0);kt.rotation.x=Math.PI/2;for(const sz of[10,-10])mesh(key,new THREE.SphereGeometry(3,20,12),M.brass,0,21,sz);mesh(key,new THREE.SphereGeometry(4.2,20,14),M.brass,0,21,0);
   const V2=(a,b)=>new THREE.Vector2(a,b);
-  /* slotted screw head along an axis: 'x' or 'z', outward sign s, head from r0 to r0+h */
-  const sHead=(p,ax,s,r0,rad,h,y,t)=>{const X=ax==='x',m=mesh(p,cylY(rad,h,20),M.brass2,0,y,0),sl=mesh(p,X?new THREE.BoxGeometry(0.6,rad*2.02,rad*0.35):new THREE.BoxGeometry(rad*0.35,rad*2.02,0.6),M.steelD,0,y,0);
-    if(X){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);sl.position.x=s*(r0+h-0.25);m.position.z=sl.position.z=t||0;}
-    else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);sl.position.z=s*(r0+h-0.25);m.position.x=sl.position.x=t||0;}};
+  /* slotted screw along an axis: 'x' or 'z', outward sign s, head from r0 to r0+h, and its shank (half the head's radius) sh mm back into the part under it */
+  const sHead=(p,ax,s,r0,rad,h,y,t,sh=2.5)=>{const X=ax==='x',m=mesh(p,cylY(rad,h,20),M.brass2,0,y,0),sl=mesh(p,X?new THREE.BoxGeometry(0.6,rad*2.02,rad*0.35):new THREE.BoxGeometry(rad*0.35,rad*2.02,0.6),M.steelD,0,y,0),k=mesh(p,cylY(rad*0.5,sh,12),M.brass2,0,y,0);
+    if(X){for(const q of[m,k])q.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);k.position.x=s*(r0-sh/2);sl.position.x=s*(r0+h-0.25);m.position.z=sl.position.z=k.position.z=t||0;}
+    else{for(const q of[m,k])q.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);k.position.z=s*(r0-sh/2);sl.position.z=s*(r0+h-0.25);m.position.x=sl.position.x=k.position.x=t||0;}};
   /* knurled lock nut: a body with 30 ridges, merged into one mesh */
   const knurl=(p,ax,s,r0,rad,h)=>{const gs=[[cylY(rad,h,48),new THREE.Matrix4()]];for(let k=0;k<30;k++){const a=k/30*TAU;gs.push([new THREE.BoxGeometry(0.5,h,0.5),new THREE.Matrix4().makeTranslation(rad*Math.cos(a),0,rad*Math.sin(a))]);}
     const m=mesh(p,mergeGeo(gs),M.brass2,0,0,0);if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);}};
