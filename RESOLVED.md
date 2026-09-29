@@ -196,6 +196,30 @@ Contents:
 - **Gimbals as blank blocks.** Replaced by a flat ring on pivot screws, with
   washers, lock nuts, case support brackets and straps (Figs. 1, 94, 106). The
   ring was raised so the case clears the box floor. `eae5358`
+- **Case's winding hole open at rest, and the shield plate showing through
+  the floor.** The shield plate turned 1.1 rad away from its open position and
+  was too narrow to cover the case's hole there. Its top face lay in the
+  floor's plane, so from inside the bowl its outline flickered through the
+  floor, and so did the stop screw's end. Its return spring was buried in the
+  plate. The shoulder screw's head was smaller than its shoulder and never
+  reached the case. The new flat bottom (48 curve segments against the wall's
+  120) left a dotted ring open at r 44.
+  - The fix:
+    - The plate is a rounded triangle that covers the hole at rest and turns
+      0.75 rad to open it. The stop screw runs in an arc slot whose ends set
+      both positions.
+    - A torsion coil sits between the plate and a slotted head wider than
+      the coil.
+    - The bottom is 1 mm thick, and the plate hangs under it.
+    - The bottom's rim has the wall's 120 points.
+    - The winding key's handle is 3 mm lower, clear of the plate and its
+      screws.
+  - Keep:
+    - Nothing hangs under the case bottom within 1 mm of its inside face: at
+      0.05 mm, depth precision let the edges through.
+    - The plate covers the hole whenever it isn't open.
+    - A shape joining the lathe has the lathe's vertices round its rim.
+  `c0a7531`
 
 ## Accuracy to the manual
 
@@ -348,26 +372,3 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
-- **Case's winding hole open at rest, and the shield plate showing through
-  the floor.** The shield plate turned 1.1 rad away from its open position and
-  was too narrow to cover the case's hole there. Its top face lay in the
-  floor's plane, so from inside the bowl its outline flickered through the
-  floor, and so did the stop screw's end. Its return spring was buried in the
-  plate. The shoulder screw's head was smaller than its shoulder and never
-  reached the case. The new flat bottom (48 curve segments against the wall's
-  120) left a dotted ring open at r 44.
-  - The fix:
-    - The plate is a rounded triangle that covers the hole at rest and turns
-      0.75 rad to open it. The stop screw runs in an arc slot whose ends set
-      both positions.
-    - A torsion coil sits between the plate and a slotted head wider than
-      the coil.
-    - The bottom is 1 mm thick, and the plate hangs under it.
-    - The bottom's rim has the wall's 120 points.
-    - The winding key's handle is 3 mm lower, clear of the plate and its
-      screws.
-  - Keep:
-    - Nothing hangs under the case bottom within 1 mm of its inside face: at
-      0.05 mm, depth precision let the edges through.
-    - The plate covers the hole whenever it isn't open.
-    - A shape joining the lathe has the lathe's vertices round its rim.
