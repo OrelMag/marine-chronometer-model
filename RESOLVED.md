@@ -189,22 +189,22 @@ Contents:
   tapped hole (`hT`), from positions worked out once (`S` in `buildMovement`).
   The Exploded view lifts each screw out of its holes (`SCREWS`). Keep: a new
   screw gets its shank and its holes; `tools/fine.py` shows a shank without its
-  hole as a new overlap. `(this commit)`
+  hole as a new overlap. `63c5dce`
 - **`polyGeo`'s bevel narrows every hole at both faces**, by 0.8 × the bevel
   (0.18 mm on the train bridge), so a thread that fits its tapped hole grazed
   it there, 0.1–0.2 mm deep, in eight places. Screw holes (`hC`/`hT`, whose
   fourth element is set) are cut that much larger. Keep: pass screw holes
-  through `hC`/`hT`, never as bare `[x, z, r]`. `(this commit)`
+  through `hC`/`hT`, never as bare `[x, z, r]`. `63c5dce`
 - **The setup cover's feet stopped 0.35 mm above the barrel bridge.** They now
-  stand on it, with the cover screws through them. `(this commit)`
+  stand on it, with the cover screws through them. `63c5dce`
 - **The winding-pawl spring screws stood on nothing**: 0.8 mm heads on a
   spring 0.3 mm wide (`audit.py`'s floating screws). Each spring now has a foot
-  under its two screws. `(this commit)`
+  under its two screws. `63c5dce`
 - **Pivots ended in bare holes**: the balance's lower pivot (no setting, no
   endstone), the escape arbor's (a gilt ring, no jewel, a stone floating over
   the bridge, two pins for the cap's screws), and the fourth wheel's upper one.
   They now run in settings with their jewels, up to endstone caps held by
-  screws (Figs. 108, 110). `(this commit)`
+  screws (Figs. 108, 110). `63c5dce`
 
 ## Setup, case and gimbals
 
@@ -261,17 +261,17 @@ Contents:
   finish the impulse), at run down, against the balance locking arm or at the
   train-blocking screw's dog point, and a stopped chronometer needs Twist to
   start. Keep: the hands and `tSim` stand while the train is held, and nothing
-  jumps when it starts again (`H.bOff`, `H.eOff`). `(this commit)`
+  jumps when it starts again (`H.bOff`, `H.eOff`). `63c5dce`
 - **The minute wheel and the wind indicator wheel turned on arbors of their
   own**, the wind indicator's running through the pillar plate. The parts list
   has posts (42085, 42084) screwed to the plate (35779); the wheels turn on
-  them. `(this commit)`
+  them. `63c5dce`
 - **Parts in the parts list were missing**: pillar screws from the dial side,
   the mounting ring's screws, dial screws, the posts, the barrel and fusee upper
   bushings, the endstone caps and settings, the setup pawl pivot screw, the
   balance's cap and hold-down screws, the balance locking arm and the
   train-blocking screw. See `Review-results.md`, "Every part against the
-  manual". `(this commit)`
+  manual". `63c5dce`
 
 ## Rate panel
 
