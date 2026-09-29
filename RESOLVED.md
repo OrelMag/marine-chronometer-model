@@ -176,7 +176,7 @@ Contents:
   0.9 mm clear (`hullSplice`). Keep: the cap and both its screws on the cock,
   with metal all round. `polyGeo` warns about holes crossing the outline, not
   holes wholly outside it, so check a moved screw against the outline by hand.
-  (hash to follow)
+  `5ac87a7`
 - **Train bridge opening round the balance too big.** The centre and escape
   pivots fell in the hole. The opening was reduced; it is r 8.0 after the
   escapement change. `84a7645`, `7328e67`
