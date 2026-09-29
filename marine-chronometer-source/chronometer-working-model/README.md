@@ -333,10 +333,18 @@ for the wind indicator; `MOD` holds the tooth sizes).
 `core.js`: chapter ring, numerals, the seconds and UP–DOWN sub-dials and the
 inscription. `dialCanvas('roman')` draws the Variants panel's alternative, a
 Roman dial after the A. Lange & Söhne deck chronometers (no maker's name or
-number; its AUF–AB wind scale uses this movement's 240° sweep). The hands are
-`handGeo()` shapes in `core.js`, placed in the "dial, hands, motion work" block
-of `movement.js`; each dial style has its own set (`userData.dk`), switched with
-`mv.userData.dial(kind)`, which paints the Roman texture on first use.
+number; its AUF–AB wind scale uses this movement's 240° sweep).
+`dialCanvas('swiss')` and `dialCanvas('soviet')` share one branch for the
+Nardin pattern. The Swiss one follows the Ulysse Nardin dial photographed by NOAA
+(Roman hours, UP/HAUT–DOWN/BAS). The Soviet one follows the First Moscow Watch
+Factory's copy of it (Arabic hours, ЗАВОД–СПУСК, СДЕЛАНО В СССР, its Cyrillic
+set in system sans because the vendored fonts are Latin only). Both leave off
+the maker's name and number and keep the 240° wind sweep. `References/` holds
+both photographs. The hands are `handGeo()` shapes in `core.js` (spade, leaf,
+lance, pear, plain; a negative tail gives a spear counterpoise), placed in the
+"dial, hands, motion work" block of `movement.js`. Each dial style has its own
+set (`userData.dk`), switched with `mv.userData.dial(kind)`, which paints a
+style's texture on first use.
 
 **Change materials and colours.** `mats()` in `core.js` defines every material
 (`M.plate`, `M.gilt`, `M.steel`, `M.blued`, `M.ruby`, …). Colours are sRGB hex
