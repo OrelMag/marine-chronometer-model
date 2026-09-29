@@ -1,4 +1,4 @@
-/* core.js: helpers, materials (damascened nickel, gilt), textures, engraving, gear/spring/hand/pawl/escape-wheel geometry, dial, cross-section patch
+/* core.js: helpers, materials (damascened nickel, gilt), textures, engraving, gear/spring/hand/pawl/escape-wheel geometry, dial, cross-section patch, pen-and-wash drawing
    Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 "use strict";
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -104,12 +104,98 @@ function patchSection(m,cap){
   m.customProgramCacheKey=()=>'sec'+(cap?1:0);
   m.needsUpdate=true;
 }
-function setSection(on,plane){SEC.on.value=on?1:0;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
+function setSection(on,plane){SEC.on.value=on?1:0;SEC.plane=plane;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
 const GHOST=new Map();
 /* a derived copy (see-through, faded) takes its source's current texture and colour, so a dial style or plate finish chosen while it is shown carries over */
 function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);return d;}
 function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,m.opacity??1);g.depthWrite=false;g.userData={};patchSection(g,false);
   if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return syncMat(g,m);}
+/* ---------- pen and wash: the model drawn live as the Illustration tab is drawn (tools/illustration.py, stylize(); the numbers are its) ----------
+   drawOf(m): m's wash. A Phong copy (per-pixel diffuse under the scene's lights and shadows, no specular) whose output is stylize()'s colour: the albedo in
+   sRGB lifted toward the paper, chroma boosted and capped, the lit value in soft bands, laid as pigment density, left white where metal catches the light.
+   Alpha carries the band (0.45 band; 1 is bare paper, cleared to white: a clear colour is premultiplied) for the hatching; a transparent source (the
+   engraving) keeps the alpha beneath it */
+const DRAW=new Map(),INK={shMax:{value:1.1}};
+const WASH=tr=>'float dL=dot(diffuseColor.rgb,vec3(0.3,0.55,0.15)),shd=dot(outgoingLight,vec3(0.3,0.55,0.15))/max(dL,1e-4);diffuseColor.rgb=mix(diffuse,diffuseColor.rgb,uTex);vec3 alb=pow(clamp(diffuseColor.rgb,0.0,1.0),vec3(1.0/2.2));'+
+  'float aL=dot(alb,vec3(0.3,0.55,0.15));vec3 chr=(alb-aL)*1.6;chr*=min(1.0,0.3/max(length(chr),1e-6));vec3 wc=clamp(0.45+0.5225*aL+chr,0.0,1.0);'+
+  'float bd=clamp((pow(clamp(shd/uShMax,0.0,1.0),1.0/2.2)-0.25)/0.7,0.0,1.0),bq=bd*3.0;bd=0.5*bd+0.5*(floor(bq)+smoothstep(0.3,0.7,fract(bq)))/3.0;'+
+  'vec3 dens=(1.0-wc)+(1.0-bd)*(0.26+0.55*(1.0-wc));float hl=clamp((dot(normalize(normal),vec3(-0.3521,0.5533,0.7646))-0.9)/0.07,0.0,1.0)*clamp(uMetal*1.3,0.0,1.0);'+
+  'gl_FragColor=vec4(exp(-dens*(1.0-0.85*hl)*1.25),'+(tr?'diffuseColor.a':'0.45*bd')+');';
+function drawOf(m){let d=DRAW.get(m);
+  if(!d){const tr=!!m.transparent,cap=!!m.userData.secCap,mt={value:m.metalness||0},tx={value:m.normalMap?0.3:1};   /* damascening (a map with a normal map) muted: washed, it read as hatching */
+    d=new THREE.MeshPhongMaterial({color:m.color?m.color.clone():new THREE.Color(1,1,1),map:m.map||null,specular:0,shininess:1,transparent:tr,depthWrite:m.depthWrite,toneMapped:false,
+      polygonOffset:m.polygonOffset,polygonOffsetFactor:m.polygonOffsetFactor,polygonOffsetUnits:m.polygonOffsetUnits});
+    if(tr)Object.assign(d,{blending:THREE.CustomBlending,blendSrc:THREE.SrcAlphaFactor,blendDst:THREE.OneMinusSrcAlphaFactor,blendSrcAlpha:THREE.ZeroFactor,blendDstAlpha:THREE.OneFactor});
+    patchSection(d,cap);d.userData.side0=m.userData.side0??m.side;d.side=m.side;d.clippingPlanes=[...(m.clippingPlanes||[])];
+    const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;
+      sh.fragmentShader='uniform float uMetal;\nuniform float uTex;\nuniform float uShMax;\n'+sh.fragmentShader.replace('#include <dithering_fragment>',WASH(tr)+'\n#include <dithering_fragment>');sec(sh);
+      sh.fragmentShader=sh.fragmentShader.replace('vec3(1.0/2.2)),1.0);','vec3(1.0/2.2)),0.45);');};   /* a cut face (patchSection) is drawing, not paper */
+    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0);DRAW.set(m,d);}
+  d.opacity=m.opacity??1;return syncMat(d,m);}
+/* makeInk(r): draws a frame in pen and wash. Hidden meshes stay hidden; a mesh whose material is under half opaque (glass, see-through and faded parts) is a
+   ghost, drawn in outline only, lighter, and left out of the wash. Passes: view normals and a part id (solids, then ghosts) with their depths; the wash (the
+   meshes' drawOf materials, with the scene's shadows: the only pass that draws the shadow map); then two full-screen passes: ink lines where depth jumps (0.6 mm
+   + 1.2% of the distance) or the drawing ends, lighter ones at creases (over ~37 degrees) and between parts; and the sheet: the wash laid a little off the
+   lines, mottled and pooled at edges, on paper, hatched in deep shade, inked with a varying pen pressure. */
+function makeInk(r){
+  const T=THREE,rt=(nearest,depth)=>{const t=new T.WebGLRenderTarget(1,1,nearest?{minFilter:T.NearestFilter,magFilter:T.NearestFilter}:{});if(depth)t.depthTexture=new T.DepthTexture(1,1,T.UnsignedIntType);return t;};
+  const rtN=rt(1,1),rtG=rt(1,1),rtC=rt(0,1),rtE=rt(0,0);rtE.depthBuffer=false;   /* depth textures are 24-bit; a target's own depth buffer is 16-bit in r128, and the box's brass fought its wood */
+  /* noise: white noise blurred to a 3-texel sigma, tiled, normalized to unit deviation (stored as 0.5 + 0.18 v), four independent channels */
+  const NZ=256,nz=new Uint8Array(NZ*NZ*4);{const g=[],K=9;for(let i=-K;i<=K;i++)g.push(Math.exp(-i*i/18));
+    for(let c=0;c<4;c++){let a=Float32Array.from({length:NZ*NZ},()=>Math.random()-0.5);
+      for(const hz of[1,0]){const b=new Float32Array(NZ*NZ);for(let y=0;y<NZ;y++)for(let x=0;x<NZ;x++){let s=0;for(let i=-K;i<=K;i++)s+=g[i+K]*(hz?a[y*NZ+((x+i+NZ)%NZ)]:a[((y+i+NZ)%NZ)*NZ+x]);b[y*NZ+x]=s;}a=b;}
+      let s2=0;for(const v of a)s2+=v*v;const k=1/Math.sqrt(s2/a.length);for(let i=0;i<a.length;i++)nz[i*4+c]=clamp(Math.round((0.5+0.18*a[i]*k)*255),0,255);}}
+  const nzT=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);nzT.wrapS=nzT.wrapT=T.RepeatWrapping;nzT.magFilter=nzT.minFilter=T.LinearFilter;nzT.needsUpdate=true;
+  /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once) */
+  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,uniforms:{uId:{value:0}},
+    vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
+    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);}'});
+  let idOn=false;function setId(){if(idOn){nid.uniforms.uId.value=this.userData.inkId;nid.uniformsNeedUpdate=true;}}
+  const hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
+  const U=(o={})=>Object.assign({uPx:{value:new T.Vector2()},uPr:{value:1}},o);
+  const VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.0,1.0);}';
+  const edge=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tN:{value:rtN.texture},tD:{value:rtN.depthTexture},tG:{value:rtG.texture},tGD:{value:rtG.depthTexture},uNF:{value:new T.Vector2()},uTwo:{value:0},uGh:{value:0}}),
+    fragmentShader:`#include <packing>
+uniform sampler2D tN,tD,tG,tGD;uniform vec2 uPx,uNF;uniform float uTwo,uGh;varying vec2 vUv;
+float vz(float d){return -perspectiveDepthToViewZ(d,uNF.x,uNF.y);}
+vec2 ed(sampler2D tn,sampler2D td,vec2 u,vec2 o){float d0=texture2D(td,u).x,d1=texture2D(td,u+o).x;bool b0=d0>0.999999,b1=d1>0.999999;
+  if(b0&&b1)return vec2(0.0);if(b0!=b1)return vec2(1.0,0.0);float z0=vz(d0),z1=vz(d1);if(abs(z0-z1)>0.6+0.012*min(z0,z1))return vec2(1.0,0.0);
+  vec4 n0=texture2D(tn,u),n1=texture2D(tn,u+o);float c=dot(normalize(n0.xyz*2.0-1.0),normalize(n1.xyz*2.0-1.0))<0.8?0.75:0.0;return vec2(0.0,max(c,abs(n0.a-n1.a)>0.002?0.6:0.0));}
+vec2 lines(sampler2D tn,sampler2D td){vec2 e=vec2(0.0);vec2 D[4];D[0]=vec2(1.0,0.0);D[1]=vec2(0.0,1.0);D[2]=vec2(1.0,1.0);D[3]=vec2(1.0,-1.0);
+  for(int i=0;i<4;i++){e=max(e,ed(tn,td,vUv,D[i]*uPx));if(uTwo>0.5)e=max(e,ed(tn,td,vUv,-D[i]*uPx));}return e;}
+void main(){vec2 s=lines(tN,tD),g=uGh>0.5?lines(tG,tGD):vec2(0.0);gl_FragColor=vec4(s,max(g.x,g.y*0.8),1.0);}`});
+  const comp=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tC:{value:rtC.texture},tE:{value:rtE.texture},tZ:{value:nzT},uPaper:{value:new T.Color(0xf5f0e4)},uInk:{value:new T.Color(0x2c2824)}}),
+    fragmentShader:`uniform sampler2D tC,tE,tZ;uniform vec2 uPx;uniform float uPr;uniform vec3 uPaper,uInk;varying vec2 vUv;
+float nz(vec2 p,float s,int c){vec4 t=texture2D(tZ,p*3.0/(s*256.0));return ((c==0?t.r:c==1?t.g:c==2?t.b:t.a)-0.5)/0.18;}
+void main(){vec2 p=gl_FragCoord.xy/uPr;
+  vec4 c=texture2D(tC,vUv+vec2(nz(p,18.0,0),nz(p,18.0,1))*1.4*uPr*uPx);float fg=clamp((1.0-c.a)*2.0,0.0,1.0),bd=clamp(c.a/0.45,0.0,1.0);
+  vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+texture2D(tE,vUv+vec2(h.x,-h.y))+texture2D(tE,vUv-vec2(h.x,-h.y)));
+  float pl=0.0;for(int i=0;i<8;i++){float a=float(i)*0.7854;vec4 q=texture2D(tE,vUv+vec2(cos(a),sin(a))*2.5*uPr*uPx);pl+=max(q.r,q.g);}pl/=8.0;
+  float m=(1.0+0.07*nz(p,10.0,2)+0.035*nz(p,2.0,3))*(1.0+0.25*clamp(pl*3.0,0.0,1.0));vec3 w=pow(max(c.rgb,vec3(1e-4)),vec3(m));
+  float pr=clamp(0.85+0.15*nz(p,12.0,3),0.55,1.0),ink=max(e.r,e.g*0.8)*pr;
+  float hat=1.0-smoothstep(0.05,0.13,abs(fract((p.x-p.y)/5.5)-0.5));ink=max(ink,hat*clamp((0.4-bd)/0.25,0.0,1.0)*fg*0.55*pr);
+  float g=e.b*0.55*(1.0-0.8*fg);gl_FragColor=vec4(uPaper*mix(mix(w,uInk,g),uInk,ink),1.0);}`});
+  const qs=new T.Scene(),q=new T.Mesh(new T.PlaneGeometry(2,2),edge),qc=new T.OrthographicCamera(-1,1,1,-1,0,1);q.frustumCulled=false;qs.add(q);
+  const bs=new T.Vector2(),cc=new T.Color();
+  return{render(scene,cam,meshes){
+    r.getDrawingBufferSize(bs);if(bs.x!==rtN.width||bs.y!==rtN.height)for(const t of[rtN,rtG,rtC,rtE])t.setSize(bs.x,bs.y);
+    const pr=r.getPixelRatio(),gh=[],so=[];
+    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;o.userData.inkId=hash(o.userData.part);}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
+    r.getClearColor(cc);const ca=r.getClearAlpha(),au=r.shadowMap.autoUpdate,ov=scene.overrideMaterial;
+    nid.clippingPlanes=SEC.on.value>0.5&&SEC.plane?[SEC.plane]:[];
+    /* normals and ids: the solids, then the ghosts alone; no shadow map is drawn for these */
+    r.shadowMap.autoUpdate=false;scene.overrideMaterial=nid;idOn=true;r.setClearColor(0x000000,0);
+    gh.forEach(o=>o.visible=false);r.setRenderTarget(rtN);r.clear();r.render(scene,cam);
+    so.forEach(o=>o.visible=false);gh.forEach(o=>o.visible=true);r.setRenderTarget(rtG);r.clear();if(gh.length)r.render(scene,cam);
+    so.forEach(o=>o.visible=true);gh.forEach(o=>o.visible=false);scene.overrideMaterial=ov;idOn=false;
+    /* the wash, with the shadows */
+    r.shadowMap.needsUpdate=true;r.setClearColor(0xffffff,1);r.setRenderTarget(rtC);r.clear();r.render(scene,cam);
+    gh.forEach(o=>o.visible=true);r.shadowMap.autoUpdate=au;
+    /* lines, then the sheet: lines about one CSS pixel wide (both sides of an edge from 1.5 device pixels per CSS pixel) */
+    for(const m of[edge,comp]){m.uniforms.uPx.value.set(1/bs.x,1/bs.y);m.uniforms.uPr.value=pr;}
+    edge.uniforms.uNF.value.set(cam.near,cam.far);edge.uniforms.uTwo.value=pr>=1.5?1:0;edge.uniforms.uGh.value=gh.length?1:0;
+    q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=comp;r.setRenderTarget(null);r.setClearColor(cc,ca);r.render(qs,qc);}};
+}
 /* mainspring: w=1 fully wound (coils on the arbor), w=0 run down (coils against the wall) */
 function mainspringGeo(w,ra,Rw,y0,y1,turns){
   const N=900,pos=[],idx=[],tot=TAU*turns,pack=2.6;

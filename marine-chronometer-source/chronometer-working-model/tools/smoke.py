@@ -41,6 +41,12 @@ async def model(b,errs,steps):
     await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT');await click('#now','Now')
     await click('#tabFig','Illustration tab');await click('#tabModel','3D model tab')
     for sel in['#colr','#ghost','#lbls','#rock','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
+    # pen and wash (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
+    await click('#draw','pen and wash on',600)
+    for v in['box','dial','movement','train','escapement','exploded','laidout']:await click(f'#views button[data-v="{v}"]',f'pen and wash, view {v}')
+    await click('#colr');await click('#ghost','pen and wash, colour by part, see-through');await click('#colr');await click('#ghost')
+    await click('#secs button[data-v="x"]','pen and wash, section');await click('#secs button[data-v="off"]')
+    await click('#driveOn','pen and wash, moving parts only');await click('#driveOn');await click('#draw','pen and wash off')
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
     await click('#kwBtn','wind with the key',2500);await click('#kwBtn','stop winding')
     await click('#wind','wind');await click('#rateZero','rate reset')
@@ -48,9 +54,9 @@ async def model(b,errs,steps):
     await pg.focus('canvas')
     for k in['ArrowLeft','ArrowUp','+','-','0','1','Space']:await pg.keyboard.press(k);await pg.wait_for_timeout(150)
     await pg.keyboard.press('Space');steps.append('keyboard')
-    await pg.evaluate("location.hash='#view=escapement&part=det&speed=0.05'");await pg.wait_for_timeout(1200)
-    st=await pg.evaluate("[document.querySelector('#views button[aria-pressed=\"true\"]')?.dataset.v,document.querySelector('#info').classList.contains('on'),document.querySelector('#spdN').value]")
-    if st!=['escapement',True,'0.05']:errs.append(f'hash link not applied: {st}')
+    await pg.evaluate("location.hash='#view=escapement&part=det&speed=0.05&draw=1'");await pg.wait_for_timeout(1200)
+    st=await pg.evaluate("[document.querySelector('#views button[aria-pressed=\"true\"]')?.dataset.v,document.querySelector('#info').classList.contains('on'),document.querySelector('#spdN').value,document.querySelector('#draw').checked]")
+    if st!=['escapement',True,'0.05',True]:errs.append(f'hash link not applied: {st}')
     steps.append('hash link');await pg.close()
 async def essay(b,errs,steps):
     if not ESSAY.exists():errs.append(f'no built essay at {ESSAY}: run build.py');return

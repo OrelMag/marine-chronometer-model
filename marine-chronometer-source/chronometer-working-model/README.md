@@ -22,7 +22,7 @@ copies and assembles the website (see the root README).
 | `index.html` | Page markup: the stage with its 3D model / Illustration tabs, walkthrough card, controls (View, Time, Display, and collapsible Parts, Rate and timing weights, Cross-section and Variants), the About dialog with sources and method |
 | `css/style.css` | Layout, theme tokens (light and dark), controls, labels |
 | `img/illustration.webp` | The overview drawing shown in the Illustration tab, rendered from the model by `tools/illustration.py` |
-| `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch |
+| `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch, the Pen and wash drawing (`drawOf`, `makeInk`) |
 | `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate), winding key |
@@ -64,6 +64,13 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - Time: set the hands to any time of day, or to now. The model keeps Greenwich Mean Time by default, as U.S. Navy chronometers were kept (the HUD says GMT); Keep: Local time switches to the viewer's time zone, moving the hands by the difference. Wind with the key turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 60 h of chain), with the plates see-through and the winding stop kept solid. For the last half turns the camera closes in on the stop-bar catching.
 - Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (931 g·mm² as built). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.146 and 0.092 mm. The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose; the panel shows the daily rate and what the hands have gained since the weights were moved or the hands set.
 - Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme. Save writes the view as a PNG.
+- Pen and wash (Display; `draw=1` in the hash) draws the live model as the Illustration tab is drawn: `tools/illustration.py`'s `stylize()` done on the GPU, with its numbers.
+  - `drawOf(m)` in `core.js` gives each shown material a Phong copy whose output is the wash. It is the albedo lifted toward the paper, the lit value in soft bands, white where metal catches the light. `look()` applies it to whatever a part shows, so it combines with Colour by part, fading and sections.
+  - `makeInk(r)` draws the frame. Three scene passes: normals, part ids and 24-bit depth for the solids, then the same for the ghosts, then the wash with the shadows. Two full-screen passes follow: the lines, then the sheet. The sheet lays the wash a little off the lines, mottles it and pools it at edges, hatches deep shade and inks with a varying pressure.
+  - Lines fall where depth jumps (0.6 mm + 1.2 % of the distance) or the drawing ends, with lighter ones at creases and between parts.
+  - Parts under half opaque (see-through plates, the glass, faded parts) are ghosts, drawn in outline only and lighter.
+  - The stage is paper in either theme, the floor shadow is left out, and the plates' damascening is muted.
+  - A moving model costs three scene renders a frame instead of one. The shadow map is still drawn once. With the option off, nothing is drawn differently.
 - Labels are off by default (Display turns them on, and the choice isn't remembered). The walkthrough shows the labels of each step's parts regardless.
 - Keyboard and reduced motion: Space stops and restarts, 1 to 7 pick the views; with the model focused (click it or Tab to it) the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, camera and state moves are instant (as with `?snap`), the walkthrough leaves ship motion off and scrolls without animation, and the page's fades are off.
 - Phones: below 600 px wide the part card is a sheet along the bottom of the stage; on touch screens buttons and checkboxes are finger-sized; in landscape with the height under 560 px the stage fills the height and the panel scrolls beside it. On a phone (coarse pointer, screen under 600 px on its short side) the pixel ratio is capped at 1.5 and the shadow map at 1024 px, against 2 and 2048 px elsewhere. A part casts a shadow only when its radius spans 6 texels of the shadow map, which follows the view: far views drop the screws and pins, close-ups keep them. The knurled nuts and the balance rim's holes are each one merged mesh (`mergeGeo` in `core.js`).
@@ -72,7 +79,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 
 The page's state is kept in the URL hash, so a link opens the model as it
 was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part; `view=laidout` is the laid-out train),
-`#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `sec=x:-3.5`
+`#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `draw=1` (Pen and wash), `sec=x:-3.5`
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
 rewritten (without adding to the history) 0.3 s after any change.
