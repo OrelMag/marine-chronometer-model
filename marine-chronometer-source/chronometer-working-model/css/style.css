@@ -168,3 +168,7 @@ table.rt td.n{text-align:right}
   .info{top:50px;max-height:calc(100% - 110px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y}.hud{right:14px;bottom:50px}}
 /* the HUD sits above the tools on narrow and landscape phones; clear the taller touch buttons */
 @media(pointer:coarse) and (max-width:600px),(pointer:coarse) and (orientation:landscape) and (max-height:560px){.hud{bottom:62px}}
+/* the model takes keyboard focus (arrow keys turn it) */
+.stage canvas:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
+/* reduced motion: no fades or slides */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}

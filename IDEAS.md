@@ -576,6 +576,8 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 ## 6. Interface and accessibility
 
 ### 6.1 Accessibility
+> **Done.** Reduced motion: instant camera and state moves (as `?snap`), no ship motion from the walkthrough, no smooth scrolling, no CSS fades. Keyboard: the canvas takes focus (with a focus ring); arrows turn the view, +/− zoom, 0 resets; listed in the help card and About. The walkthrough text is a polite live region. Still open: a canvas description that follows the view, and a contrast check of the part colours.
+
 - **Reduced motion (S):** the CSS has no `prefers-reduced-motion` rule. When it's set, snap camera moves (as `?snap` does), keep **Turn slowly** and **Ship motion** off, and don't auto-scroll the walkthrough card into view ([app.js:378](marine-chronometer-source/chronometer-working-model/js/app.js#L378)).
 - **Keyboard orbit (S):** arrow keys to orbit, `+`/`−` to zoom, `0` to reset. Only 1–6 and Space work today. Make the canvas focusable (`tabindex="0"`) with a visible focus ring, and list the keys in About.
 - **Screen readers (S):**

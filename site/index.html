@@ -245,6 +245,10 @@ table.rt td.n{text-align:right}
   .info{top:50px;max-height:calc(100% - 110px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y}.hud{right:14px;bottom:50px}}
 /* the HUD sits above the tools on narrow and landscape phones; clear the taller touch buttons */
 @media(pointer:coarse) and (max-width:600px),(pointer:coarse) and (orientation:landscape) and (max-height:560px){.hud{bottom:62px}}
+/* the model takes keyboard focus (arrow keys turn it) */
+.stage canvas:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
+/* reduced motion: no fades or slides */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 
 <link rel="canonical" href="https://www.marinechronometermodel.com/">
@@ -261,7 +265,7 @@ table.rt td.n{text-align:right}
 </header>
 <div class="wrap">
   <div class="stage" id="stage">
-    <canvas aria-label="3D working model of a marine chronometer"></canvas>
+    <canvas tabindex="0" aria-label="3D working model of a marine chronometer. Arrow keys turn it, plus and minus zoom, 0 resets the view."></canvas>
     <div class="labels"></div>
     <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it does; right-click to fade or hide it.</span><span class="t-only">Tap a part to see what it does; long-press to fade or hide it.</span> <b>?</b> lists every control</div>
@@ -272,7 +276,7 @@ table.rt td.n{text-align:right}
         <section class="hc mouse"><h4>With a mouse</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Shift-drag or middle-drag</dt><dd>Pan</dd><dt>Scroll</dt><dd>Zoom</dd>
           <dt>Click a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Right-click a part</dt><dd>Fade or hide it</dd><dt>Right-click empty space</dt><dd>Bring hidden parts back</dd>
-          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 6</dt><dd>The views, in the order of their buttons</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
+          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 6</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
         <section class="hc touch"><h4>On a phone or tablet</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Drag two fingers</dt><dd>Pan</dd><dt>Pinch</dt><dd>Zoom</dd>
           <dt>Tap a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Long-press a part</dt><dd>Fade or hide it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back</dd>
@@ -295,7 +299,7 @@ table.rt td.n{text-align:right}
         <div class="tnav"><button id="tPrev">Back</button><span id="tStep"></span><button id="tNext">Next</button></div>
         <div class="dots" id="tDots"></div>
         <h3 id="tTitle"></h3>
-        <div class="txt" id="tText"></div>
+        <div class="txt" id="tText" aria-live="polite"></div>
         <div class="inset" id="tInset"></div>
         <div class="seg" style="margin-top:10px"><button id="tExit">End walkthrough</button></div>
       </div>
@@ -379,7 +383,7 @@ table.rt td.n{text-align:right}
     <li>Drag to turn; Shift-drag, middle-drag or drag two fingers to pan; scroll or pinch to zoom. The <b>?</b> button on the model lists every control, for a mouse and for touch.</li>
     <li>Tap a part to see what it does and its Hamilton part number.</li>
     <li>Right-click or long-press a part to fade or hide it; do the same on empty space to bring hidden parts back.</li>
-    <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons.</li>
+    <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons. With the model focused (click it, or Tab to it), the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, views change without animation and the walkthrough leaves ship motion off.</li>
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
     <li>Wind with the key (under Time) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
   </ul>
@@ -1486,6 +1490,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   const dark=()=>matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark';
   /* phones (touch, under 600 px on the short side): a lower pixel ratio and shadow map keep the frame rate up */
   const PHONE=matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<600;
+  /* reduced motion (a system setting): camera and state moves are instant, as with ?snap; the walkthrough doesn't start ship motion or scroll smoothly */
+  const RM=matchMedia('(prefers-reduced-motion: reduce)');
   let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,PHONE?1.5:2));
   r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
   r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -1641,7 +1647,12 @@ function drawEsc2D(ctx,w,h,p,dark){
     /* space bar: stop and restart, unless typing or pressing a button */
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
     /* 1 to 6: the views, in the order of their buttons (a disabled button ignores the click) */
-    if(/^[1-6]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)document.querySelectorAll('#views button')[+e.key-1].click();});
+    if(/^[1-6]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)document.querySelectorAll('#views button')[+e.key-1].click();
+    /* with the model focused (Tab to it, or click it): arrow keys turn the view as a drag does, + and − zoom, 0 resets the view */
+    if(document.activeElement===cv&&!e.ctrlKey&&!e.metaKey&&!e.altKey){const a={ArrowLeft:[0.08,0],ArrowRight:[-0.08,0],ArrowUp:[0,-0.06],ArrowDown:[0,0.06]}[e.key];
+      if(a){e.preventDefault();camFree=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.3,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
+      else if('+=-_'.includes(e.key)){e.preventDefault();C.dist=G.dist=clamp(C.dist*('-_'.includes(e.key)?1.12:1/1.12),30,1500);}
+      else if(e.key==='0'){e.preventDefault();setView(st.view,true);}}});
 
   /* ---------- controls ---------- */
   /* speed: presets, or any value from 0.01x to 10000x on a log slider or typed in */
@@ -1791,14 +1802,14 @@ function drawEsc2D(ctx,w,h,p,dark){
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
     st.drive=s.drive;st.mwOn=!!s.mw;$('#mwOn').checked=st.mwOn;st.focus=s.focus?new Set(s.focus):null;st.see=false;
-    st.rock=!!s.rock;$('#rock').checked=st.rock;setSpeed(s.speed);
+    st.rock=!!s.rock&&!RM.matches;$('#rock').checked=st.rock;setSpeed(s.speed);
     Object.assign(tgt,{lift:s.v.lift,flip:s.v.flip,explode:s.v.explode,lidM:s.v.lidM??1,lidT:s.v.lidT??1});goCam(s.v);look();
     document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');
     setInset(s.inset||null);
     /* bring the card into view: below the stage when the stage sits above the panel (phones in portrait), else beside it (landscape phones) */
     if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
-      if(cr.left<stage.getBoundingClientRect().right){const y=cr.top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:'smooth'});}
-      else card.scrollIntoView({block:'nearest',behavior:'smooth'});}}
+      if(cr.left<stage.getBoundingClientRect().right){const y=cr.top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:RM.matches?'auto':'smooth'});}
+      else card.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'});}}
   function tourEnd(){st.tour=-1;st.focus=null;st.drive=false;st.mwOn=false;st.rock=false;$('#rock').checked=false;setSpeed(1);setInset(null);
     $('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView('dial');}
   $('#tStart').addEventListener('click',()=>tourGo(0));$('#tPrev').addEventListener('click',()=>tourGo(Math.max(0,st.tour-1)));
@@ -1871,7 +1882,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   new ResizeObserver(wake).observe(stage);cv.addEventListener('webglcontextrestored',wake);
   new IntersectionObserver(e=>{onScreen=e[e.length-1].isIntersecting;if(onScreen)wake();}).observe(stage);
   function frame(now){
-    const dt=Math.min(0.05,(now-last)/1000);last=now;const k=SNAP?1:1-Math.exp(-dt*3.0);
+    const dt=Math.min(0.05,(now-last)/1000);last=now;const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
     for(const q of['lift','flip','explode','lidM','lidT'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
     const run=hrs<RUN_H;

@@ -23,7 +23,7 @@
 </header>
 <div class="wrap">
   <div class="stage" id="stage">
-    <canvas aria-label="3D working model of a marine chronometer"></canvas>
+    <canvas tabindex="0" aria-label="3D working model of a marine chronometer. Arrow keys turn it, plus and minus zoom, 0 resets the view."></canvas>
     <div class="labels"></div>
     <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it does; right-click to fade or hide it.</span><span class="t-only">Tap a part to see what it does; long-press to fade or hide it.</span> <b>?</b> lists every control</div>
@@ -34,7 +34,7 @@
         <section class="hc mouse"><h4>With a mouse</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Shift-drag or middle-drag</dt><dd>Pan</dd><dt>Scroll</dt><dd>Zoom</dd>
           <dt>Click a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Right-click a part</dt><dd>Fade or hide it</dd><dt>Right-click empty space</dt><dd>Bring hidden parts back</dd>
-          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 6</dt><dd>The views, in the order of their buttons</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
+          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 6</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
         <section class="hc touch"><h4>On a phone or tablet</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Drag two fingers</dt><dd>Pan</dd><dt>Pinch</dt><dd>Zoom</dd>
           <dt>Tap a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Long-press a part</dt><dd>Fade or hide it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back</dd>
@@ -57,7 +57,7 @@
         <div class="tnav"><button id="tPrev">Back</button><span id="tStep"></span><button id="tNext">Next</button></div>
         <div class="dots" id="tDots"></div>
         <h3 id="tTitle"></h3>
-        <div class="txt" id="tText"></div>
+        <div class="txt" id="tText" aria-live="polite"></div>
         <div class="inset" id="tInset"></div>
         <div class="seg" style="margin-top:10px"><button id="tExit">End walkthrough</button></div>
       </div>
@@ -141,7 +141,7 @@
     <li>Drag to turn; Shift-drag, middle-drag or drag two fingers to pan; scroll or pinch to zoom. The <b>?</b> button on the model lists every control, for a mouse and for touch.</li>
     <li>Tap a part to see what it does and its Hamilton part number.</li>
     <li>Right-click or long-press a part to fade or hide it; do the same on empty space to bring hidden parts back.</li>
-    <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons.</li>
+    <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons. With the model focused (click it, or Tab to it), the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, views change without animation and the walkthrough leaves ship motion off.</li>
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
     <li>Wind with the key (under Time) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
   </ul>
