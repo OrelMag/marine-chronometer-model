@@ -54,9 +54,9 @@ nautical miles ([3.2](#32-the-navigators-rate-book)), and a simulated test that
 fills in the manual's test card ([3.4](#34-the-30-day-performance-test)).
 
 ### Performance
-- **Too many meshes.** The scene has 545 separate meshes, and 541 of them cast shadows. See [5.1](#51-draw-calls-merge-and-instance).
-- **Knurling.** 155 of those meshes make up five knurled nuts: a body and 30 separate ridges each. See [5.1](#51-draw-calls-merge-and-instance).
-- **Slow texture at load.** Building the plates' striped (damascened) texture takes 204 ms of the 322 ms spent on materials. See [5.2](#52-startup-the-stripe-texture).
+- **Too many meshes.** The scene has 545 separate meshes, and 541 of them cast shadows. See [5.1](#51-draw-calls-merge-and-instance). *(Partly done: 389 meshes, and parts too small for the shadow map cast none, `347bf5b`; merging the static parts is open.)*
+- **Knurling.** 155 of those meshes make up five knurled nuts: a body and 30 separate ridges each. See [5.1](#51-draw-calls-merge-and-instance). *(Done: one mesh per nut, `347bf5b`.)*
+- **Slow texture at load.** Building the plates' striped (damascened) texture takes 204 ms of the 322 ms spent on materials. See [5.2](#52-startup-the-stripe-texture). *(Done: 4.4× faster, same pixels, `6c5ed75`.)*
 - **Per-frame rebuilds.** The hairspring's geometry is rebuilt every frame whenever it can be seen. See [5.3](#53-dont-rebuild-geometry-every-frame-sm).
 
 ### Three copies of the escapement solver
@@ -83,25 +83,25 @@ automated checks on GitHub. See [8.1](#81-continuous-integration).
 
 ## At a glance
 
-The fifteen ideas with the best return, roughly in order.
+The fifteen ideas with the best return, roughly in order. Status as of 29 September 2026 (Stage 1 of the [roadmap](#11-roadmap) done).
 
-| # | Idea | Area | Effort | Why |
-|---|---|---|---|---|
-| 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes |
-| 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" |
-| 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something |
-| 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page |
-| 5 | [One parts registry](#71-one-parts-registry) | Code | S | Adding a part touches six tables in `app.js` today |
-| 6 | [Make `ESC` a factory and share it](#73-make-esc-a-factory-and-share-it) | Code | S–M | Enables #4, removes the source-slicing in `tools/escapement.js` and the hand-copied solver in the essay |
-| 7 | [Merge static meshes; stop shadows from tiny parts](#51-draw-calls-merge-and-instance) | Performance | S–M | 545 meshes, each with its own geometry; 541 cast shadows; 124 meshes are knurling on four nuts |
-| 8 | [Stop rebuilding the stripe texture at load](#52-startup-the-stripe-texture) | Performance | S | 204 ms of a 322 ms `mats()` is one per-pixel JavaScript loop |
-| 9 | [Temperature and the two balances](#23-temperature) | Physics | M | The manual gives the test temperatures and the compensation figure; the split-rim variant could visibly curl |
-| 10 | [30-day performance test](#34-the-30-day-performance-test) | Features | M | The manual prints the test card and the Bureau of Ships tolerances. A satisfying way to see the physics add up |
-| 11 | [CI: build, escapement check, browser smoke test](#81-continuous-integration) | Testing | S | No automated checks today; the tools already exist |
-| 12 | [Reduced motion, keyboard orbit](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the camera can't be turned from the keyboard |
-| 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash |
-| 14 | [A real fusee comparison](#22-the-fusee-earns-its-keep) | Physics | M | The fusee inset is constant by construction. Show what a going barrel would do |
-| 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) |
+| # | Idea | Area | Effort | Why | Status |
+|---|---|---|---|---|---|
+| 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes |  |
+| 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" | Half: GMT by default `23e9c58`; setting the hands waits for 2.1 |
+| 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something |  |
+| 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page |  |
+| 5 | [One parts registry](#71-one-parts-registry) | Code | S | Adding a part touches six tables in `app.js` today | Done `5e8c578` |
+| 6 | [Make `ESC` a factory and share it](#73-make-esc-a-factory-and-share-it) | Code | S–M | Enables #4, removes the source-slicing in `tools/escapement.js` and the hand-copied solver in the essay | Done `813f7ae` |
+| 7 | [Merge static meshes; stop shadows from tiny parts](#51-draw-calls-merge-and-instance) | Performance | S–M | 545 meshes, each with its own geometry; 541 cast shadows; 124 meshes are knurling on four nuts | Done: knurls, rim holes, tiny shadows `347bf5b`; merging all static parts open |
+| 8 | [Stop rebuilding the stripe texture at load](#52-startup-the-stripe-texture) | Performance | S | 204 ms of a 322 ms `mats()` is one per-pixel JavaScript loop | Done `6c5ed75` |
+| 9 | [Temperature and the two balances](#23-temperature) | Physics | M | The manual gives the test temperatures and the compensation figure; the split-rim variant could visibly curl |  |
+| 10 | [30-day performance test](#34-the-30-day-performance-test) | Features | M | The manual prints the test card and the Bureau of Ships tolerances. A satisfying way to see the physics add up |  |
+| 11 | [CI: build, escapement check, browser smoke test](#81-continuous-integration) | Testing | S | No automated checks today; the tools already exist | Done `7f3668e` |
+| 12 | [Reduced motion, keyboard orbit](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the camera can't be turned from the keyboard | Done `c2af700` |
+| 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash | Done: hash `cf07772`; remembered settings open |
+| 14 | [A real fusee comparison](#22-the-fusee-earns-its-keep) | Physics | M | The fusee inset is constant by construction. Show what a going barrel would do |  |
+| 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) |  |
 
 ---
 
@@ -743,12 +743,12 @@ belongs in the model, but the two could work together better.
 
 A suggested order, so that each stage makes the next easier.
 
-**Stage 1: foundations and quick wins (1–2 weeks)**
-- Parts registry (7.1). Derive train numbers from `TRAIN` (7.2). `ESC` as a factory, shared with the tools and the essay (7.3).
-- CI: build, escapement check with an exit code, built-copies check, smoke test (8.1). Invariant tests (8.2).
-- Performance: knurls and rim holes merged, tiny meshes out of the shadow pass (5.1). Precomputed stripe texture (5.2). No rendering when idle (5.4).
-- Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2).
-- GMT by default (3.1, first half).
+**Stage 1: foundations and quick wins (1–2 weeks)**. *Done, 29 September 2026; the leftovers are noted per item.*
+- Parts registry (7.1). Derive train numbers from `TRAIN` (7.2). `ESC` as a factory, shared with the tools and the essay (7.3). *Done: `5e8c578`, `5512fe4`, `813f7ae`.*
+- CI: build, escapement check with an exit code, built-copies check, smoke test (8.1). Invariant tests (8.2). *Done: `813f7ae` (exit code), `7f3668e`; the expected-leftovers file for `dyn.py`/`audit.py` is open.*
+- Performance: knurls and rim holes merged, tiny meshes out of the shadow pass (5.1). Precomputed stripe texture (5.2). No rendering when idle (5.4). *Done: `347bf5b`, `6c5ed75` (a faster loop, not precomputed images: see 5.2), `4bd930e`.*
+- Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2). *Done: `c2af700`, `cf07772` (with fixes in `650c005`); a view-following canvas description, a contrast check and remembered settings are open.*
+- GMT by default (3.1, first half). *Done: `23e9c58`.*
 
 **Stage 2: the chronometer as an instrument (3–5 weeks)**
 - Dynamic balance, not self-starting, twist to start (2.1). Manual setting methods (3.1, second half). Hand-setting square and balance locking arm (1.5).
