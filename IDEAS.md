@@ -283,7 +283,7 @@ The amplitude then emerges from the model instead of being fixed.
 ### 2.5 Gimbals with inertia (M)
 **What.** Ship motion now counter-rotates the ring and bowl exactly, so the movement stays perfectly level ([app.js:460](marine-chronometer-source/chronometer-working-model/js/app.js#L460)). Model the bowl and ring as two coupled damped pendulums driven by the box's motion instead.
 - They then lag, and overshoot at some frequencies.
-- A **Latch the gimbals** control (the latch is modelled but only shown released) would lock them. The movement then visibly tilts with the box.
+- A **Latch the gimbals** control (the latch is modelled but only shown released) would lock them. The movement then visibly tilts with the box. *(Done: Gimbals latched, under Display. The lever swings in through a slot in the ring to the keeper on the case (Fig. 106); ring and case are brought level with the box first and then tilt with it.)*
 
 **Why.** It shows what the gimbals do, and where they stop working: a roll period near the bowl's own period.
 
