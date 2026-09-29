@@ -360,7 +360,7 @@ Contents:
   objects with no parts in it, so the first label anchor on a part threw
   (`localToWorld` of null). It now turns Edges off before each view, as the
   sheet was drawn. Keep: a tool that hooks `render` must get the model's scene,
-  so switch off any overlay pass drawn after it.
+  so switch off any overlay pass drawn after it. `91dd568`
 
 ---
 
