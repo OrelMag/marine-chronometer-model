@@ -39,7 +39,7 @@ What stood out from reading the code and the manual, and from the
 measurements.
 
 ### Starting and setting don't follow the manual
-- **The model starts itself.** A detent escapement isn't self-starting. After winding a run-down chronometer, the manual says to start it with "a single quick twist" of the box (Sec. III). The model just carries on after winding. See [2.1](#21-a-balance-that-can-stop-and-must-be-started).
+- **The model starts itself.** A detent escapement isn't self-starting. After winding a run-down chronometer, the manual says to start it with "a single quick twist" of the box (Sec. III). The model just carries on after winding. See [2.1](#21-a-balance-that-can-stop-and-must-be-started). *(Done: the balance's amplitude is state; below the 39.2° the escapement needs, the train stops, and a stopped chronometer needs Twist to start.)*
 - **The hands are set at will.** The manual says the hands "are never set except when the instrument is started" (Sec. III, Setting). The error is recorded and allowed for instead. The model's **Set the hands** changes them at any moment. See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
 - **The model runs on local time.** Navy chronometers were kept on Greenwich time; the model starts on the viewer's local time. *(Fixed: GMT by default.)* `23e9c58` See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
 
@@ -171,6 +171,7 @@ the old heights.
 - **Then:** `dyn.py`, `audit.py`, `p3fit.py` and `node escapement.js`. The escape wheel's 9.40 mm centre distance is solved from roller shake, so it must stay fixed.
 
 ### 1.2 The train-bridge screw with nothing under it (S)
+*Still open. Screws now have their shanks, so this one is drawn threaded into the bridge alone. A pillar can't go under it: the fourth wheel is there.*
 One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:206](marine-chronometer-source/chronometer-working-model/js/movement.js#L206)). Two ways to fix it:
 - If the top-view photograph shows a pillar there, add it. The manual gives three screws per bridge, and the model has three train pillars plus one barrel pillar.
 - Otherwise, move the screw onto a pillar and note the change.
@@ -187,6 +188,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Upper pivot setting:** the setting in the cock is "not drawn: the staff is 0.7 mm from the cock's edge" ([movement.js:346](marine-chronometer-source/chronometer-working-model/js/movement.js#L346)). That suggests the traced cock outline is slightly off near the endstone. Re-check the parallax shift in `cock_outline.json`.
 
 ### 1.5 Hand-setting square, balance locking arm, shipping wedges (S each)
+*The balance locking arm is done: arm, screw, washer and stop pin, Locked / Unlocked under Stopping and starting, and it stops the balance. The square and the wedges are still to do.*
 - **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
 - **Balance locking arm (Fig. 9):** later chronometers have a balance wheel locking arm, with locked and unlocked positions. Model it, with a toggle, as a part of the "Operation when received" story.
 - **Shipping wedges:** before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
@@ -208,6 +210,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Mainspring:** drawn schematically. If the parts list gives its length and width as well as the 0.0165 in thickness, compute the coil count and spacing from the barrel and arbor radii for the wound and run-down states.
 
 ### 1.10 Oil sinks, jewel settings, endstones (S)
+*Settings and endstones are done: the escape wheel's upper and lower endstone caps, the balance's lower setting and endstone cap, and the fourth wheel's upper setting. 13 of the 14 jewels are drawn; the balance's upper hole jewel isn't (1.4). Oil sinks are still to do.*
 Jewels are a gilt ring plus a ruby ring. Add the oil sink (a shallow cone) on the settings that take oil, and cap jewels where the manual has them. This pairs with the oiling chart in [3.5](#35-overhaul-walkthrough-and-oiling-chart).
 
 ---
@@ -220,11 +223,13 @@ timing weights' moment of inertia. That is right for most of what the page
 shows. These ideas add the dynamics where they teach something.
 
 ### 2.1 A balance that can stop and must be started
+*Partly done: the amplitude is state (`H.amp` in `app.js`), not an integrated oscillator. It runs down freely when the train is held, against the balance locking arm at once, and builds up after Twist to start; the escapement needs `ESC.AMIN` (39.2°, worked out by `makeEsc`) to keep going, so the train stops below it and at run down. Still to do: the equation of motion below, with the impulse's torque, and the rate against amplitude that would follow.*
+
 **What.** Treat the balance as a damped torsional oscillator driven by the escapement:
 
 `I·θ″ + c·θ′ + k·θ = τ(θ, θ′, state)`
 
-- `I`: the balance's moment of inertia (931 g·mm², already computed).
+- `I`: the balance's moment of inertia (930 g·mm², already computed).
 - `k = I·(2π/0.5 s)²`: the hairspring's stiffness, about 1.5 × 10⁻⁴ N·m/rad.
 - `c`: losses, set so the amplitude settles at the manual's 1⅜–1½ turns.
 - `τ`: the impulse torque while `ESC` says a tooth is on the impulse jewel, minus the small unlocking resistance.
@@ -680,13 +685,13 @@ A GitHub Actions workflow on every push, in increasing cost:
 5. **Nightly or manual:** `dyn.py` and `audit.py`, which are slower. Compare their output with a committed expected-leftovers file, so a new collision or loose screw fails rather than scrolling past.
 
 ### 8.2 Invariant tests (S)
-> **Done.** `tools/invariants.py` checks the hands, the escape wheel, the wind indicator's 60° and 300° ends, the fusee's 60 h, 17½ half turns and 7 half turns a day, the balance's 931 g·mm², and 40 s / 2.8 s a day for a turn of the weights. A planted 76-tooth third wheel fails eight checks. The pawls are left to `maintaining.py`, which already checks them. `7f3668e`
+> **Done.** `tools/invariants.py` checks the hands, the escape wheel, the wind indicator's 60° and 300° ends, the fusee's 60 h, 17½ half turns and 7 half turns a day, the balance's 930 g·mm² (931 before the hub was drawn as Fig. 4 has it), and 40 s / 2.8 s a day for a turn of the weights. A planted 76-tooth third wheel fails eight checks. The pawls are left to `maintaining.py`, which already checks them. `7f3668e`
 
 Small browser or Node checks on the model's arithmetic:
 - **Hands:** at `tSim = t`, the hour, minute and second hands point where a clock reading `t` would: centre wheel 1 turn/h, fourth 1 turn/min, escape 16 teeth per 8 s.
 - **Wind indicator:** runs from 60° at UP to 300° at 56 h, which is the dial's scale.
 - **Fusee:** `FUSEE_TURNS / FUSEE_PER_HOUR` is 60 h of chain, and 17½ half turns wind it fully.
-- **Moment of inertia:** `R.timing(0,0)` is 931 g·mm² (catches accidental changes to the balance's geometry), and a full turn of the timing pair is 40 s a day and of the vernier pair 2.8 s, the manual's figures.
+- **Moment of inertia:** `R.timing(0,0)` is 930 g·mm² (catches accidental changes to the balance's geometry), and a full turn of the timing pair is 40 s a day and of the vernier pair 2.8 s, the manual's figures.
 - **Pawls:** after `update()` at a spread of states, every pawl's tip sits within a tolerance of its ratchet's profile.
 
 ### 8.3 Visual regression (M)

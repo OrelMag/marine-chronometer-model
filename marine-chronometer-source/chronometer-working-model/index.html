@@ -83,6 +83,7 @@
         <div class="clk tzr"><span>Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as U.S. Navy chronometers were kept">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
         <div class="kw"><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button><label class="ck"><input type="checkbox" id="kwFull" checked> From run down</label></div>
         <p class="note hidden" id="kwOut" aria-live="polite" style="margin:6px 0 0"></p>
+        <div class="kw"><button id="twist" title="Give the box a quick twist, which sets the balance swinging: how a stopped chronometer is started">Twist to start</button></div>
       </section>
       <section class="grp">
         <h2>Display</h2>
@@ -112,6 +113,17 @@
         <div class="rate" id="rateOut" aria-live="polite"></div>
         <div class="seg" style="margin-top:8px"><button id="rateZero">Zero</button><button id="rateLook">Show the balance</button></div>
         <p class="note" style="margin:8px 0 0">The manual gives about 40 s a day for a full turn of the timing weights and 2.8 s for the verniers; the model's thread is set to match, and the moment of inertia comes from the model's balance and the parts list's masses. In an overhaul, balance screws and washers bring the rate within 2 minutes a day, then the timing weights within half a second, and the verniers make the final changes (Ops. 5, 6, 10). The model's clock runs at the new rate, so the hands drift from real time; try 3600×. The weights are drawn on the Hamilton balance only.</p>
+      </details>
+      <details class="grp more" id="stopDet">
+        <summary>Stopping and starting</summary>
+        <p class="note" style="margin:0 0 4px">A detent chronometer does not start by itself. Once its balance swings too little to carry the discharge jewel past the trip spring and unlock the wheel, it stops, and it takes a quick twist of the box to set the balance going again (Sec. III).</p>
+        <h3 class="sub-h">Balance locking arm</h3>
+        <div class="seg" id="armSeg"><button data-v="0" aria-pressed="true" title="Clear of the balance, against its stop pin">Unlocked</button><button data-v="1" aria-pressed="false" title="Its end under the rim, holding the balance still, as for shipping (Fig. 9)">Locked</button></div>
+        <h3 class="sub-h">Train-blocking screw</h3>
+        <div class="seg" id="blkSeg"><button data-v="0" aria-pressed="true" title="Screwed up, clear of the train">Raised</button><button data-v="1" aria-pressed="false" title="Screwed down, its dog point between the fourth wheel's spokes: the train stops at the next spoke">Screwed down</button></div>
+        <div class="seg" style="margin-top:8px"><button id="stopLook">Show them</button></div>
+        <div class="rate" id="stopOut" aria-live="polite"></div>
+        <p class="note" style="margin:8px 0 0">The arm was fitted from 1947 so a chronometer could be shipped with its balance held; the screw keeps the mainspring's power in while the balance and escapement are out for service. With the screw down the balance swings on, unlocking a wheel that cannot turn, and runs down in a minute or two; raise the screw before then and it carries on. Screw it down or lock the arm, then unlock and twist: the hands will have lost the time it stood.</p>
       </details>
       <details class="grp more" id="secDet">
         <summary>Cross-section</summary>
@@ -149,6 +161,7 @@
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
     <li>The model keeps Greenwich Mean Time, as Navy chronometers were kept; under Time, Keep: Local time switches to your time zone. (The manual has the hands set only when the chronometer is started, the error being recorded instead; here Set the hands works at any time.)</li>
     <li>Wind with the key (under Time) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
+    <li>It doesn’t start by itself. Run down, or stopped with the balance locking arm or the train-blocking screw (under Stopping and starting), it needs winding and then Twist to start, the quick twist of the box the manual prescribes; the hands lose the time it stood.</li>
   </ul>
   <h3>Sources</h3>
   <ol>
@@ -162,6 +175,7 @@
   <ul>
     <li><b>Measured.</b> The balance, fusee and barrel positions were triangulated from two photographs, each with its own fitted camera. The bridge outline, balance cock, setup cover, screws, engraving and damascene direction were traced on the top view; rendered from that photograph’s camera, the model’s key axes land within 0.4 mm of it. The heights of the plates, wheels and bridges come from a side photograph scaled by the pillar plate’s 3.86 mm edge.</li>
     <li><b>Solved.</b> The escape wheel sits 9.40 mm from the balance, where the manual’s impulse roller leaves its specified 0.002 in of roller shake. The third wheel’s position and the train’s tooth sizes were solved so that every arbor clears every wheel and the barrel.</li>
+    <li><b>Checked against the parts list.</b> Every part in the manual’s parts lists (Figs. 106–110) was checked against the model, and the missing ones added: among them the pillar, mounting-ring and dial screws, the endstone caps, the balance’s hub cap and hold-down screws, the balance locking arm and the train-blocking screw. Every screw has its thread, and every part it passes through or screws into has its hole.</li>
     <li><b>Checked.</b> The parts were tested for collisions to 0.05 mm through a full escapement cycle, at many positions of the train and from run down to full wind, including the chain, the springs and the barrel, whose clearances were measured as it turns. Every screw, pivot and pawl was checked for proper seating and engagement. Not tested: the dial face. The split-balance variant is not yet clear of the barrel bridge.</li>
   </ul>
   <h3>Estimated</h3>

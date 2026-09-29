@@ -182,6 +182,29 @@ Contents:
   replaces the "0.6 mm" note in the stop-bar entry above. Keep: the stop-bar
   sweeps the pocket over the last quarter turn; if the bar, its travel or the
   pocket changes, `tools/fine.py` must still report no train-bridge contact. `da90e53`
+- **Screws were heads with nothing under them, and no part had a hole for
+  one.** The Exploded view showed it: every bridge lifted away with bare heads.
+  `screw()` now draws a threaded shank (`len`, toward +y), and every part a
+  shank passes through has a clearance hole (`hC`) and the part it holds a
+  tapped hole (`hT`), from positions worked out once (`S` in `buildMovement`).
+  The Exploded view lifts each screw out of its holes (`SCREWS`). Keep: a new
+  screw gets its shank and its holes; `tools/fine.py` shows a shank without its
+  hole as a new overlap. `(this commit)`
+- **`polyGeo`'s bevel narrows every hole at both faces**, by 0.8 × the bevel
+  (0.18 mm on the train bridge), so a thread that fits its tapped hole grazed
+  it there, 0.1–0.2 mm deep, in eight places. Screw holes (`hC`/`hT`, whose
+  fourth element is set) are cut that much larger. Keep: pass screw holes
+  through `hC`/`hT`, never as bare `[x, z, r]`. `(this commit)`
+- **The setup cover's feet stopped 0.35 mm above the barrel bridge.** They now
+  stand on it, with the cover screws through them. `(this commit)`
+- **The winding-pawl spring screws stood on nothing**: 0.8 mm heads on a
+  spring 0.3 mm wide (`audit.py`'s floating screws). Each spring now has a foot
+  under its two screws. `(this commit)`
+- **Pivots ended in bare holes**: the balance's lower pivot (no setting, no
+  endstone), the escape arbor's (a gilt ring, no jewel, a stone floating over
+  the bridge, two pins for the cap's screws), and the fourth wheel's upper one.
+  They now run in settings with their jewels, up to endstone caps held by
+  screws (Figs. 108, 110). `(this commit)`
 
 ## Setup, case and gimbals
 
@@ -231,6 +254,24 @@ Contents:
   winding stop 42099. `7a91d18`
 - **Escapement views looked from the wrong side.** They now look from the
   pillar-plate side. `7a91d18`
+- **The model started itself.** Wound after running down, it simply ran again;
+  a detent chronometer is started with "a single quick twist" of its box
+  (Sec. III). The balance's amplitude is now state: the train stops below
+  `ESC.AMIN` (39.2°: the swing must pass the trip spring, unlock the wheel and
+  finish the impulse), at run down, against the balance locking arm or at the
+  train-blocking screw's dog point, and a stopped chronometer needs Twist to
+  start. Keep: the hands and `tSim` stand while the train is held, and nothing
+  jumps when it starts again (`H.bOff`, `H.eOff`). `(this commit)`
+- **The minute wheel and the wind indicator wheel turned on arbors of their
+  own**, the wind indicator's running through the pillar plate. The parts list
+  has posts (42085, 42084) screwed to the plate (35779); the wheels turn on
+  them. `(this commit)`
+- **Parts in the parts list were missing**: pillar screws from the dial side,
+  the mounting ring's screws, dial screws, the posts, the barrel and fusee upper
+  bushings, the endstone caps and settings, the setup pawl pivot screw, the
+  balance's cap and hold-down screws, the balance locking arm and the
+  train-blocking screw. See `Review-results.md`, "Every part against the
+  manual". `(this commit)`
 
 ## Rate panel
 
