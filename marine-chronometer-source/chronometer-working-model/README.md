@@ -243,7 +243,7 @@ and the thread pitches are the model's. Things to know before changing it:
    - the bridge outline (radius about 40 mm);
    - the crescent balance cock (`tools/cock_outline.json`), shifted for its height parallax so its endstone lands over the staff. The traced edge passes 0.7 mm from the staff, too close for the upper setting, so the nose is rounded out to a boss 2.4 mm in radius about the staff (see "Estimated");
    - the barrel bridge's cut round the balance. Its edge, traced on `References/photo-top-view.jpg` through an affine map fitted to five screws on the barrel bridge (within 0.6 mm), fits a circle of r 17.6 about (5.24, 6.33) to 1.3 mm: 2.8 mm off the staff toward the barrel, so it reaches 20.5 mm from the staff on that side. The cut is that circle joined with the balance's clearance circle (r 17.7 about the staff), and the barrel's cap and the fusee's large end show through it, as photographed;
-   - the bow-shaped setup cover over the ratchet, and the ratchet's size (about 52 teeth, 15.6 mm across);
+   - the setup cover over the ratchet: a waisted plate across the arbor, its ends arcs about 13 mm out, both long sides concave to about 6 mm from the arbor, so the ratchet's teeth show on either side and the click's tip on the rim side (as in Fig. 24 and the 2E12055 photograph). Traced through a fit to its two screws and the arbor; the rim-side edge is an arc within 0.5 mm of the tracing. And the ratchet's size (about 52 teeth, 15.6 mm across);
    - the screw positions;
    - the engraving columns (`tools/engr.json`);
    - the damascene direction.

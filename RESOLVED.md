@@ -200,6 +200,14 @@ Contents:
 - **Setup cover shaped as a 220° fan.** The photos show a bow-shaped plate
   straddling the barrel arbor, with a curved slot showing the ratchet and click,
   and screws inside the outline. `9606cc3`, `cc70482`
+- **Setup cover's rim side wrong.** Its rim-side edge ran at 8.7 mm from
+  the arbor with a curved slot cut in the plate to show the teeth and click.
+  The top-view photograph, the 2E12055 photograph and Fig. 24 show no slot:
+  the plate is waisted on both sides, and on the rim side its concave edge
+  comes to 5.9 mm from the arbor, uncovering the teeth and the click's tip.
+  Traced through a fit to the cover's two screws and the arbor; the edge is an
+  arc within 0.5 mm of the tracing. Keep: check the cover against the
+  photograph with `tools/topview.py`.
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved

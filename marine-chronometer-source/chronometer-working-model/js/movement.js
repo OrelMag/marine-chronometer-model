@@ -385,9 +385,9 @@ function buildMovement(M){
   const fsP=part('fs',-16);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
   const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:TB_T+1.0,bB:-9.6,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,capR:5.6,screw,sbZ:-1.8,stopAng:Math.atan2(-fo[1],fo[0])-Math.atan2(-dz,dx)+Math.asin((0.7+0.9-1.8)/7.2)});   /* at full wind the stop-bar's side (half-width 0.7, 1.8 off the axis beside the arbor) meets the winding stop pin (r 0.9, 7.2 mm out) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
-  /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), measured on the top-view photograph:
-     a bow-shaped cover straddling the arbor, ends ~13 mm out along 107 deg / 287 deg, the right end an arc about the arbor; the waist on the
-     centre side just uncovers the ratchet teeth, and on the rim side a curved slot (r 7.1-7.95) shows the teeth and the click */
+  /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), traced on the top-view photograph (fitted to
+     its two screws and the arbor): a waisted plate across the arbor, its two ends arcs about 13 mm out along 107 deg / 287 deg, and both long sides
+     concave, coming within about 6 mm of the arbor, so the ratchet's teeth show on either side and the click's tip on the rim side */
   const rt=part('ratchet',-76),P2=(r,a)=>[L.Ba[0]+r*Math.cos(a*D2R),L.Ba[1]+r*Math.sin(a*D2R)];
   const srw=mesh(rt,gearGeo(52,0.289,1.0,{ratchet:true,flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]);   /* steep faces meet the click against the mainspring's pull */
   cylBetween(rt,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28);
@@ -405,20 +405,16 @@ function buildMovement(M){
     mesh(rt,stripGeo([s0,s1,[(s1[0]+E[0])/2+bk.n[0]*0.3,(s1[1]+E[1])/2+bk.n[1]*0.3],E],0.3,0.6),M.blued,0,-28.31,0);
     for(const q of[s0,s1])cylBetween(rt,0.25,-27.71,-27.16,M.steel,...q);}
   const nBefore=rt.children.length;
-  { /* outline in polar coordinates about the arbor: left end arc, rim-side concave edge, right end, centre-side concave edge */
+  { /* outline in polar coordinates about the arbor: left end arc, rim-side concave edge (to r 5.9, within 0.5 mm of the photograph), right end,
+       centre-side concave edge (to r 6.4) */
     const arc3=(a,b,c,n)=>{const[ax,az]=a,[bx,bz]=b,[cx2,cz2]=c,d=2*(ax*(bz-cz2)+bx*(cz2-az)+cx2*(az-bz)),
         ux=((ax*ax+az*az)*(bz-cz2)+(bx*bx+bz*bz)*(cz2-az)+(cx2*cx2+cz2*cz2)*(az-bz))/d,uz=((ax*ax+az*az)*(cx2-bx)+(bx*bx+bz*bz)*(ax-cx2)+(cx2*cx2+cz2*cz2)*(bx-ax))/d,
         r=Math.hypot(ax-ux,az-uz),t0=Math.atan2(az-uz,ax-ux),tm=Math.atan2(bz-uz,bx-ux);let t1=Math.atan2(cz2-uz,cx2-ux);
       const w=t=>((t-t0)%TAU+TAU)%TAU;let dt=w(t1);if(w(tm)>dt)dt-=TAU;const o=[];for(let k=1;k<n;k++){const t=t0+dt*k/n;o.push([ux+r*Math.cos(t),uz+r*Math.sin(t)]);}return o;};
     const TL=P2(12.8,69.4),BL=P2(13.1,145.6),BR=P2(12.97,249.2),TR=P2(12.61,325.9),pts=[],polar=(r0,r1,a0,a1,n)=>{const o=[];for(let k=0;k<=n;k++){const t=k/n;o.push(P2(lerp(r0,r1,t),lerp(a0,a1,t)));}return o;};
-    pts.push(TL,...arc3(TL,P2(13.1,106),BL,20),BL,P2(9.8,153),...polar(8.7,8.7,163,236,30),BR,...polar(12.97,12.61,249.2,325.9,30).slice(1,-1),TR,...arc3(TR,P2(6.4,17),TL,40));
+    pts.push(TL,...arc3(TL,P2(13.1,106),BL,20),BL,...arc3(BL,P2(5.9,192),BR,40),BR,...polar(12.97,12.61,249.2,325.9,30).slice(1,-1),TR,...arc3(TR,P2(6.4,17),TL,40));
     const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
     const h=new THREE.Path();h.absarc(L.Ba[0],-L.Ba[1],2.6,0,TAU,true);s.holes.push(h);
-    /* the curved slot on the rim side, round-ended */
-    { const r0=7.1,r1=7.95,rc=(r0+r1)/2,rh=(r1-r0)/2,a0=161,a1=236,sl=[...polar(r1,r1,a0,a1,30)],e1=P2(rc,a1),e0=P2(rc,a0);
-      for(let k=1;k<12;k++){const t=a1*D2R+k/12*Math.PI;sl.push([e1[0]+rh*Math.cos(t),e1[1]+rh*Math.sin(t)]);}
-      sl.push(...polar(r0,r0,a1,a0,30));for(let k=1;k<12;k++){const t=a0*D2R+Math.PI+k/12*Math.PI;sl.push([e0[0]+rh*Math.cos(t),e0[1]+rh*Math.sin(t)]);}
-      const hp=new THREE.Path();sl.forEach(([x,z],i)=>i?hp.lineTo(x,-z):hp.moveTo(x,-z));hp.closePath();s.holes.push(hp);}
     const cvg=new THREE.ExtrudeGeometry(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
     R.cover=mesh(rt,cvg,M.plateSolid,0,-29.66,0);
     /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */
