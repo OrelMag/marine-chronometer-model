@@ -131,7 +131,18 @@ Everything is driven from one model clock `tSim`, in seconds of the time kept (G
   turns forward until its ratchet catches the pawls, and the sustaining ratchet
   forward to load the spring again. Nothing turns back; `tools/maintaining.py`
   checks this. Every pawl is rested on its ratchet's teeth each frame
-  (`seatPawl`), so it rides over them or bears on a steep face.
+  (`seatPawl`), so it rides over them or bears on a steep face. The winding
+  pawls' flat springs are rebuilt with them (`wpsGeo`), their ends kept on the
+  arm as the pawls swing out over the teeth while winding.
+- What turns while winding: the fusee wheel follows the train (`gA`), not the
+  fusee, so it keeps turning forward, driven by the sustaining spring, while
+  the key turns the fusee and its winding ratchet back and the sustaining
+  pawl holds the sustaining ratchet. The setup ratchet never turns: its angle
+  is set once when the movement is built (`srw.rotation.y`, a steep face on
+  the click) and `update()` leaves it alone. The barrel arbor turns only when
+  the watchmaker lets the mainspring down or sets it up with a let-down key
+  (Sec. II, p. 4: "the only time that the mainspring arbor turns is when
+  manipulated during assembly, disassembly or adjustment"; Ops. 8, 53).
 
 ### The rate panel
 

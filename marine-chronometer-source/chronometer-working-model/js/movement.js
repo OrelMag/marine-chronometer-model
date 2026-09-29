@@ -224,11 +224,14 @@ function buildMovement(M){
   mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,flip:true,bore:5}),M.steel,0,-9.45,0);   /* steep faces lead against the running direction, so the sustaining pawl holds it */
   mesh(R.sr,cylY(0.4,1.45,10),M.steel,13.55*Math.cos(SSP_PIN),-8.375,13.55*Math.sin(SSP_PIN));   /* pin pressing the sustaining spring's free end */
   /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4): pushed by its steep faces when running, slipping over them when winding.
-     Each is held in by a flat winding-pawl spring (42007) under two screws (42012), bearing on the arm's outer side near the pivot (Figs. 28, 69) */
+     Each is held in by a flat winding-pawl spring (42007) under two screws (42012), bearing on the arm's outer side near the pivot (Figs. 28, 69).
+     wpsGeo: the spring for pawl angle th, its free part bent so the end stays on the arm; update() rebuilds it as the pawl rides the teeth in winding */
+  const wpsGeo=(pw,th)=>{const u=pw.userData,bk=pawlBack(u.pts,0.96,u.q,th,[0,0]),E=[bk.p[0]+bk.n[0]*0.095,bk.p[1]+bk.n[1]*0.095],[s0,r0,r1]=u.sp;
+    return stripGeo([s0,r0,r1,[(r1[0]+E[0])/2+bk.n[0]*0.25,(r1[1]+E[1])/2+bk.n[1]*0.25],E],0.3,0.3);};
   R.wp=[];for(let k=0;k<2;k++){const a=k*Math.PI+0.4,P=[12.3*Math.cos(a),12.3*Math.sin(a)],T=[8.95*Math.cos(a+0.3),8.95*Math.sin(a+0.3)],ln=Math.hypot(T[0]-P[0],T[1]-P[1])+0.2,pw=mesh(R.sr,pawlGeo(ln,0.9,0.5),M.steel,P[0],-10.05,P[1]);
     pw.userData.q=P;pw.userData.th0=Math.atan2(T[1]-P[1],-(T[0]-P[0]));pw.userData.pts=pawlPts(ln,0.9);R.wp.push(pw);
-    const bk=pawlBack(pw.userData.pts,0.96,P,pw.userData.th0,[0,0]),E=[bk.p[0]+bk.n[0]*0.17,bk.p[1]+bk.n[1]*0.17],pol=(r,t)=>[r*Math.cos(a+t),r*Math.sin(a+t)],r0=pol(12.9,0.85),r1=pol(12.5,0.6);
-    mesh(R.sr,stripGeo([pol(13.0,0.97),r0,r1,[(r1[0]+E[0])/2+bk.n[0]*0.25,(r1[1]+E[1])/2+bk.n[1]*0.25],E],0.3,0.3),M.blued,0,-10.1,0);
+    const pol=(r,t)=>[r*Math.cos(a+t),r*Math.sin(a+t)],r0=pol(12.9,0.85),r1=pol(12.5,0.6);pw.userData.sp=[pol(13.0,0.97),r0,r1];
+    pw.userData.spr=mesh(R.sr,wpsGeo(pw,pw.userData.th0),M.blued,0,-10.1,0);pw.userData.sprTh=pw.userData.th0;
     for(const q of[r0,r1])screw(R.sr,...q,-10.1,0.4,0.2);}
   const sp=part('spawl',-12);cylBetween(sp,0.7,TB_U-0.7,y0+2,M.steel,...SPv);
   /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2), trailing the pivot so the teeth can only pass it one way */
@@ -438,7 +441,8 @@ function buildMovement(M){
     fs.fz.rotation.y=s.n*TAU+eps;const fzW=base+eps;
     R.sr.rotation.y=srA;
     { const d=Math.min(SMAX,gA-srA);if(Math.abs(d-lastD)>0.002){R.sspring.geometry.dispose();R.sspring.geometry=sspGeo(SSP_PIN+d-0.031);lastD=d;} }
-    for(const pw of R.wp){const psi=fzW-srA;pw.rotation.y=seatPawl(pw.userData.pts,toWheel(pw.userData.q,[0,0],psi),pw.userData.th0-psi,FPR)+psi;}
+    for(const pw of R.wp){const psi=fzW-srA,u=pw.userData;pw.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,FPR)+psi;
+      if(Math.abs(pw.rotation.y-u.sprTh)>0.002){u.spr.geometry.dispose();u.spr.geometry=wpsGeo(pw,pw.rotation.y);u.sprTh=pw.rotation.y;}}   /* the spring follows its pawl */
     { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP)+srA;R.spS.rotation.y=R.spawl.rotation.y-R.spawl.userData.base; }
     R.staff.rotation.y=-s.th;
     R.det.rotation.y=s.lift/E.LEN;
