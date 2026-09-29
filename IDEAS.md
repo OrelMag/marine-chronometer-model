@@ -539,6 +539,8 @@ the JavaScript `update()`.
 - **Tiny shadows (S):** 308 meshes are under 1.5 mm in radius, and 541 meshes cast shadows. Set `castShadow=false` on anything under about 1.5 mm. From 2048 px over 340 mm, a shadow texel is about 0.17 mm, so their shadows are a few texels at most.
 
 ### 5.2 Startup: the stripe texture
+> **Done.** Option 3, with the same pixels: each height is computed once in three rolling rows instead of five times, the wave once per column, and `Math.sqrt` replaces `Math.hypot`. Both maps hash identically to before; in headless Chromium `stripeTex()` went from 540 to 123 ms and `mats()` from 577 to 140 ms. Precomputed images (option 1) were set aside: images loaded from `file://` taint WebGL in Chrome, which would break opening `index.html` directly and the Playwright tools.
+
 `stripeTex()` takes 204 ms: a per-pixel JavaScript loop over 1024 × 1024 pixels, computing `sin` and `pow` several times each ([core.js:22](marine-chronometer-source/chronometer-working-model/js/core.js#L22)). Options, best first:
 1. **Precompute it.** Generate the two tiles once, save them as WebP or PNG in `vendor/` or `img/` (the map is greyscale; the normal map compresses well), and inline them at build time. Load time drops to a decode.
 2. **Compute it on the GPU.** Render the pattern with a one-off full-screen shader into a render target. It takes a few milliseconds, but a render target doesn't survive context loss, so it would join the environment map's rebuild.

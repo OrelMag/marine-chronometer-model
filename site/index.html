@@ -449,11 +449,17 @@ function envTex(r){
 function stripeTex(){
   const N=1024,P=64,cm=document.createElement('canvas'),cn=document.createElement('canvas');cm.width=cm.height=cn.width=cn.height=N;
   const xm=cm.getContext('2d'),xn=cn.getContext('2d'),im=xm.createImageData(N,N),inn=xn.createImageData(N,N);
-  const h=(x,y)=>{const w=y+7*Math.sin(TAU*x/N)+2.5*Math.sin(TAU*3*x/N+1.3);const t=(w%P+P)%P/P;return Math.pow(Math.sin(Math.PI*t),1.6);};
-  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const k=4*(y*N+x),v=h(x,y),dy=(h(x,y+1)-h(x,y-1))*0.5,dx=(h(x+1,y)-h(x-1,y))*0.5;
-    const g=Math.round(255*(0.7+0.3*v));im.data[k]=im.data[k+1]=im.data[k+2]=g;im.data[k+3]=255;
-    let nx=-dx*5,ny=dy*5,nz=1;const l=Math.hypot(nx,ny,nz);nx/=l;ny/=l;nz/=l;
-    inn.data[k]=Math.round((nx*0.5+0.5)*255);inn.data[k+1]=Math.round((ny*0.5+0.5)*255);inn.data[k+2]=Math.round((nz*0.5+0.5)*255);inn.data[k+3]=255;}
+  /* height h(x,y) = sin(pi*t)^1.6 of the ridge phase t, the ridges waving with x. Each h is computed once, in three rolling rows (rows y-1, y, y+1 over
+     x = -1..N), not five times over for the slopes, and the wave per column once: the same pixels as the direct formula, about a fifth of the time */
+  const A=new Float64Array(N+2),B=new Float64Array(N+2);for(let x=-1;x<=N;x++){A[x+1]=7*Math.sin(TAU*x/N);B[x+1]=2.5*Math.sin(TAU*3*x/N+1.3);}
+  const row=(y,o)=>{for(let i=0;i<N+2;i++){const w=y+A[i]+B[i],t=(w%P+P)%P/P;o[i]=Math.pow(Math.sin(Math.PI*t),1.6);}return o;};
+  let r0=row(-1,new Float64Array(N+2)),r1=row(0,new Float64Array(N+2)),r2=new Float64Array(N+2);const dm=im.data,dn=inn.data;
+  for(let y=0;y<N;y++){row(y+1,r2);
+    for(let x=0;x<N;x++){const k=4*(y*N+x),v=r1[x+1],dy=(r2[x+1]-r0[x+1])*0.5,dx=(r1[x+2]-r1[x])*0.5;
+      const g=Math.round(255*(0.7+0.3*v));dm[k]=dm[k+1]=dm[k+2]=g;dm[k+3]=255;
+      let nx=-dx*5,ny=dy*5,nz=1;const l=Math.sqrt(nx*nx+ny*ny+1);nx/=l;ny/=l;nz/=l;
+      dn[k]=Math.round((nx*0.5+0.5)*255);dn[k+1]=Math.round((ny*0.5+0.5)*255);dn[k+2]=Math.round((nz*0.5+0.5)*255);dn[k+3]=255;}
+    const t=r0;r0=r1;r1=r2;r2=t;}
   xm.putImageData(im,0,0);xn.putImageData(inn,0,0);
   const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)t.encoding=THREE.sRGBEncoding;return t;};
   return{map:mk(cm,true),normal:mk(cn,false)};
