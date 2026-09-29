@@ -174,7 +174,7 @@ and the thread pitches are the model's. Things to know before changing it:
    - The cock foot stands 14.2 tall on the train bridge.
    - The fusee cone spans 6.7–15.8, which the model matches.
    - The escape wheel runs 0.9 below the train bridge.
-   - The escape pinion meshes with the fourth wheel 3.6 above the plate, and a large wheel runs lowest, at 0.4–1.6. That is the centre wheel, which must pass under the fusee wheel and the barrel.
+   - The escape pinion meshes with the fourth wheel 3.6 above the plate, and a large wheel runs lowest, at 0.4–1.6. That is the centre wheel, which must pass under the fusee wheel and the barrel. The escape pinion runs from the fourth wheel down toward the plate (2.1–4.1), clear of the third wheel just above.
    - A 3 mm plate at 7.9–10.9 is taken to be the balance lower bridge. It also carries the fourth wheel's upper pivot, and the train-blocking screw reaches down from it to the fourth wheel's spokes (Sec. II).
    - Fig. 2 and Fig. 109 show a tall barrel that rises past the train bridge to the barrel bridge, and Figs. 108 and 110 show the train bridge cut round it.
    - The plan positions (`L`) were fitted before the re-stack, with the old heights, which `bundle.py`, `fit.py` and `unproj.py` still use. They were not re-fitted.
@@ -187,7 +187,7 @@ and the thread pitches are the model's. Things to know before changing it:
 - Tooth counts of the centre, third and fourth wheels and pinions. They are chosen to give the half-second train's ratios. The escape wheel (16) is Hamilton's; the 96/14 first stage reproduces the manual's seven key half-turns per 24 h.
 - Dimensions and positions, estimated from the figures and a 4-inch dial, except where the photographs give them (plan: "How the layout was measured", steps 1–5; heights: step 6).
 - Heights the side photograph doesn't show:
-  - The third wheel (8.6 mm above the plate, between the centre pinion and the barrel).
+  - The third wheel (4.3–5.2 mm above the plate, just above the fourth wheel, between the centre pinion and the barrel).
   - The barrel (13.2 mm tall, from just above the third wheel to 1 mm under the barrel bridge; its chain band runs level with the fusee's cone).
   - The balance rim, 0.4 mm clear of the escape upper bridge. The bridge's two screws have low heads (0.3 mm), 0.14 mm clear of the rim and the timing weights, which pass over them.
   - The hairspring, 6.7 mm tall to the cock.
@@ -224,7 +224,7 @@ and the thread pitches are the model's. Things to know before changing it:
   - The weights' travel, 3 turns either way from the middle position the manual starts them at. At 40 s a turn, that covers the 2 minutes a day that screws and washers leave (Op. 5).
   - The weights' drawn sizes.
 - The upper train bridge's outline under the barrel bridge (drawn as a full disc) and its opening round the balance staff (r 8.0 mm).
-- The sustaining pawl's position: 21 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel.
+- The sustaining pawl's position: 21.35 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel and of the fusee wheel's teeth.
 
 ## Modifying the model
 
