@@ -168,6 +168,7 @@ and the thread pitches are the model's. Things to know before changing it:
 - chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement, a redrawing of the manual's Fig. 90, and a photograph of a Model 21 detent.
 - chronometerbook.com, post 30: escape wheel specification of 16 teeth, 13.14-13.18 mm diameter, 1.27-1.32 mm thick and no wider than the impulse roller; the locking jewel set at 8-12° of draw.
 - The manual's Fig. 2 photograph (layout) and Fig. 107 (dial side, wind-indicator wheel).
+- A photographed Model 21 dial of the U.S. Maritime Commission contract (the Hamilton dial's layout, inscriptions and hands) and a photographed movement, serial 2E12055 (the plate engraving's text and layout, and the serial used on the plates and dial). Both are in `References/`.
 
 ## How the layout was measured
 
@@ -210,7 +211,8 @@ and the thread pitches are the model's. Things to know before changing it:
 - The train bridge's cut round the barrel: a 19.2 mm circle that holds the barrel, open to the rim and clear of the centre arbor. Figs. 108 and 110 show its presence, not its size.
 - The balance lower bridge: a 3 mm plate on a boss under the train bridge, with two screws (Op. 50). Fig. 110 shows it stepped and lobed; its outline is simplified.
 - The train-bridge and barrel-bridge screws. Their positions come from the top-view photograph; the manual gives three screws for each bridge. One train-bridge screw, at (−8.5, 27.7), has no pillar under it in the model.
-- The fusee profile and the wind indicator ratio.
+- The fusee profile and the wind indicator ratio. The ratio gives the UP–DOWN hand a 240° sweep for 56 h; the photographed Hamilton dial's scale spans about 310°, so the model's scale is drawn on 240°, open wider round the 12.
+- The Hamilton dial's proportions. The sub-dial centres are fixed by their arbors (23.9 mm from the centre, 0.47 of the dial's radius), nearer the centre than on the photographed dial (about 0.54), so the sub-dials sit lower and the inscriptions closer together. The plate engraving's block is 2.5 mm nearer the rim than on the top-view tracing, to clear the dust-seal flange.
 - The stop-bar's size and travel, and the fusee's top: a turned boss, a slotted layer with a groove for the stop-bar spring, and the top plate (r 5.4) with its two screws. Sec. IV describes the mechanism (the chain bears on one end, the other moves out to the winding stop), not its dimensions. The stop-bar slides out over the last quarter turn, driven from the wind, not from contact with the chain.
 - The shapes of the springs: the winding-pawl springs, the stop-bar spring, the sustaining pawl's spring (a wire round a steady pin in the train bridge) and the setup pawl spring. The sustaining spring's travel from loaded to spent (10°, `SMAX`): 5 to 10 minutes of drive (Sec. IV) is 4.4–8.75° of the fusee wheel. The model does not stop the train if a wind outlasts it (only possible at high speed).
 - The sustaining spring is pinned to the fusee wheel and pushed by a pin on the sustaining ratchet; the manual pins it to both.
@@ -331,7 +333,11 @@ for the wind indicator; `MOD` holds the tooth sizes).
 
 **Change the dial.** The dial is painted on a canvas in `dialCanvas()` in
 `core.js`: chapter ring, numerals, the seconds and UP–DOWN sub-dials and the
-inscription. `dialCanvas('roman')` draws the Variants panel's alternative, a
+inscription. The default, Hamilton dial follows a photographed Model 21 dial of
+the U.S. Maritime Commission contract; `SERIAL` (top of `core.js`) is printed
+in its seconds sub-dial and engraved on the plates. The numerals are sized from
+the loaded face's measured figure height, so `app.js` loads the canvas-only
+font faces before building the model. `dialCanvas('roman')` draws the Variants panel's alternative, a
 Roman dial after the A. Lange & Söhne deck chronometers (no maker's name or
 number; its AUF–AB wind scale uses this movement's 240° sweep).
 `dialCanvas('swiss')` and `dialCanvas('soviet')` share one branch for the
@@ -340,8 +346,9 @@ Nardin pattern. The Swiss one follows the Ulysse Nardin dial photographed by NOA
 Factory's copy of it (Arabic hours, ЗАВОД–СПУСК, СДЕЛАНО В СССР, its Cyrillic
 set in system sans because the vendored fonts are Latin only). Both leave off
 the maker's name and number and keep the 240° wind sweep. `References/` holds
-both photographs. The hands are `handGeo()` shapes in `core.js` (spade, leaf,
-lance, pear, plain; a negative tail gives a spear counterpoise), placed in the
+the photographs. The hands are `handGeo()` shapes in `core.js` (spade, leaf,
+lance, pear, plain; a negative tail gives a spear counterpoise; `at` moves the
+pear's bulb), placed in the
 "dial, hands, motion work" block of `movement.js`. Each dial style has its own
 set (`userData.dk`), switched with `mv.userData.dial(kind)`, which paints a
 style's texture on first use.

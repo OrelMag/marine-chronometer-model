@@ -221,6 +221,8 @@ function buildMovement(M){
       for(const da of[0.03,-0.08,-0.19]){const b=a+da;C.push([[L.Fu[0]+(e-0.6)*Math.cos(b),L.Fu[1]+(e-0.6)*Math.sin(b)],Math.hypot(0.6,2.5)+0.3]);}}
     for(let i=0;i<240;i++){const v=[Math.cos(i/240*TAU),Math.sin(i/240*TAU)];let t=0;for(const[c,r]of C){const w=[L.Fu[0]-c[0],L.Fu[1]-c[1]],b=w[0]*v[0]+w[1]*v[1],d=b*b-(w[0]*w[0]+w[1]*w[1]-r*r);if(d>=0)t=Math.max(t,-b+Math.sqrt(d));}o.push([L.Fu[0]+t*v[0],L.Fu[1]+t*v[1]]);}return o;})();
   R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,8.0],{pts:FUpocket},[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,TB_T,0);
+  {const C=[10.53,35.06],A=[-0.9764,0.2161],P=[0.2161,0.9764],q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */
+    const eg=mesh(tb,decalGeo([q(-5.5,-1.8),q(5.5,-1.8),q(5.5,1.8),q(-5.5,1.8)]),M.engraveT,0,TB_T-0.02,0);eg.userData.noShadow=true;eg.userData.noCap=true;eg.userData.decal=true;}
   PILLARS.train.slice(0,2).forEach(([x,z])=>screw(tb,x,z,TB_T,2.9,1.6));screw(tb,-8.5,27.7,TB_T,2.9,1.6);
   /* centre and third upper bushings in the train bridge (42166, 42167); they lie in the opening round the balance, so they can be oiled with the barrel bridge on (Sec. VIII, Op. 46) */
   bushR(tb,...L.C,TB_T-0.1,TB_U,1.2,0.78);bushR(tb,...L.T,TB_T-0.1,TB_U,1.0,0.58);
@@ -248,12 +250,13 @@ function buildMovement(M){
   const dface=mesh(dl,new THREE.RingGeometry(2.4,50.8,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,3.92,0);dface.userData.noCap=true;
   for(const a of[30,150,270])cylBetween(dl,0.9,0,3.3,M.brass,39*Math.cos(a*D2R),39*Math.sin(a*D2R));
   const hd=part('hands',48),hg=new THREE.MeshStandardMaterial({color:sc(0xd9b25e),metalness:1,roughness:0.2}),hb=new THREE.MeshStandardMaterial({color:sc(0x7a6240),metalness:1,roughness:0.45});   /* hg gilt (Roman), hb aged gilt (Soviet) */
+  /* Hamilton hands as on the photographed dial: blued hour hand with a bulb two-thirds out and a long spear point, plain minute hand to the track, a long seconds hand with a spear counterpoise */
   const dk=(o,k)=>{const g=new THREE.Group();g.userData.dk=k;o.parent.add(g);g.add(o);return o;};   /* hands of one dial style ('hamilton', 'roman', 'swiss' or 'soviet'), grouped so app.js's per-mesh visibility leaves the choice alone */
-  R.hour=new THREE.Group();R.hour.position.y=5.2;hd.add(R.hour);dk(mesh(R.hour,handGeo(30,2.3,6,'spade'),M.blued),'hamilton');dk(mesh(R.hour,handGeo(29,1.3,6,'leaf'),hg),'roman');
-  R.min=new THREE.Group();R.min.position.y=6.0;hd.add(R.min);dk(mesh(R.min,handGeo(44,1.6,8,'plain'),M.blued),'hamilton');dk(mesh(R.min,handGeo(45,0.9,8,'lance'),hg),'roman');
+  R.hour=new THREE.Group();R.hour.position.y=5.2;hd.add(R.hour);dk(mesh(R.hour,handGeo(41,1.2,2.5,'pear',0.68),M.blued),'hamilton');dk(mesh(R.hour,handGeo(29,1.3,6,'leaf'),hg),'roman');
+  R.min=new THREE.Group();R.min.position.y=6.0;hd.add(R.min);dk(mesh(R.min,handGeo(47.5,1.5,3,'plain'),M.blued),'hamilton');dk(mesh(R.min,handGeo(45,0.9,8,'lance'),hg),'roman');
   dk(mesh(hd,cylY(2,1.2,24),M.blued,0,6.3,0),'hamilton');dk(mesh(hd,cylY(2.3,1.2,24),hg,0,6.3,0),'roman');dk(mesh(hd,cylY(1,0.5,6),M.steel,0,7.1,0),'roman');
-  R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2) */hd.add(R.sec);dk(mesh(R.sec,handGeo(11.5,0.6,3.5,'plain'),M.blued),'hamilton');dk(mesh(R.sec,handGeo(16.5,0.55,4,'plain'),M.blued),'roman');mesh(R.sec,cylY(0.9,0.8,16),M.blued,0,0.3,0);
-  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35,L.Ud[1]);hd.add(R.ud);dk(mesh(R.ud,handGeo(10.5,0.7,2.5,'plain'),M.blued),'hamilton');dk(mesh(R.ud,handGeo(10,0.6,2.5,'leaf'),hg),'roman');mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
+  R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2) */hd.add(R.sec);dk(mesh(R.sec,handGeo(21,0.5,-10,'plain'),M.blued),'hamilton');dk(mesh(R.sec,handGeo(16.5,0.55,4,'plain'),M.blued),'roman');mesh(R.sec,cylY(0.9,0.8,16),M.blued,0,0.3,0);
+  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35,L.Ud[1]);hd.add(R.ud);dk(mesh(R.ud,handGeo(11,0.6,2.5,'plain'),M.blued),'hamilton');dk(mesh(R.ud,handGeo(10,0.6,2.5,'leaf'),hg),'roman');mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
   /* Nardin-pattern dials: pear hands (blued, or aged gilt on the Soviet copies); a long thin seconds hand to the track with a spear counterpoise */
   for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31,1.4,6,'pear'),m),k);dk(mesh(R.min,handGeo(46.5,0.9,8,'pear'),m),k);dk(mesh(hd,cylY(2.3,1.2,24),m,0,6.3,0),k);
     dk(mesh(R.sec,handGeo(19,0.45,-8,'plain'),M.blued),k);dk(mesh(R.ud,handGeo(k==='swiss'?11.5:8.5,0.6,2.5,'plain'),M.blued),k);}

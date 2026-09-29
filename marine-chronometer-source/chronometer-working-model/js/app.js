@@ -17,8 +17,8 @@ const INFO={
   barrelBridge:['Barrel bridge','Holds the upper pivots of both the barrel and the fusee. The fusee winding stop is a stud screwed into its underside (left-hand thread); the setup ratchet and the dust seal sit on top.','No. 42061 · winding stop 42099'],
   escBridge:['Escape upper bridge','Small bridge holding the escape wheel’s upper jewel and endstone.','No. 42064'],
   lowerBridge:['Balance lower bridge','Supports the lower cap jewel of the balance staff and the fourth wheel upper setting.','No. 42065'],
-  dial:['Dial','Black on silver-white. Hours 1–12 with 60 minute graduations; UP–DOWN indicator below the 12, numbered 8 to 48; seconds at 6, numbered 5 to 60.','No. 42030'],
-  hands:['Hands','Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff, wind indicator hand on its own wheel. The hands advance in half-second increments.','Nos. 42032–42035'],
+  dial:['Dial','Black on silver-white, after a photographed Model 21 dial of the U.S. Maritime Commission contract. Large Arabic hours (the 6 covered by the seconds sub-dial) inside a railroad minute track with triangles at the hours; HAMILTON and LANCASTER, PA., U.S.A. across the centre; UP–DOWN indicator below the 12, numbered 8 to 48, on this movement’s 240° sweep; seconds at 6, numbered 10 to 60, with the serial number and U.S. MARITIME COMMISSION.','No. 42030'],
+  hands:['Hands','Blued steel: an hour hand with a bulb and a long spear point, a plain minute hand, a long seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff, wind indicator hand on its own wheel. The hands advance in half-second increments.','Nos. 42032–42035'],
   motion:['Motion work','Cannon pinion, minute wheel and hour wheel under the dial. A pinion on the dial end of the fusee arbor drives the wind indicator wheel.','Nos. 42077, 42078, 42080, 42081'],
   gw:['Fusee wheel','The first wheel of the train, free on the fusee arbor; it drives the centre wheel pinion. The sustaining spring in its recess drives it: loaded by the sustaining ratchet wheel in running, on its own while the key winds.','No. 42015 · 96 teeth here'],
   sratchet:['Sustaining ratchet wheel','Free on the fusee arbor. Its two winding pawls, each held in by a flat spring, catch the winding ratchet screwed to the fusee, so in running the mainspring’s pull passes through this wheel and the sustaining spring to the fusee wheel. While the key turns the fusee back the winding ratchet slips under the pawls, and the sustaining pawl holds this wheel.','No. 42009 · winding pawl springs 42007 · winding ratchet 42013'],
@@ -79,7 +79,8 @@ function drawEsc2D(ctx,w,h,p,dark){
 (async function(){
   const stage=$('#stage'),cv=stage.querySelector('canvas');
   if(typeof THREE==='undefined'){$('#loading').textContent='The 3D library didn’t load. Reload the page to try again.';return;}
-  try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2500))]);}catch(_){}
+  /* faces drawn only on canvases (dial, engraving) are not fetched by the page's CSS, so fonts.ready alone doesn't wait for them */
+  try{await Promise.race([Promise.all(['600 10px Spectral','400 10px Spectral','400 10px "Instrument Sans"'].map(f=>document.fonts.load(f))).then(()=>document.fonts.ready),new Promise(r=>setTimeout(r,2500))]);}catch(_){}
   const dark=()=>matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark';
   /* phones (touch, under 600 px on the short side): a lower pixel ratio and shadow map keep the frame rate up */
   const PHONE=matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<600;

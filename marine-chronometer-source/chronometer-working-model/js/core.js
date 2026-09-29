@@ -47,6 +47,9 @@ function engraveCanvas(draw){const S=1024,c=document.createElement('canvas');c.w
   x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t;}
 function engraveArc(x,S,k,txt,r,psiDeg,spreadDeg,size){x.font=`600 ${size*k}px Spectral, Georgia, serif`;const ch=[...txt],n=ch.length,phi0=-psiDeg*D2R,sp=spreadDeg*D2R;
   ch.forEach((q,i)=>{const phi=phi0+((n-1)/2-i)*sp;x.save();x.translate(S/2+r*k*Math.cos(phi),S/2+r*k*Math.sin(phi));x.rotate(phi-Math.PI/2);x.fillText(q,0,0);x.restore();});}
+/* letters of t spread (or squeezed) to width w, centred on the origin; gx narrows each letter first, as on the engraved plates */
+function fillTracked(x,t,w,gx=1){const cs=[...t],ws=cs.map(q=>x.measureText(q).width),n=ws.reduce((s,v)=>s+v,0),W=w/gx,g=cs.length>1?Math.max(0,(W-n)/(cs.length-1)):0;
+  x.save();x.scale(gx*Math.min(1,W/n),1);x.textAlign='left';let px=-(n+g*(cs.length-1))/2;cs.forEach((q,i)=>{x.fillText(q,px,0);px+=ws[i]+g;});x.restore();}
 function engraveLines(x,S,k,lines,cx,cz,size,gap,rotDeg=0){x.save();x.translate(S/2+cx*k,S/2-cz*k);x.rotate(rotDeg*D2R);lines.forEach((t,i)=>{const sz=Array.isArray(t)?t[1]:size;x.font=`600 ${sz*k}px Spectral, Georgia, serif`;x.fillText(Array.isArray(t)?t[0]:t,0,(i-(lines.length-1)/2)*gap*k);});x.restore();}
 /* flat decal with the outline of a bridge, UV-mapped to the engraving canvas */
 function decalGeo(poly){const s=new THREE.Shape();poly.forEach(([x,z],i)=>i?s.lineTo(x,z):s.moveTo(x,z));const g=new THREE.ShapeGeometry(s,24);
@@ -63,6 +66,7 @@ function escapeWheel(parent,M,rt,y){
   return teeth;
 }
 const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74};
+const SERIAL='2E12055';   /* the photographed movement's serial: engraved on the plates, printed on the Hamilton dial */
 function mats(){
   const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
   const stx=stripeTex(),st=stx.map,wt=woodTex();
@@ -75,11 +79,13 @@ function mats(){
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
   M.setPlateFinish=k=>{const c=sc(PLATE_FINISH[k]);for(const m of[M.plate,M.plateSolid])m.color.copy(c);};   /* see-through and faded copies follow on the next look() (syncMat) */
   const eng=t=>new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});
-  /* engraving in columns as on the photographed movement (text runs along -x, lines stack toward +z; maker's name omitted); the two lines nearest the fusee are shortened to clear the dust-seal flange */
-  M.engraveB=eng(engraveCanvas((x,S,k)=>{const cols=[["MODEL 21, 14 JEWELS",0.53,-30.50,17.84,1.64],["MARINE CHRONOMETER",-2.56,-26.57,17.58,2.2],["TWO-DAY, 56 HOURS",-2.03,-24.19,11.12,1.4],["\u24c3 1761-1941",-7.28,-17.85,13.54,2.79],["MADE IN U.S.A.",-11.74,-19.05,9.84,1.80]];
-    x.save();for(const[t,cx,cz,len,sz]of cols){x.save();x.translate(S/2+cx*k,S/2-cz*k);x.rotate(Math.atan2(-0.2161,-0.9764));
-      x.font=`600 ${sz*k}px "Instrument Sans", Arial, sans-serif`;const w=x.measureText(t).width;const f=Math.min(1,len*k/w);x.scale(f,1);x.fillText(t,0,0);x.restore();}x.restore();}));
-  M.engraveT=eng(engraveCanvas(()=>{}));
+  /* engraving as on a photographed movement (serial 2E12055): text runs along -x, lines stack toward +z. Lengths, sizes and offsets measured on that photograph
+     against the top-view tracing (tools/engr.json); the three-line block sits 2.5 mm nearer the rim than traced, so its full-length lines clear the dust-seal flange and the barrel pillar screw */
+  const engr=(x,S,k,cols)=>{for(const[t,cx,cz,len,sz]of cols){x.save();x.translate(S/2+cx*k,S/2-cz*k);x.rotate(Math.atan2(-0.2161,-0.9764));
+    x.font=`600 ${sz*k}px "Instrument Sans", Arial, sans-serif`;fillTracked(x,t,len*k,0.8);x.restore();}};
+  M.engraveB=eng(engraveCanvas((x,S,k)=>engr(x,S,k,[["MODEL 21, 14 JEWELS",-0.01,-32.94,17.6,1.9],["HAMILTON WATCH CO.",0.71,-30.34,24.4,2.5],["LANCASTER, PENNA.",1.01,-27.64,15.9,1.95],
+    ["MADE IN U.S.A.",-11.55,-21.89,10.9,1.9],[SERIAL,-7.24,-17.82,8.1,2.7]])));
+  M.engraveT=eng(engraveCanvas((x,S,k)=>engr(x,S,k,[[SERIAL,10.53,35.06,9.3,2.7]])));   /* the serial again on the train bridge at 6 o'clock, where the barrel bridge is cut away */
   return M;
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */
@@ -152,18 +158,18 @@ function springGeo(R,H,N,th,wire){
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
   return new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false);
 }
-function handGeo(len,w,tail,kind){   /* tail<0: a spear counterpoise -tail long in place of the flat tail */
+function handGeo(len,w,tail,kind,at){   /* tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len */
   const s=new THREE.Shape();if(tail<0){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
   else{s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);}
   if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
   else if(kind==='leaf'||kind==='lance'){const b=kind==='leaf'?w*1.9:w*1.25,m=kind==='leaf'?0.68:0.8;   /* leaf widest at m·len, drawn to a point */
     s.lineTo(w*0.35,len*(m-0.25));s.quadraticCurveTo(b,len*(m-0.06),b*0.85,len*m);s.quadraticCurveTo(b*0.45,len*(m+0.14),0,len);s.quadraticCurveTo(-b*0.45,len*(m+0.14),-b*0.85,len*m);s.quadraticCurveTo(-b,len*(m-0.06),-w*0.35,len*(m-0.25));}
-  else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */
+  else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=at?len*at:len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */
     s.lineTo(w*0.35,m-h*1.3);s.quadraticCurveTo(b,m-h*1.1,b,m);s.quadraticCurveTo(b,m+h*0.9,w*0.12,m+h*1.4);s.lineTo(0,len);s.lineTo(-w*0.12,m+h*1.4);s.quadraticCurveTo(-b,m+h*0.9,-b,m);s.quadraticCurveTo(-b,m-h*1.1,-w*0.35,m-h*1.3);}
   else{s.lineTo(w*0.3,len*0.85);s.lineTo(0,len);s.lineTo(-w*0.3,len*0.85);}
   s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
 }
-/* silvered dial, 4 inch. kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
+/* silvered dial, 4 inch. Default: the Hamilton Model 21 (below). kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
    large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale keeps this model's 240° arc.
    'swiss' and 'soviet': the Ulysse Nardin deck chronometers (Roman hours, UP/HAUT–DOWN/BAS) and the First Moscow Watch Factory's copies of them
    (Arabic hours, ЗАВОД–СПУСК, СДЕЛАНО В СССР): white face, railroad track, a large seconds sub-dial with lines at 5, 15 … 55 s; makers' names
@@ -177,15 +183,15 @@ function dialCanvas(kind){
   const ln=(cx,cy,a,ra,rb,w)=>{x.lineWidth=w;x.beginPath();x.moveTo(cx+ra*Math.sin(a),cy-ra*Math.cos(a));x.lineTo(cx+rb*Math.sin(a),cy-rb*Math.cos(a));x.stroke();};
   const circ=(cx,cy,r,w,a0=0,a1=TAU)=>{x.lineWidth=w;x.beginPath();x.arc(cx,cy,r,a0-Math.PI/2,a1-Math.PI/2);x.stroke();};
   const rad=(t,cx,cy,a,r,sx=1,ro=a)=>{x.save();x.translate(cx+r*Math.sin(a),cy-r*Math.cos(a));x.rotate(ro);x.scale(sx,1);x.fillText(t,0,0);x.restore();};
+  const SANS='"Instrument Sans", Arial, sans-serif',up=a=>Math.cos(a)<-1e-6?a+Math.PI:a;   /* figures set radially, those in the lower half turned to read upright */
+  const arcT=(t,cx,cy,r,a,low)=>{const cs=[...t],w=cs.map(ch=>x.measureText(ch).width);let th=a+w.reduce((s,v)=>s+v,0)/r/2*(low?1:-1);   /* letters along an arc, centred on a; low: along the bottom, tops inward */
+    cs.forEach((ch,i)=>{const d=w[i]/r/2*(low?-1:1);th+=d;x.save();x.translate(cx+r*Math.sin(th),cy-r*Math.cos(th));x.rotate(low?th+Math.PI:th);x.fillText(ch,0,0);x.restore();th+=d;});};
+  const tri=(r1,a)=>{const p=(r,d)=>[c+r*Math.sin(a+d),c-r*Math.cos(a+d)];x.beginPath();x.moveTo(...p(r1,0.012));x.lineTo(...p(r1,-0.012));x.lineTo(...p(r1-c*0.028,0));x.closePath();x.fill();};   /* hour mark: a small triangle on the outer line, pointing in */
   if(nard){
-    const sov=kind==='soviet',SANS='"Instrument Sans", Arial, sans-serif',CYR='Arial, "Helvetica Neue", Roboto, "DejaVu Sans", sans-serif';   /* Cyrillic is outside the vendored fonts' subset: system sans */
-    const up=a=>Math.cos(a)<-1e-6?a+Math.PI:a;   /* figures set radially, those in the lower half turned to read upright */
-    const arcT=(t,cx,cy,r,a,low)=>{const cs=[...t],w=cs.map(ch=>x.measureText(ch).width);let th=a+w.reduce((s,v)=>s+v,0)/r/2*(low?1:-1);   /* letters along an arc, centred on a; low: along the bottom, tops inward */
-      cs.forEach((ch,i)=>{const d=w[i]/r/2*(low?-1:1);th+=d;x.save();x.translate(cx+r*Math.sin(th),cy-r*Math.cos(th));x.rotate(low?th+Math.PI:th);x.fillText(ch,0,0);x.restore();th+=d;});};
+    const sov=kind==='soviet',CYR='Arial, "Helvetica Neue", Roboto, "DejaVu Sans", sans-serif';   /* Cyrillic is outside the vendored fonts' subset: system sans */
     x.textAlign='center';x.textBaseline='middle';
     const r1=c*0.96,r2=c*0.925;circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);
-    for(let i=0;i<12;i++){const a=i/12*TAU;if(sov){ln(c,c,a,r2,r1,S*0.009);continue;}   /* hour marks: bars (Soviet), small triangles on the outer line (Nardin) */
-      const p=(r,d)=>[c+r*Math.sin(a+d),c-r*Math.cos(a+d)];x.beginPath();x.moveTo(...p(r1,0.012));x.lineTo(...p(r1,-0.012));x.lineTo(...p(r1-c*0.028,0));x.closePath();x.fill();}
+    for(let i=0;i<12;i++){const a=i/12*TAU;if(sov)ln(c,c,a,r2,r1,S*0.009);else tri(r1,a);}   /* hour marks: bars (Soviet), triangles (Nardin) */
     const k=0.472,sy=c+c*k,uy=c-c*k,rs=c*(sov?0.375:0.39),ru=c*(sov?0.27:0.255),A=h=>(60+240*h/56)*D2R;
     /* wind: Nardin, a double arc ticked every 8 h round figures 8–48, UP/HAUT at the wound end, DOWN/BAS at the run-down end, an inner arc open under the XII;
        Soviet, figures 0–56 inside an outer circle open under the 12, round a ticked double arc, ЗАВОД (wound) and СПУСК (run down) */
@@ -226,20 +232,34 @@ function dialCanvas(kind){
       if(h%8===0){x.font=`400 ${S*0.021}px Spectral, Georgia, serif`;rad(String(h),c,uy,a,ru*0.6);}}
     x.font=`600 ${S*0.026}px Spectral, Georgia, serif`;x.fillText('AUF',c+ru*0.92,uy-ru*0.92);x.fillText('AB',c-ru*0.92,uy-ru*0.92);
     return cv;}
-  const r1=c*0.955,r2=c*0.905;x.lineWidth=S*0.0018;for(const r of[r1,r2]){x.beginPath();x.arc(c,c,r,0,TAU);x.stroke();}
-  for(let i=0;i<60;i++){const a=i/60*TAU;x.lineWidth=i%5?S*0.0022:S*0.0055;const ra=i%5?r2:c*0.885;x.beginPath();x.moveTo(c+ra*Math.sin(a),c-ra*Math.cos(a));x.lineTo(c+r1*Math.sin(a),c-r1*Math.cos(a));x.stroke();}
-  x.font=`600 ${S*0.085}px Spectral, Georgia, serif`;x.textAlign='center';x.textBaseline='middle';
-  for(let i=1;i<=12;i++){const a=i/12*TAU,r=c*0.8;x.fillText(String(i),c+r*Math.sin(a),c-r*Math.cos(a)+S*0.003);}
-  const sub=(cy,r)=>{x.lineWidth=S*0.0016;x.beginPath();x.arc(c,cy,r,0,TAU);x.stroke();};
-  const k=0.472,rs=c*0.24,sy=c+c*k,uy=c-c*k;
-  sub(sy,rs);for(let i=0;i<60;i++){const a=i/60*TAU,rb=i%5?rs*0.9:rs*0.82;x.lineWidth=i%5?S*0.0014:S*0.003;x.beginPath();x.moveTo(c+rs*Math.sin(a),sy-rs*Math.cos(a));x.lineTo(c+rb*Math.sin(a),sy-rb*Math.cos(a));x.stroke();}
-  x.font=`${S*0.024}px Spectral, Georgia, serif`;for(let q=1;q<=12;q++){const a=q/12*TAU,r=rs*0.66;x.fillText(String(q*5),c+r*Math.sin(a),sy-r*Math.cos(a));}
+  /* Hamilton, after a photographed Model 21 dial of the U.S. Maritime Commission contract: railroad minute track with triangles at the hours; large Arabic hours
+     (the 6 under the seconds) set just inside it; HAMILTON and LANCASTER, PA., U.S.A. across the centre; a large seconds sub-dial meeting the track at 6, with
+     the serial and U.S. MARITIME COMMISSION; the UP–DOWN scale open at the top round the 12. The sub-dial centres are fixed by their arbors, which lie nearer the
+     centre than on the dial photographed, so the sub-dials sit lower on this face and the inscriptions are closer together; the scale keeps this movement's
+     240° sweep (the photographed dial's spans about 310°) */
+  const r1=c*0.955,r2=c*0.905,k=0.472,sy=c+c*k,uy=c-c*k,rs=r2-c*k,ru=c*0.255;
+  circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);for(let i=0;i<12;i++)tri(r1,i/12*TAU);
+  /* hours, sized so the figures stand 0.18 c tall: each numeral's box just inside the track; the 5 and 7 edged round toward the 4 and 8 until they clear the seconds sub-dial */
+  x.font='600 100px Spectral, Georgia, serif';{const m=x.measureText('1234567890');x.font=`600 ${100*c*0.18/(m.actualBoundingBoxAscent+m.actualBoundingBoxDescent)}px Spectral, Georgia, serif`;}
+  x.textAlign='left';x.textBaseline='alphabetic';
+  for(let i=1;i<=12;i++){if(i===6)continue;const t=String(i),m=x.measureText(t),w=m.actualBoundingBoxLeft+m.actualBoundingBoxRight,h=m.actualBoundingBoxAscent+m.actualBoundingBoxDescent;let a=i/12*TAU,px,py;
+    for(let j=0;j<60;j++){const sn=Math.sin(a),cs=Math.cos(a),r=r2-c*0.012-Math.abs(sn)*w/2-Math.abs(cs)*h/2;px=c+r*sn;py=c-r*cs;
+      const dx=px-c,dy=py-sy,d=Math.hypot(dx,dy);if(d-(Math.abs(dx)*w/2+Math.abs(dy)*h/2)/d>rs+c*0.015)break;a+=(i<6?-1:1)*0.005;}
+    x.fillText(t,px-(m.actualBoundingBoxRight-m.actualBoundingBoxLeft)/2,py+(m.actualBoundingBoxAscent-m.actualBoundingBoxDescent)/2);}
+  x.textAlign='center';x.textBaseline='middle';
+  const trk=(t,px,py,w)=>{x.save();x.translate(px,py);fillTracked(x,t,w);x.restore();};
+  /* seconds: railroad track, bars across it every 10 s, lines at 5, 15 … 55 s inside, figures set radially */
+  circ(c,sy,rs,S*0.0018);circ(c,sy,rs*0.915,S*0.0014);for(let i=0;i<60;i++)ln(c,sy,i/60*TAU,rs*0.915,rs,i%10?S*0.0012:S*0.003);
+  for(let q=0;q<6;q++)ln(c,sy,(q+0.5)/6*TAU,rs*0.79,rs*0.915,S*0.0016);
+  x.font=`500 ${S*0.031}px ${SANS}`;for(let q=1;q<=6;q++){const a=q/6*TAU;rad(String(q*10),c,sy,a,rs*0.78,1,up(a));}
   /* up/down scale as Fig. 107: UP at the upper right, hours since winding increasing clockwise round the bottom to DOWN at the upper left
-     (winding turns the hand counterclockwise back to UP, manual Sec. III) */
-  x.lineWidth=S*0.0016;x.beginPath();x.arc(c,uy,rs,(-30)*D2R,(210)*D2R);x.stroke();
-  for(let h=0;h<=56;h+=2){const a=(60+240*h/56)*D2R,rb=h%8?rs*0.9:rs*0.8;x.lineWidth=h%8?S*0.0012:S*0.003;x.beginPath();x.moveTo(c+rs*Math.sin(a),uy-rs*Math.cos(a));x.lineTo(c+rb*Math.sin(a),uy-rb*Math.cos(a));x.stroke();
-    if(h%8===0&&h>0&&h<56){const r=rs*0.62;x.font=`${S*0.024}px Spectral, Georgia, serif`;x.fillText(String(h),c+r*Math.sin(a),uy-r*Math.cos(a));}}
-  x.font=`600 ${S*0.024}px Spectral, Georgia, serif`;x.fillText('UP',c+rs*0.62,uy-rs*0.72);x.fillText('DOWN',c-rs*0.62,uy-rs*0.72);
-  x.font=`italic ${S*0.028}px Spectral, Georgia, serif`;x.fillText('Two-day marine chronometer',c,c+c*0.15);
+     (winding turns the hand counterclockwise back to UP, manual Sec. III); a double ring with bars every 8 h, figures inside set radially, UP and DOWN past its ends */
+  const A=h=>(60+240*h/56)*D2R;circ(c,uy,ru,S*0.0016,A(0),A(56));circ(c,uy,ru*0.89,S*0.0014,A(0),A(56));for(let h=0;h<=56;h+=8)ln(c,uy,A(h),ru*0.89,ru,S*0.003);
+  x.font=`600 ${S*0.029}px ${SANS}`;for(let h=8;h<=48;h+=8)rad(String(h),c,uy,A(h),ru*0.69,1,up(A(h)));
+  x.font=`600 ${S*0.02}px ${SANS}`;arcT('UP',c,uy,ru*1.1,45*D2R);arcT('DOWN',c,uy,ru*1.1,-45*D2R);
+  /* inscriptions: maker and town across the centre, split round the hands' boss; serial and contract in the seconds sub-dial */
+  x.font=`600 ${S*0.042}px ${SANS}`;trk('HAMILTON',c,c-c*0.13,c*0.5);
+  x.font=`600 ${S*0.027}px ${SANS}`;trk('LANCASTER,',c-c*0.32,c-c*0.005,c*0.35);trk('PA., U.S.A.',c+c*0.31,c-c*0.005,c*0.33);
+  trk(SERIAL,c,sy-c*0.145,c*0.23);trk('U.S. MARITIME',c,sy+c*0.1,c*0.44);trk('COMMISSION',c,sy+c*0.215,c*0.41);
   return cv;
 }

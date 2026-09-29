@@ -182,7 +182,10 @@ Contents:
   straddling the barrel arbor, with a curved slot showing the ratchet and click,
   and screws inside the outline. `9606cc3`, `cc70482`
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
-  HOURS" were shortened so the flange no longer covers them. `9606cc3`
+  HOURS" were shortened so the flange no longer covers them. `9606cc3` The
+  photographed text that replaced them runs full length; the block moved
+  2.5 mm toward the rim instead. Keep: every line clear of the flange (r 8.6
+  round the fusee) and the barrel pillar screw's head.
 - **Gimbals as blank blocks.** Replaced by a flat ring on pivot screws, with
   washers, lock nuts, case support brackets and straps (Figs. 1, 94, 106). The
   ring was raised so the case clears the box floor. `eae5358`
@@ -222,6 +225,13 @@ Contents:
   600 mm. It is fixed with polygon offset on the face material. Keep: don't
   close the gap by moving the geometry, and use polygon offset for any other
   near-coplanar faces. `e036cf8`
+
+- **Dial and engraving drawn in the fallback font.** `document.fonts.ready`
+  doesn't fetch faces used only on canvases, so Spectral 600 could be missing
+  when the dial was painted; numerals sized from its figure height came out
+  in Georgia, whose old-style figures made them overlap. `app.js` now loads the
+  canvas faces explicitly, and the size is measured over all ten figures.
+  Keep: add any new canvas-only face to that list.
 
 ## Controls and display
 
