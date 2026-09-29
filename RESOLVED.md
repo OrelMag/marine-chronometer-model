@@ -244,7 +244,7 @@ Contents:
   `normalBias` pushes back faces' lookups the wrong way. It is now two
   front-facing shells (outer, and the reversed profile for the inner). Keep: a
   surface that receives shadows on its inside gets its own front-facing shell,
-  not `DoubleSide`.
+  not `DoubleSide`. `4be54e9`
 
 ## Controls and display
 
