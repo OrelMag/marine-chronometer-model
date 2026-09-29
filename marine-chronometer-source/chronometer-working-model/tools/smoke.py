@@ -40,7 +40,7 @@ async def model(b,errs,steps):
     await click('#secs button[data-v="off"]','section off')
     await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT');await click('#now','Now')
     await click('#tabFig','Illustration tab');await click('#tabModel','3D model tab')
-    for sel in['#colr','#ghost','#edges','#lbls','#rock','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
+    for sel in['#colr','#ghost','#edges','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
     # pen and wash (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
     await click('#draw','pen and wash on',600)
     for v in['box','dial','movement','train','escapement','exploded','laidout']:await click(f'#views button[data-v="{v}"]',f'pen and wash, view {v}')

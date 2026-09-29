@@ -24,7 +24,6 @@ STATES=[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,(n,w) in enumerate(
 EXPECTED={
  ('bal:Box','bal:Cylinder'):('impulse jewel set in its roller on the staff',0.69,1.1),
  ('bal:Cylinder','bal:Cylinder'):('balance staff, rollers and collet: one assembly',1.49,2.4),
- ('bal:Cylinder','cock:Extrude'):('balance upper pivot in its jewel in the cock',0.93,1.5),
  ('escBridge:Extrude','escW:Cylinder'):('escape wheel upper pivot in its bridge',0.43,0.45),
  ('barrelBridge:Extrude','fusee:Cylinder'):('fusee upper pivot in the barrel bridge',0.06,0.25),
  ('barrelBridge:Extrude','ratchet:Cylinder'):('barrel arbor in the barrel bridge, under the setup ratchet',0.078,0.21),
@@ -41,7 +40,9 @@ EXPECTED={
  ('chain:Cylinder','fusee:Lathe'):("the chain's pin in the fusee's large end",0.12,0.45),
  ('chain:Box','chain:Cylinder'):("that pin through the chain's end link",0.07,0.55),
  ('chain:Box','chain:Box'):("the barrel-end hook riveted to the chain's last link",0.25,0.85),
- ('cock:Extrude','spr:Tube(tube)'):("hairspring's upper end pinned in its stud on the cock",0.021,0.1),
+ ('bal:Box','spr:Tube(tube)'):("hairspring's inner end in the clamp on the collet's tongue",0.06,0.35),
+ ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),
+ ('cock:Extrude','spr:Cylinder'):("hairspring stud's steady pin in the cock",0.23,0.8),
  ('chain:Box','fusee:Lathe'):("chain links on the fusee cone: the groove is turned rings, not a helix, and the links are upright boxes on a slope",0.27,0.5),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('spawl:Cylinder','trainBridge:Extrude'):('sustaining pawl arbor (r 0.7) in its 0.72 hole: grazes the bevel',0.06,0.18),
