@@ -21,7 +21,7 @@ copies and assembles the website (see the root README).
 |---|---|
 | `index.html` | Page markup: the stage with its 3D model / Illustration tabs, walkthrough card, controls (View, Time, Display, and collapsible Parts, Rate and timing weights, Cross-section and Variants), the About dialog with sources and method |
 | `css/style.css` | Layout, theme tokens (light and dark), controls, labels |
-| `img/what-makes-it-precise.webp` | The Smithsonian overview drawing shown in the Illustration tab (credited in its caption) |
+| `img/illustration.webp` | The overview drawing shown in the Illustration tab, rendered from the model by `tools/illustration.py` |
 | `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch |
 | `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
@@ -41,6 +41,7 @@ copies and assembles the website (see the root README).
 | `tools/invariants.py` | Checks the model's arithmetic: hands against the time, the wind indicator's scale, the fusee's 60 h and 17½ half turns, the balance's moment of inertia and the rate for a turn of the weights (exit code 1 on a failure) |
 | `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, variants, sections, time zone, keys, a URL-hash link), then scrolls the essay; fails on any console error or warning |
 | `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
+| `tools/illustration.py`, `tools/illustration-passes.js` | Draws `img/illustration.webp` from the model in pen and wash: renders each view's colour, lit shade, normals, depth and part ids in the page, turns them into ink and wash, and lays out the labelled sheet |
 | `tools/social.py` | Renders the 1200 × 630 link-preview images into `site-assets/`, the model on a dark background beside a title column: `social.png` (the model page: the dial in its box, hands at 10:10) and `social-movement.png` (the essay: the moving parts) |
 | `verification/` | Reference results: the top-view comparison, the Fig. 2 overlay and its camera fit |
 
@@ -423,3 +424,10 @@ exits with 1 when a figure is out of tolerance.
 shot:
 
     python social.py --out name.png --view movement --drive --cam YAW PITCH DIST FOV
+
+**Update the illustration** after a visible change to the box, gimbals, fusee,
+chain, escapement or balance: `python illustration.py` from `tools/` renders the
+five views, draws them and writes `img/illustration.webp` (about two minutes;
+`--only esc bal` re-renders some views, `--no-render` only redraws and lays
+out). Look at `r_ill/sheet.png`: labels pointing at a sheet position were placed
+by eye, so move them in `sheet()` if a part has moved. Then rebuild from the root.

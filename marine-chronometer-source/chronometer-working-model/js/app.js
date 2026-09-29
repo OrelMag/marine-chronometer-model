@@ -278,7 +278,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* about: sources and method in a dialog */
   const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});
   about.addEventListener('click',e=>{if(e.target===about)about.close();});
-  /* tabs: the 3D model, or the Smithsonian overview illustration over it (the model keeps time but isn't drawn meanwhile) */
+  /* tabs: the 3D model, or the overview illustration drawn from it (tools/illustration.py) over it (the model keeps time but isn't drawn meanwhile) */
   let figOn=false;const fig=$('#fig'),fsc=fig.querySelector('.fsc');
   const showFig=on=>{figOn=on;fig.classList.toggle('hidden',!on);$('#tabModel').setAttribute('aria-selected',!on);$('#tabFig').setAttribute('aria-selected',on);if(on)closeOpm();};
   $('#tabModel').addEventListener('click',()=>showFig(false));$('#tabFig').addEventListener('click',()=>showFig(true));

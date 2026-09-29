@@ -147,7 +147,7 @@ none are quoted.
 |---|---|---|
 | `chronometer-working-model.html` | 1,169 KB | 514 KB |
 | of which `three.min.js` | 589 KB | 145 KB |
-| of which the Smithsonian illustration (WebP, inlined as base64) | 128 KB | about the same |
+| of which the illustration (WebP, inlined as base64) | 130 KB | about the same |
 | of which the five fonts | 120 KB | about the same |
 | `marine-chronometer.html` (essay) | 910 KB | 353 KB |
 
@@ -716,7 +716,7 @@ Fail the build if `chronometer-working-model.html` grows past a set size, say 1.
 - **Where:** `site/` only. The single-file copies stay as they are.
 
 ### 9.3 Smaller downloads for the website (S–M)
-- **Illustration:** in `site/`, load the Smithsonian illustration as a separate file when the Illustration tab is first opened, instead of inlining 128 KB of base64 into every page load. Keep it inlined in the single-file copy, which must work alone.
+- **Illustration:** in `site/`, load the illustration as a separate file when the Illustration tab is first opened, instead of inlining 128 KB of base64 into every page load. Keep it inlined in the single-file copy, which must work alone.
 - **Fonts:** check that every font weight is used. Spectral 300 might not be; if so, drop it (22 KB).
 - **three.js:** a custom build containing only the classes used would cut its 145 KB (gzip) substantially. That's only practical after the upgrade (4.3), with ES modules.
 
@@ -773,5 +773,5 @@ What makes the project good, which none of the above should erode:
 - **One clock.** New motion is driven from `tSim` and `E` by fixed ratios, or by the balance's dynamics. Never by an independent timer. The dynamic balance (2.1) replaces the source of `E`, not the principle.
 - **Offline, single file, no network.** The build fails on any remote reference. Keep it that way: new libraries go in `vendor/` with their licence, and new images are inlined in the single-file build.
 - **`L` stays put** unless the fitting tools are re-run (1.1).
-- **Rights.** The Smithsonian illustration is shown with credit under its own terms. The photographs in `References/` are kept in the repository for the tools, not published on the site. Only the manual's own figures (a U.S. government publication) are safe to show in the page (3.7). The maker's name appears only as on photographed Hamiltons (the Hamilton dial and the plate engraving, added at the owner's request); it stays off the Roman, Swiss and Soviet variants.
+- **Rights.** The Illustration tab's drawing is rendered from the model (`tools/illustration.py`), so it is under the model's own licence. The photographs in `References/` are kept in the repository for the tools, not published on the site. Only the manual's own figures (a U.S. government publication) are safe to show in the page (3.7). The maker's name appears only as on photographed Hamiltons (the Hamilton dial and the plate engraving, added at the owner's request); it stays off the Roman, Swiss and Soviet variants.
 - **The verification loop.** `dyn.py`, `audit.py`, `p3fit.py` and `escapement.js` are what make the model trustworthy. Every geometric idea above ends with running them; CI (8.1) makes that automatic.
