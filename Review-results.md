@@ -18,6 +18,11 @@ A later pass with a finer collision check found and fixed six more overlaps,
 and added a check for the barrel wall; see
 [Fine interference pass](#fine-interference-pass).
 
+A review of the barrel and fusee against the manual found the maintaining
+work's state handling wrong, the train bridge covering the fusee, and 13 parts
+missing; all are fixed. See
+[Barrel and fusee against the manual](#barrel-and-fusee-against-the-manual).
+
 ## Summary
 
 No part of the model is broken. The mechanics hold up: ratios, directions of
@@ -509,3 +514,123 @@ common tangent. The winding-stop pin, which the fusee's turned wrap then
 brushed at full wind, ends 0.2 mm higher, still covering the stop-bar.
 
 The dial face (a flat, open ring) is the one open surface still untested.
+
+## Barrel and fusee against the manual
+
+A second review, of the power side only: is every part of the barrel and fusee
+modelled, and is each one right? Sources: the manual's Sec. II and IV,
+disassembly Ops. 7–9 and 27–45, reassembly Ops. 16–54, Figs. 12, 17–18, 24–29,
+67–80 and 109, and the parts lists for Figs. 108–110. Checked against
+`movement.js` and `app.js` in the working tree, 29 September 2026.
+
+### The parts
+
+Every part number in the model's descriptions matches the parts list. Parts
+marked "added" were missing; the model's shapes for them are estimated from the
+figures (listed in the README's "Estimated, not from the manual").
+
+| Part (Hamilton no.) | Before | Now |
+|---|---|---|
+| Fusee with arbor and wind-indicator pinion (42021, 42022) | modelled | the fusee turns every frame (it lagged its square by up to 0.29°) |
+| Fusee chain (42001) | links only | added: a pin at the fusee's large end, a hook at the barrel |
+| Winding ratchet wheel (42013) | modelled | unchanged |
+| Winding ratchet wheel screws (42014, 2) | missing | added, heads in the sustaining ratchet's open centre |
+| Sustaining ratchet wheel with pawls (42009) | modelled, as part of the fusee wheel | its own part, with its own description, exploded apart as in Fig. 28 |
+| Winding pawl springs (42007, 2) and screws (42012, 4) | missing | added: flat springs bearing on the pawls |
+| Sustaining spring (42016) | modelled, inside the fusee wheel part, 0.05 mm into its web | its own part, clear of the web |
+| Fusee wheel (42015) | modelled | unchanged |
+| Fusee end plate (42019) and taper pin (42020) | missing | added |
+| Winding stop-bar (42024) | a 0.22 mm bar on a turned cap, 0.6 mm under the train bridge | in a slot in the fusee's top, under the top plate |
+| Winding stop-bar spring (42025) | missing | added: a wire in a groove, bearing on the bar's inner end and following it |
+| Fusee top plate (42008) and screws (27760, 2) | missing | added |
+| Winding stop (42099) | a pin down through a hole in the train bridge | a stud from the barrel bridge, through the train bridge's pocket |
+| Sustaining pawl with arbor and springs (42096) | pawl and arbor | added: its spring, round a steady pin in the train bridge |
+| Barrel (42168), cap (42169) and 5 screws (37023) | modelled | unchanged |
+| Barrel arbor (42170) | shaft and squares; the mainspring's inner coil floated 1.2 mm off it | added: the core and the hook for the spring's inner end |
+| Mainspring brace (42037) | a small block | a strip lining 40° of the wall |
+| Mainspring (42038) | schematic | unchanged |
+| Setup ratchet (42026), pawl (42027), cover plate (42029) and screws | modelled | unchanged |
+| Setup pawl spring (42028) | missing | added |
+| Dust seal (42051), its screws and packing rings (42054) | modelled | unchanged (seal ring and helical spring are inside it, not drawn) |
+
+Right as they were: the directions (fusee and barrel clockwise from the train
+side in running, the key counterclockwise), the stack order of Fig. 28, and
+the stop-bar reaching the stop at full wind.
+
+### Findings
+
+1. **The sustaining ratchet turned back when winding stopped.** `update()` put
+   the ratchet on the winding-pawl engagement nearest the fusee wheel
+   (`Math.round`). A probe of 12 windings: 6 ended with the ratchet jumping
+   0.8–5° backward past the sustaining pawl, which the pawl makes impossible.
+   Physically the fusee turns forward (less than one winding tooth) until its
+   ratchet catches the pawls, and then drives the sustaining ratchet forward.
+2. **The sustaining spring had no steady load.** In running its deflection was
+   whatever the fusee's phase left, from −4.5° to +4.3° (negative: stretched).
+   It should hold one loaded deflection in running, relax while winding, and be
+   reloaded when the key lets go.
+3. **The fusee lagged its square by up to 0.29°.** It turned only when
+   `setWind` ran (every 0.0008 turn), while the square turned every frame.
+4. **The upper train bridge covered the fusee.** Figs. 24, 29, 67 and 77 show
+   the fusee open to the barrel bridge, which holds its upper bushing (parts
+   list 108-45, Op. 46). Covering it made the winding stop a pin through the
+   train bridge and left no room for the top plate or the stop-bar spring.
+5. **Thirteen parts were missing** and two were the wrong shape (the table
+   above: the brace and the winding stop), and the sustaining
+   ratchet, its pawls and the spring couldn't be picked, named or exploded
+   apart.
+
+### Fixes
+
+- **Maintaining work** (`update()` in `movement.js`):
+  - running: the sustaining ratchet turns with the fusee wheel (spring loaded);
+  - the fusee sits `eps` past its `n` turns, where its ratchet bears on the
+    pawls, and the arbor, square and wind-indicator pinion turn with it;
+  - winding: the ratchet falls back to its pawl, then holds while the spring
+    relaxes (drawn up to 10°, `SMAX`); `eps` runs down with `n`;
+  - key let go: the fusee catches forward, the ratchet reloads the spring.
+- **Train bridge:** a pocket round the fusee's top, the winding stop and the
+  stop-bar's sweep over the last quarter turn. The plan was a cut open to the
+  rim like the barrel's. That would uncover the fusee wheel just past the
+  barrel bridge's straight edge (6.4 mm from the fusee axis), where the
+  top-view photograph shows the train bridge. So the pocket stays 0.5 mm under
+  that edge, and is smaller than the manual's opening.
+- **Parts:** as in the table. The sustaining ratchet (`sratchet`) and spring
+  (`sspring`) are their own parts, with descriptions, colours, a label, and
+  places in the parts list, the key-winding focus and the "Winding without
+  stopping" step. The sustaining pawl explodes level with its ratchet.
+- **Checks:**
+  - `tools/maintaining.py` (new) drives run and wind cycles and fails on any
+    of the faults above. On the old code it failed (351 frames: spring load,
+    arbor lag, ratchet turned back); now it passes.
+  - `tools/fine.py`: the winding pawls' entry is renamed to `sratchet`, and the
+    winding-stop pin's bevel entry is gone. New entries, each an intended
+    contact: the spring's pin in the fusee wheel, the pawl spring on its pin,
+    the chain's end pin and hook, and the arbor's core and hook in the barrel.
+    The mainspring's inner coil is checked against the core (r 2.4).
+
+### Checks after the fixes
+
+- `maintaining.py`: ok, 311 frames. The stop-bar touches the stop at full wind
+  (0.000 mm), is 2.34 mm clear half a turn before, and 0.66 mm clear after the
+  key lets go.
+- `fine.py`: 33 states, 23 pairs, 0 new or grown; 0 barrel problems. The
+  mainspring's inner coil is 0.2 mm off the core.
+- `audit.py`: no overlapping or floating screws. The loose ends are the
+  expected ones: the winding stop's free end (listed or not, depending on the
+  wind state at the time) and the balance's screw and weight tips. The new coplanar hits are faces in contact:
+  the sustaining ratchet under the winding ratchet and pawls, and the pawl
+  springs on the ratchet.
+- `views.py --diff`: changed pixels only on the fusee stack, the barrel and
+  setup area, the sustaining pawl, and the train bridge round the fusee. The
+  dial view changes by 19 px: the wind-indicator hand, which now includes the
+  fusee's `eps`.
+
+### Not changed
+
+- The stop-bar is still driven from the wind over the last quarter turn, not
+  pushed by the chain. The chain's top turn passes under it.
+- The model does not stop the train if a wind outlasts the sustaining
+  spring's 5–10 minutes; that only happens at high speed.
+- The rest of the upper train bridge's outline (Figs. 29, 67: a crescent) is
+  still to trace (`IDEAS.md` 1.3). The chain's links are still boxes (1.9).

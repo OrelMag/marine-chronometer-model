@@ -25,7 +25,7 @@ EXPECTED={
  ('bal:Cylinder','bal:Cylinder'):('balance staff, rollers and collet: one assembly',1.49,2.4),
  ('bal:Cylinder','cock:Extrude'):('balance upper pivot in its jewel in the cock',0.93,1.5),
  ('escBridge:Extrude','escW:Cylinder'):('escape wheel upper pivot in its bridge',0.43,0.45),
- ('barrelBridge:Extrude','fusee:Cylinder'):('fusee upper pivot in the barrel bridge',0.051,0.25),
+ ('barrelBridge:Extrude','fusee:Cylinder'):('fusee upper pivot in the barrel bridge',0.06,0.25),
  ('barrelBridge:Extrude','ratchet:Cylinder'):('barrel arbor in the barrel bridge, under the setup ratchet',0.078,0.21),
  ('spawl:Cylinder','spawl:Extrude'):('sustaining pawl on its arbor',0.75,0.6),
  ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot",0.17,0.44),
@@ -34,13 +34,18 @@ EXPECTED={
  ('hands:Cylinder','hands:Extrude'):('hour and minute hands nested on their pipes',2.03,0.35),
  ('hands:Cylinder','motion:Cylinder'):('hand collets on the cannon pinion and wind-indicator arbor',0.33,0.35),
  ('hands:Extrude','motion:Cylinder'):('hands on the cannon pinion and wind-indicator arbor',0.17,0.25),
- ('fusee:Extrude','gw:Extrude'):('winding pawls riding the winding ratchet while winding',0.003,0.5),
+ ('fusee:Extrude','sratchet:Extrude'):('winding pawls riding the winding ratchet while winding',0.003,0.5),
+ ('gw:Extrude','sspring:Cylinder'):("sustaining spring's pin in the fusee wheel",0.15,0.3),
+ ('spawl:Tube(tube)','trainBridge:Cylinder'):("sustaining pawl's spring bearing on its steady pin in the train bridge",0.04,0.3),
+ ('chain:Cylinder','fusee:Lathe'):("the chain's pin in the fusee's large end",0.12,0.45),
+ ('chain:Box','chain:Cylinder'):("that pin through the chain's end link",0.07,0.55),
+ ('chain:Box','chain:Box'):("the barrel-end hook riveted to the chain's last link",0.25,0.85),
  ('cock:Extrude','spr:Tube(tube)'):("hairspring's upper end pinned in its stud on the cock",0.021,0.1),
  ('chain:Box','fusee:Lathe'):("chain links on the fusee cone: the groove is turned rings, not a helix, and the links are upright boxes on a slope",0.27,0.5),
- # bevelled holes: polyGeo's bevel narrows the train bridge's holes near one face, and these two pins nearly fill theirs (inside the bridge, not visible)
+ # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('spawl:Cylinder','trainBridge:Extrude'):('sustaining pawl arbor (r 0.7) in its 0.72 hole: grazes the bevel',0.06,0.18),
- ('barrelBridge:Cylinder','trainBridge:Extrude'):('winding-stop pin (r 0.9) in its 1.0 hole: grazes the bevel',0.035,0.16),
- ('barrel:Cylinder(drum)','ratchet:Cylinder'):("barrel arbor, on the barrel's axis: it carries the barrel",80,13.2),
+ ('barrel:Cylinder(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
+ ('barrel:Cylinder(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
 }
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),
@@ -84,7 +89,7 @@ async def main():
         okk=(lo is None or o['d']>=lo) and (hi is None or o['d']<=hi);nb+=not okk
         print(f"{'ok  ' if okk else 'NEAR' if o['d']>=0 else 'HIT '} {o['d']:8.3f}  {o['part']:14s} {o['type']:9s} to the barrel's {o['piece']:16s} @ {','.join(map(str,o['at']))}  ({o['state']})"+(f"  -- {e[0]}" if e else ''))
     if spring:
-        s=spring;arb=near.get('ratchet');checks=[('innermost coil off the barrel arbor (r 1.4)',s['rMin']-1.4),('outermost coil inside the wall',s['wall']-s['rMax']),
+        s=spring;arb=near.get('ratchet');checks=[("innermost coil off the barrel arbor's core (r 2.4)",s['rMin']-2.4),('outermost coil inside the wall',s['wall']-s['rMax']),
           ("below the upper cap's inner face",s['yTop']-s['capTopInner']),("above the lower cap's inner face",s['capBottomInner']-s['yBottom'])]
         print(f"mainspring over the wind: coils {s['rMin']}-{s['rMax']} mm from the axis, {s['yTop']} to {s['yBottom']} in y")
         for t,g in checks:okk=g>=BARREL_MIN;nb+=not okk;print(f"{'ok  ' if okk else 'HIT '} {g:8.3f}  {t}")

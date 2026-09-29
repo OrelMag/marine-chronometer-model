@@ -177,7 +177,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 
 ### 1.3 Outlines the photographs don't show (M)
 - **Balance lower bridge:** a stadium in the model; "stepped and lobed" in Fig. 110. Trace Fig. 110 through the same kind of similarity transform `p3map.json` uses.
-- **Upper train bridge under the barrel bridge:** drawn as a full disc. If any reference photo shows the movement with the barrel bridge off (overhaul photos often do), trace it.
+- **Upper train bridge under the barrel bridge:** drawn as a full disc, cut round the barrel and with a pocket round the fusee's top (the fusee is open to the barrel bridge, Figs. 24, 77). Figs. 29 and 67 show its whole outline, a crescent; trace it (or an overhaul photo with the barrel bridge off), keeping the pocket's clearances and the top-view photograph's visible edge.
 - **Detent foot and support block:** shortened to clear the train pillar. Once 1.1 is done, check whether the pillar or the block is really the one out of place.
 
 ### 1.4 The balance's collet, stud and upper setting (S–M)
@@ -205,7 +205,7 @@ The case's winding-hole shield plate "is turned clockwise to admit the key and s
 - **Tooth counts:** the centre, third and fourth counts are estimates. Count teeth on the highest-resolution photographs (the fourth wheel and the centre wheel's outer rim are often visible), or ask on chronometerbook.com. Update `TRAIN` and every place the counts appear as text (see [7.2](#72-derive-every-train-number-from-train)).
 
 ### 1.9 Chain and mainspring detail (M)
-- **Chain:** the links are alternating instanced boxes. A fusee chain is outer plates and inner plates riveted, with a hook at each end: one hooks the fusee's large end, the other the barrel. Build one link as a small merged geometry with rivet heads, and add the two end hooks. Make the barrel-end hook visible in the "Stored energy" step.
+- **Chain:** the links are alternating instanced boxes. A fusee chain is outer plates and inner plates riveted. Build one link as a small merged geometry with rivet heads. The end fittings (a pin at the fusee's large end, a hook at the barrel) are drawn; make the barrel-end hook visible in the "Stored energy" step.
 - **Mainspring:** drawn schematically. If the parts list gives its length and width as well as the 0.0165 in thickness, compute the coil count and spacing from the barrel and arbor radii for the wound and run-down states.
 
 ### 1.10 Oil sinks, jewel settings, endstones (S)

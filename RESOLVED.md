@@ -271,3 +271,34 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
+
+From the barrel and fusee review (`Review-results.md`, "Barrel and fusee against
+the manual"):
+
+- **Sustaining ratchet turned back when winding stopped, and the sustaining
+  spring had no steady load.** In running the ratchet was put on the winding
+  pawls' engagement nearest the fusee wheel, so the spring's deflection was
+  whatever the fusee's phase left (−4.5° to +4.3°, stretched as often as
+  loaded). When winding stopped the ratchet jumped to that engagement, backward
+  past its pawl in about half the windings (up to 5°). Now the spring is at its
+  loaded deflection in running (ratchet and fusee wheel turn together), the
+  fusee sits `eps` past its `n` turns so its ratchet bears on the pawls, and
+  when the key lets go the fusee turns forward to catch the pawls and the
+  ratchet forward to reload the spring. The fusee also lagged its own square by
+  up to 0.29° (it turned only when `setWind` ran); it now turns every frame.
+  Keep: nothing in the maintaining work turns back except the sustaining
+  ratchet's fall to its pawl as winding starts; `tools/maintaining.py` must
+  pass.
+- **Train bridge covered the fusee.** It was a full disc, so the winding stop
+  was a pin through a hole in the train bridge and the stop-bar lay in 0.6 mm
+  on a turned cap. Figs. 24, 29, 67 and 77 show the fusee open to the barrel
+  bridge, which holds its upper bushing. The train bridge now has a pocket round
+  the fusee's top (under the barrel bridge, where the top-view photograph shows
+  the train bridge), the winding stop is a stud from the barrel bridge, and the
+  fusee's top has its slotted layer, stop-bar spring and top plate. This
+  replaces the "0.6 mm" note in the stop-bar entry above. Keep: the stop-bar
+  sweeps the pocket over the last quarter turn; if the bar, its travel or the
+  pocket changes, `tools/fine.py` must still report no train-bridge contact.
+- **Sustaining spring 0.05 mm into the fusee wheel's web.** It went unseen
+  while both were one part. The spring is now its own part and 0.02 mm under
+  the web.

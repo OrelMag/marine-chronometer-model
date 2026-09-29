@@ -33,6 +33,7 @@ copies and assembles the website (see the root README).
 | `tools/p3map.json`, `tools/cock_outline.json`, `tools/engr.json` | Traced from the top-view photograph: its mapping into the model, the balance cock's outline, the engraving columns |
 | `tools/dyn.py`, `tools/interference-check.js` | Voxel collision check through a full escapement cycle |
 | `tools/views.py` | Before/after renders of every view (frozen, labels hidden), a pixel diff between two runs, and close-ups of chosen parts |
+| `tools/maintaining.py` | The maintaining work over run and wind cycles: the sustaining ratchet never turns back, the sustaining spring is loaded in running and only relaxes while winding, the fusee catches forward when the key lets go, the pawls sit on their teeth, and the stop-bar meets the winding stop at full wind |
 | `tools/fine.py`, `tools/fine-interference.js`, `tools/barrel-clearance.js` | Fine (0.05 mm) collision check through the escapement cycle, round the train and over the wind, against a table of expected contacts; the barrel's margins and the mainspring |
 | `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
@@ -99,10 +100,18 @@ Everything is driven from one model clock `tSim`, in local seconds.
   56 h.
 - Maintaining work: when running, the fusee's winding ratchet drives the
   sustaining ratchet through the two winding pawls, and a pin on that ratchet
-  drives the fusee wheel through the sustaining spring. When winding, the
-  sustaining pawl holds the ratchet and the spring alone drives the train.
-  Every pawl is rested on its ratchet's teeth each frame (`seatPawl`), so it
-  rides over them or bears on a steep face.
+  drives the fusee wheel through the sustaining spring, at its loaded
+  deflection: the ratchet and the fusee wheel turn together. The fusee and
+  chain follow the hours, the fusee wheel the train, so the fusee sits `eps`
+  (less than one winding tooth) past its `n` turns, where its ratchet bears on
+  the pawls. When winding, the spring turns the sustaining ratchet back until
+  the sustaining pawl holds it (`holdBack`), then relaxes as it alone drives
+  the train (drawn up to `SMAX`, 10°); `eps` runs down with `n`, so the
+  stop-bar meets the winding stop at full wind. When the key lets go, the fusee
+  turns forward until its ratchet catches the pawls, and the sustaining ratchet
+  forward to load the spring again. Nothing turns back; `tools/maintaining.py`
+  checks this. Every pawl is rested on its ratchet's teeth each frame
+  (`seatPawl`), so it rides over them or bears on a steep face.
 
 ### The rate panel
 
@@ -144,7 +153,9 @@ and the thread pitches are the model's. Things to know before changing it:
 
 - *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948. Used for:
   - the structure: pillar plate, barrel bridge, upper and lower train bridges, balance lower bridge, escape upper bridge. The lower train bridge is screwed to the dial side of the pillar plate (Figs. 29, 67, 110);
-  - the maintaining work and the winding stop-bar;
+  - the maintaining work and the winding stop-bar (Sec. IV, Figs. 12, 28, 69–74, parts list Fig. 109): the fusee's winding ratchet with its two screws; the sustaining ratchet wheel, free on the arbor, with two winding pawls, their springs and four screws; the sustaining spring in the fusee wheel's recess; the end plate and taper pin; the stop-bar in a slot in the fusee's top with its spring, under the top plate and its two screws; the winding stop screwed into the barrel bridge; the sustaining pawl on its arbor with its spring;
+  - the upper train bridge leaving the fusee's top open to the barrel bridge, which holds the fusee's upper bushing (Figs. 24, 29, 67, 77; parts list 108-45);
+  - the barrel's inside (Figs. 26, 75): the arbor's core with its hook for the mainspring, and the brace lining the wall; the chain hooked to the barrel and pinned to the fusee (Figs. 26, 28); the setup pawl spring (Figs. 17, 24, 80);
   - the detent escapement. Its layout comes from the plan view, Fig. 90: the detent lies at 68° to the line of centres, with 11.3 mm from the point of flexure to the locking jewel, and the trip spring is 7.9 mm long, 2.3 mm to the side, on the line through the balance staff;
   - the detent's construction, from Figs. 14, 54–60 and 110 and the parts list. The detent is beryllium copper with a two-strip detent spring and a round locking jewel with a flat. The trip spring is Elinvar, on an angle bracket. The support block hangs from the upper train bridge and carries the stop button, lock-adjusting and detent-adjusting screws;
   - the escapement's adjustment figures (Sec. VIII, Ops. 76–97): roller shake about 0.002 in (Op. 84), lock about 6° (Op. 85), let-off at least 6° (Op. 86), overall 26–30° (Op. 87), horn clearance about 0.010 in (Op. 88) and drop about 2° (Op. 97). The teeth drop into the large portion of the impulse roller's crescent and never enter the small portion (Ops. 76, 83). The wheel is centred on the impulse jewel (Op. 82);
@@ -200,7 +211,10 @@ and the thread pitches are the model's. Things to know before changing it:
 - The balance lower bridge: a 3 mm plate on a boss under the train bridge, with two screws (Op. 50). Fig. 110 shows it stepped and lobed; its outline is simplified.
 - The train-bridge and barrel-bridge screws. Their positions come from the top-view photograph; the manual gives three screws for each bridge. One train-bridge screw, at (−8.5, 27.7), has no pillar under it in the model.
 - The fusee profile and the wind indicator ratio.
-- The stop-bar's size and travel, and the fusee's top cap it sits on. Sec. IV describes the mechanism (the chain bears on one end, the other moves out to the winding stop), not its dimensions.
+- The stop-bar's size and travel, and the fusee's top: a turned boss, a slotted layer with a groove for the stop-bar spring, and the top plate (r 5.4) with its two screws. Sec. IV describes the mechanism (the chain bears on one end, the other moves out to the winding stop), not its dimensions. The stop-bar slides out over the last quarter turn, driven from the wind, not from contact with the chain.
+- The shapes of the springs: the winding-pawl springs, the stop-bar spring, the sustaining pawl's spring (a wire round a steady pin in the train bridge) and the setup pawl spring. The sustaining spring's travel from loaded to spent (10°, `SMAX`): 5 to 10 minutes of drive (Sec. IV) is 4.4–8.75° of the fusee wheel. The model does not stop the train if a wind outlasts it (only possible at high speed).
+- The sustaining spring is pinned to the fusee wheel and pushed by a pin on the sustaining ratchet; the manual pins it to both.
+- The barrel arbor's core (r 2.4) and hook, the brace (0.43 mm thick, 40° of the wall), the end plate and taper pin, and the chain's end pin and hook.
 - The mainspring’s coils, which are drawn schematically.
 - The detent's dimensions.
   - Its plan follows Fig. 90 and its construction Figs. 14 and 110 and the chronometerbook photograph. Thicknesses and heights are estimated.
@@ -229,7 +243,7 @@ and the thread pitches are the model's. Things to know before changing it:
   - Reading "one full turn of timing weight" as both weights of the pair turned a turn each.
   - The weights' travel, 3 turns either way from the middle position the manual starts them at. At 40 s a turn, that covers the 2 minutes a day that screws and washers leave (Op. 5).
   - The weights' drawn sizes.
-- The upper train bridge's outline under the barrel bridge (drawn as a full disc) and its opening round the balance staff (r 8.0 mm).
+- The upper train bridge's outline under the barrel bridge (drawn as a full disc, cut round the barrel) and its opening round the balance staff (r 8.0 mm). Figs. 29 and 67 show a crescent. Round the fusee it has a pocket: the top plate (r 5.9), the winding stop and the stop-bar's sweep over the last quarter turn. The pocket stays 0.5 mm under the barrel bridge's straight edge, where the top-view photograph shows the train bridge, so it is smaller than the manual's opening.
 - The sustaining pawl's position: 21.35 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel and of the fusee wheel's teeth.
 
 ## Modifying the model
