@@ -3,11 +3,14 @@
     python fine.py            # 18 escapement phases, then 15 train positions and wind states (full wind and winding included)
     python fine.py --dense    # also 101 phases across a full balance swing
     python fine.py --split    # with the split-balance variant shown (open finding 9 in Review-results.md: expect failures)
+    python fine.py --eval "__mv.userData.R.timing(3,3)"   # run some JS after the page loads (a variant, the weights, a planted fault)
 
 dyn.py works in 0.4 mm cubes and misses thin overlaps (the escape pinion, the fourth wheel's collet, the sustaining pawl's pivot and the stop-bar
 all went unseen; see RESOLVED.md). This one resolves 0.05 mm. Each pair of meshes that meets is listed once, with its largest overlap; pairs in
 EXPECTED are intended contacts, each with the reason and the largest overlap seen when it was recorded. Anything else, or an expected pair that
-has grown past its limit, is printed as NEW or GREW and makes the exit code 1. The train positions are whole teeth apart: the escape wheel only
+has grown past its limit, is printed as NEW or GREW and makes the exit code 1. The barrel's wall is an open drum; it is tested as the solid it
+encloses, and barrel-clearance.js then measures, at each wind state, how close every other part comes to the solid the whole barrel sweeps as
+it turns (wall, caps, cap screws, hook), and where the mainspring lies inside it. A part closer than BARREL_MIN, not listed in BARREL, fails too. The train positions are whole teeth apart: the escape wheel only
 ever rests on a whole tooth plus the escapement's progress, and a fractional offset would put it out of step with the balance."""
 import asyncio,json,pathlib,sys
 from playwright.async_api import async_playwright
@@ -37,7 +40,11 @@ EXPECTED={
  # bevelled holes: polyGeo's bevel narrows the train bridge's holes near one face, and these two pins nearly fill theirs (inside the bridge, not visible)
  ('spawl:Cylinder','trainBridge:Extrude'):('sustaining pawl arbor (r 0.7) in its 0.72 hole: grazes the bevel',0.06,0.18),
  ('barrelBridge:Cylinder','trainBridge:Extrude'):('winding-stop pin (r 0.9) in its 1.0 hole: grazes the bevel',0.035,0.16),
+ ('barrel:Cylinder(drum)','ratchet:Cylinder'):("barrel arbor, on the barrel's axis: it carries the barrel",80,13.2),
 }
+BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
+BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),
+ 'chain':('chain wound on the drum: its links should touch the wall, not enter it',0,0.1)}   # part: (reason, least, most) clearance allowed; None = any
 FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}
   const s=ESC.state({ph});mv.userData._u({{E:1000+{dE}+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n:{n},winding:{w},springOn:true,msOn:false}});}})()"""
 async def main():
@@ -48,6 +55,7 @@ async def main():
         await pg.goto(PAGE);await pg.wait_for_timeout(5000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         if '--split' in sys.argv:await pg.evaluate("window.__mv.userData.balance('split')")
+        if '--eval' in sys.argv:await pg.evaluate(sys.argv[sys.argv.index('--eval')+1])
         chk=open(HERE/'fine-interference.js').read();seen={}
         for ph,dE,n,w in states:
             await pg.evaluate(FREEZE.format(ph=ph,dE=dE,n=n,w=str(w).lower()))
@@ -55,10 +63,30 @@ async def main():
                 k=tuple(sorted((o['a'],o['b'])));o['state']=f"ph {ph} +{dE} teeth, {n} turns{' winding' if w else ''}"
                 if k not in seen or o['vol']>seen[k]['vol']:seen[k]={**o,'hits':seen.get(k,{}).get('hits',0)}
                 seen[k]['hits']+=1
+        bc=open(HERE/'barrel-clearance.js').read();near={};spring=None
+        for n,w in WIND:
+            await pg.evaluate(FREEZE.format(ph=0.4,dE=0,n=n,w=str(w).lower()).replace('msOn:false','msOn:true'))
+            r=json.loads(await pg.evaluate(bc))
+            for o in r['parts']:
+                if o['part'] not in near or o['d']<near[o['part']]['d']:near[o['part']]={**o,'state':f"{n} turns{' winding' if w else ''}"}
+            sp=r['spring']
+            if sp:spring=sp if not spring else {**spring,'rMin':min(spring['rMin'],sp['rMin']),'rMax':max(spring['rMax'],sp['rMax']),'yTop':min(spring['yTop'],sp['yTop']),'yBottom':max(spring['yBottom'],sp['yBottom'])}
         await b.close()
     bad=0
     for k,o in sorted(seen.items(),key=lambda kv:-kv[1]['vol']):
         e=EXPECTED.get(k);tag='ok  ' if e and o['vol']<=e[1] and o['maxY']<=e[2] else ('GREW' if e else 'NEW ');bad+=tag!='ok  '
         print(f"{tag} {o['vol']:7.3f} mm3 depth {o['maxY']:5.2f}  {k[0]:26s} x {k[1]:26s} @ {','.join(map(str,o['at']))}  ({o['hits']} hits; largest at {o['state']})"+(f"  -- {e[0]}" if e else ''))
-    print(f"{len(states)} states, {len(seen)} pairs, {bad} new or grown");sys.exit(1 if bad else 0)
+    print(f"{len(states)} states, {len(seen)} pairs, {bad} new or grown")
+    print(f"\nbarrel: closest approach to its swept solid over {len(WIND)} wind states (mm; negative = inside)")
+    nb=0
+    for o in sorted(near.values(),key=lambda o:o['d']):
+        e=BARREL.get(o['part']);lo,hi=(e[1],e[2]) if e else (BARREL_MIN,None)
+        okk=(lo is None or o['d']>=lo) and (hi is None or o['d']<=hi);nb+=not okk
+        print(f"{'ok  ' if okk else 'NEAR' if o['d']>=0 else 'HIT '} {o['d']:8.3f}  {o['part']:14s} {o['type']:9s} to the barrel's {o['piece']:16s} @ {','.join(map(str,o['at']))}  ({o['state']})"+(f"  -- {e[0]}" if e else ''))
+    if spring:
+        s=spring;arb=near.get('ratchet');checks=[('innermost coil off the barrel arbor (r 1.4)',s['rMin']-1.4),('outermost coil inside the wall',s['wall']-s['rMax']),
+          ("below the upper cap's inner face",s['yTop']-s['capTopInner']),("above the lower cap's inner face",s['capBottomInner']-s['yBottom'])]
+        print(f"mainspring over the wind: coils {s['rMin']}-{s['rMax']} mm from the axis, {s['yTop']} to {s['yBottom']} in y")
+        for t,g in checks:okk=g>=BARREL_MIN;nb+=not okk;print(f"{'ok  ' if okk else 'HIT '} {g:8.3f}  {t}")
+    print(f"{nb} barrel problems");sys.exit(1 if bad or nb else 0)
 asyncio.run(main())

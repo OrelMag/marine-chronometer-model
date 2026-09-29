@@ -13,8 +13,8 @@ Status: findings 1–5 were fixed after the review; see
 finding 9 (the split-balance variant runs through the barrel bridge), which is
 not fixed yet. Findings 6–9 and the smaller issues are open.
 
-A later pass with a finer collision check found and fixed five more overlaps,
-and planned a check for the barrel wall; see
+A later pass with a finer collision check found and fixed six more overlaps,
+and added a check for the barrel wall; see
 [Fine interference pass](#fine-interference-pass).
 
 ## Summary
@@ -416,8 +416,9 @@ finding 9.
 | Sustaining pawl's arbor into the fusee wheel's teeth | 0.12 mm | Pivot 21.35 mm from the fusee axis (was 21) | `329e77e` |
 | Stop-bar through the fusee arbor at full wind | 1 mm³ | One bar beside the arbor, re-aimed at the stop pin | `b39086a` |
 | Stop-bar through the chain's top turn at full wind | 0.18 mm | Raised top cap, thinner bar above the chain | `0371c16` |
+| Chain's straight run into the barrel (found by the barrel check) | 0.24 mm | Common tangent of the two drums; winding-stop pin 0.2 mm shorter | this pass |
 
-All five were thinner than `dyn.py`'s 0.4 mm cubes.
+All were thinner than `dyn.py`'s 0.4 mm cubes, and the barrel wall was never tested before.
 
 ### Stage by stage
 
@@ -446,39 +447,49 @@ These are intended contacts, in `fine.py`'s `EXPECTED` table with their limits:
   not a helix, and each link is an upright box on a slope of up to 60°, so its
   lower edge dips into the cone. This stands for the chain lying in its groove.
 
-### Not tested: the barrel wall (plan)
+### The barrel wall
 
 The barrel's wall is an open, double-sided cylinder (`noCap`, r 13.5 mm), and
-ray parity needs closed meshes, so neither check can test it. The same goes for
-the mainspring (an open ribbon) and the dial face (a flat ring). The review's
-hand check found the barrel 0.15 mm from the third wheel at its cap screws,
-1.7 mm inside the train bridge's cutout, and about 4 mm from the centre and
-third arbors. The plan:
+ray parity needs closed meshes, so neither check could test it. The plan was
+carried out as follows.
 
-1. **Solid proxy.** In `fine-interference.js`, add a closed stand-in for every
-   open cylinder marked `noCap`: a solid cylinder with the same radius, height
-   and transform. The drum is closed in reality (wall, caps, contents), so
-   anything else inside it is a collision. The barrel's own contents (its
-   arbor under the setup ratchet, the mainspring, the hook, the caps and their
-   screws) go in `EXPECTED`, each with its reason.
-2. **Exact clearance, not only overlap.** For every other part's vertices within
-   the drum's height (bB to bT, and the caps' height at Rb + 0.7), take the
-   distance from the barrel axis minus the radius. Subdivide edges longer than
-   0.1 mm, so a flat face crossing the cylinder between vertices is caught.
-   Report the smallest clearance per part and fail below 0.05 mm. This gives
-   margins, which the grid can't: expect about 0.15 mm (third wheel against the
-   cap screws), 1.7 mm (train bridge cutout) and 4 mm (arbors), as found by
-   hand.
-3. **States.** The wall is round, but the cap screws and the hook turn with
-   the barrel, and the chain's wrap changes with the wind: use `fine.py`'s wind
-   states. The chain wraps at Rb + 0.3, so its links' inner faces sit about
-   0.02 mm off the drum. Record that as expected, with a limit.
-4. **Mainspring, analytically.** From `mainspringGeo`'s parameters over the
-   whole wind: the innermost coil stays outside the barrel arbor (2.6 mm), and
-   the outermost stays inside the wall (13.1 mm).
-5. **Prove it.** Plant a fault (barrel radius +0.3 mm) and confirm the check
-   fails on the cap screws or the third wheel. Then remove the fault and
-   confirm the margins match the hand check.
-6. **Record.** Add the result to `fine.py`'s output and `EXPECTED`, the model
-   README's collision step and finding 7. Apply the same proxy to the dial
-   face if it proves useful.
+- **Solid stand-in.** `fine-interference.js` tests any open cylinder marked
+  `noCap` as the solid it encloses. The barrel arbor on its axis is expected.
+- **Margins.** `barrel-clearance.js` measures how close every other part comes
+  to the solid the whole barrel sweeps as it turns: wall, caps, cap screws,
+  hook and boss. Signed distance to each piece is convex, so a branch and bound
+  with tangent-plane bounds gives margins to about 0.002 mm in 0.5 s a state.
+  `fine.py` runs it at its 15 wind states and fails on anything closer than
+  0.05 mm that isn't in `BARREL`.
+- **Mainspring.** Its drawn coils, over the wind, against the arbor, wall and
+  caps.
+- **Proved.** Three planted faults fail as they should, with no source edits
+  (`--eval`):
+  - the wall scaled 1.2×: it hits the train bridge, the detent and the chain;
+  - the barrel moved 0.2 mm toward the plate: the third wheel is 0.050 mm
+    inside, exactly the 0.2 less its 0.15 mm gap;
+  - the mainspring scaled 1.1×: its outer coil is 0.69 mm through the wall.
+
+Results, over the wind:
+
+| Part | Closest to | Margin |
+|---|---|---|
+| Chain (wound on the drum) | wall | 0.013 mm, expected (0–0.1 mm) |
+| Third wheel | cap screws, below them | 0.150 mm |
+| Barrel bridge | boss on the upper cap | 0.550 mm |
+| Detent foot | wall | 0.983 mm |
+| Train bridge's cutout | rim of the upper cap | 0.998 mm |
+| Centre wheel | rim of the lower cap | 2.08 mm |
+| Balance | rim of the upper cap | 2.34 mm |
+| Mainspring | arbor / wall / caps | 1.2 / 0.6 / 0.3 and 0.2 mm |
+
+These agree with the review's hand check except the cutout: its 1.7 mm is
+measured to the wall, and the caps' rim, 0.7 mm wider, is 1.0 mm from it.
+
+The check found one fault. The chain's straight run joined the two drums'
+lowest points, which is a true tangent only when their radii are equal; with
+the fusee smaller, the run cut up to 0.24 mm into the barrel. It is now the
+common tangent. The winding-stop pin, which the fusee's turned wrap then
+brushed at full wind, ends 0.2 mm higher, still covering the stop-bar.
+
+The dial face (a flat, open ring) is the one open surface still untested.

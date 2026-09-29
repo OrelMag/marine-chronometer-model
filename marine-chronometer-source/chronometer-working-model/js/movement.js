@@ -222,7 +222,7 @@ function buildMovement(M){
   const eg2=mesh(bb,decalGeo(BBpoly),M.engraveB,0,BB_T-0.02,0);eg2.userData.noShadow=true;eg2.userData.noCap=true;eg2.userData.decal=true;
   /* winding stop on the underside of the barrel bridge, reached by the stop-bar in the fusee top */
   const Fl=Math.hypot(...L.Fu),fo=[L.Fu[0]/Fl,L.Fu[1]/Fl],WS=WSd;
-  for(const o of[cylBetween(bb,0.9,TB_T,-20.2,M.steel,...WS),mesh(bb,new THREE.BoxGeometry(2.2,1,2.2),M.steel,WS[0],TB_T-0.5,WS[1])])o.userData.wstop=true;   /* down through the train bridge to the stop-bar's level; kept solid while the key winds (app.js) */
+  for(const o of[cylBetween(bb,0.9,TB_T,-20.4,M.steel,...WS),mesh(bb,new THREE.BoxGeometry(2.2,1,2.2),M.steel,WS[0],TB_T-0.5,WS[1])])o.userData.wstop=true;   /* down through the train bridge to the stop-bar's level (the bar is at -20.63..-20.41), clear above the chain's top turn; kept solid while the key winds (app.js) */
   /* ---------- dial (4 in), hands, motion work ---------- */
   const dl=part('dial',32);
   mesh(dl,discGeo(50.8,0.6,[[...L.C,2.4],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,3.3,0);
@@ -492,10 +492,12 @@ function makeFusee(M,c){
   function setWind(n){
     fz.rotation.y=n*TAU;bz.rotation.y=I(n)*TAU;
     const P=[],V=(x,y,z)=>P.push(new THREE.Vector3(x,y,z));
-    for(let m=c.N;m>n;m-=0.01){const a=-Math.PI/2+TAU*(m-n),r=rf(m)+0.2;V(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}
-    const r0=rf(n)+0.2,y0=yf(n),y1=yb(n);V(fx,y0,-r0);
-    for(let s=0.1;s<1;s+=0.1)V(lerp(fx,bx,s),lerp(y0,y1,s),-lerp(r0,c.Rb+0.3,s));
-    const In=I(n);for(let m=n;m>=0;m-=0.01){const b=-Math.PI/2-TAU*(In-I(m));V(bx+(c.Rb+0.3)*Math.cos(b),yb(m),(c.Rb+0.3)*Math.sin(b));}
+    /* the straight run is the drums' common tangent: it leaves both at dl past their lowest point (when the chain's radii differ, joining the lowest points cuts into the larger drum) */
+    const r0=rf(n)+0.2,rB=c.Rb+0.3,dl=Math.asin((rB-r0)/(fx-bx)),y0=yf(n),y1=yb(n);
+    for(let m=c.N;m>n;m-=0.01){const a=-Math.PI/2+dl+TAU*(m-n),r=rf(m)+0.2;V(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}
+    const F0=[fx+r0*Math.sin(dl),-r0*Math.cos(dl)],B0=[bx+rB*Math.sin(dl),-rB*Math.cos(dl)];V(F0[0],y0,F0[1]);
+    for(let s=0.1;s<1;s+=0.1)V(lerp(F0[0],B0[0],s),lerp(y0,y1,s),lerp(F0[1],B0[1],s));
+    const In=I(n);for(let m=n;m>=0;m-=0.01){const b=-Math.PI/2+dl-TAU*(In-I(m));V(bx+rB*Math.cos(b),yb(m),rB*Math.sin(b));}
     let ia=0,ib=0,acc=0,next=0,k=0;const pitch=1.32;
     for(let i=1;i<P.length&&(ia<MAX&&ib<MAX);i++){const seg=P[i].distanceTo(P[i-1]);
       while(acc+seg>=next&&ia<MAX&&ib<MAX){const f=(next-acc)/seg;pos.lerpVectors(P[i-1],P[i],f);t.subVectors(P[i],P[i-1]).normalize();

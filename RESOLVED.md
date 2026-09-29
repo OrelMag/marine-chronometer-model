@@ -119,6 +119,15 @@ Contents:
   bridge, still level with the winding stop pin. Keep: the bar has only the
   0.6 mm between the cone's top and the train bridge; run `tools/fine.py`
   after touching the fusee, chain or bridge heights. `0371c16`
+- **Chain's straight run cut into the barrel, up to 0.24 mm.** It joined the
+  drums' lowest points, a true tangent only when their radii are equal; with
+  the fusee smaller (most of the run) the line entered the barrel just past
+  that point. It is now the drums' common tangent, leaving both `dl` past their
+  lowest point, and the chain lies 0.013 mm off the barrel. The winding-stop
+  pin, which the turned fusee wrap then brushed at full wind, now ends at
+  −20.40 (was −20.2), still covering the stop-bar's thickness. Found by the
+  barrel check in `tools/fine.py`. Keep: `fine.py` must report 0 barrel
+  problems. Fixed, not yet committed.
 
 ## Plates, bridges, screws and arbors
 

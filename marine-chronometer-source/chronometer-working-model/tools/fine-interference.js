@@ -8,15 +8,16 @@
  const EXTRA=[];mv.traverse(o=>{if(!o.isMesh||!vis(o))return;const g=o.geometry;if(!g.attributes||!g.attributes.position||g.attributes.position.count<3)return;
    if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<o.count;i++){o.getMatrixAt(i,im);EXTRA.push({o,mat:new THREE.Matrix4().multiplyMatrices(o.matrixWorld,im),tag:'link'+(i%2)});}return;}
    const m=o.userData.mat0||o.material;if(g.type==='TubeGeometry'){items.push({o,mat:o.matrixWorld,tube:1});return;}
+   if(o.userData.noCap&&g.type==='CylinderGeometry'&&g.parameters.openEnded){const q=g.parameters;items.push({o,mat:o.matrixWorld,geo:new THREE.CylinderGeometry(q.radiusTop,q.radiusBottom,q.height,q.radialSegments),tag2:'(drum)'});return;}   /* an open drum (the barrel wall) as the solid it encloses */
    if(m.transparent||m.side===THREE.DoubleSide||o.userData.noCap||o.userData.noShadow)return;items.push({o,mat:o.matrixWorld});});
  for(const e of EXTRA)items.push(e);
  const M4=new THREE.Matrix4(),v=new THREE.Vector3();
- const D=items.map(it=>{const o=it.o;M4.multiplyMatrices(inv,it.mat);const g=o.geometry,p=g.attributes.position,idx=g.index;
+ const D=items.map(it=>{const o=it.o;M4.multiplyMatrices(inv,it.mat);const g=it.geo||o.geometry,p=g.attributes.position,idx=g.index;
    const P=new Float64Array(p.count*3);let x0=1e9,y0=1e9,z0=1e9,x1=-1e9,y1=-1e9,z1=-1e9;
    for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).applyMatrix4(M4);P[3*i]=v.x;P[3*i+1]=v.y;P[3*i+2]=v.z;x0=Math.min(x0,v.x);x1=Math.max(x1,v.x);y0=Math.min(y0,v.y);y1=Math.max(y1,v.y);z0=Math.min(z0,v.z);z1=Math.max(z1,v.z);}
    const nt=idx?idx.count/3:p.count/3,T=new Uint32Array(nt*3);for(let t=0;t<nt*3;t++)T[t]=idx?idx.array[t]:t;
    const TB=new Float64Array(nt*4);for(let t=0;t<nt;t++){const a=T[3*t],b=T[3*t+1],c=T[3*t+2];TB[4*t]=Math.min(P[3*a],P[3*b],P[3*c]);TB[4*t+1]=Math.max(P[3*a],P[3*b],P[3*c]);TB[4*t+2]=Math.min(P[3*a+2],P[3*b+2],P[3*c+2]);TB[4*t+3]=Math.max(P[3*a+2],P[3*b+2],P[3*c+2]);}
-   return{P,T,TB,nt,bb:[x0,y0,z0,x1,y1,z1],part:partOf(o),name:o.geometry.type.replace('Geometry','')+(it.tube?'(tube)':''),par:it.tag?null:o.parent,inst:!!it.tag};});
+   return{P,T,TB,nt,bb:[x0,y0,z0,x1,y1,z1],part:partOf(o),name:o.geometry.type.replace('Geometry','')+(it.tube?'(tube)':'')+(it.tag2||''),par:it.tag?null:o.parent,inst:!!it.tag};});
  const cols=(d,X,r,nx,nz)=>{const C=new Array(nx*nz);const{P,T,TB,nt}=d;
    for(let t=0;t<nt;t++){if(TB[4*t+1]<X[0]||TB[4*t]>X[3]||TB[4*t+3]<X[2]||TB[4*t+2]>X[5])continue;
      const a=T[3*t],b=T[3*t+1],c=T[3*t+2],ax=P[3*a],ay=P[3*a+1],az=P[3*a+2],bx=P[3*b],by=P[3*b+1],bz=P[3*b+2],cx=P[3*c],cy=P[3*c+1],cz=P[3*c+2];

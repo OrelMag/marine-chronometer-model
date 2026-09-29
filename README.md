@@ -157,7 +157,7 @@ Before committing a change to the model:
    `marine-chronometer-source/chronometer-working-model/tools/`:
 
        python dyn.py        # collisions through a full escapement cycle
-       python fine.py       # the same at 0.05 mm, round the train and over the wind (exit code 1 on anything new)
+       python fine.py       # the same at 0.05 mm, round the train and over the wind, plus the barrel's margins (exit code 1 on anything new)
        python audit.py      # screws, pivots, loose parts in the movement
        python audit.py box  # the same for the box and gimbals
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
