@@ -206,6 +206,19 @@ Contents:
   must be built when a view can reveal it. `ec55b98`
 - **Right-click triggered left-click picking.** It no longer does, and a
   right-click passes through a faded part to the one behind. `16119fc`
+- **Fade/hide menu unreachable on iPhones.** It opened only on `contextmenu`,
+  which iOS Safari never fires for a long press. A touch held 500 ms without
+  moving now opens it (`openOpm` in `app.js`). Android's own long-press
+  `contextmenu` and the timer open it once between them. Keep: a long press
+  never picks (`down.lp`), and a second finger or a drag cancels it. `65fd5d6`
+- **Walkthrough scrolled the page wrongly beside the stage.** It assumed the
+  stage sits above the panel whenever the window is under 960 px wide, which
+  is untrue in the landscape phone layout. It now checks whether the card is
+  below the stage or beside it. Keep: test the layout, not the width. `65fd5d6`
+- **Tools turned the labels on.** `fit.py`, `unproj.py` and `p3fit.py` clicked
+  the Labels box to hide them; labels are now off by default, so the click was
+  removed. Keep: tools that need a clean render hide `.labels` with CSS
+  (`social.py`, `views.py`) or leave the box alone. `65fd5d6`
 
 ## Build, tools and docs
 
@@ -258,19 +271,3 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
-
-From the phone work (for "Controls and display"):
-
-- **Fade/hide menu unreachable on iPhones.** It opened only on `contextmenu`,
-  which iOS Safari never fires for a long press. A touch held 500 ms without
-  moving now opens it (`openOpm` in `app.js`). Android's own long-press
-  `contextmenu` and the timer open it once between them. Keep: a long press
-  never picks (`down.lp`), and a second finger or a drag cancels it.
-- **Walkthrough scrolled the page wrongly beside the stage.** It assumed the
-  stage sits above the panel whenever the window is under 960 px wide, which
-  is untrue in the landscape phone layout. It now checks whether the card is
-  below the stage or beside it. Keep: test the layout, not the width.
-- **Tools turned the labels on.** `fit.py`, `unproj.py` and `p3fit.py` clicked
-  the Labels box to hide them; labels are now off by default, so the click was
-  removed. Keep: tools that need a clean render hide `.labels` with CSS
-  (`social.py`, `views.py`) or leave the box alone.
