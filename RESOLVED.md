@@ -231,7 +231,7 @@ Contents:
   train and over the wind, with the chain, springs and barrel; it names the
   dial face as untested and the split-balance variant as not yet clear. Keep:
   change that sentence when `fine.py`'s coverage or finding 9 changes.
-  Fixed, not yet committed.
+  `346299c`
 
 ---
 
