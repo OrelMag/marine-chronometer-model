@@ -188,13 +188,14 @@ visitor's browser fetches only these few files, from the host alone.
 
 ### The live site
 
-The site is live at https://marinechronometermodel.com (also at
-https://marinechronometer.orelmac.workers.dev), a Cloudflare Worker that serves
-`site/` as static files. `wrangler.jsonc` at the root describes it, including
-the custom domain. To update it (Node.js provides `npx`; the first run opens a
+The site is live at https://www.marinechronometermodel.com, a Cloudflare Worker
+that serves `site/` as static files. `wrangler.jsonc` at the root describes it,
+with its custom domains; `worker.js` redirects every other address
+(https://marinechronometermodel.com, https://marinechronometer.orelmac.workers.dev
+and plain `http://`) to the main one, keeping the path. To update it (Node.js provides `npx`; the first run opens a
 browser window to log in to Cloudflare):
 
-    python build.py --site-url https://marinechronometermodel.com
+    python build.py --site-url https://www.marinechronometermodel.com
     npx wrangler deploy
 
 Pushing to GitHub doesn't deploy it. The steps below are for setting up a new

@@ -1,17 +1,21 @@
-// The live site: a Cloudflare Worker that serves site/ as static files (no script), at
-// https://marinechronometermodel.com (its custom domain, also www.) and marinechronometer.orelmac.workers.dev.
-// Build with its address, then deploy (the first run asks you to log in):
-//   python build.py --site-url https://marinechronometermodel.com
+// The live site: a Cloudflare Worker serving site/ as static files at its main address, https://www.marinechronometermodel.com.
+// worker.js sends every other address (marinechronometermodel.com, marinechronometer.orelmac.workers.dev, plain http) there.
+// Build with the main address, then deploy (the first run asks you to log in):
+//   python build.py --site-url https://www.marinechronometermodel.com
 //   npx wrangler deploy
 {
   "name": "marinechronometer",
   "compatibility_date": "2026-09-28",
+  "main": "worker.js",
   // the domain's DNS record and certificate are created by Cloudflare on deploy (the zone is in this account)
   "routes": [{ "pattern": "marinechronometermodel.com", "custom_domain": true }, { "pattern": "www.marinechronometermodel.com", "custom_domain": true }],
-  // keep the old address working too (with routes set, wrangler would otherwise turn it off)
+  // keep the old address answering, so worker.js can redirect it (with routes set, wrangler would otherwise turn it off)
   "workers_dev": true,
   "assets": {
     "directory": "./site",
+    "binding": "ASSETS",
+    // every request goes through worker.js first, so the other addresses redirect instead of serving the files
+    "run_worker_first": true,
     // /page.html redirects to /page, which build.py's link-preview addresses assume
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
