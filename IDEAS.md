@@ -179,15 +179,15 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 
 ### 1.3 Outlines the photographs don't show (M)
 - **Balance lower bridge:** a stadium in the model; "stepped and lobed" in Fig. 110. Trace Fig. 110 through the same kind of similarity transform `p3map.json` uses.
-- **Upper train bridge under the barrel bridge:** drawn as a full disc, cut round the barrel and with a pocket round the fusee's top (the fusee is open to the barrel bridge, Figs. 24, 77). Figs. 29 and 67 show its whole outline, a crescent; trace it (or an overhaul photo with the barrel bridge off), keeping the pocket's clearances and the top-view photograph's visible edge.
+- **Upper train bridge under the barrel bridge:** drawn as a full disc, cut round the barrel and with a pocket round the fusee's top (the fusee is open to the barrel bridge, Figs. 24, 77). Figs. 29 and 67 show its whole outline, a crescent; trace it (or an overhaul photo with the barrel bridge off), keeping the pocket's clearances and the top-view photograph's visible edge. *(Partly done: the pocket is now a cut round the fusee open to the rim (r 17.8), which leaves the fusee clear as Fig. 24 shows. The crescent's outer edge and its keyhole opening are still to trace.)*
 - **Detent foot and support block:** shortened to clear the train pillar. Once 1.1 is done, check whether the pillar or the block is really the one out of place.
 
 ### 1.4 The balance's collet, stud and upper setting (S–M)
-- **Collet and stud:** the manual (Sec. II, Fig. 5) says the collet's "curious shape" came from counterpoising experiments to remove position errors, and the stud's attachment to the cock is "unusual". Today the collet is a hexagonal prism. Model both after Fig. 5, with the collet clamp and wedge pin of Fig. 6.
-- **Upper pivot setting:** the setting in the cock is "not drawn: the staff is 0.7 mm from the cock's edge" ([movement.js:346](marine-chronometer-source/chronometer-working-model/js/movement.js#L346)). That suggests the traced cock outline is slightly off near the endstone. Re-check the parallax shift in `cock_outline.json`.
+- **Collet and stud:** the manual (Sec. II, Fig. 5) says the collet's "curious shape" came from counterpoising experiments to remove position errors, and the stud's attachment to the cock is "unusual". Today the collet is a hexagonal prism. Model both after Fig. 5, with the collet clamp and wedge pin of Fig. 6. *(Done: the slotted collet with its plate, tongue, clamp and wedge pin, and the stud as a bar under the cock on the stud screw and a steady pin (Figs. 19, 84, 85), with its own clamp and wedge pin. The spring's ends reach the clamps, and it is 5.9 mm tall to clear the stud's bar. The collet's counterpoise is not modelled.)* `91dd568`
+- **Upper pivot setting:** the setting in the cock is "not drawn: the staff is 0.7 mm from the cock's edge" ([movement.js:346](marine-chronometer-source/chronometer-working-model/js/movement.js#L346)). That suggests the traced cock outline is slightly off near the endstone. Re-check the parallax shift in `cock_outline.json`. *(Done: the setting and its olive-hole jewel are drawn in the cock under the endstone cap, with the staff's pivot in the jewel. Rather than re-fit the tracing, the nose is rounded out to a boss 2.4 mm in radius about the staff, as the photographs show the endstone about 3 mm inside the edge; a re-trace of the nose would replace it.)* `2acc042`
 
 ### 1.5 Hand-setting square, balance locking arm, shipping wedges (S each)
-- **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
+- **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says). *(Done: the square is drawn on the minute hand's pipe, the fusee square's size so the one key fits both. Using it to set the hands waits for 3.1.)* `ad1762d`
 - **Balance locking arm (Fig. 9):** later chronometers have a balance wheel locking arm, with locked and unlocked positions. Model it, with a toggle, as a part of the "Operation when received" story.
 - **Shipping wedges:** before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
 
@@ -283,7 +283,7 @@ The amplitude then emerges from the model instead of being fixed.
 ### 2.5 Gimbals with inertia (M)
 **What.** Ship motion now counter-rotates the ring and bowl exactly, so the movement stays perfectly level ([app.js:460](marine-chronometer-source/chronometer-working-model/js/app.js#L460)). Model the bowl and ring as two coupled damped pendulums driven by the box's motion instead.
 - They then lag, and overshoot at some frequencies.
-- A **Latch the gimbals** control (the latch is modelled but only shown released) would lock them. The movement then visibly tilts with the box.
+- A **Latch the gimbals** control (the latch is modelled but only shown released) would lock them. The movement then visibly tilts with the box. *(Done: Gimbals latched, under Display. The lever swings in through a slot in the ring to the keeper on the case (Fig. 106); ring and case are brought level with the box first and then tilt with it.)* `c04e4d9`
 
 **Why.** It shows what the gimbals do, and where they stop working: a roll period near the bowl's own period.
 

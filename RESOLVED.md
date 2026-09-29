@@ -183,11 +183,31 @@ Contents:
   sweeps the pocket over the last quarter turn; if the bar, its travel or the
   pocket changes, `tools/fine.py` must still report no train-bridge contact. `da90e53`
 
+- **The barrel hardly showed from above.** In the top-view photograph a wide
+  window in the barrel bridge shows the barrel's cap and the fusee's large end
+  beside the balance. The model's cut was the balance's clearance circle only
+  (r 17.7), which left a 3.8 mm crescent of barrel, and the train bridge,
+  drawn as a full disc with a pocket round the fusee's top, covered the rest.
+  The cut is now traced on the photograph (r 17.6 about a centre 2.8 mm off
+  the staff toward the barrel, joined with the clearance circle), and the
+  train bridge is cut round the fusee (r 17.8, open to the rim) as it is cut
+  round the barrel. `tools/topview.py` warps the model onto the photograph to
+  compare them. Keep: an outline the photographs show is traced, not a
+  clearance circle; check it with `topview.py`. `aa9d525`
+
 ## Setup, case and gimbals
 
 - **Setup cover shaped as a 220° fan.** The photos show a bow-shaped plate
   straddling the barrel arbor, with a curved slot showing the ratchet and click,
   and screws inside the outline. `9606cc3`, `cc70482`
+- **Setup cover's rim side wrong.** Its rim-side edge ran at 8.7 mm from
+  the arbor with a curved slot cut in the plate to show the teeth and click.
+  The top-view photograph, the 2E12055 photograph and Fig. 24 show no slot:
+  the plate is waisted on both sides, and on the rim side its concave edge
+  comes to 5.9 mm from the arbor, uncovering the teeth and the click's tip.
+  Traced through a fit to the cover's two screws and the arbor; the edge is an
+  arc within 0.5 mm of the tracing. Keep: check the cover against the
+  photograph with `tools/topview.py`. `54fdbfb`
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved
@@ -354,6 +374,13 @@ Contents:
   froze the model. It now spends that context on a blank page, as `smoke.py`
   does, and waits for the loading screen to go. Keep: every browser tool
   warms up WebGL first and waits for the page, not for a fixed time. `ea04355`
+- **`illustration.py` failed at its first view.** Its render hook keeps the
+  last scene drawn, for the passes to redraw. With Edges on (the default except
+  on phones), the last scene drawn each frame is the Edges overlay's, two
+  objects with no parts in it, so the first label anchor on a part threw
+  (`localToWorld` of null). It now turns Edges off before each view, as the
+  sheet was drawn. Keep: a tool that hooks `render` must get the model's scene,
+  so switch off any overlay pass drawn after it. `91dd568`
 
 ---
 
