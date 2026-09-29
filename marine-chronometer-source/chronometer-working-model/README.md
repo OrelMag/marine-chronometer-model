@@ -25,7 +25,7 @@ copies and assembles the website (see the root README).
 | `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch, the Pen and wash drawing (`drawOf`, `makeInk`) |
 | `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
-| `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate), winding key |
+| `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate that turns to admit the winding key), winding key |
 | `js/app.js` | The parts registry (`PARTS`: every part's name, description, part numbers, group, colour and flags), renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, and the animation loop |
 | `build.py` | Inlines the CSS, JS, image, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
 | `dist/chronometer-working-model.html` | The built single file (committed) |
@@ -306,6 +306,11 @@ and the thread pitches are the model's. Things to know before changing it:
   - The weights' travel, 3 turns either way from the middle position the manual starts them at. At 40 s a turn, that covers the 2 minutes a day that screws and washers leave (Op. 5).
   - The weights' drawn sizes.
 - The upper train bridge's outline under the barrel bridge (drawn as a full disc, cut round the barrel) and its opening round the balance staff (r 8.0 mm). Figs. 29 and 67 show a crescent. Round the fusee it has a pocket: the top plate (r 5.9), the winding stop and the stop-bar's sweep over the last quarter turn. The pocket stays 0.5 mm under the barrel bridge's straight edge, where the top-view photograph shows the train bridge, so it is smaller than the manual's opening.
+- The case's winding-hole shield plate. Sourced: its parts (plate, shoulder screw, stop screw, return spring; parts list) and its action, turned clockwise, seen from below, until its hole lines up with the case's, and returned by the spring (the case's description and the winding instructions). Estimated: everything else.
+  - The plate's shape: a rounded triangle on a shoulder screw 9 mm from the key hole, covering the hole at rest and turning 0.75 rad to open it.
+  - The stop screw runs in an arc slot in the plate, whose two ends set the rest and open positions.
+  - The spring is a torsion coil round the shoulder, with one leg on the stop screw and one on a pin in the plate.
+  - The case bottom is 1 mm thick (the rest of the bowl is a sheet).
 - The sustaining pawl's position: 21.35 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel and of the fusee wheel's teeth.
 
 ## Modifying the model

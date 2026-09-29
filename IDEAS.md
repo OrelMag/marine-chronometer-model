@@ -191,9 +191,6 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Balance locking arm (Fig. 9):** later chronometers have a balance wheel locking arm, with locked and unlocked positions. Model it, with a toggle, as a part of the "Operation when received" story.
 - **Shipping wedges:** before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
 
-### 1.6 Case shield plate (S)
-The case's winding-hole shield plate "is turned clockwise to admit the key and springs back when the key is removed" (`INFO.bowl`). `box.js` builds it (`shutter`) but never moves it. Animate it in `kwStart`/`kwStop` and when the key appears.
-
 ### 1.7 Screws, washers and weights from the parts list (S)
 - **The manual's masses:** the moment of inertia in `R.timing` now uses the parts list's masses for the three screw sizes and the two weights (931 g·mm²). Still to do:
   - Sec. II gives balance screws "in six weights ranging from 100 mgs. to 300 mgs." and timing washers "in a range of six weights from 4 mgs. to 20 mgs". Map the parts list's three screw head heights onto the six weights.
