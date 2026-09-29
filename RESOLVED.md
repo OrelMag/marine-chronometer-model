@@ -183,6 +183,18 @@ Contents:
   sweeps the pocket over the last quarter turn; if the bar, its travel or the
   pocket changes, `tools/fine.py` must still report no train-bridge contact. `da90e53`
 
+- **The barrel hardly showed from above.** In the top-view photograph a wide
+  window in the barrel bridge shows the barrel's cap and the fusee's large end
+  beside the balance. The model's cut was the balance's clearance circle only
+  (r 17.7), which left a 3.8 mm crescent of barrel, and the train bridge,
+  drawn as a full disc with a pocket round the fusee's top, covered the rest.
+  The cut is now traced on the photograph (r 17.6 about a centre 2.8 mm off
+  the staff toward the barrel, joined with the clearance circle), and the
+  train bridge is cut round the fusee (r 17.8, open to the rim) as it is cut
+  round the barrel. `tools/topview.py` warps the model onto the photograph to
+  compare them. Keep: an outline the photographs show is traced, not a
+  clearance circle; check it with `topview.py`.
+
 ## Setup, case and gimbals
 
 - **Setup cover shaped as a 220° fan.** The photos show a bow-shaped plate

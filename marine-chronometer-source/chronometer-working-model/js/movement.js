@@ -161,18 +161,15 @@ function buildMovement(M){
     mesh(pl,new THREE.LatheGeometry(pr,32),M.plateSolid,x,0,z);};
   PILLARS.train.forEach(([x,z])=>pillar(x,z,TB_U));pillar(...PILLARS.barrel,TB_T);
   /* ---------- upper train bridge (y TB_T..TB_U) and barrel bridge (y BB_T..TB_T). The barrel bridge sits on the train bridge and is cut around the
-               balance; the train bridge's outline under it is not photographed, so it is drawn as a full disc ---------- */
+               balance; the train bridge's outline under it is not photographed: a disc cut round the barrel and the fusee (Figs. 24, 29) ---------- */
   const tb=part('trainBridge',-62);
   const WSd=(()=>{const Fl=Math.hypot(...L.Fu);return[L.Fu[0]+7.2*L.Fu[0]/Fl,L.Fu[1]+7.2*L.Fu[1]/Fl];})();
-  const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56],TBpoly=subtractCircle(discClip(BR_R,[],240),TBc,19.2);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */   /* opening round the balance staff and rollers, r 8.0: the escape and centre pivots (9.4 and 10.5 mm from the staff) stay in solid bridge */
-  /* the train bridge leaves the fusee's top open to the barrel bridge, which holds the fusee's upper bushing (Figs. 24, 29, 67, 77; parts list 108-45): a pocket round the top plate
-     (r 5.9), the winding stop (r 2.8 round it) and the stop-bar's outer end as it slides out over the last quarter turn, turned on by up to a winding tooth when the key lets go
-     (0.3 clear). It stays under the barrel bridge, 0.5 mm inside its straight edge, where the top-view photograph shows the train bridge; the bar's sweep leads away from that edge */
-  const FUpocket=(()=>{const fl=Math.hypot(...L.Fu),C=[[L.Fu,5.9],[WSd,2.8]],a0=Math.atan2(WSd[1]-L.Fu[1],WSd[0]-L.Fu[0]),o=[];
-    for(let i=0;i<=60;i++){const n=0.3*i/60,x=3.2*smooth(1-n/0.25),a=a0-n*TAU,e=4.3+x,m=Math.hypot(e,2.5);   /* bar end (4.3 + travel out, 1.1-2.5 off its axis) in its direction a, and turned on by up to a tooth */
-      for(const da of[0.03,-0.08,-0.19]){const b=a+da;C.push([[L.Fu[0]+(e-0.6)*Math.cos(b),L.Fu[1]+(e-0.6)*Math.sin(b)],Math.hypot(0.6,2.5)+0.3]);}}
-    for(let i=0;i<240;i++){const v=[Math.cos(i/240*TAU),Math.sin(i/240*TAU)];let t=0;for(const[c,r]of C){const w=[L.Fu[0]-c[0],L.Fu[1]-c[1]],b=w[0]*v[0]+w[1]*v[1],d=b*b-(w[0]*w[0]+w[1]*w[1]-r*r);if(d>=0)t=Math.max(t,-b+Math.sqrt(d));}o.push([L.Fu[0]+t*v[0],L.Fu[1]+t*v[1]]);}return o;})();
-  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,8.0],{pts:FUpocket},[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,TB_T,0);
+  const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56];let TBpoly=subtractCircle(discClip(BR_R,[],240),TBc,19.2);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */   /* opening round the balance staff and rollers, r 8.0: the escape and centre pivots (9.4 and 10.5 mm from the staff) stay in solid bridge */
+  /* the train bridge leaves the fusee open to the barrel bridge, which holds its upper bushing (Figs. 24, 29, 67, 77; parts list 108-45): cut round it as round the
+     barrel, open to the rim (Fig. 24 shows the fusee clear of the bridge's edge, the top-view photograph its large end through the barrel bridge's cut). r 17.8
+     clears the cone and chain (r 15), leaves the centre bushing 5.3 mm of bridge and the sustaining pawl's arbor 2.8 mm, and reaches past the rim */
+  TBpoly=subtractCircle(TBpoly,L.Fu,17.8);
+  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,8.0],[...PILLARS.barrel,3.1],[...SPv,0.72]],0.22),M.plate,0,TB_T,0);
   {const C=[10.53,35.06],A=[-0.9764,0.2161],P=[0.2161,0.9764],q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */
     const eg=mesh(tb,decalGeo([q(-5.5,-1.8),q(5.5,-1.8),q(5.5,1.8),q(-5.5,1.8)]),M.engraveT,0,TB_T-0.02,0);eg.userData.noShadow=true;eg.userData.noCap=true;eg.userData.decal=true;}
   PILLARS.train.slice(0,2).forEach(([x,z])=>screw(tb,x,z,TB_T,2.9,1.6));screw(tb,-8.5,27.7,TB_T,2.9,1.6);
@@ -186,8 +183,10 @@ function buildMovement(M){
   mesh(eb,ring(1.6,0.3,0.5),M.gilt,L.E[0],TB_T-1.15,L.E[1]);mesh(eb,cylY(0.95,0.25,16),M.ruby,L.E[0],TB_T-1.5,L.E[1]);
   for(const k of[1,-1]){const q=[L.E[0]+eu[0]*2.4-eu[1]*k,L.E[1]+eu[1]*2.4+eu[0]*k];mesh(eb,cylY(0.45,0.5,10),M.steel,q[0],TB_T-1.15,q[1]);}
   const bb=part('barrelBridge',-72);
-  /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with an S-shaped cut round the balance */
-  const cutR=BAL_R+3.2;const BBpoly=subtractCircle(discClip(BR_R,[[14.5,-0.1,-1]],360),L.B,cutR);
+  /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24). The cut is the balance's
+     clearance circle (r 17.7 about the staff; the screws and weights sweep 17.2) joined with the circle fitted to its edge on the top-view photograph (r 17.6 about
+     5.24, 6.33; points within 1.3 mm), which reaches 20.5 mm from the staff toward the barrel: the barrel's cap and the fusee's large end show through it */
+  const cutR=BAL_R+3.2;const BBpoly=subtractCircle(subtractCircle(discClip(BR_R,[[14.5,-0.1,-1]],360),L.B,cutR),[5.24,6.33],17.6);
   R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,[[...L.Fu,1.1],[...L.Ba,1.5]],0.25),M.plate,0,BB_T,0);
   screw(bb,...PILLARS.barrel,BB_T,2.9,1.6);screw(bb,...PILLARS.train[2],BB_T,2.9,1.6);screw(bb,29.24,-12.28,BB_T,2.9,1.6);
   const eg2=mesh(bb,decalGeo(BBpoly),M.engraveB,0,BB_T-0.02,0);eg2.userData.noShadow=true;eg2.userData.noCap=true;eg2.userData.decal=true;
