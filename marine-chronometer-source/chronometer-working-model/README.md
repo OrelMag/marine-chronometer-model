@@ -76,6 +76,10 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
     - Views from below are heavily hatched. The light comes from above, so in the Escapement view (from the pillar-plate side) most faces are in shade, and `stylize()` hatches shade under a band of 0.4. The Illustration never looks up at the movement, so it doesn't show this. To lighten it, change the hatching's threshold (`0.4`) or weight (`0.55`) in the sheet shader of `makeInk`.
     - The plates' damascening is kept at 30 % in the wash (`uTex` in `drawOf`). At full strength it read as hatching. The shade is taken before that mix, so a darker stripe never changes a band.
     - The lines are found in screen space, one or two device pixels apart depending on the pixel ratio. Very thin parts far away (screws, pins in the Box view) can be only a line or two wide.
+- Edges (Display; `edges=1` in the hash) outlines the movement's parts over the normal rendering, so that parts of one finish lying on each other stay apart: the steel winding pawls on the steel sustaining ratchet, for one. It is Pen and wash's line pass (`makeInk(r).lines()` in `core.js`) laid over the ordinary frame instead of the wash.
+  - The thresholds are Pen and wash's: depth jumps, creases, and ghosts in lighter lines. Two things differ. The ids are per mesh, not per part, because a pawl is the same part as the wheel it lies on and less than the depth threshold above it. And the box, case, gimbals and glass (id 0) draw no lines, including where they meet the movement or stand in front of it. The engravings and the floor shadow are left out of the id passes, so an engraving doesn't outline itself on its plate.
+  - Cost: the two id passes plus the normal render, three scene renders for a moving frame, as with Pen and wash. With the option off, nothing is drawn differently.
+  - Pen and wash inks its own lines. While it is on, Edges is greyed out and kept, and it comes back when Pen and wash goes off.
 - Labels are off by default (Display turns them on, and the choice isn't remembered). The walkthrough shows the labels of each step's parts regardless.
 - Keyboard and reduced motion: Space stops and restarts, 1 to 7 pick the views; with the model focused (click it or Tab to it) the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, camera and state moves are instant (as with `?snap`), the walkthrough leaves ship motion off and scrolls without animation, and the page's fades are off.
 - Phones: below 600 px wide the part card is a sheet along the bottom of the stage; on touch screens buttons and checkboxes are finger-sized; in landscape with the height under 560 px the stage fills the height and the panel scrolls beside it. On a phone (coarse pointer, screen under 600 px on its short side) the pixel ratio is capped at 1.5 and the shadow map at 1024 px, against 2 and 2048 px elsewhere. A part casts a shadow only when its radius spans 6 texels of the shadow map, which follows the view: far views drop the screws and pins, close-ups keep them. The knurled nuts and the balance rim's holes are each one merged mesh (`mergeGeo` in `core.js`).
@@ -84,7 +88,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 
 The page's state is kept in the URL hash, so a link opens the model as it
 was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part; `view=laidout` is the laid-out train),
-`#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `draw=1` (Pen and wash), `sec=x:-3.5`
+`#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `draw=1` (Pen and wash), `edges=1` (Edges), `sec=x:-3.5`
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
 rewritten (without adding to the history) 0.3 s after any change.

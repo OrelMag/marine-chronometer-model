@@ -136,7 +136,8 @@ function drawOf(m){let d=DRAW.get(m);
    ghost, drawn in outline only, lighter, and left out of the wash. Passes: view normals and a part id (solids, then ghosts) with their depths; the wash (the
    meshes' drawOf materials, with the scene's shadows: the only pass that draws the shadow map); then two full-screen passes: ink lines where depth jumps (0.6 mm
    + 1.2% of the distance) or the drawing ends, lighter ones at creases (over ~37 degrees) and between parts; and the sheet: the wash laid a little off the
-   lines, mottled and pooled at edges, on paper, hatched in deep shade, inked with a varying pen pressure. */
+   lines, mottled and pooled at edges, on paper, hatched in deep shade, inked with a varying pen pressure.
+   lines(): the Edges option, the same line pass over the normal frame instead of the wash. Ids are per mesh, not per part, and the box draws no lines */
 function makeInk(r){
   const T=THREE,rt=(nearest,depth)=>{const t=new T.WebGLRenderTarget(1,1,nearest?{minFilter:T.NearestFilter,magFilter:T.NearestFilter}:{});if(depth)t.depthTexture=new T.DepthTexture(1,1,T.UnsignedIntType);return t;};
   const rtN=rt(1,1),rtG=rt(1,1),rtC=rt(0,1),rtE=rt(0,0);rtE.depthBuffer=false;   /* depth textures are 24-bit; a target's own depth buffer is 16-bit in r128, and the box's brass fought its wood */
@@ -150,17 +151,19 @@ function makeInk(r){
   const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,uniforms:{uId:{value:0}},
     vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
     fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);}'});
-  let idOn=false;function setId(){if(idOn){nid.uniforms.uId.value=this.userData.inkId;nid.uniformsNeedUpdate=true;}}
+  /* the id is the part's (pen and wash) or, for Edges, the mesh's: a pawl lies on its own part's wheel. Edges gives box meshes (userData.inkBox) id 0, no line */
+  let idOn=false,idM=false,nM=0;function setId(){if(idOn){nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniformsNeedUpdate=true;}}
   const hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
   const U=(o={})=>Object.assign({uPx:{value:new T.Vector2()},uPr:{value:1}},o);
   const VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.0,1.0);}';
-  const edge=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tN:{value:rtN.texture},tD:{value:rtN.depthTexture},tG:{value:rtG.texture},tGD:{value:rtG.depthTexture},uNF:{value:new T.Vector2()},uTwo:{value:0},uGh:{value:0}}),
+  const edge=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tN:{value:rtN.texture},tD:{value:rtN.depthTexture},tG:{value:rtG.texture},tGD:{value:rtG.depthTexture},uNF:{value:new T.Vector2()},uTwo:{value:0},uGh:{value:0},uMv:{value:0}}),
     fragmentShader:`#include <packing>
-uniform sampler2D tN,tD,tG,tGD;uniform vec2 uPx,uNF;uniform float uTwo,uGh;varying vec2 vUv;
+uniform sampler2D tN,tD,tG,tGD;uniform vec2 uPx,uNF;uniform float uTwo,uGh,uMv;varying vec2 vUv;
 float vz(float d){return -perspectiveDepthToViewZ(d,uNF.x,uNF.y);}
 vec2 ed(sampler2D tn,sampler2D td,vec2 u,vec2 o){float d0=texture2D(td,u).x,d1=texture2D(td,u+o).x;bool b0=d0>0.999999,b1=d1>0.999999;
-  if(b0&&b1)return vec2(0.0);if(b0!=b1)return vec2(1.0,0.0);float z0=vz(d0),z1=vz(d1);if(abs(z0-z1)>0.6+0.012*min(z0,z1))return vec2(1.0,0.0);
-  vec4 n0=texture2D(tn,u),n1=texture2D(tn,u+o);float c=dot(normalize(n0.xyz*2.0-1.0),normalize(n1.xyz*2.0-1.0))<0.8?0.75:0.0;return vec2(0.0,max(c,abs(n0.a-n1.a)>0.002?0.6:0.0));}
+  if(b0&&b1)return vec2(0.0);vec4 n0=texture2D(tn,u),n1=texture2D(tn,u+o);if(uMv>0.5&&((!b0&&n0.a<0.001)||(!b1&&n1.a<0.001)))return vec2(0.0);   /* Edges: none on or at the box (id 0) */
+  if(b0!=b1)return vec2(1.0,0.0);float z0=vz(d0),z1=vz(d1);if(abs(z0-z1)>0.6+0.012*min(z0,z1))return vec2(1.0,0.0);
+  float c=dot(normalize(n0.xyz*2.0-1.0),normalize(n1.xyz*2.0-1.0))<0.8?0.75:0.0;return vec2(0.0,max(c,abs(n0.a-n1.a)>0.002?(uMv>0.5?0.75:0.6):0.0));}
 vec2 lines(sampler2D tn,sampler2D td){vec2 e=vec2(0.0);vec2 D[4];D[0]=vec2(1.0,0.0);D[1]=vec2(0.0,1.0);D[2]=vec2(1.0,1.0);D[3]=vec2(1.0,-1.0);
   for(int i=0;i<4;i++){e=max(e,ed(tn,td,vUv,D[i]*uPx));if(uTwo>0.5)e=max(e,ed(tn,td,vUv,-D[i]*uPx));}return e;}
 void main(){vec2 s=lines(tN,tD),g=uGh>0.5?lines(tG,tGD):vec2(0.0);gl_FragColor=vec4(s,max(g.x,g.y*0.8),1.0);}`});
@@ -175,26 +178,41 @@ void main(){vec2 p=gl_FragCoord.xy/uPr;
   float pr=clamp(0.85+0.15*nz(p,12.0,3),0.55,1.0),ink=max(e.r,e.g*0.8)*pr;
   float hat=1.0-smoothstep(0.05,0.13,abs(fract((p.x-p.y)/5.5)-0.5));ink=max(ink,hat*clamp((0.4-bd)/0.25,0.0,1.0)*fg*0.55*pr);
   float g=e.b*0.55*(1.0-0.8*fg);gl_FragColor=vec4(uPaper*mix(mix(w,uInk,g),uInk,ink),1.0);}`});
+  /* Edges: the lines alone, laid over the normal rendering, softened as the sheet does */
+  const over=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,transparent:true,vertexShader:VS,uniforms:U({tE:{value:rtE.texture},uInk:{value:new T.Color(0x1c1a18)}}),
+    fragmentShader:`uniform sampler2D tE;uniform vec2 uPx;uniform vec3 uInk;varying vec2 vUv;
+void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+texture2D(tE,vUv+vec2(h.x,-h.y))+texture2D(tE,vUv-vec2(h.x,-h.y)));
+  gl_FragColor=vec4(uInk,0.8*max(max(e.r,e.g*0.8),e.b*0.45));}`});
   const qs=new T.Scene(),q=new T.Mesh(new T.PlaneGeometry(2,2),edge),qc=new T.OrthographicCamera(-1,1,1,-1,0,1);q.frustumCulled=false;qs.add(q);
   const bs=new T.Vector2(),cc=new T.Color();
-  return{render(scene,cam,meshes){
+  /* normals and ids: the solids, then the ghosts alone (for Edges, mv: mesh ids, the box masked, hide left out); no shadow map is drawn for these.
+     Leaves the ghosts hidden and the line pass's uniforms set */
+  function ids(scene,cam,meshes,mv,hide){
     r.getDrawingBufferSize(bs);if(bs.x!==rtN.width||bs.y!==rtN.height)for(const t of[rtN,rtG,rtC,rtE])t.setSize(bs.x,bs.y);
     const pr=r.getPixelRatio(),gh=[],so=[];
-    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;o.userData.inkId=hash(o.userData.part);}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
-    r.getClearColor(cc);const ca=r.getClearAlpha(),au=r.shadowMap.autoUpdate,ov=scene.overrideMaterial;
+    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;o.userData.inkId=hash(o.userData.part);o.userData.inkIdM=o.userData.inkBox?0:(nM++%251+3)/255;}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
+    r.getClearColor(cc);const s={gh,ca:r.getClearAlpha(),au:r.shadowMap.autoUpdate},ov=scene.overrideMaterial,hv=hide.map(o=>o.visible);
     nid.clippingPlanes=SEC.on.value>0.5&&SEC.plane?[SEC.plane]:[];
-    /* normals and ids: the solids, then the ghosts alone; no shadow map is drawn for these */
-    r.shadowMap.autoUpdate=false;scene.overrideMaterial=nid;idOn=true;r.setClearColor(0x000000,0);
+    r.shadowMap.autoUpdate=false;scene.overrideMaterial=nid;idOn=true;idM=mv;r.setClearColor(0x000000,0);hide.forEach(o=>o.visible=false);
     gh.forEach(o=>o.visible=false);r.setRenderTarget(rtN);r.clear();r.render(scene,cam);
     so.forEach(o=>o.visible=false);gh.forEach(o=>o.visible=true);r.setRenderTarget(rtG);r.clear();if(gh.length)r.render(scene,cam);
-    so.forEach(o=>o.visible=true);gh.forEach(o=>o.visible=false);scene.overrideMaterial=ov;idOn=false;
+    so.forEach(o=>o.visible=true);gh.forEach(o=>o.visible=false);hide.forEach((o,i)=>o.visible=hv[i]);scene.overrideMaterial=ov;idOn=idM=false;
+    /* lines about one CSS pixel wide (both sides of an edge from 1.5 device pixels per CSS pixel) */
+    for(const m of[edge,comp,over]){m.uniforms.uPx.value.set(1/bs.x,1/bs.y);m.uniforms.uPr.value=pr;}
+    edge.uniforms.uNF.value.set(cam.near,cam.far);edge.uniforms.uTwo.value=pr>=1.5?1:0;edge.uniforms.uGh.value=gh.length?1:0;edge.uniforms.uMv.value=mv?1:0;
+    return s;}
+  return{render(scene,cam,meshes){
+    const{gh,ca,au}=ids(scene,cam,meshes,false,[]);
     /* the wash, with the shadows */
     r.shadowMap.needsUpdate=true;r.setClearColor(0xffffff,1);r.setRenderTarget(rtC);r.clear();r.render(scene,cam);
     gh.forEach(o=>o.visible=true);r.shadowMap.autoUpdate=au;
-    /* lines, then the sheet: lines about one CSS pixel wide (both sides of an edge from 1.5 device pixels per CSS pixel) */
-    for(const m of[edge,comp]){m.uniforms.uPx.value.set(1/bs.x,1/bs.y);m.uniforms.uPr.value=pr;}
-    edge.uniforms.uNF.value.set(cam.near,cam.far);edge.uniforms.uTwo.value=pr>=1.5?1:0;edge.uniforms.uGh.value=gh.length?1:0;
-    q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=comp;r.setRenderTarget(null);r.setClearColor(cc,ca);r.render(qs,qc);}};
+    /* lines, then the sheet */
+    q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=comp;r.setRenderTarget(null);r.setClearColor(cc,ca);r.render(qs,qc);},
+  /* Edges: the frame rendered as usual (with the shadows), then the lines over it; hide: scene objects not in meshes (the floor shadow) */
+  lines(scene,cam,meshes,hide){
+    const{gh,ca,au}=ids(scene,cam,meshes,true,hide);gh.forEach(o=>o.visible=true);
+    r.shadowMap.needsUpdate=true;r.setRenderTarget(null);r.setClearColor(cc,ca);r.clear();r.render(scene,cam);r.shadowMap.autoUpdate=au;
+    q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=over;r.setRenderTarget(null);const ac=r.autoClear;r.autoClear=false;r.render(qs,qc);r.autoClear=ac;}};
 }
 /* mainspring: w=1 fully wound (coils on the arbor), w=0 run down (coils against the wall) */
 function mainspringGeo(w,ra,Rw,y0,y1,turns){
