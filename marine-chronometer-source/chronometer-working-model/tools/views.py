@@ -6,7 +6,7 @@
     python views.py --diff before after      # changed pixels per view, and r_vd_*.png with the changes in red
     python views.py close --keep tw,fw,escW --look 2.6 0.35 45 7.2 -8 16.1   # a close-up of chosen parts (yaw pitch dist x y z; movement mm)
 
-The model is frozen at one escapement phase and wind state, and the page's labels and panels are hidden, so two runs of an unchanged model
+The model is frozen at one escapement phase and wind state (after a moment of winding, so the fusee's angle doesn't depend on when the page ran), and the page's labels and panels are hidden, so two runs of an unchanged model
 give the same pixels (a few anti-aliased edges may differ). --keep shows only the named parts (userData.partName); --look can be repeated;
 --n sets the fusee turns from full wind (0 = fully wound)."""
 import asyncio,json,pathlib,sys
@@ -17,7 +17,8 @@ VIEWS=['box','dial','movement','train','escapement','exploded']
 CSS=("header,.panel,.hud,.tools,.hint,.labels,.loading{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
      ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
 FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}
-  const s=ESC.state(0.4);mv.userData._u({{E:1000+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n:{n},winding:false,springOn:true,msOn:false}});}})()"""
+  const s=ESC.state(0.4),u=(n,w)=>mv.userData._u({{E:1000+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,springOn:true,msOn:false}});
+  u(0,true);u({n},false);}})()"""   # a moment of winding first: the fusee's ratchet then settles by the train alone, not by the time of day the page ran
 def arg(k,d=None):return sys.argv[sys.argv.index(k)+1] if k in sys.argv else d
 def diff(a,b):
     import numpy as np

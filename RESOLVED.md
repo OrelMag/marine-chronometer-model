@@ -282,6 +282,13 @@ Contents:
   dial face as untested and the split-balance variant as not yet clear. Keep:
   change that sentence when `fine.py`'s coverage or finding 9 changes.
   `346299c`
+- **`views.py` diffs depended on the time of day.** Before freezing, the page
+  runs live for a few seconds, and the fusee's ratchet settles to the nearest
+  tooth of wherever the train stood then, so renders made minutes apart showed
+  the fusee and its square a ratchet pitch (9°) apart: hundreds of "changed"
+  pixels from an unchanged model. The freeze now passes through a moment of
+  winding first, which resets that history. Keep: a frozen state must not
+  depend on the page's history. `TBD-views`
 
 ---
 
