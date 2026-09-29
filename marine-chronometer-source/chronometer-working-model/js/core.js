@@ -141,12 +141,13 @@ function drawOf(m){let d=DRAW.get(m);
 function makeInk(r){
   const T=THREE,rt=(nearest,depth)=>{const t=new T.WebGLRenderTarget(1,1,nearest?{minFilter:T.NearestFilter,magFilter:T.NearestFilter}:{});if(depth)t.depthTexture=new T.DepthTexture(1,1,T.UnsignedIntType);return t;};
   const rtN=rt(1,1),rtG=rt(1,1),rtC=rt(0,1),rtE=rt(0,0);rtE.depthBuffer=false;   /* depth textures are 24-bit; a target's own depth buffer is 16-bit in r128, and the box's brass fought its wood */
-  /* noise: white noise blurred to a 3-texel sigma, tiled, normalized to unit deviation (stored as 0.5 + 0.18 v), four independent channels */
-  const NZ=256,nz=new Uint8Array(NZ*NZ*4);{const g=[],K=9;for(let i=-K;i<=K;i++)g.push(Math.exp(-i*i/18));
+  /* noise: white noise blurred to a 3-texel sigma, tiled, normalized to unit deviation (stored as 0.5 + 0.18 v), four independent channels. Made when pen and wash
+     first draws: Edges, on from the start, doesn't need it */
+  const noise=()=>{const NZ=256,nz=new Uint8Array(NZ*NZ*4);{const g=[],K=9;for(let i=-K;i<=K;i++)g.push(Math.exp(-i*i/18));
     for(let c=0;c<4;c++){let a=Float32Array.from({length:NZ*NZ},()=>Math.random()-0.5);
       for(const hz of[1,0]){const b=new Float32Array(NZ*NZ);for(let y=0;y<NZ;y++)for(let x=0;x<NZ;x++){let s=0;for(let i=-K;i<=K;i++)s+=g[i+K]*(hz?a[y*NZ+((x+i+NZ)%NZ)]:a[((y+i+NZ)%NZ)*NZ+x]);b[y*NZ+x]=s;}a=b;}
       let s2=0;for(const v of a)s2+=v*v;const k=1/Math.sqrt(s2/a.length);for(let i=0;i<a.length;i++)nz[i*4+c]=clamp(Math.round((0.5+0.18*a[i]*k)*255),0,255);}}
-  const nzT=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);nzT.wrapS=nzT.wrapT=T.RepeatWrapping;nzT.magFilter=nzT.minFilter=T.LinearFilter;nzT.needsUpdate=true;
+    const t=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=t.minFilter=T.LinearFilter;t.needsUpdate=true;return t;};
   /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once) */
   const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,uniforms:{uId:{value:0}},
     vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
@@ -167,7 +168,7 @@ vec2 ed(sampler2D tn,sampler2D td,vec2 u,vec2 o){float d0=texture2D(td,u).x,d1=t
 vec2 lines(sampler2D tn,sampler2D td){vec2 e=vec2(0.0);vec2 D[4];D[0]=vec2(1.0,0.0);D[1]=vec2(0.0,1.0);D[2]=vec2(1.0,1.0);D[3]=vec2(1.0,-1.0);
   for(int i=0;i<4;i++){e=max(e,ed(tn,td,vUv,D[i]*uPx));if(uTwo>0.5)e=max(e,ed(tn,td,vUv,-D[i]*uPx));}return e;}
 void main(){vec2 s=lines(tN,tD),g=uGh>0.5?lines(tG,tGD):vec2(0.0);gl_FragColor=vec4(s,max(g.x,g.y*0.8),1.0);}`});
-  const comp=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tC:{value:rtC.texture},tE:{value:rtE.texture},tZ:{value:nzT},uPaper:{value:new T.Color(0xf5f0e4)},uInk:{value:new T.Color(0x2c2824)}}),
+  const comp=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tC:{value:rtC.texture},tE:{value:rtE.texture},tZ:{value:null},uPaper:{value:new T.Color(0xf5f0e4)},uInk:{value:new T.Color(0x2c2824)}}),
     fragmentShader:`uniform sampler2D tC,tE,tZ;uniform vec2 uPx;uniform float uPr;uniform vec3 uPaper,uInk;varying vec2 vUv;
 float nz(vec2 p,float s,int c){vec4 t=texture2D(tZ,p*3.0/(s*256.0));return ((c==0?t.r:c==1?t.g:c==2?t.b:t.a)-0.5)/0.18;}
 void main(){vec2 p=gl_FragCoord.xy/uPr;
@@ -188,9 +189,11 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
   /* normals and ids: the solids, then the ghosts alone (for Edges, mv: mesh ids, the box masked, hide left out); no shadow map is drawn for these.
      Leaves the ghosts hidden and the line pass's uniforms set */
   function ids(scene,cam,meshes,mv,hide){
-    r.getDrawingBufferSize(bs);if(bs.x!==rtN.width||bs.y!==rtN.height)for(const t of[rtN,rtG,rtC,rtE])t.setSize(bs.x,bs.y);
     const pr=r.getPixelRatio(),gh=[],so=[];
     for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;o.userData.inkId=hash(o.userData.part);o.userData.inkIdM=o.userData.inkBox?0:(nM++%251+3)/255;}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
+    /* targets at the drawing's size only while used, else 1 px (setSize frees the old one): the ghosts' while there are ghosts, the wash's while pen and wash draws.
+       Each is 4 bytes a pixel, 8 with a depth texture: Edges without ghosts keeps 12 a pixel, not 28 */
+    r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
     r.getClearColor(cc);const s={gh,ca:r.getClearAlpha(),au:r.shadowMap.autoUpdate},ov=scene.overrideMaterial,hv=hide.map(o=>o.visible);
     nid.clippingPlanes=SEC.on.value>0.5&&SEC.plane?[SEC.plane]:[];
     r.shadowMap.autoUpdate=false;scene.overrideMaterial=nid;idOn=true;idM=mv;r.setClearColor(0x000000,0);hide.forEach(o=>o.visible=false);
@@ -202,6 +205,7 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
     edge.uniforms.uNF.value.set(cam.near,cam.far);edge.uniforms.uTwo.value=pr>=1.5?1:0;edge.uniforms.uGh.value=gh.length?1:0;edge.uniforms.uMv.value=mv?1:0;
     return s;}
   return{render(scene,cam,meshes){
+    if(!comp.uniforms.tZ.value)comp.uniforms.tZ.value=noise();
     const{gh,ca,au}=ids(scene,cam,meshes,false,[]);
     /* the wash, with the shadows */
     r.shadowMap.needsUpdate=true;r.setClearColor(0xffffff,1);r.setRenderTarget(rtC);r.clear();r.render(scene,cam);

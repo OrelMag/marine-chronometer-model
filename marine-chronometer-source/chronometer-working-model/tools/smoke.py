@@ -47,11 +47,12 @@ async def model(b,errs,steps):
     await click('#colr');await click('#ghost','pen and wash, colour by part, see-through');await click('#colr');await click('#ghost')
     await click('#secs button[data-v="x"]','pen and wash, section');await click('#secs button[data-v="off"]')
     await click('#driveOn','pen and wash, moving parts only');await click('#driveOn');await click('#draw','pen and wash off')
-    # edges (makeInk's lines over the normal frame): a section, see-through plates, then pen and wash over it (it disables Edges) and off again
-    await click('#edges','edges on',600);await click('#secs button[data-v="x"]','edges, section');await click('#secs button[data-v="off"]');await click('#ghost','edges, see-through');await click('#ghost')
+    # edges (makeInk's lines over the normal frame; on by default except on phones): a section, see-through plates, then pen and wash over it (it disables Edges) and off again
+    if not await pg.evaluate("document.querySelector('#edges').checked"):errs.append('Edges not on by default')
+    await click('#secs button[data-v="x"]','edges, section');await click('#secs button[data-v="off"]');await click('#ghost','edges, see-through');await click('#ghost')
     await click('#draw','edges, pen and wash on');await click('#draw','edges, pen and wash off')
     if not await pg.evaluate("document.querySelector('#edges').checked&&!document.querySelector('#edges').disabled"):errs.append('Edges not restored after pen and wash')
-    await click('#edges','edges off')
+    await click('#edges','edges off',600);await click('#edges','edges on again')
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
     await click('#kwBtn','wind with the key',2500);await click('#kwBtn','stop winding')
     await click('#wind','wind');await click('#rateZero','rate reset')

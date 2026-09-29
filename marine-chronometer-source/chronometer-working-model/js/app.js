@@ -145,7 +145,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,draw:false,edges:false,op:{},hid:new Set(),focus:null,pick:null,labels:false,rock:false,spin:false,speed:1,sound:false,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,draw:false,edges:!PHONE,op:{},hid:new Set(),focus:null,pick:null,labels:false,rock:false,spin:false,speed:1,sound:false,view:'dial',tour:-1};
   const FOV0=cam.fov,cur={lift:0,flip:0,explode:0,lidM:0,lidT:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the real plates stay hidden */
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
@@ -493,20 +493,21 @@ function drawEsc2D(ctx,w,h,p,dark){
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
 
   /* ---------- shareable links: the state in the URL hash ----------
-     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 (pen and wash), edges=1, sec=x:-3.5 (a section; :f shows the other half),
+     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 (pen and wash), edges=0 or 1 (only against its default: on, off on phones), sec=x:-3.5 (a section; :f shows the other half),
      tz=local, t=12:00:00 (only once the hands have been set). Read at load and when the hash is edited; written 0.3 s after any change, with
      replaceState, so the back button isn't filled with views */
   function hashOf(){const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',1);if(st.edges)h.set('edges',1);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);return h.toString().split('%3A').join(':');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',1);if(st.edges===PHONE)h.set('edges',+st.edges);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);return h.toString().split('%3A').join(':');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
   function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):'dial';   /* own keys only: 'constructor' is no view or part */
     if(g('tz')==='gmt'||g('tz')==='local'){if(g('tz')!==tz)setTz(g('tz'));}
     if(g('t'))setTod(g('t'));
-    if((g('draw')==='1')!==st.draw||(g('edges')==='1')!==st.edges){st.draw=g('draw')==='1';st.edges=g('edges')==='1';look();}
+    const ed=g('edges')==='1'||(g('edges')!=='0'&&!PHONE);   /* Edges is on by default except on phones: the hash says edges=0 or edges=1 only against that */
+    if((g('draw')==='1')!==st.draw||ed!==st.edges){st.draw=g('draw')==='1';st.edges=ed;look();}
     const tr=parseInt(g('tour'));
     if(tr>=1&&tr<=TOUR.length)tourGo(tr-1);
     else{if(st.tour>=0)tourEnd();
