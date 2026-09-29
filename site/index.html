@@ -1140,13 +1140,12 @@ function buildMovement(M){
                balance; the train bridge's outline under it is not photographed: a disc cut round the barrel and the fusee (Figs. 24, 29) ---------- */
   const tb=part('trainBridge',-62);
   const WSd=(()=>{const Fl=Math.hypot(...L.Fu);return[L.Fu[0]+7.2*L.Fu[0]/Fl,L.Fu[1]+7.2*L.Fu[1]/Fl];})();
-  const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56];let TBpoly=subtractCircle(discClip(BR_R,[],240),TBc,19.2);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */   /* opening round the balance staff and rollers, r 8.0: the escape and centre pivots (9.4 and 10.5 mm from the staff) stay in solid bridge */
-  /* the train bridge leaves the fusee open to the barrel bridge, which holds its upper bushing (Figs. 24, 29, 67, 77; parts list 108-45): cut round it as round the
-     barrel, open to the rim (Fig. 24 shows the fusee clear of the bridge's edge, the top-view photograph its large end through the barrel bridge's cut). r 16.3
-     clears everything the fusee carries at the bridge's height, and leaves the tapped holes of the barrel bridge screw at (29.24, -12.28) and the locking arm's
-     screw 1.4 and 0.75 mm of bridge */
-  TBpoly=subtractCircle(TBpoly,L.Fu,16.3);
-  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,8.0],[...PILLARS.barrel,3.1],[...SPv,0.72],
+  const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56],TBpoly=subtractCircle(discClip(BR_R,[],240),TBc,19.2);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */   /* opening round the balance staff and rollers, r 8.0: the escape and centre pivots (9.4 and 10.5 mm from the staff) stay in solid bridge */
+  /* the train bridge leaves the fusee open to the barrel bridge, which holds its upper bushing (Figs. 24, 29, 67, 77; parts list 108-45): a round hole
+     (Fig. 24 shows the fusee clear of the bridge, the top-view photograph its large end through the barrel bridge's cut). r 16.3 clears everything the fusee
+     carries at the bridge's height and leaves the tapped holes of the barrel bridge screw at (29.24, -12.28) and the locking arm's screw 1.4 and 0.75 mm of
+     bridge; opening it to the rim (r 17.6 or more) would cut into them, so a band 1.3 mm wide is left at the rim */
+  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2],[...L.T,1],[...L.E,0.9],[...L.B,8.0],[...L.Fu,16.3],[...PILLARS.barrel,3.1],[...SPv,0.72],
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),hT(...S.tb[2],PSR),hC(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.eb.map(q=>hT(...q,0.9)),...S.lb.map(q=>hC(...q,0.8)),hC(...S.blk,0.9),hT(...S.cock,2.8,0.8),
     hT(...S.arm,ARM_S),[...S.tBlock,0.72]],0.22),M.plate,0,TB_T,0);
   {const C=[10.53,35.06],A=[-0.9764,0.2161],P=[0.2161,0.9764],q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */
