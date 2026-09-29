@@ -56,6 +56,20 @@ function subtractCircle(poly,c,r){
   const n=Math.ceil(Math.abs(d)/0.03);for(let q=1;q<n;q++){const a=aE+d*q/n;run.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}
   return run;
 }
+/* polygon plus a circle that crosses its boundary: the outline with the arc that runs outside it in place of the stretch inside the circle */
+function unionCircle(poly,c,r){
+  const dense=[];for(let k=0;k<poly.length;k++){const a=poly[k],b=poly[(k+1)%poly.length],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/0.1));for(let t=0;t<n;t++)dense.push([a[0]+(b[0]-a[0])*t/n,a[1]+(b[1]-a[1])*t/n,t===0]);}
+  const ins=p=>Math.hypot(p[0]-c[0],p[1]-c[1])<r,N=dense.length;
+  let s0=-1;for(let k=0;k<N;k++)if(!ins(dense[k])&&ins(dense[(k+N-1)%N])){s0=k;break;}
+  if(s0<0)return poly;                        /* circle does not cross the boundary */
+  let run=[];let k=s0;while(!ins(dense[k%N])&&run.length<N){run.push(dense[k%N]);k++;}
+  run=run.filter((p,i)=>p[2]||i===0||i===run.length-1).map(p=>[p[0],p[1]]);   /* the outline's own points, and where it meets the circle */
+  const inPoly=p=>{let w=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,zi]=poly[i],[xj,zj]=poly[j];if((zi>p[1])!==(zj>p[1])&&p[0]<(xj-xi)*(p[1]-zi)/(zj-zi)+xi)w=!w;}return w;};
+  const aOf=p=>Math.atan2(p[1]-c[1],p[0]-c[0]),aE=aOf(run[run.length-1]),aS=aOf(run[0]);
+  let d=((aS-aE)%TAU+TAU)%TAU;const mid=aE+d/2;if(inPoly([c[0]+r*Math.cos(mid),c[1]+r*Math.sin(mid)]))d=d-TAU;
+  const n=Math.ceil(Math.abs(d)/0.05);for(let q=1;q<n;q++){const a=aE+d*q/n;run.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}
+  const i0=run.findIndex(p=>p[0]===poly[0][0]&&p[1]===poly[0][1]);return i0>0?run.slice(i0).concat(run.slice(0,i0)):run;   /* starting where the outline did, so the extruded sides map as before */
+}
 /* polygon of a disc clipped by half-planes z*s > a + b*x  (s=+1 keeps above the line, -1 below) */
 function discClip(R,cuts,N=160){
   let poly=[];for(let i=0;i<N;i++){const a=i/N*TAU;poly.push([R*Math.cos(a),R*Math.sin(a)]);}
@@ -285,7 +299,7 @@ function buildMovement(M){
      as a rotation in the balance's frame). The spring rises HS_H from HS_Y, below the collet, to the stud's clamp under the cock */
   const Q=[33.11,12.32],SPD=(()=>{const d=[Q[0]-L.B[0],Q[1]-L.B[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),SPSI=Math.atan2(-SPD[1],SPD[0])-BETA,HS_R=3.6,HS_Y=BAL_Y-2.3,HS_H=5.9;
   R.staff=new THREE.Group();bl.add(R.staff);
-  cylBetween(R.staff,0.45,CK_T+1.1,LB_T+0.5,M.steel,0,0,12);
+  cylBetween(R.staff,0.45,CK_T+1.1,LB_T+0.5,M.steel,0,0,12);cylBetween(R.staff,0.2,CK_T+0.15,CK_T+1.1,M.steel,0,0,10);   /* upper pivot, in the olive-hole jewel in the cock, 0.15 under the endstone */
   /* impulse roller (O.D. 0.249 in, as thick as the escape wheel, post 30) with its crescent: the large portion behind the impulse jewel, where each tooth
      drops in and meets the jewel, and the small portion ahead of it, which the teeth never enter (Ops. 76, 83). Shape angle = minus the unit-frame angle */
   const rR=E.rRoll*ES,ir=new THREE.Shape(),n0=-E.aI,n1=n0+0.6;ir.absarc(0,0,rR,n1,n0-0.16+TAU,false);ir.absarc(0,0,rR*0.86,n0-0.16,n0,false);ir.absarc(0,0,rR*0.55,n0,n1,false);
@@ -347,7 +361,13 @@ function buildMovement(M){
      in the photo), a straight edge to the endstone over the staff and a concave arc back to the rim. Outline shifted
      by the cock's parallax so the endstone sits over the balance staff. */
   const COCK_POLY=[[25.38, 31.05], [26.19, 30.36], [26.99, 29.66], [27.77, 28.93], [28.53, 28.18], [29.26, 27.42], [29.98, 26.63], [30.68, 25.82], [31.35, 25.0], [32.0, 24.16], [32.63, 23.3], [33.24, 22.43], [33.82, 21.54], [34.38, 20.63], [34.92, 19.71], [35.43, 18.78], [35.92, 17.83], [36.38, 16.87], [36.81, 15.9], [37.22, 14.92], [37.6, 13.93], [37.96, 12.92], [38.29, 11.91], [38.59, 10.89], [38.87, 9.86], [39.12, 8.83], [39.34, 7.79], [39.53, 6.74], [39.69, 5.69], [39.83, 4.63], [39.94, 3.58], [32.87, 3.03], [26.51, 2.76], [20.15, 2.49], [13.87, 2.62], [8.04, 2.86], [5.77, 3.99], [5.53, 5.72], [6.88, 7.11], [13.2, 9.07], [17.2, 11.96], [19.38, 16.1], [20.84, 20.82], [21.82, 25.22]];
-  R.cock=mesh(ck,polyGeo(COCK_POLY,2.6,[],0.3),M.plate,0,CK_T,0);   /* the staff's upper pivot runs in the setting pressed into the cock (not drawn: the staff is 0.7 mm from the cock's edge) */
+  /* the balance upper setting and jewel are pressed into the cock under the endstone cap (manual Figs. 19, 36, 85), with metal all round them. The traced
+     edge passes 0.7 mm from the staff, so the nose is rounded out to a boss 2.4 mm in radius about the staff: in the top-view photograph and the
+     oblique one the endstone sits about 3 mm inside the cock's edge, which the tracing, taken at plate height and shifted for parallax, misses near the tip */
+  R.cock=mesh(ck,polyGeo(unionCircle(COCK_POLY,L.B,2.4),2.6,[[...L.B,1.5]],0.3),M.plate,0,CK_T,0);
+  /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
+  mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)].reverse(),40),M.steel,...[L.B[0],0,L.B[1]]);
+  mesh(ck,ring(0.95,0.25,0.6),M.ruby,L.B[0],CK_T+0.65,L.B[1]);
   /* foot: a solid block under the outer part of the crescent, standing on the upper train bridge beside the barrel bridge's straight edge
      (the cock is mounted to the train bridge, manual Sec. II; its screw is where the top-view photograph shows it). Annular sector r 31-39.8,
      up to 32 deg, kept 0.25 mm off the barrel bridge edge z = 14.5 - 0.1x */

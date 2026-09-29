@@ -223,6 +223,7 @@ and the thread pitches are the model's. Things to know before changing it:
   - the balance and hairspring. The balance carries 10 screws in diametric pairs, 6 of 0.049 in, 2 of 0.080 in and 2 of 0.101 in head height, plus 2 timing weights (93 mg) and 2 vernier weights (10.5 mg), each a nut on a screw in one of the rim's holes (parts list, p. 82; Fig. 3);
   - the barrel cap with its five screws on the pillar-plate end (Figs. 26, 109), and the dust seal with three packing rings around the fusee arbor (Fig. 24);
   - the gimbal mounting (Figs. 1, 94, 106): a flat ring hung on two pivot screws through the box sides (washer inside, lock nut outside), the case hung in it on front and rear pivot screws into brackets on the case, support straps at 3 and 6, the gimbal latch at the front right and the key at the back right;
+  - the balance upper setting and jewel, pressed into the cock under the endstone cap and its two screws (Figs. 19, 36, 84, 85; parts list 42162, 42160), and the staff's pivot in it;
   - the hairspring's collet and stud (Sec. II; Figs. 5, 6, 19, 84, 85): the collet slotted to grip the staff, with a flat plate whose tongue carries a clamp and wedge pin for the spring's inner end; the stud under the cock, held by the stud screw from the cock's top and a steady pin, holding the upper end the same way;
   - the hand-setting square at the centre of the dial, which takes the winding key (Sec. III, Setting; Fig. 8);
   - the dial markings, winding figures and part numbers. The UP–DOWN scale runs clockwise round the bottom of its sub-dial from UP (upper right) to DOWN (upper left), so winding turns the hand counterclockwise back to UP (Fig. 107, Sec. III).
@@ -238,7 +239,7 @@ and the thread pitches are the model's. Things to know before changing it:
 2. **Scale.** The fusee wheel is fixed at 96:14 by the manual's winding figures and must stay inside the 87.57 mm pillar plate. The two-view result is scaled to meet that (factor 0.955).
 3. **Mapping the top view.** Using those three axes, a similarity transform maps the top-view photograph into the model, with under 0.4 mm residual (`tools/p3map.json`). The following were traced through it:
    - the bridge outline (radius about 40 mm);
-   - the crescent balance cock (`tools/cock_outline.json`), shifted for its height parallax so its endstone lands over the staff;
+   - the crescent balance cock (`tools/cock_outline.json`), shifted for its height parallax so its endstone lands over the staff. The traced edge passes 0.7 mm from the staff, too close for the upper setting, so the nose is rounded out to a boss 2.4 mm in radius about the staff (see "Estimated");
    - the bow-shaped setup cover over the ratchet, and the ratchet's size (about 52 teeth, 15.6 mm across);
    - the screw positions;
    - the engraving columns (`tools/engr.json`);
@@ -308,6 +309,7 @@ and the thread pitches are the model's. Things to know before changing it:
   - The weights' travel, 3 turns either way from the middle position the manual starts them at. At 40 s a turn, that covers the 2 minutes a day that screws and washers leave (Op. 5).
   - The weights' drawn sizes.
 - The upper train bridge's outline under the barrel bridge (drawn as a full disc, cut round the barrel) and its opening round the balance staff (r 8.0 mm). Figs. 29 and 67 show a crescent. Round the fusee it has a pocket: the top plate (r 5.9), the winding stop and the stop-bar's sweep over the last quarter turn. The pocket stays 0.5 mm under the barrel bridge's straight edge, where the top-view photograph shows the train bridge, so it is smaller than the manual's opening.
+- The balance cock's nose: a boss 2.4 mm in radius about the staff, joined to the traced outline, so the upper setting (1.5 mm in radius, standing 0.3 mm below the cock) has metal round it. The manual's drawings show the setting inside the cock's nose (Figs. 19, 85), and in the top-view and oblique photographs the endstone sits about 3 mm inside the edge; the tracing, taken through the plate-height mapping and shifted for parallax, puts the edge 0.7 mm from the staff. The setting's and jewel's sizes are estimated.
 - The collet and stud: their outlines and sizes, and the stud's direction.
   - The collet's plate is a 130° sector 3 mm in radius with a tongue out to the clamp, and a hub 1.15 mm in radius (Figs. 5 and 6 show the shape, not its size). Its counterpoising is not modelled.
   - The stud is a bar 5.7 × 1.6 × 0.5 mm, running from over the spring's end along the cock toward the cock screw; the stud screw is 7.6 mm from the staff and the steady pin 5.6 mm.

@@ -23,7 +23,6 @@ STATES=[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,(n,w) in enumerate(
 EXPECTED={
  ('bal:Box','bal:Cylinder'):('impulse jewel set in its roller on the staff',0.69,1.1),
  ('bal:Cylinder','bal:Cylinder'):('balance staff, rollers and collet: one assembly',1.49,2.4),
- ('bal:Cylinder','cock:Extrude'):('balance upper pivot in its jewel in the cock',0.93,1.5),
  ('escBridge:Extrude','escW:Cylinder'):('escape wheel upper pivot in its bridge',0.43,0.45),
  ('barrelBridge:Extrude','fusee:Cylinder'):('fusee upper pivot in the barrel bridge',0.06,0.25),
  ('barrelBridge:Extrude','ratchet:Cylinder'):('barrel arbor in the barrel bridge, under the setup ratchet',0.078,0.21),
