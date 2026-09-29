@@ -207,7 +207,7 @@ Contents:
   comes to 5.9 mm from the arbor, uncovering the teeth and the click's tip.
   Traced through a fit to the cover's two screws and the arbor; the edge is an
   arc within 0.5 mm of the tracing. Keep: check the cover against the
-  photograph with `tools/topview.py`.
+  photograph with `tools/topview.py`. `54fdbfb`
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved
