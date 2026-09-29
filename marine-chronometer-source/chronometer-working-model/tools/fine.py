@@ -4,6 +4,7 @@
     python fine.py --dense    # also 101 phases across a full balance swing
     python fine.py --split    # with the split-balance variant shown (open finding 9 in Review-results.md: expect failures)
     python fine.py --eval "__mv.userData.R.timing(3,3)"   # run some JS after the page loads (a variant, the weights, a planted fault)
+    python fine.py --hold     # with the balance locking arm locked and the train-blocking screw down (where a spoke leaves room; else just above the wheel)
 
 dyn.py works in 0.4 mm cubes and misses thin overlaps (the escape pinion, the fourth wheel's collet, the sustaining pawl's pivot and the stop-bar
 all went unseen; see RESOLVED.md). This one resolves 0.05 mm. Each pair of meshes that meets is listed once, with its largest overlap; pairs in
@@ -28,7 +29,7 @@ EXPECTED={
  ('barrelBridge:Extrude','fusee:Cylinder'):('fusee upper pivot in the barrel bridge',0.06,0.25),
  ('barrelBridge:Extrude','ratchet:Cylinder'):('barrel arbor in the barrel bridge, under the setup ratchet',0.078,0.21),
  ('spawl:Cylinder','spawl:Extrude'):('sustaining pawl on its arbor',0.75,0.6),
- ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot",0.17,0.44),
+ ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot, and the shanks of the clamp, detent-adjusting and lock-adjusting screws in the foot and support block (horizontal screws in vertically extruded pieces, which can't be holed across)",1.15,0.95),
  ('fw:Cylinder','hands:Cylinder'):('seconds hand collet on the fourth arbor',0.33,0.35),
  ('fw:Cylinder','hands:Extrude'):('seconds hand on the fourth arbor',0.15,0.25),
  ('hands:Cylinder','hands:Extrude'):('hour and minute hands nested on their pipes',2.03,0.35),
@@ -51,7 +52,8 @@ BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept so
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),
  'chain':('chain wound on the drum: its links should touch the wall, not enter it',0,0.1)}   # part: (reason, least, most) clearance allowed; None = any
 FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}
-  const s=ESC.state({ph});mv.userData._u({{E:1000+{dE}+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n:{n},winding:{w},springOn:true,msOn:false}});}})()"""
+  const s=ESC.state({ph}),E=1000+{dE}+s.prog,R=mv.userData.R,hold={hold};
+  mv.userData._u({{E,th:s.th,lift:s.lift,psDef:s.psDef,n:{n},winding:{w},springOn:true,msOn:false,arm:hold?1:0,blk:hold?(R.blockClear(E)?1:R.tbs.userData.vFace-0.005):0}});}})()"""
 async def main():
     states=STATES+([(i/100,0,2.5,False) for i in range(101)] if '--dense' in sys.argv else [])
     async with async_playwright() as p:
@@ -63,14 +65,14 @@ async def main():
         if '--eval' in sys.argv:await pg.evaluate(sys.argv[sys.argv.index('--eval')+1])
         chk=open(HERE/'fine-interference.js').read();seen={}
         for ph,dE,n,w in states:
-            await pg.evaluate(FREEZE.format(ph=ph,dE=dE,n=n,w=str(w).lower()))
+            await pg.evaluate(FREEZE.format(ph=ph,dE=dE,n=n,w=str(w).lower(),hold=str('--hold' in sys.argv).lower()))
             for o in json.loads(await pg.evaluate(chk))['out']:
                 k=tuple(sorted((o['a'],o['b'])));o['state']=f"ph {ph} +{dE} teeth, {n} turns{' winding' if w else ''}"
                 if k not in seen or o['vol']>seen[k]['vol']:seen[k]={**o,'hits':seen.get(k,{}).get('hits',0)}
                 seen[k]['hits']+=1
         bc=open(HERE/'barrel-clearance.js').read();near={};spring=None
         for n,w in WIND:
-            await pg.evaluate(FREEZE.format(ph=0.4,dE=0,n=n,w=str(w).lower()).replace('msOn:false','msOn:true'))
+            await pg.evaluate(FREEZE.format(ph=0.4,dE=0,n=n,w=str(w).lower(),hold=str('--hold' in sys.argv).lower()).replace('msOn:false','msOn:true'))
             r=json.loads(await pg.evaluate(bc))
             for o in r['parts']:
                 if o['part'] not in near or o['d']<near[o['part']]['d']:near[o['part']]={**o,'state':f"{n} turns{' winding' if w else ''}"}

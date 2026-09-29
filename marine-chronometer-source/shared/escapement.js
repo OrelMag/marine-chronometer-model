@@ -51,9 +51,11 @@ function makeEsc(o={}){
     const qx=sT*u.x+ox,qy=sT*u.y+oy;if(qx<0&&Math.hypot(qx-EX,qy)<1)a=Math.atan2(qy,qx-EX);
     const cx=ox-EX,b=u.x*cx+u.y*oy,dc=b*b-(cx*cx+oy*oy-1);if(dc>0){const s=-b-Math.sqrt(dc);if(s>0&&s<=sT){const px=s*u.x+ox;if(px<0)a=Math.max(a,Math.atan2(s*u.y+oy,px-EX));}}
     return a;};
-  /* state at balance phase p (0..1 over one 0.5 s oscillation): balance angle, detent lift, passing-spring deflection, escape-wheel tooth progress */
-  function state(p){
-    const th=-A*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0;
+  /* state at balance phase p (0..1 over one 0.5 s oscillation): balance angle, detent lift, passing-spring deflection, escape-wheel tooth progress.
+     amp: the swing's amplitude in radians (A, the running amplitude, by default); smaller while the balance starts or runs down. Below the angle that unlocks
+     the detent, completes the impulse and passes the trip spring (AMIN) the wheel stays locked, which the caller keeps (the progress it reports assumes a running escapement) */
+  function state(p,amp=A){
+    const th=-amp*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0;
     const lift=ccw?tab(LI,th):0,psDef=ccw?0:tab(PS,th);let prog;
     if(ccw&&th>thRel){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);prog=phi<=-P?1:-phi/P;}
     else prog=ccw?0:1;
@@ -73,6 +75,11 @@ function makeEsc(o={}){
     stone
   };
   const fixed={foot:rect(-1.45,0,-0.083,0.083),blockMain:rect(-1.5,0.9,-0.5,-0.083),blockFront:rect(0.9,BL-0.1,-0.3,-0.083),button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
-  return{ES,NT,P,EX,A,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,LI,PS,TH0,DT,bite};
+  /* AMIN: the least amplitude that keeps the escapement going, with 2 degrees to spare: the swing must carry the discharge jewel past the trip spring on the return
+     (where the spring falls off it, thPass), unlock the wheel (thRel) and see the impulse to its end (thEnd). Below it the balance swings on without unlocking */
+  let thEnd=thRel;for(let th=thRel;th<A;th+=0.001){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);if(phi<=-P){thEnd=th;break;}}
+  let ip=0;for(let i=0;i<NTB;i++)if(PS[i]>PS[ip]+1e-9)ip=i;let thPass=TH0;for(let i=0;i<NTB;i++)if(PS[i]>=PS[ip]-1e-9){thPass=TH0+i*DT;break;}
+  const AMIN=Math.max(-thRel,thEnd,-thPass)+2*D2R;
+  return{ES,NT,P,EX,A,AMIN,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};

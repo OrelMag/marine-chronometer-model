@@ -56,6 +56,23 @@ async def model(b,errs,steps):
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
     await click('#kwBtn','wind with the key',2500);await click('#kwBtn','stop winding')
     await click('#wind','wind');await click('#rateZero','rate reset')
+    # stopping and starting: the locking arm stops the balance, a twist restarts it; the train-blocking screw stops the train at a spoke (at 60x, so it reaches one soon)
+    hud=lambda:pg.evaluate("document.querySelector('#hud').textContent")
+    async def expect(label,want,ok=True,wait=0):   # wait: poll up to this many seconds (the arm and screw move on frame time, slow in a headless browser)
+        for _ in range(int(wait*2)+1):
+            t=await hud()
+            if (want in t)==ok:return
+            if wait:await pg.wait_for_timeout(500)
+        errs.append(f'{label}: HUD reads "{t}"')
+    # model time runs at 60x here: a headless browser draws a few frames a second, and the arm stops the balance in model time
+    await pg.evaluate("document.querySelector('#stopDet').open=true");await click('#speeds button[data-v="60"]','60x')
+    await click('#armSeg button[data-v="1"]','balance locked',2500);await expect('balance locked','Balance locked')
+    await click('#armSeg button[data-v="0"]','balance unlocked',1000);await expect('unlocked, at rest','twist to start')
+    await click('#twist','twist to start',2500);await expect('after the twist','Stopped',False)
+    await click('#blkSeg button[data-v="1"]','train-blocking screw down');await expect('screw down','Train blocked',wait=45)
+    await click('#blkSeg button[data-v="0"]','train-blocking screw raised');await expect('screw raised','Train blocked',False,wait=45)
+    await click('#twist','twist again',1500);await expect('screw raised and twisted','Stopped',False)
+    await click('#speeds button[data-v="1"]','1x');await click('#stopLook','show the arm and screw')
     await click('#helpBtn','help card');await click('#helpBtn','help card closed')
     await pg.focus('canvas')
     for k in['ArrowLeft','ArrowUp','+','-','0','1','Space']:await pg.keyboard.press(k);await pg.wait_for_timeout(150)

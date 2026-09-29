@@ -163,6 +163,7 @@ Before committing a change to the model:
 
        python dyn.py        # collisions through a full escapement cycle
        python fine.py       # the same at 0.05 mm, round the train and over the wind, plus the barrel's margins (exit code 1 on anything new)
+       python fine.py --hold    # the same with the balance locking arm locked and the train-blocking screw down
        python maintaining.py    # the fusee's maintaining work over run and wind cycles (exit code 1 on a failure)
        python views.py before   # (before the change) renders every view; after it: python views.py after, then python views.py --diff before after
        python audit.py      # screws, pivots, loose parts in the movement

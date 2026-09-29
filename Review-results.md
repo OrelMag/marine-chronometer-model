@@ -23,6 +23,14 @@ work's state handling wrong, the train bridge covering the fusee, and 13 parts
 missing; all are fixed. See
 [Barrel and fusee against the manual](#barrel-and-fusee-against-the-manual).
 
+A third review took every part in the manual's parts lists (Figs. 106–110)
+and the manual's account of how it works: screws had no shanks and parts no
+holes for them, pivots ended in bare holes, more than 30 listed parts were missing,
+and the model started itself where the manual has it twisted into motion. All
+are fixed; a few parts are drawn differently from the figures and a few small
+ones are not drawn, as listed. See
+[Every part against the manual](#every-part-against-the-manual).
+
 ## Summary
 
 No part of the model is broken. The mechanics hold up: ratios, directions of
@@ -634,3 +642,166 @@ the stop-bar reaching the stop at full wind.
   spring's 5–10 minutes; that only happens at high speed.
 - The rest of the upper train bridge's outline (Figs. 29, 67: a crescent) is
   still to trace (`IDEAS.md` 1.3). The chain's links are still boxes (1.9).
+
+## Every part against the manual
+
+A third review, of the whole movement and its case against the manual's parts
+lists (Figs. 106–110, pp. 78–88), its description and principles of operation
+(Secs. II–IV) and its handling instructions (Sec. III, Figs. 7–11), with the
+Figs. 4, 9, 107, 108 and 110 drawings. It started from one complaint: every
+screw was a head with nothing under it, which the Exploded view made plain,
+and no part had a hole where a screw goes. Checked against `movement.js`,
+`box.js` and `app.js` in the working tree, 29 September 2026.
+
+### Screws and holes
+
+- **Every screw has its shank.** `screw()` draws a fillister head and a
+  threaded shank (turned rings of thread, a chamfered tip) of half the head's
+  diameter, as long as the parts it passes through and about 3 mm into the part
+  it holds. Each length is set where the screw is placed. There are 51, plus
+  the train-blocking screw, which is drawn on its own because it moves.
+- **Every screw has its holes.** The parts a screw passes through have a
+  clearance hole (`hC`) and the part it screws into a tapped hole (`hT`): the
+  pillar plate, lower train bridge, pillars (tapped at both ends), upper train
+  bridge, escape upper bridge, barrel bridge, balance lower bridge and its boss,
+  cock and cock foot, the endstone caps, setup cover and its feet, dust-seal
+  flange, sustaining ratchet wheel, winding ratchet and a tapped disc in the
+  fusee's large end, the fusee's top layers, top plate and boss, the detent
+  support block and trip-spring bracket, and the balance's arm, hub and cap.
+- **The Exploded view lifts each screw out of its holes** along its own axis,
+  as Figs. 108–110 draw them, so the threads and the holes both show.
+- **Screws in the case and gimbals** (`sHead` in `box.js`) have shanks too.
+  Those parts never come apart in the model, so they have no holes.
+- **Not holed:** the detent's clamp, detent-adjusting and lock-adjusting screws
+  go across pieces that are drawn as vertical extrusions, so their shanks lie
+  inside the foot and support block (`fine.py` lists this with its reason).
+
+### The parts
+
+Every Hamilton number in the Figs. 108–110 lists, and the case and box parts
+of Figs. 106–107. "Added" parts were missing; their shapes are estimated from
+the figures and listed in the model README's "Estimated, not from the manual".
+
+| Part (Hamilton no.) | Before | Now |
+|---|---|---|
+| **Fig. 108: balance, cock, setup cover** | | |
+| Balance cock (42066) and screw (42192) | cock and screw head | the screw goes through cock and foot into the train bridge; it sits 0.3 mm off its traced place, inside the tracing's 0.4 mm, so its thread clears the foot's edge |
+| Balance upper endstone cap (42160), its setting (42155) and screws (20762, 2) | plate, stone, screw heads | screws threaded into the cock; the setting is drawn as the stone in the cap |
+| Balance upper setting (42162) | not drawn | not drawn: the staff is 0.7 mm from the traced cock's edge (IDEAS 1.4) |
+| Balance and hairspring assembly (42193), wheel (42178) | modelled | unchanged |
+| Hairspring (42188) | modelled | unchanged |
+| Hairspring stud (42189), stud screw (27760), clamps (42191) and wedge pins (42147); collet (42190) | a block and a hexagonal collet | unchanged: Fig. 5's shapes are not drawn (IDEAS 1.4) |
+| Balance screws (42171, 42173, 42174), timing weights and screws (42176, 42177), vernier weights and screws (37115, 42197) | modelled | unchanged |
+| Timing washers (42181) | not modelled | not modelled: "as required" |
+| Impulse roller (42263) and jewel (286), unlocking roller (42252) and jewel (287) | modelled | unchanged |
+| Hub with staff (42186), cap (42248), hold-down screws (42249, 2) | a solid Invar cylinder through the arm | added after Fig. 4: the hub's flange under the arm and its boss through the arm's clearance hole, the cap over the arm, two hold-down screws into the flange |
+| Balance wheel locking arm (42299), screw (37204), washer (42251), stop pin (42300) | missing | added, and it works (see below) |
+| Setup cover plate (42029) and screws (42056, 2) | its feet stopped 0.35 mm short of the barrel bridge | the feet stand on the bridge; screws threaded into it |
+| **Fig. 109: barrel, fusee, setup** | | |
+| Setup ratchet (42026), pawl (42027), pawl spring (42028) | modelled | unchanged |
+| Setup pawl pivot screw (42036) | a pin on the cover | a screw through the cover and the pawl's pivot into the barrel bridge |
+| Dust seal (42051), screws (42056, 2), packing rings (42054) | modelled | screws threaded into the barrel bridge; the flange has their holes |
+| Seal ring (42052), helical seal spring (42053) | inside the seal, not drawn | unchanged |
+| Barrel bridge (42061), pillar screw and screws (42055, 1 + 2) | modelled | threaded: into the barrel pillar, through the train bridge into its pillar, into the train bridge |
+| Barrel and fusee upper bushings (42164) | missing | added, in the barrel bridge |
+| Winding stop (42099) | modelled | unchanged |
+| Barrel (42168), cap (42169), cap screws (37023, 5), arbor (42170), mainspring (42038), brace (42037) | modelled | unchanged (the cap screws are heads on the cap) |
+| Fusee and its parts (42006, 42015, 42016, 42019–42022, 42024, 42025, 42008), chain (42001) | modelled | unchanged |
+| Sustaining ratchet wheel with pawls (42009), winding pawl springs (42007, 2) and screws (42012, 4) | the springs were strips 0.3 mm wide under 0.8 mm screw heads; `audit.py` found the screws standing on nothing | each spring has a foot under its two screws; screws threaded into the wheel |
+| Winding ratchet (42013) and screws (42014, 2); fusee top plate (42008) and screws (27760, 2) | screw heads | threaded into a tapped disc in the fusee's large end and into the fusee's boss |
+| **Fig. 110: train, escapement, plates** | | |
+| Escape upper bridge (42064A) and screws (20762, 2) | modelled | screws threaded into the train bridge |
+| Escape upper setting (42162) and endstone cap (42159) with screws (20762, 2) | a ring on the bridge, a stone above it and two plain pins | the setting and its jewel pressed into the bridge, a cap over it with the stone, two screws |
+| Detent (42087), jewel (285), bracket (42092), trip spring (42088), support block (42086), lock-adjusting and clamp screws (42091), detent-adjusting screw (20756), clamp screw (37024) and washer (42251) | modelled | the adjusting and clamp screws have shanks; the trip-spring screw (1770) a fine thread in the bracket |
+| Detent support block screw (42056) | a head | threaded through the train bridge into the block |
+| Locking jewel wedge pin (42089), trip-spring bracket screw (1770) | not drawn | unchanged |
+| Escape wheel (42076), centre (42068), third (42071) and fourth (42073) wheels | modelled | unchanged |
+| Upper train bridge (42062), pillar screws (42055, 3), bushings (42166, 42167) | modelled | screws threaded: two into their pillars; the third, where the top-view photograph shows it, has no pillar under it in the model (IDEAS 1.2), so it is drawn threaded into the bridge alone |
+| Sustaining pawl with arbor and springs (42096) | modelled | unchanged |
+| Balance lower bridge (42065) and screws (42055, 2) | a stadium, a boss, screw heads | a lobe for the train-blocking screw; screws threaded into the boss |
+| Balance lower setting (42162), lower endstone cap (42159) and screws (20762, 2) | a 0.5 mm hole the staff ended in | added: setting and jewel, and a cap under the bridge; the staff's pivot reaches the endstone |
+| Fourth wheel upper setting (42161) | a hole | added: setting and jewel |
+| Train-blocking screw (42247) | missing | added, and it works (see below) |
+| Train bridge pillars (42059, 3), barrel bridge pillar (42058) | modelled | tapped at both ends |
+| Pillar screws (42055, 3 + 1) from the dial side | missing | added, through the pillar plate into the pillars |
+| Lower train bridge (42063), screws (42163, 2), third and fourth lower settings (42161) | modelled | screws threaded into the pillar plate |
+| Pillar plate (42060), centre, barrel and fusee lower bushings (42165, 42164) | modelled | unchanged |
+| Escape lower setting (42162) | a gilt ring | its jewel added |
+| Escape lower endstone cap (42159) and screws (20762, 2) | missing | added, on the dial side |
+| Minute wheel post (42085) and wind indicator wheel post (42084), with their screws (35779) | the two wheels turned on arbors of their own | fixed posts screwed to the plate from its train side; the wheels turn on them, the wind indicator wheel's hand on its pipe |
+| Mounting ring (42057) and screws (42055, 3) | a ring beside the plate, no screws | a lip under the plate's dial side, held by three screws |
+| **Fig. 107: case, dial, motion work** | | |
+| Dial (42030) and dial screws (35756) | three feet on the plate, no screws | each foot held by a screw from the train side of the plate |
+| Hands (42032–42035), cannon pinion (42077), minute wheel (42078), hour wheel (42080), wind indicator wheel (42081) | modelled | unchanged |
+| Case (42101), bezel (42102), crystal (42103), case support brackets (42105) and screws (42117) | modelled | the bracket screws have shanks |
+| Latch keeper (42113) and its screw (42116); separating washer (42128) | the keeper only | unchanged |
+| Shield plate (42104), shoulder screw (42124), stop screw (42125), return spring (42126) | modelled | unchanged. Fig. 107 draws the plate as a disc and the spring as an open ring. A disc that size, turning beside the key hole, would overhang the case's flat bottom, so the model keeps its lobed plate and coiled spring (estimated) |
+| **Fig. 106: box and gimbals** | | |
+| Mounting box (42201), key (42044), gimbal ring (42106), gimbal and case support straps (42107, 42108) and screws (42116), pivot screws (42118–42120), washers (42122), lock nuts (42121) | modelled | strap screws have shanks |
+| Latch: support bracket (42109), lever (42111), handle (42112), bracket screws (42115) | modelled, shown released | unchanged |
+| Latch clamping bracket (42110), take-up spring (42277) and screw (42276), clamping screw (42114), washer (42123) | not modelled | unchanged |
+
+### Jewels
+
+The manual counts 14 (Sec. II). The model draws 13: impulse, unlocking and
+locking; both of the escape wheel's hole jewels and endstones (three added);
+the balance's lower hole jewel and both endstones (two added); both of the
+fourth wheel's bar-hole jewels (one added) and the third wheel's dial-end one.
+The fourteenth, the balance's upper hole jewel, is not drawn (above).
+
+### Function
+
+Checked against Secs. II–IV and the handling instructions:
+
+- **Already right:** the directions of turning (the fusee wound
+  counterclockwise, the barrel clockwise in running), 7 half turns a day and
+  17½ from run down, the maintaining work (Sec. IV, `maintaining.py`), the
+  detent's five steps and the adjustment figures (Ops. 84–88, 97,
+  `escapement.js`), the hands in half-second steps, the winding stop at full
+  wind, the balance's 1⅜–1½ turns.
+- **Wrong before: the model started by itself.** Wound after running down, it
+  simply ran again. A detent chronometer isn't self-starting. It stops when its
+  balance no longer swings far enough to unlock the wheel, and the manual has
+  it started with "a single quick twist" of the box (Sec. III). The model now
+  keeps the balance's amplitude:
+  - It needs `ESC.AMIN`, 39.2°, to keep going: the swing has to carry the
+    discharge jewel past the trip spring on the return (it falls off at
+    −37.2°), unlock the wheel (−21.3°) and see the impulse through (+20.8°).
+    `makeEsc` works it out from the escapement's own tables.
+  - Below that the train stops at a locked beat and the balance swings down
+    freely, the detent still lifting while the swing reaches the trip spring.
+  - Twist to start sets it swinging again (160°), after which it builds up to
+    its running 255°.
+  - The same holds at run down: the train stops, the balance runs down, and a
+    wound chronometer needs its twist.
+- **Added: the balance locking arm** (Fig. 9). Locked, its end lies under the
+  rim, its pad bears on the rim, and the balance stops within a swing or two.
+  Unlocked, the arm lies against its stop pin, and the balance needs a twist.
+- **Added: the train-blocking screw** (Sec. II, Fig. 110).
+  - Screwed down, its dog point stands between the fourth wheel's spokes. The
+    train runs on until a spoke meets it, at most about 22 beats (11 s at 1×), and stops at
+    the last whole beat before contact; the balance then swings down, unlocking
+    a wheel that can't turn.
+  - It waits above the wheel while a spoke is under it.
+  - Raised within a minute or two, before the balance drops below 39°, the
+    chronometer carries on by itself.
+  - It sits on a lobe of the balance lower bridge at the fourth wheel's end.
+    Nearer the bridge's line it would come down through the third wheel, which
+    runs between the bridge and the fourth wheel, or beside the escape wheel.
+- **Not modelled:** setting the hands with the key on the centre square
+  (Fig. 8; the Time panel sets them), the gimbal latch (shown released), and
+  the hairspring's stud and collet as Fig. 5 draws them.
+
+### Found along the way
+
+- **`polyGeo`'s bevel narrows every hole** by 0.8 × the bevel (0.18 mm on the
+  train bridge) at both faces. A screw that fits its tapped hole grazed it
+  there, 0.1–0.2 mm deep, in eight places. Screw holes are now cut that much
+  larger, so they have their size at the faces (wider inside the plate, where
+  it can't be seen); arbor holes are unchanged.
+- **The minute wheel and the wind indicator wheel turned on arbors of their
+  own**, the wind indicator's running through the pillar plate. The parts list
+  has fixed posts screwed to the plate (above).
+- **The balance's lower pivot and the escape arbor's pivots ended in nothing
+  or in bare holes**: no jewels, no endstones. They now run in their settings
+  up to the endstones.

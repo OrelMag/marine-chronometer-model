@@ -6,7 +6,7 @@
   would put them: 1 turn a minute, an hour, 12 hours, and 16 teeth in 8 s. A wrong tooth count anywhere in the train fails this.
 - Wind indicator: at UP (fully wound) and after 56 h, the hand is at the ends of the dial's 240° scale (60° and 300° from 12).
 - Fusee: 8¾ turns of chain is 60 h of running and 17½ half turns of the key (manual Sec. III).
-- Balance: the moment of inertia as built (931 g·mm², from the parts list's masses), and a full turn of the timing weights and of the vernier weights
+- Balance: the moment of inertia as built (930 g·mm², from the parts list's masses and the balance as drawn), and a full turn of the timing weights and of the vernier weights
   changing the rate by the manual's 40 s and 2.8 s a day (p. 70).
 The movement's update() is driven directly, as views.py does; the page's own loop is stopped first."""
 import asyncio,json,math,pathlib,sys
@@ -30,7 +30,7 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   chk('fusee: 8 3/4 turns of chain run',FUSEE_TURNS/FUSEE_PER_HOUR,60,1e-9,'h');chk('fusee: half turns of the key to wind fully',FUSEE_TURNS*2,17.5,1e-9,'');
   chk('fusee: 7 half turns restore',7*0.5/FUSEE_PER_HOUR,24,0.05,'h');
   const I0=R.timing(0,0),rate=(t,v)=>86400*(Math.sqrt(I0/R.timing(t,v))-1);
-  chk('balance moment of inertia as built',I0,931,1,'g mm2');
+  chk('balance moment of inertia as built',I0,930.3,1,'g mm2');
   chk('timing weights, a full turn out (manual: 40 s/day)',-rate(1,0),40,2,'s/day');chk('vernier weights, a full turn out (manual: 2.8 s/day)',-rate(0,1),2.8,0.15,'s/day');
   R.timing(0,0);return out;})()"""
 async def main():
