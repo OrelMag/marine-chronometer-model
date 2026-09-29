@@ -231,7 +231,7 @@ Contents:
   when the dial was painted; numerals sized from its figure height came out
   in Georgia, whose old-style figures made them overlap. `app.js` now loads the
   canvas faces explicitly, and the size is measured over all ten figures.
-  Keep: add any new canvas-only face to that list.
+  Keep: add any new canvas-only face to that list. `274d2cb`
 
 ## Controls and display
 
