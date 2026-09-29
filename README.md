@@ -39,6 +39,7 @@ Contents:
       marine-chronometer-essay/  the essay: src/ holds its four pieces, marine-chronometer.html is the built file
       shared/                    escapement.js: the detent escapement's solver, used by both pages and the model's tools
     References/                  source material: the 1948 manual, photographs, drawings; its README lists each file
+    .github/workflows/checks.yml CI: build, built copies, escapement, smoke test and invariants on every push; geometry weekly
     RESOLVED.md                  bugs already found and fixed, from the commit history; check it before changing a part
     IDEAS.md                     ways to improve the model and the application
 
@@ -150,9 +151,12 @@ Before committing a change to the model:
 1. **Past fixes.** Look up the part, control or build step in
    [RESOLVED.md](RESOLVED.md), so an old bug doesn't come back.
 2. **Build.** `python build.py` at the root must finish without errors.
-3. **Console.** Open the rebuilt `chronometer-working-model.html`, click through
-   every view and the walkthrough, and check the console has no errors or
-   warnings.
+3. **Console and arithmetic.** From
+   `marine-chronometer-source/chronometer-working-model/tools/`, run
+   `python smoke.py` (clicks through every control of the model, then scrolls
+   the essay, and fails on any console error or warning) and
+   `python invariants.py` (hands against the time, the wind indicator, the
+   fusee's figures and the balance's). Both print `ok`.
 4. **Geometry** (if you changed any part), run from
    `marine-chronometer-source/chronometer-working-model/tools/`:
 
@@ -176,9 +180,14 @@ Before committing a change to the model:
    into the folder they're run from.
 5. **Preview images.** If the model's appearance changed, re-render them:
    `python social.py` (from the same `tools/` folder), then rebuild.
-6. **Record fixes.** If the change fixes a bug, add it to
+6. **CI.** Pushing to GitHub runs the same checks (`.github/workflows/checks.yml`):
+   the build, a check that the committed built copies match it (build with
+   `--site-url https://www.marinechronometermodel.com`, as the live site is),
+   `escapement.js`, `smoke.py` and `invariants.py`; `fine.py` and
+   `maintaining.py` run weekly and on demand.
+7. **Record fixes.** If the change fixes a bug, add it to
    [RESOLVED.md](RESOLVED.md) under the right heading, with the commit hash.
-7. **Commit** the source and the regenerated root copies together.
+8. **Commit** the source and the regenerated root copies together.
 
 ## Publishing the website
 

@@ -1,0 +1,73 @@
+"""Smoke test: load the model and click through every control, failing on any console error or warning or page error (exit code 1).
+
+    python smoke.py            # the model (../index.html) and the built essay (../../../marine-chronometer.html)
+    python smoke.py --model    # the model only
+
+Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, every cross-section
+(and its other half), GMT / Local, the Illustration tab, the display switches, winding with the key, the keyboard, and a link through the URL
+hash. Then the essay, scrolled from top to bottom. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
+ignored. Each problem names the page and the last step done before it."""
+import asyncio,pathlib,sys
+from playwright.async_api import async_playwright
+HERE=pathlib.Path(__file__).resolve().parent
+PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+ESSAY=HERE.parents[2]/'marine-chronometer.html'
+ARGS=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"]
+NOISE=('GL Driver Message','GPU stall')
+STEPS=[]
+def watch(pg,errs,tag):   # each problem names the page and the last step done before it
+    at=lambda:f"{tag}, after '{STEPS[-1] if STEPS else 'load'}'"
+    pg.on("pageerror",lambda e:errs.append(f'{at()}: page error: {e}'))
+    pg.on("console",lambda m:errs.append(f'{at()}: console {m.type}: {m.text}') if m.type in('error','warning') and not any(n in m.text for n in NOISE) else None)
+async def model(b,errs,steps):
+    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'model')
+    await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000)
+    async def click(sel,label=None,ms=250):
+        await pg.evaluate("s=>{const e=document.querySelector(s);if(!e)throw Error('missing '+s);e.click();}",sel);await pg.wait_for_timeout(ms);steps.append(label or sel)
+    for drive in(False,True):
+        if drive:await click('#driveOn','Moving parts only')
+        for v in['box','dial','movement','train','escapement','exploded']:await click(f'#views button[data-v="{v}"]',f'view {v}'+(' (moving parts)' if drive else ''))
+    await click('#mwOn','motion work and hands');await click('#mwOn');await click('#driveOn','Moving parts off')
+    await click('#tStart','walkthrough')
+    for i in range(7):await click('#tNext',f'walkthrough step {i+2}',400)
+    await click('#tNext','walkthrough finish')
+    for grp in['#bal','#dialSt','#finish']:
+        for v in await pg.evaluate("g=>[...document.querySelectorAll(g+' button')].map(b=>b.dataset.v)",grp):await click(f'{grp} button[data-v="{v}"]')
+        await click(f'{grp} button')   # back to the first (the default)
+    await click('#views button[data-v="movement"]')
+    for v in['x','z','y']:
+        await click(f'#secs button[data-v="{v}"]',f'section {v}');await click('#secFlip',f'section {v}, other half');await click('#secFlip')
+    await click('#secs button[data-v="off"]','section off')
+    await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT');await click('#now','Now')
+    await click('#tabFig','Illustration tab');await click('#tabModel','3D model tab')
+    for sel in['#colr','#ghost','#lbls','#rock','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
+    await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
+    await click('#kwBtn','wind with the key',2500);await click('#kwBtn','stop winding')
+    await click('#wind','wind');await click('#rateZero','rate reset')
+    await click('#helpBtn','help card');await click('#helpBtn','help card closed')
+    await pg.focus('canvas')
+    for k in['ArrowLeft','ArrowUp','+','-','0','1','Space']:await pg.keyboard.press(k);await pg.wait_for_timeout(150)
+    await pg.keyboard.press('Space');steps.append('keyboard')
+    await pg.evaluate("location.hash='#view=escapement&part=det&speed=0.05'");await pg.wait_for_timeout(1200)
+    st=await pg.evaluate("[document.querySelector('#views button[aria-pressed=\"true\"]')?.dataset.v,document.querySelector('#info').classList.contains('on'),document.querySelector('#spdN').value]")
+    if st!=['escapement',True,'0.05']:errs.append(f'hash link not applied: {st}')
+    steps.append('hash link');await pg.close()
+async def essay(b,errs,steps):
+    if not ESSAY.exists():errs.append(f'no built essay at {ESSAY}: run build.py');return
+    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'essay');await pg.goto(ESSAY.as_uri());await pg.wait_for_timeout(2000)
+    h=await pg.evaluate("document.body.scrollHeight")
+    for y in range(0,h,700):await pg.evaluate(f"scrollTo(0,{y})");await pg.wait_for_timeout(120)
+    await pg.wait_for_timeout(1000);steps.append('essay scrolled');await pg.close()
+async def main():
+    errs,steps=[],STEPS
+    async with async_playwright() as p:
+        b=await p.chromium.launch(args=ARGS)
+        # a fresh headless Chromium on SwiftShader loses its first WebGL context a moment after creating it, whatever the page (the original model too):
+        # spend that on a blank page, so the pages under test start with a context that stays
+        w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
+        await model(b,errs,steps)
+        if '--model' not in sys.argv:await essay(b,errs,steps)
+        await b.close()
+    print(f'{len(steps)} steps');[print(e) for e in errs]
+    print('ok' if not errs else f'{len(errs)} problems');sys.exit(1 if errs else 0)
+asyncio.run(main())

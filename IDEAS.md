@@ -73,7 +73,7 @@ the manual's figures. See [7.3](#73-make-esc-a-factory-and-share-it) and
 [3.3](#33-adjusters-bench-the-escapement-live).
 
 ### No automated checks
-- **Nothing runs on its own.** There is no continuous integration, although the checking tools exist.
+- **Nothing runs on its own.** There is no continuous integration, although the checking tools exist. *(Done: see 8.1.)*
 - **The escapement check always reports success.** `node escapement.js` prints `!!` beside a figure out of tolerance, but always exits with success. A CI job would pass even when the escapement fails the manual's figures. *(Fixed: it now exits with 1.)*
 
 Giving it a failing exit code is the first thing to fix when setting up
@@ -673,6 +673,8 @@ At 62 KB and 484 dense lines, `app.js` holds the part descriptions, the 2-D esca
 ## 8. Testing and verification
 
 ### 8.1 Continuous integration
+> **Done.** `.github/workflows/checks.yml`: on every push and pull request, steps 1–4 (the build with the live site's `--site-url`, then `git diff --exit-code` of the built copies; `escapement.js`, which now exits 1 on a failure; and `tools/smoke.py`, which clicks through every control and scrolls the essay), plus `tools/invariants.py` (8.2). Weekly and on demand, `fine.py` and `maintaining.py`, which already fail on anything new; `.gitattributes` keeps the built copies LF on every platform. Step 5's expected-leftovers file for `dyn.py`/`audit.py` is still open.
+
 A GitHub Actions workflow on every push, in increasing cost:
 1. **Build:** `python build.py`. It already fails if a page loads anything from the network.
 2. **Escapement:** `node tools/escapement.js`. It prints `!!` for a figure out of tolerance but always exits 0; set `process.exitCode=1` when any row fails. *Done: it now exits with 1 when a figure is out of tolerance.*
@@ -681,6 +683,8 @@ A GitHub Actions workflow on every push, in increasing cost:
 5. **Nightly or manual:** `dyn.py` and `audit.py`, which are slower. Compare their output with a committed expected-leftovers file, so a new collision or loose screw fails rather than scrolling past.
 
 ### 8.2 Invariant tests (S)
+> **Done.** `tools/invariants.py` checks the hands, the escape wheel, the wind indicator's 60° and 300° ends, the fusee's 60 h, 17½ half turns and 7 half turns a day, the balance's 931 g·mm², and 40 s / 2.8 s a day for a turn of the weights. A planted 76-tooth third wheel fails eight checks. The pawls are left to `maintaining.py`, which already checks them.
+
 Small browser or Node checks on the model's arithmetic:
 - **Hands:** at `tSim = t`, the hour, minute and second hands point where a clock reading `t` would: centre wheel 1 turn/h, fourth 1 turn/min, escape 16 teeth per 8 s.
 - **Wind indicator:** runs from 60° at UP to 300° at 56 h, which is the dial's scale.
