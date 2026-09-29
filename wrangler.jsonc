@@ -1,5 +1,5 @@
 // The live site: a Cloudflare Worker that serves site/ as static files (no script), at
-// https://marinechronometermodel.com (its custom domain) and marinechronometer.orelmac.workers.dev.
+// https://marinechronometermodel.com (its custom domain, also www.) and marinechronometer.orelmac.workers.dev.
 // Build with its address, then deploy (the first run asks you to log in):
 //   python build.py --site-url https://marinechronometermodel.com
 //   npx wrangler deploy
@@ -7,7 +7,7 @@
   "name": "marinechronometer",
   "compatibility_date": "2026-09-28",
   // the domain's DNS record and certificate are created by Cloudflare on deploy (the zone is in this account)
-  "routes": [{ "pattern": "marinechronometermodel.com", "custom_domain": true }],
+  "routes": [{ "pattern": "marinechronometermodel.com", "custom_domain": true }, { "pattern": "www.marinechronometermodel.com", "custom_domain": true }],
   // keep the old address working too (with routes set, wrangler would otherwise turn it off)
   "workers_dev": true,
   "assets": {
