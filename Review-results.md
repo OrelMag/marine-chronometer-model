@@ -11,7 +11,8 @@ copies of the escapement solver, and the escapement check's exit code.
 Status: findings 1–5 were fixed after the review; see
 [Fixes for findings 1–5](#fixes-for-findings-15). Checking the fixes turned up
 finding 9 (the split-balance variant runs through the barrel bridge), which is
-not fixed yet. Findings 6–9 and the smaller issues are open.
+not fixed yet. Findings 6, 8 and 9 and the smaller issues are open; finding 7
+was resolved by the fine interference pass.
 
 A later pass with a finer collision check found and fixed six more overlaps,
 and added a check for the barrel wall; see
@@ -269,8 +270,10 @@ or add analytic clearance checks for thin gaps and for the hidden variant.
 which resolves 0.05 mm and tests the chain, the hairspring, the trip spring,
 the barrel wall (as a solid, with its margins) and the mainspring, and with
 `--split` the hidden split-balance variant (it fails there: finding 9 is still
-open). Still untested: the dial face. The About dialog's wording is unchanged.
-See [Fine interference pass](#fine-interference-pass).
+open). Still untested: the dial face. The About dialog now says what the
+checks cover, names the dial face as untested and the split-balance variant as
+not yet clear, so the finding is resolved. See
+[Fine interference pass](#fine-interference-pass).
 
 ### 8. The dial looks small in its case (worth checking, not confirmed wrong)
 

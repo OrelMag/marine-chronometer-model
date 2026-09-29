@@ -225,6 +225,13 @@ Contents:
   don't, and `--keep-html` covers other hosts. `2c0f236`
 - **Essay linked to the wrong page for the model.** It now links to the site's
   home page. `219e4df`
+- **About dialog claimed more collision testing than was done** (finding 7).
+  "Every part was tested for collisions through a full escapement cycle" is
+  now what the checks cover: 0.05 mm, through the escapement cycle, round the
+  train and over the wind, with the chain, springs and barrel; it names the
+  dial face as untested and the split-balance variant as not yet clear. Keep:
+  change that sentence when `fine.py`'s coverage or finding 9 changes.
+  Fixed, not yet committed.
 
 ---
 
