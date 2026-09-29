@@ -53,7 +53,7 @@ function buildBox(M){
   /* latch keeper on the case, facing the latch */
   {const kp=mesh(bowl,new THREE.BoxGeometry(3,4,6),M.brass2,65.2*Math.cos(Math.PI/4),3,65.2*Math.sin(Math.PI/4));kp.rotation.y=-Math.PI/4;}
   const bp=[V2(0.01,-66)];for(let i=0;i<=12;i++){const a=i/12*Math.PI/2;bp.push(V2(44+20*Math.sin(a),-46-20*Math.cos(a)));}bp.push(V2(64,6),V2(66.5,6),V2(66.5,8.5),V2(62,8.5));
-  mesh(bowl,new THREE.LatheGeometry(bp,120),M.brassDS);
+  mesh(bowl,new THREE.LatheGeometry(bp,120),M.brass);mesh(bowl,new THREE.LatheGeometry(bp.slice().reverse(),120),M.brass); /* inner face is its own front-facing shell: a back face gets its shadow normalBias pushed the wrong way (speckled floor) */
   const shutter=mesh(bowl,cylY(5,0.8,24),M.brass2,L.Fu[0],-66.4,L.Fu[1]);
   const bz=mesh(bowl,new THREE.TorusGeometry(63.5,2.6,14,128),M.brass,0,9.5,0);bz.rotation.x=Math.PI/2;
   const gl=mesh(bowl,new THREE.CircleGeometry(62,96).rotateX(-Math.PI/2),M.glass,0,10.5,0);gl.renderOrder=5;

@@ -239,6 +239,12 @@ Contents:
   in Georgia, whose old-style figures made them overlap. `app.js` now loads the
   canvas faces explicitly, and the size is measured over all ten figures.
   Keep: add any new canvas-only face to that list. `274d2cb`
+- **Speckled floor inside the bowl** (shadow acne). The bowl was one
+  double-sided lathe, so its inside faces were back faces, and the shadow
+  `normalBias` pushes back faces' lookups the wrong way. It is now two
+  front-facing shells (outer, and the reversed profile for the inner). Keep: a
+  surface that receives shadows on its inside gets its own front-facing shell,
+  not `DoubleSide`.
 
 ## Controls and display
 
