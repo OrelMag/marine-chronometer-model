@@ -193,7 +193,7 @@ Contents:
   train bridge is cut round the fusee (r 17.8, open to the rim) as it is cut
   round the barrel. `tools/topview.py` warps the model onto the photograph to
   compare them. Keep: an outline the photographs show is traced, not a
-  clearance circle; check it with `topview.py`.
+  clearance circle; check it with `topview.py`. `aa9d525`
 
 ## Setup, case and gimbals
 
