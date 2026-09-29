@@ -145,6 +145,13 @@ Contents:
 - **Sustaining spring 0.05 mm into the fusee wheel's web.** It went unseen
   while both were one part. The spring is now its own part and 0.02 mm under
   the web. `da90e53`
+- **Winding pawls cut up to 0.16 mm into their flat springs while winding.**
+  The springs (42007) were built once, for the pawls' design angle, and stood
+  still while the pawls swung out about 5° over the winding ratchet's teeth. `wpsGeo` in `movement.js` now rebuilds
+  each spring from its pawl's angle in `update()`, its end 0.01 mm or less
+  off the arm in every state. Keep: a spring that bears on a moving part
+  follows it. `fine.py` can't see this, because a pawl and its spring are
+  one part (`sratchet`), so measure it directly. `161b79b`
 
 ## Plates, bridges, screws and arbors
 
@@ -329,11 +336,9 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
-- **Winding pawls cut up to 0.16 mm into their flat springs while winding**
-  (Winding and maintaining work). The springs (42007) were built once, for
-  the pawls' design angle, and stood still while the pawls swung out about 5°
-  over the winding ratchet's teeth. `wpsGeo` in `movement.js` now rebuilds
-  each spring from its pawl's angle in `update()`, its end 0.01 mm or less
-  off the arm in every state. Keep: a spring that bears on a moving part
-  follows it. `fine.py` can't see this, because a pawl and its spring are
-  one part (`sratchet`), so measure it directly.
+- **`views.py` failed to load the page** (Build, tools and docs). It waited
+  a fixed 5 s and used headless Chromium's first WebGL context, which is lost
+  a moment after it's created, so `window.__mv` was often missing when it
+  froze the model. It now spends that context on a blank page, as `smoke.py`
+  does, and waits for the loading screen to go. Keep: every browser tool
+  warms up WebGL first and waits for the page, not for a fixed time.

@@ -33,9 +33,11 @@ async def main():
     tag=sys.argv[1];keep=arg('--keep');looks=[sys.argv[i+1:i+7] for i,k in enumerate(sys.argv) if k=='--look']
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        # as in smoke.py: a fresh headless Chromium loses its first WebGL context, so spend it on a blank page
+        w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800},device_scale_factor=1,color_scheme='light');errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=%r;document.head.appendChild(s);});"%CSS)
-        await pg.goto(PAGE);await pg.wait_for_timeout(5000)
+        await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)   # loaded, not a fixed wait
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(FREEZE.format(n=arg('--n','2.5')))
         if looks or keep:
             await pg.evaluate("document.querySelector('#driveOn').click()");await pg.evaluate("document.querySelector('#views button[data-v=\"train\"]').click()");await pg.wait_for_timeout(2500)
