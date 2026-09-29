@@ -14,7 +14,7 @@ async def main():
         pg=await b.new_page(viewport={"width":1100,"height":1000},color_scheme='light')
         await pg.goto(PAGE); await pg.wait_for_timeout(4000)
         c=lambda s: pg.evaluate(f"document.querySelector('{s}').click()")
-        await c('#lbls');await c('#views button[data-v="movement"]');await pg.wait_for_timeout(2500)
+        await c('#views button[data-v="movement"]');await pg.wait_for_timeout(2500)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         keys=list(PH);best=None
         grid=[(float(y),float(p)) for y in np.arange(-1.0,-0.3,0.02) for p in np.arange(0.45,0.85,0.02)]

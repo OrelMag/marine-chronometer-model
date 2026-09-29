@@ -19,17 +19,28 @@
 <body>
 <header>
   <h1>The Marine Chronometer, <em>working</em></h1>
-  <p>A two-day fusee chronometer with a spring detent escapement, built part by part and running in real time. Drag to turn, Shift-drag or two-finger drag to pan, pinch or scroll to zoom, tap any part to identify it.</p>
+  <p>A two-day fusee chronometer with a spring detent escapement, built part by part and running in real time. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
 </header>
 <div class="wrap">
   <div class="stage" id="stage">
     <canvas aria-label="3D working model of a marine chronometer"></canvas>
     <div class="labels"></div>
     <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div></div>
-    <div class="hint" id="hint">Tap a part to see what it does and its Hamilton part number. Right-click a part to fade or hide it</div>
+    <div class="hint" id="hint"><span class="m-only">Click a part to see what it does; right-click to fade or hide it.</span><span class="t-only">Tap a part to see what it does; long-press to fade or hide it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div></div>
     <div class="hud" id="hud"></div>
-    <div class="tools"><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
+    <div class="info help" id="help" role="dialog" aria-labelledby="helpT"><button class="x" aria-label="Close">×</button><h3 id="helpT">How to use it</h3>
+      <div class="hcols">
+        <section class="hc mouse"><h4>With a mouse</h4><dl>
+          <dt>Drag</dt><dd>Turn the view</dd><dt>Shift-drag or middle-drag</dt><dd>Pan</dd><dt>Scroll</dt><dd>Zoom</dd>
+          <dt>Click a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Right-click a part</dt><dd>Fade or hide it</dd><dt>Right-click empty space</dt><dd>Bring hidden parts back</dd>
+          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 6</dt><dd>The views, in the order of their buttons</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
+        <section class="hc touch"><h4>On a phone or tablet</h4><dl>
+          <dt>Drag</dt><dd>Turn the view</dd><dt>Drag two fingers</dt><dd>Pan</dd><dt>Pinch</dt><dd>Zoom</dd>
+          <dt>Tap a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Long-press a part</dt><dd>Fade or hide it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back</dd>
+          <dt>Tap empty space</dt><dd>Close a card</dd><dt>Turn the phone sideways</dt><dd>A larger model, with the controls beside it</dd></dl></section></div>
+      <p class="note">Reset brings the camera back to the chosen view. Parts too small to tap are listed under Parts. To see how the chronometer works, start the walkthrough under How it works.</p></div>
+    <div class="tools"><button id="helpBtn" aria-label="How to use it" aria-controls="help" aria-expanded="false" title="How to use it: mouse, touch and keys">?</button><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
     <figure class="fig hidden" id="fig" role="tabpanel" aria-labelledby="tabFig"><div class="fsc"><img src="img/what-makes-it-precise.webp" width="930" height="1000" alt="Illustration titled What Makes a Marine Chronometer So Precise? A chronometer lifted out of its open box, with callouts: the fusee, chain and mainspring barrel, which even out the spring's force as it unwinds; the spring detent escapement, which gives the balance its impulse while touching it as little as possible; the balance wheel and hairspring, whose bimetallic rim compensates for temperature; and the gimballed box, which keeps the instrument level as the ship rolls." title="Click to see it full size"></div>
       <figcaption>Illustration from <a href="https://timeandnavigation.si.edu/multimedia-asset/what-makes-a-sea-chronometer-so-precise" target="_blank" rel="noopener"><i>What Makes a Sea Chronometer So Precise?</i></a> by Bruce Morser, National Air and Space Museum, Smithsonian Institution (<i>Time and Navigation</i>). Shown here with credit; not covered by this model’s licence. A generic chronometer, not the Hamilton Model 21.</figcaption></figure>
     <div class="tabs" role="tablist" aria-label="What the stage shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabFig" aria-selected="false" aria-controls="fig" title="An overview drawing of what makes a chronometer precise">Illustration</button></div>
@@ -74,7 +85,7 @@
       <section class="grp">
         <h2>Display</h2>
         <div class="cks">
-          <label class="ck"><input type="checkbox" id="lbls" checked> Labels</label>
+          <label class="ck"><input type="checkbox" id="lbls"> Labels</label>
           <label class="ck"><input type="checkbox" id="ghost"> See-through plates</label>
           <label class="ck"><input type="checkbox" id="colr"> Colour by part</label>
           <label class="ck"><input type="checkbox" id="rock"> Ship motion</label>
@@ -127,9 +138,9 @@
   <p>A working 3D model of the Hamilton Model 21 marine chronometer: a two-day fusee chronometer with a spring detent escapement, made in Lancaster, Pennsylvania, for the U.S. Navy from 1941. Every part runs from one clock: the balance beats twice a second, the hands step in half-seconds, and the fusee and chain follow the hours since winding.</p>
   <h3>Using it</h3>
   <ul>
-    <li>Drag to turn; pinch or scroll to zoom.</li>
+    <li>Drag to turn; Shift-drag, middle-drag or drag two fingers to pan; scroll or pinch to zoom. The <b>?</b> button on the model lists every control, for a mouse and for touch.</li>
     <li>Tap a part to see what it does and its Hamilton part number.</li>
-    <li>Right-click a part to fade or hide it; right-click empty space to bring hidden parts back.</li>
+    <li>Right-click or long-press a part to fade or hide it; do the same on empty space to bring hidden parts back.</li>
     <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons.</li>
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
     <li>Wind with the key (under Time) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>

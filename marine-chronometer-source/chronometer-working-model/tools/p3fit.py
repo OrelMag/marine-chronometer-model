@@ -15,7 +15,7 @@ async def main():
         errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE); await pg.wait_for_timeout(4500)
         c=lambda s: pg.evaluate(f"document.querySelector('{s}').click()")
-        await c('#lbls');await c('#views button[data-v="movement"]');await pg.wait_for_timeout(2500)
+        await c('#views button[data-v="movement"]');await pg.wait_for_timeout(2500)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         keys=list(PH);grid=[(float(y),float(pt)) for y in np.arange(-3.14,3.14,0.04) for pt in np.arange(1.1,1.571,0.03)]
         outs=json.loads(await pg.evaluate("(g)=>JSON.stringify(g.map(([y,p])=>window.__proj(%s,y,p,700,10)))"%json.dumps([MD[k] for k in keys]),grid))

@@ -185,6 +185,19 @@ The website is a folder of static files (`site/`): no server code, no
 database. Any static host can serve it. The files are self-contained, so a
 visitor's browser fetches only these few files, from the host alone.
 
+### The live site
+
+The site is live at https://marinechronometer.orelmac.workers.dev, a
+Cloudflare Worker that serves `site/` as static files. `wrangler.jsonc` at the
+root describes it. To update it (Node.js provides `npx`; the first run opens a
+browser window to log in to Cloudflare):
+
+    python build.py --site-url https://marinechronometer.orelmac.workers.dev
+    npx wrangler deploy
+
+Pushing to GitHub doesn't deploy it. The steps below are for setting up a new
+site elsewhere.
+
 ### Recommended: Cloudflare Pages
 
 It's free, has unlimited bandwidth on the free plan, serves from hundreds of

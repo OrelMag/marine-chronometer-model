@@ -96,7 +96,7 @@ The fifteen ideas with the best return, roughly in order.
 | 9 | [Temperature and the two balances](#23-temperature) | Physics | M | The manual gives the test temperatures and the compensation figure; the split-rim variant could visibly curl |
 | 10 | [30-day performance test](#34-the-30-day-performance-test) | Features | M | The manual prints the test card and the Bureau of Ships tolerances. A satisfying way to see the physics add up |
 | 11 | [CI: build, escapement check, browser smoke test](#81-continuous-integration) | Testing | S | No automated checks today; the tools already exist |
-| 12 | [Reduced motion, keyboard orbit, touch menu](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the fade/hide menu needs a right-click |
+| 12 | [Reduced motion, keyboard orbit](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the camera can't be turned from the keyboard |
 | 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash |
 | 14 | [A real fusee comparison](#22-the-fusee-earns-its-keep) | Physics | M | The fusee inset is constant by construction. Show what a going barrel would do |
 | 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) |
@@ -557,10 +557,8 @@ The loop renders every frame even when stopped with the camera still, which cost
 - At 1× the second hand moves every half second, but the balance moves continuously, so this only helps when stopped or when the Illustration tab is shown. The loop already skips rendering there; stop scheduling `drawInset` and the HUD too.
 - Pause entirely when the stage is scrolled out of view on narrow layouts (`IntersectionObserver`).
 
-### 5.5 Cheaper DOM updates (S)
-The HUD's `innerHTML` is rewritten every frame ([app.js:474](marine-chronometer-source/chronometer-working-model/js/app.js#L474)), which re-parses HTML and invalidates layout 60 times a second. Build the string, compare it with the last one, and write only when it changes: twice a second at 1×.
-
-### 5.6 Adaptive quality (M)
+### 5.5 Adaptive quality (M)
+Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map 1024 px); this would replace it with one that measures.
 - Measure the frame time. When it stays above about 25 ms, step down: pixel ratio from 2 to 1.5 to 1, shadow map from 2048 to 1024, then shadows off.
 - Step back up when there's headroom.
 - Show the current level in a small **Quality: Auto / High / Low** control under Display.
@@ -572,7 +570,6 @@ The HUD's `innerHTML` is rewritten every frame ([app.js:474](marine-chronometer-
 ### 6.1 Accessibility
 - **Reduced motion (S):** the CSS has no `prefers-reduced-motion` rule. When it's set, snap camera moves (as `?snap` does), keep **Turn slowly** and **Ship motion** off, and don't auto-scroll the walkthrough card into view ([app.js:378](marine-chronometer-source/chronometer-working-model/js/app.js#L378)).
 - **Keyboard orbit (S):** arrow keys to orbit, `+`/`−` to zoom, `0` to reset. Only 1–6 and Space work today. Make the canvas focusable (`tabindex="0"`) with a visible focus ring, and list the keys in About.
-- **Touch menu (S):** the fade/hide menu opens on `contextmenu`, which iOS Safari doesn't fire on a long press. Touch users can only hide parts through the Parts list. Add an explicit long-press (500 ms, little movement) that opens the same menu.
 - **Screen readers (S):**
   - The info card is `aria-live="polite"`; the walkthrough's changing text and the key-winding progress should be too (`kwOut` already is).
   - Give the walkthrough step changes a live region.
@@ -581,7 +578,7 @@ The HUD's `innerHTML` is rewritten every frame ([app.js:474](marine-chronometer-
 
 ### 6.2 Shareable links and remembered state
 - **URL hash (S):** `#view=escapement&speed=0.05&part=det&t=12:00:00&sec=x:-3.5`. Read it at load, and update it with `history.replaceState` as things change, throttled. Walkthrough steps: `#tour=6`. Teachers can then link straight to "the detent at 1/20×".
-- **Remember (S):** in `localStorage`, alongside the theme already stored there, keep labels on or off, plate finish, dial style, balance and the last view. Always wrap it in `try`, as the theme code does.
+- **Remember (S):** in `localStorage`, alongside the theme already stored there, keep plate finish, dial style, balance and the last view. Always wrap it in `try`, as the theme code does.
 
 ### 6.3 Parts list (S)
 - **Search:** a search box that filters by name and Hamilton part number (`42087` finds the detent).
@@ -727,8 +724,8 @@ A suggested order, so that each stage makes the next easier.
 **Stage 1: foundations and quick wins (1–2 weeks)**
 - Parts registry (7.1). Derive train numbers from `TRAIN` (7.2). `ESC` as a factory, shared with the tools and the essay (7.3).
 - CI: build, escapement check with an exit code, built-copies check, smoke test (8.1). Invariant tests (8.2).
-- Performance: knurls and rim holes merged, tiny meshes out of the shadow pass (5.1). Precomputed stripe texture (5.2). HUD written only on change (5.5). No rendering when idle (5.4).
-- Interface: reduced motion, keyboard orbit, touch long-press (6.1). URL hash state (6.2).
+- Performance: knurls and rim holes merged, tiny meshes out of the shadow pass (5.1). Precomputed stripe texture (5.2). No rendering when idle (5.4).
+- Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2).
 - GMT by default (3.1, first half).
 
 **Stage 2: the chronometer as an instrument (3–5 weeks)**

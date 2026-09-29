@@ -13,7 +13,7 @@ async def main():
         pg=await b.new_page(viewport={"width":1100,"height":1000},color_scheme='light')
         await pg.goto(PAGE); await pg.wait_for_timeout(4000)
         c=lambda s: pg.evaluate(f"document.querySelector('{s}').click()")
-        await c('#lbls');await c('#views button[data-v="movement"]');await pg.wait_for_timeout(2500)
+        await c('#views button[data-v="movement"]');await pg.wait_for_timeout(2500)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         s=best['s'];Rm=np.array(best['R']);ma=np.array(best['ma']);mb=np.array(best['mb'])
         toScreen=lambda q:(Rm.T@((np.array(q)-mb)/s))+ma      # invert the similarity: photo px -> render px

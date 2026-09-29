@@ -1,0 +1,14 @@
+// The live site: a Cloudflare Worker that serves site/ as static files (no script).
+// Build with its address, then deploy (the first run asks you to log in):
+//   python build.py --site-url https://marinechronometer.orelmac.workers.dev
+//   npx wrangler deploy
+{
+  "name": "marinechronometer",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./site",
+    // /page.html redirects to /page, which build.py's link-preview addresses assume
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}

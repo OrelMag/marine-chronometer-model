@@ -79,14 +79,16 @@ function drawEsc2D(ctx,w,h,p,dark){
   if(typeof THREE==='undefined'){$('#loading').textContent='The 3D library didn’t load. Reload the page to try again.';return;}
   try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2500))]);}catch(_){}
   const dark=()=>matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark';
-  let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  /* phones (touch, under 600 px on the short side): a lower pixel ratio and shadow map keep the frame rate up */
+  const PHONE=matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<600;
+  let r;try{r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(_){$('#loading').textContent='This browser couldn’t start 3D graphics (WebGL). Try another browser, or turn on hardware acceleration.';return;}r.setPixelRatio(Math.min(window.devicePixelRatio||1,PHONE?1.5:2));
   r.outputEncoding=THREE.sRGBEncoding;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.08;
   r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
   const scene=new THREE.Scene();scene.environment=envTex(r);
   /* a lost WebGL context (a phone switching apps, a GPU reset) comes back without the generated environment map that lights the metals: rebuild it */
   cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);});
   scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28));
-  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
+  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=true;key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
   const scam=key.shadow.camera;scam.left=-170;scam.right=170;scam.top=170;scam.bottom=-170;scam.near=1;scam.far=1200;scene.add(key,key.target);
   const cam=new THREE.PerspectiveCamera(32,1,1,6000);
   const M=mats();const BX=buildBox(M);scene.add(BX.root);
@@ -119,7 +121,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,op:{},hid:new Set(),focus:null,pick:null,labels:true,rock:false,spin:false,speed:1,sound:false,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,op:{},hid:new Set(),focus:null,pick:null,labels:false,rock:false,spin:false,speed:1,sound:false,view:'dial',tour:-1};
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   const PLATES=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','cock','dial']),DRIVE_HIDE=new Set(['pillar','pillars','trainBridge','barrelBridge','escBridge','lowerBridge','ltb','dial','cock','post']);
@@ -179,30 +181,31 @@ function drawEsc2D(ctx,w,h,p,dark){
     Object.assign(tgt,{lift:st.drive?1:vv.lift,flip:st.drive?1:vv.flip,explode:vv.explode*expV(),lidM:vv.lidM,lidT:vv.lidT});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',k!=='exploded');
     if(!keepSee){st.see=!!vv.see;}look();
     document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
-  /* pointer: orbit, pinch, tap to pick */
-  const ptrs=new Map();let pinch=0,down=null,rMoved=0;
-  cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0,btn:e.button,pan:e.shiftKey||e.button===1};if(e.button===1)e.preventDefault();});
+  /* pointer: orbit, pinch, tap to pick; on touch, a long press (500 ms, barely moving) opens the fade/hide menu, since iOS fires no contextmenu */
+  const ptrs=new Map();let pinch=0,down=null,rMoved=0,lpT=0,lpAt=-1e9;const lpStop=()=>{clearTimeout(lpT);lpT=0;};
+  cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0,btn:e.button,pan:e.shiftKey||e.button===1};if(e.button===1)e.preventDefault();
+    lpStop();if(e.pointerType!=='mouse'&&ptrs.size===1){const x=e.clientX,y=e.clientY;lpT=setTimeout(()=>{lpT=0;if(!down||down.moved>6||ptrs.size!==1)return;down.lp=true;lpAt=performance.now();openOpm(x,y);if(opm.classList.contains('on')&&navigator.vibrate)navigator.vibrate(10);},500);}});
   cv.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;
     const pdx=e.clientX-p.x,pdy=e.clientY-p.y;
-    if(down)down.moved+=Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y);
+    if(down)down.moved+=Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y);if(lpT&&down&&down.moved>6)lpStop();
     if(ptrs.size===1&&down&&down.moved>4&&down.pan)panBy(e.clientX-p.x,e.clientY-p.y);
     else if(ptrs.size===1&&down&&down.moved>4){camFree=true;C.yaw-=(e.clientX-p.x)*0.008;C.pitch=clamp(C.pitch+(e.clientY-p.y)*0.008,-1.3,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
     p.x=e.clientX;p.y=e.clientY;
     if(ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)C.dist=G.dist=clamp(C.dist*pinch/d,30,1500);pinch=d;panBy(pdx/2,pdy/2);if(down)down.moved=99;}});
-  const up=e=>{if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size){stage.classList.remove('grab');}
+  const up=e=>{lpStop();if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&!down.lp&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size){stage.classList.remove('grab');}
     if(wasTap&&e.type==='pointerup')pick(e);if(!ptrs.size)down=null;};
   cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
   cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
   const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
-  function pick(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
+  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
     const hit=hits.find(h=>INFO[h.object.userData.part]);
     if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
-  function showPart(p){st.hid.delete(p);st.pick=p;look();const[t,d,sp]=INFO[p];
+  function showPart(p){showHelp(false);st.hid.delete(p);st.pick=p;look();const[t,d,sp]=INFO[p];
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');$('#hint').style.opacity=0;}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
-  /* right-click a part: opacity and hide. Prefers the nearest solid part, so faded parts in front can be looked through.
+  /* right-click (or long-press) a part: opacity and hide. Prefers the nearest solid part, so faded parts in front can be looked through.
      Hidden parts can't be clicked, so the menu lists them for unhiding; right-click empty space to reach that list alone */
   const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output'),opP=$('#opPart'),opH=$('#opHid'),chips=opH.querySelector('.chips');let opPart=null;
   const opShow=()=>{const v=Math.round((st.op[opPart]??1)*100);opIn.value=v;opOut.textContent=v+'%';};
@@ -210,18 +213,25 @@ function drawEsc2D(ctx,w,h,p,dark){
   function opRender(){opP.classList.toggle('hidden',!opPart);opH.classList.toggle('hidden',!st.hid.size);opList();
     opm.querySelector('h4').textContent=opPart?INFO[opPart][0]:'Hidden parts';if(opPart)opShow();if(!opPart&&!st.hid.size)closeOpm();}
   function closeOpm(){opm.classList.remove('on');opPart=null;}
-  cv.addEventListener('contextmenu',e=>{e.preventDefault();if((down?down.moved:rMoved)>6)return;const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
+  /* Android fires its own contextmenu on a long press: whichever comes first opens the menu, once, and the press never picks */
+  cv.addEventListener('contextmenu',e=>{e.preventDefault();lpStop();if(performance.now()-lpAt<800)return;if((down?down.moved:rMoved)>6)return;if(down)down.lp=true;openOpm(e.clientX,e.clientY);});
+  function openOpm(cx,cy){const rc=cv.getBoundingClientRect();ndc.set((cx-rc.left)/rc.width*2-1,-(cy-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&INFO[h.object.userData.part]);
     const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>st.op[h.object.userData.part]!=null);
     if(!hit&&!st.hid.size){closeOpm();return;}
     opPart=hit?hit.object.userData.part:null;opm.classList.add('on');opRender();
-    const sr=stage.getBoundingClientRect();opm.style.left=clamp(e.clientX-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(e.clientY-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';});
+    const sr=stage.getBoundingClientRect();opm.style.left=clamp(cx-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(cy-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';}
   opIn.addEventListener('input',()=>{if(!opPart)return;const v=opIn.valueAsNumber/100;if(v>=1)delete st.op[opPart];else st.op[opPart]=v;opOut.textContent=opIn.value+'%';look();});
   opm.querySelectorAll('button[data-a]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.a;
     if(a==='hide'){if(opPart){st.hid.add(opPart);opPart=null;}}else if(a==='showall')st.hid.clear();else if(a==='all'){st.op={};st.hid.clear();}else if(opPart)delete st.op[opPart];
     look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOpm();
+  /* how to use it: every control for a mouse and for touch. Stays open while the model is dragged, so the gestures can be tried; a tap, × or Esc closes it */
+  const help=$('#help'),helpBtn=$('#helpBtn');
+  function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();$('#hint').style.opacity=0;}}
+  helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeOpm();showHelp(false);}
+    if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
     /* space bar: stop and restart, unless typing or pressing a button */
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
     /* 1 to 6: the views, in the order of their buttons (a disabled button ignores the click) */
@@ -372,7 +382,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     {t:'Hands and the wind indicator',x:'<p>The centre wheel staff carries the minute hand and, through the motion work, the hour hand; the fourth wheel staff carries the second hand.</p><p>A pinion on the dial end of the fusee arbor drives the wind indicator wheel. Here an 8-leaf pinion and a 98-tooth wheel take the hand across the UP–DOWN scale as the fusee makes its 8.2 turns in 56 hours.</p>',
       drive:true,mw:true,v:{lift:1,flip:0,explode:0,yaw:0.2,pitch:1.05,dist:170,target:mvL(-3,3,-6)},speed:3600,focus:['motion','hands','cw','fusee','gw'],inset:'motion'}];
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
-  function tourGo(i){st.tour=i;const s=TOUR[i];closeInfo();
+  function tourGo(i){st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
@@ -381,7 +391,10 @@ function drawEsc2D(ctx,w,h,p,dark){
     Object.assign(tgt,{lift:s.v.lift,flip:s.v.flip,explode:s.v.explode,lidM:s.v.lidM??1,lidT:s.v.lidT??1});goCam(s.v);look();
     document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');
     setInset(s.inset||null);
-    if(innerWidth<960){const card=$('#tourCard'),y=card.getBoundingClientRect().top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:'smooth'});}}
+    /* bring the card into view: below the stage when the stage sits above the panel (phones in portrait), else beside it (landscape phones) */
+    if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
+      if(cr.left<stage.getBoundingClientRect().right){const y=cr.top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:'smooth'});}
+      else card.scrollIntoView({block:'nearest',behavior:'smooth'});}}
   function tourEnd(){st.tour=-1;st.focus=null;st.drive=false;st.mwOn=false;st.rock=false;$('#rock').checked=false;setSpeed(1);setInset(null);
     $('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView('dial');}
   $('#tStart').addEventListener('click',()=>tourGo(0));$('#tPrev').addEventListener('click',()=>tourGo(Math.max(0,st.tour-1)));
@@ -420,7 +433,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     const foc=st.pick?new Set([st.pick]):st.focus,doOcc=now-lastOcc>200;if(doOcc)lastOcc=now;
     const placed=[],pad=3;
     for(const l of LS){
-      let show=st.labels&&(l.grp==='mv'?(cur.lift>0.8||st.drive)&&cur.flip>0.8:l.grp==='motion'?st.drive&&st.mwOn&&cur.flip<0.3:l.grp==='dial'?cur.lift<0.1&&cur.lidM>0.9&&!st.drive:cur.lift<0.1&&cur.lidT>0.9&&!st.drive);
+      /* off by default; the walkthrough always names the parts of its step */
+      let show=(st.labels||st.tour>=0)&&(l.grp==='mv'?(cur.lift>0.8||st.drive)&&cur.flip>0.8:l.grp==='motion'?st.drive&&st.mwOn&&cur.flip<0.3:l.grp==='dial'?cur.lift<0.1&&cur.lidM>0.9&&!st.drive:cur.lift<0.1&&cur.lidT>0.9&&!st.drive);
       if(show&&foc&&!foc.has(l.part))show=false;
       if(show&&st.drive&&DRIVE_HIDE.has(l.part))show=false;
       if(!show){l.el.style.opacity=0;continue;}
@@ -444,7 +458,7 @@ function drawEsc2D(ctx,w,h,p,dark){
 
   /* ---------- loop ---------- */
   const SNAP=/[?&]snap\b/.test(location.search);
-  let last=performance.now(),loaded=false;
+  let last=performance.now(),loaded=false,hudS='';const hud=$('#hud');
   function frame(now){
     const dt=Math.min(0.05,(now-last)/1000);last=now;const k=SNAP?1:1-Math.exp(-dt*3.0);
     for(const q of['lift','flip','explode','lidM','lidT'])cur[q]+=(tgt[q]-cur[q])*k;
@@ -477,7 +491,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     placeLabels(now);}
     drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    $('#hud').innerHTML=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
+    if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
     if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView('dial');},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}

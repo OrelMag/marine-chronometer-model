@@ -37,17 +37,20 @@ copies and assembles the website (see the root README).
 | `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
 | `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
-| `tools/social.py` | Renders the 1200 × 630 link-preview images into `site-assets/`: `social.png` (the dial in its box) and `social-movement.png` (the moving parts) |
+| `tools/social.py` | Renders the 1200 × 630 link-preview images into `site-assets/`, the model on a dark background beside a title column: `social.png` (the model page: the dial in its box, hands at 10:10) and `social-movement.png` (the essay: the moving parts) |
 | `verification/` | Reference results: the top-view comparison, the Fig. 2 overlay and its camera fit |
 
 ## Controls
 
-Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Right-click a part to fade or hide it; right-click empty space to bring hidden parts back.
+Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Right-click a part to fade or hide it; right-click empty space to bring hidden parts back. On touch screens a long press (half a second, barely moving) does the same; Android's own long-press `contextmenu` and the page's timer open the menu once between them, and the press never picks.
 
+- The **?** button on the model (or the **?** key) opens a card listing every control, for a mouse and for touch, with this device's first; the header and the hint word the gestures for the device too (`.m-only` / `.t-only`, switched by `@media (hover:none)`). A tap in the model, × or Esc closes it; dragging doesn't, so the gestures can be tried with it open.
 - Keys 1–6 pick the views. Exploded has a Spread slider.
 - Time: set the hands to any time of day, or to now. Wind with the key turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 60 h of chain), with the plates see-through and the winding stop kept solid. For the last half turns the camera closes in on the stop-bar catching.
 - Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (931 g·mm² as built). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.146 and 0.092 mm. The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose; the panel shows the daily rate and what the hands have gained since the weights were moved or the hands set.
 - Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme. Save writes the view as a PNG.
+- Labels are off by default (Display turns them on, and the choice isn't remembered). The walkthrough shows the labels of each step's parts regardless.
+- Phones: below 600 px wide the part card is a sheet along the bottom of the stage; on touch screens buttons and checkboxes are finger-sized; in landscape with the height under 560 px the stage fills the height and the panel scrolls beside it. On a phone (coarse pointer, screen under 600 px on its short side) the pixel ratio is capped at 1.5 and the shadow map at 1024 px, against 2 and 2048 px elsewhere.
 
 ## Testing
 

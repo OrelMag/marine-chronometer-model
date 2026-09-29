@@ -22,6 +22,8 @@ From the repository root:
     python build.py --site-url https://...   # also adds canonical + og:image tags to site/ pages (or set SITE_URL)
     python build.py --site-url https://... --keep-html   # for hosts that don't redirect /page.html to /page
 
+The live site is https://marinechronometer.orelmac.workers.dev, a Cloudflare Worker serving `site/` (`wrangler.jsonc`). Pushing doesn't deploy it: build with `--site-url https://marinechronometer.orelmac.workers.dev`, commit, then `npx wrangler deploy`.
+
 Open `marine-chronometer-source/chronometer-working-model/index.html` directly in a browser for development. URL flags:
 - `?snap`: disables camera/state easing so views settle immediately (for screenshots).
 - `?qa`: exposes `window.__mv` (the movement group), `__proj` / `__unproj` (movement frame ↔ screen pixels for a given camera), `__cam(yaw,pitch,dist,fov)` / `__look(yaw,pitch,dist,x,y,z)` (set the camera) and `__camInfo()` (print it) for the verification tools and `social.py`.
