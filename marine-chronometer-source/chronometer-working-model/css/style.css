@@ -85,7 +85,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .spd input[type=number]{width:5.6em;font:500 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums}
 .spd>span:last-child{color:var(--muted);margin-left:-4px}
 .pow .sl{flex:1;min-width:0;gap:8px}.pow .sl input{min-width:0;width:0}.pow .sl output{min-width:3.4em;flex-shrink:0}.pow button{flex-shrink:0}
-.clk{display:flex;align-items:center;gap:8px;margin-top:10px}.clk .sl{flex:1;min-width:0;gap:8px}.clk .sl span,#expWrap span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}
+.clk{display:flex;align-items:center;gap:8px;margin-top:10px}.tzr>span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}.clk .sl{flex:1;min-width:0;gap:8px}.clk .sl span,#expWrap span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}
 .clk input[type=time]{flex:0 1 auto;min-width:0;font:500 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 6px;font-variant-numeric:tabular-nums;color-scheme:light dark}
 #expWrap output{min-width:3.4em}
 .kw{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}.kw .ck{font-size:14px}

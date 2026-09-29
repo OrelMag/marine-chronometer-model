@@ -78,7 +78,8 @@
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time: watch the escapement">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="spd"><span>Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
         <div class="pow"><label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="60" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
-        <div class="clk"><label class="sl"><span>Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to your clock">Now</button></div>
+        <div class="clk"><label class="sl"><span>Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
+        <div class="clk tzr"><span>Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as U.S. Navy chronometers were kept">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
         <div class="kw"><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button><label class="ck"><input type="checkbox" id="kwFull" checked> From run down</label></div>
         <p class="note hidden" id="kwOut" aria-live="polite" style="margin:6px 0 0"></p>
       </section>
@@ -143,6 +144,7 @@
     <li>Right-click or long-press a part to fade or hide it; do the same on empty space to bring hidden parts back.</li>
     <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons. With the model focused (click it, or Tab to it), the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, views change without animation and the walkthrough leaves ship motion off.</li>
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
+    <li>The model keeps Greenwich Mean Time, as Navy chronometers were kept; under Time, Keep: Local time switches to your time zone. (The manual has the hands set only when the chronometer is started, the error being recorded instead; here Set the hands works at any time.)</li>
     <li>Wind with the key (under Time) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
   </ul>
   <h3>Sources</h3>

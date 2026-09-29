@@ -145,7 +145,9 @@ function drawEsc2D(ctx,w,h,p,dark){
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
   let wakeT=0;const wake=()=>{wakeT=performance.now()+600;};
-  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
+  /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
+  let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
+  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   /* colour mode: one flat CAD-style colour per part; the part labels double as the legend */
   const COLM=new Map();
   function colourOf(m0,p){if(!p||!PCOL[p]||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+p;let c=COLM.get(k);
@@ -301,7 +303,10 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* set the hands: only the time of day changes (the balance keeps its phase) and no power is used */
   const todIn=$('#tod');let todS=-1;
   todIn.addEventListener('change',()=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(todIn.value);if(!m)return;tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;rErr=0;});
-  $('#now').addEventListener('click',()=>{tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;lastE=null;todS=-1;rErr=0;});
+  $('#now').addEventListener('click',()=>{tSim=Date.now()/1000+tzOff();lastE=null;todS=-1;rErr=0;});
+  /* GMT or local: the hands move by the difference, as when they are set */
+  const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
+  document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
   $('#spin').addEventListener('change',e=>st.spin=e.target.checked);
   /* theme: Auto follows the system; a choice is remembered in this browser */
   const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));try{localStorage.setItem('cm-theme',v);}catch(_){}};
@@ -520,7 +525,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     placeLabels(now);}
     if(!still)drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}

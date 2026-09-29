@@ -41,7 +41,7 @@ measurements.
 ### Starting and setting don't follow the manual
 - **The model starts itself.** A detent escapement isn't self-starting. After winding a run-down chronometer, the manual says to start it with "a single quick twist" of the box (Sec. III). The model just carries on after winding. See [2.1](#21-a-balance-that-can-stop-and-must-be-started).
 - **The hands are set at will.** The manual says the hands "are never set except when the instrument is started" (Sec. III, Setting). The error is recorded and allowed for instead. The model's **Set the hands** changes them at any moment. See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
-- **The model runs on local time.** Navy chronometers were kept on Greenwich time; the model starts on the viewer's local time. See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
+- **The model runs on local time.** Navy chronometers were kept on Greenwich time; the model starts on the viewer's local time. *(Fixed: GMT by default.)* See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
 
 ### Section IX has ready-made features
 The manual's Test and Adjustment section gives:
@@ -311,7 +311,7 @@ While the key turns, only the sustaining spring drives the train, "enough to run
 ## 3. New things to do with it
 
 ### 3.1 Keep it on GMT, and set it as the manual says
-**GMT.**
+**GMT.** *Done: GMT is the default, with Keep: GMT / Local time under Time, and the HUD names the zone. Setting the hands the manual's way waits for the dynamic balance (2.1).*
 - `tSim` starts at local time (`Date.now()/1000 - getTimezoneOffset()*60`, [app.js:124](marine-chronometer-source/chronometer-working-model/js/app.js#L124)), and **Now** does the same.
 - A navy chronometer was kept on Greenwich time.
 - Make **GMT** the default, with a Local option, and say which in the HUD.

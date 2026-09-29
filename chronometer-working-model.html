@@ -162,7 +162,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .spd input[type=number]{width:5.6em;font:500 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums}
 .spd>span:last-child{color:var(--muted);margin-left:-4px}
 .pow .sl{flex:1;min-width:0;gap:8px}.pow .sl input{min-width:0;width:0}.pow .sl output{min-width:3.4em;flex-shrink:0}.pow button{flex-shrink:0}
-.clk{display:flex;align-items:center;gap:8px;margin-top:10px}.clk .sl{flex:1;min-width:0;gap:8px}.clk .sl span,#expWrap span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}
+.clk{display:flex;align-items:center;gap:8px;margin-top:10px}.tzr>span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}.clk .sl{flex:1;min-width:0;gap:8px}.clk .sl span,#expWrap span{font-size:13.5px;color:var(--muted);min-width:6.3em;white-space:nowrap}
 .clk input[type=time]{flex:0 1 auto;min-width:0;font:500 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 6px;font-variant-numeric:tabular-nums;color-scheme:light dark}
 #expWrap output{min-width:3.4em}
 .kw{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}.kw .ck{font-size:14px}
@@ -314,7 +314,8 @@ table.rt td.n{text-align:right}
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time: watch the escapement">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="spd"><span>Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
         <div class="pow"><label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="60" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
-        <div class="clk"><label class="sl"><span>Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to your clock">Now</button></div>
+        <div class="clk"><label class="sl"><span>Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
+        <div class="clk tzr"><span>Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as U.S. Navy chronometers were kept">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
         <div class="kw"><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button><label class="ck"><input type="checkbox" id="kwFull" checked> From run down</label></div>
         <p class="note hidden" id="kwOut" aria-live="polite" style="margin:6px 0 0"></p>
       </section>
@@ -379,6 +380,7 @@ table.rt td.n{text-align:right}
     <li>Right-click or long-press a part to fade or hide it; do the same on empty space to bring hidden parts back.</li>
     <li>Space bar stops and restarts the movement; keys 1 to 6 pick the views in the order of their buttons. With the model focused (click it, or Tab to it), the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, views change without animation and the walkthrough leaves ship motion off.</li>
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
+    <li>The model keeps Greenwich Mean Time, as Navy chronometers were kept; under Time, Keep: Local time switches to your time zone. (The manual has the hands set only when the chronometer is started, the error being recorded instead; here Set the hands works at any time.)</li>
     <li>Wind with the key (under Time) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
   </ul>
   <h3>Sources</h3>
@@ -1534,7 +1536,9 @@ function drawEsc2D(ctx,w,h,p,dark){
   const cur={lift:0,flip:0,explode:0,lidM:0,lidT:0},tgt={...cur};
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
   let wakeT=0;const wake=()=>{wakeT=performance.now()+600;};
-  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60,tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
+  /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
+  let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
+  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tVis=0,rockT=0,roll=0,pitch=0,lastE=null;
   /* colour mode: one flat CAD-style colour per part; the part labels double as the legend */
   const COLM=new Map();
   function colourOf(m0,p){if(!p||!PCOL[p]||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+p;let c=COLM.get(k);
@@ -1690,7 +1694,10 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* set the hands: only the time of day changes (the balance keeps its phase) and no power is used */
   const todIn=$('#tod');let todS=-1;
   todIn.addEventListener('change',()=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(todIn.value);if(!m)return;tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;rErr=0;});
-  $('#now').addEventListener('click',()=>{tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;lastE=null;todS=-1;rErr=0;});
+  $('#now').addEventListener('click',()=>{tSim=Date.now()/1000+tzOff();lastE=null;todS=-1;rErr=0;});
+  /* GMT or local: the hands move by the difference, as when they are set */
+  const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
+  document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
   $('#spin').addEventListener('change',e=>st.spin=e.target.checked);
   /* theme: Auto follows the system; a choice is remembered in this browser */
   const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));try{localStorage.setItem('cm-theme',v);}catch(_){}};
@@ -1909,7 +1916,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     placeLabels(now);}
     if(!still)drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b>&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left`:'Run down. Wind it to restart.'}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
