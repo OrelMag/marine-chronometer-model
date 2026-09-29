@@ -165,6 +165,18 @@ Contents:
   The cock foot also shared its top face with the cock (z-fighting). `cc70482`
 - **Balance cock foot overhung.** It now stands on the train bridge beside the
   barrel bridge, with its screw at the photographed position. `84a7645`
+- **Balance upper endstone cap overhung the cock's nose, one screw in the
+  air.** The traced nose passed 0.7 mm from the staff (a 2.4 mm boss had been
+  added round the setting), and the cap, a 7.4 mm plate running toward the
+  nose's tip with its screws 3.6 and 2.2 mm off the staff, stood past the edge;
+  its outer screw's thread hung below it over the hairspring. The cap is now as
+  the top-view photograph shows it: a plate 7.6 × 4.6 mm along the cock's
+  straight edge, round at the nose's end, its endstone in a gilt setting at the
+  centre and its screws 2.75 mm either side; the nose is the hull round it,
+  0.9 mm clear (`hullSplice`). Keep: the cap and both its screws on the cock,
+  with metal all round. `polyGeo` warns about holes crossing the outline, not
+  holes wholly outside it, so check a moved screw against the outline by hand.
+  `5ac87a7`
 - **Train bridge opening round the balance too big.** The centre and escape
   pivots fell in the hole. The opening was reduced; it is r 8.0 after the
   escapement change. `84a7645`, `7328e67`

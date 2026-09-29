@@ -989,20 +989,12 @@ function subtractCircle(poly,c,r,uni){
   const n=Math.ceil(Math.abs(d)/0.03);for(let q=1;q<n;q++){const a=aE+d*q/n;run.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}
   return run;
 }
-/* polygon plus a circle that crosses its boundary: the outline with the arc that runs outside it in place of the stretch inside the circle */
-function unionCircle(poly,c,r){
-  const dense=[];for(let k=0;k<poly.length;k++){const a=poly[k],b=poly[(k+1)%poly.length],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/0.1));for(let t=0;t<n;t++)dense.push([a[0]+(b[0]-a[0])*t/n,a[1]+(b[1]-a[1])*t/n,t===0]);}
-  const ins=p=>Math.hypot(p[0]-c[0],p[1]-c[1])<r,N=dense.length;
-  let s0=-1;for(let k=0;k<N;k++)if(!ins(dense[k])&&ins(dense[(k+N-1)%N])){s0=k;break;}
-  if(s0<0)return poly;                        /* circle does not cross the boundary */
-  let run=[];let k=s0;while(!ins(dense[k%N])&&run.length<N){run.push(dense[k%N]);k++;}
-  run=run.filter((p,i)=>p[2]||i===0||i===run.length-1).map(p=>[p[0],p[1]]);   /* the outline's own points, and where it meets the circle */
-  const inPoly=p=>{let w=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,zi]=poly[i],[xj,zj]=poly[j];if((zi>p[1])!==(zj>p[1])&&p[0]<(xj-xi)*(p[1]-zi)/(zj-zi)+xi)w=!w;}return w;};
-  const aOf=p=>Math.atan2(p[1]-c[1],p[0]-c[0]),aE=aOf(run[run.length-1]),aS=aOf(run[0]);
-  let d=((aS-aE)%TAU+TAU)%TAU;const mid=aE+d/2;if(inPoly([c[0]+r*Math.cos(mid),c[1]+r*Math.sin(mid)]))d=d-TAU;
-  const n=Math.ceil(Math.abs(d)/0.05);for(let q=1;q<n;q++){const a=aE+d*q/n;run.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}
-  const i0=run.findIndex(p=>p[0]===poly[0][0]&&p[1]===poly[0][1]);return i0>0?run.slice(i0).concat(run.slice(0,i0)):run;   /* starting where the outline did, so the extruded sides map as before */
-}
+/* convex hull of points (Andrew's monotone chain) */
+function hull(P){P=[...P].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]),h=[];
+  for(const s of[P,[...P].reverse()]){const k=h.length;for(const p of s){while(h.length>=k+2&&cr(h[h.length-2],h[h.length-1],p)<=0)h.pop();h.push(p);}h.pop();}return h;}
+/* outline with its stretch from point i0 to point i1 replaced by the outer side of the hull of those two points and pts */
+function hullSplice(poly,i0,i1,pts){const H=hull([poly[i0],...pts,poly[i1]]),n=H.length,a=H.indexOf(poly[i0]),b=H.indexOf(poly[i1]);
+  const run=d=>{const r=[];for(let k=a;;k=(k+d+n)%n){r.push(H[k]);if(k===b)break;}return r;},f=run(1);return[...poly.slice(0,i0),...(f.length>2?f:run(-1)),...poly.slice(i1+1)];}
 /* polygon of a disc clipped by half-planes z*s > a + b*x  (s=+1 keeps above the line, -1 below) */
 function discClip(R,cuts,N=160){
   let poly=[];for(let i=0;i<N;i++){const a=i/N*TAU;poly.push([R*Math.cos(a),R*Math.sin(a)]);}
@@ -1104,7 +1096,7 @@ function buildMovement(M){
   /* train-blocking screw (42247): over the fourth wheel's spokes, 3.5 mm from its arbor on the 6 o'clock side, on a lobe of the balance lower bridge. Nearer the bridge's line it
      would come down through the third wheel (which runs between the bridge and the fourth wheel) or beside the escape wheel */
   const TBd=[0,1];S.tBlock=add(L.F,TBd,3.5);
-  const EPa=Math.atan2(-(L.B[1]-S.cock[1]),L.B[0]-S.cock[0]);S.ep=[[3.6,0],[-1.6,1.5]].map(q=>add(L.B,ry(EPa,q)));   /* balance upper endstone cap: its screws in the cock */
+  const EPa=Math.atan2(-0.24,-5.83),EPu=ry(EPa,[1,0]),EP=[[2.75,0],[-2.75,0]];S.ep=EP.map(q=>add(L.B,ry(EPa,q)));   /* balance upper endstone cap: along the cock's straight edge (x toward the nose), its screws 2.75 either side of the staff (top-view photograph) */
   const PB=(r,a)=>[L.Ba[0]+r*Math.cos(a*D2R),L.Ba[1]+r*Math.sin(a*D2R)];S.cover=[PB(11.1,107),PB(11.6,288)];S.click=PB(8.9,250.6);
   S.dial=[30,150,270].map(a=>[39*Math.cos(a*D2R),39*Math.sin(a*D2R)]);
   S.seal=[2.2,-1.0].map(a=>[L.Fu[0]+7.6*Math.cos(a),L.Fu[1]+7.6*Math.sin(a)]);
@@ -1375,10 +1367,11 @@ function buildMovement(M){
      in the photo), a straight edge to the endstone over the staff and a concave arc back to the rim. Outline shifted
      by the cock's parallax so the endstone sits over the balance staff. */
   const COCK_POLY=[[25.38, 31.05], [26.19, 30.36], [26.99, 29.66], [27.77, 28.93], [28.53, 28.18], [29.26, 27.42], [29.98, 26.63], [30.68, 25.82], [31.35, 25.0], [32.0, 24.16], [32.63, 23.3], [33.24, 22.43], [33.82, 21.54], [34.38, 20.63], [34.92, 19.71], [35.43, 18.78], [35.92, 17.83], [36.38, 16.87], [36.81, 15.9], [37.22, 14.92], [37.6, 13.93], [37.96, 12.92], [38.29, 11.91], [38.59, 10.89], [38.87, 9.86], [39.12, 8.83], [39.34, 7.79], [39.53, 6.74], [39.69, 5.69], [39.83, 4.63], [39.94, 3.58], [32.87, 3.03], [26.51, 2.76], [20.15, 2.49], [13.87, 2.62], [8.04, 2.86], [5.77, 3.99], [5.53, 5.72], [6.88, 7.11], [13.2, 9.07], [17.2, 11.96], [19.38, 16.1], [20.84, 20.82], [21.82, 25.22]];
-  /* the balance upper setting and jewel are pressed into the cock under the endstone cap (manual Figs. 19, 36, 85), with metal all round them. The traced
-     edge passes 0.7 mm from the staff, so the nose is rounded out to a boss 2.4 mm in radius about the staff: in the top-view photograph and the
-     oblique one the endstone sits about 3 mm inside the cock's edge, which the tracing, taken at plate height and shifted for parallax, misses near the tip */
-  R.cock=mesh(ck,polyGeo(unionCircle(COCK_POLY,L.B,2.4),2.6,[[...L.B,1.5],hC(...S.cock,2.8,0.8),...S.ep.map(q=>hT(...q,0.7)),hC(...SPS,0.8)],0.3),M.plate,0,CK_T,0);
+  /* the balance upper setting and jewel are pressed into the cock under the endstone cap (manual Figs. 19, 36, 85), and the cap lies on the cock with metal all
+     round it (top-view photograph). The traced edge passes 0.7 mm from the staff and left the cap and its outer screw over nothing: the tracing, taken at plate
+     height and shifted for parallax, misses the nose. So the nose, from the straight edge's corner to the concave edge, is the hull round the cap, 0.9 mm clear of it */
+  const EPo=[];for(let k=0;k<=16;k++){const a=-Math.PI/2+Math.PI*k/16;EPo.push([1.65+2.3*Math.cos(a),2.3*Math.sin(a)]);}EPo.push([-3.35,2.3],[-3.65,2.0],[-3.65,-2.0],[-3.35,-2.3]);   /* cap: round at the nose's end, square at the foot's */
+  R.cock=mesh(ck,polyGeo(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.65),add(L.B,EPu,-3.0),6.4)]),2.6,[[...L.B,1.5],hC(...S.cock,2.8,0.8),...S.ep.map(q=>hT(...q,0.7)),hC(...SPS,0.8)],0.3),M.plate,0,CK_T,0);
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)].reverse(),40),M.steel,...[L.B[0],0,L.B[1]]);
   mesh(ck,ring(0.95,0.25,0.6),M.ruby,L.B[0],CK_T+0.65,L.B[1]);
@@ -1392,10 +1385,11 @@ function buildMovement(M){
   /* one balance cock screw (parts list 42192), at its position on the top-view photograph (p3map scr_cockfoot) */
   screw(ck,...Q,CK_T,2.8,1.5,2.6+11.6+2.5,0.8);   /* through the cock and its foot into the train bridge */
   screw(ck,...SPS,CK_T,0.8,0.45,2.6);   /* hairspring stud screw (27760), down through the cock to the stud (Figs. 19, 84) */
-  /* endstone plate over the staff: small steel plate with two screws and the cap jewel */
-  const ep=new THREE.Group();ep.position.set(L.B[0],CK_T,L.B[1]);ep.rotation.y=Math.atan2(-(L.B[1]-Q[1]),L.B[0]-Q[0]);ck.add(ep);
-  mesh(ep,polyGeo([[-2.5,-2.3],[4.9,-2.3],[4.9,2.3],[-2.5,2.3]],0.7,[hC(3.6,0,0.7),hC(-1.6,1.5,0.7)]),M.steel,0,-0.7,0);mesh(ep,cylY(1.0,0.3,16),M.ruby,0,-0.8,0);
-  screw(ep,3.6,0,-0.7,0.7,0.4,0.7+1.8);screw(ep,-1.6,1.5,-0.7,0.7,0.4,0.7+1.8);   /* 20762, into the cock */
+  /* endstone cap (42160) over the staff, as photographed from above: a steel plate 7.6 x 4.6 mm, the endstone in a gilt setting (42155) at its centre, set 0.1 below
+     the plate's face and 0.15 over the pivot's end, and two screws (20762) into the cock */
+  const ep=new THREE.Group();ep.position.set(L.B[0],CK_T,L.B[1]);ep.rotation.y=EPa;ck.add(ep);
+  mesh(ep,polyGeo(EPo,0.7,[[0,0,1.15],...EP.map(q=>hC(...q,0.7))]),M.steel,0,-0.7,0);mesh(ep,ring(1.15,0.7,0.6),M.gilt,0,-0.3,0);mesh(ep,cylY(0.7,0.5,24),M.ruby,0,-0.25,0);
+  for(const q of EP)screw(ep,...q,-0.7,0.7,0.4,0.7+1.8);
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, below the third wheel) ---------- */
   const fsP=part('fs',-16);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
   const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:TB_T+1.0,bB:-9.6,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,capR:5.6,screw,sbZ:-1.8,stopAng:Math.atan2(-fo[1],fo[0])-Math.atan2(-dz,dx)+Math.asin((0.7+0.9-1.8)/7.2)});   /* at full wind the stop-bar's side (half-width 0.7, 1.8 off the axis beside the arbor) meets the winding stop pin (r 0.9, 7.2 mm out) */
