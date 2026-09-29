@@ -288,7 +288,7 @@ Contents:
   the fusee and its square a ratchet pitch (9°) apart: hundreds of "changed"
   pixels from an unchanged model. The freeze now passes through a moment of
   winding first, which resets that history. Keep: a frozen state must not
-  depend on the page's history. `TBD-views`
+  depend on the page's history. `d71d757`
 
 ---
 

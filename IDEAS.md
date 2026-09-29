@@ -41,7 +41,7 @@ measurements.
 ### Starting and setting don't follow the manual
 - **The model starts itself.** A detent escapement isn't self-starting. After winding a run-down chronometer, the manual says to start it with "a single quick twist" of the box (Sec. III). The model just carries on after winding. See [2.1](#21-a-balance-that-can-stop-and-must-be-started).
 - **The hands are set at will.** The manual says the hands "are never set except when the instrument is started" (Sec. III, Setting). The error is recorded and allowed for instead. The model's **Set the hands** changes them at any moment. See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
-- **The model runs on local time.** Navy chronometers were kept on Greenwich time; the model starts on the viewer's local time. *(Fixed: GMT by default.)* See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
+- **The model runs on local time.** Navy chronometers were kept on Greenwich time; the model starts on the viewer's local time. *(Fixed: GMT by default.)* `23e9c58` See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
 
 ### Section IX has ready-made features
 The manual's Test and Adjustment section gives:
@@ -60,7 +60,7 @@ fills in the manual's test card ([3.4](#34-the-30-day-performance-test)).
 - **Per-frame rebuilds.** The hairspring's geometry is rebuilt every frame whenever it can be seen. See [5.3](#53-dont-rebuild-geometry-every-frame-sm).
 
 ### Three copies of the escapement solver
-> **Done.** One solver, `makeEsc` in `marine-chronometer-source/shared/escapement.js`, used by the model, the essay and `tools/escapement.js`. See 7.3.
+> **Done.** One solver, `makeEsc` in `marine-chronometer-source/shared/escapement.js`, used by the model, the essay and `tools/escapement.js`. See 7.3. `813f7ae`
 
 The escapement solver exists in three places:
 - the model (`ESC` in `movement.js`);
@@ -73,8 +73,8 @@ the manual's figures. See [7.3](#73-make-esc-a-factory-and-share-it) and
 [3.3](#33-adjusters-bench-the-escapement-live).
 
 ### No automated checks
-- **Nothing runs on its own.** There is no continuous integration, although the checking tools exist. *(Done: see 8.1.)*
-- **The escapement check always reports success.** `node escapement.js` prints `!!` beside a figure out of tolerance, but always exits with success. A CI job would pass even when the escapement fails the manual's figures. *(Fixed: it now exits with 1.)*
+- **Nothing runs on its own.** There is no continuous integration, although the checking tools exist. *(Done: see 8.1.)* `7f3668e`
+- **The escapement check always reports success.** `node escapement.js` prints `!!` beside a figure out of tolerance, but always exits with success. A CI job would pass even when the escapement fails the manual's figures. *(Fixed: it now exits with 1.)* `813f7ae`
 
 Giving it a failing exit code is the first thing to fix when setting up
 automated checks on GitHub. See [8.1](#81-continuous-integration).
@@ -311,7 +311,7 @@ While the key turns, only the sustaining spring drives the train, "enough to run
 ## 3. New things to do with it
 
 ### 3.1 Keep it on GMT, and set it as the manual says
-**GMT.** *Done: GMT is the default, with Keep: GMT / Local time under Time, and the HUD names the zone. Setting the hands the manual's way waits for the dynamic balance (2.1).*
+**GMT.** *Done: GMT is the default, with Keep: GMT / Local time under Time, and the HUD names the zone. Setting the hands the manual's way waits for the dynamic balance (2.1).* `23e9c58`
 - `tSim` starts at local time (`Date.now()/1000 - getTimezoneOffset()*60`, [app.js:124](marine-chronometer-source/chronometer-working-model/js/app.js#L124)), and **Now** does the same.
 - A navy chronometer was kept on Greenwich time.
 - Make **GMT** the default, with a Local option, and say which in the HUD.
@@ -530,7 +530,7 @@ Frame time on phones is dominated by draw calls and shadow rendering, not by
 the JavaScript `update()`.
 
 ### 5.1 Draw calls: merge and instance
-> **Done.** Knurled nuts and the balance rim's holes are merged (`mergeGeo` in `core.js`): 592 meshes down to 389. Rather than a fixed 1.5 mm, a mesh casts a shadow when its radius spans 6 texels of the shadow map, which follows the view (the escapement close-up's texel is 0.06 mm, so its small parts keep their shadows). Draw calls per frame, main and shadow passes: box view 1,239 to 652, dial 1,214 to 706, movement 830 to 612, escapement 571 to 451. Merging static parts and sharing geometries are still open.
+> **Done.** Knurled nuts and the balance rim's holes are merged (`mergeGeo` in `core.js`): 592 meshes down to 389. Rather than a fixed 1.5 mm, a mesh casts a shadow when its radius spans 6 texels of the shadow map, which follows the view (the escapement close-up's texel is 0.06 mm, so its small parts keep their shadows). Draw calls per frame, main and shadow passes: box view 1,239 to 652, dial 1,214 to 706, movement 830 to 612, escapement 571 to 451. Merging static parts and sharing geometries are still open. `347bf5b`
 
 - **Knurling (S):** `knurl()` in [box.js:26](marine-chronometer-source/chronometer-working-model/js/box.js#L26) builds 30 separate box meshes, plus the body, for each knurled nut: 124 meshes for the four on the gimbal ring, 31 more on the latch. Build each nut as one merged geometry (knurled lathe profile or merged boxes). That removes about 150 draw calls, twice over with shadows.
 - **Balance rim holes (S):** 60 separate meshes. Merge them into one geometry in the balance's frame; it rotates with the staff anyway.
@@ -539,7 +539,7 @@ the JavaScript `update()`.
 - **Tiny shadows (S):** 308 meshes are under 1.5 mm in radius, and 541 meshes cast shadows. Set `castShadow=false` on anything under about 1.5 mm. From 2048 px over 340 mm, a shadow texel is about 0.17 mm, so their shadows are a few texels at most.
 
 ### 5.2 Startup: the stripe texture
-> **Done.** Option 3, with the same pixels: each height is computed once in three rolling rows instead of five times, the wave once per column, and `Math.sqrt` replaces `Math.hypot`. Both maps hash identically to before; in headless Chromium `stripeTex()` went from 540 to 123 ms and `mats()` from 577 to 140 ms. Precomputed images (option 1) were set aside: images loaded from `file://` taint WebGL in Chrome, which would break opening `index.html` directly and the Playwright tools.
+> **Done.** Option 3, with the same pixels: each height is computed once in three rolling rows instead of five times, the wave once per column, and `Math.sqrt` replaces `Math.hypot`. Both maps hash identically to before; in headless Chromium `stripeTex()` went from 540 to 123 ms and `mats()` from 577 to 140 ms. Precomputed images (option 1) were set aside: images loaded from `file://` taint WebGL in Chrome, which would break opening `index.html` directly and the Playwright tools. `6c5ed75`
 
 `stripeTex()` takes 204 ms: a per-pixel JavaScript loop over 1024 × 1024 pixels, computing `sin` and `pow` several times each ([core.js:22](marine-chronometer-source/chronometer-working-model/js/core.js#L22)). Options, best first:
 1. **Precompute it.** Generate the two tiles once, save them as WebP or PNG in `vendor/` or `img/` (the map is greyscale; the normal map compresses well), and inline them at build time. Load time drops to a decode.
@@ -558,7 +558,7 @@ The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving
 - **Mainspring:** rebuilt only when shown and when the wind changes. That's fine at 1×; at 3600× it rebuilds every frame. Rebuild only when the barrel has turned a visible amount.
 
 ### 5.4 Render only when something changes (S)
-> **Done.** Each frame compares a signature of everything shown (camera, lids and lift, wheels and balance, wind, ship motion, section plane). With nothing changed, no input for 0.6 s and a draw less than a second ago, it skips the render, the labels and the inset; an off-screen stage (`IntersectionObserver`) isn't drawn. Stopped with a still camera, headless Chromium drew 1 frame a second out of 52. `?snap` still draws every frame for the tools; `?qa` exposes `__renders()`.
+> **Done.** Each frame compares a signature of everything shown (camera, lids and lift, wheels and balance, wind, ship motion, section plane). With nothing changed, no input for 0.6 s and a draw less than a second ago, it skips the render, the labels and the inset; an off-screen stage (`IntersectionObserver`) isn't drawn. Stopped with a still camera, headless Chromium drew 1 frame a second out of 52. `?snap` still draws every frame for the tools; `?qa` exposes `__renders()`. `4bd930e`
 
 The loop renders every frame even when stopped with the camera still, which costs battery on laptops and phones for a page that is often left open.
 - Skip `r.render` when the speed is 0, the camera has settled (its easing deltas are below a threshold), no transition is running, and no input arrived.
@@ -576,7 +576,7 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 ## 6. Interface and accessibility
 
 ### 6.1 Accessibility
-> **Done.** Reduced motion: instant camera and state moves (as `?snap`), no ship motion from the walkthrough, no smooth scrolling, no CSS fades. Keyboard: the canvas takes focus (with a focus ring); arrows turn the view, +/− zoom, 0 resets; listed in the help card and About. The walkthrough text is a polite live region. Still open: a canvas description that follows the view, and a contrast check of the part colours.
+> **Done.** Reduced motion: instant camera and state moves (as `?snap`), no ship motion from the walkthrough, no smooth scrolling, no CSS fades. Keyboard: the canvas takes focus (with a focus ring); arrows turn the view, +/− zoom, 0 resets; listed in the help card and About. The walkthrough text is a polite live region. Still open: a canvas description that follows the view, and a contrast check of the part colours. `c2af700`
 
 - **Reduced motion (S):** the CSS has no `prefers-reduced-motion` rule. When it's set, snap camera moves (as `?snap` does), keep **Turn slowly** and **Ship motion** off, and don't auto-scroll the walkthrough card into view ([app.js:378](marine-chronometer-source/chronometer-working-model/js/app.js#L378)).
 - **Keyboard orbit (S):** arrow keys to orbit, `+`/`−` to zoom, `0` to reset. Only 1–6 and Space work today. Make the canvas focusable (`tabindex="0"`) with a visible focus ring, and list the keys in About.
@@ -587,7 +587,7 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - **Contrast (S):** check the label colours (`--pc` swatches) and muted text against both themes with a contrast checker. Several part colours are mid-tones.
 
 ### 6.2 Shareable links and remembered state
-> **Done.** The URL hash carries `view`, `tour` (1-based), `speed`, `part`, `drive=1`, `sec=x:-3.5[:f]`, `tz=local` and `t` (only once the hands were set). It is read at load (the opening move goes to the linked view) and on `hashchange`, and written with `replaceState` 0.3 s after any change. Remembering settings in `localStorage` is still open.
+> **Done.** The URL hash carries `view`, `tour` (1-based), `speed`, `part`, `drive=1`, `sec=x:-3.5[:f]`, `tz=local` and `t` (only once the hands were set). It is read at load (the opening move goes to the linked view) and on `hashchange`, and written with `replaceState` 0.3 s after any change. Remembering settings in `localStorage` is still open. `cf07772`
 
 - *Done:* **URL hash (S):** `#view=escapement&speed=0.05&part=det&t=12:00:00&sec=x:-3.5`. Read it at load, and update it with `history.replaceState` as things change, throttled. Walkthrough steps: `#tour=6`. Teachers can then link straight to "the detent at 1/20×".
 - **Remember (S):** in `localStorage`, alongside the theme already stored there, keep plate finish, dial style, balance and the last view. Always wrap it in `try`, as the theme code does.
@@ -621,7 +621,7 @@ The dense style is deliberate (see CLAUDE.md), and these ideas keep it. They
 remove the places where one fact is written in several places.
 
 ### 7.1 One parts registry
-> **Done.** `PARTS` at the top of `app.js` holds each part's name, description, part numbers, group (`g`, into `PG`), colour (`c`), label priority (`pri`) and flags (`plate`, `dh`). `INFO`, `PCOL`, `PRI`, `PGRP`, `PLATES` and `DRIVE_HIDE` are derived from it (checked identical to the old tables), and `?qa` exposes it as `window.__parts`. The README's "Add a new part" is down to four steps.
+> **Done.** `PARTS` at the top of `app.js` holds each part's name, description, part numbers, group (`g`, into `PG`), colour (`c`), label priority (`pri`) and flags (`plate`, `dh`). `INFO`, `PCOL`, `PRI`, `PGRP`, `PLATES` and `DRIVE_HIDE` are derived from it (checked identical to the old tables), and `?qa` exposes it as `window.__parts`. The README's "Add a new part" is down to four steps. `5e8c578`
 
 Adding a part today touches `INFO`, `PCOL`, `PGRP`, `PRI`, `PLATES` and `DRIVE_HIDE` in `app.js`, plus its label (the README's "Add a new part" has six steps). Replace these with one table, and derive the six from it:
 
@@ -636,7 +636,7 @@ const INFO=Object.fromEntries(Object.entries(PARTS).map(([k,p])=>[k,[p.t,p.d,p.s
 The same table carries the provenance (3.6) and figure references (6.3). `geometry-audit.js` and `social.py` can read it through `?qa`.
 
 ### 7.2 Derive every train number from `TRAIN`
-> **Done.** `TRAIN` now includes the first stage (`fu:96,cp:14`), the motion work is `MW`, and `ESC_PER` (escape turns per turn of each wheel) replaces `RF`/`RT`/`RC`; `FUSEE_PER_HOUR`, the hands' ratios and tooth phasing use them. Labels, part cards, the walkthrough's train and motion tables, their live angles and the tour's wind-indicator text are built from them (identical text today; a planted 76-tooth third wheel changes every figure, and the centre wheel's "1 turn / 1.01 h" shows the fault).
+> **Done.** `TRAIN` now includes the first stage (`fu:96,cp:14`), the motion work is `MW`, and `ESC_PER` (escape turns per turn of each wheel) replaces `RF`/`RT`/`RC`; `FUSEE_PER_HOUR`, the hands' ratios and tooth phasing use them. Labels, part cards, the walkthrough's train and motion tables, their live angles and the tour's wind-indicator text are built from them (identical text today; a planted 76-tooth third wheel changes every figure, and the centre wheel's "1 turn / 1.01 h" shows the fault). `5512fe4`
 
 The README warns that tooth counts appear as text in the labels, `INFO`, the ratio table in `setInset` (hard-coded rows, [app.js:346](marine-chronometer-source/chronometer-working-model/js/app.js#L346)), and the live readout (hard-coded 7.5, 56.25 and 450, [app.js:387](marine-chronometer-source/chronometer-working-model/js/app.js#L387)).
 - Compute the table rows, the ratios, the "one turn" times and the label subtitles from `TRAIN`, `UD` and the fusee's 96/14.
@@ -644,7 +644,7 @@ The README warns that tooth counts appear as text in the labels, `INFO`, the rat
 - Then a change of tooth count, when better counts turn up (1.8), is a one-line edit.
 
 ### 7.3 Make `ESC` a factory and share it
-> **Done.** `makeEsc(settings)` lives in `marine-chronometer-source/shared/escapement.js` (angles in degrees; unknown settings throw). The model builds `ESC` with the centre distance from `L`, the essay's F7 calls `makeEsc()`, and `tools/escapement.js` `require`s it, reading only `L` from `movement.js`. Its output, the model's views and the essay's figure are unchanged.
+> **Done.** `makeEsc(settings)` lives in `marine-chronometer-source/shared/escapement.js` (angles in degrees; unknown settings throw). The model builds `ESC` with the centre distance from `L`, the essay's F7 calls `makeEsc()`, and `tools/escapement.js` `require`s it, reading only `L` from `movement.js`. Its output, the model's views and the essay's figure are unchanged. `813f7ae`
 
 **Today, three copies of one solver:**
 - the model's `ESC` is an IIFE with its settings as local constants ([movement.js:45](marine-chronometer-source/chronometer-working-model/js/movement.js#L45));
@@ -673,17 +673,17 @@ At 62 KB and 484 dense lines, `app.js` holds the part descriptions, the 2-D esca
 ## 8. Testing and verification
 
 ### 8.1 Continuous integration
-> **Done.** `.github/workflows/checks.yml`: on every push and pull request, steps 1–4 (the build with the live site's `--site-url`, then `git diff --exit-code` of the built copies; `escapement.js`, which now exits 1 on a failure; and `tools/smoke.py`, which clicks through every control and scrolls the essay), plus `tools/invariants.py` (8.2). Weekly and on demand, `fine.py` and `maintaining.py`, which already fail on anything new; `.gitattributes` keeps the built copies LF on every platform. Step 5's expected-leftovers file for `dyn.py`/`audit.py` is still open.
+> **Done.** `.github/workflows/checks.yml`: on every push and pull request, steps 1–4 (the build with the live site's `--site-url`, then `git diff --exit-code` of the built copies; `escapement.js`, which now exits 1 on a failure; and `tools/smoke.py`, which clicks through every control and scrolls the essay), plus `tools/invariants.py` (8.2). Weekly and on demand, `fine.py` and `maintaining.py`, which already fail on anything new; `.gitattributes` keeps the built copies LF on every platform. Step 5's expected-leftovers file for `dyn.py`/`audit.py` is still open. `7f3668e`
 
 A GitHub Actions workflow on every push, in increasing cost:
 1. **Build:** `python build.py`. It already fails if a page loads anything from the network.
-2. **Escapement:** `node tools/escapement.js`. It prints `!!` for a figure out of tolerance but always exits 0; set `process.exitCode=1` when any row fails. *Done: it now exits with 1 when a figure is out of tolerance.*
+2. **Escapement:** `node tools/escapement.js`. It prints `!!` for a figure out of tolerance but always exits 0; set `process.exitCode=1` when any row fails. *Done: it now exits with 1 when a figure is out of tolerance.* `813f7ae`
 3. **Built copies:** check that the committed root copies match a fresh build (`git diff --exit-code`). CLAUDE.md asks for them to be committed together, and this enforces it.
 4. **Smoke test:** Playwright opens `index.html?snap&qa` with SwiftShader and fails on any console error or warning. It clicks every view, every walkthrough step, both variants and every section plane, and checks that `#loading` goes away.
 5. **Nightly or manual:** `dyn.py` and `audit.py`, which are slower. Compare their output with a committed expected-leftovers file, so a new collision or loose screw fails rather than scrolling past.
 
 ### 8.2 Invariant tests (S)
-> **Done.** `tools/invariants.py` checks the hands, the escape wheel, the wind indicator's 60° and 300° ends, the fusee's 60 h, 17½ half turns and 7 half turns a day, the balance's 931 g·mm², and 40 s / 2.8 s a day for a turn of the weights. A planted 76-tooth third wheel fails eight checks. The pawls are left to `maintaining.py`, which already checks them.
+> **Done.** `tools/invariants.py` checks the hands, the escape wheel, the wind indicator's 60° and 300° ends, the fusee's 60 h, 17½ half turns and 7 half turns a day, the balance's 931 g·mm², and 40 s / 2.8 s a day for a turn of the weights. A planted 76-tooth third wheel fails eight checks. The pawls are left to `maintaining.py`, which already checks them. `7f3668e`
 
 Small browser or Node checks on the model's arithmetic:
 - **Hands:** at `tSim = t`, the hour, minute and second hands point where a clock reading `t` would: centre wheel 1 turn/h, fourth 1 turn/min, escape 16 teeth per 8 s.
