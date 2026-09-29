@@ -32,6 +32,7 @@ copies and assembles the website (see the root README).
 | `tools/solve.py` | Places the arbors from the measured positions and the centre distances the wheels need (no browser) |
 | `tools/p3map.json`, `tools/cock_outline.json`, `tools/engr.json` | Traced from the top-view photograph: its mapping into the model, the balance cock's outline, the engraving columns |
 | `tools/dyn.py`, `tools/interference-check.js` | Voxel collision check through a full escapement cycle |
+| `tools/views.py` | Before/after renders of every view (frozen, labels hidden), a pixel diff between two runs, and close-ups of chosen parts |
 | `tools/fine.py`, `tools/fine-interference.js`, `tools/barrel-clearance.js` | Fine (0.05 mm) collision check through the escapement cycle, round the train and over the wind, against a table of expected contacts; the barrel's margins and the mainspring |
 | `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |

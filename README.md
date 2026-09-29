@@ -158,6 +158,7 @@ Before committing a change to the model:
 
        python dyn.py        # collisions through a full escapement cycle
        python fine.py       # the same at 0.05 mm, round the train and over the wind, plus the barrel's margins (exit code 1 on anything new)
+       python views.py before   # (before the change) renders every view; after it: python views.py after, then python views.py --diff before after
        python audit.py      # screws, pivots, loose parts in the movement
        python audit.py box  # the same for the box and gimbals
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
@@ -165,7 +166,8 @@ Before committing a change to the model:
 
    `dyn.py` should list only intended joints: pivots in their jewels, collets
    on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
-   its table `EXPECTED` gives the reason for each intended contact. `audit.py` is expected to report the
+   its table `EXPECTED` gives the reason for each intended contact. The
+   `views.py` diff should show changed pixels only on the parts you changed. `audit.py` is expected to report the
    winding-stop pin and the free ends of the balance screws and the timing
    weights' screws; most of its
    coplanar-face hits are faces in contact. `escapement.js` marks each figure

@@ -265,6 +265,13 @@ The barrel was checked by hand and is clear (see
 [Mechanics, by hand](#mechanics-by-hand)). Suggested fix: narrow the wording,
 or add analytic clearance checks for thin gaps and for the hidden variant.
 
+**Status (fine interference pass):** mostly addressed by `tools/fine.py`,
+which resolves 0.05 mm and tests the chain, the hairspring, the trip spring,
+the barrel wall (as a solid, with its margins) and the mainspring, and with
+`--split` the hidden split-balance variant (it fails there: finding 9 is still
+open). Still untested: the dial face. The About dialog's wording is unchanged.
+See [Fine interference pass](#fine-interference-pass).
+
 ### 8. The dial looks small in its case (worth checking, not confirmed wrong)
 
 - The dial is 50.8 mm in radius, the estimated 4 in.
@@ -419,6 +426,12 @@ finding 9.
 | Chain's straight run into the barrel (found by the barrel check) | 0.24 mm | Common tangent of the two drums; winding-stop pin 0.2 mm shorter | `ba9634f` |
 
 All were thinner than `dyn.py`'s 0.4 mm cubes, and the barrel wall was never tested before.
+
+Each fix was also checked with before/after renders of every view button,
+with and without "Moving parts only", in a frozen state, and a pixel diff
+(now `tools/views.py`): the only changed pixels were on the parts fixed. Each
+also left `dyn.py`, `audit.py` and `escapement.js` as they were, apart from
+the moved parts' own entries.
 
 ### Stage by stage
 
