@@ -319,18 +319,16 @@ box and gimbals.
 4. `README.md` (this file): record where each dimension comes from, or add it
    to "Estimated, not from the manual" above.
 
-**Change gear ratios or tooth counts.** The counts are in `TRAIN` (and `UD`
-for the wind indicator; `MOD` holds the tooth sizes).
-- The ratios follow from these automatically. The fusee wheel's 96 teeth are
-  written directly in the fusee-wheel code.
-- The same numbers also appear as text, so update all of them:
-  - the labels in `app.js` (`addL('Centre wheel','80 teeth, …')` and the
-    others);
-  - `INFO`;
-  - the ratio table built in `setInset` (the `'train'` case);
-  - the live angle readout in `drawInset`, which uses 7.5, 56.25 and 450;
-  - the tooth counts in this README.
-- Any tooth count changes the wheel's radius, so re-run `tools/solve.py` and
+**Change gear ratios or tooth counts.** The counts are in `TRAIN` (the fusee
+wheel and centre pinion `fu`/`cp`, then the going train), `MW` (motion work) and
+`UD` (wind indicator) at the top of `movement.js`; `MOD` holds the tooth sizes.
+- Everything follows from these: the ratios (`ESC_PER`, escape turns per turn
+  of each wheel), `FUSEE_PER_HOUR`, the hands, and every count or turn time the
+  page shows (labels, part cards, the walkthrough's train and motion-work
+  tables and its live angles). Only the tooth counts written in this README
+  need updating by hand.
+- Any tooth count changes the wheel's radius, so re-run `tools/solve.py` (its
+  pitch radii are written from the counts: update them there) and
   check clearances with `fine.py` (`dyn.py` can't see gaps under 0.4 mm).
 
 **Change the dial.** The dial is painted on a canvas in `dialCanvas()` in

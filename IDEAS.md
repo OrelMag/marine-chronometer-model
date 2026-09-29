@@ -626,6 +626,8 @@ const INFO=Object.fromEntries(Object.entries(PARTS).map(([k,p])=>[k,[p.t,p.d,p.s
 The same table carries the provenance (3.6) and figure references (6.3). `geometry-audit.js` and `social.py` can read it through `?qa`.
 
 ### 7.2 Derive every train number from `TRAIN`
+> **Done.** `TRAIN` now includes the first stage (`fu:96,cp:14`), the motion work is `MW`, and `ESC_PER` (escape turns per turn of each wheel) replaces `RF`/`RT`/`RC`; `FUSEE_PER_HOUR`, the hands' ratios and tooth phasing use them. Labels, part cards, the walkthrough's train and motion tables, their live angles and the tour's wind-indicator text are built from them (identical text today; a planted 76-tooth third wheel changes every figure, and the centre wheel's "1 turn / 1.01 h" shows the fault).
+
 The README warns that tooth counts appear as text in the labels, `INFO`, the ratio table in `setInset` (hard-coded rows, [app.js:346](marine-chronometer-source/chronometer-working-model/js/app.js#L346)), and the live readout (hard-coded 7.5, 56.25 and 450, [app.js:387](marine-chronometer-source/chronometer-working-model/js/app.js#L387)).
 - Compute the table rows, the ratios, the "one turn" times and the label subtitles from `TRAIN`, `UD` and the fusee's 96/14.
 - `RF`, `RT` and `RC` already exist inside `buildMovement`; expose them on `mv.userData`.
