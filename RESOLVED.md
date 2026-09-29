@@ -67,6 +67,18 @@ Contents:
   numbers. `1340cb6`
 - **Seconds and wind-indicator hands too high.** The hour hand swept into
   them. They were lowered. `84a7645`
+- **Escape pinion 0.3 mm into the third wheel's teeth** (seen in the model,
+  not a review finding). The 2 mm pinion was centred on the fourth wheel, so
+  its upper end reached the third wheel's height, 0.37 mm inside its tips. It
+  now runs from the fourth wheel toward the plate (y −7.96 to −5.96), 0.19 mm
+  below the third wheel. Keep: `dyn.py` works in 0.4 mm cubes and can't see
+  this; check pinion and collet lengths against neighbouring wheels by hand. `329e77e`
+- **Fourth wheel's collet 0.38 mm into the third wheel's teeth.** The collet
+  stood 0.6 mm proud of both faces, so its upper end reached the third wheel,
+  whose teeth come within 1.21 mm of the fourth arbor to mesh with its pinion.
+  `arbor()` now takes `cside` (collet on one side only, 0.05 mm proud of the
+  other face so the faces don't z-fight); the fourth wheel's is on the plate
+  side. Keep: a collet must stay inside the radius a meshing wheel leaves free. `329e77e`
 
 ## Winding and maintaining work
 
@@ -88,6 +100,10 @@ Contents:
 - **Stop-bar missed the winding stop.** It was aimed 26° off (`84a7645`), then
   hit the pin end-on 0.8 mm deep. It now meets the pin side-on at full wind.
   `967570c`
+- **Sustaining pawl's pivot 0.12 mm into the fusee wheel's teeth.** At 21 mm
+  from the fusee axis the 0.7 mm arbor reached inside the wheel's 20.42 mm
+  tips; it is now at 21.35 mm (0.23 mm clear), and the pawl still seats in the
+  sustaining ratchet. `329e77e`
 
 ## Plates, bridges, screws and arbors
 
@@ -211,19 +227,3 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
-- **Escape pinion 0.3 mm into the third wheel's teeth** (seen in the model,
-  not a review finding). The 2 mm pinion was centred on the fourth wheel, so
-  its upper end reached the third wheel's height, 0.37 mm inside its tips. It
-  now runs from the fourth wheel toward the plate (y −7.96 to −5.96), 0.19 mm
-  below the third wheel. Keep: `dyn.py` works in 0.4 mm cubes and can't see
-  this; check pinion and collet lengths against neighbouring wheels by hand.
-- **Fourth wheel's collet 0.38 mm into the third wheel's teeth.** The collet
-  stood 0.6 mm proud of both faces, so its upper end reached the third wheel,
-  whose teeth come within 1.21 mm of the fourth arbor to mesh with its pinion.
-  `arbor()` now takes `cside` (collet on one side only, 0.05 mm proud of the
-  other face so the faces don't z-fight); the fourth wheel's is on the plate
-  side. Keep: a collet must stay inside the radius a meshing wheel leaves free.
-- **Sustaining pawl's pivot 0.12 mm into the fusee wheel's teeth.** At 21 mm
-  from the fusee axis the 0.7 mm arbor reached inside the wheel's 20.42 mm
-  tips; it is now at 21.35 mm (0.23 mm clear), and the pawl still seats in the
-  sustaining ratchet.
