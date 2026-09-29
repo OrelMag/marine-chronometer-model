@@ -611,6 +611,8 @@ The dense style is deliberate (see CLAUDE.md), and these ideas keep it. They
 remove the places where one fact is written in several places.
 
 ### 7.1 One parts registry
+> **Done.** `PARTS` at the top of `app.js` holds each part's name, description, part numbers, group (`g`, into `PG`), colour (`c`), label priority (`pri`) and flags (`plate`, `dh`). `INFO`, `PCOL`, `PRI`, `PGRP`, `PLATES` and `DRIVE_HIDE` are derived from it (checked identical to the old tables), and `?qa` exposes it as `window.__parts`. The README's "Add a new part" is down to four steps.
+
 Adding a part today touches `INFO`, `PCOL`, `PGRP`, `PRI`, `PLATES` and `DRIVE_HIDE` in `app.js`, plus its label (the README's "Add a new part" has six steps). Replace these with one table, and derive the six from it:
 
 ```js

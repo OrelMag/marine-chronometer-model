@@ -26,7 +26,7 @@ copies and assembles the website (see the root README).
 | `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate), winding key |
-| `js/app.js` | Renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, and the animation loop |
+| `js/app.js` | The parts registry (`PARTS`: every part's name, description, part numbers, group, colour and flags), renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, and the animation loop |
 | `build.py` | Inlines the CSS, JS, image, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
 | `dist/chronometer-working-model.html` | The built single file (committed) |
 | `tools/bundle.py`, `tools/fit.py`, `tools/unproj.py` | Photo fitting: camera fits to the Fig. 2 and top-view photographs, triangulation of the balance, fusee and barrel axes, photo points projected onto the movement (see "How the layout was measured") |
@@ -304,18 +304,19 @@ box and gimbals.
 **Add a new part.**
 1. Build it in a new `part('myPart', explodeOffset)` group in `movement.js`,
    or in `box.js` (give that group `userData.partName = 'myPart'`).
-2. `app.js`: add a description to `INFO`:
-   `myPart: ['Title', 'What it does.', 'Part number or spec']`. Without an
-   entry the part can't be tapped or right-clicked.
-3. `app.js`: add a flat colour for Colour by part to `PCOL`.
-4. `app.js` (optional): add a label with `addL('Text', 'subtitle', 'myPart',
+2. `app.js`: add one entry to `PARTS`, in the place it should take in the
+   parts list: `myPart: {t: 'Title', g: 2, c: '#a0922f', d: 'What it does.',
+   sp: 'Part number or spec'}`. `g` is its group in the parts list (`PG`), `c`
+   its flat colour for Colour by part; add `plate: 1` for a plate or bridge
+   (see-through with the plates, hidden by Moving parts only) or `dh: 1` to be
+   hidden by Moving parts only, and `pri` to rank its label. Without an entry
+   the part can't be tapped or right-clicked. `INFO`, `PCOL`, `PRI`, `PGRP`,
+   `PLATES` and `DRIVE_HIDE` are derived from `PARTS`.
+3. `app.js` (optional): add a label with `addL('Text', 'subtitle', 'myPart',
    anchor, group)`:
    - the anchor is a point on the part, e.g. `pw(P.myPart, x, y, z)`;
-   - the group is `'mv'` (movement views), `'dial'`, `'box'` or `'motion'`;
-   - `PRI` sets which labels win when space is short.
-5. `app.js`, if it's a plate or bridge: add it to `PLATES` (made see-through by
-   See-through plates) and `DRIVE_HIDE` (hidden by Moving parts only).
-6. `README.md` (this file): record where each dimension comes from, or add it
+   - the group is `'mv'` (movement views), `'dial'`, `'box'` or `'motion'`.
+4. `README.md` (this file): record where each dimension comes from, or add it
    to "Estimated, not from the manual" above.
 
 **Change gear ratios or tooth counts.** The counts are in `TRAIN` (and `UD`
