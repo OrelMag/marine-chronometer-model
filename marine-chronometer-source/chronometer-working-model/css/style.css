@@ -22,6 +22,10 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .lbl span{position:absolute;left:0;top:0;display:block;padding:2px 7px 3px;border-radius:5px;background:color-mix(in srgb,var(--card) 90%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .colr .lbl::before{background:var(--pc,var(--brass));width:10px;height:10px;left:-5px;top:-5px}
 .colr .lbl span{border-left:4px solid var(--pc,transparent)}
+.csrc .lbl::before{background:var(--ps,var(--brass));width:10px;height:10px;left:-5px;top:-5px}.csrc .lbl span{border-left:4px solid var(--ps,transparent)}
+/* Colour by source: its key, under the tabs */
+.srckey{position:absolute;z-index:5;right:10px;top:50px;display:flex;flex-direction:column;gap:3px;padding:6px 9px;border-radius:8px;font-size:12px;color:var(--ink);background:color-mix(in srgb,var(--card) 88%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.srckey span{display:flex;align-items:center;gap:6px;white-space:nowrap}.srckey i{width:10px;height:10px;border-radius:2px;background:var(--ps)}
 /* pen and wash (app.js, makeInk in core.js): the stage is paper in either theme, its overlays in the light tokens, the labels lettered as on the Illustration */
 .stage.draw{--bg:#f5f0e4;--panel:#f5f0e4;--card:#fbf8f1;--ink:#2c2824;--muted:#6f655b;--brass:#2c2824;--rule:#d9d0bf;background:#f5f0e4;color:var(--ink)}
 .stage.draw .lbl{font:italic 14px/1.2 Spectral,serif}.stage.draw .lbl span{background:none;box-shadow:none;text-shadow:0 0 3px #f5f0e4,0 0 3px #f5f0e4,0 0 2px #f5f0e4}
@@ -37,6 +41,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .info h3{font:600 18px/1.2 Spectral,Georgia,serif;margin:0 26px 4px 0}
 .info p{margin:0;font-size:13.5px;color:var(--ink)}
 .info .spec{margin-top:6px;color:var(--muted);font-size:12.5px}
+.info .src{margin-top:4px;color:var(--muted);font-size:12.5px}.info .src:empty{display:none}.info .src i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;background:var(--ps)}
 .info .x{position:absolute;right:8px;top:8px;border:0;padding:2px 8px;font-size:18px;line-height:1;color:var(--muted)}
 /* how to use it: mouse and touch side by side, this device's first and marked */
 .help{z-index:7;top:52px;width:min(620px,calc(100% - 24px));max-width:none;max-height:calc(100% - 118px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y}
@@ -106,7 +111,8 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .prow input{accent-color:var(--blue);width:16px;height:16px;margin:0 4px 0 0;flex-shrink:0;cursor:pointer}
 .prow .pn{flex:1;min-width:0;display:flex;align-items:center;gap:7px;text-align:left;border:0;border-radius:6px;padding:3px 7px;font-weight:500;font-size:13.5px;color:var(--ink)}
 .prow .pn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--rule);flex-shrink:0}
-#plist.colr .pn::before{background:var(--pc,var(--rule))}
+#pSearch{width:100%;box-sizing:border-box;margin:0 0 8px;padding:5px 9px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--ink);font:13px "Instrument Sans",sans-serif}
+#plist.colr .pn::before{background:var(--pc,var(--rule))}#plist.csrc .pn::before{background:var(--ps,var(--rule))}
 .prow .pn:hover{background:color-mix(in srgb,var(--blue) 12%,transparent)}
 .prow .pn[aria-pressed="true"]{background:var(--blue);color:var(--panel)}
 .prow.off .pn{color:var(--muted);text-decoration:line-through}

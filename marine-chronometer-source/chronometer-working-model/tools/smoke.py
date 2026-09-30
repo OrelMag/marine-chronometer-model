@@ -3,7 +3,7 @@
     python smoke.py            # the model (../index.html) and the built essay (../../../marine-chronometer.html)
     python smoke.py --model    # the model only
 
-Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, every cross-section
+Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, every cross-section
 (and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the Illustration tab, the display switches, Reset display, Link, winding with the key, the keyboard, and a link through the URL
 hash. Then the essay, scrolled from top to bottom. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
@@ -40,7 +40,13 @@ async def model(b,errs,steps):
     await click('#secs button[data-v="off"]','section off')
     await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT');await click('#now','Now')
     await click('#tabFig','Illustration tab');await click('#tabModel','3D model tab')
-    for sel in['#colr','#ghost','#edges','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
+    # the parts list: search (a part number, a figure, nothing), sizes in inches on a card and back
+    await pg.evaluate("document.querySelector('#partsDet').open=true")
+    for q in['42087','fig 90','zzz','']:await pg.evaluate("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",q);steps.append(f'parts search {q!r}')
+    await click('#units button[data-v="in"]','sizes in inches');await pg.evaluate("location.hash='#part=pillar'");await pg.wait_for_timeout(400)
+    if '3.448 in' not in await pg.evaluate("document.querySelector('#info .spec').textContent"):errs.append('the pillar plate card is not in inches')
+    await click('#units button[data-v="mm"]','sizes in mm')
+    for sel in['#colr','#colrSrc','#ghost','#edges','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
     # pen and wash (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
     await click('#draw','pen and wash on',600)
     for v in['box','dial','movement','train','escapement','exploded','laidout','fusee','balance']:await click(f'#views button[data-v="{v}"]',f'pen and wash, view {v}')
@@ -56,7 +62,7 @@ async def model(b,errs,steps):
     # Reset display puts the Display boxes back (Edges on, the rest off, in Dial); Link copies the address, or puts it in the address bar
     for sel in['#lbls','#colr','#rock','#spin','#ghost']:await click(sel)
     await click('#edges');await click('#draw');await click('#dispReset','reset display',600)
-    bad=await pg.evaluate("['lbls','colr','draw','rock','latch','spin','ghost'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges'])")
+    bad=await pg.evaluate("['lbls','colr','colrSrc','draw','rock','latch','spin','ghost'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges'])")
     if bad:errs.append(f'Reset display left {bad}')
     await click('#link','copy link',400)
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')

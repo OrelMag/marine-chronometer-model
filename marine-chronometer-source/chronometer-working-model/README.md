@@ -96,7 +96,9 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
   - Memory: `makeInk`'s render targets are the drawing's size only while in use, else 1 px. Edges keeps the normals and ids (4 bytes a pixel, plus 4 of depth) and the lines (4): 12 bytes a pixel, about 23 MB for a 1600 × 1200 drawing. See-through parts add the ghosts' 8, and pen and wash the wash's 8 (dropped again when it goes off).
   - With the option off, nothing is drawn differently.
   - Pen and wash inks its own lines. While it is on, Edges is greyed out and kept, and it comes back when Pen and wash goes off.
-- Remembered in this browser (`localStorage`, each in a `try`): the theme (`cm-theme`), the open panel sections (`cm-open`), and in `cm-set` the plate finish, dial style, balance and the last view. The remembered view opens the page when its link names no view or walkthrough step. Nothing else is kept: a link (the hash) carries the rest.
+- Remembered in this browser (`localStorage`, each in a `try`): the theme (`cm-theme`), the open panel sections (`cm-open`), and in `cm-set` the plate finish, dial style, balance, the last view and the cards' units. The remembered view opens the page when its link names no view or walkthrough step. Nothing else is kept: a link (the hash) carries the rest.
+- Parts: a search box above the list finds parts by name, Hamilton part number (`42087` finds the detent) or words in the source note, every word; `fig 90` finds the parts the manual's Fig. 90 shows (from `figs`, ranges included). Sizes in: mm or inches, the manual's unit, for the sizes on the part cards (remembered in `cm-set`).
+- Colour by source (Display) colours each part by where its shape and size mainly come from (`src` in `PARTS`, `SRC`): the manual (green: its figures, parts list or specifications), measured (blue: on photographs, or a real part), solved (amber: placed or sized to fit the rest) or estimated (grey: the manual shows it, not its size or shape). A key under the tabs names the colours; the part's card says what came from where. It and Colour by part exclude each other; `colr=part` or `colr=src` in the hash.
 - Labels are off by default (Display turns them on, and the choice isn't remembered). The walkthrough shows the labels of each step's parts regardless.
 - The walkthrough sets its own view, speed, Moving parts only, ship motion and gimbal latch for each step. Ending it (Finish, Exit, or anything that leaves it) gives back the viewer's own: the view, See-through, Ship motion, Gimbals latched, the speed, Moving parts only and the motion work, as they were when it started.
 - Screen readers: the model's `aria-label` says what the stage shows, the view (`VIEW_DESC` in `app.js`) or the walkthrough step, and Moving parts only, and is updated with it.
@@ -504,7 +506,12 @@ box and gimbals.
    sp: 'Part number or spec'}`. `g` is its group in the parts list (`PG`), `c`
    its flat colour for Colour by part; add `plate: 1` for a plate or bridge
    (see-through with the plates, hidden by Moving parts only) or `dh: 1` to be
-   hidden by Moving parts only, and `pri` to rank its label. Without an entry
+   hidden by Moving parts only, and `pri` to rank its label. Say where its
+   shape and size come from: `src` (`manual`, `photo` for measured, `solved`
+   for placed or sized to fit, `est` for estimated; `SRC`), `sn` (a short note
+   of what came from where) and `figs` (the manual's figures that show it), in
+   step with "Sources" and "Estimated, not from the manual" above; they show on
+   its card and in Colour by source. Without an entry
    the part can't be tapped or right-clicked. `INFO`, `PCOL`, `PRI`, `PGRP`,
    `PLATES` and `DRIVE_HIDE` are derived from `PARTS`.
 3. `app.js` (optional): add a label with `addL('Text', 'subtitle', 'myPart',

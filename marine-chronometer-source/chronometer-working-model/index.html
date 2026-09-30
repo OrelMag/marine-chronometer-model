@@ -26,9 +26,10 @@
   <div class="stage" id="stage">
     <canvas tabindex="0" aria-label="3D working model of a marine chronometer. Arrow keys turn it, plus and minus zoom, 0 resets the view."></canvas>
     <div class="labels"></div>
-    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div></div>
+    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div><div class="src"></div></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it does; right-click to fade or hide it.</span><span class="t-only">Tap a part to see what it does; long-press to fade or hide it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div></div>
+    <div class="srckey hidden" id="srcKey" aria-label="Colour by source: what each colour means"></div>
     <div class="hud" id="hud"></div>
     <div class="info help" id="help" role="dialog" aria-labelledby="helpT"><button class="x" aria-label="Close">×</button><h3 id="helpT">How to use it</h3>
       <div class="hcols">
@@ -98,7 +99,7 @@
         <div class="dgrid">
           <span class="lab">Show</span><label class="ck"><input type="checkbox" id="lbls"> Labels</label><label class="ck" title="Outline every part of the movement with the Pen and wash lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
           <label class="ck c2" title="See-through plates, bridges and case"><input type="checkbox" id="ghost"> See-through</label><label class="ck"><input type="checkbox" id="colr"> Colour by part</label>
-          <label class="ck c2" title="Draw the model in ink and watercolour, as the Illustration is drawn"><input type="checkbox" id="draw"> Pen and wash</label>
+          <label class="ck c2" title="Draw the model in ink and watercolour, as the Illustration is drawn"><input type="checkbox" id="draw"> Pen and wash</label><label class="ck" title="Colour each part by where its shape and size come from: the manual, measurements, solved to fit, or estimated"><input type="checkbox" id="colrSrc"> Colour by source</label>
           <span class="lab g">Motion</span><label class="ck g" title="The box rolls and pitches as on a ship; the gimbals keep the case level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Lock the gimbals with the latch, as when the box is carried: the case then tilts with the box"><input type="checkbox" id="latch"> Gimbals latched</label>
           <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
           <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
@@ -107,7 +108,10 @@
       <details class="grp more" id="partsDet">
         <summary>Parts</summary>
         <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
+        <input type="search" id="pSearch" placeholder="Find: a name, part number or figure" aria-label="Find a part by name, Hamilton part number or the manual's figure">
+        <p class="note hidden" id="pNone" style="margin:6px 0 0">Nothing matches.</p>
         <div id="plist"></div>
+        <div class="row" style="margin-top:8px"><span class="lab">Sizes in</span><div class="seg" id="units" role="group" aria-label="Units for the sizes on the part cards"><button data-v="mm" aria-pressed="true">mm</button><button data-v="in" aria-pressed="false" title="Inches, as the manual gives them">inches</button></div></div>
         <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
       </details>
       <details class="grp more" id="rateDet">
