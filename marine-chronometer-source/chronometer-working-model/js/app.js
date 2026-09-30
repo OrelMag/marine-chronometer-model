@@ -155,7 +155,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
-  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
+  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
   /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
      minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
      seconds from the second hand (continuous: as a comparator reads it) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
@@ -345,16 +345,16 @@ function drawEsc2D(ctx,w,h,p,dark){
      passes 60. The second hand is never touched, so the dial can still be up to 30 s out, and it goes into the record. ks.ph: 1 turning forward, 2 waiting for the master's 60, 3 done */
   const setOut=$('#setOut'),ksBtn=$('#ksBtn'),minT=()=>tSim+(H.bOff+H.eOff)/2+slip;
   function ksStart(){if(ks){ksEnd();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();
-    ks={ph:1,t:0,latch0:st.latch,fast:(((tM-30-minT())%43200)+43200)%43200>21600};st.latch=true;$('#latch').checked=true;setView('dial');look();
+    sw=null;ks={ph:1,t:0,latch0:st.latch,fast:(((tM-30-minT())%43200)+43200)%43200>21600};st.latch=true;$('#latch').checked=true;setView('dial');look();
     ksBtn.textContent='Stop setting';ksBtn.setAttribute('aria-pressed','true');setOut.classList.remove('hidden');}
-  function ksEnd(){if(!ks)return;st.latch=ks.latch0;$('#latch').checked=st.latch;ks=null;look();ksBtn.textContent='Forward with the key';ksBtn.setAttribute('aria-pressed','false');}
+  function ksEnd(){if(!ks)return;st.latch=ks.latch0;$('#latch').checked=st.latch;ks=null;look();ksBtn.textContent='With the key';ksBtn.setAttribute('aria-pressed','false');}
   function ksStep(dt){const d=(((tM-30-minT())%43200)+43200)%43200;   /* how far forward the minute hand still has to go */
     if(ks.ph===1){const v=Math.max(300,2*d)*dt;if(d<=v){slip+=d;ks.ph=2;ks.s0=Math.floor(tM/60);}else slip+=v;
       setOut.innerHTML=`Gimbals latched, bezel off, the key on the square. Turning the hour and minute hands forward${ks.fast?': the dial was fast, and they turn forward only, so they go nearly round the dial':''}.`;}
-    else if(ks.ph===2){if(Math.floor(tM/60)>ks.s0){const g=(((tM-minT())%43200)+43200)%43200;slip+=g<21600?g:0;ks.ph=3;ks.t=0;const e=dialRead()-tM;
+    else if(ks.ph===2){if(Math.floor(tM/60)>ks.s0){const g=(((tM-minT())%43200)+43200)%43200;slip+=g<21600?g:0;ks.ph=3;ks.t=performance.now();const e=dialRead()-tM;
         setOut.innerHTML=`<b>Set.</b> At the master's 60 the minute hand went to the next marker. The second hand was left alone, so the dial reads ${Math.abs(e)<0.25?'with the master':`<b>${fmtErr(e)}</b> ${e>0?'fast':'slow'}`} (this way it can be up to 30 s out). A navigator records that error rather than setting it out.`;}
       else setOut.innerHTML=`The minute hand is on its marker, half a minute behind the master. At the master's 60 it goes to the next one: <b>${Math.ceil(60-(((tM%60)+60)%60))} s</b>${st.speed?'':' (the model is stopped)'}.`;}
-    else if((ks.t+=dt)>2.5)ksEnd();}   /* the key comes off and the bezel goes back */
+    else if(performance.now()-ks.t>2500)ksEnd();}   /* the key comes off and the bezel goes back */
   ksBtn.addEventListener('click',ksStart);
   $('#spin').addEventListener('change',e=>st.spin=e.target.checked);
   /* theme: Auto follows the system; a choice is remembered in this browser */
@@ -412,10 +412,20 @@ function drawEsc2D(ctx,w,h,p,dark){
   document.querySelectorAll('#blkSeg button').forEach(b=>b.addEventListener('click',()=>blkSet(+b.dataset.v)));
   const blockedNow=()=>H.blk>R.tbs.userData.vFace;
   function stopWhy(run){if(!run)return'Run down';if(!H.held)return'';if(H.arm>0.5)return'Balance locked';if(blockedNow())return'Train blocked';return H.amp>0.5*D2R?'Stopping: the balance swings too little to unlock':'Stopped: twist to start';}
-  twistB.addEventListener('click',()=>{if(H.armT){stopMsg('Unlock the balance first: the arm holds its rim.');return;}
+  const twist=()=>{if(H.armT){stopMsg('Unlock the balance first: the arm holds its rim.');return;}
     if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;   /* from rest: the balance at its dead point, on the return swing */
     H.kick=160*D2R;H.twT=performance.now();wake();
-    if(hrs>=RUN_H)stopMsg('Twisted, but it is run down: with no power the balance swings down again. Wind it first.');else if(blockedNow())stopMsg('Twisted, but the train is blocked: the balance swings without unlocking the wheel. Raise the screw.');});
+    if(hrs>=RUN_H)stopMsg('Twisted, but it is run down: with no power the balance swings down again. Wind it first.');else if(blockedNow())stopMsg('Twisted, but the train is blocked: the balance swings without unlocking the wheel. Raise the screw.');};twistB.addEventListener('click',twist);
+  /* setting when stopped (Sec. III, Setting When Stopped): stop the balance (here with the locking arm), wait until the master overtakes a fast dial, or until the second hands
+     agree on a slow one, unlock, and start it with a twist at that instant. The escape wheel stands locked, so the second hand is on a half second. sw: the steps under way */
+  const ssBtn=$('#ssBtn');
+  ssBtn.addEventListener('click',()=>{if(ks)ksEnd();if(!H.armT&&!H.held){sw={t:0};armSet(1);setOut.classList.remove('hidden');}else if(H.armT){sw=sw||{t:0};armSet(0);}else{sw={t:performance.now(),go:!H.armT};twist();}});
+  const ssLabel=()=>{const l=H.armT?'Unlock arm':H.held?'Twist to start':'Stop to set';if(ssBtn.textContent!==l)ssBtn.textContent=l;};   /* the button is the next step, whatever stopped it */
+  function ssStep(dt){const e=dialRead()-tM,sT=tSim+(H.bOff+H.eOff)/2,w=(((sT-tM)%60)+60)%60;
+    if(!H.held&&!H.armT){if(sw.go){const a=(performance.now()-sw.t)/1000;if(a>6)sw=null;else if(a>0.3&&!sw.said){sw.said=1;setOut.innerHTML=`<b>Started.</b> The dial reads ${Math.abs(e)<0.25?'with the master':`<b>${fmtErr(e)}</b> ${e>0?'fast':'slow'}`}: what is left is the moment of the twist.${Math.abs(e)>=30?' Set the minutes with the key.':''}`;}}else if(H.amp>=ESC.AMIN)sw=null;return;}
+    if(H.armT&&!H.held){setOut.innerHTML='The locking arm is coming onto the rim: the balance stops within a swing or two.';return;}
+    setOut.innerHTML=(H.armT?`Stopped with the locking arm; the second hand stands on a half second. `:'')+(e>0.25?`The dial is <b>${fmtErr(e)}</b> fast: the master overtakes it in <b>${e.toFixed(1)} s</b>. ${H.armT?'Unlock the arm, then twist':'Twist'} to start at that instant.`:
+      e<-0.25?`The dial is <b>${fmtErr(e)}</b> slow: start it as the second hands agree, in <b>${(w>59.75?0:w).toFixed(1)} s</b>, then set the minutes forward with the key.`:`The dial agrees with the master: ${H.armT?'unlock, then twist':'twist'} now.`);}
   let msgT=0;const stopMsg=t=>{stopOut.innerHTML=t;msgT=performance.now()+4000;};
   function stopShow(now,run){if(now<msgT||now-lastSO<250)return;lastSO=now;const w=stopWhy(run),a=H.amp/D2R;
     stopOut.innerHTML=`<b>${w||'Running'}.</b> <span>The balance ${a<0.5?'is at rest':`swings ${Math.round(a)}° each way`}${a>=0.5&&H.amp<ESC.AMIN?`, under the ${Math.round(ESC.AMIN/D2R)}° it needs to unlock the wheel`:''}.</span>`;}
@@ -645,7 +655,7 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
-    lastE=E;const n=hrs*FUSEE_PER_HOUR;if(ks)ksStep(dt);   /* after the train has moved, so the hands and the master are of the same moment */
+    lastE=E;const n=hrs*FUSEE_PER_HOUR;if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();   /* after the train has moved, so the hands and the master are of the same moment */
     mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||Object.keys(st.op).length>0,msOn:msShown()});
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.rotation.y=SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6)));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */

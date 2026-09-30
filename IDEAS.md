@@ -313,7 +313,7 @@ While the key turns, only the sustaining spring drives the train, "enough to run
 ## 3. New things to do with it
 
 ### 3.1 Keep it on GMT, and set it as the manual says
-> **Setting forward: done.** Forward with the key (Time) follows Sec. III's "Setting While Running": gimbals latched, bezel off, the key on the square, the minute hand on its marker half a minute behind the master and on the next as the master passes 60; the second hand untouched, so up to 30 s remains.
+> **Setting: done.** With the key (Time) follows Sec. III's "Setting While Running": gimbals latched, bezel off, the key on the square, the minute hand on its marker half a minute behind the master and on the next as the master passes 60; the second hand untouched, so up to 30 s remains. Stop to set follows "Setting When Stopped": the arm stops the balance, the Time section counts down to the master overtaking a fast dial (or to the second hands agreeing on a slow one), and a twist starts it at that instant.
 
 **GMT.** *Done: GMT is the default, with Keep: GMT / Local time under Time, and the HUD names the zone. Setting the hands the manual's way waits for the dynamic balance (2.1).* `23e9c58`
 - `tSim` starts at local time (`Date.now()/1000 - getTimezoneOffset()*60`, [app.js:124](marine-chronometer-source/chronometer-working-model/js/app.js#L124)), and **Now** does the same.
