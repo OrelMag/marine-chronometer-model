@@ -449,6 +449,26 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(H.armT&&!H.held){setOut.innerHTML='The locking arm is coming onto the rim: the balance stops within a swing or two.';return;}
     setOut.innerHTML=(H.armT?`Stopped with the locking arm; the second hand stands on a half second. `:'')+(e>0.25?`The dial is <b>${fmtErr(e)}</b> fast: the master overtakes it in <b>${e.toFixed(1)} s</b>. ${H.armT?'Unlock the arm, then twist':'Twist'} to start at that instant.`:
       e<-0.25?`The dial is <b>${fmtErr(e)}</b> slow: start it as the second hands agree, in <b>${(w>59.75?0:w).toFixed(1)} s</b>, then set the minutes forward with the key.`:`The dial agrees with the master: ${H.armT?'unlock, then twist':'twist'} now.`);}
+  /* ---------- adjuster's bench (Sec. VIII): the escapement's settings on sliders. ESC is rebuilt with makeEsc and taken over in place (Object.assign, so every
+     reader keeps it), the 3D parts with escSet; ESC.checks() measures the figures as tools/escapement.js does. A setting at which it would not run is not applied ---------- */
+  const EX0=ESC.EX,BENCH=[['rT','Trip-spring tip',0.24,0.34,0.001,'mm'],['rd','Discharge-jewel reach',0.26,0.35,0.001,'mm'],['dL','Depth of lock',0.005,0.05,0.001,'mm'],
+    ['DRAW','Locking-jewel draw',4,16,0.5,'°'],['aD','Discharge-jewel angle',260,275,0.1,'°'],['aI','Impulse-jewel angle',175,188,0.1,'°']],BDEF=Object.fromEntries(BENCH.map(([k])=>[k,ESC.settings[k]]));   /* the model's settings */
+  const bset={...BDEF},bIn={},benchOut=$('#benchOut'),benchT=$('#benchT'),bcv=$('#benchCv');let benchQ=false,benchBad='';
+  const bFmt=(k,v)=>{const b=BENCH.find(x=>x[0]===k);return b[5]==='mm'?(v*ES).toFixed(3)+' mm':(+v).toFixed(1)+'°';};
+  for(const[k,t,lo,hi,st]of BENCH){$('#benchS').insertAdjacentHTML('beforeend',`<label class="sl rw"><span>${t}</span><input type="range" min="${lo}" max="${hi}" step="${st}" value="${BDEF[k]}" aria-label="${t}"><output></output></label>`);
+    const i=$('#benchS').lastElementChild.querySelector('input');bIn[k]=i;i.addEventListener('input',()=>{bset[k]=+i.value;benchQ=true;wake();});}
+  function benchShow(){for(const[k]of BENCH){bIn[k].value=bset[k];bIn[k].nextElementSibling.textContent=bFmt(k,bset[k]);}
+    benchT.innerHTML='<table class="rt bench"><thead><tr><th>Figure</th><th class="n">Now</th><th>Manual</th></tr></thead><tbody>'+ESC.checks().filter(c=>c.k!=='D').map(c=>`<tr><td>${c.name}</td><td class="n${c.ok?'':' bad'}">${c.ok?'':'✗ '}${c.v}</td><td>${c.want}</td></tr>`).join('')+'</tbody></table>';
+    const n=ESC.checks().filter(c=>!c.ok).length;benchOut.innerHTML=(benchBad?`<b>It would not run at that setting</b><span>${benchBad}: it is kept at the last setting that runs.</span>`:`<b>${n?n+' figure'+(n>1?'s':'')+' outside the manual’s':'Every figure within the manual’s'}</b>`)+
+      `<span>The balance must swing at least ${Math.round(ESC.AMIN/D2R)}° to unlock the wheel and see the impulse through${H.amp<ESC.AMIN?': it swings less, so the train has stopped (twist to start)':''}.</span>`;}
+  function benchApply(){benchQ=false;const E2=makeEsc({EX:EX0,...bset}),m=E2.measure();
+    if(!m.runs){benchBad=m.why;for(const k in bset)bset[k]=ESC.settings[k];}else{benchBad='';Object.assign(ESC,E2);mv.userData.escSet();}benchShow();wake();}
+  const benchDiff=()=>BENCH.filter(([k])=>Math.abs(bset[k]-BDEF[k])>1e-9);
+  $('#benchReset').addEventListener('click',()=>{Object.assign(bset,BDEF);benchApply();});
+  $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('escapement');});
+  function benchDraw(s){if(!$('#benchDet').open)return;const w=bcv.clientWidth||280,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);
+    if(bcv.width!==Math.round(w*d)){bcv.width=Math.round(w*d);bcv.height=Math.round(h*d);bcv.style.height=h+'px';}const x=bcv.getContext('2d');x.setTransform(d,0,0,d,0,0);drawEsc2D(x,w,h,s.p??0,dark());}
+  $('#benchDet').addEventListener('toggle',()=>{if($('#benchDet').open)benchShow();});
   let msgT=0;const stopMsg=t=>{stopOut.innerHTML=t;msgT=performance.now()+4000;};
   function stopShow(now,run){if(now<msgT||now-lastSO<250)return;lastSO=now;const w=stopWhy(run),a=H.amp/D2R;
     stopOut.innerHTML=`<b>${w||'Running'}.</b> <span>The balance ${a<0.5?'is at rest':`swings ${Math.round(a)}° each way`}${a>=0.5&&H.amp<ESC.AMIN?`, under the ${Math.round(ESC.AMIN/D2R)}° it needs to unlock the wheel`:''}.</span>`;}
@@ -619,7 +639,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   function hashOf(){const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',1);if(st.edges===PHONE)h.set('edges',+st.edges);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);return h.toString().split('%3A').join(':');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',1);if(st.edges===PHONE)h.set('edges',+st.edges);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
@@ -627,6 +647,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(g('tz')==='gmt'||g('tz')==='local'){if(g('tz')!==tz)setTz(g('tz'));}
     if(g('t'))setTod(g('t'));
     { const a=g('arm')==='1'?1:0,b=g('block')==='1'?1:0;if(a!==H.armT){armSet(a);H.arm=a;if(a)H.amp=0;}if(b!==H.blkT){blkSet(b);H.blk=b&&!R.blockClear(lastE??0)?Math.min(b,R.tbs.userData.vFace-0.005):b;} }   /* locked in a link: the balance is at rest */
+    { const q={...BDEF};for(const kv of(g('esc')||'').split(',')){const[k,v]=kv.split(':');if(own(BDEF,k)&&Number.isFinite(+v)){const b=BENCH.find(x=>x[0]===k);q[k]=clamp(+v,b[2],b[3]);}}
+      if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings */
     const ed=g('edges')==='1'||(g('edges')!=='0'&&!PHONE);   /* Edges is on by default except on phones: the hash says edges=0 or edges=1 only against that */
     if((g('draw')==='1')!==st.draw||ed!==st.edges){st.draw=g('draw')==='1';st.edges=ed;look();}
     const tr=parseInt(g('tour'));
@@ -678,7 +700,7 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
-    lastE=E;const n=hrs*FUSEE_PER_HOUR;if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
+    lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
     {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
     mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||Object.keys(st.op).length>0,msOn:msShown()});
@@ -704,7 +726,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(!figOn&&onScreen&&!still){paint();renders++;lastDraw=now;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
-    if(!still)drawInset(E,s,n);
+    if(!still){drawInset(E,s,n);benchDraw(s);}
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */

@@ -283,7 +283,7 @@ The amplitude then emerges from the model instead of being fixed.
 ### 2.4 Isochronism and escapement error
 - **Rate against amplitude.** With [2.1](#21-a-balance-that-can-stop-and-must-be-started), plot rate against amplitude. The manual's isochronism check compares "the 12 hour rate and one-half the 24 hour rate at 72½ °F" (Sec. IX); reproduce that number.
 - **Escapement error.** The impulse runs from −20.7° to +20.8°, centred on the dead point, and the unlocking comes before it (−27.4° to −21.3°). Airy's result says a push with the motion before the dead point makes the balance gain and one after makes it lose. A resisting force before it makes it lose.
-- **An interactive version.** Offset the impulse jewel's angle (`aI`), and see the rate change and the escapement figures move. This belongs on the adjuster's bench ([3.3](#33-adjusters-bench-the-escapement-live)).
+- *Done on the adjuster's bench (3.3), for the figures; the rate is still kinematic.* **An interactive version.** Offset the impulse jewel's angle (`aI`), and see the rate change and the escapement figures move. This belongs on the adjuster's bench ([3.3](#33-adjusters-bench-the-escapement-live)).
 
 ### 2.5 Gimbals with inertia (M)
 **What.** Ship motion now counter-rotates the ring and bowl exactly, so the movement stays perfectly level ([app.js:460](marine-chronometer-source/chronometer-working-model/js/app.js#L460)). Model the bowl and ring as two coupled damped pendulums driven by the box's motion instead.
@@ -347,6 +347,8 @@ Example: "After 30 days at +1.2 s a day, uncorrected: 36 s, 9′ of longitude, 7
 - Add a simulated day counter that runs at 3600× or faster, with observational noise of ±¼ s from reading to the half second.
 
 ### 3.3 Adjuster's bench: the escapement, live
+> **Done.** The Adjuster's bench section: six sliders, the detent, trip spring screw, roller and jewels rebuilt live (`escSet`), the 2-D plan beside them, the manual's figures from `ESC.checks()` (moved from `tools/escapement.js` into `makeEsc`, which the tool now prints unchanged), and "it would not run" with the reason, keeping the last setting that runs. `AMIN` follows the settings. The hash carries changed settings.
+
 **What.** A panel of sliders for the escapement's settings, each redrawn live in the 3D model and the 2-D diagram, with the manual's figures checked as you move them:
 
 | Slider | Constant | Figures it moves |

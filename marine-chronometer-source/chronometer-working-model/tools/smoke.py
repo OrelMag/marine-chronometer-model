@@ -4,7 +4,7 @@
     python smoke.py --model    # the model only
 
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, every cross-section
-(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the Illustration tab, the display switches, Reset display, Link, winding with the key, the keyboard, and a link through the URL
+(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the Illustration tab, the display switches, Reset display, Link, winding with the key, the keyboard, and a link through the URL
 hash. Then the essay, scrolled from top to bottom. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
 import asyncio,pathlib,sys
@@ -83,6 +83,14 @@ async def model(b,errs,steps):
     await click('#ksBtn','set forward with the key',1500);await click('#ksBtn','setting with the key stopped')
     await click('#ssBtn','stop to set',2500);await click('#ssBtn','stop to set: unlock',1000);await click('#ssBtn','stop to set: twist',1500)
     await pg.evaluate("()=>{const i=document.querySelector('#lat');i.value=-45;i.dispatchEvent(new Event('input'))}");await click('#bookNow','second comparison, 45 S');await click('#bookClr','rate book cleared')
+    # the adjuster's bench: each setting to both ends (some won't run, and are refused), then the model's settings again
+    await pg.evaluate("document.querySelector('#benchDet').open=true")
+    for j in range(6):
+        for end in('min','max'):
+            await pg.evaluate("([j,e])=>{const i=document.querySelectorAll('#benchS input')[j];i.value=i[e];i.dispatchEvent(new Event('input'))}",[j,end]);await pg.wait_for_timeout(250)
+        steps.append(f'bench setting {j+1} to both ends')
+    await click('#benchReset',"bench: the model's settings");await click('#benchLook','bench: show the escapement')
+    if await pg.evaluate("document.querySelector('#benchOut b').textContent")!='Every figure within the manual’s':errs.append("the model's settings don't pass on the bench")
     await click('#speeds button[data-v="1"]','1x');await click('#stopLook','show the arm and screw')
     await click('#helpBtn','help card');await click('#helpBtn','help card closed')
     await pg.focus('canvas')

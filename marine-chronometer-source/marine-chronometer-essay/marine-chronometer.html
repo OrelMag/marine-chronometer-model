@@ -430,7 +430,7 @@ function makeEsc(o={}){
       {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
-  return{ES,NT,P,EX,A,AMIN,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,LI,PS,TH0,DT,bite};
+  return{settings:c,ES,NT,P,EX,A,AMIN,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};
 
