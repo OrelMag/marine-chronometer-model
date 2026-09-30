@@ -85,7 +85,7 @@ Contents:
   drawn by all three and `bite()` follows the undercut face. Keep: change the
   teeth in `makeEsc` only; the wheel's tips lie at k·P in its own frame, so
   `R.esc.rotation.y` is `-t0 + E·P` with no other offset (and the fourth
-  wheel's phasing and `invariants.py` agree). `HASH`
+  wheel's phasing and `invariants.py` agree). `c4032e4`
 
 ## Going train and heights
 
