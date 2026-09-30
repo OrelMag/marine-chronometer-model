@@ -435,6 +435,23 @@ Contents:
   sheet was drawn. Keep: a tool that hooks `render` must get the model's scene,
   so switch off any overlay pass drawn after it. `91dd568`
 
+- **Floating screws with Moving parts only.** The setup cover's two screws and
+  the click's pivot screw stood in the air over the hidden barrel bridge: their
+  `driveHide` flag was set on each screw's group, and `look()` tests meshes. The
+  detent support block's screw (its head on the hidden train bridge), the
+  balance locking arm and the train-blocking screw (mounted on hidden plates)
+  floated too. The flags are now set on every mesh, and the arm and the screw
+  are `dh` parts, hidden with the plates. Keep: flag meshes, not groups; a part
+  mounted on a plate hides with the plates.
+- **Cock's screw holes wider than their heads.** `polyGeo` bevels a hole
+  inward (0.8·bev narrower at the faces, which screw holes allow for) only when
+  the hole is wound like the outline after ExtrudeGeometry's own correction; the
+  cock, traced counterclockwise, was reversed and its holes bevelled outward, so
+  the hairspring stud screw's hole was 0.93 mm across at the face under a
+  0.8 mm head (`audit.py`: nothing under its seat). `polyGeo` now passes the
+  outline and every hole clockwise. Keep: measure a hole's size at the faces
+  when a screw seems to float.
+
 ---
 
 ## Fixed, not yet committed

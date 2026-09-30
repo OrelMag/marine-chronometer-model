@@ -100,10 +100,12 @@ function checkHoles(tag,holes,inside){holes.forEach(([x,z,r],i)=>{if(inside(x,z)
   holes.forEach(([x2,z2,r2],j)=>{if(j>i&&Math.hypot(x-x2,z-z2)<r+r2+0.05)console.warn(tag+': holes at '+x.toFixed(2)+','+z.toFixed(2)+' and '+x2.toFixed(2)+','+z2.toFixed(2)+' overlap');});});}
 function polyGeo(pts,th,holes=[],bev=0){const polyH=holes.filter(h=>h.pts);holes=holes.filter(h=>!h.pts);   /* holes: circles [x,z,r], or {pts} outlines */
   checkHoles('polyGeo',holes,(x,z)=>{let d=1e9;for(let k=0;k<pts.length;k++){const[ax,az]=pts[k],[bx,bz]=pts[(k+1)%pts.length],l2=(bx-ax)**2+(bz-az)**2,t=l2?clamp(((x-ax)*(bx-ax)+(z-az)*(bz-az))/l2,0,1):0;d=Math.min(d,Math.hypot(x-ax-t*(bx-ax),z-az-t*(bz-az)));}return d-bev;});
-  const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
+  /* the outline and its holes go to ExtrudeGeometry clockwise: given a counterclockwise outline it reverses it and turns the holes counterclockwise, and holes wound
+     against the outline are bevelled outward, 0.8·bev wider at the faces (the cock, traced the other way round, had its screw holes wider than the heads over them) */
+  const cwise=v=>(THREE.ShapeUtils.isClockWise(v)?v:v.reverse()),s=new THREE.Shape();cwise(pts.map(([x,z])=>new THREE.Vector2(x,-z))).forEach((q,i)=>i?s.lineTo(q.x,q.y):s.moveTo(q.x,q.y));s.closePath();
   /* the bevel narrows every hole by 0.8·bev at both faces; a screw hole (4th element set) is drawn that much larger, so it has its size at the faces and a thread fits it */
   for(const[hx,hz,hr,sc]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr+(sc?bev*0.8:0),0,TAU,true);s.holes.push(h);}
-  for(const{pts:hp}of polyH){const h=new THREE.Path();hp.forEach(([x,z],i)=>i?h.lineTo(x,-z):h.moveTo(x,-z));h.closePath();s.holes.push(h);}
+  for(const{pts:hp}of polyH){const h=new THREE.Path();cwise(hp.map(([x,z])=>new THREE.Vector2(x,-z))).forEach((q,i)=>i?h.lineTo(q.x,q.y):h.moveTo(q.x,q.y));h.closePath();s.holes.push(h);}
   const g=new THREE.ExtrudeGeometry(s,{depth:th-2*bev,bevelEnabled:bev>0,bevelThickness:bev,bevelSize:bev*0.8,bevelOffset:-bev*0.8,bevelSegments:1,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,bev,0);return g;}
 function stadiumPts(p0,p1,w){const dx=p1[0]-p0[0],dz=p1[1]-p0[1],l=Math.hypot(dx,dz),nx=-dz/l*w/2,nz=dx/l*w/2,pts=[];
   const a0=Math.atan2(nz,nx);for(let i=0;i<=16;i++){const a=a0+Math.PI*i/16;pts.push([p0[0]+w/2*Math.cos(a),p0[1]+w/2*Math.sin(a)]);}
@@ -378,7 +380,7 @@ function buildMovement(M){
   /* screws in detent coordinates (t along the detent, n across it): block screw from the train bridge's top; clamp screw and two steady pins across the foot;
      detent-adjusting screw at the block's end; lock-adjusting screw and its clamp screw across the block's front, under the wheel; trip-spring screw on the bracket */
   const dd=new THREE.Group();dd.position.copy(R.det.position);dd.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(dd);const T=(t,n)=>[t*ES,-n*ES];
-  screw(dd,...T(-1.2,-0.35),TB_T,0.9,0.5,3.1+2.4);   /* detent support block screw (42056), through the train bridge into the block,  the train bridge is uncovered by the barrel bridge: fitted with the movement assembled (Op. 81) */
+  screw(dd,...T(-1.2,-0.35),TB_T,0.9,0.5,3.1+2.4).traverse(m=>m.userData.driveHide=true);   /* detent support block screw (42056), through the train bridge into the block,  the train bridge is uncovered by the barrel bridge: fitted with the movement assembled (Op. 81) */
   const across=(g,t,n0,n1,r,y,mat)=>{const q=mesh(g,cylY(r,(n1-n0)*ES,16),mat,t*ES,y,-(n0+n1)/2*ES);q.rotation.x=Math.PI/2;return q;};
   across(dd,-0.75,0.083,0.083+1.4/ES,0.95,-18.31,M.steel);across(dd,-0.75,0.083,0.083+0.25/ES,1.25,-18.31,M.steel);for(const t of[-1.2,-0.3])across(dd,t,-0.2,0.12,0.22,-18.31,M.steel);
   across(dd,-0.75,-0.35,0.083,0.45,-18.31,M.steel);   /* the clamp screw's shank, through the foot into the block */
@@ -464,7 +466,7 @@ function buildMovement(M){
      round it (top-view photograph). The traced edge passes 0.7 mm from the staff and left the cap and its outer screw over nothing: the tracing, taken at plate
      height and shifted for parallax, misses the nose. So the nose, from the straight edge's corner to the concave edge, is the hull round the cap, 0.9 mm clear of it */
   const EPo=[];for(let k=0;k<=16;k++){const a=-Math.PI/2+Math.PI*k/16;EPo.push([1.65+2.3*Math.cos(a),2.3*Math.sin(a)]);}EPo.push([-3.35,2.3],[-3.65,2.0],[-3.65,-2.0],[-3.35,-2.3]);   /* cap: round at the nose's end, square at the foot's */
-  R.cock=mesh(ck,polyGeo(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.65),add(L.B,EPu,-3.0),6.4)]),2.6,[[...L.B,1.5],hC(...S.cock,2.8,0.8),...S.ep.map(q=>hT(...q,0.7)),hC(...SPS,0.8)],0.3),M.plate,0,CK_T,0);
+  R.cock=mesh(ck,polyGeo(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.65),add(L.B,EPu,-3.0),6.4)]),2.6,[[...L.B,1.5,1],hC(...S.cock,2.8,0.8),...S.ep.map(q=>hT(...q,0.7)),hC(...SPS,0.8)],0.3),M.plate,0,CK_T,0);
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)].reverse(),40),M.steel,...[L.B[0],0,L.B[1]]);
   mesh(ck,ring(0.95,0.25,0.6),M.ruby,L.B[0],CK_T+0.65,L.B[1]);
@@ -522,7 +524,7 @@ function buildMovement(M){
     /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */
     for(const q of S.cover){mesh(rt,ringGeo(1.1,hC(0,0,0.9)[2],1.4),M.plateSolid,q[0],-27.86,q[1]);screw(rt,...q,-29.66,0.9,0.55,1.1+1.4+2.2);}   /* 42056, into the barrel bridge */
     screw(rt,...S.click,-29.66,0.6,0.3,4.5);}   /* setup pawl pivot screw (42036): through the cover and the click's pivot into the barrel bridge */
-  rt.children.slice(nBefore).forEach(o=>o.userData.driveHide=true);
+  rt.children.slice(nBefore).forEach(o=>o.traverse(m=>m.userData.driveHide=true));   /* on every mesh (look() tests meshes): the screws are groups */
   /* dust seal around the fusee arbor (manual Fig. 24): nickel body on a flange held by two screws, capped by three packing rings; the arbor's squared end takes the key */
   const wp=part('post',-78);
   mesh(wp,new THREE.LatheGeometry([V2(1.3,-27.18),V2(6.6,-27.18),V2(6.6,-28.36),V2(6.2,-28.76),V2(5.9,-28.96),V2(5.9,-32.56),V2(1.3,-32.56),V2(1.3,-27.18)].reverse(),56),M.plateSolid,L.Fu[0],0,L.Fu[1]);
