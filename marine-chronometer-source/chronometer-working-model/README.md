@@ -182,6 +182,10 @@ input draws at the display's rate. Each frame is compared with the last one
 drawn. Code that changes the scene without input or a `look()` call should call
 `wake()`.
 
+Every piece of the model is tagged with its line in the manual's parts list
+(`userData.hn`, set by `hn()` in `core.js`; `bom.json` is the list, `tools/bom.py`
+checks the model against it and writes `BOM.md` at the repository root).
+
 The browser tools in `tools/` open `index.html?snap&qa` themselves. They need
 Python with numpy, scipy and Playwright's Chromium, and write their output into
 the folder they're run from. `escapement.js` and `solve.py` need no browser. The
@@ -459,7 +463,14 @@ and the thread pitches are the model's. Things to know before changing it:
   - The hand-setting square is the cannon pinion's squared end, 2.4 mm across, as the fusee arbor's square, since the one key fits both (Fig. 8), standing 1.6 mm proud of the minute hand's collet, as the fusee's square stands (the side photograph suggests about 2 mm).
   - The cannon pinion's pipe is r 1.7, as the square's corners need, since the hour wheel goes on over the square; the hour wheel's bore is r 1.75 and its pipe r 2.3, through a dial hole of r 2.5.
   - The hour hand's boss is r 2.9, its collet r 2.7 and 0.6 mm deep under the blade (clear of the seconds hand's tip, which reaches r 2.9 at :00); the minute hand's boss and collet are r 3.2, the collet 0.8 mm deep over it (the dial photograph shows one round boss about 7 mm across). The hour hand is at 5.2 mm and the minute hand at 5.75 mm, on the cannon pinion's shoulder.
-- The gimbal latch's geometry. Sourced: its parts (support bracket screwed from outside the box, lever, handle, keeper on the case) and the slot in the ring the lever passes (Figs. 1, 106; parts list). Estimated: the lever pivots on a pin in a corner bracket at the height of the ring's pivots and swings 45° between the right wall and the keeper; the slot is 7.3 × 4.4 mm; the keeper is a back and two cheeks. The take-up spring and the clamping bracket and screw are left out.
+- The gimbal latch's geometry. Sourced: its parts and how they go together (Fig. 106, parts list): the support bracket screwed into the corner from outside the box with washers under the screws' heads, the lever turning on the knurled clamping screw, which goes down through the clamping bracket and the lever into the support bracket, the take-up spring on its two screws, the handle, the keeper on the case on its separating washer and screw, and the slot in the ring the lever passes. Estimated: the brackets' shapes and sizes, the take-up spring pressing up on a collar under the lever, the lever at the height of the ring's pivots swinging 45° between the right wall and the keeper; the slot is 7.3 × 4.4 mm; the keeper is a back and two cheeks.
+- The gimbal pivots (Fig. 106, Sec. III, Op. 104): each ring pivot screw in through the box side, its washer under the head outside and its lock nut inside against the wall, its point (r 0.8) in a bushing (42214) in the ring at 9 and the support strap at 3; each case pivot screw threaded through the ring (and at 6 the case support strap), locked by its nut, its point in a bushing in the case bracket. The straps are curved to the ring, the case brackets flat-backed on the case; sizes estimated.
+- Pivots and jewels (sizes estimated; the manual gives the jewels' kinds, Sec. II, and the endshake, Ops. 15, 69, 74): every jewelled or bushed arbor is turned to pivots with shoulders: balance and escape r 0.2 in olive-hole jewels (hole 0.22), fourth and third r 0.25 in bar-hole jewels (hole 0.27), third upper r 0.3 and centre r 0.5 in bushings bored 0.02 over, sustaining pawl r 0.5 in the bridge and plate. Endshake 0.05 mm on each: at the endstones for the balance and escape arbor, at the shoulders for the others. The lower train bridge's settings go through the bridge; the endstones are set flush in their caps.
+- The barrel's cap screws go into a lip inside the barrel's rim at its plate end (r 12.9-13.3, 0.5 thick), five at 115° + 72° k, clear of the brace (Fig. 109 draws the screws at the cap's edge; the lip is estimated).
+- The dust seal's inside: a chamber holding the seal ring (42052) on the arbor's square end, pressed against its top by the helical seal spring (42053); sizes estimated.
+- The sustaining ratchet runs free on the fusee arbor on a web 0.3 thick below the heads of the winding ratchet's screws, which turn round in its open centre while the key winds (Fig. 109; the web is estimated).
+- The dial's four feet and screws (Fig. 107, parts list: 4) on the diagonals, 39 mm out (a straight-down photograph of serial 623 shows four such screws near the plate's edge).
+- The trip spring bracket's screw (1770) along the bracket's leg into the cross-piece, and the trip spring's foot under the head of its screw; the hairspring stud a bar tapped for its screw, its steady pin through it into the cock; the locking arm's stop pin pressed into the train bridge; the winding stop's thread 2 mm into the barrel bridge; the balance screws' threads in the rim; the timing and vernier weights nuts on their screws. Positions and sizes estimated.
 - The case's winding-hole shield plate. Sourced: its parts (plate, shoulder screw, stop screw, return spring; parts list) and its action, turned clockwise, seen from below, until its hole lines up with the case's, and returned by the spring (the case's description and the winding instructions). Estimated: everything else.
   - The plate's shape: a rounded triangle on a shoulder screw 9 mm from the key hole, covering the hole at rest and turning 0.75 rad to open it.
   - The stop screw runs in an arc slot in the plate, whose two ends set the rest and open positions.
@@ -475,6 +486,9 @@ and the thread pitches are the model's. Things to know before changing it:
 - The sustaining pawl's position: 21.35 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel and of the fusee wheel's teeth.
 
 ## Modifying the model
+
+Every new piece needs its parts-list line: `hn(object, 'line id')` on one object per piece (`{sub:1}` on any other mesh of the same piece), and a line or relation in `bom.json`. Then run `tools/bom.py` (it fails on a mesh with no line) and `python bom.py --md` to regenerate `BOM.md`.
+
 
 Work on `index.html` (not the built file) and reload the browser after each
 edit; see "Changing things" in the root README for the loop and the checks.

@@ -314,11 +314,14 @@ function sqRingGeo(ro,a,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 function sqPath(a){const q=a/2,h=new THREE.Path();h.moveTo(q,q);h.lineTo(q,-q);h.lineTo(-q,-q);h.lineTo(-q,q);h.closePath();return h;}   /* clockwise, a hole */
 /* pawl / click: round pivot boss at the origin, tapered arm along -x ending in a hooked tip */
-function pawlGeo(len,w,th,centre){const s=new THREE.Shape(),r=w*0.72;s.moveTo(0,r);s.absarc(0,0,r,Math.PI/2,-Math.PI/2,true);
+function pawlGeo(len,w,th,centre,bore){const s=new THREE.Shape(),r=w*0.72;   /* bore: the pivot hole's radius (default 0.35 of the boss's) */s.moveTo(0,r);s.absarc(0,0,r,Math.PI/2,-Math.PI/2,true);
   s.lineTo(-len*0.8,-w*0.26);s.lineTo(-len,-w*0.62);s.lineTo(-len*0.96,w*0.08);s.quadraticCurveTo(-len*0.5,w*0.42,0,r);
-  const h=new THREE.Path();h.absarc(0,0,r*0.35,0,TAU,true);s.holes.push(h);
+  const h=new THREE.Path();h.absarc(0,0,bore??r*0.35,0,TAU,true);s.holes.push(h);
   const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:16});g.rotateX(-Math.PI/2);g.translate(centre?len/2:0,-th/2,0);return g;}
 function mesh(p,geo,mat,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);p.add(m);return m;}
+/* the parts-list line a piece is (its id in bom.json: the Hamilton number, with a suffix where the number is on several lines), tagged on one object per piece;
+   x: data for tools/bom.py (a gear's {z, m}). Untagged meshes belong to the nearest tagged ancestor ("complete with pins") */
+const hn=(o,id,x)=>{o.userData.hn=id;if(x)Object.assign(o.userData,x);return o;};
 function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 /* several geometries as one mesh's, each placed by its matrix ([[geometry, Matrix4], ...]): one draw call (and one shadow-pass call) instead of many */
 function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonIndexed():g.clone()).applyMatrix4(m);g.dispose();return q;}),out=new THREE.BufferGeometry();
@@ -342,19 +345,29 @@ function gearGeo(n,m,th,o={}){
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
   const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);return g;
 }
+/* a turned arbor or staff: prof [[y, r], ...] is radius r from y to the next y (the last entry's y is the end), so a pivot steps up to the body at a shoulder; one closed solid */
+function shaftGeo(prof,seg=16){const V2=(a,b)=>new THREE.Vector2(a,b),pr=[V2(0,prof[0][0])];for(let i=0;i+1<prof.length;i++){pr.push(V2(prof[i][1],prof[i][0]),V2(prof[i][1],prof[i+1][0]));}
+  pr.push(V2(0,prof[prof.length-1][0]));return new THREE.LatheGeometry(pr,seg);}
+/* a jewel stone, centred on y 0, h thick, outside radius ro, hole rb: 'olive' a hole rounded through its thickness (rb at the middle, 0.06 wider at the faces), 'bar' a straight hole
+   with an oil sink on its +y face; one closed solid */
+function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y1=h/2,pr=[V2(kind==='olive'?rb+0.06:rb,y0),V2(ro,y0),V2(ro,y1)];
+  if(kind==='olive'){for(let i=0;i<=12;i++){const s=1-i/6;pr.push(V2(rb+0.06*s*s,s*h/2));}}
+  else{pr.push(V2(rb+0.18,y1),V2(rb,y1-0.14),V2(rb,y0));}
+  return new THREE.LatheGeometry(pr,32);}
 /* arbor with wheel & pinion: returns rotating group */
 function arbor(parent,M,x,z,o){
   const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
   let wy=null,cy=null;   /* the wheel's and the collet's y ranges, and the collet's radius, for the check below */
-  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,escape:w.escape,flip:w.flip,rt:w.rt,depth:w.depth,bore:w.bore,hub:w.hub}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;
+  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,escape:w.escape,flip:w.flip,rt:w.rt,depth:w.depth,bore:w.bore,hub:w.hub}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
     const ro=w.m*w.n/2+w.m*0.95;wy=[w.y-th/2,w.y+th/2,w.spokes===0?ro:(w.hub??Math.max(1.6,ro*0.18))];
     /* cside ±1: collet on that side of the wheel only, cp proud of it there (0.6) and 0.05 proud of the other face, not flush with it */
     if(w.collet!==0){const cp=w.cp??0.6,h=w.cside?th+0.05+cp:th+1.2,c=w.y+(w.cside||0)*(cp-0.05)/2;mesh(g,cylY(w.collet||1.6,h,20),M.brass2,0,c,0);cy=[c-h/2,c+h/2,w.collet||1.6];}}
-  if(o.pin){const p=o.pin,n=p.n||10,th=p.th||2.5;g.userData.pin=mesh(g,gearGeo(n,p.m,th,{bore:p.bore}),M.steel,0,p.y,0);g.userData.np=n;
+  if(o.pin){const p=o.pin,n=p.n||10,th=p.th||2.5;g.userData.pin=mesh(g,gearGeo(n,p.m,th,{bore:p.bore}),M.steel,0,p.y,0);g.userData.np=n;g.userData.pin.userData.gear={z:n,m:p.m};
     /* a pinion's leaves must end at its wheel's boss: where the pinion shares heights with the wheel or its collet, its tips must lie inside the hub or the collet */
     const rt=p.m*n/2+p.m*0.95,y0=p.y-th/2+1e-6,y1=p.y+th/2-1e-6,over=r=>r&&y0<r[1]&&y1>r[0]&&rt>r[2];
     if(over(wy)||over(cy))console.error('arbor: pinion inside its wheel',{x,z,y:p.y,rt,wheel:wy,collet:cy});}
-  if(o.ar){const[a,b]=o.ar;cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
+  if(o.prof)g.userData.ar=mesh(g,shaftGeo(o.prof),M.steel);   /* a turned arbor: pivots and shoulders (shaftGeo) */
+  else if(o.ar){const[a,b]=o.ar;g.userData.ar=cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
   return g;
 }
 function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into){   /* rc, rs: radii of the inner (collet) and outer (stud) ends, where the terminal curves end; into: the previous geometry, rewritten in place (reclose) */
