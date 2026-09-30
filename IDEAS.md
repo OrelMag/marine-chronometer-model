@@ -203,7 +203,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Shipping wedges** (not the hairspring clamps' wedge pins, which are done): before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
 
 ### 1.7 Screws, washers and weights from the parts list (S)
-- **The manual's masses:** the moment of inertia in `R.timing` now uses the parts list's masses for the three screw sizes and the two weights (931 g·mm²). Still to do:
+- **The manual's masses:** *Done: the moment of inertia is Table II's 1,140 g·mm² (the rim 4.3 mm tall as Fig. 3 draws it, 1.12 wide to fit), the screw heads 2.6 mm across as Fig. 3 draws them.* Before: the moment of inertia in `R.timing` used the parts list's masses for the three screw sizes and the two weights (931 g·mm²). Still to do:
   - Sec. II gives balance screws "in six weights ranging from 100 mgs. to 300 mgs." and timing washers "in a range of six weights from 4 mgs. to 20 mgs". Map the parts list's three screw head heights onto the six weights.
   - Table II's screw changes imply about 1,100–1,300 g·mm², so the rim's section is probably too light.
   - The drawn screw heads (1.5 mm) are too small for their masses: they should be about 3–4 mm across.

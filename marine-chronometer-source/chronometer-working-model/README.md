@@ -311,15 +311,15 @@ and the thread pitches are the model's. Things to know before changing it:
   each, as they are in practice to keep the balance in poise. If it means one
   weight, the pitches double, to 0.29 and 0.18 mm. The rates the panel shows
   would not change, because the pitches are fitted to the manual's figures.
-- **The balance is probably heavier than drawn.** With the parts list's masses
-  the moment of inertia is 930 g·mm². Table II gives a second estimate:
-  replacing a pair of 0.100 in screws with 0.080 in ones changes the rate by
-  about 16 minutes a day (the model gives 22.6), and 0.100 in to 0.050 in by
-  about 43 (the model gives 55.6, going to the 0.049 in screws). Both imply
-  about 1,100–1,300 g·mm², so the rim's section (1.4 × 2.4 mm, estimated) is
-  likely too light. The drawn balance-screw heads are also too small. They
-  are 1.5 mm across, but screws of 125–255 mg with those head heights need
-  heads of about 3–4 mm, which is closer to what the photographs show.
+- **The moment of inertia is Table II's.** Table II (p. 70) gives the rate a
+  pair of screws of one head height makes against another: 0.100 in to 0.080
+  in, about 16 minutes a day; 0.100 to 0.050, about 43; and eight more. With
+  the parts list's masses at their heads' radii, those changes fit a balance of
+  1,140 g·mm² (least squares over the ten; Table III's washers give about 960).
+  The rim is drawn to give it: 4.3 mm tall, as Fig. 3 draws the band against
+  the 29 mm balance, and 1.12 wide. The screw heads are 2.6 mm across, as Fig.
+  3 draws them; at that size their masses need a dense metal (gold, or
+  platinum; brass would need heads of 3.9 mm).
 - **Changing the balance changes the pitches, not the rates.** A heavier rim
   or larger screws raise `I₀`; `R.pitch` follows, and a turn stays 40 s and
   2.8 s a day.
@@ -444,8 +444,8 @@ and the thread pitches are the model's. Things to know before changing it:
   - The locking jewel's wedge pin (42089, Figs. 57–59), 0.2 mm across, beside the jewel on the side away from the wheel.
 - The balance rim diameter (29 mm), measured on the top-view photograph.
 - The rate panel's figures (see "The rate panel" under How the timing works). Sourced: the rate for a full turn (p. 70) and the screws' and weights' masses (parts list). Estimated:
-  - The moment of inertia: the rim's and arm's section, and each screw's or weight's mass spread along its drawn cylinder. It leaves out the rim's holes, the weights' screws and the staff. Table II's screw changes imply a larger moment, about 1,100–1,300 g·mm², so the rim is probably heavier than drawn. The drawn balance-screw heads (1.5 mm across) are also too small for their masses.
-  - The thread pitches (0.146 and 0.092 mm), which follow from the moment of inertia.
+  - The rim's width (1.12 mm), fitted so that the moment of inertia is the 1,140 g·mm² Table II gives (its height, 4.3 mm, is Fig. 3's; its section otherwise estimated), and the arm's section. Each screw's or weight's mass is spread along its drawn cylinder; the rim's holes, the weights' screws and the staff are left out.
+  - The thread pitches (0.179 and 0.113 mm), which follow from the moment of inertia.
   - Reading "one full turn of timing weight" as both weights of the pair turned a turn each.
   - The weights' travel, 3 turns either way from the middle position the manual starts them at. At 40 s a turn, that covers the 2 minutes a day that screws and washers leave (Op. 5).
   - The weights' drawn sizes.
