@@ -81,6 +81,8 @@
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
         <div class="row clk"><label class="sl"><span class="lab">Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
         <div class="row"><span class="lab">Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as U.S. Navy chronometers were kept">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
+        <div class="row"><span class="lab">Setting</span><button id="ksBtn" aria-pressed="false" title="Set the hour and minute hands as the manual does while it runs: the key on the square, forward only, the minute hand to its marker as the master's second hand passes 60. The second hand is left alone">Forward with the key</button></div>
+        <p class="note ind hidden" id="setOut" aria-live="polite" style="margin-top:6px;margin-bottom:0"></p>
         <div class="row"><span class="lab">Sound</span><label class="ck" title="A click at each beat, at up to real time"><input type="checkbox" id="snd"> Tick sound</label></div>
       </details>
       <details class="grp more" id="windDet" open>

@@ -155,7 +155,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
-  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
+  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
   /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
      minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
      seconds from the second hand (continuous: as a comparator reads it) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
@@ -186,7 +186,7 @@ function drawEsc2D(ctx,w,h,p,dark){
       const gh=!(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||m.userData.devPlate||(st.drive&&m.userData.driveGhost)||(foc&&!foc.has(p)&&!(p==='mainspring'&&foc.has('barrel'))));
       if(m.userData.noShadow&&gh)vis=false;
       m.visible=vis&&!opHide(m);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
-    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
+    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw;
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
@@ -340,6 +340,22 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* GMT or local: the hands move by the difference, as when they are set */
   const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;tM+=tzOff()-o;lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
   document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
+  /* setting the hands while it runs, as the manual does it (Sec. III, Setting While Running): gimbals latched, bezel off, the key on the square at the centre of the dial, turned by its
+     shank, forward only. The minute hand goes on its marker half a minute behind the master (as the master's second hand passes 30), then to the next marker as the master's
+     passes 60. The second hand is never touched, so the dial can still be up to 30 s out, and it goes into the record. ks.ph: 1 turning forward, 2 waiting for the master's 60, 3 done */
+  const setOut=$('#setOut'),ksBtn=$('#ksBtn'),minT=()=>tSim+(H.bOff+H.eOff)/2+slip;
+  function ksStart(){if(ks){ksEnd();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();
+    ks={ph:1,t:0,latch0:st.latch,fast:(((tM-30-minT())%43200)+43200)%43200>21600};st.latch=true;$('#latch').checked=true;setView('dial');look();
+    ksBtn.textContent='Stop setting';ksBtn.setAttribute('aria-pressed','true');setOut.classList.remove('hidden');}
+  function ksEnd(){if(!ks)return;st.latch=ks.latch0;$('#latch').checked=st.latch;ks=null;look();ksBtn.textContent='Forward with the key';ksBtn.setAttribute('aria-pressed','false');}
+  function ksStep(dt){const d=(((tM-30-minT())%43200)+43200)%43200;   /* how far forward the minute hand still has to go */
+    if(ks.ph===1){const v=Math.max(300,2*d)*dt;if(d<=v){slip+=d;ks.ph=2;ks.s0=Math.floor(tM/60);}else slip+=v;
+      setOut.innerHTML=`Gimbals latched, bezel off, the key on the square. Turning the hour and minute hands forward${ks.fast?': the dial was fast, and they turn forward only, so they go nearly round the dial':''}.`;}
+    else if(ks.ph===2){if(Math.floor(tM/60)>ks.s0){const g=(((tM-minT())%43200)+43200)%43200;slip+=g<21600?g:0;ks.ph=3;ks.t=0;const e=dialRead()-tM;
+        setOut.innerHTML=`<b>Set.</b> At the master's 60 the minute hand went to the next marker. The second hand was left alone, so the dial reads ${Math.abs(e)<0.25?'with the master':`<b>${fmtErr(e)}</b> ${e>0?'fast':'slow'}`} (this way it can be up to 30 s out). A navigator records that error rather than setting it out.`;}
+      else setOut.innerHTML=`The minute hand is on its marker, half a minute behind the master. At the master's 60 it goes to the next one: <b>${Math.ceil(60-(((tM%60)+60)%60))} s</b>${st.speed?'':' (the model is stopped)'}.`;}
+    else if((ks.t+=dt)>2.5)ksEnd();}   /* the key comes off and the bezel goes back */
+  ksBtn.addEventListener('click',ksStart);
   $('#spin').addEventListener('change',e=>st.spin=e.target.checked);
   /* theme: Auto follows the system; a choice is remembered in this browser */
   const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));try{localStorage.setItem('cm-theme',v);}catch(_){}};
@@ -629,8 +645,8 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
-    lastE=E;const n=hrs*FUSEE_PER_HOUR;
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||Object.keys(st.op).length>0,msOn:msShown()});
+    lastE=E;const n=hrs*FUSEE_PER_HOUR;if(ks)ksStep(dt);   /* after the train has moved, so the hands and the master are of the same moment */
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||Object.keys(st.op).length>0,msOn:msShown()});
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.rotation.y=SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6)));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
@@ -648,7 +664,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     const cp=Math.cos(C.pitch);cam.position.set(C.target.x+C.dist*cp*Math.sin(C.yaw),C.target.y+C.dist*Math.sin(C.pitch),C.target.z+C.dist*cp*Math.cos(C.yaw));cam.lookAt(C.target);
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
-    const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,s.th,s.lift,s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off')];
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,s.th,s.lift,s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off')];
     const still=!SNAP&&!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now>wakeT&&now-lastDraw<1000;lastSig=sig;
     if(!figOn&&onScreen&&!still){paint();renders++;lastDraw=now;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
