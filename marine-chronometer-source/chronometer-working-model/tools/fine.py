@@ -9,7 +9,7 @@
 dyn.py works in 0.4 mm cubes and misses thin overlaps (the escape pinion, the fourth wheel's collet, the sustaining pawl's pivot and the stop-bar
 all went unseen; see RESOLVED.md). This one resolves 0.05 mm. Each pair of meshes that meets is listed once, with its largest overlap; pairs in
 EXPECTED are intended contacts, each with the reason and the largest overlap seen when it was recorded. Anything else, or an expected pair that
-has grown past its limit, is printed as NEW or GREW and makes the exit code 1. The barrel's wall is an open drum; it is tested as the solid it
+has grown past its limit, is printed as NEW or GREW and makes the exit code 1. The barrel's wall (userData.barrelWall) is tested as the solid it
 encloses, and barrel-clearance.js then measures, at each wind state, how close every other part comes to the solid the whole barrel sweeps as
 it turns (wall, caps, cap screws, hook), and where the mainspring lies inside it. A part closer than BARREL_MIN, not listed in BARREL, fails too. The train positions are whole teeth apart: the escape wheel only
 ever rests on a whole tooth plus the escapement's progress, and a fractional offset would put it out of step with the balance."""
@@ -46,8 +46,8 @@ EXPECTED={
  ('chain:Box','fusee:Lathe'):("chain links on the fusee cone: the groove is turned rings, not a helix, and the links are upright boxes on a slope",0.27,0.5),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('spawl:Cylinder','trainBridge:Extrude'):('sustaining pawl arbor (r 0.7) in its 0.72 hole: grazes the bevel',0.06,0.18),
- ('barrel:Cylinder(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
- ('barrel:Cylinder(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
+ ('barrel:Extrude(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
+ ('barrel:Extrude(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
 }
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),

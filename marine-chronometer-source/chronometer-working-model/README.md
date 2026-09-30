@@ -37,6 +37,8 @@ copies and assembles the website (see the root README).
 | `tools/maintaining.py` | The maintaining work over run and wind cycles: the sustaining ratchet never turns back, the sustaining spring is loaded in running and only relaxes while winding, the fusee catches forward when the key lets go, the pawls sit on their teeth, and the stop-bar meets the winding stop at full wind |
 | `tools/fine.py`, `tools/fine-interference.js`, `tools/barrel-clearance.js` | Fine (0.05 mm) collision check through the escapement cycle, round the train and over the wind, against a table of expected contacts; the barrel's margins and the mainspring |
 | `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
+| `tools/solids.py`, `tools/solids-check.js` | Solid geometry check: every mesh closed (no open edge), consistently wound and not inside out, but the decals and surfaces flagged as such; loaded as it is and with Moving parts only and a section on |
+| `tools/placements.py` | Every mesh's position and bounding box in seven model states (escapement phases, train and wind positions), and a diff between two runs or two copies of the page: proves a change moved only the parts it meant to, and that the mechanism moves as before |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
 | `tools/invariants.py` | Checks the model's arithmetic: hands against the time, the wind indicator's scale, the fusee's 60 h and 17½ half turns, the balance's moment of inertia and the rate for a turn of the weights (exit code 1 on a failure) |
 | `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, variants, sections, time zone, keys, a URL-hash link), then scrolls the essay; fails on any console error or warning |
@@ -324,7 +326,7 @@ and the thread pitches are the model's. Things to know before changing it:
 - The stop-bar's size and travel, and the fusee's top: a turned boss, a slotted layer with a groove for the stop-bar spring, and the top plate (r 5.4) with its two screws. Sec. IV describes the mechanism (the chain bears on one end, the other moves out to the winding stop), not its dimensions. The stop-bar slides out over the last quarter turn, driven from the wind, not from contact with the chain.
 - The shapes of the springs: the winding-pawl springs, the stop-bar spring, the sustaining pawl's spring (a wire round a steady pin in the train bridge) and the setup pawl spring. The sustaining spring's travel from loaded to spent (10°, `SMAX`): 5 to 10 minutes of drive (Sec. IV) is 4.4–8.75° of the fusee wheel. The model does not stop the train if a wind outlasts it (only possible at high speed).
 - The sustaining spring is pinned to the fusee wheel and pushed by a pin on the sustaining ratchet; the manual pins it to both.
-- The barrel arbor's core (r 2.4) and hook, the brace (0.43 mm thick, 40° of the wall), the end plate and taper pin, and the chain's end pin and hook.
+- The barrel arbor's core (r 2.4) and hook, the barrel wall (0.2 mm thick) and the brace lining it (0.25 mm thick, 40° of the wall), the end plate and taper pin, and the chain's end pin and hook.
 - The mainspring’s coils, which are drawn schematically.
 - The detent's dimensions.
   - Its plan follows Fig. 90 and its construction Figs. 14 and 110 and the chronometerbook photograph. Thicknesses and heights are estimated.
@@ -404,6 +406,29 @@ edit; see "Changing things" in the root README for the loop and the checks.
 
   Put meshes in a part with `mesh(parent, geometry, material, x, y, z)`.
   Anything that moves is stored in `R` and moved in `mv.userData.update()`.
+- **Solid parts.** Every part is a closed solid facing out, as in a CAD model,
+  so a hole shows its wall, a part taken out leaves real metal behind, and a
+  cross-section cuts solid material. The only surfaces are the engravings
+  (`userData.decal`), the dial's printed face and the floor's shadow
+  (`userData.surface`). Build shapes so they stay closed:
+  - extrusions through `extrude(shape, options)` in `core.js`, not
+    `THREE.ExtrudeGeometry` directly: three.js r128 winds a hole's wall into
+    the metal when the outline is clockwise, and `extrude()` turns it over;
+  - lathe profiles closed (back to their first point) or run to the axis at
+    radius 0, not 0.01;
+  - anything else left open (a tube's ends, a lathe or torus turned less than a
+    full circle) through `closeGeo(geometry)`, which caps each open loop with a
+    flat face;
+  - single-sided materials (no `DoubleSide`) and no `noCap` on a new part.
+
+  `tools/solids.py` checks all of this.
+- **Cross-sections.** A section clips every material at one plane, and the cut
+  faces are the solids' back faces seen through the cut, drawn hatched
+  (`patchSection` in `core.js`). They are drawn 0.015 mm nearer than they lie
+  (`SEC_DEPTH`, compiled in only while a section is on, also in Edges' id pass),
+  so a part lying on the cut one doesn't show through in patches. Two solids
+  that overlap show each other through a cut, so keep parts from overlapping
+  except at their intended contacts (`tools/fine.py`).
 - **One clock drives everything.** `app.js` advances `tSim` and passes
   `update()` the escape wheel's position `E`, the balance angle and the hours
   since winding. Each arbor turns by a fixed ratio of `E`, so never animate a
@@ -419,7 +444,10 @@ box and gimbals.
   `[x, z, radius]`. A hole that crosses an outline or another hole is reported
   as a warning in the console.
 - **Round parts** (screws, posts, collets) use `LatheGeometry` profiles or
-  `cylY(radius, height)`.
+  `cylY(radius, height)`. Close each profile or run it to the axis (see
+  "Solid parts" above).
+- **After a shape change,** run `tools/solids.py` (every part still a closed
+  solid) and `tools/placements.py` before and after (nothing else moved).
 - **Wheels and pinions** are `arbor(parent, M, x, z, {wheel, pin, ar})` with
   `gearGeo(teeth, module, thickness, options)`. The pitch radius is
   module × teeth ÷ 2.

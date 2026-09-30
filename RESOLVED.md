@@ -56,6 +56,11 @@ Contents:
 - **Essay's detent figure drifted from the model.** It now carries a copy of the
   model's `ESC` solver. Keep: after changing `ESC` in `movement.js`, copy it into
   the essay's `src/p4.js` and rebuild (see CLAUDE.md). `219e4df`
+- **Balance arm drawn from the hub to one side only.** `subtractCircle` keeps
+  one run of the outline, and the 2.2 mm circle round the hub cut the 2.4 mm
+  bar into two; the arm is now drawn outright. The moment of inertia already
+  counted the whole arm. Keep: `subtractCircle` only where its circle crosses
+  the outline once. `8956085`
 
 ## Going train and heights
 
@@ -229,6 +234,30 @@ Contents:
   round the barrel. `tools/topview.py` warps the model onto the photograph to
   compare them. Keep: an outline the photographs show is traced, not a
   clearance circle; check it with `topview.py`. `aa9d525`
+- **Plates hollow round their holes and cut-outs: a screw taken out showed
+  only the hole's two rims, and a section showed the hole's wall instead of
+  the cut.** r128's `ExtrudeGeometry` turns a shape's holes round only when it
+  reverses a counterclockwise outline, so `polyGeo`'s clockwise outline with
+  clockwise holes got every hole wall wound into the metal (culled; seen from
+  inside the cut). `extrude()` in `core.js` builds every extrusion and turns
+  those walls over, the shape unchanged. The balance cock's setting was an
+  inside-out lathe (`.reverse()` on its profile). Keep: build extrusions with
+  `extrude()`; a closed part has no edge used once, nor twice the same way, and
+  a positive signed volume. `8956085`
+- **Parts drawn as surfaces, not solids** (the rest, after `8956085`). Every
+  part is now a closed, outward-facing solid, except the decals (engravings,
+  the dial's printed face) and the ground's shadow: lathes run to the axis
+  (the screws, pillars, posts and dial feet had a 0.01 mm hole down it);
+  `closeGeo()` in `core.js` caps the springs' tubes, the box handles' half tori
+  and the gimbal ring's part-turned lathes; the barrel wall is 0.2 mm thick
+  inside its 13.5 mm drum radius (the brace, 0.25 mm, lines it), the mainspring
+  a strip 0.1 mm thick, the case's bowl one lathe 1 mm thick outward of its
+  inside face on a 1 mm floor with its key hole, and the glasses 0.8 mm slabs
+  (a one-sided plane vanished from below). The pivot blocks and latch keeper
+  sit on the bowl's new outside face. The checks find the barrel wall by
+  `userData.barrelWall`. Keep: no `DoubleSide`, `noCap` or open geometry for a
+  new part; a closed part has no edge used once, nor twice the same way, and a
+  positive signed volume. `eb37b95`
 
 ## Setup, case and gimbals
 
@@ -350,6 +379,14 @@ Contents:
   onto the override as the mesh is drawn. Keep: a pass with an override material
   takes each mesh's polygon offset (the offset on the face material from the
   gold-streaks fix above). `c039a73`
+- **Sections: cut faces patchy where a part lies on the cut one** (the barrel
+  bridge on the train bridge, in a cut through the train bridge), and the
+  mounting ring cut hollow. The cut face (a back face) was at the depth of the
+  face under it; `SEC_DEPTH` now draws it 0.015 mm nearer, in the visible pass
+  and in Edges' id pass, compiled only while a section is on. The ring started
+  0.1 mm inside the plate's edge; it now starts 0.02 mm outside. Keep: a pass
+  with an override material (`nid`) takes the section's depth too; overlapping
+  solids show each other through a cut. `8956085`
 
 ## Controls and display
 

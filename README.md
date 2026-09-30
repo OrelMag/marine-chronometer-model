@@ -40,7 +40,7 @@ Contents:
       marine-chronometer-essay/  the essay: src/ holds its four pieces, marine-chronometer.html is the built file
       shared/                    escapement.js: the detent escapement's solver, used by both pages and the model's tools
     References/                  source material: the 1948 manual, photographs, drawings; its README lists each file
-    .github/workflows/checks.yml CI: build, built copies, escapement, smoke test and invariants on every push; geometry weekly
+    .github/workflows/checks.yml CI: build, built copies, escapement, smoke test, invariants and solids on every push; geometry weekly
     RESOLVED.md                  bugs already found and fixed, from the commit history; check it before changing a part
     IDEAS.md                     ways to improve the model and the application
 
@@ -166,6 +166,8 @@ Before committing a change to the model:
        python fine.py --hold    # the same with the balance locking arm locked and the train-blocking screw down
        python maintaining.py    # the fusee's maintaining work over run and wind cycles (exit code 1 on a failure)
        python views.py before   # (before the change) renders every view; after it: python views.py after, then python views.py --diff before after
+       python solids.py     # every part a closed solid, facing out (exit code 1 on a failure)
+       python placements.py dump before   # (before the change) every mesh's place in seven states; after it: dump after, then --diff before after
        python audit.py      # screws, pivots, loose parts in the movement
        python audit.py box  # the same for the box and gimbals
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
@@ -174,7 +176,8 @@ Before committing a change to the model:
    `dyn.py` should list only intended joints: pivots in their jewels, collets
    on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
    its table `EXPECTED` gives the reason for each intended contact. The
-   `views.py` diff should show changed pixels only on the parts you changed. `audit.py` is expected to report the
+   `views.py` diff should show changed pixels only on the parts you changed, and
+   the `placements.py` diff list only the parts you rebuilt. `solids.py` prints `0 not solid` twice. `audit.py` is expected to report the
    winding-stop pin and the free ends of the balance screws and the timing
    weights' screws; most of its
    coplanar-face hits are faces in contact. `escapement.js` marks each figure
@@ -187,7 +190,7 @@ Before committing a change to the model:
 6. **CI.** Pushing to GitHub runs the same checks (`.github/workflows/checks.yml`):
    the build, a check that the committed built copies match it (build with
    `--site-url https://www.marinechronometermodel.com`, as the live site is),
-   `escapement.js`, `smoke.py` and `invariants.py`; `fine.py` and
+   `escapement.js`, `smoke.py`, `invariants.py` and `solids.py`; `fine.py` and
    `maintaining.py` run weekly and on demand.
 7. **Record fixes.** If the change fixes a bug, add it to
    [RESOLVED.md](RESOLVED.md) under the right heading, with the commit hash.

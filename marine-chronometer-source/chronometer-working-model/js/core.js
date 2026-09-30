@@ -67,7 +67,7 @@ function escapeWheel(parent,M,rt,y){
   const teeth=new THREE.Mesh(gearGeo(16,1,1.3,{escape:true,flip:true,rt,depth:rt*0.23,bore:rt*0.7}),M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
   const web=new THREE.Shape();web.absarc(0,0,rt*0.72,0,TAU,false);for(let j=0;j<4;j++){const a0=j/4*TAU+0.12,a1=(j+1)/4*TAU-0.12,h=new THREE.Path();h.absarc(0,0,rt*0.62,a0,a1,false);h.absarc(0,0,1.3,a1,a0,true);web.holes.push(h);}
   const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);
-  const wg=new THREE.ExtrudeGeometry(web,{depth:0.5,bevelEnabled:false,curveSegments:24});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
+  const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:24});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
   const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
   return teeth;
 }
@@ -79,7 +79,7 @@ function mats(){
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
     steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),blued:S(0x1a2c7a,0.9,0.24),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),
-    chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3,{side:THREE.DoubleSide}),
+    chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3),
     wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
     invar:S(0xa7aaa6,1,0.28)};
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
@@ -96,12 +96,19 @@ function mats(){
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */
 const SEC={on:{value:0},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};
+/* a cut face (a back face seen through the cut) is drawn 0.015 mm nearer than it lies: at its own depth it z-fought the part lying on that face (the barrel
+   bridge on the train bridge, a plate on its pillar) and showed it through the cut in patches. Not at the plane itself: the far side of an uncut part is a back
+   face too, and would cover everything. Compiled in only while a section is on (setSection recompiles), as a shader that writes depth loses early depth testing */
+const secDepth=m=>!!m.userData.secCap&&SEC.on.value>0.5;
+const SEC_DEPTH='\n#if NUM_CLIPPING_PLANES>0&&(__VERSION__>=300||defined(GL_EXT_frag_depth))\n{float fd=gl_FragCoord.z;'+
+  'if(uSecOn>0.5&&!gl_FrontFacing&&!isOrthographic){vec3 q=-vClipPosition;vec4 c=projectionMatrix*vec4(q*(1.0-0.015/length(q)),1.0);fd=0.5*c.z/c.w+0.5;}gl_FragDepthEXT=fd;}\n#endif';
 function patchSection(m,cap){
   if(!m||m.userData.secPatched)return;m.userData.secPatched=true;m.userData.secCap=cap;m.userData.side0=m.side;m.clipShadows=true;if(!m.clippingPlanes)m.clippingPlanes=[];SEC.mats.add(m);
-  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;
-    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
-      'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':''));};
-  m.customProgramCacheKey=()=>'sec'+(cap?1:0);
+  if(cap)m.extensions={fragDepth:true};
+  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;const dp=secDepth(m);
+    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+(dp?'uniform mat4 projectionMatrix;\n':'')+sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
+      'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':'')+(dp?SEC_DEPTH:''));};
+  m.customProgramCacheKey=()=>'sec'+(cap?1:0)+(secDepth(m)?1:0);
   m.needsUpdate=true;
 }
 function setSection(on,plane){SEC.on.value=on?1:0;SEC.plane=plane;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
@@ -130,7 +137,7 @@ function drawOf(m){let d=DRAW.get(m);
     const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;
       sh.fragmentShader='uniform float uMetal;\nuniform float uTex;\nuniform float uShMax;\nuniform float uWash;\n'+sh.fragmentShader.replace('#include <dithering_fragment>',WASH(tr)+'\n#include <dithering_fragment>');sec(sh);
       sh.fragmentShader=sh.fragmentShader.replace('vec3(1.0/2.2)),1.0);','vec3(1.0/2.2)),0.45);');};   /* a cut face (patchSection) is drawing, not paper */
-    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0);DRAW.set(m,d);}
+    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0)+(secDepth(d)?1:0);DRAW.set(m,d);}
   d.opacity=m.opacity??1;return syncMat(d,m);}
 /* makeInk(r): draws a frame in pen and wash. Hidden meshes stay hidden; a mesh whose material is under half opaque (glass, see-through and faded parts) is a
    ghost, drawn in outline only, lighter, and left out of the wash. Passes: view normals and a part id (solids, then ghosts) with their depths; the wash (the
@@ -150,9 +157,9 @@ function makeInk(r){
     const t=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=t.minFilter=T.LinearFilter;t.needsUpdate=true;return t;};
   /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once),
      and so is the mesh's own polygon offset: without it the dial's face, 0.02 above its brass disc, fought it, and Edges drew the fight as streaks across the dial */
-  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,uniforms:{uId:{value:0}},
+  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
     vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
-    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);}'});
+    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId,uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);'+SEC_DEPTH+'\n}'});
   /* the id is the part's (pen and wash) or, for Edges, the mesh's: a pawl lies on its own part's wheel. Edges gives box meshes (userData.inkBox) id 0, no line */
   let idOn=false,idM=false,nM=0;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
   const hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
@@ -219,21 +226,50 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
     r.shadowMap.needsUpdate=true;r.setRenderTarget(null);r.setClearColor(cc,ca);r.clear();r.render(scene,cam);r.shadowMap.autoUpdate=au;
     q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=over;r.setRenderTarget(null);const ac=r.autoClear;r.autoClear=false;r.render(qs,qc);r.autoClear=ac;}};
 }
-/* mainspring: w=1 fully wound (coils on the arbor), w=0 run down (coils against the wall) */
+/* mainspring: w=1 fully wound (coils on the arbor), w=0 run down (coils against the wall). A strip 0.1 thick (estimated; coils lie pack/turns apart, over 0.2)
+   inward of the path, its four faces sharp-edged, its ends capped: a solid, turned to face out by its signed volume */
 function mainspringGeo(w,ra,Rw,y0,y1,turns){
-  const N=900,pos=[],idx=[],tot=TAU*turns,pack=2.6;
+  const N=900,th=0.1,pos=[],idx=[],tot=TAU*turns,pack=2.6,S=[];
   for(let i=0;i<=N;i++){const t=i/N;let r=lerp(Rw-0.25-(1-t)*pack,ra+0.2+t*pack,w);
     if(t>0.965)r=lerp(r,Rw-0.2,(t-0.965)/0.035);if(t<0.02)r=lerp(ra,r,t/0.02);
-    const a=-tot*t,x=r*Math.cos(a),z=-r*Math.sin(a);pos.push(x,y0,z,x,y1,z);if(i<N){const k=i*2;idx.push(k,k+1,k+2,k+1,k+3,k+2);}}
+    const a=-tot*t,c=Math.cos(a),s=-Math.sin(a),ri=r-th;S.push([[r*c,y0,r*s],[r*c,y1,r*s],[ri*c,y1,ri*s],[ri*c,y0,ri*s]]);}   /* corners: outer top, outer bottom, inner bottom, inner top */
+  for(let f=0;f<4;f++){const b=pos.length/3;for(const q of S)pos.push(...q[f],...q[(f+1)%4]);for(let i=0;i<N;i++){const k=b+i*2;idx.push(k,k+1,k+2,k+1,k+3,k+2);}}   /* one row of vertices per face */
+  for(const[q,o]of[[S[0],1],[S[N],0]]){const b=pos.length/3;for(const p of q)pos.push(...p);idx.push(...(o?[b,b+2,b+1,b,b+3,b+2]:[b,b+1,b+2,b,b+2,b+3]));}
+  let v=0;const P=k=>new THREE.Vector3(pos[3*k],pos[3*k+1],pos[3*k+2]);for(let i=0;i<idx.length;i+=3)v+=P(idx[i]).dot(P(idx[i+1]).cross(P(idx[i+2])));
+  if(v<0)for(let i=0;i<idx.length;i+=3){const t=idx[i+1];idx[i+1]=idx[i+2];idx[i+2]=t;}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();return g;
 }
+/* extrude(s,o): ExtrudeGeometry with every hole's wall facing into the hole. r128 turns the holes only when it reverses a counterclockwise outline, so with a
+   clockwise outline a clockwise hole got its wall wound into the metal: culled, the plate looked a hollow shell round its holes and cut-outs, and a section
+   showed that wall's face instead of the hatched cut. Its triangles are turned over; the shape is unchanged (a clockwise hole's bevel still narrows it) */
+function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,p=s.extractPoints(o.curveSegments??12),dd=v=>{if(v.length>2&&v[v.length-1].equals(v[0]))v.pop();return v;},sh=dd(p.shape),hs=p.holes.map(dd);
+  if(!U.isClockWise(sh)||!hs.length)return g;const sl=6*((o.steps??1)+(o.bevelEnabled?2*(o.bevelSegments??3):0)),side=g.groups[1];let i=side.start+sh.length*sl,f=0;   /* the side walls: the outline's, then each hole's, 6·sl vertices a point */
+  if(side.start+side.count!==i+hs.reduce((a,h)=>a+h.length*sl,0)){console.error('extrude: side walls not as counted');return g;}
+  for(const h of hs){const e=i+h.length*sl;if(U.isClockWise(h)){f=1;for(const a of Object.values(g.attributes))for(let v=i;v<e;v+=3)for(let c=0;c<a.itemSize;c++){const k=(v+1)*a.itemSize+c,m=(v+2)*a.itemSize+c,t=a.array[k];a.array[k]=a.array[m];a.array[m]=t;}}i=e;}
+  if(f)g.computeVertexNormals();return g;}
+/* closeGeo(g): g made a closed solid: each loop of open edges (a tube's ends, a part-turned lathe's or torus's ends, all flat) filled with a flat cap, wound to
+   face out. Returns an indexed copy with g's type and parameters (or g, if already closed) */
+function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[];
+  for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);if(!id.has(k)){id.set(k,P.length);P.push(new THREE.Vector3().fromBufferAttribute(p,i));}V.push(id.get(k));}
+  const E=new Set(),nx=new Map();for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u+'_'+v);}
+  for(const k of E){const[u,v]=k.split('_').map(Number);if(!E.has(v+'_'+u))nx.set(v,u);}   /* an open edge u->v: its cap runs v->u */
+  if(!nx.size)return g;const pos=[],nor=[],done=new Set();
+  for(const s of nx.keys()){if(done.has(s))continue;const L=[];let q=s;while(q!==undefined&&!done.has(q)&&L.length<=nx.size){done.add(q);L.push(P[q]);q=nx.get(q);}if(L.length<3)continue;
+    const N=new THREE.Vector3();L.forEach((a,i)=>{const b=L[(i+1)%L.length];N.x+=(a.y-b.y)*(a.z+b.z);N.y+=(a.z-b.z)*(a.x+b.x);N.z+=(a.x-b.x)*(a.y+b.y);});N.normalize();   /* Newell: the cap's normal */
+    const e1=new THREE.Vector3().subVectors(L[1],L[0]).projectOnPlane(N).normalize(),e2=new THREE.Vector3().crossVectors(N,e1),o=L[0];
+    const c2=L.map(a=>{const d=a.clone().sub(o);return new THREE.Vector2(d.dot(e1),d.dot(e2));});
+    for(const f of THREE.ShapeUtils.triangulateShape(c2,[])){const[a,b,c]=f.map(i=>L[i]);const fl=new THREE.Vector3().subVectors(b,a).cross(new THREE.Vector3().subVectors(c,a)).dot(N)<0;
+      for(const v of fl?[a,c,b]:[a,b,c]){pos.push(v.x,v.y,v.z);nor.push(N.x,N.y,N.z);}}}
+  if(!pos.length)return g;const h=g.index?g:g.toNonIndexed(),o0=h.attributes.position.count,m=pos.length/3,out=new THREE.BufferGeometry(),I=[];
+  for(const k in h.attributes){const a=h.attributes[k],w=a.itemSize,arr=new Float32Array((o0+m)*w);arr.set(a.array.subarray(0,o0*w));if(k==='position')arr.set(pos,o0*w);else if(k==='normal')arr.set(nor,o0*w);out.setAttribute(k,new THREE.BufferAttribute(arr,w));}
+  if(h.index)I.push(...h.index.array);else for(let i=0;i<o0;i++)I.push(i);for(let i=0;i<m;i++)I.push(o0+i);out.setIndex(I);out.type=g.type;out.parameters=g.parameters;g.dispose();return out;}   /* type and parameters kept: the checks know a tube by them */
 function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,TAU,true);s.holes.push(hp);
-  const g=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
+  const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 /* pawl / click: round pivot boss at the origin, tapered arm along -x ending in a hooked tip */
 function pawlGeo(len,w,th,centre){const s=new THREE.Shape(),r=w*0.72;s.moveTo(0,r);s.absarc(0,0,r,Math.PI/2,-Math.PI/2,true);
   s.lineTo(-len*0.8,-w*0.26);s.lineTo(-len,-w*0.62);s.lineTo(-len*0.96,w*0.08);s.quadraticCurveTo(-len*0.5,w*0.42,0,r);
   const h=new THREE.Path();h.absarc(0,0,r*0.35,0,TAU,true);s.holes.push(h);
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:16});g.rotateX(-Math.PI/2);g.translate(centre?len/2:0,-th/2,0);return g;}
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:16});g.rotateX(-Math.PI/2);g.translate(centre?len/2:0,-th/2,0);return g;}
 function mesh(p,geo,mat,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);p.add(m);return m;}
 function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 /* several geometries as one mesh's, each placed by its matrix ([[geometry, Matrix4], ...]): one draw call (and one shadow-pass call) instead of many */
@@ -242,7 +278,7 @@ function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonInde
   gs.forEach(g=>g.dispose());return out;}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
 function discGeo(r,th,holes=[]){if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
 /* gear: pitch radius = m*n/2 */
 function gearGeo(n,m,th,o={}){
   const rp=m*n/2,ro=o.escape?o.rt:rp+m*0.95,depth=o.escape?o.depth:2.25*m,ri=ro-depth,p=TAU/n,pts=[];
@@ -257,7 +293,7 @@ function gearGeo(n,m,th,o={}){
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);return g;
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);return g;
 }
 /* arbor with wheel & pinion: returns rotating group */
 function arbor(parent,M,x,z,o){
@@ -276,7 +312,7 @@ function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3){   /* rc, rs: radii of the i
     else if(t>1-a0){const s=(t-1+a0)/a0;ang=Math.PI+TAU*N+Math.PI*s;r=Re-(Re-rs)*(1-Math.cos(s*Math.PI/2));y=H*0.95+H*0.05*s;}
     else{const s=(t-a0)/(1-2*a0);ang=Math.PI+TAU*N*s;r=Re;y=H*0.05+H*0.9*s;}
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
-  return new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false);
+  return closeGeo(new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
 }
 function handGeo(len,w,tail,kind,at){   /* tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len */
   const s=new THREE.Shape();if(tail<0){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
@@ -287,7 +323,7 @@ function handGeo(len,w,tail,kind,at){   /* tail<0: a spear counterpoise -tail lo
   else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=at?len*at:len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */
     s.lineTo(w*0.35,m-h*1.3);s.quadraticCurveTo(b,m-h*1.1,b,m);s.quadraticCurveTo(b,m+h*0.9,w*0.12,m+h*1.4);s.lineTo(0,len);s.lineTo(-w*0.12,m+h*1.4);s.quadraticCurveTo(-b,m+h*0.9,-b,m);s.quadraticCurveTo(-b,m-h*1.1,-w*0.35,m-h*1.3);}
   else{s.lineTo(w*0.3,len*0.85);s.lineTo(0,len);s.lineTo(-w*0.3,len*0.85);}
-  s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
+  s.closePath();const g=extrude(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
 }
 /* silvered dial, 4 inch. Default: the Hamilton Model 21 (below). kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
    large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale keeps this model's 240° arc.

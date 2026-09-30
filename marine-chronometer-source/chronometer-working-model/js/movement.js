@@ -106,7 +106,7 @@ function polyGeo(pts,th,holes=[],bev=0){const polyH=holes.filter(h=>h.pts);holes
   /* the bevel narrows every hole by 0.8·bev at both faces; a screw hole (4th element set) is drawn that much larger, so it has its size at the faces and a thread fits it */
   for(const[hx,hz,hr,sc]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr+(sc?bev*0.8:0),0,TAU,true);s.holes.push(h);}
   for(const{pts:hp}of polyH){const h=new THREE.Path();cwise(hp.map(([x,z])=>new THREE.Vector2(x,-z))).forEach((q,i)=>i?h.lineTo(q.x,q.y):h.moveTo(q.x,q.y));h.closePath();s.holes.push(h);}
-  const g=new THREE.ExtrudeGeometry(s,{depth:th-2*bev,bevelEnabled:bev>0,bevelThickness:bev,bevelSize:bev*0.8,bevelOffset:-bev*0.8,bevelSegments:1,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,bev,0);return g;}
+  const g=extrude(s,{depth:th-2*bev,bevelEnabled:bev>0,bevelThickness:bev,bevelSize:bev*0.8,bevelOffset:-bev*0.8,bevelSegments:1,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,bev,0);return g;}
 function stadiumPts(p0,p1,w){const dx=p1[0]-p0[0],dz=p1[1]-p0[1],l=Math.hypot(dx,dz),nx=-dz/l*w/2,nz=dx/l*w/2,pts=[];
   const a0=Math.atan2(nz,nx);for(let i=0;i<=16;i++){const a=a0+Math.PI*i/16;pts.push([p0[0]+w/2*Math.cos(a),p0[1]+w/2*Math.sin(a)]);}
   for(let i=0;i<=16;i++){const a=a0+Math.PI+Math.PI*i/16;pts.push([p1[0]+w/2*Math.cos(a),p1[1]+w/2*Math.sin(a)]);}return pts;}
@@ -161,10 +161,10 @@ function buildMovement(M){
      every screw with its shank). Thread diameter half the head's (sR); the parts it passes through have clearance holes (hC) and the part it screws into a tapped hole (hT).
      Head, shank and slot are one group, which the Exploded view lifts out of its holes along the screw's axis, as the manual's exploded views draw them (SCREWS) */
   const SCREWS=[];
-  const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r))=>{const c=Math.min(0.35,r*0.14),pr=[V2(0.01,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
+  const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r))=>{const c=Math.min(0.35,r*0.14),pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
     if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt));pr.push(V2(rs,0),V2(rs,len-n*pt-d));   /* rings of thread (drawn as turned grooves, not a helix), a chamfered tip */
-      for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0.01,len));}
-    else pr.push(V2(0.01,0));
+      for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));}
+    else pr.push(V2(0,0));
     const g=new THREE.Group();g.position.set(x,y,z);p.add(g);g.userData.y0=y;g.userData.lift=len+h+1.5;SCREWS.push(g);
     const hd=mesh(g,new THREE.LatheGeometry(pr,28),M.steel);hd.userData.screw=r;const sl=mesh(g,new THREE.BoxGeometry(r*2.02,Math.min(0.55,h*0.45),Math.max(0.35,r*0.2)),M.steelD,0,-h+Math.min(0.55,h*0.45)/2-0.02,0);sl.rotation.y=(x*7+z*3)%3;return g;};
   const ring=ringGeo;R.ring=ring;
@@ -204,8 +204,8 @@ function buildMovement(M){
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
   const bushR=(p,x,z,y1,y2,ro,ri,mat)=>mesh(p,ringGeo(ro,ri,Math.abs(y2-y1)),mat||M.brass2,x,(y1+y2)/2,z);
   bushR(pp,...L.C,y0-0.1,0,1.5,0.78);bushR(pp,...L.Fu,y0-0.1,0,1.4,0.58);bushR(pp,...L.Ba,y0-0.1,0,1.9,1.43);bushR(pp,...L.E,y0-0.1,0,1.3,0.95,M.gilt);bushR(pp,...L.E,-1.2,0,0.95,0.58,M.ruby);   /* escape lower setting (42162) with its jewel */
-  /* mounting ring (42057, Fig. 110) round the plate's edge, with a lip under its dial side held by three screws (42055) from the dial side; section and screw positions estimated */
-  R.flange=mesh(pp,new THREE.LatheGeometry([V2(PP_R-0.1,y0),V2(47,y0),V2(47,-0.01),V2(PP_R-0.1,-0.01),V2(PP_R-0.1,y0)],160),M.plate);mesh(pp,discGeo(47,1.0,[[0,0,40.2],...S.ring.map(q=>hC(...q,RSR))]),M.plate,0,0.01,0);
+  /* mounting ring (42057, Fig. 110) round the plate's edge, with a lip under its dial side held by three screws (42055) from the dial side; section and screw positions estimated. It starts 0.02 outside the plate's edge, clear of the plate's polygon (at PP_R-0.1 the plate's edge ran inside it and showed in a section as a hollow) */
+  R.flange=mesh(pp,new THREE.LatheGeometry([V2(PP_R+0.02,y0),V2(47,y0),V2(47,-0.01),V2(PP_R+0.02,-0.01),V2(PP_R+0.02,y0)],160),M.plate);mesh(pp,discGeo(47,1.0,[[0,0,40.2],...S.ring.map(q=>hC(...q,RSR))]),M.plate,0,0.01,0);
   { const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);
     for(const q of S.ring)screw(rg,q[0],-q[1],-1.01,RSR,1.2,1.01+3.86-0.4);   /* through the lip and into the plate */
     /* the pillars' screws (42055) from the dial side, through the plate into the pillars (Fig. 110) */
@@ -219,7 +219,7 @@ function buildMovement(M){
   /* ---------- pillars (two measured on Fig. 2, two placed clear of the fusee wheel and balance) ---------- */
   const pl=part('pillars',-30);
   /* tapped at both ends: for its screw from the dial side through the pillar plate, and for the bridge screw at its top (3.5 mm deep) */
-  const pillar=(x,z,top)=>{const hb=hT(0,0,PSR)[2],pr=[V2(0.01,y0-3.5),V2(hb,y0-3.5),V2(hb,y0),V2(3.4,y0),V2(3.4,y0-1.3),V2(2.9,y0-1.9),V2(2.7,(top+y0)*0.5),V2(2.3,top+2.4),V2(2.9,top+1.7),V2(2.9,top),V2(hb,top),V2(hb,top+3.5),V2(0.01,top+3.5)].reverse();
+  const pillar=(x,z,top)=>{const hb=hT(0,0,PSR)[2],pr=[V2(0,y0-3.5),V2(hb,y0-3.5),V2(hb,y0),V2(3.4,y0),V2(3.4,y0-1.3),V2(2.9,y0-1.9),V2(2.7,(top+y0)*0.5),V2(2.3,top+2.4),V2(2.9,top+1.7),V2(2.9,top),V2(hb,top),V2(hb,top+3.5),V2(0,top+3.5)].reverse();
     mesh(pl,new THREE.LatheGeometry(pr,32),M.plateSolid,x,0,z);};
   PILLARS.train.forEach(([x,z])=>pillar(x,z,TB_U));pillar(...PILLARS.barrel,TB_T);
   /* ---------- upper train bridge (y TB_T..TB_U) and barrel bridge (y BB_T..TB_T). The barrel bridge sits on the train bridge and is cut around the
@@ -274,9 +274,9 @@ function buildMovement(M){
   mesh(dl,discGeo(50.8,0.6,[[...L.C,2.4],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,3.3,0);
   const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;
   /* the face lies 0.02 above the brass disc's top; polygon offset keeps it in front in the depth buffer, else the brass shows through in streaks when zoomed out */
-  const dface=mesh(dl,new THREE.RingGeometry(2.4,50.8,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,3.92,0);dface.userData.noCap=true;
+  const dface=mesh(dl,new THREE.RingGeometry(2.4,50.8,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,3.92,0);dface.userData.noCap=true;dface.userData.surface=true;
   /* three feet, each held by a dial screw (35756, Fig. 107) from the train side of the pillar plate into its tapped end */
-  for(const q of S.dial){mesh(dl,new THREE.LatheGeometry([V2(0.01,2.0),V2(hT(0,0,1.0)[2],2.0),V2(hT(0,0,1.0)[2],0),V2(0.9,0),V2(0.9,3.3),V2(0.01,3.3)],20),M.brass,...[q[0],0,q[1]]);screw(pp,...q,y0,1.0,0.5,PP_T+1.8);}
+  for(const q of S.dial){mesh(dl,new THREE.LatheGeometry([V2(0,2.0),V2(hT(0,0,1.0)[2],2.0),V2(hT(0,0,1.0)[2],0),V2(0.9,0),V2(0.9,3.3),V2(0,3.3)],20),M.brass,...[q[0],0,q[1]]);screw(pp,...q,y0,1.0,0.5,PP_T+1.8);}
   const hd=part('hands',48),hg=new THREE.MeshStandardMaterial({color:sc(0xd9b25e),metalness:1,roughness:0.2}),hb=new THREE.MeshStandardMaterial({color:sc(0x7a6240),metalness:1,roughness:0.45});   /* hg gilt (Roman), hb aged gilt (Soviet) */
   /* Hamilton hands as on the photographed dial: blued hour hand with a bulb two-thirds out and a long spear point, plain minute hand to the track, a long seconds hand with a spear counterpoise */
   const dk=(o,k)=>{const g=new THREE.Group();g.userData.dk=k;o.parent.add(g);g.add(o);return o;};   /* hands of one dial style ('hamilton', 'roman', 'swiss' or 'soviet'), grouped so app.js's per-mesh visibility leaves the choice alone */
@@ -295,7 +295,7 @@ function buildMovement(M){
   const mw=part('motion',16);
   R.cannon=arbor(mw,M,...L.C,{pin:{n:MW.cp,m:0.4,y:1.2,th:2,bore:0.85}});mesh(R.cannon,ring(1.4,0.85,4.6),M.steel,0,2.6,0);
   /* the minute wheel and the wind indicator wheel turn on posts (42085, 42084) fixed to the pillar plate by screws (35779) from its train side (Fig. 110) */
-  const post=(x,z,r,top)=>{const hr=hT(0,0,0.8)[2];mesh(pp,new THREE.LatheGeometry([V2(0.01,2.0),V2(hr,2.0),V2(hr,0),V2(r,0),V2(r,top),V2(0.01,top)],24),M.steel,x,0,z);screw(pp,x,z,y0,0.8,0.4,PP_T+1.8);};
+  const post=(x,z,r,top)=>{const hr=hT(0,0,0.8)[2];mesh(pp,new THREE.LatheGeometry([V2(0,2.0),V2(hr,2.0),V2(hr,0),V2(r,0),V2(r,top),V2(0,top)],24),M.steel,x,0,z);screw(pp,x,z,y0,0.8,0.4,PP_T+1.8);};
   post(...L.Mw,0.7,3.2);post(...L.Ud,0.5,4.1);
   R.minW=arbor(mw,M,...L.Mw,{wheel:{n:MW.mw,m:0.4,y:1.2,th:0.8,spokes:4,collet:0,bore:0.72},pin:{n:MW.mp,m:0.384,y:2.4,th:1.6,bore:0.72}});mesh(R.minW,ring(1.6,0.72,2.0),M.brass2,0,1.2,0);
   R.hourW=arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:0.384,y:2.6,th:0.8,spokes:4,collet:0,bore:1.45}});mesh(R.hourW,ring(2.2,1.45,2.6),M.brass2,0,3.9,0);
@@ -308,7 +308,7 @@ function buildMovement(M){
   /* sustaining spring: fixed to the fusee wheel by the pin at XZ -0.35 and curving back (against the running direction) to a free end on which the
      sustaining ratchet's pin presses, so the ratchet drives the wheel forward through it; e = XZ angle of the free end in the wheel's frame */
   const sspGeo=e=>{const s=new THREE.Shape(),r0=13.2,r1=13.9;s.absarc(0,0,r1,0.35,-e,true);s.absarc(0,0,r0,-e,0.35,false);
-    const g=new THREE.ExtrudeGeometry(s,{depth:1.13,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);return g;};   /* 0.02 under the wheel's web */
+    const g=extrude(s,{depth:1.13,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);return g;};   /* 0.02 under the wheel's web */
   /* the sustaining spring (42016) and its fixing pin: its own part, turning with the fusee wheel, in whose recess it lies (Figs. 28, 71) */
   const ssP=part('sspring',-10);R.ssg=new THREE.Group();R.ssg.position.set(L.Fu[0],0,L.Fu[1]);ssP.add(R.ssg);
   const SSP_PIN=4.05;R.sspring=mesh(R.ssg,sspGeo(SSP_PIN-0.031),M.blued,0,-8.75,0);
@@ -336,7 +336,7 @@ function buildMovement(M){
   /* sustaining pawl's spring (part of 42096, "complete with arbor and springs"; shape estimated): a wire from a collet on the arbor under the train bridge, bent round a
      steady pin in the bridge so it turns the pawl's tip into the ratchet. Drawn with the pawl at rest (R.spS turns with it); the pin stands in the bridge */
   R.spS=new THREE.Group();R.spS.position.set(SPv[0],0,SPv[1]);sp.add(R.spS);mesh(R.spS,ringGeo(1.2,0.7,0.6),M.steel,0,-19.6,0);
-  mesh(R.spS,new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(new THREE.Vector3(0.05,-19.6,1.15),new THREE.Vector3(0.35,-19.6,2.6),new THREE.Vector3(0.1,-19.6,4.3)),16,0.12,6,false),M.steel);
+  mesh(R.spS,closeGeo(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(new THREE.Vector3(0.05,-19.6,1.15),new THREE.Vector3(0.35,-19.6,2.6),new THREE.Vector3(0.1,-19.6,4.3)),16,0.12,6,false)),M.steel);
   cylBetween(tb,0.35,TB_U-0.6,-19.25,M.steel,SPv[0]-0.3,SPv[1]+3.9);
   /* ---------- going train (modules 0.29 / 0.30 / 0.3113; counts in TRAIN) ---------- */
   const m=MOD.train;
@@ -358,8 +358,8 @@ function buildMovement(M){
   /* train-blocking screw (42247, Sec. II, Fig. 110): threaded through the lower bridge's lobe. Screwed down, its head stops in the counterbore and its dog point stands between
      the fourth wheel's spokes, so the train can turn only until a spoke meets it; screwed up (as it runs), the chamfer on its head seats in the countersunk access hole in the
      train bridge. The thread (6.2 mm) stays in the bridge at both ends of its 5.6 mm travel. R.tbs.userData: seat heights and the dog point's place for blockRoom */
-  { const bs=part('tblock',-46),r=TBS_R,h=0.9,c=0.25,rs=0.42,pt=0.176,d=pt*0.3,Lt=6.2,Ld=6.81,rd=0.25,pr=[V2(0.01,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0),V2(rs,0)];
-    const n=Math.floor(Lt/pt);for(let i=0;i<n;i++){const a=Lt-(n-i)*pt;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,Lt),V2(rd,Lt+0.05),V2(rd,Ld),V2(0.01,Ld));
+  { const bs=part('tblock',-46),r=TBS_R,h=0.9,c=0.25,rs=0.42,pt=0.176,d=pt*0.3,Lt=6.2,Ld=6.81,rd=0.25,pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0),V2(rs,0)];
+    const n=Math.floor(Lt/pt);for(let i=0;i<n;i++){const a=Lt-(n-i)*pt;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,Lt),V2(rd,Lt+0.05),V2(rd,Ld),V2(0,Ld));
     R.tbs=new THREE.Group();R.tbs.position.set(...[S.tBlock[0],0,S.tBlock[1]]);bs.add(R.tbs);mesh(R.tbs,new THREE.LatheGeometry(pr,28),M.steel);
     mesh(R.tbs,new THREE.BoxGeometry(r*2.02,0.35,0.3),M.steelD,0,-h+0.155,0);
     const up=TB_U+h+0.03,down=LB_T+0.6;R.tbs.userData={up,down,turns:(down-up)/pt,rho:3.5,sig:Math.atan2(-TBd[1],TBd[0]),half:Math.asin((0.45+rd)/3.5)};R.tbs.position.y=up; }
@@ -371,7 +371,7 @@ function buildMovement(M){
   R.det=new THREE.Group();R.det.position.set(E.Ft.x*ES,0,E.Ft.y*ES);dt.add(R.det);const fx=new THREE.Group();fx.position.copy(R.det.position);dt.add(fx);   /* moving about the point of flexure; fixed */
   const poly=(g,pts,ya,yb,mat,holes=[])=>{const s=new THREE.Shape();pts.forEach((p,i)=>{const x=(p.x-E.Ft.x)*ES,z=(p.y-E.Ft.y)*ES;i?s.lineTo(x,z):s.moveTo(x,z);});s.closePath();
     for(const[p,r]of holes){const h=new THREE.Path();h.absarc((p.x-E.Ft.x)*ES,(p.y-E.Ft.y)*ES,r,0,TAU,true);s.holes.push(h);}   /* holes: [unit-frame point, radius in mm] */
-    const ge=new THREE.ExtrudeGeometry(s,{depth:yb-ya,bevelEnabled:false,curveSegments:12});ge.rotateX(Math.PI/2);ge.translate(0,yb,0);return mesh(g,ge,mat);};
+    const ge=extrude(s,{depth:yb-ya,bevelEnabled:false,curveSegments:12});ge.rotateX(Math.PI/2);ge.translate(0,yb,0);return mesh(g,ge,mat);};
   const Pc=E.pieces,Fx=E.fixed,Cu=M.copper;
   poly(fx,Fx.foot,-19.26,-17.36,Cu);poly(R.det,Pc.spring,-19.26,-18.76,Cu);poly(R.det,Pc.spring,-17.86,-17.41,Cu);poly(R.det,Pc.cross,-19.26,-17.36,Cu);   /* bottoms staggered so no two faces are coplanar */
   poly(R.det,Pc.blade,-18.21,-17.41,Cu);poly(R.det,Pc.block,-18.26,-17.36,Cu);poly(R.det,Pc.arm,-18.16,-17.86,Cu);poly(R.det,Pc.horn,-17.86,-17.41,Cu);poly(R.det,Pc.bracket,-17.86,-17.46,Cu,[[E.D(E.tR+0.01,E.nR+0.033),hT(0,0,0.22,0.07)[2]]]);
@@ -398,7 +398,7 @@ function buildMovement(M){
   /* impulse roller (O.D. 0.249 in, as thick as the escape wheel, post 30) with its crescent: the large portion behind the impulse jewel, where each tooth
      drops in and meets the jewel, and the small portion ahead of it, which the teeth never enter (Ops. 76, 83). Shape angle = minus the unit-frame angle */
   const rR=E.rRoll*ES,ir=new THREE.Shape(),n0=-E.aI,n1=n0+0.6;ir.absarc(0,0,rR,n1,n0-0.16+TAU,false);ir.absarc(0,0,rR*0.86,n0-0.16,n0,false);ir.absarc(0,0,rR*0.55,n0,n1,false);
-  const irg=new THREE.ExtrudeGeometry(ir,{depth:1.3,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.65,0);
+  const irg=extrude(ir,{depth:1.3,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.65,0);
   mesh(R.staff,irg,M.steel,0,EY-0.07,0);
   const pal=(ang,r0,r1,w,y,h)=>{const q=mesh(R.staff,new THREE.BoxGeometry(r1-r0,h,w),M.ruby,(r0+r1)/2*Math.cos(ang),y,(r0+r1)/2*Math.sin(ang));q.rotation.y=-ang;};
   pal(E.aIc,rR-0.9,E.rp*ES,E.wI*ES,EY-0.09,1.56);   /* the wheel centred on the impulse jewel, jewel showing above and below it (Op. 82) */
@@ -418,8 +418,8 @@ function buildMovement(M){
   mesh(R.balU,ring(BR,BR-1.4,2.4),M.steel);
   /* the arm on the hub (Fig. 4): the hub (42186, on the staff) has a flange under the arm and a boss up through the arm's clearance hole; the cap (42248) over the arm
      and two hold-down screws (42249) through cap and arm into the flange. The arm is widened round the hub. Sizes estimated */
-  const HD=[[1.7,0],[-1.7,0]];
-  mesh(R.balU,polyGeo(subtractCircle([[-(BR-0.5),-1.2],[BR-0.5,-1.2],[BR-0.5,1.2],[-(BR-0.5),1.2]],[0,0],2.2,true),1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,-0.55,0);
+  const HD=[[1.7,0],[-1.7,0]],xa=Math.sqrt(2.2**2-1.2**2),a0=Math.atan2(1.2,xa),arc=(s,e)=>[...Array(25)].map((_,i)=>[2.2*Math.cos(s+(e-s)*i/24),2.2*Math.sin(s+(e-s)*i/24)]);   /* the bar across, joined to the 2.2 circle round the hub on both sides (subtractCircle keeps one run: it drew half the arm) */
+  mesh(R.balU,polyGeo([[BR-0.5,-1.2],[BR-0.5,1.2],...arc(a0,Math.PI-a0),[-(BR-0.5),1.2],[-(BR-0.5),-1.2],...arc(Math.PI+a0,TAU-a0)],1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,-0.55,0);
   mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,0.55,0);cylBetween(R.balU,1.1,1.15,-0.9,M.steel,0,0,24);
   mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,-0.9,0);
   for(const q of HD)screw(R.balU,...q,-0.9,0.4,0.25,0.35+1.1+0.5);
@@ -446,7 +446,7 @@ function buildMovement(M){
   R.balS=new THREE.Group();R.balS.position.y=BY;R.balS.visible=false;R.staff.add(R.balS);
   mesh(R.balS,new THREE.BoxGeometry(2*BR-1,1.4,2.2),M.steel);mesh(R.balS,cylY(2.2,2.2,24),M.steel);
   const span=160*D2R,band=(a0,r0,r1)=>{const s=new THREE.Shape(),N=48;for(let i=0;i<=N;i++){const a=a0+span*i/N;i?s.lineTo(r1*Math.cos(a),r1*Math.sin(a)):s.moveTo(r1*Math.cos(a),r1*Math.sin(a));}
-    for(let i=N;i>=0;i--){const a=a0+span*i/N;s.lineTo(r0*Math.cos(a),r0*Math.sin(a));}const g=new THREE.ExtrudeGeometry(s,{depth:2.4,bevelEnabled:false});g.rotateX(-Math.PI/2);g.translate(0,-1.2,0);return g;};
+    for(let i=N;i>=0;i--){const a=a0+span*i/N;s.lineTo(r0*Math.cos(a),r0*Math.sin(a));}const g=extrude(s,{depth:2.4,bevelEnabled:false});g.rotateX(-Math.PI/2);g.translate(0,-1.2,0);return g;};
   for(let k=0;k<2;k++){const a0=k*Math.PI;mesh(R.balS,band(a0,BR-1.6,BR-0.9),M.steel);mesh(R.balS,band(a0,BR-0.9,BR),M.brass);
     const wa=a0+span*0.62,w=mesh(R.balS,cylY(2.3,4.2,24),M.brass2,(BR+1.9)*Math.cos(wa),0,-(BR+1.9)*Math.sin(wa));w.rotation.set(0,wa,Math.PI/2);}
   /* helical hairspring: ~8 mm tall, ~5.5 mm radius, many turns (Fig. 2) */
@@ -468,7 +468,7 @@ function buildMovement(M){
   const EPo=[];for(let k=0;k<=16;k++){const a=-Math.PI/2+Math.PI*k/16;EPo.push([1.65+2.3*Math.cos(a),2.3*Math.sin(a)]);}EPo.push([-3.35,2.3],[-3.65,2.0],[-3.65,-2.0],[-3.35,-2.3]);   /* cap: round at the nose's end, square at the foot's */
   R.cock=mesh(ck,polyGeo(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.65),add(L.B,EPu,-3.0),6.4)]),2.6,[[...L.B,1.5,1],hC(...S.cock,2.8,0.8),...S.ep.map(q=>hT(...q,0.7)),hC(...SPS,0.8)],0.3),M.plate,0,CK_T,0);
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
-  mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)].reverse(),40),M.steel,...[L.B[0],0,L.B[1]]);
+  mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.steel,...[L.B[0],0,L.B[1]]);
   mesh(ck,ring(0.95,0.25,0.6),M.ruby,L.B[0],CK_T+0.65,L.B[1]);
   /* foot: a solid block under the outer part of the crescent, standing on the upper train bridge beside the barrel bridge's straight edge
      (the cock is mounted to the train bridge, manual Sec. II; its screw is where the top-view photograph shows it). Annular sector r 31-39.8,
@@ -519,7 +519,7 @@ function buildMovement(M){
     pts.push(TL,...arc3(TL,P2(13.1,106),BL,20),BL,...arc3(BL,P2(5.9,192),BR,40),BR,...polar(12.97,12.61,249.2,325.9,30).slice(1,-1),TR,...arc3(TR,P2(6.4,17),TL,40));
     const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
     for(const[x,z,r]of[[...L.Ba,2.6],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
-    const cvg=new THREE.ExtrudeGeometry(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
+    const cvg=extrude(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
     R.cover=mesh(rt,cvg,M.plateSolid,0,-29.66,0);
     /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */
     for(const q of S.cover){mesh(rt,ringGeo(1.1,hC(0,0,0.9)[2],1.4),M.plateSolid,q[0],-27.86,q[1]);screw(rt,...q,-29.66,0.9,0.55,1.1+1.4+2.2);}   /* 42056, into the barrel bridge */
@@ -623,7 +623,7 @@ function buildMovement(M){
     if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,HS_H,14,s.th,0.17,HS_R,HS_R);}
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing */
     const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,EY+1.3,p.y*ES);
-    R.pspring.geometry.dispose();R.pspring.geometry=new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(V(a0),V(am),V(tp2)),20,0.1,5,false);
+    R.pspring.geometry.dispose();R.pspring.geometry=closeGeo(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(V(a0),V(am),V(tp2)),20,0.1,5,false));
   };
   mv.userData.explode(0);
   return mv;
@@ -656,15 +656,15 @@ function makeFusee(M,c){
   const bsp=mesh(sbR,new THREE.BufferGeometry(),M.steel,0,yT-0.25,0);let barX=null;
   /* the spring: fixed in the groove at one side of the slot, round the far side of the arbor, then into the slot against the bar's inner end, following it as it slides */
   const setBar=x=>{if(x===barX)return;barX=x;stopBar.position.x=x;const P=[];for(let k=0;k<=40;k++){const a=-0.2+(Math.PI+0.4)*k/40;P.push(new THREE.Vector3(4.3*Math.cos(a),0,4.3*Math.sin(a)));}
-    const xe=0.1-4.2+x-0.15;P.push(new THREE.Vector3(-4.3,0,sbZ+0.55),new THREE.Vector3(xe,0,sbZ+0.3));bsp.geometry.dispose();bsp.geometry=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P),60,0.13,6,false);};
+    const xe=0.1-4.2+x-0.15;P.push(new THREE.Vector3(-4.3,0,sbZ+0.55),new THREE.Vector3(xe,0,sbZ+0.3));bsp.geometry.dispose();bsp.geometry=closeGeo(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P),60,0.13,6,false));};
   setBar(0);
   const bz=new THREE.Group();bz.position.x=bx;bz.userData.partName='barrel';g.add(bz);
-  const bw=new THREE.Mesh(new THREE.CylinderGeometry(c.Rb,c.Rb,Math.abs(c.bT-c.bB),72,1,true),M.brassDS);bw.position.y=(c.bT+c.bB)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.noCap=true;
+  const bw=new THREE.Mesh(ringGeo(c.Rb,c.Rb-0.2,Math.abs(c.bT-c.bB)),M.brass);bw.position.y=(c.bT+c.bB)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.barrelWall=c.Rb;   /* the wall, 0.2 thick inside the chain's drum radius (estimated) */
   for(const y of[c.bT+0.3,c.bB-0.3]){const cp=mesh(bz,ringGeo(c.Rb+0.7,1.5,0.6),M.gilt,0,y,0);cp.userData.driveGhost=true;}
-  /* mainspring brace (42037, Fig. 75): a strip lining the wall where the spring's outer end hooks, as thick as the spring, between the caps' inner faces */
-  { const s=new THREE.Shape(),a0=Math.PI/2-0.35,a1=Math.PI/2+0.35;s.absarc(0,0,c.Rb-0.02,a0,a1,false);s.absarc(0,0,c.Rb-0.45,a1,a0,true);
-    const ge=new THREE.ExtrudeGeometry(s,{depth:Math.abs(c.bT-c.bB)-1.24,bevelEnabled:false,curveSegments:24});ge.rotateX(-Math.PI/2);mesh(bz,ge,M.steel,0,c.bT+0.62,0); }
-  const ms=new THREE.Mesh(new THREE.BufferGeometry(),M.mspring);ms.position.x=bx;ms.userData.partName='mainspring';ms.userData.onlyDrive=true;ms.userData.noCap=true;g.add(ms);
+  /* mainspring brace (42037, Fig. 75): a strip lining the wall where the spring's outer end hooks, between the caps' inner faces */
+  { const s=new THREE.Shape(),a0=Math.PI/2-0.35,a1=Math.PI/2+0.35;s.absarc(0,0,c.Rb-0.2,a0,a1,false);s.absarc(0,0,c.Rb-0.45,a1,a0,true);
+    const ge=extrude(s,{depth:Math.abs(c.bT-c.bB)-1.24,bevelEnabled:false,curveSegments:24});ge.rotateX(-Math.PI/2);mesh(bz,ge,M.steel,0,c.bT+0.62,0); }
+  const ms=new THREE.Mesh(new THREE.BufferGeometry(),M.mspring);ms.position.x=bx;ms.userData.partName='mainspring';ms.userData.onlyDrive=true;g.add(ms);
   mesh(bz,ringGeo(4,1.5,0.4),M.brass2,0,c.bT-0.25,0).userData.driveGhost=true;
   /* barrel cap on the pillar-plate end, held by five screws (manual Figs. 26, 109) */
   for(let k=0;k<5;k++){const a=k/5*TAU;mesh(bz,cylY(0.7,0.4,10),M.steel,12.4*Math.cos(a),c.bB+0.2,12.4*Math.sin(a));}
