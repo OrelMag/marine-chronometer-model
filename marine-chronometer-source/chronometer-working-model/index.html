@@ -9,12 +9,13 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Marine Chronometer, working">
 <meta property="og:description" content="Explore the Hamilton Model 21 marine chronometer part by part, running in real time in your browser.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":["CreativeWork","WebApplication"],"name":"The Marine Chronometer: A Working Model","description":"An interactive 3D working model of the Hamilton Model 21 marine chronometer: fusee, chain, detent escapement and balance, running in real time, built from the 1948 U.S. Navy overhaul manual.","author":{"@type":"Person","name":"Orel Magidish"},"about":{"@type":"Thing","name":"Hamilton Model 21 marine chronometer"},"citation":{"@type":"Book","name":"Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer","identifier":"NAVSHIPS 250-624","datePublished":"1948","publisher":{"@type":"Organization","name":"U.S. Navy, Bureau of Ships"}},"license":"https://creativecommons.org/licenses/by/4.0/","inLanguage":"en","isAccessibleForFree":true,"applicationCategory":"EducationalApplication","operatingSystem":"Any (a web browser with WebGL)"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["CreativeWork","WebApplication"],"name":"The Marine Chronometer: A Working Model","description":"An interactive 3D working model of the Hamilton Model 21 marine chronometer: fusee, chain, detent escapement and balance, running in real time, built from the 1948 U.S. Navy overhaul manual.","author":{"@type":"Person","name":"Orel Magidish"},"about":{"@type":"Thing","name":"Hamilton Model 21 marine chronometer"},"citation":{"@type":"Book","name":"Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer","identifier":"NAVSHIPS 250-624","datePublished":"1948","publisher":{"@type":"Organization","name":"U.S. Navy, Bureau of Ships"}},"hasPart":{"@type":"Article","headline":"The Marine Chronometer","description":"How a marine chronometer keeps time at sea, one idea at a time: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent escapement, the gimbals and keeping the rate, with live figures drawn from the working model.","author":{"@type":"Person","name":"Orel Magidish"},"datePublished":"2026-09","inLanguage":"en"},"license":"https://creativecommons.org/licenses/by/4.0/","inLanguage":"en","isAccessibleForFree":true,"applicationCategory":"EducationalApplication","operatingSystem":"Any (a web browser with WebGL)"}</script>
 <meta name="theme-color" content="#dfe2e3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0d1115" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f4f4f1' stroke='%23b58325' stroke-width='3'/%3E%3Cpath d='M16 7v9l6 4' stroke='%2326479c' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../../vendor/fonts/fonts.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/essay.css">
 
 </head>
 <body>
@@ -43,9 +44,7 @@
           <dt>Tap empty space</dt><dd>Close a card</dd><dt>Turn the phone sideways</dt><dd>A larger model, with the controls beside it</dd></dl></section></div>
       <p class="note">Reset brings the camera back to the chosen view. Parts too small to tap are listed under Parts. To see how the chronometer works, start the walkthrough under How it works.</p></div>
     <div class="tools"><button id="helpBtn" aria-label="How to use it" aria-controls="help" aria-expanded="false" title="How to use it: mouse, touch and keys">?</button><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="link" title="Copy a link to this view: the view, speed, part and settings">Link</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
-    <figure class="fig hidden" id="fig" role="tabpanel" aria-labelledby="tabFig"><div class="fsc"><img id="figT" src="img/illustration.webp" width="1200" height="1420" alt="Tinted drawing titled What keeps a marine chronometer on time, drawn from this model of the Hamilton Model 21. The mahogany box with both covers open and the movement lifted out of its brass case above the gimbal ring. Four numbered panels: 1, gimbals: the box tilted, drawn in outline, with the case hanging level in its ring and the two pivot axes at right angles; 2, fusee and chain: the mainspring in its barrel, drawn open, and the chain running onto the cone of the fusee above the fusee wheel; 3, spring detent escapement: the escape wheel, the detent and the impulse roller on the balance staff, the balance in outline; 4, balance and hairspring: the steel rim on its Invar arm with its balance screws, under the cylindrical Elinvar hairspring." title="Click to see it full size"><img id="figI" class="hidden" src="img/illustration-ink.webp" width="1200" height="1420" alt="Ink drawing, in line, titled What keeps a marine chronometer on time, drawn from this model of the Hamilton Model 21. The mahogany box with both covers open and the movement lifted out of its brass case above the gimbal ring. Four numbered panels: 1, gimbals: the box tilted, drawn in outline, with the case hanging level in its ring and the two pivot axes at right angles; 2, fusee and chain: the mainspring in its barrel, drawn open, and the chain running onto the cone of the fusee above the fusee wheel; 3, spring detent escapement: the escape wheel, the detent and the impulse roller on the balance staff, the balance in outline; 4, balance and hairspring: the steel rim on its Invar arm with its balance screws, under the cylindrical Elinvar hairspring." title="Click to see it full size"></div>
-      <figcaption><span class="seg" id="figSt" role="group" aria-label="Drawing"><button data-v="tint" aria-pressed="true" title="Ink with a light watercolour tint">Tinted</button><button data-v="ink" aria-pressed="false" title="Ink lines, and the dial's printing">Ink</button></span><span>Drawn from this model: every part is rendered from the same geometry the 3D model runs, then inked, and tinted or left in line.</span></figcaption></figure>
-    <div class="tabs" role="tablist" aria-label="What the stage shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabFig" aria-selected="false" aria-controls="fig" title="An overview drawing of what keeps a chronometer on time">Illustration</button></div>
+    <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Marine Chronometer: an essay on how it keeps time at sea, with live figures drawn from this model">Essay</button></div>
     <div class="loading" id="loading">Assembling the movement…</div>
   </div>
   <div class="panel">
@@ -99,8 +98,8 @@
         <div class="dgrid">
           <span class="lab">Show</span><label class="ck"><input type="checkbox" id="lbls"> Labels</label><label class="ck" title="Outline every part of the movement with the drawing's lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
           <label class="ck c2"><input type="checkbox" id="colr"> Colour by part</label><label class="ck" title="Colour each part by where its shape and size come from: the manual, measurements, solved to fit, or estimated"><input type="checkbox" id="colrSrc"> Colour by source</label>
-          <label class="ck c2" title="Draw the model in ink with a light watercolour tint, as the Illustration is drawn"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines and the printing alone, as the Illustration's ink drawing"><input type="checkbox" id="drawInk"> Ink drawing</label>
-          <label class="ck c2" title="See-through plates, bridges and case"><input type="checkbox" id="ghost"> See-through</label>
+          <label class="ck c2" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines and the printing alone"><input type="checkbox" id="drawInk"> Ink drawing</label>
+          <label class="ck c2" title="See-through plates, bridges and case"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
           <span class="lab g">Motion</span><label class="ck g" title="The box rolls and pitches as on a ship; the gimbals keep the case level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Lock the gimbals with the latch, as when the box is carried: the case then tilts with the box"><input type="checkbox" id="latch"> Gimbals latched</label>
           <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
           <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
@@ -174,6 +173,205 @@
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
   </div>
 </div>
+<article id="essay" role="tabpanel" aria-labelledby="tabEssay" tabindex="-1" hidden>
+<div class="e-bar"><a class="e-t" href="#essay">The Marine Chronometer <span>· an essay on the working model</span></a><div class="e-prog"></div></div>
+<div class="e-art">
+<header class="e-hero">
+  <div class="e-dial" id="eHeroSt"><canvas id="eHero" aria-label="The Hamilton Model 21's dial, showing the time the model on the other tab keeps"></canvas></div>
+  <p class="e-dialcap" id="eHeroCap" aria-live="off">The model’s dial</p>
+  <h1>The Marine Chronometer</h1>
+  <p class="e-by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span> · <a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
+  <p class="e-deck">How a brass bowl hung in a mahogany box told a navigator where on Earth the ship was. This essay takes the instrument apart one idea at a time, using the Hamilton Model 21 on the other tab: every figure is drawn from that model’s own parts, counts and settings.</p>
+  <p class="e-after">In the spirit of Bartosz Ciechanowski’s <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>. Drag any 3D figure to turn it; a link ending in → opens the working model at the part it describes.</p>
+  <nav class="e-toc" aria-label="Contents"><b>Contents</b><ol>
+    <li><a href="#essay=time">Time is a position</a></li><li><a href="#essay=oscillator">An oscillator that ignores the sea</a></li><li><a href="#essay=spring">The spring that breathes</a></li>
+    <li><a href="#essay=heat">Heat</a></li><li><a href="#essay=force">Constant force</a></li><li><a href="#essay=winding">Winding</a></li><li><a href="#essay=counting">Counting</a></li>
+    <li><a href="#essay=detent">The detent</a></li><li><a href="#essay=gimbals">Level on a moving ship</a></li><li><a href="#essay=rate">Keeping the rate</a></li><li><a href="#essay=model21">The Hamilton Model 21</a></li></ol></nav>
+</header>
+
+<h2 id="time"><a class="e-h" href="#essay=time">Time is a position</a></h2>
+<p>Latitude was never the hard problem at sea. The height of the noon sun, or of the pole star, above the horizon tells a navigator how far north or south the ship is, and a sextant measures that angle well.</p>
+<p>Longitude is different, because the Earth turns under the sky: 360° every 24 hours, 15° every hour. An east–west position is really a question about time. When the sun stands highest over the ship it is local noon, and if the navigator knows what time it is at that moment at a reference meridian such as Greenwich, the difference between the two times is the ship’s longitude.</p>
+<p>Move the ship with the slider. The view looks down on the North Pole with the sun to the right, always at the moment of the ship’s local noon:</p>
+<figure>
+  <div class="e-st flat" id="eLon"><canvas aria-label="Polar view of the Earth showing the ship's meridian and Greenwich"></canvas></div>
+  <div class="e-ctl"><label class="e-sl"><span>Ship’s longitude</span><input type="range" min="-179" max="180" step="1" value="-40"><output></output></label></div>
+  <div class="e-ro"></div>
+  <figcaption>The Earth turns counterclockwise in this view. If the ship is west of Greenwich, Greenwich has already passed under the sun, and the chronometer reads after noon.</figcaption>
+</figure>
+<p>Local noon is easy to observe. Greenwich time in the middle of an ocean is not: it has to be carried aboard, in a clock that keeps going through months of motion, damp and heat.</p>
+<p>And the arithmetic is unforgiving. Four minutes of time are a degree of longitude, and four seconds are a minute of arc, which is a nautical mile at the equator and less toward the poles, where the meridians crowd together. A clock that gains two seconds a day is superb by the standards of a house; after six weeks at sea it has moved the ship twenty miles.</p>
+<figure>
+  <div class="e-st flat" id="eErr"><canvas aria-label="True and believed positions of a ship given a clock error"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Clock gains</span><input type="range" min="0" max="10" step="0.1" value="2"><output></output></label>
+    <label class="e-sl"><span>Days at sea</span><input type="range" min="1" max="120" step="1" value="42"><output></output></label>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The error in longitude, at the equator. A clock that gains shows Greenwich time later than it is, so the ship seems further west than it is. The shaded band is the half degree, 30 nautical miles, within which the Longitude Act of 1714 offered its top prize of £20,000.</figcaption>
+</figure>
+<p>John Harrison’s fourth timekeeper, H4, beat that standard on its 1761–62 trial voyage to Jamaica. But H4 was a single, intricate masterpiece that few could copy. The instrument that went to sea by the thousand in the nineteenth and twentieth centuries came from a different line, through Pierre Le Roy in France and John Arnold and Thomas Earnshaw in London: a mainspring and fusee, a spring detent escapement, a compensated balance with a helical spring, hung in gimbals in a wooden box. The Hamilton Model 21, made in Lancaster, Pennsylvania, for the U.S. Navy from 1941, is one of the last of that line, and it is the one this essay takes apart.</p>
+
+<h2 id="oscillator"><a class="e-h" href="#essay=oscillator">An oscillator that ignores the sea</a></h2>
+<p>Every clock is an oscillator and a counter. On land the best oscillator was the pendulum, but a pendulum keeps time against gravity, and a rolling ship adds accelerations of the same order as gravity itself. A pendulum clock on a deck is hopeless.</p>
+<p>The chronometer uses a <em>balance</em>: a wheel that turns back and forth on its own axis, drawn back toward its rest position by a spring. Because the wheel is balanced about its axis, a sideways jolt pushes equally on both sides of it and makes no turning force. Only a turning of the ship itself can disturb it, and the gimbals we’ll meet later take care of most of that.</p>
+<p>Its period depends on two things: its moment of inertia <span class="e-math">I</span>, which grows with the rim’s mass and with how far out that mass sits, and the stiffness <span class="e-math">κ</span> of the spring. For small swings the period is <span class="e-math">T = 2π√(I/κ)</span>. A heavier rim swings more slowly; a stiffer spring swings faster.</p>
+<figure>
+  <div class="e-st" id="eBal"><canvas aria-label="The Model 21's balance and hairspring, swinging"></canvas><div class="e-labels"></div></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Rim mass</span><input type="range" min="0.5" max="2" step="0.01" value="1"><output></output></label>
+    <label class="e-sl"><span>Spring stiffness</span><input type="range" min="0.5" max="2" step="0.01" value="1"><output></output></label>
+    <label class="e-ck"><input type="checkbox" class="slow"> Slow motion</label>
+    <button class="play">Pause</button>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The Model 21’s balance as the model builds it: a stainless-steel rim 29&nbsp;mm across on an Invar arm, with its balance screws and timing weights, swinging <span class="e-live" data-live="A">255°</span> each way under its cylindrical hairspring. The mass slider thickens the screws; the stiffness slider thickens the spring’s wire.</figcaption>
+</figure>
+<p>The Model 21’s balance makes one full oscillation in half a second. Watchmakers count each swing in one direction as a <em>vibration</em>, so that is 14,400 vibrations an hour, and the escapement pushes the balance once in every oscillation, which is why the hands step in half-seconds. By the model’s arithmetic the balance, with its screws and weights, has a moment of inertia of about <span class="e-live" data-live="I0">930</span>&nbsp;g·mm², so its hairspring has to turn it back with about <span class="e-live" data-live="kappa">147</span>&nbsp;micronewton-metres for each radian of twist.</p>
+<p>Hamilton’s rim is solid and uncut. It is free of the centrifugal effects that open a split rim at speed, so it can swing further, 1⅜ to 1½ turns from one end of its swing to the other (the model swings it <span class="e-live" data-live="motion">1.42</span>), and it could be made larger and 35 percent lighter for the same moment of inertia, which eases its pivots.</p>
+<p class="e-see"><a href="#tour=7">The balance and hairspring in the working model</a></p>
+
+<h2 id="spring"><a class="e-h" href="#essay=spring">The spring that breathes</a></h2>
+<p>An ideal oscillator is <em>isochronous</em>: its period doesn’t depend on how widely it swings. A real balance only approximates that, and it matters, because the swing never stays put. It changes as the mainspring runs down, as the oil thickens, as warmth changes the friction. Any link between the swing and the period turns each of those into an error of rate.</p>
+<p>Most watches use a flat spiral balance spring. Chronometers usually use a <em>helical</em> one, a coil shaped like a small cylinder, with its ends bent inward in <em>terminal curves</em> so that they attach close to the axis. With well-shaped curves the coil stays centred on the balance staff as it winds and unwinds, so it only ever twists the balance. Without them the coil’s centre wanders to one side as it winds, pushing the pivots sideways and adding friction that depends on the swing.</p>
+<figure>
+  <div class="e-st" id="eSpr"><canvas aria-label="Close-up of a helical balance spring winding and unwinding"></canvas><div class="e-labels"></div></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Balance angle</span><input type="range" min="-255" max="255" step="1" value="0"><output></output></label>
+    <div class="seg" role="group" aria-label="Spring ends"><button aria-pressed="true" data-v="1">Terminal curves</button><button aria-pressed="false" data-v="0">Plain ends</button></div>
+  </div>
+  <figcaption>The inner end is held in the collet on the balance staff and turns with it; the outer end is held in the stud under the balance cock and never moves. Drawn taller, with fewer and more widely spaced coils than the model’s fourteen; the plain-ended coil’s drift is exaggerated.</figcaption>
+</figure>
+<p>Arnold was curving the ends of helical springs by the 1770s and 1780s, largely by experiment; a full mathematical treatment came from the French engineer Édouard Phillips in the 1860s.</p>
+<p>Hamilton’s spring is of Hamilton Elinvar, an alloy chosen for elasticity that stays steady with temperature, and it doesn’t corrode. Each end is held in its clamp by a wedge pin, without bending the spring, so its active length is the same winding and unwinding, which the manual credits with reducing its isochronal error. There is no regulator to lengthen or shorten it: the rate is set with the balance’s screws and weights alone.</p>
+<p class="e-see"><a href="#view=balance">The Model 21’s balance close up, with its timing weights</a></p>
+
+<h2 id="heat"><a class="e-h" href="#essay=heat">Heat</a></h2>
+<p>Temperature was the chronometer’s chief enemy. As a steel spring warms it weakens, and at the same time the balance expands, moving its mass further from the axis. Both slow the clock. A plain brass balance with a steel spring loses on the order of ten seconds a day for every degree Celsius, and a ship sailing from the English Channel to the tropics sees twenty degrees or more.</p>
+<p>The classic cure was a balance that changes shape. Its rim is a strip of two metals fused together, brass outside and steel inside, cut through near each end of the arm so each half has a free end. Brass expands more than steel, so as it warms the free ends curl inward, drawing mass toward the axis just enough to offset the weakening spring. Weights moved along the rim set how much correction each degree brings.</p>
+<figure>
+  <div class="e-st" id="eTemp"><canvas aria-label="Balances whose rims respond to temperature"></canvas><div class="e-labels"></div></div>
+  <div class="e-st flat e-chart" id="eTempChart"><canvas aria-label="Rate against temperature"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Temperature</span><input type="range" min="-5" max="45" step="0.5" value="20"><output></output></label>
+    <div class="seg" role="group" aria-label="Balance"><button aria-pressed="true" data-v="split">Split bimetallic</button><button aria-pressed="false" data-v="plain">Plain brass</button><button aria-pressed="false" data-v="m21">Model 21</button></div>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The rims’ movement is exaggerated about twenty times. The curves for the older balances are illustrative, with magnitudes typical of their period; the Model 21’s band is the limit its Navy test set, not a measured curve.</figcaption>
+</figure>
+<p>That correction isn’t perfect. The bimetallic rim changes the moment of inertia roughly in proportion to temperature, while the spring’s loss of stiffness has a large quadratic part. Adjusted to keep time at two temperatures, a chronometer gains between them and loses outside them. This <em>middle temperature error</em>, typically a second or two a day, occupied makers for most of the nineteenth century, until Charles-Édouard Guillaume’s nickel steels largely solved it around 1900.</p>
+<p>The Model 21 is built on Guillaume’s alloys. Its rim is solid stainless steel, silver-soldered to an arm of Invar, which hardly expands. The rim’s diameter at the ends of the arm stays almost fixed; the rest of the rim moves out as it warms and in as it cools, so screws moved toward or away from the arm set the compensation, to within 0.02 seconds a day for each degree Fahrenheit. The Elinvar hairspring hardly changes its stiffness. Adjusted, its temperature error is negligible, the manual says, and in service no temperature record needs to be kept.</p>
+<p class="e-see"><a href="#open=varDet">Fit the split bimetallic balance to the working model, under Variants</a></p>
+
+<h2 id="force"><a class="e-h" href="#essay=force">Constant force</a></h2>
+<p>The energy is stored in a coiled mainspring inside a drum, the <em>barrel</em>. A spring pulls harder fully wound than nearly run down, and more force swings the balance wider; since no balance is perfectly isochronous, the rate would follow the state of wind. The chronometer borrows a much older answer, the <em>fusee</em>: a grooved cone, joined to the barrel by a fine steel chain.</p>
+<p>Fully wound, the chain pulls on the narrow end of the cone, where it has the least leverage, just when the spring is strongest. As the spring weakens, the chain comes off the cone at larger and larger radii, and the pull times the lever stays the same.</p>
+<figure>
+  <div class="e-st" id="eFus"><canvas aria-label="The barrel, chain and fusee"></canvas><div class="e-labels"></div></div>
+  <div class="e-st flat e-chart" id="eFusChart"><canvas aria-label="Force against hours since winding"></canvas></div>
+  <div class="e-ctl"><label class="e-sl"><span>Hours since winding</span><input type="range" min="0" max="60" step="0.1" value="6"><output></output></label></div>
+  <div class="e-ro"></div>
+  <figcaption>The Model 21’s fusee as the model draws it: the chain’s radius grows from <span class="e-live" data-live="rmin">7.9</span> to <span class="e-live" data-live="rmax">16.8</span>&nbsp;mm over <span data-live="turns">8¾</span> turns, a profile that evens out a pull falling in step with the barrel’s turns. The spring’s pull shown is the one that profile answers, not a measured curve.</figcaption>
+</figure>
+<p>Unlike a watch’s, the barrel drives no wheel at all: the first wheel of the train is on the fusee. The barrel’s own arbor never turns in use; a setup ratchet and pawl on the barrel bridge hold it, and only a watchmaker’s let-down key moves it.</p>
+<p class="e-see"><a href="#tour=3">The fusee and chain in the working model</a></p>
+
+<h2 id="winding"><a class="e-h" href="#essay=winding">Winding</a></h2>
+<p>Winding turns all of this backward. The key turns the fusee arbor counterclockwise, drawing the chain off the barrel and onto the cone, which winds the spring. For as long as the key turns, though, the fusee isn’t pushing the train forward. Harrison’s <em>maintaining power</em> fills the gap: in the Model 21 a sustaining spring inside the fusee wheel, always under load, drives the train for five to ten minutes, and a sustaining pawl keeps it from unwinding backward.</p>
+<p>The routine was the same every day, at the same hour. Turn the chronometer gently face down in its gimbals; turn the shield plate on the bottom of the case clockwise to uncover the keyhole; wind to the left. Seven half turns restore the 24 hours since the last winding. The last half turn goes slowly, so that the chain meets the winding stop gently: at full wind it pushes a stop-bar in the top of the fusee out against a stop under the barrel bridge, and the key can turn no further.</p>
+<figure>
+  <div class="e-st flat" id="eWind"><canvas aria-label="The up-down dial and the half turns of the key needed to wind"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Hours since winding</span><input type="range" min="0" max="60" step="0.1" value="20"><output></output></label>
+    <button class="wind">Wind it</button>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The up–down dial below the 12. Its hand creeps clockwise from UP toward DOWN as the chronometer runs, one half turn of the key for every <span class="e-live" data-live="halfT">3.43</span> hours, and winding takes it back. Its scale is drawn over the model’s 240°.</figcaption>
+</figure>
+<p>The dial keeps the account. Its up–down indicator is driven by a pinion on the fusee arbor, and after the daily winding its hand should have gone back from about 24 to 0. The Model 21 is designed to run at most 56 hours on a winding (the model runs <span class="e-live" data-live="run">60</span> before its chain is all on the barrel). Allowed to run down, it needs 17½ half turns, and then, since its escapement can’t start itself, a single quick twist of the box to set the balance swinging.</p>
+<p class="e-see"><a href="#tour=4">Winding without stopping, in the working model</a></p>
+
+<h2 id="counting"><a class="e-h" href="#essay=counting">Counting</a></h2>
+<p>From the fusee, a train of wheels both slows things down and counts. The fusee wheel drives the centre wheel, which turns once an hour and carries the minute hand. Each wheel after it drives the next one faster: the third wheel, then the fourth, which turns once a minute and carries the second hand, and finally the escape wheel.</p>
+<p>The escape wheel releases one tooth per oscillation of the balance, 120 times a minute. Hamilton gave it <span class="e-live" data-live="ew">16</span> teeth, where most chronometers have 13 or 15, so it turns once every 8 seconds. At the other end the fusee wheel’s <span class="e-live" data-live="fu">96</span> teeth drive the centre wheel’s pinion of <span class="e-live" data-live="cp">14</span>, so the fusee turns once in <span class="e-live" data-live="gwT">6.86 hours</span>: seven half turns of the key a day, as the manual has it. The counts of the wheels between aren’t published; the model’s are chosen to give the ratios a half-second train needs.</p>
+<figure>
+  <div class="e-st" id="eTrain"><canvas aria-label="The going train from the centre wheel to the escape wheel"></canvas><div class="e-labels"></div></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Speed</span><input type="range" min="0" max="1" step="0.001" value="0"><output></output></label>
+    <button class="play">Pause</button>
+  </div>
+  <figcaption>The centre, third, fourth and escape wheels with the model’s counts (<span data-live="cw">80</span>, <span data-live="tw">75</span>, <span data-live="fw">60</span> and <span data-live="ew">16</span> teeth; pinions of <span data-live="tp">10</span>, <span data-live="fp">10</span> and <span data-live="ep">8</span>) and its tooth sizes. The blue pointer on each arbor shows how it turns; meshing wheels turn opposite ways.</figcaption>
+</figure>
+<p>At normal speed the motion isn’t smooth: the whole train stands still, then jumps, twice a second. That is the escapement at work, and in a chronometer it is the most distinctive part of all.</p>
+<p class="e-see"><a href="#tour=5">The Model 21’s going train in the working model</a></p>
+
+<h2 id="detent"><a class="e-h" href="#essay=detent">The detent</a></h2>
+<p>An escapement has two jobs: to let the train advance one tooth at a time, and to give the balance a small push to replace what friction takes. Every contact disturbs the balance a little, so the ideal escapement touches it as rarely and as briefly as it can. The spring detent comes very close. It pushes the balance in one direction of swing only, and for the rest of each oscillation the balance swings almost free.</p>
+<p>Here is one full cycle, seen from the balance cock’s side as the manual’s Fig. 90 draws it. The escape wheel, 13.16&nbsp;mm across, is held by a jewel, the <em>locking jewel</em>, on the <em>detent</em>: a slender blade whose foot is screwed to a fixed block and joined to it by a thin spring, so that it can swing a little. A stop button sets how far it falls back. The balance staff carries two rollers, each with its jewel.</p>
+<p>As the balance swings one way, the small <em>unlocking jewel</em> meets the tip of the fine <em>trip spring</em>, which rests against the detent’s horn, so the push lifts the whole detent off its stop. The locking jewel moves clear, the wheel leaps forward and a tooth drops into the notch cut in the larger roller, where it catches the <em>impulse jewel</em> and drives the balance on its way. By then the detent has sprung back, ready to catch the next tooth.</p>
+<figure>
+  <div class="e-st flat" id="eEsc"><canvas aria-label="Animated plan of the Model 21's spring detent escapement"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Cycle</span><input type="range" class="phase" min="0" max="1000" step="1" value="150"><output></output></label>
+    <label class="e-sl"><span>Speed</span><input type="range" class="speed" min="0.01" max="1" step="0.01" value="0.08"><output></output></label>
+    <button class="play">Pause</button>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The Model 21’s escapement as the model solves it, the escape wheel <span class="e-live" data-live="D">9.40 mm</span> from the balance. Nothing is animated by hand: each part moves only when another touches it. The balance itself lies above this plane; the dial at the top right shows its angle. Drag the cycle slider to step through it.</figcaption>
+</figure>
+<p>On the return swing the unlocking jewel meets the trip spring from the other side. This time the trip spring simply bends away from the horn: the detent never moves, the wheel stays locked, and the balance passes almost without resistance.</p>
+<p>All of this happens within a few degrees of a swing of <span class="e-live" data-live="A">255°</span> each way, and the settings are fine. The manual gives the repairer figures to set, measured as angles of the balance: the <em>lock</em>, from the moment the detent leaves its stop until the tooth drops off the locking jewel, about 6°; the <em>let-off</em>, at least 6°; the wheel’s <em>drop</em> onto the impulse jewel, about 2°; and the <em>overall</em>, the whole contact of both swings together, 26° to 30°. The impulse roller, <span class="e-live" data-live="roller">6.3 mm</span> across, clears the teeth by about 0.05&nbsp;mm, and the horn clears the unlocking jewel by a quarter of a millimetre. As the model sets it: lock <span class="e-live" data-live="lock">6.0°</span>, let-off <span class="e-live" data-live="letoff">10.6°</span>, drop <span class="e-live" data-live="drop">2.1°</span>, overall <span class="e-live" data-live="overall">28.4°</span>, roller shake <span class="e-live" data-live="shake">0.055 mm</span>, horn clearance <span class="e-live" data-live="horn">0.25 mm</span>.</p>
+<p>Hamilton chose the materials for the job: the detent is beryllium copper, springy and rustless, and the trip spring is Elinvar. In English chronometers it was usually gold.</p>
+<p>The design has a price. A detent escapement doesn’t start itself: once the balance swings less than about <span class="e-live" data-live="AMIN">41°</span> each way, it can no longer unlock the wheel and see the impulse through, and the chronometer stops until it is given a twist. A hard jolt can also knock the detent and let the wheel slip a tooth. In a padded box in a chart room that is an acceptable trade, and it is one reason the design stayed in the box instead of moving to the wrist.</p>
+<p class="e-see"><a href="#view=escapement&amp;speed=0.05&amp;part=det">The detent at 1/20 speed in the working model</a></p>
+<p class="e-see"><a href="#open=benchDet">The adjuster’s bench: change the settings and measure them</a></p>
+
+<h2 id="gimbals"><a class="e-h" href="#essay=gimbals">Level on a moving ship</a></h2>
+<p>A balance’s rate varies slightly with its position, so a chronometer is adjusted to run in one: dial up, balance level. The brass case hangs in <em>gimbals</em>, a ring pivoted in the box on one axis, with the case pivoted in the ring on the axis at right angles. Weighted low, the case stays level while the box rolls and pitches around it.</p>
+<figure>
+  <div class="e-st" id="eGim"><canvas aria-label="The Model 21's box rolling while its gimballed case stays level"></canvas><div class="e-labels"></div></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Sea state</span><input type="range" min="0" max="30" step="1" value="18"><output></output></label>
+    <label class="e-ck"><input type="checkbox" class="lock"> Latch the gimbals</label>
+    <button class="play">Pause</button>
+  </div>
+  <figcaption>The model’s own box, gimbal ring, case and latch, with its dial keeping its time. Latched, as when the box is carried or the hands are set, the case tilts with the box.</figcaption>
+</figure>
+<p>A chronometer went to and from a ship in its box, carried by hand. The gimbal latch locks the case to the ring and the ring to the box, for carrying and before the hands are set.</p>
+<p class="e-see"><a href="#tour=1">The Model 21’s box and gimbals in the working model, with ship motion</a></p>
+
+<h2 id="rate"><a class="e-h" href="#essay=rate">Keeping the rate</a></h2>
+<p>A navigator never set the hands. They were set only when the chronometer was started; after that its error was recorded and allowed for. Every day, or at other convenient times, the dial was compared with a master time signal, an authorized radio signal, either directly or through a comparing watch, which adds a small error of its own. The hands step in half-seconds, so the error is read to the nearest half-second.</p>
+<p>The <em>daily rate</em> is the change in that error from one day to the next. Read to the half-second, single days are noisy, so the rates are averaged over several days into a <em>mean daily rate</em>, and that is what works out the true time between signals. Under Remarks goes anything that might have disturbed it: started, stopped, set, moved.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eRate"><canvas aria-label="A chronometer's dial error, day by day, and the mean rate carried forward"></canvas></div>
+  <div class="e-book"></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Its rate</span><input type="range" min="-3" max="3" step="0.1" value="1.3"><output></output></label>
+    <label class="e-sl"><span>Day-to-day wander</span><input type="range" min="0" max="2" step="0.1" value="0.3"><output></output></label>
+    <label class="e-sl"><span>Days without a signal</span><input type="range" min="1" max="40" step="1" value="20"><output></output></label>
+    <button class="again">Another voyage</button>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>Ten days of comparisons in the form of the manual’s Table I (dial error, + fast; daily rate, + gaining), then days with no signal. The black line is the true error; the dots are the dial read to the half-second; the dashed line is the mean rate carried forward. The chronometer and its wander are simulated.</figcaption>
+</figure>
+<p>What matters, then, isn’t that a chronometer keeps perfect time but that its rate is steady. One that gains 1.3 seconds a day, every day, is as good as a perfect one; one whose rate wanders is not. That is why each capital ship of the Navy, battleship, carrier or cruiser, was allotted two or more Model 21s, kept in different stations aboard: the navigator compares them, and a misbehaving instrument gives itself away.</p>
+<p>Before issue, each chronometer was tested for thirty days in a dust-free room held at 72½&nbsp;°F, compared every day on Hamilton’s electronic comparator, which reads the dial to better than 0.02 seconds. The thirty days made six periods of five, at 90, 72½, 55, 55, 72½ and 90&nbsp;°F. From each period’s mean rate came the figures the Bureau of Ships held it to: no period’s mean rate over 1.55 seconds a day; the rates at 55 and 90&nbsp;°F within 1.2 seconds a day of each other; and the two periods at the same temperature within 0.7 seconds a day.</p>
+<p class="e-see"><a href="#open=bookDet">Keep a rate book for the working model: it compares its dial with the master time each day</a></p>
+
+<h2 id="model21"><a class="e-h" href="#essay=model21">The Hamilton Model 21</a></h2>
+<p>The Model 21 was designed and made by the Hamilton Watch Company of Lancaster, Pennsylvania, to U.S. Navy Specification 18-C-7; the dial in these pages is from one made under a U.S. Maritime Commission contract. The Navy assigned its serial numbers and engraved them on the dial and the barrel bridge. It has fourteen jewels. It changed in service: chronometers put into the field before 1944 may have a one-piece roller, replaced at overhaul by two, whose angle can be set; later ones have a train-blocking screw, from serial 4003, to hold the mainspring’s power while the balance and escapement are out; and from the end of 1947 a balance locking arm was fitted at overhaul, in place of the folded wedges that had held the balance still in shipment.</p>
+<p>Most of what is known of it in this detail comes from one book, the Navy’s <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em> (NAVSHIPS 250-624, 1948). The model on the other tab is built from it and from photographs of surviving movements; the Royal Museums Greenwich holds one, No. 4E019.</p>
+<p>Radio time signals, and later satellite navigation, retired the chronometer from its work. The instrument itself, a small steel wheel swinging twice a second to keep a ship’s place on the planet, remains one of the most elegant answers ever built to a problem that once cost thousands of lives.</p>
+<div class="e-go">
+  <p>See it working: every part can be picked out and named, and the hands keep Greenwich time, as the Navy’s chronometers were kept.</p>
+  <div class="seg"><a class="primary" href="#tour=1">Walk through it</a><a href="#view=box">In its box</a><a href="#view=movement">The movement</a><a href="#view=exploded">Exploded</a><a href="#view=escapement&amp;speed=0.05">The escapement</a></div>
+</div>
+
+<hr>
+<p class="e-refs"><strong>Further reading.</strong> <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em>, NAVSHIPS 250-624, Bureau of Ships (1948): the source of the Model 21’s figures here. Rupert T. Gould, <em>The Marine Chronometer: Its History and Development</em> (1923). David Boettcher’s notes on <a href="https://vintagewatchstraps.com/MTEpdf.php">middle temperature error</a>. The Royal Museums Greenwich’s <a href="https://www.rmg.co.uk/collections/objects/rmgc-object-387425">Hamilton Model 21, No. 4E019</a>. Bartosz Ciechanowski, <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>, whose approach inspired this essay. The working model’s sources are listed under “About this model” on the other tab.</p>
+</div>
+</article>
 <dialog id="about" aria-labelledby="aboutT">
   <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
   <h2 id="aboutT">About this model</h2>
@@ -216,18 +414,18 @@
   <p>Nickel plates with bold damascening and gilt wheels, as on the photographed movements. The gilt option matches the gilt movement in one of the reference photographs.</p>
   <p>The Roman dial follows the A. Lange &amp; Söhne (Glashütte) deck chronometers, with gilt hands and the maker’s name and number left off. Its wind scale is drawn over this movement’s 240° sweep rather than the Lange dial’s near-full circle, so the hand still reads true.</p>
   <p>The Swiss dial follows the Ulysse Nardin (Le Locle) deck chronometers, such as the one the U.S. Coast and Geodetic Survey used in the 1940s (<a href="https://www.noaa.gov/heritage/stories/friday-find-1940s-timepiece-was-original-gps-for-ships">NOAA Heritage</a>). The Soviet dial follows the First Moscow Watch Factory’s deck chronometers, which copied the Nardin layout with Arabic hours. Both leave off the maker’s name and number, and both draw their wind scales over this movement’s 240° sweep.</p>
-  <h3>Illustration</h3>
-  <p>The Illustration tab is an overview of the four features the model shows in detail: the gimbals, the fusee and chain, the spring detent escapement and the balance with its hairspring. It is drawn from the model itself: each view is rendered from the model’s geometry as outlines, shading and colour, then washed and inked like a drawing, so it shows the Hamilton Model 21 as modelled here, with the same estimates where the manual is silent. It comes tinted or in ink alone (the buttons under it); under Display, Tinted drawing and Ink drawing draw the live model the same ways, in any view.</p>
   <h3>Further reading</h3>
-  <p><a href="marine-chronometer.html">The Marine Chronometer</a>, a long-form interactive essay on longitude, the balance, the fusee and the detent escapement.</p>
+  <p><a href="#essay">The Marine Chronometer</a>, the essay on the other tab: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals and keeping the rate, with live figures drawn from this model.</p>
   <h3>Licence</h3>
   <p>Code under the MIT licence; text, drawings and the model under Creative Commons Attribution 4.0. Built with three.js (MIT) and the Spectral and Instrument Sans typefaces (SIL Open Font License).</p>
 </dialog>
 <script src="../../vendor/three.min.js"></script>
 <script src="js/core.js"></script>
 <script src="../shared/escapement.js"></script>
+<script src="../shared/escplan.js"></script>
 <script src="js/movement.js"></script>
 <script src="js/box.js"></script>
+<script src="js/essay.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

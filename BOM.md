@@ -178,9 +178,9 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 110-20 | 42055 | Screw - Pillar upper train bridge | 3 | 3 | trainBridge | Hold the upper train bridge to its three pillars (Op. 14). | in 42062 (clear): 3.069 mm, least gap 0.2197<br>in 42059 (tap): 3.02 mm, least gap 0.0225 | ✓ (deviation) |
 | 110-21 | 42166 | Bushing - Center wheel upper | 1 | 1 | trainBridge | Bearing for the centre arbor's upper pivot. | in 42062 (press): 0.097 mm, least gap 0.0172 | ✓ |
 | 110-22 | 42167 | Bushing - Third wheel upper | 1 | 1 | trainBridge | Bearing for the third arbor's upper pivot. | in 42062 (press): 0.097 mm, least gap 0.0171 | ✓ |
-| 110-23 | 42073 | Wheel - Fourth, complete with pinion | 1 | 1 | fw | Turns once a minute; its arbor carries the second hand (Sec. II). | in J.fu (run): 0.313 mm, least gap 0.0219<br>in J.fl (run): 0.313 mm, least gap 0.0219<br>endshake 0.050 mm (J.fl / J.fu)<br>meshes 42071: centres 12.7524 (m(z1+z2)/2 12.75), 10/75 teeth, faces overlap 0.9, ratio -0.133333<br>also: invariants.py: second hand | ✓ |
+| 110-23 | 42073 | Wheel - Fourth, complete with pinion | 1 | 1 | fw | Turns once a minute; its arbor carries the second hand (Sec. II). | in J.fu (run): 0.313 mm, least gap 0.0219<br>in J.fl (run): 0.313 mm, least gap 0.0219<br>endshake 0.050 mm (J.fl / J.fu)<br>meshes 42071: centres 12.7524 (m(z1+z2)/2 12.75), 10/75 teeth, faces overlap 0.65, ratio -0.133333<br>also: invariants.py: second hand | ✓ |
 | 110-24 | 42068 | Wheel - Center, complete with pinion | 1 | 1 | cw | Turns once an hour; its long arbor carries the cannon pinion and hour wheel (Sec. II). | in 42166 (run): 3.276 mm, least gap 0.0211<br>in 42165 (run): 4.004 mm, least gap 0.0211<br>endshake 0.050 mm (42165 / 42166)<br>also: invariants.py: minute hand | ✓ |
-| 110-25 | 42071 | Wheel - Third, complete with pinion | 1 | 1 | tw | Drives the fourth pinion. | in 42167 (run): 3.171 mm, least gap 0.0211<br>in J.tl (run): 0.302 mm, least gap 0.0197<br>endshake 0.050 mm (J.tl / 42167)<br>meshes 42068: centres 13.0488 (m(z1+z2)/2 13.05), 10/80 teeth, faces overlap 1, ratio -0.125 | ✓ |
+| 110-25 | 42071 | Wheel - Third, complete with pinion | 1 | 1 | tw | Drives the fourth pinion. | in 42167 (run): 3.171 mm, least gap 0.0211<br>in J.tl (run): 0.302 mm, least gap 0.0197<br>endshake 0.050 mm (J.tl / 42167)<br>meshes 42068: centres 13.0488 (m(z1+z2)/2 13.05), 10/80 teeth, faces overlap 0.7, ratio -0.125 | ✓ |
 | 110-26 | 42096 | Pawl - Sustaining, complete with arbor and springs | 1 | 1 | spawl | Holds the sustaining ratchet from turning back while winding (Sec. IV). | in 42062 (run): 0.121 mm, least gap 0.0542<br>in 42060 (run): 2.059 mm, least gap 0.0274<br>on 42009: 0.0073 mm<br>also: maintaining.py: pawl on its teeth | ✓ |
 | 110-27 | 42065 | Bridge - Balance lower, complete with pins | 1 | 1 | lowerBridge | Holds the balance lower setting and cap and the fourth upper setting; carries the train-blocking screw (Sec. II). | on 42062: 0 mm | ✓ |
 | 110-20 | 42055 | Screw - Balance lower bridge | 2 | 2 | lowerBridge | Hold the balance lower bridge to the train bridge (Ops. 12, 50). | in 42065 (clear): 1.976 mm, least gap 0.1897<br>in 42062 (tap): 2.519 mm, least gap 0.033 | ✓ |
@@ -247,8 +247,8 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 42015 | 42068 | 96/14 | 0.4171/0.4171 | 22.9427 | 22.9405 | 1.2 | -6.857143 | -6.857143 |
 | 42022 | 42081 | 8/98 | 0.2319/0.2319 | 12.2938 | 12.2907 | 0.8 | -0.081633 | -0.081633 |
 | 42076 | 42073 | 8/60 | 0.3113/0.3113 | 10.5846 | 10.5842 | 0.9 | -0.133333 | -0.133333 |
-| 42073 | 42071 | 10/75 | 0.3/0.3 | 12.7524 | 12.75 | 0.9 | -0.133333 | -0.133333 |
-| 42071 | 42068 | 10/80 | 0.29/0.29 | 13.0488 | 13.05 | 1 | -0.125 | -0.125 |
+| 42073 | 42071 | 10/75 | 0.3/0.3 | 12.7524 | 12.75 | 0.65 | -0.133333 | -0.133333 |
+| 42071 | 42068 | 10/80 | 0.29/0.29 | 13.0488 | 13.05 | 0.7 | -0.125 | -0.125 |
 
 ## Not modelled, and why
 

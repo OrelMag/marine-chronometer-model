@@ -112,6 +112,8 @@ brackets, the latch's parts).
 - The essay's copy of the escapement solver (F7 in `src/p4.js`) runs the same
   code as `ESC` in `movement.js`. The only differences are the intended ones:
   `EX` written out as 9.3997 mm, and a different set of returned fields.
+  *Superseded: the essay is now the model's Essay tab and uses the model's own
+  `ESC`.*
 
 ### Gear meshes
 
@@ -365,7 +367,8 @@ Then run `dyn.py` with the variant shown.
 
 ## Not covered
 
-- The essay, beyond its copy of the escapement solver.
+- The essay, beyond its copy of the escapement solver. *(It has since been
+  rewritten as the model's Essay tab.)*
 - The photo-fitting tools (`fit.py`, `bundle.py`, `unproj.py`), which were not
   rerun.
 - Phone layout and the CSS.
@@ -941,9 +944,11 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    screw, twist to start, the setup click's direction, shield plate and latch):
    `maintaining.py`, `escapement.js` and `invariants.py` cover the maintaining
    work, the escapement and the train's arithmetic.
-4. **The other checks after these geometry changes:** `solids.py` passes;
-   `fine.py`, `exploded.py`, `maintaining.py` and `audit.py` still to be run
-   and their tables (`fine.py`'s `EXPECTED`) brought up to date: several
+4. **The other checks after these geometry changes** (merged with
+   `claude/fidelity`'s restacked train): `solids.py`, `exploded.py`, `smoke.py`,
+   `invariants.py` and `escapement.js` pass; `fine.py`, `maintaining.py` and
+   `audit.py` still to be run and their tables (`fine.py`'s `EXPECTED`) brought
+   up to date: several
    expected overlaps (hands on their arbors, the impulse jewel in its roller,
    the sustaining spring's pin, the stud's steady pin, bushings in bevelled
    holes) should now be gone.

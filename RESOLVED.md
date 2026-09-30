@@ -24,6 +24,7 @@ Contents:
 [Rendering](#rendering) ·
 [Controls and display](#controls-and-display) ·
 [Build, tools and docs](#build-tools-and-docs) ·
+[Essay](#essay) ·
 [Fixed, not yet committed](#fixed-not-yet-committed)
 
 ---
@@ -54,8 +55,10 @@ Contents:
   two-strip spring, round locking jewel with a flat at 10° of draw, Elinvar trip
   spring on a Z bracket, and support block with stop button. `7328e67`
 - **Essay's detent figure drifted from the model.** It now carries a copy of the
-  model's `ESC` solver. Keep: after changing `ESC` in `movement.js`, copy it into
-  the essay's `src/p4.js` and rebuild (see CLAUDE.md). `219e4df`
+  model's `ESC` solver. `219e4df` Since then the solver became one `makeEsc`
+  (`813f7ae`), and the essay became the model's Essay tab (`9ffe479`), whose figure uses the
+  model's own `ESC` and the same plan drawing as the inset (`drawEscPlan`,
+  `shared/escplan.js`). Keep: one solver and one plan drawing; nothing to copy.
 - **Balance arm drawn from the hub to one side only.** `subtractCircle` keeps
   one run of the outline, and the 2.2 mm circle round the hub cut the 2.4 mm
   bar into two; the arm is now drawn outright. The moment of inertia already
@@ -162,6 +165,25 @@ Contents:
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves. `c2adc92`
+- **Pinions inside their wheels; the train stacked
+  upside down.** The fourth pinion's leaves (tips r 1.785) ran 0.21 mm into its
+  collet and 0.16 mm into its wheel, standing out of the collet (r 1.6) and hub
+  as small steel notches on the brass; the centre pinion ran 0.5 mm into its
+  wheel's spoke windows. `fine.py` couldn't see either: wheel and pinion are one
+  part. Figs. 13, 29 and 110 stack the train third / centre / fourth from the
+  plate, the third and centre pinions above their wheels, the fourth pinion
+  below its wheel, and five spokes on each wheel. The model had centre /
+  fourth / third, the third and fourth pinions on the wrong sides and 4 spokes
+  on the third and fourth wheels, from reading the side photograph's lowest
+  band (0.4–1.6 mm) as the centre wheel. Now as the figures: third wheel
+  0.35–1.0 mm above the plate, centre wheel 1.15–1.85, fourth wheel unchanged;
+  the minute and hour wheels solid and the wind indicator wheel five-spoked, as
+  photographs of a Model 21's dial side show them. Keep: each pinion ends at
+  its wheel's boss (`arbor()` reports a pinion inside its wheel or collet with
+  `console.error`, which `smoke.py` fails on); a boss stays inside the radius a
+  neighbouring wheel leaves free (the centre boss r 1.3, 0.215 mm inside the
+  third wheel's tips); the train-blocking screw takes its spoke count from the
+  wheel's (`FW_SP`). `22e3984`
 
 ## Winding and maintaining work
 
@@ -501,7 +523,7 @@ Contents:
   manual". `63c5dce`
 
 **The parts list against the model: parts missing, parts holding nothing,
-pivots without shoulders, jewels floating or buried** (`claude/bom`). Checked
+pivots without shoulders, jewels floating or buried** (`ae397f2`). Checked
 line by line against the manual's parts list (Sec. XI, Figs. 106-110) by the new
 `tools/bom.py`, which measures how each part is held and runs:
 - *Missing or short:* a dial screw and foot (the manual has 4, the model had
@@ -569,6 +591,20 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **Lifted views at 80 fps on a fast desktop, 15 on a phone.** Once
+  every open tube went through `closeGeo` (every part a closed solid), the
+  hairspring, rebuilt every frame the balance turns, paid for it: `closeGeo`
+  string-hashes all 4,500 vertices and 23,000 edges and triangulates the caps,
+  about 9 ms a frame on a desktop CPU (63 % of the frame) and 50 ms with the
+  CPU throttled 4×, plus a new vertex buffer each frame. `reclose(old, g)` in
+  `core.js` now writes the new tube's positions and normals into the old
+  closed geometry, keeping its weld and caps (`closeGeo` records which vertex
+  each cap vertex copies, `userData.capOf`), and the hairspring is rebuilt only
+  when the balance has turned. Same vertices and index as before; the Movement
+  view went from 12.5 to 2.6 ms a frame. Keep: a geometry rebuilt as the model
+  moves goes through `reclose` (the stop-bar spring does too), never
+  `closeGeo` each frame; check a new one with `tools/perf.py` in a lifted
+  view. `bf503d8`
 - **Metals flat and dark after a lost WebGL context.** A restored context
   loses its PMREM render targets. The environment map is now rebuilt on
   `webglcontextrestored`. Keep that handler. `fcedc94`
@@ -704,7 +740,8 @@ An arbor needs pivots and shoulders; a stone its seat.
   contacts: "drops onto the impulse jewel" only during the drop, "Stopped" while
   held. Its teeth are the mesh's, and it says it is seen from the cock side, as
   Fig. 90, which is the 3D Escapement view mirrored. Keep: `drawEsc2D(ctx, w, h,
-  s, E, dark)` takes the state the model shows. `89a949d`
+  s, E, dark)` takes the state the model shows (it now calls `drawEscPlan` in
+  `shared/escplan.js`, which the essay's detent figure shares). `89a949d`
 
 ## Build, tools and docs
 
@@ -723,7 +760,8 @@ An arbor needs pivots and shoulders; a stone its seat.
 - **Link-preview URLs ended in `.html`,** which Cloudflare redirects. They now
   don't, and `--keep-html` covers other hosts. `2c0f236`
 - **Essay linked to the wrong page for the model.** It now links to the site's
-  home page. `219e4df`
+  home page. `219e4df` (The essay is now the model's Essay tab, and its links
+  into the model are in-page: `#tour=3`, `#view=…`, `#open=…`.)
 - **About dialog claimed more collision testing than was done** (finding 7).
   "Every part was tested for collisions through a full escapement cycle" is
   now what the checks cover: 0.05 mm, through the escapement cycle, round the
@@ -744,7 +782,8 @@ An arbor needs pivots and shoulders; a stone its seat.
   froze the model. It now spends that context on a blank page, as `smoke.py`
   does, and waits for the loading screen to go. Keep: every browser tool
   warms up WebGL first and waits for the page, not for a fixed time. `ea04355`
-- **`illustration.py` failed at its first view.** Its render hook keeps the
+- **`illustration.py` failed at its first view** (the tool and its Illustration
+  tab have since been removed; the lesson stands). Its render hook keeps the
   last scene drawn, for the passes to redraw. With Edges on (the default except
   on phones), the last scene drawn each frame is the Edges overlay's, two
   objects with no parts in it, so the first label anchor on a part threw
@@ -768,6 +807,34 @@ An arbor needs pivots and shoulders; a stone its seat.
   0.8 mm head (`audit.py`: nothing under its seat). `polyGeo` now passes the
   outline and every hole clockwise. Keep: measure a hole's size at the faces
   when a screw seems to float. `41e99e0`
+
+## Essay
+
+- **The essay contradicted the model and itself.** Its last figure, "The whole
+  instrument", had a 15-tooth escape wheel turning in 7.5 s and a 90/80 train,
+  where its text and train figure said 16 teeth and 8 s; its fusee made 8 turns
+  on a 0–56 h axis (the model's makes 8¾ and runs 60 h, rated 56); its balance
+  swung 220° in two figures and "some 250°" in the text, against the solver's
+  255°; its dial was a Roman "No. 1761"; its balance was a split bimetallic one,
+  labelled as the instrument's; and it used the older names (passing spring,
+  discharging and impulse pallets, locking stone) for the trip spring and the
+  unlocking, impulse and locking jewels. It is now the model's Essay tab, its
+  figures drawn from the model's code (`dialCanvas`, `handShape`, `ESC` and
+  `drawEscPlan`, `TRAIN` and `MOD`, `arbor`, `escapeWheel`, `R.fs`, `buildBox`),
+  the split balance shown as history beside the Model 21's, and its terms the
+  model's. Keep: the essay's figures use the model's functions and constants,
+  not copies; a number the model computes goes in a `data-live` span, set by
+  `fillLive()`. `9ffe479`
+- **The escapement's figures were typed into the essay's text** (lock 6.0°,
+  drop 2.1°, overall 28.4°), so a change to the solver would have left them
+  stale. They are now read from `ESC.measure()` as the essay shows, with the
+  let-off, roller shake, horn clearance, roller, centre distance, swing and the
+  least swing that keeps it going. Keep: no figure the model computes typed in. `9ffe479`
+- **The essay made a WebGL context for each 3D figure** (seven, beside the
+  model's own on the page that links to it). Its 3D figures now share one
+  renderer off screen, each copied onto its own 2D canvas, and are built only
+  when first near the view. Keep: at most two WebGL contexts on the page
+  (`smoke.py` counts them). `9ffe479`
 
 ---
 

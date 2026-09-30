@@ -1,7 +1,6 @@
 __pycache__/
 # outputs of the tools in marine-chronometer-source/chronometer-working-model/tools/, written to the directory they run from
 r_*.png
-r_ill/
 fit.json
 p3fit.json
 unproj.json

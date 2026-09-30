@@ -4,8 +4,14 @@ from playwright.async_api import async_playwright
 import pathlib
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import re
+SRC=(pathlib.Path(__file__).resolve().parent.parent/'js'/'movement.js').read_text(encoding='utf-8')
+K=lambda n:float(re.search(r'\b'+n+r'=(-?[\d.]+)',SRC).group(1))
+# heights from the model's levels (a screw head's point 0.6 into it): balance rim BAL_Y, fusee at the barrel bridge's top BB_T, barrel square 4.4 above it,
+# the barrel-bridge screw and the train-bridge screw, the plate's edge ring at BB_T. The plan positions (x, z) are the fit's own, from before the re-stack
+YB,YF,YS,YP,YT,YR=K('BAL_Y'),K('BB_T'),K('BB_T')-4.4,K('BB_T')-0.6,K('TB_T')-0.6,K('BB_T')
 best=json.load(open('fit.json'))
-PH={'balance':((775,512),-31.5),'fusee':((1105,695),-33.0),'barrel':((440,690),-37.4),'pillar_front':((703,985),-33.6),'pillar_backleft':((245,420),-29.6)}
+PH={'balance':((775,512),YB),'fusee':((1105,695),YF),'barrel':((440,690),YS),'pillar_front':((703,985),YP),'pillar_backleft':((245,420),YT)}
 EDGE=[(395,300),(300,345),(200,415),(140,490),(110,560),(100,640),(800,1030),(1000,995),(1100,960),(1200,915)]
 async def main():
     async with async_playwright() as p:
@@ -17,7 +23,7 @@ async def main():
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         s=best['s'];Rm=np.array(best['R']);ma=np.array(best['ma']);mb=np.array(best['mb'])
         toScreen=lambda q:(Rm.T@((np.array(q)-mb)/s))+ma      # invert the similarity: photo px -> render px
-        pts=[list(toScreen(v[0]))+[v[1]] for v in PH.values()]+[list(toScreen(e))+[-33.0] for e in EDGE]
+        pts=[list(toScreen(v[0]))+[v[1]] for v in PH.values()]+[list(toScreen(e))+[YR] for e in EDGE]
         out=json.loads(await pg.evaluate(f"JSON.stringify(window.__unproj({json.dumps(pts)},{best['yaw']},{best['pitch']},520,12))"))
         for k,o in zip(PH,out): print(k,[round(x,2) for x in o])
         E=np.array(out[len(PH):]);r=np.hypot(E[:,0],E[:,1])

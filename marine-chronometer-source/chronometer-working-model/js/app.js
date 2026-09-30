@@ -39,9 +39,9 @@ const PARTS={
   sratchet:{t:'Sustaining ratchet wheel',g:2,src:'est',sn:'Its pawls, springs and screws are the manual’s (Sec. IV, parts list); sizes estimated',figs:'69–74',c:'#2f8fb0',pri:4.6,d:'Free on the fusee arbor. Its two winding pawls, each held in by a flat spring, catch the winding ratchet screwed to the fusee, so in running the mainspring’s pull passes through this wheel and the sustaining spring to the fusee wheel. While the key turns the fusee back the winding ratchet slips under the pawls, and the sustaining pawl holds this wheel.',sp:'No. 42009 · winding pawl springs 42007, screws 42012 · winding ratchet 42013'},
   sspring:{t:'Sustaining spring',g:2,src:'est',sn:'Pinned to the wheel, pushed by a pin (the manual pins both ends); its travel estimated',figs:'69–74',c:'#6a3fa0',d:'A ring-shaped spring in the fusee wheel’s recess, pinned to the wheel at one end, with a pin on the sustaining ratchet wheel bearing on the other. Always under load: while the key turns the fusee back it alone drives the train, for 5 to 10 minutes, and the mainspring loads it again when the key lets go.',sp:'No. 42016'},
   spawl:{t:'Sustaining pawl',g:2,src:'solved',sn:'Placed 21.35 mm from the fusee axis, to reach the ratchet clear of the wheels',figs:'12, 28',c:'#1fa05a',pri:4.5,d:'Holds the sustaining ratchet wheel from turning back while the fusee is wound, so the sustaining spring can only release its power forward into the train, enough to run the chronometer 5 to 10 minutes.',sp:'No. 42096'},
-  cw:{t:'Centre wheel',g:3,src:'solved',sn:'Tooth count chosen for the half-second train; module solved so every arbor clears every wheel',figs:'13',c:'#f2c230',pri:7,d:'Second wheel of the train. Its long arbor passes through the pillar plate and dial and carries the cannon pinion and hour wheel.',sp:'No. 42068 · 1 turn an hour'},
-  tw:{t:'Third wheel',g:3,src:'solved',sn:'Position and module solved so every arbor clears every wheel; tooth count chosen',figs:'13',c:'#7cc242',pri:6.5,d:'Drives the fourth wheel pinion.',sp:'No. 42071'},
-  fw:{t:'Fourth wheel',g:3,src:'solved',sn:'Tooth count chosen; its module and height solved for clearance; a side photograph shows where it meshes',figs:'13',c:'#2fb3a6',pri:6.8,d:'Its long arbor passes through the dial to carry the second hand. Jewelled at both ends; its upper setting is in the balance lower bridge.',sp:'No. 42073 · 1 turn a minute'},
+  cw:{t:'Centre wheel',g:3,src:'solved',sn:'Its place in the stack (above the third wheel, its pinion above it), its pinion’s side and its five spokes from Figs. 13, 29 and 110; tooth count chosen for the half-second train; module solved so every arbor clears every wheel',figs:'13, 29, 110',c:'#f2c230',pri:7,d:'Second wheel of the train. Its long arbor passes through the pillar plate and dial and carries the cannon pinion and hour wheel.',sp:'No. 42068 · 1 turn an hour'},
+  tw:{t:'Third wheel',g:3,src:'solved',sn:'Lowest in the stack, its pinion above it and five spokes, from Figs. 13, 29 and 110; position and module solved so every arbor clears every wheel; tooth count chosen',figs:'13, 29, 110',c:'#7cc242',pri:6.5,d:'Lowest wheel of the train, next to the pillar plate. Its pinion, above it, is driven by the centre wheel; the wheel drives the fourth wheel’s pinion.',sp:'No. 42071'},
+  fw:{t:'Fourth wheel',g:3,src:'solved',sn:'Its long pinion under the wheel and its five spokes from Figs. 13, 29 and 110; tooth count chosen; its module and height solved for clearance; a side photograph shows where it meshes',figs:'13, 29, 110',c:'#2fb3a6',pri:6.8,d:'Its long arbor passes through the dial to carry the second hand. Jewelled at both ends; its upper setting is in the balance lower bridge.',sp:'No. 42073 · 1 turn a minute'},
   tblock:{t:'Train-blocking screw',g:3,src:'est',sn:'Its arrangement is Fig. 110’s section; its size and travel are estimated',figs:'110',c:'#c77d2a',dh:1,d:'Mounted in the balance lower bridge (Sec. II, Fig. 110). Screwed down, its head stops on a seat in the bridge and its dog point stands between the fourth wheel’s spokes, so the train turns only until a spoke meets it: the mainspring keeps its power while the balance and escapement are out for service. Screwed up, the chamfer on its head seats in the countersunk access hole in the upper train bridge, through which it is turned. Fitted from serial 4003. Lower and raise it under Stopping and starting.',sp:'No. 42247'},
   escW:{t:'Escape wheel',g:3,src:'manual',sn:'16 teeth, 13.16 mm, 1.3 mm thick (Hamilton’s specification); tooth form from Fig. 90 and an original wheel, tall teeth on a thin rim as Fig. 14 has them; 9.40 mm from the balance for the manual’s roller shake',figs:'14, 90',c:'#2f7fe0',pri:9.5,d:'Released one tooth per oscillation of the balance, so the second hand advances in half-second steps. Sixteen teeth (most chronometers use 13 or 15), 13.16 mm across, the teeth 1.3 mm thick standing on a thin, narrow rim with four thin crossed spokes. Each tooth is a slender point: a narrow land at the tip, a locking face undercut so the tip leads, and a hollow back. The tip and front face bear on the locking jewel and drive the impulse jewel.',sp:`No. 42076 · ${TRAIN.ew} teeth, 1 turn / ${turnT(ESC_TURN)}`},
   det:{t:'Detent',g:3,src:'manual',sn:'The plan from Fig. 90; thicknesses and heights estimated',figs:'14, 54–60, 90, 110',c:'#e0457b',pri:9,d:'Beryllium-copper spring detent. Its foot is clamped to the support block under the upper train bridge, and the detent-adjusting screw sets it lengthwise. Ahead of the foot: the two-strip detent spring (the point of flexure), the blade, the locking jewel (round, with a flat set at about 10° of draw) and the abutment arm (horn). It rests against the stop button, set by the lock-adjusting screw. The trip (passing) spring, a thin flat strip of Hamilton Elinvar, is screwed to an angle bracket on it and rests on the horn. The locking jewel is held in its hole by a wedge pin.',sp:'Detent 42087 with locking jewel 285 and wedge pin 42089 · trip spring 42088 on bracket 42092, screws 1770 · block 42086, screw 42056 · clamp screw 37024, washer 42251 · adjusting screw 20756 · lock-adjusting and clamp screws 42091'},
@@ -49,7 +49,7 @@ const PARTS={
   lockArm:{t:'Balance wheel locking arm',g:3,src:'est',sn:'Its screw, positions and stop pin are Fig. 9’s; its shape is estimated',figs:'9',c:'#5a7fb0',dh:1,d:'Holds the balance still in transit (Sec. III, Fig. 9): loosen its screw, turn the arm, tighten the screw. Locked, its end lies under the rim; unlocked, it rests on its stop pin, clear of the balance. Fitted to chronometers overhauled from 1947; before it, folded wedges went between the rim and the train bridge. Its shape and how it holds the rim are estimated. Lock and unlock it under Stopping and starting.',sp:'Arm 42299 · screw 37204 · washer 42251 · stop pin 42300'},
   spr:{t:'Hairspring',g:3,src:'est',sn:'5.9 mm tall, to reach the stud; the collet and stud after Figs. 5 and 6',figs:'5, 6, 19, 84, 85',c:'#f25fd0',pri:6,d:'Cylindrical, of Hamilton Elinvar. Each end is held in a clamp by a wedge pin, without bending the spring, so its active length is the same winding and unwinding: the inner end on the tongue of the collet, which is slotted to grip the balance staff and owes its curious shape to counterpoising experiments; the upper end in the stud, a bar held under the balance cock by the stud screw from the cock’s top and a steady pin. There is no regulator: rate is set with the balance screws and weights.',sp:'No. 42188 · collet 42190 · stud 42189 with its clamp 42191, wedge pin 42147 and screw 27760 (Figs. 5, 6)'},
   hands:{t:'Hands',g:4,src:'photo',sn:'After the photographed U.S. Maritime Commission dial; how the hands are fitted after Op. 64',figs:'107',c:'#1b1b1b',pri:6,d:'Blued steel: an hour hand with a bulb and a long spear point, a plain minute hand, a long seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff, wind indicator hand on its own wheel. The hands advance in half-second increments. The hour hand is pressed on the hour wheel’s pipe; the minute hand, broached square, sits on the cannon pinion’s square below its bright end (Op. 64).',sp:'Nos. 42032–42035'},
-  motion:{t:'Motion work',g:4,src:'est',sn:'Its counts are chosen; the wind indicator ratio gives the scale a 240° sweep; the hand-setting square after Fig. 8',figs:'8, 81, 107',c:'#a45a3c',pri:5,d:'Cannon pinion, minute wheel and hour wheel under the dial, the pipes of the cannon pinion and hour wheel rising through it; the minute wheel turns on a post screwed to the pillar plate. The cannon pinion is a friction fit on the centre arbor, so the hands can be set without moving the train, and its pipe ends above the dial in the bright square that takes the winding key, turned by its shank, to set the hour and minute hands, forward only. The hour wheel turns free on the cannon pinion’s pipe. A pinion on the dial end of the fusee arbor drives the wind indicator wheel, which turns on a post of its own and carries the wind indicator hand on its pipe.',sp:'Nos. 42077, 42078, 42080, 42081 · posts 42085, 42084'}
+  motion:{t:'Motion work',g:4,src:'est',sn:'Its counts are chosen; the wind indicator ratio gives the scale a 240° sweep; the hand-setting square after Fig. 8; the solid minute and hour wheels and the five-spoked wind indicator wheel as photographs of a Model 21’s dial side show them',figs:'8, 81, 107',c:'#a45a3c',pri:5,d:'Cannon pinion, minute wheel and hour wheel under the dial, the pipes of the cannon pinion and hour wheel rising through it; the minute wheel turns on a post screwed to the pillar plate. The cannon pinion is a friction fit on the centre arbor, so the hands can be set without moving the train, and its pipe ends above the dial in the bright square that takes the winding key, turned by its shank, to set the hour and minute hands, forward only. The hour wheel turns free on the cannon pinion’s pipe. A pinion on the dial end of the fusee arbor drives the wind indicator wheel, which turns on a post of its own and carries the wind indicator hand on its pipe.',sp:'Nos. 42077, 42078, 42080, 42081 · posts 42085, 42084'}
 };
 /* the tables the rest of app.js reads */
 const INFO={},PCOL={},PRI={},PGRP=PG.map(g=>[g,[]]);
@@ -57,39 +57,9 @@ for(const[k,p]of Object.entries(PARTS)){INFO[k]=[p.t,p.d,p.sp];if(p.c)PCOL[k]=p.
 const PLATES=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate)),DRIVE_HIDE=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate||PARTS[k].dh));
 
 /* ================= 2D escapement inset ================= */
+/* the walkthrough's inset and the adjuster's bench: the plan (drawEscPlan, ../shared/escplan.js) in the page's colours, three names, the stage written under it */
 function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model shows it (s.held: the train stands), Ew: the escape wheel's position in teeth */
-  const E=ESC,NT=E.NT,P=E.P,EX=E.EX;
-  ctx.clearRect(0,0,w,h);
-  const x0=-2.5,x1=0.95,y0=-2.45,y1=1.15,sc=Math.min(w/(x1-x0),h/(y1-y0)),ox=(w-(x1-x0)*sc)/2-x0*sc,oy=(h-(y1-y0)*sc)/2+y1*sc,X=x=>ox+x*sc,Y=y=>oy-y*sc;
-  const ink=dark?'#e4e8eb':'#141a20',brass=dark?'#d8a94f':'#b58325',steel=dark?'#8e98a3':'#8a939c',copper=dark?'#d49a63':'#b87840',ruby='#c3163b',paper=dark?'#1b2127':'#ffffff';
-  const phi=-(((Ew%1)+1)%1)*P;
-  ctx.beginPath();let f=true;
-  for(let k=0;k<NT;k++){const pts=E.toothPts(E.t0+k*P+phi);   /* the mesh's tooth, tip at t0+kP */
-    for(const[r,aa]of pts){const px=X(EX+r*Math.cos(aa)),py=Y(r*Math.sin(aa));f?ctx.moveTo(px,py):ctx.lineTo(px,py);f=false;}}
-  ctx.closePath();ctx.fillStyle=brass;ctx.fill();ctx.fillStyle=paper;ctx.beginPath();ctx.arc(X(EX),Y(0),(E.r0-0.5/E.ES)*sc,0,TAU);ctx.fill();
-  ctx.strokeStyle=brass;ctx.lineWidth=0.08*sc;for(let k=0;k<4;k++){const a=-Ew*P+E.t0-0.3+k*TAU/4,rs=E.r0-0.45/E.ES;ctx.beginPath();ctx.moveTo(X(EX),Y(0));ctx.lineTo(X(EX+rs*Math.cos(a)),Y(rs*Math.sin(a)));ctx.stroke();}   /* spokes where the mesh has them (core.js escapeWheel) */
-  { const arc=(r,a0,a1,n)=>{for(let i=0;i<=n;i++){const q=a0+(a1-a0)*i/n;ctx.lineTo(X(r*Math.cos(q)),Y(r*Math.sin(q)));}},a=E.aI+s.th,rr=E.rRoll;   /* impulse roller with its crescent, as built */
-    ctx.fillStyle=steel;ctx.globalAlpha=0.25;ctx.beginPath();arc(rr,a+0.16,a-0.6+TAU,60);arc(rr*0.55,a-0.6,a,12);arc(rr*0.86,a,a+0.16,4);ctx.closePath();ctx.fill();ctx.globalAlpha=1; }
-  const jewel=(ang,r0,r1,wd)=>{const c=Math.cos(ang),sn=Math.sin(ang),px=-sn*wd/2,py=c*wd/2;ctx.fillStyle=ruby;ctx.beginPath();ctx.moveTo(X(r0*c+px),Y(r0*sn+py));ctx.lineTo(X(r1*c+px),Y(r1*sn+py));ctx.lineTo(X(r1*c-px),Y(r1*sn-py));ctx.lineTo(X(r0*c-px),Y(r0*sn-py));ctx.closePath();ctx.fill();};
-  jewel(E.aIc+s.th,E.rRoll-0.08,E.rp,E.wI);
-  const del=-s.lift/E.LEN,cd=Math.cos(del),sd=Math.sin(del),Ft=E.Ft,R=p2=>({x:Ft.x+(p2.x-Ft.x)*cd-(p2.y-Ft.y)*sd,y:Ft.y+(p2.x-Ft.x)*sd+(p2.y-Ft.y)*cd});
-  const poly=(pts,col,fix)=>{ctx.beginPath();pts.forEach((q,i)=>{const r=fix?q:R(q);i?ctx.lineTo(X(r.x),Y(r.y)):ctx.moveTo(X(r.x),Y(r.y));});ctx.closePath();ctx.fillStyle=col;ctx.fill();};
-  ctx.globalAlpha=0.35;for(const k in E.fixed)poly(E.fixed[k],k==='foot'?copper:steel,true);ctx.globalAlpha=1;for(const k in E.pieces)poly(E.pieces[k],k==='stone'?ruby:copper);   /* support block and stop button fixed; the detent turns about its point of flexure */
-  const[a0,am,tp]=E.springPts(s);
-  ctx.strokeStyle=steel;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(X(a0.x),Y(a0.y));ctx.quadraticCurveTo(X(am.x),Y(am.y),X(tp.x),Y(tp.y));ctx.stroke();
-  ctx.fillStyle=steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();jewel(E.aD+s.th,E.rDR-0.05,E.rd,E.wD);
-  ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(0),Y(0),3,0,TAU);ctx.fill();
-  ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='left';
-  ctx.fillText('escape wheel',X(-2.35),Y(1.02));ctx.fillText('detent',X(-2.4),Y(-1.2));ctx.fillText('balance rollers',X(0.1),Y(0.75));
-  const th=s.th;let t;
-  if(s.held)t=s.lift>0.005?'Stopped: the detent lifts, the wheel can’t turn':s.ccw&&s.psDef>0.005?'Stopped: too small a swing to pass the trip spring':s.psDef>0.005?'Stopped: trip spring bends aside, detent still':'Stopped: wheel locked, balance swinging free';
-  else if(!s.ccw)t=s.psDef>0.005?'Return swing: trip spring bends aside, detent still':'Wheel locked, balance swinging free';
-  else if(s.lift>0.005&&s.prog===0)t='Unlocking: the jewel pushes trip spring and detent';
-  else if(s.prog>0&&s.prog<1)t=s.drop?'Unlocked: the wheel drops onto the impulse jewel':'Impulse: a tooth drives the balance';
-  else t=s.lift>0.005?'Detent returns and locks the next tooth':'Wheel locked, balance swinging free';
-  ctx.fillStyle=ink;ctx.font='600 12px "Instrument Sans",sans-serif';ctx.fillText(t,8,h-8);
-  ctx.textAlign='right';ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.fillText('balance '+(Math.round(th/D2R)||0)+'°',w-8,14);
-  ctx.fillText('from the cock side, as Fig. 90',w-8,h-26);   /* the manual's side; the 3D Escapement view looks from the pillar plate, so it is mirrored */
+  drawEscPlan(ctx,w,h,s,Ew,{labels:'short',cap:true,pal:{ink:dark?'#e4e8eb':'#141a20',muted:dark?'#9aa4ad':'#5b656e',brass:dark?'#d8a94f':'#b58325',steel:dark?'#8e98a3':'#8a939c',copper:dark?'#d49a63':'#b87840',paper:dark?'#1b2127':'#ffffff'}});
 }
 
 /* ================= app ================= */
@@ -110,7 +80,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* a lost WebGL context (a phone switching apps, a GPU reset) comes back without the generated environment map that lights the metals: rebuild it */
   cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);});
   scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28));
-  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=true;key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
+  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=false;   /* casts only with Shadows (Display) on: look() */
+  key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
   const scam=key.shadow.camera;scam.left=-170;scam.right=170;scam.top=170;scam.bottom=-170;scam.near=1;scam.far=1200;scene.add(key,key.target);
   const cam=new THREE.PerspectiveCamera(32,1,1,6000);
   const M=mats();const BX=buildBox(M);scene.add(BX.root);
@@ -153,7 +124,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:!PHONE,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
   const FOV0=cam.fov,cur={lift:0,flip:0,explode:0,lidM:0,lidT:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the real plates stay hidden */
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
   /* a short note in the HUD, for a few seconds */
@@ -197,11 +168,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       m.visible=vis&&!opHide(m);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
     for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
+    /* Shadows (off by default): the key light's shadow map, an extra pass over every caster (about 380 draw calls and all the triangles again) and a costlier shader.
+       The floor's shadow (sh) is a texture, always there. Turned off, the map (2048 px, 1024 on phones) is freed (three makes it again when it is next needed) */
+    if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
     cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
-    $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
+    $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;$('#shadows').checked=st.shadows;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
   }
 
   /* ---------- camera ---------- */
@@ -291,7 +265,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const help=$('#help'),helpBtn=$('#helpBtn');
   function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeOpm();showHelp(false);}
+  document.addEventListener('keydown',e=>{if(ESSAY.on())return;   /* the essay shows: its keys scroll it, and the tabs take their own (essay.js) */
+    if(e.key==='Escape'){closeOpm();showHelp(false);}
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
     /* space bar: stop and restart, unless typing or pressing a button */
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
@@ -315,28 +290,20 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN)));
     const snap=[0.05,0.1,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
   spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
-  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();showFig(false);setView(b.dataset.v);}));
+  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();setView(b.dataset.v);}));
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   $('#driveOn').addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');});
   /* about: sources and method in a dialog */
   const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});
   about.addEventListener('click',e=>{if(e.target===about)about.close();});
-  /* tabs: the 3D model, or the overview illustration drawn from it (tools/illustration.py) over it (the model keeps time but isn't drawn meanwhile), tinted or in ink */
-  let figOn=false;const fig=$('#fig'),fsc=fig.querySelector('.fsc');
-  const showFig=on=>{figOn=on;fig.classList.toggle('hidden',!on);$('#tabModel').setAttribute('aria-selected',!on);$('#tabFig').setAttribute('aria-selected',on);if(on)closeOpm();};
-  $('#tabModel').addEventListener('click',()=>showFig(false));$('#tabFig').addEventListener('click',()=>showFig(true));
-  fig.querySelectorAll('img').forEach(im=>im.addEventListener('click',()=>{const z=fsc.classList.toggle('zoom');fig.querySelectorAll('img').forEach(i=>i.title=z?'Click to fit':'Click to see it full size');if(!z)fsc.scrollTo(0,0);}));
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
   /* settings this browser remembers, as it does the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
   const SET=(()=>{try{const o=JSON.parse(localStorage.getItem('cm-set')||'{}');return o&&typeof o==='object'?o:{};}catch(_){return{};}})(),keep=(k,v)=>{SET[k]=v;try{localStorage.setItem('cm-set',JSON.stringify(SET));}catch(_){}};
   units=SET.units==='in'?'in':'mm';
-  /* the Illustration's style (remembered): the tinted drawing or the ink one */
-  const figSt=v=>{$('#figT').classList.toggle('hidden',v==='ink');$('#figI').classList.toggle('hidden',v!=='ink');document.querySelectorAll('#figSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));};
-  figSt(SET.fig==='ink'?'ink':'tint');document.querySelectorAll('#figSt button').forEach(b=>b.addEventListener('click',()=>{figSt(b.dataset.v);keep('fig',b.dataset.v);}));
   document.querySelectorAll('#units button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.v===units?'true':'false');b.addEventListener('click',()=>{units=b.dataset.v;keep('units',units);
     document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);keep('bal',b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
-  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked?'tint':false;look();});$('#drawInk').addEventListener('change',e=>{st.draw=e.target.checked?'ink':false;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});
+  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked?'tint':false;look();});$('#drawInk').addEventListener('change',e=>{st.draw=e.target.checked?'ink':false;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});$('#shadows').addEventListener('change',e=>{st.shadows=e.target.checked;look();});
   const DIAL_INFO={hamilton:[INFO.dial[1],INFO.hands[1]],roman:['Black on silver-white, in the German style of the A. Lange & Söhne deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads AUF (up) to AB (down). Its scale keeps this movement’s 240° sweep.','Gilt leaf hour hand and lance minute hand, gilt wind indicator hand, blued seconds hand. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     swiss:['Black on white, in the style of the Ulysse Nardin (Le Locle) deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads UP / HAUT to DOWN / BAS. Its scale keeps this movement’s 240° sweep.','Blued pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     soviet:['Black on white, in the style of the First Moscow Watch Factory deck chronometers, which copied the Nardin layout (maker’s name and number left off): upright Arabic hours, with the 6 covered by a large seconds sub-dial marked СДЕЛАНО В СССР (made in the USSR); railroad minute and seconds tracks; the wind indicator reads ЗАВОД (wound) to СПУСК (run down). Its scale keeps this movement’s 240° sweep.','Aged gilt pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.']};
@@ -388,7 +355,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const bar=()=>{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);};
     try{navigator.clipboard.writeText(u).then(()=>{bar();say('Copied');},()=>{bar();say('In address bar');});}catch(_){bar();say('In address bar');}});
   /* Reset display: each Display box back to its default (See-through to the view's own; the drawings before Edges, which they disable), faded and hidden parts back. The theme stays */
-  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:!PHONE,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
+  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:true,shadows:false,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
     for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}st.op={};st.hid.clear();st.iso=null;look();opRender();});
   /* the panel's sections: each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
   const DET=[...document.querySelectorAll('.ctl>details.grp')];
@@ -541,7 +508,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   addL('Balance cock','','cock',pw(P.cock,(L.B[0]+COCK_FOOT[0])/2,CK_T,(L.B[1]+COCK_FOOT[1])/2),'mv');
   addL('Escape wheel',`${TRAIN.ew} teeth, 1 turn / ${turnT(ESC_TURN)}`,'escW',pw(ef('escW'),ESC.EX*ES,EY,-7),'mv');addL('Detent','','det',pw(ef('det'),ESC.D(1.1,-0.045).x*ES,EY+1.2,ESC.D(1.1,-0.045).y*ES),'mv');
   addL('Fusee',`1 turn / ${turnT(GW_TURN)}`,'fusee',pw(P.fs,L.Fu[0]+7,-14,L.Fu[1]-3),'mv');addL('Mainspring barrel','','barrel',pw(P.fs,L.Ba[0]-9,-15,L.Ba[1]-6),'mv');addL('Fusee chain','','chain',pw(P.fs,(L.Fu[0]+L.Ba[0])/2-6,-13,(L.Fu[1]+L.Ba[1])/2-10),'mv');
-  addL('Fusee wheel',`${TRAIN.fu} teeth, 1 turn / ${turnT(GW_TURN)}`,'gw',pw(P.gw,L.Fu[0]+14,-6.5,L.Fu[1]-11),'mv');addL('Centre wheel',`${TRAIN.cw} teeth, 1 turn / ${per(ESC_PER.cw*ESC_TURN)}`,'cw',pw(P.cw,-8,-5.2,-8),'mv');addL('Third wheel',`${TRAIN.tw} teeth, 1 turn / ${per(ESC_PER.tw*ESC_TURN)}`,'tw',pw(P.tw,L.T[0]-9,-8.6,L.T[1]+5),'mv');
+  addL('Fusee wheel',`${TRAIN.fu} teeth, 1 turn / ${turnT(GW_TURN)}`,'gw',pw(P.gw,L.Fu[0]+14,-6.5,L.Fu[1]-11),'mv');addL('Centre wheel',`${TRAIN.cw} teeth, 1 turn / ${per(ESC_PER.cw*ESC_TURN)}`,'cw',pw(P.cw,-8,-5.36,-8),'mv');addL('Third wheel',`${TRAIN.tw} teeth, 1 turn / ${per(ESC_PER.tw*ESC_TURN)}`,'tw',pw(P.tw,L.T[0]-9,-4.535,L.T[1]+5),'mv');
   addL('Fourth wheel',`${TRAIN.fw} teeth, 1 turn / ${per(ESC_PER.fw*ESC_TURN)}`,'fw',pw(P.fw,L.F[0]-7,-7.46,L.F[1]+5),'mv');addL('Upper train bridge','','trainBridge',pw(P.trainBridge,-20,TB_T,24),'mv');addL('Barrel bridge','','barrelBridge',pw(P.barrelBridge,-16,BB_T,-18),'mv');
   addL('Sustaining pawl','','spawl',pw(R.spawl,-2.5,0,0),'mv');addL('Sustaining ratchet','','sratchet',pw(P.sratchet,L.Fu[0]+13,-9.45,L.Fu[1]+9),'mv');addL('Balance lower bridge','','lowerBridge',pw(P.lowerBridge,(L.B[0]+L.F[0])/2,LB_T,(L.B[1]+L.F[1])/2),'mv');
   addL('Up/down indicator','','hands',pwo(P.hands,R.ud,-L.Ud[0],6,-36-L.Ud[1]),'dial');addL('Seconds','','hands',pwo(P.hands,R.sec,-10-L.F[0],6,34-L.F[1]),'dial');addL('Gimbal ring','','ring',pw(BX.ring,82,8,0),'box');
@@ -656,25 +623,26 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
 
   /* ---------- shareable links: the state in the URL hash ----------
-     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 or 1 (only against its default: on, off on phones), sec=x:-3.5 (a section; :f shows the other half),
-     tz=local, t=12:00:00 (only once the hands have been set). Read at load and when the hash is edited; written 0.3 s after any change, with
-     replaceState, so the back button isn't filled with views */
-  function hashOf(){const h=new URLSearchParams();
+     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 (Edges off; it is on by default), shadows=1 (Shadows on; off by default), sec=x:-3.5 (a section; :f shows the other half),
+     tz=local, t=12:00:00 (only once the hands have been set). #essay or #essay=detent: the essay (essay.js), at a section; open=bookDet (in a link only): open that panel section.
+     Read at load and when the hash is edited; written 0.3 s after any change, with replaceState, so the back button isn't filled with views */
+  function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(st.edges===PHONE)h.set('edges',+st.edges);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
   function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):first&&!g('tour')&&own(VIEWS,SET.view)?SET.view:'dial';   /* own keys only: 'constructor' is no view or part. At load, no view in the hash: the last one seen here */
+    if(h.has('essay')){ESSAY.show(true,g('essay'));return v;}ESSAY.show(false);   /* the essay: the model underneath is left as it is */
     if(g('tz')==='gmt'||g('tz')==='local'){if(g('tz')!==tz)setTz(g('tz'));}
     if(g('t'))setTod(g('t'));
     { const a=g('arm')==='1'?1:0,b=g('block')==='1'?1:0;if(a!==H.armT){armSet(a);H.arm=a;if(a)H.amp=0;}if(b!==H.blkT){blkSet(b);H.blk=b&&!R.blockClear(lastE??0)?Math.min(b,R.tbs.userData.vFace-0.005):b;} }   /* locked in a link: the balance is at rest */
     { const q={...BDEF};for(const kv of(g('esc')||'').split(',')){const[k,v]=kv.split(':');if(own(BDEF,k)&&Number.isFinite(+v)){const b=BENCH.find(x=>x[0]===k);q[k]=clamp(+v,b[2],b[3]);}}
       if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings */
-    const ed=g('edges')==='1'||(g('edges')!=='0'&&!PHONE);   /* Edges is on by default except on phones: the hash says edges=0 or edges=1 only against that */
+    const ed=g('edges')!=='0',shd=g('shadows')==='1';   /* Edges is on by default, Shadows off: the hash says edges=0 or shadows=1 only against that */
     const dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
-    if(dw!==st.draw||ed!==st.edges||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
+    if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
     const tr=parseInt(g('tour'));
     if(tr>=1&&tr<=TOUR.length)tourGo(tr-1);
     else{if(st.tour>=0)tourEnd();
@@ -685,6 +653,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(sc){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
       if(!first)setView(v);}
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
+    const od=DET.find(d=>d.id===g('open'));if(od){od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}   /* open=bookDet: a link from the essay to a panel section */
     return v;}
   addEventListener('hashchange',()=>applyHash(false));
   for(const k of['finish','dial','bal']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}
@@ -695,8 +664,12 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   let last=performance.now(),loaded=false,hudS='';const hud=$('#hud');
   /* idle: when nothing that shows has changed (camera, lids, lift, wheels, balance, wind, ship motion, section), no input came in the last 0.6 s and the
      stage was drawn less than a second ago, the frame skips the render, the labels and the inset (a stopped model with a still camera draws once a second).
-     Off-screen stages aren't drawn. ?snap draws every frame, for the tools that change the model directly */
-  let lastSig=null,lastDraw=-1e9,renders=0,onScreen=true;
+     Off-screen stages aren't drawn, nor is the stage while the essay covers it (the model keeps time meanwhile). ?snap draws every frame, for the tools that change the model directly.
+     The balance's swing (angle, detent, passing spring) counts only while it can be seen: not with the movement in its case under the dial (the Dial and Box views), unless
+     the walkthrough's inset or the adjuster's bench shows the escapement; there the hands' steps alone draw a frame (a few frames a beat, not every frame).
+     Without input, a frame comes at most every 10 ms: a 120 or 144 Hz display draws the running model at 60 or 72 Hz, a 60 or 90 Hz one every frame.
+     The signature is compared with the last one drawn, so a change in a skipped frame is still drawn */
+  let lastSig=null,lastDraw=-1e9,renders=0,onScreen=true;const benchD=$('#benchDet');
   for(const ev of['pointerdown','pointermove','wheel','keydown','input','change','click'])document.addEventListener(ev,wake,{capture:true,passive:true});
   new ResizeObserver(wake).observe(stage);cv.addEventListener('webglcontextrestored',wake);
   new IntersectionObserver(e=>{onScreen=e[e.length-1].isIntersecting;if(onScreen)wake();}).observe(stage);
@@ -744,12 +717,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const cp=Math.cos(C.pitch);cam.position.set(C.target.x+C.dist*cp*Math.sin(C.yaw),C.target.y+C.dist*Math.sin(C.pitch),C.target.z+C.dist*cp*Math.cos(C.yaw));cam.lookAt(C.target);
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
-    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,s.th,s.lift,s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off')];
-    const still=!SNAP&&!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now>wakeT&&now-lastDraw<1000;lastSig=sig;
-    if(!figOn&&onScreen&&!still){paint();renders++;lastDraw=now;
+    const balHid=cur.lift<0.02&&cur.explode<0.01&&cur.dev<0.01&&!st.drive&&secMode==='off'&&!st.see&&!st.iso&&!st.hid.size&&!Object.keys(st.op).length&&!insetKind&&!benchD.open;   /* the balance can't be seen */
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off')];
+    const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
+    if(!ESSAY.on()&&onScreen&&!still){paint();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
-    if(!still){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}
+    if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
@@ -759,6 +733,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
+  ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake});
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';
   document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==='dial'?'true':'false'));
