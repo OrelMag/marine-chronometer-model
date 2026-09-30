@@ -24,6 +24,7 @@ Contents:
 [Rendering](#rendering) ·
 [Controls and display](#controls-and-display) ·
 [Build, tools and docs](#build-tools-and-docs) ·
+[Essay](#essay) ·
 [Fixed, not yet committed](#fixed-not-yet-committed)
 
 ---
@@ -54,8 +55,10 @@ Contents:
   two-strip spring, round locking jewel with a flat at 10° of draw, Elinvar trip
   spring on a Z bracket, and support block with stop button. `7328e67`
 - **Essay's detent figure drifted from the model.** It now carries a copy of the
-  model's `ESC` solver. Keep: after changing `ESC` in `movement.js`, copy it into
-  the essay's `src/p4.js` and rebuild (see CLAUDE.md). `219e4df`
+  model's `ESC` solver. `219e4df` Since then the solver became one `makeEsc`
+  (`813f7ae`), and the essay became the model's Essay tab (`9ffe479`), whose figure uses the
+  model's own `ESC` and the same plan drawing as the inset (`drawEscPlan`,
+  `shared/escplan.js`). Keep: one solver and one plan drawing; nothing to copy.
 - **Balance arm drawn from the hub to one side only.** `subtractCircle` keeps
   one run of the outline, and the 2.2 mm circle round the hub cut the 2.4 mm
   bar into two; the arm is now drawn outright. The moment of inertia already
@@ -670,7 +673,8 @@ Contents:
   contacts: "drops onto the impulse jewel" only during the drop, "Stopped" while
   held. Its teeth are the mesh's, and it says it is seen from the cock side, as
   Fig. 90, which is the 3D Escapement view mirrored. Keep: `drawEsc2D(ctx, w, h,
-  s, E, dark)` takes the state the model shows. `89a949d`
+  s, E, dark)` takes the state the model shows (it now calls `drawEscPlan` in
+  `shared/escplan.js`, which the essay's detent figure shares). `89a949d`
 
 ## Build, tools and docs
 
@@ -689,7 +693,8 @@ Contents:
 - **Link-preview URLs ended in `.html`,** which Cloudflare redirects. They now
   don't, and `--keep-html` covers other hosts. `2c0f236`
 - **Essay linked to the wrong page for the model.** It now links to the site's
-  home page. `219e4df`
+  home page. `219e4df` (The essay is now the model's Essay tab, and its links
+  into the model are in-page: `#tour=3`, `#view=…`, `#open=…`.)
 - **About dialog claimed more collision testing than was done** (finding 7).
   "Every part was tested for collisions through a full escapement cycle" is
   now what the checks cover: 0.05 mm, through the escapement cycle, round the
@@ -710,7 +715,8 @@ Contents:
   froze the model. It now spends that context on a blank page, as `smoke.py`
   does, and waits for the loading screen to go. Keep: every browser tool
   warms up WebGL first and waits for the page, not for a fixed time. `ea04355`
-- **`illustration.py` failed at its first view.** Its render hook keeps the
+- **`illustration.py` failed at its first view** (the tool and its Illustration
+  tab have since been removed; the lesson stands). Its render hook keeps the
   last scene drawn, for the passes to redraw. With Edges on (the default except
   on phones), the last scene drawn each frame is the Edges overlay's, two
   objects with no parts in it, so the first label anchor on a part threw
@@ -734,6 +740,34 @@ Contents:
   0.8 mm head (`audit.py`: nothing under its seat). `polyGeo` now passes the
   outline and every hole clockwise. Keep: measure a hole's size at the faces
   when a screw seems to float. `41e99e0`
+
+## Essay
+
+- **The essay contradicted the model and itself.** Its last figure, "The whole
+  instrument", had a 15-tooth escape wheel turning in 7.5 s and a 90/80 train,
+  where its text and train figure said 16 teeth and 8 s; its fusee made 8 turns
+  on a 0–56 h axis (the model's makes 8¾ and runs 60 h, rated 56); its balance
+  swung 220° in two figures and "some 250°" in the text, against the solver's
+  255°; its dial was a Roman "No. 1761"; its balance was a split bimetallic one,
+  labelled as the instrument's; and it used the older names (passing spring,
+  discharging and impulse pallets, locking stone) for the trip spring and the
+  unlocking, impulse and locking jewels. It is now the model's Essay tab, its
+  figures drawn from the model's code (`dialCanvas`, `handShape`, `ESC` and
+  `drawEscPlan`, `TRAIN` and `MOD`, `arbor`, `escapeWheel`, `R.fs`, `buildBox`),
+  the split balance shown as history beside the Model 21's, and its terms the
+  model's. Keep: the essay's figures use the model's functions and constants,
+  not copies; a number the model computes goes in a `data-live` span, set by
+  `fillLive()`. `9ffe479`
+- **The escapement's figures were typed into the essay's text** (lock 6.0°,
+  drop 2.1°, overall 28.4°), so a change to the solver would have left them
+  stale. They are now read from `ESC.measure()` as the essay shows, with the
+  let-off, roller shake, horn clearance, roller, centre distance, swing and the
+  least swing that keeps it going. Keep: no figure the model computes typed in. `9ffe479`
+- **The essay made a WebGL context for each 3D figure** (seven, beside the
+  model's own on the page that links to it). Its 3D figures now share one
+  renderer off screen, each copied onto its own 2D canvas, and are built only
+  when first near the view. Keep: at most two WebGL contexts on the page
+  (`smoke.py` counts them). `9ffe479`
 
 ---
 

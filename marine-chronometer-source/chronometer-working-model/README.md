@@ -12,22 +12,24 @@ fonts from `../../vendor/`, all from local files, so it works offline.
 
 `dist/chronometer-working-model.html` is the same thing as one self-contained
 file. `python build.py` here regenerates it. Normally you run `python build.py`
-at the repository root instead: it also rebuilds the essay, refreshes the root
-copies and assembles the website (see the root README).
+at the repository root instead: it also refreshes the root copy and assembles
+the website (see the root README).
 
 ## Files
 
 | File | Contents |
 |---|---|
-| `index.html` | Page markup: the stage with its 3D model / Illustration tabs, walkthrough card, controls (View, Time, Winding and Display, open by default, and Parts, Rate and timing weights, Stopping and starting, Cross-section and Variants, closed; every section folds, and each viewer's open ones are remembered in `localStorage` as `cm-open`), the About dialog with sources and method |
+| `index.html` | Page markup: the stage with its 3D model / Essay tabs, walkthrough card, controls (View, Time, Winding and Display, open by default, and Parts, Rate and timing weights, Stopping and starting, Cross-section and Variants, closed; every section folds, and each viewer's open ones are remembered in `localStorage` as `cm-open`), the About dialog with sources and method, and the essay (`<article id="essay">`: its text and its figures' markup) |
 | `css/style.css` | Layout, theme tokens (light and dark), controls, labels |
-| `img/illustration.webp`, `img/illustration-ink.webp` | The overview drawing shown in the Illustration tab, tinted and in ink (Tinted / Ink under it, remembered in `localStorage` as `cm-set.fig`), rendered from the model by `tools/illustration.py` |
+| `css/essay.css` | The Essay tab: a reading page laid over the model, in the model's tokens; its classes start `e-` |
 | `js/core.js` | Math helpers, materials and procedural textures (plate striping, wood grain, engraving), gear / hairspring / hand / mainspring geometry, dial artwork, cross-section shader patch, the tinted and ink drawings (`drawOf`, `makeInk`) |
 | `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
+| `../shared/escplan.js` | Its plan, `drawEscPlan(ctx, w, h, state, E, o)`, drawn from the solver's outlines, as Fig. 90 has it: the walkthrough's inset and the adjuster's bench (three names, the stage written under it) and the essay's detent figure (every part named, a dial for the balance's angle); `escStage(state)` names what the escapement is doing |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), screw positions and holes, pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, train-blocking screw and balance locking arm, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate that turns to admit the winding key), winding key |
+| `js/essay.js` | The Essay tab (see "The Essay tab" below): its figures, drawn from the model's code, and the tab, hash and scroll handling. One IIFE that declares only `ESSAY` |
 | `js/app.js` | The parts registry (`PARTS`: every part's name, description, part numbers, group, colour and flags), renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, stopping and starting (the balance's amplitude, the locking arm, the train-blocking screw, the twist), and the animation loop |
-| `build.py` | Inlines the CSS, JS, image, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
+| `build.py` | Inlines the CSS, JS, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
 | `dist/chronometer-working-model.html` | The built single file (committed) |
 | `tools/bundle.py`, `tools/fit.py`, `tools/unproj.py` | Photo fitting: camera fits to the Fig. 2 and top-view photographs, triangulation of the balance, fusee and barrel axes, photo points projected onto the movement (see "How the layout was measured") |
 | `tools/solve.py` | Places the arbors from the measured positions and the centre distances the wheels need (no browser) |
@@ -42,14 +44,13 @@ copies and assembles the website (see the root README).
 | `tools/placements.py` | Every mesh's position and bounding box in seven model states (escapement phases, train and wind positions), and a diff between two runs or two copies of the page: proves a change moved only the parts it meant to, and that the mechanism moves as before |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
 | `tools/invariants.py` | Checks the model's arithmetic: hands against the time, the wind indicator's scale, the fusee's 60 h and 17½ half turns, the balance's moment of inertia and the rate for a turn of the weights (exit code 1 on a failure) |
-| `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, variants, sections, time zone, keys, a URL-hash link), then scrolls the essay; fails on any console error or warning |
+| `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, variants, sections, time zone, keys, a URL-hash link), then opens the Essay tab, scrolls it and works every control in it (the model not drawn under it, at most two WebGL contexts, a link into the model and Back, `#essay=detent`); fails on any console error or warning (`--model`, `--essay`: one half) |
 | `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
 | `verification/lower-bridge-comparison.png` | The balance lower bridge side by side with the manual's Figs. 29, 30 and 110 (the exploded view from a camera fitted to Fig. 110's projection, the underside, the section through the train-blocking screw) |
 | `tools/lower_bridge.py` | Lays out the balance lower bridge's upper tier (Figs. 29, 30, 110) round what it must clear, reports the clearances, prints `LB_UP` for `movement.js` and draws it back on Fig. 110 (no browser) |
 | `tools/train_bridge.py` | Traces the upper train bridge's crescent on the manual's Fig. 67 through an affine fit, pushes the notch's edge off the screws and bushings, and prints `TB_EDGE` for `movement.js` (no browser) |
 | `tools/topview.py` | Renders the model from above and warps it onto `References/photo-top-view.jpg` through five screws on the barrel bridge: `verification/topview-comparison.png` (photo, model, the two blended) |
-| `tools/illustration.py`, `tools/illustration-passes.js` | Draws `img/illustration.webp` (tinted) and `img/illustration-ink.webp` from the model: renders each view's colour, lit shade, normals, depth and part ids in the page, turns them into lines and a tint (or lines alone), and lays out the labelled sheet |
-| `tools/social.py` | Renders the 1200 × 630 link-preview images into `site-assets/`, the model on a dark background beside a title column: `social.png` (the model page: the dial in its box, hands at 10:10) and `social-movement.png` (the essay: the moving parts) |
+| `tools/social.py` | Renders the 1200 × 630 link-preview images into `site-assets/`, the model on a dark background beside a title column: `social.png` (the page's preview: the dial in its box, hands at 10:10) and `social-movement.png` (the moving parts, titled for the essay, for posting) |
 | `verification/` | Reference results: the top-view comparison, the Fig. 2 overlay and its camera fit |
 
 ## Controls
@@ -80,8 +81,8 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme, and Reset display puts every Display box back to its default (See-through to the view's own) and shows faded and hidden parts again, leaving the theme. Save writes the view as a PNG; Link copies the page's address with the state in its hash (without clipboard access it is put in the address bar instead).
 - Gimbals latched (Display) swings the latch lever in through the slot in the gimbal ring to the keeper on the case, bringing ring and case level with the box first; latched, they tilt with the box, as Ship motion then shows. Unticked, the lever swings back along the wall and the gimbals are free. A walkthrough step with ship motion releases them.
 - Tick sound (Time) is on by default: a click at each beat, while the model runs at up to 1×. Browsers start audio only from a user gesture, so the page makes or resumes its audio context on the first click, tap or key press, and it is silent until then.
-- Tinted drawing and Ink drawing (Display; `draw=1` and `draw=ink` in the hash; one at a time) draw the live model as the Illustration tab's two drawings are drawn: `tools/illustration.py`'s `stylize()` done on the GPU, with its numbers except one: the tint is laid lighter (pigment density `INK.wash` 0.75 against `stylize()`'s 1.25), so the live model reads through it.
-  - `drawOf(m)` in `core.js` gives each shown material a Phong copy whose output is the tint. It is the albedo lifted toward the paper, the lit value in soft bands, white where metal catches the light. `look()` applies it to whatever a part shows, so it combines with Colour by part, fading and sections. In ink (`INK.ink`) the copy is paper, inked only where its albedo falls under 55 % of the material's median (`inkRef`: the colour times a 48 × 48 sample of the map), which is the printing: the dial's figures. The engravings (`userData.inkDecal`) are ink under their own alpha; a faded part is paper at its opacity. `stylize()` takes the median per mesh over its visible pixels, the live mode per material over its whole map, which comes to the same for the dial.
+- Tinted drawing and Ink drawing (Display; `draw=1` and `draw=ink` in the hash; one at a time) draw the live model as a pen-and-wash drawing, tinted or in ink alone; the tint is laid light (pigment density `INK.wash` 0.75), so the live model reads through it. (The numbers were first those of an overview drawing rendered from the model, the Illustration tab, which the Essay tab replaced.)
+  - `drawOf(m)` in `core.js` gives each shown material a Phong copy whose output is the tint. It is the albedo lifted toward the paper, the lit value in soft bands, white where metal catches the light. `look()` applies it to whatever a part shows, so it combines with Colour by part, fading and sections. In ink (`INK.ink`) the copy is paper, inked only where its albedo falls under 55 % of the material's median (`inkRef`: the colour times a 48 × 48 sample of the map), which is the printing: the dial's figures. The engravings (`userData.inkDecal`) are ink under their own alpha; a faded part is paper at its opacity.
   - `makeInk(r)` draws the frame. Three scene passes: normals, part ids and 24-bit depth for the solids, then the same for the ghosts, then the tint (with the shadows when Shadows is on). Two full-screen passes follow: the lines, then the sheet. The sheet lays the tint on paper, true to the lines, and inks with a varying pressure.
   - The tint was once a pen-and-wash wash, laid up to 1.4 px off the lines by a noise field, mottled, pooled at edges, with hatching in deep shade. The offset read as the parts being distorted, so both drawings now keep to the lines and none of these effects is left.
   - Lines fall where depth jumps (0.6 mm + 1.2 % of the distance) or the drawing ends, with lighter ones at creases and between parts.
@@ -103,16 +104,56 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - Colour by source (Display) colours each part by where its shape and size mainly come from (`src` in `PARTS`, `SRC`): the manual (green: its figures, parts list or specifications), measured (blue: on photographs, or a real part), solved (amber: placed or sized to fit the rest) or estimated (grey: the manual shows it, not its size or shape). A key under the tabs names the colours; the part's card says what came from where. It and Colour by part exclude each other; `colr=part` or `colr=src` in the hash.
 - Labels are off by default (Display turns them on, and the choice isn't remembered). The walkthrough shows the labels of each step's parts regardless.
 - The walkthrough sets its own view, speed, Moving parts only, ship motion and gimbal latch for each step. Ending it (Finish, Exit, or anything that leaves it) gives back the viewer's own: the view, See-through, Ship motion, Gimbals latched, the speed, Moving parts only and the motion work, as they were when it started.
-- Shadows (Display; off by default; `shadows=1` in the hash when on): the key light casts shadows through a shadow map (`PCFSoftShadowMap`, 2048 px, 1024 on phones). With it off, the light casts none: no shadow pass, simpler shaders to compile (two programs fewer at start), and the map is freed. The floor's soft shadow under the box is a texture (`shadowTex`) and is always drawn. The tinted and ink drawings follow the switch. Cost with it on, measured with `tools/perf.py`: about 230–380 more draw calls and every caster's triangles again; 0.4–1.1 ms a frame on a desktop GPU, 22 % (Edges on) to 47 % (Edges off) on the Dial view with the CPU throttled 4×, 14–22 % in the software renderer. `illustration.py`, `social.py`, `topview.py` and `p3fit.py` turn it on, as their images were made.
+- Shadows (Display; off by default; `shadows=1` in the hash when on): the key light casts shadows through a shadow map (`PCFSoftShadowMap`, 2048 px, 1024 on phones). With it off, the light casts none: no shadow pass, simpler shaders to compile (two programs fewer at start), and the map is freed. The floor's soft shadow under the box is a texture (`shadowTex`) and is always drawn. The tinted and ink drawings follow the switch. Cost with it on, measured with `tools/perf.py`: about 230–380 more draw calls and every caster's triangles again; 0.4–1.1 ms a frame on a desktop GPU, 22 % (Edges on) to 47 % (Edges off) on the Dial view with the CPU throttled 4×, 14–22 % in the software renderer. `social.py`, `topview.py` and `p3fit.py` turn it on, as their images were made.
 - Screen readers: the model's `aria-label` says what the stage shows, the view (`VIEW_DESC` in `app.js`) or the walkthrough step, and Moving parts only, and is updated with it.
 - Keyboard and reduced motion: Space stops and restarts, 1 to 9 pick the views (the key for a view that is off, Box or Dial with Moving parts only, flashes its button and says why in the HUD); with the model focused (click it or Tab to it) the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, camera and state moves are instant (as with `?snap`), the walkthrough leaves ship motion off and scrolls without animation, and the page's fades are off.
 - Phones: below 600 px wide the part card is a sheet along the bottom of the stage; on touch screens buttons and checkboxes are finger-sized; in landscape with the height under 560 px the stage fills the height and the panel scrolls beside it. On a phone (coarse pointer, screen under 600 px on its short side) the pixel ratio is capped at 1.5 and the shadow map at 1024 px, against 2 and 2048 px elsewhere. A part casts a shadow only when its radius spans 6 texels of the shadow map, which follows the view: far views drop the screws and pins, close-ups keep them. The knurled nuts and the balance rim's holes are each one merged mesh (`mergeGeo` in `core.js`).
+
+## The Essay tab
+
+The page's second tab is *The Marine Chronometer*, an essay on how the chronometer keeps time at sea, in the manner of Bartosz Ciechanowski's
+*Mechanical Watch*. It replaced two things: a separate essay page (`marine-chronometer.html`, which predated the manual and had drifted from the model:
+a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the escapement's parts) and the Illustration tab, an overview drawing.
+
+- **Where it is.** Its text and figure markup are the `<article id="essay">` in `index.html`, its styles `css/essay.css` (classes `e-…`, since the model's
+  `.stage`, `.sl` and `h2` mean other things), its code `js/essay.js`. It is laid over the whole page (`position: fixed`), so the model's layout underneath
+  is untouched, and the tab bar moves into its sticky bar while it shows.
+- **Sections** (each heading's id is its link: `#essay=detent`): time is a position, an oscillator that ignores the sea, the spring that breathes, heat,
+  constant force, winding, counting, the detent, level on a moving ship, keeping the rate, the Hamilton Model 21.
+- **Figures, and what each takes from the model:**
+
+  | Figure | Drawn with |
+  |---|---|
+  | The dial at the top | `dialCanvas('hamilton')` and the hands' outlines (`handShape`, core.js) at the model's own time and state of wind (`bind`) |
+  | Longitude, clock error | 2D; 4 s of time is 1′ of longitude |
+  | Balance and hairspring | The Model 21's balance rebuilt in the essay (the model's is built inside `buildMovement`): `BAL_R`, the rim's section, screws and weights as `movement.js` places them; `springGeo` with the model's hairspring numbers; the swing `ESC.A`; the moment of inertia `R.timing(0,0)` |
+  | Terminal curves | `springGeo`, and a plain-ended coil (essay-only), drawn with fewer coils than the model's fourteen |
+  | Heat | A split bimetallic rim (as history), a plain brass one and the Model 21's; the older balances' rate curves are illustrative; the Model 21's band is the Navy test's limit (Sec. IX), not a curve |
+  | Constant force | The model's fusee profile and barrel turns (`R.fs.rf`, `R.fs.I`), 8¾ turns, 0 to 60 h with the rated 56 h marked; the spring's pull shown is the one the profile answers |
+  | Winding | The dial's up/down sub-dial and hand; 3.43 h a half turn (`FUSEE_PER_HOUR`) |
+  | Counting | `arbor`, `gearGeo` and `escapeWheel` with `TRAIN`'s counts and `MOD`'s modules; turn times from `ESC_PER` |
+  | The detent | `drawEscPlan` with the model's `ESC` (it follows the adjuster's bench) |
+  | Gimbals | `buildBox` itself, with a dial at the model's time |
+  | Keeping the rate | 2D; a simulated chronometer's rate book in the form of Table I |
+
+- **Numbers in the text** that the model computes are `data-live` spans filled by `fillLive()` when the essay shows: the escapement's figures
+  (`ESC.measure()`), the swing and the least swing that keeps it going, the roller, the centre distance, the tooth counts, the fusee's radii, the
+  moment of inertia. The text's other facts come from the manual (Secs. I–IV, VIII, IX) and this README; keep them to those sources.
+- **Building and drawing.** A figure is built the first time it comes within 300 px of the view (an `IntersectionObserver` on the essay), once the fonts
+  are loaded (the dial is drawn once and kept) and, for those that read the model (the fusee), once app.js has called `ESSAY.bind()`. A figure is drawn
+  only while the essay shows, and only when something in it changed. The 3D figures share one `WebGLRenderer` on a canvas off the page: each renders
+  into the bottom-left corner of that canvas and is copied onto its own 2D canvas in the same task, so the page has two WebGL contexts (the model's and
+  this one), where one per figure would have been seven more. The model keeps time under the essay but isn't drawn, and its keys are left alone.
+- **Hash and history.** `#essay`, or `#essay=<section>` as the reader scrolls, written by app.js's `hashOf` (by the essay itself before the model is
+  built). Links from the essay into the model are ordinary links (`#tour=3`, `#view=escapement&speed=0.05&part=det`, `#open=bookDet`), so Back returns
+  to the essay where it was left; `sessionStorage` (`cm-essay-y`) keeps the place through a reload. The essay's old address on the live site
+  (`/marine-chronometer`) is redirected to `/#essay` by `worker.js`.
 
 ## Testing
 
 The page's state is kept in the URL hash, so a link opens the model as it
 was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part; `view=laidout` is the laid-out train), `arm=1` (the balance locked, at rest), `block=1` (the train-blocking screw down),
-`#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
+`#tour=6` (a walkthrough step), `#essay` or `#essay=detent` (the Essay tab, at a section), `open=bookDet` (in a link: open that panel section), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
 rewritten (without adding to the history) 0.3 s after any change.
@@ -629,8 +670,8 @@ Update the step count in `index.html` ("Eight steps …") if it changes.
 (`rT`, `rd`, `dL`, `DRAW`, `aI`, `aD` and the rest, angles in degrees) are the
 defaults listed at the top of `makeEsc`.
 `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection and
-escape-wheel progress for balance phase `p`. The 2-D walkthrough diagram
-(`drawEsc2D` in `app.js`) draws from the same data, so the two stay in step.
+escape-wheel progress for balance phase `p`. The 2-D plan (`drawEscPlan` in
+`../shared/escplan.js`: the walkthrough's inset, the adjuster's bench and the essay's detent figure) draws from the same data, so they stay in step.
 The detent's plan outlines are `ESC.pieces` (turning about the point of
 flexure) and `ESC.fixed`; their heights are set where the detent is built.
 After a change, run `node escapement.js` in `tools/`. It measures lock, let-off,
@@ -640,9 +681,9 @@ manual's figures. The measurements and tolerances are `ESC.measure()` and
 one definition; `measure()` also says when a setting would not run at all
 (`runs`, `why`), and the tool then exits with 1. To try a setting before editing, pass it on the command line,
 for example `node escapement.js rT=0.29`. Record the results in the escapement
-entries under "Estimated, not from the manual". The essay's detent figure (F7
-in `../marine-chronometer-essay/src/p4.js`) calls the same `makeEsc`, so it
-follows the change; rebuild with `python build.py` at the root. `node escapement.js`
+entries under "Estimated, not from the manual". The essay's detent figure and
+the figures in its text (lock, let-off, drop, overall, shake, horn clearance) read
+the model's own `ESC`, so they follow the change. `node escapement.js`
 exits with 1 when a figure is out of tolerance.
 
 **Update the link-preview images** after visible changes. From `tools/`, run
@@ -652,13 +693,10 @@ shot:
 
     python social.py --out name.png --view movement --drive --cam YAW PITCH DIST FOV
 
-**Update the illustration** after a visible change to the box, gimbals, fusee,
-chain, escapement or balance: `python illustration.py` from `tools/` renders the
-five views, draws them tinted and in ink and writes `img/illustration.webp` and
-`img/illustration-ink.webp` (about two minutes; `--only esc bal` re-renders some
-views, `--no-render` only redraws and lays out). Look at `r_ill/sheet-tint.png`
-and `sheet-ink.png`: labels pointing at a sheet position were placed
-by eye, so move them in `sheet()` if a part has moved. Then rebuild from the root.
+**Look over the essay** (`index.html#essay`) after a visible change to the box,
+gimbals, fusee, chain, train, escapement or balance: its figures are built from the
+same code (`buildBox`, `arbor`, `escapeWheel`, `gearGeo`, `springGeo`, `dialCanvas`,
+`handShape`, `ESC`, `R.fs`), so they follow, but their cameras and labels were placed by eye.
 
 **Measure performance** after a change that could cost frame time: `python perf.py`
 from `tools/` prints, for each view, the frame's cost as opened (Edges on,
