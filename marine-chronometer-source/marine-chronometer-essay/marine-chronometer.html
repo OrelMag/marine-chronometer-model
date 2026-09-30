@@ -266,7 +266,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 </figure>
 
 <p>On the return swing the discharging pallet meets the passing spring from the other side. This time the passing spring simply bends away from the horn. The detent never moves, the wheel stays locked, and the balance passes with almost no resistance.</p>
-<p>All of this happens in a few degrees of a swing of some 250° each way, and the tolerances are fine. The US Navy’s overhaul manual for the Model 21 gives a repairer the figures to set, measured as angles of the balance. The <em>lock</em>, from the moment the detent leaves its stop until the tooth drops off the stone, should be about 6°. The wheel’s <em>drop</em> onto the impulse pallet should be about 2°. The whole contact on both swings together, the <em>overall</em>, should be 26° to 30°. The impulse roller, 6.3 mm across, clears the teeth on either side of it by only 0.05 mm, and the horn clears the discharging pallet by a quarter of a millimetre. The figure above meets every one of those settings: its lock is 6.0°, its drop 2.1° and its overall 28.3°.</p>
+<p>All of this happens in a few degrees of a swing of some 250° each way, and the tolerances are fine. The US Navy’s overhaul manual for the Model 21 gives a repairer the figures to set, measured as angles of the balance. The <em>lock</em>, from the moment the detent leaves its stop until the tooth drops off the stone, should be about 6°. The wheel’s <em>drop</em> onto the impulse pallet should be about 2°. The whole contact on both swings together, the <em>overall</em>, should be 26° to 30°. The impulse roller, 6.3 mm across, clears the teeth on either side of it by only 0.05 mm, and the horn clears the discharging pallet by a quarter of a millimetre. The figure above meets every one of those settings: its lock is 6.0°, its drop 2.1° and its overall 28.4°.</p>
 <p>Hamilton also chose its materials for the job. The detent is beryllium copper, a springy alloy that doesn’t rust, and the passing spring is Elinvar, a nickel-steel whose stiffness hardly changes with temperature. In English chronometers the passing spring was usually gold.</p>
 <p>The design has a price. A detent escapement isn’t self-starting: if the balance stops, it has to be swung by hand to set it going again. A hard jolt can also knock the detent and let the wheel slip a tooth. In a padded box in a ship’s chart room that’s an acceptable trade, and it is one reason the design stayed in the box instead of moving to the wrist.</p>
 <p class="see"><a href="chronometer-working-model.html#view=escapement&amp;speed=0.05">The detent at 1/20 speed in the working model →</a></p>
@@ -330,9 +330,11 @@ function makeEsc(o={}){
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side. EX: the centre distance (9.40 mm; the model passes the one in its L).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
      rT: passing-spring tip; rd: discharge jewel reach; dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
-  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.288,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:267.5};
+  /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
+     (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch. tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
+  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.286,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:269.6,r0:5.5/ES,U:0.1,land:0.05,B:0.55,tsT:0.06};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
-  const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A=c.A*D2R,G=c.G,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=0.1/ES,dL=c.dL,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
+  const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A=c.A*D2R,G=c.G,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
   /* detent (Fig. 90): straight, 68 deg to the line of centres, the locking face 11.3 mm from the point of flexure Ft. The passing spring runs parallel to it
@@ -371,9 +373,12 @@ function makeEsc(o={}){
   /* wheel angle (tooth tip, from the line of centres) at which a tooth meets the impulse jewel at balance angle th: its locking face on the jewel's
      tip, or its tip on the jewel's driven face, whichever holds it back more; -1e9 while the jewel is outside the teeth's path */
   const bite=th=>{const c=aIc+th,u={x:Math.cos(c),y:Math.sin(c)},h=wI/2,sT=Math.sqrt(rp*rp-h*h),ox=h*u.y,oy=-h*u.x;let a=-1e9;   /* driven face: s*u+(ox,oy) */
-    const qx=sT*u.x+ox,qy=sT*u.y+oy;if(qx<0&&Math.hypot(qx-EX,qy)<1)a=Math.atan2(qy,qx-EX);
+    const qx=sT*u.x+ox,qy=sT*u.y+oy,rq=Math.hypot(qx-EX,qy);if(qx<0&&rq<1)a=Math.atan2(qy,qx-EX)-U*P*Math.min(1,(1-rq)/(1-r0));   /* the undercut face reaches the jewel's tip that much after the tooth's tip */
     const cx=ox-EX,b=u.x*cx+u.y*oy,dc=b*b-(cx*cx+oy*oy-1);if(dc>0){const s=-b-Math.sqrt(dc);if(s>0&&s<=sT){const px=s*u.x+ox;if(px<0)a=Math.max(a,Math.atan2(s*u.y+oy,px-EX));}}
     return a;};
+  /* one tooth's outline (unit frame, polar [r, angle]) with its tip at angle a, the back trailing (+angle, the wheel turning to -angle): front root, tip, land, hollow back,
+     root circle to the next tooth's front root. Drawn by the model's wheel (core.js escapeWheel) and the 2D inset */
+  const toothPts=a=>{const q=[[r0,a+U*P],[1,a],[1,a+c.land*P]];for(let k=1;k<=8;k++){const f=k/8;q.push([1-(1-r0)*Math.sqrt(f),a+P*(c.land+(c.B-c.land)*f)]);}q.push([r0,a+P*(c.B+1+U)/2]);return q;};
   /* state at balance phase p (0..1 over one 0.5 s oscillation): balance angle, detent lift, passing-spring deflection, escape-wheel tooth progress.
      amp: the swing's amplitude in radians (A, the running amplitude, by default); smaller while the balance starts or runs down. Below the angle that unlocks
      the detent, completes the impulse and passes the trip spring (AMIN) the wheel stays locked, which the caller keeps (the progress it reports assumes a running escapement).
@@ -434,7 +439,7 @@ function makeEsc(o={}){
       {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
-  return{settings:c,ES,NT,P,EX,A,AMIN,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
+  return{settings:c,ES,NT,P,EX,A,AMIN,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};
 
@@ -966,7 +971,7 @@ function initTrain(){
 const ESC=makeEsc();
 function initEsc(){
   const st=$('#f-esc');const C=canvas2D(st,w=>w<520?0.84:0.8);
-  const E=ESC,RT=1,RR=0.77;
+  const E=ESC;
   let phase=0.15,speed=0.08,playing=!RM;
   const phIn=$('.phase',st.parentElement),spIn=$('.speed',st.parentElement),btn=$('.play',st.parentElement),ro=$('#esc-read');
   const stage=s=>!s.ccw?(s.psDef>0.002?'passing':'free'):s.prog>0&&s.prog<1?(s.prog<0.25?'drop':'impulse'):s.lift>0.002?(s.prog?'relock':'unlock'):'free';
@@ -985,12 +990,12 @@ function initEsc(){
     const brass=PAL.brass,ink=PAL.ink,ruby='#c3163b',phi=-(s.prog%1)*E.P;
     // escape wheel
     ctx.beginPath();let first=true;
-    for(let k=0;k<E.NT;k++){const a=E.t0+k*E.P+phi;const pts=[[RR,a-0.005],[RT,a]];for(let j=1;j<=6;j++){const q=j/6;pts.push([RT-(RT-RR)*Math.pow(q,0.6),a+E.P*0.72*q]);}pts.push([RR,a+E.P*0.99]);
+    for(let k=0;k<E.NT;k++){const pts=E.toothPts(E.t0+k*E.P+phi);   // the model's tooth outline
       for(const[r,aa]of pts){const px=X(E.EX+r*Math.cos(aa)),py=Y(r*Math.sin(aa));first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;}}
     ctx.closePath();ctx.fillStyle=brass;ctx.globalAlpha=0.85;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=ink;ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle=PAL.paper;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.62*sc,0,TAU);ctx.fill();
-    ctx.strokeStyle=brass;ctx.lineWidth=0.09*sc;ctx.globalAlpha=0.85;
-    for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(E.EX),Y(0));ctx.lineTo(X(E.EX+0.64*Math.cos(a)),Y(0.64*Math.sin(a)));ctx.stroke();}
+    ctx.fillStyle=PAL.paper;ctx.beginPath();ctx.arc(X(E.EX),Y(0),(E.r0-0.5/E.ES)*sc,0,TAU);ctx.fill();
+    ctx.strokeStyle=brass;ctx.lineWidth=0.076*sc;ctx.globalAlpha=0.85;
+    for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(E.EX),Y(0));ctx.lineTo(X(E.EX+(E.r0-0.45/E.ES)*Math.cos(a)),Y((E.r0-0.45/E.ES)*Math.sin(a)));ctx.stroke();}
     ctx.globalAlpha=1;ctx.fillStyle=brass;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.14*sc,0,TAU);ctx.fill();ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.035*sc,0,TAU);ctx.fill();
     // impulse roller with its crescent: the teeth dip into it to reach the jewel, which ends flush with the roller
     const arc=(r,a0,a1,n)=>{for(let i=0;i<=n;i++){const q=a0+(a1-a0)*i/n;ctx.lineTo(X(r*Math.cos(q)),Y(r*Math.sin(q)));}},ai=E.aIc+s.th,rr=E.rRoll;

@@ -18,7 +18,7 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   const u=(E,n,w)=>mv.userData._u({E,th:0,lift:0,psDef:0,n,winding:w,springOn:false,msOn:false});
   const wrap=a=>{a=((a%TAU)+TAU)%TAU;return a>Math.PI?a-TAU:a;},out=[],chk=(name,got,want,tol,unit)=>out.push({name,got,want,tol,unit,ok:Math.abs(got-want)<=tol});
   u(0,0,true);u(0,3,false);
-  for(const t of[37.5,754.5,5230,40001.5]){u(2*t,3,false);const esc0=-ESC.t0+0.03*ESC.P;
+  for(const t of[37.5,754.5,5230,40001.5]){u(2*t,3,false);const esc0=-ESC.t0;
     chk(`second hand at t=${t} s (1 turn/min)`,wrap(R.sec.rotation.y+TAU*t/60)/D,0,1e-6,'deg off');
     chk(`minute hand at t=${t} s (1 turn/h)`,wrap(R.min.rotation.y+TAU*t/3600)/D,0,1e-6,'deg off');
     chk(`hour hand at t=${t} s (1 turn/12 h)`,wrap(R.hour.rotation.y+TAU*t/43200)/D,0,1e-6,'deg off');

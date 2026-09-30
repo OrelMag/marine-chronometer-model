@@ -212,9 +212,9 @@ amplitude is kept as state (`H.amp` in `app.js`, 255° each way when running)
 and `ESC.state(p, amp)` gives the escapement at that amplitude.
 
 - **What keeps it going.** A swing must carry the discharge jewel past the trip
-  spring on the return (it falls off at −37.2°), unlock the wheel (−21.3°) and
+  spring on the return (it falls off at −39.1°), unlock the wheel (−21.3°) and
   see the impulse through (+20.8°). `makeEsc` works out that least amplitude
-  from its own tables: `ESC.AMIN`, 39.2° with 2° to spare.
+  from its own tables: `ESC.AMIN`, 41.1° with 2° to spare.
 - **When the train stops.** It stops at a locked beat when there is no power
   (run down), when the swing falls below `AMIN`, when the locking arm brakes
   the balance, or when the train-blocking screw's dog point is down and the
@@ -226,7 +226,7 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   down. It runs down freely with the train held (1/e in 25 s, `TAU_FREE`,
   estimated) and at once, within a swing or two, against the locking arm
   (`TAU_ARM`, 0.2 s). While the swing still carries the discharge jewel back
-  past the trip spring's tip (above 37.2°), the detent lifts but the wheel
+  past the trip spring's tip (above 39.1°), the detent lifts but the wheel
   can't turn. A smaller swing leaves the jewel on the near side of the tip: the
   trip spring stays bent against it and follows it back, and the detent stays on
   its stop (`ESC.state`).
@@ -369,18 +369,24 @@ and the thread pitches are the model's. Things to know before changing it:
   | Setting | Model | Manual |
   |---|---|---|
   | Lock: detent leaves the stop button, until the tooth drops off | 6.0° | about 6° (Op. 85) |
-  | Let-off: tooth drops off, until the detent falls back | 12.4° | at least 6° (Op. 86) |
-  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 28.3° | 26–30° (Op. 87) |
+  | Let-off: tooth drops off, until the detent falls back | 10.6° | at least 6° (Op. 86) |
+  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 28.4° | 26–30° (Op. 87) |
   | Drop | 2.1° | about 2° (Op. 97) |
   | Roller shake | 0.055 mm | about 0.002 in (Op. 84) |
   | Horn clearance | 0.25 mm | about 0.010 in (Op. 88) |
-  | Angle between the jewels | 86° | about 90° in Fig. 90 (adjustable) |
+  | Angle between the jewels | 88° | about 90° in Fig. 90 and Op. 7 (adjustable) |
   | Locking-jewel draw | 10° | 8–12° (chronometerbook post 30) |
 
   - Depth of lock is 0.125 mm, and the trip spring's tip lifts 0.20 mm to release.
   - The discharge jewel meets the trip spring at −27.3° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.8°, centred on the dead point.
-  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip leaves the jewel's end (−8.9° and −37.2°). The push peaks about a degree earlier, where the tip slides off the jewel's side onto its end. Let-off and overall are measured to the fall, as the manual's gauge reads them.
-  - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release. Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver takes the teeth's locking face as radial; the mesh's leans back 0.03 of a pitch, 0.02 mm where the impulse jewel meets it.
+  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip leaves the jewel's end (−10.7° and −39.1°). The push peaks about a degree earlier, where the tip slides off the jewel's side onto its end. Let-off and overall are measured to the fall, as the manual's gauge reads them.
+  - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release. Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
+- The escapement's parts beyond the plan.
+  - The escape teeth: their form follows Fig. 90 and an original wheel photographed in chronometerbook post 30 (a land 0.13 mm wide at the tip, the root circle at 5.5 mm). The undercut of the locking face (the root trails the tip by 0.1 of a pitch, about 11°) and the length of the hollow back (0.55 of a pitch) are read from the drawing and photograph. The rim (0.5 mm), the spokes (0.5 mm wide and thick) and the collet (r 1.5 mm) are estimated from the photograph.
+  - The impulse roller's three holes (0.5 mm radius, a quarter turn apart from the jewel, Figs. 14, 61 and 90) and the impulse jewel's section (flat on the impulse face, curved behind, thinning to 0.45 of its width at the ends; "curved side of the jewel", Sec. VII) are estimated in size.
+  - The unlocking roller is a collar 1 mm long with its jewel in a slot and a wider slot opposite (Fig. 64); its length and the slots' depths are estimated.
+  - The trip spring is a flat strip 0.06 mm thick and 0.3 mm deep, its foot 0.2 mm thick against the angle bracket; both estimated. Its thickness sets where the jewel meets and leaves it, so the settings above were chosen with it: the tip radius `rT` 0.286 and the unlocking jewel at `aD` 269.6° (the jewels 88° apart, as Op. 97 adjusts the drop).
+  - The locking jewel's wedge pin (42089, Figs. 57–59), 0.2 mm across, beside the jewel on the side away from the wheel.
 - The balance rim diameter (29 mm), measured on the top-view photograph.
 - The rate panel's figures (see "The rate panel" under How the timing works). Sourced: the rate for a full turn (p. 70) and the screws' and weights' masses (parts list). Estimated:
   - The moment of inertia: the rim's and arm's section, and each screw's or weight's mass spread along its drawn cylinder. It leaves out the rim's holes, the weights' screws and the staff. Table II's screw changes imply a larger moment, about 1,100–1,300 g·mm², so the rim is probably heavier than drawn. The drawn balance-screw heads (1.5 mm across) are also too small for their masses.
