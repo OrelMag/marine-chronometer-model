@@ -555,4 +555,8 @@ Contents:
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Rate book: a comparison between noons restarted the mean daily rate.** A
+  row too soon after the last to give a rate stopped the run the mean is taken
+  over, as a break would. Such rows are now skipped; only a break (started,
+  stopped, set, not wound) starts a new run. Keep: the mean's run ends at a
+  break, not at a row without a rate.
