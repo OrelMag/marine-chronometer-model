@@ -86,6 +86,20 @@ Contents:
   teeth in `makeEsc` only; the wheel's tips lie at k·P in its own frame, so
   `R.esc.rotation.y` is `-t0 + E·P` with no other offset (and the fourth
   wheel's phasing and `invariants.py` agree). `c4032e4`
+- **Escape wheel's rim the teeth's full thickness, flickering inside.**
+  The teeth and rim were one 1.3 mm extrusion, where Fig. 14's cut-away has tall
+  teeth standing on a thin rim, the rim as thin as the spokes; and the spoke
+  web's windows ended exactly on the rim's inner wall, its top flush with the
+  rim's, so the coincident faces z-fought (dashes on the rim's inner wall). The
+  tooth outline also differed from Fig. 90 (traced in polar coordinates): the
+  undercut was 0.1 of a pitch where the drawing has 0.14, and the back met the
+  root circle at an angle where the drawing's meets it tangentially. Now the
+  rim, spokes and collet are one 0.5 mm plate to the root circle, and each tooth
+  is its own 1.3 mm solid closed along that circle, the two meeting edge to
+  edge; `toothPts` has U 0.14 and a back 1-(1-f)^1.6 deep (16 segments, so its
+  walls shade smoothly). Lock, let-off, overall and drop are unchanged. Keep:
+  no face of the plate on a face of a tooth; the teeth's outline only in
+  `makeEsc`.
 - **Kink in the detent where the trip spring's bracket leaves it.**
   The Z bracket's leg (t 0.62–0.72 of the escape wheel's radius) was set 0.26 mm
   along the detent from the cross-piece it stands on (t 0.58–0.68), so the two
