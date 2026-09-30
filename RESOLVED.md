@@ -445,7 +445,7 @@ Contents:
   barrel arbor come off on their own (`loose`), screws through another part
   leave with it (`headOn`), and the balance hub's screws stay in. Keep:
   `tools/exploded.py` reports 0 failing (it runs in CI); where parts overlap
-  seen along the arbors, the upper one rises more.
+  seen along the arbors, the upper one rises more. `d59c0ad`
 
 ## Build, tools and docs
 
