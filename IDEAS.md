@@ -463,6 +463,8 @@ Give each its own short synthesised click with a different spectrum, scheduled a
 - Keep it opt-in, as now.
 
 ### 3.12 At high speed, blur rather than slow down (S)
+> **Partly done.** The balance swings as it really does up to 5× (it switched to its slow display swing above 1×, so at 2× it swung slower than at 1×); above 5× the HUD says "balance swing shown slowed". The motion-blurred disc is still open.
+
 **Today.** Above 1×, the balance swings at a "viewable rate" unrelated to the model's time, and the detent and trip spring freeze (`s.lift=0; s.psDef=0`, [app.js:453](marine-chronometer-source/chronometer-working-model/js/app.js#L453)).
 
 **Options:**

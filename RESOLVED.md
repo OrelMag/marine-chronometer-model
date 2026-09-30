@@ -544,4 +544,8 @@ Contents:
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The balance swung slower at 2× than at 1×** (Review-results, smaller
+  issues). Above 1× it switched to its 0.9 Hz display swing. It now swings as
+  it really does, and the escape wheel steps, up to 5× (`REAL_X` in
+  `app.js`); above that the HUD says the swing is shown slowed. Keep: the
+  real-motion path and the hold/restart logic share the one threshold.
