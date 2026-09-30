@@ -167,6 +167,7 @@ Before committing a change to the model:
        python maintaining.py    # the fusee's maintaining work over run and wind cycles (exit code 1 on a failure)
        python views.py before   # (before the change) renders every view; after it: python views.py after, then python views.py --diff before after
        python solids.py     # every part a closed solid, facing out (exit code 1 on a failure)
+       python exploded.py   # no two parts meet in the Exploded view, at any spread (exit code 1 on a failure)
        python placements.py dump before   # (before the change) every mesh's place in seven states; after it: dump after, then --diff before after
        python audit.py      # screws, pivots, loose parts in the movement
        python audit.py box  # the same for the box and gimbals
@@ -177,7 +178,7 @@ Before committing a change to the model:
    on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
    its table `EXPECTED` gives the reason for each intended contact. The
    `views.py` diff should show changed pixels only on the parts you changed, and
-   the `placements.py` diff list only the parts you rebuilt. `solids.py` prints `0 not solid` twice. `audit.py` is expected to report the
+   the `placements.py` diff list only the parts you rebuilt. `solids.py` prints `0 not solid` twice and `exploded.py` `0 failing`. `audit.py` is expected to report the
    winding-stop pin and the free ends of the balance screws and the timing
    weights' screws; most of its
    coplanar-face hits are faces in contact. `escapement.js` marks each figure
@@ -190,7 +191,7 @@ Before committing a change to the model:
 6. **CI.** Pushing to GitHub runs the same checks (`.github/workflows/checks.yml`):
    the build, a check that the committed built copies match it (build with
    `--site-url https://www.marinechronometermodel.com`, as the live site is),
-   `escapement.js`, `smoke.py`, `invariants.py` and `solids.py`; `fine.py` and
+   `escapement.js`, `smoke.py`, `invariants.py`, `solids.py` and `exploded.py`; `fine.py` and
    `maintaining.py` run weekly and on demand.
 7. **Record fixes.** If the change fixes a bug, add it to
    [RESOLVED.md](RESOLVED.md) under the right heading, with the commit hash.

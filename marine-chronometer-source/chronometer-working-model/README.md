@@ -37,6 +37,7 @@ copies and assembles the website (see the root README).
 | `tools/maintaining.py` | The maintaining work over run and wind cycles: the sustaining ratchet never turns back, the sustaining spring is loaded in running and only relaxes while winding, the fusee catches forward when the key lets go, the pawls sit on their teeth, and the stop-bar meets the winding stop at full wind |
 | `tools/fine.py`, `tools/fine-interference.js`, `tools/barrel-clearance.js` | Fine (0.05 mm) collision check through the escapement cycle, round the train and over the wind, against a table of expected contacts; the barrel's margins and the mainspring |
 | `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts |
+| `tools/exploded.py`, `tools/exploded-check.js` | Exploded-view clearance: every part and screw, taken as it stands assembled, against every other, at every spread from 0 to 100 % (none may meet at full spread, or pass through another on the way), over escapement phases, train positions and the wind |
 | `tools/solids.py`, `tools/solids-check.js` | Solid geometry check: every mesh closed (no open edge), consistently wound and not inside out, but the decals and surfaces flagged as such; loaded as it is and with Moving parts only and a section on |
 | `tools/placements.py` | Every mesh's position and bounding box in seven model states (escapement phases, train and wind positions), and a diff between two runs or two copies of the page: proves a change moved only the parts it meant to, and that the mechanism moves as before |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
@@ -401,7 +402,11 @@ edit; see "Changing things" in the root README for the loop and the checks.
   *parts*. `part(name, off, ef)` makes a group:
   - `name` is the part's id; it links the part to its description, colour,
     label and picking;
-  - `off` is how far the part rises in the Exploded view, in millimetres (the laid-out view moves parts only across, in x and z, so the two combine);
+  - `off` is how far the part rises in the Exploded view, in millimetres (the laid-out view moves parts only across, in x and z, so the two combine).
+    Where two parts overlap seen along the arbors, the one on top must rise more, or it passes through the other as the Spread slider moves: the
+    fusee and barrel rise above the centre and third wheels they cover, the fusee wheel above the centre wheel. The third wheel, escape wheel,
+    detent and lower bridge are nested (the escape pinion runs under the third wheel's rim and the lower bridge's edge, the escape wheel over
+    both), so they rise within a millimetre or two of each other. `tools/exploded.py` checks every pair;
   - `ef` set to true puts the part in the escapement's rotated frame.
 
   Put meshes in a part with `mesh(parent, geometry, material, x, y, z)`.
@@ -469,12 +474,19 @@ box and gimbals.
 - work out the position once, in the `S` table at the top of
   `buildMovement`, when a part built earlier needs its hole;
 - screws are tagged `userData.screw`, which is how the audit finds them, and
-  kept in `SCREWS`, which the Exploded view lifts out of their holes;
+  kept in `SCREWS`, which the Exploded view lifts out of their holes (by the
+  shank and head's length, `userData.lift`). A screw put in through another
+  part takes `headOn(screw(...), 'itsPart', 'thatPart')`, so it leaves with
+  that part before lifting out; one its own part covers (the balance hub's)
+  stays in, `lift` 0. `loose(group, lift)` does the same for any other piece
+  that comes off its part another way (the fusee's end plate, the barrel arbor);
 - run `fine.py`: a shank in a part without its hole shows as a new overlap.
 
 **Add a new part.**
 1. Build it in a new `part('myPart', explodeOffset)` group in `movement.js`,
-   or in `box.js` (give that group `userData.partName = 'myPart'`).
+   or in `box.js` (give that group `userData.partName = 'myPart'`). Choose the
+   offset so it stacks with its neighbours (see `off` above) and run
+   `tools/exploded.py`.
 2. `app.js`: add one entry to `PARTS`, in the place it should take in the
    parts list: `myPart: {t: 'Title', g: 2, c: '#a0922f', d: 'What it does.',
    sp: 'Part number or spec'}`. `g` is its group in the parts list (`PG`), `c`
