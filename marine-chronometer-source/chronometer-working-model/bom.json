@@ -4008,16 +4008,16 @@
    "parent": "42057",
    "kind": "part",
    "part": "pillar",
-   "fn": "Hold the mounting ring.",
+   "fn": "Hold the pillar plate to the mounting ring, from the train side (reassembly Op. 1; Fig. 29).",
    "rel": [
     [
      "in",
-     "42057",
+     "42060",
      "clear"
     ],
     [
      "in",
-     "42060",
+     "42057",
      "tap"
     ]
    ],

@@ -1466,7 +1466,7 @@ function drawEscPlan(ctx,w,h,s,Ew,o={}){
    - Third wheel, escape wheel position and the going-train modules (0.29 / 0.30 / 0.3113): solved as a constraint problem
      so that every arbor clears every wheel and the barrel (solve.py).
    ===================================================================== */
-const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[-9.6,0]};
+const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[9.6,0]};
 const PP_R=87.57/2,PP_T=3.86,BR_R=40.5;
 /* levels (y) from a side photograph of the movement, scaled by the pillar plate's 3.86 mm edge: train bridge 16.8-19.9 mm above the plate (TB_U, TB_T),
    barrel bridge 3.4 mm on it (BB_T), cock foot 14.2 mm tall on the train bridge (CK_T); the escape wheel runs just under the train bridge, the fourth
@@ -1630,9 +1630,9 @@ function buildMovement(M){
   /* ---------- screw positions (x, z), worked out before the plates are cut: a clearance hole where a screw passes through a part (hC), a tapped hole where it holds (hT).
        42055 (pillar, bridge and mounting-ring screws) have heads r 2.9; ESCAP: the endstone caps' screws (20762) ---------- */
   const add=(a,b,k=1)=>[a[0]+b[0]*k,a[1]+b[1]*k],sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],unit=a=>{const l=Math.hypot(...a);return[a[0]/l,a[1]/l];},ry=(a,[x,z])=>[x*Math.cos(a)+z*Math.sin(a),-x*Math.sin(a)+z*Math.cos(a)];
-  const eu=unit(sub(L.E,L.B)),lbu=unit(sub(L.F,L.B)),lbn=[-lbu[1],lbu[0]],LBm=add(L.B,sub(L.F,L.B),0.9),ESCAP=0.45,PSR=2.9,RSR=1.8;   /* RSR: the mounting ring's screws, on its narrow lip */
-  const S={ltb:[0.35,0.65].map(f=>add(L.T,sub(L.F,L.T),f)),pil:[...PILLARS.train,PILLARS.barrel],tb:[PILLARS.train[0],PILLARS.train[1],[-8.5,27.7]],bb:[PILLARS.barrel,PILLARS.train[2],[29.24,-12.28]],
-    ring:[90,210,330].map(a=>[42.0*Math.cos(a*D2R),42.0*Math.sin(a*D2R)]),eb:[4.3,6.6].map(f=>add(L.E,eu,f)),ebc:[2.1,-2.1].map(f=>add(L.E,eu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
+  const eu=unit(sub(L.E,L.B)),lbu=unit(sub(L.F,L.B)),lbn=[-lbu[1],lbu[0]],LBm=add(L.B,sub(L.F,L.B),0.9),ESCAP=0.45,PSR=2.9;
+  const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-14),add(L.F,ltu,9)],ltbp:[add(L.T,ltu,-10),add(L.F,ltu,5)],pil:[...PILLARS.train,PILLARS.barrel],tb:[PILLARS.train[0],PILLARS.train[1],[-8.5,27.7]],bb:[PILLARS.barrel,PILLARS.train[2],[29.24,-12.28]],
+    ring:[100,210,340].map(a=>[40.6*Math.cos(a*D2R),40.6*Math.sin(a*D2R)]),eb:[4.3,6.6].map(f=>add(L.E,eu,f)),ebc:[2.1,-2.1].map(f=>add(L.E,eu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[[20.5,20.0],[-5.3,26.2]],lbp:[[16.9,21.3],[-2.6,26.4]],blc:[1.9,-1.9].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(-1.2,-0.35)),cock:[33.11,12.62]};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread clears the foot's edge */
   /* lb: the balance lower bridge's screws (42055), put in from below through its upper tier into the train bridge: at the arm's end on the 3 o'clock side (outside every wheel, over the
      access hole in the pillar plate) and beside the train-blocking screw; lbp: its steady pins (tools/lower_bridge.py) */
@@ -1651,22 +1651,33 @@ function buildMovement(M){
   /* sustaining pawl pivot: 21.35 mm from the fusee (so the pawl reaches the sustaining ratchet, and its arbor clears the fusee wheel's tips at 20.42), where it can run up to solid train bridge
      (manual Sec. VIII, Op. 15 note) clear of the centre wheel, the chain and the opening round the balance */
   const SPv=[L.Fu[0]+21.35*Math.cos(60*D2R),L.Fu[1]+21.35*Math.sin(60*D2R)];
-  R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.T,0.8],[...L.F,1.2],[...L.Fu,1.4],hC(...L.Ud,0.8),hC(...L.Mw,0.8),[...L.Ba,1.9],[...L.E,1.3],[...SPv,0.52],
-    ...S.ltb.map(q=>hT(...q,1.4)),...S.pil.map(q=>hC(...q,PSR)),...S.ring.map(q=>hT(...q,RSR)),...S.elc.map(q=>hT(...q,ESCAP)),...S.dial.map(q=>hC(...q,1.0)),[...S.lb[0],3.4]]),M.plate,0,y0,0);hn(pp,'42060');   /* the plate's parts-list line on its part, so its pins go with it */
+  R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.T,6.0],...S.ltbp.map(q=>[...q,0.41]),[...L.F,1.2],[...L.Fu,1.4],hC(...L.Ud,0.8),hC(...L.Mw,0.8),[...L.Ba,1.9],[...L.E,1.3],[...SPv,0.52],
+    ...S.ltb.map(q=>hT(...q,1.4)),...S.pil.map(q=>hC(...q,PSR)),...S.ring.map(q=>hC(...q,PSR)),...S.elc.map(q=>hT(...q,ESCAP)),...S.dial.map(q=>hC(...q,1.0)),[...S.lb[0],3.4]]),M.plate,0,y0,0);hn(pp,'42060');   /* the plate's parts-list line on its part, so its pins go with it */
   /* the last hole: access to the balance lower bridge's screw at 3 o'clock, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial */
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
   const bushR=(p,x,z,y1,y2,ro,ri,mat)=>mesh(p,ringGeo(ro,ri,Math.abs(y2-y1)),mat||M.brass2,x,(y1+y2)/2,z);
   hn(bushR(pp,...L.C,y0-0.1,0,1.5,0.52),'42165');hn(bushR(pp,...L.Fu,y0-0.1,0,1.4,0.58),'42164.fl');hn(bushR(pp,...L.Ba,y0-0.1,0,1.9,1.43),'42164.bl');hn(bushR(pp,...L.E,y0-0.1,0,1.3,0.95,M.gilt),'42162.el');hn(mesh(pp,stoneGeo(0.95,0.22,0.5,'olive'),M.ruby,L.E[0],-0.25,L.E[1]),'J.el');   /* escape lower setting (42162) with its olive-hole jewel, flush with the plate's dial face under the endstone */
-  /* mounting ring (42057, Fig. 110) round the plate's edge, with a lip under its dial side held by three screws (42055) from the dial side; section and screw positions estimated. It starts 0.02 outside the plate's edge, clear of the plate's polygon (at PP_R-0.1 the plate's edge ran inside it and showed in a section as a hollow) */
-  R.flange=hn(mesh(pp,new THREE.LatheGeometry([V2(PP_R+0.02,y0),V2(47,y0),V2(47,-0.01),V2(PP_R+0.02,-0.01),V2(PP_R+0.02,y0)],160),M.plate),'42057');hn(mesh(pp,discGeo(47,1.0,[[0,0,40.2],...S.ring.map(q=>hC(...q,RSR))]),M.plate,0,0.01,0),'42057',{sub:1});
+  /* mounting ring (42057, Fig. 110) round the plate's edge, with a lip under its dial side. Three screws (42055) hold the plate to it from the train side: the plate is laid
+     on the ring and the screws put in (reassembly Op. 1; Fig. 29 draws them above the plate), and the top-view photographs show one on the plate at the rim at 6 o'clock,
+     half under the train bridge; the others under the bridges, at 210 and 340 deg, estimated. The lip has a tab inward under each, tapped for it, clear of the dial feet.
+     Section and tabs estimated. It starts 0.02 outside the plate's edge, clear of the plate's polygon (at PP_R-0.1 the plate's edge ran inside it and showed in a section as a hollow) */
+  R.flange=hn(mesh(pp,new THREE.LatheGeometry([V2(PP_R+0.02,y0),V2(47,y0),V2(47,-0.01),V2(PP_R+0.02,-0.01),V2(PP_R+0.02,y0)],160),M.plate),'42057');
+  { const RA=[100,210,340].map(a=>a*D2R),dA=a=>Math.min(...RA.map(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b))))),rin=a=>{const t=clamp((dA(a)-0.07)/0.05,0,1);return lerp(38.4,40.2,smooth(t));};
+    const inner=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rin(a)*Math.cos(a),rin(a)*Math.sin(a)];}),outer=[...Array(160).keys()].map(k=>{const a=k/160*TAU;return[47*Math.cos(a),47*Math.sin(a)];});
+    hn(mesh(pp,polyGeo(outer,1.0,[{pts:inner},...S.ring.map(q=>hT(...q,PSR))]),M.plate,0,0.01,0),'42057',{sub:1}); }   /* the lip, with its tabs */
+  for(const q of S.ring)hn(screw(pp,...q,y0,PSR,1.6,PP_T+0.95),'42055.ring');   /* through the plate into the lip's tab */
   { const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);
-    for(const q of S.ring)hn(screw(rg,q[0],-q[1],-1.01,RSR,1.2,1.01+3.86-0.4),'42055.ring');   /* through the lip and into the plate */
     /* the pillars' screws (42055) from the dial side, through the plate into the pillars (Fig. 110) */
     S.pil.forEach((q,i)=>hn(screw(rg,q[0],-q[1],0,PSR,1.6,3.86+3.2),i<3?'42055.pil':'42055.pilb'));
     /* escape lower endstone cap (42159) with its jewel and two screws (20762), on the dial side over the escape lower setting (Fig. 110) */
     endCap(rg,L.E[0],-L.E[1],[eu[0],-eu[1]],0,3.86-0.4,2.1,['42159.el','J.ele','20762.elc']); }
-  /* lower train bridge on the dial side of the pillar plate, screwed from the dial side (manual Figs. 29, 67, 110); jewels and screw built in a flipped frame so they face the dial */
-  const lt=part('ltb',8);R.ltb=mesh(lt,stadium(L.T,L.F,6,1.2,[[...L.T,1.1],[...L.F,1.1],...S.ltb.map(q=>hC(...q,1.4))]),M.plate,0,0,0);hn(lt,'42063');
+  /* lower train bridge (42063) on the dial side of the pillar plate, screwed from the dial side (Figs. 29, 30, 31, 67, 110): a straight steel bar with square ends across an
+     opening in the plate round the third arbor (Figs. 30, 31; the third wheel shows through it in a photograph of a Model 21's dial side), the third and fourth lower settings
+     inboard and a screw toward each end (Fig. 31 and that photograph: the screws about 2.9 times as far apart as the settings), and two steady pins ("complete with pins").
+     Its length, width, the screws' and pins' places along it and the opening's size are estimated from those two views */
+  const lt=part('ltb',8),LTe=[add(L.T,ltu,-21),add(L.F,ltu,14)],ltn=[-ltu[1]*3,ltu[0]*3],LTP=[add(LTe[0],ltn),add(LTe[1],ltn),sub(LTe[1],ltn),sub(LTe[0],ltn)];
+  R.ltb=mesh(lt,polyGeo(LTP,1.2,[[...L.T,1.1],[...L.F,1.1],...S.ltb.map(q=>hC(...q,1.4)),...S.ltbp.map(q=>[...q,0.4])]),M.steel,0,0,0);hn(lt,'42063');
+  for(const q of S.ltbp)hn(cylBetween(lt,0.4,-1.0,1.2,M.steel,...q,12),'42063',{sub:1});   /* its steady pins, into the plate */
   const ltf=new THREE.Group();ltf.rotation.x=Math.PI;lt.add(ltf);jewel(lt,...L.F,['42161.fl','J.fl']);jewel(lt,...L.T,['42161.tl','J.tl']);
   for(const q of S.ltb)hn(screw(ltf,q[0],-q[1],-1.2,1.4,0.8,1.2+3.46),'42163');   /* two screws (42163; Ops. 7, 53) into the pillar plate */
   /* ---------- pillars (two measured on Fig. 2, two placed clear of the fusee wheel and balance) ---------- */
@@ -2838,7 +2849,7 @@ const PARTS={
   bowl:{t:'Chronometer case',g:0,src:'est',sn:'The case’s shield plate: its parts and action from the manual, its shape estimated',c:'#c4b27a',pri:5,d:'Brass bowl and bezel with crystal. The winding-hole shield plate on its bottom is turned clockwise to admit the key and springs back when the key is removed.',sp:'Case No. 42101, bezel 42102, crystal 42103 · case support brackets 42105, their screws 42117 and pivot bushings 42214 · latch keeper 42113, its screw 42116 and separating washer 42128 · shield plate 42104, shoulder screw 42124, stop screw 42125, return spring 42126'},
   key:{t:'Winding key',g:0,src:'est',sn:'The square is 2.4 mm, as the fusee arbor’s, since one key fits both; the rest estimated',figs:'7, 8',c:'#6d7a8a',pri:4,d:'Wind to the left (counterclockwise). Seven half turns restore 24 hours of running; 17½ half turns wind a run-down chronometer fully.',sp:'No. 42044'},
   pillar:{t:'Pillar plate',g:1,src:'photo',sn:'87.57 mm across and 3.86 mm thick, from a new-old-stock plate; the engraving traced on a photograph',figs:'29, 67, 110',c:'#9fb4c8',plate:1,d:'Foundation of the movement. The barrel and train bridges stand off it on four pillars, each screwed on from the dial side. A large hole under the dial reaches one of the balance lower bridge’s screws. On its dial side are the lower train bridge, the escape wheel’s lower endstone cap and the posts the minute and wind indicator wheels turn on; round its edge, the mounting ring.',sp:'No. 42060 · 87.57 mm diameter, 3.86 mm thick · pillar screws 42055 · mounting ring 42057, screws 42055 · centre, barrel and fusee lower bushings 42165, 42164 · escape lower setting 42162, endstone cap 42159, screws 20762 · posts 42084, 42085, screws 35779'},
-  ltb:{t:'Lower train bridge',g:1,src:'est',sn:'Screwed to the dial side of the pillar plate, as the manual has it; its outline is estimated',figs:'29, 67, 110',c:'#b6d7c9',plate:1,d:'Screwed to the dial side of the pillar plate, under the dial; carries the third and fourth wheel lower settings (bar-hole jewels).',sp:'No. 42063 · screws 42163 · third and fourth lower settings 42161'},
+  ltb:{t:'Lower train bridge',g:1,src:'photo',sn:'A straight steel bar with square ends across an opening in the plate, the settings inboard and a screw toward each end, as Figs. 30 and 31 and a photograph of a Model 21’s dial side show it; its sizes are estimated',figs:'29, 30, 31, 67, 110',c:'#b6d7c9',plate:1,d:'A steel bar screwed to the dial side of the pillar plate, under the dial, across an opening round the third arbor; carries the third and fourth wheel lower settings (bar-hole jewels) and two steady pins.',sp:'No. 42063 · screws 42163 · third and fourth lower settings 42161'},
   pillars:{t:'Pillars',g:1,src:'photo',sn:'Heights from a side photograph, places from the top-view photograph',figs:'29, 67, 110',c:'#707a84',plate:1,d:'Four pillars: three for the upper train bridge, one for the barrel bridge. Each is screwed on from the dial side of the pillar plate and tapped at its top for its bridge’s screw.',sp:'Nos. 42059, 42058 · screws 42055'},
   trainBridge:{t:'Upper train bridge',g:1,src:'manual',sn:'Its crescent traced on Fig. 67; thickness from a side photograph; the keyhole built round the arbors',figs:'24, 29, 67, 108, 110',c:'#c9d8a8',pri:2,plate:1,d:'Carries the centre and third wheel upper bushings. The balance cock, balance lower bridge and escape upper bridge are mounted to it; the detent support block is fastened to its underside. It leaves the fusee’s top open to the barrel bridge above.',sp:'No. 42062 · screws 42055 · centre and third upper bushings 42166, 42167'},
   barrelBridge:{t:'Barrel bridge',g:1,src:'photo',sn:'Outline and the cut round the balance traced on the top-view photograph; thickness from a side photograph',figs:'24, 77, 110',c:'#e3cfa6',pri:2,plate:1,d:'Holds the upper pivots of both the barrel and the fusee. The fusee winding stop is a stud screwed into its underside (left-hand thread); the setup ratchet and the dust seal sit on top.',sp:'No. 42061 · screws 42055 · barrel and fusee upper bushings 42164 · winding stop 42099'},
@@ -3331,7 +3342,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   addL('Sustaining pawl','','spawl',pw(R.spawl,-2.5,0,0),'mv');addL('Sustaining ratchet','','sratchet',pw(P.sratchet,L.Fu[0]+13,-9.45,L.Fu[1]+9),'mv');addL('Balance lower bridge','','lowerBridge',pw(P.lowerBridge,(L.B[0]+L.F[0])/2,LB_T,(L.B[1]+L.F[1])/2),'mv');
   addL('Up/down indicator','','hands',pwo(P.hands,R.ud,-L.Ud[0],6,-36-L.Ud[1]),'dial');addL('Seconds','','hands',pwo(P.hands,R.sec,-10-L.F[0],6,34-L.F[1]),'dial');addL('Gimbal ring','','ring',pw(BX.ring,82,8,0),'box');
   addL('Bowl','','bowl',pw(BX.bowl,-48,-40,40),'box');addL('Winding key','','key',pw(BX.root,76,-5,-76),'box');addL('Gimbal latch','','latch',pw(BX.root,80,-13,76),'box');
-  addL('Cannon pinion',`${MW.cp} leaves`,'motion',pw(P.motion,2,1.2,-3),'motion');addL('Minute wheel',`${MW.mw} / ${MW.mp}`,'motion',pw(P.motion,L.Mw[0]-6,1.2,L.Mw[1]+4),'motion');addL('Up/down wheel',`${UD.wheel} teeth`,'motion',pwo(P.motion,R.udW,11,1.5,0),'motion');
+  addL('Cannon pinion',`${MW.cp} leaves`,'motion',pw(P.motion,2,1.2,-3),'motion');addL('Minute wheel',`${MW.mw} / ${MW.mp}`,'motion',pw(P.motion,L.Mw[0]+6,1.2,L.Mw[1]+4),'motion');addL('Up/down wheel',`${UD.wheel} teeth`,'motion',pwo(P.motion,R.udW,11,1.5,0),'motion');
 
   /* ---------- walkthrough ---------- */
   const inset=$('#tInset');let insetKind=null,insetCv=null,insetCtx=null,trace=[];
