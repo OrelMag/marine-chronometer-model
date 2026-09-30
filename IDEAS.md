@@ -739,7 +739,7 @@ The essay predates the manual and the working model. Hamilton-specific detail
 belongs in the model, but the two could work together better.
 
 - **Shared escapement (S):** see 7.3. It also removes the essay README's instruction to copy `ESC` across by hand.
-- **Deep links into the model (S):** with [6.2](#62-shareable-links-and-remembered-state), each essay section can end with "See it in the model", opening the matching view: the detent section opens `#view=escapement&speed=0.05`, the fusee section `#tour=3`.
+- *Done:* **Deep links into the model (S):** the balance, heat, fusee, train, detent and gimbals sections end with a link into the model (`#tour=7`, `#view=balance`, `#tour=3`, `#tour=5`, `#view=escapement&speed=0.05`, `#tour=1`); the heat link names the Model 21's uncut Invar-armed balance and Elinvar spring. The build keeps the hash when it points the links at `./` in `site/`. Before: with [6.2](#62-shareable-links-and-remembered-state), each essay section can end with "See it in the model", opening the matching view: the detent section opens `#view=escapement&speed=0.05`, the fusee section `#tour=3`.
 - **A chapter on keeping the rate (M):** the essay opens with longitude ("Time is a position"). A closing chapter on the rate book (3.2) and the performance test (3.4) would bring it back to navigation, with the manual's Table I and test card as its figures.
 - **Correct what the manual changed (M):** read the essay against the model README's sources and fix anything the manual contradicts. The "Heat" chapter should mention the Model 21's uncut Invar-armed balance and Elinvar spring as the answer to the split balance's middle temperature error.
 

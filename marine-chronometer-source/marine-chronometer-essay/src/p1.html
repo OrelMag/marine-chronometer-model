@@ -40,6 +40,7 @@ a{color:var(--blue);text-underline-offset:2px}
 h1{font-weight:600;font-size:clamp(2.3rem,7vw,3.4rem);line-height:1.05;letter-spacing:-.01em;margin:34px 0 12px}
 .deck{font-size:1.2em;line-height:1.45;color:var(--muted);margin:0 0 10px}
 .after{font-style:italic;color:var(--muted);font-size:.9em;margin:0 0 28px}
+.see{font-size:.92em;color:var(--muted);margin:-4px 0 28px}
 .byline{color:var(--muted);font-size:.95em;margin:0 0 10px}.byline span{white-space:nowrap}
 h2{font-weight:600;font-size:1.6rem;line-height:1.2;margin:2.4em 0 .5em}
 p{margin:0 0 1em}
@@ -137,6 +138,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 </figure>
 
 <p>Many marine chronometers complete a full oscillation in half a second. Watchmakers count each swing in one direction as a <em>vibration</em>, so that’s 14,400 vibrations an hour. As we’ll see, the escapement gives the balance one push per full oscillation, which is why a chronometer ticks in half-seconds.</p>
+<p class="see"><a href="chronometer-working-model.html#tour=7">The Hamilton Model 21’s balance and helical spring in the working model →</a></p>
 
 <h2>The spring that breathes</h2>
 <p>An ideal oscillator is <em>isochronous</em>: its period doesn’t depend on how widely it swings. The formula above assumes this, and a real balance only approximates it. That matters, because the amplitude never stays put. It changes as the mainspring runs down, as oil thickens, as temperature shifts friction. Any link between amplitude and period turns each of those effects into an error in rate.</p>
@@ -169,6 +171,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 </figure>
 
 <p>The correction is not perfect. The bimetallic rim changes the inertia roughly in proportion to temperature, while the spring’s loss of stiffness has a significant quadratic part. A chronometer can be adjusted to keep time at two temperatures, but it then gains between them and loses outside them. This <em>middle temperature error</em>, typically a second or two a day, occupied chronometer makers for most of the nineteenth century. They built many “auxiliary compensation” devices to reduce it before Charles-Édouard Guillaume’s nickel-steel alloys largely solved the problem around 1900.</p>
+<p class="see">The Hamilton Model 21 took the other road: a solid, uncut steel rim on an arm of Invar, which barely expands, with a hairspring of Elinvar, whose stiffness hardly changes with heat. <a href="chronometer-working-model.html#view=balance">See its balance in the working model →</a></p>
 
 <h2>Constant force</h2>
 <p>The energy to run the chronometer is stored in a coiled mainspring inside a drum called the <em>barrel</em>. A typical chronometer runs for about two days on one winding, yet it is wound every day at the same hour, so it always works on the upper, more consistent part of the spring.</p>
@@ -184,6 +187,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 </figure>
 
 <p>Winding reverses all of this. The key turns the fusee backward, drawing the chain off the barrel and onto the cone, which tightens the spring. For as long as the key is turning, though, the fusee is no longer pushing the train forward. To keep the clock from stopping or faltering, chronometers carry <em>maintaining power</em>, Harrison’s invention: a small auxiliary spring inside the fusee that keeps driving the train while the main drive is interrupted.</p>
+<p class="see"><a href="chronometer-working-model.html#tour=3">The fusee and chain in the working model →</a></p>
 
 <h2>Counting</h2>
 <p>From the fusee, a chain of gears called the <em>train</em> both slows things down and counts. The fusee’s great wheel drives the centre wheel, which turns once an hour and carries the minute hand. Each following wheel drives the next faster: the third wheel, then the fourth wheel, which turns once a minute and carries the seconds hand, and finally the escape wheel.</p>
@@ -199,6 +203,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 </figure>
 
 <p>At normal speed the motion isn’t smooth. The whole train stands still, then jumps, twice a second. That is the escapement at work, and in a chronometer it is the most distinctive part of all.</p>
+<p class="see"><a href="chronometer-working-model.html#tour=5">The Model 21’s going train in the working model →</a></p>
 
 <h2>The detent</h2>
 <p>An escapement has two jobs. It lets the train advance one tooth at a time, and it gives the balance a small push to replace the energy lost to friction. Every contact disturbs the balance a little, so the ideal escapement touches it as rarely and as briefly as possible. The <em>detent escapement</em> comes very close. It pushes the balance in only one direction of swing, and for the rest of each oscillation the balance swings almost entirely free.</p>
@@ -220,6 +225,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 <p>All of this happens in a few degrees of a swing of some 250° each way, and the tolerances are fine. The US Navy’s overhaul manual for the Model 21 gives a repairer the figures to set, measured as angles of the balance. The <em>lock</em>, from the moment the detent leaves its stop until the tooth drops off the stone, should be about 6°. The wheel’s <em>drop</em> onto the impulse pallet should be about 2°. The whole contact on both swings together, the <em>overall</em>, should be 26° to 30°. The impulse roller, 6.3 mm across, clears the teeth on either side of it by only 0.05 mm, and the horn clears the discharging pallet by a quarter of a millimetre. The figure above meets every one of those settings: its lock is 6.1°, its drop 2.1° and its overall 27.8°.</p>
 <p>Hamilton also chose its materials for the job. The detent is beryllium copper, a springy alloy that doesn’t rust, and the passing spring is Elinvar, a nickel-steel whose stiffness hardly changes with temperature. In English chronometers the passing spring was usually gold.</p>
 <p>The design has a price. A detent escapement isn’t self-starting: if the balance stops, it has to be swung by hand to set it going again. A hard jolt can also knock the detent and let the wheel slip a tooth. In a padded box in a ship’s chart room that’s an acceptable trade, and it is one reason the design stayed in the box instead of moving to the wrist.</p>
+<p class="see"><a href="chronometer-working-model.html#view=escapement&amp;speed=0.05">The detent at 1/20 speed in the working model →</a></p>
 
 <h2>Level on a moving ship</h2>
 <p>A balance’s rate varies slightly with its orientation, so the chronometer is adjusted to run in one position: dial up, balance horizontal. The brass bowl holding the movement hangs in <em>gimbals</em>, a ring pivoted in the box along one axis, with the bowl pivoted inside the ring along the perpendicular axis. The bowl is weighted low, so it hangs level while the box rolls and pitches around it.</p>
@@ -233,6 +239,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
   </div>
   <figcaption>Boxes usually had a way to lock the gimbals so the bowl couldn’t swing freely while the chronometer was carried.</figcaption>
 </figure>
+<p class="see"><a href="chronometer-working-model.html#tour=1">The Model 21’s box and gimbals in the working model, with ship motion →</a></p>
 
 <h2>The whole instrument</h2>
 <p>Here is everything together. Open the lid, then lift the movement out of its bowl and turn it over to see the balance side. The dial shows the time where you are now.</p>
@@ -250,7 +257,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
 </figure>
 
 <p>On a real voyage, the chronometer’s value lay less in having no error than in having a predictable one. Before sailing, the navigator established its <em>rate</em>, say a steady gain of 1.3 seconds a day, and applied it to every reading. A chronometer that gains steadily is perfectly usable; one whose rate wanders is not. Ships that could afford it carried two or three, compared daily, so that one misbehaving instrument would give itself away.</p>
-<p>For one real instrument built part by part, see the <a href="chronometer-working-model.html">working model of the Hamilton Model 21</a>. Its layout is fitted to photographs of the movement and its escapement is checked against the manual; every part can be picked out and named, and the hands keep your local time.</p>
+<p>For one real instrument built part by part, see the <a href="chronometer-working-model.html">working model of the Hamilton Model 21</a>. Its layout is fitted to photographs of the movement and its escapement is checked against the manual; every part can be picked out and named, and the hands keep Greenwich time, as the Navy’s chronometers were kept.</p>
 <p>Radio time signals in the early twentieth century, and satellite navigation later, finally retired the chronometer from its job. The instrument itself, a few ounces of oscillating brass keeping a ship’s place on the planet, remains one of the most elegant solutions ever built to a problem that once cost thousands of lives.</p>
 
 <hr>
