@@ -481,6 +481,12 @@ Contents:
   it really does, and the escape wheel steps, up to 5× (`REAL_X` in
   `app.js`); above that the HUD says the swing is shown slowed. Keep: the
   real-motion path and the hold/restart logic share the one threshold. `5af0a57`
+- **The first frame stepped time back.** Its `requestAnimationFrame` time can
+  come before the loop's start time, so `dt` was negative once (about
+  −0.26 s): the easing overshot slightly, and the master time (`tM`), which
+  takes every step, fell a quarter second behind the model clock, showing a
+  dial error at load. `dt` is now clamped to 0–0.05 s. Keep: nothing that
+  advances with `dt` may assume it is positive unless it is clamped. `562928a`
 
 ## Build, tools and docs
 
@@ -549,9 +555,4 @@ Contents:
 
 ## Fixed, not yet committed
 
-- **The first frame stepped time back.** Its `requestAnimationFrame` time can
-  come before the loop's start time, so `dt` was negative once (about
-  −0.26 s): the easing overshot slightly, and the master time (`tM`), which
-  takes every step, fell a quarter second behind the model clock, showing a
-  dial error at load. `dt` is now clamped to 0–0.05 s. Keep: nothing that
-  advances with `dt` may assume it is positive unless it is clamped.
+None at the moment.
