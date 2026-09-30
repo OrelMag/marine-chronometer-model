@@ -189,7 +189,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 
 ### 1.5 Hand-setting square, balance locking arm, shipping wedges (S each)
 *The balance locking arm is done: arm, screw, washer and stop pin, Locked / Unlocked under Stopping and starting, and it stops the balance. The square is drawn too (`ad1762d`); the wedges are still to do.*
-- **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says). *(Done: the square is drawn, the fusee square's size so the one key fits both (`ad1762d`); it is the cannon pinion's squared end, with the minute hand broached square on it, as Op. 64 has it.)*
+- **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says). *(Done: the square is drawn, the fusee square's size so the one key fits both (`ad1762d`); it is the cannon pinion's squared end, with the minute hand broached square on it (Op. 64: "the minute hand can be broached with a square file").)*
 - **Balance locking arm (Fig. 9):** later chronometers have a balance wheel locking arm, with locked and unlocked positions. Model it, with a toggle, as a part of the "Operation when received" story.
 - **Shipping wedges:** before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
 

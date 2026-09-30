@@ -49,7 +49,7 @@ const PARTS={
   lockArm:{t:'Balance wheel locking arm',g:3,src:'est',sn:'Its screw, positions and stop pin are Fig. 9’s; its shape is estimated',figs:'9',c:'#5a7fb0',dh:1,d:'Holds the balance still in transit (Sec. III, Fig. 9): loosen its screw, turn the arm, tighten the screw. Locked, its end lies under the rim; unlocked, it rests on its stop pin, clear of the balance. Fitted to chronometers overhauled from 1947; before it, folded wedges went between the rim and the train bridge. Its shape and how it holds the rim are estimated. Lock and unlock it under Stopping and starting.',sp:'Arm 42299 · screw 37204 · washer 42251 · stop pin 42300'},
   spr:{t:'Hairspring',g:3,src:'est',sn:'5.9 mm tall, to reach the stud; the collet and stud after Figs. 5 and 6',figs:'5, 6, 19, 84, 85',c:'#f25fd0',pri:6,d:'Cylindrical, of Hamilton Elinvar. Each end is held in a clamp by a wedge pin, without bending the spring, so its active length is the same winding and unwinding: the inner end on the tongue of the collet, which is slotted to grip the balance staff and owes its curious shape to counterpoising experiments; the upper end in the stud, a bar held under the balance cock by the stud screw from the cock’s top and a steady pin. There is no regulator: rate is set with the balance screws and weights.',sp:'No. 42188 · collet 42190 · stud 42189 with its clamp 42191, wedge pin 42147 and screw 27760 (Figs. 5, 6)'},
   hands:{t:'Hands',g:4,src:'photo',sn:'After the photographed U.S. Maritime Commission dial; how the hands are fitted after Op. 64',figs:'107',c:'#1b1b1b',pri:6,d:'Blued steel: an hour hand with a bulb and a long spear point, a plain minute hand, a long seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff, wind indicator hand on its own wheel. The hands advance in half-second increments. The hour hand is pressed on the hour wheel’s pipe; the minute hand, broached square, sits on the cannon pinion’s square below its bright end (Op. 64).',sp:'Nos. 42032–42035'},
-  motion:{t:'Motion work',g:4,src:'est',sn:'Its counts are chosen; the wind indicator ratio gives the scale a 240° sweep; the hand-setting square after Fig. 8',figs:'8, 81, 107',c:'#a45a3c',pri:5,d:'Cannon pinion, minute wheel and hour wheel under the dial; the minute wheel turns on a post screwed to the pillar plate. The cannon pinion is a friction fit on the centre arbor, so the hands can be set without moving the train, and its pipe ends above the dial in the bright square that takes the winding key, turned by its shank, to set the hour and minute hands, forward only. The hour wheel turns free on the cannon pinion’s pipe. A pinion on the dial end of the fusee arbor drives the wind indicator wheel, which turns on a post of its own and carries the wind indicator hand on its pipe.',sp:'Nos. 42077, 42078, 42080, 42081 · posts 42085, 42084'}
+  motion:{t:'Motion work',g:4,src:'est',sn:'Its counts are chosen; the wind indicator ratio gives the scale a 240° sweep; the hand-setting square after Fig. 8',figs:'8, 81, 107',c:'#a45a3c',pri:5,d:'Cannon pinion, minute wheel and hour wheel under the dial, the pipes of the cannon pinion and hour wheel rising through it; the minute wheel turns on a post screwed to the pillar plate. The cannon pinion is a friction fit on the centre arbor, so the hands can be set without moving the train, and its pipe ends above the dial in the bright square that takes the winding key, turned by its shank, to set the hour and minute hands, forward only. The hour wheel turns free on the cannon pinion’s pipe. A pinion on the dial end of the fusee arbor drives the wind indicator wheel, which turns on a post of its own and carries the wind indicator hand on its pipe.',sp:'Nos. 42077, 42078, 42080, 42081 · posts 42085, 42084'}
 };
 /* the tables the rest of app.js reads */
 const INFO={},PCOL={},PRI={},PGRP=PG.map(g=>[g,[]]);
@@ -123,6 +123,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:mvL(x,y,z)});};}
   $('#srcKey').innerHTML=Object.values(SRC).map(([t,c,d])=>`<span title="${t}: ${d}"><i style="--ps:${c}"></i>${t}</span>`).join('');
   const partOf=o=>{while(o){if(o.userData&&o.userData.partName)return o.userData.partName;o=o.parent;}return null;};
+  const shown=o=>{for(;o;o=o.parent)if(!o.visible)return false;return true;};   /* r128's raycaster ignores visibility: a mesh in a hidden group (the hand-setting key, another dial style's hands) must not take a click or hide a label */
   /* a mesh casts a shadow only when its radius spans SHK texels of the shadow map (shThr, set as the shadow camera follows the view): smaller shadows were a
      few texels at most, each an extra draw call. Far views drop the screws and pins (under about 1.5 mm); close-ups keep them. Instanced meshes (the chain) always cast */
   BX.root.updateMatrixWorld(true);const wsc=new THREE.Vector3(),rad=o=>{if(o.isInstancedMesh)return 1e9;const g=o.geometry,b0=g.boundingSphere;g.computeBoundingSphere();const r=g.boundingSphere.radius;g.boundingSphere=b0;if(!(r>0))return 1e9;o.getWorldScale(wsc);return r*Math.max(wsc.x,wsc.y,wsc.z);};   /* three computes its own bounding sphere when it first needs it, as before; geometries rebuilt as they move (hairspring, passing spring) start empty, and always cast */
@@ -250,7 +251,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
   const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
   function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
-    const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
+    const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
     const hit=hits.find(h=>INFO[h.object.userData.part]);
     if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
@@ -270,7 +271,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* Android fires its own contextmenu on a long press: whichever comes first opens the menu, once, and the press never picks */
   cv.addEventListener('contextmenu',e=>{e.preventDefault();lpStop();if(performance.now()-lpAt<800)return;if((down?down.moved:rMoved)>6)return;if(down)down.lp=true;openOpm(e.clientX,e.clientY);});
   function openOpm(cx,cy){const rc=cv.getBoundingClientRect();ndc.set((cx-rc.left)/rc.width*2-1,-(cy-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
-    const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&INFO[h.object.userData.part]);
+    const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);
     const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>st.op[h.object.userData.part]!=null);
     if(!hit&&!st.hid.size){closeOpm();return;}
     opPart=hit?hit.object.userData.part:null;opm.classList.add('on');opRender();
@@ -632,7 +633,7 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(!show){l.el.style.opacity=0;continue;}
       const P0=l.fn();
       if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);ray2.set(camP,tmpV.copy(P0).sub(camP).normalize());ray2.far=d-0.8;
-        const hits=ray2.intersectObject(BX.root,true);l.occ=hits.some(h=>h.object.visible&&h.object.userData.part!==l.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5)&&!h.object.userData.decal);}
+        const hits=ray2.intersectObject(BX.root,true);l.occ=hits.some(h=>shown(h.object)&&h.object.userData.part!==l.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5)&&!h.object.userData.decal);}
       if(l.occ){l.el.style.opacity=0;continue;}
       tmpV.copy(P0).project(cam);const px=(tmpV.x+1)/2*W,py=(1-tmpV.y)/2*Hh;
       if(tmpV.z>1||px<4||px>W-4||py<4||py>Hh-40){l.el.style.opacity=0;continue;}

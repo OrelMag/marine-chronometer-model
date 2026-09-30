@@ -592,4 +592,17 @@ Contents:
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Seconds hand's tip on the hour hand's collet** (Going train and heights).
+  The collet added in `4bd8888` filled r 2.9 from the centre down to y 4.6, and
+  the Hamilton seconds hand's tip, at y 4.35 to 4.7, reaches r 2.9 as it passes
+  :00, so they touched once a minute. The collet is r 2.7, inside the hand's
+  boss. Keep: the contact has no volume and `fine.py` never sets the seconds
+  hand at :00; check the sub-dial hands' reach against anything new at the
+  centre by hand.
+- **Hidden parts took clicks and hid labels** (Controls and display). r128's
+  raycaster ignores visibility, and picking, the right-click menu and label
+  occlusion tested only the mesh's own `visible`, so meshes in a hidden group
+  (the hand-setting key, the other dial styles' hands) still caught the ray:
+  clicks near the dial's centre opened Hands or Motion work instead of the
+  part shown. They test the mesh and its ancestors (`shown()` in `app.js`).
+  Keep: filter ray hits with `shown()`, never `object.visible` alone.

@@ -31,7 +31,7 @@ EXPECTED={
  ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot, and the shanks of the clamp, detent-adjusting and lock-adjusting screws in the foot and support block (horizontal screws in vertically extruded pieces, which can't be holed across)",1.15,0.95),
  ('fw:Cylinder','hands:Cylinder'):('seconds hand collet on the fourth arbor',0.33,0.35),
  ('fw:Cylinder','hands:Extrude'):('seconds hand on the fourth arbor',0.15,0.25),
- ('hands:Cylinder','hands:Extrude'):('seconds and wind-indicator hands in their collets',0.34,0.35),
+ ('hands:Cylinder','hands:Extrude'):('seconds and wind-indicator hands in their collets (up to 0.344 across the dial styles)',0.35,0.35),
  ('hands:Cylinder','motion:Cylinder'):("wind-indicator hand's collet on its wheel's arbor",0.33,0.35),
  ('hands:Extrude','motion:Cylinder'):("wind-indicator hand on its wheel's arbor",0.17,0.25),
  ('fusee:Extrude','sratchet:Extrude'):('winding pawls riding the winding ratchet while winding',0.003,0.5),

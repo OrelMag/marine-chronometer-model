@@ -381,9 +381,9 @@ and the thread pitches are the model's. Things to know before changing it:
   - The stud is a bar 5.7 × 1.6 × 0.5 mm, running from over the spring's end along the cock toward the cock screw; the stud screw is 7.6 mm from the staff and the steady pin 5.6 mm.
   - Both ends of the spring are 3.6 mm from the staff, in the stud's direction when the balance is at rest.
 - The centre of the dial. Sourced: the order of the parts and how they fit (the cannon pinion a friction fit on the centre arbor, Op. 58; the hour wheel free on the cannon pinion, Op. 59; the hour hand broached round onto the hour wheel's pipe and the minute hand broached square onto the cannon pinion, Op. 64; the key on "the bright, square arbor at the center of the dial", Fig. 8). Estimated: the sizes.
-  - The hand-setting square is the cannon pinion's squared end, 2.4 mm across, as the fusee arbor's square, since the one key fits both (Fig. 8), standing 1.6 mm proud of the minute hand's collet (the side photograph shows about 1.9 mm).
+  - The hand-setting square is the cannon pinion's squared end, 2.4 mm across, as the fusee arbor's square, since the one key fits both (Fig. 8), standing 1.6 mm proud of the minute hand's collet, as the fusee's square stands (the side photograph suggests about 2 mm).
   - The cannon pinion's pipe is r 1.7, as the square's corners need, since the hour wheel goes on over the square; the hour wheel's bore is r 1.75 and its pipe r 2.3, through a dial hole of r 2.5.
-  - The hour hand's collet is r 2.9 and 0.6 mm deep under the blade, the minute hand's r 3.2 and 0.8 mm deep over it (the dial photograph shows one round boss about 7 mm across). The hour hand is at 5.2 mm and the minute hand at 5.75 mm, on the cannon pinion's shoulder.
+  - The hour hand's boss is r 2.9, its collet r 2.7 and 0.6 mm deep under the blade (clear of the seconds hand's tip, which reaches r 2.9 at :00); the minute hand's boss and collet are r 3.2, the collet 0.8 mm deep over it (the dial photograph shows one round boss about 7 mm across). The hour hand is at 5.2 mm and the minute hand at 5.75 mm, on the cannon pinion's shoulder.
 - The gimbal latch's geometry. Sourced: its parts (support bracket screwed from outside the box, lever, handle, keeper on the case) and the slot in the ring the lever passes (Figs. 1, 106; parts list). Estimated: the lever pivots on a pin in a corner bracket at the height of the ring's pivots and swings 45° between the right wall and the keeper; the slot is 7.3 × 4.4 mm; the keeper is a back and two cheeks. The take-up spring and the clamping bracket and screw are left out.
 - The case's winding-hole shield plate. Sourced: its parts (plate, shoulder screw, stop screw, return spring; parts list) and its action, turned clockwise, seen from below, until its hole lines up with the case's, and returned by the spring (the case's description and the winding instructions). Estimated: everything else.
   - The plate's shape: a rounded triangle on a shoulder screw 9 mm from the key hole, covering the hole at rest and turning 0.75 rad to open it.
@@ -554,8 +554,8 @@ the maker's name and number and keep the 240° wind sweep. `References/` holds
 the photographs. The hands are `handGeo()` shapes in `core.js` (spade, leaf,
 lance, pear, plain; a negative tail gives a spear counterpoise; `at` moves the
 pear's bulb; `{boss, bore}` or `{boss, sq}` draws a round boss with a round or
-square hole, as the hour and minute hands have; `sqRingGeo()` makes their
-collets and the keys' square sockets), placed in the
+square hole, as the hour and minute hands have; `sqRingGeo()` makes the
+minute hand's collet and the keys' square sockets), placed in the
 "dial, hands, motion work" block of `movement.js`. Each dial style has its own
 set (`userData.dk`), switched with `mv.userData.dial(kind)`, which paints a
 style's texture on first use.
