@@ -446,6 +446,15 @@ Contents:
   seated against the hole's edge. The screw now has a slotted spigot (r 0.5,
   1.5 mm) above the head, and the hole keeps its 0.72 mm radius at both faces.
   Keep: raised, the spigot is in the hole and the collar under it. `fd944c1`
+- **Balance hub solid round the staff; spring screws rubbing the fusee.** When
+  the staff was turned with shoulders, the hub's boss (42186) stayed a solid
+  cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
+  a press fit. The winding-pawl springs' screws (42012) were 0.2 mm tall, the
+  whole gap between the springs' foot and the fusee's underside, which turns
+  over them while winding; their slots stood 0.02 mm into it. The heads are
+  0.15 tall. Keep: a part on a shaft is bored for it; a screw head under a part
+  that turns over it keeps clear of it. Found by `fine.py` after the parts-list
+  changes, which also retired 15 `EXPECTED` entries nothing matches any more.
 
 ## Setup, case and gimbals
 

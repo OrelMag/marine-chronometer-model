@@ -330,7 +330,7 @@ function buildMovement(M){
   mesh(R.sr,ringGeo(5,1.05,0.3),M.steel,0,-9.25,0);   /* its web, free on the fusee arbor (0.05 side shake), under the heads of the winding ratchet's screws, which turn round inside the wheel's open centre as the key winds */   /* steep faces lead against the running direction, so the sustaining pawl holds it */
   mesh(R.sr,cylY(0.4,1.45,10),M.steel,13.55*Math.cos(SSP_PIN),-8.375,13.55*Math.sin(SSP_PIN));   /* pin pressing the sustaining spring's free end */
   /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4): pushed by its steep faces when running, slipping over them when winding.
-     Each is held in by a flat winding-pawl spring (42007) under two screws (42012), bearing on the arm's outer side near the pivot (Figs. 28, 69).
+     Each is held in by a flat winding-pawl spring (42007) under two screws (42012; heads 0.15 tall, clear of the fusee's underside, which turns over them while winding), bearing on the arm's outer side near the pivot (Figs. 28, 69).
      wpsGeo: the spring for pawl angle th, its free part bent so the end stays on the arm; update() rebuilds it as the pawl rides the teeth in winding */
   const wpsGeo=(pw,th)=>{const u=pw.userData,bk=pawlBack(u.pts,0.96,u.q,th,[0,0]),E=[bk.p[0]+bk.n[0]*0.095,bk.p[1]+bk.n[1]*0.095],[,,r1]=u.sp,m=[(r1[0]+E[0])/2+bk.n[0]*0.25,(r1[1]+E[1])/2+bk.n[1]*0.25];
     return stripGeo([add(r1,unit(sub(m,r1)),0.45),m,E],0.3,0.3);};   /* the free part, from its foot (screwed down, drawn once) to its end on the arm */
@@ -338,7 +338,7 @@ function buildMovement(M){
     pw.userData.q=P;pw.userData.th0=Math.atan2(T[1]-P[1],-(T[0]-P[0]));pw.userData.pts=pawlPts(ln,0.9);R.wp.push(pw);
     const pol=(r,t)=>[r*Math.cos(a+t),r*Math.sin(a+t)],r0=pol(12.9,0.85),r1=pol(12.5,0.6);pw.userData.sp=[pol(13.0,0.97),r0,r1];
     pw.userData.spr=hn(mesh(R.sr,wpsGeo(pw,pw.userData.th0),M.blued,0,-10.1,0),'42007');pw.userData.sprTh=pw.userData.th0;
-    hn(mesh(R.sr,stadium(r0,r1,1.0,0.3,[r0,r1].map(q=>hC(...q,0.4))),M.blued,0,-10.1,0),'42007',{sub:1});for(const q of[r0,r1])hn(screw(R.sr,...q,-10.1,0.4,0.2,0.3+0.5),'42012');}   /* the spring's foot and its two screws (42012) */
+    hn(mesh(R.sr,stadium(r0,r1,1.0,0.3,[r0,r1].map(q=>hC(...q,0.4))),M.blued,0,-10.1,0),'42007',{sub:1});for(const q of[r0,r1])hn(screw(R.sr,...q,-10.1,0.4,0.15,0.3+0.5),'42012');}   /* the spring's foot and its two screws (42012) */
   const sp=hn(part('spawl',-22),'42096');sp.userData.axis=mesh(sp,shaftGeo([[TB_U-0.7,0.5],[TB_U+0.025,0.7],[y0-0.025,0.5],[y0+2]]),M.steel,SPv[0],0,SPv[1]);   /* pivots (r 0.5) in the train bridge and the plate (it has no bushing, Op. 15), shoulders 0.025 off them */
   /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2), trailing the pivot so the teeth can only pass it one way */
   const SPt=[L.Fu[0]+16.35*Math.cos(54*D2R),L.Fu[1]+16.35*Math.sin(54*D2R)];
@@ -475,7 +475,7 @@ function buildMovement(M){
      and two hold-down screws (42249) through cap and arm into the flange. The arm is widened round the hub. Sizes estimated */
   const HD=[[1.7,0],[-1.7,0]],xa=Math.sqrt(2.2**2-1.2**2),a0=Math.atan2(1.2,xa),arc=(s,e)=>[...Array(25)].map((_,i)=>[2.2*Math.cos(s+(e-s)*i/24),2.2*Math.sin(s+(e-s)*i/24)]);   /* the bar across, joined to the 2.2 circle round the hub on both sides (subtractCircle keeps one run: it drew half the arm) */
   mesh(R.balU,polyGeo([[BR-0.5,-1.2],[BR-0.5,1.2],...arc(a0,Math.PI-a0),[-(BR-0.5),1.2],[-(BR-0.5),-1.2],...arc(Math.PI+a0,TAU-a0)],1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,-0.55,0);
-  hn(mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,0.55,0),'42186',{sub:1});hn(cylBetween(R.balU,1.1,1.15,-0.9,M.steel,0,0,24),'42186',{sub:1});   /* the hub's flange and boss */
+  hn(mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,0.55,0),'42186',{sub:1});hn(mesh(R.balU,ringGeo(1.1,0.45,2.05),M.steel,0,0.125,0),'42186',{sub:1});   /* the hub's flange and boss, bored for the staff (as the flange is) */
   hn(mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,-0.9,0),'42248');
   for(const q of HD)hn(screw(R.balU,...q,-0.9,0.4,0.25,0.35+1.1+0.5),'42249').userData.lift=0;   /* they stay in: the hub's flange under them is on the staff, which goes with the balance */
   { const hs=[];for(let k=0;k<60;k++){if(k%30===0||k%30===2||k%30===28)continue;const a=k/60*TAU;hs.push([cylY(0.28,0.2,8),new THREE.Matrix4().compose(new THREE.Vector3((BR+0.05)*Math.cos(a),0,(BR+0.05)*Math.sin(a)),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-a,Math.PI/2)),new THREE.Vector3(1,1,1))]);}mesh(R.balU,mergeGeo(hs),M.steelD); }   /* none at the arm ends or under the weights' screws */

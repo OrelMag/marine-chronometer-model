@@ -22,20 +22,7 @@ WIND=[(2.5,False),(8.7,False),(0.05,False),(4,True),(1,False),(6,True),(8.7,True
 STATES=[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,(n,w) in enumerate(WIND,1)]
 # (part:geometry, part:geometry) sorted: (reason, largest volume mm3, largest depth along y mm) seen when recorded
 EXPECTED={
- ('bal:Box','bal:Cylinder'):('impulse jewel set in its roller on the staff',0.69,1.1),
- ('bal:Cylinder','bal:Cylinder'):('balance staff, rollers and collet: one assembly',1.49,2.4),
- ('escBridge:Extrude','escW:Cylinder'):('escape wheel upper pivot in its bridge',0.43,0.45),
- ('barrelBridge:Extrude','fusee:Cylinder'):('fusee upper pivot in the barrel bridge',0.06,0.25),
- ('barrelBridge:Extrude','ratchet:Cylinder'):('barrel arbor in the barrel bridge, under the setup ratchet',0.078,0.21),
- ('spawl:Cylinder','spawl:Extrude'):('sustaining pawl on its arbor',0.75,0.6),
  ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot, and the shanks of the clamp, detent-adjusting and lock-adjusting screws in the foot and support block (horizontal screws in vertically extruded pieces, which can't be holed across)",1.15,0.95),
- ('fw:Cylinder','hands:Cylinder'):('seconds hand collet on the fourth arbor',0.33,0.35),
- ('fw:Cylinder','hands:Extrude'):('seconds hand on the fourth arbor',0.15,0.25),
- ('hands:Cylinder','hands:Extrude'):('seconds and wind-indicator hands in their collets (up to 0.344 across the dial styles)',0.35,0.35),
- ('hands:Cylinder','motion:Cylinder'):("wind-indicator hand's collet on its wheel's arbor",0.33,0.35),
- ('hands:Extrude','motion:Cylinder'):("wind-indicator hand on its wheel's arbor",0.17,0.25),
- ('fusee:Extrude','sratchet:Extrude'):('winding pawls riding the winding ratchet while winding',0.003,0.5),
- ('gw:Extrude','sspring:Cylinder'):("sustaining spring's pin in the fusee wheel",0.15,0.3),
  ('spawl:Tube(tube)','trainBridge:Cylinder'):("sustaining pawl's spring bearing on its steady pin in the train bridge",0.04,0.3),
  ('chain:Cylinder','fusee:Lathe'):("the chain's pin in the fusee's large end",0.12,0.45),
  ('chain:Buffer','chain:Cylinder'):("that pin through the rivet hole of the chain's first link (an outer link: two plates and their rivets)",0.03,0.4),
@@ -43,10 +30,9 @@ EXPECTED={
  ('chain:Box','chain:Buffer'):("the barrel-end hook plate riveted to the chain's last link (an outer link)",0.03,0.2),
  ('bal:Box','spr:Tube(tube)'):("hairspring's inner end in the clamp on the collet's tongue",0.06,0.35),
  ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),
- ('cock:Extrude','spr:Cylinder'):("hairspring stud's steady pin in the cock",0.23,0.8),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
- ('spawl:Cylinder','trainBridge:Extrude'):('sustaining pawl arbor (r 0.7) in its 0.72 hole: grazes the bevel',0.06,0.18),
  ('barrel:Extrude(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
+ ('barrel:Extrude(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.03,0.45),
  ('barrel:Extrude(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
  ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",7.0,1.2),
  ('fusee:Cylinder','fusee:Cylinder'):("the taper pin through the fusee arbor, under the end plate (their own group, which the Exploded view takes off the arbor's end)",0.25,0.45),

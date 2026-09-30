@@ -944,13 +944,16 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    screw, twist to start, the setup click's direction, shield plate and latch):
    `maintaining.py`, `escapement.js` and `invariants.py` cover the maintaining
    work, the escapement and the train's arithmetic.
-4. **The other checks after these geometry changes** (merged with
-   `claude/fidelity`'s restacked train): `solids.py`, `exploded.py`, `smoke.py`,
-   `invariants.py` and `escapement.js` pass; `fine.py`, `maintaining.py` and
-   `audit.py` still to be run and their tables (`fine.py`'s `EXPECTED`) brought
-   up to date: several
-   expected overlaps (hands on their arbors, the impulse jewel in its roller,
-   the sustaining spring's pin, the stud's steady pin, bushings in bevelled
-   holes) should now be gone.
+4. *Done:* **The other checks after these geometry changes.** `fine.py`
+   (also `--hold`, `--dense` and the timing weights at ±3 turns),
+   `maintaining.py`, `audit.py`, `solids.py` and `bom.py` pass. `fine.py` found
+   three new contacts: the balance hub's boss was solid round the turned staff
+   (now bored r 0.45, a press fit), the winding-pawl springs' screw heads
+   touched the fusee's underside that turns over them (now 0.15 tall), and the
+   barrel cap's screws stand in the lip inside the rim (an intended contact,
+   added to `EXPECTED`). The 15 `EXPECTED` entries nothing matches any more
+   (the hands on their arbors, the impulse jewel in its roller, pivots in their
+   holes, the stud's steady pin, the sustaining spring's pin and others) are
+   removed.
 5. `bom.py` in CI: about 5 minutes a run.
 
