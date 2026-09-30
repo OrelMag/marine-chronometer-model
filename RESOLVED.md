@@ -622,6 +622,13 @@ An arbor needs pivots and shoulders; a stone its seat.
   over, as a break would. Such rows are now skipped; only a break (started,
   stopped, set, not wound) starts a new run. Keep: the mean's run ends at a
   break, not at a row without a rate. `e7b1398`
+- **Balance lighter than the manual's.** The moment of inertia was 930
+  g·mm²; the manual's Table II (screw changes and the rates they make) fits
+  1,140 g·mm² with the parts list's masses, and Fig. 3 draws the rim as a band
+  about 4.3 mm tall where the model's was 2.4. The rim is now 4.3 tall and 1.12
+  wide (fitted to 1,140), the screws and weights at its mid-height with heads
+  2.6 mm across as Fig. 3 draws them. Keep: `invariants.py` checks 1,140; a
+  change to the balance keeps Table II's moment (the pitches follow). `ff40402`
 
 ## Rendering
 
