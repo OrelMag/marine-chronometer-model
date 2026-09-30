@@ -565,3 +565,7 @@ Contents:
   gimbals latched. The walkthrough now ends the setting first (the latch goes
   back as it was) and drops a stop-to-set under way. Keep: anything that takes
   over the view ends the setting, as `ksStart` ends the walkthrough.
+- **The hand-setting key hung off the movement in other views.** Changing view
+  while setting with the key lifted the movement out with the key still on
+  its square. Leaving the Dial view now ends the setting. Keep: the key and
+  the missing bezel belong to the Dial view only.
