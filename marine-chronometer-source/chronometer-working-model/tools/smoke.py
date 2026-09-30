@@ -4,7 +4,7 @@
     python smoke.py --model    # the model only
 
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, every cross-section
-(and its other half), GMT / Local, the Illustration tab, the display switches, winding with the key, the keyboard, and a link through the URL
+(and its other half), GMT / Local, the Illustration tab, the display switches, Reset display, Link, winding with the key, the keyboard, and a link through the URL
 hash. Then the essay, scrolled from top to bottom. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
 import asyncio,pathlib,sys
@@ -26,7 +26,7 @@ async def model(b,errs,steps):
         await pg.evaluate("s=>{const e=document.querySelector(s);if(!e)throw Error('missing '+s);e.click();}",sel);await pg.wait_for_timeout(ms);steps.append(label or sel)
     for drive in(False,True):
         if drive:await click('#driveOn','Moving parts only')
-        for v in['box','dial','movement','train','escapement','exploded','laidout']:await click(f'#views button[data-v="{v}"]',f'view {v}'+(' (moving parts)' if drive else ''))
+        for v in['box','dial','movement','train','escapement','exploded','laidout','fusee','balance']:await click(f'#views button[data-v="{v}"]',f'view {v}'+(' (moving parts)' if drive else ''))
     await click('#mwOn','motion work and hands');await click('#mwOn');await click('#driveOn','Moving parts off')
     await click('#tStart','walkthrough')
     for i in range(7):await click('#tNext',f'walkthrough step {i+2}',400)
@@ -43,7 +43,7 @@ async def model(b,errs,steps):
     for sel in['#colr','#ghost','#edges','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
     # pen and wash (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
     await click('#draw','pen and wash on',600)
-    for v in['box','dial','movement','train','escapement','exploded','laidout']:await click(f'#views button[data-v="{v}"]',f'pen and wash, view {v}')
+    for v in['box','dial','movement','train','escapement','exploded','laidout','fusee','balance']:await click(f'#views button[data-v="{v}"]',f'pen and wash, view {v}')
     await click('#colr');await click('#ghost','pen and wash, colour by part, see-through');await click('#colr');await click('#ghost')
     await click('#secs button[data-v="x"]','pen and wash, section');await click('#secs button[data-v="off"]')
     await click('#driveOn','pen and wash, moving parts only');await click('#driveOn');await click('#draw','pen and wash off')
@@ -53,6 +53,12 @@ async def model(b,errs,steps):
     await click('#draw','edges, pen and wash on');await click('#draw','edges, pen and wash off')
     if not await pg.evaluate("document.querySelector('#edges').checked&&!document.querySelector('#edges').disabled"):errs.append('Edges not restored after pen and wash')
     await click('#edges','edges off',600);await click('#edges','edges on again')
+    # Reset display puts the Display boxes back (Edges on, the rest off, in Dial); Link copies the address, or puts it in the address bar
+    for sel in['#lbls','#colr','#rock','#spin','#ghost']:await click(sel)
+    await click('#edges');await click('#draw');await click('#dispReset','reset display',600)
+    bad=await pg.evaluate("['lbls','colr','draw','rock','latch','spin','ghost'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges'])")
+    if bad:errs.append(f'Reset display left {bad}')
+    await click('#link','copy link',400)
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
     await click('#kwBtn','wind with the key',2500);await click('#kwBtn','stop winding')
     await click('#wind','wind');await click('#rateZero','rate reset')

@@ -34,13 +34,13 @@
         <section class="hc mouse"><h4>With a mouse</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Shift-drag or middle-drag</dt><dd>Pan</dd><dt>Scroll</dt><dd>Zoom</dd>
           <dt>Click a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Right-click a part</dt><dd>Fade or hide it</dd><dt>Right-click empty space</dt><dd>Bring hidden parts back</dd>
-          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 7</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
+          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 9</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
         <section class="hc touch"><h4>On a phone or tablet</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Drag two fingers</dt><dd>Pan</dd><dt>Pinch</dt><dd>Zoom</dd>
           <dt>Tap a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Long-press a part</dt><dd>Fade or hide it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back</dd>
           <dt>Tap empty space</dt><dd>Close a card</dd><dt>Turn the phone sideways</dt><dd>A larger model, with the controls beside it</dd></dl></section></div>
       <p class="note">Reset brings the camera back to the chosen view. Parts too small to tap are listed under Parts. To see how the chronometer works, start the walkthrough under How it works.</p></div>
-    <div class="tools"><button id="helpBtn" aria-label="How to use it" aria-controls="help" aria-expanded="false" title="How to use it: mouse, touch and keys">?</button><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
+    <div class="tools"><button id="helpBtn" aria-label="How to use it" aria-controls="help" aria-expanded="false" title="How to use it: mouse, touch and keys">?</button><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="link" title="Copy a link to this view: the view, speed, part and settings">Link</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
     <figure class="fig hidden" id="fig" role="tabpanel" aria-labelledby="tabFig"><div class="fsc"><img src="img/illustration.webp" width="1200" height="1420" alt="Pen-and-wash drawing titled What keeps a marine chronometer on time, drawn from this model of the Hamilton Model 21. The mahogany box with both covers open and the movement lifted out of its brass case above the gimbal ring. Four numbered panels: 1, gimbals: the box tilted, drawn in outline, with the case hanging level in its ring and the two pivot axes at right angles; 2, fusee and chain: the mainspring in its barrel, drawn open, and the chain running onto the cone of the fusee above the fusee wheel; 3, spring detent escapement: the escape wheel, the detent and the impulse roller on the balance staff, the balance in outline; 4, balance and hairspring: the steel rim on its Invar arm with its balance screws, under the cylindrical Elinvar hairspring." title="Click to see it full size"></div>
       <figcaption>Drawn from this model: every part is rendered from the same geometry the 3D model runs, then inked and washed.</figcaption></figure>
     <div class="tabs" role="tablist" aria-label="What the stage shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabFig" aria-selected="false" aria-controls="fig" title="An overview drawing of what keeps a chronometer on time">Illustration</button></div>
@@ -63,43 +63,44 @@
       </div>
     </div>
     <div class="card ctl">
-      <section class="grp">
-        <h2>View</h2>
+      <details class="grp more" id="viewDet" open>
+        <summary>View</summary>
         <div class="seg grid3" id="views">
           <button data-v="box" title="The instrument in its mounting box">Box</button><button data-v="dial" aria-pressed="true" title="Read the dial through the glass">Dial</button><button data-v="exploded" title="Every part lifted apart along the arbors">Exploded</button>
           <button data-v="movement" title="The movement lifted out of its case, train side up">Movement</button><button data-v="train" title="The going train, plates see-through">Train</button><button data-v="escapement" title="Close up on the detent escapement">Escapement</button>
-          <button data-v="laidout" title="The train laid out in one line and seen from the side, as textbooks draw it: barrel, fusee, centre, third, fourth, escape wheel and balance, each still in mesh">Laid out in a line</button></div>
-        <label class="sl hidden" id="expWrap" style="margin-top:10px"><span>Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
+          <button data-v="laidout" title="The train laid out in one line and seen from the side, as textbooks draw it: barrel, fusee, centre, third, fourth, escape wheel and balance, each still in mesh">Laid out</button><button data-v="fusee" title="The mainspring barrel, the chain and the fusee, plates see-through">Fusee</button><button data-v="balance" title="Close up on the balance, its weights and the hairspring">Balance</button></div>
+        <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
         <label class="ck sw" title="Hide the plates, bridges, dial and case to see the moving parts"><input type="checkbox" id="driveOn" role="switch"> Moving parts only</label>
         <label class="ck sub hidden" id="mwWrap"><input type="checkbox" id="mwOn"> Include motion work and hands</label>
-      </section>
-      <section class="grp">
-        <h2>Time</h2>
+      </details>
+      <details class="grp more" id="timeDet" open>
+        <summary>Time</summary>
         <div class="seg" id="speeds">
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time: watch the escapement">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
-        <div class="spd"><span>Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
-        <div class="pow"><label class="sl"><span>Since winding</span><input type="range" id="hrs" min="0" max="60" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
-        <div class="clk"><label class="sl"><span>Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
-        <div class="clk tzr"><span>Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as U.S. Navy chronometers were kept">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
-        <div class="kw"><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button><label class="ck"><input type="checkbox" id="kwFull" checked> From run down</label></div>
-        <p class="note hidden" id="kwOut" aria-live="polite" style="margin:6px 0 0"></p>
-        <div class="kw"><button id="twist" title="Give the box a quick twist, which sets the balance swinging: how a stopped chronometer is started">Twist to start</button></div>
-      </section>
-      <section class="grp">
-        <h2>Display</h2>
-        <div class="cks">
-          <label class="ck"><input type="checkbox" id="lbls"> Labels</label>
-          <label class="ck"><input type="checkbox" id="ghost"> See-through plates</label>
-          <label class="ck"><input type="checkbox" id="colr"> Colour by part</label>
-          <label class="ck" title="Draw the model in ink and watercolour, as the Illustration is drawn"><input type="checkbox" id="draw"> Pen and wash</label>
-          <label class="ck" title="Outline every part of the movement with the Pen and wash lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
-          <label class="ck"><input type="checkbox" id="rock"> Ship motion</label>
-          <label class="ck" title="Lock the gimbals with the latch, as when the box is carried: the case then tilts with the box"><input type="checkbox" id="latch"> Gimbals latched</label>
-          <label class="ck"><input type="checkbox" id="snd"> Tick sound</label>
-          <label class="ck"><input type="checkbox" id="spin"> Turn slowly</label></div>
-        <h3 class="sub-h" style="margin-top:12px">Theme</h3>
-        <div class="seg" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
-      </section>
+        <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
+        <div class="row clk"><label class="sl"><span class="lab">Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
+        <div class="row"><span class="lab">Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as U.S. Navy chronometers were kept">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
+        <div class="row"><span class="lab">Sound</span><label class="ck" title="A click at each beat, at up to real time"><input type="checkbox" id="snd"> Tick sound</label></div>
+      </details>
+      <details class="grp more" id="windDet" open>
+        <summary>Winding</summary>
+        <div class="row pow"><label class="sl"><span class="lab">Since winding</span><input type="range" id="hrs" min="0" max="60" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
+        <div class="row"><span class="lab">Key</span><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button></div>
+        <label class="ck ind kwf" title="Start winding from run down, the chain all on the barrel: 17½ half turns"><input type="checkbox" id="kwFull" checked> From run down</label>
+        <p class="note ind hidden" id="kwOut" aria-live="polite" style="margin-top:6px;margin-bottom:0"></p>
+        <div class="row"><span class="lab">Start</span><button id="twist" title="Give the box a quick twist, which sets the balance swinging: how a stopped chronometer is started">Twist to start</button></div>
+      </details>
+      <details class="grp more disp" id="dispDet" open>
+        <summary>Display</summary>
+        <div class="dgrid">
+          <span class="lab">Show</span><label class="ck"><input type="checkbox" id="lbls"> Labels</label><label class="ck" title="Outline every part of the movement with the Pen and wash lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
+          <label class="ck c2" title="See-through plates, bridges and case"><input type="checkbox" id="ghost"> See-through</label><label class="ck"><input type="checkbox" id="colr"> Colour by part</label>
+          <label class="ck c2" title="Draw the model in ink and watercolour, as the Illustration is drawn"><input type="checkbox" id="draw"> Pen and wash</label>
+          <span class="lab g">Motion</span><label class="ck g" title="The box rolls and pitches as on a ship; the gimbals keep the case level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Lock the gimbals with the latch, as when the box is carried: the case then tilts with the box"><input type="checkbox" id="latch"> Gimbals latched</label>
+          <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
+          <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+          <div class="seg c2 span"><button id="dispReset" title="Every Display option back to its default, and every faded or hidden part shown again (the theme stays)">Reset display</button></div></div>
+      </details>
       <details class="grp more" id="partsDet">
         <summary>Parts</summary>
         <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
@@ -134,7 +135,7 @@
           <label class="ck" style="margin-top:6px"><input type="checkbox" id="secFlip"> Show the other half</label>
           <p class="note" style="margin:6px 0 0">Cut faces are hatched. The plane moves with the movement, so it works in every view, including in the box.</p></div>
       </details>
-      <details class="grp more">
+      <details class="grp more" id="varDet">
         <summary>Variants</summary>
         <h3 class="sub-h">Plate finish</h3>
         <div class="seg" id="finish"><button data-v="nickel" aria-pressed="true">Nickel (Hamilton)</button><button data-v="gilt">Gilt</button></div>
@@ -158,10 +159,10 @@
     <li>Drag to turn; Shift-drag, middle-drag or drag two fingers to pan; scroll or pinch to zoom. The <b>?</b> button on the model lists every control, for a mouse and for touch.</li>
     <li>Tap a part to see what it does and its Hamilton part number.</li>
     <li>Right-click or long-press a part to fade or hide it; do the same on empty space to bring hidden parts back.</li>
-    <li>Space bar stops and restarts the movement; keys 1 to 7 pick the views in the order of their buttons. With the model focused (click it, or Tab to it), the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, views change without animation and the walkthrough leaves ship motion off.</li>
+    <li>Space bar stops and restarts the movement; keys 1 to 9 pick the views in the order of their buttons. With the model focused (click it, or Tab to it), the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, views change without animation and the walkthrough leaves ship motion off.</li>
     <li>Under Parts, single out or hide any part by name, including parts too small to tap.</li>
     <li>The model keeps Greenwich Mean Time, as Navy chronometers were kept; under Time, Keep: Local time switches to your time zone. (The manual has the hands set only when the chronometer is started, the error being recorded instead; here Set the hands works at any time.)</li>
-    <li>Wind with the key (under Time) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
+    <li>Wind with the key (under Winding) turns the key half a turn at a time until the winding stop catches. Under Rate and timing weights, move the balance’s weights and watch the hands gain or lose.</li>
     <li>It doesn’t start by itself. Run down, or stopped with the balance locking arm or the train-blocking screw (under Stopping and starting), it needs winding and then Twist to start, the quick twist of the box the manual prescribes; the hands lose the time it stood.</li>
   </ul>
   <h3>Sources</h3>
