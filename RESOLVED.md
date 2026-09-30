@@ -651,4 +651,9 @@ Contents:
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Train-blocking screw's slot under the train bridge, behind a hole
+  smaller than its head.** Fig. 110's section shows the raised screw's
+  slotted top standing in the train bridge's access hole, the collar below it
+  seated against the hole's edge. The screw now has a slotted spigot (r 0.5,
+  1.5 mm) above the head, and the hole keeps its 0.72 mm radius at both faces.
+  Keep: raised, the spigot is in the hole and the collar under it.
