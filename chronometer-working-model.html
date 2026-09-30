@@ -1995,6 +1995,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
+    cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
     $('#ghost').checked=st.see;$('#draw').checked=st.draw;$('#edges').checked=st.edges;$('#edges').disabled=st.draw;stage.classList.toggle('colr',st.colr);stage.classList.toggle('draw',st.draw);partsSync();
   }
 
@@ -2016,6 +2017,10 @@ function drawEsc2D(ctx,w,h,p,dark){
     fusee:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.2,dist:105,target:mvL((L.Fu[0]+L.Ba[0])/2,-12,(L.Fu[1]+L.Ba[1])/2),see:true},
     /* the balance close up under its cock, with the timing weights (Rate and timing weights' Show the balance comes here too) */
     balance:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:-0.9,pitch:0.35,dist:65,target:mvL(L.B[0],BAL_Y,L.B[1])}};
+  const VIEW_DESC={box:'The chronometer in its mahogany box.',dial:'The dial, read through the glass-top cover.',movement:'The movement lifted out of its case, train side up.',
+    train:'The going train from above, plates see-through: fusee wheel, centre, third, fourth and escape wheels.',escapement:'Close up on the detent escapement, from the pillar-plate side: the detent, the escape wheel and the balance’s rollers.',
+    exploded:'Every part lifted apart along the arbors.',laidout:'The train laid out in one line and seen from the side: barrel, fusee, centre, third, fourth and escape wheels, and the balance.',
+    fusee:'The mainspring barrel, the chain and the fusee, plates see-through.',balance:'Close up on the balance under its cock, with its timing weights and hairspring.'};
   /* keep the same horizontal coverage on narrow screens: distance grows as the aspect ratio falls below 1.5 */
   const aspectK=()=>clamp(1.25/(W/Hh),1,2.2);
   function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK()*(st.drive&&v.lift?0.8:1);G.follow=v.target;panO.set(0,0,0);camFree=false;}

@@ -589,7 +589,7 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - **Screen readers (S):**
   - The info card is `aria-live="polite"`; the walkthrough's changing text and the key-winding progress should be too (`kwOut` already is).
   - Give the walkthrough step changes a live region.
-  - Give the canvas a description that updates with the view ("Escapement view: detent, escape wheel and balance, seen from the pillar-plate side").
+  - *Done:* the canvas's `aria-label` names the view or walkthrough step, and Moving parts only. Before: give the canvas a description that updates with the view ("Escapement view: detent, escape wheel and balance, seen from the pillar-plate side").
 - **Contrast (S):** check the label colours (`--pc` swatches) and muted text against both themes with a contrast checker. Several part colours are mid-tones.
 
 ### 6.2 Shareable links and remembered state
