@@ -209,6 +209,8 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Timing washers:** add them as an option in the rate panel ([2.6](#26-a-fuller-rate-panel-sm)).
 
 ### 1.8 Wheel teeth (M–L)
+*The train's stack is done: third, centre and fourth wheels from the plate up, with the pinions on the sides and the five spokes that Figs. 13, 29 and 110 give, and the motion work's solid minute and hour wheels and five-spoked wind indicator wheel from photographs of a Model 21's dial side. Profiles and counts are still open.*
+- **Open question: the wind indicator wheel's size.** The dial-side photographs show it larger than the model's r 12.4 (from Fig. 107), about r 15–17 mm. A larger wheel would change its count or module, and the scale's ratio with them. It is left as it is until a measurement settles it.
 - **Profiles:** `gearGeo` draws a generic trapezoidal tooth. Clock and chronometer trains use cycloidal teeth and pinion leaves with rounded addenda (the BS 978 Part 2 proportions are the usual reference). With true profiles, the close-ups would show real rolling contact, and `dyn.py` could check tooth-to-leaf clearance through a whole tooth pitch, not just in phase.
 - **Tooth counts:** the centre, third and fourth counts are estimates. Count teeth on the highest-resolution photographs (the fourth wheel and the centre wheel's outer rim are often visible), or ask on chronometerbook.com. Update `TRAIN` and every place the counts appear as text (see [7.2](#72-derive-every-train-number-from-train)).
 
