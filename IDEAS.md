@@ -410,7 +410,7 @@ A results table beside them shows lock, let-off, overall, drop, roller shake and
 **Why.** The manual is an overhaul manual; this is the part of it the model doesn't yet use. It's also what restorers would come to the page for.
 
 ### 3.6 Provenance overlay: colour by source (S–M)
-> **Done.** Every part in `PARTS` has `src` (the manual, measured, solved, estimated), `sn` (what came from where) and `figs`, taken from the README's Sources, layout and Estimated sections; the part card shows them.
+> **Done.** Every part in `PARTS` has `src` (the manual, measured, solved, estimated), `sn` (what came from where) and `figs`, taken from the README's Sources, layout and Estimated sections; the part card shows them. Colour by source (Display) colours every part by it, with a key; `colr=src` in the hash.
 
 **What.** A third colouring mode beside Normal and Colour by part: every part coloured by where its shape and size came from.
 
