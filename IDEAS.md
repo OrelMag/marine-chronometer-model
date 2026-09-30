@@ -602,7 +602,7 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - **Units:** an **mm / in** toggle for the dimensions on the info cards. The manual works in inches (0.249 in roller, 0.002 in roller shake).
 
 ### 6.4 Onboarding and hints (S)
-- **Hint:** the hint fades after nine seconds whether or not it was read. Instead, keep it until the first tap or drag.
+- *Done:* **Hint:** it stays until the model is first tapped, dragged, scrolled or given a key, or a part card, help or the walkthrough covers it. Before: the hint fades after nine seconds whether or not it was read. Instead, keep it until the first tap or drag.
 - **First tap:** add a one-line "Tap any part" pulse on a first-time visitor's first view.
 
 ### 6.5 Translations (M)

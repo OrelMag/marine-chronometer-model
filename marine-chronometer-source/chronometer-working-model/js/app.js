@@ -214,6 +214,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     expR.setAttribute('aria-label',k==='laidout'?'How far the train is laid out in a line':'How far apart the exploded parts are');
     if(!keepSee){st.see=!!vv.see;}look();if(hashReady)keep('view',k);
     document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
+  /* the hint under the stage stays until the model is first tapped, dragged, scrolled or given a key (or a card, help or the walkthrough covers it) */
+  const hintOff=()=>{$('#hint').style.opacity=0;};for(const ev of['pointerdown','wheel','keydown'])cv.addEventListener(ev,hintOff,{once:true,passive:true});
   /* pointer: orbit, pinch, tap to pick; on touch, a long press (500 ms, barely moving) opens the fade/hide menu, since iOS fires no contextmenu */
   const ptrs=new Map();let pinch=0,down=null,rMoved=0,lpT=0,lpAt=-1e9;const lpStop=()=>{clearTimeout(lpT);lpT=0;};
   cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0,btn:e.button,pan:e.shiftKey||e.button===1};if(e.button===1)e.preventDefault();
@@ -235,7 +237,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     const hit=hits.find(h=>INFO[h.object.userData.part]);
     if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
   function showPart(p){showHelp(false);st.hid.delete(p);st.pick=p;look();const[t,d,sp]=INFO[p];
-    const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');$('#hint').style.opacity=0;}
+    const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');hintOff();}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
   /* right-click (or long-press) a part: opacity and hide. Prefers the nearest solid part, so faded parts in front can be looked through.
@@ -261,7 +263,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   /* how to use it: every control for a mouse and for touch. Stays open while the model is dragged, so the gestures can be tried; a tap, × or Esc closes it */
   const help=$('#help'),helpBtn=$('#helpBtn');
-  function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();$('#hint').style.opacity=0;}}
+  function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeOpm();showHelp(false);}
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
@@ -470,7 +472,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     {t:'Hands and the wind indicator',x:`<p>The centre wheel staff carries the minute hand and, through the motion work, the hour hand; the fourth wheel staff carries the second hand.</p><p>A pinion on the dial end of the fusee arbor drives the wind indicator wheel. Here an ${UD.pin}-leaf pinion and a ${UD.wheel}-tooth wheel take the hand across the UP–DOWN scale as the fusee makes its ${(56*FUSEE_PER_HOUR).toFixed(1)} turns in 56 hours.</p>`,
       drive:true,mw:true,v:{lift:1,flip:0,explode:0,yaw:0.2,pitch:1.05,dist:170,target:mvL(-3,3,-6)},speed:3600,focus:['motion','hands','cw','fusee','gw'],inset:'motion'}];
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
-  function tourGo(i){st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);
+  function tourGo(i){st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
@@ -640,7 +642,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
-    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}
+    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
   look();
