@@ -258,6 +258,15 @@ Contents:
   `userData.barrelWall`. Keep: no `DoubleSide`, `noCap` or open geometry for a
   new part; a closed part has no edge used once, nor twice the same way, and a
   positive signed volume. `eb37b95`
+- **Train-blocking screw hung in the air between the bridges.** Its head sat
+  under the train bridge and its thread ran 5 mm bare down to a thin lobe of
+  the balance lower bridge. Fig. 110's section shows the screw's part of the
+  bridge rising to the train bridge's underside, bored for the head down to
+  the seat and tapped below. The lobe now rises in a column (r 1.9) to the
+  train bridge, bored r 0.95 to the seat 0.6 mm into the bridge's top. The
+  screw's travel and `blockRoom` are unchanged. Keep: the screw is enclosed
+  from the train bridge down to the lobe's underside; the column stays clear
+  of the fourth wheel's upper setting.
 
 ## Setup, case and gimbals
 

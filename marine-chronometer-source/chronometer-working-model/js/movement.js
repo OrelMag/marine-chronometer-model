@@ -347,15 +347,17 @@ function buildMovement(M){
   R.esc=arbor(ew,M,E.EX*ES,0,{pin:{n:TRAIN.ep,m:MOD.fourth,y:-6.96,th:2.0},ar:[TB_T-0.86,-0.05]});   /* pinion runs from the fourth wheel toward the plate: centred on the wheel, its top end reached the third wheel's teeth */
   R.esc.userData.wheel=escapeWheel(R.esc,M,ES,EY);
   /* ---------- balance lower bridge: lower balance cap jewel and the fourth wheel upper setting ---------- */
-  /* a lobe for the train-blocking screw (42247, Sec. II, Fig. 110), whose head sits in a counterbore 0.6 deep in the bridge's top: the bridge is drawn as two layers, the top one cut for the counterbore */
-  const lb=part('lowerBridge',-46),LBpoly=subtractCircle(stadiumPts(L.B,L.F,4.6),add(L.F,TBd,2.6),2.3,true),LBh=[[...L.B,1.2],[...L.F,1.2],...S.blc.map(q=>hT(...q,ESCAP))];
+  /* a lobe for the train-blocking screw (42247, Sec. II, Fig. 110), rising in a column r 1.9 to the train bridge's underside, as the section in Fig. 110 draws it: bored for the head (r 0.95)
+     down to the seat 0.6 into the bridge's top, tapped below it through the bridge. The bridge is drawn as two layers, the top one cut for the bore; the column stops 1.6 short of the fourth wheel's upper setting */
+  const lb=part('lowerBridge',-46),LBpoly=subtractCircle(stadiumPts(L.B,L.F,4.6),S.tBlock,1.9,true),LBh=[[...L.B,1.2],[...L.F,1.2],...S.blc.map(q=>hT(...q,ESCAP))];
   R.lowerBridge=mesh(lb,polyGeo(LBpoly,0.6,[...LBh,[...S.tBlock,0.95]]),M.plate,0,LB_T,0);mesh(lb,polyGeo(LBpoly,2.4,[...LBh,hT(...S.tBlock,TBS_R)]),M.plate,0,LB_T+0.6,0);
+  mesh(lb,ringGeo(1.9,0.95,LB_T-TB_U),M.plate,S.tBlock[0],(TB_U+LB_T)/2,S.tBlock[1]);
   /* boss up to the train bridge, two screws (42055) from the train bridge's top into it (Op. 50) */
   mesh(lb,stadium(add(LBm,lbn,-1.1),add(LBm,lbn,1.1),3.0,LB_T-TB_U,S.lb.map(q=>hT(...q,0.8))),M.plate,0,TB_U,0);for(const q of S.lb)screw(lb,...q,TB_T,0.8,0.45,3.1+3.0);
   /* balance lower setting (42162) in the bridge, and the lower endstone cap (42159) with its screws on the bridge's underside (Fig. 110) */
   mesh(lb,ring(1.2,0.9,3.0),M.gilt,L.B[0],LB_T+1.5,L.B[1]);mesh(lb,ring(1.2,0.9,3.0),M.gilt,L.F[0],LB_T+1.5,L.F[1]);mesh(lb,ring(0.9,0.6,0.6),M.ruby,L.F[0],LB_T+1.0,L.F[1]);   /* and the fourth wheel upper setting (42161) */mesh(lb,ring(0.9,0.5,0.6),M.ruby,L.B[0],LB_T+2.6,L.B[1]);
   { const lbf=new THREE.Group();lbf.rotation.x=Math.PI;lb.add(lbf);endCap(lbf,L.B[0],-L.B[1],[lbu[0],-lbu[1]],-(LB_T+3),2.0,1.9); }
-  /* train-blocking screw (42247, Sec. II, Fig. 110): threaded through the lower bridge's lobe. Screwed down, its head stops in the counterbore and its dog point stands between
+  /* train-blocking screw (42247, Sec. II, Fig. 110): threaded through the lower bridge's lobe, its head in the lobe's column. Screwed down, its head stops on the seat and its dog point stands between
      the fourth wheel's spokes, so the train can turn only until a spoke meets it; screwed up (as it runs), the chamfer on its head seats in the countersunk access hole in the
      train bridge. The thread (6.2 mm) stays in the bridge at both ends of its 5.6 mm travel. R.tbs.userData: seat heights and the dog point's place for blockRoom */
   { const bs=part('tblock',-46),r=TBS_R,h=0.9,c=0.25,rs=0.42,pt=0.176,d=pt*0.3,Lt=6.2,Ld=6.81,rd=0.25,pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0),V2(rs,0)];
