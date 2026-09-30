@@ -560,3 +560,8 @@ Contents:
   over, as a break would. Such rows are now skipped; only a break (started,
   stopped, set, not wound) starts a new run. Keep: the mean's run ends at a
   break, not at a row without a rate.
+- **Starting the walkthrough left a key setting in hand.** With the key on the
+  square, the walkthrough's steps ran with the bezel off, the key on and the
+  gimbals latched. The walkthrough now ends the setting first (the latch goes
+  back as it was) and drops a stop-to-set under way. Keep: anything that takes
+  over the view ends the setting, as `ksStart` ends the walkthrough.

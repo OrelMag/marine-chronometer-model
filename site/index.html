@@ -2459,7 +2459,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
   /* the viewer's own settings, kept when the walkthrough starts and given back when it ends */
   let preTour=null;
-  function tourGo(i){if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
+  function tourGo(i){if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
