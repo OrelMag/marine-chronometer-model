@@ -615,7 +615,7 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 
 ### 6.6 Small fixes noticed while reading
 - *Done:* **Keys 1–9:** the key for a view that is off flashes its button and says in the HUD to turn off Moving parts only. Before: these call `.click()` on buttons that may be disabled in **Moving parts only**. A disabled button ignores the click, as the comment says, but the key gives no feedback. Flash the button or show a brief HUD message.
-- **Walkthrough and user settings:** the walkthrough sets `st.see=false` and `st.rock`, and restores defaults on exit rather than what the user had before. Save and restore the user's settings around a tour.
+- *Done:* **Walkthrough and user settings:** the view, See-through, Ship motion, Gimbals latched, the speed, Moving parts only and the motion work are kept when it starts and given back when it ends. Before: the walkthrough sets `st.see=false` and `st.rock`, and restores defaults on exit rather than what the user had before. Save and restore the user's settings around a tour.
 
 ---
 

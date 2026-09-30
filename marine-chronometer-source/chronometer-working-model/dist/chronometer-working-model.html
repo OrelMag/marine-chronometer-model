@@ -2285,7 +2285,9 @@ function drawEsc2D(ctx,w,h,p,dark){
     {t:'Hands and the wind indicator',x:`<p>The centre wheel staff carries the minute hand and, through the motion work, the hour hand; the fourth wheel staff carries the second hand.</p><p>A pinion on the dial end of the fusee arbor drives the wind indicator wheel. Here an ${UD.pin}-leaf pinion and a ${UD.wheel}-tooth wheel take the hand across the UP–DOWN scale as the fusee makes its ${(56*FUSEE_PER_HOUR).toFixed(1)} turns in 56 hours.</p>`,
       drive:true,mw:true,v:{lift:1,flip:0,explode:0,yaw:0.2,pitch:1.05,dist:170,target:mvL(-3,3,-6)},speed:3600,focus:['motion','hands','cw','fusee','gw'],inset:'motion'}];
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
-  function tourGo(i){st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
+  /* the viewer's own settings, kept when the walkthrough starts and given back when it ends */
+  let preTour=null;
+  function tourGo(i){if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
@@ -2298,8 +2300,9 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
       if(cr.left<stage.getBoundingClientRect().right){const y=cr.top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:RM.matches?'auto':'smooth'});}
       else card.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'});}}
-  function tourEnd(){st.tour=-1;st.focus=null;st.drive=false;st.mwOn=false;st.rock=false;$('#rock').checked=false;setSpeed(1);setInset(null);
-    $('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView('dial');}
+  function tourEnd(){const u=preTour||{view:'dial',see:false,rock:false,latch:st.latch,speed:1,drive:false,mwOn:false};preTour=null;
+    st.tour=-1;st.focus=null;st.drive=u.drive;st.mwOn=u.mwOn;st.rock=u.rock;st.latch=u.latch;st.see=u.see;for(const k of['driveOn','mwOn','rock','latch'])$('#'+k).checked=st[k==='driveOn'?'drive':k];setSpeed(u.speed);setInset(null);
+    $('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView(u.view,true);}
   $('#tStart').addEventListener('click',()=>tourGo(0));$('#tPrev').addEventListener('click',()=>tourGo(Math.max(0,st.tour-1)));
   $('#tNext').addEventListener('click',()=>st.tour<TOUR.length-1?tourGo(st.tour+1):tourEnd());$('#tExit').addEventListener('click',tourEnd);
 
