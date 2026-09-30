@@ -272,37 +272,40 @@ function buildMovement(M){
   for(const o of[cylBetween(bb,0.9,TB_T,-20.45,M.steel,...WS),mesh(bb,new THREE.BoxGeometry(2.2,1,2.2),M.steel,WS[0],TB_T-0.5,WS[1])])o.userData.wstop=true;   /* a stud screwed into the barrel bridge (left-hand thread, Op. 42), down through the train bridge's pocket to the stop-bar's level (the bar is at -20.97..-20.52), clear above the chain's top turn; kept solid while the key winds (app.js) */
   /* ---------- dial (4 in), hands, motion work ---------- */
   const dl=part('dial',32);
-  mesh(dl,discGeo(50.8,0.6,[[...L.C,2.4],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,3.3,0);
+  mesh(dl,discGeo(50.8,0.6,[[...L.C,2.5],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,3.3,0);
   const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;
   /* the face lies 0.02 above the brass disc's top; polygon offset keeps it in front in the depth buffer, else the brass shows through in streaks when zoomed out */
-  const dface=mesh(dl,new THREE.RingGeometry(2.4,50.8,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,3.92,0);dface.userData.noCap=true;dface.userData.surface=true;
+  const dface=mesh(dl,new THREE.RingGeometry(2.5,50.8,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,3.92,0);dface.userData.noCap=true;dface.userData.surface=true;
   /* three feet, each held by a dial screw (35756, Fig. 107) from the train side of the pillar plate into its tapped end */
   for(const q of S.dial){mesh(dl,new THREE.LatheGeometry([V2(0,2.0),V2(hT(0,0,1.0)[2],2.0),V2(hT(0,0,1.0)[2],0),V2(0.9,0),V2(0.9,3.3),V2(0,3.3)],20),M.brass,...[q[0],0,q[1]]);screw(pp,...q,y0,1.0,0.5,PP_T+1.8);}
   const hd=part('hands',48),hg=new THREE.MeshStandardMaterial({color:sc(0xd9b25e),metalness:1,roughness:0.2}),hb=new THREE.MeshStandardMaterial({color:sc(0x7a6240),metalness:1,roughness:0.45});   /* hg gilt (Roman), hb aged gilt (Soviet) */
   /* Hamilton hands as on the photographed dial: blued hour hand with a bulb two-thirds out and a long spear point, plain minute hand to the track, a long seconds hand with a spear counterpoise */
-  const dk=(o,k)=>{const g=new THREE.Group();g.userData.dk=k;o.parent.add(g);g.add(o);return o;};   /* hands of one dial style ('hamilton', 'roman', 'swiss' or 'soviet'), grouped so app.js's per-mesh visibility leaves the choice alone */
-  R.hour=new THREE.Group();R.hour.position.y=5.2;hd.add(R.hour);dk(mesh(R.hour,handGeo(41,1.2,2.5,'pear',0.68),M.blued),'hamilton');dk(mesh(R.hour,handGeo(29,1.3,6,'leaf'),hg),'roman');
-  R.min=new THREE.Group();R.min.position.y=6.0;hd.add(R.min);dk(mesh(R.min,handGeo(47.5,1.5,3,'plain'),M.blued),'hamilton');dk(mesh(R.min,handGeo(45,0.9,8,'lance'),hg),'roman');
-  dk(mesh(hd,cylY(2,1.2,24),M.blued,0,6.3,0),'hamilton');dk(mesh(R.min,new THREE.BoxGeometry(2.4,1.4,2.4),M.steel,0,1.6,0),'hamilton');   /* the bright hand-setting square on the minute hand's pipe, 1.4 proud of the boss: the winding key sets the hands on it (Fig. 8, Sec. III). As the fusee's square, so one key fits both */
-  /* the winding key on the hand-setting square, turned by its shank to set the hands (Fig. 8): shown only while setting, when the bezel is off; it turns with the minute hand */
-  R.hkey=new THREE.Group();R.hkey.visible=false;R.min.add(R.hkey);mesh(R.hkey,ringGeo(2.6,1.35,5),M.brass,0,3.45,0);cylBetween(R.hkey,1.7,5.95,34.5,M.brass);
-  { const kb=mesh(R.hkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,36.5,0);kb.rotation.x=Math.PI/2;for(const z of[13,-13])mesh(R.hkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,36.5,z);mesh(R.hkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,36.5,0); }
-  dk(mesh(hd,cylY(2.3,1.2,24),hg,0,6.3,0),'roman');dk(mesh(hd,cylY(1,0.5,6),M.steel,0,7.1,0),'roman');
+  const dk=(o,k,...more)=>{const g=new THREE.Group();g.userData.dk=k;o.parent.add(g);for(const m of[o,...more])g.add(m);return o;};   /* hands of one dial style ('hamilton', 'roman', 'swiss' or 'soviet'), each with its collet, grouped so app.js's per-mesh visibility leaves the choice alone */
+  /* hour hand: a round hole, pressed on the hour wheel's pipe, its collet below the blade and inside its boss, clear of the seconds hand's tip (r 2.9 at :00) (Op. 64, broached with Tool 40); minute hand: a square hole ("broached with a square file"), seated on the cannon pinion's shoulder under its square, its collet above the blade */
+  R.hour=new THREE.Group();R.hour.position.y=5.2;hd.add(R.hour);R.min=new THREE.Group();R.min.position.y=5.75;hd.add(R.min);
+  const HO={boss:2.9,bore:2.33},MO={boss:3.2,sq:2.44},hcol=m=>mesh(R.hour,ringGeo(2.7,2.33,0.6),m,0,-0.3,0),mcol=m=>mesh(R.min,sqRingGeo(3.2,2.44,0.8),m,0,0.75,0);
+  dk(mesh(R.hour,handGeo(41,1.2,2.5,'pear',0.68,HO),M.blued),'hamilton',hcol(M.blued));dk(mesh(R.min,handGeo(47.5,1.5,3,'plain',0,MO),M.blued),'hamilton',mcol(M.blued));
+  dk(mesh(R.hour,handGeo(29,1.3,6,'leaf',0,HO),hg),'roman',hcol(hg));dk(mesh(R.min,handGeo(45,0.9,8,'lance',0,MO),hg),'roman',mcol(hg));
   R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2) */hd.add(R.sec);dk(mesh(R.sec,handGeo(21,0.5,-10,'plain'),M.blued),'hamilton');dk(mesh(R.sec,handGeo(16.5,0.55,4,'plain'),M.blued),'roman');mesh(R.sec,cylY(0.9,0.8,16),M.blued,0,0.3,0);
   R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35,L.Ud[1]);hd.add(R.ud);dk(mesh(R.ud,handGeo(11,0.6,2.5,'plain'),M.blued),'hamilton');dk(mesh(R.ud,handGeo(10,0.6,2.5,'leaf'),hg),'roman');mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
   /* Nardin-pattern dials: pear hands (blued, or aged gilt on the Soviet copies); a long thin seconds hand to the track with a spear counterpoise */
-  for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31,1.4,6,'pear'),m),k);dk(mesh(R.min,handGeo(46.5,0.9,8,'pear'),m),k);dk(mesh(hd,cylY(2.3,1.2,24),m,0,6.3,0),k);
+  for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31,1.4,6,'pear',0,HO),m),k,hcol(m));dk(mesh(R.min,handGeo(46.5,0.9,8,'pear',0,MO),m),k,mcol(m));
     dk(mesh(R.sec,handGeo(19,0.45,-8,'plain'),M.blued),k);dk(mesh(R.ud,handGeo(k==='swiss'?11.5:8.5,0.6,2.5,'plain'),M.blued),k);}
   const DTEX={hamilton:dtex};hd.traverse(o=>{if(o.userData.dk&&o.userData.dk!=='hamilton')o.visible=false;});
   mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;}
     const m=dface.userData.mat0||dface.material;m.map=DTEX[kind];m.needsUpdate=true;hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===kind;});};   /* the face's own material (app.js may be showing a see-through or faded copy of it, which follows on the next look()) */
   const mw=part('motion',16);
-  R.cannon=arbor(mw,M,...L.C,{pin:{n:MW.cp,m:0.4,y:1.2,th:2,bore:0.85}});mesh(R.cannon,ring(1.4,0.85,4.6),M.steel,0,2.6,0);
+  /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75), and ends in the
+     bright square the winding key sets the hands by (Fig. 8, Sec. III), 2.4 across as the fusee's, so one key fits both, 1.6 proud of the minute hand's collet. The hour wheel goes on over it and turns free on the pipe (Op. 59) */
+  R.cannon=arbor(mw,M,...L.C,{pin:{n:MW.cp,m:0.4,y:1.2,th:2,bore:0.85}});mesh(R.cannon,ring(1.7,0.85,5.45),M.steel,0,3.025,0);mesh(R.cannon,new THREE.BoxGeometry(2.4,2.9,2.4),M.steel,0,7.05,0);
+  /* the winding key on the square, turned by its shank to set the hands (Fig. 8): shown only while setting, when the bezel is off */
+  R.hkey=new THREE.Group();R.hkey.visible=false;R.cannon.add(R.hkey);mesh(R.hkey,sqRingGeo(2.6,2.46,5),M.brass,0,9.45,0);cylBetween(R.hkey,1.7,11.95,40.5,M.brass);
+  { const kb=mesh(R.hkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,42.5,0);kb.rotation.x=Math.PI/2;for(const z of[13,-13])mesh(R.hkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,42.5,z);mesh(R.hkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,42.5,0); }
   /* the minute wheel and the wind indicator wheel turn on posts (42085, 42084) fixed to the pillar plate by screws (35779) from its train side (Fig. 110) */
   const post=(x,z,r,top)=>{const hr=hT(0,0,0.8)[2];mesh(pp,new THREE.LatheGeometry([V2(0,2.0),V2(hr,2.0),V2(hr,0),V2(r,0),V2(r,top),V2(0,top)],24),M.steel,x,0,z);screw(pp,x,z,y0,0.8,0.4,PP_T+1.8);};
   post(...L.Mw,0.7,3.2);post(...L.Ud,0.5,4.1);
   R.minW=arbor(mw,M,...L.Mw,{wheel:{n:MW.mw,m:0.4,y:1.2,th:0.8,spokes:4,collet:0,bore:0.72},pin:{n:MW.mp,m:0.384,y:2.4,th:1.6,bore:0.72}});mesh(R.minW,ring(1.6,0.72,2.0),M.brass2,0,1.2,0);
-  R.hourW=arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:0.384,y:2.6,th:0.8,spokes:4,collet:0,bore:1.45}});mesh(R.hourW,ring(2.2,1.45,2.6),M.brass2,0,3.9,0);
+  R.hourW=arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:0.384,y:2.6,th:0.8,spokes:4,collet:0,bore:1.75,hub:2.6}});mesh(R.hourW,ring(2.3,1.75,2.9),M.brass2,0,4.05,0);   /* its pipe carries the hour hand */
   R.udW=arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:4,collet:0,bore:0.55}});mesh(R.udW,ring(1.6,0.55,2.0),M.brass2,0,1.5,0);mesh(R.udW,ring(0.9,0.55,2.7),M.steel,0,2.85,0);cylBetween(R.udW,0.55,4.2,4.6,M.steel);   /* its pipe carries the hand */
   R.fp=arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:1.5,th:2,bore:0.56}});
   /* ---------- fusee wheel (TRAIN.fu : centre pinion TRAIN.cp, module 0.417) with its maintaining work ---------- */
@@ -344,7 +347,7 @@ function buildMovement(M){
   cylBetween(tb,0.35,TB_U-0.6,-19.25,M.steel,SPv[0]-0.3,SPv[1]+3.9);
   /* ---------- going train (modules 0.29 / 0.30 / 0.3113; counts in TRAIN) ---------- */
   const m=MOD.train;
-  const cw=part('cw',-8);R.cw=arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.2,th:1.0,spokes:5},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.5,th:2.6},ar:[TB_T-0.1,4.8],r:0.75});
+  const cw=part('cw',-8);R.cw=arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.2,th:1.0,spokes:5},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.5,th:2.6},ar:[TB_T-0.1,5.45],r:0.75});
   const tw=part('tw',-42);R.tw=arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-8.6,th:0.9,spokes:4},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.2,th:1.6},ar:[TB_T-0.1,1.2]});
   const fw=part('fw',-30);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-7.46,th:0.9,spokes:4,cside:1},pin:{n:TRAIN.fp,m,y:-8.6,th:1.7},ar:[LB_T+0.7,4.6]});
   const E=ESC,ew=part('escW',-41,true);
@@ -547,7 +550,7 @@ function buildMovement(M){
   const sqP=part('sq',-84);R.sq=new THREE.Group();R.sq.position.set(L.Fu[0],0,L.Fu[1]);sqP.add(R.sq);cylBetween(R.sq,1.2,-36.56,-27.16,M.steel);mesh(R.sq,new THREE.BoxGeometry(2.4,1.6,2.4),M.steel,0,-37.16,0);
   /* winding key: its socket fits the fusee arbor square and turns it (never the barrel arbor, which the setup ratchet holds) */
   R.wkey=new THREE.Group();R.wkey.visible=false;R.sq.add(R.wkey);
-  mesh(R.wkey,ringGeo(2.6,1.35,5),M.brass,0,-39.46,0);cylBetween(R.wkey,1.7,-41.96,-71,M.brass);   /* handle low enough to turn clear of the case's shield plate and its screws (lowest at -69.8, box.js) */
+  mesh(R.wkey,sqRingGeo(2.6,2.46,5),M.brass,0,-39.46,0);cylBetween(R.wkey,1.7,-41.96,-71,M.brass);   /* handle low enough to turn clear of the case's shield plate and its screws (lowest at -69.8, box.js) */
   const kbar=mesh(R.wkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,-73,0);kbar.rotation.x=Math.PI/2;
   for(const sz of[13,-13])mesh(R.wkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,-73,sz);mesh(R.wkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,-73,0);
   /* ---------- tooth phasing: driver tooth centred on the line of centres, driven gap centred there ---------- */

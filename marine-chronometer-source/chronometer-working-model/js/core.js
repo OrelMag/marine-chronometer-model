@@ -291,6 +291,10 @@ function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null
   if(h.index)I.push(...h.index.array);else for(let i=0;i<o0;i++)I.push(i);for(let i=0;i<m;i++)I.push(o0+i);out.setIndex(I);out.type=g.type;out.parameters=g.parameters;g.dispose();return out;}   /* type and parameters kept: the checks know a tube by them */
 function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,TAU,true);s.holes.push(hp);
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
+/* a round collet or socket with a square hole a across (a hand broached square, a key's socket), centred on its y like ringGeo */
+function sqRingGeo(ro,a,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);s.holes.push(sqPath(a));
+  const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
+function sqPath(a){const q=a/2,h=new THREE.Path();h.moveTo(q,q);h.lineTo(q,-q);h.lineTo(-q,-q);h.lineTo(-q,q);h.closePath();return h;}   /* clockwise, a hole */
 /* pawl / click: round pivot boss at the origin, tapered arm along -x ending in a hooked tip */
 function pawlGeo(len,w,th,centre){const s=new THREE.Shape(),r=w*0.72;s.moveTo(0,r);s.absarc(0,0,r,Math.PI/2,-Math.PI/2,true);
   s.lineTo(-len*0.8,-w*0.26);s.lineTo(-len,-w*0.62);s.lineTo(-len*0.96,w*0.08);s.quadraticCurveTo(-len*0.5,w*0.42,0,r);
@@ -324,7 +328,7 @@ function gearGeo(n,m,th,o={}){
 /* arbor with wheel & pinion: returns rotating group */
 function arbor(parent,M,x,z,o){
   const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
-  if(o.wheel){const w=o.wheel;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,w.th||1,{spokes:w.spokes??4,escape:w.escape,flip:w.flip,rt:w.rt,depth:w.depth,bore:w.bore}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;
+  if(o.wheel){const w=o.wheel;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,w.th||1,{spokes:w.spokes??4,escape:w.escape,flip:w.flip,rt:w.rt,depth:w.depth,bore:w.bore,hub:w.hub}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;
     if(w.collet!==0)mesh(g,cylY(w.collet||1.6,(w.th||1)+(w.cside?0.65:1.2),20),M.brass2,0,w.y+(w.cside||0)*0.275,0);}   /* cside ±1: collet on that side of the wheel only (0.05 proud of the other face, not flush with it) */
   if(o.pin){const p=o.pin;g.userData.pin=mesh(g,gearGeo(p.n||10,p.m,p.th||2.5,{bore:p.bore}),M.steel,0,p.y,0);g.userData.np=p.n||10;}
   if(o.ar){const[a,b]=o.ar;cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
@@ -340,8 +344,10 @@ function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3){   /* rc, rs: radii of the i
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
   return closeGeo(new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
 }
-function handGeo(len,w,tail,kind,at){   /* tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len */
-  const s=new THREE.Shape();if(tail<0){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
+function handGeo(len,w,tail,kind,at,o){   /* tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off) */
+  const s=new THREE.Shape(),b=o&&o.boss,yb=b&&Math.sqrt(b*b-w*w/4),ab=b&&Math.acos(w/2/b);
+  if(b){if(tail>yb){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);s.lineTo(w/2,-yb);s.absarc(0,0,b,-ab,ab,false);}else s.moveTo(w/2,yb);}
+  else if(tail<0){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
   else{s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);}
   if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
   else if(kind==='leaf'||kind==='lance'){const b=kind==='leaf'?w*1.9:w*1.25,m=kind==='leaf'?0.68:0.8;   /* leaf widest at m·len, drawn to a point */
@@ -349,7 +355,8 @@ function handGeo(len,w,tail,kind,at){   /* tail<0: a spear counterpoise -tail lo
   else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=at?len*at:len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */
     s.lineTo(w*0.35,m-h*1.3);s.quadraticCurveTo(b,m-h*1.1,b,m);s.quadraticCurveTo(b,m+h*0.9,w*0.12,m+h*1.4);s.lineTo(0,len);s.lineTo(-w*0.12,m+h*1.4);s.quadraticCurveTo(-b,m+h*0.9,-b,m);s.quadraticCurveTo(-b,m-h*1.1,-w*0.35,m-h*1.3);}
   else{s.lineTo(w*0.3,len*0.85);s.lineTo(0,len);s.lineTo(-w*0.3,len*0.85);}
-  s.closePath();const g=extrude(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
+  if(b){s.lineTo(-w/2,yb);s.absarc(0,0,b,Math.PI-ab,tail>yb?Math.PI+ab:TAU+ab,false);if(o.sq)s.holes.push(sqPath(o.sq));else{const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}}
+  s.closePath();const g=extrude(s,{depth:0.35,bevelEnabled:false,curveSegments:b?32:12});g.rotateX(-Math.PI/2);return g;
 }
 /* silvered dial, 4 inch. Default: the Hamilton Model 21 (below). kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
    large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale keeps this model's 240° arc.
