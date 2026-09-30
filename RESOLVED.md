@@ -68,14 +68,14 @@ Contents:
   87), overall was 29.9°, at the edge of 26–30°. The trip spring is now 0.013 mm
   shorter (`rT` 0.288, as Op. 91 stones a long one), giving overall 28.3° and
   let-off 12.4°. Keep: release is where the tip leaves the jewel (`thOff`,
-  `thPass` in `makeEsc`), not the peak. `HASH`
+  `thPass` in `makeEsc`), not the peak. `89a949d`
 - **A swing too small to pass the trip spring lifted the detent.** Below 37.2°
   of amplitude the discharge jewel never gets back past the trip spring's tip,
   yet `ESC.state` lifted the detent on the next swing (even at 25°, which never
   reaches it from that side) and snapped the bent spring straight at each turn;
   `app.js` faded the lift by amplitude. Now the spring stays bent against the
   jewel and follows it back, and the detent stays on its stop. Keep: `state`
-  decides it from `thPass`; no fade in `app.js`. `HASH`
+  decides it from `thPass`; no fade in `app.js`. `89a949d`
 
 ## Going train and heights
 
@@ -575,7 +575,7 @@ Contents:
   contacts: "drops onto the impulse jewel" only during the drop, "Stopped" while
   held. Its teeth are the mesh's, and it says it is seen from the cock side, as
   Fig. 90, which is the 3D Escapement view mirrored. Keep: `drawEsc2D(ctx, w, h,
-  s, E, dark)` takes the state the model shows. `HASH`
+  s, E, dark)` takes the state the model shows. `89a949d`
 
 ## Build, tools and docs
 
