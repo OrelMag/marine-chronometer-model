@@ -4,7 +4,7 @@
     python fine.py --dense    # also 101 phases across a full balance swing
     python fine.py --split    # with the split-balance variant shown (open finding 9 in Review-results.md: expect failures)
     python fine.py --eval "__mv.userData.R.timing(3,3)"   # run some JS after the page loads (a variant, the weights, a planted fault)
-    python fine.py --hold     # with the balance locking arm locked and the train-blocking screw down (where a spoke leaves room; else just above the wheel)
+    python fine.py --hold     # with the balance locking arm locked (the balance held at rest, a timing weight against the arm's finger) and the train-blocking screw down (where a spoke leaves room; else just above the wheel)
 
 dyn.py works in 0.4 mm cubes and misses thin overlaps (the escape pinion, the fourth wheel's collet, the sustaining pawl's pivot and the stop-bar
 all went unseen; see RESOLVED.md). This one resolves 0.05 mm. Each pair of meshes that meets is listed once, with its largest overlap; pairs in
@@ -32,6 +32,7 @@ EXPECTED={
  ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('barrel:Extrude(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
+ ('barrel:Extrude(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75)",0.02,0.3),
  ('barrel:Extrude(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.03,0.45),
  ('barrel:Extrude(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
  ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",7.0,1.2),
@@ -42,8 +43,8 @@ BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept so
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),
  'chain':('chain wound on the drum: its links should touch the wall, not enter it',0,0.1)}   # part: (reason, least, most) clearance allowed; None = any
 FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}
-  const s=ESC.state({ph}),E=1000+{dE}+s.prog,R=mv.userData.R,hold={hold};
-  mv.userData._u({{E,th:s.th,lift:s.lift,psDef:s.psDef,n:{n},winding:{w},springOn:true,msOn:false,arm:hold?1:0,blk:hold?(R.blockClear(E)?1:R.tbs.userData.vFace-0.005):0}});}})()"""
+  const hold={hold},s=ESC.state({ph}),E=1000+{dE}+(hold?0:s.prog),R=mv.userData.R;   /* held: the balance at rest, the escape wheel locked on the detent */
+  mv.userData._u({{E,th:hold?0:s.th,lift:hold?0:s.lift,psDef:hold?0:s.psDef,n:{n},winding:{w},springOn:true,msOn:false,arm:hold?1:0,blk:hold?(R.blockClear(E)?1:R.tbs.userData.vFace-0.005):0}});}})()"""
 async def main():
     states=STATES+([(i/100,0,2.5,False) for i in range(101)] if '--dense' in sys.argv else [])
     async with async_playwright() as p:

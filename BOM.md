@@ -126,11 +126,11 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | Idx | No. | Name | Manual | Model | Card | Function | Fit and drive (measured) | |
 |---|---|---|---|---|---|---|---|---|
 | 109-1 | 42169 | Cap - Barrel | 1 | 1 | barrel | Closes the barrel on the pillar-plate end, held by five screws (Figs. 26, 109). | on 42168: 0 mm | ✓ |
-| 109-2 | 37023 | Screw - Barrel cap | 5 | 5 | barrel | Hold the barrel cap. | in 42169 (clear): 0.564 mm, least gap 0.0285<br>in 42168 (tap): 0.423 mm, least gap 0.0223 | ✓ |
+| 109-2 | 37023 | Screw - Barrel cap | 5 | 5 | barrel | Hold the barrel cap. | in 42169 (clear): 0.564 mm, least gap 0.0286<br>in 42168 (tap): 0.423 mm, least gap 0.0224 | ✓ |
 | 109-3 | 42170 | Arbor - Barrel | 1 | 1 | ratchet | Carries the mainspring's inner end on its hook; held still by the setup ratchet and click (Sec. II). | in 42164.bu (run): 3.375 mm, least gap 0.04<br>in 42164.bl (run): 2.978 mm, least gap 0.05 | ✓ |
 | 109-4 | 42038 | Mainspring - Complete with anchor pin, 0.0165 in thick | 1 | 1 | mainspring | The power: inner end on the arbor's hook, outer end by its pin at the brace (Sec. II). | also: fine.py: barrel-clearance.js coils inside the barrel | ✓ |
 | 109-5 | 42037 | Brace - Mainspring | 1 | 1 | barrel | Lines the wall where the mainspring's outer end hooks. | on 42168: 0 mm | ✓ |
-| 109-6 | 42168 | Barrel - Mainspring, complete with anchor pin | 1 | 1 | barrel | Turns clockwise in running, drawing the chain off the fusee (Sec. IV). | round 42170 (run): 0.993 mm, least gap 0.0506 | ✓ |
+| 109-6 | 42168 | Barrel - Mainspring, complete with anchor pin | 1 | 1 | barrel | Turns clockwise in running, drawing the chain off the fusee (Sec. IV). | round 42170 (run): 0.993 mm, least gap 0.0501 | ✓ |
 | 109-7 | 42020 | Pin - Taper, fusee assembly | 1 | 1 | fusee | Through the arbor under the end plate: holds the stack on (Figs. 28, 70). | in 42022 (embed): 1.975 mm, least gap -0.2104 | ✓ |
 | 109-8 | 42019 | Plate - Fusee end | 1 | 1 | fusee | Under the fusee wheel, held by the taper pin. | round 42022 (free): 0.503 mm, least gap 0.0361 | ✓ |
 | 109-9 | 42015 | Wheel - Fusee | 1 | 1 | gw | First wheel of the train, free on the fusee arbor; drives the centre pinion (Secs. II, IV). | round 42022 (free): 1.759 mm, least gap 0.064<br>meshes 42068: centres 22.9427 (m(z1+z2)/2 22.9405), 96/14 teeth, faces overlap 1.2, ratio -6.857143 | ✓ |
@@ -216,7 +216,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 110-39 | 42164 | Bushing - Barrel lower | 1 | 1 | pillar | Bearing for the barrel arbor's lower end. | in 42060 (press): 3.863 mm, least gap 0.0008 | ✓ |
 | 110-39 | 42164 | Bushing - Fusee lower | 1 | 1 | pillar | Bearing for the fusee arbor's lower end. | in 42060 (press): 3.863 mm, least gap 0.0006 | ✓ |
 | 110-40 | 42057 | Ring - Mounting | 1 | 1 | pillar | Round the plate's edge; holds the movement in the case. | on 42060: 0.01 mm | ✓ |
-| 110-20 | 42055 | Screw - Mounting ring | 3 | 3 | pillar | Hold the mounting ring. | in 42057 (clear): 0.99 mm, least gap 0.1216<br>in 42060 (tap): 3.465 mm, least gap 0.0241 | ✓ |
+| 110-20 | 42055 | Screw - Mounting ring | 3 | 3 | pillar | Hold the pillar plate to the mounting ring, from the train side (reassembly Op. 1; Fig. 29). | in 42060 (clear): 3.861 mm, least gap 0.1898<br>in 42057 (tap): 0.941 mm, least gap 0.0371 | ✓ |
 
 ## The fourteen jewels (Sec. II, Jeweling)
 

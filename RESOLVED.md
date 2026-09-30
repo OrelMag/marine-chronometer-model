@@ -311,6 +311,16 @@ Contents:
   The wall now runs between the caps' inner faces, and `barrel-clearance.js`
   finds the caps by their inner faces on its ends. Keep: no face of the wall in
   a cap's outer face. `0538794`
+- **The chain's barrel end slid round the barrel.** The barrel was turned by
+  the fusee's turns (`I(n)`), not by the chain wound on it from where it meets
+  the barrel, so the chain's hook moved 8 mm round the drum over a wind, and its
+  nose sat on the wall's outside with nothing to take it. `Ib(n, eps)` turns
+  the barrel, the mainspring's turns and the power inset; the hook's end stays
+  at `HKA` in the barrel's frame, its nose through a hole in the wall (Figs. 17,
+  75). A link also dipped 0.013 mm into the drum at some train positions: the
+  pitch line is 0.04 off it and the hook plate's middle on the pitch circle.
+  Keep: whatever turns the barrel uses `Ib`; the hook stays in its hole over the
+  whole wind. `3655b52`
 
 ## Plates, bridges, screws and arbors
 
@@ -461,6 +471,15 @@ Contents:
   Op. 1; Fig. 29 draws them over the plate), and the top-view photographs show
   one on the plate at the rim at 6 o'clock. Keep: the mounting ring screws go
   in from the train side, through the plate into the ring. `3c047b0`
+- **Locking arm under the rim.** The balance locking arm held a pad under the
+  rim, which no part of Fig. 9 shows. Fig. 9 draws the arm curved, its screw
+  outside the rim and its end at a timing weight, and Sec. X places it "over the
+  timing weight": the finger at its end now stands beside the timing weight on
+  the 6 o'clock side, and a balance screw stops the balance the other way.
+  `fine.py --hold` held the arm locked while the balance still swung through its
+  phases; it now holds the balance at rest and the escape wheel locked. Keep: the
+  arm stops the balance through a timing weight; unlocked, it is clear of
+  everything the balance carries. `3655b52`
 
 ## Setup, case and gimbals
 
