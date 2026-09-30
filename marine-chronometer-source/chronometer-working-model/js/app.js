@@ -174,7 +174,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* per-part opacity, set from the right-click menu */
   const FADE=new Map();
   function fadeOf(m0,p,op){const k=m0.uuid+p;let f=FADE.get(k);
-    if(!f){f=m0.clone();f.userData={};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
+    if(!f){f=m0.clone();f.userData={inkDecal:m0.userData.inkDecal};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
     f.opacity=(m0.opacity??1)*op;return syncMat(f,m0);}
   const base=m=>{const p=m.userData.part,m0=st.colr||st.csrc?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
   const fin=m=>st.draw?drawOf(base(m)):base(m);   /* the drawing (st.draw 'tint' or 'ink'): the wash copy of whatever the part shows; see-through parts stay ghosts, drawn in outline */

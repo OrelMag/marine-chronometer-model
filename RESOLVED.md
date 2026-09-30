@@ -425,6 +425,14 @@ Contents:
   0.1 mm inside the plate's edge; it now starts 0.02 mm outside. Keep: a pass
   with an override material (`nid`) takes the section's depth too; overlapping
   solids show each other through a cut. `8956085`
+- **Faded parts drawn solid in the ink drawing.** The ink drawing inked every
+  transparent material under its alpha, as it should the engravings, so a part
+  faded to 50–99 % (fades under 50 % are ghosts, in outline) became a dark
+  shape: the barrel bridge at 75 %, the hands. Only materials flagged
+  `userData.inkDecal` (the engravings, set in `eng()`, carried by `fadeOf`)
+  are inked so now; other transparent parts are paper at their opacity. Keep:
+  transparent means faded or glass as well as decal; key decal treatment on the
+  flag. `HASH`
 
 ## Controls and display
 

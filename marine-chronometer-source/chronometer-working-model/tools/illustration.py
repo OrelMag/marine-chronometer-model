@@ -94,7 +94,7 @@ def stylize(d,lineonly=False,tint=True,lift=0.45,sat=1.6,cap=0.3,seed=1):
         out=np.exp(-dens*(1-0.85*hl)[...,None]*fg[...,None]*1.25)
     else:
         out=np.ones((H,W,3))
-        # in ink, printing is inked (the dial's figures): albedo under 55% of its part's median
+        # in ink, printing is inked (the dial's figures): albedo under 55% of its mesh's median
         if not lineonly:u=np.unique(ID[~bg]);med=np.zeros(ID.max()+1);med[u]=nd.median(L[...,0],ID,u);ink=np.maximum(ink,nd.gaussian_filter(np.clip((0.55*med[ID]-L[...,0])/(0.2*med[ID]+1e-3),0,1)*fg,0.4*SS)*0.9)
     out=out*(1-ink[...,None])+np.array([0.17,0.15,0.14])*ink[...,None]
     img=Image.fromarray((np.clip(out,0,1)*255).astype(np.uint8)).resize((W//SS,H//SS),Image.LANCZOS)

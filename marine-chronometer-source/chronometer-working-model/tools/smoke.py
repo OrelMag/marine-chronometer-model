@@ -71,6 +71,8 @@ async def model(b,errs,steps):
     await click('#edges');await click('#draw');await click('#dispReset','reset display',600)
     bad=await pg.evaluate("['lbls','colr','colrSrc','draw','rock','latch','spin','ghost'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges'])")
     if bad:errs.append(f'Reset display left {bad}')
+    await click('#drawInk');await click('#dispReset','reset display from the ink drawing',600)
+    if await pg.evaluate("document.querySelector('#drawInk').checked||!document.querySelector('#edges').checked"):errs.append('Reset display left the ink drawing on or Edges off')
     await click('#link','copy link',400)
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
     await click('#kwBtn','wind with the key',2500);await click('#kwBtn','stop winding')
