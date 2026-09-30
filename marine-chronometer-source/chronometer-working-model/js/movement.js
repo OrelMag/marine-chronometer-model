@@ -240,7 +240,7 @@ function buildMovement(M){
   const KEY=twoCircles(L.B,8.0,L.E,3.0);
   R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2],[...L.T,1],{pts:KEY},[...SPv,0.72],
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),hT(...S.tb[2],PSR),hC(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.eb.map(q=>hT(...q,0.9)),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),hC(...S.blk,0.9),hT(...S.cock,2.8,0.8),
-    hT(...S.arm,ARM_S),[...S.tBlock,0.72]],0.22),M.plate,0,TB_T,0);
+    hT(...S.arm,ARM_S),[...S.tBlock,0.72,1]],0.22),M.plate,0,TB_T,0);
   {const C=[10.53,35.06],A=[-0.9764,0.2161],P=[0.2161,0.9764],q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */
     const eg=mesh(tb,decalGeo([q(-5.5,-1.8),q(5.5,-1.8),q(5.5,1.8),q(-5.5,1.8)]),M.engraveT,0,TB_T-0.02,0);eg.userData.noShadow=true;eg.userData.noCap=true;eg.userData.decal=true;}
   /* three pillar screws (42055): two into their pillars; the third, where the top-view photograph shows it, has no pillar under it in the model (the fourth wheel is there), so it is drawn threaded into the bridge alone */
@@ -374,11 +374,11 @@ function buildMovement(M){
     in the Exploded view they drop out of the tier, no further (the third wheel lies below) */
   /* train-blocking screw (42247, Sec. II, Fig. 110): threaded through the lower bridge's lobe, its head in the lobe's column. Screwed down, its head stops on the seat and its dog point stands between
      the fourth wheel's spokes, so the train can turn only until a spoke meets it; screwed up (as it runs), the chamfer on its head seats in the countersunk access hole in the
-     train bridge. The thread (6.2 mm) stays in the bridge at both ends of its 5.6 mm travel. R.tbs.userData: seat heights and the dog point's place for blockRoom */
-  { const bs=part('tblock',-41),r=TBS_R,h=0.9,c=0.25,rs=0.42,pt=0.176,d=pt*0.3,Lt=6.2,Ld=6.81,rd=0.25,pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0),V2(rs,0)];
+     train bridge, and the slotted spigot above the head stands in the hole, where a screwdriver reaches it (Fig. 110's section). The thread (6.2 mm) stays in the bridge at both ends of its 5.6 mm travel. R.tbs.userData: seat heights and the dog point's place for blockRoom */
+  { const bs=part('tblock',-41),r=TBS_R,h=0.9,c=0.25,sp=1.5,rp=0.5,rs=0.42,pt=0.176,d=pt*0.3,Lt=6.2,Ld=6.81,rd=0.25,pr=[V2(0,-h-sp),V2(rp,-h-sp),V2(rp,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0),V2(rs,0)];
     const n=Math.floor(Lt/pt);for(let i=0;i<n;i++){const a=Lt-(n-i)*pt;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,Lt),V2(rd,Lt+0.05),V2(rd,Ld),V2(0,Ld));
     R.tbs=new THREE.Group();R.tbs.position.set(...[S.tBlock[0],0,S.tBlock[1]]);bs.add(R.tbs);mesh(R.tbs,new THREE.LatheGeometry(pr,28),M.steel);
-    mesh(R.tbs,new THREE.BoxGeometry(r*2.02,0.35,0.3),M.steelD,0,-h+0.155,0);
+    mesh(R.tbs,new THREE.BoxGeometry(rp*2.02,0.35,0.3),M.steelD,0,-h-sp+0.155,0);   /* the slot, in the top of the spigot (sp above the head, as Fig. 110's section draws it: raised, it stands in the train bridge's access hole) */
     const up=TB_U+h+0.03,down=LB_T+0.6;R.tbs.userData={up,down,turns:(down-up)/pt,rho:3.5,sig:Math.atan2(-TBd[1],TBd[0]),half:Math.asin((0.45+rd)/3.5)};R.tbs.position.y=up; }
   /* ---------- detent (manual Figs. 14, 90, 110; detent photograph in chronometerbook post 4). Beryllium-copper detent (parts list 42087): foot clamped to the
        support block, two-strip detent spring, cross-piece carrying the Z bracket of the Elinvar trip (passing) spring, blade, jewel block with the locking jewel,
