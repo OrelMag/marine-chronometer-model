@@ -86,6 +86,20 @@ Contents:
   teeth in `makeEsc` only; the wheel's tips lie at k·P in its own frame, so
   `R.esc.rotation.y` is `-t0 + E·P` with no other offset (and the fourth
   wheel's phasing and `invariants.py` agree). `c4032e4`
+- **Kink in the detent where the trip spring's bracket leaves it.**
+  The Z bracket's leg (t 0.62–0.72 of the escape wheel's radius) was set 0.26 mm
+  along the detent from the cross-piece it stands on (t 0.58–0.68), so the two
+  met end to end with a step on either side, in the model and in both 2D
+  figures. The leg now spans the cross-piece's t exactly. Keep: the bracket's leg
+  on the cross-piece's t in `makeEsc`'s `pieces`.
+- **Detent's arm ended askew on its horn.** The arm ran
+  diagonally into the horn and stopped square to its own slant, on a horn block
+  wider than the arm and aligned with the trip spring, so the two read as
+  separate pieces stuck together. The arm now turns along n for its last
+  stretch and ends square over the horn, which is the arm's width (0.05 of the
+  wheel's radius, from tH in): the horn is the arm's end bent down to the trip
+  spring. Its inner face stays at tH, so horn clearance is unchanged (0.25 mm).
+  Keep: the arm's end and the horn one outline in plan.
 
 ## Going train and heights
 

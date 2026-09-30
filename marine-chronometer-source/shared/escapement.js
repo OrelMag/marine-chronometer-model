@@ -81,8 +81,8 @@ function makeEsc(o={}){
   const thick=(pts,w)=>{const L2=[],R2=[];pts.forEach((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy);L2.push({x:p.x-dy/l*w,y:p.y+dx/l*w});R2.push({x:p.x+dy/l*w,y:p.y-dx/l*w});});return L2.concat(R2.reverse());};
   const pieces={
     spring:rect(0,0.58,-0.058,-0.046),cross:rect(0.58,0.68,-0.075,0.083),blade:rect(0.66,BL-0.07,-0.06,-0.03),block:rect(BL-0.08,BL+0.08,-0.08,0.08),
-    arm:thick([D(BL+0.06,0),D(BL+0.2,0),D(tH-0.03,nR+rho+0.03)],0.025),horn:rect(tH-0.07,tH,nR+rho,nR+rho+0.05),
-    bracket:[D(0.62,0.083),D(0.72,0.083),D(0.72,nR+0.015),D(tR+0.06,nR+0.015),D(tR+0.06,nR+0.05),D(0.62,nR+0.05)],
+    arm:thick([D(BL+0.06,0),D(BL+0.2,0),D(tH-0.025,nR+rho-0.03),D(tH-0.025,nR+rho),D(tH-0.025,nR+rho+0.05)],0.025),horn:rect(tH-0.05,tH,nR+rho,nR+rho+0.05),   /* the arm ends square over the horn, their outlines one */
+    bracket:[D(0.58,0.083),D(0.68,0.083),D(0.68,nR+0.015),D(tR+0.06,nR+0.015),D(tR+0.06,nR+0.05),D(0.58,nR+0.05)],   /* its leg continues the cross-piece (same t) */
     stone
   };
   const fixed={foot:rect(-1.45,0,-0.083,0.083),blockMain:rect(-1.5,0.9,-0.5,-0.083),blockFront:rect(0.9,BL-0.1,-0.3,-0.083),button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
