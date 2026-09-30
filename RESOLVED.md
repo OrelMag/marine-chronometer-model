@@ -99,7 +99,7 @@ Contents:
   edge; `toothPts` has U 0.14 and a back 1-(1-f)^1.6 deep (16 segments, so its
   walls shade smoothly). Lock, let-off, overall and drop are unchanged. Keep:
   no face of the plate on a face of a tooth; the teeth's outline only in
-  `makeEsc`.
+  `makeEsc`. `1f8f083`
 - **Kink in the detent where the trip spring's bracket leaves it.**
   The Z bracket's leg (t 0.62–0.72 of the escape wheel's radius) was set 0.26 mm
   along the detent from the cross-piece it stands on (t 0.58–0.68), so the two
