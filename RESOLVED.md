@@ -266,7 +266,7 @@ Contents:
   train bridge, bored r 0.95 to the seat 0.6 mm into the bridge's top. The
   screw's travel and `blockRoom` are unchanged. Keep: the screw is enclosed
   from the train bridge down to the lobe's underside; the column stays clear
-  of the fourth wheel's upper setting.
+  of the fourth wheel's upper setting. `7267536`
 
 ## Setup, case and gimbals
 
