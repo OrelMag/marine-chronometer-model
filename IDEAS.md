@@ -88,8 +88,8 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 | # | Idea | Area | Effort | Why | Status |
 |---|---|---|---|---|---|
 | 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes |  |
-| 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" | Half: GMT by default `23e9c58`; setting the hands waits for 2.1 |
-| 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something |  |
+| 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" | Done: GMT by default `23e9c58`; setting with the key and when stopped `dc06fae`, `21ea739` |
+| 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something | Done `70baefe` |
 | 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page |  |
 | 5 | [One parts registry](#71-one-parts-registry) | Code | S | Adding a part touches six tables in `app.js` today | Done `5e8c578` |
 | 6 | [Make `ESC` a factory and share it](#73-make-esc-a-factory-and-share-it) | Code | S–M | Enables #4, removes the source-slicing in `tools/escapement.js` and the hand-copied solver in the essay | Done `813f7ae` |
@@ -296,7 +296,7 @@ The amplitude then emerges from the model instead of being fixed.
 
 ### 2.6 A fuller rate panel (S–M)
 - **Adjusters' tools.** Add balance screws and timing washers from the parts list (1.7) as further adjustments. The manual's timing operations use them alongside the weights.
-- *Done:* **Dial error against real time.** The HUD shows the dial error against a master time `tM` that runs with the model. Before: show it in the HUD as the hands drift: "+3.5 s since set".
+- *Done:* **Dial error against real time.** The HUD shows the dial error against a master time `tM` that runs with the model. `562928a` Before: show it in the HUD as the hands drift: "+3.5 s since set".
 
 ### 2.7 Tripping and setting (M, illustrative)
 - **What.** A **Jolt** button, demonstrating the two classic detent faults:
@@ -313,7 +313,7 @@ While the key turns, only the sustaining spring drives the train, "enough to run
 ## 3. New things to do with it
 
 ### 3.1 Keep it on GMT, and set it as the manual says
-> **Setting: done.** With the key (Time) follows Sec. III's "Setting While Running": gimbals latched, bezel off, the key on the square, the minute hand on its marker half a minute behind the master and on the next as the master passes 60; the second hand untouched, so up to 30 s remains. Stop to set follows "Setting When Stopped": the arm stops the balance, the Time section counts down to the master overtaking a fast dial (or to the second hands agreeing on a slow one), and a twist starts it at that instant.
+> **Setting: done.** With the key (Time) follows Sec. III's "Setting While Running": gimbals latched, bezel off, the key on the square, the minute hand on its marker half a minute behind the master and on the next as the master passes 60; the second hand untouched, so up to 30 s remains. Stop to set follows "Setting When Stopped": the arm stops the balance, the Time section counts down to the master overtaking a fast dial (or to the second hands agreeing on a slow one), and a twist starts it at that instant. `dc06fae`, `21ea739`
 
 **GMT.** *Done: GMT is the default, with Keep: GMT / Local time under Time, and the HUD names the zone. Setting the hands the manual's way waits for the dynamic balance (2.1).* `23e9c58`
 - `tSim` starts at local time (`Date.now()/1000 - getTimezoneOffset()*60`, [app.js:124](marine-chronometer-source/chronometer-working-model/js/app.js#L124)), and **Now** does the same.
@@ -325,7 +325,7 @@ While the key turns, only the sustaining spring drives the train, "enough to run
 2. **Stop and restart.** Stop the balance, wait until the master time "overtakes" the dial, and start it with a twist at that instant. Because the escape wheel is locked, "the second hand is exactly upon the second or half second" when stopped. Needs [2.1](#21-a-balance-that-can-stop-and-must-be-started).
 
 ### 3.2 The navigator's rate book
-> **Done.** The Rate book section: comparisons at noon master time and on demand, dial error to the half second, daily rate over at least half a day, mean daily rate and mean deviation since the last break, automatic remarks (started, stopped, set, not wound, weights moved), and the longitude error at a chosen latitude, uncorrected and corrected with the mean rate. No noise is added: the half-second reading is the only scatter.
+> **Done.** The Rate book section: comparisons at noon master time and on demand, dial error to the half second, daily rate over at least half a day, mean daily rate and mean deviation since the last break, automatic remarks (started, stopped, set, not wound, weights moved), and the longitude error at a chosen latitude, uncorrected and corrected with the mean rate. No noise is added: the half-second reading is the only scatter. `70baefe`
 
 **What.** A panel reproducing the manual's "Computation of Rate" (Sec. IX, Table I), after the *Navigational Timepiece Record* (NavShips 3587).
 - Each simulated day, a "radio time signal" comparison records the dial error to the nearest half second, because the hands step in half seconds.
