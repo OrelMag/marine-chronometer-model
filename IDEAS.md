@@ -206,7 +206,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Tooth counts:** the centre, third and fourth counts are estimates. Count teeth on the highest-resolution photographs (the fourth wheel and the centre wheel's outer rim are often visible), or ask on chronometerbook.com. Update `TRAIN` and every place the counts appear as text (see [7.2](#72-derive-every-train-number-from-train)).
 
 ### 1.9 Chain and mainspring detail (M)
-- **Chain:** the links are alternating instanced boxes. A fusee chain is outer plates and inner plates riveted. Build one link as a small merged geometry with rivet heads. The end fittings (a pin at the fusee's large end, a hook at the barrel) are drawn; make the barrel-end hook visible in the "Stored energy" step.
+- *Chain: done.* Outer links (two figure-eight plates and their rivets) and inner links (one plate), on edge in a helical groove (Fig. 38). Still to do: make the barrel-end hook visible in the "Stored energy" step.
 - *Mainspring: done.* It is drawn 0.0165 in thick, in two packs (arbor and wall) joined by a free turn, with the counts from the barrel and arbor radii (`mainspringGeo`). Its length is still estimated (600 mm, the half-room rule). The parts list gives no length or width; a measured spring would settle the set-up (0.30 turn in the model).
 
 ### 1.10 Oil sinks, jewel settings, endstones (S)
@@ -251,7 +251,7 @@ The amplitude then emerges from the model instead of being fixed.
 - The damping and impulse torque are **illustrative**. Calibrate them to the manual's motion and say so.
 
 ### 2.2 The fusee earns its keep
-**What.** The fusee inset plots spring pull, chain radius and torque. The torque line is 1 by construction, because the fusee profile `rf(m)` is defined as exactly the inverse of a linear pull ([app.js:394](marine-chronometer-source/chronometer-working-model/js/app.js#L394), [movement.js:461](marine-chronometer-source/chronometer-working-model/js/movement.js#L461)).
+**What.** The fusee inset plots spring pull, chain radius and torque. The torque line is 1 by construction: the pull drawn is `rf(0)/rf(n)`, the pull the measured profile (`r0/√(1−a·m)`, a pull falling in step with the barrel's turns) evens out exactly.
 
 **Do instead:**
 1. Give the mainspring a plausible torque curve: rising with turns, with coil friction and a set-up of a turn or so. **Illustrative**; say so.
@@ -419,7 +419,7 @@ A results table beside them shows lock, let-off, overall, drop, roller shake and
 | The manual | green | the detent plan, the adjustment figures, the impulse roller |
 | Measured on photographs | blue | the bridge outline, the cock, the heights |
 | Solved for clearance | amber | the third wheel's position, the modules |
-| Estimated | grey | tooth counts, the fusee profile, the mainspring |
+| Estimated | grey | tooth counts, the stop-bar's nose, the mainspring |
 
 Tapping a part adds a "Source" line to its info card.
 

@@ -237,8 +237,9 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
 }
 /* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: filling half the room between arbor and wall, which gives the most turns),
    coiled in two packs, one on the arbor (from ra) and one on the wall (out to Rw), joined by k free turns. Its coils in a pack lie gap apart (the grease).
-   Running peels coils off the arbor pack onto the wall pack. msPack(la,o): the packs with la mm on the arbor; T, the turns from the inner end to the outer */
-const MSPRING={t:0.419,gap:0.01,ra:2.46,Rw:13.04,len:600,k:1};
+   Running peels coils off the arbor pack onto the wall pack. msPack(la,o): the packs with la mm on the arbor; T, the turns from the inner end to the outer.
+   ra 1.8 (the arbor's core, estimated): small enough for the 7.6 turns that the fusee's 7.05 barrel turns of chain and a set-up need */
+const MSPRING={t:0.419,gap:0.01,ra:1.8,Rw:13.04,len:600,k:1};
 function msPack(la,o=MSPRING){const p=o.t+o.gap,a0=o.ra+o.t/2,R0=o.Rw-o.t/2,ni=(Math.sqrt(a0*a0+la*p/Math.PI)-a0)/p,ri=a0+ni*p;let ro=R0,lf=0,no=0;
   for(let i=0;i<30;i++){lf=o.k*Math.PI*(ri+ro);no=(R0-Math.sqrt(Math.max(0,R0*R0-Math.max(0,o.len-la-lf)*p/Math.PI)))/p;ro=R0-no*p;}
   return{p,a0,R0,ni,ri,no,ro,lf,T:ni+o.k+no};}

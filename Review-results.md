@@ -31,6 +31,12 @@ are fixed; a few parts are drawn differently from the figures and a few small
 ones are not drawn, as listed. See
 [Every part against the manual](#every-part-against-the-manual).
 
+A fourth review checked the fusee and chain against the manual and the
+photographs: the fusee was too thin at its small end, its groove turned in
+rings, the chain's links lay flat, and the stop-bar moved with the wind count
+instead of being pushed by the chain. All are fixed. See
+[Fusee and chain against the manual and photographs](#fusee-and-chain-against-the-manual-and-photographs).
+
 ## Summary
 
 No part of the model is broken. The mechanics hold up: ratios, directions of
@@ -816,3 +822,70 @@ Checked against Secs. II–IV and the handling instructions:
 - **The balance's lower pivot and the escape arbor's pivots ended in nothing
   or in bare holes**: no jewels, no endstones. They now run in their settings
   up to the endstones.
+
+## Fusee and chain against the manual and photographs
+
+Checked against Secs. I, III and IV, Figs. 12, 26, 28, 38 and 70–75, and the
+side and oblique photographs (`References/photo-side-view.jpg`,
+`photo-oblique-balance-side.jpg`). The side photograph is scaled by the fusee
+wheel's tips (96 teeth, module 0.4171: 40.87 mm, 694 px) about its axis.
+
+### Right as they were
+
+- Directions: fusee and barrel clockwise seen from the key while running, the
+  key counterclockwise (Secs. III, IV); an open chain run on the drums' common
+  tangent, leaving the fusee's small end at full wind and its large end run down.
+- The chain pinned at the fusee's large end and hooked near the top of the
+  barrel (Figs. 26, 28, 75).
+- 17½ half turns for a full wind, 7 a day (96/14); the maintaining work.
+- The chain's coils on the barrel: widely spaced near its top, closer toward
+  the plate, as both photographs show. The run stays level, so on a plain drum
+  each coil lies where the fusee's groove was when it came off.
+
+### Findings, all fixed
+
+1. **The fusee was too thin at its small end, its top too small.** Groove floor
+   on the photograph 8.33 to 13.81 over the eight upper turns, flanges about
+   1.25 over the floor of the turn below, top 9.3, base flange 18.3; the model
+   had r 6.5 to 14 and a top plate of r 5.4. Fig. 28 draws the photograph's
+   proportions (the top about 0.6 of the largest turn). The measured floors fit
+   `r0/√(1−a·m)` (the fusee for a pull falling with the barrel's turns) to
+   0.085 mm rms: 7.95 to 16.8.
+2. **The groove was turned in rings,** a 0.4 mm ripple of the lathe profile, not
+   the helix of thin flanges photographed.
+3. **The links lay flat.** A fusee chain bends about rivets parallel to the
+   arbor; its figure-eight plates (Fig. 38) stand on edge, three deep. The
+   model's boxes were 1.0 along the arbor by 0.34 radially. The end pin was
+   radial; Fig. 28 draws it parallel to the arbor.
+4. **The chain didn't work the stop-work.** Sec. IV: the chain "bears against
+   one end of the spring-activated winding stop-bar, the opposite end of which
+   moves out to engage the winding stop". The bar slid out over the last
+   quarter turn from the wind count, clear above the chain, both ends inside
+   the fusee's top; the key walkthrough's text said the chain pushed it.
+5. **The fusee chart and power readout used literals** (6.5, 14) for the
+   profile.
+
+Knock-on: the fatter fusee takes 656 links of chain (about 26 in with its run,
+against 22; one sale listing gives 28.5 in for the Hamilton's), 7.07 barrel
+turns. The model's mainspring took 6.53 on its r 2.4 core; on r 1.74 it takes
+7.64, leaving a set-up of 0.37 turn.
+
+### Noted, not changed
+
+- The side photograph's barrel coils are about 1.4× further apart than a
+  13.5 mm barrel predicts; the top-view comparison agrees with 13.5, so the
+  barrel stays.
+- On the side photograph the sustaining ratchet's teeth reach r 18.7; the
+  model's (120 teeth, module 0.27) reach about 16.5.
+- 17½ half turns at 96/14 hold 60 h of chain; the manual rates the chronometer
+  at 56 h. A 96/15 first stage would give 56 h, but 7½ half turns a day, not
+  the manual's 7. The model keeps 96/14 (finding 4 above).
+
+### Checks after the fixes
+
+`solids.py`, `fine.py` (0 new or grown; the chain's links no longer enter the
+fusee, the groove replacing that expected entry), `fine.py --hold`,
+`maintaining.py` (the stop-bar meets the stop at full wind, 2.6 mm clear half
+a turn earlier), `exploded.py`, `invariants.py`, `audit.py`, `smoke.py` and
+`node escapement.js`.
+
