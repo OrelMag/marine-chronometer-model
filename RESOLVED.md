@@ -534,7 +534,7 @@ Contents:
   view went from 12.5 to 2.6 ms a frame. Keep: a geometry rebuilt as the model
   moves goes through `reclose` (the stop-bar spring does too), never
   `closeGeo` each frame; check a new one with `tools/perf.py` in a lifted
-  view. `HASH`
+  view. `bf503d8`
 - **Metals flat and dark after a lost WebGL context.** A restored context
   loses its PMREM render targets. The environment map is now rebuilt on
   `webglcontextrestored`. Keep that handler. `fcedc94`

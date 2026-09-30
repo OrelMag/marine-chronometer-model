@@ -567,7 +567,7 @@ the JavaScript `update()`.
 The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving canvases. The same treatment applies to the engraving, which never changes.
 
 ### 5.3 Don't rebuild geometry every frame (S–M)
-> **Done.** The closed-solid rule later put the hairspring through `closeGeo` every frame, 9 ms of it on a desktop CPU. Now `reclose` writes the new tube into the old geometry in place (same vertices, same index; `fine.py` and the others still read what `update()` builds), and only when the balance has turned: the Movement view went from 12.5 to 2.6 ms a frame (`tools/perf.py`). The shader below is no longer needed.
+> **Done.** The closed-solid rule later put the hairspring through `closeGeo` every frame, 9 ms of it on a desktop CPU. Now `reclose` writes the new tube into the old geometry in place (same vertices, same index; `fine.py` and the others still read what `update()` builds), and only when the balance has turned: the Movement view went from 12.5 to 2.6 ms a frame (`tools/perf.py`). The shader below is no longer needed. `bf503d8`
 >
 > **Earlier, partly done.** The trip spring is rebuilt only when its lift or deflection changes, so it stands still (and isn't rebuilt) for most of each swing, and above 1× never. The hairspring is left as it is: the balance turns every frame while running, so a change threshold saves nothing, and bending it in a shader would hide its real shape from `fine.py`, `dyn.py`, `solids.py` and `illustration.py`, which read the geometry `update()` builds. `a4e7574`
 
