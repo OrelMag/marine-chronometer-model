@@ -153,7 +153,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:!PHONE,op:{},hid:new Set(),focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:!PHONE,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
   const FOV0=cam.fov,cur={lift:0,flip:0,explode:0,lidM:0,lidT:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the real plates stay hidden */
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
   /* a short note in the HUD, for a few seconds */
@@ -181,9 +181,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     f.opacity=(m0.opacity??1)*op;return syncMat(f,m0);}
   const base=m=>{const p=m.userData.part,m0=st.colr||st.csrc?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
   const fin=m=>st.draw?drawOf(base(m)):base(m);   /* the drawing (st.draw 'tint' or 'ink'): the wash copy of whatever the part shows; see-through parts stay ghosts, drawn in outline */
-  const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0;
-  /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, the barrel or spring picked, or the barrel faded or hidden */
-  const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus,ob=st.op.barrel;return st.drive||secMode!=='off'||st.hid.has('barrel')||(ob!=null&&ob<1)||!!(foc&&(foc.has('mainspring')||foc.has('barrel')));};
+  const isoOut=p=>!!st.iso&&!st.iso.has(p)&&!(p==='mainspring'&&st.iso.has('barrel'));   /* isolated: only the parts in st.iso are drawn (the mainspring with its barrel) */
+  const isoDrop=p=>{if(st.iso){st.iso.delete(p);if(!st.iso.size)st.iso=null;}};   /* the last isolated part hidden: the rest of the model comes back */
+  const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0||isoOut(m.userData.part);
+  /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, the barrel or spring picked or isolated, or the barrel faded or hidden */
+  const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus,ob=st.op.barrel;return st.drive||secMode!=='off'||st.hid.has('barrel')||(ob!=null&&ob<1)||!!(foc&&(foc.has('mainspring')||foc.has('barrel')))||!!(st.iso&&(st.iso.has('mainspring')||st.iso.has('barrel')));};
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;
     const foc=st.pick?new Set([st.pick]):st.focus,dvOn=(st.tour<0&&st.view==='laidout')||devShown;   /* laid out: the real plates' holes no longer meet the arbors; schematic ones stand in */
     for(const m of MVM){const p=m.userData.part;let vis=true;
@@ -194,7 +196,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(m.userData.noShadow&&gh)vis=false;
       m.visible=vis&&!opHide(m);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
     for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
-    sh.visible=!st.drive&&!dvOn&&!st.draw;
+    sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
@@ -258,29 +260,31 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
   const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
-  function showPart(p){showHelp(false);st.hid.delete(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
+  function showPart(p){showHelp(false);st.hid.delete(p);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[p];info.querySelector('.src').innerHTML=q.src?`<i style="--ps:${SRC[q.src][1]}"></i>${SRC[q.src][0]}: ${U(q.sn)}${q.figs?`. Figs. ${q.figs}`:''}.`:'';info.classList.add('on');hintOff();}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
-  /* right-click (or long-press) a part: opacity and hide. Prefers the nearest solid part, so faded parts in front can be looked through.
-     Hidden parts can't be clicked, so the menu lists them for unhiding; right-click empty space to reach that list alone */
-  const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output'),opP=$('#opPart'),opH=$('#opHid'),chips=opH.querySelector('.chips');let opPart=null;
+  /* right-click (or long-press) a part: opacity, hide and isolate. Prefers the nearest solid part, so faded parts in front can be looked through.
+     Hidden parts can't be clicked, so the menu lists them for unhiding, and offers the way back from isolation; right-click empty space to reach those alone */
+  const opm=$('#opm'),opIn=opm.querySelector('input'),opOut=opm.querySelector('output'),opP=$('#opPart'),opH=$('#opHid'),opI=$('#opIso'),chips=opH.querySelector('.chips');let opPart=null;
   const opShow=()=>{const v=Math.round((st.op[opPart]??1)*100);opIn.value=v;opOut.textContent=v+'%';};
   function opList(){chips.innerHTML='';for(const p of st.hid){const b=document.createElement('button');b.textContent=INFO[p][0];b.title='Show '+INFO[p][0];b.addEventListener('click',()=>{st.hid.delete(p);look();opRender();});chips.appendChild(b);}}
-  function opRender(){opP.classList.toggle('hidden',!opPart);opH.classList.toggle('hidden',!st.hid.size);opList();
-    opm.querySelector('h4').textContent=opPart?INFO[opPart][0]:'Hidden parts';if(opPart)opShow();if(!opPart&&!st.hid.size)closeOpm();}
+  function opRender(){opP.classList.toggle('hidden',!opPart);opH.classList.toggle('hidden',!st.hid.size);opI.classList.toggle('hidden',!st.iso);opList();
+    if(st.iso)opI.querySelector('.hl').textContent='Showing only '+[...st.iso].map(p=>INFO[p][0]).join(', ');opm.querySelector('[data-a="iso"]').classList.toggle('hidden',!!(st.iso&&st.iso.size===1&&st.iso.has(opPart)));
+    opm.querySelector('h4').textContent=opPart?INFO[opPart][0]:st.hid.size?'Hidden parts':'Isolated';if(opPart)opShow();if(!opPart&&!st.hid.size&&!st.iso)closeOpm();}
   function closeOpm(){opm.classList.remove('on');opPart=null;}
   /* Android fires its own contextmenu on a long press: whichever comes first opens the menu, once, and the press never picks */
   cv.addEventListener('contextmenu',e=>{e.preventDefault();lpStop();if(performance.now()-lpAt<800)return;if((down?down.moved:rMoved)>6)return;if(down)down.lp=true;openOpm(e.clientX,e.clientY);});
   function openOpm(cx,cy){const rc=cv.getBoundingClientRect();ndc.set((cx-rc.left)/rc.width*2-1,-(cy-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);
     const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>st.op[h.object.userData.part]!=null);
-    if(!hit&&!st.hid.size){closeOpm();return;}
+    if(!hit&&!st.hid.size&&!st.iso){closeOpm();return;}
     opPart=hit?hit.object.userData.part:null;opm.classList.add('on');opRender();
     const sr=stage.getBoundingClientRect();opm.style.left=clamp(cx-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(cy-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';}
   opIn.addEventListener('input',()=>{if(!opPart)return;const v=opIn.valueAsNumber/100;if(v>=1)delete st.op[opPart];else st.op[opPart]=v;opOut.textContent=opIn.value+'%';look();});
   opm.querySelectorAll('button[data-a]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.a;
-    if(a==='hide'){if(opPart){st.hid.add(opPart);opPart=null;}}else if(a==='showall')st.hid.clear();else if(a==='all'){st.op={};st.hid.clear();}else if(opPart)delete st.op[opPart];
+    if(a==='hide'){if(opPart){st.hid.add(opPart);isoDrop(opPart);opPart=null;}}else if(a==='iso'){if(opPart){st.iso=new Set([opPart]);st.hid.delete(opPart);delete st.op[opPart];}}else if(a==='uniso')st.iso=null;
+    else if(a==='showall'){st.hid.clear();st.iso=null;}else if(a==='all'){st.op={};st.hid.clear();st.iso=null;}else if(opPart)delete st.op[opPart];
     look();opRender();}));
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   /* how to use it: every control for a mouse and for touch. Stays open while the model is dragged, so the gestures can be tried; a tap, × or Esc closes it */
@@ -385,7 +389,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     try{navigator.clipboard.writeText(u).then(()=>{bar();say('Copied');},()=>{bar();say('In address bar');});}catch(_){bar();say('In address bar');}});
   /* Reset display: each Display box back to its default (See-through to the view's own; the drawings before Edges, which they disable), faded and hidden parts back. The theme stays */
   $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:!PHONE,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
-    for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}st.op={};st.hid.clear();look();opRender();});
+    for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}st.op={};st.hid.clear();st.iso=null;look();opRender();});
   /* the panel's sections: each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
   const DET=[...document.querySelectorAll('.ctl>details.grp')];
   try{const o=JSON.parse(localStorage.getItem('cm-open')||'{}');DET.forEach(d=>{if(typeof o[d.id]==='boolean')d.open=o[d.id];});}catch(_){}
@@ -395,13 +399,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);const gh=plist.lastElementChild;
     for(const p of ps){const row=document.createElement('div');row.className='prow';row.innerHTML=`<input type="checkbox" checked aria-label="Show ${INFO[p][0]}"><button class="pn">${INFO[p][0]}</button>`;
       if(PCOL[p])row.style.setProperty('--pc',PCOL[p]);if(PARTS[p].src)row.style.setProperty('--ps',SRC[PARTS[p].src][1]);const ck=row.firstChild,b=row.lastChild;
-      ck.addEventListener('change',()=>{if(ck.checked)st.hid.delete(p);else{st.hid.add(p);if(st.pick===p)closeInfo();}look();});
+      ck.addEventListener('change',()=>{if(ck.checked){st.hid.delete(p);if(st.iso)st.iso.add(p);}else{st.hid.add(p);isoDrop(p);if(st.pick===p)closeInfo();}look();});   /* while isolated, a box ticked adds its part to the isolation */
       b.addEventListener('click',()=>{st.pick===p?closeInfo():showPart(p);});plist.appendChild(row);PROWS.push({p,row,ck,b,gh,txt:[p,INFO[p][0],PARTS[p].sp,PARTS[p].sn].join(' ').toLowerCase(),figs:new Set((PARTS[p].figs||'').split(', ').flatMap(f=>{const[a,z]=f.split('–').map(Number);return z?Array.from({length:z-a+1},(_,i)=>a+i):[a];}))});}}
   /* search: by name, key, Hamilton part number (42087 finds the detent) or source note, every word; or by figure, fig 90 (the manual's figures that show it, ranges included). A group with nothing found hides its heading */
   const pSearch=$('#pSearch');pSearch.addEventListener('input',()=>{const v=pSearch.value.trim().toLowerCase(),fm=/^figs?\.?\s*(\d+)$/.exec(v),q=v.split(/\s+/).filter(Boolean),hit=new Set();
     for(const r of PROWS){const on=fm?r.figs.has(+fm[1]):q.every(w=>r.txt.includes(w));r.row.classList.toggle('hidden',!on);if(on)hit.add(r.gh);}for(const r of PROWS)r.gh.classList.toggle('hidden',!hit.has(r.gh));
     $('#pNone').classList.toggle('hidden',hit.size>0);});
-  $('#pShow').addEventListener('click',()=>{st.hid.clear();look();});
+  $('#pShow').addEventListener('click',()=>{st.hid.clear();st.iso=null;look();});
   /* rate: the timing and vernier weight pairs turned in or out in eighth turns, up to 3 turns either way (R.timing, movement.js, sets the pitch from the
      manual's rate for a turn). The period goes as √I, so the model clock runs √(I0/I) as fast as a perfect one; rErr is what the hands have gained since
      the weights were moved or the hands set */
@@ -515,7 +519,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(hrs===0){kw.end=kw.t+3;kwOut.innerHTML=`<b>Fully wound after ${halfs(tot)} half turns.</b> The chain has pushed the stop-bar in the fusee top out against the winding stop under the barrel bridge, and the key can turn no further.`;}
     else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}, counterclockwise. ${(RUN_H-hrs).toFixed(1)} h of running stored. The sustaining spring drives the train meanwhile.`;}
   kwBtn.addEventListener('click',kwStart);
-  function partsSync(){for(const q of PROWS){const h=st.hid.has(q.p);q.ck.checked=!h;q.row.classList.toggle('off',h);q.b.setAttribute('aria-pressed',st.pick===q.p?'true':'false');q.b.disabled=st.drive&&(BOXP.has(q.p)||DRIVE_HIDE.has(q.p));}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
+  function partsSync(){for(const q of PROWS){const h=st.hid.has(q.p)||isoOut(q.p);q.ck.checked=!h;q.row.classList.toggle('off',h);q.b.setAttribute('aria-pressed',st.pick===q.p?'true':'false');q.b.disabled=st.drive&&(BOXP.has(q.p)||DRIVE_HIDE.has(q.p));}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}else{(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);}});
   /* tick sound, on by default: browsers start audio only from a user gesture (and warn if a page tries sooner), so the context is made or resumed on the first
@@ -631,7 +635,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       /* off by default; the walkthrough always names the parts of its step */
       let show=(st.labels||st.tour>=0)&&(l.grp==='mv'?(cur.lift>0.8||st.drive)&&cur.flip>0.8:l.grp==='motion'?st.drive&&st.mwOn&&cur.flip<0.3:l.grp==='dial'?cur.lift<0.1&&cur.lidM>0.9&&!st.drive:cur.lift<0.1&&cur.lidT>0.9&&!st.drive);
       if(show&&foc&&!foc.has(l.part))show=false;
-      if(show&&st.drive&&DRIVE_HIDE.has(l.part))show=false;
+      if(show&&st.drive&&DRIVE_HIDE.has(l.part))show=false;if(show&&isoOut(l.part))show=false;
       if(!show){l.el.style.opacity=0;continue;}
       const P0=l.fn();
       if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);ray2.set(camP,tmpV.copy(P0).sub(camP).normalize());ray2.far=d-0.8;
@@ -722,7 +726,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
     {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||Object.keys(st.op).length>0,msOn:msShown()});
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.rotation.y=SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6)));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}

@@ -61,8 +61,8 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .opm .sl output{min-width:3em;flex-shrink:0}.opm .sl input{min-width:0;width:0}
 .opm .seg{margin-top:8px;display:flex;gap:6px}
 .opm .seg button{padding:4px 10px;font-size:12.5px}
-.opm #opHid{margin-top:10px;padding-top:8px;border-top:1px solid color-mix(in srgb,currentColor 14%,transparent)}
-.opm #opPart.hidden+#opHid{margin-top:0;padding-top:0;border-top:0}
+.opm #opHid,.opm #opIso{margin-top:10px;padding-top:8px;border-top:1px solid color-mix(in srgb,currentColor 14%,transparent)}
+.opm #opPart.hidden+#opHid,.opm #opPart.hidden+#opHid.hidden+#opIso{margin-top:0;padding-top:0;border-top:0}
 .opm .hl{font-size:12px;opacity:.7;margin-bottom:5px}
 .opm .chips{display:flex;flex-wrap:wrap;gap:4px}
 .opm .chips button{padding:3px 9px;font-size:12px}
