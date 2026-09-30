@@ -454,7 +454,7 @@ Contents:
   over them while winding; their slots stood 0.02 mm into it. The heads are
   0.15 tall. Keep: a part on a shaft is bored for it; a screw head under a part
   that turns over it keeps clear of it. Found by `fine.py` after the parts-list
-  changes, which also retired 15 `EXPECTED` entries nothing matches any more.
+  changes, which also retired 15 `EXPECTED` entries nothing matches any more. `5709d7b`
 
 ## Setup, case and gimbals
 
