@@ -336,6 +336,8 @@ Then run `dyn.py` with the variant shown.
   than at 1×
   ([app.js:456](marine-chronometer-source/chronometer-working-model/js/app.js#L456)).
   Raising the threshold to about 5× would keep the true motion there.
+  *Fixed: the true motion is kept up to 5× (`REAL_X`), and above it the HUD
+  says the swing is shown slowed.*
 - **Short hands.**
   - Hamilton dial: the minute hand stops 2 mm short of the minute track (tip at
     44 mm radius, track from 46 mm).
@@ -348,6 +350,9 @@ Then run `dyn.py` with the variant shown.
   are outputs of `p3fit.py`, committed by mistake in `1340cb6`. `.gitignore`
   doesn't cover the tools' outputs, so running them from `tools/` dirties the
   working tree.
+  *Fixed: both are untracked, and `.gitignore` covers every file the tools
+  write (`r_*.png`, `r_ill/`, `fit.json`, `p3fit.json`, `unproj.json`,
+  `bundle.npy`).*
 
 ## Not covered
 

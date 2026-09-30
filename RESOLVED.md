@@ -84,6 +84,9 @@ Contents:
   `arbor()` now takes `cside` (collet on one side only, 0.05 mm proud of the
   other face so the faces don't z-fight); the fourth wheel's is on the plate
   side. Keep: a collet must stay inside the radius a meshing wheel leaves free. `329e77e`
+- **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
+  stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
+  escape wheel's position leaves. `c2adc92`
 
 ## Winding and maintaining work
 
@@ -170,6 +173,10 @@ Contents:
   replaces the "strip 0.1 mm thick" of the solid-parts entry. Keep: the turns
   fall by exactly the barrel's turns (`Tup - I(n)`); the hook and pin follow
   from `fs.MS`, not fixed angles; the strip stays 0.05 mm or more off the core. `e3ad654`
+- **Model stopped at 56 h, but its chain holds 60 h** (finding 4). `RUN_H`
+  (60 h, the fusee's 8¾ turns) now sets the run-down point, the power readouts
+  and the fusee chart. The dial's UP–DOWN scale still covers the rated 56 h.
+  Keep: use `RUN_H`, not a literal 56 or 60. `c2adc92`
 
 ## Plates, bridges, screws and arbors
 
@@ -280,6 +287,10 @@ Contents:
   screw's travel and `blockRoom` are unchanged. Keep: the screw is enclosed
   from the train bridge down to the lobe's underside; the column stays clear
   of the fourth wheel's upper setting. `7267536`
+- **Escape upper bridge's screw heads 0.06 mm into the balance's path**
+  (finding 3). The heads are now 0.3 mm tall, 0.14 mm clear of the rim and
+  timing weights. `dyn.py` works in 0.4 mm cubes and can't see gaps this thin,
+  so check them by hand. `c2adc92`
 
 ## Setup, case and gimbals
 
@@ -459,6 +470,17 @@ Contents:
   leave with it (`headOn`), and the balance hub's screws stay in. Keep:
   `tools/exploded.py` reports 0 failing (it runs in CI); where parts overlap
   seen along the arbors, the upper one rises more. `d59c0ad`
+- **Dial style reverted when parts were see-through, singled out or faded,
+  and the plate finish didn't reach faded parts** (findings 1–2). Derived
+  materials (see-through, faded) kept an old texture and colour. `syncMat` in
+  `core.js` now copies the source's map and colour whenever a copy is used, and
+  the dial and finish buttons call `look()`. Keep: change the source material
+  (`userData.mat0`), never the copies. `c2adc92`
+- **The balance swung slower at 2× than at 1×** (Review-results, smaller
+  issues). Above 1× it switched to its 0.9 Hz display swing. It now swings as
+  it really does, and the escape wheel steps, up to 5× (`REAL_X` in
+  `app.js`); above that the HUD says the swing is shown slowed. Keep: the
+  real-motion path and the hold/restart logic share the one threshold. `5af0a57`
 
 ## Build, tools and docs
 
@@ -527,24 +549,4 @@ Contents:
 
 ## Fixed, not yet committed
 
-These are findings 1–5 of `Review-results.md` (review at `f591611`). They are
-fixed in the working tree. Move each entry to its heading, with the hash, when
-it is committed.
-
-- **Dial style reverted when parts were see-through, singled out or faded,
-  and the plate finish didn't reach faded parts** (findings 1–2). Derived
-  materials (see-through, faded) kept an old texture and colour. `syncMat` in
-  `core.js` now copies the source's map and colour whenever a copy is used, and
-  the dial and finish buttons call `look()`. Keep: change the source material
-  (`userData.mat0`), never the copies.
-- **Escape upper bridge's screw heads 0.06 mm into the balance's path**
-  (finding 3). The heads are now 0.3 mm tall, 0.14 mm clear of the rim and
-  timing weights. `dyn.py` works in 0.4 mm cubes and can't see gaps this thin,
-  so check them by hand.
-- **Model stopped at 56 h, but its chain holds 60 h** (finding 4). `RUN_H`
-  (60 h, the fusee's 8¾ turns) now sets the run-down point, the power readouts
-  and the fusee chart. The dial's UP–DOWN scale still covers the rated 56 h.
-  Keep: use `RUN_H`, not a literal 56 or 60.
-- **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
-  stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
-  escape wheel's position leaves.
+None at the moment.

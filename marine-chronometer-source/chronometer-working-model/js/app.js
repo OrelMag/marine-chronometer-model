@@ -122,7 +122,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   const partOf=o=>{while(o){if(o.userData&&o.userData.partName)return o.userData.partName;o=o.parent;}return null;};
   /* a mesh casts a shadow only when its radius spans SHK texels of the shadow map (shThr, set as the shadow camera follows the view): smaller shadows were a
      few texels at most, each an extra draw call. Far views drop the screws and pins (under about 1.5 mm); close-ups keep them. Instanced meshes (the chain) always cast */
-  BX.root.updateMatrixWorld(true);const wsc=new THREE.Vector3(),rad=o=>{if(o.isInstancedMesh)return 1e9;const g=o.geometry,b0=g.boundingSphere;g.computeBoundingSphere();const r=g.boundingSphere.radius;g.boundingSphere=b0;if(!(r>0))return 1e9;o.getWorldScale(wsc);return r*Math.max(wsc.x,wsc.y,wsc.z);};   /* three computes its own bounding sphere when it first needs it, as before; geometries rebuilt every frame (hairspring, passing spring) start empty, and always cast */
+  BX.root.updateMatrixWorld(true);const wsc=new THREE.Vector3(),rad=o=>{if(o.isInstancedMesh)return 1e9;const g=o.geometry,b0=g.boundingSphere;g.computeBoundingSphere();const r=g.boundingSphere.radius;g.boundingSphere=b0;if(!(r>0))return 1e9;o.getWorldScale(wsc);return r*Math.max(wsc.x,wsc.y,wsc.z);};   /* three computes its own bounding sphere when it first needs it, as before; geometries rebuilt as they move (hairspring, passing spring) start empty, and always cast */
   const SHK=6;let shThr=SHK*2*scam.right/key.shadow.mapSize.x;const castOn=m=>{m.castShadow=!!m.userData.cs&&m.userData.rad>=shThr;};
   const MVM=[];mv.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);MVM.push(o);}});
   BOXM.forEach(o=>{o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);o.userData.cs=o.material!==M.glass;castOn(o);});
@@ -150,6 +150,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   const st={drive:false,mwOn:false,see:false,colr:false,draw:false,edges:!PHONE,op:{},hid:new Set(),focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
   const FOV0=cam.fov,cur={lift:0,flip:0,explode:0,lidM:0,lidT:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the real plates stay hidden */
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
+  /* a short note in the HUD, for a few seconds */
+  let noteT=0,noteTx='';const hudNote=t=>{noteTx=t;noteT=performance.now()+3000;};
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
@@ -183,6 +185,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
+    cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
     $('#ghost').checked=st.see;$('#draw').checked=st.draw;$('#edges').checked=st.edges;$('#edges').disabled=st.draw;stage.classList.toggle('colr',st.colr);stage.classList.toggle('draw',st.draw);partsSync();
   }
 
@@ -204,6 +207,10 @@ function drawEsc2D(ctx,w,h,p,dark){
     fusee:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.2,dist:105,target:mvL((L.Fu[0]+L.Ba[0])/2,-12,(L.Fu[1]+L.Ba[1])/2),see:true},
     /* the balance close up under its cock, with the timing weights (Rate and timing weights' Show the balance comes here too) */
     balance:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:-0.9,pitch:0.35,dist:65,target:mvL(L.B[0],BAL_Y,L.B[1])}};
+  const VIEW_DESC={box:'The chronometer in its mahogany box.',dial:'The dial, read through the glass-top cover.',movement:'The movement lifted out of its case, train side up.',
+    train:'The going train from above, plates see-through: fusee wheel, centre, third, fourth and escape wheels.',escapement:'Close up on the detent escapement, from the pillar-plate side: the detent, the escape wheel and the balance’s rollers.',
+    exploded:'Every part lifted apart along the arbors.',laidout:'The train laid out in one line and seen from the side: barrel, fusee, centre, third, fourth and escape wheels, and the balance.',
+    fusee:'The mainspring barrel, the chain and the fusee, plates see-through.',balance:'Close up on the balance under its cock, with its timing weights and hairspring.'};
   /* keep the same horizontal coverage on narrow screens: distance grows as the aspect ratio falls below 1.5 */
   const aspectK=()=>clamp(1.25/(W/Hh),1,2.2);
   function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK()*(st.drive&&v.lift?0.8:1);G.follow=v.target;panO.set(0,0,0);camFree=false;}
@@ -212,8 +219,10 @@ function drawEsc2D(ctx,w,h,p,dark){
   function setView(k,keepSee){const v=VIEWS[k];if(st.drive&&(k==='box'||k==='dial'))k='movement';const vv=VIEWS[k];
     Object.assign(tgt,{lift:st.drive?1:vv.lift,flip:st.drive?1:vv.flip,explode:vv.explode*expV(),dev:(vv.dev||0)*expV(),fov:vv.fov||FOV0,lidM:vv.lidM,lidT:vv.lidT});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',k!=='exploded'&&k!=='laidout');
     expR.setAttribute('aria-label',k==='laidout'?'How far the train is laid out in a line':'How far apart the exploded parts are');
-    if(!keepSee){st.see=!!vv.see;}look();
+    if(!keepSee){st.see=!!vv.see;}look();if(hashReady)keep('view',k);
     document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
+  /* the hint under the stage stays until the model is first tapped, dragged, scrolled or given a key (or a card, help or the walkthrough covers it) */
+  const hintOff=()=>{$('#hint').style.opacity=0;};for(const ev of['pointerdown','wheel','keydown'])cv.addEventListener(ev,hintOff,{once:true,passive:true});
   /* pointer: orbit, pinch, tap to pick; on touch, a long press (500 ms, barely moving) opens the fade/hide menu, since iOS fires no contextmenu */
   const ptrs=new Map();let pinch=0,down=null,rMoved=0,lpT=0,lpAt=-1e9;const lpStop=()=>{clearTimeout(lpT);lpT=0;};
   cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0,btn:e.button,pan:e.shiftKey||e.button===1};if(e.button===1)e.preventDefault();
@@ -235,7 +244,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     const hit=hits.find(h=>INFO[h.object.userData.part]);
     if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
   function showPart(p){showHelp(false);st.hid.delete(p);st.pick=p;look();const[t,d,sp]=INFO[p];
-    const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');$('#hint').style.opacity=0;}
+    const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';info.classList.add('on');hintOff();}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
   /* right-click (or long-press) a part: opacity and hide. Prefers the nearest solid part, so faded parts in front can be looked through.
@@ -261,14 +270,15 @@ function drawEsc2D(ctx,w,h,p,dark){
   cv.addEventListener('pointerdown',e=>{if(e.button!==2)closeOpm();});
   /* how to use it: every control for a mouse and for touch. Stays open while the model is dragged, so the gestures can be tried; a tap, × or Esc closes it */
   const help=$('#help'),helpBtn=$('#helpBtn');
-  function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();$('#hint').style.opacity=0;}}
+  function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeOpm();showHelp(false);}
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
     /* space bar: stop and restart, unless typing or pressing a button */
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
-    /* 1 to 9: the views, in the order of their buttons (a disabled button ignores the click) */
-    if(/^[1-9]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)document.querySelectorAll('#views button')[+e.key-1].click();
+    /* 1 to 9: the views, in the order of their buttons. A disabled one (Box and Dial, with Moving parts only) says why, in the HUD, and its button flashes */
+    if(/^[1-9]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open){const b=document.querySelectorAll('#views button')[+e.key-1];
+      if(!b)return;if(!b.disabled)b.click();else{hudNote(`${b.textContent} view: turn off Moving parts only first`);b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');clearTimeout(b.nopeT);b.nopeT=setTimeout(()=>b.classList.remove('nope'),700);}}
     /* with the model focused (Tab to it, or click it): arrow keys turn the view as a drag does, + and − zoom, 0 resets the view */
     if(document.activeElement===cv&&!e.ctrlKey&&!e.metaKey&&!e.altKey){const a={ArrowLeft:[0.08,0],ArrowRight:[-0.08,0],ArrowUp:[0,-0.06],ArrowDown:[0,0.06]}[e.key];
       if(a){e.preventDefault();camFree=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.3,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
@@ -298,13 +308,15 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#tabModel').addEventListener('click',()=>showFig(false));$('#tabFig').addEventListener('click',()=>showFig(true));
   fig.querySelector('img').addEventListener('click',e=>{const z=fsc.classList.toggle('zoom');e.target.title=z?'Click to fit':'Click to see it full size';if(!z)fsc.scrollTo(0,0);});
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
-  document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
+  /* settings this browser remembers, as it does the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
+  const SET=(()=>{try{const o=JSON.parse(localStorage.getItem('cm-set')||'{}');return o&&typeof o==='object'?o:{};}catch(_){return{};}})(),keep=(k,v)=>{SET[k]=v;try{localStorage.setItem('cm-set',JSON.stringify(SET));}catch(_){}};
+  document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);keep('bal',b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});
   const DIAL_INFO={hamilton:[INFO.dial[1],INFO.hands[1]],roman:['Black on silver-white, in the German style of the A. Lange & Söhne deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads AUF (up) to AB (down). Its scale keeps this movement’s 240° sweep.','Gilt leaf hour hand and lance minute hand, gilt wind indicator hand, blued seconds hand. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     swiss:['Black on white, in the style of the Ulysse Nardin (Le Locle) deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads UP / HAUT to DOWN / BAS. Its scale keeps this movement’s 240° sweep.','Blued pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     soviet:['Black on white, in the style of the First Moscow Watch Factory deck chronometers, which copied the Nardin layout (maker’s name and number left off): upright Arabic hours, with the 6 covered by a large seconds sub-dial marked СДЕЛАНО В СССР (made in the USSR); railroad minute and seconds tracks; the wind indicator reads ЗАВОД (wound) to СПУСК (run down). Its scale keeps this movement’s 240° sweep.','Aged gilt pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.']};
-  document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>{mv.userData.dial(b.dataset.v);look();[INFO.dial[1],INFO.hands[1]]=DIAL_INFO[b.dataset.v];document.querySelectorAll('#dialSt button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
-  document.querySelectorAll('#finish button').forEach(b=>b.addEventListener('click',()=>{M.setPlateFinish(b.dataset.v);look();document.querySelectorAll('#finish button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
+  document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>{mv.userData.dial(b.dataset.v);keep('dial',b.dataset.v);look();[INFO.dial[1],INFO.hands[1]]=DIAL_INFO[b.dataset.v];document.querySelectorAll('#dialSt button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
+  document.querySelectorAll('#finish button').forEach(b=>b.addEventListener('click',()=>{M.setPlateFinish(b.dataset.v);keep('finish',b.dataset.v);look();document.querySelectorAll('#finish button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#lbls').addEventListener('change',e=>st.labels=e.target.checked);$('#rock').addEventListener('change',e=>st.rock=e.target.checked);$('#latch').addEventListener('change',e=>st.latch=e.target.checked);
   const hIn=$('#hrs'),hOut=hIn.parentElement.querySelector('output');
   const showH=()=>{hOut.textContent=hrs.toFixed(1)+' h';hIn.value=hrs.toFixed(1);};
@@ -468,7 +480,9 @@ function drawEsc2D(ctx,w,h,p,dark){
     {t:'Hands and the wind indicator',x:`<p>The centre wheel staff carries the minute hand and, through the motion work, the hour hand; the fourth wheel staff carries the second hand.</p><p>A pinion on the dial end of the fusee arbor drives the wind indicator wheel. Here an ${UD.pin}-leaf pinion and a ${UD.wheel}-tooth wheel take the hand across the UP–DOWN scale as the fusee makes its ${(56*FUSEE_PER_HOUR).toFixed(1)} turns in 56 hours.</p>`,
       drive:true,mw:true,v:{lift:1,flip:0,explode:0,yaw:0.2,pitch:1.05,dist:170,target:mvL(-3,3,-6)},speed:3600,focus:['motion','hands','cw','fusee','gw'],inset:'motion'}];
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
-  function tourGo(i){st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);
+  /* the viewer's own settings, kept when the walkthrough starts and given back when it ends */
+  let preTour=null;
+  function tourGo(i){if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
@@ -481,8 +495,9 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
       if(cr.left<stage.getBoundingClientRect().right){const y=cr.top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:RM.matches?'auto':'smooth'});}
       else card.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'});}}
-  function tourEnd(){st.tour=-1;st.focus=null;st.drive=false;st.mwOn=false;st.rock=false;$('#rock').checked=false;setSpeed(1);setInset(null);
-    $('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView('dial');}
+  function tourEnd(){const u=preTour||{view:'dial',see:false,rock:false,latch:st.latch,speed:1,drive:false,mwOn:false};preTour=null;
+    st.tour=-1;st.focus=null;st.drive=u.drive;st.mwOn=u.mwOn;st.rock=u.rock;st.latch=u.latch;st.see=u.see;for(const k of['driveOn','mwOn','rock','latch'])$('#'+k).checked=st[k==='driveOn'?'drive':k];setSpeed(u.speed);setInset(null);
+    $('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView(u.view,true);}
   $('#tStart').addEventListener('click',()=>tourGo(0));$('#tPrev').addEventListener('click',()=>tourGo(Math.max(0,st.tour-1)));
   $('#tNext').addEventListener('click',()=>st.tour<TOUR.length-1?tourGo(st.tour+1):tourEnd());$('#tExit').addEventListener('click',tourEnd);
 
@@ -553,7 +568,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
-  function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):'dial';   /* own keys only: 'constructor' is no view or part */
+  function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):first&&!g('tour')&&own(VIEWS,SET.view)?SET.view:'dial';   /* own keys only: 'constructor' is no view or part. At load, no view in the hash: the last one seen here */
     if(g('tz')==='gmt'||g('tz')==='local'){if(g('tz')!==tz)setTz(g('tz'));}
     if(g('t'))setTod(g('t'));
     { const a=g('arm')==='1'?1:0,b=g('block')==='1'?1:0;if(a!==H.armT){armSet(a);H.arm=a;if(a)H.amp=0;}if(b!==H.blkT){blkSet(b);H.blk=b&&!R.blockClear(lastE??0)?Math.min(b,R.tbs.userData.vFace-0.005):b;} }   /* locked in a link: the balance is at rest */
@@ -571,10 +586,11 @@ function drawEsc2D(ctx,w,h,p,dark){
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
     return v;}
   addEventListener('hashchange',()=>applyHash(false));
+  for(const k of['finish','dial','bal']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}
   const startView=applyHash(true);
 
   /* ---------- loop ---------- */
-  const SNAP=/[?&]snap\b/.test(location.search);
+  const SNAP=/[?&]snap\b/.test(location.search),REAL_X=5;   /* REAL_X: the fastest speed at which the balance is drawn swinging as it really does */
   let last=performance.now(),loaded=false,hudS='';const hud=$('#hud');
   /* idle: when nothing that shows has changed (camera, lids, lift, wheels, balance, wind, ship motion, section), no input came in the last 0.6 s and the
      stage was drawn less than a second ago, the frame skips the render, the labels and the inset (a stopped model with a still camera draws once a second).
@@ -591,11 +607,12 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
     tVis+=dt;stopMove(dt);
     const brake=H.arm>0.75;ampStep(dtS*rateK,brake,run&&!H.held);   /* the arm's pad is under the rim from about three quarters of its turn */
-    /* the train's state at model time t: beats E (whole beats locked, a fraction during an impulse; continuous above 1x) and the balance's state */
-    const at=t=>{if(st.speed>1){const p=(tVis*0.9)%1,z=ESC.state(p,H.amp);z.p=p;z.lift=0;z.psDef=0;return{E:t*2+H.bOff+H.eOff,s:z};}
+    /* the train's state at model time t: beats E (whole beats locked, a fraction during an impulse; continuous above REAL_X) and the balance's state. Up to REAL_X the balance
+       swings as it really does (10 Hz at 5x, still a few frames a swing); faster, it would be a blur, so it swings at 0.9 Hz, detent and trip spring still, and the HUD says so */
+    const at=t=>{if(st.speed>REAL_X){const p=(tVis*0.9)%1,z=ESC.state(p,H.amp);z.p=p;z.lift=0;z.psDef=0;return{E:t*2+H.bOff+H.eOff,s:z};}
       const x=t/0.5+H.bOff,kk=Math.floor(x),p=x-kk,z=ESC.state(p,H.amp);z.p=p;return{E:kk+z.prog+H.eOff,s:z};};
     let E,s;
-    if(!H.held){let q=at(tSim);const Eb=lastE??q.E,locked=q.s.prog<=0||q.s.prog>=1||st.speed>1,room=blockedNow()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity;   /* room: the last whole beat before a spoke meets the dog point */
+    if(!H.held){let q=at(tSim);const Eb=lastE??q.E,locked=q.s.prog<=0||q.s.prog>=1||st.speed>REAL_X,room=blockedNow()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity;   /* room: the last whole beat before a spoke meets the dog point */
       const hold=()=>{H.held=true;H.bph=tSim/0.5+H.bOff;};
       if(dtS>0&&locked&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}   /* the train stops at a locked beat */
       else{if(dtS>0){tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}q=at(tSim);}
@@ -603,8 +620,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(H.held){H.bph+=dtS*rateK/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;
       if(H.amp<ESC.AMIN){s.lift*=clamp((H.amp/D2R-20)/5,0,1);}   /* a swing too small to reach the trip spring leaves the detent alone */
       const lockedP=s.prog<=0||s.prog>=1;
-      if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>1)){H.held=false;   /* the train goes again, from where the balance is */
-        H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>1)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
+      if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is */
+        H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
     lastE=E;const n=hrs*FUSEE_PER_HOUR;
     mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||Object.keys(st.op).length>0,msOn:msShown()});
@@ -632,12 +649,12 @@ function drawEsc2D(ctx,w,h,p,dark){
     placeLabels(now);}
     if(!still)drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
-    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);setTimeout(()=>{$('#hint').style.opacity=0;},9000);}
+    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
   look();
