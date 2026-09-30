@@ -609,7 +609,7 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 ### 6.3 Parts list (S)
 - *Done:* **Search:** by name, part number or source note, and `fig 90` by the manual's figure. Before: a search box that filters by name and Hamilton part number (`42087` finds the detent).
 - *Done:* **Figure references:** on each card, from `figs` in `PARTS`. Before: show each part's manual figure numbers ("Figs. 14, 90, 110") on its info card. The README already records them; move them into the registry.
-- **Units:** an **mm / in** toggle for the dimensions on the info cards. The manual works in inches (0.249 in roller, 0.002 in roller shake).
+- *Done:* **Units:** Sizes in mm or inches (Parts), for the cards, remembered. Before: an **mm / in** toggle for the dimensions on the info cards. The manual works in inches (0.249 in roller, 0.002 in roller shake).
 
 ### 6.4 Onboarding and hints (S)
 - *Done:* **Hint:** it stays until the model is first tapped, dragged, scrolled or given a key, or a part card, help or the walkthrough covers it. `c490811` Before: the hint fades after nine seconds whether or not it was read. Instead, keep it until the first tap or drag.

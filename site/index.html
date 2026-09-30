@@ -360,6 +360,7 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
         <input type="search" id="pSearch" placeholder="Find: a name, part number or figure" aria-label="Find a part by name, Hamilton part number or the manual's figure">
         <p class="note hidden" id="pNone" style="margin:6px 0 0">Nothing matches.</p>
         <div id="plist"></div>
+        <div class="row" style="margin-top:8px"><span class="lab">Sizes in</span><div class="seg" id="units" role="group" aria-label="Units for the sizes on the part cards"><button data-v="mm" aria-pressed="true">mm</button><button data-v="in" aria-pressed="false" title="Inches, as the manual gives them">inches</button></div></div>
         <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
       </details>
       <details class="grp more" id="rateDet">
@@ -2046,7 +2047,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
-  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,book=[],pend=new Set(),bookDay=0,wasHeld=false,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
+  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,units='mm',book=[],pend=new Set(),bookDay=0,wasHeld=false,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
   /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
      minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
      seconds from the second hand (continuous: as a comparator reads it) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
@@ -2141,8 +2142,10 @@ function drawEsc2D(ctx,w,h,p,dark){
     const hits=ray.intersectObjects([BX.root],true).filter(h=>h.object.visible&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
     const hit=hits.find(h=>INFO[h.object.userData.part]);
     if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
-  function showPart(p){showHelp(false);st.hid.delete(p);st.pick=p;look();const[t,d,sp]=INFO[p];
-    const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[p];info.querySelector('.src').innerHTML=q.src?`<i style="--ps:${SRC[q.src][1]}"></i>${SRC[q.src][0]}: ${q.sn}${q.figs?`. Figs. ${q.figs}`:''}.`:'';info.classList.add('on');hintOff();}
+  /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
+  const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
+  function showPart(p){showHelp(false);st.hid.delete(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
+    const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[p];info.querySelector('.src').innerHTML=q.src?`<i style="--ps:${SRC[q.src][1]}"></i>${SRC[q.src][0]}: ${U(q.sn)}${q.figs?`. Figs. ${q.figs}`:''}.`:'';info.classList.add('on');hintOff();}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
   /* right-click (or long-press) a part: opacity and hide. Prefers the nearest solid part, so faded parts in front can be looked through.
@@ -2208,6 +2211,9 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
   /* settings this browser remembers, as it does the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
   const SET=(()=>{try{const o=JSON.parse(localStorage.getItem('cm-set')||'{}');return o&&typeof o==='object'?o:{};}catch(_){return{};}})(),keep=(k,v)=>{SET[k]=v;try{localStorage.setItem('cm-set',JSON.stringify(SET));}catch(_){}};
+  units=SET.units==='in'?'in':'mm';
+  document.querySelectorAll('#units button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.v===units?'true':'false');b.addEventListener('click',()=>{units=b.dataset.v;keep('units',units);
+    document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);keep('bal',b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});
   const DIAL_INFO={hamilton:[INFO.dial[1],INFO.hands[1]],roman:['Black on silver-white, in the German style of the A. Lange & Söhne deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads AUF (up) to AB (down). Its scale keeps this movement’s 240° sweep.','Gilt leaf hour hand and lance minute hand, gilt wind indicator hand, blued seconds hand. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],

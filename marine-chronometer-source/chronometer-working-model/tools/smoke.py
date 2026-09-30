@@ -3,7 +3,7 @@
     python smoke.py            # the model (../index.html) and the built essay (../../../marine-chronometer.html)
     python smoke.py --model    # the model only
 
-Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, every cross-section
+Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, every cross-section
 (and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the Illustration tab, the display switches, Reset display, Link, winding with the key, the keyboard, and a link through the URL
 hash. Then the essay, scrolled from top to bottom. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
@@ -40,6 +40,12 @@ async def model(b,errs,steps):
     await click('#secs button[data-v="off"]','section off')
     await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT');await click('#now','Now')
     await click('#tabFig','Illustration tab');await click('#tabModel','3D model tab')
+    # the parts list: search (a part number, a figure, nothing), sizes in inches on a card and back
+    await pg.evaluate("document.querySelector('#partsDet').open=true")
+    for q in['42087','fig 90','zzz','']:await pg.evaluate("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",q);steps.append(f'parts search {q!r}')
+    await click('#units button[data-v="in"]','sizes in inches');await pg.evaluate("location.hash='#part=pillar'");await pg.wait_for_timeout(400)
+    if '3.448 in' not in await pg.evaluate("document.querySelector('#info .spec').textContent"):errs.append('the pillar plate card is not in inches')
+    await click('#units button[data-v="mm"]','sizes in mm')
     for sel in['#colr','#colrSrc','#ghost','#edges','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
     # pen and wash (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
     await click('#draw','pen and wash on',600)
