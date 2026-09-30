@@ -56,7 +56,7 @@ Contents:
   spring on a Z bracket, and support block with stop button. `7328e67`
 - **Essay's detent figure drifted from the model.** It now carries a copy of the
   model's `ESC` solver. `219e4df` Since then the solver became one `makeEsc`
-  (`813f7ae`), and the essay became the model's Essay tab, whose figure uses the
+  (`813f7ae`), and the essay became the model's Essay tab (`9ffe479`), whose figure uses the
   model's own `ESC` and the same plan drawing as the inset (`drawEscPlan`,
   `shared/escplan.js`). Keep: one solver and one plan drawing; nothing to copy.
 - **Balance arm drawn from the hub to one side only.** `subtractCircle` keeps
@@ -743,17 +743,17 @@ Contents:
   the split balance shown as history beside the Model 21's, and its terms the
   model's. Keep: the essay's figures use the model's functions and constants,
   not copies; a number the model computes goes in a `data-live` span, set by
-  `fillLive()`.
+  `fillLive()`. `9ffe479`
 - **The escapement's figures were typed into the essay's text** (lock 6.0°,
   drop 2.1°, overall 28.4°), so a change to the solver would have left them
   stale. They are now read from `ESC.measure()` as the essay shows, with the
   let-off, roller shake, horn clearance, roller, centre distance, swing and the
-  least swing that keeps it going. Keep: no figure the model computes typed in.
+  least swing that keeps it going. Keep: no figure the model computes typed in. `9ffe479`
 - **The essay made a WebGL context for each 3D figure** (seven, beside the
   model's own on the page that links to it). Its 3D figures now share one
   renderer off screen, each copied onto its own 2D canvas, and are built only
   when first near the view. Keep: at most two WebGL contexts on the page
-  (`smoke.py` counts them).
+  (`smoke.py` counts them). `9ffe479`
 
 ---
 
