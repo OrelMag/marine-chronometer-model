@@ -170,6 +170,7 @@ These close gaps the model README already lists, or add parts the manual
 describes that aren't modelled yet.
 
 ### 1.1 Re-fit the plan positions with the new heights (M)
+*Done: the tools read the model's heights; re-fitted over eight seeds, every axis stays within the fit's spread of `L` (balance 0.16–1.43 mm, mean about 0.1), so `L` stays. See the model README, step 6.*
 The README notes that `L` was fitted before the heights were re-stacked from
 the side photograph, and that `bundle.py`, `fit.py` and `unproj.py` still use
 the old heights.
