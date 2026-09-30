@@ -380,6 +380,11 @@ Contents:
   mid-travel (Fig. 3). `78ffd0f`
 - **Wording:** turning a weight out raises the moment of inertia, not the mass.
   `78ffd0f`
+- **Rate book: a comparison between noons restarted the mean daily rate.** A
+  row too soon after the last to give a rate stopped the run the mean is taken
+  over, as a break would. Such rows are now skipped; only a break (started,
+  stopped, set, not wound) starts a new run. Keep: the mean's run ends at a
+  break, not at a row without a rate. `e7b1398`
 
 ## Rendering
 
@@ -487,6 +492,15 @@ Contents:
   takes every step, fell a quarter second behind the model clock, showing a
   dial error at load. `dt` is now clamped to 0–0.05 s. Keep: nothing that
   advances with `dt` may assume it is positive unless it is clamped. `562928a`
+- **Starting the walkthrough left a key setting in hand.** With the key on the
+  square, the walkthrough's steps ran with the bezel off, the key on and the
+  gimbals latched. The walkthrough now ends the setting first (the latch goes
+  back as it was) and drops a stop-to-set under way. Keep: anything that takes
+  over the view ends the setting, as `ksStart` ends the walkthrough. `d8acf54`
+- **The hand-setting key hung off the movement in other views.** Changing view
+  while setting with the key lifted the movement out with the key still on
+  its square. Leaving the Dial view now ends the setting. Keep: the key and
+  the missing bezel belong to the Dial view only. `3fcfcb9`
 
 ## Build, tools and docs
 
@@ -555,17 +569,4 @@ Contents:
 
 ## Fixed, not yet committed
 
-- **Rate book: a comparison between noons restarted the mean daily rate.** A
-  row too soon after the last to give a rate stopped the run the mean is taken
-  over, as a break would. Such rows are now skipped; only a break (started,
-  stopped, set, not wound) starts a new run. Keep: the mean's run ends at a
-  break, not at a row without a rate.
-- **Starting the walkthrough left a key setting in hand.** With the key on the
-  square, the walkthrough's steps ran with the bezel off, the key on and the
-  gimbals latched. The walkthrough now ends the setting first (the latch goes
-  back as it was) and drops a stop-to-set under way. Keep: anything that takes
-  over the view ends the setting, as `ksStart` ends the walkthrough.
-- **The hand-setting key hung off the movement in other views.** Changing view
-  while setting with the key lifted the movement out with the key still on
-  its square. Leaving the Dial view now ends the setting. Keep: the key and
-  the missing bezel belong to the Dial view only.
+None at the moment.
