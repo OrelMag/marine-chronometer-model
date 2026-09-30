@@ -150,6 +150,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   const st={drive:false,mwOn:false,see:false,colr:false,draw:false,edges:!PHONE,op:{},hid:new Set(),focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
   const FOV0=cam.fov,cur={lift:0,flip:0,explode:0,lidM:0,lidT:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the real plates stay hidden */
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
+  /* a short note in the HUD, for a few seconds */
+  let noteT=0,noteTx='';const hudNote=t=>{noteTx=t;noteT=performance.now()+3000;};
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
@@ -269,8 +271,9 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
     /* space bar: stop and restart, unless typing or pressing a button */
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
-    /* 1 to 9: the views, in the order of their buttons (a disabled button ignores the click) */
-    if(/^[1-9]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)document.querySelectorAll('#views button')[+e.key-1].click();
+    /* 1 to 9: the views, in the order of their buttons. A disabled one (Box and Dial, with Moving parts only) says why, in the HUD, and its button flashes */
+    if(/^[1-9]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open){const b=document.querySelectorAll('#views button')[+e.key-1];
+      if(!b)return;if(!b.disabled)b.click();else{hudNote(`${b.textContent} view: turn off Moving parts only first`);b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');clearTimeout(b.nopeT);b.nopeT=setTimeout(()=>b.classList.remove('nope'),700);}}
     /* with the model focused (Tab to it, or click it): arrow keys turn the view as a drag does, + and − zoom, 0 resets the view */
     if(document.activeElement===cv&&!e.ctrlKey&&!e.metaKey&&!e.altKey){const a={ArrowLeft:[0.08,0],ArrowRight:[-0.08,0],ArrowUp:[0,-0.06],ArrowDown:[0,0.06]}[e.key];
       if(a){e.preventDefault();camFree=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.3,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
@@ -637,7 +640,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     placeLabels(now);}
     if(!still)drawInset(E,s,n);
     const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);

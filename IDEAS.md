@@ -614,7 +614,7 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - Keep technical terms consistent with period horological usage in each language. German, for instance, has an established chronometer vocabulary (the Roman dial already uses AUF/AB).
 
 ### 6.6 Small fixes noticed while reading
-- **Keys 1–6:** these call `.click()` on buttons that may be disabled in **Moving parts only**. A disabled button ignores the click, as the comment says, but the key gives no feedback. Flash the button or show a brief HUD message.
+- *Done:* **Keys 1–9:** the key for a view that is off flashes its button and says in the HUD to turn off Moving parts only. Before: these call `.click()` on buttons that may be disabled in **Moving parts only**. A disabled button ignores the click, as the comment says, but the key gives no feedback. Flash the button or show a brief HUD message.
 - **Walkthrough and user settings:** the walkthrough sets `st.see=false` and `st.rock`, and restores defaults on exit rather than what the user had before. Save and restore the user's settings around a tour.
 
 ---
