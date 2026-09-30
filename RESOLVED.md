@@ -244,6 +244,20 @@ Contents:
   inside-out lathe (`.reverse()` on its profile). Keep: build extrusions with
   `extrude()`; a closed part has no edge used once, nor twice the same way, and
   a positive signed volume. `8956085`
+- **Parts drawn as surfaces, not solids** (the rest, after `8956085`). Every
+  part is now a closed, outward-facing solid, except the decals (engravings,
+  the dial's printed face) and the ground's shadow: lathes run to the axis
+  (the screws, pillars, posts and dial feet had a 0.01 mm hole down it);
+  `closeGeo()` in `core.js` caps the springs' tubes, the box handles' half tori
+  and the gimbal ring's part-turned lathes; the barrel wall is 0.2 mm thick
+  inside its 13.5 mm drum radius (the brace, 0.25 mm, lines it), the mainspring
+  a strip 0.1 mm thick, the case's bowl one lathe 1 mm thick outward of its
+  inside face on a 1 mm floor with its key hole, and the glasses 0.8 mm slabs
+  (a one-sided plane vanished from below). The pivot blocks and latch keeper
+  sit on the bowl's new outside face. The checks find the barrel wall by
+  `userData.barrelWall`. Keep: no `DoubleSide`, `noCap` or open geometry for a
+  new part; a closed part has no edge used once, nor twice the same way, and a
+  positive signed volume. `eb37b95`
 
 ## Setup, case and gimbals
 
@@ -500,17 +514,3 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
-- **Parts drawn as surfaces, not solids** (the rest, after `8956085`). Every
-  part is now a closed, outward-facing solid, except the decals (engravings,
-  the dial's printed face) and the ground's shadow: lathes run to the axis
-  (the screws, pillars, posts and dial feet had a 0.01 mm hole down it);
-  `closeGeo()` in `core.js` caps the springs' tubes, the box handles' half tori
-  and the gimbal ring's part-turned lathes; the barrel wall is 0.2 mm thick
-  inside its 13.5 mm drum radius (the brace, 0.25 mm, lines it), the mainspring
-  a strip 0.1 mm thick, the case's bowl one lathe 1 mm thick outward of its
-  inside face on a 1 mm floor with its key hole, and the glasses 0.8 mm slabs
-  (a one-sided plane vanished from below). The pivot blocks and latch keeper
-  sit on the bowl's new outside face. The checks find the barrel wall by
-  `userData.barrelWall`. Keep: no `DoubleSide`, `noCap` or open geometry for a
-  new part; a closed part has no edge used once, nor twice the same way, and a
-  positive signed volume.
