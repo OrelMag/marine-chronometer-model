@@ -111,6 +111,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .prow input{accent-color:var(--blue);width:16px;height:16px;margin:0 4px 0 0;flex-shrink:0;cursor:pointer}
 .prow .pn{flex:1;min-width:0;display:flex;align-items:center;gap:7px;text-align:left;border:0;border-radius:6px;padding:3px 7px;font-weight:500;font-size:13.5px;color:var(--ink)}
 .prow .pn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--rule);flex-shrink:0}
+#pSearch{width:100%;box-sizing:border-box;margin:0 0 8px;padding:5px 9px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--ink);font:13px "Instrument Sans",sans-serif}
 #plist.colr .pn::before{background:var(--pc,var(--rule))}#plist.csrc .pn::before{background:var(--ps,var(--rule))}
 .prow .pn:hover{background:color-mix(in srgb,var(--blue) 12%,transparent)}
 .prow .pn[aria-pressed="true"]{background:var(--blue);color:var(--panel)}

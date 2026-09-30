@@ -381,11 +381,15 @@ function drawEsc2D(ctx,w,h,p,dark){
   DET.forEach(d=>d.addEventListener('toggle',()=>{try{localStorage.setItem('cm-open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));}catch(_){}}));
   /* parts list: every named part, grouped. A name singles the part out as a tap does; the box hides it, as the right-click menu does */
   const BOXP=new Set(PGRP[0][1]),plist=$('#plist'),PROWS=[];
-  for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);
+  for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);const gh=plist.lastElementChild;
     for(const p of ps){const row=document.createElement('div');row.className='prow';row.innerHTML=`<input type="checkbox" checked aria-label="Show ${INFO[p][0]}"><button class="pn">${INFO[p][0]}</button>`;
       if(PCOL[p])row.style.setProperty('--pc',PCOL[p]);if(PARTS[p].src)row.style.setProperty('--ps',SRC[PARTS[p].src][1]);const ck=row.firstChild,b=row.lastChild;
       ck.addEventListener('change',()=>{if(ck.checked)st.hid.delete(p);else{st.hid.add(p);if(st.pick===p)closeInfo();}look();});
-      b.addEventListener('click',()=>{st.pick===p?closeInfo():showPart(p);});plist.appendChild(row);PROWS.push({p,row,ck,b});}}
+      b.addEventListener('click',()=>{st.pick===p?closeInfo():showPart(p);});plist.appendChild(row);PROWS.push({p,row,ck,b,gh,txt:[p,INFO[p][0],PARTS[p].sp,PARTS[p].sn].join(' ').toLowerCase(),figs:new Set((PARTS[p].figs||'').split(', ').flatMap(f=>{const[a,z]=f.split('–').map(Number);return z?Array.from({length:z-a+1},(_,i)=>a+i):[a];}))});}}
+  /* search: by name, key, Hamilton part number (42087 finds the detent) or source note, every word; or by figure, fig 90 (the manual's figures that show it, ranges included). A group with nothing found hides its heading */
+  const pSearch=$('#pSearch');pSearch.addEventListener('input',()=>{const v=pSearch.value.trim().toLowerCase(),fm=/^figs?\.?\s*(\d+)$/.exec(v),q=v.split(/\s+/).filter(Boolean),hit=new Set();
+    for(const r of PROWS){const on=fm?r.figs.has(+fm[1]):q.every(w=>r.txt.includes(w));r.row.classList.toggle('hidden',!on);if(on)hit.add(r.gh);}for(const r of PROWS)r.gh.classList.toggle('hidden',!hit.has(r.gh));
+    $('#pNone').classList.toggle('hidden',hit.size>0);});
   $('#pShow').addEventListener('click',()=>{st.hid.clear();look();});
   /* rate: the timing and vernier weight pairs turned in or out in eighth turns, up to 3 turns either way (R.timing, movement.js, sets the pitch from the
      manual's rate for a turn). The period goes as √I, so the model clock runs √(I0/I) as fast as a perfect one; rErr is what the hands have gained since

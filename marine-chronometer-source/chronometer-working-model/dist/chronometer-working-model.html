@@ -172,6 +172,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .prow input{accent-color:var(--blue);width:16px;height:16px;margin:0 4px 0 0;flex-shrink:0;cursor:pointer}
 .prow .pn{flex:1;min-width:0;display:flex;align-items:center;gap:7px;text-align:left;border:0;border-radius:6px;padding:3px 7px;font-weight:500;font-size:13.5px;color:var(--ink)}
 .prow .pn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--rule);flex-shrink:0}
+#pSearch{width:100%;box-sizing:border-box;margin:0 0 8px;padding:5px 9px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--ink);font:13px "Instrument Sans",sans-serif}
 #plist.colr .pn::before{background:var(--pc,var(--rule))}#plist.csrc .pn::before{background:var(--ps,var(--rule))}
 .prow .pn:hover{background:color-mix(in srgb,var(--blue) 12%,transparent)}
 .prow .pn[aria-pressed="true"]{background:var(--blue);color:var(--panel)}
@@ -350,6 +351,8 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
       <details class="grp more" id="partsDet">
         <summary>Parts</summary>
         <p class="note" style="margin:0 0 6px">Click a name to single it out and read about it; untick to hide it.</p>
+        <input type="search" id="pSearch" placeholder="Find: a name, part number or figure" aria-label="Find a part by name, Hamilton part number or the manual's figure">
+        <p class="note hidden" id="pNone" style="margin:6px 0 0">Nothing matches.</p>
         <div id="plist"></div>
         <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
       </details>
@@ -2260,11 +2263,15 @@ function drawEsc2D(ctx,w,h,p,dark){
   DET.forEach(d=>d.addEventListener('toggle',()=>{try{localStorage.setItem('cm-open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));}catch(_){}}));
   /* parts list: every named part, grouped. A name singles the part out as a tap does; the box hides it, as the right-click menu does */
   const BOXP=new Set(PGRP[0][1]),plist=$('#plist'),PROWS=[];
-  for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);
+  for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);const gh=plist.lastElementChild;
     for(const p of ps){const row=document.createElement('div');row.className='prow';row.innerHTML=`<input type="checkbox" checked aria-label="Show ${INFO[p][0]}"><button class="pn">${INFO[p][0]}</button>`;
       if(PCOL[p])row.style.setProperty('--pc',PCOL[p]);if(PARTS[p].src)row.style.setProperty('--ps',SRC[PARTS[p].src][1]);const ck=row.firstChild,b=row.lastChild;
       ck.addEventListener('change',()=>{if(ck.checked)st.hid.delete(p);else{st.hid.add(p);if(st.pick===p)closeInfo();}look();});
-      b.addEventListener('click',()=>{st.pick===p?closeInfo():showPart(p);});plist.appendChild(row);PROWS.push({p,row,ck,b});}}
+      b.addEventListener('click',()=>{st.pick===p?closeInfo():showPart(p);});plist.appendChild(row);PROWS.push({p,row,ck,b,gh,txt:[p,INFO[p][0],PARTS[p].sp,PARTS[p].sn].join(' ').toLowerCase(),figs:new Set((PARTS[p].figs||'').split(', ').flatMap(f=>{const[a,z]=f.split('–').map(Number);return z?Array.from({length:z-a+1},(_,i)=>a+i):[a];}))});}}
+  /* search: by name, key, Hamilton part number (42087 finds the detent) or source note, every word; or by figure, fig 90 (the manual's figures that show it, ranges included). A group with nothing found hides its heading */
+  const pSearch=$('#pSearch');pSearch.addEventListener('input',()=>{const v=pSearch.value.trim().toLowerCase(),fm=/^figs?\.?\s*(\d+)$/.exec(v),q=v.split(/\s+/).filter(Boolean),hit=new Set();
+    for(const r of PROWS){const on=fm?r.figs.has(+fm[1]):q.every(w=>r.txt.includes(w));r.row.classList.toggle('hidden',!on);if(on)hit.add(r.gh);}for(const r of PROWS)r.gh.classList.toggle('hidden',!hit.has(r.gh));
+    $('#pNone').classList.toggle('hidden',hit.size>0);});
   $('#pShow').addEventListener('click',()=>{st.hid.clear();look();});
   /* rate: the timing and vernier weight pairs turned in or out in eighth turns, up to 3 turns either way (R.timing, movement.js, sets the pitch from the
      manual's rate for a turn). The period goes as √I, so the model clock runs √(I0/I) as fast as a perfect one; rErr is what the hands have gained since

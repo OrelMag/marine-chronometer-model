@@ -607,8 +607,8 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - *Done:* **Remember (S):** `cm-set` keeps plate finish, dial style, balance and the last view; the view opens the page when its link names none. `8a84df5` Before: in `localStorage`, alongside the theme already stored there, keep plate finish, dial style, balance and the last view. Always wrap it in `try`, as the theme code does.
 
 ### 6.3 Parts list (S)
-- **Search:** a search box that filters by name and Hamilton part number (`42087` finds the detent).
-- **Figure references:** show each part's manual figure numbers ("Figs. 14, 90, 110") on its info card. The README already records them; move them into the registry.
+- *Done:* **Search:** by name, part number or source note, and `fig 90` by the manual's figure. Before: a search box that filters by name and Hamilton part number (`42087` finds the detent).
+- *Done:* **Figure references:** on each card, from `figs` in `PARTS`. Before: show each part's manual figure numbers ("Figs. 14, 90, 110") on its info card. The README already records them; move them into the registry.
 - **Units:** an **mm / in** toggle for the dimensions on the info cards. The manual works in inches (0.249 in roller, 0.002 in roller shake).
 
 ### 6.4 Onboarding and hints (S)
