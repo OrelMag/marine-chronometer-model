@@ -432,7 +432,7 @@ Contents:
   `userData.inkDecal` (the engravings, set in `eng()`, carried by `fadeOf`)
   are inked so now; other transparent parts are paper at their opacity. Keep:
   transparent means faded or glass as well as decal; key decal treatment on the
-  flag. `HASH`
+  flag. `ae670d5`
 
 ## Controls and display
 
