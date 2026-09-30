@@ -504,7 +504,12 @@ box and gimbals.
    sp: 'Part number or spec'}`. `g` is its group in the parts list (`PG`), `c`
    its flat colour for Colour by part; add `plate: 1` for a plate or bridge
    (see-through with the plates, hidden by Moving parts only) or `dh: 1` to be
-   hidden by Moving parts only, and `pri` to rank its label. Without an entry
+   hidden by Moving parts only, and `pri` to rank its label. Say where its
+   shape and size come from: `src` (`manual`, `photo` for measured, `solved`
+   for placed or sized to fit, `est` for estimated; `SRC`), `sn` (a short note
+   of what came from where) and `figs` (the manual's figures that show it), in
+   step with "Sources" and "Estimated, not from the manual" above; they show on
+   its card and in Colour by source. Without an entry
    the part can't be tapped or right-clicked. `INFO`, `PCOL`, `PRI`, `PGRP`,
    `PLATES` and `DRIVE_HIDE` are derived from `PARTS`.
 3. `app.js` (optional): add a label with `addL('Text', 'subtitle', 'myPart',
