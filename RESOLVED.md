@@ -500,6 +500,54 @@ Contents:
   train-blocking screw. See `Review-results.md`, "Every part against the
   manual". `63c5dce`
 
+**The parts list against the model: parts missing, parts holding nothing,
+pivots without shoulders, jewels floating or buried** (`claude/bom`). Checked
+line by line against the manual's parts list (Sec. XI, Figs. 106-110) by the new
+`tools/bom.py`, which measures how each part is held and runs:
+- *Missing or short:* a dial screw and foot (the manual has 4, the model had
+  3); the second 1770 screw (the trip spring bracket's); the dust seal's seal
+  ring and helical spring; the latch's clamping bracket, clamping screw,
+  take-up spring and its two screws, and the washers under the bracket's
+  screws; the keeper's screw and separating washer; the four pivot-screw
+  bushings (42214). All added.
+- *Holding nothing:* the barrel cap's five screws were heads on the cap; the
+  hairspring stud screw stopped at the stud; the winding stop wasn't screwed
+  into the barrel bridge (a block sat inside the bridge); the locking arm's
+  stop pin stood on the bridge's face; the balance screws had no threads; the
+  timing and vernier weights were solid, not nuts on their screws; the latch
+  bracket's screws were 2.5 mm long in a 10 mm wall; the sustaining ratchet had
+  a 5 mm bore round a 1 mm arbor, nothing locating it. Each now goes into its
+  part.
+- *Pivots and endshake:* the train's arbors were plain cylinders through their
+  jewels and bushings, with nothing to stop them along their axes (the fourth
+  wheel could move 2.7 mm, the third 0.74); the balance's 0.17 mm. All are now
+  turned to pivots with shoulders, 0.05 mm endshake each (Ops. 15, 69, 74).
+- *Jewels:* the third arbor ended 0.47 mm short of its lower jewel; the lower
+  train bridge's settings stood proud of the bridge with the stones floating
+  in them; the endstones were larger than their caps' holes (buried in the
+  metal); the escape lower jewel was 1.2 mm thick; the impulse jewel had no
+  slot in its roller and the locking jewel no seat in the detent's block.
+  Settings now go into their bridges, stones sit in their settings, endstones
+  in their caps, pallet stones in their slots; olive-hole jewels for the
+  balance and escape arbor, bar-hole for the third and fourth (Sec. II).
+- *Fits:* the cannon pinion had 0.10 mm play on the centre arbor (a friction
+  fit, Op. 58); the hour wheel lay face to face on the cannon pinion's leaves;
+  the second and wind indicator hands were solid bosses through which their
+  arbors passed; the barrel's caps had 0.10 mm shake; the bushings and the
+  sustaining pawl's arbor overlapped the bevel of their holes; the winding
+  ratchet hung 0.1 mm below the fusee; the setup click stood 0.08 mm off its
+  tooth; the trip spring's foot sat 0.05 mm under its screw's head.
+- *Gimbals and case (Fig. 106):* the ring pivot screws had the washer inside
+  and the lock nut outside the box (the figure has them the other way); the
+  pivot screws' points didn't enter the ring or brackets; the latch lever
+  turned on a plain pin (it turns on the clamping screw); the straps were
+  flat boxes on the curved ring.
+Keep: every piece carries its parts-list line (`hn()`), and `bom.py` passes
+after any geometry change (`BOM.md` regenerated). A thread or pin needs its
+hole in the part it holds (tapped) and the parts it passes (clear), or, where a
+hole across an extrusion or turned part can't be cut, the `embed` relation.
+An arbor needs pivots and shoulders; a stone its seat.
+
 ## Rate panel
 
 - **Balance far too light.** The screws and weights were drawn as cylinders

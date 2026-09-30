@@ -5,6 +5,8 @@ r_ill/
 fit.json
 p3fit.json
 unproj.json
+r_bom.json
+placements_*.json
 bundle.npy
 # wrangler's local state
 .wrangler/
