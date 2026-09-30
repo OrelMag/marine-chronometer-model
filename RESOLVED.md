@@ -199,6 +199,36 @@ Contents:
   (60 h, the fusee's 8¾ turns) now sets the run-down point, the power readouts
   and the fusee chart. The dial's UP–DOWN scale still covers the rated 56 h.
   Keep: use `RUN_H`, not a literal 56 or 60. `c2adc92`
+- **Stop-bar moved by the wind count, not by the chain.** Sec. IV: the chain,
+  wrapping onto the fusee, "bears against one end of the spring-activated
+  winding stop-bar, the opposite end of which moves out". The bar slid out over
+  the last quarter turn from `n`, lying clear above the chain with both ends
+  inside the fusee's top, while the key walkthrough said the chain pushed it.
+  The bar now crosses the top in a slot open to the rim, its nose down in the
+  groove's top turn; the chain winding over the nose slides it
+  (`barTravel`, from where the chain leaves the fusee), and its far end stands
+  out past the rim to the winding stop, placed where that end is at full wind.
+  Keep: the travel comes from the chain's path (`setWind(n, eps)`), not from
+  `n` alone; the stop's place comes from `fs.stud`. `7970409`
+- **Fusee too thin at the small end, its top too small.** The profile was
+  illustrative (r 6.5 to 14, top plate r 5.4). The side photograph, scaled by
+  the fusee wheel, gives the groove's floor 8.3 to 13.8 on the upper turns and
+  a top of r 9.3; Fig. 28 draws the same proportions. The profile is now
+  `r0/√(1−a·m)` fitted to those turns (7.95 to 16.8, 0.085 mm rms), and the
+  top plate r 9.15. The chain grew to 656 links, 7.07 barrel turns, more than
+  the mainspring took on its r 2.4 core, so the core is r 1.74 (7.64 turns).
+  Keep: `app.js` takes radii and pull from `R.fs.rf`, never literals. `7970409`
+- **Groove turned in rings, chain links lying flat.** The groove was a 0.4 mm
+  ripple of a lathe profile, concentric rings the helical chain crossed, and
+  the links were boxes 1.0 along the arbor by 0.34 radially, as if they bent
+  about radial rivets. The fusee is now a lathe pushed out to a helical groove
+  between thin flanges, as photographed, and the chain is figure-eight plates
+  on edge, three deep, riveted parallel to the arbor (Fig. 38), its pitch line
+  locked to the groove, so it can't sink into the floor as the tangent point
+  drifts (up to 14°) or the fusee sits `eps` past its turns. The end pin runs
+  parallel to the arbor (Fig. 28). Keep: the chain and the groove share `phi0`
+  and `m`; the groove runs 0.12 turn past the chain's start and 0.04 past its
+  end, or the run leaving the fusee cuts the top rim. `7970409`
 
 ## Plates, bridges, screws and arbors
 
