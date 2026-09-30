@@ -224,8 +224,11 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
   down. It runs down freely with the train held (1/e in 25 s, `TAU_FREE`,
   estimated) and at once, within a swing or two, against the locking arm
-  (`TAU_ARM`, 0.2 s). The detent still lifts while the swing reaches the trip
-  spring, but the wheel can't turn.
+  (`TAU_ARM`, 0.2 s). While the swing still carries the discharge jewel back
+  past the trip spring's tip (above 37.2°), the detent lifts but the wheel
+  can't turn. A smaller swing leaves the jewel on the near side of the tip: the
+  trip spring stays bent against it and follows it back, and the detent stays on
+  its stop (`ESC.state`).
 - **When it goes again.** The train runs again when there is power, the arm is
   off, the screw is up and the swing is above `AMIN`. That happens at once if
   the balance is still swinging: the screw raised, or the chronometer wound,
@@ -364,9 +367,9 @@ and the thread pitches are the model's. Things to know before changing it:
 
   | Setting | Model | Manual |
   |---|---|---|
-  | Lock: detent leaves the stop button, until the tooth drops off | 6.1° | about 6° (Op. 85) |
-  | Let-off: tooth drops off, until the detent falls back | 11.9° | at least 6° (Op. 86) |
-  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 27.8° | 26–30° (Op. 87) |
+  | Lock: detent leaves the stop button, until the tooth drops off | 6.0° | about 6° (Op. 85) |
+  | Let-off: tooth drops off, until the detent falls back | 12.4° | at least 6° (Op. 86) |
+  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 28.3° | 26–30° (Op. 87) |
   | Drop | 2.1° | about 2° (Op. 97) |
   | Roller shake | 0.055 mm | about 0.002 in (Op. 84) |
   | Horn clearance | 0.25 mm | about 0.010 in (Op. 88) |
@@ -374,7 +377,9 @@ and the thread pitches are the model's. Things to know before changing it:
   | Locking-jewel draw | 10° | 8–12° (chronometerbook post 30) |
 
   - Depth of lock is 0.125 mm, and the trip spring's tip lifts 0.20 mm to release.
-  - The discharge jewel meets the trip spring at −27.4° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.8°, centred on the dead point.
+  - The discharge jewel meets the trip spring at −27.3° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.8°, centred on the dead point.
+  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip leaves the jewel's end (−8.9° and −37.2°). The push peaks about a degree earlier, where the tip slides off the jewel's side onto its end. Let-off and overall are measured to the fall, as the manual's gauge reads them.
+  - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release. Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver takes the teeth's locking face as radial; the mesh's leans back 0.03 of a pitch, 0.02 mm where the impulse jewel meets it.
 - The balance rim diameter (29 mm), measured on the top-view photograph.
 - The rate panel's figures (see "The rate panel" under How the timing works). Sourced: the rate for a full turn (p. 70) and the screws' and weights' masses (parts list). Estimated:
   - The moment of inertia: the rim's and arm's section, and each screw's or weight's mass spread along its drawn cylinder. It leaves out the rim's holes, the weights' screws and the staff. Table II's screw changes imply a larger moment, about 1,100–1,300 g·mm², so the rim is probably heavier than drawn. The drawn balance-screw heads (1.5 mm across) are also too small for their masses.

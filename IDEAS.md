@@ -152,7 +152,7 @@ none are quoted.
 | `marine-chronometer.html` (essay) | 910 KB | 353 KB |
 
 **Escapement** (`node tools/escapement.js`): every figure is within the
-manual's tolerances: lock 6.1°, let-off 11.9°, overall 27.8°, drop 2.1°,
+manual's tolerances: lock 6.0°, let-off 12.4°, overall 28.3°, drop 2.1°,
 roller shake 0.055 mm, horn clearance 0.25 mm.
 
 ---
@@ -282,7 +282,7 @@ The amplitude then emerges from the model instead of being fixed.
 
 ### 2.4 Isochronism and escapement error
 - **Rate against amplitude.** With [2.1](#21-a-balance-that-can-stop-and-must-be-started), plot rate against amplitude. The manual's isochronism check compares "the 12 hour rate and one-half the 24 hour rate at 72½ °F" (Sec. IX); reproduce that number.
-- **Escapement error.** The impulse runs from −20.7° to +20.8°, centred on the dead point, and the unlocking comes before it (−27.4° to −21.3°). Airy's result says a push with the motion before the dead point makes the balance gain and one after makes it lose. A resisting force before it makes it lose.
+- **Escapement error.** The impulse runs from −20.7° to +20.8°, centred on the dead point, and the unlocking comes before it (−27.3° to −21.3°). Airy's result says a push with the motion before the dead point makes the balance gain and one after makes it lose. A resisting force before it makes it lose.
 - *Done on the adjuster's bench (3.3), for the figures; the rate is still kinematic.* **An interactive version.** Offset the impulse jewel's angle (`aI`), and see the rate change and the escapement figures move. This belongs on the adjuster's bench ([3.3](#33-adjusters-bench-the-escapement-live)).
 
 ### 2.5 Gimbals with inertia (M)

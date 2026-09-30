@@ -397,7 +397,7 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
         <summary>Adjuster's bench</summary>
         <p class="note" style="margin:0 0 6px">The escapement's settings, as the repairman adjusts them (Sec. VIII, Ops. 84–88, 97). Move one and the detent, jewels and roller are rebuilt with it, and the figures are measured against the manual's the way <code>tools/escapement.js</code> measures them. If a setting would stop the escapement working, the bench says why and keeps the last one that works.</p>
         <div id="benchS"></div>
-        <canvas id="benchCv" aria-label="Plan of the escapement at these settings, moving with the model"></canvas>
+        <canvas id="benchCv" aria-label="Plan of the escapement at these settings, seen from the balance cock as in the manual's Fig. 90, moving with the model"></canvas>
         <div id="benchT"></div>
         <div class="rate" id="benchOut" aria-live="polite"></div>
         <div class="seg" style="margin-top:8px"><button id="benchReset">The model's settings</button><button id="benchLook">Show the escapement</button></div>
@@ -954,7 +954,7 @@ function makeEsc(o={}){
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side. EX: the centre distance (9.40 mm; the model passes the one in its L).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
      rT: passing-spring tip; rd: discharge jewel reach; dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
-  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.286,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:267.5};
+  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.288,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:267.5};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A=c.A*D2R,G=c.G,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=0.1/ES,dL=c.dL,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
@@ -984,8 +984,12 @@ function makeEsc(o={}){
     const q={x:Pt.x+sg*d*dir.x,y:Pt.y+sg*d*dir.y};return q.x*u.x+q.y*u.y>reach?-d:d;};   /* negative: tip has slid off at that displacement */
   const hold=(th,dir,sg,d,sl)=>{const ps=aD+th,u={x:Math.cos(ps),y:Math.sin(ps)},m={x:-u.y,y:u.x},q={x:Pt.x+sg*d*dir.x,y:Pt.y+sg*d*dir.y};   /* after sliding off: stay clear of the jewel's end while it moves away */
     if(Math.abs(q.x*m.x+q.y*m.y)>=wD/2+rho||q.x*u.x+q.y*u.y>=reach)return d;return Math.min(sl,Math.max(d,(reach-Pt.x*u.x-Pt.y*u.y)/(sg*(dir.x*u.x+dir.y*u.y))));};
-  { let sl=-1,thS=0,lm=0;for(let i=0;i<NTB;i++){const th=TH0+i*DT;if(sl<0){const d=push(th,nH,1);if(d<0){sl=lm;thS=th;}else{LI[i]=d;lm=d;continue;}}LI[i]=hold(th,nH,1,sl*Math.max(0,1-(th-thS)/RET),sl);}
-    sl=-1;lm=0;for(let i=NTB-1;i>=0;i--){const th=TH0+i*DT;if(sl<0){const d=push(th,nB,-1);if(d<0){sl=lm;thS=th;}else{PS[i]=d;lm=d;continue;}}PS[i]=hold(th,nB,-1,sl*Math.max(0,1-(thS-th)/RET),sl);} }
+  let thOff=null,thPass=null;   /* where the spring's tip leaves the jewel: the detent falls back (active swing), the trip spring flies back (return swing). Not where the push
+     peaks, as the tip slides off the jewel's side: it then rides on the jewel's end for another degree or so, until that has swept past */
+  { let sl=-1,thS=0,lm=0;for(let i=0;i<NTB;i++){const th=TH0+i*DT;if(sl<0){const d=push(th,nH,1);if(d<0){sl=lm;thS=th;}else{LI[i]=d;lm=d;continue;}}
+      const f=sl*Math.max(0,1-(th-thS)/RET);LI[i]=hold(th,nH,1,f,sl);if(thOff===null&&sl>0&&th>thS&&LI[i]<=f+1e-12)thOff=th;}
+    sl=-1;lm=0;for(let i=NTB-1;i>=0;i--){const th=TH0+i*DT;if(sl<0){const d=push(th,nB,-1);if(d<0){sl=lm;thS=th;}else{PS[i]=d;lm=d;continue;}}
+      const f=sl*Math.max(0,1-(thS-th)/RET);PS[i]=hold(th,nB,-1,f,sl);if(thPass===null&&sl>0&&th<thS&&PS[i]<=f+1e-12)thPass=th;} }
   const tab=(T,th)=>{const f=(th-TH0)/DT,i=Math.floor(f);return i<0||i>=NTB-1?0:T[i]+(T[i+1]-T[i])*(f-i);};
   let thRel=0,released=false;for(let i=0;i<NTB;i++)if(LI[i]>=lRel){thRel=TH0+i*DT;released=true;break;}
   /* wheel angle (tooth tip, from the line of centres) at which a tooth meets the impulse jewel at balance angle th: its locking face on the jewel's
@@ -996,13 +1000,15 @@ function makeEsc(o={}){
     return a;};
   /* state at balance phase p (0..1 over one 0.5 s oscillation): balance angle, detent lift, passing-spring deflection, escape-wheel tooth progress.
      amp: the swing's amplitude in radians (A, the running amplitude, by default); smaller while the balance starts or runs down. Below the angle that unlocks
-     the detent, completes the impulse and passes the trip spring (AMIN) the wheel stays locked, which the caller keeps (the progress it reports assumes a running escapement) */
+     the detent, completes the impulse and passes the trip spring (AMIN) the wheel stays locked, which the caller keeps (the progress it reports assumes a running escapement).
+     A swing that doesn't carry the discharge jewel back past the trip spring's tip (amp below -thPass) never gets it behind the spring to unlock: the spring stays bent
+     against the jewel and follows it back, and the detent stays on its stop. drop: the wheel runs free, between release and the tooth landing on the impulse jewel */
   function state(p,amp=A){
-    const th=-amp*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0;
-    const lift=ccw?tab(LI,th):0,psDef=ccw?0:tab(PS,th);let prog;
-    if(ccw&&th>thRel){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);prog=phi<=-P?1:-phi/P;}
+    const th=-amp*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0,pass=thPass!==null&&amp>=-thPass;
+    const lift=ccw&&pass?tab(LI,th):0,psDef=ccw&&pass?0:tab(PS,th);let prog,drop=false;
+    if(ccw&&pass&&th>thRel){const a=bite(th),pf=-(th-thRel)*G,pa=a>-1e8?a-t0:-1e9,phi=Math.max(pf,pa);prog=phi<=-P?1:-phi/P;drop=pf>pa&&phi>-P;}
     else prog=ccw?0:1;
-    return{th,ccw,lift,psDef,prog};
+    return{th,ccw,lift,psDef,prog,drop};
   }
   /* passing spring as root, control point and tip (unit frame) for a state: rides with the detent, tip bent along -nB on the return swing */
   function springPts(s){const a0=rot(Ps0,s.lift),am=rot({x:(Ps0.x+Pt.x)/2,y:(Ps0.y+Pt.y)/2},s.lift),tp=rot(Pt,s.lift);tp.x-=nB.x*s.psDef;tp.y-=nB.y*s.psDef;return[a0,am,tp];}
@@ -1021,8 +1027,7 @@ function makeEsc(o={}){
   /* AMIN: the least amplitude that keeps the escapement going, with 2 degrees to spare: the swing must carry the discharge jewel past the trip spring on the return
      (where the spring falls off it, thPass), unlock the wheel (thRel) and see the impulse to its end (thEnd). Below it the balance swings on without unlocking */
   let thEnd=thRel;for(let th=thRel;th<A;th+=0.001){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);if(phi<=-P){thEnd=th;break;}}
-  let ip=0;for(let i=0;i<NTB;i++)if(PS[i]>PS[ip]+1e-9)ip=i;let thPass=TH0;for(let i=0;i<NTB;i++)if(PS[i]>=PS[ip]-1e-9){thPass=TH0+i*DT;break;}
-  const AMIN=Math.max(-thRel,thEnd,-thPass)+2*D2R;
+  const AMIN=Math.max(-thRel,thEnd,-(thPass??TH0))+2*D2R;
   /* the manual's adjustment figures (Sec. VIII, Ops. 76, 84-88, 97), measured with its own definitions: printed by chronometer-working-model/tools/escapement.js, shown
      live by the model's adjuster's bench. runs: false, with why, when the escapement would not run at these settings (its other figures are then NaN where they can't be had) */
   let meas=null;
@@ -1030,12 +1035,11 @@ function makeEsc(o={}){
     const tip=a=>Math.hypot(EX+Math.cos(a),Math.sin(a));
     r.D=mm(-EX);r.shake=mm(tip(t0)-rRoll);r.dip=mm(rRoll-(-EX-1));
     let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=th(i);break;}                                  // unlocking swing: discharge jewel meets the trip spring
-    let im=0;for(let i=0;i<NTB;i++)if(LI[i]>LI[im])im=i;const off=th(im);                        // ... tip slides off the jewel, detent falls back
-    let ip=null;for(let i=0;i<NTB;i++)if(PS[i]>0&&(ip===null||PS[i]>PS[ip]+1e-9))ip=i;
-    let ipm=NTB-1;if(ip!==null)for(let i=0;i<NTB;i++)if(PS[i]>=PS[ip]-1e-9){ipm=i;break;}const poff=th(ipm);    // passing swing: trip spring falls off the jewel
-    if(a0===null)no('the discharge jewel never meets the trip spring');else if(!released)no('the detent never lifts far enough to free the wheel');if(ip===null)no('the discharge jewel never passes the trip spring on the return swing');
+    const off=thOff,poff=thPass;                                                                 // the tip slides off the jewel: detent falls back / trip spring returns
+    if(a0===null)no('the discharge jewel never meets the trip spring');else if(!released)no('the detent never lifts far enough to free the wheel');else if(off===null)no('the trip spring never slides off the discharge jewel');
+    if(poff===null)no('the discharge jewel never passes the trip spring on the return swing');
     r.contact=deg(a0);r.rel=deg(thRel);r.off=deg(off);r.poff=deg(poff);
-    r.lock=deg(a0==null?null:thRel-a0);r.letoff=deg(off-thRel);r.overall=deg(off-poff);
+    r.lock=deg(a0==null?null:thRel-a0);r.letoff=deg(off==null?null:off-thRel);r.overall=deg(off==null||poff==null?null:off-poff);
     let tIn=null;for(let t=TH0;t<1.2;t+=0.01*D2R)if(bite(t)>-1e8){tIn=t;break;}
     if(tIn===null)no('no tooth reaches the impulse jewel');
     r.drop=deg(tIn==null?null:thRel-tIn);r.ahead=deg(t0-bite(thRel));                                    // drop (Op. 97); >0: jewel is past the waiting tooth at release
@@ -1054,7 +1058,7 @@ function makeEsc(o={}){
       {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
-  return{settings:c,ES,NT,P,EX,A,AMIN,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,LI,PS,TH0,DT,bite};
+  return{settings:c,ES,NT,P,EX,A,AMIN,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};
 
@@ -2017,14 +2021,14 @@ for(const[k,p]of Object.entries(PARTS)){INFO[k]=[p.t,p.d,p.sp];if(p.c)PCOL[k]=p.
 const PLATES=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate)),DRIVE_HIDE=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate||PARTS[k].dh));
 
 /* ================= 2D escapement inset ================= */
-function drawEsc2D(ctx,w,h,p,dark){
-  const E=ESC,s=E.state(p),NT=E.NT,P=E.P,EX=E.EX,RT=1,RR=0.77;
+function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model shows it (s.held: the train stands), Ew: the escape wheel's position in teeth */
+  const E=ESC,NT=E.NT,P=E.P,EX=E.EX,RT=1,RR=0.77;
   ctx.clearRect(0,0,w,h);
   const x0=-2.5,x1=0.95,y0=-2.45,y1=1.15,sc=Math.min(w/(x1-x0),h/(y1-y0)),ox=(w-(x1-x0)*sc)/2-x0*sc,oy=(h-(y1-y0)*sc)/2+y1*sc,X=x=>ox+x*sc,Y=y=>oy-y*sc;
   const ink=dark?'#e4e8eb':'#141a20',brass=dark?'#d8a94f':'#b58325',steel=dark?'#8e98a3':'#8a939c',copper=dark?'#d49a63':'#b87840',ruby='#c3163b',paper=dark?'#1b2127':'#ffffff';
-  const prog=(s.prog%1),phi=-prog*P;
+  const phi=-(((Ew%1)+1)%1)*P;
   ctx.beginPath();let f=true;
-  for(let k=0;k<NT;k++){const a=E.t0+k*P+phi,pts=[[RR,a-0.005],[RT,a]];for(let j=1;j<=6;j++){const q=j/6;pts.push([RT-(RT-RR)*Math.pow(q,0.6),a+P*0.72*q]);}pts.push([RR,a+P*0.99]);
+  for(let k=0;k<NT;k++){const a=E.t0+k*P+phi,pts=[[RR,a-0.03*P],[RT,a]];for(let j=1;j<=5;j++){const q=j/5;pts.push([RT-(RT-RR)*Math.pow(q,0.55),a+P*0.62*q]);}pts.push([RR,a+P*0.94]);   /* the mesh's tooth (gearGeo's escape outline), tip at a */
     for(const[r,aa]of pts){const px=X(EX+r*Math.cos(aa)),py=Y(r*Math.sin(aa));f?ctx.moveTo(px,py):ctx.lineTo(px,py);f=false;}}
   ctx.closePath();ctx.fillStyle=brass;ctx.fill();ctx.fillStyle=paper;ctx.beginPath();ctx.arc(X(EX),Y(0),0.6*sc,0,TAU);ctx.fill();
   ctx.strokeStyle=brass;ctx.lineWidth=0.08*sc;for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(EX),Y(0));ctx.lineTo(X(EX+0.62*Math.cos(a)),Y(0.62*Math.sin(a)));ctx.stroke();}
@@ -2041,13 +2045,15 @@ function drawEsc2D(ctx,w,h,p,dark){
   ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(0),Y(0),3,0,TAU);ctx.fill();
   ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='left';
   ctx.fillText('escape wheel',X(-2.35),Y(1.02));ctx.fillText('detent',X(-2.4),Y(-1.2));ctx.fillText('balance rollers',X(0.1),Y(0.75));
-  const ccw=Math.sin(TAU*p)>0,th=s.th;let t;
-  if(!ccw)t=s.psDef>0.005?'Return swing: passing spring bends aside, detent untouched':'Wheel locked, balance swinging free';
-  else if(s.lift>0.005&&s.prog===0)t='Unlocking: pallet lifts the detent via the passing spring';
-  else if(s.prog>0&&s.prog<1)t=s.prog<0.25?'Unlocked: the wheel drops forward':'Impulse: a tooth drives the balance';
+  const th=s.th;let t;
+  if(s.held)t=s.lift>0.005?'Stopped: the detent lifts, the wheel can’t turn':s.ccw&&s.psDef>0.005?'Stopped: too small a swing to pass the trip spring':s.psDef>0.005?'Stopped: trip spring bends aside, detent still':'Stopped: wheel locked, balance swinging free';
+  else if(!s.ccw)t=s.psDef>0.005?'Return swing: trip spring bends aside, detent still':'Wheel locked, balance swinging free';
+  else if(s.lift>0.005&&s.prog===0)t='Unlocking: the jewel pushes trip spring and detent';
+  else if(s.prog>0&&s.prog<1)t=s.drop?'Unlocked: the wheel drops onto the impulse jewel':'Impulse: a tooth drives the balance';
   else t=s.lift>0.005?'Detent returns and locks the next tooth':'Wheel locked, balance swinging free';
   ctx.fillStyle=ink;ctx.font='600 12px "Instrument Sans",sans-serif';ctx.fillText(t,8,h-8);
   ctx.textAlign='right';ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.fillText('balance '+(Math.round(th/D2R)||0)+'°',w-8,14);
+  ctx.fillText('from the cock side, as Fig. 90',w-8,h-26);   /* the manual's side; the 3D Escapement view looks from the pillar plate, so it is mirrored */
 }
 
 /* ================= app ================= */
@@ -2443,8 +2449,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   const benchDiff=()=>BENCH.filter(([k])=>Math.abs(bset[k]-BDEF[k])>1e-9);
   $('#benchReset').addEventListener('click',()=>{Object.assign(bset,BDEF);benchApply();});
   $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('escapement');});
-  function benchDraw(s){if(!$('#benchDet').open)return;const w=bcv.clientWidth||280,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);
-    if(bcv.width!==Math.round(w*d)){bcv.width=Math.round(w*d);bcv.height=Math.round(h*d);bcv.style.height=h+'px';}const x=bcv.getContext('2d');x.setTransform(d,0,0,d,0,0);drawEsc2D(x,w,h,s.p??0,dark());}
+  function benchDraw(s,E){if(!$('#benchDet').open)return;const w=bcv.clientWidth||280,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);
+    if(bcv.width!==Math.round(w*d)){bcv.width=Math.round(w*d);bcv.height=Math.round(h*d);bcv.style.height=h+'px';}const x=bcv.getContext('2d');x.setTransform(d,0,0,d,0,0);drawEsc2D(x,w,h,s,E,dark());}
   $('#benchDet').addEventListener('toggle',()=>{if($('#benchDet').open)benchShow();});
   let msgT=0;const stopMsg=t=>{stopOut.innerHTML=t;msgT=performance.now()+4000;};
   function stopShow(now,run){if(now<msgT||now-lastSO<250)return;lastSO=now;const w=stopWhy(run),a=H.amp/D2R;
@@ -2558,7 +2564,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(insetKind==='power'){const el=$('#pw');if(el){const I=R.fs.I(n),pull=R.fs.rf(0)/R.fs.rf(n);el.innerHTML=`Barrel has turned <b>${I.toFixed(2)}</b> of ${R.fs.IN.toFixed(2)} turns. Spring pull <b>${Math.round(pull*100)}%</b> of full. ${(RUN_H-hrs).toFixed(1)} h of running left.`;}}
     else if(insetKind==='train'){const P2=ESC.P,esc=E*P2,v={ew:esc/TAU,fw:esc/ESC_PER.fw/TAU,tw:esc/ESC_PER.tw/TAU,cw:esc/ESC_PER.cw/TAU,gw:esc/ESC_PER.gw/TAU};inset.querySelectorAll('td[data-k]').forEach(td=>td.textContent=(((v[td.dataset.k]%1)+1)%1*360).toFixed(td.dataset.k==='gw'?2:1)+'°');}
     else if(insetCv){const ctx=insetCtx,w=insetCv._w,h=insetCv._h;
-      if(insetKind==='esc'){drawEsc2D(ctx,w,h,s.p??0,dk);}
+      if(insetKind==='esc'){drawEsc2D(ctx,w,h,s,E,dk);}
       else if(insetKind==='fusee'){ctx.clearRect(0,0,w,h);const L0=34,R0=10,T0=12,B0=28,pw=w-L0-R0,ph=h-T0-B0,X=x=>L0+x/RUN_H*pw,Y=y=>T0+(1-y/1.1)*ph;
         ctx.font='11px "Instrument Sans",sans-serif';ctx.strokeStyle=dk?'#2a323a':'#dde1e4';ctx.fillStyle=dk?'#9aa4ad':'#5b656e';ctx.lineWidth=1;
         for(const x of[0,15,30,45,60]){ctx.beginPath();ctx.moveTo(X(x),T0);ctx.lineTo(X(x),T0+ph);ctx.stroke();ctx.textAlign='center';ctx.fillText(x+' h',X(x),h-12);}
@@ -2672,8 +2678,7 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(dtS>0&&locked&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}   /* the train stops at a locked beat */
       else{if(dtS>0){tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}q=at(tSim);}
         E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
-    if(H.held){H.bph+=dtS*rateK/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;
-      if(H.amp<ESC.AMIN){s.lift*=clamp((H.amp/D2R-20)/5,0,1);}   /* a swing too small to reach the trip spring leaves the detent alone */
+    if(H.held){H.bph+=dtS*rateK/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
       const lockedP=s.prog<=0||s.prog>=1;
       if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
@@ -2704,7 +2709,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(!figOn&&onScreen&&!still){paint();renders++;lastDraw=now;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
-    if(!still){drawInset(E,s,n);benchDraw(s);}
+    if(!still){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */

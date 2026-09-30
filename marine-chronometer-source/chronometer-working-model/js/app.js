@@ -57,14 +57,14 @@ for(const[k,p]of Object.entries(PARTS)){INFO[k]=[p.t,p.d,p.sp];if(p.c)PCOL[k]=p.
 const PLATES=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate)),DRIVE_HIDE=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate||PARTS[k].dh));
 
 /* ================= 2D escapement inset ================= */
-function drawEsc2D(ctx,w,h,p,dark){
-  const E=ESC,s=E.state(p),NT=E.NT,P=E.P,EX=E.EX,RT=1,RR=0.77;
+function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model shows it (s.held: the train stands), Ew: the escape wheel's position in teeth */
+  const E=ESC,NT=E.NT,P=E.P,EX=E.EX,RT=1,RR=0.77;
   ctx.clearRect(0,0,w,h);
   const x0=-2.5,x1=0.95,y0=-2.45,y1=1.15,sc=Math.min(w/(x1-x0),h/(y1-y0)),ox=(w-(x1-x0)*sc)/2-x0*sc,oy=(h-(y1-y0)*sc)/2+y1*sc,X=x=>ox+x*sc,Y=y=>oy-y*sc;
   const ink=dark?'#e4e8eb':'#141a20',brass=dark?'#d8a94f':'#b58325',steel=dark?'#8e98a3':'#8a939c',copper=dark?'#d49a63':'#b87840',ruby='#c3163b',paper=dark?'#1b2127':'#ffffff';
-  const prog=(s.prog%1),phi=-prog*P;
+  const phi=-(((Ew%1)+1)%1)*P;
   ctx.beginPath();let f=true;
-  for(let k=0;k<NT;k++){const a=E.t0+k*P+phi,pts=[[RR,a-0.005],[RT,a]];for(let j=1;j<=6;j++){const q=j/6;pts.push([RT-(RT-RR)*Math.pow(q,0.6),a+P*0.72*q]);}pts.push([RR,a+P*0.99]);
+  for(let k=0;k<NT;k++){const a=E.t0+k*P+phi,pts=[[RR,a-0.03*P],[RT,a]];for(let j=1;j<=5;j++){const q=j/5;pts.push([RT-(RT-RR)*Math.pow(q,0.55),a+P*0.62*q]);}pts.push([RR,a+P*0.94]);   /* the mesh's tooth (gearGeo's escape outline), tip at a */
     for(const[r,aa]of pts){const px=X(EX+r*Math.cos(aa)),py=Y(r*Math.sin(aa));f?ctx.moveTo(px,py):ctx.lineTo(px,py);f=false;}}
   ctx.closePath();ctx.fillStyle=brass;ctx.fill();ctx.fillStyle=paper;ctx.beginPath();ctx.arc(X(EX),Y(0),0.6*sc,0,TAU);ctx.fill();
   ctx.strokeStyle=brass;ctx.lineWidth=0.08*sc;for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(EX),Y(0));ctx.lineTo(X(EX+0.62*Math.cos(a)),Y(0.62*Math.sin(a)));ctx.stroke();}
@@ -81,13 +81,15 @@ function drawEsc2D(ctx,w,h,p,dark){
   ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(0),Y(0),3,0,TAU);ctx.fill();
   ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='left';
   ctx.fillText('escape wheel',X(-2.35),Y(1.02));ctx.fillText('detent',X(-2.4),Y(-1.2));ctx.fillText('balance rollers',X(0.1),Y(0.75));
-  const ccw=Math.sin(TAU*p)>0,th=s.th;let t;
-  if(!ccw)t=s.psDef>0.005?'Return swing: passing spring bends aside, detent untouched':'Wheel locked, balance swinging free';
-  else if(s.lift>0.005&&s.prog===0)t='Unlocking: pallet lifts the detent via the passing spring';
-  else if(s.prog>0&&s.prog<1)t=s.prog<0.25?'Unlocked: the wheel drops forward':'Impulse: a tooth drives the balance';
+  const th=s.th;let t;
+  if(s.held)t=s.lift>0.005?'Stopped: the detent lifts, the wheel can’t turn':s.ccw&&s.psDef>0.005?'Stopped: too small a swing to pass the trip spring':s.psDef>0.005?'Stopped: trip spring bends aside, detent still':'Stopped: wheel locked, balance swinging free';
+  else if(!s.ccw)t=s.psDef>0.005?'Return swing: trip spring bends aside, detent still':'Wheel locked, balance swinging free';
+  else if(s.lift>0.005&&s.prog===0)t='Unlocking: the jewel pushes trip spring and detent';
+  else if(s.prog>0&&s.prog<1)t=s.drop?'Unlocked: the wheel drops onto the impulse jewel':'Impulse: a tooth drives the balance';
   else t=s.lift>0.005?'Detent returns and locks the next tooth':'Wheel locked, balance swinging free';
   ctx.fillStyle=ink;ctx.font='600 12px "Instrument Sans",sans-serif';ctx.fillText(t,8,h-8);
   ctx.textAlign='right';ctx.fillStyle=dark?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.fillText('balance '+(Math.round(th/D2R)||0)+'°',w-8,14);
+  ctx.fillText('from the cock side, as Fig. 90',w-8,h-26);   /* the manual's side; the 3D Escapement view looks from the pillar plate, so it is mirrored */
 }
 
 /* ================= app ================= */
@@ -483,8 +485,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   const benchDiff=()=>BENCH.filter(([k])=>Math.abs(bset[k]-BDEF[k])>1e-9);
   $('#benchReset').addEventListener('click',()=>{Object.assign(bset,BDEF);benchApply();});
   $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('escapement');});
-  function benchDraw(s){if(!$('#benchDet').open)return;const w=bcv.clientWidth||280,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);
-    if(bcv.width!==Math.round(w*d)){bcv.width=Math.round(w*d);bcv.height=Math.round(h*d);bcv.style.height=h+'px';}const x=bcv.getContext('2d');x.setTransform(d,0,0,d,0,0);drawEsc2D(x,w,h,s.p??0,dark());}
+  function benchDraw(s,E){if(!$('#benchDet').open)return;const w=bcv.clientWidth||280,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);
+    if(bcv.width!==Math.round(w*d)){bcv.width=Math.round(w*d);bcv.height=Math.round(h*d);bcv.style.height=h+'px';}const x=bcv.getContext('2d');x.setTransform(d,0,0,d,0,0);drawEsc2D(x,w,h,s,E,dark());}
   $('#benchDet').addEventListener('toggle',()=>{if($('#benchDet').open)benchShow();});
   let msgT=0;const stopMsg=t=>{stopOut.innerHTML=t;msgT=performance.now()+4000;};
   function stopShow(now,run){if(now<msgT||now-lastSO<250)return;lastSO=now;const w=stopWhy(run),a=H.amp/D2R;
@@ -598,7 +600,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(insetKind==='power'){const el=$('#pw');if(el){const I=R.fs.I(n),pull=R.fs.rf(0)/R.fs.rf(n);el.innerHTML=`Barrel has turned <b>${I.toFixed(2)}</b> of ${R.fs.IN.toFixed(2)} turns. Spring pull <b>${Math.round(pull*100)}%</b> of full. ${(RUN_H-hrs).toFixed(1)} h of running left.`;}}
     else if(insetKind==='train'){const P2=ESC.P,esc=E*P2,v={ew:esc/TAU,fw:esc/ESC_PER.fw/TAU,tw:esc/ESC_PER.tw/TAU,cw:esc/ESC_PER.cw/TAU,gw:esc/ESC_PER.gw/TAU};inset.querySelectorAll('td[data-k]').forEach(td=>td.textContent=(((v[td.dataset.k]%1)+1)%1*360).toFixed(td.dataset.k==='gw'?2:1)+'°');}
     else if(insetCv){const ctx=insetCtx,w=insetCv._w,h=insetCv._h;
-      if(insetKind==='esc'){drawEsc2D(ctx,w,h,s.p??0,dk);}
+      if(insetKind==='esc'){drawEsc2D(ctx,w,h,s,E,dk);}
       else if(insetKind==='fusee'){ctx.clearRect(0,0,w,h);const L0=34,R0=10,T0=12,B0=28,pw=w-L0-R0,ph=h-T0-B0,X=x=>L0+x/RUN_H*pw,Y=y=>T0+(1-y/1.1)*ph;
         ctx.font='11px "Instrument Sans",sans-serif';ctx.strokeStyle=dk?'#2a323a':'#dde1e4';ctx.fillStyle=dk?'#9aa4ad':'#5b656e';ctx.lineWidth=1;
         for(const x of[0,15,30,45,60]){ctx.beginPath();ctx.moveTo(X(x),T0);ctx.lineTo(X(x),T0+ph);ctx.stroke();ctx.textAlign='center';ctx.fillText(x+' h',X(x),h-12);}
@@ -712,8 +714,7 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(dtS>0&&locked&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}   /* the train stops at a locked beat */
       else{if(dtS>0){tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}q=at(tSim);}
         E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
-    if(H.held){H.bph+=dtS*rateK/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;
-      if(H.amp<ESC.AMIN){s.lift*=clamp((H.amp/D2R-20)/5,0,1);}   /* a swing too small to reach the trip spring leaves the detent alone */
+    if(H.held){H.bph+=dtS*rateK/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
       const lockedP=s.prog<=0||s.prog>=1;
       if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
@@ -744,7 +745,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(!figOn&&onScreen&&!still){paint();renders++;lastDraw=now;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
-    if(!still){drawInset(E,s,n);benchDraw(s);}
+    if(!still){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
