@@ -8,7 +8,7 @@
  const EXTRA=[];mv.traverse(o=>{if(!o.isMesh||!vis(o))return;const g=o.geometry;if(!g.attributes||!g.attributes.position||g.attributes.position.count<3)return;
    if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<o.count;i++){o.getMatrixAt(i,im);EXTRA.push({o,mat:new THREE.Matrix4().multiplyMatrices(o.matrixWorld,im),tag:'link'+(i%2)});}return;}
    const m=o.userData.mat0||o.material;if(g.type==='TubeGeometry'){items.push({o,mat:o.matrixWorld,tube:1});return;}
-   if(o.userData.noCap&&g.type==='CylinderGeometry'&&g.parameters.openEnded){const q=g.parameters;items.push({o,mat:o.matrixWorld,geo:new THREE.CylinderGeometry(q.radiusTop,q.radiusBottom,q.height,q.radialSegments),tag2:'(drum)'});return;}   /* an open drum (the barrel wall) as the solid it encloses */
+   if(o.userData.barrelWall){const q=g.parameters.options,R=o.userData.barrelWall;items.push({o,mat:o.matrixWorld,geo:new THREE.CylinderGeometry(R,R,q.depth,72),tag2:'(drum)'});return;}   /* the barrel wall as the solid it encloses */
    if(m.transparent||m.side===THREE.DoubleSide||o.userData.noCap||o.userData.noShadow)return;items.push({o,mat:o.matrixWorld});});
  for(const e of EXTRA)items.push(e);
  const M4=new THREE.Matrix4(),v=new THREE.Vector3();

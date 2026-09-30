@@ -11,7 +11,7 @@
  const inB=o=>{while(o){if(o===bz)return true;o=o.parent;}return false;};
  const env=[];bz.traverse(o=>{if(!o.isMesh)return;M4.multiplyMatrices(inv,o.matrixWorld);const p=o.geometry.attributes.position;let r=0,y0=1e9,y1=-1e9;
    for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).applyMatrix4(M4);r=Math.max(r,Math.hypot(v.x,v.z));y0=Math.min(y0,v.y);y1=Math.max(y1,v.y);}
-   const q=o.geometry.parameters||{},nm=q.openEnded?'wall':o.geometry.type.replace('Geometry','')+' r'+r.toFixed(1);if(!env.some(e=>e.name===nm&&Math.abs(e.y0-y0)<1e-6&&Math.abs(e.y1-y1)<1e-6))env.push({r,y0,y1,name:nm});});   /* one per shape: the cap screws sweep the same ring */
+   const nm=o.userData.barrelWall?'wall':o.geometry.type.replace('Geometry','')+' r'+r.toFixed(1);if(!env.some(e=>e.name===nm&&Math.abs(e.y0-y0)<1e-6&&Math.abs(e.y1-y1)<1e-6))env.push({r,y0,y1,name:nm});});   /* one per shape: the cap screws sweep the same ring */
  const R=Math.max(...env.map(e=>e.r)),Y0=Math.min(...env.map(e=>e.y0)),Y1=Math.max(...env.map(e=>e.y1)),MG=2.5;
  /* signed distance to one piece (exact: outside, the distance; inside, minus the depth to the nearest face) and its gradient; it is convex */
  const sdf=(e,x,y,z)=>{const r=Math.hypot(x,z),ux=r>1e-9?x/r:1,uz=r>1e-9?z/r:0,dr=r-e.r,dt=e.y0-y,db=y-e.y1,dy=Math.max(dt,db),sy=dt>db?-1:1;

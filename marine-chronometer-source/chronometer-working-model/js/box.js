@@ -15,7 +15,7 @@ function buildBox(M){
   const brassCorner=(p,x,y,z,h,cz=0)=>{const sx=Math.sign(x),sz=Math.sign(z-cz);mesh(p,new THREE.BoxGeometry(12,h,1.2),M.brass,x-sx*5.4,y,z+sz*0.6);mesh(p,new THREE.BoxGeometry(1.2,h,12),M.brass,x+sx*0.6,y,z-sz*5.4);};
   for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,yF+H0/2,sz*W,H0);}
   for(const sx of[1,-1]){const hp=mesh(root,new THREE.BoxGeometry(1.2,22,52),M.brass,sx*(W+0.6),-38,0);
-    const hd=new THREE.Mesh(new THREE.TorusGeometry(20,2.2,10,32,Math.PI),M.brass);hd.rotation.set(Math.PI,Math.PI/2,0);hd.position.set(sx*(W+3),-34,0);root.add(hd);}
+    const hd=new THREE.Mesh(closeGeo(new THREE.TorusGeometry(20,2.2,10,32,Math.PI)),M.brass);hd.rotation.set(Math.PI,Math.PI/2,0);hd.position.set(sx*(W+3),-34,0);root.add(hd);}
   /* winding key standing in a socket on a corner block at the back right (Fig. 1), low enough for the lids to close */
   const KX=W-T-12;wood(24,59,24,KX,yF+T+30.5,-KX,root,M.woodEdge);   /* stands on the felt */mesh(root,cylY(4.2,4,20),M.brass2,KX,yF+T+62,-KX);
   const key=new THREE.Group();key.userData.partName='key';key.position.set(KX,-26,-KX);root.add(key);key.rotation.y=Math.PI/4;
@@ -35,8 +35,8 @@ function buildBox(M){
   const ring=new THREE.Group();ring.userData.partName='ring';ring.position.y=RY;root.add(ring);
   /* the band, with a slot at the front right (Fig. 106) that the latch lever passes through to the case: the band round the rest of the ring, the band above and
      below the slot, and the slot's two side walls */
-  { const SL=0.045,pr=(a,b)=>[V2(RI,a),V2(RO,a),V2(RO,b),V2(RI,b),V2(RI,a)];mesh(ring,new THREE.LatheGeometry(pr(-7,7),158,LATCH_A+SL,TAU-2*SL),M.brass);
-    for(const[a,b]of[[-7,-2.2],[2.2,7]])mesh(ring,new THREE.LatheGeometry(pr(a,b),2,LATCH_A-SL,2*SL),M.brass);
+  { const SL=0.045,pr=(a,b)=>[V2(RI,a),V2(RO,a),V2(RO,b),V2(RI,b),V2(RI,a)];mesh(ring,closeGeo(new THREE.LatheGeometry(pr(-7,7),158,LATCH_A+SL,TAU-2*SL)),M.brass);
+    for(const[a,b]of[[-7,-2.2],[2.2,7]])mesh(ring,closeGeo(new THREE.LatheGeometry(pr(a,b),2,LATCH_A-SL,2*SL)),M.brass);
     for(const s of[1,-1]){const f=LATCH_A+s*SL,w=mesh(ring,new THREE.BoxGeometry(RO-RI,4.4,0.02),M.brass,(RI+RO)/2*Math.sin(f),0,(RI+RO)/2*Math.cos(f));w.rotation.y=f-Math.PI/2;} }
   const strap=(ax,s)=>{const b=mesh(ring,ax==='x'?new THREE.BoxGeometry(1.2,16,22):new THREE.BoxGeometry(22,16,1.2),M.brass2,ax==='x'?s*(RO+0.6):0,0,ax==='z'?s*(RO+0.6):0);
     for(const t of[-7.5,7.5])sHead(ring,ax,s,RO+1.2,1.3,0.7,-4,t);};
@@ -57,20 +57,21 @@ function buildBox(M){
     cylBetween(lv,1.2,0.7,5.5,M.brass2,6,0);const kn=new THREE.Group();kn.position.set(6,5.5,0);kn.rotation.x=-Math.PI/2;lv.add(kn);knurl(kn,'z',1,0,2.6,2.2);   /* knob on a post, its axis upright */ }
   /* case (bowl) pivoted in the ring at 6 and 12: support brackets on the case, pivot screws through the ring, each with a knurled lock nut (Figs. 94, 106, 107) */
   const bowl=new THREE.Group();bowl.userData.partName='bowl';ring.add(bowl);
-  for(const sz of[1,-1]){mesh(bowl,new THREE.BoxGeometry(14,12,8),M.brass2,0,-1,sz*67.5);for(const t of[-4.5,4.5])sHead(bowl,'z',sz,71.5,1.2,0.6,-4.5,t);
+  for(const sz of[1,-1]){mesh(bowl,new THREE.BoxGeometry(14,12,6.5),M.brass2,0,-1,sz*68.25);for(const t of[-4.5,4.5])sHead(bowl,'z',sz,71.5,1.2,0.6,-4.5,t);
     const sh=mesh(ring,cylY(1.6,RO-69,12),M.steel,0,0,sz*(RO+69)/2);sh.rotation.x=Math.PI/2;}
   strap('z',1);boss('z',1,RO+1.2,RO+3.2,3.2);{const g=new THREE.Group();ring.add(g);knurl(g,'z',1,RO+3.2,5,2.5);}sHead(ring,'z',1,RO+5.7,3.4,2,0);
   boss('z',-1,RO,RO+2.4,3.2);{const g=new THREE.Group();ring.add(g);knurl(g,'z',-1,RO+2.4,5,2.5);}sHead(ring,'z',-1,RO+4.9,3.4,2,0);
   /* latch keeper on the case, facing the latch through the ring's slot: a back on the wall and two cheeks, the lever's tip between them when latched */
   { const kp=new THREE.Group();kp.position.set(0,0,0);kp.rotation.y=LATCH_A-Math.PI/2;bowl.add(kp);
-    mesh(kp,new THREE.BoxGeometry(1.1,4,6),M.brass2,64.55,0,0);for(const s of[1,-1])mesh(kp,new THREE.BoxGeometry(2,4,1.3),M.brass2,66.1,0,s*2.35); }
-  const bp=[V2(0.01,-66)];for(let i=0;i<=12;i++){const a=i/12*Math.PI/2;bp.push(V2(44+20*Math.sin(a),-46-20*Math.cos(a)));}bp.push(V2(64,6),V2(66.5,6),V2(66.5,8.5),V2(62,8.5));
-  const KH=2.3,fu=L.Fu,BT=1;   /* key hole through the flat bottom at the fusee axis (Fig. 7). The wall is a zero-thickness sheet; the bottom is BT thick (inside face at -66, outside at -66-BT, chamfered into the wall),
-     so the shield plate under it sits a full millimetre behind the floor seen from inside: at 0.05 mm its outline showed through the floor (depth precision) */
-  const botG=(r,hz)=>{const bs=new THREE.Shape();bs.absarc(0,0,r,0,TAU,false);const h=new THREE.Path();h.absarc(fu[0],hz,KH,0,TAU,true);bs.holes.push(h);return new THREE.ShapeGeometry(bs,60);};   /* 60 gives the rim 120 points, the lathe's own vertices: other counts leave slivers open along the seam */
-  mesh(bowl,botG(44,-fu[1]).rotateX(-Math.PI/2),M.brass,0,-66,0);mesh(bowl,botG(43.2,fu[1]).rotateX(Math.PI/2),M.brass,0,-66-BT,0);
-  mesh(bowl,new THREE.LatheGeometry([V2(KH,-66),V2(KH,-66-BT)],32),M.brass,fu[0],0,fu[1]);   /* the key hole's wall, facing the hole */
-  const bp1=bp.slice(1);mesh(bowl,new THREE.LatheGeometry([V2(43.2,-66-BT),...bp1],120),M.brass);mesh(bowl,new THREE.LatheGeometry(bp1.slice().reverse(),120),M.brass); /* inner face is its own front-facing shell: a back face gets its shadow normalBias pushed the wrong way (speckled floor) */
+    mesh(kp,new THREE.BoxGeometry(0.6,4,6),M.brass2,65.3,0,0);for(const s of[1,-1])mesh(kp,new THREE.BoxGeometry(2,4,1.3),M.brass2,66.1,0,s*2.35); }
+  const KH=2.3,fu=L.Fu,BT=1,WT=1;   /* key hole through the flat bottom at the fusee axis (Fig. 7). The bottom is BT thick (inside face at -66, outside at -66-BT), the wall WT, outward of its
+     inside face; both solids. The shield plate under the bottom sits a full millimetre behind the floor seen from inside: at 0.05 mm its outline showed through the floor (depth precision) */
+  { const arc=(r,a0,a1)=>{const o=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;o.push(V2(44+r*Math.sin(a),-46-r*Math.cos(a)));}return o;};
+    /* the wall's section, one closed outline: inside face up from the floor's edge, the lip at the rim, the flange, the outside face down to the bottom's outside face */
+    const pr=[...arc(20,0,Math.PI/2),V2(64,7),V2(62,7),V2(62,8.5),V2(66.5,8.5),V2(66.5,6),V2(64+WT,6),...arc(20+WT,Math.PI/2,0),V2(44,-66)];
+    mesh(bowl,new THREE.LatheGeometry(pr.reverse(),120),M.brass);   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
+    const bs=new THREE.Shape();bs.absarc(0,0,44,0,TAU,false);const h=new THREE.Path();h.absarc(fu[0],-fu[1],KH,0,TAU,true);bs.holes.push(h);
+    const fl=extrude(bs,{depth:BT,bevelEnabled:false,curveSegments:60});fl.rotateX(-Math.PI/2);mesh(bowl,fl,M.brass,0,-66-BT,0); }   /* 60: the rim's 120 points, the lathe's own */
   /* winding-hole shield plate (the manual's case description and winding instructions, and its parts list: plate, shoulder screw, stop screw, return spring; its shape is estimated): a plate turning on a shoulder screw beside the hole.
      At rest its solid part covers the case's hole; turned clockwise (seen from below) through 0.75 rad its own hole lines up with it. The stop screw runs in an arc slot in the plate, whose ends set both positions,
      and a torsion spring on the shoulder (one leg on the stop screw, one on a pin in the plate) turns it back. Everything hangs 0.05 mm clear of the bottom's outside face. shield.rotation.y = 0 open, SH_REST closed */
@@ -94,13 +95,13 @@ function buildBox(M){
   {const lg=mesh(bowl,cylY(0.2,1.5,8),M.steel,pv[0]+3.05*Math.cos(ah),YB-0.8,pv[1]+3.05*Math.sin(ah));lg.rotation.set(0,-ah,Math.PI/2);}   /* fixed leg, bearing on the stop screw */
   shield.rotation.y=SH_REST;
   const bz=mesh(bowl,new THREE.TorusGeometry(63.5,2.6,14,128),M.brass,0,9.5,0);bz.rotation.x=Math.PI/2;
-  const gl=mesh(bowl,new THREE.CircleGeometry(62,96).rotateX(-Math.PI/2),M.glass,0,10.5,0);gl.renderOrder=5;
+  const gl=mesh(bowl,new THREE.CylinderGeometry(62,62,0.8,96),M.glass,0,10.5,0);gl.renderOrder=5;
   /* lids hinged at the back */
   /* glass lid hinged to the back of the box; the outer lid hinged to the back-top edge of the glass lid, so it opens on its own and never swings through the glass lid */
   const mid=new THREE.Group(),top=new THREE.Group();mid.userData.partName='lidGlass';top.userData.partName='lid';mid.position.set(0,0,-W);top.position.set(0,38,0);root.add(mid);mid.add(top);
   const lidBody=(p,y0,h,glass)=>{
     if(glass){const fw=26;wood(2*W,h,fw,0,y0+h/2,2*W-fw/2,p);wood(2*W,h,fw,0,y0+h/2,fw/2,p);wood(fw,h,2*W-2*fw,W-fw/2,y0+h/2,W,p);wood(fw,h,2*W-2*fw,-W+fw/2,y0+h/2,W,p);
-      const g=mesh(p,new THREE.PlaneGeometry(2*W-2*fw,2*W-2*fw).rotateX(-Math.PI/2),M.glass,0,y0+h-3,W);g.renderOrder=6;}
+      const g=mesh(p,new THREE.BoxGeometry(2*W-2*fw,0.8,2*W-2*fw),M.glass,0,y0+h-3,W);g.renderOrder=6;}
     else{wood(2*W,h,2*W,0,y0+h/2,W,p);mesh(p,new THREE.BoxGeometry(70,0.8,26),M.brass,0,y0+h+0.4,W+50);mesh(p,new THREE.BoxGeometry(14,18,1.2),M.brass,0,y0+h/2,2*W+0.6);}
     for(const sx of[1,-1])for(const sz of[0,2*W])brassCorner(p,sx*W,y0+h/2,sz,h,W);
   };
