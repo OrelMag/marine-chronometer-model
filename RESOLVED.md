@@ -260,7 +260,7 @@ Contents:
   `audit.py` listed both as z-fights), and the caps' flanges passed through it.
   The wall now runs between the caps' inner faces, and `barrel-clearance.js`
   finds the caps by their inner faces on its ends. Keep: no face of the wall in
-  a cap's outer face. `HASH`
+  a cap's outer face. `0538794`
 
 ## Plates, bridges, screws and arbors
 
