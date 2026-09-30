@@ -1122,12 +1122,13 @@ function buildMovement(M){
   /* screw: a fillister head seated at y (in p's frame), the head toward -y, and a threaded shank len mm long toward +y, into the parts it holds (Figs. 108-110 draw
      every screw with its shank). Thread diameter half the head's (sR); the parts it passes through have clearance holes (hC) and the part it screws into a tapped hole (hT).
      Head, shank and slot are one group, which the Exploded view lifts out of its holes along the screw's axis, as the manual's exploded views draw them (SCREWS) */
-  const SCREWS=[];
+  const SCREWS=[],loose=(g,lift)=>{g.userData.y0=g.position.y;g.userData.lift=lift;SCREWS.push(g);return g;};   /* loose: g moves on its own in the Exploded view, lift mm toward its frame's -y past its part */
+  const headOn=(g,p,q)=>{g.userData.lift+=parts[p].userData.off-parts[q].userData.off;return g;};   /* a screw of part p put in through part q: it leaves with q, then lifts out of it */
   const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r))=>{const c=Math.min(0.35,r*0.14),pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
     if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt));pr.push(V2(rs,0),V2(rs,len-n*pt-d));   /* rings of thread (drawn as turned grooves, not a helix), a chamfered tip */
       for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));}
     else pr.push(V2(0,0));
-    const g=new THREE.Group();g.position.set(x,y,z);p.add(g);g.userData.y0=y;g.userData.lift=len+h+1.5;SCREWS.push(g);
+    const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);
     const hd=mesh(g,new THREE.LatheGeometry(pr,28),M.steel);hd.userData.screw=r;const sl=mesh(g,new THREE.BoxGeometry(r*2.02,Math.min(0.55,h*0.45),Math.max(0.35,r*0.2)),M.steelD,0,-h+Math.min(0.55,h*0.45)/2-0.02,0);sl.rotation.y=(x*7+z*3)%3;return g;};
   const ring=ringGeo;R.ring=ring;
   const jewel=(p,x,z,y,cap)=>{mesh(p,ring(2.1,1.0,0.5),M.gilt,x,y-0.25,z);mesh(p,ring(0.95,0.57,0.25),M.ruby,x,y-0.6,z);   /* bar-hole jewel: setting and pierced stone */
@@ -1264,7 +1265,7 @@ function buildMovement(M){
   R.udW=arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:4,collet:0,bore:0.55}});mesh(R.udW,ring(1.6,0.55,2.0),M.brass2,0,1.5,0);mesh(R.udW,ring(0.9,0.55,2.7),M.steel,0,2.85,0);cylBetween(R.udW,0.55,4.2,4.6,M.steel);   /* its pipe carries the hand */
   R.fp=arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:1.5,th:2,bore:0.56}});
   /* ---------- fusee wheel (TRAIN.fu : centre pinion TRAIN.cp, module 0.417) with its maintaining work ---------- */
-  const gw=part('gw',-8);
+  const gw=part('gw',-14);
   R.gw=arbor(gw,M,...L.Fu,{wheel:{n:TRAIN.fu,m:MOD.fusee,y:-6.5,th:1.2,spokes:0,mat:M.copper,collet:0,bore:1.05}});
   mesh(R.gw,ring(17.3,15.2,1.8),M.copper,0,-8.0,0);mesh(R.gw,ring(15.2,1.05,0.5),M.copper,0,-7.35,0);
   /* sustaining spring: fixed to the fusee wheel by the pin at XZ -0.35 and curving back (against the running direction) to a free end on which the
@@ -1272,11 +1273,11 @@ function buildMovement(M){
   const sspGeo=e=>{const s=new THREE.Shape(),r0=13.2,r1=13.9;s.absarc(0,0,r1,0.35,-e,true);s.absarc(0,0,r0,-e,0.35,false);
     const g=extrude(s,{depth:1.13,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);return g;};   /* 0.02 under the wheel's web */
   /* the sustaining spring (42016) and its fixing pin: its own part, turning with the fusee wheel, in whose recess it lies (Figs. 28, 71) */
-  const ssP=part('sspring',-10);R.ssg=new THREE.Group();R.ssg.position.set(L.Fu[0],0,L.Fu[1]);ssP.add(R.ssg);
+  const ssP=part('sspring',-18);R.ssg=new THREE.Group();R.ssg.position.set(L.Fu[0],0,L.Fu[1]);ssP.add(R.ssg);
   const SSP_PIN=4.05;R.sspring=mesh(R.ssg,sspGeo(SSP_PIN-0.031),M.blued,0,-8.75,0);
   mesh(R.ssg,cylY(0.4,1.5,10),M.steel,13.55*Math.cos(0.35),-8.1,-13.55*Math.sin(0.35));
   /* sustaining ratchet wheel (42009): free on the fusee arbor, open in the middle round the fusee's winding ratchet and its screws (Fig. 28) */
-  const srP=part('sratchet',-12);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
+  const srP=part('sratchet',-22);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
   const WPS=[0,1].map(k=>{const a=k*Math.PI+0.4;return[[12.9*Math.cos(a+0.85),12.9*Math.sin(a+0.85)],[12.5*Math.cos(a+0.6),12.5*Math.sin(a+0.6)]];});   /* the winding pawl springs' screws */
   mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,flip:true,bore:5,holes:WPS.flat().map(q=>hT(...q,0.4))}),M.steel,0,-9.45,0);   /* steep faces lead against the running direction, so the sustaining pawl holds it */
   mesh(R.sr,cylY(0.4,1.45,10),M.steel,13.55*Math.cos(SSP_PIN),-8.375,13.55*Math.sin(SSP_PIN));   /* pin pressing the sustaining spring's free end */
@@ -1290,7 +1291,7 @@ function buildMovement(M){
     const pol=(r,t)=>[r*Math.cos(a+t),r*Math.sin(a+t)],r0=pol(12.9,0.85),r1=pol(12.5,0.6);pw.userData.sp=[pol(13.0,0.97),r0,r1];
     pw.userData.spr=mesh(R.sr,wpsGeo(pw,pw.userData.th0),M.blued,0,-10.1,0);pw.userData.sprTh=pw.userData.th0;
     mesh(R.sr,stadium(r0,r1,1.0,0.3,[r0,r1].map(q=>hC(...q,0.4))),M.blued,0,-10.1,0);for(const q of[r0,r1])screw(R.sr,...q,-10.1,0.4,0.2,0.3+0.5);}   /* the spring's foot and its two screws (42012) */
-  const sp=part('spawl',-12);cylBetween(sp,0.7,TB_U-0.7,y0+2,M.steel,...SPv);
+  const sp=part('spawl',-22);cylBetween(sp,0.7,TB_U-0.7,y0+2,M.steel,...SPv);
   /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2), trailing the pivot so the teeth can only pass it one way */
   const SPt=[L.Fu[0]+16.35*Math.cos(54*D2R),L.Fu[1]+16.35*Math.sin(54*D2R)];
   R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2,0.6),M.steel,0,0,0);
@@ -1302,27 +1303,27 @@ function buildMovement(M){
   cylBetween(tb,0.35,TB_U-0.6,-19.25,M.steel,SPv[0]-0.3,SPv[1]+3.9);
   /* ---------- going train (modules 0.29 / 0.30 / 0.3113; counts in TRAIN) ---------- */
   const m=MOD.train;
-  const cw=part('cw',-26);R.cw=arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.2,th:1.0,spokes:5},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.5,th:2.6},ar:[TB_T-0.1,4.8],r:0.75});
-  const tw=part('tw',-34);R.tw=arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-8.6,th:0.9,spokes:4},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.2,th:1.6},ar:[TB_T-0.1,1.2]});
-  const fw=part('fw',-42);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-7.46,th:0.9,spokes:4,cside:1},pin:{n:TRAIN.fp,m,y:-8.6,th:1.7},ar:[LB_T+0.7,4.6]});
-  const E=ESC,ew=part('escW',-52,true);
+  const cw=part('cw',-8);R.cw=arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.2,th:1.0,spokes:5},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.5,th:2.6},ar:[TB_T-0.1,4.8],r:0.75});
+  const tw=part('tw',-42);R.tw=arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-8.6,th:0.9,spokes:4},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.2,th:1.6},ar:[TB_T-0.1,1.2]});
+  const fw=part('fw',-30);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-7.46,th:0.9,spokes:4,cside:1},pin:{n:TRAIN.fp,m,y:-8.6,th:1.7},ar:[LB_T+0.7,4.6]});
+  const E=ESC,ew=part('escW',-41,true);
   R.esc=arbor(ew,M,E.EX*ES,0,{pin:{n:TRAIN.ep,m:MOD.fourth,y:-6.96,th:2.0},ar:[TB_T-0.86,-0.05]});   /* pinion runs from the fourth wheel toward the plate: centred on the wheel, its top end reached the third wheel's teeth */
   R.esc.userData.wheel=escapeWheel(R.esc,M,ES,EY);
   /* ---------- balance lower bridge: lower balance cap jewel and the fourth wheel upper setting ---------- */
   /* a lobe for the train-blocking screw (42247, Sec. II, Fig. 110), rising in a column r 1.9 to the train bridge's underside, as the section in Fig. 110 draws it: bored for the head (r 0.95)
      down to the seat 0.6 into the bridge's top, tapped below it through the bridge. The bridge is drawn as two layers, the top one cut for the bore; the column stops 1.6 short of the fourth wheel's upper setting */
-  const lb=part('lowerBridge',-46),LBpoly=subtractCircle(stadiumPts(L.B,L.F,4.6),S.tBlock,1.9,true),LBh=[[...L.B,1.2],[...L.F,1.2],...S.blc.map(q=>hT(...q,ESCAP))];
+  const lb=part('lowerBridge',-41),LBpoly=subtractCircle(stadiumPts(L.B,L.F,4.6),S.tBlock,1.9,true),LBh=[[...L.B,1.2],[...L.F,1.2],...S.blc.map(q=>hT(...q,ESCAP))];
   R.lowerBridge=mesh(lb,polyGeo(LBpoly,0.6,[...LBh,[...S.tBlock,0.95]]),M.plate,0,LB_T,0);mesh(lb,polyGeo(LBpoly,2.4,[...LBh,hT(...S.tBlock,TBS_R)]),M.plate,0,LB_T+0.6,0);
   mesh(lb,ringGeo(1.9,0.95,LB_T-TB_U),M.plate,S.tBlock[0],(TB_U+LB_T)/2,S.tBlock[1]);
   /* boss up to the train bridge, two screws (42055) from the train bridge's top into it (Op. 50) */
-  mesh(lb,stadium(add(LBm,lbn,-1.1),add(LBm,lbn,1.1),3.0,LB_T-TB_U,S.lb.map(q=>hT(...q,0.8))),M.plate,0,TB_U,0);for(const q of S.lb)screw(lb,...q,TB_T,0.8,0.45,3.1+3.0);
+  mesh(lb,stadium(add(LBm,lbn,-1.1),add(LBm,lbn,1.1),3.0,LB_T-TB_U,S.lb.map(q=>hT(...q,0.8))),M.plate,0,TB_U,0);for(const q of S.lb)headOn(screw(lb,...q,TB_T,0.8,0.45,3.1+3.0),'lowerBridge','trainBridge');
   /* balance lower setting (42162) in the bridge, and the lower endstone cap (42159) with its screws on the bridge's underside (Fig. 110) */
   mesh(lb,ring(1.2,0.9,3.0),M.gilt,L.B[0],LB_T+1.5,L.B[1]);mesh(lb,ring(1.2,0.9,3.0),M.gilt,L.F[0],LB_T+1.5,L.F[1]);mesh(lb,ring(0.9,0.6,0.6),M.ruby,L.F[0],LB_T+1.0,L.F[1]);   /* and the fourth wheel upper setting (42161) */mesh(lb,ring(0.9,0.5,0.6),M.ruby,L.B[0],LB_T+2.6,L.B[1]);
   { const lbf=new THREE.Group();lbf.rotation.x=Math.PI;lb.add(lbf);endCap(lbf,L.B[0],-L.B[1],[lbu[0],-lbu[1]],-(LB_T+3),2.0,1.9); }
   /* train-blocking screw (42247, Sec. II, Fig. 110): threaded through the lower bridge's lobe, its head in the lobe's column. Screwed down, its head stops on the seat and its dog point stands between
      the fourth wheel's spokes, so the train can turn only until a spoke meets it; screwed up (as it runs), the chamfer on its head seats in the countersunk access hole in the
      train bridge. The thread (6.2 mm) stays in the bridge at both ends of its 5.6 mm travel. R.tbs.userData: seat heights and the dog point's place for blockRoom */
-  { const bs=part('tblock',-46),r=TBS_R,h=0.9,c=0.25,rs=0.42,pt=0.176,d=pt*0.3,Lt=6.2,Ld=6.81,rd=0.25,pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0),V2(rs,0)];
+  { const bs=part('tblock',-41),r=TBS_R,h=0.9,c=0.25,rs=0.42,pt=0.176,d=pt*0.3,Lt=6.2,Ld=6.81,rd=0.25,pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0),V2(rs,0)];
     const n=Math.floor(Lt/pt);for(let i=0;i<n;i++){const a=Lt-(n-i)*pt;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,Lt),V2(rd,Lt+0.05),V2(rd,Ld),V2(0,Ld));
     R.tbs=new THREE.Group();R.tbs.position.set(...[S.tBlock[0],0,S.tBlock[1]]);bs.add(R.tbs);mesh(R.tbs,new THREE.LatheGeometry(pr,28),M.steel);
     mesh(R.tbs,new THREE.BoxGeometry(r*2.02,0.35,0.3),M.steelD,0,-h+0.155,0);
@@ -1331,7 +1332,7 @@ function buildMovement(M){
        support block, two-strip detent spring, cross-piece carrying the Z bracket of the Elinvar trip (passing) spring, blade, jewel block with the locking jewel,
        and the arm whose horn the trip spring rests on. It lies between the escape wheel and the balance lower bridge (Op. 82); the arm crosses over the trip spring
        and the horn drops to it (Fig. 14). Support block hung from the upper train bridge by one screw, with the stop button beside the jewel (Figs. 14, 90) ---------- */
-  const dt=part('det',-48,true);
+  const dt=part('det',-40,true);
   R.det=new THREE.Group();R.det.position.set(E.Ft.x*ES,0,E.Ft.y*ES);dt.add(R.det);const fx=new THREE.Group();fx.position.copy(R.det.position);dt.add(fx);   /* moving about the point of flexure; fixed */
   const poly=(g,pts,ya,yb,mat,holes=[])=>{const s=new THREE.Shape();pts.forEach((p,i)=>{const x=(p.x-E.Ft.x)*ES,z=(p.y-E.Ft.y)*ES;i?s.lineTo(x,z):s.moveTo(x,z);});s.closePath();
     for(const[p,r]of holes){const h=new THREE.Path();h.absarc((p.x-E.Ft.x)*ES,(p.y-E.Ft.y)*ES,r,0,TAU,true);s.holes.push(h);}   /* holes: [unit-frame point, radius in mm] */
@@ -1344,7 +1345,7 @@ function buildMovement(M){
   /* screws in detent coordinates (t along the detent, n across it): block screw from the train bridge's top; clamp screw and two steady pins across the foot;
      detent-adjusting screw at the block's end; lock-adjusting screw and its clamp screw across the block's front, under the wheel; trip-spring screw on the bracket */
   const dd=new THREE.Group();dd.position.copy(R.det.position);dd.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(dd);const T=(t,n)=>[t*ES,-n*ES];
-  screw(dd,...T(-1.2,-0.35),TB_T,0.9,0.5,3.1+2.4).traverse(m=>m.userData.driveHide=true);   /* detent support block screw (42056), through the train bridge into the block,  the train bridge is uncovered by the barrel bridge: fitted with the movement assembled (Op. 81) */
+  headOn(screw(dd,...T(-1.2,-0.35),TB_T,0.9,0.5,3.1+2.4),'det','trainBridge').traverse(m=>m.userData.driveHide=true);   /* detent support block screw (42056), through the train bridge into the block,  the train bridge is uncovered by the barrel bridge: fitted with the movement assembled (Op. 81) */
   const across=(g,t,n0,n1,r,y,mat)=>{const q=mesh(g,cylY(r,(n1-n0)*ES,16),mat,t*ES,y,-(n0+n1)/2*ES);q.rotation.x=Math.PI/2;return q;};
   across(dd,-0.75,0.083,0.083+1.4/ES,0.95,-18.31,M.steel);across(dd,-0.75,0.083,0.083+0.25/ES,1.25,-18.31,M.steel);for(const t of[-1.2,-0.3])across(dd,t,-0.2,0.12,0.22,-18.31,M.steel);
   across(dd,-0.75,-0.35,0.083,0.45,-18.31,M.steel);   /* the clamp screw's shank, through the foot into the block */
@@ -1386,7 +1387,7 @@ function buildMovement(M){
   mesh(R.balU,polyGeo([[BR-0.5,-1.2],[BR-0.5,1.2],...arc(a0,Math.PI-a0),[-(BR-0.5),1.2],[-(BR-0.5),-1.2],...arc(Math.PI+a0,TAU-a0)],1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,-0.55,0);
   mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,0.55,0);cylBetween(R.balU,1.1,1.15,-0.9,M.steel,0,0,24);
   mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,-0.9,0);
-  for(const q of HD)screw(R.balU,...q,-0.9,0.4,0.25,0.35+1.1+0.5);
+  for(const q of HD)screw(R.balU,...q,-0.9,0.4,0.25,0.35+1.1+0.5).userData.lift=0;   /* they stay in: the hub's flange under them is on the staff, which goes with the balance */
   { const hs=[];for(let k=0;k<60;k++){if(k%30===0||k%30===2||k%30===28)continue;const a=k/60*TAU;hs.push([cylY(0.28,0.2,8),new THREE.Matrix4().compose(new THREE.Vector3((BR+0.05)*Math.cos(a),0,(BR+0.05)*Math.sin(a)),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-a,Math.PI/2)),new THREE.Vector3(1,1,1))]);}mesh(R.balU,mergeGeo(hs),M.steelD); }   /* none at the arm ends or under the weights' screws */
   const radial=(a,r0,len,rr,mat,seg=12)=>{const q=mesh(R.balU,cylY(rr,len,seg),mat,(r0+len/2)*Math.cos(a),0,(r0+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);return q;};
   const BW=[],bscrew=(a,len,rr,mat,mg,kind,off=0)=>BW.push({q:radial(a,BR+off,len,rr,mat),a,len,rr,mg,kind,off});
@@ -1450,19 +1451,22 @@ function buildMovement(M){
   mesh(ep,polyGeo(EPo,0.7,[[0,0,1.15],...EP.map(q=>hC(...q,0.7))]),M.steel,0,-0.7,0);mesh(ep,ring(1.15,0.7,0.6),M.gilt,0,-0.3,0);mesh(ep,cylY(0.7,0.5,24),M.ruby,0,-0.25,0);
   for(const q of EP)screw(ep,...q,-0.7,0.7,0.4,0.7+1.8);
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, below the third wheel) ---------- */
-  const fsP=part('fs',-16);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
-  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:TB_T+1.0,bB:-9.6,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,capR:5.6,screw,sbZ:-1.8,stopAng:Math.atan2(-fo[1],fo[0])-Math.atan2(-dz,dx)+Math.asin((0.7+0.9-1.8)/7.2)});   /* at full wind the stop-bar's side (half-width 0.7, 1.8 off the axis beside the arbor) meets the winding stop pin (r 0.9, 7.2 mm out) */
+  const fsP=part('fs',-50);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
+  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:6.5,rmax:14,N:FUSEE_TURNS,Rb:13.5,bT:TB_T+1.0,bB:-9.6,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,capR:5.6,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
+    sbZ:-1.8,stopAng:Math.atan2(-fo[1],fo[0])-Math.atan2(-dz,dx)+Math.asin((0.7+0.9-1.8)/7.2)});   /* at full wind the stop-bar's side (half-width 0.7, 1.8 off the axis beside the arbor) meets the winding stop pin (r 0.9, 7.2 mm out) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), traced on the top-view photograph (fitted to
      its two screws and the arbor): a waisted plate across the arbor, its two ends arcs about 13 mm out along 107 deg / 287 deg, and both long sides
      concave, coming within about 6 mm of the arbor, so the ratchet's teeth show on either side and the click's tip on the rim side */
   const rt=part('ratchet',-76),P2=(r,a)=>[L.Ba[0]+r*Math.cos(a*D2R),L.Ba[1]+r*Math.sin(a*D2R)];
   const srw=mesh(rt,gearGeo(52,0.289,1.0,{ratchet:true,flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]);   /* steep faces meet the click against the mainspring's pull */
-  cylBetween(rt,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28);
+  /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
+     (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
+  const ba=loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off);rt.add(ba);cylBetween(ba,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28);
   /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The spring's inner end lies at -90 deg in the
      fusee/barrel group's frame (mainspringGeo's start, turned by ms.rotation), so the hook is there, and the core stays 0.1 clear of the turning caps */
-  { const ga=-Math.PI/2-fs.g.rotation.y,hk=mesh(rt,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+2.55*Math.cos(ga),(TB_T+1.9-10.4)/2,L.Ba[1]+2.55*Math.sin(ga));hk.rotation.y=-ga;
-    cylBetween(rt,2.4,TB_T+1.71,-10.3,M.steel,L.Ba[0],L.Ba[1],32); }
+  { const ga=-Math.PI/2-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+2.55*Math.cos(ga),(TB_T+1.9-10.4)/2,L.Ba[1]+2.55*Math.sin(ga));hk.rotation.y=-ga;
+    cylBetween(ba,2.4,TB_T+1.71,-10.3,M.steel,L.Ba[0],L.Ba[1],32); }
   mesh(rt,new THREE.BoxGeometry(2.2,3.0,2.2),M.steel,L.Ba[0],-31.46,L.Ba[1]);
   { const Pv=P2(8.9,250.6),Tp=P2(7.5,220),clk=mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]);clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
     /* turn the ratchet (it is fixed in running) so a steep face bears on the click's tip, then rest the click on it */
@@ -1533,6 +1537,7 @@ function buildMovement(M){
   dp.traverse(o=>{if(o.isMesh){o.userData.devPlate=true;o.userData.noCap=true;}});
   /* ---------- API ---------- */
   mv.userData.parts=parts;mv.userData.R=R;mv.userData.DEV=DEV;mv.userData.S=S;   /* S: screw positions, for the tools */
+  mv.userData.lifted=SCREWS;   /* screws and loose pieces, for exploded.py */
   mv.userData.explode=e=>{for(const k in parts)parts[k].position.y=parts[k].userData.off*e;for(const g of SCREWS)g.position.y=g.userData.y0-g.userData.lift*e;};
   /* develop(e): 0 as built, 1 laid out in a line; moves only x, z and the turn about y, so it combines with explode */
   mv.userData.develop=e=>{for(const[o,d]of DMV){o.position.x=o.userData.xz0[0]+d[0]*e;o.position.z=o.userData.xz0[1]+d[1]*e;}
@@ -1605,8 +1610,9 @@ function makeFusee(M,c){
   const WRS=[0.6,0.6+Math.PI].map(a=>[3.4*Math.cos(a),3.4*Math.sin(a)]);
   mesh(fz,gearGeo(40,0.47,0.5,{ratchet:true,bore:1,holes:WRS.map(q=>hC(...q,0.55))}),M.steel,0,c.yB+0.85,0);mesh(fz,discGeo(5,1.6,[[0,0,1.05],...WRS.map(q=>hT(...q,0.55))]),M.gilt,0,c.yB-1.1,0);
   if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;fz.add(fl);for(const q of WRS)c.screw(fl,q[0],-q[1],-(c.yB+1.1),0.55,0.3,0.6+1.2);}
-  /* fusee end plate (42019) under the fusee wheel, and the taper pin (42020) through the arbor below it that holds the stack on (Figs. 28, 70) */
-  mesh(fz,ringGeo(2.6,1.02,0.5),M.steel,0,-5.63,0);{ const tp=mesh(fz,new THREE.CylinderGeometry(0.17,0.23,4.6,10),M.steel,0,-5.13,0);tp.rotation.z=Math.PI/2; }
+  /* fusee end plate (42019) under the fusee wheel, and the taper pin (42020) through the arbor below it that holds the stack on (Figs. 28, 70). The fusee rises above the
+     fusee wheel in the Exploded view, so they come off the arbor's lower end and stay under the wheel (c.endLift) */
+  { const ep=new THREE.Group();fz.add(ep);if(c.loose)c.loose(ep,c.endLift);mesh(ep,ringGeo(2.6,1.02,0.5),M.steel,0,-5.63,0);const tp=mesh(ep,new THREE.CylinderGeometry(0.17,0.23,4.6,10),M.steel,0,-5.13,0);tp.rotation.z=Math.PI/2; }
   /* the fusee's top (Figs. 28, 73, 109): above the turned boss a slotted layer, the winding stop-bar (42024) in the slot beside the arbor, the stop-bar spring (42025) in a groove
      round the arbor with its end on the bar's inner end, and the top plate (42008) over them with two screws (27760). Built in the bar's frame: x along the bar, the slot across z */
   const sbR=new THREE.Group();sbR.rotation.y=c.stopAng||0;fz.add(sbR);const sbZ=c.sbZ||0,yT=c.yS-cap,zHi=sbZ+0.72,zLo=sbZ-0.75;

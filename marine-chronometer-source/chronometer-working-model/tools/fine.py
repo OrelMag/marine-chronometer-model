@@ -48,6 +48,8 @@ EXPECTED={
  ('spawl:Cylinder','trainBridge:Extrude'):('sustaining pawl arbor (r 0.7) in its 0.72 hole: grazes the bevel',0.06,0.18),
  ('barrel:Extrude(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
  ('barrel:Extrude(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
+ ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",7.0,1.2),
+ ('fusee:Cylinder','fusee:Cylinder'):("the taper pin through the fusee arbor, under the end plate (their own group, which the Exploded view takes off the arbor's end)",0.25,0.45),
 }
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),

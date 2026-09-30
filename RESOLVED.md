@@ -434,6 +434,18 @@ Contents:
   differs from the one it last wrote or applied. `650c005`
 - **Zoom keys matched an empty key name.** `'+=-_'.includes(e.key)` is true
   for `''`; it is now an exact match. `650c005`
+- **Exploded view: parts through each other.** Each part rose by a hand-set
+  offset with no regard to what lay over it: the centre wheel (under the fusee
+  wheel, the maintaining work and the barrel) rose 10 mm past the barrel and
+  ended inside it, the third and fourth wheels passed through each other and
+  the escape wheel, the fusee rose through its own end plate, and screws put
+  in through the train bridge stayed under it. Offsets now follow the stacking
+  (centre wheel 8, fusee wheel 14 ... fusee and barrel 50); the escapement's
+  nested parts rise within 1–2 mm of each other; the fusee's end plate and the
+  barrel arbor come off on their own (`loose`), screws through another part
+  leave with it (`headOn`), and the balance hub's screws stay in. Keep:
+  `tools/exploded.py` reports 0 failing (it runs in CI); where parts overlap
+  seen along the arbors, the upper one rises more.
 
 ## Build, tools and docs
 
