@@ -970,4 +970,10 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    fourth wheel at about 0.7 of its radius (about 7 mm from the arbor); the
    model has it 3.5 mm out. Fig. 16 and a top photograph put its head near the
    balance. Moving it re-lays the balance lower bridge's lobe.
-
+8. **A second capped post and a Y-shaped arm** (fidelity, noted). The top-view
+   photograph's movement (2E11795) and others (omegaforums, Delaney No. 8854)
+   have a second post with a cap near the fusee's, carrying a long Y-shaped
+   arm over the balance whose tips reach the rim: probably the Navy's "balance
+   stop" (Sec. I: "Certain instruments have been modified by the Navy to include
+   a balance stop"). 2E12055 and the manual's figures have none; the model has
+   the manual's locking arm (Fig. 9) instead, and leaves the stop out.
