@@ -549,4 +549,9 @@ Contents:
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The first frame stepped time back.** Its `requestAnimationFrame` time can
+  come before the loop's start time, so `dt` was negative once (about
+  −0.26 s): the easing overshot slightly, and the master time (`tM`), which
+  takes every step, fell a quarter second behind the model clock, showing a
+  dial error at load. `dt` is now clamped to 0–0.05 s. Keep: nothing that
+  advances with `dt` may assume it is positive unless it is clamped.

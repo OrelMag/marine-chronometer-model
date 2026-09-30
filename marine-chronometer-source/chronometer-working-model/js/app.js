@@ -155,7 +155,13 @@ function drawEsc2D(ctx,w,h,p,dark){
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
-  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
+  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
+  /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
+     minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
+     seconds from the second hand (continuous: as a comparator reads it) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
+  tM=tSim;
+  const dialRead=()=>{const sT=tSim+(H.bOff+H.eOff)/2,ss=((sT%60)+60)%60,r=Math.round((sT+slip-ss)/60)*60+ss,e=r-tM;return tM+(((e+21600)%43200)+43200)%43200-21600;};
+  const fmtErr=e=>{const a=Math.abs(e),h=Math.floor(a/3600),m=Math.floor(a%3600/60),x=Math.round((a%60)*2)/2;return(e<0?'−':'+')+(h?h+' h ':'')+(h||m?m+' min ':'')+(h?'':x+' s');};   /* to the half second, as a navigator records it */
   /* colour mode: one flat CAD-style colour per part; the part labels double as the legend */
   const COLM=new Map();
   function colourOf(m0,p){if(!p||!PCOL[p]||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+p;let c=COLM.get(k);
@@ -328,11 +334,11 @@ function drawEsc2D(ctx,w,h,p,dark){
   const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(st.tour<0){if(st.view==='exploded')tgt.explode=expV();else if(st.view==='laidout')tgt.dev=expV();}});
   /* set the hands: only the time of day changes (the balance keeps its phase) and no power is used */
   const todIn=$('#tod');let todS=-1;
-  const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);};
+  const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;slip=0;tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);};
   todIn.addEventListener('change',()=>setTod(todIn.value));
-  $('#now').addEventListener('click',()=>{tSim=Date.now()/1000+tzOff();lastE=null;todS=-1;rErr=0;handsSet=false;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);});
+  $('#now').addEventListener('click',()=>{tSim=tM=Date.now()/1000+tzOff();slip=0;lastE=null;todS=-1;rErr=0;handsSet=false;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);});
   /* GMT or local: the hands move by the difference, as when they are set */
-  const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
+  const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;tM+=tzOff()-o;lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
   document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
   $('#spin').addEventListener('change',e=>st.spin=e.target.checked);
   /* theme: Auto follows the system; a choice is remembered in this browser */
@@ -383,7 +389,7 @@ function drawEsc2D(ctx,w,h,p,dark){
      While the train is held tSim and the hands stand, and the balance keeps its own phase in H.bph (oscillations); on restarting, H.bOff (phase) and H.eOff (beats)
      carry both across, so neither the balance nor the hands jump. H.arm and H.blk move on frame time: the arm 0 unlocked to 1 locked, the screw 0 up to 1 down ---------- */
   const H={amp:ESC.A,held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,twT:-1},TAU_FREE=25,TAU_ARM=0.2,TAU_UP=3,stopOut=$('#stopOut'),twistB=$('#twist');let lastSO=0;
-  if(/[?&]qa\b/.test(location.search))window.__H=()=>({...H,E:lastE,tSim,hrs});   /* for the tools: the stop/start state */
+  if(/[?&]qa\b/.test(location.search))window.__H=()=>({...H,E:lastE,tSim,hrs,tM,slip});   /* for the tools: the stop/start state, the master time and the hands' slip */
   const segSet=(sel,v)=>document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===v?'true':'false'));
   const armSet=v=>{H.armT=v;segSet('#armSeg',v);twistB.disabled=!!v;twistB.title=v?'Unlock the balance first: the locking arm holds its rim':'Give the box a quick twist, which sets the balance swinging: how a stopped chronometer is started';wake();},blkSet=v=>{H.blkT=v;segSet('#blkSeg',v);wake();};
   document.querySelectorAll('#armSeg button').forEach(b=>b.addEventListener('click',()=>armSet(+b.dataset.v)));
@@ -600,10 +606,10 @@ function drawEsc2D(ctx,w,h,p,dark){
   new ResizeObserver(wake).observe(stage);cv.addEventListener('webglcontextrestored',wake);
   new IntersectionObserver(e=>{onScreen=e[e.length-1].isIntersecting;if(onScreen)wake();}).observe(stage);
   function frame(now){
-    const dt=Math.min(0.05,(now-last)/1000);last=now;const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
+    const dt=clamp((now-last)/1000,0,0.05);last=now;   /* the first frame's time can come before last was set: never a step back */const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
     for(const q of['lift','flip','explode','lidM','lidT','dev','fov'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
-    const run=hrs<RUN_H,dtS=dt*st.speed;
+    const run=hrs<RUN_H,dtS=dt*st.speed;tM+=dtS;
     if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
     tVis+=dt;stopMove(dt);
     const brake=H.arm>0.75;ampStep(dtS*rateK,brake,run&&!H.held);   /* the arm's pad is under the rim from about three quarters of its turn */
@@ -648,8 +654,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
     if(!still)drawInset(E,s,n);
-    const tod=((tSim%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
+    const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);

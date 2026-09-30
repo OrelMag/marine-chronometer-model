@@ -67,7 +67,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
   - See-through schematic plates stand in for them: pillar plate, train bridge, barrel bridge, a cock over the balance, and pillars. They are drawn only in this view, carry no part name, and go with Moving parts only.
   - The camera's field of view narrows from 32° to 20° so the elevation looks nearly flat.
   - The Spread slider sets how far the train is laid out (`mv.userData.develop(e)` in `movement.js`, 0 as built, 1 laid out).
-- Time: set the hands to any time of day, or to now. The model keeps Greenwich Mean Time by default, as U.S. Navy chronometers were kept (the HUD says GMT); Keep: Local time switches to the viewer's time zone, moving the hands by the difference. Tick sound is under Time too.
+- Time: set the hands to any time of day, or to now. The model keeps Greenwich Mean Time by default, as U.S. Navy chronometers were kept (the HUD says GMT); Keep: Local time switches to the viewer's time zone, moving the hands by the difference. The HUD shows the time the hands show and, once it is a quarter second or more, the dial error against the master time (below): `+` fast, `−` slow, to the half second as a navigator records it. Now sets both the hands and the master time to the viewer's clock; Set the hands moves the hands only, so it makes a dial error. Tick sound is under Time too.
 - Winding: Since winding and Wind, and Wind with the key, which turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 60 h of chain), with the plates see-through and the winding stop kept solid. For the last half turns the camera closes in on the stop-bar catching.
 - Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (930 g·mm² as built). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.146 and 0.092 mm. The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose; the panel shows the daily rate and what the hands have gained since the weights were moved or the hands set.
 - Stopping and starting (and Twist to start under Winding): the balance locking arm (Fig. 9) and the train-blocking screw (Sec. II), and the twist that starts a stopped chronometer. See "Stopping and starting" under How the timing works.
@@ -149,6 +149,8 @@ constants beside it:
 ## How the timing works
 
 Everything is driven from one model clock `tSim`, in seconds of the time kept (GMT by default, or local time).
+
+Beside it runs the master time `tM`: a perfect clock, standing for the time signal the chronometer is compared with. It runs at the model's speed, also while the chronometer stands, and doesn't follow the weights. The dial error is what the hands show (`dialRead()` in `app.js`: the second hand's time, continuous as a comparator reads it, with the minutes from the minute hand) less `tM`; it grows with the rate, with the time the chronometer stood, and with setting the hands.
 
 - The balance phase is `p = frac(tSim / 0.5)`, one oscillation per half-second.
 - `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection

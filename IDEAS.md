@@ -296,7 +296,7 @@ The amplitude then emerges from the model instead of being fixed.
 
 ### 2.6 A fuller rate panel (S–M)
 - **Adjusters' tools.** Add balance screws and timing washers from the parts list (1.7) as further adjustments. The manual's timing operations use them alongside the weights.
-- **Dial error against real time.** Show it in the HUD as the hands drift: "+3.5 s since set".
+- *Done:* **Dial error against real time.** The HUD shows the dial error against a master time `tM` that runs with the model. Before: show it in the HUD as the hands drift: "+3.5 s since set".
 
 ### 2.7 Tripping and setting (M, illustrative)
 - **What.** A **Jolt** button, demonstrating the two classic detent faults:
