@@ -254,6 +254,13 @@ Contents:
   parallel to the arbor (Fig. 28). Keep: the chain and the groove share `phi0`
   and `m`; the groove runs 0.12 turn past the chain's start and 0.04 past its
   end, or the run leaving the fusee cuts the top rim. `7970409`
+- **Dashed ring round the barrel's caps.** The wall ran the barrel's full
+  height, so its two ends lay in the caps' outer faces and z-fought them (a
+  dashed ring on each cap with Edges on, 0.2 mm inside the drum's radius;
+  `audit.py` listed both as z-fights), and the caps' flanges passed through it.
+  The wall now runs between the caps' inner faces, and `barrel-clearance.js`
+  finds the caps by their inner faces on its ends. Keep: no face of the wall in
+  a cap's outer face. `HASH`
 
 ## Plates, bridges, screws and arbors
 

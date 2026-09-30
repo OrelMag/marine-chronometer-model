@@ -38,6 +38,6 @@
  let ms=null,sp=null;mv.traverse(o=>{if(o.isMesh&&o.userData.partName==='mainspring')ms=o;});
  if(ms&&ms.geometry.attributes.position){M4.multiplyMatrices(inv,ms.matrixWorld);const p=ms.geometry.attributes.position;let r0=1e9,r1=0,y0=1e9,y1=-1e9;
    for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).applyMatrix4(M4);const r=Math.hypot(v.x,v.z);r0=Math.min(r0,r);r1=Math.max(r1,r);y0=Math.min(y0,v.y);y1=Math.max(y1,v.y);}
-   const wall=env.find(e=>e.name==='wall'),ends=env.filter(e=>e!==wall&&e.r>wall.r*0.5),top=ends.filter(e=>Math.abs(e.y0-wall.y0)<0.05)[0]||{y1:wall.y0},bot=ends.filter(e=>Math.abs(e.y1-wall.y1)<0.05)[0]||{y0:wall.y1};   /* the caps sit at the wall's two ends */
+   const wall=env.find(e=>e.name==='wall'),ends=env.filter(e=>e!==wall&&e.r>wall.r*0.5),top=ends.filter(e=>Math.abs(e.y1-wall.y0)<0.05)[0]||{y1:wall.y0},bot=ends.filter(e=>Math.abs(e.y0-wall.y1)<0.05)[0]||{y0:wall.y1};   /* the caps' inner faces on the wall's two ends */
    sp={rMin:+r0.toFixed(3),rMax:+r1.toFixed(3),yTop:+y0.toFixed(3),yBottom:+y1.toFixed(3),wall:+wall.r.toFixed(3),capTopInner:+top.y1.toFixed(3),capBottomInner:+bot.y0.toFixed(3)};}
  return JSON.stringify({env:env.map(e=>({name:e.name,r:+e.r.toFixed(3),y0:+e.y0.toFixed(3),y1:+e.y1.toFixed(3)})),parts:Object.values(res).map(o=>({...o,d:+o.d.toFixed(4)})),spring:sp});})()

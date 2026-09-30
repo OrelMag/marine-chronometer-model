@@ -752,7 +752,7 @@ function makeFusee(M,c){
   /* the winding stop's place (group frame): where it meets the bar's leading side at full wind, 0.15 clear of the rim */
   const stud=[fx+xS*ca+zS*sa,-xS*sa+zS*ca];
   const bz=new THREE.Group();bz.position.x=bx;bz.userData.partName='barrel';g.add(bz);
-  const bw=new THREE.Mesh(ringGeo(c.Rb,c.Rb-0.2,Math.abs(c.bT-c.bB)),M.brass);bw.position.y=(c.bT+c.bB)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.barrelWall=c.Rb;   /* the wall, 0.2 thick (estimated) */
+  const bw=new THREE.Mesh(ringGeo(c.Rb,c.Rb-0.2,Math.abs(c.bT-c.bB)-1.2),M.brass);bw.position.y=(c.bT+c.bB)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.barrelWall=c.Rb;   /* the wall, 0.2 thick (estimated), between the caps' inner faces: flush with their outer faces, its ends fought them (a dashed ring in Edges) */
   for(const y of[c.bT+0.3,c.bB-0.3]){const cp=mesh(bz,ringGeo(c.Rb+0.7,1.5,0.6),M.gilt,0,y,0);cp.userData.driveGhost=true;}
   /* mainspring brace (42037, Fig. 75): a strip lining the wall where the spring's outer end hooks, between the caps' inner faces */
   { const s=new THREE.Shape(),a0=Math.PI/2-0.35,a1=Math.PI/2+0.35;s.absarc(0,0,c.Rb-0.2,a0,a1,false);s.absarc(0,0,c.Rb-0.45,a1,a0,true);
