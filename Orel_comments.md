@@ -15,7 +15,7 @@ What is the cost the leave the edges visibility always on? should it be on by de
 
 Does the Setup rachet is modeled correctly? refer to the manual and web images. 
 
-Tidy up te sidebar. For example, in the Display subsection. aligned columns?
+Tidy up te sidebar. For example, in the Display subsection. aligned columns? [done]
 
 Ticksound on by default
 

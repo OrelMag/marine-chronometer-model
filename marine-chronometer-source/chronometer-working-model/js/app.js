@@ -199,7 +199,11 @@ function drawEsc2D(ctx,w,h,p,dark){
     escapement:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:1.9,pitch:-0.75,dist:78,target:mvL(8.0,-18.5,12),see:true},   /* from the pillar-plate side: the balance is then behind the escapement, not in front of it */
     exploded:{lidM:1,lidT:1,lift:1,flip:1,explode:1,yaw:0.9,pitch:0.28,dist:520,target:mvL(0,-40,0)},
     /* the train laid out along the barrel-fusee line (movement.js, DEV), seen square from the side through a narrow field, as the textbooks draw it: barrel left, hands below */
-    laidout:{lidM:1,lidT:1,lift:1,flip:1,explode:0,dev:1,fov:20,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.05,dist:300,target:mvL(mv.userData.DEV.mid[0],-15,mv.userData.DEV.mid[1])}};
+    laidout:{lidM:1,lidT:1,lift:1,flip:1,explode:0,dev:1,fov:20,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.05,dist:300,target:mvL(mv.userData.DEV.mid[0],-15,mv.userData.DEV.mid[1])},
+    /* the barrel, chain and fusee, seen across the line joining them */
+    fusee:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:Math.atan2(mv.userData.DEV.w[1],mv.userData.DEV.w[0]),pitch:0.2,dist:105,target:mvL((L.Fu[0]+L.Ba[0])/2,-12,(L.Fu[1]+L.Ba[1])/2),see:true},
+    /* the balance close up under its cock, with the timing weights (Rate and timing weights' Show the balance comes here too) */
+    balance:{lidM:1,lidT:1,lift:1,flip:1,explode:0,yaw:-0.9,pitch:0.35,dist:65,target:mvL(L.B[0],BAL_Y,L.B[1])}};
   /* keep the same horizontal coverage on narrow screens: distance grows as the aspect ratio falls below 1.5 */
   const aspectK=()=>clamp(1.25/(W/Hh),1,2.2);
   function goCam(v){G.yaw=C.yaw+((((v.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=v.pitch;G.dist=v.dist*aspectK()*(st.drive&&v.lift?0.8:1);G.follow=v.target;panO.set(0,0,0);camFree=false;}
@@ -263,8 +267,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
     /* space bar: stop and restart, unless typing or pressing a button */
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
-    /* 1 to 6: the views, in the order of their buttons (a disabled button ignores the click) */
-    if(/^[1-7]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)document.querySelectorAll('#views button')[+e.key-1].click();
+    /* 1 to 9: the views, in the order of their buttons (a disabled button ignores the click) */
+    if(/^[1-9]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)document.querySelectorAll('#views button')[+e.key-1].click();
     /* with the model focused (Tab to it, or click it): arrow keys turn the view as a drag does, + and − zoom, 0 resets the view */
     if(document.activeElement===cv&&!e.ctrlKey&&!e.metaKey&&!e.altKey){const a={ArrowLeft:[0.08,0],ArrowRight:[-0.08,0],ArrowUp:[0,-0.06],ArrowDown:[0,0.06]}[e.key];
       if(a){e.preventDefault();camFree=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.3,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
@@ -326,6 +330,17 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* save the view as a PNG: render and copy in the same task, while the drawing buffer is still valid, over the page background */
   $('#shot').addEventListener('click',()=>{paint();const c2=document.createElement('canvas');c2.width=cv.width;c2.height=cv.height;const x=c2.getContext('2d');x.fillStyle=getComputedStyle(document.body).backgroundColor;x.fillRect(0,0,c2.width,c2.height);x.drawImage(cv,0,0);
     c2.toBlob(b=>{if(!b)return;const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='hamilton-model-21.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);});});
+  /* Link: the page's address with this state in its hash (not waiting for writeHash); without the clipboard, it is put in the address bar */
+  $('#link').addEventListener('click',()=>{const b=$('#link'),h=hashOf(),u=location.href.split('#')[0]+(h?'#'+h:''),say=t=>{b.textContent=t;clearTimeout(b.t);b.t=setTimeout(()=>b.textContent='Link',1500);};
+    const bar=()=>{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);};
+    try{navigator.clipboard.writeText(u).then(()=>{bar();say('Copied');},()=>{bar();say('In address bar');});}catch(_){bar();say('In address bar');}});
+  /* Reset display: each Display box back to its default (See-through to the view's own; Pen and wash before Edges, which it disables), faded and hidden parts back. The theme stays */
+  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,edges:!PHONE,ghost:!!VIEWS[st.view].see,colr:false,rock:false,latch:false,spin:false};
+    for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}st.op={};st.hid.clear();look();opRender();});
+  /* the panel's sections: each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
+  const DET=[...document.querySelectorAll('.ctl>details.grp')];
+  try{const o=JSON.parse(localStorage.getItem('cm-open')||'{}');DET.forEach(d=>{if(typeof o[d.id]==='boolean')d.open=o[d.id];});}catch(_){}
+  DET.forEach(d=>d.addEventListener('toggle',()=>{try{localStorage.setItem('cm-open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));}catch(_){}}));
   /* parts list: every named part, grouped. A name singles the part out as a tap does; the box hides it, as the right-click menu does */
   const BOXP=new Set(PGRP[0][1]),plist=$('#plist'),PROWS=[];
   for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);
@@ -347,7 +362,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     twR.nextElementSibling.textContent=eighths(twR.valueAsNumber);vwR.nextElementSibling.textContent=eighths(vwR.valueAsNumber);rateShow();}
   twR.addEventListener('input',rateSet);vwR.addEventListener('input',rateSet);rateSet();
   $('#rateZero').addEventListener('click',()=>{twR.value=0;vwR.value=0;rateSet();});
-  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('movement');showPart('bal');goCam({yaw:2.27,pitch:0.5,dist:58,target:mvL(L.B[0],BAL_Y,L.B[1])});});
+  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('balance');showPart('bal');});
   /* ---------- stopping and starting (Sec. III): a detent chronometer is not self-starting. The balance swings at amplitude H.amp; below ESC.AMIN a swing no longer
      carries the discharge jewel past the trip spring, unlocks the wheel and sees the impulse through, so the train stops at a locked beat and the balance runs down freely
      (TAU_FREE, estimated). The locking arm (Fig. 9) brakes it within a swing or two; the train-blocking screw's dog point stops the fourth wheel at a spoke; at run down
