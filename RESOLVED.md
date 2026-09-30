@@ -321,6 +321,12 @@ Contents:
   pitch line is 0.04 off it and the hook plate's middle on the pitch circle.
   Keep: whatever turns the barrel uses `Ib`; the hook stays in its hole over the
   whole wind. `3655b52`
+- **Setup pawl's pivot screw from the wrong side.** It was drawn from the top,
+  its head on the cover; the manual screws it into the barrel bridge before
+  the bridge goes on (Op. 41, Fig. 80), and the top-view photograph shows only
+  its small round end in the cover. Now from under the bridge; the pawl's
+  spring is the long arc Fig. 80 draws. Keep: the pivot screw from below, its
+  end flush in the cover. `8555124`
 
 ## Plates, bridges, screws and arbors
 
