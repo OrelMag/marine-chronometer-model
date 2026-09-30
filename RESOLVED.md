@@ -162,6 +162,25 @@ Contents:
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves. `c2adc92`
+- **Pinions inside their wheels; the train stacked
+  upside down.** The fourth pinion's leaves (tips r 1.785) ran 0.21 mm into its
+  collet and 0.16 mm into its wheel, standing out of the collet (r 1.6) and hub
+  as small steel notches on the brass; the centre pinion ran 0.5 mm into its
+  wheel's spoke windows. `fine.py` couldn't see either: wheel and pinion are one
+  part. Figs. 13, 29 and 110 stack the train third / centre / fourth from the
+  plate, the third and centre pinions above their wheels, the fourth pinion
+  below its wheel, and five spokes on each wheel. The model had centre /
+  fourth / third, the third and fourth pinions on the wrong sides and 4 spokes
+  on the third and fourth wheels, from reading the side photograph's lowest
+  band (0.4–1.6 mm) as the centre wheel. Now as the figures: third wheel
+  0.35–1.0 mm above the plate, centre wheel 1.15–1.85, fourth wheel unchanged;
+  the minute and hour wheels solid and the wind indicator wheel five-spoked, as
+  photographs of a Model 21's dial side show them. Keep: each pinion ends at
+  its wheel's boss (`arbor()` reports a pinion inside its wheel or collet with
+  `console.error`, which `smoke.py` fails on); a boss stays inside the radius a
+  neighbouring wheel leaves free (the centre boss r 1.3, 0.215 mm inside the
+  third wheel's tips); the train-blocking screw takes its spoke count from the
+  wheel's (`FW_SP`). `22e3984`
 
 ## Winding and maintaining work
 
@@ -739,22 +758,4 @@ Contents:
 
 ## Fixed, not yet committed
 
-- **Going train and heights: pinions inside their wheels; the train stacked
-  upside down.** The fourth pinion's leaves (tips r 1.785) ran 0.21 mm into its
-  collet and 0.16 mm into its wheel, standing out of the collet (r 1.6) and hub
-  as small steel notches on the brass; the centre pinion ran 0.5 mm into its
-  wheel's spoke windows. `fine.py` couldn't see either: wheel and pinion are one
-  part. Figs. 13, 29 and 110 stack the train third / centre / fourth from the
-  plate, the third and centre pinions above their wheels, the fourth pinion
-  below its wheel, and five spokes on each wheel. The model had centre /
-  fourth / third, the third and fourth pinions on the wrong sides and 4 spokes
-  on the third and fourth wheels, from reading the side photograph's lowest
-  band (0.4–1.6 mm) as the centre wheel. Now as the figures: third wheel
-  0.35–1.0 mm above the plate, centre wheel 1.15–1.85, fourth wheel unchanged;
-  the minute and hour wheels solid and the wind indicator wheel five-spoked, as
-  photographs of a Model 21's dial side show them. Keep: each pinion ends at
-  its wheel's boss (`arbor()` reports a pinion inside its wheel or collet with
-  `console.error`, which `smoke.py` fails on); a boss stays inside the radius a
-  neighbouring wheel leaves free (the centre boss r 1.3, 0.215 mm inside the
-  third wheel's tips); the train-blocking screw takes its spoke count from the
-  wheel's (`FW_SP`).
+None at the moment.
