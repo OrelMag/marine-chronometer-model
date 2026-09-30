@@ -517,7 +517,7 @@ function escapeWheel(parent,M,rt,y){
   const teeth=new THREE.Mesh(gearGeo(16,1,1.3,{escape:true,flip:true,rt,depth:rt*0.23,bore:rt*0.7}),M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
   const web=new THREE.Shape();web.absarc(0,0,rt*0.72,0,TAU,false);for(let j=0;j<4;j++){const a0=j/4*TAU+0.12,a1=(j+1)/4*TAU-0.12,h=new THREE.Path();h.absarc(0,0,rt*0.62,a0,a1,false);h.absarc(0,0,1.3,a1,a0,true);web.holes.push(h);}
   const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);
-  const wg=new THREE.ExtrudeGeometry(web,{depth:0.5,bevelEnabled:false,curveSegments:24});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
+  const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:24});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
   const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
   return teeth;
 }
@@ -546,12 +546,19 @@ function mats(){
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */
 const SEC={on:{value:0},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};
+/* a cut face (a back face seen through the cut) is drawn 0.015 mm nearer than it lies: at its own depth it z-fought the part lying on that face (the barrel
+   bridge on the train bridge, a plate on its pillar) and showed it through the cut in patches. Not at the plane itself: the far side of an uncut part is a back
+   face too, and would cover everything. Compiled in only while a section is on (setSection recompiles), as a shader that writes depth loses early depth testing */
+const secDepth=m=>!!m.userData.secCap&&SEC.on.value>0.5;
+const SEC_DEPTH='\n#if NUM_CLIPPING_PLANES>0&&(__VERSION__>=300||defined(GL_EXT_frag_depth))\n{float fd=gl_FragCoord.z;'+
+  'if(uSecOn>0.5&&!gl_FrontFacing&&!isOrthographic){vec3 q=-vClipPosition;vec4 c=projectionMatrix*vec4(q*(1.0-0.015/length(q)),1.0);fd=0.5*c.z/c.w+0.5;}gl_FragDepthEXT=fd;}\n#endif';
 function patchSection(m,cap){
   if(!m||m.userData.secPatched)return;m.userData.secPatched=true;m.userData.secCap=cap;m.userData.side0=m.side;m.clipShadows=true;if(!m.clippingPlanes)m.clippingPlanes=[];SEC.mats.add(m);
-  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;
-    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
-      'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':''));};
-  m.customProgramCacheKey=()=>'sec'+(cap?1:0);
+  if(cap)m.extensions={fragDepth:true};
+  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;const dp=secDepth(m);
+    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+(dp?'uniform mat4 projectionMatrix;\n':'')+sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
+      'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':'')+(dp?SEC_DEPTH:''));};
+  m.customProgramCacheKey=()=>'sec'+(cap?1:0)+(secDepth(m)?1:0);
   m.needsUpdate=true;
 }
 function setSection(on,plane){SEC.on.value=on?1:0;SEC.plane=plane;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
@@ -580,7 +587,7 @@ function drawOf(m){let d=DRAW.get(m);
     const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;
       sh.fragmentShader='uniform float uMetal;\nuniform float uTex;\nuniform float uShMax;\nuniform float uWash;\n'+sh.fragmentShader.replace('#include <dithering_fragment>',WASH(tr)+'\n#include <dithering_fragment>');sec(sh);
       sh.fragmentShader=sh.fragmentShader.replace('vec3(1.0/2.2)),1.0);','vec3(1.0/2.2)),0.45);');};   /* a cut face (patchSection) is drawing, not paper */
-    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0);DRAW.set(m,d);}
+    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0)+(secDepth(d)?1:0);DRAW.set(m,d);}
   d.opacity=m.opacity??1;return syncMat(d,m);}
 /* makeInk(r): draws a frame in pen and wash. Hidden meshes stay hidden; a mesh whose material is under half opaque (glass, see-through and faded parts) is a
    ghost, drawn in outline only, lighter, and left out of the wash. Passes: view normals and a part id (solids, then ghosts) with their depths; the wash (the
@@ -600,9 +607,9 @@ function makeInk(r){
     const t=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=t.minFilter=T.LinearFilter;t.needsUpdate=true;return t;};
   /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once),
      and so is the mesh's own polygon offset: without it the dial's face, 0.02 above its brass disc, fought it, and Edges drew the fight as streaks across the dial */
-  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,uniforms:{uId:{value:0}},
+  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
     vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
-    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);}'});
+    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId,uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);'+SEC_DEPTH+'\n}'});
   /* the id is the part's (pen and wash) or, for Edges, the mesh's: a pawl lies on its own part's wheel. Edges gives box meshes (userData.inkBox) id 0, no line */
   let idOn=false,idM=false,nM=0;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
   const hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
@@ -677,13 +684,21 @@ function mainspringGeo(w,ra,Rw,y0,y1,turns){
     const a=-tot*t,x=r*Math.cos(a),z=-r*Math.sin(a);pos.push(x,y0,z,x,y1,z);if(i<N){const k=i*2;idx.push(k,k+1,k+2,k+1,k+3,k+2);}}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();return g;
 }
+/* extrude(s,o): ExtrudeGeometry with every hole's wall facing into the hole. r128 turns the holes only when it reverses a counterclockwise outline, so with a
+   clockwise outline a clockwise hole got its wall wound into the metal: culled, the plate looked a hollow shell round its holes and cut-outs, and a section
+   showed that wall's face instead of the hatched cut. Its triangles are turned over; the shape is unchanged (a clockwise hole's bevel still narrows it) */
+function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,p=s.extractPoints(o.curveSegments??12),dd=v=>{if(v.length>2&&v[v.length-1].equals(v[0]))v.pop();return v;},sh=dd(p.shape),hs=p.holes.map(dd);
+  if(!U.isClockWise(sh)||!hs.length)return g;const sl=6*((o.steps??1)+(o.bevelEnabled?2*(o.bevelSegments??3):0)),side=g.groups[1];let i=side.start+sh.length*sl,f=0;   /* the side walls: the outline's, then each hole's, 6·sl vertices a point */
+  if(side.start+side.count!==i+hs.reduce((a,h)=>a+h.length*sl,0)){console.error('extrude: side walls not as counted');return g;}
+  for(const h of hs){const e=i+h.length*sl;if(U.isClockWise(h)){f=1;for(const a of Object.values(g.attributes))for(let v=i;v<e;v+=3)for(let c=0;c<a.itemSize;c++){const k=(v+1)*a.itemSize+c,m=(v+2)*a.itemSize+c,t=a.array[k];a.array[k]=a.array[m];a.array[m]=t;}}i=e;}
+  if(f)g.computeVertexNormals();return g;}
 function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,TAU,true);s.holes.push(hp);
-  const g=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
+  const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 /* pawl / click: round pivot boss at the origin, tapered arm along -x ending in a hooked tip */
 function pawlGeo(len,w,th,centre){const s=new THREE.Shape(),r=w*0.72;s.moveTo(0,r);s.absarc(0,0,r,Math.PI/2,-Math.PI/2,true);
   s.lineTo(-len*0.8,-w*0.26);s.lineTo(-len,-w*0.62);s.lineTo(-len*0.96,w*0.08);s.quadraticCurveTo(-len*0.5,w*0.42,0,r);
   const h=new THREE.Path();h.absarc(0,0,r*0.35,0,TAU,true);s.holes.push(h);
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:16});g.rotateX(-Math.PI/2);g.translate(centre?len/2:0,-th/2,0);return g;}
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:16});g.rotateX(-Math.PI/2);g.translate(centre?len/2:0,-th/2,0);return g;}
 function mesh(p,geo,mat,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);p.add(m);return m;}
 function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 /* several geometries as one mesh's, each placed by its matrix ([[geometry, Matrix4], ...]): one draw call (and one shadow-pass call) instead of many */
@@ -692,7 +707,7 @@ function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonInde
   gs.forEach(g=>g.dispose());return out;}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
 function discGeo(r,th,holes=[]){if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
 /* gear: pitch radius = m*n/2 */
 function gearGeo(n,m,th,o={}){
   const rp=m*n/2,ro=o.escape?o.rt:rp+m*0.95,depth=o.escape?o.depth:2.25*m,ri=ro-depth,p=TAU/n,pts=[];
@@ -707,7 +722,7 @@ function gearGeo(n,m,th,o={}){
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);return g;
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);return g;
 }
 /* arbor with wheel & pinion: returns rotating group */
 function arbor(parent,M,x,z,o){
@@ -737,7 +752,7 @@ function handGeo(len,w,tail,kind,at){   /* tail<0: a spear counterpoise -tail lo
   else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=at?len*at:len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */
     s.lineTo(w*0.35,m-h*1.3);s.quadraticCurveTo(b,m-h*1.1,b,m);s.quadraticCurveTo(b,m+h*0.9,w*0.12,m+h*1.4);s.lineTo(0,len);s.lineTo(-w*0.12,m+h*1.4);s.quadraticCurveTo(-b,m+h*0.9,-b,m);s.quadraticCurveTo(-b,m-h*1.1,-w*0.35,m-h*1.3);}
   else{s.lineTo(w*0.3,len*0.85);s.lineTo(0,len);s.lineTo(-w*0.3,len*0.85);}
-  s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
+  s.closePath();const g=extrude(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
 }
 /* silvered dial, 4 inch. Default: the Hamilton Model 21 (below). kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
    large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale keeps this model's 240° arc.
@@ -1032,7 +1047,7 @@ function polyGeo(pts,th,holes=[],bev=0){const polyH=holes.filter(h=>h.pts);holes
   /* the bevel narrows every hole by 0.8·bev at both faces; a screw hole (4th element set) is drawn that much larger, so it has its size at the faces and a thread fits it */
   for(const[hx,hz,hr,sc]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr+(sc?bev*0.8:0),0,TAU,true);s.holes.push(h);}
   for(const{pts:hp}of polyH){const h=new THREE.Path();cwise(hp.map(([x,z])=>new THREE.Vector2(x,-z))).forEach((q,i)=>i?h.lineTo(q.x,q.y):h.moveTo(q.x,q.y));h.closePath();s.holes.push(h);}
-  const g=new THREE.ExtrudeGeometry(s,{depth:th-2*bev,bevelEnabled:bev>0,bevelThickness:bev,bevelSize:bev*0.8,bevelOffset:-bev*0.8,bevelSegments:1,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,bev,0);return g;}
+  const g=extrude(s,{depth:th-2*bev,bevelEnabled:bev>0,bevelThickness:bev,bevelSize:bev*0.8,bevelOffset:-bev*0.8,bevelSegments:1,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,bev,0);return g;}
 function stadiumPts(p0,p1,w){const dx=p1[0]-p0[0],dz=p1[1]-p0[1],l=Math.hypot(dx,dz),nx=-dz/l*w/2,nz=dx/l*w/2,pts=[];
   const a0=Math.atan2(nz,nx);for(let i=0;i<=16;i++){const a=a0+Math.PI*i/16;pts.push([p0[0]+w/2*Math.cos(a),p0[1]+w/2*Math.sin(a)]);}
   for(let i=0;i<=16;i++){const a=a0+Math.PI+Math.PI*i/16;pts.push([p1[0]+w/2*Math.cos(a),p1[1]+w/2*Math.sin(a)]);}return pts;}
@@ -1130,8 +1145,8 @@ function buildMovement(M){
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
   const bushR=(p,x,z,y1,y2,ro,ri,mat)=>mesh(p,ringGeo(ro,ri,Math.abs(y2-y1)),mat||M.brass2,x,(y1+y2)/2,z);
   bushR(pp,...L.C,y0-0.1,0,1.5,0.78);bushR(pp,...L.Fu,y0-0.1,0,1.4,0.58);bushR(pp,...L.Ba,y0-0.1,0,1.9,1.43);bushR(pp,...L.E,y0-0.1,0,1.3,0.95,M.gilt);bushR(pp,...L.E,-1.2,0,0.95,0.58,M.ruby);   /* escape lower setting (42162) with its jewel */
-  /* mounting ring (42057, Fig. 110) round the plate's edge, with a lip under its dial side held by three screws (42055) from the dial side; section and screw positions estimated */
-  R.flange=mesh(pp,new THREE.LatheGeometry([V2(PP_R-0.1,y0),V2(47,y0),V2(47,-0.01),V2(PP_R-0.1,-0.01),V2(PP_R-0.1,y0)],160),M.plate);mesh(pp,discGeo(47,1.0,[[0,0,40.2],...S.ring.map(q=>hC(...q,RSR))]),M.plate,0,0.01,0);
+  /* mounting ring (42057, Fig. 110) round the plate's edge, with a lip under its dial side held by three screws (42055) from the dial side; section and screw positions estimated. It starts 0.02 outside the plate's edge, clear of the plate's polygon (at PP_R-0.1 the plate's edge ran inside it and showed in a section as a hollow) */
+  R.flange=mesh(pp,new THREE.LatheGeometry([V2(PP_R+0.02,y0),V2(47,y0),V2(47,-0.01),V2(PP_R+0.02,-0.01),V2(PP_R+0.02,y0)],160),M.plate);mesh(pp,discGeo(47,1.0,[[0,0,40.2],...S.ring.map(q=>hC(...q,RSR))]),M.plate,0,0.01,0);
   { const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);
     for(const q of S.ring)screw(rg,q[0],-q[1],-1.01,RSR,1.2,1.01+3.86-0.4);   /* through the lip and into the plate */
     /* the pillars' screws (42055) from the dial side, through the plate into the pillars (Fig. 110) */
@@ -1234,7 +1249,7 @@ function buildMovement(M){
   /* sustaining spring: fixed to the fusee wheel by the pin at XZ -0.35 and curving back (against the running direction) to a free end on which the
      sustaining ratchet's pin presses, so the ratchet drives the wheel forward through it; e = XZ angle of the free end in the wheel's frame */
   const sspGeo=e=>{const s=new THREE.Shape(),r0=13.2,r1=13.9;s.absarc(0,0,r1,0.35,-e,true);s.absarc(0,0,r0,-e,0.35,false);
-    const g=new THREE.ExtrudeGeometry(s,{depth:1.13,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);return g;};   /* 0.02 under the wheel's web */
+    const g=extrude(s,{depth:1.13,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);return g;};   /* 0.02 under the wheel's web */
   /* the sustaining spring (42016) and its fixing pin: its own part, turning with the fusee wheel, in whose recess it lies (Figs. 28, 71) */
   const ssP=part('sspring',-10);R.ssg=new THREE.Group();R.ssg.position.set(L.Fu[0],0,L.Fu[1]);ssP.add(R.ssg);
   const SSP_PIN=4.05;R.sspring=mesh(R.ssg,sspGeo(SSP_PIN-0.031),M.blued,0,-8.75,0);
@@ -1297,7 +1312,7 @@ function buildMovement(M){
   R.det=new THREE.Group();R.det.position.set(E.Ft.x*ES,0,E.Ft.y*ES);dt.add(R.det);const fx=new THREE.Group();fx.position.copy(R.det.position);dt.add(fx);   /* moving about the point of flexure; fixed */
   const poly=(g,pts,ya,yb,mat,holes=[])=>{const s=new THREE.Shape();pts.forEach((p,i)=>{const x=(p.x-E.Ft.x)*ES,z=(p.y-E.Ft.y)*ES;i?s.lineTo(x,z):s.moveTo(x,z);});s.closePath();
     for(const[p,r]of holes){const h=new THREE.Path();h.absarc((p.x-E.Ft.x)*ES,(p.y-E.Ft.y)*ES,r,0,TAU,true);s.holes.push(h);}   /* holes: [unit-frame point, radius in mm] */
-    const ge=new THREE.ExtrudeGeometry(s,{depth:yb-ya,bevelEnabled:false,curveSegments:12});ge.rotateX(Math.PI/2);ge.translate(0,yb,0);return mesh(g,ge,mat);};
+    const ge=extrude(s,{depth:yb-ya,bevelEnabled:false,curveSegments:12});ge.rotateX(Math.PI/2);ge.translate(0,yb,0);return mesh(g,ge,mat);};
   const Pc=E.pieces,Fx=E.fixed,Cu=M.copper;
   poly(fx,Fx.foot,-19.26,-17.36,Cu);poly(R.det,Pc.spring,-19.26,-18.76,Cu);poly(R.det,Pc.spring,-17.86,-17.41,Cu);poly(R.det,Pc.cross,-19.26,-17.36,Cu);   /* bottoms staggered so no two faces are coplanar */
   poly(R.det,Pc.blade,-18.21,-17.41,Cu);poly(R.det,Pc.block,-18.26,-17.36,Cu);poly(R.det,Pc.arm,-18.16,-17.86,Cu);poly(R.det,Pc.horn,-17.86,-17.41,Cu);poly(R.det,Pc.bracket,-17.86,-17.46,Cu,[[E.D(E.tR+0.01,E.nR+0.033),hT(0,0,0.22,0.07)[2]]]);
@@ -1324,7 +1339,7 @@ function buildMovement(M){
   /* impulse roller (O.D. 0.249 in, as thick as the escape wheel, post 30) with its crescent: the large portion behind the impulse jewel, where each tooth
      drops in and meets the jewel, and the small portion ahead of it, which the teeth never enter (Ops. 76, 83). Shape angle = minus the unit-frame angle */
   const rR=E.rRoll*ES,ir=new THREE.Shape(),n0=-E.aI,n1=n0+0.6;ir.absarc(0,0,rR,n1,n0-0.16+TAU,false);ir.absarc(0,0,rR*0.86,n0-0.16,n0,false);ir.absarc(0,0,rR*0.55,n0,n1,false);
-  const irg=new THREE.ExtrudeGeometry(ir,{depth:1.3,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.65,0);
+  const irg=extrude(ir,{depth:1.3,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.65,0);
   mesh(R.staff,irg,M.steel,0,EY-0.07,0);
   const pal=(ang,r0,r1,w,y,h)=>{const q=mesh(R.staff,new THREE.BoxGeometry(r1-r0,h,w),M.ruby,(r0+r1)/2*Math.cos(ang),y,(r0+r1)/2*Math.sin(ang));q.rotation.y=-ang;};
   pal(E.aIc,rR-0.9,E.rp*ES,E.wI*ES,EY-0.09,1.56);   /* the wheel centred on the impulse jewel, jewel showing above and below it (Op. 82) */
@@ -1344,8 +1359,8 @@ function buildMovement(M){
   mesh(R.balU,ring(BR,BR-1.4,2.4),M.steel);
   /* the arm on the hub (Fig. 4): the hub (42186, on the staff) has a flange under the arm and a boss up through the arm's clearance hole; the cap (42248) over the arm
      and two hold-down screws (42249) through cap and arm into the flange. The arm is widened round the hub. Sizes estimated */
-  const HD=[[1.7,0],[-1.7,0]];
-  mesh(R.balU,polyGeo(subtractCircle([[-(BR-0.5),-1.2],[BR-0.5,-1.2],[BR-0.5,1.2],[-(BR-0.5),1.2]],[0,0],2.2,true),1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,-0.55,0);
+  const HD=[[1.7,0],[-1.7,0]],xa=Math.sqrt(2.2**2-1.2**2),a0=Math.atan2(1.2,xa),arc=(s,e)=>[...Array(25)].map((_,i)=>[2.2*Math.cos(s+(e-s)*i/24),2.2*Math.sin(s+(e-s)*i/24)]);   /* the bar across, joined to the 2.2 circle round the hub on both sides (subtractCircle keeps one run: it drew half the arm) */
+  mesh(R.balU,polyGeo([[BR-0.5,-1.2],[BR-0.5,1.2],...arc(a0,Math.PI-a0),[-(BR-0.5),1.2],[-(BR-0.5),-1.2],...arc(Math.PI+a0,TAU-a0)],1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,-0.55,0);
   mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,0.55,0);cylBetween(R.balU,1.1,1.15,-0.9,M.steel,0,0,24);
   mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,-0.9,0);
   for(const q of HD)screw(R.balU,...q,-0.9,0.4,0.25,0.35+1.1+0.5);
@@ -1372,7 +1387,7 @@ function buildMovement(M){
   R.balS=new THREE.Group();R.balS.position.y=BY;R.balS.visible=false;R.staff.add(R.balS);
   mesh(R.balS,new THREE.BoxGeometry(2*BR-1,1.4,2.2),M.steel);mesh(R.balS,cylY(2.2,2.2,24),M.steel);
   const span=160*D2R,band=(a0,r0,r1)=>{const s=new THREE.Shape(),N=48;for(let i=0;i<=N;i++){const a=a0+span*i/N;i?s.lineTo(r1*Math.cos(a),r1*Math.sin(a)):s.moveTo(r1*Math.cos(a),r1*Math.sin(a));}
-    for(let i=N;i>=0;i--){const a=a0+span*i/N;s.lineTo(r0*Math.cos(a),r0*Math.sin(a));}const g=new THREE.ExtrudeGeometry(s,{depth:2.4,bevelEnabled:false});g.rotateX(-Math.PI/2);g.translate(0,-1.2,0);return g;};
+    for(let i=N;i>=0;i--){const a=a0+span*i/N;s.lineTo(r0*Math.cos(a),r0*Math.sin(a));}const g=extrude(s,{depth:2.4,bevelEnabled:false});g.rotateX(-Math.PI/2);g.translate(0,-1.2,0);return g;};
   for(let k=0;k<2;k++){const a0=k*Math.PI;mesh(R.balS,band(a0,BR-1.6,BR-0.9),M.steel);mesh(R.balS,band(a0,BR-0.9,BR),M.brass);
     const wa=a0+span*0.62,w=mesh(R.balS,cylY(2.3,4.2,24),M.brass2,(BR+1.9)*Math.cos(wa),0,-(BR+1.9)*Math.sin(wa));w.rotation.set(0,wa,Math.PI/2);}
   /* helical hairspring: ~8 mm tall, ~5.5 mm radius, many turns (Fig. 2) */
@@ -1394,7 +1409,7 @@ function buildMovement(M){
   const EPo=[];for(let k=0;k<=16;k++){const a=-Math.PI/2+Math.PI*k/16;EPo.push([1.65+2.3*Math.cos(a),2.3*Math.sin(a)]);}EPo.push([-3.35,2.3],[-3.65,2.0],[-3.65,-2.0],[-3.35,-2.3]);   /* cap: round at the nose's end, square at the foot's */
   R.cock=mesh(ck,polyGeo(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.65),add(L.B,EPu,-3.0),6.4)]),2.6,[[...L.B,1.5,1],hC(...S.cock,2.8,0.8),...S.ep.map(q=>hT(...q,0.7)),hC(...SPS,0.8)],0.3),M.plate,0,CK_T,0);
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
-  mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)].reverse(),40),M.steel,...[L.B[0],0,L.B[1]]);
+  mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.steel,...[L.B[0],0,L.B[1]]);
   mesh(ck,ring(0.95,0.25,0.6),M.ruby,L.B[0],CK_T+0.65,L.B[1]);
   /* foot: a solid block under the outer part of the crescent, standing on the upper train bridge beside the barrel bridge's straight edge
      (the cock is mounted to the train bridge, manual Sec. II; its screw is where the top-view photograph shows it). Annular sector r 31-39.8,
@@ -1445,7 +1460,7 @@ function buildMovement(M){
     pts.push(TL,...arc3(TL,P2(13.1,106),BL,20),BL,...arc3(BL,P2(5.9,192),BR,40),BR,...polar(12.97,12.61,249.2,325.9,30).slice(1,-1),TR,...arc3(TR,P2(6.4,17),TL,40));
     const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
     for(const[x,z,r]of[[...L.Ba,2.6],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
-    const cvg=new THREE.ExtrudeGeometry(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
+    const cvg=extrude(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
     R.cover=mesh(rt,cvg,M.plateSolid,0,-29.66,0);
     /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */
     for(const q of S.cover){mesh(rt,ringGeo(1.1,hC(0,0,0.9)[2],1.4),M.plateSolid,q[0],-27.86,q[1]);screw(rt,...q,-29.66,0.9,0.55,1.1+1.4+2.2);}   /* 42056, into the barrel bridge */
@@ -1589,7 +1604,7 @@ function makeFusee(M,c){
   for(const y of[c.bT+0.3,c.bB-0.3]){const cp=mesh(bz,ringGeo(c.Rb+0.7,1.5,0.6),M.gilt,0,y,0);cp.userData.driveGhost=true;}
   /* mainspring brace (42037, Fig. 75): a strip lining the wall where the spring's outer end hooks, as thick as the spring, between the caps' inner faces */
   { const s=new THREE.Shape(),a0=Math.PI/2-0.35,a1=Math.PI/2+0.35;s.absarc(0,0,c.Rb-0.02,a0,a1,false);s.absarc(0,0,c.Rb-0.45,a1,a0,true);
-    const ge=new THREE.ExtrudeGeometry(s,{depth:Math.abs(c.bT-c.bB)-1.24,bevelEnabled:false,curveSegments:24});ge.rotateX(-Math.PI/2);mesh(bz,ge,M.steel,0,c.bT+0.62,0); }
+    const ge=extrude(s,{depth:Math.abs(c.bT-c.bB)-1.24,bevelEnabled:false,curveSegments:24});ge.rotateX(-Math.PI/2);mesh(bz,ge,M.steel,0,c.bT+0.62,0); }
   const ms=new THREE.Mesh(new THREE.BufferGeometry(),M.mspring);ms.position.x=bx;ms.userData.partName='mainspring';ms.userData.onlyDrive=true;ms.userData.noCap=true;g.add(ms);
   mesh(bz,ringGeo(4,1.5,0.4),M.brass2,0,c.bT-0.25,0).userData.driveGhost=true;
   /* barrel cap on the pillar-plate end, held by five screws (manual Figs. 26, 109) */
@@ -1713,7 +1728,7 @@ function buildBox(M){
     {const sp=[],N=24,sg=Math.sign(SH_REST),cap=(a,t0)=>{const c=at(RS,a);for(let i=1;i<N/2;i++){const t=t0+sg*i/(N/2)*Math.PI;sp.push([c[0]+SW*Math.cos(t),c[1]+SW*Math.sin(t)]);}};   /* arc slot for the stop screw, round-ended */
       for(let i=0;i<=N;i++)sp.push(at(RS+SW,ah+SH_REST*i/N));cap(ah+SH_REST,ah+SH_REST);for(let i=N;i>=0;i--)sp.push(at(RS-SW,ah+SH_REST*i/N));cap(ah,ah+Math.PI);
       sh.holes.push(new THREE.Path(sp.map(q=>new THREE.Vector2(q[0],q[1]))));}
-    const pg=new THREE.ExtrudeGeometry(sh,{depth:PT,bevelEnabled:false,curveSegments:24});pg.rotateX(Math.PI/2);   /* rotateX(+90): (x,y,z) -> (x,-z,y), so the outline's y is world z and the plate hangs from Y0 */
+    const pg=extrude(sh,{depth:PT,bevelEnabled:false,curveSegments:24});pg.rotateX(Math.PI/2);   /* rotateX(+90): (x,y,z) -> (x,-z,y), so the outline's y is world z and the plate hangs from Y0 */
     mesh(shield,pg,M.brass2);const q=at(3.3,ah+SH_REST/2+Math.PI);mesh(shield,cylY(0.35,0.6,10),M.steel,q[0],-PT-0.3,q[1]);   /* the spring's pin, under the plate opposite the slot */
     const lg=mesh(shield,cylY(0.2,1.0,8),M.steel,2.8*Math.cos(ah+SH_REST/2+Math.PI),YB-0.3-Y0,2.8*Math.sin(ah+SH_REST/2+Math.PI));lg.rotation.set(0,-(ah+SH_REST/2+Math.PI),Math.PI/2);}   /* moving leg, from the coil to the pin */
   /* fixed to the case: shoulder screw (shoulder through the plate, slotted head wider than the spring), the spring's coil and fixed leg, stop screw (shank through the slot, head under the plate) */

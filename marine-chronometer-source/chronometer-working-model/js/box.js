@@ -83,7 +83,7 @@ function buildBox(M){
     {const sp=[],N=24,sg=Math.sign(SH_REST),cap=(a,t0)=>{const c=at(RS,a);for(let i=1;i<N/2;i++){const t=t0+sg*i/(N/2)*Math.PI;sp.push([c[0]+SW*Math.cos(t),c[1]+SW*Math.sin(t)]);}};   /* arc slot for the stop screw, round-ended */
       for(let i=0;i<=N;i++)sp.push(at(RS+SW,ah+SH_REST*i/N));cap(ah+SH_REST,ah+SH_REST);for(let i=N;i>=0;i--)sp.push(at(RS-SW,ah+SH_REST*i/N));cap(ah,ah+Math.PI);
       sh.holes.push(new THREE.Path(sp.map(q=>new THREE.Vector2(q[0],q[1]))));}
-    const pg=new THREE.ExtrudeGeometry(sh,{depth:PT,bevelEnabled:false,curveSegments:24});pg.rotateX(Math.PI/2);   /* rotateX(+90): (x,y,z) -> (x,-z,y), so the outline's y is world z and the plate hangs from Y0 */
+    const pg=extrude(sh,{depth:PT,bevelEnabled:false,curveSegments:24});pg.rotateX(Math.PI/2);   /* rotateX(+90): (x,y,z) -> (x,-z,y), so the outline's y is world z and the plate hangs from Y0 */
     mesh(shield,pg,M.brass2);const q=at(3.3,ah+SH_REST/2+Math.PI);mesh(shield,cylY(0.35,0.6,10),M.steel,q[0],-PT-0.3,q[1]);   /* the spring's pin, under the plate opposite the slot */
     const lg=mesh(shield,cylY(0.2,1.0,8),M.steel,2.8*Math.cos(ah+SH_REST/2+Math.PI),YB-0.3-Y0,2.8*Math.sin(ah+SH_REST/2+Math.PI));lg.rotation.set(0,-(ah+SH_REST/2+Math.PI),Math.PI/2);}   /* moving leg, from the coil to the pin */
   /* fixed to the case: shoulder screw (shoulder through the plate, slotted head wider than the spring), the spring's coil and fixed leg, stop screw (shank through the slot, head under the plate) */

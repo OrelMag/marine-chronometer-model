@@ -477,3 +477,26 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
+- **Plates hollow round their holes and cut-outs: a screw taken out showed
+  only the hole's two rims, and a section showed the hole's wall instead of
+  the cut.** r128's `ExtrudeGeometry` turns a shape's holes round only when it
+  reverses a counterclockwise outline, so `polyGeo`'s clockwise outline with
+  clockwise holes got every hole wall wound into the metal (culled; seen from
+  inside the cut). `extrude()` in `core.js` builds every extrusion and turns
+  those walls over, the shape unchanged. The balance cock's setting was an
+  inside-out lathe (`.reverse()` on its profile). Keep: build extrusions with
+  `extrude()`; a closed part has no edge used once, nor twice the same way, and
+  a positive signed volume.
+- **Balance arm drawn from the hub to one side only.** `subtractCircle` keeps
+  one run of the outline, and the 2.2 mm circle round the hub cut the 2.4 mm
+  bar into two; the arm is now drawn outright. The moment of inertia already
+  counted the whole arm. Keep: `subtractCircle` only where its circle crosses
+  the outline once.
+- **Sections: cut faces patchy where a part lies on the cut one** (the barrel
+  bridge on the train bridge, in a cut through the train bridge), and the
+  mounting ring cut hollow. The cut face (a back face) was at the depth of the
+  face under it; `SEC_DEPTH` now draws it 0.015 mm nearer, in the visible pass
+  and in Edges' id pass, compiled only while a section is on. The ring started
+  0.1 mm inside the plate's edge; it now starts 0.02 mm outside. Keep: a pass
+  with an override material (`nid`) takes the section's depth too; overlapping
+  solids show each other through a cut.

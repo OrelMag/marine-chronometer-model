@@ -67,7 +67,7 @@ function escapeWheel(parent,M,rt,y){
   const teeth=new THREE.Mesh(gearGeo(16,1,1.3,{escape:true,flip:true,rt,depth:rt*0.23,bore:rt*0.7}),M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
   const web=new THREE.Shape();web.absarc(0,0,rt*0.72,0,TAU,false);for(let j=0;j<4;j++){const a0=j/4*TAU+0.12,a1=(j+1)/4*TAU-0.12,h=new THREE.Path();h.absarc(0,0,rt*0.62,a0,a1,false);h.absarc(0,0,1.3,a1,a0,true);web.holes.push(h);}
   const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);
-  const wg=new THREE.ExtrudeGeometry(web,{depth:0.5,bevelEnabled:false,curveSegments:24});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
+  const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:24});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
   const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
   return teeth;
 }
@@ -96,12 +96,19 @@ function mats(){
 }
 /* ---------- cross-section support: clip plane + hatched caps on back faces ---------- */
 const SEC={on:{value:0},col:{value:new THREE.Color(0.58,0.12,0.09)},mats:new Set()};
+/* a cut face (a back face seen through the cut) is drawn 0.015 mm nearer than it lies: at its own depth it z-fought the part lying on that face (the barrel
+   bridge on the train bridge, a plate on its pillar) and showed it through the cut in patches. Not at the plane itself: the far side of an uncut part is a back
+   face too, and would cover everything. Compiled in only while a section is on (setSection recompiles), as a shader that writes depth loses early depth testing */
+const secDepth=m=>!!m.userData.secCap&&SEC.on.value>0.5;
+const SEC_DEPTH='\n#if NUM_CLIPPING_PLANES>0&&(__VERSION__>=300||defined(GL_EXT_frag_depth))\n{float fd=gl_FragCoord.z;'+
+  'if(uSecOn>0.5&&!gl_FrontFacing&&!isOrthographic){vec3 q=-vClipPosition;vec4 c=projectionMatrix*vec4(q*(1.0-0.015/length(q)),1.0);fd=0.5*c.z/c.w+0.5;}gl_FragDepthEXT=fd;}\n#endif';
 function patchSection(m,cap){
   if(!m||m.userData.secPatched)return;m.userData.secPatched=true;m.userData.secCap=cap;m.userData.side0=m.side;m.clipShadows=true;if(!m.clippingPlanes)m.clippingPlanes=[];SEC.mats.add(m);
-  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;
-    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
-      'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':''));};
-  m.customProgramCacheKey=()=>'sec'+(cap?1:0);
+  if(cap)m.extensions={fragDepth:true};
+  m.onBeforeCompile=sh=>{sh.uniforms.uSecOn=SEC.on;sh.uniforms.uSecCol=SEC.col;const dp=secDepth(m);
+    sh.fragmentShader='uniform float uSecOn;\nuniform vec3 uSecCol;\n'+(dp?'uniform mat4 projectionMatrix;\n':'')+sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+(cap?
+      'if(uSecOn>0.5&&!gl_FrontFacing){float st=step(0.5,fract((gl_FragCoord.x+gl_FragCoord.y)/9.0));vec3 cc=mix(uSecCol,diffuseColor.rgb,0.28)*(0.78+0.22*st);gl_FragColor=vec4(pow(max(cc,vec3(0.0)),vec3(1.0/2.2)),1.0);}':'')+(dp?SEC_DEPTH:''));};
+  m.customProgramCacheKey=()=>'sec'+(cap?1:0)+(secDepth(m)?1:0);
   m.needsUpdate=true;
 }
 function setSection(on,plane){SEC.on.value=on?1:0;SEC.plane=plane;for(const m of SEC.mats){m.clippingPlanes=on?[plane]:[];m.side=on&&m.userData.secCap?THREE.DoubleSide:m.userData.side0;m.needsUpdate=true;}}
@@ -130,7 +137,7 @@ function drawOf(m){let d=DRAW.get(m);
     const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;
       sh.fragmentShader='uniform float uMetal;\nuniform float uTex;\nuniform float uShMax;\nuniform float uWash;\n'+sh.fragmentShader.replace('#include <dithering_fragment>',WASH(tr)+'\n#include <dithering_fragment>');sec(sh);
       sh.fragmentShader=sh.fragmentShader.replace('vec3(1.0/2.2)),1.0);','vec3(1.0/2.2)),0.45);');};   /* a cut face (patchSection) is drawing, not paper */
-    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0);DRAW.set(m,d);}
+    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0)+(secDepth(d)?1:0);DRAW.set(m,d);}
   d.opacity=m.opacity??1;return syncMat(d,m);}
 /* makeInk(r): draws a frame in pen and wash. Hidden meshes stay hidden; a mesh whose material is under half opaque (glass, see-through and faded parts) is a
    ghost, drawn in outline only, lighter, and left out of the wash. Passes: view normals and a part id (solids, then ghosts) with their depths; the wash (the
@@ -150,9 +157,9 @@ function makeInk(r){
     const t=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=t.minFilter=T.LinearFilter;t.needsUpdate=true;return t;};
   /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once),
      and so is the mesh's own polygon offset: without it the dial's face, 0.02 above its brass disc, fought it, and Edges drew the fight as streaks across the dial */
-  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,uniforms:{uId:{value:0}},
+  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
     vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
-    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);}'});
+    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId,uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);'+SEC_DEPTH+'\n}'});
   /* the id is the part's (pen and wash) or, for Edges, the mesh's: a pawl lies on its own part's wheel. Edges gives box meshes (userData.inkBox) id 0, no line */
   let idOn=false,idM=false,nM=0;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
   const hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
@@ -227,13 +234,21 @@ function mainspringGeo(w,ra,Rw,y0,y1,turns){
     const a=-tot*t,x=r*Math.cos(a),z=-r*Math.sin(a);pos.push(x,y0,z,x,y1,z);if(i<N){const k=i*2;idx.push(k,k+1,k+2,k+1,k+3,k+2);}}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();return g;
 }
+/* extrude(s,o): ExtrudeGeometry with every hole's wall facing into the hole. r128 turns the holes only when it reverses a counterclockwise outline, so with a
+   clockwise outline a clockwise hole got its wall wound into the metal: culled, the plate looked a hollow shell round its holes and cut-outs, and a section
+   showed that wall's face instead of the hatched cut. Its triangles are turned over; the shape is unchanged (a clockwise hole's bevel still narrows it) */
+function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,p=s.extractPoints(o.curveSegments??12),dd=v=>{if(v.length>2&&v[v.length-1].equals(v[0]))v.pop();return v;},sh=dd(p.shape),hs=p.holes.map(dd);
+  if(!U.isClockWise(sh)||!hs.length)return g;const sl=6*((o.steps??1)+(o.bevelEnabled?2*(o.bevelSegments??3):0)),side=g.groups[1];let i=side.start+sh.length*sl,f=0;   /* the side walls: the outline's, then each hole's, 6·sl vertices a point */
+  if(side.start+side.count!==i+hs.reduce((a,h)=>a+h.length*sl,0)){console.error('extrude: side walls not as counted');return g;}
+  for(const h of hs){const e=i+h.length*sl;if(U.isClockWise(h)){f=1;for(const a of Object.values(g.attributes))for(let v=i;v<e;v+=3)for(let c=0;c<a.itemSize;c++){const k=(v+1)*a.itemSize+c,m=(v+2)*a.itemSize+c,t=a.array[k];a.array[k]=a.array[m];a.array[m]=t;}}i=e;}
+  if(f)g.computeVertexNormals();return g;}
 function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,TAU,true);s.holes.push(hp);
-  const g=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
+  const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 /* pawl / click: round pivot boss at the origin, tapered arm along -x ending in a hooked tip */
 function pawlGeo(len,w,th,centre){const s=new THREE.Shape(),r=w*0.72;s.moveTo(0,r);s.absarc(0,0,r,Math.PI/2,-Math.PI/2,true);
   s.lineTo(-len*0.8,-w*0.26);s.lineTo(-len,-w*0.62);s.lineTo(-len*0.96,w*0.08);s.quadraticCurveTo(-len*0.5,w*0.42,0,r);
   const h=new THREE.Path();h.absarc(0,0,r*0.35,0,TAU,true);s.holes.push(h);
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:16});g.rotateX(-Math.PI/2);g.translate(centre?len/2:0,-th/2,0);return g;}
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:16});g.rotateX(-Math.PI/2);g.translate(centre?len/2:0,-th/2,0);return g;}
 function mesh(p,geo,mat,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);p.add(m);return m;}
 function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 /* several geometries as one mesh's, each placed by its matrix ([[geometry, Matrix4], ...]): one draw call (and one shadow-pass call) instead of many */
@@ -242,7 +257,7 @@ function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonInde
   gs.forEach(g=>g.dispose());return out;}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
 function discGeo(r,th,holes=[]){if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
 /* gear: pitch radius = m*n/2 */
 function gearGeo(n,m,th,o={}){
   const rp=m*n/2,ro=o.escape?o.rt:rp+m*0.95,depth=o.escape?o.depth:2.25*m,ri=ro-depth,p=TAU/n,pts=[];
@@ -257,7 +272,7 @@ function gearGeo(n,m,th,o={}){
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
-  const g=new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);return g;
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);return g;
 }
 /* arbor with wheel & pinion: returns rotating group */
 function arbor(parent,M,x,z,o){
@@ -287,7 +302,7 @@ function handGeo(len,w,tail,kind,at){   /* tail<0: a spear counterpoise -tail lo
   else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=at?len*at:len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */
     s.lineTo(w*0.35,m-h*1.3);s.quadraticCurveTo(b,m-h*1.1,b,m);s.quadraticCurveTo(b,m+h*0.9,w*0.12,m+h*1.4);s.lineTo(0,len);s.lineTo(-w*0.12,m+h*1.4);s.quadraticCurveTo(-b,m+h*0.9,-b,m);s.quadraticCurveTo(-b,m-h*1.1,-w*0.35,m-h*1.3);}
   else{s.lineTo(w*0.3,len*0.85);s.lineTo(0,len);s.lineTo(-w*0.3,len*0.85);}
-  s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
+  s.closePath();const g=extrude(s,{depth:0.35,bevelEnabled:false});g.rotateX(-Math.PI/2);return g;
 }
 /* silvered dial, 4 inch. Default: the Hamilton Model 21 (below). kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
    large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale keeps this model's 240° arc.
