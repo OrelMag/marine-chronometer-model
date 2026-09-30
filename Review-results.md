@@ -346,6 +346,9 @@ Then run `dyn.py` with the variant shown.
 - **Floating minute hand.** The minute hand and its hub float 0.8 mm above the
   top of the cannon pinion: the pipe ends at y 4.9 and the hub starts at 5.7.
   This is only visible in the 12–6 cross-section.
+  *Fixed: the cannon pinion's pipe runs to a shoulder at 5.75 and ends in the
+  square; the minute hand, broached square, sits on it, and the hour hand has
+  a round collet on the hour wheel's pipe (Ops. 58, 59, 64).*
 - **Committed tool outputs.** `tools/r_p3.png` (456 KB) and `tools/p3fit.json`
   are outputs of `p3fit.py`, committed by mistake in `1340cb6`. `.gitignore`
   doesn't cover the tools' outputs, so running them from `tools/` dirties the

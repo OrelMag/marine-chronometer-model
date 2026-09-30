@@ -577,4 +577,18 @@ Contents:
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Minute hand floating over the cannon pinion; hour hand without a hole;
+  the square on the minute hand** (Review-results.md, "Floating minute hand").
+  The cannon pinion's pipe ended at y 4.9, and the minute hand sat in a static
+  hub from 5.7 that didn't turn. The hour hand was a solid blade across the
+  pipe's path. The key's round socket cut into the square's corners, and only
+  the Hamilton dial had a square. Now stacked as Ops. 58, 59 and 64 describe:
+  the cannon pinion's pipe (r 1.7) runs to a shoulder at 5.75 and ends in the
+  square (the one the key turns, on every dial style); the hour wheel (bore
+  1.75) is free on the pipe; the hour hand's round collet sits on the hour
+  wheel's pipe; the minute hand, broached square, sits on the shoulder with its
+  collet over it; both keys have square sockets. Keep: each collet turns with
+  its hand (one `dk` group); the hour wheel's bore clears the square's corners
+  (r 1.70), since it goes on over them; the hands stay above the sub-dial
+  collets (5.05); `fine.py` run with the keys shown (`hkeyOn`, `keyOn`) finds
+  nothing between a socket and its square.
