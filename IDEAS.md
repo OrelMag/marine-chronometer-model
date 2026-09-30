@@ -90,7 +90,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 | 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes |  |
 | 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" | Done: GMT by default `23e9c58`; setting with the key and when stopped `dc06fae`, `21ea739` |
 | 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something | Done `70baefe` |
-| 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page |  |
+| 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page | Done `630aa0f` |
 | 5 | [One parts registry](#71-one-parts-registry) | Code | S | Adding a part touches six tables in `app.js` today | Done `5e8c578` |
 | 6 | [Make `ESC` a factory and share it](#73-make-esc-a-factory-and-share-it) | Code | S–M | Enables #4, removes the source-slicing in `tools/escapement.js` and the hand-copied solver in the essay | Done `813f7ae` |
 | 7 | [Merge static meshes; stop shadows from tiny parts](#51-draw-calls-merge-and-instance) | Performance | S–M | 545 meshes, each with its own geometry; 541 cast shadows; 124 meshes are knurling on four nuts | Done: knurls, rim holes, tiny shadows `347bf5b`; merging all static parts open |
@@ -347,7 +347,7 @@ Example: "After 30 days at +1.2 s a day, uncorrected: 36 s, 9′ of longitude, 7
 - Add a simulated day counter that runs at 3600× or faster, with observational noise of ±¼ s from reading to the half second.
 
 ### 3.3 Adjuster's bench: the escapement, live
-> **Done.** The Adjuster's bench section: six sliders, the detent, trip spring screw, roller and jewels rebuilt live (`escSet`), the 2-D plan beside them, the manual's figures from `ESC.checks()` (moved from `tools/escapement.js` into `makeEsc`, which the tool now prints unchanged), and "it would not run" with the reason, keeping the last setting that runs. `AMIN` follows the settings. The hash carries changed settings.
+> **Done.** The Adjuster's bench section: six sliders, the detent, trip spring screw, roller and jewels rebuilt live (`escSet`), the 2-D plan beside them, the manual's figures from `ESC.checks()` (moved from `tools/escapement.js` into `makeEsc`, which the tool now prints unchanged), and "it would not run" with the reason, keeping the last setting that runs. `AMIN` follows the settings. The hash carries changed settings. `04f95f9`, `2763e9e`, `630aa0f`
 
 **What.** A panel of sliders for the escapement's settings, each redrawn live in the 3D model and the 2-D diagram, with the manual's figures checked as you move them:
 
@@ -410,7 +410,7 @@ A results table beside them shows lock, let-off, overall, drop, roller shake and
 **Why.** The manual is an overhaul manual; this is the part of it the model doesn't yet use. It's also what restorers would come to the page for.
 
 ### 3.6 Provenance overlay: colour by source (S–M)
-> **Done.** Every part in `PARTS` has `src` (the manual, measured, solved, estimated), `sn` (what came from where) and `figs`, taken from the README's Sources, layout and Estimated sections; the part card shows them. Colour by source (Display) colours every part by it, with a key; `colr=src` in the hash.
+> **Done.** Every part in `PARTS` has `src` (the manual, measured, solved, estimated), `sn` (what came from where) and `figs`, taken from the README's Sources, layout and Estimated sections; the part card shows them. Colour by source (Display) colours every part by it, with a key; `colr=src` in the hash. `d42027c`, `ce76d8a`
 
 **What.** A third colouring mode beside Normal and Colour by part: every part coloured by where its shape and size came from.
 
@@ -607,9 +607,9 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - *Done:* **Remember (S):** `cm-set` keeps plate finish, dial style, balance and the last view; the view opens the page when its link names none. `8a84df5` Before: in `localStorage`, alongside the theme already stored there, keep plate finish, dial style, balance and the last view. Always wrap it in `try`, as the theme code does.
 
 ### 6.3 Parts list (S)
-- *Done:* **Search:** by name, part number or source note, and `fig 90` by the manual's figure. Before: a search box that filters by name and Hamilton part number (`42087` finds the detent).
-- *Done:* **Figure references:** on each card, from `figs` in `PARTS`. Before: show each part's manual figure numbers ("Figs. 14, 90, 110") on its info card. The README already records them; move them into the registry.
-- *Done:* **Units:** Sizes in mm or inches (Parts), for the cards, remembered. Before: an **mm / in** toggle for the dimensions on the info cards. The manual works in inches (0.249 in roller, 0.002 in roller shake).
+- *Done:* **Search:** by name, part number or source note, and `fig 90` by the manual's figure. `d89ee8f` Before: a search box that filters by name and Hamilton part number (`42087` finds the detent).
+- *Done:* **Figure references:** on each card, from `figs` in `PARTS`. `d42027c` Before: show each part's manual figure numbers ("Figs. 14, 90, 110") on its info card. The README already records them; move them into the registry.
+- *Done:* **Units:** Sizes in mm or inches (Parts), for the cards, remembered. `a0f6d6d` Before: an **mm / in** toggle for the dimensions on the info cards. The manual works in inches (0.249 in roller, 0.002 in roller shake).
 
 ### 6.4 Onboarding and hints (S)
 - *Done:* **Hint:** it stays until the model is first tapped, dragged, scrolled or given a key, or a part card, help or the walkthrough covers it. `c490811` Before: the hint fades after nine seconds whether or not it was read. Instead, keep it until the first tap or drag.
@@ -769,10 +769,10 @@ A suggested order, so that each stage makes the next easier.
 - GMT by default (3.1, first half). *Done: `23e9c58`.*
 
 **Stage 2: the chronometer as an instrument (3–5 weeks)**
-- Dynamic balance, not self-starting, twist to start (2.1). Manual setting methods (3.1, second half). Hand-setting square and balance locking arm (1.5).
-- Rate book and longitude error (3.2).
-- Adjuster's bench (3.3).
-- Provenance overlay (3.6).
+- Dynamic balance, not self-starting, twist to start (2.1). Manual setting methods (3.1, second half). Hand-setting square and balance locking arm (1.5). *Done but the equation of motion (2.1) and the shipping wedges (1.5): setting `dc06fae`, `21ea739`.*
+- Rate book and longitude error (3.2). *Done: `70baefe`.*
+- Adjuster's bench (3.3). *Done: `630aa0f`.*
+- Provenance overlay (3.6). *Done: `d42027c`, `ce76d8a`.*
 
 **Stage 3: depth (open-ended)**
 - Temperature and the two balances (2.3), isochronism (2.4), then the 30-day test (3.4).
