@@ -45,7 +45,7 @@ async def shot(b,out,view,drive,cam,text=None,tod=None):
     # applied before the page's scripts run, so the renderer starts at this size
     await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=%r;document.head.appendChild(s);});"%css(text))
     await pg.goto(PAGE);await pg.wait_for_timeout(4500)
-    await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
+    await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate("(()=>{const e=document.querySelector('#shadows');if(!e.checked)e.click();})()")   # with the lamp's shadows (off by default)
     if drive:await pg.evaluate("document.querySelector('#driveOn').click()")
     await pg.evaluate(f"document.querySelector('#views button[data-v=\"{view}\"]').click()");await pg.wait_for_timeout(2500)
     # the hands at ten past ten, as watches are photographed (the model is stopped, so they stay there)

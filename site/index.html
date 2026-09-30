@@ -426,7 +426,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
           <span class="lab">Show</span><label class="ck"><input type="checkbox" id="lbls"> Labels</label><label class="ck" title="Outline every part of the movement with the drawing's lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
           <label class="ck c2"><input type="checkbox" id="colr"> Colour by part</label><label class="ck" title="Colour each part by where its shape and size come from: the manual, measurements, solved to fit, or estimated"><input type="checkbox" id="colrSrc"> Colour by source</label>
           <label class="ck c2" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines and the printing alone"><input type="checkbox" id="drawInk"> Ink drawing</label>
-          <label class="ck c2" title="See-through plates, bridges and case"><input type="checkbox" id="ghost"> See-through</label>
+          <label class="ck c2" title="See-through plates, bridges and case"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
           <span class="lab g">Motion</span><label class="ck g" title="The box rolls and pitches as on a ship; the gimbals keep the case level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Lock the gimbals with the latch, as when the box is carried: the case then tilts with the box"><input type="checkbox" id="latch"> Gimbals latched</label>
           <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
           <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
@@ -1040,21 +1040,31 @@ function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,
   for(const h of hs){const e=i+h.length*sl;if(U.isClockWise(h)){f=1;for(const a of Object.values(g.attributes))for(let v=i;v<e;v+=3)for(let c=0;c<a.itemSize;c++){const k=(v+1)*a.itemSize+c,m=(v+2)*a.itemSize+c,t=a.array[k];a.array[k]=a.array[m];a.array[m]=t;}}i=e;}
   if(f)g.computeVertexNormals();return g;}
 /* closeGeo(g): g made a closed solid: each loop of open edges (a tube's ends, a part-turned lathe's or torus's ends, all flat) filled with a flat cap, wound to
-   face out. Returns an indexed copy with g's type and parameters (or g, if already closed) */
-function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[];
-  for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);if(!id.has(k)){id.set(k,P.length);P.push(new THREE.Vector3().fromBufferAttribute(p,i));}V.push(id.get(k));}
+   face out. Returns an indexed copy with g's type and parameters (or g, if already closed); its userData.capOf gives, for each cap vertex, the vertex of g it copies (for reclose) */
+function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[],S=[];
+  for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);if(!id.has(k)){id.set(k,P.length);P.push(new THREE.Vector3().fromBufferAttribute(p,i));S.push(i);}V.push(id.get(k));}
   const E=new Set(),nx=new Map();for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u+'_'+v);}
   for(const k of E){const[u,v]=k.split('_').map(Number);if(!E.has(v+'_'+u))nx.set(v,u);}   /* an open edge u->v: its cap runs v->u */
-  if(!nx.size)return g;const pos=[],nor=[],done=new Set();
-  for(const s of nx.keys()){if(done.has(s))continue;const L=[];let q=s;while(q!==undefined&&!done.has(q)&&L.length<=nx.size){done.add(q);L.push(P[q]);q=nx.get(q);}if(L.length<3)continue;
+  if(!nx.size)return g;const pos=[],nor=[],src=[],done=new Set();
+  for(const s of nx.keys()){if(done.has(s))continue;const L=[],Q=[];let q=s;while(q!==undefined&&!done.has(q)&&L.length<=nx.size){done.add(q);L.push(P[q]);Q.push(S[q]);q=nx.get(q);}if(L.length<3)continue;
     const N=new THREE.Vector3();L.forEach((a,i)=>{const b=L[(i+1)%L.length];N.x+=(a.y-b.y)*(a.z+b.z);N.y+=(a.z-b.z)*(a.x+b.x);N.z+=(a.x-b.x)*(a.y+b.y);});N.normalize();   /* Newell: the cap's normal */
     const e1=new THREE.Vector3().subVectors(L[1],L[0]).projectOnPlane(N).normalize(),e2=new THREE.Vector3().crossVectors(N,e1),o=L[0];
     const c2=L.map(a=>{const d=a.clone().sub(o);return new THREE.Vector2(d.dot(e1),d.dot(e2));});
     for(const f of THREE.ShapeUtils.triangulateShape(c2,[])){const[a,b,c]=f.map(i=>L[i]);const fl=new THREE.Vector3().subVectors(b,a).cross(new THREE.Vector3().subVectors(c,a)).dot(N)<0;
-      for(const v of fl?[a,c,b]:[a,b,c]){pos.push(v.x,v.y,v.z);nor.push(N.x,N.y,N.z);}}}
+      for(const i of fl?[f[0],f[2],f[1]]:f){const v=L[i];pos.push(v.x,v.y,v.z);nor.push(N.x,N.y,N.z);src.push(Q[i]);}}}
   if(!pos.length)return g;const h=g.index?g:g.toNonIndexed(),o0=h.attributes.position.count,m=pos.length/3,out=new THREE.BufferGeometry(),I=[];
   for(const k in h.attributes){const a=h.attributes[k],w=a.itemSize,arr=new Float32Array((o0+m)*w);arr.set(a.array.subarray(0,o0*w));if(k==='position')arr.set(pos,o0*w);else if(k==='normal')arr.set(nor,o0*w);out.setAttribute(k,new THREE.BufferAttribute(arr,w));}
-  if(h.index)I.push(...h.index.array);else for(let i=0;i<o0;i++)I.push(i);for(let i=0;i<m;i++)I.push(o0+i);out.setIndex(I);out.type=g.type;out.parameters=g.parameters;g.dispose();return out;}   /* type and parameters kept: the checks know a tube by them */
+  if(h.index)I.push(...h.index.array);else for(let i=0;i<o0;i++)I.push(i);for(let i=0;i<m;i++)I.push(o0+i);out.setIndex(I);out.type=g.type;out.parameters=g.parameters;out.userData.capOf=Int32Array.from(src);g.dispose();return out;}   /* type and parameters kept: the checks know a tube by them */
+/* reclose(old,g): closeGeo(g) written into old, in place, when old is closeGeo's output for a geometry of g's counts (a spring rebuilt as it moves: the same tube, bent
+   differently). The weld and the caps' triangulation are old's; only positions and normals change, so there is no hashing and no new buffer each frame (closeGeo on the
+   hairspring was about 9 ms a frame). Else, or if old is missing, old is disposed and closeGeo(g) returned */
+function reclose(old,g){const u=old&&old.userData.capOf,p=g.attributes.position,o0=p.count;
+  if(!u||!g.index||old.attributes.position.count!==o0+u.length||old.index.count!==g.index.count+u.length){if(old)old.dispose();return closeGeo(g);}
+  const A=old.attributes.position,Nm=old.attributes.normal,a=A.array,nm=Nm.array,s=p.array,e1=new THREE.Vector3(),e2=new THREE.Vector3();a.set(s);nm.set(g.attributes.normal.array);
+  for(let k=0;k<u.length;k++){const j=3*u[k],o=3*(o0+k);a[o]=s[j];a[o+1]=s[j+1];a[o+2]=s[j+2];}
+  for(let k=0;k<u.length;k+=3){const o=3*(o0+k);e1.set(a[o+3]-a[o],a[o+4]-a[o+1],a[o+5]-a[o+2]);e2.set(a[o+6]-a[o],a[o+7]-a[o+1],a[o+8]-a[o+2]);e1.cross(e2).normalize();   /* each cap flat and wound to face out */
+    for(let c=0;c<9;c+=3){nm[o+c]=e1.x;nm[o+c+1]=e1.y;nm[o+c+2]=e1.z;}}
+  A.needsUpdate=Nm.needsUpdate=true;old.computeBoundingSphere();if(old.boundingBox)old.computeBoundingBox();g.dispose();return old;}
 function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,TAU,true);s.holes.push(hp);
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 /* a round collet or socket with a square hole a across (a hand broached square, a key's socket), centred on its y like ringGeo */
@@ -1099,7 +1109,7 @@ function arbor(parent,M,x,z,o){
   if(o.ar){const[a,b]=o.ar;cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
   return g;
 }
-function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3){   /* rc, rs: radii of the inner (collet) and outer (stud) ends, where the terminal curves end */
+function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into){   /* rc, rs: radii of the inner (collet) and outer (stud) ends, where the terminal curves end; into: the previous geometry, rewritten in place (reclose) */
   const c=new THREE.Curve();c.arcLengthDivisions=1400;
   const Re=R*N/(N+th/TAU*0.8),a0=0.09,tot=TAU*N+TAU;
   c.getPoint=(t,v=new THREE.Vector3())=>{let ang,r,y;
@@ -1107,7 +1117,7 @@ function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3){   /* rc, rs: radii of the i
     else if(t>1-a0){const s=(t-1+a0)/a0;ang=Math.PI+TAU*N+Math.PI*s;r=Re-(Re-rs)*(1-Math.cos(s*Math.PI/2));y=H*0.95+H*0.05*s;}
     else{const s=(t-a0)/(1-2*a0);ang=Math.PI+TAU*N*s;r=Re;y=H*0.05+H*0.9*s;}
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
-  return closeGeo(new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
+  return reclose(into,new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
 }
 function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y from its arbor (handGeo extrudes it; the essay draws it flat). tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off) */
   const s=new THREE.Shape(),b=o&&o.boss,yb=b&&Math.sqrt(b*b-w*w/4),ab=b&&Math.acos(w/2/b);
@@ -2059,7 +2069,7 @@ function buildMovement(M){
     R.blockRoom=E=>Math.min(...sp(E).map(a=>(((a-u.half)%q)+q)%q))*ESC_PER.fw/ESC.P;
     R.blockClear=E=>sp(E).every(a=>Math.abs((((a%q)+q+q/2)%q)-q/2)>=u.half); }
   const RF=ESC_PER.fw,RT=ESC_PER.tw,RC=ESC_PER.cw,MR=MW.cp/MW.mw,HR=MR*MW.mp/MW.hw;   /* escape turns per fourth, third, centre turn; minute wheel and hour wheel per centre turn */
-  let lastN=-1,lastEps=0,lastIn=-1,lastPs='',srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0;
+  let lastN=-1,lastEps=0,lastIn=-1,lastTh=null,lastPs='',srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0;
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
   const FPR=ratchetProf(40,0.47,false),SRP=ratchetProf(120,0.27,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1).psi;
   /* the sustaining spring's travel from loaded (running) to spent: 5 to 10 minutes of drive (Sec. IV) is 4.4 to 8.75 deg of the fusee wheel; 10 deg drawn, estimated */
@@ -2096,7 +2106,7 @@ function buildMovement(M){
     const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
     const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-60*D2R-udA;
     if(s.msOn){const In=fs.I(s.n);if(Math.abs(In-lastIn)>=0.002){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup-In,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=In;}}   /* rebuilt when the barrel has turned 0.7 deg */
-    if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,HS_H,14,s.th,0.17,HS_R,HS_R);}
+    if(s.springOn&&s.th!==lastTh){R.spring.geometry=springGeo(5.5,HS_H,14,s.th,0.17,HS_R,HS_R,R.spring.geometry);lastTh=s.th;}   /* rewritten in place (reclose), and only when the balance has turned */
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing. Rebuilt only when either changes (still for most of each swing) */
     const psK=s.lift+','+s.psDef;if(psK!==lastPs){lastPs=psK;R.pspring.geometry.dispose();R.pspring.geometry=tripGeo(E.springPts(s));}
   };
@@ -2163,7 +2173,7 @@ function makeFusee(M,c){
   const bsp=mesh(sbR,new THREE.BufferGeometry(),M.steel,0,yT-0.25,0);let barX=null;
   /* the spring: fixed in the groove at one side of the slot, round the far side of the arbor, into the slot beside the bar and against the tab, following it as it slides */
   const setBar=x=>{if(x===barX)return;barX=x;stopBar.position.x=x;const P=[];for(let k=0;k<=40;k++){const a=Math.PI+0.25-(Math.PI+0.55)*k/40;P.push(new THREE.Vector3(4.3*Math.cos(a),0,4.3*Math.sin(a)));}
-    P.push(new THREE.Vector3(2.5,0,-1.29),new THREE.Vector3(-1.4+x+0.02,0,-1.29));bsp.geometry.dispose();bsp.geometry=closeGeo(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P),60,0.13,6,false));};
+    P.push(new THREE.Vector3(2.5,0,-1.29),new THREE.Vector3(-1.4+x+0.02,0,-1.29));bsp.geometry=reclose(bsp.geometry,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P),60,0.13,6,false));};
   setBar(0);
   /* how far the chain has pushed the nose in when it leaves the fusee at m: the incoming run's inner face, a turn fraction m - mF ahead of it, lies rN / cos of that angle out */
   const barTravel=m=>{const a=TAU*(m-mF);if(a>=Math.PI/2)return 0;const r=a<=0?rN:rN/Math.cos(a);return clamp(xf(Math.max(r,rN))-xN,0,TR);};
@@ -2820,7 +2830,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* a lost WebGL context (a phone switching apps, a GPU reset) comes back without the generated environment map that lights the metals: rebuild it */
   cv.addEventListener('webglcontextrestored',()=>{scene.environment=envTex(r);});
   scene.add(new THREE.HemisphereLight(0xffffff,0x333333,0.28));
-  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=true;key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
+  const key=new THREE.DirectionalLight(0xfff4e6,1.0);key.castShadow=false;   /* casts only with Shadows (Display) on: look() */
+  key.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);key.shadow.bias=-0.0004;key.shadow.normalBias=0.6;
   const scam=key.shadow.camera;scam.left=-170;scam.right=170;scam.top=170;scam.bottom=-170;scam.near=1;scam.far=1200;scene.add(key,key.target);
   const cam=new THREE.PerspectiveCamera(32,1,1,6000);
   const M=mats();const BX=buildBox(M);scene.add(BX.root);
@@ -2863,7 +2874,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:!PHONE,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
   const FOV0=cam.fov,cur={lift:0,flip:0,explode:0,lidM:0,lidT:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the real plates stay hidden */
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
   /* a short note in the HUD, for a few seconds */
@@ -2907,11 +2918,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       m.visible=vis&&!opHide(m);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
     for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
+    /* Shadows (off by default): the key light's shadow map, an extra pass over every caster (about 380 draw calls and all the triangles again) and a costlier shader.
+       The floor's shadow (sh) is a texture, always there. Turned off, the map (2048 px, 1024 on phones) is freed (three makes it again when it is next needed) */
+    if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
     cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
-    $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
+    $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;$('#shadows').checked=st.shadows;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
   }
 
   /* ---------- camera ---------- */
@@ -3039,7 +3053,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   document.querySelectorAll('#units button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.v===units?'true':'false');b.addEventListener('click',()=>{units=b.dataset.v;keep('units',units);
     document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);keep('bal',b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
-  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked?'tint':false;look();});$('#drawInk').addEventListener('change',e=>{st.draw=e.target.checked?'ink':false;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});
+  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked?'tint':false;look();});$('#drawInk').addEventListener('change',e=>{st.draw=e.target.checked?'ink':false;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});$('#shadows').addEventListener('change',e=>{st.shadows=e.target.checked;look();});
   const DIAL_INFO={hamilton:[INFO.dial[1],INFO.hands[1]],roman:['Black on silver-white, in the German style of the A. Lange & Söhne deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads AUF (up) to AB (down). Its scale keeps this movement’s 240° sweep.','Gilt leaf hour hand and lance minute hand, gilt wind indicator hand, blued seconds hand. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     swiss:['Black on white, in the style of the Ulysse Nardin (Le Locle) deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads UP / HAUT to DOWN / BAS. Its scale keeps this movement’s 240° sweep.','Blued pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     soviet:['Black on white, in the style of the First Moscow Watch Factory deck chronometers, which copied the Nardin layout (maker’s name and number left off): upright Arabic hours, with the 6 covered by a large seconds sub-dial marked СДЕЛАНО В СССР (made in the USSR); railroad minute and seconds tracks; the wind indicator reads ЗАВОД (wound) to СПУСК (run down). Its scale keeps this movement’s 240° sweep.','Aged gilt pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.']};
@@ -3091,7 +3105,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const bar=()=>{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);};
     try{navigator.clipboard.writeText(u).then(()=>{bar();say('Copied');},()=>{bar();say('In address bar');});}catch(_){bar();say('In address bar');}});
   /* Reset display: each Display box back to its default (See-through to the view's own; the drawings before Edges, which they disable), faded and hidden parts back. The theme stays */
-  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:!PHONE,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
+  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:true,shadows:false,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
     for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}st.op={};st.hid.clear();st.iso=null;look();opRender();});
   /* the panel's sections: each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
   const DET=[...document.querySelectorAll('.ctl>details.grp')];
@@ -3359,13 +3373,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
 
   /* ---------- shareable links: the state in the URL hash ----------
-     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 or 1 (only against its default: on, off on phones), sec=x:-3.5 (a section; :f shows the other half),
+     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 (Edges off; it is on by default), shadows=1 (Shadows on; off by default), sec=x:-3.5 (a section; :f shows the other half),
      tz=local, t=12:00:00 (only once the hands have been set). #essay or #essay=detent: the essay (essay.js), at a section; open=bookDet (in a link only): open that panel section.
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState, so the back button isn't filled with views */
   function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(st.edges===PHONE)h.set('edges',+st.edges);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
@@ -3376,9 +3390,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     { const a=g('arm')==='1'?1:0,b=g('block')==='1'?1:0;if(a!==H.armT){armSet(a);H.arm=a;if(a)H.amp=0;}if(b!==H.blkT){blkSet(b);H.blk=b&&!R.blockClear(lastE??0)?Math.min(b,R.tbs.userData.vFace-0.005):b;} }   /* locked in a link: the balance is at rest */
     { const q={...BDEF};for(const kv of(g('esc')||'').split(',')){const[k,v]=kv.split(':');if(own(BDEF,k)&&Number.isFinite(+v)){const b=BENCH.find(x=>x[0]===k);q[k]=clamp(+v,b[2],b[3]);}}
       if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings */
-    const ed=g('edges')==='1'||(g('edges')!=='0'&&!PHONE);   /* Edges is on by default except on phones: the hash says edges=0 or edges=1 only against that */
+    const ed=g('edges')!=='0',shd=g('shadows')==='1';   /* Edges is on by default, Shadows off: the hash says edges=0 or shadows=1 only against that */
     const dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
-    if(dw!==st.draw||ed!==st.edges||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
+    if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
     const tr=parseInt(g('tour'));
     if(tr>=1&&tr<=TOUR.length)tourGo(tr-1);
     else{if(st.tour>=0)tourEnd();
@@ -3400,8 +3414,12 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   let last=performance.now(),loaded=false,hudS='';const hud=$('#hud');
   /* idle: when nothing that shows has changed (camera, lids, lift, wheels, balance, wind, ship motion, section), no input came in the last 0.6 s and the
      stage was drawn less than a second ago, the frame skips the render, the labels and the inset (a stopped model with a still camera draws once a second).
-     Off-screen stages aren't drawn, nor is the stage while the essay covers it (the model keeps time meanwhile). ?snap draws every frame, for the tools that change the model directly */
-  let lastSig=null,lastDraw=-1e9,renders=0,onScreen=true;
+     Off-screen stages aren't drawn, nor is the stage while the essay covers it (the model keeps time meanwhile). ?snap draws every frame, for the tools that change the model directly.
+     The balance's swing (angle, detent, passing spring) counts only while it can be seen: not with the movement in its case under the dial (the Dial and Box views), unless
+     the walkthrough's inset or the adjuster's bench shows the escapement; there the hands' steps alone draw a frame (a few frames a beat, not every frame).
+     Without input, a frame comes at most every 10 ms: a 120 or 144 Hz display draws the running model at 60 or 72 Hz, a 60 or 90 Hz one every frame.
+     The signature is compared with the last one drawn, so a change in a skipped frame is still drawn */
+  let lastSig=null,lastDraw=-1e9,renders=0,onScreen=true;const benchD=$('#benchDet');
   for(const ev of['pointerdown','pointermove','wheel','keydown','input','change','click'])document.addEventListener(ev,wake,{capture:true,passive:true});
   new ResizeObserver(wake).observe(stage);cv.addEventListener('webglcontextrestored',wake);
   new IntersectionObserver(e=>{onScreen=e[e.length-1].isIntersecting;if(onScreen)wake();}).observe(stage);
@@ -3449,9 +3467,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const cp=Math.cos(C.pitch);cam.position.set(C.target.x+C.dist*cp*Math.sin(C.yaw),C.target.y+C.dist*Math.sin(C.pitch),C.target.z+C.dist*cp*Math.cos(C.yaw));cam.lookAt(C.target);
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
-    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,s.th,s.lift,s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off')];
-    const still=!SNAP&&!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now>wakeT&&now-lastDraw<1000;lastSig=sig;
-    if(!ESSAY.on()&&onScreen&&!still){paint();renders++;lastDraw=now;
+    const balHid=cur.lift<0.02&&cur.explode<0.01&&cur.dev<0.01&&!st.drive&&secMode==='off'&&!st.see&&!st.iso&&!st.hid.size&&!Object.keys(st.op).length&&!insetKind&&!benchD.open;   /* the balance can't be seen */
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off')];
+    const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
+    if(!ESSAY.on()&&onScreen&&!still){paint();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
     if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}

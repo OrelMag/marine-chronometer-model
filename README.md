@@ -196,7 +196,14 @@ Before committing a change to the model:
    `python social.py` (from the same `tools/` folder), then rebuild. If the box,
    gimbals, fusee, escapement, train or balance changed, look over the essay's
    figures too (`index.html#essay`): they are built from the same code.
-6. **CI.** Pushing to GitHub runs the same checks (`.github/workflows/checks.yml`):
+   `topview.py` and `p3fit.py` turn Shadows on (off on the page by default), as their images were made.
+6. **Frame time** (if you changed the render loop, a rebuilt part, or what is drawn):
+   `python perf.py` (same folder) prints each view's frame cost, draw calls and
+   triangles with the page's settings, with Shadows and without Edges, and how
+   often the page draws when left alone. It runs on your GPU with vsync off;
+   `--throttle 4` slows the CPU to about a phone's. Compare with a run before
+   the change.
+7. **CI.** Pushing to GitHub runs the same checks (`.github/workflows/checks.yml`):
    the build, a check that the committed built copies match it (build with
    `--site-url https://www.marinechronometermodel.com`, as the live site is),
    `escapement.js`, `smoke.py`, `invariants.py`, `solids.py` and `exploded.py`; `fine.py` and

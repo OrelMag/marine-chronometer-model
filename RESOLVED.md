@@ -524,6 +524,20 @@ Contents:
 
 ## Rendering
 
+- **Lifted views at 80 fps on a fast desktop, 15 on a phone.** Once
+  every open tube went through `closeGeo` (every part a closed solid), the
+  hairspring, rebuilt every frame the balance turns, paid for it: `closeGeo`
+  string-hashes all 4,500 vertices and 23,000 edges and triangulates the caps,
+  about 9 ms a frame on a desktop CPU (63 % of the frame) and 50 ms with the
+  CPU throttled 4×, plus a new vertex buffer each frame. `reclose(old, g)` in
+  `core.js` now writes the new tube's positions and normals into the old
+  closed geometry, keeping its weld and caps (`closeGeo` records which vertex
+  each cap vertex copies, `userData.capOf`), and the hairspring is rebuilt only
+  when the balance has turned. Same vertices and index as before; the Movement
+  view went from 12.5 to 2.6 ms a frame. Keep: a geometry rebuilt as the model
+  moves goes through `reclose` (the stop-bar spring does too), never
+  `closeGeo` each frame; check a new one with `tools/perf.py` in a lifted
+  view. `bf503d8`
 - **Metals flat and dark after a lost WebGL context.** A restored context
   loses its PMREM render targets. The environment map is now rebuilt on
   `webglcontextrestored`. Keep that handler. `fcedc94`

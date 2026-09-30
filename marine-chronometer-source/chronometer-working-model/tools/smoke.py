@@ -5,7 +5,7 @@
     python smoke.py --essay    # the Essay tab only
 
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, every cross-section
-(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches, Reset display, Link, winding with the key, the keyboard, and a link through the URL
+(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, winding with the key, the keyboard, and a link through the URL
 hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
 two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
@@ -47,7 +47,7 @@ async def model(b,errs,steps):
     await click('#units button[data-v="in"]','sizes in inches');await pg.evaluate("location.hash='#part=pillar'");await pg.wait_for_timeout(400)
     if '3.448 in' not in await pg.evaluate("document.querySelector('#info .spec').textContent"):errs.append('the pillar plate card is not in inches')
     await click('#units button[data-v="mm"]','sizes in mm')
-    for sel in['#colr','#colrSrc','#ghost','#edges','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
+    for sel in['#colr','#colrSrc','#ghost','#edges','#shadows','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
     # the tinted and ink drawings (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
     for sel,nm in(('#draw','tinted drawing'),('#drawInk','ink drawing')):
         await click(sel,f'{nm} on',600)
@@ -61,14 +61,15 @@ async def model(b,errs,steps):
     await click('#drawInk')
     # edges (makeInk's lines over the normal frame; on by default except on phones): a section, see-through plates, then each drawing over it (it disables Edges) and off again
     if not await pg.evaluate("document.querySelector('#edges').checked"):errs.append('Edges not on by default')
+    if await pg.evaluate("document.querySelector('#shadows').checked"):errs.append('Shadows not off by default')
     await click('#secs button[data-v="x"]','edges, section');await click('#secs button[data-v="off"]');await click('#ghost','edges, see-through');await click('#ghost')
     for sel in('#draw','#drawInk'):await click(sel,f'edges, {sel[1:]} on');await click(sel,f'edges, {sel[1:]} off')
     if not await pg.evaluate("document.querySelector('#edges').checked&&!document.querySelector('#edges').disabled"):errs.append('Edges not restored after a drawing')
     await click('#edges','edges off',600);await click('#edges','edges on again')
     # Reset display puts the Display boxes back (Edges on, the rest off, in Dial); Link copies the address, or puts it in the address bar
-    for sel in['#lbls','#colr','#rock','#spin','#ghost']:await click(sel)
+    for sel in['#lbls','#colr','#rock','#spin','#ghost','#shadows']:await click(sel)
     await click('#edges');await click('#draw');await click('#dispReset','reset display',600)
-    bad=await pg.evaluate("['lbls','colr','colrSrc','draw','rock','latch','spin','ghost'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges'])")
+    bad=await pg.evaluate("['lbls','colr','colrSrc','draw','rock','latch','spin','ghost','shadows'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges'])")
     if bad:errs.append(f'Reset display left {bad}')
     await click('#drawInk');await click('#dispReset','reset display from the ink drawing',600)
     if await pg.evaluate("document.querySelector('#drawInk').checked||!document.querySelector('#edges').checked"):errs.append('Reset display left the ink drawing on or Edges off')
@@ -110,9 +111,9 @@ async def model(b,errs,steps):
     await pg.focus('#stage canvas')
     for k in['ArrowLeft','ArrowUp','+','-','0','1','Space']:await pg.keyboard.press(k);await pg.wait_for_timeout(150)
     await pg.keyboard.press('Space');steps.append('keyboard')
-    await pg.evaluate("location.hash='#view=escapement&part=det&speed=0.05&draw=1'");await pg.wait_for_timeout(1200)
-    st=await pg.evaluate("[document.querySelector('#views button[aria-pressed=\"true\"]')?.dataset.v,document.querySelector('#info').classList.contains('on'),document.querySelector('#spdN').value,document.querySelector('#draw').checked]")
-    if st!=['escapement',True,'0.05',True]:errs.append(f'hash link not applied: {st}')
+    await pg.evaluate("location.hash='#view=escapement&part=det&speed=0.05&draw=1&shadows=1'");await pg.wait_for_timeout(1200)
+    st=await pg.evaluate("[document.querySelector('#views button[aria-pressed=\"true\"]')?.dataset.v,document.querySelector('#info').classList.contains('on'),document.querySelector('#spdN').value,document.querySelector('#draw').checked,document.querySelector('#shadows').checked]")
+    if st!=['escapement',True,'0.05',True,True]:errs.append(f'hash link not applied: {st}')
     steps.append('hash link');await pg.close()
 GLC="""(()=>{const g=HTMLCanvasElement.prototype.getContext;window.__glc=new Set();HTMLCanvasElement.prototype.getContext=function(t,...a){const c=g.call(this,t,...a);if(c&&/webgl/.test(t))window.__glc.add(this);return c;};})()"""
 async def essay(b,errs,steps):
