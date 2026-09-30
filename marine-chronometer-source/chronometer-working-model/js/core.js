@@ -345,9 +345,15 @@ function gearGeo(n,m,th,o={}){
 /* arbor with wheel & pinion: returns rotating group */
 function arbor(parent,M,x,z,o){
   const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
-  if(o.wheel){const w=o.wheel;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,w.th||1,{spokes:w.spokes??4,escape:w.escape,flip:w.flip,rt:w.rt,depth:w.depth,bore:w.bore,hub:w.hub}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;
-    if(w.collet!==0)mesh(g,cylY(w.collet||1.6,(w.th||1)+(w.cside?0.65:1.2),20),M.brass2,0,w.y+(w.cside||0)*0.275,0);}   /* cside ±1: collet on that side of the wheel only (0.05 proud of the other face, not flush with it) */
-  if(o.pin){const p=o.pin;g.userData.pin=mesh(g,gearGeo(p.n||10,p.m,p.th||2.5,{bore:p.bore}),M.steel,0,p.y,0);g.userData.np=p.n||10;}
+  let wy=null,cy=null;   /* the wheel's and the collet's y ranges, and the collet's radius, for the check below */
+  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,escape:w.escape,flip:w.flip,rt:w.rt,depth:w.depth,bore:w.bore,hub:w.hub}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;
+    const ro=w.m*w.n/2+w.m*0.95;wy=[w.y-th/2,w.y+th/2,w.spokes===0?ro:(w.hub??Math.max(1.6,ro*0.18))];
+    /* cside ±1: collet on that side of the wheel only, cp proud of it there (0.6) and 0.05 proud of the other face, not flush with it */
+    if(w.collet!==0){const cp=w.cp??0.6,h=w.cside?th+0.05+cp:th+1.2,c=w.y+(w.cside||0)*(cp-0.05)/2;mesh(g,cylY(w.collet||1.6,h,20),M.brass2,0,c,0);cy=[c-h/2,c+h/2,w.collet||1.6];}}
+  if(o.pin){const p=o.pin,n=p.n||10,th=p.th||2.5;g.userData.pin=mesh(g,gearGeo(n,p.m,th,{bore:p.bore}),M.steel,0,p.y,0);g.userData.np=n;
+    /* a pinion's leaves must end at its wheel's boss: where the pinion shares heights with the wheel or its collet, its tips must lie inside the hub or the collet */
+    const rt=p.m*n/2+p.m*0.95,y0=p.y-th/2+1e-6,y1=p.y+th/2-1e-6,over=r=>r&&y0<r[1]&&y1>r[0]&&rt>r[2];
+    if(over(wy)||over(cy))console.error('arbor: pinion inside its wheel',{x,z,y:p.y,rt,wheel:wy,collet:cy});}
   if(o.ar){const[a,b]=o.ar;cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
   return g;
 }
