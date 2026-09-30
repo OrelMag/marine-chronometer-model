@@ -331,19 +331,33 @@ function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(
 function discGeo(r,th,holes=[]){if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
   const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
 /* gear: pitch radius = m*n/2 */
+/* toothed wheel or pinion, n teeth of module m, th thick. Teeth centred at a + 0.375 of a pitch (spaces at 0.875), as ph() phases them. Cycloidal clock teeth, in
+   BS 978 Part 2's proportions (the manual gives no profiles: estimated): a wheel's tooth 1.41 m thick at the pitch circle, radial flanks inside it, an epicycloidal
+   addendum rolled by a circle half its pinion's pitch radius (o.mate leaves, default 10), capped at 1.15 m; a pinion's leaf (20 or fewer) 1.05 m thick, radial
+   flanks and a round tip (addendum 0.525 m); both 1.3 m deep below the pitch circle, clear of the other's addendum. o.ratchet: a ratchet's saw teeth.
+   userData: ro (tip radius), ri (root), hub (the spokes' hub radius) */
 function gearGeo(n,m,th,o={}){
-  const rp=m*n/2,ro=rp+m*0.95,depth=2.25*m,ri=ro-depth,p=TAU/n,pts=[];
-  for(let i=0;i<n;i++){const a=i*p;
-    if(o.ratchet){pts.push([ri,a],[ro,a+p*0.9],[ri,a+p*0.97]);}
-    else pts.push([ri,a],[ri,a+p*0.1],[ro-depth*0.3,a+p*0.18],[ro,a+p*0.28],[ro,a+p*0.47],[ro-depth*0.3,a+p*0.57],[ri,a+p*0.65]);}
+  const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95,ri=rp-1.3*m;let ro;
+  const root=(a0,a1)=>{for(let k=1;k<3;k++)pts.push([ri,a0+(a1-a0)*k/3]);};   /* the root between two teeth, rounded */
+  if(o.ratchet){ro=roS;const r0=ro-2.25*m;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*0.9],[r0,a+p*0.97]);}}
+  else if(n<=20){const b=0.525*m/rp,rt=0.525*m;ro=rp+rt;
+    for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b],[rp,c-b]);
+      for(let k=1;k<12;k++){const t=Math.PI*k/12,u=rp+rt*Math.sin(t),v=-rt*Math.cos(t);pts.push([Math.hypot(u,v),c+Math.atan2(v,u)]);}   /* the round tip, a semicircle on the pitch circle */
+      pts.push([rp,c+b],[ri,c+b]);root(c+b,c+p-b);}}
+  else{const b=0.705*m/rp,rg=m*(o.mate||10)/4,hm=1.15*m,K=(rp+rg)/rg,ep=[];
+    for(let k=0;k<=24;k++){const t=0.6*k/24,x=(rp+rg)*Math.cos(t)-rg*Math.cos(K*t),y=(rp+rg)*Math.sin(t)-rg*Math.sin(K*t),r=Math.hypot(x,y),a=Math.atan2(y,x);
+      if(a>=b||r>=rp+hm){ep.push([Math.min(r,rp+hm),Math.min(a,b)]);break;}ep.push([r,a]);}   /* the addendum's left side from the pitch point, until it reaches the tooth's centre or the cap */
+    ro=ep[ep.length-1][0];
+    for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b]);for(const[r,a]of ep)pts.push([r,c-b+a]);for(let k=ep.length-1;k>=0;k--){const[r,a]=ep[k];if(a<b-1e-9||k<ep.length-1)pts.push([r,c+b-a]);}pts.push([ri,c+b]);root(c+b,c+p-b);}}
   let xy=pts.map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);if(o.flip)xy=xy.map(([x,y])=>[x,-y]).reverse();
   const s=new THREE.Shape();s.moveTo(...xy[0]);for(let i=1;i<xy.length;i++)s.lineTo(...xy[i]);s.closePath();
-  if(o.spokes){const R1=ri-(o.rim??Math.max(0.9,ro*0.09)),R0=o.hub??Math.max(1.6,ro*0.18),sw=o.sw??Math.max(0.9,ro*0.08);
+  const R0=o.hub??Math.max(1.6,roS*0.18);
+  if(o.spokes){const R1=ri-(o.rim??Math.max(0.9,roS*0.09)),sw=o.sw??Math.max(0.9,roS*0.08);
     if(R1>R0+1)for(let j=0;j<o.spokes;j++){const a0=j/o.spokes*TAU,a1=(j+1)/o.spokes*TAU,d1=Math.asin(Math.min(0.9,sw/2/R1)),d0=Math.asin(Math.min(0.9,sw/2/R0));
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
-  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);return g;
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro,ri,hub:R0});return g;
 }
 /* a turned arbor or staff: prof [[y, r], ...] is radius r from y to the next y (the last entry's y is the end), so a pivot steps up to the body at a shoulder; one closed solid */
 function shaftGeo(prof,seg=16){const V2=(a,b)=>new THREE.Vector2(a,b),pr=[V2(0,prof[0][0])];for(let i=0;i+1<prof.length;i++){pr.push(V2(prof[i][1],prof[i][0]),V2(prof[i][1],prof[i+1][0]));}
@@ -358,13 +372,13 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
 function arbor(parent,M,x,z,o){
   const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
   let wy=null,cy=null;   /* the wheel's and the collet's y ranges, and the collet's radius, for the check below */
-  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,escape:w.escape,flip:w.flip,rt:w.rt,depth:w.depth,bore:w.bore,hub:w.hub}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
-    const ro=w.m*w.n/2+w.m*0.95;wy=[w.y-th/2,w.y+th/2,w.spokes===0?ro:(w.hub??Math.max(1.6,ro*0.18))];
+  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
+    const gu=g.userData.wheel.geometry.userData;wy=[w.y-th/2,w.y+th/2,w.spokes===0?gu.ro:gu.hub];
     /* cside ±1: collet on that side of the wheel only, cp proud of it there (0.6) and 0.05 proud of the other face, not flush with it */
     if(w.collet!==0){const cp=w.cp??0.6,h=w.cside?th+0.05+cp:th+1.2,c=w.y+(w.cside||0)*(cp-0.05)/2;mesh(g,cylY(w.collet||1.6,h,20),M.brass2,0,c,0);cy=[c-h/2,c+h/2,w.collet||1.6];}}
   if(o.pin){const p=o.pin,n=p.n||10,th=p.th||2.5;g.userData.pin=mesh(g,gearGeo(n,p.m,th,{bore:p.bore}),M.steel,0,p.y,0);g.userData.np=n;g.userData.pin.userData.gear={z:n,m:p.m};
     /* a pinion's leaves must end at its wheel's boss: where the pinion shares heights with the wheel or its collet, its tips must lie inside the hub or the collet */
-    const rt=p.m*n/2+p.m*0.95,y0=p.y-th/2+1e-6,y1=p.y+th/2-1e-6,over=r=>r&&y0<r[1]&&y1>r[0]&&rt>r[2];
+    const rt=g.userData.pin.geometry.userData.ro,y0=p.y-th/2+1e-6,y1=p.y+th/2-1e-6,over=r=>r&&y0<r[1]&&y1>r[0]&&rt>r[2];
     if(over(wy)||over(cy))console.error('arbor: pinion inside its wheel',{x,z,y:p.y,rt,wheel:wy,collet:cy});}
   if(o.prof)g.userData.ar=mesh(g,shaftGeo(o.prof),M.steel);   /* a turned arbor: pivots and shoulders (shaftGeo) */
   else if(o.ar){const[a,b]=o.ar;g.userData.ar=cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
