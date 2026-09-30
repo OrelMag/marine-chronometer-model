@@ -956,4 +956,18 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    holes, the stud's steady pin, the sustaining spring's pin and others) are
    removed.
 5. `bom.py` in CI: about 5 minutes a run.
+6. **The third arbor's place** (fidelity, open). Mapped through the centre,
+   the fusee arbor and the wind indicator wheel (which land within 0.8 mm of
+   the model), a photograph of a Model 21's dial side puts the third lower
+   setting at about (-8.0, 18.6), 7 mm from the model's T (-4.86, 12.11), and
+   the lower train bridge at about 34 deg against the model's T-F line at 68.
+   T is solved for clearance (README, step 5), and Fig. 67's fit lands a hole
+   within 1-2 mm of it, so it is left; a clearer photograph of the dial side
+   or of the train would settle it (moving T changes the centre and third
+   stages' modules).
+7. **The train-blocking screw's place** (fidelity, open). A side photograph
+   (omegaforums, "Incoming Hamilton Model 21") shows its dog point entering the
+   fourth wheel at about 0.7 of its radius (about 7 mm from the arbor); the
+   model has it 3.5 mm out. Fig. 16 and a top photograph put its head near the
+   balance. Moving it re-lays the balance lower bridge's lobe.
 

@@ -19,7 +19,7 @@
    - Third wheel, escape wheel position and the going-train modules (0.29 / 0.30 / 0.3113): solved as a constraint problem
      so that every arbor clears every wheel and the barrel (solve.py).
    ===================================================================== */
-const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[-9.6,0]};
+const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[9.6,0]};
 const PP_R=87.57/2,PP_T=3.86,BR_R=40.5;
 /* levels (y) from a side photograph of the movement, scaled by the pillar plate's 3.86 mm edge: train bridge 16.8-19.9 mm above the plate (TB_U, TB_T),
    barrel bridge 3.4 mm on it (BB_T), cock foot 14.2 mm tall on the train bridge (CK_T); the escape wheel runs just under the train bridge, the fourth
@@ -184,7 +184,7 @@ function buildMovement(M){
        42055 (pillar, bridge and mounting-ring screws) have heads r 2.9; ESCAP: the endstone caps' screws (20762) ---------- */
   const add=(a,b,k=1)=>[a[0]+b[0]*k,a[1]+b[1]*k],sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],unit=a=>{const l=Math.hypot(...a);return[a[0]/l,a[1]/l];},ry=(a,[x,z])=>[x*Math.cos(a)+z*Math.sin(a),-x*Math.sin(a)+z*Math.cos(a)];
   const eu=unit(sub(L.E,L.B)),lbu=unit(sub(L.F,L.B)),lbn=[-lbu[1],lbu[0]],LBm=add(L.B,sub(L.F,L.B),0.9),ESCAP=0.45,PSR=2.9;
-  const S={ltb:[0.35,0.65].map(f=>add(L.T,sub(L.F,L.T),f)),pil:[...PILLARS.train,PILLARS.barrel],tb:[PILLARS.train[0],PILLARS.train[1],[-8.5,27.7]],bb:[PILLARS.barrel,PILLARS.train[2],[29.24,-12.28]],
+  const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-14),add(L.F,ltu,9)],ltbp:[add(L.T,ltu,-10),add(L.F,ltu,5)],pil:[...PILLARS.train,PILLARS.barrel],tb:[PILLARS.train[0],PILLARS.train[1],[-8.5,27.7]],bb:[PILLARS.barrel,PILLARS.train[2],[29.24,-12.28]],
     ring:[100,210,340].map(a=>[40.6*Math.cos(a*D2R),40.6*Math.sin(a*D2R)]),eb:[4.3,6.6].map(f=>add(L.E,eu,f)),ebc:[2.1,-2.1].map(f=>add(L.E,eu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[[20.5,20.0],[-5.3,26.2]],lbp:[[16.9,21.3],[-2.6,26.4]],blc:[1.9,-1.9].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(-1.2,-0.35)),cock:[33.11,12.62]};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread clears the foot's edge */
   /* lb: the balance lower bridge's screws (42055), put in from below through its upper tier into the train bridge: at the arm's end on the 3 o'clock side (outside every wheel, over the
@@ -204,7 +204,7 @@ function buildMovement(M){
   /* sustaining pawl pivot: 21.35 mm from the fusee (so the pawl reaches the sustaining ratchet, and its arbor clears the fusee wheel's tips at 20.42), where it can run up to solid train bridge
      (manual Sec. VIII, Op. 15 note) clear of the centre wheel, the chain and the opening round the balance */
   const SPv=[L.Fu[0]+21.35*Math.cos(60*D2R),L.Fu[1]+21.35*Math.sin(60*D2R)];
-  R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.T,0.8],[...L.F,1.2],[...L.Fu,1.4],hC(...L.Ud,0.8),hC(...L.Mw,0.8),[...L.Ba,1.9],[...L.E,1.3],[...SPv,0.52],
+  R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.T,6.0],...S.ltbp.map(q=>[...q,0.41]),[...L.F,1.2],[...L.Fu,1.4],hC(...L.Ud,0.8),hC(...L.Mw,0.8),[...L.Ba,1.9],[...L.E,1.3],[...SPv,0.52],
     ...S.ltb.map(q=>hT(...q,1.4)),...S.pil.map(q=>hC(...q,PSR)),...S.ring.map(q=>hC(...q,PSR)),...S.elc.map(q=>hT(...q,ESCAP)),...S.dial.map(q=>hC(...q,1.0)),[...S.lb[0],3.4]]),M.plate,0,y0,0);hn(pp,'42060');   /* the plate's parts-list line on its part, so its pins go with it */
   /* the last hole: access to the balance lower bridge's screw at 3 o'clock, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial */
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
@@ -224,8 +224,13 @@ function buildMovement(M){
     S.pil.forEach((q,i)=>hn(screw(rg,q[0],-q[1],0,PSR,1.6,3.86+3.2),i<3?'42055.pil':'42055.pilb'));
     /* escape lower endstone cap (42159) with its jewel and two screws (20762), on the dial side over the escape lower setting (Fig. 110) */
     endCap(rg,L.E[0],-L.E[1],[eu[0],-eu[1]],0,3.86-0.4,2.1,['42159.el','J.ele','20762.elc']); }
-  /* lower train bridge on the dial side of the pillar plate, screwed from the dial side (manual Figs. 29, 67, 110); jewels and screw built in a flipped frame so they face the dial */
-  const lt=part('ltb',8);R.ltb=mesh(lt,stadium(L.T,L.F,6,1.2,[[...L.T,1.1],[...L.F,1.1],...S.ltb.map(q=>hC(...q,1.4))]),M.plate,0,0,0);hn(lt,'42063');
+  /* lower train bridge (42063) on the dial side of the pillar plate, screwed from the dial side (Figs. 29, 30, 31, 67, 110): a straight steel bar with square ends across an
+     opening in the plate round the third arbor (Figs. 30, 31; the third wheel shows through it in a photograph of a Model 21's dial side), the third and fourth lower settings
+     inboard and a screw toward each end (Fig. 31 and that photograph: the screws about 2.9 times as far apart as the settings), and two steady pins ("complete with pins").
+     Its length, width, the screws' and pins' places along it and the opening's size are estimated from those two views */
+  const lt=part('ltb',8),LTe=[add(L.T,ltu,-21),add(L.F,ltu,14)],ltn=[-ltu[1]*3,ltu[0]*3],LTP=[add(LTe[0],ltn),add(LTe[1],ltn),sub(LTe[1],ltn),sub(LTe[0],ltn)];
+  R.ltb=mesh(lt,polyGeo(LTP,1.2,[[...L.T,1.1],[...L.F,1.1],...S.ltb.map(q=>hC(...q,1.4)),...S.ltbp.map(q=>[...q,0.4])]),M.steel,0,0,0);hn(lt,'42063');
+  for(const q of S.ltbp)hn(cylBetween(lt,0.4,-1.0,1.2,M.steel,...q,12),'42063',{sub:1});   /* its steady pins, into the plate */
   const ltf=new THREE.Group();ltf.rotation.x=Math.PI;lt.add(ltf);jewel(lt,...L.F,['42161.fl','J.fl']);jewel(lt,...L.T,['42161.tl','J.tl']);
   for(const q of S.ltb)hn(screw(ltf,q[0],-q[1],-1.2,1.4,0.8,1.2+3.46),'42163');   /* two screws (42163; Ops. 7, 53) into the pillar plate */
   /* ---------- pillars (two measured on Fig. 2, two placed clear of the fusee wheel and balance) ---------- */
