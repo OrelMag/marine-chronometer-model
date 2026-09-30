@@ -207,7 +207,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 
 ### 1.9 Chain and mainspring detail (M)
 - **Chain:** the links are alternating instanced boxes. A fusee chain is outer plates and inner plates riveted. Build one link as a small merged geometry with rivet heads. The end fittings (a pin at the fusee's large end, a hook at the barrel) are drawn; make the barrel-end hook visible in the "Stored energy" step.
-- **Mainspring:** drawn schematically. If the parts list gives its length and width as well as the 0.0165 in thickness, compute the coil count and spacing from the barrel and arbor radii for the wound and run-down states.
+- *Mainspring: done.* It is drawn 0.0165 in thick, in two packs (arbor and wall) joined by a free turn, with the counts from the barrel and arbor radii (`mainspringGeo`). Its length is still estimated (600 mm, the half-room rule). The parts list gives no length or width; a measured spring would settle the set-up (0.30 turn in the model).
 
 ### 1.10 Oil sinks, jewel settings, endstones (S)
 *Settings and endstones are done: the escape wheel's upper and lower endstone caps, the balance's lower setting and endstone cap, and the fourth wheel's upper setting. 13 of the 14 jewels are drawn; the balance's upper hole jewel isn't (1.4). Oil sinks are still to do.*
@@ -557,7 +557,7 @@ The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving
   - rotate about the axis by `th·(1 − s)` in `onBeforeCompile`, with `th` as a uniform.
   - The cross-section patch already uses `onBeforeCompile`; chain the two.
 - **Trip spring:** a new `TubeGeometry` every frame ([movement.js:453](marine-chronometer-source/chronometer-working-model/js/movement.js#L453)), even though it only moves near the unlocking and passing moments. Rebuild only when `lift` or `psDef` has changed, or bend it in the shader the same way.
-- **Mainspring:** rebuilt only when shown and when the wind changes. That's fine at 1×; at 3600× it rebuilds every frame. Rebuild only when the barrel has turned a visible amount.
+- *Mainspring: done.* It is rebuilt only when shown and when the barrel has turned 0.002 turn (0.7°).
 
 ### 5.4 Render only when something changes (S)
 > **Done.** Each frame compares a signature of everything shown (camera, lids and lift, wheels and balance, wind, ship motion, section plane). With nothing changed, no input for 0.6 s and a draw less than a second ago, it skips the render, the labels and the inset; an off-screen stage (`IntersectionObserver`) isn't drawn. Stopped with a still camera, headless Chromium drew 1 frame a second out of 52. `?snap` still draws every frame for the tools; `?qa` exposes `__renders()`. `4bd930e`

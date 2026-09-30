@@ -171,6 +171,7 @@ Everything is driven from one model clock `tSim`, in seconds of the time kept (G
   (`seatPawl`), so it rides over them or bears on a steep face. The winding
   pawls' flat springs are rebuilt with them (`wpsGeo`), their ends kept on the
   arm as the pawls swing out over the teeth while winding.
+- The mainspring (`mainspringGeo` in `core.js`) is rebuilt from the barrel's turns `I(n)`: its turns from the inner end to the outer fall from `Tup` at full wind by the barrel's turns (`fs.MS`). Running peels coils off the pack on the arbor onto the pack on the wall, with one free turn between them. Its inner end is held by the arbor's hook in an eye, and its outer end turns with the barrel, its anchor pin on the brace. The arbor never turns, and the setup click faces the spring's pull.
 - What turns while winding: the fusee wheel follows the train (`gA`), not the
   fusee, so it keeps turning forward, driven by the sustaining spring, while
   the key turns the fusee and its winding ratchet back and the sustaining
@@ -328,7 +329,7 @@ and the thread pitches are the model's. Things to know before changing it:
 - The shapes of the springs: the winding-pawl springs, the stop-bar spring, the sustaining pawl's spring (a wire round a steady pin in the train bridge) and the setup pawl spring. The sustaining spring's travel from loaded to spent (10°, `SMAX`): 5 to 10 minutes of drive (Sec. IV) is 4.4–8.75° of the fusee wheel. The model does not stop the train if a wind outlasts it (only possible at high speed).
 - The sustaining spring is pinned to the fusee wheel and pushed by a pin on the sustaining ratchet; the manual pins it to both.
 - The barrel arbor's core (r 2.4) and hook, the barrel wall (0.2 mm thick) and the brace lining it (0.25 mm thick, 40° of the wall), the end plate and taper pin, and the chain's end pin and hook.
-- The mainspring’s coils, which are drawn schematically.
+- The mainspring's length and lie. Its thickness is from the parts list (0.0165 in, 0.419 mm); its length (600 mm) is estimated, filling half the room between the core and the brace, the length that gives the most turns. It lies in two packs, one on the arbor and one on the wall, their coils 0.01 mm apart (the grease), joined by one free turn (estimated). In the model's barrel that spring takes 6.53 turns from its fewest to its most. The fusee needs 6.03 of them, which leaves a set-up of 0.30 turn and 0.2 turn unused at full wind. That is tight, but it can be done; a larger real barrel or thinner core would give more. The eye in its inner end for the arbor's hook, and the anchor pin at its outer end (the parts list's "complete with anchor pin"), drawn bearing on the brace's leading end, are estimated.
 - The detent's dimensions.
   - Its plan follows Fig. 90 and its construction Figs. 14 and 110 and the chronometerbook photograph. Thicknesses and heights are estimated.
   - The foot and support block are shorter than in Fig. 90, so they clear the model's train pillar.

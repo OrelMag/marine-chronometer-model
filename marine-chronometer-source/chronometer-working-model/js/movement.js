@@ -501,9 +501,10 @@ function buildMovement(M){
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
   const ba=loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off);rt.add(ba);cylBetween(ba,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28);
-  /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The spring's inner end lies at -90 deg in the
-     fusee/barrel group's frame (mainspringGeo's start, turned by ms.rotation), so the hook is there, and the core stays 0.1 clear of the turning caps */
-  { const ga=-Math.PI/2-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+2.55*Math.cos(ga),(TB_T+1.9-10.4)/2,L.Ba[1]+2.55*Math.sin(ga));hk.rotation.y=-ga;
+  /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The hook stands in the eye near the spring's
+     inner end (fs.MS.hookA in the fusee/barrel group's frame, which the arbor never turns from), no higher than the strip is thick, so the next coil passes over it;
+     the core stays 0.1 clear of the turning caps */
+  { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+2.55*Math.cos(ga),(TB_T+1.9-10.4)/2,L.Ba[1]+2.55*Math.sin(ga));hk.rotation.y=-ga;
     cylBetween(ba,2.4,TB_T+1.71,-10.3,M.steel,L.Ba[0],L.Ba[1],32); }
   mesh(rt,new THREE.BoxGeometry(2.2,3.0,2.2),M.steel,L.Ba[0],-31.46,L.Ba[1]);
   { const Pv=P2(8.9,250.6),Tp=P2(7.5,220),clk=mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]);clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
@@ -589,7 +590,7 @@ function buildMovement(M){
     R.blockRoom=E=>Math.min(...sp(E).map(a=>(((a-u.half)%q)+q)%q))*ESC_PER.fw/ESC.P;
     R.blockClear=E=>sp(E).every(a=>Math.abs((((a%q)+q+q/2)%q)-q/2)>=u.half); }
   const RF=ESC_PER.fw,RT=ESC_PER.tw,RC=ESC_PER.cw,MR=MW.cp/MW.mw,HR=MR*MW.mp/MW.hw;   /* escape turns per fourth, third, centre turn; minute wheel and hour wheel per centre turn */
-  let lastN=-1,srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0;
+  let lastN=-1,lastIn=-1,srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0;
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
   const FPR=ratchetProf(40,0.47,false),SRP=ratchetProf(120,0.27,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1).psi;
   /* the sustaining spring's travel from loaded (running) to spent: 5 to 10 minutes of drive (Sec. IV) is 4.4 to 8.75 deg of the fusee wheel; 10 deg drawn, estimated */
@@ -626,7 +627,7 @@ function buildMovement(M){
     const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
     const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-60*D2R-udA;
     fs.setBar(lerp(0,3.2,smooth(1-s.n/0.25)));
-    if(s.msOn){const In=fs.I(s.n);fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(1-In/fs.IN,2.6,13.1,-10.4,TB_T+1.9,6+fs.IN-In);}
+    if(s.msOn){const In=fs.I(s.n);if(Math.abs(In-lastIn)>=0.002){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup-In,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=In;}}   /* rebuilt when the barrel has turned 0.7 deg */
     if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,HS_H,14,s.th,0.17,HS_R,HS_R);}
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing */
     const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,EY+1.3,p.y*ES);
@@ -673,6 +674,10 @@ function makeFusee(M,c){
   { const s=new THREE.Shape(),a0=Math.PI/2-0.35,a1=Math.PI/2+0.35;s.absarc(0,0,c.Rb-0.2,a0,a1,false);s.absarc(0,0,c.Rb-0.45,a1,a0,true);
     const ge=extrude(s,{depth:Math.abs(c.bT-c.bB)-1.24,bevelEnabled:false,curveSegments:24});ge.rotateX(-Math.PI/2);mesh(bz,ge,M.steel,0,c.bT+0.62,0); }
   const ms=new THREE.Mesh(new THREE.BufferGeometry(),M.mspring);ms.position.x=bx;ms.userData.partName='mainspring';ms.userData.onlyDrive=true;g.add(ms);
+  /* the mainspring's anchor pin (parts list: "complete with anchor pin"): a stud on the outer end's outside face, bearing on the brace's leading end, so the
+     spring's pull holds the brace round the wall. Where the pin sits, and that it catches the brace, are estimated */
+  const PIN=0.35+0.32/12.9,pin=mesh(bz,new THREE.CylinderGeometry(0.3,0.3,0.26,12),M.steel,13.16*Math.cos(PIN-Math.PI/2),(c.bT+c.bB)/2+0.05,13.16*Math.sin(PIN-Math.PI/2));   /* the brace's end at -90 + 20 deg */
+  pin.rotation.set(0,-(PIN-Math.PI/2),Math.PI/2);Object.assign(pin.userData,{partName:'mainspring',onlyDrive:true});
   mesh(bz,ringGeo(4,1.5,0.4),M.brass2,0,c.bT-0.25,0).userData.driveGhost=true;
   /* barrel cap on the pillar-plate end, held by five screws (manual Figs. 26, 109) */
   for(let k=0;k<5;k++){const a=k/5*TAU;mesh(bz,cylY(0.7,0.4,10),M.steel,12.4*Math.cos(a),c.bB+0.2,12.4*Math.sin(a));}
@@ -704,6 +709,10 @@ function makeFusee(M,c){
       mtx.makeBasis(tb,Y,nb).setPosition(pb.clone().addScaledVector(tb,0.55));hkB.matrix.copy(mtx);hkB.matrix.decompose(hkB.position,hkB.quaternion,hkB.scale);
       hkN.position.copy(pb).addScaledVector(tb,0.9).addScaledVector(ub,-(rB-c.Rb)/2-0.01);hkN.quaternion.setFromUnitVectors(Y,ub);hkN.scale.set(1,(rB-c.Rb-0.02)/0.3,1); }
   }
-  const IN=I(c.N);ms.rotation.y=Math.PI/2+TAU*(6+IN);
-  return{g,fz,bz,setWind,rf,yf,fx,bx,ms,I,IN,stopBar,setBar};
+  /* the mainspring's turns: Tup at full wind (0.2 short of its most, where the stop-bar stops the key), Tdown = Tup less the barrel's IN turns at run down, and the
+     set-up, what it is still wound past its fewest. Its outer end (theta = TAU T in mainspringGeo) 0.4 mm past the pin, so turning it by rot puts the end there
+     at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
+  const IN=I(c.N),MR=msRange(),y0=c.bT+0.9,y1=c.bB-0.8,ym=(y0+y1)/2,e0=0.6/MSPRING.ra,e1=e0+1.06/MSPRING.ra,MS={Tup:MR.Tmax-0.2,y0,y1,ey:[e0,e1,ym-1.3,ym+1.3]};
+  MS.Tdown=MS.Tup-IN;MS.setup=MS.Tdown-MR.Tmin;MS.rot=TAU*MS.Tup+Math.PI/2-PIN-0.4/(MSPRING.Rw-MSPRING.t/2);MS.hookA=(e0+e1)/2-MS.rot;ms.rotation.y=MS.rot;
+  return{g,fz,bz,setWind,rf,yf,fx,bx,ms,I,IN,MS,stopBar,setBar};
 }

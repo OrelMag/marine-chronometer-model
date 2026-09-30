@@ -535,3 +535,16 @@ it is committed.
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves.
+- **Mainspring drawn 0.1 mm thick and floating free in mid-wind; its inner end
+  11° off the arbor's hook.** The parts list gives 0.0165 in (0.419 mm). Every
+  coil's radius was interpolated at once between a wall pack and an arbor pack,
+  so at half wind the whole spring hung as a loose spiral between r 6.5 and
+  9.1 mm, touching neither arbor nor wall. The full-wind turn count (12.03) wasn't
+  a whole number, so the inner end missed the hook by 0.03 turn. `mainspringGeo`
+  now lays a 600 mm strip in two packs joined by one free turn, and running
+  peels coils from the arbor pack onto the wall pack. The hook stands in an eye
+  in the strip (`fs.MS.hookA`), and an anchor pin at the outer end bears on the
+  brace. The spring is rebuilt only when the barrel has turned 0.002 turn. This
+  replaces the "strip 0.1 mm thick" of the solid-parts entry. Keep: the turns
+  fall by exactly the barrel's turns (`Tup - I(n)`); the hook and pin follow
+  from `fs.MS`, not fixed angles; the strip stays 0.05 mm or more off the core.
