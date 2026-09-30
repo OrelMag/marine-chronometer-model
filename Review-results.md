@@ -348,6 +348,9 @@ Then run `dyn.py` with the variant shown.
   are outputs of `p3fit.py`, committed by mistake in `1340cb6`. `.gitignore`
   doesn't cover the tools' outputs, so running them from `tools/` dirties the
   working tree.
+  *Fixed: both are untracked, and `.gitignore` covers every file the tools
+  write (`r_*.png`, `r_ill/`, `fit.json`, `p3fit.json`, `unproj.json`,
+  `bundle.npy`).*
 
 ## Not covered
 
