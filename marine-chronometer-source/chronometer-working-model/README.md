@@ -82,19 +82,19 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - Tick sound (Time) is on by default: a click at each beat, while the model runs at up to 1×. Browsers start audio only from a user gesture, so the page makes or resumes its audio context on the first click, tap or key press, and it is silent until then.
 - Tinted drawing and Ink drawing (Display; `draw=1` and `draw=ink` in the hash; one at a time) draw the live model as the Illustration tab's two drawings are drawn: `tools/illustration.py`'s `stylize()` done on the GPU, with its numbers except one: the tint is laid lighter (pigment density `INK.wash` 0.75 against `stylize()`'s 1.25), so the live model reads through it.
   - `drawOf(m)` in `core.js` gives each shown material a Phong copy whose output is the tint. It is the albedo lifted toward the paper, the lit value in soft bands, white where metal catches the light. `look()` applies it to whatever a part shows, so it combines with Colour by part, fading and sections. In ink (`INK.ink`) the copy is paper, inked only where its albedo falls under 55 % of the material's median (`inkRef`: the colour times a 48 × 48 sample of the map), which is the printing: the dial's figures. The engravings (`userData.inkDecal`) are ink under their own alpha; a faded part is paper at its opacity. `stylize()` takes the median per mesh over its visible pixels, the live mode per material over its whole map, which comes to the same for the dial.
-  - `makeInk(r)` draws the frame. Three scene passes: normals, part ids and 24-bit depth for the solids, then the same for the ghosts, then the tint with the shadows. Two full-screen passes follow: the lines, then the sheet. The sheet lays the tint on paper, true to the lines, and inks with a varying pressure.
+  - `makeInk(r)` draws the frame. Three scene passes: normals, part ids and 24-bit depth for the solids, then the same for the ghosts, then the tint (with the shadows when Shadows is on). Two full-screen passes follow: the lines, then the sheet. The sheet lays the tint on paper, true to the lines, and inks with a varying pressure.
   - The tint was once a pen-and-wash wash, laid up to 1.4 px off the lines by a noise field, mottled, pooled at edges, with hatching in deep shade. The offset read as the parts being distorted, so both drawings now keep to the lines and none of these effects is left.
   - Lines fall where depth jumps (0.6 mm + 1.2 % of the distance) or the drawing ends, with lighter ones at creases and between parts.
   - Parts under half opaque (see-through plates, the glass, faded parts) are ghosts, drawn in outline only and lighter.
   - The stage is paper in either theme, the floor shadow is left out, and the plates' damascening is muted.
-  - A moving model costs three scene renders a frame instead of one. The shadow map is still drawn once. With the option off, nothing is drawn differently.
+  - A moving model costs three scene renders a frame instead of one. The shadow map, with Shadows on, is still drawn once. With the option off, nothing is drawn differently.
   - Known limits:
     - Cost: frames with nothing moving are still skipped, as in the normal rendering. It was measured only in headless Chromium's software renderer (SwiftShader), not on a phone's GPU. The tint's render target is sized when a drawing is turned on and dropped when it is turned off (the others serve Edges too); the pen-pressure noise texture is made the first time it draws.
     - The plates' damascening is kept at 30 % in the tint (`uTex` in `drawOf`). At full strength it read as hatching. The shade is taken before that mix, so a darker stripe never changes a band.
     - The lines are found in screen space, one or two device pixels apart depending on the pixel ratio. Very thin parts far away (screws, pins in the Box view) can be only a line or two wide.
-- Edges (Display; on by default, off on phones; `edges=0` or `edges=1` in the hash when it differs from that default) outlines the movement's parts over the normal rendering, so that parts of one finish lying on each other stay apart: the steel winding pawls on the steel sustaining ratchet, for one. It is the drawings' line pass (`makeInk(r).lines()` in `core.js`) laid over the ordinary frame instead of the wash.
+- Edges (Display; on by default, phones included; `edges=0` in the hash when it is off) outlines the movement's parts over the normal rendering, so that parts of one finish lying on each other stay apart: the steel winding pawls on the steel sustaining ratchet, for one. It is the drawings' line pass (`makeInk(r).lines()` in `core.js`) laid over the ordinary frame instead of the wash.
   - The thresholds are the drawings': depth jumps, creases, and ghosts in lighter lines. Two things differ. The ids are per mesh, not per part, because a pawl is the same part as the wheel it lies on and less than the depth threshold above it. And the box, case, gimbals and glass (id 0) draw no lines, including where they meet the movement or stand in front of it. The engravings and the floor shadow are left out of the id passes, so an engraving doesn't outline itself on its plate.
-  - Cost: the two id passes plus the normal render, three scene renders for a moving frame, as with the drawings; the id passes' shader is trivial. In headless Chromium's software renderer a moving frame took 3–8 % longer at a pixel ratio of 1 and 12–28 % at 2 (Movement and Escapement views). Not measured on a phone's GPU, where the tripled draw calls weigh most; phones start with it off.
+  - Cost: the two id passes plus the normal render, three scene renders for a moving frame, as with the drawings; the id passes' shader is trivial. Measured with `tools/perf.py` (1440 × 900, Shadows off): on a desktop GPU a frame takes 0.7–2 ms longer (Dial 1.5 → 2.5 ms, Movement 1.9 → 2.6 ms), mostly the JavaScript of the extra draw calls (470 → 940 in the Dial view); with the CPU throttled 4× (about a phone's) the Dial view went from 6.9 to 12.2 ms. It stays on for phones, where Shadows being off pays for it.
   - Memory: `makeInk`'s render targets are the drawing's size only while in use, else 1 px. Edges keeps the normals and ids (4 bytes a pixel, plus 4 of depth) and the lines (4): 12 bytes a pixel, about 23 MB for a 1600 × 1200 drawing. See-through parts add the ghosts' 8, and a drawing the tint's 8 (dropped again when it goes off).
   - With the option off, nothing is drawn differently.
   - The drawings ink their own lines. While one is on, Edges is greyed out and kept, and it comes back when the drawing goes off.
@@ -103,6 +103,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - Colour by source (Display) colours each part by where its shape and size mainly come from (`src` in `PARTS`, `SRC`): the manual (green: its figures, parts list or specifications), measured (blue: on photographs, or a real part), solved (amber: placed or sized to fit the rest) or estimated (grey: the manual shows it, not its size or shape). A key under the tabs names the colours; the part's card says what came from where. It and Colour by part exclude each other; `colr=part` or `colr=src` in the hash.
 - Labels are off by default (Display turns them on, and the choice isn't remembered). The walkthrough shows the labels of each step's parts regardless.
 - The walkthrough sets its own view, speed, Moving parts only, ship motion and gimbal latch for each step. Ending it (Finish, Exit, or anything that leaves it) gives back the viewer's own: the view, See-through, Ship motion, Gimbals latched, the speed, Moving parts only and the motion work, as they were when it started.
+- Shadows (Display; off by default; `shadows=1` in the hash when on): the key light casts shadows through a shadow map (`PCFSoftShadowMap`, 2048 px, 1024 on phones). With it off, the light casts none: no shadow pass, simpler shaders to compile (two programs fewer at start), and the map is freed. The floor's soft shadow under the box is a texture (`shadowTex`) and is always drawn. The tinted and ink drawings follow the switch. Cost with it on, measured with `tools/perf.py`: about 230–380 more draw calls and every caster's triangles again; 0.4–1.1 ms a frame on a desktop GPU, 22 % (Edges on) to 47 % (Edges off) on the Dial view with the CPU throttled 4×, 14–22 % in the software renderer. `illustration.py`, `social.py`, `topview.py` and `p3fit.py` turn it on, as their images were made.
 - Screen readers: the model's `aria-label` says what the stage shows, the view (`VIEW_DESC` in `app.js`) or the walkthrough step, and Moving parts only, and is updated with it.
 - Keyboard and reduced motion: Space stops and restarts, 1 to 9 pick the views (the key for a view that is off, Box or Dial with Moving parts only, flashes its button and says why in the HUD); with the model focused (click it or Tab to it) the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, camera and state moves are instant (as with `?snap`), the walkthrough leaves ship motion off and scrolls without animation, and the page's fades are off.
 - Phones: below 600 px wide the part card is a sheet along the bottom of the stage; on touch screens buttons and checkboxes are finger-sized; in landscape with the height under 560 px the stage fills the height and the panel scrolls beside it. On a phone (coarse pointer, screen under 600 px on its short side) the pixel ratio is capped at 1.5 and the shadow map at 1024 px, against 2 and 2048 px elsewhere. A part casts a shadow only when its radius spans 6 texels of the shadow map, which follows the view: far views drop the screws and pins, close-ups keep them. The knurled nuts and the balance rim's holes are each one merged mesh (`mergeGeo` in `core.js`).
@@ -111,7 +112,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 
 The page's state is kept in the URL hash, so a link opens the model as it
 was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part; `view=laidout` is the laid-out train), `arm=1` (the balance locked, at rest), `block=1` (the train-blocking screw down),
-`#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` / `edges=1` (Edges, when not its default), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
+`#tour=6` (a walkthrough step), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
 rewritten (without adding to the history) 0.3 s after any change.
@@ -130,8 +131,15 @@ The stage is drawn only when something shown has changed: the camera, the
 lids and lift, the wheels and balance, the wind, ship motion or a section, or
 any input in the last 0.6 s. Otherwise it is redrawn once a second, and not at
 all while scrolled off screen. A stopped model with a still camera draws once a
-second instead of every frame. Code that changes the scene without input or a
-`look()` call should call `wake()`.
+second instead of every frame. The balance's swing counts only while the
+balance can be seen: with the movement in its case under the dial (the Dial and
+Box views, nothing see-through, hidden, faded or cut), the hands' steps alone
+draw a frame, about 4 a second at 1×, unless the walkthrough's inset or the
+adjuster's bench shows the escapement. Without input a frame comes at most
+every 10 ms, so a 120 or 144 Hz display draws the running model at 60 or 72 Hz;
+input draws at the display's rate. Each frame is compared with the last one
+drawn. Code that changes the scene without input or a `look()` call should call
+`wake()`.
 
 The browser tools in `tools/` open `index.html?snap&qa` themselves. They need
 Python with numpy, scipy and Playwright's Chromium, and write their output into
@@ -464,7 +472,11 @@ edit; see "Changing things" in the root README for the loop and the checks.
     radius 0, not 0.01;
   - anything else left open (a tube's ends, a lathe or torus turned less than a
     full circle) through `closeGeo(geometry)`, which caps each open loop with a
-    flat face;
+    flat face. A tube rebuilt as it moves (the hairspring every frame the
+    balance turns, the stop-bar spring) goes through `reclose(old, geometry)`,
+    which writes the new positions and normals into the old closed geometry,
+    keeping its weld and caps: `closeGeo` on the hairspring cost about 9 ms a
+    frame;
   - single-sided materials (no `DoubleSide`) and no `noCap` on a new part.
 
   `tools/solids.py` checks all of this.
@@ -647,3 +659,12 @@ five views, draws them tinted and in ink and writes `img/illustration.webp` and
 views, `--no-render` only redraws and lays out). Look at `r_ill/sheet-tint.png`
 and `sheet-ink.png`: labels pointing at a sheet position were placed
 by eye, so move them in `sheet()` if a part has moved. Then rebuild from the root.
+
+**Measure performance** after a change that could cost frame time: `python perf.py`
+from `tools/` prints, for each view, the frame's cost as opened (Edges on,
+Shadows off), with Shadows and without Edges (ms, draw calls and triangles over
+every pass, the JavaScript inside the renders), then how many frames a second
+the page draws when left alone, and the time to the first frame. It runs
+Chromium on the machine's GPU with vsync off; `--throttle 4` slows the CPU about
+to a phone's, `--sw` uses the software renderer (a weak GPU), `--views` and
+`--dpr` choose what to measure.

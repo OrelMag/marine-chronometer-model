@@ -57,7 +57,7 @@ fills in the manual's test card ([3.4](#34-the-30-day-performance-test)).
 - **Too many meshes.** The scene has 545 separate meshes, and 541 of them cast shadows. See [5.1](#51-draw-calls-merge-and-instance). *(Partly done: 389 meshes, and parts too small for the shadow map cast none, `347bf5b`; merging the static parts is open.)*
 - **Knurling.** 155 of those meshes make up five knurled nuts: a body and 30 separate ridges each. See [5.1](#51-draw-calls-merge-and-instance). *(Done: one mesh per nut, `347bf5b`.)*
 - **Slow texture at load.** Building the plates' striped (damascened) texture takes 204 ms of the 322 ms spent on materials. See [5.2](#52-startup-the-stripe-texture). *(Done: 4.4× faster, same pixels, `6c5ed75`.)*
-- **Per-frame rebuilds.** The hairspring's geometry is rebuilt every frame whenever it can be seen. See [5.3](#53-dont-rebuild-geometry-every-frame-sm).
+- **Per-frame rebuilds.** The hairspring's geometry is rebuilt every frame whenever it can be seen. See [5.3](#53-dont-rebuild-geometry-every-frame-sm). *(Done: written in place, not rebuilt through `closeGeo`; see RESOLVED.md.)*
 
 ### Three copies of the escapement solver
 > **Done.** One solver, `makeEsc` in `marine-chronometer-source/shared/escapement.js`, used by the model, the essay and `tools/escapement.js`. See 7.3. `813f7ae`
@@ -544,6 +544,12 @@ the JavaScript `update()`.
 ### 5.1 Draw calls: merge and instance
 > **Done.** Knurled nuts and the balance rim's holes are merged (`mergeGeo` in `core.js`): 592 meshes down to 389. Rather than a fixed 1.5 mm, a mesh casts a shadow when its radius spans 6 texels of the shadow map, which follows the view (the escapement close-up's texel is 0.06 mm, so its small parts keep their shadows). Draw calls per frame, main and shadow passes: box view 1,239 to 652, dial 1,214 to 706, movement 830 to 612, escapement 571 to 451. Merging static parts and sharing geometries are still open. `347bf5b`
 
+> **Next: fewer triangles** (measured, not started). The whole model is about 720k triangles (1.35M a frame with Edges, 2M with Shadows too), with no level of detail. Three parts carry 64 % of them. This matters most for weak GPUs and the software renderer, where the triangles are the cost, and for the shadow pass, which draws every caster again. Each changes geometry, so `fine.py` (the chain on the fusee cone is an expected contact), `solids.py` and `exploded.py` must be re-run and `EXPECTED` may need its sizes retuned; do it on its own branch.
+> - **Fusee lathe, 148k:** its profile is sampled every 0.03 mm (343 points) × 216 segments (`makeFusee` in `movement.js`). Sample the groove's flanks more coarsely or adaptively.
+> - **Chain, 188k in 2 draw calls:** 656 links; an outer link is 408 triangles (two plates with `curveSegments:10`, two rivets), an inner one 164. Fewer segments on the plates' round ends; the instance buffers are sized for 900 where 328 are used.
+> - **Screws, 133k:** 52 threaded screws, two lathe rings per thread pitch, so the finest screws are the heaviest (the 0.45 mm endstone-cap screws 4,760 each). Identical screws could share one geometry (`screw()` in `movement.js`).
+> - Also: every `absarc` gets 2 × `curveSegments` points whatever its radius, so a 0.5 mm hole in `discGeo` (64) or `ringGeo` (48) costs as much as a rim; the escape wheel's web (128) is 10k.
+
 - **Knurling (S):** `knurl()` in [box.js:26](marine-chronometer-source/chronometer-working-model/js/box.js#L26) builds 30 separate box meshes, plus the body, for each knurled nut: 124 meshes for the four on the gimbal ring, 31 more on the latch. Build each nut as one merged geometry (knurled lathe profile or merged boxes). That removes about 150 draw calls, twice over with shadows.
 - **Balance rim holes (S):** 60 separate meshes. Merge them into one geometry in the balance's frame; it rotates with the staff anyway.
 - **Merge static parts (M):** at load, merge every static mesh of a part that shares a material into one geometry. Pillar plate, bridges, pillars and cock are all static relative to their part group. Keep `userData.part` on the merged mesh; picking, colouring, fading and sections all work per part already. Copy `BufferGeometryUtils.mergeBufferGeometries` from three r128's examples into `vendor/` (MIT), or write a 30-line merge. Expect the movement's 285 meshes to drop to well under 100.
@@ -561,7 +567,9 @@ the JavaScript `update()`.
 The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving canvases. The same treatment applies to the engraving, which never changes.
 
 ### 5.3 Don't rebuild geometry every frame (S–M)
-> **Partly done.** The trip spring is rebuilt only when its lift or deflection changes, so it stands still (and isn't rebuilt) for most of each swing, and above 1× never. The hairspring is left as it is: the balance turns every frame while running, so a change threshold saves nothing, and bending it in a shader would hide its real shape from `fine.py`, `dyn.py`, `solids.py` and `illustration.py`, which read the geometry `update()` builds. `a4e7574`
+> **Done.** The closed-solid rule later put the hairspring through `closeGeo` every frame, 9 ms of it on a desktop CPU. Now `reclose` writes the new tube into the old geometry in place (same vertices, same index; `fine.py` and the others still read what `update()` builds), and only when the balance has turned: the Movement view went from 12.5 to 2.6 ms a frame (`tools/perf.py`). The shader below is no longer needed.
+>
+> **Earlier, partly done.** The trip spring is rebuilt only when its lift or deflection changes, so it stands still (and isn't rebuilt) for most of each swing, and above 1× never. The hairspring is left as it is: the balance turns every frame while running, so a change threshold saves nothing, and bending it in a shader would hide its real shape from `fine.py`, `dyn.py`, `solids.py` and `illustration.py`, which read the geometry `update()` builds. `a4e7574`
 
 - **Hairspring:** a new `TubeGeometry` from `springGeo()` every frame whenever it's visible ([movement.js:450](marine-chronometer-source/chronometer-working-model/js/movement.js#L450)). That is 0.94 ms of JavaScript plus a fresh vertex buffer upload each frame. The hairspring's "breathing" is a rotation that varies along its length (`a = ang + th·(1 − ang/tot)`), so it can be done in the vertex shader:
   - build the tube once at `th = 0`;
@@ -574,13 +582,15 @@ The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving
 ### 5.4 Render only when something changes (S)
 > **Done.** Each frame compares a signature of everything shown (camera, lids and lift, wheels and balance, wind, ship motion, section plane). With nothing changed, no input for 0.6 s and a draw less than a second ago, it skips the render, the labels and the inset; an off-screen stage (`IntersectionObserver`) isn't drawn. Stopped with a still camera, headless Chromium drew 1 frame a second out of 52. `?snap` still draws every frame for the tools; `?qa` exposes `__renders()`. `4bd930e`
 
+> **Also done:** the balance's swing is left out of the signature while it can't be seen (the Dial and Box views, movement in its case), so the running model's Dial view draws about 4 frames a second, for the hands' steps, instead of every frame; and without input a frame comes at most every 10 ms, so 120 and 144 Hz displays draw the running model at 60 or 72 Hz.
+
 The loop renders every frame even when stopped with the camera still, which costs battery on laptops and phones for a page that is often left open.
 - Skip `r.render` when the speed is 0, the camera has settled (its easing deltas are below a threshold), no transition is running, and no input arrived.
 - At 1× the second hand moves every half second, but the balance moves continuously, so this only helps when stopped or when the Illustration tab is shown. The loop already skips rendering there; stop scheduling `drawInset` and the HUD too.
 - Pause entirely when the stage is scrolled out of view on narrow layouts (`IntersectionObserver`).
 
 ### 5.5 Adaptive quality (M)
-Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map 1024 px); this would replace it with one that measures.
+Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map 1024 px), and Shadows is now off by default everywhere (a Display switch); this would replace the cap with one that measures. `tools/perf.py` measures what each setting costs.
 - Measure the frame time. When it stays above about 25 ms, step down: pixel ratio from 2 to 1.5 to 1, shadow map from 2048 to 1024, then shadows off.
 - Step back up when there's headroom.
 - Show the current level in a small **Quality: Auto / High / Low** control under Display.

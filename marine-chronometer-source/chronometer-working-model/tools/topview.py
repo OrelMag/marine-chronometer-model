@@ -34,7 +34,7 @@ async def main():
         await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=%r;document.head.appendChild(s);});"%CSS)
         await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(FREEZE)
-        await pg.evaluate("(()=>{const e=document.querySelector('#edges');if(e.checked)e.click();})()")
+        await pg.evaluate("(()=>{const e=document.querySelector('#edges');if(e.checked)e.click();})()");await pg.evaluate("(()=>{const e=document.querySelector('#shadows');if(!e.checked)e.click();})()")   # Edges off, the lamp's shadows on (off by default), as the comparison was made
         await pg.evaluate("document.querySelector('#views button[data-v=\"movement\"]').click()");await pg.wait_for_timeout(2500)
         if hide:await pg.evaluate("(H=>{for(const c of window.__mv.children)if(H.includes(c.userData.partName))c.visible=false;})(%s)"%json.dumps(hide.split(',')))
         await pg.evaluate("window.__cam(%s)"%','.join(map(str,CAM)));await pg.wait_for_timeout(2500)

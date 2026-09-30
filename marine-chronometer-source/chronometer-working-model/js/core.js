@@ -282,21 +282,31 @@ function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,
   for(const h of hs){const e=i+h.length*sl;if(U.isClockWise(h)){f=1;for(const a of Object.values(g.attributes))for(let v=i;v<e;v+=3)for(let c=0;c<a.itemSize;c++){const k=(v+1)*a.itemSize+c,m=(v+2)*a.itemSize+c,t=a.array[k];a.array[k]=a.array[m];a.array[m]=t;}}i=e;}
   if(f)g.computeVertexNormals();return g;}
 /* closeGeo(g): g made a closed solid: each loop of open edges (a tube's ends, a part-turned lathe's or torus's ends, all flat) filled with a flat cap, wound to
-   face out. Returns an indexed copy with g's type and parameters (or g, if already closed) */
-function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[];
-  for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);if(!id.has(k)){id.set(k,P.length);P.push(new THREE.Vector3().fromBufferAttribute(p,i));}V.push(id.get(k));}
+   face out. Returns an indexed copy with g's type and parameters (or g, if already closed); its userData.capOf gives, for each cap vertex, the vertex of g it copies (for reclose) */
+function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[],S=[];
+  for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);if(!id.has(k)){id.set(k,P.length);P.push(new THREE.Vector3().fromBufferAttribute(p,i));S.push(i);}V.push(id.get(k));}
   const E=new Set(),nx=new Map();for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u+'_'+v);}
   for(const k of E){const[u,v]=k.split('_').map(Number);if(!E.has(v+'_'+u))nx.set(v,u);}   /* an open edge u->v: its cap runs v->u */
-  if(!nx.size)return g;const pos=[],nor=[],done=new Set();
-  for(const s of nx.keys()){if(done.has(s))continue;const L=[];let q=s;while(q!==undefined&&!done.has(q)&&L.length<=nx.size){done.add(q);L.push(P[q]);q=nx.get(q);}if(L.length<3)continue;
+  if(!nx.size)return g;const pos=[],nor=[],src=[],done=new Set();
+  for(const s of nx.keys()){if(done.has(s))continue;const L=[],Q=[];let q=s;while(q!==undefined&&!done.has(q)&&L.length<=nx.size){done.add(q);L.push(P[q]);Q.push(S[q]);q=nx.get(q);}if(L.length<3)continue;
     const N=new THREE.Vector3();L.forEach((a,i)=>{const b=L[(i+1)%L.length];N.x+=(a.y-b.y)*(a.z+b.z);N.y+=(a.z-b.z)*(a.x+b.x);N.z+=(a.x-b.x)*(a.y+b.y);});N.normalize();   /* Newell: the cap's normal */
     const e1=new THREE.Vector3().subVectors(L[1],L[0]).projectOnPlane(N).normalize(),e2=new THREE.Vector3().crossVectors(N,e1),o=L[0];
     const c2=L.map(a=>{const d=a.clone().sub(o);return new THREE.Vector2(d.dot(e1),d.dot(e2));});
     for(const f of THREE.ShapeUtils.triangulateShape(c2,[])){const[a,b,c]=f.map(i=>L[i]);const fl=new THREE.Vector3().subVectors(b,a).cross(new THREE.Vector3().subVectors(c,a)).dot(N)<0;
-      for(const v of fl?[a,c,b]:[a,b,c]){pos.push(v.x,v.y,v.z);nor.push(N.x,N.y,N.z);}}}
+      for(const i of fl?[f[0],f[2],f[1]]:f){const v=L[i];pos.push(v.x,v.y,v.z);nor.push(N.x,N.y,N.z);src.push(Q[i]);}}}
   if(!pos.length)return g;const h=g.index?g:g.toNonIndexed(),o0=h.attributes.position.count,m=pos.length/3,out=new THREE.BufferGeometry(),I=[];
   for(const k in h.attributes){const a=h.attributes[k],w=a.itemSize,arr=new Float32Array((o0+m)*w);arr.set(a.array.subarray(0,o0*w));if(k==='position')arr.set(pos,o0*w);else if(k==='normal')arr.set(nor,o0*w);out.setAttribute(k,new THREE.BufferAttribute(arr,w));}
-  if(h.index)I.push(...h.index.array);else for(let i=0;i<o0;i++)I.push(i);for(let i=0;i<m;i++)I.push(o0+i);out.setIndex(I);out.type=g.type;out.parameters=g.parameters;g.dispose();return out;}   /* type and parameters kept: the checks know a tube by them */
+  if(h.index)I.push(...h.index.array);else for(let i=0;i<o0;i++)I.push(i);for(let i=0;i<m;i++)I.push(o0+i);out.setIndex(I);out.type=g.type;out.parameters=g.parameters;out.userData.capOf=Int32Array.from(src);g.dispose();return out;}   /* type and parameters kept: the checks know a tube by them */
+/* reclose(old,g): closeGeo(g) written into old, in place, when old is closeGeo's output for a geometry of g's counts (a spring rebuilt as it moves: the same tube, bent
+   differently). The weld and the caps' triangulation are old's; only positions and normals change, so there is no hashing and no new buffer each frame (closeGeo on the
+   hairspring was about 9 ms a frame). Else, or if old is missing, old is disposed and closeGeo(g) returned */
+function reclose(old,g){const u=old&&old.userData.capOf,p=g.attributes.position,o0=p.count;
+  if(!u||!g.index||old.attributes.position.count!==o0+u.length||old.index.count!==g.index.count+u.length){if(old)old.dispose();return closeGeo(g);}
+  const A=old.attributes.position,Nm=old.attributes.normal,a=A.array,nm=Nm.array,s=p.array,e1=new THREE.Vector3(),e2=new THREE.Vector3();a.set(s);nm.set(g.attributes.normal.array);
+  for(let k=0;k<u.length;k++){const j=3*u[k],o=3*(o0+k);a[o]=s[j];a[o+1]=s[j+1];a[o+2]=s[j+2];}
+  for(let k=0;k<u.length;k+=3){const o=3*(o0+k);e1.set(a[o+3]-a[o],a[o+4]-a[o+1],a[o+5]-a[o+2]);e2.set(a[o+6]-a[o],a[o+7]-a[o+1],a[o+8]-a[o+2]);e1.cross(e2).normalize();   /* each cap flat and wound to face out */
+    for(let c=0;c<9;c+=3){nm[o+c]=e1.x;nm[o+c+1]=e1.y;nm[o+c+2]=e1.z;}}
+  A.needsUpdate=Nm.needsUpdate=true;old.computeBoundingSphere();if(old.boundingBox)old.computeBoundingBox();g.dispose();return old;}
 function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,TAU,true);s.holes.push(hp);
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 /* a round collet or socket with a square hole a across (a hand broached square, a key's socket), centred on its y like ringGeo */
@@ -341,7 +351,7 @@ function arbor(parent,M,x,z,o){
   if(o.ar){const[a,b]=o.ar;cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
   return g;
 }
-function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3){   /* rc, rs: radii of the inner (collet) and outer (stud) ends, where the terminal curves end */
+function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into){   /* rc, rs: radii of the inner (collet) and outer (stud) ends, where the terminal curves end; into: the previous geometry, rewritten in place (reclose) */
   const c=new THREE.Curve();c.arcLengthDivisions=1400;
   const Re=R*N/(N+th/TAU*0.8),a0=0.09,tot=TAU*N+TAU;
   c.getPoint=(t,v=new THREE.Vector3())=>{let ang,r,y;
@@ -349,7 +359,7 @@ function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3){   /* rc, rs: radii of the i
     else if(t>1-a0){const s=(t-1+a0)/a0;ang=Math.PI+TAU*N+Math.PI*s;r=Re-(Re-rs)*(1-Math.cos(s*Math.PI/2));y=H*0.95+H*0.05*s;}
     else{const s=(t-a0)/(1-2*a0);ang=Math.PI+TAU*N*s;r=Re;y=H*0.05+H*0.9*s;}
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
-  return closeGeo(new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
+  return reclose(into,new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
 }
 function handGeo(len,w,tail,kind,at,o){   /* tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off) */
   const s=new THREE.Shape(),b=o&&o.boss,yb=b&&Math.sqrt(b*b-w*w/4),ab=b&&Math.acos(w/2/b);

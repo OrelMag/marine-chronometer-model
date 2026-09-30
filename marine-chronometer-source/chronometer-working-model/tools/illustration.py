@@ -53,8 +53,8 @@ async def render(b,name,view,W,H,drive=False,keep=None,ghost=None,drop=None,cam=
     await pg.evaluate((HERE/'illustration-passes.js').read_text()+";(()=>{const r=__r,o=r.render;r.render=function(s,c){window.__S=s;window.__C=c;return o.call(this,s,c)};})()")
     # stopped at ten past ten, as watches are drawn
     await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate("t=>{const i=document.querySelector('#tod');i.value=t;i.dispatchEvent(new Event('change'))}",'10:09:36')
-    # Edges off (on by default except on phones): its overlay is drawn last, so the render hook would capture the overlay's scene, not the model's
-    await pg.evaluate("(()=>{const e=document.querySelector('#edges');if(e.checked)e.click();})()")
+    # Edges off (on by default): its overlay is drawn last, so the render hook would capture the overlay's scene, not the model's. Shadows on (off by default): the shade pass has them
+    await pg.evaluate("(()=>{const e=document.querySelector('#edges');if(e.checked)e.click();})()");await pg.evaluate("(()=>{const e=document.querySelector('#shadows');if(!e.checked)e.click();})()")
     if drive:await pg.evaluate("document.querySelector('#driveOn').click()")
     await pg.evaluate(f"document.querySelector('#views button[data-v=\"{view}\"]').click()");await pg.wait_for_timeout(1500)
     if cam:await pg.evaluate(f"window.__cam({','.join(map(str,cam))})")
