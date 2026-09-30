@@ -87,6 +87,13 @@ Contents:
   (r 1.70), since it goes on over them; the hands stay above the sub-dial
   collets (5.05); `fine.py` run with the keys shown (`hkeyOn`, `keyOn`) finds
   nothing between a socket and its square. `4bd8888`
+- **Seconds hand's tip on the hour hand's collet.**
+  The collet added in `4bd8888` filled r 2.9 from the centre down to y 4.6, and
+  the Hamilton seconds hand's tip, at y 4.35 to 4.7, reaches r 2.9 as it passes
+  :00, so they touched once a minute. The collet is r 2.7, inside the hand's
+  boss. Keep: the contact has no volume and `fine.py` never sets the seconds
+  hand at :00; check the sub-dial hands' reach against anything new at the
+  centre by hand. `9f9118f`
 - **Escape pinion 0.3 mm into the third wheel's teeth** (seen in the model,
   not a review finding). The 2 mm pinion was centred on the fourth wheel, so
   its upper end reached the third wheel's height, 0.37 mm inside its tips. It
@@ -451,6 +458,13 @@ Contents:
 
 ## Controls and display
 
+- **Hidden parts took clicks and hid labels.** r128's
+  raycaster ignores visibility, and picking, the right-click menu and label
+  occlusion tested only the mesh's own `visible`, so meshes in a hidden group
+  (the hand-setting key, the other dial styles' hands) still caught the ray:
+  clicks near the dial's centre opened Hands or Motion work instead of the
+  part shown. They test the mesh and its ancestors (`shown()` in `app.js`).
+  Keep: filter ray hits with `shown()`, never `object.visible` alone. `9f9118f`
 - **Mainspring invisible outside drive-train mode.** It is now drawn when a
   cross-section is on, when the barrel or mainspring is picked
   (`16119fc`), and when the barrel is faded or hidden (`336aad3`).
@@ -592,17 +606,4 @@ Contents:
 
 ## Fixed, not yet committed
 
-- **Seconds hand's tip on the hour hand's collet** (Going train and heights).
-  The collet added in `4bd8888` filled r 2.9 from the centre down to y 4.6, and
-  the Hamilton seconds hand's tip, at y 4.35 to 4.7, reaches r 2.9 as it passes
-  :00, so they touched once a minute. The collet is r 2.7, inside the hand's
-  boss. Keep: the contact has no volume and `fine.py` never sets the seconds
-  hand at :00; check the sub-dial hands' reach against anything new at the
-  centre by hand.
-- **Hidden parts took clicks and hid labels** (Controls and display). r128's
-  raycaster ignores visibility, and picking, the right-click menu and label
-  occlusion tested only the mesh's own `visible`, so meshes in a hidden group
-  (the hand-setting key, the other dial styles' hands) still caught the ray:
-  clicks near the dial's centre opened Hands or Motion work instead of the
-  part shown. They test the mesh and its ancestors (`shown()` in `app.js`).
-  Keep: filter ray hits with `shown()`, never `object.visible` alone.
+None at the moment.
