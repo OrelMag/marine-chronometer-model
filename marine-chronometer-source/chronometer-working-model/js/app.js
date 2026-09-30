@@ -129,7 +129,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   const SHK=6;let shThr=SHK*2*scam.right/key.shadow.mapSize.x;const castOn=m=>{m.castShadow=!!m.userData.cs&&m.userData.rad>=shThr;};
   const MVM=[];mv.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);MVM.push(o);}});
   BOXM.forEach(o=>{o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);o.userData.cs=o.material!==M.glass;castOn(o);});
-  /* a frame: rendered, drawn in pen and wash, or rendered with Edges (the pen and wash lines over it, the movement's only) (makeInk in core.js, set up the first time it is asked for) */
+  /* a frame: rendered, drawn (tinted or in ink), or rendered with Edges (the drawing's lines over it, the movement's only) (makeInk in core.js, set up the first time it is asked for) */
   let ink=null;const INKM=[...MVM,...BOXM];BOXM.forEach(o=>o.userData.inkBox=true);
   const INKH=[sh,...MVM.filter(o=>o.userData.decal)];   /* left out of Edges' ids: the floor shadow, and the engravings, which would outline themselves on their plates */
   const paint=()=>{if(st.draw)(ink||(ink=makeInk(r))).render(scene,cam,INKM);else if(st.edges)(ink||(ink=makeInk(r))).lines(scene,cam,INKM,INKH);else r.render(scene,cam);};
@@ -174,14 +174,14 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* per-part opacity, set from the right-click menu */
   const FADE=new Map();
   function fadeOf(m0,p,op){const k=m0.uuid+p;let f=FADE.get(k);
-    if(!f){f=m0.clone();f.userData={};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
+    if(!f){f=m0.clone();f.userData={inkDecal:m0.userData.inkDecal};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
     f.opacity=(m0.opacity??1)*op;return syncMat(f,m0);}
   const base=m=>{const p=m.userData.part,m0=st.colr||st.csrc?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
-  const fin=m=>st.draw?drawOf(base(m)):base(m);   /* pen and wash: the wash copy of whatever the part shows; see-through parts stay ghosts, drawn in outline */
+  const fin=m=>st.draw?drawOf(base(m)):base(m);   /* the drawing (st.draw 'tint' or 'ink'): the wash copy of whatever the part shows; see-through parts stay ghosts, drawn in outline */
   const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0;
   /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, the barrel or spring picked, or the barrel faded or hidden */
   const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus,ob=st.op.barrel;return st.drive||secMode!=='off'||st.hid.has('barrel')||(ob!=null&&ob<1)||!!(foc&&(foc.has('mainspring')||foc.has('barrel')));};
-  function look(){wake();
+  function look(){wake();INK.ink.value=st.draw==='ink'?1:0;
     const foc=st.pick?new Set([st.pick]):st.focus,dvOn=(st.tour<0&&st.view==='laidout')||devShown;   /* laid out: the real plates' holes no longer meet the arbors; schematic ones stand in */
     for(const m of MVM){const p=m.userData.part;let vis=true;
       if(((st.drive||dvOn)&&DRIVE_HIDE.has(p))||(st.drive&&!st.mwOn&&(p==='motion'||p==='hands')))vis=false;
@@ -196,7 +196,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
     cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
-    $('#ghost').checked=st.see;$('#draw').checked=st.draw;$('#edges').checked=st.edges;$('#edges').disabled=st.draw;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',st.draw);partsSync();
+    $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
   }
 
   /* ---------- camera ---------- */
@@ -314,19 +314,22 @@ function drawEsc2D(ctx,w,h,p,dark){
   /* about: sources and method in a dialog */
   const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});
   about.addEventListener('click',e=>{if(e.target===about)about.close();});
-  /* tabs: the 3D model, or the overview illustration drawn from it (tools/illustration.py) over it (the model keeps time but isn't drawn meanwhile) */
+  /* tabs: the 3D model, or the overview illustration drawn from it (tools/illustration.py) over it (the model keeps time but isn't drawn meanwhile), tinted or in ink */
   let figOn=false;const fig=$('#fig'),fsc=fig.querySelector('.fsc');
   const showFig=on=>{figOn=on;fig.classList.toggle('hidden',!on);$('#tabModel').setAttribute('aria-selected',!on);$('#tabFig').setAttribute('aria-selected',on);if(on)closeOpm();};
   $('#tabModel').addEventListener('click',()=>showFig(false));$('#tabFig').addEventListener('click',()=>showFig(true));
-  fig.querySelector('img').addEventListener('click',e=>{const z=fsc.classList.toggle('zoom');e.target.title=z?'Click to fit':'Click to see it full size';if(!z)fsc.scrollTo(0,0);});
+  fig.querySelectorAll('img').forEach(im=>im.addEventListener('click',()=>{const z=fsc.classList.toggle('zoom');fig.querySelectorAll('img').forEach(i=>i.title=z?'Click to fit':'Click to see it full size');if(!z)fsc.scrollTo(0,0);}));
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
   /* settings this browser remembers, as it does the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
   const SET=(()=>{try{const o=JSON.parse(localStorage.getItem('cm-set')||'{}');return o&&typeof o==='object'?o:{};}catch(_){return{};}})(),keep=(k,v)=>{SET[k]=v;try{localStorage.setItem('cm-set',JSON.stringify(SET));}catch(_){}};
   units=SET.units==='in'?'in':'mm';
+  /* the Illustration's style (remembered): the tinted drawing or the ink one */
+  const figSt=v=>{$('#figT').classList.toggle('hidden',v==='ink');$('#figI').classList.toggle('hidden',v!=='ink');document.querySelectorAll('#figSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));};
+  figSt(SET.fig==='ink'?'ink':'tint');document.querySelectorAll('#figSt button').forEach(b=>b.addEventListener('click',()=>{figSt(b.dataset.v);keep('fig',b.dataset.v);}));
   document.querySelectorAll('#units button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.v===units?'true':'false');b.addEventListener('click',()=>{units=b.dataset.v;keep('units',units);
     document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);keep('bal',b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
-  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});
+  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked?'tint':false;look();});$('#drawInk').addEventListener('change',e=>{st.draw=e.target.checked?'ink':false;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});
   const DIAL_INFO={hamilton:[INFO.dial[1],INFO.hands[1]],roman:['Black on silver-white, in the German style of the A. Lange & Söhne deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads AUF (up) to AB (down). Its scale keeps this movement’s 240° sweep.','Gilt leaf hour hand and lance minute hand, gilt wind indicator hand, blued seconds hand. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     swiss:['Black on white, in the style of the Ulysse Nardin (Le Locle) deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads UP / HAUT to DOWN / BAS. Its scale keeps this movement’s 240° sweep.','Blued pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     soviet:['Black on white, in the style of the First Moscow Watch Factory deck chronometers, which copied the Nardin layout (maker’s name and number left off): upright Arabic hours, with the 6 covered by a large seconds sub-dial marked СДЕЛАНО В СССР (made in the USSR); railroad minute and seconds tracks; the wind indicator reads ЗАВОД (wound) to СПУСК (run down). Its scale keeps this movement’s 240° sweep.','Aged gilt pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.']};
@@ -377,8 +380,8 @@ function drawEsc2D(ctx,w,h,p,dark){
   $('#link').addEventListener('click',()=>{const b=$('#link'),h=hashOf(),u=location.href.split('#')[0]+(h?'#'+h:''),say=t=>{b.textContent=t;clearTimeout(b.t);b.t=setTimeout(()=>b.textContent='Link',1500);};
     const bar=()=>{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);};
     try{navigator.clipboard.writeText(u).then(()=>{bar();say('Copied');},()=>{bar();say('In address bar');});}catch(_){bar();say('In address bar');}});
-  /* Reset display: each Display box back to its default (See-through to the view's own; Pen and wash before Edges, which it disables), faded and hidden parts back. The theme stays */
-  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,edges:!PHONE,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
+  /* Reset display: each Display box back to its default (See-through to the view's own; the drawings before Edges, which they disable), faded and hidden parts back. The theme stays */
+  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:!PHONE,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
     for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}st.op={};st.hid.clear();look();opRender();});
   /* the panel's sections: each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
   const DET=[...document.querySelectorAll('.ctl>details.grp')];
@@ -646,13 +649,13 @@ function drawEsc2D(ctx,w,h,p,dark){
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
 
   /* ---------- shareable links: the state in the URL hash ----------
-     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 (pen and wash), edges=0 or 1 (only against its default: on, off on phones), sec=x:-3.5 (a section; :f shows the other half),
+     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 or 1 (only against its default: on, off on phones), sec=x:-3.5 (a section; :f shows the other half),
      tz=local, t=12:00:00 (only once the hands have been set). Read at load and when the hash is edited; written 0.3 s after any change, with
      replaceState, so the back button isn't filled with views */
   function hashOf(){const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(st.edges===PHONE)h.set('edges',+st.edges);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(st.edges===PHONE)h.set('edges',+st.edges);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
@@ -663,7 +666,8 @@ function drawEsc2D(ctx,w,h,p,dark){
     { const q={...BDEF};for(const kv of(g('esc')||'').split(',')){const[k,v]=kv.split(':');if(own(BDEF,k)&&Number.isFinite(+v)){const b=BENCH.find(x=>x[0]===k);q[k]=clamp(+v,b[2],b[3]);}}
       if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings */
     const ed=g('edges')==='1'||(g('edges')!=='0'&&!PHONE);   /* Edges is on by default except on phones: the hash says edges=0 or edges=1 only against that */
-    if((g('draw')==='1')!==st.draw||ed!==st.edges||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=g('draw')==='1';st.edges=ed;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
+    const dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
+    if(dw!==st.draw||ed!==st.edges||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
     const tr=parseInt(g('tour'));
     if(tr>=1&&tr<=TOUR.length)tourGo(tr-1);
     else{if(st.tour>=0)tourEnd();

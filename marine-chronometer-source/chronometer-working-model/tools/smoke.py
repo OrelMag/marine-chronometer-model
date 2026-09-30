@@ -4,7 +4,7 @@
     python smoke.py --model    # the model only
 
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, every cross-section
-(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the Illustration tab, the display switches, Reset display, Link, winding with the key, the keyboard, and a link through the URL
+(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the Illustration tab (tinted and ink), the display switches, Reset display, Link, winding with the key, the keyboard, and a link through the URL
 hash. Then the essay, scrolled from top to bottom. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
 import asyncio,pathlib,sys
@@ -39,7 +39,9 @@ async def model(b,errs,steps):
         await click(f'#secs button[data-v="{v}"]',f'section {v}');await click('#secFlip',f'section {v}, other half');await click('#secFlip')
     await click('#secs button[data-v="off"]','section off')
     await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT');await click('#now','Now')
-    await click('#tabFig','Illustration tab');await click('#tabModel','3D model tab')
+    await click('#tabFig','Illustration tab');await click('#figSt button[data-v="ink"]','Illustration in ink')
+    if await pg.evaluate("[document.querySelector('#figT').classList.contains('hidden'),document.querySelector('#figI').classList.contains('hidden')].join()")!='true,false':errs.append('the Illustration does not show the ink drawing')
+    await click('#figSt button[data-v="tint"]','Illustration tinted');await click('#tabModel','3D model tab')
     # the parts list: search (a part number, a figure, nothing), sizes in inches on a card and back
     await pg.evaluate("document.querySelector('#partsDet').open=true")
     for q in['42087','fig 90','zzz','']:await pg.evaluate("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",q);steps.append(f'parts search {q!r}')
@@ -47,23 +49,30 @@ async def model(b,errs,steps):
     if '3.448 in' not in await pg.evaluate("document.querySelector('#info .spec').textContent"):errs.append('the pillar plate card is not in inches')
     await click('#units button[data-v="mm"]','sizes in mm')
     for sel in['#colr','#colrSrc','#ghost','#edges','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
-    # pen and wash (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
-    await click('#draw','pen and wash on',600)
-    for v in['box','dial','movement','train','escapement','exploded','laidout','fusee','balance']:await click(f'#views button[data-v="{v}"]',f'pen and wash, view {v}')
-    await click('#colr');await click('#ghost','pen and wash, colour by part, see-through');await click('#colr');await click('#ghost')
-    await click('#secs button[data-v="x"]','pen and wash, section');await click('#secs button[data-v="off"]')
-    await click('#driveOn','pen and wash, moving parts only');await click('#driveOn');await click('#draw','pen and wash off')
-    # edges (makeInk's lines over the normal frame; on by default except on phones): a section, see-through plates, then pen and wash over it (it disables Edges) and off again
+    # the tinted and ink drawings (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
+    for sel,nm in(('#draw','tinted drawing'),('#drawInk','ink drawing')):
+        await click(sel,f'{nm} on',600)
+        for v in['box','dial','movement','train','escapement','exploded','laidout','fusee','balance']:await click(f'#views button[data-v="{v}"]',f'{nm}, view {v}')
+        await click('#colr');await click('#ghost',f'{nm}, colour by part, see-through');await click('#colr');await click('#ghost')
+        await click('#secs button[data-v="x"]',f'{nm}, section');await click('#secs button[data-v="off"]')
+        await click('#driveOn',f'{nm}, moving parts only');await click('#driveOn');await click(sel,f'{nm} off')
+    # one at a time: ink over tinted takes its place
+    await click('#draw');await click('#drawInk','ink drawing over the tinted one')
+    if await pg.evaluate("[document.querySelector('#draw').checked,document.querySelector('#drawInk').checked].join()")!='false,true':errs.append('the tinted and ink drawings both ticked')
+    await click('#drawInk')
+    # edges (makeInk's lines over the normal frame; on by default except on phones): a section, see-through plates, then each drawing over it (it disables Edges) and off again
     if not await pg.evaluate("document.querySelector('#edges').checked"):errs.append('Edges not on by default')
     await click('#secs button[data-v="x"]','edges, section');await click('#secs button[data-v="off"]');await click('#ghost','edges, see-through');await click('#ghost')
-    await click('#draw','edges, pen and wash on');await click('#draw','edges, pen and wash off')
-    if not await pg.evaluate("document.querySelector('#edges').checked&&!document.querySelector('#edges').disabled"):errs.append('Edges not restored after pen and wash')
+    for sel in('#draw','#drawInk'):await click(sel,f'edges, {sel[1:]} on');await click(sel,f'edges, {sel[1:]} off')
+    if not await pg.evaluate("document.querySelector('#edges').checked&&!document.querySelector('#edges').disabled"):errs.append('Edges not restored after a drawing')
     await click('#edges','edges off',600);await click('#edges','edges on again')
     # Reset display puts the Display boxes back (Edges on, the rest off, in Dial); Link copies the address, or puts it in the address bar
     for sel in['#lbls','#colr','#rock','#spin','#ghost']:await click(sel)
     await click('#edges');await click('#draw');await click('#dispReset','reset display',600)
     bad=await pg.evaluate("['lbls','colr','colrSrc','draw','rock','latch','spin','ghost'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges'])")
     if bad:errs.append(f'Reset display left {bad}')
+    await click('#drawInk');await click('#dispReset','reset display from the ink drawing',600)
+    if await pg.evaluate("document.querySelector('#drawInk').checked||!document.querySelector('#edges').checked"):errs.append('Reset display left the ink drawing on or Edges off')
     await click('#link','copy link',400)
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
     await click('#kwBtn','wind with the key',2500);await click('#kwBtn','stop winding')

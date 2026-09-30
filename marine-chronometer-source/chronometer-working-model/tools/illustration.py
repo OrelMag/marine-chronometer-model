@@ -1,17 +1,17 @@
-"""Draw the overview illustration shown in the Illustration tab (img/illustration.webp) from the model itself, in a pen-and-wash style.
+"""Draw the overview illustration shown in the Illustration tab from the model itself, twice: tinted (img/illustration.webp) and in ink (img/illustration-ink.webp).
 
-    python illustration.py                  # render every view, stylize, lay out the sheet, write ../img/illustration.webp
+    python illustration.py                  # render every view, stylize, lay out both sheets, write ../img/illustration.webp and illustration-ink.webp
     python illustration.py --no-render      # stylize and lay out again from the passes already in r_ill/ (no browser for the views)
     python illustration.py --only esc bal   # re-render some views only (the others are reused from r_ill/)
 
 Each view is set up in index.html?snap&qa (a view button, a camera, parts kept, dropped or drawn in outline), the page's loop is frozen, and
 illustration-passes.js renders albedo, lit shade (with the scene's shadows), normals, depth, object ids and metalness through replacement
-materials at twice the output size. stylize() turns those into ink and wash: outlines where depth jumps or the silhouette ends, finer lines
-at creases and between parts, colour lifted toward the paper in soft value bands, mottled, pooled at edges and laid slightly off the lines,
-white left for highlights on metal, hatching in deep shade. Parts listed as a view's `ghost` are drawn in outline only, under the others
+materials at twice the output size. stylize() turns those into a drawing: outlines where depth jumps or the silhouette ends, finer lines
+at creases and between parts, with a varying pen pressure; tinted, colour lifted toward the paper in soft value bands, laid true to the lines,
+with white left for highlights on metal; in ink, the lines alone and the printing (the dial's figures). Parts listed as a view's `ghost` are drawn in outline only, under the others
 (the barrel round the mainspring, the balance behind the escapement, the box round the gimbals). The sheet is laid out as HTML in the page's
 typefaces (vendor/fonts) and screenshotted. Label anchors given as sheet coordinates were placed by eye: after changing a camera or the
-geometry, look at r_ill/sheet.png and move them. Intermediates go to r_ill/ in the current directory."""
+geometry, look at r_ill/sheet-tint.png and sheet-ink.png and move them. Intermediates go to r_ill/ in the current directory."""
 import asyncio,base64,json,math,pathlib,sys
 import numpy as np
 from PIL import Image
@@ -20,7 +20,7 @@ from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 FONTS=(HERE.parents[2]/'vendor'/'fonts'/'fonts.css').as_uri()
-OUT=HERE.parent/'img'/'illustration.webp'
+OUT=HERE.parent/'img'/'illustration.webp';OUT_INK=HERE.parent/'img'/'illustration-ink.webp'
 WD=pathlib.Path('r_ill')
 SS=2   # supersampling of the passes
 CSS=("header,.panel,.hud,.tools,.hint,.labels,.loading,.tabs{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
@@ -69,7 +69,8 @@ async def render(b,name,view,W,H,drive=False,keep=None,ghost=None,drop=None,cam=
             if k!='anc':(d/f'{k}.png').write_bytes(base64.b64decode(v.split(',',1)[1]))
         (d/'anchors.json').write_text(json.dumps(out['anc']))
     print(name,'rendered','page errors:',errs);await pg.close()
-def stylize(d,lineonly=False,lift=0.45,sat=1.6,cap=0.3,seed=1):
+def stylize(d,lineonly=False,tint=True,lift=0.45,sat=1.6,cap=0.3,seed=1):
+    """The view drawn in ink, tinted (tint) or not; lineonly: the lines alone (a ghost)."""
     ld=lambda k:np.asarray(Image.open(d/f'{k}.png').convert('RGB'),np.float64);rng=np.random.default_rng(seed)
     A=ld('albedo')/255;S=ld('shade')[...,0]/255;N=ld('normal')/255*2-1;Dp=ld('depth');I=ld('id').astype(np.int64);M=ld('mat')/255
     D=(Dp[...,0]*65536+Dp[...,1]*256+Dp[...,2])/64;ID=I[...,0]*65536+I[...,1]*256+I[...,2];bg=ID==0;D[bg]=D[~bg].max()*4;H,W=ID.shape;N/=np.maximum(np.linalg.norm(N,axis=2,keepdims=True),1e-6)
@@ -82,44 +83,44 @@ def stylize(d,lineonly=False,lift=0.45,sat=1.6,cap=0.3,seed=1):
     fn=lambda sig,amp=1:(lambda n:n/(n.std()+1e-9)*amp)(nd.gaussian_filter(rng.standard_normal((H,W)),sig))
     r=max(1,round(SS*0.9));ink=np.maximum(nd.grey_dilation(sil,size=(r+1,r+1)),nd.grey_dilation(cre,size=(r,r))*0.8)
     press=np.clip(0.85+0.15*fn(12*SS),0.55,1.0);ink=nd.gaussian_filter(ink,0.35*SS)*press   # pen pressure varies slowly along the strokes
-    # colour: albedo in sRGB, lightened toward the paper, chroma boosted but capped; value from the lit pass in soft bands
-    alb=np.clip(A,0,1)**(1/2.2);L=(alb*[0.3,0.55,0.15]).sum(2,keepdims=True);ch=(alb-L)*sat;ch*=np.minimum(1,cap/np.maximum(np.linalg.norm(ch,axis=2,keepdims=True),1e-6));wc=np.clip(lift+(1-lift)*0.95*L+ch,0,1)
-    v=np.clip(S/max(np.percentile(S[~bg],97),1e-3),0,1)**(1/2.2);bd=np.clip((v-0.25)/0.7,0,1);bd=nd.gaussian_filter(0.5*bd+0.5*np.round(bd*3)/3,0.8*SS)
-    # the wash laid a little off the lines, as by a loose hand
-    dy=fn(18*SS,1.4*SS);dx=fn(18*SS,1.4*SS);yy,xx=np.mgrid[0:H,0:W]
-    warp=lambda a:np.stack([warp(a[...,c]) for c in range(a.shape[2])],2) if a.ndim==3 else nd.map_coordinates(a,[yy+dy,xx+dx],order=1,mode='nearest')
-    fg=warp((~bg).astype(float));wc=warp(wc);bd=warp(bd);met=warp(M[...,0]);nn=warp(N)
-    # pigment: colour plus a shadow glaze of the same hue, mottled, pooled darker at region edges; white left where metal catches the light
-    dens=(1-wc)+(1-bd)[...,None]*(0.26+0.55*(1-wc))
-    dens*=((1+0.07*fn(10*SS)+0.035*fn(2*SS))*(1+0.25*np.clip(nd.gaussian_filter(np.maximum(sil,cre),1.5*SS)*3,0,1)))[...,None]
-    Hv=np.array([-0.35,0.55,0.76]);Hv/=np.linalg.norm(Hv);hl=nd.gaussian_filter(np.clip(((nn*Hv).sum(2)-0.9)/0.07,0,1)*np.clip(met*1.3,0,1),1.2*SS)
-    out=np.exp(-dens*(1-0.85*hl)[...,None]*np.clip(fg,0,1)[...,None]*1.25)
-    if lineonly:out[:]=1
-    else:hat=nd.gaussian_filter((np.abs(((xx+yy)/(5.5*SS))%1-0.5)<0.09).astype(float),0.3*SS);ink=np.maximum(ink,hat*np.clip((0.4-bd)/0.25,0,1)*fg*0.55*press)   # hatching in deep shade
+    fg=(~bg).astype(float);alb=np.clip(A,0,1)**(1/2.2);L=(alb*[0.3,0.55,0.15]).sum(2,keepdims=True)
+    if tint and not lineonly:
+        # colour: albedo in sRGB, lightened toward the paper, chroma boosted but capped; value from the lit pass in soft bands
+        ch=(alb-L)*sat;ch*=np.minimum(1,cap/np.maximum(np.linalg.norm(ch,axis=2,keepdims=True),1e-6));wc=np.clip(lift+(1-lift)*0.95*L+ch,0,1)
+        v=np.clip(S/max(np.percentile(S[~bg],97),1e-3),0,1)**(1/2.2);bd=np.clip((v-0.25)/0.7,0,1);bd=nd.gaussian_filter(0.5*bd+0.5*np.round(bd*3)/3,0.8*SS)
+        # pigment: colour plus a shadow glaze of the same hue, laid true to the lines; white left where metal catches the light
+        dens=(1-wc)+(1-bd)[...,None]*(0.26+0.55*(1-wc))
+        Hv=np.array([-0.35,0.55,0.76]);Hv/=np.linalg.norm(Hv);hl=nd.gaussian_filter(np.clip(((N*Hv).sum(2)-0.9)/0.07,0,1)*np.clip(M[...,0]*1.3,0,1),1.2*SS)
+        out=np.exp(-dens*(1-0.85*hl)[...,None]*fg[...,None]*1.25)
+    else:
+        out=np.ones((H,W,3))
+        # in ink, printing is inked (the dial's figures): albedo under 55% of its mesh's median
+        if not lineonly:u=np.unique(ID[~bg]);med=np.zeros(ID.max()+1);med[u]=nd.median(L[...,0],ID,u);ink=np.maximum(ink,nd.gaussian_filter(np.clip((0.55*med[ID]-L[...,0])/(0.2*med[ID]+1e-3),0,1)*fg,0.4*SS)*0.9)
     out=out*(1-ink[...,None])+np.array([0.17,0.15,0.14])*ink[...,None]
     img=Image.fromarray((np.clip(out,0,1)*255).astype(np.uint8)).resize((W//SS,H//SS),Image.LANCZOS)
     img.putalpha(Image.fromarray((np.clip(np.maximum(fg,nd.grey_dilation(sil,size=(r+1,r+1))),0,1)*255).astype(np.uint8)).resize((W//SS,H//SS),Image.LANCZOS));return img
-def prep(n,ghost=0.55,pad=14,crop=None):
+def prep(n,ghost=0.55,pad=14,crop=None,tint=True):
     """The view with its ghost's lines under it, cropped to the drawing (crop: fractions of that), flattened on white; anchors as fractions of the crop."""
-    im=stylize(WD/n)
+    im=stylize(WD/n,tint=tint)
     if (WD/(n+'_ghost')).exists():
         ga=np.asarray(stylize(WD/(n+'_ghost'),lineonly=True)).astype(float);ga[...,3]*=np.clip((1-ga[...,:3].mean(2)/255)*2.2,0,1)*ghost
         base=Image.new('RGBA',im.size,(255,255,255,0));base.alpha_composite(Image.fromarray(ga.astype(np.uint8)));base.alpha_composite(im);im=base
     ys,xs=np.nonzero(np.asarray(im.getchannel('A'))>8);x0,x1,y0,y1=max(xs.min()-pad,0),min(xs.max()+pad,im.width),max(ys.min()-pad,0),min(ys.max()+pad,im.height)
     if crop:x0,y0,x1,y1=[int(v) for v in (x0+crop[0]*(x1-x0),y0+crop[1]*(y1-y0),x0+crop[2]*(x1-x0),y0+crop[3]*(y1-y0))]
-    c=im.crop((x0,y0,x1,y1));flat=Image.new('RGB',c.size,'white');flat.paste(c,(0,0),c);flat.save(WD/f'{n}.png')
+    c=im.crop((x0,y0,x1,y1));flat=Image.new('RGB',c.size,'white');flat.paste(c,(0,0),c);flat.save(WD/f'{n}-{STY[tint]}.png')
     anc={k:((v[0]*im.width-x0)/c.width,(v[1]*im.height-y0)/c.height) for k,v in json.loads((WD/n/'anchors.json').read_text()).items()}
-    return dict(src=f'{n}.png',w=c.width,h=c.height,anc=anc)
+    return dict(src=f'{n}-{STY[tint]}.png',w=c.width,h=c.height,anc=anc)
 SW,SH=1200,1420
-def sheet():
+STY={True:'tint',False:'ink'}
+def sheet(tint=True):
     # views: the drawing fitted into box [x, y, w, h]; labels (anchor: a view anchor or a sheet point, text, 'l'/'r' = the text starts/ends at x, x, y)
-    V=[dict(d=prep('hero'),box=[40,200,600,720],dashed=[('mvbot','bowlc')],labels=[((222,352),'Movement, lifted out','r',196,420),((262,480),'Glass-top cover','r',226,470),
+    V=[dict(d=prep('hero',tint=tint),box=[40,200,600,720],dashed=[('mvbot','bowlc')],labels=[((222,352),'Movement, lifted out','r',196,420),((262,480),'Glass-top cover','r',226,470),
          ((172,628),'Chronometer case','r',150,540),((160,668),'Gimbal ring','r',140,590),((470,805),'Mahogany box','l',440,880)]),
-       dict(d=prep('gim'),box=[680,296,480,270],axes=[('r1','r2',0.15),('c1','c2',0.3)],labels=[('r1','Ring pivots in the box','l',985,318),('c1','Case pivots in the ring','l',690,500),((930,488),'Case hangs level','l',960,530)]),
-       dict(d=prep('fusee',ghost=0.95),box=[680,680,480,250],labels=[((822,795),'Mainspring','r',790,700),((848,772),'Barrel, drawn open','l',830,730),((738,800),'Chain','r',728,812),
+       dict(d=prep('gim',tint=tint),box=[680,296,480,270],axes=[('r1','r2',0.15),('c1','c2',0.3)],labels=[('r1','Ring pivots in the box','l',985,318),('c1','Case pivots in the ring','l',690,500),((930,488),'Case hangs level','l',960,530)]),
+       dict(d=prep('fusee',ghost=0.95,tint=tint),box=[680,680,480,250],labels=[((822,795),'Mainspring','r',790,700),((848,772),'Barrel, drawn open','l',830,730),((738,800),'Chain','r',728,812),
          ((1040,830),'Fusee','l',1060,760),((900,880),'Fusee wheel','r',870,900)]),
-       dict(d=prep('esc',crop=[0.14,0.02,1,1]),box=[40,1050,540,320],labels=[((368,1285),'Escape wheel','l',400,1300),((340,1215),'Detent','l',440,1128),((225,1205),'Impulse roller','r',175,1235),((95,1100),'Balance, in outline','l',70,1060)]),
-       dict(d=prep('bal'),box=[620,1050,540,320],labels=[((975,1110),'Elinvar hairspring','l',1000,1070),((948,1288),'Steel rim','l',990,1340),((1000,1212),'Invar arm','l',1015,1170),((735,1283),'Balance screws','l',640,1330)])]
+       dict(d=prep('esc',crop=[0.14,0.02,1,1],tint=tint),box=[40,1050,540,320],labels=[((368,1285),'Escape wheel','l',400,1300),((340,1215),'Detent','l',440,1128),((225,1205),'Impulse roller','r',175,1235),((95,1100),'Balance, in outline','l',70,1060)]),
+       dict(d=prep('bal',tint=tint),box=[620,1050,540,320],labels=[((975,1110),'Elinvar hairspring','l',1000,1070),((948,1288),'Steel rim','l',990,1340),((1000,1212),'Invar arm','l',1015,1170),((735,1283),'Balance screws','l',640,1330)])]
     PANELS=[(680,200,480,'1','Gimbals','The box moves with the ship. The ring pivots in the box, and the case in the ring at right angles, so the case hangs level and the balance swings in the plane it was adjusted in.'),
       (680,580,480,'2','Fusee and chain','A mainspring pulls harder wound than run down. The chain comes off the fusee’s narrow end while the spring is strong and its wide end as it weakens, so the train is driven with about the same force for two days.'),
       (40,940,540,'3','Spring detent escapement','Once per oscillation the balance trips the detent; the released escape wheel pushes the impulse roller once, and the detent locks the next tooth. On the return swing it only bends a light trip spring aside.'),
@@ -152,8 +153,8 @@ def sheet():
       '<h1>What keeps a marine chronometer on time</h1><div class="sub">The Hamilton Model 21 of 1941, drawn from this site’s working model</div>'
       '<div class="intro">A key-wound clock driven by a spring, it holds a steady rate at sea through four features: gimbals that keep the movement level, even force from the fusee and chain, '
       'a balance left almost free by its detent escapement, and a balance and hairspring made to resist changes of temperature.</div>'+''.join(txt)+
-      '<div class="foot"><span>Rendered from the 3D model: outlines, shading and colour from the same geometry the working model runs</span><span>CC BY 4.0</span></div></body>')
-    (WD/'sheet.html').write_text(html,encoding='utf-8')
+      '<div class="foot"><span>Rendered from the 3D model: '+('outlines, shading and colour' if tint else 'every line')+' from the same geometry the working model runs</span><span>CC BY 4.0</span></div></body>')
+    (WD/f'sheet-{STY[tint]}.html').write_text(html,encoding='utf-8')
 async def main():
     a=sys.argv[1:];only=a[a.index('--only')+1:] if '--only' in a else None
     async with async_playwright() as p:
@@ -163,8 +164,10 @@ async def main():
             t=await b.new_page();await t.goto(PAGE);await t.wait_for_timeout(1500);await t.close()
             for v in VIEWS:
                 if not only or v['name'] in only:await render(b,**v)
-        sheet();pg=await b.new_page(viewport={'width':SW,'height':SH})
-        await pg.goto((WD/'sheet.html').resolve().as_uri());await pg.evaluate('document.fonts.ready');await pg.wait_for_timeout(400)
-        await pg.screenshot(path=str(WD/'sheet.png'));await b.close()
-    Image.open(WD/'sheet.png').convert('RGB').save(OUT,quality=78,method=6);print('wrote',OUT,OUT.stat().st_size//1024,'KB; the sheet as laid out:',WD/'sheet.png')
-asyncio.run(main())
+        for tint,out in((True,OUT),(False,OUT_INK)):
+            sheet(tint);n=STY[tint];pg=await b.new_page(viewport={'width':SW,'height':SH})
+            await pg.goto((WD/f'sheet-{n}.html').resolve().as_uri());await pg.evaluate('document.fonts.ready');await pg.wait_for_timeout(400)
+            await pg.screenshot(path=str(WD/f'sheet-{n}.png'));await pg.close()
+            Image.open(WD/f'sheet-{n}.png').convert('RGB').save(out,quality=78,method=6);print('wrote',out,out.stat().st_size//1024,'KB; the sheet as laid out:',WD/f'sheet-{n}.png')
+        await b.close()
+if __name__=='__main__':asyncio.run(main())

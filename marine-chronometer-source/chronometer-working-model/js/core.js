@@ -1,4 +1,4 @@
-/* core.js: helpers, materials (damascened nickel, gilt), textures, engraving, gear/spring/hand/pawl/escape-wheel geometry, dial, cross-section patch, pen-and-wash drawing
+/* core.js: helpers, materials (damascened nickel, gilt), textures, engraving, gear/spring/hand/pawl/escape-wheel geometry, dial, cross-section patch, drawing (tinted or in ink)
    Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 "use strict";
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -84,7 +84,7 @@ function mats(){
     invar:S(0xa7aaa6,1,0.28)};
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
   M.setPlateFinish=k=>{const c=sc(PLATE_FINISH[k]);for(const m of[M.plate,M.plateSolid])m.color.copy(c);};   /* see-through and faded copies follow on the next look() (syncMat) */
-  const eng=t=>new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});
+  const eng=t=>{const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;return m;};   /* inkDecal: the ink drawing inks it under its alpha */
   /* engraving as on a photographed movement (serial 2E12055): text runs along -x, lines stack toward +z. Lengths, sizes and offsets measured on that photograph
      against the top-view tracing (tools/engr.json); the three-line block sits 2.5 mm nearer the rim than traced, so its full-length lines clear the dust-seal flange and the barrel pillar screw */
   const engr=(x,S,k,cols)=>{for(const[t,cx,cz,len,sz]of cols){x.save();x.translate(S/2+cx*k,S/2-cz*k);x.rotate(Math.atan2(-0.2161,-0.9764));
@@ -117,39 +117,51 @@ const GHOST=new Map();
 function syncMat(d,s){if(d.map!==s.map){d.map=s.map;d.needsUpdate=true;}if(s.color&&d.color)d.color.copy(s.color);return d;}
 function ghostOf(m){let g=GHOST.get(m);if(!g){g=m.clone();g.transparent=true;g.opacity=Math.min(0.16,m.opacity??1);g.depthWrite=false;g.userData={};patchSection(g,false);
   if(SEC.on.value>0.5)g.clippingPlanes=[...(m.clippingPlanes||[])];GHOST.set(m,g);}return syncMat(g,m);}
-/* ---------- pen and wash: the model drawn live as the Illustration tab is drawn (tools/illustration.py, stylize(); the numbers are its) ----------
+/* ---------- drawing: the model drawn live as the Illustration tab is drawn (tools/illustration.py, stylize(); the numbers are its), tinted or in ink ----------
    drawOf(m): m's wash. A Phong copy (per-pixel diffuse under the scene's lights and shadows, no specular) whose output is stylize()'s colour: the albedo in
    sRGB lifted toward the paper, chroma boosted and capped, the lit value in soft bands, laid as pigment density, left white where metal catches the light.
-   Alpha carries the band (0.45 band; 1 is bare paper, cleared to white: a clear colour is premultiplied) for the hatching; a transparent source (the
-   engraving) keeps the alpha beneath it */
-const DRAW=new Map(),INK={shMax:{value:1.1},wash:{value:0.75}};   /* wash: pigment density; stylize() lays 1.25, lighter here so the live model reads through it */
-const WASH=tr=>'float dL=dot(diffuseColor.rgb,vec3(0.3,0.55,0.15)),shd=dot(outgoingLight,vec3(0.3,0.55,0.15))/max(dL,1e-4);diffuseColor.rgb=mix(diffuse,diffuseColor.rgb,uTex);vec3 alb=pow(clamp(diffuseColor.rgb,0.0,1.0),vec3(1.0/2.2));'+
+   In ink (INK.ink 1) it is paper, inked only where the albedo is printed: under 55% of the material's median (uRef, inkRef), as the dial's figures; an
+   engraving (userData.inkDecal) is ink under its own alpha, and any other transparent source (a faded part) paper at its opacity. Alpha carries the band (0.45 band; 1 is bare paper, cleared to white: a clear colour is
+   premultiplied), which tells the sheet the drawing from the paper; a transparent source keeps the alpha beneath it */
+const DRAW=new Map(),INK={shMax:{value:1.1},wash:{value:0.75},ink:{value:0}};   /* wash: pigment density; stylize() lays 1.25, lighter here so the live model reads through it */
+const WASH=(tr,dec)=>'float dL=dot(diffuseColor.rgb,vec3(0.3,0.55,0.15)),shd=dot(outgoingLight,vec3(0.3,0.55,0.15))/max(dL,1e-4);diffuseColor.rgb=mix(diffuse,diffuseColor.rgb,uTex);vec3 alb=pow(clamp(diffuseColor.rgb,0.0,1.0),vec3(1.0/2.2));'+
   'float aL=dot(alb,vec3(0.3,0.55,0.15));vec3 chr=(alb-aL)*1.6;chr*=min(1.0,0.3/max(length(chr),1e-6));vec3 wc=clamp(0.45+0.5225*aL+chr,0.0,1.0);'+
   'float bd=clamp((pow(clamp(shd/uShMax,0.0,1.0),1.0/2.2)-0.25)/0.7,0.0,1.0),bq=bd*3.0;bd=0.5*bd+0.5*(floor(bq)+smoothstep(0.3,0.7,fract(bq)))/3.0;'+
   'vec3 dens=(1.0-wc)+(1.0-bd)*(0.26+0.55*(1.0-wc));float hl=clamp((dot(normalize(normal),vec3(-0.3521,0.5533,0.7646))-0.9)/0.07,0.0,1.0)*clamp(uMetal*1.3,0.0,1.0);'+
-  'gl_FragColor=vec4(exp(-dens*(1.0-0.85*hl)*uWash),'+(tr?'diffuseColor.a':'0.45*bd')+');';
+  'gl_FragColor=vec4(exp(-dens*(1.0-0.85*hl)*uWash),'+(tr?'diffuseColor.a':'0.45*bd')+');'+
+  (dec?'if(uInkOn>0.5)gl_FragColor=vec4(0.1725,0.1569,0.1412,diffuseColor.a);':'if(uInkOn>0.5)gl_FragColor=vec4(mix(vec3(1.0),vec3(0.1725,0.1569,0.1412),0.9*clamp((0.55*uRef-aL)/(0.2*uRef+1e-3),0.0,1.0)),'+(tr?'diffuseColor.a':'0.45*bd')+');');
+/* inkRef(d,tx): the median sRGB luminance of d's albedo (its colour times its map, the map mixed in by tx as the wash does), which the ink compares with; a map's
+   texels are sampled once, 48 x 48, and the median kept per colour */
+const INKREF=new WeakMap();
+function inkRef(d,tx){const c=d.color||new THREE.Color(1,1,1),t=d.map,cs=[c.r,c.g,c.b],w=[0.3,0.55,0.15],L=f=>w.reduce((a,wc,i)=>a+wc*Math.pow(Math.max(f(i),0),1/2.2),0);
+  if(!t||!t.image)return L(i=>cs[i]);let e=INKREF.get(t);
+  if(!e){e={k:new Map(),px:null};INKREF.set(t,e);try{const cv=document.createElement('canvas');cv.width=cv.height=48;const x=cv.getContext('2d');x.drawImage(t.image,0,0,48,48);
+    const a=x.getImageData(0,0,48,48).data,s=t.encoding===THREE.sRGBEncoding;e.px=new Float32Array(48*48*3);for(let i=0;i<48*48;i++)for(let j=0;j<3;j++){const v=a[i*4+j]/255;e.px[i*3+j]=s?Math.pow(v,2.2):v;}}catch(_){}}
+  if(!e.px)return L(i=>cs[i]);const key=c.getHex()+':'+tx;if(!e.k.has(key)){const v=[];for(let i=0;i<e.px.length;i+=3)v.push(L(j=>cs[j]*(tx*e.px[i+j]+1-tx)));v.sort((p,q)=>p-q);e.k.set(key,v[v.length>>1]);}
+  return e.k.get(key);}
 function drawOf(m){let d=DRAW.get(m);
-  if(!d){const tr=!!m.transparent,cap=!!m.userData.secCap,mt={value:m.metalness||0},tx={value:m.normalMap?0.3:1};   /* damascening (a map with a normal map) muted: washed, it read as hatching */
+  if(!d){const tr=!!m.transparent,dec=tr&&!!m.userData.inkDecal,cap=!!m.userData.secCap,mt={value:m.metalness||0},tx={value:m.normalMap?0.3:1};   /* damascening (a map with a normal map) muted: washed, it read as hatching */
     d=new THREE.MeshPhongMaterial({color:m.color?m.color.clone():new THREE.Color(1,1,1),map:m.map||null,specular:0,shininess:1,transparent:tr,depthWrite:m.depthWrite,toneMapped:false,
       polygonOffset:m.polygonOffset,polygonOffsetFactor:m.polygonOffsetFactor,polygonOffsetUnits:m.polygonOffsetUnits});
     if(tr)Object.assign(d,{blending:THREE.CustomBlending,blendSrc:THREE.SrcAlphaFactor,blendDst:THREE.OneMinusSrcAlphaFactor,blendSrcAlpha:THREE.ZeroFactor,blendDstAlpha:THREE.OneFactor});
     patchSection(d,cap);d.userData.side0=m.userData.side0??m.side;d.side=m.side;d.clippingPlanes=[...(m.clippingPlanes||[])];
-    const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;
-      sh.fragmentShader='uniform float uMetal;\nuniform float uTex;\nuniform float uShMax;\nuniform float uWash;\n'+sh.fragmentShader.replace('#include <dithering_fragment>',WASH(tr)+'\n#include <dithering_fragment>');sec(sh);
+    const ref=d.userData.ref={value:1};d.userData.tx=tx.value;
+    const sec=d.onBeforeCompile;d.onBeforeCompile=sh=>{sh.uniforms.uMetal=mt;sh.uniforms.uTex=tx;sh.uniforms.uShMax=INK.shMax;sh.uniforms.uWash=INK.wash;sh.uniforms.uInkOn=INK.ink;sh.uniforms.uRef=ref;
+      sh.fragmentShader='uniform float uMetal;\nuniform float uTex;\nuniform float uShMax;\nuniform float uWash;\nuniform float uInkOn;\nuniform float uRef;\n'+sh.fragmentShader.replace('#include <dithering_fragment>',WASH(tr,dec)+'\n#include <dithering_fragment>');sec(sh);
       sh.fragmentShader=sh.fragmentShader.replace('vec3(1.0/2.2)),1.0);','vec3(1.0/2.2)),0.45);');};   /* a cut face (patchSection) is drawing, not paper */
-    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0)+(secDepth(d)?1:0);DRAW.set(m,d);}
-  d.opacity=m.opacity??1;return syncMat(d,m);}
-/* makeInk(r): draws a frame in pen and wash. Hidden meshes stay hidden; a mesh whose material is under half opaque (glass, see-through and faded parts) is a
+    d.customProgramCacheKey=()=>'draw'+(cap?1:0)+(tr?1:0)+(dec?1:0)+(secDepth(d)?1:0);DRAW.set(m,d);}
+  d.opacity=m.opacity??1;syncMat(d,m);if(INK.ink.value>0.5)d.userData.ref.value=inkRef(d,d.userData.tx);return d;}
+/* makeInk(r): draws a frame as a drawing, tinted or in ink. Hidden meshes stay hidden; a mesh whose material is under half opaque (glass, see-through and faded parts) is a
    ghost, drawn in outline only, lighter, and left out of the wash. Passes: view normals and a part id (solids, then ghosts) with their depths; the wash (the
    meshes' drawOf materials, with the scene's shadows: the only pass that draws the shadow map); then two full-screen passes: ink lines where depth jumps (0.6 mm
-   + 1.2% of the distance) or the drawing ends, lighter ones at creases (over ~37 degrees) and between parts; and the sheet: the wash laid a little off the
-   lines, mottled and pooled at edges, on paper, hatched in deep shade, inked with a varying pen pressure.
+   + 1.2% of the distance) or the drawing ends, lighter ones at creases (over ~37 degrees) and between parts; and the sheet: the wash on paper, true to the
+   lines, inked with a varying pen pressure.
    lines(): the Edges option, the same line pass over the normal frame instead of the wash. Ids are per mesh, not per part, and the box draws no lines */
 function makeInk(r){
   const T=THREE,rt=(nearest,depth)=>{const t=new T.WebGLRenderTarget(1,1,nearest?{minFilter:T.NearestFilter,magFilter:T.NearestFilter}:{});if(depth)t.depthTexture=new T.DepthTexture(1,1,T.UnsignedIntType);return t;};
   const rtN=rt(1,1),rtG=rt(1,1),rtC=rt(0,1),rtE=rt(0,0);rtE.depthBuffer=false;   /* depth textures are 24-bit; a target's own depth buffer is 16-bit in r128, and the box's brass fought its wood */
-  /* noise: white noise blurred to a 3-texel sigma, tiled, normalized to unit deviation (stored as 0.5 + 0.18 v), four independent channels. Made when pen and wash
-     first draws: Edges, on from the start, doesn't need it */
+  /* noise: white noise blurred to a 3-texel sigma, tiled, normalized to unit deviation (stored as 0.5 + 0.18 v), four independent channels (the pen's pressure
+     reads one). Made when the drawing first draws: Edges, on from the start, doesn't need it */
   const noise=()=>{const NZ=256,nz=new Uint8Array(NZ*NZ*4);{const g=[],K=9;for(let i=-K;i<=K;i++)g.push(Math.exp(-i*i/18));
     for(let c=0;c<4;c++){let a=Float32Array.from({length:NZ*NZ},()=>Math.random()-0.5);
       for(const hz of[1,0]){const b=new Float32Array(NZ*NZ);for(let y=0;y<NZ;y++)for(let x=0;x<NZ;x++){let s=0;for(let i=-K;i<=K;i++)s+=g[i+K]*(hz?a[y*NZ+((x+i+NZ)%NZ)]:a[((y+i+NZ)%NZ)*NZ+x]);b[y*NZ+x]=s;}a=b;}
@@ -160,7 +172,7 @@ function makeInk(r){
   const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
     vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
     fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId,uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);'+SEC_DEPTH+'\n}'});
-  /* the id is the part's (pen and wash) or, for Edges, the mesh's: a pawl lies on its own part's wheel. Edges gives box meshes (userData.inkBox) id 0, no line */
+  /* the id is the part's (the drawing) or, for Edges, the mesh's: a pawl lies on its own part's wheel. Edges gives box meshes (userData.inkBox) id 0, no line */
   let idOn=false,idM=false,nM=0;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
   const hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
   const U=(o={})=>Object.assign({uPx:{value:new T.Vector2()},uPr:{value:1}},o);
@@ -180,13 +192,10 @@ void main(){vec2 s=lines(tN,tD),g=uGh>0.5?lines(tG,tGD):vec2(0.0);gl_FragColor=v
     fragmentShader:`uniform sampler2D tC,tE,tZ;uniform vec2 uPx;uniform float uPr;uniform vec3 uPaper,uInk;varying vec2 vUv;
 float nz(vec2 p,float s,int c){vec4 t=texture2D(tZ,p*3.0/(s*256.0));return ((c==0?t.r:c==1?t.g:c==2?t.b:t.a)-0.5)/0.18;}
 void main(){vec2 p=gl_FragCoord.xy/uPr;
-  vec4 c=texture2D(tC,vUv+vec2(nz(p,18.0,0),nz(p,18.0,1))*1.4*uPr*uPx);float fg=clamp((1.0-c.a)*2.0,0.0,1.0),bd=clamp(c.a/0.45,0.0,1.0);
+  vec4 c=texture2D(tC,vUv);float fg=clamp((1.0-c.a)*2.0,0.0,1.0);
   vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+texture2D(tE,vUv+vec2(h.x,-h.y))+texture2D(tE,vUv-vec2(h.x,-h.y)));
-  float pl=0.0;for(int i=0;i<8;i++){float a=float(i)*0.7854;vec4 q=texture2D(tE,vUv+vec2(cos(a),sin(a))*2.5*uPr*uPx);pl+=max(q.r,q.g);}pl/=8.0;
-  float m=(1.0+0.07*nz(p,10.0,2)+0.035*nz(p,2.0,3))*(1.0+0.25*clamp(pl*3.0,0.0,1.0));vec3 w=pow(max(c.rgb,vec3(1e-4)),vec3(m));
   float pr=clamp(0.85+0.15*nz(p,12.0,3),0.55,1.0),ink=max(e.r,e.g*0.8)*pr;
-  float hat=1.0-smoothstep(0.05,0.13,abs(fract((p.x-p.y)/5.5)-0.5));ink=max(ink,hat*clamp((0.4-bd)/0.25,0.0,1.0)*fg*0.55*pr);
-  float g=e.b*0.55*(1.0-0.8*fg);gl_FragColor=vec4(uPaper*mix(mix(w,uInk,g),uInk,ink),1.0);}`});
+  float g=e.b*0.55*(1.0-0.8*fg);gl_FragColor=vec4(uPaper*mix(mix(c.rgb,uInk,g),uInk,ink),1.0);}`});
   /* Edges: the lines alone, laid over the normal rendering, softened as the sheet does */
   const over=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,transparent:true,vertexShader:VS,uniforms:U({tE:{value:rtE.texture},uInk:{value:new T.Color(0x1c1a18)}}),
     fragmentShader:`uniform sampler2D tE;uniform vec2 uPx;uniform vec3 uInk;varying vec2 vUv;
@@ -199,7 +208,7 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
   function ids(scene,cam,meshes,mv,hide){
     const pr=r.getPixelRatio(),gh=[],so=[];
     for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;o.userData.inkId=hash(o.userData.part);o.userData.inkIdM=o.userData.inkBox?0:(nM++%251+3)/255;}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
-    /* targets at the drawing's size only while used, else 1 px (setSize frees the old one): the ghosts' while there are ghosts, the wash's while pen and wash draws.
+    /* targets at the drawing's size only while used, else 1 px (setSize frees the old one): the ghosts' while there are ghosts, the wash's while the drawing draws.
        Each is 4 bytes a pixel, 8 with a depth texture: Edges without ghosts keeps 12 a pixel, not 28 */
     r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
     r.getClearColor(cc);const s={gh,ca:r.getClearAlpha(),au:r.shadowMap.autoUpdate},ov=scene.overrideMaterial,hv=hide.map(o=>o.visible);
