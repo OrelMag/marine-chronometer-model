@@ -479,6 +479,7 @@ and the thread pitches are the model's. Things to know before changing it:
 - The screws' shanks: a thread of half the head's diameter (0.8 mm for the cock screw, 0.07 mm for the trip-spring screw in the bracket's thin leg), drawn as turned rings, and each one's length. The parts list gives the screws, not their threads or lengths. The cock screw sits 0.3 mm off its traced position (within the tracing's 0.4 mm) so its thread clears the foot's edge.
 - The lower train bridge's sizes: a bar 6 mm wide and 1.2 thick, reaching 21 mm past the third arbor and 14 past the fourth, its screws 14 and 9 mm past them and its steady pins 10 and 5 (the screws about 2.9 times as far apart as the settings, measured on Fig. 31 and the dial-side photograph, whose perspectives err opposite ways), and the opening in the plate under it, r 6 about the third arbor.
 - The minute wheel's place: at 3 o'clock, 9.6 mm from the centre (the dial-side photograph puts it there, 10.5 mm out, and Fig. 107 draws it on that side of the hour wheel); the distance is the motion work's counts'.
+- The teeth's profiles: cycloidal clock teeth in BS 978 Part 2's proportions (the manual gives no profiles): a wheel's tooth 1.41 module thick at the pitch circle with radial flanks and an epicycloidal addendum capped at 1.15 module, a pinion's leaf 1.05 module thick with a round tip, both 1.3 module deep.
 - The pillar screws from the dial side (four), the mounting ring's lip, with a tab under each of its three screws, and the screws' places other than the one at 6 o'clock (the screws go in from the train side, through the plate into the ring, as reassembly Op. 1 and Fig. 29 have them; the top-view photographs show the 6 o'clock one on the plate at the rim, half under the train bridge: 40.6 mm out at 100°, the others at 210° and 340°), the dial screws (one into each foot), and the posts of the minute and wind indicator wheels with their screws from the train side. The parts list and Figs. 107 and 110 give the parts, not their sizes or positions.
 - The endstone caps (escape upper and lower, balance lower): a steel plate 1.3 mm wide over the setting, its screws 2.1 mm (1.9 mm on the balance lower bridge) either side of the arbor.
 - The balance's hub, cap and hold-down screws (Fig. 4): a flange 0.6 mm thick under the arm, a boss through it, a cap 0.35 mm thick, screws 1.7 mm from the staff. The balance's moment of inertia counts them in place of the old hub.
@@ -567,7 +568,11 @@ box and gimbals.
   solid) and `tools/placements.py` before and after (nothing else moved).
 - **Wheels and pinions** are `arbor(parent, M, x, z, {wheel, pin, ar})` with
   `gearGeo(teeth, module, thickness, options)`. The pitch radius is
-  module × teeth ÷ 2.
+  module × teeth ÷ 2. Teeth are cycloidal clock teeth: a wheel's epicycloidal
+  addendum is rolled by a circle half its pinion's pitch radius (`wheel.mate`,
+  the pinion's leaves), a pinion's leaves have round tips; the geometry's
+  `userData` gives its tip radius (`ro`), root (`ri`) and hub, which `arbor()`
+  uses to check that a pinion ends at its wheel's boss.
 - **Arbor positions** come from the photo fit, in `L` at the top of
   `movement.js`. Don't move them without re-running the tools in `tools/`.
 
