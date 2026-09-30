@@ -17,14 +17,14 @@ Does the Setup rachet is modeled correctly? refer to the manual and web images.
 
 Tidy up te sidebar. For example, in the Display subsection. aligned columns?
 
-Ticksound on by default
+Ticksound on by default [done]
 
-What about this: Still not drawn: the balance's upper jewel, the hairspring stud and collet details, the hand-setting square and the gimbal latch mechanism.
+What about this: Still not drawn: the balance's upper jewel, the hairspring stud and collet details, the hand-setting square and the gimbal latch mechanism. [done]
 
 Fill the plates (now they are shelled)
 
 BOM Comparsion - each part in the model against the manual
 
-Top side view compasion, the plate on the hairspring is wrong? 
+Top side view compasion, the plate on the hairspring is wrong? [done]
 
 {{{update Claude.md: Before each run give an ETA for the results}}}
