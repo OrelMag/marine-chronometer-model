@@ -343,6 +343,21 @@ Contents:
   (finding 3). The heads are now 0.3 mm tall, 0.14 mm clear of the rim and
   timing weights. `dyn.py` works in 0.4 mm cubes and can't see gaps this thin,
   so check them by hand. `c2adc92`
+- **Balance lower bridge screwed from the wrong side, with the wrong screws,
+  and drawn as a flat bar.** Two small screws came down from the train
+  bridge's top into a boss, and the bar's balance end hung free. The manual
+  draws the two screws (42055, the pillar screws) head down under the bridge,
+  going up into the train bridge (Figs. 29, 67, 110); Op. 12 screws the bridge
+  to the upturned train bridge and Op. 50 takes the screws out once that
+  bridge is off. The bridge is now a stepped block: an upper tier against the
+  train bridge (an arm round the escape wheel, `LB_UP` from
+  `tools/lower_bridge.py`) with the screws from below and two steady pins
+  ("complete with pins"), and the lower tier, boss and column below it. The
+  screw at the arm's end is outside every wheel, over a hole in the pillar
+  plate that reaches it (RMG No. 4E019). Keep: no screw heads on the train
+  bridge's top for this bridge; each screw's way out downward clear of the
+  lower tier (it goes in from below); the arm 0.39 mm or more off the escape
+  wheel's tips. `7cbbfaf`
 
 ## Setup, case and gimbals
 

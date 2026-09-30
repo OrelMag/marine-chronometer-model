@@ -732,7 +732,7 @@ the figures and listed in the model README's "Estimated, not from the manual".
 | Escape wheel (42076), centre (42068), third (42071) and fourth (42073) wheels | modelled | unchanged |
 | Upper train bridge (42062), pillar screws (42055, 3), bushings (42166, 42167) | modelled | screws threaded: two into their pillars; the third, where the top-view photograph shows it, has no pillar under it in the model (IDEAS 1.2), so it is drawn threaded into the bridge alone |
 | Sustaining pawl with arbor and springs (42096) | modelled | unchanged |
-| Balance lower bridge (42065) and screws (42055, 2) | a stadium, a boss, screw heads | a lobe for the train-blocking screw; screws threaded into the boss |
+| Balance lower bridge (42065) and screws (42055, 2) | a stadium, a boss, screw heads | a lobe for the train-blocking screw; later a stepped block: upper tier against the train bridge, the screws (pillar-screw size) from below into the train bridge (Figs. 29, 110; Ops. 12, 50), steady pins, the pillar plate's access hole (RMG No. 4E019) |
 | Balance lower setting (42162), lower endstone cap (42159) and screws (20762, 2) | a 0.5 mm hole the staff ended in | added: setting and jewel, and a cap under the bridge; the staff's pivot reaches the endstone |
 | Fourth wheel upper setting (42161) | a hole | added: setting and jewel |
 | Train-blocking screw (42247) | missing | added, and it works (see below) |
