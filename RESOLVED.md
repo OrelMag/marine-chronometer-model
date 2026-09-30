@@ -209,7 +209,7 @@ Contents:
   (`barTravel`, from where the chain leaves the fusee), and its far end stands
   out past the rim to the winding stop, placed where that end is at full wind.
   Keep: the travel comes from the chain's path (`setWind(n, eps)`), not from
-  `n` alone; the stop's place comes from `fs.stud`. `HASH`
+  `n` alone; the stop's place comes from `fs.stud`. `7970409`
 - **Fusee too thin at the small end, its top too small.** The profile was
   illustrative (r 6.5 to 14, top plate r 5.4). The side photograph, scaled by
   the fusee wheel, gives the groove's floor 8.3 to 13.8 on the upper turns and
@@ -217,7 +217,7 @@ Contents:
   `r0/√(1−a·m)` fitted to those turns (7.95 to 16.8, 0.085 mm rms), and the
   top plate r 9.15. The chain grew to 656 links, 7.07 barrel turns, more than
   the mainspring took on its r 2.4 core, so the core is r 1.74 (7.64 turns).
-  Keep: `app.js` takes radii and pull from `R.fs.rf`, never literals. `HASH`
+  Keep: `app.js` takes radii and pull from `R.fs.rf`, never literals. `7970409`
 - **Groove turned in rings, chain links lying flat.** The groove was a 0.4 mm
   ripple of a lathe profile, concentric rings the helical chain crossed, and
   the links were boxes 1.0 along the arbor by 0.34 radially, as if they bent
@@ -228,7 +228,7 @@ Contents:
   drifts (up to 14°) or the fusee sits `eps` past its turns. The end pin runs
   parallel to the arbor (Fig. 28). Keep: the chain and the groove share `phi0`
   and `m`; the groove runs 0.12 turn past the chain's start and 0.04 past its
-  end, or the run leaving the fusee cuts the top rim. `HASH`
+  end, or the run leaving the fusee cuts the top rim. `7970409`
 
 ## Plates, bridges, screws and arbors
 
