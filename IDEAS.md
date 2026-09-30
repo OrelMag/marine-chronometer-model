@@ -700,6 +700,8 @@ Small browser or Node checks on the model's arithmetic:
 - **The renderer:** SwiftShader output is deterministic enough if the Chromium version is pinned.
 
 ### 8.4 Size budget (S)
+> **Done.** `build.py` fails a page past its `BUDGET` (1.6 MB for the model, 1.1 MB for the essay; they were 1.33 and 0.94 MB) and prints each page's three.js, fonts, images and the rest on every build. The first breakdown showed Instrument Sans inlined three times over (one file under three weights); it is now one face with a weight range.
+
 Fail the build if `chronometer-working-model.html` grows past a set size, say 1.4 MB raw. It's 1.17 MB today. Print a breakdown (three.js, fonts, images, app) on every build, so growth is visible.
 
 ---

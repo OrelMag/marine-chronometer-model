@@ -85,6 +85,10 @@ The build fails if a page still loads a script, stylesheet or font from another
 server. That keeps the published files working offline and in countries where
 common CDNs are blocked.
 
+It also fails if a page grows past its size budget (`BUDGET` in `build.py`:
+1.6 MB for the model, 1.1 MB for the essay), and prints where each page's bytes
+go (three.js, fonts, images and the rest), so growth shows up on every build.
+
 Once you know the site's address, pass it in. The pages then show a picture when
 the link is shared, and search engines see the canonical address:
 
