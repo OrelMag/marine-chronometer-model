@@ -442,7 +442,7 @@ Contents:
   balance locking arm and the train-blocking screw (mounted on hidden plates)
   floated too. The flags are now set on every mesh, and the arm and the screw
   are `dh` parts, hidden with the plates. Keep: flag meshes, not groups; a part
-  mounted on a plate hides with the plates.
+  mounted on a plate hides with the plates. `41e99e0`
 - **Cock's screw holes wider than their heads.** `polyGeo` bevels a hole
   inward (0.8·bev narrower at the faces, which screw holes allow for) only when
   the hole is wound like the outline after ExtrudeGeometry's own correction; the
@@ -450,7 +450,7 @@ Contents:
   the hairspring stud screw's hole was 0.93 mm across at the face under a
   0.8 mm head (`audit.py`: nothing under its seat). `polyGeo` now passes the
   outline and every hole clockwise. Keep: measure a hole's size at the faces
-  when a screw seems to float.
+  when a screw seems to float. `41e99e0`
 
 ---
 
