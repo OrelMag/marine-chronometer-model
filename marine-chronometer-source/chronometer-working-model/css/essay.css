@@ -1,0 +1,83 @@
+/* essay.css: the Essay tab (js/essay.js), a reading page laid over the model: the model's tokens, Spectral for the text, Instrument Sans for its controls.
+   Everything is under #essay, and its own classes start e-, since the model's .stage, .sl, .ck, .labels and h2 mean other things */
+#essay{--red:#a3261d;--steel:#6d7680;--copper:#a8672f;--paper:var(--panel);
+  position:fixed;inset:0;z-index:40;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);color:var(--ink);
+  font:19px/1.62 Spectral,Georgia,"Times New Roman",serif;-webkit-text-size-adjust:100%;outline:0;scroll-padding-top:64px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #essay{--red:#ec7466;--steel:#9aa4ad;--copper:#d49a63}}
+:root[data-theme="dark"] #essay{--red:#ec7466;--steel:#9aa4ad;--copper:#d49a63}
+#essay[hidden]{display:none}
+html.essay-on,html.essay-on body{overflow:hidden}
+/* the bar: the page's name, the tabs (moved here from the stage while the essay shows) and how far through it the reader is */
+.e-bar{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(8px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left));
+  background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.e-bar .e-t{font:400 17px/1.2 Spectral,Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);text-decoration:none}
+.e-bar .e-t span{color:var(--muted)}
+.e-bar .tabs{position:static;flex-shrink:0;box-shadow:none;background:color-mix(in srgb,var(--card) 70%,transparent)}
+.e-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--brass);transform-origin:0 50%;transform:scaleX(0)}
+.e-art{max-width:680px;margin:0 auto;padding:12px 22px 96px}
+#essay a{color:var(--blue);text-underline-offset:2px}
+#essay p{margin:0 0 1em}
+#essay h1{font:600 clamp(2.3rem,7vw,3.4rem)/1.05 Spectral,Georgia,serif;letter-spacing:-.01em;margin:30px 0 12px;color:var(--ink)}
+#essay h2{font:600 1.6rem/1.2 Spectral,Georgia,serif;color:var(--ink);margin:2.4em 0 .5em;scroll-margin-top:70px}
+#essay h2 a.e-h{color:inherit;text-decoration:none}
+#essay h2 a.e-h::after{content:"#";margin-left:.35em;color:var(--rule);font-weight:400;opacity:0;transition:opacity .2s}
+#essay h2:hover a.e-h::after,#essay h2 a.e-h:focus-visible::after{opacity:1}
+.e-hero{padding-top:22px}
+.e-dial{width:min(76vw,360px);margin:8px auto 18px;aspect-ratio:1;border-radius:50%;
+  box-shadow:0 0 0 9px #c79a45,0 0 0 12px #7a5718,0 18px 40px rgba(0,0,0,.25)}
+.e-dial canvas{width:100%;height:100%;display:block;border-radius:50%}
+.e-dialcap{text-align:center;font:13px/1.4 "Instrument Sans",sans-serif;color:var(--muted);margin:-4px 0 0}
+.e-deck{font-size:1.2em;line-height:1.45;color:var(--muted);margin:0 0 10px}
+.e-by{color:var(--muted);font-size:.9em;margin:0 0 12px}.e-by span{white-space:nowrap}.e-by a{color:inherit!important}
+.e-after{font-style:italic;color:var(--muted);font-size:.9em;margin:0 0 20px}
+/* contents: the sections, two columns where there is room */
+.e-toc{margin:0 0 8px;padding:14px 18px;border-radius:14px;background:var(--paper);font:14.5px/1.35 "Instrument Sans",sans-serif}
+.e-toc b{display:block;font-weight:600;font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.e-toc ol{margin:0;padding-left:1.4em;columns:2;column-gap:28px}.e-toc li{margin:0 0 4px;break-inside:avoid}
+@media (max-width:520px){.e-toc ol{columns:1}}
+.e-see{font-size:.92em;color:var(--muted);margin:-4px 0 28px!important}
+.e-see a::after{content:" →"}
+.e-math{font-style:italic;white-space:nowrap}
+#essay figure{margin:30px -22px;background:var(--paper);padding:0 0 4px}
+@media (min-width:720px){#essay figure{margin:34px -80px;border-radius:14px;overflow:hidden}}
+.e-st{position:relative;width:100%;user-select:none;-webkit-user-select:none}
+.e-st canvas{display:block;width:100%;touch-action:pan-y;cursor:grab}
+.e-st.grab canvas{cursor:grabbing}
+.e-st.flat canvas{cursor:default}
+.e-st .e-wait{position:absolute;inset:0;display:grid;place-items:center;font:italic 15px Spectral,serif;color:var(--muted);pointer-events:none}
+.e-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.e-lbl{position:absolute;left:0;top:0;font:12px/1.2 "Instrument Sans",system-ui,sans-serif;color:var(--ink);transition:opacity .2s;white-space:nowrap}
+.e-lbl::before{content:"";position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px var(--paper)}
+.e-lbl span{display:block;margin:-7px 0 0 9px;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--paper) 82%,transparent)}
+.e-lbl i{display:block;font-style:normal;color:var(--muted);font-size:11px}
+.e-ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding:12px 18px 6px;font:14px/1.3 "Instrument Sans",system-ui,sans-serif;color:var(--ink)}
+.e-sl{display:flex;align-items:center;gap:10px;flex:1 1 250px;min-width:min(100%,290px)}   /* never shrunk under its contents by a button beside it: the button wraps */
+.e-sl>span{flex:0 0 auto;color:var(--muted)}
+.e-sl input{flex:1;min-width:80px;accent-color:var(--blue)}
+.e-sl output{flex:0 0 auto;min-width:4.6em;text-align:right;font-variant-numeric:tabular-nums}
+.e-ck{display:flex;align-items:center;gap:7px;cursor:pointer}
+.e-ck input{accent-color:var(--blue);width:17px;height:17px}
+#essay .seg button{font-size:13.5px}
+.e-ro{padding:4px 18px 0;font:14px/1.45 "Instrument Sans",system-ui,sans-serif;color:var(--muted);font-variant-numeric:tabular-nums}
+.e-ro b{color:var(--ink);font-weight:600}
+#essay figcaption{padding:8px 18px 12px;font-size:15px;line-height:1.45;color:var(--muted);font-style:italic}
+.e-chart canvas{cursor:default;touch-action:auto}
+/* live numbers in the text (the escapement's figures, the train's counts): set from the model's own code */
+.e-live{font-variant-numeric:tabular-nums;white-space:nowrap}
+/* the rate book figure's table */
+.e-book{padding:6px 18px 0;overflow-x:auto}
+.e-book table{width:100%;border-collapse:collapse;font:13px/1.3 "Instrument Sans",sans-serif;font-variant-numeric:tabular-nums}
+.e-book th,.e-book td{text-align:right;padding:4px 6px;border-bottom:1px solid var(--rule)}.e-book th{color:var(--muted);font-weight:500}
+.e-book th:first-child,.e-book td:first-child,.e-book td:last-child,.e-book th:last-child{text-align:left}
+/* the hand-off to the model: its views and the walkthrough */
+.e-go{margin:26px 0 8px;padding:16px 18px;border-radius:14px;background:var(--paper);font:14px/1.45 "Instrument Sans",sans-serif}
+.e-go p{margin:0 0 10px!important;color:var(--muted)}
+.e-go .seg a{display:inline-block;font:600 13.5px "Instrument Sans",sans-serif;color:var(--blue);border:1.5px solid var(--blue);border-radius:999px;padding:6px 13px;text-decoration:none}
+.e-go .seg a.primary{background:var(--blue);color:var(--panel)}
+.e-go .seg a:hover{background:color-mix(in srgb,var(--blue) 12%,transparent)}.e-go .seg a.primary:hover{background:var(--blue)}
+.e-refs{font-size:.92em}.e-refs li{margin-bottom:.45em}
+#essay hr{border:0;border-top:1px solid var(--rule);margin:3em 0}
+.e-fallback{padding:40px 18px;text-align:center;color:var(--muted);font:15px "Instrument Sans",sans-serif}
+@media (max-width:520px){#essay{font-size:18px}.e-lbl{font-size:11px}.e-bar .e-t span{display:none}}
+@media(pointer:coarse){.e-ck{min-height:44px}.e-ck input{width:22px;height:22px}.e-go .seg a{min-height:44px;display:inline-flex;align-items:center}}

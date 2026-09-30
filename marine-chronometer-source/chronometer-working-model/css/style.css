@@ -26,7 +26,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 /* Colour by source: its key, under the tabs */
 .srckey{position:absolute;z-index:5;right:10px;top:50px;display:flex;flex-direction:column;gap:3px;padding:6px 9px;border-radius:8px;font-size:12px;color:var(--ink);background:color-mix(in srgb,var(--card) 88%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .srckey span{display:flex;align-items:center;gap:6px;white-space:nowrap}.srckey i{width:10px;height:10px;border-radius:2px;background:var(--ps)}
-/* the drawing, tinted or in ink (app.js, makeInk in core.js): the stage is paper in either theme, its overlays in the light tokens, the labels lettered as on the Illustration */
+/* the drawing, tinted or in ink (app.js, makeInk in core.js): the stage is paper in either theme, its overlays in the light tokens, the labels lettered in italic as on a drawing */
 .stage.draw{--bg:#f5f0e4;--panel:#f5f0e4;--card:#fbf8f1;--ink:#2c2824;--muted:#6f655b;--brass:#2c2824;--rule:#d9d0bf;background:#f5f0e4;color:var(--ink)}
 .stage.draw .lbl{font:italic 14px/1.2 Spectral,serif}.stage.draw .lbl span{background:none;box-shadow:none;text-shadow:0 0 3px #f5f0e4,0 0 3px #f5f0e4,0 0 2px #f5f0e4}
 .stage.draw .lbl::before{width:5px;height:5px;left:-2.5px;top:-2.5px;box-shadow:none}.stage.draw .lbl i{font:12px "Instrument Sans",sans-serif}
@@ -69,13 +69,6 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .tabs{position:absolute;z-index:6;right:10px;top:10px;display:flex;gap:2px;padding:3px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .tabs button{border:0;border-radius:999px;padding:4px 12px;font-size:12.5px;background:none;color:var(--muted)}
 .tabs button[aria-selected="true"]{background:var(--blue);color:var(--panel)}
-.fig{position:absolute;inset:0;z-index:4;margin:0;display:flex;flex-direction:column;gap:8px;padding:52px 14px 12px;background:var(--bg);touch-action:auto;user-select:text;-webkit-user-select:text}
-.fig .fsc{flex:1;min-height:0;overflow:auto}
-.fig img{display:block;width:100%;height:100%;object-fit:contain;cursor:zoom-in}
-.fig .fsc.zoom img{width:auto;height:auto;margin:0 auto;cursor:zoom-out}
-.fig figcaption{flex-shrink:0;font-size:12px;line-height:1.4;color:var(--muted);text-align:center;max-width:90ch;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 12px}
-.fig figcaption .seg{flex-wrap:nowrap}.fig figcaption .seg button{padding:3px 10px;font-size:12.5px}
-.fig figcaption a{color:var(--blue);text-underline-offset:2px}
 /* a view key pressed for a view that is off: its button flashes */
 @keyframes nope{0%,100%{transform:none}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}.nope{animation:nope .3s 2}
 @media (prefers-reduced-motion:reduce){.nope{animation:none;outline:2px solid var(--hi)}}

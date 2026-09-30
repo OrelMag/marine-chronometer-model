@@ -19,7 +19,7 @@ jobs:
       - name: Build (fails if a page loads anything from the network)
         run: python build.py --site-url https://www.marinechronometermodel.com
       - name: Committed built copies match the sources
-        run: git diff --exit-code --stat -- chronometer-working-model.html marine-chronometer.html site marine-chronometer-source/chronometer-working-model/dist marine-chronometer-source/marine-chronometer-essay/marine-chronometer.html
+        run: git diff --exit-code --stat -- chronometer-working-model.html site marine-chronometer-source/chronometer-working-model/dist
       - name: Escapement against the manual's figures
         run: node marine-chronometer-source/chronometer-working-model/tools/escapement.js
   browser:
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
       - run: pip install playwright && python -m playwright install --with-deps chromium
-      - name: Smoke test (every control; no console errors or warnings)
+      - name: Smoke test (every control and the Essay tab; no console errors or warnings)
         run: python smoke.py
       - name: Invariants (hands, wind indicator, fusee, balance)
         run: python invariants.py

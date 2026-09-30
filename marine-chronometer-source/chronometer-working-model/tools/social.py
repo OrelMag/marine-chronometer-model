@@ -1,6 +1,6 @@
 """Render the link-preview images (1200 x 630) shown when the site is shared, into site-assets/ at the repository root.
 
-    python social.py                  # both presets: social.png (the model page: the dial in its box) and social-movement.png (the essay: the mechanism)
+    python social.py                  # both presets: social.png (the page's link preview: the dial in its box) and social-movement.png (the mechanism, titled for the essay, for posting)
     python social.py dial             # one preset
     python social.py --out NAME.png --view VIEW [--drive] [--cam YAW PITCH DIST FOV]   # a custom shot, the model alone on the dark background
 
@@ -26,7 +26,7 @@ PRESETS={
 }
 BG='radial-gradient(ellipse 58% 85% at 70% 52%,#1f2a35 0%,#121920 48%,#07090c 100%)'
 # the stage alone, no labels, hints, cards or buttons, over a dark page; with a title, the stage keeps to the right of the text column
-HIDE="header,.panel,.hud,.tools,.hint,.labels,.loading,.tabs,.info,.opm{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
+HIDE="header,.panel,.hud,.tools,.hint,.labels,.loading,.tabs,.info,.opm,#essay{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
 def css(text):
     left='400px' if text else '0'
     return (HIDE+f"html,body{{background:{BG}!important;min-height:100vh}}"
