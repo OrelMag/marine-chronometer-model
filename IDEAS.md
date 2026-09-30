@@ -325,6 +325,8 @@ While the key turns, only the sustaining spring drives the train, "enough to run
 2. **Stop and restart.** Stop the balance, wait until the master time "overtakes" the dial, and start it with a twist at that instant. Because the escape wheel is locked, "the second hand is exactly upon the second or half second" when stopped. Needs [2.1](#21-a-balance-that-can-stop-and-must-be-started).
 
 ### 3.2 The navigator's rate book
+> **Done.** The Rate book section: comparisons at noon master time and on demand, dial error to the half second, daily rate over at least half a day, mean daily rate and mean deviation since the last break, automatic remarks (started, stopped, set, not wound, weights moved), and the longitude error at a chosen latitude, uncorrected and corrected with the mean rate. No noise is added: the half-second reading is the only scatter.
+
 **What.** A panel reproducing the manual's "Computation of Rate" (Sec. IX, Table I), after the *Navigational Timepiece Record* (NavShips 3587).
 - Each simulated day, a "radio time signal" comparison records the dial error to the nearest half second, because the hands step in half seconds.
 - The panel computes the daily rate, the mean daily rate over several days, and the mean deviation of daily rate, exactly as Table I does.

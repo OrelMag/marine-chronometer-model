@@ -217,6 +217,8 @@ table.rt{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numer
 table.rt th,table.rt td{text-align:left;padding:4px 4px;border-bottom:1px solid var(--rule)}
 table.rt th{color:var(--muted);font-weight:500}
 table.rt td.n{text-align:right}
+/* the rate book: seconds in the columns, dates on one line */
+table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book td{padding:4px 3px}
 .note{font-size:12.5px;color:var(--muted)}
 .note p{margin:0 0 .6em}
 .hidden{display:none!important}
@@ -351,6 +353,14 @@ table.rt td.n{text-align:right}
         <div class="rate" id="rateOut" aria-live="polite"></div>
         <div class="seg" style="margin-top:8px"><button id="rateZero">Zero</button><button id="rateLook">Show the balance</button></div>
         <p class="note" style="margin:8px 0 0">The manual gives about 40 s a day for a full turn of the timing weights and 2.8 s for the verniers; the model's thread is set to match, and the moment of inertia comes from the model's balance and the parts list's masses. In an overhaul, balance screws and washers bring the rate within 2 minutes a day, then the timing weights within half a second, and the verniers make the final changes (Ops. 5, 6, 10). The model's clock runs at the new rate, so the hands drift from real time; try 3600×. The weights are drawn on the Hamilton balance only.</p>
+      </details>
+      <details class="grp more" id="bookDet">
+        <summary>Rate book</summary>
+        <p class="note" style="margin:0 0 6px">The navigator doesn't set the hands: the chronometer's error is compared with a time signal, daily, and recorded with its rate, and applied to every reading (Sec. III, Setting; Sec. IX, Table I). Error and daily rate in seconds: + fast or gaining, − slow or losing. Here the signal is the master time, which runs with the model; the hands step in half seconds, so the error is read to the nearest half second.</p>
+        <div id="bookT"></div>
+        <div class="seg" style="margin-top:8px"><button id="bookNow" title="Compare the dial with the master now">Compare now</button><button id="bookClr">Clear</button></div>
+        <label class="sl rw" style="margin-top:8px"><span>Latitude</span><input type="number" id="lat" min="-89" max="89" step="1" value="30" style="width:64px" aria-label="Latitude, degrees (north positive)"><span>°</span></label>
+        <div class="rate" id="bookLon" aria-live="polite"></div>
       </details>
       <details class="grp more" id="stopDet">
         <summary>Stopping and starting</summary>
@@ -1970,7 +1980,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
-  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
+  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,book=[],pend=new Set(),bookDay=0,wasHeld=false,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
   /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
      minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
      seconds from the second hand (continuous: as a comparator reads it) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
@@ -2149,11 +2159,11 @@ function drawEsc2D(ctx,w,h,p,dark){
   const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(st.tour<0){if(st.view==='exploded')tgt.explode=expV();else if(st.view==='laidout')tgt.dev=expV();}});
   /* set the hands: only the time of day changes (the balance keeps its phase) and no power is used */
   const todIn=$('#tod');let todS=-1;
-  const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;slip=0;tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);};
+  const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;slip=0;pend.add('set');tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);};
   todIn.addEventListener('change',()=>setTod(todIn.value));
-  $('#now').addEventListener('click',()=>{tSim=tM=Date.now()/1000+tzOff();slip=0;lastE=null;todS=-1;rErr=0;handsSet=false;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);});
+  $('#now').addEventListener('click',()=>{tSim=tM=Date.now()/1000+tzOff();slip=0;pend.add('set');bookDay=dayOf(tM);lastE=null;todS=-1;rErr=0;handsSet=false;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);});
   /* GMT or local: the hands move by the difference, as when they are set */
-  const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;tM+=tzOff()-o;lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
+  const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;tM+=tzOff()-o;bookDay=dayOf(tM);if(hashReady)pend.add('set');lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
   document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
   /* setting the hands while it runs, as the manual does it (Sec. III, Setting While Running): gimbals latched, bezel off, the key on the square at the centre of the dial, turned by its
      shank, forward only. The minute hand goes on its marker half a minute behind the master (as the master's second hand passes 30), then to the next marker as the master's
@@ -2166,7 +2176,7 @@ function drawEsc2D(ctx,w,h,p,dark){
   function ksStep(dt){const d=(((tM-30-minT())%43200)+43200)%43200;   /* how far forward the minute hand still has to go */
     if(ks.ph===1){const v=Math.max(300,2*d)*dt;if(d<=v){slip+=d;ks.ph=2;ks.s0=Math.floor(tM/60);}else slip+=v;
       setOut.innerHTML=`Gimbals latched, bezel off, the key on the square. Turning the hour and minute hands forward${ks.fast?': the dial was fast, and they turn forward only, so they go nearly round the dial':''}.`;}
-    else if(ks.ph===2){if(Math.floor(tM/60)>ks.s0){const g=(((tM-minT())%43200)+43200)%43200;slip+=g<21600?g:0;ks.ph=3;ks.t=performance.now();const e=dialRead()-tM;
+    else if(ks.ph===2){if(Math.floor(tM/60)>ks.s0){const g=(((tM-minT())%43200)+43200)%43200;slip+=g<21600?g:0;pend.add('set');ks.ph=3;ks.t=performance.now();const e=dialRead()-tM;
         setOut.innerHTML=`<b>Set.</b> At the master's 60 the minute hand went to the next marker. The second hand was left alone, so the dial reads ${Math.abs(e)<0.25?'with the master':`<b>${fmtErr(e)}</b> ${e>0?'fast':'slow'}`} (this way it can be up to 30 s out). A navigator records that error rather than setting it out.`;}
       else setOut.innerHTML=`The minute hand is on its marker, half a minute behind the master. At the master's 60 it goes to the next one: <b>${Math.ceil(60-(((tM%60)+60)%60))} s</b>${st.speed?'':' (the model is stopped)'}.`;}
     else if(performance.now()-ks.t>2500)ksEnd();}   /* the key comes off and the bezel goes back */
@@ -2207,10 +2217,33 @@ function drawEsc2D(ctx,w,h,p,dark){
   function rateShow(){const d=86400*(rateK-1),dI=(rI/I0-1)*100,on=Math.abs(d)<0.05,t=twR.valueAsNumber,v=vwR.valueAsNumber;
     rateOut.innerHTML=`<b>${on?'On time':(d>0?'Gains ':'Loses ')+Math.abs(d).toFixed(1)+' s a day'}</b>${on?'':`<span>Since the last change the hands have ${d<0?'lost':'gained'} ${Math.abs(rErr).toFixed(Math.abs(rErr)<10?2:1)} s.</span>`}`+
       `<span>${!t&&!v?'Both pairs at mid-travel':`Timing weights ${travel(t,R.pitch.t)}, verniers ${travel(v,R.pitch.v)}`}. Moment of inertia ${rI.toFixed(1)} g·mm²${on?'':`, ${dI<0?'−':'+'}${Math.abs(dI).toPrecision(2)}%`}.</span>`;}
-  function rateSet(){rI=R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);rateK=Math.sqrt(I0/rI);rErr=0;
+  function rateSet(){rI=R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);rateK=Math.sqrt(I0/rI);rErr=0;pend.add('weights moved');
     twR.nextElementSibling.textContent=eighths(twR.valueAsNumber);vwR.nextElementSibling.textContent=eighths(vwR.valueAsNumber);rateShow();}
   twR.addEventListener('input',rateSet);vwR.addEventListener('input',rateSet);rateSet();
   $('#rateZero').addEventListener('click',()=>{twR.value=0;vwR.value=0;rateSet();});
+  /* ---------- the navigator's rate book (Sec. IX, Recording the Rate; Table I): the dial error against the master, to the nearest half second as the hands step, compared at
+     noon each day (master time) or on demand; the daily rate is the change in error per day; the mean daily rate and the mean deviation over the comparisons since the last
+     break (started, stopped, set, not wound). Then what the error means at sea: 4 s of time is 1' of longitude, cos(latitude) nautical miles ---------- */
+  const dayOf=t=>Math.floor((t-43200)/86400),BREAK=['set','started','stopped','not wound'],bookT=$('#bookT'),bookLon=$('#bookLon'),latIn=$('#lat');bookDay=dayOf(tM);let lastBL=0;
+  const hm=t=>{const d=new Date(t*1000);return d.getUTCDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getUTCMonth()]+' '+String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0');};
+  const sgn=(v,n=1)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n),half=v=>Math.round(v*2)/2;
+  function bookStats(){const run=[];for(let i=book.length-1;i>0;i--){if(book[i].rate==null)break;run.unshift(book[i].rate);if(run.length===10)break;}
+    const m=run.length?run.reduce((a,b)=>a+b,0)/run.length:null;return{m,dev:m==null?null:run.reduce((a,b)=>a+Math.abs(b-m),0)/run.length,n:run.length};}
+  /* the rate is taken against the latest comparison at least half a day back with no break since: over a shorter time, reading to the half second swamps it */
+  function bookAdd(){const e=half(dialRead()-tM),rem=[...pend];pend.clear();let prev=null;
+    if(!rem.some(r=>BREAK.includes(r)))for(let i=book.length-1;i>=0;i--){if(tM-book[i].t>=43200){prev=book[i];break;}if(book[i].rem.some(r=>BREAK.includes(r)))break;}
+    const rate=prev?(e-prev.e)/((tM-prev.t)/86400):null;book.push({t:tM,e,rate,rem:book.length?rem:['first comparison',...rem.filter(r=>r!=='weights moved')]});bookShow();}
+  function bookShow(){const S=bookStats();
+    bookT.innerHTML=book.length?'<table class="rt book"><thead><tr><th>Master</th><th class="n" title="Dial error, seconds: + fast, − slow">Error</th><th class="n" title="Daily rate, seconds a day: + gaining, − losing">Rate</th><th class="n" title="Deviation from the mean daily rate">Dev.</th><th>Remarks</th></tr></thead><tbody>'+book.slice(-12).map(r=>
+      `<tr><td>${hm(r.t)}</td><td class="n">${sgn(r.e)}</td><td class="n">${r.rate==null?'':sgn(r.rate)}</td><td class="n">${r.rate==null||S.m==null?'':(Math.abs(r.rate-S.m)).toFixed(1)}</td><td>${r.rem.join(', ')}</td></tr>`).join('')+'</tbody></table>'+
+      (S.m==null?'':`<p class="note" style="margin:6px 0 0">Mean daily rate <b>${sgn(S.m,2)} s</b> (${S.m>=0?'gaining':'losing'}), mean deviation ${S.dev.toFixed(2)} s, over ${S.n} day${S.n>1?'s':''} since the last break.</p>`)
+      :'<p class="note" style="margin:0">No comparisons yet. One is made at noon each day, master time (try 3600×), or now.</p>';}
+  function bookLive(now){if(now-lastBL<250||!$('#bookDet').open)return;lastBL=now;const e=dialRead()-tM,lat=clamp(+latIn.value||0,-89,89),nm=x=>Math.abs(x)/4*Math.cos(lat*D2R),L=book[book.length-1],S=bookStats();
+    let t=`<b>Dial error now ${fmtErr(e)}</b><span>Read uncorrected, it puts the ship ${(Math.abs(e)/4).toFixed(2)}′ of longitude ${e>0?'west':'east'} of where it is: ${nm(e).toFixed(2)} nautical miles at ${Math.abs(lat)}° ${lat<0?'S':'N'}.</span>`;
+    if(L&&S.m!=null){const pr=L.e+S.m*(tM-L.t)/86400,r=e-pr;t+=`<span>Corrected as the navigator does, the last comparison's error plus ${((tM-L.t)/86400).toFixed(1)} days at the mean rate (${fmtErr(pr)}), ${Math.abs(r)<0.25?'it is right to the half second':`the error left is ${fmtErr(r)}, ${nm(r).toFixed(2)} nautical miles`}.</span>`;}
+    else t+='<span>With two comparisons a day apart and no break between, the book gives a rate to correct it with.</span>';
+    bookLon.innerHTML=t;}
+  $('#bookNow').addEventListener('click',bookAdd);$('#bookClr').addEventListener('click',()=>{book=[];bookShow();});bookShow();
   $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('balance');showPart('bal');});
   /* ---------- stopping and starting (Sec. III): a detent chronometer is not self-starting. The balance swings at amplitude H.amp; below ESC.AMIN a swing no longer
      carries the discharge jewel past the trip spring, unlocks the wheel and sees the impulse through, so the train stops at a locked beat and the balance runs down freely
@@ -2470,7 +2503,9 @@ function drawEsc2D(ctx,w,h,p,dark){
       if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
-    lastE=E;const n=hrs*FUSEE_PER_HOUR;if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();   /* after the train has moved, so the hands and the master are of the same moment */
+    lastE=E;const n=hrs*FUSEE_PER_HOUR;if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
+    if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
+    {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
     mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||Object.keys(st.op).length>0,msOn:msShown()});
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.rotation.y=SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6)));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
@@ -2501,7 +2536,7 @@ function drawEsc2D(ctx,w,h,p,dark){
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
-    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
+    if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
   look();
