@@ -99,7 +99,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 | 10 | [30-day performance test](#34-the-30-day-performance-test) | Features | M | The manual prints the test card and the Bureau of Ships tolerances. A satisfying way to see the physics add up |  |
 | 11 | [CI: build, escapement check, browser smoke test](#81-continuous-integration) | Testing | S | No automated checks today; the tools already exist | Done `7f3668e` |
 | 12 | [Reduced motion, keyboard orbit](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the camera can't be turned from the keyboard | Done `c2af700` |
-| 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash | Done: hash `cf07772`; remembered settings open |
+| 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash | Done: hash `cf07772`; remembered settings `8a84df5` |
 | 14 | [A real fusee comparison](#22-the-fusee-earns-its-keep) | Physics | M | The fusee inset is constant by construction. Show what a going barrel would do |  |
 | 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) |  |
 
@@ -463,7 +463,7 @@ Give each its own short synthesised click with a different spectrum, scheduled a
 - Keep it opt-in, as now.
 
 ### 3.12 At high speed, blur rather than slow down (S)
-> **Partly done.** The balance swings as it really does up to 5× (it switched to its slow display swing above 1×, so at 2× it swung slower than at 1×); above 5× the HUD says "balance swing shown slowed". The motion-blurred disc is still open.
+> **Partly done.** The balance swings as it really does up to 5× (it switched to its slow display swing above 1×, so at 2× it swung slower than at 1×); above 5× the HUD says "balance swing shown slowed". The motion-blurred disc is still open. `5af0a57`
 
 **Today.** Above 1×, the balance swings at a "viewable rate" unrelated to the model's time, and the detent and trip spring freeze (`s.lift=0; s.psDef=0`, [app.js:453](marine-chronometer-source/chronometer-working-model/js/app.js#L453)).
 
@@ -553,7 +553,7 @@ the JavaScript `update()`.
 The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving canvases. The same treatment applies to the engraving, which never changes.
 
 ### 5.3 Don't rebuild geometry every frame (S–M)
-> **Partly done.** The trip spring is rebuilt only when its lift or deflection changes, so it stands still (and isn't rebuilt) for most of each swing, and above 1× never. The hairspring is left as it is: the balance turns every frame while running, so a change threshold saves nothing, and bending it in a shader would hide its real shape from `fine.py`, `dyn.py`, `solids.py` and `illustration.py`, which read the geometry `update()` builds.
+> **Partly done.** The trip spring is rebuilt only when its lift or deflection changes, so it stands still (and isn't rebuilt) for most of each swing, and above 1× never. The hairspring is left as it is: the balance turns every frame while running, so a change threshold saves nothing, and bending it in a shader would hide its real shape from `fine.py`, `dyn.py`, `solids.py` and `illustration.py`, which read the geometry `update()` builds. `a4e7574`
 
 - **Hairspring:** a new `TubeGeometry` from `springGeo()` every frame whenever it's visible ([movement.js:450](marine-chronometer-source/chronometer-working-model/js/movement.js#L450)). That is 0.94 ms of JavaScript plus a fresh vertex buffer upload each frame. The hairspring's "breathing" is a rotation that varies along its length (`a = ang + th·(1 − ang/tot)`), so it can be done in the vertex shader:
   - build the tube once at `th = 0`;
@@ -582,21 +582,21 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 ## 6. Interface and accessibility
 
 ### 6.1 Accessibility
-> **Done.** Reduced motion: instant camera and state moves (as `?snap`), no ship motion from the walkthrough, no smooth scrolling, no CSS fades. Keyboard: the canvas takes focus (with a focus ring); arrows turn the view, +/− zoom, 0 resets; listed in the help card and About. The walkthrough text is a polite live region. Still open: a canvas description that follows the view, and a contrast check of the part colours. `c2af700`
+> **Done.** Reduced motion: instant camera and state moves (as `?snap`), no ship motion from the walkthrough, no smooth scrolling, no CSS fades. Keyboard: the canvas takes focus (with a focus ring); arrows turn the view, +/− zoom, 0 resets; listed in the help card and About. The walkthrough text is a polite live region. The canvas description follows the view (`dd2c6df`). Still open: a contrast check of the part colours. `c2af700`
 
 - **Reduced motion (S):** the CSS has no `prefers-reduced-motion` rule. When it's set, snap camera moves (as `?snap` does), keep **Turn slowly** and **Ship motion** off, and don't auto-scroll the walkthrough card into view ([app.js:378](marine-chronometer-source/chronometer-working-model/js/app.js#L378)).
 - **Keyboard orbit (S):** arrow keys to orbit, `+`/`−` to zoom, `0` to reset. Only 1–6 and Space work today. Make the canvas focusable (`tabindex="0"`) with a visible focus ring, and list the keys in About.
 - **Screen readers (S):**
   - The info card is `aria-live="polite"`; the walkthrough's changing text and the key-winding progress should be too (`kwOut` already is).
   - Give the walkthrough step changes a live region.
-  - *Done:* the canvas's `aria-label` names the view or walkthrough step, and Moving parts only. Before: give the canvas a description that updates with the view ("Escapement view: detent, escape wheel and balance, seen from the pillar-plate side").
+  - *Done:* the canvas's `aria-label` names the view or walkthrough step, and Moving parts only. `dd2c6df` Before: give the canvas a description that updates with the view ("Escapement view: detent, escape wheel and balance, seen from the pillar-plate side").
 - **Contrast (S):** check the label colours (`--pc` swatches) and muted text against both themes with a contrast checker. Several part colours are mid-tones.
 
 ### 6.2 Shareable links and remembered state
-> **Done.** The URL hash carries `view`, `tour` (1-based), `speed`, `part`, `drive=1`, `sec=x:-3.5[:f]`, `tz=local` and `t` (only once the hands were set). It is read at load (the opening move goes to the linked view) and on `hashchange`, and written with `replaceState` 0.3 s after any change. Remembering settings in `localStorage` is still open. `cf07772`
+> **Done.** The URL hash carries `view`, `tour` (1-based), `speed`, `part`, `drive=1`, `sec=x:-3.5[:f]`, `tz=local` and `t` (only once the hands were set). It is read at load (the opening move goes to the linked view) and on `hashchange`, and written with `replaceState` 0.3 s after any change. Remembering settings in `localStorage`: plate finish, dial style, balance and the last view, `8a84df5`. `cf07772`
 
 - *Done:* **URL hash (S):** `#view=escapement&speed=0.05&part=det&t=12:00:00&sec=x:-3.5`. Read it at load, and update it with `history.replaceState` as things change, throttled. Walkthrough steps: `#tour=6`. Teachers can then link straight to "the detent at 1/20×".
-- *Done:* **Remember (S):** `cm-set` keeps plate finish, dial style, balance and the last view; the view opens the page when its link names none. Before: in `localStorage`, alongside the theme already stored there, keep plate finish, dial style, balance and the last view. Always wrap it in `try`, as the theme code does.
+- *Done:* **Remember (S):** `cm-set` keeps plate finish, dial style, balance and the last view; the view opens the page when its link names none. `8a84df5` Before: in `localStorage`, alongside the theme already stored there, keep plate finish, dial style, balance and the last view. Always wrap it in `try`, as the theme code does.
 
 ### 6.3 Parts list (S)
 - **Search:** a search box that filters by name and Hamilton part number (`42087` finds the detent).
@@ -604,7 +604,7 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - **Units:** an **mm / in** toggle for the dimensions on the info cards. The manual works in inches (0.249 in roller, 0.002 in roller shake).
 
 ### 6.4 Onboarding and hints (S)
-- *Done:* **Hint:** it stays until the model is first tapped, dragged, scrolled or given a key, or a part card, help or the walkthrough covers it. Before: the hint fades after nine seconds whether or not it was read. Instead, keep it until the first tap or drag.
+- *Done:* **Hint:** it stays until the model is first tapped, dragged, scrolled or given a key, or a part card, help or the walkthrough covers it. `c490811` Before: the hint fades after nine seconds whether or not it was read. Instead, keep it until the first tap or drag.
 - **First tap:** add a one-line "Tap any part" pulse on a first-time visitor's first view.
 
 ### 6.5 Translations (M)
@@ -616,8 +616,8 @@ Phones already get a fixed cap (`PHONE` in `app.js`: pixel ratio 1.5, shadow map
 - Keep technical terms consistent with period horological usage in each language. German, for instance, has an established chronometer vocabulary (the Roman dial already uses AUF/AB).
 
 ### 6.6 Small fixes noticed while reading
-- *Done:* **Keys 1–9:** the key for a view that is off flashes its button and says in the HUD to turn off Moving parts only. Before: these call `.click()` on buttons that may be disabled in **Moving parts only**. A disabled button ignores the click, as the comment says, but the key gives no feedback. Flash the button or show a brief HUD message.
-- *Done:* **Walkthrough and user settings:** the view, See-through, Ship motion, Gimbals latched, the speed, Moving parts only and the motion work are kept when it starts and given back when it ends. Before: the walkthrough sets `st.see=false` and `st.rock`, and restores defaults on exit rather than what the user had before. Save and restore the user's settings around a tour.
+- *Done:* **Keys 1–9:** the key for a view that is off flashes its button and says in the HUD to turn off Moving parts only. `8b03099` Before: these call `.click()` on buttons that may be disabled in **Moving parts only**. A disabled button ignores the click, as the comment says, but the key gives no feedback. Flash the button or show a brief HUD message.
+- *Done:* **Walkthrough and user settings:** the view, See-through, Ship motion, Gimbals latched, the speed, Moving parts only and the motion work are kept when it starts and given back when it ends. `8ab661e` Before: the walkthrough sets `st.see=false` and `st.rock`, and restores defaults on exit rather than what the user had before. Save and restore the user's settings around a tour.
 
 ---
 
@@ -704,7 +704,7 @@ Small browser or Node checks on the model's arithmetic:
 - **The renderer:** SwiftShader output is deterministic enough if the Chromium version is pinned.
 
 ### 8.4 Size budget (S)
-> **Done.** `build.py` fails a page past its `BUDGET` (1.6 MB for the model, 1.1 MB for the essay; they were 1.33 and 0.94 MB) and prints each page's three.js, fonts, images and the rest on every build. The first breakdown showed Instrument Sans inlined three times over (one file under three weights); it is now one face with a weight range.
+> **Done.** `build.py` fails a page past its `BUDGET` (1.6 MB for the model, 1.1 MB for the essay; they were 1.33 and 0.94 MB) and prints each page's three.js, fonts, images and the rest on every build. The first breakdown showed Instrument Sans inlined three times over (one file under three weights); it is now one face with a weight range. `843d642`, `8f1266b`
 
 Fail the build if `chronometer-working-model.html` grows past a set size, say 1.4 MB raw. It's 1.17 MB today. Print a breakdown (three.js, fonts, images, app) on every build, so growth is visible.
 
@@ -729,7 +729,7 @@ Fail the build if `chronometer-working-model.html` grows past a set size, say 1.
 - **three.js:** a custom build containing only the classes used would cut its 145 KB (gzip) substantially. That's only practical after the upgrade (4.3), with ES modules.
 
 ### 9.4 Discoverability (S)
-> **Done.** With `--site-url`, `build.py` writes `site/sitemap.xml` and `robots.txt` at the addresses the canonical tags name. Both pages carry schema.org JSON-LD (the model a `CreativeWork`/`WebApplication`, the essay an `Article`) citing the manual, under CC BY 4.0. The essay had no `description` or `og:` title and description; it has them now.
+> **Done.** With `--site-url`, `build.py` writes `site/sitemap.xml` and `robots.txt` at the addresses the canonical tags name. Both pages carry schema.org JSON-LD (the model a `CreativeWork`/`WebApplication`, the essay an `Article`) citing the manual, under CC BY 4.0. The essay had no `description` or `og:` title and description; it has them now. `75d8b9c`
 
 - **Structured data:** `schema.org` markup for both pages: `CreativeWork`, with the manual cited as a source and the licence as `license`.
 - **Sitemap:** `sitemap.xml` and `robots.txt` in `site/`, generated by `build.py` when `--site-url` is given.
@@ -743,7 +743,7 @@ The essay predates the manual and the working model. Hamilton-specific detail
 belongs in the model, but the two could work together better.
 
 - **Shared escapement (S):** see 7.3. It also removes the essay README's instruction to copy `ESC` across by hand.
-- *Done:* **Deep links into the model (S):** the balance, heat, fusee, train, detent and gimbals sections end with a link into the model (`#tour=7`, `#view=balance`, `#tour=3`, `#tour=5`, `#view=escapement&speed=0.05`, `#tour=1`); the heat link names the Model 21's uncut Invar-armed balance and Elinvar spring. The build keeps the hash when it points the links at `./` in `site/`. Before: with [6.2](#62-shareable-links-and-remembered-state), each essay section can end with "See it in the model", opening the matching view: the detent section opens `#view=escapement&speed=0.05`, the fusee section `#tour=3`.
+- *Done:* **Deep links into the model (S):** the balance, heat, fusee, train, detent and gimbals sections end with a link into the model (`#tour=7`, `#view=balance`, `#tour=3`, `#tour=5`, `#view=escapement&speed=0.05`, `#tour=1`); the heat link names the Model 21's uncut Invar-armed balance and Elinvar spring. The build keeps the hash when it points the links at `./` in `site/`. `fb4d2cb` Before: with [6.2](#62-shareable-links-and-remembered-state), each essay section can end with "See it in the model", opening the matching view: the detent section opens `#view=escapement&speed=0.05`, the fusee section `#tour=3`.
 - **A chapter on keeping the rate (M):** the essay opens with longitude ("Time is a position"). A closing chapter on the rate book (3.2) and the performance test (3.4) would bring it back to navigation, with the manual's Table I and test card as its figures.
 - **Correct what the manual changed (M):** read the essay against the model README's sources and fix anything the manual contradicts. The "Heat" chapter should mention the Model 21's uncut Invar-armed balance and Elinvar spring as the answer to the split balance's middle temperature error.
 
