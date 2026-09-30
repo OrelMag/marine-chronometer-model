@@ -81,6 +81,8 @@
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
         <div class="row clk"><label class="sl"><span class="lab">Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
         <div class="row"><span class="lab">Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as U.S. Navy chronometers were kept">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
+        <div class="row"><span class="lab">Setting</span><button id="ksBtn" aria-pressed="false" title="Set the hour and minute hands as the manual does while it runs: the key on the square, forward only, the minute hand to its marker as the master's second hand passes 60. The second hand is left alone">With the key</button><button id="ssBtn" title="Set it as the manual does when stopped: stop the balance, wait for the master to overtake a fast dial (or for the second hands to agree on a slow one), and start it with a twist at that instant">Stop to set</button></div>
+        <p class="note ind hidden" id="setOut" aria-live="polite" style="margin-top:6px;margin-bottom:0"></p>
         <div class="row"><span class="lab">Sound</span><label class="ck" title="A click at each beat, at up to real time"><input type="checkbox" id="snd"> Tick sound</label></div>
       </details>
       <details class="grp more" id="windDet" open>
@@ -116,6 +118,14 @@
         <div class="rate" id="rateOut" aria-live="polite"></div>
         <div class="seg" style="margin-top:8px"><button id="rateZero">Zero</button><button id="rateLook">Show the balance</button></div>
         <p class="note" style="margin:8px 0 0">The manual gives about 40 s a day for a full turn of the timing weights and 2.8 s for the verniers; the model's thread is set to match, and the moment of inertia comes from the model's balance and the parts list's masses. In an overhaul, balance screws and washers bring the rate within 2 minutes a day, then the timing weights within half a second, and the verniers make the final changes (Ops. 5, 6, 10). The model's clock runs at the new rate, so the hands drift from real time; try 3600×. The weights are drawn on the Hamilton balance only.</p>
+      </details>
+      <details class="grp more" id="bookDet">
+        <summary>Rate book</summary>
+        <p class="note" style="margin:0 0 6px">The navigator doesn't set the hands: the chronometer's error is compared with a time signal, daily, and recorded with its rate, and applied to every reading (Sec. III, Setting; Sec. IX, Table I). Error and daily rate in seconds: + fast or gaining, − slow or losing. Here the signal is the master time, which runs with the model; the hands step in half seconds, so the error is read to the nearest half second.</p>
+        <div id="bookT"></div>
+        <div class="seg" style="margin-top:8px"><button id="bookNow" title="Compare the dial with the master now">Compare now</button><button id="bookClr">Clear</button></div>
+        <label class="sl rw" style="margin-top:8px"><span>Latitude</span><input type="number" id="lat" min="-89" max="89" step="1" value="30" style="width:64px" aria-label="Latitude, degrees (north positive)"><span>°</span></label>
+        <div class="rate" id="bookLon" aria-live="polite"></div>
       </details>
       <details class="grp more" id="stopDet">
         <summary>Stopping and starting</summary>

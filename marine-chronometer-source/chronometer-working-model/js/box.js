@@ -95,7 +95,7 @@ function buildBox(M){
   {const lg=mesh(bowl,cylY(0.2,1.5,8),M.steel,pv[0]+3.05*Math.cos(ah),YB-0.8,pv[1]+3.05*Math.sin(ah));lg.rotation.set(0,-ah,Math.PI/2);}   /* fixed leg, bearing on the stop screw */
   shield.rotation.y=SH_REST;
   const bz=mesh(bowl,new THREE.TorusGeometry(63.5,2.6,14,128),M.brass,0,9.5,0);bz.rotation.x=Math.PI/2;
-  const gl=mesh(bowl,new THREE.CylinderGeometry(62,62,0.8,96),M.glass,0,10.5,0);gl.renderOrder=5;
+  const gl=mesh(bowl,new THREE.CylinderGeometry(62,62,0.8,96),M.glass,0,10.5,0);gl.renderOrder=5;bz.userData.bezel=gl.userData.bezel=true;   /* the bezel with its crystal, taken off to set the hands with the key (app.js) */
   /* lids hinged at the back */
   /* glass lid hinged to the back of the box; the outer lid hinged to the back-top edge of the glass lid, so it opens on its own and never swings through the glass lid */
   const mid=new THREE.Group(),top=new THREE.Group();mid.userData.partName='lidGlass';top.userData.partName='lid';mid.position.set(0,0,-W);top.position.set(0,38,0);root.add(mid);mid.add(top);

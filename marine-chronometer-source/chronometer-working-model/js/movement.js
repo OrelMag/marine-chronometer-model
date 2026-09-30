@@ -284,6 +284,9 @@ function buildMovement(M){
   R.hour=new THREE.Group();R.hour.position.y=5.2;hd.add(R.hour);dk(mesh(R.hour,handGeo(41,1.2,2.5,'pear',0.68),M.blued),'hamilton');dk(mesh(R.hour,handGeo(29,1.3,6,'leaf'),hg),'roman');
   R.min=new THREE.Group();R.min.position.y=6.0;hd.add(R.min);dk(mesh(R.min,handGeo(47.5,1.5,3,'plain'),M.blued),'hamilton');dk(mesh(R.min,handGeo(45,0.9,8,'lance'),hg),'roman');
   dk(mesh(hd,cylY(2,1.2,24),M.blued,0,6.3,0),'hamilton');dk(mesh(R.min,new THREE.BoxGeometry(2.4,1.4,2.4),M.steel,0,1.6,0),'hamilton');   /* the bright hand-setting square on the minute hand's pipe, 1.4 proud of the boss: the winding key sets the hands on it (Fig. 8, Sec. III). As the fusee's square, so one key fits both */
+  /* the winding key on the hand-setting square, turned by its shank to set the hands (Fig. 8): shown only while setting, when the bezel is off; it turns with the minute hand */
+  R.hkey=new THREE.Group();R.hkey.visible=false;R.min.add(R.hkey);mesh(R.hkey,ringGeo(2.6,1.35,5),M.brass,0,3.45,0);cylBetween(R.hkey,1.7,5.95,34.5,M.brass);
+  { const kb=mesh(R.hkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,36.5,0);kb.rotation.x=Math.PI/2;for(const z of[13,-13])mesh(R.hkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,36.5,z);mesh(R.hkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,36.5,0); }
   dk(mesh(hd,cylY(2.3,1.2,24),hg,0,6.3,0),'roman');dk(mesh(hd,cylY(1,0.5,6),M.steel,0,7.1,0),'roman');
   R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2) */hd.add(R.sec);dk(mesh(R.sec,handGeo(21,0.5,-10,'plain'),M.blued),'hamilton');dk(mesh(R.sec,handGeo(16.5,0.55,4,'plain'),M.blued),'roman');mesh(R.sec,cylY(0.9,0.8,16),M.blued,0,0.3,0);
   R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35,L.Ud[1]);hd.add(R.ud);dk(mesh(R.ud,handGeo(11,0.6,2.5,'plain'),M.blued),'hamilton');dk(mesh(R.ud,handGeo(10,0.6,2.5,'leaf'),hg),'roman');mesh(R.ud,cylY(0.9,0.8,16),M.blued,0,0.3,0);
@@ -603,8 +606,8 @@ function buildMovement(M){
     R.esc.rotation.y=-E.t0+0.03*P+esc;
     R.fw.rotation.y=-esc/RF;R.sec.rotation.y=-esc/RF;
     R.tw.rotation.y=esc/RT;
-    const cA=esc/RC;R.cw.rotation.y=-cA;R.cannon.rotation.y=-cA;R.min.rotation.y=-cA;
-    R.minW.rotation.y=cA*MR;R.hourW.rotation.y=-cA*HR;R.hour.rotation.y=-cA*HR;
+    const cA=esc/RC,hA=cA+(s.slip||0)/3600*TAU;R.cw.rotation.y=-cA;R.cannon.rotation.y=-hA;R.min.rotation.y=-hA;   /* slip: seconds the key has turned the hands on the centre arbor (the cannon pinion slips); the second hand is never touched */
+    R.minW.rotation.y=hA*MR;R.hourW.rotation.y=-hA*HR;R.hour.rotation.y=-hA*HR;R.hkey.visible=!!s.hkeyOn;
     const gA=cA*TRAIN.cp/TRAIN.fu;R.gw.rotation.y=gA;R.ssg.rotation.y=gA;
     if(Math.abs(s.n-lastN)>0.0008){fs.setWind(s.n);lastN=s.n;}
     /* Maintaining work. Running: fusee -> winding ratchet -> winding pawls -> sustaining ratchet -> spring (loaded, d = 0) -> fusee wheel, so the sustaining ratchet turns
