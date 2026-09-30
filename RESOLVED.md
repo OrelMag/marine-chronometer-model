@@ -455,6 +455,12 @@ Contents:
   0.15 tall. Keep: a part on a shaft is bored for it; a screw head under a part
   that turns over it keeps clear of it. Found by `fine.py` after the parts-list
   changes, which also retired 15 `EXPECTED` entries nothing matches any more. `5709d7b`
+- **Mounting ring screws from the wrong side.** The three screws (42055)
+  were drawn from the dial side, through the ring's lip into the plate. The
+  manual lays the plate on the ring and screws them in from above (reassembly
+  Op. 1; Fig. 29 draws them over the plate), and the top-view photographs show
+  one on the plate at the rim at 6 o'clock. Keep: the mounting ring screws go
+  in from the train side, through the plate into the ring. `3c047b0`
 
 ## Setup, case and gimbals
 
