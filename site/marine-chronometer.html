@@ -369,7 +369,7 @@ function makeEsc(o={}){
   { let sl=-1,thS=0,lm=0;for(let i=0;i<NTB;i++){const th=TH0+i*DT;if(sl<0){const d=push(th,nH,1);if(d<0){sl=lm;thS=th;}else{LI[i]=d;lm=d;continue;}}LI[i]=hold(th,nH,1,sl*Math.max(0,1-(th-thS)/RET),sl);}
     sl=-1;lm=0;for(let i=NTB-1;i>=0;i--){const th=TH0+i*DT;if(sl<0){const d=push(th,nB,-1);if(d<0){sl=lm;thS=th;}else{PS[i]=d;lm=d;continue;}}PS[i]=hold(th,nB,-1,sl*Math.max(0,1-(thS-th)/RET),sl);} }
   const tab=(T,th)=>{const f=(th-TH0)/DT,i=Math.floor(f);return i<0||i>=NTB-1?0:T[i]+(T[i+1]-T[i])*(f-i);};
-  let thRel=0;for(let i=0;i<NTB;i++)if(LI[i]>=lRel){thRel=TH0+i*DT;break;}
+  let thRel=0,released=false;for(let i=0;i<NTB;i++)if(LI[i]>=lRel){thRel=TH0+i*DT;released=true;break;}
   /* wheel angle (tooth tip, from the line of centres) at which a tooth meets the impulse jewel at balance angle th: its locking face on the jewel's
      tip, or its tip on the jewel's driven face, whichever holds it back more; -1e9 while the jewel is outside the teeth's path */
   const bite=th=>{const c=aIc+th,u={x:Math.cos(c),y:Math.sin(c)},h=wI/2,sT=Math.sqrt(rp*rp-h*h),ox=h*u.y,oy=-h*u.x;let a=-1e9;   /* driven face: s*u+(ox,oy) */
@@ -405,7 +405,38 @@ function makeEsc(o={}){
   let thEnd=thRel;for(let th=thRel;th<A;th+=0.001){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);if(phi<=-P){thEnd=th;break;}}
   let ip=0;for(let i=0;i<NTB;i++)if(PS[i]>PS[ip]+1e-9)ip=i;let thPass=TH0;for(let i=0;i<NTB;i++)if(PS[i]>=PS[ip]-1e-9){thPass=TH0+i*DT;break;}
   const AMIN=Math.max(-thRel,thEnd,-thPass)+2*D2R;
-  return{ES,NT,P,EX,A,AMIN,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,LI,PS,TH0,DT,bite};
+  /* the manual's adjustment figures (Sec. VIII, Ops. 76, 84-88, 97), measured with its own definitions: printed by chronometer-working-model/tools/escapement.js, shown
+     live by the model's adjuster's bench. runs: false, with why, when the escapement would not run at these settings (its other figures are then NaN where they can't be had) */
+  let meas=null;
+  function measure(){if(meas)return meas;const mm=u=>u*ES,deg=a=>a==null?NaN:a/D2R,th=i=>TH0+i*DT,r={runs:true,why:''},no=w=>{if(r.runs){r.runs=false;r.why=w;}};
+    const tip=a=>Math.hypot(EX+Math.cos(a),Math.sin(a));
+    r.D=mm(-EX);r.shake=mm(tip(t0)-rRoll);r.dip=mm(rRoll-(-EX-1));
+    let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=th(i);break;}                                  // unlocking swing: discharge jewel meets the trip spring
+    let im=0;for(let i=0;i<NTB;i++)if(LI[i]>LI[im])im=i;const off=th(im);                        // ... tip slides off the jewel, detent falls back
+    let ip=null;for(let i=0;i<NTB;i++)if(PS[i]>0&&(ip===null||PS[i]>PS[ip]+1e-9))ip=i;
+    let ipm=NTB-1;if(ip!==null)for(let i=0;i<NTB;i++)if(PS[i]>=PS[ip]-1e-9){ipm=i;break;}const poff=th(ipm);    // passing swing: trip spring falls off the jewel
+    if(a0===null)no('the discharge jewel never meets the trip spring');else if(!released)no('the detent never lifts far enough to free the wheel');if(ip===null)no('the discharge jewel never passes the trip spring on the return swing');
+    r.contact=deg(a0);r.rel=deg(thRel);r.off=deg(off);r.poff=deg(poff);
+    r.lock=deg(a0==null?null:thRel-a0);r.letoff=deg(off-thRel);r.overall=deg(off-poff);
+    let tIn=null;for(let t=TH0;t<1.2;t+=0.01*D2R)if(bite(t)>-1e8){tIn=t;break;}
+    if(tIn===null)no('no tooth reaches the impulse jewel');
+    r.drop=deg(tIn==null?null:thRel-tIn);r.ahead=deg(t0-bite(thRel));                                    // drop (Op. 97); >0: jewel is past the waiting tooth at release
+    let tE=null;for(let k=0;k<=40000;k++){const p=0.5*k/40000;if(Math.sin(TAU*p)<=0)continue;const s=state(p);if(tE===null&&s.prog>=1){tE=s.th;break;}}
+    if(tE===null)no('the tooth never finishes its impulse: the wheel would not advance');
+    r.impEnd=deg(tE);r.hornClr=mm(Math.min(...pieces.horn.map(q=>Math.hypot(q.x,q.y)))-rd);r.jewels=deg(aD-aI);r.lRel=mm(lRel);
+    return meas=r;}
+  /* each figure against the manual's: k, name, the value as text, what the manual wants, ok */
+  function checks(){const r=measure(),f=(x,n=1)=>x.toFixed(n);
+    return[{k:'D',name:'centre distance',v:f(r.D,2)+' mm',want:'',ok:true},
+      {k:'shake',name:'roller shake (Op. 84)',v:f(r.shake,3)+' mm',want:'about 0.002 in (0.051 mm)',ok:r.shake>0.03&&r.shake<0.08},
+      {k:'dip',name:"teeth dip into the roller's crescent (Op. 76)",v:f(r.dip,2)+' mm',want:'> 0',ok:r.dip>0},
+      {k:'lock',name:'lock (Op. 85)',v:f(r.lock)+'°',want:'about 6°',ok:Math.abs(r.lock-6)<1},
+      {k:'letoff',name:'let-off (Op. 86)',v:f(r.letoff)+'°',want:'at least 6°',ok:r.letoff>=6},
+      {k:'overall',name:'overall (Op. 87)',v:f(r.overall)+'°',want:'26-30°',ok:r.overall>=26&&r.overall<=30},
+      {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
+      {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
+      {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
+  return{ES,NT,P,EX,A,AMIN,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,D,pieces,fixed,state,springPts,lRel,thRel,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};
 

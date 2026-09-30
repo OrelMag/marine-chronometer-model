@@ -586,7 +586,10 @@ The detent's plan outlines are `ESC.pieces` (turning about the point of
 flexure) and `ESC.fixed`; their heights are set where the detent is built.
 After a change, run `node escapement.js` in `tools/`. It measures lock, let-off,
 overall, drop, roller shake and the horn clearance, and flags any outside the
-manual's figures. To try a setting before editing, pass it on the command line,
+manual's figures. The measurements and tolerances are `ESC.measure()` and
+`ESC.checks()` in `makeEsc`, so the tool and the page's adjuster's bench use
+one definition; `measure()` also says when a setting would not run at all
+(`runs`, `why`), and the tool then exits with 1. To try a setting before editing, pass it on the command line,
 for example `node escapement.js rT=0.29`. Record the results in the escapement
 entries under "Estimated, not from the manual". The essay's detent figure (F7
 in `../marine-chronometer-essay/src/p4.js`) calls the same `makeEsc`, so it
