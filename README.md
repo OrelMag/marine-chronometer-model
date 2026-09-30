@@ -192,7 +192,7 @@ Before committing a change to the model:
 5. **Preview images.** If the model's appearance changed, re-render them:
    `python social.py` (from the same `tools/` folder), then rebuild. If the box,
    gimbals, fusee, escapement or balance changed, redraw the Illustration tab too:
-   `python illustration.py`, and check its labels in `r_ill/sheet.png`.
+   `python illustration.py`, and check its labels in `r_ill/sheet-tint.png` and `sheet-ink.png`.
 6. **CI.** Pushing to GitHub runs the same checks (`.github/workflows/checks.yml`):
    the build, a check that the committed built copies match it (build with
    `--site-url https://www.marinechronometermodel.com`, as the live site is),

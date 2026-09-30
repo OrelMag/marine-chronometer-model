@@ -732,7 +732,7 @@ Fail the build if `chronometer-working-model.html` grows past a set size, say 1.
 - **Where:** `site/` only. The single-file copies stay as they are.
 
 ### 9.3 Smaller downloads for the website (S–M)
-- **Illustration:** in `site/`, load the illustration as a separate file when the Illustration tab is first opened, instead of inlining 128 KB of base64 into every page load. Keep it inlined in the single-file copy, which must work alone.
+- **Illustration:** in `site/`, load the illustration as separate files when the Illustration tab is first opened (and the ink one when it is chosen), instead of inlining both drawings, about 330 KB of base64, into every page load. Keep it inlined in the single-file copy, which must work alone.
 - **Fonts:** check that every font weight is used. Spectral 300 might not be; if so, drop it (22 KB).
 - **three.js:** a custom build containing only the classes used would cut its 145 KB (gzip) substantially. That's only practical after the upgrade (4.3), with ES modules.
 
