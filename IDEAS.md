@@ -12,6 +12,13 @@ figures, as elsewhere in this repository. Where an idea would add something the
 manual doesn't specify, it is marked **illustrative**, and it would belong in
 the model README's "Estimated, not from the manual" section once built.
 
+**Source of truth.** Two things decide what the model should look like and
+do: photographs of real Hamilton Model 21 chronometers (in `References/`,
+listed in its README) and the manual. Where the model disagrees with them, the
+model is wrong. Estimates, clearance fits and the model's own earlier choices
+give way to either, and an idea that can't be checked against them is
+illustrative.
+
 Contents:
 [Key findings](#key-findings) ·
 [At a glance](#at-a-glance) ·
@@ -87,7 +94,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 
 | # | Idea | Area | Effort | Why | Status |
 |---|---|---|---|---|---|
-| 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes |  |
+| 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes | Partly done: amplitude as state, the train stops below `ESC.AMIN`, Twist to start; the equation of motion is open |
 | 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" | Done: GMT by default `23e9c58`; setting with the key and when stopped `dc06fae`, `21ea739` |
 | 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something | Done `70baefe` |
 | 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page | Done `630aa0f` |
@@ -191,7 +198,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 *The balance locking arm is done: arm, screw, washer and stop pin, Locked / Unlocked under Stopping and starting, and it stops the balance. The square is drawn too (`ad1762d`); the wedges are still to do.*
 - **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says). *(Done: the square is drawn, the fusee square's size so the one key fits both (`ad1762d`); it is the cannon pinion's squared end, with the minute hand broached square on it (Op. 64: "the minute hand can be broached with a square file").)*
 - **Balance locking arm (Fig. 9):** later chronometers have a balance wheel locking arm, with locked and unlocked positions. Model it, with a toggle, as a part of the "Operation when received" story.
-- **Shipping wedges:** before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
+- **Shipping wedges** (not the hairspring clamps' wedge pins, which are done): before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
 
 ### 1.7 Screws, washers and weights from the parts list (S)
 - **The manual's masses:** the moment of inertia in `R.timing` now uses the parts list's masses for the three screw sizes and the two weights (931 g·mm²). Still to do:
@@ -210,7 +217,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - *Mainspring: done.* It is drawn 0.0165 in thick, in two packs (arbor and wall) joined by a free turn, with the counts from the barrel and arbor radii (`mainspringGeo`). Its length is still estimated (600 mm, the half-room rule). The parts list gives no length or width; a measured spring would settle the set-up (0.30 turn in the model).
 
 ### 1.10 Oil sinks, jewel settings, endstones (S)
-*Settings and endstones are done: the escape wheel's upper and lower endstone caps, the balance's lower setting and endstone cap, and the fourth wheel's upper setting. 13 of the 14 jewels are drawn; the balance's upper hole jewel isn't (1.4). Oil sinks are still to do.*
+*Settings and endstones are done: the escape wheel's upper and lower endstone caps, the balance's lower setting and endstone cap, the balance's upper setting and hole jewel in the cock (1.4, `2acc042`), and the fourth wheel's upper setting. All 14 jewels are drawn. Oil sinks are still to do.*
 Jewels are a gilt ring plus a ruby ring. Add the oil sink (a shallow cone) on the settings that take oil, and cap jewels where the manual has them. This pairs with the oiling chart in [3.5](#35-overhaul-walkthrough-and-oiling-chart).
 
 ---
@@ -775,7 +782,7 @@ A suggested order, so that each stage makes the next easier.
 - Parts registry (7.1). Derive train numbers from `TRAIN` (7.2). `ESC` as a factory, shared with the tools and the essay (7.3). *Done: `5e8c578`, `5512fe4`, `813f7ae`.*
 - CI: build, escapement check with an exit code, built-copies check, smoke test (8.1). Invariant tests (8.2). *Done: `813f7ae` (exit code), `7f3668e`; the expected-leftovers file for `dyn.py`/`audit.py` is open.*
 - Performance: knurls and rim holes merged, tiny meshes out of the shadow pass (5.1). Precomputed stripe texture (5.2). No rendering when idle (5.4). *Done: `347bf5b`, `6c5ed75` (a faster loop, not precomputed images: see 5.2), `4bd930e`.*
-- Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2). *Done: `c2af700`, `cf07772` (with fixes in `650c005`); a view-following canvas description, a contrast check and remembered settings are open.*
+- Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2). *Done: `c2af700`, `cf07772` (with fixes in `650c005`), a view-following canvas description `dd2c6df` and remembered settings `8a84df5`; a contrast check is open.*
 - GMT by default (3.1, first half). *Done: `23e9c58`.*
 
 **Stage 2: the chronometer as an instrument (3–5 weeks)**
@@ -797,6 +804,7 @@ A suggested order, so that each stage makes the next easier.
 
 What makes the project good, which none of the above should erode:
 
+- **The photographs and the manual are the source of truth.** Photographs of real Model 21s and the 1948 manual decide every shape, size and behaviour; when the model disagrees with them, the model changes. A fit, an estimate or an earlier choice in the code never outranks them.
 - **Sourced against estimated.** Every new dimension, coefficient or behaviour goes into the README's "Estimated, not from the manual" section, unless the manual or a measurement gives it. Physics additions (2.x) are mostly illustrative; label them in the page, not just the README.
 - **One clock.** New motion is driven from `tSim` and `E` by fixed ratios, or by the balance's dynamics. Never by an independent timer. The dynamic balance (2.1) replaces the source of `E`, not the principle.
 - **Offline, single file, no network.** The build fails on any remote reference. Keep it that way: new libraries go in `vendor/` with their licence, and new images are inlined in the single-file build.
