@@ -80,6 +80,7 @@ This one command:
    - `marine-chronometer.html` is the essay;
    - `social.png` and `social-movement.png` are the link-preview images: the dial in its box for the model page, the mechanism for the essay page (both also work for posting);
    - `_headers` holds security and caching headers, read by Cloudflare Pages and Netlify.
+   - `sitemap.xml` and `robots.txt`, for search engines, when `--site-url` is given (below).
 
 The build fails if a page still loads a script, stylesheet or font from another
 server. That keeps the published files working offline and in countries where

@@ -14,6 +14,7 @@ Writes:
      marine-chronometer.html   the essay
      social.png            link-preview image of the model page (the dial in its box)
      social-movement.png   link-preview image of the essay page (the mechanism), also for posting
+     sitemap.xml, robots.txt   for search engines (with --site-url only)
 Each HTML file is self-contained: three.js and the fonts are inlined, so nothing is fetched from another server.
 """
 import argparse,os,pathlib,re,shutil,subprocess,sys
@@ -40,11 +41,14 @@ def budget(name,html):
     print(f'  {name}: {kb(n)} of {kb(BUDGET[name])} = three.js {kb(three)}, fonts {kb(fonts)}, images {kb(imgs)}, the rest {kb(n-three-fonts-imgs)}')
     if n>BUDGET[name]:sys.exit(f'{name} is {kb(n)}, over its budget of {kb(BUDGET[name])} (BUDGET in build.py): find what grew, or raise the budget knowingly')
 
+def address(url,page,keep=False):
+    # Cloudflare (Workers and Pages) redirects /page.html to /page, so name the address it ends up at, unless --keep-html
+    return url.rstrip('/')+'/'+('' if page=='index.html' else page if keep else page.removesuffix('.html'))
+
 def meta(html,url,page,img='social.png',keep=False):
     """Link-preview and canonical tags that need the site's absolute address."""
     if not url:return html
-    # Cloudflare (Workers and Pages) redirects /page.html to /page, so name the address it ends up at, unless --keep-html
-    u=url.rstrip('/')+'/'+('' if page=='index.html' else page if keep else page.removesuffix('.html'))
+    u=address(url,page,keep)
     tags=(f'<link rel="canonical" href="{u}">\n<meta property="og:url" content="{u}">\n'
           f'<meta property="og:image" content="{url.rstrip("/")}/{img}">\n<meta property="og:image:width" content="1200">\n'
           f'<meta property="og:image:height" content="630">\n<meta name="twitter:card" content="summary_large_image">\n')
@@ -72,6 +76,10 @@ def main():
     write(SITE/'marine-chronometer.html',meta(essay.replace('href="chronometer-working-model.html"','href="./"'),a.site_url,'marine-chronometer.html','social-movement.png',a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # link-preview images
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
+    if a.site_url:   # for search engines: both pages, at the addresses the canonical tags name
+        write(SITE/'sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
+              ''.join(f'<url><loc>{address(a.site_url,p,a.keep_html)}</loc></url>\n' for p in('index.html','marine-chronometer.html'))+'</urlset>\n')
+        write(SITE/'robots.txt',f'User-agent: *\nAllow: /\nSitemap: {a.site_url.rstrip("/")}/sitemap.xml\n')
     print('site/ is ready to upload'+('' if a.site_url else ' (no --site-url given: link previews will show no image)'))
 
 if __name__=='__main__':main()
