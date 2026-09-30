@@ -62,12 +62,18 @@ function decalGeo(poly){const s=new THREE.Shape();poly.forEach(([x,z],i)=>i?s.li
   const p=g.attributes.position,uv=g.attributes.uv,n=g.attributes.normal;
   for(let i=0;i<p.count;i++){const X=p.getX(i),Z=p.getY(i);p.setXYZ(i,X,0,Z);uv.setXY(i,(X+48)/96,(Z+48)/96);n.setXYZ(i,0,-1,0);}
   p.needsUpdate=uv.needsUpdate=n.needsUpdate=true;return g;}
-/* escape wheel after the manual's Fig. 14: thin four-spoke rim carrying tall crown teeth */
-function escapeWheel(parent,M,rt,y){
-  const teeth=new THREE.Mesh(gearGeo(16,1,1.3,{escape:true,flip:true,rt,depth:rt*0.23,bore:rt*0.7}),M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
-  const web=new THREE.Shape();web.absarc(0,0,rt*0.72,0,TAU,false);for(let j=0;j<4;j++){const a0=j/4*TAU+0.12,a1=(j+1)/4*TAU-0.12,h=new THREE.Path();h.absarc(0,0,rt*0.62,a0,a1,false);h.absarc(0,0,1.3,a1,a0,true);web.holes.push(h);}
+/* escape wheel (Figs. 14, 90; an original photographed in chronometerbook post 30): 16 thorn teeth, their outline E.toothPts from the escapement's solver, standing the wheel's
+   full 1.3 mm on a narrow rim (0.5 mm), and four thin crossed spokes (0.5 mm thick) to a round collet. The tooth tips lie at angles k*P in the wheel's frame */
+function escapeWheel(parent,M,rt,y,E){
+  let xy=[];for(let k=0;k<16;k++)for(const[r,a]of E.toothPts(k*E.P))xy.push([r*rt*Math.cos(a),r*rt*Math.sin(a)]);xy=xy.map(([x,z])=>[x,-z]).reverse();
+  const s=new THREE.Shape();s.moveTo(...xy[0]);for(let i=1;i<xy.length;i++)s.lineTo(...xy[i]);s.closePath();
+  const rIn=rt*E.r0-0.5,rim=new THREE.Path();rim.absarc(0,0,rIn,0,TAU,true);s.holes.push(rim);
+  const tg=extrude(s,{depth:1.3,bevelEnabled:false,curveSegments:64});tg.rotateX(-Math.PI/2);tg.translate(0,-0.65,0);
+  const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
+  const web=new THREE.Shape(),R1=rIn,R0=1.5,sw=0.5;web.absarc(0,0,rIn+0.1,0,TAU,false);
+  for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
   const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);
-  const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:24});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
+  const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:32});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
   const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
   return teeth;
 }
@@ -312,10 +318,9 @@ function discGeo(r,th,holes=[]){if(typeof checkHoles==='function')checkHoles('di
   const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
 /* gear: pitch radius = m*n/2 */
 function gearGeo(n,m,th,o={}){
-  const rp=m*n/2,ro=o.escape?o.rt:rp+m*0.95,depth=o.escape?o.depth:2.25*m,ri=ro-depth,p=TAU/n,pts=[];
+  const rp=m*n/2,ro=rp+m*0.95,depth=2.25*m,ri=ro-depth,p=TAU/n,pts=[];
   for(let i=0;i<n;i++){const a=i*p;
-    if(o.escape){pts.push([ri,a],[ro,a+p*0.03]);for(let k=1;k<=5;k++){const f=k/5;pts.push([ro-(ro-ri)*Math.pow(f,0.55),a+p*(0.03+0.62*f)]);}pts.push([ri,a+p*0.97]);}
-    else if(o.ratchet){pts.push([ri,a],[ro,a+p*0.9],[ri,a+p*0.97]);}
+    if(o.ratchet){pts.push([ri,a],[ro,a+p*0.9],[ri,a+p*0.97]);}
     else pts.push([ri,a],[ri,a+p*0.1],[ro-depth*0.3,a+p*0.18],[ro,a+p*0.28],[ro,a+p*0.47],[ro-depth*0.3,a+p*0.57],[ri,a+p*0.65]);}
   let xy=pts.map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);if(o.flip)xy=xy.map(([x,y])=>[x,-y]).reverse();
   const s=new THREE.Shape();s.moveTo(...xy[0]);for(let i=1;i<xy.length;i++)s.lineTo(...xy[i]);s.closePath();

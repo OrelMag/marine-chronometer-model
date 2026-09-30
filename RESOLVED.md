@@ -76,6 +76,16 @@ Contents:
   `app.js` faded the lift by amplitude. Now the spring stays bent against the
   jewel and follows it back, and the detent stays on its stop. Keep: `state`
   decides it from `thPass`; no fade in `app.js`. `89a949d`
+- **Escape teeth leaned the wrong way, drawn three ways.** The mesh's locking
+  face leaned back (the root ahead of the tip), where Fig. 90 and an original
+  wheel (chronometerbook post 30) have it undercut, the tip leading; the teeth
+  were broad sawteeth rather than slender points, and the solver, the mesh and
+  the 2D inset each had their own outline. Now one outline, `ESC.toothPts`
+  (land 0.13 mm, root at 5.5 mm, face undercut 0.1 pitch, hollow back), is
+  drawn by all three and `bite()` follows the undercut face. Keep: change the
+  teeth in `makeEsc` only; the wheel's tips lie at k·P in its own frame, so
+  `R.esc.rotation.y` is `-t0 + E·P` with no other offset (and the fourth
+  wheel's phasing and `invariants.py` agree). `HASH`
 
 ## Going train and heights
 

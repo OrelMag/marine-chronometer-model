@@ -355,7 +355,7 @@ function buildMovement(M){
   const fw=part('fw',-30);R.fw=arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-7.46,th:0.9,spokes:4,cside:1},pin:{n:TRAIN.fp,m,y:-8.6,th:1.7},ar:[LB_T+0.7,4.6]});
   const E=ESC,ew=part('escW',-41,true);
   R.esc=arbor(ew,M,E.EX*ES,0,{pin:{n:TRAIN.ep,m:MOD.fourth,y:-6.96,th:2.0},ar:[TB_T-0.86,-0.05]});   /* pinion runs from the fourth wheel toward the plate: centred on the wheel, its top end reached the third wheel's teeth */
-  R.esc.userData.wheel=escapeWheel(R.esc,M,ES,EY);
+  R.esc.userData.wheel=escapeWheel(R.esc,M,ES,EY,E);
   /* ---------- balance lower bridge (42065, Figs. 29, 30, 110): a stepped block. The lower tier holds the balance's lower setting and endstone cap and the fourth wheel's
        upper setting; the upper tier (LB_UP) lies against the train bridge's underside, an arm round the escape wheel with a screw at each end ---------- */
   /* a lobe for the train-blocking screw (42247, Sec. II, Fig. 110), rising in a column r 1.9 to the upper tier, as the section in Fig. 110 draws it: bored for the head (r 0.95, through the
@@ -394,6 +394,10 @@ function buildMovement(M){
   poly(fx,Fx.foot,-19.26,-17.36,Cu);poly(R.det,'spring',-19.26,-18.76,Cu);poly(R.det,'spring',-17.86,-17.41,Cu);poly(R.det,'cross',-19.26,-17.36,Cu);   /* bottoms staggered so no two faces are coplanar */
   poly(R.det,'blade',-18.21,-17.41,Cu);poly(R.det,'block',-18.26,-17.36,Cu);poly(R.det,'arm',-18.16,-17.86,Cu);poly(R.det,'horn',-17.86,-17.41,Cu);poly(R.det,'bracket',-17.86,-17.46,Cu,()=>[[E.D(E.tR+0.01,E.nR+0.033),hT(0,0,0.22,0.07)[2]]]);
   poly(R.det,'stone',-19.81,-17.33,M.ruby);
+  /* locking jewel wedge pin (42089, Figs. 57-59): beside the jewel in its hole in the block, on the side away from the wheel, pressing it against the hole's wall; cut off
+     just above the block (Sec. VII re-jewelling). Rebuilt with the stone */
+  const wpAt=()=>{const r=E.rJ+0.1/ES,dx=-E.nF.x-E.dirB.x*0.17+E.nB.x*0.98,dy=-E.nF.y-E.dirB.y*0.17+E.nB.y*0.98,l=Math.hypot(dx,dy),q={x:E.Jc.x+dx/l*r,y:E.Jc.y+dy/l*r};return[(q.x-E.Ft.x)*ES,(q.y-E.Ft.y)*ES];};
+  const wPin=mesh(R.det,cylY(0.1,1.0,12),M.steel,...(([x,z])=>[x,-17.8,z])(wpAt()));
   poly(fx,Fx.blockMain,TB_U,-17.46,M.plateSolid,[[E.D(-1.2,-0.35),hT(0,0,0.9)[2]]]);poly(fx,Fx.blockFront,-18.26,-17.46,M.plateSolid);poly(fx,Fx.button,-18.16,-17.51,M.steel);
   /* screws in detent coordinates (t along the detent, n across it): block screw from the train bridge's top; clamp screw and two steady pins across the foot;
      detent-adjusting screw at the block's end; lock-adjusting screw and its clamp screw across the block's front, under the wheel; trip-spring screw on the bracket */
@@ -406,6 +410,13 @@ function buildMovement(M){
   for(const t of[E.BL-0.15,1.2]){across(dd,t,-0.3-0.3/ES,-0.3,0.42,-17.81,M.steel);across(dd,t,-0.3,-0.12,0.2,-17.81,M.steel);}   /* lock-adjusting screw and its clamp screw: heads and shanks */
   const tsAt=()=>{const rp=E.D(E.tR+0.01,E.nR+0.033);return[(rp.x-E.Ft.x)*ES,(rp.y-E.Ft.y)*ES];};R.tsScrew=screw(R.det,...tsAt(),-17.86,0.22,0.25,0.4,0.07);   /* trip spring screw (1770): a fine thread in the bracket's 0.23 mm leg */
   R.pspring=mesh(dt,new THREE.BufferGeometry(),M.steel);
+  /* the trip spring (42088, Fig. 14): a flat Elinvar strip on edge, E.settings.tsT thick and 0.3 mm deep, bending in its thin direction; its foot, 0.2 mm thick, is screwed to the
+     angle bracket (whose leg it lies against, on the +n side) for 0.4 mm and thins to the strip over the next 0.2 mm. pts: root, control point and tip from ESC.springPts */
+  const tripGeo=([a0,am,tp])=>{const N=24,Q=[],t2=E.settings.tsT/2,L=[],Rr=[];for(let i=0;i<=N;i++){const u=i/N,v=1-u;Q.push({x:(v*v*a0.x+2*u*v*am.x+u*u*tp.x)*ES,y:(v*v*a0.y+2*u*v*am.y+u*u*tp.y)*ES});}
+    let sAcc=0;Q.forEach((p,i)=>{const a=Q[Math.max(0,i-1)],b=Q[Math.min(N,i+1)];let nx=-(b.y-a.y),ny=b.x-a.x;const l=Math.hypot(nx,ny);nx/=l;ny/=l;if(nx*E.nB.x+ny*E.nB.y<0){nx=-nx;ny=-ny;}
+      if(i)sAcc+=Math.hypot(p.x-Q[i-1].x,p.y-Q[i-1].y);const wp=t2+(0.1-t2)*clamp((0.6-sAcc)/0.2,0,1);L.push([p.x-nx*t2,p.y-ny*t2]);Rr.push([p.x+nx*wp,p.y+ny*wp]);});
+    const sh=new THREE.Shape(),P=L.concat(Rr.reverse());sh.moveTo(...P[0]);P.slice(1).forEach(p=>sh.lineTo(...p));sh.closePath();
+    const g=extrude(sh,{depth:0.3,bevelEnabled:false});g.rotateX(Math.PI/2);g.translate(0,EY+1.45,0);return g;};
   /* ---------- balance (rim r 14.5, measured on the top-view photograph) and hairspring ---------- */
   const bl=part('bal',-80,true);
   /* the hairspring's ends: both at HS_R from the staff, in the direction of the stud, which runs along the cock toward its screw Q (SPD, in the movement frame; SPSI, the same
@@ -416,13 +427,30 @@ function buildMovement(M){
   /* impulse roller (O.D. 0.249 in, as thick as the escape wheel, post 30) with its crescent: the large portion behind the impulse jewel, where each tooth
      drops in and meets the jewel, and the small portion ahead of it, which the teeth never enter (Ops. 76, 83). Shape angle = minus the unit-frame angle */
   const rR=E.rRoll*ES,rollG=()=>{const ir=new THREE.Shape(),n0=-E.aI,n1=n0+0.6;ir.absarc(0,0,rR,n1,n0-0.16+TAU,false);ir.absarc(0,0,rR*0.86,n0-0.16,n0,false);ir.absarc(0,0,rR*0.55,n0,n1,false);
+    for(let k=1;k<=3;k++){const a=n0+k*Math.PI/2,h=new THREE.Path();h.absarc(0.62*rR*Math.cos(a),0.62*rR*Math.sin(a),0.5,0,TAU,true);ir.holes.push(h);}   /* its three holes (Figs. 14, 61, 90), a quarter turn apart from the jewel */
+    const hb=new THREE.Path();hb.absarc(0,0,0.45,0,TAU,true);ir.holes.push(hb);
     const irg=extrude(ir,{depth:1.3,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.65,0);return irg;};
   const roll=mesh(R.staff,rollG(),M.steel,0,EY-0.07,0);
   /* the jewels as placed for ESC (again by escSet): the impulse jewel, the wheel centred on it, showing above and below (Op. 82); the discharge jewel on its roller */
-  const palSet=(q,ang,r0,r1,w,h)=>{if(q.geometry)q.geometry.dispose();q.geometry=new THREE.BoxGeometry(r1-r0,h,w);q.position.x=(r0+r1)/2*Math.cos(ang);q.position.z=(r0+r1)/2*Math.sin(ang);q.rotation.y=-ang;return q;};
-  const palI=()=>[E.aIc,rR-0.9,E.rp*ES,E.wI*ES,1.56],palD=()=>[E.aD,E.rDR*ES-0.4,E.rd*ES,E.wD*ES,0.7];
+  /* a jewel along the radius at ang from r0 to r1, w wide, h tall. d: the impulse jewel's section, flat on its impulse face (the -angle side, which the teeth drive) and
+     curved on its back ("curved side of the jewel toward the operator", Sec. VII roller jewelling), thinning to 0.45 w at its ends; else a flat plate */
+  const palSet=(q,ang,r0,r1,w,h,d)=>{if(q.geometry)q.geometry.dispose();
+    if(d){const sh=new THREE.Shape(),zE=-w/2+0.45*w;sh.moveTo(r0,w/2);sh.lineTo(r1,w/2);sh.lineTo(r1,-zE);sh.quadraticCurveTo((r0+r1)/2,-(w-zE),r0,-zE);sh.closePath();   /* shape y = -local z */
+      const g=extrude(sh,{depth:h,bevelEnabled:false,curveSegments:12});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);q.geometry=g;q.position.x=0;q.position.z=0;}
+    else{q.geometry=new THREE.BoxGeometry(r1-r0,h,w);q.position.x=(r0+r1)/2*Math.cos(ang);q.position.z=(r0+r1)/2*Math.sin(ang);}
+    q.rotation.y=-ang;return q;};
+  const palI=()=>[E.aIc,rR-0.9,E.rp*ES,E.wI*ES,1.56,true],palD=()=>[E.aD,E.rDR*ES-0.4,E.rd*ES,E.wD*ES,0.7];
   const pI=palSet(mesh(R.staff,new THREE.BufferGeometry(),M.ruby,0,EY-0.09,0),...palI());
-  mesh(R.staff,cylY(E.rDR*ES,0.6,32),M.steel,0,EY+1.2,0);const pD=palSet(mesh(R.staff,new THREE.BufferGeometry(),M.ruby,0,EY+1.2,0),...palD());
+  /* unlocking roller (42252, Fig. 64): a collar on the staff, its jewel in a slot along it (the jewel's width), and a wider slot opposite; turned on the staff to set the drop (Op. 97) */
+  const collarG=()=>{const ro=E.rDR*ES,sl=[[-E.aD,E.wD*ES,ro-0.55],[-E.aD+Math.PI,0.3,ro-0.6]].sort((p,q)=>((p[0]%TAU)+TAU)%TAU-((q[0]%TAU)+TAU)%TAU),sh=new THREE.Shape();let st=true;
+    const pt=(x,y)=>{st?sh.moveTo(x,y):sh.lineTo(x,y);st=false;},N=64,mod=a=>((a%TAU)+TAU)%TAU;let a=0;
+    for(const[c0,w,rin]of sl){const c=mod(c0),h=Math.asin(w/2/ro),ux=Math.cos(c),uy=Math.sin(c),nx=-uy,ny=ux,ro2=Math.sqrt(ro*ro-w*w/4);
+      for(;a<c-h;a+=TAU/N)pt(ro*Math.cos(a),ro*Math.sin(a));pt(ro*Math.cos(c-h),ro*Math.sin(c-h));
+      pt(ro2*ux-w/2*nx,ro2*uy-w/2*ny);pt(rin*ux-w/2*nx,rin*uy-w/2*ny);pt(rin*ux+w/2*nx,rin*uy+w/2*ny);pt(ro2*ux+w/2*nx,ro2*uy+w/2*ny);a=c+h;}
+    for(;a<TAU-1e-9;a+=TAU/N)pt(ro*Math.cos(a),ro*Math.sin(a));sh.closePath();
+    const hb=new THREE.Path();hb.absarc(0,0,0.45,0,TAU,true);sh.holes.push(hb);
+    const g=extrude(sh,{depth:1.0,bevelEnabled:false,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,-0.5,0);return g;};
+  const collar=mesh(R.staff,collarG(),M.steel,0,EY+1.2,0);const pD=palSet(mesh(R.staff,new THREE.BufferGeometry(),M.ruby,0,EY+1.2,0),...palD());
   /* hairspring collet (manual Figs. 5, 6): a hub slotted to grip the staff, and a flat plate whose tongue carries the clamp that holds the spring's inner end,
      locked by a wedge pin, the spring unbent (Sec. II). Turned to the stud's direction (SPSI), where the spring's ends lie. Outline estimated from Figs. 5 and 6 */
   const cg=new THREE.Group();cg.rotation.y=SPSI;R.staff.add(cg);R.collet=cg;
@@ -573,7 +601,7 @@ function buildMovement(M){
   ph(U.wheel,L.Fu,TRAIN.fu,0,CW.pin,L.C,TRAIN.cp,0);
   ph(CW.wheel,L.C,TRAIN.cw,0,TW.pin,L.T,TRAIN.tp,0);
   ph(TW.wheel,L.T,TRAIN.tw,0,FW.pin,L.F,TRAIN.fp,0);
-  ph(FW.wheel,L.F,TRAIN.fw,0,EW.pin,L.E,TRAIN.ep,BETA+(-ESC.t0+0.03*ESC.P));
+  ph(FW.wheel,L.F,TRAIN.fw,0,EW.pin,L.E,TRAIN.ep,BETA-ESC.t0);
   ph(R.cannon.userData.pin,L.C,MW.cp,0,R.minW.userData.wheel,L.Mw,MW.mw,0);
   ph(R.minW.userData.pin,L.Mw,MW.mp,0,R.hourW.userData.wheel,L.C,MW.hw,0);
   ph(R.fp.userData.pin,L.Fu,UD.pin,0,R.udW.userData.wheel,L.Ud,UD.wheel,0);
@@ -623,7 +651,7 @@ function buildMovement(M){
     let b=a,r=tr(a);for(let i=0;i<60;i++){const nb=b-SRP.p/40,nr=tr(nb);if(nr>r+0.004)break;b=nb;r=Math.min(r,nr);}return b;};
   mv.userData.update=(s)=>{
     const P=E.P,esc=s.E*P;
-    R.esc.rotation.y=-E.t0+0.03*P+esc;
+    R.esc.rotation.y=-E.t0+esc;   /* tips at t0+kP when E is whole */
     R.fw.rotation.y=-esc/RF;R.sec.rotation.y=-esc/RF;
     R.tw.rotation.y=esc/RT;
     const cA=esc/RC,hA=cA+(s.slip||0)/3600*TAU;R.cw.rotation.y=-cA;R.cannon.rotation.y=-hA;R.min.rotation.y=-hA;   /* slip: seconds the key has turned the hands on the centre arbor (the cannon pinion slips); the second hand is never touched */
@@ -652,12 +680,11 @@ function buildMovement(M){
     if(s.msOn){const In=fs.I(s.n);if(Math.abs(In-lastIn)>=0.002){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup-In,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=In;}}   /* rebuilt when the barrel has turned 0.7 deg */
     if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,HS_H,14,s.th,0.17,HS_R,HS_R);}
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing. Rebuilt only when either changes (still for most of each swing) */
-    const psK=s.lift+','+s.psDef;if(psK!==lastPs){lastPs=psK;const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,EY+1.3,p.y*ES);
-      R.pspring.geometry.dispose();R.pspring.geometry=closeGeo(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(V(a0),V(am),V(tp2)),20,0.1,5,false));}
+    const psK=s.lift+','+s.psDef;if(psK!==lastPs){lastPs=psK;R.pspring.geometry.dispose();R.pspring.geometry=tripGeo(E.springPts(s));}
   };
   /* the escapement rebuilt for ESC's current settings (the adjuster's bench changes them with Object.assign(ESC, makeEsc(...))): detent pieces, trip spring screw, roller, jewels */
-  mv.userData.escSet=()=>{for(const d of DETM){d.m.geometry.dispose();d.m.geometry=d.G();}const[x,z]=tsAt();R.tsScrew.position.x=x;R.tsScrew.position.z=z;
-    roll.geometry.dispose();roll.geometry=rollG();palSet(pI,...palI());palSet(pD,...palD());lastPs='';};
+  mv.userData.escSet=()=>{for(const d of DETM){d.m.geometry.dispose();d.m.geometry=d.G();}const[x,z]=tsAt();R.tsScrew.position.x=x;R.tsScrew.position.z=z;{const[wx,wz]=wpAt();wPin.position.x=wx;wPin.position.z=wz;}
+    roll.geometry.dispose();roll.geometry=rollG();collar.geometry.dispose();collar.geometry=collarG();palSet(pI,...palI());palSet(pD,...palD());lastPs='';};
   mv.userData.explode(0);
   return mv;
 }

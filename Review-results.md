@@ -61,14 +61,14 @@ committed builds match their sources. The review found:
   ok  roller shake (Op. 84)                           0.055 mm   about 0.002 in (0.051 mm)
   ok  teeth dip into the roller's crescent (Op. 76)    0.34 mm   > 0
   ok  lock (Op. 85)                                       6.0°   about 6°
-  ok  let-off (Op. 86)                                   12.4°   at least 6°
-  ok  overall (Op. 87)                                   28.3°   26-30°
+  ok  let-off (Op. 86)                                   10.6°   at least 6°
+  ok  overall (Op. 87)                                   28.4°   26-30°
   ok  drop (Op. 97)                                       2.1°   about 2°
   ok  horn clearance to the unlocking jewel (Op. 88)   0.25 mm   about 0.010 in (0.25 mm)
-  ok  angle between the jewels                           86.2°   about 90° (Fig. 90)
+  ok  angle between the jewels                           88.3°   about 90° (Fig. 90)
 
-  balance angle: jewel meets trip spring -27.3°, wheel released -21.3°, detent falls back -8.9°;
-  impulse ends 20.8°; on the return swing the trip spring falls off at -37.2°. Lift at release 0.20 mm.
+  balance angle: jewel meets trip spring -27.3°, wheel released -21.3°, detent falls back -10.7°;
+  impulse ends 20.8°; on the return swing the trip spring falls off at -39.1°. Lift at release 0.20 mm.
 ```
 
 ### Collision check
@@ -778,13 +778,13 @@ Checked against Secs. II–IV and the handling instructions:
   balance no longer swings far enough to unlock the wheel, and the manual has
   it started with "a single quick twist" of the box (Sec. III). The model now
   keeps the balance's amplitude:
-  - It needs `ESC.AMIN`, 39.2°, to keep going: the swing has to carry the
+  - It needs `ESC.AMIN`, 41.1°, to keep going: the swing has to carry the
     discharge jewel past the trip spring on the return (it falls off at
-    −37.2°), unlock the wheel (−21.3°) and see the impulse through (+20.8°).
+    −39.1°), unlock the wheel (−21.3°) and see the impulse through (+20.8°).
     `makeEsc` works it out from the escapement's own tables.
   - Below that the train stops at a locked beat and the balance swings down
     freely, the detent still lifting while the swing carries the jewel back past
-    the trip spring's tip (above 37.2°). Below that the jewel stays on the near
+    the trip spring's tip (above 39.1°). Below that the jewel stays on the near
     side of the tip: the trip spring stays bent against it and follows it back,
     and the detent stays on its stop.
   - Twist to start sets it swinging again (160°), after which it builds up to

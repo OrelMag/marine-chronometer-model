@@ -30,7 +30,7 @@ function initTrain(){
 const ESC=makeEsc();
 function initEsc(){
   const st=$('#f-esc');const C=canvas2D(st,w=>w<520?0.84:0.8);
-  const E=ESC,RT=1,RR=0.77;
+  const E=ESC;
   let phase=0.15,speed=0.08,playing=!RM;
   const phIn=$('.phase',st.parentElement),spIn=$('.speed',st.parentElement),btn=$('.play',st.parentElement),ro=$('#esc-read');
   const stage=s=>!s.ccw?(s.psDef>0.002?'passing':'free'):s.prog>0&&s.prog<1?(s.prog<0.25?'drop':'impulse'):s.lift>0.002?(s.prog?'relock':'unlock'):'free';
@@ -49,12 +49,12 @@ function initEsc(){
     const brass=PAL.brass,ink=PAL.ink,ruby='#c3163b',phi=-(s.prog%1)*E.P;
     // escape wheel
     ctx.beginPath();let first=true;
-    for(let k=0;k<E.NT;k++){const a=E.t0+k*E.P+phi;const pts=[[RR,a-0.005],[RT,a]];for(let j=1;j<=6;j++){const q=j/6;pts.push([RT-(RT-RR)*Math.pow(q,0.6),a+E.P*0.72*q]);}pts.push([RR,a+E.P*0.99]);
+    for(let k=0;k<E.NT;k++){const pts=E.toothPts(E.t0+k*E.P+phi);   // the model's tooth outline
       for(const[r,aa]of pts){const px=X(E.EX+r*Math.cos(aa)),py=Y(r*Math.sin(aa));first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;}}
     ctx.closePath();ctx.fillStyle=brass;ctx.globalAlpha=0.85;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=ink;ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle=PAL.paper;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.62*sc,0,TAU);ctx.fill();
-    ctx.strokeStyle=brass;ctx.lineWidth=0.09*sc;ctx.globalAlpha=0.85;
-    for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(E.EX),Y(0));ctx.lineTo(X(E.EX+0.64*Math.cos(a)),Y(0.64*Math.sin(a)));ctx.stroke();}
+    ctx.fillStyle=PAL.paper;ctx.beginPath();ctx.arc(X(E.EX),Y(0),(E.r0-0.5/E.ES)*sc,0,TAU);ctx.fill();
+    ctx.strokeStyle=brass;ctx.lineWidth=0.076*sc;ctx.globalAlpha=0.85;
+    for(let k=0;k<4;k++){const a=phi+k*TAU/4+0.3;ctx.beginPath();ctx.moveTo(X(E.EX),Y(0));ctx.lineTo(X(E.EX+(E.r0-0.45/E.ES)*Math.cos(a)),Y((E.r0-0.45/E.ES)*Math.sin(a)));ctx.stroke();}
     ctx.globalAlpha=1;ctx.fillStyle=brass;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.14*sc,0,TAU);ctx.fill();ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(E.EX),Y(0),0.035*sc,0,TAU);ctx.fill();
     // impulse roller with its crescent: the teeth dip into it to reach the jewel, which ends flush with the roller
     const arc=(r,a0,a1,n)=>{for(let i=0;i<=n;i++){const q=a0+(a1-a0)*i/n;ctx.lineTo(X(r*Math.cos(q)),Y(r*Math.sin(q)));}},ai=E.aIc+s.th,rr=E.rRoll;

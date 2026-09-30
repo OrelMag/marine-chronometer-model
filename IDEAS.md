@@ -39,7 +39,7 @@ What stood out from reading the code and the manual, and from the
 measurements.
 
 ### Starting and setting don't follow the manual
-- **The model starts itself.** A detent escapement isn't self-starting. After winding a run-down chronometer, the manual says to start it with "a single quick twist" of the box (Sec. III). The model just carries on after winding. See [2.1](#21-a-balance-that-can-stop-and-must-be-started). *(Done: the balance's amplitude is state; below the 39.2° the escapement needs, the train stops, and a stopped chronometer needs Twist to start.)*
+- **The model starts itself.** A detent escapement isn't self-starting. After winding a run-down chronometer, the manual says to start it with "a single quick twist" of the box (Sec. III). The model just carries on after winding. See [2.1](#21-a-balance-that-can-stop-and-must-be-started). *(Done: the balance's amplitude is state; below the 41.1° the escapement needs, the train stops, and a stopped chronometer needs Twist to start.)*
 - **The hands are set at will.** The manual says the hands "are never set except when the instrument is started" (Sec. III, Setting). The error is recorded and allowed for instead. The model's **Set the hands** changes them at any moment. See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
 - **The model runs on local time.** Navy chronometers were kept on Greenwich time; the model starts on the viewer's local time. *(Fixed: GMT by default.)* `23e9c58` See [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says).
 
@@ -152,7 +152,7 @@ none are quoted.
 | `marine-chronometer.html` (essay) | 910 KB | 353 KB |
 
 **Escapement** (`node tools/escapement.js`): every figure is within the
-manual's tolerances: lock 6.0°, let-off 12.4°, overall 28.3°, drop 2.1°,
+manual's tolerances: lock 6.0°, let-off 10.6°, overall 28.4°, drop 2.1°,
 roller shake 0.055 mm, horn clearance 0.25 mm.
 
 ---
@@ -223,7 +223,7 @@ timing weights' moment of inertia. That is right for most of what the page
 shows. These ideas add the dynamics where they teach something.
 
 ### 2.1 A balance that can stop and must be started
-*Partly done: the amplitude is state (`H.amp` in `app.js`), not an integrated oscillator. It runs down freely when the train is held, against the balance locking arm at once, and builds up after Twist to start; the escapement needs `ESC.AMIN` (39.2°, worked out by `makeEsc`) to keep going, so the train stops below it and at run down. Still to do: the equation of motion below, with the impulse's torque, and the rate against amplitude that would follow.*
+*Partly done: the amplitude is state (`H.amp` in `app.js`), not an integrated oscillator. It runs down freely when the train is held, against the balance locking arm at once, and builds up after Twist to start; the escapement needs `ESC.AMIN` (41.1°, worked out by `makeEsc`) to keep going, so the train stops below it and at run down. Still to do: the equation of motion below, with the impulse's torque, and the rate against amplitude that would follow.*
 
 **What.** Treat the balance as a damped torsional oscillator driven by the escapement:
 
