@@ -576,7 +576,7 @@ The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving
 
 The loop renders every frame even when stopped with the camera still, which costs battery on laptops and phones for a page that is often left open.
 - Skip `r.render` when the speed is 0, the camera has settled (its easing deltas are below a threshold), no transition is running, and no input arrived.
-- At 1× the second hand moves every half second, but the balance moves continuously, so this only helps when stopped or when the Illustration tab is shown. The loop already skips rendering there; stop scheduling `drawInset` and the HUD too.
+- At 1× the second hand moves every half second, but the balance moves continuously, so this only helps when stopped or when the Essay tab is shown. The loop already skips rendering there; stop scheduling `drawInset` and the HUD too.
 - Pause entirely when the stage is scrolled out of view on narrow layouts (`IntersectionObserver`).
 
 ### 5.5 Adaptive quality (M)
@@ -727,12 +727,12 @@ Fail the build if `chronometer-working-model.html` grows past a set size, say 1.
 - **Permissions policy:** add `Permissions-Policy: camera=(), microphone=(), geolocation=()`.
 
 ### 9.2 Installable offline app (S–M)
-- **Install:** a web app manifest and a service worker that caches `index.html` and the essay. On phones the page then installs to the home screen and opens offline.
+- **Install:** a web app manifest and a service worker that caches `index.html` (the essay is in it). On phones the page then installs to the home screen and opens offline.
 - **Why it's cheap:** the files are self-contained, so the service worker is a few lines.
 - **Where:** `site/` only. The single-file copies stay as they are.
 
 ### 9.3 Smaller downloads for the website (S–M)
-- **Illustration:** in `site/`, load the illustration as separate files when the Illustration tab is first opened (and the ink one when it is chosen), instead of inlining both drawings, about 330 KB of base64, into every page load. Keep it inlined in the single-file copy, which must work alone.
+- *Dropped:* **Illustration:** load the Illustration tab's drawings on demand. The tab and its images are gone (the Essay tab replaced it), which took the page from 1.33 MB to 1.21 MB.
 - **Fonts:** check that every font weight is used. Spectral 300 might not be; if so, drop it (22 KB).
 - **three.js:** a custom build containing only the classes used would cut its 145 KB (gzip) substantially. That's only practical after the upgrade (4.3), with ES modules.
 
@@ -752,8 +752,10 @@ belongs in the model, but the two could work together better.
 
 - **Shared escapement (S):** see 7.3. It also removes the essay README's instruction to copy `ESC` across by hand.
 - *Done:* **Deep links into the model (S):** the balance, heat, fusee, train, detent and gimbals sections end with a link into the model (`#tour=7`, `#view=balance`, `#tour=3`, `#tour=5`, `#view=escapement&speed=0.05`, `#tour=1`); the heat link names the Model 21's uncut Invar-armed balance and Elinvar spring. The build keeps the hash when it points the links at `./` in `site/`. `fb4d2cb` Before: with [6.2](#62-shareable-links-and-remembered-state), each essay section can end with "See it in the model", opening the matching view: the detent section opens `#view=escapement&speed=0.05`, the fusee section `#tour=3`.
-- **A chapter on keeping the rate (M):** the essay opens with longitude ("Time is a position"). A closing chapter on the rate book (3.2) and the performance test (3.4) would bring it back to navigation, with the manual's Table I and test card as its figures.
-- **Correct what the manual changed (M):** read the essay against the model README's sources and fix anything the manual contradicts. The "Heat" chapter should mention the Model 21's uncut Invar-armed balance and Elinvar spring as the answer to the split balance's middle temperature error.
+> **Done.** The essay is now the model's Essay tab (`js/essay.js`), its figures drawn from the model's code, with chapters on winding and on keeping the rate (a Table I rate book, the 30-day test), and the manual's corrections made throughout. The old page redirects to `/#essay`.
+
+- *Done:* **A chapter on keeping the rate (M):** the essay opens with longitude ("Time is a position"). A closing chapter on the rate book (3.2) and the performance test (3.4) would bring it back to navigation, with the manual's Table I and test card as its figures.
+- *Done:* **Correct what the manual changed (M):** read the essay against the model README's sources and fix anything the manual contradicts. The "Heat" chapter should mention the Model 21's uncut Invar-armed balance and Elinvar spring as the answer to the split balance's middle temperature error.
 
 ---
 
@@ -791,5 +793,5 @@ What makes the project good, which none of the above should erode:
 - **One clock.** New motion is driven from `tSim` and `E` by fixed ratios, or by the balance's dynamics. Never by an independent timer. The dynamic balance (2.1) replaces the source of `E`, not the principle.
 - **Offline, single file, no network.** The build fails on any remote reference. Keep it that way: new libraries go in `vendor/` with their licence, and new images are inlined in the single-file build.
 - **`L` stays put** unless the fitting tools are re-run (1.1).
-- **Rights.** The Illustration tab's drawing is rendered from the model (`tools/illustration.py`), so it is under the model's own licence. The photographs in `References/` are kept in the repository for the tools, not published on the site. Only the manual's own figures (a U.S. government publication) are safe to show in the page (3.7). The maker's name appears only as on photographed Hamiltons (the Hamilton dial and the plate engraving, added at the owner's request); it stays off the Roman, Swiss and Soviet variants.
+- **Rights.** The essay's figures are drawn from the model, so they are under the model's own licence. The photographs in `References/` are kept in the repository for the tools, not published on the site. Only the manual's own figures (a U.S. government publication) are safe to show in the page (3.7). The maker's name appears only as on photographed Hamiltons (the Hamilton dial and the plate engraving, added at the owner's request); it stays off the Roman, Swiss and Soviet variants.
 - **The verification loop.** `dyn.py`, `audit.py`, `p3fit.py` and `escapement.js` are what make the model trustworthy. Every geometric idea above ends with running them; CI (8.1) makes that automatic.

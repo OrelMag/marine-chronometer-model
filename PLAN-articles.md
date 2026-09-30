@@ -3,7 +3,9 @@
 _Status: planned, not started (saved 2026-09-30)._
 
 ## Context
-The site (www.marinechronometermodel.com) has two pages: the 3D working model at `/` and the older essay at `/marine-chronometer`. The goal is to draw engineers and makers and to earn backlinks. We will add:
+> **Since this plan was written** the essay has become the model's Essay tab (`chronometer-working-model/js/essay.js`, its markup in `index.html`; `/marine-chronometer` redirects to `/#essay`), and the escapement's plan drawing is shared as `drawEscPlan` in `shared/escplan.js`. The essay's 2D helpers (`addFig`, `range`/`play`/`seg`, `c2d`, `chart`, `PAL`) are private to `essay.js`: step 1 below would move them out of it, and the references to `essay/src/p2.js`–`p4.js` now mean `essay.js`.
+
+The site (www.marinechronometermodel.com) had two pages: the 3D working model at `/` and the older essay at `/marine-chronometer`. The goal is to draw engineers and makers and to earn backlinks. We will add:
 - three standalone, shareable technical pages: the detent escapement as a clocked sequential circuit, the fusee as a torque regulator, and an interactive gear-train calculator;
 - free, ungated downloads (STL/glTF exported from the model, plus the math as JS/CSV/JSON).
 

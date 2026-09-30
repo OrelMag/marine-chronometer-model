@@ -112,6 +112,8 @@ brackets, the latch's parts).
 - The essay's copy of the escapement solver (F7 in `src/p4.js`) runs the same
   code as `ESC` in `movement.js`. The only differences are the intended ones:
   `EX` written out as 9.3997 mm, and a different set of returned fields.
+  *Superseded: the essay is now the model's Essay tab and uses the model's own
+  `ESC`.*
 
 ### Gear meshes
 
@@ -365,7 +367,8 @@ Then run `dyn.py` with the variant shown.
 
 ## Not covered
 
-- The essay, beyond its copy of the escapement solver.
+- The essay, beyond its copy of the escapement solver. *(It has since been
+  rewritten as the model's Essay tab.)*
 - The photo-fitting tools (`fit.py`, `bundle.py`, `unproj.py`), which were not
   rerun.
 - Phone layout and the CSS.
