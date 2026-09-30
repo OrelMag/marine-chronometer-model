@@ -590,7 +590,7 @@ function buildMovement(M){
     R.blockRoom=E=>Math.min(...sp(E).map(a=>(((a-u.half)%q)+q)%q))*ESC_PER.fw/ESC.P;
     R.blockClear=E=>sp(E).every(a=>Math.abs((((a%q)+q+q/2)%q)-q/2)>=u.half); }
   const RF=ESC_PER.fw,RT=ESC_PER.tw,RC=ESC_PER.cw,MR=MW.cp/MW.mw,HR=MR*MW.mp/MW.hw;   /* escape turns per fourth, third, centre turn; minute wheel and hour wheel per centre turn */
-  let lastN=-1,lastIn=-1,srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0;
+  let lastN=-1,lastIn=-1,lastPs='',srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0;
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
   const FPR=ratchetProf(40,0.47,false),SRP=ratchetProf(120,0.27,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1).psi;
   /* the sustaining spring's travel from loaded (running) to spent: 5 to 10 minutes of drive (Sec. IV) is 4.4 to 8.75 deg of the fusee wheel; 10 deg drawn, estimated */
@@ -629,9 +629,9 @@ function buildMovement(M){
     fs.setBar(lerp(0,3.2,smooth(1-s.n/0.25)));
     if(s.msOn){const In=fs.I(s.n);if(Math.abs(In-lastIn)>=0.002){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup-In,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=In;}}   /* rebuilt when the barrel has turned 0.7 deg */
     if(s.springOn){R.spring.geometry.dispose();R.spring.geometry=springGeo(5.5,HS_H,14,s.th,0.17,HS_R,HS_R);}
-    /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing */
-    const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,EY+1.3,p.y*ES);
-    R.pspring.geometry.dispose();R.pspring.geometry=closeGeo(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(V(a0),V(am),V(tp2)),20,0.1,5,false));
+    /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing. Rebuilt only when either changes (still for most of each swing) */
+    const psK=s.lift+','+s.psDef;if(psK!==lastPs){lastPs=psK;const[a0,am,tp2]=E.springPts(s),V=p=>new THREE.Vector3(p.x*ES,EY+1.3,p.y*ES);
+      R.pspring.geometry.dispose();R.pspring.geometry=closeGeo(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(V(a0),V(am),V(tp2)),20,0.1,5,false));}
   };
   mv.userData.explode(0);
   return mv;

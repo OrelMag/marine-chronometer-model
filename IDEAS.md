@@ -551,6 +551,8 @@ the JavaScript `update()`.
 The rest of `mats()` (about 120 ms) is mostly the wood texture and the engraving canvases. The same treatment applies to the engraving, which never changes.
 
 ### 5.3 Don't rebuild geometry every frame (S–M)
+> **Partly done.** The trip spring is rebuilt only when its lift or deflection changes, so it stands still (and isn't rebuilt) for most of each swing, and above 1× never. The hairspring is left as it is: the balance turns every frame while running, so a change threshold saves nothing, and bending it in a shader would hide its real shape from `fine.py`, `dyn.py`, `solids.py` and `illustration.py`, which read the geometry `update()` builds.
+
 - **Hairspring:** a new `TubeGeometry` from `springGeo()` every frame whenever it's visible ([movement.js:450](marine-chronometer-source/chronometer-working-model/js/movement.js#L450)). That is 0.94 ms of JavaScript plus a fresh vertex buffer upload each frame. The hairspring's "breathing" is a rotation that varies along its length (`a = ang + th·(1 − ang/tot)`), so it can be done in the vertex shader:
   - build the tube once at `th = 0`;
   - store each vertex's normalised position along the spring in an attribute;
