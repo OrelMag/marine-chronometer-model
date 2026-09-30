@@ -38,12 +38,12 @@ EXPECTED={
  ('gw:Extrude','sspring:Cylinder'):("sustaining spring's pin in the fusee wheel",0.15,0.3),
  ('spawl:Tube(tube)','trainBridge:Cylinder'):("sustaining pawl's spring bearing on its steady pin in the train bridge",0.04,0.3),
  ('chain:Cylinder','fusee:Lathe'):("the chain's pin in the fusee's large end",0.12,0.45),
- ('chain:Box','chain:Cylinder'):("that pin through the chain's end link",0.07,0.55),
- ('chain:Box','chain:Box'):("the barrel-end hook riveted to the chain's last link",0.25,0.85),
+ ('chain:Buffer','chain:Cylinder'):("that pin through the rivet hole of the chain's first link (an outer link: two plates and their rivets)",0.03,0.4),
+ ('chain:Box','chain:Extrude'):("the barrel-end hook plate riveted to the chain's last link (an inner link's plate)",0.09,0.2),
+ ('chain:Box','chain:Buffer'):("the barrel-end hook plate riveted to the chain's last link (an outer link)",0.03,0.2),
  ('bal:Box','spr:Tube(tube)'):("hairspring's inner end in the clamp on the collet's tongue",0.06,0.35),
  ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),
  ('cock:Extrude','spr:Cylinder'):("hairspring stud's steady pin in the cock",0.23,0.8),
- ('chain:Box','fusee:Lathe'):("chain links on the fusee cone: the groove is turned rings, not a helix, and the links are upright boxes on a slope",0.27,0.5),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('spawl:Cylinder','trainBridge:Extrude'):('sustaining pawl arbor (r 0.7) in its 0.72 hole: grazes the bevel',0.06,0.18),
  ('barrel:Extrude(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
@@ -51,6 +51,7 @@ EXPECTED={
  ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",7.0,1.2),
  ('fusee:Cylinder','fusee:Cylinder'):("the taper pin through the fusee arbor, under the end plate (their own group, which the Exploded view takes off the arbor's end)",0.25,0.45),
 }
+CORE=1.74   # mm: the barrel arbor's core (MSPRING.ra - 0.06, movement.js)
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),
  'chain':('chain wound on the drum: its links should touch the wall, not enter it',0,0.1)}   # part: (reason, least, most) clearance allowed; None = any
@@ -94,7 +95,7 @@ async def main():
         okk=(lo is None or o['d']>=lo) and (hi is None or o['d']<=hi);nb+=not okk
         print(f"{'ok  ' if okk else 'NEAR' if o['d']>=0 else 'HIT '} {o['d']:8.3f}  {o['part']:14s} {o['type']:9s} to the barrel's {o['piece']:16s} @ {','.join(map(str,o['at']))}  ({o['state']})"+(f"  -- {e[0]}" if e else ''))
     if spring:
-        s=spring;arb=near.get('ratchet');checks=[("innermost coil off the barrel arbor's core (r 2.4)",s['rMin']-2.4),('outermost coil inside the wall',s['wall']-s['rMax']),
+        s=spring;arb=near.get('ratchet');checks=[(f"innermost coil off the barrel arbor's core (r {CORE})",s['rMin']-CORE),('outermost coil inside the wall',s['wall']-s['rMax']),
           ("below the upper cap's inner face",s['yTop']-s['capTopInner']),("above the lower cap's inner face",s['capBottomInner']-s['yBottom'])]
         print(f"mainspring over the wind: coils {s['rMin']}-{s['rMax']} mm from the axis, {s['yTop']} to {s['yBottom']} in y")
         for t,g in checks:okk=g>=BARREL_MIN;nb+=not okk;print(f"{'ok  ' if okk else 'HIT '} {g:8.3f}  {t}")
