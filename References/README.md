@@ -27,8 +27,11 @@ Web photographs consulted (all rights reserved, so cited, not copied here):
 - Wikimedia Commons, "Hamilton Marine Chronometer Model 21.jpg": the manual's Fig. 13 (1943 edition), public domain.
 
 Videos consulted (YouTube, all rights reserved: cited, not copied; frames are taken from them with
-`tools/video.py` into a folder outside the repository). A video of a real Model 21 is a photograph in the
-sense of the source-of-truth rule (IDEAS.md): it outranks an estimate. Times are mm:ss.
+`tools/video.py` into a folder outside the repository). Videos of real Model 21s are a source of truth,
+with the photographs and the manual (IDEAS.md): they outrank an estimate. Times are mm:ss.
+**[VIDEOS.md](VIDEOS.md)** has the full record: what each video shows minute by minute, every
+measurement taken (with its frame and command), the methods that worked and those that didn't, and
+which open gaps each could close. The table below is the summary.
 
 | Video | What it shows | Used for |
 |---|---|---|

@@ -370,6 +370,8 @@ and the thread pitches are the model's. Things to know before changing it:
 - The manual's Fig. 2 photograph (layout) and Fig. 107 (dial side, wind-indicator wheel).
 - Photographs of a Model 21's dial side during reassembly and of its loose motion-work wheels (user-supplied, source unknown): the solid minute and hour wheels and the five thin spokes of the wind indicator wheel. Shapes only; the counts and the wind indicator wheel's radius (Fig. 107) are unchanged, though the photographed wheel looks larger (about r 15–17 mm).
 - A photographed Model 21 dial of the U.S. Maritime Commission contract (the Hamilton dial's layout, inscriptions and hands) and a photographed movement, serial 2E12055 (the plate engraving's text and layout, and the serial used on the plates and dial). Both are in `References/`.
+- Videos of real Model 21s (`References/VIDEOS.md`, which records what each shows and every measurement): a 4K restoration of a 1941 movement, serial 2E8489 (C Spinner Watch Restorations, https://www.youtube.com/watch?v=KLUwI2UUCMQ), for the going train's tooth counts (fusee and centre wheels 90, third 80 with a pinion of 12, fourth 75, the wind indicator wheel 120) and which wheel is which; BunnSpecial's two-part teardown (https://www.youtube.com/watch?v=Jd2c3x8VKsE, https://www.youtube.com/watch?v=wcYqdgpyggQ) for the bridges and pillars off. Counted with `tools/video.py`. Like the photographs, they are a source of truth.
+- The photographed dial above, again: its UP–DOWN scale's ticks, 8 h apart, sweep 315.7° over 56 h; the model's 313.6° comes from the train.
 
 ## How the layout was measured
 

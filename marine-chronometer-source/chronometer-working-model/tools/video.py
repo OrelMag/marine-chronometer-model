@@ -1,4 +1,4 @@
-"""Teeth and parts from videos of real Model 21s (References/README.md, "Videos consulted"). No browser; needs opencv-python and,
+"""Teeth and parts from videos of real Model 21s (References/VIDEOS.md: what each video shows, every measurement and the methods). No browser; needs opencv-python and,
 for fetch, yt-dlp (pip install yt-dlp). Videos and frames are kept outside the repository, in $MC_VIDEO (default ~/mc-video):
 they are other people's work, cited, not copied.
 
@@ -6,7 +6,10 @@ they are other people's work, cited, not copied.
   python video.py sheet ID [--step 10]           contact sheets, a frame every STEP s, 4 x 4, timestamped: sheet_ID_NN.jpg
   python video.py frame ID mm:ss [...]           full frames: f_ID_mm-ss.png (in $MC_VIDEO/frames)
   python video.py count FRAME cx cy a b NAME     a wheel's teeth, counted one by one
-        [--s 0.8 1.12] [--band 0.945 0.975] [--ch -V] [--mind 22]
+        [--s 0.8 1.12] [--band 0.945 0.975] [--ch -V] [--mind 22] [--blue]
+  python video.py ticks cx cy v:x,y [v:x,y ...]  a dial scale: the angles of ticks (value v at pixel x,y) about the centre (cx, cy),
+                                                 clockwise from 12, and the degrees per unit fitted through them
+  python video.py plate FRAME cx cy fx fy [name:x,y ...]   a bare plate's plan (rough): C at (cx, cy), the fourth's jewel at (fx, fy)
 
 count: (cx, cy, a, b) is a first guess at the tooth tips' ellipse in the frame's pixels (axes along x and y). The ellipse is refined
 on the outermost brass along each ray (s0..s1 of it), the rim is unrolled along it, and in the band of radii --band (through the
@@ -24,7 +27,21 @@ The counts of IDEAS.md 1.8 (frames of KLUwI2UUCMQ, 4K):
   count f_KLUwI2UUCMQ_27-30.png 1988 1140 648 620 FU --band 0.94 0.98                      fusee wheel, 90
   count f_KLUwI2UUCMQ_35-30.png 2576 900 790 690 C --ch S --band 0.94 0.98                 centre wheel, 90
   count f_KLUwI2UUCMQ_35-22.png 1890 1416 570 504 T --s 0.75 1.15 --band 0.946 0.969       third wheel, 80
-  count f_KLUwI2UUCMQ_35-33.png 1448 820 520 416 F --s 0.75 1.15 --band 0.946 0.969        fourth wheel, 75"""
+  count f_KLUwI2UUCMQ_35-33.png 1448 820 520 416 F --s 0.75 1.15 --band 0.946 0.969        fourth wheel, 75
+  count f_KLUwI2UUCMQ_23-30.png 1860 1553 240 220 UDW --band 0.93 0.975 --mind 10 --blue  wind indicator wheel, 120 (--blue: the
+                                                 wheel is lit almost white, so the part is "not the blue mat" rather than brass)
+
+ticks: the UP-DOWN scale of References/photo-dial-hamilton-maritime-commission.jpg (898 px square): 5.65 deg an hour, 316 deg in 56 h
+(315.7 by the mean of its 8 h intervals):
+  python video.py ticks 410 390 8:705,270 16:710,505 24:535,680 32:295,680 40:120,510 48:130,270   (on the 5x crop at x 345, y 210;
+  the same as 427 288 8:486,264 16:487,311 24:452,346 32:404,346 40:369,312 48:371,264 on the photograph)
+
+plate: an affine plan of the pillar plate's train face from one frame, train side up: an ellipse centred on C fitted to the far half of
+the rim (the near half shows the side wall), rotated so the fourth's jewel is on +z (6 o'clock), +x (3 o'clock) on the image's left;
+the points named T and F (the third's and fourth's settings, on the lower train bridge) are 3.86 mm lower, and their shared parallax is taken out by putting F at
+(0, 23.9). Rough (rim rms about 2.4 mm on KLUwI2UUCMQ 14:45): it shows that a part is millimetres off, not where to put it; see
+References/VIDEOS.md, "Methods", for the proper camera fit to use instead.
+  python video.py plate f_KLUwI2UUCMQ_14-45.png 1876 960 1830 1504 T:2100,1356 Fu:1524,624 Ba:2516,896 E:1570,1324"""
 import cv2, numpy as np, sys, os, subprocess
 HOME = os.environ.get('MC_VIDEO', os.path.expanduser('~/mc-video'))
 def vid(i):   # the largest copy of video i (the highest resolution, where a smaller one was fetched too)
@@ -115,4 +132,36 @@ elif cmd == 'count':
         for x in range(0, 1024, 100): cv2.line(z, (x, 0), (x, 12), (0, 0, 255), 2)
         cv2.rectangle(z, (0, 0), (1023, z.shape[0] - 1), (255, 0, 255), 3); cv2.putText(z, f'seg {k}', (8, 40), 0, 1, (255, 0, 255), 2); seg.append(z)
     cv2.imwrite(f'e_{name}.png', np.vstack(seg))
+elif cmd == 'ticks':
+    cx, cy = map(float, a[:2]); V, A = [], []
+    for t in a[2:]:
+        v, xy = t.split(':'); x, y = map(float, xy.split(',')); ang = np.degrees(np.arctan2(x - cx, cy - y)) % 360; V.append(float(v)); A.append(ang)
+        print(f'{v:>6}: {ang:6.1f} deg')
+    V, A = np.array(V), np.unwrap(np.radians(A)); k, b = np.polyfit(V, np.degrees(A), 1)
+    print(f'{k:.3f} deg per unit, zero at {b % 360:.1f} deg; rms {np.std(np.degrees(A) - (k * V + b)):.2f} deg')
+elif cmd == 'plate':
+    img = cv2.imread(a[0]); H, W = img.shape[:2]; hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV); C0 = np.array(list(map(float, a[1:3]))); Fp = np.array(list(map(float, a[3:5])))
+    pts = {'F': Fp, **{t.split(':')[0]: np.array(list(map(float, t.split(':')[1].split(',')))) for t in a[5:]}}
+    notsilver = (hsv[:, :, 1] > 70) & (hsv[:, :, 2] > 40); far = np.arctan2(*(C0 - Fp)[::-1])   # the far side: away from the fourth
+    rim = []
+    for t in far + np.linspace(-0.45 * np.pi, 0.45 * np.pi, 400):
+        d = np.array([np.cos(t), np.sin(t)])
+        for r in np.arange(300, 3000, 1.0):
+            x, y = (C0 + r * d).astype(int)
+            if not (0 <= x < W and 0 <= y < H): break
+            if all(notsilver[int(C0[1] + (r + q) * d[1]), int(C0[0] + (r + q) * d[0])] for q in range(8) if 0 <= int(C0[0] + (r + q) * d[0]) < W and 0 <= int(C0[1] + (r + q) * d[1]) < H): rim.append(C0 + r * d); break
+    U = np.array(rim) - C0; keep = np.ones(len(U), bool)
+    for it in range(8):
+        M3, *_ = np.linalg.lstsq(np.c_[U[keep, 0] ** 2, 2 * U[keep, 0] * U[keep, 1], U[keep, 1] ** 2], np.ones(keep.sum()), rcond=None)
+        M = np.array([[M3[0], M3[1]], [M3[1], M3[2]]]); q = np.sqrt(np.einsum('ij,jk,ik->i', U, M, U)); e = np.abs(q - 1); keep = e < max(0.003, 3 * 1.48 * np.median(e[keep]))
+    R0 = 87.57 / 2; w, V = np.linalg.eigh(M); Ai = np.linalg.inv(V @ np.diag(1 / np.sqrt(w)) @ V.T / R0)
+    for refl in (1, -1):
+        Q = {k: np.diag([refl, 1.0]) @ Ai @ (v - C0) for k, v in pts.items()}; ang = np.arctan2(Q['F'][0], Q['F'][1])
+        Rr = np.array([[np.cos(ang), -np.sin(ang)], [np.sin(ang), np.cos(ang)]]); Q = {k: Rr @ v for k, v in Q.items()}
+        img_left = (np.linalg.inv(np.diag([refl, 1.0]) @ Ai) @ (Rr.T @ np.array([1.0, 0])))   # where plan +x points in the image
+        if img_left[0] < 0: break   # +x on the image's left: the train side seen from above
+    sh = Q['F'] - np.array([0, 23.9])
+    print(f'rim: {keep.sum()} of {len(U)} points, rms {np.sqrt(np.mean((q[keep] - 1) ** 2)) * R0:.2f} mm (rough above about 0.5)')
+    for k, v in Q.items():
+        low = k in ('T', 'F'); u = v - sh if low else v; print(f'{k:>4}: ({u[0]:6.2f}, {u[1]:6.2f}) mm, r {np.hypot(*u):5.2f}' + ('  (on the lower train bridge: parallax taken out)' if low else ''))
 else: sys.exit(__doc__)
