@@ -361,6 +361,15 @@ Contents:
   its small round end in the cover. Now from under the bridge; the pawl's
   spring is the long arc Fig. 80 draws. Keep: the pivot screw from below, its
   end flush in the cover. `8555124`
+- **The sustaining spring drove the train for hours while winding at high
+  speed.** A wind takes about 4 s on screen (17 s with the key) whatever the
+  speed, so at 3600× the train ran on the sustaining spring for hours of model
+  time, where Sec. IV gives it 5 to 10 minutes; the spring was drawn spent
+  (`SMAX`) and went on driving. Model time now runs at most 10× while winding
+  (`WIND_X` in `app.js`), so a wind is at most about 3 minutes of it, and the
+  HUD says so. `SMAX` is the fusee wheel's turn in 10 minutes (9.3°), from the
+  train, not a literal 10° figured for the old 60 h fusee. Keep: no wind
+  outlasts the sustaining spring. HASH
 
 ## Plates, bridges, screws and arbors
 
