@@ -382,6 +382,14 @@ Contents:
   from the wall as it closes, keeping its length. Keep: each end pinned, the
   fixed one in the wheel's frame, the working one in the ratchet's; the gap
   closes under load. `65aff17`
+- **Fusee wheel and sustaining ratchet hung on the bare arbor.** Both had
+  r 1.05 bores on the 2 mm fusee arbor. The restoration video shows a steel
+  collar r 2.7 on the arbor below the fusee (28:08–28:35) and the fusee wheel's
+  bore r 2.7 (27:26); Fig. 69 has it greased "above ratchet wheel". Now the
+  collar runs from the fusee's large end to the end plate, 0.02 past the wheel
+  so the plate bears on it, and the winding ratchet, the sustaining ratchet's
+  web and the fusee wheel have r 2.75 bores round it. Keep: the wheels free on
+  the collar, not on the arbor. HASH
 
 ## Plates, bridges, screws and arbors
 

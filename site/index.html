@@ -1911,13 +1911,13 @@ function buildMovement(M){
   R.fp=hn(arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:1.5,th:2}}),'42022',{sub:1});   /* the wind indicator pinion, part of the fusee arbor */
   /* ---------- fusee wheel (TRAIN.fu : centre pinion TRAIN.cp, module MOD.fusee, 0.441) with its maintaining work ---------- */
   const gw=part('gw',-14);
-  R.gw=hn(arbor(gw,M,...L.Fu,{wheel:{n:TRAIN.fu,m:MOD.fusee,y:-6.5,th:1.2,spokes:0,mat:M.copper,collet:0,bore:1.05,mate:TRAIN.cp}}),'42015');
+  R.gw=hn(arbor(gw,M,...L.Fu,{wheel:{n:TRAIN.fu,m:MOD.fusee,y:-6.5,th:1.2,spokes:0,mat:M.copper,collet:0,bore:2.75,mate:TRAIN.cp}}),'42015');
   /* its recess (restoration video 27:26, References/VIDEOS.md): the wall at r 18.0 inside a rim over the teeth's roots, the floor with a raised disc to r 9.3 and a hub round the bore,
      the manual's "both elevations in the recess" (Op. 26; their heights estimated). SSF: the XZ angle of the sustaining spring's fixed end's tip; SSH: the two holes in that end,
      the first with the pin into the wheel (which hole has the pin, estimated) */
   const SSF=0.488,SSH=[[15.9,SSF-48*D2R],[15.9,SSF-8*D2R]].map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);
-  mesh(R.gw,ring(19.2,18.0,1.8),M.copper,0,-8.0,0);mesh(R.gw,discGeo(18.0,0.5,[[0,0,1.05],[...SSH[0],0.4]]),M.copper,0,-7.6,0);   /* the rim and the floor, with the hole the spring's pin is pressed into */
-  mesh(R.gw,discGeo(9.3,0.3,[[0,0,1.05]]),M.copper,0,-7.9,0);mesh(R.gw,ringGeo(4.0,1.05,0.3),M.copper,0,-8.05,0);   /* the raised disc and the hub */
+  mesh(R.gw,ring(19.2,18.0,1.8),M.copper,0,-8.0,0);mesh(R.gw,discGeo(18.0,0.5,[[0,0,2.75],[...SSH[0],0.4]]),M.copper,0,-7.6,0);   /* the rim and the floor, with the hole the spring's pin is pressed into */
+  mesh(R.gw,discGeo(9.3,0.3,[[0,0,2.75]]),M.copper,0,-7.9,0);mesh(R.gw,ringGeo(4.0,2.75,0.3),M.copper,0,-8.05,0);   /* the raised disc and the hub; the bore (r 2.75, video 27:26) free on the arbor's collar */
   /* sustaining spring (42016; video 27:26, Figs. 69, 71): a flat blued band 2.1 wide against the recess wall, round from its fixed end (a lobe toward the hub, pinned to the wheel) the
      long way to its working end (a smaller lobe across the gap from it, pinned to the sustaining ratchet). The ratchet drives the wheel through it by pushing the working end forward,
      across the gap toward the fixed end: the ring closes, from a 17 deg gap relaxed (as photographed, out of the movement) to 17 deg less SMAX loaded. The lobes keep their shape
@@ -1937,7 +1937,7 @@ function buildMovement(M){
   const srP=part('sratchet',-22);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
   const WPS=[0,1].map(k=>{const a=k*Math.PI+0.4;return[[12.9*Math.cos(a+0.85),12.9*Math.sin(a+0.85)],[12.5*Math.cos(a+0.6),12.5*Math.sin(a+0.6)]];});   /* the winding pawl springs' screws */
   hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,flip:true,bore:5,holes:WPS.flat().map(q=>hT(...q,0.4))}),M.steel,0,-9.45,0),'42009',{sub:1,gear:{z:120,m:0.27,ratchet:1}});
-  mesh(R.sr,ringGeo(5,1.05,0.3),M.steel,0,-9.25,0);   /* its web, free on the fusee arbor (0.05 side shake), under the heads of the winding ratchet's screws, which turn round inside the wheel's open centre as the key winds */   /* steep faces lead against the running direction, so the sustaining pawl holds it */
+  mesh(R.sr,ringGeo(5,2.75,0.3),M.steel,0,-9.25,0);   /* its web, free on the fusee arbor's collar (0.05 side shake; Fig. 69, arrow 5), under the heads of the winding ratchet's screws, which turn round inside the wheel's open centre as the key winds */   /* steep faces lead against the running direction, so the sustaining pawl holds it */
   mesh(R.sr,cylY(0.4,1.45,10),M.steel,14.6*Math.cos(SSP),-8.375,14.6*Math.sin(SSP));   /* the pin from the sustaining spring's working end, in the ratchet (the manual pins the spring to both wheels) */
   /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4): pushed by its steep faces when running, slipping over them when winding.
      Each is held in by a flat winding-pawl spring (42007) under two screws (42012; heads 0.15 tall, clear of the fusee's underside, which turns over them while winding), bearing on the arm's outer side near the pivot (Figs. 28, 69).
@@ -2379,10 +2379,14 @@ function makeFusee(M,c){
   const yBot=c.yB+0.6,pr=[V2(1.05,yT)],NY=Math.ceil((yBot-yT)/0.03);for(let i=0;i<=NY;i++)pr.push(V2(c.rmax,lerp(yT,yBot,i/NY)));
   pr.push(V2(5,yBot),V2(5,c.yB-1.1),V2(1.05,c.yB-1.1),V2(1.05,yT));   /* a recess in the large end holds a disc tapped for the winding ratchet's screws */
   const lg=new THREE.LatheGeometry(pr,216),lp=lg.attributes.position;for(let i=0;i<lp.count;i++){const x=lp.getX(i),z=lp.getZ(i),r=Math.hypot(x,z);if(r>5.5){const q=R(x,z,lp.getY(i))/r;lp.setX(i,x*q);lp.setZ(i,z*q);}}
-  lg.computeVertexNormals();mesh(fz,lg,M.gilt);hn(cylBetween(fz,1,c.aT??-33,-PP_T-0.1,M.steel,0,0,12),'42022');hn(cylBetween(fz,0.55,-PP_T-0.1,0.5,M.steel,0,0,12),'42022',{sub:1});   /* its lower pivot, through the plate bushing to the wind indicator pinion turned on its end */   /* arbor, then its lower pivot through the plate bushing to the wind-indicator pinion */
+  lg.computeVertexNormals();mesh(fz,lg,M.gilt);
+  /* the arbor: through the fusee, then a collar r 2.7 from the fusee's large end to the end plate, on which the winding ratchet's centre, the sustaining ratchet and the fusee wheel
+     sit (restoration video 28:08, 28:17, 28:35; Fig. 69, arrow 5: "grease fusee arbor above ratchet wheel"), its end 0.02 past the wheel so the end plate bears on it and leaves
+     the wheel free; then on to the plate */
+  const yC0=c.yB+0.6,yC1=-5.88;hn(cylBetween(fz,1,c.aT??-33,yC0,M.steel,0,0,12),'42022');hn(cylBetween(fz,2.7,yC0,yC1,M.steel,0,0,32),'42022',{sub:1});hn(cylBetween(fz,1,yC1,-PP_T-0.1,M.steel,0,0,12),'42022',{sub:1});hn(cylBetween(fz,0.55,-PP_T-0.1,0.5,M.steel,0,0,12),'42022',{sub:1});   /* its lower pivot, through the plate bushing to the wind indicator pinion turned on its end */   /* arbor, then its lower pivot through the plate bushing to the wind-indicator pinion */
   /* winding ratchet wheel (42013) on the fusee's large end, fixed by two screws (42014) put in from below, their heads in the sustaining ratchet's open centre (Figs. 28, 69) */
   const WRS=[0.6,0.6+Math.PI].map(a=>[3.4*Math.cos(a),3.4*Math.sin(a)]);
-  hn(mesh(fz,gearGeo(40,0.47,0.5,{ratchet:true,bore:1,holes:WRS.map(q=>hC(...q,0.55))}),M.steel,0,c.yB+0.85,0),'42013',{gear:{z:40,m:0.47,ratchet:1}});mesh(fz,discGeo(5,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,0.55))]),M.gilt,0,c.yB-1.1,0);
+  hn(mesh(fz,gearGeo(40,0.47,0.5,{ratchet:true,bore:2.75,holes:WRS.map(q=>hC(...q,0.55))}),M.steel,0,c.yB+0.85,0),'42013',{gear:{z:40,m:0.47,ratchet:1}});mesh(fz,discGeo(5,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,0.55))]),M.gilt,0,c.yB-1.1,0);
   if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;fz.add(fl);for(const q of WRS)hn(c.screw(fl,q[0],-q[1],-(c.yB+1.1),0.55,0.3,0.6+1.2),'42014');}
   /* fusee end plate (42019) under the fusee wheel, and the taper pin (42020) through the arbor below it that holds the stack on (Figs. 28, 70). The fusee rises above the
      fusee wheel in the Exploded view, so they come off the arbor's lower end and stay under the wheel (c.endLift) */
