@@ -392,6 +392,13 @@ Contents:
   (Op. 81), and the locking arm's screw moves 5° to clear the horn. Keep:
   sunk screw heads in the photograph are the train bridge's, proud ones the
   barrel bridge's. `e1244db`
+- **A corner in the balance cock's concave edge.** Where the nose, widened
+  round the endstone cap, met the traced edge, the concave edge turned 50° at
+  a point; at 41:58 and 6:29 it is one smooth curve from the nose to the
+  horn. It is now a cubic tangent to both, within 0.43 mm of the traced points,
+  and the arm's underside sweeps down into the body in a cove instead of a
+  step. Keep: the cove stays above the balance's sweep (`fine.py`) and the
+  hairspring keeps under the flat part.
 - **Train bridge opening round the balance too big.** The centre and escape
   pivots fell in the hole. The opening was reduced; it is r 8.0 after the
   escapement change. `84a7645`, `7328e67`

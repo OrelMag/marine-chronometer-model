@@ -1582,35 +1582,43 @@ function discClip(R,cuts,N=160){
 }
 /* a solid in two depths, closed and facing out (like polyGeo, unbevelled): the outline out at depth tA, and the part of it outside the circle (c, r) at depth tB,
    with the step's wall on that circle's arc. Top at y 0, depths toward +y. Holes [x,z,r]: through tA inside the circle, through tB outside it; a hole [x,z,r,rc,dc]
-   is counterbored rc to dc. UVs: the top's in plan, as ExtrudeGeometry gives them, so the plate's stripes lie as on the other plates; the walls' along one ridge (below) */
-function stepGeo(out,c,r,tA,tB,holes){
-  const d=p=>Math.hypot(p[0]-c[0],p[1]-c[1])-r,O=[];   /* the outline, with the two points where it crosses the circle */
-  for(let k=0;k<out.length;k++){const a=out[k],b=out[(k+1)%out.length];O.push(a);if((d(a)<0)!==(d(b)<0)){let u=0,v=1;for(let i=0;i<40;i++){const m=(u+v)/2,q=[a[0]+(b[0]-a[0])*m,a[1]+(b[1]-a[1])*m];(d(q)<0)===(d(a)<0)?u=m:v=m;}O.push([a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u,1]);}}
-  const X=O.map((p,i)=>p[2]?i:-1).filter(i=>i>=0),n=O.length,arm=k=>d(O[k])<-1e-9;if(X.length!==2)console.error('stepGeo: the circle crosses the outline '+X.length+' times');
-  const chain=(i,j)=>{const r=[];for(let k=i;;k=(k+1)%n){r.push(O[k]);if(k===j)break;}return r;},[i0,i1]=X,inA=arm((i0+1)%n);
+   is counterbored rc to dc. cv {r0, tS, n}: a cove under the part inside the circle, its underside at tA within r0 of c, sweeping down as a quarter circle to tS at r,
+   where the step goes on to tB (n bands, each triangulated flat). UVs: the top's in plan, as ExtrudeGeometry gives them, so the plate's stripes lie as on the other
+   plates; the walls' along one ridge (below) */
+function stepGeo(out,c,r,tA,tB,holes,cv){
+  const d=p=>Math.hypot(p[0]-c[0],p[1]-c[1]),m=cv?cv.n:0,r0=cv?cv.r0:r,tS=cv?cv.tS:tA,RS=[r];for(let k=m-1;k>=0;k--)RS.push(r0+(r-r0)*Math.sin(Math.PI/2*k/m));   /* RS: the levels, r first, r0 last */
+  const prof=p=>{const q=d(p);if(!cv||q<=r0)return tA;const u=Math.min(1,(q-r0)/(r-r0));return tA+(tS-tA)*(1-Math.sqrt(1-u*u));};
+  const O=[];for(let k=0;k<out.length;k++){const a=out[k],b=out[(k+1)%out.length];O.push(a);const X=[];   /* the outline, with the points where it crosses each level */
+    RS.forEach((R,j)=>{if((d(a)<R)!==(d(b)<R)){let u=0,v=1;for(let i=0;i<40;i++){const w=(u+v)/2,q=[a[0]+(b[0]-a[0])*w,a[1]+(b[1]-a[1])*w];(d(q)<R)===(d(a)<R)?u=w:v=w;}X.push([u,[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u],j]);}});
+    X.sort((x,y)=>x[0]-y[0]).forEach(([,q,j])=>{q.lv=j;O.push(q);});}
+  const n=O.length,X0=O.map((p,i)=>p.lv===0?i:-1).filter(i=>i>=0);if(X0.length!==2)console.error('stepGeo: the circle crosses the outline '+X0.length+' times');
+  const chain=(i,j)=>{const q=[];for(let k=i;;k=(k+1)%n){q.push(O[k]);if(k===j)break;}return q;},[i0,i1]=X0,inA=d(O[(i0+1)%n])<r;
   const A=inA?chain(i0,i1):chain(i1,i0),B=inA?chain(i1,i0):chain(i0,i1);   /* A: the stretch inside the circle (the arm), from crossing to crossing; B: the rest */
-  const a0=Math.atan2(A[A.length-1][1]-c[1],A[A.length-1][0]-c[0]);let da=Math.atan2(A[0][1]-c[1],A[0][0]-c[0])-a0;da=((da%TAU)+TAU)%TAU;
-  const mid=a0+da/2,ins=p=>{let w=false;for(let i=0,j=O.length-1;i<O.length;j=i++){const[xi,zi]=O[i],[xj,zj]=O[j];if((zi>p[1])!==(zj>p[1])&&p[0]<(xj-xi)*(p[1]-zi)/(zj-zi)+xi)w=!w;}return w;};
-  if(!ins([c[0]+r*Math.cos(mid),c[1]+r*Math.sin(mid)]))da-=TAU;   /* the arc that runs inside the outline, from A's end back to its start */
-  const na=Math.max(2,Math.ceil(Math.abs(da)*r/0.25)),ARC=[];for(let k=1;k<na;k++){const t=a0+da*k/na;ARC.push([c[0]+r*Math.cos(t),c[1]+r*Math.sin(t)]);}
-  const AP=[...A,...ARC],BP=[...B,...ARC.slice().reverse()];   /* the arm's underside and the body's foot */
-  const circ=(x,z,rr)=>{const m=Math.max(16,Math.ceil(TAU*rr/0.2)),q=[];for(let k=0;k<m;k++){const t=k/m*TAU;q.push([x+rr*Math.cos(t),z+rr*Math.sin(t)]);}return q;};
-  const hA=holes.filter(h=>d(h)<0),hB=holes.filter(h=>d(h)>=0),P=[],U=[];
+  const ins=p=>{let w=false;for(let i=0,j=O.length-1;i<O.length;j=i++){const[xi,zi]=O[i],[xj,zj]=O[j];if((zi>p[1])!==(zj>p[1])&&p[0]<(xj-xi)*(p[1]-zi)/(zj-zi)+xi)w=!w;}return w;};
+  const ia=[],ib=[];RS.forEach((R,j)=>{const k=A.map((p,i)=>p.lv===j?i:-1).filter(i=>i>=0);if(k.length!==2)console.error('stepGeo: level '+j+' crosses the arm '+k.length+' times');ia.push(k[0]);ib.push(k[k.length-1]);});
+  const arc=(R,p,q)=>{const a0=Math.atan2(p[1]-c[1],p[0]-c[0]);let da=Math.atan2(q[1]-c[1],q[0]-c[0])-a0;da=((da%TAU)+TAU)%TAU;const mid=a0+da/2;if(!ins([c[0]+R*Math.cos(mid),c[1]+R*Math.sin(mid)]))da-=TAU;   /* from p round to q inside the outline, ends left out */
+    const na=Math.max(2,Math.ceil(Math.abs(da)*R/0.25)),o=[];for(let k=1;k<na;k++){const t=a0+da*k/na;o.push([c[0]+R*Math.cos(t),c[1]+R*Math.sin(t)]);}return o;};
+  const ARCS=RS.map((R,j)=>arc(R,A[ib[j]],A[ia[j]])),ARC=ARCS[0];   /* each level's arc across the arm, from its outer crossing back to its inner one */
+  const BP=[...B,...ARC.slice().reverse()];   /* the body's foot */
+  const circ=(x,z,rr)=>{const k=Math.max(16,Math.ceil(TAU*rr/0.2)),q=[];for(let i=0;i<k;i++){const t=i/k*TAU;q.push([x+rr*Math.cos(t),z+rr*Math.sin(t)]);}return q;};
+  const hA=holes.filter(h=>d(h)<r),hB=holes.filter(h=>d(h)>=r),P=[],U=[];hA.forEach(h=>{if(d(h)+h[2]>r0)console.warn('stepGeo: a hole in the cove');});
   const tri=(a,b,e,ua,ub,ue)=>{P.push(...a,...b,...e);U.push(...ua,...ub,...ue);};
-  const face=(poly,hs,y,up)=>{const V=v=>new THREE.Vector2(v[0],v[1]),T=THREE.ShapeUtils.triangulateShape(poly.map(V),hs.map(h=>h.map(V))),all=[...poly,...hs.flat()];   /* up: faces -y (the top) */
+  const face=(poly,hs,y,up)=>{const Y=typeof y==='function'?y:()=>y,V=v=>new THREE.Vector2(v[0],v[1]),T=THREE.ShapeUtils.triangulateShape(poly.map(V),hs.map(h=>h.map(V))),all=[...poly,...hs.flat()];   /* up: faces -y (the top) */
     for(const[i,j,k]of T){const[a,b,e]=[all[i],all[j],all[k]],cr=(b[0]-a[0])*(e[1]-a[1])-(b[1]-a[1])*(e[0]-a[0]),f=(cr>0)===up?[a,b,e]:[a,e,b];
-      tri(...f.map(p=>[p[0],y,p[1]]),...f.map(p=>[p[0],-p[1]]));}};
+      tri(...f.map(p=>[p[0],Y(p),p[1]]),...f.map(p=>[p[0],-p[1]]));}};
   const rc=Math.cos(STRIPE_ANGLE),rs=Math.sin(STRIPE_ANGLE),uw=p=>{const t=p[0]*rc-p[1]*rs;return[-rs*38.75+t*rc,rc*38.75+t*rs];};   /* walls: along one ridge's crest of the stripes (38.75 mm across them), so they read polished, as the cock's are */
-  const wall=(p,q,y0,y1,outward)=>{const[a,b]=outward?[p,q]:[q,p],ua=uw(a),ub=uw(b);   /* a quad p->q, y0..y1, facing to the right of p->q when outward */
-    const A0=[a[0],y0,a[1]],B0=[b[0],y0,b[1]],A1=[a[0],y1,a[1]],B1=[b[0],y1,b[1]];
+  const wall=(p,q,y0,y1,outward,y1q=y1)=>{const[a,b]=outward?[p,q]:[q,p],[ya,yb]=outward?[y1,y1q]:[y1q,y1],ua=uw(a),ub=uw(b);   /* a quad p->q from y0 down to y1 at p (y1q at q), facing to the right of p->q when outward */
+    const A0=[a[0],y0,a[1]],B0=[b[0],y0,b[1]],A1=[a[0],ya,a[1]],B1=[b[0],yb,b[1]];
     tri(A0,A1,B1,ua,ua,ub);tri(A0,B1,B0,ua,ub,ub);};
   const cw=THREE.ShapeUtils.area(O.map(v=>new THREE.Vector2(v[0],v[1])))<0,loop=(L,f)=>{for(let k=0;k<L.length;k++)f(L[k],L[(k+1)%L.length]);};
   const cbr=h=>h[3]?circ(h[0],h[1],h[3]):circ(h[0],h[1],h[2]);
-  face(O,[...hA.map(h=>circ(...h)),...hB.map(cbr)],0,true);face(AP,hA.map(h=>circ(...h)),tA,false);face(BP,hB.map(h=>circ(...h)),tB,false);
+  face(O,[...hA.map(h=>circ(...h)),...hB.map(cbr)],0,true);face(BP,hB.map(h=>circ(...h)),tB,false);
+  face([...A.slice(ia[m],ib[m]+1),...ARCS[m]],hA.map(h=>circ(...h)),tA,false);   /* the arm's underside within the last level */
+  for(let j=0;j<m;j++)face([...A.slice(ia[j],ia[j+1]+1),...ARCS[j+1].slice().reverse(),...A.slice(ib[j+1],ib[j]+1),...ARCS[j]],[],prof,false);   /* the cove, band by band */
   for(const h of hB.filter(h=>h[3])){const R=circ(h[0],h[1],h[3]),I=circ(h[0],h[1],h[2]),F=[...R];face(F,[I],h[4],true);}   /* the counterbore's floor */
-  for(let k=0;k<A.length-1;k++)wall(A[k],A[k+1],0,tA,!cw);   /* the arm's edge, tA deep */
-  for(let k=0;k<B.length-1;k++){wall(B[k],B[k+1],0,tA,!cw);wall(B[k],B[k+1],tA,tB,!cw);}   /* the body's, split at tA where the arm's underside meets it */
-  const Arc=[A[A.length-1],...ARC,A[0]];for(let k=0;k<Arc.length-1;k++)wall(Arc[k],Arc[k+1],tA,tB,cw);   /* the step under the arm */
+  for(let k=0;k<A.length-1;k++)wall(A[k],A[k+1],0,prof(A[k]),!cw,prof(A[k+1]));   /* the arm's edge, down to its underside */
+  for(let k=0;k<B.length-1;k++){wall(B[k],B[k+1],0,tS,!cw);wall(B[k],B[k+1],tS,tB,!cw);}   /* the body's, split at tS where the arm's underside meets it */
+  const Arc=[A[A.length-1],...ARC,A[0]];for(let k=0;k<Arc.length-1;k++)wall(Arc[k],Arc[k+1],tS,tB,cw);   /* the step under the arm */
   const hole=(L,y0,y1)=>{const ccw=THREE.ShapeUtils.area(L.map(v=>new THREE.Vector2(v[0],v[1])))>0;loop(L,(p,q)=>wall(p,q,y0,y1,!ccw));};   /* faces into the hole */
   for(const h of hA)hole(circ(...h),0,tA);for(const h of hB)if(h[3]){hole(circ(h[0],h[1],h[3]),0,h[4]);hole(circ(h[0],h[1],h[2]),h[4],tB);}else hole(circ(...h),0,tB);
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g.computeVertexNormals();return g;}
@@ -2083,7 +2091,13 @@ function buildMovement(M){
      The body is all of the outline more than CK_RP from the staff, the circle the barrel bridge is cut on round the balance; its face on that arc is the step under
      the arm. The screw's head lies in a counterbore (41:58, 6:29) */
   const CK_RP=BAL_R+3.2,CK_CB=1.5;
-  R.cock=mesh(ck,stepGeo(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.65),add(L.B,EPu,-3.0),6.4)]),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.8,0.8).slice(0,3),2.95,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),hC(...SPS,0.8).slice(0,3),[...add(L.B,SPD,5.6),0.3]]),M.plate,0,CK_T,0);   /* last: the hole for the stud's steady pin */
+  /* the concave edge one smooth curve from the nose's round to the horn's tip, as at 41:58 and 6:29: a cubic tangent to the nose and to the traced edge at the horn,
+     fitted to the traced points (within 0.43 mm); the tracing's corner where the widened nose met it is gone */
+  const ckEdge=o=>{const k=o.indexOf(COCK_POLY[40]),P0=o[k-1],P3=o[0],P1=add(P0,unit(sub(P0,o[k-2])),21.17),P2=add(P3,unit(sub(P3,COCK_POLY[43])),-19.72),q=[];
+    for(let i=1;i<24;i++){const u=i/24,v=1-u,w=[v*v*v,3*v*v*u,3*v*u*u,u*u*u];q.push([0,1].map(e=>w[0]*P0[e]+w[1]*P1[e]+w[2]*P2[e]+w[3]*P3[e]));}return[...o.slice(0,k),...q];};
+  /* the arm's underside sweeps down into the body (41:58, 23:45): a cove from 9 mm round the staff, a quarter circle down to 7.6 mm under the top at the step (1 mm over
+     the balance's top, 8.6 down; the hairspring keeps under the flat part, within 7.1 mm), the step's wall then going on down to the train bridge */
+  R.cock=mesh(ck,stepGeo(ckEdge(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.65),add(L.B,EPu,-3.0),6.4)])),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.8,0.8).slice(0,3),2.95,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),hC(...SPS,0.8).slice(0,3),[...add(L.B,SPD,5.6),0.3]],{r0:9,tS:7.6,n:12}),M.plate,0,CK_T,0);   /* last: the hole for the stud's steady pin */
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.steel,...[L.B[0],0,L.B[1]]),'42162.bu');
   hn(mesh(ck,stoneGeo(0.95,0.22,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone */
