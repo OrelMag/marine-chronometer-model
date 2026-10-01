@@ -793,7 +793,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   keys clamped the pitch to −1.3 rad (74.5°) below, against 1.52 (87°) above,
   so a lifted movement couldn't be seen from straight under it. Both limits
   are now ±1.52. Keep: stop short of ±90°, where `lookAt` has no up and the
-  view spins. (hash once committed)
+  view spins. `fada89a`
 
 ## Build, tools and docs
 
