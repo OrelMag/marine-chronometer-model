@@ -369,7 +369,7 @@ Contents:
   (`WIND_X` in `app.js`), so a wind is at most about 3 minutes of it, and the
   HUD says so. `SMAX` is the fusee wheel's turn in 10 minutes (9.3°), from the
   train, not a literal 10° figured for the old 60 h fusee. Keep: no wind
-  outlasts the sustaining spring. HASH
+  outlasts the sustaining spring. `5fd993d`
 
 ## Plates, bridges, screws and arbors
 
