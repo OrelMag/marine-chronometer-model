@@ -1422,6 +1422,31 @@ on the top-view photograph) had the right parts in the wrong arrangement.
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
+20. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
+    branch `claude/train-bridge-outline`). **Rebuilt from the video**
+    (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
+    the face through the rim, the barrel's cut and the centre bushing, 0.2-0.3
+    mm rms). The notch is one circle, r 16.57 about (11.46, -17.47), 0.12 mm
+    rms; the horn its cusp with the barrel's cut, cut off straight 12.4 mm
+    from the centre; the mouth a sharp corner at (28.0, -18.7) and a straight
+    edge to the rim at -23° (it was a spike to -40°). Still open:
+    - **The third screw (29.24, -12.28)** keeps 0.5 mm of metal to the notch,
+      and its head (r 2.9) overhangs the edge by about 1 mm. On 23:30 no hole
+      shows there; the nearest is a large one (about 5 mm across, a
+      counterbore) at (32.25, -10.81), 3.3 mm further out, as the pillars on
+      the bare plate stand further out than the model's (`References/VIDEOS.md`).
+      The top-view photograph's five-screw map, 6:29 and the barrel bridge laid
+      flat put the screw at (29.24, -12.28). Settle it with a homography on
+      several holes of the flat bridge before moving the screw, and the barrel
+      bridge's hole with it.
+    - **The notch's centre** is 2.3 mm from the model's fusee arbor, at 33°
+      from the 12 and 20.9 mm out (the arbor at 30.3° and 22.9 mm). If the
+      notch is concentric with the fusee, that is a reading of the fusee's
+      place on the bridge itself, beside finding 19's 43-45° on the dial side.
+    - **The keyhole**: the video's opening has three lobes and a round hole,
+      and leaves 3 mm or more of metal below the notch. The model's is still the
+      two circles about the balance and escape arbors, now kept 1 mm off the
+      notch.
 
 ## The fusee assembly against Fig. 28 and the video
 

@@ -32,9 +32,11 @@ const TB_U=-20.66,TB_T=-23.76,BB_T=-27.16,CK_T=-37.96;
 const EY=-18.96,LB_T=-14.76,BAL_Y=-26.3;   /* escape wheel (teeth 0.95 below the train bridge), balance lower bridge's top face (photograph: 7.9-10.9 mm above the plate), balance rim */   /* bridge radius: the top-view photograph (the fusee wheel is hidden under it, as photographed) */          /* pillar plate; bridges */
 const PILLARS={barrel:[-15.3,-26.58],train:[[-16.63,22.48],[18.17,26.92],[32.11,-4.1]]};
 const COCK_FOOT=[28.3,6.4],BAL_R=14.5;
-/* the edge of the upper train bridge's notch round the fusee, traced on the manual's Fig. 67 (tools/train_bridge.py): from outside the rim, past the centre
-   arbor to the horn's tip, and into the barrel's cut; pushed 1 mm or more off every screw, bushing and pivot the bridge holds, and off the keyhole */
-const TB_EDGE=[[31.67, -26.34], [31.32, -25.19], [30.97, -24.04], [30.61, -22.9], [30.26, -21.75], [29.91, -20.6], [29.55, -19.46], [29.19, -18.31], [28.8, -17.18], [28.37, -16.06], [27.86, -14.96], [27.29, -13.85], [26.81, -12.68], [26.57, -11.42], [26.28, -10.19], [25.9, -8.98], [25.41, -7.82], [24.82, -6.7], [24.14, -5.64], [23.37, -4.67], [22.5, -3.79], [21.54, -3.01], [20.51, -2.33], [19.4, -1.74], [18.23, -1.28], [17.01, -0.95], [15.76, -0.78], [14.54, -0.78], [13.34, -0.97], [12.16, -1.31], [10.95, -1.73], [9.67, -2.07], [8.34, -2.22], [7.05, -2.19], [5.83, -2.16], [4.67, -2.27], [3.57, -2.57], [2.5, -3.06], [1.47, -3.7], [0.48, -4.44], [-0.46, -5.22], [-1.38, -6.0], [-2.29, -6.7], [-3.19, -7.19], [-4.06, -7.34], [-4.86, -7.1], [-5.51, -6.51], [-5.92, -5.69], [-6.02, -4.77], [-5.81, -3.81], [-5.38, -2.83], [-4.85, -1.81], [-4.3, -0.75]];
+/* the upper train bridge's notch round the fusee and its horn, measured on two frames of a restoration video (tools/train_bridge.py: KLUwI2UUCMQ 23:30 and 13:49.5):
+   the notch a circle (TB_NOTCH: x, z, r), the horn between it and the barrel's cut ending in a straight cut across, the mouth a sharp corner and a straight edge to
+   the rim. TB_EDGE runs from outside the rim along the mouth, round the notch, across the horn's end and into the barrel's cut, as crescent() takes it */
+const TB_NOTCH=[11.46,-17.47,16.57];
+const TB_EDGE=[[38.23, -15.56], [27.99, -18.67], [28.02, -18.18], [28.03, -17.68], [28.03, -17.19], [28.01, -16.69], [27.98, -16.2], [27.94, -15.7], [27.88, -15.21], [27.8, -14.72], [27.71, -14.23], [27.61, -13.75], [27.49, -13.27], [27.36, -12.79], [27.21, -12.31], [27.05, -11.85], [26.87, -11.38], [26.68, -10.92], [26.48, -10.47], [26.26, -10.02], [26.03, -9.59], [25.79, -9.15], [25.54, -8.73], [25.27, -8.31], [24.99, -7.9], [24.7, -7.5], [24.39, -7.11], [24.08, -6.73], [23.75, -6.35], [23.41, -5.99], [23.06, -5.64], [22.7, -5.3], [22.33, -4.97], [21.95, -4.65], [21.57, -4.34], [21.17, -4.04], [20.76, -3.76], [20.35, -3.49], [19.92, -3.23], [19.49, -2.98], [19.06, -2.75], [18.61, -2.53], [18.16, -2.32], [17.71, -2.12], [17.24, -1.94], [16.78, -1.78], [16.31, -1.63], [15.83, -1.49], [15.35, -1.37], [14.87, -1.26], [14.38, -1.16], [13.89, -1.08], [13.4, -1.02], [12.9, -0.97], [12.41, -0.93], [11.91, -0.91], [11.42, -0.9], [10.92, -0.91], [10.43, -0.94], [9.93, -0.97], [9.44, -1.03], [8.95, -1.09], [8.46, -1.18], [7.97, -1.27], [7.49, -1.39], [7.01, -1.51], [6.54, -1.65], [6.06, -1.81], [5.6, -1.98], [5.14, -2.16], [4.68, -2.35], [4.23, -2.56], [3.79, -2.79], [3.35, -3.02], [2.92, -3.27], [2.5, -3.53], [2.09, -3.81], [1.69, -4.09], [1.29, -4.39], [0.9, -4.7], [0.53, -5.03], [0.16, -5.36], [-0.2, -5.7], [-0.55, -6.06], [-0.88, -6.42], [-1.21, -6.79], [-1.52, -7.18], [-1.82, -7.57], [-2.11, -7.97], [-2.39, -8.38], [-2.66, -8.8], [-2.91, -9.23], [-3.15, -9.66], [-3.38, -10.1], [-3.59, -10.55], [-3.79, -11.01], [-3.98, -11.46], [-4.15, -11.93], [-6.6, -10.44], [-7.03, -10.18]];
 /* the balance lower bridge (tools/lower_bridge.py), after a restoration video (References/VIDEOS.md: the bridge on the upturned train bridge, measured through a camera fitted to its rim):
    LB_LO, the lower tier, one slab shaped as an L round the escape arbor; LB_UP, the upper tier, a lug at each end of the bridge's long axis against the train bridge's underside, each with
    its screw (the fourth end's round the train-blocking screw); LB_WALL, the walls that join them to the slab. The escape wheel turns between the slab and the train bridge, between the lugs */
@@ -267,7 +269,7 @@ function buildMovement(M){
      (outside every wheel, over the access hole in the pillar plate), and at the fourth end beyond the train-blocking screw (Fig. 30's order), moved off the pillar, the detent support
      block and the barrel bridge's screw beside it; lbp: its steady pins, one in each lug (tools/lower_bridge.py) */
   /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff, at -30 deg, where the
-     bridge's notch round the fusee (Fig. 67) leaves it 2 mm of metal; at -60 deg it would stand in the notch */
+     bridge's notch round the fusee leaves it 2.8 mm of metal; at -60 deg it would stand in the notch */
   const ARM_S=0.8,TBS_R=0.84;
   /* balance locking arm: its finger (S.armF) stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (at 180 + 12 deg
      - BETA with the balance at rest), 0.02 clear of it; the arm turns on its screw (S.arm) outside the balance's sweep, 90 deg out to its stop pin (42300, pressed into the train bridge) */
@@ -329,14 +331,15 @@ function buildMovement(M){
     return mesh(pl,new THREE.LatheGeometry(pr,32),M.plateSolid,x,0,z);};
   PILLARS.train.forEach(([x,z])=>hn(pillar(x,z,TB_U),'42059'));hn(pillar(...PILLARS.barrel,TB_T),'42058');
   /* ---------- upper train bridge (y TB_T..TB_U) and barrel bridge (y BB_T..TB_T). The barrel bridge sits on the train bridge and is cut around the
-               balance. The train bridge is the crescent of Figs. 29, 67 and 110, traced through an affine fit (tools/train_bridge.py): the disc less a cut round
+               balance. The train bridge is the crescent of Figs. 29, 67 and 110, its notch and horn measured on a restoration video (tools/train_bridge.py): the disc less a cut round
                the barrel and a notch round the fusee, open to the rim, with a horn between them that carries the centre wheel's upper bushing; the barrel
                pillar stands in the open notch. Its keyhole opening frees the balance's staff and rollers and the escape arbor ---------- */
   const tb=part('trainBridge',-62);
   const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56],TBpoly=crescent(BR_R,TBc,19.2,TB_EDGE);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */
   /* the keyhole (Figs. 29, 67): the opening round the balance staff and rollers (r 8.0) joined to one round the escape arbor (r 3.0, well inside the escape upper
-     bridge's screws), which the escape upper bridge spans. Drawn from the model's centres: through the fit the drawing's keyhole lands about 5 mm off them */
-  const KEY=twoCircles(L.B,8.0,L.E,3.0);
+     bridge's screws), which the escape upper bridge spans. Drawn from the model's centres: through the fit the drawing's keyhole lands about 5 mm off them. Kept 1 mm
+     off the notch round the fusee, which the r 8.0 circle would reach: the video's keyhole (23:30) leaves 3 mm or more of metal there, and nothing passes at that side */
+  const KEY=twoCircles(L.B,8.0,L.E,3.0).map(p=>{const c=TB_NOTCH,d=Math.hypot(p[0]-c[0],p[1]-c[1]),m=c[2]+1;return d<m?[c[0]+(p[0]-c[0])*m/d,c[1]+(p[1]-c[1])*m/d]:p;});
   R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2,1],[...L.T,1,1],{pts:KEY},[...SPv,0.52,1],
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),hT(...S.tb[2],PSR),hC(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.eb.map(q=>hT(...q,0.9)),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),hT(...S.blk,0.9),hT(...S.cock,2.8,0.8),...S.ckp.map(q=>[...q,0.42,1]),
     hT(...S.arm,ARM_S),[...S.tBlock,0.72,1],[...S.armPin,0.3,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');
