@@ -103,7 +103,7 @@ host, add a redirect of your own if old links matter.
 
 ### Versions
 
-The site has a version, `M.mm.pp` (0.05.00, for example), shown under the byline;
+The site has a version, `M.mm.pp` (1.05.00, for example), shown under the byline;
 clicking it opens About at its list of changes. Both come from `CHANGELOG.md` at
 the root, newest first. A plain build only reads it, so building twice gives the
 same files. To make a release, name the kind of change and what changed:
