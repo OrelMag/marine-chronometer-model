@@ -47,6 +47,8 @@ Essay: its text and figure markup are the `<article id="essay">` in `index.html`
 
 ## Verification tools (`tools/`)
 
+Before each run of a build, check or tool, give an ETA for its results. Times measured on this machine (1 October 2026): `build.py` and `escapement.js` about 1 s, `invariants.py` 4 s, `solids.py` 16 s, `exploded.py` 20 s, `smoke.py` 3 min, `bom.py` about 5 min. `fine.py` and `maintaining.py` are the slowest (CI gives the weekly job up to 3 h). For a tool not listed, estimate, then add its time here.
+
 `BOM.md` (root, generated) is the parts list against the model; `Review-results.md` "BOM comparison" records what it found and what is still open.
 
 Python scripts (numpy, scipy, Playwright + Chromium with SwiftShader WebGL) that fitted the layout to photographs and check it. Each script opens `../index.html?snap&qa` through a `PAGE` constant resolved from its own location. Outputs (`fit.json`, `p3fit.json`, `unproj.json`, `bundle.npy`, `r_*.png` screenshots) are written to the current directory, and `unproj.py` reads the `fit.json` that `fit.py` wrote there. The committed JSON files (`p3map.json`, `cock_outline.json`, `engr.json`) are traced photo data the model was built from, not tool output to regenerate.
