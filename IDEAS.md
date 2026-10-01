@@ -12,6 +12,13 @@ figures, as elsewhere in this repository. Where an idea would add something the
 manual doesn't specify, it is marked **illustrative**, and it would belong in
 the model README's "Estimated, not from the manual" section once built.
 
+**Source of truth.** Two things decide what the model should look like and
+do: photographs of real Hamilton Model 21 chronometers (in `References/`,
+listed in its README) and the manual. Where the model disagrees with them, the
+model is wrong. Estimates, clearance fits and the model's own earlier choices
+give way to either, and an idea that can't be checked against them is
+illustrative.
+
 Contents:
 [Key findings](#key-findings) ·
 [At a glance](#at-a-glance) ·
@@ -87,7 +94,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 
 | # | Idea | Area | Effort | Why | Status |
 |---|---|---|---|---|---|
-| 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes |  |
+| 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes | Partly done: amplitude as state, the train stops below `ESC.AMIN`, Twist to start; the equation of motion is open |
 | 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" | Done: GMT by default `23e9c58`; setting with the key and when stopped `dc06fae`, `21ea739` |
 | 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something | Done `70baefe` |
 | 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page | Done `630aa0f` |
@@ -163,6 +170,7 @@ These close gaps the model README already lists, or add parts the manual
 describes that aren't modelled yet.
 
 ### 1.1 Re-fit the plan positions with the new heights (M)
+*Done: the tools read the model's heights; re-fitted over eight seeds, every axis stays within the fit's spread of `L` (balance 0.16–1.43 mm, mean about 0.1), so `L` stays. See the model README, step 6.*
 The README notes that `L` was fitted before the heights were re-stacked from
 the side photograph, and that `bundle.py`, `fit.py` and `unproj.py` still use
 the old heights.
@@ -171,6 +179,7 @@ the old heights.
 - **Then:** `dyn.py`, `audit.py`, `p3fit.py` and `node escapement.js`. The escape wheel's 9.40 mm centre distance is solved from roller shake, so it must stay fixed.
 
 ### 1.2 The train-bridge screw with nothing under it (S)
+*Examined, still open (`bom.py`'s one known deviation). Fig. 29 draws the upper train bridge with three counterbored screw holes, at its two horns and mid-arc; the top-view photographs show counterbored screws at pillar 0 and at (29.24, -12.28), proud ones at pillar 1, pillar 2 and (-8.5, 27.7). No pillar can stand at (-8.5, 27.7) (the fourth wheel's teeth pass over it) or at (29.24, -12.28) (the fusee wheel's), so which screws are the pillar screws is not settled by these; a photograph of the train bridge off the plate would settle it. Found on the way: the mounting ring's screws go in from the train side, one at the rim at 6 o'clock (fixed, `3c047b0`).*
 *Still open. Screws now have their shanks, so this one is drawn threaded into the bridge alone. A pillar can't go under it: the fourth wheel is there.*
 One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:206](marine-chronometer-source/chronometer-working-model/js/movement.js#L206)). Two ways to fix it:
 - If the top-view photograph shows a pillar there, add it. The manual gives three screws per bridge, and the model has three train pillars plus one barrel pillar.
@@ -181,20 +190,20 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 ### 1.3 Outlines the photographs don't show (M)
 - **Balance lower bridge:** a stadium in the model; "stepped and lobed" in Fig. 110. Trace Fig. 110 through the same kind of similarity transform `p3map.json` uses. *(Done: a stepped block, its upper tier against the train bridge with the two screws from below and two steady pins (Figs. 29, 30, 110; Ops. 12, 50). Fig. 110 fitted like Fig. 67 puts its holes 4–10 mm off, so `tools/lower_bridge.py` lays the upper tier out round the escape wheel instead, with the drawing's arrangement; its lower tier is still the stadium.)*
 - **Upper train bridge under the barrel bridge:** drawn as a full disc, cut round the barrel and with a pocket round the fusee's top (the fusee is open to the barrel bridge, Figs. 24, 77). Figs. 29 and 67 show its whole outline, a crescent; trace it (or an overhaul photo with the barrel bridge off), keeping the pocket's clearances and the top-view photograph's visible edge. *(Partly done: the pocket is now a cut round the fusee open to the rim (r 17.8), which leaves the fusee clear as Fig. 24 shows. The crescent's outer edge and its keyhole opening are still to trace.)* *(Done: the crescent is traced on Fig. 67 through an affine fit (`tools/train_bridge.py`), with its notch round the fusee, the horn and the keyhole; the keyhole's lobes are left out.)*
-- **Detent foot and support block:** shortened to clear the train pillar. Once 1.1 is done, check whether the pillar or the block is really the one out of place.
+- **Detent foot and support block:** shortened to clear the train pillar. Once 1.1 is done, check whether the pillar or the block is really the one out of place. *Checked: the top-view photographs put pillar 0's counterbored screw where the model has it (within 1 mm) and `L` stays (1.1), so the block stays short.*
 
 ### 1.4 The balance's collet, stud and upper setting (S–M)
-- **Collet and stud:** the manual (Sec. II, Fig. 5) says the collet's "curious shape" came from counterpoising experiments to remove position errors, and the stud's attachment to the cock is "unusual". Today the collet is a hexagonal prism. Model both after Fig. 5, with the collet clamp and wedge pin of Fig. 6. *(Done: the slotted collet with its plate, tongue, clamp and wedge pin, and the stud as a bar under the cock on the stud screw and a steady pin (Figs. 19, 84, 85), with its own clamp and wedge pin. The spring's ends reach the clamps, and it is 5.9 mm tall to clear the stud's bar. The collet's counterpoise is not modelled.)* `91dd568`
+- *Checked against Figs. 5 and 6 (fidelity session): the arrangement matches (a slotted fan-shaped collet with its tongue, clamp and wedge pin); Fig. 5 draws the collet larger against the spring, its clamp nearer the coils' radius, which would change the spring's terminal curves: left as it is.* - **Collet and stud:** the manual (Sec. II, Fig. 5) says the collet's "curious shape" came from counterpoising experiments to remove position errors, and the stud's attachment to the cock is "unusual". Today the collet is a hexagonal prism. Model both after Fig. 5, with the collet clamp and wedge pin of Fig. 6. *(Done: the slotted collet with its plate, tongue, clamp and wedge pin, and the stud as a bar under the cock on the stud screw and a steady pin (Figs. 19, 84, 85), with its own clamp and wedge pin. The spring's ends reach the clamps, and it is 5.9 mm tall to clear the stud's bar. The collet's counterpoise is not modelled.)* `91dd568`
 - **Upper pivot setting:** the setting in the cock is "not drawn: the staff is 0.7 mm from the cock's edge" ([movement.js:346](marine-chronometer-source/chronometer-working-model/js/movement.js#L346)). That suggests the traced cock outline is slightly off near the endstone. Re-check the parallax shift in `cock_outline.json`. *(Done: the setting and its olive-hole jewel are drawn in the cock under the endstone cap, with the staff's pivot in the jewel. Rather than re-fit the tracing, the nose is rounded out to a boss 2.4 mm in radius about the staff, as the photographs show the endstone about 3 mm inside the edge; a re-trace of the nose would replace it.)* `2acc042`
 
 ### 1.5 Hand-setting square, balance locking arm, shipping wedges (S each)
-*The balance locking arm is done: arm, screw, washer and stop pin, Locked / Unlocked under Stopping and starting, and it stops the balance. The square is drawn too (`ad1762d`); the wedges are still to do.*
+*The balance locking arm is done: arm, screw, washer and stop pin, Locked / Unlocked under Stopping and starting, and it stops the balance, by a timing weight as Fig. 9 and Sec. X have it (`3655b52`). The square is drawn too (`ad1762d`); the wedges are still to do.*
 - **Hand-setting square:** Fig. 8 shows the key on "the bright, square arbor at the center of the dial", turned by its shank to set the hands. Add the square to the hands' centre stack and use it in [3.1](#31-keep-it-on-gmt-and-set-it-as-the-manual-says). *(Done: the square is drawn, the fusee square's size so the one key fits both (`ad1762d`); it is the cannon pinion's squared end, with the minute hand broached square on it (Op. 64: "the minute hand can be broached with a square file").)*
 - **Balance locking arm (Fig. 9):** later chronometers have a balance wheel locking arm, with locked and unlocked positions. Model it, with a toggle, as a part of the "Operation when received" story.
-- **Shipping wedges:** before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
+- *Deferred:* the wedges belong to chronometers before the locking arm; the model has the arm. - **Shipping wedges** (not the hairspring clamps' wedge pins, which are done): before the arm, chronometers shipped with folded red plastic wedges between the balance rim and the train bridge (Sec. III). This could be an Easter egg in a "Received from storage" walkthrough step.
 
 ### 1.7 Screws, washers and weights from the parts list (S)
-- **The manual's masses:** the moment of inertia in `R.timing` now uses the parts list's masses for the three screw sizes and the two weights (931 g·mm²). Still to do:
+- **The manual's masses:** *Done: the moment of inertia is Table II's 1,140 g·mm² (the rim 4.3 mm tall as Fig. 3 draws it, 1.12 wide to fit), the screw heads 2.6 mm across as Fig. 3 draws them.* Before: the moment of inertia in `R.timing` used the parts list's masses for the three screw sizes and the two weights (931 g·mm²). Still to do:
   - Sec. II gives balance screws "in six weights ranging from 100 mgs. to 300 mgs." and timing washers "in a range of six weights from 4 mgs. to 20 mgs". Map the parts list's three screw head heights onto the six weights.
   - Table II's screw changes imply about 1,100–1,300 g·mm², so the rim's section is probably too light.
   - The drawn screw heads (1.5 mm) are too small for their masses: they should be about 3–4 mm across.
@@ -202,15 +211,17 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js:
 - **Timing washers:** add them as an option in the rate panel ([2.6](#26-a-fuller-rate-panel-sm)).
 
 ### 1.8 Wheel teeth (M–L)
-- **Profiles:** `gearGeo` draws a generic trapezoidal tooth. Clock and chronometer trains use cycloidal teeth and pinion leaves with rounded addenda (the BS 978 Part 2 proportions are the usual reference). With true profiles, the close-ups would show real rolling contact, and `dyn.py` could check tooth-to-leaf clearance through a whole tooth pitch, not just in phase.
+*The train's stack is done: third, centre and fourth wheels from the plate up, with the pinions on the sides and the five spokes that Figs. 13, 29 and 110 give, and the motion work's solid minute and hour wheels and five-spoked wind indicator wheel from photographs of a Model 21's dial side. Profiles and counts are still open.* `22e3984`
+- **The wind indicator wheel's size** (settled). The dial-side photographs seemed to show it larger than the model's r 12.4, about r 15–17 mm, and Fig. 13 draws it large. But it meshes the pinion on the fusee arbor, and its centre under the 12 (Fig. 107) lies 12.3 mm from the fusee's: that centre distance holds its pitch radius near 11.4 mm, as the model has it. The photographs' size is perspective.
+- *Done:* **Profiles:** cycloidal wheel teeth (epicycloidal addenda rolled for each wheel's pinion) and round-tipped pinion leaves, in BS 978 Part 2's proportions; `fine.py` finds no contact at its 15 train positions. Before: `gearGeo` drew a generic trapezoidal tooth. Clock and chronometer trains use cycloidal teeth and pinion leaves with rounded addenda (the BS 978 Part 2 proportions are the usual reference). With true profiles, the close-ups would show real rolling contact, and `dyn.py` could check tooth-to-leaf clearance through a whole tooth pitch, not just in phase.
 - **Tooth counts:** the centre, third and fourth counts are estimates. Count teeth on the highest-resolution photographs (the fourth wheel and the centre wheel's outer rim are often visible), or ask on chronometerbook.com. Update `TRAIN` and every place the counts appear as text (see [7.2](#72-derive-every-train-number-from-train)).
 
 ### 1.9 Chain and mainspring detail (M)
-- *Chain: done.* Outer links (two figure-eight plates and their rivets) and inner links (one plate), on edge in a helical groove (Fig. 38). Still to do: make the barrel-end hook visible in the "Stored energy" step.
-- *Mainspring: done.* It is drawn 0.0165 in thick, in two packs (arbor and wall) joined by a free turn, with the counts from the barrel and arbor radii (`mainspringGeo`). Its length is still estimated (600 mm, the half-room rule). The parts list gives no length or width; a measured spring would settle the set-up (0.30 turn in the model).
+- *Chain: done.* Outer links (two figure-eight plates and their rivets) and inner links (one plate), on edge in a helical groove (Fig. 38). Its hook now stays in a hole in the barrel's wall over the whole wind (`3655b52`). Still to do: make the barrel-end hook visible in the "Stored energy" step.
+- *Mainspring: done.* (Its length has no source: the parts list gives its thickness only, so it stays estimated.) It is drawn 0.0165 in thick, in two packs (arbor and wall) joined by a free turn, with the counts from the barrel and arbor radii (`mainspringGeo`). Its length is still estimated (600 mm, the half-room rule). The parts list gives no length or width; a measured spring would settle the set-up (0.30 turn in the model).
 
 ### 1.10 Oil sinks, jewel settings, endstones (S)
-*Settings and endstones are done: the escape wheel's upper and lower endstone caps, the balance's lower setting and endstone cap, and the fourth wheel's upper setting. 13 of the 14 jewels are drawn; the balance's upper hole jewel isn't (1.4). Oil sinks are still to do.*
+*Settings and endstones are done (and seated, the endstones set in their caps and the lower train bridge's settings pressed through it, by the parts-list work, `ae397f2`): the escape wheel's upper and lower endstone caps, the balance's lower setting and endstone cap, the balance's upper setting and hole jewel in the cock (1.4, `2acc042`), and the fourth wheel's upper setting. All 14 jewels are drawn. Oil sinks are still to do.*
 Jewels are a gilt ring plus a ruby ring. Add the oil sink (a shallow cone) on the settings that take oil, and cap jewels where the manual has them. This pairs with the oiling chart in [3.5](#35-overhaul-walkthrough-and-oiling-chart).
 
 ---
@@ -777,7 +788,7 @@ A suggested order, so that each stage makes the next easier.
 - Parts registry (7.1). Derive train numbers from `TRAIN` (7.2). `ESC` as a factory, shared with the tools and the essay (7.3). *Done: `5e8c578`, `5512fe4`, `813f7ae`.*
 - CI: build, escapement check with an exit code, built-copies check, smoke test (8.1). Invariant tests (8.2). *Done: `813f7ae` (exit code), `7f3668e`; the expected-leftovers file for `dyn.py`/`audit.py` is open.*
 - Performance: knurls and rim holes merged, tiny meshes out of the shadow pass (5.1). Precomputed stripe texture (5.2). No rendering when idle (5.4). *Done: `347bf5b`, `6c5ed75` (a faster loop, not precomputed images: see 5.2), `4bd930e`.*
-- Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2). *Done: `c2af700`, `cf07772` (with fixes in `650c005`); a view-following canvas description, a contrast check and remembered settings are open.*
+- Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2). *Done: `c2af700`, `cf07772` (with fixes in `650c005`), a view-following canvas description `dd2c6df` and remembered settings `8a84df5`; a contrast check is open.*
 - GMT by default (3.1, first half). *Done: `23e9c58`.*
 
 **Stage 2: the chronometer as an instrument (3–5 weeks)**
@@ -799,6 +810,7 @@ A suggested order, so that each stage makes the next easier.
 
 What makes the project good, which none of the above should erode:
 
+- **The photographs and the manual are the source of truth.** Photographs of real Model 21s and the 1948 manual decide every shape, size and behaviour; when the model disagrees with them, the model changes. A fit, an estimate or an earlier choice in the code never outranks them.
 - **Sourced against estimated.** Every new dimension, coefficient or behaviour goes into the README's "Estimated, not from the manual" section, unless the manual or a measurement gives it. Physics additions (2.x) are mostly illustrative; label them in the page, not just the README.
 - **One clock.** New motion is driven from `tSim` and `E` by fixed ratios, or by the balance's dynamics. Never by an independent timer. The dynamic balance (2.1) replaces the source of `E`, not the principle.
 - **Offline, single file, no network.** The build fails on any remote reference. Keep it that way: new libraries go in `vendor/` with their licence, and new images are inlined in the single-file build.

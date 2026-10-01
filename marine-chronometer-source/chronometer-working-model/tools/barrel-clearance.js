@@ -12,6 +12,7 @@
  const env=[];bz.traverse(o=>{if(!o.isMesh)return;M4.multiplyMatrices(inv,o.matrixWorld);const p=o.geometry.attributes.position;let r=0,y0=1e9,y1=-1e9;
    for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).applyMatrix4(M4);r=Math.max(r,Math.hypot(v.x,v.z));y0=Math.min(y0,v.y);y1=Math.max(y1,v.y);}
    const nm=o.userData.barrelWall?'wall':o.geometry.type.replace('Geometry','')+' r'+r.toFixed(1);if(!env.some(e=>e.name===nm&&Math.abs(e.y0-y0)<1e-6&&Math.abs(e.y1-y1)<1e-6))env.push({r,y0,y1,name:nm});});   /* one per shape: the cap screws sweep the same ring */
+ { const W=env.filter(e=>e.name==='wall');if(W.length>1){const w={r:W[0].r,y0:Math.min(...W.map(e=>e.y0)),y1:Math.max(...W.map(e=>e.y1)),name:'wall'};for(const e of W)env.splice(env.indexOf(e),1);env.push(w);} }   /* the wall's bands (round the chain hook's hole) as one */
  const R=Math.max(...env.map(e=>e.r)),Y0=Math.min(...env.map(e=>e.y0)),Y1=Math.max(...env.map(e=>e.y1)),MG=2.5;
  /* signed distance to one piece (exact: outside, the distance; inside, minus the depth to the nearest face) and its gradient; it is convex */
  const sdf=(e,x,y,z)=>{const r=Math.hypot(x,z),ux=r>1e-9?x/r:1,uz=r>1e-9?z/r:0,dr=r-e.r,dt=e.y0-y,db=y-e.y1,dy=Math.max(dt,db),sy=dt>db?-1:1;
@@ -27,7 +28,7 @@
      const tol=Math.max(0.002,-0.02*best),rad=Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2])+Math.hypot(b[0]-c[0],b[1]-c[1],b[2]-c[2]);
      if(lb<best-tol&&rad>tol){const ab=[(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2],bc=[(b[0]+c[0])/2,(b[1]+c[1])/2,(b[2]+c[2])/2],ca=[(c[0]+a[0])/2,(c[1]+a[1])/2,(c[2]+a[2])/2];st.push([a,ab,ca],[ab,b,bc],[ca,bc,c],[ab,bc,ca]);}}
    if(bp){const m=new THREE.Vector3(...bp).applyMatrix4(toMv);res[part]={part,type,d:best,piece:bn,at:[m.x,m.y,m.z].map(c=>+c.toFixed(2))};}};
- mv.traverse(o=>{if(!o.isMesh||!vis(o)||inB(o))return;const part=partOf(o);if(part==='mainspring')return;const g=o.geometry;if(!g.attributes||!g.attributes.position)return;
+ mv.traverse(o=>{if(!o.isMesh||!vis(o)||inB(o)||o.userData.hookNose)return;const part=partOf(o);   /* the chain's hook nose stands in its hole in the wall */if(part==='mainspring')return;const g=o.geometry;if(!g.attributes||!g.attributes.position)return;
    const mats=[];if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<o.count;i++){o.getMatrixAt(i,im);mats.push(new THREE.Matrix4().multiplyMatrices(o.matrixWorld,im));}}else mats.push(o.matrixWorld);
    const p=g.attributes.position,idx=g.index,nt=idx?idx.count/3:p.count/3,type=g.type.replace('Geometry','');
    for(const mw of mats){M4.multiplyMatrices(inv,mw);const P=[];let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9,z0=1e9,z1=-1e9;

@@ -4,10 +4,16 @@ from playwright.async_api import async_playwright
 import pathlib
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import re
+SRC=(pathlib.Path(__file__).resolve().parent.parent/'js'/'movement.js').read_text(encoding='utf-8')
+K=lambda n:float(re.search(r'\b'+n+r'=(-?[\d.]+)',SRC).group(1))
+# heights from the model's levels (a screw head's point 0.6 into it): balance rim BAL_Y, fusee at the barrel bridge's top BB_T, barrel square 4.4 above it,
+# the barrel-bridge screw and the train-bridge screw, the plate's edge ring at BB_T. The plan positions (x, z) are the fit's own, from before the re-stack
+YB,YF,YS,YP,YT,YR=K('BAL_Y'),K('BB_T'),K('BB_T')-4.4,K('BB_T')-0.6,K('TB_T')-0.6,K('BB_T')
 PH={'balance':(775,512),'fusee_post_base':(1105,695),'barrel_square':(440,690),'front_pillar_screw':(703,985),'backleft_pillar_screw':(245,420)}
-MD={'balance':[8.01,-31.5,8.6],'fusee_post_base':[11.3,-33.0,-18.27],'barrel_square':[-21.82,-37.4,1.64],'front_pillar_screw':[-23.0,-33.6,-24.5],'backleft_pillar_screw':[-9.1,-29.6,33.3]}
+MD={'balance':[8.01,YB,8.6],'fusee_post_base':[11.3,YF,-18.27],'barrel_square':[-21.82,YS,1.64],'front_pillar_screw':[-23.0,YP,-24.5],'backleft_pillar_screw':[-9.1,YT,33.3]}
 EDGE=[(395,300),(300,345),(200,415),(140,490),(110,560),(100,640),(800,1030),(1000,995),(1100,960),(1200,915)]
-RING=[[37.5*math.cos(t),-33,37.5*math.sin(t)] for t in np.linspace(0,2*math.pi,240)]
+RING=[[37.5*math.cos(t),YR,37.5*math.sin(t)] for t in np.linspace(0,2*math.pi,240)]
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])

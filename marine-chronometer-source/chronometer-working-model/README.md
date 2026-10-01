@@ -182,6 +182,10 @@ input draws at the display's rate. Each frame is compared with the last one
 drawn. Code that changes the scene without input or a `look()` call should call
 `wake()`.
 
+Every piece of the model is tagged with its line in the manual's parts list
+(`userData.hn`, set by `hn()` in `core.js`; `bom.json` is the list, `tools/bom.py`
+checks the model against it and writes `BOM.md` at the repository root).
+
 The browser tools in `tools/` open `index.html?snap&qa` themselves. They need
 Python with numpy, scipy and Playwright's Chromium, and write their output into
 the folder they're run from. `escapement.js` and `solve.py` need no browser. The
@@ -307,15 +311,15 @@ and the thread pitches are the model's. Things to know before changing it:
   each, as they are in practice to keep the balance in poise. If it means one
   weight, the pitches double, to 0.29 and 0.18 mm. The rates the panel shows
   would not change, because the pitches are fitted to the manual's figures.
-- **The balance is probably heavier than drawn.** With the parts list's masses
-  the moment of inertia is 930 g·mm². Table II gives a second estimate:
-  replacing a pair of 0.100 in screws with 0.080 in ones changes the rate by
-  about 16 minutes a day (the model gives 22.6), and 0.100 in to 0.050 in by
-  about 43 (the model gives 55.6, going to the 0.049 in screws). Both imply
-  about 1,100–1,300 g·mm², so the rim's section (1.4 × 2.4 mm, estimated) is
-  likely too light. The drawn balance-screw heads are also too small. They
-  are 1.5 mm across, but screws of 125–255 mg with those head heights need
-  heads of about 3–4 mm, which is closer to what the photographs show.
+- **The moment of inertia is Table II's.** Table II (p. 70) gives the rate a
+  pair of screws of one head height makes against another: 0.100 in to 0.080
+  in, about 16 minutes a day; 0.100 to 0.050, about 43; and eight more. With
+  the parts list's masses at their heads' radii, those changes fit a balance of
+  1,140 g·mm² (least squares over the ten; Table III's washers give about 960).
+  The rim is drawn to give it: 4.3 mm tall, as Fig. 3 draws the band against
+  the 29 mm balance, and 1.12 wide. The screw heads are 2.6 mm across, as Fig.
+  3 draws them; at that size their masses need a dense metal (gold, or
+  platinum; brass would need heads of 3.9 mm).
 - **Changing the balance changes the pitches, not the rates.** A heavier rim
   or larger screws raise `I₀`; `R.pitch` follows, and a turn stays 40 s and
   2.8 s a day.
@@ -332,7 +336,8 @@ and the thread pitches are the model's. Things to know before changing it:
 ## Sources
 
 - *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948. Used for:
-  - the structure: pillar plate, barrel bridge, upper and lower train bridges, balance lower bridge, escape upper bridge. The lower train bridge is screwed to the dial side of the pillar plate (Figs. 29, 67, 110);
+  - the structure: pillar plate, barrel bridge, upper and lower train bridges, balance lower bridge, escape upper bridge. The lower train bridge is screwed to the dial side of the pillar plate (Figs. 29, 67, 110): a straight steel bar with square ends across an opening in the plate, its settings inboard and a screw toward each end (Figs. 30, 31 and a photograph of a Model 21's dial side);
+  - the going train's stack (Figs. 13, 29, 110): third, centre and fourth wheels from the plate up, the third and centre pinions above their wheels and the fourth's below, and five spokes on each wheel;
   - the maintaining work and the winding stop-bar (Sec. IV, Figs. 12, 28, 69–74, parts list Fig. 109): the fusee's winding ratchet with its two screws; the sustaining ratchet wheel, free on the arbor, with two winding pawls, their springs and four screws; the sustaining spring in the fusee wheel's recess; the end plate and taper pin; the stop-bar in a slot in the fusee's top with its spring, under the top plate and its two screws; the winding stop screwed into the barrel bridge; the sustaining pawl on its arbor with its spring;
   - the upper train bridge leaving the fusee's top open to the barrel bridge, which holds the fusee's upper bushing (Figs. 24, 29, 67, 77; parts list 108-45);
   - the barrel's inside (Figs. 26, 75): the arbor's core with its hook for the mainspring, and the brace lining the wall; the chain hooked to the barrel and pinned to the fusee (Figs. 26, 28); the setup pawl spring (Figs. 17, 24, 80);
@@ -356,6 +361,7 @@ and the thread pitches are the model's. Things to know before changing it:
 - chronometerbook.com, post 4: W. Rawlings' plan of the Model 21 escapement, a redrawing of the manual's Fig. 90, and a photograph of a Model 21 detent.
 - chronometerbook.com, post 30: escape wheel specification of 16 teeth, 13.14-13.18 mm diameter, 1.27-1.32 mm thick and no wider than the impulse roller; the locking jewel set at 8-12° of draw.
 - The manual's Fig. 2 photograph (layout) and Fig. 107 (dial side, wind-indicator wheel).
+- Photographs of a Model 21's dial side during reassembly and of its loose motion-work wheels (user-supplied, source unknown): the solid minute and hour wheels and the five thin spokes of the wind indicator wheel. Shapes only; the counts and the wind indicator wheel's radius (Fig. 107) are unchanged, though the photographed wheel looks larger (about r 15–17 mm).
 - A photographed Model 21 dial of the U.S. Maritime Commission contract (the Hamilton dial's layout, inscriptions and hands) and a photographed movement, serial 2E12055 (the plate engraving's text and layout, and the serial used on the plates and dial). Both are in `References/`.
 
 ## How the layout was measured
@@ -380,12 +386,12 @@ and the thread pitches are the model's. Things to know before changing it:
    - The cock foot stands 14.2 tall on the train bridge.
    - The fusee cone spans 6.7–15.8, which the model matches. Its profile is measured on the same photograph, scaled by the fusee wheel's tips (40.87 mm, 16.98 px/mm) about its axis: the groove's floor on the eight upper turns is 8.33, 8.54, 8.95, 9.54, 10.19, 11.07, 12.16 and 13.81 mm, the flanges standing about 1.25 mm over the floor of the turn below them, the top 9.3 and the base flange 18.3. `r0/√(1−a·m)` fits those floors to 0.085 mm rms (r0/(1−a·m), the old form, to 0.21): 7.95 mm at the small end and 16.8 at the large. That is the fusee for a pull falling in step with the barrel's turns, as a mainspring's does. Fig. 28 draws the same proportions.
    - The escape wheel runs 0.9 below the train bridge.
-   - The escape pinion meshes with the fourth wheel 3.6 above the plate, and a large wheel runs lowest, at 0.4–1.6. That is the centre wheel, which must pass under the fusee wheel and the barrel. The escape pinion runs from the fourth wheel down toward the plate (2.1–4.1), clear of the third wheel just above.
+   - The escape pinion meshes with the fourth wheel 3.6 above the plate, and a large wheel runs lowest, at 0.4–1.6. Figs. 13, 29 and 110 stack the train third, centre, fourth from the plate, so that band is the third wheel (0.35–1.0) with the centre wheel just above it (1.15–1.85), under the fusee wheel (2.04). The third and centre pinions stand above their wheels, the fourth pinion below its wheel, long, down to the third wheel (0.2–3.1), and all three wheels have five spokes. The escape pinion runs from the fourth wheel down toward the plate (2.1–4.1), 1.1 mm above the third wheel's teeth.
    - A 3 mm plate at 7.9–10.9 is taken to be the balance lower bridge's lower tier (its upper tier lies against the train bridge). It also carries the fourth wheel's upper pivot, and the train-blocking screw reaches down from it to the fourth wheel's spokes (Sec. II).
    - Fig. 2 and Fig. 109 show a tall barrel that rises past the train bridge to the barrel bridge, and Figs. 108 and 110 show the train bridge cut round it.
-   - The plan positions (`L`) were fitted before the re-stack, with the old heights, which `bundle.py`, `fit.py` and `unproj.py` still use. They were not re-fitted.
-   - Re-running `bundle.py` with the new heights puts the fusee and barrel axes within 0.8 mm of `L` and the balance within 2 mm. That is about the run-to-run spread of its random restarts.
-7. **Collision check.** `tools/fine.py --hold` runs the same check with the balance locking arm locked and the train-blocking screw down. `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. `tools/fine.py` checks at 0.05 mm, also at 15 train positions and wind states, and includes the chain and the tube springs; it found four overlaps of 0.1–0.4 mm that the coarser check could not see. Only intended contacts remain, listed with their reasons in `fine.py`. The barrel's wall is an open drum; `fine.py` tests it as the solid it encloses and measures every part's distance to the solid the barrel sweeps: the tightest are the third wheel (0.150 mm below the cap screws), the barrel bridge (0.55 mm above the boss), the detent's foot (0.98 mm) and the train bridge's cutout (1.0 mm from the caps' rim). The mainspring stays 1.2 mm off the arbor, 0.6 mm inside the wall and 0.2–0.3 mm from the caps at every wind. The dial face is the one open surface not tested.
+   - The plan positions (`L`) were fitted before the re-stack. `bundle.py`, `fit.py` and `unproj.py` now read their heights from `movement.js`'s constants. Only heights relative to the edge ring's matter to the fit (a common offset moves the camera), and the re-stack changed only the balance's, by 0.64 mm.
+   - Re-fitted with those heights over eight seeds (`python bundle.py --seed N`, 45 restarts each), and fitted to `L` by a turn and a scale about the centre, the axes land within 0.16–1.43 mm of `L` for the balance, 0.09–0.73 mm for the fusee and 0.12–0.38 mm for the barrel, the balance's mean offset about 0.1 mm; the scale comes out 0.948–0.960 (the 0.955 of step 2). With the old heights the same seeds give 0.5–2.1, 0.3–0.8 and 0.3–0.7 mm (two seeds fall into a wrong minimum). No axis moves clear of that spread, so `L` stays as fitted.
+7. **Collision check.** `tools/fine.py --hold` runs the same check with the balance locking arm locked and the train-blocking screw down. `tools/dyn.py` with `tools/interference-check.js` checks every closed part at 0.4 mm through a full escapement cycle. `tools/fine.py` checks at 0.05 mm, also at 15 train positions and wind states, and includes the chain and the tube springs; it found four overlaps of 0.1–0.4 mm that the coarser check could not see. Only intended contacts remain, listed with their reasons in `fine.py`. The barrel's wall is an open drum; `fine.py` tests it as the solid it encloses and measures every part's distance to the solid the barrel sweeps: the tightest are the barrel bridge (0.55 mm above the boss), the detent's foot (0.98 mm) and the train bridge's cutout (1.0 mm from the caps' rim). The mainspring stays 1.2 mm off the arbor, 0.6 mm inside the wall and 0.2–0.3 mm from the caps at every wind. The dial face is the one open surface not tested.
 8. **Visual check.** `tools/topview.py` renders the model from above and warps it onto the top-view photograph through five barrel-bridge screws: `verification/topview-comparison.png` shows the photo, the model and the two blended. Parts far above or below the barrel bridge (the cock, the balance's endstone) are off by up to about 3 mm there, from the photograph's tilt. The photographed movement has the balance locking arm (Fig. 9), which the model now has too, though its shape is estimated. `tools/p3fit.py` renders from the camera fitted to the photograph the tracing was first done on.
 
 ## Estimated, not from the manual
@@ -393,8 +399,8 @@ and the thread pitches are the model's. Things to know before changing it:
 - Tooth counts of the centre, third and fourth wheels and pinions. They are chosen to give the half-second train's ratios. The escape wheel (16) is Hamilton's; the 96/14 first stage reproduces the manual's seven key half-turns per 24 h.
 - Dimensions and positions, estimated from the figures and a 4-inch dial, except where the photographs give them (plan: "How the layout was measured", steps 1–5; heights: step 6).
 - Heights the side photograph doesn't show:
-  - The third wheel (4.3–5.2 mm above the plate, just above the fourth wheel, between the centre pinion and the barrel).
-  - The barrel (13.2 mm tall, from just above the third wheel to 1 mm under the barrel bridge; its chain band runs level with the fusee's cone).
+  - The train wheels' and pinions' heights within the stack that Figs. 13, 29 and 110 give (third wheel 0.35–1.0 mm above the plate, centre wheel 1.15–1.85, pinions ending at their wheels' bosses), and the bosses' sizes (the centre boss r 1.3, inside the radius the third wheel's teeth leave free).
+  - The barrel (13.2 mm tall, from 5.7 mm above the plate, over the third and centre wheels, to 1 mm under the barrel bridge; its chain band runs level with the fusee's cone).
   - The balance rim, 0.4 mm clear of the escape upper bridge. The bridge's two screws have low heads (0.3 mm), 0.14 mm clear of the rim and the timing weights, which pass over them.
   - The hairspring, 5.9 mm tall, from under the collet to the stud's clamp under the cock.
 - The train bridge's cut round the barrel: a 19.2 mm circle that holds the barrel, open to the rim and clear of the centre arbor. Figs. 108 and 110 show its presence; the lower cutout of Fig. 67 follows this circle to 0.7 mm (see the next item).
@@ -403,9 +409,9 @@ and the thread pitches are the model's. Things to know before changing it:
 - The wind indicator ratio. The ratio gives the UP–DOWN hand a 240° sweep for 56 h; the photographed Hamilton dial's scale spans about 310°, so the model's scale is drawn on 240°, open wider round the 12.
 - The Hamilton dial's proportions. The sub-dial centres are fixed by their arbors (23.9 mm from the centre, 0.47 of the dial's radius), nearer the centre than on the photographed dial (about 0.54), so the sub-dials sit lower and the inscriptions closer together. The plate engraving's block is 2.5 mm nearer the rim than on the top-view tracing, to clear the dust-seal flange.
 - The stop-bar's size, nose and travel, and the fusee's top: a slotted layer with a groove for the stop-bar spring, and the top plate (r 9.15) with its two screws. Sec. IV describes the mechanism (the chain bears on one end, the other moves out to the winding stop), not its dimensions. The model's bar lies beside the arbor in a slot open to the rim at both ends (Figs. 12, 28); a nose from its end hangs 1.6 mm proud of the groove's floor in the top turn, 0.7 turn in, through a window in the top rim, and the chain winding over it slides the bar 1.64 mm, so the far end stands about 1.4 mm past the rim, where the winding stop hangs. The spring bears on a tab on the bar's inner side. The groove is led in over 0.12 turn at its start, where the chain leaves the fusee at full wind, and out over 0.04 at its end.
-- The shapes of the springs: the winding-pawl springs, the stop-bar spring, the sustaining pawl's spring (a wire round a steady pin in the train bridge) and the setup pawl spring. The sustaining spring's travel from loaded to spent (10°, `SMAX`): 5 to 10 minutes of drive (Sec. IV) is 4.4–8.75° of the fusee wheel. The model does not stop the train if a wind outlasts it (only possible at high speed).
+- The shapes of the springs: the winding-pawl springs, the stop-bar spring, the sustaining pawl's spring (a wire round a steady pin in the train bridge) and the setup pawl spring (a long arc round the ratchet, as Fig. 80 draws it, 9.8 mm from the arbor, held between two steady pins at its far end). The setup pawl turns on its pivot screw, put in from under the barrel bridge (Op. 41, Fig. 80), whose end shows in the cover as the top-view photograph shows it. The sustaining spring's travel from loaded to spent (10°, `SMAX`): 5 to 10 minutes of drive (Sec. IV) is 4.4–8.75° of the fusee wheel. The model does not stop the train if a wind outlasts it (only possible at high speed).
 - The sustaining spring is pinned to the fusee wheel and pushed by a pin on the sustaining ratchet; the manual pins it to both.
-- The barrel arbor's core (r 1.74) and hook, the barrel wall (0.2 mm thick) and the brace lining it (0.25 mm thick, 40° of the wall), the end plate and taper pin, and the chain's end pin and hook.
+- The barrel arbor's core (r 1.74) and hook, the barrel wall (0.2 mm thick) and the brace lining it (0.25 mm thick, 40° of the wall), the end plate and taper pin, and the chain's end pin and hook (its nose through a hole 0.7 mm across in the wall, as Figs. 17 and 75 have it; the hole's size and the nose's place, 0.85 mm past the last link, estimated).
 - The chain's links: figure-eight plates (Fig. 38) 0.9 mm high and 0.18 thick, three deep along the arbor, riveted at a 1.0 mm pitch. The chain is 660 links, about 26 in with its straight run; one sale listing gives 28.5 in for the Hamilton's.
 - The mainspring's length and lie. Its thickness is from the parts list (0.0165 in, 0.419 mm); its length (600 mm) is estimated, filling half the room between the core and the brace, the length that gives the most turns. It lies in two packs, one on the arbor and one on the wall, their coils 0.01 mm apart (the grease), joined by one free turn (estimated). In the model's barrel, on a core of r 1.74 (estimated: the arbor's pivots are r 1.4), that spring takes 7.64 turns from its fewest to its most. The fusee's chain needs 7.07 of them, which leaves a set-up of 0.37 turn and 0.2 turn unused at full wind. The core was r 2.4 (6.53 turns) until the fusee was measured, which needed more chain. The eye in its inner end for the arbor's hook, and the anchor pin at its outer end (the parts list's "complete with anchor pin"), drawn bearing on the brace's leading end, are estimated.
 - The detent's dimensions.
@@ -438,8 +444,8 @@ and the thread pitches are the model's. Things to know before changing it:
   - The locking jewel's wedge pin (42089, Figs. 57–59), 0.2 mm across, beside the jewel on the side away from the wheel.
 - The balance rim diameter (29 mm), measured on the top-view photograph.
 - The rate panel's figures (see "The rate panel" under How the timing works). Sourced: the rate for a full turn (p. 70) and the screws' and weights' masses (parts list). Estimated:
-  - The moment of inertia: the rim's and arm's section, and each screw's or weight's mass spread along its drawn cylinder. It leaves out the rim's holes, the weights' screws and the staff. Table II's screw changes imply a larger moment, about 1,100–1,300 g·mm², so the rim is probably heavier than drawn. The drawn balance-screw heads (1.5 mm across) are also too small for their masses.
-  - The thread pitches (0.146 and 0.092 mm), which follow from the moment of inertia.
+  - The rim's width (1.12 mm), fitted so that the moment of inertia is the 1,140 g·mm² Table II gives (its height, 4.3 mm, is Fig. 3's; its section otherwise estimated), and the arm's section. Each screw's or weight's mass is spread along its drawn cylinder; the rim's holes, the weights' screws and the staff are left out.
+  - The thread pitches (0.179 and 0.113 mm), which follow from the moment of inertia.
   - Reading "one full turn of timing weight" as both weights of the pair turned a turn each.
   - The weights' travel, 3 turns either way from the middle position the manual starts them at. At 40 s a turn, that covers the 2 minutes a day that screws and washers leave (Op. 5).
   - The weights' drawn sizes.
@@ -457,22 +463,35 @@ and the thread pitches are the model's. Things to know before changing it:
   - The hand-setting square is the cannon pinion's squared end, 2.4 mm across, as the fusee arbor's square, since the one key fits both (Fig. 8), standing 1.6 mm proud of the minute hand's collet, as the fusee's square stands (the side photograph suggests about 2 mm).
   - The cannon pinion's pipe is r 1.7, as the square's corners need, since the hour wheel goes on over the square; the hour wheel's bore is r 1.75 and its pipe r 2.3, through a dial hole of r 2.5.
   - The hour hand's boss is r 2.9, its collet r 2.7 and 0.6 mm deep under the blade (clear of the seconds hand's tip, which reaches r 2.9 at :00); the minute hand's boss and collet are r 3.2, the collet 0.8 mm deep over it (the dial photograph shows one round boss about 7 mm across). The hour hand is at 5.2 mm and the minute hand at 5.75 mm, on the cannon pinion's shoulder.
-- The gimbal latch's geometry. Sourced: its parts (support bracket screwed from outside the box, lever, handle, keeper on the case) and the slot in the ring the lever passes (Figs. 1, 106; parts list). Estimated: the lever pivots on a pin in a corner bracket at the height of the ring's pivots and swings 45° between the right wall and the keeper; the slot is 7.3 × 4.4 mm; the keeper is a back and two cheeks. The take-up spring and the clamping bracket and screw are left out.
+- The gimbal latch's geometry. Sourced: its parts and how they go together (Fig. 106, parts list): the support bracket screwed into the corner from outside the box with washers under the screws' heads, the lever turning on the knurled clamping screw, which goes down through the clamping bracket and the lever into the support bracket, the take-up spring on its two screws, the handle, the keeper on the case on its separating washer and screw, and the slot in the ring the lever passes. Estimated: the brackets' shapes and sizes, the take-up spring pressing up on a collar under the lever, the lever at the height of the ring's pivots swinging 45° between the right wall and the keeper; the slot is 7.3 × 4.4 mm; the keeper is a back and two cheeks.
+- The gimbal pivots (Fig. 106, Sec. III, Op. 104): each ring pivot screw in through the box side, its washer under the head outside and its lock nut inside against the wall, its point (r 0.8) in a bushing (42214) in the ring at 9 and the support strap at 3; each case pivot screw threaded through the ring (and at 6 the case support strap), locked by its nut, its point in a bushing in the case bracket. The straps are curved to the ring, the case brackets flat-backed on the case; sizes estimated.
+- Pivots and jewels (sizes estimated; the manual gives the jewels' kinds, Sec. II, and the endshake, Ops. 15, 69, 74): every jewelled or bushed arbor is turned to pivots with shoulders: balance and escape r 0.2 in olive-hole jewels (hole 0.22), fourth and third r 0.25 in bar-hole jewels (hole 0.27), third upper r 0.3 and centre r 0.5 in bushings bored 0.02 over, sustaining pawl r 0.5 in the bridge and plate. Endshake 0.05 mm on each: at the endstones for the balance and escape arbor, at the shoulders for the others. The lower train bridge's settings go through the bridge; the endstones are set flush in their caps.
+- The barrel's cap screws go into a lip inside the barrel's rim at its plate end (r 12.9-13.3, 0.5 thick), five at 115° + 72° k, clear of the brace (Fig. 109 draws the screws at the cap's edge; the lip is estimated).
+- The dust seal's inside: a chamber holding the seal ring (42052) on the arbor's square end, pressed against its top by the helical seal spring (42053); sizes estimated.
+- The sustaining ratchet runs free on the fusee arbor on a web 0.3 thick below the heads of the winding ratchet's screws, which turn round in its open centre while the key winds (Fig. 109; the web is estimated).
+- The dial's four feet and screws (Fig. 107, parts list: 4) on the diagonals, 39 mm out (a straight-down photograph of serial 623 shows four such screws near the plate's edge).
+- The trip spring bracket's screw (1770) along the bracket's leg into the cross-piece, and the trip spring's foot under the head of its screw; the hairspring stud a bar tapped for its screw, its steady pin through it into the cock; the locking arm's stop pin pressed into the train bridge; the winding stop's thread 2 mm into the barrel bridge; the balance screws' threads in the rim; the timing and vernier weights nuts on their screws. Positions and sizes estimated.
 - The case's winding-hole shield plate. Sourced: its parts (plate, shoulder screw, stop screw, return spring; parts list) and its action, turned clockwise, seen from below, until its hole lines up with the case's, and returned by the spring (the case's description and the winding instructions). Estimated: everything else.
   - The plate's shape: a rounded triangle on a shoulder screw 9 mm from the key hole, covering the hole at rest and turning 0.75 rad to open it.
   - The stop screw runs in an arc slot in the plate, whose two ends set the rest and open positions.
   - The spring is a torsion coil round the shoulder, with one leg on the stop screw and one on a pin in the plate.
   - The case bottom is 1 mm thick (the rest of the bowl is a sheet).
 - The screws' shanks: a thread of half the head's diameter (0.8 mm for the cock screw, 0.07 mm for the trip-spring screw in the bracket's thin leg), drawn as turned rings, and each one's length. The parts list gives the screws, not their threads or lengths. The cock screw sits 0.3 mm off its traced position (within the tracing's 0.4 mm) so its thread clears the foot's edge.
-- The pillar screws from the dial side (four), the mounting ring's lip and its three screws (on 42 mm, at 90°, 210° and 330°), the dial screws (one into each foot), and the posts of the minute and wind indicator wheels with their screws from the train side. The parts list and Figs. 107 and 110 give the parts, not their sizes or positions.
+- The lower train bridge's sizes: a bar 6 mm wide and 1.2 thick, reaching 21 mm past the third arbor and 14 past the fourth, its screws 14 and 9 mm past them and its steady pins 10 and 5 (the screws about 2.9 times as far apart as the settings, measured on Fig. 31 and the dial-side photograph, whose perspectives err opposite ways), and the opening in the plate under it, r 6 about the third arbor.
+- The minute wheel's place: at 3 o'clock, 9.6 mm from the centre (the dial-side photograph puts it there, 10.5 mm out, and Fig. 107 draws it on that side of the hour wheel); the distance is the motion work's counts'.
+- The teeth's profiles: cycloidal clock teeth in BS 978 Part 2's proportions (the manual gives no profiles): a wheel's tooth 1.41 module thick at the pitch circle with radial flanks and an epicycloidal addendum capped at 1.15 module, a pinion's leaf 1.05 module thick with a round tip, both 1.3 module deep.
+- The pillar screws from the dial side (four), the mounting ring's lip, with a tab under each of its three screws, and the screws' places other than the one at 6 o'clock (the screws go in from the train side, through the plate into the ring, as reassembly Op. 1 and Fig. 29 have them; the top-view photographs show the 6 o'clock one on the plate at the rim, half under the train bridge: 40.6 mm out at 100°, the others at 210° and 340°), the dial screws (one into each foot), and the posts of the minute and wind indicator wheels with their screws from the train side. The parts list and Figs. 107 and 110 give the parts, not their sizes or positions.
 - The endstone caps (escape upper and lower, balance lower): a steel plate 1.3 mm wide over the setting, its screws 2.1 mm (1.9 mm on the balance lower bridge) either side of the arbor.
 - The balance's hub, cap and hold-down screws (Fig. 4): a flange 0.6 mm thick under the arm, a boss through it, a cap 0.35 mm thick, screws 1.7 mm from the staff. The balance's moment of inertia counts them in place of the old hub.
 - The train-blocking screw (Sec. II, Fig. 110): its place on a lobe of the balance lower bridge, 3.5 mm from the fourth arbor on the 6 o'clock side, clear of the third wheel and the escape wheel; its size (head 1.7 mm, thread 0.84 mm, dog point 0.5 mm) and 5.6 mm travel; the lobe's column (r 1.9, bored r 0.95 down to the seat 0.6 mm into the bridge's top: the section gives the arrangement, not the sizes) and the access hole in the train bridge (r 0.72).
-- The balance locking arm (Fig. 9, which shows its screw, positions and stop, not its shape): a flat arm 3.6 mm long on the train bridge under the balance, turning 90° on its screw 10.6 mm from the staff at −30° (where the train bridge's notch round the fusee leaves it metal; at −60° it would stand in the notch), with a pad at its end that comes under the rim; the stop pin's place.
+- The balance locking arm's sizes (Fig. 9 shows it curved, its screw outside the rim and its end at a timing weight; Sec. X: "place the locking arm over the timing weight"): a strip 1.0 mm wide and 0.45 thick, bowed 0.6 mm, turning 90° on its screw 20 mm from the staff in the open 6 o'clock sector of the train bridge, with a round finger 1.65 mm tall at its end. Locked, the finger stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (0.02 mm clear), and a balance screw stops the balance 39° the other way; the top-view photograph shows the arm's end beside a timing weight on that side. Unlocked, it lies turned out against its stop pin, clear of the balance.
 - Stopping and starting: the balance's free run-down (1/e in 25 s), the arm's braking (0.2 s), the twist's swing (160°) and the build-up to 255° (3 s). `ESC.AMIN` is worked out from the escapement.
 - The sustaining pawl's position: 21.35 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel and of the fusee wheel's teeth.
 
 ## Modifying the model
+
+Every new piece needs its parts-list line: `hn(object, 'line id')` on one object per piece (`{sub:1}` on any other mesh of the same piece), and a line or relation in `bom.json`. Then run `tools/bom.py` (it fails on a mesh with no line) and `python bom.py --md` to regenerate `BOM.md`.
+
 
 Work on `index.html` (not the built file) and reload the browser after each
 edit; see "Changing things" in the root README for the loop and the checks.
@@ -549,7 +568,11 @@ box and gimbals.
   solid) and `tools/placements.py` before and after (nothing else moved).
 - **Wheels and pinions** are `arbor(parent, M, x, z, {wheel, pin, ar})` with
   `gearGeo(teeth, module, thickness, options)`. The pitch radius is
-  module × teeth ÷ 2.
+  module × teeth ÷ 2. Teeth are cycloidal clock teeth: a wheel's epicycloidal
+  addendum is rolled by a circle half its pinion's pitch radius (`wheel.mate`,
+  the pinion's leaves), a pinion's leaves have round tips; the geometry's
+  `userData` gives its tip radius (`ro`), root (`ri`) and hub, which `arbor()`
+  uses to check that a pinion ends at its wheel's boss.
 - **Arbor positions** come from the photo fit, in `L` at the top of
   `movement.js`. Don't move them without re-running the tools in `tools/`.
 

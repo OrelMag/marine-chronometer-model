@@ -165,6 +165,25 @@ Contents:
 - **Fourth wheel and escape pinion 0.045 mm too far apart** (finding 5). The
   stage's module is now 0.3113, fitting the 10.585 mm centre distance that the
   escape wheel's position leaves. `c2adc92`
+- **Pinions inside their wheels; the train stacked
+  upside down.** The fourth pinion's leaves (tips r 1.785) ran 0.21 mm into its
+  collet and 0.16 mm into its wheel, standing out of the collet (r 1.6) and hub
+  as small steel notches on the brass; the centre pinion ran 0.5 mm into its
+  wheel's spoke windows. `fine.py` couldn't see either: wheel and pinion are one
+  part. Figs. 13, 29 and 110 stack the train third / centre / fourth from the
+  plate, the third and centre pinions above their wheels, the fourth pinion
+  below its wheel, and five spokes on each wheel. The model had centre /
+  fourth / third, the third and fourth pinions on the wrong sides and 4 spokes
+  on the third and fourth wheels, from reading the side photograph's lowest
+  band (0.4–1.6 mm) as the centre wheel. Now as the figures: third wheel
+  0.35–1.0 mm above the plate, centre wheel 1.15–1.85, fourth wheel unchanged;
+  the minute and hour wheels solid and the wind indicator wheel five-spoked, as
+  photographs of a Model 21's dial side show them. Keep: each pinion ends at
+  its wheel's boss (`arbor()` reports a pinion inside its wheel or collet with
+  `console.error`, which `smoke.py` fails on); a boss stays inside the radius a
+  neighbouring wheel leaves free (the centre boss r 1.3, 0.215 mm inside the
+  third wheel's tips); the train-blocking screw takes its spoke count from the
+  wheel's (`FW_SP`). `22e3984`
 
 ## Winding and maintaining work
 
@@ -292,6 +311,22 @@ Contents:
   The wall now runs between the caps' inner faces, and `barrel-clearance.js`
   finds the caps by their inner faces on its ends. Keep: no face of the wall in
   a cap's outer face. `0538794`
+- **The chain's barrel end slid round the barrel.** The barrel was turned by
+  the fusee's turns (`I(n)`), not by the chain wound on it from where it meets
+  the barrel, so the chain's hook moved 8 mm round the drum over a wind, and its
+  nose sat on the wall's outside with nothing to take it. `Ib(n, eps)` turns
+  the barrel, the mainspring's turns and the power inset; the hook's end stays
+  at `HKA` in the barrel's frame, its nose through a hole in the wall (Figs. 17,
+  75). A link also dipped 0.013 mm into the drum at some train positions: the
+  pitch line is 0.04 off it and the hook plate's middle on the pitch circle.
+  Keep: whatever turns the barrel uses `Ib`; the hook stays in its hole over the
+  whole wind. `3655b52`
+- **Setup pawl's pivot screw from the wrong side.** It was drawn from the top,
+  its head on the cover; the manual screws it into the barrel bridge before
+  the bridge goes on (Op. 41, Fig. 80), and the top-view photograph shows only
+  its small round end in the cover. Now from under the bridge; the pawl's
+  spring is the long arc Fig. 80 draws. Keep: the pivot screw from below, its
+  end flush in the cover. `8555124`
 
 ## Plates, bridges, screws and arbors
 
@@ -427,6 +462,30 @@ Contents:
   seated against the hole's edge. The screw now has a slotted spigot (r 0.5,
   1.5 mm) above the head, and the hole keeps its 0.72 mm radius at both faces.
   Keep: raised, the spigot is in the hole and the collar under it. `fd944c1`
+- **Balance hub solid round the staff; spring screws rubbing the fusee.** When
+  the staff was turned with shoulders, the hub's boss (42186) stayed a solid
+  cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
+  a press fit. The winding-pawl springs' screws (42012) were 0.2 mm tall, the
+  whole gap between the springs' foot and the fusee's underside, which turns
+  over them while winding; their slots stood 0.02 mm into it. The heads are
+  0.15 tall. Keep: a part on a shaft is bored for it; a screw head under a part
+  that turns over it keeps clear of it. Found by `fine.py` after the parts-list
+  changes, which also retired 15 `EXPECTED` entries nothing matches any more. `5709d7b`
+- **Mounting ring screws from the wrong side.** The three screws (42055)
+  were drawn from the dial side, through the ring's lip into the plate. The
+  manual lays the plate on the ring and screws them in from above (reassembly
+  Op. 1; Fig. 29 draws them over the plate), and the top-view photographs show
+  one on the plate at the rim at 6 o'clock. Keep: the mounting ring screws go
+  in from the train side, through the plate into the ring. `3c047b0`
+- **Locking arm under the rim.** The balance locking arm held a pad under the
+  rim, which no part of Fig. 9 shows. Fig. 9 draws the arm curved, its screw
+  outside the rim and its end at a timing weight, and Sec. X places it "over the
+  timing weight": the finger at its end now stands beside the timing weight on
+  the 6 o'clock side, and a balance screw stops the balance the other way.
+  `fine.py --hold` held the arm locked while the balance still swung through its
+  phases; it now holds the balance at rest and the escape wheel locked. Keep: the
+  arm stops the balance through a timing weight; unlocked, it is clear of
+  everything the balance carries. `3655b52`
 
 ## Setup, case and gimbals
 
@@ -503,6 +562,54 @@ Contents:
   train-blocking screw. See `Review-results.md`, "Every part against the
   manual". `63c5dce`
 
+**The parts list against the model: parts missing, parts holding nothing,
+pivots without shoulders, jewels floating or buried** (`ae397f2`). Checked
+line by line against the manual's parts list (Sec. XI, Figs. 106-110) by the new
+`tools/bom.py`, which measures how each part is held and runs:
+- *Missing or short:* a dial screw and foot (the manual has 4, the model had
+  3); the second 1770 screw (the trip spring bracket's); the dust seal's seal
+  ring and helical spring; the latch's clamping bracket, clamping screw,
+  take-up spring and its two screws, and the washers under the bracket's
+  screws; the keeper's screw and separating washer; the four pivot-screw
+  bushings (42214). All added.
+- *Holding nothing:* the barrel cap's five screws were heads on the cap; the
+  hairspring stud screw stopped at the stud; the winding stop wasn't screwed
+  into the barrel bridge (a block sat inside the bridge); the locking arm's
+  stop pin stood on the bridge's face; the balance screws had no threads; the
+  timing and vernier weights were solid, not nuts on their screws; the latch
+  bracket's screws were 2.5 mm long in a 10 mm wall; the sustaining ratchet had
+  a 5 mm bore round a 1 mm arbor, nothing locating it. Each now goes into its
+  part.
+- *Pivots and endshake:* the train's arbors were plain cylinders through their
+  jewels and bushings, with nothing to stop them along their axes (the fourth
+  wheel could move 2.7 mm, the third 0.74); the balance's 0.17 mm. All are now
+  turned to pivots with shoulders, 0.05 mm endshake each (Ops. 15, 69, 74).
+- *Jewels:* the third arbor ended 0.47 mm short of its lower jewel; the lower
+  train bridge's settings stood proud of the bridge with the stones floating
+  in them; the endstones were larger than their caps' holes (buried in the
+  metal); the escape lower jewel was 1.2 mm thick; the impulse jewel had no
+  slot in its roller and the locking jewel no seat in the detent's block.
+  Settings now go into their bridges, stones sit in their settings, endstones
+  in their caps, pallet stones in their slots; olive-hole jewels for the
+  balance and escape arbor, bar-hole for the third and fourth (Sec. II).
+- *Fits:* the cannon pinion had 0.10 mm play on the centre arbor (a friction
+  fit, Op. 58); the hour wheel lay face to face on the cannon pinion's leaves;
+  the second and wind indicator hands were solid bosses through which their
+  arbors passed; the barrel's caps had 0.10 mm shake; the bushings and the
+  sustaining pawl's arbor overlapped the bevel of their holes; the winding
+  ratchet hung 0.1 mm below the fusee; the setup click stood 0.08 mm off its
+  tooth; the trip spring's foot sat 0.05 mm under its screw's head.
+- *Gimbals and case (Fig. 106):* the ring pivot screws had the washer inside
+  and the lock nut outside the box (the figure has them the other way); the
+  pivot screws' points didn't enter the ring or brackets; the latch lever
+  turned on a plain pin (it turns on the clamping screw); the straps were
+  flat boxes on the curved ring.
+Keep: every piece carries its parts-list line (`hn()`), and `bom.py` passes
+after any geometry change (`BOM.md` regenerated). A thread or pin needs its
+hole in the part it holds (tapped) and the parts it passes (clear), or, where a
+hole across an extrusion or turned part can't be cut, the `embed` relation.
+An arbor needs pivots and shoulders; a stone its seat.
+
 ## Rate panel
 
 - **Balance far too light.** The screws and weights were drawn as cylinders
@@ -521,6 +628,13 @@ Contents:
   over, as a break would. Such rows are now skipped; only a break (started,
   stopped, set, not wound) starts a new run. Keep: the mean's run ends at a
   break, not at a row without a rate. `e7b1398`
+- **Balance lighter than the manual's.** The moment of inertia was 930
+  g·mm²; the manual's Table II (screw changes and the rates they make) fits
+  1,140 g·mm² with the parts list's masses, and Fig. 3 draws the rim as a band
+  about 4.3 mm tall where the model's was 2.4. The rim is now 4.3 tall and 1.12
+  wide (fitted to 1,140), the screws and weights at its mid-height with heads
+  2.6 mm across as Fig. 3 draws them. Keep: `invariants.py` checks 1,140; a
+  change to the balance keeps Table II's moment (the pitches follow). `ff40402`
 
 ## Rendering
 

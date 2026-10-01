@@ -1,0 +1,4183 @@
+{
+ "source": "NAVSHIPS 250-624 (1948), Sec. XI Maintenance Parts Catalog, Figs. 106-110, pp. 78-88; totals checked against Sec. XII, p. 89",
+ "relations": {
+  "round": "the part goes round the named part (its bore on a shaft, pipe, post or screw), kinds as in",
+  "embed": "a thread or pin across a part drawn without a hole for it (an extrusion or turned solid that can't be holed across): inside its metal",
+  "in": "the part's axis (a screw's thread, an arbor's pivot, a pin, a post, or a ring's outside) inside the named part: tap (thread in a tapped hole), clear (through a clearance hole), run (a pivot in its bearing), free (turning on a post or pipe), press (pressed in)",
+  "on": "rests against the named part (surfaces within 0.02 mm)",
+  "mesh": "teeth engage: centre distance m(z1+z2)/2, the same module, the faces overlapping, turning in the tooth ratio",
+  "endshake": "axial play between the named bearings or endstones, 0.001-0.003 in (Ops. 15, 69, 74)"
+ },
+ "lines": [
+  {
+   "id": "42301",
+   "idx": null,
+   "no": "42301",
+   "name": "Ship Chronometer Assembly",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The complete instrument: mounting box and gimbals with the case and movement.",
+   "rel": [],
+   "figs": "1"
+  },
+  {
+   "id": "42213",
+   "idx": null,
+   "no": "42213",
+   "name": "Ship Chronometer Assembly (serials 338-1941)",
+   "qty": "Ref.",
+   "parent": null,
+   "kind": "ref",
+   "part": null,
+   "fn": "Superseded assembly, with carrying case 42202; no longer furnished (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42212",
+   "idx": null,
+   "no": "42212",
+   "name": "Ship Chronometer Assembly (serials 1-337)",
+   "qty": "Ref.",
+   "parent": null,
+   "kind": "ref",
+   "part": null,
+   "fn": "Superseded assembly, with carrying case 42130 (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42202",
+   "idx": "106-1",
+   "no": "42202",
+   "name": "Case - Carrying, complete",
+   "qty": "Ref.",
+   "parent": "42213",
+   "kind": "ref",
+   "part": null,
+   "fn": "Former carrying case for the mounting box (Sec. II); not part of the current assembly.",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42130",
+   "idx": "106-2",
+   "no": "42130",
+   "name": "Case - Carrying, complete",
+   "qty": "Ref.",
+   "parent": "42212",
+   "kind": "ref",
+   "part": null,
+   "fn": "Former carrying case with hook and eye (Sec. II).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42297",
+   "idx": null,
+   "no": "42297",
+   "name": "Mounting Box and Gimbal Assembly",
+   "qty": 1,
+   "parent": "42301",
+   "kind": "asm",
+   "part": null,
+   "fn": "Box, key and gimbals.",
+   "rel": [],
+   "figs": "1, 106"
+  },
+  {
+   "id": "42201",
+   "idx": "106-3",
+   "no": "42201",
+   "name": "Box - Mounting, complete",
+   "qty": 1,
+   "parent": "42297",
+   "kind": "part",
+   "part": "box",
+   "fn": "Mahogany box with two hinged covers; carries the gimbals and the key (Sec. II).",
+   "rel": [],
+   "figs": "1, 106"
+  },
+  {
+   "id": "42129",
+   "idx": "106-4",
+   "no": "42129",
+   "name": "Box - Mounting, complete (with lock)",
+   "qty": "Ref.",
+   "parent": "42297",
+   "kind": "ref",
+   "part": null,
+   "fn": "Earlier box with lock and key for the lower lid (Sec. II).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42044",
+   "idx": "106-5",
+   "no": "42044",
+   "name": "Key - Winding, complete",
+   "qty": 1,
+   "parent": "42297",
+   "kind": "part",
+   "part": "key",
+   "fn": "Winds the fusee counterclockwise and sets the hands on the centre square (Sec. III, Figs. 7, 8).",
+   "rel": [],
+   "figs": "7, 8"
+  },
+  {
+   "id": "42100A",
+   "idx": null,
+   "no": "42100A",
+   "name": "Gimbal Assembly",
+   "qty": 1,
+   "parent": "42297",
+   "kind": "asm",
+   "part": null,
+   "fn": "Ring, straps, pivot screws and latch that keep the case level (Sec. II).",
+   "rel": [],
+   "figs": "106"
+  },
+  {
+   "id": "42106",
+   "idx": "106-6",
+   "no": "42106",
+   "name": "Ring - Gimbal, complete with bushing",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Brass ring pivoted in the box at two points; the case pivots in it 90 deg away (Sec. II).",
+   "rel": [],
+   "figs": "1, 106"
+  },
+  {
+   "id": "42214.r",
+   "idx": "106-7",
+   "no": "42214",
+   "name": "Bushing - Pivot screw (in the gimbal ring)",
+   "qty": 1,
+   "parent": "42106",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Bearing in the ring for a gimbal ring pivot screw.",
+   "rel": [
+    [
+     "in",
+     "42106",
+     "press"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42107",
+   "idx": "106-8",
+   "no": "42107",
+   "name": "Strap - Gimbal support, complete with bushing",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Slotted strap on the ring carrying the other gimbal pivot bushing; its slots set the level (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42106"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42116.gs",
+   "idx": "106-9",
+   "no": "42116",
+   "name": "Screw - Gimbal support strap",
+   "qty": 2,
+   "parent": "42107",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Hold the gimbal support strap to the ring.",
+   "rel": [
+    [
+     "in",
+     "42107",
+     "embed"
+    ],
+    [
+     "in",
+     "42106",
+     "embed"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42214.s",
+   "idx": "106-7",
+   "no": "42214",
+   "name": "Bushing - Pivot screw (in the gimbal support strap)",
+   "qty": 1,
+   "parent": "42107",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Bearing in the strap for the other gimbal ring pivot screw.",
+   "rel": [
+    [
+     "in",
+     "42107",
+     "press"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42108",
+   "idx": "106-10",
+   "no": "42108",
+   "name": "Strap - Case support",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Slotted strap on the ring for the case front pivot; sets the level (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42106"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42116.cs",
+   "idx": "106-9",
+   "no": "42116",
+   "name": "Screw - Case support strap",
+   "qty": 2,
+   "parent": "42108",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Hold the case support strap to the ring.",
+   "rel": [
+    [
+     "in",
+     "42108",
+     "embed"
+    ],
+    [
+     "in",
+     "42106",
+     "embed"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42118",
+   "idx": "106-11",
+   "no": "42118",
+   "name": "Screw - Case rear pivot",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Rear pivot of the case in the ring, running in a case bracket's bushing.",
+   "rel": [
+    [
+     "in",
+     "42214.c",
+     "run"
+    ]
+   ],
+   "figs": "94, 106"
+  },
+  {
+   "id": "42121.cr",
+   "idx": "106-12",
+   "no": "42121",
+   "name": "Nut - Pivot screw lock (case rear)",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Locks the case rear pivot screw.",
+   "rel": [
+    [
+     "on",
+     "42106"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42119",
+   "idx": "106-13",
+   "no": "42119",
+   "name": "Screw - Case front pivot",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Front pivot of the case, through the case support strap, running in a case bracket's bushing.",
+   "rel": [
+    [
+     "in",
+     "42214.c",
+     "run"
+    ]
+   ],
+   "figs": "94, 106"
+  },
+  {
+   "id": "42121.cf",
+   "idx": "106-12",
+   "no": "42121",
+   "name": "Nut - Pivot screw lock (case front)",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Locks the case front pivot screw.",
+   "rel": [
+    [
+     "on",
+     "42108"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42120",
+   "idx": "106-14",
+   "no": "42120",
+   "name": "Screw - Gimbal ring pivot",
+   "qty": 2,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Through the box sides into the bushings of the ring and its support strap: the ring's two pivots (Sec. II).",
+   "rel": [
+    [
+     "in",
+     "42201",
+     "embed"
+    ],
+    [
+     "in",
+     "42214.r|42214.s",
+     "run"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42122",
+   "idx": "106-15",
+   "no": "42122",
+   "name": "Washer - Gimbal ring pivot screw",
+   "qty": 2,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Under the head of the gimbal ring pivot screw, outside the box (Fig. 106); its thickness sets how far the screw reaches into the ring's bushing, and so the ring's freedom (Op. 104).",
+   "rel": [
+    [
+     "on",
+     "42201"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42121.g",
+   "idx": "106-12",
+   "no": "42121",
+   "name": "Nut - Pivot screw lock (gimbal ring)",
+   "qty": 2,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Locks each gimbal ring pivot screw, inside the box against its wall (Fig. 106).",
+   "rel": [
+    [
+     "on",
+     "42201"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42109",
+   "idx": "106-16",
+   "no": "42109",
+   "name": "Bracket - Latch support",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Screwed into the corner of the box from outside (Fig. 106); the latch lever turns on the clamping screw threaded into it.",
+   "rel": [
+    [
+     "on",
+     "42201"
+    ]
+   ],
+   "figs": "1, 106"
+  },
+  {
+   "id": "42110",
+   "idx": "106-17",
+   "no": "42110",
+   "name": "Bracket - Latch clamping",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Lies on the lever's boss under the clamping screw's head, its leg on the support bracket: tightening the screw clamps the lever (Fig. 106).",
+   "rel": [
+    [
+     "on",
+     "42111"
+    ],
+    [
+     "on",
+     "42109"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42123",
+   "idx": "106-18",
+   "no": "42123",
+   "name": "Washer - Latch support bracket screw",
+   "qty": 2,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Under the heads of the support bracket screws, outside the box.",
+   "rel": [
+    [
+     "on",
+     "42201"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42115",
+   "idx": "106-19",
+   "no": "42115",
+   "name": "Screw - Latch support bracket",
+   "qty": 2,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Hold the latch support bracket, from outside the box.",
+   "rel": [
+    [
+     "in",
+     "42201",
+     "embed"
+    ],
+    [
+     "in",
+     "42109",
+     "embed"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42111",
+   "idx": "106-20",
+   "no": "42111",
+   "name": "Lever - Latch",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Swings in through the ring's slot to the keeper on the case, locking ring and case (Sec. II).",
+   "rel": [
+    [
+     "round",
+     "42114",
+     "free"
+    ],
+    [
+     "on",
+     "42277"
+    ]
+   ],
+   "figs": "1, 106"
+  },
+  {
+   "id": "42277",
+   "idx": "106-21",
+   "no": "42277",
+   "name": "Spring - Latch lever take-up",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Flat spring on the support bracket pressing up on the collar under the lever, taking up its play on the clamping screw (Fig. 106).",
+   "rel": [
+    [
+     "on",
+     "42109"
+    ],
+    [
+     "on",
+     "42111"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42276",
+   "idx": "106-22",
+   "no": "42276",
+   "name": "Screw - Latch lever take-up spring",
+   "qty": 2,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Hold the take-up spring.",
+   "rel": [
+    [
+     "in",
+     "42277",
+     "clear"
+    ],
+    [
+     "in",
+     "42109",
+     "tap"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42114",
+   "idx": "106-23",
+   "no": "42114",
+   "name": "Screw - Latch clamping",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Knurled thumb screw: the lever's pivot, through the clamping bracket into the support bracket; tightened, it clamps the lever (Fig. 106).",
+   "rel": [
+    [
+     "in",
+     "42110",
+     "clear"
+    ],
+    [
+     "in",
+     "42109",
+     "tap"
+    ]
+   ],
+   "figs": "106"
+  },
+  {
+   "id": "42112",
+   "idx": "106-24",
+   "no": "42112",
+   "name": "Handle - Latch lever",
+   "qty": 1,
+   "parent": "42100A",
+   "kind": "part",
+   "part": "latch",
+   "fn": "Knurled handle by which the lever is turned.",
+   "rel": [
+    [
+     "on",
+     "42111"
+    ]
+   ],
+   "figs": "1, 106"
+  },
+  {
+   "id": "42298",
+   "idx": "106-25",
+   "no": "42298",
+   "name": "Case and Movement Assembly",
+   "qty": 1,
+   "parent": "42301",
+   "kind": "asm",
+   "part": null,
+   "fn": "The case with the movement in it.",
+   "rel": [],
+   "figs": "107"
+  },
+  {
+   "id": "42296",
+   "idx": null,
+   "no": "42296",
+   "name": "Case - Complete with bezel and brackets",
+   "qty": 1,
+   "parent": "42298",
+   "kind": "asm",
+   "part": null,
+   "fn": "Brass bowl, bezel and crystal, brackets, keeper and shield plate (Sec. II).",
+   "rel": [],
+   "figs": "107"
+  },
+  {
+   "id": "42101",
+   "idx": "107-1",
+   "no": "42101",
+   "name": "Case - Chronometer",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Brass bowl holding the movement; the key hole in its bottom (Sec. II).",
+   "rel": [],
+   "figs": "1, 107"
+  },
+  {
+   "id": "42102",
+   "idx": "107-2",
+   "no": "42102",
+   "name": "Bezel - Complete with crystal",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Bezel carrying the crystal; taken off to set the hands (Sec. III).",
+   "rel": [
+    [
+     "on",
+     "42101"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42103",
+   "idx": "107-3",
+   "no": "42103",
+   "name": "Crystal",
+   "qty": 1,
+   "parent": "42102",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Glass over the dial.",
+   "rel": [
+    [
+     "on",
+     "42102"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42105",
+   "idx": "107-4",
+   "no": "42105",
+   "name": "Bracket - Case support, complete with bushing",
+   "qty": 2,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "On the case at front and rear; the case pivots in them (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42101"
+    ]
+   ],
+   "figs": "94, 107"
+  },
+  {
+   "id": "42117",
+   "idx": "107-5",
+   "no": "42117",
+   "name": "Screw - Case support bracket",
+   "qty": 4,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Two hold each bracket to the case.",
+   "rel": [
+    [
+     "in",
+     "42105",
+     "clear"
+    ],
+    [
+     "in",
+     "42101",
+     "embed"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42214.c",
+   "idx": "107-6",
+   "no": "42214",
+   "name": "Bushing - Pivot screw (in a case support bracket)",
+   "qty": 2,
+   "parent": "42105",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Bearing in each bracket for a case pivot screw.",
+   "rel": [
+    [
+     "in",
+     "42105",
+     "press"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42113",
+   "idx": "107-7",
+   "no": "42113",
+   "name": "Keeper - Latch, complete with steady pins",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "On the case, facing the ring's slot; the latch lever's tip goes between its cheeks.",
+   "rel": [
+    [
+     "on",
+     "42128"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42116.k",
+   "idx": "107-8",
+   "no": "42116",
+   "name": "Screw - Latch keeper",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Holds the keeper to the case.",
+   "rel": [
+    [
+     "in",
+     "42101",
+     "embed"
+    ],
+    [
+     "in",
+     "42128",
+     "clear"
+    ],
+    [
+     "in",
+     "42113",
+     "embed"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42128",
+   "idx": "107-9",
+   "no": "42128",
+   "name": "Washer - Separating",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Between keeper and case.",
+   "rel": [
+    [
+     "on",
+     "42101"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42104",
+   "idx": "107-10",
+   "no": "42104",
+   "name": "Plate - Shield",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Covers the winding hole; turned clockwise to admit the key, sprung back when it is removed (Sec. II).",
+   "rel": [
+    [
+     "round",
+     "42124",
+     "free"
+    ]
+   ],
+   "figs": "107",
+   "check": "bom.py fn: shield plate"
+  },
+  {
+   "id": "42124",
+   "idx": "107-11",
+   "no": "42124",
+   "name": "Screw - Shield plate shoulder",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "The shield plate turns on its shoulder.",
+   "rel": [
+    [
+     "in",
+     "42101",
+     "tap"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42125",
+   "idx": "107-12",
+   "no": "42125",
+   "name": "Screw - Shield plate stop",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "In the plate's arc slot: stops it closed and open.",
+   "rel": [
+    [
+     "in",
+     "42101",
+     "tap"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42126",
+   "idx": "107-13",
+   "no": "42126",
+   "name": "Spring - Shield plate return",
+   "qty": 1,
+   "parent": "42296",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Turns the shield plate back over the hole when the key is removed (Sec. II).",
+   "rel": [],
+   "figs": "107"
+  },
+  {
+   "id": "42000",
+   "idx": "107-14",
+   "no": "42000",
+   "name": "Movement Assembly - Chronometer, 85-size, model 21",
+   "qty": 1,
+   "parent": "42298",
+   "kind": "asm",
+   "part": null,
+   "fn": "The 14-jewel movement (Sec. II).",
+   "rel": [],
+   "figs": "2"
+  },
+  {
+   "id": "42033",
+   "idx": "107-15",
+   "no": "42033",
+   "name": "Hand - Minute",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "hands",
+   "fn": "Broached square, on the cannon pinion's square below its end (Op. 64).",
+   "rel": [
+    [
+     "round",
+     "42077",
+     "press"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42032",
+   "idx": "107-16",
+   "no": "42032",
+   "name": "Hand - Hour",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "hands",
+   "fn": "Pressed on the hour wheel's pipe (Op. 64).",
+   "rel": [
+    [
+     "round",
+     "42080",
+     "press"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42034",
+   "idx": "107-17",
+   "no": "42034",
+   "name": "Hand - Second, complete with pin",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "hands",
+   "fn": "On the fourth wheel's arbor; turns once a minute in half-second steps.",
+   "rel": [
+    [
+     "round",
+     "42073",
+     "press"
+    ]
+   ],
+   "figs": "107",
+   "check": "invariants.py: second hand"
+  },
+  {
+   "id": "42035",
+   "idx": "107-18",
+   "no": "42035",
+   "name": "Hand - Wind indicator",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "hands",
+   "fn": "On the wind indicator wheel's pipe; shows the hours run since winding (UP-DOWN).",
+   "rel": [
+    [
+     "round",
+     "42081",
+     "press"
+    ]
+   ],
+   "figs": "107",
+   "check": "invariants.py: wind indicator"
+  },
+  {
+   "id": "42030",
+   "idx": "107-19",
+   "no": "42030",
+   "name": "Dial - Modern arabic numeral style",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "dial",
+   "fn": "Hours, minutes, seconds and UP-DOWN scales (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42060"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "35756",
+   "idx": "107-20",
+   "no": "35756",
+   "name": "Screw - Dial",
+   "qty": 4,
+   "parent": "42000",
+   "kind": "part",
+   "part": "dial",
+   "fn": "Hold the dial by its feet, from the train side of the pillar plate.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "clear"
+    ],
+    [
+     "in",
+     "42030",
+     "tap"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42081",
+   "idx": "107-21",
+   "no": "42081",
+   "name": "Wheel - Wind indicator, complete with hub",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "motion",
+   "fn": "Driven by the pinion on the fusee arbor; turns on its post and carries the wind indicator hand (Sec. II).",
+   "rel": [
+    [
+     "round",
+     "42084",
+     "free"
+    ],
+    [
+     "mesh",
+     "42022"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42080",
+   "idx": "107-22",
+   "no": "42080",
+   "name": "Wheel - Hour, complete with hub",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "motion",
+   "fn": "Driven by the minute pinion; turns free on the cannon pinion's pipe (Op. 59), once in 12 h.",
+   "rel": [
+    [
+     "round",
+     "42077",
+     "free"
+    ],
+    [
+     "mesh",
+     "42078"
+    ]
+   ],
+   "figs": "107",
+   "check": "invariants.py: hour hand"
+  },
+  {
+   "id": "42078",
+   "idx": "107-23",
+   "no": "42078",
+   "name": "Wheel - Minute, complete with pinion",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "motion",
+   "fn": "Driven by the cannon pinion, drives the hour wheel; turns on its post.",
+   "rel": [
+    [
+     "round",
+     "42085",
+     "free"
+    ],
+    [
+     "mesh",
+     "42077"
+    ]
+   ],
+   "figs": "107"
+  },
+  {
+   "id": "42077",
+   "idx": "107-24",
+   "no": "42077",
+   "name": "Pinion - Cannon",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "motion",
+   "fn": "A friction fit on the centre arbor (Op. 58), slipping when the hands are set; carries the minute hand.",
+   "rel": [
+    [
+     "round",
+     "42068",
+     "press"
+    ]
+   ],
+   "figs": "8, 107"
+  },
+  {
+   "id": "42066",
+   "idx": "108-1",
+   "no": "42066",
+   "name": "Cock - Balance, complete with pins",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "cock",
+   "fn": "Carries the balance upper setting and endstone cap and the hairspring stud; stands on the train bridge (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42062"
+    ]
+   ],
+   "figs": "19, 84, 85, 108"
+  },
+  {
+   "id": "42192",
+   "idx": "108-2",
+   "no": "42192",
+   "name": "Screw - Balance cock",
+   "qty": 1,
+   "parent": "42066",
+   "kind": "part",
+   "part": "cock",
+   "fn": "Holds the cock (Op. 74).",
+   "rel": [
+    [
+     "in",
+     "42066",
+     "clear"
+    ],
+    [
+     "in",
+     "42062",
+     "tap"
+    ]
+   ],
+   "figs": "85, 108"
+  },
+  {
+   "id": "42160",
+   "idx": "108-3",
+   "no": "42160",
+   "name": "Cap - Balance upper endstone, with jewel",
+   "qty": 1,
+   "parent": "42066",
+   "kind": "part",
+   "part": "cock",
+   "fn": "Holds the upper endstone over the olive-hole jewel.",
+   "rel": [
+    [
+     "on",
+     "42066"
+    ]
+   ],
+   "figs": "85, 108"
+  },
+  {
+   "id": "20762.ep",
+   "idx": "108-4",
+   "no": "20762",
+   "name": "Screw - Balance upper endstone cap",
+   "qty": 2,
+   "parent": "42160",
+   "kind": "part",
+   "part": "cock",
+   "fn": "Hold the upper endstone cap.",
+   "rel": [
+    [
+     "in",
+     "42160",
+     "clear"
+    ],
+    [
+     "in",
+     "42066",
+     "tap"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42155",
+   "idx": "108-5",
+   "no": "42155",
+   "name": "Setting - Balance upper endstone, with jewel",
+   "qty": 1,
+   "parent": "42160",
+   "kind": "part",
+   "part": "cock",
+   "fn": "Holds the balance upper endstone (cap jewel) in the cap.",
+   "rel": [
+    [
+     "in",
+     "42160",
+     "press"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "J.bue",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Balance upper endstone (cap jewel)",
+   "qty": 1,
+   "parent": "42155",
+   "kind": "jewel",
+   "part": "cock",
+   "fn": "Stops the balance staff's upper pivot end; endshake 0.001-0.003 in (Op. 74).",
+   "rel": [],
+   "figs": "108",
+   "jewel": {
+    "type": "end",
+    "arbor": "42186",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "42162.bu",
+   "idx": "108-6",
+   "no": "42162",
+   "name": "Setting - Balance (upper), complete with jewel",
+   "qty": 1,
+   "parent": "42066",
+   "kind": "part",
+   "part": "cock",
+   "fn": "Olive-hole jewel for the balance staff's upper pivot, pressed into the cock.",
+   "rel": [
+    [
+     "in",
+     "42066",
+     "press"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "J.bu",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Balance upper hole (olive-hole)",
+   "qty": 1,
+   "parent": "42162.bu",
+   "kind": "jewel",
+   "part": "cock",
+   "fn": "The balance staff's upper pivot runs in it (Sec. II, Jeweling).",
+   "rel": [],
+   "figs": "108",
+   "jewel": {
+    "type": "hole",
+    "arbor": "42186",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "42193",
+   "idx": "108-7",
+   "no": "42193",
+   "name": "Balance and Hairspring Assembly",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "asm",
+   "part": null,
+   "fn": "Balance wheel, hub and staff, hairspring with stud and collet, rollers (Sec. II).",
+   "rel": [],
+   "figs": "2, 108"
+  },
+  {
+   "id": "27760.st",
+   "idx": "108-8",
+   "no": "27760",
+   "name": "Screw - Hairspring stud",
+   "qty": 1,
+   "parent": "42193",
+   "kind": "part",
+   "part": "cock",
+   "fn": "Holds the stud under the cock, from the cock's top (Figs. 19, 84).",
+   "rel": [
+    [
+     "in",
+     "42066",
+     "clear"
+    ],
+    [
+     "in",
+     "42189",
+     "tap"
+    ]
+   ],
+   "figs": "19, 108"
+  },
+  {
+   "id": "42188",
+   "idx": "108-9",
+   "no": "42188",
+   "name": "Hairspring",
+   "qty": 1,
+   "parent": "42193",
+   "kind": "part",
+   "part": "spr",
+   "fn": "Cylindrical Elinvar spring: its restoring force times the balance (Sec. II).",
+   "rel": [],
+   "figs": "5, 6, 108"
+  },
+  {
+   "id": "42189",
+   "idx": "108-10",
+   "no": "42189",
+   "name": "Stud - Hairspring, complete with pins",
+   "qty": 1,
+   "parent": "42188",
+   "kind": "part",
+   "part": "spr",
+   "fn": "Holds the hairspring's upper end under the cock, by its clamp and wedge pin (Sec. II, Fig. 5).",
+   "rel": [
+    [
+     "on",
+     "42066"
+    ]
+   ],
+   "figs": "5, 108"
+  },
+  {
+   "id": "42147.st",
+   "idx": "108-11",
+   "no": "42147",
+   "name": "Pin - Hairspring stud clamp wedge",
+   "qty": 1,
+   "parent": "42188",
+   "kind": "part",
+   "part": "spr",
+   "fn": "Wedges the stud clamp on the spring's end without bending it (Fig. 6).",
+   "rel": [],
+   "figs": "5, 6, 108"
+  },
+  {
+   "id": "42191.st",
+   "idx": "108-12",
+   "no": "42191",
+   "name": "Clamp - Hairspring stud",
+   "qty": 1,
+   "parent": "42188",
+   "kind": "part",
+   "part": "spr",
+   "fn": "Holds the spring's upper end in the stud.",
+   "rel": [
+    [
+     "on",
+     "42189"
+    ]
+   ],
+   "figs": "5, 6, 108"
+  },
+  {
+   "id": "42190",
+   "idx": "108-13",
+   "no": "42190",
+   "name": "Collet - Hairspring",
+   "qty": 1,
+   "parent": "42188",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Slotted to grip the balance staff; carries the spring's inner end (Sec. II, Fig. 5).",
+   "rel": [
+    [
+     "round",
+     "42186",
+     "press"
+    ]
+   ],
+   "figs": "5, 108"
+  },
+  {
+   "id": "42147.col",
+   "idx": "108-11",
+   "no": "42147",
+   "name": "Pin - Hairspring collet clamp wedge",
+   "qty": 1,
+   "parent": "42188",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Wedges the collet clamp on the spring's inner end (Fig. 6).",
+   "rel": [],
+   "figs": "6, 108"
+  },
+  {
+   "id": "42191.col",
+   "idx": "108-12",
+   "no": "42191",
+   "name": "Clamp - Hairspring collet",
+   "qty": 1,
+   "parent": "42188",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Holds the spring's inner end on the collet's tongue.",
+   "rel": [
+    [
+     "on",
+     "42190"
+    ]
+   ],
+   "figs": "6, 108"
+  },
+  {
+   "id": "42195",
+   "idx": null,
+   "no": "42195",
+   "name": "Balance Wheel Assembly, with screws",
+   "qty": 1,
+   "parent": "42193",
+   "kind": "asm",
+   "part": null,
+   "fn": "Rim, arm, screws and weights (Sec. II, Fig. 3).",
+   "rel": [],
+   "figs": "3, 108"
+  },
+  {
+   "id": "42178",
+   "idx": "108-14",
+   "no": "42178",
+   "name": "Wheel - Balance, complete with spoke",
+   "qty": 1,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Solid stainless rim silver-soldered to an Invar arm; tapped holes all round for the screws and weights (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42186"
+    ]
+   ],
+   "figs": "3, 4, 108"
+  },
+  {
+   "id": "42177",
+   "idx": "108-15",
+   "no": "42177",
+   "name": "Screw - Timing weight",
+   "qty": 2,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "The timing weights turn on them (Fig. 3).",
+   "rel": [
+    [
+     "in",
+     "42178",
+     "embed"
+    ]
+   ],
+   "figs": "3, 108"
+  },
+  {
+   "id": "42176",
+   "idx": "108-16",
+   "no": "42176",
+   "name": "Weight - Timing, 93 +/- 1 mg",
+   "qty": 2,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "A full turn of the pair changes the rate about 40 s a day (p. 70).",
+   "rel": [
+    [
+     "round",
+     "42177",
+     "tap"
+    ]
+   ],
+   "figs": "3, 108",
+   "check": "invariants.py: timing weights 40 s/day"
+  },
+  {
+   "id": "42197",
+   "idx": "108-17",
+   "no": "42197",
+   "name": "Screw - Vernier timing weight",
+   "qty": 2,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "The vernier weights turn on them.",
+   "rel": [
+    [
+     "in",
+     "42178",
+     "embed"
+    ]
+   ],
+   "figs": "3, 108"
+  },
+  {
+   "id": "37115",
+   "idx": "108-18",
+   "no": "37115",
+   "name": "Weight - Vernier timing, 10.5 +/- 0.3 mg",
+   "qty": 2,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "A full turn of the pair changes the rate about 2.8 s a day (p. 70).",
+   "rel": [
+    [
+     "round",
+     "42197",
+     "tap"
+    ]
+   ],
+   "figs": "3, 108",
+   "check": "invariants.py: vernier weights 2.8 s/day"
+  },
+  {
+   "id": "42171",
+   "idx": "108-19",
+   "no": "42171",
+   "name": "Screw - Balance, 125-130 mg, 0.049 in head height",
+   "qty": [
+    4,
+    6
+   ],
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Balance screws for rate and temperature adjustment (Secs. II, IX).",
+   "rel": [
+    [
+     "in",
+     "42178",
+     "embed"
+    ]
+   ],
+   "figs": "3, 108",
+   "check": "invariants.py: moment of inertia"
+  },
+  {
+   "id": "42173",
+   "idx": "108-20",
+   "no": "42173",
+   "name": "Screw - Balance, 200-205 mg, 0.080 in head height",
+   "qty": 2,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Balance screws, heavier.",
+   "rel": [
+    [
+     "in",
+     "42178",
+     "embed"
+    ]
+   ],
+   "figs": "3, 108"
+  },
+  {
+   "id": "42174",
+   "idx": "108-21",
+   "no": "42174",
+   "name": "Screw - Balance, 250-255 mg, 0.101 in head height",
+   "qty": 2,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Balance screws, heaviest.",
+   "rel": [
+    [
+     "in",
+     "42178",
+     "embed"
+    ]
+   ],
+   "figs": "3, 108"
+  },
+  {
+   "id": "42181",
+   "idx": "108-22",
+   "no": "42181",
+   "name": "Washer - Timing, 4.0-5.0 mg, 0.002 in thick",
+   "qty": "As Reqd.",
+   "parent": "42195",
+   "kind": "omit",
+   "part": "bal",
+   "fn": "Under balance screws for fine adjustment, as required.",
+   "rel": [],
+   "figs": "",
+   "why": "Fitted only as the rate requires; the model's rate needs none (its weights cover the 2 minutes a day of Op. 5)."
+  },
+  {
+   "id": "42252",
+   "idx": "108-23",
+   "no": "42252",
+   "name": "Roller - Unlocking, complete with jewel",
+   "qty": 1,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Carries the unlocking (discharge) jewel that lifts the detent through the trip spring (Sec. IV).",
+   "rel": [
+    [
+     "round",
+     "42186",
+     "press"
+    ]
+   ],
+   "figs": "14, 64, 108",
+   "check": "escapement.js"
+  },
+  {
+   "id": "287",
+   "idx": "108-24",
+   "no": "287",
+   "name": "Jewel - Unlocking",
+   "qty": 1,
+   "parent": "42252",
+   "kind": "jewel",
+   "part": "bal",
+   "fn": "Unlocks the escape wheel through the trip spring, on one swing only (Sec. IV).",
+   "rel": [],
+   "figs": "14, 108",
+   "jewel": {
+    "type": "pallet",
+    "holder": "42252"
+   },
+   "check": "escapement.js: overall, let-off"
+  },
+  {
+   "id": "42263",
+   "idx": "108-25",
+   "no": "42263",
+   "name": "Roller - Impulse, complete with jewel (Identity No. 3; O.D. .249)",
+   "qty": 1,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Carries the impulse jewel; its 0.249 in O.D. sets the roller shake (Op. 84).",
+   "rel": [
+    [
+     "round",
+     "42186",
+     "press"
+    ]
+   ],
+   "figs": "14, 61, 108",
+   "check": "escapement.js: roller shake"
+  },
+  {
+   "id": "286",
+   "idx": "108-26",
+   "no": "286",
+   "name": "Jewel - Impulse",
+   "qty": 1,
+   "parent": "42263",
+   "kind": "jewel",
+   "part": "bal",
+   "fn": "Receives the escape wheel's impulse (Sec. IV).",
+   "rel": [],
+   "figs": "14, 108",
+   "jewel": {
+    "type": "pallet",
+    "holder": "42263"
+   },
+   "check": "escapement.js: drop"
+  },
+  {
+   "id": "42180",
+   "idx": "108-27",
+   "no": "42180",
+   "name": "Roller - One piece",
+   "qty": "Ref.",
+   "parent": "42195",
+   "kind": "ref",
+   "part": null,
+   "fn": "Earlier one-piece roller; replace with 42252 and 42263 (p. 82).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42248",
+   "idx": "108-28",
+   "no": "42248",
+   "name": "Cap - Balance wheel",
+   "qty": 1,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Over the arm on the hub's boss, under the hold-down screws (Fig. 4).",
+   "rel": [
+    [
+     "on",
+     "42178"
+    ]
+   ],
+   "figs": "4, 108"
+  },
+  {
+   "id": "42249",
+   "idx": "108-29",
+   "no": "42249",
+   "name": "Screw - Balance wheel hold-down",
+   "qty": 2,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "Through cap and arm into the hub's flange (Fig. 4).",
+   "rel": [
+    [
+     "in",
+     "42248",
+     "clear"
+    ],
+    [
+     "in",
+     "42186",
+     "tap"
+    ]
+   ],
+   "figs": "4, 108"
+  },
+  {
+   "id": "42186",
+   "idx": "108-30",
+   "no": "42186",
+   "name": "Hub - Balance wheel, complete with staff",
+   "qty": 1,
+   "parent": "42195",
+   "kind": "part",
+   "part": "bal",
+   "fn": "The staff with its pivots; its hub carries the arm clear of the staff (Fig. 4).",
+   "rel": [
+    [
+     "in",
+     "J.bu",
+     "run"
+    ],
+    [
+     "in",
+     "J.bl",
+     "run"
+    ],
+    [
+     "endshake",
+     "J.bue",
+     "J.ble"
+    ]
+   ],
+   "figs": "4, 108"
+  },
+  {
+   "id": "42299",
+   "idx": "108-31",
+   "no": "42299",
+   "name": "Arm - Balance wheel locking (NAVOBSY 4618)",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "lockArm",
+   "fn": "Turned under the rim to hold the balance in transit (Sec. III, Fig. 9).",
+   "rel": [
+    [
+     "round",
+     "37204",
+     "free"
+    ]
+   ],
+   "figs": "9, 108",
+   "check": "bom.py fn: locking arm"
+  },
+  {
+   "id": "37204",
+   "idx": "108-32",
+   "no": "37204",
+   "name": "Screw - Flat head fillister (NAVOBSY 4618)",
+   "qty": 1,
+   "parent": "42299",
+   "kind": "part",
+   "part": "lockArm",
+   "fn": "The locking arm turns on it and is clamped by it.",
+   "rel": [
+    [
+     "in",
+     "42299",
+     "clear"
+    ],
+    [
+     "in",
+     "42062",
+     "tap"
+    ]
+   ],
+   "figs": "9, 108"
+  },
+  {
+   "id": "42251.arm",
+   "idx": "108-33",
+   "no": "42251",
+   "name": "Washer (NAVOBSY 55-3)",
+   "qty": 1,
+   "parent": "42299",
+   "kind": "part",
+   "part": "lockArm",
+   "fn": "Under the locking arm's screw.",
+   "rel": [
+    [
+     "on",
+     "42299"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42300",
+   "idx": "108-34",
+   "no": "42300",
+   "name": "Pin - Balance wheel locking arm stop",
+   "qty": 1,
+   "parent": "42299",
+   "kind": "part",
+   "part": "lockArm",
+   "fn": "Stops the arm when unlocked, clear of the balance (Fig. 9).",
+   "rel": [
+    [
+     "in",
+     "42062",
+     "press"
+    ]
+   ],
+   "figs": "9, 108"
+  },
+  {
+   "id": "42029",
+   "idx": "108-35",
+   "no": "42029",
+   "name": "Plate - Setup cover",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "ratchet",
+   "fn": "Covers the setup ratchet and click; holds the click's pivot screw (Sec. II).",
+   "rel": [],
+   "figs": "24, 80, 108"
+  },
+  {
+   "id": "42056.cv",
+   "idx": "108-36",
+   "no": "42056",
+   "name": "Screw - Setup cover plate",
+   "qty": 2,
+   "parent": "42029",
+   "kind": "part",
+   "part": "ratchet",
+   "fn": "Hold the cover plate on its feet to the barrel bridge.",
+   "rel": [
+    [
+     "in",
+     "42029",
+     "clear"
+    ],
+    [
+     "in",
+     "42061",
+     "tap"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42026",
+   "idx": "108-37",
+   "no": "42026",
+   "name": "Wheel - Setup ratchet",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "ratchet",
+   "fn": "On the barrel arbor above the barrel bridge; held by the click so the arbor never turns in winding or running (Sec. II).",
+   "rel": [
+    [
+     "round",
+     "42170",
+     "press"
+    ]
+   ],
+   "figs": "17, 24, 80, 108",
+   "check": "bom.py fn: setup click"
+  },
+  {
+   "id": "42027",
+   "idx": "108-38",
+   "no": "42027",
+   "name": "Pawl - Setup",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "ratchet",
+   "fn": "The click: bears on the setup ratchet's steep faces against the mainspring's pull (Sec. II).",
+   "rel": [
+    [
+     "round",
+     "42036",
+     "free"
+    ],
+    [
+     "on",
+     "42026"
+    ]
+   ],
+   "figs": "24, 80, 108"
+  },
+  {
+   "id": "42051",
+   "idx": "108-39",
+   "no": "42051",
+   "name": "Seal - Dust",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "post",
+   "fn": "Seals where the fusee arbor rises through the barrel bridge (Fig. 24).",
+   "rel": [
+    [
+     "on",
+     "42061"
+    ]
+   ],
+   "figs": "24, 108"
+  },
+  {
+   "id": "42056.sl",
+   "idx": "108-36",
+   "no": "42056",
+   "name": "Screw - Dust seal",
+   "qty": 2,
+   "parent": "42051",
+   "kind": "part",
+   "part": "post",
+   "fn": "Hold the dust seal's flange to the barrel bridge.",
+   "rel": [
+    [
+     "in",
+     "42051",
+     "clear"
+    ],
+    [
+     "in",
+     "42061",
+     "tap"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42054",
+   "idx": "108-40",
+   "no": "42054",
+   "name": "Ring - Packing",
+   "qty": 3,
+   "parent": "42051",
+   "kind": "part",
+   "part": "post",
+   "fn": "Stacked in the seal round the arbor's square.",
+   "rel": [
+    [
+     "on",
+     "42051|42054"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42052",
+   "idx": "108-41",
+   "no": "42052",
+   "name": "Ring - Seal",
+   "qty": 1,
+   "parent": "42051",
+   "kind": "part",
+   "part": "post",
+   "fn": "Bears on the fusee arbor inside the dust seal.",
+   "rel": [
+    [
+     "on",
+     "42053"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42053",
+   "idx": "108-42",
+   "no": "42053",
+   "name": "Spring - Helical seal",
+   "qty": 1,
+   "parent": "42051",
+   "kind": "part",
+   "part": "post",
+   "fn": "Presses the seal ring against its seat.",
+   "rel": [
+    [
+     "on",
+     "42051"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42061",
+   "idx": "108-43",
+   "no": "42061",
+   "name": "Bridge - Barrel, complete with pins",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Holds the upper pivots of the barrel and fusee; the winding stop is screwed into its underside (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42062|42058"
+    ]
+   ],
+   "figs": "24, 108, 110"
+  },
+  {
+   "id": "42055.bbp",
+   "idx": "108-44",
+   "no": "42055",
+   "name": "Screw - Barrel bridge pillar",
+   "qty": 1,
+   "parent": "42061",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Holds the barrel bridge to its pillar.",
+   "rel": [
+    [
+     "in",
+     "42061",
+     "clear"
+    ],
+    [
+     "in",
+     "42058",
+     "tap"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42055.bb",
+   "idx": "108-44",
+   "no": "42055",
+   "name": "Screw - Barrel bridge",
+   "qty": 2,
+   "parent": "42061",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Hold the barrel bridge to the train bridge.",
+   "rel": [
+    [
+     "in",
+     "42061",
+     "clear"
+    ],
+    [
+     "in",
+     "42062|42059",
+     "tap"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42164.bu",
+   "idx": "108-45",
+   "no": "42164",
+   "name": "Bushing - Barrel upper",
+   "qty": 1,
+   "parent": "42061",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Bearing for the barrel arbor's upper end.",
+   "rel": [
+    [
+     "in",
+     "42061",
+     "press"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42164.fu",
+   "idx": "108-45",
+   "no": "42164",
+   "name": "Bushing - Fusee upper",
+   "qty": 1,
+   "parent": "42061",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Bearing for the fusee arbor's upper end.",
+   "rel": [
+    [
+     "in",
+     "42061",
+     "press"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42028",
+   "idx": "108-46",
+   "no": "42028",
+   "name": "Spring - Setup pawl, complete with pins",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "ratchet",
+   "fn": "Holds the click in the setup ratchet's teeth.",
+   "rel": [
+    [
+     "on",
+     "42027"
+    ]
+   ],
+   "figs": "17, 24, 80, 108"
+  },
+  {
+   "id": "42036",
+   "idx": "108-47",
+   "no": "42036",
+   "name": "Screw - Setup pawl pivot",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "ratchet",
+   "fn": "The click turns on it; through the cover into the barrel bridge.",
+   "rel": [
+    [
+     "in",
+     "42029",
+     "clear"
+    ],
+    [
+     "in",
+     "42061",
+     "tap"
+    ]
+   ],
+   "figs": "108"
+  },
+  {
+   "id": "42099",
+   "idx": "108-48",
+   "no": "42099",
+   "name": "Stop - Fusee winding stop-bar",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Stud under the barrel bridge (left-hand thread, Op. 42) that the stop-bar meets at full wind (Sec. II).",
+   "rel": [
+    [
+     "in",
+     "42061",
+     "tap"
+    ]
+   ],
+   "figs": "12, 108",
+   "check": "maintaining.py: stop-bar meets the stop"
+  },
+  {
+   "id": "42242",
+   "idx": "108-49",
+   "no": "42242",
+   "name": "Barrel Assembly",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "asm",
+   "part": null,
+   "fn": "Barrel, cap, arbor, mainspring and brace.",
+   "rel": [],
+   "figs": "26, 109"
+  },
+  {
+   "id": "42169",
+   "idx": "109-1",
+   "no": "42169",
+   "name": "Cap - Barrel",
+   "qty": 1,
+   "parent": "42242",
+   "kind": "part",
+   "part": "barrel",
+   "fn": "Closes the barrel on the pillar-plate end, held by five screws (Figs. 26, 109).",
+   "rel": [
+    [
+     "on",
+     "42168"
+    ]
+   ],
+   "figs": "26, 109"
+  },
+  {
+   "id": "37023",
+   "idx": "109-2",
+   "no": "37023",
+   "name": "Screw - Barrel cap",
+   "qty": 5,
+   "parent": "42242",
+   "kind": "part",
+   "part": "barrel",
+   "fn": "Hold the barrel cap.",
+   "rel": [
+    [
+     "in",
+     "42169",
+     "clear"
+    ],
+    [
+     "in",
+     "42168",
+     "tap"
+    ]
+   ],
+   "figs": "109"
+  },
+  {
+   "id": "42170",
+   "idx": "109-3",
+   "no": "42170",
+   "name": "Arbor - Barrel",
+   "qty": 1,
+   "parent": "42242",
+   "kind": "part",
+   "part": "ratchet",
+   "fn": "Carries the mainspring's inner end on its hook; held still by the setup ratchet and click (Sec. II).",
+   "rel": [
+    [
+     "in",
+     "42164.bu",
+     "run"
+    ],
+    [
+     "in",
+     "42164.bl",
+     "run"
+    ]
+   ],
+   "figs": "26, 75, 109"
+  },
+  {
+   "id": "42038",
+   "idx": "109-4",
+   "no": "42038",
+   "name": "Mainspring - Complete with anchor pin, 0.0165 in thick",
+   "qty": 1,
+   "parent": "42242",
+   "kind": "part",
+   "part": "mainspring",
+   "fn": "The power: inner end on the arbor's hook, outer end by its pin at the brace (Sec. II).",
+   "rel": [],
+   "figs": "26, 75, 109",
+   "check": "fine.py: barrel-clearance.js coils inside the barrel"
+  },
+  {
+   "id": "42037",
+   "idx": "109-5",
+   "no": "42037",
+   "name": "Brace - Mainspring",
+   "qty": 1,
+   "parent": "42242",
+   "kind": "part",
+   "part": "barrel",
+   "fn": "Lines the wall where the mainspring's outer end hooks.",
+   "rel": [
+    [
+     "on",
+     "42168"
+    ]
+   ],
+   "figs": "75, 109"
+  },
+  {
+   "id": "42168",
+   "idx": "109-6",
+   "no": "42168",
+   "name": "Barrel - Mainspring, complete with anchor pin",
+   "qty": 1,
+   "parent": "42242",
+   "kind": "part",
+   "part": "barrel",
+   "fn": "Turns clockwise in running, drawing the chain off the fusee (Sec. IV).",
+   "rel": [
+    [
+     "round",
+     "42170",
+     "run"
+    ]
+   ],
+   "figs": "26, 109"
+  },
+  {
+   "id": "42006",
+   "idx": "108-50",
+   "no": "42006",
+   "name": "Fusee Assembly",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "asm",
+   "part": null,
+   "fn": "Fusee, wheel and maintaining work (Figs. 12, 109).",
+   "rel": [],
+   "figs": "12, 109"
+  },
+  {
+   "id": "42020",
+   "idx": "109-7",
+   "no": "42020",
+   "name": "Pin - Taper, fusee assembly",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Through the arbor under the end plate: holds the stack on (Figs. 28, 70).",
+   "rel": [
+    [
+     "in",
+     "42022",
+     "embed"
+    ]
+   ],
+   "figs": "70, 109"
+  },
+  {
+   "id": "42019",
+   "idx": "109-8",
+   "no": "42019",
+   "name": "Plate - Fusee end",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Under the fusee wheel, held by the taper pin.",
+   "rel": [
+    [
+     "round",
+     "42022",
+     "free"
+    ]
+   ],
+   "figs": "70, 109"
+  },
+  {
+   "id": "42015",
+   "idx": "109-9",
+   "no": "42015",
+   "name": "Wheel - Fusee",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "gw",
+   "fn": "First wheel of the train, free on the fusee arbor; drives the centre pinion (Secs. II, IV).",
+   "rel": [
+    [
+     "round",
+     "42022",
+     "free"
+    ],
+    [
+     "mesh",
+     "42068"
+    ]
+   ],
+   "figs": "12, 28, 109"
+  },
+  {
+   "id": "42016",
+   "idx": "109-10",
+   "no": "42016",
+   "name": "Spring - Sustaining, complete with pins",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "sspring",
+   "fn": "Under load in running; drives the train alone for 5-10 minutes while winding (Sec. IV).",
+   "rel": [],
+   "figs": "12, 71, 109",
+   "check": "maintaining.py: spring loaded in running, relaxes in winding"
+  },
+  {
+   "id": "42009A",
+   "idx": null,
+   "no": "42009A",
+   "name": "Wheel Assembly - Sustaining ratchet, with pawls, springs and screws",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "asm",
+   "part": null,
+   "fn": "The maintaining ratchet and its winding pawls.",
+   "rel": [],
+   "figs": "12, 109"
+  },
+  {
+   "id": "42009",
+   "idx": "109-11",
+   "no": "42009",
+   "name": "Wheel - Sustaining ratchet, complete with pawls",
+   "qty": 1,
+   "parent": "42009A",
+   "kind": "part",
+   "part": "sratchet",
+   "fn": "Free on the fusee arbor; its pawls take the winding ratchet's drive in running; the sustaining pawl holds it in winding (Sec. IV).",
+   "rel": [
+    [
+     "round",
+     "42022",
+     "free"
+    ]
+   ],
+   "figs": "12, 28, 69, 109",
+   "check": "maintaining.py: never turns back"
+  },
+  {
+   "id": "42007",
+   "idx": "109-12",
+   "no": "42007",
+   "name": "Spring - Winding pawl, complete with pins",
+   "qty": 2,
+   "parent": "42009A",
+   "kind": "part",
+   "part": "sratchet",
+   "fn": "Hold the winding pawls in the winding ratchet's teeth.",
+   "rel": [
+    [
+     "on",
+     "42009"
+    ]
+   ],
+   "figs": "69, 109",
+   "check": "maintaining.py: pawls on their teeth"
+  },
+  {
+   "id": "42012",
+   "idx": "109-13",
+   "no": "42012",
+   "name": "Screw - Winding pawl spring",
+   "qty": 4,
+   "parent": "42009A",
+   "kind": "part",
+   "part": "sratchet",
+   "fn": "Hold the winding pawl springs.",
+   "rel": [
+    [
+     "in",
+     "42007",
+     "clear"
+    ],
+    [
+     "in",
+     "42009",
+     "tap"
+    ]
+   ],
+   "figs": "109"
+  },
+  {
+   "id": "42013",
+   "idx": "109-14",
+   "no": "42013",
+   "name": "Wheel - Winding ratchet",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Screwed to the fusee's large end; its teeth drive the winding pawls in running, slip under them in winding (Sec. IV).",
+   "rel": [
+    [
+     "on",
+     "42021"
+    ]
+   ],
+   "figs": "12, 69, 109",
+   "check": "maintaining.py: fusee catches forward"
+  },
+  {
+   "id": "42014",
+   "idx": "109-15",
+   "no": "42014",
+   "name": "Screw - Winding ratchet wheel",
+   "qty": 2,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Hold the winding ratchet to the fusee.",
+   "rel": [
+    [
+     "in",
+     "42013",
+     "clear"
+    ],
+    [
+     "in",
+     "42021",
+     "tap"
+    ]
+   ],
+   "figs": "109"
+  },
+  {
+   "id": "42008",
+   "idx": "109-16",
+   "no": "42008",
+   "name": "Plate - Fusee top",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Covers the stop-bar and its spring in the fusee's top.",
+   "rel": [
+    [
+     "on",
+     "42021"
+    ]
+   ],
+   "figs": "73, 109"
+  },
+  {
+   "id": "27760.fu",
+   "idx": "109-17",
+   "no": "27760",
+   "name": "Screw - Fusee top plate",
+   "qty": 2,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Hold the top plate.",
+   "rel": [
+    [
+     "in",
+     "42008",
+     "clear"
+    ],
+    [
+     "in",
+     "42021",
+     "tap"
+    ]
+   ],
+   "figs": "109"
+  },
+  {
+   "id": "42025",
+   "idx": "109-18",
+   "no": "42025",
+   "name": "Spring - Winding stop-bar",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Draws the stop-bar back when the chain runs off its last turn.",
+   "rel": [
+    [
+     "on",
+     "42024"
+    ]
+   ],
+   "figs": "73, 109"
+  },
+  {
+   "id": "42024",
+   "idx": "109-19",
+   "no": "42024",
+   "name": "Stop-bar - Winding",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Pushed out by the chain at full wind to meet the winding stop (Secs. II, IV).",
+   "rel": [],
+   "figs": "12, 73, 109",
+   "check": "maintaining.py: stop-bar meets the stop"
+  },
+  {
+   "id": "42021",
+   "idx": "109-20",
+   "no": "42021",
+   "name": "Fusee - Complete with arbor",
+   "qty": 1,
+   "parent": "42006",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Its spiral groove evens the mainspring's pull on the train (Sec. II).",
+   "rel": [],
+   "figs": "12, 109"
+  },
+  {
+   "id": "42022",
+   "idx": "109-21",
+   "no": "42022",
+   "name": "Arbor - Fusee, complete with wind indicator pinion",
+   "qty": 1,
+   "parent": "42021",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Squared for the key; its pinion drives the wind indicator wheel (Sec. II).",
+   "rel": [
+    [
+     "in",
+     "42164.fu",
+     "run"
+    ],
+    [
+     "in",
+     "42164.fl",
+     "run"
+    ],
+    [
+     "mesh",
+     "42081"
+    ]
+   ],
+   "figs": "12, 109",
+   "check": "invariants.py: wind indicator"
+  },
+  {
+   "id": "42001",
+   "idx": "109-22",
+   "no": "42001",
+   "name": "Fusee Chain Assembly",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "chain",
+   "fn": "Links barrel to fusee; hooked to the barrel, pinned to the fusee (Sec. II, Figs. 26, 28).",
+   "rel": [],
+   "figs": "26, 28, 38, 109",
+   "check": "fine.py: links on the fusee"
+  },
+  {
+   "id": "42064A",
+   "idx": null,
+   "no": "42064A",
+   "name": "Bridge - Escape upper, complete with pins and setting",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "asm",
+   "part": null,
+   "fn": "Escape upper bridge with setting.",
+   "rel": [],
+   "figs": "110"
+  },
+  {
+   "id": "20762.eb",
+   "idx": "110-1",
+   "no": "20762",
+   "name": "Screw - Escape upper bridge",
+   "qty": 2,
+   "parent": "42064A",
+   "kind": "part",
+   "part": "escBridge",
+   "fn": "Hold the escape upper bridge (Op. 69).",
+   "rel": [
+    [
+     "in",
+     "42064",
+     "clear"
+    ],
+    [
+     "in",
+     "42062",
+     "tap"
+    ]
+   ],
+   "figs": "84, 110"
+  },
+  {
+   "id": "42064",
+   "idx": "110-2",
+   "no": "42064",
+   "name": "Bridge - Escape upper, complete with pins",
+   "qty": 1,
+   "parent": "42064A",
+   "kind": "part",
+   "part": "escBridge",
+   "fn": "Holds the escape wheel's upper setting and endstone cap.",
+   "rel": [
+    [
+     "on",
+     "42062"
+    ]
+   ],
+   "figs": "84, 110"
+  },
+  {
+   "id": "42162.eu",
+   "idx": "110-3",
+   "no": "42162",
+   "name": "Setting - Escape upper, complete with jewel",
+   "qty": 1,
+   "parent": "42064A",
+   "kind": "part",
+   "part": "escBridge",
+   "fn": "Olive-hole jewel for the escape arbor's upper pivot.",
+   "rel": [
+    [
+     "in",
+     "42064",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "J.eu",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Escape upper hole (olive-hole)",
+   "qty": 1,
+   "parent": "42162.eu",
+   "kind": "jewel",
+   "part": "escBridge",
+   "fn": "The escape arbor's upper pivot runs in it.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "hole",
+    "arbor": "42076",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "42159.eu",
+   "idx": "110-4",
+   "no": "42159",
+   "name": "Cap - Escape upper endstone, complete with jewel",
+   "qty": 1,
+   "parent": "42064A",
+   "kind": "part",
+   "part": "escBridge",
+   "fn": "Holds the escape arbor's upper endstone; milled or changed to set the endshake (Op. 69).",
+   "rel": [
+    [
+     "on",
+     "42064"
+    ]
+   ],
+   "figs": "86, 110"
+  },
+  {
+   "id": "J.eue",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Escape upper endstone (cap jewel)",
+   "qty": 1,
+   "parent": "42159.eu",
+   "kind": "jewel",
+   "part": "escBridge",
+   "fn": "Stops the escape arbor's upper pivot end.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "end",
+    "arbor": "42076",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "20762.euc",
+   "idx": "110-1",
+   "no": "20762",
+   "name": "Screw - Escape upper endstone cap",
+   "qty": 2,
+   "parent": "42159.eu",
+   "kind": "part",
+   "part": "escBridge",
+   "fn": "Hold the escape upper endstone cap.",
+   "rel": [
+    [
+     "in",
+     "42159.eu",
+     "clear"
+    ],
+    [
+     "in",
+     "42064",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42093",
+   "idx": "110-5",
+   "no": "42093",
+   "name": "Detent Assembly",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "asm",
+   "part": null,
+   "fn": "Detent, trip spring, support block and their screws (Sec. IV, Fig. 14).",
+   "rel": [],
+   "figs": "14, 110"
+  },
+  {
+   "id": "42056.blk",
+   "idx": "110-6",
+   "no": "42056",
+   "name": "Screw - Detent support block",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Holds the support block under the train bridge, with two positioning pins (Sec. II).",
+   "rel": [
+    [
+     "in",
+     "42062",
+     "clear"
+    ],
+    [
+     "in",
+     "42086",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42087",
+   "idx": "110-7",
+   "no": "42087",
+   "name": "Detent - Complete with jewel (beryllium copper)",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Its locking jewel holds the escape wheel; lifted by the unlocking jewel through the trip spring (Sec. IV).",
+   "rel": [
+    [
+     "on",
+     "42086"
+    ]
+   ],
+   "figs": "14, 54-60, 90, 110",
+   "check": "escapement.js: lock, let-off, overall"
+  },
+  {
+   "id": "42089",
+   "idx": "110-8",
+   "no": "42089",
+   "name": "Pin - Locking jewel wedge",
+   "qty": 1,
+   "parent": "42087",
+   "kind": "part",
+   "part": "det",
+   "fn": "Wedges the locking jewel in its hole (Figs. 57-59).",
+   "rel": [
+    [
+     "on",
+     "285"
+    ]
+   ],
+   "figs": "57, 110"
+  },
+  {
+   "id": "285",
+   "idx": "110-9",
+   "no": "285",
+   "name": "Jewel - Locking",
+   "qty": 1,
+   "parent": "42087",
+   "kind": "jewel",
+   "part": "det",
+   "fn": "Locks each tooth of the escape wheel until the detent is lifted (Sec. IV).",
+   "rel": [],
+   "figs": "14, 90, 110",
+   "jewel": {
+    "type": "pallet",
+    "holder": "42087"
+   },
+   "check": "escapement.js: lock"
+  },
+  {
+   "id": "42092",
+   "idx": "110-10",
+   "no": "42092",
+   "name": "Bracket - Detent trip spring support angle",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Carries the trip spring on the detent (Sec. IV).",
+   "rel": [
+    [
+     "on",
+     "42087"
+    ]
+   ],
+   "figs": "14, 110"
+  },
+  {
+   "id": "1770.br",
+   "idx": "110-11",
+   "no": "1770",
+   "name": "Screw - Detent trip spring support bracket",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Holds the angle bracket to the detent.",
+   "rel": [
+    [
+     "in",
+     "42092",
+     "embed"
+    ],
+    [
+     "in",
+     "42087",
+     "embed"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42088",
+   "idx": "110-12",
+   "no": "42088",
+   "name": "Spring - Detent trip (Hamilton Elinvar)",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Passes the unlocking jewel on the return swing; lifts the detent on the unlocking swing (Sec. IV).",
+   "rel": [
+    [
+     "on",
+     "42092"
+    ]
+   ],
+   "figs": "14, 110",
+   "check": "escapement.js: overall"
+  },
+  {
+   "id": "1770.ts",
+   "idx": "110-11",
+   "no": "1770",
+   "name": "Screw - Detent trip spring",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Holds the trip spring on the bracket.",
+   "rel": [
+    [
+     "in",
+     "42092",
+     "tap"
+    ],
+    [
+     "on",
+     "42088"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42086",
+   "idx": "110-13",
+   "no": "42086",
+   "name": "Block - Detent support, complete with button and pins",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Fixed under the train bridge by one screw and two positioning pins; carries the detent, the stop button and the adjusting screws (Secs. II, IV).",
+   "rel": [
+    [
+     "on",
+     "42062"
+    ]
+   ],
+   "figs": "14, 110"
+  },
+  {
+   "id": "42091.cl",
+   "idx": "110-14",
+   "no": "42091",
+   "name": "Screw - Detent lock adjusting clamp",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Clamps the lock-adjusting screw.",
+   "rel": [
+    [
+     "in",
+     "42086",
+     "embed"
+    ]
+   ],
+   "figs": "14, 110"
+  },
+  {
+   "id": "42091.lk",
+   "idx": "110-14",
+   "no": "42091",
+   "name": "Screw - Detent lock adjusting",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Sets the depth of lock through the stop button (Op. 85).",
+   "rel": [
+    [
+     "in",
+     "42086",
+     "embed"
+    ]
+   ],
+   "figs": "14, 110",
+   "check": "escapement.js: lock"
+  },
+  {
+   "id": "20756",
+   "idx": "110-15",
+   "no": "20756",
+   "name": "Screw - Detent adjusting",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Sets the detent lengthwise (Op. 82).",
+   "rel": [
+    [
+     "in",
+     "42086",
+     "embed"
+    ]
+   ],
+   "figs": "14, 110"
+  },
+  {
+   "id": "37024",
+   "idx": "110-16",
+   "no": "37024",
+   "name": "Screw - Detent clamp",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Clamps the detent's foot to the block, with a washer and two steady pins (Sec. IV).",
+   "rel": [
+    [
+     "in",
+     "42087",
+     "embed"
+    ],
+    [
+     "in",
+     "42086",
+     "embed"
+    ]
+   ],
+   "figs": "14, 110"
+  },
+  {
+   "id": "42251.det",
+   "idx": "110-17",
+   "no": "42251",
+   "name": "Washer - Detent clamp screw",
+   "qty": 1,
+   "parent": "42093",
+   "kind": "part",
+   "part": "det",
+   "fn": "Under the detent clamp screw.",
+   "rel": [
+    [
+     "on",
+     "42087"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42076",
+   "idx": "110-18",
+   "no": "42076",
+   "name": "Wheel - Escape, complete with pinion",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "escW",
+   "fn": "Released one tooth a beat; impulses the balance (Sec. IV).",
+   "rel": [
+    [
+     "in",
+     "J.eu",
+     "run"
+    ],
+    [
+     "in",
+     "J.el",
+     "run"
+    ],
+    [
+     "endshake",
+     "J.eue",
+     "J.ele"
+    ],
+    [
+     "mesh",
+     "42073"
+    ]
+   ],
+   "figs": "14, 90, 110",
+   "check": "escapement.js"
+  },
+  {
+   "id": "42062",
+   "idx": "110-19",
+   "no": "42062",
+   "name": "Bridge - Upper train",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "trainBridge",
+   "fn": "Carries the centre and third upper bushings; the cock, balance lower bridge, escape upper bridge and detent block are mounted to it (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42059"
+    ]
+   ],
+   "figs": "24, 29, 67, 110"
+  },
+  {
+   "id": "42055.tb",
+   "idx": "110-20",
+   "no": "42055",
+   "name": "Screw - Pillar upper train bridge",
+   "qty": 3,
+   "parent": "42062",
+   "kind": "part",
+   "part": "trainBridge",
+   "fn": "Hold the upper train bridge to its three pillars (Op. 14).",
+   "rel": [
+    [
+     "in",
+     "42062",
+     "clear"
+    ],
+    [
+     "in",
+     "42059",
+     "tap"
+    ]
+   ],
+   "figs": "67, 110",
+   "dev": [
+    {
+     "rel": [
+      "in",
+      "42059"
+     ],
+     "inst": [
+      2
+     ],
+     "why": "The manual has all three upper train bridge screws in pillars (Ops. 14, 47, 48). The model's third screw is where the top-view photographs show one, at (-8.5, 27.7); a pillar there would stand in the fourth wheel, whose size the layout fixes, so it is drawn threaded into the bridge alone (IDEAS.md 1.2). What it holds in the real movement is not settled."
+    }
+   ]
+  },
+  {
+   "id": "42166",
+   "idx": "110-21",
+   "no": "42166",
+   "name": "Bushing - Center wheel upper",
+   "qty": 1,
+   "parent": "42062",
+   "kind": "part",
+   "part": "trainBridge",
+   "fn": "Bearing for the centre arbor's upper pivot.",
+   "rel": [
+    [
+     "in",
+     "42062",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42167",
+   "idx": "110-22",
+   "no": "42167",
+   "name": "Bushing - Third wheel upper",
+   "qty": 1,
+   "parent": "42062",
+   "kind": "part",
+   "part": "trainBridge",
+   "fn": "Bearing for the third arbor's upper pivot.",
+   "rel": [
+    [
+     "in",
+     "42062",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42073",
+   "idx": "110-23",
+   "no": "42073",
+   "name": "Wheel - Fourth, complete with pinion",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "fw",
+   "fn": "Turns once a minute; its arbor carries the second hand (Sec. II).",
+   "rel": [
+    [
+     "in",
+     "J.fu",
+     "run"
+    ],
+    [
+     "in",
+     "J.fl",
+     "run"
+    ],
+    [
+     "endshake",
+     "42161.fu",
+     "42161.fl"
+    ],
+    [
+     "mesh",
+     "42071"
+    ]
+   ],
+   "figs": "13, 110",
+   "check": "invariants.py: second hand"
+  },
+  {
+   "id": "42068",
+   "idx": "110-24",
+   "no": "42068",
+   "name": "Wheel - Center, complete with pinion",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "cw",
+   "fn": "Turns once an hour; its long arbor carries the cannon pinion and hour wheel (Sec. II).",
+   "rel": [
+    [
+     "in",
+     "42166",
+     "run"
+    ],
+    [
+     "in",
+     "42165",
+     "run"
+    ],
+    [
+     "endshake",
+     "42166",
+     "42165"
+    ]
+   ],
+   "figs": "13, 110",
+   "check": "invariants.py: minute hand"
+  },
+  {
+   "id": "42071",
+   "idx": "110-25",
+   "no": "42071",
+   "name": "Wheel - Third, complete with pinion",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "tw",
+   "fn": "Drives the fourth pinion.",
+   "rel": [
+    [
+     "in",
+     "42167",
+     "run"
+    ],
+    [
+     "in",
+     "J.tl",
+     "run"
+    ],
+    [
+     "endshake",
+     "42167",
+     "42161.tl"
+    ],
+    [
+     "mesh",
+     "42068"
+    ]
+   ],
+   "figs": "13, 110"
+  },
+  {
+   "id": "42096",
+   "idx": "110-26",
+   "no": "42096",
+   "name": "Pawl - Sustaining, complete with arbor and springs",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "spawl",
+   "fn": "Holds the sustaining ratchet from turning back while winding (Sec. IV).",
+   "rel": [
+    [
+     "in",
+     "42062",
+     "run"
+    ],
+    [
+     "in",
+     "42060",
+     "run"
+    ],
+    [
+     "on",
+     "42009"
+    ]
+   ],
+   "figs": "12, 28, 110",
+   "check": "maintaining.py: pawl on its teeth"
+  },
+  {
+   "id": "42065",
+   "idx": "110-27",
+   "no": "42065",
+   "name": "Bridge - Balance lower, complete with pins",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "lowerBridge",
+   "fn": "Holds the balance lower setting and cap and the fourth upper setting; carries the train-blocking screw (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42062"
+    ]
+   ],
+   "figs": "29, 30, 110"
+  },
+  {
+   "id": "42055.lb",
+   "idx": "110-20",
+   "no": "42055",
+   "name": "Screw - Balance lower bridge",
+   "qty": 2,
+   "parent": "42065",
+   "kind": "part",
+   "part": "lowerBridge",
+   "fn": "Hold the balance lower bridge to the train bridge (Ops. 12, 50).",
+   "rel": [
+    [
+     "in",
+     "42065",
+     "clear"
+    ],
+    [
+     "in",
+     "42062",
+     "tap"
+    ]
+   ],
+   "figs": "29, 110"
+  },
+  {
+   "id": "42161.fu",
+   "idx": "110-28",
+   "no": "42161",
+   "name": "Setting - Fourth wheel upper, complete with jewel",
+   "qty": 1,
+   "parent": "42065",
+   "kind": "part",
+   "part": "lowerBridge",
+   "fn": "Bar-hole jewel for the fourth arbor's upper pivot.",
+   "rel": [
+    [
+     "in",
+     "42065",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "J.fu",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Fourth upper hole (bar-hole)",
+   "qty": 1,
+   "parent": "42161.fu",
+   "kind": "jewel",
+   "part": "lowerBridge",
+   "fn": "The fourth arbor's upper pivot runs in it.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "hole",
+    "arbor": "42073",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "42162.bl",
+   "idx": "110-3",
+   "no": "42162",
+   "name": "Setting - Balance wheel lower, complete with jewel",
+   "qty": 1,
+   "parent": "42065",
+   "kind": "part",
+   "part": "lowerBridge",
+   "fn": "Olive-hole jewel for the balance staff's lower pivot.",
+   "rel": [
+    [
+     "in",
+     "42065",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "J.bl",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Balance lower hole (olive-hole)",
+   "qty": 1,
+   "parent": "42162.bl",
+   "kind": "jewel",
+   "part": "lowerBridge",
+   "fn": "The balance staff's lower pivot runs in it.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "hole",
+    "arbor": "42186",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "42159.bl",
+   "idx": "110-4",
+   "no": "42159",
+   "name": "Cap - Balance lower endstone, complete with jewel",
+   "qty": 1,
+   "parent": "42065",
+   "kind": "part",
+   "part": "lowerBridge",
+   "fn": "Holds the balance staff's lower endstone.",
+   "rel": [
+    [
+     "on",
+     "42065"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "J.ble",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Balance lower endstone (cap jewel)",
+   "qty": 1,
+   "parent": "42159.bl",
+   "kind": "jewel",
+   "part": "lowerBridge",
+   "fn": "Stops the balance staff's lower pivot end.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "end",
+    "arbor": "42186",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "20762.blc",
+   "idx": "110-1",
+   "no": "20762",
+   "name": "Screw - Balance lower endstone cap",
+   "qty": 2,
+   "parent": "42159.bl",
+   "kind": "part",
+   "part": "lowerBridge",
+   "fn": "Hold the balance lower endstone cap.",
+   "rel": [
+    [
+     "in",
+     "42159.bl",
+     "clear"
+    ],
+    [
+     "in",
+     "42065",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42247",
+   "idx": "110-29",
+   "no": "42247",
+   "name": "Screw - Train blocking (from serial 4003)",
+   "qty": 1,
+   "parent": "42065",
+   "kind": "part",
+   "part": "tblock",
+   "fn": "Screwed down, its dog point stands between the fourth wheel's spokes and holds the train (Sec. II).",
+   "rel": [
+    [
+     "in",
+     "42065",
+     "tap"
+    ]
+   ],
+   "figs": "110",
+   "check": "bom.py fn: train-blocking screw"
+  },
+  {
+   "id": "42059",
+   "idx": "110-30",
+   "no": "42059",
+   "name": "Pillar - Train bridge",
+   "qty": 3,
+   "parent": "42000",
+   "kind": "part",
+   "part": "pillars",
+   "fn": "Hold the upper train bridge off the pillar plate (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42060"
+    ]
+   ],
+   "figs": "29, 67, 110"
+  },
+  {
+   "id": "42055.pil",
+   "idx": "110-20",
+   "no": "42055",
+   "name": "Screw - Pillar train bridge",
+   "qty": 3,
+   "parent": "42059",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Hold the train bridge pillars, from the dial side of the pillar plate.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "clear"
+    ],
+    [
+     "in",
+     "42059",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42058",
+   "idx": "110-31",
+   "no": "42058",
+   "name": "Pillar - Barrel bridge",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "pillars",
+   "fn": "Holds the barrel bridge off the pillar plate.",
+   "rel": [
+    [
+     "on",
+     "42060"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42055.pilb",
+   "idx": "110-20",
+   "no": "42055",
+   "name": "Screw - Pillar barrel bridge",
+   "qty": 1,
+   "parent": "42058",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Holds the barrel bridge pillar, from the dial side.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "clear"
+    ],
+    [
+     "in",
+     "42058",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42063",
+   "idx": "110-32",
+   "no": "42063",
+   "name": "Bridge - Lower train, complete with pins",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "ltb",
+   "fn": "On the dial side of the pillar plate: the third and fourth lower settings (Sec. II).",
+   "rel": [
+    [
+     "on",
+     "42060"
+    ]
+   ],
+   "figs": "29, 67, 110"
+  },
+  {
+   "id": "42163",
+   "idx": "110-33",
+   "no": "42163",
+   "name": "Screw - Lower train bridge",
+   "qty": 2,
+   "parent": "42063",
+   "kind": "part",
+   "part": "ltb",
+   "fn": "Hold the lower train bridge (Ops. 7, 53).",
+   "rel": [
+    [
+     "in",
+     "42063",
+     "clear"
+    ],
+    [
+     "in",
+     "42060",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42161.tl",
+   "idx": "110-28",
+   "no": "42161",
+   "name": "Setting - Third lower, complete with jewel",
+   "qty": 1,
+   "parent": "42063",
+   "kind": "part",
+   "part": "ltb",
+   "fn": "Bar-hole jewel for the third arbor's dial end.",
+   "rel": [
+    [
+     "in",
+     "42063",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "J.tl",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Third lower hole (bar-hole)",
+   "qty": 1,
+   "parent": "42161.tl",
+   "kind": "jewel",
+   "part": "ltb",
+   "fn": "The third arbor's lower pivot runs in it.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "hole",
+    "arbor": "42071",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "42161.fl",
+   "idx": "110-28",
+   "no": "42161",
+   "name": "Setting - Fourth lower, complete with jewel",
+   "qty": 1,
+   "parent": "42063",
+   "kind": "part",
+   "part": "ltb",
+   "fn": "Bar-hole jewel for the fourth arbor's dial end.",
+   "rel": [
+    [
+     "in",
+     "42063",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "J.fl",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Fourth lower hole (bar-hole)",
+   "qty": 1,
+   "parent": "42161.fl",
+   "kind": "jewel",
+   "part": "ltb",
+   "fn": "The fourth arbor runs in it.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "hole",
+    "arbor": "42073",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "42060",
+   "idx": "110-34",
+   "no": "42060",
+   "name": "Plate - Pillar, complete with pins",
+   "qty": 1,
+   "parent": "42000",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Foundation of the movement (Sec. II).",
+   "rel": [],
+   "figs": "29, 67, 110"
+  },
+  {
+   "id": "42159.el",
+   "idx": "110-4",
+   "no": "42159",
+   "name": "Cap - Escape lower endstone, complete with jewel",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Holds the escape arbor's lower endstone, on the dial side.",
+   "rel": [
+    [
+     "on",
+     "42060"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "J.ele",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Escape lower endstone (cap jewel)",
+   "qty": 1,
+   "parent": "42159.el",
+   "kind": "jewel",
+   "part": "pillar",
+   "fn": "Stops the escape arbor's lower pivot end.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "end",
+    "arbor": "42076",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "20762.elc",
+   "idx": "110-1",
+   "no": "20762",
+   "name": "Screw - Escape lower endstone cap",
+   "qty": 2,
+   "parent": "42159.el",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Hold the escape lower endstone cap.",
+   "rel": [
+    [
+     "in",
+     "42159.el",
+     "clear"
+    ],
+    [
+     "in",
+     "42060",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42162.el",
+   "idx": "110-3",
+   "no": "42162",
+   "name": "Setting - Escape wheel lower, complete with jewel",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Olive-hole jewel for the escape arbor's lower pivot, in the pillar plate.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "J.el",
+   "idx": null,
+   "no": null,
+   "name": "Jewel - Escape lower hole (olive-hole)",
+   "qty": 1,
+   "parent": "42162.el",
+   "kind": "jewel",
+   "part": "pillar",
+   "fn": "The escape arbor's lower pivot runs in it.",
+   "rel": [],
+   "figs": "110",
+   "jewel": {
+    "type": "hole",
+    "arbor": "42076",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "42084",
+   "idx": "110-35",
+   "no": "42084",
+   "name": "Post - Wind indicator wheel",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "The wind indicator wheel turns on it (Fig. 110).",
+   "rel": [
+    [
+     "on",
+     "42060"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "35779.ud",
+   "idx": "110-36",
+   "no": "35779",
+   "name": "Screw - Wind indicator wheel post",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Holds the post, from the train side of the plate.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "clear"
+    ],
+    [
+     "in",
+     "42084",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42085",
+   "idx": "110-37",
+   "no": "42085",
+   "name": "Post - Minute wheel",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "The minute wheel turns on it.",
+   "rel": [
+    [
+     "on",
+     "42060"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "35779.mw",
+   "idx": "110-36",
+   "no": "35779",
+   "name": "Screw - Minute wheel post",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Holds the post, from the train side of the plate.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "clear"
+    ],
+    [
+     "in",
+     "42085",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42165",
+   "idx": "110-38",
+   "no": "42165",
+   "name": "Bushing - Center wheel lower",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Bearing for the centre arbor in the pillar plate.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42164.bl",
+   "idx": "110-39",
+   "no": "42164",
+   "name": "Bushing - Barrel lower",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Bearing for the barrel arbor's lower end.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42164.fl",
+   "idx": "110-39",
+   "no": "42164",
+   "name": "Bushing - Fusee lower",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Bearing for the fusee arbor's lower end.",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "press"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42057",
+   "idx": "110-40",
+   "no": "42057",
+   "name": "Ring - Mounting",
+   "qty": 1,
+   "parent": "42060",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Round the plate's edge; holds the movement in the case.",
+   "rel": [
+    [
+     "on",
+     "42060"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42055.ring",
+   "idx": "110-20",
+   "no": "42055",
+   "name": "Screw - Mounting ring",
+   "qty": 3,
+   "parent": "42057",
+   "kind": "part",
+   "part": "pillar",
+   "fn": "Hold the pillar plate to the mounting ring, from the train side (reassembly Op. 1; Fig. 29).",
+   "rel": [
+    [
+     "in",
+     "42060",
+     "clear"
+    ],
+    [
+     "in",
+     "42057",
+     "tap"
+    ]
+   ],
+   "figs": "110"
+  },
+  {
+   "id": "42271",
+   "idx": null,
+   "no": "42271",
+   "name": "Screw - Balance, 100-105 mg, 0.039 in head height",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Additional balance screw weight (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42172",
+   "idx": null,
+   "no": "42172",
+   "name": "Screw - Balance, 150-155 mg, 0.060 in head height",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Additional balance screw weight (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42175",
+   "idx": null,
+   "no": "42175",
+   "name": "Screw - Balance, 300-305 mg, 0.121 in head height",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Additional balance screw weight (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42182",
+   "idx": null,
+   "no": "42182",
+   "name": "Washer - Timing, 6.0-7.0 mg, 0.003 in thick",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Additional timing washer (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42183",
+   "idx": null,
+   "no": "42183",
+   "name": "Washer - Timing, 8.0-9.0 mg, 0.004 in thick",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Additional timing washer (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42184",
+   "idx": null,
+   "no": "42184",
+   "name": "Washer - Timing, 12.0-13.0 mg, 0.006 in thick",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Additional timing washer (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42185",
+   "idx": null,
+   "no": "42185",
+   "name": "Washer - Timing, 16.0-17.0 mg, 0.008 in thick",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Additional timing washer (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42256",
+   "idx": null,
+   "no": "42256",
+   "name": "Washer - Timing, 20.0-21.0 mg, 0.010 in thick",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Additional timing washer (p. 88).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42264",
+   "idx": null,
+   "no": "42264",
+   "name": "Roller - Impulse, O.D. .250 (Identity No. 4)",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Alternative impulse roller for roller shake (p. 88, Op. 84).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42265",
+   "idx": null,
+   "no": "42265",
+   "name": "Roller - Impulse, O.D. .251 (Identity No. 5)",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Alternative impulse roller for roller shake (p. 88, Op. 84).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42266",
+   "idx": null,
+   "no": "42266",
+   "name": "Roller - Impulse, O.D. .252 (Identity No. 6)",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Alternative impulse roller for roller shake (p. 88, Op. 84).",
+   "rel": [],
+   "figs": ""
+  },
+  {
+   "id": "42267",
+   "idx": null,
+   "no": "42267",
+   "name": "Roller - Impulse, O.D. .253 (Identity No. 7)",
+   "qty": "Var.",
+   "parent": "42195",
+   "kind": "variant",
+   "part": null,
+   "fn": "Alternative impulse roller for roller shake (p. 88, Op. 84).",
+   "rel": [],
+   "figs": ""
+  }
+ ]
+}
