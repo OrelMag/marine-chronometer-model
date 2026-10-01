@@ -1129,9 +1129,33 @@ as the video shows it, bored for the escape arbor; the rest stands.
     estimated parts: the third arbor 3.2 mm into the detent's support block
     under the train bridge (its screw matches a real hole, its outline is
     drawn), and the third wheel's teeth 0.65 mm into the foot (r 3.4,
-    estimated) of the train pillar at (−16.63, 22.48). Not committed. A video
-    should show: the detent's support block from below with the train in
-    place, and the pillar's foot beside the third wheel (35:14–36:15).
+    estimated) of the train pillar at (−16.63, 22.48). Not committed.
+
+    Then measured:
+    - **The pillar** (42:56, side-on, scaled by its 16.8 mm height; ±0.15
+      mm): a straight shaft r 2.7 with a collar at each end, the foot r 2.9
+      over its bottom 3.3 mm and the top r 3.3 over its top 3.4 mm. The model
+      has the foot r 3.4 over 1.3 mm, a neck r 2.3 under the top, and the top
+      r 2.9. With the real foot, the third wheel clears the pillar with the
+      third arbor at the measured (−6.18, 14.75) (0.05 mm) but not at the
+      ratio-implied (−6.71, 14.52) (−0.68 mm). The pillar's place is right:
+      the anchored frame puts it on a real pillar-screw hole.
+    - **The detent's support block.** On the anchored underside (13:49.5,
+      the detent off) the model's block lies across the real lower bridge's
+      second lug and its screw, and there is no hole at the model's block
+      screw (−13.67, 18.21). So the real block is elsewhere. The block's
+      place comes from the escapement plan (Fig. 90 as Rawlings redrew it,
+      `shared/escapement.js`: the detent at 68° in the escapement's frame,
+      the block 1.5–0.9 escape radii along it), turned to the balance–escape
+      line, which puts it toward 9 o'clock. The only unexplained hole near
+      the keyhole on the underside is on the other side of that line, at
+      (9.24, 20.86), 5 mm from the escape arbor, with a curved slot beside
+      it. From above (10:45–10:48) the block's screw is taken out at the
+      train bridge's edge below the keyhole. If that is the block's screw,
+      the plan is mirrored about the balance–escape line, which would change
+      the detent, the wheel's turning direction and the essay's figures.
+      Not settled: the top view (10:47) still has to be anchored on matched
+      holes to place that screw.
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
