@@ -1496,16 +1496,30 @@ on the top-view photograph) had the right parts in the wrong arrangement.
     mm rms). The notch is one circle, r 16.57 about (11.46, -17.47), 0.12 mm
     rms; the horn its cusp with the barrel's cut, cut off straight 12.4 mm
     from the centre; the mouth a sharp corner at (28.0, -18.7) and a straight
-    edge to the rim at -23° (it was a spike to -40°). Still open:
-    - **The third screw (29.24, -12.28)** keeps 0.5 mm of metal to the notch,
-      and its head (r 2.9) overhangs the edge by about 1 mm. On 23:30 no hole
-      shows there; the nearest is a large one (about 5 mm across, a
-      counterbore) at (32.25, -10.81), 3.3 mm further out, as the pillars on
-      the bare plate stand further out than the model's (`References/VIDEOS.md`).
-      The top-view photograph's five-screw map, 6:29 and the barrel bridge laid
-      flat put the screw at (29.24, -12.28). Settle it with a homography on
-      several holes of the flat bridge before moving the screw, and the barrel
-      bridge's hole with it.
+    edge turning into the rim through a round corner (it was a spike to
+    -40°). Still open:
+    - **The third screw: moved, its pillar still open** (2 October 2026,
+      branch `claude/train-bridge-screw`). At (29.24, -12.28) it kept 0.5 mm
+      of metal to the notch and its head overhung the edge by about 1 mm, and
+      the bridge laid flat (23:30) has no hole there. The hole is a 5.3 mm
+      counterbore at the end of the tongue, (32.25, -10.81); at 36:26 the
+      bridge goes on with it, and at 36:34 the screw is driven into it with a
+      fluted pillar under it. The manual has the same: four pillars, three
+      for the train bridge, and all three of its screws in them (Ops. 5, 14;
+      parts list 42059 x3, 42055 "Pillar upper train bridge" x3); the barrel
+      bridge has its pillar's screw and two plain screws. The model's
+      (29.24, -12.28) came from the top-view photograph's five-screw map,
+      which is fitted to the model's own screws. The screw is now at the
+      video's hole, its head (r 2.5) sunk flush, threaded into the bridge
+      alone. **Still open:** the pillar. On the manual and video's reading the
+      model's pillar 2 (32.11, -4.1) belongs under this screw, 6.7 mm away,
+      and the barrel-bridge screw now in it goes into the train bridge. But
+      the fusee wheel's tips reach 20.4 mm from the fusee arbor, and a pillar
+      (r 2.7) at the hole stands 22.5 mm away: 0.6 mm in the wheel. The real
+      one clears, so the model's fusee is placed or sized wrong: the notch's
+      centre (below) puts the fusee 20.9 mm from the centre, which with the
+      train's 90 and 14 makes the wheel's tips about 18.5 mm and leaves the
+      pillar 0.6 mm clear. Next, on its own branch.
     - **The notch's centre** is 2.3 mm from the model's fusee arbor, at 33°
       from the 12 and 20.9 mm out (the arbor at 30.3° and 22.9 mm). If the
       notch is concentric with the fusee, that is a reading of the fusee's
