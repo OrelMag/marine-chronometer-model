@@ -2296,13 +2296,22 @@ function makeFusee(M,c){
      past the barrel's lowest point), so the hook at its end stays in its hole in the wall (with I(n), the fusee's turns, the hook slid 8 mm round the barrel over a wind) */
   const IB0=I(md(0))-dl(md(0))/TAU,Ib=(n,eps=0)=>{const m0=md(n*TAU+eps);return I(m0)-dl(m0)/TAU-IB0;};
   /* the chain's hook: its end on the barrel (m = 0) stays at HKA in the barrel's frame; its nose goes through a hole in the wall there (Figs. 17, 75), 0.7 mm across
-     (estimated). The wall is built in three bands, the middle one, round the hole, with a slot through it; each band is the wall (barrelWall) to the checks */
+     (estimated); the wall is one solid with the hole through it */
   const HKA=-Math.PI/2-TAU*IB0,HKN=HKA-0.85/rB,HKY=yb(0),HKW=0.35;   /* HKA: the chain's end; HKN: the nose, 0.85 on along the drum, past the last link's plates */
-  { const top=c.bT+0.6,bot=c.bB-0.6,band=(y,geo)=>{const m=new THREE.Mesh(geo,M.brass);m.position.y=y;bz.add(m);Object.assign(m.userData,{driveGhost:true,barrelWall:c.Rb});return m;};
-    bw.geometry.dispose();bw.geometry=ringGeo(c.Rb,c.Rb-0.2,bot-(HKY+HKW));bw.position.y=(bot+HKY+HKW)/2;   /* below the hole */
-    band((top+HKY-HKW)/2,ringGeo(c.Rb,c.Rb-0.2,HKY-HKW-top));   /* above it */
-    const g0=HKW/c.Rb,arc=(r,a0,a1)=>[...Array(97).keys()].map(i=>{const a=a0+(a1-a0)*i/96;return[r*Math.cos(a),r*Math.sin(a)];});
-    band(HKY-HKW,polyGeo([...arc(c.Rb,HKN+g0,HKN+TAU-g0),...arc(c.Rb-0.2,HKN+TAU-g0,HKN+g0)],2*HKW)); }
+  { /* the wall as one closed solid with the hole through it: outer and inner faces on a grid in (angle, height), the hole's four faces, the two end faces */
+    const top=c.bT+0.6,bot=c.bB-0.6,ro=c.Rb,ri=c.Rb-0.2,g0=HKW/c.Rb,ta=HKN+g0,tb=HKN-g0+TAU,M=180,U=[...Array(M+1).keys()].map(i=>ta+(tb-ta)*i/M),Y=[top,HKY-HKW,HKY+HKW,bot].sort((a,b)=>a-b);
+    const P=[],I=[],vid={},V=(s,i,j)=>{const k=s+','+i+','+j;if(vid[k]===undefined){const r=s?ri:ro;vid[k]=P.length/3;P.push(r*Math.cos(U[i]),Y[j],r*Math.sin(U[i]));}return vid[k];};
+    const q=(a,b,cc,d,n)=>{const p3=k=>new THREE.Vector3(P[3*k],P[3*k+1],P[3*k+2]),A=p3(a),B=p3(b),C=p3(cc),N=new THREE.Vector3().subVectors(B,A).cross(new THREE.Vector3().subVectors(C,A));
+      if(N.dot(n)<0)I.push(a,cc,b,a,d,cc);else I.push(a,b,cc,a,cc,d);};
+    const rad=i=>new THREE.Vector3(Math.cos(U[i]),0,Math.sin(U[i])),tan=i=>new THREE.Vector3(-Math.sin(U[i]),0,Math.cos(U[i])),up=new THREE.Vector3(0,1,0),dn=new THREE.Vector3(0,-1,0);
+    for(let i=0;i<M;i++){const n=rad(i).add(rad(i+1));for(let j=0;j<3;j++){q(V(0,i,j),V(0,i+1,j),V(0,i+1,j+1),V(0,i,j+1),n);q(V(1,i,j),V(1,i+1,j),V(1,i+1,j+1),V(1,i,j+1),n.clone().negate());}
+      q(V(0,i,3),V(0,i+1,3),V(1,i+1,3),V(1,i,3),up);q(V(0,i,0),V(0,i+1,0),V(1,i+1,0),V(1,i,0),dn);}
+    { const n=rad(M).add(rad(0));for(const j of[0,2]){q(V(0,M,j),V(0,0,j),V(0,0,j+1),V(0,M,j+1),n);q(V(1,M,j),V(1,0,j),V(1,0,j+1),V(1,M,j+1),n.clone().negate());}   /* across the hole: below and above it */
+      q(V(0,M,3),V(0,0,3),V(1,0,3),V(1,M,3),up);q(V(0,M,0),V(0,0,0),V(1,0,0),V(1,M,0),dn);
+      q(V(0,M,1),V(0,0,1),V(1,0,1),V(1,M,1),up);q(V(0,M,2),V(0,0,2),V(1,0,2),V(1,M,2),dn);   /* the hole's bottom and top */
+      q(V(0,M,1),V(0,M,2),V(1,M,2),V(1,M,1),tan(M));q(V(0,0,1),V(0,0,2),V(1,0,2),V(1,0,1),tan(0).negate()); }   /* its sides */
+    let wg=new THREE.BufferGeometry();wg.setAttribute('position',new THREE.Float32BufferAttribute(P,3));wg.setIndex(I);wg=wg.toNonIndexed();wg.computeVertexNormals();   /* flat faces, as the extruded wall had */
+    bw.geometry.dispose();bw.geometry=wg;bw.position.y=0; }
   function path(m0,rot){const P=[],V=(x,y,z)=>P.push(new THREE.Vector3(x,y,z)),d=dl(m0),r0=rc(m0);
     for(let m=N;m>m0;m-=0.01){const a=phi0+TAU*m-rot,r=rc(m);V(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}
     const F0=[fx+r0*Math.sin(d),-r0*Math.cos(d)],B0=[bx+rB*Math.sin(d),-rB*Math.cos(d)],y0=yf(m0),y1=yb(m0);V(F0[0],y0,F0[1]);

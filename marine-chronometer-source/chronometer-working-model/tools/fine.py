@@ -31,10 +31,10 @@ EXPECTED={
  ('bal:Box','spr:Tube(tube)'):("hairspring's inner end in the clamp on the collet's tongue",0.06,0.35),
  ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
- ('barrel:Extrude(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
- ('barrel:Extrude(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75)",0.02,0.3),
- ('barrel:Extrude(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.03,0.45),
- ('barrel:Extrude(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
+ ('barrel:Buffer(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,13.2),
+ ('barrel:Buffer(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75); the wall is tested as the drum it encloses, so the nose counts as inside it",0.04,0.6),
+ ('barrel:Buffer(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.03,0.45),
+ ('barrel:Buffer(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),
  ('ratchet:Cylinder','ratchet:Cylinder'):("the barrel arbor in its squared top's collar: one piece, in two groups so the Exploded view takes the arbor out below with the barrel",7.0,1.2),
  ('fusee:Cylinder','fusee:Cylinder'):("the taper pin through the fusee arbor, under the end plate (their own group, which the Exploded view takes off the arbor's end)",0.25,0.45),
 }
