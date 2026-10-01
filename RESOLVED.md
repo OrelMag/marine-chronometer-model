@@ -497,7 +497,7 @@ Contents:
   bridge's access hole moved with it. The mouth's edge now turns into the
   rim through a round corner (r 6) instead of a sharp one. Keep: no screw
   head over an edge; the pillar under this screw (the manual's and the
-  video's) waits on the fusee's place (`Review-results.md` 21). HASH
+  video's) waits on the fusee's place (`Review-results.md` 21). `b58bd58`
 - **Screws were heads with nothing under them, and no part had a hole for
   one.** The Exploded view showed it: every bridge lifted away with bare heads.
   `screw()` now draws a threaded shank (`len`, toward +y), and every part a
