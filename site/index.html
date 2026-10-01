@@ -1190,7 +1190,7 @@ function dialCanvas(kind){
     x.textAlign='center';x.textBaseline='middle';
     const r1=c*0.96,r2=c*0.925;circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);
     for(let i=0;i<12;i++){const a=i/12*TAU;if(sov)ln(c,c,a,r2,r1,S*0.009);else tri(r1,a);}   /* hour marks: bars (Soviet), triangles (Nardin) */
-    const k=0.472,sy=c+c*k,uy=c-c*k,rs=c*(sov?0.375:0.39),ru=c*(sov?0.27:0.255),A=h=>(60+240*h/56)*D2R;
+    const k=L.F[1]/DIAL_R,sy=c+c*k,uy=c-c*k,rs=c*(sov?0.375:0.39),ru=c*(sov?0.27:0.255),A=h=>(60+240*h/56)*D2R;
     /* wind: Nardin, a double arc ticked every 8 h round figures 8–48, UP/HAUT at the wound end, DOWN/BAS at the run-down end, an inner arc open under the XII;
        Soviet, figures 0–56 inside an outer circle open under the 12, round a ticked double arc, ЗАВОД (wound) and СПУСК (run down) */
     x.font=`500 ${S*0.026}px ${SANS}`;
@@ -1219,7 +1219,7 @@ function dialCanvas(kind){
     x.beginPath();x.moveTo(c,c-r1-S*0.004);x.lineTo(c-S*0.006,c-r1-S*0.016);x.lineTo(c+S*0.006,c-r1-S*0.016);x.closePath();x.fill();   /* index at 60 */
     x.font=`600 ${S*0.097}px Spectral, Georgia, serif`;x.textAlign='center';x.textBaseline='middle';
     ['XII','I','II','III','IIII','V','','VII','VIII','IX','X','XI'].forEach((t,i)=>{if(t)rad(t,c,c,i/12*TAU,c*0.826,t.length>3?0.62:0.78);});
-    const k=0.472,sy=c+c*k,uy=c-c*k,rs=c*0.36,ru=c*0.25;
+    const k=L.F[1]/DIAL_R,sy=c+c*k,uy=c-c*k,rs=c*0.36,ru=c*0.25;
     /* seconds: railroad track, 5 s marks long, figures upright every 10 */
     circ(c,sy,rs,S*0.0018);circ(c,sy,rs*0.9,S*0.0012);circ(c,sy,rs*0.52,S*0.0012);
     for(let i=0;i<60;i++)ln(c,sy,i/60*TAU,i%5?rs*0.9:rs*0.8,rs,i%5?S*0.0012:S*0.0024);
@@ -1482,6 +1482,10 @@ function drawEscPlan(ctx,w,h,s,Ew,o={}){
    ===================================================================== */
 const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[9.6,0]};
 const PP_R=87.57/2,PP_T=3.86,BR_R=40.5;
+/* the mounting ring (42057) under the plate's dial side, and the dial on it, from the side photograph (18.9 px/mm by the plate's width): a band as wide as the plate down to 6.0 mm
+   below its train face (MR_FL), then a flange 95.9 across down to 10.4 mm (MR_Y), the dial's seat. Its bore (40.2) from the dial-side photograph. The dial 95 across, a little
+   inside the flange (the side photograph; with the sub-dials on their arbors, the photographed dial's proportions give it within 2 %) */
+const MR_RO=95.9/2,MR_RI=40.2,MR_FL=6.0-PP_T,MR_Y=10.4-PP_T,DIAL_R=47.5,DIAL_T=0.6,DD=MR_Y-3.3,DK=DIAL_R/50.8;   /* DD: the dial and all above it, raised from where 3.3 mm feet on the plate had them; DK: the hands, drawn for a 4 in dial, scaled to this one */
 /* levels (y) from a side photograph of the movement, scaled by the pillar plate's 3.86 mm edge: train bridge 16.8-19.9 mm above the plate (TB_U, TB_T),
    barrel bridge 3.4 mm on it (BB_T), cock foot 14.2 mm tall on the train bridge (CK_T); the escape wheel runs just under the train bridge, the fourth
    wheel and escape pinion 3.6 mm above the plate, and the third wheel lowest with the centre wheel just above it, as Figs. 13, 29 and 110 stack the train (see README, 'How the layout was measured') */
@@ -1666,7 +1670,7 @@ function buildMovement(M){
   const TBd=[0,1];S.tBlock=add(L.F,TBd,3.5);
   const EPa=Math.atan2(-0.24,-5.83),EPu=ry(EPa,[1,0]),EP=[[2.75,0],[-2.75,0]];S.ep=EP.map(q=>add(L.B,ry(EPa,q)));   /* balance upper endstone cap: along the cock's straight edge (x toward the nose), its screws 2.75 either side of the staff (top-view photograph) */
   const PB=(r,a)=>[L.Ba[0]+r*Math.cos(a*D2R),L.Ba[1]+r*Math.sin(a*D2R)];S.cover=[PB(11.1,107),PB(11.6,288)];S.click=PB(8.9,250.6);
-  S.dial=[45,135,225,315].map(a=>[39*Math.cos(a*D2R),39*Math.sin(a*D2R)]);   /* four dial feet and screws (35756, 4; Fig. 107) */
+  S.dial=[38.5,111.6,218.5,291.6].map(a=>[45.9*Math.cos(a*D2R),45.9*Math.sin(a*D2R)]);   /* four dial feet and screws (35756, 4; Fig. 107), in the mounting ring's flange outside the plate: the top-view photographs show two, at 38.5 and 111.6 deg; the other two opposite them (estimated) */
   S.seal=[2.2,-1.0].map(a=>[L.Fu[0]+7.6*Math.cos(a),L.Fu[1]+7.6*Math.sin(a)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
@@ -1674,20 +1678,23 @@ function buildMovement(M){
      (manual Sec. VIII, Op. 15 note) clear of the centre wheel, the chain and the opening round the balance */
   const SPv=[L.Fu[0]+21.35*Math.cos(60*D2R),L.Fu[1]+21.35*Math.sin(60*D2R)];
   R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],[...L.T,6.0],...S.ltbp.map(q=>[...q,0.41]),[...L.F,1.2],[...L.Fu,1.4],hC(...L.Ud,0.8),hC(...L.Mw,0.8),[...L.Ba,1.9],[...L.E,1.3],[...SPv,0.52],
-    ...S.ltb.map(q=>hT(...q,1.4)),...S.pil.map(q=>hC(...q,PSR)),...S.ring.map(q=>hC(...q,PSR)),...S.elc.map(q=>hT(...q,ESCAP)),...S.dial.map(q=>hC(...q,1.0)),[...S.lb[0],3.4]]),M.plate,0,y0,0);hn(pp,'42060');   /* the plate's parts-list line on its part, so its pins go with it */
+    ...S.ltb.map(q=>hT(...q,1.4)),...S.pil.map(q=>hC(...q,PSR)),...S.ring.map(q=>hC(...q,PSR)),...S.elc.map(q=>hT(...q,ESCAP)),[...S.lb[0],3.4]]),M.plate,0,y0,0);hn(pp,'42060');   /* the plate's parts-list line on its part, so its pins go with it */
   /* the last hole: access to the balance lower bridge's screw at 3 o'clock, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial */
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
   const bushR=(p,x,z,y1,y2,ro,ri,mat)=>mesh(p,ringGeo(ro,ri,Math.abs(y2-y1)),mat||M.brass2,x,(y1+y2)/2,z);
   hn(bushR(pp,...L.C,y0-0.1,0,1.5,0.52),'42165');hn(bushR(pp,...L.Fu,y0-0.1,0,1.4,0.58),'42164.fl');hn(bushR(pp,...L.Ba,y0-0.1,0,1.9,1.43),'42164.bl');hn(bushR(pp,...L.E,y0-0.1,0,1.3,0.95,M.gilt),'42162.el');hn(mesh(pp,stoneGeo(0.95,0.22,0.5,'olive'),M.ruby,L.E[0],-0.25,L.E[1]),'J.el');   /* escape lower setting (42162) with its olive-hole jewel, flush with the plate's dial face under the endstone */
-  /* mounting ring (42057, Fig. 110) round the plate's edge, with a lip under its dial side. Three screws (42055) hold the plate to it from the train side: the plate is laid
-     on the ring and the screws put in (reassembly Op. 1; Fig. 29 draws them above the plate), and the top-view photographs show one on the plate at the rim at 6 o'clock,
-     half under the train bridge; the others under the bridges, at 210 and 340 deg, estimated. The lip has a tab inward under each, tapped for it, clear of the dial feet.
-     Section and tabs estimated. It starts 0.02 outside the plate's edge, clear of the plate's polygon (at PP_R-0.1 the plate's edge ran inside it and showed in a section as a hollow) */
-  R.flange=hn(mesh(pp,new THREE.LatheGeometry([V2(PP_R+0.02,y0),V2(47,y0),V2(47,-0.01),V2(PP_R+0.02,-0.01),V2(PP_R+0.02,y0)],160),M.plate),'42057');
-  { const RA=[100,210,340].map(a=>a*D2R),dA=a=>Math.min(...RA.map(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b))))),rin=a=>{const t=clamp((dA(a)-0.07)/0.05,0,1);return lerp(38.4,40.2,smooth(t));};
-    const inner=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rin(a)*Math.cos(a),rin(a)*Math.sin(a)];}),outer=[...Array(160).keys()].map(k=>{const a=k/160*TAU;return[47*Math.cos(a),47*Math.sin(a)];});
-    hn(mesh(pp,polyGeo(outer,1.0,[{pts:inner},...S.ring.map(q=>hT(...q,PSR))]),M.plate,0,0.01,0),'42057',{sub:1}); }   /* the lip, with its tabs */
-  for(const q of S.ring)hn(screw(pp,...q,y0,PSR,1.6,PP_T+0.95),'42055.ring');   /* through the plate into the lip's tab */
+  /* mounting ring (42057, Figs. 29, 67, 110: a deep ring under the plate, drawn cut), lacquered brass (Sec. VI): a band as wide as the plate under its dial side, then a flange
+     that stands out round it and carries the dial (the side photograph; "the dial or the movement [may] shift on the mounting ring", the note at Op. 98, Sec. VIII); from the dial side the plate lies
+     sunk in it. Three screws (42055) hold the plate to it from the train side: the plate is laid on the ring and the screws put in (reassembly Op. 1; Fig. 29 draws them above
+     the plate), and the top-view photographs show one on the plate at the rim at 6 o'clock, half under the train bridge; the others under the bridges, at 210 and 340 deg,
+     estimated. The band has a tab inward under each, tapped for it. Bore and tabs estimated (the bore from the dial-side photograph). Both pieces start 0.01 off the faces they meet */
+  { const RA=[100,210,340].map(a=>a*D2R),dA=a=>Math.min(...RA.map(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b))))),rin=a=>{const t=clamp((dA(a)-0.07)/0.05,0,1);return lerp(38.4,MR_RI,smooth(t));};
+    const circ=(r,n)=>[...Array(n).keys()].map(k=>{const a=k/n*TAU;return[r*Math.cos(a),r*Math.sin(a)];}),inner=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rin(a)*Math.cos(a),rin(a)*Math.sin(a)];});
+    R.flange=hn(mesh(pp,polyGeo(circ(PP_R,160),MR_FL-0.01,[{pts:inner},...S.ring.map(q=>hT(...q,PSR))]),M.brass,0,0.01,0),'42057');   /* the band, with its tabs */
+    hn(mesh(pp,polyGeo(circ(MR_RO,160),MR_Y-MR_FL,[{pts:circ(MR_RI,160)},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_FL,0),'42057',{sub:1});   /* the flange, bored for the dial's feet */
+    /* the alignment pin, "protruding beyond the movement" into its slot in the edge of the case (Sec. III): pressed into the flange's edge, at 12 o'clock (estimated) */
+    const ap=hn(mesh(pp,cylY(0.5,0.8,12),M.steel,0,(MR_FL+MR_Y)/2,-(MR_RO+0.4)),'42057',{sub:1});ap.rotation.x=Math.PI/2; }
+  for(const q of S.ring)hn(screw(pp,...q,y0,PSR,1.6,PP_T+1.8),'42055.ring');   /* through the plate into the band's tab */
   { const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);
     /* the pillars' screws (42055) from the dial side, through the plate into the pillars (Fig. 110) */
     S.pil.forEach((q,i)=>hn(screw(rg,q[0],-q[1],0,PSR,1.6,3.86+3.2),i<3?'42055.pil':'42055.pilb'));
@@ -1756,43 +1763,43 @@ function buildMovement(M){
   S.bb.forEach((q,i)=>hn(screw(bb,...q,BB_T,PSR,1.6,[3.4+3.0,3.4+3.1+3.0,3.4+2.6][i]),i?'42055.bb':'42055.bbp'));
   const eg2=mesh(bb,decalGeo(BBpoly),M.engraveB,0,BB_T-0.02,0);eg2.userData.noShadow=true;eg2.userData.noCap=true;eg2.userData.decal=true;
   const Fl=Math.hypot(...L.Fu),fo=[L.Fu[0]/Fl,L.Fu[1]/Fl];
-  /* ---------- dial (4 in), hands, motion work ---------- */
+  /* ---------- dial (on the mounting ring's flange), hands, motion work ---------- */
   const dl=part('dial',32);
-  hn(dl,'42030');mesh(dl,discGeo(50.8,0.6,[[...L.C,2.5],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,3.3,0);
+  hn(dl,'42030');mesh(dl,discGeo(DIAL_R,DIAL_T,[[...L.C,2.5],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,MR_Y,0);
   const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;
   /* the face lies 0.02 above the brass disc's top; polygon offset keeps it in front in the depth buffer, else the brass shows through in streaks when zoomed out */
-  const dface=mesh(dl,new THREE.RingGeometry(2.5,50.8,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,3.92,0);dface.userData.noCap=true;dface.userData.surface=true;
-  /* four feet, each held by a dial screw (35756, Fig. 107) from the train side of the pillar plate into its tapped end */
-  for(const q of S.dial){mesh(dl,new THREE.LatheGeometry([V2(0,2.0),V2(hT(0,0,1.0)[2],2.0),V2(hT(0,0,1.0)[2],0),V2(0.9,0),V2(0.9,3.3),V2(0,3.3)],20),M.brass,...[q[0],0,q[1]]);hn(screw(pp,...q,y0,1.0,0.5,PP_T+1.8),'35756');}
+  const dface=mesh(dl,new THREE.RingGeometry(2.5,DIAL_R,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,MR_Y+DIAL_T+0.02,0);dface.userData.noCap=true;dface.userData.surface=true;
+  /* four feet down into the ring's flange, each held by a dial screw (35756, Fig. 107) from the flange's train side into its tapped end */
+  for(const q of S.dial){const fb=MR_FL+1.4;mesh(dl,new THREE.LatheGeometry([V2(0,fb+2.0),V2(hT(0,0,1.1)[2],fb+2.0),V2(hT(0,0,1.1)[2],fb),V2(0.75,fb),V2(0.75,MR_Y),V2(0,MR_Y)],20),M.brass,...[q[0],0,q[1]]);hn(screw(pp,...q,MR_FL,1.1,0.5,1.4+1.8),'35756');}
   const hd=part('hands',48),hg=new THREE.MeshStandardMaterial({color:sc(0xd9b25e),metalness:1,roughness:0.2}),hb=new THREE.MeshStandardMaterial({color:sc(0x7a6240),metalness:1,roughness:0.45});   /* hg gilt (Roman), hb aged gilt (Soviet) */
   /* Hamilton hands as on the photographed dial: blued hour hand with a bulb two-thirds out and a long spear point, plain minute hand to the track, a long seconds hand with a spear counterpoise */
   const dk=(o,k,...more)=>{const g=new THREE.Group();g.userData.dk=k;o.parent.add(g);for(const m of[o,...more])g.add(m);return o;};   /* hands of one dial style ('hamilton', 'roman', 'swiss' or 'soviet'), each with its collet, grouped so app.js's per-mesh visibility leaves the choice alone */
   /* hour hand: a round hole, pressed on the hour wheel's pipe, its collet below the blade and inside its boss, clear of the seconds hand's tip (r 2.9 at :00) (Op. 64, broached with Tool 40); minute hand: a square hole ("broached with a square file"), seated on the cannon pinion's shoulder under its square, its collet above the blade */
-  R.hour=new THREE.Group();R.hour.position.y=5.2;hd.add(R.hour);R.min=new THREE.Group();R.min.position.y=5.75;hd.add(R.min);
+  R.hour=new THREE.Group();R.hour.position.y=5.2+DD;hd.add(R.hour);R.min=new THREE.Group();R.min.position.y=5.75+DD;hd.add(R.min);
   const HO={boss:2.9,bore:2.33},MO={boss:3.2,sq:2.44},hcol=m=>mesh(R.hour,ringGeo(2.7,2.33,0.6),m,0,-0.3,0),mcol=m=>mesh(R.min,sqRingGeo(3.2,2.44,0.8),m,0,0.75,0);
-  hn(dk(mesh(R.hour,handGeo(41,1.2,2.5,'pear',0.68,HO),M.blued),'hamilton',hcol(M.blued)).parent,'42032');hn(dk(mesh(R.min,handGeo(47.5,1.5,3,'plain',0,MO),M.blued),'hamilton',mcol(M.blued)).parent,'42033');   /* the hands' parts-list lines on the Hamilton dial's hands (the other styles are variants) */
-  dk(mesh(R.hour,handGeo(29,1.3,6,'leaf',0,HO),hg),'roman',hcol(hg));dk(mesh(R.min,handGeo(45,0.9,8,'lance',0,MO),hg),'roman',mcol(hg));
-  R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2) */hd.add(R.sec);hn(dk(mesh(R.sec,handGeo(21,0.5,-10,'plain'),M.blued,0,0.25,0),'hamilton'),'42034');dk(mesh(R.sec,handGeo(16.5,0.55,4,'plain'),M.blued,0,0.25,0),'roman');hn(mesh(R.sec,ringGeo(0.9,0.26,0.6),M.blued,0,-0.05,0),'42034',{sub:1});   /* the collet pressed on the fourth arbor's pivot, flush with its end; the blade on it */
-  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35,L.Ud[1]);hd.add(R.ud);hn(dk(mesh(R.ud,handGeo(11,0.6,2.5,'plain'),M.blued,0,0.25,0),'hamilton'),'42035');dk(mesh(R.ud,handGeo(10,0.6,2.5,'leaf'),hg,0,0.25,0),'roman');hn(mesh(R.ud,ringGeo(0.9,0.56,0.4),M.blued,0,0.05,0),'42035',{sub:1});   /* the collet pressed on its wheel's pin */
+  hn(dk(mesh(R.hour,handGeo(41*DK,1.2,2.5,'pear',0.68,HO),M.blued),'hamilton',hcol(M.blued)).parent,'42032');hn(dk(mesh(R.min,handGeo(47.5*DK,1.5,3,'plain',0,MO),M.blued),'hamilton',mcol(M.blued)).parent,'42033');   /* the hands' parts-list lines on the Hamilton dial's hands (the other styles are variants) */
+  dk(mesh(R.hour,handGeo(29*DK,1.3,6,'leaf',0,HO),hg),'roman',hcol(hg));dk(mesh(R.min,handGeo(45*DK,0.9,8,'lance',0,MO),hg),'roman',mcol(hg));
+  R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35+DD,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2+DD) */hd.add(R.sec);hn(dk(mesh(R.sec,handGeo(21*DK,0.5,-10,'plain'),M.blued,0,0.25,0),'hamilton'),'42034');dk(mesh(R.sec,handGeo(16.5*DK,0.55,4,'plain'),M.blued,0,0.25,0),'roman');hn(mesh(R.sec,ringGeo(0.9,0.26,0.6),M.blued,0,-0.05,0),'42034',{sub:1});   /* the collet pressed on the fourth arbor's pivot, flush with its end; the blade on it */
+  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35+DD,L.Ud[1]);hd.add(R.ud);hn(dk(mesh(R.ud,handGeo(11*DK,0.6,2.5,'plain'),M.blued,0,0.25,0),'hamilton'),'42035');dk(mesh(R.ud,handGeo(10*DK,0.6,2.5,'leaf'),hg,0,0.25,0),'roman');hn(mesh(R.ud,ringGeo(0.9,0.56,0.4),M.blued,0,0.05,0),'42035',{sub:1});   /* the collet pressed on its wheel's pin */
   /* Nardin-pattern dials: pear hands (blued, or aged gilt on the Soviet copies); a long thin seconds hand to the track with a spear counterpoise */
-  for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31,1.4,6,'pear',0,HO),m),k,hcol(m));dk(mesh(R.min,handGeo(46.5,0.9,8,'pear',0,MO),m),k,mcol(m));
-    dk(mesh(R.sec,handGeo(19,0.45,-8,'plain'),M.blued,0,0.25,0),k);dk(mesh(R.ud,handGeo(k==='swiss'?11.5:8.5,0.6,2.5,'plain'),M.blued,0,0.25,0),k);}
+  for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31*DK,1.4,6,'pear',0,HO),m),k,hcol(m));dk(mesh(R.min,handGeo(46.5*DK,0.9,8,'pear',0,MO),m),k,mcol(m));
+    dk(mesh(R.sec,handGeo(19*DK,0.45,-8,'plain'),M.blued,0,0.25,0),k);dk(mesh(R.ud,handGeo((k==='swiss'?11.5:8.5)*DK,0.6,2.5,'plain'),M.blued,0,0.25,0),k);}
   const DTEX={hamilton:dtex};hd.traverse(o=>{if(o.userData.dk&&o.userData.dk!=='hamilton')o.visible=false;});
   mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;}
     const m=dface.userData.mat0||dface.material;m.map=DTEX[kind];m.needsUpdate=true;hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===kind;});};   /* the face's own material (app.js may be showing a see-through or faded copy of it, which follows on the next look()) */
   const mw=part('motion',16);
-  /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75), and ends in the
+  /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75+DD), and ends in the
      bright square the winding key sets the hands by (Fig. 8, Sec. III), 2.4 across as the fusee's, so one key fits both, 1.6 proud of the minute hand's collet. The hour wheel goes on over it and turns free on the pipe (Op. 59) */
-  R.cannon=hn(arbor(mw,M,...L.C,{pin:{n:MW.cp,m:0.4,y:1.2,th:2,bore:0.5}}),'42077');mesh(R.cannon,ring(1.7,0.5,5.45),M.steel,0,3.025,0);mesh(R.cannon,new THREE.BoxGeometry(2.4,2.9,2.4),M.steel,0,7.05,0);
+  R.cannon=hn(arbor(mw,M,...L.C,{pin:{n:MW.cp,m:0.4,y:1.2,th:2,bore:0.5}}),'42077');mesh(R.cannon,ring(1.7,0.5,5.45+DD),M.steel,0,3.025+DD/2,0);mesh(R.cannon,new THREE.BoxGeometry(2.4,2.9,2.4),M.steel,0,7.05+DD,0);
   /* the winding key on the square, turned by its shank to set the hands (Fig. 8): shown only while setting, when the bezel is off */
-  R.hkey=new THREE.Group();R.hkey.visible=false;R.cannon.add(R.hkey);mesh(R.hkey,sqRingGeo(2.6,2.46,5),M.brass,0,9.45,0);cylBetween(R.hkey,1.7,11.95,40.5,M.brass);
-  { const kb=mesh(R.hkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,42.5,0);kb.rotation.x=Math.PI/2;for(const z of[13,-13])mesh(R.hkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,42.5,z);mesh(R.hkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,42.5,0); }
+  R.hkey=new THREE.Group();R.hkey.visible=false;R.cannon.add(R.hkey);mesh(R.hkey,sqRingGeo(2.6,2.46,5),M.brass,0,9.45+DD,0);cylBetween(R.hkey,1.7,11.95+DD,40.5+DD,M.brass);
+  { const kb=mesh(R.hkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,42.5+DD,0);kb.rotation.x=Math.PI/2;for(const z of[13,-13])mesh(R.hkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,42.5+DD,z);mesh(R.hkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,42.5+DD,0); }
   /* the minute wheel and the wind indicator wheel turn on posts (42085, 42084) fixed to the pillar plate by screws (35779) from its train side (Fig. 110) */
   const post=(x,z,r,top,k)=>{const hr=hT(0,0,0.8)[2];hn(mesh(pp,new THREE.LatheGeometry([V2(0,2.0),V2(hr,2.0),V2(hr,0),V2(r,0),V2(r,top),V2(0,top)],24),M.steel,x,0,z),k[0]);hn(screw(pp,x,z,y0,0.8,0.4,PP_T+1.8),k[1]);};
   post(...L.Mw,0.7,3.2,['42085','35779.mw']);post(...L.Ud,0.5,4.1,['42084','35779.ud']);
   R.minW=arbor(mw,M,...L.Mw,{wheel:{n:MW.mw,m:0.4,y:1.2,th:0.8,spokes:0,collet:0,bore:0.72,mate:MW.cp},pin:{n:MW.mp,m:0.384,y:2.4,th:1.6,bore:0.72}});mesh(R.minW,ring(1.6,0.72,2.0),M.brass2,0,1.2,0);hn(R.minW,'42078');
-  R.hourW=hn(arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:0.384,y:2.65,th:0.8,spokes:0,collet:0,bore:1.75,hub:2.6,mate:MW.mp}}),'42080');mesh(R.hourW,ring(2.3,1.75,2.9),M.brass2,0,4.1,0);   /* its pipe carries the hour hand; 0.05 clear of the cannon pinion's leaves, which turn twelve times as fast */
-  R.udW=hn(arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:5,collet:0,bore:0.55,mate:UD.pin}}),'42081');mesh(R.udW,ring(1.6,0.55,2.0),M.brass2,0,1.5,0);mesh(R.udW,ring(0.9,0.55,2.7),M.steel,0,2.85,0);cylBetween(R.udW,0.55,4.2,4.6,M.steel);   /* its pipe carries the hand */
+  R.hourW=hn(arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:0.384,y:2.65,th:0.8,spokes:0,collet:0,bore:1.75,hub:2.6,mate:MW.mp}}),'42080');mesh(R.hourW,ring(2.3,1.75,2.9+DD),M.brass2,0,4.1+DD/2,0);   /* its pipe carries the hour hand; 0.05 clear of the cannon pinion's leaves, which turn twelve times as fast */
+  R.udW=hn(arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:5,collet:0,bore:0.55,mate:UD.pin}}),'42081');mesh(R.udW,ring(1.6,0.55,2.0),M.brass2,0,1.5,0);mesh(R.udW,ring(0.9,0.55,2.7+DD),M.steel,0,2.85+DD/2,0);cylBetween(R.udW,0.55,4.2+DD,4.6+DD,M.steel);   /* its pipe carries the hand */
   R.fp=hn(arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:1.5,th:2}}),'42022',{sub:1});   /* the wind indicator pinion, part of the fusee arbor */
   /* ---------- fusee wheel (TRAIN.fu : centre pinion TRAIN.cp, module 0.417) with its maintaining work ---------- */
   const gw=part('gw',-14);
@@ -1834,9 +1841,9 @@ function buildMovement(M){
   cylBetween(tb,0.35,TB_U-0.6,-19.25,M.steel,SPv[0]-0.3,SPv[1]+3.9);
   /* ---------- going train (modules 0.29 / 0.30 / 0.3113; counts in TRAIN) ---------- */
   const m=MOD.train;
-  const cw=part('cw',-8);R.cw=hn(arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.36,th:0.7,spokes:5,collet:1.3,cside:1,cp:0.3,mate:TRAIN.tp},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.53,th:1.54},prof:[[TB_T-0.1,0.5],[TB_U+0.025,0.75],[y0-0.125,0.5],[5.45]]}),'42068');   /* pivots r 0.5 in the bushings, shoulders 0.025 off them; the lower pivot runs on through the dial for the cannon pinion */
+  const cw=part('cw',-8);R.cw=hn(arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.36,th:0.7,spokes:5,collet:1.3,cside:1,cp:0.3,mate:TRAIN.tp},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.53,th:1.54},prof:[[TB_T-0.1,0.5],[TB_U+0.025,0.75],[y0-0.125,0.5],[5.45+DD]]}),'42068');   /* pivots r 0.5 in the bushings, shoulders 0.025 off them; the lower pivot runs on through the dial for the cannon pinion */
   const tw=part('tw',-4);R.tw=hn(arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-4.535,th:0.65,spokes:5,cside:1,cp:0.2,mate:TRAIN.fp},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.385,th:0.95},prof:[[TB_T-0.1,0.3],[TB_U+0.025,0.55],[-0.025,0.25],[0.45]]}),'42071');
-  const fw=part('fw',-30);R.fw=hn(arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-7.46,th:0.9,spokes:FW_SP,cside:-1,mate:TRAIN.ep},pin:{n:TRAIN.fp,m,y:-5.51,th:2.9},prof:[[LB_T+2.56,0.25],[LB_T+3.025,0.55],[-0.025,0.25],[4.6]]}),'42073');   /* its lower pivot runs on through the jewel and the dial for the second hand */
+  const fw=part('fw',-30);R.fw=hn(arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-7.46,th:0.9,spokes:FW_SP,cside:-1,mate:TRAIN.ep},pin:{n:TRAIN.fp,m,y:-5.51,th:2.9},prof:[[LB_T+2.56,0.25],[LB_T+3.025,0.55],[-0.025,0.25],[4.6+DD]]}),'42073');   /* its lower pivot runs on through the jewel and the dial for the second hand */
   const E=ESC,ew=part('escW',-41,true);
   R.esc=hn(arbor(ew,M,E.EX*ES,0,{pin:{n:TRAIN.ep,m:MOD.fourth,y:-6.96,th:2.0},prof:[[TB_T-0.875,0.2],[TB_T-0.3,0.55],[-0.6,0.2],[-0.025]]}),'42076');   /* pivots r 0.2 in the olive-hole jewels, ends 0.025 off the endstones (Op. 69); the pinion runs from the fourth wheel toward the plate, 1.1 mm above the third wheel's teeth, which pass under it */
   R.esc.userData.wheel=escapeWheel(R.esc,M,ES,EY,E);
@@ -2101,9 +2108,9 @@ function buildMovement(M){
   const sqP=part('sq',-84);R.sq=hn(new THREE.Group(),'42022',{sub:1});R.sq.position.set(L.Fu[0],0,L.Fu[1]);sqP.add(R.sq);   /* the fusee arbor's square */cylBetween(R.sq,1.2,-36.56,-27.16,M.steel);mesh(R.sq,new THREE.BoxGeometry(2.4,1.6,2.4),M.steel,0,-37.16,0);
   /* winding key: its socket fits the fusee arbor square and turns it (never the barrel arbor, which the setup ratchet holds) */
   R.wkey=new THREE.Group();R.wkey.visible=false;R.sq.add(R.wkey);
-  mesh(R.wkey,sqRingGeo(2.6,2.46,5),M.brass,0,-39.46,0);cylBetween(R.wkey,1.7,-41.96,-71,M.brass);   /* handle low enough to turn clear of the case's shield plate and its screws (lowest at -69.8, box.js) */
-  const kbar=mesh(R.wkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,-73,0);kbar.rotation.x=Math.PI/2;
-  for(const sz of[13,-13])mesh(R.wkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,-73,sz);mesh(R.wkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,-73,0);
+  mesh(R.wkey,sqRingGeo(2.6,2.46,5),M.brass,0,-39.46,0);cylBetween(R.wkey,1.7,-41.96,-69,M.brass);   /* handle low enough to turn clear of the case's shield plate and its screws (lowest at -67.8, box.js) */
+  const kbar=mesh(R.wkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,-71,0);kbar.rotation.x=Math.PI/2;
+  for(const sz of[13,-13])mesh(R.wkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,-71,sz);mesh(R.wkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,-71,0);
   /* ---------- tooth phasing: driver tooth centred on the line of centres, driven gap centred there ---------- */
   const ph=(A,pa,na,extA,B,pb,nb,extB)=>{const phi=Math.atan2(-(pb[1]-pa[1]),pb[0]-pa[0]);A.rotation.y=phi-0.375*TAU/na-(extA||0);B.rotation.y=phi+Math.PI-0.875*TAU/nb-(extB||0);};
   const U=R.gw.userData,CW=R.cw.userData,TW=R.tw.userData,FW=R.fw.userData,EW=R.esc.userData;
@@ -2377,7 +2384,12 @@ function buildBox(M){
     const m=mesh(p,mergeGeo(gs),M.brass2,0,0,0);if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);}return m;};
   /* gimbal ring: a flat brass band (Fig. 106), pivoted at 3 and 9 on two screws that come in through the box sides, each with a washer and lock nut.
      Slotted support straps on the ring carry the bushings for the gimbal pivot at 3 and the front case pivot at 6 (Fig. 94) */
-  const RY=-20,RI=80,RO=82;
+  /* the case's sizes, from the movement it holds (movement.js): a recess round its top edge (DB) takes the mounting ring's flange, which sits on the shoulder at its foot (SH, outside the dial screws' heads under the flange); the
+     dial lies in it, as it does when the movement is put upside down on the case to be started (Sec. III: "the dial carefully located in the shoulder recess around the top edge
+     of the case"), and the bezel screws on outside the rim (TR). The rim's 105 across and the gimbal ring's 66-68 radius are from the top-view photographs (estimated); the
+     rest estimated. YT the rim's top, YTB the thread's foot; FD the floor's inside depth, FR the floor's edge (the bowl's inside rounds into it with radius SH-FR) */
+  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,TR=DB+4.5,YT=MR_Y+DIAL_T+0.6,YTB=5.2,FD=64,FR=38;
+  const RY=-20,RI=CR+16.5,RO=RI+2;
   const ring=hn(new THREE.Group(),'42106');ring.userData.partName='ring';ring.position.y=RY;root.add(ring);
   /* the band, with a slot at the front right (Fig. 106) that the latch lever passes through to the case: the band round the rest of the ring, the band above and
      below the slot, and the slot's two side walls */
@@ -2414,38 +2426,43 @@ function buildBox(M){
     const cs=hn(new THREE.Group(),'42114');lat.add(cs);cs.userData.sc={r:1.8,h:1.5,len:ct+0.6-(bt-2.5),rs:0.9};const kg=new THREE.Group();kg.position.set(LP,ct+0.6,LP);kg.rotation.x=-Math.PI/2;cs.add(kg);knurl(kg,'z',1,0,2.0,1.5);
     cs.userData.axis=cylBetween(cs,0.9,bt-2.5,ct+0.6,M.steel,LP,LP); }   /* the clamping screw: knurled head on the clamping bracket, its shank the lever's pivot, 2.5 into the support bracket */
   const lv=hn(new THREE.Group(),'42111');lv.position.set(LP,LY,LP);lv.rotation.y=LATCH_OFF;lat.add(lv);
-  { const len=Math.SQRT2*LP-65.3;mesh(lv,polyGeo([[-1.5,-1.5],[len,-1.5],[len,1.5],[-1.5,1.5]],1.4,[[0,0,0.95]]),M.brass,0,-0.7,0);mesh(lv,ringGeo(1.3,0.95,0.6),M.brass,0,1.0,0);mesh(lv,ringGeo(1.3,0.95,0.3),M.brass,0,-0.85,0);   /* the lever, bored for the clamping screw, with a boss above and a collar below */
+  { const len=Math.SQRT2*LP-(CR+0.3);mesh(lv,polyGeo([[-1.5,-1.5],[len,-1.5],[len,1.5],[-1.5,1.5]],1.4,[[0,0,0.95]]),M.brass,0,-0.7,0);mesh(lv,ringGeo(1.3,0.95,0.6),M.brass,0,1.0,0);mesh(lv,ringGeo(1.3,0.95,0.3),M.brass,0,-0.85,0);   /* the lever, bored for the clamping screw, with a boss above and a collar below */
     hn(cylBetween(lv,1.2,0.7,5.5,M.brass2,6,0),'42112',{sub:1});const kn=hn(new THREE.Group(),'42112');kn.position.set(6,5.5,0);kn.rotation.x=-Math.PI/2;lv.add(kn);knurl(kn,'z',1,0,2.6,2.2);   /* knob on a post, its axis upright */ }
   /* case (bowl) pivoted in the ring at 6 and 12 (Figs. 94, 106, 107): a support bracket on the case at each, shaped to the case, with a bushing (drawn in it) its pivot
      screw's point runs in; each pivot screw is threaded through the ring (and at 6 the case support strap) and locked by a knurled nut against it (Sec. III) */
   const bowl=new THREE.Group();bowl.userData.partName='bowl';ring.add(bowl);
   for(const sz of[1,-1]){const bs=new THREE.Shape();bs.moveTo(-7,-7);bs.lineTo(7,-7);bs.lineTo(7,5);bs.lineTo(-7,5);bs.closePath();for(const[x,y,r]of[[0,0,1.4],[-4.5,-4.5,0.66],[4.5,-4.5,0.66]]){const h=new THREE.Path();h.absarc(x,y,r,0,TAU,true);bs.holes.push(h);}
-    const bm=hn(mesh(bowl,extrude(bs,{depth:6.5,bevelEnabled:false,curveSegments:24}),M.brass2,0,0,sz*65),'42105');if(sz<0)bm.rotation.y=Math.PI;   /* its back flat on the case, bored for the bushing and its two screws */
-    for(const t of[-4.5,4.5])hn(sHead(bowl,'z',sz,71.5,1.2,0.6,-4.5,t,7.2),'42117');   /* through the bracket into the case's wall (drawn without a hole) */
-    const b=hn(mesh(bowl,ringGeo(1.4,0.82,2.5),M.steel,0,0,sz*70.25),'42214.c');b.rotation.x=Math.PI/2;   /* pressed into the bracket's outer end */
-    const rE=sz>0?RO+3.2:RO+2.4,sh=hn(mesh(ring,cylY(1.6,rE-71.55,12),M.steel,0,0,sz*(rE+71.55)/2),sz>0?'42119':'42118',{sub:1});sh.rotation.x=Math.PI/2;
-    const pt=hn(mesh(ring,cylY(0.8,2.05,12),M.steel,0,0,sz*(71.55-1.025)),sz>0?'42119':'42118',{sub:1});pt.rotation.x=Math.PI/2;}   /* the shank through the ring to its shoulder, 0.05 off the bushing, and its point in it */
+    const bm=hn(mesh(bowl,extrude(bs,{depth:6.5,bevelEnabled:false,curveSegments:24}),M.brass2,0,0,sz*CR),'42105');if(sz<0)bm.rotation.y=Math.PI;   /* its back flat on the case, bored for the bushing and its two screws */
+    for(const t of[-4.5,4.5])hn(sHead(bowl,'z',sz,CR+6.5,1.2,0.6,-4.5,t,7.8),'42117');   /* through the bracket into the case's wall (drawn without a hole) */
+    const b=hn(mesh(bowl,ringGeo(1.4,0.82,2.5),M.steel,0,0,sz*(CR+5.25)),'42214.c');b.rotation.x=Math.PI/2;   /* pressed into the bracket's outer end */
+    const rE=sz>0?RO+3.2:RO+2.4,sh=hn(mesh(ring,cylY(1.6,rE-(CR+6.55),12),M.steel,0,0,sz*(rE+CR+6.55)/2),sz>0?'42119':'42118',{sub:1});sh.rotation.x=Math.PI/2;
+    const pt=hn(mesh(ring,cylY(0.8,2.05,12),M.steel,0,0,sz*(CR+6.55-1.025)),sz>0?'42119':'42118',{sub:1});pt.rotation.x=Math.PI/2;}   /* the shank through the ring to its shoulder, 0.05 off the bushing, and its point in it */
   strap('z',1);hn(boss('z',1,RO+1.2,RO+3.2,3.2,1.6),'42108',{sub:1});{const g=new THREE.Group();ring.add(g);hn(knurl(g,'z',1,RO+3.2,5,2.5,1.62),'42121.cf');}hn(sHead(ring,'z',1,RO+5.7,3.4,2,0),'42119');
   boss('z',-1,RO,RO+2.4,3.2,1.6);{const g=new THREE.Group();ring.add(g);hn(knurl(g,'z',-1,RO+2.4,5,2.5,1.62),'42121.cr');}hn(sHead(ring,'z',-1,RO+4.9,3.4,2,0),'42118');
   /* latch keeper on the case, facing the latch through the ring's slot: a back on a separating washer (42128) against the wall, held by its screw (42116) from inside the
      case, and two cheeks, the lever's tip between them against the back when latched */
   { const kp=hn(new THREE.Group(),'42113');kp.position.set(0,0,0);kp.rotation.y=LATCH_A-Math.PI/2;bowl.add(kp);
-    mesh(kp,new THREE.BoxGeometry(0.6,4,6),M.brass2,65.6,0,0);for(const s of[1,-1])mesh(kp,new THREE.BoxGeometry(2,4,1.3),M.brass2,66.4,0,s*2.35);
-    hn(mesh(kp,ringGeo(1.4,0.5,0.3),M.brass2,65.15,0,0),'42128').rotation.z=Math.PI/2;
-    hn(sHead(kp,'x',-1,-64,0.9,0.6,0,0,1.8),'42116.k'); }
-  const KH=2.3,fu=L.Fu,BT=1,WT=1;   /* key hole through the flat bottom at the fusee axis (Fig. 7). The bottom is BT thick (inside face at -66, outside at -66-BT), the wall WT, outward of its
-     inside face; both solids. The shield plate under the bottom sits a full millimetre behind the floor seen from inside: at 0.05 mm its outline showed through the floor (depth precision) */
+    mesh(kp,new THREE.BoxGeometry(0.6,4,6),M.brass2,CR+0.6,0,0);for(const s of[1,-1])mesh(kp,new THREE.BoxGeometry(2,4,1.3),M.brass2,CR+1.4,0,s*2.35);
+    hn(mesh(kp,ringGeo(1.4,0.5,0.3),M.brass2,CR+0.15,0,0),'42128').rotation.z=Math.PI/2;
+    hn(sHead(kp,'x',-1,-SH,0.9,0.6,0,0,CR-SH+0.8),'42116.k'); }
+  const KH=2.3,fu=L.Fu,BT=1;   /* key hole through the flat bottom at the fusee axis (Fig. 7). The bottom is BT thick (inside face at -FD, outside at -FD-BT), the wall CR-DB; both
+     solids. The shield plate under the bottom sits a full millimetre behind the floor seen from inside: at 0.05 mm its outline showed through the floor (depth precision) */
   let bot;   /* the case's bottom: rebuilt below with the shield plate's screw holes */
-  const botG=hs=>{const bs=new THREE.Shape();bs.absarc(0,0,44,0,TAU,false);for(const[x,z,r]of[[fu[0],fu[1],KH],...hs]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);bs.holes.push(h);}const fl=extrude(bs,{depth:BT,bevelEnabled:false,curveSegments:60});fl.rotateX(-Math.PI/2);return fl;};
-  { const arc=(r,a0,a1)=>{const o=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;o.push(V2(44+r*Math.sin(a),-46-r*Math.cos(a)));}return o;};
-    /* the wall's section, one closed outline: inside face up from the floor's edge, the lip at the rim, the flange, the outside face down to the bottom's outside face */
-    const pr=[...arc(20,0,Math.PI/2),V2(64,7),V2(62,7),V2(62,8.5),V2(66.5,8.5),V2(66.5,6),V2(64+WT,6),...arc(20+WT,Math.PI/2,0),V2(44,-66)];
+  const botG=hs=>{const bs=new THREE.Shape();bs.absarc(0,0,FR,0,TAU,false);for(const[x,z,r]of[[fu[0],fu[1],KH],...hs]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);bs.holes.push(h);}const fl=extrude(bs,{depth:BT,bevelEnabled:false,curveSegments:60});fl.rotateX(-Math.PI/2);return fl;};
+  { const YS=MR_FL,RF=CR-FR,arc=(r,cy,a0,a1)=>{const o=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;o.push(V2(FR+r*Math.sin(a),cy-r*Math.cos(a)));}return o;};
+    /* the wall's section below the recess, one closed outline: inside face up from the floor's edge to the shoulder, out to the outside face and down it to the bottom's outside face */
+    const pr=[...arc(SH-FR,-FD+SH-FR,0,Math.PI/2),V2(SH,YS),V2(CR,YS),...arc(RF,-FD-BT+RF,Math.PI/2,0),V2(FR,-FD)];
     hn(mesh(bowl,new THREE.LatheGeometry(pr.reverse(),120),M.brass),'42101');   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
-    bot=hn(mesh(bowl,botG([]),M.brass,0,-66-BT,0),'42101',{sub:1}); }   /* 60: the rim's 120 points, the lathe's own */
+    bot=hn(mesh(bowl,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});   /* 60: the rim's 120 points, the lathe's own */
+    /* the recess's wall, slotted at 12 o'clock down to the shoulder for the movement's alignment pin (Sec. III), so the pin goes in as the movement is lowered: below the
+       thread, and the rim with the band outside it the bezel screws onto */
+    const w=0.75/DB,a0=-Math.PI/2,bore=[...Array(121).keys()].map(k=>{const a=a0+w+(TAU-2*w)*k/120;return[DB*Math.cos(a),DB*Math.sin(a)];}),circ=r=>[...Array(120).keys()].map(k=>{const a=k/120*TAU;return[r*Math.sin(a),r*Math.cos(a)];});
+    bore.push([-0.75,-(MR_RO+1.0)],[0.75,-(MR_RO+1.0)]);
+    hn(mesh(bowl,polyGeo(circ(CR),YTB-YS,[{pts:bore}]),M.brass,0,YS,0),'42101',{sub:1});hn(mesh(bowl,polyGeo(circ(TR),YT-YTB,[{pts:bore}]),M.brass,0,YTB,0),'42101',{sub:1}); }
   /* winding-hole shield plate (the manual's case description and winding instructions, and its parts list: plate, shoulder screw, stop screw, return spring; its shape is estimated): a plate turning on a shoulder screw beside the hole.
      At rest its solid part covers the case's hole; turned clockwise (seen from below) through 0.75 rad its own hole lines up with it. The stop screw runs in an arc slot in the plate, whose ends set both positions,
      and a torsion spring on the shoulder (one leg on the stop screw, one on a pin in the plate) turns it back. Everything hangs 0.05 mm clear of the bottom's outside face. shield.rotation.y = 0 open, SH_REST closed */
-  const SH_D=9,SH_REST=-0.75,SH_A=Math.atan2(-1,0.3),pv=[fu[0]+SH_D*Math.cos(SH_A),fu[1]+SH_D*Math.sin(SH_A)],Y0=-66-BT-0.05,PT=0.8,YB=Y0-PT,YH=YB-1.1,RS=4.5,SW=0.8;
+  const SH_D=9,SH_REST=-0.75,SH_A=Math.atan2(-1,0.3),pv=[fu[0]+SH_D*Math.cos(SH_A),fu[1]+SH_D*Math.sin(SH_A)],Y0=-FD-BT-0.05,PT=0.8,YB=Y0-PT,YH=YB-1.1,RS=4.5,SW=0.8;
   const shield=hn(new THREE.Group(),'42104');shield.position.set(pv[0],Y0,pv[1]);bowl.add(shield);shield.userData.partName='bowl';
   const ah=Math.atan2(fu[1]-pv[1],fu[0]-pv[0]),at=(r,a)=>[r*Math.cos(a),r*Math.sin(a)];   /* ah: the hole's direction from the pivot; the plate's angles run from ah (the hole) to ah+SH_REST (the part that covers it at rest) */
   {const pts=[],circ=(c,r)=>{for(let i=0;i<48;i++){const t=i/48*TAU;pts.push([c[0]+r*Math.cos(t),c[1]+r*Math.sin(t)]);}};circ([0,0],4);circ(at(SH_D,ah),4.2);circ(at(SH_D,ah+SH_REST),4.2);
@@ -2459,15 +2476,16 @@ function buildBox(M){
     const lg=hn(mesh(shield,cylY(0.2,1.0,8),M.steel,2.8*Math.cos(ah+SH_REST/2+Math.PI),YB-0.3-Y0,2.8*Math.sin(ah+SH_REST/2+Math.PI)),'42126',{sub:1});lg.rotation.set(0,-(ah+SH_REST/2+Math.PI),Math.PI/2);}   /* moving leg, from the coil to the pin */
   /* fixed to the case: shoulder screw (shoulder through the plate, slotted head wider than the spring), the spring's coil and fixed leg, stop screw (shank through the slot, head under the plate) */
   const yScrew=(x,z,rs,rh,hh,rt)=>{const g=new THREE.Group();bowl.add(g);const m=mesh(g,cylY(rs,Y0-YH,16),M.steel,x,(Y0+YH)/2,z),h=mesh(g,cylY(rh,hh,24),M.steel,x,YH-hh/2,z),sl=mesh(g,new THREE.BoxGeometry(rh*2.02,0.6,rh*0.35),M.steelD,x,YH-hh+0.25,z);sl.rotation.y=0.6;
-    g.userData.axis=mesh(g,cylY(rt,-66-Y0,12),M.steel,x,(Y0-66)/2,z);return g;};   /* rt: its thread, up through the case's bottom (tapped) */
+    g.userData.axis=mesh(g,cylY(rt,-FD-Y0,12),M.steel,x,(Y0-FD)/2,z);return g;};   /* rt: its thread, up through the case's bottom (tapped) */
   hn(yScrew(pv[0],pv[1],1.5,2.8,0.8,1.0),'42124');
   for(const y of[YB-0.3,YB-0.8]){const c=hn(mesh(bowl,new THREE.TorusGeometry(2.3,0.25,8,32),M.steel,pv[0],y,pv[1]),'42126',y===YB-0.3?0:{sub:1});c.rotation.x=Math.PI/2;}   /* return spring: two turns round the shoulder */
   const ss=[pv[0]+RS*Math.cos(ah),pv[1]+RS*Math.sin(ah)];hn(yScrew(ss[0],ss[1],0.7,1.3,0.8,0.5),'42125');
   bot.geometry.dispose();bot.geometry=botG([[pv[0],pv[1],1.02],[ss[0],ss[1],0.52]]);
   {const lg=hn(mesh(bowl,cylY(0.2,1.5,8),M.steel,pv[0]+3.05*Math.cos(ah),YB-0.8,pv[1]+3.05*Math.sin(ah)),'42126',{sub:1});lg.rotation.set(0,-ah,Math.PI/2);}   /* fixed leg, bearing on the stop screw */
   shield.rotation.y=SH_REST;
-  const bz=hn(mesh(bowl,new THREE.TorusGeometry(63.5,2.6,14,128),M.brass,0,9.5,0),'42102');bz.rotation.x=Math.PI/2;
-  const gl=hn(mesh(bowl,new THREE.CylinderGeometry(62,62,0.8,96),M.glass,0,10.5,0),'42103');gl.renderOrder=5;bz.userData.bezel=gl.userData.bezel=true;   /* the bezel with its crystal, taken off to set the hands with the key (app.js) */
+  /* the bezel (42102), screwed onto the rim, rising to hold the crystal (42103) in a groove clear of the hands' square; its section estimated */
+  const YC=MR_Y+5.6,BL=DIAL_R-1.6,GR=DIAL_R+0.1,bz=hn(mesh(bowl,new THREE.LatheGeometry([V2(TR,YTB),V2(TR+1.8,YTB),V2(TR+1.8,YT+1.2),V2(DB+0.9,YC+1.4),V2(BL,YC+1.4),V2(BL,YC+0.8),V2(GR,YC+0.8),V2(GR,YC),V2(BL,YC),V2(BL,YC-0.5),V2(DB+0.1,YC-0.5),V2(DB+0.1,YT),V2(TR,YT),V2(TR,YTB)],128),M.brass),'42102');
+  const gl=hn(mesh(bowl,new THREE.CylinderGeometry(GR,GR,0.8,96),M.glass,0,YC+0.4,0),'42103');gl.renderOrder=5;bz.userData.bezel=gl.userData.bezel=true;   /* the bezel with its crystal, taken off to set the hands with the key (app.js) */
   /* lids hinged at the back */
   /* glass lid hinged to the back of the box; the outer lid hinged to the back-top edge of the glass lid, so it opens on its own and never swings through the glass lid */
   const mid=new THREE.Group(),top=new THREE.Group();mid.userData.partName='lidGlass';top.userData.partName='lid';mid.position.set(0,0,-W);top.position.set(0,38,0);root.add(mid);mid.add(top);
@@ -2479,7 +2497,7 @@ function buildBox(M){
   };
   lidBody(mid,0,38,true);lidBody(top,0,38,false);
   for(const sx of[1,-1]){const h=mesh(root,cylY(2.6,30,14),M.brass,sx*55,0,-W-2);h.rotation.z=Math.PI/2;const h2=mesh(mid,cylY(2.6,30,14),M.brass,sx*55,38,-2);h2.rotation.z=Math.PI/2;}
-  return{root,ring,bowl,mid,top,shield,shRest:SH_REST,latch:lv};
+  return{root,ring,bowl,mid,top,shield,shRest:SH_REST,latch:lv,RO,CR};
 }
 function shadowTex(){const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');const g=x.createRadialGradient(128,128,20,128,128,128);g.addColorStop(0,'rgba(0,0,0,0.42)');g.addColorStop(0.6,'rgba(0,0,0,0.16)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,256,256);return new THREE.CanvasTexture(cv);}
 
@@ -2594,12 +2612,12 @@ const ESSAY=(()=>{
   /* ---------- the dial: the model's Hamilton dial (dialCanvas, core.js) with its hands (handShape), at time t (seconds, the hands stepping in half-seconds) and h hours since winding ---------- */
   let DIAL=null;const dial=()=>DIAL||(DIAL=dialCanvas('hamilton'));
   let HANDS=null;
-  const hands=()=>HANDS||(HANDS={hour:handShape(41,1.2,2.5,'pear',0.68,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(47.5,1.5,3,'plain',0,{boss:3.2,sq:2.44}).extractPoints(20),
-    sec:handShape(21,0.5,-10,'plain').extractPoints(20),ud:handShape(11,0.6,2.5,'plain').extractPoints(20)});   /* the model's hands, movement.js: sizes in mm */
+  const hands=()=>HANDS||(HANDS={hour:handShape(41*DK,1.2,2.5,'pear',0.68,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(47.5*DK,1.5,3,'plain',0,{boss:3.2,sq:2.44}).extractPoints(20),
+    sec:handShape(21*DK,0.5,-10,'plain').extractPoints(20),ud:handShape(11*DK,0.6,2.5,'plain').extractPoints(20)});   /* the model's hands, movement.js: sizes in mm */
   const udA=h=>(60+240*clamp(h,0,RUN_H)/56)*D2R;   /* the up/down hand: UP at 60°, 240° to DOWN at 56 h (movement.js, UD) */
   function drawHand(x,p,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,-k);x.beginPath();
     for(const loop of[p.shape,...p.holes]){loop.forEach((v,i)=>i?x.lineTo(v.x,v.y):x.moveTo(v.x,v.y));x.closePath();}x.fill('evenodd');x.restore();}
-  function paintDial(x,S,t,h,o={}){const c=S/2,k=c/50.8,H=hands();x.drawImage(dial(),0,0,S,S);x.fillStyle='#1d2c74';   /* the 4 in dial is 50.8 mm in radius; sub-dials 23.9 mm off centre (L.F, L.Ud) */
+  function paintDial(x,S,t,h,o={}){const c=S/2,k=c/DIAL_R,H=hands();x.drawImage(dial(),0,0,S,S);x.fillStyle='#1d2c74';   /* the dial is DIAL_R in radius (movement.js); sub-dials 23.9 mm off centre (L.F, L.Ud) */
     const ts=Math.floor(t*2)/2,sy=L.F[1]*k,uy=L.Ud[1]*k;
     drawHand(x,H.ud,c,c+uy,udA(h),k);drawHand(x,H.sec,c,c+sy,((ts/60)%1)*TAU,k);
     for(const y of[uy,sy]){x.beginPath();x.arc(c,c+y,0.9*k,0,TAU);x.fill();}
@@ -2761,7 +2779,7 @@ const ESSAY=(()=>{
     range(inp,v=>{if(kw)return;h=v;say();f.dirty=true;return v.toFixed(1)+' h';});
     btn.addEventListener('click',()=>{if(kw||h<0.05)return;kw={t:0,h0:h,n:Math.ceil(h/HT-1e-6),i:1};});
     return dt=>{if(kw){kw.t+=dt*(RM?4:1);const i=Math.floor(kw.t/0.8);kw.i=Math.min(kw.n,i+1);h=Math.max(0,kw.h0-HT*(i+smooth((kw.t-i*0.8)/0.55)));if(h<=0){h=0;kw=null;}inp.value=h;inp.parentElement.querySelector('output').textContent=h.toFixed(1)+' h';say();f.dirty=true;}
-      if(!f.dirty)return;f.dirty=false;const{x:ctx,w,h:H}=C;ctx.clearRect(0,0,w,H);const D=dial(),S=D.width,c=S/2,uy=c+L.Ud[1]*c/50.8,hs=c*0.255*1.3,nw=w<520,sz=nw?Math.min(w*0.62,H*0.52):Math.min(H*0.92,w*0.46),dx=nw?(w-sz)/2:w*0.26-sz/2,dy=nw?8:(H-sz)/2,k=sz/(2*hs)*c/50.8;
+      if(!f.dirty)return;f.dirty=false;const{x:ctx,w,h:H}=C;ctx.clearRect(0,0,w,H);const D=dial(),S=D.width,c=S/2,uy=c+L.Ud[1]*c/DIAL_R,hs=c*0.255*1.3,nw=w<520,sz=nw?Math.min(w*0.62,H*0.52):Math.min(H*0.92,w*0.46),dx=nw?(w-sz)/2:w*0.26-sz/2,dy=nw?8:(H-sz)/2,k=sz/(2*hs)*c/DIAL_R;
       ctx.save();ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.clip();ctx.drawImage(D,c-hs,uy-hs,2*hs,2*hs,dx,dy,sz,sz);ctx.fillStyle='#1d2c74';drawHand(ctx,hands().ud,dx+sz/2,dy+sz/2,udA(h),k);ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,0.9*k,0,TAU);ctx.fill();ctx.restore();
       ctx.strokeStyle=PAL.rule;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.stroke();
       /* the key's 17½ half turns from run down, seven to a row (a day's running), those still to go filled */
@@ -2804,9 +2822,9 @@ const ESSAY=(()=>{
   fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.9,pitch:0.36,dist:840,target:[0,32,0],near:20,far:5000}),M=G.M,S=V.scene;
     const BX=buildBox(M);S.add(BX.root);BX.mid.rotation.x=-1.6;BX.top.rotation.x=-0.32;
     const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
-    mesh(BX.bowl,cylY(50.8,3,96),M.brass2,0,2.3,0);mesh(BX.bowl,new THREE.CircleGeometry(50.8,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,4.1,0);   /* the dial, 0.3 over its disc, held in front of it as the model's is */
+    mesh(BX.bowl,cylY(DIAL_R,DIAL_T,96),M.brass2,0,MR_Y+DIAL_T/2,0);mesh(BX.bowl,new THREE.CircleGeometry(DIAL_R,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,MR_Y+DIAL_T+0.3,0);   /* the dial, 0.3 over its disc, held in front of it as the model's is */
     const sh=mesh(S,new THREE.PlaneGeometry(640,640).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({map:shadowTex(),transparent:true,opacity:0.7,depthWrite:false}),0,-101,0);sh.renderOrder=-1;
-    V.label('Gimbal ring','',at(BX.ring,82,8,0));V.label('Case','hangs level',at(BX.bowl,-48,-40,40));V.label('Latch','',at(BX.root,80,-13,76));
+    V.label('Gimbal ring','',at(BX.ring,BX.RO,8,0));V.label('Case','hangs level',at(BX.bowl,-BX.CR*0.7,-40,BX.CR*0.7));V.label('Latch','',at(BX.root,80,-13,76));
     let amp=18,t=0,going=!RM,lock=false,lk=0,lt=-1;
     range(q('input[type=range]',P),v=>{amp=v;f.dirty=true;return v+'°';});q('.lock',P).addEventListener('change',e=>{lock=e.target.checked;f.dirty=true;});play(q('.play',P),()=>going,v=>going=v);
     return dt=>{if(going){t+=dt;f.dirty=true;}const l0=lk;lk=RM?+lock:clamp(lk+(lock?1:-1)*dt*1.2,0,1);if(lk!==l0)f.dirty=true;
@@ -2900,11 +2918,11 @@ const PARTS={
   box:{t:'Mounting box',g:0,src:'est',sn:'Its parts are the manual’s; its size and shape are estimated',figs:'1, 94',c:'#a9745b',d:'Mahogany with brass fittings and two hinged covers: an upper lid, and a second cover with a glass top so the dial can be read while it stays closed. Felt protects the outside bottom.',sp:'No. 42201 · scaled to 7¾ × 7¾ in.'},
   lid:{t:'Upper lid',g:0,src:'est',sn:'Size and shape estimated',figs:'1',c:'#8a5a44',d:'Protects the instrument. Kept closed except when reading, winding or comparing.',sp:''},
   lidGlass:{t:'Glass-top cover',g:0,src:'est',sn:'Size and shape estimated',figs:'1',c:'#c49a7a',d:'The second cover. Usually kept closed; the dial is read through its glass.',sp:''},
-  ring:{t:'Gimbal ring',g:0,src:'est',sn:'The arrangement of ring, pivots, lock nuts and straps is the manual’s; the sizes are estimated',figs:'1, 94, 106',c:'#9aa1a8',pri:5,d:'Flat brass ring hung on two pivot screws that come in through the sides of the mounting box, with washers and lock nuts. The case pivots in it on front and rear pivot screws 90° away, each with a knurled lock nut, so the movement tends to stay level whatever the box does. Slotted support straps at 3 and 6 set the level.',sp:'Ring 42106 · straps 42107, 42108, their screws 42116 · pivot screws 42120, 42118, 42119, bushings 42214 · washers 42122 · lock nuts 42121'},
+  ring:{t:'Gimbal ring',g:0,src:'est',sn:'The arrangement of ring, pivots, lock nuts and straps is the manual’s; its size from the top-view photographs, the rest estimated',figs:'1, 94, 106',c:'#9aa1a8',pri:5,d:'Flat brass ring hung on two pivot screws that come in through the sides of the mounting box, with washers and lock nuts. The case pivots in it on front and rear pivot screws 90° away, each with a knurled lock nut, so the movement tends to stay level whatever the box does. Slotted support straps at 3 and 6 set the level.',sp:'Ring 42106 · straps 42107, 42108, their screws 42116 · pivot screws 42120, 42118, 42119, bushings 42214 · washers 42122 · lock nuts 42121'},
   latch:{t:'Gimbal latch',g:0,src:'est',sn:'Its parts and the slot in the ring are the manual’s; the lever’s pivot, swing and the keeper are estimated',figs:'1, 106',c:'#7d9a4a',d:'Locks the gimbals so the case cannot swing, when the box is carried or the lid must be closed with the instrument out of its box, and before the hands are set. The lever turns on a pin in its bracket, in through a slot in the gimbal ring to the keeper on the case, so ring and case are held at once. Tick Gimbals latched under Display, with Ship motion, to see the case tilt with the box.',sp:'Lever 42111 · handle 42112 · support bracket 42109, its screws 42115 and washers 42123 · clamping bracket 42110 and screw 42114 · take-up spring 42277, its screws 42276'},
-  bowl:{t:'Chronometer case',g:0,src:'est',sn:'The case’s shield plate: its parts and action from the manual, its shape estimated',c:'#c4b27a',pri:5,d:'Brass bowl and bezel with crystal. The winding-hole shield plate on its bottom is turned clockwise to admit the key and springs back when the key is removed.',sp:'Case No. 42101, bezel 42102, crystal 42103 · case support brackets 42105, their screws 42117 and pivot bushings 42214 · latch keeper 42113, its screw 42116 and separating washer 42128 · shield plate 42104, shoulder screw 42124, stop screw 42125, return spring 42126'},
+  bowl:{t:'Chronometer case',g:0,src:'est',sn:'How it holds the movement is the manual’s (Sec. III), its width from the top-view photographs; the shield plate’s parts and action from the manual; shapes and the other sizes estimated',c:'#c4b27a',pri:5,d:'Brass bowl and bezel with crystal. The movement’s mounting ring sits in a recess round its top edge, on the shoulder at its foot, and the ring’s alignment pin enters a slot in its edge; the bezel screws on outside the rim. The winding-hole shield plate on its bottom is turned clockwise to admit the key and springs back when the key is removed.',sp:'Case No. 42101, bezel 42102, crystal 42103 · case support brackets 42105, their screws 42117 and pivot bushings 42214 · latch keeper 42113, its screw 42116 and separating washer 42128 · shield plate 42104, shoulder screw 42124, stop screw 42125, return spring 42126'},
   key:{t:'Winding key',g:0,src:'est',sn:'The square is 2.4 mm, as the fusee arbor’s, since one key fits both; the rest estimated',figs:'7, 8',c:'#6d7a8a',pri:4,d:'Wind to the left (counterclockwise). Seven half turns restore 24 hours of running; 17½ half turns wind a run-down chronometer fully.',sp:'No. 42044'},
-  pillar:{t:'Pillar plate',g:1,src:'photo',sn:'87.57 mm across and 3.86 mm thick, from a new-old-stock plate; the engraving traced on a photograph',figs:'29, 67, 110',c:'#9fb4c8',plate:1,d:'Foundation of the movement. The barrel and train bridges stand off it on four pillars, each screwed on from the dial side. A large hole under the dial reaches one of the balance lower bridge’s screws. On its dial side are the lower train bridge, the escape wheel’s lower endstone cap and the posts the minute and wind indicator wheels turn on; round its edge, the mounting ring.',sp:'No. 42060 · 87.57 mm diameter, 3.86 mm thick · pillar screws 42055 · mounting ring 42057, screws 42055 · centre, barrel and fusee lower bushings 42165, 42164 · escape lower setting 42162, endstone cap 42159, screws 20762 · posts 42084, 42085, screws 35779'},
+  pillar:{t:'Pillar plate',g:1,src:'photo',sn:'87.57 mm across and 3.86 mm thick, from a new-old-stock plate; the engraving traced on a photograph',figs:'29, 67, 110',c:'#9fb4c8',plate:1,d:'Foundation of the movement. The barrel and train bridges stand off it on four pillars, each screwed on from the dial side. A large hole under the dial reaches one of the balance lower bridge’s screws. On its dial side are the lower train bridge, the escape wheel’s lower endstone cap and the posts the minute and wind indicator wheels turn on. It is laid on the mounting ring, a deep lacquered brass ring that carries the dial and holds the movement in its case; seen from the dial side, the plate lies sunk in it.',sp:'No. 42060 · 87.57 mm diameter, 3.86 mm thick · pillar screws 42055 · mounting ring 42057 with its alignment pin, screws 42055 · centre, barrel and fusee lower bushings 42165, 42164 · escape lower setting 42162, endstone cap 42159, screws 20762 · posts 42084, 42085, screws 35779'},
   ltb:{t:'Lower train bridge',g:1,src:'photo',sn:'A straight steel bar with square ends across an opening in the plate, the settings inboard and a screw toward each end, as Figs. 30 and 31 and a photograph of a Model 21’s dial side show it; its sizes are estimated',figs:'29, 30, 31, 67, 110',c:'#b6d7c9',plate:1,d:'A steel bar screwed to the dial side of the pillar plate, under the dial, across an opening round the third arbor; carries the third and fourth wheel lower settings (bar-hole jewels) and two steady pins.',sp:'No. 42063 · screws 42163 · third and fourth lower settings 42161'},
   pillars:{t:'Pillars',g:1,src:'photo',sn:'Heights from a side photograph, places from the top-view photograph',figs:'29, 67, 110',c:'#707a84',plate:1,d:'Four pillars: three for the upper train bridge, one for the barrel bridge. Each is screwed on from the dial side of the pillar plate and tapped at its top for its bridge’s screw.',sp:'Nos. 42059, 42058 · screws 42055'},
   trainBridge:{t:'Upper train bridge',g:1,src:'manual',sn:'Its crescent traced on Fig. 67; thickness from a side photograph; the keyhole built round the arbors',figs:'24, 29, 67, 108, 110',c:'#c9d8a8',pri:2,plate:1,d:'Carries the centre and third wheel upper bushings. The balance cock, balance lower bridge and escape upper bridge are mounted to it; the detent support block is fastened to its underside. It leaves the fusee’s top open to the barrel bridge above.',sp:'No. 42062 · screws 42055 · centre and third upper bushings 42166, 42167'},
@@ -2912,7 +2930,7 @@ const PARTS={
   escBridge:{t:'Escape upper bridge',g:1,src:'est',sn:'Placed on the escape arbor; its shape is estimated',figs:'29, 67, 110',c:'#c8b8e3',plate:1,d:'Small bridge holding the escape wheel’s upper setting and jewel, with the endstone cap over them on two screws.',sp:'No. 42064, screws 20762 · setting 42162 · cap 42159, screws 20762'},
   lowerBridge:{t:'Balance lower bridge',g:1,src:'est',sn:'A stepped block as Figs. 29, 30 and 110 draw it; its lower tier a 3 mm plate on a side photograph; its outline laid out round the parts it clears (tools/lower_bridge.py)',figs:'29, 30, 110',c:'#a8d4e0',pri:3,plate:1,d:'Holds the balance staff’s lower setting, with its endstone cap underneath, and the fourth wheel upper setting. Its upper tier lies against the underside of the upper train bridge, an arm round the escape wheel held by two screws put in from below and located by two steady pins; the screw at the arm’s end can be reached through a hole in the pillar plate. The train-blocking screw is threaded through its lobe, which rises in a column to the upper tier.',sp:'No. 42065 · screws 42055 · settings 42162, 42161 · cap 42159, screws 20762'},
   cock:{t:'Balance cock',g:1,src:'photo',sn:'Traced on the top-view photograph and shifted for parallax; the nose widened round the endstone cap',figs:'19, 84, 85',c:'#d8b0c8',pri:5,plate:1,d:'Carries the balance upper setting and its olive-hole jewel, pressed into the nose, the endstone cap over them on two screws, and the hairspring stud underneath on its screw. Its foot stands on the upper train bridge beside the barrel bridge, held by one screw.',sp:'No. 42066 · screw 42192 · upper setting 42162 · endstone cap 42160 with its setting 42155, screws 20762 · hairspring stud screw 27760'},
-  dial:{t:'Dial',g:1,src:'photo',sn:'After a photographed U.S. Maritime Commission dial; the sub-dials sit on their arbors, a little nearer the centre',figs:'107',plate:1,d:'Black on silver-white, after a photographed Model 21 dial of the U.S. Maritime Commission contract. Large Arabic hours (the 6 covered by the seconds sub-dial) inside a railroad minute track with triangles at the hours; HAMILTON and LANCASTER, PA., U.S.A. across the centre; UP–DOWN indicator below the 12, numbered 8 to 48, on this movement’s 240° sweep; seconds at 6, numbered 10 to 60, with the serial number and U.S. MARITIME COMMISSION. Held on three feet by dial screws from the train side of the pillar plate.',sp:'No. 42030 · screws 35756'},
+  dial:{t:'Dial',g:1,src:'photo',sn:'After a photographed U.S. Maritime Commission dial; the sub-dials sit on their arbors, a little nearer the centre',figs:'107',plate:1,d:'Black on silver-white, after a photographed Model 21 dial of the U.S. Maritime Commission contract. Large Arabic hours (the 6 covered by the seconds sub-dial) inside a railroad minute track with triangles at the hours; HAMILTON and LANCASTER, PA., U.S.A. across the centre; UP–DOWN indicator below the 12, numbered 8 to 48, on this movement’s 240° sweep; seconds at 6, numbered 10 to 60, with the serial number and U.S. MARITIME COMMISSION. It lies on the mounting ring’s flange, a little inside its edge, held by four feet in the flange and dial screws from the flange’s train side.',sp:'No. 42030 · screws 35756'},
   barrel:{t:'Mainspring barrel',g:2,src:'est',sn:'Its axis from the photographs; its height (13.2 mm) and inside are estimated',figs:'26, 75, 109',c:'#b86bd1',pri:8,d:'Holds the mainspring and its brace, a strip lining the wall where the spring’s outer end hooks. Turns clockwise while running, drawing the chain from the fusee. The cap on the pillar-plate end is held by five screws.',sp:'No. 42168 · cap 42169, screws 37023 · brace 42037'},
   mainspring:{t:'Mainspring',g:2,src:'est',sn:'Thickness from the parts list (0.0165 in); length (600 mm) and lie estimated',figs:'26, 75',c:'#334f8f',d:'Inner end on the hook of the fixed barrel arbor, outer end by its anchor pin at the brace. Coils drawn schematically.',sp:'No. 42038 · 0.0165 in. thick'},
   ratchet:{t:'Setup ratchet',g:2,src:'photo',sn:'The cover plate traced on the top-view photograph, and the ratchet’s size (about 52 teeth) measured there',figs:'17, 24, 80',c:'#a0922f',d:'Setup ratchet wheel on the barrel arbor under the bow-shaped cover plate, with setup pawl (click) and spring. Keeps the arbor from turning in winding and running, so the wheel never moves in use. The arbor turns only in the watchmaker’s hands, with a let-down key on its square: to let the mainspring down before servicing, the pawl held back, and to set it up again at assembly. Inside the barrel the arbor carries the mainspring’s inner end on its hook.',sp:'Wheel 42026 · pawl 42027 on its screw 42036 · spring 42028 · cover plate 42029, screws 42056 · arbor 42170'},
@@ -3396,8 +3414,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   addL('Fusee wheel',`${TRAIN.fu} teeth, 1 turn / ${turnT(GW_TURN)}`,'gw',pw(P.gw,L.Fu[0]+14,-6.5,L.Fu[1]-11),'mv');addL('Centre wheel',`${TRAIN.cw} teeth, 1 turn / ${per(ESC_PER.cw*ESC_TURN)}`,'cw',pw(P.cw,-8,-5.36,-8),'mv');addL('Third wheel',`${TRAIN.tw} teeth, 1 turn / ${per(ESC_PER.tw*ESC_TURN)}`,'tw',pw(P.tw,L.T[0]-9,-4.535,L.T[1]+5),'mv');
   addL('Fourth wheel',`${TRAIN.fw} teeth, 1 turn / ${per(ESC_PER.fw*ESC_TURN)}`,'fw',pw(P.fw,L.F[0]-7,-7.46,L.F[1]+5),'mv');addL('Upper train bridge','','trainBridge',pw(P.trainBridge,-20,TB_T,24),'mv');addL('Barrel bridge','','barrelBridge',pw(P.barrelBridge,-16,BB_T,-18),'mv');
   addL('Sustaining pawl','','spawl',pw(R.spawl,-2.5,0,0),'mv');addL('Sustaining ratchet','','sratchet',pw(P.sratchet,L.Fu[0]+13,-9.45,L.Fu[1]+9),'mv');addL('Balance lower bridge','','lowerBridge',pw(P.lowerBridge,(L.B[0]+L.F[0])/2,LB_T,(L.B[1]+L.F[1])/2),'mv');
-  addL('Up/down indicator','','hands',pwo(P.hands,R.ud,-L.Ud[0],6,-36-L.Ud[1]),'dial');addL('Seconds','','hands',pwo(P.hands,R.sec,-10-L.F[0],6,34-L.F[1]),'dial');addL('Gimbal ring','','ring',pw(BX.ring,82,8,0),'box');
-  addL('Bowl','','bowl',pw(BX.bowl,-48,-40,40),'box');addL('Winding key','','key',pw(BX.root,76,-5,-76),'box');addL('Gimbal latch','','latch',pw(BX.root,80,-13,76),'box');
+  addL('Up/down indicator','','hands',pwo(P.hands,R.ud,-L.Ud[0],6,-36-L.Ud[1]),'dial');addL('Seconds','','hands',pwo(P.hands,R.sec,-10-L.F[0],6,34-L.F[1]),'dial');addL('Gimbal ring','','ring',pw(BX.ring,BX.RO,8,0),'box');
+  addL('Bowl','','bowl',pw(BX.bowl,-BX.CR*0.7,-40,BX.CR*0.7),'box');addL('Winding key','','key',pw(BX.root,76,-5,-76),'box');addL('Gimbal latch','','latch',pw(BX.root,80,-13,76),'box');
   addL('Cannon pinion',`${MW.cp} leaves`,'motion',pw(P.motion,2,1.2,-3),'motion');addL('Minute wheel',`${MW.mw} / ${MW.mp}`,'motion',pw(P.motion,L.Mw[0]+6,1.2,L.Mw[1]+4),'motion');addL('Up/down wheel',`${UD.wheel} teeth`,'motion',pwo(P.motion,R.udW,11,1.5,0),'motion');
 
   /* ---------- walkthrough ---------- */

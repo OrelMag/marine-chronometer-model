@@ -973,11 +973,11 @@
    "parent": "42000",
    "kind": "part",
    "part": "dial",
-   "fn": "Hours, minutes, seconds and UP-DOWN scales (Sec. II).",
+   "fn": "Hours, minutes, seconds and UP-DOWN scales (Sec. II); it lies on the mounting ring's flange.",
    "rel": [
     [
      "on",
-     "42060"
+     "42057"
     ]
    ],
    "figs": "107"
@@ -991,11 +991,11 @@
    "parent": "42000",
    "kind": "part",
    "part": "dial",
-   "fn": "Hold the dial by its feet, from the train side of the pillar plate.",
+   "fn": "Hold the dial by its feet, from the train side of the mounting ring's flange.",
    "rel": [
     [
      "in",
-     "42060",
+     "42057",
      "clear"
     ],
     [
@@ -3166,7 +3166,7 @@
      "inst": [
       2
      ],
-     "why": "The manual has all three upper train bridge screws in pillars (Ops. 14, 47, 48). The model's third screw is where the top-view photographs show one, at (-8.5, 27.7); a pillar there would stand in the fourth wheel, whose size the layout fixes, so it is drawn threaded into the bridge alone (IDEAS.md 1.2). What it holds in the real movement is not settled."
+     "why": "The manual has all three upper train bridge screws in pillars (reassembly Op. 14; disassembly Ops. 47, 48). The model's third screw is where the top-view photographs show one, at (-8.5, 27.7); a pillar there would stand in the fourth wheel, whose size the layout fixes, so it is drawn threaded into the bridge alone (IDEAS.md 1.2). What it holds in the real movement is not settled."
     }
    ]
   },
@@ -3990,14 +3990,18 @@
    "parent": "42060",
    "kind": "part",
    "part": "pillar",
-   "fn": "Round the plate's edge; holds the movement in the case.",
+   "fn": "Under the plate's dial side: carries the dial, and holds the movement in the case, its alignment pin in the case's slot (Sec. III).",
    "rel": [
     [
      "on",
      "42060"
+    ],
+    [
+     "on",
+     "42101"
     ]
    ],
-   "figs": "110"
+   "figs": "29, 67, 110"
   },
   {
    "id": "42055.ring",

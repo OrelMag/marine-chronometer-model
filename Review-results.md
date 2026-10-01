@@ -298,6 +298,11 @@ not yet clear, so the finding is resolved. See
 
 ### 8. The dial looks small in its case (worth checking, not confirmed wrong)
 
+*Fixed (RESOLVED.md, Setup, case and gimbals): the case was 13 mm too wide all
+round and held nothing. It is now built from the movement it holds: the mounting
+ring's flange in a recess round its top on a shoulder, the dial (95 mm, the side
+photograph) inside it, the bezel screwed on round the rim.*
+
 - The dial is 50.8 mm in radius, the estimated 4 in.
 - The bezel's inner edge is at about 60.9 mm (the torus at 63.5 mm less its
   2.6 mm tube), and the glass is 62 mm.
@@ -746,9 +751,9 @@ the figures and listed in the model README's "Estimated, not from the manual".
 | Escape lower setting (42162) | a gilt ring | its jewel added |
 | Escape lower endstone cap (42159) and screws (20762, 2) | missing | added, on the dial side |
 | Minute wheel post (42085) and wind indicator wheel post (42084), with their screws (35779) | the two wheels turned on arbors of their own | fixed posts screwed to the plate from its train side; the wheels turn on them, the wind indicator wheel's hand on its pipe |
-| Mounting ring (42057) and screws (42055, 3) | a ring beside the plate, no screws | a lip under the plate's dial side, held by three screws |
+| Mounting ring (42057) and screws (42055, 3) | a ring beside the plate, no screws | a lip under the plate's dial side, held by three screws; since, the deep ring under the plate that Figs. 29, 67 and 110 draw, carrying the dial, with its alignment pin |
 | **Fig. 107: case, dial, motion work** | | |
-| Dial (42030) and dial screws (35756) | three feet on the plate, no screws | each foot held by a screw from the train side of the plate |
+| Dial (42030) and dial screws (35756) | three feet on the plate, no screws | each foot held by a screw from the train side of the plate; since, four feet in the mounting ring's flange, screwed from its train side, where the top-view photographs show the screws |
 | Hands (42032–42035), cannon pinion (42077), minute wheel (42078), hour wheel (42080), wind indicator wheel (42081) | modelled | unchanged |
 | Case (42101), bezel (42102), crystal (42103), case support brackets (42105) and screws (42117) | modelled | the bracket screws have shanks |
 | Latch keeper (42113) and its screw (42116); separating washer (42128) | the keeper only | unchanged |
@@ -930,10 +935,11 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
 ### Still open
 
 1. **The upper train bridge's third screw** (known deviation, `bom.json`
-   `dev` on 42055.tb). The manual has all three in pillars (Ops. 14, 47, 48);
+   `dev` on 42055.tb). The manual has all three in pillars (reassembly Op. 14; disassembly Ops. 47, 48);
    the model's third is where the top-view photographs (and serial 623's) show
    a screw, at (-8.5, 27.7), where a pillar would stand in the fourth wheel.
-   What it holds in the real movement is not settled (IDEAS.md 1.2).
+   What it holds in the real movement is not settled (IDEAS.md 1.2; examined
+   again against Figs. 29, 67 and 110 on 1 October 2026, still open).
 2. **Shape against the drawings and photographs**, part by part, not yet
    done. 44 web photographs were gathered (mostly all rights reserved: to be
    cited by URL, not committed). Candidates: the shield plate (Fig. 107 draws

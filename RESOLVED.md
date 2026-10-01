@@ -486,6 +486,20 @@ Contents:
   phases; it now holds the balance at rest and the escape wheel locked. Keep: the
   arm stops the balance through a timing weight; unlocked, it is clear of
   everything the balance carries. `3655b52`
+- **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
+  and 110 draw it as a deep ring under the plate, and the side and dial-side
+  photographs show it: a band as wide as the plate, then a flange 95.9 mm
+  across, 6.5 mm out from the plate's dial face, lacquered brass (Sec. VI); the
+  plate's dial face lies sunk in it. Now that, carrying the dial (the note at
+  Op. 98), with its alignment pin (Sec. III). The dial (95 mm, the side
+  photograph; the dial photograph's proportions agree) moved 3.24 mm further
+  from the plate, and everything above it with it: the hands, the cannon pinion's
+  and hour wheel's pipes, the wind indicator's pipe, the centre and fourth
+  arbors' dial ends, the setting key. Its feet and screws moved from the plate
+  (r 39) to the flange (r 45.9), where the top-view photographs show two. Keep:
+  the dial on the ring (`MR_Y`), heights above it written `+DD`; the hands
+  scaled by `DK`; the dial canvas's sub-dials at `L.F[1]/DIAL_R`, on their
+  arbors. HASH
 
 ## Setup, case and gimbals
 
@@ -505,6 +519,26 @@ Contents:
   photographed text that replaced them runs full length; the block moved
   2.5 mm toward the rim instead. Keep: every line clear of the flange (r 8.6
   round the fusee) and the barrel pillar screw's head.
+- **Case 13 mm too wide, holding nothing.** The movement was added at the
+  bowl's origin and nothing touched it: the bowl's bore was r 64 round a
+  mounting ring of r 47 and a dial of r 50.8, its lip at r 62 three millimetres
+  above the dial, the gimbal ring at r 80. The manual's case holds the movement
+  by the movement's own parts (Sec. III: the dial in "the shoulder recess around
+  the top edge of the case" when the movement is put on it upside down, the
+  alignment pin in its slot; the case parts list, Fig. 107, has nothing between
+  them). The case is now built from the movement: the mounting ring's flange
+  sits in a recess round the top on a shoulder, the pin in a slot down to it,
+  the bezel screwed on round the 105 mm rim (top-view photographs); the gimbal
+  ring (r 66–68), the brackets, keeper, latch lever and pivot screws follow.
+  Keep: the case's sizes derived from the movement's constants (`DB`, `SH`,
+  `CR`, `TR` in `box.js` from `MR_RO`, `MR_Y`, `DIAL_R`), not literals;
+  `bom.py`'s "42057 on 42101"; after a change to either, the movement checked
+  against the case with `fine.py --eval` attaching the bowl's meshes to
+  `__mv` (0 new or grown). HASH
+- **Shield plate's screws in the box's felt.** With the case level, their
+  heads reached 0.75 mm into the felt. The floor is 2 mm shallower (`FD` 64)
+  and the winding key's handle 2 mm higher. Keep: the case's lowest point
+  above the felt (y −89). HASH
 - **Gimbals as blank blocks.** Replaced by a flat ring on pivot screws, with
   washers, lock nuts, case support brackets and straps (Figs. 1, 94, 106). The
   ring was raised so the case clears the box floor. `eae5358`

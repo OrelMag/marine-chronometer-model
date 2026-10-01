@@ -106,12 +106,12 @@ const ESSAY=(()=>{
   /* ---------- the dial: the model's Hamilton dial (dialCanvas, core.js) with its hands (handShape), at time t (seconds, the hands stepping in half-seconds) and h hours since winding ---------- */
   let DIAL=null;const dial=()=>DIAL||(DIAL=dialCanvas('hamilton'));
   let HANDS=null;
-  const hands=()=>HANDS||(HANDS={hour:handShape(41,1.2,2.5,'pear',0.68,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(47.5,1.5,3,'plain',0,{boss:3.2,sq:2.44}).extractPoints(20),
-    sec:handShape(21,0.5,-10,'plain').extractPoints(20),ud:handShape(11,0.6,2.5,'plain').extractPoints(20)});   /* the model's hands, movement.js: sizes in mm */
+  const hands=()=>HANDS||(HANDS={hour:handShape(41*DK,1.2,2.5,'pear',0.68,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(47.5*DK,1.5,3,'plain',0,{boss:3.2,sq:2.44}).extractPoints(20),
+    sec:handShape(21*DK,0.5,-10,'plain').extractPoints(20),ud:handShape(11*DK,0.6,2.5,'plain').extractPoints(20)});   /* the model's hands, movement.js: sizes in mm */
   const udA=h=>(60+240*clamp(h,0,RUN_H)/56)*D2R;   /* the up/down hand: UP at 60°, 240° to DOWN at 56 h (movement.js, UD) */
   function drawHand(x,p,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,-k);x.beginPath();
     for(const loop of[p.shape,...p.holes]){loop.forEach((v,i)=>i?x.lineTo(v.x,v.y):x.moveTo(v.x,v.y));x.closePath();}x.fill('evenodd');x.restore();}
-  function paintDial(x,S,t,h,o={}){const c=S/2,k=c/50.8,H=hands();x.drawImage(dial(),0,0,S,S);x.fillStyle='#1d2c74';   /* the 4 in dial is 50.8 mm in radius; sub-dials 23.9 mm off centre (L.F, L.Ud) */
+  function paintDial(x,S,t,h,o={}){const c=S/2,k=c/DIAL_R,H=hands();x.drawImage(dial(),0,0,S,S);x.fillStyle='#1d2c74';   /* the dial is DIAL_R in radius (movement.js); sub-dials 23.9 mm off centre (L.F, L.Ud) */
     const ts=Math.floor(t*2)/2,sy=L.F[1]*k,uy=L.Ud[1]*k;
     drawHand(x,H.ud,c,c+uy,udA(h),k);drawHand(x,H.sec,c,c+sy,((ts/60)%1)*TAU,k);
     for(const y of[uy,sy]){x.beginPath();x.arc(c,c+y,0.9*k,0,TAU);x.fill();}
@@ -273,7 +273,7 @@ const ESSAY=(()=>{
     range(inp,v=>{if(kw)return;h=v;say();f.dirty=true;return v.toFixed(1)+' h';});
     btn.addEventListener('click',()=>{if(kw||h<0.05)return;kw={t:0,h0:h,n:Math.ceil(h/HT-1e-6),i:1};});
     return dt=>{if(kw){kw.t+=dt*(RM?4:1);const i=Math.floor(kw.t/0.8);kw.i=Math.min(kw.n,i+1);h=Math.max(0,kw.h0-HT*(i+smooth((kw.t-i*0.8)/0.55)));if(h<=0){h=0;kw=null;}inp.value=h;inp.parentElement.querySelector('output').textContent=h.toFixed(1)+' h';say();f.dirty=true;}
-      if(!f.dirty)return;f.dirty=false;const{x:ctx,w,h:H}=C;ctx.clearRect(0,0,w,H);const D=dial(),S=D.width,c=S/2,uy=c+L.Ud[1]*c/50.8,hs=c*0.255*1.3,nw=w<520,sz=nw?Math.min(w*0.62,H*0.52):Math.min(H*0.92,w*0.46),dx=nw?(w-sz)/2:w*0.26-sz/2,dy=nw?8:(H-sz)/2,k=sz/(2*hs)*c/50.8;
+      if(!f.dirty)return;f.dirty=false;const{x:ctx,w,h:H}=C;ctx.clearRect(0,0,w,H);const D=dial(),S=D.width,c=S/2,uy=c+L.Ud[1]*c/DIAL_R,hs=c*0.255*1.3,nw=w<520,sz=nw?Math.min(w*0.62,H*0.52):Math.min(H*0.92,w*0.46),dx=nw?(w-sz)/2:w*0.26-sz/2,dy=nw?8:(H-sz)/2,k=sz/(2*hs)*c/DIAL_R;
       ctx.save();ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.clip();ctx.drawImage(D,c-hs,uy-hs,2*hs,2*hs,dx,dy,sz,sz);ctx.fillStyle='#1d2c74';drawHand(ctx,hands().ud,dx+sz/2,dy+sz/2,udA(h),k);ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,0.9*k,0,TAU);ctx.fill();ctx.restore();
       ctx.strokeStyle=PAL.rule;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(dx+sz/2,dy+sz/2,sz/2,0,TAU);ctx.stroke();
       /* the key's 17½ half turns from run down, seven to a row (a day's running), those still to go filled */
@@ -316,9 +316,9 @@ const ESSAY=(()=>{
   fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.9,pitch:0.36,dist:840,target:[0,32,0],near:20,far:5000}),M=G.M,S=V.scene;
     const BX=buildBox(M);S.add(BX.root);BX.mid.rotation.x=-1.6;BX.top.rotation.x=-0.32;
     const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
-    mesh(BX.bowl,cylY(50.8,3,96),M.brass2,0,2.3,0);mesh(BX.bowl,new THREE.CircleGeometry(50.8,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,4.1,0);   /* the dial, 0.3 over its disc, held in front of it as the model's is */
+    mesh(BX.bowl,cylY(DIAL_R,DIAL_T,96),M.brass2,0,MR_Y+DIAL_T/2,0);mesh(BX.bowl,new THREE.CircleGeometry(DIAL_R,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,MR_Y+DIAL_T+0.3,0);   /* the dial, 0.3 over its disc, held in front of it as the model's is */
     const sh=mesh(S,new THREE.PlaneGeometry(640,640).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({map:shadowTex(),transparent:true,opacity:0.7,depthWrite:false}),0,-101,0);sh.renderOrder=-1;
-    V.label('Gimbal ring','',at(BX.ring,82,8,0));V.label('Case','hangs level',at(BX.bowl,-48,-40,40));V.label('Latch','',at(BX.root,80,-13,76));
+    V.label('Gimbal ring','',at(BX.ring,BX.RO,8,0));V.label('Case','hangs level',at(BX.bowl,-BX.CR*0.7,-40,BX.CR*0.7));V.label('Latch','',at(BX.root,80,-13,76));
     let amp=18,t=0,going=!RM,lock=false,lk=0,lt=-1;
     range(q('input[type=range]',P),v=>{amp=v;f.dirty=true;return v+'°';});q('.lock',P).addEventListener('change',e=>{lock=e.target.checked;f.dirty=true;});play(q('.play',P),()=>going,v=>going=v);
     return dt=>{if(going){t+=dt;f.dirty=true;}const l0=lk;lk=RM?+lock:clamp(lk+(lock?1:-1)*dt*1.2,0,1);if(lk!==l0)f.dirty=true;
