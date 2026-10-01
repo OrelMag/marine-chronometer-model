@@ -38,6 +38,8 @@ searching a video again.
 
 | Time | What is on screen | Useful for |
 |---|---|---|
+| 2:15–2:45 | The movement out of its case, oblique and from the side: the balance cock stands at the rim as a tall polished block (2:36) | The cock's height and its solid outer wall |
+| **4:56–6:47** | **From above (12 o'clock toward the camera): the cock in place, its screw out (5:56), its nose and endstone cap close (5:50), then lifted off (6:44); 6:29 and 6:47 are the same view with the cock on and off** | The cock's outline, the barrel bridge's edge beside it, the cock's screw and steady-pin holes in the train bridge |
 | 12:48–13:03 | The upper train bridge lifted and turned over: its underside, engraved HAMILTON WATCH CO, MODEL 21 | Bridge outline, its screw holes (1.2) |
 | 13:06–13:33 | Barrel bridge off: the fusee with the chain on it, the barrel; the fusee lifted out with its chain | Chain on the fusee, fusee wheel in place |
 | 13:36–13:48 | The upper train bridge with the balance lower bridge and its red jewel, then lifted | Lower bridge in place |
@@ -67,6 +69,8 @@ searching a video again.
 | 35:44–35:54 | The balance lower bridge, upper side, jewel oiled | Lower bridge |
 | **36:15** | **The train seated, all four pillars standing, oblique** | Pillars (1.2), relative wheel sizes |
 | 40:15, 40:30 | Dial side: lower train bridge and motion work | Motion work counts |
+| **41:58–42:08** | **The cock alone on the mat, top up (41:58), then its endstone cap screwed on (42:03, 42:08)** | The cock's solid form, its counterbored screw hole, its setting |
+| 43:48–44:15 | The cock going back on over the balance | |
 
 ### `wcYqdgpyggQ` (BunnSpecial Part 2, 720p)
 
@@ -103,6 +107,10 @@ frame`, in `$MC_VIDEO/frames`).
 | Up–down scale sweep | **315.7° in 56 h** | `References/photo-dial-hamilton-maritime-commission.jpg` (not a video) | Ticks 8 h apart at 67.9°, 111°, 156.7°, 201.6°, 247.5°, 293.2° from 12: 45.1° each (a line through them: 5.65° an hour, 316°) | `video.py ticks 427 288 8:486,264 16:487,311 24:452,346 32:404,346 40:369,312 48:371,264` |
 | Wheel size ratios | centre ÷ third 1.36–1.39; centre ÷ fourth 1.48–1.5 | 35:30, 35:33, 36:15 | Same frame, nearly the same plane; ±3 % | Ellipse axes from `count`'s fit |
 | Third arbor's distance from the centre | 16–19.7 mm (model 13.05) | 14:45, 13:51 | Rough: affine fit, rim rms 2.4–2.8 mm; on the same fit the barrel bushing lands at r 23.2 (model 18.6), so it can't place parts | `video.py plate f_KLUwI2UUCMQ_14-45.png 1876 960 1830 1504 T:2100,1356 Fu:1524,624 Ba:2516,896 E:1570,1324` |
+| Balance cock's form | One solid block: its outer wall follows the rim the full height (14.2 mm) to the train bridge; only the nose is an arm, about as thick as a plate, over the balance; one screw, its head in a counterbore | 41:58, 23:45, 2:36, 6:29 | Sure of the form; the arm's thickness and where the body steps down to it are estimated | Frames by eye, against the model rendered at matching views (`views.py close --look`) |
+| Barrel bridge's horn on the cock's side | Ends 2–9° round the rim from 3 o'clock, at the cock's straight edge (5°): the cock stands on the train bridge in the bridge's opening | 23:30 (flat), 6:47 (cock off) | About 2 mm: the flat bridge mapped through the fusee and barrel bushings and the plate's centre; at 6:47 the bridge's edge meets the rim where the cock's straight edge does | `video.py frame`; the map by hand |
+| Barrel bridge's other horn | Ends about 112–114° round, with a cut toward the centre; the top-view photograph shows a screw on the bridge there, about (−10.8, 25.1) | 23:30; `References/photo-top-view.jpg` | Rough, ±3 mm; not yet in the model (see the gaps below) | As above, and `topview.py`'s five-screw map |
+| The cock's steady pins | Two plain holes in the train bridge under the cock, about (36, 4) and (27, 20) | 6:47 | About 2 mm | By eye, against the cock screw's tapped hole |
 
 ## Methods
 
@@ -179,6 +187,7 @@ videos to look.
 | Motion work counts (1.8) | `KLUwI2UUCMQ` 23:30 (minute and hour wheels flat, half blurred); 40:15–40:30; `wcYqdgpyggQ` 5:10 | Count the minute wheel, its pinion, the hour wheel and the cannon pinion; the ratio must stay 12 |
 | Third arbor's place and the wheels' sizes (1.11) | 13:51, 14:36–14:45, 34:30 at 4K | A proper camera fit (Methods), then plan positions of the bushings and settings; then `solve.py`, `fine.py`, `bom.py` |
 | Train-bridge screw with no pillar (1.2) | `wcYqdgpyggQ` 19:30–20:40 (bridge off), 21:50–23:20 (plate with pillars); `KLUwI2UUCMQ` 12:48–13:03 (bridge underside), 36:15 | Map the pillars and the bridge's holes onto the plan with the same camera fit |
+| The barrel bridge's extent toward 6 o'clock (1.2) | `KLUwI2UUCMQ` 23:30, 23:45 (the bridge flat), 12:48–13:03; the top-view photograph | The model cuts the bridge on a chord at z ≈ 15 from about 21° to 157°; the real bridge reaches round to about 112–114° on the far side of the balance, and the photograph shows a screw on it at about (−10.8, 25.1), where the model draws its train-bridge screw with no pillar (−8.5, 27.7). A homography on the flat bridge (rim, bushings, screw holes) would place that horn and settle which bridge the screw holds |
 | Mainspring length (1.9) | `KLUwI2UUCMQ` 16:28–17:04, 32:20–32:52 (spring out, stretched in turns) | Count its turns out of the barrel and their radii, or measure a stretched length against a known width (the barrel's) |
 | Oil sinks (1.10) | 14:12–15:12, 33:44–33:56 (settings close) | See which unjewelled holes have sinks |
 | Balance's swing, escapement motion (2.x) | `We1dLNXiBj0`, `s7VW3RiJ97E` | Frame-by-frame angle of the balance: amplitude (the manual's 1⅜–1½ turns), and the detent's lift |

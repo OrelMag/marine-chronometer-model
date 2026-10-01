@@ -366,6 +366,19 @@ Contents:
   with metal all round. `polyGeo` warns about holes crossing the outline, not
   holes wholly outside it, so check a moved screw against the outline by hand.
   `5ac87a7`
+- **Balance cock a thin plate on a small post; the barrel bridge under it.**
+  The cock was a 2.6 mm crescent plate held 11 mm up on a foot under one
+  sector, with the barrel bridge running on under its outer half. In C
+  Spinner's restoration video (41:58, 23:45, 2:36; `References/VIDEOS.md`) it
+  is one solid block: its polished outer wall follows the rim the full 14.2 mm
+  down to the train bridge, and only the nose is an arm over the balance. With
+  the cock off (6:47), and on the bridge laid flat (23:30), the barrel bridge's
+  horn ends at the cock's straight edge. The cock is now that block
+  (`stepGeo`: the outline at the top, the body outside the 17.7 mm circle round
+  the staff), with its screw's head in a counterbore and two steady pins in the
+  train bridge, and the barrel bridge's horn ends just short of it. Keep:
+  the cock stands on the train bridge, in the barrel bridge's opening; its body
+  clears the balance's sweep (`fine.py`).
 - **Train bridge opening round the balance too big.** The centre and escape
   pivots fell in the hole. The opening was reduced; it is r 8.0 after the
   escapement change. `84a7645`, `7328e67`
