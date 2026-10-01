@@ -466,7 +466,7 @@ Contents:
   `tools/train_bridge.py` now builds `TB_EDGE` from those readings, and the
   keyhole stops 1 mm short of the notch. Keep: the edge is neither smoothed
   nor pushed off holes (that rounded the horn); the tool prints the metal left
-  round each instead. HASH
+  round each instead. `8a48535`
 - **Screws were heads with nothing under them, and no part had a hole for
   one.** The Exploded view showed it: every bridge lifted away with bare heads.
   `screw()` now draws a threaded shank (`len`, toward +y), and every part a
