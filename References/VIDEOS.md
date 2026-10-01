@@ -38,13 +38,20 @@ searching a video again.
 
 | Time | What is on screen | Useful for |
 |---|---|---|
+| 9:56–10:26 | The escape upper bridge taken off (10:00: on, over the keyhole's escape lobe), its jewel and endstone close (10:16–10:26) | Escape arbor's place |
+| **10:06–10:13** | **The escape wheel lifted out from above through the keyhole, the lower bridge in place: a long arbor, the pinion near its lower end** | Escape arbor's length |
+| **10:28–10:38** | **Side-on under the train bridge: the detent, the balance lower bridge's slab, the fourth arbor from it down past its wheel** | Lower bridge's heights |
+| 10:41–11:03 | The keyhole with the escape wheel out: the lower bridge's pocket walls, the balance's lower jewel at the bottom; the detent taken off (11:06) | Lower bridge from above |
+| 12:40–12:46 | The barrel bridge on, the keyhole: the balance's lower jewel and the escape wheel's teeth through its two lobes | |
 | 12:48–13:03 | The upper train bridge lifted and turned over: its underside, engraved HAMILTON WATCH CO, MODEL 21 | Bridge outline, its screw holes (1.2) |
 | 13:06–13:33 | Barrel bridge off: the fusee with the chain on it, the barrel; the fusee lifted out with its chain | Chain on the fusee, fusee wheel in place |
 | 13:36–13:48 | The upper train bridge with the balance lower bridge and its red jewel, then lifted | Lower bridge in place |
+| **13:44** | **The train bridge from above, barrel bridge, balance and escape wheel off: the two-lobed keyhole, the lower bridge's pockets under it, the balance's lower jewel and its two screws** | Lower bridge from above |
+| **13:48–13:50** | **The train bridge turned over in the hand, the balance lower bridge on it, nearly face-on (13:49–13:49.5): its underside, both screws, cap, fourth's setting, pin** | Lower bridge's outline |
 | **13:51–13:54** | **The train in place (centre, third, fourth wheels), nearly straight down; centre pinion end-on** | Arbor layout (1.11), pinion counts (1.8) |
 | 13:57 | The centre wheel lifted out | |
 | 14:00–14:08 | The third wheel lifted out; the keyhole opening and the lower train bridge's bar under it | Third arbor's setting |
-| 14:12–14:32 | Jewel settings close: the lower train bridge's and the balance lower bridge's (pink jewels) | Settings, oil sinks (1.10) |
+| 14:12–14:34 | Jewel settings close: the lower train bridge's and the balance lower bridge's (pink jewels); 14:30–14:34 the lower bridge's cap taken off, the slab's edge and the counterbore | Settings, oil sinks (1.10) |
 | **14:36–14:45** | **The bare pillar plate, train side, nearly straight down: centre bushing, fusee and barrel bushings, the bar's settings, the fourth's red jewel, pillars** | Plan positions (1.11, 1.2) |
 | 14:48 | The case's bowl, empty | |
 | 14:52–15:12 | Jewel settings and endstones, close | 1.10 |
@@ -64,8 +71,13 @@ searching a video again.
 | 34:52–35:12 | Dial side: the lower train bridge's bar, its screws and jewels | Lower train bridge |
 | **35:14–35:34** | **The train goes in: third wheel (35:18–35:22, alone, its pinion countable), centre wheel (35:24–35:30), fourth wheel held (35:33)** | Tooth counts (centre 90, third 80 and pinion 12, fourth 75), which wheel is which |
 | 35:36–35:42 | A post or arbor set in beside the train | |
-| 35:44–35:54 | The balance lower bridge, upper side, jewel oiled | Lower bridge |
+| **35:43–36:13** | **The balance lower bridge on the upturned train bridge, oblique from several sides (35:54, 36:01 the clearest), jewel oiled, cap screwed back** | Lower bridge's form |
 | **36:15** | **The train seated, all four pillars standing, oblique** | Pillars (1.2), relative wheel sizes |
+| 36:16–36:35 | The train bridge, with the lower bridge, lowered onto the train and screwed down | |
+| **36:41–36:49** | **Side-on under the train bridge before the escape wheel goes in: the lower bridge's slab and steps, the fourth arbor, the third pinion** | Lower bridge's heights |
+| 39:30–39:38 | Dial side, settings oiled: the lower train bridge's, and a red jewel under an endstone | Escape lower setting |
+| **42:50–42:56** | **Side-on with the escape wheel in: the wheel just under the train bridge, over the lower bridge's slab, its arbor down past the slab to the pinion and the plate** | Heights of the escape wheel and the slab |
+| 43:14–43:20 | The escape wheel in a staking tool, its arbor and pinion | |
 | 40:15, 40:30 | Dial side: lower train bridge and motion work | Motion work counts |
 
 ### `wcYqdgpyggQ` (BunnSpecial Part 2, 720p)
@@ -103,6 +115,11 @@ frame`, in `$MC_VIDEO/frames`).
 | Up–down scale sweep | **315.7° in 56 h** | `References/photo-dial-hamilton-maritime-commission.jpg` (not a video) | Ticks 8 h apart at 67.9°, 111°, 156.7°, 201.6°, 247.5°, 293.2° from 12: 45.1° each (a line through them: 5.65° an hour, 316°) | `video.py ticks 427 288 8:486,264 16:487,311 24:452,346 32:404,346 40:369,312 48:371,264` |
 | Wheel size ratios | centre ÷ third 1.36–1.39; centre ÷ fourth 1.48–1.5 | 35:30, 35:33, 36:15 | Same frame, nearly the same plane; ±3 % | Ellipse axes from `count`'s fit |
 | Third arbor's distance from the centre | 16–19.7 mm (model 13.05) | 14:45, 13:51 | Rough: affine fit, rim rms 2.4–2.8 mm; on the same fit the barrel bushing lands at r 23.2 (model 18.6), so it can't place parts | `video.py plate f_KLUwI2UUCMQ_14-45.png 1876 960 1830 1504 T:2100,1356 Fu:1524,624 Ba:2516,896 E:1570,1324` |
+| Balance lower bridge's settings | The balance's cap and the fourth's setting, in Fig. 30's order (ear and screw, the train-blocking screw's point, the fourth's setting, the cap, the arm) | 13:49, 35:54, 36:01; the parts list (42065) for which settings | Certain | By eye; the cap's jewel and two screws seen from above too (13:44) |
+| Balance lower bridge's form | A broad slab (the lower tier) with stepped lugs up to the train bridge at both ends; the escape wheel turns between the slab and the train bridge, its arbor through the slab | 10:30, 36:41, 42:56 (side); 13:44, 11:00 (above) | Certain | By eye |
+| Slab's height | 8.8–11.9 mm above the plate (42:56); its underside 8.4–9.4 over three views; model 7.9–10.9 | 42:56, 36:41, 10:30 | ±0.7 mm | Pixels along the pillars (16.8 mm) at the slab's depth |
+| Escape wheel's height | 15.6 mm above the plate; model 15.1 | 42:56 | ±0.5 mm | The same |
+| Settings' spacing on the slab | A third of the two screws' spacing; 8–11 mm on the frames' scale (the train bridge's rim, the screw heads); the model's balance and fourth arbors are 18.9 apart | 13:49, 13:49.5, 36:01 | Ratio certain (2.9–3.8 over three frames); mm uncertain | Pixels; the scale is the open question (Review-results.md, "The balance lower bridge") |
 
 ## Methods
 
@@ -164,7 +181,33 @@ wheel into the gilt bushing; the fourth last, into the bar's red jewel. Seen
 from the train side, 3 o'clock is on the image's left.
 
 **Finding a moment.** `video.py sheet ID --step 10` for the whole video, then
-`--step 2` or `3` round what matters (the catalogue above was built that way).
+`--step 2` or `3` round what matters (the catalogue above was built that way);
+`--from mm:ss --to mm:ss` makes sheets of a stretch only (at 0.5 s steps to
+follow a part being lifted or turned over).
+
+**Heights from a side view.** Where a pillar stands beside the part, side-on,
+read pixels along it: plate to train bridge is 16.8 mm. Take the part's
+heights at the pillar's depth, and check them on two or three views (the lower
+bridge's slab: 8.4–9.4 mm over three). This works.
+
+**Which part is which.** Name a feature by its place among others the model
+already has, and check the guess against a third: on the 13:44 top view the
+centre bushing, the balance's jewel and the escape lobe fitted to 42–80 px,
+and the model's third bushing then landed 57 px from a real one. A first try
+that named the two gilt bushings the other way round fitted three points just
+as well and gave a wrong answer (an escape arbor 4 mm off). Read the manual's
+parts list for what a part holds before naming its settings.
+
+**A camera from model points and circles** (`video.py fit SPEC.json`, then
+`video.py unproj SPEC.json Y u,v …`): the pose and focal length fitted to named
+points and to circles traced on the frame (the train bridge's rim, its cut
+round the barrel, the plate's rim, at their heights), from many starting
+poses. On 13:44 it did not give usable plan positions: with two named points
+and one arc it fell to a near-orthographic camera (f 9,300 px) that put the
+balance's jewel 13 mm off, and the rim's arc couldn't be told from the
+plate's, whose radii differ by 3.3 mm and heights by 20. It needs four or
+more named points spread over the frame, at known heights, before `unproj`
+can be trusted; then a second view to check.
 
 ## Gaps the videos could close
 
@@ -182,3 +225,4 @@ videos to look.
 | Mainspring length (1.9) | `KLUwI2UUCMQ` 16:28–17:04, 32:20–32:52 (spring out, stretched in turns) | Count its turns out of the barrel and their radii, or measure a stretched length against a known width (the barrel's) |
 | Oil sinks (1.10) | 14:12–15:12, 33:44–33:56 (settings close) | See which unjewelled holes have sinks |
 | Balance's swing, escapement motion (2.x) | `We1dLNXiBj0`, `s7VW3RiJ97E` | Frame-by-frame angle of the balance: amplitude (the manual's 1⅜–1½ turns), and the detent's lift |
+| Balance lower bridge: its outline and the settings' spacing (Review-results.md) | `KLUwI2UUCMQ` 13:49–13:49.5 (underside, near face-on), 35:54, 36:01; `wcYqdgpyggQ` 19:30–20:40 | A ruler in the slab's own plane: a part of known size on its underside, or the camera fit with four or more named points; then the settings' spacing and the outline in mm |
