@@ -17,6 +17,15 @@ function envTex(r){
   pl(16,7,new THREE.Color(6,5.7,5.2),[-8,12,7]);pl(6,12,new THREE.Color(2.6,2.7,3),[13,3,-7]);pl(10,3,new THREE.Color(1.6,1.5,1.4),[0,-2,-15]);
   const t=pm.fromScene(s,0.025).texture;pm.dispose();return t;
 }
+/* plainFaces(m,uv0,top): the damascening kept only on a plate's faces turned to the train side (their normal toward -y in the movement), or on none (top false):
+   on every other face (the underside, the edges, a bevel) each vertex's uv is pinned to uv0 (M.plateCrest), so those faces read plain, as the restoration video
+   shows the bridges' undersides and polished edges. An indexed geometry is made non-indexed first, so a corner's vertex isn't shared between faces */
+function plainFaces(m,uv0,top=true,root=null){let g=m.geometry;if(!g.attributes.uv)return;if(g.index){const u=g.userData;g=g.toNonIndexed();g.userData=u;m.geometry=g;}
+  const R=new THREE.Matrix4().copy(m.matrixWorld);if(root)R.premultiply(new THREE.Matrix4().copy(root.matrixWorld).invert());const N=new THREE.Matrix3().getNormalMatrix(R);
+  const p=g.attributes.position,uv=g.attributes.uv,a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
+  for(let i=0;i+2<p.count;i+=3){a.fromBufferAttribute(p,i);b.fromBufferAttribute(p,i+1).sub(a);c.fromBufferAttribute(p,i+2).sub(a);const n=b.cross(c).applyMatrix3(N).normalize();
+    if(top&&n.y<-0.9)continue;for(let k=0;k<3;k++)uv.setXY(i+k,uv0[0],uv0[1]);}
+  uv.needsUpdate=true;}
 /* Damascening (Hamilton Model 21 plates): broad parallel ridges ~2.5 mm apart with a gentle wave, as on the photographed movement.
    Returns {map, normal}; one 1024 px tile = 40 mm = 16 ridges. */
 function stripeTex(){
@@ -89,6 +98,9 @@ function mats(){
     chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3),
     wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
     invar:S(0xa7aaa6,1,0.28)};
+  /* plateCrest: a uv on one of the damascening's ridge crests (row 29.6 of the tile at its left edge, where the map is brightest and its normal flat), through the
+     map's transform: plainFaces pins a plate's faces off its train side there, so they read as plain nickel */
+  M.plateCrest=(()=>{st.updateMatrix();const v=new THREE.Vector3(0.5/1024,1-30.1/1024,1).applyMatrix3(st.matrix.clone().invert());return[v.x,v.y];})();
   M.brassDS=M.brass.clone();M.brassDS.side=THREE.DoubleSide;
   M.setPlateFinish=k=>{const c=sc(PLATE_FINISH[k]);for(const m of[M.plate,M.plateSolid])m.color.copy(c);};   /* see-through and faded copies follow on the next look() (syncMat) */
   const eng=t=>{const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;return m;};   /* inkDecal: the ink drawing inks it under its alpha */

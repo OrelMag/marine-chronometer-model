@@ -845,6 +845,10 @@ function buildMovement(M){
   mv.userData.escSet=()=>{for(const d of DETM){d.m.geometry.dispose();d.m.geometry=d.G();}const[x,z]=tsAt();R.tsScrew.position.x=x;R.tsScrew.position.z=z;{const[wx,wz]=wpAt();wPin.position.x=wx;wPin.position.z=wz;}
     roll.geometry.dispose();roll.geometry=rollG();collar.geometry.dispose();collar.geometry=collarG();palSet(pI,...palI());palSet(pD,...palD());lastPs='';};
   mv.userData.explode(0);
+  /* the damascening only on the plates' and bridges' train-side faces: their undersides, edges and bevels plain, and the balance lower bridge plain all over, as the
+     restoration video shows them (References/VIDEOS.md). Parts only: the laid-out view's schematic plates have no partName */
+  mv.updateMatrixWorld(true);mv.traverse(o=>{if(!o.isMesh||o.material!==M.plate)return;let p=o;while(p&&p!==mv&&!p.userData.partName)p=p.parent;if(!p||p===mv)return;
+    plainFaces(o,M.plateCrest,p.userData.partName!=='lowerBridge',mv);});
   return mv;
 }
 
