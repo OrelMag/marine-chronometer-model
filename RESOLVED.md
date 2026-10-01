@@ -389,7 +389,7 @@ Contents:
   collar runs from the fusee's large end to the end plate, 0.02 past the wheel
   so the plate bears on it, and the winding ratchet, the sustaining ratchet's
   web and the fusee wheel have r 2.75 bores round it. Keep: the wheels free on
-  the collar, not on the arbor. HASH
+  the collar, not on the arbor. `ec2e80d`
 
 ## Plates, bridges, screws and arbors
 
