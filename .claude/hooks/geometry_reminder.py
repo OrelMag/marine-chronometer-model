@@ -1,13 +1,22 @@
 """PostToolUse hook (Edit|Write|MultiEdit|Bash|PowerShell): after a change to the model's geometry, remind Claude to isolate the
 changed part and compare it with its reference (a real Model 21's photograph or video frame, or the manual's figure) before
 going on. Geometry files: the model's js/movement.js, core.js, box.js and shared/escapement.js, escplan.js, changed by an edit
-or by a shell command that writes them (sed -i, a redirect, Set-Content...). It also records, per session, when geometry last
+or by a shell command that writes them (writes() below). It also records, per session, when geometry last
 changed and when tools/isolate.py last ran, for the Stop gate (geometry_gate.py). Reads the hook's JSON on stdin."""
 import json, os, re, sys, tempfile, time
 GEO = r'(chronometer-working-model/js/(movement|core|box)|shared/(escapement|escplan))\.js'
 NAME = r'\b(movement|core|box|escapement|escplan)\.js\b'
-WRITE = (r'sed\s+(-\w+\s+)*-i|perl\s+-\w*i|(?<![0-9&])>>?(?!&)\s*(?!/dev/null|\$null)\S|\btee\b|Set-Content|Add-Content|Out-File|'
-         r'WriteAll|\.write\(|open\([^)]*[\'"][wa]|\bpatch\b|\bmv\b|\bcp\b|Copy-Item|Move-Item')
+# A shell command writes a geometry file only where the file is the write's target: a redirect into it; a writing command
+# (sed -i, tee, Set-Content, cp...) naming it later in the same pipeline stage; or inline code that writes a file and holds its
+# path in the call or in a bare path string (p='js/movement.js'). A name in prose (a commit message) or in a read is no write.
+REDIR = r'>{1,2}\s*["\']?[^\s"\';|&<>]*' + NAME
+VERB = r'(sed\s+(-\w+\s+)*-i|perl\s+-\w*i|\btee\b|Set-Content|Add-Content|Out-File|\bpatch\b|\bmv\b|\bcp\b|Copy-Item|Move-Item)\b.*' + NAME
+CODE = r'(open|write_text|writeFileSync|WriteAllText)\s*\(|\.write\('
+PATH = r'(\(|=)\s*r?["\'][^"\'\s]*' + NAME + r'["\']'
+def writes(cmd):
+    m = re.search(REDIR, cmd) or next((re.search(NAME, s) for s in re.split(r';|&&|\|\||\||\n', cmd) if re.search(VERB, s)), None)
+    if not m and re.search(CODE, cmd): m = re.search(PATH, cmd) and re.search(NAME, re.search(PATH, cmd).group(0))
+    return m and re.search(NAME, m.group(0)).group(0)
 def state_path(sid): return os.path.join(tempfile.gettempdir(), 'claude-geometry-%s.json' % re.sub(r'[^\w-]', '', sid or 'none'))
 def load(sid):
     try:
@@ -27,8 +36,7 @@ cmd = ti.get('command') or ''
 if cmd and re.search(r'isolate\.py', cmd):
     st = load(sid); st['iso'] = time.time(); save(sid, st)
 if f: hit = re.search(GEO + '$', f) and f.split('/')[-1]
-elif cmd and not re.match(r'\s*git\b', cmd):
-    m = re.search(NAME, cmd); hit = m and re.search(WRITE, cmd) and m.group(0)
+elif cmd: hit = writes(cmd)
 else: hit = None
 if not hit:
     sys.exit(0)
