@@ -803,8 +803,9 @@ function buildMovement(M){
   let lastN=-1,lastEps=0,lastIn=-1,lastTh=null,lastPs='',srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0;
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
   const FPR=ratchetProf(40,0.47,false),SRP=ratchetProf(120,0.27,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1).psi;
-  /* the sustaining spring's travel from loaded (running) to spent: 5 to 10 minutes of drive (Sec. IV) is 4.4 to 8.75 deg of the fusee wheel; 10 deg drawn, estimated */
-  const SMAX=10*D2R;R.WPH=WPH;R.SMAX=SMAX;
+  /* the sustaining spring's travel from loaded (running) to spent: the fusee wheel's turn in 10 minutes, the longer of the 5 to 10 minutes it drives the train (Sec. IV): 9.3 deg.
+     A wind never outlasts it: app.js runs model time at most WIND_X fast while winding */
+  const SMAX=FUSEE_PER_HOUR*TAU/6;R.WPH=WPH;R.SMAX=SMAX;
   /* when winding starts the spring turns the sustaining ratchet back until a steep face meets the sustaining pawl */
   const holdBack=a=>{const q0=[SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],tr=psi=>{const q=toWheel(q0,[0,0],psi),th=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-psi,SRP),t=R.spawl.userData.pts[PAWL_TIP],c=Math.cos(th),sn=Math.sin(th);return Math.hypot(q[0]+t[0]*c+t[1]*sn,q[1]-t[0]*sn+t[1]*c);};
     let b=a,r=tr(a);for(let i=0;i<60;i++){const nb=b-SRP.p/40,nr=tr(nb);if(nr>r+0.004)break;b=nb;r=Math.min(r,nr);}return b;};

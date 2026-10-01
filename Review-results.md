@@ -31,6 +31,11 @@ are fixed; a few parts are drawn differently from the figures and a few small
 ones are not drawn, as listed. See
 [Every part against the manual](#every-part-against-the-manual).
 
+A fifth review set the fusee assembly against the manual's exploded drawing
+(Fig. 28) and the restoration video: every part is there and works, but six
+differ in shape, and a wind at high speed outlasted the sustaining spring
+(fixed). See [The fusee assembly against Fig. 28 and the video](#the-fusee-assembly-against-fig-28-and-the-video).
+
 A fourth review checked the fusee and chain against the manual and the
 photographs: the fusee was too thin at its small end, its groove turned in
 rings, the chain's links lay flat, and the stop-bar moved with the wind count
@@ -1385,3 +1390,56 @@ on the top-view photograph) had the right parts in the wrong arrangement.
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
+
+## The fusee assembly against Fig. 28 and the video
+
+1 October 2026. The seventeen parts of Fig. 28 (the manual's exploded fusee)
+against `movement.js`, Figs. 12 and 69–73, Sec. II and IV, Ops. 16–45, and the
+restoration video `KLUwI2UUCMQ` at 13:30, 17:23 and 27:20–29:20 (readings in
+`References/VIDEOS.md`, Measurements).
+
+Every part is modelled and moves: the top plate, its screws, the winding
+ratchet, its screws, the taper pin and the end plate turn with the fusee; the
+stop-bar slides as the chain winds over its nose, and its spring follows it;
+the chain is laid along its path at every wind; the winding pawls ride the
+winding ratchet's teeth, their springs following them; the sustaining ratchet
+turns with the fusee wheel in running and stands while winding; the sustaining
+spring is drawn loaded in running and relaxing while winding. The model is
+kinematic: positions follow the time and the wind; no force is computed.
+
+Fixed: a wind lasts seconds on screen whatever the speed, so at high speed the
+sustaining spring drove the train for hours of model time (RESOLVED.md,
+Winding and maintaining work).
+
+### Open, most certain first
+
+1. **Sustaining spring** (27:26; Figs. 69, 71). A flat blued band about
+   2.1 mm wide, r 15.8–18.0, against the recess wall, round about 335° (its
+   fixed end widened inward, with two holes; a lighter working end with an
+   upright pin). The model: 0.7 mm wide, r 13.2–13.9, 250°, its free end
+   pushed by a pin on the ratchet (the manual pins both ends).
+2. **Fusee wheel** (27:26; Figs. 71, 72; Ops. 20, 26). Its recess reaches
+   r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
+   recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
+   model's web is flat.
+3. **Fusee's top** (13:30, 17:23; Fig. 28). A steel collar r ≈ 2.9 round the
+   arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
+   has no collar, a plate hole of r 1.02 and its screws at r 3.2.
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). Gilt brass, not steel; the
+   winding-pawl spring screws go in from the fusee wheel's side (slotted heads
+   there). The model has the heads on the pawl side.
+5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
+   Op. 23). A steel collar r ≈ 2.7 on the arbor below the fusee carries the
+   sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
+   arbor); the large end has a raised outer rim round the winding ratchet,
+   whose tips read r ≈ 8.5 (model 9.85; rough, oblique).
+6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). Notches in its face that
+   the taper pin lies in; the model's is a plain washer with the pin under it.
+   Figs. 28 and 69 both draw it about 0.37 of the fusee wheel across (r ≈ 7.5;
+   model 2.6), not yet seen on video.
+7. **Winding pawl springs** (Figs. 28, 69). Drawn as long arcs round a raised
+   ring about the ratchet's centre; the model's are short bent strips. Not yet
+   seen on video (hidden in the stack).
+
+Not seen on video yet: the end plate, the winding pawls and their springs, the
+stop-bar and its spring.

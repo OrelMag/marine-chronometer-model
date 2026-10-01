@@ -660,7 +660,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const startView=applyHash(true);
 
   /* ---------- loop ---------- */
-  const SNAP=/[?&]snap\b/.test(location.search),REAL_X=5;   /* REAL_X: the fastest speed at which the balance is drawn swinging as it really does */
+  const SNAP=/[?&]snap\b/.test(location.search),REAL_X=5,WIND_X=10;   /* REAL_X: the fastest speed at which the balance is drawn swinging as it really does. WIND_X: the fastest model time runs while winding, so a wind
+     (17½ half turns of the key in about 17 s, or Wind in 4 s) takes at most 3 min of model time, well inside the 5 to 10 minutes the sustaining spring drives the train (Sec. IV) */
   let last=performance.now(),loaded=false,hudS='';const hud=$('#hud');
   /* idle: when nothing that shows has changed (camera, lids, lift, wheels, balance, wind, ship motion, section), no input came in the last 0.6 s and the
      stage was drawn less than a second ago, the frame skips the render, the labels and the inset (a stopped model with a still camera draws once a second).
@@ -677,7 +678,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const dt=clamp((now-last)/1000,0,0.05);last=now;   /* the first frame's time can come before last was set: never a step back */const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
     for(const q of['lift','flip','explode','lidM','lidT','dev','fov'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
-    const run=hrs<RUN_H,dtS=dt*st.speed;tM+=dtS;
+    const run=hrs<RUN_H,dtS=dt*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
     if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
     tVis+=dt;stopMove(dt);
     const brake=H.arm>0.75;ampStep(dtS*rateK,brake,run&&!H.held);   /* the arm's pad is under the rim from about three quarters of its turn */
@@ -725,7 +726,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     placeLabels(now);}
     if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
