@@ -537,6 +537,18 @@ Contents:
   and the ear's screw at the photographed holes; solid walls between the tiers,
   not posts; the upper tier and walls clear of the escape wheel's tips
   (0.70 mm) and the rollers' sweep (0.56 mm); the screws put in from below. `01f2eea`
+- **Balance lower bridge's lower tier a thin bar, 0.39 mm from the escape
+  arbor.** The lower tier ran as a bar from the balance's setting to the
+  fourth's, its edge passing the escape arbor by 0.39 mm. A restoration video
+  of a 1941 Model 21 (`References/VIDEOS.md`) shows it a broad slab, side-on
+  unbroken from end to end, the escape wheel turning between it and the train
+  bridge and its arbor passing through it; the escape wheel is lifted out from
+  above with the bridge in place. The slab now covers the hull of the two
+  settings, the balance-end wall and the train-blocking screw's boss
+  (`tools/lower_bridge.py`, `SLAB`), bored r 3.0 round the escape arbor. Keep:
+  the lower tier a slab, not a bar; the escape arbor's hole wide enough for its
+  pinion (r 1.9) to pass; the slab's heights from the side photograph (the
+  video's are within 1 mm). `e8e76e4`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,

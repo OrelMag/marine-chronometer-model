@@ -19,8 +19,14 @@ What the sources give:
   them); a steady pin in the other; the bridge's second screw in the tapped hole, in the ear. A third, dark hole near the escape wheel lands over the
   escape wheel's teeth and is not this bridge's.
 
+- A restoration video of a 1941 Model 21 (References/VIDEOS.md, "The balance lower bridge"): on the underside the same order as Fig. 30, the balance's cap
+  in a round counterbore; side-on, the lower tier a broad slab (8.8-11.9 mm above the plate), the escape wheel turning between it and the train bridge (15.6),
+  its arbor through the slab; the escape wheel lifted out from above with the bridge in place. Its two settings read 8-11 mm apart on the frames' scale,
+  where the model's balance and fourth arbors are 18.9 apart: the outline below keeps the model's arbors and is estimated.
+
 So the bridge is built as a frame round the escape wheel, which turns at the upper tier's height:
-- the lower tier: a bar from the balance's setting to the fourth's, a lobe under the train-blocking screw, and one at the balance end out to the wall;
+- the lower tier: a slab over the hull of the balance's setting, the balance-end wall, the train-blocking screw's boss and the fourth's setting (SLAB, 2.3 mm
+  round them), bored r 3.0 for the escape arbor (EHOLE, in movement.js's holes), wide enough to lift the escape pinion out through it;
 - at the fourth end, a solid wall (the column round the train-blocking screw, curved round a recess over the fourth's setting) up to the upper tier's
   first piece, which carries the screw's head bore, the steady pin and the ear with its screw;
 - at the balance end, a wall outside the rollers' sweep up to the upper tier's second piece, the arm: round the escape wheel's 3 o'clock side at 9.4 mm
@@ -50,11 +56,15 @@ def smin(ds):
     for q in ds[1:]:h=np.clip(0.5+0.5*(q-r)/FIL,0,1);r=q*(1-h)+r*h-FIL*h*(1-h)   # smooth minimum: a fillet where two pieces meet
     return r
 WOUT=W+1.2*(W-B)/np.linalg.norm(W-B)
+def poly(P,V):   # signed distance to the convex polygon V (counterclockwise or not): negative inside
+    d=np.min([seg(P,V[i],V[(i+1)%len(V)]) for i in range(len(V))],axis=0);cr=lambda a,b:a[0]*b[...,1]-a[1]*b[...,0];sg=[cr(V[(i+1)%len(V)]-V[i],P-V[i]) for i in range(len(V))]
+    ins=np.all(np.array(sg)>=0,axis=0)|np.all(np.array(sg)<=0,axis=0);return np.where(ins,-d,d)
+SLAB=np.array([B,WOUT,TBLOCK,F]);SLAB_M=2.3;EHOLE=3.0                   # the lower tier: a slab over the hull of the settings, the balance-end wall and the train-blocking screw's boss
 SDF={'upF':lambda P:smin([cir(P,TBLOCK,2.6),cir(P,S2,3.2),seg(P,TBLOCK,S2)-2.0,cir(P,P2,1.3)]),
      'upB':lambda P:smin([cir(P,S1,3.3),np.min([seg(P,a,b) for a,b in zip(ARM[:-1],ARM[1:])],axis=0)-ARM_W/2,seg(P,W,WOUT)-2.0]),
      'wallF':lambda P:np.maximum(smin([cir(P,TBLOCK,2.6),seg(P,TBLOCK,F)-2.3]),-cir(P,F,REC)),
      'wallB':lambda P:seg(P,W,WOUT)-2.0,
-     'lo':lambda P:smin([seg(P,B,F)-2.3,seg(P,F,TBLOCK)-2.3,seg(P,B,WOUT)-2.2])}
+     'lo':lambda P:smin([seg(P,B,F)-2.3,seg(P,F,TBLOCK)-2.3,seg(P,B,WOUT)-2.2,poly(P,SLAB)-SLAB_M])}
 def outline(f,step=0.02):
     import contourpy
     xs=np.arange(-12,30,step);zs=np.arange(0,36,step);X,Z=np.meshgrid(xs,zs);D=f(np.stack([X,Z],-1))
@@ -71,7 +81,7 @@ def main():
     print('clearances, mm (upper tier: TB_U .. TB_U+2; walls: down to the lower tier):')
     for k in('upF','upB','wallF','wallB'):
         print(f'  {k:6s} escape wheel tips {near(k,E)-ES:5.2f}   rollers {near(k,B)-ROLL:6.2f}   pillar {near(k,PIL)-PIL_R:5.2f}   detent block {bd(k):5.2f}')
-    print(f'  lower tier: escape arbor (r 0.55) {near("lo",E)-0.55:5.2f}')
+    print(f'  lower tier: the escape arbor hole r {EHOLE} (the pinion, r 1.9, lifts out through it), metal round it {-SDF["lo"](np.atleast_2d(E))[0]-EHOLE:5.2f}')
     print('holes: metal round them, mm')
     hc=HEAD*0.5*1.12+0.01
     for k,c,r in(('upB',S1,hc),('upF',S2,hc),('upB',P1,0.41),('upF',P2,0.41),('upF',TBLOCK,0.95),('wallF',TBLOCK,0.95),('lo',TBLOCK,0.86),('lo',B,1.2),('lo',F,1.2)):

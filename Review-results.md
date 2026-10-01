@@ -1002,39 +1002,72 @@ settled, change the model, record the fix in `RESOLVED.md` and strike it here.
 Rebuilt on 1 October 2026 as a frame round the escape wheel
 (`tools/lower_bridge.py`, `verification/lower-bridge-comparison.png`). Three
 points come from the top-view photograph (to about 1 mm); the rest is laid
-out round what it must clear.
+out round what it must clear. Then looked for in a restoration video
+(`References/VIDEOS.md`, `KLUwI2UUCMQ`: the bridge on the upturned train bridge
+at 13:49 and 35:43–36:13, from above through the keyhole at 10:00–11:00 and
+13:44, side-on at 10:30, 36:41 and 42:56). The lower tier is now a broad slab,
+as the video shows it, bored for the escape arbor; the rest stands.
 
-1. **Its outline between the photographed points.** The upper tier is in two
-   pieces (the fourth end's, from the train-blocking screw to the ear; the
-   arm, from the balance end round the escape wheel's 3 o'clock side to the
-   lug at (20.5, 20)), with solid walls at both ends and a bar between the
-   settings below. Figs. 29, 30 and 110 give the order along it, not the
-   shape; their holes land 4–10 mm off when fitted. A video should show: the
-   bridge off the movement, from above and below; or the train bridge turned
-   over with the bridge on it, as Fig. 30 (Op. 12).
-2. **Whether the upper tier is one piece.** Fig. 110 seems to draw one slab
-   from the lug to the column; the model's can't run past the escape wheel on
-   the balance side (the detent's support block is there) and has a gap. A
-   video should show: the upper tier against the train bridge's underside.
-3. **The arm's route.** The model runs it from the balance end, outside the
-   rollers (0.56 mm), round the escape wheel's 3 o'clock side (0.70 mm off its
-   tips). Fig. 30 has the arm leave beside the balance's endstone cap. A video
-   should show: where the arm meets the rest of the bridge, and which side of
-   the escape wheel it passes.
-4. **The heights.** The lower tier is the 3 mm plate at 7.9–10.9 mm above the
-   pillar plate on the side photograph; the upper tier is taken as 2 mm. Fig.
-   110's section draws the wall round the train-blocking screw about 4.3 mm
-   tall, the model's 5.9 mm. A video should show: the bridge side-on, beside
-   the train bridge, or the screw's travel.
-5. **The ear's screw.** At (11.24, 29.51), the top-view photograph's tapped
-   hole with a screw's end in it, in line with the fourth arbor and the
-   train-blocking screw, as Fig. 30 orders them. A video should show: the
-   train bridge's underside, which screw comes out there (Op. 50).
-6. **The steady pins.** One at the photograph's second countersunk hole
-   (3.2, 28.56); the other, beside the lug at (17.81, 18.27), is placed, not
-   seen. The photograph's countersunk holes look empty: they may be oil or
-   access holes, not pins. A video should show: the train bridge's underside
-   with the bridge off (pin holes) or on (pin ends).
+1. **Its outline between the photographed points.** Compared, not settled.
+   The real bridge, seen face-on from below (13:49.5) and drawn against the
+   model (local overlay, placed by the centre bushing and the barrel cut), is
+   one shield-shaped plate about 40 mm long, wider than the model's whole
+   bridge. It has stepped lugs at the two ends of its long axis and the
+   balance's cap in a round counterbore near its middle. The escape arbor's
+   passage is an oval through-opening about 15 × 9 mm on one side of the cap,
+   and the fourth's setting and the train-blocking screw's point are on the
+   other. The model's bridge (two lobes with both screws at the fourth end, a
+   frame round the escape wheel, a slab between them) has the right parts in
+   the wrong arrangement. Its outline can't be redrawn until 14 is settled:
+   the real outline is laid out round arbors at other distances.
+2. **Whether the upper tier is one piece.** Settled: two. Side-on (42:56)
+   the escape wheel shows between the slab and the train bridge, with stepped
+   lugs rising to the train bridge at both ends and nothing against the train
+   bridge between them.
+3. **The arm's route.** Settled: there is no separate thin arm. The "arm" of
+   Fig. 30 is the long body of the bridge, running from the cap to the lug at
+   that end, past the escape arbor's passage on its outer side.
+4. **The heights.** Settled to about 1 mm. By the pillars (16.8 mm) on three
+   side views the slab stands at 8.8–11.9 mm above the plate (its underside
+   8.4–9.4), the model's at 7.9–10.9; the escape wheel at 15.6, the model's at
+   15.1. Kept.
+5. **The ear's screw.** Settled against the model. The real bridge's two
+   screws are at the ends of its long axis, about 31–36 mm apart (the model's
+   13.3). The tapped hole the top-view photograph shows at (11.24, 29.51) lies
+   uncovered on the train bridge's underside, several millimetres clear of the
+   real bridge, so it is not this bridge's screw (placement good to about
+   3 mm). What screws into it is open.
+6. **The steady pins.** Open. None show on the bridge's faces; pins between
+   the bridge and the train bridge would be hidden in the joint.
+14. **The settings' spacing** (new). The face-on underside gives the
+   bridge's own proportions, without naming any train-bridge hole. Cap to
+   escape passage, cap to fourth's setting and escape passage to fourth's
+   setting are 8.6 : 10.8 : 11.6, with the angle at the cap about 73°. The
+   model's balance, escape and fourth arbors are 9.4 : 18.9 : 10.6, nearly in
+   a line. Two independent rulers give the same millimetres. The train
+   bridge's rim and barrel cut give 35–39 px/mm, and the escapement's 9.4 mm
+   from balance to escape gives 37.8. The balance-to-fourth distance is
+   10.8–11.8 mm against the model's 18.9. Two other readings agree with a
+   train laid out differently from the model's:
+   - the third bushing lands 16.8 mm from the centre on this frame and
+     16–19.7 on the bare plate (finding 12; model 13.05);
+   - the counted wheels' size ratios (centre ÷ fourth 1.48–1.5, VIDEOS.md)
+     with the third at 16.8 make the escape-to-fourth distance about 11.2 mm,
+     as the bridge shows (model 10.6).
+
+   The model's balance (triangulated from two photographs) and fourth arbor
+   (under the seconds hand) are its best-founded positions, so a balance only
+   11 mm from the fourth is hard to reconcile with them. Something in that
+   chain is wrong, and it is bigger than this bridge: settling it would move
+   arbors (`L`), the modules and the escapement's direction. A video should
+   show: a face-on underside with a part of known size beside it, or the
+   seconds hand and balance in one top view.
+15. **The keyhole** (new). From below (13:49.5) the escape lobe is the oval
+   passage above, through both bridges. The balance lobe is closed underneath
+   by the lower bridge, with the cap at its bottom. The lobes' plan sizes wait
+   on 14. A top-view reading (13:44) of two 5 mm lobes is withdrawn: its
+   four-point fit had the handedness of a dial-side view, which a train-side
+   frame can't have (VIDEOS.md, "Which part is which").
 
 ### The train-blocking screw (42247)
 
