@@ -1160,6 +1160,20 @@ as the video shows it, bored for the escape arbor; the rest stands.
       the detent, the wheel's turning direction and the essay's figures.
       Not settled: the top view (10:47) still has to be anchored on matched
       holes to place that screw.
+16. **The escapement plan's orientation** (started 1 October 2026, branch
+    `claude/escapement-plan`). Item 12 found the detent's support block isn't
+    where the plan puts it. Tried so far:
+    - the detent held up to the camera (11:04–11:30): too overexposed and
+      oblique to read which side of the blade the locking jewel and horn lie;
+    - the dial side face-on (40:08): a search matching the model's dial-side
+      features (centre, fusee pinion, studs, pillar screws, the bar's settings
+      and screws, the escape jewel) to the frame's finds no consistent fit
+      (6 of 14 at best, pairings that make no sense). The ring's inner edge
+      fits a circle centred near the bar's middle, not on the tall arbor the
+      motion work goes on. The features need naming first, by following the
+      motion work going on (40:14–40:44) and the bar going on (34:52–35:12).
+    A video should show: the detent from above or below in place, beside the
+    escape wheel (42:40–42:49, the escape wheel going in through the keyhole).
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.

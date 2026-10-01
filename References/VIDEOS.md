@@ -77,6 +77,8 @@ searching a video again.
 | **36:15** | **The train seated, all four pillars standing, oblique** | Pillars (1.2), relative wheel sizes |
 | 36:16–36:35 | The train bridge, with the lower bridge, lowered onto the train and screwed down | |
 | **36:41–36:49** | **Side-on under the train bridge before the escape wheel goes in: the lower bridge's slab and steps, the fourth arbor, the third pinion** | Lower bridge's heights |
+| 11:04–11:30 | The detent with its support block held up to the camera, against a bright background (overexposed; its handedness can't be read reliably) | Detent's shape |
+| **40:02–40:44** | **The plate's dial side, dial off, nearly face-on: the lower train bridge's bar with its gilt setting and red jewel, the fusee arbor's pinion, two studs, three pillar screws, a capped jewel; the motion work and the wind indicator wheel going on (40:14–40:44)** | Dial-side plan; the escape arbor's lower jewel |
 | 39:30–39:38 | Dial side, settings oiled: the lower train bridge's, and a red jewel under an endstone | Escape lower setting |
 | **42:50–42:56** | **Side-on with the escape wheel in: the wheel just under the train bridge, over the lower bridge's slab, its arbor down past the slab to the pinion and the plate** | Heights of the escape wheel and the slab |
 | 43:14–43:20 | The escape wheel in a staking tool, its arbor and pinion | |
