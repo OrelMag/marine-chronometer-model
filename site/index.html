@@ -1628,6 +1628,17 @@ function stepGeo(out,c,r,tA,tB,holes,cv){
   const hole=(L,y0,y1)=>{const ccw=THREE.ShapeUtils.area(L.map(v=>new THREE.Vector2(v[0],v[1])))>0;loop(L,(p,q)=>wall(p,q,y0,y1,!ccw));};   /* faces into the hole */
   for(const h of hA)hole(circ(...h),0,tA);for(const h of hB)if(h[3]){hole(circ(h[0],h[1],h[3]),0,h[4]);hole(circ(h[0],h[1],h[2]),h[4],tB);}else hole(circ(...h),0,tB);
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g.computeVertexNormals();return g;}
+/* a plate th thick with counterbored holes, closed and facing out (as stepGeo builds it): top at y 0, depth toward +y; holes [x,z,r], or [x,z,r,rc,dc] counterbored rc to dc */
+function cbGeo(out,th,holes){const P=[],U=[],V=v=>new THREE.Vector2(v[0],v[1]),tri=(...f)=>{for(const p of f){P.push(...p);U.push(p[0],-p[2]);}};
+  const circ=(x,z,r)=>{const k=Math.max(24,Math.ceil(TAU*r/0.1)),q=[];for(let i=0;i<k;i++){const t=i/k*TAU;q.push([x+r*Math.cos(t),z+r*Math.sin(t)]);}return q;};
+  const face=(poly,hs,y,up)=>{const T=THREE.ShapeUtils.triangulateShape(poly.map(V),hs.map(h=>h.map(V))),all=[...poly,...hs.flat()];   /* up: faces -y (the top) */
+    for(const[i,j,k]of T){const[a,b,e]=[all[i],all[j],all[k]],cr=(b[0]-a[0])*(e[1]-a[1])-(b[1]-a[1])*(e[0]-a[0]),f=(cr>0)===up?[a,b,e]:[a,e,b];tri(...f.map(p=>[p[0],y,p[1]]));}};
+  const wall=(L,y0,y1,outward)=>{const ccw=THREE.ShapeUtils.area(L.map(V))>0;for(let k=0;k<L.length;k++){const[a,b]=(ccw===outward)?[L[k],L[(k+1)%L.length]]:[L[(k+1)%L.length],L[k]];
+    tri([a[0],y0,a[1]],[a[0],y1,a[1]],[b[0],y1,b[1]]);tri([a[0],y0,a[1]],[b[0],y1,b[1]],[b[0],y0,b[1]]);}};   /* outward: facing out of the loop, else into it */
+  const I=holes.map(h=>circ(h[0],h[1],h[2])),C=holes.map(h=>h[3]?circ(h[0],h[1],h[3]):null);
+  face(out,holes.map((h,i)=>C[i]||I[i]),0,true);face(out,I,th,false);wall(out,0,th,true);
+  holes.forEach((h,i)=>{if(C[i]){face(C[i],[I[i]],h[4],true);wall(C[i],0,h[4],false);wall(I[i],h[4],th,false);}else wall(I[i],0,th,false);});
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g.computeVertexNormals();return g;}
 /* a hole that crosses the outline or overlaps another hole silently breaks the triangulation: report it */
 function checkHoles(tag,holes,inside){holes.forEach(([x,z,r],i)=>{if(inside(x,z)<r+0.05)console.warn(tag+': hole at '+x.toFixed(2)+','+z.toFixed(2)+' r'+r+' crosses the outline');
   holes.forEach(([x2,z2,r2],j)=>{if(j>i&&Math.hypot(x-x2,z-z2)<r+r2+0.05)console.warn(tag+': holes at '+x.toFixed(2)+','+z.toFixed(2)+' and '+x2.toFixed(2)+','+z2.toFixed(2)+' overlap');});});}
@@ -2091,7 +2102,8 @@ function buildMovement(M){
   /* the balance upper setting and jewel are pressed into the cock under the endstone cap (manual Figs. 19, 36, 85), and the cap lies on the cock with metal all
      round it (top-view photograph). The traced edge passes 0.7 mm from the staff and left the cap and its outer screw over nothing: the tracing, taken at plate
      height and shifted for parallax, misses the nose. So the nose, from the straight edge's corner to the concave edge, is the hull round the cap, 0.9 mm clear of it */
-  const EPo=[];for(let k=0;k<=16;k++){const a=-Math.PI/2+Math.PI*k/16;EPo.push([1.65+2.3*Math.cos(a),2.3*Math.sin(a)]);}EPo.push([-3.35,2.3],[-3.65,2.0],[-3.65,-2.0],[-3.35,-2.3]);   /* cap: round at the nose's end, square at the foot's */
+  /* cap: 7.2 x 4.6 mm, its corners rounded r 1.2 at the nose's end and r 0.4 at the foot's (C Spinner's video, 5:51 and 42:03; the top-view photograph) */
+  const EPo=[];for(const[cx,cz,r,a0]of[[2.4,1.1,1.2,0],[-3.2,1.9,0.4,90],[-3.2,-1.9,0.4,180],[2.4,-1.1,1.2,270]])for(let k=0;k<=8;k++){const a=(a0+90*k/8)*D2R;EPo.push([cx+r*Math.cos(a),cz+r*Math.sin(a)]);}
   /* one solid block, as it comes off the movement (C Spinner's restoration video, 41:58 and 23:45; the side at 2:36; References/VIDEOS.md): its outer wall follows
      the rim the full 14.2 mm down to the train bridge, its straight edge stands against the barrel bridge's horn, and only the nose is a 2.6 mm arm over the balance.
      The body is all of the outline more than CK_RP from the staff, the circle the barrel bridge is cut on round the balance; its face on that arc is the step under
@@ -2112,11 +2124,13 @@ function buildMovement(M){
   /* one balance cock screw (parts list 42192), at its position on the top-view photograph (p3map scr_cockfoot), its head down in the counterbore */
   hn(screw(ck,...Q,CK_T+CK_CB,2.8,1.5,TB_T-CK_T-CK_CB+2.5,0.8),'42192');   /* through the cock into the train bridge */
   hn(screw(ck,...SPS,CK_T,0.8,0.45,2.6+0.45),'27760.st');   /* through the cock into the stud */   /* hairspring stud screw (27760), down through the cock to the stud (Figs. 19, 84) */
-  /* endstone cap (42160) over the staff, as photographed from above: a steel plate 7.6 x 4.6 mm, the endstone in a gilt setting (42155) at its centre, set 0.1 below
-     the plate's face and 0.15 over the pivot's end, and two screws (20762) into the cock */
+  /* endstone cap (42160) over the staff, as C Spinner's video shows it on the cock (5:51, 42:03, 42:08) and off it (41:58): a steel plate 0.7 mm thick, symmetric about the
+     staff, its screws' (20762) heads sunk flush in counterbores 0.4 deep at either end; at its centre the setting (42155), pressed in flush with both faces, has a polished
+     conical oil sink 3.1 mm across in its top down to the endstone, set from below flush with the cap's underside, r 0.95, 0.025 over the pivot's end */
   const ep=new THREE.Group();ep.position.set(L.B[0],CK_T,L.B[1]);ep.rotation.y=EPa;ck.add(ep);
-  hn(mesh(ep,polyGeo(EPo,0.7,[[0,0,1.15],...EP.map(q=>hC(...q,0.7))]),M.steel,0,-0.7,0),'42160');hn(mesh(ep,ring(1.15,0.7,0.6),M.gilt,0,-0.3,0),'42155');hn(mesh(ep,cylY(0.7,0.5,24),M.ruby,0,-0.25,0),'J.bue');
-  for(const q of EP)hn(screw(ep,...q,-0.7,0.7,0.4,0.7+1.8),'20762.ep');
+  hn(mesh(ep,cbGeo(EPo,0.7,[[0,0,1.6],...EP.map(q=>[...hC(...q,0.7).slice(0,3),0.75,0.4])]),M.steel,0,-0.7,0),'42160');
+  hn(mesh(ep,new THREE.LatheGeometry([V2(0.95,0),V2(0.95,-0.3),V2(0.75,-0.3),V2(1.55,-0.7),V2(1.6,-0.7),V2(1.6,0),V2(0.95,0)],40),M.steel),'42155');hn(mesh(ep,cylY(0.95,0.3,32),M.ruby,0,-0.15,0),'J.bue');
+  for(const q of EP)hn(screw(ep,...q,-0.3,0.7,0.4,0.3+1.8),'20762.ep');
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, over the third wheel) ---------- */
   const fsP=part('fs',-50);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
   /* the fusee's profile from the side photograph (References/photo-side-view.jpg, scaled by the fusee wheel's 40.87 mm tips, 16.98 px/mm): the groove's floor on its eight
