@@ -38,6 +38,8 @@ searching a video again.
 
 | Time | What is on screen | Useful for |
 |---|---|---|
+| 2:15–2:45 | The movement out of its case, oblique and from the side: the balance cock stands at the rim as a tall polished block (2:36) | The cock's height and its solid outer wall |
+| **4:56–6:47** | **From above (12 o'clock toward the camera): the cock in place, its screw out (5:56), its nose and endstone cap close (5:50), then lifted off (6:44); 6:29 and 6:47 are the same view with the cock on and off** | The cock's outline, the barrel bridge's edge beside it, the cock's screw and steady-pin holes in the train bridge |
 | **10:44–10:48** | **From above, the detent's support block's screw taken out at the train bridge's edge below the keyhole; the keyhole's two lobes and the lower bridge's pocket in them** | Detent block's place |
 | 10:51–11:06 | The detent with its support block drawn out from under the train bridge, then held up (11:05–11:11): a long rectangular block with the screw hole at one end | Detent block's shape |
 | 9:56–10:26 | The escape upper bridge taken off (10:00: on, over the keyhole's escape lobe), its jewel and endstone close (10:16–10:26) | Escape arbor's place |
@@ -81,6 +83,8 @@ searching a video again.
 | **42:50–42:56** | **Side-on with the escape wheel in: the wheel just under the train bridge, over the lower bridge's slab, its arbor down past the slab to the pinion and the plate** | Heights of the escape wheel and the slab |
 | 43:14–43:20 | The escape wheel in a staking tool, its arbor and pinion | |
 | 40:15, 40:30 | Dial side: lower train bridge and motion work | Motion work counts |
+| **41:58–42:08** | **The cock alone on the mat, top up (41:58), then its endstone cap screwed on (42:03, 42:08)** | The cock's solid form, its counterbored screw hole, its setting |
+| 43:48–44:15 | The cock going back on over the balance | |
 
 ### `wcYqdgpyggQ` (BunnSpecial Part 2, 720p)
 
@@ -125,6 +129,12 @@ frame`, in `$MC_VIDEO/frames`).
 | Balance lower bridge's size | One shield-shaped plate about 40 mm long; its two screws 31–36 mm apart at the ends of its long axis (model 13.3); escape passage about 15 × 9 mm | 13:49.5 | ±10 % | The same rulers |
 | Third bushing from the centre | **16.0 mm**, at 22.7° from the 6 o'clock line (model 13.05 at 21.9°); 15.7 on the bare plate | 13:49.5; 14:45 | ±0.6 mm | A homography on five train-bridge holes matched to model holes (0.2–0.6 mm); the plate rectified by its rim and centre bushing (Methods) |
 | Train pillar's profile | Straight shaft r 2.7; foot collar r 2.9 × 3.3 mm, top collar r 3.3 × 3.4 mm (model: foot r 3.4 × 1.3, neck r 2.3, top r 2.9) | 42:56 | ±0.15 mm | Pixels across the pillar, scaled by its height (16.8 mm) |
+| Balance cock's form | One solid block: its outer wall follows the rim the full height (14.2 mm) to the train bridge; only the nose is an arm, about as thick as a plate, over the balance; one screw, its head in a counterbore | 41:58, 23:45, 2:36, 6:29 | Sure of the form; the arm's thickness and where the body steps down to it are estimated | Frames by eye, against the model rendered at matching views (`views.py close --look`) |
+| Barrel bridge's horn on the cock's side | Ends 2–9° round the rim from 3 o'clock, at the cock's straight edge (5°): the cock stands on the train bridge in the bridge's opening | 23:30 (flat), 6:47 (cock off) | About 2 mm: the flat bridge mapped through the fusee and barrel bushings and the plate's centre; at 6:47 the bridge's edge meets the rim where the cock's straight edge does | `video.py frame`; the map by hand |
+| Barrel bridge's other horn | Ends about 112–114° round, with a cut toward the centre; the top-view photograph shows a screw on the bridge there, about (−10.8, 25.1) | 23:30; `References/photo-top-view.jpg` | Rough, ±3 mm; not yet in the model (see the gaps below) | As above, and `topview.py`'s five-screw map |
+| The cock's steady pins | Two plain holes in the train bridge under the cock, about (36, 4) and (27, 20) | 6:47 | About 2 mm | By eye, against the cock screw's tapped hole |
+| The far horn's end and screws | Cut from (−5.45, 21.46) on the balance opening to the rim at about 100°; a screw proud of the horn at (−11.07, 26.46), a train-bridge screw sunk in a hole through it at pillar 0 (−17.2, 23.0) | `References/photo-top-view.jpg`; 23:30; `wcYqdgpyggQ` 12:05 (bridge off: the pillar-0 screw remains) | About 0.6 mm in the photograph (five-screw map at the bridge's height); about 2 mm on the flat bridge | `topview.py`'s five-screw map, by hand |
+| Pillars on the bare plate | Bases 32.7, 42.0, 37.9 and 32.3 mm from the centre (model 28.0–32.5), pairwise 40–78 mm (model 34–63): about 1.2 times the model's spacing | `wcYqdgpyggQ` 22:00 | Rough: picks by eye at 720p; the rim fits an ellipse to ±1.6 mm | Rim ellipse (`cv2.fitEllipse`), rectified to 43.8 mm |
 
 ## Methods
 
@@ -258,6 +268,7 @@ videos to look.
 | Motion work counts (1.8) | `KLUwI2UUCMQ` 23:30 (minute and hour wheels flat, half blurred); 40:15–40:30; `wcYqdgpyggQ` 5:10 | Count the minute wheel, its pinion, the hour wheel and the cannon pinion; the ratio must stay 12 |
 | Third arbor's place and the wheels' sizes (1.11) | 13:51, 14:36–14:45, 34:30 at 4K | A proper camera fit (Methods), then plan positions of the bushings and settings; then `solve.py`, `fine.py`, `bom.py` |
 | Train-bridge screw with no pillar (1.2) | `wcYqdgpyggQ` 19:30–20:40 (bridge off), 21:50–23:20 (plate with pillars); `KLUwI2UUCMQ` 12:48–13:03 (bridge underside), 36:15 | Map the pillars and the bridge's holes onto the plan with the same camera fit |
+| The pillars' and screws' places (1.2, 1.11) | `wcYqdgpyggQ` 22:00 (bare plate, four pillars); `KLUwI2UUCMQ` 36:15, 14:45 | The bare plate rectified by its rim (an ellipse fitted to 13 rim points, scaled to the plate's 87.57 mm; rim radii within ±1.6 mm) puts the four pillars' bases 32–42 mm from the centre (model 28–32.5) and 40–78 mm apart (model 34–63): about 1.2 times the model's spacing, as the barrel bushing at 14:45 was (23.2 against 18.6). The bridges' rims, 34–35 mm read against their screws on the pillars, are 39–40.5 against the plate (the side photograph's silhouette 39–39.5), so the rims stand and the layout inside them is what is small. The pillar picks are by eye at 720p (±1 mm or so); a 4K camera fit of 36:15 with the train's arbors would settle how much of the layout to move, and whether the fusee wheel (40.87 mm on the side photograph) agrees |
 | Mainspring length (1.9) | `KLUwI2UUCMQ` 16:28–17:04, 32:20–32:52 (spring out, stretched in turns) | Count its turns out of the barrel and their radii, or measure a stretched length against a known width (the barrel's) |
 | Oil sinks (1.10) | 14:12–15:12, 33:44–33:56 (settings close) | See which unjewelled holes have sinks |
 | Balance's swing, escapement motion (2.x) | `We1dLNXiBj0`, `s7VW3RiJ97E` | Frame-by-frame angle of the balance: amplitude (the manual's 1⅜–1½ turns), and the detent's lift |

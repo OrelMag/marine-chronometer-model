@@ -69,14 +69,14 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | Idx | No. | Name | Manual | Model | Card | Function | Fit and drive (measured) | |
 |---|---|---|---|---|---|---|---|---|
 | 108-1 | 42066 | Cock - Balance, complete with pins | 1 | 1 | cock | Carries the balance upper setting and endstone cap and the hairspring stud; stands on the train bridge (Sec. II). | on 42062: 0 mm | ✓ |
-| 108-2 | 42192 | Screw - Balance cock | 1 | 1 | cock | Holds the cock (Op. 74). | in 42066 (clear): 14.263 mm, least gap 0.115<br>in 42062 (tap): 2.49 mm, least gap 0.1105 | ✓ |
+| 108-2 | 42192 | Screw - Balance cock | 1 | 1 | cock | Holds the cock (Op. 74). | in 42066 (clear): 14.234 mm, least gap 0.104<br>in 42062 (tap): 2.494 mm, least gap 0.1002 | ✓ |
 | 108-3 | 42160 | Cap - Balance upper endstone, with jewel | 1 | 1 | cock | Holds the upper endstone over the olive-hole jewel. | on 42066: 0 mm | ✓ |
-| 108-4 | 20762 | Screw - Balance upper endstone cap | 2 | 2 | cock | Hold the upper endstone cap. | in 42160 (clear): 0.682 mm, least gap 0.0524<br>in 42066 (tap): 1.802 mm, least gap 0.0585 | ✓ |
-| 108-5 | 42155 | Setting - Balance upper endstone, with jewel | 1 | 1 | cock | Holds the balance upper endstone (cap jewel) in the cap. | in 42160 (press): 0.601 mm, least gap -0.001 | ✓ |
+| 108-4 | 20762 | Screw - Balance upper endstone cap | 2 | 2 | cock | Hold the upper endstone cap. | in 42160 (clear): 0.728 mm, least gap 0.05<br>in 42066 (tap): 1.794 mm, least gap 0.0219 | ✓ |
+| 108-5 | 42155 | Setting - Balance upper endstone, with jewel | 1 | 1 | cock | Holds the balance upper endstone (cap jewel) in the cap. | in 42160 (press): 0.701 mm, least gap 0.004 | ✓ |
 |  |  | Jewel - Balance upper endstone (cap jewel) | 1 | 1 | cock | Stops the balance staff's upper pivot end; endshake 0.001-0.003 in (Op. 74). |  | ✓ |
-| 108-6 | 42162 | Setting - Balance (upper), complete with jewel | 1 | 1 | cock | Olive-hole jewel for the balance staff's upper pivot, pressed into the cock. | in 42066 (press): 0.098 mm, least gap 0.0174 | ✓ |
+| 108-6 | 42162 | Setting - Balance (upper), complete with jewel | 1 | 1 | cock | Olive-hole jewel for the balance staff's upper pivot, pressed into the cock. | in 42066 (press): 2.608 mm, least gap 0.0002 | ✓ |
 |  |  | Jewel - Balance upper hole (olive-hole) | 1 | 1 | cock | The balance staff's upper pivot runs in it (Sec. II, Jeweling). |  | ✓ |
-| 108-8 | 27760 | Screw - Hairspring stud | 1 | 1 | cock | Holds the stud under the cock, from the cock's top (Figs. 19, 84). | in 42066 (clear): 2.592 mm, least gap 0.094<br>in 42189 (tap): 0.44 mm, least gap 0.0222 | ✓ |
+| 108-8 | 27760 | Screw - Hairspring stud | 1 | 1 | cock | Holds the stud under the cock, from the cock's top (Figs. 19, 84). | in 42066 (clear): 2.592 mm, least gap 0.0528<br>in 42189 (tap): 0.44 mm, least gap 0.0222 | ✓ |
 | 108-9 | 42188 | Hairspring | 1 | 1 | spr | Cylindrical Elinvar spring: its restoring force times the balance (Sec. II). |  | ✓ |
 | 108-10 | 42189 | Stud - Hairspring, complete with pins | 1 | 1 | spr | Holds the hairspring's upper end under the cock, by its clamp and wedge pin (Sec. II, Fig. 5). | on 42066: 0 mm | ✓ |
 | 108-11 | 42147 | Pin - Hairspring stud clamp wedge | 1 | 1 | spr | Wedges the stud clamp on the spring's end without bending it (Fig. 6). |  | ✓ |
@@ -99,8 +99,8 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-28 | 42248 | Cap - Balance wheel | 1 | 1 | bal | Over the arm on the hub's boss, under the hold-down screws (Fig. 4). | on 42178: 0 mm | ✓ |
 | 108-29 | 42249 | Screw - Balance wheel hold-down | 2 | 2 | bal | Through cap and arm into the hub's flange (Fig. 4). | in 42248 (clear): 0.338 mm, least gap 0.0346<br>in 42186 (tap): 0.483 mm, least gap 0.0213 | ✓ |
 | 108-30 | 42186 | Hub - Balance wheel, complete with staff | 1 | 1 | bal | The staff with its pivots; its hub carries the arm clear of the staff (Fig. 4). | in J.bu (run): 0.487 mm, least gap 0.0217<br>in J.bl (run): 0.487 mm, least gap 0.0217<br>endshake 0.050 mm (J.ble / J.bue) | ✓ |
-| 108-31 | 42299 | Arm - Balance wheel locking (NAVOBSY 4618) | 1 | 1 | lockArm | Turned under the rim to hold the balance in transit (Sec. III, Fig. 9). | round 37204 (free): 0.44 mm, least gap 0.0591<br>also: bom.py fn: locking arm | ✓ |
-| 108-32 | 37204 | Screw - Flat head fillister (NAVOBSY 4618) | 1 | 1 | lockArm | The locking arm turns on it and is clamped by it. | in 42299 (clear): 0.44 mm, least gap 0.0591<br>in 42062 (tap): 2.494 mm, least gap 0.0862 | ✓ |
+| 108-31 | 42299 | Arm - Balance wheel locking (NAVOBSY 4618) | 1 | 1 | lockArm | Turned under the rim to hold the balance in transit (Sec. III, Fig. 9). | round 37204 (free): 0.44 mm, least gap 0.0592<br>also: bom.py fn: locking arm | ✓ |
+| 108-32 | 37204 | Screw - Flat head fillister (NAVOBSY 4618) | 1 | 1 | lockArm | The locking arm turns on it and is clamped by it. | in 42299 (clear): 0.44 mm, least gap 0.0592<br>in 42062 (tap): 2.494 mm, least gap 0.0862 | ✓ |
 | 108-33 | 42251 | Washer (NAVOBSY 55-3) | 1 | 1 | lockArm | Under the locking arm's screw. | on 42299: 0 mm | ✓ |
 | 108-34 | 42300 | Pin - Balance wheel locking arm stop | 1 | 1 | lockArm | Stops the arm when unlocked, clear of the balance (Fig. 9). | in 42062 (press): 0.047 mm, least gap 0.023 | ✓ |
 | 108-35 | 42029 | Plate - Setup cover | 1 | 1 | ratchet | Covers the setup ratchet and click; holds the click's pivot screw (Sec. II). |  | ✓ |
@@ -159,7 +159,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 110-4 | 42159 | Cap - Escape upper endstone, complete with jewel | 1 | 1 | escBridge | Holds the escape arbor's upper endstone; milled or changed to set the endshake (Op. 69). | on 42064: 0 mm | ✓ |
 |  |  | Jewel - Escape upper endstone (cap jewel) | 1 | 1 | escBridge | Stops the escape arbor's upper pivot end. |  | ✓ |
 | 110-1 | 20762 | Screw - Escape upper endstone cap | 2 | 2 | escBridge | Hold the escape upper endstone cap. | in 42159.eu (clear): 0.283 mm, least gap 0.0419<br>in 42064 (tap): 0.801 mm, least gap 0.0239 | ✓ |
-| 110-6 | 42056 | Screw - Detent support block | 1 | 1 | det | Holds the support block under the train bridge, with two positioning pins (Sec. II). | in 42062 (clear): 3.057 mm, least gap 0.1021<br>in 42086 (tap): 2.416 mm, least gap 0.0173 | ✓ |
+| 110-6 | 42056 | Screw - Detent support block | 1 | 1 | det | Holds the support block under the train bridge, with two positioning pins (Sec. II); put in from below (Op. 81). | in 42086 (clear): 3.162 mm, least gap 0.0622<br>in 42062 (tap): 2.421 mm, least gap 0.0673 | ✓ |
 | 110-7 | 42087 | Detent - Complete with jewel (beryllium copper) | 1 | 1 | det | Its locking jewel holds the escape wheel; lifted by the unlocking jewel through the trip spring (Sec. IV). | on 42086: 0 mm<br>also: escapement.js: lock, let-off, overall | ✓ |
 | 110-8 | 42089 | Pin - Locking jewel wedge | 1 | 1 | det | Wedges the locking jewel in its hole (Figs. 57-59). | on 285: 0.0033 mm | ✓ |
 | 110-9 | 285 | Jewel - Locking | 1 | 1 | det | Locks each tooth of the escape wheel until the detent is lifted (Sec. IV). | also: escapement.js: lock | ✓ |
@@ -170,7 +170,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 110-13 | 42086 | Block - Detent support, complete with button and pins | 1 | 1 | det | Fixed under the train bridge by one screw and two positioning pins; carries the detent, the stop button and the adjusting screws (Secs. II, IV). | on 42062: 0 mm | ✓ |
 | 110-14 | 42091 | Screw - Detent lock adjusting clamp | 1 | 1 | det | Clamps the lock-adjusting screw. | in 42086 (embed): 1.302 mm, least gap -0.197 | ✓ |
 | 110-14 | 42091 | Screw - Detent lock adjusting | 1 | 1 | det | Sets the depth of lock through the stop button (Op. 85). | in 42086 (embed): 1.302 mm, least gap -0.197<br>also: escapement.js: lock | ✓ |
-| 110-15 | 20756 | Screw - Detent adjusting | 1 | 1 | det | Sets the detent lengthwise (Op. 82). | in 42086 (embed): 1.417 mm, least gap -0.3448 | ✓ |
+| 110-15 | 20756 | Screw - Detent adjusting | 1 | 1 | det | Sets the detent lengthwise (Op. 82). | in 42086 (embed): 0.678 mm, least gap -0.3448 | ✓ |
 | 110-16 | 37024 | Screw - Detent clamp | 1 | 1 | det | Clamps the detent's foot to the block, with a washer and two steady pins (Sec. IV). | in 42087 (embed): 1.087 mm, least gap -0.6417<br>in 42086 (embed): 2.024 mm, least gap -0.6417 | ✓ |
 | 110-17 | 42251 | Washer - Detent clamp screw | 1 | 1 | det | Under the detent clamp screw. | on 42087: 0 mm | ✓ |
 | 110-18 | 42076 | Wheel - Escape, complete with pinion | 1 | 1 | escW | Released one tooth a beat; impulses the balance (Sec. IV). | in J.eu (run): 0.459 mm, least gap 0.0229<br>in J.el (run): 0.459 mm, least gap 0.0229<br>endshake 0.050 mm (J.ele / J.eue)<br>meshes 42073: centres 10.5846 (m(z1+z2)/2 10.5846), 10/75 teeth, faces overlap 0.9, ratio -0.133333<br>also: escapement.js | ✓ |
@@ -178,9 +178,9 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 110-20 | 42055 | Screw - Pillar upper train bridge | 3 | 3 | trainBridge | Hold the upper train bridge to its three pillars (Op. 14). | in 42062 (clear): 3.069 mm, least gap 0.2197<br>in 42059 (tap): 3.02 mm, least gap 0.0225 | ✓ (deviation) |
 | 110-21 | 42166 | Bushing - Center wheel upper | 1 | 1 | trainBridge | Bearing for the centre arbor's upper pivot. | in 42062 (press): 0.097 mm, least gap 0.0172 | ✓ |
 | 110-22 | 42167 | Bushing - Third wheel upper | 1 | 1 | trainBridge | Bearing for the third arbor's upper pivot. | in 42062 (press): 0.097 mm, least gap 0.0171 | ✓ |
-| 110-23 | 42073 | Wheel - Fourth, complete with pinion | 1 | 1 | fw | Turns once a minute; its arbor carries the second hand (Sec. II). | in J.fu (run): 0.373 mm, least gap 0.0219<br>in J.fl (run): 0.249 mm, least gap 0.0219<br>endshake 0.050 mm (J.fl / J.fu)<br>meshes 42071: centres 12.7524 (m(z1+z2)/2 12.7524), 10/80 teeth, faces overlap 0.65, ratio -0.125<br>also: invariants.py: second hand | ✓ |
+| 110-23 | 42073 | Wheel - Fourth, complete with pinion | 1 | 1 | fw | Turns once a minute; its arbor carries the second hand (Sec. II). | in J.fu (run): 0.373 mm, least gap 0.0219<br>in J.fl (run): 0.249 mm, least gap 0.0219<br>endshake 0.050 mm (J.fl / J.fu)<br>meshes 42071: centres 11.0415 (m(z1+z2)/2 11.0415), 10/80 teeth, faces overlap 0.65, ratio -0.125<br>also: invariants.py: second hand | ✓ |
 | 110-24 | 42068 | Wheel - Center, complete with pinion | 1 | 1 | cw | Turns once an hour; its long arbor carries the cannon pinion and hour wheel (Sec. II). | in 42166 (run): 3.235 mm, least gap 0.0211<br>in 42165 (run): 4.044 mm, least gap 0.0211<br>endshake 0.050 mm (42165 / 42166)<br>also: invariants.py: minute hand | ✓ |
-| 110-25 | 42071 | Wheel - Third, complete with pinion | 1 | 1 | tw | Drives the fourth pinion. | in 42167 (run): 3.171 mm, least gap 0.0211<br>in J.tl (run): 0.302 mm, least gap 0.0197<br>endshake 0.050 mm (J.tl / 42167)<br>meshes 42068: centres 13.0488 (m(z1+z2)/2 13.0488), 12/90 teeth, faces overlap 0.7, ratio -0.133333 | ✓ |
+| 110-25 | 42071 | Wheel - Third, complete with pinion | 1 | 1 | tw | Drives the fourth pinion. | in 42167 (run): 3.171 mm, least gap 0.0211<br>in J.tl (run): 0.302 mm, least gap 0.0197<br>endshake 0.050 mm (J.tl / 42167)<br>meshes 42068: centres 15.9923 (m(z1+z2)/2 15.9923), 12/90 teeth, faces overlap 0.7, ratio -0.133333 | ✓ |
 | 110-26 | 42096 | Pawl - Sustaining, complete with arbor and springs | 1 | 1 | spawl | Holds the sustaining ratchet from turning back while winding (Sec. IV). | in 42062 (run): 0.121 mm, least gap 0.0542<br>in 42060 (run): 2.059 mm, least gap 0.0274<br>on 42009: 0.0066 mm<br>also: maintaining.py: pawl on its teeth | ✓ |
 | 110-27 | 42065 | Bridge - Balance lower, complete with pins | 1 | 1 | lowerBridge | Holds the balance lower setting and cap and the fourth upper setting; carries the train-blocking screw (Sec. II). | on 42062: 0 mm | ✓ |
 | 110-20 | 42055 | Screw - Balance lower bridge | 2 | 2 | lowerBridge | Hold the balance lower bridge to the train bridge (Ops. 12, 50). | in 42065 (clear): 1.976 mm, least gap 0.1897<br>in 42062 (tap): 2.519 mm, least gap 0.033 | ✓ |
@@ -222,7 +222,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 
 | Jewel | Kind | Arbor, end | Set in | Least gap |
 |---|---|---|---|---|
-| Jewel - Balance upper endstone (cap jewel) | end | 42186 upper | 42155 (0.5 mm) | 0.0009 |
+| Jewel - Balance upper endstone (cap jewel) | end | 42186 upper | 42155 (0.3 mm) | 0.0008 |
 | Jewel - Balance upper hole (olive-hole) | hole | 42186 upper | 42162.bu (0.6 mm) | 0.0031 |
 | Jewel - Unlocking | pallet |   | 42252 (0.7 mm) | -0.0 |
 | Jewel - Impulse | pallet |   | 42263 (1.32 mm), 42186 (0.24 mm) | 0.0818 |
@@ -247,8 +247,8 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 42015 | 42068 | 90/14 | 0.44120602769651696/0.44120602769651696 | 22.9427 | 22.9427 | 1.2 | -6.428571 | -6.428571 |
 | 42022 | 42081 | 12/120 | 0.18627005534166802/0.18627005534166802 | 12.2938 | 12.2938 | 0.8 | -0.1 | -0.1 |
 | 42076 | 42073 | 10/75 | 0.2490502085258753/0.2490502085258753 | 10.5846 | 10.5846 | 0.9 | -0.133333 | -0.133333 |
-| 42073 | 42071 | 10/80 | 0.28338666164800347/0.28338666164800347 | 12.7524 | 12.7524 | 0.65 | -0.125 | -0.125 |
-| 42071 | 42068 | 12/90 | 0.25585921313747517/0.25585921313747517 | 13.0488 | 13.0488 | 0.7 | -0.133333 | -0.133333 |
+| 42073 | 42071 | 10/80 | 0.2453668455372259/0.2453668455372259 | 11.0415 | 11.0415 | 0.65 | -0.125 | -0.125 |
+| 42071 | 42068 | 12/90 | 0.31357527040801086/0.31357527040801086 | 15.9923 | 15.9923 | 0.7 | -0.133333 | -0.133333 |
 
 ## Not modelled, and why
 
@@ -276,4 +276,4 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 
 ## Known deviations
 
-- in 42055.tb#2 -> 42059 (tap): The manual has all three upper train bridge screws in pillars (reassembly Op. 14; disassembly Ops. 47, 48). The model's third screw is where the top-view photographs show one, at (-8.5, 27.7); a pillar there would stand in the fourth wheel, whose size the layout fixes, so it is drawn threaded into the bridge alone (IDEAS.md 1.2). What it holds in the real movement is not settled.
+- in 42055.tb#2 -> 42059 (tap): The manual has all three upper train bridge screws in pillars (reassembly Op. 14; disassembly Ops. 47, 48). The model's third screw is at (29.24, -12.28), where the top-view photograph shows a screw head sunk in a clearance hole through the barrel bridge (C Spinner's restoration video, 23:30, shows that hole through the bridge laid flat); a pillar there would stand in the fusee wheel, whose size the layout fixes, so it is drawn threaded into the bridge alone (IDEAS.md 1.2). What it holds in the real movement is not settled.
