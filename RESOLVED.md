@@ -617,7 +617,7 @@ Contents:
   it (the train bridge's tapped holes follow `S.eb`). Keep: the bar runs
   across the balance–escape line (68° round), its end screws 8.0 mm either
   side of the jewel; the end screws' heads stay 0.3 mm tall for the balance
-  rim. (hash to come)
+  rim. `0dade8c`
 
 ## Setup, case and gimbals
 
