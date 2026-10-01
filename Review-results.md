@@ -1219,7 +1219,12 @@ as the video shows it, bored for the escape arbor; the rest stands.
     balance-to-fourth distance (14). The plan turns with them, and the block
     is about 20 mm from the balance, so a few degrees move it millimetres.
     The detent's block (12) is placed once those are settled.
-17. **The escape upper bridge (42064)** (new, 1 October 2026). From above
+17. **The escape upper bridge (42064)** (new, 1 October 2026). **Rebuilt
+    (1 October 2026, branch `claude/escape-arbor`; RESOLVED.md)**: a bar
+    across the keyhole, symmetric about the jewel, a screw near each end, a
+    round cap. Still open: its thickness and the boss under the cap, its
+    steady pins, the end screws' countersunk heads, and the two other
+    endstone caps of the same part (42159), which look round too. From above
     with the bridge on (`KLUwI2UUCMQ` 10:00), it is a long straight plate,
     rounded at both ends, with the jewel and its two-screw endstone cap in
     the middle and a screw near each end, symmetric about the jewel. It spans
