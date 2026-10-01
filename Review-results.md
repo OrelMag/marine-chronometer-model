@@ -1154,7 +1154,10 @@ as the video shows it, bored for the escape arbor; the rest stands.
       line, which puts it toward 9 o'clock. The only unexplained hole near
       the keyhole on the underside is on the other side of that line, at
       (9.24, 20.86), 5 mm from the escape arbor, with a curved slot beside
-      it. From above (10:45–10:48) the block's screw is taken out at the
+      it. (That fit was on five holes only, and the model's holes are about
+      10 % too near the centre. Refitted on the rim and the barrel cut, the
+      hole is at (11.79, 22.41), and it is an escape upper bridge screw's,
+      17 and 18.) From above (10:45–10:48) the block's screw is taken out at the
       train bridge's edge below the keyhole. ~~If that is the block's screw,
       the plan is mirrored about the balance–escape line.~~ It isn't (16):
       the plan can't be mirrored, and the hole is not where any part of the
@@ -1228,6 +1231,56 @@ as the video shows it, bored for the escape arbor; the rest stands.
     (10) is off. Not changed: the bridge's direction and length wait on 10
     and 14. A video should show: the bridge's screw holes on the bare train
     bridge from above (13:44, once anchored on matched holes).
+
+    Measured (18): the end screws are 8.3 and 8.6 mm from the jewel, not 5,
+    on a line about 3° off the 6 o'clock line, and the cap's screws 3.3 mm.
+    The hole at item 12's (9.24, 20.86), re-placed at (11.79, 22.41) by a
+    better fit, is 1.1 mm from the end screw at (12.49, 21.54) found from
+    above on another frame, so it is that screw's hole.
+18. **The escape arbor's place, measured** (1 October 2026, branch
+    `claude/escape-arbor`). Three frames of `KLUwI2UUCMQ` were fitted with
+    `video.py anchor` on the train bridge's rim (r 40.5 about the centre),
+    its cut round the barrel and the centre bushing. The other holes are
+    independent checks (fit specs in `tools/anchors/`).
+    - **10:00, from above, the escape upper bridge on.** Rim 0.28 mm rms,
+      centre and third bushings 0.17 and 0.16 mm. The escape jewel is at
+      **(12.90, 12.90)**, the bridge's end screws at (13.25, 4.64) and
+      (12.49, 21.54), the cap's screws at (12.95, 9.63) and (12.65, 16.19).
+    - **13:44, from above, bare.** Rim 0.44 mm, the barrel cut 0.50. The
+      10:00 points mapped onto it land on the two raised lugs flanking the
+      keyhole's left pocket (the end screws) and at that pocket's centre
+      (the jewel). The left pocket is the escape lobe, centred about
+      (12.6, 15.4) with r about 7.0, room for the 13.16 mm wheel to come out.
+      The right pocket, the balance's jewel at its bottom, is the balance
+      lobe, centred about (5.4, 10.4) with r 4.9. Fitted without the third
+      bushing (the barrel cut giving the rotation), the jewel stays at
+      (12.92, 13.32) and the third bushing lands 2.85 mm from the model's,
+      6° round and 18.25 mm out.
+    - **13:49.5, from below.** Rim 0.22, the cut 0.24, the third bushing
+      1.09 mm from the model's as a check.
+
+    So the escape arbor is about 18 mm from the centre, as the model has it
+    (17.7), but 40–45° round from the 6 o'clock line toward 3, not the
+    model's 24°: about 6 mm from the model's (7.19, 16.14). The scale rests
+    on the rim's 40.5 mm (the third bushing reads 16.9–18.3 mm on these
+    fits against 15.7–16.0 by other methods, so up to 10 % large). The angle
+    doesn't depend on the scale, and every fit gives it.
+
+    **It contradicts the train.** The escape pinion meshes the fourth wheel,
+    about 10.9 mm apart. With the fourth arbor under the seconds hand at
+    (0, 23.9), the escape arbor can be at most 27° from the 6 o'clock line.
+    At 44° it would be 16.6–17 mm from the fourth. The jewel to the balance
+    lobe's centre is 7.9 mm, against the escapement's 9.4. If the escape
+    jewel and the third bushing are right, the meshes put the fourth arbor
+    near (4.1, 19.3), 6 mm from where the seconds hand puts it. Either the
+    model's fourth arbor (and with it the seconds hand's place on the dial)
+    is off, or these fits share an error that the frames can't show: they
+    all assume the rim is a circle about the centre arbor, and the cut's
+    centre where the model has it. **Not changed in the model.** Next: a
+    frame with a ruler from the manual (the plate's 87.57 mm rim) and the
+    fourth arbor in view, from above with the train in (13:51–13:54), or
+    the bare plate (14:36–14:45), where the fourth's jewel and the escape
+    arbor's lower jewel are both in the plate's own face.
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.

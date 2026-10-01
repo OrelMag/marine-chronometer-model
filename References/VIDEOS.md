@@ -137,6 +137,7 @@ frame`, in `$MC_VIDEO/frames`).
 | The cock's steady pins | Two plain holes in the train bridge under the cock, about (36, 4) and (27, 20) | 6:47 | About 2 mm | By eye, against the cock screw's tapped hole |
 | The far horn's end and screws | Cut from (−5.45, 21.46) on the balance opening to the rim at about 100°; a screw proud of the horn at (−11.07, 26.46), a train-bridge screw sunk in a hole through it at pillar 0 (−17.2, 23.0) | `References/photo-top-view.jpg`; 23:30; `wcYqdgpyggQ` 12:05 (bridge off: the pillar-0 screw remains) | About 0.6 mm in the photograph (five-screw map at the bridge's height); about 2 mm on the flat bridge | `topview.py`'s five-screw map, by hand |
 | Pillars on the bare plate | Bases 32.7, 42.0, 37.9 and 32.3 mm from the centre (model 28.0–32.5), pairwise 40–78 mm (model 34–63): about 1.2 times the model's spacing | `wcYqdgpyggQ` 22:00 | Rough: picks by eye at 720p; the rim fits an ellipse to ±1.6 mm | Rim ellipse (`cv2.fitEllipse`), rectified to 43.8 mm |
+| Escape arbor's place | The escape jewel at **(12.90, 12.90)**: 18 mm from the centre, 44° from the 6 o'clock line toward 3 (model (7.19, 16.14), 24°). The bridge's end screws 8.3 and 8.6 mm either side of it, about along the 6 o'clock line. Escape lobe centred about (12.6, 15.4), r 7.0; balance lobe about (5.4, 10.4), r 4.9. Contradicts the fourth arbor at (0, 23.9): not in the model (Review-results.md, "Elsewhere", 18) | 10:00; 13:44; 13:49.5 | Angle ±3°; mm ±10 % (the rim's 40.5 is the ruler) | `video.py anchor` on the rim, the barrel cut and the centre bushing (`tools/anchors/`) |
 | Escape upper bridge's form | A long straight plate, rounded at both ends, the jewel and its two-screw cap in the middle and a screw near each end, symmetric about the jewel (model: a stadium reaching 7.5 mm beyond the arbor, both screws beyond it). End screws about 2.5 × as far from the jewel as the cap's | 10:00 | Form certain; distances rough (no ruler in the frame) | By eye (Review-results.md, "Elsewhere", 17) |
 
 ## Methods
@@ -231,7 +232,25 @@ has no part of the detent at those distances, whichever way round, so the
 hole is something else. The plan's handedness comes from the train and Fig.
 90 instead (Review-results.md, "Elsewhere", 16).
 
-**A plane anchored on matched holes.** Where a face of a part the model has
+**A face anchored on its rim** (`video.py anchor`, with `circles`). Trace
+the train bridge's rim (r 40.5 about the centre) and its cut round the
+barrel (r 19.2), and name the centre bushing. The circles fix the face's
+perspective and scale and the cut its rotation, and every other hole is
+then a check, not part of the fit. On 13:49.5, 13:44 and 10:00 the rim fits
+to 0.2–0.4 mm. Read the outline first: on 13:49.5 the opening beside the
+centre bushing is the bay beyond the bridge's inner edge, not the cut,
+which is the opening with the barrel's teeth in it. Check the order of
+features round the centre against the plan (`holes.py PART --plan`)
+before naming an edge. Only points on the face map; a jewel 12 mm below
+it, on a view tilted 45°, lands about 10 mm off.
+
+**A plane anchored on matched holes.** Unreliable on its own: a homography
+passes near any five points. On 13:49.5 three searches over the same picks
+gave three different fits, each to 0.1–0.3 mm, and the model's holes are
+themselves about 10 % too near the centre (the README, "barrel bridge's far
+horn"). The readings below that came from this method on 13:49.5 (the third
+bushing at 16.0 mm, the hole at (9.24, 20.86)) shift by up to 3 mm on the
+rim fit.  Where a face of a part the model has
 from a source (the train bridge, traced on the top-view photograph) is seen,
 pick every hole on the frame and let a search pair them with the model's
 holes; a homography on the matched pairs maps the frame onto that face. On
