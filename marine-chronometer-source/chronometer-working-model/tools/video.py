@@ -13,6 +13,18 @@ they are other people's work, cited, not copied.
   python video.py plate FRAME cx cy fx fy [name:x,y ...]   a bare plate's plan (rough): C at (cx, cy), the fourth's jewel at (fx, fy)
   python video.py fit SPEC.json [--draw OUT.png]   a frame's camera (pose and focal length) from model points and circles traced on it: SPEC.cam.json
   python video.py unproj SPEC.json Y u,v [...] [--circle]   pixels put back on the plane y = Y (mm, or TBtop / TBbot / PPtop) through that camera
+  python video.py anchor SPEC.json [--tol 1.0] [--draw OUT.png]   a frame mapped onto one face of a part (a homography): SPEC.H.json
+
+anchor: SPEC is {"frame", "view": "above" (seen from the train side) or "below" (the dial side, or a part turned over), "holes": the
+part's holes (holes.py's JSON, or {name: [x, z]}), "use": [the holes to pair], "picks": {name: [u, v]} (holes found on the frame),
+"pairs": {model hole: pick} (named, always kept), "circles": {name: {"c": [x, z], "r": mm, "pts": [[u, v], ...]}} (edges traced on the
+frame: the train bridge's rim, r 40.5 about the centre, and its cut round the barrel, r 19.2 about (-22.56, 0.23)), "init": an earlier
+H.json to start from, "map": {name: [x, z]} (drawn), "unmap": {name: [u, v]} (put on the face)}. With circles, the homography is fitted
+on them and the named pairs only, and every other hole that pairs within --tol mm is an independent check; without, it is fitted on
+every pair, and each is reported with the pair left out (a homography passes near any five points, so five pairs prove little: on
+KLUwI2UUCMQ 13:49.5 three searches gave three fits, each to 0.1-0.3 mm). Name the centre bushing and trace the rim: the circles fix
+the face's perspective and scale; the cut, or a second named hole, its rotation. Only points on the face map: on a view tilted 45 deg
+a jewel 12 mm below it lands about 10 mm off.
 
 count: (cx, cy, a, b) is a first guess at the tooth tips' ellipse in the frame's pixels (axes along x and y). The ellipse is refined
 on the outermost brass along each ray (s0..s1 of it), the rim is unrolled along it, and in the band of radii --band (through the
@@ -223,4 +235,76 @@ elif cmd in ('fit', 'unproj'):
         if '--circle' in a and len(out) > 2:
             U = np.array(out); A_ = np.c_[2 * U, np.ones(len(U))]; c = np.linalg.lstsq(A_, (U ** 2).sum(1), rcond=None)[0]; r = np.sqrt(c[2] + c[0] ** 2 + c[1] ** 2)
             print(f'  circle: centre ({c[0]:.2f}, {c[1]:.2f}), r {r:.2f}, rms {np.sqrt(np.mean((np.hypot(*(U - c[:2]).T) - r) ** 2)):.2f} mm')
+elif cmd == 'anchor':
+    # a frame mapped onto one face of a part by its holes: SPEC is a JSON file {"frame": path, "view": "above" | "below", "holes": holes_PART.json
+    # (holes.py; or {name: [x, z]}), "use": [names to anchor on; default all], "picks": {name: [u, v]} (holes found on the frame, unnamed),
+    # "map": {name: [x, z]} (model points to draw), "unmap": {name: [u, v]} (frame points to put on the face)}. "above" is a view of the face from
+    # the train side (+x, 3 o'clock, on the image's left when 12 is up); "below" from the dial side, or a part turned over to show its underside
+    import json, itertools; from scipy.optimize import linear_sum_assignment
+    sp = a[0]; S = json.load(open(sp)); here = os.path.dirname(os.path.abspath(sp))
+    fr = S['frame'] if os.path.isabs(S['frame']) else os.path.join(HOME, 'frames', S['frame']); img = cv2.imread(fr)
+    hs = S['holes']; hs = json.load(open(os.path.join(here, hs)))['holes'] if isinstance(hs, str) else hs
+    use = S.get('use', list(hs)); mk = [k for k in hs if k in use]; Mh = np.array([hs[k][:2] for k in mk], float)
+    pk = list(S['picks']); Fp = np.array([S['picks'][k] for k in pk], float); mir = -1 if S['view'] == 'above' else 1
+    tol = float(opt(a, '--tol', 1, 1.0))   # mm: how near a pick must fall to a model hole to pair with it
+    def sim(s, t, M): z = s * (mir * M[:, 0] + 1j * M[:, 1]) + t; return np.c_[z.real, z.imag]
+    best = None; Mz = mir * Mh[:, 0] + 1j * Mh[:, 1]; Fz = Fp[:, 0] + 1j * Fp[:, 1]
+    kp = [(mk.index(m), pk.index(f)) for m, f in S.get('pairs', {}).items()]   # pairs named in the SPEC: kept, and with two or more the similarity is theirs
+    if 'init' in S and S.get('circles'): best = (0, 1, 0, 0)
+    elif len(kp) >= 2: A_ = np.c_[[Mz[i] for i, _ in kp], np.ones(len(kp))]; s, t = np.linalg.lstsq(A_, np.array([Fz[j] for _, j in kp]), rcond=None)[0]; best = (0, s, t, 0)
+    for i, j in (() if best else itertools.permutations(range(len(Fp)), 2)):   # else every pair of picks on every pair of model holes: a similarity of the right handedness
+        for p, q in itertools.permutations(range(len(Mh)), 2):
+            s = (Fz[j] - Fz[i]) / (Mz[q] - Mz[p])
+            if not 8 < abs(s) < 120: continue
+            t = Fz[i] - s * Mz[p]; D = np.abs((s * Mz + t)[:, None] - Fz[None]); n = (D.min(1) < tol * abs(s)).sum()
+            if best is None or n > best[0] or (n == best[0] and D.min(1)[D.min(1) < tol * abs(s)].sum() < best[3]): best = (n, s, t, D.min(1)[D.min(1) < tol * abs(s)].sum())
+    _, s, t, _ = best; P = sim(s, t, Mh); sc = abs(s)
+    def pairup(P):   # one to one, the named pairs kept
+        D = np.linalg.norm(P[:, None] - Fp[None], axis=2)
+        for i, j in kp: D[i, :] = 1e9; D[:, j] = 1e9; D[i, j] = 0
+        r_, c_ = linear_sum_assignment(D); return [(i, j) for i, j in zip(r_, c_) if D[i, j] < tol * sc]
+    CI = {k: (np.array(v['c'], float), float(v['r']), np.array(v['pts'], float)) for k, v in S.get('circles', {}).items()}
+    toMH = lambda H, u: cv2.perspectiveTransform(np.array(u, np.float64).reshape(-1, 1, 2), np.linalg.inv(H))[:, 0]
+    if CI:   # fitted on the named pairs and the circles (edges traced on the frame: a circle of radius r about c on the face); every other hole is a check
+        from scipy.optimize import least_squares
+        if 'init' in S: H0 = np.array(json.load(open(os.path.join(here, S['init'])))['H']); H0 /= H0[2, 2]   # a start: an earlier anchor's H.json
+        elif len(kp) >= 2: H0 = np.array([[mir * s.real, -s.imag, t.real], [mir * s.imag, s.real, t.imag], [0, 0, 1]])
+        else: sys.exit('circles need a start: two or more named "pairs", or "init"')
+        Hq = lambda q: np.r_[q, 1].reshape(3, 3)
+        def rr(q):
+            H = Hq(q); r = [(toMH(H, [Fp[j] for _, j in kp]) - Mh[[i for i, _ in kp]]).ravel()]
+            for c, R, U in CI.values(): r.append(np.linalg.norm(toMH(H, U) - c, axis=1) - R)
+            return np.concatenate(r)
+        Hm = Hq(least_squares(rr, H0.ravel()[:8], x_scale='jac', max_nfev=20000).x)
+        J = np.array([[Hm[0, 0] - Hm[2, 0] * Hm[0, 2], Hm[0, 1] - Hm[2, 1] * Hm[0, 2]], [Hm[1, 0] - Hm[2, 0] * Hm[1, 2], Hm[1, 1] - Hm[2, 1] * Hm[1, 2]]]); sc = np.sqrt(abs(np.linalg.det(J)))   # px per mm at the origin
+        pr = pairup(cv2.perspectiveTransform(Mh[:, None], Hm)[:, 0]); src = np.array([Mh[i] for i, _ in pr]); dst = np.array([Fp[j] for _, j in pr])
+    else:
+        for it in range(4):   # pair one to one, then a homography on the pairs
+            pr = pairup(P); src = np.array([Mh[i] for i, _ in pr], np.float32); dst = np.array([Fp[j] for _, j in pr], np.float32)
+            if len(pr) < 4: sys.exit(f'only {len(pr)} holes pair within {tol} mm: pick more, or check "view"')
+            Hm = cv2.findHomography(src, dst, 0)[0]; P = cv2.perspectiveTransform(Mh[:, None].astype(np.float32), Hm)[:, 0]
+    toM = lambda u: toMH(Hm, u)
+    res = np.linalg.norm(toM(dst) - src, axis=1) if len(pr) else np.zeros(0)
+    print(f'{os.path.basename(fr)} ({S["view"]}): {len(pr)} of {len(mk)} model holes paired with {len(pk)} picks within {tol} mm' + (f'; fitted on {len(kp)} named pairs and {len(CI)} circles' if CI else ''))
+    for k, (c, R, U) in CI.items(): e = np.linalg.norm(toM(U) - c, axis=1) - R; print(f'  circle {k}: {len(U)} points, rms {np.sqrt(np.mean(e ** 2)):.2f} mm (r {R} about ({c[0]}, {c[1]}))')
+    def loo(k):   # that pair's error with the homography fitted on the others: a homography passes near any five points, so this is the test
+        if CI or len(pr) < 6: return float('nan')
+        o_ = [n for n in range(len(pr)) if n != k]; h = cv2.findHomography(src[o_], dst[o_], 0)[0]
+        return float(np.linalg.norm(toMH(h, dst[k]) - src[k]))
+    lo = [loo(k) for k in range(len(pr))]
+    print(f'  pair                 model hole      pick   off (mm)' + ('' if CI else '  left out' + ('' if len(pr) >= 6 else ' (needs six pairs)')))
+    for (i, j), r, l in zip(pr, res, lo): print(f'  {mk[i]:8s} ({Mh[i][0]:7.2f}, {Mh[i][1]:7.2f}) <-> {pk[j]:6s} {r:.2f}' + ('  named' if (i, j) in kp else '  check' if CI else f'      {l:.2f}'))
+    lone = [pk[j] for j in range(len(pk)) if j not in [j for _, j in pr]]
+    if lone: print('picks with no model hole (on the face):'); [print(f'  {k:6s} -> ({m[0]:7.2f}, {m[1]:7.2f})') for k, m in zip(lone, toM([S['picks'][k] for k in lone]))]
+    if S.get('unmap'): print('frame points on the face:'); [print(f'  {k:8s} -> ({m[0]:7.2f}, {m[1]:7.2f})') for k, m in zip(S['unmap'], toM(list(S['unmap'].values())))]
+    json.dump({'frame': fr, 'H': Hm.tolist(), 'pairs': {mk[i]: pk[j] for i, j in pr}}, open(sp.replace('.json', '') + '.H.json', 'w')); print('wrote', sp.replace('.json', '') + '.H.json')
+    if '--draw' in a:
+        o = img.copy(); toF = lambda M: cv2.perspectiveTransform(np.array(M, np.float32).reshape(-1, 1, 2), Hm)[:, 0]
+        for k, v in hs.items():   # every model hole at its size: green if anchored on, yellow if used but unpaired, red if left out of "use"
+            c = (0, 200, 0) if k in [mk[i] for i, _ in pr] else (0, 255, 255) if k in mk else (0, 0, 255); r = v[2] if len(v) > 2 else 0.5
+            ring = toF(np.c_[v[0] + r * np.cos(np.linspace(0, 6.3, 40)), v[1] + r * np.sin(np.linspace(0, 6.3, 40))]).astype(np.int32)
+            cv2.polylines(o, [ring], True, c, 3); u = ring.mean(0).astype(int); cv2.putText(o, k, (int(u[0]) + 14, int(u[1]) - 14), 0, 1.1, c, 3)
+        for k, u in S['picks'].items(): cv2.drawMarker(o, tuple(map(int, u)), (255, 0, 255), 1, 26, 3)
+        for k, v in S.get('map', {}).items(): u = toF([v])[0]; cv2.drawMarker(o, tuple(map(int, u)), (255, 128, 0), 0, 40, 4); cv2.putText(o, k, (int(u[0]) + 14, int(u[1]) + 30), 0, 1.3, (255, 128, 0), 4)
+        cv2.imwrite(a[a.index('--draw') + 1], o)
 else: sys.exit(__doc__)

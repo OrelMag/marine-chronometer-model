@@ -7,5 +7,8 @@ unproj.json
 r_bom.json
 placements_*.json
 bundle.npy
+*.H.json
+holes_*.json
+!marine-chronometer-source/chronometer-working-model/tools/anchors/holes_*.json
 # wrangler's local state
 .wrangler/

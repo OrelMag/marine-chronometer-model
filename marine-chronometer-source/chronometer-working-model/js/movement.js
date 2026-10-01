@@ -184,6 +184,9 @@ function stadiumPts(p0,p1,w){const dx=p1[0]-p0[0],dz=p1[1]-p0[1],l=Math.hypot(dx
   const a0=Math.atan2(nz,nx);for(let i=0;i<=16;i++){const a=a0+Math.PI*i/16;pts.push([p0[0]+w/2*Math.cos(a),p0[1]+w/2*Math.sin(a)]);}
   for(let i=0;i<=16;i++){const a=a0+Math.PI+Math.PI*i/16;pts.push([p1[0]+w/2*Math.cos(a),p1[1]+w/2*Math.sin(a)]);}return pts;}
 function stadium(p0,p1,w,th,holes=[]){return polyGeo(stadiumPts(p0,p1,w),th,holes);}
+/* a straight bar w wide and l long overall (round ends) along the unit u through c, with a round boss of radius r at c */
+function barBossPts(c,u,l,w,r){const v=[-u[1],u[0]],P=(t,n)=>[c[0]+t*u[0]+n*v[0],c[1]+t*u[1]+n*v[1]],t0=l/2-w/2,a=Math.atan2(w/2,Math.sqrt(r*r-w*w/4)),o=[],arc=(ct,rr,f0,f1,N)=>{for(let k=0;k<=N;k++){const f=f0+(f1-f0)*k/N;o.push(P(ct+rr*Math.cos(f),rr*Math.sin(f)));}};
+  arc(t0,w/2,-Math.PI/2,Math.PI/2,16);arc(0,r,a,Math.PI-a,40);arc(-t0,w/2,Math.PI/2,1.5*Math.PI,16);arc(0,r,Math.PI+a,TAU-a,40);return o;}
 
 /* screw holes: thread radius sR for a head of radius r; a clearance hole (hC) where the screw passes through a part, a tapped hole (hT) where it screws in; [x, z, r, 1] as polyGeo takes (the 1: polyGeo keeps its size at the faces, below) */
 const sR=r=>r*0.5,hC=(x,z,r,rs=sR(r))=>[x,z,+(rs*1.12+0.01).toFixed(3),1],hT=(x,z,r,rs=sR(r))=>[x,z,+(rs+0.02).toFixed(3),1];   /* rs: a thread radius other than half the head's */
@@ -245,16 +248,19 @@ function buildMovement(M){
   const jewel=(p,x,z,[si,ji])=>{hn(mesh(p,ring(1.1,0.62,1.2),M.gilt,x,0.6,z),si);hn(mesh(p,stoneGeo(0.62,0.27,0.4,'bar'),M.ruby,x,0.2,z),ji);};   /* bar-hole jewel in the lower train bridge: a setting pressed through the bridge, the stone seated in it at the train side (its oil sink toward the dial); si, ji: their parts-list lines */
   /* endstone cap (42159, 42160): a steel plate over a setting with the cap jewel showing through its centre, two screws (20762) at ±2.1 mm along u into the part under it.
      Built in frame g with the part's face at y and the cap toward -y; depth: how far the screws go into the part */
-  const endCap=(g,x,z,u,y,depth,sp,[ci,ji,si])=>{const a=[x-u[0]*sp,z-u[1]*sp],b=[x+u[0]*sp,z+u[1]*sp];   /* ci, ji, si: the parts-list lines of the cap, its jewel and its screws */
-    hn(mesh(g,stadium(a,b,1.6,0.3,[[x,z,0.55],hC(...a,ESCAP),hC(...b,ESCAP)]),M.steel,0,y-0.3,0),ci);hn(mesh(g,cylY(0.55,0.26,24),M.ruby,x,y-0.13,z),ji);   /* the endstone set in the cap, flush with its face on the hole jewel */
+  const endCap=(g,x,z,u,y,depth,sp,[ci,ji,si],rc)=>{const a=[x-u[0]*sp,z-u[1]*sp],b=[x+u[0]*sp,z+u[1]*sp],H=[[x,z,0.55],hC(...a,ESCAP),hC(...b,ESCAP)];   /* ci, ji, si: the parts-list lines of the cap, its jewel and its screws; rc: a round cap of that radius */
+    hn(mesh(g,rc?polyGeo([...Array(64).keys()].map(k=>[x+rc*Math.cos(k*TAU/64),z+rc*Math.sin(k*TAU/64)]),0.3,H):stadium(a,b,1.6,0.3,H),M.steel,0,y-0.3,0),ci);hn(mesh(g,cylY(0.55,0.26,24),M.ruby,x,y-0.13,z),ji);   /* the endstone set in the cap, flush with its face on the hole jewel */
     for(const q of[a,b])hn(screw(g,...q,y-0.3,ESCAP,0.2,0.3+depth),si);};
   const y0=-PP_T;
   /* ---------- screw positions (x, z), worked out before the plates are cut: a clearance hole where a screw passes through a part (hC), a tapped hole where it holds (hT).
        42055 (pillar, bridge and mounting-ring screws) have heads r 2.9; ESCAP: the endstone caps' screws (20762) ---------- */
   const add=(a,b,k=1)=>[a[0]+b[0]*k,a[1]+b[1]*k],sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],unit=a=>{const l=Math.hypot(...a);return[a[0]/l,a[1]/l];},ry=(a,[x,z])=>[x*Math.cos(a)+z*Math.sin(a),-x*Math.sin(a)+z*Math.cos(a)];
   const eu=unit(sub(L.E,L.B)),lbu=unit(sub(L.F,L.B)),ESCAP=0.45,PSR=2.9;
+  /* the escape upper bridge's length (ebu): 68 deg round from the balance-escape line, across it (KLUwI2UUCMQ 10:00, from above, and 13:44, where its screws land on the
+     two lugs either side of the keyhole's escape lobe; to about 10 deg) */
+  const ebu=(f=>[eu[0]*Math.cos(f)-eu[1]*Math.sin(f),eu[0]*Math.sin(f)+eu[1]*Math.cos(f)])(68*D2R);
   const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-14),add(L.F,ltu,9)],ltbp:[add(L.T,ltu,-10),add(L.F,ltu,5)],pil:[...PILLARS.train,PILLARS.barrel],tb:[PILLARS.train[0],PILLARS.train[1],[29.24,-12.28]],bb:[PILLARS.barrel,PILLARS.train[2],[-11.07,26.46]],
-    ring:[100,210,340].map(a=>[40.6*Math.cos(a*D2R),40.6*Math.sin(a*D2R)]),eb:[4.3,6.6].map(f=>add(L.E,eu,f)),ebc:[2.1,-2.1].map(f=>add(L.E,eu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
+    ring:[100,210,340].map(a=>[40.6*Math.cos(a*D2R),40.6*Math.sin(a*D2R)]),eb:[8.0,-8.0].map(f=>add(L.E,ebu,f)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[[20.58,11.88],[-9.6,21.6]],lbp:[[22.6,14.6],[-7.0,22.4]],blc:[1.9,-1.9].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(-1.2,-0.35)),cock:[33.11,12.62],ckp:[[35.5,5.0],[26.9,19.8]]};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
      ckp: the cock's steady pins, at the two plain holes the train bridge shows under the cock with it off (C Spinner 6:47), placed to about 2 mm */
   /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge: at the arm's end on the 3 o'clock side where the restoration video has it
@@ -328,7 +334,7 @@ function buildMovement(M){
                pillar stands in the open notch. Its keyhole opening frees the balance's staff and rollers and the escape arbor ---------- */
   const tb=part('trainBridge',-62);
   const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56],TBpoly=crescent(BR_R,TBc,19.2,TB_EDGE);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */
-  /* the keyhole (Figs. 29, 67): the opening round the balance staff and rollers (r 8.0) joined to one round the escape arbor (r 3.0, 0.8 mm short of the escape upper
+  /* the keyhole (Figs. 29, 67): the opening round the balance staff and rollers (r 8.0) joined to one round the escape arbor (r 3.0, well inside the escape upper
      bridge's screws), which the escape upper bridge spans. Drawn from the model's centres: through the fit the drawing's keyhole lands about 5 mm off them */
   const KEY=twoCircles(L.B,8.0,L.E,3.0);
   R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2,1],[...L.T,1,1],{pts:KEY},[...SPv,0.52,1],
@@ -355,10 +361,13 @@ function buildMovement(M){
     hn(cylBetween(ap,0.3,TB_T+0.8,TB_T-0.8,M.steel,...S.armPin),'42300'); }   /* 0.8 into the bridge */
   /* escape upper bridge with jewel and endstone cap */
   const eb=part('escBridge',-66);
-  R.escBridge=mesh(eb,stadium([L.E[0]-eu[0]*1.5,L.E[1]-eu[1]*1.5],[L.E[0]+eu[0]*7.5,L.E[1]+eu[1]*7.5],4.0,0.9,[[...L.E,1.6],...S.eb.map(q=>hC(...q,0.9)),...S.ebc.map(q=>hT(...q,ESCAP))]),M.plate,0,TB_T-0.9,0);hn(eb,'42064');
+  /* the escape upper bridge (42064; Figs. 84, 110; KLUwI2UUCMQ 10:00): a straight bar, round-ended, across the escape lobe with a screw near each end, symmetric about the
+     setting, which sits in a round boss under the endstone cap. Its end screws 8.0 mm either side of the jewel, the cap's 3.1 (about 2.6 times as far, on the frame), scaled
+     by the frame's fit to about 10 %; the bar's width and the boss's size are read off the same frame against that spacing */
+  R.escBridge=mesh(eb,polyGeo(barBossPts(L.E,ebu,22,4.0,4.5),0.9,[[...L.E,1.6],...S.eb.map(q=>hC(...q,0.9)),...S.ebc.map(q=>hT(...q,ESCAP))]),M.plate,0,TB_T-0.9,0);hn(eb,'42064');
   for(const q of S.eb)hn(screw(eb,...q,TB_T-0.9,0.9,0.3,0.9+2.0),'20762.eb');   /* two screws (20762; Op. 22) into the train bridge; low heads, 0.14 mm clear of the balance rim and timing weights that pass over them */
   /* escape upper setting (42162: gilt setting, pierced jewel) pressed into the bridge, and the endstone cap (42159) over it with its two screws (Fig. 110) */
-  hn(mesh(eb,ring(1.6,0.95,0.9),M.gilt,L.E[0],TB_T-0.45,L.E[1]),'42162.eu');hn(mesh(eb,stoneGeo(0.95,0.22,0.5,'olive'),M.ruby,L.E[0],TB_T-0.65,L.E[1]),'J.eu');endCap(eb,...L.E,eu,TB_T-0.9,0.8,2.1,['42159.eu','J.eue','20762.euc']);
+  hn(mesh(eb,ring(1.6,0.95,0.9),M.gilt,L.E[0],TB_T-0.45,L.E[1]),'42162.eu');hn(mesh(eb,stoneGeo(0.95,0.22,0.5,'olive'),M.ruby,L.E[0],TB_T-0.65,L.E[1]),'J.eu');endCap(eb,...L.E,ebu,TB_T-0.9,0.8,3.1,['42159.eu','J.eue','20762.euc'],4.4);   /* a round cap (10:00), on the boss */
   const bb=part('barrelBridge',-72);
   /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24). The cut is the balance's
      clearance circle (r 17.7 about the staff; the screws and weights sweep 17.2) joined with the circle fitted to its edge on the top-view photograph (r 17.6 about
