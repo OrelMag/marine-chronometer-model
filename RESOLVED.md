@@ -622,7 +622,7 @@ Contents:
   vertices), `geometry-audit.js` probes a screw's seat in the screw's own
   frame and eight directions (a turned detent screw read as floating), and
   `invariants.py` runs the train with the fusee for its 56 h indicator test.
-  HASH
+  `8cbb259`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
