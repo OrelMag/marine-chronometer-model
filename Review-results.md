@@ -1465,7 +1465,7 @@ Winding and maintaining work).
    sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
    arbor); the large end has a raised outer rim round the winding ratchet,
    whose tips read r ≈ 8.5 (model 9.85; rough, oblique).
-6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). Notches in its face that
+6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). *Fixed: r 7.0 with the slot and a 9.6 mm pin. Open: Fig. 69 draws a raised boss round its hole; not seen on video.* Notches in its face that
    the taper pin lies in; the model's is a plain washer with the pin under it.
    Figs. 28 and 69 both draw it about 0.37 of the fusee wheel across (r ≈ 7.5;
    model 2.6), not yet seen on video.

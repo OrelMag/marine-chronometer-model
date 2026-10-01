@@ -2391,9 +2391,13 @@ function makeFusee(M,c){
   const WRS=[0.6,0.6+Math.PI].map(a=>[3.4*Math.cos(a),3.4*Math.sin(a)]);
   hn(mesh(fz,gearGeo(40,0.47,0.5,{ratchet:true,bore:2.75,holes:WRS.map(q=>hC(...q,0.55))}),M.steel,0,c.yB+0.85,0),'42013',{gear:{z:40,m:0.47,ratchet:1}});mesh(fz,discGeo(5,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,0.55))]),M.gilt,0,c.yB-1.1,0);
   if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;fz.add(fl);for(const q of WRS)hn(c.screw(fl,q[0],-q[1],-(c.yB+1.1),0.55,0.3,0.6+1.2),'42014');}
-  /* fusee end plate (42019) under the fusee wheel, and the taper pin (42020) through the arbor below it that holds the stack on (Figs. 28, 70). The fusee rises above the
+  /* fusee end plate (42019) under the fusee wheel, against the collar's end, and the taper pin (42020) through the arbor below it that holds the stack on (Figs. 28, 70).
+     The plate is r 7.0 (Figs. 28 and 69 draw it about 0.37 of the wheel across, r 7.5; 1.5 clear of the centre wheel's teeth), so it reaches under the wheel's bore, and its
+     outer face has a slot across it, the notches the pin lies in (Ops. 27-29: "the end plate notches correspond to the taper of the taper pin"). The fusee rises above the
      fusee wheel in the Exploded view, so they come off the arbor's lower end and stay under the wheel (c.endLift) */
-  { const ep=new THREE.Group();fz.add(ep);if(c.loose)c.loose(ep,c.endLift);hn(mesh(ep,ringGeo(2.6,1.02,0.5),M.steel,0,-5.63,0),'42019');const tp=hn(mesh(ep,new THREE.CylinderGeometry(0.17,0.23,4.6,10),M.steel,0,-5.13,0),'42020');tp.rotation.z=Math.PI/2; }
+  { const ep=new THREE.Group();fz.add(ep);if(c.loose)c.loose(ep,c.endLift);hn(mesh(ep,ringGeo(7.0,1.02,0.25),M.steel,0,-5.755,0),'42019');
+    for(const sg of[1,-1])hn(mesh(ep,polyGeo(subtractCircle(discClip(7.0,[[sg*0.24,0,sg]],128),[0,0],1.02),0.25),M.steel,0,-5.63,0),'42019',{sub:1});   /* either side of the slot */
+    const tp=hn(mesh(ep,new THREE.CylinderGeometry(0.17,0.23,9.6,10),M.steel,0,-5.39,0),'42020');tp.rotation.z=Math.PI/2; }   /* in the slot, 0.01 off its floor, about two thirds of the plate across (Fig. 28) */
   /* the fusee's top (Figs. 28, 73, 109): on the top face a slotted layer, the stop-bar in the slot, the stop-bar spring (42025) in a groove round the arbor, and the top plate
      (42008) over them with two screws (27760) into the layer */
   const sbR=new THREE.Group();sbR.rotation.y=al;fz.add(sbR);

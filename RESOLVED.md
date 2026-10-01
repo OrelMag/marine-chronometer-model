@@ -403,6 +403,14 @@ Contents:
   into the springs' feet (tapped, 0.47 thick, 0.03 under the fusee's face that
   turns over them while winding). Keep: the screws from the underside; the
   feet thick enough for 0.4 mm of thread (`bom.py`). `69b2e97`
+- **Fusee end plate a plain washer, the taper pin under it, and (after the
+  arbor's collar) too small to hold the wheel on.** Ops. 27–29 give the plate
+  notches that the taper pin lies in; Figs. 28 and 69 draw it about 0.37 of the
+  fusee wheel across. It was r 2.6 with the pin below it, and once the wheel's
+  bore became r 2.75 nothing held the wheel. Now r 7.0 (1.5 clear of the centre
+  wheel), against the collar's end, with a slot across its outer face in which
+  the pin (9.6 long, as Fig. 28 draws it) lies. Keep: the end plate larger than
+  the wheel's bore. HASH
 
 ## Plates, bridges, screws and arbors
 
