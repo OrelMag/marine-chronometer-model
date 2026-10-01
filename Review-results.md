@@ -1223,7 +1223,9 @@ as the video shows it, bored for the escape arbor; the rest stands.
     (1 October 2026, branch `claude/escape-arbor`; RESOLVED.md)**: a bar
     across the keyhole, symmetric about the jewel, a screw near each end, a
     round cap. Still open: its thickness and the boss under the cap, its
-    steady pins, the end screws' countersunk heads, and the two other
+    steady pins, the end screws' countersunk heads, the cap's edge on the
+    keyhole side (cut straight, parallel to the bar, and stepped down on
+    the frame; the model's cap is a plain disc), and the two other
     endstone caps of the same part (42159), which look round too. From above
     with the bridge on (`KLUwI2UUCMQ` 10:00), it is a long straight plate,
     rounded at both ends, with the jewel and its two-screw endstone cap in
