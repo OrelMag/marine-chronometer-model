@@ -381,7 +381,7 @@ Contents:
   fixed end, closing the ring (17° relaxed, 7.7° loaded), and the band bows in
   from the wall as it closes, keeping its length. Keep: each end pinned, the
   fixed one in the wheel's frame, the working one in the ratchet's; the gap
-  closes under load. HASH
+  closes under load. `65aff17`
 
 ## Plates, bridges, screws and arbors
 
