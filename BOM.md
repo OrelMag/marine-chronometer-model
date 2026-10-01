@@ -56,10 +56,10 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 107-15 | 42033 | Hand - Minute | 1 | 1 | hands | Broached square, on the cannon pinion's square below its end (Op. 64). | round 42077 (press): 1.135 mm, least gap 0.0215 | ✓ |
 | 107-16 | 42032 | Hand - Hour | 1 | 1 | hands | Pressed on the hour wheel's pipe (Op. 64). | round 42080 (press): 0.97 mm, least gap 0.0289 | ✓ |
 | 107-17 | 42034 | Hand - Second, complete with pin | 1 | 1 | hands | On the fourth wheel's arbor; turns once a minute in half-second steps. | round 42073 (press): 0.626 mm, least gap 0.0131<br>also: invariants.py: second hand | ✓ |
-| 107-18 | 42035 | Hand - Wind indicator | 1 | 1 | hands | On the wind indicator wheel's pipe; shows the hours run since winding (UP-DOWN). | round 42081 (press): 0.39 mm, least gap 0.0116<br>also: invariants.py: wind indicator | ✓ |
+| 107-18 | 42035 | Hand - Wind indicator | 1 | 1 | hands | On the wind indicator wheel's pipe; shows the hours run since winding (UP-DOWN). | round 42081 (press): 0.39 mm, least gap 0.0105<br>also: invariants.py: wind indicator | ✓ |
 | 107-19 | 42030 | Dial - Modern arabic numeral style | 1 | 1 | dial | Hours, minutes, seconds and UP-DOWN scales (Sec. II). | on 42060: 0 mm | ✓ |
 | 107-20 | 35756 | Screw - Dial | 4 | 4 | dial | Hold the dial by its feet, from the train side of the pillar plate. | in 42060 (clear): 3.853 mm, least gap 0.072<br>in 42030 (tap): 1.778 mm, least gap 0.0162 | ✓ |
-| 107-21 | 42081 | Wheel - Wind indicator, complete with hub | 1 | 1 | motion | Driven by the pinion on the fusee arbor; turns on its post and carries the wind indicator hand (Sec. II). | round 42084 (free): 3.606 mm, least gap 0.051<br>meshes 42022: centres 12.2938 (m(z1+z2)/2 12.2907), 98/8 teeth, faces overlap 0.8, ratio -12.25 | ✓ |
+| 107-21 | 42081 | Wheel - Wind indicator, complete with hub | 1 | 1 | motion | Driven by the pinion on the fusee arbor; turns on its post and carries the wind indicator hand (Sec. II). | round 42084 (free): 3.606 mm, least gap 0.0514<br>meshes 42022: centres 12.2938 (m(z1+z2)/2 12.2907), 98/8 teeth, faces overlap 0.8, ratio -12.25 | ✓ |
 | 107-22 | 42080 | Wheel - Hour, complete with hub | 1 | 1 | motion | Driven by the minute pinion; turns free on the cannon pinion's pipe (Op. 59), once in 12 h. | round 42077 (free): 3.302 mm, least gap 0.0485<br>meshes 42078: centres 9.6 (m(z1+z2)/2 9.6), 40/10 teeth, faces overlap 0.8, ratio -4<br>also: invariants.py: hour hand | ✓ |
 | 107-23 | 42078 | Wheel - Minute, complete with pinion | 1 | 1 | motion | Driven by the cannon pinion, drives the hour wheel; turns on its post. | round 42085 (free): 3.007 mm, least gap 0.0214<br>meshes 42077: centres 9.6 (m(z1+z2)/2 9.6), 36/12 teeth, faces overlap 0.8, ratio -3 | ✓ |
 | 107-24 | 42077 | Pinion - Cannon | 1 | 1 | motion | A friction fit on the centre arbor (Op. 58), slipping when the hands are set; carries the minute hand. | round 42068 (press): 5.278 mm, least gap 0.0003 | ✓ |
@@ -106,7 +106,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-35 | 42029 | Plate - Setup cover | 1 | 1 | ratchet | Covers the setup ratchet and click; holds the click's pivot screw (Sec. II). |  | ✓ |
 | 108-36 | 42056 | Screw - Setup cover plate | 2 | 2 | ratchet | Hold the cover plate on its feet to the barrel bridge. | in 42029 (clear): 2.465 mm, least gap 0.067<br>in 42061 (tap): 2.218 mm, least gap 0.0616 | ✓ |
 | 108-37 | 42026 | Wheel - Setup ratchet | 1 | 1 | ratchet | On the barrel arbor above the barrel bridge; held by the click so the arbor never turns in winding or running (Sec. II). | round 42170 (press): 0.993 mm, least gap 0.018<br>also: bom.py fn: setup click | ✓ |
-| 108-38 | 42027 | Pawl - Setup | 1 | 1 | ratchet | The click: bears on the setup ratchet's steep faces against the mainspring's pull (Sec. II). | round 42036 (free): 0.787 mm, least gap 0.0297<br>on 42026: 0 mm | ✓ |
+| 108-38 | 42027 | Pawl - Setup | 1 | 1 | ratchet | The click: bears on the setup ratchet's steep faces against the mainspring's pull (Sec. II). | round 42036 (free): 0.84 mm, least gap 0.028<br>on 42026: 0 mm | ✓ |
 | 108-39 | 42051 | Seal - Dust | 1 | 1 | post | Seals where the fusee arbor rises through the barrel bridge (Fig. 24). | on 42061: 0.02 mm | ✓ |
 | 108-36 | 42056 | Screw - Dust seal | 2 | 2 | post | Hold the dust seal's flange to the barrel bridge. | in 42051 (clear): 0.978 mm, least gap 0.0719<br>in 42061 (tap): 2.005 mm, least gap 0.0378 | ✓ |
 | 108-40 | 42054 | Ring - Packing | 3 | 3 | post | Stacked in the seal round the arbor's square. | on 42051/42054: 0 mm | ✓ |
@@ -117,8 +117,8 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-44 | 42055 | Screw - Barrel bridge | 2 | 2 | barrelBridge | Hold the barrel bridge to the train bridge. | in 42061 (clear): 3.455 mm, least gap 0.1919<br>in 42062/42059 (tap): 3.248 mm, least gap 0.0232 | ✓ |
 | 108-45 | 42164 | Bushing - Barrel upper | 1 | 1 | barrelBridge | Bearing for the barrel arbor's upper end. | in 42061 (press): 0.097 mm, least gap 0.0199 | ✓ |
 | 108-45 | 42164 | Bushing - Fusee upper | 1 | 1 | barrelBridge | Bearing for the fusee arbor's upper end. | in 42061 (press): 0.097 mm, least gap 0.0198 | ✓ |
-| 108-46 | 42028 | Spring - Setup pawl, complete with pins | 1 | 1 | ratchet | Holds the click in the setup ratchet's teeth. | on 42027: 0 mm | ✓ |
-| 108-47 | 42036 | Screw - Setup pawl pivot | 1 | 1 | ratchet | The click turns on it; through the cover into the barrel bridge. | in 42029 (clear): 1.082 mm, least gap 0.0779<br>in 42061 (tap): 2.017 mm, least gap 0.0644 | ✓ |
+| 108-46 | 42028 | Spring - Setup pawl, complete with pins | 1 | 1 | ratchet | Holds the click in the setup ratchet's teeth. | on 42027: 0.0177 mm | ✓ |
+| 108-47 | 42036 | Screw - Setup pawl pivot | 1 | 1 | ratchet | The click turns on it; through the cover into the barrel bridge. | in 42029 (clear): 1.037 mm, least gap 0.1048<br>in 42061 (tap): 3.359 mm, least gap 0.0602 | ✓ |
 | 108-48 | 42099 | Stop - Fusee winding stop-bar | 1 | 1 | barrelBridge | Stud under the barrel bridge (left-hand thread, Op. 42) that the stop-bar meets at full wind (Sec. II). | in 42061 (tap): 2.017 mm, least gap 0.0334<br>also: maintaining.py: stop-bar meets the stop | ✓ |
 
 ## Fig. 109: barrel and fusee
@@ -126,26 +126,26 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | Idx | No. | Name | Manual | Model | Card | Function | Fit and drive (measured) | |
 |---|---|---|---|---|---|---|---|---|
 | 109-1 | 42169 | Cap - Barrel | 1 | 1 | barrel | Closes the barrel on the pillar-plate end, held by five screws (Figs. 26, 109). | on 42168: 0 mm | ✓ |
-| 109-2 | 37023 | Screw - Barrel cap | 5 | 5 | barrel | Hold the barrel cap. | in 42169 (clear): 0.564 mm, least gap 0.0287<br>in 42168 (tap): 0.423 mm, least gap 0.0224 | ✓ |
+| 109-2 | 37023 | Screw - Barrel cap | 5 | 5 | barrel | Hold the barrel cap. | in 42169 (clear): 0.564 mm, least gap 0.0286<br>in 42168 (tap): 0.423 mm, least gap 0.0224 | ✓ |
 | 109-3 | 42170 | Arbor - Barrel | 1 | 1 | ratchet | Carries the mainspring's inner end on its hook; held still by the setup ratchet and click (Sec. II). | in 42164.bu (run): 3.375 mm, least gap 0.04<br>in 42164.bl (run): 2.978 mm, least gap 0.05 | ✓ |
 | 109-4 | 42038 | Mainspring - Complete with anchor pin, 0.0165 in thick | 1 | 1 | mainspring | The power: inner end on the arbor's hook, outer end by its pin at the brace (Sec. II). | also: fine.py: barrel-clearance.js coils inside the barrel | ✓ |
 | 109-5 | 42037 | Brace - Mainspring | 1 | 1 | barrel | Lines the wall where the mainspring's outer end hooks. | on 42168: 0 mm | ✓ |
-| 109-6 | 42168 | Barrel - Mainspring, complete with anchor pin | 1 | 1 | barrel | Turns clockwise in running, drawing the chain off the fusee (Sec. IV). | round 42170 (run): 0.993 mm, least gap 0.0507 | ✓ |
-| 109-7 | 42020 | Pin - Taper, fusee assembly | 1 | 1 | fusee | Through the arbor under the end plate: holds the stack on (Figs. 28, 70). | in 42022 (embed): 2.014 mm, least gap -0.2106 | ✓ |
-| 109-8 | 42019 | Plate - Fusee end | 1 | 1 | fusee | Under the fusee wheel, held by the taper pin. | round 42022 (free): 0.503 mm, least gap 0.0278 | ✓ |
-| 109-9 | 42015 | Wheel - Fusee | 1 | 1 | gw | First wheel of the train, free on the fusee arbor; drives the centre pinion (Secs. II, IV). | round 42022 (free): 1.759 mm, least gap 0.0561<br>meshes 42068: centres 22.9427 (m(z1+z2)/2 22.9405), 96/14 teeth, faces overlap 1.2, ratio -6.857143 | ✓ |
+| 109-6 | 42168 | Barrel - Mainspring, complete with anchor pin | 1 | 1 | barrel | Turns clockwise in running, drawing the chain off the fusee (Sec. IV). | round 42170 (run): 0.993 mm, least gap 0.0501 | ✓ |
+| 109-7 | 42020 | Pin - Taper, fusee assembly | 1 | 1 | fusee | Through the arbor under the end plate: holds the stack on (Figs. 28, 70). | in 42022 (embed): 1.975 mm, least gap -0.2104 | ✓ |
+| 109-8 | 42019 | Plate - Fusee end | 1 | 1 | fusee | Under the fusee wheel, held by the taper pin. | round 42022 (free): 0.503 mm, least gap 0.0361 | ✓ |
+| 109-9 | 42015 | Wheel - Fusee | 1 | 1 | gw | First wheel of the train, free on the fusee arbor; drives the centre pinion (Secs. II, IV). | round 42022 (free): 1.759 mm, least gap 0.064<br>meshes 42068: centres 22.9427 (m(z1+z2)/2 22.9405), 96/14 teeth, faces overlap 1.2, ratio -6.857143 | ✓ |
 | 109-10 | 42016 | Spring - Sustaining, complete with pins | 1 | 1 | sspring | Under load in running; drives the train alone for 5-10 minutes while winding (Sec. IV). | also: maintaining.py: spring loaded in running, relaxes in winding | ✓ |
-| 109-11 | 42009 | Wheel - Sustaining ratchet, complete with pawls | 1 | 1 | sratchet | Free on the fusee arbor; its pawls take the winding ratchet's drive in running; the sustaining pawl holds it in winding (Sec. IV). | round 42022 (free): 0.251 mm, least gap 0.0578<br>also: maintaining.py: never turns back | ✓ |
+| 109-11 | 42009 | Wheel - Sustaining ratchet, complete with pawls | 1 | 1 | sratchet | Free on the fusee arbor; its pawls take the winding ratchet's drive in running; the sustaining pawl holds it in winding (Sec. IV). | round 42022 (free): 0.251 mm, least gap 0.0657<br>also: maintaining.py: never turns back | ✓ |
 | 109-12 | 42007 | Spring - Winding pawl, complete with pins | 2 | 2 | sratchet | Hold the winding pawls in the winding ratchet's teeth. | on 42009: 0 mm<br>also: maintaining.py: pawls on their teeth | ✓ |
 | 109-13 | 42012 | Screw - Winding pawl spring | 4 | 4 | sratchet | Hold the winding pawl springs. | in 42007 (clear): 0.277 mm, least gap 0.0346<br>in 42009 (tap): 0.508 mm, least gap 0.0226 | ✓ |
 | 109-14 | 42013 | Wheel - Winding ratchet | 1 | 1 | fusee | Screwed to the fusee's large end; its teeth drive the winding pawls in running, slip under them in winding (Sec. IV). | on 42021: 0 mm<br>also: maintaining.py: fusee catches forward | ✓ |
-| 109-15 | 42014 | Screw - Winding ratchet wheel | 2 | 2 | fusee | Hold the winding ratchet to the fusee. | in 42013 (clear): 0.482 mm, least gap 0.0438<br>in 42021 (tap): 1.301 mm, least gap 0.0212 | ✓ |
+| 109-15 | 42014 | Screw - Winding ratchet wheel | 2 | 2 | fusee | Hold the winding ratchet to the fusee. | in 42013 (clear): 0.482 mm, least gap 0.0434<br>in 42021 (tap): 1.301 mm, least gap 0.0204 | ✓ |
 | 109-16 | 42008 | Plate - Fusee top | 1 | 1 | fusee | Covers the stop-bar and its spring in the fusee's top. | on 42021: 0 mm | ✓ |
-| 109-17 | 27760 | Screw - Fusee top plate | 2 | 2 | fusee | Hold the top plate. | in 42008 (clear): 0.568 mm, least gap 0.0433<br>in 42021 (tap): 0.52 mm, least gap 0.0204 | ✓ |
+| 109-17 | 27760 | Screw - Fusee top plate | 2 | 2 | fusee | Hold the top plate. | in 42008 (clear): 0.568 mm, least gap 0.0442<br>in 42021 (tap): 0.52 mm, least gap 0.0211 | ✓ |
 | 109-18 | 42025 | Spring - Winding stop-bar | 1 | 1 | fusee | Draws the stop-bar back when the chain runs off its last turn. | on 42024: 0.02 mm | ✓ |
 | 109-19 | 42024 | Stop-bar - Winding | 1 | 1 | fusee | Pushed out by the chain at full wind to meet the winding stop (Secs. II, IV). | also: maintaining.py: stop-bar meets the stop | ✓ |
 | 109-20 | 42021 | Fusee - Complete with arbor | 1 | 1 | fusee | Its spiral groove evens the mainspring's pull on the train (Sec. II). |  | ✓ |
-| 109-21 | 42022 | Arbor - Fusee, complete with wind indicator pinion | 1 | 1 | fusee | Squared for the key; its pinion drives the wind indicator wheel (Sec. II). | in 42164.fu (run): 3.518 mm, least gap 0.0278<br>in 42164.fl (run): 4.021 mm, least gap 0.0343<br>meshes 42081: centres 12.2938 (m(z1+z2)/2 12.2907), 8/98 teeth, faces overlap 0.8, ratio -0.081633<br>also: invariants.py: wind indicator | ✓ |
+| 109-21 | 42022 | Arbor - Fusee, complete with wind indicator pinion | 1 | 1 | fusee | Squared for the key; its pinion drives the wind indicator wheel (Sec. II). | in 42164.fu (run): 3.518 mm, least gap 0.0357<br>in 42164.fl (run): 4.021 mm, least gap 0.0386<br>meshes 42081: centres 12.2938 (m(z1+z2)/2 12.2907), 8/98 teeth, faces overlap 0.8, ratio -0.081633<br>also: invariants.py: wind indicator | ✓ |
 | 109-22 | 42001 | Fusee Chain Assembly | 1 | 1 | chain | Links barrel to fusee; hooked to the barrel, pinned to the fusee (Sec. II, Figs. 26, 28). | also: fine.py: links on the fusee | ✓ |
 
 ## Fig. 110: escapement, train, bridges and pillar plate
