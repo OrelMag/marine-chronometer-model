@@ -31,6 +31,11 @@ are fixed; a few parts are drawn differently from the figures and a few small
 ones are not drawn, as listed. See
 [Every part against the manual](#every-part-against-the-manual).
 
+A fifth review set the fusee assembly against the manual's exploded drawing
+(Fig. 28) and the restoration video: every part is there and works, but six
+differ in shape, and a wind at high speed outlasted the sustaining spring
+(fixed). See [The fusee assembly against Fig. 28 and the video](#the-fusee-assembly-against-fig-28-and-the-video).
+
 A fourth review checked the fusee and chain against the manual and the
 photographs: the fusee was too thin at its small end, its groove turned in
 rings, the chain's links lay flat, and the stop-bar moved with the wind count
@@ -1077,6 +1082,31 @@ on the top-view photograph) had the right parts in the wrong arrangement.
    assumption, the rim a 40.5 mm circle about the centre arbor; 18 sets them
    against the top-view comparison and the dial side, which agree with the
    model. The bridge is drawn round the model's arbors meanwhile.
+
+   A fourth reading, from the other side (1 October 2026,
+   `tools/anchors/KLUwI2UUCMQ_6-29.json`, `video.py fit` then `unproj`):
+   6:29, the same movement from above with the cock on, its camera fitted
+   to the barrel bridge's screws that `topview.py` maps the top-view
+   photograph by (the setup cover's two, the train-bridge screw sunk through
+   the bridge and the one beside it, the barrel pillar screw's empty hole),
+   the cock's screw hole and the bridge's near rim. Rms 38 px (about 1.5 mm).
+   The balance's endstone, put back at the cap's height, lands at (7.0,
+   6.8), 1.0 mm from the model's balance; leaving out any one point or the
+   rim keeps it within (5.9-9.2, 6.1-7.5). The fusee's winding post lands
+   about 2.6 mm from the model's arbor. So this movement's balance sits
+   where the photographed movement's does, relative to the barrel bridge,
+   the fusee and the cock. That doesn't contradict 36:01: the model's
+   balance, fusee, barrel and barrel-bridge screws all come from the same
+   two photographs, and this fit can't see an error in where that group
+   stands relative to the train (the centre, third and fourth arbors), which
+   is what 36:01 and 18's fits measure the balance against. What would
+   settle it: one frame with a train arbor and the balance (or the barrel
+   bridge's screws) in it, such as 12:40-12:46 (the barrel bridge on, the
+   balance's lower jewel and the escape teeth through the keyhole, the
+   fusee and barrel arbors standing), fitted on the barrel bridge's screws
+   and read at the slab's height. A turn of the photographed group about
+   the centre would also move the fusee relative to the up-and-down
+   indicator under the 12, so the indicator's gearing is a further check.
 15. **The keyhole** (new). From below (13:49.5) the escape lobe is the oval
    passage above, through both bridges. The balance lobe is closed underneath
    by the lower bridge, with the cap at its bottom. The lobes' plan sizes wait
@@ -1357,7 +1387,39 @@ on the top-view photograph) had the right parts in the wrong arrangement.
     plate's rim failed: the picks mix the plate's edge with the mounting
     ring's inner step (a free fit ran to a 1000 px focal length). Next: trace
     the plate's edge alone, on 40:05–40:20, and fit two frames together.
-19. **The detent against the manual and the video** (new, 1 October 2026;
+19. **The dial's 12-6 axis against the photographed group** (new, 1 October
+    2026, branch `claude/balance-train`). **Measured: the fusee (and the
+    barrel) stand about 13° further round from the 12 than the model has
+    them.** Two independent readings:
+    - **The dial side, rectified** (`tools/rimfit.py rimfit_40-08.json`;
+      40:08, the motion work off). A perspective camera fitted to the
+      mounting ring's bore (r 40.2) about the centre arbor's bushing: rim rms
+      0.15-0.21 mm over focal lengths of 4000-8000 px, the centre arbor
+      within 0.1 mm. About the centre, from the indicator's stud (at 12): the
+      fourth's jewel (the seconds) 176° (model 180), the minute wheel's stud
+      86-91° (model 90), **the fusee's bushing 43-45° (model 30.3)**, the
+      bushing taken for the barrel's -77 to -81° (model -89.4). The fusee
+      at r 21.8-22.7 (model 22.9). This rectifies what 18's last paragraph
+      read unrectified.
+    - **The indicator wheel's size** (23:30, laid flat; the 120-tooth wheel
+      counted there): its tips about 35-38 mm across against the train
+      bridge's rim beside it (r 40.5), perhaps 5-10 % less for its being
+      nearer the camera; the model's is 22.4 mm (module 0.186, from the
+      fusee's 12.3 mm from the indicator). With the fusee's 12-leaf pinion,
+      a wheel that size needs the fusee 18-20 mm from the indicator's
+      centre, 45-52° round from the 12: the dial side's 43-45°.
+
+    So the model's photographed group (balance, fusee, barrel, the bridges,
+    the cock) is turned about 13° from the dial and the train, or the dial
+    and the train about -13° from it. The group's own internal layout stands
+    (6:29 and 14). Turning it brings the balance 16.7 mm from the fourth
+    (model 18.9), toward 36:01's 12.0; that reading's remaining 18° is open.
+    The fix (not made): the dial, the fourth, third, escape and indicator
+    arbors, the minute wheel and the lower train bridge turned about the
+    centre against the group, the indicator's gearing sized to its wheel,
+    the escapement's direction and the lower bridge's outline redone, and
+    every check and the essay's figures rerun.
+20. **The detent against the manual and the video** (new, 1 October 2026;
     branch `claude/detent-fixings`). The escapement works as the manual has
     it: lock 6.0°, let-off 10.6°, overall 28.4°, drop 2.1°, roller shake
     0.055 mm and horn clearance 0.25 mm (`tools/escapement.js`). The tooth
@@ -1427,3 +1489,56 @@ on the top-view photograph) had the right parts in the wrong arrangement.
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
+
+## The fusee assembly against Fig. 28 and the video
+
+1 October 2026. The seventeen parts of Fig. 28 (the manual's exploded fusee)
+against `movement.js`, Figs. 12 and 69–73, Sec. II and IV, Ops. 16–45, and the
+restoration video `KLUwI2UUCMQ` at 13:30, 17:23 and 27:20–29:20 (readings in
+`References/VIDEOS.md`, Measurements).
+
+Every part is modelled and moves: the top plate, its screws, the winding
+ratchet, its screws, the taper pin and the end plate turn with the fusee; the
+stop-bar slides as the chain winds over its nose, and its spring follows it;
+the chain is laid along its path at every wind; the winding pawls ride the
+winding ratchet's teeth, their springs following them; the sustaining ratchet
+turns with the fusee wheel in running and stands while winding; the sustaining
+spring is drawn loaded in running and relaxing while winding. The model is
+kinematic: positions follow the time and the wind; no force is computed.
+
+Fixed: a wind lasts seconds on screen whatever the speed, so at high speed the
+sustaining spring drove the train for hours of model time (RESOLVED.md,
+Winding and maintaining work).
+
+### Open, most certain first
+
+1. **Sustaining spring** (27:26; Figs. 69, 71). A flat blued band about
+   2.1 mm wide, r 15.8–18.0, against the recess wall, round about 335° (its
+   fixed end widened inward, with two holes; a lighter working end with an
+   upright pin). The model: 0.7 mm wide, r 13.2–13.9, 250°, its free end
+   pushed by a pin on the ratchet (the manual pins both ends).
+2. **Fusee wheel** (27:26; Figs. 71, 72; Ops. 20, 26). Its recess reaches
+   r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
+   recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
+   model's web is flat.
+3. **Fusee's top** (13:30, 17:23; Fig. 28). A steel collar r ≈ 2.9 round the
+   arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
+   has no collar, a plate hole of r 1.02 and its screws at r 3.2.
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). Gilt brass, not steel; the
+   winding-pawl spring screws go in from the fusee wheel's side (slotted heads
+   there). The model has the heads on the pawl side.
+5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
+   Op. 23). A steel collar r ≈ 2.7 on the arbor below the fusee carries the
+   sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
+   arbor); the large end has a raised outer rim round the winding ratchet,
+   whose tips read r ≈ 8.5 (model 9.85; rough, oblique).
+6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). Notches in its face that
+   the taper pin lies in; the model's is a plain washer with the pin under it.
+   Figs. 28 and 69 both draw it about 0.37 of the fusee wheel across (r ≈ 7.5;
+   model 2.6), not yet seen on video.
+7. **Winding pawl springs** (Figs. 28, 69). Drawn as long arcs round a raised
+   ring about the ratchet's centre; the model's are short bent strips. Not yet
+   seen on video (hidden in the stack).
+
+Not seen on video yet: the end plate, the winding pawls and their springs, the
+stop-bar and its spring.

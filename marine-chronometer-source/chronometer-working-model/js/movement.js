@@ -65,7 +65,7 @@ const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);retur
 const ES=13.16/2,ESC=makeEsc({EX:-Math.hypot(L.B[0]-L.E[0],L.B[1]-L.E[1])/ES});
 /* the detent support block's top face, against the train bridge (Fig. 90, Fig. 14, KLUwI2UUCMQ 11:08): its screw's hole between two positioning pins on its centre line, in
    detent coordinates (t, n: ESC.D); Fig. 90 scaled by the 11.3 mm from the point of flexure to the locking jewel, to about 0.3 mm. Pin a is 2.9 mm nearer the screw than
-   Fig. 90's (t -1.45): there, in the model's place for the block, it would stand past the train bridge's cut round the barrel (Review-results.md, "Elsewhere", 19) */
+   Fig. 90's (t -1.45): there, in the model's place for the block, it would stand past the train bridge's cut round the barrel (Review-results.md, "Elsewhere", 20) */
 const DBLK={s:[-0.56,-0.29],p:[[-1.0,-0.29],[0.31,-0.29]]};
 
 /* polygon minus a circle that crosses its boundary: keep the part outside the circle, close it with the arc that runs through the polygon.
@@ -543,7 +543,7 @@ function buildMovement(M){
   const dd=new THREE.Group();dd.position.copy(R.det.position);dd.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(dd);const T=(t,n)=>[t*ES,-n*ES];
   { const df=new THREE.Group();df.rotation.x=Math.PI;dd.add(df);const[x,z]=T(...DBLK.s);const k=hn(screw(df,x,-z,17.46,0.9,0.5,3.2+2.4),'42056.blk');k.userData.lift=3.2+2.4+0.5;k.traverse(m=>m.userData.driveHide=true); }   /* detent support block screw (42056), in the flipped frame, its head under the block, put in from below through the block into the train bridge. Provisional: the manual and
      the video put it in from above, through the train bridge into a tapped hole in the block's top (Sec. II, Figs. 14, 22, 84; KLUwI2UUCMQ 10:45, 11:08), where the barrel bridge's horn
-     covers the model's block; it turns round with the block's place (Review-results.md, "Elsewhere", 19 and 12) */
+     covers the model's block; it turns round with the block's place (Review-results.md, "Elsewhere", 20 and 12) */
   const across=(g,t,n0,n1,r,y,mat)=>{const q=mesh(g,cylY(r,(n1-n0)*ES,16),mat,t*ES,y,-(n0+n1)/2*ES);q.rotation.x=Math.PI/2;return q;};
   hn(across(dd,-0.75,0.083,0.083+1.4/ES,0.95,-18.31,M.steel),'37024');hn(across(dd,-0.75,0.083,0.083+0.25/ES,1.25,-18.31,M.steel),'42251.det');for(const t of[-1.2,-0.3])hn(across(dd,t,-0.2,0.083+1.2/ES,0.22,-18.31,M.steel),'42086',{sub:1});   /* the detent's steady pins, standing 1.2 mm out of the foot (Fig. 90, KLUwI2UUCMQ 11:08) */
   hn(across(dd,-0.75,-0.35,0.083,0.45,-18.31,M.steel),'37024',{sub:1});   /* the clamp screw's shank, through the foot into the block */
@@ -817,8 +817,9 @@ function buildMovement(M){
   let lastN=-1,lastEps=0,lastIn=-1,lastTh=null,lastPs='',srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0;
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
   const FPR=ratchetProf(40,0.47,false),SRP=ratchetProf(120,0.27,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1).psi;
-  /* the sustaining spring's travel from loaded (running) to spent: 5 to 10 minutes of drive (Sec. IV) is 4.4 to 8.75 deg of the fusee wheel; 10 deg drawn, estimated */
-  const SMAX=10*D2R;R.WPH=WPH;R.SMAX=SMAX;
+  /* the sustaining spring's travel from loaded (running) to spent: the fusee wheel's turn in 10 minutes, the longer of the 5 to 10 minutes it drives the train (Sec. IV): 9.3 deg.
+     A wind never outlasts it: app.js runs model time at most WIND_X fast while winding */
+  const SMAX=FUSEE_PER_HOUR*TAU/6;R.WPH=WPH;R.SMAX=SMAX;
   /* when winding starts the spring turns the sustaining ratchet back until a steep face meets the sustaining pawl */
   const holdBack=a=>{const q0=[SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],tr=psi=>{const q=toWheel(q0,[0,0],psi),th=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-psi,SRP),t=R.spawl.userData.pts[PAWL_TIP],c=Math.cos(th),sn=Math.sin(th);return Math.hypot(q[0]+t[0]*c+t[1]*sn,q[1]-t[0]*sn+t[1]*c);};
     let b=a,r=tr(a);for(let i=0;i<60;i++){const nb=b-SRP.p/40,nr=tr(nb);if(nr>r+0.004)break;b=nb;r=Math.min(r,nr);}return b;};
@@ -859,6 +860,10 @@ function buildMovement(M){
   mv.userData.escSet=()=>{for(const d of DETM){d.m.geometry.dispose();d.m.geometry=d.G();}{const[wx,wz]=wpAt();wPin.position.x=wx;wPin.position.z=wz;}
     roll.geometry.dispose();roll.geometry=rollG();collar.geometry.dispose();collar.geometry=collarG();palSet(pI,...palI());palSet(pD,...palD());lastPs='';};
   mv.userData.explode(0);
+  /* the damascening only on the plates' and bridges' train-side faces: their undersides, edges and bevels plain, and the balance lower bridge plain all over, as the
+     restoration video shows them (References/VIDEOS.md). Parts only: the laid-out view's schematic plates have no partName */
+  mv.updateMatrixWorld(true);mv.traverse(o=>{if(!o.isMesh||o.material!==M.plate)return;let p=o;while(p&&p!==mv&&!p.userData.partName)p=p.parent;if(!p||p===mv)return;
+    plainFaces(o,M.plateCrest,p.userData.partName!=='lowerBridge',mv);});
   return mv;
 }
 
