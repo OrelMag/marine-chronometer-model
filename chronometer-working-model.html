@@ -2389,9 +2389,11 @@ function makeFusee(M,c){
      (42008) over them with two screws (27760) into the layer */
   const sbR=new THREE.Group();sbR.rotation.y=al;fz.add(sbR);
   const lay=(pts,holes)=>mesh(sbR,polyGeo(pts,0.5,holes||[]),M.gilt,0,yT-0.5,0);
-  lay(subtractCircle(discClip(capR,[[zHi,0,1]],128),[0,0],4.55));lay(subtractCircle(discClip(capR,[[zLo,0,-1]],128),[0,0],4.55));   /* rim, either side of the slot */
-  lay(discClip(4.05,[[zHi,0,1]],96),[[0,0,1.02],hT(0,3.2,0.55)]);lay(discClip(4.05,[[zLo,0,-1]],96),[hT(0,-3.3,0.55)]);   /* hub round the arbor, and its small side; the spring's groove is between (r 4.05-4.55) */
-  hn(mesh(sbR,discGeo(capR-0.2,0.6,[[0,0,1.02],hC(0,3.2,0.55),hC(0,-3.3,0.55)]),M.gilt,0,yT-1.1,0),'42008');if(c.screw)for(const z of[3.2,-3.3])hn(c.screw(sbR,0,z,yT-1.1,0.55,0.3,0.6+0.5),'27760.fu');
+  lay(subtractCircle(discClip(capR,[[zHi,0,1]],128),[0,0],4.55),[hT(0,7.0,0.55)]);lay(subtractCircle(discClip(capR,[[zLo,0,-1]],128),[0,0],4.55),[hT(0,-7.0,0.55)]);   /* rim, either side of the slot, tapped for the top plate's screws */
+  lay(discClip(4.05,[[zHi,0,1]],96),[[0,0,1.02]]);lay(discClip(4.05,[[zLo,0,-1]],96));   /* hub round the arbor, and its small side; the spring's groove is between (r 4.05-4.55) */
+  hn(mesh(sbR,discGeo(capR-0.2,0.6,[[0,0,1.02],hC(0,7.0,0.55),hC(0,-7.0,0.55)]),M.gilt,0,yT-1.1,0),'42008');if(c.screw)for(const z of[7.0,-7.0])hn(c.screw(sbR,0,z,yT-1.1,0.55,0.3,0.6+0.5),'27760.fu');   /* its screws opposite each other at r 7.0 (restoration video 13:30, face-on) */
+  hn(cylBetween(fz,2.9,yT-1.1,yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, standing on the top plate (video 13:30, 17:23: r 2.9; its height estimated). Fig. 28 draws a raised hub through a
+     large hole in the plate, beside which the stop-bar's slot would run; the bar's place under the plate isn't seen, so the collar starts at the plate */
   const stopBar=hn(new THREE.Group(),'42024');stopBar.position.y=yT-0.25;sbR.add(stopBar);   /* in the slot, 0.025 off the top face and 0.025 under the plate */
   mesh(stopBar,new THREE.BoxGeometry(xF0-xB0,0.45,2*BW),M.steel,(xF0+xB0)/2,0,sbZ);   /* the bar (first child: tools/maintaining.py measures it) */
   { const s=new THREE.Shape(),yb0=0.225,Y=y=>y-(yT-0.25);[[xB0+0.5,yb0],[xB0,yb0],[xB0,Y(yNt)],[xN,Y(yNt)],[xN,Y(yNb)],[xN+0.5,Y(yNb)],[xN+0.5,Y(yNt)+0.1],[xB0+0.5,Y(yNt)+0.1]].forEach(([x,y],i)=>i?s.lineTo(x,y):s.moveTo(x,y));

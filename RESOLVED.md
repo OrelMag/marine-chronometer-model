@@ -390,6 +390,12 @@ Contents:
   so the plate bears on it, and the winding ratchet, the sustaining ratchet's
   web and the fusee wheel have r 2.75 bores round it. Keep: the wheels free on
   the collar, not on the arbor. `ec2e80d`
+- **Fusee top plate's screws beside the arbor, and no collar over it.** The
+  screws stood at r 3.2. The restoration video, face-on at 13:30, shows them
+  opposite each other near the plate's rim (r 7.0) and a steel collar r 2.9 on
+  the arbor at its centre. Now so; the screws go into the slotted layer's rim
+  either side of the slot. The collar's height (1.0) is estimated. Keep: the
+  screws clear of the stop-bar's slot and of its spring. HASH
 
 ## Plates, bridges, screws and arbors
 
