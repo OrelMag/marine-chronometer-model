@@ -395,7 +395,7 @@ Contents:
   opposite each other near the plate's rim (r 7.0) and a steel collar r 2.9 on
   the arbor at its centre. Now so; the screws go into the slotted layer's rim
   either side of the slot. The collar's height (1.0) is estimated. Keep: the
-  screws clear of the stop-bar's slot and of its spring. HASH
+  screws clear of the stop-bar's slot and of its spring. `2aa6e7a`
 
 ## Plates, bridges, screws and arbors
 
