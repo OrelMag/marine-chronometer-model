@@ -40,6 +40,8 @@ searching a video again.
 |---|---|---|
 | 2:15–2:45 | The movement out of its case, oblique and from the side: the balance cock stands at the rim as a tall polished block (2:36) | The cock's height and its solid outer wall |
 | **4:56–6:47** | **From above (12 o'clock toward the camera): the cock in place, its screw out (5:56), its nose and endstone cap close (5:50), then lifted off (6:44); 6:29 and 6:47 are the same view with the cock on and off** | The cock's outline, the barrel bridge's edge beside it, the cock's screw and steady-pin holes in the train bridge |
+| **10:44–10:48** | **From above, the detent's support block's screw taken out at the train bridge's edge below the keyhole; the keyhole's two lobes and the lower bridge's pocket in them** | Detent block's place |
+| 10:51–11:06 | The detent with its support block drawn out from under the train bridge, then held up (11:05–11:11): a long rectangular block with the screw hole at one end | Detent block's shape |
 | 9:56–10:26 | The escape upper bridge taken off (10:00: on, over the keyhole's escape lobe), its jewel and endstone close (10:16–10:26) | Escape arbor's place |
 | **10:06–10:13** | **The escape wheel lifted out from above through the keyhole, the lower bridge in place: a long arbor, the pinion near its lower end** | Escape arbor's length |
 | **10:28–10:38** | **Side-on under the train bridge: the detent, the balance lower bridge's slab, the fourth arbor from it down past its wheel** | Lower bridge's heights |
@@ -125,7 +127,8 @@ frame`, in `$MC_VIDEO/frames`).
 | Escape wheel's height | 15.6 mm above the plate; model 15.1 | 42:56 | ±0.5 mm | The same |
 | Settings' spacing on the slab | Cap to escape passage, cap to fourth's setting, passage to fourth's setting 8.6 : 10.8 : 11.6 (angle at the cap 73°); 10.8–11.8 mm from cap to fourth's setting by two rulers. Model's balance, escape and fourth arbors 9.4 : 18.9 : 10.6 | 13:49.5 | Ratios certain; mm ±10 % | Pixels on the face-on underside; rulers: the train bridge's rim and barrel cut, and the escapement's 9.4 mm (Review-results.md, "The balance lower bridge", 14) |
 | Balance lower bridge's size | One shield-shaped plate about 40 mm long; its two screws 31–36 mm apart at the ends of its long axis (model 13.3); escape passage about 15 × 9 mm | 13:49.5 | ±10 % | The same rulers |
-| Third bushing from the centre | 16.8 mm (model 13.05; the bare plate gave 16–19.7) | 13:49.5 | ±2 mm | Placed by the centre bushing and the barrel cut |
+| Third bushing from the centre | **16.0 mm**, at 22.7° from the 6 o'clock line (model 13.05 at 21.9°); 15.7 on the bare plate | 13:49.5; 14:45 | ±0.6 mm | A homography on five train-bridge holes matched to model holes (0.2–0.6 mm); the plate rectified by its rim and centre bushing (Methods) |
+| Train pillar's profile | Straight shaft r 2.7; foot collar r 2.9 × 3.3 mm, top collar r 3.3 × 3.4 mm (model: foot r 3.4 × 1.3, neck r 2.3, top r 2.9) | 42:56 | ±0.15 mm | Pixels across the pillar, scaled by its height (16.8 mm) |
 | Balance cock's form | One solid block: its outer wall follows the rim the full height (14.2 mm) to the train bridge; only the nose is an arm, about as thick as a plate, over the balance; one screw, its head in a counterbore | 41:58, 23:45, 2:36, 6:29 | Sure of the form; the arm's thickness and where the body steps down to it are estimated | Frames by eye, against the model rendered at matching views (`views.py close --look`) |
 | Barrel bridge's horn on the cock's side | Ends 2–9° round the rim from 3 o'clock, at the cock's straight edge (5°): the cock stands on the train bridge in the bridge's opening | 23:30 (flat), 6:47 (cock off) | About 2 mm: the flat bridge mapped through the fusee and barrel bushings and the plate's centre; at 6:47 the bridge's edge meets the rim where the cock's straight edge does | `video.py frame`; the map by hand |
 | Barrel bridge's other horn | Ends about 112–114° round, with a cut toward the centre; the top-view photograph shows a screw on the bridge there, about (−10.8, 25.1) | 23:30; `References/photo-top-view.jpg` | Rough, ±3 mm; not yet in the model (see the gaps below) | As above, and `topview.py`'s five-screw map |
@@ -213,6 +216,24 @@ on 13:44 one fitted the centre, third, balance and escape positions to
 0.6–1.9 mm, but unmirrored, which a train-side frame can't be. It and the
 escape arbor "4 mm off" read from it are withdrawn. Read the manual's parts
 list for what a part holds before naming its settings.
+
+**A plane anchored on matched holes.** Where a face of a part the model has
+from a source (the train bridge, traced on the top-view photograph) is seen,
+pick every hole on the frame and let a search pair them with the model's
+holes; a homography on the matched pairs maps the frame onto that face. On
+13:49.5 five holes matched to 0.2–0.6 mm, and the third bushing then read
+16.0 mm from the centre. Points off that face (the lower bridge, 7.9 mm
+nearer) need the camera's distance; there the method disagrees with the
+escapement's 9.4 mm from balance to escape, so it isn't used for them yet.
+
+**The plate rectified by its rim.** The pillar plate is a circle (87.57 mm)
+and the centre arbor stands at its centre, so the rim's image and the centre
+bushing's give the plate's plane in millimetres without a camera. On 14:45
+the two plate bushings came out 23.2 and 19.0 mm from the centre: the fusee's
+and the barrel's (model 22.9, 18.6). That labels them the other way round from
+the `plate` command's example above (Fu is at 2526, 918; Ba at 1522, 625).
+Points on the lower train bridge lie 3.86 mm below the face and shift in an
+oblique view.
 
 **A part's own proportions.** Where a part is seen face-on, ratios between
 its own features need no camera and no names on other parts: the lower

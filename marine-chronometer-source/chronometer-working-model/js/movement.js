@@ -16,10 +16,10 @@
    - Escape wheel: 16 teeth, 13.16 mm, 1.3 mm thick (Hamilton spec quoted in chronometerbook.com post 30).
    - Escapement: plan view of the manual's Fig. 90 (redrawn by Rawlings, chronometerbook.com post 4); escape wheel 9.40 mm from the balance,
      where the 0.249 in impulse roller leaves 0.002 in roller shake (Op. 84) and the teeth dip into its crescent (Ops. 76, 83).
-   - Third wheel, escape wheel position and the going-train modules (0.29 / 0.30 / 0.3113): solved as a constraint problem
-     so that every arbor clears every wheel and the barrel (solve.py).
+   - Third arbor: measured on a restoration video (References/VIDEOS.md), 16.0 mm from the centre, where the counted wheels' size ratios put it;
+     escape wheel position from the escapement (9.40 mm from the balance). The modules (MOD) follow from the arbors' spacing: 0.314 / 0.245 / 0.249.
    ===================================================================== */
-const L={C:[0,0],T:[-4.86,12.11],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[9.6,0]};
+const L={C:[0,0],T:[-6.18,14.75],F:[0,23.9],E:[7.193,16.135],B:[8.0,6.77],Fu:[11.59,-19.8],Ba:[-18.56,0.19],Ud:[0,-23.9],Mw:[9.6,0]};
 const PP_R=87.57/2,PP_T=3.86,BR_R=40.5;
 /* the mounting ring (42057) under the plate's dial side, and the dial on it, from the side photograph (18.9 px/mm by the plate's width): a band as wide as the plate down to 6.0 mm
    below its train face (MR_FL), then a flange 95.9 across down to 10.4 mm (MR_Y), the dial's seat. Its bore (40.2) from the dial-side photograph. The dial 95 across, a little
@@ -318,7 +318,8 @@ function buildMovement(M){
   /* ---------- pillars (two measured on Fig. 2, two placed clear of the fusee wheel and balance) ---------- */
   const pl=part('pillars',-30);
   /* tapped at both ends: for its screw from the dial side through the pillar plate, and for the bridge screw at its top (3.5 mm deep) */
-  const pillar=(x,z,top)=>{const hb=hT(0,0,PSR)[2],pr=[V2(0,y0-3.5),V2(hb,y0-3.5),V2(hb,y0),V2(3.4,y0),V2(3.4,y0-1.3),V2(2.9,y0-1.9),V2(2.7,(top+y0)*0.5),V2(2.3,top+2.4),V2(2.9,top+1.7),V2(2.9,top),V2(hb,top),V2(hb,top+3.5),V2(0,top+3.5)].reverse();
+  /* profile measured side-on on a restoration video (References/VIDEOS.md, KLUwI2UUCMQ 42:56, scaled by the pillar's 16.8 mm): a straight shaft r 2.7 with a collar at each end, the foot r 2.9 over 3.3 mm and the top r 3.3 over 3.4 mm */
+  const pillar=(x,z,top)=>{const hb=hT(0,0,PSR)[2],pr=[V2(0,y0-3.5),V2(hb,y0-3.5),V2(hb,y0),V2(2.9,y0),V2(2.9,y0-3.3),V2(2.7,y0-3.3),V2(2.7,top+3.4),V2(3.3,top+3.4),V2(3.3,top),V2(hb,top),V2(hb,top+3.5),V2(0,top+3.5)].reverse();
     return mesh(pl,new THREE.LatheGeometry(pr,32),M.plateSolid,x,0,z);};
   PILLARS.train.forEach(([x,z])=>hn(pillar(x,z,TB_U),'42059'));hn(pillar(...PILLARS.barrel,TB_T),'42058');
   /* ---------- upper train bridge (y TB_T..TB_U) and barrel bridge (y BB_T..TB_T). The barrel bridge sits on the train bridge and is cut around the
@@ -454,7 +455,7 @@ function buildMovement(M){
   R.spS=new THREE.Group();R.spS.position.set(SPv[0],0,SPv[1]);sp.add(R.spS);mesh(R.spS,ringGeo(1.2,0.7,0.6),M.steel,0,-19.6,0);
   mesh(R.spS,closeGeo(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(new THREE.Vector3(0.05,-19.6,1.15),new THREE.Vector3(0.35,-19.6,2.6),new THREE.Vector3(0.1,-19.6,4.3)),16,0.12,6,false)),M.steel);
   cylBetween(tb,0.35,TB_U-0.6,-19.25,M.steel,SPv[0]-0.3,SPv[1]+3.9);
-  /* ---------- going train (modules 0.29 / 0.30 / 0.3113; counts in TRAIN) ---------- */
+  /* ---------- going train (modules from MOD, 0.314 / 0.245 / 0.249; counts in TRAIN) ---------- */
   const m=MOD.train;
   const cw=part('cw',-8);R.cw=hn(arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.36,th:0.7,spokes:5,collet:1.3,cside:1,cp:0.3,mate:TRAIN.tp},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.53,th:1.54},prof:[[TB_T-0.1,0.5],[TB_U+0.025,0.75],[y0-0.125,0.5],[5.45+DD]]}),'42068');   /* pivots r 0.5 in the bushings, shoulders 0.025 off them; the lower pivot runs on through the dial for the cannon pinion */
   const tw=part('tw',-4);R.tw=hn(arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-4.535,th:0.65,spokes:5,cside:1,cp:0.2,mate:TRAIN.fp},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.385,th:0.95},prof:[[TB_T-0.1,0.3],[TB_U+0.025,0.55],[-0.025,0.25],[0.45]]}),'42071');
@@ -514,7 +515,10 @@ function buildMovement(M){
     DETM.push({m,G:()=>{place();return G();}}); }
   const wpAt=()=>{const r=E.rJ+0.1/ES,dx=-E.nF.x-E.dirB.x*0.17+E.nB.x*0.98,dy=-E.nF.y-E.dirB.y*0.17+E.nB.y*0.98,l=Math.hypot(dx,dy),q={x:E.Jc.x+dx/l*r,y:E.Jc.y+dy/l*r};return[(q.x-E.Ft.x)*ES,(q.y-E.Ft.y)*ES];};
   const wPin=hn(mesh(R.det,cylY(0.1,1.0,12),M.steel,...(([x,z])=>[x,-17.8,z])(wpAt())),'42089');
-  hn(poly(fx,Fx.blockMain,TB_U,-17.46,M.plateSolid,[[E.D(-1.2,-0.35),hC(0,0,0.9)[2]]]),'42086');hn(poly(fx,Fx.blockFront,-18.26,-17.46,M.plateSolid),'42086',{sub:1});hn(poly(fx,Fx.button,-18.16,-17.51,M.steel),'42086',{sub:1});
+  /* the block notched round the third arbor, which runs up past it to its bushing in the train bridge (measured on the video: Review-results.md, 'Elsewhere', 12). Provisional:
+     on the video the block is not where the escapement plan puts it (the same item); until it is placed, it keeps the plan's place and only gives the arbor room */
+  const tU=()=>{const dx=L.T[0]-L.B[0],dz=L.T[1]-L.B[1],c=Math.cos(BETA),s_=Math.sin(BETA);return[(dx*c-dz*s_)/ES,(dx*s_+dz*c)/ES];};
+  hn(poly(fx,()=>subtractCircle(Fx.blockMain.map(p=>[p.x,p.y]),tU(),0.95/ES).map(([x,y])=>({x,y})),TB_U,-17.46,M.plateSolid,[[E.D(-1.2,-0.35),hC(0,0,0.9)[2]]]),'42086');hn(poly(fx,Fx.blockFront,-18.26,-17.46,M.plateSolid),'42086',{sub:1});hn(poly(fx,Fx.button,-18.16,-17.51,M.steel),'42086',{sub:1});
   /* screws in detent coordinates (t along the detent, n across it): block screw from below, into the train bridge; clamp screw and two steady pins across the foot;
      detent-adjusting screw at the block's end; lock-adjusting screw and its clamp screw across the block's front, under the wheel; trip-spring screw on the bracket */
   const dd=new THREE.Group();dd.position.copy(R.det.position);dd.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(dd);const T=(t,n)=>[t*ES,-n*ES];
@@ -522,7 +526,7 @@ function buildMovement(M){
   const across=(g,t,n0,n1,r,y,mat)=>{const q=mesh(g,cylY(r,(n1-n0)*ES,16),mat,t*ES,y,-(n0+n1)/2*ES);q.rotation.x=Math.PI/2;return q;};
   hn(across(dd,-0.75,0.083,0.083+1.4/ES,0.95,-18.31,M.steel),'37024');hn(across(dd,-0.75,0.083,0.083+0.25/ES,1.25,-18.31,M.steel),'42251.det');for(const t of[-1.2,-0.3])hn(across(dd,t,-0.2,0.12,0.22,-18.31,M.steel),'42086',{sub:1});
   hn(across(dd,-0.75,-0.35,0.083,0.45,-18.31,M.steel),'37024',{sub:1});   /* the clamp screw's shank, through the foot into the block */
-  for(const[r,l,x]of[[0.8,0.5,-1.5*ES-0.25],[0.35,1.2,-1.5*ES+0.6]]){const q=hn(mesh(dd,cylY(r,l,16),M.steel,x,-18.61,0.3*ES),'20756',r<0.5&&{sub:1});q.rotation.z=Math.PI/2;}   /* detent-adjusting screw: head, and shank into the block */
+  for(const[r,l,x]of[[0.8,0.5,-1.4*ES-0.25],[0.35,0.5,-1.4*ES+0.25]]){const q=hn(mesh(dd,cylY(r,l,16),M.steel,x,-18.61,0.3*ES),'20756',r<0.5&&{sub:1});q.rotation.z=Math.PI/2;}   /* detent-adjusting screw: head, and shank into the block (0.5 mm: the block is shortened to clear the train pillar, provisional, Review-results.md "Elsewhere", 12) */
   for(const t of[E.BL-0.15,1.2]){const k=t===1.2?'42091.cl':'42091.lk';hn(across(dd,t,-0.3-0.3/ES,-0.3,0.42,-17.81,M.steel),k);hn(across(dd,t,-0.3,-0.12,0.2,-17.81,M.steel),k,{sub:1});}   /* lock-adjusting screw and its clamp screw: heads and shanks */
   const tsAt=()=>{const rp=E.D(E.tR+0.01,E.nR+0.033);return[(rp.x-E.Ft.x)*ES,(rp.y-E.Ft.y)*ES];};R.tsScrew=hn(screw(R.det,...tsAt(),-17.86,0.22,0.25,0.4,0.07),'1770.ts');   /* trip spring screw (1770): a fine thread in the bracket's 0.23 mm leg */
   R.pspring=hn(mesh(dt,new THREE.BufferGeometry(),M.steel),'42088');

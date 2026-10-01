@@ -199,6 +199,26 @@ Contents:
   third wheel's tips); the train-blocking screw takes its spoke count from the
   wheel's (`FW_SP`). `22e3984`
 
+- **Third arbor 3 mm too near the centre; centre and third wheels the same
+  size.** The third arbor was solved for clearances at 13.05 mm from the
+  centre, and the modules, which follow from the arbors' spacing, gave the
+  centre and third wheels tip radii of 11.8 and 11.6 mm. A restoration video
+  (`References/VIDEOS.md`, KLUwI2UUCMQ 13:49.5 and 14:45) puts the third
+  bushing 16.0 mm out (anchored on five train-bridge holes matching the
+  model's to 0.2–0.6 mm), and the counted wheels' size ratios are centre ÷
+  third 1.36–1.39 and centre ÷ fourth 1.48–1.50. The third arbor is now at
+  (−6.18, 14.75): tip radii 14.4, 10.1 and 9.6 mm (ratios 1.43, 1.50). The
+  detent's support block is notched round the arbor, provisional until its
+  own place is measured. Keep: the third arbor where the video puts it; the
+  wheel sizes from `MOD`, not set by hand. `a237869`
+- **Train pillars' profile drawn, not measured.** The model had a foot r 3.4
+  over 1.3 mm, a neck r 2.3 under a top r 2.9. The video (42:56) shows a
+  straight shaft r 2.7 with a foot collar r 2.9 over 3.3 mm and a top collar r
+  3.3 over 3.4 mm; with the old foot the corrected third wheel would hit it.
+  The detent's support block is 0.66 mm shorter at its foot end, and its
+  adjusting screw follows, to clear the thicker top collar. Keep: the pillars'
+  measured profile. `a237869`
+
 ## Winding and maintaining work
 
 - **Sustaining spring ran forward from its pin,** so the sustaining ratchet
