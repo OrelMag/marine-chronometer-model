@@ -685,7 +685,7 @@ and no part had a hole where a screw goes. Checked against `movement.js`,
 - **Every screw has its holes.** The parts a screw passes through have a
   clearance hole (`hC`) and the part it screws into a tapped hole (`hT`): the
   pillar plate, lower train bridge, pillars (tapped at both ends), upper train
-  bridge, escape upper bridge, barrel bridge, balance lower bridge and its boss,
+  bridge, escape upper bridge, barrel bridge, balance lower bridge,
   cock and cock foot, the endstone caps, setup cover and its feet, dust-seal
   flange, sustaining ratchet wheel, winding ratchet and a tapped disc in the
   fusee's large end, the fusee's top layers, top plate and boss, the detent
@@ -740,7 +740,7 @@ the figures and listed in the model README's "Estimated, not from the manual".
 | Escape wheel (42076), centre (42068), third (42071) and fourth (42073) wheels | modelled | unchanged |
 | Upper train bridge (42062), pillar screws (42055, 3), bushings (42166, 42167) | modelled | screws threaded: two into their pillars; the third, where the top-view photograph shows it, has no pillar under it in the model (IDEAS 1.2), so it is drawn threaded into the bridge alone |
 | Sustaining pawl with arbor and springs (42096) | modelled | unchanged |
-| Balance lower bridge (42065) and screws (42055, 2) | a stadium, a boss, screw heads | a lobe for the train-blocking screw; later a stepped block: upper tier against the train bridge, the screws (pillar-screw size) from below into the train bridge (Figs. 29, 110; Ops. 12, 50), steady pins, the pillar plate's access hole (RMG No. 4E019) |
+| Balance lower bridge (42065) and screws (42055, 2) | a stadium, a boss, screw heads | a lobe for the train-blocking screw; later a stepped block: upper tier against the train bridge, the screws (pillar-screw size) from below into the train bridge (Figs. 29, 110; Ops. 12, 50), steady pins, the pillar plate's access hole (RMG No. 4E019); later a frame round the escape wheel in Fig. 30's order, the train-blocking screw, a pin and the second screw at holes on the top-view photograph |
 | Balance lower setting (42162), lower endstone cap (42159) and screws (20762, 2) | a 0.5 mm hole the staff ended in | added: setting and jewel, and a cap under the bridge; the staff's pivot reaches the endstone |
 | Fourth wheel upper setting (42161) | a hole | added: setting and jewel |
 | Train-blocking screw (42247) | missing | added, and it works (see below) |
@@ -810,9 +810,9 @@ Checked against Secs. II–IV and the handling instructions:
   - It waits above the wheel while a spoke is under it.
   - Raised within a minute or two, before the balance drops below 39°, the
     chronometer carries on by itself.
-  - It sits on a lobe of the balance lower bridge at the fourth wheel's end.
-    Nearer the bridge's line it would come down through the third wheel, which
-    runs between the bridge and the fourth wheel, or beside the escape wheel.
+  - It sits in the balance lower bridge at the fourth wheel's end, 5.0 mm
+    from the arbor, at a countersunk hole the top-view photograph shows in
+    the train bridge (see finding 7).
 - **Not modelled:** setting the hands with the key on the centre square
   (Fig. 8; the Time panel sets them), the gimbal latch (shown released), and
   the hairspring's stud and collet as Fig. 5 draws them.
@@ -971,11 +971,16 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    within 1-2 mm of it, so it is left; a clearer photograph of the dial side
    or of the train would settle it (moving T changes the centre and third
    stages' modules).
-7. **The train-blocking screw's place** (fidelity, open). A side photograph
-   (omegaforums, "Incoming Hamilton Model 21") shows its dog point entering the
-   fourth wheel at about 0.7 of its radius (about 7 mm from the arbor); the
-   model has it 3.5 mm out. Fig. 16 and a top photograph put its head near the
-   balance. Moving it re-lays the balance lower bridge's lobe.
+7. **The train-blocking screw's place** (fidelity, narrowed 1 October 2026).
+   A side photograph (omegaforums, "Incoming Hamilton Model 21") shows its dog
+   point entering the fourth wheel at about 0.7 of its radius (about 7 mm from
+   the arbor). The model now has it 5.0 mm out, at one of two countersunk holes
+   1.3 mm across that the top-view photograph shows in the train bridge beside
+   the fourth arbor (mapped to about 1 mm; the access hole is countersunk,
+   Sec. II; `tools/lower_bridge.py`). A dark hole about 7 mm from the arbor on
+   that photograph lands over the escape wheel's teeth, 4.9 mm from its arbor,
+   where the screw's wall can't stand. Still open: the forum photograph's
+   7 mm, and which of the two countersunk holes is the screw's.
 8. **A second capped post and a Y-shaped arm** (fidelity, noted). The top-view
    photograph's movement (2E11795) and others (omegaforums, Delaney No. 8854)
    have a second post with a cap near the fusee's, carrying a long Y-shaped
@@ -983,3 +988,90 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    stop" (Sec. I: "Certain instruments have been modified by the Navy to include
    a balance stop"). 2E12055 and the manual's figures have none; the model has
    the manual's locking arm (Fig. 9) instead, and leaves the stop out.
+
+## Open questions, to settle from video (1 October 2026)
+
+What the manual and the photographs so far leave open, gathered in one place so
+videos of a Model 21 (taken apart, or turning) can settle them. Each says what
+the model does now, why, and what a video would have to show. Plan positions
+are in the movement frame (mm; 12 o'clock −z, 3 o'clock +x). When one is
+settled, change the model, record the fix in `RESOLVED.md` and strike it here.
+
+### The balance lower bridge (42065)
+
+Rebuilt on 1 October 2026 as a frame round the escape wheel
+(`tools/lower_bridge.py`, `verification/lower-bridge-comparison.png`). Three
+points come from the top-view photograph (to about 1 mm); the rest is laid
+out round what it must clear.
+
+1. **Its outline between the photographed points.** The upper tier is in two
+   pieces (the fourth end's, from the train-blocking screw to the ear; the
+   arm, from the balance end round the escape wheel's 3 o'clock side to the
+   lug at (20.5, 20)), with solid walls at both ends and a bar between the
+   settings below. Figs. 29, 30 and 110 give the order along it, not the
+   shape; their holes land 4–10 mm off when fitted. A video should show: the
+   bridge off the movement, from above and below; or the train bridge turned
+   over with the bridge on it, as Fig. 30 (Op. 12).
+2. **Whether the upper tier is one piece.** Fig. 110 seems to draw one slab
+   from the lug to the column; the model's can't run past the escape wheel on
+   the balance side (the detent's support block is there) and has a gap. A
+   video should show: the upper tier against the train bridge's underside.
+3. **The arm's route.** The model runs it from the balance end, outside the
+   rollers (0.56 mm), round the escape wheel's 3 o'clock side (0.70 mm off its
+   tips). Fig. 30 has the arm leave beside the balance's endstone cap. A video
+   should show: where the arm meets the rest of the bridge, and which side of
+   the escape wheel it passes.
+4. **The heights.** The lower tier is the 3 mm plate at 7.9–10.9 mm above the
+   pillar plate on the side photograph; the upper tier is taken as 2 mm. Fig.
+   110's section draws the wall round the train-blocking screw about 4.3 mm
+   tall, the model's 5.9 mm. A video should show: the bridge side-on, beside
+   the train bridge, or the screw's travel.
+5. **The ear's screw.** At (11.24, 29.51), the top-view photograph's tapped
+   hole with a screw's end in it, in line with the fourth arbor and the
+   train-blocking screw, as Fig. 30 orders them. A video should show: the
+   train bridge's underside, which screw comes out there (Op. 50).
+6. **The steady pins.** One at the photograph's second countersunk hole
+   (3.2, 28.56); the other, beside the lug at (17.81, 18.27), is placed, not
+   seen. The photograph's countersunk holes look empty: they may be oil or
+   access holes, not pins. A video should show: the train bridge's underside
+   with the bridge off (pin holes) or on (pin ends).
+
+### The train-blocking screw (42247)
+
+7. **Which countersunk hole is its access hole** (finding 7 under BOM
+   comparison). The model takes the nearer to the fourth arbor, (4.30, 26.46),
+   5.0 mm out; the other is 2.4 mm from it. A video should show: the screw
+   being turned from above, or the slotted spigot standing in its hole.
+8. **How far out it stands.** A forum side photograph (omegaforums,
+   "Incoming Hamilton Model 21") puts the dog point at about 0.7 of the fourth
+   wheel's radius, about 7 mm; the top-view photograph's hole gives 5.0 mm. A
+   video should show: the dog point between the fourth wheel's spokes, side-on.
+9. **A dark hole near the escape wheel.** About 2.5 mm across, at about
+   (2.7, 18.1) on the top-view photograph, partly under the balance locking
+   arm: 4.9 mm from the escape arbor, over the escape wheel's teeth, so not
+   the train-blocking screw's (its wall would stand in the wheel). The model
+   has no hole there. A video should show: what lies under it, or what goes
+   through it.
+
+### Elsewhere
+
+10. **The escape wheel's place.** Through the train bridge's keyhole, under the
+    balance rim, the top-view photograph shows a steel plate with a jewel and
+    a screw hole a few millimetres from where the model has the escape wheel's
+    upper jewel (its comparison, `verification/topview-comparison.png`, puts
+    the model's jewel in the keyhole's dark part). It may be the escape upper
+    bridge seen at an angle, or the model's escape arbor may be off. The
+    escape wheel is 9.40 mm from the balance by the escapement's figures
+    (README, step 5); only its direction is fitted. A video should show: the
+    escape upper bridge and its jewel from straight above, with the balance
+    off.
+11. **The upper train bridge's third screw** (finding 1 under BOM
+    comparison; IDEAS.md 1.2): at (−8.5, 27.7), with no pillar under it in the
+    model. A video should show: the train bridge coming off, and what the
+    screw holds.
+12. **The third arbor's place** (finding 6 under BOM comparison): a dial-side
+    photograph puts its lower setting about 7 mm from the model's. A video
+    should show: the dial side with the dial off, or the train from the side.
+13. **The balance stop** (finding 8 under BOM comparison): the Navy's
+    modification on some movements; the model has the manual's locking arm. A
+    video of a modified movement would show its shape and how it works.
