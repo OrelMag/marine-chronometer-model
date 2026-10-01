@@ -476,6 +476,24 @@ Contents:
   seated against the hole's edge. The screw now has a slotted spigot (r 0.5,
   1.5 mm) above the head, and the hole keeps its 0.72 mm radius at both faces.
   Keep: raised, the spigot is in the hole and the collar under it. `fd944c1`
+- **Balance lower bridge drawn as a thin arm on a post, its screws off the
+  photograph's holes.** The upper tier was a 3 mm strip round the escape
+  wheel's 6 o'clock side, from the lug at 3 o'clock to a lobe at (−5.3, 26.2),
+  and the lower tier a bar joined to it only by a small boss and the
+  train-blocking screw's column. Figs. 29 and 110 draw a stout stepped block
+  with solid walls between the tiers. Fig. 30 gives the order along it: an ear
+  with a screw, the train-blocking screw, the fourth's setting, the balance's
+  cap, then the arm. The top-view photograph shows the train-blocking screw's
+  countersunk access hole, a pin's hole and the second screw's tapped hole
+  beside the fourth arbor, 2–8 mm from where the model had them. The bridge is
+  now a frame round the escape wheel (`LB_UP`, `LB_WALL`, `LB_LO` from
+  `tools/lower_bridge.py`). Walls stand at both ends: at the fourth end round
+  the train-blocking screw (now 5.0 mm from the arbor), with the ear's screw at
+  the photographed hole. The arm runs from the balance end round the escape
+  wheel's 3 o'clock side to the lug. Keep: the train-blocking screw, the pin
+  and the ear's screw at the photographed holes; solid walls between the tiers,
+  not posts; the upper tier and walls clear of the escape wheel's tips
+  (0.70 mm) and the rollers' sweep (0.56 mm); the screws put in from below. `01f2eea`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
