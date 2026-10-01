@@ -378,7 +378,7 @@ Contents:
   the staff), with its screw's head in a counterbore and two steady pins in the
   train bridge, and the barrel bridge's horn ends just short of it. Keep:
   the cock stands on the train bridge, in the barrel bridge's opening; its body
-  clears the balance's sweep (`fine.py`).
+  clears the balance's sweep (`fine.py`). `3312b3b`
 - **Train bridge opening round the balance too big.** The centre and escape
   pivots fell in the hole. The opening was reduced; it is r 8.0 after the
   escapement change. `84a7645`, `7328e67`
