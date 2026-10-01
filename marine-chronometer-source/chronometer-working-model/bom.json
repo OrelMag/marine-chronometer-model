@@ -2448,16 +2448,16 @@
    "parent": "42009A",
    "kind": "part",
    "part": "sratchet",
-   "fn": "Hold the winding pawl springs.",
+   "fn": "Hold the winding pawl springs: put in from the ratchet's underside, through it into the springs' feet (restoration video 28:35; Fig. 28).",
    "rel": [
     [
      "in",
-     "42007",
+     "42009",
      "clear"
     ],
     [
      "in",
-     "42009",
+     "42007",
      "tap"
     ]
    ],
