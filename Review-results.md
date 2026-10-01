@@ -1281,6 +1281,30 @@ as the video shows it, bored for the escape arbor; the rest stands.
     fourth arbor in view, from above with the train in (13:51–13:54), or
     the bare plate (14:36–14:45), where the fourth's jewel and the escape
     arbor's lower jewel are both in the plate's own face.
+
+    **What the manual fixes** (no positions, but the identities). The fourth
+    wheel's "long arbor … projects through the dial to receive the second
+    hand" (p. 15), so the fourth arbor is under the seconds hand, at 6 (p.
+    14; the seconds dial's centre about half the dial's radius out, so 23.9
+    mm stands). The balance lower bridge carries the balance's lower cap
+    jewel and the fourth's upper setting, and the lower train bridge the
+    third's and fourth's lower settings (p. 14; bar-hole jewels, p. 17).
+    Figs. 29 and 67 put the escape lower setting and endstone cap in the
+    plate, beside the bar's fourth end.
+
+    **The dial side, 40:08** (`KLUwI2UUCMQ`). Named by those figures and by
+    the fusee's 12-leaf indicator pinion: centre bushing (2129, 1329), the
+    third's setting at the bar's left end (2314, 1800), the fourth's (red
+    jewel) at its right (2793, 1786), and the escape's capped lower jewel in
+    a round recess above the bar's right end (about 2843, 1486). Unrectified
+    (the plate tilted about 40°), the escape jewel is 26° round from the
+    centre-to-fourth line, and 0.44 of that distance from the fourth. That
+    is the model's 24° and 0.44, and it agrees with the train's mesh, not
+    with the 40–45° of the train-side fits above. Foreshortening can bend
+    angles by this much, so it settles nothing yet. Rectifying it on the
+    plate's rim failed: the picks mix the plate's edge with the mounting
+    ring's inner step (a free fit ran to a 1000 px focal length). Next: trace
+    the plate's edge alone, on 40:05–40:20, and fit two frames together.
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
