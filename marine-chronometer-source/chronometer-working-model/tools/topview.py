@@ -15,9 +15,9 @@ PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 PHOTO=HERE.parents[2]/'References'/'photo-top-view.jpg'
 OUT=HERE.parent/'verification'/'topview-comparison.png'
 CROP=(470,280,1760,1470)   # the movement in the photograph, px
-# screw heads on the barrel bridge and the setup cover: model point (x, y at the head's top, z) and its centre in the photograph, px
+# screw heads on the barrel bridge (the one at (29.24, -12.28) is the train bridge's, sunk in a hole through it) and the setup cover: model point (x, y at the head's top, z) and its centre in the photograph, px
 D2R=math.pi/180;BA=(-18.56,0.19);P2=lambda r,a,y:[BA[0]+r*math.cos(a*D2R),y,BA[1]+r*math.sin(a*D2R)]
-PTS=[([-15.3,-28.76,-26.58],(1353,325)),(P2(11.6,288,-30.21),(1410,608)),(P2(11.1,107,-30.21),(1615,995)),([29.24,-28.76,-12.28],(510,778)),([32.11,-28.76,-4.1],(495,925))]
+PTS=[([-15.3,-28.76,-26.58],(1353,325)),(P2(11.6,288,-30.21),(1410,608)),(P2(11.1,107,-30.21),(1615,995)),([29.24,-25.36,-12.28],(510,778)),([32.11,-28.76,-4.1],(495,925))]
 CAM=(2.1,1.5,1400,3.8)   # yaw, pitch, distance, field of view: from above, far away, the movement filling the canvas's height (about 9 px/mm)
 CSS=("header,.panel,.hud,.tools,.hint,.labels,.loading,.tabs{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
      ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
