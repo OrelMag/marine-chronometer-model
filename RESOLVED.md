@@ -117,6 +117,27 @@ Contents:
   wheel's radius, from tH in): the horn is the arm's end bent down to the trip
   spring. Its inner face stays at tH, so horn clearance is unchanged (0.25 mm).
   Keep: the arm's end and the horn one outline in plan. `4a660ab`
+- **Detent support block without its positioning pins.** Sec. II fastens
+  the block to the train bridge "by means of one screw and two positioning
+  pins" (Figs. 14, 22, 90; the restoration video, 11:08); the model had the
+  screw only, 7.9 mm from the point of flexure. The block's top is now laid
+  out from Fig. 90: the screw 3.7 mm from the point of flexure, a pin either
+  side of it, standing into the train bridge. Keep: the top face's layout in
+  `DBLK` (movement.js), the pins' holes in the train bridge (`S.dpin`).
+  `8acac25`
+- **Trip spring's screw upright, in a 0.23 mm leg.** It now lies across the
+  spring, through the hole in its foot into the bracket's upright leg, as
+  Figs. 14 and 54, the detent's reassembly (Op. 8) and the video (11:08)
+  have it; the bracket's upright leg is 0.36 mm thick to take its thread.
+  Keep: the screw across the spring, rebuilt with the detent; no hole in the
+  bracket's top. `8acac25`
+- **Detent-adjusting screw touching nothing.** Its head stood 0.64 mm beside
+  the detent's foot, where Op. 93 has it "screwed in against the detent".
+  The foot now runs on past the block's end, slotted, and the screw's head
+  stands in the slot (Fig. 90). Keep: the slot and the head's place from
+  `ESC.adj` (shared/escapement.js), so the plans draw the same foot. `8acac25`
+- **Locking jewel's wedge pin proud of the block** by 0.04 mm at each end;
+  flush now, as the re-jewelling (8-9) leaves it. `8acac25`
 
 ## Going train and heights
 
