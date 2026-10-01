@@ -699,7 +699,7 @@ Contents:
   (−9.18, 21.87). The model draws that, changed only round its own arbors.
   Keep: the outline in the train bridge's frame as measured, its two levels
   and chamfer; anything turned onto the model by the model's own arbors
-  carries their error into the part. HASH
+  carries their error into the part. `c2f11a6`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
