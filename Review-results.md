@@ -1144,7 +1144,12 @@ as the video shows it, bored for the escape arbor; the rest stands.
       third arbor at the measured (−6.18, 14.75) (0.05 mm) but not at the
       ratio-implied (−6.71, 14.52) (−0.68 mm). The pillar's place is right:
       the anchored frame puts it on a real pillar-screw hole.
-    - **The detent's support block.** On the anchored underside (13:49.5,
+    - **The detent's support block.** **Set aside (1 October 2026): the
+      reading below rests on the five-hole fit of 13:49.5, which three
+      searches showed can't be trusted (18), so nothing reliable puts the
+      block anywhere but Fig. 90's place; it stays there. Low priority: the
+      block is hidden under the train bridge and changes nothing in the
+      running.** On the anchored underside (13:49.5,
       the detent off) the model's block lies across the real lower bridge's
       second lug and its screw, and there is no hole at the model's block
       screw (−13.67, 18.21). So the real block is elsewhere. The block's
@@ -1161,9 +1166,8 @@ as the video shows it, bored for the escape arbor; the rest stands.
       train bridge's edge below the keyhole. ~~If that is the block's screw,
       the plan is mirrored about the balance–escape line.~~ It isn't (16):
       the plan can't be mirrored, and the hole is not where any part of the
-      block could be, in either handedness. Still open: where the block's
-      screw is; the top view (10:47) has to be anchored on matched holes to
-      place it.
+      block could be, in either handedness. Where the block's screw is could
+      still be read on the top view (10:47), with a fit that can be trusted.
 16. **The escapement plan's orientation** (started 1 October 2026, branch
     `claude/escapement-plan`). **Settled: not mirrored.** The model's plan is
     right as it is, and nothing in `shared/escapement.js`, the detent or the
