@@ -1528,6 +1528,42 @@ on the top-view photograph) had the right parts in the wrong arrangement.
       and leaves 3 mm or more of metal below the notch. The model's is still the
       two circles about the balance and escape arbors, now kept 1 mm off the
       notch.
+22. **The bare pillar plate: the fusee, barrel and pillars against the train**
+    (new, 2 October 2026, branch `claude/fusee-layout`; `tools/rimfit.py
+    rimfit_34-30.json`). KLUwI2UUCMQ 34:30 at 4K: the bare plate from the
+    train side with its four pillars standing. A camera fitted to the plate
+    face's rim (r 43.8; the rim traced with the pillars, the screwdriver and
+    a ring screw masked off, `rim_pts`) and to its four gilt settings made
+    round: rim 0.14 mm rms, settings 0.04, the same to 0.5 mm over focal
+    lengths of 4000-8000 px. In the plate's own frame (no anchors):
+    - **the fusee's lower bushing 20.0-21.0 mm from the centre** (model
+      22.9), **the barrel's 21.8-23.8** (model 18.6), 38.5 mm apart (model
+      36.2), 124° apart about the centre (model 121°). Told apart by the
+      bushings' sizes (the barrel's the larger) and which side they lie.
+      The train bridge's cut round the barrel is centred 22.56 mm out
+      already, where this puts the barrel.
+    - **the pillars 30-37 mm out** (model 28-32.5), as BunnSpecial's bare
+      plate had them (VIDEOS.md, "Pillars on the bare plate").
+    Turned onto the model by the train's own arbors (the centre bushing,
+    the escape lower setting, the third and fourth settings on the lower
+    train bridge, mirrored for the train side; 0.8-2.0 mm off), **the fusee
+    stands 47° from the 12** (model 30°; the dial side's 43-45° in 19), and
+    the pillars 15-20° further round than the model's (the fourth, its top
+    out of frame, read at its foot to about 5 mm, near pillar 2). So the
+    photographed group (fusee, barrel, pillars and the bridges' holes on
+    them) is turned against the train, as 19 found, and the fusee is nearer
+    the centre: with the train's 90 and 14 that is a module of about 0.385
+    (model 0.441), the fusee wheel's tips about 17.7 mm from its arbor
+    (model 20.4). How sure: the bushings' places ±1 mm (the anchors' 2 mm
+    offsets are the train's own); the pillars' ±1.5 mm, the fourth's ±5.
+    **Not yet acted on; planned in `IDEAS.md` 1.12.** Moving the group means the fusee and barrel's
+    places, the pillars, the barrel and train bridges' outlines and holes and
+    the cock (traced on the top-view photograph in the model's frame), the
+    fusee wheel and centre pinion's module (`solve.py`), the chain, the
+    maintaining work and the essay's figures. Settle first which frame the
+    top-view photograph and Fig. 2 fits put the group in, and measure the
+    fusee wheel's size (27:26, laid flat). It also bears on 21: the pillar
+    under the train bridge's third screw.
 
 ## The fusee assembly against Fig. 28 and the video
 
