@@ -1102,9 +1102,36 @@ as the video shows it, bored for the escape arbor; the rest stands.
     comparison; IDEAS.md 1.2): at (−8.5, 27.7), with no pillar under it in the
     model. A video should show: the train bridge coming off, and what the
     screw holds.
-12. **The third arbor's place** (finding 6 under BOM comparison): a dial-side
-    photograph puts its lower setting about 7 mm from the model's. A video
-    should show: the dial side with the dial off, or the train from the side.
+12. **The third arbor's place and the wheels' sizes** (finding 6 under BOM
+    comparison). Measured on the video (`KLUwI2UUCMQ`, 1 October 2026):
+    - On the train bridge's underside (13:49.5), anchored by a homography on
+      five real holes that match model holes to 0.2–0.6 mm (the centre
+      bushing, two pillar screws, the tapped hole at (11.24, 29.51) and the
+      sustaining pawl's pivot), the third arbor's upper bushing is at
+      (−6.18, 14.75): **16.0 mm from the centre**, in the model's direction
+      (22.7° from the 6 o'clock line against 21.9°) but 3 mm farther out.
+      On the bare plate (14:45, rectified by the rim and the centre bushing)
+      15.7 mm; the rough affine fit gave 16–19.7, the dial-side photograph
+      about 7 mm off.
+    - The model's wheels don't match the counted wheels' size ratios
+      (VIDEOS.md: centre ÷ third 1.36–1.39, centre ÷ fourth 1.48–1.50). The
+      model's are 1.01 and 1.23, because `MOD` follows the arbor spacing and
+      the third arbor is too near the centre.
+    - With the third arbor at 16.0 mm and the fourth at the seconds
+      (0, 23.9), those ratios put it at 24.8° from the 6 o'clock line
+      (measured 22.7°): (−6.71, 14.52). The modules become 0.314 / 0.256 /
+      0.249 and the tip radii 14.4 (centre) / 10.5 (third) / 9.6 (fourth),
+      against 11.8 / 11.6 / 9.6. The fourth wheel and the escape spacing are
+      unchanged (0.1 mm).
+
+    Tried in the model: only `L.T` changes, and `MOD` gives the video's
+    ratios. `solids.py` passes. `fine.py` finds two new overlaps, both with
+    estimated parts: the third arbor 3.2 mm into the detent's support block
+    under the train bridge (its screw matches a real hole, its outline is
+    drawn), and the third wheel's teeth 0.65 mm into the foot (r 3.4,
+    estimated) of the train pillar at (−16.63, 22.48). Not committed. A video
+    should show: the detent's support block from below with the train in
+    place, and the pillar's foot beside the third wheel (35:14–36:15).
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.

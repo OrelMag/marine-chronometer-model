@@ -121,7 +121,7 @@ frame`, in `$MC_VIDEO/frames`).
 | Escape wheel's height | 15.6 mm above the plate; model 15.1 | 42:56 | ±0.5 mm | The same |
 | Settings' spacing on the slab | Cap to escape passage, cap to fourth's setting, passage to fourth's setting 8.6 : 10.8 : 11.6 (angle at the cap 73°); 10.8–11.8 mm from cap to fourth's setting by two rulers. Model's balance, escape and fourth arbors 9.4 : 18.9 : 10.6 | 13:49.5 | Ratios certain; mm ±10 % | Pixels on the face-on underside; rulers: the train bridge's rim and barrel cut, and the escapement's 9.4 mm (Review-results.md, "The balance lower bridge", 14) |
 | Balance lower bridge's size | One shield-shaped plate about 40 mm long; its two screws 31–36 mm apart at the ends of its long axis (model 13.3); escape passage about 15 × 9 mm | 13:49.5 | ±10 % | The same rulers |
-| Third bushing from the centre | 16.8 mm (model 13.05; the bare plate gave 16–19.7) | 13:49.5 | ±2 mm | Placed by the centre bushing and the barrel cut |
+| Third bushing from the centre | **16.0 mm**, at 22.7° from the 6 o'clock line (model 13.05 at 21.9°); 15.7 on the bare plate | 13:49.5; 14:45 | ±0.6 mm | A homography on five train-bridge holes matched to model holes (0.2–0.6 mm); the plate rectified by its rim and centre bushing (Methods) |
 
 ## Methods
 
@@ -203,6 +203,24 @@ on 13:44 one fitted the centre, third, balance and escape positions to
 0.6–1.9 mm, but unmirrored, which a train-side frame can't be. It and the
 escape arbor "4 mm off" read from it are withdrawn. Read the manual's parts
 list for what a part holds before naming its settings.
+
+**A plane anchored on matched holes.** Where a face of a part the model has
+from a source (the train bridge, traced on the top-view photograph) is seen,
+pick every hole on the frame and let a search pair them with the model's
+holes; a homography on the matched pairs maps the frame onto that face. On
+13:49.5 five holes matched to 0.2–0.6 mm, and the third bushing then read
+16.0 mm from the centre. Points off that face (the lower bridge, 7.9 mm
+nearer) need the camera's distance; there the method disagrees with the
+escapement's 9.4 mm from balance to escape, so it isn't used for them yet.
+
+**The plate rectified by its rim.** The pillar plate is a circle (87.57 mm)
+and the centre arbor stands at its centre, so the rim's image and the centre
+bushing's give the plate's plane in millimetres without a camera. On 14:45
+the two plate bushings came out 23.2 and 19.0 mm from the centre: the fusee's
+and the barrel's (model 22.9, 18.6). That labels them the other way round from
+the `plate` command's example above (Fu is at 2526, 918; Ba at 1522, 625).
+Points on the lower train bridge lie 3.86 mm below the face and shift in an
+oblique view.
 
 **A part's own proportions.** Where a part is seen face-on, ratios between
 its own features need no camera and no names on other parts: the lower
