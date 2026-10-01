@@ -1556,7 +1556,7 @@ on the top-view photograph) had the right parts in the wrong arrangement.
     (model 0.441), the fusee wheel's tips about 17.7 mm from its arbor
     (model 20.4). How sure: the bushings' places ±1 mm (the anchors' 2 mm
     offsets are the train's own); the pillars' ±1.5 mm, the fourth's ±5.
-    **Not yet acted on.** Moving the group means the fusee and barrel's
+    **Not yet acted on; planned in `IDEAS.md` 1.12.** Moving the group means the fusee and barrel's
     places, the pillars, the barrel and train bridges' outlines and holes and
     the cock (traced on the top-view photograph in the model's frame), the
     fusee wheel and centre pinion's module (`solve.py`), the chain, the
