@@ -21,7 +21,7 @@ RIM=g([(45,300),(40,420),(70,560),(140,690),(260,780),(420,850),(600,900),(800,9
 BARREL=g([(950,420),(880,480),(855,550),(870,620),(930,690),(1000,730),(1060,760)])
 NOTCH=g([(575,5),(545,70),(515,150),(512,200),(530,240),(570,275),(620,300),(700,330),(800,352),(900,350),(1000,335),(1045,328),(1055,360),(1050,392),(1000,398),(950,420)])
 # what the bridge holds (x, z, radius of the hole or part): the model's screw holes (clearance or tapped), bushings and pivots on the fusee side
-KEEP=[((0,0),1.2,'centre bushing'),((22.27,-1.31),0.72,'sustaining pawl arbor'),((29.24,-12.28),1.47,'barrel bridge screw (tapped)'),((32.11,-4.1),1.64,'barrel bridge screw into pillar'),
+KEEP=[((0,0),1.2,'centre bushing'),((22.27,-1.31),0.72,'sustaining pawl arbor'),((29.24,-12.28),1.47,'train bridge screw (tapped)'),((32.11,-4.1),1.64,'barrel bridge screw into pillar'),((-11.07,26.46),1.47,'barrel bridge screw (tapped)'),
       ((8+10.6*math.cos(math.radians(-30)),6.77+10.6*math.sin(math.radians(-30))),0.42,'locking arm screw'),((8,6.77),8.0,'keyhole: the opening round the balance'),((7.19,16.135),3.0,'keyhole: round the escape arbor'),((21.99,2.59),0.3,"sustaining pawl spring's pin")]
 def fit():
     aff=lambda p:(np.array([[p[0],p[1]],[p[2],p[3]]]),np.array(p[4:6]))

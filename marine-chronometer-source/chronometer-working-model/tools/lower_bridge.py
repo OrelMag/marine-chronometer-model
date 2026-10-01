@@ -88,7 +88,7 @@ def main():
     try:   # the overlay: the plan on the top-view photograph, through topview.py's five screws and the shift onto the train bridge's plane
         from PIL import Image,ImageDraw
         D2R=math.pi/180;BA=(-18.56,0.19);PB=lambda r,a,y:[BA[0]+r*math.cos(a*D2R),y,BA[1]+r*math.sin(a*D2R)]   # topview.py's five screws (PTS)
-        PTS=[([-15.3,-28.76,-26.58],(1353,325)),(PB(11.6,288,-30.21),(1410,608)),(PB(11.1,107,-30.21),(1615,995)),([29.24,-28.76,-12.28],(510,778)),([32.11,-28.76,-4.1],(495,925))]
+        PTS=[([-15.3,-28.76,-26.58],(1353,325)),(PB(11.6,288,-30.21),(1410,608)),(PB(11.1,107,-30.21),(1615,995)),([29.24,-25.36,-12.28],(510,778)),([32.11,-28.76,-4.1],(495,925))]
         X=np.array([[p[0],p[2],1] for p,_ in PTS]);Y=np.array([q for _,q in PTS],float);M=np.linalg.lstsq(X,Y,rcond=None)[0]
         T=lambda P:[tuple(np.array([x-1.0,z-0.96,1])@M) for x,z in P]
         im=Image.open(HERE.parents[2]/'References'/'photo-top-view.jpg').convert('RGB');dr=ImageDraw.Draw(im)
