@@ -391,7 +391,7 @@ Contents:
   detent support block's screw, which the horn now covers, goes in from below
   (Op. 81), and the locking arm's screw moves 5° to clear the horn. Keep:
   sunk screw heads in the photograph are the train bridge's, proud ones the
-  barrel bridge's.
+  barrel bridge's. `e1244db`
 - **Train bridge opening round the balance too big.** The centre and escape
   pivots fell in the hole. The opening was reduced; it is r 8.0 after the
   escapement change. `84a7645`, `7328e67`
