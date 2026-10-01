@@ -402,7 +402,7 @@ Contents:
   one put in from below. Now so: the screws pass through the ratchet (clear)
   into the springs' feet (tapped, 0.47 thick, 0.03 under the fusee's face that
   turns over them while winding). Keep: the screws from the underside; the
-  feet thick enough for 0.4 mm of thread (`bom.py`). HASH
+  feet thick enough for 0.4 mm of thread (`bom.py`). `69b2e97`
 
 ## Plates, bridges, screws and arbors
 
