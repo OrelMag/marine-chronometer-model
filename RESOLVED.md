@@ -789,6 +789,11 @@ An arbor needs pivots and shoulders; a stone its seat.
   Fig. 90, which is the 3D Escapement view mirrored. Keep: `drawEsc2D(ctx, w, h,
   s, E, dark)` takes the state the model shows (it now calls `drawEscPlan` in
   `shared/escplan.js`, which the essay's detent figure shares). `89a949d`
+- **The camera couldn't look up at the underside.** Dragging and the arrow
+  keys clamped the pitch to −1.3 rad (74.5°) below, against 1.52 (87°) above,
+  so a lifted movement couldn't be seen from straight under it. Both limits
+  are now ±1.52. Keep: stop short of ±90°, where `lookAt` has no up and the
+  view spins. (hash once committed)
 
 ## Build, tools and docs
 

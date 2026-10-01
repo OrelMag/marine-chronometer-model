@@ -3105,7 +3105,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const pdx=e.clientX-p.x,pdy=e.clientY-p.y;
     if(down)down.moved+=Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y);if(lpT&&down&&down.moved>6)lpStop();
     if(ptrs.size===1&&down&&down.moved>4&&down.pan)panBy(e.clientX-p.x,e.clientY-p.y);
-    else if(ptrs.size===1&&down&&down.moved>4){camFree=true;C.yaw-=(e.clientX-p.x)*0.008;C.pitch=clamp(C.pitch+(e.clientY-p.y)*0.008,-1.3,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
+    else if(ptrs.size===1&&down&&down.moved>4){camFree=true;C.yaw-=(e.clientX-p.x)*0.008;C.pitch=clamp(C.pitch+(e.clientY-p.y)*0.008,-1.52,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}   /* pitch to 87° above or below (1.52 rad): at 90° lookAt has no up and the view spins */
     p.x=e.clientX;p.y=e.clientY;
     if(ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)C.dist=G.dist=clamp(C.dist*pinch/d,30,1500);pinch=d;panBy(pdx/2,pdy/2);if(down)down.moved=99;}});
   const up=e=>{lpStop();if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&!down.lp&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size){stage.classList.remove('grab');}
@@ -3160,7 +3160,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(!b)return;if(!b.disabled)b.click();else{hudNote(`${b.textContent} view: turn off Moving parts only first`);b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');clearTimeout(b.nopeT);b.nopeT=setTimeout(()=>b.classList.remove('nope'),700);}}
     /* with the model focused (Tab to it, or click it): arrow keys turn the view as a drag does, + and − zoom, 0 resets the view */
     if(document.activeElement===cv&&!e.ctrlKey&&!e.metaKey&&!e.altKey){const a={ArrowLeft:[0.08,0],ArrowRight:[-0.08,0],ArrowUp:[0,-0.06],ArrowDown:[0,0.06]}[e.key];
-      if(a){e.preventDefault();camFree=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.3,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
+      if(a){e.preventDefault();camFree=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.52,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
       else if(/^[-+=_]$/.test(e.key)){e.preventDefault();C.dist=G.dist=clamp(C.dist*(/^[-_]$/.test(e.key)?1.12:1/1.12),30,1500);}
       else if(e.key==='0'){e.preventDefault();setView(st.view,true);}}});
 
