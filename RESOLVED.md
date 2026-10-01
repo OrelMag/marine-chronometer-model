@@ -505,7 +505,7 @@ Contents:
   (`tools/lower_bridge.py`, `SLAB`), bored r 3.0 round the escape arbor. Keep:
   the lower tier a slab, not a bar; the escape arbor's hole wide enough for its
   pinion (r 1.9) to pass; the slab's heights from the side photograph (the
-  video's are within 1 mm). `HASH`
+  video's are within 1 mm). `e8e76e4`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
