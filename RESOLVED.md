@@ -499,7 +499,7 @@ Contents:
   (r 39) to the flange (r 45.9), where the top-view photographs show two. Keep:
   the dial on the ring (`MR_Y`), heights above it written `+DD`; the hands
   scaled by `DK`; the dial canvas's sub-dials at `L.F[1]/DIAL_R`, on their
-  arbors. HASH
+  arbors. `8ec1d92`
 
 ## Setup, case and gimbals
 
@@ -534,11 +534,11 @@ Contents:
   `CR`, `TR` in `box.js` from `MR_RO`, `MR_Y`, `DIAL_R`), not literals;
   `bom.py`'s "42057 on 42101"; after a change to either, the movement checked
   against the case with `fine.py --eval` attaching the bowl's meshes to
-  `__mv` (0 new or grown). HASH
+  `__mv` (0 new or grown). `8ec1d92`
 - **Shield plate's screws in the box's felt.** With the case level, their
   heads reached 0.75 mm into the felt. The floor is 2 mm shallower (`FD` 64)
   and the winding key's handle 2 mm higher. Keep: the case's lowest point
-  above the felt (y −89). HASH
+  above the felt (y −89). `8ec1d92`
 - **Gimbals as blank blocks.** Replaced by a flat ring on pivot screws, with
   washers, lock nuts, case support brackets and straps (Figs. 1, 94, 106). The
   ring was raised so the case clears the box floor. `eae5358`
