@@ -1387,6 +1387,38 @@ on the top-view photograph) had the right parts in the wrong arrangement.
     plate's rim failed: the picks mix the plate's edge with the mounting
     ring's inner step (a free fit ran to a 1000 px focal length). Next: trace
     the plate's edge alone, on 40:05–40:20, and fit two frames together.
+19. **The dial's 12-6 axis against the photographed group** (new, 1 October
+    2026, branch `claude/balance-train`). **Measured: the fusee (and the
+    barrel) stand about 13° further round from the 12 than the model has
+    them.** Two independent readings:
+    - **The dial side, rectified** (`tools/rimfit.py rimfit_40-08.json`;
+      40:08, the motion work off). A perspective camera fitted to the
+      mounting ring's bore (r 40.2) about the centre arbor's bushing: rim rms
+      0.15-0.21 mm over focal lengths of 4000-8000 px, the centre arbor
+      within 0.1 mm. About the centre, from the indicator's stud (at 12): the
+      fourth's jewel (the seconds) 176° (model 180), the minute wheel's stud
+      86-91° (model 90), **the fusee's bushing 43-45° (model 30.3)**, the
+      bushing taken for the barrel's -77 to -81° (model -89.4). The fusee
+      at r 21.8-22.7 (model 22.9). This rectifies what 18's last paragraph
+      read unrectified.
+    - **The indicator wheel's size** (23:30, laid flat; the 120-tooth wheel
+      counted there): its tips about 35-38 mm across against the train
+      bridge's rim beside it (r 40.5), perhaps 5-10 % less for its being
+      nearer the camera; the model's is 22.4 mm (module 0.186, from the
+      fusee's 12.3 mm from the indicator). With the fusee's 12-leaf pinion,
+      a wheel that size needs the fusee 18-20 mm from the indicator's
+      centre, 45-52° round from the 12: the dial side's 43-45°.
+
+    So the model's photographed group (balance, fusee, barrel, the bridges,
+    the cock) is turned about 13° from the dial and the train, or the dial
+    and the train about -13° from it. The group's own internal layout stands
+    (6:29 and 14). Turning it brings the balance 16.7 mm from the fourth
+    (model 18.9), toward 36:01's 12.0; that reading's remaining 18° is open.
+    The fix (not made): the dial, the fourth, third, escape and indicator
+    arbors, the minute wheel and the lower train bridge turned about the
+    centre against the group, the indicator's gearing sized to its wheel,
+    the escapement's direction and the lower bridge's outline redone, and
+    every check and the essay's figures rerun.
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
