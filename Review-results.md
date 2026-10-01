@@ -1077,6 +1077,31 @@ on the top-view photograph) had the right parts in the wrong arrangement.
    assumption, the rim a 40.5 mm circle about the centre arbor; 18 sets them
    against the top-view comparison and the dial side, which agree with the
    model. The bridge is drawn round the model's arbors meanwhile.
+
+   A fourth reading, from the other side (1 October 2026,
+   `tools/anchors/KLUwI2UUCMQ_6-29.json`, `video.py fit` then `unproj`):
+   6:29, the same movement from above with the cock on, its camera fitted
+   to the barrel bridge's screws that `topview.py` maps the top-view
+   photograph by (the setup cover's two, the train-bridge screw sunk through
+   the bridge and the one beside it, the barrel pillar screw's empty hole),
+   the cock's screw hole and the bridge's near rim. Rms 38 px (about 1.5 mm).
+   The balance's endstone, put back at the cap's height, lands at (7.0,
+   6.8), 1.0 mm from the model's balance; leaving out any one point or the
+   rim keeps it within (5.9-9.2, 6.1-7.5). The fusee's winding post lands
+   about 2.6 mm from the model's arbor. So this movement's balance sits
+   where the photographed movement's does, relative to the barrel bridge,
+   the fusee and the cock. That doesn't contradict 36:01: the model's
+   balance, fusee, barrel and barrel-bridge screws all come from the same
+   two photographs, and this fit can't see an error in where that group
+   stands relative to the train (the centre, third and fourth arbors), which
+   is what 36:01 and 18's fits measure the balance against. What would
+   settle it: one frame with a train arbor and the balance (or the barrel
+   bridge's screws) in it, such as 12:40-12:46 (the barrel bridge on, the
+   balance's lower jewel and the escape teeth through the keyhole, the
+   fusee and barrel arbors standing), fitted on the barrel bridge's screws
+   and read at the slab's height. A turn of the photographed group about
+   the centre would also move the fusee relative to the up-and-down
+   indicator under the 12, so the indicator's gearing is a further check.
 15. **The keyhole** (new). From below (13:49.5) the escape lobe is the oval
    passage above, through both bridges. The balance lobe is closed underneath
    by the lower bridge, with the cap at its bottom. The lobes' plan sizes wait
