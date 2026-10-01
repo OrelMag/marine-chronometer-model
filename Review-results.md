@@ -810,9 +810,9 @@ Checked against Secs. II–IV and the handling instructions:
   - It waits above the wheel while a spoke is under it.
   - Raised within a minute or two, before the balance drops below 39°, the
     chronometer carries on by itself.
-  - It sits in the balance lower bridge at the fourth wheel's end, 5.0 mm
-    from the arbor, at a countersunk hole the top-view photograph shows in
-    the train bridge (see finding 7).
+  - It sits in the balance lower bridge beside the fourth's setting, toward
+    the lug at that end, 5.0 mm from the arbor, as the restoration video has
+    it ("The balance lower bridge", 7).
 - **Not modelled:** setting the hands with the key on the centre square
   (Fig. 8; the Time panel sets them), the gimbal latch (shown released), and
   the hairspring's stud and collet as Fig. 5 draws them.
@@ -974,13 +974,12 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
 7. **The train-blocking screw's place** (fidelity, narrowed 1 October 2026).
    A side photograph (omegaforums, "Incoming Hamilton Model 21") shows its dog
    point entering the fourth wheel at about 0.7 of its radius (about 7 mm from
-   the arbor). The model now has it 5.0 mm out, at one of two countersunk holes
-   1.3 mm across that the top-view photograph shows in the train bridge beside
-   the fourth arbor (mapped to about 1 mm; the access hole is countersunk,
-   Sec. II; `tools/lower_bridge.py`). A dark hole about 7 mm from the arbor on
-   that photograph lands over the escape wheel's teeth, 4.9 mm from its arbor,
-   where the screw's wall can't stand. Still open: the forum photograph's
-   7 mm, and which of the two countersunk holes is the screw's.
+   the arbor), and the restoration video's bridge (36:01) has it 6.9 mm out,
+   between the fourth's setting and the lug at that end. The model has it
+   5.0 mm out, toward that lug, where its access hole clears the balance
+   locking arm's screw and pin ("The balance lower bridge", 7 and 8); no
+   longer at either countersunk hole of the top-view photograph. Still open:
+   the 7 mm.
 8. **A second capped post and a Y-shaped arm** (fidelity, noted). The top-view
    photograph's movement (2E11795) and others (omegaforums, Delaney No. 8854)
    have a second post with a cap near the fusee's, carrying a long Y-shaped
@@ -999,46 +998,49 @@ settled, change the model, record the fix in `RESOLVED.md` and strike it here.
 
 ### The balance lower bridge (42065)
 
-Rebuilt on 1 October 2026 as a frame round the escape wheel
-(`tools/lower_bridge.py`, `verification/lower-bridge-comparison.png`). Three
-points come from the top-view photograph (to about 1 mm); the rest is laid
-out round what it must clear. Then looked for in a restoration video
-(`References/VIDEOS.md`, `KLUwI2UUCMQ`: the bridge on the upturned train bridge
-at 13:49 and 35:43–36:13, from above through the keyhole at 10:00–11:00 and
-13:44, side-on at 10:30, 36:41 and 42:56). The lower tier is now a broad slab,
-as the video shows it, bored for the escape arbor; the rest stands.
+Rebuilt on 1 October 2026 after the restoration video (`References/VIDEOS.md`,
+`KLUwI2UUCMQ`): at 36:01 the bridge on the upturned train bridge, put in
+millimetres through a camera fitted to the train bridge's rim and its round
+settings, and turned onto the model by the centre, third and fourth settings
+(`tools/lower_bridge.py`, `verification/lower-bridge-comparison.png`). The
+lower tier is one slab shaped as an L round the escape arbor, with a lug and
+screw at each end of the bridge's long axis. The earlier model (a frame of
+lobes round the escape wheel, both screws at the fourth end, after three holes
+on the top-view photograph) had the right parts in the wrong arrangement.
 
-1. **Its outline between the photographed points.** Compared, not settled.
-   The real bridge, seen face-on from below (13:49.5) and drawn against the
-   model (local overlay, placed by the centre bushing and the barrel cut), is
-   one shield-shaped plate about 40 mm long, wider than the model's whole
-   bridge. It has stepped lugs at the two ends of its long axis and the
-   balance's cap in a round counterbore near its middle. The escape arbor's
-   passage is an oval through-opening about 15 × 9 mm on one side of the cap,
-   and the fourth's setting and the train-blocking screw's point are on the
-   other. The model's bridge (two lobes with both screws at the fourth end, a
-   frame round the escape wheel, a slab between them) has the right parts in
-   the wrong arrangement. Its outline can't be redrawn until 14 is settled:
-   the real outline is laid out round arbors at other distances.
+1. **Its outline.** Settled against the model, in form; estimated in size. On
+   the video the slab is an L: a body with the fourth's setting (a large gilt
+   setting in a sink) and the cap (in a round counterbore, near the L's
+   corner), the train-blocking screw's dog point near the body's far side, and
+   an arm from the cap's end to a lug. The escape arbor passes up through the
+   L's inside corner, under the train bridge's escape lobe; Fig. 110 draws the
+   bridge as a C round that opening. The model now draws that L, but round its
+   own arbors, which 14 puts farther apart than the video's: the body is
+   stretched from the balance to the fourth arbor and narrowed between the
+   escape and third arbors, so it is longer and slimmer than the video's, and
+   the arm shorter. Its outline waits on 14.
 2. **Whether the upper tier is one piece.** Settled: two. Side-on (42:56)
    the escape wheel shows between the slab and the train bridge, with stepped
    lugs rising to the train bridge at both ends and nothing against the train
    bridge between them.
 3. **The arm's route.** Settled: there is no separate thin arm. The "arm" of
-   Fig. 30 is the long body of the bridge, running from the cap to the lug at
-   that end, past the escape arbor's passage on its outer side.
+   Fig. 30 is the L's arm, running from the cap to the lug at that end, past
+   the escape arbor's passage on its outer side. The model draws it so.
 4. **The heights.** Settled to about 1 mm. By the pillars (16.8 mm) on three
    side views the slab stands at 8.8–11.9 mm above the plate (its underside
    8.4–9.4), the model's at 7.9–10.9; the escape wheel at 15.6, the model's at
    15.1. Kept.
-5. **The ear's screw.** Settled against the model. The real bridge's two
-   screws are at the ends of its long axis, about 31–36 mm apart (the model's
-   13.3). The tapped hole the top-view photograph shows at (11.24, 29.51) lies
-   uncovered on the train bridge's underside, several millimetres clear of the
-   real bridge, so it is not this bridge's screw (placement good to about
-   3 mm). What screws into it is open.
+5. **The screws.** Settled. The real bridge's two screws are at the ends of
+   its long axis, 33.9 mm apart on 36:01 (31–36 on the other frames). The
+   model has the 3 o'clock one where the video has it, (20.58, 11.88), with the
+   pillar plate's access hole (RMG No. 4E019) under it, and the other at the
+   fourth end, (−9.6, 21.6), moved off the pillar, the detent support block
+   and a barrel-bridge screw that stand where the video's lug is (31.7 mm
+   apart). The tapped hole the top-view photograph shows at (11.24, 29.51)
+   isn't this bridge's; what screws into it is still open.
 6. **The steady pins.** Open. None show on the bridge's faces; pins between
-   the bridge and the train bridge would be hidden in the joint.
+   the bridge and the train bridge would be hidden in the joint. The model
+   puts one in each lug.
 14. **The settings' spacing** (new). The face-on underside gives the
    bridge's own proportions, without naming any train-bridge hole. Cap to
    escape passage, cap to fourth's setting and escape passage to fourth's
@@ -1062,6 +1064,19 @@ as the video shows it, bored for the escape arbor; the rest stands.
    arbors (`L`), the modules and the escapement's direction. A video should
    show: a face-on underside with a part of known size beside it, or the
    seconds hand and balance in one top view.
+
+   A third reading (1 October 2026, `tools/rimfit.py rimfit_36-01.json`):
+   36:01, the bridge on the upturned train bridge, through a perspective
+   camera fitted to the rim with the gilt settings made circular, the slab's
+   points put back at their height (8.9 mm). The centre arbor's setting
+   lands 1.0 mm from the rim's centre; turned by the centre, third and
+   fourth settings (1.0, 1.8, 1.5 mm off), the cap is at (3.8, 11.5), 12.0 mm
+   from the fourth's setting, and the escape opening's centre at (11.5,
+   16.3), steady over focal lengths of 5000-8000 px. It agrees with 18's
+   train-side fits (balance lobe about (5.4, 10.4)), and shares their
+   assumption, the rim a 40.5 mm circle about the centre arbor; 18 sets them
+   against the top-view comparison and the dial side, which agree with the
+   model. The bridge is drawn round the model's arbors meanwhile.
 15. **The keyhole** (new). From below (13:49.5) the escape lobe is the oval
    passage above, through both bridges. The balance lobe is closed underneath
    by the lower bridge, with the cap at its bottom. The lobes' plan sizes wait
@@ -1071,14 +1086,18 @@ as the video shows it, bored for the escape arbor; the rest stands.
 
 ### The train-blocking screw (42247)
 
-7. **Which countersunk hole is its access hole** (finding 7 under BOM
-   comparison). The model takes the nearer to the fourth arbor, (4.30, 26.46),
-   5.0 mm out; the other is 2.4 mm from it. A video should show: the screw
-   being turned from above, or the slotted spigot standing in its hole.
-8. **How far out it stands.** A forum side photograph (omegaforums,
-   "Incoming Hamilton Model 21") puts the dog point at about 0.7 of the fourth
-   wheel's radius, about 7 mm; the top-view photograph's hole gives 5.0 mm. A
-   video should show: the dog point between the fourth wheel's spokes, side-on.
+7. **Where it stands.** Settled in arrangement: on the restoration video
+   (36:01) its dog point is on the bridge's body between the fourth's setting
+   and the lug at that end, 6.9 mm from the setting, not at either countersunk
+   hole beside the fourth arbor on the top-view photograph. The model puts it
+   5.0 mm out at 230° round the fourth arbor, 2 mm from the video's place,
+   where its access hole clears the balance locking arm's screw and stop pin
+   (finding 7 under BOM comparison is overtaken).
+8. **How far out it stands.** The video's 6.9 mm agrees with a forum side
+   photograph (omegaforums, "Incoming Hamilton Model 21"), about 0.7 of the
+   fourth wheel's radius, about 7 mm. The model keeps 5.0: at 6.9 mm its head
+   bore would break through the lug's edge, which the detent support block
+   holds 1 mm away. Open with 14.
 9. **A dark hole near the escape wheel.** About 2.5 mm across, at about
    (2.7, 18.1) on the top-view photograph, partly under the balance locking
    arm: 4.9 mm from the escape arbor, over the escape wheel's teeth, so not

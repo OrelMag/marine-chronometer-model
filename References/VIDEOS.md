@@ -28,6 +28,7 @@ Contents: [The videos](#the-videos) · [What each shows](#what-each-shows) ·
 | `Jd2c3x8VKsE` | BunnSpecial, "… Part 1 of 2" | 27 min, 720p | Preparation: out of the box and case, letting down the mainspring (not yet reviewed frame by frame) |
 | `We1dLNXiBj0` | bunnspecial, "Hamilton Model 21 Marine Chronometer, Part 1 of 3" | 3 min, 720p | The escapement running (not yet used) |
 | `s7VW3RiJ97E` | RM Watch & Clock, "Hamilton Model 21 Marine Chronometer" | 30 s, 1080p | The escapement running, close (not yet used) |
+| `TWQsSVWuikk` | Boulder Horological Society, "Zoom #19: Hamilton 21 Marine Chronometer Deconstructed" | A recorded talk | 43:13: the upper train bridge upturned in the hand, the balance lower bridge on it and the whole keyhole; the same L-shaped slab and lugs as `KLUwI2UUCMQ` (not yet downloaded; seen on a screenshot) |
 
 ## What each shows
 
@@ -124,11 +125,12 @@ frame`, in `$MC_VIDEO/frames`).
 | Wheel size ratios | centre ÷ third 1.36–1.39; centre ÷ fourth 1.48–1.5 | 35:30, 35:33, 36:15 | Same frame, nearly the same plane; ±3 % | Ellipse axes from `count`'s fit |
 | Third arbor's distance from the centre | 16–19.7 mm (model 13.05) | 14:45, 13:51 | Rough: affine fit, rim rms 2.4–2.8 mm; on the same fit the barrel bushing lands at r 23.2 (model 18.6), so it can't place parts | `video.py plate f_KLUwI2UUCMQ_14-45.png 1876 960 1830 1504 T:2100,1356 Fu:1524,624 Ba:2516,896 E:1570,1324` |
 | Balance lower bridge's settings | The balance's cap and the fourth's setting, in Fig. 30's order (ear and screw, the train-blocking screw's point, the fourth's setting, the cap, the arm) | 13:49, 35:54, 36:01; the parts list (42065) for which settings | Certain | By eye; the cap's jewel and two screws seen from above too (13:44) |
-| Balance lower bridge's form | A broad slab (the lower tier) with stepped lugs up to the train bridge at both ends; the escape wheel turns between the slab and the train bridge, its arbor through the slab | 10:30, 36:41, 42:56 (side); 13:44, 11:00 (above) | Certain | By eye |
+| Balance lower bridge's form | A slab (the lower tier) shaped as an L, with stepped lugs up to the train bridge at both ends; the escape wheel turns between the slab and the train bridge, its arbor up through the L's inside corner, under the train bridge's escape lobe | 10:30, 36:41, 42:56 (side); 13:44, 11:00 (above); 36:01, 13:49.5 (below) | Certain | By eye |
 | Slab's height | 8.8–11.9 mm above the plate (42:56); its underside 8.4–9.4 over three views; model 7.9–10.9 | 42:56, 36:41, 10:30 | ±0.7 mm | Pixels along the pillars (16.8 mm) at the slab's depth |
 | Escape wheel's height | 15.6 mm above the plate; model 15.1 | 42:56 | ±0.5 mm | The same |
 | Settings' spacing on the slab | Cap to escape passage, cap to fourth's setting, passage to fourth's setting 8.6 : 10.8 : 11.6 (angle at the cap 73°); 10.8–11.8 mm from cap to fourth's setting by two rulers. Model's balance, escape and fourth arbors 9.4 : 18.9 : 10.6 | 13:49.5 | Ratios certain; mm ±10 % | Pixels on the face-on underside; rulers: the train bridge's rim and barrel cut, and the escapement's 9.4 mm (Review-results.md, "The balance lower bridge", 14) |
-| Balance lower bridge's size | One shield-shaped plate about 40 mm long; its two screws 31–36 mm apart at the ends of its long axis (model 13.3); escape passage about 15 × 9 mm | 13:49.5 | ±10 % | The same rulers |
+| Balance lower bridge's size | One plate about 26 × 23 mm, its lugs reaching about 40 mm end to end; its two screws 31–36 mm apart at the ends of its long axis (model 31.7) | 13:49.5, 36:01 | ±10 % (13:49.5); ±0.5 mm (36:01) | The rulers above; the camera below |
+| Balance lower bridge in mm | On the model's plan, turned by the centre, third and fourth settings (1.0, 1.8, 1.5 mm off the model's): the cap at (3.8, 11.5), the fourth's setting (1.0, 22.8), the escape opening's centre (11.5, 16.3), the train-blocking screw's dog point (−5.2, 19.6), the screws (20.5, 12.4) and (−12.0, 22.1), and the slab's and lugs' outlines (`tools/lower_bridge.py`, `VIDEO`). The cap 12.0 mm from the fourth's setting (model 18.9) | 36:01 | ±0.5 mm over focal lengths of 5000–8000 px; the picks by eye at 4K, about ±10 px | `python rimfit.py rimfit_36-01.json` (Methods) |
 | Third bushing from the centre | **16.0 mm**, at 22.7° from the 6 o'clock line (model 13.05 at 21.9°); 15.7 on the bare plate | 13:49.5; 14:45 | ±0.6 mm | A homography on five train-bridge holes matched to model holes (0.2–0.6 mm); the plate rectified by its rim and centre bushing (Methods) |
 | Train pillar's profile | Straight shaft r 2.7; foot collar r 2.9 × 3.3 mm, top collar r 3.3 × 3.4 mm (model: foot r 3.4 × 1.3, neck r 2.3, top r 2.9) | 42:56 | ±0.15 mm | Pixels across the pillar, scaled by its height (16.8 mm) |
 | Balance cock's form | One solid block: its outer wall follows the rim the full height (14.2 mm) to the train bridge; only the nose is an arm, about as thick as a plate, over the balance; one screw, its head in a counterbore | 41:58, 23:45, 2:36, 6:29 | Sure of the form; the arm's thickness and where the body steps down to it are estimated | Frames by eye, against the model rendered at matching views (`views.py close --look`) |
@@ -232,6 +234,22 @@ has no part of the detent at those distances, whichever way round, so the
 hole is something else. The plan's handedness comes from the train and Fig.
 90 instead (Review-results.md, "Elsewhere", 16).
 
+**A part on the mat put in millimetres by its rim** (`rimfit.py`). Where a
+plate or bridge with a round rim of known radius lies on the blue mat (36:01:
+the upper train bridge upturned, r 40.5), segment it from the mat, fit an
+ellipse to its outer contour's rim (RANSAC), and fit a perspective camera so
+a circle of that radius lands on the rim, for each of several focal lengths.
+The rim's arc alone leaves the tilt loose (13–37° fitted it equally well at
+36:01), so trace round features on the frame (gilt settings: centre, semi-axes
+and their height above the face) and make them come out circular; with them
+the fit takes the steeper tilt the settings' shapes show (37° at 36:01), and
+the centre arbor's setting lands 1.0 mm from the rim's centre. Picked pixels
+go back onto the plane at their heights (the slab of the balance lower bridge
+8.9 mm above the train bridge's face: in a 37° view that parallax is 6.7 mm),
+and named settings turn the result onto the model's plan. Seen from below, the
+plan is the dial side's (x right, z down), so no mirror: the mirrored fit
+lands the centre, third and fourth settings 7 mm off, the direct one 1.5 mm.
+
 **A face anchored on its rim** (`video.py anchor`, with `circles`). Trace
 the train bridge's rim (r 40.5 about the centre) and its cut round the
 barrel (r 19.2), and name the centre bushing. The circles fix the face's
@@ -309,4 +327,4 @@ videos to look.
 | Mainspring length (1.9) | `KLUwI2UUCMQ` 16:28–17:04, 32:20–32:52 (spring out, stretched in turns) | Count its turns out of the barrel and their radii, or measure a stretched length against a known width (the barrel's) |
 | Oil sinks (1.10) | 14:12–15:12, 33:44–33:56 (settings close) | See which unjewelled holes have sinks |
 | Balance's swing, escapement motion (2.x) | `We1dLNXiBj0`, `s7VW3RiJ97E` | Frame-by-frame angle of the balance: amplitude (the manual's 1⅜–1½ turns), and the detent's lift |
-| Balance lower bridge: its outline and the settings' spacing (Review-results.md) | `KLUwI2UUCMQ` 13:49–13:49.5 (underside, near face-on), 35:54, 36:01; `wcYqdgpyggQ` 19:30–20:40 | A ruler in the slab's own plane: a part of known size on its underside, or the camera fit with four or more named points; then the settings' spacing and the outline in mm |
+| Balance lower bridge: the settings' spacing (Review-results.md, "The balance lower bridge", 14) | `KLUwI2UUCMQ` 6:29 (the cock's endstone from above), 13:44 (the keyhole and the balance's lower jewel from above), 36:01; the dial side at 40:08 (the fourth's and escape's lower settings) | Its outline is now the video's (`rimfit.py`). What remains is where the balance is: 36:01 puts the cap 12 mm from the fourth's setting, while the barrel bridge's cut round the balance on the top-view photograph and the endstone at 6:29 keep it near the model's (18.9 mm). Camera fits to 6:29 and 13:44 with `video.py fit` (four or more named points at their heights) would settle it |

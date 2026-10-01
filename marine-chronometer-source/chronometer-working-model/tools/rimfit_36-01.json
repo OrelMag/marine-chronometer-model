@@ -1,0 +1,8 @@
+{"frame": "f_KLUwI2UUCMQ_36-01.png", "rim": 40.5, "thick": 3.1,
+ "note": "KLUwI2UUCMQ 36:01: the upper train bridge upturned on the mat with the balance lower bridge on it. Rings: the fourth's gilt setting (on the slab, 8.9 mm above the bridge's face) and two settings in the bridge. Anchors: the centre arbor's and the third's settings in the bridge, the fourth's on the slab. The slab's face is 8.9 mm above the bridge's (the side photograph's 7.9 mm and the train bridge's underside at 16.8), the cap 0.4 more, the lugs' faces about 3.5 and the screws' heads 4.5",
+ "rings": [[1794, 847, 127.5, 97.5, 0, 8.9], [2107, 1796, 96.5, 84, 0, 0], [2260, 1213, 70, 64, 0, 0.3]],
+ "points": {"centre": [2100, 1807, 0.3], "third": [2242, 1217, 0.3], "fourth": [1794, 847, 8.9], "cap": [1825, 1240, 9.3], "tblock": [2085, 885, 8.9], "escape": [1460, 1390, 0], "screwL": [1108, 1517, 4.5], "screwR": [2308, 858, 4.5]},
+ "anchors": {"centre": [0, 0], "third": [-6.18, 14.75], "fourth": [0, 23.9]},
+ "outline": {"slab": [[1585,715],[1860,670],[2140,625],[2150,750],[2150,900],[2145,1100],[2135,1320],[2100,1375],[1917,1450],[1750,1517],[1583,1570],[1450,1600],[1283,1600],[1280,1320],[1350,1318],[1450,1315],[1590,1295],[1640,1230],[1645,1150],[1650,1070],[1610,950],[1575,890]],
+   "lugL": [[892,1417],[1292,1433],[1292,1725],[892,1725]], "lugR": [[2158,770],[2420,758],[2450,820],[2450,1100],[2170,1100],[2150,1000]]},
+ "outline_h": {"slab": 8.9, "lugL": 3.5, "lugR": 3.5}}
