@@ -2810,7 +2810,7 @@
    "parent": "42093",
    "kind": "part",
    "part": "det",
-   "fn": "Holds the support block under the train bridge, with two positioning pins (Sec. II); put in from below (Op. 81).",
+   "fn": "Holds the support block under the train bridge, with two positioning pins (Sec. II). The model puts it in from below; the manual and the video put it in from above, into a tapped hole in the block (Review-results.md, \"Elsewhere\", 20).",
    "rel": [
     [
      "in",
@@ -2950,19 +2950,19 @@
    "parent": "42093",
    "kind": "part",
    "part": "det",
-   "fn": "Holds the trip spring on the bracket.",
+   "fn": "Holds the trip spring on the bracket: through the hole in the spring's foot into the bracket's upright leg (Figs. 14, 54).",
    "rel": [
     [
      "in",
      "42092",
-     "tap"
+     "embed"
     ],
     [
      "on",
      "42088"
     ]
    ],
-   "figs": "110"
+   "figs": "14, 54, 110"
   },
   {
    "id": "42086",
@@ -3030,15 +3030,19 @@
    "parent": "42093",
    "kind": "part",
    "part": "det",
-   "fn": "Sets the detent lengthwise (Op. 82).",
+   "fn": "Sets the detent lengthwise (Ops. 84, 93): threaded into the block's end, its head in a slot in the detent's foot (Fig. 90).",
    "rel": [
     [
      "in",
      "42086",
      "embed"
+    ],
+    [
+     "on",
+     "42087"
     ]
    ],
-   "figs": "14, 110"
+   "figs": "14, 90, 110"
   },
   {
    "id": "37024",
