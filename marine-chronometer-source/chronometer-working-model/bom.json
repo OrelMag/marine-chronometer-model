@@ -2810,16 +2810,16 @@
    "parent": "42093",
    "kind": "part",
    "part": "det",
-   "fn": "Holds the support block under the train bridge, with two positioning pins (Sec. II).",
+   "fn": "Holds the support block under the train bridge, with two positioning pins (Sec. II); put in from below (Op. 81).",
    "rel": [
     [
      "in",
-     "42062",
+     "42086",
      "clear"
     ],
     [
      "in",
-     "42086",
+     "42062",
      "tap"
     ]
    ],
@@ -3166,7 +3166,7 @@
      "inst": [
       2
      ],
-     "why": "The manual has all three upper train bridge screws in pillars (reassembly Op. 14; disassembly Ops. 47, 48). The model's third screw is where the top-view photographs show one, at (-8.5, 27.7); a pillar there would stand in the fourth wheel, whose size the layout fixes, so it is drawn threaded into the bridge alone (IDEAS.md 1.2). What it holds in the real movement is not settled."
+     "why": "The manual has all three upper train bridge screws in pillars (reassembly Op. 14; disassembly Ops. 47, 48). The model's third screw is at (29.24, -12.28), where the top-view photograph shows a screw head sunk in a clearance hole through the barrel bridge (C Spinner's restoration video, 23:30, shows that hole through the bridge laid flat); a pillar there would stand in the fusee wheel, whose size the layout fixes, so it is drawn threaded into the bridge alone (IDEAS.md 1.2). What it holds in the real movement is not settled."
     }
    ]
   },

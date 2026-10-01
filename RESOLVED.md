@@ -379,6 +379,19 @@ Contents:
   train bridge, and the barrel bridge's horn ends just short of it. Keep:
   the cock stands on the train bridge, in the barrel bridge's opening; its body
   clears the balance's sweep (`fine.py`). `3312b3b`
+- **Barrel bridge without its far horn; its screw drawn as the train
+  bridge's.** The model cut the barrel bridge on a chord at the 6 o'clock
+  side and drew a train-bridge screw "with no pillar" at (−8.5, 27.7). The
+  real bridge runs on past the balance to about 100° (the top-view
+  photograph, C Spinner 23:30), and that screw is proud of it: the barrel
+  bridge's screw into the train bridge (gone with the bridge off, BunnSpecial
+  12:05). The horn is drawn with that screw at (−11.07, 26.46) and clearance
+  holes over the train bridge's screws at pillar 0 and (29.24, −12.28),
+  which is now the train bridge's third screw (the one without a pillar). The
+  detent support block's screw, which the horn now covers, goes in from below
+  (Op. 81), and the locking arm's screw moves 5° to clear the horn. Keep:
+  sunk screw heads in the photograph are the train bridge's, proud ones the
+  barrel bridge's.
 - **Train bridge opening round the balance too big.** The centre and escape
   pivots fell in the hole. The opening was reduced; it is r 8.0 after the
   escapement change. `84a7645`, `7328e67`
