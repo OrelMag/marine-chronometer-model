@@ -557,6 +557,8 @@ Contents:
   and the ear's screw at the photographed holes; solid walls between the tiers,
   not posts; the upper tier and walls clear of the escape wheel's tips
   (0.70 mm) and the rollers' sweep (0.56 mm); the screws put in from below. `01f2eea`
+  (The frame and the photographed holes are superseded by the L-shaped slab
+  below; the walls, the clearances and the screws from below stand.)
 - **Balance lower bridge's lower tier a thin bar, 0.39 mm from the escape
   arbor.** The lower tier ran as a bar from the balance's setting to the
   fourth's, its edge passing the escape arbor by 0.39 mm. A restoration video
@@ -568,7 +570,8 @@ Contents:
   (`tools/lower_bridge.py`, `SLAB`), bored r 3.0 round the escape arbor. Keep:
   the lower tier a slab, not a bar; the escape arbor's hole wide enough for its
   pinion (r 1.9) to pass; the slab's heights from the side photograph (the
-  video's are within 1 mm). `e8e76e4`
+  video's are within 1 mm). `e8e76e4` (The bore is superseded: the escape
+  arbor now passes through the L's inside corner, below.)
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
@@ -1039,4 +1042,24 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Balance lower bridge nothing like the real one.** The model drew a frame
+  of lobes round the escape wheel, both screws 13.3 mm apart at the fourth's
+  end, after three holes on the top-view photograph. A restoration video
+  (`KLUwI2UUCMQ` 36:01, 13:49.5; Boulder Horological Society 43:13) shows one
+  slab shaped as an L, the cap in a round counterbore at its corner, the
+  fourth's large gilt setting up its body, an arm to a lug at one end and a
+  lug beside the train-blocking screw at the other, the screws 34 mm apart,
+  and the escape arbor through the L's inside corner. Measured at 36:01
+  through a camera fitted to the train bridge's rim (`tools/rimfit.py`), the
+  bridge is now that L round the model's arbors (`tools/lower_bridge.py`):
+  the 3 o'clock lug and screw where the video has them (the plate's access
+  hole under it), the other lug off the pillar, detent support block and
+  barrel-bridge screw beside it, the train-blocking screw 5.0 mm from the
+  fourth arbor at 230° (its access hole off the locking arm's screw and pin),
+  the cap's counterbore (r 4.3) and the fourth's sink (r 2.7) 0.4 deep. Keep:
+  the L, the escape arbor outside the slab in its corner (3.6 mm), a lug and
+  screw at each end of the long axis, the cap in its counterbore; the slab
+  1 mm off the third arbor, the lugs off the escape wheel's tips (1.2 mm) and
+  the pillar (0.7 mm). The outlines are simplified so no three points are in
+  a line: three.js's triangulation joins a hole wrongly to such an outline
+  (116 open edges).

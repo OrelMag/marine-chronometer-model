@@ -81,7 +81,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-10 | 42189 | Stud - Hairspring, complete with pins | 1 | 1 | spr | Holds the hairspring's upper end under the cock, by its clamp and wedge pin (Sec. II, Fig. 5). | on 42066: 0 mm | ✓ |
 | 108-11 | 42147 | Pin - Hairspring stud clamp wedge | 1 | 1 | spr | Wedges the stud clamp on the spring's end without bending it (Fig. 6). |  | ✓ |
 | 108-12 | 42191 | Clamp - Hairspring stud | 1 | 1 | spr | Holds the spring's upper end in the stud. | on 42189: 0 mm | ✓ |
-| 108-13 | 42190 | Collet - Hairspring | 1 | 1 | bal | Slotted to grip the balance staff; carries the spring's inner end (Sec. II, Fig. 5). | round 42186 (press): 1.462 mm, least gap 0.0102 | ✓ |
+| 108-13 | 42190 | Collet - Hairspring | 1 | 1 | bal | Slotted to grip the balance staff; carries the spring's inner end (Sec. II, Fig. 5). | round 42186 (press): 1.439 mm, least gap 0.0102 | ✓ |
 | 108-11 | 42147 | Pin - Hairspring collet clamp wedge | 1 | 1 | bal | Wedges the collet clamp on the spring's inner end (Fig. 6). |  | ✓ |
 | 108-12 | 42191 | Clamp - Hairspring collet | 1 | 1 | bal | Holds the spring's inner end on the collet's tongue. | on 42190: 0 mm | ✓ |
 | 108-14 | 42178 | Wheel - Balance, complete with spoke | 1 | 1 | bal | Solid stainless rim silver-soldered to an Invar arm; tapped holes all round for the screws and weights (Sec. II). | on 42186: 0 mm | ✓ |
@@ -92,13 +92,13 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-19 | 42171 | Screw - Balance, 125-130 mg, 0.049 in head height | 4-6 | 6 | bal | Balance screws for rate and temperature adjustment (Secs. II, IX). | in 42178 (embed): 1.111 mm, least gap -0.3474<br>also: invariants.py: moment of inertia | ✓ |
 | 108-20 | 42173 | Screw - Balance, 200-205 mg, 0.080 in head height | 2 | 2 | bal | Balance screws, heavier. | in 42178 (embed): 1.276 mm, least gap -0.3474 | ✓ |
 | 108-21 | 42174 | Screw - Balance, 250-255 mg, 0.101 in head height | 2 | 2 | bal | Balance screws, heaviest. | in 42178 (embed): 1.128 mm, least gap -0.3474 | ✓ |
-| 108-23 | 42252 | Roller - Unlocking, complete with jewel | 1 | 1 | bal | Carries the unlocking (discharge) jewel that lifts the detent through the trip spring (Sec. IV). | round 42186 (press): 0.974 mm, least gap 0.0033<br>also: escapement.js | ✓ |
+| 108-23 | 42252 | Roller - Unlocking, complete with jewel | 1 | 1 | bal | Carries the unlocking (discharge) jewel that lifts the detent through the trip spring (Sec. IV). | round 42186 (press): 0.959 mm, least gap 0.0033<br>also: escapement.js | ✓ |
 | 108-24 | 287 | Jewel - Unlocking | 1 | 1 | bal | Unlocks the escape wheel through the trip spring, on one swing only (Sec. IV). | also: escapement.js: overall, let-off | ✓ |
-| 108-25 | 42263 | Roller - Impulse, complete with jewel (Identity No. 3; O.D. .249) | 1 | 1 | bal | Carries the impulse jewel; its 0.249 in O.D. sets the roller shake (Op. 84). | round 42186 (press): 1.299 mm, least gap 0.0033<br>also: escapement.js: roller shake | ✓ |
+| 108-25 | 42263 | Roller - Impulse, complete with jewel (Identity No. 3; O.D. .249) | 1 | 1 | bal | Carries the impulse jewel; its 0.249 in O.D. sets the roller shake (Op. 84). | round 42186 (press): 1.279 mm, least gap 0.0033<br>also: escapement.js: roller shake | ✓ |
 | 108-26 | 286 | Jewel - Impulse | 1 | 1 | bal | Receives the escape wheel's impulse (Sec. IV). | also: escapement.js: drop | ✓ |
 | 108-28 | 42248 | Cap - Balance wheel | 1 | 1 | bal | Over the arm on the hub's boss, under the hold-down screws (Fig. 4). | on 42178: 0 mm | ✓ |
 | 108-29 | 42249 | Screw - Balance wheel hold-down | 2 | 2 | bal | Through cap and arm into the hub's flange (Fig. 4). | in 42248 (clear): 0.338 mm, least gap 0.0346<br>in 42186 (tap): 0.483 mm, least gap 0.0213 | ✓ |
-| 108-30 | 42186 | Hub - Balance wheel, complete with staff | 1 | 1 | bal | The staff with its pivots; its hub carries the arm clear of the staff (Fig. 4). | in J.bu (run): 0.487 mm, least gap 0.0217<br>in J.bl (run): 0.487 mm, least gap 0.0217<br>endshake 0.050 mm (J.ble / J.bue) | ✓ |
+| 108-30 | 42186 | Hub - Balance wheel, complete with staff | 1 | 1 | bal | The staff with its pivots; its hub carries the arm clear of the staff (Fig. 4). | in J.bu (run): 0.48 mm, least gap 0.0218<br>in J.bl (run): 0.48 mm, least gap 0.0218<br>endshake 0.050 mm (J.ble / J.bue) | ✓ |
 | 108-31 | 42299 | Arm - Balance wheel locking (NAVOBSY 4618) | 1 | 1 | lockArm | Turned under the rim to hold the balance in transit (Sec. III, Fig. 9). | round 37204 (free): 0.44 mm, least gap 0.0592<br>also: bom.py fn: locking arm | ✓ |
 | 108-32 | 37204 | Screw - Flat head fillister (NAVOBSY 4618) | 1 | 1 | lockArm | The locking arm turns on it and is clamped by it. | in 42299 (clear): 0.44 mm, least gap 0.0592<br>in 42062 (tap): 2.494 mm, least gap 0.0862 | ✓ |
 | 108-33 | 42251 | Washer (NAVOBSY 55-3) | 1 | 1 | lockArm | Under the locking arm's screw. | on 42299: 0 mm | ✓ |
@@ -184,9 +184,9 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 110-26 | 42096 | Pawl - Sustaining, complete with arbor and springs | 1 | 1 | spawl | Holds the sustaining ratchet from turning back while winding (Sec. IV). | in 42062 (run): 0.121 mm, least gap 0.0542<br>in 42060 (run): 2.059 mm, least gap 0.0274<br>on 42009: 0.0066 mm<br>also: maintaining.py: pawl on its teeth | ✓ |
 | 110-27 | 42065 | Bridge - Balance lower, complete with pins | 1 | 1 | lowerBridge | Holds the balance lower setting and cap and the fourth upper setting; carries the train-blocking screw (Sec. II). | on 42062: 0 mm | ✓ |
 | 110-20 | 42055 | Screw - Balance lower bridge | 2 | 2 | lowerBridge | Hold the balance lower bridge to the train bridge (Ops. 12, 50). | in 42065 (clear): 1.976 mm, least gap 0.1897<br>in 42062 (tap): 2.519 mm, least gap 0.033 | ✓ |
-| 110-28 | 42161 | Setting - Fourth wheel upper, complete with jewel | 1 | 1 | lowerBridge | Bar-hole jewel for the fourth arbor's upper pivot. | in 42065 (press): 3.001 mm, least gap 0.0004 | ✓ |
+| 110-28 | 42161 | Setting - Fourth wheel upper, complete with jewel | 1 | 1 | lowerBridge | Bar-hole jewel for the fourth arbor's upper pivot. | in 42065 (press): 2.608 mm, least gap 0.0008 | ✓ |
 |  |  | Jewel - Fourth upper hole (bar-hole) | 1 | 1 | lowerBridge | The fourth arbor's upper pivot runs in it. |  | ✓ |
-| 110-3 | 42162 | Setting - Balance wheel lower, complete with jewel | 1 | 1 | lowerBridge | Olive-hole jewel for the balance staff's lower pivot. | in 42065 (press): 3.001 mm, least gap 0.0004 | ✓ |
+| 110-3 | 42162 | Setting - Balance wheel lower, complete with jewel | 1 | 1 | lowerBridge | Olive-hole jewel for the balance staff's lower pivot. | in 42065 (press): 2.602 mm, least gap 0.0004 | ✓ |
 |  |  | Jewel - Balance lower hole (olive-hole) | 1 | 1 | lowerBridge | The balance staff's lower pivot runs in it. |  | ✓ |
 | 110-4 | 42159 | Cap - Balance lower endstone, complete with jewel | 1 | 1 | lowerBridge | Holds the balance staff's lower endstone. | on 42065: 0 mm | ✓ |
 |  |  | Jewel - Balance lower endstone (cap jewel) | 1 | 1 | lowerBridge | Stops the balance staff's lower pivot end. |  | ✓ |
