@@ -3,7 +3,8 @@ for fetch, yt-dlp (pip install yt-dlp). Videos and frames are kept outside the r
 they are other people's work, cited, not copied.
 
   python video.py fetch ID [--height 2160]       the video, video only (yt-dlp; VP9 at 4K is about 4 GB for the hour)
-  python video.py sheet ID [--step 10]           contact sheets, a frame every STEP s, 4 x 4, timestamped: sheet_ID_NN.jpg
+  python video.py sheet ID [--step 10]           contact sheets, a frame every STEP s, 4 x 4, timestamped: $MC_VIDEO/sheets/sheet_ID_NN.jpg
+        [--from mm:ss] [--to mm:ss]               only that stretch (sheet_ID_mm-ss_NN.jpg)
   python video.py frame ID mm:ss [...]           full frames: f_ID_mm-ss.png (in $MC_VIDEO/frames)
   python video.py count FRAME cx cy a b NAME     a wheel's teeth, counted one by one
         [--s 0.8 1.12] [--band 0.945 0.975] [--ch -V] [--mind 22] [--blue]
@@ -67,16 +68,18 @@ elif cmd in ('sheet', 'frame'):
             f = grab(secs(s)); p = os.path.join(HOME, 'frames', f'f_{a[0]}_{s.replace(":", "-")}.png')
             if f is not None: cv2.imwrite(p, f); print(p)
     else:
-        step = float(opt(a, '--step', 1, '10')); W, H, C = 400, 225, 4; ts = [i * step for i in range(int(dur // step))]
+        step = float(opt(a, '--step', 1, '10')); t0 = secs(opt(a, '--from', 1, '0:00')); t1 = min(secs(opt(a, '--to', 1, '999:00')), dur); W, H, C = 400, 225, 4; ts = list(np.arange(t0, t1, step))
+        tag = f'_{a[0]}_' + (f'{int(t0 // 60)}-{int(t0 % 60):02d}_' if t0 else '')
+        os.makedirs(os.path.join(HOME, 'sheets'), exist_ok=True)
         for k in range(0, len(ts), C * C):
             sh = np.zeros((H * C, W * C, 3), np.uint8)
             for j, t in enumerate(ts[k:k + C * C]):
                 f = grab(t)
                 if f is None: continue
-                f = cv2.resize(f, (W, H)); lab = f'{int(t // 60)}:{int(t % 60):02d}'
+                f = cv2.resize(f, (W, H)); lab = f'{int(t // 60)}:{t % 60:04.1f}' if step < 1 else f'{int(t // 60)}:{int(t % 60):02d}'
                 cv2.putText(f, lab, (6, 22), 0, 0.7, (0, 0, 0), 4); cv2.putText(f, lab, (6, 22), 0, 0.7, (255, 255, 255), 2)
                 sh[(j // C) * H:(j // C + 1) * H, (j % C) * W:(j % C + 1) * W] = f
-            cv2.imwrite(f'sheet_{a[0]}_{k // (C * C):02d}.jpg', sh, [cv2.IMWRITE_JPEG_QUALITY, 80])
+            cv2.imwrite(os.path.join(HOME, 'sheets', f'sheet{tag}{k // (C * C):02d}.jpg'), sh, [cv2.IMWRITE_JPEG_QUALITY, 80])
         print(a[0], f'{dur:.0f} s,', len(ts), 'frames')
 elif cmd == 'count':
     s0, s1 = map(float, opt(a, '--s', 2, ['0.8', '1.12'])); b0, b1 = map(float, opt(a, '--band', 2, ['0.945', '0.975']))
