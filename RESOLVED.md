@@ -143,6 +143,20 @@ Contents:
   (r 1.70), since it goes on over them; the hands stay above the sub-dial
   collets (5.05); `fine.py` run with the keys shown (`hkeyOn`, `keyOn`) finds
   nothing between a socket and its square. `4bd8888`
+- **Every tooth count in the going train wrong, and the up–down scale on 240°.**
+  The counts were chosen for the ratios (fusee wheel 96, centre 80, third 75,
+  fourth 60, pinions 10, 10, 8; wind indicator 98 : 8), and the dial's UP–DOWN
+  scale was drawn on the 240° that ratio gave, where a photographed Model 21's
+  spans about 315°. Counted on a restoration video of a 1941 Model 21
+  (`References/README.md`, "Videos consulted"; `tools/video.py`): fusee wheel
+  90, centre 90, third 80 with a pinion of 12, fourth 75, wind indicator wheel
+  120; the fourth and escape pinions (10, 10) follow. The centre pinion (14) and
+  the fusee arbor's pinion (12) are inferred: 17½ half turns then hold 56¼ h,
+  the manual's maximum of 56, and the hand sweeps 313.6° (dial 315.7°). Keep:
+  `MOD` is worked out from the centre distances in `L`, so a count changes a
+  module, not a place; the hand and every dial's scale use `UDA` (movement.js),
+  never a fixed angle; `invariants.py` checks the sweep against the
+  photographed dial and the run against the manual's 56 h. TBD
 - **Seconds hand's tip on the hour hand's collet.**
   The collet added in `4bd8888` filled r 2.9 from the centre down to y 4.6, and
   the Hamilton seconds hand's tip, at y 4.35 to 4.7, reaches r 2.9 as it passes

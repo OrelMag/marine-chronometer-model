@@ -13,15 +13,15 @@ def circ(p,q,r1,r2,side):
     ex,ez=(q[0]-p[0])/D,(q[1]-p[1])/D; mx,mz=p[0]+a*ex,p[1]+a*ez
     return (mx-side*h*ez, mz+side*h*ex)
 best=[]
-# counts: centre 80 / third pinion 10 (x8); third 75 / fourth pinion 10 (x7.5); fourth 60 / escape pinion 8 (x7.5, 16-tooth escape wheel)
-for m1 in [x/100 for x in range(26,46)]:
-  for m2 in [x/100 for x in range(26,46)]:
-    rc,rtp=40*m1,5*m1; rt,rfp=37.5*m2,5*m2
+# counts (movement.js TRAIN, counted on a restoration video): centre 90 / third pinion 12 (x7.5); third 80 / fourth pinion 10 (x8); fourth 75 / escape pinion 10 (x7.5, 16-tooth escape wheel)
+for m1 in [x/100 for x in range(20,46)]:
+  for m2 in [x/100 for x in range(20,46)]:
+    rc,rtp=45*m1,6*m1; rt,rfp=40*m2,5*m2
     for side in (1,-1):
       T=circ(C,F,rc+rtp,rt+rfp,side)
       if not T: continue
-      for m3 in [x/100 for x in range(26,50)]:
-        rf,rep=30*m3,4*m3
+      for m3 in [x/100 for x in range(20,50)]:
+        rf,rep=37.5*m3,5*m3
         for ang in range(0,360,3):
           E=(B[0]+EB*math.cos(math.radians(ang)),B[1]+EB*math.sin(math.radians(ang)))
           if abs(d(E,F)-(rf+rep))>0.15: continue

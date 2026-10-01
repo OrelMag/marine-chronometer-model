@@ -8,7 +8,7 @@
    - Pillar plate 87.57 mm diameter, 3.86 mm thick (new-old-stock Hamilton part, Cas-Ker listing).
    - Balance, fusee arbor and barrel arbor: triangulated from two photographs (the manual's Fig. 2 and a near-top
      view of a 1941 movement) with an independent camera for each (bundle.py), then scaled so the fusee wheel
-     (fixed at 96:14 by the winding figures) stays inside the 87.57 mm pillar plate.
+     (96 teeth then, 90 counted since: the same pitch radius at this centre distance) stays inside the 87.57 mm pillar plate.
    - Bridge shapes, balance cock, setup cover, screw positions, engraving columns and damascene direction:
      traced on the top-view photograph and mapped into this frame (p3map.json).
    - Dial orientation: wind-indicator wheel under the 12 (manual Fig. 107, radius ~12 mm), driven by the
@@ -38,17 +38,24 @@ const TB_EDGE=[[31.67, -26.34], [31.32, -25.19], [30.97, -24.04], [30.61, -22.9]
 /* the balance lower bridge's upper tier, against the train bridge's underside (tools/lower_bridge.py): an arm round the escape wheel from the lug of the screw
    on the 3 o'clock side to a lobe beside the train-blocking screw, with the column and boss down to the lower tier (Figs. 29, 30, 110) */
 const LB_UP=[[20.14, 16.72], [19.74, 16.79], [19.34, 16.91], [18.96, 17.08], [18.62, 17.29], [18.3, 17.54], [18.01, 17.84], [17.76, 18.16], [17.55, 18.52], [17.36, 18.87], [17.1, 19.19], [16.74, 19.4], [16.34, 19.52], [15.94, 19.63], [15.55, 19.74], [15.16, 19.85], [14.77, 19.96], [14.38, 20.07], [13.99, 20.18], [13.6, 20.33], [13.26, 20.57], [12.94, 20.83], [12.62, 21.08], [12.3, 21.34], [11.98, 21.59], [11.67, 21.84], [11.34, 22.1], [11.02, 22.35], [10.7, 22.61], [10.3, 22.71], [9.9, 22.81], [9.5, 22.91], [9.1, 23.01], [8.7, 23.11], [8.3, 23.21], [7.9, 23.31], [7.5, 23.41], [7.1, 23.51], [6.7, 23.6], [6.3, 23.66], [5.9, 23.73], [5.5, 23.79], [5.1, 23.86], [4.7, 23.93], [4.3, 23.99], [3.9, 24.06], [3.5, 24.13], [3.1, 24.19], [2.7, 24.2], [2.78, 23.8], [3.04, 23.49], [3.22, 23.13], [3.3, 22.72], [3.26, 22.32], [3.12, 21.94], [2.88, 21.61], [2.56, 21.35], [2.22, 21.12], [1.88, 20.9], [1.52, 20.7], [1.14, 20.55], [0.74, 20.43], [0.34, 20.31], [-0.06, 20.23], [-0.46, 20.24], [-0.86, 20.38], [-1.19, 20.6], [-1.46, 20.91], [-1.63, 21.28], [-1.7, 21.68], [-1.65, 22.08], [-1.5, 22.46], [-1.26, 22.8], [-1.02, 23.14], [-0.93, 23.54], [-0.99, 23.94], [-1.05, 24.34], [-1.22, 24.72], [-1.56, 24.93], [-1.96, 24.93], [-2.34, 24.78], [-2.65, 24.52], [-2.92, 24.21], [-3.2, 23.92], [-3.52, 23.66], [-3.88, 23.44], [-4.26, 23.28], [-4.66, 23.17], [-5.06, 23.11], [-5.46, 23.1], [-5.86, 23.15], [-6.26, 23.25], [-6.64, 23.4], [-7.0, 23.61], [-7.32, 23.85], [-7.62, 24.14], [-7.87, 24.46], [-8.08, 24.82], [-8.23, 25.2], [-8.34, 25.59], [-8.39, 26.0], [-8.39, 26.42], [-8.34, 26.82], [-8.23, 27.22], [-8.07, 27.6], [-7.86, 27.95], [-7.6, 28.28], [-7.31, 28.56], [-6.99, 28.8], [-6.63, 29.0], [-6.24, 29.15], [-5.84, 29.25], [-5.44, 29.3], [-5.04, 29.29], [-4.64, 29.23], [-4.24, 29.11], [-3.86, 28.95], [-3.5, 28.72], [-3.18, 28.48], [-2.84, 28.27], [-2.44, 28.27], [-2.14, 28.54], [-1.9, 28.87], [-1.62, 29.17], [-1.3, 29.42], [-0.94, 29.61], [-0.56, 29.73], [-0.16, 29.79], [0.24, 29.79], [0.64, 29.71], [1.02, 29.57], [1.38, 29.36], [1.69, 29.1], [1.96, 28.79], [2.16, 28.44], [2.31, 28.06], [2.52, 27.7], [2.86, 27.49], [3.26, 27.41], [3.66, 27.35], [4.06, 27.28], [4.46, 27.21], [4.86, 27.15], [5.26, 27.08], [5.66, 27.01], [6.06, 26.95], [6.45, 26.88], [6.86, 26.81], [7.26, 26.75], [7.66, 26.67], [8.06, 26.57], [8.46, 26.47], [8.86, 26.37], [9.26, 26.27], [9.66, 26.17], [10.06, 26.07], [10.46, 25.97], [10.86, 25.87], [11.26, 25.77], [11.66, 25.67], [12.06, 25.55], [12.41, 25.34], [12.72, 25.09], [13.03, 24.84], [13.36, 24.58], [13.68, 24.33], [14.0, 24.07], [14.32, 23.82], [14.64, 23.56], [14.96, 23.31], [15.32, 23.13], [15.71, 23.02], [16.1, 22.91], [16.5, 22.8], [16.9, 22.68], [17.3, 22.57], [17.7, 22.47], [18.1, 22.49], [18.48, 22.64], [18.84, 22.85], [19.2, 23.03], [19.58, 23.17], [19.98, 23.26], [20.38, 23.3], [20.78, 23.29], [21.18, 23.23], [21.57, 23.12], [21.96, 22.96], [22.31, 22.76], [22.63, 22.52], [22.92, 22.24], [23.18, 21.93], [23.4, 21.58], [23.57, 21.2], [23.7, 20.81], [23.78, 20.4], [23.8, 20.0], [23.78, 19.6], [23.7, 19.2], [23.58, 18.82], [23.41, 18.44], [23.18, 18.08], [22.92, 17.76], [22.63, 17.48], [22.31, 17.24], [21.96, 17.04], [21.58, 16.88], [21.18, 16.77], [20.78, 16.71], [20.38, 16.7]];
-/* going train (counts give the ratios; centre-escape counts are not published). fu : cp, fusee wheel 96 : centre pinion 14, from the winding figures:
-   7 half-turns of the key per 24 h (manual Sec. III) = 6.857 h per fusee turn. Every count shown in the page (labels, part cards, walkthrough tables) comes from here */
-const TRAIN={fu:96,cp:14,cw:80,tp:10,tw:75,fp:10,fw:60,ep:8,ew:16};
+/* going train, counted on a restoration video of a 1941 Model 21 (References/README.md, "Videos consulted"; tools/video.py): fusee wheel 90, centre wheel 90,
+   third wheel 80 with a pinion of 12, fourth wheel 75; the fourth and escape pinions (10, 10) follow, the fourth turning once a minute and the 16-tooth escape
+   wheel 7.5 times to its once. The centre pinion's leaves weren't counted cleanly: 14 makes the manual's 17½ half turns (Sec. III) hold 56¼ h, its "maximum of
+   56 hours", and with the fusee arbor's pinion of 12 sweeps the UP-DOWN hand 313.6° in 56 h, as the photographed dial's 315.7°; 13 (with 13) would fit the dial
+   and the manual's seven half turns a day but run 60.6 h. Every count shown in the page (labels, part cards, walkthrough tables) comes from here */
+const TRAIN={fu:90,cp:14,cw:90,tp:12,tw:80,fp:10,fw:75,ep:10,ew:16};
 const FW_SP=5;   /* the fourth wheel's spokes (Figs. 29, 110: the three train wheels have five each); the train-blocking screw's dog point stands between them */
 const MW={cp:12,mw:36,mp:10,hw:40};   /* motion work: cannon pinion 12 : minute wheel 36, minute pinion 10 : hour wheel 40 */
-/* escape-wheel turns per turn of the fourth, third, centre and fusee wheels: 7.5, 56.25, 450, 3086 */
+/* escape-wheel turns per turn of the fourth, third, centre and fusee wheels: 7.5, 60, 450, 2893 */
 const ESC_PER=(()=>{const fw=TRAIN.fw/TRAIN.ep,tw=fw*TRAIN.tw/TRAIN.fp,cw=tw*TRAIN.cw/TRAIN.tp;return{fw,tw,cw,gw:cw*TRAIN.fu/TRAIN.cp};})();
-const FUSEE_PER_HOUR=TRAIN.cp/TRAIN.fu,FUSEE_TURNS=8.75; /* 17-1/2 half turns for a full wind */
-const RUN_H=FUSEE_TURNS/FUSEE_PER_HOUR;         /* 60 h: runs down when the chain is all on the barrel (the dial's UP-DOWN scale covers the rated 56 h) */
-const UD={pin:8,wheel:98,m:0.2319};             /* wind indicator: wheel radius 12.4 mm, as Fig. 107 */
-const MOD={fusee:0.4171,train:0.30,centre:0.29,fourth:0.3113};   /* fourth: the escape pinion meshes at the 10.585 mm the escape wheel's 9.40 mm from the balance leaves */
+const FUSEE_PER_HOUR=TRAIN.cp/TRAIN.fu,FUSEE_TURNS=8.75; /* "17-1/2 half turns will be required for a full winding" (manual Sec. III) */
+const RUN_H=FUSEE_TURNS/FUSEE_PER_HOUR;         /* 56.25 h: runs down when the chain is all on the barrel, the manual's "maximum of 56 hours" and the end of the dial's UP-DOWN scale */
+/* wind indicator: wheel 120 (counted on the video), the fusee arbor's pinion 12 (inferred: see TRAIN). Its hand sweeps UD_SWEEP degrees in 56 h, centred on the 6
+   (UP at the upper right, DOWN at the upper left); UDA(h) is its angle after h hours, for the hand here and every dial's scale (core.js, essay.js) */
+const UD={pin:12,wheel:120,m:2*Math.hypot(L.Fu[0]-L.Ud[0],L.Fu[1]-L.Ud[1])/(12+120)},UD_SWEEP=56*FUSEE_PER_HOUR*UD.pin/UD.wheel*360,UD_UP=180-UD_SWEEP/2,UDA=h=>(UD_UP+UD_SWEEP*h/56)*Math.PI/180;
+/* modules from the centre distances in L, so each pair meshes there; fourth: the escape pinion meshes at the 10.585 mm the escape wheel's 9.40 mm from the balance leaves */
+const MOD=(()=>{const d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  return{fusee:2*d(L.Fu,L.C)/(TRAIN.fu+TRAIN.cp),centre:2*d(L.C,L.T)/(TRAIN.cw+TRAIN.tp),train:2*d(L.T,L.F)/(TRAIN.tw+TRAIN.fp),fourth:2*d(L.F,L.E)/(TRAIN.fw+TRAIN.ep)};})();
 const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);return[dx/l,dz/l];})(),BETA=Math.atan2(-EU[1],EU[0]);
 /* Spring detent escapement: solved by makeEsc in ../shared/escapement.js (shared with the essay and tools/escapement.js), with the centre distance in L (9.40 mm).
    Unit frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius ES */
@@ -340,7 +347,7 @@ function buildMovement(M){
   R.hourW=hn(arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:0.384,y:2.65,th:0.8,spokes:0,collet:0,bore:1.75,hub:2.6,mate:MW.mp}}),'42080');mesh(R.hourW,ring(2.3,1.75,2.9+DD),M.brass2,0,4.1+DD/2,0);   /* its pipe carries the hour hand; 0.05 clear of the cannon pinion's leaves, which turn twelve times as fast */
   R.udW=hn(arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.5,th:0.8,spokes:5,collet:0,bore:0.55,mate:UD.pin}}),'42081');mesh(R.udW,ring(1.6,0.55,2.0),M.brass2,0,1.5,0);mesh(R.udW,ring(0.9,0.55,2.7+DD),M.steel,0,2.85+DD/2,0);cylBetween(R.udW,0.55,4.2+DD,4.6+DD,M.steel);   /* its pipe carries the hand */
   R.fp=hn(arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:1.5,th:2}}),'42022',{sub:1});   /* the wind indicator pinion, part of the fusee arbor */
-  /* ---------- fusee wheel (TRAIN.fu : centre pinion TRAIN.cp, module 0.417) with its maintaining work ---------- */
+  /* ---------- fusee wheel (TRAIN.fu : centre pinion TRAIN.cp, module MOD.fusee, 0.441) with its maintaining work ---------- */
   const gw=part('gw',-14);
   R.gw=hn(arbor(gw,M,...L.Fu,{wheel:{n:TRAIN.fu,m:MOD.fusee,y:-6.5,th:1.2,spokes:0,mat:M.copper,collet:0,bore:1.05,mate:TRAIN.cp}}),'42015');
   mesh(R.gw,ring(17.3,15.2,1.8),M.copper,0,-8.0,0);mesh(R.gw,discGeo(15.2,0.5,[[0,0,1.05],[13.55*Math.cos(0.35),-13.55*Math.sin(0.35),0.4]]),M.copper,0,-7.6,0);   /* the web, with the hole the sustaining spring's pin is pressed into */
@@ -731,7 +738,7 @@ function buildMovement(M){
     { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armS*(1-(s.arm||0))*Math.PI/2; }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;
     const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
-    const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-60*D2R-udA;
+    const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-UD_UP*D2R-udA;
     if(s.msOn){const In=fs.Ib(s.n,eps);if(Math.abs(In-lastIn)>=0.002){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup-In,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=In;}}   /* rebuilt when the barrel has turned 0.7 deg */
     if(s.springOn&&s.th!==lastTh){R.spring.geometry=springGeo(5.5,HS_H,14,s.th,0.17,HS_R,HS_R,R.spring.geometry);lastTh=s.th;}   /* rewritten in place (reclose), and only when the balance has turned */
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing. Rebuilt only when either changes (still for most of each swing) */

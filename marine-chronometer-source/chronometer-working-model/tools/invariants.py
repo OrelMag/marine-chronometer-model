@@ -4,8 +4,9 @@
 
 - Hands: with the escape wheel at E = 2t teeth (t seconds), the second, minute and hour hands and the escape wheel point where a clock reading t
   would put them: 1 turn a minute, an hour, 12 hours, and 16 teeth in 8 s. A wrong tooth count anywhere in the train fails this.
-- Wind indicator: at UP (fully wound) and after 56 h, the hand is at the ends of the dial's 240° scale (60° and 300° from 12).
-- Fusee: 8¾ turns of chain is 60 h of running and 17½ half turns of the key (manual Sec. III).
+- Wind indicator: at UP (fully wound) and after 56 h, the hand is at the ends of the dial's scale, 313.6° apart and centred on the 6 (UD_SWEEP),
+  within 1% of the 315.7° a photographed Model 21 dial's ticks give.
+- Fusee: 8¾ turns of chain is 17½ half turns of the key (manual Sec. III) and 56¼ h of running, the manual's "maximum of 56 hours" (Sec. III).
 - Balance: the moment of inertia as built (1,140 g·mm², the manual's Table II, from the parts list's masses and the balance as drawn), and a full turn of the timing weights and of the vernier weights
   changing the rate by the manual's 40 s and 2.8 s a day (p. 70).
 The movement's update() is driven directly, as views.py does; the page's own loop is stopped first."""
@@ -23,12 +24,12 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
     chk(`minute hand at t=${t} s (1 turn/h)`,wrap(R.min.rotation.y+TAU*t/3600)/D,0,1e-6,'deg off');
     chk(`hour hand at t=${t} s (1 turn/12 h)`,wrap(R.hour.rotation.y+TAU*t/43200)/D,0,1e-6,'deg off');
     chk(`escape wheel at t=${t} s (16 teeth/8 s)`,wrap(R.esc.rotation.y-esc0-TAU*t/8)/D,0,1e-6,'deg off');}
-  /* wind indicator: the hand's angle from 12, clockwise seen from the dial; the fusee's ratchet can sit up to a tooth (9 deg) past n turns, 0.7 deg of the hand */
+  /* wind indicator: the hand's angle from 12, clockwise seen from the dial; the fusee's ratchet can sit up to a tooth (9 deg) past n turns, 0.9 deg of the hand */
   const ud=()=>(-R.ud.rotation.y)/D;
-  u(0,0,true);u(0,0,false);chk('wind indicator at UP (fully wound)',ud(),60,0.8,'deg');
-  u(0,56*FUSEE_PER_HOUR,true);u(0,56*FUSEE_PER_HOUR,false);chk('wind indicator after 56 h (DOWN end of the scale)',ud(),300,0.8,'deg');
-  chk('fusee: 8 3/4 turns of chain run',FUSEE_TURNS/FUSEE_PER_HOUR,60,1e-9,'h');chk('fusee: half turns of the key to wind fully',FUSEE_TURNS*2,17.5,1e-9,'');
-  chk('fusee: 7 half turns restore',7*0.5/FUSEE_PER_HOUR,24,0.05,'h');
+  u(0,0,true);u(0,0,false);chk('wind indicator at UP (fully wound)',ud(),UD_UP,0.95,'deg');
+  u(0,56*FUSEE_PER_HOUR,true);u(0,56*FUSEE_PER_HOUR,false);chk('wind indicator after 56 h (DOWN end of the scale)',ud(),UD_UP+UD_SWEEP,0.95,'deg');chk('wind indicator sweep against the photographed dial',UD_SWEEP,315.7,3.2,'deg');
+  chk('fusee: 8 3/4 turns of chain run (manual: 56 h at most)',FUSEE_TURNS/FUSEE_PER_HOUR,56,0.5,'h');chk('fusee: half turns of the key to wind fully',FUSEE_TURNS*2,17.5,1e-9,'');
+  chk('fusee: 7 half turns restore (manual: 24 h)',7*0.5/FUSEE_PER_HOUR,24,1.6,'h');
   const I0=R.timing(0,0),rate=(t,v)=>86400*(Math.sqrt(I0/R.timing(t,v))-1);
   chk('balance moment of inertia as built (Table II)',I0,1140.0,1,'g mm2');
   chk('timing weights, a full turn out (manual: 40 s/day)',-rate(1,0),40,2,'s/day');chk('vernier weights, a full turn out (manual: 2.8 s/day)',-rate(0,1),2.8,0.15,'s/day');

@@ -3,7 +3,7 @@
     python maintaining.py
 
 Drives mv.userData.update through running, winding (short winds, winds to the stop) and a jump of the "Since winding" slider, with the train and the
-fusee advancing together as in the page (7200 escape teeth to 14/96 of a fusee turn an hour), and checks after every frame:
+fusee advancing together as in the page (7200 escape teeth to FUSEE_PER_HOUR, 14/90, of a fusee turn an hour), and checks after every frame:
   - the sustaining ratchet never turns back, except once as winding starts, by less than one of its teeth, until its pawl holds it;
   - in running the spring is at its loaded deflection (fusee wheel and sustaining ratchet turn together); while winding it only relaxes, up to SMAX;
   - the fusee (and the arbor, square and wind-indicator pinion with it) only moves forward when the key lets go: its winding ratchet catches the pawls;
@@ -17,7 +17,7 @@ HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
  const D=180/Math.PI,FPR=ratchetProf(40,0.47,false),SRP=ratchetProf(120,0.27,true),SMAX=R.SMAX??10/D,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);};
- const TPH=7200,NPH=14/96,st={E:1000,n:3};let prev=null,k=0,wasW=false;
+ const TPH=7200,NPH=FUSEE_PER_HOUR,st={E:1000,n:3};let prev=null,k=0,wasW=false;
  /* how far into its ratchet's teeth a pawl reaches (negative: inside), pawl frame as seatPawl */
  const depth=(pts,q,th,pr)=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(const[x,z]of pts){const X=q[0]+x*c+z*sn,Z=q[1]-x*sn+z*c,r=Math.hypot(X,Z);if(r<pr.ro+0.5)m=Math.min(m,r-pr.r(Math.atan2(Z,X)));}return m;};
  const stud=[];mv.traverse(o=>{if(o.userData.wstop&&o.geometry&&o.geometry.parameters&&o.geometry.parameters.radiusTop)stud.push(o);});

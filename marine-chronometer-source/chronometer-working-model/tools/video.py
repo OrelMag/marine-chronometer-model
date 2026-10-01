@@ -63,9 +63,10 @@ elif cmd in ('sheet', 'frame'):
         print(a[0], f'{dur:.0f} s,', len(ts), 'frames')
 elif cmd == 'count':
     s0, s1 = map(float, opt(a, '--s', 2, ['0.8', '1.12'])); b0, b1 = map(float, opt(a, '--band', 2, ['0.945', '0.975']))
-    ch = opt(a, '--ch', 1, '-V'); mind = int(opt(a, '--mind', 1, '22'))
+    ch = opt(a, '--ch', 1, '-V'); mind = int(opt(a, '--mind', 1, '22')); blue = '--blue' in a; a = [x for x in a if x != '--blue']
     img = cv2.imread(a[0]); cx, cy, A, B = map(float, a[1:5]); name = a[5]
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV); brass = cv2.inRange(hsv, (8, 55, 50), (40, 255, 255)) > 0; H, W = brass.shape
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV); H, W = hsv.shape[:2]
+    brass = ~(cv2.inRange(hsv, (92, 70, 30), (132, 255, 255)) > 0) if blue else cv2.inRange(hsv, (8, 55, 50), (40, 255, 255)) > 0   # the part: brass, or (--blue) anything not the blue mat
     N, M = 4096, 240; th = np.arange(N) / N * 2 * np.pi; ss = np.linspace(s0, s1, M)
     def grid(E):
         ex, ey, A, B, t = E; u = np.cos(th)[None] * A * ss[:, None]; v = np.sin(th)[None] * B * ss[:, None]

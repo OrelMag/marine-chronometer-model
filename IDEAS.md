@@ -170,11 +170,11 @@ These close gaps the model README already lists, or add parts the manual
 describes that aren't modelled yet.
 
 **Status (1 October 2026).** Closed: 1.1, 1.3, 1.4, 1.5 (what's left in them is
-noted there and left on purpose). Open: 1.8's tooth counts, now counted on a
-restoration video (fusee and centre wheels 90, third 80, fourth 75; the centre
-pinion still open), to be put into the model; 1.2, whose evidence (the plate
-bare in two teardown videos) is found but not yet fitted. Open, small: the rest
-of 1.7, 1.9 and 1.10.
+noted there and left on purpose). 1.8's tooth counts are in the model, counted
+on a restoration video; the centre pinion is inferred. Open: 1.11, the third
+arbor's place and the wheels' sizes, which the same videos show differ from the
+model's; 1.2, whose evidence (the plate bare in two teardown videos) is found
+but not yet fitted. Open, small: the rest of 1.7, 1.9 and 1.10.
 
 ### 1.1 Re-fit the plan positions with the new heights (M) — closed
 *Done: the tools read the model's heights; re-fitted over eight seeds, every axis stays within the fit's spread of `L` (balance 0.16–1.43 mm, mean about 0.1), so `L` stays. See the model README, step 6.* The escape wheel's 9.40 mm centre distance is solved from roller shake, so it stays fixed whatever a re-fit says.
@@ -207,28 +207,27 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js]
 - **Six weights:** *Still to do.* Sec. II gives balance screws "in six weights ranging from 100 mgs. to 300 mgs." and timing washers "in a range of six weights from 4 mgs. to 20 mgs". Map the parts list's three screw head heights onto the six weights. Changing any of these moves `R.pitch`, not the rate for a turn; see "The rate panel" in the model's README for the clearance checks.
 - **Timing washers:** *Still to do.* Add them as an option in the rate panel ([2.6](#26-a-fuller-rate-panel-sm)).
 
-### 1.8 Wheel teeth (M–L) — open (tooth counts)
-*The train's stack is done: third, centre and fourth wheels from the plate up, with the pinions on the sides and the five spokes that Figs. 13, 29 and 110 give, and the motion work's solid minute and hour wheels and five-spoked wind indicator wheel from photographs of a Model 21's dial side. Profiles are done; the counts are still open.* `22e3984`
-- **The wind indicator wheel's size** (settled). The dial-side photographs seemed to show it larger than the model's r 12.4, about r 15–17 mm, and Fig. 13 draws it large. But it meshes the pinion on the fusee arbor, and its centre under the 12 (Fig. 107) lies 12.3 mm from the fusee's: that centre distance holds its pitch radius near 11.4 mm, as the model has it. The photographs' size is perspective.
-- *Done:* **Profiles:** cycloidal wheel teeth (epicycloidal addenda rolled for each wheel's pinion) and round-tipped pinion leaves, in BS 978 Part 2's proportions; `fine.py` finds no contact at its 15 train positions. Before: `gearGeo` drew a generic trapezoidal tooth. Clock and chronometer trains use cycloidal teeth and pinion leaves with rounded addenda (the BS 978 Part 2 proportions are the usual reference). With true profiles, the close-ups would show real rolling contact, and `dyn.py` could check tooth-to-leaf clearance through a whole tooth pitch, not just in phase.
-- **Tooth counts:** the centre, third and fourth counts are estimates. Count teeth on the highest-resolution photographs (the fourth wheel and the centre wheel's outer rim are often visible), or ask on chronometerbook.com. Update `TRAIN` and every place the counts appear as text (see [7.2](#72-derive-every-train-number-from-train)).
-  *Counted (1 October 2026) on a restoration video of a 1941 Model 21 (C Spinner Watch Restorations, "Repairing a World War II Navy Chronometer", https://www.youtube.com/watch?v=KLUwI2UUCMQ, 4K). The model is wrong on every wheel counted:*
+### 1.8 Wheel teeth (M–L) — done (the centre pinion inferred)
+*The train's stack is done: third, centre and fourth wheels from the plate up, with the pinions on the sides and the five spokes that Figs. 13, 29 and 110 give, and the motion work's solid minute and hour wheels and five-spoked wind indicator wheel from photographs of a Model 21's dial side.* `22e3984`
+- *Done:* **Profiles:** cycloidal wheel teeth (epicycloidal addenda rolled for each wheel's pinion) and round-tipped pinion leaves, in BS 978 Part 2's proportions; `fine.py` finds no contact at its 15 train positions.
+- *Done:* **Tooth counts**, counted on a restoration video of a 1941 Model 21 (C Spinner Watch Restorations, "Repairing a World War II Navy Chronometer", https://www.youtube.com/watch?v=KLUwI2UUCMQ, 4K) with `tools/video.py` (its docstring has the commands): each wheel's rim unrolled along its fitted ellipse, the gaps found one by one, the local pitch fitted round the turn, every count checked by eye on the enlarged strips. The model was wrong on every wheel counted:
 
-  | Wheel | Model (`TRAIN`) | Video | How sure | Where (mm:ss) |
+  | Wheel | Was | Now | How sure | Where (mm:ss) |
   |---|---|---|---|---|
   | Fusee wheel | 96 | **90** | Certain: lying flat on the mat, all 90 gaps found one by one, none missed | 27:30 |
-  | Centre wheel | 80 | **90** | Certain: 90.0 counted by eye segment by segment, 90.2 and 90.7 by fit on two frames | 35:26, 35:30 |
-  | Third wheel | 75 | **80** | Measured 80.4–82.8 (partly hidden); 80 is the only count near that which the train's ratios allow | 35:22, 35:30 |
+  | Centre wheel | 80 | **90** | Certain: 90.0 counted by eye segment by segment, 88.3–90.7 by fit on three frames | 35:26, 35:30 |
+  | Third wheel | 75 | **80** | Measured 80.0–82.8 (partly hidden); 80 is the only count near that which the train's ratios allow | 35:22, 35:30 |
   | Third pinion | 10 | **12** | Counted on the leaves' angles (30° apart) | 35:22 |
-  | Fourth wheel | 60 | **75** | Measured 74.9–76.1; fourth wheel ÷ escape pinion must be 7.5 | 35:33, 36:15 |
-  | Fourth pinion | 10 | 10 | Inferred: 90/12 × 80/10 = 60, one turn of the fourth wheel a minute | |
-  | Escape pinion | 8 | 10 | Inferred: 75/10 = 7.5, an escape turn in 8 s (16 teeth, a tooth a half-second) | |
-  | Centre pinion | 14 | **open** | The leaves' angles read 22.3° (16 leaves) on one view, about 25° (14–15) on another | 35:30, 36:15 |
+  | Fourth wheel | 60 | **75** | Measured 74.1–76.1; fourth wheel ÷ escape pinion must be 7.5 | 35:33, 36:15 |
+  | Fourth pinion | 10 | 10 | Follows: 90/12 × 80/10 = 60, one turn of the fourth wheel a minute | |
+  | Escape pinion | 8 | 10 | Follows: 75/10 = 7.5, an escape turn in 8 s (16 teeth, a tooth a half-second) | |
+  | Wind indicator wheel | 98 | **120** | Certain: lying flat, all 120 gaps found, none missed | 23:30 |
+  | Centre pinion | 14 | 14 | Inferred (below); the leaves' angles read 22.3° (16) on one view, about 25° (14–15) on another | 35:30, 36:15 |
+  | Fusee arbor's pinion | 8 | 12 | Inferred (below); its end face, blurred, reads 10–12 | 29:11 |
 
-  Which wheel is which follows the reassembly (35:18–35:34): the third wheel goes in first, lowest, its arbor in the lower train bridge's gilt setting in the plate's opening (as the model has it); the centre wheel next, its arbor into the gilt bushing; the fourth last, its arbor in the bar's red jewel. The manual (Sec. IV) gives the order: fusee wheel → centre pinion, centre wheel → third pinion, third wheel → fourth pinion, fourth wheel → escape pinion.
-  - *The centre pinion and the manual.* The model's 96/14 came from "Seven half turns are required if the chronometer has been running 24 hours since the last winding" (Sec. III, p. 18). With the real 90-tooth fusee wheel, 7 half turns a day needs a pinion of 13 (6.93); 14 gives 7.47 and 16 gives 8.53. The manual's figure reads as a practical instruction, not a ratio, but 16 is far from it: count the centre pinion on a better view (the centre wheel lying flat, or the BunnSpecial teardown, https://www.youtube.com/watch?v=wcYqdgpyggQ and Part 1, Jd2c3x8VKsE) before changing the fusee's figures (`FUSEE_PER_HOUR`, 17½ half turns, the 8¾ turns of chain, `invariants.py`, the essay).
-  - *What changes with the counts.* Bigger wheels on the same arbors need new modules or new centres: `solve.py` again, then `fine.py`, `bom.py` (mesh relations) and the README's "Estimated" section (these counts move out of it). The third arbor's place may move too: in the video's frames the centre bushing sits nearer the fourth wheel's jewel, relative to the third arbor, than the model's `L` has it (ratio about 1.4 against the model's 1.83). Re-fit `L.T` to the train-side photographs of the bare plate (34:30, 35:16) while doing this.
-  - Counted with `tools/video.py` (its docstring has the commands): each wheel's rim unrolled along its fitted ellipse, the gaps found one by one, the local pitch fitted round the turn, and every count checked by eye on the enlarged strips. The videos are listed in `References/README.md` ("Videos consulted"); they and their frames stay outside the repository, cited, not copied.
+  Which wheel is which follows the reassembly (35:18–35:34): the third wheel goes in first, lowest, its arbor in the lower train bridge's gilt setting in the plate's opening (as the model has it); the centre wheel next, its arbor into the gilt bushing; the fourth last, its arbor in the bar's red jewel.
+  - *The two inferred pinions.* The manual (Sec. III, p. 18) gives three figures: 17½ half turns from run down, "a maximum of 56 hours on each full winding", and "seven half turns ... if the chronometer has been running 24 hours". A photographed dial's UP–DOWN ticks, 8 h apart, sweep 315.7° in 56 h (45.1° each). With the 90 and 120 wheels the run is 8¾ × 90/cp hours and the sweep 1.867·cp·p degrees. cp 16 runs 49 h, short of 56: out. Two pairs fit the dial: 14 and 12 (313.6°, 56¼ h, 7.47 half turns a day) and 13 and 13 (315.5°, 60.6 h, 6.93). The model takes 14 and 12: the chain then runs out exactly at the manual's 56 h and the end of the dial's scale, and the best view of the centre pinion reads nearer 14. A clean count of either pinion would settle it (the BunnSpecial teardown, https://www.youtube.com/watch?v=wcYqdgpyggQ and Part 1, Jd2c3x8VKsE, are the next places to look).
+  - The motion work (12 : 36, 10 : 40) is still chosen: the minute wheel lies on the mat at 23:30 but half out of focus (about 55 teeth by the clean half).
 
 ### 1.9 Chain and mainspring detail (M) — open (small)
 - **Chain:** *Done:* outer links (two figure-eight plates and their rivets) and inner links (one plate), on edge in a helical groove (Fig. 38); its hook stays in a hole in the barrel's wall over the whole wind (`3655b52`). *Still to do:* make the barrel-end hook visible in the "Stored energy" step.
@@ -237,6 +236,9 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js]
 ### 1.10 Oil sinks, jewel settings, endstones (S) — open (small)
 *Done:* all 14 jewels, their settings and endstones, seated by the parts-list work (`ae397f2`): the escape wheel's upper and lower endstone caps, the balance's lower setting and endstone cap, the balance's upper setting and hole jewel in the cock (1.4, `2acc042`), the fourth wheel's upper setting and the lower train bridge's settings pressed through it. The bar-hole jewels (the train's) are cut with their oil sinks (`stoneGeo(…, 'bar')` in `core.js`); the olive-hole jewels under the balance's and escape wheel's endstones, which hold their oil against the endstone, have none.
 *Still to do:* oil sinks on the pivot holes that aren't jewelled, where the oiling chart (Sec. VIII) oils them. This pairs with [3.5](#35-overhaul-walkthrough-and-oiling-chart).
+
+### 1.11 The third arbor's place and the wheels' sizes (M) — open
+The counts went in with the arbors where `L` has them: `MOD` is worked out from the centre distances, which gives wheels and pinions within 0.15 mm of their old sizes. The videos say the layout differs: the centre wheel looks 1.36–1.39 times the third wheel's diameter and 1.48–1.5 times the fourth's (the model's: 1.01 and 1.23), and on the bare plate seen from above (14:45, and the train in place at 13:51) the third arbor stands 16–19.7 mm from the centre (the model's 13.05) and about 11.4–11.9 mm from the fourth (12.75). With the counts, those ratios and the fixed fourth-to-escape distance give the third arbor at about (−6.4, 14.5), |CT| 15.9, |TF| 11.4. Moving it brings the third wheel's teeth over train pillar 0 (12.96 mm from it, the wheel's tips at 10.5 and the pillar's base r 3.4), so the pillar's place (two of the four were placed, not measured) comes into question too, and with it 1.2. Do it with a proper camera fit of the bare-plate frames (the plate's rim alone is ill-conditioned: its near side shows the side wall), then `solve.py`, `fine.py`, `bom.py`.
 
 ---
 
