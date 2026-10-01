@@ -410,7 +410,7 @@ Contents:
   bore became r 2.75 nothing held the wheel. Now r 7.0 (1.5 clear of the centre
   wheel), against the collar's end, with a slot across its outer face in which
   the pin (9.6 long, as Fig. 28 draws it) lies. Keep: the end plate larger than
-  the wheel's bore. HASH
+  the wheel's bore. `bb3086e`
 
 ## Plates, bridges, screws and arbors
 
