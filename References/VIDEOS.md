@@ -42,7 +42,7 @@ searching a video again.
 | **4:56–6:47** | **From above (12 o'clock toward the camera): the cock in place, its screw out (5:56), its nose and endstone cap close (5:50), then lifted off (6:44); 6:29 and 6:47 are the same view with the cock on and off** | The cock's outline, the barrel bridge's edge beside it, the cock's screw and steady-pin holes in the train bridge |
 | **10:44–10:48** | **From above, the detent's support block's screw taken out at the train bridge's edge below the keyhole; the keyhole's two lobes and the lower bridge's pocket in them** | Detent block's place |
 | 10:51–11:06 | The detent with its support block drawn out from under the train bridge, then held up (11:05–11:11): a long rectangular block with the screw hole at one end | Detent block's shape |
-| 9:56–10:26 | The escape upper bridge taken off (10:00: on, over the keyhole's escape lobe), its jewel and endstone close (10:16–10:26) | Escape arbor's place |
+| 9:56–10:26 | The escape upper bridge taken off (10:00: on, over the keyhole's escape lobe, from above: a long plate symmetric about its jewel, a screw near each end), its jewel and endstone close (10:16–10:26) | Escape arbor's place; the bridge's form |
 | **10:06–10:13** | **The escape wheel lifted out from above through the keyhole, the lower bridge in place: a long arbor, the pinion near its lower end** | Escape arbor's length |
 | **10:28–10:38** | **Side-on under the train bridge: the detent, the balance lower bridge's slab, the fourth arbor from it down past its wheel** | Lower bridge's heights |
 | 10:41–11:03 | The keyhole with the escape wheel out: the lower bridge's pocket walls, the balance's lower jewel at the bottom; the detent taken off (11:06) | Lower bridge from above |
@@ -79,6 +79,8 @@ searching a video again.
 | **36:15** | **The train seated, all four pillars standing, oblique** | Pillars (1.2), relative wheel sizes |
 | 36:16–36:35 | The train bridge, with the lower bridge, lowered onto the train and screwed down | |
 | **36:41–36:49** | **Side-on under the train bridge before the escape wheel goes in: the lower bridge's slab and steps, the fourth arbor, the third pinion** | Lower bridge's heights |
+| 11:04–11:30 | The detent with its support block held up to the camera, against a bright background (overexposed; its handedness can't be read reliably) | Detent's shape |
+| **40:02–40:44** | **The plate's dial side, dial off, nearly face-on: the lower train bridge's bar with its gilt setting and red jewel, the fusee arbor's pinion, two studs, three pillar screws, a capped jewel; the motion work and the wind indicator wheel going on (40:14–40:44)** | Dial-side plan; the escape arbor's lower jewel |
 | 39:30–39:38 | Dial side, settings oiled: the lower train bridge's, and a red jewel under an endstone | Escape lower setting |
 | **42:50–42:56** | **Side-on with the escape wheel in: the wheel just under the train bridge, over the lower bridge's slab, its arbor down past the slab to the pinion and the plate** | Heights of the escape wheel and the slab |
 | 43:14–43:20 | The escape wheel in a staking tool, its arbor and pinion | |
@@ -135,6 +137,7 @@ frame`, in `$MC_VIDEO/frames`).
 | The cock's steady pins | Two plain holes in the train bridge under the cock, about (36, 4) and (27, 20) | 6:47 | About 2 mm | By eye, against the cock screw's tapped hole |
 | The far horn's end and screws | Cut from (−5.45, 21.46) on the balance opening to the rim at about 100°; a screw proud of the horn at (−11.07, 26.46), a train-bridge screw sunk in a hole through it at pillar 0 (−17.2, 23.0) | `References/photo-top-view.jpg`; 23:30; `wcYqdgpyggQ` 12:05 (bridge off: the pillar-0 screw remains) | About 0.6 mm in the photograph (five-screw map at the bridge's height); about 2 mm on the flat bridge | `topview.py`'s five-screw map, by hand |
 | Pillars on the bare plate | Bases 32.7, 42.0, 37.9 and 32.3 mm from the centre (model 28.0–32.5), pairwise 40–78 mm (model 34–63): about 1.2 times the model's spacing | `wcYqdgpyggQ` 22:00 | Rough: picks by eye at 720p; the rim fits an ellipse to ±1.6 mm | Rim ellipse (`cv2.fitEllipse`), rectified to 43.8 mm |
+| Escape upper bridge's form | A long straight plate, rounded at both ends, the jewel and its two-screw cap in the middle and a screw near each end, symmetric about the jewel (model: a stadium reaching 7.5 mm beyond the arbor, both screws beyond it). End screws about 2.5 × as far from the jewel as the cap's | 10:00 | Form certain; distances rough (no ruler in the frame) | By eye (Review-results.md, "Elsewhere", 17) |
 
 ## Methods
 
@@ -216,6 +219,17 @@ on 13:44 one fitted the centre, third, balance and escape positions to
 0.6–1.9 mm, but unmirrored, which a train-side frame can't be. It and the
 escape arbor "4 mm off" read from it are withdrawn. Read the manual's parts
 list for what a part holds before naming its settings.
+
+**A mirror or a misplacement.** Before reading a plan as mirrored, check
+what a mirror keeps. A mirror about a line keeps every point's distance from
+the points on that line. A feature that doesn't fit at its distances from
+two arbors (say the balance and the escape) fits no better mirrored about
+the line through them. On 13:49.5 a hole 5.2 mm from the escape arbor and
+14.1 mm from the balance was read as the detent block's screw, on the other
+side of that line, and so as a sign of a mirrored escapement plan. Fig. 90
+has no part of the detent at those distances, whichever way round, so the
+hole is something else. The plan's handedness comes from the train and Fig.
+90 instead (Review-results.md, "Elsewhere", 16).
 
 **A plane anchored on matched holes.** Where a face of a part the model has
 from a source (the train bridge, traced on the top-view photograph) is seen,
