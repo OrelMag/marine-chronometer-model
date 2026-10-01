@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Marine Chronometer, working">
 <meta property="og:description" content="Explore the Hamilton Model 21 marine chronometer part by part, running in real time in your browser.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":["CreativeWork","WebApplication"],"name":"The Marine Chronometer: A Working Model","description":"An interactive 3D working model of the Hamilton Model 21 marine chronometer: fusee, chain, detent escapement and balance, running in real time, built from the 1948 U.S. Navy overhaul manual.","author":{"@type":"Person","name":"Orel Magidish"},"about":{"@type":"Thing","name":"Hamilton Model 21 marine chronometer"},"citation":{"@type":"Book","name":"Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer","identifier":"NAVSHIPS 250-624","datePublished":"1948","publisher":{"@type":"Organization","name":"U.S. Navy, Bureau of Ships"}},"hasPart":{"@type":"Article","headline":"The Marine Chronometer","description":"How a marine chronometer keeps time at sea, one idea at a time: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent escapement, the gimbals and keeping the rate, with live figures drawn from the working model.","author":{"@type":"Person","name":"Orel Magidish"},"datePublished":"2026-09","inLanguage":"en"},"license":"https://creativecommons.org/licenses/by/4.0/","inLanguage":"en","isAccessibleForFree":true,"applicationCategory":"EducationalApplication","operatingSystem":"Any (a web browser with WebGL)"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["CreativeWork","WebApplication"],"name":"The Marine Chronometer: A Working Model","softwareVersion":"dev","description":"An interactive 3D working model of the Hamilton Model 21 marine chronometer: fusee, chain, detent escapement and balance, running in real time, built from the 1948 U.S. Navy overhaul manual.","author":{"@type":"Person","name":"Orel Magidish"},"about":{"@type":"Thing","name":"Hamilton Model 21 marine chronometer"},"citation":{"@type":"Book","name":"Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer","identifier":"NAVSHIPS 250-624","datePublished":"1948","publisher":{"@type":"Organization","name":"U.S. Navy, Bureau of Ships"}},"hasPart":{"@type":"Article","headline":"The Marine Chronometer","description":"How a marine chronometer keeps time at sea, one idea at a time: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent escapement, the gimbals and keeping the rate, with live figures drawn from the working model.","author":{"@type":"Person","name":"Orel Magidish"},"datePublished":"2026-09","inLanguage":"en"},"license":"https://creativecommons.org/licenses/by/4.0/","inLanguage":"en","isAccessibleForFree":true,"applicationCategory":"EducationalApplication","operatingSystem":"Any (a web browser with WebGL)"}</script>
 <meta name="theme-color" content="#dfe2e3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0d1115" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f4f4f1' stroke='%23b58325' stroke-width='3'/%3E%3Cpath d='M16 7v9l6 4' stroke='%2326479c' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -170,7 +170,7 @@
       </details>
     </div>
     <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
-    <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
+    <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a><br><button class="ver" id="verBtn" title="What changed, version by version">Version <span data-ver>dev</span> · changes</button></p>
   </div>
 </div>
 <article id="essay" role="tabpanel" aria-labelledby="tabEssay" tabindex="-1" hidden>
@@ -375,7 +375,7 @@
 <dialog id="about" aria-labelledby="aboutT">
   <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
   <h2 id="aboutT">About this model</h2>
-  <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
+  <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a> · version <span data-ver>dev</span></p>
   <p>A working 3D model of the Hamilton Model 21 marine chronometer: a two-day fusee chronometer with a spring detent escapement, made in Lancaster, Pennsylvania, for the U.S. Navy from 1941. Every part runs from one clock: the balance beats twice a second, the hands step in half-seconds, and the fusee and chain follow the hours since winding.</p>
   <h3>Using it</h3>
   <ul>
@@ -416,6 +416,8 @@
   <p>The Swiss dial follows the Ulysse Nardin (Le Locle) deck chronometers, such as the one the U.S. Coast and Geodetic Survey used in the 1940s (<a href="https://www.noaa.gov/heritage/stories/friday-find-1940s-timepiece-was-original-gps-for-ships">NOAA Heritage</a>). The Soviet dial follows the First Moscow Watch Factory’s deck chronometers, which copied the Nardin layout with Arabic hours. Both leave off the maker’s name and number, and both draw their wind scales over this movement’s 240° sweep.</p>
   <h3>Further reading</h3>
   <p><a href="#essay">The Marine Chronometer</a>, the essay on the other tab: longitude, the balance and its spring, heat, the fusee, winding, the train, the detent, the gimbals and keeping the rate, with live figures drawn from this model.</p>
+  <h3 id="changes">Changes</h3>
+  <!--changelog--><p>The built page lists each version's changes here, from CHANGELOG.md.</p><!--/changelog-->
   <h3>Licence</h3>
   <p>Code under the MIT licence; text, drawings and the model under Creative Commons Attribution 4.0. Built with three.js (MIT) and the Spectral and Instrument Sans typefaces (SIL Open Font License).</p>
 </dialog>

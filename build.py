@@ -4,6 +4,7 @@
     python build.py                                  # rebuild everything
     python build.py --site-url https://example.org   # also set the site's public address (link previews, canonical URL)
     python build.py --site-url https://example.org --keep-html   # for hosts that serve /page.html without redirecting to /page
+    python build.py --release patch -m "what changed" [-m ...]   # a release: the next version in CHANGELOG.md (patch, minor or major), then the build
 
 Writes:
   marine-chronometer-source/chronometer-working-model/dist/chronometer-working-model.html
@@ -14,11 +15,13 @@ Writes:
      social-movement.png   an image of the mechanism titled for the essay, for posting
      sitemap.xml, robots.txt   for search engines (with --site-url only)
 The HTML file is self-contained: three.js and the fonts are inlined, so nothing is fetched from another server.
+Its version and list of changes come from CHANGELOG.md (changelog.py); a build without --release changes neither, so CI's rebuild matches.
 """
 import argparse,os,pathlib,re,shutil,subprocess,sys
 ROOT=pathlib.Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
 from inline import inline,remote_refs
+import changelog
 MODEL=ROOT/'marine-chronometer-source/chronometer-working-model'
 SITE=ROOT/'site'
 
@@ -55,7 +58,11 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--keep-html',action='store_true',help="keep .html in page addresses (for hosts that don't redirect /page.html to /page)")
     ap.add_argument('--site-url',default=os.environ.get('SITE_URL',''),help='public address of the site, e.g. https://marine-chronometer.pages.dev (or set SITE_URL)')
+    ap.add_argument('--release',choices=['patch','minor','major'],help='add the next version to CHANGELOG.md, with today’s date and the -m lines, before building')
+    ap.add_argument('-m',dest='notes',action='append',default=[],help='with --release: one line of what changed, for visitors (repeat for more)')
     a=ap.parse_args()
+    if a.notes and not a.release:ap.error('-m goes with --release')
+    if a.release:print('release',changelog.release(a.release,a.notes))
     # the working model, with the essay in its Essay tab: its own build script writes dist/
     subprocess.run([sys.executable,str(MODEL/'build.py')],check=True)
     model=(MODEL/'dist/chronometer-working-model.html').read_text(encoding='utf-8');check('working model',model);budget('working model',model)

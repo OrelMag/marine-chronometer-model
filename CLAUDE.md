@@ -21,8 +21,11 @@ From the repository root:
     python build.py                          # the model (with its Essay tab), the root copy, site/
     python build.py --site-url https://...   # also adds canonical + og:image tags to site/index.html (or set SITE_URL)
     python build.py --site-url https://... --keep-html   # for hosts that don't redirect /page.html to /page
+    python build.py --release patch -m "what changed" [-m ...] --site-url https://...   # a release: the next version in CHANGELOG.md, then the build
 
 The live site is https://www.marinechronometermodel.com, a Cloudflare Worker serving `site/` (`wrangler.jsonc`); `worker.js` redirects the bare domain, the old workers.dev address and plain http to it, and the essay's old address (`/marine-chronometer`) to `/#essay`. Pushing doesn't deploy it: build with `--site-url https://www.marinechronometermodel.com`, commit, then `npx wrangler deploy`.
+
+Versions: the site's version (`M.mm.pp`, shown under the byline, and in About with the list of changes) is the top entry of the root `CHANGELOG.md`, which `changelog.py` reads, checks and renders into the page at build time. A plain build never changes it, so CI's rebuild matches. Every deploy is a release: build with `--release patch` (fixes, small changes), `minor` (new features or parts, a merged branch) or `major`, one `-m` per line of what changed, written for visitors, then commit `CHANGELOG.md` with the builds and deploy. Suggest the kind and the lines; the user decides.
 
 Merging a branch into `main`: always `git merge --no-ff`, so every branch lands as its own merge commit (never a fast-forward or a squash). Resolve conflicts in the built copies and `site/` by rebuilding, not by hand.
 
