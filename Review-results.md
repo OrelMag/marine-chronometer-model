@@ -1489,7 +1489,7 @@ on the top-view photograph) had the right parts in the wrong arrangement.
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
-20. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
+21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
     the face through the rim, the barrel's cut and the centre bushing, 0.2-0.3

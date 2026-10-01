@@ -30,7 +30,7 @@ M23=[(29.42,-18.65),(30.63,-18.28),(31.69,-17.94),(32.79,-17.65),(33.88,-17.36),
 HN13=[(5.38,-1.37),(1.91,-3.22),(-1.14,-5.57),(-3.15,-8.00),(-4.42,-10.12),(-4.81,-11.53)];HB13=[(-6.97,-10.22),(-5.52,-7.98),(-4.24,-5.40),(-3.51,-2.83),(-3.17,0.14),(-3.46,2.71),(-4.08,5.10)]
 N13=[(27.66,-13.90),(25.77,-8.85),(22.51,-4.54)];MC13=(28.24,-18.69)
 # what the bridge holds (x, z, radius of the hole or part): the model's screw holes (clearance or tapped), bushings and pivots near the edge
-KEEP=[((0,0),1.2,'centre bushing'),((22.27,-1.31),0.72,'sustaining pawl arbor'),((29.24,-12.28),1.47,'train bridge screw (tapped; Review-results 20)'),((32.11,-4.1),1.64,'barrel bridge screw into pillar'),((-11.07,26.46),1.47,'barrel bridge screw (tapped)'),
+KEEP=[((0,0),1.2,'centre bushing'),((22.27,-1.31),0.72,'sustaining pawl arbor'),((29.24,-12.28),1.47,'train bridge screw (tapped; Review-results 21)'),((32.11,-4.1),1.64,'barrel bridge screw into pillar'),((-11.07,26.46),1.47,'barrel bridge screw (tapped)'),
       ((8+10.6*math.cos(math.radians(-30)),6.77+10.6*math.sin(math.radians(-30))),0.42,'locking arm screw'),((8,6.77),8.0,'keyhole round the balance (cut back to 1 mm in movement.js)'),((7.19,16.135),3.0,'keyhole: round the escape arbor'),((21.99,2.59),0.3,"sustaining pawl spring's pin")]
 A=lambda P:np.array(P,float)
 def circle(P):   # least squares (Kasa, then Gauss-Newton)
