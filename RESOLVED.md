@@ -210,14 +210,14 @@ Contents:
   (−6.18, 14.75): tip radii 14.4, 10.1 and 9.6 mm (ratios 1.43, 1.50). The
   detent's support block is notched round the arbor, provisional until its
   own place is measured. Keep: the third arbor where the video puts it; the
-  wheel sizes from `MOD`, not set by hand. `HASH`
+  wheel sizes from `MOD`, not set by hand. `a237869`
 - **Train pillars' profile drawn, not measured.** The model had a foot r 3.4
   over 1.3 mm, a neck r 2.3 under a top r 2.9. The video (42:56) shows a
   straight shaft r 2.7 with a foot collar r 2.9 over 3.3 mm and a top collar r
   3.3 over 3.4 mm; with the old foot the corrected third wheel would hit it.
   The detent's support block is 0.66 mm shorter at its foot end, and its
   adjusting screw follows, to clear the thicker top collar. Keep: the pillars'
-  measured profile. `HASH`
+  measured profile. `a237869`
 
 ## Winding and maintaining work
 
