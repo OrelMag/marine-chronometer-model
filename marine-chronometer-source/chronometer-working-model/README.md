@@ -29,7 +29,7 @@ the website (see the root README).
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate that turns to admit the winding key), winding key |
 | `js/essay.js` | The Essay tab (see "The Essay tab" below): its figures, drawn from the model's code, and the tab, hash and scroll handling. One IIFE that declares only `ESSAY` |
 | `js/app.js` | The parts registry (`PARTS`: every part's name, description, part numbers, group, colour and flags), renderer and shadows, camera and gestures, visibility/focus system, cross-sections, part picking and descriptions, labels, the eight-step walkthrough with its live diagrams, stopping and starting (the balance's amplitude, the locking arm, the train-blocking screw, the twist), and the animation loop |
-| `build.py` | Inlines the CSS, JS, three.js and fonts into `dist/` (through `inline.py` at the repository root) |
+| `build.py` | Inlines the CSS, JS, three.js and fonts into `dist/` (through `inline.py` at the repository root), with the version and the list of changes from the root `CHANGELOG.md` (`changelog.py`) |
 | `dist/chronometer-working-model.html` | The built single file (committed) |
 | `tools/bundle.py`, `tools/fit.py`, `tools/unproj.py` | Photo fitting: camera fits to the Fig. 2 and top-view photographs, triangulation of the balance, fusee and barrel axes, photo points projected onto the movement (see "How the layout was measured") |
 | `tools/solve.py` | Places the arbors from the measured positions and the centre distances the wheels need (no browser) |
