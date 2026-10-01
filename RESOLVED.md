@@ -859,6 +859,12 @@ An arbor needs pivots and shoulders; a stone its seat.
   0.8 mm head (`audit.py`: nothing under its seat). `polyGeo` now passes the
   outline and every hole clockwise. Keep: measure a hole's size at the faces
   when a screw seems to float. `41e99e0`
+- **`deploy.py` saw the live page as changed when it wasn't.** Cloudflare's Web
+  Analytics adds its beacon script (`static.cloudflareinsights.com`) to the page
+  it serves to some clients (Python's request got it, curl's didn't), so a
+  same-version redeploy was refused. The check now removes that script before
+  comparing. Keep: compare the live page with `site/index.html` only after
+  taking out what the host adds. (hash once committed)
 
 ## Essay
 

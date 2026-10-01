@@ -40,7 +40,8 @@ def check():
     if dirty:refuse('uncommitted changes (a rebuild with the live address included):\n'+dirty+'\ncommit them first: what goes live must be a commit')
     mine=PAGE.read_bytes();v=ver(mine.decode('utf-8'));top=changelog.read()[0][0]
     if v!=top:refuse(f'site/index.html is {changelog.fmt(v)} but CHANGELOG.md is at {changelog.fmt(top)}')
-    theirs=live();lv=ver(theirs.decode('utf-8','replace'))
+    # Cloudflare's Web Analytics adds its beacon script to the page it serves to some clients; that isn't the page's own content
+    theirs=re.sub(rb'<script[^>]*static\.cloudflareinsights\.com[^>]*></script>\n?',b'',live());lv=ver(theirs.decode('utf-8','replace'))
     if lv>v:refuse(f'the live site is {changelog.fmt(lv)}, newer than this {changelog.fmt(v)}')
     if lv==v and theirs!=mine:refuse(f'{changelog.fmt(v)} is already live with a different page. Make a release first:\n'
         f'  python build.py --release patch -m "what changed" --site-url {URL}\nthen commit CHANGELOG.md and the builds')
