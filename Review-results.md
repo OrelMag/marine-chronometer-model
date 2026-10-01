@@ -685,7 +685,7 @@ and no part had a hole where a screw goes. Checked against `movement.js`,
 - **Every screw has its holes.** The parts a screw passes through have a
   clearance hole (`hC`) and the part it screws into a tapped hole (`hT`): the
   pillar plate, lower train bridge, pillars (tapped at both ends), upper train
-  bridge, escape upper bridge, barrel bridge, balance lower bridge and its boss,
+  bridge, escape upper bridge, barrel bridge, balance lower bridge,
   cock and cock foot, the endstone caps, setup cover and its feet, dust-seal
   flange, sustaining ratchet wheel, winding ratchet and a tapped disc in the
   fusee's large end, the fusee's top layers, top plate and boss, the detent
@@ -740,7 +740,7 @@ the figures and listed in the model README's "Estimated, not from the manual".
 | Escape wheel (42076), centre (42068), third (42071) and fourth (42073) wheels | modelled | unchanged |
 | Upper train bridge (42062), pillar screws (42055, 3), bushings (42166, 42167) | modelled | screws threaded: two into their pillars; the third, where the top-view photograph shows it, has no pillar under it in the model (IDEAS 1.2), so it is drawn threaded into the bridge alone |
 | Sustaining pawl with arbor and springs (42096) | modelled | unchanged |
-| Balance lower bridge (42065) and screws (42055, 2) | a stadium, a boss, screw heads | a lobe for the train-blocking screw; later a stepped block: upper tier against the train bridge, the screws (pillar-screw size) from below into the train bridge (Figs. 29, 110; Ops. 12, 50), steady pins, the pillar plate's access hole (RMG No. 4E019) |
+| Balance lower bridge (42065) and screws (42055, 2) | a stadium, a boss, screw heads | a lobe for the train-blocking screw; later a stepped block: upper tier against the train bridge, the screws (pillar-screw size) from below into the train bridge (Figs. 29, 110; Ops. 12, 50), steady pins, the pillar plate's access hole (RMG No. 4E019); later a frame round the escape wheel in Fig. 30's order, the train-blocking screw, a pin and the second screw at holes on the top-view photograph |
 | Balance lower setting (42162), lower endstone cap (42159) and screws (20762, 2) | a 0.5 mm hole the staff ended in | added: setting and jewel, and a cap under the bridge; the staff's pivot reaches the endstone |
 | Fourth wheel upper setting (42161) | a hole | added: setting and jewel |
 | Train-blocking screw (42247) | missing | added, and it works (see below) |
@@ -810,9 +810,9 @@ Checked against Secs. II–IV and the handling instructions:
   - It waits above the wheel while a spoke is under it.
   - Raised within a minute or two, before the balance drops below 39°, the
     chronometer carries on by itself.
-  - It sits on a lobe of the balance lower bridge at the fourth wheel's end.
-    Nearer the bridge's line it would come down through the third wheel, which
-    runs between the bridge and the fourth wheel, or beside the escape wheel.
+  - It sits in the balance lower bridge at the fourth wheel's end, 5.0 mm
+    from the arbor, at a countersunk hole the top-view photograph shows in
+    the train bridge (see finding 7).
 - **Not modelled:** setting the hands with the key on the centre square
   (Fig. 8; the Time panel sets them), the gimbal latch (shown released), and
   the hairspring's stud and collet as Fig. 5 draws them.
@@ -971,11 +971,16 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    within 1-2 mm of it, so it is left; a clearer photograph of the dial side
    or of the train would settle it (moving T changes the centre and third
    stages' modules).
-7. **The train-blocking screw's place** (fidelity, open). A side photograph
-   (omegaforums, "Incoming Hamilton Model 21") shows its dog point entering the
-   fourth wheel at about 0.7 of its radius (about 7 mm from the arbor); the
-   model has it 3.5 mm out. Fig. 16 and a top photograph put its head near the
-   balance. Moving it re-lays the balance lower bridge's lobe.
+7. **The train-blocking screw's place** (fidelity, narrowed 1 October 2026).
+   A side photograph (omegaforums, "Incoming Hamilton Model 21") shows its dog
+   point entering the fourth wheel at about 0.7 of its radius (about 7 mm from
+   the arbor). The model now has it 5.0 mm out, at one of two countersunk holes
+   1.3 mm across that the top-view photograph shows in the train bridge beside
+   the fourth arbor (mapped to about 1 mm; the access hole is countersunk,
+   Sec. II; `tools/lower_bridge.py`). A dark hole about 7 mm from the arbor on
+   that photograph lands over the escape wheel's teeth, 4.9 mm from its arbor,
+   where the screw's wall can't stand. Still open: the forum photograph's
+   7 mm, and which of the two countersunk holes is the screw's.
 8. **A second capped post and a Y-shaped arm** (fidelity, noted). The top-view
    photograph's movement (2E11795) and others (omegaforums, Delaney No. 8854)
    have a second post with a cap near the fusee's, carrying a long Y-shaped

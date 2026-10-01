@@ -52,7 +52,7 @@ Essay: its text and figure markup are the `<article id="essay">` in `index.html`
 
 ## Verification tools (`tools/`)
 
-Before each run of a build, check or tool, give an ETA for its results. Times measured on this machine (1 October 2026): `build.py` and `escapement.js` about 1 s, `invariants.py` 4 s, `solids.py` 16 s, `exploded.py` 20 s, `smoke.py` 3 min, `bom.py` about 5 min. `fine.py` and `maintaining.py` are the slowest (CI gives the weekly job up to 3 h). For a tool not listed, estimate, then add its time here.
+Before each run of a build, check or tool, give an ETA for its results. Times measured on this machine (1 October 2026): `build.py` and `escapement.js` about 1 s, `invariants.py` 4 s, `solids.py` 16 s, `exploded.py` 20 s, `smoke.py` 3 min, `bom.py` about 5 min, `audit.py` 9 s, `placements.py dump` 22 s, `views.py` about 2.5 min a set, `fine.py` about 4 min (as long again with `--hold`). CI gives the weekly `fine.py` and `maintaining.py` job up to 3 h. For a tool not listed, estimate, then add its time here.
 
 `BOM.md` (root, generated) is the parts list against the model; `Review-results.md` "BOM comparison" records what it found and what is still open.
 
