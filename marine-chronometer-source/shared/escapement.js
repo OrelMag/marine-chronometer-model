@@ -86,7 +86,7 @@ function makeEsc(o={}){
     bracket:[D(0.58,0.083),D(0.68,0.083),D(0.68,nR+0.015),D(tR+0.06,nR+0.015),D(tR+0.06,nR+0.05),D(0.58,nR+0.05)],   /* its leg continues the cross-piece (same t) */
     stone
   };
-  const fixed={foot:rect(-1.45,0,-0.083,0.083),blockMain:rect(-1.5,0.9,-0.5,-0.083),blockFront:rect(0.9,BL-0.1,-0.3,-0.083),button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
+  const fixed={foot:rect(-1.45,0,-0.083,0.083),blockMain:rect(-1.40,0.9,-0.5,-0.083),blockFront:rect(0.9,BL-0.1,-0.3,-0.083),button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
   /* AMIN: the least amplitude that keeps the escapement going, with 2 degrees to spare: the swing must carry the discharge jewel past the trip spring on the return
      (where the spring falls off it, thPass), unlock the wheel (thRel) and see the impulse to its end (thEnd). Below it the balance swings on without unlocking */
   let thEnd=thRel;for(let th=thRel;th<A;th+=0.001){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);if(phi<=-P){thEnd=th;break;}}

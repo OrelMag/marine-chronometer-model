@@ -1103,7 +1103,11 @@ as the video shows it, bored for the escape arbor; the rest stands.
     model. A video should show: the train bridge coming off, and what the
     screw holds.
 12. **The third arbor's place and the wheels' sizes** (finding 6 under BOM
-    comparison). Measured on the video (`KLUwI2UUCMQ`, 1 October 2026):
+    comparison). **Settled for the arbor, the wheels and the pillars** (the
+    model now has the third arbor at (−6.18, 14.75) and the measured pillar
+    profile; RESOLVED.md). Still open: the detent's support block, which the
+    model notches round the arbor and shortens to clear the pillar, in the
+    escapement plan's place. Measured on the video (`KLUwI2UUCMQ`, 1 October 2026):
     - On the train bridge's underside (13:49.5), anchored by a homography on
       five real holes that match model holes to 0.2–0.6 mm (the centre
       bushing, two pillar screws, the tapped hole at (11.24, 29.51) and the
