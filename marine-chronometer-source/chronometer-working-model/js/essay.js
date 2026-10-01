@@ -108,7 +108,7 @@ const ESSAY=(()=>{
   let HANDS=null;
   const hands=()=>HANDS||(HANDS={hour:handShape(41*DK,1.2,2.5,'pear',0.68,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(47.5*DK,1.5,3,'plain',0,{boss:3.2,sq:2.44}).extractPoints(20),
     sec:handShape(21*DK,0.5,-10,'plain').extractPoints(20),ud:handShape(11*DK,0.6,2.5,'plain').extractPoints(20)});   /* the model's hands, movement.js: sizes in mm */
-  const udA=h=>(60+240*clamp(h,0,RUN_H)/56)*D2R;   /* the up/down hand: UP at 60°, 240° to DOWN at 56 h (movement.js, UD) */
+  const udA=h=>UDA(clamp(h,0,RUN_H));   /* the up/down hand: UD_SWEEP degrees from UP to DOWN in 56 h (movement.js, UD) */
   function drawHand(x,p,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,-k);x.beginPath();
     for(const loop of[p.shape,...p.holes]){loop.forEach((v,i)=>i?x.lineTo(v.x,v.y):x.moveTo(v.x,v.y));x.closePath();}x.fill('evenodd');x.restore();}
   function paintDial(x,S,t,h,o={}){const c=S/2,k=c/DIAL_R,H=hands();x.drawImage(dial(),0,0,S,S);x.fillStyle='#1d2c74';   /* the dial is DIAL_R in radius (movement.js); sub-dials 23.9 mm off centre (L.F, L.Ud) */
@@ -260,7 +260,7 @@ const ESSAY=(()=>{
     const inp=q('input[type=range]',P);inp.max=RUN_H;
     range(inp,v=>{hrs=v;wind(v*FUSEE_PER_HOUR);ro.innerHTML=`Spring pull <b>${Math.round(pull(v)*100)}%</b> of full, lever arm on the fusee <b>${rf(n).toFixed(1)} mm</b>, ${(rf(n)/rf(0)).toFixed(2)}× the smallest, turning force on the fusee wheel <b>100%</b>`;f.dirty=true;cf.dirty=true;return v.toFixed(1)+' h';});
     return()=>{if(f.dirty){f.dirty=false;V.render();}
-      if(cf.dirty){cf.dirty=false;const{X,Y}=chart(C,{x0:0,x1:RUN_H,y0:0,y1:1.1,xt:[0,12,24,36,48,60],yt:[0,0.25,0.5,0.75,1],yf:y=>Math.round(y*100)+'%',xl:'Hours since winding',yl:'Force',cursor:hrs,
+      if(cf.dirty){cf.dirty=false;const{X,Y}=chart(C,{x0:0,x1:RUN_H,y0:0,y1:1.1,xt:[0,8,16,24,32,40,48,56],yt:[0,0.25,0.5,0.75,1],yf:y=>Math.round(y*100)+'%',xl:'Hours since winding',yl:'Force',cursor:hrs,
         series:[{f:pull,color:PAL.red,label:'the spring’s pull on the chain',lx:40,dy:16,la:'center'},{f:()=>1,color:PAL.blue,label:'pull × lever: the force on the train',lx:26,dy:-12,la:'center'}],
         marks:[{x:hrs,y:pull(hrs),color:PAL.red},{x:hrs,y:1,color:PAL.blue}]});
         const{x:ctx}=C;ctx.strokeStyle=PAL.muted;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(X(56),Y(0));ctx.lineTo(X(56),Y(1.1));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=PAL.muted;ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='right';ctx.fillText('rated 56 h',X(56)-4,Y(0.08));}};},'model');

@@ -410,10 +410,10 @@ function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y f
 }
 function handGeo(len,w,tail,kind,at,o){const g=extrude(handShape(len,w,tail,kind,at,o),{depth:0.35,bevelEnabled:false,curveSegments:o&&o.boss?32:12});g.rotateX(-Math.PI/2);return g;}
 /* silvered dial, 4 inch. Default: the Hamilton Model 21 (below). kind 'roman': the German style of the A. Lange & Söhne deck chronometers (radial Roman chapter, IIII, the VI under a
-   large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale keeps this model's 240° arc.
+   large seconds sub-dial, railroad tracks, AUF–AB wind scale), without the maker's name or number; the wind scale is drawn on this movement's sweep (UDA, movement.js).
    'swiss' and 'soviet': the Ulysse Nardin deck chronometers (Roman hours, UP/HAUT–DOWN/BAS) and the First Moscow Watch Factory's copies of them
    (Arabic hours, ЗАВОД–СПУСК, СДЕЛАНО В СССР): white face, railroad track, a large seconds sub-dial with lines at 5, 15 … 55 s; makers' names
-   and numbers left off, wind scales on the 240° arc */
+   and numbers left off, wind scales on the movement's sweep (UDA) */
 function dialCanvas(kind){
   const S=1536,c=S/2,cv=document.createElement('canvas');cv.width=cv.height=S;const x=cv.getContext('2d'),nard=kind==='swiss'||kind==='soviet';
   const g=x.createRadialGradient(c*0.7,c*0.6,S*0.05,c,c,c);g.addColorStop(0,nard?'#f8f7f2':'#f4f4f1');g.addColorStop(1,nard?'#e2e0d8':'#d9dad6');
@@ -432,7 +432,7 @@ function dialCanvas(kind){
     x.textAlign='center';x.textBaseline='middle';
     const r1=c*0.96,r2=c*0.925;circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);
     for(let i=0;i<12;i++){const a=i/12*TAU;if(sov)ln(c,c,a,r2,r1,S*0.009);else tri(r1,a);}   /* hour marks: bars (Soviet), triangles (Nardin) */
-    const k=L.F[1]/DIAL_R,sy=c+c*k,uy=c-c*k,rs=c*(sov?0.375:0.39),ru=c*(sov?0.27:0.255),A=h=>(60+240*h/56)*D2R;
+    const k=L.F[1]/DIAL_R,sy=c+c*k,uy=c-c*k,rs=c*(sov?0.375:0.39),ru=c*(sov?0.27:0.255),A=UDA;
     /* wind: Nardin, a double arc ticked every 8 h round figures 8–48, UP/HAUT at the wound end, DOWN/BAS at the run-down end, an inner arc open under the XII;
        Soviet, figures 0–56 inside an outer circle open under the 12, round a ticked double arc, ЗАВОД (wound) and СПУСК (run down) */
     x.font=`500 ${S*0.026}px ${SANS}`;
@@ -467,8 +467,8 @@ function dialCanvas(kind){
     for(let i=0;i<60;i++)ln(c,sy,i/60*TAU,i%5?rs*0.9:rs*0.8,rs,i%5?S*0.0012:S*0.0024);
     x.font=`400 ${S*0.03}px Spectral, Georgia, serif`;for(let q=1;q<=6;q++){const a=q/6*TAU,r=rs*0.67;x.fillText(String(q*10),c+r*Math.sin(a),sy-r*Math.cos(a)+S*0.002);}
     /* wind: double arc with 2 h marks, figures every 8 h set radially; AUF at the wound end, AB at the run-down end */
-    const a0=60*D2R,a1=300*D2R;circ(c,uy,ru,S*0.0016,a0,a1);circ(c,uy,ru*0.84,S*0.0012,a0,a1);
-    for(let h=0;h<=56;h+=2){const a=(60+240*h/56)*D2R;ln(c,uy,a,h%8?ru*0.84:ru*0.76,ru,h%8?S*0.0011:S*0.0024);
+    const a0=UDA(0),a1=UDA(56);circ(c,uy,ru,S*0.0016,a0,a1);circ(c,uy,ru*0.84,S*0.0012,a0,a1);
+    for(let h=0;h<=56;h+=2){const a=UDA(h);ln(c,uy,a,h%8?ru*0.84:ru*0.76,ru,h%8?S*0.0011:S*0.0024);
       if(h%8===0){x.font=`400 ${S*0.021}px Spectral, Georgia, serif`;rad(String(h),c,uy,a,ru*0.6);}}
     x.font=`600 ${S*0.026}px Spectral, Georgia, serif`;x.fillText('AUF',c+ru*0.92,uy-ru*0.92);x.fillText('AB',c-ru*0.92,uy-ru*0.92);
     return cv;}
@@ -476,7 +476,7 @@ function dialCanvas(kind){
      (the 6 under the seconds) set just inside it; HAMILTON and LANCASTER, PA., U.S.A. across the centre; a large seconds sub-dial meeting the track at 6, with
      the serial and U.S. MARITIME COMMISSION; the UP–DOWN scale open at the top round the 12. The sub-dial centres are fixed by their arbors, which lie nearer the
      centre than on the dial photographed, so the sub-dials sit lower on this face and the inscriptions are closer together; the scale keeps this movement's
-     240° sweep (the photographed dial's spans about 310°) */
+     sweep, UD_SWEEP (313.6°: the photographed dial's ticks, 8 h apart, give 315.7°) */
   const r1=c*0.955,r2=c*0.905,k=0.472,sy=c+c*k,uy=c-c*k,rs=r2-c*k,ru=c*0.255;
   circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);for(let i=0;i<12;i++)tri(r1,i/12*TAU);
   /* hours, sized so the figures stand 0.18 c tall: each numeral's box just inside the track; the 5 and 7 edged round toward the 4 and 8 until they clear the seconds sub-dial */
@@ -494,7 +494,7 @@ function dialCanvas(kind){
   x.font=`500 ${S*0.031}px ${SANS}`;for(let q=1;q<=6;q++){const a=q/6*TAU;rad(String(q*10),c,sy,a,rs*0.78,1,up(a));}
   /* up/down scale as Fig. 107: UP at the upper right, hours since winding increasing clockwise round the bottom to DOWN at the upper left
      (winding turns the hand counterclockwise back to UP, manual Sec. III); a double ring with bars every 8 h, figures inside set radially, UP and DOWN past its ends */
-  const A=h=>(60+240*h/56)*D2R;circ(c,uy,ru,S*0.0016,A(0),A(56));circ(c,uy,ru*0.89,S*0.0014,A(0),A(56));for(let h=0;h<=56;h+=8)ln(c,uy,A(h),ru*0.89,ru,S*0.003);
+  const A=UDA;circ(c,uy,ru,S*0.0016,A(0),A(56));circ(c,uy,ru*0.89,S*0.0014,A(0),A(56));for(let h=0;h<=56;h+=8)ln(c,uy,A(h),ru*0.89,ru,S*0.003);
   x.font=`600 ${S*0.029}px ${SANS}`;for(let h=8;h<=48;h+=8)rad(String(h),c,uy,A(h),ru*0.69,1,up(A(h)));
   x.font=`600 ${S*0.02}px ${SANS}`;arcT('UP',c,uy,ru*1.1,45*D2R);arcT('DOWN',c,uy,ru*1.1,-45*D2R);
   /* inscriptions: maker and town across the centre, split round the hands' boss; serial and contract in the seconds sub-dial */
