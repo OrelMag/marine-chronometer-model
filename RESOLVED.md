@@ -529,6 +529,16 @@ Contents:
   keyhole stops 1 mm short of the notch. Keep: the edge is neither smoothed
   nor pushed off holes (that rounded the horn); the tool prints the metal left
   round each instead. `8a48535`
+- **Train bridge's third screw overhung the notch.** At (29.24, −12.28),
+  from the top-view photograph's five-screw map (fitted to the model's own
+  screws), its head hung about 1 mm over the notch round the fusee, and the
+  real bridge has no hole there. It is now at the end of the tongue beside
+  the notch's mouth, (32.25, −10.81), its head sunk flush in the 5.3 mm
+  counterbore C Spinner's video shows (23:30, 36:26, 36:34), and the barrel
+  bridge's access hole moved with it. The mouth's edge now turns into the
+  rim through a round corner (r 6) instead of a sharp one. Keep: no screw
+  head over an edge; the pillar under this screw (the manual's and the
+  video's) waits on the fusee's place (`Review-results.md` 21). `b58bd58`
 - **Screws were heads with nothing under them, and no part had a hole for
   one.** The Exploded view showed it: every bridge lifted away with bare heads.
   `screw()` now draws a threaded shank (`len`, toward +y), and every part a

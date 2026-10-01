@@ -10,8 +10,8 @@ nearly face on, the horn whole.
   Its centre is 2.4 mm from the model's fusee arbor.
 - The horn between it and the barrel's cut: its sides are those two circles to its end (both frames, within about 0.6 mm). The circles don't meet (2.6 mm
   apart at their nearest); the horn ends in a straight cut across, its corners sharp, 12 mm from the centre (13:49.5: the line through its two corners).
-- The notch's mouth: a sharp corner on the circle at (28.2, -18.7) (both frames, within 0.1 mm), then a straight edge out to the rim (its direction fitted
-  on 23:30's m0-m5; m6-m8, where it turns into the rim over its last millimetre, left out).
+- The notch's mouth: a sharp corner on the circle at (28.2, -18.7) (both frames, within 0.1 mm), then a straight edge (its direction fitted on 23:30's
+  m0-m5) that turns into the rim through a round corner (FILLET, tangent to both; m5-m8 fit any radius from 5 to 8 mm to 0.2-0.3 mm rms).
 The edge runs from outside the rim along the mouth, round the notch, across the horn's end and into the barrel's cut, as crescent() in movement.js takes
 it. Nothing moves it: the metal left round each hole and part the bridge holds is printed, and any under MARGIN flagged.
 Until 1 October 2026 the edge was traced on the manual's Fig. 67 through an affine fit, then pushed off what the bridge holds and smoothed, which gave the
@@ -19,7 +19,7 @@ horn a round end 7.5 mm from the centre, a wavy notch and a mouth reaching the r
 import json,math,os,pathlib
 import numpy as np
 BR_R=40.5;BA=np.array([-18.56,0.19]);TBC=BA*22.56/18.56;TB_R=19.2;FU=np.array([11.59,-19.8])
-MARGIN=1.0
+MARGIN=1.0;FILLET=6.0
 # 23:30 (video.py anchor anchors/KLUwI2UUCMQ_23-30.json): the notch n0-n31 (n31 at the mouth's corner), the horn's notch side hn and barrel side hb up to the part lying on it, the mouth m0-m8
 N23=[(1.07,-4.78),(2.13,-3.94),(3.19,-3.10),(4.39,-2.49),(5.58,-1.89),(6.92,-1.51),(8.17,-1.36),(9.41,-1.21),(10.62,-0.91),(11.61,-0.75),(12.82,-0.69),(13.94,-0.85),
      (15.16,-1.18),(16.33,-1.55),(17.43,-1.94),(18.51,-2.52),(19.60,-3.01),(20.65,-3.67),(21.59,-4.41),(22.52,-5.23),(23.42,-6.24),(24.33,-7.16),(25.06,-8.27),(25.80,-9.38),
@@ -30,7 +30,7 @@ M23=[(29.42,-18.65),(30.63,-18.28),(31.69,-17.94),(32.79,-17.65),(33.88,-17.36),
 HN13=[(5.38,-1.37),(1.91,-3.22),(-1.14,-5.57),(-3.15,-8.00),(-4.42,-10.12),(-4.81,-11.53)];HB13=[(-6.97,-10.22),(-5.52,-7.98),(-4.24,-5.40),(-3.51,-2.83),(-3.17,0.14),(-3.46,2.71),(-4.08,5.10)]
 N13=[(27.66,-13.90),(25.77,-8.85),(22.51,-4.54)];MC13=(28.24,-18.69)
 # what the bridge holds (x, z, radius of the hole or part): the model's screw holes (clearance or tapped), bushings and pivots near the edge
-KEEP=[((0,0),1.2,'centre bushing'),((22.27,-1.31),0.72,'sustaining pawl arbor'),((29.24,-12.28),1.47,'train bridge screw (tapped; Review-results 21)'),((32.11,-4.1),1.64,'barrel bridge screw into pillar'),((-11.07,26.46),1.47,'barrel bridge screw (tapped)'),
+KEEP=[((0,0),1.2,'centre bushing'),((22.27,-1.31),0.72,'sustaining pawl arbor'),((32.25,-10.81),2.65,"third train bridge screw's counterbore"),((32.11,-4.1),1.64,'barrel bridge screw into pillar'),((-11.07,26.46),1.47,'barrel bridge screw (tapped)'),
       ((8+10.6*math.cos(math.radians(-30)),6.77+10.6*math.sin(math.radians(-30))),0.42,'locking arm screw'),((8,6.77),8.0,'keyhole round the balance (cut back to 1 mm in movement.js)'),((7.19,16.135),3.0,'keyhole: round the escape arbor'),((21.99,2.59),0.3,"sustaining pawl spring's pin")]
 A=lambda P:np.array(P,float)
 def circle(P):   # least squares (Kasa, then Gauss-Newton)
@@ -48,12 +48,16 @@ def main():
     for n,P in[('13:49.5 notch',N13),('23:30 horn, notch side',HN23),('13:49.5 horn, notch side',HN13[1:])]:print(f'  {n:26s} off the notch circle {np.round(off(P,c1,r1),2)}')
     for n,P in[('23:30 horn, barrel side',HB23),('13:49.5 horn, barrel side',HB13)]:print(f'  {n:26s} off the barrel cut     {np.round(off(P,TBC,TB_R),2)}')
     k=(A(N23[-1])+A(MC13))/2;K=c1+(k-c1)*r1/np.linalg.norm(k-c1)   # the mouth's corner: both frames' reading, on the circle
-    _,um=line(M23[:6]);um=um if um[0]>0 else -um;Mr=meet(K,um,np.zeros(2),BR_R,A(M23[-1]))   # its edge, along m0-m5, to the rim
+    _,um=line(M23[:6]);um=um if um[0]>0 else -um;nm=np.array([um[1],-um[0]]);nm=nm if nm@(A((30,-10))-K)>0 else -nm   # its edge, along m0-m5; nm toward the metal
+    q=K+FILLET*nm;b=q@um;t=-b+math.sqrt(b*b-q@q+(BR_R-FILLET)**2);cf=q+t*um;T1=K+t*um;Mr=cf/np.linalg.norm(cf)*BR_R   # the round corner: centre cf, on the edge at T1, on the rim at Mr
+    f0=math.atan2(*(Mr-cf)[::-1]);f1=math.atan2(*(T1-cf)[::-1]);f1+=math.tau*((f1-f0)<-math.pi)-math.tau*((f1-f0)>math.pi);nf=max(2,math.ceil(abs(f1-f0)*FILLET/0.3))
+    FL=[cf+FILLET*np.array([math.cos(f0+(f1-f0)*k/nf),math.sin(f0+(f1-f0)*k/nf)]) for k in range(1,nf+1)]
+    print(f'  round corner r {FILLET}: on the edge {np.linalg.norm(T1-K):.1f} mm from the corner, rms {math.sqrt(np.mean([(np.hypot(*(A(p)-cf))-FILLET)**2 for p in M23[6:9]])):.2f} mm over m6-m8')
     print(f'mouth: corner ({K[0]:.2f}, {K[1]:.2f}) (23:30 {N23[-1]}, 13:49.5 {MC13}); meets the rim at ({Mr[0]:.2f}, {Mr[1]:.2f}), {math.degrees(math.atan2(Mr[1],Mr[0])):.1f} deg')
     pe=A(HN13[-1]);ue=A(HB13[0])-pe;ue/=np.linalg.norm(ue);En=meet(pe,ue,c1,r1,pe);Eb=meet(pe,ue,TBC,TB_R,A(HB13[0]))   # the horn's end: its corners on the two circles
     print(f'horn: end ({En[0]:.2f}, {En[1]:.2f}) to ({Eb[0]:.2f}, {Eb[1]:.2f}), {np.linalg.norm(Eb-En):.2f} mm across, {np.hypot(*(En+Eb)/2):.1f} mm from the centre')
     a0=math.atan2(K[1]-c1[1],K[0]-c1[0]);a1=math.atan2(En[1]-c1[1],En[0]-c1[0]);a1+=math.tau*(a1<a0);n=math.ceil((a1-a0)*r1/0.5)   # round the notch through +z, 0.5 mm steps
-    E=[Mr+um,K]+[c1+r1*np.array([math.cos(a0+(a1-a0)*k/n),math.sin(a0+(a1-a0)*k/n)]) for k in range(1,n+1)]+[Eb,Eb+ue*0.5]
+    E=[Mr*1.05]+FL+[K]+[c1+r1*np.array([math.cos(a0+(a1-a0)*k/n),math.sin(a0+(a1-a0)*k/n)]) for k in range(1,n+1)]+[Eb,Eb+ue*0.5]
     E=A(E)
     def dist(c):   # from a point to the edge's segments
         d=1e9
