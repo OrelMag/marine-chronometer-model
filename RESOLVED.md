@@ -665,7 +665,7 @@ Contents:
   in the Exploded view (`exploded.py`); with the group turned nothing stands
   over it, so it goes in from above (`hC` in the train bridge, `hT` in the
   block; `bom.json` 42056.blk). Keep: the screw in from above, on the train
-  bridge. HASH
+  bridge. `d0d563d`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
