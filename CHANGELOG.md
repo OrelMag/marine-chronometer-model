@@ -1,8 +1,11 @@
 # Changelog
 
-What changed on the site, newest first. `build.py` reads this file: the top version is printed under the byline of the built page, and the list goes into the About dialog's Changes section.
+What changed on the site, newest first. `build.py` reads this file: the top version and the list go into the built page's last panel section, Version … · what's new, above the byline (the About dialog's byline shows the version too).
 
-Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds. Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
+Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
+
+## 1.05.01 · 2026-10-01
+- The list of changes moves to its own section in the panel, above the byline.
 
 ## 1.05.00 · 2026-10-01
 - A version number under the byline, and this list of changes in About.

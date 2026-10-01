@@ -126,10 +126,10 @@ dialog#about a{color:var(--blue);text-underline-offset:2px}
 dialog#about p{margin:0 0 .6em}dialog#about p.by{color:var(--muted);margin:-4px 0 12px}dialog#about ul,dialog#about ol{margin:0;padding-left:1.25em}dialog#about li{margin:0 0 .45em}
 dialog#about .dx{position:absolute;right:12px;top:12px;margin:0}
 dialog#about .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}
-/* the version under the byline (a link to About's Changes) and the list of changes there, from CHANGELOG.md (changelog.py) */
-.by button.ver{font:inherit;color:inherit;border:0;border-radius:4px;padding:0;margin-top:2px;text-decoration:underline;text-underline-offset:2px}
-dialog#about ol.changes{list-style:none;padding-left:0}dialog#about ol.changes>li{margin:0 0 .7em}dialog#about ol.changes time{color:var(--muted);margin-left:.4em}
-dialog#about ol.changes ul{margin:.2em 0 0}dialog#about .changes-older summary{cursor:pointer;color:var(--blue);margin:0 0 .6em}
+/* Version … · what's new: the list of changes from CHANGELOG.md (changelog.py), the last section of the panel, above the byline */
+.changes-box{font-size:13px;line-height:1.45}.changes-box ol.changes{list-style:none;margin:0;padding:0}.changes-box ol.changes>li{margin:0 0 .8em}
+.changes-box ol.changes time{color:var(--muted);margin-left:.4em}.changes-box ol.changes ul{margin:.25em 0 0;padding-left:1.1em}.changes-box ol.changes ul li{margin:0 0 .3em}
+.changes-box .changes-older>summary{cursor:pointer;color:var(--blue);font-weight:600;margin:0 0 .6em}
 h2{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:0 0 7px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 button{font:600 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--blue);background:transparent;border:1.5px solid var(--blue);border-radius:999px;padding:6px 13px;cursor:pointer}

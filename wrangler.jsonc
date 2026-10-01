@@ -1,12 +1,15 @@
 // The live site: a Cloudflare Worker serving site/ as static files at its main address, https://www.marinechronometermodel.com.
 // worker.js sends every other address (marinechronometermodel.com, marinechronometer.orelmac.workers.dev, plain http) there.
 // Build with the main address, then deploy (the first run asks you to log in):
-//   python build.py --site-url https://www.marinechronometermodel.com
-//   npx wrangler deploy
+//   python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com   (commit it)
+//   python deploy.py   (the checks below, wrangler deploy, and the version's tag)
 {
   "name": "marinechronometer",
   "compatibility_date": "2026-09-28",
   "main": "worker.js",
+  // run before every deploy, however started: refuses unless site/ is committed, built for this address, and a newer version than the live
+  // page (or the same version with the same page). See deploy.py
+  "build": { "command": "python deploy.py --check" },
   // the domain's DNS record and certificate are created by Cloudflare on deploy (the zone is in this account)
   "routes": [{ "pattern": "marinechronometermodel.com", "custom_domain": true }, { "pattern": "www.marinechronometermodel.com", "custom_domain": true }],
   // keep the old address answering, so worker.js can redirect it (with routes set, wrangler would otherwise turn it off)

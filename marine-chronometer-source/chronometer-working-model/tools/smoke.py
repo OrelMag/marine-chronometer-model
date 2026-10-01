@@ -5,7 +5,7 @@
     python smoke.py --essay    # the Essay tab only
 
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, every cross-section
-(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, the version and About, winding with the key, the keyboard, and a link through the URL
+(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, Version · what's new and About, winding with the key, the keyboard, and a link through the URL
 hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
 two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
@@ -108,9 +108,10 @@ async def model(b,errs,steps):
     if await pg.evaluate("document.querySelector('#benchOut b').textContent")!='Every figure within the manual’s':errs.append("the model's settings don't pass on the bench")
     await click('#speeds button[data-v="1"]','1x');await click('#stopLook','show the arm and screw')
     await click('#helpBtn','help card');await click('#helpBtn','help card closed')
-    await click('#verBtn','version: About at its Changes')
-    if not await pg.evaluate("document.querySelector('#about').open&&!!document.querySelector('#changes')"):errs.append('the version did not open About at its Changes')
-    await pg.evaluate("document.querySelector('#about').close()");await click('#aboutBtn','About');await pg.evaluate("document.querySelector('#about').close()");steps.append('About closed')
+    await pg.evaluate("document.querySelector('#changesDet').open=true");steps.append("what's new")
+    if not await pg.evaluate("document.querySelector('#changesDet summary [data-ver]')&&document.querySelector('#changesDet').open"):errs.append("Version · what's new is missing")
+    await pg.evaluate("document.querySelector('#changesDet').open=false")
+    await click('#aboutBtn','About');await pg.evaluate("document.querySelector('#about').close()");steps.append('About closed')
     await pg.focus('#stage canvas')
     for k in['ArrowLeft','ArrowUp','+','-','0','1','Space']:await pg.keyboard.press(k);await pg.wait_for_timeout(150)
     await pg.keyboard.press('Space');steps.append('keyboard')
