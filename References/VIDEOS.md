@@ -119,7 +119,9 @@ frame`, in `$MC_VIDEO/frames`).
 | Balance lower bridge's form | A broad slab (the lower tier) with stepped lugs up to the train bridge at both ends; the escape wheel turns between the slab and the train bridge, its arbor through the slab | 10:30, 36:41, 42:56 (side); 13:44, 11:00 (above) | Certain | By eye |
 | Slab's height | 8.8–11.9 mm above the plate (42:56); its underside 8.4–9.4 over three views; model 7.9–10.9 | 42:56, 36:41, 10:30 | ±0.7 mm | Pixels along the pillars (16.8 mm) at the slab's depth |
 | Escape wheel's height | 15.6 mm above the plate; model 15.1 | 42:56 | ±0.5 mm | The same |
-| Settings' spacing on the slab | A third of the two screws' spacing; 8–11 mm on the frames' scale (the train bridge's rim, the screw heads); the model's balance and fourth arbors are 18.9 apart | 13:49, 13:49.5, 36:01 | Ratio certain (2.9–3.8 over three frames); mm uncertain | Pixels; the scale is the open question (Review-results.md, "The balance lower bridge") |
+| Settings' spacing on the slab | Cap to escape passage, cap to fourth's setting, passage to fourth's setting 8.6 : 10.8 : 11.6 (angle at the cap 73°); 10.8–11.8 mm from cap to fourth's setting by two rulers. Model's balance, escape and fourth arbors 9.4 : 18.9 : 10.6 | 13:49.5 | Ratios certain; mm ±10 % | Pixels on the face-on underside; rulers: the train bridge's rim and barrel cut, and the escapement's 9.4 mm (Review-results.md, "The balance lower bridge", 14) |
+| Balance lower bridge's size | One shield-shaped plate about 40 mm long; its two screws 31–36 mm apart at the ends of its long axis (model 13.3); escape passage about 15 × 9 mm | 13:49.5 | ±10 % | The same rulers |
+| Third bushing from the centre | 16.8 mm (model 13.05; the bare plate gave 16–19.7) | 13:49.5 | ±2 mm | Placed by the centre bushing and the barrel cut |
 
 ## Methods
 
@@ -190,13 +192,26 @@ read pixels along it: plate to train bridge is 16.8 mm. Take the part's
 heights at the pillar's depth, and check them on two or three views (the lower
 bridge's slab: 8.4–9.4 mm over three). This works.
 
-**Which part is which.** Name a feature by its place among others the model
-already has, and check the guess against a third: on the 13:44 top view the
-centre bushing, the balance's jewel and the escape lobe fitted to 42–80 px,
-and the model's third bushing then landed 57 px from a real one. A first try
-that named the two gilt bushings the other way round fitted three points just
-as well and gave a wrong answer (an escape arbor 4 mm off). Read the manual's
-parts list for what a part holds before naming its settings.
+**Which part is which.** Settle the frame's handedness first. A view from
+the train side is the model's plan mirrored (3 o'clock on the image's left
+when 12 is up); a view of the train bridge's underside, or of the dial side,
+is not. Check it on parts no one can mistake (13:12: the barrel, the fusee and
+its chain, the keyhole). Then name a feature by its place among others the
+model already has, and check the guess against a third. A similarity with the
+wrong handedness can still fit three or four points to a millimetre or two:
+on 13:44 one fitted the centre, third, balance and escape positions to
+0.6–1.9 mm, but unmirrored, which a train-side frame can't be. It and the
+escape arbor "4 mm off" read from it are withdrawn. Read the manual's parts
+list for what a part holds before naming its settings.
+
+**A part's own proportions.** Where a part is seen face-on, ratios between
+its own features need no camera and no names on other parts: the lower
+bridge's cap, escape passage and fourth's setting are 8.6 : 10.8 : 11.6
+(13:49.5). For millimetres use two independent rulers and see that they
+agree: the train bridge's rim (40.5 mm) and its barrel cut against the
+escapement's 9.4 mm from balance to escape, 35–39 against 37.8 px/mm. The
+bridge's features lie about 8 mm nearer the camera than the train bridge,
+which at this distance (about 80 mm) enlarges them by up to 11 %.
 
 **A camera from model points and circles** (`video.py fit SPEC.json`, then
 `video.py unproj SPEC.json Y u,v …`): the pose and focal length fitted to named
