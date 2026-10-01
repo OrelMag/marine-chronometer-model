@@ -666,7 +666,7 @@ Contents:
   column of its own on the detent's other side (`tools/lower_bridge.py`,
   three upper-tier pieces in `LB_UP`/`LB_WALL`; `BLOCK` the detent's real
   footprint from the page). Keep: the far lug beside the fourth, not past
-  the body. HASH
+  the body. `c1f9696`
 - **Detent support block's screw put in from below.** The manual (Sec. II;
   Figs. 14, 22, 84; Op. 81) and the video (`KLUwI2UUCMQ` 10:45, 11:08) put
   it in from above, through the train bridge into a tapped hole in the
@@ -967,7 +967,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   of 1.08 at beat …719.83 the two disagreed and the train toggled every
   frame; the HUD (`smoke.py`, "screw down") rarely caught it held. It showed
   when the screw moved 0.5 mm. The restart test is now the hold test's
-  negation. Keep: hold and release decided by the same test. HASH
+  negation. Keep: hold and release decided by the same test. `c1f9696`
 - **Hidden parts took clicks and hid labels.** r128's
   raycaster ignores visibility, and picking, the right-click menu and label
   occlusion tested only the mesh's own `visible`, so meshes in a hidden group
