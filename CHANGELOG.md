@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 1.08.00 · 2026-10-01
+- The going train's tooth counts, counted on a restoration video of a real 1941 Model 21: the fusee and centre wheels have 90 teeth, the third 80, the fourth 75.
+- The up–down wind scale now sweeps about 314°, as on a real Model 21 dial, and its hand reaches DOWN when the chain runs out, after the manual's 56 hours.
+- The essay, part cards and walkthrough give the new counts and say where each comes from.
+
 ## 1.07.00 · 2026-10-01
 - The balance lower bridge rebuilt as the solid frame the manual and photographs show, round the escape wheel.
 - The train-blocking screw and the bridge's screws moved to the holes a photograph of a real movement shows.
