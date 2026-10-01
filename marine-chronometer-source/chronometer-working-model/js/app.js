@@ -294,8 +294,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   $('#driveOn').addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');});
   /* about: sources and method in a dialog */
-  const about=$('#about'),aboutOpen=()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');};$('#aboutBtn').addEventListener('click',()=>{aboutOpen();about.scrollTop=0;});
-  $('#verBtn').addEventListener('click',()=>{aboutOpen();$('#changes').scrollIntoView({block:'start'});});   /* the version: About, at its Changes */
+  const about=$('#about'),aboutOpen=()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');};$('#aboutBtn').addEventListener('click',aboutOpen);
   about.addEventListener('click',e=>{if(e.target===about)about.close();});
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
   /* settings this browser remembers, as it does the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
