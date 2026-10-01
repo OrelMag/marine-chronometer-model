@@ -656,6 +656,17 @@ Contents:
   frame and eight directions (a turned detent screw read as floating), and
   `invariants.py` runs the train with the fusee for its 56 h indicator test.
   `8cbb259`
+- **Balance lower bridge's far lug past the body's end.** After the 14° turn
+  the detent stood where the video has the far lug (`KLUwI2UUCMQ` 36:01:
+  beside the fourth's setting on the 9 o'clock side), so the lug was moved
+  past the body's end, 11.3 mm from the video's, and the bridge lost the
+  L that main's had. The lug is back beside the fourth (−13.9, 18.8), 3.8 mm
+  from the video's, on the detent's 12 o'clock side, joined to the body by
+  a tongue of the slab under the detent; the train-blocking screw has a
+  column of its own on the detent's other side (`tools/lower_bridge.py`,
+  three upper-tier pieces in `LB_UP`/`LB_WALL`; `BLOCK` the detent's real
+  footprint from the page). Keep: the far lug beside the fourth, not past
+  the body. HASH
 - **Detent support block's screw put in from below.** The manual (Sec. II;
   Figs. 14, 22, 84; Op. 81) and the video (`KLUwI2UUCMQ` 10:45, 11:08) put
   it in from above, through the train bridge into a tapped hole in the
@@ -949,6 +960,14 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **Train-blocking screw down, the train held a frame and freed the next.**
+  The train halts when its next whole beat would bring a spoke to the dog
+  point (`Eb+1 > floor(Eb+blockRoom)`), but it restarted whenever
+  `blockRoom >= 1`. At speed the beat count is fractional, so with a room
+  of 1.08 at beat …719.83 the two disagreed and the train toggled every
+  frame; the HUD (`smoke.py`, "screw down") rarely caught it held. It showed
+  when the screw moved 0.5 mm. The restart test is now the hold test's
+  negation. Keep: hold and release decided by the same test. HASH
 - **Hidden parts took clicks and hid labels.** r128's
   raycaster ignores visibility, and picking, the right-click menu and label
   occlusion tested only the mesh's own `visible`, so meshes in a hidden group

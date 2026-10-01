@@ -1038,10 +1038,14 @@ on the top-view photograph) had the right parts in the wrong arrangement.
 5. **The screws.** Settled. The real bridge's two screws are at the ends of
    its long axis, 33.9 mm apart on 36:01 (31–36 on the other frames). The
    model has the 3 o'clock one where the video has it, (20.58, 11.88), with the
-   pillar plate's access hole (RMG No. 4E019) under it, and the other at the
-   body's far end, (−6.98, 32.24), past the detent and its support block's
-   screw, which the escapement's direction puts where the video's lug is
-   (34.3 mm apart). The tapped hole the top-view photograph shows at (11.24, 29.51)
+   pillar plate's access hole (RMG No. 4E019) under it, and the other beside
+   the fourth on the 9 o'clock side as on the video, at (−13.9, 18.8), 3.8 mm
+   round toward 12 from the video's (−12.0, 22.1): there the model's detent
+   foot stands (its clamp screw 0.6 mm off the video's place), which the real
+   one can't (35.2 mm apart). The slab reaches the lug by a tongue under the
+   detent. On the video's arrangement (the balance nearer the fourth, the
+   escapement turned with it) the detent would run clear of the lug; that
+   waits on 14. The tapped hole the top-view photograph shows at (11.24, 29.51)
    isn't this bridge's; what screws into it is still open.
 6. **The steady pins.** Open. None show on the bridge's faces; pins between
    the bridge and the train bridge would be hidden in the joint. The model
@@ -1122,14 +1126,14 @@ on the top-view photograph) had the right parts in the wrong arrangement.
 7. **Where it stands.** Settled in arrangement: on the restoration video
    (36:01) its dog point is on the bridge's body between the fourth's setting
    and the lug at that end, 6.9 mm from the setting, not at either countersunk
-   hole beside the fourth arbor on the top-view photograph. The model puts it
-   5.0 mm out at 140° round the fourth arbor, on the side away from the
-   detent, which the escapement's direction swings over the body, its access
-   hole 3.2 mm off the balance locking arm's screw and pin (finding 7 under
-   BOM comparison is overtaken).
+   hole beside the fourth arbor on the top-view photograph. The video's place
+   is covered by the model's detent, so the model puts it 4.5 mm out on the
+   detent's other side, (−3.70, 26.50), 7.1 mm from the video's, in a column of
+   its own from the slab to the train bridge, 1.1 mm off the detent (finding 7
+   under BOM comparison is overtaken).
 8. **How far out it stands.** The video's 6.9 mm agrees with a forum side
    photograph (omegaforums, "Incoming Hamilton Model 21"), about 0.7 of the
-   fourth wheel's radius, about 7 mm. The model keeps 5.0, inside the
+   fourth wheel's radius, about 7 mm. The model has 4.5, inside the
    fourth wheel's spokes and clear of the detent. Open with 14.
 9. **A dark hole near the escape wheel.** About 2.5 mm across, at about
    (2.7, 18.1) on the top-view photograph, partly under the balance locking

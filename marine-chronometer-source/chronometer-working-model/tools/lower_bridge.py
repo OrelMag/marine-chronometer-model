@@ -23,7 +23,9 @@ What the sources give:
 - What doesn't carry over: on the video the cap is about 12 mm from the fourth's setting and 9 mm from the escape arbor, at about 73 deg; the model's balance,
   escape and fourth arbors are 9.4, 10.6 and 18.9 mm apart, nearly in a line (Review-results.md, "The balance lower bridge", 14). The bridge is drawn here
   round the model's arbors: the left lug and its screw where the video has them, the body stretched from the balance to the fourth arbor and narrowed
-  between the escape arbor and the third arbor, the right lug moved off the pillar, the detent support block and the barrel bridge's screw beside it.
+  between the escape arbor and the third arbor, the far lug beside the fourth on the 9 o'clock side as on the video, but moved toward 12 off the detent's
+  foot, which the escapement's direction puts where the video has the lug, and joined to the body by a tongue of the slab under the detent; the
+  train-blocking screw on the detent's other side, in a column of its own.
 
 Outlines are polygons with their corners rounded (r 0.8), the walls and tiers unions and intersections of their distance fields, traced at 0.02 mm."""
 import json,math,pathlib
@@ -33,9 +35,9 @@ HERE=pathlib.Path(__file__).resolve().parent
 B=np.array([6.125,8.504]);F=np.array([0.0,23.9]);E=np.array([8.504,17.598]);T=np.array([-6.18,14.75]);C=np.array([0.0,0.0]);ES=13.16/2
 PIL=np.array([[11.12,30.52],[-21.57,17.79]]);PIL_R=3.4                                   # the train bridge's pillars near the bridge, r 3.4 at the upper tier's height
 BB2=np.array([-17.14,23.0]);ARM=np.array([[0.83,27.79],[0.86,29.73]])                    # holes in the train bridge: a barrel-bridge screw (S.bb[2]), the balance locking arm's screw and stop pin (S.arm, S.armPin)
-BLK=np.array([-10.46,26.55])                                                             # the detent support block's screw (S.blk)
+BLK=np.array([-7.31,23.72]);DPIN=np.array([[-9.64,25.45],[-2.72,20.3]])                    # the detent support block's screw and positioning pins (S.blk, S.dpin)
 ROLL=4.32                                                                                # the balance's widest roller part at the walls' heights (r about the staff)
-BLOCK=np.array([[3.67,13.32],[1.22,19.09],[-6.07,24.51],[-8.49,26.32],[-10.92,28.13],[-11.63,28.01],[-12.59,26.73],[-13.48,25.25],[-11.32,21.9],[-9.91,20.85],[3.25,12.91]])   # the detent and its support block over the slab (the page's hull)
+BLOCK=np.array([[4.0,9.58],[3.7,10.2],[-1.3,13.85],[-1.9,13.84],[-3.98,15.2],[-3.92,15.8],[-2.43,17.8],[-2.8,18.3],[-5.3,20.15],[-5.7,19.63],[-6.8,20.22],[-7.4,20.28],[-7.76,19.8],[-8.0,20.38],[-7.8,20.96],[-8.3,21.33],[-8.9,21.51],[-10.0,20.85],[-11.0,21.6],[-11.3,22.13],[-10.9,22.67],[-10.94,23.3],[-12.0,24.02],[-12.39,23.5],[-12.96,23.3],[-12.42,24.4],[-14.0,25.57],[-14.14,26.2],[-13.77,26.7],[-13.2,26.46],[-12.4,27.48],[-12.15,26.9],[-11.23,27.8],[-10.6,27.95],[0.89,19.4],[1.06,18.8],[0.7,18.31],[0.97,17.7],[1.5,17.3],[2.1,17.23],[2.9,16.26],[4.5,15.44],[3.7,14.41],[3.78,13.8],[4.3,13.41],[4.83,12.3],[4.4,9.9]])   # the detent, its support block and their screws in the lugs' layer (TB_U to the lower tier): the page's meshes there, their plan hulls joined
 # the video's bridge (36:01, see above; python rimfit.py rimfit_36-01.json --f 6000), mm in the model's frame: the slab, the lugs, the screws, the cap, the fourth's setting, the train-blocking screw, the escape arbor
 VIDEO={'slab': [[4.5, 28.3], [-2.2, 27.6], [-9.1, 26.9], [-8.0, 23.1], [-6.5, 18.7], [-4.4, 13.2], [-2.2, 7.5], [-0.9, 6.4], [3.5, 5.7], [7.5, 5.2], [11.3, 5.0], [14.3, 5.2], [17.7, 6.2], [15.9, 13.4], [14.4, 12.9], [12.3, 12.3], [9.2, 11.9], [7.6, 13.3], [6.9, 15.4], [6.1, 17.5], [6.0, 21.2], [6.3, 23.2]],
   'lugL': [[24.6, 17.3], [15.9, 14.0], [17.9, 6.5], [26.3, 9.2]],
@@ -50,15 +52,17 @@ pol=lambda c,r,a:c+r*np.array([math.cos(math.radians(a)),math.sin(math.radians(a
 U=(F-B)/np.linalg.norm(F-B);N=np.array([U[1],-U[0]])                                     # along the body (balance to fourth) and across it, toward the escape arbor
 st=lambda s_,t_:B+s_*U+t_*N                                                              # a point s along the body from the balance, t across it
 S1=np.array([20.58,11.88])                                                               # the left lug's screw, where the video has it (rimfit: (20.5, 12.2-12.6) over 5000-8000 px; 3 o'clock side, the plate's access hole under it)
-S2=st(26.9,-3.4)                                                                         # the far lug's: past the body's end, clear of the detent and its block's screw
-TBLOCK=pol(F,5.0,140)                                                                    # train-blocking screw: 5 mm from the fourth arbor (within the spokes), on the side away from the detent
-P1=st(-4.5,17.5);P2=st(29.0,-0.5)                                                        # steady pins, one in each lug
-HEAD=2.9;FIL=0.5;EB=3.0;CB=3.8                                                           # 42055's head radius (PSR); fillet; the L's corner round the escape arbor; the cap's counterbore
-# the slab, the L: a body from below the cap past the fourth, 2 mm off the third arbor, as broad as the video's; the arm across to the left lug, its end 3.3 mm short of the lug's screw; the
-# escape arbor in the L's inside corner, which is cut round it (EB: its pinion, r 1.9, lifts out through it), as a scallop in the body's edge as on the video's slab
-SLAB=[st(*q) for q in[(-5.3,-6.5),(23.6,-6.5),(23.6,4.2),(2.2,4.2),(2.2,11.2),(-4.0,11.2),(-5.0,8.0),(-5.6,2.0)]]
-LUGL=[[15.42,13.28],[22.39,17.67],[26.0,9.95],[23.6,9.25],[17.4,9.2]]                   # round the left screw, 1.6 mm off the escape wheel's tips, its lower edge 0.8 off the sustaining pawl's spring and its pin (21.6, 8.0-8.4), its inner edge under the arm's end
-LUGR=[st(*q) for q in[(19.2,-3.6),(19.2,1.0),(30.0,1.0),(30.0,-6.0),(23.0,-6.0)]]         # round the far screw and the train-blocking screw's column, 1.6 mm off the detent
+S2=np.array([-13.9,18.8])                                                                # the far lug's screw: beside the fourth on the 9 o'clock side, as on the video, but 3.8 mm round toward 12 from its (-12.0, 22.1),
+                                                                                         # where the detent's foot stands in the model (4.0 mm clear of it, 1.1 off the pillar)
+TBLOCK=np.array([-3.70,26.50])                                                           # train-blocking screw: 4.5 mm from the fourth arbor (within the spokes), on the side away from the detent, its column 1 mm off it
+P1=st(-4.5,17.5);P2=np.array([-11.4,16.4])                                               # steady pins, one in each lug
+HEAD=2.9;FIL=0.5;EB=3.0;CB=3.8;COL=1.95                                                  # 42055's head radius (PSR); fillet; the L's corner round the escape arbor; the cap's counterbore; the column round the train-blocking screw
+# the slab, the L: a body from below the cap past the fourth, 2 mm off the third arbor, as broad as the video's, with a tongue under the detent to the far lug's wall (the slab lies below
+# the detent); the arm across to the left lug; the escape arbor in the L's inside corner, which is cut round it (EB: its pinion, r 1.9, lifts out through it)
+SLAB=[st(-5.3,-6.5),[-4.0,17.2],[-9.8,16.6],[-10.5,17.0],[-10.5,22.3],[-9.4,24.8],st(23.0,-6.5),st(23.0,4.2),st(2.2,4.2),st(2.2,11.2),st(-4.0,11.2),st(-5.0,8.0),st(-5.6,2.0)]
+LUGL=[[15.42,13.28],[22.39,17.67],[26.0,9.95],[23.6,9.25],[17.4,9.2]]                   # round the left screw, 1.6 mm off the escape wheel's tips, its lower edge 0.8 off the sustaining pawl's spring and its pin (21.6, 8.0-8.4), its inner edge under the arm
+LUGR=[[-17.4,17.2],[-13.6,14.6],[-8.6,15.7],[-8.9,18.0],[-12.4,21.2],[-16.0,21.4]]      # round the far screw, the video's lug's 12 o'clock half: 1 mm or more off the detent, the pillar and the third arbor; over the tongue's end for its wall
+COLT=[list(TBLOCK+COL*np.array([np.cos(a),np.sin(a)])) for a in np.radians(np.arange(0,360,45))]   # the column round the train-blocking screw, from the slab up to the train bridge
 def fillet(P,r=0.8,n=5):   # each corner cut back by r (at most 0.4 of either edge) and rounded with a quadratic Bezier; straight edges stay straight
     P=[np.array(p,float) for p in P];out=[]
     for i,p in enumerate(P):
@@ -78,10 +82,10 @@ def smin(ds):
     r=ds[0]
     for q in ds[1:]:h=np.clip(0.5+0.5*(q-r)/FIL,0,1);r=q*(1-h)+r*h-FIL*h*(1-h)   # smooth minimum: a fillet where two pieces meet
     return r
-SL,LL,LR=fillet(SLAB),fillet(LUGL),fillet(LUGR)
+SL,LL,LR,LT=fillet(SLAB),fillet(LUGL),fillet(LUGR),fillet(COLT,0.6)
 lo=lambda P:np.maximum(poly(P,SL),-cir(P,E,EB))
-SDF={'upR':lambda P:poly(P,LR),'upL':lambda P:poly(P,LL),
-     'wallR':lambda P:np.maximum(poly(P,LR),lo(P)),'wallL':lambda P:np.maximum(poly(P,LL),lo(P)),'lo':lo}
+SDF={'upR':lambda P:poly(P,LR),'upT':lambda P:poly(P,LT),'upL':lambda P:poly(P,LL),
+     'wallR':lambda P:np.maximum(poly(P,LR),lo(P)),'wallT':lambda P:np.maximum(poly(P,LT),lo(P)),'wallL':lambda P:np.maximum(poly(P,LL),lo(P)),'lo':lo}
 def outline(f,step=0.02):
     import contourpy
     xs=np.arange(-24,32,step);zs=np.arange(-4,42,step);X,Z=np.meshgrid(xs,zs);D=f(np.stack([X,Z],-1))
@@ -100,12 +104,12 @@ def main():
     edge=lambda k,P:max(-SDF[k](np.atleast_2d(P))[0],0)
     bd=lambda k:float(np.min([seg(O[k],BLOCK[i],BLOCK[(i+1)%len(BLOCK)]).min() for i in range(len(BLOCK))]))
     print('clearances, mm (upper tier: TB_U .. TB_U+2; walls: down to the lower tier; lower tier: 7.9-10.9 mm above the plate):')
-    for k in('upR','upL','wallR','wallL'):
+    for k in('upR','upT','upL','wallR','wallT','wallL'):
         print(f'  {k:6s} escape wheel tips {near(k,E)-ES:5.2f}   rollers {near(k,B)-ROLL:6.2f}   pillars {min(near(k,p) for p in PIL)-PIL_R:5.2f}   detent {bd(k):5.2f}')
-    print(f'  lower tier: escape arbor {near("lo",E):5.2f} (the L\'s corner, r {EB}), third arbor {near("lo",T)-0.55:5.2f}, centre arbor {near("lo",C)-0.75:5.2f}')
+    print(f'  lower tier: escape arbor {near("lo",E):5.2f} (the L\'s corner, r {EB}), third arbor {near("lo",T)-0.55:5.2f}, centre arbor {near("lo",C)-0.75:5.2f}; far lug: third arbor {near("upR",T)-0.55:5.2f}')
     print('holes: metal round them, mm')
     hc=HEAD*0.5*1.12+0.01
-    for k,c,r in(('upL',S1,hc),('upR',S2,hc),('upL',P1,0.41),('upR',P2,0.41),('upR',TBLOCK,0.95),('wallR',TBLOCK,0.95),('lo',TBLOCK,0.86),('lo',B,CB),('lo',F,2.7)):
+    for k,c,r in(('upL',S1,hc),('upR',S2,hc),('upL',P1,0.41),('upR',P2,0.41),('upT',TBLOCK,0.95),('wallT',TBLOCK,0.95),('lo',TBLOCK,0.86),('lo',B,CB),('lo',F,2.7)):
         print(f'  {k:6s} at ({c[0]:6.2f},{c[1]:6.2f}) r {r:4.2f}: {edge(k,c)-r:5.2f}')
     print('the screws\' heads (r 2.9, hanging under the upper tier):')
     for n,s in(('S1',S1),('S2',S2)):
@@ -113,8 +117,8 @@ def main():
     print(f'  barrel bridge screw (S.bb[2]) from the right lug {-SDF["upR"](np.atleast_2d(BB2))[0]*-1:5.2f}; the train-blocking screw access hole (r 0.72) from the locking arm screw and pin {min(np.linalg.norm(a-TBLOCK) for a in ARM)-0.72-0.8:5.2f}')
     print(f'train-blocking screw {np.linalg.norm(TBLOCK-F):.2f} mm from the fourth arbor; screws {np.linalg.norm(S1-S2):.1f} mm apart (video {np.linalg.norm(np.subtract(VIDEO["sL"],VIDEO["sR"])):.1f})')
     r2=lambda P:[[round(float(x),2),round(float(z),2)] for x,z in P]
-    print('const LB_UP=['+json.dumps(r2(O['upR']))+','+json.dumps(r2(O['upL']))+'];')
-    print('const LB_WALL=['+json.dumps(r2(O['wallR']))+','+json.dumps(r2(O['wallL']))+'];')
+    print('const LB_UP=['+json.dumps(r2(O['upR']))+','+json.dumps(r2(O['upT']))+','+json.dumps(r2(O['upL']))+'];')
+    print('const LB_WALL=['+json.dumps(r2(O['wallR']))+','+json.dumps(r2(O['wallT']))+','+json.dumps(r2(O['wallL']))+'];')
     print('const LB_LO='+json.dumps(r2(O['lo']))+';')
     print('S.tBlock',r2([TBLOCK]),'S.lb',r2([S1,S2]),'S.lbp',r2([P1,P2]))
     try:   # the plan beside the video's outline
@@ -129,8 +133,8 @@ def main():
                 ax.plot(*VIDEO['tbs'],'k^')
             else:
                 cl(O['lo'],color='tab:blue',lw=2)
-                for k in('upR','upL'):cl(O[k],color='tab:red')
-                for k in('wallR','wallL'):cl(O[k],color='tab:orange',ls='--')
+                for k in('upR','upT','upL'):cl(O[k],color='tab:red')
+                for k in('wallR','wallT','wallL'):cl(O[k],color='tab:orange',ls='--')
                 for c in(S1,S2):ring(c,1.5,color='k');ring(c,HEAD,color='k',ls=':')
                 for c,cc,n in((B,'tab:purple','balance'),(F,'goldenrod','fourth'),(E,'tab:green','escape')):ring(c,1.2,color=cc);ax.text(c[0]+1.4,c[1],n)
                 ring(B,CB,color='tab:purple',ls=':');ring(E,ES,color='tab:green',ls=':');ax.plot(*TBLOCK,'k^')

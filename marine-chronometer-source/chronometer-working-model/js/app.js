@@ -694,7 +694,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
         E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
     if(H.held){H.bph+=dtS*rateK/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
       const lockedP=s.prog<=0||s.prog>=1;
-      if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&R.blockRoom(H.Eh)<1)&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is */
+      if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is, unless the dog point leaves it no whole beat (the hold's own test: a fractional beat at speed must not free it) */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
