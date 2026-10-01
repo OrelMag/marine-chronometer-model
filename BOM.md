@@ -71,8 +71,8 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-1 | 42066 | Cock - Balance, complete with pins | 1 | 1 | cock | Carries the balance upper setting and endstone cap and the hairspring stud; stands on the train bridge (Sec. II). | on 42062: 0 mm | ✓ |
 | 108-2 | 42192 | Screw - Balance cock | 1 | 1 | cock | Holds the cock (Op. 74). | in 42066 (clear): 14.234 mm, least gap 0.104<br>in 42062 (tap): 2.494 mm, least gap 0.1002 | ✓ |
 | 108-3 | 42160 | Cap - Balance upper endstone, with jewel | 1 | 1 | cock | Holds the upper endstone over the olive-hole jewel. | on 42066: 0 mm | ✓ |
-| 108-4 | 20762 | Screw - Balance upper endstone cap | 2 | 2 | cock | Hold the upper endstone cap. | in 42160 (clear): 0.682 mm, least gap 0.0524<br>in 42066 (tap): 1.802 mm, least gap 0.0261 | ✓ |
-| 108-5 | 42155 | Setting - Balance upper endstone, with jewel | 1 | 1 | cock | Holds the balance upper endstone (cap jewel) in the cap. | in 42160 (press): 0.601 mm, least gap -0.001 | ✓ |
+| 108-4 | 20762 | Screw - Balance upper endstone cap | 2 | 2 | cock | Hold the upper endstone cap. | in 42160 (clear): 0.728 mm, least gap 0.05<br>in 42066 (tap): 1.794 mm, least gap 0.0219 | ✓ |
+| 108-5 | 42155 | Setting - Balance upper endstone, with jewel | 1 | 1 | cock | Holds the balance upper endstone (cap jewel) in the cap. | in 42160 (press): 0.701 mm, least gap 0.004 | ✓ |
 |  |  | Jewel - Balance upper endstone (cap jewel) | 1 | 1 | cock | Stops the balance staff's upper pivot end; endshake 0.001-0.003 in (Op. 74). |  | ✓ |
 | 108-6 | 42162 | Setting - Balance (upper), complete with jewel | 1 | 1 | cock | Olive-hole jewel for the balance staff's upper pivot, pressed into the cock. | in 42066 (press): 2.608 mm, least gap 0.0002 | ✓ |
 |  |  | Jewel - Balance upper hole (olive-hole) | 1 | 1 | cock | The balance staff's upper pivot runs in it (Sec. II, Jeweling). |  | ✓ |

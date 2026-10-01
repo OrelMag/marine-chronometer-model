@@ -366,6 +366,16 @@ Contents:
   with metal all round. `polyGeo` warns about holes crossing the outline, not
   holes wholly outside it, so check a moved screw against the outline by hand.
   `5ac87a7`
+- **Balance upper endstone cap a flat D-shaped plate.** Round at the nose's
+  end, square at the foot's and off centre, with a small flush jewel in a gilt
+  ring and its screws' heads standing 0.4 mm proud. C Spinner's video (5:51,
+  41:58, 42:03, 42:08) shows a plate symmetric about the staff, 7.2 × 4.6 mm,
+  its corners rounded more at the nose's end, a polished conical oil sink 3.1 mm
+  across in the setting down to the endstone, and the screws' heads sunk flush
+  in counterbores. The cap is now that, one closed solid (`cbGeo`, a plate
+  with counterbored holes). Keep: the cone and the flush heads; the screws'
+  counterbores 0.1 mm inside the plate's ends.
+  `52d4598`
 - **Balance cock a thin plate on a small post; the barrel bridge under it.**
   The cock was a 2.6 mm crescent plate held 11 mm up on a foot under one
   sector, with the barrel bridge running on under its outer half. In C
@@ -997,12 +1007,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **Balance upper endstone cap a flat D-shaped plate.** Round at the nose's
-  end, square at the foot's and off centre, with a small flush jewel in a gilt
-  ring and its screws' heads standing 0.4 mm proud. C Spinner's video (5:51,
-  41:58, 42:03, 42:08) shows a plate symmetric about the staff, 7.2 × 4.6 mm,
-  its corners rounded more at the nose's end, a polished conical oil sink 3.1 mm
-  across in the setting down to the endstone, and the screws' heads sunk flush
-  in counterbores. The cap is now that, one closed solid (`cbGeo`, a plate
-  with counterbored holes). Keep: the cone and the flush heads; the screws'
-  counterbores 0.1 mm inside the plate's ends.
+None at the moment.
