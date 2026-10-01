@@ -156,7 +156,7 @@ Contents:
   `MOD` is worked out from the centre distances in `L`, so a count changes a
   module, not a place; the hand and every dial's scale use `UDA` (movement.js),
   never a fixed angle; `invariants.py` checks the sweep against the
-  photographed dial and the run against the manual's 56 h. TBD
+  photographed dial and the run against the manual's 56 h. `49a402d`
 - **Seconds hand's tip on the hour hand's collet.**
   The collet added in `4bd8888` filled r 2.9 from the centre down to y 4.6, and
   the Hamilton seconds hand's tip, at y 4.35 to 4.7, reaches r 2.9 as it passes
