@@ -29,6 +29,8 @@ Versions: the site's version (`M.mm.pp`, shown with the list of changes in the p
 
 Merging a branch into `main`: always `git merge --no-ff`, so every branch lands as its own merge commit (never a fast-forward or a squash). Resolve conflicts in the built copies and `site/` by rebuilding, not by hand.
 
+Every local branch lives on GitHub too, merged or not: push a new branch with `git push -u origin BRANCH` as soon as it has its first commit, and push again after every commit on it (and `main` after every merge, with `--follow-tags`). Never leave a local branch without its `origin` copy or behind it; `git for-each-ref --format='%(refname:short) %(upstream:short) %(upstream:track)' refs/heads` should list every branch with an upstream and no `[ahead N]`.
+
 Open `marine-chronometer-source/chronometer-working-model/index.html` directly in a browser for development. URL flags:
 - `?snap`: disables camera/state easing so views settle immediately (for screenshots), and draws every frame (without it the loop skips frames in which nothing shown changed; see the README).
 - `?qa`: exposes `window.__mv` (the movement group), `__proj` / `__unproj` (movement frame ↔ screen pixels for a given camera), `__cam(yaw,pitch,dist,fov)` / `__look(yaw,pitch,dist,x,y,z)` (set the camera) and `__camInfo()` (print it) for the verification tools and `social.py`, plus `__parts` (the parts registry), `__r` (the renderer), `__renders()` (frames drawn) and `__H()` (stopping and starting: the balance's amplitude, whether the train is held, the arm and screw).
