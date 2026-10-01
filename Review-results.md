@@ -1445,12 +1445,12 @@ Winding and maintaining work).
 
 ### Open, most certain first
 
-1. **Sustaining spring** (27:26; Figs. 69, 71). A flat blued band about
+1. **Sustaining spring** (27:26; Figs. 69, 71). *Fixed (RESOLVED.md, Winding and maintaining work).* A flat blued band about
    2.1 mm wide, r 15.8–18.0, against the recess wall, round about 335° (its
    fixed end widened inward, with two holes; a lighter working end with an
    upright pin). The model: 0.7 mm wide, r 13.2–13.9, 250°, its free end
    pushed by a pin on the ratchet (the manual pins both ends).
-2. **Fusee wheel** (27:26; Figs. 71, 72; Ops. 20, 26). Its recess reaches
+2. **Fusee wheel** (27:26; Figs. 71, 72; Ops. 20, 26). *The recess and its elevations fixed with the spring; the bore still open (with 5).* Its recess reaches
    r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
    recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
    model's web is flat.

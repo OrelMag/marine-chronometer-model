@@ -370,6 +370,18 @@ Contents:
   HUD says so. `SMAX` is the fusee wheel's turn in 10 minutes (9.3°), from the
   train, not a literal 10° figured for the old 60 h fusee. Keep: no wind
   outlasts the sustaining spring. `5fd993d`
+- **Sustaining spring and the fusee wheel's recess not as on a real Model 21.**
+  The spring was a 0.7 mm band round 250° at r 13.2–13.9, its free end pushed
+  open by a pin on the sustaining ratchet, in a recess walled at r 15.2. The
+  restoration video (27:26) shows a flat blued band 2.1 mm wide round about
+  335°, against a wall at r 18.0, its fixed end a lobe pinned to the wheel and
+  its working end, across a small gap, pinned to the ratchet (as the manual
+  has it), and a raised disc and hub on the floor (Op. 26's two elevations).
+  Now so: the ratchet's pin pushes the working end across the gap toward the
+  fixed end, closing the ring (17° relaxed, 7.7° loaded), and the band bows in
+  from the wall as it closes, keeping its length. Keep: each end pinned, the
+  fixed one in the wheel's frame, the working one in the ratchet's; the gap
+  closes under load. HASH
 
 ## Plates, bridges, screws and arbors
 
