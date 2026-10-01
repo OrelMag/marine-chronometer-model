@@ -195,7 +195,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js]
 
 ### 1.3 Outlines the photographs don't show (M) — closed
 - **Balance lower bridge:** *Done:* a stepped block, its upper tier against the train bridge with the two screws from below and two steady pins (Figs. 29, 30, 110; Ops. 12, 50). Fig. 110 fitted like Fig. 67 puts its holes 4–10 mm off, so `tools/lower_bridge.py` lays it out instead, with the drawing's arrangement. Redone 1 October 2026: a frame round the escape wheel in Fig. 30's order, with walls between the tiers; the train-blocking screw, a steady pin and the second screw at holes the top-view photograph shows in the train bridge; the lower tier a bar with lobes under the walls.
-- **Upper train bridge under the barrel bridge:** *Done:* the crescent traced on Fig. 67 through an affine fit (`tools/train_bridge.py`), with its notch round the fusee (open to the barrel bridge, Figs. 24, 77), the horn and the keyhole. Left as it is: the keyhole's lobes (one under the detent support block's screw) aren't drawn.
+- **Upper train bridge under the barrel bridge:** *Done:* the crescent of Figs. 29, 67 and 110, with its notch round the fusee (open to the barrel bridge, Figs. 24, 77), the horn and the keyhole; the notch, horn and mouth measured on C Spinner's video (23:30, 13:49.5; `tools/train_bridge.py`), replacing the Fig. 67 trace (`Review-results.md` 21). Left as it is: the keyhole's lobes (one under the detent support block's screw) aren't drawn.
 - **Detent foot and support block:** *Checked:* the top-view photographs put pillar 0's counterbored screw where the model has it (within 1 mm) and `L` stays (1.1), so the block stays short.
 
 ### 1.4 The balance's collet, stud and upper setting (S–M) — closed

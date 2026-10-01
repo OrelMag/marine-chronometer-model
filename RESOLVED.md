@@ -476,6 +476,18 @@ Contents:
   replaces the "0.6 mm" note in the stop-bar entry above. Keep: the stop-bar
   sweeps the pocket over the last quarter turn; if the bar, its travel or the
   pocket changes, `tools/fine.py` must still report no train-bridge contact. `da90e53`
+- **Train bridge's notch and horn traced on a loose drawing.** The edge came
+  from Fig. 67 through an affine fit, then was pushed off every hole and
+  smoothed 60 times: the horn ended in a round bulb 7.5 mm from the centre,
+  the notch round the fusee was wavy and its mouth a spike to the rim at −40°.
+  C Spinner's video (23:30 flat, 13:49.5 turned over, each put on the face by
+  `video.py anchor`) shows the notch one circle, the horn its cusp with the
+  barrel's cut ending in a straight cut with sharp corners 12.4 mm out, and
+  the mouth a sharp corner with a straight edge to the rim at −23°.
+  `tools/train_bridge.py` now builds `TB_EDGE` from those readings, and the
+  keyhole stops 1 mm short of the notch. Keep: the edge is neither smoothed
+  nor pushed off holes (that rounded the horn); the tool prints the metal left
+  round each instead. `8a48535`
 - **Screws were heads with nothing under them, and no part had a hole for
   one.** The Exploded view showed it: every bridge lifted away with bare heads.
   `screw()` now draws a threaded shank (`len`, toward +y), and every part a
