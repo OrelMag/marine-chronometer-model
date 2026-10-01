@@ -1436,9 +1436,121 @@ on the top-view photograph) had the right parts in the wrong arrangement.
     - the fourth's radius: the dial side gives 21.2-23.2 mm (the model 23.9);
     - 36:01's remaining 18° (the cap 12.0 mm from the fourth's setting, the
       model's balance now 16.6).
+    - **the third arbor** (found merging main's train bridge, 2 October
+      2026). The train bridge's underside (13:49.5) put on its face through
+      the rim, the barrel's cut and the centre bushing (`video.py anchor`,
+      0.2 mm rms) is in the photographed group's frame. Turned with it, the
+      fourth's gilt setting lands 0.8 mm from the fourth arbor (5.3 before
+      the turn), for the turn; but the third bushing lands at (−9.66, 13.90),
+      3.6 mm from the model's third arbor (1.1 before), and 23:30 with the
+      third named leaves it 3.1 mm off (0.5 before). So the bridge puts the
+      third with the group and the fourth with the dial. The third arbor is
+      held to the fourth by its wheel and the fourth's pinion (11.04 mm,
+      module 0.245); at the bridge's place it would be 13.9 mm from the
+      fourth and 16.9 from the centre, modules about 0.31 and 0.33, nearer
+      each other than the model's 0.245 and 0.314 (12: the counted wheels'
+      size ratios also disagree with the model's). The third wheel would then
+      reach the train pillar at (−21.57, 17.79), 12.5 mm from the arbor, which
+      the bare plate puts farther out (`References/VIDEOS.md`). Sure: medium
+      (two frames agree to 1 mm; the third bushing is one pick a frame). Open
+      with 12; the train bridge's outline is the group's, which this doesn't
+      change.
+20. **The detent against the manual and the video** (new, 1 October 2026;
+    branch `claude/detent-fixings`). The escapement works as the manual has
+    it: lock 6.0°, let-off 10.6°, overall 28.4°, drop 2.1°, roller shake
+    0.055 mm and horn clearance 0.25 mm (`tools/escapement.js`). The tooth
+    leaves the impulse jewel at 96 % of a pitch and drops onto the locking
+    jewel, and the detent is back on its stop by 0.31 of a pitch. The
+    detent's parts are Fig. 14's and the video's (`KLUwI2UUCMQ` 11:08–11:13,
+    the detent held up, sharp): the long block stepped down toward the
+    jewel, the foot with its clamp screw, washer and cross pins, the
+    two-strip spring, cross-piece and angle bracket, the jewel standing in
+    its block, the arm whose end bends down as the horn. The fixings were
+    not:
+    1. **The block's screw goes in from above.** Sec. II: the block "is
+       fastened to the underside of the upper train bridge by means of one
+       screw and two positioning pins". Fig. 14 draws a tapped hole in the
+       block's top face, between the pins, and Figs. 22 and 84 the screw
+       above the train bridge. On the video the screw comes out from above
+       beside the keyhole (10:45), and the block's top shows the tapped hole
+       (11:08). Op. 81's "Turn movement over. Install detent support block
+       screw" follows Op. 80, done with the movement upside down (Fig. 89),
+       so it brings the train side up. The model put the screw in from
+       below (`e1244db`), because in its place for the block the barrel
+       bridge's horn covered it. **Fixed** (2 October 2026, merging into
+       `claude/dial-turn`): after the photographed group's 14° turn nothing
+       stands over the screw, which now goes in from above. Sure: high.
+    2. **The two positioning pins were missing.** Sec. II, Figs. 14, 22 and
+       90, Op. 26 ("pushing nickel wire against steady pins"), the video
+       (11:08). **Fixed on the branch**: two pins in the block's top, into
+       the train bridge, and the screw between them, laid out from Fig. 90
+       (scaled by the 11.3 mm from the point of flexure to the locking
+       jewel): the screw 3.7 mm toward the foot from the point of flexure
+       (it was 7.9), a pin 2.0 mm the other way. Fig. 90's other pin, 9.5 mm
+       toward the foot, would stand past the train bridge's cut round the
+       barrel in the model's place for the block; it is drawn 2.9 mm nearer
+       the screw. One more sign that the block is not where the model puts
+       it (12, 16, 18), as is the third arbor 1.2 mm from the point of
+       flexure, through a notch in the block. Sure: high on the pins; their
+       spacing to about 0.3 mm on Fig. 90.
+    3. **The trip spring's screw was upright**, a fine thread in the
+       bracket's 0.23 mm leg with the spring held under its head. Op. 8 of
+       the detent's reassembly: "place trip spring screw in the hole of the
+       trip spring"; Fig. 14 and Fig. 54 (driven like the clamp screw) put
+       it across the spring into the bracket's upright leg, and the video
+       shows its head face-on (11:08). **Fixed on the branch**, the
+       bracket's upright leg thickened to 0.36 mm to take the thread (its
+       size estimated; on the video the bracket looks taller than the
+       model's 0.4 mm). Sure: high.
+    4. **The detent-adjusting screw didn't touch the detent**: its head
+       stood 0.64 mm beside the foot. Op. 93 has it "screwed in against the
+       detent" and Op. 84 turns it to slide the detent along. Fig. 90 draws
+       it threaded into the block's end, its head standing in a slot across
+       the foot, which runs on past it. **Fixed on the branch**: the foot
+       runs 1.06 mm further (away from the barrel), slotted for the head.
+       Sure: high that it bears on the detent; medium on the slot (one
+       drawing).
+    5. **The lock-adjusting screw stops 0.24 mm short of the stop button**,
+       inside the block. Fig. 90 shows the block's front split by a long
+       slot that this screw and its clamp screw cross, so the screw moves
+       the button by spreading the slot ("working through the locking jewel
+       button", Sec. IV). **Open.** Sure: medium (the slot is read from one
+       drawing).
+    6. **The wedge pin stood 0.04 mm proud** of the block at both ends. The
+       manual pushes it flush on top and stones it flush below (re-jewelling
+       the detent, 8–9). **Fixed on the branch.**
+
+    Not modelled, and not needed by a kinematic model: the detent spring's
+    0.770 g test (Op. 78) and the trip spring resting lightly on the arm
+    (Op. 79).
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
+21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
+    branch `claude/train-bridge-outline`). **Rebuilt from the video**
+    (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
+    the face through the rim, the barrel's cut and the centre bushing, 0.2-0.3
+    mm rms). The notch is one circle, r 16.57 about (11.46, -17.47), 0.12 mm
+    rms; the horn its cusp with the barrel's cut, cut off straight 12.4 mm
+    from the centre; the mouth a sharp corner at (28.0, -18.7) and a straight
+    edge to the rim at -23° (it was a spike to -40°). Still open:
+    - **The third screw (29.24, -12.28)** keeps 0.5 mm of metal to the notch,
+      and its head (r 2.9) overhangs the edge by about 1 mm. On 23:30 no hole
+      shows there; the nearest is a large one (about 5 mm across, a
+      counterbore) at (32.25, -10.81), 3.3 mm further out, as the pillars on
+      the bare plate stand further out than the model's (`References/VIDEOS.md`).
+      The top-view photograph's five-screw map, 6:29 and the barrel bridge laid
+      flat put the screw at (29.24, -12.28). Settle it with a homography on
+      several holes of the flat bridge before moving the screw, and the barrel
+      bridge's hole with it.
+    - **The notch's centre** is 2.3 mm from the model's fusee arbor, at 33°
+      from the 12 and 20.9 mm out (the arbor at 30.3° and 22.9 mm). If the
+      notch is concentric with the fusee, that is a reading of the fusee's
+      place on the bridge itself, beside finding 19's 43-45° on the dial side.
+    - **The keyhole**: the video's opening has three lobes and a round hole,
+      and leaves 3 mm or more of metal below the notch. The model's is still the
+      two circles about the balance and escape arbors, now kept 1 mm off the
+      notch.
 
 ## The fusee assembly against Fig. 28 and the video
 

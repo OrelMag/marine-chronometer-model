@@ -117,6 +117,27 @@ Contents:
   wheel's radius, from tH in): the horn is the arm's end bent down to the trip
   spring. Its inner face stays at tH, so horn clearance is unchanged (0.25 mm).
   Keep: the arm's end and the horn one outline in plan. `4a660ab`
+- **Detent support block without its positioning pins.** Sec. II fastens
+  the block to the train bridge "by means of one screw and two positioning
+  pins" (Figs. 14, 22, 90; the restoration video, 11:08); the model had the
+  screw only, 7.9 mm from the point of flexure. The block's top is now laid
+  out from Fig. 90: the screw 3.7 mm from the point of flexure, a pin either
+  side of it, standing into the train bridge. Keep: the top face's layout in
+  `DBLK` (movement.js), the pins' holes in the train bridge (`S.dpin`).
+  `8acac25`
+- **Trip spring's screw upright, in a 0.23 mm leg.** It now lies across the
+  spring, through the hole in its foot into the bracket's upright leg, as
+  Figs. 14 and 54, the detent's reassembly (Op. 8) and the video (11:08)
+  have it; the bracket's upright leg is 0.36 mm thick to take its thread.
+  Keep: the screw across the spring, rebuilt with the detent; no hole in the
+  bracket's top. `8acac25`
+- **Detent-adjusting screw touching nothing.** Its head stood 0.64 mm beside
+  the detent's foot, where Op. 93 has it "screwed in against the detent".
+  The foot now runs on past the block's end, slotted, and the screw's head
+  stands in the slot (Fig. 90). Keep: the slot and the head's place from
+  `ESC.adj` (shared/escapement.js), so the plans draw the same foot. `8acac25`
+- **Locking jewel's wedge pin proud of the block** by 0.04 mm at each end;
+  flush now, as the re-jewelling (8-9) leaves it. `8acac25`
 
 ## Going train and heights
 
@@ -455,6 +476,18 @@ Contents:
   replaces the "0.6 mm" note in the stop-bar entry above. Keep: the stop-bar
   sweeps the pocket over the last quarter turn; if the bar, its travel or the
   pocket changes, `tools/fine.py` must still report no train-bridge contact. `da90e53`
+- **Train bridge's notch and horn traced on a loose drawing.** The edge came
+  from Fig. 67 through an affine fit, then was pushed off every hole and
+  smoothed 60 times: the horn ended in a round bulb 7.5 mm from the centre,
+  the notch round the fusee was wavy and its mouth a spike to the rim at −40°.
+  C Spinner's video (23:30 flat, 13:49.5 turned over, each put on the face by
+  `video.py anchor`) shows the notch one circle, the horn its cusp with the
+  barrel's cut ending in a straight cut with sharp corners 12.4 mm out, and
+  the mouth a sharp corner with a straight edge to the rim at −23°.
+  `tools/train_bridge.py` now builds `TB_EDGE` from those readings, and the
+  keyhole stops 1 mm short of the notch. Keep: the edge is neither smoothed
+  nor pushed off holes (that rounded the horn); the tool prints the metal left
+  round each instead. `8a48535`
 - **Screws were heads with nothing under them, and no part had a hole for
   one.** The Exploded view showed it: every bridge lifted away with bare heads.
   `screw()` now draws a threaded shank (`len`, toward +y), and every part a
@@ -623,6 +656,16 @@ Contents:
   frame and eight directions (a turned detent screw read as floating), and
   `invariants.py` runs the train with the fusee for its 56 h indicator test.
   `8cbb259`
+- **Detent support block's screw put in from below.** The manual (Sec. II;
+  Figs. 14, 22, 84; Op. 81) and the video (`KLUwI2UUCMQ` 10:45, 11:08) put
+  it in from above, through the train bridge into a tapped hole in the
+  block's top; the model had it from below because the barrel bridge's horn
+  covered its place. Merging main's detent fixings into the 14° turn put the
+  screw over the balance lower bridge's slab, which it then passed through
+  in the Exploded view (`exploded.py`); with the group turned nothing stands
+  over it, so it goes in from above (`hC` in the train bridge, `hT` in the
+  block; `bom.json` 42056.blk). Keep: the screw in from above, on the train
+  bridge. HASH
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,

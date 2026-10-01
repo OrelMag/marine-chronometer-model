@@ -40,9 +40,12 @@ const TB_U=-20.66,TB_T=-23.76,BB_T=-27.16,CK_T=-37.96;
 const EY=-18.96,LB_T=-14.76,BAL_Y=-26.3;   /* escape wheel (teeth 0.95 below the train bridge), balance lower bridge's top face (photograph: 7.9-10.9 mm above the plate), balance rim */   /* bridge radius: the top-view photograph (the fusee wheel is hidden under it, as photographed) */          /* pillar plate; bridges */
 const PILLARS={barrel:PT([-15.3,-26.58]),train:[[-16.63,22.48],[18.17,26.92],[32.11,-4.1]].map(PT)};   /* traced on the top-view photograph (PT, above) */
 const COCK_FOOT=PT([28.3,6.4]),BAL_R=14.5;
-/* the edge of the upper train bridge's notch round the fusee, traced on the manual's Fig. 67 (tools/train_bridge.py): from outside the rim, past the centre
-   arbor to the horn's tip, and into the barrel's cut; pushed 1 mm or more off every screw, bushing and pivot the bridge holds, and off the keyhole */
-const TB_EDGE=[[31.67, -26.34], [31.32, -25.19], [30.97, -24.04], [30.61, -22.9], [30.26, -21.75], [29.91, -20.6], [29.55, -19.46], [29.19, -18.31], [28.8, -17.18], [28.37, -16.06], [27.86, -14.96], [27.29, -13.85], [26.81, -12.68], [26.57, -11.42], [26.28, -10.19], [25.9, -8.98], [25.41, -7.82], [24.82, -6.7], [24.14, -5.64], [23.37, -4.67], [22.5, -3.79], [21.54, -3.01], [20.51, -2.33], [19.4, -1.74], [18.23, -1.28], [17.01, -0.95], [15.76, -0.78], [14.54, -0.78], [13.34, -0.97], [12.16, -1.31], [10.95, -1.73], [9.67, -2.07], [8.34, -2.22], [7.05, -2.19], [5.83, -2.16], [4.67, -2.27], [3.57, -2.57], [2.5, -3.06], [1.47, -3.7], [0.48, -4.44], [-0.46, -5.22], [-1.38, -6.0], [-2.29, -6.7], [-3.19, -7.19], [-4.06, -7.34], [-4.86, -7.1], [-5.51, -6.51], [-5.92, -5.69], [-6.02, -4.77], [-5.81, -3.81], [-5.38, -2.83], [-4.85, -1.81], [-4.3, -0.75]].map(PT);
+/* the upper train bridge's notch round the fusee and its horn, measured on two frames of a restoration video (tools/train_bridge.py: KLUwI2UUCMQ 23:30 and 13:49.5):
+   the notch a circle (TB_NOTCH: x, z, r), the horn between it and the barrel's cut ending in a straight cut across, the mouth a sharp corner and a straight edge to
+   the rim. TB_EDGE runs from outside the rim along the mouth, round the notch, across the horn's end and into the barrel's cut, as crescent() takes it. Both are
+   measured against the bridge's rim, barrel cut and centre bushing, so they turn with the photographed group (PT) */
+const TB_NOTCH=[...PT([11.46,-17.47]),16.57];
+const TB_EDGE=[[38.23, -15.56], [27.99, -18.67], [28.02, -18.18], [28.03, -17.68], [28.03, -17.19], [28.01, -16.69], [27.98, -16.2], [27.94, -15.7], [27.88, -15.21], [27.8, -14.72], [27.71, -14.23], [27.61, -13.75], [27.49, -13.27], [27.36, -12.79], [27.21, -12.31], [27.05, -11.85], [26.87, -11.38], [26.68, -10.92], [26.48, -10.47], [26.26, -10.02], [26.03, -9.59], [25.79, -9.15], [25.54, -8.73], [25.27, -8.31], [24.99, -7.9], [24.7, -7.5], [24.39, -7.11], [24.08, -6.73], [23.75, -6.35], [23.41, -5.99], [23.06, -5.64], [22.7, -5.3], [22.33, -4.97], [21.95, -4.65], [21.57, -4.34], [21.17, -4.04], [20.76, -3.76], [20.35, -3.49], [19.92, -3.23], [19.49, -2.98], [19.06, -2.75], [18.61, -2.53], [18.16, -2.32], [17.71, -2.12], [17.24, -1.94], [16.78, -1.78], [16.31, -1.63], [15.83, -1.49], [15.35, -1.37], [14.87, -1.26], [14.38, -1.16], [13.89, -1.08], [13.4, -1.02], [12.9, -0.97], [12.41, -0.93], [11.91, -0.91], [11.42, -0.9], [10.92, -0.91], [10.43, -0.94], [9.93, -0.97], [9.44, -1.03], [8.95, -1.09], [8.46, -1.18], [7.97, -1.27], [7.49, -1.39], [7.01, -1.51], [6.54, -1.65], [6.06, -1.81], [5.6, -1.98], [5.14, -2.16], [4.68, -2.35], [4.23, -2.56], [3.79, -2.79], [3.35, -3.02], [2.92, -3.27], [2.5, -3.53], [2.09, -3.81], [1.69, -4.09], [1.29, -4.39], [0.9, -4.7], [0.53, -5.03], [0.16, -5.36], [-0.2, -5.7], [-0.55, -6.06], [-0.88, -6.42], [-1.21, -6.79], [-1.52, -7.18], [-1.82, -7.57], [-2.11, -7.97], [-2.39, -8.38], [-2.66, -8.8], [-2.91, -9.23], [-3.15, -9.66], [-3.38, -10.1], [-3.59, -10.55], [-3.79, -11.01], [-3.98, -11.46], [-4.15, -11.93], [-6.6, -10.44], [-7.03, -10.18]].map(PT);
 /* the balance lower bridge (tools/lower_bridge.py), after a restoration video (References/VIDEOS.md: the bridge on the upturned train bridge, measured through a camera fitted to its rim):
    LB_LO, the lower tier, one slab shaped as an L round the escape arbor; LB_UP, the upper tier, a lug at each end of the bridge's long axis against the train bridge's underside, each with
    its screw (the fourth end's round the train-blocking screw); LB_WALL, the walls that join them to the slab. The escape wheel turns between the slab and the train bridge, between the lugs */
@@ -71,6 +74,10 @@ const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);retur
 /* Spring detent escapement: solved by makeEsc in ../shared/escapement.js (shared with the essay and tools/escapement.js), with the centre distance in L (9.40 mm).
    Unit frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius ES */
 const ES=13.16/2,ESC=makeEsc({EX:-Math.hypot(L.B[0]-L.E[0],L.B[1]-L.E[1])/ES});
+/* the detent support block's top face, against the train bridge (Fig. 90, Fig. 14, KLUwI2UUCMQ 11:08): its screw's hole between two positioning pins on its centre line, in
+   detent coordinates (t, n: ESC.D); Fig. 90 scaled by the 11.3 mm from the point of flexure to the locking jewel, to about 0.3 mm. Pin a is 2.9 mm nearer the screw than
+   Fig. 90's (t -1.45): there, in the model's place for the block, it would stand past the train bridge's cut round the barrel (Review-results.md, "Elsewhere", 20) */
+const DBLK={s:[-0.56,-0.29],p:[[-1.0,-0.29],[0.31,-0.29]]};
 
 /* polygon minus a circle that crosses its boundary: keep the part outside the circle, close it with the arc that runs through the polygon.
    uni: the union instead, closed with the arc that runs outside the polygon */
@@ -272,13 +279,13 @@ function buildMovement(M){
   const ebu=(f=>[eu[0]*Math.cos(f)-eu[1]*Math.sin(f),eu[0]*Math.sin(f)+eu[1]*Math.cos(f)])(68*D2R);
   const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-14),add(L.F,ltu,7.5)],ltbp:[add(L.T,ltu,-10),add(L.F,ltu,5)],pil:[...PILLARS.train,PILLARS.barrel],tb:[PILLARS.train[0],PILLARS.train[1],PT([29.24,-12.28])],bb:[PILLARS.barrel,PILLARS.train[2],PT([-11.07,26.46])],
     ring:[100,210,340].map(a=>[40.6*Math.cos(a*D2R),40.6*Math.sin(a*D2R)]),eb:[8.0,-8.0].map(f=>add(L.E,ebu,f)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
-    lb:[[20.58,11.88],[-6.98,32.24]],lbp:[[24.05,10.79],[-5.06,35.27]],blc:[1.9,-1.9].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(-1.2,-0.35)),cock:PT([33.11,12.62]),ckp:[[35.5,5.0],[26.9,19.8]].map(PT)};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
+    lb:[[20.58,11.88],[-6.98,32.24]],lbp:[[24.05,10.79],[-5.06,35.27]],blc:[1.9,-1.9].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(...DBLK.s)),dpin:DBLK.p.map(([t,n])=>(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(t,n))),cock:PT([33.11,12.62]),ckp:[[35.5,5.0],[26.9,19.8]].map(PT)};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
      ckp: the cock's steady pins, at the two plain holes the train bridge shows under the cock with it off (C Spinner 6:47), placed to about 2 mm */
   /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge: at the arm's end on the 3 o'clock side where the restoration video has it
      (outside every wheel, over the access hole in the pillar plate), and at the fourth end beyond the train-blocking screw (Fig. 30's order), past the body's end, clear of the detent
      and its support block's screw; lbp: its steady pins, one in each lug (tools/lower_bridge.py) */
   /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff, at -30 deg, where the
-     bridge's notch round the fusee (Fig. 67) leaves it 2 mm of metal; at -60 deg it would stand in the notch */
+     bridge's notch round the fusee leaves it 2.8 mm of metal; at -60 deg it would stand in the notch */
   const ARM_S=0.8,TBS_R=0.84;
   /* balance locking arm: its finger (S.armF) stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (at 180 + 12 deg
      - BETA with the balance at rest), 0.02 clear of it; the arm turns on its screw (S.arm) outside the balance's sweep, 90 deg out to its stop pin (42300, pressed into the train bridge) */
@@ -341,22 +348,26 @@ function buildMovement(M){
     return mesh(pl,new THREE.LatheGeometry(pr,32),M.plateSolid,x,0,z);};
   PILLARS.train.forEach(([x,z])=>hn(pillar(x,z,TB_U),'42059'));hn(pillar(...PILLARS.barrel,TB_T),'42058');
   /* ---------- upper train bridge (y TB_T..TB_U) and barrel bridge (y BB_T..TB_T). The barrel bridge sits on the train bridge and is cut around the
-               balance. The train bridge is the crescent of Figs. 29, 67 and 110, traced through an affine fit (tools/train_bridge.py): the disc less a cut round
+               balance. The train bridge is the crescent of Figs. 29, 67 and 110, its notch and horn measured on a restoration video (tools/train_bridge.py): the disc less a cut round
                the barrel and a notch round the fusee, open to the rim, with a horn between them that carries the centre wheel's upper bushing; the barrel
                pillar stands in the open notch. Its keyhole opening frees the balance's staff and rollers and the escape arbor ---------- */
   const tb=part('trainBridge',-62);
   const TBc=[L.Ba[0]*22.56/18.56,L.Ba[1]*22.56/18.56],TBpoly=crescent(BR_R,TBc,19.2,TB_EDGE);   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110) */
   /* the keyhole (Figs. 29, 67): the opening round the balance staff and rollers (r 8.0) joined to one round the escape arbor (r 3.0, well inside the escape upper
-     bridge's screws), which the escape upper bridge spans. Drawn from the model's centres: through the fit the drawing's keyhole lands about 5 mm off them */
-  const KEY=twoCircles(L.B,8.0,L.E,3.0);
+     bridge's screws), which the escape upper bridge spans. Drawn from the model's centres: through the fit the drawing's keyhole lands about 5 mm off them. Kept 1 mm
+     off the notch round the fusee, which the r 8.0 circle would reach: the video's keyhole (23:30) leaves 3 mm or more of metal there, and nothing passes at that side */
+  const KEY=twoCircles(L.B,8.0,L.E,3.0).map(p=>{const c=TB_NOTCH,d=Math.hypot(p[0]-c[0],p[1]-c[1]),m=c[2]+1;return d<m?[c[0]+(p[0]-c[0])*m/d,c[1]+(p[1]-c[1])*m/d]:p;});
   R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2,1],[...L.T,1,1],{pts:KEY},[...SPv,0.52,1],
-    hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),hT(...S.tb[2],PSR),hC(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.eb.map(q=>hT(...q,0.9)),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),hT(...S.blk,0.9),hT(...S.cock,2.8,0.8),...S.ckp.map(q=>[...q,0.42,1]),
+    hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),hT(...S.tb[2],PSR),hC(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.eb.map(q=>hT(...q,0.9)),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),hC(...S.blk,0.9),...S.dpin.map(q=>[...q,0.42,1]),hT(...S.cock,2.8,0.8),...S.ckp.map(q=>[...q,0.42,1]),
     hT(...S.arm,ARM_S),[...S.tBlock,0.72,1],[...S.armPin,0.3,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');
   {const C=PT([10.53,35.06]),A=PT([-0.9764,0.2161]),P=PT([0.2161,0.9764]),q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */
     const eg=mesh(tb,decalGeo([q(-5.5,-1.8),q(5.5,-1.8),q(5.5,1.8),q(-5.5,1.8)],PTi),M.engraveT,0,TB_T-0.02,0);eg.userData.noShadow=true;eg.userData.noCap=true;eg.userData.decal=true;}
   /* three pillar screws (42055): two into their pillars; the third, where the top-view photograph shows its head sunk in a clearance hole in the barrel bridge (with pillar 0's;
      C Spinner 23:30 shows both holes through the bridge laid flat), has no pillar under it in the model (the fusee wheel is there), so it is drawn threaded into the bridge alone */
   S.tb.forEach(([x,z],i)=>hn(screw(tb,x,z,TB_T,PSR,1.6,i<2?3.1+3.0:2.8),'42055.tb'));
+  /* detent support block screw (42056): from above, through the train bridge into a tapped hole in the block's top, between its two positioning pins (Sec. II; Figs. 14, 22, 84;
+     Op. 81, with the train side up; KLUwI2UUCMQ 10:45, 11:08). Nothing stands over it: the barrel bridge's horn, which covered it before the photographed group's turn, is clear */
+  hn(screw(tb,...S.blk,TB_T,0.9,0.5,3.1+2.4),'42056.blk');
   /* centre and third upper bushings in the train bridge (42166, 42167); they lie in the opening round the balance, so they can be oiled with the barrel bridge on (Sec. VIII, Op. 46) */
   hn(bushR(tb,...L.C,TB_T-0.1,TB_U,1.2,0.52),'42166');hn(bushR(tb,...L.T,TB_T-0.1,TB_U,1.0,0.32),'42167');   /* bored for the pivots (r 0.5, 0.3), 0.02 side shake */
   /* balance wheel locking arm (42299, Fig. 9; fitted from 1947, Bureau of Ships sketch 023263): a curved arm on the train bridge, turning on its shouldered screw (37204) and
@@ -526,32 +537,39 @@ function buildMovement(M){
     const ge=extrude(s,{depth:yb-ya,bevelEnabled:false,curveSegments:12});ge.rotateX(Math.PI/2);ge.translate(0,yb,0);return ge;},m=mesh(g,G(),mat);if(k||F)DETM.push({m,G});return m;};   /* pts: an outline, one of ESC.pieces by name, or a function of ESC */
   const Fx=E.fixed,Cu=M.copper;
   hn(poly(fx,Fx.foot,-19.26,-17.36,Cu),'42087',{sub:1});poly(R.det,'spring',-19.26,-18.76,Cu);poly(R.det,'spring',-17.86,-17.41,Cu);poly(R.det,'cross',-19.26,-17.36,Cu);   /* bottoms staggered so no two faces are coplanar */
-  poly(R.det,'blade',-18.21,-17.41,Cu);poly(R.det,()=>{const b=E.pieces.block.map(p=>[p.x,p.y]);return subtractCircle(b,[E.Jc.x,E.Jc.y],E.rJ).map(([x,y])=>({x,y}));},-18.26,-17.36,Cu,()=>{const b=E.pieces.block,c=E.Jc,in_=Math.min(c.x-Math.min(...b.map(p=>p.x)),Math.max(...b.map(p=>p.x))-c.x,c.y-Math.min(...b.map(p=>p.y)),Math.max(...b.map(p=>p.y))-c.y)>E.rJ;return in_?[[c,E.rJ*ES]]:[];});   /* the jewel block, cut for the locking jewel: a notch where the stone stands out of it, a hole where it doesn't */poly(R.det,'arm',-18.16,-17.86,Cu);poly(R.det,'horn',-17.86,-17.41,Cu);hn(poly(R.det,'bracket',-17.86,-17.46,Cu,()=>[[E.D(E.tR+0.01,E.nR+0.033),hT(0,0,0.22,0.07)[2]]]),'42092');
+  poly(R.det,'blade',-18.21,-17.41,Cu);poly(R.det,()=>{const b=E.pieces.block.map(p=>[p.x,p.y]);return subtractCircle(b,[E.Jc.x,E.Jc.y],E.rJ).map(([x,y])=>({x,y}));},-18.26,-17.36,Cu,()=>{const b=E.pieces.block,c=E.Jc,in_=Math.min(c.x-Math.min(...b.map(p=>p.x)),Math.max(...b.map(p=>p.x))-c.x,c.y-Math.min(...b.map(p=>p.y)),Math.max(...b.map(p=>p.y))-c.y)>E.rJ;return in_?[[c,E.rJ*ES]]:[];});   /* the jewel block, cut for the locking jewel: a notch where the stone stands out of it, a hole where it doesn't */poly(R.det,'arm',-18.16,-17.86,Cu);poly(R.det,'horn',-17.86,-17.41,Cu);hn(poly(R.det,'bracket',-17.86,-17.46,Cu),'42092');
   hn(poly(R.det,'stone',-19.81,-17.33,M.ruby),'285');
-  /* locking jewel wedge pin (42089, Figs. 57-59): beside the jewel in its hole in the block, on the side away from the wheel, pressing it against the hole's wall; cut off
-     just above the block (Sec. VII re-jewelling). Rebuilt with the stone */
+  /* locking jewel wedge pin (42089, Figs. 57-59): beside the jewel in its hole in the block, on the side away from the wheel, pressing it against the hole's wall; pushed in
+     flush with the block's top and cut and stoned flush below (Sec. VII, re-jewelling the detent, 8-9). Rebuilt with the stone */
   /* the trip spring bracket's screw (1770, Fig. 110): along the bracket's leg from its end into the cross-piece it continues; a horizontal screw in vertically extruded pieces, drawn without holes (as the detent's other cross screws). Rebuilt with the detent */
-  { const G=()=>{const P=q=>new THREE.Vector3((q.x-E.Ft.x)*ES,-17.66,(q.y-E.Ft.y)*ES),cyl=(p0,p1,r)=>{const d=new THREE.Vector3().subVectors(p1,p0),l=d.length();return[cylY(r,l,12),new THREE.Matrix4().compose(p0.clone().add(p1).multiplyScalar(0.5),new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize()),new THREE.Vector3(1,1,1))];};
-      const a=P(E.D(0.63,E.nR+0.05)),b=P(E.D(0.63,0.003)),c=P(E.D(0.63,E.nR+0.05+0.15/ES));return mergeGeo([cyl(b,a,0.08),cyl(a,c,0.18)]);};
+  const cyl=(p0,p1,r)=>{const d=new THREE.Vector3().subVectors(p1,p0),l=d.length();return[cylY(r,l,12),new THREE.Matrix4().compose(p0.clone().add(p1).multiplyScalar(0.5),new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize()),new THREE.Vector3(1,1,1))];};   /* a cylinder from p0 to p1, for mergeGeo */
+  { const G=()=>{const P=q=>new THREE.Vector3((q.x-E.Ft.x)*ES,-17.66,(q.y-E.Ft.y)*ES);
+      const a=P(E.D(0.63,E.brO)),b=P(E.D(0.63,0.003)),c=P(E.D(0.63,E.brO+0.15/ES));return mergeGeo([cyl(b,a,0.08),cyl(a,c,0.18)]);};
     const m=hn(mesh(R.det,G(),M.steel),'1770.br'),ax=new THREE.Object3D();R.det.add(ax);m.userData.axis=ax;   /* ax: the screw's axis, for tools/bom.py */
-    const place=()=>{const a=E.D(0.63,E.nR+0.05),b=E.D(0.63,0.003),P=new THREE.Vector3((a.x-E.Ft.x)*ES,-17.66,(a.y-E.Ft.y)*ES),Q=new THREE.Vector3((b.x-E.Ft.x)*ES,-17.66,(b.y-E.Ft.y)*ES);ax.position.copy(P);ax.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),Q.sub(P).normalize());};place();
+    const place=()=>{const a=E.D(0.63,E.brO),b=E.D(0.63,0.003),P=new THREE.Vector3((a.x-E.Ft.x)*ES,-17.66,(a.y-E.Ft.y)*ES),Q=new THREE.Vector3((b.x-E.Ft.x)*ES,-17.66,(b.y-E.Ft.y)*ES);ax.position.copy(P);ax.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),Q.sub(P).normalize());};place();
     DETM.push({m,G:()=>{place();return G();}}); }
   const wpAt=()=>{const r=E.rJ+0.1/ES,dx=-E.nF.x-E.dirB.x*0.17+E.nB.x*0.98,dy=-E.nF.y-E.dirB.y*0.17+E.nB.y*0.98,l=Math.hypot(dx,dy),q={x:E.Jc.x+dx/l*r,y:E.Jc.y+dy/l*r};return[(q.x-E.Ft.x)*ES,(q.y-E.Ft.y)*ES];};
-  const wPin=hn(mesh(R.det,cylY(0.1,1.0,12),M.steel,...(([x,z])=>[x,-17.8,z])(wpAt())),'42089');
+  const wPin=hn(mesh(R.det,cylY(0.1,0.9,12),M.steel,...(([x,z])=>[x,-17.81,z])(wpAt())),'42089');
   /* the block notched round the third arbor, which runs up past it to its bushing in the train bridge (measured on the video: Review-results.md, 'Elsewhere', 12). Provisional:
      on the video the block is not where the escapement plan puts it (the same item); until it is placed, it keeps the plan's place and only gives the arbor room */
   const tU=()=>{const dx=L.T[0]-L.B[0],dz=L.T[1]-L.B[1],c=Math.cos(BETA),s_=Math.sin(BETA);return[(dx*c-dz*s_)/ES,(dx*s_+dz*c)/ES];};
-  hn(poly(fx,()=>subtractCircle(Fx.blockMain.map(p=>[p.x,p.y]),tU(),0.95/ES).map(([x,y])=>({x,y})),TB_U,-17.46,M.plateSolid,[[E.D(-1.2,-0.35),hC(0,0,0.9)[2]]]),'42086');hn(poly(fx,Fx.blockFront,-18.26,-17.46,M.plateSolid),'42086',{sub:1});hn(poly(fx,Fx.button,-18.16,-17.51,M.steel),'42086',{sub:1});
-  /* screws in detent coordinates (t along the detent, n across it): block screw from below, into the train bridge; clamp screw and two steady pins across the foot;
+  hn(poly(fx,()=>subtractCircle(Fx.blockMain.map(p=>[p.x,p.y]),tU(),0.95/ES).map(([x,y])=>({x,y})),TB_U,-17.46,M.plateSolid,[[E.D(...DBLK.s),hT(0,0,0.9)[2]],...DBLK.p.map(([t,n])=>[E.D(t,n),0.4])]),'42086');hn(poly(fx,Fx.blockFront,-18.26,-17.46,M.plateSolid),'42086',{sub:1});hn(poly(fx,Fx.button,-18.16,-17.51,M.steel),'42086',{sub:1});
+  /* the block's two positioning pins (Sec. II: "fastened to the underside of the upper train bridge by means of one screw and two positioning pins"; Figs. 14, 22, 90; KLUwI2UUCMQ 11:08):
+     pressed 1.5 mm into its top face, standing 1.2 mm into the train bridge */
+  for(const[t,n]of DBLK.p){const q=E.D(t,n);hn(mesh(fx,cylY(0.4,2.7,16),M.steel,(q.x-E.Ft.x)*ES,TB_U+0.15,(q.y-E.Ft.y)*ES),'42086',{sub:1});}
+  /* screws in detent coordinates (t along the detent, n across it): clamp screw and two steady pins across the foot;
      detent-adjusting screw at the block's end; lock-adjusting screw and its clamp screw across the block's front, under the wheel; trip-spring screw on the bracket */
   const dd=new THREE.Group();dd.position.copy(R.det.position);dd.rotation.y=-Math.atan2(E.dirB.y,E.dirB.x);dt.add(dd);const T=(t,n)=>[t*ES,-n*ES];
-  { const df=new THREE.Group();df.rotation.x=Math.PI;dd.add(df);const[x,z]=T(-1.2,-0.35);const k=hn(screw(df,x,-z,17.46,0.9,0.5,3.2+2.4),'42056.blk');k.userData.lift=3.2+2.4+0.5;k.traverse(m=>m.userData.driveHide=true); }   /* detent support block screw (42056), put in from below through the block into the train bridge ("Turn movement over. Install detent support block screw", Op. 81, with the barrel bridge on since Op. 44; the top-view photograph shows the barrel bridge's horn whole over it): in the flipped frame, its head under the block */
   const across=(g,t,n0,n1,r,y,mat)=>{const q=mesh(g,cylY(r,(n1-n0)*ES,16),mat,t*ES,y,-(n0+n1)/2*ES);q.rotation.x=Math.PI/2;return q;};
-  hn(across(dd,-0.75,0.083,0.083+1.4/ES,0.95,-18.31,M.steel),'37024');hn(across(dd,-0.75,0.083,0.083+0.25/ES,1.25,-18.31,M.steel),'42251.det');for(const t of[-1.2,-0.3])hn(across(dd,t,-0.2,0.12,0.22,-18.31,M.steel),'42086',{sub:1});
+  hn(across(dd,-0.75,0.083,0.083+1.4/ES,0.95,-18.31,M.steel),'37024');hn(across(dd,-0.75,0.083,0.083+0.25/ES,1.25,-18.31,M.steel),'42251.det');for(const t of[-1.2,-0.3])hn(across(dd,t,-0.2,0.083+1.2/ES,0.22,-18.31,M.steel),'42086',{sub:1});   /* the detent's steady pins, standing 1.2 mm out of the foot (Fig. 90, KLUwI2UUCMQ 11:08) */
   hn(across(dd,-0.75,-0.35,0.083,0.45,-18.31,M.steel),'37024',{sub:1});   /* the clamp screw's shank, through the foot into the block */
-  for(const[r,l,x]of[[0.8,0.5,-1.4*ES-0.25],[0.35,0.5,-1.4*ES+0.25]]){const q=hn(mesh(dd,cylY(r,l,16),M.steel,x,-18.61,0.3*ES),'20756',r<0.5&&{sub:1});q.rotation.z=Math.PI/2;}   /* detent-adjusting screw: head, and shank into the block (0.5 mm: the block is shortened to clear the train pillar, provisional, Review-results.md "Elsewhere", 12) */
+  { const a=E.adj,b=-1.40+0.5/ES;for(const[r,t0,t1]of[[a.r,a.tH,a.tS],[0.35,a.tS,b]]){const q=hn(mesh(dd,cylY(r,(t1-t0)*ES,16),M.steel,(t0+t1)/2*ES,-18.61,-a.n*ES),'20756',r<0.5&&{sub:1});q.rotation.z=Math.PI/2;} }   /* detent-adjusting screw (Fig. 90; Ops. 84, 93): its head against the wall of the foot's slot, and shank 0.5 mm into the block (shortened to clear the train pillar, provisional, Review-results.md "Elsewhere", 12) */
   for(const t of[E.BL-0.15,1.2]){const k=t===1.2?'42091.cl':'42091.lk';hn(across(dd,t,-0.3-0.3/ES,-0.3,0.42,-17.81,M.steel),k);hn(across(dd,t,-0.3,-0.12,0.2,-17.81,M.steel),k,{sub:1});}   /* lock-adjusting screw and its clamp screw: heads and shanks */
-  const tsAt=()=>{const rp=E.D(E.tR+0.01,E.nR+0.033);return[(rp.x-E.Ft.x)*ES,(rp.y-E.Ft.y)*ES];};R.tsScrew=hn(screw(R.det,...tsAt(),-17.86,0.22,0.25,0.4,0.07),'1770.ts');   /* trip spring screw (1770): a fine thread in the bracket's 0.23 mm leg */
+  /* trip spring screw (1770, Figs. 14, 54; KLUwI2UUCMQ 11:08, its head face-on): across the spring, 0.2 mm along its foot, through the hole in the foot ("place trip spring screw in the
+     hole of the trip spring", Sec. VII, reassembly of the detent, 8) into the bracket's upright leg, its head on the spring's inner face; drawn without holes, as the bracket's screw. Rebuilt with the detent */
+  { const Y=-17.71,P=(t,n)=>{const q=E.D(t,n);return new THREE.Vector3((q.x-E.Ft.x)*ES,Y,(q.y-E.Ft.y)*ES);},ends=()=>{const t=E.tR+0.2/ES,s0=E.nR-E.settings.tsT/2/ES;return[P(t,s0),P(t,E.brO-0.04/ES),P(t,s0-0.12/ES)];};
+    const G=()=>{const[a,b,c]=ends();return mergeGeo([cyl(a,b,0.07),cyl(c,a,0.16)]);},m=hn(mesh(R.det,G(),M.steel),'1770.ts'),ax=new THREE.Object3D();R.det.add(ax);m.userData.axis=ax;
+    const place=()=>{const[a,b]=ends();ax.position.copy(a);ax.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),b.sub(a).normalize());};place();DETM.push({m,G:()=>{place();return G();}}); }
   R.pspring=hn(mesh(dt,new THREE.BufferGeometry(),M.steel),'42088');
   /* the trip spring (42088, Fig. 14): a flat Elinvar strip on edge, E.settings.tsT thick and 0.3 mm deep, bending in its thin direction; its foot, 0.2 mm thick, is screwed to the
      angle bracket (whose leg it lies against, on the +n side) for 0.4 mm and thins to the strip over the next 0.2 mm. pts: root, control point and tip from ESC.springPts */
@@ -855,7 +873,7 @@ function buildMovement(M){
     const psK=s.lift+','+s.psDef;if(psK!==lastPs){lastPs=psK;R.pspring.geometry.dispose();R.pspring.geometry=tripGeo(E.springPts(s));}
   };
   /* the escapement rebuilt for ESC's current settings (the adjuster's bench changes them with Object.assign(ESC, makeEsc(...))): detent pieces, trip spring screw, roller, jewels */
-  mv.userData.escSet=()=>{for(const d of DETM){d.m.geometry.dispose();d.m.geometry=d.G();}const[x,z]=tsAt();R.tsScrew.position.x=x;R.tsScrew.position.z=z;{const[wx,wz]=wpAt();wPin.position.x=wx;wPin.position.z=wz;}
+  mv.userData.escSet=()=>{for(const d of DETM){d.m.geometry.dispose();d.m.geometry=d.G();}{const[wx,wz]=wpAt();wPin.position.x=wx;wPin.position.z=wz;}
     roll.geometry.dispose();roll.geometry=rollG();collar.geometry.dispose();collar.geometry=collarG();palSet(pI,...palI());palSet(pD,...palD());lastPs='';};
   mv.userData.explode(0);
   /* the damascening only on the plates' and bridges' train-side faces: their undersides, edges and bevels plain, and the balance lower bridge plain all over, as the

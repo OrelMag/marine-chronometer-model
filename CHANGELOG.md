@@ -4,6 +4,16 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 1.11.04 · 2026-10-02
+- The upper train bridge's notch round the fusee, its horn and its mouth now match a real Model 21
+
+## 1.11.03 · 2026-10-01
+- The detent's support block has its two positioning pins into the train bridge, as on a real Model 21
+- The trip spring's screw goes through the spring into its bracket, and the detent-adjusting screw bears on the detent
+
+## 1.11.02 · 2026-10-01
+- Winding at high speed no longer runs the chronometer for hours on its maintaining spring: while the key turns, time runs at most ten times real speed, as the sustaining spring drives the train for only 5 to 10 minutes.
+
 ## 1.11.01 · 2026-10-01
 - The bridges' undersides and edges are now plain nickel, as on a real Model 21; the damascening stays on their top faces.
 
