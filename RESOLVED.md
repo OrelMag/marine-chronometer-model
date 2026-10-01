@@ -607,6 +607,17 @@ Contents:
   the dial on the ring (`MR_Y`), heights above it written `+DD`; the hands
   scaled by `DK`; the dial canvas's sub-dials at `L.F[1]/DIAL_R`, on their
   arbors. `8ec1d92`
+- **Escape upper bridge drawn the wrong shape, along the wrong line.** It
+  was a short stadium running from the escape arbor away from the balance,
+  with both screws beyond the arbor and a small bar-shaped endstone cap. The
+  real bridge (`KLUwI2UUCMQ` 10:00; Figs. 84, 110) is a long bar across the
+  keyhole, symmetric about the setting, with a screw near each end and a large
+  round cap on a boss in the middle. It is now built that way
+  (`barBossPts`, `endCap(..., rc)` in `movement.js`), its screws moved with
+  it (the train bridge's tapped holes follow `S.eb`). Keep: the bar runs
+  across the balance–escape line (68° round), its end screws 8.0 mm either
+  side of the jewel; the end screws' heads stay 0.3 mm tall for the balance
+  rim. `0dade8c`
 
 ## Setup, case and gimbals
 
