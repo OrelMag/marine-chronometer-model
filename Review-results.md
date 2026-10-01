@@ -1237,8 +1237,30 @@ as the video shows it, bored for the escape arbor; the rest stands.
     The hole at item 12's (9.24, 20.86), re-placed at (11.79, 22.41) by a
     better fit, is 1.1 mm from the end screw at (12.49, 21.54) found from
     above on another frame, so it is that screw's hole.
-18. **The escape arbor's place, measured** (1 October 2026, branch
-    `claude/escape-arbor`). Three frames of `KLUwI2UUCMQ` were fitted with
+18. **The escape arbor's place.** **Settled: the model's stands; the
+    40–45° reading below is withdrawn.** The escape arbor isn't free: it
+    must be 9.40 mm from the balance (the escapement) and about 10.6 mm
+    from the fourth (their mesh), and the fourth is under the seconds hand
+    (manual, p. 15). Given the balance and the fourth, that leaves one place
+    for it, which is where the model has it. The balance is the model's
+    best-founded position: triangulated in two independent photographs, the
+    axes within 0.16–1.43 mm over eight seeds (README, "How the layout was
+    measured", 1, 6). It is also checked independently by
+    `verification/topview-comparison.png`, which warps the model onto the
+    top-view photograph through five barrel-bridge screws, not the balance.
+    There the photograph's endstone lands 2.7 mm from the model's, the
+    photograph's tilt for a part on top of the cock, and the hairspring
+    below it lies the other way, so the staff passes through the model's.
+    A balance 11–12 mm from the fourth (14) would put it about 7 mm off,
+    plain on that comparison. So the train-side fits below share an error,
+    most likely their assumptions (the train bridge's rim a 40.5 mm circle
+    about the centre arbor, the rotation from the third bushing). And 14's
+    reading of the lower bridge's underside misnames or misscales a setting.
+    The dial side (40:08, below) agrees with the model unrectified. What
+    stands from the fits: the escape upper bridge's form and its end screws'
+    spacing about the jewel (17), and the hole being one of them.
+
+    The measurement, as made (1 October 2026, branch `claude/escape-arbor`). Three frames of `KLUwI2UUCMQ` were fitted with
     `video.py anchor` on the train bridge's rim (r 40.5 about the centre),
     its cut round the barrel and the centre bushing. The other holes are
     independent checks (fit specs in `tools/anchors/`).
@@ -1259,7 +1281,7 @@ as the video shows it, bored for the escape arbor; the rest stands.
     - **13:49.5, from below.** Rim 0.22, the cut 0.24, the third bushing
       1.09 mm from the model's as a check.
 
-    So the escape arbor is about 18 mm from the centre, as the model has it
+    (Withdrawn, above.) So the escape arbor is about 18 mm from the centre, as the model has it
     (17.7), but 40–45° round from the 6 o'clock line toward 3, not the
     model's 24°: about 6 mm from the model's (7.19, 16.14). The scale rests
     on the rim's 40.5 mm (the third bushing reads 16.9–18.3 mm on these
