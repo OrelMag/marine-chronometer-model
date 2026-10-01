@@ -479,7 +479,7 @@ Contents:
   wheel's 3 o'clock side to the lug. Keep: the train-blocking screw, the pin
   and the ear's screw at the photographed holes; solid walls between the tiers,
   not posts; the upper tier and walls clear of the escape wheel's tips
-  (0.70 mm) and the rollers' sweep (0.56 mm); the screws put in from below.
+  (0.70 mm) and the rollers' sweep (0.56 mm); the screws put in from below. `01f2eea`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
