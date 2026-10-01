@@ -453,11 +453,12 @@ function buildMovement(M){
   /* sustaining ratchet wheel (42009): free on the fusee arbor, open in the middle round the fusee's winding ratchet and its screws (Fig. 28) */
   const srP=part('sratchet',-22);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
   const WPS=[0,1].map(k=>{const a=k*Math.PI+0.4;return[[12.9*Math.cos(a+0.85),12.9*Math.sin(a+0.85)],[12.5*Math.cos(a+0.6),12.5*Math.sin(a+0.6)]];});   /* the winding pawl springs' screws */
-  hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,flip:true,bore:5,holes:WPS.flat().map(q=>hT(...q,0.4))}),M.steel,0,-9.45,0),'42009',{sub:1,gear:{z:120,m:0.27,ratchet:1}});
-  mesh(R.sr,ringGeo(5,2.75,0.3),M.steel,0,-9.25,0);   /* its web, free on the fusee arbor's collar (0.05 side shake; Fig. 69, arrow 5), under the heads of the winding ratchet's screws, which turn round inside the wheel's open centre as the key winds */   /* steep faces lead against the running direction, so the sustaining pawl holds it */
+  hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(120,0.27,0.7,{ratchet:true,flip:true,bore:5,holes:WPS.flat().map(q=>hC(...q,0.4))}),M.gilt,0,-9.45,0),'42009',{sub:1,gear:{z:120,m:0.27,ratchet:1}});
+  mesh(R.sr,ringGeo(5,2.75,0.3),M.gilt,0,-9.25,0);   /* its web, free on the fusee arbor's collar (0.05 side shake; Fig. 69, arrow 5), under the heads of the winding ratchet's screws, which turn round inside the wheel's open centre as the key winds */   /* steep faces lead against the running direction, so the sustaining pawl holds it */
   mesh(R.sr,cylY(0.4,1.45,10),M.steel,14.6*Math.cos(SSP),-8.375,14.6*Math.sin(SSP));   /* the pin from the sustaining spring's working end, in the ratchet (the manual pins the spring to both wheels) */
   /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4): pushed by its steep faces when running, slipping over them when winding.
-     Each is held in by a flat winding-pawl spring (42007) under two screws (42012; heads 0.15 tall, clear of the fusee's underside, which turns over them while winding), bearing on the arm's outer side near the pivot (Figs. 28, 69).
+     Each is held in by a flat winding-pawl spring (42007), bearing on the arm's outer side near the pivot (Figs. 28, 69), its foot held by two screws (42012) put in from the
+     ratchet's underside, through it into the foot: their slotted heads show there (restoration video 28:35), and Fig. 28 draws one so. The wheel is gilt brass, as the video shows it.
      wpsGeo: the spring for pawl angle th, its free part bent so the end stays on the arm; update() rebuilds it as the pawl rides the teeth in winding */
   const wpsGeo=(pw,th)=>{const u=pw.userData,bk=pawlBack(u.pts,0.96,u.q,th,[0,0]),E=[bk.p[0]+bk.n[0]*0.095,bk.p[1]+bk.n[1]*0.095],[,,r1]=u.sp,m=[(r1[0]+E[0])/2+bk.n[0]*0.25,(r1[1]+E[1])/2+bk.n[1]*0.25];
     return stripGeo([add(r1,unit(sub(m,r1)),0.45),m,E],0.3,0.3);};   /* the free part, from its foot (screwed down, drawn once) to its end on the arm */
@@ -465,7 +466,9 @@ function buildMovement(M){
     pw.userData.q=P;pw.userData.th0=Math.atan2(T[1]-P[1],-(T[0]-P[0]));pw.userData.pts=pawlPts(ln,0.9);R.wp.push(pw);
     const pol=(r,t)=>[r*Math.cos(a+t),r*Math.sin(a+t)],r0=pol(12.9,0.85),r1=pol(12.5,0.6);pw.userData.sp=[pol(13.0,0.97),r0,r1];
     pw.userData.spr=hn(mesh(R.sr,wpsGeo(pw,pw.userData.th0),M.blued,0,-10.1,0),'42007');pw.userData.sprTh=pw.userData.th0;
-    hn(mesh(R.sr,stadium(r0,r1,1.0,0.3,[r0,r1].map(q=>hC(...q,0.4))),M.blued,0,-10.1,0),'42007',{sub:1});for(const q of[r0,r1])hn(screw(R.sr,...q,-10.1,0.4,0.15,0.3+0.5),'42012');}   /* the spring's foot and its two screws (42012) */
+    hn(mesh(R.sr,stadium(r0,r1,1.0,0.47,[r0,r1].map(q=>hT(...q,0.4))),M.blued,0,-10.27,0),'42007',{sub:1});
+    const fl=new THREE.Group();fl.rotation.x=Math.PI;R.sr.add(fl);for(const q of[r0,r1])hn(screw(fl,q[0],-q[1],9.1,0.4,0.15,0.7+0.42),'42012');}   /* the spring's foot, thick enough to be tapped (0.47; 0.03 under the fusee's face,
+     which turns over it while winding), and its two screws (42012) from the ratchet's underside (y -9.1), 0.05 short of the foot's top */
   const sp=hn(part('spawl',-22),'42096');sp.userData.axis=mesh(sp,shaftGeo([[TB_U-0.7,0.5],[TB_U+0.025,0.7],[y0-0.025,0.5],[y0+2]]),M.steel,SPv[0],0,SPv[1]);   /* pivots (r 0.5) in the train bridge and the plate (it has no bushing, Op. 15), shoulders 0.025 off them */
   /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2), trailing the pivot so the teeth can only pass it one way */
   const SPt=[L.Fu[0]+16.35*Math.cos(54*D2R),L.Fu[1]+16.35*Math.sin(54*D2R)];

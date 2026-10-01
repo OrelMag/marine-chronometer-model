@@ -1457,7 +1457,7 @@ Winding and maintaining work).
 3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
-4. **Sustaining ratchet** (28:32–29:14; Fig. 28). Gilt brass, not steel; the
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* Gilt brass, not steel; the
    winding-pawl spring screws go in from the fusee wheel's side (slotted heads
    there). The model has the heads on the pawl side.
 5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;

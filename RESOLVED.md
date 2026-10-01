@@ -396,6 +396,13 @@ Contents:
   the arbor at its centre. Now so; the screws go into the slotted layer's rim
   either side of the slot. The collar's height (1.0) is estimated. Keep: the
   screws clear of the stop-bar's slot and of its spring. `2aa6e7a`
+- **Sustaining ratchet drawn steel, its springs' screws from the pawl side.**
+  The restoration video (28:32–29:14) shows the wheel gilt brass, with the
+  winding-pawl spring screws' slotted heads on its underside; Fig. 28 draws
+  one put in from below. Now so: the screws pass through the ratchet (clear)
+  into the springs' feet (tapped, 0.47 thick, 0.03 under the fusee's face that
+  turns over them while winding). Keep: the screws from the underside; the
+  feet thick enough for 0.4 mm of thread (`bom.py`). HASH
 
 ## Plates, bridges, screws and arbors
 
