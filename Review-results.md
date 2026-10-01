@@ -1155,14 +1155,48 @@ as the video shows it, bored for the escape arbor; the rest stands.
       the keyhole on the underside is on the other side of that line, at
       (9.24, 20.86), 5 mm from the escape arbor, with a curved slot beside
       it. From above (10:45–10:48) the block's screw is taken out at the
-      train bridge's edge below the keyhole. If that is the block's screw,
-      the plan is mirrored about the balance–escape line, which would change
-      the detent, the wheel's turning direction and the essay's figures.
-      Not settled: the top view (10:47) still has to be anchored on matched
-      holes to place that screw.
+      train bridge's edge below the keyhole. ~~If that is the block's screw,
+      the plan is mirrored about the balance–escape line.~~ It isn't (16):
+      the plan can't be mirrored, and the hole is not where any part of the
+      block could be, in either handedness. Still open: where the block's
+      screw is; the top view (10:47) has to be anchored on matched holes to
+      place it.
 16. **The escapement plan's orientation** (started 1 October 2026, branch
-    `claude/escapement-plan`). Item 12 found the detent's support block isn't
-    where the plan puts it. Tried so far:
+    `claude/escapement-plan`). **Settled: not mirrored.** The model's plan is
+    right as it is, and nothing in `shared/escapement.js`, the detent or the
+    essay changes. Three things fix its handedness, none of them from a video:
+    - **The train.** The fourth wheel carries the seconds hand (clockwise on
+      the dial) and drives the escape pinion directly, so the escape wheel
+      turns anticlockwise seen from the dial, clockwise seen from the train
+      side. The model does (`update()`: centre −, third +, fourth −, escape +
+      in `rotation.y`, about +y toward the dial).
+    - **Fig. 90.** Its teeth lead clockwise all round, and the locking jewel
+      holds a tooth two pitches downstream of the pair at the roller, so the
+      locked tooth pushes the detent toward its foot and support block. A
+      plan mirrored about the balance–escape line keeps the train's direction
+      only with the wheel running backwards against its teeth. The solver has
+      Fig. 90's arrangement: the wheel turns to −angle, the locking tooth at
+      t0 − 2P, and the tooth's motion there is along −dirB, toward Ft (cosine
+      −0.98). Its unit frame maps (x, y) to the movement's (x, z), which seen
+      from the train side is a half turn, not a mirror.
+    - **Ops. 85–86.** The balance is read against a sector on the upper
+      train bridge, so seen from above, and turning it anticlockwise lifts the
+      detent off its stop button. In the model the unlocking swing is
+      anticlockwise seen from the train side, as in Fig. 90.
+
+    The evidence for a mirror was the hole at (9.24, 20.86) (item 12). It is
+    in the train bridge itself, just past the slab's corner (checked on the
+    full 4K frame 13:49.5), so the homography on the bridge's holes places it
+    well: 5.2 mm from the model's escape arbor and 14.1 mm from the balance.
+    A mirror about the balance–escape line keeps every point's distance from
+    both arbors. Those two distances put the hole almost on that line,
+    beyond the escape arbor (31° off it), over the wheel's spokes. In Fig. 90
+    nothing of the detent is there in either handedness: the block runs off
+    to the side, below the wheel's centre. So the hole is not the block's
+    screw, mirrored or not. More likely it is a screw of the escape upper
+    bridge (17).
+
+    Tried before this was settled:
     - the detent held up to the camera (11:04–11:30): too overexposed and
       oblique to read which side of the blade the locking jewel and horn lie;
     - the dial side face-on (40:08): a search matching the model's dial-side
@@ -1172,8 +1206,28 @@ as the video shows it, bored for the escape arbor; the rest stands.
       fits a circle centred near the bar's middle, not on the tall arbor the
       motion work goes on. The features need naming first, by following the
       motion work going on (40:14–40:44) and the bar going on (34:52–35:12).
-    A video should show: the detent from above or below in place, beside the
-    escape wheel (42:40–42:49, the escape wheel going in through the keyhole).
+
+    What stays open is where the plan sits, not which way round it is: the
+    direction of the escape arbor from the balance (only fitted; 10) and the
+    balance-to-fourth distance (14). The plan turns with them, and the block
+    is about 20 mm from the balance, so a few degrees move it millimetres.
+    The detent's block (12) is placed once those are settled.
+17. **The escape upper bridge (42064)** (new, 1 October 2026). From above
+    with the bridge on (`KLUwI2UUCMQ` 10:00), it is a long straight plate,
+    rounded at both ends, with the jewel and its two-screw endstone cap in
+    the middle and a screw near each end, symmetric about the jewel. It spans
+    the keyhole's escape lobe. The model's bridge is a stadium from 1.5 mm
+    behind the escape arbor to 7.5 mm beyond it, with both screws beyond it
+    (4.3 and 6.6 mm along the balance–escape line). Certain for the form, by
+    eye. The end screws are about 2.5 times as far from the jewel as the
+    cap's screws (about 5 mm if those are the model's 2.1 mm, which is
+    estimated). That would fit the hole at (9.24, 20.86), 5.2 mm from the
+    escape arbor, as one of them. Its partner would then be about as far on
+    the other side of the arbor, which is inside the model's keyhole if the
+    model's escape arbor is right: one more sign that the arbor's direction
+    (10) is off. Not changed: the bridge's direction and length wait on 10
+    and 14. A video should show: the bridge's screw holes on the bare train
+    bridge from above (13:44, once anchored on matched holes).
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works.
