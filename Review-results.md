@@ -1537,27 +1537,27 @@ Winding and maintaining work).
 
 ### Open, most certain first
 
-1. **Sustaining spring** (27:26; Figs. 69, 71). A flat blued band about
+1. **Sustaining spring** (27:26; Figs. 69, 71). *Fixed (RESOLVED.md, Winding and maintaining work).* A flat blued band about
    2.1 mm wide, r 15.8–18.0, against the recess wall, round about 335° (its
    fixed end widened inward, with two holes; a lighter working end with an
    upright pin). The model: 0.7 mm wide, r 13.2–13.9, 250°, its free end
    pushed by a pin on the ratchet (the manual pins both ends).
-2. **Fusee wheel** (27:26; Figs. 71, 72; Ops. 20, 26). Its recess reaches
+2. **Fusee wheel** (27:26; Figs. 71, 72; Ops. 20, 26). *Fixed: the recess and its elevations with the spring, the bore with the collar (5).* Its recess reaches
    r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
    recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
    model's web is flat.
-3. **Fusee's top** (13:30, 17:23; Fig. 28). A steel collar r ≈ 2.9 round the
+3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
-4. **Sustaining ratchet** (28:32–29:14; Fig. 28). Gilt brass, not steel; the
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* Gilt brass, not steel; the
    winding-pawl spring screws go in from the fusee wheel's side (slotted heads
    there). The model has the heads on the pawl side.
 5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
-   Op. 23). A steel collar r ≈ 2.7 on the arbor below the fusee carries the
+   Op. 23). *The collar fixed; the large end's rim and the ratchet's size open.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
    sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
    arbor); the large end has a raised outer rim round the winding ratchet,
    whose tips read r ≈ 8.5 (model 9.85; rough, oblique).
-6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). Notches in its face that
+6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). *Fixed: r 7.0 with the slot and a 9.6 mm pin. Open: Fig. 69 draws a raised boss round its hole; not seen on video.* Notches in its face that
    the taper pin lies in; the model's is a plain washer with the pin under it.
    Figs. 28 and 69 both draw it about 0.37 of the fusee wheel across (r ≈ 7.5;
    model 2.6), not yet seen on video.

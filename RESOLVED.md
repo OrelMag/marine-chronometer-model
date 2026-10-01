@@ -391,6 +391,47 @@ Contents:
   HUD says so. `SMAX` is the fusee wheel's turn in 10 minutes (9.3°), from the
   train, not a literal 10° figured for the old 60 h fusee. Keep: no wind
   outlasts the sustaining spring. `5fd993d`
+- **Sustaining spring and the fusee wheel's recess not as on a real Model 21.**
+  The spring was a 0.7 mm band round 250° at r 13.2–13.9, its free end pushed
+  open by a pin on the sustaining ratchet, in a recess walled at r 15.2. The
+  restoration video (27:26) shows a flat blued band 2.1 mm wide round about
+  335°, against a wall at r 18.0, its fixed end a lobe pinned to the wheel and
+  its working end, across a small gap, pinned to the ratchet (as the manual
+  has it), and a raised disc and hub on the floor (Op. 26's two elevations).
+  Now so: the ratchet's pin pushes the working end across the gap toward the
+  fixed end, closing the ring (17° relaxed, 7.7° loaded), and the band bows in
+  from the wall as it closes, keeping its length. Keep: each end pinned, the
+  fixed one in the wheel's frame, the working one in the ratchet's; the gap
+  closes under load. `65aff17`
+- **Fusee wheel and sustaining ratchet hung on the bare arbor.** Both had
+  r 1.05 bores on the 2 mm fusee arbor. The restoration video shows a steel
+  collar r 2.7 on the arbor below the fusee (28:08–28:35) and the fusee wheel's
+  bore r 2.7 (27:26); Fig. 69 has it greased "above ratchet wheel". Now the
+  collar runs from the fusee's large end to the end plate, 0.02 past the wheel
+  so the plate bears on it, and the winding ratchet, the sustaining ratchet's
+  web and the fusee wheel have r 2.75 bores round it. Keep: the wheels free on
+  the collar, not on the arbor. `ec2e80d`
+- **Fusee top plate's screws beside the arbor, and no collar over it.** The
+  screws stood at r 3.2. The restoration video, face-on at 13:30, shows them
+  opposite each other near the plate's rim (r 7.0) and a steel collar r 2.9 on
+  the arbor at its centre. Now so; the screws go into the slotted layer's rim
+  either side of the slot. The collar's height (1.0) is estimated. Keep: the
+  screws clear of the stop-bar's slot and of its spring. `2aa6e7a`
+- **Sustaining ratchet drawn steel, its springs' screws from the pawl side.**
+  The restoration video (28:32–29:14) shows the wheel gilt brass, with the
+  winding-pawl spring screws' slotted heads on its underside; Fig. 28 draws
+  one put in from below. Now so: the screws pass through the ratchet (clear)
+  into the springs' feet (tapped, 0.47 thick, 0.03 under the fusee's face that
+  turns over them while winding). Keep: the screws from the underside; the
+  feet thick enough for 0.4 mm of thread (`bom.py`). `69b2e97`
+- **Fusee end plate a plain washer, the taper pin under it, and (after the
+  arbor's collar) too small to hold the wheel on.** Ops. 27–29 give the plate
+  notches that the taper pin lies in; Figs. 28 and 69 draw it about 0.37 of the
+  fusee wheel across. It was r 2.6 with the pin below it, and once the wheel's
+  bore became r 2.75 nothing held the wheel. Now r 7.0 (1.5 clear of the centre
+  wheel), against the collar's end, with a slot across its outer face in which
+  the pin (9.6 long, as Fig. 28 draws it) lies. Keep: the end plate larger than
+  the wheel's bore. `bb3086e`
 
 ## Plates, bridges, screws and arbors
 
