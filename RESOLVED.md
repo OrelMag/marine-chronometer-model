@@ -602,6 +602,27 @@ Contents:
   the pillar (0.7 mm). The outlines are simplified so no three points are in
   a line: three.js's triangulation joins a hole wrongly to such an outline
   (116 open edges). `3953b0c`
+- **The photographed group 14° off the dial.** The arbors' layout was fitted
+  to the top-view photograph with the dial's 12 o'clock taken as the
+  photograph's; measured against the restoration video's dial side and the
+  photographed dial (the seconds and indicator sub-dials against the balance
+  and fusee), the balance, fusee, barrel, pillars, bridges, cock, their screws
+  and pins, the engraving and the damascening stood 14° round from the dial
+  and train. They are now turned together (`PHOTO_TURN`, `PT`/`PTi` in
+  `movement.js`; the damascening's stripe and the decals' UVs with them), the
+  escape arbor solved again from the balance (9.40) and the fourth (10.585),
+  the lower bridge laid out again round it (`tools/lower_bridge.py`) and the
+  indicator wheel brought in to 23.6 mm (module 0.266, 32.5 mm across, at
+  y 1.94) inside the mounting ring's bore. Keep: anything placed from the
+  photograph goes through `PT`, anything placed from the dial or the train
+  doesn't; angles read on the photograph (screws, pawls, the setup spring)
+  get `PHOTO_TURN` added or taken off in the same frame. Three checks were
+  made robust by the move: `seatPawl` lays the pawls on a densified tooth
+  outline (0.1 mm; the fusee met the sustaining ratchet in a sliver between
+  vertices), `geometry-audit.js` probes a screw's seat in the screw's own
+  frame and eight directions (a turned detent screw read as floating), and
+  `invariants.py` runs the train with the fusee for its 56 h indicator test.
+  HASH
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,

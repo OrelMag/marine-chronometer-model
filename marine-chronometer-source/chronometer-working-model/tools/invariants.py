@@ -24,10 +24,12 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
     chk(`minute hand at t=${t} s (1 turn/h)`,wrap(R.min.rotation.y+TAU*t/3600)/D,0,1e-6,'deg off');
     chk(`hour hand at t=${t} s (1 turn/12 h)`,wrap(R.hour.rotation.y+TAU*t/43200)/D,0,1e-6,'deg off');
     chk(`escape wheel at t=${t} s (16 teeth/8 s)`,wrap(R.esc.rotation.y-esc0-TAU*t/8)/D,0,1e-6,'deg off');}
-  /* wind indicator: the hand's angle from 12, clockwise seen from the dial; the fusee's ratchet can sit up to a tooth (9 deg) past n turns, 0.9 deg of the hand */
+  /* wind indicator: the hand's angle from 12, clockwise seen from the dial; the fusee's ratchet can sit up to a tooth (9 deg) past n turns, 0.9 deg of the hand. After 56 h the
+     train has run with the fusee (7200 escape teeth an hour, as maintaining.py drives it), so the ratchet sits where it sat at UP; the fusee turned alone, as a jump with the train
+     held would, the ratchet's seat lands anywhere in a tooth from where it was */
   const ud=()=>(-R.ud.rotation.y)/D;
   u(0,0,true);u(0,0,false);chk('wind indicator at UP (fully wound)',ud(),UD_UP,0.95,'deg');
-  u(0,56*FUSEE_PER_HOUR,true);u(0,56*FUSEE_PER_HOUR,false);chk('wind indicator after 56 h (DOWN end of the scale)',ud(),UD_UP+UD_SWEEP,0.95,'deg');chk('wind indicator sweep against the photographed dial',UD_SWEEP,315.7,3.2,'deg');
+  u(56*7200,56*FUSEE_PER_HOUR,false);u(56*7200,56*FUSEE_PER_HOUR,false);chk('wind indicator after 56 h (DOWN end of the scale)',ud(),UD_UP+UD_SWEEP,0.95,'deg');chk('wind indicator sweep against the photographed dial',UD_SWEEP,315.7,3.2,'deg');
   chk('fusee: 8 3/4 turns of chain run (manual: 56 h at most)',FUSEE_TURNS/FUSEE_PER_HOUR,56,0.5,'h');chk('fusee: half turns of the key to wind fully',FUSEE_TURNS*2,17.5,1e-9,'');
   chk('fusee: 7 half turns restore (manual: 24 h)',7*0.5/FUSEE_PER_HOUR,24,1.6,'h');
   const I0=R.timing(0,0),rate=(t,v)=>86400*(Math.sqrt(I0/R.timing(t,v))-1);
