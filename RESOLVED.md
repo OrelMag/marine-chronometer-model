@@ -398,7 +398,7 @@ Contents:
   horn. It is now a cubic tangent to both, within 0.43 mm of the traced points,
   and the arm's underside sweeps down into the body in a cove instead of a
   step. Keep: the cove stays above the balance's sweep (`fine.py`) and the
-  hairspring keeps under the flat part.
+  hairspring keeps under the flat part. `45f9515`
 - **Train bridge opening round the balance too big.** The centre and escape
   pivots fell in the hole. The opening was reduced; it is r 8.0 after the
   escapement change. `84a7645`, `7328e67`
