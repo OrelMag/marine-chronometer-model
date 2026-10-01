@@ -28,3 +28,23 @@ BOM Comparsion - each part in the model against the manual
 Top side view compasion, the plate on the hairspring is wrong? [done]
 
 {{{update Claude.md: Before each run give an ETA for the results}}}
+
+Add option to turn off shadows
+
+In phone, Edges are on by default
+
+Does The adjuster bench tweaks affects the model? can it?  - can they be synced them
+
+Check the whole train - make sure it’s modeled correctly, both and function and geometry (correct mechanical transfer)
+
+Refer to the manual and web search
+
+All added parts are solid?
+
+Performance hit (?) - imporve performance
+
+Rework the Illustrtion
+
+Side and top view comparsion between the model and images. Look for disrepency. 
+
+Camera is locked? can look at the bottom directly 

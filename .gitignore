@@ -9,3 +9,6 @@ placements_*.json
 bundle.npy
 # wrangler's local state
 .wrangler/
+# worktrees of side branches, and folders the tools write (r_ill/, r_esc/ ...)
+.claude/worktrees/
+r_*/
