@@ -202,6 +202,7 @@ Before committing a change to the model:
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
        node escapement.js   # the escapement's lock, let-off, overall, drop and clearances (Node.js only)
        python bom.py        # every part against the manual's parts list: counts, how each is held and runs, the gears, the 14 jewels (exit code 1 on a failure; --md rewrites BOM.md)
+       python video.py      # teeth counted on frames of videos of real Model 21s (References/README.md); pip install opencv-python yt-dlp; videos kept outside the repository
 
    `dyn.py` should list only intended joints: pivots in their jewels, collets
    on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
