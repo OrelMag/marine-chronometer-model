@@ -1,0 +1,5 @@
+{"frame": "f_KLUwI2UUCMQ_40-08.png", "segment": "silver", "rim": 40.2, "edges": [0, 2.14], "box": [500, 0, 3000, 1450],
+ "note": "KLUwI2UUCMQ 40:08: the pillar plate's dial side in its mounting ring, the motion work off. The rim is the ring's bore (r 40.2, its top 2.14 mm above the plate's face), centred on the centre arbor's bushing. Points on the plate's face (the studs' bases, the bushings) and on the lower train bridge's bar (about 1.6 mm up)",
+ "centre": [2120, 1330, 0.1],
+ "points": {"centre": [2120, 1330, 0.1], "indicator stud": [1500, 840, 0], "minute stud": [2430, 1050, 0], "fusee bushing": [2090, 710, 0.1], "bar setting": [2314, 1810, 1.6], "fourth jewel": [2790, 1760, 1.6], "barrel bushing": [1360, 1770, 0.1]},
+ "angle_from": "indicator stud"}
