@@ -1734,18 +1734,18 @@ Winding and maintaining work).
    r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
    recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
    model's web is flat.
-3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %.* A steel collar r ≈ 2.9 round the
+3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %. *Now so* (RESOLVED.md, Winding and maintaining work).* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
 4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open.* Gilt brass, not steel; the
    winding-pawl spring screws go in from the fusee wheel's side (slotted heads
    there). The model has the heads on the pawl side.
 5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
-   Op. 23). *The collar fixed; the large end's rim open. The winding ratchet seen (18:20): about 36 teeth (model 40), likely.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
+   Op. 23). *The collar fixed; the large end's rim open. The winding ratchet seen (18:20): about 36 teeth (model 40), likely; now 36.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
    sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
    arbor); the large end has a raised outer rim round the winding ratchet,
    whose tips read r ≈ 8.5 (model 9.85; rough, oblique).
-6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). *Fixed: r 7.0 with the slot and a 9.6 mm pin. Open: Fig. 69 draws a raised boss round its hole.* *Seen (18:22, 18:25): gilt brass (model steel), r about 7, the raised boss round its hole with the slot across it for the taper pin, as Fig. 69 draws it. Likely.* Notches in its face that
+6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). *Fixed: r 7.0 with the slot and a 9.6 mm pin. Open: Fig. 69 draws a raised boss round its hole.* *Seen (18:22, 18:25): gilt brass (model steel), r about 7, the raised boss round its hole with the slot across it for the taper pin, as Fig. 69 draws it. Likely. Now so.* Notches in its face that
    the taper pin lies in; the model's is a plain washer with the pin under it.
    Figs. 28 and 69 both draw it about 0.37 of the fusee wheel across (r ≈ 7.5;
    model 2.6), not yet seen on video.
@@ -1754,7 +1754,10 @@ Winding and maintaining work).
    (19:12, 18:40, 19:15): each a long thin arc of about 150–170° in the gutter
    round the sustaining ratchet's raised plateau, held at its far end, the two
    nearly round it, as Fig. 28 draws them; each pawl a short lever on a stud.
-   Sure: the form certain.*
+   Sure: the form certain. *Now so* (RESOLVED.md, Winding and maintaining
+   work); the pawls themselves stand where the video has them (pivots about
+   11 mm out, tips about 8.4). Not drawn: the raised plateau the springs lie
+   round.*
 
 Seen on video since (2 October 2026, 17:50–20:27): the end plate, the winding
 pawls and their springs, the stop-bar and its spring (`References/VIDEOS.md`).
