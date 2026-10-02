@@ -142,6 +142,17 @@ Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (ag
 - Next: the fusee parts (the winding pawls and their arc springs, the stop-bar's slot and its C-wire spring, the
   gilt end plate with its boss, the winding ratchet's teeth) and the oil sinks; then the barrel's fit; then item 22.
 
+## Next round (the user, 2 October 2026, after 1.17.00 went live)
+
+All chosen, done on sub-branches of `claude/fidelity-plan`, then merged and released as one batch after asking:
+- quick: the setup click's function check; the sustaining ratchet's face (plateau, holes); the setup arbor's square
+  and the cover's centre hole; the cock's nose trimmed to its cap;
+- large: the fourth arbor against the balance (IDEAS 1.11; fits first, then a decision with the user); the pillars'
+  distances and pillar 1; the escapement's details (escape upper bridge, detent block, lower bridge pins, the dark
+  and tapped holes); the wind indicator against the mounting ring's bore;
+- measurements: the motion work's counts and the escape pinion; the barrel's height and the train bridge's cut;
+  a firmer camera method for the video fits.
+
 ## Progress
 
 | Item | State | Branch / commit |
