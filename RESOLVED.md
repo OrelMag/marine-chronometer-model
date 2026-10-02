@@ -138,6 +138,24 @@ Contents:
   `ESC.adj` (shared/escapement.js), so the plans draw the same foot. `8acac25`
 - **Locking jewel's wedge pin proud of the block** by 0.04 mm at each end;
   flush now, as the re-jewelling (8-9) leaves it. `8acac25`
+- **Lock-adjusting screw short of the stop button** by 0.24 mm, ending inside
+  a solid block (`Review-results.md` 20.5). Fig. 90 splits the block's front
+  along its length by a slot, open at the stop button's end, so the button
+  stands on a strip sprung from the block's root: the lock-adjusting screw,
+  threaded in the outer part, bears on the strip ("working through the
+  locking jewel button", Sec. IV; Op. 85 turns it after loosening the clamp
+  screw), and the clamp screw crosses the slot into the strip. Keep: the slot
+  in `ESC.fixed.blockFront` (shared/escapement.js), the lock screw's point on
+  the strip, the clamp screw into it.
+- **Split-balance variant through the bridges** (`Review-results.md` finding
+  9). Its compensation weights (r 2.3, 4.2 long, out to 18.5 mm) stood 1.1 mm
+  proud of the band each side and reached into the barrel bridge's cut round
+  the balance (17.7) and the escape upper bridge; its arm and hub were solid
+  round the staff. The weights are now within the band's height (r 1.1, out to
+  16.8 mm, inside the timing weights' path), the arm and hub bored for the
+  staff; `fine.py --split` passes. Keep: anything on the balance stays inside
+  17.7 mm and above the escape upper bridge's screw heads, as the uncut rim's
+  parts do.
 
 ## Going train and heights
 
@@ -164,6 +182,15 @@ Contents:
   (r 1.70), since it goes on over them; the hands stay above the sub-dial
   collets (5.05); `fine.py` run with the keys shown (`hkeyOn`, `keyOn`) finds
   nothing between a socket and its square. `4bd8888`
+- **Hamilton dial's hands short of their tracks** (Review-results.md, "Short
+  hands"). Measured on the photographed dial against its own tracks (the
+  track's inner/outer 0.945 there, 0.948 in the model): the minute hand
+  reaches the minute track's outer edge (the model's stopped mid-track,
+  44.4 mm against 45.4), the seconds hand 0.99 of its track's outer circle
+  (0.955), the wind hand 0.95 of its scale's (0.85, short of the inner arc);
+  the hour hand, 0.84 of the minute track, agreed. Keep: the hands' lengths
+  are the photograph's proportions of the tracks they read; the essay draws
+  the same hands (`hands()` in essay.js).
 - **Every tooth count in the going train wrong, and the up–down scale on 240°.**
   The counts were chosen for the ratios (fusee wheel 96, centre 80, third 75,
   fourth 60, pinions 10, 10, 8; wind indicator 98 : 8), and the dial's UP–DOWN

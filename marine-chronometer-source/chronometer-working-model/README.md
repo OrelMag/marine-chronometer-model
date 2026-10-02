@@ -439,17 +439,17 @@ and the thread pitches are the model's. Things to know before changing it:
   | Setting | Model | Manual |
   |---|---|---|
   | Lock: detent leaves the stop button, until the tooth drops off | 6.0° | about 6° (Op. 85) |
-  | Let-off: tooth drops off, until the detent falls back | 10.6° | at least 6° (Op. 86) |
-  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 28.4° | 26–30° (Op. 87) |
+  | Let-off: tooth drops off, until the detent falls back | 10.1° | at least 6° (Op. 86) |
+  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 28.0° | 26–30° (Op. 87) |
   | Drop | 2.1° | about 2° (Op. 97) |
-  | Roller shake | 0.055 mm | about 0.002 in (Op. 84) |
+  | Roller shake | 0.056 mm | about 0.002 in (Op. 84) |
   | Horn clearance | 0.25 mm | about 0.010 in (Op. 88) |
   | Angle between the jewels | 88° | about 90° in Fig. 90 and Op. 7 (adjustable) |
   | Locking-jewel draw | 10° | 8–12° (chronometerbook post 30) |
 
   - Depth of lock is 0.125 mm, and the trip spring's tip lifts 0.20 mm to release.
-  - The discharge jewel meets the trip spring at −27.3° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.8°, centred on the dead point.
-  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip leaves the jewel's end (−10.7° and −39.1°). The push peaks about a degree earlier, where the tip slides off the jewel's side onto its end. Let-off and overall are measured to the fall, as the manual's gauge reads them.
+  - The discharge jewel meets the trip spring at −27.3° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.7°, centred on the dead point.
+  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip leaves the jewel's end (−11.1° and −39.1°). The push peaks about a degree earlier, where the tip slides off the jewel's side onto its end. Let-off and overall are measured to the fall, as the manual's gauge reads them.
   - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release. Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
 - The escapement's parts beyond the plan.
   - The escape teeth: their form follows Fig. 90 and an original wheel photographed in chronometerbook post 30 (a land 0.13 mm wide at the tip, the root circle at 5.5 mm). The undercut of the locking face (the root trails the tip by 0.14 of a pitch, about 16°), the length of the hollow back (0.55 of a pitch) and its curve (meeting the root circle tangentially) are traced from Fig. 90. Fig. 14's cut-away gives the arrangement: the teeth stand the wheel's full thickness on a thin rim and spokes. The plate's thickness (0.5 mm), the rim's width (0.5 mm), the spokes (0.5 mm wide) and the collet (r 1.5 mm) are estimated from the photograph and Fig. 14.
@@ -458,6 +458,7 @@ and the thread pitches are the model's. Things to know before changing it:
   - The trip spring is a flat strip 0.06 mm thick and 0.3 mm deep, its foot 0.2 mm thick against the angle bracket; both estimated. Its thickness sets where the jewel meets and leaves it, so the settings above were chosen with it: the tip radius `rT` 0.286 and the unlocking jewel at `aD` 269.6° (the jewels 88° apart, as Op. 97 adjusts the drop).
   - The locking jewel's wedge pin (42089, Figs. 57–59), 0.2 mm across, beside the jewel on the side away from the wheel, flush with the block at both ends (Sec. VII).
   - The support block's top face is laid out from Fig. 90, scaled by the 11.3 mm from the point of flexure to the locking jewel (to about 0.3 mm): the screw 3.7 mm from the point of flexure toward the foot, a positioning pin 2.0 mm the other way. The second pin is drawn 2.9 mm nearer the screw than Fig. 90 has it, which would put it past the train bridge's cut round the barrel in the model's place for the block. The pins (r 0.4) stand 1.2 mm into the train bridge; their size and depth are estimated.
+  - The block's front is split along its length by a slot open at the stop button's end, as Fig. 90 draws it: the lock-adjusting screw, threaded in the outer part, bears on the strip that carries the button, and its clamp screw crosses the slot into the strip. The slot (0.24 mm), the strip (0.36 mm) and the solid root (0.2 mm) are in Fig. 90's proportions; one drawing, so medium sure.
   - The detent-adjusting screw's head (r 0.9, 0.45 thick) stands 0.3 mm off the block's end and 0.3 mm deep in the slot across the foot, which runs on 0.6 mm past it (Fig. 90's foot runs on about 1.1 mm); sizes estimated. The detent's two steady pins stand 1.2 mm out of the foot, as Fig. 90 draws them.
   - The trip spring's screw: shank r 0.07, head r 0.16 and 0.12 thick, 0.2 mm along the spring's foot, threaded 0.32 mm into the angle bracket's upright leg, which is 0.36 mm thick and 0.4 mm tall; all estimated (on the video the bracket looks taller).
 - The balance rim diameter (29 mm), measured on the top-view photograph.
