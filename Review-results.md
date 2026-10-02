@@ -973,7 +973,13 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    the spring a band on edge round half a turn, the cover's feet outside it;
    RESOLVED.md, Winding and maintaining work*), the dust seal, the detent's
    trip-spring bracket.
-3. *Done, but the setup click (2 October 2026, `tools/bom-fn.js`):* **Function
+3. *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
+   the arbor the right way, but its tip seats only about 0.1 mm inside the
+   teeth's tips (of a 0.8 mm face): the click lies nearly tangent from a pivot
+   9.25 mm out (traced on the top-view photograph), where C Spinner's video
+   (11:58) reads it about 10-10.5 mm out, 5.3 mm long, its tip 32 deg round,
+   which puts the tip at the root. Open: the pivot's place, photograph against
+   video, and with it the click's length and its spring's end.* **Function
    checks** in `bom.py`, worked through the page's own controls on a fresh page:
    the locking arm stops the balance with its finger at a timing weight and it
    doesn't restart by itself, the twist starts it, the train-blocking screw
