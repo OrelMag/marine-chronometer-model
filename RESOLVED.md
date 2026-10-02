@@ -538,7 +538,7 @@ Contents:
   (the video gives about 1.1 m); the chain 4.85 barrel turns, the set-up
   held at 0.37 turn (it was pinned to the spring's most, which the longer
   spring made 6.4 turns). Keep: the barrel's inner parts follow `c.Rb`; the
-  set-up a turn fraction, not the spring's range.
+  set-up a turn fraction, not the spring's range. `2e0db4f`
 
 ## Plates, bridges, screws and arbors
 
