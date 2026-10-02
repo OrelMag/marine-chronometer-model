@@ -302,7 +302,8 @@ or add analytic clearance checks for thin gaps and for the hidden variant.
 which resolves 0.05 mm and tests the chain, the hairspring, the trip spring,
 the barrel wall (as a solid, with its margins) and the mainspring, and with
 `--split` the hidden split-balance variant (it fails there: finding 9 is still
-open). Still untested: the dial face. The About dialog now says what the
+open). Still untested then: the dial face (*now checked*, 2 October 2026: `fine.py`
+measures the least height of any part over it). The About dialog now says what the
 checks cover, names the dial face as untested and the split-balance variant as
 not yet clear, so the finding is resolved. See
 [Fine interference pass](#fine-interference-pass).
@@ -563,7 +564,7 @@ the fusee smaller, the run cut up to 0.24 mm into the barrel. It is now the
 common tangent. The winding-stop pin, which the fusee's turned wrap then
 brushed at full wind, ends 0.2 mm higher, still covering the stop-bar.
 
-The dial face (a flat, open ring) is the one open surface still untested.
+The dial face (a flat, open ring) was the one open surface untested; `fine.py` now checks the heights of the parts over it (2 October 2026).
 
 ## Barrel and fusee against the manual
 
@@ -1019,7 +1020,10 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    arm over the balance whose tips reach the rim: probably the Navy's "balance
    stop" (Sec. I: "Certain instruments have been modified by the Navy to include
    a balance stop"). 2E12055 and the manual's figures have none; the model has
-   the manual's locking arm (Fig. 9) instead, and leaves the stop out.
+   the manual's locking arm (Fig. 9) instead, and leaves the stop out. *Built as a
+   variant (2 October 2026; Variants, Balance stop): shape and place mapped from
+   the top-view photograph; the manual's "balance stop" (Sec. I) turns out to be
+   Fig. 9's arm, so how the Y-arm works is estimated (README, "Estimated").*
 
 ## Open questions, to settle from video (1 October 2026)
 
@@ -1587,7 +1591,9 @@ changes it only round its own arbors (1 below).
     (Op. 79).
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
-    video of a modified movement would show its shape and how it works.
+    video of a modified movement would show its shape and how it works. *Built
+    as an illustrative variant from the top-view photograph (2 October 2026);
+    how it works is still to be seen.*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
