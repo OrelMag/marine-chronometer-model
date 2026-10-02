@@ -122,7 +122,13 @@ large step (was item 3):
 - the fourth arbor 3.9 mm off its setting, and the balance 13.7 mm from it (the video's 10.8-12): IDEAS 1.11;
 - the pillars' radii (their tops read 3-7 mm further out than the similarity puts them) and pillar 1,
   pushed 2.3 mm out of the fourth wheel;
-- the indicator's radius against the mounting ring's bore (item 4).
+- the indicator's radius against the mounting ring's bore (item 4);
+- **new: the barrel's size** (Review-results, Elsewhere 23): about r 18–19 on four readings, the model's 13.5;
+  with it the mainspring (about 1.1 m). High impact, L; waits on a camera fit and the user's decision.
+Readings for Phase E are in (`References/VIDEOS.md`, 2 October 2026): the setup ratchet about 42 teeth (52 in the
+model) and its spring a 180° band; the winding ratchet about 36 (40); the winding pawl springs long arcs round a
+plateau; the stop-bar's slot 3.5–5 mm off the axis with a C-wire spring; the end plate gilt with a boss; conical
+oil sinks on the fusee's and barrel's bushings.
 Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (agreed with the other session).
 
 ## Progress
@@ -140,3 +146,8 @@ Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (ag
 | 5 Keyhole, 7 train-blocking screw's place | taken over by `claude/group-layout` (the measured opening `TB_KEY`; the screw at (3.9, 26.15)) | — |
 | 14 Chain hook | done: labelled as the barrel turns it into view; the Stored energy step names it | `claude/fp-balance` |
 | — Camera targets | fixed: the views' and walkthrough's targets follow `L` (were the pre-turn places) | `claude/fp-balance` |
+| 20 Function checks | done in `bom.py` (`tools/bom-fn.js`): locking arm, twist, train-blocking screw, shield plate, gimbal latch; the setup click's direction still to write | `claude/fp-balance` |
+| 2 `solve.py` | fixed: reads `L` and `TRAIN`, solves E against `L.E`, gives the modules, checks clearances | `claude/fidelity-plan` `66edc05` |
+| 13 Setup ratchet and click | fixed: 42 teeth (video), the spring half a turn round (video, Fig. 108), the cover's feet outside it; the arbor's square taller on the video (rough), not changed | `claude/fp-fusee` `07b8a00` |
+| C2 readings | done: setup work, fusee parts, mainspring, oil sinks, and the barrel's size (new item 23) | `claude/fp-fusee` |
+| 12 Winding pawl springs | next: the video puts the pawls nearer the centre (about 8-9 mm, model 11) with long arc springs anchored far round; a redesign of the pawls, checked by `maintaining.py` | — |
