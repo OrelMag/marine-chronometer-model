@@ -113,6 +113,18 @@ winding ratchet's tips 9.85 × 0.892 = 8.8 against the video's 8.5), 13, 15, 14'
   "Estimated" list kept true; the builds regenerated and committed with the source.
 - Releases are the user's: suggest the kind and the lines.
 
+## Status after release 1.15.00 (main, 2 October 2026)
+
+`claude/group-layout` merged: item 1 is done (the photographed group placed by one similarity fitted to the
+measured balance cap, fusee 20.4 mm and barrel 22.6 mm; pillar 2 under the train bridge's third screw; the
+keyhole the measured opening `TB_KEY`; IDEAS 1.2 and 1.12 closed). Still open from the layout, now the next
+large step (was item 3):
+- the fourth arbor 3.9 mm off its setting, and the balance 13.7 mm from it (the video's 10.8-12): IDEAS 1.11;
+- the pillars' radii (their tops read 3-7 mm further out than the similarity puts them) and pillar 1,
+  pushed 2.3 mm out of the fourth wheel;
+- the indicator's radius against the mounting ring's bore (item 4).
+Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (agreed with the other session).
+
 ## Progress
 
 | Item | State | Branch / commit |

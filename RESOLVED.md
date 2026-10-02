@@ -266,6 +266,27 @@ Contents:
   The detent's support block is 0.66 mm shorter at its foot end, and its
   adjusting screw follows, to clear the thicker top collar. Keep: the pillars'
   measured profile. `a237869`
+- **The photographed group's size and place.** The
+  balance, fusee and barrel were triangulated on two photographs, which fix
+  their layout but not its size: the size came from making the fusee wheel,
+  assumed 40.87 mm across, fit the plate (×0.955), and the place from a 14°
+  turn about the centre. Measured on real movements, the fusee stands 20.4 mm
+  from the centre, not 22.9 (the bare plate at 34:30 and 36:15, the side
+  photograph's wheel read at the plate's own scale, the train bridge's
+  notch), the barrel 22.6, not 18.6 (the plate; the train bridge's cut round
+  it), and the balance on its lower cap, 4.9 mm from where it was (13:49.5,
+  `framecam.py`). The three fit the photographs' own triangle ×1.039 to
+  0.23–0.31 mm. Everything traced on the top-view photograph now goes through
+  that similarity (`PT`: ×1.039, 19.42°, shifted (−3.891, 0.879)); outlines to
+  the rim through `PTr`; what the video measured in the train bridge's own
+  frame through the 14° turn alone (`PR`). The escape arbor is solved again
+  (9.40 from the balance, 10.585 from the fourth), the detent turning with
+  it; the lower bridge laid out again; the train-blocking screw moved to
+  (3.9, 26.15), the locking arm swinging back over its screw (`ARM_U`),
+  pillar 1 pushed 2.3 mm out of the fourth wheel. Keep: a constant traced on
+  the photograph goes through `PT`, one measured on the train bridge through
+  `PR`, one placed from the dial or train through neither; angles read on
+  the photograph take `PHOTO_TURN`, radii `PHOTO_K`. `6d1bd37`
 
 ## Winding and maintaining work
 
@@ -459,6 +480,14 @@ Contents:
   wheel), against the collar's end, with a slot across its outer face in which
   the pin (9.6 long, as Fig. 28 draws it) lies. Keep: the end plate larger than
   the wheel's bore. `bb3086e`
+- **The fusee assembly 12 % too large.** The
+  side photograph's fusee profile and the restoration video's wheel recess,
+  sustaining spring, ratchets and pawls were all read against the fusee
+  wheel's tips taken as 40.87 mm; at the plate's scale the wheel is 36.0–36.9
+  (the model's now 36.1, module 0.392). They are scaled by `FK` (0.882):
+  the cone 7.01–14.82. The chain, barrel and arbor keep theirs. Keep: a size
+  read against the fusee wheel scales with `FK`; `tools/maintaining.py`
+  reads the ratchets from `WRT`/`SRT`. `6d1bd37`
 
 ## Plates, bridges, screws and arbors
 
@@ -829,6 +858,26 @@ Contents:
   across the balance–escape line (68° round), its end screws 8.0 mm either
   side of the jewel; the end screws' heads stay 0.3 mm tall for the balance
   rim. `0dade8c`
+- **The upper train bridge's middle and
+  its end.** The middle was two circles about the model's balance and escape
+  arbors (r 8.0 and 3.0); the real bridge (C Spinner 23:30, BunnSpecial
+  20:20) has one opening of two lobes, over the balance (r 4.6, centred 0.6
+  mm from the staff) and over the fourth's setting on the lower bridge
+  (r 4.3), and the escape passage (r 4.7), through which the lower bridge
+  shows; the light pockets either side are seats for the escape upper
+  bridge's ends, not openings. The bridge's end past the barrel ran on round
+  the rim as a sliver 23° further than the real one's straight cut. Both
+  traced on 23:30 through its anchor (`tools/train_bridge.py`: `TB_KEY`,
+  `TB_END`, through `PR`), checked on the frame rectified to the model's plan.
+  Keep: the bridge's outline, opening and end are the video's, in the bridge's
+  frame. `6d1bd37`
+- **The train bridge's third screw in
+  its pillar.** The manual and the video put all three train-bridge screws in
+  pillars (Op. 14; 36:34); the third was threaded into the bridge alone, as
+  a pillar there would have stood in the fusee wheel. With the fusee where
+  the plate has it, pillar 2 stands under it, and the barrel bridge's screw
+  where pillar 2 stood goes into the train bridge (`bom.py`'s 42055.tb
+  deviation removed). `6d1bd37`
 
 ## Setup, case and gimbals
 
@@ -1256,6 +1305,15 @@ An arbor needs pivots and shoulders; a stone its seat.
   same-version redeploy was refused. The check now removes that script before
   comparing. Keep: compare the live page with `site/index.html` only after
   taking out what the host adds. `d49eb8c`
+- **`solve.py` solved a layout the model no longer had** (Review-results.md,
+  finding 6). Its inputs were Fig. 2's positions before the photo fits (the
+  fusee at (12.0, -17.8), an 18 mm balance), and its modules and third arbor
+  matched neither `MOD` nor `L`. It now reads `L` and `TRAIN` from
+  `movement.js`, takes the measured arbors as they stand, solves the escape
+  arbor (9.40 mm from the balance, the fourth's mesh distance from the
+  fourth) against `L.E`, gives the modules as `MOD` does and checks the
+  through arbors clear the wheels' tips in plan; exit code 1 otherwise. Keep:
+  no positions or counts written into the tool.
 
 ## Essay
 

@@ -352,7 +352,7 @@ const ESSAY=(()=>{
   function fillLive(){const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
-      I0:model?Math.round(model.I0/10)*10:930,rmin:model?f1(model.fs.rf(0)):'7.9',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'16.8'};
+      I0:model?Math.round(model.I0/10)*10:930,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
 

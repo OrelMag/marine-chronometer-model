@@ -46,7 +46,7 @@ function stripeTex(){
   const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)t.encoding=THREE.sRGBEncoding;return t;};
   return{map:mk(cm,true),normal:mk(cn,false)};
 }
-const STRIPE_ANGLE=(-82.3-14)*Math.PI/180;   /* ridge direction, in plate (shape) coordinates, from the photograph, turned with the photographed group (movement.js, PHOTO_TURN 14 deg) */
+const STRIPE_ANGLE=(-82.3-19.42)*Math.PI/180;   /* ridge direction, in plate (shape) coordinates, from the photograph, turned with the photographed group (movement.js, PHOTO_TURN 19.42 deg) */
 function woodTex(){
   const c=document.createElement('canvas');c.width=512;c.height=1024;const x=c.getContext('2d');
   x.fillStyle='#5a2413';x.fillRect(0,0,512,1024);
