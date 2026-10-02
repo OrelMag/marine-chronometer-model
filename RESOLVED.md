@@ -752,7 +752,7 @@ Contents:
   its edge (a hole there was lost by the outline's tracer, which keeps the
   outer boundary only: `fine.py` found the slab through the arbor); the
   3 o'clock lug keeps 1 mm off the escape wheel. Keep: a clearance round an
-  arbor inside a traced outline must reach its edge. HASH
+  arbor inside a traced outline must reach its edge. `5e84cfd`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
