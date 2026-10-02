@@ -407,12 +407,26 @@ function buildMovement(M){
      against its stop pin (42300), clear of everything the balance carries. Fig. 9 shows the arm curved, its screw outside the rim and its end at a timing weight; the arm's
      sizes, the screw's place and the finger's height (1.65 mm, to 0.76 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
   { const ap=part('lockArm',-62),dA=sub(S.armF,S.arm),AL=Math.hypot(...dA),dL=unit(dA),AE=AL+0.45;R.armL=Math.atan2(-dL[1],dL[0]);
-    R.armU=-ARM_U;R.arm=new THREE.Group();R.arm.position.set(S.arm[0],TB_T,S.arm[1]);ap.add(R.arm);R.arm.rotation.y=R.armL+R.armU;
+    const f9=new THREE.Group();ap.add(f9);R.armF9=f9;   /* the manual's arm, its screw, washer and stop pin: hidden together when the Navy's Y-arm is fitted instead (below) */
+    R.armU=-ARM_U;R.arm=new THREE.Group();R.arm.position.set(S.arm[0],TB_T,S.arm[1]);f9.add(R.arm);R.arm.rotation.y=R.armL+R.armU;
     const bw=-0.6*Math.sign((L.B[0]-S.arm[0])*-dL[1]+(L.B[1]-S.arm[1])*dL[0]),cl=t=>[t*AE,bw*Math.sin(Math.PI*t)],N=14,side=k=>[...Array(N+1).keys()].map(i=>{const t=i/N,[x,z]=cl(t);return[x,z+k*0.5];});   /* a strip 1.0 wide, bowed 0.6 away from the staff */
     hn(R.arm,'42299');mesh(R.arm,polyGeo(subtractCircle([...side(1),...side(-1).reverse()],[0,0],1.1,true),0.45,[hC(0,0,ARM_S)]),M.blued,0,-0.45,0);
     cylBetween(R.arm,0.4,-0.45,-2.85,M.steel,AL,0,16);   /* the finger, 2.4 tall: 0.56 up the timing weight */
-    hn(mesh(ap,ringGeo(1.1,hC(0,0,ARM_S)[2],0.15),M.steel,S.arm[0],TB_T-0.525,S.arm[1]),'42251.arm');hn(screw(ap,...S.arm,TB_T-0.6,ARM_S,0.35,0.15+0.45+2.5),'37204');
-    hn(cylBetween(ap,0.3,TB_T+0.8,TB_T-0.8,M.steel,...S.armPin),'42300'); }   /* 0.8 into the bridge */
+    hn(mesh(f9,ringGeo(1.1,hC(0,0,ARM_S)[2],0.15),M.steel,S.arm[0],TB_T-0.525,S.arm[1]),'42251.arm');hn(screw(f9,...S.arm,TB_T-0.6,ARM_S,0.35,0.15+0.45+2.5),'37204');
+    hn(cylBetween(f9,0.3,TB_T+0.8,TB_T-0.8,M.steel,...S.armPin),'42300');
+    /* the Navy's other balance stop (illustrative; Variants): a post on the barrel bridge, capped with packing rings as the fusee's dust seal is, and a Y-shaped arm from
+       under its cap over the balance, a short pin under each end over the rim, the ends nearly opposite each other. As on serial 2E11795 (References/photo-top-view.jpg;
+       others on omegaforums and Delaney No. 8854; Review-results.md, BOM comparison 8): its shape and place mapped from the photograph through the barrel bridge's five
+       screws (tools/topview.py's fit), corrected 1 mm for the photograph's tilt at the arm's height and 2.9 mm at the cap's, to about 1.5 mm. The manual doesn't describe
+       it (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is a guess: the cap pressed from outside the case, the arm comes down until its pins bear on
+       the rim, as the wedges did (Sec. III). Its heights are chosen to clear the balance, the hairspring and the cock. R.navyArm moves: position.y 0 free, 0.48 locked */
+    const nv=new THREE.Group();nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.69,-19.16],ya=-31.9,PB=(p,r)=>{const d=[p[0]-L.B[0],p[1]-L.B[1]],l=Math.hypot(...d);return l>=r?p:[L.B[0]+d[0]/l*r,L.B[1]+d[1]/l*r];};
+    cylBetween(nv,1.6,BB_T,-32.56,M.plateSolid,...NP,32);
+    for(let k=0;k<3;k++){const a=-32.56-1.733*k,b=a-1.733;mesh(nv,new THREE.LatheGeometry([V2(1.6,a),V2(6.2,a),V2(6.45,a-0.22),V2(6.45,b+0.22),V2(6.2,b),V2(1.6,b),V2(1.6,a)].reverse(),56),M.brass2,NP[0],0,NP[1]);}
+    const na=new THREE.Group();nv.add(na);R.navyArm=na;
+    const fork=[-1.8,0.02],LE=PB([14.67,5.64],0),RT=(d=>[L.B[0]+d[0]*13.95,L.B[1]+d[1]*13.95])(unit(sub([-13.11,13.65],L.B))),r0=[-5.56,-12.0],e0=add(NP,unit(sub(r0,NP)),1.9),arms=[[e0,r0,fork],[fork,PB([4.59,2.19],7.0),PB([11.45,4.69],7.0),LE],[fork,PB([-4.92,3.21],7.0),PB([-9.49,8.98],7.0),RT]];
+    arms.forEach((pts,i)=>mesh(na,stripGeo(pts,i?1.5:2.2,0.45),M.steel,0,ya,0));mesh(na,ringGeo(2.4,1.62,0.45),M.steel,NP[0],ya+0.225,NP[1]);   /* the arm's eye round the post */
+    for(const q of[LE,RT])cylBetween(na,0.3,ya+0.45,BAL_Y+1.2-2*2.15-0.5,M.steel,...q,16);   /* the pins, 0.5 over the rim's top when free */ }   /* 0.8 into the bridge */
   /* escape upper bridge with jewel and endstone cap */
   const eb=part('escBridge',-66);
   /* the escape upper bridge (42064; Figs. 84, 110; KLUwI2UUCMQ 10:00): a straight bar, round-ended, across the escape lobe with a screw near each end, symmetric about the
@@ -891,6 +905,7 @@ function buildMovement(M){
     const a=DEV.g*e,c=Math.cos(a),s=Math.sin(a);for(const g of EFP){g.rotation.y=a;g.position.x=L.E[0]+dE[0]*e-(L.E[0]*c+L.E[1]*s);g.position.z=L.E[1]+dE[1]*e-(-L.E[0]*s+L.E[1]*c);}
     for(const q of DPH)q.m.rotation.y=q.r0+q.c*e;};
   mv.userData.balance=kind=>{R.balU.visible=kind!=='split';R.balS.visible=kind==='split';};
+  mv.userData.stop=kind=>{R.armF9.visible=kind!=='navy';R.navy.visible=kind==='navy';};   /* the balance stop fitted: the manual's locking arm (Fig. 9) or the Navy's Y-arm */
   /* train-blocking screw: with its dog point down between the fourth wheel's spokes, how many beats (E) the train can still turn before the next spoke meets it (blockRoom),
      and whether a spoke is under the dog point now, so it can't be screwed down (blockClear). The fourth wheel turns with its spokes' angles falling as E rises */
   { const u=R.tbs.userData,q=TAU/FW_SP,sp=E=>[...Array(FW_SP).keys()].map(j=>-(E*ESC.P)/ESC_PER.fw+FW.wheel.rotation.y+j*q-u.sig);
@@ -929,7 +944,7 @@ function buildMovement(M){
       if(Math.abs(pw.rotation.y-u.sprTh)>0.002){u.spr.geometry.dispose();u.spr.geometry=wpsGeo(pw,pw.rotation.y);u.sprTh=pw.rotation.y;}}   /* the spring follows its pawl */
     { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP)+srA;R.spS.rotation.y=R.spawl.rotation.y-R.spawl.userData.base; }
     R.staff.rotation.y=-s.th;
-    { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0)); }   /* screwed down turns it clockwise seen from its head */
+    { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyArm.position.y=0.48*(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;
     const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
     const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-UD_UP*D2R-udA;

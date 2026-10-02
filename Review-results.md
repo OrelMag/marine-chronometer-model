@@ -1020,7 +1020,10 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    arm over the balance whose tips reach the rim: probably the Navy's "balance
    stop" (Sec. I: "Certain instruments have been modified by the Navy to include
    a balance stop"). 2E12055 and the manual's figures have none; the model has
-   the manual's locking arm (Fig. 9) instead, and leaves the stop out.
+   the manual's locking arm (Fig. 9) instead, and leaves the stop out. *Built as a
+   variant (2 October 2026; Variants, Balance stop): shape and place mapped from
+   the top-view photograph; the manual's "balance stop" (Sec. I) turns out to be
+   Fig. 9's arm, so how the Y-arm works is estimated (README, "Estimated").*
 
 ## Open questions, to settle from video (1 October 2026)
 
@@ -1588,7 +1591,9 @@ changes it only round its own arbors (1 below).
     (Op. 79).
 13. **The balance stop** (finding 8 under BOM comparison): the Navy's
     modification on some movements; the model has the manual's locking arm. A
-    video of a modified movement would show its shape and how it works.
+    video of a modified movement would show its shape and how it works. *Built
+    as an illustrative variant from the top-view photograph (2 October 2026);
+    how it works is still to be seen.*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
