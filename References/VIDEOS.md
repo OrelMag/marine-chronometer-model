@@ -358,6 +358,14 @@ plate's, whose radii differ by 3.3 mm and heights by 20. It needs four or
 more named points spread over the frame, at known heights, before `unproj`
 can be trusted; then a second view to check.
 
+**The focal length, shot by shot** (2 October 2026). The 4K video's lens or zoom changes between shots: about 7900 px at 36:01, 3900 at 40:08,
+about 8000 at 34:30, 2800-4000 at 23:30. A fit at an assumed f (the tools' 6000) is only as good as that guess for its shot. For each shot:
+take a frame with a whole rim of known radius and round features at two or more known heights (36:01: the rim, settings at 0.3 and the slab's
+at 8.9 mm), or a whole rim with its centre picked to 2 px (40:08); run `tools/fcal.py` on its spec, and take f only where the cost has a clear
+minimum; otherwise give the result over the range the profile allows. Check any fit with a ratio that needs no camera: a part's own proportions
+seen whole (the barrel's height to its radius side-on, 33:12). Readings made at 6000 shift under 0.5 mm, except the pillars' tops (1-3 mm)
+and the barrel (refitted).
+
 ## Gaps the videos could close
 
 Each gap's full note and other routes are in IDEAS.md; this is where in the
