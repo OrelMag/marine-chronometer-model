@@ -19,7 +19,7 @@
    - Third arbor: measured on a restoration video (References/VIDEOS.md), 16.0 mm from the centre, where the counted wheels' size ratios put it;
      escape wheel position from the escapement (9.40 mm from the balance). The modules (MOD) follow from the arbors' spacing: 0.314 / 0.245 / 0.249.
    ===================================================================== */
-const L={C:[0,0],T:[-6.18,14.75],F:[0,23.9],E:[8.095,17.08],B:[1.609,10.277],Fu:[14.306,-14.519],Ba:[-22.144,-5.347],Ud:[0,-23.6],Mw:[9.6,0]};
+const L={C:[0,0],T:[-6.18,14.75],F:[0,23.9],E:[8.095,17.08],B:[1.609,10.277],Fu:[14.306,-14.519],Ba:[-22.144,-5.347],Ud:[0,-23.6],Mw:[10.5,0]};
 /* The photographed group: the balance, fusee and barrel (B, Fu, Ba, triangulated on two photographs: (8.0, 6.77), (11.59, -19.8), (-18.56, 0.19)) and everything traced
    or fitted on the top-view photograph with them (the pillars, the bridges' cuts and holes, the cock, their screws and pins, the engraving, the damascening). PT takes a
    point of the photographs' frame into the movement's: a similarity, x1.039, turned 19.42 deg and shifted (-3.891, 0.879), fitted (IDEAS.md 1.12) so the three arbors land
@@ -54,7 +54,7 @@ const COCK_FOOT=PT([28.3,6.4]),BAL_R=14.5;
    the notch a circle (TB_NOTCH: x, z, r), the horn between it and the barrel's cut ending in a straight cut across, the mouth a sharp corner and a straight edge
    turning into the rim through a round corner (r 6). TB_EDGE runs from outside the rim along the mouth, round the notch, across the horn's end and into the barrel's cut, as crescent() takes it.
    Both are measured against the bridge's rim, barrel cut and centre bushing, so they turn with the train bridge's frame (PR) */
-const TB_NOTCH=[...PR([11.46,-17.47]),16.57],TB_CUT=PR([-22.56,0.23]);   /* TB_CUT: the centre of its cut round the barrel (r 19.2) */
+const TB_NOTCH=[...PR([11.46,-17.47]),16.57],TB_CUT=PR([-22.56*24.8/22.561,0.23*24.8/22.561]),TB_CR=21.0;   /* TB_CUT, TB_CR: the centre and radius of its cut round the barrel: fitted with both free on C Spinner's video (23:30, the bridge face up, the camera on its rim; 13:49.5 agrees), r 21.0-22.0 (taken at its low end, 21.0, where the train bridge keeps 0.7 mm of metal round pillar 0's screw), centred 24.6-25.1 mm out, about 2 mm further out than the barrel's arbor (it was r 19.2, centred on the barrel) */
 /* the bridge's end past the barrel: a straight cut from the barrel's cut to the rim (KLUwI2UUCMQ 23:30, the frame rectified through its anchor: the corner 36.9 mm from the
    centre, the rim reached at 40.4, within about 0.2 mm), where the cut's circle alone ran on round the rim as a sliver 23 deg further (tools/train_bridge.py) */
 const TB_END=[[-31.33,19.66],[-32.61,23.59]].map(PR);
@@ -81,7 +81,9 @@ const LB_LO2=[[5.18, 4.15], [4.46, 4.19], [4.1, 4.22], [3.38, 4.3], [3.02, 4.35]
    and the manual's seven half turns a day but run 60.6 h. Every count shown in the page (labels, part cards, walkthrough tables) comes from here */
 const TRAIN={fu:90,cp:14,cw:90,tp:12,tw:80,fp:10,fw:75,ep:10,ew:16};
 const FW_SP=5;   /* the fourth wheel's spokes (Figs. 29, 110: the three train wheels have five each); the train-blocking screw's dog point stands between them */
-const MW={cp:12,mw:36,mp:10,hw:40};   /* motion work: cannon pinion 12 : minute wheel 36, minute pinion 10 : hour wheel 40 */
+const MW={cp:14,mw:56,mp:18,hw:54};   /* motion work: cannon pinion 14 : minute wheel 56, minute pinion 18 : hour wheel 54, counted on C Spinner's video (the wheels lying whole on
+   the mat, 23:45-23:46; the minute pinion's 18 leaf ends on the wheel's back, 9:06; the cannon pinion's 14 forced by the ratio of 12: References/VIDEOS.md) */
+const MWM=(()=>{const d=Math.hypot(...L.Mw);return{a:2*d/(MW.cp+MW.mw),b:2*d/(MW.mp+MW.hw)};})();   /* their modules, from the minute wheel's place (10.5 mm out, the dial-side photograph) */
 /* escape-wheel turns per turn of the fourth, third, centre and fusee wheels: 7.5, 60, 450, 2893 */
 const ESC_PER=(()=>{const fw=TRAIN.fw/TRAIN.ep,tw=fw*TRAIN.tw/TRAIN.fp,cw=tw*TRAIN.cw/TRAIN.tp;return{fw,tw,cw,gw:cw*TRAIN.fu/TRAIN.cp};})();
 const FUSEE_PER_HOUR=TRAIN.cp/TRAIN.fu,FUSEE_TURNS=8.75; /* "17-1/2 half turns will be required for a full winding" (manual Sec. III) */
@@ -390,7 +392,7 @@ function buildMovement(M){
                the barrel and a notch round the fusee, open to the rim, with a horn between them that carries the centre wheel's upper bushing; the barrel
                pillar stands in the open notch. Its keyhole opening frees the balance's staff and rollers and the escape arbor ---------- */
   const tb=part('trainBridge',-62);
-  const TBpoly=clipPoly(crescent(BR_R,TB_CUT,19.2,TB_EDGE),p=>{const[a,b]=TB_END,c=(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);return Math.max(-c,p[0]+30);});   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110); measured on the video, 22.56 mm out, it is where the barrel stands */
+  const TBpoly=clipPoly(crescent(BR_R,TB_CUT,TB_CR,TB_EDGE),p=>{const[a,b]=TB_END,c=(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);return Math.max(-c,p[0]+30);});   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110); measured on the video, 22.56 mm out, it is where the barrel stands */
   R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2,1],[...L.T,1,1],{pts:TB_KEY},[...SPv,0.52,1],
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),[...S.tb[2],TB_CB,1],hT(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.eb.map(q=>hT(...q,0.9)),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),hC(...S.blk,0.9),...S.dpin.map(q=>[...q,0.42,1]),hT(...S.cock,2.8,0.8),...S.ckp.map(q=>[...q,0.42,1]),
     hT(...S.arm,ARM_S),[...S.tBlock,0.72,1],[...S.armPin,0.3,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');
@@ -488,15 +490,15 @@ function buildMovement(M){
   const mw=part('motion',16);
   /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75+DD), and ends in the
      bright square the winding key sets the hands by (Fig. 8, Sec. III), 2.4 across as the fusee's, so one key fits both, 1.6 proud of the minute hand's collet. The hour wheel goes on over it and turns free on the pipe (Op. 59) */
-  R.cannon=hn(arbor(mw,M,...L.C,{pin:{n:MW.cp,m:0.4,y:1.2,th:2,bore:0.5}}),'42077');mesh(R.cannon,ring(1.7,0.5,5.45+DD),M.steel,0,3.025+DD/2,0);mesh(R.cannon,new THREE.BoxGeometry(2.4,2.9,2.4),M.steel,0,7.05+DD,0);
+  R.cannon=hn(arbor(mw,M,...L.C,{pin:{n:MW.cp,m:MWM.a,y:1.2,th:2,bore:0.5}}),'42077');mesh(R.cannon,ring(1.7,0.5,5.45+DD),M.steel,0,3.025+DD/2,0);mesh(R.cannon,new THREE.BoxGeometry(2.4,2.9,2.4),M.steel,0,7.05+DD,0);
   /* the winding key on the square, turned by its shank to set the hands (Fig. 8): shown only while setting, when the bezel is off */
   R.hkey=new THREE.Group();R.hkey.visible=false;R.cannon.add(R.hkey);mesh(R.hkey,sqRingGeo(2.6,2.46,5),M.brass,0,9.45+DD,0);cylBetween(R.hkey,1.7,11.95+DD,40.5+DD,M.brass);
   { const kb=mesh(R.hkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,42.5+DD,0);kb.rotation.x=Math.PI/2;for(const z of[13,-13])mesh(R.hkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,42.5+DD,z);mesh(R.hkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,42.5+DD,0); }
   /* the minute wheel and the wind indicator wheel turn on posts (42085, 42084) fixed to the pillar plate by screws (35779) from its train side (Fig. 110) */
   const post=(x,z,r,top,k)=>{const hr=hT(0,0,0.8)[2];hn(mesh(pp,new THREE.LatheGeometry([V2(0,2.0),V2(hr,2.0),V2(hr,0),V2(r,0),V2(r,top),V2(0,top)],24),M.steel,x,0,z),k[0]);hn(screw(pp,x,z,y0,0.8,0.4,PP_T+1.8),k[1]);};
   post(...L.Mw,0.7,3.2,['42085','35779.mw']);post(...L.Ud,0.5,4.1,['42084','35779.ud']);
-  R.minW=arbor(mw,M,...L.Mw,{wheel:{n:MW.mw,m:0.4,y:1.2,th:0.8,spokes:0,collet:0,bore:0.72,mate:MW.cp},pin:{n:MW.mp,m:0.384,y:2.4,th:1.6,bore:0.72}});mesh(R.minW,ring(1.6,0.72,2.0),M.brass2,0,1.2,0);hn(R.minW,'42078');
-  R.hourW=hn(arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:0.384,y:2.65,th:0.8,spokes:0,collet:0,bore:1.75,hub:2.6,mate:MW.mp}}),'42080');mesh(R.hourW,ring(2.3,1.75,2.9+DD),M.brass2,0,4.1+DD/2,0);   /* its pipe carries the hour hand; 0.05 clear of the cannon pinion's leaves, which turn twelve times as fast */
+  R.minW=arbor(mw,M,...L.Mw,{wheel:{n:MW.mw,m:MWM.a,y:1.2,th:0.8,spokes:0,collet:0,bore:0.72,mate:MW.cp},pin:{n:MW.mp,m:MWM.b,y:2.4,th:1.6,bore:0.72}});mesh(R.minW,ring(1.6,0.72,2.0),M.brass2,0,1.2,0);hn(R.minW,'42078');
+  R.hourW=hn(arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:MWM.b,y:2.65,th:0.8,spokes:0,collet:0,bore:1.75,hub:2.6,mate:MW.mp}}),'42080');mesh(R.hourW,ring(2.3,1.75,2.9+DD),M.brass2,0,4.1+DD/2,0);   /* its pipe carries the hour hand; 0.05 clear of the cannon pinion's leaves, which turn twelve times as fast */
   R.udW=hn(arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.94,th:0.5,spokes:5,collet:0,bore:0.55,mate:UD.pin}}),'42081');mesh(R.udW,ring(1.6,0.55,2.0),M.brass2,0,1.94,0);mesh(R.udW,ring(0.9,0.55,2.7+DD),M.steel,0,2.85+DD/2,0);cylBetween(R.udW,0.55,4.2+DD,4.6+DD,M.steel);   /* its pipe carries the hand */
   R.fp=hn(arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:2.1,th:2.2}}),'42022',{sub:1});   /* the wind indicator pinion, part of the fusee arbor */
   /* ---------- fusee wheel (TRAIN.fu : centre pinion TRAIN.cp, module MOD.fusee, 0.392) with its maintaining work, their sizes read off the video scaled by FK ---------- */
@@ -538,6 +540,7 @@ function buildMovement(M){
   const wpsGeo=(pw,th)=>{const u=pw.userData,bk=pawlBack(u.pts,0.96,u.q,th,[0,0]),E=[bk.p[0]+bk.n[0]*0.095,bk.p[1]+bk.n[1]*0.095];
     return stripGeo([...u.arc,E],0.3,0.3);};   /* from its foot (screwed down, drawn once) round to its end on the arm */
   R.wp=[];for(let k=0;k<2;k++){const a=k*Math.PI+0.4,P=[12.3*FK*Math.cos(a),12.3*FK*Math.sin(a)],T=[8.95*FK*Math.cos(a+0.3),8.95*FK*Math.sin(a+0.3)],ln=Math.hypot(T[0]-P[0],T[1]-P[1])+0.2,pw=mesh(R.sr,pawlGeo(ln,0.9,0.5),M.steel,P[0],-10.05,P[1]);
+    hn(cylBetween(R.sr,0.22,-9.45,-10.3,M.steel,...P,12),'42009',{sub:1});   /* the stud it turns on, pressed into the wheel, riveted flush with the pawl's top, which the fusee's underside turns over (C Spinner 19:12: each pawl on a stud; two of the holes under the wheel, 19:05) */
     pw.userData.q=P;pw.userData.th0=Math.atan2(T[1]-P[1],-(T[0]-P[0]));pw.userData.pts=pawlPts(ln,0.9);R.wp.push(pw);
     const pol=(r,t)=>[r*Math.cos(a+t),r*Math.sin(a+t)],r0=pol(WPR,WPF[1]),r1=pol(WPR,WPF[0]);pw.userData.arc=[];for(let t=WPF[0]-0.03;t>0.45;t-=0.06)pw.userData.arc.push(pol(WPR,t));
     pw.userData.spr=hn(mesh(R.sr,wpsGeo(pw,pw.userData.th0),M.blued,0,-10.1,0),'42007');pw.userData.sprTh=pw.userData.th0;
@@ -771,7 +774,7 @@ function buildMovement(M){
     for(let i=1;i<24;i++){const u=i/24,v=1-u,w=[v*v*v,3*v*v*u,3*v*u*u,u*u*u];q.push([0,1].map(e=>w[0]*P0[e]+w[1]*P1[e]+w[2]*P2[e]+w[3]*P3[e]));}return[...o.slice(0,k),...q];};
   /* the arm's underside sweeps down into the body (41:58, 23:45): a cove from 9 mm round the staff, a quarter circle down to 7.6 mm under the top at the step (1 mm over
      the balance's top, 8.6 down; the hairspring keeps under the flat part, within 7.1 mm), the step's wall then going on down to the train bridge */
-  R.cock=mesh(ck,stepGeo(ckEdge(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.65),add(L.B,EPu,-3.0),6.4)])),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.8,0.8).slice(0,3),2.95,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),hC(...SPS,0.8).slice(0,3),[...add(L.B,SPD,5.6),0.3]],{r0:9,tS:7.6,n:12}),M.plate,0,CK_T,0);   /* last: the hole for the stud's steady pin */
+  R.cock=mesh(ck,stepGeo(ckEdge(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.3),add(L.B,EPu,-3.0),5.2)])),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.8,0.8).slice(0,3),2.95,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),hC(...SPS,0.8).slice(0,3),[...add(L.B,SPD,5.6),0.3]],{r0:9,tS:7.6,n:12}),M.plate,0,CK_T,0);   /* last: the hole for the stud's steady pin */
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.steel,...[L.B[0],0,L.B[1]]),'42162.bu');
   hn(mesh(ck,stoneGeo(0.95,0.22,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone */
@@ -792,7 +795,10 @@ function buildMovement(M){
   /* the fusee's profile from the side photograph (References/photo-side-view.jpg), read against the fusee wheel's tips taken as 40.87 mm (16.98 px/mm): the groove's floor on
      its eight upper turns is 8.33, 8.54, 8.95, 9.54, 10.19, 11.07, 12.16, 13.81, which r0 / sqrt(1 - a m) fits to 0.085 mm rms with r0 7.95 and 16.8 at the large end; at the
      plate's scale (FK, above) 7.01 and 14.82 */
-  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:17.6,bT:TB_T+1.0,bB:-9.6,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
+  /* BB_LO: the barrel's lower face, 2.4 mm over the pillar plate (over the centre wheel, 0.55 clear), so the barrel is 16.5 mm tall cap to cap: C Spinner's video, side-on
+     (33:09.5-33:35: height to radius 0.95 +- 0.06) and the 23:30 fit at the focal length that agrees with it (15.6-16.3); it was 13.2 */
+  const BB_LO=y0-2.4;
+  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:17.6,bT:TB_T+1.0,bB:BB_LO,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
     stopDir:Math.atan2(fo[1],fo[0])+Math.atan2(-dz,dx)});   /* the winding stop outward from the plate's centre, past the fusee's top (as it was, 7.2 mm out, before the top was widened) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* winding stop (42099) on the underside of the barrel bridge, where the stop-bar's far end meets it at full wind: a stud screwed into the bridge (left-hand thread, Op. 42),
@@ -814,9 +820,9 @@ function buildMovement(M){
   /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The hook stands in the eye near the spring's
      inner end (fs.MS.hookA in the fusee/barrel group's frame, which the arbor never turns from), no higher than the strip is thick, so the next coil passes over it;
      the core stays 0.1 clear of the turning caps */
-  { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(TB_T+1.9-10.4)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
-    cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,-10.3,M.steel,L.Ba[0],L.Ba[1],32); }
-  hn(mesh(rt,new THREE.BoxGeometry(2.2,3.0,2.2),M.steel,L.Ba[0],-31.46,L.Ba[1]),'42170',{sub:1});   /* the arbor's square */
+  { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(TB_T+1.9+BB_LO-0.8)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
+    cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],32); }
+  hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
   { const Pv=P2(8.9,250.6),Tp=P2(7.5,220),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
     /* turn the ratchet (it is fixed in running) so a steep face bears on the click's tip, then rest the click on it */
     const pr=ratchetProf(SRZ,SRM,true),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1);
@@ -845,7 +851,7 @@ function buildMovement(M){
     const TL=P2(12.8,69.4),BL=P2(13.1,145.6),BR=P2(12.97,249.2),TR=P2(12.61,325.9),pts=[],polar=(r0,r1,a0,a1,n)=>{const o=[];for(let k=0;k<=n;k++){const t=k/n;o.push(P2(lerp(r0,r1,t),lerp(a0,a1,t)));}return o;};
     pts.push(TL,...arc3(TL,P2(13.1,106),BL,20),BL,...arc3(BL,P2(5.9,192),BR,40),BR,...polar(12.97,12.61,249.2,325.9,30).slice(1,-1),TR,...arc3(TR,P2(6.4,17),TL,40));
     const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
-    for(const[x,z,r]of[[...L.Ba,2.6],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
+    for(const[x,z,r]of[[...L.Ba,3.0],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
     const cvg=extrude(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
     R.cover=hn(mesh(rt,cvg,M.plateSolid,0,-29.66,0),'42029');
     /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */

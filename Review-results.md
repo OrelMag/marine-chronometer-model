@@ -973,7 +973,13 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    the spring a band on edge round half a turn, the cover's feet outside it;
    RESOLVED.md, Winding and maintaining work*), the dust seal, the detent's
    trip-spring bracket.
-3. *Done, but the setup click (2 October 2026, `tools/bom-fn.js`):* **Function
+3. *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
+   the arbor the right way, but its tip seats only about 0.1 mm inside the
+   teeth's tips (of a 0.8 mm face): the click lies nearly tangent from a pivot
+   9.25 mm out (traced on the top-view photograph), where C Spinner's video
+   (11:58) reads it about 10-10.5 mm out, 5.3 mm long, its tip 32 deg round,
+   which puts the tip at the root. Open: the pivot's place, photograph against
+   video, and with it the click's length and its spring's end.* **Function
    checks** in `bom.py`, worked through the page's own controls on a fresh page:
    the locking arm stops the balance with its finger at a timing weight and it
    doesn't restart by itself, the twist starts it, the train-blocking screw
@@ -1713,7 +1719,10 @@ changes it only round its own arbors (1 below).
     certain above 14.5); 13:06 agrees roughly. The barrel now r 17.6 under a
     0.7 mm lip, the mainspring 1,064 mm (half the room), the chain 4.85
     barrel turns; it fits the train bridge's cut and clears everything round
-    it by 0.86 mm or more. RESOLVED.md, Winding and maintaining work.*
+    it by 0.86 mm or more. RESOLVED.md, Winding and maintaining work. Its
+    height too: 16.5 mm (side-on, 33:09.5–33:35), not 13.2; and the train
+    bridge's cut round it r 21.0 (fitted 21.0–22.0 with its centre free, 24.6–25.1
+    mm out), not 19.2.*
 
 ## The fusee assembly against Fig. 28 and the video
 
@@ -1749,7 +1758,7 @@ Winding and maintaining work).
 3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %. *Now so* (RESOLVED.md, Winding and maintaining work).* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
-4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open.* Gilt brass, not steel; the
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open. The pivots now drawn as studs riveted flush (2 October 2026). Not drawn: the raised plateau the pawl springs lie round (the pawls lie over it; its height isn't seen).* Gilt brass, not steel; the
    winding-pawl spring screws go in from the fusee wheel's side (slotted heads
    there). The model has the heads on the pawl side.
 5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
