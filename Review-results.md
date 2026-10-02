@@ -1719,7 +1719,10 @@ changes it only round its own arbors (1 below).
     certain above 14.5); 13:06 agrees roughly. The barrel now r 17.6 under a
     0.7 mm lip, the mainspring 1,064 mm (half the room), the chain 4.85
     barrel turns; it fits the train bridge's cut and clears everything round
-    it by 0.86 mm or more. RESOLVED.md, Winding and maintaining work.*
+    it by 0.86 mm or more. RESOLVED.md, Winding and maintaining work. Its
+    height too: 16.5 mm (side-on, 33:09.5–33:35), not 13.2; and the train
+    bridge's cut round it r 21.0 (fitted 21.0–22.0 with its centre free, 24.6–25.1
+    mm out), not 19.2.*
 
 ## The fusee assembly against Fig. 28 and the video
 

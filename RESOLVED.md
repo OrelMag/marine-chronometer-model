@@ -536,6 +536,15 @@ Contents:
   video. Keep: the springs' feet and screws at `WPS` (the wheel's holes are
   cut there). `69992a0`
 
+- **Barrel 13.2 mm tall and the train bridge's cut round it r 19.2**
+  (Review-results.md, Elsewhere 23). Side-on on C Spinner's video
+  (33:09.5-33:35) the barrel's height to radius is 0.95, camera-free: about
+  16.5 mm tall. The cut, fitted with its centre and radius free (23:30,
+  13:49.5), is r 21.0-22.0, centred about 2 mm further out than the barrel.
+  Now the barrel 16.5 mm tall from 2.4 mm over the plate (0.28 over the
+  centre wheel), the cut r 21.0 centred 24.8 mm out (its low end, where the
+  bridge keeps 0.7 mm round pillar 0's screw). Keep: `BB_LO`, `TB_CUT`,
+  `TB_CR`; fine.py's barrel-arbor entry sized for the taller barrel.
 - **Barrel a third too small** (Review-results.md, Elsewhere 23). It was r 13.5;
   on C Spinner's video its top lip fits r 18.3 (23:30; 17.4-19.6 over the
   focal lengths the frame allows, certain above 14.5), as the train bridge's
