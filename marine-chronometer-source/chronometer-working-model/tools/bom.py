@@ -17,14 +17,17 @@ userData.hn, hn() in core.js):
     0.5 mm or more, and turning in the tooth ratio the other way; endshake: 0.001-0.003 in (Ops. 15, 69, 74);
   - jewels: the manual's fourteen (Sec. II), each seated in its setting, roller or detent;
   - the registry: every Hamilton number in a part card (app.js PARTS[k].sp) is in the list, and every number a card's part holds is on its card.
-Checks named in a line's 'check' (escapement.js, invariants.py, maintaining.py, fine.py) are that tool's; they must exist.
+Checks named in a line's 'check' (escapement.js, invariants.py, maintaining.py, fine.py) are that tool's; they must exist. 'bom.py fn: NAME' is one of
+bom-fn.js's function checks, run last through the page's own controls at 1× (about 30 s; --no-fn skips them): the locking arm stops the balance at a timing
+weight and it doesn't restart by itself, the twist starts it, the train-blocking screw holds the train and lets it go, the shield plate covers the key hole
+and opens onto it, the gimbal latch holds the case to the box. A named one not written yet is reported (~~), not failed.
 A line's 'dev' lists known deviations from the manual, each with its reason: printed with ~~, not failed."""
 import asyncio,json,pathlib,re,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 BOM=json.loads((HERE.parent/'bom.json').read_text(encoding='utf-8'))
-JS=(HERE/'bom-check.js').read_text(encoding='utf-8')
+JS=(HERE/'bom-check.js').read_text(encoding='utf-8');FNJS=(HERE/'bom-fn.js').read_text(encoding='utf-8')
 IN={'tap':(0.4,-0.03,0.35),'clear':(0.1,0.0,9),'run':(0.1,0.003,0.06),'free':(0.2,0.003,0.25),'press':(0.04,-0.03,0.05),'embed':(0.3,-9,-0.01)}   # kind: least length engaged, gap from, gap to (mm)
 # press and run in a bevelled hole: at its faces, where it has its size (it is wider inside); embed: a thread or pin across a part drawn without a hole for it
 # (the part is an extrusion or a turned solid that can't be holed across: the balance rim, the detent's block and foot, the fusee arbor), so inside its metal
@@ -43,6 +46,11 @@ async def run(evl):
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.wait_for_timeout(300)
         if evl:await pg.evaluate(evl)
         res=await pg.evaluate(JS,BOM)
+        if '--no-fn' in sys.argv:res['fn']=[]
+        else:   # on a fresh page: bom-check.js turns the train and balance through update(), and a held train isn't redrawn from the page's own state
+            await pg.reload();await pg.wait_for_function("window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
+            if evl:await pg.evaluate(evl)
+            res['fn']=await pg.evaluate(FNJS)
         sp=await pg.evaluate("Object.fromEntries(Object.entries(window.__parts).map(([k,v])=>[k,v.sp||'']))")
         await b.close()
     return res,sp,errs
@@ -84,6 +92,10 @@ def judge(res,sp):
     for l in BOM['lines']:
         c=l.get('check')
         if c:t=c.split(':')[0].strip();ok(t=='bom.py fn' or (HERE/t.split()[0]).exists(),f"{l['id']}: check tool {t} not found")
+        if c and c.startswith('bom.py fn:') and res['fn']:   # a function check bom-fn.js runs; one not written yet is reported, not failed
+            n=c.split(':',1)[1].strip()
+            if not any(f[0]==n for f in res['fn']):D.append(f"{l['id']}: function check '{n}' not written yet")
+    for n,good,msg in res.get('fn',[]):ok(good,f"fn {n}: {msg}")
     # registry
     nos={l['no'] for l in BOM['lines'] if l.get('no')}
     num=re.compile(r'(?<![\d.])(\d{3,5}A?)(?![\d.])')
@@ -103,6 +115,7 @@ def main():
     res,sp,errs=asyncio.run(run(evl))
     (HERE/'r_bom.json').write_text(json.dumps(res,indent=1),encoding='utf-8')
     F=judge(res,sp)
+    for n,good,msg in res.get('fn',[]):print(('ok  ' if good else '!!  ')+f'fn {n}: {msg}')
     for d in D:print('~~ known deviation:',d)
     for f in F:print('!!',f)
     for e in errs:print('page error:',e)

@@ -48,6 +48,7 @@ searching a video again.
 | **10:28–10:38** | **Side-on under the train bridge: the detent, the balance lower bridge's slab, the fourth arbor from it down past its wheel** | Lower bridge's heights |
 | 10:41–11:03 | The keyhole with the escape wheel out: the lower bridge's pocket walls, the balance's lower jewel at the bottom; the detent taken off (11:06) | Lower bridge from above |
 | 12:40–12:46 | The barrel bridge on, the keyhole: the balance's lower jewel and the escape wheel's teeth through its two lobes | |
+| **11:46–12:22** | **The setup work in place: the cover on, its screws out (11:46); the cover off (11:58, 12:19): the setup ratchet, its click and the click's spring wrapping round the ratchet** | Setup ratchet's teeth, click and spring (2 October 2026) |
 | 12:48–13:03 | The upper train bridge lifted and turned over: its underside, engraved HAMILTON WATCH CO, MODEL 21 | Bridge outline, its screw holes (1.2) |
 | 13:06–13:33 | Barrel bridge off: the fusee with the chain on it, the barrel; the fusee lifted out with its chain | Chain on the fusee, fusee wheel in place |
 | **13:27–13:33** | **The fusee out, its small end face-on (13:30): the top plate, its two screws near the rim, a steel collar round the arbor** | Fusee's top |
@@ -56,6 +57,7 @@ searching a video again.
 | **13:48–13:50** | **The train bridge turned over in the hand, the balance lower bridge on it, nearly face-on (13:49–13:49.5): its underside, both screws, cap, fourth's setting, pin** | Lower bridge's outline |
 | **13:51–13:54** | **The train in place (centre, third, fourth wheels), nearly straight down; centre pinion end-on** | Arbor layout (1.11), pinion counts (1.8) |
 | 13:57 | The centre wheel lifted out | |
+| **13:59.4–13:59.6** | **The centre wheel held in tweezers over the plate, its pinion end-on from above** | Centre pinion's leaves (14, likely) |
 | 14:00–14:08 | The third wheel lifted out; the keyhole opening and the lower train bridge's bar under it | Third arbor's setting |
 | 14:12–14:34 | Jewel settings close: the lower train bridge's and the balance lower bridge's (pink jewels); 14:30–14:34 the lower bridge's cap taken off, the slab's edge and the counterbore | Settings, oil sinks (1.10) |
 | **14:36–14:45** | **The bare pillar plate, train side, nearly straight down: centre bushing, fusee and barrel bushings, the bar's settings, the fourth's red jewel, pillars** | Plan positions (1.11, 1.2) |
@@ -107,6 +109,12 @@ searching a video again.
 | **21:50–23:20** | **The pillar plate bare, train side up, with its four pillars** | Pillars' places (1.2) |
 | 23:30–24:10 | The plate's dial side | |
 
+Further moments (2 October 2026): **15:54** the mainspring let down in the barrel (its coils' spacing); **17:50–20:27** the fusee taken
+apart: the end plate and taper pin (18:22, 18:25), the winding ratchet (18:20), the sustaining ratchet with the winding pawls and their springs
+(18:40, 19:12, 19:15; the other face 19:05), the stop-bar and its spring under the top plate (20:05–20:27); **32:18, 32:30** the mainspring free
+on the table; **35:23.66** the centre pinion's leaves from above; **37:59–39:38** bushings oiled, close (the dial side's at 37:59, 38:02);
+**38:23–38:41** the setup ratchet going back on.
+
 ## Measurements
 
 What was taken from the videos and is now in the model, or recorded as
@@ -121,7 +129,7 @@ frame`, in `$MC_VIDEO/frames`).
 | Third pinion | **12** | 35:22 | Leaves 30° apart, by eye | Enlarged crop round the arbor |
 | Fourth wheel teeth | **75** | 35:33, 36:15 | 74.1–76.1 by fit; 75 ÷ escape pinion 10 = 7.5 | `count f_KLUwI2UUCMQ_35-33.png 1448 820 520 416 F --s 0.75 1.15 --band 0.946 0.969` |
 | Wind indicator wheel | **120** | 23:30 | Certain: all 120 gaps, every interval clean | `count f_KLUwI2UUCMQ_23-30.png 1860 1553 240 220 UDW --band 0.93 0.975 --mind 10 --blue` |
-| Centre pinion | 14 (inferred) | 13:51, 35:24–35:30, 36:15 | Not counted: leaves' angles read 22–25° (14–16); see IDEAS.md 1.8 | Leaf angles round the arbor; polar FFT (inconclusive) |
+| Centre pinion | **14** (likely) | 13:59.46, 13:59.55, 35:23.66 | End-on (13:59.4–13:59.6, the centre wheel held in tweezers over the plate): 12 consecutive gaps, the arbor hiding about 80°; fitted as equally spaced points on a projected circle, free N 13.82 on both frames, 10.5–11.2 px rms at 14 against 23.8–24.3 at 13 (12, 15, 16: 25–58); the 14 fit puts the next, hidden gap on a dark spot at the arbor's edge, the 13 fit on a leaf. The leaves' top faces as a star at reassembly (35:23.66): 11 ends, free N 14.20, 13.3 px at 14 against 21.0 at 13. Not certain: no frame shows every leaf | Gaps picked by hand, centred on the local dark spot, then the circle fit (crops and scripts in `$MC_VIDEO/pinion/`, outside the repository) |
 | Wind indicator pinion | 12 (inferred) | 29:04–29:12 | Not counted: blurred end face, 10–12 | Polar FFT round the end face (said 11; unreliable) |
 | Minute wheel | about 55 (not used) | 23:30 | Half the rim out of focus | `count` at (3289, 886), `--blue` |
 | Up–down scale sweep | **315.7° in 56 h** | `References/photo-dial-hamilton-maritime-commission.jpg` (not a video) | Ticks 8 h apart at 67.9°, 111°, 156.7°, 201.6°, 247.5°, 293.2° from 12: 45.1° each (a line through them: 5.65° an hour, 316°) | `video.py ticks 427 288 8:486,264 16:487,311 24:452,346 32:404,346 40:369,312 48:371,264` |
@@ -157,7 +165,16 @@ frame`, in `$MC_VIDEO/frames`).
 | Fusee's top | A steel collar r ≈ 2.9 round the arbor, standing on the top plate; the plate's two screws opposite each other at r ≈ 7.0 (model: no collar, the plate's hole r 1.02, screws at r 3.2) | 13:30, 17:23 | ±0.5 mm (ratios to the top plate, r 9.15, face-on) | By eye on the frame |
 | Fusee's large end and arbor | A wide raised outer rim (Op. 23's "elevation at outer rim"), then the steel winding ratchet in a recess with two slotted screws; the ratchet's tips about 0.47 of the large end's radius, r ≈ 8.5 (model 9.85). Past it the arbor has a steel collar r ≈ 2.7, on which the sustaining ratchet and the fusee wheel ride | 28:08, 28:17 | Rough: oblique, ±1 mm | Ratios along both axes of the tilted outline |
 | Sustaining ratchet | Gilt brass (model steel); slotted screw heads on its face toward the fusee wheel, so the winding-pawl spring screws go in from that side, as Fig. 28 draws one (model: heads on the pawl side) | 28:32–28:44, 28:53–29:14 | Certain for the colour and the slots | By eye |
-| Not seen yet | The fusee end plate and taper pin, the winding pawls and their springs (on the ratchet's face toward the fusee, hidden in the stack), the stop-bar and its spring (under the top plate) | | | |
+| Setup ratchet's teeth | **About 42 ± 2** (model 52): pitch 8.3–8.8°; spectral peaks 41–43 and the pitch fitted round the turn 40.3–41.3 on four frames; the top-view photograph's window in the cover about 8.3° | 11:58, 12:19, 38:28, 38:32.5 | Certain that it is well under 52; the count to ± 2 | Unrolled rim, spectral and edge counts (`$MC_VIDEO/c2/scripts`) |
+| Setup click and its spring | The click a short lever, its pivot about 10 mm from the arbor, its tip about 5.3 mm from the pivot and 32° round (model 4.5 mm, 30°): it holds the arbor against turning counterclockwise seen from above, as the model's. The spring a flat blued band about 0.9–1.0 mm wide, wrapping about 180° round the ratchet at r 10–10.7 from the click's back past 6 o'clock to just past 9, where it is held (model about 120° at r 9.8, thinner); Fig. 108 draws an arc of about 180° | 11:58 | Click: likely; spring's form: certain, its sizes ±0.5 mm | By eye against the ratchet's radius |
+| Setup cover | As the model's waisted plate: arc ends on feet, a counterbored screw hole near each end, the pivot screw's end near one end; its centre hole about r 3 (model 2.6). The arbor's square stands about 8–10 mm above the ratchet (model about 5) | 11:46 | Form certain; sizes rough | By eye |
+| Fusee end plate | Gilt brass (model steel), about 14 mm across (r 7, as the model's), a raised boss round its hole with a slot across it for the taper pin (Fig. 69); the pin crosses the arbor over a dark steel ring, both ends standing out | 18:22, 18:25, 17:55 | Likely | By eye against the fusee wheel (40.9 mm on that frame's scale) |
+| Fusee's winding ratchet | Dark steel, **about 36 teeth** (spectral 36, 35 and 37 close; model 40); one of its two slotted screws seen | 18:20 | Likely, not certain | Spectral count round the rim |
+| Winding pawls and their springs | On the sustaining ratchet's face toward the fusee, gilt, with a raised central plateau: each pawl a short dark lever on a stud; each spring a long thin arc of about 150–170° in the gutter round the plateau, held at its far end, the two together nearly round it, as Fig. 28 draws them (model: short bent strips). Four small holes near the springs' far ends (Op. 42's four screws); the other face (19:05) about ten holes and screw ends | 19:12 (best), 18:40, 19:15, 19:05 | Form certain; what the other holes are, open | By eye |
+| Stop-bar and its spring | Under the top plate: a round recess about the arbor (r about 4–5) with a hub, the plate's two screw holes; a straight slot across the top beside the hub, open at both ends, its centreline about 3.5–5 mm off the axis (Fig. 28's 3.6; model 2.0); the flat steel bar with a hole near one end; its spring a round wire bent into an open C of about 270° with a hooked end, in a groove round the hub (Fig. 28) | 20:05–20:27 | Form certain; sizes ±30 % | By eye against the top plate |
+| The barrel's size (**new, to settle**) | **About r 18–19, not the model's 13.5**: the barrel's cap 608 px across against the train bridge's rim's 1221 px (r 40.5) beside it, about 40 mm (37–39 for its height toward the camera); in place (13:12) about as wide as the fusee wheel; the train bridge's measured cut round it is r 19.2; the side photograph's coils 1.4 times further apart than a 13.5 mm barrel gives (Review-results, "Noted, not changed"); the mainspring's coil spacing (15:54) is the parts list's 0.419 mm only in a barrel about 36–37 mm inside | 23:30, 13:12, 15:54 | Likely; needs a camera fit before the model changes | Ellipse against the anchored rim (`anchors/KLUwI2UUCMQ_23-30.json`) |
+| Mainspring | Let down (15:54): an outer pack of 12 ± 1 coils against the wall, one loose inner turn of about r 8, the end on the arbor; coils 1/88 of the barrel's inside diameter apart. Free (32:30): about 7 turns. **Length about 1.1 m (0.9–1.25)** if the barrel is r 18 (model 600 mm in r 13.5); its height not measured | 15:54, 32:30 | Likely, resting on the barrel's size | Coil profiles across the barrel; turns' radii summed |
+| Oil sinks | The fusee's and barrel's lower bushings (dial side) each with a polished conical sink round the bore, the cone's outside about 0.6–0.7 of the bushing face's width; a dial-side bushing oiled at its sink (39:33); the train side's bushings show bevel rings (14:45, less clear). The manual's oiling (Ops. 43, 46–49; Figs. 77–80) puts argon oil on the fusee, barrel and centre bushings, the third's upper and the sustaining pawl's pivots, but never mentions sinks | 37:59, 38:02, 39:33, 14:45 | Likely | By eye |
 
 ## Methods
 
@@ -341,7 +358,7 @@ videos to look.
 
 | Gap (IDEAS.md) | Where to look | What to do |
 |---|---|---|
-| Centre pinion: 14 or 13 (1.8) | `KLUwI2UUCMQ` 13:51–13:57 at 4K (end-on from above, then lifted); 23:45 if it lies flat there; `wcYqdgpyggQ` and `Jd2c3x8VKsE` | Count the leaves end-on. 13 means the fusee's figures change (`FUSEE_PER_HOUR`, `RUN_H` 60.6 h, the indicator pinion 13); 14 confirms the model |
+| Centre pinion: 14, likely (1.8) | Counted end-on at 13:59.5 and from above at 35:23.66 (2 October 2026): 14 fits, 13 doesn't. To make it certain: the wheel lying flat pinion up, or end-on with the arbor straight at the camera | 13 would change the fusee's figures (`FUSEE_PER_HOUR`, `RUN_H` 60.6 h, the indicator pinion 13); 14 is the model's |
 | Wind indicator pinion: 12 (1.8) | 29:04–29:12 at 4K (end-on, blurred); 23:30 if the fusee arbor lies there | Count the leaves; it must make cp × p ≈ 169 with the dial |
 | Escape pinion: 10 (1.8) | `wcYqdgpyggQ` 17:20–17:28 (escape wheel in the palm) | Count; 10 confirms the fourth wheel's 75 |
 | Motion work counts (1.8) | `KLUwI2UUCMQ` 23:30 (minute and hour wheels flat, half blurred); 40:15–40:30; `wcYqdgpyggQ` 5:10 | Count the minute wheel, its pinion, the hour wheel and the cannon pinion; the ratio must stay 12 |

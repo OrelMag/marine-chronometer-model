@@ -2,7 +2,7 @@
 
     python fine.py            # 18 escapement phases, then 15 train positions and wind states (full wind and winding included)
     python fine.py --dense    # also 101 phases across a full balance swing
-    python fine.py --split    # with the split-balance variant shown (open finding 9 in Review-results.md: expect failures)
+    python fine.py --split    # with the split-balance variant shown (finding 9 in Review-results.md, fixed)
     python fine.py --eval "__mv.userData.R.timing(3,3)"   # run some JS after the page loads (a variant, the weights, a planted fault)
     python fine.py --hold     # with the balance locking arm locked (the balance held at rest, a timing weight against the arm's finger) and the train-blocking screw down (where a spoke leaves room; else just above the wheel)
 
