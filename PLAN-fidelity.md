@@ -122,7 +122,13 @@ large step (was item 3):
 - the fourth arbor 3.9 mm off its setting, and the balance 13.7 mm from it (the video's 10.8-12): IDEAS 1.11;
 - the pillars' radii (their tops read 3-7 mm further out than the similarity puts them) and pillar 1,
   pushed 2.3 mm out of the fourth wheel;
-- the indicator's radius against the mounting ring's bore (item 4).
+- the indicator's radius against the mounting ring's bore (item 4);
+- **new: the barrel's size** (Review-results, Elsewhere 23): about r 18–19 on four readings, the model's 13.5;
+  with it the mainspring (about 1.1 m). High impact, L; waits on a camera fit and the user's decision.
+Readings for Phase E are in (`References/VIDEOS.md`, 2 October 2026): the setup ratchet about 42 teeth (52 in the
+model) and its spring a 180° band; the winding ratchet about 36 (40); the winding pawl springs long arcs round a
+plateau; the stop-bar's slot 3.5–5 mm off the axis with a C-wire spring; the end plate gilt with a boss; conical
+oil sinks on the fusee's and barrel's bushings.
 Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (agreed with the other session).
 
 ## Progress

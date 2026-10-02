@@ -965,7 +965,10 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    cited by URL, not committed). Candidates: the shield plate (Fig. 107 draws
    a disc and an open-ring spring; *now drawn so*, 2 October 2026, RESOLVED.md,
    Setup, case and gimbals), the setup
-   ratchet and click (asked in Orel_comments.md), the dust seal, the detent's
+   ratchet and click (asked in Orel_comments.md; *read on video, 2 October
+   2026, 11:46–12:22: about 42 teeth, not 52; the click as the model's, holding
+   the same way; its spring a flat band wrapping about 180° round the ratchet,
+   as Fig. 108 draws it, where the model's is about 120°*), the dust seal, the detent's
    trip-spring bracket.
 3. *Done, but the setup click (2 October 2026, `tools/bom-fn.js`):* **Function
    checks** in `bom.py`, worked through the page's own controls on a fresh page:
@@ -1682,6 +1685,22 @@ changes it only round its own arbors (1 below).
     fusee wheel's size (27:26, laid flat). It also bears on 21: the pillar
     under the train bridge's third screw.
 
+23. **The barrel's size** (new, 2 October 2026; `References/VIDEOS.md`,
+    Measurements). The model's barrel is r 13.5; four readings put it about
+    r 18–19: laid flat at 23:30 its cap is about 37–40 mm across against the
+    train bridge's rim (r 40.5) on the same frame; in place (13:12) it looks as
+    wide as the fusee wheel; the train bridge's measured cut round it is
+    r 19.2; and the side photograph's coils stand 1.4 times further apart than
+    a 13.5 mm barrel gives (above, "Noted, not changed"). The mainspring's
+    coils at 15:54 are spaced as the parts list's 0.419 mm thickness only in a
+    barrel about 36–37 mm inside, where its length comes to about 1.1 m (model
+    600 mm). Sure: likely. Changing it changes the barrel's turns for the
+    chain's length (7.07 now, about 5 in an r 18.5 barrel), the mainspring,
+    the maintaining work placed about the barrel, the barrel bridge's cut and
+    the clearances round the barrel, so it waits on a camera fit of 23:30 or
+    13:12 (the barrel's rim and the train bridge's at their heights) and on
+    the user's decision.
+
 ## The fusee assembly against Fig. 28 and the video
 
 1 October 2026. The seventeen parts of Fig. 28 (the manual's exploded fusee)
@@ -1713,24 +1732,27 @@ Winding and maintaining work).
    r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
    recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
    model's web is flat.
-3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* A steel collar r ≈ 2.9 round the
+3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %.* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
-4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* Gilt brass, not steel; the
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open.* Gilt brass, not steel; the
    winding-pawl spring screws go in from the fusee wheel's side (slotted heads
    there). The model has the heads on the pawl side.
 5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
-   Op. 23). *The collar fixed; the large end's rim and the ratchet's size open.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
+   Op. 23). *The collar fixed; the large end's rim open. The winding ratchet seen (18:20): about 36 teeth (model 40), likely.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
    sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
    arbor); the large end has a raised outer rim round the winding ratchet,
    whose tips read r ≈ 8.5 (model 9.85; rough, oblique).
-6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). *Fixed: r 7.0 with the slot and a 9.6 mm pin. Open: Fig. 69 draws a raised boss round its hole; not seen on video.* Notches in its face that
+6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). *Fixed: r 7.0 with the slot and a 9.6 mm pin. Open: Fig. 69 draws a raised boss round its hole.* *Seen (18:22, 18:25): gilt brass (model steel), r about 7, the raised boss round its hole with the slot across it for the taper pin, as Fig. 69 draws it. Likely.* Notches in its face that
    the taper pin lies in; the model's is a plain washer with the pin under it.
    Figs. 28 and 69 both draw it about 0.37 of the fusee wheel across (r ≈ 7.5;
    model 2.6), not yet seen on video.
 7. **Winding pawl springs** (Figs. 28, 69). Drawn as long arcs round a raised
-   ring about the ratchet's centre; the model's are short bent strips. Not yet
-   seen on video (hidden in the stack).
+   ring about the ratchet's centre; the model's are short bent strips. *Seen
+   (19:12, 18:40, 19:15): each a long thin arc of about 150–170° in the gutter
+   round the sustaining ratchet's raised plateau, held at its far end, the two
+   nearly round it, as Fig. 28 draws them; each pawl a short lever on a stud.
+   Sure: the form certain.*
 
-Not seen on video yet: the end plate, the winding pawls and their springs, the
-stop-bar and its spring.
+Seen on video since (2 October 2026, 17:50–20:27): the end plate, the winding
+pawls and their springs, the stop-bar and its spring (`References/VIDEOS.md`).
