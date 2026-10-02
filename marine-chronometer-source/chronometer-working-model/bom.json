@@ -3160,19 +3160,7 @@
      "tap"
     ]
    ],
-   "figs": "67, 110",
-   "dev": [
-    {
-     "rel": [
-      "in",
-      "42059"
-     ],
-     "inst": [
-      2
-     ],
-     "why": "The manual has all three upper train bridge screws in pillars (reassembly Op. 14; disassembly Ops. 47, 48). The model's third screw is at (32.25, -10.81), at the end of the tongue beside the notch's mouth, its head sunk in the counterbore C Spinner's restoration video shows there (23:30), below a clearance hole in the barrel bridge (the top-view photograph). The video (36:34) shows it going down into a pillar, as the manual has it; in the model a pillar there would stand 0.6 mm in the fusee wheel, whose place and size the layout fixes, so it is drawn threaded into the bridge alone until the fusee's place is settled (Review-results.md 21; IDEAS.md 1.2)."
-    }
-   ]
+   "figs": "67, 110"
   },
   {
    "id": "42166",
