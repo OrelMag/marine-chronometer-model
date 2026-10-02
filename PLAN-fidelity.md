@@ -131,6 +131,17 @@ plateau; the stop-bar's slot 3.5–5 mm off the axis with a C-wire spring; the e
 oil sinks on the fusee's and barrel's bushings.
 Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (agreed with the other session).
 
+## Decisions (the user, 2 October 2026)
+
+- The barrel's size (item 23): fit first, then change. A camera fit of C Spinner 23:30 and 13:12 (the barrel's
+  rim and the train bridge's at their heights); if it confirms r 18-19, enlarge the barrel and follow through:
+  the chain, the mainspring (about 1.1 m), the maintaining work and the clearances.
+- `claude/fidelity-plan` merged into main with a minor release (1.16.00); deploying stays with the user.
+- Item 22: all four built, none recorded as won't do: the collet as Fig. 5 draws it, the Navy's balance stop as
+  an optional variant, the barrel pillar's profile measured, the dial face in `fine.py`.
+- Next: the fusee parts (the winding pawls and their arc springs, the stop-bar's slot and its C-wire spring, the
+  gilt end plate with its boss, the winding ratchet's teeth) and the oil sinks; then the barrel's fit; then item 22.
+
 ## Progress
 
 | Item | State | Branch / commit |
