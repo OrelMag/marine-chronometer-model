@@ -821,7 +821,7 @@ function buildMovement(M){
      the core stays 0.1 clear of the turning caps */
   { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(TB_T+1.9+BB_LO-0.8)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
     cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],32); }
-  hn(mesh(rt,new THREE.BoxGeometry(2.2,3.0,2.2),M.steel,L.Ba[0],-31.46,L.Ba[1]),'42170',{sub:1});   /* the arbor's square */
+  hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
   { const Pv=P2(8.9,250.6),Tp=P2(7.5,220),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
     /* turn the ratchet (it is fixed in running) so a steep face bears on the click's tip, then rest the click on it */
     const pr=ratchetProf(SRZ,SRM,true),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1);
@@ -850,7 +850,7 @@ function buildMovement(M){
     const TL=P2(12.8,69.4),BL=P2(13.1,145.6),BR=P2(12.97,249.2),TR=P2(12.61,325.9),pts=[],polar=(r0,r1,a0,a1,n)=>{const o=[];for(let k=0;k<=n;k++){const t=k/n;o.push(P2(lerp(r0,r1,t),lerp(a0,a1,t)));}return o;};
     pts.push(TL,...arc3(TL,P2(13.1,106),BL,20),BL,...arc3(BL,P2(5.9,192),BR,40),BR,...polar(12.97,12.61,249.2,325.9,30).slice(1,-1),TR,...arc3(TR,P2(6.4,17),TL,40));
     const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
-    for(const[x,z,r]of[[...L.Ba,2.6],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
+    for(const[x,z,r]of[[...L.Ba,3.0],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
     const cvg=extrude(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);
     R.cover=hn(mesh(rt,cvg,M.plateSolid,0,-29.66,0),'42029');
     /* two screws near the ends, on feet down to the bridge; the pin near the lower-right corner is the setup pawl pivot */
