@@ -1724,8 +1724,11 @@ changes it only round its own arbors (1 below).
     pillars' feet r 34.1-34.7, the indicator's stud 22.9, the ring's bore 38.2 with a relief
     for the indicator wheel. But the dial side and the bare plate agree only with a 4-5 %
     scale factor between the plate's 87.57 and the bore's 40.2, and the photographed dial's
-    seconds argue for the larger scale. Open: the scale first (the user's decision), then
-    the fourth, the pillars, the stud and the bore together.
+    seconds argue for the larger scale. Measured (`References/VIDEOS.md`, "The scale"): the
+    error is most likely in the bore (0.81-0.83 of the ring's outside diameter on the
+    video, about 38.4-39.8 mm), the plate's 87.57 stands, and the fourth's 21.4-21.75 is
+    read against the plate in the same frame. Open: the fourth, the escape arbor, the
+    pillars, the stud and the bore, moved together.
 
 23. **The barrel's size** (new, 2 October 2026; `References/VIDEOS.md`,
     Measurements). The model's barrel is r 13.5; four readings put it about
