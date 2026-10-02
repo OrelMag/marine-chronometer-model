@@ -14,7 +14,7 @@ SPEC: {"frame": "f_...png", "rim": radius mm, "thick": the part's thickness (mm,
 rim contour inside it), "rings": [[u, v, a, b, angle deg, h], ...] (ellipses traced on the frame: centre, semi-axes, the a axis's angle, height mm),
 "points": {"NAME": [u, v, h]} (h: mm above the face, toward the camera), "anchors": {"NAME": [x, z]} (model plan positions of named points),
 "mirror": false (the face seen is the plan mirrored), "segment": "blue" or "silver", "edges": [h, h] (the rim's two edges' heights; default
-[0, -thick]), "centre": [u, v, h] (a point the rim is centred on), "angle_from": NAME (print angles about the centre from that point), "outline": {"NAME": [[u, v], ...], ...} with "outline_h": {"NAME": h}}.
+[0, -thick]), "centre": [u, v, h] (a point the rim is centred on), "angle_from": NAME (print angles about the centre from that point), "outline": {"NAME": [[u, v], ...], ...} with "outline_h": {"NAME": h}, "rim_pts": [[u, v], ...] (the rim traced beforehand, instead of segmenting it)}.
 Examples: rimfit_36-01.json, the upper train bridge upturned with the balance lower bridge on it; rimfit_40-08.json, the pillar plate's dial side in its
 mounting ring (the ring's bore, r 40.2, about the centre arbor), the angles of the fusee, barrel and indicator about the centre (References/VIDEOS.md, Methods). About 2 s."""
 import json,os,sys,numpy as np,cv2
@@ -26,11 +26,13 @@ S=json.load(open(a[0]));fr=S['frame'] if os.path.isabs(S['frame']) else os.path.
 FS=[float(x) for x in a[a.index('--f')+1].split(',')] if '--f' in a else [4000,5000,6000,8000]
 RR,TH=S['rim'],S.get('thick',3.1);EH=S.get('edges',[0,-TH])   # the rim's two edges' heights above the face (a bore's: the face and the ring's top)
 # the rim: the part's outer contour against the mat, the points on a fitted ellipse
-if S.get('segment','blue')=='silver':   # a silver face inside brass (a plate in its mounting ring): low saturation, bright
+if 'rim_pts' in S:c=np.array(S['rim_pts'],float)   # the rim traced beforehand (where the mat or the ring can't be segmented cleanly: a tool or pillars across it)
+elif S.get('segment','blue')=='silver':   # a silver face inside brass (a plate in its mounting ring): low saturation, bright
     hsv=cv2.cvtColor(im,cv2.COLOR_BGR2HSV);m=((hsv[:,:,1]<60)&(hsv[:,:,2]>110)).astype(np.uint8)*255;m=cv2.morphologyEx(cv2.morphologyEx(m,cv2.MORPH_OPEN,np.ones((15,15),np.uint8)),cv2.MORPH_CLOSE,np.ones((41,41),np.uint8))
 else:b,g,r=[im[:,:,i].astype(int) for i in range(3)];m=(~((b-r>60)&(b>120))).astype(np.uint8)*255;m=cv2.morphologyEx(m,cv2.MORPH_OPEN,np.ones((9,9),np.uint8))
-n,lab,st,_=cv2.connectedComponentsWithStats(m);m=((lab==1+np.argmax(st[1:,4]))*255).astype(np.uint8)
-c=max(cv2.findContours(m,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)[0],key=len)[:,0,:].astype(float);c=c[(c[:,1]<H-5)&(c[:,0]>5)&(c[:,0]<W-5)]
+if 'rim_pts' not in S:
+    n,lab,st,_=cv2.connectedComponentsWithStats(m);m=((lab==1+np.argmax(st[1:,4]))*255).astype(np.uint8)
+    c=max(cv2.findContours(m,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)[0],key=len)[:,0,:].astype(float);c=c[(c[:,1]<H-5)&(c[:,0]>5)&(c[:,0]<W-5)]
 if 'box' in S:x0,y0,x1,y1=S['box'];c=c[(c[:,0]>x0)&(c[:,0]<x1)&(c[:,1]>y0)&(c[:,1]<y1)]
 def off(e,P):
     (cx,cy),(A,B),ang=e;t=np.radians(ang);R=np.array([[np.cos(t),np.sin(t)],[-np.sin(t),np.cos(t)]]);q=(P-[cx,cy])@R.T;return np.abs(np.hypot(q[:,0]/(A/2),q[:,1]/(B/2))-1)*min(A,B)/2

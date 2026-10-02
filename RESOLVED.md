@@ -391,6 +391,47 @@ Contents:
   HUD says so. `SMAX` is the fusee wheel's turn in 10 minutes (9.3°), from the
   train, not a literal 10° figured for the old 60 h fusee. Keep: no wind
   outlasts the sustaining spring. `5fd993d`
+- **Sustaining spring and the fusee wheel's recess not as on a real Model 21.**
+  The spring was a 0.7 mm band round 250° at r 13.2–13.9, its free end pushed
+  open by a pin on the sustaining ratchet, in a recess walled at r 15.2. The
+  restoration video (27:26) shows a flat blued band 2.1 mm wide round about
+  335°, against a wall at r 18.0, its fixed end a lobe pinned to the wheel and
+  its working end, across a small gap, pinned to the ratchet (as the manual
+  has it), and a raised disc and hub on the floor (Op. 26's two elevations).
+  Now so: the ratchet's pin pushes the working end across the gap toward the
+  fixed end, closing the ring (17° relaxed, 7.7° loaded), and the band bows in
+  from the wall as it closes, keeping its length. Keep: each end pinned, the
+  fixed one in the wheel's frame, the working one in the ratchet's; the gap
+  closes under load. `65aff17`
+- **Fusee wheel and sustaining ratchet hung on the bare arbor.** Both had
+  r 1.05 bores on the 2 mm fusee arbor. The restoration video shows a steel
+  collar r 2.7 on the arbor below the fusee (28:08–28:35) and the fusee wheel's
+  bore r 2.7 (27:26); Fig. 69 has it greased "above ratchet wheel". Now the
+  collar runs from the fusee's large end to the end plate, 0.02 past the wheel
+  so the plate bears on it, and the winding ratchet, the sustaining ratchet's
+  web and the fusee wheel have r 2.75 bores round it. Keep: the wheels free on
+  the collar, not on the arbor. `ec2e80d`
+- **Fusee top plate's screws beside the arbor, and no collar over it.** The
+  screws stood at r 3.2. The restoration video, face-on at 13:30, shows them
+  opposite each other near the plate's rim (r 7.0) and a steel collar r 2.9 on
+  the arbor at its centre. Now so; the screws go into the slotted layer's rim
+  either side of the slot. The collar's height (1.0) is estimated. Keep: the
+  screws clear of the stop-bar's slot and of its spring. `2aa6e7a`
+- **Sustaining ratchet drawn steel, its springs' screws from the pawl side.**
+  The restoration video (28:32–29:14) shows the wheel gilt brass, with the
+  winding-pawl spring screws' slotted heads on its underside; Fig. 28 draws
+  one put in from below. Now so: the screws pass through the ratchet (clear)
+  into the springs' feet (tapped, 0.47 thick, 0.03 under the fusee's face that
+  turns over them while winding). Keep: the screws from the underside; the
+  feet thick enough for 0.4 mm of thread (`bom.py`). `69b2e97`
+- **Fusee end plate a plain washer, the taper pin under it, and (after the
+  arbor's collar) too small to hold the wheel on.** Ops. 27–29 give the plate
+  notches that the taper pin lies in; Figs. 28 and 69 draw it about 0.37 of the
+  fusee wheel across. It was r 2.6 with the pin below it, and once the wheel's
+  bore became r 2.75 nothing held the wheel. Now r 7.0 (1.5 clear of the centre
+  wheel), against the collar's end, with a slot across its outer face in which
+  the pin (9.6 long, as Fig. 28 draws it) lies. Keep: the end plate larger than
+  the wheel's bore. `bb3086e`
 
 ## Plates, bridges, screws and arbors
 
@@ -488,6 +529,16 @@ Contents:
   keyhole stops 1 mm short of the notch. Keep: the edge is neither smoothed
   nor pushed off holes (that rounded the horn); the tool prints the metal left
   round each instead. `8a48535`
+- **Train bridge's third screw overhung the notch.** At (29.24, −12.28),
+  from the top-view photograph's five-screw map (fitted to the model's own
+  screws), its head hung about 1 mm over the notch round the fusee, and the
+  real bridge has no hole there. It is now at the end of the tongue beside
+  the notch's mouth, (32.25, −10.81), its head sunk flush in the 5.3 mm
+  counterbore C Spinner's video shows (23:30, 36:26, 36:34), and the barrel
+  bridge's access hole moved with it. The mouth's edge now turns into the
+  rim through a round corner (r 6) instead of a sharp one. Keep: no screw
+  head over an edge; the pillar under this screw (the manual's and the
+  video's) waits on the fusee's place (`Review-results.md` 21). `b58bd58`
 - **Screws were heads with nothing under them, and no part had a hole for
   one.** The Exploded view showed it: every bridge lifted away with bare heads.
   `screw()` now draws a threaded shank (`len`, toward +y), and every part a
@@ -677,6 +728,31 @@ Contents:
   over it, so it goes in from above (`hC` in the train bridge, `hT` in the
   block; `bom.json` 42056.blk). Keep: the screw in from above, on the train
   bridge. `d0d563d`
+- **Balance lower bridge drawn as an L, not the real lens.** The outline was
+  read on 36:01 through a camera turned onto the model by its centre, third
+  and fourth arbors, then laid round the model's balance, escape and fourth
+  arbors, which stand 4–5 mm off the real ones: that bent it into a
+  straight-sided L with an arm. Measured face-on at 13:49.5 through the camera
+  the train bridge's own rim, barrel cut and centre bushing give
+  (`tools/framecam.py`, the picks back at their heights), the slab is a lens
+  (two convex edges, r 20.8 and 25.7, a straight end, a concave edge on the
+  escape lobe's circle, r 7.14) with a chamfer round its convex edges, and a
+  lug at each end of the upper level; the screws are at (20.70, 7.23) and
+  (−9.18, 21.87). The model draws that, changed only round its own arbors.
+  Keep: the outline in the train bridge's frame as measured, its two levels
+  and chamfer; anything turned onto the model by the model's own arbors
+  carries their error into the part. `c2f11a6`
+- **The measured lower bridge in the turned layout.** Merging main's lower
+  bridge (measured at 13:49.5 in the train bridge's frame) into the 14° turn:
+  the outline, its circles and the lugs and screws go through `PT` with the
+  train bridge, the arbors stay the model's. The turned detent then crosses
+  the slab beside the fourth arbor, so the train-blocking screw keeps a column
+  of its own at (−3.70, 26.50), with a boss of the slab round it; the third
+  arbor, which doesn't turn, stands inside the turned slab and gets a slot to
+  its edge (a hole there was lost by the outline's tracer, which keeps the
+  outer boundary only: `fine.py` found the slab through the arbor); the
+  3 o'clock lug keeps 1 mm off the escape wheel. Keep: a clearance round an
+  arbor inside a traced outline must reach its edge. HASH
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,

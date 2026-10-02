@@ -1013,44 +1013,65 @@ screw at each end of the bridge's long axis. The earlier model (a frame of
 lobes round the escape wheel, both screws at the fourth end, after three holes
 on the top-view photograph) had the right parts in the wrong arrangement.
 
-1. **Its outline.** Settled against the model, in form; estimated in size. On
-   the video the slab is an L: a body with the fourth's setting (a large gilt
-   setting in a sink) and the cap (in a round counterbore, near the L's
-   corner), the train-blocking screw's dog point near the body's far side, and
-   an arm from the cap's end to a lug. The escape arbor passes up through the
-   L's inside corner, under the train bridge's escape lobe; Fig. 110 draws the
-   bridge as a C round that opening. The model now draws that L, but round its
-   own arbors, which 14 puts farther apart than the video's: the body is
-   stretched from the balance to the fourth arbor and narrowed between the
-   escape and third arbors, so it is longer and slimmer than the video's, and
-   the arm shorter. Its outline waits on 14.
+Rebuilt again on 2 October 2026 (branch `claude/lower-bridge-curved`): the L
+was the model's arbors bending the video's outline, not the bridge's shape.
+Measured face-on at 13:49.5 (`tools/framecam.py`, the camera recovered from the
+frame's anchor on the train bridge's rim, barrel cut and centre bushing; the
+picks back at their heights), the real slab is a lens in the train bridge's
+frame, which is the model's, and it already holds the model's balance and
+fourth arbors. The model now draws that lens where the real bridge is, with
+two levels (the slab, and a lug at each end against the train bridge), and
+changes it only round its own arbors (1 below).
+
+1. **Its outline.** Settled: measured (2 October 2026). Seen from below, the
+   slab is a lens: an outer edge on a circle of r 20.8 (0.2 mm rms over 13
+   points) from the 3 o'clock lug round past the centre arbor, a flatter
+   convex edge (r 25.7) to the fourth's end, a straight edge across it, a
+   short one to the train bridge's escape lobe, and a concave edge on the
+   lobe's circle (r 7.14, 0.04 mm rms; the lobe from above, 18, r 7.0), so
+   the escape wheel lifts out past the slab; a chamfer about 1 mm wide round
+   its convex edges. Fig. 110's C round a large opening is that concave side.
+   The model draws it as measured, and changes it only round its own arbors,
+   which stand off the real ones (14): a bulge of about 1 mm to keep 1 mm of
+   metal round the cap's counterbore and the fourth's sink, a bite r 2.4
+   round the escape arbor (0.5 mm inside the lobe's circle in the model), and
+   1 mm off the third arbor. Sure: ±0.5 mm over focal lengths of 5000–7000
+   px; the picks to about 0.3 mm. Earlier (1 October) the outline was read on
+   36:01 through a camera turned onto the model by its centre, third and
+   fourth arbors, which bent it into an L round the model's arbors.
 2. **Whether the upper tier is one piece.** Settled: two. Side-on (42:56)
    the escape wheel shows between the slab and the train bridge, with stepped
    lugs rising to the train bridge at both ends and nothing against the train
    bridge between them.
 3. **The arm's route.** Settled: there is no separate thin arm. The "arm" of
-   Fig. 30 is the L's arm, running from the cap to the lug at that end, past
-   the escape arbor's passage on its outer side. The model draws it so.
+   Fig. 30 is the slab's end toward the 3 o'clock lug, past the escape lobe
+   on its outer side. The model draws it so.
 4. **The heights.** Settled to about 1 mm. By the pillars (16.8 mm) on three
    side views the slab stands at 8.8–11.9 mm above the plate (its underside
    8.4–9.4), the model's at 7.9–10.9; the escape wheel at 15.6, the model's at
    15.1. Kept.
 5. **The screws.** Settled. The real bridge's two screws are at the ends of
-   its long axis, 33.9 mm apart on 36:01 (31–36 on the other frames). The
-   model has the 3 o'clock one where the video has it, (20.58, 11.88), with the
-   pillar plate's access hole (RMG No. 4E019) under it, and the other beside
-   the fourth on the 9 o'clock side as on the video, at (−13.9, 18.8), 3.8 mm
-   round toward 12 from the video's (−12.0, 22.1): there the model's detent
-   foot stands (its clamp screw 0.6 mm off the video's place), which the real
-   one can't (35.2 mm apart). The slab reaches the lug by a tongue under the
-   detent. On the video's arrangement (the balance nearer the fourth, the
-   escapement turned with it) the detent would run clear of the lug; that
-   waits on 14. The tapped hole the top-view photograph shows at (11.24, 29.51)
+   its long axis, 33.3 mm apart at 13:49.5 (33.9 on 36:01, 31–36 on the other
+   frames). The model has both where 13:49.5 puts them, (20.70, 7.23) with the
+   pillar plate's access hole (RMG No. 4E019) under it, and (−9.18, 21.87), in
+   the train bridge's frame (since the 14° turn (18.34, 12.02) and (−14.20,
+   19.00) in the model's).
+   36:01 had the 3 o'clock one at (20.5, 12.4), 4.7 mm away: that frame is
+   turned onto the model by its centre, third and fourth arbors, and the
+   fourth stands 4.3 mm off the real setting (14). The far lug is the video's
+   less where the model's detent, the pillar, a barrel-bridge screw and the
+   balance locking arm's screw and pin stand. The tapped hole the top-view photograph shows at (11.24, 29.51)
    isn't this bridge's; what screws into it is still open.
 6. **The steady pins.** Open. None show on the bridge's faces; pins between
    the bridge and the train bridge would be hidden in the joint. The model
    puts one in each lug.
-14. **The settings' spacing** (new). The face-on underside gives the
+14. **The settings' spacing** (new). Measured with the camera (2 October
+   2026, `tools/framecam.py`): in the train bridge's frame the cap's jewel is
+   at (3.79, 9.75) and the fourth's setting at (2.89, 20.73), 11.0 mm apart,
+   the escape lobe's centre at (13.81, 15.51); the model's balance is 5.2 mm
+   from the cap and its fourth arbor 4.3 mm from the setting. Across focal
+   lengths of 5000–7000 px these move 0.5 mm or less. So the layout question
+   stands as below, now on one frame anchored on the bridge itself. The face-on underside gives the
    bridge's own proportions, without naming any train-bridge hole. Cap to
    escape passage, cap to fourth's setting and escape passage to fourth's
    setting are 8.6 : 10.8 : 11.6, with the angle at the cap about 73°. The
@@ -1537,16 +1558,30 @@ on the top-view photograph) had the right parts in the wrong arrangement.
     mm rms). The notch is one circle, r 16.57 about (11.46, -17.47), 0.12 mm
     rms; the horn its cusp with the barrel's cut, cut off straight 12.4 mm
     from the centre; the mouth a sharp corner at (28.0, -18.7) and a straight
-    edge to the rim at -23° (it was a spike to -40°). Still open:
-    - **The third screw (29.24, -12.28)** keeps 0.5 mm of metal to the notch,
-      and its head (r 2.9) overhangs the edge by about 1 mm. On 23:30 no hole
-      shows there; the nearest is a large one (about 5 mm across, a
-      counterbore) at (32.25, -10.81), 3.3 mm further out, as the pillars on
-      the bare plate stand further out than the model's (`References/VIDEOS.md`).
-      The top-view photograph's five-screw map, 6:29 and the barrel bridge laid
-      flat put the screw at (29.24, -12.28). Settle it with a homography on
-      several holes of the flat bridge before moving the screw, and the barrel
-      bridge's hole with it.
+    edge turning into the rim through a round corner (it was a spike to
+    -40°). Still open:
+    - **The third screw: moved, its pillar still open** (2 October 2026,
+      branch `claude/train-bridge-screw`). At (29.24, -12.28) it kept 0.5 mm
+      of metal to the notch and its head overhung the edge by about 1 mm, and
+      the bridge laid flat (23:30) has no hole there. The hole is a 5.3 mm
+      counterbore at the end of the tongue, (32.25, -10.81); at 36:26 the
+      bridge goes on with it, and at 36:34 the screw is driven into it with a
+      fluted pillar under it. The manual has the same: four pillars, three
+      for the train bridge, and all three of its screws in them (Ops. 5, 14;
+      parts list 42059 x3, 42055 "Pillar upper train bridge" x3); the barrel
+      bridge has its pillar's screw and two plain screws. The model's
+      (29.24, -12.28) came from the top-view photograph's five-screw map,
+      which is fitted to the model's own screws. The screw is now at the
+      video's hole, its head (r 2.5) sunk flush, threaded into the bridge
+      alone. **Still open:** the pillar. On the manual and video's reading the
+      model's pillar 2 (32.11, -4.1) belongs under this screw, 6.7 mm away,
+      and the barrel-bridge screw now in it goes into the train bridge. But
+      the fusee wheel's tips reach 20.4 mm from the fusee arbor, and a pillar
+      (r 2.7) at the hole stands 22.5 mm away: 0.6 mm in the wheel. The real
+      one clears, so the model's fusee is placed or sized wrong: the notch's
+      centre (below) puts the fusee 20.9 mm from the centre, which with the
+      train's 90 and 14 makes the wheel's tips about 18.5 mm and leaves the
+      pillar 0.6 mm clear. Next, on its own branch.
     - **The notch's centre** is 2.3 mm from the model's fusee arbor, at 33°
       from the 12 and 20.9 mm out (the arbor at 30.3° and 22.9 mm). If the
       notch is concentric with the fusee, that is a reading of the fusee's
@@ -1555,6 +1590,42 @@ on the top-view photograph) had the right parts in the wrong arrangement.
       and leaves 3 mm or more of metal below the notch. The model's is still the
       two circles about the balance and escape arbors, now kept 1 mm off the
       notch.
+22. **The bare pillar plate: the fusee, barrel and pillars against the train**
+    (new, 2 October 2026, branch `claude/fusee-layout`; `tools/rimfit.py
+    rimfit_34-30.json`). KLUwI2UUCMQ 34:30 at 4K: the bare plate from the
+    train side with its four pillars standing. A camera fitted to the plate
+    face's rim (r 43.8; the rim traced with the pillars, the screwdriver and
+    a ring screw masked off, `rim_pts`) and to its four gilt settings made
+    round: rim 0.14 mm rms, settings 0.04, the same to 0.5 mm over focal
+    lengths of 4000-8000 px. In the plate's own frame (no anchors):
+    - **the fusee's lower bushing 20.0-21.0 mm from the centre** (model
+      22.9), **the barrel's 21.8-23.8** (model 18.6), 38.5 mm apart (model
+      36.2), 124° apart about the centre (model 121°). Told apart by the
+      bushings' sizes (the barrel's the larger) and which side they lie.
+      The train bridge's cut round the barrel is centred 22.56 mm out
+      already, where this puts the barrel.
+    - **the pillars 30-37 mm out** (model 28-32.5), as BunnSpecial's bare
+      plate had them (VIDEOS.md, "Pillars on the bare plate").
+    Turned onto the model by the train's own arbors (the centre bushing,
+    the escape lower setting, the third and fourth settings on the lower
+    train bridge, mirrored for the train side; 0.8-2.0 mm off), **the fusee
+    stands 47° from the 12** (model 30°; the dial side's 43-45° in 19), and
+    the pillars 15-20° further round than the model's (the fourth, its top
+    out of frame, read at its foot to about 5 mm, near pillar 2). So the
+    photographed group (fusee, barrel, pillars and the bridges' holes on
+    them) is turned against the train, as 19 found, and the fusee is nearer
+    the centre: with the train's 90 and 14 that is a module of about 0.385
+    (model 0.441), the fusee wheel's tips about 17.7 mm from its arbor
+    (model 20.4). How sure: the bushings' places ±1 mm (the anchors' 2 mm
+    offsets are the train's own); the pillars' ±1.5 mm, the fourth's ±5.
+    **Not yet acted on; planned in `IDEAS.md` 1.12.** Moving the group means the fusee and barrel's
+    places, the pillars, the barrel and train bridges' outlines and holes and
+    the cock (traced on the top-view photograph in the model's frame), the
+    fusee wheel and centre pinion's module (`solve.py`), the chain, the
+    maintaining work and the essay's figures. Settle first which frame the
+    top-view photograph and Fig. 2 fits put the group in, and measure the
+    fusee wheel's size (27:26, laid flat). It also bears on 21: the pillar
+    under the train bridge's third screw.
 
 ## The fusee assembly against Fig. 28 and the video
 
@@ -1578,27 +1649,27 @@ Winding and maintaining work).
 
 ### Open, most certain first
 
-1. **Sustaining spring** (27:26; Figs. 69, 71). A flat blued band about
+1. **Sustaining spring** (27:26; Figs. 69, 71). *Fixed (RESOLVED.md, Winding and maintaining work).* A flat blued band about
    2.1 mm wide, r 15.8–18.0, against the recess wall, round about 335° (its
    fixed end widened inward, with two holes; a lighter working end with an
    upright pin). The model: 0.7 mm wide, r 13.2–13.9, 250°, its free end
    pushed by a pin on the ratchet (the manual pins both ends).
-2. **Fusee wheel** (27:26; Figs. 71, 72; Ops. 20, 26). Its recess reaches
+2. **Fusee wheel** (27:26; Figs. 71, 72; Ops. 20, 26). *Fixed: the recess and its elevations with the spring, the bore with the collar (5).* Its recess reaches
    r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
    recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
    model's web is flat.
-3. **Fusee's top** (13:30, 17:23; Fig. 28). A steel collar r ≈ 2.9 round the
+3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
-4. **Sustaining ratchet** (28:32–29:14; Fig. 28). Gilt brass, not steel; the
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* Gilt brass, not steel; the
    winding-pawl spring screws go in from the fusee wheel's side (slotted heads
    there). The model has the heads on the pawl side.
 5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
-   Op. 23). A steel collar r ≈ 2.7 on the arbor below the fusee carries the
+   Op. 23). *The collar fixed; the large end's rim and the ratchet's size open.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
    sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
    arbor); the large end has a raised outer rim round the winding ratchet,
    whose tips read r ≈ 8.5 (model 9.85; rough, oblique).
-6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). Notches in its face that
+6. **Fusee end plate** (Ops. 27–29; Figs. 28, 69). *Fixed: r 7.0 with the slot and a 9.6 mm pin. Open: Fig. 69 draws a raised boss round its hole; not seen on video.* Notches in its face that
    the taper pin lies in; the model's is a plain washer with the pin under it.
    Figs. 28 and 69 both draw it about 0.37 of the fusee wheel across (r ≈ 7.5;
    model 2.6), not yet seen on video.
