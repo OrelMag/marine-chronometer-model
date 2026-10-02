@@ -18,8 +18,10 @@ CROP=(470,280,1760,1470)   # the movement in the photograph, px
 # screw heads on the barrel bridge (the one at (29.24, -12.28) is the train bridge's, sunk in a hole through it) and the setup cover: model point (x, y at the head's top, z) and its centre in the photograph, px
 D2R=math.pi/180;BA=(-18.56,0.19);P2=lambda r,a,y:[BA[0]+r*math.cos(a*D2R),y,BA[1]+r*math.sin(a*D2R)]
 PTS0=[([-15.3,-28.76,-26.58],(1353,325)),(P2(11.6,288,-30.21),(1410,608)),(P2(11.1,107,-30.21),(1615,995)),([29.24,-25.36,-12.28],(510,778)),([32.11,-28.76,-4.1],(495,925))]
-# the screws in the photographs' frame; the model's photographed group stands PHOTO_TURN (14 deg, movement.js) round the centre from it
-TURN=14*D2R;PTS=[([p[0]*math.cos(TURN)-p[2]*math.sin(TURN),p[1],p[0]*math.sin(TURN)+p[2]*math.cos(TURN)],q) for p,q in PTS0]
+# the screws in the photographs' frame, taken into the movement's by movement.js's PT (x1.039, turned 19.42 deg, shifted (-3.891, 0.879)). The sunk one's trace lands 5 mm
+# from the train bridge's third screw as the video measures it (movement.js PR: (32.25, -10.81) turned 14 deg); kept as traced, since the map is the photograph's own
+K,TURN,SH=1.039,19.42*D2R,(-3.891,0.879);PT=lambda p:[K*(p[0]*math.cos(TURN)-p[2]*math.sin(TURN))+SH[0],p[1],K*(p[0]*math.sin(TURN)+p[2]*math.cos(TURN))+SH[1]]
+PTS=[(PT(p),q) for p,q in PTS0]
 CAM=(2.1,1.5,1400,3.8)   # yaw, pitch, distance, field of view: from above, far away, the movement filling the canvas's height (about 9 px/mm)
 CSS=("header,.panel,.hud,.tools,.hint,.labels,.loading,.tabs{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
      ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")

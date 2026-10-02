@@ -16,7 +16,7 @@ from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
- const D=180/Math.PI,FPR=ratchetProf(40,0.47,false),SRP=ratchetProf(120,0.27,true),SMAX=R.SMAX??10/D,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);};
+ const D=180/Math.PI,FPR=ratchetProf(WRT.z,WRT.m,false),SRP=ratchetProf(SRT.z,SRT.m,true),SMAX=R.SMAX??10/D,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);};
  const TPH=7200,NPH=FUSEE_PER_HOUR,st={E:1000,n:3};let prev=null,k=0,wasW=false;
  /* how far into its ratchet's teeth a pawl reaches (negative: inside), pawl frame as seatPawl */
  const dense=pts=>{const d=[];for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/0.1));for(let k=0;k<n;k++)d.push([a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n]);}return d;};   /* as seatPawl measures it (movement.js): every 0.1 mm along the outline's edges */

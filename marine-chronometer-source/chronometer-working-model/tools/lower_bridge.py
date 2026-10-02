@@ -37,11 +37,11 @@ import json,math,pathlib
 import numpy as np
 HERE=pathlib.Path(__file__).resolve().parent
 # the model's positions (movement.js: L, PILLARS, ES, S)
-B=np.array([6.125,8.504]);F=np.array([0.0,23.9]);E=np.array([8.504,17.598]);T=np.array([-6.18,14.75]);C=np.array([0.0,0.0]);ES=13.16/2
-PIL=np.array([[11.12,30.52],[-21.57,17.79]]);PIL_R=3.4                                   # the train bridge's pillars near the bridge, r 3.4 at the upper tier's height
-BB2=np.array([-17.14,23.0]);ARM=np.array([[0.83,27.79],[0.86,29.73]])                 # holes in the train bridge: a barrel-bridge screw (S.bb[2]), the balance locking arm's screw and stop pin (S.arm, S.armPin)
+B=np.array([1.609,10.277]);F=np.array([0.0,23.9]);E=np.array([8.095,17.08]);T=np.array([-6.18,14.75]);C=np.array([0.0,0.0]);ES=13.16/2
+PIL=np.array([[5.61,35.62],[-27.95,17.16]]);PIL_R=3.4                                   # the train bridge's pillars near the bridge, r 3.4 at the upper tier's height
+BB2=np.array([-23.88,22.98]);ARM=np.array([[6.32,29.71],[7.29,31.4]])                 # holes in the train bridge: a barrel-bridge screw (S.bb[2]), the balance locking arm's screw and stop pin (S.arm, S.armPin)
 ROLL=4.32                                                                                # the balance's widest roller part at the walls' heights (r about the staff)
-DET=np.array([[4.0,9.58],[3.7,10.2],[-1.3,13.85],[-1.9,13.84],[-3.98,15.2],[-3.92,15.8],[-2.43,17.8],[-2.8,18.3],[-5.3,20.15],[-5.7,19.63],[-6.8,20.22],[-7.4,20.28],[-7.76,19.8],[-8.0,20.38],[-7.8,20.96],[-8.3,21.33],[-8.9,21.51],[-10.0,20.85],[-11.0,21.6],[-11.3,22.13],[-10.9,22.67],[-10.94,23.3],[-12.0,24.02],[-12.39,23.5],[-12.96,23.3],[-12.42,24.4],[-14.0,25.57],[-14.14,26.2],[-13.77,26.7],[-13.2,26.46],[-12.4,27.48],[-12.15,26.9],[-11.23,27.8],[-10.6,27.95],[0.89,19.4],[1.06,18.8],[0.7,18.31],[0.97,17.7],[1.5,17.3],[2.1,17.23],[2.9,16.26],[4.5,15.44],[3.7,14.41],[3.78,13.8],[4.3,13.41],[4.83,12.3],[4.4,9.9]])   # the detent, its support block and their screws in the lugs' layer (TB_U to the lower tier): the page's meshes there, their plan hulls joined (the turned escapement's)
+DET=np.array([[0.82, 11.98], [0.22, 12.43], [0.47, 12.78], [-2.33, 18.78], [-2.68, 18.63], [-3.63, 20.78], [-3.98, 21.08], [-3.88, 21.33], [-1.13, 22.63], [-2.68, 25.98], [-3.48, 25.73], [-4.23, 27.33], [-5.33, 26.83], [-5.48, 27.23], [-4.38, 27.73], [-4.98, 29.03], [-5.23, 28.98], [-5.38, 29.28], [-6.43, 28.78], [-7.18, 30.38], [-6.23, 30.93], [-6.28, 31.28], [-6.08, 31.38], [-6.63, 32.68], [-7.68, 32.23], [-7.93, 32.58], [-6.83, 33.13], [-7.88, 35.33], [-6.93, 35.83], [-6.53, 35.28], [-5.23, 35.88], [-5.03, 35.48], [-5.53, 35.18], [-5.38, 34.98], [-3.78, 35.68], [2.47, 21.98], [1.27, 21.33], [1.87, 20.03], [2.17, 20.08], [2.52, 19.38], [2.27, 19.13], [2.87, 17.83], [3.17, 17.88], [3.52, 17.08], [1.82, 16.43], [2.37, 15.43], [2.02, 15.18], [2.37, 14.38], [0.72, 12.33]])   # the detent's plan, rasterised from the built model's meshes (it turns with the escapement, 9.40 from the balance)
 # the real bridge, measured on KLUwI2UUCMQ 13:49.5 (the upper train bridge's underside face-on, the bridge on it; tools/anchor_heights.py): mm in the train bridge's frame, which is the
 # model's (the frame's homography fitted on the bridge's rim, its cut round the barrel and the centre bushing, 0.2-0.3 mm rms; the camera recovered from it at f 6000 px, where its axes
 # come out orthonormal; the slab's face put back 7.9 mm below the bridge's underside, the lugs' 3.3). The slab's outline (traced on the frame), its two convex edges and the concave one
@@ -67,9 +67,10 @@ LUGR=MEAS['lugB'][:5]+[[-3.6,17.6],[-1.4,17.9],[-1.2,21.8],[-4.21,23.23]]
 TURN=math.radians(14);_R=np.array([[math.cos(TURN),math.sin(TURN)],[-math.sin(TURN),math.cos(TURN)]]);PT=lambda P:np.asarray(P,float)@_R
 MEAS={k:PT(v).round(2).tolist() for k,v in MEAS.items()};OUT,LEFT,LOBE,BOT,SIDE,END=(PT(v) for v in(OUT,LEFT,LOBE,BOT,SIDE,END))
 S1,S2=np.array(MEAS['screwA']),np.array(MEAS['screwB']);P1,P2=PT(P1),PT(P2);LUGL=PT(LUGL).tolist()
-# the far lug as measured (turned); the train-blocking screw in a column of its own: the model's detent, turned with the escapement, crosses the slab beside the fourth arbor, so
-# no place 4.5-7.8 mm from it inside the slab is clear of it; the column stands just past the slab's straight end, 4.5 mm from the fourth arbor, with a boss of the slab round it
-LUGR=MEAS['lugB'];P2=np.array([-13.6,16.4]);TBLOCK=np.array([-3.70,26.50]);COL=1.95
+# the far lug as measured (turned); the train-blocking screw in a column of its own: the model's detent, turned with the escapement (since the balance stands on the video's
+# cap, its blade runs past the fourth arbor), covers the video's place; the column stands 4.5 mm from the fourth arbor on the escape side, where it keeps at least 1.1 mm from
+# the detent, the escape wheel, the locking arm and the detent block's screw, just past the slab's side edge, with a boss of the slab round it
+LUGR=MEAS['lugB'];P2=np.array([-13.6,16.4]);TBLOCK=np.array([3.9,26.15]);COL=1.95
 COLT=[list(TBLOCK+COL*np.array([np.cos(a),np.sin(a)])) for a in np.radians(np.arange(0,360,45))]
 def fillet(P,r=0.8,n=5):   # each corner cut back by r (at most 0.4 of either edge) and rounded with a quadratic Bezier; straight edges stay straight
     P=[np.array(p,float) for p in P];out=[]
