@@ -958,7 +958,8 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
 2. **Shape against the drawings and photographs**, part by part, not yet
    done. 44 web photographs were gathered (mostly all rights reserved: to be
    cited by URL, not committed). Candidates: the shield plate (Fig. 107 draws
-   a disc and an open-ring spring; the model keeps its lobed plate), the setup
+   a disc and an open-ring spring; *now drawn so*, 2 October 2026, RESOLVED.md,
+   Setup, case and gimbals), the setup
    ratchet and click (asked in Orel_comments.md), the dust seal, the detent's
    trip-spring bracket.
 3. **Function checks** not yet in `bom.py` (the locking arm, train-blocking

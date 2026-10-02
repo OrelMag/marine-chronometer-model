@@ -121,7 +121,7 @@ frame`, in `$MC_VIDEO/frames`).
 | Third pinion | **12** | 35:22 | Leaves 30° apart, by eye | Enlarged crop round the arbor |
 | Fourth wheel teeth | **75** | 35:33, 36:15 | 74.1–76.1 by fit; 75 ÷ escape pinion 10 = 7.5 | `count f_KLUwI2UUCMQ_35-33.png 1448 820 520 416 F --s 0.75 1.15 --band 0.946 0.969` |
 | Wind indicator wheel | **120** | 23:30 | Certain: all 120 gaps, every interval clean | `count f_KLUwI2UUCMQ_23-30.png 1860 1553 240 220 UDW --band 0.93 0.975 --mind 10 --blue` |
-| Centre pinion | 14 (inferred) | 13:51, 35:24–35:30, 36:15 | Not counted: leaves' angles read 22–25° (14–16); see IDEAS.md 1.8 | Leaf angles round the arbor; polar FFT (inconclusive) |
+| Centre pinion | **14** (likely) | 13:59.46, 13:59.55, 35:23.66 | End-on (13:59.4–13:59.6, the centre wheel held in tweezers over the plate): 12 consecutive gaps, the arbor hiding about 80°; fitted as equally spaced points on a projected circle, free N 13.82 on both frames, 10.5–11.2 px rms at 14 against 23.8–24.3 at 13 (12, 15, 16: 25–58); the 14 fit puts the next, hidden gap on a dark spot at the arbor's edge, the 13 fit on a leaf. The leaves' top faces as a star at reassembly (35:23.66): 11 ends, free N 14.20, 13.3 px at 14 against 21.0 at 13. Not certain: no frame shows every leaf | Gaps picked by hand, centred on the local dark spot, then the circle fit (crops and scripts in `$MC_VIDEO/pinion/`, outside the repository) |
 | Wind indicator pinion | 12 (inferred) | 29:04–29:12 | Not counted: blurred end face, 10–12 | Polar FFT round the end face (said 11; unreliable) |
 | Minute wheel | about 55 (not used) | 23:30 | Half the rim out of focus | `count` at (3289, 886), `--blue` |
 | Up–down scale sweep | **315.7° in 56 h** | `References/photo-dial-hamilton-maritime-commission.jpg` (not a video) | Ticks 8 h apart at 67.9°, 111°, 156.7°, 201.6°, 247.5°, 293.2° from 12: 45.1° each (a line through them: 5.65° an hour, 316°) | `video.py ticks 427 288 8:486,264 16:487,311 24:452,346 32:404,346 40:369,312 48:371,264` |
@@ -339,7 +339,7 @@ videos to look.
 
 | Gap (IDEAS.md) | Where to look | What to do |
 |---|---|---|
-| Centre pinion: 14 or 13 (1.8) | `KLUwI2UUCMQ` 13:51–13:57 at 4K (end-on from above, then lifted); 23:45 if it lies flat there; `wcYqdgpyggQ` and `Jd2c3x8VKsE` | Count the leaves end-on. 13 means the fusee's figures change (`FUSEE_PER_HOUR`, `RUN_H` 60.6 h, the indicator pinion 13); 14 confirms the model |
+| Centre pinion: 14, likely (1.8) | Counted end-on at 13:59.5 and from above at 35:23.66 (2 October 2026): 14 fits, 13 doesn't. To make it certain: the wheel lying flat pinion up, or end-on with the arbor straight at the camera | 13 would change the fusee's figures (`FUSEE_PER_HOUR`, `RUN_H` 60.6 h, the indicator pinion 13); 14 is the model's |
 | Wind indicator pinion: 12 (1.8) | 29:04–29:12 at 4K (end-on, blurred); 23:30 if the fusee arbor lies there | Count the leaves; it must make cp × p ≈ 169 with the dial |
 | Escape pinion: 10 (1.8) | `wcYqdgpyggQ` 17:20–17:28 (escape wheel in the palm) | Count; 10 confirms the fourth wheel's 75 |
 | Motion work counts (1.8) | `KLUwI2UUCMQ` 23:30 (minute and hour wheels flat, half blurred); 40:15–40:30; `wcYqdgpyggQ` 5:10 | Count the minute wheel, its pinion, the hour wheel and the cannon pinion; the ratio must stay 12 |

@@ -895,6 +895,18 @@ Contents:
     - The plate covers the hole whenever it isn't open.
     - A shape joining the lathe has the lathe's vertices round its rim.
   `c0a7531`
+- **Shield plate not as Fig. 107 draws it** (`Review-results.md`, BOM
+  comparison, still open 2). It was a rounded triangle on a shoulder screw
+  beside the key hole, its return spring a torsion coil hanging under it.
+  Fig. 107 draws a disc nearly the size of the case's bottom, its three holes
+  (the shoulder screw's at its centre, the key's, the stop screw's opposite),
+  and the spring an open ring between the plate and the bottom, hooked on the
+  stop screw. Now so: the disc turns on its shoulder screw at the case's
+  centre, the ring runs from the stop screw round to a pin in the plate and
+  is rebuilt as the plate turns (`shield.userData.turn`, which app.js calls:
+  the page's picking pass takes every mesh's `onBeforeRender`). Keep: the
+  plate turned only through `turn()`, so the spring keeps its hook on the
+  screw and its end on the pin; nothing under the bottom within 0.5 mm of it.
 
 ## Accuracy to the manual
 
@@ -1165,6 +1177,14 @@ An arbor needs pivots and shoulders; a stone its seat.
   so a lifted movement couldn't be seen from straight under it. Both limits
   are now ±1.52. Keep: stop short of ±90°, where `lookAt` has no up and the
   view spins. `fada89a`
+- **Camera targets left at the photographed group's old places.** The
+  Escapement view, Stopping and starting's view and the walkthrough's Stored
+  energy, Constant force, Winding without stopping, detent and balance steps
+  aimed at numbers (the balance at (8.0, 6.8), the barrel at (-18.6, 0.2), the
+  fusee at (11.6, -19.8)) that the photo fits gave before the group turned
+  14°, about 3 mm off. They are now the arbors' places in `L` (the escapement
+  views between the balance and the escape arbor). Keep: a camera target on a
+  part is written from `L`, so it follows a change of the layout.
 
 ## Build, tools and docs
 

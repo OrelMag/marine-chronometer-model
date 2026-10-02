@@ -656,7 +656,8 @@ function buildMovement(M){
   hn(mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,0.55,0),'42186',{sub:1});hn(mesh(R.balU,ringGeo(1.1,0.45,2.05),M.steel,0,0.125,0),'42186',{sub:1});   /* the hub's flange and boss, bored for the staff (as the flange is) */
   hn(mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,-0.9,0),'42248');
   for(const q of HD)hn(screw(R.balU,...q,-0.9,0.4,0.25,0.35+1.1+0.5),'42249').userData.lift=0;   /* they stay in: the hub's flange under them is on the staff, which goes with the balance */
-  { const hs=[];for(let k=0;k<60;k++){if(k%30===0||k%30===2||k%30===28)continue;const a=k/60*TAU;hs.push([cylY(0.28,0.2,8),new THREE.Matrix4().compose(new THREE.Vector3((BR+0.05)*Math.cos(a),RY,(BR+0.05)*Math.sin(a)),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-a,Math.PI/2)),new THREE.Vector3(1,1,1))]);}mesh(R.balU,mergeGeo(hs),M.steelD); }   /* none at the arm ends or under the weights' screws */
+  { const hs=[],sa=[Math.PI/2,-Math.PI/2].flatMap(c=>[-0.5,-0.25,0,0.25,0.5].map(d=>c+d)),under=a=>sa.some(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))*BR<1.6);   /* none under a balance screw's head or washer (r 1.3), where they stood inside the head */
+    for(let k=0;k<60;k++){if(k%30===0||k%30===2||k%30===28)continue;const a=k/60*TAU;if(under(a))continue;hs.push([cylY(0.28,0.2,8),new THREE.Matrix4().compose(new THREE.Vector3((BR+0.05)*Math.cos(a),RY,(BR+0.05)*Math.sin(a)),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-a,Math.PI/2)),new THREE.Vector3(1,1,1))]);}mesh(R.balU,mergeGeo(hs),M.steelD); }   /* none at the arm ends or under the weights' screws */
   const radial=(a,r0,len,rr,mat,seg=12,bore=0)=>{const q=mesh(R.balU,bore?ringGeo(rr,bore,len):cylY(rr,len,seg),mat,(r0+len/2)*Math.cos(a),RY,(r0+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);return q;};   /* bore: a nut's thread */
   const BW=[],bscrew=(a,len,rr,mat,mg,kind,off,id,bore=0)=>BW.push({q:hn(radial(a,BR+off,len,rr,mat,12,bore),id),a,len,rr,mg,kind,off});   /* id: its parts-list line */
   /* balance screws per the parts list (p. 82): 6 of 0.049 in head height (125-130 mg), 2 of 0.080 in (200-205 mg), 2 of 0.101 in (250-255 mg), in diametric
@@ -669,13 +670,26 @@ function buildMovement(M){
   /* moment of inertia of the uncut balance about the staff, in g·mm²: steel rim, hub and cap (7.9 mg/mm³), Invar arm (8.1), and the screws and weights at their
      parts-list masses, each spread along its drawn cylinder. The rim's holes, the weights' screws and the staff are left out */
   const I_FIX=(7.9*Math.PI*RH*(BR**4-(BR-RW)**4)/2+8.1*(2*BR-1)*1.1*2.4*((2*BR-1)**2+2.4**2)/12+7.9*Math.PI*(0.6*2.2**4+2.05*1.1**4+0.35*(2.2**4-1.15**4))/2)/1000;   /* rim, arm, and the hub's flange and boss and the cap (steel) */
-  const inertia=(xt,xv)=>{let I=I_FIX;for(const w of BW){const d=BR+w.off+w.len/2+(w.kind==='t'?xt:w.kind==='v'?xv:0);I+=w.mg*(d*d+w.len*w.len/12+w.rr*w.rr/4)/1000;}return I;};
+  const inertia=(xt,xv)=>{let I=I_FIX;for(const w of BW){const d=BR+w.off+w.len/2+(w.kind==='t'?xt:w.kind==='v'?xv:0);I+=w.mg*(d*d+w.len*w.len/12+w.rr*w.rr/4)/1000+(w.wmg?w.wmg*(BR+w.off/2)**2/1000:0);}return I;};   /* wmg: a washer under a screw's head (R.screws) */
   /* the weights' thread pitch, set so that a full turn of a pair changes the rate by the manual's figures, about 40 s a day for the timing weights and 2.8 s
      for the verniers (p. 70). The period goes as √I, so moving a pair x mm out loses 86400·(dI/dx)·x/(2I) s a day */
   const I0=inertia(0,0),dIdx=k=>BW.reduce((s,w)=>s+(w.kind===k?2*w.mg*(BR+w.off+w.len/2)/1000:0),0);
   R.pitch={t:40*2*I0/86400/dIdx('t'),v:2.8*2*I0/86400/dIdx('v')};
   /* timing(nt,nv): turns both timing weights nt turns out and both verniers nv (negative: in), so the balance stays in poise, and returns the new moment */
   R.timing=(nt,nv)=>{const xt=nt*R.pitch.t,xv=nv*R.pitch.v;for(const w of BW)if(w.kind){const d=BR+w.off+w.len/2+(w.kind==='t'?xt:xv);w.q.position.set(d*Math.cos(w.a),RY,d*Math.sin(w.a));}return inertia(xt,xv);};
+  /* screw and washer changes (Op. 3, Tables II and III on p. 70; the parts list's screws and washers, pp. 93, 99): R.screws(heads, washers) gives each diametric pair of balance
+     screws (pair k: the k-th of the five about each quarter, in BW's order) a head height and a washer under each of its heads (keys of BSZ and BWA, inches; washer 0:
+     none), rebuilt where they stand; R.timing then returns the moment with them. The heights are Table II's: the parts list's 0.121 in screw would reach the barrel bridge's
+     cut round the balance (17.7 mm) with a washer under it. Washers r 1.0 under the heads (r 1.3); their size estimated */
+  const BSZ={'0.040':[0.039,102.5,'42271'],'0.050':[0.049,127.5,'42171'],'0.060':[0.060,152.5,'42172'],'0.080':[0.080,202.5,'42173'],'0.100':[0.101,252.5,'42174']};
+  const BWA={'0.002':[0.002,4.5,'42181'],'0.003':[0.003,6.5,'42182'],'0.004':[0.004,8.5,'42183'],'0.006':[0.006,12.5,'42184'],'0.008':[0.008,16.5,'42185'],'0.010':[0.010,20.5,'42256']};
+  const BS=BW.filter(w=>!w.kind);BS.forEach((w,i)=>{w.pair=i%5;w.h0=Object.keys(BSZ).find(k=>BSZ[k][1]===w.mg);w.h=w.h0;w.len0=w.len;w.wk=0;w.wmg=0;
+    const g=new THREE.Group();g.visible=false;R.balU.add(g);w.wg=g;w.wm=hn(mesh(g,ringGeo(1.0,0.37,1),M.steel),'42181');w.wm.rotation.set(0,-w.a,Math.PI/2);});   /* each washer in a group of its own, hidden with it (look() shows every mesh) */
+  R.screwStd=BS.slice(0,5).map(w=>w.h0);
+  R.screws=(heads,washers)=>{for(const w of BS){const h=heads[w.pair]||w.h0,k=washers[w.pair]||0,[hin,mg,id]=BSZ[h],[tin,wmg,wid]=k?BWA[k]:[0,0,null],t=tin*25.4,len=h===w.h0?w.len0:hin*25.4;   /* the standard heads keep their drawn heights, so putting them back restores the moment exactly */
+      if(h!==w.h){w.q.geometry.dispose();w.q.geometry=cylY(w.rr,len,12);w.q.userData.hn=id;}
+      Object.assign(w,{h,wk:k,len,mg,off:t,wmg});const d=BR+t+len/2;w.q.position.set(d*Math.cos(w.a),RY,d*Math.sin(w.a));
+      w.wg.visible=!!k;if(k){w.wm.scale.set(1,t,1);w.wm.position.set((BR+t/2)*Math.cos(w.a),RY,(BR+t/2)*Math.sin(w.a));w.wm.userData.hn=wid;}}};
   R.balS=new THREE.Group();R.balS.position.y=BY;R.balS.visible=false;R.staff.add(R.balS);
   mesh(R.balS,polyGeo([[BR-0.5,-1.1],[BR-0.5,1.1],[-(BR-0.5),1.1],[-(BR-0.5),-1.1]],1.4,[[0,0,0.45]]),M.steel,0,-0.7,0);mesh(R.balS,ringGeo(2.2,0.45,2.2),M.steel);   /* arm and hub, bored for the staff (a press fit, as the uncut balance's hub) */
   const span=160*D2R,band=(a0,r0,r1)=>{const s=new THREE.Shape(),N=48;for(let i=0;i<=N;i++){const a=a0+span*i/N;i?s.lineTo(r1*Math.cos(a),r1*Math.sin(a)):s.moveTo(r1*Math.cos(a),r1*Math.sin(a));}

@@ -118,3 +118,13 @@ winding ratchet's tips 9.85 × 0.892 = 8.8 against the video's 8.5), 13, 15, 14'
 | Item | State | Branch / commit |
 |---|---|---|
 | Plan | written | `claude/fidelity-plan` |
+| 16 Split balance (RR 9) | fixed: weights within the band, arm and hub bored; `fine.py --split` passes | `claude/fp-balance` `3c9608c` |
+| 17 Lock-adjusting screw (RR 20.5) | fixed: the block's front slotted as Fig. 90 | `claude/fp-balance` `3c9608c` |
+| 21 Hands | fixed for the Hamilton dial, against the photographed dial's tracks; the Roman dial (no photograph) left | `claude/fp-balance` `3c9608c` |
+| 19 Shield plate | done: Fig. 107's disc, centre pivot and open-ring spring | `claude/fp-balance` |
+| 18 Screws and washers (IDEAS 1.7) | done: Table II's heads and Table III's washers in the rate panel, the manual's figure beside the model's | `claude/fp-balance` |
+| 10 Centre pinion | counted: 14, likely (13:59.5 end-on, 35:23.66); sent to `group-layout`; the indicator pinion unreadable | `claude/fp-balance` |
+| 3 Train against the group | taken over by `claude/group-layout` (a fitted similarity of the whole group, 2 October 2026) | — |
+| 5 Keyhole, 7 train-blocking screw's place | taken over by `claude/group-layout` (the measured opening `TB_KEY`; the screw at (3.9, 26.15)) | — |
+| 14 Chain hook | done: labelled as the barrel turns it into view; the Stored energy step names it | `claude/fp-balance` |
+| — Camera targets | fixed: the views' and walkthrough's targets follow `L` (were the pre-turn places) | `claude/fp-balance` |
