@@ -501,7 +501,7 @@ Contents:
   click's height, round half a turn at r 10, and the feet steps under the
   cover's ends, 0.5 mm further out than its screws. The click itself (its
   pivot, length, and the way it holds) agreed with the video. Keep: the
-  spring's end on the click's back at the click's height (bom.py's `on`).
+  spring's end on the click's back at the click's height (bom.py's `on`). `07b8a00`
 
 ## Plates, bridges, screws and arbors
 

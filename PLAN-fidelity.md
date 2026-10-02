@@ -148,6 +148,6 @@ Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (ag
 | — Camera targets | fixed: the views' and walkthrough's targets follow `L` (were the pre-turn places) | `claude/fp-balance` |
 | 20 Function checks | done in `bom.py` (`tools/bom-fn.js`): locking arm, twist, train-blocking screw, shield plate, gimbal latch; the setup click's direction still to write | `claude/fp-balance` |
 | 2 `solve.py` | fixed: reads `L` and `TRAIN`, solves E against `L.E`, gives the modules, checks clearances | `claude/fidelity-plan` `66edc05` |
-| 13 Setup ratchet and click | fixed: 42 teeth (video), the spring half a turn round (video, Fig. 108), the cover's feet outside it; the arbor's square taller on the video (rough), not changed | `claude/fp-fusee` |
+| 13 Setup ratchet and click | fixed: 42 teeth (video), the spring half a turn round (video, Fig. 108), the cover's feet outside it; the arbor's square taller on the video (rough), not changed | `claude/fp-fusee` `07b8a00` |
 | C2 readings | done: setup work, fusee parts, mainspring, oil sinks, and the barrel's size (new item 23) | `claude/fp-fusee` |
 | 12 Winding pawl springs | next: the video puts the pawls nearer the centre (about 8-9 mm, model 11) with long arc springs anchored far round; a redesign of the pawls, checked by `maintaining.py` | — |
