@@ -529,6 +529,17 @@ Contents:
   video. Keep: the springs' feet and screws at `WPS` (the wheel's holes are
   cut there). `69992a0`
 
+- **Barrel a third too small** (Review-results.md, Elsewhere 23). It was r 13.5;
+  on C Spinner's video its top lip fits r 18.3 (23:30; 17.4-19.6 over the
+  focal lengths the frame allows, certain above 14.5), as the train bridge's
+  cut round it (r 19.2) and the mainspring's coil spacing had suggested. Now
+  r 17.6 under a 0.7 mm lip, its cap 0.7 wider, its lip, brace and pin
+  inside following its radius; the mainspring 1,064 mm by the half-room rule
+  (the video gives about 1.1 m); the chain 4.85 barrel turns, the set-up
+  held at 0.37 turn (it was pinned to the spring's most, which the longer
+  spring made 6.4 turns). Keep: the barrel's inner parts follow `c.Rb`; the
+  set-up a turn fraction, not the spring's range.
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the

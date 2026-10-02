@@ -1707,7 +1707,13 @@ changes it only round its own arbors (1 below).
     the maintaining work placed about the barrel, the barrel bridge's cut and
     the clearances round the barrel, so it waits on a camera fit of 23:30 or
     13:12 (the barrel's rim and the train bridge's at their heights) and on
-    the user's decision.
+    the user's decision. *Fitted and changed (2 October 2026): at 23:30, the
+    barrel as an upright cylinder through a camera scaled by the train bridge,
+    its top lip r 18.3 (17.4–19.6 over the focal lengths the frame allows,
+    certain above 14.5); 13:06 agrees roughly. The barrel now r 17.6 under a
+    0.7 mm lip, the mainspring 1,064 mm (half the room), the chain 4.85
+    barrel turns; it fits the train bridge's cut and clears everything round
+    it by 0.86 mm or more. RESOLVED.md, Winding and maintaining work.*
 
 ## The fusee assembly against Fig. 28 and the video
 
