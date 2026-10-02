@@ -1515,7 +1515,7 @@ function drawEscPlan(ctx,w,h,s,Ew,o={}){
    - Third arbor: measured on a restoration video (References/VIDEOS.md), 16.0 mm from the centre, where the counted wheels' size ratios put it;
      escape wheel position from the escapement (9.40 mm from the balance). The modules (MOD) follow from the arbors' spacing: 0.314 / 0.245 / 0.249.
    ===================================================================== */
-const L={C:[0,0],T:[-6.18,14.75],F:[0,23.9],E:[8.095,17.08],B:[1.609,10.277],Fu:[14.306,-14.519],Ba:[-22.144,-5.347],Ud:[0,-23.6],Mw:[9.6,0]};
+const L={C:[0,0],T:[-6.18,14.75],F:[0,23.9],E:[8.095,17.08],B:[1.609,10.277],Fu:[14.306,-14.519],Ba:[-22.144,-5.347],Ud:[0,-23.6],Mw:[10.5,0]};
 /* The photographed group: the balance, fusee and barrel (B, Fu, Ba, triangulated on two photographs: (8.0, 6.77), (11.59, -19.8), (-18.56, 0.19)) and everything traced
    or fitted on the top-view photograph with them (the pillars, the bridges' cuts and holes, the cock, their screws and pins, the engraving, the damascening). PT takes a
    point of the photographs' frame into the movement's: a similarity, x1.039, turned 19.42 deg and shifted (-3.891, 0.879), fitted (IDEAS.md 1.12) so the three arbors land
@@ -1577,7 +1577,9 @@ const LB_LO2=[[5.18, 4.15], [4.46, 4.19], [4.1, 4.22], [3.38, 4.3], [3.02, 4.35]
    and the manual's seven half turns a day but run 60.6 h. Every count shown in the page (labels, part cards, walkthrough tables) comes from here */
 const TRAIN={fu:90,cp:14,cw:90,tp:12,tw:80,fp:10,fw:75,ep:10,ew:16};
 const FW_SP=5;   /* the fourth wheel's spokes (Figs. 29, 110: the three train wheels have five each); the train-blocking screw's dog point stands between them */
-const MW={cp:12,mw:36,mp:10,hw:40};   /* motion work: cannon pinion 12 : minute wheel 36, minute pinion 10 : hour wheel 40 */
+const MW={cp:14,mw:56,mp:18,hw:54};   /* motion work: cannon pinion 14 : minute wheel 56, minute pinion 18 : hour wheel 54, counted on C Spinner's video (the wheels lying whole on
+   the mat, 23:45-23:46; the minute pinion's 18 leaf ends on the wheel's back, 9:06; the cannon pinion's 14 forced by the ratio of 12: References/VIDEOS.md) */
+const MWM=(()=>{const d=Math.hypot(...L.Mw);return{a:2*d/(MW.cp+MW.mw),b:2*d/(MW.mp+MW.hw)};})();   /* their modules, from the minute wheel's place (10.5 mm out, the dial-side photograph) */
 /* escape-wheel turns per turn of the fourth, third, centre and fusee wheels: 7.5, 60, 450, 2893 */
 const ESC_PER=(()=>{const fw=TRAIN.fw/TRAIN.ep,tw=fw*TRAIN.tw/TRAIN.fp,cw=tw*TRAIN.cw/TRAIN.tp;return{fw,tw,cw,gw:cw*TRAIN.fu/TRAIN.cp};})();
 const FUSEE_PER_HOUR=TRAIN.cp/TRAIN.fu,FUSEE_TURNS=8.75; /* "17-1/2 half turns will be required for a full winding" (manual Sec. III) */
@@ -1984,15 +1986,15 @@ function buildMovement(M){
   const mw=part('motion',16);
   /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75+DD), and ends in the
      bright square the winding key sets the hands by (Fig. 8, Sec. III), 2.4 across as the fusee's, so one key fits both, 1.6 proud of the minute hand's collet. The hour wheel goes on over it and turns free on the pipe (Op. 59) */
-  R.cannon=hn(arbor(mw,M,...L.C,{pin:{n:MW.cp,m:0.4,y:1.2,th:2,bore:0.5}}),'42077');mesh(R.cannon,ring(1.7,0.5,5.45+DD),M.steel,0,3.025+DD/2,0);mesh(R.cannon,new THREE.BoxGeometry(2.4,2.9,2.4),M.steel,0,7.05+DD,0);
+  R.cannon=hn(arbor(mw,M,...L.C,{pin:{n:MW.cp,m:MWM.a,y:1.2,th:2,bore:0.5}}),'42077');mesh(R.cannon,ring(1.7,0.5,5.45+DD),M.steel,0,3.025+DD/2,0);mesh(R.cannon,new THREE.BoxGeometry(2.4,2.9,2.4),M.steel,0,7.05+DD,0);
   /* the winding key on the square, turned by its shank to set the hands (Fig. 8): shown only while setting, when the bezel is off */
   R.hkey=new THREE.Group();R.hkey.visible=false;R.cannon.add(R.hkey);mesh(R.hkey,sqRingGeo(2.6,2.46,5),M.brass,0,9.45+DD,0);cylBetween(R.hkey,1.7,11.95+DD,40.5+DD,M.brass);
   { const kb=mesh(R.hkey,new THREE.CylinderGeometry(2.4,2.4,26,20),M.brass,0,42.5+DD,0);kb.rotation.x=Math.PI/2;for(const z of[13,-13])mesh(R.hkey,new THREE.SphereGeometry(2.4,18,12),M.brass,0,42.5+DD,z);mesh(R.hkey,new THREE.SphereGeometry(3.4,18,12),M.brass,0,42.5+DD,0); }
   /* the minute wheel and the wind indicator wheel turn on posts (42085, 42084) fixed to the pillar plate by screws (35779) from its train side (Fig. 110) */
   const post=(x,z,r,top,k)=>{const hr=hT(0,0,0.8)[2];hn(mesh(pp,new THREE.LatheGeometry([V2(0,2.0),V2(hr,2.0),V2(hr,0),V2(r,0),V2(r,top),V2(0,top)],24),M.steel,x,0,z),k[0]);hn(screw(pp,x,z,y0,0.8,0.4,PP_T+1.8),k[1]);};
   post(...L.Mw,0.7,3.2,['42085','35779.mw']);post(...L.Ud,0.5,4.1,['42084','35779.ud']);
-  R.minW=arbor(mw,M,...L.Mw,{wheel:{n:MW.mw,m:0.4,y:1.2,th:0.8,spokes:0,collet:0,bore:0.72,mate:MW.cp},pin:{n:MW.mp,m:0.384,y:2.4,th:1.6,bore:0.72}});mesh(R.minW,ring(1.6,0.72,2.0),M.brass2,0,1.2,0);hn(R.minW,'42078');
-  R.hourW=hn(arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:0.384,y:2.65,th:0.8,spokes:0,collet:0,bore:1.75,hub:2.6,mate:MW.mp}}),'42080');mesh(R.hourW,ring(2.3,1.75,2.9+DD),M.brass2,0,4.1+DD/2,0);   /* its pipe carries the hour hand; 0.05 clear of the cannon pinion's leaves, which turn twelve times as fast */
+  R.minW=arbor(mw,M,...L.Mw,{wheel:{n:MW.mw,m:MWM.a,y:1.2,th:0.8,spokes:0,collet:0,bore:0.72,mate:MW.cp},pin:{n:MW.mp,m:MWM.b,y:2.4,th:1.6,bore:0.72}});mesh(R.minW,ring(1.6,0.72,2.0),M.brass2,0,1.2,0);hn(R.minW,'42078');
+  R.hourW=hn(arbor(mw,M,...L.C,{wheel:{n:MW.hw,m:MWM.b,y:2.65,th:0.8,spokes:0,collet:0,bore:1.75,hub:2.6,mate:MW.mp}}),'42080');mesh(R.hourW,ring(2.3,1.75,2.9+DD),M.brass2,0,4.1+DD/2,0);   /* its pipe carries the hour hand; 0.05 clear of the cannon pinion's leaves, which turn twelve times as fast */
   R.udW=hn(arbor(mw,M,...L.Ud,{wheel:{n:UD.wheel,m:UD.m,y:1.94,th:0.5,spokes:5,collet:0,bore:0.55,mate:UD.pin}}),'42081');mesh(R.udW,ring(1.6,0.55,2.0),M.brass2,0,1.94,0);mesh(R.udW,ring(0.9,0.55,2.7+DD),M.steel,0,2.85+DD/2,0);cylBetween(R.udW,0.55,4.2+DD,4.6+DD,M.steel);   /* its pipe carries the hand */
   R.fp=hn(arbor(mw,M,...L.Fu,{pin:{n:UD.pin,m:UD.m,y:2.1,th:2.2}}),'42022',{sub:1});   /* the wind indicator pinion, part of the fusee arbor */
   /* ---------- fusee wheel (TRAIN.fu : centre pinion TRAIN.cp, module MOD.fusee, 0.392) with its maintaining work, their sizes read off the video scaled by FK ---------- */

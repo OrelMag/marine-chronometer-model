@@ -191,6 +191,13 @@ Contents:
   the hour hand, 0.84 of the minute track, agreed. Keep: the hands' lengths
   are the photograph's proportions of the tracks they read; the essay draws
   the same hands (`hands()` in essay.js). `3c9608c`
+- **Every count in the motion work wrong** (IDEAS.md 1.8). The model had
+  cannon pinion 12 : minute wheel 36, minute pinion 10 : hour wheel 40, chosen
+  for the ratio of 12; C Spinner's video has 14 : 56 and 18 : 54 (the wheels
+  whole on the mat, 23:45-23:46; the pinion's 18 leaf ends, 9:06). Now so, the
+  modules from the minute wheel's place, 10.5 mm out as the dial-side
+  photograph has it (it was 9.6, the old counts' distance). Keep: `MW` the
+  counts, `MWM` their modules from `L.Mw`.
 - **Every tooth count in the going train wrong, and the up–down scale on 240°.**
   The counts were chosen for the ratios (fusee wheel 96, centre 80, third 75,
   fourth 60, pinions 10, 10, 8; wind indicator 98 : 8), and the dial's UP–DOWN
