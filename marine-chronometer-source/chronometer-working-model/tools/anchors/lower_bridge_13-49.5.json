@@ -1,0 +1,294 @@
+{
+ "anchor": "KLUwI2UUCMQ_13-49.5.json",
+ "frame": "f_KLUwI2UUCMQ_13-49.5.png",
+ "face_y": -20.66,
+ "target": [
+  5.0,
+  -17.0,
+  15.0
+ ],
+ "box": [
+  1350,
+  450,
+  3350,
+  1650
+ ],
+ "note": "KLUwI2UUCMQ 13:49.5: the upper train bridge held underside up, the balance lower bridge on it, face-on (run video.py anchor on the anchor spec first, for its H.json). Picked by eye at 4K, about +-10 px (0.3 mm): the slab's face edge (inside the chamfer band round its convex edges), 7.9 mm off the bridge's underside (the slab's underside 8.4-9.4 mm above the plate, the bridge's 16.8: References/VIDEOS.md); the concave edge along the escape lobe, the two lugs' faces and the screws' heads at 3.3 (the upper level's depth on the side view, 36:45); the cap's jewel and the fourth's gilt setting (centres of fitted circles) on the slab's face. tools/lower_bridge.py's MEAS is this at f 6000.",
+ "picks": {
+  "slab": {
+   "h": 7.9,
+   "px": [
+    [
+     1740,
+     895
+    ],
+    [
+     1950,
+     790
+    ],
+    [
+     2000,
+     875
+    ],
+    [
+     2055,
+     930
+    ],
+    [
+     2115,
+     962
+    ],
+    [
+     2190,
+     987
+    ],
+    [
+     2270,
+     982
+    ],
+    [
+     2340,
+     962
+    ],
+    [
+     2410,
+     920
+    ],
+    [
+     2445,
+     890
+    ],
+    [
+     2485,
+     835
+    ],
+    [
+     2535,
+     800
+    ],
+    [
+     2540,
+     750
+    ],
+    [
+     2740,
+     740
+    ],
+    [
+     2870,
+     935
+    ],
+    [
+     3000,
+     1130
+    ],
+    [
+     2920,
+     1165
+    ],
+    [
+     2830,
+     1205
+    ],
+    [
+     2770,
+     1230
+    ],
+    [
+     2700,
+     1270
+    ],
+    [
+     2580,
+     1300
+    ],
+    [
+     2515,
+     1370
+    ],
+    [
+     2450,
+     1380
+    ],
+    [
+     2350,
+     1390
+    ],
+    [
+     2290,
+     1405
+    ],
+    [
+     2230,
+     1385
+    ],
+    [
+     2170,
+     1358
+    ],
+    [
+     2110,
+     1320
+    ],
+    [
+     2050,
+     1278
+    ],
+    [
+     1990,
+     1235
+    ],
+    [
+     1935,
+     1183
+    ],
+    [
+     1880,
+     1125
+    ],
+    [
+     1835,
+     1068
+    ],
+    [
+     1790,
+     1010
+    ],
+    [
+     1755,
+     950
+    ]
+   ]
+  },
+  "concave": {
+   "h": 7.9,
+   "px": [
+    [
+     2000,
+     875
+    ],
+    [
+     2055,
+     930
+    ],
+    [
+     2115,
+     962
+    ],
+    [
+     2190,
+     987
+    ],
+    [
+     2270,
+     982
+    ],
+    [
+     2340,
+     962
+    ],
+    [
+     2410,
+     920
+    ]
+   ]
+  },
+  "lugA": {
+   "h": 3.3,
+   "px": [
+    [
+     1635,
+     635
+    ],
+    [
+     1855,
+     588
+    ],
+    [
+     1955,
+     725
+    ],
+    [
+     1965,
+     770
+    ],
+    [
+     1950,
+     790
+    ],
+    [
+     1740,
+     895
+    ],
+    [
+     1700,
+     910
+    ]
+   ]
+  },
+  "lugB": {
+   "h": 3.3,
+   "px": [
+    [
+     2964,
+     1178
+    ],
+    [
+     3047,
+     1357
+    ],
+    [
+     3028,
+     1522
+    ],
+    [
+     2786,
+     1560
+    ],
+    [
+     2690,
+     1446
+    ],
+    [
+     2700,
+     1270
+    ],
+    [
+     2830,
+     1205
+    ]
+   ]
+  },
+  "screws": {
+   "h": 3.3,
+   "px": [
+    [
+     1810,
+     760
+    ],
+    [
+     2900,
+     1390
+    ]
+   ]
+  },
+  "cap": {
+   "h": 7.9,
+   "px": [
+    [
+     2250.9,
+     1152.7
+    ]
+   ]
+  },
+  "fourth": {
+   "h": 7.9,
+   "px": [
+    [
+     2624.0,
+     958.7
+    ]
+   ]
+  }
+ }
+}

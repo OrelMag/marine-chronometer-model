@@ -686,6 +686,20 @@ Contents:
   the pillar (0.7 mm). The outlines are simplified so no three points are in
   a line: three.js's triangulation joins a hole wrongly to such an outline
   (116 open edges). `3953b0c`
+- **Balance lower bridge drawn as an L, not the real lens.** The outline was
+  read on 36:01 through a camera turned onto the model by its centre, third
+  and fourth arbors, then laid round the model's balance, escape and fourth
+  arbors, which stand 4–5 mm off the real ones: that bent it into a
+  straight-sided L with an arm. Measured face-on at 13:49.5 through the camera
+  the train bridge's own rim, barrel cut and centre bushing give
+  (`tools/framecam.py`, the picks back at their heights), the slab is a lens
+  (two convex edges, r 20.8 and 25.7, a straight end, a concave edge on the
+  escape lobe's circle, r 7.14) with a chamfer round its convex edges, and a
+  lug at each end of the upper level; the screws are at (20.70, 7.23) and
+  (−9.18, 21.87). The model draws that, changed only round its own arbors.
+  Keep: the outline in the train bridge's frame as measured, its two levels
+  and chamfer; anything turned onto the model by the model's own arbors
+  carries their error into the part. `c2f11a6`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,

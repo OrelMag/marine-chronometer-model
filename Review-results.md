@@ -1013,40 +1013,63 @@ screw at each end of the bridge's long axis. The earlier model (a frame of
 lobes round the escape wheel, both screws at the fourth end, after three holes
 on the top-view photograph) had the right parts in the wrong arrangement.
 
-1. **Its outline.** Settled against the model, in form; estimated in size. On
-   the video the slab is an L: a body with the fourth's setting (a large gilt
-   setting in a sink) and the cap (in a round counterbore, near the L's
-   corner), the train-blocking screw's dog point near the body's far side, and
-   an arm from the cap's end to a lug. The escape arbor passes up through the
-   L's inside corner, under the train bridge's escape lobe; Fig. 110 draws the
-   bridge as a C round that opening. The model now draws that L, but round its
-   own arbors, which 14 puts farther apart than the video's: the body is
-   stretched from the balance to the fourth arbor and narrowed between the
-   escape and third arbors, so it is longer and slimmer than the video's, and
-   the arm shorter. Its outline waits on 14.
+Rebuilt again on 2 October 2026 (branch `claude/lower-bridge-curved`): the L
+was the model's arbors bending the video's outline, not the bridge's shape.
+Measured face-on at 13:49.5 (`tools/framecam.py`, the camera recovered from the
+frame's anchor on the train bridge's rim, barrel cut and centre bushing; the
+picks back at their heights), the real slab is a lens in the train bridge's
+frame, which is the model's, and it already holds the model's balance and
+fourth arbors. The model now draws that lens where the real bridge is, with
+two levels (the slab, and a lug at each end against the train bridge), and
+changes it only round its own arbors (1 below).
+
+1. **Its outline.** Settled: measured (2 October 2026). Seen from below, the
+   slab is a lens: an outer edge on a circle of r 20.8 (0.2 mm rms over 13
+   points) from the 3 o'clock lug round past the centre arbor, a flatter
+   convex edge (r 25.7) to the fourth's end, a straight edge across it, a
+   short one to the train bridge's escape lobe, and a concave edge on the
+   lobe's circle (r 7.14, 0.04 mm rms; the lobe from above, 18, r 7.0), so
+   the escape wheel lifts out past the slab; a chamfer about 1 mm wide round
+   its convex edges. Fig. 110's C round a large opening is that concave side.
+   The model draws it as measured, and changes it only round its own arbors,
+   which stand off the real ones (14): a bulge of about 1 mm to keep 1 mm of
+   metal round the cap's counterbore and the fourth's sink, a bite r 2.4
+   round the escape arbor (0.5 mm inside the lobe's circle in the model), and
+   1 mm off the third arbor. Sure: ±0.5 mm over focal lengths of 5000–7000
+   px; the picks to about 0.3 mm. Earlier (1 October) the outline was read on
+   36:01 through a camera turned onto the model by its centre, third and
+   fourth arbors, which bent it into an L round the model's arbors.
 2. **Whether the upper tier is one piece.** Settled: two. Side-on (42:56)
    the escape wheel shows between the slab and the train bridge, with stepped
    lugs rising to the train bridge at both ends and nothing against the train
    bridge between them.
 3. **The arm's route.** Settled: there is no separate thin arm. The "arm" of
-   Fig. 30 is the L's arm, running from the cap to the lug at that end, past
-   the escape arbor's passage on its outer side. The model draws it so.
+   Fig. 30 is the slab's end toward the 3 o'clock lug, past the escape lobe
+   on its outer side. The model draws it so.
 4. **The heights.** Settled to about 1 mm. By the pillars (16.8 mm) on three
    side views the slab stands at 8.8–11.9 mm above the plate (its underside
    8.4–9.4), the model's at 7.9–10.9; the escape wheel at 15.6, the model's at
    15.1. Kept.
 5. **The screws.** Settled. The real bridge's two screws are at the ends of
-   its long axis, 33.9 mm apart on 36:01 (31–36 on the other frames). The
-   model has the 3 o'clock one where the video has it, (20.58, 11.88), with the
-   pillar plate's access hole (RMG No. 4E019) under it, and the other at the
-   fourth end, (−9.6, 21.6), moved off the pillar, the detent support block
-   and a barrel-bridge screw that stand where the video's lug is (31.7 mm
-   apart). The tapped hole the top-view photograph shows at (11.24, 29.51)
+   its long axis, 33.3 mm apart at 13:49.5 (33.9 on 36:01, 31–36 on the other
+   frames). The model has both where 13:49.5 puts them, (20.70, 7.23) with the
+   pillar plate's access hole (RMG No. 4E019) under it, and (−9.18, 21.87).
+   36:01 had the 3 o'clock one at (20.5, 12.4), 4.7 mm away: that frame is
+   turned onto the model by its centre, third and fourth arbors, and the
+   fourth stands 4.3 mm off the real setting (14). The far lug is the video's
+   less where the model's detent, the pillar, a barrel-bridge screw and the
+   balance locking arm's screw and pin stand. The tapped hole the top-view photograph shows at (11.24, 29.51)
    isn't this bridge's; what screws into it is still open.
 6. **The steady pins.** Open. None show on the bridge's faces; pins between
    the bridge and the train bridge would be hidden in the joint. The model
    puts one in each lug.
-14. **The settings' spacing** (new). The face-on underside gives the
+14. **The settings' spacing** (new). Measured with the camera (2 October
+   2026, `tools/framecam.py`): in the train bridge's frame the cap's jewel is
+   at (3.79, 9.75) and the fourth's setting at (2.89, 20.73), 11.0 mm apart,
+   the escape lobe's centre at (13.81, 15.51); the model's balance is 5.2 mm
+   from the cap and its fourth arbor 4.3 mm from the setting. Across focal
+   lengths of 5000–7000 px these move 0.5 mm or less. So the layout question
+   stands as below, now on one frame anchored on the bridge itself. The face-on underside gives the
    bridge's own proportions, without naming any train-bridge hole. Cap to
    escape passage, cap to fourth's setting and escape passage to fourth's
    setting are 8.6 : 10.8 : 11.6, with the angle at the cap about 73°. The
