@@ -503,6 +503,43 @@ Contents:
   pivot, length, and the way it holds) agreed with the video. Keep: the
   spring's end on the click's back at the click's height (bom.py's `on`). `07b8a00`
 
+- **Fusee's stop-bar slot across the hub, its end plate steel and flat, its
+  winding ratchet 40 teeth** (Review-results.md, the fusee assembly, 3, 5, 6).
+  On C Spinner's video (17:50-20:27, the fusee taken apart) and in Figs. 28
+  and 69: the slot runs beside the hub 3.5-5 mm off the axis (it was 2.0, cut
+  through the hub), the stop-bar's spring a round wire in an open C of about
+  270 deg round the hub; the end plate gilt brass with a raised boss round its
+  hole, the taper pin's slot across the boss; the winding ratchet about 36
+  teeth. Now so: the slot 3.6 mm off the axis, the hub r 2.4 with the
+  spring's groove round it, the spring out of the groove where the slot opens
+  it and along to the bar's tab; the nose's face set where the chain meets its
+  outer corner (the chain met that corner first once the slot moved out);
+  the plate gilt with an r 2.2 boss; 36 teeth on the old pitch radius. Keep:
+  the spring leaves the groove past the tab's reach at full travel; the nose
+  set by its outer corner (`xf`). `daa45cb`
+
+- **Winding-pawl springs short bent strips** (Review-results.md, the fusee
+  assembly, 7). Figs. 28 and 69 draw them as long arcs, and C Spinner's video
+  (19:12, 18:40, 19:15) shows each a thin arc of about 150-170 deg round the
+  sustaining ratchet's middle, held at its far end by two screws, the two
+  nearly round it. Now so: each from a foot about 150 deg round (toward the
+  side its pawl's tip points) back along r 12.1 FK to the arm, its last
+  stretch rebuilt as the pawl rides the teeth; the strip starts at the
+  foot's inner end, clear of the foot's screws. The pawls agreed with the
+  video. Keep: the springs' feet and screws at `WPS` (the wheel's holes are
+  cut there). `69992a0`
+
+- **Barrel a third too small** (Review-results.md, Elsewhere 23). It was r 13.5;
+  on C Spinner's video its top lip fits r 18.3 (23:30; 17.4-19.6 over the
+  focal lengths the frame allows, certain above 14.5), as the train bridge's
+  cut round it (r 19.2) and the mainspring's coil spacing had suggested. Now
+  r 17.6 under a 0.7 mm lip, its cap 0.7 wider, its lip, brace and pin
+  inside following its radius; the mainspring 1,064 mm by the half-room rule
+  (the video gives about 1.1 m); the chain 4.85 barrel turns, the set-up
+  held at 0.37 turn (it was pinned to the spring's most, which the longer
+  spring made 6.4 turns). Keep: the barrel's inner parts follow `c.Rb`; the
+  set-up a turn fraction, not the spring's range. `2e0db4f`
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the

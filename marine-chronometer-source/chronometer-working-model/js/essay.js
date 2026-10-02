@@ -191,7 +191,7 @@ const ESSAY=(()=>{
       else{const s=(t-0.04)/0.92;ang=TAU*N*s;r=Re;y=H*s;ox=Math.sin(Math.PI*s)*0.45*R*(th/(TAU*0.6));}
       const a=ang+th*(1-ang/(TAU*N));return v.set(r*Math.cos(a)+ox,y,-r*Math.sin(a));};
     return closeGeo(new THREE.TubeGeometry(c,Math.round(N*44),wire,6,false));}
-  const HS=[5.5,5.9,14,0.17,3.6];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the ends' radius (HS_R) */
+  const HS=[5.5,5.9,14,0.17,4.6];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the ends' radius (HS_R) */
 
   /* ---------- the balance and hairspring: T = 2π√(I/κ) ---------- */
   fig('eBal',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.5,dist:70,target:[4,1,0]}),M=G.M,A=ESC.A;
@@ -238,7 +238,7 @@ const ESSAY=(()=>{
 
   /* ---------- constant force: the barrel, chain and fusee, in the model's profile ---------- */
   fig('eFus',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.85:0.55,yaw:Math.PI-0.45,pitch:0.42,dist:112,target:[0,3.5,0]}),M=G.M,S=V.scene;
-    const fs=model.fs,rf=fs.rf,N=FUSEE_TURNS,H=8.96,yf=m=>H*(1-m/N),Rb=13.5,d=Math.hypot(L.Fu[0]-L.Ba[0],L.Fu[1]-L.Ba[1]),fx=d/2,bx=-d/2,V2=(a,b)=>new THREE.Vector2(a,b);
+    const fs=model.fs,rf=fs.rf,N=FUSEE_TURNS,H=8.96,yf=m=>H*(1-m/N),Rb=17.6,d=Math.hypot(L.Fu[0]-L.Ba[0],L.Fu[1]-L.Ba[1]),fx=d/2,bx=-d/2,V2=(a,b)=>new THREE.Vector2(a,b);
     /* barrel turns for n fusee turns of chain, as the model reckons them (makeFusee's I, which counts the chain's thickness) */
     const I=n=>fs.I(n);
     const fz=new THREE.Group();fz.position.x=fx;S.add(fz);
