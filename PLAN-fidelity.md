@@ -161,4 +161,6 @@ Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (ag
 | 2 `solve.py` | fixed: reads `L` and `TRAIN`, solves E against `L.E`, gives the modules, checks clearances | `claude/fidelity-plan` `66edc05` |
 | 13 Setup ratchet and click | fixed: 42 teeth (video), the spring half a turn round (video, Fig. 108), the cover's feet outside it; the arbor's square taller on the video (rough), not changed | `claude/fp-fusee` `07b8a00` |
 | C2 readings | done: setup work, fusee parts, mainspring, oil sinks, and the barrel's size (new item 23) | `claude/fp-fusee` |
-| 12 Winding pawl springs | next: the video puts the pawls nearer the centre (about 8-9 mm, model 11) with long arc springs anchored far round; a redesign of the pawls, checked by `maintaining.py` | — |
+| 12 Fusee parts | done: the stop-bar slot beside the hub with its C-wire spring, the end plate gilt with its boss, the winding ratchet's 36 teeth, the winding-pawl springs as long arcs; oil sinks on the fusee's and barrel's bushings. Not drawn: the plateau the pawl springs lie round | `claude/fp-fusee2` |
+| 23 Barrel's size | fitted (r 18.3 top lip, 17.4-19.6) and changed: the barrel r 17.6, the mainspring 1,064 mm, the chain 4.85 barrel turns | `claude/fp-barrel` `2e0db4f` |
+| 22 Left items | built: the dial face checked in `fine.py`, the collet as Figs. 5 and 6, the Navy's Y-arm stop as a variant (illustrative), the barrel pillar's profile from the video | `claude/fp-left`, `claude/fp-barrel` |
