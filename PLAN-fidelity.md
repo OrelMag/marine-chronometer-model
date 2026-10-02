@@ -175,3 +175,12 @@ All chosen, done on sub-branches of `claude/fidelity-plan`, then merged and rele
 | 12 Fusee parts | done: the stop-bar slot beside the hub with its C-wire spring, the end plate gilt with its boss, the winding ratchet's 36 teeth, the winding-pawl springs as long arcs; oil sinks on the fusee's and barrel's bushings. Not drawn: the plateau the pawl springs lie round | `claude/fp-fusee2` |
 | 23 Barrel's size | fitted (r 18.3 top lip, 17.4-19.6) and changed: the barrel r 17.6, the mainspring 1,064 mm, the chain 4.85 barrel turns | `claude/fp-barrel` `2e0db4f` |
 | 22 Left items | built: the dial face checked in `fine.py`, the collet as Figs. 5 and 6, the Navy's Y-arm stop as a variant (illustrative), the barrel pillar's profile from the video | `claude/fp-left`, `claude/fp-barrel` |
+| Setup click check | done: holds the right way; its seat shallow (0.1 mm), the pivot's place open (photograph 9.25 mm, video 10-10.5) | `claude/fp-quick` |
+| Motion work counts | done: 14 : 56, 18 : 54 (video), the minute wheel 10.5 mm out (dial-side photograph); escape pinion 10 and indicator pinion 12 likely | `claude/fp-quick` `aba5fcf` |
+| Barrel height, bridge cut | done: 16.5 mm tall (side-on, camera-free), the cut r 21.0 centred 24.8 out | `claude/fp-barrel2` `919cc84` |
+| Setup arbor and cover | done: the square about 7.5 mm over the ratchet, the cover's hole r 3.0 (rough readings) | `claude/fp-barrel2` |
+| Cock nose | done: trimmed to the cap's outline + 0.3 | `claude/fp-barrel2` |
+| Sustaining ratchet face | the pawls' studs drawn; the plateau left (the pawls lie over it, its height unseen) | `claude/fp-barrel2` |
+| Camera method | `tools/fcal.py`: f per shot; the video's f changes between shots | `claude/fp-camera` |
+| Fourth arbor, pillars, indicator | measured at the plate's scale (the fourth 21.5, pillars 34.1-34.7, stud 22.9, bore 38.2 with a relief at the 12); the user: settle the scale first (4-5 % between the plate's 87.57 and the bore's 40.2), then move them together, the ring's relief with the bore | — |
+| Escapement details | measuring | — |
