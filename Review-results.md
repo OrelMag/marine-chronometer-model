@@ -1087,6 +1087,10 @@ changes it only round its own arbors (1 below).
      with the third at 16.8 make the escape-to-fourth distance about 11.2 mm,
      as the bridge shows (model 10.6).
 
+   **The balance: applied** (2 October 2026, IDEAS.md 1.12): it now stands on the cap (with the fusee and
+   barrel, one similarity of the photographed group), and the train bridge's balance lobe at 23:30 is
+   centred 0.6 mm from it. The fourth is still 3.9 mm off its setting, and the balance 13.7 mm from it (the
+   video's 10.8-12): open with 1.11.
    The model's balance (triangulated from two photographs) and fourth arbor
    (under the seconds hand) are its best-founded positions, so a balance only
    11 mm from the fourth is hard to reconcile with them. Something in that
@@ -1440,7 +1444,8 @@ changes it only round its own arbors (1 below).
     So the model's photographed group (balance, fusee, barrel, the bridges,
     the cock) is turned about 13° from the dial and the train, or the dial
     and the train about -13° from it. The group's own internal layout stands
-    (6:29 and 14; but see 22: the bare plate, fitted again after the turn,
+    (6:29 and 14; applied as one similarity, IDEAS.md 1.12, which also put the balance on its cap and so
+    takes up 36:01's remaining angle; see 22: the bare plate, fitted again after the turn,
     puts the fusee 2.7 mm nearer the centre and the barrel and pillars 2.5-7
     mm further out, which no move of the whole group fits). Turning it brings the balance 16.7 mm from the fourth
     (model 18.9), toward 36:01's 12.0; that reading's remaining 18° is open.
@@ -1562,6 +1567,9 @@ changes it only round its own arbors (1 below).
     from the centre; the mouth a sharp corner at (28.0, -18.7) and a straight
     edge turning into the rim through a round corner (it was a spike to
     -40°). Still open:
+    - **Applied (2 October 2026, `claude/group-layout`):** pillar 2 stands under the third screw, the fusee 20.4
+      mm out; the keyhole is the measured opening (two lobes and the escape passage, `TB_KEY`) and the end past
+      the barrel a straight cut (`TB_END`), both on 23:30 through its anchor.
     - **The third screw: moved, its pillar still open** (2 October 2026,
       branch `claude/train-bridge-screw`). At (29.24, -12.28) it kept 0.5 mm
       of metal to the notch and its head overhung the edge by about 1 mm, and
@@ -1635,7 +1643,12 @@ changes it only round its own arbors (1 below).
     scale (×1.11) 2.5 mm, the fusee 3.2 mm off. So the turn took the angles,
     and what is left is the group's own layout, against the top-view
     photograph's (19 took that to stand). How sure: as above.
-    **Not yet acted on; planned in `IDEAS.md` 1.12** (updated for the turn). Moving the group means the fusee and barrel's
+    **Applied (2 October 2026, branch `claude/group-layout`; IDEAS.md 1.12).** The group is placed by one similarity
+    fitted to the measured balance (its cap), fusee (20.4) and barrel (22.6), to 0.23-0.31 mm; 36:15 fitted too
+    (`rimfit_36-15.json`, the fusee 20.3-20.8, the barrel 21.4-23.5). Open: the pillars' radii (their tops
+    read 3-7 mm further out than the transform puts them; the train bridge's holes at 23:30 agree with the
+    transform) and pillar 1, pushed 2.3 mm out of the fourth wheel. The rest of this paragraph is the plan as it
+    stood. Moving the group means the fusee and barrel's
     places, the pillars, the barrel and train bridges' outlines and holes and
     the cock (traced on the top-view photograph in the model's frame), the
     fusee wheel and centre pinion's module (`solve.py`), the chain, the
