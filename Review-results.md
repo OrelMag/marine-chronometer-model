@@ -1362,6 +1362,18 @@ changes it only round its own arbors (1 below).
     and 14. A video should show: the bridge's screw holes on the bare train
     bridge from above (13:44, once anchored on matched holes).
 
+    Measured again (2 October 2026; `References/VIDEOS.md`, "The escape
+    upper bridge, close"): the bar 5.2 mm wide (model 4.0), 0.9-1.1 thick, flat;
+    under its middle a round boss r 3.8 hanging 1.5 mm into the escape
+    passage; the end screws countersunk, flush; the ends in recessed seats in
+    the train bridge, each with a steady-pin hole 1.6 mm further out and 1.3 mm
+    toward the balance; the cap a disc R 4.1, about 1 mm thick, sunk flush in
+    the bar and cut flat on both sides with the bar's edges. **Waits on the
+    escape arbor's place** (24): the model's arbor stands 3.2 mm from the
+    keyhole's edge, so a boss of r 3.8 would cut the train bridge; the
+    bridge is rebuilt with the arbor's move. The balance lower cap (round,
+    one flat) is built (`claude/fp-escape`); the detent block's far pin waits (20.2).
+
     Measured (18): the end screws are 8.3 and 8.6 mm from the jewel, not 5,
     on a line about 3° off the 6 o'clock line, and the cap's screws 3.3 mm.
     The hole at item 12's (9.24, 20.86), re-placed at (11.79, 22.41) by a
@@ -1559,7 +1571,13 @@ changes it only round its own arbors (1 below).
        (it was 7.9), a pin 2.0 mm the other way. Fig. 90's other pin, 9.5 mm
        toward the foot, would stand past the train bridge's cut round the
        barrel in the model's place for the block; it is drawn 2.9 mm nearer
-       the screw. One more sign that the block is not where the model puts
+       the screw. Since the barrel's cut was refitted (23) there is metal there,
+       and the video's holes (10:00, 10:50) put the pin there too, in line
+       with the screw 5.7 and 5.5 mm either side. But it can't move alone:
+       Fig. 90's block runs 15 mm toward the foot from the point of flexure
+       and the detent's foot 17 (the adjusting screw beyond the block's end);
+       the model's are 9.2 and 10.6, shortened to clear the train pillar.
+       The pin, block and foot wait for the layout (24). One more sign that the block is not where the model puts
        it (12, 16, 18), as is the third arbor 1.2 mm from the point of
        flexure, through a notch in the block. Sure: high on the pins; their
        spacing to about 0.3 mm on Fig. 90.
