@@ -15,14 +15,14 @@ async()=>{
   { click('#armSeg button[data-v="1"]');await until(()=>H().amp===0,60000);await wait(300);const h=H();   /* the page's frames carry model time: a slow renderer takes longer */
     const fin=[];R.arm.traverse(m=>{if(m.isMesh&&m.geometry.type==='CylinderGeometry')fin.push(ax(m));});let g=1e9;
     for(const w of byHn('42176')){const[a,b,r]=ax(w);for(const[c,d,q]of fin)g=Math.min(g,segD(a,b,c,d)-r-q);}
-    out.push(['locking arm',h.amp===0&&h.held&&g>-0.05&&g<0.1,`locked: amplitude ${f2(h.amp)}, train held ${h.held}, finger to timing weight ${f2(g)} mm (want -0.05..0.1); staff at ${f2(R.staff.rotation.y)} rad, ${byHn('42176').length} weights, ${fin.length} finger`]);
+    out.push(['locking arm',h.amp===0&&h.held&&g>-0.05&&g<0.25,`locked: amplitude ${f2(h.amp)}, train held ${h.held}, finger to timing weight about ${f2(g)} mm (between their axes less their radii, which overstates it where the finger's end stands above the weight's axis; want -0.05..0.25, fine.py measures it)`]);
     click('#armSeg button[data-v="0"]');await wait(2000);const h2=H();
     out.push(['locking arm, unlocked',h2.amp===0&&h2.held,`unlocked, not started: amplitude ${f2(h2.amp)}, train held ${h2.held} (a detent chronometer doesn't start by itself)`]); }
   /* the twist (Sec. III): "a single quick twist" sets the balance swinging past the escapement's least amplitude, and the train runs */
   { click('#twist');await until(()=>H().amp>amin&&!H().held,60000);const h=H();out.push(['twist to start',h.amp>amin&&!h.held,`after the twist: amplitude ${f2(h.amp)} rad (least to unlock ${f2(amin)}), train held ${h.held}`]); }
   /* the train-blocking screw (Sec. II, Fig. 110): down, its dog point between the fourth wheel's spokes holds the train; raised, the train goes on */
-  { click('#blkSeg button[data-v="1"]');await until(()=>H().held,60000);await wait(3000);const h=H(),E0=h.E;await wait(3000);const h1=H();   /* held, the wheel runs on to the spoke: then it stands */
-    out.push(['train-blocking screw',h1.held&&h1.E===E0,`screwed down: train held ${h1.held}, escape wheel ${E0} then ${h1.E}`]);
+  { click('#blkSeg button[data-v="1"]');await until(()=>H().held,180000);await wait(3000);const h=H(),E0=h.E;await wait(3000);const h1=H();   /* it waits over the wheel for a gap between spokes; held, the wheel runs on to the spoke: then it stands */
+    out.push(['train-blocking screw',h1.held&&h1.E===E0,h.held?`screwed down: train held ${h1.held}, escape wheel ${E0} then ${h1.E}`:'screwed down: the train not held within 180 s']);
     click('#blkSeg button[data-v="0"]');await until(()=>!H().held,60000);const h2=H(),E2=h2.E;await until(()=>H().E!==E2,30000);const h3=H();
     const ok=h3.amp>amin?!h3.held&&h3.E!==E2:true;out.push(['train-blocking screw, raised',ok,`raised: train held ${h3.held}, escape wheel ${E2} then ${h3.E}, amplitude ${f2(h3.amp)}`]); }
   /* the shield plate (Fig. 107; Sec. III, Fig. 7): at rest its metal covers the case's key hole; turned open, its hole lines up with it */

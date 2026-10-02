@@ -46,7 +46,11 @@ async def run(evl):
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.wait_for_timeout(300)
         if evl:await pg.evaluate(evl)
         res=await pg.evaluate(JS,BOM)
-        res['fn']=[] if '--no-fn' in sys.argv else await pg.evaluate(FNJS)
+        if '--no-fn' in sys.argv:res['fn']=[]
+        else:   # on a fresh page: bom-check.js turns the train and balance through update(), and a held train isn't redrawn from the page's own state
+            await pg.reload();await pg.wait_for_function("window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
+            if evl:await pg.evaluate(evl)
+            res['fn']=await pg.evaluate(FNJS)
         sp=await pg.evaluate("Object.fromEntries(Object.entries(window.__parts).map(([k,v])=>[k,v.sp||'']))")
         await b.close()
     return res,sp,errs

@@ -962,8 +962,15 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    Setup, case and gimbals), the setup
    ratchet and click (asked in Orel_comments.md), the dust seal, the detent's
    trip-spring bracket.
-3. **Function checks** not yet in `bom.py` (the locking arm, train-blocking
-   screw, twist to start, the setup click's direction, shield plate and latch):
+3. *Done, but the setup click (2 October 2026, `tools/bom-fn.js`):* **Function
+   checks** in `bom.py`, worked through the page's own controls on a fresh page:
+   the locking arm stops the balance with its finger at a timing weight and it
+   doesn't restart by itself, the twist starts it, the train-blocking screw
+   holds the train and lets it go, the shield plate covers the key hole and
+   opens onto it, the latch holds the case to the box. The setup click's
+   direction waits on a reading of the setup ratchet. Before (the locking arm,
+   train-blocking screw, twist to start, the setup click's direction, shield
+   plate and latch):
    `maintaining.py`, `escapement.js` and `invariants.py` cover the maintaining
    work, the escapement and the train's arithmetic.
 4. *Done:* **The other checks after these geometry changes.** `fine.py`
