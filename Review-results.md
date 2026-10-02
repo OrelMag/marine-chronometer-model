@@ -1699,6 +1699,16 @@ changes it only round its own arbors (1 below).
     fusee wheel's size (27:26, laid flat). It also bears on 21: the pillar
     under the train bridge's third screw.
 
+24. **The fourth arbor, the pillars and the indicator against the scale** (new, 2 October
+    2026; `References/VIDEOS.md`). At the plate's assumed 87.57 mm the fourth's setting is
+    21.5 mm from the centre (model 23.9), which leaves the model's balance 11.3 mm from it,
+    as the video has it (14's conflict is the fourth's place, not the balance's); the
+    pillars' feet r 34.1-34.7, the indicator's stud 22.9, the ring's bore 38.2 with a relief
+    for the indicator wheel. But the dial side and the bare plate agree only with a 4-5 %
+    scale factor between the plate's 87.57 and the bore's 40.2, and the photographed dial's
+    seconds argue for the larger scale. Open: the scale first (the user's decision), then
+    the fourth, the pillars, the stud and the bore together.
+
 23. **The barrel's size** (new, 2 October 2026; `References/VIDEOS.md`,
     Measurements). The model's barrel is r 13.5; four readings put it about
     r 18–19: laid flat at 23:30 its cap is about 37–40 mm across against the

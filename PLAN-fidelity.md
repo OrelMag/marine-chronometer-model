@@ -182,4 +182,5 @@ All chosen, done on sub-branches of `claude/fidelity-plan`, then merged and rele
 | Cock nose | done: trimmed to the cap's outline + 0.3 | `claude/fp-barrel2` |
 | Sustaining ratchet face | the pawls' studs drawn; the plateau left (the pawls lie over it, its height unseen) | `claude/fp-barrel2` |
 | Camera method | `tools/fcal.py`: f per shot; the video's f changes between shots | `claude/fp-camera` |
-| Fourth arbor, pillars, indicator; escapement details | measuring (two agents) | — |
+| Fourth arbor, pillars, indicator | measured at the plate's scale (the fourth 21.5, pillars 34.1-34.7, stud 22.9, bore 38.2 with a relief at the 12); the user: settle the scale first (4-5 % between the plate's 87.57 and the bore's 40.2), then move them together, the ring's relief with the bore | — |
+| Escapement details | measuring | — |
