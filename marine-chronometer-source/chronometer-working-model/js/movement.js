@@ -272,9 +272,9 @@ function buildMovement(M){
     ring:[100,210,340].map(a=>[40.6*Math.cos(a*D2R),40.6*Math.sin(a*D2R)]),eb:[8.0,-8.0].map(f=>add(L.E,ebu,f)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[[20.7,7.23],[-9.18,21.87]],lbp:[[23.4,8.6],[-7.4,23.9]],blc:[1.9,-1.9].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(...DBLK.s)),dpin:DBLK.p.map(([t,n])=>(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(t,n))),cock:[33.11,12.62],ckp:[[35.5,5.0],[26.9,19.8]]};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
      ckp: the cock's steady pins, at the two plain holes the train bridge shows under the cock with it off (C Spinner 6:47), placed to about 2 mm */
-  /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge: at the arm's end on the 3 o'clock side where the restoration video has it
-     (outside every wheel, over the access hole in the pillar plate), and at the fourth end beyond the train-blocking screw (Fig. 30's order), moved off the pillar, the detent support
-     block and the barrel bridge's screw beside it; lbp: its steady pins, one in each lug (tools/lower_bridge.py) */
+  /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge, where the restoration video has them (13:49.5, measured face-on): at the
+     slab's end on the 3 o'clock side (outside every wheel, over the access hole in the pillar plate), and at the fourth end beyond the train-blocking screw (Fig. 30's order); lbp: its
+     steady pins, one in each lug (tools/lower_bridge.py) */
   /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff, at -30 deg, where the
      bridge's notch round the fusee leaves it 2.8 mm of metal; at -60 deg it would stand in the notch */
   const ARM_S=0.8,TBS_R=0.84,TB_CB=2.65;   /* TB_CB: the train bridge's counterbore for its third screw (r, 23:30) */
