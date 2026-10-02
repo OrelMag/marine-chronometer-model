@@ -197,7 +197,7 @@ Contents:
   whole on the mat, 23:45-23:46; the pinion's 18 leaf ends, 9:06). Now so, the
   modules from the minute wheel's place, 10.5 mm out as the dial-side
   photograph has it (it was 9.6, the old counts' distance). Keep: `MW` the
-  counts, `MWM` their modules from `L.Mw`.
+  counts, `MWM` their modules from `L.Mw`. `aba5fcf`
 - **Every tooth count in the going train wrong, and the up–down scale on 240°.**
   The counts were chosen for the ratios (fusee wheel 96, centre 80, third 75,
   fourth 60, pinions 10, 10, 8; wind indicator 98 : 8), and the dial's UP–DOWN
