@@ -186,9 +186,9 @@ elif cmd in ('fit', 'unproj'):
     # traced on the frame. SPEC is a JSON file: {"frame": path, "points": {"NAME@LEVEL": [u, v]}, "circles": {"NAME@LEVEL": [[u, v], ...]}}
     import json; from scipy.optimize import least_squares
     LEV = {'TBtop': -23.76, 'TBbot': -20.66, 'PPtop': -3.86}   # movement.js: TB_T, TB_U, the pillar plate's train face (-PP_T)
-    PT = {'C': (0, 0), 'T': (-6.18, 14.75), 'F': (0, 23.9), 'B': (8.0, 6.77), 'E': (7.193, 16.135), 'Fu': (11.59, -19.8), 'Ba': (-18.56, 0.19),
-          'tb0': (-16.63, 22.48), 'tb1': (18.17, 26.92), 'tb2': (-8.5, 27.7)}   # movement.js L and PILLARS (tb: the train bridge's pillar screws)
-    CI = {'tbrim': (0, 0, 40.5), 'bcut': (-22.56, 0.23, 19.2), 'plate': (0, 0, 87.57 / 2)}   # BR_R; the train bridge's cut round the barrel (crescent's bc, br); the plate
+    PT = {'C': (0, 0), 'T': (-6.18, 14.75), 'F': (0, 23.9), 'B': (6.125, 8.504), 'E': (8.504, 17.598), 'Fu': (16.036, -16.408), 'Ba': (-18.055, -4.306),
+          'tb0': (-21.57, 17.79), 'tb1': (11.12, 30.52), 'tb2': (-14.95, 24.82)}   # movement.js L and PILLARS (tb: the train bridge's pillar screws), the photographed group turned 14 deg (PHOTO_TURN)
+    CI = {'tbrim': (0, 0, 40.5), 'bcut': (-21.95, -5.23, 19.2), 'plate': (0, 0, 87.57 / 2)}   # BR_R; the train bridge's cut round the barrel (crescent's bc, br); the plate
     def at(n):   # NAME@LEVEL -> (name, y); a name may be x,z and a level a number
         k, l = n.split('@'); return k, LEV[l] if l in LEV else float(l)
     def xyz(k, y): x, z = PT[k] if k in PT else map(float, k.split(',')); return np.array([x, y, z], float)

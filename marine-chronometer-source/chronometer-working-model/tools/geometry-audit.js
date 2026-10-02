@@ -20,7 +20,9 @@
  for(const s of screws){const p=new THREE.Vector3().setFromMatrixPosition(L(s)),r=s.userData.screw,sl=s.parent.children.filter(c=>c!==s&&c.isMesh&&Math.hypot(c.position.x-s.position.x,c.position.z-s.position.z)<0.01);
    const ex=new Set([s,...sl]);
    /* seat is at the head's +y face (profile 0..-h placed at y); probe just past it, on the axis and at 0.85 of the head's radius: under the head, outside the screw's own hole */
-   const up=new THREE.Vector3(0,1,0).transformDirection(L(s));let ok=0;for(const[dx,dz]of[[0,0],[0.85,0],[-0.85,0],[0,0.85],[0,-0.85]]){const q=new THREE.Vector3(p.x+dx*r,p.y,p.z+dz*r).addScaledVector(up,0.15);if(inside(q,ex))ok++;}
+   /* in the screw's own frame, on the axis and round the head every 45 deg: a seat at least 0.15 mm wide (a thin leg) has three of them in it whatever its heading */
+   const up=new THREE.Vector3(0,1,0).transformDirection(L(s)),ex1=new THREE.Vector3(1,0,0).transformDirection(L(s)),ez1=new THREE.Vector3(0,0,1).transformDirection(L(s));let ok=0;
+   for(const[dx,dz]of[[0,0],...[0,1,2,3,4,5,6,7].map(k=>[0.85*Math.cos(k*Math.PI/4),0.85*Math.sin(k*Math.PI/4)])]){const q=p.clone().addScaledVector(ex1,dx*r).addScaledVector(ez1,dz*r).addScaledVector(up,0.15);if(inside(q,ex))ok++;}
    if(ok<3)out.floatScrews.push([name(s),p.toArray().map(v=>+v.toFixed(2)),r,ok]);
    for(const t of screws){if(t===s||t.id<s.id)continue;const q=new THREE.Vector3().setFromMatrixPosition(L(t));if(Math.abs(q.y-p.y)<2&&Math.hypot(q.x-p.x,q.z-p.z)<r+t.userData.screw-0.05)out.dupScrews.push([name(s),name(t),p.toArray().map(v=>+v.toFixed(1)),q.toArray().map(v=>+v.toFixed(1))]);}}
  /* arbor-like cylinders: both ends should sit in something */

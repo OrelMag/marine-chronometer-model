@@ -2809,18 +2809,18 @@
    "qty": 1,
    "parent": "42093",
    "kind": "part",
-   "part": "det",
-   "fn": "Holds the support block under the train bridge, with two positioning pins (Sec. II). The model puts it in from below; the manual and the video put it in from above, into a tapped hole in the block (Review-results.md, \"Elsewhere\", 20).",
+   "part": "trainBridge",
+   "fn": "Holds the support block under the train bridge, with two positioning pins (Sec. II). From above, through the train bridge into a tapped hole in the block, as the manual and the video have it.",
    "rel": [
     [
      "in",
      "42086",
-     "clear"
+     "tap"
     ],
     [
      "in",
      "42062",
-     "tap"
+     "clear"
     ]
    ],
    "figs": "110"

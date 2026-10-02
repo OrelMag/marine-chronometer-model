@@ -686,6 +686,48 @@ Contents:
   the pillar (0.7 mm). The outlines are simplified so no three points are in
   a line: three.js's triangulation joins a hole wrongly to such an outline
   (116 open edges). `3953b0c`
+- **The photographed group 14° off the dial.** The arbors' layout was fitted
+  to the top-view photograph with the dial's 12 o'clock taken as the
+  photograph's; measured against the restoration video's dial side and the
+  photographed dial (the seconds and indicator sub-dials against the balance
+  and fusee), the balance, fusee, barrel, pillars, bridges, cock, their screws
+  and pins, the engraving and the damascening stood 14° round from the dial
+  and train. They are now turned together (`PHOTO_TURN`, `PT`/`PTi` in
+  `movement.js`; the damascening's stripe and the decals' UVs with them), the
+  escape arbor solved again from the balance (9.40) and the fourth (10.585),
+  the lower bridge laid out again round it (`tools/lower_bridge.py`) and the
+  indicator wheel brought in to 23.6 mm (module 0.266, 32.5 mm across, at
+  y 1.94) inside the mounting ring's bore. Keep: anything placed from the
+  photograph goes through `PT`, anything placed from the dial or the train
+  doesn't; angles read on the photograph (screws, pawls, the setup spring)
+  get `PHOTO_TURN` added or taken off in the same frame. Three checks were
+  made robust by the move: `seatPawl` lays the pawls on a densified tooth
+  outline (0.1 mm; the fusee met the sustaining ratchet in a sliver between
+  vertices), `geometry-audit.js` probes a screw's seat in the screw's own
+  frame and eight directions (a turned detent screw read as floating), and
+  `invariants.py` runs the train with the fusee for its 56 h indicator test.
+  `8cbb259`
+- **Balance lower bridge's far lug past the body's end.** After the 14° turn
+  the detent stood where the video has the far lug (`KLUwI2UUCMQ` 36:01:
+  beside the fourth's setting on the 9 o'clock side), so the lug was moved
+  past the body's end, 11.3 mm from the video's, and the bridge lost the
+  L that main's had. The lug is back beside the fourth (−13.9, 18.8), 3.8 mm
+  from the video's, on the detent's 12 o'clock side, joined to the body by
+  a tongue of the slab under the detent; the train-blocking screw has a
+  column of its own on the detent's other side (`tools/lower_bridge.py`,
+  three upper-tier pieces in `LB_UP`/`LB_WALL`; `BLOCK` the detent's real
+  footprint from the page). Keep: the far lug beside the fourth, not past
+  the body. `c1f9696`
+- **Detent support block's screw put in from below.** The manual (Sec. II;
+  Figs. 14, 22, 84; Op. 81) and the video (`KLUwI2UUCMQ` 10:45, 11:08) put
+  it in from above, through the train bridge into a tapped hole in the
+  block's top; the model had it from below because the barrel bridge's horn
+  covered its place. Merging main's detent fixings into the 14° turn put the
+  screw over the balance lower bridge's slab, which it then passed through
+  in the Exploded view (`exploded.py`); with the group turned nothing stands
+  over it, so it goes in from above (`hC` in the train bridge, `hT` in the
+  block; `bom.json` 42056.blk). Keep: the screw in from above, on the train
+  bridge. `d0d563d`
 - **Balance lower bridge drawn as an L, not the real lens.** The outline was
   read on 36:01 through a camera turned onto the model by its centre, third
   and fourth arbors, then laid round the model's balance, escape and fourth
@@ -700,6 +742,17 @@ Contents:
   Keep: the outline in the train bridge's frame as measured, its two levels
   and chamfer; anything turned onto the model by the model's own arbors
   carries their error into the part. `c2f11a6`
+- **The measured lower bridge in the turned layout.** Merging main's lower
+  bridge (measured at 13:49.5 in the train bridge's frame) into the 14° turn:
+  the outline, its circles and the lugs and screws go through `PT` with the
+  train bridge, the arbors stay the model's. The turned detent then crosses
+  the slab beside the fourth arbor, so the train-blocking screw keeps a column
+  of its own at (−3.70, 26.50), with a boss of the slab round it; the third
+  arbor, which doesn't turn, stands inside the turned slab and gets a slot to
+  its edge (a hole there was lost by the outline's tracer, which keeps the
+  outer boundary only: `fine.py` found the slab through the arbor); the
+  3 o'clock lug keeps 1 mm off the escape wheel. Keep: a clearance round an
+  arbor inside a traced outline must reach its edge. `5e84cfd`
 - **Balance hub solid round the staff; spring screws rubbing the fusee.** When
   the staff was turned with shoulders, the hub's boss (42186) stayed a solid
   cylinder with the staff inside it; it is now bored r 0.45, as its flange is,
@@ -983,6 +1036,14 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **Train-blocking screw down, the train held a frame and freed the next.**
+  The train halts when its next whole beat would bring a spoke to the dog
+  point (`Eb+1 > floor(Eb+blockRoom)`), but it restarted whenever
+  `blockRoom >= 1`. At speed the beat count is fractional, so with a room
+  of 1.08 at beat …719.83 the two disagreed and the train toggled every
+  frame; the HUD (`smoke.py`, "screw down") rarely caught it held. It showed
+  when the screw moved 0.5 mm. The restart test is now the hold test's
+  negation. Keep: hold and release decided by the same test. `c1f9696`
 - **Hidden parts took clicks and hid labels.** r128's
   raycaster ignores visibility, and picking, the right-click menu and label
   occlusion tested only the mesh's own `visible`, so meshes in a hidden group

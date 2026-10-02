@@ -13,7 +13,8 @@ nearly face on, the horn whole.
 - The notch's mouth: a sharp corner on the circle at (28.2, -18.7) (both frames, within 0.1 mm), then a straight edge (its direction fitted on 23:30's
   m0-m5) that turns into the rim through a round corner (FILLET, tangent to both; m5-m8 fit any radius from 5 to 8 mm to 0.2-0.3 mm rms).
 The edge runs from outside the rim along the mouth, round the notch, across the horn's end and into the barrel's cut, as crescent() in movement.js takes
-it. Nothing moves it: the metal left round each hole and part the bridge holds is printed, and any under MARGIN flagged.
+it. All in the plan before the 14° turn of 2 October 2026 (the photographed group's frame, which the bridge's rim, barrel cut and centre bushing fix:
+movement.js takes TB_EDGE and TB_NOTCH through PT, and KEEP holds the model's positions taken back through PTi). Nothing moves it: the metal left round each hole and part the bridge holds is printed, and any under MARGIN flagged.
 Until 1 October 2026 the edge was traced on the manual's Fig. 67 through an affine fit, then pushed off what the bridge holds and smoothed, which gave the
 horn a round end 7.5 mm from the centre, a wavy notch and a mouth reaching the rim at -40 deg instead of -21 (RESOLVED.md, plates and bridges)."""
 import json,math,os,pathlib
@@ -31,7 +32,7 @@ HN13=[(5.38,-1.37),(1.91,-3.22),(-1.14,-5.57),(-3.15,-8.00),(-4.42,-10.12),(-4.8
 N13=[(27.66,-13.90),(25.77,-8.85),(22.51,-4.54)];MC13=(28.24,-18.69)
 # what the bridge holds (x, z, radius of the hole or part): the model's screw holes (clearance or tapped), bushings and pivots near the edge
 KEEP=[((0,0),1.2,'centre bushing'),((22.27,-1.31),0.72,'sustaining pawl arbor'),((32.25,-10.81),2.65,"third train bridge screw's counterbore"),((32.11,-4.1),1.64,'barrel bridge screw into pillar'),((-11.07,26.46),1.47,'barrel bridge screw (tapped)'),
-      ((8+10.6*math.cos(math.radians(-30)),6.77+10.6*math.sin(math.radians(-30))),0.42,'locking arm screw'),((8,6.77),8.0,'keyhole round the balance (cut back to 1 mm in movement.js)'),((7.19,16.135),3.0,'keyhole: round the escape arbor'),((21.99,2.59),0.3,"sustaining pawl spring's pin")]
+      ((7.53,26.76),0.42,'locking arm screw'),((8,6.77),8.0,'keyhole round the balance (cut back to 1 mm in movement.js)'),((12.51,15.02),3.0,'keyhole: round the escape arbor'),((21.99,2.59),0.3,"sustaining pawl spring's pin")]
 A=lambda P:np.array(P,float)
 def circle(P):   # least squares (Kasa, then Gauss-Newton)
     P=A(P);M=np.c_[2*P,np.ones(len(P))];c0,c1,k=np.linalg.lstsq(M,(P**2).sum(1),rcond=None)[0];c=np.array([c0,c1]);r=math.sqrt(k+c@c)

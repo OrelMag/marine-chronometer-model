@@ -46,7 +46,7 @@ function stripeTex(){
   const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)t.encoding=THREE.sRGBEncoding;return t;};
   return{map:mk(cm,true),normal:mk(cn,false)};
 }
-const STRIPE_ANGLE=-82.3*Math.PI/180;   /* ridge direction, in plate (shape) coordinates, from the photograph */
+const STRIPE_ANGLE=(-82.3-14)*Math.PI/180;   /* ridge direction, in plate (shape) coordinates, from the photograph, turned with the photographed group (movement.js, PHOTO_TURN 14 deg) */
 function woodTex(){
   const c=document.createElement('canvas');c.width=512;c.height=1024;const x=c.getContext('2d');
   x.fillStyle='#5a2413';x.fillRect(0,0,512,1024);
@@ -67,9 +67,9 @@ function fillTracked(x,t,w,gx=1){const cs=[...t],ws=cs.map(q=>x.measureText(q).w
   x.save();x.scale(gx*Math.min(1,W/n),1);x.textAlign='left';let px=-(n+g*(cs.length-1))/2;cs.forEach((q,i)=>{x.fillText(q,px,0);px+=ws[i]+g;});x.restore();}
 function engraveLines(x,S,k,lines,cx,cz,size,gap,rotDeg=0){x.save();x.translate(S/2+cx*k,S/2-cz*k);x.rotate(rotDeg*D2R);lines.forEach((t,i)=>{const sz=Array.isArray(t)?t[1]:size;x.font=`600 ${sz*k}px Spectral, Georgia, serif`;x.fillText(Array.isArray(t)?t[0]:t,0,(i-(lines.length-1)/2)*gap*k);});x.restore();}
 /* flat decal with the outline of a bridge, UV-mapped to the engraving canvas */
-function decalGeo(poly){const s=new THREE.Shape();poly.forEach(([x,z],i)=>i?s.lineTo(x,z):s.moveTo(x,z));const g=new THREE.ShapeGeometry(s,24);
+function decalGeo(poly,uvOf=q=>q){const s=new THREE.Shape();poly.forEach(([x,z],i)=>i?s.lineTo(x,z):s.moveTo(x,z));const g=new THREE.ShapeGeometry(s,24);
   const p=g.attributes.position,uv=g.attributes.uv,n=g.attributes.normal;
-  for(let i=0;i<p.count;i++){const X=p.getX(i),Z=p.getY(i);p.setXYZ(i,X,0,Z);uv.setXY(i,(X+48)/96,(Z+48)/96);n.setXYZ(i,0,-1,0);}
+  for(let i=0;i<p.count;i++){const X=p.getX(i),Z=p.getY(i),[U,V]=uvOf([X,Z]);p.setXYZ(i,X,0,Z);uv.setXY(i,(U+48)/96,(V+48)/96);n.setXYZ(i,0,-1,0);}   /* uvOf: an engraving drawn in another frame (the photographs', PTi) */
   p.needsUpdate=uv.needsUpdate=n.needsUpdate=true;return g;}
 /* escape wheel (Figs. 14, 90; an original photographed in chronometerbook post 30): a thin plate (0.5 mm), its rim (0.5 mm wide) and four crossed spokes to a round collet,
    and on the plate's edge 16 thorn teeth standing the wheel's full 1.3 mm (Fig. 14's cut-away: tall teeth on a thin rim), each its outline E.toothPts from the escapement's solver
@@ -444,7 +444,7 @@ function dialCanvas(kind){
     x.textAlign='center';x.textBaseline='middle';
     const r1=c*0.96,r2=c*0.925;circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);
     for(let i=0;i<12;i++){const a=i/12*TAU;if(sov)ln(c,c,a,r2,r1,S*0.009);else tri(r1,a);}   /* hour marks: bars (Soviet), triangles (Nardin) */
-    const k=L.F[1]/DIAL_R,sy=c+c*k,uy=c-c*k,rs=c*(sov?0.375:0.39),ru=c*(sov?0.27:0.255),A=UDA;
+    const k=L.F[1]/DIAL_R,sy=c+c*k,uy=c+c*k*L.Ud[1]/L.F[1],rs=c*(sov?0.375:0.39),ru=c*(sov?0.27:0.255),A=UDA;
     /* wind: Nardin, a double arc ticked every 8 h round figures 8–48, UP/HAUT at the wound end, DOWN/BAS at the run-down end, an inner arc open under the XII;
        Soviet, figures 0–56 inside an outer circle open under the 12, round a ticked double arc, ЗАВОД (wound) and СПУСК (run down) */
     x.font=`500 ${S*0.026}px ${SANS}`;
@@ -473,7 +473,7 @@ function dialCanvas(kind){
     x.beginPath();x.moveTo(c,c-r1-S*0.004);x.lineTo(c-S*0.006,c-r1-S*0.016);x.lineTo(c+S*0.006,c-r1-S*0.016);x.closePath();x.fill();   /* index at 60 */
     x.font=`600 ${S*0.097}px Spectral, Georgia, serif`;x.textAlign='center';x.textBaseline='middle';
     ['XII','I','II','III','IIII','V','','VII','VIII','IX','X','XI'].forEach((t,i)=>{if(t)rad(t,c,c,i/12*TAU,c*0.826,t.length>3?0.62:0.78);});
-    const k=L.F[1]/DIAL_R,sy=c+c*k,uy=c-c*k,rs=c*0.36,ru=c*0.25;
+    const k=L.F[1]/DIAL_R,sy=c+c*k,uy=c+c*k*L.Ud[1]/L.F[1],rs=c*0.36,ru=c*0.25;
     /* seconds: railroad track, 5 s marks long, figures upright every 10 */
     circ(c,sy,rs,S*0.0018);circ(c,sy,rs*0.9,S*0.0012);circ(c,sy,rs*0.52,S*0.0012);
     for(let i=0;i<60;i++)ln(c,sy,i/60*TAU,i%5?rs*0.9:rs*0.8,rs,i%5?S*0.0012:S*0.0024);
@@ -486,10 +486,10 @@ function dialCanvas(kind){
     return cv;}
   /* Hamilton, after a photographed Model 21 dial of the U.S. Maritime Commission contract: railroad minute track with triangles at the hours; large Arabic hours
      (the 6 under the seconds) set just inside it; HAMILTON and LANCASTER, PA., U.S.A. across the centre; a large seconds sub-dial meeting the track at 6, with
-     the serial and U.S. MARITIME COMMISSION; the UP–DOWN scale open at the top round the 12. The sub-dial centres are fixed by their arbors, which lie nearer the
+     the serial and U.S. MARITIME COMMISSION; the UP–DOWN scale open at the top round the 12. The sub-dial centres are fixed by their arbors (the UP–DOWN one farther out than the seconds, as on the photographed dial), which lie nearer the
      centre than on the dial photographed, so the sub-dials sit lower on this face and the inscriptions are closer together; the scale keeps this movement's
      sweep, UD_SWEEP (313.6°: the photographed dial's ticks, 8 h apart, give 315.7°) */
-  const r1=c*0.955,r2=c*0.905,k=0.472,sy=c+c*k,uy=c-c*k,rs=r2-c*k,ru=c*0.255;
+  const r1=c*0.955,r2=c*0.905,k=0.472,sy=c+c*k,uy=c+c*k*L.Ud[1]/L.F[1],rs=r2-c*k,ru=c*0.255;
   circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);for(let i=0;i<12;i++)tri(r1,i/12*TAU);
   /* hours, sized so the figures stand 0.18 c tall: each numeral's box just inside the track; the 5 and 7 edged round toward the 4 and 8 until they clear the seconds sub-dial */
   x.font='600 100px Spectral, Georgia, serif';{const m=x.measureText('1234567890');x.font=`600 ${100*c*0.18/(m.actualBoundingBoxAscent+m.actualBoundingBoxDescent)}px Spectral, Georgia, serif`;}

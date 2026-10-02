@@ -1053,7 +1053,9 @@ changes it only round its own arbors (1 below).
 5. **The screws.** Settled. The real bridge's two screws are at the ends of
    its long axis, 33.3 mm apart at 13:49.5 (33.9 on 36:01, 31–36 on the other
    frames). The model has both where 13:49.5 puts them, (20.70, 7.23) with the
-   pillar plate's access hole (RMG No. 4E019) under it, and (−9.18, 21.87).
+   pillar plate's access hole (RMG No. 4E019) under it, and (−9.18, 21.87), in
+   the train bridge's frame (since the 14° turn (18.34, 12.02) and (−14.20,
+   19.00) in the model's).
    36:01 had the 3 o'clock one at (20.5, 12.4), 4.7 mm away: that frame is
    turned onto the model by its centre, third and fourth arbors, and the
    fourth stands 4.3 mm off the real setting (14). The far lug is the video's
@@ -1104,7 +1106,10 @@ changes it only round its own arbors (1 below).
    train-side fits (balance lobe about (5.4, 10.4)), and shares their
    assumption, the rim a 40.5 mm circle about the centre arbor; 18 sets them
    against the top-view comparison and the dial side, which agree with the
-   model. The bridge is drawn round the model's arbors meanwhile.
+   model. The bridge is drawn round the model's arbors meanwhile. With the
+   photographed group turned 14° ("Elsewhere", 19, applied 2 October 2026)
+   the model's balance is 16.6 mm from the fourth and 3.8 mm from the
+   video's cap; the escape arbor 3.2 mm from the video's opening.
 
    A fourth reading, from the other side (1 October 2026,
    `tools/anchors/KLUwI2UUCMQ_6-29.json`, `video.py fit` then `unproj`):
@@ -1142,15 +1147,15 @@ changes it only round its own arbors (1 below).
 7. **Where it stands.** Settled in arrangement: on the restoration video
    (36:01) its dog point is on the bridge's body between the fourth's setting
    and the lug at that end, 6.9 mm from the setting, not at either countersunk
-   hole beside the fourth arbor on the top-view photograph. The model puts it
-   5.0 mm out at 230° round the fourth arbor, 2 mm from the video's place,
-   where its access hole clears the balance locking arm's screw and stop pin
-   (finding 7 under BOM comparison is overtaken).
+   hole beside the fourth arbor on the top-view photograph. The video's place
+   is covered by the model's detent, so the model puts it 4.5 mm out on the
+   detent's other side, (−3.70, 26.50), 7.1 mm from the video's, in a column of
+   its own from the slab to the train bridge, 1.1 mm off the detent (finding 7
+   under BOM comparison is overtaken).
 8. **How far out it stands.** The video's 6.9 mm agrees with a forum side
    photograph (omegaforums, "Incoming Hamilton Model 21"), about 0.7 of the
-   fourth wheel's radius, about 7 mm. The model keeps 5.0: at 6.9 mm its head
-   bore would break through the lug's edge, which the detent support block
-   holds 1 mm away. Open with 14.
+   fourth wheel's radius, about 7 mm. The model has 4.5, inside the
+   fourth wheel's spokes and clear of the detent. Open with 14.
 9. **A dark hole near the escape wheel.** About 2.5 mm across, at about
    (2.7, 18.1) on the top-view photograph, partly under the balance locking
    arm: 4.9 mm from the escape arbor, over the escape wheel's teeth, so not
@@ -1437,11 +1442,44 @@ changes it only round its own arbors (1 below).
     and the train about -13° from it. The group's own internal layout stands
     (6:29 and 14). Turning it brings the balance 16.7 mm from the fourth
     (model 18.9), toward 36:01's 12.0; that reading's remaining 18° is open.
-    The fix (not made): the dial, the fourth, third, escape and indicator
-    arbors, the minute wheel and the lower train bridge turned about the
-    centre against the group, the indicator's gearing sized to its wheel,
-    the escapement's direction and the lower bridge's outline redone, and
-    every check and the essay's figures rerun.
+    **Applied (2 October 2026, branch `claude/dial-turn`).** The photographed
+    group turned 14° about the centre against the dial (`PHOTO_TURN`, `PT`
+    in `movement.js`: the balance, fusee, barrel, pillars, bridges, cock,
+    their screws and pins, the engraving, the damascening, the setup cover);
+    the escape arbor solved again (9.40 from the balance, 10.585 from the
+    fourth), with the escapement's plan, detent and keyhole; the lower bridge
+    laid out again round the new arbors; the lower train bridge's bar
+    shortened at the fourth's end, off a pillar's screw head. The indicator
+    wheel is 32.5 mm across (module 0.266): its centre is 23.6 mm out, so
+    it keeps inside the mounting ring's bore (40.2), between the pillar
+    screws' heads and the hour wheel. Still open:
+    - the indicator's radius: the restoration video's dial side puts its stud
+      about 25 mm out and the photographed dial its sub-dial 1.13 times as far
+      out as the seconds, which the ring's bore as drawn can't take with a
+      wheel this size; the ring's bore or the wheel's height may be what is
+      off;
+    - the fourth's radius: the dial side gives 21.2-23.2 mm (the model 23.9);
+    - 36:01's remaining 18° (the cap 12.0 mm from the fourth's setting, the
+      model's balance now 16.6).
+    - **the third arbor** (found merging main's train bridge, 2 October
+      2026). The train bridge's underside (13:49.5) put on its face through
+      the rim, the barrel's cut and the centre bushing (`video.py anchor`,
+      0.2 mm rms) is in the photographed group's frame. Turned with it, the
+      fourth's gilt setting lands 0.8 mm from the fourth arbor (5.3 before
+      the turn), for the turn; but the third bushing lands at (−9.66, 13.90),
+      3.6 mm from the model's third arbor (1.1 before), and 23:30 with the
+      third named leaves it 3.1 mm off (0.5 before). So the bridge puts the
+      third with the group and the fourth with the dial. The third arbor is
+      held to the fourth by its wheel and the fourth's pinion (11.04 mm,
+      module 0.245); at the bridge's place it would be 13.9 mm from the
+      fourth and 16.9 from the centre, modules about 0.31 and 0.33, nearer
+      each other than the model's 0.245 and 0.314 (12: the counted wheels'
+      size ratios also disagree with the model's). The third wheel would then
+      reach the train pillar at (−21.57, 17.79), 12.5 mm from the arbor, which
+      the bare plate puts farther out (`References/VIDEOS.md`). Sure: medium
+      (two frames agree to 1 mm; the third bushing is one pick a frame). Open
+      with 12; the train bridge's outline is the group's, which this doesn't
+      change.
 20. **The detent against the manual and the video** (new, 1 October 2026;
     branch `claude/detent-fixings`). The escapement works as the manual has
     it: lock 6.0°, let-off 10.6°, overall 28.4°, drop 2.1°, roller shake
@@ -1462,10 +1500,11 @@ changes it only round its own arbors (1 below).
        beside the keyhole (10:45), and the block's top shows the tapped hole
        (11:08). Op. 81's "Turn movement over. Install detent support block
        screw" follows Op. 80, done with the movement upside down (Fig. 89),
-       so it brings the train side up. The model puts the screw in from
+       so it brings the train side up. The model put the screw in from
        below (`e1244db`), because in its place for the block the barrel
-       bridge's horn covers it. **Open**: it turns round with the block's
-       place (12). Sure: high.
+       bridge's horn covered it. **Fixed** (2 October 2026, merging into
+       `claude/dial-turn`): after the photographed group's 14° turn nothing
+       stands over the screw, which now goes in from above. Sure: high.
     2. **The two positioning pins were missing.** Sec. II, Figs. 14, 22 and
        90, Op. 26 ("pushing nickel wire against steady pins"), the video
        (11:08). **Fixed on the branch**: two pins in the block's top, into

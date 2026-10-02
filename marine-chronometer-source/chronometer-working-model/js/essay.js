@@ -111,7 +111,7 @@ const ESSAY=(()=>{
   const udA=h=>UDA(clamp(h,0,RUN_H));   /* the up/down hand: UD_SWEEP degrees from UP to DOWN in 56 h (movement.js, UD) */
   function drawHand(x,p,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,-k);x.beginPath();
     for(const loop of[p.shape,...p.holes]){loop.forEach((v,i)=>i?x.lineTo(v.x,v.y):x.moveTo(v.x,v.y));x.closePath();}x.fill('evenodd');x.restore();}
-  function paintDial(x,S,t,h,o={}){const c=S/2,k=c/DIAL_R,H=hands();x.drawImage(dial(),0,0,S,S);x.fillStyle='#1d2c74';   /* the dial is DIAL_R in radius (movement.js); sub-dials 23.9 mm off centre (L.F, L.Ud) */
+  function paintDial(x,S,t,h,o={}){const c=S/2,k=c/DIAL_R,H=hands();x.drawImage(dial(),0,0,S,S);x.fillStyle='#1d2c74';   /* the dial is DIAL_R in radius (movement.js); sub-dials at their arbors (L.F 23.9 mm, L.Ud 23.6 off centre) */
     const ts=Math.floor(t*2)/2,sy=L.F[1]*k,uy=L.Ud[1]*k;
     drawHand(x,H.ud,c,c+uy,udA(h),k);drawHand(x,H.sec,c,c+sy,((ts/60)%1)*TAU,k);
     for(const y of[uy,sy]){x.beginPath();x.arc(c,c+y,0.9*k,0,TAU);x.fill();}
