@@ -1829,7 +1829,11 @@ function buildMovement(M){
   /* the last hole: access to the balance lower bridge's screw at 3 o'clock, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial */
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
   const bushR=(p,x,z,y1,y2,ro,ri,mat)=>mesh(p,ringGeo(ro,ri,Math.abs(y2-y1)),mat||M.brass2,x,(y1+y2)/2,z);
-  hn(bushR(pp,...L.C,y0-0.1,0,1.5,0.52),'42165');hn(bushR(pp,...L.Fu,y0-0.1,0,1.4,0.58),'42164.fl');hn(bushR(pp,...L.Ba,y0-0.1,0,1.9,1.43),'42164.bl');hn(bushR(pp,...L.E,y0-0.1,0,1.3,0.95,M.gilt),'42162.el');hn(mesh(pp,stoneGeo(0.95,0.22,0.5,'olive'),M.ruby,L.E[0],-0.25,L.E[1]),'J.el');   /* escape lower setting (42162) with its olive-hole jewel, flush with the plate's dial face under the endstone */
+  /* a bushing with an oil sink, a 90 deg cone round the bore in its face at y2 (y2 > y1), its outside 0.65 of the bushing's radius and at least 0.25 past the bore
+     (C Spinner 37:59, 38:02: the fusee's and barrel's bushings on the dial side; the oiling, Ops. 43, 46-49) */
+  const bushS=(p,x,z,y1,y2,ro,ri,mat)=>{const rs=Math.max(0.65*ro,ri+0.25),V=(a,b)=>new THREE.Vector2(a,b);
+    return mesh(p,new THREE.LatheGeometry([V(ri,y2-(rs-ri)),V(rs,y2),V(ro,y2),V(ro,y1),V(ri,y1),V(ri,y2-(rs-ri))].reverse(),48),mat||M.brass2,x,0,z);};
+  hn(bushR(pp,...L.C,y0-0.1,0,1.5,0.52),'42165');hn(bushS(pp,...L.Fu,y0-0.1,0,1.4,0.58),'42164.fl');hn(bushS(pp,...L.Ba,y0-0.1,0,1.9,1.43),'42164.bl');hn(bushR(pp,...L.E,y0-0.1,0,1.3,0.95,M.gilt),'42162.el');hn(mesh(pp,stoneGeo(0.95,0.22,0.5,'olive'),M.ruby,L.E[0],-0.25,L.E[1]),'J.el');   /* escape lower setting (42162) with its olive-hole jewel, flush with the plate's dial face under the endstone */
   /* mounting ring (42057, Figs. 29, 67, 110: a deep ring under the plate, drawn cut), lacquered brass (Sec. VI): a band as wide as the plate under its dial side, then a flange
      that stands out round it and carries the dial (the side photograph; "the dial or the movement [may] shift on the mounting ring", the note at Op. 98, Sec. VIII); from the dial side the plate lies
      sunk in it. Three screws (42055) hold the plate to it from the train side: the plate is laid on the ring and the screws put in (reassembly Op. 1; Fig. 29 draws them above
