@@ -1589,7 +1589,7 @@ const MOD=(()=>{const d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
    at the plate's own scale on the side photograph the wheel is 36.0-36.9 (IDEAS.md 1.12), and the model's, from the centre distance, is (fu+2) m. So every size read off
    those frames scales by FK (0.882): the cone, the wheel's recess and sustaining spring, the two ratchets, the pawls, the end plate, the top's screws and collars. The chain,
    the barrel, the arbor and its square keep theirs. WRT, SRT: the fusee's winding ratchet and the sustaining ratchet (tools/maintaining.py reads them) */
-const FK=(TRAIN.fu+2)*MOD.fusee/40.87,WRT={z:40,m:0.47*FK},SRT={z:120,m:0.27*FK};
+const FK=(TRAIN.fu+2)*MOD.fusee/40.87,WRT={z:36,m:0.47*40/36*FK},SRT={z:120,m:0.27*FK};   /* the winding ratchet's 36 teeth: C Spinner 18:20 (spectral count, 35 and 37 close; References/VIDEOS.md), on the pitch radius it had with 40 */
 const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);return[dx/l,dz/l];})(),BETA=Math.atan2(-EU[1],EU[0]);
 /* Spring detent escapement: solved by makeEsc in ../shared/escapement.js (shared with the essay and tools/escapement.js), with the centre distance in L (9.40 mm).
    Unit frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius ES */
@@ -2452,9 +2452,12 @@ function makeFusee(M,c){
      stop-bar spring toward its nose end. The nose hangs from that end into the top turn of the groove (at mF, 0.7 turn in), standing 1.6 mm proud of the groove's floor;
      the chain, winding on over its last turn, bears on the nose and slides the bar along, so its other end stands out past the rim into the path of the winding stop
      under the barrel bridge. Built in the bar's frame (x along the bar, the slot across z, sbR turned by al); the stop's place (c.stopDir, the fusee/barrel group's frame)
-     sets al, and al where the nose falls in the groove. Nose, travel and slot estimated ---- */
-  const sbZ=-2.0,BW=0.5,zHi=-1.08,zLo=-2.55,RS=0.9,xS=Math.sqrt((capR+0.15+RS)**2-(sbZ+BW+RS)**2),zS=sbZ+BW+RS,xF0=Math.sqrt((capR-0.05)**2-(sbZ-BW)**2),xB0=-xF0;
-  const xf=r=>-Math.sqrt(r*r-sbZ*sbZ),al=Math.atan2(zS,xS)-(c.stopDir||0);let mF=0.5,xN=0,rN=0;
+     sets al, and al where the nose falls in the groove. The slot runs beside the hub 3.6 mm off the axis, as Fig. 28 draws it and C Spinner's video shows it
+     (20:05-20:27: 3.5-5 mm), the hub r 2.4 with the spring's groove round it to r 2.9 (the video's recess r 4-5 with its hub; sizes to about 30 %). Nose and travel
+     estimated ---- */
+  const sbZ=-3.6,BW=0.5,zHi=sbZ+BW+0.42,zLo=sbZ-BW-0.05,HUB=2.4,GRV=2.9,RS=0.9,xS=Math.sqrt((capR+0.15+RS)**2-(sbZ+BW+RS)**2),zS=sbZ+BW+RS,xF0=Math.sqrt((capR-0.05)**2-(sbZ-BW)**2),xB0=-xF0;
+  /* xf: along the bar, where a circle r about the arbor meets the nose's outer corner (0.25 further out than the bar's line), which the chain reaches first */
+  const xf=r=>-Math.sqrt(r*r-(Math.abs(sbZ)+0.25)**2),al=Math.atan2(zS,xS)-(c.stopDir||0);let mF=0.5,xN=0,rN=0;
   for(let i=0;i<6;i++){rN=rc(mF)-H/2;xN=xf(rN+1.6);const aN=Math.atan2(sbZ,xN)-al,phi0=-Math.PI/2+dl(mF);mF=(((aN-phi0)/TAU)%1+1)%1;}   /* the chain lies at local angle phi0 + TAU m */
   const TR=xf(rN)-xN,phi0=-Math.PI/2+dl(mF),yNb=yf(mF)+0.25,yNt=-20.4,xWin=xB0+0.5+TR+0.15;   /* travel; the nose from just under the winding stop's end to the chain's lower half */
   /* ---- the fusee: a lathe whose outer surface is pushed out to the helical groove: the floor rf(m) under each turn of the chain, a flange 0.16-0.3 thick between turns
@@ -2476,21 +2479,22 @@ function makeFusee(M,c){
   const yC0=c.yB+0.6,yC1=-5.88;hn(cylBetween(fz,1,c.aT??-33,yC0,M.steel,0,0,12),'42022');hn(cylBetween(fz,2.7*k,yC0,yC1,M.steel,0,0,32),'42022',{sub:1});hn(cylBetween(fz,1,yC1,-PP_T-0.1,M.steel,0,0,12),'42022',{sub:1});hn(cylBetween(fz,0.55,-PP_T-0.1,1.0,M.steel,0,0,12),'42022',{sub:1});   /* its lower pivot, through the plate bushing to the wind indicator pinion turned on its end */   /* arbor, then its lower pivot through the plate bushing to the wind-indicator pinion */
   /* winding ratchet wheel (42013) on the fusee's large end, fixed by two screws (42014) put in from below, their heads in the sustaining ratchet's open centre (Figs. 28, 69) */
   const WRS=[0.6,0.6+Math.PI].map(a=>[3.4*k*Math.cos(a),3.4*k*Math.sin(a)]);
-  hn(mesh(fz,gearGeo(40,0.47*k,0.5,{ratchet:true,bore:2.75*k,holes:WRS.map(q=>hC(...q,0.55))}),M.steel,0,c.yB+0.85,0),'42013',{gear:{z:40,m:0.47*k,ratchet:1}});mesh(fz,discGeo(5*k,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,0.55))]),M.gilt,0,c.yB-1.1,0);
+  hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.5,{ratchet:true,bore:2.75*k,holes:WRS.map(q=>hC(...q,0.55))}),M.steel,0,c.yB+0.85,0),'42013',{gear:{z:WRT.z,m:WRT.m/FK*k,ratchet:1}});mesh(fz,discGeo(5*k,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,0.55))]),M.gilt,0,c.yB-1.1,0);
   if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;fz.add(fl);for(const q of WRS)hn(c.screw(fl,q[0],-q[1],-(c.yB+1.1),0.55,0.3,0.6+1.2),'42014');}
   /* fusee end plate (42019) under the fusee wheel, against the collar's end, and the taper pin (42020) through the arbor below it that holds the stack on (Figs. 28, 70).
      The plate is r 7.0 k, or less to keep 0.3 clear of the centre wheel's teeth, which run at its height (c.epR: 5.6; Figs. 28 and 69 draw it about 0.37 of the wheel across, r 6.7), so it reaches under the wheel's bore, and its
-     outer face has a slot across it, the notches the pin lies in (Ops. 27-29: "the end plate notches correspond to the taper of the taper pin"). The fusee rises above the
+     outer face has a raised boss round its hole with a slot across it, the notches the pin lies in (Ops. 27-29: "the end plate notches correspond to the taper of the taper
+     pin"; the boss Fig. 69's and C Spinner's, 18:22, 18:25, where the plate is gilt brass and the pin's ends stand out past the boss; the boss's r 2.2 k estimated). The fusee rises above the
      fusee wheel in the Exploded view, so they come off the arbor's lower end and stay under the wheel (c.endLift) */
-  { const ep=new THREE.Group(),EPR=c.epR??7.0*k;fz.add(ep);if(c.loose)c.loose(ep,c.endLift);hn(mesh(ep,ringGeo(EPR,1.02,0.25),M.steel,0,-5.755,0),'42019');
-    for(const sg of[1,-1])hn(mesh(ep,polyGeo(subtractCircle(discClip(EPR,[[sg*0.24,0,sg]],128),[0,0],1.02),0.25),M.steel,0,-5.63,0),'42019',{sub:1});   /* either side of the slot */
+  { const ep=new THREE.Group(),EPR=c.epR??7.0*k;fz.add(ep);if(c.loose)c.loose(ep,c.endLift);hn(mesh(ep,ringGeo(EPR,1.02,0.25),M.gilt,0,-5.755,0),'42019');
+    for(const sg of[1,-1])hn(mesh(ep,polyGeo(subtractCircle(discClip(2.2*k,[[sg*0.24,0,sg]],64),[0,0],1.02),0.25),M.gilt,0,-5.63,0),'42019',{sub:1});   /* the boss, either side of the slot */
     const tp=hn(mesh(ep,new THREE.CylinderGeometry(0.17,0.23,9.6*k,10),M.steel,0,-5.39,0),'42020');tp.rotation.z=Math.PI/2; }   /* in the slot, 0.01 off its floor, about two thirds of the plate across (Fig. 28) */
   /* the fusee's top (Figs. 28, 73, 109): on the top face a slotted layer, the stop-bar in the slot, the stop-bar spring (42025) in a groove round the arbor, and the top plate
      (42008) over them with two screws (27760) into the layer */
   const sbR=new THREE.Group();sbR.rotation.y=al;fz.add(sbR);
   const lay=(pts,holes)=>mesh(sbR,polyGeo(pts,0.5,holes||[]),M.gilt,0,yT-0.5,0);
-  lay(subtractCircle(discClip(capR,[[zHi,0,1]],128),[0,0],4.55),[hT(0,7.0*k,0.55)]);lay(subtractCircle(discClip(capR,[[zLo,0,-1]],128),[0,0],4.55),[hT(0,-7.0*k,0.55)]);   /* rim, either side of the slot, tapped for the top plate's screws */
-  lay(discClip(4.05,[[zHi,0,1]],96),[[0,0,1.02]]);lay(discClip(4.05,[[zLo,0,-1]],96));   /* hub round the arbor, and its small side; the spring's groove is between (r 4.05-4.55) */
+  lay(subtractCircle(discClip(capR,[[zHi,0,1]],128),[0,0],GRV),[hT(0,7.0*k,0.55)]);lay(discClip(capR,[[zLo,0,-1]],128),[hT(0,-7.0*k,0.55)]);   /* rim, either side of the slot, tapped for the top plate's screws */
+  lay(discClip(HUB,[[zHi,0,1]],96),[[0,0,1.02]]);   /* hub round the arbor; the spring's groove round it (r HUB-GRV), cut open by the slot */
   hn(mesh(sbR,discGeo(capR-0.2,0.6,[[0,0,1.02],hC(0,7.0*k,0.55),hC(0,-7.0*k,0.55)]),M.gilt,0,yT-1.1,0),'42008');if(c.screw)for(const z of[7.0*k,-7.0*k])hn(c.screw(sbR,0,z,yT-1.1,0.55,0.3,0.6+0.5),'27760.fu');   /* its screws opposite each other at r 7.0 k (restoration video 13:30, face-on) */
   hn(cylBetween(fz,2.9*k,yT-1.1,yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, standing on the top plate (video 13:30, 17:23: r 2.9 k; its height estimated). Fig. 28 draws a raised hub through a
      large hole in the plate, beside which the stop-bar's slot would run; the bar's place under the plate isn't seen, so the collar starts at the plate */
@@ -2498,11 +2502,12 @@ function makeFusee(M,c){
   mesh(stopBar,new THREE.BoxGeometry(xF0-xB0,0.45,2*BW),M.steel,(xF0+xB0)/2,0,sbZ);   /* the bar (first child: tools/maintaining.py measures it) */
   { const s=new THREE.Shape(),yb0=0.225,Y=y=>y-(yT-0.25);[[xB0+0.5,yb0],[xB0,yb0],[xB0,Y(yNt)],[xN,Y(yNt)],[xN,Y(yNb)],[xN+0.5,Y(yNb)],[xN+0.5,Y(yNt)+0.1],[xB0+0.5,Y(yNt)+0.1]].forEach(([x,y],i)=>i?s.lineTo(x,y):s.moveTo(x,y));
     const ng=extrude(s,{depth:0.5,bevelEnabled:false});ng.translate(0,0,sbZ-0.25);mesh(stopBar,ng,M.steel); }   /* the nose: from under the bar's end, below the winding stop's end, then down into the groove */
-  mesh(stopBar,new THREE.BoxGeometry(0.4,0.45,0.35),M.steel,-1.6,0,-1.325);   /* a tab on the bar's inner side, which the spring's end bears on */
+  mesh(stopBar,new THREE.BoxGeometry(0.4,0.45,0.35),M.steel,-1.6,0,sbZ+BW+0.175);   /* a tab on the bar's inner side, which the spring's end bears on */
   const bsp=hn(mesh(sbR,new THREE.BufferGeometry(),M.steel,0,yT-0.25,0),'42025');let barX=null;
-  /* the spring: fixed in the groove at one side of the slot, round the far side of the arbor, into the slot beside the bar and against the tab, following it as it slides */
-  const setBar=x=>{if(x===barX)return;barX=x;stopBar.position.x=x;const P=[];for(let k=0;k<=40;k++){const a=Math.PI+0.25-(Math.PI+0.55)*k/40;P.push(new THREE.Vector3(4.3*Math.cos(a),0,4.3*Math.sin(a)));}
-    P.push(new THREE.Vector3(2.5,0,-1.29),new THREE.Vector3(-1.4+x+0.02,0,-1.29));bsp.geometry=reclose(bsp.geometry,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P),60,0.13,6,false));};
+  /* the spring (42025): a round wire bent to an open C, about 270 deg in the groove round the hub from its fixed end, then into the slot beside the bar and against the tab,
+     following it as it slides (Fig. 28; C Spinner 20:20, 20:27) */
+  const setBar=x=>{if(x===barX)return;barX=x;stopBar.position.x=x;const P=[],rg=(HUB+GRV)/2,zs=sbZ+BW+0.21,a1=-Math.acos(0.9/rg);for(let k=0;k<=40;k++){const a=Math.PI+0.25-(Math.PI+0.25-a1)*k/40;P.push(new THREE.Vector3(rg*Math.cos(a),0,rg*Math.sin(a)));}
+    P.push(new THREE.Vector3(0.9,0,zs),new THREE.Vector3(-1.4+x+0.02,0,zs));   /* out of the groove where the slot opens it (x 0.9, past the tab's reach at full travel) */bsp.geometry=reclose(bsp.geometry,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P),60,0.13,6,false));};
   setBar(0);
   /* how far the chain has pushed the nose in when it leaves the fusee at m: the incoming run's inner face, a turn fraction m - mF ahead of it, lies rN / cos of that angle out */
   const barTravel=m=>{const a=TAU*(m-mF);if(a>=Math.PI/2)return 0;const r=a<=0?rN:rN/Math.cos(a);return clamp(xf(Math.max(r,rN))-xN,0,TR);};

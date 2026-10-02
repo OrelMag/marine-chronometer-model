@@ -503,6 +503,21 @@ Contents:
   pivot, length, and the way it holds) agreed with the video. Keep: the
   spring's end on the click's back at the click's height (bom.py's `on`). `07b8a00`
 
+- **Fusee's stop-bar slot across the hub, its end plate steel and flat, its
+  winding ratchet 40 teeth** (Review-results.md, the fusee assembly, 3, 5, 6).
+  On C Spinner's video (17:50-20:27, the fusee taken apart) and in Figs. 28
+  and 69: the slot runs beside the hub 3.5-5 mm off the axis (it was 2.0, cut
+  through the hub), the stop-bar's spring a round wire in an open C of about
+  270 deg round the hub; the end plate gilt brass with a raised boss round its
+  hole, the taper pin's slot across the boss; the winding ratchet about 36
+  teeth. Now so: the slot 3.6 mm off the axis, the hub r 2.4 with the
+  spring's groove round it, the spring out of the groove where the slot opens
+  it and along to the bar's tab; the nose's face set where the chain meets its
+  outer corner (the chain met that corner first once the slot moved out);
+  the plate gilt with an r 2.2 boss; 36 teeth on the old pitch radius. Keep:
+  the spring leaves the groove past the tab's reach at full travel; the nose
+  set by its outer corner (`xf`).
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the
