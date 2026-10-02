@@ -906,7 +906,7 @@ Contents:
   is rebuilt as the plate turns (`shield.userData.turn`, which app.js calls:
   the page's picking pass takes every mesh's `onBeforeRender`). Keep: the
   plate turned only through `turn()`, so the spring keeps its hook on the
-  screw and its end on the pin; nothing under the bottom within 0.5 mm of it.
+  screw and its end on the pin; nothing under the bottom within 0.5 mm of it. `cce56d7`
 
 ## Accuracy to the manual
 
@@ -1184,7 +1184,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   fusee at (11.6, -19.8)) that the photo fits gave before the group turned
   14°, about 3 mm off. They are now the arbors' places in `L` (the escapement
   views between the balance and the escape arbor). Keep: a camera target on a
-  part is written from `L`, so it follows a change of the layout.
+  part is written from `L`, so it follows a change of the layout. `cce56d7`
 
 ## Build, tools and docs
 
