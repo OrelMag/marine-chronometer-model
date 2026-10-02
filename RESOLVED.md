@@ -146,7 +146,7 @@ Contents:
   locking jewel button", Sec. IV; Op. 85 turns it after loosening the clamp
   screw), and the clamp screw crosses the slot into the strip. Keep: the slot
   in `ESC.fixed.blockFront` (shared/escapement.js), the lock screw's point on
-  the strip, the clamp screw into it.
+  the strip, the clamp screw into it. `3c9608c`
 - **Split-balance variant through the bridges** (`Review-results.md` finding
   9). Its compensation weights (r 2.3, 4.2 long, out to 18.5 mm) stood 1.1 mm
   proud of the band each side and reached into the barrel bridge's cut round
@@ -155,7 +155,7 @@ Contents:
   16.8 mm, inside the timing weights' path), the arm and hub bored for the
   staff; `fine.py --split` passes. Keep: anything on the balance stays inside
   17.7 mm and above the escape upper bridge's screw heads, as the uncut rim's
-  parts do.
+  parts do. `3c9608c`
 
 ## Going train and heights
 
@@ -190,7 +190,7 @@ Contents:
   (0.955), the wind hand 0.95 of its scale's (0.85, short of the inner arc);
   the hour hand, 0.84 of the minute track, agreed. Keep: the hands' lengths
   are the photograph's proportions of the tracks they read; the essay draws
-  the same hands (`hands()` in essay.js).
+  the same hands (`hands()` in essay.js). `3c9608c`
 - **Every tooth count in the going train wrong, and the up–down scale on 240°.**
   The counts were chosen for the ratios (fusee wheel 96, centre 80, third 75,
   fourth 60, pinions 10, 10, 8; wind indicator 98 : 8), and the dial's UP–DOWN
