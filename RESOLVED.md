@@ -138,6 +138,24 @@ Contents:
   `ESC.adj` (shared/escapement.js), so the plans draw the same foot. `8acac25`
 - **Locking jewel's wedge pin proud of the block** by 0.04 mm at each end;
   flush now, as the re-jewelling (8-9) leaves it. `8acac25`
+- **Lock-adjusting screw short of the stop button** by 0.24 mm, ending inside
+  a solid block (`Review-results.md` 20.5). Fig. 90 splits the block's front
+  along its length by a slot, open at the stop button's end, so the button
+  stands on a strip sprung from the block's root: the lock-adjusting screw,
+  threaded in the outer part, bears on the strip ("working through the
+  locking jewel button", Sec. IV; Op. 85 turns it after loosening the clamp
+  screw), and the clamp screw crosses the slot into the strip. Keep: the slot
+  in `ESC.fixed.blockFront` (shared/escapement.js), the lock screw's point on
+  the strip, the clamp screw into it. `3c9608c`
+- **Split-balance variant through the bridges** (`Review-results.md` finding
+  9). Its compensation weights (r 2.3, 4.2 long, out to 18.5 mm) stood 1.1 mm
+  proud of the band each side and reached into the barrel bridge's cut round
+  the balance (17.7) and the escape upper bridge; its arm and hub were solid
+  round the staff. The weights are now within the band's height (r 1.1, out to
+  16.8 mm, inside the timing weights' path), the arm and hub bored for the
+  staff; `fine.py --split` passes. Keep: anything on the balance stays inside
+  17.7 mm and above the escape upper bridge's screw heads, as the uncut rim's
+  parts do. `3c9608c`
 
 ## Going train and heights
 
@@ -164,6 +182,15 @@ Contents:
   (r 1.70), since it goes on over them; the hands stay above the sub-dial
   collets (5.05); `fine.py` run with the keys shown (`hkeyOn`, `keyOn`) finds
   nothing between a socket and its square. `4bd8888`
+- **Hamilton dial's hands short of their tracks** (Review-results.md, "Short
+  hands"). Measured on the photographed dial against its own tracks (the
+  track's inner/outer 0.945 there, 0.948 in the model): the minute hand
+  reaches the minute track's outer edge (the model's stopped mid-track,
+  44.4 mm against 45.4), the seconds hand 0.99 of its track's outer circle
+  (0.955), the wind hand 0.95 of its scale's (0.85, short of the inner arc);
+  the hour hand, 0.84 of the minute track, agreed. Keep: the hands' lengths
+  are the photograph's proportions of the tracks they read; the essay draws
+  the same hands (`hands()` in essay.js). `3c9608c`
 - **Every tooth count in the going train wrong, and the up–down scale on 240°.**
   The counts were chosen for the ratios (fusee wheel 96, centre 80, third 75,
   fourth 60, pinions 10, 10, 8; wind indicator 98 : 8), and the dial's UP–DOWN
@@ -868,6 +895,18 @@ Contents:
     - The plate covers the hole whenever it isn't open.
     - A shape joining the lathe has the lathe's vertices round its rim.
   `c0a7531`
+- **Shield plate not as Fig. 107 draws it** (`Review-results.md`, BOM
+  comparison, still open 2). It was a rounded triangle on a shoulder screw
+  beside the key hole, its return spring a torsion coil hanging under it.
+  Fig. 107 draws a disc nearly the size of the case's bottom, its three holes
+  (the shoulder screw's at its centre, the key's, the stop screw's opposite),
+  and the spring an open ring between the plate and the bottom, hooked on the
+  stop screw. Now so: the disc turns on its shoulder screw at the case's
+  centre, the ring runs from the stop screw round to a pin in the plate and
+  is rebuilt as the plate turns (`shield.userData.turn`, which app.js calls:
+  the page's picking pass takes every mesh's `onBeforeRender`). Keep: the
+  plate turned only through `turn()`, so the spring keeps its hook on the
+  screw and its end on the pin; nothing under the bottom within 0.5 mm of it. `cce56d7`
 
 ## Accuracy to the manual
 
@@ -1138,6 +1177,14 @@ An arbor needs pivots and shoulders; a stone its seat.
   so a lifted movement couldn't be seen from straight under it. Both limits
   are now ±1.52. Keep: stop short of ±90°, where `lookAt` has no up and the
   view spins. `fada89a`
+- **Camera targets left at the photographed group's old places.** The
+  Escapement view, Stopping and starting's view and the walkthrough's Stored
+  energy, Constant force, Winding without stopping, detent and balance steps
+  aimed at numbers (the balance at (8.0, 6.8), the barrel at (-18.6, 0.2), the
+  fusee at (11.6, -19.8)) that the photo fits gave before the group turned
+  14°, about 3 mm off. They are now the arbors' places in `L` (the escapement
+  views between the balance and the escape arbor). Keep: a camera target on a
+  part is written from `L`, so it follows a change of the layout. `cce56d7`
 
 ## Build, tools and docs
 

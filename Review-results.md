@@ -10,9 +10,10 @@ copies of the escapement solver, and the escapement check's exit code.
 
 Status: findings 1–5 were fixed after the review; see
 [Fixes for findings 1–5](#fixes-for-findings-15). Checking the fixes turned up
-finding 9 (the split-balance variant runs through the barrel bridge), which is
-not fixed yet. Findings 6, 8 and 9 and the smaller issues are open; finding 7
-was resolved by the fine interference pass.
+finding 9 (the split-balance variant runs through the barrel bridge), fixed
+on 2 October 2026, as were the Hamilton dial's short hands. Finding 6 is
+open; finding 7 was resolved by the fine interference pass, finding 8 by the
+case rebuilt round the movement.
 
 A later pass with a finer collision check found and fixed six more overlaps,
 and added a check for the barrel wall; see
@@ -318,6 +319,10 @@ photograph) inside it, the bezel screwed on round the rim.*
 
 ### 9. The split-balance variant runs through the barrel bridge
 
+*Fixed (2 October 2026; RESOLVED.md, Escapement): the weights within the band's
+height (r 1.1) and out to 16.8 mm, the arm and hub bored for the staff;
+`fine.py --split` passes.*
+
 Found while checking the fixes; the geometry is unchanged since `f591611`.
 Variants → Balance → Split bimetallic rim shows `R.balS`
 ([movement.js:340-345](marine-chronometer-source/chronometer-working-model/js/movement.js#L340-L345)).
@@ -361,6 +366,11 @@ Then run `dyn.py` with the variant shown.
     44 mm radius, track from 46 mm).
   - Roman dial: the minute hand's tip is at 45 mm and the track starts at 47 mm.
   - The wind-indicator hand is 0.5 mm short of its marks.
+  *Fixed for the Hamilton dial (2 October 2026; RESOLVED.md, Going train and
+  heights): its minute, seconds and wind hands measured against the
+  photographed dial's tracks. The Roman dial is a variant after the Lange
+  deck chronometers, with no photograph in `References/`; its hands are left
+  as drawn.*
 - **Floating minute hand.** The minute hand and its hub float 0.8 mm above the
   top of the cannon pinion: the pipe ends at y 4.9 and the hub starts at 5.7.
   This is only visible in the 12–6 cross-section.
@@ -948,11 +958,19 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
 2. **Shape against the drawings and photographs**, part by part, not yet
    done. 44 web photographs were gathered (mostly all rights reserved: to be
    cited by URL, not committed). Candidates: the shield plate (Fig. 107 draws
-   a disc and an open-ring spring; the model keeps its lobed plate), the setup
+   a disc and an open-ring spring; *now drawn so*, 2 October 2026, RESOLVED.md,
+   Setup, case and gimbals), the setup
    ratchet and click (asked in Orel_comments.md), the dust seal, the detent's
    trip-spring bracket.
-3. **Function checks** not yet in `bom.py` (the locking arm, train-blocking
-   screw, twist to start, the setup click's direction, shield plate and latch):
+3. *Done, but the setup click (2 October 2026, `tools/bom-fn.js`):* **Function
+   checks** in `bom.py`, worked through the page's own controls on a fresh page:
+   the locking arm stops the balance with its finger at a timing weight and it
+   doesn't restart by itself, the twist starts it, the train-blocking screw
+   holds the train and lets it go, the shield plate covers the key hole and
+   opens onto it, the latch holds the case to the box. The setup click's
+   direction waits on a reading of the setup ratchet. Before (the locking arm,
+   train-blocking screw, twist to start, the setup click's direction, shield
+   plate and latch):
    `maintaining.py`, `escapement.js` and `invariants.py` cover the maintaining
    work, the escapement and the train's arithmetic.
 4. *Done:* **The other checks after these geometry changes.** `fine.py`
@@ -1539,8 +1557,10 @@ changes it only round its own arbors (1 below).
        inside the block. Fig. 90 shows the block's front split by a long
        slot that this screw and its clamp screw cross, so the screw moves
        the button by spreading the slot ("working through the locking jewel
-       button", Sec. IV). **Open.** Sure: medium (the slot is read from one
-       drawing).
+       button", Sec. IV). **Fixed** (2 October 2026, `claude/fidelity-plan`):
+       the slot open at the button's end, the screw's point on the strip that
+       carries the button, the clamp screw across the slot into it. Sure:
+       medium (the slot is read from one drawing).
     6. **The wedge pin stood 0.04 mm proud** of the block at both ends. The
        manual pushes it flush on top and stones it flush below (re-jewelling
        the detent, 8–9). **Fixed on the branch.**
