@@ -518,6 +518,17 @@ Contents:
   the spring leaves the groove past the tab's reach at full travel; the nose
   set by its outer corner (`xf`). `daa45cb`
 
+- **Winding-pawl springs short bent strips** (Review-results.md, the fusee
+  assembly, 7). Figs. 28 and 69 draw them as long arcs, and C Spinner's video
+  (19:12, 18:40, 19:15) shows each a thin arc of about 150-170 deg round the
+  sustaining ratchet's middle, held at its far end by two screws, the two
+  nearly round it. Now so: each from a foot about 150 deg round (toward the
+  side its pawl's tip points) back along r 12.1 FK to the arm, its last
+  stretch rebuilt as the pawl rides the teeth; the strip starts at the
+  foot's inner end, clear of the foot's screws. The pawls agreed with the
+  video. Keep: the springs' feet and screws at `WPS` (the wheel's holes are
+  cut there).
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the

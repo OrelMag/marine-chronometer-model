@@ -1754,7 +1754,10 @@ Winding and maintaining work).
    (19:12, 18:40, 19:15): each a long thin arc of about 150–170° in the gutter
    round the sustaining ratchet's raised plateau, held at its far end, the two
    nearly round it, as Fig. 28 draws them; each pawl a short lever on a stud.
-   Sure: the form certain.*
+   Sure: the form certain. *Now so* (RESOLVED.md, Winding and maintaining
+   work); the pawls themselves stand where the video has them (pivots about
+   11 mm out, tips about 8.4). Not drawn: the raised plateau the springs lie
+   round.*
 
 Seen on video since (2 October 2026, 17:50–20:27): the end plate, the winding
 pawls and their springs, the stop-bar and its spring (`References/VIDEOS.md`).
