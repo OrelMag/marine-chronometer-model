@@ -1440,7 +1440,9 @@ changes it only round its own arbors (1 below).
     So the model's photographed group (balance, fusee, barrel, the bridges,
     the cock) is turned about 13° from the dial and the train, or the dial
     and the train about -13° from it. The group's own internal layout stands
-    (6:29 and 14). Turning it brings the balance 16.7 mm from the fourth
+    (6:29 and 14; but see 22: the bare plate, fitted again after the turn,
+    puts the fusee 2.7 mm nearer the centre and the barrel and pillars 2.5-7
+    mm further out, which no move of the whole group fits). Turning it brings the balance 16.7 mm from the fourth
     (model 18.9), toward 36:01's 12.0; that reading's remaining 18° is open.
     **Applied (2 October 2026, branch `claude/dial-turn`).** The photographed
     group turned 14° about the centre against the dial (`PHOTO_TURN`, `PT`
@@ -1618,7 +1620,22 @@ changes it only round its own arbors (1 below).
     (model 0.441), the fusee wheel's tips about 17.7 mm from its arbor
     (model 20.4). How sure: the bushings' places ±1 mm (the anchors' 2 mm
     offsets are the train's own); the pillars' ±1.5 mm, the fourth's ±5.
-    **Not yet acted on; planned in `IDEAS.md` 1.12.** Moving the group means the fusee and barrel's
+    **The turn applied (19, release 1.14.00); fitted again against it** (2
+    October 2026, branch `claude/ideas-1.12`). The spec's escape setting was
+    anchored at the escape arbor's place before the turn; at (8.504, 17.598),
+    where it now is, the anchors land 0.7-1.8 mm off (the escape setting 0.76,
+    1.9 before), rim 0.13-0.15 mm rms over f 4000-8000. **The fusee 20.1-20.4
+    mm out at 49-50°** (model 22.9, 44.3°), **the barrel 22.1-22.7 at
+    281-282°** (model 18.6, 283°), 38.1-38.7 apart (model 36.2); **the
+    pillars 2-8° round from the model's, no common sign, and 2.5-7 mm further
+    out** (31-38 mm). The fourth pillar's foot lands 2.8-3.8 mm from the train
+    bridge's third screw ((33.91, -2.69) in the model; 21), the model's pillar
+    2 6.5 mm from it. No move of the group as a whole fits: the best turn and
+    shift leaves 4.1 mm rms over the fusee, barrel and three pillars, with a
+    scale (×1.11) 2.5 mm, the fusee 3.2 mm off. So the turn took the angles,
+    and what is left is the group's own layout, against the top-view
+    photograph's (19 took that to stand). How sure: as above.
+    **Not yet acted on; planned in `IDEAS.md` 1.12** (updated for the turn). Moving the group means the fusee and barrel's
     places, the pillars, the barrel and train bridges' outlines and holes and
     the cock (traced on the top-view photograph in the model's frame), the
     fusee wheel and centre pinion's module (`solve.py`), the chain, the
