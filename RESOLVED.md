@@ -527,7 +527,7 @@ Contents:
   stretch rebuilt as the pawl rides the teeth; the strip starts at the
   foot's inner end, clear of the foot's screws. The pawls agreed with the
   video. Keep: the springs' feet and screws at `WPS` (the wheel's holes are
-  cut there).
+  cut there). `69992a0`
 
 ## Plates, bridges, screws and arbors
 
