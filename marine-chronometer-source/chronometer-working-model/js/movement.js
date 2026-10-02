@@ -105,7 +105,8 @@ const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);retur
 const ES=13.16/2,ESC=makeEsc({EX:-Math.hypot(L.B[0]-L.E[0],L.B[1]-L.E[1])/ES});
 /* the detent support block's top face, against the train bridge (Fig. 90, Fig. 14, KLUwI2UUCMQ 11:08): its screw's hole between two positioning pins on its centre line, in
    detent coordinates (t, n: ESC.D); Fig. 90 scaled by the 11.3 mm from the point of flexure to the locking jewel, to about 0.3 mm. Pin a is 2.9 mm nearer the screw than
-   Fig. 90's (t -1.45): there, in the model's place for the block, it would stand past the train bridge's cut round the barrel (Review-results.md, "Elsewhere", 20) */
+   Fig. 90's (t -1.43; the video's holes put it there too, KLUwI2UUCMQ 10:00, 10:50): Fig. 90's block runs 15 mm toward the foot from the point of flexure and the foot 17,
+   the model's 9.2 and 10.6 (shortened to clear the train pillar), so the pin waits for the block's length (Review-results.md, "Elsewhere", 20) */
 const DBLK={s:[-0.56,-0.29],p:[[-1.0,-0.29],[0.31,-0.29]]};
 
 /* polygon minus a circle that crosses its boundary: keep the part outside the circle, close it with the arc that runs through the polygon.
@@ -295,8 +296,8 @@ function buildMovement(M){
   const jewel=(p,x,z,[si,ji])=>{hn(mesh(p,ring(1.1,0.62,1.2),M.gilt,x,0.6,z),si);hn(mesh(p,stoneGeo(0.62,0.27,0.4,'bar'),M.ruby,x,0.2,z),ji);};   /* bar-hole jewel in the lower train bridge: a setting pressed through the bridge, the stone seated in it at the train side (its oil sink toward the dial); si, ji: their parts-list lines */
   /* endstone cap (42159, 42160): a steel plate over a setting with the cap jewel showing through its centre, two screws (20762) at ±2.1 mm along u into the part under it.
      Built in frame g with the part's face at y and the cap toward -y; depth: how far the screws go into the part */
-  const endCap=(g,x,z,u,y,depth,sp,[ci,ji,si],rc)=>{const a=[x-u[0]*sp,z-u[1]*sp],b=[x+u[0]*sp,z+u[1]*sp],H=[[x,z,0.55],hC(...a,ESCAP),hC(...b,ESCAP)];   /* ci, ji, si: the parts-list lines of the cap, its jewel and its screws; rc: a round cap of that radius */
-    hn(mesh(g,rc?polyGeo([...Array(64).keys()].map(k=>[x+rc*Math.cos(k*TAU/64),z+rc*Math.sin(k*TAU/64)]),0.3,H):stadium(a,b,1.6,0.3,H),M.steel,0,y-0.3,0),ci);hn(mesh(g,cylY(0.55,0.26,24),M.ruby,x,y-0.13,z),ji);   /* the endstone set in the cap, flush with its face on the hole jewel */
+  const endCap=(g,x,z,u,y,depth,sp,[ci,ji,si],rc,fl)=>{const a=[x-u[0]*sp,z-u[1]*sp],b=[x+u[0]*sp,z+u[1]*sp],H=[[x,z,0.55],hC(...a,ESCAP),hC(...b,ESCAP)];   /* ci, ji, si: the parts-list lines of the cap, its jewel and its screws; rc: a round cap of that radius; fl: [nx, nz, d], cut flat d from the jewel across that normal */
+    hn(mesh(g,rc?polyGeo([...Array(64).keys()].map(k=>{const c=Math.cos(k*TAU/64),s=Math.sin(k*TAU/64),f=fl?(fl[0]*c+fl[1]*s)*rc-fl[2]:0,e=f>0?f:0;return[x+rc*c-(fl?fl[0]*e:0),z+rc*s-(fl?fl[1]*e:0)];}),0.3,H):stadium(a,b,1.6,0.3,H),M.steel,0,y-0.3,0),ci);hn(mesh(g,cylY(0.55,0.26,24),M.ruby,x,y-0.13,z),ji);   /* the endstone set in the cap, flush with its face on the hole jewel */
     for(const q of[a,b])hn(screw(g,...q,y-0.3,ESCAP,0.2,0.3+depth),si);};
   const y0=-PP_T;
   /* ---------- screw positions (x, z), worked out before the plates are cut: a clearance hole where a screw passes through a part (hC), a tapped hole where it holds (hT).
@@ -584,7 +585,8 @@ function buildMovement(M){
   for(const q of S.lbp)cylBetween(lb,0.4,LB_U,TB_U-1.0,M.steel,...q);
   /* balance lower setting (42162) in the bridge, and the lower endstone cap (42159) with its screws on the bridge's underside (Fig. 110) */
   hn(mesh(lb,ring(1.2,0.9,2.6),M.gilt,L.B[0],LB_T+1.3,L.B[1]),'42162.bl');hn(mesh(lb,ring(2.2,0.9,3.0),M.gilt,L.F[0],LB_T+1.5,L.F[1]),'42161.fu');{const q=hn(mesh(lb,stoneGeo(0.9,0.27,0.4,'bar'),M.ruby,L.F[0],LB_T+2.8,L.F[1]),'J.fu');q.rotation.x=Math.PI;}   /* its oil sink up, away from the wheel */   /* and the fourth wheel upper setting (42161) */hn(mesh(lb,stoneGeo(0.9,0.22,0.6,'olive'),M.ruby,L.B[0],LB_T+2.3,L.B[1]),'J.bl');
-  { const lbf=new THREE.Group();lbf.rotation.x=Math.PI;lb.add(lbf);endCap(lbf,L.B[0],-L.B[1],[lbu[0],-lbu[1]],-(LB_T+2.6),2.0,1.9,['42159.bl','J.ble','20762.blc']);for(const q of S.lb)hn(screw(lbf,q[0],-q[1],-LB_U,PSR,1.6,2.0+2.5),'42055.lb').userData.lift=2.0+2.5+0.5; }   /* the bridge's screws in the flipped frame: heads on the upper tier's underside, 2.5 mm into the train bridge;
+  { const lbf=new THREE.Group();lbf.rotation.x=Math.PI;lb.add(lbf);{ const v=[-lbu[1],lbu[0]],w=(v[0]*(L.E[0]-L.B[0])+v[1]*(L.E[1]-L.B[1]))>0?[-v[0],-v[1]]:v;endCap(lbf,L.B[0],-L.B[1],[lbu[0],-lbu[1]],-(LB_T+2.6),2.0,1.9,['42159.bl','J.ble','20762.blc'],2.7,[w[0],-w[1],0.65*2.7]); }   /* the cap round, R 2.7 (its screws at 0.71 R), cut flat 0.65 R out on the side away from the escape arbor, parallel to its screws (KLUwI2UUCMQ 13:49.5; Fig. 30 draws it round) */
+  for(const q of S.lb)hn(screw(lbf,q[0],-q[1],-LB_U,PSR,1.6,2.0+2.5),'42055.lb').userData.lift=2.0+2.5+0.5; }   /* the bridge's screws in the flipped frame: heads on the upper tier's underside, 2.5 mm into the train bridge;
     in the Exploded view they drop out of the tier, no further (the fourth wheel lies below) */
   /* train-blocking screw (42247, Sec. II, Fig. 110): threaded through the lower bridge's lower tier, its head in the wall's bore. Screwed down, its head stops on the seat and its dog point stands between
      the fourth wheel's spokes, so the train can turn only until a spoke meets it; screwed up (as it runs), the chamfer on its head seats in the countersunk access hole in the

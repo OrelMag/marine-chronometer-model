@@ -117,6 +117,10 @@ Contents:
   wheel's radius, from tH in): the horn is the arm's end bent down to the trip
   spring. Its inner face stays at tH, so horn clearance is unchanged (0.25 mm).
   Keep: the arm's end and the horn one outline in plan. `4a660ab`
+- **The balance lower endstone cap a bar** (Review-results.md, Elsewhere
+  17). On the restoration video (13:49.5) it is round with one flat, parallel
+  to its two screws, on the side away from the escape arbor; Fig. 30 draws it
+  round. Now R 2.7, the flat 0.65 R out. Keep: `endCap`'s `fl`.
 - **Detent support block without its positioning pins.** Sec. II fastens
   the block to the train bridge "by means of one screw and two positioning
   pins" (Figs. 14, 22, 90; the restoration video, 11:08); the model had the
