@@ -1313,7 +1313,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   arbor (9.40 mm from the balance, the fourth's mesh distance from the
   fourth) against `L.E`, gives the modules as `MOD` does and checks the
   through arbors clear the wheels' tips in plan; exit code 1 otherwise. Keep:
-  no positions or counts written into the tool.
+  no positions or counts written into the tool. `66edc05`
 
 ## Essay
 
