@@ -9,7 +9,8 @@
 dyn.py works in 0.4 mm cubes and misses thin overlaps (the escape pinion, the fourth wheel's collet, the sustaining pawl's pivot and the stop-bar
 all went unseen; see RESOLVED.md). This one resolves 0.05 mm. Each pair of meshes that meets is listed once, with its largest overlap; pairs in
 EXPECTED are intended contacts, each with the reason and the largest overlap seen when it was recorded. Anything else, or an expected pair that
-has grown past its limit, is printed as NEW or GREW and makes the exit code 1. The barrel's wall (userData.barrelWall) is tested as the solid it
+has grown past its limit, is printed as NEW or GREW and makes the exit code 1. The dial's printed face (userData.surface, an open ring 0.02 over the
+brass disc the voxels test) is checked exactly: the least height over it of any part above the disc, outside its arbor holes, at least DIAL_MIN. The barrel's wall (userData.barrelWall) is tested as the solid it
 encloses, and barrel-clearance.js then measures, at each wind state, how close every other part comes to the solid the whole barrel sweeps as
 it turns (wall, caps, cap screws, hook), and where the mainspring lies inside it. A part closer than BARREL_MIN, not listed in BARREL, fails too. The train positions are whole teeth apart: the escape wheel only
 ever rests on a whole tooth plus the escapement's progress, and a fractional offset would put it out of step with the balance."""
@@ -41,6 +42,16 @@ EXPECTED={
 }
 CORE=1.74   # mm: the barrel arbor's core (MSPRING.ra - 0.06, movement.js)
 BARREL_MIN=0.05   # mm: closest any other part may come to the barrel's swept solid
+DIAL_MIN=0.02   # mm: least height of any part over the dial's printed face (it lies 0.02 over the brass disc, which the voxels test)
+DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{if(o.isMesh&&o.userData.surface)face=o;});mv.updateMatrixWorld(true);
+ const inv=new T.Matrix4().copy(mv.matrixWorld).invert(),fy=new T.Vector3().setFromMatrixPosition(face.matrixWorld).applyMatrix4(inv).y,R=face.geometry.parameters.outerRadius,Ri=face.geometry.parameters.innerRadius;
+ const holes=[[L.F[0],L.F[1],1.2],[L.Ud[0],L.Ud[1],1.2],[L.C[0],L.C[1],Ri]],pn=o=>{for(let p=o;p;p=p.parent)if(p.userData.partName)return p.userData.partName;return '?';};
+ let best=null;const v=new T.Vector3(),m=new T.Matrix4();
+ mv.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||o===face||pn(o)==='dial'||o.userData.decal||o.userData.surface)return;for(let p=o;p;p=p.parent)if(!p.visible)return;
+   const P=o.geometry.attributes&&o.geometry.attributes.position;if(!P)return;m.multiplyMatrices(inv,o.matrixWorld);
+   for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);if(v.y<fy-0.05||v.y>fy+3||Math.hypot(v.x,v.z)>R||holes.some(([x,z,h])=>Math.hypot(v.x-x,v.z-z)<h))continue;
+     const d=v.y-fy;if(!best||d<best.d)best={d:+d.toFixed(3),part:pn(o),type:o.geometry.type.replace('Geometry',''),at:[v.x,v.y,v.z].map(q=>+q.toFixed(2))};}});
+ return JSON.stringify({face:+fy.toFixed(3),best});})()'''
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),
  'chain':('chain wound on the drum: its links should touch the wall, not enter it',0,0.1)}   # part: (reason, least, most) clearance allowed; None = any
 FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}
@@ -70,6 +81,7 @@ async def main():
                 if o['part'] not in near or o['d']<near[o['part']]['d']:near[o['part']]={**o,'state':f"{n} turns{' winding' if w else ''}"}
             sp=r['spring']
             if sp:spring=sp if not spring else {**spring,'rMin':min(spring['rMin'],sp['rMin']),'rMax':max(spring['rMax'],sp['rMax']),'yTop':min(spring['yTop'],sp['yTop']),'yBottom':max(spring['yBottom'],sp['yBottom'])}
+        dial=json.loads(await pg.evaluate(DIALJS))
         await b.close()
     bad=0
     for k,o in sorted(seen.items(),key=lambda kv:-kv[1]['vol']):
@@ -87,5 +99,8 @@ async def main():
           ("below the upper cap's inner face",s['yTop']-s['capTopInner']),("above the lower cap's inner face",s['capBottomInner']-s['yBottom'])]
         print(f"mainspring over the wind: coils {s['rMin']}-{s['rMax']} mm from the axis, {s['yTop']} to {s['yBottom']} in y")
         for t,g in checks:okk=g>=BARREL_MIN;nb+=not okk;print(f"{'ok  ' if okk else 'HIT '} {g:8.3f}  {t}")
-    print(f"{nb} barrel problems");sys.exit(1 if bad or nb else 0)
+    print(f"{nb} barrel problems")
+    d=dial['best'];dok=d is None or d['d']>=DIAL_MIN
+    print(f"\ndial face (y {dial['face']}): least height of a part over it, outside its arbor holes: "+('nothing over it' if d is None else f"{d['d']:.3f} mm, {d['part']} {d['type']} @ {','.join(map(str,d['at']))}")+f"  {'ok' if dok else 'HIT'} (want {DIAL_MIN} or more)")
+    sys.exit(1 if bad or nb or not dok else 0)
 asyncio.run(main())

@@ -302,7 +302,8 @@ or add analytic clearance checks for thin gaps and for the hidden variant.
 which resolves 0.05 mm and tests the chain, the hairspring, the trip spring,
 the barrel wall (as a solid, with its margins) and the mainspring, and with
 `--split` the hidden split-balance variant (it fails there: finding 9 is still
-open). Still untested: the dial face. The About dialog now says what the
+open). Still untested then: the dial face (*now checked*, 2 October 2026: `fine.py`
+measures the least height of any part over it). The About dialog now says what the
 checks cover, names the dial face as untested and the split-balance variant as
 not yet clear, so the finding is resolved. See
 [Fine interference pass](#fine-interference-pass).
@@ -563,7 +564,7 @@ the fusee smaller, the run cut up to 0.24 mm into the barrel. It is now the
 common tangent. The winding-stop pin, which the fusee's turned wrap then
 brushed at full wind, ends 0.2 mm higher, still covering the stop-bar.
 
-The dial face (a flat, open ring) is the one open surface still untested.
+The dial face (a flat, open ring) was the one open surface untested; `fine.py` now checks the heights of the parts over it (2 October 2026).
 
 ## Barrel and fusee against the manual
 
