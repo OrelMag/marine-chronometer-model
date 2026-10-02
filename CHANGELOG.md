@@ -4,6 +4,13 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 1.16.00 · 2026-10-02
+- The rate panel changes balance screws and puts washers under them, with the manual's own tables beside the model's figure
+- The setup ratchet, the case's winding-hole shield plate, the dial's hands and the split balance redrawn as the manual and a real Model 21 have them
+- The detent's lock-adjusting screw now bears on the strip that carries its stop button, as the manual draws it
+- The fusee chain's hook is named as the barrel turns it into view
+- The views and the walkthrough now aim at the parts where they stand
+
 ## 1.15.00 · 2026-10-02
 - The fusee, barrel and balance now stand where real Model 21s put them, measured on restoration videos: the fusee nearer the centre with a smaller wheel and cone, the barrel further out, the balance on its lower cap
 - The upper train bridge's middle opening redrawn as on a real Model 21: lobes over the balance and the fourth wheel's setting, and the round escape passage
