@@ -516,7 +516,7 @@ Contents:
   outer corner (the chain met that corner first once the slot moved out);
   the plate gilt with an r 2.2 boss; 36 teeth on the old pitch radius. Keep:
   the spring leaves the groove past the tab's reach at full travel; the nose
-  set by its outer corner (`xf`).
+  set by its outer corner (`xf`). `daa45cb`
 
 ## Plates, bridges, screws and arbors
 
