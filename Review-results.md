@@ -968,7 +968,9 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    ratchet and click (asked in Orel_comments.md; *read on video, 2 October
    2026, 11:46–12:22: about 42 teeth, not 52; the click as the model's, holding
    the same way; its spring a flat band wrapping about 180° round the ratchet,
-   as Fig. 108 draws it, where the model's is about 120°*), the dust seal, the detent's
+   as Fig. 108 draws it, where the model's is about 120°; *now so*: 42 teeth,
+   the spring a band on edge round half a turn, the cover's feet outside it;
+   RESOLVED.md, Winding and maintaining work*), the dust seal, the detent's
    trip-spring bracket.
 3. *Done, but the setup click (2 October 2026, `tools/bom-fn.js`):* **Function
    checks** in `bom.py`, worked through the page's own controls on a fresh page:

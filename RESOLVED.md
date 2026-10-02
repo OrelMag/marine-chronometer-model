@@ -489,6 +489,20 @@ Contents:
   read against the fusee wheel scales with `FK`; `tools/maintaining.py`
   reads the ratchets from `WRT`/`SRT`. `6d1bd37`
 
+- **Setup ratchet with 52 teeth and a short click spring** (Review-results.md,
+  BOM comparison, still open 2; `Orel_comments.md`: "Does the setup ratchet
+  modelled correctly?"). On C Spinner's video (11:46-12:22, 38:28) the ratchet
+  has about 42 teeth (pitch 8.3-8.8 deg; certain it is well under 52) and the
+  click's spring wraps about half a turn round it from two steady pins to the
+  click's back, as Fig. 108 draws it; the model's ran about 120 deg, and the
+  cover's feet, rings round its screws, stood where a longer spring passes.
+  Now 42 teeth on the same pitch radius (the click's tip where the
+  photograph has it), the spring a band on edge on the bridge, up to the
+  click's height, round half a turn at r 10, and the feet steps under the
+  cover's ends, 0.5 mm further out than its screws. The click itself (its
+  pivot, length, and the way it holds) agreed with the video. Keep: the
+  spring's end on the click's back at the click's height (bom.py's `on`).
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the
