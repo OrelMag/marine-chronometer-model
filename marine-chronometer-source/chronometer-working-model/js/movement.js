@@ -871,15 +871,18 @@ function buildMovement(M){
     hn(mesh(rt,stripGeo([...arcP,E],0.3,0.85),M.blued,0,BB_T-0.85,0),'42028');   /* on the bridge, up to the click's middle */
     for(const q of[P2(SR+0.42,a0+3),P2(SR-0.42,a0+12)])hn(cylBetween(rt,0.25,-27.71,-27.16,M.steel,...q),'42028',{sub:1});}
   const nBefore=rt.children.length;
-  { /* outline in polar coordinates about the arbor, symmetric about its long axis (107.5 deg / 287.5 deg) and across it, as both photographs show: two end arcs
-       round the arbor at r 12.87, 76.5 deg wide, and two like concave edges to r 5.95, each bowed in about a tenth of its chord (photo-movement-2E12055: 0.104 and
-       0.109; the top-view photograph: 0.114 and 0.079; read by eye on each, the sides' difference within the reading's noise) */
+  { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
+       centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the
+       centre side). Fitted to the plate's edge traced along 240 normals on each photograph (photo-movement-2E12055 through a camera fitted to 11 screws and the
+       arbor, the top-view photograph through topview.py's map): each alone gives Q 0.59 and 0.41 off, sides to 5.61 and 5.43; the fit's edge within 0.24 mm
+       (median) of the traced one. The setup pawl's pivot end shows 8.9-9.3 mm from the arbor on both, 10.25 here (C Spinner's video) */
+    const CA=106.89,CH=37.8,CR=12.69,CW=5.58,Q0=P2(-0.53,CA+90),PQ=(r,a)=>{const p=P2(r,a);return[p[0]+Q0[0]-L.Ba[0],p[1]+Q0[1]-L.Ba[1]];};
     const arc3=(a,b,c,n)=>{const[ax,az]=a,[bx,bz]=b,[cx2,cz2]=c,d=2*(ax*(bz-cz2)+bx*(cz2-az)+cx2*(az-bz)),
         ux=((ax*ax+az*az)*(bz-cz2)+(bx*bx+bz*bz)*(cz2-az)+(cx2*cx2+cz2*cz2)*(az-bz))/d,uz=((ax*ax+az*az)*(cx2-bx)+(bx*bx+bz*bz)*(ax-cx2)+(cx2*cx2+cz2*cz2)*(bx-ax))/d,
         r=Math.hypot(ax-ux,az-uz),t0=Math.atan2(az-uz,ax-ux),tm=Math.atan2(bz-uz,bx-ux);let t1=Math.atan2(cz2-uz,cx2-ux);
       const w=t=>((t-t0)%TAU+TAU)%TAU;let dt=w(t1);if(w(tm)>dt)dt-=TAU;const o=[];for(let k=1;k<n;k++){const t=t0+dt*k/n;o.push([ux+r*Math.cos(t),uz+r*Math.sin(t)]);}return o;};
-    const CA=107.5,CH=38.25,CR=12.87,CW=5.95,TL=P2(CR,CA-CH),BL=P2(CR,CA+CH),BR=P2(CR,CA+180-CH),TR=P2(CR,CA+180+CH),pts=[],polar=(a0,a1,n)=>{const o=[];for(let k=1;k<n;k++)o.push(P2(CR,lerp(a0,a1,k/n)));return o;};
-    pts.push(TL,...polar(CA-CH,CA+CH,30),BL,...arc3(BL,P2(CW,CA+90),BR,40),BR,...polar(CA+180-CH,CA+180+CH,30),TR,...arc3(TR,P2(CW,CA-90),TL,40));
+    const TL=PQ(CR,CA-CH),BL=PQ(CR,CA+CH),BR=PQ(CR,CA+180-CH),TR=PQ(CR,CA+180+CH),pts=[],polar=(a0,a1,n)=>{const o=[];for(let k=1;k<n;k++)o.push(PQ(CR,lerp(a0,a1,k/n)));return o;};
+    pts.push(TL,...polar(CA-CH,CA+CH,30),BL,...arc3(BL,PQ(CW,CA+90),BR,40),BR,...polar(CA+180-CH,CA+180+CH,30),TR,...arc3(TR,PQ(CW,CA-90),TL,40));
     const s=new THREE.Shape();pts.forEach(([x,z],i)=>i?s.lineTo(x,-z):s.moveTo(x,-z));s.closePath();
     for(const[x,z,r]of[[...L.Ba,3.0],...S.cover.map(q=>hC(...q,0.9)),hC(...S.click,0.6)]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);s.holes.push(h);}
     const cvg=extrude(s,{depth:0.8,bevelEnabled:true,bevelThickness:0.15,bevelSize:0.15,bevelSegments:1,curveSegments:24});cvg.rotateX(-Math.PI/2);cvg.translate(0,0.15,0);

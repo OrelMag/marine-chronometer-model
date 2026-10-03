@@ -1027,6 +1027,15 @@ Contents:
   end arcs round the arbor (r 12.87, 76.5°) and two like concave sides to
   5.95 mm; the click's tip is still 0.5 mm clear in the rim-side gap. Keep:
   the outline built symmetric (`CA`, `CH`, `CR`, `CW`). `d4f788a`
+- **Setup cover centred on the arbor, its waist too wide.** The symmetric
+  outline was centred on the arbor with its sides 5.95 mm from it. Its edge,
+  traced along the outline on both photographs, shows a symmetric plate whose
+  centre is 0.4-0.6 mm off the arbor toward the movement's centre, its sides
+  5.4-5.6 mm from that centre: the rim side's edge was 0.8 mm short of the real
+  one on both. Now fitted to both traces (centre 0.53 off, sides 5.58, ends
+  r 12.69 and 75.6° wide); every side and end within 0.2 mm (median) on the
+  top-view photograph, 0.5 mm on 2E12055. Keep: the outline symmetric about
+  its own centre `Q0`, not the arbor.
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved
