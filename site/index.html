@@ -891,7 +891,7 @@ function mats(){
   const stx=stripeTex(),st=stx.map,wt=woodTex();
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
-    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),
+    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),clear:S(0xdfe5ea,0.1,0.08,{transparent:true,opacity:0.6}),
     chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3),
     wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
     invar:S(0xa7aaa6,1,0.28)};
@@ -1936,7 +1936,7 @@ function buildMovement(M){
     const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
     const hd=mesh(g,new THREE.LatheGeometry(pr,28),M.steel);hd.userData.screw=r;const sl=mesh(g,new THREE.BoxGeometry(r*2.02,Math.min(0.55,h*0.45),Math.max(0.35,r*0.2)),M.steelD,0,-h+Math.min(0.55,h*0.45)/2-0.02,0);sl.rotation.y=(x*7+z*3)%3;return g;};
   const ring=ringGeo;R.ring=ring;
-  const jewel=(p,x,z,[si,ji],b=0,r=1.1,d=0)=>{hn(mesh(p,d?new THREE.LatheGeometry([V2(0.62,b+1.2),V2(r,b+1.2),V2(r,b-d),V2(1.1,b-d),V2(1.1,b),V2(0.62,b),V2(0.62,b+1.2)].reverse(),48):ring(r,0.62,1.2),M.gilt,x,d?0:b+0.6,z),si);hn(mesh(p,stoneGeo(0.62,0.27,0.4,'bar'),M.ruby,x,b+0.2,z),ji);};   /* bar-hole jewel in the lower train bridge: a setting 1.2 deep pressed into the bridge's dial-side face (b: its bottom), the stone seated in it at the train side (its oil sink toward the dial); si, ji: their parts-list lines; d: the setting runs on d below b, bored 1.1 there, to the bridge's train-side face (KLUwI2UUCMQ 34:30: gilt there, r 2.5, seen through the plate's opening) */
+  const jewel=(p,x,z,[si,ji],b=0,r=1.1,d=0,jm=M.ruby)=>{hn(mesh(p,d?new THREE.LatheGeometry([V2(0.62,b+1.2),V2(r,b+1.2),V2(r,b-d),V2(1.1,b-d),V2(1.1,b),V2(0.62,b),V2(0.62,b+1.2)].reverse(),48):ring(r,0.62,1.2),M.gilt,x,d?0:b+0.6,z),si);hn(mesh(p,stoneGeo(0.62,0.27,0.4,'bar'),jm,x,b+0.2,z),ji);};   /* bar-hole jewel in the lower train bridge: a setting 1.2 deep pressed into the bridge's dial-side face (b: its bottom), the stone seated in it at the train side (its oil sink toward the dial); si, ji: their parts-list lines; d: the setting runs on d below b, bored 1.1 there, to the bridge's train-side face (KLUwI2UUCMQ 34:30: gilt there, r 2.5, seen through the plate's opening); jm: the stone's material */
   /* endstone cap (42159, 42160): a steel plate over a setting with the cap jewel showing through its centre, two screws (20762) at ±2.1 mm along u into the part under it.
      Built in frame g with the part's face at y and the cap toward -y; depth: how far the screws go into the part */
   const endCap=(g,x,z,u,y,depth,sp,[ci,ji,si],rc,fl,th=0.3,win=0,hr=ESCAP,bore=0)=>{const FL=fl?(Array.isArray(fl[0])?fl:[fl]):[];const a=[x-u[0]*sp,z-u[1]*sp],b=[x+u[0]*sp,z+u[1]*sp],sh=[hC(...a,hr,0.225),hC(...b,hr,0.225)],er=bore?bore+0.15:0.55;   /* ci, ji, si: the parts-list lines of the cap, its jewel and its screws; rc: a round cap of that radius; fl: [nx, nz, d] (or a list of them), cut flat d from the jewel across that normal; th: its thickness */
@@ -2034,7 +2034,8 @@ function buildMovement(M){
   R.ltb=mesh(lt,polyGeo(LTP,LT_H-2.0,[[...L.T,2.5],[...L.F,2.5],...ltS,...S.ltbp.map(q=>[...q,0.4])]),M.steel,0,0,0);hn(lt,'42063');
   mesh(lt,polyGeo(LTP,1.2,[[...L.T,2.5],[...L.F,2.5],...ltS]),M.steel,0,LT_H-2.0,0);mesh(lt,polyGeo(LTP,0.8,[[...L.T,3.0],[...L.F,3.0],...S.ltb.map(q=>[...q,2.4])]),M.steel,0,LT_H-0.8,0);   /* the pins' holes blind; the settings' seats and counterbores, the heads' counterbores */
   for(const q of S.ltbp)hn(cylBetween(lt,0.4,-1.0,1.6,M.steel,...q,12),'42063',{sub:1});   /* its steady pins, into the plate */
-  const ltf=new THREE.Group();ltf.rotation.x=Math.PI;lt.add(ltf);jewel(lt,...L.F,['42161.fl','J.fl'],LT_H-2.0,2.5,LT_H-2.0);jewel(lt,...L.T,['42161.tl','J.tl'],LT_H-2.0,2.5,LT_H-2.0);
+  const ltf=new THREE.Group();ltf.rotation.x=Math.PI;lt.add(ltf);jewel(lt,...L.F,['42161.fl','J.fl'],LT_H-2.0,2.5,LT_H-2.0);jewel(lt,...L.T,['42161.tl','J.tl'],LT_H-2.0,2.5,LT_H-2.0,M.clear);   /* the third's stone colourless, the fourth's red (KLUwI2UUCMQ 40:08 from the dial side, the third's pinion seen through it; 34:30 from the train side, the blue mat) */
+  
   for(const q of S.ltb)hn(screw(ltf,q[0],-q[1],-(LT_H-0.8),2.2,0.8,LT_H-0.8+3.46,0.7),'42163');   /* two screws (42163; Ops. 7, 53) into the pillar plate */
   /* ---------- pillars (two measured on Fig. 2, two placed clear of the fusee wheel and balance) ---------- */
   const pl=part('pillars',-30);
