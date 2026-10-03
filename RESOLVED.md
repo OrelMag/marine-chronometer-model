@@ -174,16 +174,16 @@ Contents:
   `SEC_L` (the seconds hand clears the hour wheel's pipe); the train bridge's
   escape opening r 6.9 about `L.E`; the lower bridge from `tools/lower_bridge.py`
   with the model's arbors; the balance locking arm's screw 30 deg from its
-  weight (on the weight's other side, or at 18 deg, it stands in the cock's foot).
+  weight (on the weight's other side, or at 18 deg, it stands in the cock's foot). `7291b20`
 - **The detent block and foot short of Fig. 90's, its far pin 2.9 mm short**
   (Review-results.md, Elsewhere 20.2). Shortened to clear a train pillar that
   has since moved out; now 15 and 16.4 mm from the point of flexure, the pins
   symmetric about the screw. Keep: `BE` in `shared/escapement.js`; `DBLK.p`
-  symmetric about `DBLK.s`.
+  symmetric about `DBLK.s`. `7291b20`
 - **The escape upper bridge a thin bar with a plan boss and a 0.3 mm cap**
   (Review-results.md, Elsewhere 17). Rebuilt as the video shows it (10:00-10:50).
   Keep: the arbor's top pivot and its jewels moved down 0.9 together (endshake
-  unchanged); the end screws at 8.3, `ebu` 72 deg.
+  unchanged); the end screws at 8.3, `ebu` 72 deg. `7291b20`
 - **Heights estimated wrongly.** Train bridge was 22.1 mm above the plate;
   a side photograph scaled by the pillar plate's 3.86 mm edge gives 16.8 mm.
   Barrel (13.2 mm tall, rising through a cut in the train bridge), train wheels,
