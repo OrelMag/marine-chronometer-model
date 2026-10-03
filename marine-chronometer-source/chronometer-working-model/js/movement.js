@@ -257,6 +257,23 @@ function pawlPts(len,w){const r=w*0.72,S=[[0,r]];for(let k=1;k<=12;k++){const a=
 /* flat spring: a strip w wide along a polyline in XZ, th tall from y 0 up (+y) */
 function stripGeo(pts,w,th){const L2=[],R2=[];pts.forEach((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz);
   L2.push([p[0]-dz/l*w/2,p[1]+dx/l*w/2]);R2.push([p[0]+dz/l*w/2,p[1]-dx/l*w/2]);});return polyGeo(L2.concat(R2.reverse()),th);}
+/* outline of the region where f(x, z) < 0 inside a box, by marching squares on an h grid (each crossing on its cell edge, a saddle split by the cell's centre):
+   the longest loop, thinned to within 0.004 mm (Ramer-Douglas-Peucker); the fine grid is worked only near the boundary. For parts drawn as bars joined by fillets: f a union of distances (smooth where filleted) */
+function sdfOutline(f,x0,z0,x1,z1,h){const G=8,nX=Math.ceil((x1-x0)/h/G),nZ=Math.ceil((z1-z0)/h/G),nx=nX*G,nz=nZ*G,W=nx+1,V=new Float64Array(W*(nz+1)),C=new Float64Array((nX+1)*(nZ+1)),far=0.75*G*h;
+  for(let J=0;J<=nZ;J++)for(let I=0;I<=nX;I++)C[J*(nX+1)+I]=f(x0+I*G*h,z0+J*G*h);   /* a coarse grid G cells to one: a coarse cell whose corners are all farther than far from the boundary, on one side, is all on that side (f no steeper than a distance) */
+  for(let j=0;j<=nz;j++)for(let i=0;i<=nx;i++){const I=Math.min(nX-1,(i/G)|0),J=Math.min(nZ-1,(j/G)|0),k=J*(nX+1)+I,a=C[k],b=C[k+1],c=C[k+nX+1],d=C[k+nX+2];
+    V[j*W+i]=(a>far&&b>far&&c>far&&d>far?far:a<-far&&b<-far&&c<-far&&d<-far?-far:f(x0+i*h,z0+j*h))||1e-9;}
+  const P=new Map(),adj=new Map(),key=(i,j,e)=>{const k=(j*W+i)*2+e;if(!P.has(k)){const a=V[j*W+i],b=e?V[(j+1)*W+i]:V[j*W+i+1],t=a/(a-b);P.set(k,e?[x0+i*h,z0+(j+t)*h]:[x0+(i+t)*h,z0+j*h]);}return k;},
+    link=(p,q)=>{for(const[u,w]of[[p,q],[q,p]]){if(!adj.has(u))adj.set(u,[]);adj.get(u).push(w);}};
+  for(let j=0;j<nz;j++)for(let i=0;i<nx;i++){const a=V[j*W+i]<0,b=V[j*W+i+1]<0,c=V[(j+1)*W+i+1]<0,d=V[(j+1)*W+i]<0,E=[];
+    if(a!==b)E.push(key(i,j,0));if(b!==c)E.push(key(i+1,j,1));if(d!==c)E.push(key(i,j+1,0));if(a!==d)E.push(key(i,j,1));
+    if(E.length===2)link(E[0],E[1]);else if(E.length===4){const m=(V[j*W+i]+V[j*W+i+1]+V[(j+1)*W+i+1]+V[(j+1)*W+i])/4<0;   /* E: bottom, right, top, left */
+      if(a===m){link(E[0],E[1]);link(E[2],E[3]);}else{link(E[3],E[0]);link(E[1],E[2]);}}}
+  const seen=new Set();let best=[];for(const s of adj.keys()){if(seen.has(s))continue;const loop=[];let p=null,q=s;
+    while(q!==undefined&&!seen.has(q)){seen.add(q);loop.push(P.get(q));const n=adj.get(q),r=n[0]===p?n[1]:n[0];p=q;q=r;}if(loop.length>best.length)best=loop;}
+  const rdp=(Q,t)=>{if(Q.length<3)return Q;const[A,B]=[Q[0],Q[Q.length-1]],dx=B[0]-A[0],dz=B[1]-A[1],l=Math.hypot(dx,dz)||1e-9;let m=0,k=0;
+    for(let i=1;i<Q.length-1;i++){const e=Math.abs((Q[i][0]-A[0])*dz-(Q[i][1]-A[1])*dx)/l;if(e>m){m=e;k=i;}}return m>t?[...rdp(Q.slice(0,k+1),t).slice(0,-1),...rdp(Q.slice(k),t)]:[A,B];};
+  const h2=best.length>>1;return[...rdp(best.slice(0,h2+1),0.004).slice(0,-1),...rdp([...best.slice(h2),best[0]],0.004).slice(0,-1)];}
 /* the point where a spring bears on a pawl's arm, c mm from its pivot, on the side facing away from its ratchet's centre (pawl at q, angle th,
    ratchet centre at o, all in one XZ frame): returns the point and that side's outward normal */
 function pawlBack(pts,c,q,th,o){const co=Math.cos(th),sn=Math.sin(th),W=(x,z)=>[q[0]+x*co+z*sn,q[1]-x*sn+z*co];let best=null;
@@ -442,19 +459,62 @@ function buildMovement(M){
     cylBetween(R.arm,0.4,-0.45,-2.85,M.steel,AL,0,16);   /* the finger, 2.4 tall: 0.56 up the timing weight */
     hn(mesh(f9,ringGeo(1.1,hC(0,0,ARM_S)[2],0.15),M.steel,S.arm[0],TB_T-0.525,S.arm[1]),'42251.arm');hn(screw(f9,...S.arm,TB_T-0.6,ARM_S,0.35,0.15+0.45+2.5),'37204');
     hn(cylBetween(f9,0.3,TB_T+0.8,TB_T-0.8,M.steel,...S.armPin),'42300');
-    /* the Navy's other balance stop (illustrative; Variants): a post on the barrel bridge, capped with packing rings as the fusee's dust seal is, and a Y-shaped arm from
-       under its cap over the balance, a short pin under each end over the rim, the ends nearly opposite each other. As on serial 2E11795 (References/photo-top-view.jpg;
-       others on omegaforums and Delaney No. 8854; Review-results.md, BOM comparison 8): its shape and place mapped from the photograph through the barrel bridge's five
-       screws (tools/topview.py's fit), corrected 1 mm for the photograph's tilt at the arm's height and 2.9 mm at the cap's, to about 1.5 mm. The manual doesn't describe
-       it (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is a guess: the cap pressed from outside the case, the arm comes down until its pins bear on
-       the rim, as the wedges did (Sec. III). Its heights are chosen to clear the balance, the hairspring and the cock. R.navyArm moves: position.y 0 free, 0.48 locked */
-    const nv=new THREE.Group();nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.69,-19.16],ya=-31.9,PB=(p,r)=>{const d=[p[0]-L.B[0],p[1]-L.B[1]],l=Math.hypot(...d);return l>=r?p:[L.B[0]+d[0]/l*r,L.B[1]+d[1]/l*r];};
-    cylBetween(nv,1.6,BB_T,-32.56,M.plateSolid,...NP,32);
-    for(let k=0;k<3;k++){const a=-32.56-1.733*k,b=a-1.733;mesh(nv,new THREE.LatheGeometry([V2(1.6,a),V2(6.2,a),V2(6.45,a-0.22),V2(6.45,b+0.22),V2(6.2,b),V2(1.6,b),V2(1.6,a)].reverse(),56),M.brass2,NP[0],0,NP[1]);}
-    const na=new THREE.Group();nv.add(na);R.navyArm=na;
-    const fork=[-1.8,0.02],LE=PB([14.67,5.64],0),RT=(d=>[L.B[0]+d[0]*13.95,L.B[1]+d[1]*13.95])(unit(sub([-13.11,13.65],L.B))),r0=[-5.56,-12.0],e0=add(NP,unit(sub(r0,NP)),1.9),arms=[[e0,r0,fork],[fork,PB([4.59,2.19],7.0),PB([11.45,4.69],7.0),LE],[fork,PB([-4.92,3.21],7.0),PB([-9.49,8.98],7.0),RT]];
-    arms.forEach((pts,i)=>mesh(na,stripGeo(pts,i?1.5:2.2,0.45),M.steel,0,ya,0));mesh(na,ringGeo(2.4,1.62,0.45),M.steel,NP[0],ya+0.225,NP[1]);   /* the arm's eye round the post */
-    for(const q of[LE,RT])cylBetween(na,0.3,ya+0.45,BAL_Y+1.2-2*2.15-0.5,M.steel,...q,16);   /* the pins, 0.5 over the rim's top when free */ }   /* 0.8 into the bridge */
+    /* the Navy's other balance stop (illustrative; Variants), as on serial 2E11795 (References/photo-top-view.jpg), Delaney No. 8854 and another, both photographed from
+       straight above (Review-results.md, BOM comparison 8). A second dust seal on the barrel bridge like the fusee's: a nickel body on a flange held by screws, and
+       packing rings (black on 2E11795). Its bore is closed by a nickel plunger head with a hex socket screw. Under it runs a lever of spring steel: its root is screwed
+       to a stud under a large shouldered screw near the bridge's rim, and it runs straight under the cap, through a slot in the seal's body, to a curved crossbar over
+       the balance. The crossbar is an arch over the cock's end, its legs coming straight down, and from the foot of each, level with the staff, an arm straight
+       out to a round eye with a pin over the rim, symmetric about the stem (a sketch of the shape, 3 October 2026; Delaney's photograph close to it, its eyes level with the staff,
+       its arch's top 9.7 mm out, the sketch's taller). The outline is the boundary of bars of those widths joined with round fillets (sdfOutline), cut as one plate. The pivot screw and
+       the eyes land within about 1 mm of where 2E11795's and Delaney's photographs put them, registered by the balance rim (on 2E11795 the cock's edge hides the
+       left end). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is a guess: the cap, pressed from
+       outside the case, pushes the plunger down on the lever, which bends about its screwed root (drawn as a turn about the pivot) until the pins bear on the rim, as
+       the wedges did (Sec. III). Estimated: the heights, the lever's thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the
+       flange's bite round the setup cover, and the screws' threads (not drawn: the bridge is the manual's, untapped there). R.navyLock(a): a 0 free, 1 locked. In the
+       Exploded view it lifts 22 mm past the locking arm's part, to -84: above the barrel bridge it stands on (-72) and the balance it reaches over (-80), and under the
+       hairspring and the cock (-88, -96) */
+    const nv=loose(new THREE.Group(),22);nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.69,-19.16],AY=-31.75,AT=0.45,Y0=-30.65,Y1=-31.85,HB=-33.1,HT=-38.06,PE=BAL_Y+1.2-2*2.15-0.5;   /* the lever's top, thickness; the slot's bottom and top; the plunger head's foot and top (free); the pins' ends, 0.5 over the rim's top */
+    const lat=(o,p,m,c=NP,n=56)=>mesh(o,new THREE.LatheGeometry(p.map(([r,y])=>V2(r,y)).reverse(),n),m,c[0],0,c[1]),circ=(r,n=96)=>[...Array(n)].map((_,i)=>[r*Math.cos(i/n*TAU),r*Math.sin(i/n*TAU)]);
+    /* the pivot: both photographs put it 2.5 mm from the barrel bridge's pillar screw, a large slotted head like it (2E11795), so the fitting is taken to replace that
+       screw with a shouldered stud (hidden screw R.navyBB, below); the lever's end bent to it under the cap, as Delaney's photograph shows it bent there */
+    const NPV0=[-9.61,-30.95],iP=S.bb.reduce((b,q,i)=>Math.hypot(...sub(q,NPV0))<Math.hypot(...sub(S.bb[b],NPV0))?i:b,0),NPV=S.bb[iP];R.navyBB=iP;
+    /* the crossbar, symmetric about the line from the staff to the post (aa; pp across it): an arch over the cock's end, its legs WA out (its inner edge 6.7 from the
+       staff, clear of the hairspring's 5.5), straight for HL then round over in a half circle to its top HA out; from each leg's foot, level with the staff, an arm straight out to an
+       eye at EA, its pin over the rim (13.38-14.5). Widths from Delaney's photograph: the stem 2.9, the lever past the cap 2.5, the bar 2.2, the eyes r 1.4 */
+    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=7.8,HL=4.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
+    /* the seal: body, flange and screws as the fusee's (below), its chamber closed underneath, slotted through both sides at the lever's height along the lever
+       (toward the crossbar and toward the pivot) */
+    const SW=2.0,gaps=[loc(0,HA),NPV].map(q=>{const d=sub(q,NP);return Math.atan2(d[1],d[0]);}).sort((a,b)=>a-b);
+    lat(nv,[[0,-27.18],[6.6,-27.18],[6.6,-28.36],[6.2,-28.76],[5.9,-28.96],[5.9,Y0],[3.0,Y0],[3.0,-27.9],[0,-27.9]],M.plateSolid);
+    for(const[A,B]of[[gaps[0],gaps[1]],[gaps[1],gaps[0]+TAU]]){const go=Math.asin(SW/5.9),gi=Math.asin(SW/3.0),P=[];
+      for(let k=0;k<=60;k++){const t=A+go+(B-A-2*go)*k/60;P.push([5.9*Math.cos(t),5.9*Math.sin(t)]);}for(let k=60;k>=0;k--){const t=A+gi+(B-A-2*gi)*k/60;P.push([3.0*Math.cos(t),3.0*Math.sin(t)]);}
+      mesh(nv,polyGeo(P,Y0-Y1),M.plateSolid,NP[0],Y1,NP[1]);}
+    lat(nv,[[1.3,Y1],[5.9,Y1],[5.9,-32.56],[1.3,-32.56],[1.3,Y1]],M.plateSolid);   /* the body's top, bored for the plunger */
+    for(let k=0;k<3;k++){const a=-32.56-1.733*k,b=a-1.733;lat(nv,[[3.4,a],[6.2,a],[6.45,a-0.22],[6.45,b+0.22],[6.2,b],[3.4,b],[3.4,a]],M.packing);}
+    const NS=[37.8,-158.5].map(d=>[NP[0]+7.9*Math.cos(d*D2R),NP[1]+7.9*Math.sin(d*D2R)]);   /* the flange screws: one where the photograph shows it, one about opposite (estimated) */
+    /* the setup cover's end (below, out to 13.15 from the barrel arbor) and its foot (13.65) reach over where the flange would: bitten round them, about the arbor, 0.3 clear */
+    mesh(nv,polyGeo(subtractCircle(circ(8.6),sub(L.Ba,NP),13.95),1.0,[[0,0,6.7],...NS.map(q=>hC(q[0]-NP[0],q[1]-NP[1],1.0))]),M.plateSolid,NP[0],-28.18,NP[1]);for(const q of NS)screw(nv,...q,-28.18,1.0,0.5,1.0);
+    /* the stud: threaded through the bridge into the pillar as the screw it replaces (3.4 + 3.0), a shoulder r 2.0 up to the lever, and a bore for the screw over it,
+       whose head (the pillar screw's) holds the lever's root on the shoulder */
+    lat(nv,[[0,BB_T+6.4],[sR(PSR),BB_T+6.4],[sR(PSR),BB_T],[2.0,BB_T],[2.0,AY+AT+0.05],[1.0,AY+AT+0.05],[1.0,AY+AT+0.65],[0,AY+AT+0.65]],M.steel,NPV,40);screw(nv,...NPV,AY-0.05,PSR,1.6,AT+0.7,0.98);   /* 0.05 clear of the lever above and below: locked, its root's eye tilts 0.03 */
+    /* the lever: the traced outline smoothed as one closed curve (centripetal Catmull-Rom) and cut as one plate, so the fork has no seams; satin, as photographed
+       (about 0.83 of the plates' brightness); it turns about the pivot at its mid-thickness */
+    const na=new THREE.Group();na.position.set(NPV[0],AY+AT/2,NPV[1]);nv.add(na);const ni=new THREE.Group();ni.position.set(-NPV[0],-(AY+AT/2),-NPV[1]);na.add(ni);
+    { const seg=(x,z,a,b,r)=>{const px=x-a[0],pz=z-a[1],bx=b[0]-a[0],bz=b[1]-a[1],h=clamp((px*bx+pz*bz)/(bx*bx+bz*bz||1),0,1);return Math.hypot(px-bx*h,pz-bz*h)-r;},
+        smin=(a,b,k)=>{const h=clamp(0.5+0.5*(b-a)/k,0,1);return b*(1-h)+a*h-k*h*(1-h);},
+        arch=(x,z)=>{const dx=x-L.B[0],dz=z-L.B[1],X=dx*pp[0]+dz*pp[1],Y=dx*aa[0]+dz*aa[1];return(Y>=HL?Math.abs(Math.hypot(X,Y-HL)-WA):Math.hypot(Math.abs(X)-WA,Math.min(Y,0)))-1.1;};   /* the legs and the half circle, one bar */
+      const f=(x,z)=>smin(smin(smin(arch(x,z),Math.min(seg(x,z,loc(WA,0),loc(EA,0),1.1),seg(x,z,loc(-WA,0),loc(-EA,0),1.1)),0.5),Math.min(...NPIN.map(q=>seg(x,z,q,q,1.4))),0.4),
+        smin(seg(x,z,loc(0,HA),NP,1.45),smin(seg(x,z,NP,NPV,1.25),seg(x,z,NPV,NPV,2.5),0.4),0.4),0.9);   /* bar, arms, eyes; stem, lever and the root's boss, joined with round fillets */
+      const K=[...NPIN,NPV,loc(0,HA),loc(WA,0),loc(-WA,0)],O=sdfOutline(f,Math.min(...K.map(q=>q[0]))-3,Math.min(...K.map(q=>q[1]))-3,Math.max(...K.map(q=>q[0]))+3,Math.max(...K.map(q=>q[1]))+3,0.06);
+      mesh(ni,polyGeo(O,AT,[[...NPV,1.0],...NPIN.map(q=>[...q,0.4])]),M.steelS,0,AY,0); }
+    for(const q of NPIN)cylBetween(ni,0.4,AY,PE,M.steel,...q,16);
+    /* the plunger: its head in the packing rings' bore, 0.3 proud of them and recessed for the hex socket screw; its stem down to 0.02 over the lever */
+    const pl=new THREE.Group();nv.add(pl);lat(pl,[[0,HB],[3.35,HB],[3.35,HT],[1.3,HT],[1.3,HT+0.8],[0,HT+0.8]],M.plateSolid);
+    { const hx=[...Array(6)].map((_,i)=>[0.62*Math.cos(i/6*TAU),0.62*Math.sin(i/6*TAU)]);mesh(pl,polyGeo(circ(1.28,48),0.8,[{pts:hx}]),M.steel,NP[0],HT,NP[1]); }
+    cylBetween(pl,1.25,HB,AY-0.02,M.steel,...NP,32);
+    /* locking: the lever turned about the horizontal through the pivot, across it, until the farther pin is 0.02 over the rim; the plunger goes down with the lever under it */
+    { const ul=unit(sub(NP,NPV)),K=new THREE.Vector3(-ul[1],0,ul[0]),sA=q=>(q[0]-NPV[0])*ul[0]+(q[1]-NPV[1])*ul[1],th=0.48/Math.max(...NPIN.map(sA)),sP=sA(NP);
+      R.navyLock=a=>{na.setRotationFromAxisAngle(K,th*a);pl.position.y=sP*th*a;}; } }
   /* escape upper bridge with jewel and endstone cap */
   const eb=part('escBridge',-66),EB_Y=TB_T+SEAT_D;   /* the bar's underside: its ends in the train bridge's seats */
   /* the escape upper bridge (42064; Figs. 84, 110; KLUwI2UUCMQ 10:00-10:50; References/VIDEOS.md, "The escape upper bridge, close"): a flat bar 1.0 thick and 5.2 wide, round-ended,
@@ -490,7 +550,7 @@ function buildMovement(M){
   hn(bushR(bb,...L.Fu,BB_T,TB_T,1.6,1.02),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,1.95,1.42),'42164.bu');   /* fusee and barrel upper bushings (42164) */
   /* barrel bridge pillar screw (42055) into the barrel pillar; two barrel bridge screws into the train bridge: one beside the third train pillar's screw (where the third pillar stood before it went under that screw), one in the far horn
      (proud of the bridge in the top-view photograph; gone with the bridge off, BunnSpecial 12:05) */
-  S.bb.forEach((q,i)=>hn(screw(bb,...q,BB_T,PSR,1.6,[3.4+3.0,3.4+2.6,3.4+2.6][i]),i?'42055.bb':'42055.bbp'));   /* the pillar's screw, and two into the train bridge (the parts list: "Screw - Barrel bridge", to the train bridge) */
+  R.bbScr=S.bb.map((q,i)=>hn(screw(bb,...q,BB_T,PSR,1.6,[3.4+3.0,3.4+2.6,3.4+2.6][i]),i?'42055.bb':'42055.bbp'));   /* the pillar's screw, and two into the train bridge (the parts list: "Screw - Barrel bridge", to the train bridge) */
   const eg2=mesh(bb,decalGeo(BBpoly,PTi),M.engraveB,0,BB_T-0.02,0);eg2.userData.noShadow=true;eg2.userData.noCap=true;eg2.userData.decal=true;
   const Fl=Math.hypot(...L.Fu),fo=[L.Fu[0]/Fl,L.Fu[1]/Fl];
   /* ---------- dial (on the mounting ring's flange), hands, motion work ---------- */
@@ -946,7 +1006,7 @@ function buildMovement(M){
     const a=DEV.g*e,c=Math.cos(a),s=Math.sin(a);for(const g of EFP){g.rotation.y=a;g.position.x=L.E[0]+dE[0]*e-(L.E[0]*c+L.E[1]*s);g.position.z=L.E[1]+dE[1]*e-(-L.E[0]*s+L.E[1]*c);}
     for(const q of DPH)q.m.rotation.y=q.r0+q.c*e;};
   mv.userData.balance=kind=>{R.balU.visible=kind!=='split';R.balS.visible=kind==='split';};
-  mv.userData.stop=kind=>{R.armF9.visible=kind!=='navy';R.navy.visible=kind==='navy';};   /* the balance stop fitted: the manual's locking arm (Fig. 9) or the Navy's Y-arm */
+  mv.userData.stop=kind=>{R.armF9.visible=kind!=='navy';R.navy.visible=kind==='navy';R.bbScr[R.navyBB].visible=kind!=='navy';};   /* the balance stop fitted: the manual's locking arm (Fig. 9) or the Navy's Y-arm */
   /* train-blocking screw: with its dog point down between the fourth wheel's spokes, how many beats (E) the train can still turn before the next spoke meets it (blockRoom),
      and whether a spoke is under the dog point now, so it can't be screwed down (blockClear). The fourth wheel turns with its spokes' angles falling as E rises */
   { const u=R.tbs.userData,q=TAU/FW_SP,sp=E=>[...Array(FW_SP).keys()].map(j=>-(E*ESC.P)/ESC_PER.fw+FW.wheel.rotation.y+j*q-u.sig);
@@ -993,7 +1053,7 @@ function buildMovement(M){
       if(Math.abs(pw.rotation.y-u.sprTh)>0.002){u.spr.geometry.dispose();u.spr.geometry=wpsGeo(pw,pw.rotation.y);u.sprTh=pw.rotation.y;}}   /* the spring follows its pawl */
     { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP)+srA;R.spS.rotation.y=R.spawl.rotation.y-R.spawl.userData.base; }
     R.staff.rotation.y=-s.th;
-    { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyArm.position.y=0.48*(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
+    { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyLock(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;
     const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
     const udA=fa*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-UD_UP*D2R-udA;
