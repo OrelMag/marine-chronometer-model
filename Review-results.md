@@ -955,7 +955,8 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
 
 ### Still open
 
-1. **The upper train bridge's third screw** (known deviation, `bom.json`
+1. *Closed (2 October 2026, `claude/group-layout`): pillar 2 stands under the screw, as the
+   video has it (23:30, 36:34) and Op. 14; `bom.json` has no deviation left.* **The upper train bridge's third screw** (known deviation, `bom.json`
    `dev` on 42055.tb). The manual has all three in pillars (reassembly Op. 14; disassembly Ops. 47, 48);
    the model's third is where the top-view photographs (and serial 623's) show
    a screw, at (-8.5, 27.7), where a pillar would stand in the fourth wheel.
@@ -1100,7 +1101,8 @@ changes it only round its own arbors (1 below).
    less where the model's detent, the pillar, a barrel-bridge screw and the
    balance locking arm's screw and pin stand. The tapped hole the top-view photograph shows at (11.24, 29.51)
    isn't this bridge's; what screws into it is still open.
-6. **The steady pins.** Open. None show on the bridge's faces; pins between
+6. *Left estimated (3 October 2026): no frame can show them (hidden in the joint), so the model keeps one in each
+   lug, as the parts list's "complete with pins" allows; the README's "Estimated" list says so.* **The steady pins.** Open. None show on the bridge's faces; pins between
    the bridge and the train bridge would be hidden in the joint. The model
    puts one in each lug.
 14. **The settings' spacing** (new). Measured with the camera (2 October
@@ -1198,7 +1200,10 @@ changes it only round its own arbors (1 below).
    photograph (omegaforums, "Incoming Hamilton Model 21"), about 0.7 of the
    fourth wheel's radius, about 7 mm. The model has 4.5, inside the
    fourth wheel's spokes and clear of the detent. Open with 14.
-9. **A dark hole near the escape wheel.** About 2.5 mm across, at about
+9. *Likely settled (3 October 2026): taken through the group's transform (`PT`) the hole lands at (-7.50, 19.55),
+   2.2 mm from the train-blocking screw (-5.57, 18.55), whose access hole through the bridges is 2.3 mm across: it
+   is that hole, the 2.2 mm the same order as the photograph's other offsets from the video here (pillar 1, 4 deg).
+   Nothing changed.* **A dark hole near the escape wheel.** About 2.5 mm across, at about
    (2.7, 18.1) on the top-view photograph, partly under the balance locking
    arm: 4.9 mm from the escape arbor, over the escape wheel's teeth, so not
    the train-blocking screw's (its wall would stand in the wheel). The model
@@ -1207,7 +1212,8 @@ changes it only round its own arbors (1 below).
 
 ### Elsewhere
 
-10. **The escape wheel's place.** Through the train bridge's keyhole, under the
+10. *Settled (2 October 2026; 18 and 24): the escape arbor 9.40 from the balance toward the jewel seen from
+    above, on the video's train.* **The escape wheel's place.** Through the train bridge's keyhole, under the
     balance rim, the top-view photograph shows a steel plate with a jewel and
     a screw hole a few millimetres from where the model has the escape wheel's
     upper jewel (its comparison, `verification/topview-comparison.png`, puts
@@ -1217,7 +1223,7 @@ changes it only round its own arbors (1 below).
     (README, step 5); only its direction is fitted. A video should show: the
     escape upper bridge and its jewel from straight above, with the balance
     off.
-11. **The upper train bridge's third screw** (finding 1 under BOM
+11. *Settled: pillar 2 under it (BOM comparison, Still open 1).* **The upper train bridge's third screw** (finding 1 under BOM
     comparison; IDEAS.md 1.2): at (−8.5, 27.7), with no pillar under it in the
     model. A video should show: the train bridge coming off, and what the
     screw holds.
@@ -1341,7 +1347,12 @@ changes it only round its own arbors (1 below).
 17. **The escape upper bridge (42064)** (new, 1 October 2026). **Rebuilt again
     (2 October 2026, `claude/fp-layout`) as measured below: the bar 5.2 x 1.0, the boss and
     thickening under it, the flat-sided cap sunk flush, flush end screws, steady pins.
-    Open: the seats in the train bridge, the cap's conical window.** First rebuilt
+    Open: the seats in the train bridge, the cap's conical window.** *Both done (3 October 2026,
+    `claude/fp-finish`): the ends lie in seats sunk 0.3 (estimated) in the train bridge's face
+    (`TB_SEAT`, `tools/train_bridge.py`), the bar and the escape arbor's top pivot lowered with them;
+    the cap's window a 90 deg cone r 1.55 down to the endstone, its screws' heads r 0.75 as the
+    frame shows them. The balance lower cap's window a straight bore r 1.1, its heads r 0.5 (13:49.5).*
+    First rebuilt
     (1 October 2026, branch `claude/escape-arbor`; RESOLVED.md): a bar
     across the keyhole, symmetric about the jewel, a screw near each end, a
     round cap. Still open: its thickness and the boss under the cap, its
@@ -1744,7 +1755,17 @@ changes it only round its own arbors (1 below).
     arbor (the escape wheel lifts out through it; the traced lobe, from 23:30 at the wrong
     focal length, was r 5). The dial's print now puts the seconds sub-dial on its arbor (it
     was at a fixed 0.472 of the dial's radius, 1.5 mm off it).
-    Still open: the seconds hand and the dial's track. With the fourth at 21.6 the hand
+    *Since (3 October 2026, `claude/fp-finish`): the lower train bridge measured on 40:08 and rebuilt, 4.4 thick
+    and 10 wide, its screws and settings in counterbores (its end 9.2 past the fourth, not the video's 10.3, to
+    clear pillar 1's dial-side screw at the model's 170.8 deg); the minute wheel's stud 11.3 (the video's). Pillar 1
+    tried at the video's 166.3 deg (its dial-side screw just clear of the bar's end on 40:08): its top screw's head
+    then stands in the cock's foot, which C Spinner's video shows clear of any screw (6:29 on, 6:47 off), so it
+    stays at 170.8 and the 4 deg between the dial side's angles and the cock's place stays open.*
+    *Settled (3 October 2026): the photographed dial, face-on and scaled by its seconds' centre (on the fourth, 21.6
+    out), has its minute track at r 40.4-42.2, the seconds track r 17.9 meeting it at 6, and shows to r 45.9 inside the
+    bezel, the model's bezel opening exactly: the 95 mm dial stands, and its print, at r 43.0-45.4, was 9 % too large.
+    Now printed so, the hands to the photograph's lengths (`References/VIDEOS.md`, "The Hamilton dial's proportions").*
+    Was open: the seconds hand and the dial's track. With the fourth at 21.6 the hand
     can be at most about 18 mm long (it must pass the hour wheel's pipe), so the seconds
     sub-dial can't meet this 95 mm dial's minute track at 6 as on the photographed dial
     (its seconds centre 0.549 of the track's radius would want a track r 39.3, against

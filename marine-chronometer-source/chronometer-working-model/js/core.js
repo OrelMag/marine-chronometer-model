@@ -490,7 +490,10 @@ function dialCanvas(kind){
      the serial and U.S. MARITIME COMMISSION; the UP–DOWN scale open at the top round the 12. The sub-dial centres are fixed by their arbors (the UP–DOWN one farther out than the seconds, as on the photographed dial), which lie nearer the
      centre than on the dial photographed, so the sub-dials sit lower on this face and the inscriptions are closer together; the scale keeps this movement's
      sweep, UD_SWEEP (313.6°: the photographed dial's ticks, 8 h apart, give 315.7°) */
-  const r1=c*0.955,r2=c*0.905,k=L.F[1]/DIAL_R,sy=c+c*k,uy=c+c*L.Ud[1]/DIAL_R,rs=Math.min(r2-c*k,(SEC_L+0.27)/DIAL_R*c),ru=c*0.255;   /* the sub-dials on their arbors (k was a fixed 0.472, the fourth's place on a 50.8 mm dial, until 2 October 2026: 1.5 mm off it on this one); the seconds track to the hand's reach (SEC_L) */
+  /* its proportions measured on the photograph (face-on, scaled by the seconds' centre, which is on the fourth arbor, 21.6 mm out): the minute track r 40.4-42.2 (0.851-0.888 of the
+     dial's radius; it was 0.905-0.955 until 3 October 2026, which with the fourth's measured place left no room for the seconds), the seconds track to r 17.9, 0.9 inside the minute track at 6,
+     the UP-DOWN ring r 11.2; the dial shows to r 45.9 inside the bezel, as the photograph's */
+  const r1=c*42.2/DIAL_R,r2=c*40.4/DIAL_R,k=L.F[1]/DIAL_R,sy=c+c*k,uy=c+c*L.Ud[1]/DIAL_R,rs=Math.min(r2-c*k-c*0.9/DIAL_R,(SEC_L+0.27)/DIAL_R*c),ru=c*11.2/DIAL_R;   /* the sub-dials on their arbors (k was a fixed 0.472, the fourth's place on a 50.8 mm dial, until 2 October 2026: 1.5 mm off it on this one); the seconds track to the hand's reach (SEC_L) */
   circ(c,c,r1,S*0.0018);circ(c,c,r2,S*0.0016);for(let i=0;i<60;i++)ln(c,c,i/60*TAU,r2,r1,S*0.0014);for(let i=0;i<12;i++)tri(r1,i/12*TAU);
   /* hours, sized so the figures stand 0.18 c tall: each numeral's box just inside the track; the 5 and 7 edged round toward the 4 and 8 until they clear the seconds sub-dial */
   x.font='600 100px Spectral, Georgia, serif';{const m=x.measureText('1234567890');x.font=`600 ${100*c*0.18/(m.actualBoundingBoxAscent+m.actualBoundingBoxDescent)}px Spectral, Georgia, serif`;}
