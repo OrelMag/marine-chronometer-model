@@ -111,13 +111,25 @@ async def model(b,errs,steps):
     await pg.evaluate("()=>{const i=document.querySelector('#lat');i.value=-45;i.dispatchEvent(new Event('input'))}");await click('#bookNow','second comparison, 45 S');await click('#bookClr','rate book cleared')
     # the adjuster's bench: each setting to both ends (some won't run, and are refused), then the model's settings again
     await pg.evaluate("document.querySelector('#benchDet').open=true")
-    for j in range(6):
+    for j in range(await pg.evaluate("document.querySelectorAll('#benchS input').length")):
         for end in('min','max'):
             await pg.evaluate("([j,e])=>{const i=document.querySelectorAll('#benchS input')[j];i.value=i[e];i.dispatchEvent(new Event('input'))}",[j,end]);await pg.wait_for_timeout(250)
         steps.append(f'bench setting {j+1} to both ends')
     await click('#benchReset',"bench: the model's settings");await click('#benchLook','bench: show the escapement')
     if await pg.evaluate("document.querySelector('#benchOut b').textContent")!='Every figure within the manual’s':errs.append("the model's settings don't pass on the bench")
-    if not await pg.evaluate("ESC.A===255*Math.PI/180&&ESC.run.rate===0&&window.__H().escK===1"):errs.append("the bench's reset leaves the amplitude or the escapement's rate off the model's settings")
+    if not await pg.evaluate("ESC.A===255*Math.PI/180&&ESC.run.rate===0&&ESC.rateAt(ESC.A,1)===0&&Math.abs(ESC.ampAt(1)-ESC.A)<1e-9"):errs.append("the bench's reset leaves the amplitude or the escapement's rate off the model's settings")
+    # swing and isochronism: each chart, the going barrel, a jolt or two (twisting if it set), the roll period
+    await pg.evaluate("document.querySelector('#swingDet').open=true")
+    for v in('t','a','w'):await click(f'#swK button[data-v="{v}"]',f'swing chart {v}',400)
+    await click('#swGB','without the fusee off');await click('#swGB','without the fusee on')
+    for i in range(3):
+        await click('#jolt',f'jolt {i+1}',600)
+        if await pg.evaluate("window.__H().held"):await click('#twist','twist after a jolt',1500)
+    await pg.evaluate("()=>{const r=document.querySelector('#msetR');r.value=20;r.dispatchEvent(new Event('input'))}");steps.append('mainspring set 20%');await pg.wait_for_timeout(400)
+    await pg.evaluate("document.querySelector('#testDet').open=true");await pg.wait_for_timeout(800);steps.append('performance test')
+    if not await pg.evaluate("document.querySelectorAll('#testOut tr').length>=14"):errs.append('the performance test card is missing')
+    await pg.evaluate("()=>{const r=document.querySelector('#msetR');r.value=0;r.dispatchEvent(new Event('input'))}")
+    await pg.evaluate("()=>{const r=document.querySelector('#rollP');r.value=0.7;r.dispatchEvent(new Event('input'))}");await click('#rock','ship motion, roll period 0.7 s',1500);await click('#rock','ship motion off')
     await click('#speeds button[data-v="1"]','1x');await click('#stopLook','show the arm and screw')
     await click('#helpBtn','help card');await click('#helpBtn','help card closed')
     await pg.evaluate("document.querySelector('#changesDet').open=true");steps.append("what's new")
