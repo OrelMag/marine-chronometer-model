@@ -1547,4 +1547,10 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The plate's opening under the lower train bridge a small round hole** (Plates, bridges, screws
+  and arbors): r 6 about the third, estimated, and the fourth's pivot in a plain hole r 1.2. Measured
+  on 34:30 and 40:08 it is a keyhole: a circle r 11.3 about the third, a lobe r 4.85 toward the
+  balance and a bore r 3.2 about the fourth (`PP_KEY`, drawn by `lobedCircle`; `discGeo` now takes
+  an outline hole). The bar's settings run through it, gilt at its train-side face as 34:30 shows,
+  and the steady pin that stood in the opening moved past the screw. Keep: no hole or pin of the
+  plate inside `PP_KEY` (`checkHoles` doesn't test an outline hole).
