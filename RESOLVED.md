@@ -1065,7 +1065,7 @@ Contents:
   model's ratchet as the scale. Now the tips at 7.05 (`SUT`; 42 teeth), the
   pivot at 8.95, the click's tip at the new root and its spring at 1.273 tip
   radii. Keep: read sizes on the video against a part whose size is known
-  from elsewhere, not against the model's.
+  from elsewhere, not against the model's. `c603feb`
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved
