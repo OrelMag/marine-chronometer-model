@@ -593,12 +593,12 @@ Contents:
 - **The setup click's tip 0.1 mm in the ratchet's teeth** (Review-results.md, BOM
   comparison 3): its pivot 9.25 mm out, from the top-view photograph. At the video's
   10.25 (11:58), its tip at the teeth's root 32 deg round, it seats 0.52 mm. Keep:
-  bom.py's setup click check wants it seated over 0.3. `HASH`
+  bom.py's setup click check wants it seated over 0.3. `12badbb`
 - **The fusee's large end flat, the dust seal's flange round** (Review-results.md, the
   fusee assembly 5; BOM comparison 2): the large end now has its rim round the recess
   that holds the winding ratchet (18:20), 0.4 tall so it clears the sustaining ratchet
   and its pawl by 0.1 (fine.py found 0.75 in both); the seal's flange its shallow bite
-  between the screws (6:29). `HASH`
+  between the screws (6:29). `12badbb`
 
 ## Plates, bridges, screws and arbors
 
