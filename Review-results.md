@@ -1928,3 +1928,44 @@ Open, found on the way:
   fusee's bushings the barrel's number (42164), whose bore the model has at
   r 1.42: a thicker arbor would fit them. Thickening it means the barrel
   bridge's bushing, the dust seal and its ring together.
+
+### Still open after the collar's height (4 October 2026)
+
+What this pass on Figs. 21, 22, 28 and 29 leaves, most worth doing first. The
+measurements behind each are in `References/VIDEOS.md` (the rows for the fusee's
+top, the fusee arbor, the take-off slot and the flange's holes).
+
+1. **The fusee arbor's shaft and winding square.** Above the collar the real
+   arbor reads 0.66 of the collar's width (20:00, 19:59; r ≈ 1.75 against the
+   model's r 1), and the parts list gives the fusee's bushings the barrel's
+   number (42164, bored r 1.42 in the model). The square starts at a step about
+   11 mm over the fusee's top (y ≈ −31.5) and runs to a rounded end; the model
+   has a plain r 1.2 cylinder there and a 1.6 mm square at the end. Doing it
+   means the arbor, the barrel bridge's bushing (42164.fu), the dust seal (42051)
+   and its ring (42052) together, then `fine.py`, `bom.py` and `maintaining.py`.
+   Needs first: the shaft's radius from a frame where it stands against
+   something matt (a polished silhouette on the blue mat reads narrow), or a
+   ratio to the barrel arbor's pivot in one frame.
+2. **The dial screws and the mounting ring's screws.** The video's ring
+   (2E8489, 9:03 unrolled): dial screws at 130.4°, 224.4° and 319.4° (r ≈ 46),
+   none at r 46 elsewhere, a small hole at 2.5° (r ≈ 43, under the plate's rim:
+   a dial steady pin?); the ring's screws tapped through at 88.5°, 212.3° and
+   337.8°. The model: dial screws 38.0°, 152.6°, 223.7°, 323.5° (152.6° and
+   223.7° from the top-view photograph, 2E11795); ring screws 70°, 190°, 300°.
+   Needs first: the top-view photograph's camera refitted (`fit.py`, `unproj.py`)
+   and its flange screws read through it, then the two movements compared;
+   where they agree, move the model's.
+3. **`tools/p3map.json` doesn't fit `References/photo-top-view.jpg`.** Its
+   three anchors (the balance at 640, 830 and so on) don't land on those parts
+   in the copy in `References/` (2322 px square): it was fitted on another copy
+   or crop. Find that copy, or refit the map on this one, before any new reading
+   from the photograph.
+4. **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
+   round recess r 4-5 about the hub; the model has the spring's groove r 2.4-2.9
+   only. Sizes ±30 %.
+5. **Estimated, to measure if a frame allows:** the take-off slot's depth (1.0,
+   its floor brass at 9:03), the collar's radius (r 3.0 face-on at 13:30, ±0.3:
+   the dark ring round it may be the hole's gap).
+6. **Cosmetic:** the sustaining spring's blue is brighter than the video's
+   nearly black steel (27:30).
+
