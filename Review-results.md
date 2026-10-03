@@ -978,7 +978,7 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    a screw, at (-8.5, 27.7), where a pillar would stand in the fourth wheel.
    What it holds in the real movement is not settled (IDEAS.md 1.2; examined
    again against Figs. 29, 67 and 110 on 1 October 2026, still open).
-2. **Shape against the drawings and photographs**, part by part, not yet
+2. *Under way (4 October 2026, `claude/shape-pass`): every line triaged for its provenance, the work order and ledgers in **`SHAPE-PASS.md`**.* **Shape against the drawings and photographs**, part by part, not yet
    done. 44 web photographs were gathered (mostly all rights reserved: to be
    cited by URL, not committed). Candidates: the shield plate (Fig. 107 draws
    a disc and an open-ring spring; *now drawn so*, 2 October 2026, RESOLVED.md,
