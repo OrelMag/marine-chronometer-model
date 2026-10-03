@@ -54,6 +54,18 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   const es=o=>makeEsc({EX:ESC.EX,...o});chk("escapement: running amplitude at the model's settings",ESC.A/D,255,1e-9,'deg');chk("escapement: rate at the model's settings",ESC.run.rate,0,0,'s/day');
   chk('escapement: impulse jewel at 184 deg gains',es({aI:184}).run.rate,1,0.9,'s/day');chk('escapement: impulse jewel at 178 deg loses',es({aI:178}).run.rate,-2,1.5,'s/day');
   const dl=es({dL:0.03});chk('escapement: deeper lock (0.20 mm, from 0.13) swings less',dl.A/D,248,6.9,'deg');chk('escapement: deeper lock loses',dl.run.rate,-3.5,3,'s/day');
+  /* the balance's dynamics (makeEsc ampAt, rateAt): the torque the escapement is calibrated at gives its 255 deg and rate 0; free, it decays as exp(-t/TF), a quarter of
+     its swing stays after TF ln 4; the manual's 1 3/8 to 1 1/2 turns take a torque within the fusee's residual of it; a smaller swing loses (the escapement's isochronism) */
+  chk('dynamics: the calibrated torque swings the balance 255 deg',ESC.ampAt(1)/D,255,1e-9,'deg');chk('dynamics: and its rate there',ESC.rateAt(ESC.A,1),0,1e-12,'s/day');
+  chk('dynamics: a smaller swing (90% of the torque) loses',ESC.rateAt(ESC.ampAt(0.9),0.9),-0.2,0.15,'s/day');
+  /* the fusee (makeFusee pull, torque): the illustrative spring's pull falls from 1 to rmin/rmax; the torque on the fusee wheel keeps within its 3% residual; the going barrel's
+     doesn't (the essay's and walkthrough's dashed line) */
+  const F=R.fs,N=FUSEE_TURNS;let tq=[1e9,-1e9];for(let i=0;i<=100;i++){const v=F.torque(N*i/100);tq=[Math.min(tq[0],v),Math.max(tq[1],v)];}
+  chk('fusee: the spring pulls 1 fully wound',F.pull(0),1.03,1e-9,'');chk('fusee: and rmin/rmax run down',F.pull(N),F.rf(0)/F.rf(N)*0.97,1e-9,'');
+  chk('fusee: torque on the fusee wheel within 3% of its mean',(tq[1]-tq[0])/2,0.03,0.0005,'');
+  /* temperature (core.js MTE): the Model 21's curvature against the test card of No. 3390 (90 F -0.02, 72.5 +0.06, 55 0.00 s a day: 72.5 above the ends' mean by 0.07) */
+  chk('temperature: Model 21 balance, 72.5 F above the mean of 55 and 90 F',-(MTE.uncut(55)+MTE.uncut(90))/2,0.07,0.002,'s/day');
+  chk('temperature: split balance, 0 at 72.5 F',MTE.split(72.5),0,1e-12,'s/day');
   R.timing(0,0);return out;})()"""
 async def main():
     async with async_playwright() as p:

@@ -861,10 +861,17 @@ function buildMovement(M){
   R.T4=(hh,n)=>{n=n<7?14-n:n;if(n===7)return 0;const r=T4[n];if(!r)return null;let i=0;while(i<T4H.length-2&&hh<T4H[i+1])i++;return r[i]+(r[i+1]-r[i])*(hh-T4H[i])/(T4H[i+1]-T4H[i]);};
   R.balS=new THREE.Group();R.balS.position.y=BY;R.balS.visible=false;R.staff.add(R.balS);
   mesh(R.balS,polyGeo([[BR-0.5,-1.1],[BR-0.5,1.1],[-(BR-0.5),1.1],[-(BR-0.5),-1.1]],1.4,[[0,0,0.45]]),M.steel,0,-0.7,0);mesh(R.balS,ringGeo(2.2,0.45,2.2),M.steel);   /* arm and hub, bored for the staff (a press fit, as the uncut balance's hub) */
-  const span=160*D2R,band=(a0,r0,r1)=>{const s=new THREE.Shape(),N=48;for(let i=0;i<=N;i++){const a=a0+span*i/N;i?s.lineTo(r1*Math.cos(a),r1*Math.sin(a)):s.moveTo(r1*Math.cos(a),r1*Math.sin(a));}
-    for(let i=N;i>=0;i--){const a=a0+span*i/N;s.lineTo(r0*Math.cos(a),r0*Math.sin(a));}const g=extrude(s,{depth:2.4,bevelEnabled:false});g.rotateX(-Math.PI/2);g.translate(0,-1.2,0);return g;};
-  for(let k=0;k<2;k++){const a0=k*Math.PI;mesh(R.balS,band(a0,BR-1.6,BR-0.9),M.steel);mesh(R.balS,band(a0,BR-0.9,BR),M.brass);
-    const wa=a0+span*0.62,w=mesh(R.balS,cylY(1.1,2.4,24),M.brass2,(BR+1.1)*Math.cos(wa),0,-(BR+1.1)*Math.sin(wa));w.rotation.set(0,wa,Math.PI/2);}   /* compensation weights within the band's 2.4 mm height and out to 16.8 mm, inside the timing weights' path: they pass the escape upper bridge's screws and the barrel bridge's cut round the balance (17.7) as the uncut rim's do */
+  /* d: the rim curled in by d (1 - cos) at the angle from its fixed end, a curvature change (R.balCurl) */
+  const span=160*D2R,band=(a0,r0,r1,d=0)=>{const s=new THREE.Shape(),N=48,rr=(r,i)=>r-d*(1-Math.cos(span*i/N));for(let i=0;i<=N;i++){const a=a0+span*i/N,r=rr(r1,i);i?s.lineTo(r*Math.cos(a),r*Math.sin(a)):s.moveTo(r*Math.cos(a),r*Math.sin(a));}
+    for(let i=N;i>=0;i--){const a=a0+span*i/N,r=rr(r0,i);s.lineTo(r*Math.cos(a),r*Math.sin(a));}const g=extrude(s,{depth:2.4,bevelEnabled:false});g.rotateX(-Math.PI/2);g.translate(0,-1.2,0);return g;};
+  const balSR=[];
+  for(let k=0;k<2;k++){const a0=k*Math.PI,st=mesh(R.balS,band(a0,BR-1.6,BR-0.9),M.steel),br=mesh(R.balS,band(a0,BR-0.9,BR),M.brass);
+    const wa=a0+span*0.62,w=mesh(R.balS,cylY(1.1,2.4,24),M.brass2,(BR+1.1)*Math.cos(wa),0,-(BR+1.1)*Math.sin(wa));w.rotation.set(0,wa,Math.PI/2);balSR.push({a0,st,br,w,wa});}   /* compensation weights within the band's 2.4 mm height and out to 16.8 mm, inside the timing weights' path: they pass the escape upper bridge's screws and the barrel bridge's cut round the balance (17.7) as the uncut rim's do */
+  /* the split rim's curl with temperature (2.3 in IDEAS.md): brass outside steel, the brass expanding more, so the free ends curl in with heat and out with cold, taking the
+     weights with them. A bimetal strip of two equal layers changes its curvature by 1.5 Δα ΔT / h (Timoshenko): brass 19, steel 11.5 × 10⁻⁶ a °C, the rim 1.6 mm thick, about
+     3.9 × 10⁻⁶ /mm a °F; a point φ from the fixed end then comes in by R² Δκ (1 - cos φ), 0.05 mm at the free end for 27½ °F. dF: °F from 72½, x: the exaggeration it is drawn with */
+  R.CURLX=20;R.balCurl=(dF,x=R.CURLX)=>{const d=BR*BR*1.5*(19e-6-11.5e-6)/1.8/1.6*dF*x;if(Math.abs(d-(R.balSD||0))<1e-4)return;R.balSD=d;
+    for(const q of balSR){q.st.geometry.dispose();q.br.geometry.dispose();q.st.geometry=band(q.a0,BR-1.6,BR-0.9,d);q.br.geometry=band(q.a0,BR-0.9,BR,d);const r=BR+1.1-d*(1-Math.cos(q.wa-q.a0));q.w.position.x=r*Math.cos(q.wa);q.w.position.z=-r*Math.sin(q.wa);}};
   /* helical hairspring: ~8 mm tall, ~5.5 mm radius, many turns (Fig. 2) */
   const spg=part('spr',-88,true),sg=new THREE.Group();sg.rotation.y=SPSI;spg.add(sg);R.spring=hn(mesh(sg,new THREE.BufferGeometry(),M.steel,0,HS_Y,0),'42188');R.spring.rotation.x=Math.PI;
   /* hairspring stud (Figs. 5, 19, 84, 85): a flat bar under the cock, held by the stud screw from the cock's top and a steady pin, with a clamp at its inner end
@@ -1040,7 +1047,7 @@ function buildMovement(M){
   mv.userData.develop=e=>{for(const[o,d]of DMV){o.position.x=o.userData.xz0[0]+d[0]*e;o.position.z=o.userData.xz0[1]+d[1]*e;}
     const a=DEV.g*e,c=Math.cos(a),s=Math.sin(a);for(const g of EFP){g.rotation.y=a;g.position.x=L.E[0]+dE[0]*e-(L.E[0]*c+L.E[1]*s);g.position.z=L.E[1]+dE[1]*e-(-L.E[0]*s+L.E[1]*c);}
     for(const q of DPH)q.m.rotation.y=q.r0+q.c*e;};
-  mv.userData.balance=kind=>{R.balU.visible=kind!=='split';R.balS.visible=kind==='split';};
+  mv.userData.balance=kind=>{R.balU.visible=kind!=='split';R.balS.visible=kind==='split';R.balKind=kind==='split'?'split':'uncut';};R.balKind='uncut';
   mv.userData.stop=kind=>{R.armF9.visible=kind!=='navy';R.navy.visible=kind==='navy';R.bbScr[R.navyBB].visible=kind!=='navy';};   /* the balance stop fitted: the manual's locking arm (Fig. 9) or the Navy's Y-arm */
   /* train-blocking screw: with its dog point down between the fourth wheel's spokes, how many beats (E) the train can still turn before the next spoke meets it (blockRoom),
      and whether a spoke is under the dog point now, so it can't be screwed down (blockClear). The fourth wheel turns with its spokes' angles falling as E rises */
@@ -1266,5 +1273,10 @@ function makeFusee(M,c){
      at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
   const IN=Ib(N),MR=msRange(),y0=c.bT+0.9,y1=c.bB-0.8,ym=(y0+y1)/2,e0=0.6/MSPRING.ra,e1=e0+1.06/MSPRING.ra,MS={Tup:Math.min(MR.Tmax-0.2,MR.Tmin+0.37+IN),y0,y1,ey:[e0,e1,ym-1.3,ym+1.3]};   /* fully wound: the set-up (0.37 turn, estimated) and the chain's barrel turns past the fewest the spring takes */
   MS.Tdown=MS.Tup-IN;MS.setup=MS.Tdown-MR.Tmin;MS.rot=TAU*MS.Tup+Math.PI/2-PIN-0.4/(MSPRING.Rw-MSPRING.t/2);MS.hookA=(e0+e1)/2-MS.rot;ms.rotation.y=MS.rot;
-  return{g,fz,bz,setWind,rf,yf,fx,bx,ms,I,Ib,IN,MS,stopBar,setBar,barTravel,mF,stud,N};
+  /* the spring's pull (illustrative): the profile evens out exactly a pull falling in step with the barrel's turns, from 1 fully wound to rmin/rmax run down (pullB's first
+     factor, at x of the barrel's turns let down); a real spring in its barrel rises more steeply than that near full wind, where its coils crowd the arbor, and falls off more
+     steeply near run down: 3% at each end, flat between (SPR). pull(m): at m fusee turns from full wind; torque(m): pull times the chain's radius on the fusee, against
+     the smallest, the fusee's small residual. A going barrel would deliver pullB(x) itself, x running evenly with time */
+  const SPR=0.03,rho=c.rmin/c.rmax,pullB=x=>(1-(1-rho)*x)*(1+SPR*(1-2*x)**3),xb=m=>(1-rf(0)/rf(m))/(1-rho),pull=m=>pullB(xb(clamp(m,0,N))),torque=m=>pull(m)*rf(clamp(m,0,N))/rf(0);
+  return{g,fz,bz,setWind,rf,yf,fx,bx,ms,I,Ib,IN,MS,stopBar,setBar,barTravel,mF,stud,N,pull,pullB,torque};
 }

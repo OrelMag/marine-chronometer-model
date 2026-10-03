@@ -6,6 +6,11 @@ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t;
 const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 const $=s=>document.querySelector(s);
 const sc=h=>new THREE.Color(h).convertSRGBToLinear();
+/* the balances' rate against temperature beyond what the screws make linear (Table IV, app.js), s a day at t °F, 0 at 72½ °F where the model is regulated: uncut, the Model 21's,
+   the curvature of the factory test card of No. 3390 (Sec. IX, p. 68; period means 90 °F -0.02, 72½ +0.06, 55 0.00 s a day), its second difference alone, the linear part being
+   that chronometer's own screws: a gain in the middle, 0.07 s a day against both ends. split: the bimetallic balance's middle temperature error, illustrative, compensated near
+   45 and 90 °F and gaining up to 1.5 s a day between (splitC, in °C: the essay's curve) */
+const MTE={splitC:c=>1.5*(1-((c-19.5)/12.5)**2),uncut:t=>-0.000229*(t-72.5)**2,split:t=>MTE.splitC((t-32)/1.8)-MTE.splitC((72.5-32)/1.8)};
 
 function envTex(r){
   const pm=new THREE.PMREMGenerator(r),s=new THREE.Scene();

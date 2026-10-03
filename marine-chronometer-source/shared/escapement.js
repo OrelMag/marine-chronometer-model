@@ -125,13 +125,24 @@ function makeEsc(o={}){
   /* phase gained an oscillation (rad) at amplitude a: the impulse pushes with the swing (+θ), the unlocking against it (-θ), the trip spring against the return (+θ) */
   const airy=(g,s,a)=>{let q=0;for(const[th,e]of g)if(Math.abs(th)<a)q+=s*e*th/Math.sqrt(a*a-th*th);return-q/(a*a);};
   const parts=(cl,a)=>({imp:cl.w*airy(wk.I,1,a),draw:cl.w*airy(wk.R,-1,a),detent:cl.Kd*airy(wk.Dt,-1,a),trip:cl.Kp*airy(wk.Tp,1,a)}),sumP=p=>p.imp+p.draw+p.detent+p.trip,day=x=>86400*x/TAU;
-  let run;
+  let run,CL=null,PH0=0;
   if(isRef){let cl=null,ph=0,br=null;if(wk){const w=Math.PI*A0*A0/Q/(wk.EI*(1-c.fD-c.fP)-wk.ER);cl={w,Kd:wk.ED>0?c.fD*w*wk.EI/wk.ED:0,Kp:wk.ET>0?c.fP*w*wk.EI/wk.ET:0};br=parts(cl,A0);ph=sumP(br);}
-    RF[rk]={cl,ph};run={A:A0,rate:0,own:day(ph),parts:br,cl};}
+    RF[rk]={cl,ph};CL=cl;PH0=ph;run={A:A0,rate:0,own:day(ph),parts:br,cl};}
   else{const R0=RF[rk]||(makeEsc(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl,Wn=wk&&cl?cl.w*(wk.EI-wk.ER)-cl.Kd*wk.ED-cl.Kp*wk.ET:0,a=Wn>0?Math.sqrt(Q*Wn/Math.PI):0,br=a>=AMIN?parts(cl,a):null;
-    run={A:a,rate:br?day(sumP(br)-R0.ph):NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
+    CL=cl;PH0=R0.ph;run={A:a,rate:br?day(sumP(br)-R0.ph):NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
   if(wk&&run.cl){const cl=run.cl;Object.assign(run,{Q,Wi:cl.w*wk.EI,fu:(cl.w*wk.ER+cl.Kd*wk.ED+cl.Kp*wk.ET)/(cl.w*wk.EI),land:wk.tl,drive:wk.EI});}
   const A=run.A;
+  /* the balance's equation of motion, averaged over a swing (the model's clock keeps the phase; this gives the amplitude and the rate). The escape wheel's torque is s times
+     the model's (1: the mainspring through the fusee, as calibrated): the impulse's work and the locking jewel's draw go with it, the detent and trip springs' don't. ampAt(s):
+     the amplitude it settles at, √(Q Wn/π) as above. In ½A² (units of k) a swing gains Wn and loses πA²/Q, so A² relaxes to ampAt(s)² as exp(-2t/TF), exactly for a steady
+     torque: the caller steps it so. rateAt(a, s): the escapement's rate at amplitude a, s a day against the reference at its own amplitude (Airy, as run.rate); NaN under AMIN.
+     The rate's change with amplitude is the escapement's isochronism error: the hairspring is taken as isochronous (Hamilton's Elinvar spring, held without bending at its
+     ends, "minimum isochronal error", Sec. II) */
+  const wnAt=s=>wk&&CL?s*CL.w*(wk.EI-wk.ER)-CL.Kd*wk.ED-CL.Kp*wk.ET:0,ampAt=s=>{const w=wnAt(s);return w>0?Math.sqrt(Q*w/Math.PI):0;};
+  /* TRIP: a swing past a full turn and the angle where the discharge jewel meets the trip spring brings the jewel round to unlock the detent a second time in the swing: the
+     wheel trips, escaping an extra tooth (app.js's jolt) */
+  const TRIP=a0===null?Infinity:TAU+a0;
+  const rateAt=(a,s=1)=>{if(!wk||!CL||!(a>=AMIN))return NaN;const p=parts(CL,a);return day(s*(p.imp+p.draw)+p.detent+p.trip-PH0);};
   /* the manual's adjustment figures (Sec. VIII, Ops. 76, 84-88, 97), measured with its own definitions: printed by chronometer-working-model/tools/escapement.js, shown
      live by the model's adjuster's bench. runs: false, with why, when the escapement would not run at these settings (its other figures are then NaN where they can't be had) */
   let meas=null;
@@ -163,6 +174,6 @@ function makeEsc(o={}){
       {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,run,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,T,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};

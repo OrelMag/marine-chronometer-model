@@ -96,7 +96,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 
 | # | Idea | Area | Effort | Why | Status |
 |---|---|---|---|---|---|
-| 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes | Partly done: amplitude as state, the train stops below `ESC.AMIN`, Twist to start; the equation of motion is open |
+| 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes | Done: amplitude as state, the train stops below `ESC.AMIN`, Twist to start; the equation of motion, averaged over a swing (`claude/physics`) |
 | 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" | Done: GMT by default `23e9c58`; setting with the key and when stopped `dc06fae`, `21ea739` |
 | 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something | Done `70baefe` |
 | 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page | Done `630aa0f`; it drives the amplitude and rate too |
@@ -104,12 +104,12 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 | 6 | [Make `ESC` a factory and share it](#73-make-esc-a-factory-and-share-it) | Code | S–M | Enables #4, removes the source-slicing in `tools/escapement.js` and the hand-copied solver in the essay | Done `813f7ae` |
 | 7 | [Merge static meshes; stop shadows from tiny parts](#51-draw-calls-merge-and-instance) | Performance | S–M | 545 meshes, each with its own geometry; 541 cast shadows; 124 meshes are knurling on four nuts | Done: knurls, rim holes, tiny shadows `347bf5b`; merging all static parts open |
 | 8 | [Stop rebuilding the stripe texture at load](#52-startup-the-stripe-texture) | Performance | S | 204 ms of a 322 ms `mats()` is one per-pixel JavaScript loop | Done `6c5ed75` |
-| 9 | [Temperature and the two balances](#23-temperature) | Physics | M | The manual gives the test temperatures and the compensation figure; the split-rim variant could visibly curl |  |
+| 9 | [Temperature and the two balances](#23-temperature) | Physics | M | The manual gives the test temperatures and the compensation figure; the split-rim variant could visibly curl | Done: Table IV's line, the balances' curvature, the split rim's curl, the Navy test's figures (`claude/physics`) |
 | 10 | [30-day performance test](#34-the-30-day-performance-test) | Features | M | The manual prints the test card and the Bureau of Ships tolerances. A satisfying way to see the physics add up |  |
 | 11 | [CI: build, escapement check, browser smoke test](#81-continuous-integration) | Testing | S | No automated checks today; the tools already exist | Done `7f3668e` |
 | 12 | [Reduced motion, keyboard orbit](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the camera can't be turned from the keyboard | Done `c2af700` |
 | 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash | Done: hash `cf07772`; remembered settings `8a84df5` |
-| 14 | [A real fusee comparison](#22-the-fusee-earns-its-keep) | Physics | M | The fusee inset is constant by construction. Show what a going barrel would do |  |
+| 14 | [A real fusee comparison](#22-the-fusee-earns-its-keep) | Physics | M | The fusee inset is constant by construction. Show what a going barrel would do | Done (`claude/physics`) |
 | 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) |  |
 
 ---
@@ -276,6 +276,8 @@ The photographs' layout held; their scale had been set by the assumed wheel (×0
 
 ## 2. Physics and timekeeping
 
+*Done (3 October 2026, `claude/physics`): every idea below is built, in the form noted under each; the model README's "The balance's dynamics" describes them. The phase stays kinematic (`frac(tSim/0.5)`), so the hands step in half seconds at every speed; the amplitude, the rate against it, the drive's torque, the gimbals and the balances' temperature curves are dynamic. Was:*
+
 Today everything is kinematic: the balance phase is `frac(tSim/0.5)`, the
 amplitude is a constant 255° each side, and the rate changes only through the
 timing weights' moment of inertia. That is right for most of what the page
@@ -283,6 +285,8 @@ shows. These ideas add the dynamics where they teach something.
 
 ### 2.1 A balance that can stop and must be started
 *Partly done: the amplitude is state (`H.amp` in `app.js`), not an integrated oscillator. It runs down freely when the train is held, against the balance locking arm at once, and builds up after Twist to start; the escapement needs `ESC.AMIN` (41.1°, worked out by `makeEsc`) to keep going, so the train stops below it and at run down. The running amplitude it comes to (`ESC.A`) is worked out by `makeEsc` from the work the impulse gives and unlocking takes, against losses fitted to the 25 s run-down, so the Adjuster's bench changes it (3.3). Still to do: the equation of motion below, with the impulse's torque, and the rate against amplitude that would follow.*
+
+*Done (`claude/physics`): the equation of motion averaged over a swing, not integrated step by step. In ½A² a swing gains the impulse's work less unlocking's and loses πA²/Q, so A² relaxes to `ESC.ampAt(s)²` exactly as exp(−2t/TF) for a steady torque s: stable at 3600× as at 1×, which the 1 ms substeps below would not be, and it keeps the phase on the model's clock, so the hands, the tick and every tool that sets `tSim` are unchanged. The torque comes from the drive (the fusee, the sustaining spring while winding, none at run down). The rate against amplitude is Airy's sum over the impulse and unlocking at that amplitude (`ESC.rateAt`). What the full integration would add, the balance's angle following the impulse's torque within a swing, is a fraction of a degree and not visible.*
 
 **What.** Treat the balance as a damped torsional oscillator driven by the escapement:
 
@@ -320,8 +324,10 @@ The amplitude then emerges from the model instead of being fixed.
 
 **Why.** It shows why the fusee is there, rather than asserting it.
 
+*Done (`claude/physics`): `makeFusee`'s `pull` (the profile's pull, 3% steeper at each end, illustrative), `torque` (pull × radius: ±3%) and `pullB` (a going barrel). The walkthrough's fusee inset and the essay's fusee figure plot them with the going barrel dashed; Swing and isochronism plots the swing over a wind with and without the fusee, and the rate's spread (−0.05 to +0.02 s a day against −0.76 to +0.33) and the manual's isochronism check (0.00 against +0.03 s).*
+
 ### 2.3 Temperature
-> **Partly done.** The rate panel moves pairs of screws from hole to hole (Op. 8) and gives Table IV's change in the rate at 90 °F against 55 °F (`R.T4`), with a temperature slider (40–100 °F) that runs the clock with it, linear about 72.5 °F; pairs can be taken out or put in. Still open: the curvature (the middle temperature error) and the split balance's curl.
+> **Done.** The rate panel moves pairs of screws from hole to hole (Op. 8) and gives Table IV's change in the rate at 90 °F against 55 °F (`R.T4`), with a temperature slider (40–100 °F) that runs the clock with it, linear about 72.5 °F; pairs can be taken out or put in. *(`claude/physics`:)* the curvature on top (`MTE` in `core.js`): the Model 21's read off the factory test card of No. 3390 (p. 68: 72½ °F 0.07 s a day above both ends), the split balance's middle temperature error illustrative (the essay's curve); a rate-against-temperature chart with the Navy test's three compensation figures against their limits (the Model 21 passes, 0.07/0.07/0.00; the split balance fails 90 against 72½, 1.47 against 0.75); the split rim curls with temperature, a bimetal's curvature change drawn ×20 (`R.balCurl`).
 
 **What.** A temperature slider (the manual's test temperatures are 55, 72½ and 90 °F) with a rate readout and a rate-against-temperature curve.
 
@@ -344,7 +350,7 @@ The amplitude then emerges from the model instead of being fixed.
 ### 2.4 Isochronism and escapement error
 - **Rate against amplitude.** With [2.1](#21-a-balance-that-can-stop-and-must-be-started), plot rate against amplitude. The manual's isochronism check compares "the 12 hour rate and one-half the 24 hour rate at 72½ °F" (Sec. IX); reproduce that number.
 - **Escapement error.** The impulse runs from −20.7° to +20.8°, centred on the dead point, and the unlocking comes before it (−27.3° to −21.3°). Airy's result says a push with the motion before the dead point makes the balance gain and one after makes it lose. A resisting force before it makes it lose.
-- *Done on the adjuster's bench (3.3): the figures, and the escapement error itself, Airy's result summed over the impulse and the unlocking from `makeEsc`'s geometry, against the model's settings, in the model's rate (`escK`). Rate against amplitude (isochronism) is still to do.* **An interactive version.** Offset the impulse jewel's angle (`aI`), and see the rate change and the escapement figures move. This belongs on the adjuster's bench ([3.3](#33-adjusters-bench-the-escapement-live)).
+- *Done on the adjuster's bench (3.3): the figures, and the escapement error itself, Airy's result summed over the impulse and the unlocking from `makeEsc`'s geometry, against the model's settings, in the model's rate (`escK`). Rate against amplitude (isochronism): done (`claude/physics`), `ESC.rateAt`, in the running rate each frame, plotted under Swing and isochronism with the manual's 12-hour against half 24-hour check; `tools/escapement.js` prints it at 1⅜ and 1½ turns (−0.07 and +0.13 s a day). The hairspring is taken as isochronous.* **An interactive version.** Offset the impulse jewel's angle (`aI`), and see the rate change and the escapement figures move. This belongs on the adjuster's bench ([3.3](#33-adjusters-bench-the-escapement-live)).
 
 ### 2.5 Gimbals with inertia (M)
 **What.** Ship motion now counter-rotates the ring and bowl exactly, so the movement stays perfectly level ([app.js:460](marine-chronometer-source/chronometer-working-model/js/app.js#L460)). Model the bowl and ring as two coupled damped pendulums driven by the box's motion instead.
@@ -355,8 +361,11 @@ The amplitude then emerges from the model instead of being fixed.
 
 **Watch out.** The bowl's mass distribution and pivot friction are **illustrative**.
 
+*Done (`claude/physics`): each axis a damped pendulum, ψ″ = −ω0²ψ − 2ζω0(ψ′ − φ′), period 0.7 s and ζ 0.05 estimated, the box rolling about the pivots; a Roll period slider (0.4–12 s) under Ship motion shows it level at a ship's period and swinging with the box near its own; it stops 25° off the box against the ring; a jolt kicks it.*
+
 ### 2.6 A fuller rate panel (S–M)
 - **Adjusters' tools.** Add balance screws and timing washers from the parts list (1.7) as further adjustments. The manual's timing operations use them alongside the weights.
+- *Already there:* balance screws and timing washers (the rate panel's screw pairs, Tables II and III).
 - *Done:* **Dial error against real time.** The HUD shows the dial error against a master time `tM` that runs with the model. `562928a` Before: show it in the HUD as the hands drift: "+3.5 s since set".
 
 ### 2.7 Tripping and setting (M, illustrative)
@@ -365,11 +374,12 @@ The amplitude then emerges from the model instead of being fixed.
   - *Setting:* the balance stops at a low amplitude.
 - **Why.** It explains why the detent was kept to gimballed marine instruments and why the manual cares so much about the trip spring's condition (its Fig. 38 shows trip-spring wear).
 - **Watch out.** Label it plainly as an illustration of a fault, not as how a sound Model 21 behaves.
+- *Done (`claude/physics`): Jolt the box, under Stopping and starting. A knock about the staff jerks the balance's speed (0.6–1 of its top speed, either way, at random); from where the balance is in its swing it sets (checked under `AMIN`), trips (carried past `ESC.TRIP`, 332.7°: the discharge jewel comes round and unlocks a second time, an extra tooth, the hands half a second on) or is upset and settles. Labelled as an illustration.*
 
 ### 2.8 Maintaining power under load (S)
 While the key turns, only the sustaining spring drives the train, "enough to run the chronometer 5 to 10 minutes" (`INFO.spawl`). With [2.1](#21-a-balance-that-can-stop-and-must-be-started), the amplitude can dip slightly while winding and recover afterwards. The key-winding sequence already knows when winding starts and stops.
 
-*Partly done (3 October 2026, `claude/maintaining-load`): while winding the model shows the sustaining spring carrying the load: the load path in colour, a close-up of the maintaining work with the spring's drive left, an option to draw its relaxing 20 times as far, and the essay's maintaining-power figure (model README, Controls; The Essay tab). Open: the amplitude dipping while the sustaining spring drives.*
+*Partly done (3 October 2026, `claude/maintaining-load`): while winding the model shows the sustaining spring carrying the load: the load path in colour, a close-up of the maintaining work with the spring's drive left, an option to draw its relaxing 20 times as far, and the essay's maintaining-power figure (model README, Controls; The Essay tab). Open: the amplitude dipping while the sustaining spring drives.* *Done (`claude/physics`): while the key turns the sustaining spring drives at 0.8 of the mainspring's torque loaded (estimated), less as it relaxes, so the swing heads for 227° and comes back when the key lets go; Swing and isochronism's last-minute chart shows it, and the rate book the small loss.*
 
 ---
 

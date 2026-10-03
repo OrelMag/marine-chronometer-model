@@ -168,7 +168,7 @@ table.rt th,table.rt td{text-align:left;padding:4px 4px;border-bottom:1px solid 
 table.rt th{color:var(--muted);font-weight:500}
 table.rt td.n{text-align:right}
 /* the adjuster's bench: its plan, and each figure against the manual's */
-#benchCv{display:block;width:100%;margin-top:6px;border-radius:8px;background:var(--card)}table.rt.bench td.bad{color:var(--hi);font-weight:600}
+#benchCv,canvas.mini{display:block;width:100%;margin-top:6px;border-radius:8px;background:var(--card)}table.rt.bench td.bad,#tempOut b.bad{color:var(--hi);font-weight:600}
 /* the rate book: seconds in the columns, dates on one line */
 table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book td{padding:4px 3px}
 .note{font-size:12.5px;color:var(--muted)}

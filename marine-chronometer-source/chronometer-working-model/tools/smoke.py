@@ -116,7 +116,15 @@ async def model(b,errs,steps):
         steps.append(f'bench setting {j+1} to both ends')
     await click('#benchReset',"bench: the model's settings");await click('#benchLook','bench: show the escapement')
     if await pg.evaluate("document.querySelector('#benchOut b').textContent")!='Every figure within the manual’s':errs.append("the model's settings don't pass on the bench")
-    if not await pg.evaluate("ESC.A===255*Math.PI/180&&ESC.run.rate===0&&window.__H().escK===1"):errs.append("the bench's reset leaves the amplitude or the escapement's rate off the model's settings")
+    if not await pg.evaluate("ESC.A===255*Math.PI/180&&ESC.run.rate===0&&ESC.rateAt(ESC.A,1)===0&&Math.abs(ESC.ampAt(1)-ESC.A)<1e-9"):errs.append("the bench's reset leaves the amplitude or the escapement's rate off the model's settings")
+    # swing and isochronism: each chart, the going barrel, a jolt or two (twisting if it set), the roll period
+    await pg.evaluate("document.querySelector('#swingDet').open=true")
+    for v in('t','a','w'):await click(f'#swK button[data-v="{v}"]',f'swing chart {v}',400)
+    await click('#swGB','without the fusee off');await click('#swGB','without the fusee on')
+    for i in range(3):
+        await click('#jolt',f'jolt {i+1}',600)
+        if await pg.evaluate("window.__H().held"):await click('#twist','twist after a jolt',1500)
+    await pg.evaluate("()=>{const r=document.querySelector('#rollP');r.value=0.7;r.dispatchEvent(new Event('input'))}");await click('#rock','ship motion, roll period 0.7 s',1500);await click('#rock','ship motion off')
     await click('#speeds button[data-v="1"]','1x');await click('#stopLook','show the arm and screw')
     await click('#helpBtn','help card');await click('#helpBtn','help card closed')
     await pg.evaluate("document.querySelector('#changesDet').open=true");steps.append("what's new")
