@@ -605,6 +605,11 @@ Contents:
   collar, r 3.0, now rises from the hub through a hole of r 3.05 and 1.0 past it.
   Keep: the collar inside the stop-bar slot's edge (zHi) and clear of the spring in
   the groove under it. `d135f96`
+- **The fusee's collar 1.0 mm over the top plate** (Review-results.md, Figs. 21, 22, 28 and
+  29): side-on at 20:00, against the groove's pitch, it stands 2.8 mm over the top
+  layer; now up to 0.05 under the barrel bridge (`collarT`), the arbor's shoulder
+  under its bushing. Keep: read lengths along an arbor against the fusee's pitch, not
+  against a polished part's silhouette on the blue mat, which reads narrow.
 - **Sustaining pawl's spring invented, and its arbor 2.7 mm round from the
   real one.** The spring was a collet near the arbor's top with a wire across
   to a steady pin in the train bridge; C Spinner's video (35:37.5-36:29) shows a
