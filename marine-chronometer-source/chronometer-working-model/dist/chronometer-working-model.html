@@ -511,7 +511,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <h3 class="sub-h">Balance</h3>
         <div class="seg" id="bal"><button data-v="uncut" aria-pressed="true">Uncut rim (Hamilton)</button><button data-v="split">Split bimetallic rim</button></div>
         <h3 class="sub-h">Balance stop</h3>
-        <div class="seg" id="stopV"><button data-v="arm" aria-pressed="true" title="The manual's balance locking arm (Fig. 9)">Locking arm (manual)</button><button data-v="navy" aria-pressed="false" title="A Y-shaped arm over the balance, as on serial 2E11795; the manual doesn't describe it, so how it works is a guess">Y-arm (as on 2E11795)</button></div>
+        <div class="seg" id="stopV"><button data-v="arm" aria-pressed="true" title="The manual's balance locking arm (Fig. 9)">Locking arm (manual)</button><button data-v="navy" aria-pressed="false" title="The Navy's balance brake: an arm over the balance, screwed down onto it with an Allen key, as on serial 2E11795; the manual doesn't describe it">Y-arm (as on 2E11795)</button></div>
       </details>
     </div>
     <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
@@ -2089,12 +2089,14 @@ function buildMovement(M){
        packing rings (black on 2E11795). Its bore is closed by a nickel plunger head with a hex socket screw. Under it runs a lever of spring steel: its root is screwed
        to a stud under a large shouldered screw near the bridge's rim, and it runs straight under the cap, through a slot in the seal's body, to a curved crossbar over
        the balance. The crossbar is an arch over the cock's end, its legs coming straight down, and from the foot of each, level with the staff, an arm straight
-       out to a round eye with a pin over the rim, symmetric about the stem (a sketch of the shape, 3 October 2026; Delaney's photograph close to it, its eyes level with the staff,
-       its arch's top 9.7 mm out, the sketch's taller). The outline is the boundary of bars of those widths joined with round fillets (sdfOutline), cut as one plate. The pivot screw and
+       out to a round eye with a pin over the rim, symmetric about the stem, as all four movements photographed with it have it (2E11795, Delaney's, the omegaforums one and 2E8489 in the
+       restoration video, 5:10). Traced on Delaney's photograph (straight above, scaled by the eyes 27.8 apart): the arch round the staff about 7.9 out, its top 8.3 out on
+       the bar's centre line, the arms nearly level with the staff (Review-results.md, open findings 13; until 4 October 2026 straight legs 4.5 long under the arch, its top
+       12.3 out, after a sketch). The outline is the boundary of bars of those widths joined with round fillets (sdfOutline), cut as one plate. The pivot screw and
        the eyes land within about 1 mm of where 2E11795's and Delaney's photographs put them, registered by the balance rim (on 2E11795 the cock's edge hides the
-       left end). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is a guess: the cap, pressed from
-       outside the case, pushes the plunger down on the lever, which bends about its screwed root (drawn as a turn about the pivot) until the pins bear on the rim, as
-       the wedges did (Sec. III). Estimated: the heights, the lever's thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the
+       left end). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is read from the sources that describe
+       it (Review-results.md, 13): the plunger, screwed down by its hex socket with an Allen key through the bottom of the case, presses the lever down, which bends about
+       its screwed root (drawn as a turn about the pivot) until the pins bear on the rim, as the wedges did (Sec. III); screwed up, the lever springs back. Estimated: the heights, the lever's thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the
        flange's bite round the setup cover, and the screws' threads (not drawn: the bridge is the manual's, untapped there). R.navyLock(a): a 0 free, 1 locked. In the
        Exploded view it lifts 22 mm past the locking arm's part, to -84: above the barrel bridge it stands on (-72) and the balance it reaches over (-80), and under the
        hairspring and the cock (-88, -96) */
@@ -2104,9 +2106,9 @@ function buildMovement(M){
        screw with a shouldered stud (hidden screw R.navyBB, below); the lever's end bent to it under the cap, as Delaney's photograph shows it bent there */
     const NPV0=[-9.61,-30.95],iP=S.bb.reduce((b,q,i)=>Math.hypot(...sub(q,NPV0))<Math.hypot(...sub(S.bb[b],NPV0))?i:b,0),NPV=S.bb[iP];R.navyBB=iP;
     /* the crossbar, symmetric about the line from the staff to the post (aa; pp across it): an arch over the cock's end, its legs WA out (its inner edge 6.7 from the
-       staff, clear of the hairspring's 5.5), straight for HL then round over in a half circle to its top HA out; from each leg's foot, level with the staff, an arm straight out to an
+       staff, clear of the hairspring's 5.5), straight for HL (0.5, Delaney's photograph) then round over in a half circle to its top HA out (8.3); from each leg's foot, level with the staff, an arm straight out to an
        eye at EA, its pin over the rim (13.38-14.5). Widths from Delaney's photograph: the stem 2.9, the lever past the cap 2.5, the bar 2.2, the eyes r 1.4 */
-    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=7.8,HL=4.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
+    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=7.8,HL=0.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
     /* the seal: body, flange and screws as the fusee's (below), its chamber closed underneath, slotted through both sides at the lever's height along the lever
        (toward the crossbar and toward the pivot) */
     const SW=2.0,gaps=[loc(0,HA),NPV].map(q=>{const d=sub(q,NP);return Math.atan2(d[1],d[0]);}).sort((a,b)=>a-b);
