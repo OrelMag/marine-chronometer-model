@@ -32,7 +32,7 @@ def check(name,html):
     r=remote_refs(html)
     if r:sys.exit(f'{name} still loads {r}: vendor the file and point the page at it')
 
-BUDGET={'working model':1_400_000}   # bytes: past its budget the build fails (1.33 MB with the Illustration's images on 30 September 2026; the essay moved in and the images out on 1 October)
+BUDGET={'working model':1_430_000}   # bytes: past its budget the build fails (1.33 MB with the Illustration's images on 30 September 2026; the essay moved in and the images out on 1 October; 1.40 MB until 3 October, raised by 30 KB for the balance's numbered holes and the rate panel's pairs, temperature and link, 1.408 MB then)
 def budget(name,html):
     """Print where a page's bytes go (three.js, fonts, images, the rest) and fail if it is over its budget."""
     n=len(html.encode());three=(ROOT/'vendor/three.min.js').stat().st_size if 'three.min.js' in html or 'REVISION' in html else 0

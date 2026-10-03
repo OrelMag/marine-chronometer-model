@@ -116,6 +116,7 @@ async def model(b,errs,steps):
         steps.append(f'bench setting {j+1} to both ends')
     await click('#benchReset',"bench: the model's settings");await click('#benchLook','bench: show the escapement')
     if await pg.evaluate("document.querySelector('#benchOut b').textContent")!='Every figure within the manual’s':errs.append("the model's settings don't pass on the bench")
+    if not await pg.evaluate("ESC.A===255*Math.PI/180&&ESC.run.rate===0&&window.__H().escK===1"):errs.append("the bench's reset leaves the amplitude or the escapement's rate off the model's settings")
     await click('#speeds button[data-v="1"]','1x');await click('#stopLook','show the arm and screw')
     await click('#helpBtn','help card');await click('#helpBtn','help card closed')
     await pg.evaluate("document.querySelector('#changesDet').open=true");steps.append("what's new")

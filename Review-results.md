@@ -1043,7 +1043,15 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    the manual's locking arm (Fig. 9) instead, and leaves the stop out. *Built as a
    variant (2 October 2026; Variants, Balance stop): shape and place mapped from
    the top-view photograph; the manual's "balance stop" (Sec. I) turns out to be
-   Fig. 9's arm, so how the Y-arm works is estimated (README, "Estimated").*
+   Fig. 9's arm, so how the Y-arm works is estimated (README, "Estimated").
+   Rebuilt 3 October 2026 (`claude/navy-yarm`) from the photograph at full size:
+   the post is a second dust seal like the fusee's (body, flange and screw, black
+   packing rings, a plunger head with a hex socket screw), and the arm one broad
+   satin plate, its outline traced and registered on the post and the balance.
+   Rebuilt again the same day from photographs taken straight above (Delaney No.
+   8854 and another): the arm is a lever, screwed on a shouldered stud in the
+   barrel bridge's pillar screw's place, under the cap to a crossbar with an eye
+   and a pin at each end, symmetric (an arch, level arms).*
 
 ## Open questions, to settle from video (1 October 2026)
 
@@ -1647,7 +1655,8 @@ changes it only round its own arbors (1 below).
     modification on some movements; the model has the manual's locking arm. A
     video of a modified movement would show its shape and how it works. *Built
     as an illustrative variant from the top-view photograph (2 October 2026);
-    how it works is still to be seen.*
+    redrawn from it at full size, 3 October 2026; how it works is still to be
+    seen.*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on

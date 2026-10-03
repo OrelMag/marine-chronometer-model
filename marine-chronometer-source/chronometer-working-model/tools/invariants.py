@@ -10,6 +10,7 @@
 - Balance: the moment of inertia as built (1,140 g·mm², the manual's Table II, from the parts list's masses and the balance as drawn), and a full turn of the timing weights and of the vernier weights
   changing the rate by the manual's 40 s and 2.8 s a day (p. 70); Table IV (p. 74) rebuilt from its fitted seven-to-n figures; a pair of screws moved along the rim
   leaving the moment of inertia as it was.
+- Escapement: the running amplitude 255° and the escapement's rate 0 s a day at the model's settings exactly, and Airy's signs for the impulse jewel's angle and the depth of lock.
 The movement's update() is driven directly, as views.py does; the page's own loop is stopped first."""
 import asyncio,json,math,pathlib,sys
 from playwright.async_api import async_playwright
@@ -48,6 +49,11 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   let t4=0;for(const[a,b,v]of T4R)HH.forEach((h,i)=>{t4=Math.max(t4,Math.abs(R.T4(h,b)-R.T4(h,a)-v[i]));});chk('Table IV: its printed rows from the fitted 7-to-n figures',t4,0,0.041,'s/day');
   /* moving a pair along the rim keeps the moment of inertia (the rate at the mean temperature); the standard set is back after */
   R.screws(R.screwStd.map((p,i)=>i?p:{...p,n:7}));chk('a pair moved from hole 3 to 7: moment of inertia unchanged',R.timing(0,0),I0,1e-9,'g mm2');R.screws(R.screwStd);
+  /* the escapement's running amplitude and rate (makeEsc, the adjuster's bench): exactly 255 deg and 0 s a day at the model's settings; away from them Airy's signs: the impulse
+     jewel set on (aI 184) ends the impulse sooner after the dead point and gains, set back (aI 178) loses; a deeper lock (dL 0.03, 0.20 mm) takes more from the balance before it and loses */
+  const es=o=>makeEsc({EX:ESC.EX,...o});chk("escapement: running amplitude at the model's settings",ESC.A/D,255,1e-9,'deg');chk("escapement: rate at the model's settings",ESC.run.rate,0,0,'s/day');
+  chk('escapement: impulse jewel at 184 deg gains',es({aI:184}).run.rate,1,0.9,'s/day');chk('escapement: impulse jewel at 178 deg loses',es({aI:178}).run.rate,-2,1.5,'s/day');
+  const dl=es({dL:0.03});chk('escapement: deeper lock (0.20 mm, from 0.13) swings less',dl.A/D,248,6.9,'deg');chk('escapement: deeper lock loses',dl.run.rate,-3.5,3,'s/day');
   R.timing(0,0);return out;})()"""
 async def main():
     async with async_playwright() as p:
