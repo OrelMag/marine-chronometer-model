@@ -460,7 +460,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <div class="row"><span class="lab">Washers, in</span><div class="seg" id="spW" role="group" aria-label="Washer under each of the pair's heads, inches"><button data-v="0" aria-pressed="true">none</button><button data-v="0.002" aria-pressed="false">.002</button><button data-v="0.003" aria-pressed="false">.003</button><button data-v="0.004" aria-pressed="false">.004</button><button data-v="0.006" aria-pressed="false">.006</button><button data-v="0.008" aria-pressed="false">.008</button><button data-v="0.010" aria-pressed="false">.010</button></div></div>
         <div class="rate" id="rateOut" aria-live="polite"></div>
         <div class="seg" style="margin-top:8px"><button id="rateZero">Zero</button><button id="rateLook">Show the balance</button></div>
-        <p class="note" style="margin:8px 0 0">The manual gives about 40 s a day for a full turn of the timing weights and 2.8 s for the verniers; the model's thread is set to match, and the moment of inertia comes from the model's balance and the parts list's masses. In an overhaul, balance screws and washers bring the rate within 2 minutes a day, then the timing weights within half a second, and the verniers make the final changes (Ops. 5, 6, 10). The model's clock runs at the new rate, so the hands drift from real time; try 3600×. The screw pairs (numbered round from the arm) take the five head heights of Table II, and washers the six thicknesses of Table III, under both heads of a pair; the panel gives the manual's figure for the change beside the model's. Zero puts back the weights' mid-travel and the standard screws. The weights and screws are drawn on the Hamilton balance only.</p>
+        <p class="note" style="margin:8px 0 0">The manual gives about 40 s a day for a full turn of the timing weights and 2.8 s for the verniers; the model's thread is set to match, and the moment of inertia comes from the model's balance and the parts list's masses. In an overhaul, balance screws and washers bring the rate within 2 minutes a day, then the timing weights within half a second, and the verniers make the final changes (Ops. 5, 6, 10). The model's clock runs at the new rate, so the hands drift from real time; try 3600×. The screw pairs (numbered round from the arm) take the five head heights of Table II, and washers the six thicknesses of Table III, under both heads of a pair; the panel gives the manual's figure for the change beside the model's. Zero puts back the weights' mid-travel and the standard screws. The escapement's settings on the Adjuster's bench change the rate too, and the panel says by how much; the bench's own button takes them back. The weights and screws are drawn on the Hamilton balance only.</p>
       </details>
       <details class="grp more" id="bookDet">
         <summary>Rate book</summary>
@@ -483,7 +483,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
       </details>
       <details class="grp more" id="benchDet">
         <summary>Adjuster's bench</summary>
-        <p class="note" style="margin:0 0 6px">The escapement's settings, as the repairman adjusts them (Sec. VIII, Ops. 84–88, 97). Move one and the detent, jewels and roller are rebuilt with it, and the figures are measured against the manual's the way <code>tools/escapement.js</code> measures them. If a setting would stop the escapement working, the bench says why and keeps the last one that works.</p>
+        <p class="note" style="margin:0 0 6px">The escapement's settings, as the repairman adjusts them (Sec. VIII, Ops. 84–88, 97). Move one and the detent, jewels and roller are rebuilt with it, and the figures are measured against the manual's the way <code>tools/escapement.js</code> measures them. The model runs with them: the balance swings as far as the impulse, less what unlocking takes, carries it (Stopping and starting), and the escapement's rate changes with where they push the balance about its dead point (Rate and timing weights). If a setting would stop the escapement working, or leave the balance swinging too little to keep it going, the bench says why and keeps the last one that works.</p>
         <div id="benchS"></div>
         <canvas id="benchCv" aria-label="Plan of the escapement at these settings, seen from the balance cock as in the manual's Fig. 90, moving with the model"></canvas>
         <div id="benchT"></div>
@@ -1319,15 +1319,16 @@ function dialCanvas(kind){
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
 function makeEsc(o={}){
   const TAU=Math.PI*2,D2R=Math.PI/180,ES=13.16/2;
-  /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side. EX: the centre distance (9.40 mm; the model passes the one in its L).
+  /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side at the model's settings (ESC.A, the running amplitude, follows other settings: below).
+     TF: the balance's free run-down (s, estimated); MU: steel on sapphire; fD, fP: the detent and trip springs' share of the impulse's work at the model's settings (estimated). EX: the centre distance (9.40 mm; the model passes the one in its L).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
      rT: passing-spring tip; rd: discharge jewel reach; dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.286,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:269.6,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06};
+  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.286,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:269.6,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,TF:25,MU:0.15,fD:0.03,fP:0.005};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
-  const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A=c.A*D2R,G=c.G,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
+  const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,G=c.G,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
   const S={x:EX+Math.cos(lockA),y:Math.sin(lockA)};
   /* detent (Fig. 90): straight, 68 deg to the line of centres, the locking face 11.3 mm from the point of flexure Ft. The passing spring runs parallel to it
@@ -1407,15 +1408,47 @@ function makeEsc(o={}){
   const fixed={foot:[D(fE,-0.083),D(aH-0.03/ES,-0.083),D(aH-0.03/ES,sDp),D(aS,sDp),D(aS,-0.083),D(0,-0.083),D(0,0.083),D(fE,0.083)],blockMain:rect(BE,0.9,-0.5,-0.083),blockFront:[D(0.9,-0.3),D(BL-0.1,-0.3),D(BL-0.1,-0.173),D(0.93,-0.173),D(0.93,-0.137),D(BL-0.1,-0.137),D(BL-0.1,-0.083),D(0.9,-0.083)],button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
   /* AMIN: the least amplitude that keeps the escapement going, with 2 degrees to spare: the swing must carry the discharge jewel past the trip spring on the return
      (where the spring falls off it, thPass), unlock the wheel (thRel) and see the impulse to its end (thEnd). Below it the balance swings on without unlocking */
-  let thEnd=thRel;for(let th=thRel;th<A;th+=0.001){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);if(phi<=-P){thEnd=th;break;}}
+  let thEnd=thRel;for(let th=thRel;th<A0;th+=0.001){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);if(phi<=-P){thEnd=th;break;}}
   const AMIN=Math.max(-thRel,thEnd,-(thPass??TH0))+2*D2R;
+  /* the running amplitude A and the escapement's rate (the adjuster's bench changes both). Work per oscillation, in units of the hairspring's stiffness k (rad²): the
+     impulse, w (the wheel's torque over k) times the wheel's turn while it drives the jewel (a pitch less the drop onto it and the tooth's fall off its tip to the locking jewel, spread as bite() gives it), less the
+     unlocking: the locking jewel drawn back against the tooth and rubbing on it (dL(tan DRAW+MU)/(1-MU tan DRAW) of the wheel's turn, over the lift to release), the
+     detent spring lifted (Kd LI²/2, lost as the detent falls back) and the trip spring bent on the return (Kp PS²/2, lost as it flies back). The swing loses πA²/Q a
+     time, Q=πTF/T from the free run-down TF, so A=√(QW/π). w, Kd and Kp are fitted at the model's settings (the reference: the bench's six settings at DEF), the springs
+     taking fD and fP of the impulse's work (estimated), so there A is c.A and the rate 0. Rate: Airy's result, each push τ|dθ| (τ toward +θ) at θ advancing the
+     phase by -(τ|dθ|/k)θ/(A²√(A²-θ²)) an oscillation: before the dead point a push gains and a resistance loses, after it the reverse. In s a day against the reference */
+  let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=TH0+i*DT;break;}                                // unlocking swing: discharge jewel meets the trip spring
+  const T=0.5,Q=Math.PI*c.TF/T,CAL=['EX','A','TF','MU','fD','fP'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-DEF[k])<1e-9),RF=makeEsc.refs||(makeEsc.refs={}),rk=CAL.map(k=>c[k]).join();
+  let wk=null;
+  if(a0!==null&&released&&thOff!==null&&thPass!==null){
+    const paAt=th=>{const a=bite(th);return a>-1e8?a-t0:-1e9;},pfAt=th=>-(th-thRel)*G,phiAt=th=>clampP(Math.max(pfAt(th),paAt(th))),clampP=x=>Math.min(0,Math.max(-P,x));
+    let tl=thRel;if(paAt(thRel)<0){let th=thRel;while(paAt(th)<pfAt(th)&&pfAt(th)>-P&&th<A0)th+=DT;
+      if(paAt(th)>=pfAt(th)){let lo=th-DT,hi=th;for(let k=0;k<40;k++){const m=(lo+hi)/2;paAt(m)>=pfAt(m)?hi=m:lo=m;}tl=hi;}else tl=null;}   /* where the tooth lands on the impulse jewel */
+    if(tl!==null){const I=[],R=[],Dt=[],Tp=[];
+      for(let th=tl,ph=phiAt(tl);ph>-P&&th<A0;th+=DT){const t2=th+DT,p2=phiAt(t2),m=th+DT/2;if(paAt(m)>=pfAt(m))I.push([m,ph-p2]);ph=p2;}   /* the wheel driving: τ|dθ| = w × its turn */
+      const cdr=dL*(Math.tan(DRAW)+c.MU)/(1-c.MU*Math.tan(DRAW));let rs=0;
+      for(let i=0;i<NTB-1;i++){const th=TH0+i*DT,m=th+DT/2,l1=LI[i],l2=LI[i+1],p1=PS[i],p2=PS[i+1];
+        if(th>=a0&&th+DT<=thRel){const d=Math.min(l2,lRel)-Math.min(l1,lRel);if(d>0){R.push([m,d]);rs+=d;}}
+        if(th>=a0&&th+DT<=thOff&&l2>l1)Dt.push([m,(l2*l2-l1*l1)/2]);
+        if(th>=thPass&&p1>p2)Tp.push([m,(p1*p1-p2*p2)/2]);}
+      if(rs>0)for(const r of R)r[1]*=cdr/rs;
+      const sum=g=>g.reduce((s,r)=>s+r[1],0);wk={I,R,Dt,Tp,EI:sum(I),ER:sum(R),ED:sum(Dt),ET:sum(Tp),tl};} }
+  /* phase gained an oscillation (rad) at amplitude a: the impulse pushes with the swing (+θ), the unlocking against it (-θ), the trip spring against the return (+θ) */
+  const airy=(g,s,a)=>{let q=0;for(const[th,e]of g)if(Math.abs(th)<a)q+=s*e*th/Math.sqrt(a*a-th*th);return-q/(a*a);};
+  const parts=(cl,a)=>({imp:cl.w*airy(wk.I,1,a),draw:cl.w*airy(wk.R,-1,a),detent:cl.Kd*airy(wk.Dt,-1,a),trip:cl.Kp*airy(wk.Tp,1,a)}),sumP=p=>p.imp+p.draw+p.detent+p.trip,day=x=>86400*x/TAU;
+  let run;
+  if(isRef){let cl=null,ph=0,br=null;if(wk){const w=Math.PI*A0*A0/Q/(wk.EI*(1-c.fD-c.fP)-wk.ER);cl={w,Kd:wk.ED>0?c.fD*w*wk.EI/wk.ED:0,Kp:wk.ET>0?c.fP*w*wk.EI/wk.ET:0};br=parts(cl,A0);ph=sumP(br);}
+    RF[rk]={cl,ph};run={A:A0,rate:0,own:day(ph),parts:br,cl};}
+  else{const R0=RF[rk]||(makeEsc(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl,Wn=wk&&cl?cl.w*(wk.EI-wk.ER)-cl.Kd*wk.ED-cl.Kp*wk.ET:0,a=Wn>0?Math.sqrt(Q*Wn/Math.PI):0,br=a>=AMIN?parts(cl,a):null;
+    run={A:a,rate:br?day(sumP(br)-R0.ph):NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
+  if(wk&&run.cl){const cl=run.cl;Object.assign(run,{Q,Wi:cl.w*wk.EI,fu:(cl.w*wk.ER+cl.Kd*wk.ED+cl.Kp*wk.ET)/(cl.w*wk.EI),land:wk.tl,drive:wk.EI});}
+  const A=run.A;
   /* the manual's adjustment figures (Sec. VIII, Ops. 76, 84-88, 97), measured with its own definitions: printed by chronometer-working-model/tools/escapement.js, shown
      live by the model's adjuster's bench. runs: false, with why, when the escapement would not run at these settings (its other figures are then NaN where they can't be had) */
   let meas=null;
   function measure(){if(meas)return meas;const mm=u=>u*ES,deg=a=>a==null?NaN:a/D2R,th=i=>TH0+i*DT,r={runs:true,why:''},no=w=>{if(r.runs){r.runs=false;r.why=w;}};
     const tip=a=>Math.hypot(EX+Math.cos(a),Math.sin(a));
     r.D=mm(-EX);r.shake=mm(tip(t0)-rRoll);r.dip=mm(rRoll-(-EX-1));
-    let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=th(i);break;}                                  // unlocking swing: discharge jewel meets the trip spring
     const off=thOff,poff=thPass;                                                                 // the tip slides off the jewel: detent falls back / trip spring returns
     if(a0===null)no('the discharge jewel never meets the trip spring');else if(!released)no('the detent never lifts far enough to free the wheel');else if(off===null)no('the trip spring never slides off the discharge jewel');
     if(poff===null)no('the discharge jewel never passes the trip spring on the return swing');
@@ -1424,9 +1457,11 @@ function makeEsc(o={}){
     let tIn=null;for(let t=TH0;t<1.2;t+=0.01*D2R)if(bite(t)>-1e8){tIn=t;break;}
     if(tIn===null)no('no tooth reaches the impulse jewel');
     r.drop=deg(tIn==null?null:thRel-tIn);r.ahead=deg(t0-bite(thRel));                                    // drop (Op. 97); >0: jewel is past the waiting tooth at release
-    let tE=null;for(let k=0;k<=40000;k++){const p=0.5*k/40000;if(Math.sin(TAU*p)<=0)continue;const s=state(p);if(tE===null&&s.prog>=1){tE=s.th;break;}}
+    let tE=null;for(let k=0;k<=40000;k++){const p=0.5*k/40000;if(Math.sin(TAU*p)<=0)continue;const s=state(p,A0);if(tE===null&&s.prog>=1){tE=s.th;break;}}
     if(tE===null)no('the tooth never finishes its impulse: the wheel would not advance');
     r.impEnd=deg(tE);r.hornClr=mm(Math.min(...pieces.horn.map(q=>Math.hypot(q.x,q.y)))-rd);r.jewels=deg(aD-aI);r.lRel=mm(lRel);
+    r.A=deg(A);r.AMIN=deg(AMIN);r.rate=run.rate;r.fu=run.fu;
+    if(A<AMIN)no(A>0?`the balance would swing only ${Math.round(A/D2R)}°, less than the ${Math.round(AMIN/D2R)}° it needs to unlock the wheel and see the impulse through`:'unlocking would take more from the balance than the impulse gives it');
     return meas=r;}
   /* each figure against the manual's: k, name, the value as text, what the manual wants, ok */
   function checks(){const r=measure(),f=(x,n=1)=>x.toFixed(n);
@@ -1439,7 +1474,7 @@ function makeEsc(o={}){
       {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
-  return{settings:c,ES,NT,P,EX,A,AMIN,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,run,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};
 
@@ -3420,7 +3455,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   let wakeT=0,hashReady=false,hashT=0,hashSeen='',handsSet=false;const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any change is also written to the URL (writeHash) */
   /* the time kept: Greenwich (navy chronometers were kept on GMT) or the viewer's local time; tzOff() is its offset from UTC in seconds */
   let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
-  let hrs=20,winding=false,kw=null,rateK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,units='mm',book=[],pend=new Set(),bookDay=0,wasHeld=false,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
+  let hrs=20,winding=false,kw=null,rateK=1,escK=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,units='mm',book=[],pend=new Set(),bookDay=0,wasHeld=false,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
   /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
      minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
      seconds from the second hand (continuous: as a comparator reads it) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
@@ -3695,14 +3730,17 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     $('#pNone').classList.toggle('hidden',hit.size>0);});
   $('#pShow').addEventListener('click',()=>{st.hid.clear();st.iso=null;look();});
   /* rate: the timing and vernier weight pairs turned in or out in eighth turns, up to 3 turns either way (R.timing, movement.js, sets the pitch from the
-     manual's rate for a turn). The period goes as √I, so the model clock runs √(I0/I) as fast as a perfect one; rErr is what the hands have gained since
-     the weights were moved or the hands set */
+     manual's rate for a turn). The period goes as √I, so the model clock runs √(I0/I) as fast as a perfect one, times escK, the escapement's share
+     (the adjuster's bench: 1 at the model's settings); rErr is what the hands have gained since the weights, screws or escapement were changed or the hands set */
   const I0=R.timing(0,0),twR=$('#twR'),vwR=$('#vwR'),rateOut=$('#rateOut');let rI=I0,lastRS=0;
   const eighths=v=>{if(!v)return'0';const a=Math.abs(v),w=Math.floor(a/8);return(w||'')+['','⅛','¼','⅜','½','⅝','¾','⅞'][a%8]+(v>0?' out':' in');};
   const travel=(v,p)=>v?Math.abs(v/8*p).toFixed(2)+(v>0?' mm out':' mm in'):'at mid-travel';
   function rateShow(){const d=86400*(rateK-1),dI=(rI/I0-1)*100,on=Math.abs(d)<0.05,t=twR.valueAsNumber,v=vwR.valueAsNumber;
     rateOut.innerHTML=`<b>${on?'On time':(d>0?'Gains ':'Loses ')+rateTxt(d)+' a day'}</b>${on?'':`<span>Since the last change the hands have ${d<0?'lost':'gained'} ${Math.abs(rErr).toFixed(Math.abs(rErr)<10?2:1)} s.</span>`}`+
-      `<span>${!t&&!v?'Both pairs at mid-travel':`Timing weights ${travel(t,R.pitch.t)}, verniers ${travel(v,R.pitch.v)}`}. Moment of inertia ${rI.toFixed(1)} g·mm²${on?'':`, ${dI<0?'−':'+'}${Math.abs(dI).toPrecision(2)}%`}.</span>`+spText();}
+      `<span>${!t&&!v?'Both pairs at mid-travel':`Timing weights ${travel(t,R.pitch.t)}, verniers ${travel(v,R.pitch.v)}`}. Moment of inertia ${rI.toFixed(1)} g·mm²${on?'':`, ${dI<0?'−':'+'}${Math.abs(dI).toPrecision(2)}%`}.</span>`+spText()+escText();}
+  /* the escapement's share, set on the adjuster's bench: its impulse and unlocking placed about the dead point otherwise than at the model's settings (Airy) */
+  function escText(){const e=86400*(escK-1),wt=86400*(Math.sqrt(I0/rI)-1);if(Math.abs(e)<0.05)return'';
+    return`<span>Of that, the escapement ${e>0?'gains':'loses'} ${rateTxt(e)} a day at the adjuster's bench's settings, its impulse and unlocking pushing the balance otherwise about its dead point than at the model's own (Airy: a push before it gains, after it loses; a resistance the reverse)${Math.abs(wt)<0.05?'':`; the weights and screws ${wt>0?'gain':'lose'} ${rateTxt(wt)}`}. The bench's "The model's settings" takes it back.</span>`;}
   /* screws and washers (R.screws, movement.js): a pair chosen, its heads and the washers under them, as Op. 3 changes them; beside the model's rate, what the manual's
      Table II (screw change equivalents, for pairs) and Table III (washers, for pairs) give for the same changes */
   const spP=$('#spP'),spH=$('#spH'),spW=$('#spW'),SPH=R.screwStd.slice(),SPW=[0,0,0,0,0];let spI=0;
@@ -3720,7 +3758,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!ch.length)return'';const f=s=>{const m=Math.floor(Math.abs(s)/60),r=Math.round(Math.abs(s)%60);return`${m} min${r?` ${r} s`:''}`;};
     return`<span>Screws: ${ch.join('; ')}. ${ok?`The manual's Tables II and III give about ${f(man)} a day ${man>=0?'gained':'lost'}.`:'Table II gives no figure for that change.'}</span>`;}
   const rateTxt=d=>{const a=Math.abs(d),m=Math.floor(a/60),r=Math.round(a%60);return a<120?a.toFixed(1)+' s':`${m} min${r?` ${r} s`:''}`;};
-  function rateSet(){rI=R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);rateK=Math.sqrt(I0/rI);rErr=0;pend.add('weights moved');
+  function rateSet(){rI=R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);rateK=Math.sqrt(I0/rI)*escK;rErr=0;pend.add('weights moved');
     twR.nextElementSibling.textContent=eighths(twR.valueAsNumber);vwR.nextElementSibling.textContent=eighths(vwR.valueAsNumber);rateShow();}
   twR.addEventListener('input',rateSet);vwR.addEventListener('input',rateSet);rateSet();
   $('#rateZero').addEventListener('click',()=>{twR.value=0;vwR.value=0;for(let k=0;k<5;k++){SPH[k]=R.screwStd[k];SPW[k]=0;}R.screws(SPH,SPW);spShow();rateSet();});spShow();
@@ -3735,7 +3773,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* the rate is taken against the latest comparison at least half a day back with no break since: over a shorter time, reading to the half second swamps it */
   function bookAdd(){const e=half(dialRead()-tM),rem=[...pend];pend.clear();let prev=null;
     if(!rem.some(r=>BREAK.includes(r)))for(let i=book.length-1;i>=0;i--){if(tM-book[i].t>=43200){prev=book[i];break;}if(book[i].rem.some(r=>BREAK.includes(r)))break;}
-    const rate=prev?(e-prev.e)/((tM-prev.t)/86400):null;book.push({t:tM,e,rate,rem:book.length?rem:['first comparison',...rem.filter(r=>r!=='weights moved'&&r!=='screws changed')]});bookShow();}
+    const rate=prev?(e-prev.e)/((tM-prev.t)/86400):null;book.push({t:tM,e,rate,rem:book.length?rem:['first comparison',...rem.filter(r=>r!=='weights moved'&&r!=='screws changed'&&r!=='escapement adjusted')]});bookShow();}
   function bookShow(){const S=bookStats();
     bookT.innerHTML=book.length?'<table class="rt book"><thead><tr><th>Master</th><th class="n" title="Dial error, seconds: + fast, − slow">Error</th><th class="n" title="Daily rate, seconds a day: + gaining, − losing">Rate</th><th class="n" title="Deviation from the mean daily rate">Dev.</th><th>Remarks</th></tr></thead><tbody>'+book.slice(-12).map(r=>
       `<tr><td>${hm(r.t)}</td><td class="n">${sgn(r.e)}</td><td class="n">${r.rate==null?'':sgn(r.rate)}</td><td class="n">${r.rate==null||S.m==null?'':(Math.abs(r.rate-S.m)).toFixed(1)}</td><td>${r.rem.join(', ')}</td></tr>`).join('')+'</tbody></table>'+
@@ -3755,8 +3793,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      (the screw raised in time, or wound before the balance stops), otherwise after a twist of the box, which sets the balance swinging (the manual's way to start it).
      While the train is held tSim and the hands stand, and the balance keeps its own phase in H.bph (oscillations); on restarting, H.bOff (phase) and H.eOff (beats)
      carry both across, so neither the balance nor the hands jump. H.arm and H.blk move on frame time: the arm 0 unlocked to 1 locked, the screw 0 up to 1 down ---------- */
-  const H={amp:ESC.A,held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,twT:-1},TAU_FREE=25,TAU_ARM=0.2,TAU_UP=3,stopOut=$('#stopOut'),twistB=$('#twist');let lastSO=0;
-  if(/[?&]qa\b/.test(location.search))window.__H=()=>({...H,E:lastE,tSim,hrs,tM,slip});   /* for the tools: the stop/start state, the master time and the hands' slip */
+  const H={amp:ESC.A,held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,twT:-1},TAU_FREE=ESC.settings.TF,TAU_ARM=0.2,TAU_UP=3,stopOut=$('#stopOut'),twistB=$('#twist');let lastSO=0;
+  if(/[?&]qa\b/.test(location.search))window.__H=()=>({...H,E:lastE,tSim,hrs,tM,slip,rateK,escK});   /* for the tools: the stop/start state, the master time, the hands' slip and the rate (escK: the escapement's share) */
   const segSet=(sel,v)=>document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===v?'true':'false'));
   const armSet=v=>{H.armT=v;segSet('#armSeg',v);twistB.disabled=!!v;twistB.title=v?'Unlock the balance first: the locking arm holds its rim':'Give the box a quick twist, which sets the balance swinging: how a stopped chronometer is started';wake();},blkSet=v=>{H.blkT=v;segSet('#blkSeg',v);wake();};
   document.querySelectorAll('#armSeg button').forEach(b=>b.addEventListener('click',()=>armSet(+b.dataset.v)));
@@ -3778,7 +3816,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     setOut.innerHTML=(H.armT?`Stopped with the locking arm; the second hand stands on a half second. `:'')+(e>0.25?`The dial is <b>${fmtErr(e)}</b> fast: the master overtakes it in <b>${e.toFixed(1)} s</b>. ${H.armT?'Unlock the arm, then twist':'Twist'} to start at that instant.`:
       e<-0.25?`The dial is <b>${fmtErr(e)}</b> slow: start it as the second hands agree, in <b>${(w>59.75?0:w).toFixed(1)} s</b>, then set the minutes forward with the key.`:`The dial agrees with the master: ${H.armT?'unlock, then twist':'twist'} now.`);}
   /* ---------- adjuster's bench (Sec. VIII): the escapement's settings on sliders. ESC is rebuilt with makeEsc and taken over in place (Object.assign, so every
-     reader keeps it), the 3D parts with escSet; ESC.checks() measures the figures as tools/escapement.js does. A setting at which it would not run is not applied ---------- */
+     reader keeps it), the 3D parts with escSet; ESC.checks() measures the figures as tools/escapement.js does. The settings also set the running amplitude ESC.A, which
+     ampStep brings the balance to, and the escapement's rate ESC.run.rate (s a day against the model's settings), escK in rateK. A setting at which it would not run,
+     or at which the balance would swing too little to keep it going, is not applied ---------- */
   const EX0=ESC.EX,BENCH=[['rT','Trip-spring tip',0.24,0.34,0.001,'mm'],['rd','Discharge-jewel reach',0.26,0.35,0.001,'mm'],['dL','Depth of lock',0.005,0.05,0.001,'mm'],
     ['DRAW','Locking-jewel draw',4,16,0.5,'°'],['aD','Discharge-jewel angle',260,275,0.1,'°'],['aI','Impulse-jewel angle',175,188,0.1,'°']],BDEF=Object.fromEntries(BENCH.map(([k])=>[k,ESC.settings[k]]));   /* the model's settings */
   const bset={...BDEF},bIn={},benchOut=$('#benchOut'),benchT=$('#benchT'),bcv=$('#benchCv');let benchQ=false,benchBad='';
@@ -3790,7 +3830,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const n=ESC.checks().filter(c=>!c.ok).length;benchOut.innerHTML=(benchBad?`<b>It would not run at that setting</b><span>${benchBad}: it is kept at the last setting that runs.</span>`:`<b>${n?n+' figure'+(n>1?'s':'')+' outside the manual’s':'Every figure within the manual’s'}</b>`)+
       `<span>The balance must swing at least ${Math.round(ESC.AMIN/D2R)}° to unlock the wheel and see the impulse through${H.amp<ESC.AMIN?': it swings less, so the train has stopped (twist to start)':''}.</span>`;}
   function benchApply(){benchQ=false;const E2=makeEsc({EX:EX0,...bset}),m=E2.measure();
-    if(!m.runs){benchBad=m.why;for(const k in bset)bset[k]=ESC.settings[k];}else{benchBad='';Object.assign(ESC,E2);mv.userData.escSet();}benchShow();wake();}
+    if(!m.runs){benchBad=m.why;for(const k in bset)bset[k]=ESC.settings[k];}else{benchBad='';Object.assign(ESC,E2);mv.userData.escSet();const k2=1+ESC.run.rate/86400;if(k2!==escK){escK=k2;rateK=Math.sqrt(I0/rI)*escK;rErr=0;pend.add('escapement adjusted');rateShow();}}benchShow();wake();}
   const benchDiff=()=>BENCH.filter(([k])=>Math.abs(bset[k]-BDEF[k])>1e-9);
   $('#benchReset').addEventListener('click',()=>{Object.assign(bset,BDEF);benchApply();});
   $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('escapement');});
@@ -3926,7 +3966,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
         ctx.strokeStyle=dk?'#91adf2':'#26479c';ctx.lineWidth=2;ctx.beginPath();pts.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.stroke();
         ctx.fillStyle=dk?'#e4e8eb':'#141a20';ctx.beginPath();ctx.arc(X(tb),Y(s.th),4,0,TAU);ctx.fill();
         ctx.fillStyle=dk?'#9aa4ad':'#5b656e';ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='left';ctx.fillText('balance angle over the last '+win+' s; shaded = impulse',8,h-6);
-        ctx.textAlign='right';ctx.fillText('+255°',w-8,16);}
+        ctx.textAlign='right';ctx.fillText('+'+Math.round(ESC.A/D2R)+'°',w-8,16);}
     }
   }
 
@@ -3978,7 +4018,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(g('t'))setTod(g('t'));
     { const a=g('arm')==='1'?1:0,b=g('block')==='1'?1:0;if(a!==H.armT){armSet(a);H.arm=a;if(a)H.amp=0;}if(b!==H.blkT){blkSet(b);H.blk=b&&!R.blockClear(lastE??0)?Math.min(b,R.tbs.userData.vFace-0.005):b;} }   /* locked in a link: the balance is at rest */
     { const q={...BDEF};for(const kv of(g('esc')||'').split(',')){const[k,v]=kv.split(':');if(own(BDEF,k)&&Number.isFinite(+v)){const b=BENCH.find(x=>x[0]===k);q[k]=clamp(+v,b[2],b[3]);}}
-      if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings */
+      if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();if(first&&!H.armT)H.amp=ESC.A;} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings; at load the balance is already swinging as they make it */
     const ed=g('edges')!=='0',shd=g('shadows')==='1';   /* Edges is on by default, Shadows off: the hash says edges=0 or shadows=1 only against that */
     const dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
@@ -4032,7 +4072,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(dtS>0&&locked&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}   /* the train stops at a locked beat */
       else{if(dtS>0){tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}q=at(tSim);}
         E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
-    if(H.held){H.bph+=dtS*rateK/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
+    if(H.held){H.bph+=dtS*rateK/escK/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
       const lockedP=s.prog<=0||s.prog>=1;
       if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is, unless the dog point leaves it no whole beat (the hold's own test: a fractional beat at speed must not free it) */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}

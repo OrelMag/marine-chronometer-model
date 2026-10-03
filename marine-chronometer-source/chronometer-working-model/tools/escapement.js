@@ -1,5 +1,6 @@
 // Measures the model's escapement (makeEsc in ../../shared/escapement.js, with the centre distance in ../js/movement.js) against the manual's adjustment figures (Sec. VIII), using the manual's definitions.
-// Needs only Node.js:   node escapement.js            (try a setting without editing:  node escapement.js rT=0.29 aD=268). Exits with 1 if any figure is out of tolerance.
+// Needs only Node.js:   node escapement.js            (try a setting without editing:  node escapement.js rT=0.29 aD=268). Exits with 1 if any figure is out of tolerance
+// or the escapement would not run (the balance swinging too little to keep it going among the reasons). Also prints the running amplitude and the escapement's rate.
 // The figures and their tolerances are measure() and checks() in shared/escapement.js, which the model's adjuster's bench shows too.
 const fs=require('fs'),path=require('path'),{makeEsc}=require('../../shared/escapement.js');
 /* the centre distance comes from the arbor positions L in movement.js, as the model's own ESC does */
@@ -17,4 +18,7 @@ if(require.main===module){
   if(!r.runs){process.exitCode=1;console.log(`  !!  it would not run: ${r.why}`);}
   console.log(`\n  balance angle: jewel meets trip spring ${f(r.contact)}°, wheel released ${f(r.rel)}°, detent falls back ${f(r.off)}°;`);
   console.log(`  impulse ends ${f(r.impEnd)}°; on the return swing the trip spring falls off at ${f(r.poff)}°. Lift at release ${f(r.lRel,2)} mm.`);
+  const u=E.run;if(u.cl)console.log(`  running amplitude ${f(r.A)}° (it needs ${f(r.AMIN)}°); the tooth lands on the impulse jewel at ${f(u.land*180/Math.PI)}° and drives it through ${f(u.drive*180/Math.PI,2)}° of the wheel;
+  unlocking takes ${f(100*u.fu)}% of the impulse's work. Escapement error ${Number.isFinite(u.rate)?(u.rate>=0?'+':'')+f(u.rate,2):'-'} s a day against the model's settings`+
+    `${Number.isFinite(u.own)?` (the escapement's own error ${f(u.own,2)} s a day, which the timing absorbs at the model's settings: impulse ${f(86400*u.parts.imp/2/Math.PI,2)}, draw ${f(86400*u.parts.draw/2/Math.PI,2)}, detent spring ${f(86400*u.parts.detent/2/Math.PI,2)}, trip spring ${f(86400*u.parts.trip/2/Math.PI,2)})`:''}.`);
 }
