@@ -110,6 +110,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - Labels are off by default (Display turns them on, and the choice isn't remembered). The walkthrough shows the labels of each step's parts regardless.
 - The walkthrough sets its own view, speed, Moving parts only, ship motion and gimbal latch for each step. Ending it (Finish, Exit, or anything that leaves it) gives back the viewer's own: the view, See-through, Ship motion, Gimbals latched, the speed, Moving parts only and the motion work, as they were when it started.
 - Shadows (Display; off by default; `shadows=1` in the hash when on): the key light casts shadows through a shadow map (`PCFSoftShadowMap`, 2048 px, 1024 on phones). With it off, the light casts none: no shadow pass, simpler shaders to compile (two programs fewer at start), and the map is freed. The floor's soft shadow under the box is a texture (`shadowTex`) and is always drawn. The tinted and ink drawings follow the switch. Cost with it on, measured with `tools/perf.py`: about 230–380 more draw calls and every caster's triangles again; 0.4–1.1 ms a frame on a desktop GPU, 22 % (Edges on) to 47 % (Edges off) on the Dial view with the CPU throttled 4×, 14–22 % in the software renderer. `social.py`, `topview.py` and `p3fit.py` turn it on, as their images were made.
+- Performance mode (Display; on by default; `merge=0` in the hash when off): the parts that don't move against each other are drawn merged, about 40% fewer draw calls with the same picture ("Static pieces drawn merged", under Modifying the model). Off, every piece draws itself, as before the merge: the way out if a display mode ever shows something wrong with it on. Reset display turns it back on.
 - Screen readers: the model's `aria-label` says what the stage shows, the view (`VIEW_DESC` in `app.js`) or the walkthrough step, and Moving parts only, and is updated with it.
 - Keyboard and reduced motion: Space stops and restarts, 1 to 9 pick the views (the key for a view that is off, Box or Dial with Moving parts only, flashes its button and says why in the HUD); with the model focused (click it or Tab to it) the arrow keys turn the view, + and − zoom and 0 resets it. With reduced motion set in the system, camera and state moves are instant (as with `?snap`), the walkthrough leaves ship motion off and scrolls without animation, and the page's fades are off.
 - Phones: below 600 px wide the part card is a sheet along the bottom of the stage; on touch screens buttons and checkboxes are finger-sized; in landscape with the height under 560 px the stage fills the height and the panel scrolls beside it. On a phone (coarse pointer, screen under 600 px on its short side) the pixel ratio is capped at 1.5 and the shadow map at 1024 px, against 2 and 2048 px elsewhere. A part casts a shadow only when its radius spans 6 texels of the shadow map, which follows the view: far views drop the screws and pins, close-ups keep them. The knurled nuts and the balance rim's holes are each one merged mesh (`mergeGeo` in `core.js`).
@@ -159,7 +160,7 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
 
 The page's state is kept in the URL hash, so a link opens the model as it
 was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part; `view=laidout` is the laid-out train), `arm=1` (the balance locked, at rest), `block=1` (the train-blocking screw down),
-`#tour=6` (a walkthrough step), `#essay` or `#essay=detent` (the Essay tab, at a section), `open=bookDet` (in a link: open that panel section), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
+`#tour=6` (a walkthrough step), `#essay` or `#essay=detent` (the Essay tab, at a section), `open=bookDet` (in a link: open that panel section), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `merge=0` (Performance mode off), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
 rewritten (without adding to the history) 0.3 s after any change.
@@ -656,6 +657,34 @@ edit; see "Changing things" in the root README for the loop and the checks.
   so a part lying on the cut one doesn't show through in patches. Two solids
   that overlap show each other through a cut, so keep parts from overlapping
   except at their intended contacts (`tools/fine.py`).
+- **Static pieces drawn merged.** Each frame draws about 40% fewer meshes than
+  the model has: the pieces under one group that share a material are drawn as
+  one merged copy (`drawMerge` in `core.js`, synced in `app.js`'s `paint()`).
+  Performance mode (Display, on by default) switches it: off, `sync(false)`
+  draws every piece itself and keeps the copies for when it comes back on.
+  - The pieces stay where they are, for the tools, picking and every display
+    mode. The copies live in a group of their own in the scene, outside the
+    model's tree, and that group's `traverse()` stops at itself, so the tools,
+    which walk `__mv` or the whole scene with `traverse()`, never see them.
+    three.js draws, updates and raycasts through `children`, so it still does.
+  - A batch is drawn merged only while all its pieces are shown and wear their
+    own material (`userData.mat0`). Colour modes, fading, ghosts, the load
+    path's tint and the drawings change materials, so those parts draw
+    their pieces instead, with nothing to keep in step.
+  - A piece that moves against its group, or whose geometry is rebuilt or
+    replaced, leaves its batch for good the first frame it does, and the batch
+    is merged again without it. Animate a piece by moving it or its group, as
+    the model already does.
+  - A merged piece leaves layer 0, the camera's, for layer 2. A raycaster that
+    should hit the model enables layer 2 (`app.js`'s picking and label
+    occlusion) or all layers (`bom-check.js`, `geometry-audit*.js`).
+  - The copy casts shadows for its pieces, since r128's shadow pass tests
+    layers against the main camera, not the shadow camera.
+  - The copies carry each piece's Edges id per vertex (`aId`, from `inkTag`),
+    so the lines between pieces are drawn as before.
+  - Left out: transparent materials (drawn sorted, one by one), decals and
+    surfaces, instanced meshes and geometry drawn only in part. `__dm.stats()`
+    (`?qa`) counts the batches and how many are drawn merged.
 - **One clock drives everything.** `app.js` advances `tSim` and passes
   `update()` the escape wheel's position `E`, the balance angle and the hours
   since winding. Each arbor turns by a fixed ratio of `E`, so never animate a
