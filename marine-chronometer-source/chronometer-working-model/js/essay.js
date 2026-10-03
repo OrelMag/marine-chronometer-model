@@ -220,10 +220,10 @@ const ESSAY=(()=>{
   fig('eTemp',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.8:0.5,yaw:0.3,pitch:1.1,dist:82,target:[0,0,0]}),M=G.M;
     const B={split:balance(M,'split'),plain:balance(M,'plain'),m21:balance(M,'uncut')};for(const b of Object.values(B))V.scene.add(b);
     const cst=q('#eTempChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.62:0.34),ro=q('.e-ro',P);let T=20,kind='split';
-    const plain=t=>-11*(t-20),comp=MTE.splitC,F2C=t=>(t-32)/1.8;   /* illustrative rates, s/day (comp: core.js, which the model's rate panel uses too); °F to °C */
+    const plain=t=>-11*(t-20),comp=MTE.splitC,F2C=t=>(t-32)/1.8,m21=t=>MTE.uncut(t*1.8+32);   /* illustrative rates, s/day (comp: core.js, which the model's rate panel uses too); °F to °C */
     const Lw=V.label('Compensation weight','',v=>B.split.userData.wts[0].m.getWorldPosition(v)),Lb=V.label('Brass outside, steel inside','',v=>v.set(-BAL_R-0.5,0,-6)),Li=V.label('Invar arm','',v=>v.set(-7,0.8,0)),Ls=V.label('Uncut steel rim','',v=>v.set(-BAL_R*0.7,0,-BAL_R*0.72));
     const upd=()=>{for(const k in B)B[k].visible=k===kind;B.split.userData.set(kind==='split'?(T-20)/25*0.6:0);B.plain.userData.set(0,(T-20)/25*0.05);Lw.show=Lb.show=kind==='split';Li.show=Ls.show=kind==='m21';
-      if(kind==='m21')ro.innerHTML=`Model 21 at ${T.toFixed(1)} °C: <b>nothing curls</b>. The Invar arm holds the rim’s diameter at its ends; the Elinvar hairspring hardly changes its stiffness.`;
+      if(kind==='m21'){const r=m21(T);ro.innerHTML=`Model 21 at ${T.toFixed(1)} °C: <b>nothing curls</b>, and it ${r>=-0.005?'keeps its rate':`loses <b>${Math.abs(r).toFixed(2)} s a day</b> against 72½ °F`}. The Invar arm holds the rim’s diameter at its ends; the Elinvar hairspring hardly changes its stiffness.`;}
       else{const r=kind==='split'?comp(T):plain(T);ro.innerHTML=`${kind==='split'?'Compensation':'Plain brass'} balance at ${T.toFixed(1)} °C: ${r>=0?'gains':'loses'} <b>${Math.abs(r).toFixed(1)} s a day</b>`;}
       f.dirty=true;cf.dirty=true;};
     range(q('input[type=range]',P),v=>{T=v;upd();return v.toFixed(1)+' °C';});seg(q('.seg',P),v=>{kind=v;upd();});
@@ -231,8 +231,8 @@ const ESSAY=(()=>{
       if(cf.dirty){cf.dirty=false;const t55=F2C(55),t90=F2C(90);
         chart(C,{x0:-5,x1:45,y0:-8,y1:8,xt:[0,10,20,30,40],yt:[-8,-4,0,4,8],xf:x=>x+' °C',yf:y=>(y>0?'+':'')+y,xl:'Temperature',yl:'Rate, s a day',cursor:T,
           bands:kind==='m21'?[{x0:t55,x1:t90,y0:-0.6,y1:0.6,color:PAL.blue,label:'the Navy’s limit, 55–90 °F'}]:[],
-          series:[{f:plain,color:PAL.red,label:'plain: about −11 s a day per °C',lx:15.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:19.5,dy:-14,la:'center',width:kind==='split'?2.6:1.4}],
-          marks:kind==='m21'?[]:[{x:T,y:kind==='split'?comp(T):plain(T),color:kind==='split'?PAL.brass:PAL.red}]});
+          series:[{f:plain,color:PAL.red,label:'plain: about −11 s a day per °C',lx:15.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:19.5,dy:kind==='m21'?-28:-14,la:'center',width:kind==='split'?2.6:1.4}].concat(kind==='m21'?[{f:m21,color:PAL.blue,label:'Model 21, its test card',lx:34,dy:14,la:'center',width:2.6}]:[]),
+          marks:[{x:T,y:kind==='split'?comp(T):kind==='plain'?plain(T):m21(T),color:kind==='split'?PAL.brass:kind==='plain'?PAL.red:PAL.blue}]});
         const{x:ctx}=C;ctx.font='11px "Instrument Sans",sans-serif';ctx.fillStyle=PAL.muted;ctx.textAlign='center';const pw=C.w-62;
         for(const[tf,lab]of[[55,'55 °F'],[72.5,'72½'],[90,'90 °F']]){const x=46+(F2C(tf)+5)/50*pw;ctx.fillRect(x-0.5,C.h-40,1,5);ctx.fillText(lab,x,C.h-46);}}};},'3d');
 
@@ -391,7 +391,8 @@ const ESSAY=(()=>{
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
       I0:model?Math.round(model.I0/10)*10:1140,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
-    V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
+    V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
+    { const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const q=(lo+hi)/2;ESC.ampAt(q)<a?lo=q:hi=q;}return(lo+hi)/2;},r=A=>{const a=A*D2R;return Math.abs(ESC.rateAt(a,sAt(a))).toFixed(2);};V.isoLo=r(247.5);V.isoHi=r(270); }   /* the escapement's rate at 1 3/8 and 1 1/2 turns of motion (makeEsc rateAt) */   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
 
   /* ---------- showing, hiding, sections, the hash ---------- */
