@@ -49,14 +49,24 @@ def circle(P):   # least squares (Kasa, then Gauss-Newton)
     for _ in range(20):
         d=np.hypot(*(P-c).T);J=np.c_[-(P-c)/d[:,None],-np.ones(len(P))];s=np.linalg.lstsq(J,-(d-r),rcond=None)[0];c=c+s[:2];r+=s[2]
     return c,r,np.sqrt(((np.hypot(*(P-c).T)-r)**2).mean())
-def key_outline(px=0.02):   # the union of the lobes' circles and the hull of their centres, its boundary traced on a 0.02 mm raster (opencv) and simplified to 0.02 mm
+# the escape passage as the model has it since the layout move (2 October 2026): a circle r 6.9 about the escape arbor, so the escape wheel lifts out through it (the traced
+# lobe, from 23:30 at the wrong focal length, was r 4.7); and the escape upper bridge's seats (KLUwI2UUCMQ 10:50, 23:30: recessed and frosted, each with its screw and pin hole):
+# the bar's ends (5.2 wide, round, 8.4 out along the bar) grown 0.25 (clear of the bridge face's bevel), from the passage out. All in the bridge's frame: the model's escape arbor and the bar's direction (ebu in
+# movement.js) taken back through PR. movement.js sinks them SEAT_D deep: the opening cut through is TB_KEY (the seats with it), and TB_SEAT their floors
+ESC_B=np.array([12.849,12.881]);ESC_R=6.9;EBU_B=np.array([-0.0444,0.9990]);SEAT_W=2.6+0.25;SEAT_T=(5.5,8.4)
+def key_outline(px=0.02,seats=True):   # the union of the lobes' circles and the hull of their centres (and the seats), its boundary traced on a 0.02 mm raster (opencv) and simplified to 0.02 mm
     import cv2
     C=[(k,*circle(P)[:2]) for k,P in KEY23.items()];cs=A([c for _,c,_ in C]);m=cs.mean(0);hull=cs[np.argsort(np.arctan2(*(cs-m).T[::-1]))]
-    lo=cs.min(0)-6;n=((cs.max(0)+6-lo)/px).astype(int);im=np.zeros((n[1],n[0]),np.uint8);to=lambda P:np.round((A(P)-lo)/px).astype(np.int32)
-    for _,c,r in C:cv2.circle(im,tuple(to(c)),int(round(r/px)),255,-1)
-    cv2.fillPoly(im,[to(hull)],255)
-    ct=max(cv2.findContours(im,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)[0],key=len);ct=cv2.approxPolyDP(ct,1.0,True)[:,0]
-    return C,ct*px+lo
+    lo=cs.min(0)-12;n=((cs.max(0)+12-lo)/px).astype(int);im=np.zeros((n[1],n[0]),np.uint8);to=lambda P:np.round((A(P)-lo)/px).astype(np.int32)
+    for k,c,r in C:cv2.circle(im,tuple(to(c)),int(round(r/px)),255,-1)
+    cv2.fillPoly(im,[to(hull)],255);cv2.circle(im,tuple(to(ESC_B)),int(round(ESC_R/px)),255,-1)
+    trace=lambda m:[cv2.approxPolyDP(c,1.0,True)[:,0]*px+lo for c in cv2.findContours(m,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)[0] if len(c)>50]
+    key=im.copy();st=np.zeros_like(im)
+    for sg in(1,-1):
+        for t in np.linspace(*SEAT_T,30):cv2.circle(st,tuple(to(ESC_B+sg*t*EBU_B)),int(round(SEAT_W/px)),255,-1)
+    if seats:im=cv2.bitwise_or(im,st)
+    ct=max(trace(im),key=len);fl=trace(cv2.bitwise_and(st,cv2.bitwise_not(key)))
+    return C,ct,fl
 def line(P):   # a point on it and its direction
     P=A(P);m=P.mean(0);return m,np.linalg.svd(P-m)[2][0]
 def meet(p,u,c,r,near):   # where the line p + t u crosses the circle (c, r), the crossing nearer `near`
@@ -83,10 +93,11 @@ def main():
         for p,q in zip(E[:-1],E[1:]):t=np.clip((c-p)@(q-p)/((q-p)@(q-p)),0,1);d=min(d,np.linalg.norm(p+t*(q-p)-c))
         return d
     for c,r,nm in KEEP:m=dist(A(c))-r;print(f'  {nm:38s} {m:5.2f} mm of metal to the edge'+('  < MARGIN' if m<MARGIN else ''))
-    C,K=key_outline()
+    C,K,FL=key_outline()
     for k,c,r in C:print(f'opening, {k} lobe: r {r:.2f} about ({c[0]:.2f}, {c[1]:.2f}), {circle(KEY23[k])[2]:.2f} mm rms over {len(KEY23[k])} points')
     print(f'const TB_NOTCH=[{c1[0]:.2f},{c1[1]:.2f},{r1:.2f}];');print('const TB_EDGE='+json.dumps([[round(x,2),round(z,2)] for x,z in E])+';')
     print('const TB_KEY='+json.dumps([[round(x,2),round(z,2)] for x,z in K])+';')
+    print('const TB_SEAT='+json.dumps([[[round(x,2),round(z,2)] for x,z in f] for f in FL])+';')
     try:   # the outline drawn back on the frames (they stay outside the repository: $MC_VIDEO/frames), through the H.json video.py anchor wrote beside each spec
         import cv2
         home=os.environ.get('MC_VIDEO',os.path.expanduser('~/mc-video'));here=pathlib.Path(__file__).resolve().parent/'anchors';ims=[]

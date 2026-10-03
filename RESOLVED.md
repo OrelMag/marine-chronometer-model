@@ -117,6 +117,10 @@ Contents:
   wheel's radius, from tH in): the horn is the arm's end bent down to the trip
   spring. Its inner face stays at tH, so horn clearance is unchanged (0.25 mm).
   Keep: the arm's end and the horn one outline in plan. `4a660ab`
+- **The balance lower endstone cap a bar** (Review-results.md, Elsewhere
+  17). On the restoration video (13:49.5) it is round with one flat, parallel
+  to its two screws, on the side away from the escape arbor; Fig. 30 draws it
+  round. Now R 2.7, the flat 0.65 R out. Keep: `endCap`'s `fl`.
 - **Detent support block without its positioning pins.** Sec. II fastens
   the block to the train bridge "by means of one screw and two positioning
   pins" (Figs. 14, 22, 90; the restoration video, 11:08); the model had the
@@ -159,6 +163,27 @@ Contents:
 
 ## Going train and heights
 
+- **The fourth, third and escape arbors off the video's places, the seconds
+  sub-dial off its arbor** (Review-results.md, Elsewhere 24, 14, 18). The fourth
+  was 23.9 mm out (video 21.4-21.75 at the plate's 87.57), the third 16.0 at
+  157 deg (video 16.55 at 149), the escape arbor 1.9 mm from the jewel seen from
+  above; the dial printed the seconds at a fixed 0.472 of its radius (right for a
+  50.8 mm dial, 1.5 mm off on the 47.5). Now F (0, 21.6), T and E as measured,
+  E 9.40 from the balance; the wheels' size ratios come out as counted. Keep:
+  `tools/solve.py`'s FE 11.107; the dial's `k` from `L.F` and `DIAL_R`;
+  `SEC_L` (the seconds hand clears the hour wheel's pipe); the train bridge's
+  escape opening r 6.9 about `L.E`; the lower bridge from `tools/lower_bridge.py`
+  with the model's arbors; the balance locking arm's screw 30 deg from its
+  weight (on the weight's other side, or at 18 deg, it stands in the cock's foot). `7291b20`
+- **The detent block and foot short of Fig. 90's, its far pin 2.9 mm short**
+  (Review-results.md, Elsewhere 20.2). Shortened to clear a train pillar that
+  has since moved out; now 15 and 16.4 mm from the point of flexure, the pins
+  symmetric about the screw. Keep: `BE` in `shared/escapement.js`; `DBLK.p`
+  symmetric about `DBLK.s`. `7291b20`
+- **The escape upper bridge a thin bar with a plan boss and a 0.3 mm cap**
+  (Review-results.md, Elsewhere 17). Rebuilt as the video shows it (10:00-10:50).
+  Keep: the arbor's top pivot and its jewels moved down 0.9 together (endshake
+  unchanged); the end screws at 8.3, `ebu` 72 deg. `7291b20`
 - **Heights estimated wrongly.** Train bridge was 22.1 mm above the plate;
   a side photograph scaled by the pillar plate's 3.86 mm edge gives 16.8 mm.
   Barrel (13.2 mm tall, rising through a cut in the train bridge), train wheels,
@@ -191,6 +216,13 @@ Contents:
   the hour hand, 0.84 of the minute track, agreed. Keep: the hands' lengths
   are the photograph's proportions of the tracks they read; the essay draws
   the same hands (`hands()` in essay.js). `3c9608c`
+- **Every count in the motion work wrong** (IDEAS.md 1.8). The model had
+  cannon pinion 12 : minute wheel 36, minute pinion 10 : hour wheel 40, chosen
+  for the ratio of 12; C Spinner's video has 14 : 56 and 18 : 54 (the wheels
+  whole on the mat, 23:45-23:46; the pinion's 18 leaf ends, 9:06). Now so, the
+  modules from the minute wheel's place, 10.5 mm out as the dial-side
+  photograph has it (it was 9.6, the old counts' distance). Keep: `MW` the
+  counts, `MWM` their modules from `L.Mw`. `aba5fcf`
 - **Every tooth count in the going train wrong, and the up–down scale on 240°.**
   The counts were chosen for the ratios (fusee wheel 96, centre 80, third 75,
   fourth 60, pinions 10, 10, 8; wind indicator 98 : 8), and the dial's UP–DOWN
@@ -287,6 +319,16 @@ Contents:
   the photograph goes through `PT`, one measured on the train bridge through
   `PR`, one placed from the dial or train through neither; angles read on
   the photograph take `PHOTO_TURN`, radii `PHOTO_K`. `6d1bd37`
+- **The minute wheel's stud 10.5 mm out** (Review-results.md, Elsewhere 24): from
+  the 404 px dial-side photograph mapped through anchors that have since moved; the
+  video at the plate's scale has 11.3. Now 11.3, the motion work's modules from it. `162dfe5`
+- **The Hamilton dial's print 9 % too large** (Review-results.md, Elsewhere 24): its
+  minute track at r 43.0-45.4, so with the fourth at its measured 21.6 the seconds
+  sub-dial couldn't meet it at 6 as on the photographed dial. Measured on that
+  photograph face-on, scaled by the seconds' centre: the track r 40.4-42.2, the seconds
+  track 17.9, the UP-DOWN ring 11.2, the opening 45.9 (the bezel's own). Now printed so,
+  the hands to the photograph's lengths (and the essay's copy of them). Keep: the dial
+  95 mm; `r1`, `r2`, `ru` in `dialCanvas` in mm over `DIAL_R`. `162dfe5`
 
 ## Winding and maintaining work
 
@@ -529,6 +571,15 @@ Contents:
   video. Keep: the springs' feet and screws at `WPS` (the wheel's holes are
   cut there). `69992a0`
 
+- **Barrel 13.2 mm tall and the train bridge's cut round it r 19.2**
+  (Review-results.md, Elsewhere 23). Side-on on C Spinner's video
+  (33:09.5-33:35) the barrel's height to radius is 0.95, camera-free: about
+  16.5 mm tall. The cut, fitted with its centre and radius free (23:30,
+  13:49.5), is r 21.0-22.0, centred about 2 mm further out than the barrel.
+  Now the barrel 16.5 mm tall from 2.4 mm over the plate (0.28 over the
+  centre wheel), the cut r 21.0 centred 24.8 mm out (its low end, where the
+  bridge keeps 0.7 mm round pillar 0's screw). Keep: `BB_LO`, `TB_CUT`,
+  `TB_CR`; fine.py's barrel-arbor entry sized for the taller barrel. `919cc84`
 - **Barrel a third too small** (Review-results.md, Elsewhere 23). It was r 13.5;
   on C Spinner's video its top lip fits r 18.3 (23:30; 17.4-19.6 over the
   focal lengths the frame allows, certain above 14.5), as the train bridge's
@@ -539,6 +590,15 @@ Contents:
   held at 0.37 turn (it was pinned to the spring's most, which the longer
   spring made 6.4 turns). Keep: the barrel's inner parts follow `c.Rb`; the
   set-up a turn fraction, not the spring's range. `2e0db4f`
+- **The setup click's tip 0.1 mm in the ratchet's teeth** (Review-results.md, BOM
+  comparison 3): its pivot 9.25 mm out, from the top-view photograph. At the video's
+  10.25 (11:58), its tip at the teeth's root 32 deg round, it seats 0.52 mm. Keep:
+  bom.py's setup click check wants it seated over 0.3. `12badbb`
+- **The fusee's large end flat, the dust seal's flange round** (Review-results.md, the
+  fusee assembly 5; BOM comparison 2): the large end now has its rim round the recess
+  that holds the winding ratchet (18:20), 0.4 tall so it clears the sustaining ratchet
+  and its pawl by 0.1 (fine.py found 0.75 in both); the seal's flange its shallow bite
+  between the screws (6:29). `12badbb`
 
 ## Plates, bridges, screws and arbors
 
@@ -929,6 +989,22 @@ Contents:
   the plate has it, pillar 2 stands under it, and the barrel bridge's screw
   where pillar 2 stood goes into the train bridge (`bom.py`'s 42055.tb
   deviation removed). `6d1bd37`
+- **The lower train bridge a thin bar** (Review-results.md, Elsewhere 24): 1.2 mm
+  thick and 6 wide, against the video's 4.4 and 10 (40:08, fitted at the plate's
+  scale). Now so, its screws' heads and the settings in counterbores at its top, the
+  third and fourth arbors' lower pivots up to the settings. Keep: `LT_H`; its end 9.2
+  past the fourth, clear of pillar 1's dial-side screw (the video's 10.3 would stand on
+  it at the model's 170.8 deg). `162dfe5`
+- **The escape upper bridge's ends on the train bridge's face, its cap's window a plain
+  hole, the caps' screws small** (Review-results.md, Elsewhere 17). The ends now lie in
+  seats sunk `SEAT_D` (`TB_SEAT`, `tools/train_bridge.py`), the bar and the escape
+  arbor's top pivot lowered with them (endshake unchanged); the escape cap's window a
+  90 deg cone r 1.55, its screws' heads r 0.75; the balance lower cap's window a
+  straight bore r 1.1 over a wider endstone, its heads r 0.5 (10:00, 13:49.5). Keep:
+  the main bridge's opening (`TB_KEY`) takes the seats with it, the screw and pin holes
+  only in the seats' floors (a hole inside a hole breaks the extrusion); the caps'
+  seat layers tagged with the cap's line (bom.py reads the endstone as set in what
+  holds it). `162dfe5`
 
 ## Setup, case and gimbals
 

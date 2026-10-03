@@ -37,5 +37,26 @@ async()=>{
     set(la,false);set(rk,true);await wait(3000);const free=[ang(up(bowl),new T.Vector3(0,1,0)),ang(up(box),up(bowl))];
     set(la,true);await wait(3000);const held=ang(up(box),up(bowl));set(rk,false);set(la,false);await wait(500);
     out.push(['gimbal latch',free[0]<1.5&&free[1]>3&&held<0.5,`rolling: released, the case ${f2(free[0])} deg from level with the box ${f2(free[1])} deg from it; latched, the case ${f2(held)} deg from the box`]); }
+  /* the setup click (Sec. II: the setup ratchet and pawl "prevent the barrel arbor from turning during winding and running"): the mainspring pulls the arbor the way
+     opposite to the barrel's turn in running; turned a little that way the ratchet's steep face runs into the click's tip, turned the other way its tip only rides up a
+     tooth's back. The ratchet's outline is read off its mesh (its top face's boundary, along a ray from the axis), the click's tip as its point nearest the axis */
+  { const bz=byHn('42168')[0],rw=byHn('42026').find(o=>o.isMesh),ck=byHn('42027').find(o=>o.isMesh),axis=o=>new T.Vector3(0,1,0).transformDirection(o.matrixWorld);
+    const ang=o=>{o.updateWorldMatrix(true,false);const a=axis(o),x=new T.Vector3(1,0,0).transformDirection(o.matrixWorld);return[a,x];};
+    click('#speeds button[data-v="60"]');const[a0,x0]=ang(bz);await wait(4000);const[,x1]=ang(bz);click('#speeds button[data-v="1"]');
+    const wb=Math.sign(new T.Vector3().crossVectors(x0,x1).dot(a0));   /* the barrel's turn in running, about its own axis */
+    const pull=-wb*Math.sign(a0.dot(axis(rw)));   /* the spring's pull on the arbor, as a turn of the ratchet about its own y */
+    const g=rw.geometry,P=g.attributes.position,I=g.index?g.index.array:[...Array(P.count).keys()];let ymax=-1e9;for(let i=0;i<P.count;i++)ymax=Math.max(ymax,P.getY(i));
+    const E=new Map(),k=(a,b)=>a<b?a+','+b:b+','+a,V=i=>[P.getX(i),P.getZ(i)],key=i=>V(i).map(v=>v.toFixed(4)).join(':');
+    for(let t=0;t<I.length;t+=3){const tri=[I[t],I[t+1],I[t+2]];if(tri.some(i=>Math.abs(P.getY(i)-ymax)>1e-4))continue;for(let e=0;e<3;e++){const a=key(tri[e]),b=key(tri[(e+1)%3]),kk=k(a,b);E.set(kk,(E.get(kk)||0)+1);}}
+    const seg=[...E].filter(([,n])=>n===1).map(([kk])=>kk.split(',').map(s=>s.split(':').map(Number)));
+    const rOut=th=>{const d=[Math.cos(th),Math.sin(th)];let best=0;for(const[[ax,az],[bx,bz2]]of seg){const ex=bx-ax,ez=bz2-az,den=d[0]*ez-d[1]*ex;if(Math.abs(den)<1e-12)continue;
+        const t=(ax*ez-az*ex)/den,u=(ax*d[1]-az*d[0])/den;if(u>=0&&u<=1&&t>best)best=t;}return best;};
+    ck.updateWorldMatrix(true,false);const CP=ck.geometry.attributes.position,v=new T.Vector3();
+    const tipAt=dl=>{const r0=rw.rotation.y;rw.rotation.y=r0+dl;rw.updateWorldMatrix(true,false);const inv=new T.Matrix4().copy(rw.matrixWorld).invert();let tip=null,rt=1e9;
+      for(let i=0;i<CP.count;i++){v.fromBufferAttribute(CP,i).applyMatrix4(ck.matrixWorld).applyMatrix4(inv);const r=Math.hypot(v.x,v.z);if(r<rt){rt=r;tip=[v.x,v.z];}}
+      rw.rotation.y=r0;rw.updateWorldMatrix(true,false);return[Math.atan2(tip[1],tip[0]),rt];};
+    const depth=dl=>{const[a,r]=tipAt(dl);return rOut(a)-r;},held=depth(0.02*pull),free=depth(-0.02*pull),rest=depth(0);
+    const[ta,tr]=tipAt(0);let top=0;for(let j=1;j<=30;j++)top=Math.max(top,rOut(ta+pull*0.001*j));   /* the tooth top behind the face the tip bears on */
+    out.push(['setup click',wb!==0&&held>rest&&free<rest-0.1&&top-tr>0.3,`the barrel turns ${wb>0?'+':'-'} about its axis in running; turned 0.02 rad the way the spring pulls the arbor, the tooth's face comes onto the click's tip (outline ${f2(rest)} -> ${f2(held)} mm from it), turned the other way the gap opens under it (${f2(free)}): it holds the arbor the right way. The tip stands ${f2(top-tr)} mm inside the teeth's tips (want over 0.3: seated, the pivot where C Spinner's video has it)`]); }
   click('#speeds button[data-v="0"]');
   return out;}

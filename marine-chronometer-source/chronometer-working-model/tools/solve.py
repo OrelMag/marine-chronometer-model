@@ -19,7 +19,7 @@ def obj(name):   # a one-line JS object literal of numbers and [x, z] pairs, as 
     s=re.search(r'^const '+name+r'=(\{.*?\});',SRC,re.M).group(1)
     return eval(re.sub(r'([{,])(\w+):',r'\1"\2":',s))
 L,TR=obj('L'),obj('TRAIN')
-EB=9.40;FE=10.585   # the escapement's centre distance; the fourth to the escape arbor (movement.js: kept since the fourth stage was first fitted)
+EB=9.40;FE=11.107   # the escapement's centre distance; the fourth to the escape arbor (KLUwI2UUCMQ: the escape jewel from above, 10:00, put 9.40 from the balance, and the fourth at 21.6; 10.585 until 2 October 2026)
 d=lambda a,b:math.hypot(a[0]-b[0],a[1]-b[1])
 def circ(p,q,r1,r2,near):   # the intersection of circles r1 about p and r2 about q nearer `near`
     D=d(p,q);a=(r1*r1-r2*r2+D*D)/(2*D);h=math.sqrt(max(0,r1*r1-a*a));ex,ez=(q[0]-p[0])/D,(q[1]-p[1])/D;mx,mz=p[0]+a*ex,p[1]+a*ez

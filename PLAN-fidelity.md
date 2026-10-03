@@ -142,6 +142,17 @@ Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (ag
 - Next: the fusee parts (the winding pawls and their arc springs, the stop-bar's slot and its C-wire spring, the
   gilt end plate with its boss, the winding ratchet's teeth) and the oil sinks; then the barrel's fit; then item 22.
 
+## Next round (the user, 2 October 2026, after 1.17.00 went live)
+
+All chosen, done on sub-branches of `claude/fidelity-plan`, then merged and released as one batch after asking:
+- quick: the setup click's function check; the sustaining ratchet's face (plateau, holes); the setup arbor's square
+  and the cover's centre hole; the cock's nose trimmed to its cap;
+- large: the fourth arbor against the balance (IDEAS 1.11; fits first, then a decision with the user); the pillars'
+  distances and pillar 1; the escapement's details (escape upper bridge, detent block, lower bridge pins, the dark
+  and tapped holes); the wind indicator against the mounting ring's bore;
+- measurements: the motion work's counts and the escape pinion; the barrel's height and the train bridge's cut;
+  a firmer camera method for the video fits.
+
 ## Progress
 
 | Item | State | Branch / commit |
@@ -164,3 +175,24 @@ Next small step: item 2, `solve.py` reading `L` and `TRAIN` from movement.js (ag
 | 12 Fusee parts | done: the stop-bar slot beside the hub with its C-wire spring, the end plate gilt with its boss, the winding ratchet's 36 teeth, the winding-pawl springs as long arcs; oil sinks on the fusee's and barrel's bushings. Not drawn: the plateau the pawl springs lie round | `claude/fp-fusee2` |
 | 23 Barrel's size | fitted (r 18.3 top lip, 17.4-19.6) and changed: the barrel r 17.6, the mainspring 1,064 mm, the chain 4.85 barrel turns | `claude/fp-barrel` `2e0db4f` |
 | 22 Left items | built: the dial face checked in `fine.py`, the collet as Figs. 5 and 6, the Navy's Y-arm stop as a variant (illustrative), the barrel pillar's profile from the video | `claude/fp-left`, `claude/fp-barrel` |
+| Setup click check | done: holds the right way; its seat shallow (0.1 mm), the pivot's place open (photograph 9.25 mm, video 10-10.5) | `claude/fp-quick` |
+| Motion work counts | done: 14 : 56, 18 : 54 (video), the minute wheel 10.5 mm out (dial-side photograph); escape pinion 10 and indicator pinion 12 likely | `claude/fp-quick` `aba5fcf` |
+| Barrel height, bridge cut | done: 16.5 mm tall (side-on, camera-free), the cut r 21.0 centred 24.8 out | `claude/fp-barrel2` `919cc84` |
+| Setup arbor and cover | done: the square about 7.5 mm over the ratchet, the cover's hole r 3.0 (rough readings) | `claude/fp-barrel2` |
+| Cock nose | done: trimmed to the cap's outline + 0.3 | `claude/fp-barrel2` |
+| Sustaining ratchet face | the pawls' studs drawn; the plateau left (the pawls lie over it, its height unseen) | `claude/fp-barrel2` |
+| Camera method | `tools/fcal.py`: f per shot; the video's f changes between shots | `claude/fp-camera` |
+| Fourth arbor, pillars, indicator | measured at the plate's scale (the fourth 21.5, pillars 34.1-34.7, stud 22.9, bore 38.2 with a relief at the 12); the user: settle the scale first (4-5 % between the plate's 87.57 and the bore's 40.2), then move them together, the ring's relief with the bore | — |
+| Escapement details | measured (VIDEOS.md); built: the balance lower cap round with a flat. The block's far pin waits with the block's and the foot's length (Fig. 90: 15 and 17 mm from the point of flexure, model 9.2 and 10.6). The escape upper bridge (5.2 wide, boss r 3.8 below, flush countersunk screws, seats with steady pins, a 1 mm cap with two flats) and the train-blocking screw (6.35 from the fourth, access hole 2.5 across) wait on the escape and fourth arbors' move (the scale) | `claude/fp-escape` |
+| Setup click, fusee rim, detent notch | done: the click's pivot at the video's 10.25, its tip at the root; the fusee's large end with its rim round the recess (18:20); the detent block's dead notch removed. Recorded: the sustaining ratchet's groove (not cut), the winding ratchet's size (readings disagree) | `claude/fp-finish` |
+| Lower train bridge, minute stud, escape seats and caps, dial print | done: the bar 4.4 x 10 with counterbores (40:08), the minute stud 11.3, the escape upper bridge's seats and its cap's cone window, the caps' screws and the balance lower cap's bore, the Hamilton dial printed to the photograph (track r 40.4-42.2; the 95 mm dial stands). Pillar 1 stays at 170.8 (the cock's foot): 4 deg open | `claude/fp-finish` |
+| Layout move (the user: move now) | done: fourth 21.6, third, escape arbor, pillars, indicator stud, bore 39.0 + relief, train-blocking screw and access hole, escape upper bridge rebuilt, detent block at Fig. 90's length, lower bridge regenerated, dial seconds on its arbor. Open: the seconds hand vs the dial's track (dial size), the lower train bridge's height, the minute stud | `claude/fp-layout` |
+
+## Status after the layout move and its follow-ups (3 October 2026, `claude/fp-layout`, `claude/fp-finish`)
+
+Every item above is done or has a recorded disposition. What stays open is a disagreement between sources or a reading no frame can give, each recorded where it belongs:
+- **Pillar 1's angle** (Review-results.md, Elsewhere 24): the dial side's fit has it at 166.3 deg, but there its top screw would stand in the cock's foot, which the video shows clear of any screw; the model keeps 170.8 and ends the lower train bridge 9.2 past the fourth (the video's 10.3). The cock's place or the dial side's angles are about 4 deg out.
+- **The winding ratchet's size**: 18:20 reads its tips 6.4-7.6 mm, earlier readings 8.5 and the pawls' tips 8.4; the model's 8.75 stands until a face-on frame settles it.
+- **Not drawn, with reasons**: the sustaining ratchet's spring groove (a hidden face; the toothed wheel would have to be built in layers); the escape upper bridge's countersinks (drawn as counterbores); the balance lower bridge's steady pins (hidden in the joint, estimated).
+- **Estimated depths and heights**: the escape bridge's seats (0.3), the fusee's rim (0.4, as tall as the parts under it allow), the lower train bridge's counterbores, the mounting ring's relief.
+- **The Navy dial** (46:44): its centre hidden under the hands and the frame oblique, its proportions are inconclusive; the photographed Maritime Commission dial, face-on, sets the print.
