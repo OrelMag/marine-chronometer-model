@@ -267,8 +267,12 @@ function pawlBack(pts,c,q,th,o){const co=Math.cos(th),sn=Math.sin(th),W=(x,z)=>[
 /* the pawl's outline with points every 0.1 mm along its edges, so a tooth's tip can't pass between two of its vertices (cached per outline) */
 const DENSE=new WeakMap(),dense=pts=>{let d=DENSE.get(pts);if(!d){d=[];for(let i=0;i<pts.length;i++){const[a,b]=[pts[i],pts[(i+1)%pts.length]],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/0.1));
   for(let k=0;k<n;k++)d.push([a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n]);}DENSE.set(pts,d);}return d;};
+/* the same points with their distance from the pivot, farthest first (cached per outline): a point d from the pivot never comes nearer the ratchet's centre than |q|-d,
+   so seatPawl tests only the leading ones that can reach within ro+0.5 of it, and gets the same answer for about half the work (it runs every frame for each pawl) */
+const NEAR=new WeakMap(),near=pts=>{let d=NEAR.get(pts);if(!d){d=dense(pts).map(([x,z])=>[x,z,Math.hypot(x,z)]).sort((a,b)=>b[2]-a[2]);NEAR.set(pts,d);}return d;};
 function seatPawl(pts,q,th0,pr){
-  const P=dense(pts),f=th=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(const[x,z]of P){const X=q[0]+x*c+z*sn,Z=q[1]-x*sn+z*c,r=Math.hypot(X,Z);if(r<pr.ro+0.5)m=Math.min(m,r-pr.r(Math.atan2(Z,X)));}return m;};
+  const P=near(pts),lim=Math.hypot(q[0],q[1])-pr.ro-0.5-1e-9;let n=0;while(n<P.length&&P[n][2]>lim)n++;
+  const f=th=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(let i=0;i<n;i++){const x=P[i][0],z=P[i][1],X=q[0]+x*c+z*sn,Z=q[1]-x*sn+z*c,r=Math.hypot(X,Z);if(r<pr.ro+0.5)m=Math.min(m,r-pr.r(Math.atan2(Z,X)));}return m;};
   const tip=pts[PAWL_TIP],tr=th=>{const c=Math.cos(th),sn=Math.sin(th);return Math.hypot(q[0]+tip[0]*c+tip[1]*sn,q[1]-tip[0]*sn+tip[1]*c);};
   const so=tr(th0+0.01)>tr(th0)?1:-1;let a=th0+so*0.5,b=th0-so*0.5;if(f(b)>=0)return b;if(f(a)<0)return a;
   for(let i=0;i<28;i++){const m=(a+b)/2;f(m)>=0?a=m:b=m;}return a;}
