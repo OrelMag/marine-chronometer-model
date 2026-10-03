@@ -3,6 +3,7 @@ five screws on the barrel bridge, and lay the two side by side (and blended) in 
 
     python topview.py                      # writes ../verification/topview-comparison.png
     python topview.py --hide trainBridge   # the same with parts hidden (userData.partName), into r_topview.png in the current directory
+    python topview.py --eval "__mv.userData.stop('navy')"   # with JS run after loading (a variant fitted), into r_topview.png
 
 The warp is an affine map fitted to the barrel bridge's plane (the five screws agree with it to 0.6 mm), so parts at that height line up; parts far above or
 below it (the cock, the pillar plate) are shifted by the photograph's slight tilt, up to about 3 mm. The model is frozen as in views.py."""
@@ -29,7 +30,7 @@ FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userD
   const s=ESC.state(0.4),u=(n,w)=>mv.userData._u({E:1000+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,springOn:true,msOn:false});u(0,true);u(2.5,false);})()"""
 def arg(k,d=None):return sys.argv[sys.argv.index(k)+1] if k in sys.argv else d
 async def main():
-    hide=arg('--hide')
+    hide=arg('--hide');ev=arg('--eval')
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
         # a fresh headless Chromium loses its first WebGL context: spend it on a blank page
@@ -40,6 +41,7 @@ async def main():
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(FREEZE)
         await pg.evaluate("(()=>{const e=document.querySelector('#edges');if(e.checked)e.click();})()");await pg.evaluate("(()=>{const e=document.querySelector('#shadows');if(!e.checked)e.click();})()")   # Edges off, the lamp's shadows on (off by default), as the comparison was made
         await pg.evaluate("document.querySelector('#views button[data-v=\"movement\"]').click()");await pg.wait_for_timeout(2500)
+        if ev:await pg.evaluate(ev);await pg.wait_for_timeout(500)
         if hide:await pg.evaluate("(H=>{for(const c of window.__mv.children)if(H.includes(c.userData.partName))c.visible=false;})(%s)"%json.dumps(hide.split(',')))
         await pg.evaluate("window.__cam(%s)"%','.join(map(str,CAM)));await pg.wait_for_timeout(2500)
         await pg.screenshot(path='r_topview_render.png')   # the canvas is the page's top left, the size __proj works in
@@ -54,5 +56,5 @@ async def main():
     a,m=ph.crop(CROP),wr.crop(CROP);W,H=a.size;s=0.5
     a,m=a.resize((int(W*s),int(H*s))),m.resize((int(W*s),int(H*s)));out=Image.new('RGB',(a.width*3+20,a.height),'white')
     out.paste(a,(0,0));out.paste(m,(a.width+10,0));out.paste(Image.blend(a,m,0.5),(2*a.width+20,0))
-    path=OUT if not hide else pathlib.Path('r_topview.png');out.save(path);print('wrote',path)
+    path=OUT if not(hide or ev) else pathlib.Path('r_topview.png');out.save(path);print('wrote',path)
 asyncio.run(main())

@@ -944,6 +944,26 @@ Contents:
   phases; it now holds the balance at rest and the escape wheel locked. Keep: the
   arm stops the balance through a timing weight; unlocked, it is clear of
   everything the balance carries. `3655b52`
+- **The Navy's Y-arm ugly and not as photographed** (Variants, Balance stop). It
+  was three strips laid over each other at one height, plus a ring for its eye:
+  coplanar faces that fought at the fork, bends pinched where the strips turned,
+  and branches 1.5 mm wide that ran in to the staff and back out. Its post was a
+  bare rod under three brass rings. A first rebuild from 2E11795's photograph
+  alone made it a broad wishbone that stopped inside the post, which still didn't
+  look like the arm. Photographs from straight above (Delaney No. 8854 and
+  another) show a lever: its root is screwed on a shouldered stud near the
+  bridge's rim (in the pillar screw's place), and it runs under the cap to a
+  crossbar round the cock's end with an eye and a pin at each end. It is now
+  that lever, the crossbar symmetric about it (an arch with straight legs, level
+  arms out to the eyes over the rim), its widths from Delaney's photograph, the
+  outline the boundary of bars joined with round fillets (`sdfOutline`). Its
+  post is a second dust seal like the fusee's, slotted for the lever, with a
+  plunger that presses it down. Keep: the lever one closed plate (no strips laid
+  together), run to its pivot screw; the barrel bridge's pillar screw hidden while
+  it is fitted (`R.navyBB`); symmetric about the stem; the arch's inner edge
+  6.6 mm or more from the staff (the hairspring); both pins over the rim; the flange bitten round the setup cover
+  (`fine.py --eval "__mv.userData.stop('navy')"`, with and without `--hold`;
+  `exploded.py` and `audit.py` take the same `--eval`). `17fa7d4`, `f7bfddd`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
@@ -1220,6 +1240,18 @@ An arbor needs pivots and shoulders; a stone its seat.
   moves goes through `reclose` (the stop-bar spring does too), never
   `closeGeo` each frame; check a new one with `tools/perf.py` in a lifted
   view. `bf503d8`
+- **The pawls' seating doubled in cost every frame.** When the pawls'
+  outlines were resampled every 0.1 mm (`dense()`, so a tooth's tip can't
+  pass between two vertices; `8cbb259`), `seatPawl`, which runs every frame
+  for the two winding pawls and the sustaining pawl and tests every outline
+  point about 30 times, went from 87 points to 173 and 221: 0.30 to 0.63 ms
+  of each frame's `update()`. A point d from the pivot never comes nearer
+  the ratchet's centre than |q|−d, so it now tests only the points that can
+  come within ro+0.5 of it (`near()`, the dense outline sorted by distance
+  from the pivot; 96 and 92 of them): bit for bit the same angles over 27,000
+  positions round the ratchets, about a third less time. Keep: anything run
+  every frame over a resampled outline tests only the points that can reach;
+  `dense()` keeps its order for `maintaining.py`. `748c819`
 - **Metals flat and dark after a lost WebGL context.** A restored context
   loses its PMREM render targets. The environment map is now rebuilt on
   `webglcontextrestored`. Keep that handler. `fcedc94`
