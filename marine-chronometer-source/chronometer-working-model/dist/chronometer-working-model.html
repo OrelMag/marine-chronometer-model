@@ -881,9 +881,9 @@ function mats(){
   const stx=stripeTex(),st=stx.map,wt=woodTex();
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
-    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),blued:S(0x1a2c7a,0.9,0.24),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),
+    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),
     chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3),
-    wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
+    wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
     invar:S(0xa7aaa6,1,0.28)};
   /* plateCrest: a uv on one of the damascening's ridge crests (row 29.6 of the tile at its left edge, where the map is brightest and its normal flat), through the
      map's transform: plainFaces pins a plate's faces off its train side there, so they read as plain nickel */
@@ -1955,19 +1955,45 @@ function buildMovement(M){
     cylBetween(R.arm,0.4,-0.45,-2.85,M.steel,AL,0,16);   /* the finger, 2.4 tall: 0.56 up the timing weight */
     hn(mesh(f9,ringGeo(1.1,hC(0,0,ARM_S)[2],0.15),M.steel,S.arm[0],TB_T-0.525,S.arm[1]),'42251.arm');hn(screw(f9,...S.arm,TB_T-0.6,ARM_S,0.35,0.15+0.45+2.5),'37204');
     hn(cylBetween(f9,0.3,TB_T+0.8,TB_T-0.8,M.steel,...S.armPin),'42300');
-    /* the Navy's other balance stop (illustrative; Variants): a post on the barrel bridge, capped with packing rings as the fusee's dust seal is, and a Y-shaped arm from
-       under its cap over the balance, a short pin under each end over the rim, the ends nearly opposite each other. As on serial 2E11795 (References/photo-top-view.jpg;
-       others on omegaforums and Delaney No. 8854; Review-results.md, BOM comparison 8): its shape and place mapped from the photograph through the barrel bridge's five
-       screws (tools/topview.py's fit), corrected 1 mm for the photograph's tilt at the arm's height and 2.9 mm at the cap's, to about 1.5 mm. The manual doesn't describe
-       it (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is a guess: the cap pressed from outside the case, the arm comes down until its pins bear on
-       the rim, as the wedges did (Sec. III). Its heights are chosen to clear the balance, the hairspring and the cock. R.navyArm moves: position.y 0 free, 0.48 locked */
-    const nv=new THREE.Group();nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.69,-19.16],ya=-31.9,PB=(p,r)=>{const d=[p[0]-L.B[0],p[1]-L.B[1]],l=Math.hypot(...d);return l>=r?p:[L.B[0]+d[0]/l*r,L.B[1]+d[1]/l*r];};
-    cylBetween(nv,1.6,BB_T,-32.56,M.plateSolid,...NP,32);
-    for(let k=0;k<3;k++){const a=-32.56-1.733*k,b=a-1.733;mesh(nv,new THREE.LatheGeometry([V2(1.6,a),V2(6.2,a),V2(6.45,a-0.22),V2(6.45,b+0.22),V2(6.2,b),V2(1.6,b),V2(1.6,a)].reverse(),56),M.brass2,NP[0],0,NP[1]);}
+    /* the Navy's other balance stop (illustrative; Variants), as on serial 2E11795 (References/photo-top-view.jpg, read at full size; others on omegaforums and Delaney
+       No. 8854; Review-results.md, BOM comparison 8). The photograph shows a second dust seal on the barrel bridge like the fusee's: a nickel body on a flange, a flange
+       screw 7.9 mm out as the fusee's are, and three black packing rings. Its bore is closed by a nickel plunger head with a hex socket screw in it. A broad flat arm
+       comes out of a slot in the body's side: a stem 3.1 mm wide to a fork near the rim, then two branches round the cock's end. The right one ends in a round pad with a
+       pin, the left one tapers to a round end, and both ends lie over the rim. The outline (NA, the stem's right edge from the cap round the pad, the fork and the left end
+       to its left edge) is traced on the photograph. It is put on the movement by the barrel bridge's five screws (tools/topview.py's fit), then by the 1.9 deg turn and
+       2.5 % scale that bring the post's axis onto NP and the rim's fitted centre onto the staff. Both are read at the arm's height, with the photograph's tilt (11 px a mm)
+       taken from the rim against the endstone. It is within about 0.5 mm of the photograph, kept 6.6 mm from the staff (the hairspring's coils reach 5.5), and smoothed.
+       The left end is moved 0.36 mm out, so its pin stands on the rim as the pad's does. The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm
+       above), so how it works is a guess: the arm is fixed to the plunger, and the cap pressed from outside the case lowers it until its pins bear on the rim, as the
+       wedges did (Sec. III). The heights, the arm's thickness, the chamber and slot inside the body, the second flange screw's place, the flange's bite round the setup cover and the screws' threads (not drawn:
+       the bridge is the manual's, untapped there) are estimated. R.navyArm moves: position.y 0 free, 0.48 locked. In the Exploded view it lifts 22 mm past the
+       locking arm's part, to -84: above the barrel bridge it stands on (-72) and the balance it reaches over (-80), under the hairspring and the cock (-88, -96) */
+    const nv=loose(new THREE.Group(),22);nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.69,-19.16],AY=-31.75,AT=0.45,Y0=-30.65,Y1=-31.85,HB=-33.1,HT=-38.06,PE=BAL_Y+1.2-2*2.15-0.5;   /* the arm's top, thickness; the slot's bottom and top; the plunger head's foot and top (free); the pins' ends, 0.5 over the rim's top */
+    const lat=(o,p,m)=>mesh(o,new THREE.LatheGeometry(p.map(([r,y])=>V2(r,y)).reverse(),56),m,NP[0],0,NP[1]),circ=(r,n=96)=>[...Array(n)].map((_,i)=>[r*Math.cos(i/n*TAU),r*Math.sin(i/n*TAU)]);
+    const NA=[[-6.39,-13.76],[-4.13,-4.56],[-3.64,-2.26],[-4.11,-0.62],[-6.19,3.13],[-7.74,6.92],[-8.72,9.65],[-9.9,11.39],[-11.67,11.51],[-13.15,11.89],[-13.89,12.72],[-13.8,13.68],[-13.32,14.46],[-12.1,14.85],[-10.33,14.67],[-7.55,13.69],[-5.42,12.36],[-4.94,11.11],[-4.11,6.98],[-2.26,3.48],[-1.26,1.89],[-0.4,1.4],[2.4,2.22],[6.07,2.55],[9.7,3.17],[13.2,3.86],[13.47,3.89],[13.73,3.81],[13.94,3.63],[14.07,3.39],[14.09,3.12],[14.01,2.86],[13.83,2.65],[13.59,2.52],[8.94,0.85],[4.82,-0.09],[1.27,-1.26],[-0.54,-3.67],[-1.61,-7.7],[-2.68,-11.73],[-3.21,-13.75]];
+    const NPIN=[[-11.95,12.89],[13.39,3.19]];   /* the pad's pin (the photograph's) and the left end's, 13.8 mm from the staff: over the rim (13.38-14.5) */
+    /* the seal: body, flange and screws as the fusee's (below), its chamber closed underneath, cut through its wall at the arm's height by a slot facing the arm (u) */
+    const u=unit(sub([(NA[0][0]+NA[NA.length-1][0])/2,(NA[0][1]+NA[NA.length-1][1])/2],NP)),au=Math.atan2(u[1],u[0]),SW=1.85;   /* SW: the slot's half width, 0.3 clear of the stem */
+    lat(nv,[[0,-27.18],[6.6,-27.18],[6.6,-28.36],[6.2,-28.76],[5.9,-28.96],[5.9,Y0],[3.0,Y0],[3.0,-27.9],[0,-27.9]],M.plateSolid);
+    { const go=Math.asin(SW/5.9),gi=Math.asin(SW/3.0),P=[];for(let k=0;k<=80;k++){const t=au+go+(TAU-2*go)*k/80;P.push([5.9*Math.cos(t),5.9*Math.sin(t)]);}for(let k=80;k>=0;k--){const t=au+gi+(TAU-2*gi)*k/80;P.push([3.0*Math.cos(t),3.0*Math.sin(t)]);}
+      mesh(nv,polyGeo(P,Y0-Y1),M.plateSolid,NP[0],Y1,NP[1]); }
+    lat(nv,[[1.3,Y1],[5.9,Y1],[5.9,-32.56],[1.3,-32.56],[1.3,Y1]],M.plateSolid);   /* the body's top, bored for the plunger */
+    for(let k=0;k<3;k++){const a=-32.56-1.733*k,b=a-1.733;lat(nv,[[3.4,a],[6.2,a],[6.45,a-0.22],[6.45,b+0.22],[6.2,b],[3.4,b],[3.4,a]],M.packing);}
+    const NS=[37.8,-158.5].map(d=>[NP[0]+7.9*Math.cos(d*D2R),NP[1]+7.9*Math.sin(d*D2R)]);   /* the flange screws: one where the photograph shows it, one about opposite (estimated) */
+    /* the setup cover's end (below, out to 13.15 from the barrel arbor) and its foot (13.65) reach over where the flange would: bitten round them, about the arbor, 0.3 clear */
+    mesh(nv,polyGeo(subtractCircle(circ(8.6),sub(L.Ba,NP),13.95),1.0,[[0,0,6.7],...NS.map(q=>hC(q[0]-NP[0],q[1]-NP[1],1.0))]),M.plateSolid,NP[0],-28.18,NP[1]);for(const q of NS)screw(nv,...q,-28.18,1.0,0.5,1.0);
+    /* the arm and plunger, moving together: the traced outline, its stem run straight in through the slot to an eye round the plunger, smoothed as one closed curve
+       (centripetal Catmull-Rom) and cut as one plate, so the fork and the eye have no seams */
     const na=new THREE.Group();nv.add(na);R.navyArm=na;
-    const fork=[-1.8,0.02],LE=PB([14.67,5.64],0),RT=(d=>[L.B[0]+d[0]*13.95,L.B[1]+d[1]*13.95])(unit(sub([-13.11,13.65],L.B))),r0=[-5.56,-12.0],e0=add(NP,unit(sub(r0,NP)),1.9),arms=[[e0,r0,fork],[fork,PB([4.59,2.19],7.0),PB([11.45,4.69],7.0),LE],[fork,PB([-4.92,3.21],7.0),PB([-9.49,8.98],7.0),RT]];
-    arms.forEach((pts,i)=>mesh(na,stripGeo(pts,i?1.5:2.2,0.45),M.steel,0,ya,0));mesh(na,ringGeo(2.4,1.62,0.45),M.steel,NP[0],ya+0.225,NP[1]);   /* the arm's eye round the post */
-    for(const q of[LE,RT])cylBetween(na,0.3,ya+0.45,BAL_Y+1.2-2*2.15-0.5,M.steel,...q,16);   /* the pins, 0.5 over the rim's top when free */ }   /* 0.8 into the bridge */
+    { const n=[-u[1],u[0]],sd=q=>Math.sign((q[0]-NP[0])*n[0]+(q[1]-NP[1])*n[1]),sL=sd(NA[NA.length-1]),hw=1.55,rE=2.3,dE=Math.asin(hw/rE),B=(t,s)=>add(add(NP,u,t),n,s*hw);
+      const eye=[];for(let k=0;k<=16;k++){const t=au+sL*(dE+(TAU-2*dE)*k/16);eye.push([NP[0]+rE*Math.cos(t),NP[1]+rE*Math.sin(t)]);}
+      const C=[...NA.slice(1,-1),B(7.0,sL),B(4.0,sL),...eye,B(4.0,-sL),B(7.0,-sL)].map(([x,z])=>new THREE.Vector3(x,0,z));
+      const O=new THREE.CatmullRomCurve3(C,true,'centripetal').getSpacedPoints(400).slice(0,-1).map(v=>[v.x,v.z]);
+      mesh(na,polyGeo(O,AT,[[...NP,1.25],...NPIN.map(q=>[...q,0.4])]),M.steelS,0,AY,0); }   /* satin, as photographed: about 0.83 of the plates' brightness */
+    lat(na,[[0,HB],[3.35,HB],[3.35,HT],[1.3,HT],[1.3,HT+0.8],[0,HT+0.8]],M.plateSolid);   /* the plunger's head, in the packing rings' bore, 0.3 proud of them; recessed for the screw */
+    { const hx=[...Array(6)].map((_,i)=>[0.62*Math.cos(i/6*TAU),0.62*Math.sin(i/6*TAU)]);mesh(na,polyGeo(circ(1.28,48),0.8,[{pts:hx}]),M.steel,NP[0],HT,NP[1]); }   /* the hex socket screw, flush */
+    cylBetween(na,1.25,HB,AY+AT,M.steel,...NP,32);cylBetween(na,1.8,AY+AT,AY+AT+0.25,M.steel,...NP,32);   /* its stem down through the arm's eye, and the collar under the eye */
+    for(const q of NPIN)cylBetween(na,0.4,AY,PE,M.steel,...q,16); }
   /* escape upper bridge with jewel and endstone cap */
   const eb=part('escBridge',-66),EB_Y=TB_T+SEAT_D;   /* the bar's underside: its ends in the train bridge's seats */
   /* the escape upper bridge (42064; Figs. 84, 110; KLUwI2UUCMQ 10:00-10:50; References/VIDEOS.md, "The escape upper bridge, close"): a flat bar 1.0 thick and 5.2 wide, round-ended,

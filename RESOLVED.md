@@ -944,6 +944,20 @@ Contents:
   phases; it now holds the balance at rest and the escape wheel locked. Keep: the
   arm stops the balance through a timing weight; unlocked, it is clear of
   everything the balance carries. `3655b52`
+- **The Navy's Y-arm ugly and not as photographed** (Variants, Balance stop). It
+  was three strips laid over each other at one height, plus a ring for its eye:
+  coplanar faces that fought at the fork, bends pinched where the strips turned,
+  and branches 1.5 mm wide that ran in to the staff and back out. Its post was a
+  bare rod under three brass rings. Rebuilt from the top-view photograph at full
+  size. The arm is one plate cut from the traced outline (a stem 3.1 wide, the
+  fork, a round pad with its pin, a tapering round end), registered on the post's
+  axis and the rim's fitted centre, and satin, as photographed. The post is a
+  second dust seal like the fusee's (body, flange and screws, black packing
+  rings), with the arm on a plunger through a slot in its side. Keep: the arm one
+  closed plate (no strips laid together); its outline 6.6 mm or more from the
+  staff (the hairspring); both pins over the rim; the flange bitten round the
+  setup cover's foot (`fine.py --eval "__mv.userData.stop('navy')"`, with and
+  without `--hold`). `HASH`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
