@@ -23,7 +23,12 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
     chk(`second hand at t=${t} s (1 turn/min)`,wrap(R.sec.rotation.y+TAU*t/60)/D,0,1e-6,'deg off');
     chk(`minute hand at t=${t} s (1 turn/h)`,wrap(R.min.rotation.y+TAU*t/3600)/D,0,1e-6,'deg off');
     chk(`hour hand at t=${t} s (1 turn/12 h)`,wrap(R.hour.rotation.y+TAU*t/43200)/D,0,1e-6,'deg off');
-    chk(`escape wheel at t=${t} s (16 teeth/8 s)`,wrap(R.esc.rotation.y-esc0-TAU*t/8)/D,0,1e-6,'deg off');}
+    chk(`escape wheel at t=${t} s (16 teeth/8 s)`,wrap(R.esc.rotation.y-esc0-TAU*t/8)/D,0,1e-6,'deg off');
+    chk(`cannon pinion's square with the minute hand at t=${t} s`,wrap(R.cannon.rotation.y-R.min.rotation.y)/D,0,1e-9,'deg off');chk(`hour wheel's pipe with the hour hand at t=${t} s`,wrap(R.hourW.rotation.y-R.hour.rotation.y)/D,0,1e-9,'deg off');}
+  /* setting the hands: 10 minutes on the key (the cannon pinion slips on the centre arbor) turns the minute hand 60 deg and the hour hand 5, the second hand not at all */
+  u(1509,3,false);const m0=R.min.rotation.y,h0=R.hour.rotation.y,s0=R.sec.rotation.y;mv.userData._u({E:1509,th:0,lift:0,psDef:0,n:3,winding:false,slip:600,springOn:false,msOn:false});
+  chk('setting 10 min: minute hand',wrap(m0-R.min.rotation.y)/D,60,1e-6,'deg');chk('setting 10 min: hour hand',wrap(h0-R.hour.rotation.y)/D,5,1e-6,'deg');chk('setting 10 min: second hand untouched',wrap(R.sec.rotation.y-s0)/D,0,1e-9,'deg');
+  chk('setting 10 min: square with the minute hand',wrap(R.cannon.rotation.y-R.min.rotation.y)/D,0,1e-9,'deg off');chk('setting 10 min: hour pipe with the hour hand',wrap(R.hourW.rotation.y-R.hour.rotation.y)/D,0,1e-9,'deg off');
   /* wind indicator: the hand's angle from 12, clockwise seen from the dial; the fusee's ratchet can sit up to a tooth (9 deg) past n turns, 0.9 deg of the hand. After 56 h the
      train has run with the fusee (7200 escape teeth an hour, as maintaining.py drives it), so the ratchet sits where it sat at UP; the fusee turned alone, as a jump with the train
      held would, the ratchet's seat lands anywhere in a tooth from where it was */
