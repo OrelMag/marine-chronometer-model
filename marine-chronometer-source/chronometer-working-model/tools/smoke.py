@@ -75,6 +75,10 @@ async def model(b,errs,steps):
     await click('#drawInk');await click('#dispReset','reset display from the ink drawing',600)
     if await pg.evaluate("document.querySelector('#drawInk').checked||!document.querySelector('#edges').checked"):errs.append('Reset display left the ink drawing on or Edges off')
     await click('#link','copy link',400)
+    await click('#panelBtn','hide the panel',400)
+    if await pg.evaluate("getComputedStyle(document.querySelector('#panel')).display!=='none'||document.querySelector('#stage').offsetWidth<1000"):errs.append('Hide panel left the panel or the stage narrow')
+    await click('#panelBtn','show the panel',400)
+    if await pg.evaluate("getComputedStyle(document.querySelector('#panel')).display==='none'"):errs.append('Show panel left the panel hidden')
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
     # winding with the key, the spring drawn exaggerated: the close-up shows with the sustaining spring relaxed, the load path in colour; it goes 2 s (page time) after the key lets go
     await click('#ssx','exaggerate the spring')
