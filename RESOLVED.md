@@ -1026,7 +1026,7 @@ Contents:
   axis and across it, both sides bowed alike (about 0.1 of the chord). Now two
   end arcs round the arbor (r 12.87, 76.5°) and two like concave sides to
   5.95 mm; the click's tip is still 0.5 mm clear in the rim-side gap. Keep:
-  the outline built symmetric (`CA`, `CH`, `CR`, `CW`).
+  the outline built symmetric (`CA`, `CH`, `CR`, `CW`). `d4f788a`
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved
