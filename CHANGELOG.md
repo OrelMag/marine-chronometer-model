@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 1.22.01 · 2026-10-04
+- The plate's opening under the lower train bridge as on real Model 21s: a keyhole round the third wheel, with the bridge's settings showing through it
+
 ## 1.22.00 · 2026-10-03
 - The model draws about a third faster: parts that don't move against each other are drawn together, with the same picture
 - Performance mode in Display (on by default) switches it; turn it off if anything ever looks wrong
