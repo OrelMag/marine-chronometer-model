@@ -10,7 +10,7 @@
  const out={dupScrews:[],floatScrews:[],looseEnds:[],zfight:[],isolated:[]};
  /* raycasting against both faces */
  const sides=new Map();for(const o of meshes){sides.set(o,o.material.side);o.material.side=THREE.DoubleSide;}
- const rc=new THREE.Raycaster();
+ const rc=new THREE.Raycaster();rc.layers.enableAll();   // the pieces drawn merged are on layer 2 (drawMerge)
  const hitsFrom=(p,d,far,ex)=>{const P=p.clone().applyMatrix4(mv.matrixWorld),D=d.clone().transformDirection(mv.matrixWorld);rc.set(P,D);rc.far=far;
    return rc.intersectObjects(meshes,false).filter(h=>!ex.has(h.object)&&!h.object.material.transparent);};
  const inside=(p,ex)=>{/* parity along 3 axes, majority */let v=0;for(const d of[[1,0,0],[0,1,0],[0,0,1]]){const h=hitsFrom(p,new THREE.Vector3(...d),400,ex);

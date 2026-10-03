@@ -164,15 +164,15 @@ const ESSAY=(()=>{
       ship(X(0),PAL.ink,'True position',24);
       if(nm>0.3){ctx.strokeStyle=PAL.red;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(X(0),y-26);ctx.lineTo(X(nm),y-26);ctx.stroke();ctx.setLineDash([]);ship(X(nm),PAL.red,'Believed position',-30);}};});
 
-  /* ---------- the balance, in mm: 'uncut', the Model 21's as movement.js builds it, simplified (a stainless-steel rim 1.58 wide and 3.5 deep on an Invar arm, its
+  /* ---------- the balance, in mm: 'uncut', the Model 21's as movement.js builds it, simplified (a stainless-steel rim 0.6 wide and 3.5 deep on an Invar arm, its
      24 holes 15 deg apart, the standard four pairs of balance screws in holes 3, 5, 9 and 12 of each half, the timing weights at the arm's ends and the verniers inside the rim beside them); 'split', a bimetallic rim cut near each end of the arm, steel inside and brass
      outside, with its compensation weights, which set(curl) bends in; 'plain', a plain brass rim, which set(0, grow) enlarges. userData.S: the screws and weights ---------- */
   function balance(M,kind){const g=new THREE.Group(),BR=BAL_R,S=[];
     mesh(g,new THREE.BoxGeometry(2*BR-1,1.1,2.4),kind==='uncut'?M.invar:kind==='plain'?M.brass:M.steel);mesh(g,cylY(2.2,1.3,24),M.steel,0,0.2,0);mesh(g,cylY(0.45,15,12),M.steel,0,2.5,0);
     const radial=(a,r0,len,rr,mat)=>{const m=mesh(g,cylY(rr,len,12),mat,(r0+len/2)*Math.cos(a),0,(r0+len/2)*Math.sin(a));m.rotation.set(0,-a,Math.PI/2);return m;};
-    if(kind==='uncut'){mesh(g,ringGeo(BR,BR-1.58,3.5),M.steel);const HA=(h,n)=>h*Math.PI+(n-1)*TAU/24;
-      for(const h of[0,1])for(const[n,hh]of[[3,2.03],[5,1.24],[9,2.57],[12,1.24]])S.push(radial(HA(h,n),BR,hh,1.65,M.brass));
-      for(const h of[0,1]){S.push(radial(HA(h,1),BR+0.55,1.7,1.2,M.steelD));S.push(radial(HA(h,2),BR-1.58-0.6-1.3,1.3,0.65,M.steelD));}
+    if(kind==='uncut'){mesh(g,ringGeo(BR,BR-0.6,3.5),M.steel);const HA=(h,n)=>h*Math.PI+(n-1)*TAU/24;
+      for(const h of[0,1])for(const[n,hh]of[[3,2.03],[5,1.24],[9,2.57],[12,1.24]])S.push(radial(HA(h,n),BR,hh,1.55,M.brass));
+      for(const h of[0,1]){S.push(radial(HA(h,1),BR+0.55,1.7,1.2,M.steelD));S.push(radial(HA(h,2),BR-0.6-0.6-1.3,1.3,0.65,M.steelD));}
       g.userData.set=()=>{};}
     else if(kind==='plain'){const r=mesh(g,undefined,M.brass);g.userData.set=(c,grow=0)=>{r.geometry.dispose();r.geometry=ringGeo(BR*(1+grow)+0.8,BR*(1+grow)-0.8,2.4);};}
     else{const span=162*D2R,w=1.6,h=2.4,rims=[0,1].map(()=>[mesh(g,undefined,M.steel),mesh(g,undefined,M.brass)]);
