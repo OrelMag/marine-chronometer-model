@@ -117,7 +117,8 @@ Measure on a quiet machine: another session's `bom.py` or `smoke.py` doubles the
 The pieces under one group that share a material are drawn as one merged copy (`drawMerge` in `core.js`; the model
 README, "Static pieces drawn merged", has how it works and what it leaves out). The pieces stay for the tools,
 picking and every display mode; a batch draws merged only while all its pieces are shown in their own material,
-and a piece that moves or is rebuilt leaves its batch.
+and a piece that moves or is rebuilt leaves its batch. Display's Performance mode (on by default, `merge=0` in the hash
+when off) turns it off: every piece then draws itself, as before.
 
 | View (as opened) | Draw calls | ms a frame | JS in the renders |
 |---|---|---|---|

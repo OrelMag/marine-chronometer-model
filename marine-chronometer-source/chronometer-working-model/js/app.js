@@ -107,10 +107,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* a frame: rendered, drawn (tinted or in ink), or rendered with Edges (the drawing's lines over it, the movement's only) (makeInk in core.js, set up the first time it is asked for) */
   let ink=null;const INKM=[...MVM,...BOXM];BOXM.forEach(o=>o.userData.inkBox=true);INKM.forEach(inkTag);   /* Edges' ids, up front (inkTag, core.js) */
   const INKH=[sh,...MVM.filter(o=>o.userData.decal)];   /* left out of Edges' ids: the floor shadow, and the engravings, which would outline themselves on their plates */
-  /* the static pieces drawn merged (drawMerge, core.js): a merged piece is on layer 2, which the raycasters see too. The world matrices are brought up to date once, before
+  /* the static pieces drawn merged (drawMerge, core.js) while Performance mode is on (Display; on by default, merge=0 in the hash when off: every piece then draws
+     itself, as before the merge): a merged piece is on layer 2, which the raycasters see too. The world matrices are brought up to date once, before
      the copies are put in place, and not again for each of the frame's passes */
   const DM=drawMerge(scene,INKM);if(/[?&]qa\b/.test(location.search))window.__dm=DM;
-  const paint=()=>{scene.updateMatrixWorld();DM.sync();const au=scene.autoUpdate;scene.autoUpdate=false;
+  const paint=()=>{scene.updateMatrixWorld();DM.sync(st.merge);const au=scene.autoUpdate;scene.autoUpdate=false;
     if(st.draw)(ink||(ink=makeInk(r))).render(scene,cam,DM.all);else if(st.edges)(ink||(ink=makeInk(r))).lines(scene,cam,DM.all,INKH);else r.render(scene,cam);scene.autoUpdate=au;};
   /* ---------- cross-sections ---------- */
   r.localClippingEnabled=true;
@@ -129,7 +130,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,lp:true,cu:true,ssx:false,speed:1,sound:true,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,lp:true,cu:true,ssx:false,speed:1,sound:true,view:'dial',tour:-1};
   const FOV0=cam.fov,cur={lift:0,flip:0,explode:0,lidM:0,lidT:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the real plates stay hidden */
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
   /* a short note in the HUD, for a few seconds */
@@ -188,7 +189,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
     cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
-    $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;$('#shadows').checked=st.shadows;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
+    $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;$('#shadows').checked=st.shadows;$('#merge').checked=st.merge;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
   }
 
   /* ---------- the sustaining spring close up (Close-up, Winding) ----------
@@ -341,7 +342,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);keep('bal',b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   document.querySelectorAll('#stopV button').forEach(b=>b.addEventListener('click',()=>{mv.userData.stop(b.dataset.v);keep('stop',b.dataset.v);document.querySelectorAll('#stopV button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));   /* the balance stop fitted; Stopping and starting's Locked works either */
-  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked?'tint':false;look();});$('#drawInk').addEventListener('change',e=>{st.draw=e.target.checked?'ink':false;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});$('#shadows').addEventListener('change',e=>{st.shadows=e.target.checked;look();});
+  $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked?'tint':false;look();});$('#drawInk').addEventListener('change',e=>{st.draw=e.target.checked?'ink':false;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});$('#shadows').addEventListener('change',e=>{st.shadows=e.target.checked;look();});$('#merge').addEventListener('change',e=>{st.merge=e.target.checked;look();});
   const DIAL_INFO={hamilton:[INFO.dial[1],INFO.hands[1]],roman:['Black on silver-white, in the German style of the A. Lange & Söhne deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads AUF (up) to AB (down). Its scale is drawn on this movement’s 314° sweep.','Gilt leaf hour hand and lance minute hand, gilt wind indicator hand, blued seconds hand. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     swiss:['Black on white, in the style of the Ulysse Nardin (Le Locle) deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads UP / HAUT to DOWN / BAS. Its scale is drawn on this movement’s 314° sweep.','Blued pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     soviet:['Black on white, in the style of the First Moscow Watch Factory deck chronometers, which copied the Nardin layout (maker’s name and number left off): upright Arabic hours, with the 6 covered by a large seconds sub-dial marked СДЕЛАНО В СССР (made in the USSR); railroad minute and seconds tracks; the wind indicator reads ЗАВОД (wound) to СПУСК (run down). Its scale is drawn on this movement’s 314° sweep.','Aged gilt pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.']};
@@ -393,7 +394,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const bar=()=>{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);};
     try{navigator.clipboard.writeText(u).then(()=>{bar();say('Copied');},()=>{bar();say('In address bar');});}catch(_){bar();say('In address bar');}});
   /* Reset display: each Display box back to its default (See-through to the view's own; the drawings before Edges, which they disable), faded and hidden parts back. The theme stays */
-  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:true,shadows:false,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
+  $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:true,shadows:false,merge:true,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
     for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}st.op={};st.hid.clear();st.iso=null;look();opRender();});
   /* the panel's sections: each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
   const DET=[...document.querySelectorAll('.ctl>details.grp')];
@@ -711,13 +712,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
 
   /* ---------- shareable links: the state in the URL hash ----------
-     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 (Edges off; it is on by default), shadows=1 (Shadows on; off by default), sec=x:-3.5 (a section; :f shows the other half),
+     #view=escapement&speed=0.05&part=det, #tour=6 (a walkthrough step), drive=1 (moving parts only), draw=1 or draw=ink (the tinted or ink drawing), edges=0 (Edges off; it is on by default), shadows=1 (Shadows on; off by default), merge=0 (Performance mode off; on by default), sec=x:-3.5 (a section; :f shows the other half),
      tz=local, t=12:00:00 (only once the hands have been set). #essay or #essay=detent: the essay (essay.js), at a section; open=bookDet (in a link only): open that panel section.
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState, so the back button isn't filled with views */
   function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);return h.toString().split('%3A').join(':').split('%2C').join(',');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
@@ -729,9 +730,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     { const q={...BDEF};for(const kv of(g('esc')||'').split(',')){const[k,v]=kv.split(':');if(own(BDEF,k)&&Number.isFinite(+v)){const b=BENCH.find(x=>x[0]===k);q[k]=clamp(+v,b[2],b[3]);}}
       if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();if(first&&!H.armT)H.amp=ESC.A;} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings; at load the balance is already swinging as they make it */
     balApply(g('bal')||'');   /* bal=...: the balance's weights and screws (balStr) */
-    const ed=g('edges')!=='0',shd=g('shadows')==='1';   /* Edges is on by default, Shadows off: the hash says edges=0 or shadows=1 only against that */
+    const ed=g('edges')!=='0',shd=g('shadows')==='1',mg=g('merge')!=='0';   /* Edges and Performance mode are on by default, Shadows off: the hash says edges=0, merge=0 or shadows=1 only against that */
     const dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
-    if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
+    if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
     const tr=parseInt(g('tour'));
     if(tr>=1&&tr<=TOUR.length)tourGo(tr-1);
     else{if(st.tour>=0)tourEnd();

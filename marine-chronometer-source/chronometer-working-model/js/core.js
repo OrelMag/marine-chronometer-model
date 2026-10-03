@@ -292,10 +292,10 @@ function drawMerge(scene,meshes){
   for(const[k,b]of B)if(b.list.length<2)B.delete(k);
   const relist=()=>{all.length=0;all.push(...meshes);for(const b of B.values())if(b.mesh)all.push(b.mesh);};
   return{all,root,batches:B,stats:()=>{let on=0,pcs=0;for(const b of B.values())if(b.on){on++;pcs+=b.list.length;}return{batches:B.size,on,pieces:pcs};},
-    sync(){let re=false;
+    sync(en=true){let re=false;   /* en false (Performance mode off): no batch drawn merged, every piece drawing itself; the copies are kept for when it comes back on */
       for(const b of B.values()){let gone=false;for(const o of b.list)if(moved(o)){o.userData.dm=null;lay(o,false);gone=true;}
         if(gone){b.list=b.list.filter(o=>o.userData.dm);b.dirty=true;}
-        const on=b.list.length>1&&b.list.every(o=>o.visible&&o.material===b.mat);
+        const on=en&&b.list.length>1&&b.list.every(o=>o.visible&&o.material===b.mat);
         if(on&&b.dirty){if(b.mesh){root.remove(b.mesh);b.mesh.geometry.dispose();}
           const c=b.mesh=new THREE.Mesh(mergeIdx(b.list),b.mat),u=c.userData;c.matrixAutoUpdate=false;c.receiveShadow=true;c.castShadow=false;c.name='merged '+b.list[0].userData.part;
           Object.assign(u,{merged:true,part:b.list[0].userData.part,inkBox:!!b.list[0].userData.inkBox,inkIdM:0,inkId:inkHash(b.list[0].userData.part),mat0:b.mat});root.add(c);b.dirty=false;re=true;}
