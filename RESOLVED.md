@@ -321,14 +321,14 @@ Contents:
   the photograph take `PHOTO_TURN`, radii `PHOTO_K`. `6d1bd37`
 - **The minute wheel's stud 10.5 mm out** (Review-results.md, Elsewhere 24): from
   the 404 px dial-side photograph mapped through anchors that have since moved; the
-  video at the plate's scale has 11.3. Now 11.3, the motion work's modules from it. `HASH`
+  video at the plate's scale has 11.3. Now 11.3, the motion work's modules from it. `162dfe5`
 - **The Hamilton dial's print 9 % too large** (Review-results.md, Elsewhere 24): its
   minute track at r 43.0-45.4, so with the fourth at its measured 21.6 the seconds
   sub-dial couldn't meet it at 6 as on the photographed dial. Measured on that
   photograph face-on, scaled by the seconds' centre: the track r 40.4-42.2, the seconds
   track 17.9, the UP-DOWN ring 11.2, the opening 45.9 (the bezel's own). Now printed so,
   the hands to the photograph's lengths (and the essay's copy of them). Keep: the dial
-  95 mm; `r1`, `r2`, `ru` in `dialCanvas` in mm over `DIAL_R`. `HASH`
+  95 mm; `r1`, `r2`, `ru` in `dialCanvas` in mm over `DIAL_R`. `162dfe5`
 
 ## Winding and maintaining work
 
@@ -985,7 +985,7 @@ Contents:
   scale). Now so, its screws' heads and the settings in counterbores at its top, the
   third and fourth arbors' lower pivots up to the settings. Keep: `LT_H`; its end 9.2
   past the fourth, clear of pillar 1's dial-side screw (the video's 10.3 would stand on
-  it at the model's 170.8 deg). `HASH`
+  it at the model's 170.8 deg). `162dfe5`
 - **The escape upper bridge's ends on the train bridge's face, its cap's window a plain
   hole, the caps' screws small** (Review-results.md, Elsewhere 17). The ends now lie in
   seats sunk `SEAT_D` (`TB_SEAT`, `tools/train_bridge.py`), the bar and the escape
@@ -995,7 +995,7 @@ Contents:
   the main bridge's opening (`TB_KEY`) takes the seats with it, the screw and pin holes
   only in the seats' floors (a hole inside a hole breaks the extrusion); the caps'
   seat layers tagged with the cap's line (bom.py reads the endstone as set in what
-  holds it). `HASH`
+  holds it). `162dfe5`
 
 ## Setup, case and gimbals
 
