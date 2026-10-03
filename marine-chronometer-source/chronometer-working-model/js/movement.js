@@ -353,13 +353,12 @@ function buildMovement(M){
   /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge, where the restoration video has them (13:49.5, measured face-on): at the
      slab's end on the 3 o'clock side (outside every wheel, over the access hole in the pillar plate), and at the fourth end beyond the train-blocking screw (Fig. 30's order); lbp: its
      steady pins, one in each lug (tools/lower_bridge.py) */
-  /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff, at -30 deg, where the
-     bridge's notch round the fusee leaves it 2.8 mm of metal; at -60 deg it would stand in the notch */
   const ARM_S=0.8,ARM_U=-120*D2R,ARM_BOW=0.25,TBS_R=1.05,TB_CB=2.65;   /* ARM_U: the locking arm's swing from locked to unlocked, in the plan (x toward z) */   /* TB_CB: the train bridge's counterbore for its third screw (r, 23:30) */
   /* balance locking arm: its finger (S.armF) stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (at the arm's end,
      180 - BETA with the balance at rest), 0.02 clear of it; the arm turns on its screw (S.arm) outside the balance's sweep, back over the screw 120 deg (ARM_U) to its stop pin (42300, pressed into the train bridge): turned 90 deg
-     the other way, out from the staff, it would reach the cock and the second train pillar's screw head, which the photographed group's move brought beside it (estimated:
-     Fig. 9 shows the arm, not which way it turns). Fig. 9 draws it beside the cock's foot and a large slotted screw. Since the escape arbor's move (2 October 2026) turned the balance's
+     the other way, out from the staff, it would reach the cock and the second train pillar's screw head, which the photographed group's move brought beside it. Fig. 9 draws
+     the arm turning the other way, out from the balance (its hatched arrow and the dashed unlocked arm), which the pillar screw's head (1.6 proud, 4 mm out) and the cock's foot leave
+     no room for here (Review-results.md, BOM comparison, still open 9). Fig. 9 draws it beside the cock's foot, the barrel bridge's horn and its large slotted screw. Since the escape arbor's move (2 October 2026) turned the balance's
      rest 11.8 deg, its screw stands clear of the cock's foot: 45 deg round from the weight since the weights were put at the arm's ends (3 October 2026; 30 before, 18 before the
      escape arbor's move); turned 12 deg with its weight, the screw would stand in the cock's foot, and on the weight's other side too. The arm, locked, runs between the cock's
      foot and the escape upper bridge: 0.8 wide and bowed 0.25 away from the staff (ARM_BOW; 1.0 and 0.6 until then) it clears both, by little (fine.py --hold) */
@@ -420,7 +419,13 @@ function buildMovement(M){
     const circ=(r,n)=>[...Array(n).keys()].map(k=>{const a=k/n*TAU;return[r*Math.cos(a),r*Math.sin(a)];}),inner=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rin(a)*Math.cos(a),rin(a)*Math.sin(a)];});
     R.flange=hn(mesh(pp,polyGeo(circ(PP_R,160),MR_FL-0.01,[{pts:inner},...S.ring.map(q=>hT(...q,PSR))]),M.brass,0,0.01,0),'42057');   /* the band, with its tabs */
     const rel=a=>{const t=Math.atan2(Math.sin(a+Math.PI/2),Math.cos(a+Math.PI/2))/D2R,e=Math.min(t+11,10-t);return MR_RI+0.4*smooth(clamp(e/1.5,0,1));},relief=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rel(a)*Math.cos(a),rel(a)*Math.sin(a)];});   /* the relief cut into the bore round the 12, 11 deg back to 10 on, out to r 39.4 (16.5 from the indicator's stud), where the indicator wheel's teeth pass (KLUwI2UUCMQ 40:08: certain it is there, its size rough) */
-    hn(mesh(pp,polyGeo(circ(MR_RO,160),MR_Y-MR_FL-1.0,[{pts:circ(MR_RI,160)},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_FL,0),'42057',{sub:1});hn(mesh(pp,polyGeo(circ(MR_RO,160),1.0,[{pts:relief},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_Y-1.0,0),'42057',{sub:1});   /* the flange, bored for the dial's feet; the relief a step in its dial-side face, 1.0 deep (40:08 shows a recessed shelf; its depth estimated) */
+    /* the dial take-off slot (Fig. 21): a notch in the flange's rim under the dial's edge, where a blade goes in to lift the dial off its seat (restoration video 8:46-8:49).
+       On the ring face-on (9:03), 167 deg round from 12 seen from the dial (from the indicator's stud and the relief; the fusee's bushing and the fourth's jewel read as
+       References/VIDEOS.md has them), about 1.4 wide and 2.2 in from the rim; its floor brass, so cut through the flange's top layer only (1.0 deep, estimated) */
+    const TO_A=77*D2R,TO_W=1.4,TO_R=MR_RO-2.2,toH=Math.asin(TO_W/2/MR_RO),takeOff=[],ux=Math.cos(TO_A),uz=Math.sin(TO_A);
+    for(let k=0;k<160;k++){const a=k/160*TAU,d=Math.atan2(Math.sin(a-TO_A),Math.cos(a-TO_A));if(Math.abs(d)>toH)takeOff.push([MR_RO*Math.cos(a),MR_RO*Math.sin(a)]);
+      if(k/160*TAU<=TO_A&&(k+1)/160*TAU>TO_A)for(const[r,s]of[[MR_RO*Math.cos(toH),-1],[TO_R,-1],[TO_R,1],[MR_RO*Math.cos(toH),1]])takeOff.push([r*ux-s*TO_W/2*uz,r*uz+s*TO_W/2*ux]);}
+    hn(mesh(pp,polyGeo(circ(MR_RO,160),MR_Y-MR_FL-1.0,[{pts:circ(MR_RI,160)},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_FL,0),'42057',{sub:1});hn(mesh(pp,polyGeo(takeOff,1.0,[{pts:relief},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_Y-1.0,0),'42057',{sub:1});   /* the flange, bored for the dial's feet; the relief a step in its dial-side face, 1.0 deep (40:08 shows a recessed shelf; its depth estimated) */
     /* the alignment pin, "protruding beyond the movement" into its slot in the edge of the case (Sec. III): pressed into the flange's edge, at 12 o'clock (estimated) */
     const ap=hn(mesh(pp,cylY(0.5,0.8,12),M.steel,0,(MR_FL+MR_Y)/2,-(MR_RO+0.4)),'42057',{sub:1});ap.rotation.x=Math.PI/2; }
   for(const q of S.ring)hn(screw(pp,...q,y0,PSR,1.6,PP_T+1.8),'42055.ring');   /* through the plate into the band's tab */
@@ -483,7 +488,7 @@ function buildMovement(M){
      washer (42251) outside the balance's sweep. Locked, the finger at its end stands on the counterclockwise side of a timing weight, which the hairspring holds lightly
      against it, and the vernier's screw outside the rim, 15 deg round (hole 2), stops the balance the other way ("place the locking arm over the timing weight", Sec. X); unlocked, it lies turned out
      against its stop pin (42300), clear of everything the balance carries. Fig. 9 shows the arm curved, its screw outside the rim and its end at a timing weight; the arm's
-     sizes, the screw's place and the finger's height (1.65 mm, to 0.76 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
+     sizes, the screw's place and the finger's height (2.4 mm, to 0.56 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
   { const ap=part('lockArm',-62),dA=sub(S.armF,S.arm),AL=Math.hypot(...dA),dL=unit(dA),AE=AL+0.45;R.armL=Math.atan2(-dL[1],dL[0]);
     const f9=new THREE.Group();ap.add(f9);R.armF9=f9;   /* the manual's arm, its screw, washer and stop pin: hidden together when the Navy's Y-arm is fitted instead (below) */
     R.armU=-ARM_U;R.arm=new THREE.Group();R.arm.position.set(S.arm[0],TB_T,S.arm[1]);f9.add(R.arm);R.arm.rotation.y=R.armL+R.armU;
@@ -497,12 +502,14 @@ function buildMovement(M){
        packing rings (black on 2E11795). Its bore is closed by a nickel plunger head with a hex socket screw. Under it runs a lever of spring steel: its root is screwed
        to a stud under a large shouldered screw near the bridge's rim, and it runs straight under the cap, through a slot in the seal's body, to a curved crossbar over
        the balance. The crossbar is an arch over the cock's end, its legs coming straight down, and from the foot of each, level with the staff, an arm straight
-       out to a round eye with a pin over the rim, symmetric about the stem (a sketch of the shape, 3 October 2026; Delaney's photograph close to it, its eyes level with the staff,
-       its arch's top 9.7 mm out, the sketch's taller). The outline is the boundary of bars of those widths joined with round fillets (sdfOutline), cut as one plate. The pivot screw and
+       out to a round eye with a pin over the rim, symmetric about the stem, as all four movements photographed with it have it (2E11795, Delaney's, the omegaforums one and 2E8489 in the
+       restoration video, 5:10). Traced on Delaney's photograph (straight above, scaled by the eyes 27.8 apart): the arch round the staff about 7.9 out, its top 8.3 out on
+       the bar's centre line, the arms nearly level with the staff (Review-results.md, open findings 13; until 4 October 2026 straight legs 4.5 long under the arch, its top
+       12.3 out, after a sketch). The outline is the boundary of bars of those widths joined with round fillets (sdfOutline), cut as one plate. The pivot screw and
        the eyes land within about 1 mm of where 2E11795's and Delaney's photographs put them, registered by the balance rim (on 2E11795 the cock's edge hides the
-       left end). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is a guess: the cap, pressed from
-       outside the case, pushes the plunger down on the lever, which bends about its screwed root (drawn as a turn about the pivot) until the pins bear on the rim, as
-       the wedges did (Sec. III). Estimated: the heights, the lever's thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the
+       left end). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is read from the sources that describe
+       it (Review-results.md, 13): the plunger, screwed down by its hex socket with an Allen key through the bottom of the case, presses the lever down, which bends about
+       its screwed root (drawn as a turn about the pivot) until the pins bear on the rim, as the wedges did (Sec. III); screwed up, the lever springs back. Estimated: the heights, the lever's thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the
        flange's bite round the setup cover, and the screws' threads (not drawn: the bridge is the manual's, untapped there). R.navyLock(a): a 0 free, 1 locked. In the
        Exploded view it lifts 22 mm past the locking arm's part, to -84: above the barrel bridge it stands on (-72) and the balance it reaches over (-80), and under the
        hairspring and the cock (-88, -96) */
@@ -512,9 +519,9 @@ function buildMovement(M){
        screw with a shouldered stud (hidden screw R.navyBB, below); the lever's end bent to it under the cap, as Delaney's photograph shows it bent there */
     const NPV0=[-9.61,-30.95],iP=S.bb.reduce((b,q,i)=>Math.hypot(...sub(q,NPV0))<Math.hypot(...sub(S.bb[b],NPV0))?i:b,0),NPV=S.bb[iP];R.navyBB=iP;
     /* the crossbar, symmetric about the line from the staff to the post (aa; pp across it): an arch over the cock's end, its legs WA out (its inner edge 6.7 from the
-       staff, clear of the hairspring's 5.5), straight for HL then round over in a half circle to its top HA out; from each leg's foot, level with the staff, an arm straight out to an
+       staff, clear of the hairspring's 5.5), straight for HL (0.5, Delaney's photograph) then round over in a half circle to its top HA out (8.3); from each leg's foot, level with the staff, an arm straight out to an
        eye at EA, its pin over the rim (13.38-14.5). Widths from Delaney's photograph: the stem 2.9, the lever past the cap 2.5, the bar 2.2, the eyes r 1.4 */
-    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=7.8,HL=4.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
+    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=7.8,HL=0.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
     /* the seal: body, flange and screws as the fusee's (below), its chamber closed underneath, slotted through both sides at the lever's height along the lever
        (toward the crossbar and toward the pivot) */
     const SW=2.0,gaps=[loc(0,HA),NPV].map(q=>{const d=sub(q,NP);return Math.atan2(d[1],d[0]);}).sort((a,b)=>a-b);
@@ -1218,9 +1225,11 @@ function makeFusee(M,c){
   const lay=(pts,holes)=>mesh(sbR,polyGeo(pts,0.5,holes||[]),M.gilt,0,yT-0.5,0);
   lay(subtractCircle(discClip(capR,[[zHi,0,1]],128),[0,0],GRV),[hT(0,7.0*k,0.55)]);lay(discClip(capR,[[zLo,0,-1]],128),[hT(0,-7.0*k,0.55)]);   /* rim, either side of the slot, tapped for the top plate's screws */
   lay(discClip(HUB,[[zHi,0,1]],96),[[0,0,1.02]]);   /* hub round the arbor; the spring's groove round it (r HUB-GRV), cut open by the slot */
-  hn(mesh(sbR,discGeo(capR-0.2,0.6,[[0,0,1.02],hC(0,7.0*k,0.55),hC(0,-7.0*k,0.55)]),M.gilt,0,yT-1.1,0),'42008');if(c.screw)for(const z of[7.0*k,-7.0*k])hn(c.screw(sbR,0,z,yT-1.1,0.55,0.3,0.6+0.5),'27760.fu');   /* its screws opposite each other at r 7.0 k (restoration video 13:30, face-on) */
-  hn(cylBetween(fz,2.9*k,yT-1.1,yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, standing on the top plate (video 13:30, 17:23: r 2.9 k; its height estimated). Fig. 28 draws a raised hub through a
-     large hole in the plate, beside which the stop-bar's slot would run; the bar's place under the plate isn't seen, so the collar starts at the plate */
+  hn(mesh(sbR,discGeo(capR-0.2,0.6,[[0,0,3.0*k+0.05],hC(0,7.0*k,0.55),hC(0,-7.0*k,0.55)]),M.gilt,0,yT-1.1,0),'42008');if(c.screw)for(const z of[7.0*k,-7.0*k])hn(c.screw(sbR,0,z,yT-1.1,0.55,0.3,0.6+0.5),'27760.fu');   /* its screws opposite each other at r 7.0 k (restoration video 13:30, face-on) */
+  hn(cylBetween(fz,3.0*k,yT-0.5,yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, from the hub up through the top plate's hole (its r 3.0 k + 0.05) and 1.0 past it, as Fig. 28 draws
+     the hub rising through a large hole: the plate comes off over it, the collar staying on the arbor (restoration video 19:58-20:00), and stands on the hub with the plate off
+     (20:20); r 0.326 of the plate's on 13:30, face-on. Its height over the plate estimated (19:45 reads 1.5-2 mm, oblique). It stays inside the slot's edge (zHi) and
+     0.12 over the stop-bar spring in the groove under it */
   const stopBar=hn(new THREE.Group(),'42024');stopBar.position.y=yT-0.25;sbR.add(stopBar);   /* in the slot, 0.025 off the top face and 0.025 under the plate */
   mesh(stopBar,new THREE.BoxGeometry(xF0-xB0,0.45,2*BW),M.steel,(xF0+xB0)/2,0,sbZ);   /* the bar (first child: tools/maintaining.py measures it) */
   { const s=new THREE.Shape(),yb0=0.225,Y=y=>y-(yT-0.25);[[xB0+0.5,yb0],[xB0,yb0],[xB0,Y(yNt)],[xN,Y(yNt)],[xN,Y(yNb)],[xN+0.5,Y(yNb)],[xN+0.5,Y(yNt)+0.1],[xB0+0.5,Y(yNt)+0.1]].forEach(([x,y],i)=>i?s.lineTo(x,y):s.moveTo(x,y));

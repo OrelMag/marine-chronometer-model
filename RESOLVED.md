@@ -599,6 +599,12 @@ Contents:
   that holds the winding ratchet (18:20), 0.4 tall so it clears the sustaining ratchet
   and its pawl by 0.1 (fine.py found 0.75 in both); the seal's flange its shallow bite
   between the screws (6:29). `12badbb`
+- **The fusee's top plate holed only for the arbor, its collar sitting on it**
+  (Review-results.md, the fusee assembly 3; Fig. 28): on the restoration video the
+  plate comes off over the collar, which stays on the arbor (19:58-20:00), so the
+  collar, r 3.0, now rises from the hub through a hole of r 3.05 and 1.0 past it.
+  Keep: the collar inside the stop-bar slot's edge (zHi) and clear of the spring in
+  the groove under it. `d135f96`
 - **Sustaining pawl's spring invented, and its arbor 2.7 mm round from the
   real one.** The spring was a collet near the arbor's top with a wire across
   to a steady pin in the train bridge; C Spinner's video (35:37.5-36:29) shows a
@@ -984,6 +990,17 @@ Contents:
   6.6 mm or more from the staff (the hairspring); both pins over the rim; the flange bitten round the setup cover
   (`fine.py --eval "__mv.userData.stop('navy')"`, with and without `--hold`;
   `exploded.py` and `audit.py` take the same `--eval`). `17fa7d4`, `f7bfddd`
+- **The Navy's balance brake's arch too tall, and pressed instead of screwed**
+  (Plates, bridges, screws and arbors; Variants, Balance stop). The crossbar's
+  arch stood on straight legs 4.5 mm long, its top 12.3 mm from the staff (after a
+  sketch). Traced on Delaney No. 8854's photograph from straight above, the arch
+  runs about 7.9 mm round the staff with its top 8.3 out and the arms nearly level
+  with the staff; 2E11795, the omegaforums movement and 2E8489 (the restoration
+  video) have the same shape. The legs are now 0.5. Two descriptions of the stop
+  have it screwed down with an Allen key through the case's bottom, which fits
+  the hex socket in its plunger: the text now says so, not a pressed cap. Keep: the
+  arch's top about 8.3 mm out, its inner edge 6.6 mm or more from the staff (the
+  hairspring); the arms out to the eyes nearly level with the staff. `f9ae355`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
@@ -1045,6 +1062,11 @@ Contents:
   only in the seats' floors (a hole inside a hole breaks the extrusion); the caps'
   seat layers tagged with the cap's line (bom.py reads the endstone as set in what
   holds it). `162dfe5`
+- **No dial take-off slot** (Fig. 21; Review-results.md, Figs. 21, 22, 28 and 29):
+  the mounting ring's flange was a plain circle. Now a notch in its rim, 167° from
+  12, 1.4 wide and 2.2 in, through the flange's top layer, where the restoration
+  video lifts the dial (8:46, 9:03). Keep: it under the dial's edge and clear of
+  the dial screws' holes. `836ad13`
 - **The plate's opening under the lower train bridge a small round hole**: r 6 about
   the third, estimated, and the fourth's pivot in a plain hole r 1.2. Measured on 34:30 and 40:08 it is a keyhole: a circle r 11.3 about the third, a lobe r 4.85 toward the
   balance and a bore r 3.2 about the fourth (`PP_KEY`, drawn by `lobedCircle`; `discGeo` now takes
