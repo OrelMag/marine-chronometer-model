@@ -4,6 +4,14 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 1.19.00 · 2026-10-03
+- The going train laid out as a restoration video of a real Model 21 measures it: the third, fourth and escape wheels, the pillars and the wind indicator
+- The escape wheel's upper bridge rebuilt with its boss, flat-sided endstone cap and flush screws, its ends sunk in seats in the train bridge
+- The lower train bridge under the dial at its real size: a thick steel bar, its screws and jewel settings sunk in counterbores
+- The dial printed in the proportions of a photographed Model 21 dial: the seconds dial meets the minute track at 6, and the hands match
+- The detent's support block at the manual's length, and the train-blocking screw where the video shows it
+- The fusee's large end with its rim, the dust seal's flange, the setup click and the endstone caps redrawn after a real Model 21
+
 ## 1.18.00 · 2026-10-03
 - While winding, see the sustaining spring carry the load: the load path in colour, a close-up of the spring with how long it can still drive the train, and an option to exaggerate its motion
 - New in the essay's Winding section: the maintaining power, with the spring relaxing as the key turns
