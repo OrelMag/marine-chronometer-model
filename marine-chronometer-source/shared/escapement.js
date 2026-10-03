@@ -10,12 +10,13 @@ function makeEsc(o={}){
   const TAU=Math.PI*2,D2R=Math.PI/180,ES=13.16/2;
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side at the model's settings (ESC.A, the running amplitude, follows other settings: below).
      TF: the balance's free run-down (s, estimated); MU: steel on sapphire; fD, fP: the detent and trip springs' share of the impulse's work at the model's settings (estimated). EX: the centre distance (9.40 mm; the model passes the one in its L).
+     HS: the hairspring's own isochronism, s a day gained for each 10 deg the swing is above A (0: isochronous, the model's default; the adjuster's bench sets it).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
      rT: passing-spring tip; rd: discharge jewel reach; dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.286,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:269.6,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,TF:25,MU:0.15,fD:0.03,fP:0.005};
+  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.286,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:269.6,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,TF:25,MU:0.15,fD:0.03,fP:0.005,HS:0};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,G=c.G,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
@@ -125,13 +126,24 @@ function makeEsc(o={}){
   /* phase gained an oscillation (rad) at amplitude a: the impulse pushes with the swing (+θ), the unlocking against it (-θ), the trip spring against the return (+θ) */
   const airy=(g,s,a)=>{let q=0;for(const[th,e]of g)if(Math.abs(th)<a)q+=s*e*th/Math.sqrt(a*a-th*th);return-q/(a*a);};
   const parts=(cl,a)=>({imp:cl.w*airy(wk.I,1,a),draw:cl.w*airy(wk.R,-1,a),detent:cl.Kd*airy(wk.Dt,-1,a),trip:cl.Kp*airy(wk.Tp,1,a)}),sumP=p=>p.imp+p.draw+p.detent+p.trip,day=x=>86400*x/TAU;
-  let run;
+  let run,CL=null,PH0=0;
   if(isRef){let cl=null,ph=0,br=null;if(wk){const w=Math.PI*A0*A0/Q/(wk.EI*(1-c.fD-c.fP)-wk.ER);cl={w,Kd:wk.ED>0?c.fD*w*wk.EI/wk.ED:0,Kp:wk.ET>0?c.fP*w*wk.EI/wk.ET:0};br=parts(cl,A0);ph=sumP(br);}
-    RF[rk]={cl,ph};run={A:A0,rate:0,own:day(ph),parts:br,cl};}
+    RF[rk]={cl,ph};CL=cl;PH0=ph;run={A:A0,rate:0,own:day(ph),parts:br,cl};}
   else{const R0=RF[rk]||(makeEsc(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl,Wn=wk&&cl?cl.w*(wk.EI-wk.ER)-cl.Kd*wk.ED-cl.Kp*wk.ET:0,a=Wn>0?Math.sqrt(Q*Wn/Math.PI):0,br=a>=AMIN?parts(cl,a):null;
-    run={A:a,rate:br?day(sumP(br)-R0.ph):NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
+    CL=cl;PH0=R0.ph;run={A:a,rate:br?day(sumP(br)-R0.ph)+c.HS*(a-A0)/D2R/10:NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
   if(wk&&run.cl){const cl=run.cl;Object.assign(run,{Q,Wi:cl.w*wk.EI,fu:(cl.w*wk.ER+cl.Kd*wk.ED+cl.Kp*wk.ET)/(cl.w*wk.EI),land:wk.tl,drive:wk.EI});}
   const A=run.A;
+  /* the balance's equation of motion, averaged over a swing (the model's clock keeps the phase; this gives the amplitude and the rate). The escape wheel's torque is s times
+     the model's (1: the mainspring through the fusee, as calibrated): the impulse's work and the locking jewel's draw go with it, the detent and trip springs' don't. ampAt(s):
+     the amplitude it settles at, √(Q Wn/π) as above. In ½A² (units of k) a swing gains Wn and loses πA²/Q, so A² relaxes to ampAt(s)² as exp(-2t/TF), exactly for a steady
+     torque: the caller steps it so. rateAt(a, s): the escapement's rate at amplitude a, s a day against the reference at its own amplitude (Airy, as run.rate); NaN under AMIN.
+     The rate's change with amplitude is the escapement's isochronism error, plus the hairspring's own, HS s a day for each 10 deg above A: 0 by default, the spring taken as
+     isochronous (Hamilton's Elinvar spring, held without bending at its ends, "minimum isochronal error", Sec. II); an adjuster can set the spring against the escapement */
+  const wnAt=s=>wk&&CL?s*CL.w*(wk.EI-wk.ER)-CL.Kd*wk.ED-CL.Kp*wk.ET:0,ampAt=s=>{const w=wnAt(s);return w>0?Math.sqrt(Q*w/Math.PI):0;};
+  /* TRIP: a swing past a full turn and the angle where the discharge jewel meets the trip spring brings the jewel round to unlock the detent a second time in the swing: the
+     wheel trips, escaping an extra tooth (app.js's jolt) */
+  const TRIP=a0===null?Infinity:TAU+a0;
+  const rateAt=(a,s=1)=>{if(!wk||!CL||!(a>=AMIN))return NaN;const p=parts(CL,a);return day(s*(p.imp+p.draw)+p.detent+p.trip-PH0)+c.HS*(a-A0)/D2R/10;};
   /* the manual's adjustment figures (Sec. VIII, Ops. 76, 84-88, 97), measured with its own definitions: printed by chronometer-working-model/tools/escapement.js, shown
      live by the model's adjuster's bench. runs: false, with why, when the escapement would not run at these settings (its other figures are then NaN where they can't be had) */
   let meas=null;
@@ -163,6 +175,6 @@ function makeEsc(o={}){
       {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,run,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,T,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};

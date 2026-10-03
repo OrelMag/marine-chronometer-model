@@ -81,9 +81,12 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - Setting, Stop to set: the manual's other way (Sec. III, "Setting When Stopped"), to the second. The button is the next step: Stop to set locks the balance with the locking arm (the manual stops the balance by hand, the movement out of its case), Unlock arm takes the arm off with the balance at rest, and Twist to start gives the twist. Meanwhile the Time section counts down: to the moment the master overtakes a fast dial, or to when the second hands agree on a slow one, after which the minutes are set forward with the key. The wheel stands locked, so the second hand is on a half second, and what is left after the start is the moment of the twist (and the fraction of a second the balance takes to pick up).
 - Winding: Since winding and Wind, and Wind with the key, which turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 56¼ h of chain), with the plates see-through and the winding stop kept solid. For the last turn the camera closes in on the fusee's top: the chain winds over the stop-bar's nose, and the bar's far end comes round to the winding stop.
   Three options under it act whenever the model winds (the key, Wind, or the walkthrough's Wind it now). **Load path in colour** (on) tints the parts carrying the train's load (`lpCol`, `tintOf` in `app.js`, from the `lp` tags `movement.js` sets): while winding the sustaining spring, which drives (rose), and the sustaining ratchet and pawl, which hold (teal); for 2 s after the key lets go, the mainspring's whole path in rose (barrel, chain, fusee, winding ratchet and pawls, sustaining ratchet, spring, fusee wheel). **Close-up of the sustaining spring** (on) draws the fusee wheel's maintaining work again in a box at the stage's lower left (`cuDraw`): the same renderer and canvas (a scissored viewport, layer 1 for its parts and the lights, so the page keeps to two WebGL contexts), seen from the train bridge's side in the movement's own frame, the sustaining ratchet drawn at 45% so the spring under it shows; under it, the spring's drive left, 10 min less `R.ssD` of `R.SMAX`. **Exaggerate the spring's motion** (off) draws the spring relaxing 20 times as far (`ssX` in `update()`, up to `SMAX`) and eases it back over 0.4 s at the catch; the working end's pin moves round the ratchet with it, while the ratchet, the pawls and the time left stay the real ones. At 1× a wind from run down takes about 17 s of model time, about 3% of the spring's travel, too little to see without it. Under `?qa`, `__lp()` gives the phase (`ph` 'w' winding, 'r' the 2 s after, '' otherwise) and whether the close-up shows.
-- Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (1,140 g·mm², Table II's). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.178 and 0.151 mm. Below them, a screw pair stands in a hole (3–12, numbered round each half from the arm's end as the numbered balance block of Fig. 99 numbers them) and takes any of Table II's five head heights (0.040–0.100 in) and the washers of Table III (0.002–0.010 in) under its heads, as Op. 3 changes them; it can be moved to another empty hole (Op. 8), taken out, or another pair put in (up to all ten holes): `R.screws(pairs)` sets them and `R.timing` counts their masses. The panel puts the manual's figure for the change (Tables II and III, for pairs) beside the model's, and for a pair moved along the rim Table IV's change in the rate at 90 °F against 55 °F (`R.T4`); a temperature slider (40–100 °F) runs the clock with that change, linear about 72.5 °F, the standard set taken as compensated. Zero puts back the weights' mid-travel, the standard screws and 72.5 °F. The panel's state is kept in the link (`bal=`, as `esc=` keeps the bench's). The model clock `tSim` then runs √(I₀/I)·`escK` as fast as real time (`escK`, the escapement's share, is 1 at the model's settings and set on the Adjuster's bench), so the hands gain or lose; the panel shows the daily rate, the escapement's share of it when there is one, and what the hands have gained since the weights, screws or escapement were changed or the hands set.
-- Stopping and starting (and Twist to start under Winding): the balance locking arm (Fig. 9) and the train-blocking screw (Sec. II), and the twist that starts a stopped chronometer. See "Stopping and starting" under How the timing works.
+- Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (1,140 g·mm², Table II's). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.178 and 0.151 mm. Below them, a screw pair stands in a hole (3–12, numbered round each half from the arm's end as the numbered balance block of Fig. 99 numbers them) and takes any of Table II's five head heights (0.040–0.100 in) and the washers of Table III (0.002–0.010 in) under its heads, as Op. 3 changes them; it can be moved to another empty hole (Op. 8), taken out, or another pair put in (up to all ten holes): `R.screws(pairs)` sets them and `R.timing` counts their masses. The panel puts the manual's figure for the change (Tables II and III, for pairs) beside the model's, and for a pair moved along the rim Table IV's change in the rate at 90 °F against 55 °F (`R.T4`); a temperature slider (40–100 °F) runs the clock with that change, linear about 72.5 °F, the standard set taken as compensated, and the balance's own curvature on top (`MTE` in `core.js`: the Model 21's from the factory test card of No. 3390, the split balance's illustrative); a chart below it plots the rate from 40 to 100 °F for the balance shown, the other dashed, and gives the Navy test's three temperature compensation figures against their limits. With the split balance shown, its rim curls with the temperature, drawn 20 times as far (`R.balCurl`). Zero puts back the weights' mid-travel, the standard screws and 72.5 °F. The panel's state is kept in the link (`bal=`, as `esc=` keeps the bench's). The model clock `tSim` then runs `rateW`·`escK` as fast as real time (`rateW`: √(I₀/I) and the temperature; `escK`, the escapement's share at the balance's swing now and the drive's torque, `ESC.rateAt`: 1 at the model's settings and 255°), so the hands gain or lose; the panel shows the daily rate, the escapement's share of it when there is one, and what the hands have gained since the weights, screws or escapement were changed or the hands set.
+- Stopping and starting (and Twist to start under Winding): the balance locking arm (Fig. 9) and the train-blocking screw (Sec. II), and the twist that starts a stopped chronometer. See "Stopping and starting" under How the timing works. Jolt the box knocks it about the balance staff: depending on where the balance is in its swing it sets (stops), trips (the hands jump half a second) or is upset and settles (illustrative; "The balance's dynamics").
+- 30-day performance test: the Navy's test (Sec. IX) run on the model as it stands: six periods of five days at 90, 72½, 55, 55, 72½ and 90 °F, wound at each daily reading, read to 0.01 s; the daily rates per period, and regulation, rating, largest difference, the three temperature compensation figures, recovery and isochronism against the Bureau of Ships' limits, beside the factory card of No. 3390. It is computed again whenever a setting changes (`testCalc` in `app.js`; `__test` with `?qa`).
+- Swing and isochronism: a Mainspring set slider (0–30%, Op. 13, kept in the link as `mset=`) weakens the spring's pull all through its run; and a chart of the balance's swing over the last minute, the rate against the swing at a steady torque, or the swing over a wind with the fusee and, ticked, a going barrel; the swing and the escapement's rate now, the rate's spread over a wind and the manual's isochronism check (Sec. IX). See "The balance's dynamics".
 - Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme, and Reset display puts every Display box back to its default (See-through to the view's own) and shows faded and hidden parts again, leaving the theme. Save writes the view as a PNG; Link copies the page's address with the state in its hash (without clipboard access it is put in the address bar instead).
+- Roll period (Display, under Ship motion): how long the box takes to roll, 0.4–12 s (7 s by default). The case hangs in the gimbals as a pendulum with its own period of about 0.7 s (estimated), so at a ship's period it stays level and near its own it swings with the box ("The balance's dynamics").
 - Gimbals latched (Display) swings the latch lever in through the slot in the gimbal ring to the keeper on the case, bringing ring and case level with the box first; latched, they tilt with the box, as Ship motion then shows. Unticked, the lever swings back along the wall and the gimbals are free. A walkthrough step with ship motion releases them.
 - Tick sound (Time) is on by default: a click at each beat, while the model runs at up to 1×. Browsers start audio only from a user gesture, so the page makes or resumes its audio context on the first click, tap or key press, and it is silent until then.
 - Tinted drawing and Ink drawing (Display; `draw=1` and `draw=ink` in the hash; one at a time) draw the live model as a pen-and-wash drawing, tinted or in ink alone; the tint is laid light (pigment density `INK.wash` 0.75), so the live model reads through it. (The numbers were first those of an overview drawing rendered from the model, the Illustration tab, which the Essay tab replaced.)
@@ -297,7 +300,9 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   the balance is still swinging: the screw raised, or the chronometer wound,
   before the balance has run down. Otherwise it takes Twist to start. The twist
   turns the box sharply and back and sets the balance swinging (160°), and the
-  impulses bring it up to `ESC.A` (`TAU_UP`, 3 s).
+  impulses bring it up to the swing the train's torque gives (`ESC.ampAt`, 255°
+  at the calibrated torque), settling in about 12.5 s (below, The balance's
+  dynamics).
 - **Nothing jumps on restarting.** `H.bOff` and `H.eOff` carry the balance's
   phase and the beat count across, so neither the balance nor the hands jump.
 - **Moving the controls.** The arm and screw move on frame time, not model
@@ -406,9 +411,104 @@ the rate from its own geometry, so the Adjuster's bench changes both (`ESC.A`,
   `fP`).
 - **While the train is held,** the balance swings free: it has no escapement
   error and keeps the weights' rate alone.
-- **Not modelled:** isochronism (the rate's change with amplitude through the
-  hairspring), friction at the impulse, and the recoil in the motion (it counts
-  in the work only).
+- **Isochronism** is the escapement's, its rate at another swing
+  (`ESC.rateAt`, below), plus the hairspring's own, `HS` s a day for each 10°
+  more swing: 0 by default (the spring taken as isochronous), set on the
+  Adjuster's bench's last slider. At −0.1 the spring all but cancels the
+  escapement's loss at a smaller swing (0.00 s a day at 90% of the torque).
+  `tools/escapement.js HS=-0.1` prints it.
+- **Not modelled:** friction at the impulse, and the recoil in the motion (it
+  counts in the work only).
+
+### The balance's dynamics
+
+The balance's equation of motion, averaged over a swing. The model's clock
+still sets the phase (`frac(tSim/0.5)`, so the hands step in half seconds at
+every speed); the equation gives the amplitude and the rate.
+
+- **Amplitude.** The escape wheel's torque is `s` times the one the escapement
+  is calibrated at. The impulse's work and the locking jewel's draw scale with
+  it; the detent and trip springs' work doesn't. In ½A², in units of the
+  hairspring's stiffness, a swing gains that work and loses πA²/Q. So A²
+  relaxes to `ESC.ampAt(s)²` as exp(−2t/TF), exactly for a steady torque.
+  `ampStep` steps it so, at any speed. The swing settles in TF/2, 12.5 s.
+  Free, with no impulse, the swing falls as exp(−t/TF), as before.
+- **The drive** (`driveNow` in `app.js`). Running, the mainspring through the
+  fusee: `R.fs.torque`, 1 at 12 h from full wind, the middle of a day's
+  running. While the key turns, the sustaining spring alone drives: 0.8 of
+  that when loaded (estimated), falling linearly to nothing as it relaxes over
+  its 10 minutes (`R.ssD` of `R.SMAX`). So the swing dips while winding (227°
+  at the spring's full load) and comes back when the key lets go. Run down,
+  there is no drive.
+- **The spring's pull** (`makeFusee`'s `pull`, `pullB`, `torque`;
+  illustrative). The profile evens out exactly a pull falling in step with the
+  barrel's turns, from 1 to rmin/rmax. The model's spring is that pull made 3%
+  steeper at each end, as a real spring's is where its coils crowd the arbor
+  fully wound and near run down. The torque on the fusee wheel then keeps a
+  ±3% residual. A going barrel with the same spring (`pullB`, its pull falling
+  evenly with time, geared to match at 28 h) would vary 2:1.
+- **Rate against swing** (`ESC.rateAt(a, s)`): Airy's sum over the impulse,
+  the unlocking and the springs at amplitude a, against the reference.
+  A smaller swing feels the escapement's pushes more:
+
+  | Swing | Torque | Rate |
+  |---|---|---|
+  | 247.5° (1⅜ turns) | 94% | −0.07 s a day |
+  | 255° | 100% | 0 |
+  | 270° (1½ turns) | 112% | +0.13 s a day |
+
+  Each frame, `escK = 1 + ESC.rateAt(H.amp, drive)/86400` while the train
+  runs, so the dip while winding and a jolt show in the rate book.
+- **Over a wind.** With the fusee the rate stays within −0.05 to +0.02 s a day
+  from full wind to run down; with a going barrel, −0.76 to +0.33. The manual's
+  isochronism check (Sec. IX: the 12-hour rate against half the 24-hour rate
+  at 72½ °F, wound at the start; tolerance 0.50 s, the factory test card of
+  No. 3390 reads 0.00) comes to 0.00 s with the fusee and +0.03 s with a
+  going barrel. `tools/escapement.js` prints the rate at 1⅜ and 1½ turns.
+- **The mainspring's set** (`MSET`; Op. 13, "Check condition and set of
+  mainspring"). A spring that has taken a set pulls less all through its run;
+  the drive is scaled by 1 − set, so the fusee keeps it level but lower. At
+  20% the balance swings 227° and the chronometer loses about 0.3 s a day.
+- **The 30-day performance test** (`testCalc`). Each day's rate is the
+  model's at the period's temperature: √(I₀/I) from the weights and screws,
+  the balance's temperature curve, and the escapement's and hairspring's rate
+  averaged over the 24 hours after winding (wound at each daily reading). The
+  errors are rounded to the comparator's 0.01 s and the rates read from them,
+  as on the card. At the model's settings it passes: regulation 0.07,
+  temperature 0.07, 0.07 and 0.00 (the card of No. 3390: 0.08, 0.06, 0.02),
+  isochronism 0.00; the split balance fails 90 against 72½ °F (1.46, limit
+  0.75), and an eighth of a turn on the timing weights fails regulation. The
+  model has no day-to-day scatter, so rating and recovery come out 0.00 (the
+  card's real chronometer: 0.03 and 0.06).
+- **A jolt** (`jolt` in `app.js`; illustrative). A knock about the staff jerks
+  the balance's speed by 0.6 to 1 of its running top speed, either way at
+  random. From θ and θ′ the balance goes on at A = √(θ² + (θ′/ω)²). Checked
+  under `AMIN`, it sets (stops). Carried past `ESC.TRIP` (a full turn plus the
+  angle where the discharge jewel meets the trip spring, 332.7°), the jewel
+  comes round and unlocks a second time, so the wheel trips: one extra tooth,
+  and the hands jump half a second. The phase is kept, so the train stays on
+  its half second.
+- **Gimbals with inertia** (`gimStep`; illustrative). The case, with the ring
+  about the ring's pivots, hangs as a pendulum below each axis:
+  ψ″ = −ω0²ψ − 2ζω0(ψ′ − φ′), φ the box's angle. The case's own period is
+  0.7 s (estimated: its weight some 15 mm below the pivots, radius of gyration
+  about 45 mm) and ζ is 0.05. At a ship's roll period (7 s by default) the
+  case stays level within a few hundredths of the roll. Near 0.7 s (the Roll
+  period slider) it swings with the box, stopping 25° off it against the ring.
+  A jolt kicks it. `?snap` and reduced motion keep it exactly level, as
+  before.
+- **Temperature** (`MTE` in `core.js`). The balance's own curvature, on top of
+  Table IV's line. The Model 21's balance: the second difference of the
+  factory test card of No. 3390 (Sec. IX, p. 68; period means 90 °F −0.02,
+  72½ +0.06, 55 0.00 s a day), a gain in the middle of 0.07 s a day against
+  both ends. The split balance: the essay's illustrative middle temperature
+  error, compensated near 45 and 90 °F and gaining up to 1.5 s a day between.
+  The rate panel's chart gives the Navy test's three temperature compensation
+  figures against their limits (0.75, 0.75, 1.20 s a day). The split rim curls
+  (`R.balCurl`): a two-layer strip's curvature changes by 1.5 Δα ΔT / h,
+  about 3.9 × 10⁻⁶ /mm a °F for brass on steel 1.6 mm thick. A point φ from the
+  fixed end then comes in by R²Δκ(1 − cos φ), 0.05 mm at the free end for
+  27½ °F, drawn 20 times as far (`R.CURLX`).
 
 ## Sources
 
@@ -483,6 +583,8 @@ the rate from its own geometry, so the Adjuster's bench changes both (`ESC.A`,
 8. **Visual check.** `tools/topview.py` renders the model from above and warps it onto the top-view photograph through five barrel-bridge screws: `verification/topview-comparison.png` shows the photo, the model and the two blended. Parts far above or below the barrel bridge (the cock, the balance's endstone) are off by up to about 3 mm there, from the photograph's tilt. The photographed movement has the balance locking arm (Fig. 9), which the model now has too, though its shape is estimated. `tools/p3fit.py` renders from the camera fitted to the photograph the tracing was first done on.
 
 ## Estimated, not from the manual
+
+- The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull (the profile's pull made 3% steeper at each end), the sustaining spring's strength (0.8 of the drive, loaded) and its linear relaxing, the free run-down (25 s, as before), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
 
 - Tooth counts: the fusee wheel (90), centre wheel (90), third wheel (80) and its pinion (12), fourth wheel (75) and the wind indicator wheel (120) were counted on a restoration video of a 1941 Model 21 (`References/README.md`, "Videos consulted"; `tools/video.py`; IDEAS.md 1.8), not taken from the manual; the escape wheel (16) is Hamilton's. The fourth and escape pinions (10, 10) follow from those counts and a one-minute fourth wheel. The centre pinion (14) is counted on the same video, likely but not certain (end-on at 13:59.5, from above at 35:23.66; no frame shows every leaf); the fusee arbor's pinion (12) is inferred, not counted: 14 makes the manual's 17½ half turns hold its "maximum of 56 hours", and 14 × 12 sweeps the UP–DOWN hand 313.6° in 56 h, against the 315.7° a photographed dial's scale spans. 13 and 13 would fit the dial and the manual's seven half turns a day better, but run 60.6 h. The motion work (12 : 36, 10 : 40) is chosen; the minute wheel looks nearer 55 teeth on the video, too blurred to count.
 - Dimensions and positions, estimated from the figures and the dial (95 mm, the side photograph), except where the photographs give them (plan: "How the layout was measured", steps 1–5; heights: step 6).
