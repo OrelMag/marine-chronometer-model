@@ -23,7 +23,7 @@ Contents: [The videos](#the-videos) · [What each shows](#what-each-shows) ·
 
 | ID | Channel, title | Length, best resolution | Movement |
 |---|---|---|---|
-| `KLUwI2UUCMQ` | C Spinner Watch Restorations, "Repairing a World War II Navy Chronometer - The Iconic Hamilton Model 21" | 54 min, 4K (VP9, about 4 GB) | 1941, plate serial 2E8489, with the balance locking arm; full teardown, cleaning, reassembly, filmed close on a blue mat |
+| `KLUwI2UUCMQ` | C Spinner Watch Restorations, "Repairing a World War II Navy Chronometer - The Iconic Hamilton Model 21" | 54 min, 4K (VP9, about 4 GB) | 1941, plate serial 2E8489, with the Navy's Y-shaped balance stop and its second (white) dust seal on the barrel bridge, not the manual's locking arm (Fig. 9); full teardown, cleaning, reassembly, filmed close on a blue mat |
 | `wcYqdgpyggQ` | BunnSpecial, "How I take apart a marine chronometer, Hamilton, Model 21, Part 2 of 2" | 28 min, 720p | Teardown of the plates and wheels; the clearest views of the bridges off |
 | `Jd2c3x8VKsE` | BunnSpecial, "… Part 1 of 2" | 27 min, 720p | Preparation: out of the box and case, letting down the mainspring (not yet reviewed frame by frame) |
 | `We1dLNXiBj0` | bunnspecial, "Hamilton Model 21 Marine Chronometer, Part 1 of 3" | 3 min, 720p | The escapement running (not yet used) |
@@ -42,6 +42,7 @@ searching a video again.
 | **8:43–8:52** | **The dial lifted off: tweezers in at the dial take-off slot, between dial and flange (8:46, 8:49)** | Take-off slot |
 | **9:00–9:05** | **The mounting ring and the plate's dial side face-on, dial off: the flange's holes and the take-off slot (9:03)** | Ring's holes, take-off slot |
 | 2:15–2:45 | The movement out of its case, oblique and from the side: the balance cock stands at the rim as a tall polished block (2:36) | The cock's height and its solid outer wall |
+| **4:57–6:24** | **The Navy's Y-shaped balance stop in place, from above and close (5:10 at 4K: the lever coming out from under the white seal on the barrel bridge, the crossbar over the balance, an eye with a pin over the rim at each end); handled 5:30–5:48 (the movement turned, a key on it); unscrewed at the seal's flange 6:15–6:18 and lifted off with the seal 6:21–6:24 (contact sheet `--step 3 --from 4:30 --to 6:30`, 4 October 2026)** | The Navy stop's shape and how it works (Review-results.md, open findings 13); not Fig. 9's locking arm, which no video shows yet |
 | **4:56–6:47** | **From above (12 o'clock toward the camera): the cock in place, its screw out (5:56), its nose and endstone cap close (5:50), then lifted off (6:44); 6:29 and 6:47 are the same view with the cock on and off** | The cock's outline, the barrel bridge's edge beside it, the cock's screw and steady-pin holes in the train bridge |
 | **6:44–6:53.5** | **The balance lifted out (6:44–6:48, from the cock side, the whole rim at 6:47.5), then held in the fingers side-on (6:49.5–6:51) and nearly face-on (6:52.5–6:53.5): the screws, the empty holes, the weights at the arm's ends** | The rim's holes and screws (`$MC_VIDEO/balance/`) |
 | **10:44–10:48** | **From above, the detent's support block's screw taken out at the train bridge's edge below the keyhole; the keyhole's two lobes and the lower bridge's pocket in them** | Detent block's place |

@@ -986,6 +986,17 @@ Contents:
   6.6 mm or more from the staff (the hairspring); both pins over the rim; the flange bitten round the setup cover
   (`fine.py --eval "__mv.userData.stop('navy')"`, with and without `--hold`;
   `exploded.py` and `audit.py` take the same `--eval`). `17fa7d4`, `f7bfddd`
+- **The Navy's balance brake's arch too tall, and pressed instead of screwed**
+  (Plates, bridges, screws and arbors; Variants, Balance stop). The crossbar's
+  arch stood on straight legs 4.5 mm long, its top 12.3 mm from the staff (after a
+  sketch). Traced on Delaney No. 8854's photograph from straight above, the arch
+  runs about 7.9 mm round the staff with its top 8.3 out and the arms nearly level
+  with the staff; 2E11795, the omegaforums movement and 2E8489 (the restoration
+  video) have the same shape. The legs are now 0.5. Two descriptions of the stop
+  have it screwed down with an Allen key through the case's bottom, which fits
+  the hex socket in its plunger: the text now says so, not a pressed cap. Keep: the
+  arch's top about 8.3 mm out, its inner edge 6.6 mm or more from the staff (the
+  hairspring); the arms out to the eyes nearly level with the staff. `f9ae355`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
