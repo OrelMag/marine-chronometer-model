@@ -1031,6 +1031,11 @@ Contents:
   only in the seats' floors (a hole inside a hole breaks the extrusion); the caps'
   seat layers tagged with the cap's line (bom.py reads the endstone as set in what
   holds it). `162dfe5`
+- **No dial take-off slot** (Fig. 21; Review-results.md, Figs. 21, 22, 28 and 29):
+  the mounting ring's flange was a plain circle. Now a notch in its rim, 167° from
+  12, 1.4 wide and 2.2 in, through the flange's top layer, where the restoration
+  video lifts the dial (8:46, 9:03). Keep: it under the dial's edge and clear of
+  the dial screws' holes.
 
 ## Setup, case and gimbals
 

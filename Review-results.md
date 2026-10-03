@@ -1882,3 +1882,31 @@ Winding and maintaining work).
 
 Seen on video since (2 October 2026, 17:50–20:27): the end plate, the winding
 pawls and their springs, the stop-bar and its spring (`References/VIDEOS.md`).
+
+## Figs. 21, 22, 28 and 29 against the model (4 October 2026)
+
+Every part these four figures name is in the model and has its line in `BOM.md`,
+rendered one by one (isolated, by Hamilton number). Four places looked different:
+
+1. **Dial take-off slot** (Fig. 21). Not modelled. *Fixed: the notch in the
+   flange's rim, 167° from 12, 1.4 wide, 2.2 in (restoration video 9:03; the
+   dial lifted there, 8:46).*
+2. **Fusee top plate's hole** (Fig. 28; the fusee assembly 3 above). *Fixed:
+   the collar now rises through it (19:58–20:00).*
+3. **Fusee end plate** (Fig. 28 seems to draw a square hole). The video's plate
+   (18:22) has a round hole with a raised boss and a slot across it, as the
+   model has; the drawing's "square" is the boss and slot. No change.
+4. **Sustaining spring** (Fig. 28 shows part of it). The model's (27:26) matches
+   the video at 27:30: the band against the wall about 335°, the fixed end
+   widened with two holes, the working end with its pin. No change; the
+   video's steel looks nearly black, the model's blue brighter.
+
+Open, found on the way:
+
+- **The flange's holes** (9:03; `References/VIDEOS.md`): three large holes at
+  r ≈ 41, at 88°, 214° and 337° from 12, a screw end in one, and three small ones
+  near the rim at 3°, 131° and 319°. The model has its dial screws at 38°, 153°,
+  224° and 324° (two from the top-view photographs, two estimated) and the
+  mounting ring's screws at 70°, 190° and 300°. Neither set matches; which holes
+  are which isn't settled.
+- **The fusee arbor above the collar**: r ≈ 2.2 on 19:45 (model r 1).
