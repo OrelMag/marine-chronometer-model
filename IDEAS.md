@@ -367,6 +367,8 @@ The amplitude then emerges from the model instead of being fixed.
 ### 2.8 Maintaining power under load (S)
 While the key turns, only the sustaining spring drives the train, "enough to run the chronometer 5 to 10 minutes" (`INFO.spawl`). With [2.1](#21-a-balance-that-can-stop-and-must-be-started), the amplitude can dip slightly while winding and recover afterwards. The key-winding sequence already knows when winding starts and stops.
 
+*Partly done (3 October 2026, `claude/maintaining-load`): while winding the model shows the sustaining spring carrying the load: the load path in colour, a close-up of the maintaining work with the spring's drive left, an option to draw its relaxing 20 times as far, and the essay's maintaining-power figure (model README, Controls; The Essay tab). Open: the amplitude dipping while the sustaining spring drives.*
+
 ---
 
 ## 3. New things to do with it
