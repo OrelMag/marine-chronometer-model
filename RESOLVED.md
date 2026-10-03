@@ -604,7 +604,7 @@ Contents:
   plate comes off over the collar, which stays on the arbor (19:58-20:00), so the
   collar, r 3.0, now rises from the hub through a hole of r 3.05 and 1.0 past it.
   Keep: the collar inside the stop-bar slot's edge (zHi) and clear of the spring in
-  the groove under it.
+  the groove under it. `d135f96`
 
 ## Plates, bridges, screws and arbors
 
