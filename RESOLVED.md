@@ -609,7 +609,7 @@ Contents:
   29): side-on at 20:00, against the groove's pitch, it stands 2.8 mm over the top
   layer; now up to 0.05 under the barrel bridge (`collarT`), the arbor's shoulder
   under its bushing. Keep: read lengths along an arbor against the fusee's pitch, not
-  against a polished part's silhouette on the blue mat, which reads narrow.
+  against a polished part's silhouette on the blue mat, which reads narrow. `7f994a6`
 - **Sustaining pawl's spring invented, and its arbor 2.7 mm round from the
   real one.** The spring was a collet near the arbor's top with a wire across
   to a steady pin in the train bridge; C Spinner's video (35:37.5-36:29) shows a
