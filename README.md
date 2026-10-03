@@ -85,9 +85,10 @@ The build fails if the page still loads a script, stylesheet or font from anothe
 server. That keeps the published files working offline and in countries where
 common CDNs are blocked.
 
-It also fails if the page grows past its size budget (`BUDGET` in `build.py`:
-1.4 MB), and prints where its bytes go (three.js, fonts, images and the rest), so
-growth shows up on every build.
+It prints where the page's bytes go (three.js, fonts, images and the rest) and how
+much a visitor downloads compressed, so growth shows up on every build, and warns,
+without stopping, if the page grows past its size budget (`BUDGET` in `build.py`:
+1.43 MB): a tripwire for growth nobody meant, not a limit the host sets.
 
 Once you know the site's address, pass it in. The page then shows a picture when
 the link is shared, and search engines see the canonical address:
