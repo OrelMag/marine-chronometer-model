@@ -196,3 +196,17 @@ Every item above is done or has a recorded disposition. What stays open is a dis
 - **Not drawn, with reasons**: the sustaining ratchet's spring groove (a hidden face; the toothed wheel would have to be built in layers); the escape upper bridge's countersinks (drawn as counterbores); the balance lower bridge's steady pins (hidden in the joint, estimated).
 - **Estimated depths and heights**: the escape bridge's seats (0.3), the fusee's rim (0.4, as tall as the parts under it allow), the lower train bridge's counterbores, the mounting ring's relief.
 - **The Navy dial** (46:44): its centre hidden under the hands and the frame oblique, its proportions are inconclusive; the photographed Maritime Commission dial, face-on, sets the print.
+
+### How much each open item matters (3 October 2026, after release 1.19.00)
+
+None touches function: the escapement, train, timing and maintaining work are independent of all of them, and every check passes. They bear only on how faithful some parts look, and most are hidden or small.
+
+| Item | What is at stake | Visible? | Criticality |
+|---|---|---|---|
+| Pillar 1's angle (4 deg) | One pillar and the lower train bridge's end, about 2.4 mm at that radius; the bar 1.1 mm short of its measured length. It points at an inconsistency between sources: the cock or the dial side's angles are off in that region. | Slightly: the pillar's dial-side screw head; the bar's end only with the dial off. | **Low-medium**, and the one worth pursuing: if the cock is the part that's off, a visible top-side part is slightly misplaced. One frame with the cock and pillar 1's screw together would settle which source is wrong. |
+| The winding ratchet's size | Its tips 8.75 mm in the model, one frame 7.0, two other readings agree with 8.75: at most 1.7 mm of radius. | Only exploded or in a section; it sits under the fusee. | **Low.** It works either way (maintaining.py checks the pawls on its teeth); shrinking it would mean laying out the pawls again. |
+| The spring groove not cut | A 0.7 mm groove the winding-pawl springs lie in; the springs are at the right radius, on the face instead of in it. | No: an enclosed face between the fusee and its wheel. | **Very low.** |
+| The escape bridge's countersinks drawn as counterbores | Flat-bottomed holes for two flush screws instead of cones; from above they look the same. | Only in a section through them. | **Very low.** |
+| The balance lower bridge's steady pins | Two small locating pins, places estimated. | No: hidden in the joint, so no source can show them. | **Negligible**, and permanent. |
+| Estimated depths (escape seats 0.3, fusee rim 0.4) | The outlines are measured; only the depths and heights are set by eye or clearance, within a few tenths of a millimetre. | Barely: a shadow line at the seats; the rim only from below. | **Very low.** |
+| The Navy dial (46:44) inconclusive | Nothing: the print follows the face-on Maritime Commission photograph, which measures cleanly. | — | **None.** Recorded so it isn't measured again expecting a result. |
