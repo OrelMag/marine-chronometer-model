@@ -57,6 +57,6 @@ async()=>{
       rw.rotation.y=r0;rw.updateWorldMatrix(true,false);return[Math.atan2(tip[1],tip[0]),rt];};
     const depth=dl=>{const[a,r]=tipAt(dl);return rOut(a)-r;},held=depth(0.02*pull),free=depth(-0.02*pull),rest=depth(0);
     const[ta,tr]=tipAt(0);let top=0;for(let j=1;j<=30;j++)top=Math.max(top,rOut(ta+pull*0.001*j));   /* the tooth top behind the face the tip bears on */
-    out.push(['setup click',wb!==0&&held>rest&&free<rest-0.1&&top-tr>0.3,`the barrel turns ${wb>0?'+':'-'} about its axis in running; turned 0.02 rad the way the spring pulls the arbor, the tooth's face comes onto the click's tip (outline ${f2(rest)} -> ${f2(held)} mm from it), turned the other way the gap opens under it (${f2(free)}): it holds the arbor the right way. The tip stands ${f2(top-tr)} mm inside the teeth's tips (want over 0.3: seated, the pivot where C Spinner's video has it)`]); }
+    out.push(['setup click',wb!==0&&held>rest&&free<rest-0.1&&top-tr>0.3,`the barrel turns ${wb>0?'+':'-'} about its axis in running; turned 0.02 rad the way the spring pulls the arbor, the tooth's face comes onto the click's tip (outline ${f2(rest)} -> ${f2(held)} mm from it), turned the other way the gap opens under it (${f2(free)}): it holds the arbor the right way. The tip stands ${f2(top-tr)} mm inside the teeth's tips (want over 0.3: seated, the pivot where both photographs have it)`]); }
   click('#speeds button[data-v="0"]');
   return out;}

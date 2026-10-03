@@ -987,7 +987,7 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    the spring a band on edge round half a turn, the cover's feet outside it;
    RESOLVED.md, Winding and maintaining work*), the dust seal, the detent's
    trip-spring bracket.
-3. *The click's pivot settled (3 October 2026): at the video's 10.25 mm, its tip at the teeth's root, 0.52 mm inside their tips; bom.py's check wants it seated over 0.3.* *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
+3. *The click's pivot moved to 8.95 mm and the ratchet to tips at 7.05 (3 October 2026, later): both photographs and the video measured against the cover screws' holes; RESOLVED.md, Setup.* *The click's pivot settled (3 October 2026): at the video's 10.25 mm, its tip at the teeth's root, 0.52 mm inside their tips; bom.py's check wants it seated over 0.3.* *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
    the arbor the right way, but its tip seats only about 0.1 mm inside the
    teeth's tips (of a 0.8 mm face): the click lies nearly tangent from a pivot
    9.25 mm out (traced on the top-view photograph), where C Spinner's video

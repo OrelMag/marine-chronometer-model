@@ -105,8 +105,8 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-34 | 42300 | Pin - Balance wheel locking arm stop | 1 | 1 | lockArm | Stops the arm when unlocked, clear of the balance (Fig. 9). | in 42062 (press): 0.047 mm, least gap 0.023 | ✓ |
 | 108-35 | 42029 | Plate - Setup cover | 1 | 1 | ratchet | Covers the setup ratchet and click; holds the click's pivot screw (Sec. II). |  | ✓ |
 | 108-36 | 42056 | Screw - Setup cover plate | 2 | 2 | ratchet | Hold the cover plate on its feet to the barrel bridge. | in 42029 (clear): 2.465 mm, least gap 0.0672<br>in 42061 (tap): 2.218 mm, least gap 0.0616 | ✓ |
-| 108-37 | 42026 | Wheel - Setup ratchet | 1 | 1 | ratchet | On the barrel arbor above the barrel bridge; held by the click so the arbor never turns in winding or running (Sec. II). | round 42170 (press): 1.085 mm, least gap 0.0179<br>also: bom.py fn: setup click | ✓ |
-| 108-38 | 42027 | Pawl - Setup | 1 | 1 | ratchet | The click: bears on the setup ratchet's steep faces against the mainspring's pull (Sec. II). | round 42036 (free): 0.84 mm, least gap 0.0274<br>on 42026: 0.003 mm | ✓ |
+| 108-37 | 42026 | Wheel - Setup ratchet | 1 | 1 | ratchet | On the barrel arbor above the barrel bridge; held by the click so the arbor never turns in winding or running (Sec. II). | round 42170 (press): 1.085 mm, least gap 0.0178<br>also: bom.py fn: setup click | ✓ |
+| 108-38 | 42027 | Pawl - Setup | 1 | 1 | ratchet | The click: bears on the setup ratchet's steep faces against the mainspring's pull (Sec. II). | round 42036 (free): 0.84 mm, least gap 0.0277<br>on 42026: 0 mm | ✓ |
 | 108-39 | 42051 | Seal - Dust | 1 | 1 | post | Seals where the fusee arbor rises through the barrel bridge (Fig. 24). | on 42061: 0.02 mm | ✓ |
 | 108-36 | 42056 | Screw - Dust seal | 2 | 2 | post | Hold the dust seal's flange to the barrel bridge. | in 42051 (clear): 0.978 mm, least gap 0.0719<br>in 42061 (tap): 2.005 mm, least gap 0.0378 | ✓ |
 | 108-40 | 42054 | Ring - Packing | 3 | 3 | post | Stacked in the seal round the arbor's square. | on 42051/42054: 0 mm | ✓ |
@@ -117,7 +117,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-44 | 42055 | Screw - Barrel bridge | 2 | 2 | barrelBridge | Hold the barrel bridge to the train bridge. | in 42061 (clear): 3.366 mm, least gap 0.2195<br>in 42062/42059 (tap): 2.623 mm, least gap 0.0917 | ✓ |
 | 108-45 | 42164 | Bushing - Barrel upper | 1 | 1 | barrelBridge | Bearing for the barrel arbor's upper end. | in 42061 (press): 0.097 mm, least gap 0.0199 | ✓ |
 | 108-45 | 42164 | Bushing - Fusee upper | 1 | 1 | barrelBridge | Bearing for the fusee arbor's upper end. | in 42061 (press): 0.097 mm, least gap 0.0198 | ✓ |
-| 108-46 | 42028 | Spring - Setup pawl, complete with pins | 1 | 1 | ratchet | Holds the click in the setup ratchet's teeth. | on 42027: 0.0104 mm | ✓ |
+| 108-46 | 42028 | Spring - Setup pawl, complete with pins | 1 | 1 | ratchet | Holds the click in the setup ratchet's teeth. | on 42027: 0.0163 mm | ✓ |
 | 108-47 | 42036 | Screw - Setup pawl pivot | 1 | 1 | ratchet | The click turns on it; through the cover into the barrel bridge. | in 42029 (clear): 1.037 mm, least gap 0.1048<br>in 42061 (tap): 3.359 mm, least gap 0.0602 | ✓ |
 | 108-48 | 42099 | Stop - Fusee winding stop-bar | 1 | 1 | barrelBridge | Stud under the barrel bridge (left-hand thread, Op. 42) that the stop-bar meets at full wind (Sec. II). | in 42061 (tap): 2.017 mm, least gap 0.0334<br>also: maintaining.py: stop-bar meets the stop | ✓ |
 
