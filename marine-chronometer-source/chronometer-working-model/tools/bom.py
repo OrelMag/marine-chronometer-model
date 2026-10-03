@@ -17,6 +17,7 @@ userData.hn, hn() in core.js):
     0.5 mm or more, and turning in the tooth ratio the other way; endshake: 0.001-0.003 in (Ops. 15, 69, 74);
   - jewels: the manual's fourteen (Sec. II), each seated in its setting, roller or detent;
   - the registry: every Hamilton number in a part card (app.js PARTS[k].sp) is in the list, and every number a card's part holds is on its card.
+    The parts' pieces (app.js PIECES): every line a piece lists is in the list, and every number on a piece's card is one of its lines'.
 Checks named in a line's 'check' (escapement.js, invariants.py, maintaining.py, fine.py) are that tool's; they must exist. 'bom.py fn: NAME' is one of
 bom-fn.js's function checks, run last through the page's own controls at 1× (about 30 s; --no-fn skips them): the locking arm stops the balance at a timing
 weight and it doesn't restart by itself, the twist starts it, the train-blocking screw holds the train and lets it go, the shield plate covers the key hole
@@ -54,6 +55,7 @@ async def run(evl):
             if evl:await pg.evaluate(evl)
             res['fn']=await pg.evaluate(FNJS)
         sp=await pg.evaluate("Object.fromEntries(Object.entries(window.__parts).map(([k,v])=>[k,v.sp||'']))")
+        res['pcs']=await pg.evaluate("Object.fromEntries(Object.entries(window.__parts).flatMap(([p,v])=>(v.pcs||[]).map(c=>[p+'.'+c.k,[c.sp||'',c.h]])))")   # the parts' pieces (PIECES, app.js): card, lines
         await b.close()
     return res,sp,errs
 def judge(res,sp):
@@ -110,6 +112,11 @@ def judge(res,sp):
         held={l['no'] for l in BOM['lines'] if l.get('part')==k and l['kind'] in('part','jewel') and l.get('no')}
         miss=sorted(h for h in held if h not in nums(s))
         ok(not miss,f"card {k}: holds {', '.join(miss)}, not on its card")
+    # the pieces: every line a piece lists is in the parts list, and every number on its card is one of its lines'
+    for k,(s,h) in res.get('pcs',{}).items():
+        for i in h.split():ok(i in L,f"piece {k}: {i} is not a line of the parts list")
+        own={L[i]['no'] for i in h.split() if i in L}
+        for m in nums(s):ok(m in own,f"piece {k}: {m} on its card is none of its lines")
     return F
 def main():
     evl=None

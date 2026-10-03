@@ -191,7 +191,7 @@ function drawOf(m){let d=DRAW.get(m);
 /* a mesh's ids: inkId its part's, hashed (the drawing), inkIdM its own, given in turn (Edges), 0 on the box (userData.inkBox: no line). app.js gives them up front, in the
    order of the meshes, so a merged copy (drawMerge) carries each piece's own; a mesh first drawn later gets its own then */
 let INK_N=0;const inkHash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
-function inkTag(o){const u=o.userData;if(u.inkIdM==null){u.inkId=inkHash(u.part);u.inkIdM=u.inkBox?0:(INK_N++%251+3)/255;}}
+function inkTag(o){const u=o.userData;if(u.inkIdM==null){u.inkId=inkHash(u.pk||u.part);u.inkIdM=u.inkBox?0:(INK_N++%251+3)/255;}}
 function makeInk(r){
   const T=THREE,rt=(nearest,depth)=>{const t=new T.WebGLRenderTarget(1,1,nearest?{minFilter:T.NearestFilter,magFilter:T.NearestFilter}:{});if(depth)t.depthTexture=new T.DepthTexture(1,1,T.UnsignedIntType);return t;};
   const rtN=rt(1,1),rtG=rt(1,1),rtC=rt(0,1),rtE=rt(0,0);rtE.depthBuffer=false;   /* depth textures are 24-bit; a target's own depth buffer is 16-bit in r128, and the box's brass fought its wood */
@@ -395,6 +395,9 @@ function mesh(p,geo,mat,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.
 /* the parts-list line a piece is (its id in bom.json: the Hamilton number, with a suffix where the number is on several lines), tagged on one object per piece;
    x: data for tools/bom.py (a gear's {z, m}). Untagged meshes belong to the nearest tagged ancestor ("complete with pins") */
 const hn=(o,id,x)=>{o.userData.hn=id;if(x)Object.assign(o.userData,x);return o;};
+/* the piece of its part an object is (app.js PIECES), where its parts-list line alone doesn't say: the balance's hub carries the staff's line, the hands' other dial styles none.
+   Every mesh below it is that piece; app.js finds the rest by their lines */
+const pc=(o,k)=>{o.userData.pc=k;return o;};
 function cylY(r,h,seg=20){return new THREE.CylinderGeometry(r,r,h,seg);}
 /* several geometries as one mesh's, each placed by its matrix ([[geometry, Matrix4], ...]): one draw call (and one shadow-pass call) instead of many */
 function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonIndexed():g.clone()).applyMatrix4(m);g.dispose();return q;}),out=new THREE.BufferGeometry();
