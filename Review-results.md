@@ -688,6 +688,8 @@ the stop-bar reaching the stop at full wind.
 
 ## Every part against the manual
 
+*Status (3 October 2026): what this review lists as not drawn or not modelled has all been built since (the balance's upper setting and jewel, the collet and stud as Fig. 5, the timing washers in the rate panel, the seal ring and spring, the wedge pin, the latch's clamping parts): `tools/bom.py` finds every one of the parts list's 187 lines on the model with its relations. The table below is the review as it was.*
+
 A third review, of the whole movement and its case against the manual's parts
 lists (Figs. 106–110, pp. 78–88), its description and principles of operation
 (Secs. II–IV) and its handling instructions (Sec. III, Figs. 7–11), with the
@@ -967,14 +969,14 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    cited by URL, not committed). Candidates: the shield plate (Fig. 107 draws
    a disc and an open-ring spring; *now drawn so*, 2 October 2026, RESOLVED.md,
    Setup, case and gimbals), the setup
-   ratchet and click (asked in Orel_comments.md; *read on video, 2 October
+   ratchet and click (asked in Orel_comments.md; *the dust seal compared with C Spinner 6:29 (3 October 2026): its packing, column and flange in proportion, the flange's concave bite between its screws now drawn; the trip-spring bracket as Fig. 14 and the video (11:08) draw it, Review-results 20*; *read on video, 2 October
    2026, 11:46–12:22: about 42 teeth, not 52; the click as the model's, holding
    the same way; its spring a flat band wrapping about 180° round the ratchet,
    as Fig. 108 draws it, where the model's is about 120°; *now so*: 42 teeth,
    the spring a band on edge round half a turn, the cover's feet outside it;
    RESOLVED.md, Winding and maintaining work*), the dust seal, the detent's
    trip-spring bracket.
-3. *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
+3. *The click's pivot settled (3 October 2026): at the video's 10.25 mm, its tip at the teeth's root, 0.52 mm inside their tips; bom.py's check wants it seated over 0.3.* *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
    the arbor the right way, but its tip seats only about 0.1 mm inside the
    teeth's tips (of a 0.8 mm face): the click lies nearly tangent from a pivot
    9.25 mm out (traced on the top-view photograph), where C Spinner's video
@@ -1228,7 +1230,8 @@ changes it only round its own arbors (1 below).
     model. A video should show: the train bridge coming off, and what the
     screw holds.
 12. **The third arbor's place and the wheels' sizes** (finding 6 under BOM
-    comparison). **Settled for the arbor, the wheels and the pillars** (the
+    comparison). *The block's notch round the third arbor is gone (3 October 2026): since the layout move the block
+    stands 11.7 mm from it, at Fig. 90's length (20.2).* **Settled for the arbor, the wheels and the pillars** (the
     model now has the third arbor at (−6.18, 14.75) and the measured pillar
     profile; RESOLVED.md). Still open: the detent's support block, which the
     model notches round the arbor and shortens to clear the pillar, in the
@@ -1835,11 +1838,11 @@ Winding and maintaining work).
 3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %. *Now so* (RESOLVED.md, Winding and maintaining work).* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
-4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open. The pivots now drawn as studs riveted flush (2 October 2026). Not drawn: the raised plateau the pawl springs lie round (the pawls lie over it; its height isn't seen).* Gilt brass, not steel; the
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open. The pivots now drawn as studs riveted flush (2 October 2026). Not drawn: the raised plateau the pawl springs lie round (the pawls lie over it; its height isn't seen).* *Seen sharp at 4K (3 October 2026, 19:12): not a plateau but a groove about 0.7 wide at r 10.6-11.3, which the springs lie in; the model lays them at that radius over the face, the groove not cut (a hidden face; the toothed wheel would have to be built in layers).* Gilt brass, not steel; the
    winding-pawl spring screws go in from the fusee wheel's side (slotted heads
    there). The model has the heads on the pawl side.
 5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
-   Op. 23). *The collar fixed; the large end's rim open. The winding ratchet seen (18:20): about 36 teeth (model 40), likely; now 36.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
+   Op. 23). *The collar fixed; the large end's rim open. The winding ratchet seen (18:20): about 36 teeth (model 40), likely; now 36.* *The rim now drawn (3 October 2026): 0.4 tall (estimated, as tall as the sustaining ratchet and its pawl allow) round a recess whose edge is 0.84 of the end's radius (18:20), over the pawls and springs. The ratchet's tips on that frame read 0.43-0.51 of the end's radius (6.4-7.6 mm), against the model's 8.75 and the earlier 8.5 and the pawls' tips at 8.4: left, the readings disagree.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
    sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
    arbor); the large end has a raised outer rim round the winding ratchet,
    whose tips read r ≈ 8.5 (model 9.85; rough, oblique).

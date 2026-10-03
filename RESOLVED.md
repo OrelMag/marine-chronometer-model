@@ -590,6 +590,15 @@ Contents:
   held at 0.37 turn (it was pinned to the spring's most, which the longer
   spring made 6.4 turns). Keep: the barrel's inner parts follow `c.Rb`; the
   set-up a turn fraction, not the spring's range. `2e0db4f`
+- **The setup click's tip 0.1 mm in the ratchet's teeth** (Review-results.md, BOM
+  comparison 3): its pivot 9.25 mm out, from the top-view photograph. At the video's
+  10.25 (11:58), its tip at the teeth's root 32 deg round, it seats 0.52 mm. Keep:
+  bom.py's setup click check wants it seated over 0.3. `HASH`
+- **The fusee's large end flat, the dust seal's flange round** (Review-results.md, the
+  fusee assembly 5; BOM comparison 2): the large end now has its rim round the recess
+  that holds the winding ratchet (18:20), 0.4 tall so it clears the sustaining ratchet
+  and its pawl by 0.1 (fine.py found 0.75 in both); the seal's flange its shallow bite
+  between the screws (6:29). `HASH`
 
 ## Plates, bridges, screws and arbors
 
