@@ -1763,7 +1763,7 @@ changes it only round its own arbors (1 below).
     clear pillar 1's dial-side screw at the model's 170.8 deg); the minute wheel's stud 11.3 (the video's). Pillar 1
     tried at the video's 166.3 deg (its dial-side screw just clear of the bar's end on 40:08): its top screw's head
     then stands in the cock's foot, which C Spinner's video shows clear of any screw (6:29 on, 6:47 off), so it
-    stays at 170.8 and the 4 deg between the dial side's angles and the cock's place stays open.*
+    stays at 170.8 and the 4 deg between the dial side's angles and the cock's place stays open. Of the items left open this is the only one worth pursuing (PLAN-fidelity.md, "How much each open item matters"): one frame with the cock and pillar 1's screw together would settle which source is off.*
     *Settled (3 October 2026): the photographed dial, face-on and scaled by its seconds' centre (on the fourth, 21.6
     out), has its minute track at r 40.4-42.2, the seconds track r 17.9 meeting it at 6, and shows to r 45.9 inside the
     bezel, the model's bezel opening exactly: the 95 mm dial stands, and its print, at r 43.0-45.4, was 9 % too large.
