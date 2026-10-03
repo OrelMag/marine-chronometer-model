@@ -163,6 +163,27 @@ Contents:
 
 ## Going train and heights
 
+- **The fourth, third and escape arbors off the video's places, the seconds
+  sub-dial off its arbor** (Review-results.md, Elsewhere 24, 14, 18). The fourth
+  was 23.9 mm out (video 21.4-21.75 at the plate's 87.57), the third 16.0 at
+  157 deg (video 16.55 at 149), the escape arbor 1.9 mm from the jewel seen from
+  above; the dial printed the seconds at a fixed 0.472 of its radius (right for a
+  50.8 mm dial, 1.5 mm off on the 47.5). Now F (0, 21.6), T and E as measured,
+  E 9.40 from the balance; the wheels' size ratios come out as counted. Keep:
+  `tools/solve.py`'s FE 11.107; the dial's `k` from `L.F` and `DIAL_R`;
+  `SEC_L` (the seconds hand clears the hour wheel's pipe); the train bridge's
+  escape opening r 6.9 about `L.E`; the lower bridge from `tools/lower_bridge.py`
+  with the model's arbors; the balance locking arm's screw 30 deg from its
+  weight (on the weight's other side, or at 18 deg, it stands in the cock's foot).
+- **The detent block and foot short of Fig. 90's, its far pin 2.9 mm short**
+  (Review-results.md, Elsewhere 20.2). Shortened to clear a train pillar that
+  has since moved out; now 15 and 16.4 mm from the point of flexure, the pins
+  symmetric about the screw. Keep: `BE` in `shared/escapement.js`; `DBLK.p`
+  symmetric about `DBLK.s`.
+- **The escape upper bridge a thin bar with a plan boss and a 0.3 mm cap**
+  (Review-results.md, Elsewhere 17). Rebuilt as the video shows it (10:00-10:50).
+  Keep: the arbor's top pivot and its jewels moved down 0.9 together (endshake
+  unchanged); the end screws at 8.3, `ebu` 72 deg.
 - **Heights estimated wrongly.** Train bridge was 22.1 mm above the plate;
   a side photograph scaled by the pillar plate's 3.86 mm edge gives 16.8 mm.
   Barrel (13.2 mm tall, rising through a cut in the train bridge), train wheels,
