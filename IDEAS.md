@@ -288,7 +288,7 @@ shows. These ideas add the dynamics where they teach something.
 
 `I·θ″ + c·θ′ + k·θ = τ(θ, θ′, state)`
 
-- `I`: the balance's moment of inertia (930 g·mm², already computed).
+- `I`: the balance's moment of inertia (1,140 g·mm², already computed).
 - `k = I·(2π/0.5 s)²`: the hairspring's stiffness, about 1.5 × 10⁻⁴ N·m/rad.
 - `c`: losses, set so the amplitude settles at the manual's 1⅜–1½ turns.
 - `τ`: the impulse torque while `ESC` says a tooth is on the impulse jewel, minus the small unlocking resistance.
@@ -321,6 +321,8 @@ The amplitude then emerges from the model instead of being fixed.
 **Why.** It shows why the fusee is there, rather than asserting it.
 
 ### 2.3 Temperature
+> **Partly done.** The rate panel moves pairs of screws from hole to hole (Op. 8) and gives Table IV's change in the rate at 90 °F against 55 °F (`R.T4`), with a temperature slider (40–100 °F) that runs the clock with it, linear about 72.5 °F; pairs can be taken out or put in. Still open: the curvature (the middle temperature error) and the split balance's curl.
+
 **What.** A temperature slider (the manual's test temperatures are 55, 72½ and 90 °F) with a rate readout and a rate-against-temperature curve.
 
 **The Hamilton uncut balance.** Elinvar hairspring, steel rim on an Invar arm.
@@ -613,7 +615,7 @@ the JavaScript `update()`.
 
 - **Knurling (S):** `knurl()` in [box.js:26](marine-chronometer-source/chronometer-working-model/js/box.js#L26) builds 30 separate box meshes, plus the body, for each knurled nut: 124 meshes for the four on the gimbal ring, 31 more on the latch. Build each nut as one merged geometry (knurled lathe profile or merged boxes). That removes about 150 draw calls, twice over with shadows.
 - **Balance rim holes (S):** 60 separate meshes. Merge them into one geometry in the balance's frame; it rotates with the staff anyway.
-- **Merge static parts (M):** at load, merge every static mesh of a part that shares a material into one geometry. Pillar plate, bridges, pillars and cock are all static relative to their part group. Keep `userData.part` on the merged mesh; picking, colouring, fading and sections all work per part already. Copy `BufferGeometryUtils.mergeBufferGeometries` from three r128's examples into `vendor/` (MIT), or write a 30-line merge. Expect the movement's 285 meshes to drop to well under 100.
+- **Merge static parts (M):** *The plan (3 October 2026): PERFORMANCE.md, What's next, item 1: a merged copy for drawing only, the pieces kept for the tools and picking, per-vertex Edges ids, a part that isn't plain drawn from its pieces; 562 meshes shown to 302 by parent group and material.* At load, merge every static mesh of a part that shares a material into one geometry. Pillar plate, bridges, pillars and cock are all static relative to their part group. Keep `userData.part` on the merged mesh; picking, colouring, fading and sections all work per part already. Copy `BufferGeometryUtils.mergeBufferGeometries` from three r128's examples into `vendor/` (MIT), or write a 30-line merge. Expect the movement's 285 meshes to drop to well under 100.
 - **Share geometries (S):** 545 meshes, 545 geometries. Identical screws, pins and jewel settings could share one `LatheGeometry` each; cache by parameters in `screw()` and `jewel()`. That saves memory and upload time rather than draw calls.
 - **Tiny shadows (S):** 308 meshes are under 1.5 mm in radius, and 541 meshes cast shadows. Set `castShadow=false` on anything under about 1.5 mm. From 2048 px over 340 mm, a shadow texel is about 0.17 mm, so their shadows are a few texels at most.
 
@@ -774,7 +776,7 @@ Small browser or Node checks on the model's arithmetic:
 - **Hands:** at `tSim = t`, the hour, minute and second hands point where a clock reading `t` would: centre wheel 1 turn/h, fourth 1 turn/min, escape 16 teeth per 8 s.
 - **Wind indicator:** runs from 60° at UP to 300° at 56 h, which is the dial's scale.
 - **Fusee:** `FUSEE_TURNS / FUSEE_PER_HOUR` is 60 h of chain, and 17½ half turns wind it fully.
-- **Moment of inertia:** `R.timing(0,0)` is 930 g·mm² (catches accidental changes to the balance's geometry), and a full turn of the timing pair is 40 s a day and of the vernier pair 2.8 s, the manual's figures.
+- **Moment of inertia:** `R.timing(0,0)` is 1,140 g·mm² (catches accidental changes to the balance's geometry), and a full turn of the timing pair is 40 s a day and of the vernier pair 2.8 s, the manual's figures.
 - **Pawls:** after `update()` at a spread of states, every pawl's tip sits within a tolerance of its ratchet's profile.
 
 ### 8.3 Visual regression (M)
@@ -783,7 +785,7 @@ Small browser or Node checks on the model's arithmetic:
 - **The renderer:** SwiftShader output is deterministic enough if the Chromium version is pinned.
 
 ### 8.4 Size budget (S)
-> **Done.** `build.py` fails a page past its `BUDGET` (1.6 MB for the model, 1.1 MB for the essay; they were 1.33 and 0.94 MB) and prints each page's three.js, fonts, images and the rest on every build. The first breakdown showed Instrument Sans inlined three times over (one file under three weights); it is now one face with a weight range. `843d642`, `8f1266b`
+> **Done.** Since 3 October 2026 the build warns past the budget instead of failing (it had stopped a release over 8 KB), and prints the compressed size too; the budget is 1.43 MB. Before: `build.py` fails a page past its `BUDGET` (1.6 MB for the model, 1.1 MB for the essay; they were 1.33 and 0.94 MB) and prints each page's three.js, fonts, images and the rest on every build. The first breakdown showed Instrument Sans inlined three times over (one file under three weights); it is now one face with a weight range. `843d642`, `8f1266b`
 
 Fail the build if `chronometer-working-model.html` grows past a set size, say 1.4 MB raw. It's 1.17 MB today. Print a breakdown (three.js, fonts, images, app) on every build, so growth is visible.
 
