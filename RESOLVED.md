@@ -1240,6 +1240,14 @@ hole in the part it holds (tapped) and the parts it passes (clear), or, where a
 hole across an extrusion or turned part can't be cut, the `embed` relation.
 An arbor needs pivots and shoulders; a stone its seat.
 
+- **The hands' outlines generic**. They were stock
+  shapes drawn for a 4 in dial and scaled; they are now traced on the
+  photographed Hamilton dial (`HAND_W`, core.js): the hour hand's swelling stem,
+  round-backed bulb and needle, 0.8 mm longer; the minute hand a long leaf, not a
+  parallel blade; the seconds hand a needle with an arrowhead counterpoise; the
+  UP-DOWN hand's boss r 1.86, not 0.9. Keep them traced, never redrawn by eye
+  (SHAPE-PASS.md, 1). `1589a10`
+
 ## Rate panel
 
 - **Balance far too light.** The screws and weights were drawn as cylinders
@@ -1590,10 +1598,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The hands' outlines generic** (Accuracy to the manual). They were stock
-  shapes drawn for a 4 in dial and scaled; they are now traced on the
-  photographed Hamilton dial (`HAND_W`, core.js): the hour hand's swelling stem,
-  round-backed bulb and needle, 0.8 mm longer; the minute hand a long leaf, not a
-  parallel blade; the seconds hand a needle with an arrowhead counterpoise; the
-  UP-DOWN hand's boss r 1.86, not 0.9. Keep them traced, never redrawn by eye
-  (SHAPE-PASS.md, 1).
+None at the moment.
