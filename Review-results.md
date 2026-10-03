@@ -1036,7 +1036,11 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    Rebuilt 3 October 2026 (`claude/navy-yarm`) from the photograph at full size:
    the post is a second dust seal like the fusee's (body, flange and screw, black
    packing rings, a plunger head with a hex socket screw), and the arm one broad
-   satin plate, its outline traced and registered on the post and the balance.*
+   satin plate, its outline traced and registered on the post and the balance.
+   Rebuilt again the same day from photographs taken straight above (Delaney No.
+   8854 and another): the arm is a lever, screwed on a shouldered stud in the
+   barrel bridge's pillar screw's place, under the cap to a crossbar with an eye
+   and a pin at each end, symmetric (an arch, level arms).*
 
 ## Open questions, to settle from video (1 October 2026)
 
