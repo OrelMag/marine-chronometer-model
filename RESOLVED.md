@@ -1579,4 +1579,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Sustaining pawl a straight bar where the real one is a curved blade.**
+  C Spinner's video (36:15, its two edges put through the fitted camera) shows a
+  blade about 10 mm long, up to 3 mm wide, bowed away from the ratchet, with a
+  short straight end face; the model's was a 1.2 mm bar. Its outline is now one
+  smooth curve through those measured edges (`SPN`, `SPE`), the tip's corner on
+  the ratchet, the spring wire in its root on the bowed side; the arbor at 69°
+  (a second reading of its foot, 14:06 overhead, gives 21.7 mm at 71°). A first
+  try that widened the old bar at a few points looked wrong; draw the blade from
+  the measured edges, not by reshaping `pawlPts`.

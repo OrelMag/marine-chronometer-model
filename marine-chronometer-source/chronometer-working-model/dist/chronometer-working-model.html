@@ -2025,14 +2025,23 @@ function buildMovement(M){
   S.seal=[2.2,-1.0].map(a=>[L.Fu[0]+PHOTO_K*7.6*Math.cos(a+PHOTO_TURN),L.Fu[1]+PHOTO_K*7.6*Math.sin(a+PHOTO_TURN)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
-  /* sustaining pawl pivot, as KLUwI2UUCMQ 36:15 (4K) puts its foot through rimfit_36-15.json's camera: 21.8 mm from the fusee axis, 67 deg round it (65.6-67.7 over f 5000-8000,
-     about 1 mm; References/VIDEOS.md), in the fusee's notch of the train bridge, on the third pillar's side; 1.38 mm outside the fusee wheel's tips, so the hub at the arbor's foot
-     (r 1.1) clears them. It was 21.35 at 74 deg, placed for clearance. SPt: the pawl's tip on the sustaining ratchet (rp 16.2 FK), 20 deg back round the ratchet from the pivot.
-     SPh: the foot of the pawl's spring wire, 2.4 mm along the pawl from the pivot (the video, 36:15), with the pawl turned 0.12 rad further in than when its tip is at SPt: the
-     wire's top stands in its hole in the train bridge there, so the bent wire turns the pawl into the teeth */
-  const SPr=21.8,SPa=53*D2R+PR_TURN,SPv=[L.Fu[0]+SPr*Math.cos(SPa),L.Fu[1]+SPr*Math.sin(SPa)],SPt=[L.Fu[0]+16.35*FK*Math.cos(SPa-20*D2R),L.Fu[1]+16.35*FK*Math.sin(SPa-20*D2R)];
-  const SPh=(()=>{const l=Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),b=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0])),tr=t=>Math.hypot(SPv[0]-l*Math.cos(t)-L.Fu[0],SPv[1]+l*Math.sin(t)-L.Fu[1]),t=b-(tr(b+0.01)>tr(b)?1:-1)*0.12;
-    return[SPv[0]-2.4*Math.cos(t),SPv[1]+2.4*Math.sin(t)];})();
+  /* sustaining pawl pivot, its foot read on two frames of KLUwI2UUCMQ (References/VIDEOS.md): 36:15 (4K) through rimfit_36-15.json's camera, 21.8 mm from the fusee axis at 67 deg
+     round it (65.6-67.7 over f 5000-8000, about 1 mm), and 14:06, nearly overhead, through a homography on the plate's centre, fusee and barrel bushings and three pillars' feet
+     (0.4-1.2 mm off them), 21.7 at 71 deg: 21.8 at 69, in the fusee's notch of the train bridge, on the third pillar's side; 1.38 mm outside the fusee wheel's tips, so the hub at the
+     arbor's foot (r 1.1) clears them. It was 21.35 at 74 deg, placed for clearance. SPt: the pawl's tip on the sustaining ratchet (rp 16.2 FK), 20 deg back round the ratchet from the
+     pivot; SPl its length, SPb0 the pawl's rotation.y when its tip is there. SPb: the side of the pawl's frame (the sign of its z) away from the ratchet, where its blade bows and its
+     spring wire stands; SPw the wire's foot in that frame (2.0 along, 1.7 across: 36:15 has it about 2.7 mm from the arbor in the blade's root, on that side). spW(th, q): a point q of
+     the pawl's frame in plan, the pawl at rotation.y th. SPh: the wire's foot with the pawl turned 0.12 rad further in than with its tip at SPt: the wire's top stands in its hole in
+     the train bridge there, so the bent wire turns the pawl into the teeth */
+  /* SPN, SPE: the blade's edges as KLUwI2UUCMQ 36:15 shows them (traced and put through rimfit_36-15.json's camera at the blade's height, 6 mm over the plate), mm along the blade from the
+     arbor and across it: SPN the edge toward the ratchet, its last point the tip's corner, which meets the teeth; SPE the back, bowed away from the ratchet. SPl: the corner's distance
+     from the arbor; SPt: where it rests on the ratchet's pitch circle (rp 16.2 FK), behind the pivot */
+  const SPN=[[1.04,-2.33],[2.16,-1.25],[3.39,-0.61],[5.30,-0.06],[7.23,0.21],[8.88,-0.06],[10.21,-0.58]],SPE=[[2.47,2.06],[4.07,2.49],[6.03,2.67],[8.03,2.27],[9.57,1.50],[10.45,0.60]];
+  const SPl=Math.hypot(...SPN[6]),SPd=Math.atan2(SPN[6][1],SPN[6][0]),SPr=21.8,SPa=55*D2R+PR_TURN,SPv=[L.Fu[0]+SPr*Math.cos(SPa),L.Fu[1]+SPr*Math.sin(SPa)],
+    SPg=Math.acos((SPr**2+(16.35*FK)**2-SPl**2)/(2*SPr*16.35*FK)),SPt=[L.Fu[0]+16.35*FK*Math.cos(SPa-SPg),L.Fu[1]+16.35*FK*Math.sin(SPa-SPg)];
+  const SPb0=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0])),spW=(th,q=SPw)=>[SPv[0]+q[0]*Math.cos(th)+q[1]*Math.sin(th),SPv[1]-q[0]*Math.sin(th)+q[1]*Math.cos(th)];
+  const SPb=Math.sign(Math.sin(SPb0)*((SPv[0]+SPt[0])/2-L.Fu[0])+Math.cos(SPb0)*((SPv[1]+SPt[1])/2-L.Fu[1])),SPw=[-2.0,1.7*SPb];
+  const SPh=(()=>{const tr=t=>{const q=spW(t,[-SPl,0]);return Math.hypot(q[0]-L.Fu[0],q[1]-L.Fu[1]);};return spW(SPb0-(tr(SPb0+0.01)>tr(SPb0)?1:-1)*0.12);})();
   /* the opening under the lower train bridge, round the third arbor (KLUwI2UUCMQ 34:30, the bare plate from the train side with the bar in it, and 40:08, the dial side: References/VIDEOS.md,
      "The plate's opening under the lower train bridge"): a circle r 11.3 about the third (11.2-11.5 over both frames and the focal lengths they allow), a lobe r 4.85 toward the balance
      and a bore r 3.2 about the fourth (its setting, at the bar's face, shows through it from the train side); the third wheel turns in it and shows through from the dial side */
@@ -2310,14 +2319,19 @@ function buildMovement(M){
      KLUwI2UUCMQ 35:37.5, 35:40 and 36:15 show it (the hub's radius read against the arbor's, about 1.3 times it; its height to about 1 mm) */
   const sp=hn(part('spawl',-22),'42096');sp.userData.axis=mesh(sp,shaftGeo([[TB_U-0.7,0.5],[TB_U+0.025,0.7],[-9.15,1.1],[y0-0.025,0.5],[y0+2]]),M.steel,SPv[0],0,SPv[1]);
   /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2 FK) at SPt, trailing the pivot so the teeth can only pass it one way */
-  R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2,0.6,false,0.7),M.steel,0,0,0);
-  R.spawl.userData.base=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0]));R.spawl.rotation.y=R.spawl.userData.base;R.spawl.userData.pts=pawlPts(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2);
-  /* sustaining pawl's spring (part of 42096, "complete with arbor and springs"): a straight steel wire (r 0.12) set upright in the pawl 2.4 mm from the pivot, standing alongside
+  /* its outline from those edges, in the pawl's frame (pivot at the origin, the tip's corner on -x at SPl, the back on the SPb side): one smooth curve from the tip's corner along SPN, round the hub behind the arbor (1.6-1.9 from it there: the video doesn't show that side) and along SPE to the
+     tip's other corner, the end face straight between them, as the video's. The tip's corner is put at PAWL_TIP, where seatPawl and phaseAgainst look for it */
+  const SPP=(()=>{const c=Math.cos(SPd),sn=Math.sin(SPd),L2=([a,q])=>new THREE.Vector2(-(a*c+q*sn),SPb*(-a*sn+q*c)),N=SPN.map(L2),E=SPE.map(L2),sN=Math.sign(N[0].y),
+      B=[[1.8,sN*80],[1.6,0],[1.9,-sN*75]].map(([r,a])=>new THREE.Vector2(r*Math.cos(a*D2R),r*Math.sin(a*D2R)));
+    return new THREE.SplineCurve([...N.slice().reverse(),...B,...E]).getPoints(150).map(v=>[v.x,v.y]).map((_,i,P)=>P[(i-PAWL_TIP+P.length)%P.length]);})();
+  R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,polyGeo(SPP,0.6,[[0,0,0.7]]),M.steel,0,-0.3,0);
+  R.spawl.userData.base=SPb0;R.spawl.rotation.y=SPb0;R.spawl.userData.pts=SPP;
+  /* sustaining pawl's spring (part of 42096, "complete with arbor and springs"): a straight steel wire (r 0.12) set upright in the pawl's root at SPw, standing alongside
      the arbor to its top (KLUwI2UUCMQ 35:37.5-35:40, 36:15: the pawl's assembly lifted and seated; 36:23, 36:27: it rises under the train bridge), its top end 1 mm up a hole
      through the train bridge at SPh (two small sunk holes stand side by side on the bridge's face there, 36:23-36:29: the pivot's and, taken to be, the wire's). The pawl turned
      from SPh bends the wire, which turns it back into the teeth. R.spWire(th): the wire from its foot, with the pawl at rotation.y th, to its top, held in the hole */
   { const WT=new THREE.Vector3(SPh[0],TB_U-1.0,SPh[1]),w=mesh(sp,cylY(0.12,1,8),M.steel),up=new THREE.Vector3(0,1,0),d=new THREE.Vector3();
-    R.spWire=th=>{const F=new THREE.Vector3(SPv[0]-2.4*Math.cos(th),-9.75,SPv[1]+2.4*Math.sin(th));d.subVectors(WT,F);w.scale.y=d.length();w.position.addVectors(F,WT).multiplyScalar(0.5);w.quaternion.setFromUnitVectors(up,d.normalize());};
+    R.spWire=th=>{const q=spW(th),F=new THREE.Vector3(q[0],-9.75,q[1]);d.subVectors(WT,F);w.scale.y=d.length();w.position.addVectors(F,WT).multiplyScalar(0.5);w.quaternion.setFromUnitVectors(up,d.normalize());};
     R.spWire(R.spawl.userData.base); }
   /* ---------- going train (modules from MOD, 0.314 / 0.245 / 0.249; counts in TRAIN) ---------- */
   const m=MOD.train;
@@ -3593,7 +3607,7 @@ const PARTS={
   gw:{t:'Fusee wheel',g:2,src:'photo',sn:'90 teeth, counted on a restoration video of a 1941 Model 21; the centre pinion’s 14 leaves inferred: the manual’s 17½ half turns of the key then hold its 56 hours',figs:'12, 28',c:'#d9453b',pri:6.4,d:'The first wheel of the train, free on the fusee arbor; it drives the centre wheel pinion. The sustaining spring in its recess drives it: loaded by the sustaining ratchet wheel in running, on its own while the key winds. So it keeps turning forward with the train, once in 6.4 hours, while the fusee under it turns back.',sp:`No. 42015 · ${TRAIN.fu} teeth here`},
   sratchet:{t:'Sustaining ratchet wheel',g:2,src:'est',sn:'Its pawls, springs and screws are the manual’s (Sec. IV, parts list); gilt, its springs’ screws from its underside, as on a restoration video; sizes estimated',figs:'69–74',c:'#2f8fb0',pri:4.6,d:'Free on the fusee arbor. Its two winding pawls, each held in by a flat spring, catch the winding ratchet screwed to the fusee, so in running the mainspring’s pull passes through this wheel and the sustaining spring to the fusee wheel. While the key turns the fusee back the winding ratchet slips under the pawls, and the sustaining pawl holds this wheel.',sp:'No. 42009 · winding pawl springs 42007, screws 42012 · winding ratchet 42013'},
   sspring:{t:'Sustaining spring',g:2,src:'est',sn:'Its band, ends and place measured on a restoration video of a real Model 21; the gap and its travel estimated',figs:'28, 69–74',c:'#6a3fa0',d:'A flat blued band round the fusee wheel’s recess, nearly a full ring: one end pinned to the wheel, the other, across a small gap, pinned to the sustaining ratchet wheel, which pushes it toward the first and closes the ring. Always under load: while the key turns the fusee back it alone drives the train, for 5 to 10 minutes, and the mainspring loads it again when the key lets go.',sp:'No. 42016'},
-  spawl:{t:'Sustaining pawl',g:2,src:'photo',sn:'Its place, hub and upright spring wire from a restoration video; the pawl’s outline estimated',figs:'12, 28',c:'#1fa05a',pri:4.5,d:'Holds the sustaining ratchet wheel from turning back while the fusee is wound, so the sustaining spring can only release its power forward into the train, enough to run the chronometer 5 to 10 minutes.',sp:'No. 42096'},
+  spawl:{t:'Sustaining pawl',g:2,src:'photo',sn:'Its place, hub, curved blade and upright spring wire measured on a restoration video; the back of the blade’s root estimated',figs:'12, 28',c:'#1fa05a',pri:4.5,d:'Holds the sustaining ratchet wheel from turning back while the fusee is wound, so the sustaining spring can only release its power forward into the train, enough to run the chronometer 5 to 10 minutes.',sp:'No. 42096'},
   cw:{t:'Centre wheel',g:3,src:'solved',sn:'Its place in the stack (above the third wheel, its pinion above it), its pinion’s side and its five spokes from Figs. 13, 29 and 110; 90 teeth and a third pinion of 12, counted on a restoration video; module from its centre distance',figs:'13, 29, 110',c:'#f2c230',pri:7,d:'Second wheel of the train. Its long arbor passes through the pillar plate and dial and carries the cannon pinion and hour wheel.',sp:'No. 42068 · 1 turn an hour'},
   tw:{t:'Third wheel',g:3,src:'solved',sn:'Lowest in the stack, its pinion above it and five spokes, from Figs. 13, 29 and 110; position solved so every arbor clears every wheel; 80 teeth, counted on a restoration video; module from its centre distance',figs:'13, 29, 110',c:'#7cc242',pri:6.5,d:'Lowest wheel of the train, next to the pillar plate. Its pinion, above it, is driven by the centre wheel; the wheel drives the fourth wheel’s pinion.',sp:'No. 42071'},
   fw:{t:'Fourth wheel',g:3,src:'solved',sn:'Its long pinion under the wheel and its five spokes from Figs. 13, 29 and 110; 75 teeth, counted on a restoration video (so the escape pinion has 10); its height solved for clearance; module from its centre distance; a side photograph shows where it meshes',figs:'13, 29, 110',c:'#2fb3a6',pri:6.8,d:'Its long arbor passes through the dial to carry the second hand. Jewelled at both ends; its upper setting is in the balance lower bridge.',sp:'No. 42073 · 1 turn a minute'},
