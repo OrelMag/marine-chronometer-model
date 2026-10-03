@@ -963,7 +963,7 @@ Contents:
   it is fitted (`R.navyBB`); symmetric about the stem; the arch's inner edge
   6.6 mm or more from the staff (the hairspring); both pins over the rim; the flange bitten round the setup cover
   (`fine.py --eval "__mv.userData.stop('navy')"`, with and without `--hold`;
-  `exploded.py` and `audit.py` take the same `--eval`). `17fa7d4`, `HASH`
+  `exploded.py` and `audit.py` take the same `--eval`). `17fa7d4`, `f7bfddd`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
