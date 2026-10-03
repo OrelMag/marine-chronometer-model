@@ -106,8 +106,8 @@ const ESSAY=(()=>{
   /* ---------- the dial: the model's Hamilton dial (dialCanvas, core.js) with its hands (handShape), at time t (seconds, the hands stepping in half-seconds) and h hours since winding ---------- */
   let DIAL=null;const dial=()=>DIAL||(DIAL=dialCanvas('hamilton'));
   let HANDS=null;
-  const hands=()=>HANDS||(HANDS={hour:handShape(36.8*DK,1.2,2.5,'pear',0.68,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(45.1*DK,1.5,3,'plain',0,{boss:3.2,sq:2.44}).extractPoints(20),
-    sec:handShape(SEC_L,0.5,-10,'plain').extractPoints(20),ud:handShape(10.5*DK,0.6,2.5,'plain').extractPoints(20)});   /* the model's hands, movement.js: sizes in mm */
+  const hands=()=>HANDS||(HANDS={hour:handShape(0,0,0,HAND_W.hour,0,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(0,0,0,HAND_W.min,0,{boss:3.2,sq:2.44}).extractPoints(20),
+    sec:handShape(0,0,0,HAND_W.sec).extractPoints(20),ud:handShape(0,0,0,HAND_W.ud).extractPoints(20)});   /* the model's hands, movement.js: sizes in mm (HAND_W, core.js) */
   const udA=h=>UDA(clamp(h,0,RUN_H));   /* the up/down hand: UD_SWEEP degrees from UP to DOWN in 56 h (movement.js, UD) */
   function drawHand(x,p,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,-k);x.beginPath();
     for(const loop of[p.shape,...p.holes]){loop.forEach((v,i)=>i?x.lineTo(v.x,v.y):x.moveTo(v.x,v.y));x.closePath();}x.fill('evenodd');x.restore();}

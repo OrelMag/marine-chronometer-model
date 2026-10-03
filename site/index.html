@@ -1285,12 +1285,30 @@ function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into){   /* rc, rs: radii of 
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
   return reclose(into,new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
 }
-function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y from its arbor (handGeo extrudes it; the essay draws it flat). tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off) */
+/* the Hamilton dial's hands as measured: [distance from the arbor, full width] in mm, from the tail's end (or the boss) to the tip, traced on References/photo-dial-hamilton-maritime-commission.jpg
+   (face-on, 0.1674 mm/px: References/VIDEOS.md, "The Hamilton dial's proportions") by sections across each blade every 0.5 mm, the edges at half the contrast against the silver, those crossing
+   print left out; the arbors at the bosses' fitted circles: the hands' (426.3, 428.9) px, r 3.34 mm; the wind hand's (427.0, 286.9), r 1.86, to 0.2 px; the seconds' at the dial's sub-dial centre.
+   hour: the stem 1.3 at the boss swelling to 1.98 at 11.5 and narrowing to 0.9 at 21.3; the bulb's back a circle r 1.93 about 23.6 (the sections follow it to 0.07), widest 3.85 there (0.67 of the
+   hand), its front drawn in to a needle 0.3 wide from 32 to the tip at 35.2 (±0.2). min: 1.0 at the boss widening to 1.9 at 29 (0.69; ±0.15, between the print's lines), then drawn in fast to
+   0.95 at 35 and a needle to the minute track's outer line, 42.2. sec: a needle 0.25 to 17.6; its counterpoise a stem 0.38 wide to an arrowhead, its back square at 7.72 (the ramp's middle), 1.15
+   wide at 7.95-8.2, its point at 9.55. ud: a needle 0.42 narrowing to 0.25, to 9.8 (VIDEOS.md: 58.5 px). Widths under about 0.3 are at the photograph's blur (about 1.5 px) and may be thinner.
+   The minute hand shows a bevel down its length (two tones); drawn flat, as are all four (their side profile, 46:30-46:45, not yet read) */
+const HAND_W={hour:[[3.5,1.3],[5,1.45],[6.5,1.69],[7.5,1.8],[9,1.87],[10.5,1.96],[11.5,1.98],[13,1.95],[14.5,1.87],[15.5,1.78],[16.5,1.71],[17.5,1.56],[18.5,1.42],[19.5,1.26],[20.5,1.04],[21.3,0.9],[21.7,0.95],
+    [22,2.42],[22.5,3.13],[23,3.59],[23.6,3.85],[24,3.75],[24.5,3.3],[25,2.85],[25.5,2.55],[26,2.26],[26.5,1.98],[27,1.7],[27.5,1.46],[28,1.26],[28.5,1.07],[29,0.88],[29.5,0.75],[30,0.61],[30.5,0.49],[31,0.41],[32,0.32],[35,0.28],[35.2,0]],
+  min:[[3.5,1],[5.5,1.02],[7,1.07],[9,1.16],[10,1.22],[11,1.27],[12.5,1.3],[14,1.37],[16.5,1.42],[19,1.49],[20.5,1.58],[23,1.65],[25,1.7],[28,1.85],[29,1.9],[30.5,1.75],[32,1.5],[33,1.34],[34,1.16],[35,0.95],[36,0.79],[37,0.7],[38,0.52],[39,0.44],[40,0.39],[41,0.33],[42,0.3],[42.2,0]],
+  sec:[[-9.55,0],[-9.25,0.3],[-9,0.52],[-8.75,0.75],[-8.5,1],[-8.2,1.15],[-7.95,1.15],[-7.75,1.05],[-7.72,0.38],[0,0.38],[0.9,0.28],[17.4,0.25],[17.6,0]],
+  ud:[[0,0.42],[2,0.42],[4,0.33],[6,0.29],[9.5,0.25],[9.8,0]]};
+function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y from its arbor (handGeo extrudes it; the essay draws it flat). tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off).
+   kind an array: a measured outline (HAND_W), len, w, tail and at unused */
+  const P=Array.isArray(kind)&&kind;if(P)w=P[0][1];
   const s=new THREE.Shape(),b=o&&o.boss,yb=b&&Math.sqrt(b*b-w*w/4),ab=b&&Math.acos(w/2/b);
-  if(b){if(tail>yb){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);s.lineTo(w/2,-yb);s.absarc(0,0,b,-ab,ab,false);}else s.moveTo(w/2,yb);}
+  if(b){if(tail>yb&&!P){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);s.lineTo(w/2,-yb);s.absarc(0,0,b,-ab,ab,false);}else s.moveTo(w/2,yb);}
+  else if(P);
   else if(tail<0){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
   else{s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);}
-  if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
+  if(P){const Q=b?P.filter(p=>p[0]>yb):P,pts=[...Q.map(([y,x])=>[x/2,y]),...Q.map(([y,x])=>[-x/2,y]).reverse()].filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);
+    pts.forEach(([x,y],i)=>!b&&!i?s.moveTo(x,y):s.lineTo(x,y));}
+  else if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
   else if(kind==='leaf'||kind==='lance'){const b=kind==='leaf'?w*1.9:w*1.25,m=kind==='leaf'?0.68:0.8;   /* leaf widest at m·len, drawn to a point */
     s.lineTo(w*0.35,len*(m-0.25));s.quadraticCurveTo(b,len*(m-0.06),b*0.85,len*m);s.quadraticCurveTo(b*0.45,len*(m+0.14),0,len);s.quadraticCurveTo(-b*0.45,len*(m+0.14),-b*0.85,len*m);s.quadraticCurveTo(-b,len*(m-0.06),-w*0.35,len*(m-0.25));}
   else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=at?len*at:len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */
@@ -2248,10 +2266,10 @@ function buildMovement(M){
   /* hour hand: a round hole, pressed on the hour wheel's pipe, its collet below the blade and inside its boss, clear of the seconds hand's tip (r 2.9 at :00) (Op. 64, broached with Tool 40); minute hand: a square hole ("broached with a square file"), seated on the cannon pinion's shoulder under its square, its collet above the blade */
   R.hour=new THREE.Group();R.hour.position.y=5.2+DD;hd.add(R.hour);R.min=new THREE.Group();R.min.position.y=5.75+DD;hd.add(R.min);
   const HO={boss:2.9,bore:2.33},MO={boss:3.2,sq:2.44},hcol=m=>mesh(R.hour,ringGeo(2.7,2.33,0.6),m,0,-0.3,0),mcol=m=>mesh(R.min,sqRingGeo(3.2,2.44,0.8),m,0,0.75,0);
-  hn(dk(mesh(R.hour,handGeo(36.8*DK,1.2,2.5,'pear',0.68,HO),M.blued),'hamilton',hcol(M.blued)).parent,'42032');hn(dk(mesh(R.min,handGeo(45.1*DK,1.5,3,'plain',0,MO),M.blued),'hamilton',mcol(M.blued)).parent,'42033');   /* to the photographed dial's: the hour hand 0.853 of the minute track's inner radius, the minute hand to its outer line (42.2) */   /* the hands' parts-list lines on the Hamilton dial's hands (the other styles are variants). Lengths against the photographed dial's tracks (References/photo-dial-hamilton-maritime-commission.jpg): the minute hand to the track's outer edge, the hour hand 0.84 of it, the seconds hand 0.99 of its track's outer circle, the wind hand 0.95 of its scale's */
+  hn(dk(mesh(R.hour,handGeo(0,0,0,HAND_W.hour,0,HO),M.blued),'hamilton',hcol(M.blued)).parent,'42032');hn(dk(mesh(R.min,handGeo(0,0,0,HAND_W.min,0,MO),M.blued),'hamilton',mcol(M.blued)).parent,'42033');   /* their outlines as measured on the photographed dial (HAND_W, core.js): the hour hand to 35.2 (0.87 of the minute track's inner radius), the minute hand to the track's outer line (42.2) */   /* the hands' parts-list lines on the Hamilton dial's hands (the other styles are variants). Lengths against the photographed dial's tracks (References/photo-dial-hamilton-maritime-commission.jpg): the minute hand to the track's outer edge, the hour hand 0.84 of it, the seconds hand 0.99 of its track's outer circle, the wind hand 0.95 of its scale's */
   dk(mesh(R.hour,handGeo(29*DK,1.3,6,'leaf',0,HO),hg),'roman',hcol(hg));dk(mesh(R.min,handGeo(45*DK,0.9,8,'lance',0,MO),hg),'roman',mcol(hg));
-  R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35+DD,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2+DD) */hd.add(R.sec);hn(dk(mesh(R.sec,handGeo(SEC_L,0.5,-10,'plain'),M.blued,0,0.25,0),'hamilton'),'42034');dk(mesh(R.sec,handGeo(16.5*DK,0.55,4,'plain'),M.blued,0,0.25,0),'roman');hn(mesh(R.sec,ringGeo(0.9,0.26,0.6),M.blued,0,-0.05,0),'42034',{sub:1});   /* the collet pressed on the fourth arbor's pivot, flush with its end; the blade on it */
-  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35+DD,L.Ud[1]);hd.add(R.ud);hn(dk(mesh(R.ud,handGeo(10.5*DK,0.6,2.5,'plain'),M.blued,0,0.25,0),'hamilton'),'42035');   /* 0.875 of its ring (r 11.2), as photographed */dk(mesh(R.ud,handGeo(10*DK,0.6,2.5,'leaf'),hg,0,0.25,0),'roman');hn(mesh(R.ud,ringGeo(0.9,0.56,0.4),M.blued,0,0.05,0),'42035',{sub:1});   /* the collet pressed on its wheel's pin */
+  R.sec=new THREE.Group();R.sec.position.set(L.F[0],4.35+DD,L.F[1]);   /* sub-dial hands under the hour hand's sweep (5.2+DD) */hd.add(R.sec);hn(dk(mesh(R.sec,handGeo(0,0,0,HAND_W.sec),M.blued,0,0.25,0),'hamilton'),'42034');dk(mesh(R.sec,handGeo(16.5*DK,0.55,4,'plain'),M.blued,0,0.25,0),'roman');hn(mesh(R.sec,ringGeo(0.9,0.26,0.6),M.blued,0,-0.05,0),'42034',{sub:1});   /* the collet pressed on the fourth arbor's pivot, flush with its end; the blade on it */
+  R.ud=new THREE.Group();R.ud.position.set(L.Ud[0],4.35+DD,L.Ud[1]);hd.add(R.ud);hn(dk(mesh(R.ud,handGeo(0,0,0,HAND_W.ud),M.blued,0,0.25,0),'hamilton'),'42035');   /* 0.875 of its ring (r 11.2), as photographed (HAND_W) */dk(mesh(R.ud,handGeo(10*DK,0.6,2.5,'leaf'),hg,0,0.25,0),'roman');hn(mesh(R.ud,ringGeo(1.86,0.56,0.4),M.blued,0,0.05,0),'42035',{sub:1});   /* the collet pressed on its wheel's pin: the dark boss r 1.86 round the pin's bright end on the photographed dial (a circle fitted to its edge, 0.2 px) */
   /* Nardin-pattern dials: pear hands (blued, or aged gilt on the Soviet copies); a long thin seconds hand to the track with a spear counterpoise */
   for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31*DK,1.4,6,'pear',0,HO),m),k,hcol(m));dk(mesh(R.min,handGeo(46.5*DK,0.9,8,'pear',0,MO),m),k,mcol(m));
     dk(mesh(R.sec,handGeo(19*DK,0.45,-8,'plain'),M.blued,0,0.25,0),k);dk(mesh(R.ud,handGeo((k==='swiss'?11.5:8.5)*DK,0.6,2.5,'plain'),M.blued,0,0.25,0),k);}
@@ -3239,8 +3257,8 @@ const ESSAY=(()=>{
   /* ---------- the dial: the model's Hamilton dial (dialCanvas, core.js) with its hands (handShape), at time t (seconds, the hands stepping in half-seconds) and h hours since winding ---------- */
   let DIAL=null;const dial=()=>DIAL||(DIAL=dialCanvas('hamilton'));
   let HANDS=null;
-  const hands=()=>HANDS||(HANDS={hour:handShape(36.8*DK,1.2,2.5,'pear',0.68,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(45.1*DK,1.5,3,'plain',0,{boss:3.2,sq:2.44}).extractPoints(20),
-    sec:handShape(SEC_L,0.5,-10,'plain').extractPoints(20),ud:handShape(10.5*DK,0.6,2.5,'plain').extractPoints(20)});   /* the model's hands, movement.js: sizes in mm */
+  const hands=()=>HANDS||(HANDS={hour:handShape(0,0,0,HAND_W.hour,0,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(0,0,0,HAND_W.min,0,{boss:3.2,sq:2.44}).extractPoints(20),
+    sec:handShape(0,0,0,HAND_W.sec).extractPoints(20),ud:handShape(0,0,0,HAND_W.ud).extractPoints(20)});   /* the model's hands, movement.js: sizes in mm (HAND_W, core.js) */
   const udA=h=>UDA(clamp(h,0,RUN_H));   /* the up/down hand: UD_SWEEP degrees from UP to DOWN in 56 h (movement.js, UD) */
   function drawHand(x,p,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,-k);x.beginPath();
     for(const loop of[p.shape,...p.holes]){loop.forEach((v,i)=>i?x.lineTo(v.x,v.y):x.moveTo(v.x,v.y));x.closePath();}x.fill('evenodd');x.restore();}

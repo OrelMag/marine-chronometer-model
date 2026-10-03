@@ -462,12 +462,30 @@ function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into){   /* rc, rs: radii of 
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
   return reclose(into,new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
 }
-function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y from its arbor (handGeo extrudes it; the essay draws it flat). tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off) */
+/* the Hamilton dial's hands as measured: [distance from the arbor, full width] in mm, from the tail's end (or the boss) to the tip, traced on References/photo-dial-hamilton-maritime-commission.jpg
+   (face-on, 0.1674 mm/px: References/VIDEOS.md, "The Hamilton dial's proportions") by sections across each blade every 0.5 mm, the edges at half the contrast against the silver, those crossing
+   print left out; the arbors at the bosses' fitted circles: the hands' (426.3, 428.9) px, r 3.34 mm; the wind hand's (427.0, 286.9), r 1.86, to 0.2 px; the seconds' at the dial's sub-dial centre.
+   hour: the stem 1.3 at the boss swelling to 1.98 at 11.5 and narrowing to 0.9 at 21.3; the bulb's back a circle r 1.93 about 23.6 (the sections follow it to 0.07), widest 3.85 there (0.67 of the
+   hand), its front drawn in to a needle 0.3 wide from 32 to the tip at 35.2 (±0.2). min: 1.0 at the boss widening to 1.9 at 29 (0.69; ±0.15, between the print's lines), then drawn in fast to
+   0.95 at 35 and a needle to the minute track's outer line, 42.2. sec: a needle 0.25 to 17.6; its counterpoise a stem 0.38 wide to an arrowhead, its back square at 7.72 (the ramp's middle), 1.15
+   wide at 7.95-8.2, its point at 9.55. ud: a needle 0.42 narrowing to 0.25, to 9.8 (VIDEOS.md: 58.5 px). Widths under about 0.3 are at the photograph's blur (about 1.5 px) and may be thinner.
+   The minute hand shows a bevel down its length (two tones); drawn flat, as are all four (their side profile, 46:30-46:45, not yet read) */
+const HAND_W={hour:[[3.5,1.3],[5,1.45],[6.5,1.69],[7.5,1.8],[9,1.87],[10.5,1.96],[11.5,1.98],[13,1.95],[14.5,1.87],[15.5,1.78],[16.5,1.71],[17.5,1.56],[18.5,1.42],[19.5,1.26],[20.5,1.04],[21.3,0.9],[21.7,0.95],
+    [22,2.42],[22.5,3.13],[23,3.59],[23.6,3.85],[24,3.75],[24.5,3.3],[25,2.85],[25.5,2.55],[26,2.26],[26.5,1.98],[27,1.7],[27.5,1.46],[28,1.26],[28.5,1.07],[29,0.88],[29.5,0.75],[30,0.61],[30.5,0.49],[31,0.41],[32,0.32],[35,0.28],[35.2,0]],
+  min:[[3.5,1],[5.5,1.02],[7,1.07],[9,1.16],[10,1.22],[11,1.27],[12.5,1.3],[14,1.37],[16.5,1.42],[19,1.49],[20.5,1.58],[23,1.65],[25,1.7],[28,1.85],[29,1.9],[30.5,1.75],[32,1.5],[33,1.34],[34,1.16],[35,0.95],[36,0.79],[37,0.7],[38,0.52],[39,0.44],[40,0.39],[41,0.33],[42,0.3],[42.2,0]],
+  sec:[[-9.55,0],[-9.25,0.3],[-9,0.52],[-8.75,0.75],[-8.5,1],[-8.2,1.15],[-7.95,1.15],[-7.75,1.05],[-7.72,0.38],[0,0.38],[0.9,0.28],[17.4,0.25],[17.6,0]],
+  ud:[[0,0.42],[2,0.42],[4,0.33],[6,0.29],[9.5,0.25],[9.8,0]]};
+function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y from its arbor (handGeo extrudes it; the essay draws it flat). tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off).
+   kind an array: a measured outline (HAND_W), len, w, tail and at unused */
+  const P=Array.isArray(kind)&&kind;if(P)w=P[0][1];
   const s=new THREE.Shape(),b=o&&o.boss,yb=b&&Math.sqrt(b*b-w*w/4),ab=b&&Math.acos(w/2/b);
-  if(b){if(tail>yb){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);s.lineTo(w/2,-yb);s.absarc(0,0,b,-ab,ab,false);}else s.moveTo(w/2,yb);}
+  if(b){if(tail>yb&&!P){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);s.lineTo(w/2,-yb);s.absarc(0,0,b,-ab,ab,false);}else s.moveTo(w/2,yb);}
+  else if(P);
   else if(tail<0){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
   else{s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);}
-  if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
+  if(P){const Q=b?P.filter(p=>p[0]>yb):P,pts=[...Q.map(([y,x])=>[x/2,y]),...Q.map(([y,x])=>[-x/2,y]).reverse()].filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);
+    pts.forEach(([x,y],i)=>!b&&!i?s.moveTo(x,y):s.lineTo(x,y));}
+  else if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
   else if(kind==='leaf'||kind==='lance'){const b=kind==='leaf'?w*1.9:w*1.25,m=kind==='leaf'?0.68:0.8;   /* leaf widest at m·len, drawn to a point */
     s.lineTo(w*0.35,len*(m-0.25));s.quadraticCurveTo(b,len*(m-0.06),b*0.85,len*m);s.quadraticCurveTo(b*0.45,len*(m+0.14),0,len);s.quadraticCurveTo(-b*0.45,len*(m+0.14),-b*0.85,len*m);s.quadraticCurveTo(-b,len*(m-0.06),-w*0.35,len*(m-0.25));}
   else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=at?len*at:len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */

@@ -1590,4 +1590,10 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The hands' outlines generic** (Accuracy to the manual). They were stock
+  shapes drawn for a 4 in dial and scaled; they are now traced on the
+  photographed Hamilton dial (`HAND_W`, core.js): the hour hand's swelling stem,
+  round-backed bulb and needle, 0.8 mm longer; the minute hand a long leaf, not a
+  parallel blade; the seconds hand a needle with an arrowhead counterpoise; the
+  UP-DOWN hand's boss r 1.86, not 0.9. Keep them traced, never redrawn by eye
+  (SHAPE-PASS.md, 1).
