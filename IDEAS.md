@@ -105,7 +105,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 | 7 | [Merge static meshes; stop shadows from tiny parts](#51-draw-calls-merge-and-instance) | Performance | S–M | 545 meshes, each with its own geometry; 541 cast shadows; 124 meshes are knurling on four nuts | Done: knurls, rim holes, tiny shadows `347bf5b`; merging all static parts open |
 | 8 | [Stop rebuilding the stripe texture at load](#52-startup-the-stripe-texture) | Performance | S | 204 ms of a 322 ms `mats()` is one per-pixel JavaScript loop | Done `6c5ed75` |
 | 9 | [Temperature and the two balances](#23-temperature) | Physics | M | The manual gives the test temperatures and the compensation figure; the split-rim variant could visibly curl | Done: Table IV's line, the balances' curvature, the split rim's curl, the Navy test's figures (`claude/physics`) |
-| 10 | [30-day performance test](#34-the-30-day-performance-test) | Features | M | The manual prints the test card and the Bureau of Ships tolerances. A satisfying way to see the physics add up |  |
+| 10 | [30-day performance test](#34-the-30-day-performance-test) | Features | M | The manual prints the test card and the Bureau of Ships tolerances. A satisfying way to see the physics add up | Done: run live on the model beside the card of No. 3390 (`claude/physics`) |
 | 11 | [CI: build, escapement check, browser smoke test](#81-continuous-integration) | Testing | S | No automated checks today; the tools already exist | Done `7f3668e` |
 | 12 | [Reduced motion, keyboard orbit](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the camera can't be turned from the keyboard | Done `c2af700` |
 | 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash | Done: hash `cf07772`; remembered settings `8a84df5` |
@@ -447,6 +447,8 @@ A results table beside them shows lock, let-off, overall, drop, roller shake and
 **Watch out.** Some combinations make the solver fail: the tip never slides off, or the wheel never releases. Detect this and show "the escapement would not run" rather than drawing nonsense. That is a lesson too.
 
 ### 3.4 The 30-day performance test
+*Done (4 October 2026, `claude/physics`): the 30-day performance test section runs the six periods on the model as it stands (weights, screws, balance, adjuster's bench, mainspring set), wound at each daily reading and read to 0.01 s, and judges regulation, rating, largest difference, the three temperature compensation figures, recovery and isochronism against the Bureau of Ships' limits, beside the card of No. 3390. Computed, not run in model time; the model has no day-to-day scatter (rating and recovery come from the comparator's rounding alone).* Also from the physics list that followed 2: the hairspring's own isochronism on the adjuster's bench (`HS`), and the mainspring's set (Op. 13) under Swing and isochronism.
+
 **What.** A simulated overhaul-station rating test, following Sec. IX:
 - A test room at 72½ °F and 40 % relative humidity.
 - Six periods of five days, at 90, 72½, 55, 55, 72½ and 90 °F.

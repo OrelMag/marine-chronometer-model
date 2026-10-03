@@ -534,7 +534,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      its small residual, the spring being illustrative), 1 at 12 h from full wind, the middle of a day's running; while the key turns, the sustaining spring alone, SUS of it when
      loaded (estimated) and falling to nothing as it relaxes over its 10 minutes (R.ssD of R.SMAX, update()); run down, none. drvB(h): what a going barrel with the same spring
      would give, its pull falling evenly with time, geared to give the same at 28 h (Swing and isochronism) */
-  const SUS=0.8,FT12=R.fs.torque(12*FUSEE_PER_HOUR),drvF=h=>R.fs.torque(h*FUSEE_PER_HOUR)/FT12,drvB=h=>R.fs.pullB(clamp(h/RUN_H,0,1))/R.fs.pullB(0.5)*drvF(RUN_H/2);
+  /* MSET: the mainspring's set (Op. 13, "check condition and set of mainspring"): a spring that has taken a set pulls that much less all through, which the fusee can't make up */
+  let MSET=0;const SUS=0.8,FT12=R.fs.torque(12*FUSEE_PER_HOUR),drvF=h=>R.fs.torque(h*FUSEE_PER_HOUR)/FT12*(1-MSET),drvB=h=>R.fs.pullB(clamp(h/RUN_H,0,1))/R.fs.pullB(0.5)*drvF(RUN_H/2);
   const driveNow=()=>winding?SUS*clamp(1-R.ssD/R.SMAX,0,1):hrs<RUN_H?drvF(hrs):0;
   const H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,twT:-1},TAU_FREE=ESC.settings.TF,TAU_ARM=0.2,stopOut=$('#stopOut'),twistB=$('#twist');let lastSO=0;
   if(/[?&]qa\b/.test(location.search))window.__H=()=>({...H,E:lastE,tSim,hrs,tM,slip,rateK,escK,rateW,drive:driveNow()});   /* for the tools: the stop/start state, the master time, the hands' slip, the rate (escK: the escapement's share, rateW the rest) and the drive */
@@ -563,9 +564,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      ampStep brings the balance to, and the escapement's rate ESC.run.rate (s a day against the model's settings), escK in rateK. A setting at which it would not run,
      or at which the balance would swing too little to keep it going, is not applied ---------- */
   const EX0=ESC.EX,BENCH=[['rT','Trip-spring tip',0.24,0.34,0.001,'mm'],['rd','Discharge-jewel reach',0.26,0.35,0.001,'mm'],['dL','Depth of lock',0.005,0.05,0.001,'mm'],
-    ['DRAW','Locking-jewel draw',4,16,0.5,'°'],['aD','Discharge-jewel angle',260,275,0.1,'°'],['aI','Impulse-jewel angle',175,188,0.1,'°']],BDEF=Object.fromEntries(BENCH.map(([k])=>[k,ESC.settings[k]]));   /* the model's settings */
+    ['DRAW','Locking-jewel draw',4,16,0.5,'°'],['aD','Discharge-jewel angle',260,275,0.1,'°'],['aI','Impulse-jewel angle',175,188,0.1,'°'],['HS','Hairspring isochronism',-0.3,0.3,0.01,'s']],BDEF=Object.fromEntries(BENCH.map(([k])=>[k,ESC.settings[k]]));   /* the model's settings */
   const bset={...BDEF},bIn={},benchOut=$('#benchOut'),benchT=$('#benchT'),bcv=$('#benchCv');let benchQ=false,benchBad='';
-  const bFmt=(k,v)=>{const b=BENCH.find(x=>x[0]===k);return b[5]==='mm'?(v*ES).toFixed(3)+' mm':(+v).toFixed(1)+'°';};
+  const bFmt=(k,v)=>{const b=BENCH.find(x=>x[0]===k);return b[5]==='mm'?(v*ES).toFixed(3)+' mm':b[5]==='s'?(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(2)+' s':(+v).toFixed(1)+'°';};   /* HS: s a day for each 10 degrees more swing */
   for(const[k,t,lo,hi,st]of BENCH){$('#benchS').insertAdjacentHTML('beforeend',`<label class="sl rw"><span>${t}</span><input type="range" min="${lo}" max="${hi}" step="${st}" value="${BDEF[k]}" aria-label="${t}"><output></output></label>`);
     const i=$('#benchS').lastElementChild.querySelector('input');bIn[k]=i;i.addEventListener('input',()=>{bset[k]=+i.value;benchQ=true;wake();});}
   function benchShow(){for(const[k]of BENCH){bIn[k].value=bset[k];bIn[k].nextElementSibling.textContent=bFmt(k,bset[k]);}
@@ -616,7 +617,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function swRec(now,drv){if(swTr.length&&now-swTr[swTr.length-1][0]<100)return;swTr.push([now,H.amp/D2R,drv]);while(swTr.length&&now-swTr[0][0]>61000)swTr.shift();}
   const steady=fn=>{const r=[];for(let h=0;h<=RUN_H;h+=RUN_H/112){const sv=fn(h),a=ESC.ampAt(sv);r.push([h,a/D2R,ESC.rateAt(a,sv)]);}return r;};
   const gain=(fn,h1)=>{let g=0;const n=48;for(let i=0;i<n;i++){const h=h1*(i+0.5)/n,sv=fn(h),a=ESC.ampAt(sv);g+=ESC.rateAt(a,sv)*h1/n/24;}return g;};   /* seconds gained over the first h1 hours from full wind */
-  function swCalc(){const k=[ESC.A,ESC.run.rate,ESC.AMIN].join();if(k===swKey)return swC;swKey=k;const iso=fn=>gain(fn,12)-gain(fn,24)/2;
+  function swCalc(){const k=[ESC.A,ESC.run.rate,ESC.AMIN,ESC.settings.HS,MSET].join();if(k===swKey)return swC;swKey=k;const iso=fn=>gain(fn,12)-gain(fn,24)/2;
     const sp=fn=>{const r=steady(fn).map(q=>q[2]).filter(Number.isFinite);return[Math.min(...r),Math.max(...r)];};
     const cv=[];for(let sv=0.15;sv<=1.8;sv+=0.01){const a=ESC.ampAt(sv);if(a>=ESC.AMIN)cv.push([a/D2R,ESC.rateAt(a,sv)]);}
     return swC={F:steady(drvF),B:steady(drvB),isoF:iso(drvF),isoB:iso(drvB),spF:sp(drvF),spB:sp(drvB),cv,sus:ESC.ampAt(SUS)/D2R};}
@@ -632,8 +633,36 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       plot(swCv,{x0:0,x1:56,y0:150,y1:330,xt:[0,14,28,42,56],yt:[180,240,300],xf:v=>v+' h',yf:v=>v+'°',bands:[{x0:0,x1:56,y0:247.5,y1:270,col:band}],cursor:hrs,
         series:(B?[{pts:C.B.map(q=>[q[0],q[1]]),col:fz,w:1.6,dash:[5,4]}]:[]).concat([{pts:C.F.map(q=>[q[0],q[1]]),col:blue,w:2.2}]),
         marks:[{x:hrs,y:ESC.ampAt(drvF(hrs))/D2R,col:blue}].concat(B?[{x:hrs,y:ESC.ampAt(drvB(hrs))/D2R,col:fz,r:3}]:[]),texts:[{x:1,y:318,t:B?'swing: the fusee; dashed, a going barrel':'swing with the fusee'}]});}
-    const now2=H.held?'':`<span>Now ${Math.round(A)}° each way, the escape wheel driven at ${Math.round(drv*100)}% of its torque${winding?' by the sustaining spring':''}; the escapement ${86400*(escK-1)>=0?'gains':'loses'} ${Math.abs(86400*(escK-1)).toFixed(2)} s a day at this swing.</span>`;
-    swOut.innerHTML=`<b>Isochronism check ${sg(C.isoF)} s</b>${now2}<span>With the fusee the rate stays within ${sg(C.spF[0])} to ${sg(C.spF[1])} s a day from full wind to run down; a going barrel with the same spring would range ${sg(C.spB[0])} to ${sg(C.spB[1])}, and its isochronism check would read ${sg(C.isoB)} s. While the key turns the sustaining spring alone would swing the balance ${Math.round(C.sus)}°.</span>`;}
+    const now2=H.held?'':`<span>Now ${Math.round(A)}° each way, the escape wheel driven at ${Math.round(drv*100)}% of its torque${winding?' by the sustaining spring':''}; the escapement${ESC.settings.HS?' and hairspring':''} ${86400*(escK-1)>=0?'gain':'lose'}${ESC.settings.HS?'':'s'} ${Math.abs(86400*(escK-1)).toFixed(2)} s a day at this swing.</span>`;
+    swOut.innerHTML=`<b>Isochronism check ${sg(C.isoF)} s</b>${now2}<span>With the fusee the rate stays within ${sg(C.spF[0])} to ${sg(C.spF[1])} s a day from full wind to run down; a going barrel with the same spring would range ${sg(C.spB[0])} to ${sg(C.spB[1])}, and its isochronism check would read ${sg(C.isoB)} s. While the key turns the sustaining spring alone would swing the balance ${Math.round(C.sus)}°.${MSET?` The mainspring’s set takes ${Math.round(MSET*100)}% off its pull, so the balance swings ${Math.round(ESC.ampAt(drvF(12))/D2R)}° at 12 h, not ${Math.round(ESC.A/D2R)}°.`:''}</span>`;}
+  /* the mainspring's set: a slider in Swing and isochronism, kept in the link as mset=15 (per cent) */
+  const msR=$('#msetR'),msShow=()=>{msR.nextElementSibling.textContent=MSET?Math.round(MSET*100)+'% weaker':'as new';};
+  const msSet=v=>{v=clamp(Math.round(v),0,30)/100;if(v===MSET)return;MSET=v;msR.value=Math.round(v*100);msShow();rErr=0;pend.add('mainspring changed');swLast=0;wake();writeHash();};
+  msR.addEventListener('input',()=>msSet(+msR.value));msShow();
+  /* ---------- the 30-day performance test (Sec. IX, Performance Testing; the factory test card of No. 3390): six periods of five days, at 90, 72½, 55, 55, 72½ and 90 °F,
+     the chronometer wound at each daily comparison and read on the comparator to 0.01 s. Each day's rate is the model's at that temperature: the weights and screws (√(I0/I)),
+     the balance's temperature curve (tCurve) and the escapement's and hairspring's rate over the 24 hours after winding (gain, the fusee and the mainspring's set). The model
+     has no day-to-day scatter, so its rating and recovery come from the comparator's rounding alone; the rest are the physics'. The isochronism check is Swing and isochronism's.
+     The card's figures and the Bureau of Ships' limits beside it ---------- */
+  const tsDet=$('#testDet'),tsOut=$('#testOut'),TS=[['I',90],['II',72.5],['III',55],['IV',55],['V',72.5],['VI',90]];let tsKey='',tsLast=0;
+  const C3390={reg:0.09,dev:0.03,dif:0.14,t1:0.08,t2:0.06,t3:0.02,rec:0.06,iso:0.00};
+  function testCalc(){const wK=Math.sqrt(I0/rI),e24=gain(drvF,24),r=T=>86400*(wK*(1+tCurve(T)/86400)*(1+e24/86400)-1),q=v=>Math.round(v*100)/100;
+    let e=q(dialRead()-tM);const P=TS.map(([n,T])=>{const e0=e,rs=[];for(let d=0;d<5;d++){const e1=q(e+r(T));rs.push(q(e1-e));e=e1;}const m=(e-e0)/5,dv=rs.map(x=>Math.abs(x-m));return{n,T,e0,rs,m,dev:dv.reduce((a,b)=>a+b,0)/5,dif:Math.max(...rs)-Math.min(...rs)};});
+    const M=k=>(P[k[0]].m+P[k[1]].m)/2,m90=M([0,5]),m72=M([1,4]),m55=M([2,3]),C=swCalc();
+    return{P,reg:Math.max(...P.map(p=>Math.abs(p.m))),dev:P.reduce((a,p)=>a+p.dev,0)/6,dif:Math.max(...P.map(p=>p.dif)),t1:Math.abs(m90-m72),t2:Math.abs(m72-m55),t3:Math.abs(m90-m55),
+      rec:Math.max(Math.abs(P[0].m-P[5].m),Math.abs(P[1].m-P[4].m),Math.abs(P[2].m-P[3].m)),iso:Math.abs(C.isoF)};}
+  function testShow(now){if(!tsDet.open||now-tsLast<500)return;tsLast=now;const k=[rI,tE,R.balKind,ESC.run.rate,ESC.A,ESC.settings.HS,MSET].join();if(k===tsKey)return;tsKey=k;
+    const R2=testCalc(),f=(v,n=2)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n),L=[['reg','Regulation',1.55,'the largest mean daily rate of any period'],['dev','Rating',0.50,'the mean deviation of rates'],['dif','Largest difference',0.75,'between any two daily rates in the same period'],
+      ['t1','90 / 72½ °F',0.75,'temperature compensation: the mean rates at 90 and 72½ °F apart'],['t2','72½ / 55 °F',0.75,'temperature compensation: the mean rates at 72½ and 55 °F apart'],['t3','90 / 55 °F',1.20,'temperature compensation: the mean rates at 90 and 55 °F apart'],
+      ['rec','Recovery',0.70,'the largest difference between the mean rates of periods at the same temperature'],['iso','Isochronism',0.50,'the 12-hour rate against half the 24-hour rate, at 72½ °F']];
+    const bad=L.filter(([k,,t])=>R2[k]>t);
+    tsOut.innerHTML=`<p class="rate" style="margin:0 0 6px"><b>${bad.length?'Failed':'Passed'}</b><span>${bad.length?'Outside the limit: '+bad.map(x=>x[1].replace(/^[A-Z](?=[a-z])/,c=>c.toLowerCase())).join(', ')+'.':'Every figure within the Bureau of Ships’ limits.'}</span></p>`+
+      '<table class="rt book"><thead><tr><th>Period</th><th class="n">°F</th><th>Daily rates</th><th class="n">Mean</th><th class="n">Dev.</th></tr></thead><tbody>'+
+      R2.P.map(p=>`<tr><td>${p.n}</td><td class="n">${p.T===72.5?'72½':p.T}</td><td class="rs">${p.rs.map(x=>f(x)).join(' ')}</td><td class="n">${f(p.m)}</td><td class="n">${p.dev.toFixed(2)}</td></tr>`).join('')+'</tbody></table>'+
+      '<table class="rt book" style="margin-top:8px"><thead><tr><th>Performance</th><th class="n">Model</th><th class="n" title="The factory test card of Hamilton No. 3390 (Sec. IX)">3390</th><th class="n">Limit</th></tr></thead><tbody>'+
+      L.map(([k,n,t,w])=>`<tr><td title="${w}">${n}</td><td class="n${R2[k]>t?' bad':''}">${R2[k].toFixed(2)}</td><td class="n">${C3390[k].toFixed(2)}</td><td class="n">${t.toFixed(2)}</td></tr>`).join('')+'</tbody></table>';}
+  tsDet.addEventListener('toggle',()=>{tsKey='';tsLast=0;testShow(performance.now());});
+  if(/[?&]qa\b/.test(location.search))window.__test=testCalc;   /* for invariants.py: the test's figures as the card has them */
   $('#stopLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('movement');st.see=true;st.focus=new Set(['lockArm','tblock','bal','fw']);look();goCam({yaw:2.6,pitch:0.62,dist:95,target:mvL((L.B[0]+L.F[0])/2,-20,(L.B[1]+L.F[1])/2)});});
   /* wind with the key, on the wall clock so slow frames don't slow it: half turns of 0.7 s with a 0.3 s pause to change grip, until the chain pushes the stop-bar in the fusee top out against
      the winding stop. Plates see-through, the winding stop kept solid (look), the parts that take part in winding picked out */
@@ -796,7 +825,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);return h.toString().split('%3A').join(':').split('%2C').join(',');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
@@ -808,6 +837,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     { const q={...BDEF};for(const kv of(g('esc')||'').split(',')){const[k,v]=kv.split(':');if(own(BDEF,k)&&Number.isFinite(+v)){const b=BENCH.find(x=>x[0]===k);q[k]=clamp(+v,b[2],b[3]);}}
       if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();if(first&&!H.armT)H.amp=ESC.ampAt(driveNow());} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings; at load the balance is already swinging as they make it */
     balApply(g('bal')||'');   /* bal=...: the balance's weights and screws (balStr) */
+    msSet(+(g('mset')||0)||0);   /* mset=15: the mainspring's set, per cent */
     const ed=g('edges')!=='0',shd=g('shadows')==='1',mg=g('merge')!=='0';   /* Edges and Performance mode are on by default, Shadows off: the hash says edges=0, merge=0 or shadows=1 only against that */
     const dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
@@ -907,7 +937,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!ESSAY.on()&&onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
-    if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}if(!ESSAY.on())swDraw(now);
+    if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}if(!ESSAY.on()){swDraw(now);testShow(now);}
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
     const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */

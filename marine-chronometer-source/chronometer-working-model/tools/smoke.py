@@ -111,7 +111,7 @@ async def model(b,errs,steps):
     await pg.evaluate("()=>{const i=document.querySelector('#lat');i.value=-45;i.dispatchEvent(new Event('input'))}");await click('#bookNow','second comparison, 45 S');await click('#bookClr','rate book cleared')
     # the adjuster's bench: each setting to both ends (some won't run, and are refused), then the model's settings again
     await pg.evaluate("document.querySelector('#benchDet').open=true")
-    for j in range(6):
+    for j in range(await pg.evaluate("document.querySelectorAll('#benchS input').length")):
         for end in('min','max'):
             await pg.evaluate("([j,e])=>{const i=document.querySelectorAll('#benchS input')[j];i.value=i[e];i.dispatchEvent(new Event('input'))}",[j,end]);await pg.wait_for_timeout(250)
         steps.append(f'bench setting {j+1} to both ends')
@@ -125,6 +125,10 @@ async def model(b,errs,steps):
     for i in range(3):
         await click('#jolt',f'jolt {i+1}',600)
         if await pg.evaluate("window.__H().held"):await click('#twist','twist after a jolt',1500)
+    await pg.evaluate("()=>{const r=document.querySelector('#msetR');r.value=20;r.dispatchEvent(new Event('input'))}");steps.append('mainspring set 20%');await pg.wait_for_timeout(400)
+    await pg.evaluate("document.querySelector('#testDet').open=true");await pg.wait_for_timeout(800);steps.append('performance test')
+    if not await pg.evaluate("document.querySelectorAll('#testOut tr').length>=14"):errs.append('the performance test card is missing')
+    await pg.evaluate("()=>{const r=document.querySelector('#msetR');r.value=0;r.dispatchEvent(new Event('input'))}")
     await pg.evaluate("()=>{const r=document.querySelector('#rollP');r.value=0.7;r.dispatchEvent(new Event('input'))}");await click('#rock','ship motion, roll period 0.7 s',1500);await click('#rock','ship motion off')
     await click('#speeds button[data-v="1"]','1x');await click('#stopLook','show the arm and screw')
     await click('#helpBtn','help card');await click('#helpBtn','help card closed')

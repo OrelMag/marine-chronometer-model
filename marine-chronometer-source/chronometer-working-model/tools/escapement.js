@@ -23,5 +23,5 @@ if(require.main===module){
     `${Number.isFinite(u.own)?` (the escapement's own error ${f(u.own,2)} s a day, which the timing absorbs at the model's settings: impulse ${f(86400*u.parts.imp/2/Math.PI,2)}, draw ${f(86400*u.parts.draw/2/Math.PI,2)}, detent spring ${f(86400*u.parts.detent/2/Math.PI,2)}, trip spring ${f(86400*u.parts.trip/2/Math.PI,2)})`:''}.`);
   /* isochronism: the swing and rate the torque gives (the drive at s of the model's), at the manual's 1⅜ and 1½ turns of motion (Sec. II) */
   if(u.cl){const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const m=(lo+hi)/2;E.ampAt(m)<a?lo=m:hi=m;}return(lo+hi)/2;},d=Math.PI/180,iso=[247.5,255,270].map(A=>{const s=sAt(A*d);return`${f(A)}° ${f(100*s,0)}% of the torque, ${(x=>(x>=0?'+':'')+f(x,2))(E.rateAt(A*d,s))} s a day`;});
-    console.log(`  isochronism (the escapement's; the hairspring taken as isochronous): ${iso.join('; ')}.`);}
+    console.log(`  isochronism (the escapement's${E.settings.HS?`, and the hairspring's at ${f(E.settings.HS,2)} s a day per 10°`:'; the hairspring taken as isochronous'}): ${iso.join('; ')}.`);}
 }
