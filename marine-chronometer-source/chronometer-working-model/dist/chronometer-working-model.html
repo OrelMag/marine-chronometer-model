@@ -979,11 +979,12 @@ function makeInk(r){
     const t=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=t.minFilter=T.LinearFilter;t.needsUpdate=true;return t;};
   /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once),
      and so is the mesh's own polygon offset: without it the dial's face, 0.02 above its brass disc, fought it, and Edges drew the fight as streaks across the dial */
-  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
-    vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
-    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId,uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);'+SEC_DEPTH+'\n}'});
-  /* the id is the part's (the drawing) or, for Edges, the mesh's (inkTag): a pawl lies on its own part's wheel */
-  let idOn=false,idM=false;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
+  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uA:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
+    vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nattribute float aId;uniform float uId,uA;varying vec3 vN;varying float vId;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;vId=uA>0.5?aId:uId;}',
+    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;varying float vId;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,vId);'+SEC_DEPTH+'\n}'});
+  nid.defaultAttributeValues.aId=[0];   /* a mesh without the attribute (all but the merged copies) reads 0 */
+  /* the id is the part's (the drawing) or, for Edges, the mesh's (inkTag): a pawl lies on its own part's wheel. A merged copy (drawMerge) carries its pieces' own as aId */
+  let idOn=false,idM=false;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniforms.uA.value=idM&&this.userData.merged?1:0;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
   const U=(o={})=>Object.assign({uPx:{value:new T.Vector2()},uPr:{value:1}},o);
   const VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.0,1.0);}';
   const edge=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tN:{value:rtN.texture},tD:{value:rtN.depthTexture},tG:{value:rtG.texture},tGD:{value:rtG.depthTexture},uNF:{value:new T.Vector2()},uTwo:{value:0},uGh:{value:0},uMv:{value:0}}),
@@ -1044,6 +1045,50 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
     r.shadowMap.needsUpdate=true;r.setRenderTarget(null);r.setClearColor(cc,ca);r.clear();r.render(scene,cam);r.shadowMap.autoUpdate=au;
     q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=over;r.setRenderTarget(null);const ac=r.autoClear;r.autoClear=false;r.render(qs,qc);r.autoClear=ac;}};
 }
+/* draw calls (PERFORMANCE.md, What's next 1): the static pieces under one group that share a material, drawn as one merged copy. The pieces stay where they are, for the
+   tools, picking, shadows and every display mode. A batch is drawn merged only while each of its pieces is shown and wears its own material (mat0); otherwise its pieces
+   draw themselves. A piece that moves against its group or whose geometry is rebuilt (its place, geometry or vertex version changed since it was merged) leaves its batch
+   for good, and the batch is merged again without it. A merged piece leaves layer 0, the camera's, for layer 2, which the raycasters see too, so picking stays the
+   pieces' own. r128's shadow pass tests layers against the main camera, so the copy casts for its pieces, whenever one of them would (castOn, app.js: a small piece
+   merged with a large one then casts the shadow it was spared for its draw call). The copies live in a group of their own in the scene, outside the model's tree (the tools traverse it), each put where its
+   pieces' group is (sync: after updateMatrixWorld, before drawing), and carry their pieces' Edges ids as a vertex attribute (aId; inkTag). Left out: transparent materials
+   (drawn sorted, one by one), decals and surfaces, instanced meshes, multi-material, part-drawn and interleaved geometry, a piece placed by hand (matrixAutoUpdate off).
+   A geometry's groups (extrusions, cylinders and boxes have them) mean nothing under one material: the whole of it is drawn */
+function mergeIdx(list){const ks=Object.keys(list[0].geometry.attributes),g0=list[0].geometry;let nv=0,ni=0;
+  for(const o of list){const g=o.geometry,n=g.attributes.position.count;nv+=n;ni+=g.index?g.index.count:n;}
+  const A={};for(const k of ks)A[k]=new Float32Array(nv*g0.attributes[k].itemSize);const id=new Float32Array(nv),ix=nv>65535?new Uint32Array(ni):new Uint16Array(ni),v=new THREE.Vector3(),nm=new THREE.Matrix3(),G=['getX','getY','getZ','getW'];let ov=0,oi=0;
+  for(const o of list){const g=o.geometry,n=g.attributes.position.count;o.updateMatrix();const m=o.matrix,fl=m.determinant()<0;nm.getNormalMatrix(m);
+    for(const k of ks){const a=g.attributes[k],s=a.itemSize,t=A[k];
+      if(k==='position'||k==='normal')for(let i=0;i<n;i++){v.fromBufferAttribute(a,i);if(k==='position')v.applyMatrix4(m);else v.applyMatrix3(nm).normalize();t[(ov+i)*3]=v.x;t[(ov+i)*3+1]=v.y;t[(ov+i)*3+2]=v.z;}
+      else for(let i=0;i<n;i++)for(let c=0;c<s;c++)t[(ov+i)*s+c]=a[G[c]](i);}
+    id.fill(o.userData.inkIdM||0,ov,ov+n);
+    const c=g.index?g.index.count:n,I=g.index?g.index.array:null;for(let j=0;j<c;j+=3){const a=I?I[j]:j,b=I?I[j+1]:j+1,d=I?I[j+2]:j+2;ix[oi+j]=a+ov;ix[oi+j+1]=(fl?d:b)+ov;ix[oi+j+2]=(fl?b:d)+ov;}
+    ov+=n;oi+=c;}
+  const out=new THREE.BufferGeometry();for(const k of ks)out.setAttribute(k,new THREE.BufferAttribute(A[k],g0.attributes[k].itemSize));out.setAttribute('aId',new THREE.BufferAttribute(id,1));out.setIndex(new THREE.BufferAttribute(ix,1));out.computeBoundingSphere();return out;}
+function drawMerge(scene,meshes){
+  const root=new THREE.Group();root.name='drawMerge';root.matrixAutoUpdate=false;scene.add(root);root.traverse=root.traverseVisible=function(f){f(this);};   /* the tools walk the scene with traverse: the copies are a way of drawing, not parts (three draws, updates and raycasts through children) */const B=new Map(),all=meshes.slice();
+  const sig=g=>Object.keys(g.attributes).sort().map(k=>k+g.attributes[k].itemSize).join();
+  const ok=o=>o.isMesh&&!o.isInstancedMesh&&!!o.parent&&o.matrixAutoUpdate&&!Array.isArray(o.material)&&o.material===o.userData.mat0&&!o.material.transparent&&!o.userData.decal&&!o.userData.surface&&
+    o.renderOrder===0&&o.frustumCulled&&!!o.geometry.attributes.position&&o.geometry.attributes.position.count>0&&o.geometry.drawRange.start===0&&o.geometry.drawRange.count===Infinity&&!Object.keys(o.geometry.morphAttributes).length&&Object.values(o.geometry.attributes).every(a=>!a.isInterleavedBufferAttribute);
+  const ver=g=>g.attributes.position.version*1e6+(g.attributes.normal?g.attributes.normal.version:0);
+  const snap=o=>{o.userData.dm={p:o.position.clone(),q:o.quaternion.clone(),s:o.scale.clone(),g:o.geometry,v:ver(o.geometry)};};
+  const moved=o=>{const d=o.userData.dm;return!d.p.equals(o.position)||!d.q.equals(o.quaternion)||!d.s.equals(o.scale)||d.g!==o.geometry||d.v!==ver(o.geometry);};
+  const lay=(o,on)=>{if(on){o.layers.disable(0);o.layers.enable(2);}else{o.layers.enable(0);o.layers.disable(2);}};
+  const shown=o=>{for(;o;o=o.parent)if(!o.visible)return false;return true;};
+  for(const o of meshes){if(!ok(o))continue;const k=o.parent.uuid+'|'+o.material.uuid+'|'+o.userData.part+'|'+sig(o.geometry);let b=B.get(k);if(!b)B.set(k,b={parent:o.parent,mat:o.material,list:[],mesh:null,on:false,dirty:true});b.list.push(o);snap(o);}
+  for(const[k,b]of B)if(b.list.length<2)B.delete(k);
+  const relist=()=>{all.length=0;all.push(...meshes);for(const b of B.values())if(b.mesh)all.push(b.mesh);};
+  return{all,root,batches:B,stats:()=>{let on=0,pcs=0;for(const b of B.values())if(b.on){on++;pcs+=b.list.length;}return{batches:B.size,on,pieces:pcs};},
+    sync(){let re=false;
+      for(const b of B.values()){let gone=false;for(const o of b.list)if(moved(o)){o.userData.dm=null;lay(o,false);gone=true;}
+        if(gone){b.list=b.list.filter(o=>o.userData.dm);b.dirty=true;}
+        const on=b.list.length>1&&b.list.every(o=>o.visible&&o.material===b.mat);
+        if(on&&b.dirty){if(b.mesh){root.remove(b.mesh);b.mesh.geometry.dispose();}
+          const c=b.mesh=new THREE.Mesh(mergeIdx(b.list),b.mat),u=c.userData;c.matrixAutoUpdate=false;c.receiveShadow=true;c.castShadow=false;c.name='merged '+b.list[0].userData.part;
+          Object.assign(u,{merged:true,part:b.list[0].userData.part,inkBox:!!b.list[0].userData.inkBox,inkIdM:0,inkId:inkHash(b.list[0].userData.part),mat0:b.mat});root.add(c);b.dirty=false;re=true;}
+        if(on!==b.on){for(const o of b.list)lay(o,on);b.on=on;}
+        if(b.mesh){const vis=on&&shown(b.parent);b.mesh.visible=vis;if(vis){b.mesh.matrix.copy(b.parent.matrixWorld);b.mesh.matrixWorld.copy(b.parent.matrixWorld);b.mesh.castShadow=b.list.some(o=>o.castShadow);}}}
+      if(re)relist();}};}
 /* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: filling half the room between arbor and wall, which gives the most turns),
    coiled in two packs, one on the arbor (from ra) and one on the wall (out to Rw), joined by k free turns. Its coils in a pack lie gap apart (the grease).
    Running peels coils off the arbor pack onto the wall pack. msPack(la,o): the packs with la mm on the arbor; T, the turns from the inner end to the outer.
@@ -3496,7 +3541,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* a frame: rendered, drawn (tinted or in ink), or rendered with Edges (the drawing's lines over it, the movement's only) (makeInk in core.js, set up the first time it is asked for) */
   let ink=null;const INKM=[...MVM,...BOXM];BOXM.forEach(o=>o.userData.inkBox=true);INKM.forEach(inkTag);   /* Edges' ids, up front (inkTag, core.js) */
   const INKH=[sh,...MVM.filter(o=>o.userData.decal)];   /* left out of Edges' ids: the floor shadow, and the engravings, which would outline themselves on their plates */
-  const paint=()=>{if(st.draw)(ink||(ink=makeInk(r))).render(scene,cam,INKM);else if(st.edges)(ink||(ink=makeInk(r))).lines(scene,cam,INKM,INKH);else r.render(scene,cam);};
+  /* the static pieces drawn merged (drawMerge, core.js): a merged piece is on layer 2, which the raycasters see too. The world matrices are brought up to date once, before
+     the copies are put in place, and not again for each of the frame's passes */
+  const DM=drawMerge(scene,INKM);if(/[?&]qa\b/.test(location.search))window.__dm=DM;
+  const paint=()=>{scene.updateMatrixWorld();DM.sync();const au=scene.autoUpdate;scene.autoUpdate=false;
+    if(st.draw)(ink||(ink=makeInk(r))).render(scene,cam,DM.all);else if(st.edges)(ink||(ink=makeInk(r))).lines(scene,cam,DM.all,INKH);else r.render(scene,cam);scene.autoUpdate=au;};
   /* ---------- cross-sections ---------- */
   r.localClippingEnabled=true;
   for(const o of[...MVM,...BOXM]){const m=o.userData.mat0;if(m&&m.isMeshStandardMaterial)patchSection(m,m.side!==THREE.DoubleSide&&!m.transparent&&!o.userData.noCap);}
@@ -3649,7 +3698,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(wasTap&&e.type==='pointerup')pick(e);if(!ptrs.size)down=null;};
   cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
   cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
-  const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
+  const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();ray.layers.enable(2);   /* layer 2: the pieces drawn merged (drawMerge) */
   function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
     const hit=hits.find(h=>INFO[h.object.userData.part]);
@@ -4038,7 +4087,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   }
 
   /* ---------- label placement ---------- */
-  const ray2=new THREE.Raycaster(),tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0;
+  const ray2=new THREE.Raycaster(),tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0;ray2.layers.enable(2);
   const lsorted=()=>labels.slice().sort((p,q)=>(PRI[q.part]||1)-(PRI[p.part]||1));let LS=null;
   function placeLabels(now){
     if(!LS)LS=lsorted();

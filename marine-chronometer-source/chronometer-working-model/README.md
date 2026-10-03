@@ -634,6 +634,32 @@ edit; see "Changing things" in the root README for the loop and the checks.
   so a part lying on the cut one doesn't show through in patches. Two solids
   that overlap show each other through a cut, so keep parts from overlapping
   except at their intended contacts (`tools/fine.py`).
+- **Static pieces drawn merged.** Each frame draws about 40% fewer meshes than
+  the model has: the pieces under one group that share a material are drawn as
+  one merged copy (`drawMerge` in `core.js`, synced in `app.js`'s `paint()`).
+  - The pieces stay where they are, for the tools, picking and every display
+    mode. The copies live in a group of their own in the scene, outside the
+    model's tree, and that group's `traverse()` stops at itself, so the tools,
+    which walk `__mv` or the whole scene with `traverse()`, never see them.
+    three.js draws, updates and raycasts through `children`, so it still does.
+  - A batch is drawn merged only while all its pieces are shown and wear their
+    own material (`userData.mat0`). Colour modes, fading, ghosts, the load
+    path's tint and the drawings change materials, so those parts draw
+    their pieces instead, with nothing to keep in step.
+  - A piece that moves against its group, or whose geometry is rebuilt or
+    replaced, leaves its batch for good the first frame it does, and the batch
+    is merged again without it. Animate a piece by moving it or its group, as
+    the model already does.
+  - A merged piece leaves layer 0, the camera's, for layer 2. A raycaster that
+    should hit the model enables layer 2 (`app.js`'s picking and label
+    occlusion) or all layers (`bom-check.js`, `geometry-audit*.js`).
+  - The copy casts shadows for its pieces, since r128's shadow pass tests
+    layers against the main camera, not the shadow camera.
+  - The copies carry each piece's Edges id per vertex (`aId`, from `inkTag`),
+    so the lines between pieces are drawn as before.
+  - Left out: transparent materials (drawn sorted, one by one), decals and
+    surfaces, instanced meshes and geometry drawn only in part. `__dm.stats()`
+    (`?qa`) counts the batches and how many are drawn merged.
 - **One clock drives everything.** `app.js` advances `tSim` and passes
   `update()` the escape wheel's position `E`, the balance angle and the hours
   since winding. Each arbor turns by a fixed ratio of `E`, so never animate a
