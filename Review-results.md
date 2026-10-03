@@ -359,16 +359,19 @@ Then run `dyn.py` with the variant shown.
 
 ## Smaller issues
 
-- **The balance's rim (open, 3 October 2026).** Table II's screw changes, with
-  the parts list's masses at their heads' radii, fit a balance of 1,140 g·mm²,
-  and the model's rim is sized to it: 3.5 mm tall (the restoration video) and
-  1.578 wide. Face-on (KLUwI2UUCMQ 6:52.5, at 3 o'clock, where the rim's height
-  projects along it) the rim reads about 0.6 mm thick, which with the same
-  masses gives about 730 g·mm². One blurred frame, so low confidence; if it
-  holds, either the rim is taller, the screws heavier than the parts list's, or
-  Table II assumes another balance. To settle it: the rim edge-on, and each
-  pair's head length side-on, at 6:44–6:53.5 and 43:45–43:51
-  (`References/VIDEOS.md`, Gaps).
+- **The balance's moment of inertia (open, 3 October 2026).** The restoration
+  video measures the rim 0.6 mm thick (0.5–0.85 on three frames, edge-on,
+  scaled by the rim's 29 mm and the impulse roller's 0.249 in, which agree to
+  1 %) and about 3.5 tall, and the screw heads 2.9–3.2 across (face-on; the
+  parts list's masses need a denser metal than brass at that size). Drawn so,
+  the balance makes about 730
+  g·mm²; Table II's screw changes need 1,140 (Table III's washers about 960).
+  The model draws the measured balance and adds the difference as `I_REST`
+  (410 g·mm²), so the panel's changes are the manual's. Open: what carries it.
+  Candidates: a heavier arm or hub than drawn, Table II computed for another
+  balance, or a misreading of the parts list's masses. Still estimated: which
+  of holes 3, 5 and 12 has the 0.080 in heads (side-on, near and far heads
+  overlap in projection; from above they are too foreshortened).
 
 - **The balance slows down above 1×.** Between 1× and about 10×, the balance
   switches to its slow display swing (0.9 Hz), and the escape wheel moves

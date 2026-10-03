@@ -25,13 +25,12 @@ STATES=[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,(n,w) in enumerate(
 EXPECTED={
  ('det:Cylinder','det:Extrude'):("detent foot's clamp screw and steady pins through the foot, and the shanks of the clamp, detent-adjusting and lock-adjusting screws in the foot and support block (horizontal screws in vertically extruded pieces, which can't be holed across)",1.15,0.95),
  ('det:Buffer','det:Extrude'):("the trip spring's screw through the hole in the spring's foot into the angle bracket's upright leg (Figs. 14, 54), and the bracket's screw along its leg into the cross-piece (horizontal screws in vertically extruded pieces, which can't be holed across)",0.02,0.2),
- ('spawl:Tube(tube)','trainBridge:Cylinder'):("sustaining pawl's spring bearing on its steady pin in the train bridge",0.04,0.3),
  ('chain:Cylinder','fusee:Lathe'):("the chain's pin in the fusee's large end",0.12,0.45),
  ('chain:Buffer','chain:Cylinder'):("that pin through the rivet hole of the chain's first link (an outer link: two plates and their rivets)",0.03,0.4),
  ('chain:Box','chain:Extrude'):("the barrel-end hook plate riveted to the chain's last link (an inner link's plate)",0.09,0.2),
  ('chain:Box','chain:Buffer'):("the barrel-end hook plate riveted to the chain's last link (an outer link)",0.03,0.2),
  ('bal:Box','spr:Tube(tube)'):("hairspring's inner end in the clamp on the collet's tongue",0.06,0.35),
- ('bal:Cylinder','bal:Extrude'):("the balance screws' threads in the rim's tapped holes (each screw in a group of its own, R.screws; up to all ten holes of both halves)",1.6,0.75),
+ ('bal:Extrude','bal:Lathe'):("the balance screws' shanks in the rim's tapped holes (each screw in a group of its own, R.screws; up to five pairs)",0.6,0.75),
  ('bal:Buffer','bal:Extrude'):("the rim's empty holes, marks set 0.05 into its face (one merged mesh in a group of its own, rebuilt by R.screws)",0.25,0.6),
  ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)

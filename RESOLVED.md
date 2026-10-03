@@ -605,6 +605,17 @@ Contents:
   collar, r 3.0, now rises from the hub through a hole of r 3.05 and 1.0 past it.
   Keep: the collar inside the stop-bar slot's edge (zHi) and clear of the spring in
   the groove under it. `d135f96`
+- **Sustaining pawl's spring invented, and its arbor 2.7 mm round from the
+  real one.** The spring was a collet near the arbor's top with a wire across
+  to a steady pin in the train bridge; C Spinner's video (35:37.5-36:29) shows a
+  straight wire set upright in the pawl beside the arbor, rising under the
+  bridge, and a hub at the arbor's foot. The arbor stood at 21.35 mm and 74°
+  round the fusee; the video puts it at 21.8 mm and 67°. Keep the spring the
+  upright wire (bent by the pawl, `R.spWire`) and the arbor where 36:15 puts it;
+  its hub needs the 21.8 mm to clear the fusee wheel's tips. Its pivot hole in
+  the train bridge was r 0.70 between the faces (`polyGeo`'s bevel widens a
+  flagged hole there); it is lined to r 0.52 straight through, as `bom.py`'s
+  running fit wants (it had passed on 0.12 mm of the face). `4ab4b46`
 
 ## Plates, bridges, screws and arbors
 
@@ -1036,6 +1047,16 @@ Contents:
   12, 1.4 wide and 2.2 in, through the flange's top layer, where the restoration
   video lifts the dial (8:46, 9:03). Keep: it under the dial's edge and clear of
   the dial screws' holes. `836ad13`
+- **The plate's opening under the lower train bridge a small round hole**: r 6 about
+  the third, estimated, and the fourth's pivot in a plain hole r 1.2. Measured on 34:30 and 40:08 it is a keyhole: a circle r 11.3 about the third, a lobe r 4.85 toward the
+  balance and a bore r 3.2 about the fourth (`PP_KEY`, drawn by `lobedCircle`; `discGeo` now takes
+  an outline hole). The bar's settings run through it, gilt at its train-side face as 34:30 shows,
+  and the steady pin that stood in the opening moved past the screw. Keep: no hole or pin of the
+  plate inside `PP_KEY` (`checkHoles` doesn't test an outline hole). `b6b61b3`
+- **The third's lower jewel red**: it is colourless on the restoration video, the fourth's red
+  beside it (40:08 from the dial side, the third's pinion seen through it; 34:30 from the train
+  side, the blue mat). Now `M.clear` (`jewel()`'s `jm`). Keep: only the fourth's of the lower train
+  bridge's two stones red. `98b48be`
 
 ## Setup, case and gimbals
 
@@ -1258,6 +1279,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   the heads 3.3 across. Keep: every screw and weight stands in a numbered hole,
   hole 1 at the arm's end and 7 on the quarter, a pair in the same hole of each
   half; `invariants.py` checks 1,140, Table IV and that a moved pair keeps it. `7624339`
+
+- **The balance's rim drawn 2.6 times too thick; the screws without their points.**
+  The rim was 1.578 mm thick and 3.5 tall, sized so that the drawn balance
+  made Table II's 1,140 g·mm², and the screws stopped at its inner face. The video
+  measures the rim 0.6 thick (three frames, edge-on, scaled by the rim's 29 mm
+  and the impulse roller's 0.249 in) and about 3.5 tall, the heads 2.9–3.2
+  across (face-on; a side-on 4.1 was a near and a far head overlapping), each
+  screw running through the rim to a brass point inside it, and the verniers'
+  screws standing 1.6 outside the rim. Now drawn so, with the 410 g·mm² the
+  drawing doesn't make added as `I_REST`. Keep: draw the balance as measured
+  and keep the moment Table II's (`invariants.py` checks 1,140). `fa37969`
 
 ## Rendering
 

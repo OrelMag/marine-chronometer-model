@@ -164,15 +164,15 @@ const ESSAY=(()=>{
       ship(X(0),PAL.ink,'True position',24);
       if(nm>0.3){ctx.strokeStyle=PAL.red;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(X(0),y-26);ctx.lineTo(X(nm),y-26);ctx.stroke();ctx.setLineDash([]);ship(X(nm),PAL.red,'Believed position',-30);}};});
 
-  /* ---------- the balance, in mm: 'uncut', the Model 21's as movement.js builds it, simplified (a stainless-steel rim 1.58 wide and 3.5 deep on an Invar arm, its
+  /* ---------- the balance, in mm: 'uncut', the Model 21's as movement.js builds it, simplified (a stainless-steel rim 0.6 wide and 3.5 deep on an Invar arm, its
      24 holes 15 deg apart, the standard four pairs of balance screws in holes 3, 5, 9 and 12 of each half, the timing weights at the arm's ends and the verniers inside the rim beside them); 'split', a bimetallic rim cut near each end of the arm, steel inside and brass
      outside, with its compensation weights, which set(curl) bends in; 'plain', a plain brass rim, which set(0, grow) enlarges. userData.S: the screws and weights ---------- */
   function balance(M,kind){const g=new THREE.Group(),BR=BAL_R,S=[];
     mesh(g,new THREE.BoxGeometry(2*BR-1,1.1,2.4),kind==='uncut'?M.invar:kind==='plain'?M.brass:M.steel);mesh(g,cylY(2.2,1.3,24),M.steel,0,0.2,0);mesh(g,cylY(0.45,15,12),M.steel,0,2.5,0);
     const radial=(a,r0,len,rr,mat)=>{const m=mesh(g,cylY(rr,len,12),mat,(r0+len/2)*Math.cos(a),0,(r0+len/2)*Math.sin(a));m.rotation.set(0,-a,Math.PI/2);return m;};
-    if(kind==='uncut'){mesh(g,ringGeo(BR,BR-1.58,3.5),M.steel);const HA=(h,n)=>h*Math.PI+(n-1)*TAU/24;
-      for(const h of[0,1])for(const[n,hh]of[[3,2.03],[5,1.24],[9,2.57],[12,1.24]])S.push(radial(HA(h,n),BR,hh,1.65,M.brass));
-      for(const h of[0,1]){S.push(radial(HA(h,1),BR+0.55,1.7,1.2,M.steelD));S.push(radial(HA(h,2),BR-1.58-0.6-1.3,1.3,0.65,M.steelD));}
+    if(kind==='uncut'){mesh(g,ringGeo(BR,BR-0.6,3.5),M.steel);const HA=(h,n)=>h*Math.PI+(n-1)*TAU/24;
+      for(const h of[0,1])for(const[n,hh]of[[3,2.03],[5,1.24],[9,2.57],[12,1.24]])S.push(radial(HA(h,n),BR,hh,1.55,M.brass));
+      for(const h of[0,1]){S.push(radial(HA(h,1),BR+0.55,1.7,1.2,M.steelD));S.push(radial(HA(h,2),BR-0.6-0.6-1.3,1.3,0.65,M.steelD));}
       g.userData.set=()=>{};}
     else if(kind==='plain'){const r=mesh(g,undefined,M.brass);g.userData.set=(c,grow=0)=>{r.geometry.dispose();r.geometry=ringGeo(BR*(1+grow)+0.8,BR*(1+grow)-0.8,2.4);};}
     else{const span=162*D2R,w=1.6,h=2.4,rims=[0,1].map(()=>[mesh(g,undefined,M.steel),mesh(g,undefined,M.brass)]);
@@ -220,10 +220,10 @@ const ESSAY=(()=>{
   fig('eTemp',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.8:0.5,yaw:0.3,pitch:1.1,dist:82,target:[0,0,0]}),M=G.M;
     const B={split:balance(M,'split'),plain:balance(M,'plain'),m21:balance(M,'uncut')};for(const b of Object.values(B))V.scene.add(b);
     const cst=q('#eTempChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.62:0.34),ro=q('.e-ro',P);let T=20,kind='split';
-    const plain=t=>-11*(t-20),comp=t=>1.5*(1-((t-19.5)/12.5)**2),F2C=t=>(t-32)/1.8;   /* illustrative rates, s/day; °F to °C */
+    const plain=t=>-11*(t-20),comp=MTE.splitC,F2C=t=>(t-32)/1.8,m21=t=>MTE.uncut(t*1.8+32);   /* illustrative rates, s/day (comp: core.js, which the model's rate panel uses too); °F to °C */
     const Lw=V.label('Compensation weight','',v=>B.split.userData.wts[0].m.getWorldPosition(v)),Lb=V.label('Brass outside, steel inside','',v=>v.set(-BAL_R-0.5,0,-6)),Li=V.label('Invar arm','',v=>v.set(-7,0.8,0)),Ls=V.label('Uncut steel rim','',v=>v.set(-BAL_R*0.7,0,-BAL_R*0.72));
     const upd=()=>{for(const k in B)B[k].visible=k===kind;B.split.userData.set(kind==='split'?(T-20)/25*0.6:0);B.plain.userData.set(0,(T-20)/25*0.05);Lw.show=Lb.show=kind==='split';Li.show=Ls.show=kind==='m21';
-      if(kind==='m21')ro.innerHTML=`Model 21 at ${T.toFixed(1)} °C: <b>nothing curls</b>. The Invar arm holds the rim’s diameter at its ends; the Elinvar hairspring hardly changes its stiffness.`;
+      if(kind==='m21'){const r=m21(T);ro.innerHTML=`Model 21 at ${T.toFixed(1)} °C: <b>nothing curls</b>, and it ${r>=-0.005?'keeps its rate':`loses <b>${Math.abs(r).toFixed(2)} s a day</b> against 72½ °F`}. The Invar arm holds the rim’s diameter at its ends; the Elinvar hairspring hardly changes its stiffness.`;}
       else{const r=kind==='split'?comp(T):plain(T);ro.innerHTML=`${kind==='split'?'Compensation':'Plain brass'} balance at ${T.toFixed(1)} °C: ${r>=0?'gains':'loses'} <b>${Math.abs(r).toFixed(1)} s a day</b>`;}
       f.dirty=true;cf.dirty=true;};
     range(q('input[type=range]',P),v=>{T=v;upd();return v.toFixed(1)+' °C';});seg(q('.seg',P),v=>{kind=v;upd();});
@@ -231,8 +231,8 @@ const ESSAY=(()=>{
       if(cf.dirty){cf.dirty=false;const t55=F2C(55),t90=F2C(90);
         chart(C,{x0:-5,x1:45,y0:-8,y1:8,xt:[0,10,20,30,40],yt:[-8,-4,0,4,8],xf:x=>x+' °C',yf:y=>(y>0?'+':'')+y,xl:'Temperature',yl:'Rate, s a day',cursor:T,
           bands:kind==='m21'?[{x0:t55,x1:t90,y0:-0.6,y1:0.6,color:PAL.blue,label:'the Navy’s limit, 55–90 °F'}]:[],
-          series:[{f:plain,color:PAL.red,label:'plain: about −11 s a day per °C',lx:15.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:19.5,dy:-14,la:'center',width:kind==='split'?2.6:1.4}],
-          marks:kind==='m21'?[]:[{x:T,y:kind==='split'?comp(T):plain(T),color:kind==='split'?PAL.brass:PAL.red}]});
+          series:[{f:plain,color:PAL.red,label:'plain: about −11 s a day per °C',lx:15.5,la:'right',dx:-8,dy:0,width:kind==='plain'?2.6:1.4},{f:comp,color:PAL.brass,label:'bimetallic',lx:19.5,dy:kind==='m21'?-28:-14,la:'center',width:kind==='split'?2.6:1.4}].concat(kind==='m21'?[{f:m21,color:PAL.blue,label:'Model 21, its test card',lx:34,dy:14,la:'center',width:2.6}]:[]),
+          marks:[{x:T,y:kind==='split'?comp(T):kind==='plain'?plain(T):m21(T),color:kind==='split'?PAL.brass:kind==='plain'?PAL.red:PAL.blue}]});
         const{x:ctx}=C;ctx.font='11px "Instrument Sans",sans-serif';ctx.fillStyle=PAL.muted;ctx.textAlign='center';const pw=C.w-62;
         for(const[tf,lab]of[[55,'55 °F'],[72.5,'72½'],[90,'90 °F']]){const x=46+(F2C(tf)+5)/50*pw;ctx.fillRect(x-0.5,C.h-40,1,5);ctx.fillText(lab,x,C.h-46);}}};},'3d');
 
@@ -256,13 +256,13 @@ const ESSAY=(()=>{
       for(let m=n-0.03;m>=0;m-=0.03){const b=-Math.PI/2-TAU*(In-I(m));Vv(bx+Rb*Math.cos(b),yf(m),Rb*Math.sin(b));}if(Pp.length<4)Vv(bx-Rb,y0,0);
       chain.geometry.dispose();chain.geometry=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(Pp,false,'centripetal'),Math.min(1600,Pp.length*3),0.38,5,false);}
     V.label('Barrel','mainspring inside',v=>v.set(bx,H+3,0));V.label('Fusee','',v=>v.set(fx,H+2,0));V.label('Chain','',v=>v.set(0,yf(n),-lerp(rf(n),Rb,0.5)));V.label('Fusee wheel','drives the train',v=>v.set(fx+16,-3,0));
-    const cst=q('#eFusChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.6:0.32),ro=q('.e-ro',P),pull=h=>rf(0)/rf(h*FUSEE_PER_HOUR);
+    const cst=q('#eFusChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.6:0.32),ro=q('.e-ro',P),pull=h=>fs.pull(h*FUSEE_PER_HOUR),T12=fs.torque(12*FUSEE_PER_HOUR),tq=h=>fs.torque(h*FUSEE_PER_HOUR)/T12,gb=h=>fs.pullB(Math.min(1,h/RUN_H))/fs.pullB(0.5)*tq(RUN_H/2);   /* the model's illustrative spring (makeFusee); gb: a going barrel with it, the same at 28 h */
     const inp=q('input[type=range]',P);inp.max=RUN_H;
-    range(inp,v=>{hrs=v;wind(v*FUSEE_PER_HOUR);ro.innerHTML=`Spring pull <b>${Math.round(pull(v)*100)}%</b> of full, lever arm on the fusee <b>${rf(n).toFixed(1)} mm</b>, ${(rf(n)/rf(0)).toFixed(2)}× the smallest, turning force on the fusee wheel <b>100%</b>`;f.dirty=true;cf.dirty=true;return v.toFixed(1)+' h';});
+    range(inp,v=>{hrs=v;wind(v*FUSEE_PER_HOUR);ro.innerHTML=`Spring pull <b>${Math.round(pull(v)*100)}%</b> of full, lever arm on the fusee <b>${rf(n).toFixed(1)} mm</b>, ${(rf(n)/rf(0)).toFixed(2)}× the smallest, turning force on the fusee wheel <b>${Math.round(tq(v)*100)}%</b> (a going barrel: ${Math.round(gb(v)*100)}%)`;f.dirty=true;cf.dirty=true;return v.toFixed(1)+' h';});
     return()=>{if(f.dirty){f.dirty=false;V.render();}
-      if(cf.dirty){cf.dirty=false;const{X,Y}=chart(C,{x0:0,x1:RUN_H,y0:0,y1:1.1,xt:[0,8,16,24,32,40,48,56],yt:[0,0.25,0.5,0.75,1],yf:y=>Math.round(y*100)+'%',xl:'Hours since winding',yl:'Force',cursor:hrs,
-        series:[{f:pull,color:PAL.red,label:'the spring’s pull on the chain',lx:40,dy:16,la:'center'},{f:()=>1,color:PAL.blue,label:'pull × lever: the force on the train',lx:26,dy:-12,la:'center'}],
-        marks:[{x:hrs,y:pull(hrs),color:PAL.red},{x:hrs,y:1,color:PAL.blue}]});
+      if(cf.dirty){cf.dirty=false;const{X,Y}=chart(C,{x0:0,x1:RUN_H,y0:0,y1:1.6,xt:[0,8,16,24,32,40,48,56],yt:[0,0.5,1,1.5],yf:y=>Math.round(y*100)+'%',xl:'Hours since winding',yl:'Force',cursor:hrs,
+        series:[{f:pull,color:PAL.red,label:'the spring’s pull on the chain',lx:40,dy:16,la:'center'},{f:tq,color:PAL.blue,label:'pull × lever: the force on the train',lx:26,dy:-12,la:'center'},{f:gb,color:PAL.muted,width:1.4,dash:[5,4],label:'a going barrel',lx:10,dy:-12,la:'center'}],
+        marks:[{x:hrs,y:pull(hrs),color:PAL.red},{x:hrs,y:tq(hrs),color:PAL.blue}]});
         const{x:ctx}=C;ctx.strokeStyle=PAL.muted;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(X(56),Y(0));ctx.lineTo(X(56),Y(1.1));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=PAL.muted;ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='right';ctx.fillText('rated 56 h',X(56)-4,Y(0.08));}};},'model');
 
   /* ---------- winding: the up/down dial and the key's half turns ---------- */
@@ -391,7 +391,8 @@ const ESSAY=(()=>{
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
       I0:model?Math.round(model.I0/10)*10:1140,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
-    V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
+    V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
+    { const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const q=(lo+hi)/2;ESC.ampAt(q)<a?lo=q:hi=q;}return(lo+hi)/2;},r=A=>{const a=A*D2R;return Math.abs(ESC.rateAt(a,sAt(a))).toFixed(2);};V.isoLo=r(247.5);V.isoHi=r(270); }   /* the escapement's rate at 1 3/8 and 1 1/2 turns of motion (makeEsc rateAt) */   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
 
   /* ---------- showing, hiding, sections, the hash ---------- */

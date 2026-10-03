@@ -4,6 +4,25 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.00.00 · 2026-10-04
+- The balance now swings by its physics: how far depends on the mainspring's pull, so it dips while you wind; a new Swing and isochronism section shows how the rate follows it
+- A 30-day performance test: the Navy's test run on the model as you've set it, beside a real Model 21's test card
+- The fusee against a going barrel; the balances' temperature curves, with the split rim curling; the hairspring's isochronism on the Adjuster's bench; the mainspring's set
+- The gimbals swing with inertia, with a roll period to try; Jolt the box shows a detent tripping or stopping
+- The essay explains the escapement's isochronism and draws the Model 21's measured temperature curve
+
+## 1.22.04 · 2026-10-04
+- The sustaining pawl as real Model 21s have it: its spring a straight wire standing upright beside its arbor, a hub at the arbor's foot, and its place as a restoration video shows it
+
+## 1.22.03 · 2026-10-04
+- The third wheel's lower jewel is colourless, as on real Model 21s; the fourth's stays red
+
+## 1.22.02 · 2026-10-04
+- The balance drawn as a restored 1941 Model 21 shows it: a thinner rim, each screw running through it to a point, and the vernier weights' screws standing outside it
+
+## 1.22.01 · 2026-10-04
+- The plate's opening under the lower train bridge as on real Model 21s: a keyhole round the third wheel, with the bridge's settings showing through it
+
 ## 1.22.00 · 2026-10-03
 - The model draws about a third faster: parts that don't move against each other are drawn together, with the same picture
 - Performance mode in Display (on by default) switches it; turn it off if anything ever looks wrong
