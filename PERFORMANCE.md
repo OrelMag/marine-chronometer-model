@@ -102,7 +102,7 @@ The Movement view felt slower while dragging. Against `bf503d8`, with runs alter
 
 - **More geometry.** The fidelity work added 54 visible meshes (342 → 396) and 56k triangles in the Movement view:
   draw calls 753 → 859, doubled by Edges. The barrel alone added 6 meshes and 20k triangles; the escape bridge, train
-  bridge, posts and balance added the rest. Item 2 below is the answer.
+  bridge, posts and balance added the rest. Item 1 under What's next is the answer.
 - **`seatPawl`** went from 0.30 to 0.63 ms a frame when the pawls' outlines were resampled every 0.1 mm (`8cbb259`).
   It now tests only the points that can reach the teeth, with the same results (RESOLVED.md, Rendering): about a
   third less.
@@ -116,22 +116,50 @@ Measure on a quiet machine: another session's `bom.py` or `smoke.py` doubles the
 
 In order of what they would save for the effort.
 
-1. **Fewer triangles** (M). This matters most for weak GPUs, SwiftShader and the shadow pass. Each item changes
+1. **Fewer draw calls: a merged copy for drawing** (M). This is now the biggest cost and the one that grew: the
+   Movement view draws 859 calls a frame with Edges (430 a pass), the Dial view 1,099. Each costs about 3 µs of
+   JavaScript on this desktop (`perf.py`'s "JS in render" over its calls) and four times that on a phone's CPU.
+   - **What it saves.** Of the 562 meshes shown, merging those under the same parent group that share a material
+     leaves 302. Moving pieces are in groups of their own, so that much is safe as the model runs. That takes the
+     Movement view from about 859 calls to about 460, roughly 1.2 ms a frame here: twice what the fidelity work added
+     since September. Merging across a whole part leaves 133, but its moving subgroups make that harder: a second
+     step, if the first is worth it. The figures are an estimate (frustum culling drops a merged mesh only as a
+     whole); measure with `perf.py` before and after.
+   - **Keep the pieces.** Every tool reads the model piece by piece: `bom.py` counts `hn()` tags, `audit.py` finds
+     `userData.screw`, and `fine.py`, `solids.py`, `placements.py` and `exploded.py` test each mesh. So the pieces stay
+     where they are, and the merged meshes are an extra copy for drawing only. Three.js layers separate them: the
+     pieces on a layer the camera doesn't draw but the raycaster picks (picking still names the piece), the merged
+     copies on the camera's layer. Nothing the tools traverse changes, except that they must skip the copies
+     (`userData.merged`).
+   - **Fall back per part.** Picking, colouring, fading, hiding, sections, the ink drawing, the load path's colours and
+     Exploded all change pieces one by one. Rather than mirror each on the copies, a part that is anything but plain
+     is drawn from its pieces. Only parts as assembled and untouched use the merged copy, which is most parts in
+     most views.
+   - **Edges.** The id pass gives every mesh its own id (core.js, `setId`: a pawl lying on its own part's wheel keeps
+     its line), so a plain merge would lose the lines between pieces. The merged geometry carries each piece's id
+     as a vertex attribute, read by the id material. That also ends the per-mesh uniform upload of item 3.
+   - **Shadows.** A mesh casts a shadow only when it spans 6 texels of the shadow map (`347bf5b`). Merge casters and
+     non-casters apart, or let the merged copy cast and accept the small parts' shadows.
+   - **Risks.** A display mode that changes a piece without the part falling back would show the plain copy over
+     it; the fallback must cover every path in `look()`. Memory grows by the copies' geometry (about the model's
+     static share again). Rebuilt geometry (`reclose`) and instanced meshes (the chain) stay out.
+   - **Checks.** `views.py` before and after must diff to about 0 px in every view, as must `isolate.py` close-ups.
+     Then `smoke.py`, `placements.py` (0 parts moved), `perf.py` before and after, and `bom.py` and `audit.py`
+     unchanged. Do it on its own branch.
+   - **Cheaper first** (S): merge the 8 brass box corners (16 meshes).
+2. **Fewer triangles** (M). This matters most for weak GPUs, SwiftShader and the shadow pass. Each item changes
    geometry, so re-run `fine.py` (the chain on the fusee cone is an expected contact, and `EXPECTED` may need its
-   sizes retuned), `solids.py` and `exploded.py`, on its own branch.
+   sizes retuned), `solids.py` and `exploded.py`, on its own branch. The figures are September's (the whole model
+   about 720k then).
    - **Fusee lathe, 148k.** Its profile is sampled every 0.03 mm (343 points) × 216 segments (`makeFusee`). Sample the
      groove's flanks more coarsely or adaptively.
    - **Chain, 188k.** An outer link is 408 triangles and an inner link 164, with the plates' round ends at
      `curveSegments: 10`; use fewer. The instance buffers are sized for 900 links where 328 are used.
    - **Screws, 133k.** There are two lathe rings per thread pitch, so the finest screws are the heaviest: the 0.45 mm
-     endstone-cap screws are 4,760 triangles each. Identical screws could share one geometry (`screw()`).
+     endstone-cap screws are 4,760 triangles each. Identical screws could share one geometry (`screw()`), which saves
+     memory and upload time rather than draw calls.
    - **Small holes.** Every `absarc` gets 2 × `curveSegments` points whatever its radius, so a 0.5 mm hole in
      `discGeo` (64) or `ringGeo` (48) costs as much as a rim. The escape wheel's web (128) alone is 10k.
-2. **Fewer draw calls** (M). The main pass has about 470 calls. Most of the frame's JavaScript is three.js setting up
-   each one, and Edges doubles them.
-   - Merge each part's static meshes that share a material into one (IDEAS 5.1). Picking, colouring, fading and
-     sections already work per part.
-   - Merge the 8 brass box corners (16 meshes).
 3. **Cheaper Edges** (S–M). The id pass re-uploads every mesh's uniforms each frame (`setId` sets
    `uniformsNeedUpdate`).
    - The box glass counts as a ghost, so an extra ghost pass and a full-size render target are kept for it in the
