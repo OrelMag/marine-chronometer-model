@@ -974,7 +974,7 @@ function buildMovement(M){
   /* BB_LO: the barrel's lower face, 2.4 mm over the pillar plate (over the centre wheel, 0.55 clear), so the barrel is 16.5 mm tall cap to cap: C Spinner's video, side-on
      (33:09.5-33:35: height to radius 0.95 +- 0.06) and the 23:30 fit at the focal length that agrees with it (15.6-16.3); it was 13.2 */
   const BB_LO=y0-2.4;
-  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:17.6,bT:TB_T+1.0,bB:BB_LO,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
+  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,collarT:TB_T+0.05,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:17.6,bT:TB_T+1.0,bB:BB_LO,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
     stopDir:Math.atan2(fo[1],fo[0])+Math.atan2(-dz,dx)});   /* the winding stop outward from the plate's centre, past the fusee's top (as it was, 7.2 mm out, before the top was widened) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* winding stop (42099) on the underside of the barrel bridge, where the stop-bar's far end meets it at full wind: a stud screwed into the bridge (left-hand thread, Op. 42),
@@ -1226,9 +1226,10 @@ function makeFusee(M,c){
   lay(subtractCircle(discClip(capR,[[zHi,0,1]],128),[0,0],GRV),[hT(0,7.0*k,0.55)]);lay(discClip(capR,[[zLo,0,-1]],128),[hT(0,-7.0*k,0.55)]);   /* rim, either side of the slot, tapped for the top plate's screws */
   lay(discClip(HUB,[[zHi,0,1]],96),[[0,0,1.02]]);   /* hub round the arbor; the spring's groove round it (r HUB-GRV), cut open by the slot */
   hn(mesh(sbR,discGeo(capR-0.2,0.6,[[0,0,3.0*k+0.05],hC(0,7.0*k,0.55),hC(0,-7.0*k,0.55)]),M.gilt,0,yT-1.1,0),'42008');if(c.screw)for(const z of[7.0*k,-7.0*k])hn(c.screw(sbR,0,z,yT-1.1,0.55,0.3,0.6+0.5),'27760.fu');   /* its screws opposite each other at r 7.0 k (restoration video 13:30, face-on) */
-  hn(cylBetween(fz,3.0*k,yT-0.5,yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, from the hub up through the top plate's hole (its r 3.0 k + 0.05) and 1.0 past it, as Fig. 28 draws
+  hn(cylBetween(fz,3.0*k,yT-0.5,c.collarT??yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, from the hub up through the top plate's hole (its r 3.0 k + 0.05), as Fig. 28 draws
      the hub rising through a large hole: the plate comes off over it, the collar staying on the arbor (restoration video 19:58-20:00), and stands on the hub with the plate off
-     (20:20); r 0.326 of the plate's on 13:30, face-on. Its height over the plate estimated (19:45 reads 1.5-2 mm, oblique). It stays inside the slot's edge (zHi) and
+     (20:20); r 0.326 of the plate's on 13:30, face-on. It rises 2.8 mm over the top layer (20:00, side-on, scaled by the groove's pitch, 38-41 px a turn there), so
+     up to the barrel bridge, under whose bushing it is the arbor's shoulder: c.collarT, 0.05 under it (0.002 in, Ops. 15, 69). It stays inside the slot's edge (zHi) and
      0.12 over the stop-bar spring in the groove under it */
   const stopBar=hn(new THREE.Group(),'42024');stopBar.position.y=yT-0.25;sbR.add(stopBar);   /* in the slot, 0.025 off the top face and 0.025 under the plate */
   mesh(stopBar,new THREE.BoxGeometry(xF0-xB0,0.45,2*BW),M.steel,(xF0+xB0)/2,0,sbZ);   /* the bar (first child: tools/maintaining.py measures it) */

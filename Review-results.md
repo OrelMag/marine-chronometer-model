@@ -1921,7 +1921,7 @@ Winding and maintaining work).
    r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
    recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
    model's web is flat.
-3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *The hole fixed (4 October 2026): the plate comes off over the collar (19:58-20:00), so the collar, r 3.0, now rises from the hub through a hole of r 3.05 (Fig. 28's large hole). Still open: the arbor above the collar, r ≈ 2.2 on 19:45 (model r 1; thickening it reaches the barrel bridge's bushing and the dust seal), and the collar's height over the plate, 1.5-2 mm there (model 1.0), both read obliquely.* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %. *Now so* (RESOLVED.md, Winding and maintaining work).* A steel collar r ≈ 2.9 round the
+3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *The hole fixed (4 October 2026): the plate comes off over the collar (19:58-20:00), so the collar, r 3.0, now rises from the hub through a hole of r 3.05 (Fig. 28's large hole). The collar's height fixed too (2.8 mm over the top layer, to the barrel bridge); the arbor above it still open: see "Figs. 21, 22, 28 and 29 against the model" below (the r 2.2 first read here was the collar with the hole round it).* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %. *Now so* (RESOLVED.md, Winding and maintaining work).* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
 4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open. The pivots now drawn as studs riveted flush (2 October 2026). Not drawn: the raised plateau the pawl springs lie round (the pawls lie over it; its height isn't seen).* *Seen sharp at 4K (3 October 2026, 19:12): not a plateau but a groove about 0.7 wide at r 10.6-11.3, which the springs lie in; the model lays them at that radius over the face, the groove not cut (a hidden face; the toothed wheel would have to be built in layers).* Gilt brass, not steel; the
@@ -1969,10 +1969,66 @@ rendered one by one (isolated, by Hamilton number). Four places looked different
 
 Open, found on the way:
 
-- **The flange's holes** (9:03; `References/VIDEOS.md`): three large holes at
-  r ≈ 41, at 88°, 214° and 337° from 12, a screw end in one, and three small ones
-  near the rim at 3°, 131° and 319°. The model has its dial screws at 38°, 153°,
-  224° and 324° (two from the top-view photographs, two estimated) and the
-  mounting ring's screws at 70°, 190° and 300°. Neither set matches; which holes
-  are which isn't settled.
-- **The fusee arbor above the collar**: r ≈ 2.2 on 19:45 (model r 1).
+- **The flange's holes** (9:03, 40:05; `References/VIDEOS.md`). *Worked through
+  (4 October 2026), not settled.* The dial screws go in from the train side
+  outside the plate's rim (8:36-8:42), so the three small holes near the rim
+  (130.4°, 224.4°, 319.4°) are theirs; the three large threaded ones (88.5°,
+  212.3°, 337.8°, r ≈ 41.5) the mounting ring's screws, tapped through. The
+  model's dial screws at 223.7° and 323.5° agree within 4°; its 152.6° (from the
+  top-view photograph) is 22° from the video's 130.4°, and the video shows no
+  fourth hole at r 46 (its 2.5° hole, r ≈ 43, lies under the plate's rim). The
+  ring screws (model 70°, 190°, 300°, one from the photograph) are 18-37° off.
+  The photograph is of another movement and its map doesn't fit the copy in
+  `References/`, so the two can't be put side by side yet: refit its camera
+  (`fit.py`) and read its flange screws through it before moving any.
+- **The fusee arbor above the collar.** *The collar's height fixed (4 October
+  2026): 2.8 mm over the top layer (20:00, against the groove's pitch), up to the
+  barrel bridge.* The arbor isn't r 2.2: that read the collar. Still open: the
+  shaft above the collar reads 0.66 of the collar's width (r ≈ 1.75 against the
+  model's r 1; silhouettes against the blue mat read polished steel narrow, so
+  only the ratio is kept), and the winding square starts at a step about 11 mm
+  up (y ≈ −31.5), where the model has a plain r 1.2. The parts list gives the
+  fusee's bushings the barrel's number (42164), whose bore the model has at
+  r 1.42: a thicker arbor would fit them. Thickening it means the barrel
+  bridge's bushing, the dust seal and its ring together.
+
+### Still open after the collar's height (4 October 2026)
+
+What this pass on Figs. 21, 22, 28 and 29 leaves, most worth doing first. The
+measurements behind each are in `References/VIDEOS.md` (the rows for the fusee's
+top, the fusee arbor, the take-off slot and the flange's holes).
+
+1. **The fusee arbor's shaft and winding square.** Above the collar the real
+   arbor reads 0.66 of the collar's width (20:00, 19:59; r ≈ 1.75 against the
+   model's r 1), and the parts list gives the fusee's bushings the barrel's
+   number (42164, bored r 1.42 in the model). The square starts at a step about
+   11 mm over the fusee's top (y ≈ −31.5) and runs to a rounded end; the model
+   has a plain r 1.2 cylinder there and a 1.6 mm square at the end. Doing it
+   means the arbor, the barrel bridge's bushing (42164.fu), the dust seal (42051)
+   and its ring (42052) together, then `fine.py`, `bom.py` and `maintaining.py`.
+   Needs first: the shaft's radius from a frame where it stands against
+   something matt (a polished silhouette on the blue mat reads narrow), or a
+   ratio to the barrel arbor's pivot in one frame.
+2. **The dial screws and the mounting ring's screws.** The video's ring
+   (2E8489, 9:03 unrolled): dial screws at 130.4°, 224.4° and 319.4° (r ≈ 46),
+   none at r 46 elsewhere, a small hole at 2.5° (r ≈ 43, under the plate's rim:
+   a dial steady pin?); the ring's screws tapped through at 88.5°, 212.3° and
+   337.8°. The model: dial screws 38.0°, 152.6°, 223.7°, 323.5° (152.6° and
+   223.7° from the top-view photograph, 2E11795); ring screws 70°, 190°, 300°.
+   Needs first: the top-view photograph's camera refitted (`fit.py`, `unproj.py`)
+   and its flange screws read through it, then the two movements compared;
+   where they agree, move the model's.
+3. **`tools/p3map.json` doesn't fit `References/photo-top-view.jpg`.** Its
+   three anchors (the balance at 640, 830 and so on) don't land on those parts
+   in the copy in `References/` (2322 px square): it was fitted on another copy
+   or crop. Find that copy, or refit the map on this one, before any new reading
+   from the photograph.
+4. **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
+   round recess r 4-5 about the hub; the model has the spring's groove r 2.4-2.9
+   only. Sizes ±30 %.
+5. **Estimated, to measure if a frame allows:** the take-off slot's depth (1.0,
+   its floor brass at 9:03), the collar's radius (r 3.0 face-on at 13:30, ±0.3:
+   the dark ring round it may be the hole's gap).
+6. **Cosmetic:** the sustaining spring's blue is brighter than the video's
+   nearly black steel (27:30).
+
