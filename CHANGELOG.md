@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 1.20.00 · 2026-10-03
+- The adjuster's bench now changes how the chronometer runs: the balance swings further or less as the escapement is set, and the rate gains or loses with it
+- The rate panel shows how much of the rate is the escapement's, and the rate book notes when the escapement was adjusted
+- The bench refuses a setting that would leave the balance swinging too little to keep going
+
 ## 1.19.00 · 2026-10-03
 - The going train laid out as a restoration video of a real Model 21 measures it: the third, fourth and escape wheels, the pillars and the wind indicator
 - The escape wheel's upper bridge rebuilt with its boss, flat-sided endstone cap and flush screws, its ends sunk in seats in the train bridge
