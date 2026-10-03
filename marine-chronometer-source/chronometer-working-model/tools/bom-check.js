@@ -31,7 +31,7 @@
  const own=A=>MS.filter(x=>instOf.get(x)===A);
  /* rays hit faces either side, so a ray from inside a part's metal is seen as such */
  const sides=new Map();for(const x of MS)for(const mt of[].concat(x.m.material))if(mt&&!sides.has(mt)){sides.set(mt,mt.side);mt.side=T.DoubleSide;}
- const RC=new T.Raycaster(),nrm=new T.Vector3(),M3=new T.Matrix3();
+ const RC=new T.Raycaster(),nrm=new T.Vector3(),M3=new T.Matrix3();RC.layers.enableAll();   // the pieces drawn merged are on layer 2 (drawMerge)
  const cast=(o,d,list,far)=>{RC.set(o,d);RC.near=0;RC.far=far;const h=[];for(const x of list){const k=h.length;x.m.raycast(RC,h);for(let i=k;i<h.length;i++)h[i].x=x;}
    for(const q of h){if(q.face){M3.getNormalMatrix(q.object.matrixWorld);nrm.copy(q.face.normal).applyMatrix3(M3).normalize();q.back=nrm.dot(d)>0;}else q.back=false;}return h.sort((a,b)=>a.distance-b.distance);};
  /* a part's axis: its own +y (a screw from sHead: its shank's), through its origin; the extent of its meshes along it */

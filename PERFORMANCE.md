@@ -102,7 +102,7 @@ The Movement view felt slower while dragging. Against `bf503d8`, with runs alter
 
 - **More geometry.** The fidelity work added 54 visible meshes (342 → 396) and 56k triangles in the Movement view:
   draw calls 753 → 859, doubled by Edges. The barrel alone added 6 meshes and 20k triangles; the escape bridge, train
-  bridge, posts and balance added the rest. Item 1 under What's next is the answer.
+  bridge, posts and balance added the rest. The merged drawing below is the answer.
 - **`seatPawl`** went from 0.30 to 0.63 ms a frame when the pawls' outlines were resampled every 0.1 mm (`8cbb259`).
   It now tests only the points that can reach the teeth, with the same results (RESOLVED.md, Rendering): about a
   third less.
@@ -112,41 +112,45 @@ The Movement view felt slower while dragging. Against `bf503d8`, with runs alter
 
 Measure on a quiet machine: another session's `bom.py` or `smoke.py` doubles the spread between identical runs.
 
+## Static pieces drawn merged (3 October 2026)
+
+The pieces under one group that share a material are drawn as one merged copy (`drawMerge` in `core.js`; the model
+README, "Static pieces drawn merged", has how it works and what it leaves out). The pieces stay for the tools,
+picking and every display mode; a batch draws merged only while all its pieces are shown in their own material,
+and a piece that moves or is rebuilt leaves its batch. Display's Performance mode (on by default, `merge=0` in the hash
+when off) turns it off: every piece then draws itself, as before.
+
+| View (as opened) | Draw calls | ms a frame | JS in the renders |
+|---|---|---|---|
+| Dial | 1,099 → 623 | 2.60 → 2.01 | 2.14 → 1.47 ms |
+| Movement | 859 → 509 | 2.69 → 2.06 | 1.61 → 0.91 ms |
+| Escapement | 665 → 477 | 2.49 → 2.10 | 1.44 → 0.96 ms |
+| Train | 947 → 637 | 2.93 → 2.37 | 1.86 → 1.21 ms |
+| Box | 1,131 → 627 | 2.57 → 1.83 | 2.11 → 1.29 ms |
+
+- `perf.py` on a quiet machine, before and after. With Shadows on, the Movement view's calls go from 1,259 to 745.
+- Dragging the Movement view (60 Hz, under the profiler), the main thread is busy 404–412 ms a second instead of
+  505–514: 6.7 ms a frame instead of 8.5.
+- The picture is the same. `views.py` differs by 0–38 scattered pixels a view (a vertex placed in its group's frame
+  rounds differently in the last bit, which moves an Edges line in a 1-pixel slot), 1 pixel with Shadows on, 0–8 in
+  `isolate.py`'s views. `placements.py` finds 0 of 39 parts moved.
+- `bom.py`, `audit.py` (the same findings, apart from the balance's turn), `solids.py`, `exploded.py`,
+  `invariants.py` and `smoke.py` pass.
+- Two things to keep. r128's shadow pass tests layers against the main camera, not the shadow camera, so a merged
+  piece on layer 2 casts nothing and the copy casts for it. Several tools walk the whole scene with `traverse()`
+  (`bom-check.js` counted 113 copies belonging to no line), so the copies' group stops `traverse()` at itself.
+
 ## What's next
 
 In order of what they would save for the effort.
 
-1. **Fewer draw calls: a merged copy for drawing** (M). This is now the biggest cost and the one that grew: the
-   Movement view draws 859 calls a frame with Edges (430 a pass), the Dial view 1,099. Each costs about 3 µs of
-   JavaScript on this desktop (`perf.py`'s "JS in render" over its calls) and four times that on a phone's CPU.
-   - **What it saves.** Of the 562 meshes shown, merging those under the same parent group that share a material
-     leaves 302. Moving pieces are in groups of their own, so that much is safe as the model runs. That takes the
-     Movement view from about 859 calls to about 460, roughly 1.2 ms a frame here: twice what the fidelity work added
-     since September. Merging across a whole part leaves 133, but its moving subgroups make that harder: a second
-     step, if the first is worth it. The figures are an estimate (frustum culling drops a merged mesh only as a
-     whole); measure with `perf.py` before and after.
-   - **Keep the pieces.** Every tool reads the model piece by piece: `bom.py` counts `hn()` tags, `audit.py` finds
-     `userData.screw`, and `fine.py`, `solids.py`, `placements.py` and `exploded.py` test each mesh. So the pieces stay
-     where they are, and the merged meshes are an extra copy for drawing only. Three.js layers separate them: the
-     pieces on a layer the camera doesn't draw but the raycaster picks (picking still names the piece), the merged
-     copies on the camera's layer. Nothing the tools traverse changes, except that they must skip the copies
-     (`userData.merged`).
-   - **Fall back per part.** Picking, colouring, fading, hiding, sections, the ink drawing, the load path's colours and
-     Exploded all change pieces one by one. Rather than mirror each on the copies, a part that is anything but plain
-     is drawn from its pieces. Only parts as assembled and untouched use the merged copy, which is most parts in
-     most views.
-   - **Edges.** The id pass gives every mesh its own id (core.js, `setId`: a pawl lying on its own part's wheel keeps
-     its line), so a plain merge would lose the lines between pieces. The merged geometry carries each piece's id
-     as a vertex attribute, read by the id material. That also ends the per-mesh uniform upload of item 3.
-   - **Shadows.** A mesh casts a shadow only when it spans 6 texels of the shadow map (`347bf5b`). Merge casters and
-     non-casters apart, or let the merged copy cast and accept the small parts' shadows.
-   - **Risks.** A display mode that changes a piece without the part falling back would show the plain copy over
-     it; the fallback must cover every path in `look()`. Memory grows by the copies' geometry (about the model's
-     static share again). Rebuilt geometry (`reclose`) and instanced meshes (the chain) stay out.
-   - **Checks.** `views.py` before and after must diff to about 0 px in every view, as must `isolate.py` close-ups.
-     Then `smoke.py`, `placements.py` (0 parts moved), `perf.py` before and after, and `bom.py` and `audit.py`
-     unchanged. Do it on its own branch.
-   - **Cheaper first** (S): merge the 8 brass box corners (16 meshes).
+1. **Fewer draw calls, further** (M). The static pieces are drawn merged now (above), by parent group and material:
+   562 meshes shown become 116 batches and the pieces left out. Two steps would take more:
+   - **Merge across a part.** Merging by part and material instead of parent group leaves about 133 meshes. A part's
+     moving subgroups (wheels, pawls, the balance) would each need their own copy, placed as they move.
+   - **Keep a batch merged when one of its pieces is hidden.** A hidden or recoloured piece sends its whole batch back
+     to its pieces. Merging the shown subset again (cached by which pieces are shown) would keep the gain in the modes
+     that hide a few pieces (Moving parts only, the laid-out train).
 2. **Fewer triangles** (M). This matters most for weak GPUs, SwiftShader and the shadow pass. Each item changes
    geometry, so re-run `fine.py` (the chain on the fusee cone is an expected contact, and `EXPECTED` may need its
    sizes retuned), `solids.py` and `exploded.py`, on its own branch. The figures are September's (the whole model
