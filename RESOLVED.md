@@ -1042,6 +1042,10 @@ Contents:
   an outline hole). The bar's settings run through it, gilt at its train-side face as 34:30 shows,
   and the steady pin that stood in the opening moved past the screw. Keep: no hole or pin of the
   plate inside `PP_KEY` (`checkHoles` doesn't test an outline hole). `b6b61b3`
+- **The third's lower jewel red**: it is colourless on the restoration video, the fourth's red
+  beside it (40:08 from the dial side, the third's pinion seen through it; 34:30 from the train
+  side, the blue mat). Now `M.clear` (`jewel()`'s `jm`). Keep: only the fourth's of the lower train
+  bridge's two stones red. `98b48be`
 
 ## Setup, case and gimbals
 
