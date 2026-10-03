@@ -1025,6 +1025,12 @@ Contents:
   only in the seats' floors (a hole inside a hole breaks the extrusion); the caps'
   seat layers tagged with the cap's line (bom.py reads the endstone as set in what
   holds it). `162dfe5`
+- **The plate's opening under the lower train bridge a small round hole**: r 6 about
+  the third, estimated, and the fourth's pivot in a plain hole r 1.2. Measured on 34:30 and 40:08 it is a keyhole: a circle r 11.3 about the third, a lobe r 4.85 toward the
+  balance and a bore r 3.2 about the fourth (`PP_KEY`, drawn by `lobedCircle`; `discGeo` now takes
+  an outline hole). The bar's settings run through it, gilt at its train-side face as 34:30 shows,
+  and the steady pin that stood in the opening moved past the screw. Keep: no hole or pin of the
+  plate inside `PP_KEY` (`checkHoles` doesn't test an outline hole). `b6b61b3`
 
 ## Setup, case and gimbals
 
@@ -1247,6 +1253,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   the heads 3.3 across. Keep: every screw and weight stands in a numbered hole,
   hole 1 at the arm's end and 7 on the quarter, a pair in the same hole of each
   half; `invariants.py` checks 1,140, Table IV and that a moved pair keeps it. `7624339`
+
+- **The balance's rim drawn 2.6 times too thick; the screws without their points.**
+  The rim was 1.578 mm thick and 3.5 tall, sized so that the drawn balance
+  made Table II's 1,140 g·mm², and the screws stopped at its inner face. The video
+  measures the rim 0.6 thick (three frames, edge-on, scaled by the rim's 29 mm
+  and the impulse roller's 0.249 in) and about 3.5 tall, the heads 2.9–3.2
+  across (face-on; a side-on 4.1 was a near and a far head overlapping), each
+  screw running through the rim to a brass point inside it, and the verniers'
+  screws standing 1.6 outside the rim. Now drawn so, with the 410 g·mm² the
+  drawing doesn't make added as `I_REST`. Keep: draw the balance as measured
+  and keep the moment Table II's (`invariants.py` checks 1,140). `fa37969`
 
 ## Rendering
 

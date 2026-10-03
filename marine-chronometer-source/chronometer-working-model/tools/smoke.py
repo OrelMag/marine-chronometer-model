@@ -47,7 +47,7 @@ async def model(b,errs,steps):
     await click('#units button[data-v="in"]','sizes in inches');await pg.evaluate("location.hash='#part=pillar'");await pg.wait_for_timeout(400)
     if '3.448 in' not in await pg.evaluate("document.querySelector('#info .spec').textContent"):errs.append('the pillar plate card is not in inches')
     await click('#units button[data-v="mm"]','sizes in mm')
-    for sel in['#colr','#colrSrc','#ghost','#edges','#shadows','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
+    for sel in['#colr','#colrSrc','#ghost','#edges','#shadows','#merge','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
     # the tinted and ink drawings (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
     for sel,nm in(('#draw','tinted drawing'),('#drawInk','ink drawing')):
         await click(sel,f'{nm} on',600)
@@ -62,14 +62,15 @@ async def model(b,errs,steps):
     # edges (makeInk's lines over the normal frame; on by default except on phones): a section, see-through plates, then each drawing over it (it disables Edges) and off again
     if not await pg.evaluate("document.querySelector('#edges').checked"):errs.append('Edges not on by default')
     if await pg.evaluate("document.querySelector('#shadows').checked"):errs.append('Shadows not off by default')
+    if not await pg.evaluate("document.querySelector('#merge').checked&&__dm.stats().on>0"):errs.append('Performance mode not on by default, or nothing drawn merged')
     await click('#secs button[data-v="x"]','edges, section');await click('#secs button[data-v="off"]');await click('#ghost','edges, see-through');await click('#ghost')
     for sel in('#draw','#drawInk'):await click(sel,f'edges, {sel[1:]} on');await click(sel,f'edges, {sel[1:]} off')
     if not await pg.evaluate("document.querySelector('#edges').checked&&!document.querySelector('#edges').disabled"):errs.append('Edges not restored after a drawing')
     await click('#edges','edges off',600);await click('#edges','edges on again')
     # Reset display puts the Display boxes back (Edges on, the rest off, in Dial); Link copies the address, or puts it in the address bar
-    for sel in['#lbls','#colr','#rock','#spin','#ghost','#shadows']:await click(sel)
+    for sel in['#lbls','#colr','#rock','#spin','#ghost','#shadows','#merge']:await click(sel)
     await click('#edges');await click('#draw');await click('#dispReset','reset display',600)
-    bad=await pg.evaluate("['lbls','colr','colrSrc','draw','rock','latch','spin','ghost','shadows'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges'])")
+    bad=await pg.evaluate("['lbls','colr','colrSrc','draw','rock','latch','spin','ghost','shadows'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges']).concat(document.querySelector('#merge').checked?[]:['merge'])")
     if bad:errs.append(f'Reset display left {bad}')
     await click('#drawInk');await click('#dispReset','reset display from the ink drawing',600)
     if await pg.evaluate("document.querySelector('#drawInk').checked||!document.querySelector('#edges').checked"):errs.append('Reset display left the ink drawing on or Edges off')

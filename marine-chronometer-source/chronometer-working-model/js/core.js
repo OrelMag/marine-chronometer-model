@@ -181,6 +181,10 @@ function drawOf(m){let d=DRAW.get(m);
    + 1.2% of the distance) or the drawing ends, lighter ones at creases (over ~37 degrees) and between parts; and the sheet: the wash on paper, true to the
    lines, inked with a varying pen pressure.
    lines(): the Edges option, the same line pass over the normal frame instead of the wash. Ids are per mesh, not per part, and the box draws no lines */
+/* a mesh's ids: inkId its part's, hashed (the drawing), inkIdM its own, given in turn (Edges), 0 on the box (userData.inkBox: no line). app.js gives them up front, in the
+   order of the meshes, so a merged copy (drawMerge) carries each piece's own; a mesh first drawn later gets its own then */
+let INK_N=0;const inkHash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
+function inkTag(o){const u=o.userData;if(u.inkIdM==null){u.inkId=inkHash(u.part);u.inkIdM=u.inkBox?0:(INK_N++%251+3)/255;}}
 function makeInk(r){
   const T=THREE,rt=(nearest,depth)=>{const t=new T.WebGLRenderTarget(1,1,nearest?{minFilter:T.NearestFilter,magFilter:T.NearestFilter}:{});if(depth)t.depthTexture=new T.DepthTexture(1,1,T.UnsignedIntType);return t;};
   const rtN=rt(1,1),rtG=rt(1,1),rtC=rt(0,1),rtE=rt(0,0);rtE.depthBuffer=false;   /* depth textures are 24-bit; a target's own depth buffer is 16-bit in r128, and the box's brass fought its wood */
@@ -193,12 +197,12 @@ function makeInk(r){
     const t=new T.DataTexture(nz,NZ,NZ,T.RGBAFormat);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=t.minFilter=T.LinearFilter;t.needsUpdate=true;return t;};
   /* normals and part id; the id is a uniform set per mesh as it is drawn (onBeforeRender, with uniformsNeedUpdate: an override material is otherwise uploaded once),
      and so is the mesh's own polygon offset: without it the dial's face, 0.02 above its brass disc, fought it, and Edges drew the fight as streaks across the dial */
-  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
-    vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nvarying vec3 vN;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;}',
-    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uId,uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,uId);'+SEC_DEPTH+'\n}'});
-  /* the id is the part's (the drawing) or, for Edges, the mesh's: a pawl lies on its own part's wheel. Edges gives box meshes (userData.inkBox) id 0, no line */
-  let idOn=false,idM=false,nM=0;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
-  const hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))%251;return(h+3)/255;};
+  const nid=new T.ShaderMaterial({clipping:true,side:T.DoubleSide,toneMapped:false,extensions:{fragDepth:true},uniforms:{uId:{value:0},uA:{value:0},uSecOn:SEC.on},   /* a cut face nearer, as patchSection draws it (SEC_DEPTH, compiled only with the plane): else it fought the part on it and Edges drew the fight */
+    vertexShader:'#include <common>\n#include <clipping_planes_pars_vertex>\nattribute float aId;uniform float uId,uA;varying vec3 vN;varying float vId;\nvoid main(){\n#include <beginnormal_vertex>\n#include <defaultnormal_vertex>\n#include <begin_vertex>\n#include <project_vertex>\n#include <clipping_planes_vertex>\nvN=transformedNormal;vId=uA>0.5?aId:uId;}',
+    fragmentShader:'#include <clipping_planes_pars_fragment>\nuniform float uSecOn;uniform mat4 projectionMatrix;varying vec3 vN;varying float vId;\nvoid main(){\n#include <clipping_planes_fragment>\nvec3 n=normalize(vN)*(gl_FrontFacing?1.0:-1.0);gl_FragColor=vec4(n*0.5+0.5,vId);'+SEC_DEPTH+'\n}'});
+  nid.defaultAttributeValues.aId=[0];   /* a mesh without the attribute (all but the merged copies) reads 0 */
+  /* the id is the part's (the drawing) or, for Edges, the mesh's (inkTag): a pawl lies on its own part's wheel. A merged copy (drawMerge) carries its pieces' own as aId */
+  let idOn=false,idM=false;function setId(){if(idOn){const m=this.material;nid.uniforms.uId.value=idM?this.userData.inkIdM:this.userData.inkId;nid.uniforms.uA.value=idM&&this.userData.merged?1:0;nid.uniformsNeedUpdate=true;nid.polygonOffset=!!m.polygonOffset;nid.polygonOffsetFactor=m.polygonOffsetFactor||0;nid.polygonOffsetUnits=m.polygonOffsetUnits||0;}}
   const U=(o={})=>Object.assign({uPx:{value:new T.Vector2()},uPr:{value:1}},o);
   const VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.0,1.0);}';
   const edge=new T.ShaderMaterial({toneMapped:false,depthTest:false,depthWrite:false,vertexShader:VS,uniforms:U({tN:{value:rtN.texture},tD:{value:rtN.depthTexture},tG:{value:rtG.texture},tGD:{value:rtG.depthTexture},uNF:{value:new T.Vector2()},uTwo:{value:0},uGh:{value:0},uMv:{value:0}}),
@@ -231,7 +235,7 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
      Leaves the ghosts hidden and the line pass's uniforms set */
   function ids(scene,cam,meshes,mv,hide){
     const pr=r.getPixelRatio(),gh=[],so=[];
-    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;o.userData.inkId=hash(o.userData.part);o.userData.inkIdM=o.userData.inkBox?0:(nM++%251+3)/255;}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
+    for(const o of meshes){if(!o.visible)continue;if(o.onBeforeRender!==setId){o.onBeforeRender=setId;inkTag(o);}const m=o.material;(m.transparent&&m.opacity<0.5?gh:so).push(o);}
     /* targets at the drawing's size only while used, else 1 px (setSize frees the old one): the ghosts' while there are ghosts, the wash's while the drawing draws.
        Each is 4 bytes a pixel, 8 with a depth texture: Edges without ghosts keeps 12 a pixel, not 28 */
     r.getDrawingBufferSize(bs);const fit=(t,on)=>{const w=on?bs.x:1,h=on?bs.y:1;if(t.width!==w||t.height!==h)t.setSize(w,h);};fit(rtN,1);fit(rtE,1);fit(rtG,gh.length>0);fit(rtC,!mv);
@@ -259,6 +263,50 @@ void main(){vec2 h=0.5*uPx;vec4 e=0.25*(texture2D(tE,vUv+h)+texture2D(tE,vUv-h)+
     r.shadowMap.needsUpdate=true;r.setRenderTarget(null);r.setClearColor(cc,ca);r.clear();r.render(scene,cam);r.shadowMap.autoUpdate=au;
     q.material=edge;r.setRenderTarget(rtE);r.render(qs,qc);q.material=over;r.setRenderTarget(null);const ac=r.autoClear;r.autoClear=false;r.render(qs,qc);r.autoClear=ac;}};
 }
+/* draw calls (PERFORMANCE.md, What's next 1): the static pieces under one group that share a material, drawn as one merged copy. The pieces stay where they are, for the
+   tools, picking, shadows and every display mode. A batch is drawn merged only while each of its pieces is shown and wears its own material (mat0); otherwise its pieces
+   draw themselves. A piece that moves against its group or whose geometry is rebuilt (its place, geometry or vertex version changed since it was merged) leaves its batch
+   for good, and the batch is merged again without it. A merged piece leaves layer 0, the camera's, for layer 2, which the raycasters see too, so picking stays the
+   pieces' own. r128's shadow pass tests layers against the main camera, so the copy casts for its pieces, whenever one of them would (castOn, app.js: a small piece
+   merged with a large one then casts the shadow it was spared for its draw call). The copies live in a group of their own in the scene, outside the model's tree (the tools traverse it), each put where its
+   pieces' group is (sync: after updateMatrixWorld, before drawing), and carry their pieces' Edges ids as a vertex attribute (aId; inkTag). Left out: transparent materials
+   (drawn sorted, one by one), decals and surfaces, instanced meshes, multi-material, part-drawn and interleaved geometry, a piece placed by hand (matrixAutoUpdate off).
+   A geometry's groups (extrusions, cylinders and boxes have them) mean nothing under one material: the whole of it is drawn */
+function mergeIdx(list){const ks=Object.keys(list[0].geometry.attributes),g0=list[0].geometry;let nv=0,ni=0;
+  for(const o of list){const g=o.geometry,n=g.attributes.position.count;nv+=n;ni+=g.index?g.index.count:n;}
+  const A={};for(const k of ks)A[k]=new Float32Array(nv*g0.attributes[k].itemSize);const id=new Float32Array(nv),ix=nv>65535?new Uint32Array(ni):new Uint16Array(ni),v=new THREE.Vector3(),nm=new THREE.Matrix3(),G=['getX','getY','getZ','getW'];let ov=0,oi=0;
+  for(const o of list){const g=o.geometry,n=g.attributes.position.count;o.updateMatrix();const m=o.matrix,fl=m.determinant()<0;nm.getNormalMatrix(m);
+    for(const k of ks){const a=g.attributes[k],s=a.itemSize,t=A[k];
+      if(k==='position'||k==='normal')for(let i=0;i<n;i++){v.fromBufferAttribute(a,i);if(k==='position')v.applyMatrix4(m);else v.applyMatrix3(nm).normalize();t[(ov+i)*3]=v.x;t[(ov+i)*3+1]=v.y;t[(ov+i)*3+2]=v.z;}
+      else for(let i=0;i<n;i++)for(let c=0;c<s;c++)t[(ov+i)*s+c]=a[G[c]](i);}
+    id.fill(o.userData.inkIdM||0,ov,ov+n);
+    const c=g.index?g.index.count:n,I=g.index?g.index.array:null;for(let j=0;j<c;j+=3){const a=I?I[j]:j,b=I?I[j+1]:j+1,d=I?I[j+2]:j+2;ix[oi+j]=a+ov;ix[oi+j+1]=(fl?d:b)+ov;ix[oi+j+2]=(fl?b:d)+ov;}
+    ov+=n;oi+=c;}
+  const out=new THREE.BufferGeometry();for(const k of ks)out.setAttribute(k,new THREE.BufferAttribute(A[k],g0.attributes[k].itemSize));out.setAttribute('aId',new THREE.BufferAttribute(id,1));out.setIndex(new THREE.BufferAttribute(ix,1));out.computeBoundingSphere();return out;}
+function drawMerge(scene,meshes){
+  const root=new THREE.Group();root.name='drawMerge';root.matrixAutoUpdate=false;scene.add(root);root.traverse=root.traverseVisible=function(f){f(this);};   /* the tools walk the scene with traverse: the copies are a way of drawing, not parts (three draws, updates and raycasts through children) */const B=new Map(),all=meshes.slice();
+  const sig=g=>Object.keys(g.attributes).sort().map(k=>k+g.attributes[k].itemSize).join();
+  const ok=o=>o.isMesh&&!o.isInstancedMesh&&!!o.parent&&o.matrixAutoUpdate&&!Array.isArray(o.material)&&o.material===o.userData.mat0&&!o.material.transparent&&!o.userData.decal&&!o.userData.surface&&
+    o.renderOrder===0&&o.frustumCulled&&!!o.geometry.attributes.position&&o.geometry.attributes.position.count>0&&o.geometry.drawRange.start===0&&o.geometry.drawRange.count===Infinity&&!Object.keys(o.geometry.morphAttributes).length&&Object.values(o.geometry.attributes).every(a=>!a.isInterleavedBufferAttribute);
+  const ver=g=>g.attributes.position.version*1e6+(g.attributes.normal?g.attributes.normal.version:0);
+  const snap=o=>{o.userData.dm={p:o.position.clone(),q:o.quaternion.clone(),s:o.scale.clone(),g:o.geometry,v:ver(o.geometry)};};
+  const moved=o=>{const d=o.userData.dm;return!d.p.equals(o.position)||!d.q.equals(o.quaternion)||!d.s.equals(o.scale)||d.g!==o.geometry||d.v!==ver(o.geometry);};
+  const lay=(o,on)=>{if(on){o.layers.disable(0);o.layers.enable(2);}else{o.layers.enable(0);o.layers.disable(2);}};
+  const shown=o=>{for(;o;o=o.parent)if(!o.visible)return false;return true;};
+  for(const o of meshes){if(!ok(o))continue;const k=o.parent.uuid+'|'+o.material.uuid+'|'+o.userData.part+'|'+sig(o.geometry);let b=B.get(k);if(!b)B.set(k,b={parent:o.parent,mat:o.material,list:[],mesh:null,on:false,dirty:true});b.list.push(o);snap(o);}
+  for(const[k,b]of B)if(b.list.length<2)B.delete(k);
+  const relist=()=>{all.length=0;all.push(...meshes);for(const b of B.values())if(b.mesh)all.push(b.mesh);};
+  return{all,root,batches:B,stats:()=>{let on=0,pcs=0;for(const b of B.values())if(b.on){on++;pcs+=b.list.length;}return{batches:B.size,on,pieces:pcs};},
+    sync(en=true){let re=false;   /* en false (Performance mode off): no batch drawn merged, every piece drawing itself; the copies are kept for when it comes back on */
+      for(const b of B.values()){let gone=false;for(const o of b.list)if(moved(o)){o.userData.dm=null;lay(o,false);gone=true;}
+        if(gone){b.list=b.list.filter(o=>o.userData.dm);b.dirty=true;}
+        const on=en&&b.list.length>1&&b.list.every(o=>o.visible&&o.material===b.mat);
+        if(on&&b.dirty){if(b.mesh){root.remove(b.mesh);b.mesh.geometry.dispose();}
+          const c=b.mesh=new THREE.Mesh(mergeIdx(b.list),b.mat),u=c.userData;c.matrixAutoUpdate=false;c.receiveShadow=true;c.castShadow=false;c.name='merged '+b.list[0].userData.part;
+          Object.assign(u,{merged:true,part:b.list[0].userData.part,inkBox:!!b.list[0].userData.inkBox,inkIdM:0,inkId:inkHash(b.list[0].userData.part),mat0:b.mat});root.add(c);b.dirty=false;re=true;}
+        if(on!==b.on){for(const o of b.list)lay(o,on);b.on=on;}
+        if(b.mesh){const vis=on&&shown(b.parent);b.mesh.visible=vis;if(vis){b.mesh.matrix.copy(b.parent.matrixWorld);b.mesh.matrixWorld.copy(b.parent.matrixWorld);b.mesh.castShadow=b.list.some(o=>o.castShadow);}}}
+      if(re)relist();}};}
 /* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: filling half the room between arbor and wall, which gives the most turns),
    coiled in two packs, one on the arbor (from ra) and one on the wall (out to Rw), joined by k free turns. Its coils in a pack lie gap apart (the grease).
    Running peels coils off the arbor pack onto the wall pack. msPack(la,o): the packs with la mm on the arbor; T, the turns from the inner end to the outer.
@@ -346,7 +394,9 @@ function mergeGeo(list){const gs=list.map(([g,m])=>{const q=(g.index?g.toNonInde
   for(const[k,n]of[['position',3],['normal',3],['uv',2]]){if(!gs.every(g=>g.attributes[k]))continue;const a=new Float32Array(gs.reduce((t,g)=>t+g.attributes[k].array.length,0));let o=0;for(const g of gs){a.set(g.attributes[k].array,o);o+=g.attributes[k].array.length;}out.setAttribute(k,new THREE.BufferAttribute(a,n));}
   gs.forEach(g=>g.dispose());return out;}
 function cylBetween(p,r,y0,y1,mat,x=0,z=0,seg=16){return mesh(p,cylY(r,Math.abs(y1-y0),seg),mat,x,(y0+y1)/2,z);}
-function discGeo(r,th,holes=[]){if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
+function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.filter(h=>!h.pts);   /* holes: circles [x,z,r], or {pts} outlines */
+  if(typeof checkHoles==='function')checkHoles('discGeo',holes,(x,z)=>r-Math.hypot(x,z));const s=new THREE.Shape();s.absarc(0,0,r,0,TAU,false);for(const[hx,hz,hr]of holes){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}
+  for(const{pts:hp}of polyH){const h=new THREE.Path(),v=hp.map(([x,z])=>new THREE.Vector2(x,-z));(THREE.ShapeUtils.isClockWise(v)?v:v.reverse()).forEach((q,i)=>i?h.lineTo(q.x,q.y):h.moveTo(q.x,q.y));h.closePath();s.holes.push(h);}
   const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:64});g.rotateX(-Math.PI/2);return g;}
 /* gear: pitch radius = m*n/2 */
 /* toothed wheel or pinion, n teeth of module m, th thick. Teeth centred at a + 0.375 of a pitch (spaces at 0.875), as ph() phases them. Cycloidal clock teeth, in
