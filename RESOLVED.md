@@ -1223,6 +1223,18 @@ An arbor needs pivots and shoulders; a stone its seat.
   moves goes through `reclose` (the stop-bar spring does too), never
   `closeGeo` each frame; check a new one with `tools/perf.py` in a lifted
   view. `bf503d8`
+- **The pawls' seating doubled in cost every frame.** When the pawls'
+  outlines were resampled every 0.1 mm (`dense()`, so a tooth's tip can't
+  pass between two vertices; `8cbb259`), `seatPawl`, which runs every frame
+  for the two winding pawls and the sustaining pawl and tests every outline
+  point about 30 times, went from 87 points to 173 and 221: 0.30 to 0.63 ms
+  of each frame's `update()`. A point d from the pivot never comes nearer
+  the ratchet's centre than |q|−d, so it now tests only the points that can
+  come within ro+0.5 of it (`near()`, the dense outline sorted by distance
+  from the pivot; 96 and 92 of them): bit for bit the same angles over 27,000
+  positions round the ratchets, about a third less time. Keep: anything run
+  every frame over a resampled outline tests only the points that can reach;
+  `dense()` keeps its order for `maintaining.py`. `748c819`
 - **Metals flat and dark after a lost WebGL context.** A restored context
   loses its PMREM render targets. The environment map is now rebuilt on
   `webglcontextrestored`. Keep that handler. `fcedc94`

@@ -95,6 +95,23 @@ Blank cells weren't measured before the change.
   `maintaining.py`, `exploded.py`, `invariants.py`, `escapement.js` and `smoke.py`. `placements.py` found 0 of 39
   parts moved.
 
+## Since then (3 October 2026)
+
+The Movement view felt slower while dragging. Against `bf503d8`, with runs alternated to cancel the machine's drift
+(other sessions' browser checks were running), it cost 8–17% more a frame. No single change caused it:
+
+- **More geometry.** The fidelity work added 54 visible meshes (342 → 396) and 56k triangles in the Movement view:
+  draw calls 753 → 859, doubled by Edges. The barrel alone added 6 meshes and 20k triangles; the escape bridge, train
+  bridge, posts and balance added the rest. Item 2 below is the answer.
+- **`seatPawl`** went from 0.30 to 0.63 ms a frame when the pawls' outlines were resampled every 0.1 mm (`8cbb259`).
+  It now tests only the points that can reach the teeth, with the same results (RESOLVED.md, Rendering): about a
+  third less.
+- **Not the cause.** The adjuster's bench driving the model (1.20.00) changed no draw call and runs its solver only
+  at load and when a slider moves. Loading with a warm cache is faster than in September (0.70 s against 0.96 s to
+  the first frame).
+
+Measure on a quiet machine: another session's `bom.py` or `smoke.py` doubles the spread between identical runs.
+
 ## What's next
 
 In order of what they would save for the effort.
