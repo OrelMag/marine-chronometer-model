@@ -37,11 +37,11 @@ import json,math,pathlib
 import numpy as np
 HERE=pathlib.Path(__file__).resolve().parent
 # the model's positions (movement.js: L, PILLARS, ES, S)
-B=np.array([1.609,10.277]);F=np.array([0.0,23.9]);E=np.array([8.095,17.08]);T=np.array([-6.18,14.75]);C=np.array([0.0,0.0]);ES=13.16/2
-PIL=np.array([[5.61,35.62],[-27.95,17.16]]);PIL_R=3.4                                   # the train bridge's pillars near the bridge, r 3.4 at the upper tier's height
-BB2=np.array([-23.88,22.98]);ARM=np.array([[6.32,29.71],[7.29,31.4]])                 # holes in the train bridge: a barrel-bridge screw (S.bb[2]), the balance locking arm's screw and stop pin (S.arm, S.armPin)
+B=np.array([1.609,10.277]);F=np.array([0.0,21.6]);E=np.array([9.352,15.607]);T=np.array([-8.524,14.186]);C=np.array([0.0,0.0]);ES=13.16/2
+PIL=np.array([[5.5, 33.96],[-27.83,19.7]]);PIL_R=3.4                                   # the train bridge's pillars near the bridge, r 3.4 at the upper tier's height
+BB2=np.array([-23.88,22.98]);ARM=np.array([[6.28,29.72],[7.25,31.41]])                 # holes in the train bridge: a barrel-bridge screw (S.bb[2]), the balance locking arm's screw and stop pin (S.arm, S.armPin)
 ROLL=4.32                                                                                # the balance's widest roller part at the walls' heights (r about the staff)
-DET=np.array([[0.82, 11.98], [0.22, 12.43], [0.47, 12.78], [-2.33, 18.78], [-2.68, 18.63], [-3.63, 20.78], [-3.98, 21.08], [-3.88, 21.33], [-1.13, 22.63], [-2.68, 25.98], [-3.48, 25.73], [-4.23, 27.33], [-5.33, 26.83], [-5.48, 27.23], [-4.38, 27.73], [-4.98, 29.03], [-5.23, 28.98], [-5.38, 29.28], [-6.43, 28.78], [-7.18, 30.38], [-6.23, 30.93], [-6.28, 31.28], [-6.08, 31.38], [-6.63, 32.68], [-7.68, 32.23], [-7.93, 32.58], [-6.83, 33.13], [-7.88, 35.33], [-6.93, 35.83], [-6.53, 35.28], [-5.23, 35.88], [-5.03, 35.48], [-5.53, 35.18], [-5.38, 34.98], [-3.78, 35.68], [2.47, 21.98], [1.27, 21.33], [1.87, 20.03], [2.17, 20.08], [2.52, 19.38], [2.27, 19.13], [2.87, 17.83], [3.17, 17.88], [3.52, 17.08], [1.82, 16.43], [2.37, 15.43], [2.02, 15.18], [2.37, 14.38], [0.72, 12.33]])   # the detent's plan, rasterised from the built model's meshes (it turns with the escapement, 9.40 from the balance)
+DET=np.array([[1.19, 12.11], [0.69, 12.67], [1.01, 12.96], [-0.5, 19.41], [-0.88, 19.33], [-1.37, 21.63], [-1.65, 22.0], [-1.5, 22.22], [1.46, 22.93], [0.63, 26.53], [-0.21, 26.44], [-0.61, 28.16], [-1.79, 27.9], [-1.86, 28.32], [-0.68, 28.59], [-1.0, 29.98], [-1.25, 29.98], [-1.34, 30.31], [-2.47, 30.03], [-2.87, 31.75], [-1.83, 32.1], [-1.81, 32.45], [-1.59, 32.51], [-1.86, 33.89], [-2.98, 33.67], [-3.16, 34.06], [-1.97, 34.37], [-2.54, 36.74], [-1.51, 37.04], [-1.23, 36.42], [0.16, 36.74], [0.28, 36.31], [-0.28, 36.11], [-0.17, 35.89], [1.54, 36.25], [4.85, 21.56], [3.54, 21.16], [3.86, 19.77], [4.17, 19.76], [4.37, 19.0], [4.07, 18.81], [4.39, 17.41], [4.69, 17.4], [4.87, 16.54], [3.08, 16.26], [3.41, 15.16], [3.02, 14.99], [3.19, 14.14], [1.16, 12.47]])   # the detent's plan, rasterised from the built model's meshes (it turns with the escapement, 9.40 from the balance)
 # the real bridge, measured on KLUwI2UUCMQ 13:49.5 (the upper train bridge's underside face-on, the bridge on it; tools/anchor_heights.py): mm in the train bridge's frame, which is the
 # model's (the frame's homography fitted on the bridge's rim, its cut round the barrel and the centre bushing, 0.2-0.3 mm rms; the camera recovered from it at f 6000 px, where its axes
 # come out orthonormal; the slab's face put back 7.9 mm below the bridge's underside, the lugs' 3.3). The slab's outline (traced on the frame), its two convex edges and the concave one
@@ -70,7 +70,7 @@ S1,S2=np.array(MEAS['screwA']),np.array(MEAS['screwB']);P1,P2=PT(P1),PT(P2);LUGL
 # the far lug as measured (turned); the train-blocking screw in a column of its own: the model's detent, turned with the escapement (since the balance stands on the video's
 # cap, its blade runs past the fourth arbor), covers the video's place; the column stands 4.5 mm from the fourth arbor on the escape side, where it keeps at least 1.1 mm from
 # the detent, the escape wheel, the locking arm and the detent block's screw, just past the slab's side edge, with a boss of the slab round it
-LUGR=MEAS['lugB'];P2=np.array([-13.6,16.4]);TBLOCK=np.array([3.9,26.15]);COL=1.95
+LUGR=MEAS['lugB'];P2=np.array([-13.6,16.4]);TBLOCK=np.array([-5.568,18.552]);COL=1.95
 COLT=[list(TBLOCK+COL*np.array([np.cos(a),np.sin(a)])) for a in np.radians(np.arange(0,360,45))]
 def fillet(P,r=0.8,n=5):   # each corner cut back by r (at most 0.4 of either edge) and rounded with a quadratic Bezier; straight edges stay straight
     P=[np.array(p,float) for p in P];out=[]
@@ -98,7 +98,7 @@ CH=0.8   # the chamfer round the slab's convex edges and its straight end: on th
 def lo(P,ch=CH):   # the slab: inside both convex circles, short of the straight edges, outside the escape lobe, the convex edges and the end ch out from the face's; then the model's own
     # arbors: metal round the cap's counterbore and the fourth's sink, and room for the escape arbor and the third arbor
     d=np.maximum.reduce([cir(P,OUT,R_OUT+ch),cir(P,LEFT,R_LEFT+ch),line(P,*BOT)-ch,line(P,*SIDE),line(P,*END),R_LOBE-np.linalg.norm(P-LOBE,axis=-1)])
-    d=smin([d,cir(P,B,CB+CB_M),cir(P,F,2.7+CB_M),cir(P,TBLOCK,0.86+1.1)])
+    d=smin([d,cir(P,B,CB+CB_M),cir(P,F,2.7+CB_M),cir(P,TBLOCK,1.15+1.1)])
     return np.maximum.reduce([d,EP-np.linalg.norm(P-E,axis=-1),1.55-seg(P,T,T+np.array([-8.0,-1.0])),HEAD+0.5-np.linalg.norm(P-S2,axis=-1)])   # the third arbor in a slot to the edge: it stands inside the turned slab (Review-results 19, the third arbor)   # and clear of the far screw's head, put in from below
 KEEP=[(BB2,1.47+0.5),(ARM[0],0.8+0.5),(ARM[1],0.3+0.5),(PIL[1],PIL_R+0.7)]
 upR=lambda P:np.maximum.reduce([poly(P,LR),1.0-poly(P,DET)]+[r-np.linalg.norm(P-c,axis=-1) for c,r in KEEP])

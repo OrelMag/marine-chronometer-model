@@ -1338,8 +1338,11 @@ changes it only round its own arbors (1 below).
     balance-to-fourth distance (14). The plan turns with them, and the block
     is about 20 mm from the balance, so a few degrees move it millimetres.
     The detent's block (12) is placed once those are settled.
-17. **The escape upper bridge (42064)** (new, 1 October 2026). **Rebuilt
-    (1 October 2026, branch `claude/escape-arbor`; RESOLVED.md)**: a bar
+17. **The escape upper bridge (42064)** (new, 1 October 2026). **Rebuilt again
+    (2 October 2026, `claude/fp-layout`) as measured below: the bar 5.2 x 1.0, the boss and
+    thickening under it, the flat-sided cap sunk flush, flush end screws, steady pins.
+    Open: the seats in the train bridge, the cap's conical window.** First rebuilt
+    (1 October 2026, branch `claude/escape-arbor`; RESOLVED.md): a bar
     across the keyhole, symmetric about the jewel, a screw near each end, a
     round cap. Still open: its thickness and the boss under the cap, its
     steady pins, the end screws' countersunk heads, the cap's edge on the
@@ -1577,7 +1580,9 @@ changes it only round its own arbors (1 below).
        Fig. 90's block runs 15 mm toward the foot from the point of flexure
        and the detent's foot 17 (the adjusting screw beyond the block's end);
        the model's are 9.2 and 10.6, shortened to clear the train pillar.
-       The pin, block and foot wait for the layout (24). One more sign that the block is not where the model puts
+       The pin, block and foot wait for the layout (24). **Fixed** with it (2 October 2026):
+       the block 15 mm and the foot about 16.4 from the point of flexure, the pins
+       symmetric. One more sign that the block is not where the model puts
        it (12, 16, 18), as is the third arbor 1.2 mm from the point of
        flexure, through a notch in the block. Sure: high on the pins; their
        spacing to about 0.3 mm on Fig. 90.
@@ -1727,8 +1732,28 @@ changes it only round its own arbors (1 below).
     seconds argue for the larger scale. Measured (`References/VIDEOS.md`, "The scale"): the
     error is most likely in the bore (0.81-0.83 of the ring's outside diameter on the
     video, about 38.4-39.8 mm), the plate's 87.57 stands, and the fourth's 21.4-21.75 is
-    read against the plate in the same frame. Open: the fourth, the escape arbor, the
-    pillars, the stud and the bore, moved together.
+    read against the plate in the same frame. **Applied** (2 October 2026, `claude/fp-layout`):
+    the fourth at 21.6, the third at 16.55 (149 deg), the escape arbor 9.40 from the balance
+    toward the escape jewel seen from above (11.1 from the fourth; the counted wheels' size
+    ratios come out), the pillars on r 34.1-34.7 (pillar 1 at 170.8 deg, not the video's
+    166.3, where its screw would stand under the cock: the cock or that reading is off by
+    about 4 deg), the indicator's stud 22.9, the bore 39.0 with a relief round the 12 (its
+    size rough), the train-blocking screw 6.35 from the fourth, the escape upper bridge
+    rebuilt (17), the detent block at Fig. 90's length (20.2), the lower bridge regenerated
+    (`tools/lower_bridge.py`) and the train bridge's escape opening a circle r 6.9 about the
+    arbor (the escape wheel lifts out through it; the traced lobe, from 23:30 at the wrong
+    focal length, was r 5). The dial's print now puts the seconds sub-dial on its arbor (it
+    was at a fixed 0.472 of the dial's radius, 1.5 mm off it).
+    Still open: the seconds hand and the dial's track. With the fourth at 21.6 the hand
+    can be at most about 18 mm long (it must pass the hour wheel's pipe), so the seconds
+    sub-dial can't meet this 95 mm dial's minute track at 6 as on the photographed dial
+    (its seconds centre 0.549 of the track's radius would want a track r 39.3, against
+    43.0); the video's Navy dial (0.478) suggests a dial about 103 mm across. The dial's
+    size and track wait for a frame with the dial and the ring's flange together. Also
+    open: the lower train bridge's bar stands 4.3-5.4 mm over the plate's dial face on the
+    video (model 1.2); the minute wheel's stud 11.3 on the video against 10.5 from the
+    dial-side photograph; the balance locking arm's place (Fig. 9: beside the cock's foot;
+    the model's estimated).
 
 23. **The barrel's size** (new, 2 October 2026; `References/VIDEOS.md`,
     Measurements). The model's barrel is r 13.5; four readings put it about

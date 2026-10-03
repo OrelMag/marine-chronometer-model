@@ -89,11 +89,11 @@ function makeEsc(o={}){
   };
   /* the detent-adjusting screw (Fig. 90; Ops. 84, 93): threaded into the block's end, its head (r 0.9 mm, 0.45 thick, 0.3 mm off the block) standing 0.3 mm deep in a slot
      across the foot, which runs on 0.6 mm past it, so turning it slides the detent along; adj: the head's inner and outer faces (t) and its centre (n) */
-  const aS=-1.40-0.3/ES,aH=aS-0.45/ES,aN=-0.083+(0.3-0.9)/ES,adj={tS:aS,tH:aH,n:aN,r:0.9},sDp=-0.083+0.35/ES,fE=aH-0.63/ES;
+  const BE=-15.0/ES,aS=BE-0.3/ES,aH=aS-0.45/ES,aN=-0.083+(0.3-0.9)/ES,adj={tS:aS,tH:aH,n:aN,r:0.9,BE},sDp=-0.083+0.35/ES,fE=aH-0.63/ES;
   /* blockFront: split along its length by a slot open at the stop button's end (Fig. 90), so the button stands on a strip sprung from the block's root: the lock-adjusting
      screw, threaded in the outer part, bears on the strip and moves the button ("working through the locking jewel button", Sec. IV); the clamp screw, through the outer
      part into the strip, holds it. The slot and strip in Fig. 90's proportions of the front (0.24 and 0.36 mm) */
-  const fixed={foot:[D(fE,-0.083),D(aH-0.03/ES,-0.083),D(aH-0.03/ES,sDp),D(aS,sDp),D(aS,-0.083),D(0,-0.083),D(0,0.083),D(fE,0.083)],blockMain:rect(-1.40,0.9,-0.5,-0.083),blockFront:[D(0.9,-0.3),D(BL-0.1,-0.3),D(BL-0.1,-0.173),D(0.93,-0.173),D(0.93,-0.137),D(BL-0.1,-0.137),D(BL-0.1,-0.083),D(0.9,-0.083)],button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
+  const fixed={foot:[D(fE,-0.083),D(aH-0.03/ES,-0.083),D(aH-0.03/ES,sDp),D(aS,sDp),D(aS,-0.083),D(0,-0.083),D(0,0.083),D(fE,0.083)],blockMain:rect(BE,0.9,-0.5,-0.083),blockFront:[D(0.9,-0.3),D(BL-0.1,-0.3),D(BL-0.1,-0.173),D(0.93,-0.173),D(0.93,-0.137),D(BL-0.1,-0.137),D(BL-0.1,-0.083),D(0.9,-0.083)],button:rect(BL-0.2,BL-0.1,-0.083,-0.06)};
   /* AMIN: the least amplitude that keeps the escapement going, with 2 degrees to spare: the swing must carry the discharge jewel past the trip spring on the return
      (where the spring falls off it, thPass), unlock the wheel (thRel) and see the impulse to its end (thEnd). Below it the balance swings on without unlocking */
   let thEnd=thRel;for(let th=thRel;th<A;th+=0.001){const a=bite(th),pf=-(th-thRel)*G,phi=Math.max(pf,a>-1e8?a-t0:-1e9);if(phi<=-P){thEnd=th;break;}}
