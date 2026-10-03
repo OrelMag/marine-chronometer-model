@@ -5,8 +5,8 @@
     python smoke.py --essay    # the Essay tab only
 
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, every cross-section
-(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, Version · what's new and About, winding with the key, the keyboard, and a link through the URL
-hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
+(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, Version · what's new and About, winding with the key (the sustaining spring's close-up and load path,
+shown while winding and gone after), the keyboard, and a link through the URL hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
 two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
 import asyncio,pathlib,sys
@@ -75,8 +75,18 @@ async def model(b,errs,steps):
     if await pg.evaluate("document.querySelector('#drawInk').checked||!document.querySelector('#edges').checked"):errs.append('Reset display left the ink drawing on or Edges off')
     await click('#link','copy link',400)
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
-    await click('#kwBtn','wind with the key',2500);await click('#kwBtn','stop winding')
-    await click('#wind','wind');await click('#rateZero','rate reset')
+    # winding with the key, the spring drawn exaggerated: the close-up shows with the sustaining spring relaxed, the load path in colour; it goes 2 s (page time) after the key lets go
+    await click('#ssx','exaggerate the spring')
+    await click('#kwBtn','wind with the key',2500)
+    if not await pg.evaluate("__lp().ph==='w'&&__lp().cu&&!document.querySelector('#cu').classList.contains('hidden')&&__mv.userData.R.ssD>0"):errs.append('winding with the key: no close-up, or the sustaining spring not relaxed')
+    await click('#kwBtn','stop winding')
+    try:await pg.wait_for_function("__lp().ph===''&&document.querySelector('#cu').classList.contains('hidden')",timeout=20000)
+    except Exception:errs.append('the close-up stayed after winding')
+    for c in['#lpOn','#cuOn']:await click(c,c+' off')
+    await click('#wind','wind',800)
+    if not await pg.evaluate("document.querySelector('#cu').classList.contains('hidden')"):errs.append('Close-up unticked, but it showed while winding')
+    for c in['#lpOn','#cuOn','#ssx']:await click(c)   # back to the defaults
+    await click('#rateZero','rate reset')
     # stopping and starting: the locking arm stops the balance, a twist restarts it; the train-blocking screw stops the train at a spoke (at 60x, so it reaches one soon)
     hud=lambda:pg.evaluate("document.querySelector('#hud').textContent")
     async def expect(label,want,ok=True,wait=0):   # wait: poll up to this many seconds (the arm and screw move on frame time, slow in a headless browser)

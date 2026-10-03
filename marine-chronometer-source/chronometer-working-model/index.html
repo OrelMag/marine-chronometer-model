@@ -32,6 +32,7 @@
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
     <div class="srckey hidden" id="srcKey" aria-label="Colour by source: what each colour means"></div>
     <div class="hud" id="hud"></div>
+    <div class="cu hidden" id="cu" aria-hidden="true"><div class="cu-t">Sustaining spring, close up<span id="cuX"></span></div><div class="cu-g" id="ssGauge"><i><b></b></i><span></span></div></div>
     <div class="info help" id="help" role="dialog" aria-labelledby="helpT"><button class="x" aria-label="Close">×</button><h3 id="helpT">How to use it</h3>
       <div class="hcols">
         <section class="hc mouse"><h4>With a mouse</h4><dl>
@@ -90,6 +91,9 @@
         <div class="row pow"><label class="sl"><span class="lab">Since winding</span><input type="range" id="hrs" min="0" max="60" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully (17½ half turns from run down)">Wind</button></div>
         <div class="row"><span class="lab">Key</span><button id="kwBtn" aria-pressed="false" title="Turn the key half a turn at a time until the winding stop catches">Wind with the key</button></div>
         <label class="ck ind kwf" title="Start winding from run down, the chain all on the barrel: 17½ half turns"><input type="checkbox" id="kwFull" checked> From run down</label>
+        <label class="ck ind kwf" title="While winding, colour the parts that carry the train's load: the sustaining spring driving it (rose) and the sustaining ratchet and pawl holding (teal); for 2 s after, the mainspring's path again"><input type="checkbox" id="lpOn" checked> Load path in colour</label>
+        <label class="ck ind kwf" title="While winding, a close-up of the fusee wheel's maintaining work, the sustaining ratchet see-through, with how long the sustaining spring can still drive the train"><input type="checkbox" id="cuOn" checked> Close-up of the sustaining spring</label>
+        <label class="ck ind kwf" title="Draw the sustaining spring relaxing 20 times as far as it does, so it can be seen opening as it drives the train and closing again when the key lets go. The ratchet and pawls stay where they are; the time left is the real one"><input type="checkbox" id="ssx"> Exaggerate the spring's motion (×20)</label>
         <p class="note ind hidden" id="kwOut" aria-live="polite" style="margin-top:6px;margin-bottom:0"></p>
         <div class="row"><span class="lab">Start</span><button id="twist" title="Give the box a quick twist, which sets the balance swinging: how a stopped chronometer is started">Twist to start</button></div>
       </details>
@@ -289,6 +293,15 @@
 
 <h2 id="winding"><a class="e-h" href="#essay=winding">Winding</a></h2>
 <p>Winding turns all of this backward. The key turns the fusee arbor counterclockwise, drawing the chain off the barrel and onto the cone, which winds the spring. For as long as the key turns, though, the fusee isn’t pushing the train forward. Harrison’s <em>maintaining power</em> fills the gap: in the Model 21 a sustaining spring inside the fusee wheel, always under load, drives the train for five to ten minutes, and a sustaining pawl keeps it from unwinding backward.</p>
+<figure>
+  <div class="e-st" id="eMaint"><canvas aria-label="The fusee wheel's maintaining work, from the train bridge's side: the sustaining spring, its ratchet and pawl, and the fusee's winding ratchet and pawls"></canvas><div class="e-labels"></div></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Minutes the key has turned</span><input type="range" min="0" max="10" step="0.05" value="0"><output></output></label>
+    <button class="wind">Turn the key</button>
+  </div>
+  <div class="e-ro"></div>
+  <figcaption>The maintaining work inside the fusee wheel, as the model draws it, seen from the train bridge’s side with the sustaining ratchet see-through. Rose carries the drive; teal holds. Running, the fusee’s winding ratchet pushes the sustaining ratchet round through two pawls, and the ratchet drives the wheel through the spring, held at full load. While the key turns, the sustaining pawl holds the ratchet and the spring, pushing off it, drives the wheel on alone, relaxing <span class="e-live" data-live="ssDeg">8.8°</span> in the model’s 10 minutes, the longer of the manual’s five to ten. The spring’s gap and travel are estimated.</figcaption>
+</figure>
 <p>The routine was the same every day, at the same hour. Turn the chronometer gently face down in its gimbals; turn the shield plate on the bottom of the case clockwise to uncover the keyhole; wind to the left. Seven half turns restore the 24 hours since the last winding. The last half turn goes slowly, so that the chain meets the winding stop gently: at full wind it pushes a stop-bar in the top of the fusee out against a stop under the barrel bridge, and the key can turn no further.</p>
 <figure>
   <div class="e-st flat" id="eWind"><canvas aria-label="The up-down dial and the half turns of the key needed to wind"></canvas></div>

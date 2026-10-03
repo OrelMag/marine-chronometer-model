@@ -88,7 +88,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const BOXM=[];BX.root.traverse(o=>{if(o.isMesh)BOXM.push(o);});
   const mv=buildMovement(M);BX.bowl.add(mv);
   const sh=new THREE.Mesh(new THREE.PlaneGeometry(640,640).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({map:shadowTex(),transparent:true,depthWrite:false}));sh.position.y=-101;sh.userData.surface=true;scene.add(sh);
-  const R=mv.userData.R,P=mv.userData.parts;if(/[?&]qa\b/.test(location.search)){window.__mv=mv;window.__parts=PARTS;window.__r=r;window.__renders=()=>renders;window.__proj=(pts,yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(0,-26,0);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();return pts.map(p=>{const v=new THREE.Vector3(...p);mv.localToWorld(v);v.project(c2);return[(v.x+1)/2*W,(1-v.y)/2*Hh];});};window.__unproj=(pts,yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(0,-26,0);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();
+  const R=mv.userData.R,P=mv.userData.parts;if(/[?&]qa\b/.test(location.search)){window.__mv=mv;window.__parts=PARTS;window.__r=r;window.__renders=()=>renders;window.__lp=()=>({ph:lpPh,end:lpEnd,cu:cuOn,now:performance.now()});window.__proj=(pts,yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(0,-26,0);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();return pts.map(p=>{const v=new THREE.Vector3(...p);mv.localToWorld(v);v.project(c2);return[(v.x+1)/2*W,(1-v.y)/2*Hh];});};window.__unproj=(pts,yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(0,-26,0);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();
     const inv=new THREE.Matrix4().copy(mv.matrixWorld).invert();return pts.map(([sx,sy,h])=>{const ndc=new THREE.Vector2(sx/W*2-1,-(sy/Hh*2-1));const rc=new THREE.Raycaster();rc.setFromCamera(ndc,c2);
       const o=rc.ray.origin.clone().applyMatrix4(inv),dd=rc.ray.direction.clone().transformDirection(inv);const tt=(h-o.y)/dd.y;return[o.x+dd.x*tt,o.z+dd.z*tt];});};
   window.__camInfo=()=>JSON.stringify({fov:cam.fov,aspect:cam.aspect,pos:cam.position.toArray().map(v=>+v.toFixed(2)),tgt:C.target.toArray().map(v=>+v.toFixed(2)),C:{yaw:C.yaw,pitch:C.pitch,dist:C.dist},W,Hh});
@@ -101,7 +101,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      few texels at most, each an extra draw call. Far views drop the screws and pins (under about 1.5 mm); close-ups keep them. Instanced meshes (the chain) always cast */
   BX.root.updateMatrixWorld(true);const wsc=new THREE.Vector3(),rad=o=>{if(o.isInstancedMesh)return 1e9;const g=o.geometry,b0=g.boundingSphere;g.computeBoundingSphere();const r=g.boundingSphere.radius;g.boundingSphere=b0;if(!(r>0))return 1e9;o.getWorldScale(wsc);return r*Math.max(wsc.x,wsc.y,wsc.z);};   /* three computes its own bounding sphere when it first needs it, as before; geometries rebuilt as they move (hairspring, passing spring) start empty, and always cast */
   const SHK=6;let shThr=SHK*2*scam.right/key.shadow.mapSize.x;const castOn=m=>{m.castShadow=!!m.userData.cs&&m.userData.rad>=shThr;};
-  const MVM=[];mv.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);MVM.push(o);}});
+  const lpOf=o=>{for(;o&&o!==mv;o=o.parent)if(o.userData.lp)return o.userData.lp;return '';};   /* the load-path tag (movement.js) of a mesh or the nearest group above it */
+  const MVM=[];mv.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.lpk=lpOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);MVM.push(o);}});
   BOXM.forEach(o=>{o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);o.userData.cs=o.material!==M.glass;castOn(o);});
   /* a frame: rendered, drawn (tinted or in ink), or rendered with Edges (the drawing's lines over it, the movement's only) (makeInk in core.js, set up the first time it is asked for) */
   let ink=null;const INKM=[...MVM,...BOXM];BOXM.forEach(o=>o.userData.inkBox=true);
@@ -124,7 +125,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   $('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
 
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,speed:1,sound:true,view:'dial',tour:-1};
+  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,rock:false,latch:false,spin:false,lp:true,cu:true,ssx:false,speed:1,sound:true,view:'dial',tour:-1};
   const FOV0=cam.fov,cur={lift:0,flip:0,explode:0,lidM:0,lidT:0,dev:0,fov:FOV0},tgt={...cur};let devShown=false;   /* devShown: the train still out of place (laid out, or on its way back), so the real plates stay hidden */
   /* any input keeps the stage drawing for 0.6 s (the loop otherwise skips frames in which nothing moves) */
   /* a short note in the HUD, for a few seconds */
@@ -157,6 +158,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0||isoOut(m.userData.part);
   /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, the barrel or spring picked or isolated, or the barrel faded or hidden */
   const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus,ob=st.op.barrel;return st.drive||secMode!=='off'||st.hid.has('barrel')||(ob!=null&&ob<1)||!!(foc&&(foc.has('mainspring')||foc.has('barrel')))||!!(st.iso&&(st.iso.has('mainspring')||st.iso.has('barrel')));};
+  /* the load path (Load path in colour, Winding): while winding (lpPh 'w') the sustaining spring drives the fusee wheel (rose), pushing off its ratchet, which the sustaining
+     pawl holds (teal); for 2 s after the key lets go (lpPh 'r') the drive is the mainspring's again: barrel, chain, fusee, winding pawls, sustaining ratchet, spring, fusee wheel. A tinted copy of what the part shows: its colour drawn
+     toward the tint and a little of it lit, so it holds under the drawing (drawOf keeps the colour, not the glow) */
+  let lpPh='',lpEnd=0;const LPC={d:sc('#e0306a'),h:sc('#0e9f92')},TINT=new Map();   /* rose and teal: hues no metal in the movement has */
+  const lpCol=m=>{const k=m.userData.lpk;if(!st.lp||!lpPh||!k)return null;return lpPh==='w'?(k==='s'?'d':k==='h'||k==='r'?'h':null):(k==='h'?null:'d');};
+  function tintOf(m0,c){if(!m0.color)return m0;const k=m0.uuid+c;let t=TINT.get(k);
+    if(!t){t=m0.clone();t.userData={inkDecal:m0.userData.inkDecal};patchSection(t,!!m0.userData.secCap);t.userData.side0=m0.userData.side0??m0.side;t.side=m0.side;t.clippingPlanes=[...(m0.clippingPlanes||[])];TINT.set(k,t);}
+    if(t.map!==m0.map){t.map=m0.map;t.needsUpdate=true;}t.color.copy(m0.color).lerp(LPC[c],0.8);if(t.emissive){t.emissive.copy(LPC[c]);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}t.opacity=m0.opacity??1;return t;}   /* less metal, so the colour shows rather than the room it reflects */
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;
     const foc=st.pick?new Set([st.pick]):st.focus,dvOn=(st.tour<0&&st.view==='laidout')||devShown;   /* laid out: the real plates' holes no longer meet the arbors; schematic ones stand in */
     for(const m of MVM){const p=m.userData.part;let vis=true;
@@ -165,7 +174,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if((st.drive||dvOn)&&m.userData.driveHide)vis=false;if(m.userData.devPlate&&(!dvOn||st.drive))vis=false;
       const gh=!(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||m.userData.devPlate||(st.drive&&m.userData.driveGhost)||(foc&&!foc.has(p)&&!(p==='mainspring'&&foc.has('barrel'))));
       if(m.userData.noShadow&&gh)vis=false;
-      m.visible=vis&&!opHide(m);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
+      m.visible=vis&&!opHide(m);const lc=!gh&&lpCol(m);m.material=gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
     for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
     /* Shadows (off by default): the key light's shadow map, an extra pass over every caster (about 380 draw calls and all the triangles again) and a costlier shader.
@@ -178,6 +187,29 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;$('#shadows').checked=st.shadows;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
   }
 
+  /* ---------- the sustaining spring close up (Close-up, Winding) ----------
+     While winding and for 2 s after (lpPh), the fusee wheel's maintaining work drawn again into the box #cu, on the stage's own canvas (the page keeps to two WebGL contexts):
+     only its parts (layer 1: the fusee wheel, the sustaining spring, ratchet and pawl, the fusee's winding ratchet), seen from the train bridge's side in the movement's own frame,
+     so it holds whatever the view, the sustaining ratchet see-through so the spring under it shows, tinted as the load path. Under it, how long the spring can still drive the
+     train: R.ssD of R.SMAX, the model's 10 minutes (movement.js) */
+  const cuEl=$('#cu'),cuG=$('#ssGauge'),cuX=$('#cuX'),cam2=new THREE.PerspectiveCamera(30,1,1,2000),CUP=new Set(['gw','sspring','sratchet','spawl']);
+  const CU=MVM.filter(m=>CUP.has(m.userData.part)||m.userData.hn==='42013');CU.forEach(m=>m.layers.enable(1));scene.traverse(o=>{if(o.isLight)o.layers.enable(1);});cam2.layers.set(1);
+  const CUG=new Set(CU.filter(m=>m.userData.part==='sratchet'&&m.userData.mat0===M.gilt)),CUGM=new Map();   /* the sustaining ratchet wheel and its web, drawn at 45% */
+  const cuGhost=m0=>{let g=CUGM.get(m0);if(!g){g=m0.clone();g.userData={};g.transparent=true;g.opacity=0.45;g.depthWrite=false;patchSection(g,false);g.clippingPlanes=[...(m0.clippingPlanes||[])];CUGM.set(m0,g);}return syncMat(g,m0);};
+  let cuOn=false,cuS='';const cuBg=new THREE.Color(),cuCC=new THREE.Color(),cuT=new THREE.Vector3(),cuE=new THREE.Vector3();
+  const cuRect=()=>{const b=cuEl.getBoundingClientRect(),s=stage.getBoundingClientRect();return{x0:b.left-s.left,y0:b.top-s.top,x1:b.right-s.left,y1:b.bottom-s.top};};
+  function cuShow(){cuOn=st.cu&&!!lpPh;cuEl.classList.toggle('hidden',!cuOn);cuX.textContent=st.ssx?'spring ×20':'';cuS='';}
+  function cuDraw(){if(!cuOn)return;const b=cuRect(),gH=cuG.offsetHeight,tH=18,w=b.x1-b.x0-2,h=b.y1-b.y0-2-gH-tH;if(w<20||h<20)return;   /* between the title and the gauge */
+    const ul=Math.hypot(L.Fu[0],L.Fu[1]),ux=L.Fu[0]/ul,uz=L.Fu[1]/ul;   /* outward from the movement's centre through the fusee */
+    cuT.set(L.Fu[0]+ux*2,-8.6,L.Fu[1]+uz*2);cuE.set(L.Fu[0]+ux*21,-8.6-56,L.Fu[1]+uz*21);mv.localToWorld(cuT);mv.localToWorld(cuE);
+    cam2.position.copy(cuE);cam2.up.set(-ux,0,-uz).transformDirection(mv.matrixWorld);cam2.lookAt(cuT);cam2.aspect=w/h;cam2.updateProjectionMatrix();
+    const keep=CU.map(m=>m.material);for(const m of CU){const lc=lpCol(m),b0=base(m),t=lc?tintOf(b0,lc):b0;m.material=CUG.has(m)?cuGhost(t):t;}
+    const au=r.shadowMap.autoUpdate,ca=r.getClearAlpha();r.getClearColor(cuCC);r.shadowMap.autoUpdate=false;cuBg.set(getComputedStyle(stage).getPropertyValue('--card').trim()||'#ffffff');
+    r.setScissorTest(true);r.setViewport(b.x0+1,Hh-b.y1+1+gH,w,h);r.setScissor(b.x0+1,Hh-b.y1+1,w,h+gH+tH);r.setClearColor(cuBg,1);r.clear();r.render(scene,cam2);
+    r.setClearColor(cuCC,ca);r.setScissorTest(false);r.setViewport(0,0,W,Hh);r.shadowMap.autoUpdate=au;CU.forEach((m,i)=>m.material=keep[i]);
+    const left=10*clamp(1-R.ssD/R.SMAX,0,1),mn=Math.floor(left+1e-9),sc=Math.min(59,Math.floor((left-mn)*60)),run=lpPh!=='w';
+    const t=run?'Key let go: the mainspring drives the train again, through the fusee, and loads the sustaining spring<br><em class="d">the mainspring’s drive</em>':`<b>${mn} min ${String(sc).padStart(2,'0')} s</b> of drive left <small>(manual: 5 to 10 min)</small><br><em class="d">spring drives</em> <em class="h">ratchet and pawl hold</em>`;
+    const k=t+run;if(k!==cuS){cuS=k;cuG.classList.toggle('run',run);cuG.querySelector('b').style.width=(left*10).toFixed(1)+'%';cuG.querySelector('span').innerHTML=t;}}
   /* ---------- camera ---------- */
   const C={yaw:0.75,pitch:0.42,dist:640,target:new THREE.Vector3(0,-20,0)},G={yaw:C.yaw,pitch:C.pitch,dist:C.dist,target:C.target.clone(),follow:null};
   let W=1,Hh=1;const resize=()=>{W=stage.clientWidth;Hh=stage.clientHeight;r.setSize(W,Hh,false);cam.aspect=W/Hh;cam.updateProjectionMatrix();};new ResizeObserver(resize).observe(stage);resize();
@@ -311,7 +343,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     soviet:['Black on white, in the style of the First Moscow Watch Factory deck chronometers, which copied the Nardin layout (maker’s name and number left off): upright Arabic hours, with the 6 covered by a large seconds sub-dial marked СДЕЛАНО В СССР (made in the USSR); railroad minute and seconds tracks; the wind indicator reads ЗАВОД (wound) to СПУСК (run down). Its scale is drawn on this movement’s 314° sweep.','Aged gilt pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.']};
   document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>{mv.userData.dial(b.dataset.v);keep('dial',b.dataset.v);look();[INFO.dial[1],INFO.hands[1]]=DIAL_INFO[b.dataset.v];document.querySelectorAll('#dialSt button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
   document.querySelectorAll('#finish button').forEach(b=>b.addEventListener('click',()=>{M.setPlateFinish(b.dataset.v);keep('finish',b.dataset.v);look();document.querySelectorAll('#finish button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
-  $('#lbls').addEventListener('change',e=>st.labels=e.target.checked);$('#rock').addEventListener('change',e=>st.rock=e.target.checked);$('#latch').addEventListener('change',e=>st.latch=e.target.checked);
+  $('#lbls').addEventListener('change',e=>st.labels=e.target.checked);$('#lpOn').addEventListener('change',e=>{st.lp=e.target.checked;look();});$('#cuOn').addEventListener('change',e=>{st.cu=e.target.checked;cuShow();});$('#ssx').addEventListener('change',e=>{st.ssx=e.target.checked;cuShow();});$('#rock').addEventListener('change',e=>st.rock=e.target.checked);$('#latch').addEventListener('change',e=>st.latch=e.target.checked);
   const hIn=$('#hrs'),hOut=hIn.parentElement.querySelector('output');
   const showH=()=>{hOut.textContent=hrs.toFixed(1)+' h';hIn.value=hrs.toFixed(1);};
   hIn.addEventListener('input',()=>{if(kw)kwStop();hrs=parseFloat(hIn.value);winding=false;showH();});showH();
@@ -617,7 +649,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function placeLabels(now){
     if(!LS)LS=lsorted();
     const foc=st.pick?new Set([st.pick]):st.focus,doOcc=now-lastOcc>200;if(doOcc)lastOcc=now;
-    const placed=[],pad=3;
+    const placed=cuOn?[cuRect()]:[],pad=3;   /* the labels keep off the close-up */
     for(const l of LS){
       /* off by default; the walkthrough always names the parts of its step */
       let show=(st.labels||st.tour>=0)&&(l.grp==='mv'?(cur.lift>0.8||st.drive)&&cur.flip>0.8:l.grp==='motion'?st.drive&&st.mwOn&&cur.flip<0.3:l.grp==='dial'?cur.lift<0.1&&cur.lidM>0.9&&!st.drive:cur.lift<0.1&&cur.lidT>0.9&&!st.drive);
@@ -700,6 +732,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
     const run=hrs<RUN_H,dtS=dt*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
     if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
+    if(winding)lpEnd=now+2000;{const ph=winding?'w':now<lpEnd?'r':'';if(ph!==lpPh){lpPh=ph;look();cuShow();}}   /* the load path's phase: winding, then 2 s of the mainspring's drive again */
     tVis+=dt;stopMove(dt);
     const brake=H.arm>0.75;ampStep(dtS*rateK,brake,run&&!H.held);   /* the arm's pad is under the rim from about three quarters of its turn */
     /* the train's state at model time t: beats E (whole beats locked, a fraction during an impulse; continuous above REAL_X) and the balance's state. Up to REAL_X the balance
@@ -720,7 +753,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
     {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
@@ -739,9 +772,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
     const balHid=cur.lift<0.02&&cur.explode<0.01&&cur.dev<0.01&&!st.drive&&secMode==='off'&&!st.see&&!st.iso&&!st.hid.size&&!Object.keys(st.op).length&&!insetKind&&!benchD.open;   /* the balance can't be seen */
-    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off')];
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
-    if(!ESSAY.on()&&onScreen&&!still){paint();renders++;lastDraw=now;lastSig=sig;
+    if(!ESSAY.on()&&onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
     placeLabels(now);}
     if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}
@@ -754,7 +787,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
-  ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake});
+  ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';
   document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==='dial'?'true':'false'));

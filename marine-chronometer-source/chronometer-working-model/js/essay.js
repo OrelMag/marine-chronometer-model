@@ -283,6 +283,44 @@ const ESSAY=(()=>{
         if(full>0){ctx.fillStyle=PAL.blue;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+TAU*(half?0.5:1)*clamp(full,0,1));ctx.closePath();ctx.fill();}}
       ctx.fillStyle=PAL.muted;ctx.textBaseline='middle';for(const[row,t,c]of[[0,'24 h',7],[1,'48 h',7],[2,Math.round(RUN_H)+' h',4]])ctx.fillText(t,x0+c*gap+6,y0+row*gap);ctx.textBaseline='alphabetic';};});
 
+  /* ---------- maintaining power: the fusee wheel's maintaining work, the model's own parts (bind's R), driven as the model's update() drives them ----------
+     The sustaining ratchet stands where the sustaining pawl holds it against a steep face (phaseAgainst, as holdBack leaves it). Running, the fusee's winding ratchet bears on
+     the winding pawls and the spring is loaded (d 0); with the key turning for t minutes the fusee and its ratchet turn back under the pawls (half a turn a minute, for the
+     figure) and the spring relaxes d = SMAX t/10, turning the fusee wheel on by d while the ratchet stays. Rose: what carries the drive; teal: what holds */
+  fig('eMaint',f=>{const st=f.el,P=figOf(st),R=model.R,mv=model.mv,M0=model.M,Fu=L.Fu,SMAX=R.SMAX;
+    const V=new View3D(st,f,{aspect:w=>w<520?0.85:0.55,yaw:0.35,pitch:1.05,dist:78,target:[0,8.6,0],minPitch:0.2});
+    const root=new THREE.Group();root.rotation.x=Math.PI;root.position.set(-Fu[0],0,Fu[1]);V.scene.add(root);   /* the movement's frame turned over (the train bridge's side up), the fusee's axis at the origin */
+    const cl=o=>{const c=o.isMesh?new THREE.Mesh(o.geometry,o.userData.mat0||o.material):new THREE.Group();c.position.copy(o.position);c.quaternion.copy(o.quaternion);c.scale.copy(o.scale);c.visible=o.visible;c.userData.src=o;
+      for(const k of o.children)if(!k.isInstancedMesh&&!k.isLight)c.add(cl(k));return c;};
+    const gw=cl(R.gw),ss=cl(R.ssg),sr=cl(R.sr),sp=cl(R.spawl);root.add(gw,ss,sr,sp);const spr=ss.children.find(o=>o.userData.src===R.sspring);
+    let wr=null;R.fs.g.traverse(o=>{if(!wr&&o.isMesh&&o.userData.hn==='42013')wr=o;});
+    const wrg=new THREE.Group();wrg.position.set(Fu[0],0,Fu[1]);root.add(wrg);{mv.updateMatrixWorld(true);const p=new THREE.Vector3();wr.getWorldPosition(p);mv.worldToLocal(p);const m=new THREE.Mesh(wr.geometry,wr.userData.mat0||wr.material);m.position.y=p.y;m.userData.src=wr;wrg.add(m);}
+    const wp=sr.children.filter(o=>R.wp.includes(o.userData.src)),srM=[];sr.traverse(o=>{if(o.isMesh&&o.userData.src.userData.mat0===M0.gilt)srM.push(o);});
+    /* tints and the see-through ratchet: copies of the model's materials */
+    const T=new Map(),tint=(m0,c)=>{const k=m0.uuid+c;let t=T.get(k);if(!t){t=m0.clone();t.color=m0.color.clone().lerp(sc(c),0.8);if(t.emissive){t.emissive=sc(c);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}T.set(k,t);}return t;};
+    const see=new Map(),ghost=m0=>{let g=see.get(m0);if(!g){g=m0.clone();g.transparent=true;g.opacity=0.45;g.depthWrite=false;see.set(m0,g);}return g;};
+    const ROSE='#e0306a',TEAL='#0e9f92',paint=(g,c,gh)=>g.traverse(o=>{if(!o.isMesh)return;const m0=o.userData.src.userData.mat0||o.userData.src.material,k=typeof c==='function'?c(o):c,t=k?tint(m0,k):m0;o.material=gh&&srM.includes(o)?ghost(t):t;});
+    const onM=o=>{for(let x=o.userData.src;x&&x!==R.sr;x=x.parent)if(x.userData.lp)return x.userData.lp==='m';return false;};   /* in the ratchet's assembly, the winding pawls, their springs and feet: the mainspring's side */
+    /* where the sustaining pawl holds the ratchet, and the pawls' seats (movement.js: seatPawl, phaseAgainst) */
+    const q0=[R.spawl.position.x-Fu[0],R.spawl.position.z-Fu[1]],su=R.spawl.userData,srA=phaseAgainst(R.SRP,su.pts,q0,su.base,-1).psi;
+    sr.rotation.y=srA;sp.rotation.y=seatPawl(su.pts,toWheel(q0,[0,0],srA),su.base-srA,R.SRP)+srA;
+    let t=0,lastD=-1,kw=null,key=0;const ro=q('.e-ro',P),inp=q('input[type=range]',P),out=inp.parentElement.querySelector('output'),btn=q('.wind',P);
+    function set(tm,mode){t=tm;const d=SMAX*clamp(tm/10,0,1),wind=mode==='turn'||(!mode&&tm>0);   /* mode: 'turn' the key turning, 'run' let go, or by the slider */gw.rotation.y=ss.rotation.y=srA+d;
+      if(Math.abs(d-lastD)>1e-4){lastD=d;spr.geometry.dispose();spr.geometry=R.sspGeo(d);}
+      if(wind)key=tm*Math.PI;const fz=srA+R.WPH-(wind?key:Math.floor(key/R.FPR.p)*R.FPR.p);   /* let go, the fusee turns on until its ratchet catches the pawls (update()'s catch): whole teeth from where the key left it */wrg.rotation.y=fz;for(const w of wp){const u=w.userData.src.userData,psi=fz-srA;w.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,R.FPR)+psi;}
+      paint(gw,wind?null:ROSE);paint(ss,ROSE);paint(sr,o=>wind?(onM(o)?null:TEAL):ROSE,true);for(const w of wp)paint(w,wind?null:ROSE);paint(sp,wind?TEAL:null);paint(wrg,wind?null:ROSE);
+      const left=10*(1-d/SMAX);ro.innerHTML=wind?`<b>Key turning</b>: the sustaining spring alone drives the fusee wheel, pushing off its ratchet, which the sustaining pawl holds. Relaxed <b>${(d/D2R).toFixed(1)}°</b> of its ${(SMAX/D2R).toFixed(1)}°, <b>${left.toFixed(1)} min</b> of drive left.`:
+        '<b>Running</b>: the mainspring, through the fusee, its winding ratchet and pawls, turns the sustaining ratchet, which drives the fusee wheel through the spring at full load.';
+      out.textContent=tm.toFixed(1)+' min';f.dirty=true;}
+    range(inp,v=>{if(kw)return;set(v);return v.toFixed(1)+' min';});
+    btn.addEventListener('click',()=>{if(!kw)kw={t:0};});
+    V.label('Sustaining spring','drives while the key turns',at(ss,15.6*Math.cos(Math.PI*0.9),-8.75,15.6*Math.sin(Math.PI*0.9)));V.label('Sustaining ratchet','',at(sr,14.6*Math.cos(-2.2),-9.45,14.6*Math.sin(-2.2)));
+    V.label('Sustaining pawl','holds the ratchet',at(sp,0,0,0));V.label('Fusee wheel','to the train',at(gw,18.8*Math.cos(2.4),-6.5,18.8*Math.sin(2.4)));V.label('Winding ratchet','on the fusee',at(wrg,0,wrg.children[0].position.y,0));
+    set(0);
+    return dt=>{if(kw){kw.t+=dt/(RM?4:1);const T1=4,T2=4.6,T3=5.2;   /* the key turns 3 minutes' worth in 4 s, rests, lets go, and the mainspring loads the spring again */
+        if(kw.t<T1)set(3*smooth(kw.t/T1),'turn');else if(kw.t<T2)set(3,'turn');else if(kw.t<T3)set(3*(1-smooth((kw.t-T2)/(T3-T2))),'run');else{kw=null;set(0,'run');}inp.value=t;}
+      if(!f.dirty)return;f.dirty=false;V.render();};},'model');
+
   /* ---------- counting: the centre, third, fourth and escape wheels, with the model's counts and modules ---------- */
   fig('eTrain',f=>{const st=f.el,P=figOf(st),M=gl().M,T=TRAIN,S0=new THREE.Group(),dCT=MOD.centre*(T.cw+T.tp)/2,dTF=MOD.train*(T.tw+T.fp)/2,dFE=MOD.fourth*(T.fw+T.ep)/2;
     const pl=(p,d,a)=>[p[0]+d*Math.cos(a*D2R),p[1]+d*Math.sin(a*D2R)],C0=[0,0],Tp=pl(C0,dCT,-25),Fp=pl(Tp,dTF,40),Ep=pl(Fp,dFE,-35),mid=[(C0[0]+Ep[0])/2,(C0[1]+Ep[1])/2];
@@ -351,7 +389,7 @@ const ESSAY=(()=>{
   /* ---------- numbers in the text, from the model's code (the escapement's figures follow the adjuster's bench) ---------- */
   function fillLive(){const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
-      gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
+      gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
       I0:model?Math.round(model.I0/10)*10:930,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
@@ -389,6 +427,6 @@ const ESSAY=(()=>{
   const own=()=>{if(model)return;const h=location.hash.slice(1);if(h==='essay'||h.startsWith('essay='))show(true,h.slice(6));else show(false);};
   addEventListener('hashchange',own);own();
   return{show,on:()=>shown,section:()=>sec,
-    /* app.js, once the model is built: its time, wind and tz, the fusee (rf, I), the balance's moment of inertia, and changed() (wake and write the hash) */
+    /* app.js, once the model is built: its time, wind and tz, the fusee (rf, I), the balance's moment of inertia, changed() (wake and write the hash), and its parts (R, mv) and materials (M), which the maintaining work's figure clones */
     bind(api){model=api;removeEventListener('hashchange',own);if(shown)fillLive();FIGS.forEach(f=>{if(f.visible)build(f);});}};
 })();
