@@ -353,13 +353,12 @@ function buildMovement(M){
   /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge, where the restoration video has them (13:49.5, measured face-on): at the
      slab's end on the 3 o'clock side (outside every wheel, over the access hole in the pillar plate), and at the fourth end beyond the train-blocking screw (Fig. 30's order); lbp: its
      steady pins, one in each lug (tools/lower_bridge.py) */
-  /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff, at -30 deg, where the
-     bridge's notch round the fusee leaves it 2.8 mm of metal; at -60 deg it would stand in the notch */
   const ARM_S=0.8,ARM_U=-120*D2R,ARM_BOW=0.25,TBS_R=1.05,TB_CB=2.65;   /* ARM_U: the locking arm's swing from locked to unlocked, in the plan (x toward z) */   /* TB_CB: the train bridge's counterbore for its third screw (r, 23:30) */
   /* balance locking arm: its finger (S.armF) stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (at the arm's end,
      180 - BETA with the balance at rest), 0.02 clear of it; the arm turns on its screw (S.arm) outside the balance's sweep, back over the screw 120 deg (ARM_U) to its stop pin (42300, pressed into the train bridge): turned 90 deg
-     the other way, out from the staff, it would reach the cock and the second train pillar's screw head, which the photographed group's move brought beside it (estimated:
-     Fig. 9 shows the arm, not which way it turns). Fig. 9 draws it beside the cock's foot and a large slotted screw. Since the escape arbor's move (2 October 2026) turned the balance's
+     the other way, out from the staff, it would reach the cock and the second train pillar's screw head, which the photographed group's move brought beside it. Fig. 9 draws
+     the arm turning the other way, out from the balance (its hatched arrow and the dashed unlocked arm), which the pillar screw's head (1.6 proud, 4 mm out) and the cock's foot leave
+     no room for here (Review-results.md, BOM comparison, still open 9). Fig. 9 draws it beside the cock's foot, the barrel bridge's horn and its large slotted screw. Since the escape arbor's move (2 October 2026) turned the balance's
      rest 11.8 deg, its screw stands clear of the cock's foot: 45 deg round from the weight since the weights were put at the arm's ends (3 October 2026; 30 before, 18 before the
      escape arbor's move); turned 12 deg with its weight, the screw would stand in the cock's foot, and on the weight's other side too. The arm, locked, runs between the cock's
      foot and the escape upper bridge: 0.8 wide and bowed 0.25 away from the staff (ARM_BOW; 1.0 and 0.6 until then) it clears both, by little (fine.py --hold) */
@@ -467,7 +466,7 @@ function buildMovement(M){
      washer (42251) outside the balance's sweep. Locked, the finger at its end stands on the counterclockwise side of a timing weight, which the hairspring holds lightly
      against it, and the vernier's screw outside the rim, 15 deg round (hole 2), stops the balance the other way ("place the locking arm over the timing weight", Sec. X); unlocked, it lies turned out
      against its stop pin (42300), clear of everything the balance carries. Fig. 9 shows the arm curved, its screw outside the rim and its end at a timing weight; the arm's
-     sizes, the screw's place and the finger's height (1.65 mm, to 0.76 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
+     sizes, the screw's place and the finger's height (2.4 mm, to 0.56 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
   { const ap=part('lockArm',-62),dA=sub(S.armF,S.arm),AL=Math.hypot(...dA),dL=unit(dA),AE=AL+0.45;R.armL=Math.atan2(-dL[1],dL[0]);
     const f9=new THREE.Group();ap.add(f9);R.armF9=f9;   /* the manual's arm, its screw, washer and stop pin: hidden together when the Navy's Y-arm is fitted instead (below) */
     R.armU=-ARM_U;R.arm=new THREE.Group();R.arm.position.set(S.arm[0],TB_T,S.arm[1]);f9.add(R.arm);R.arm.rotation.y=R.armL+R.armU;

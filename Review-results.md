@@ -836,8 +836,9 @@ Checked against Secs. II–IV and the handling instructions:
     its running 255°.
   - The same holds at run down: the train stops, the balance runs down, and a
     wound chronometer needs its twist.
-- **Added: the balance locking arm** (Fig. 9). Locked, its end lies under the
-  rim, its pad bears on the rim, and the balance stops within a swing or two.
+- **Added: the balance locking arm** (Fig. 9). Locked, the finger at its end
+  stands beside a timing weight (first drawn as a pad under the rim; RESOLVED.md,
+  "Locking arm under the rim"), and the balance stops within a swing or two.
   Unlocked, the arm lies against its stop pin, and the balance needs a twist.
 - **Added: the train-blocking screw** (Sec. II, Fig. 110).
   - Screwed down, its dog point stands between the fourth wheel's spokes. The
@@ -1054,7 +1055,48 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    Rebuilt again the same day from photographs taken straight above (Delaney No.
    8854 and another): the arm is a lever, screwed on a shouldered stud in the
    barrel bridge's pillar screw's place, under the cap to a crossbar with an eye
-   and a pin at each end, symmetric (an arch, level arms).*
+   and a pin at each end, symmetric (an arch, level arms).* *The restoration video's
+   movement (2E8489) has this stop: close from above at 5:10 (4K), unscrewed and lifted
+   off with its white seal at 6:15-6:24 (References/VIDEOS.md; found 4 October 2026).*
+9. **The balance locking arm against Fig. 9 and Fig. 108** (open, 4 October 2026,
+   `claude/locking-arm`). No photograph or video of the arm fitted has been found
+   (`KLUwI2UUCMQ`'s movement and the top-view photograph's carry the Navy's Y-arm,
+   8 above; RMG's 4E019, a Model 221, has neither; a web search found no other), so
+   Fig. 9, Fig. 108 (item 31) and Secs. III and X are the only sources. What
+   matches: the four parts and their numbers (108-31 to 34, read on the page), the
+   screw outside the rim, the end holding a timing weight, the counterclockwise
+   lead of Sec. X. What differs, each read on the figures:
+   - **The swing** (fairly sure): Fig. 9's hatched curved arrow and dashed unlocked
+     arm turn the arm out, away from the balance, toward the barrel bridge's horn;
+     the model turns it 120 deg in, its end passing 7.4 mm from the staff under the
+     balance.
+   - **The shape** (moderately sure): Fig. 9 draws a strip curved along the rim,
+     Fig. 108 a short flat lever with a raised round boss at its screw; the model's
+     is straight (bowed 0.25 mm) with a plain washer and a round finger 2.4 mm tall
+     that neither figure draws (Fig. 9's end seems to rise to the weight).
+   - **The length** (not sure): about 4-5 screw heads in both figures, about
+     7-10 mm; the model's 13.
+
+   What the model's layout allows (plan of the train bridge round the balance,
+   from the built model): the balance's sweep at the arm's height reaches r 17.35.
+   The weight on the cock's side (the model's) rests under the cock's foot's span
+   (the foot covers 15-76 deg from the staff beyond r 17.4); the other weight has
+   3.1-3.7 mm of train bridge outside the sweep before the barrel bridge's edge
+   (r 20.4-21.1; the bridge sits on the train bridge, 3.42 mm thick). The rest
+   angle the weights take is the real one: the restoration video at 6:29 and RMG's
+   4E019 both show the crossbar along the cock's arm at rest, as the model has it.
+   Read with this layout, Fig. 9's scene fits the model's place: the cock's foot
+   behind, the weight on its side in front of it, the arm's screw in the open
+   6 o'clock sector, the barrel bridge's raised horn and its large screw (-23.9, 23.0)
+   beyond. So the screw's place stands; but the outward swing has no room there:
+   the second train pillar's screw head (5.5, 34.0; r 2.9, 1.6 mm proud) stands
+   4 mm out from the arm's screw, and the cock's foot beside it. Either the arm
+   rides higher than the model's (on its shouldered screw, over that head; Fig. 9
+   draws a collar under the screw's head) or Fig. 9 simplifies. *To settle:* a
+   photograph of a Model 21 overhauled after 1947 with the arm fitted (Bureau of
+   Ships sketch 023263). Until then the model keeps its place and inward swing;
+   the shape (a strip curved along the cock's foot, a boss round the screw) can
+   follow the figures without moving anything.
 
 ## Open questions, to settle from video (1 October 2026)
 
@@ -1659,7 +1701,8 @@ changes it only round its own arbors (1 below).
     video of a modified movement would show its shape and how it works. *Built
     as an illustrative variant from the top-view photograph (2 October 2026);
     redrawn from it at full size, 3 October 2026; how it works is still to be
-    seen.*
+    seen.* *The video exists: `KLUwI2UUCMQ` (2E8489) has the stop, close from above
+    at 5:10, handled 5:30-5:48, taken off with its seal 6:15-6:24 (References/VIDEOS.md).*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on

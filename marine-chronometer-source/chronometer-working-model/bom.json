@@ -1750,12 +1750,12 @@
    "id": "42299",
    "idx": "108-31",
    "no": "42299",
-   "name": "Arm - Balance wheel locking (NAVOBSY 4618)",
+   "name": "Arm - Balance wheel locking",
    "qty": 1,
    "parent": "42000",
    "kind": "part",
    "part": "lockArm",
-   "fn": "Turned under the rim to hold the balance in transit (Sec. III, Fig. 9).",
+   "fn": "Turned so the finger at its end stands beside a timing weight, to hold the balance in transit (Sec. III, Fig. 9; Sec. X).",
    "rel": [
     [
      "round",
