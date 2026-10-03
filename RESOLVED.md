@@ -599,6 +599,17 @@ Contents:
   that holds the winding ratchet (18:20), 0.4 tall so it clears the sustaining ratchet
   and its pawl by 0.1 (fine.py found 0.75 in both); the seal's flange its shallow bite
   between the screws (6:29). `12badbb`
+- **Sustaining pawl's spring invented, and its arbor 2.7 mm round from the
+  real one.** The spring was a collet near the arbor's top with a wire across
+  to a steady pin in the train bridge; C Spinner's video (35:37.5-36:29) shows a
+  straight wire set upright in the pawl beside the arbor, rising under the
+  bridge, and a hub at the arbor's foot. The arbor stood at 21.35 mm and 74°
+  round the fusee; the video puts it at 21.8 mm and 67°. Keep the spring the
+  upright wire (bent by the pawl, `R.spWire`) and the arbor where 36:15 puts it;
+  its hub needs the 21.8 mm to clear the fusee wheel's tips. Its pivot hole in
+  the train bridge was r 0.70 between the faces (`polyGeo`'s bevel widens a
+  flagged hole there); it is lined to r 0.52 straight through, as `bom.py`'s
+  running fit wants (it had passed on 0.12 mm of the face). `4ab4b46`
 
 ## Plates, bridges, screws and arbors
 
@@ -1547,14 +1558,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **Sustaining pawl's spring invented, and its arbor 2.7 mm round from the
-  real one.** The spring was a collet near the arbor's top with a wire across
-  to a steady pin in the train bridge; C Spinner's video (35:37.5-36:29) shows a
-  straight wire set upright in the pawl beside the arbor, rising under the
-  bridge, and a hub at the arbor's foot. The arbor stood at 21.35 mm and 74°
-  round the fusee; the video puts it at 21.8 mm and 67°. Keep the spring the
-  upright wire (bent by the pawl, `R.spWire`) and the arbor where 36:15 puts it;
-  its hub needs the 21.8 mm to clear the fusee wheel's tips. Its pivot hole in
-  the train bridge was r 0.70 between the faces (`polyGeo`'s bevel widens a
-  flagged hole there); it is lined to r 0.52 straight through, as `bom.py`'s
-  running fit wants (it had passed on 0.12 mm of the face).
+None at the moment.
