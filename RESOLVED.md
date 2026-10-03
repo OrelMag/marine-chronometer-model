@@ -599,6 +599,12 @@ Contents:
   that holds the winding ratchet (18:20), 0.4 tall so it clears the sustaining ratchet
   and its pawl by 0.1 (fine.py found 0.75 in both); the seal's flange its shallow bite
   between the screws (6:29). `12badbb`
+- **The fusee's top plate holed only for the arbor, its collar sitting on it**
+  (Review-results.md, the fusee assembly 3; Fig. 28): on the restoration video the
+  plate comes off over the collar, which stays on the arbor (19:58-20:00), so the
+  collar, r 3.0, now rises from the hub through a hole of r 3.05 and 1.0 past it.
+  Keep: the collar inside the stop-bar slot's edge (zHi) and clear of the spring in
+  the groove under it.
 
 ## Plates, bridges, screws and arbors
 
