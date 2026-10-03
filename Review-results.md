@@ -1703,6 +1703,26 @@ changes it only round its own arbors (1 below).
     redrawn from it at full size, 3 October 2026; how it works is still to be
     seen.* *The video exists: `KLUwI2UUCMQ` (2E8489) has the stop, close from above
     at 5:10, handled 5:30-5:48, taken off with its seal 6:15-6:24 (References/VIDEOS.md).*
+    *Four movements compared (4 October 2026): 2E11795 (the top-view photograph),
+    Delaney No. 8854 (straight above), the omegaforums movement ("Incoming Hamilton
+    Model 21", two red seals) and 2E8489 (the video, 5:10). All four have one design:
+    the stem from the second seal joins, at its top, a crossbar arched round the
+    cock's end, concave toward the staff, whose ends run out to an eye and a pin over
+    the rim on each side of the staff (182 and 186 deg apart where measurable).
+    Traced on Delaney's (straight above, scaled by the eyes 27.8 mm apart): the arch
+    about 7.9 mm round the staff, its top 8.3 out on the bar's centre line, the arms
+    nearly level with the staff, as the model drew them; the oblique photographs
+    make it look like one smooth curve. The model's arch stood on straight legs
+    4.5 mm long, its top 12.3 mm out (a sketch's): an error, not a variant; the legs
+    cut to 0.5, its top now 8.3 (`claude/navy-stop`). What
+    varies between movements: the packing rings' colour (black on 2E11795, red on
+    8854 and the forum's, white on 2E8489; the fusee seal's too), and whether the stop
+    is fitted at all (2E10230 in the same thread has none). How it works: two web
+    sources (WatchUSeek; Renaissance Antiques) have it lowered onto the balance and
+    raised with an Allen key through the bottom of the case, a Navy fitting (the
+    "Norfolk balance brake", Norfolk Naval Shipyard, given as about 1948, though
+    another source puts it in the war years). It is screwed down by the hex socket,
+    not pressed as the model had it.*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
