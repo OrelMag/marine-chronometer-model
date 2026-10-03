@@ -1214,7 +1214,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   from the pivot; 96 and 92 of them): bit for bit the same angles over 27,000
   positions round the ratchets, about a third less time. Keep: anything run
   every frame over a resampled outline tests only the points that can reach;
-  `dense()` keeps its order for `maintaining.py`.
+  `dense()` keeps its order for `maintaining.py`. `748c819`
 - **Metals flat and dark after a lost WebGL context.** A restored context
   loses its PMREM render targets. The environment map is now rebuilt on
   `webglcontextrestored`. Keep that handler. `fcedc94`
