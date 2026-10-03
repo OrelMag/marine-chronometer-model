@@ -1056,6 +1056,16 @@ Contents:
   r 12.69 and 75.6° wide); every side and end within 0.2 mm (median) on the
   top-view photograph, 0.5 mm on 2E12055. Keep: the outline symmetric about
   its own centre `Q0`, not the arbor. `fc29280`
+- **Setup ratchet 1.1 mm too large, the click's pivot 1.3 mm too far out.**
+  The ratchet's tips stood at 8.16 mm from the arbor and the pivot at 10.25.
+  The pivot's end shows in the cover 8.95 mm out on both photographs; the
+  video, measured against the cover screws' tapped holes (23.6 mm apart),
+  puts the tips at 7.04 and the pivot 1.34 tip radii out, and the top-view
+  photograph the tips at 7.0-7.3. The earlier 10.25 was read by eye with the
+  model's ratchet as the scale. Now the tips at 7.05 (`SUT`; 42 teeth), the
+  pivot at 8.95, the click's tip at the new root and its spring at 1.273 tip
+  radii. Keep: read sizes on the video against a part whose size is known
+  from elsewhere, not against the model's.
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved

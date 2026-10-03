@@ -367,7 +367,7 @@ function buildMovement(M){
      estimated) seating in it. Until 2 October 2026 at (3.9, 26.15), 4.5 mm from the arbor, while the turned detent covered this place. TBd: from the arbor toward it */
   S.tBlock=add(L.F,PR([-6.14,-1.61]));const TBd=unit(sub(S.tBlock,L.F)),TBr=Math.hypot(...sub(S.tBlock,L.F));
   const EPa=Math.atan2(-0.24,-5.83)-PHOTO_TURN,EPu=ry(EPa,[1,0]),EP=[[2.75,0],[-2.75,0]];S.ep=EP.map(q=>add(L.B,ry(EPa,q)));   /* balance upper endstone cap: along the cock's straight edge (x toward the nose), its screws 2.75 either side of the staff (top-view photograph) */
-  const PB=(r,a)=>[L.Ba[0]+PHOTO_K*r*Math.cos(a*D2R+PHOTO_TURN),L.Ba[1]+PHOTO_K*r*Math.sin(a*D2R+PHOTO_TURN)];S.cover=[PB(11.1,107),PB(11.6,288)];S.click=PB(9.87,250.6);   /* the setup click's pivot 10.25 mm from the barrel arbor, as C Spinner's video has it (11:58: 10-10.5; the top-view photograph's 9.25 left its tip 0.1 mm in the teeth) */
+  const PB=(r,a)=>[L.Ba[0]+PHOTO_K*r*Math.cos(a*D2R+PHOTO_TURN),L.Ba[1]+PHOTO_K*r*Math.sin(a*D2R+PHOTO_TURN)];S.cover=[PB(11.1,107),PB(11.6,288)];S.click=PB(8.95/PHOTO_K,253.1);   /* the setup click's pivot, whose end shows in the cover, 8.95 mm from the barrel arbor on both photographs (photo-movement-2E12055: 8.94 at 255.6 deg, the top-view photograph: 8.95 at 250.6, each through its fitted map); C Spinner's video, oblique, read 10-10.5 by eye (11:58). The click from it to its tip is 5.07 mm (the video: about 5.3, the top-view photograph 5.1) */
   S.dial=[38.5,111.6,218.5,291.6].map(a=>{const q=PT([45.9*Math.cos(a*D2R),45.9*Math.sin(a*D2R)]),l=Math.hypot(...q);return[45.9*q[0]/l,45.9*q[1]/l];});   /* four dial feet and screws (35756, 4; Fig. 107), in the mounting ring's flange outside the plate: the top-view photographs show two, at 38.5 and 111.6 deg; the other two opposite them (estimated) */
   S.seal=[2.2,-1.0].map(a=>[L.Fu[0]+PHOTO_K*7.6*Math.cos(a+PHOTO_TURN),L.Fu[1]+PHOTO_K*7.6*Math.sin(a+PHOTO_TURN)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
@@ -903,9 +903,9 @@ function buildMovement(M){
      its two screws and the arbor): a waisted plate across the arbor, its two ends arcs about 13 mm out along 107 deg / 287 deg, and both long sides
      concave, coming within about 6 mm of the arbor, so the ratchet's teeth show on either side and the click's tip on the rim side */
   const rt=part('ratchet',-76),P2=(r,a)=>[L.Ba[0]+PHOTO_K*r*Math.cos(a*D2R+PHOTO_TURN),L.Ba[1]+PHOTO_K*r*Math.sin(a*D2R+PHOTO_TURN)];
-  /* SRZ: the setup ratchet's teeth, about 42 on C Spinner's video (11:58, 12:19, 38:28: pitch 8.3-8.8 deg; References/VIDEOS.md), on the pitch radius the top-view photograph
-     gives (7.5 mm, where the click's tip is) */
-  const SRZ=42,SRM=0.289*52/SRZ*PHOTO_K;
+  /* SRZ: the setup ratchet's teeth, about 42 on C Spinner's video (11:58, 12:19, 38:28: pitch 8.3-8.8 deg; References/VIDEOS.md); SUT its tips' radius, 7.05 mm: the video
+     (11:58) has the cover screws' tapped holes, 23.6 mm apart, 3.35 tip radii apart (7.04), and the top-view photograph the tips at 7.0-7.3 through topview.py's map */
+  const SRZ=42,SUT=7.05,SRM=SUT/(SRZ/2+0.95);
   const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:true,flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* steep faces meet the click against the mainspring's pull */
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
@@ -916,7 +916,7 @@ function buildMovement(M){
   { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(TB_T+1.9+BB_LO-0.8)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
     cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],32); }
   hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
-  { const Pv=P2(9.87,250.6),Tp=P2(7.06,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
+  { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
     /* turn the ratchet (it is fixed in running) so a steep face bears on the click's tip, then rest the click on it */
     const pr=ratchetProf(SRZ,SRM,true),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1);
     srw.rotation.y=ph.psi;clk.rotation.y=ph.th;
@@ -926,11 +926,11 @@ function buildMovement(M){
         for(const P of CP){let w=false;for(let i=0,j=W.length-1;i<W.length;j=i++){const[xi,zi]=W[i],[xj,zj]=W[j];if((zi>P[1])!==(zj>P[1])&&P[0]<(xj-xi)*(P[1]-zi)/(zj-zi)+xi)w=!w;
           const dx=xj-xi,dz=zj-zi,l2=dx*dx+dz*dz,t=clamp(((P[0]-xi)*dx+(P[1]-zi)*dz)/l2,0,1);d=Math.min(d,Math.hypot(P[0]-xi-t*dx,P[1]-zi-t*dz));}if(w)inside=true;}return inside?-d:d;};
       let a=ph.psi-0.03,b=ph.psi;if(gap(a)<0&&gap(b)>0){for(let i=0;i<40;i++){const mm=(a+b)/2;gap(mm)>0.003?b=mm:a=mm;}srw.rotation.y=b;} }
-    /* setup pawl spring (42028, Figs. 17, 24, 80, 108): a blued band on edge, standing on the barrel bridge under the cover, round the ratchet about half a turn at r 10,
+    /* setup pawl spring (42028, Figs. 17, 24, 80, 108): a blued band on edge, standing on the barrel bridge under the cover, round the ratchet about half a turn at r 9,
        from its fixed end, held between two steady pins in the bridge ("pushed off by pressure on steady pins from the lower side of barrel bridge", Ops. 27, 41), to the
-       click's back, which it bears on at the click's height (C Spinner 11:58: about 180 deg at r 10-10.7, its edge about 0.9 mm seen from above at a slant; Fig. 108 draws
+       click's back, which it bears on at the click's height (C Spinner 11:58: about 180 deg at 1.23-1.31 of the ratchet's tip radius, so 8.7-9.2 mm, its edge about 0.9 mm seen from above at a slant; Fig. 108 draws
        about as much; 0.3 thick and 0.85 tall, the pins' places estimated) */
-    const bk=pawlBack(pts,1.1,Pv,ph.th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13],SR=10.0,eA=(Math.atan2(E[1]-L.Ba[1],E[0]-L.Ba[0])-PHOTO_TURN)/D2R,arcP=[];   /* eA in P2's angles (the photographs' frame) */
+    const bk=pawlBack(pts,1.1,Pv,ph.th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13],SR=1.273*SUT/PHOTO_K,eA=(Math.atan2(E[1]-L.Ba[1],E[0]-L.Ba[0])-PHOTO_TURN)/D2R,arcP=[];   /* eA in P2's angles (the photographs' frame) */
     const e1=(eA+360)%360-6,a0=e1-174;for(let a=a0;a<e1;a+=6)arcP.push(P2(SR,a));
     hn(mesh(rt,stripGeo([...arcP,E],0.3,0.85),M.blued,0,BB_T-0.85,0),'42028');   /* on the bridge, up to the click's middle */
     for(const q of[P2(SR+0.42,a0+3),P2(SR-0.42,a0+12)])hn(cylBetween(rt,0.25,-27.71,-27.16,M.steel,...q),'42028',{sub:1});}
@@ -939,7 +939,7 @@ function buildMovement(M){
        centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the
        centre side). Fitted to the plate's edge traced along 240 normals on each photograph (photo-movement-2E12055 through a camera fitted to 11 screws and the
        arbor, the top-view photograph through topview.py's map): each alone gives Q 0.59 and 0.41 off, sides to 5.61 and 5.43; the fit's edge within 0.24 mm
-       (median) of the traced one. The setup pawl's pivot end shows 8.9-9.3 mm from the arbor on both, 10.25 here (C Spinner's video) */
+       (median) of the traced one. */
     const CA=106.89,CH=37.8,CR=12.69,CW=5.58,Q0=P2(-0.53,CA+90),PQ=(r,a)=>{const p=P2(r,a);return[p[0]+Q0[0]-L.Ba[0],p[1]+Q0[1]-L.Ba[1]];};
     const arc3=(a,b,c,n)=>{const[ax,az]=a,[bx,bz]=b,[cx2,cz2]=c,d=2*(ax*(bz-cz2)+bx*(cz2-az)+cx2*(az-bz)),
         ux=((ax*ax+az*az)*(bz-cz2)+(bx*bx+bz*bz)*(cz2-az)+(cx2*cx2+cz2*cz2)*(az-bz))/d,uz=((ax*ax+az*az)*(cx2-bx)+(bx*bx+bz*bz)*(ax-cx2)+(cx2*cx2+cz2*cz2)*(bx-ax))/d,
