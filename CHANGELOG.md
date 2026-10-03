@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.00.01 · 2026-10-04
+- The mounting ring has its dial take-off slot, the notch at the rim where the dial is lifted off
+- The fusee's top plate fits round the arbor's collar, which rises through it, as the manual draws it and a restoration video shows
+
 ## 2.00.00 · 2026-10-04
 - The balance now swings by its physics: how far depends on the mainspring's pull, so it dips while you wind; a new Swing and isochronism section shows how the rate follows it
 - A 30-day performance test: the Navy's test run on the model as you've set it, beside a real Model 21's test card
