@@ -9,7 +9,7 @@ in References/, a video frame from tools/video.py frame, a figure of the manual)
 
 --look yaw pitch dist x y z (the camera, movement mm, as views.py) can be repeated; without it the camera is aimed at the parts' centre from four
 sides (--plan: from above). --crop x0 y0 x1 y1, after a --ref, crops that reference (pixels). The model is frozen as views.py freezes it. The sheet is written to
-the current directory (r_iso_NAMES.png); say what matches, what differs and how sure each reading is (CLAUDE.md, Source of truth). About 40 s."""
+the current directory (r_iso_NAMES.png); --eval JS runs after the parts are chosen (to hide a piece that covers another, say); say what matches, what differs and how sure each reading is (CLAUDE.md, Source of truth). About 40 s."""
 import asyncio,json,pathlib,sys
 from playwright.async_api import async_playwright
 from PIL import Image,ImageDraw
@@ -43,6 +43,7 @@ async def main():
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(FREEZE)
         await pg.evaluate("document.querySelector('#views button[data-v=\"movement\"]').click()");await pg.wait_for_timeout(2500)
         cx,cy,cz,sz=await pg.evaluate(KEEP%json.dumps(names))
+        if '--eval' in sys.argv:await pg.evaluate(sys.argv[sys.argv.index('--eval')+1]);await pg.wait_for_timeout(300)   # e.g. hide a piece: --eval "window.__mv.getObjectByProperty('name','x').visible=false"
         if not looks:
             d=max(40,sz*2.2);looks=[[0,1.5707,d,cx,cy,cz]] if '--plan' in sys.argv else [[a,0.7,d,cx,cy,cz] for a in (0.8,2.4,3.9,5.5)]
         shots=[]

@@ -688,6 +688,8 @@ the stop-bar reaching the stop at full wind.
 
 ## Every part against the manual
 
+*Status (3 October 2026): what this review lists as not drawn or not modelled has all been built since (the balance's upper setting and jewel, the collet and stud as Fig. 5, the timing washers in the rate panel, the seal ring and spring, the wedge pin, the latch's clamping parts): `tools/bom.py` finds every one of the parts list's 187 lines on the model with its relations. The table below is the review as it was.*
+
 A third review, of the whole movement and its case against the manual's parts
 lists (Figs. 106–110, pp. 78–88), its description and principles of operation
 (Secs. II–IV) and its handling instructions (Sec. III, Figs. 7–11), with the
@@ -955,7 +957,8 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
 
 ### Still open
 
-1. **The upper train bridge's third screw** (known deviation, `bom.json`
+1. *Closed (2 October 2026, `claude/group-layout`): pillar 2 stands under the screw, as the
+   video has it (23:30, 36:34) and Op. 14; `bom.json` has no deviation left.* **The upper train bridge's third screw** (known deviation, `bom.json`
    `dev` on 42055.tb). The manual has all three in pillars (reassembly Op. 14; disassembly Ops. 47, 48);
    the model's third is where the top-view photographs (and serial 623's) show
    a screw, at (-8.5, 27.7), where a pillar would stand in the fourth wheel.
@@ -966,14 +969,14 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    cited by URL, not committed). Candidates: the shield plate (Fig. 107 draws
    a disc and an open-ring spring; *now drawn so*, 2 October 2026, RESOLVED.md,
    Setup, case and gimbals), the setup
-   ratchet and click (asked in Orel_comments.md; *read on video, 2 October
+   ratchet and click (asked in Orel_comments.md; *the dust seal compared with C Spinner 6:29 (3 October 2026): its packing, column and flange in proportion, the flange's concave bite between its screws now drawn; the trip-spring bracket as Fig. 14 and the video (11:08) draw it, Review-results 20*; *read on video, 2 October
    2026, 11:46–12:22: about 42 teeth, not 52; the click as the model's, holding
    the same way; its spring a flat band wrapping about 180° round the ratchet,
    as Fig. 108 draws it, where the model's is about 120°; *now so*: 42 teeth,
    the spring a band on edge round half a turn, the cover's feet outside it;
    RESOLVED.md, Winding and maintaining work*), the dust seal, the detent's
    trip-spring bracket.
-3. *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
+3. *The click's pivot settled (3 October 2026): at the video's 10.25 mm, its tip at the teeth's root, 0.52 mm inside their tips; bom.py's check wants it seated over 0.3.* *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
    the arbor the right way, but its tip seats only about 0.1 mm inside the
    teeth's tips (of a 0.8 mm face): the click lies nearly tangent from a pivot
    9.25 mm out (traced on the top-view photograph), where C Spinner's video
@@ -1100,7 +1103,8 @@ changes it only round its own arbors (1 below).
    less where the model's detent, the pillar, a barrel-bridge screw and the
    balance locking arm's screw and pin stand. The tapped hole the top-view photograph shows at (11.24, 29.51)
    isn't this bridge's; what screws into it is still open.
-6. **The steady pins.** Open. None show on the bridge's faces; pins between
+6. *Left estimated (3 October 2026): no frame can show them (hidden in the joint), so the model keeps one in each
+   lug, as the parts list's "complete with pins" allows; the README's "Estimated" list says so.* **The steady pins.** Open. None show on the bridge's faces; pins between
    the bridge and the train bridge would be hidden in the joint. The model
    puts one in each lug.
 14. **The settings' spacing** (new). Measured with the camera (2 October
@@ -1198,7 +1202,10 @@ changes it only round its own arbors (1 below).
    photograph (omegaforums, "Incoming Hamilton Model 21"), about 0.7 of the
    fourth wheel's radius, about 7 mm. The model has 4.5, inside the
    fourth wheel's spokes and clear of the detent. Open with 14.
-9. **A dark hole near the escape wheel.** About 2.5 mm across, at about
+9. *Likely settled (3 October 2026): taken through the group's transform (`PT`) the hole lands at (-7.50, 19.55),
+   2.2 mm from the train-blocking screw (-5.57, 18.55), whose access hole through the bridges is 2.3 mm across: it
+   is that hole, the 2.2 mm the same order as the photograph's other offsets from the video here (pillar 1, 4 deg).
+   Nothing changed.* **A dark hole near the escape wheel.** About 2.5 mm across, at about
    (2.7, 18.1) on the top-view photograph, partly under the balance locking
    arm: 4.9 mm from the escape arbor, over the escape wheel's teeth, so not
    the train-blocking screw's (its wall would stand in the wheel). The model
@@ -1207,7 +1214,8 @@ changes it only round its own arbors (1 below).
 
 ### Elsewhere
 
-10. **The escape wheel's place.** Through the train bridge's keyhole, under the
+10. *Settled (2 October 2026; 18 and 24): the escape arbor 9.40 from the balance toward the jewel seen from
+    above, on the video's train.* **The escape wheel's place.** Through the train bridge's keyhole, under the
     balance rim, the top-view photograph shows a steel plate with a jewel and
     a screw hole a few millimetres from where the model has the escape wheel's
     upper jewel (its comparison, `verification/topview-comparison.png`, puts
@@ -1217,12 +1225,13 @@ changes it only round its own arbors (1 below).
     (README, step 5); only its direction is fitted. A video should show: the
     escape upper bridge and its jewel from straight above, with the balance
     off.
-11. **The upper train bridge's third screw** (finding 1 under BOM
+11. *Settled: pillar 2 under it (BOM comparison, Still open 1).* **The upper train bridge's third screw** (finding 1 under BOM
     comparison; IDEAS.md 1.2): at (−8.5, 27.7), with no pillar under it in the
     model. A video should show: the train bridge coming off, and what the
     screw holds.
 12. **The third arbor's place and the wheels' sizes** (finding 6 under BOM
-    comparison). **Settled for the arbor, the wheels and the pillars** (the
+    comparison). *The block's notch round the third arbor is gone (3 October 2026): since the layout move the block
+    stands 11.7 mm from it, at Fig. 90's length (20.2).* **Settled for the arbor, the wheels and the pillars** (the
     model now has the third arbor at (−6.18, 14.75) and the measured pillar
     profile; RESOLVED.md). Still open: the detent's support block, which the
     model notches round the arbor and shortens to clear the pillar, in the
@@ -1341,7 +1350,12 @@ changes it only round its own arbors (1 below).
 17. **The escape upper bridge (42064)** (new, 1 October 2026). **Rebuilt again
     (2 October 2026, `claude/fp-layout`) as measured below: the bar 5.2 x 1.0, the boss and
     thickening under it, the flat-sided cap sunk flush, flush end screws, steady pins.
-    Open: the seats in the train bridge, the cap's conical window.** First rebuilt
+    Open: the seats in the train bridge, the cap's conical window.** *Both done (3 October 2026,
+    `claude/fp-finish`): the ends lie in seats sunk 0.3 (estimated) in the train bridge's face
+    (`TB_SEAT`, `tools/train_bridge.py`), the bar and the escape arbor's top pivot lowered with them;
+    the cap's window a 90 deg cone r 1.55 down to the endstone, its screws' heads r 0.75 as the
+    frame shows them. The balance lower cap's window a straight bore r 1.1, its heads r 0.5 (13:49.5).*
+    First rebuilt
     (1 October 2026, branch `claude/escape-arbor`; RESOLVED.md): a bar
     across the keyhole, symmetric about the jewel, a screw near each end, a
     round cap. Still open: its thickness and the boss under the cap, its
@@ -1744,7 +1758,17 @@ changes it only round its own arbors (1 below).
     arbor (the escape wheel lifts out through it; the traced lobe, from 23:30 at the wrong
     focal length, was r 5). The dial's print now puts the seconds sub-dial on its arbor (it
     was at a fixed 0.472 of the dial's radius, 1.5 mm off it).
-    Still open: the seconds hand and the dial's track. With the fourth at 21.6 the hand
+    *Since (3 October 2026, `claude/fp-finish`): the lower train bridge measured on 40:08 and rebuilt, 4.4 thick
+    and 10 wide, its screws and settings in counterbores (its end 9.2 past the fourth, not the video's 10.3, to
+    clear pillar 1's dial-side screw at the model's 170.8 deg); the minute wheel's stud 11.3 (the video's). Pillar 1
+    tried at the video's 166.3 deg (its dial-side screw just clear of the bar's end on 40:08): its top screw's head
+    then stands in the cock's foot, which C Spinner's video shows clear of any screw (6:29 on, 6:47 off), so it
+    stays at 170.8 and the 4 deg between the dial side's angles and the cock's place stays open.*
+    *Settled (3 October 2026): the photographed dial, face-on and scaled by its seconds' centre (on the fourth, 21.6
+    out), has its minute track at r 40.4-42.2, the seconds track r 17.9 meeting it at 6, and shows to r 45.9 inside the
+    bezel, the model's bezel opening exactly: the 95 mm dial stands, and its print, at r 43.0-45.4, was 9 % too large.
+    Now printed so, the hands to the photograph's lengths (`References/VIDEOS.md`, "The Hamilton dial's proportions").*
+    Was open: the seconds hand and the dial's track. With the fourth at 21.6 the hand
     can be at most about 18 mm long (it must pass the hour wheel's pipe), so the seconds
     sub-dial can't meet this 95 mm dial's minute track at 6 as on the photographed dial
     (its seconds centre 0.549 of the track's radius would want a track r 39.3, against
@@ -1814,11 +1838,11 @@ Winding and maintaining work).
 3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %. *Now so* (RESOLVED.md, Winding and maintaining work).* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
-4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open. The pivots now drawn as studs riveted flush (2 October 2026). Not drawn: the raised plateau the pawl springs lie round (the pawls lie over it; its height isn't seen).* Gilt brass, not steel; the
+4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open. The pivots now drawn as studs riveted flush (2 October 2026). Not drawn: the raised plateau the pawl springs lie round (the pawls lie over it; its height isn't seen).* *Seen sharp at 4K (3 October 2026, 19:12): not a plateau but a groove about 0.7 wide at r 10.6-11.3, which the springs lie in; the model lays them at that radius over the face, the groove not cut (a hidden face; the toothed wheel would have to be built in layers).* Gilt brass, not steel; the
    winding-pawl spring screws go in from the fusee wheel's side (slotted heads
    there). The model has the heads on the pawl side.
 5. **Arbor collar and the fusee's large end** (28:08, 28:17; Fig. 69 arrow 5;
-   Op. 23). *The collar fixed; the large end's rim open. The winding ratchet seen (18:20): about 36 teeth (model 40), likely; now 36.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
+   Op. 23). *The collar fixed; the large end's rim open. The winding ratchet seen (18:20): about 36 teeth (model 40), likely; now 36.* *The rim now drawn (3 October 2026): 0.4 tall (estimated, as tall as the sustaining ratchet and its pawl allow) round a recess whose edge is 0.84 of the end's radius (18:20), over the pawls and springs. The ratchet's tips on that frame read 0.43-0.51 of the end's radius (6.4-7.6 mm), against the model's 8.75 and the earlier 8.5 and the pawls' tips at 8.4: left, the readings disagree.* A steel collar r ≈ 2.7 on the arbor below the fusee carries the
    sustaining ratchet and the fusee wheel (the model hangs both on the 2 mm
    arbor); the large end has a raised outer rim round the winding ratchet,
    whose tips read r ≈ 8.5 (model 9.85; rough, oblique).
