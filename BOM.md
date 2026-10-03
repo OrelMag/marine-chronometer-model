@@ -99,7 +99,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-28 | 42248 | Cap - Balance wheel | 1 | 1 | bal | Over the arm on the hub's boss, under the hold-down screws (Fig. 4). | on 42178: 0 mm | ✓ |
 | 108-29 | 42249 | Screw - Balance wheel hold-down | 2 | 2 | bal | Through cap and arm into the hub's flange (Fig. 4). | in 42248 (clear): 0.338 mm, least gap 0.0339<br>in 42186 (tap): 0.483 mm, least gap 0.0205 | ✓ |
 | 108-30 | 42186 | Hub - Balance wheel, complete with staff | 1 | 1 | bal | The staff with its pivots; its hub carries the arm clear of the staff (Fig. 4). | in J.bu (run): 0.48 mm, least gap 0.0239<br>in J.bl (run): 0.48 mm, least gap 0.0239<br>endshake 0.050 mm (J.ble / J.bue) | ✓ |
-| 108-31 | 42299 | Arm - Balance wheel locking (NAVOBSY 4618) | 1 | 1 | lockArm | Turned under the rim to hold the balance in transit (Sec. III, Fig. 9). | round 37204 (free): 0.44 mm, least gap 0.0594<br>also: bom.py fn: locking arm | ✓ |
+| 108-31 | 42299 | Arm - Balance wheel locking | 1 | 1 | lockArm | Turned so the finger at its end stands beside a timing weight, to hold the balance in transit (Sec. III, Fig. 9; Sec. X). | round 37204 (free): 0.44 mm, least gap 0.0594<br>also: bom.py fn: locking arm | ✓ |
 | 108-32 | 37204 | Screw - Flat head fillister (NAVOBSY 4618) | 1 | 1 | lockArm | The locking arm turns on it and is clamped by it. | in 42299 (clear): 0.44 mm, least gap 0.0594<br>in 42062 (tap): 2.494 mm, least gap 0.0862 | ✓ |
 | 108-33 | 42251 | Washer (NAVOBSY 55-3) | 1 | 1 | lockArm | Under the locking arm's screw. | on 42299: 0 mm | ✓ |
 | 108-34 | 42300 | Pin - Balance wheel locking arm stop | 1 | 1 | lockArm | Stops the arm when unlocked, clear of the balance (Fig. 9). | in 42062 (press): 0.047 mm, least gap 0.023 | ✓ |
@@ -131,7 +131,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 109-4 | 42038 | Mainspring - Complete with anchor pin, 0.0165 in thick | 1 | 1 | mainspring | The power: inner end on the arbor's hook, outer end by its pin at the brace (Sec. II). | also: fine.py: barrel-clearance.js coils inside the barrel | ✓ |
 | 109-5 | 42037 | Brace - Mainspring | 1 | 1 | barrel | Lines the wall where the mainspring's outer end hooks. | on 42168: 0 mm | ✓ |
 | 109-6 | 42168 | Barrel - Mainspring, complete with anchor pin | 1 | 1 | barrel | Turns clockwise in running, drawing the chain off the fusee (Sec. IV). | round 42170 (run): 1.085 mm, least gap 0.0505 | ✓ |
-| 109-7 | 42020 | Pin - Taper, fusee assembly | 1 | 1 | fusee | Through the arbor under the end plate: holds the stack on (Figs. 28, 70). | in 42022 (embed): 1.942 mm, least gap -0.205 | ✓ |
+| 109-7 | 42020 | Pin - Taper, fusee assembly | 1 | 1 | fusee | Through the arbor under the end plate: holds the stack on (Figs. 28, 70). | in 42022 (embed): 1.996 mm, least gap -0.205 | ✓ |
 | 109-8 | 42019 | Plate - Fusee end | 1 | 1 | fusee | Under the fusee wheel, held by the taper pin. | round 42022 (free): 0.511 mm, least gap 0.0316 | ✓ |
 | 109-9 | 42015 | Wheel - Fusee | 1 | 1 | gw | First wheel of the train, free on the fusee arbor; drives the centre pinion (Secs. II, IV). | round 42022 (free): 2.301 mm, least gap 0.0483<br>meshes 42068: centres 20.3829 (m(z1+z2)/2 20.3829), 90/14 teeth, faces overlap 1.2, ratio -6.428571 | ✓ |
 | 109-10 | 42016 | Spring - Sustaining, complete with pins | 1 | 1 | sspring | Under load in running; drives the train alone for 5-10 minutes while winding (Sec. IV). | also: maintaining.py: spring loaded in running, relaxes in winding | ✓ |
