@@ -99,7 +99,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 | 1 | [Start it with a twist](#21-a-balance-that-can-stop-and-must-be-started) | Physics | M | A detent escapement isn't self-starting. The manual says to start it with "a single quick twist" of the box; today the model just resumes | Partly done: amplitude as state, the train stops below `ESC.AMIN`, Twist to start; the equation of motion is open |
 | 2 | [Keep it on GMT; set it the manual's way](#31-keep-it-on-gmt-and-set-it-as-the-manual-says) | Features | S | Navy chronometers kept Greenwich time, and the manual says the hands "are never set except when the instrument is started" | Done: GMT by default `23e9c58`; setting with the key and when stopped `dc06fae`, `21ea739` |
 | 3 | [Navigator's rate book and longitude error](#32-the-navigators-rate-book) | Features | M | The chronometer's real job, straight from Sec. IX, Table I. Makes the rate panel mean something | Done `70baefe` |
-| 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page | Done `630aa0f` |
+| 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page | Done `630aa0f`; it drives the amplitude and rate too |
 | 5 | [One parts registry](#71-one-parts-registry) | Code | S | Adding a part touches six tables in `app.js` today | Done `5e8c578` |
 | 6 | [Make `ESC` a factory and share it](#73-make-esc-a-factory-and-share-it) | Code | S–M | Enables #4, removes the source-slicing in `tools/escapement.js` and the hand-copied solver in the essay | Done `813f7ae` |
 | 7 | [Merge static meshes; stop shadows from tiny parts](#51-draw-calls-merge-and-instance) | Performance | S–M | 545 meshes, each with its own geometry; 541 cast shadows; 124 meshes are knurling on four nuts | Done: knurls, rim holes, tiny shadows `347bf5b`; merging all static parts open |
@@ -282,7 +282,7 @@ timing weights' moment of inertia. That is right for most of what the page
 shows. These ideas add the dynamics where they teach something.
 
 ### 2.1 A balance that can stop and must be started
-*Partly done: the amplitude is state (`H.amp` in `app.js`), not an integrated oscillator. It runs down freely when the train is held, against the balance locking arm at once, and builds up after Twist to start; the escapement needs `ESC.AMIN` (41.1°, worked out by `makeEsc`) to keep going, so the train stops below it and at run down. Still to do: the equation of motion below, with the impulse's torque, and the rate against amplitude that would follow.*
+*Partly done: the amplitude is state (`H.amp` in `app.js`), not an integrated oscillator. It runs down freely when the train is held, against the balance locking arm at once, and builds up after Twist to start; the escapement needs `ESC.AMIN` (41.1°, worked out by `makeEsc`) to keep going, so the train stops below it and at run down. The running amplitude it comes to (`ESC.A`) is worked out by `makeEsc` from the work the impulse gives and unlocking takes, against losses fitted to the 25 s run-down, so the Adjuster's bench changes it (3.3). Still to do: the equation of motion below, with the impulse's torque, and the rate against amplitude that would follow.*
 
 **What.** Treat the balance as a damped torsional oscillator driven by the escapement:
 
@@ -342,7 +342,7 @@ The amplitude then emerges from the model instead of being fixed.
 ### 2.4 Isochronism and escapement error
 - **Rate against amplitude.** With [2.1](#21-a-balance-that-can-stop-and-must-be-started), plot rate against amplitude. The manual's isochronism check compares "the 12 hour rate and one-half the 24 hour rate at 72½ °F" (Sec. IX); reproduce that number.
 - **Escapement error.** The impulse runs from −20.7° to +20.8°, centred on the dead point, and the unlocking comes before it (−27.3° to −21.3°). Airy's result says a push with the motion before the dead point makes the balance gain and one after makes it lose. A resisting force before it makes it lose.
-- *Done on the adjuster's bench (3.3), for the figures; the rate is still kinematic.* **An interactive version.** Offset the impulse jewel's angle (`aI`), and see the rate change and the escapement figures move. This belongs on the adjuster's bench ([3.3](#33-adjusters-bench-the-escapement-live)).
+- *Done on the adjuster's bench (3.3): the figures, and the escapement error itself, Airy's result summed over the impulse and the unlocking from `makeEsc`'s geometry, against the model's settings, in the model's rate (`escK`). Rate against amplitude (isochronism) is still to do.* **An interactive version.** Offset the impulse jewel's angle (`aI`), and see the rate change and the escapement figures move. This belongs on the adjuster's bench ([3.3](#33-adjusters-bench-the-escapement-live)).
 
 ### 2.5 Gimbals with inertia (M)
 **What.** Ship motion now counter-rotates the ring and bowl exactly, so the movement stays perfectly level ([app.js:460](marine-chronometer-source/chronometer-working-model/js/app.js#L460)). Model the bowl and ring as two coupled damped pendulums driven by the box's motion instead.
@@ -408,7 +408,7 @@ Example: "After 30 days at +1.2 s a day, uncorrected: 36 s, 9′ of longitude, 7
 - Add a simulated day counter that runs at 3600× or faster, with observational noise of ±¼ s from reading to the half second.
 
 ### 3.3 Adjuster's bench: the escapement, live
-> **Done.** The Adjuster's bench section: six sliders, the detent, trip spring screw, roller and jewels rebuilt live (`escSet`), the 2-D plan beside them, the manual's figures from `ESC.checks()` (moved from `tools/escapement.js` into `makeEsc`, which the tool now prints unchanged), and "it would not run" with the reason, keeping the last setting that runs. `AMIN` follows the settings. The hash carries changed settings. `04f95f9`, `2763e9e`, `630aa0f`
+> **Done.** The Adjuster's bench section: six sliders, the detent, trip spring screw, roller and jewels rebuilt live (`escSet`), the 2-D plan beside them, the manual's figures from `ESC.checks()` (moved from `tools/escapement.js` into `makeEsc`, which the tool now prints unchanged), and "it would not run" with the reason, keeping the last setting that runs. `AMIN` follows the settings. The hash carries changed settings. `04f95f9`, `2763e9e`, `630aa0f`. The settings also drive the model: the running amplitude (`ESC.A`, from the work done each oscillation) and the escapement's rate (Airy, `ESC.run.rate`, in `rateK` as `escK`); a setting that would leave the balance swinging under `AMIN` is refused. Model README, "The escapement's amplitude and rate".
 
 **What.** A panel of sliders for the escapement's settings, each redrawn live in the 3D model and the 2-D diagram, with the manual's figures checked as you move them:
 

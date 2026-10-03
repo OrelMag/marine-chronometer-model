@@ -76,12 +76,12 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
   - The Spread slider sets how far the train is laid out (`mv.userData.develop(e)` in `movement.js`, 0 as built, 1 laid out).
 - Time: set the hands to any time of day, or to now. The model keeps Greenwich Mean Time by default, as U.S. Navy chronometers were kept (the HUD says GMT); Keep: Local time switches to the viewer's time zone, moving the hands by the difference. The HUD shows the time the hands show and, once it is a quarter second or more, the dial error against the master time (below): `+` fast, `−` slow, to the half second as a navigator records it. Now sets both the hands and the master time to the viewer's clock; Set the hands moves the hands only, so it makes a dial error. Tick sound is under Time too.
 - Setting, With the key: sets the hour and minute hands as the manual does while the chronometer runs (Sec. III, "Setting While Running"). The gimbals are latched, the bezel and crystal come off, and the winding key goes on the hand-setting square, turned by its shank, forward only: the minute hand goes on its marker half a minute behind the master, and to the next marker as the master's second hand passes 60. The second hand is never touched, so the dial can still be up to 30 s out, as the manual says; the Time section reports it. A dial that is fast has its hands turned nearly round the dial. The hands turn on the centre arbor as the cannon pinion slips (`slip`, passed to `update()`), which leaves the train and the second hand alone. How fast the key turns is illustrative. Another view, or the walkthrough, ends the setting.
-- Adjuster's bench (its own section): the escapement's six settings on sliders (trip-spring tip `rT`, discharge-jewel reach `rd`, depth of lock `dL`, locking-jewel draw `DRAW`, and the discharge and impulse jewels' angles `aD`, `aI`). Each change rebuilds `ESC` with `makeEsc` and takes it over in place (`Object.assign`, so everything reading `ESC` follows), rebuilds the detent pieces, trip spring screw, roller and jewels (`mv.userData.escSet()`), and measures lock, let-off, overall, drop, roller shake, the teeth's dip, horn clearance and the jewels' angle against the manual (`ESC.checks()`, as `tools/escapement.js`), with the plan view live beside them. A setting at which the escapement would not run (`ESC.measure().runs`) is refused, with the reason, and the last working one kept. The least amplitude that runs (`ESC.AMIN`) follows the settings: past it the train stops, and a twist starts it again. The hash carries the changed settings (`esc=rT:0.29,aI:185`). The model's settings are one button away; the geometry checks (`fine.py` and the rest) cover only those.
-- Rate book (its own section): the navigator's record of Sec. IX, Table I. The dial is compared with the master at noon each day, master time, and on Compare now; the error is read to the nearest half second, as the hands step. The daily rate is the change in error per day, taken against the latest comparison at least half a day back with no break (started, stopped, set, not wound) since, since over a shorter time the half-second reading swamps it. Below the table, the mean daily rate and mean deviation over the last ten rates since a break, and live for the current dial error, what it does to a position: 4 s of time is 1′ of longitude, that many nautical miles times cos(latitude) (Latitude input), uncorrected and after the navigator's correction with the last error and the mean rate. The remarks are recorded automatically. The rate is steady in the model (only the weights change it), so the mean deviation shows the reading's half-second steps.
+- Adjuster's bench (its own section): the escapement's six settings on sliders (trip-spring tip `rT`, discharge-jewel reach `rd`, depth of lock `dL`, locking-jewel draw `DRAW`, and the discharge and impulse jewels' angles `aD`, `aI`). Each change rebuilds `ESC` with `makeEsc` and takes it over in place (`Object.assign`, so everything reading `ESC` follows), rebuilds the detent pieces, trip spring screw, roller and jewels (`mv.userData.escSet()`), and measures lock, let-off, overall, drop, roller shake, the teeth's dip, horn clearance and the jewels' angle against the manual (`ESC.checks()`, as `tools/escapement.js`), with the plan view live beside them. The model runs with the settings: they set the balance's running amplitude `ESC.A` (which the balance eases to) and the escapement's rate `ESC.run.rate`, s a day against the model's settings, which multiplies into the model's rate as `escK` ("The escapement's amplitude and rate", below); the Rate panel says how much of the rate is the escapement's, and the rate book notes "escapement adjusted". A setting at which the escapement would not run (`ESC.measure().runs`), or at which the balance would swing too little to keep it going (`ESC.A` under `ESC.AMIN`), is refused, with the reason, and the last working one kept. The least amplitude that runs (`ESC.AMIN`) follows the settings: past it the train stops, and a twist starts it again. The hash carries the changed settings (`esc=rT:0.29,aI:185`). The model's settings are one button away; the geometry checks (`fine.py` and the rest) cover only those.
+- Rate book (its own section): the navigator's record of Sec. IX, Table I. The dial is compared with the master at noon each day, master time, and on Compare now; the error is read to the nearest half second, as the hands step. The daily rate is the change in error per day, taken against the latest comparison at least half a day back with no break (started, stopped, set, not wound) since, since over a shorter time the half-second reading swamps it. Below the table, the mean daily rate and mean deviation over the last ten rates since a break, and live for the current dial error, what it does to a position: 4 s of time is 1′ of longitude, that many nautical miles times cos(latitude) (Latitude input), uncorrected and after the navigator's correction with the last error and the mean rate. The remarks are recorded automatically. The rate is steady in the model (only the weights, screws and escapement's settings change it), so the mean deviation shows the reading's half-second steps.
 - Setting, Stop to set: the manual's other way (Sec. III, "Setting When Stopped"), to the second. The button is the next step: Stop to set locks the balance with the locking arm (the manual stops the balance by hand, the movement out of its case), Unlock arm takes the arm off with the balance at rest, and Twist to start gives the twist. Meanwhile the Time section counts down: to the moment the master overtakes a fast dial, or to when the second hands agree on a slow one, after which the minutes are set forward with the key. The wheel stands locked, so the second hand is on a half second, and what is left after the start is the moment of the twist (and the fraction of a second the balance takes to pick up).
 - Winding: Since winding and Wind, and Wind with the key, which turns the fusee half a turn at a time, 17½ half turns from run down (the fusee's 8¾ turns, 56¼ h of chain), with the plates see-through and the winding stop kept solid. For the last turn the camera closes in on the fusee's top: the chain winds over the stop-bar's nose, and the bar's far end comes round to the winding stop.
   Three options under it act whenever the model winds (the key, Wind, or the walkthrough's Wind it now). **Load path in colour** (on) tints the parts carrying the train's load (`lpCol`, `tintOf` in `app.js`, from the `lp` tags `movement.js` sets): while winding the sustaining spring, which drives (rose), and the sustaining ratchet and pawl, which hold (teal); for 2 s after the key lets go, the mainspring's whole path in rose (barrel, chain, fusee, winding ratchet and pawls, sustaining ratchet, spring, fusee wheel). **Close-up of the sustaining spring** (on) draws the fusee wheel's maintaining work again in a box at the stage's lower left (`cuDraw`): the same renderer and canvas (a scissored viewport, layer 1 for its parts and the lights, so the page keeps to two WebGL contexts), seen from the train bridge's side in the movement's own frame, the sustaining ratchet drawn at 45% so the spring under it shows; under it, the spring's drive left, 10 min less `R.ssD` of `R.SMAX`. **Exaggerate the spring's motion** (off) draws the spring relaxing 20 times as far (`ssX` in `update()`, up to `SMAX`) and eases it back over 0.4 s at the catch; the working end's pin moves round the ratchet with it, while the ratchet, the pawls and the time left stay the real ones. At 1× a wind from run down takes about 17 s of model time, about 3% of the spring's travel, too little to see without it. Under `?qa`, `__lp()` gives the phase (`ph` 'w' winding, 'r' the 2 s after, '' otherwise) and whether the close-up shows.
-- Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (1,140 g·mm², Table II's). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.179 and 0.113 mm. Below them, a screw pair (numbered 1–5 round the rim) takes any of Table II's five head heights (0.040–0.100 in) and the washers of Table III (0.002–0.010 in) under its heads, as Op. 3 changes them: `R.screws(heads, washers)` rebuilds them and `R.timing` counts their masses; the panel puts the manual's figure for the change (Tables II and III, for pairs) beside the model's, which are within about 10 % for screws and 15–25 % for washers (Table III fits a lighter balance, about 960 g·mm²). Zero puts back the weights' mid-travel and the standard screws. The model clock `tSim` then runs √(I₀/I) as fast as real time, so the hands gain or lose; the panel shows the daily rate and what the hands have gained since the weights were moved or the hands set.
+- Rate and timing weights: turn the timing or vernier weight pair in or out by eighth turns, up to 3 turns either way from mid-travel. `R.timing(nt, nv)` in `movement.js` moves them and returns the balance's moment of inertia, computed from the balance's geometry and the parts list's masses (1,140 g·mm², Table II's). The weights' thread pitch (`R.pitch`) is set so that a full turn gives the manual's figures (p. 70): about 40 s a day for the timing pair and 2.8 s for the vernier pair, which makes the pitches 0.179 and 0.113 mm. Below them, a screw pair (numbered 1–5 round the rim) takes any of Table II's five head heights (0.040–0.100 in) and the washers of Table III (0.002–0.010 in) under its heads, as Op. 3 changes them: `R.screws(heads, washers)` rebuilds them and `R.timing` counts their masses; the panel puts the manual's figure for the change (Tables II and III, for pairs) beside the model's, which are within about 10 % for screws and 15–25 % for washers (Table III fits a lighter balance, about 960 g·mm²). Zero puts back the weights' mid-travel and the standard screws. The model clock `tSim` then runs √(I₀/I)·`escK` as fast as real time (`escK`, the escapement's share, is 1 at the model's settings and set on the Adjuster's bench), so the hands gain or lose; the panel shows the daily rate, the escapement's share of it when there is one, and what the hands have gained since the weights, screws or escapement were changed or the hands set.
 - Stopping and starting (and Twist to start under Winding): the balance locking arm (Fig. 9) and the train-blocking screw (Sec. II), and the twist that starts a stopped chronometer. See "Stopping and starting" under How the timing works.
 - Parts: every named part by group, to single out (as a tap does) or hide. Display adds a slow turn and an Auto/Light/Dark theme, and Reset display puts every Display box back to its default (See-through to the view's own) and shows faded and hidden parts again, leaving the theme. Save writes the view as a PNG; Link copies the page's address with the state in its hash (without clipboard access it is put in the address bar instead).
 - Gimbals latched (Display) swings the latch lever in through the slot in the gimbal ring to the keeper on the case, bringing ring and case level with the box first; latched, they tilt with the box, as Ship motion then shows. Unticked, the lever swings back along the wall and the gimbals are free. A walkthrough step with ship motion releases them.
@@ -269,7 +269,7 @@ Beside it runs the master time `tM`: a perfect clock, standing for the time sign
 ### Stopping and starting
 
 A detent chronometer does not start by itself (Sec. III), so the balance's
-amplitude is kept as state (`H.amp` in `app.js`, 255° each way when running)
+amplitude is kept as state (`H.amp` in `app.js`; running, it comes to `ESC.A`, 255° each way at the model's settings)
 and `ESC.state(p, amp)` gives the escapement at that amplitude.
 
 - **What keeps it going.** A swing must carry the discharge jewel past the trip
@@ -284,8 +284,8 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   the fourth wheel.
 - **While it is stopped** `tSim` and the hands stand, so they lose the time it
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
-  down. It runs down freely with the train held (1/e in 25 s, `TAU_FREE`,
-  estimated) and at once, within a swing or two, against the locking arm
+  down. It runs down freely with the train held (1/e in 25 s, `TAU_FREE`, from
+  `ESC.settings.TF`, estimated) and at once, within a swing or two, against the locking arm
   (`TAU_ARM`, 0.2 s). While the swing still carries the discharge jewel back
   past the trip spring's tip (above 39.1°), the detent lifts but the wheel
   can't turn. A smaller swing leaves the jewel on the near side of the tip: the
@@ -296,7 +296,7 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   the balance is still swinging: the screw raised, or the chronometer wound,
   before the balance has run down. Otherwise it takes Twist to start. The twist
   turns the box sharply and back and sets the balance swinging (160°), and the
-  impulses bring it up to 255° (`TAU_UP`, 3 s).
+  impulses bring it up to `ESC.A` (`TAU_UP`, 3 s).
 - **Nothing jumps on restarting.** `H.bOff` and `H.eOff` carry the balance's
   phase and the beat count across, so neither the balance nor the hands jump.
 - **Moving the controls.** The arm and screw move on frame time, not model
@@ -340,6 +340,54 @@ and the thread pitches are the model's. Things to know before changing it:
   (`IGN`). The cock's body is 17.7 mm from the balance axis, on the barrel bridge's circle.
 - **`audit.py` lists the weights' screw tips as loose ends.** They stand
   beyond the nuts, as in Fig. 3, and are expected.
+
+### The escapement's amplitude and rate
+
+`makeEsc` works out how far the balance swings and what the escapement does to
+the rate from its own geometry, so the Adjuster's bench changes both (`ESC.A`,
+`ESC.run`).
+
+- **Amplitude, from the work done each oscillation.** Work is counted in units
+  of the hairspring's stiffness. The impulse gives w (the wheel's torque over
+  the stiffness) times the wheel's turn while it drives the jewel: at the
+  model's settings the tooth lands on the jewel at −20.6° and drives it through
+  19.4° of the wheel's 22.5° pitch, the rest being the drop onto it and the
+  tooth's fall off its tip to the locking jewel. Unlocking takes back three
+  things: the locking jewel drawn back against the tooth and rubbing on it,
+  dL(tan DRAW + μ)/(1 − μ tan DRAW) of the wheel's turn; the detent spring
+  lifted (lost as the detent falls back); and the trip spring bent on the
+  return (lost as it flies back). The swing loses πA²/Q, Q = πTF/T from the
+  balance's free run-down, so A = √(QW/π). The constants are fitted so the
+  model's settings give 255°, with unlocking taking 5.4% of the impulse's work.
+- **Rate, by Airy's result.** A push at balance angle θ moves the phase by
+  −(τ|dθ|/k)·θ/(A²√(A²−θ²)) an oscillation: a push before the dead point gains
+  and one after it loses, a resistance the reverse. Summed over the impulse
+  and the unlocking, and taken against the model's settings, this is the rate
+  in s a day. The escapement's own error at the model's settings (−1.4 s a day:
+  impulse −0.5, draw −0.5, detent spring −0.6, trip spring +0.2) is taken up in
+  the timing, so it shows as 0.
+- **What the settings do.**
+
+  | Setting | Amplitude | Rate | Why |
+  |---|---|---|---|
+  | Impulse jewel at 184° | 244° | +1.0 s a day | The impulse ends sooner after the dead point (18.0°) |
+  | Impulse jewel at 178° | 264° | −1.9 s a day | |
+  | Depth of lock 0.20 mm (0.03) | 248° | −3.6 s a day | More resistance before the dead point |
+  | Depth of lock 0.33 mm (0.05) | 225° | −9.1 s a day | |
+  | Discharge jewel at 262° | 230° | −7.1 s a day | |
+
+  One slider alone keeps the balance above `AMIN`. Several together can bring
+  it under, and the bench then refuses the setting.
+- **The model's settings are the reference.** There `ESC.A` is exactly 255°
+  and the rate exactly 0. Every tool that calls `ESC.state(p)` with the default
+  amplitude sees no change. The reference's constants are cached on
+  `makeEsc.refs`, by the calibration settings (`EX`, `A`, `TF`, `MU`, `fD`,
+  `fP`).
+- **While the train is held,** the balance swings free: it has no escapement
+  error and keeps the weights' rate alone.
+- **Not modelled:** isochronism (the rate's change with amplitude through the
+  hairspring), friction at the impulse, and the recoil in the motion (it counts
+  in the work only).
 
 ## Sources
 
@@ -456,7 +504,7 @@ and the thread pitches are the model's. Things to know before changing it:
   - Depth of lock is 0.125 mm, and the trip spring's tip lifts 0.20 mm to release.
   - The discharge jewel meets the trip spring at −27.3° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.7°, centred on the dead point.
   - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip leaves the jewel's end (−11.1° and −39.1°). The push peaks about a degree earlier, where the tip slides off the jewel's side onto its end. Let-off and overall are measured to the fall, as the manual's gauge reads them.
-  - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release. Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
+  - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release (the recoil counts in the work unlocking takes from the balance only). Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
 - The escapement's parts beyond the plan.
   - The escape teeth: their form follows Fig. 90 and an original wheel photographed in chronometerbook post 30 (a land 0.13 mm wide at the tip, the root circle at 5.5 mm). The undercut of the locking face (the root trails the tip by 0.14 of a pitch, about 16°), the length of the hollow back (0.55 of a pitch) and its curve (meeting the root circle tangentially) are traced from Fig. 90. Fig. 14's cut-away gives the arrangement: the teeth stand the wheel's full thickness on a thin rim and spokes. The plate's thickness (0.5 mm), the rim's width (0.5 mm), the spokes (0.5 mm wide) and the collet (r 1.5 mm) are estimated from the photograph and Fig. 14.
   - The impulse roller's three holes (0.5 mm radius, a quarter turn apart from the jewel, Figs. 14, 61 and 90) and the impulse jewel's section (flat on the impulse face, curved behind, thinning to 0.45 of its width at the ends; "curved side of the jewel", Sec. VII) are estimated in size.
@@ -523,7 +571,8 @@ and the thread pitches are the model's. Things to know before changing it:
 - The train-blocking screw (Sec. II, Fig. 110): its size (head 1.7 mm, thread 0.84 mm, dog point 0.5 mm) and 5.6 mm travel; the wall round it (bored r 0.95 down to the seat 0.6 mm into the bridge's top: the section gives the arrangement, not the sizes) and the access hole in the train bridge (r 0.72). Its place, 5.0 mm from the fourth arbor, is a countersunk hole on the top-view photograph, to about 1 mm.
 - The balance locking arm's sizes (Fig. 9 shows it curved, its screw outside the rim and its end at a timing weight; Sec. X: "place the locking arm over the timing weight"): a strip 1.0 mm wide and 0.45 thick, bowed 0.6 mm, turning 90° on its screw 20 mm from the staff in the open 6 o'clock sector of the train bridge (at 18° from the timing weight, just clear of the barrel bridge's far horn), with a round finger 1.65 mm tall at its end. Locked, the finger stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (0.02 mm clear), and a balance screw stops the balance 39° the other way; the top-view photograph shows the arm's end beside a timing weight on that side. Unlocked, it lies turned out against its stop pin, clear of the balance.
 - The Navy's Y-arm balance stop (Variants, Balance stop; illustrative): as on serial 2E11795 (the top-view photograph), a post on the barrel bridge capped with packing rings like the fusee's dust seal, and a Y-shaped arm from under its cap over the balance, a pin under each end over the rim. Its shape and place are mapped from the photograph through the barrel bridge's five screws, corrected for the photograph's tilt at the arm's and the cap's heights (to about 1.5 mm); the manual doesn't describe it (its "balance stop", Sec. I, is Fig. 9's arm), so its heights, sizes and working (the cap pressed from outside the case, the arm lowered 0.48 mm until its pins bear on the rim, as the wedges did) are estimated. Locked and Unlocked under Stopping and starting work it as they work the locking arm.
-- Stopping and starting: the balance's free run-down (1/e in 25 s), the arm's braking (0.2 s), the twist's swing (160°) and the build-up to 255° (3 s). `ESC.AMIN` is worked out from the escapement.
+- Stopping and starting: the balance's free run-down (1/e in 25 s), the arm's braking (0.2 s), the twist's swing (160°) and the build-up to `ESC.A` (3 s). `ESC.AMIN` is worked out from the escapement.
+- The escapement's amplitude and rate ("The escapement's amplitude and rate"): the free run-down's 25 s (`TF`) sets Q = 157 and so the scale of every escapement error; friction at the locking jewel μ = 0.15 (steel on sapphire); the detent spring's and trip spring's shares of the impulse's work at the model's settings, 3% and 0.5% (`fD`, `fP`). With them the wheel's torque comes out about 0.22 mN·m at the escape arbor (1,140 g·mm², a 0.5 s oscillation). The escapement's own error at the model's settings (−1.4 s a day) is taken to be timed out; the rate shown is the change from it.
 - The sustaining pawl's position: 21.35 mm from the fusee axis, where the pawl reaches the sustaining ratchet and its arbor can run from the pillar plate to the train bridge clear of the centre wheel and of the fusee wheel's teeth.
 
 ## Modifying the model
@@ -741,7 +790,7 @@ overall, drop, roller shake and the horn clearance, and flags any outside the
 manual's figures. The measurements and tolerances are `ESC.measure()` and
 `ESC.checks()` in `makeEsc`, so the tool and the page's adjuster's bench use
 one definition; `measure()` also says when a setting would not run at all
-(`runs`, `why`), and the tool then exits with 1. To try a setting before editing, pass it on the command line,
+(`runs`, `why`), among them a balance swinging too little to keep it going, and the tool then exits with 1. It also prints the running amplitude and the escapement's rate against the model's settings. To try a setting before editing, pass it on the command line,
 for example `node escapement.js rT=0.29`. Record the results in the escapement
 entries under "Estimated, not from the manual". The essay's detent figure and
 the figures in its text (lock, let-off, drop, overall, shake, horn clearance) read
