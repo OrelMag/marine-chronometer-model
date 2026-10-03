@@ -1,2 +1,0 @@
-hold exit 1
-exploded exit 1
