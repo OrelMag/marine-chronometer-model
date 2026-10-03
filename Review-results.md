@@ -359,6 +359,17 @@ Then run `dyn.py` with the variant shown.
 
 ## Smaller issues
 
+- **The balance's rim (open, 3 October 2026).** Table II's screw changes, with
+  the parts list's masses at their heads' radii, fit a balance of 1,140 g·mm²,
+  and the model's rim is sized to it: 3.5 mm tall (the restoration video) and
+  1.578 wide. Face-on (KLUwI2UUCMQ 6:52.5, at 3 o'clock, where the rim's height
+  projects along it) the rim reads about 0.6 mm thick, which with the same
+  masses gives about 730 g·mm². One blurred frame, so low confidence; if it
+  holds, either the rim is taller, the screws heavier than the parts list's, or
+  Table II assumes another balance. To settle it: the rim edge-on, and each
+  pair's head length side-on, at 6:44–6:53.5 and 43:45–43:51
+  (`References/VIDEOS.md`, Gaps).
+
 - **The balance slows down above 1×.** Between 1× and about 10×, the balance
   switches to its slow display swing (0.9 Hz), and the escape wheel moves
   continuously instead of stepping. At 2× the balance therefore swings slower
@@ -976,7 +987,7 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    the spring a band on edge round half a turn, the cover's feet outside it;
    RESOLVED.md, Winding and maintaining work*), the dust seal, the detent's
    trip-spring bracket.
-3. *The click's pivot settled (3 October 2026): at the video's 10.25 mm, its tip at the teeth's root, 0.52 mm inside their tips; bom.py's check wants it seated over 0.3.* *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
+3. *The click's pivot moved to 8.95 mm and the ratchet to tips at 7.05 (3 October 2026, later): both photographs and the video measured against the cover screws' holes; RESOLVED.md, Setup.* *The click's pivot settled (3 October 2026): at the video's 10.25 mm, its tip at the teeth's root, 0.52 mm inside their tips; bom.py's check wants it seated over 0.3.* *Done (2 October 2026, `tools/bom-fn.js`), the setup click included: it holds
    the arbor the right way, but its tip seats only about 0.1 mm inside the
    teeth's tips (of a 0.8 mm face): the click lies nearly tangent from a pivot
    9.25 mm out (traced on the top-view photograph), where C Spinner's video

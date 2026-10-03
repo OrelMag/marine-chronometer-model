@@ -1039,6 +1039,33 @@ Contents:
   Traced through a fit to the cover's two screws and the arbor; the edge is an
   arc within 0.5 mm of the tracing. Keep: check the cover against the
   photograph with `tools/topview.py`. `54fdbfb`
+- **Setup cover lopsided.** Its centre-side edge came to 6.4 mm from the arbor
+  and bowed in 0.07 of its chord against the rim side's 5.9 mm and 0.105, and
+  its four corners stood at 12.6-13.1 mm, one end an arc through three points,
+  the other a spiral. Both photographs show a plate symmetric about its long
+  axis and across it, both sides bowed alike (about 0.1 of the chord). Now two
+  end arcs round the arbor (r 12.87, 76.5°) and two like concave sides to
+  5.95 mm; the click's tip is still 0.5 mm clear in the rim-side gap. Keep:
+  the outline built symmetric (`CA`, `CH`, `CR`, `CW`). `d4f788a`
+- **Setup cover centred on the arbor, its waist too wide.** The symmetric
+  outline was centred on the arbor with its sides 5.95 mm from it. Its edge,
+  traced along the outline on both photographs, shows a symmetric plate whose
+  centre is 0.4-0.6 mm off the arbor toward the movement's centre, its sides
+  5.4-5.6 mm from that centre: the rim side's edge was 0.8 mm short of the real
+  one on both. Now fitted to both traces (centre 0.53 off, sides 5.58, ends
+  r 12.69 and 75.6° wide); every side and end within 0.2 mm (median) on the
+  top-view photograph, 0.5 mm on 2E12055. Keep: the outline symmetric about
+  its own centre `Q0`, not the arbor. `fc29280`
+- **Setup ratchet 1.1 mm too large, the click's pivot 1.3 mm too far out.**
+  The ratchet's tips stood at 8.16 mm from the arbor and the pivot at 10.25.
+  The pivot's end shows in the cover 8.95 mm out on both photographs; the
+  video, measured against the cover screws' tapped holes (23.6 mm apart),
+  puts the tips at 7.04 and the pivot 1.34 tip radii out, and the top-view
+  photograph the tips at 7.0-7.3. The earlier 10.25 was read by eye with the
+  model's ratchet as the scale. Now the tips at 7.05 (`SUT`; 42 teeth), the
+  pivot at 8.95, the click's tip at the new root and its spring at 1.273 tip
+  radii. Keep: read sizes on the video against a part whose size is known
+  from elsewhere, not against the model's. `c603feb`
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved
@@ -1206,6 +1233,20 @@ An arbor needs pivots and shoulders; a stone its seat.
   wide (fitted to 1,140), the screws and weights at its mid-height with heads
   2.6 mm across as Fig. 3 draws them. Keep: `invariants.py` checks 1,140; a
   change to the balance keeps Table II's moment (the pitches follow). `ff40402`
+
+- **The balance screws stood off the rim's holes.** The rim was
+  drilled with 60 holes 6° apart and the 10 screws stood 14.3° apart about the
+  quarters, off that grid, with the holes under their heads left out; the timing
+  weights stood 12° from the arm's ends and the verniers outside the rim. The
+  manual's numbered block (Fig. 99) and Table IV number the holes 1–13 round
+  each half with 7 on the quarter, and the restoration video (KLUwI2UUCMQ
+  6:47.5–6:53) shows 24 holes 15° apart, the timing weights at the arm's ends,
+  the verniers inside the rim one hole on, and four pairs of screws in holes 3,
+  5, 9 and 12. The rim now has those 24 places, the screws and weights stand in
+  them, the rim is 3.5 tall (the video) and 1.578 wide (refitted to 1,140) and
+  the heads 3.3 across. Keep: every screw and weight stands in a numbered hole,
+  hole 1 at the arm's end and 7 on the quarter, a pair in the same hole of each
+  half; `invariants.py` checks 1,140, Table IV and that a moved pair keeps it. `7624339`
 
 ## Rendering
 

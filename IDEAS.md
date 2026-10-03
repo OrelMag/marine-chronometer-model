@@ -288,7 +288,7 @@ shows. These ideas add the dynamics where they teach something.
 
 `I·θ″ + c·θ′ + k·θ = τ(θ, θ′, state)`
 
-- `I`: the balance's moment of inertia (930 g·mm², already computed).
+- `I`: the balance's moment of inertia (1,140 g·mm², already computed).
 - `k = I·(2π/0.5 s)²`: the hairspring's stiffness, about 1.5 × 10⁻⁴ N·m/rad.
 - `c`: losses, set so the amplitude settles at the manual's 1⅜–1½ turns.
 - `τ`: the impulse torque while `ESC` says a tooth is on the impulse jewel, minus the small unlocking resistance.
@@ -321,6 +321,8 @@ The amplitude then emerges from the model instead of being fixed.
 **Why.** It shows why the fusee is there, rather than asserting it.
 
 ### 2.3 Temperature
+> **Partly done.** The rate panel moves pairs of screws from hole to hole (Op. 8) and gives Table IV's change in the rate at 90 °F against 55 °F (`R.T4`), with a temperature slider (40–100 °F) that runs the clock with it, linear about 72.5 °F; pairs can be taken out or put in. Still open: the curvature (the middle temperature error) and the split balance's curl.
+
 **What.** A temperature slider (the manual's test temperatures are 55, 72½ and 90 °F) with a rate readout and a rate-against-temperature curve.
 
 **The Hamilton uncut balance.** Elinvar hairspring, steel rim on an Invar arm.
@@ -774,7 +776,7 @@ Small browser or Node checks on the model's arithmetic:
 - **Hands:** at `tSim = t`, the hour, minute and second hands point where a clock reading `t` would: centre wheel 1 turn/h, fourth 1 turn/min, escape 16 teeth per 8 s.
 - **Wind indicator:** runs from 60° at UP to 300° at 56 h, which is the dial's scale.
 - **Fusee:** `FUSEE_TURNS / FUSEE_PER_HOUR` is 60 h of chain, and 17½ half turns wind it fully.
-- **Moment of inertia:** `R.timing(0,0)` is 930 g·mm² (catches accidental changes to the balance's geometry), and a full turn of the timing pair is 40 s a day and of the vernier pair 2.8 s, the manual's figures.
+- **Moment of inertia:** `R.timing(0,0)` is 1,140 g·mm² (catches accidental changes to the balance's geometry), and a full turn of the timing pair is 40 s a day and of the vernier pair 2.8 s, the manual's figures.
 - **Pawls:** after `update()` at a spread of states, every pawl's tip sits within a tolerance of its ratchet's profile.
 
 ### 8.3 Visual regression (M)
@@ -783,7 +785,7 @@ Small browser or Node checks on the model's arithmetic:
 - **The renderer:** SwiftShader output is deterministic enough if the Chromium version is pinned.
 
 ### 8.4 Size budget (S)
-> **Done.** `build.py` fails a page past its `BUDGET` (1.6 MB for the model, 1.1 MB for the essay; they were 1.33 and 0.94 MB) and prints each page's three.js, fonts, images and the rest on every build. The first breakdown showed Instrument Sans inlined three times over (one file under three weights); it is now one face with a weight range. `843d642`, `8f1266b`
+> **Done.** Since 3 October 2026 the build warns past the budget instead of failing (it had stopped a release over 8 KB), and prints the compressed size too; the budget is 1.43 MB. Before: `build.py` fails a page past its `BUDGET` (1.6 MB for the model, 1.1 MB for the essay; they were 1.33 and 0.94 MB) and prints each page's three.js, fonts, images and the rest on every build. The first breakdown showed Instrument Sans inlined three times over (one file under three weights); it is now one face with a weight range. `843d642`, `8f1266b`
 
 Fail the build if `chronometer-working-model.html` grows past a set size, say 1.4 MB raw. It's 1.17 MB today. Print a breakdown (three.js, fonts, images, app) on every build, so growth is visible.
 

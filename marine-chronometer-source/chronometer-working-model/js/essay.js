@@ -164,15 +164,15 @@ const ESSAY=(()=>{
       ship(X(0),PAL.ink,'True position',24);
       if(nm>0.3){ctx.strokeStyle=PAL.red;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(X(0),y-26);ctx.lineTo(X(nm),y-26);ctx.stroke();ctx.setLineDash([]);ship(X(nm),PAL.red,'Believed position',-30);}};});
 
-  /* ---------- the balance, in mm: 'uncut', the Model 21's as movement.js builds it (a stainless-steel rim 1.4 wide and 2.4 deep on an Invar arm, balance screws
-     in pairs about the quarters, timing and vernier weights beside the arm ends); 'split', a bimetallic rim cut near each end of the arm, steel inside and brass
+  /* ---------- the balance, in mm: 'uncut', the Model 21's as movement.js builds it, simplified (a stainless-steel rim 1.58 wide and 3.5 deep on an Invar arm, its
+     24 holes 15 deg apart, the standard four pairs of balance screws in holes 3, 5, 9 and 12 of each half, the timing weights at the arm's ends and the verniers inside the rim beside them); 'split', a bimetallic rim cut near each end of the arm, steel inside and brass
      outside, with its compensation weights, which set(curl) bends in; 'plain', a plain brass rim, which set(0, grow) enlarges. userData.S: the screws and weights ---------- */
   function balance(M,kind){const g=new THREE.Group(),BR=BAL_R,S=[];
     mesh(g,new THREE.BoxGeometry(2*BR-1,1.1,2.4),kind==='uncut'?M.invar:kind==='plain'?M.brass:M.steel);mesh(g,cylY(2.2,1.3,24),M.steel,0,0.2,0);mesh(g,cylY(0.45,15,12),M.steel,0,2.5,0);
     const radial=(a,r0,len,rr,mat)=>{const m=mesh(g,cylY(rr,len,12),mat,(r0+len/2)*Math.cos(a),0,(r0+len/2)*Math.sin(a));m.rotation.set(0,-a,Math.PI/2);return m;};
-    if(kind==='uncut'){mesh(g,ringGeo(BR,BR-1.4,2.4),M.steel);
-      for(const c of[Math.PI/2,-Math.PI/2])for(const[d,hh]of[[-0.5,1.24],[-0.25,2.57],[0,2.03],[0.25,1.24],[0.5,1.24]])S.push(radial(c+d,BR,hh,0.75,M.brass));
-      const WT=2/60*TAU;for(const c of[0,Math.PI]){S.push(radial(c+WT,BR+0.55,1.7,1.2,M.steelD));S.push(radial(c-WT,BR+0.4,1.3,0.65,M.steelD));}
+    if(kind==='uncut'){mesh(g,ringGeo(BR,BR-1.58,3.5),M.steel);const HA=(h,n)=>h*Math.PI+(n-1)*TAU/24;
+      for(const h of[0,1])for(const[n,hh]of[[3,2.03],[5,1.24],[9,2.57],[12,1.24]])S.push(radial(HA(h,n),BR,hh,1.65,M.brass));
+      for(const h of[0,1]){S.push(radial(HA(h,1),BR+0.55,1.7,1.2,M.steelD));S.push(radial(HA(h,2),BR-1.58-0.6-1.3,1.3,0.65,M.steelD));}
       g.userData.set=()=>{};}
     else if(kind==='plain'){const r=mesh(g,undefined,M.brass);g.userData.set=(c,grow=0)=>{r.geometry.dispose();r.geometry=ringGeo(BR*(1+grow)+0.8,BR*(1+grow)-0.8,2.4);};}
     else{const span=162*D2R,w=1.6,h=2.4,rims=[0,1].map(()=>[mesh(g,undefined,M.steel),mesh(g,undefined,M.brass)]);
@@ -390,7 +390,7 @@ const ESSAY=(()=>{
   function fillLive(){const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
-      I0:model?Math.round(model.I0/10)*10:930,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
+      I0:model?Math.round(model.I0/10)*10:1140,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
 
