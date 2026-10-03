@@ -1035,7 +1035,7 @@ Contents:
   the mounting ring's flange was a plain circle. Now a notch in its rim, 167° from
   12, 1.4 wide and 2.2 in, through the flange's top layer, where the restoration
   video lifts the dial (8:46, 9:03). Keep: it under the dial's edge and clear of
-  the dial screws' holes.
+  the dial screws' holes. `836ad13`
 
 ## Setup, case and gimbals
 
