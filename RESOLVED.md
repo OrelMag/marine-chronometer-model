@@ -1055,7 +1055,7 @@ Contents:
   one on both. Now fitted to both traces (centre 0.53 off, sides 5.58, ends
   r 12.69 and 75.6° wide); every side and end within 0.2 mm (median) on the
   top-view photograph, 0.5 mm on 2E12055. Keep: the outline symmetric about
-  its own centre `Q0`, not the arbor.
+  its own centre `Q0`, not the arbor. `fc29280`
 - **Engraving under the dust seal.** "MARINE CHRONOMETER" and "TWO-DAY, 56
   HOURS" were shortened so the flange no longer covers them. `9606cc3` The
   photographed text that replaced them runs full length; the block moved
