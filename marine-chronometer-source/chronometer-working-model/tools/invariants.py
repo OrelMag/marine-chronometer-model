@@ -8,7 +8,8 @@
   within 1% of the 315.7° a photographed Model 21 dial's ticks give.
 - Fusee: 8¾ turns of chain is 17½ half turns of the key (manual Sec. III) and 56¼ h of running, the manual's "maximum of 56 hours" (Sec. III).
 - Balance: the moment of inertia as built (1,140 g·mm², the manual's Table II, from the parts list's masses and the balance as drawn), and a full turn of the timing weights and of the vernier weights
-  changing the rate by the manual's 40 s and 2.8 s a day (p. 70).
+  changing the rate by the manual's 40 s and 2.8 s a day (p. 70); Table IV (p. 74) rebuilt from its fitted seven-to-n figures; a pair of screws moved along the rim
+  leaving the moment of inertia as it was.
 The movement's update() is driven directly, as views.py does; the page's own loop is stopped first."""
 import asyncio,json,math,pathlib,sys
 from playwright.async_api import async_playwright
@@ -40,6 +41,13 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   const I0=R.timing(0,0),rate=(t,v)=>86400*(Math.sqrt(I0/R.timing(t,v))-1);
   chk('balance moment of inertia as built (Table II)',I0,1140.0,1,'g mm2');
   chk('timing weights, a full turn out (manual: 40 s/day)',-rate(1,0),40,2,'s/day');chk('vernier weights, a full turn out (manual: 2.8 s/day)',-rate(0,1),2.8,0.15,'s/day');
+  /* Table IV (p. 74): R.T4 holds its "7 to n" figures fitted to all its rows; every row printed is the difference of two of them, holes 3-6 mirroring 11-8 */
+  const HH=[0.120,0.100,0.090,0.080,0.070,0.060,0.050,0.040],T4R=[[12,11,[-1.69,-1.41,-1.10,-0.79,-0.66,-0.53,-0.32,-0.12]],[12,8,[-5.89,-4.91,-4.37,-3.82,-3.46,-3.09,-2.46,-1.89]],
+    [11,10,[-1.86,-1.55,-1.45,-1.35,-1.24,-1.14,-0.95,-0.79]],[3,5,[-3.30,-2.75,-2.57,-2.38,-2.20,-2.01,-1.68,-1.39]],[10,8,[-2.34,-1.95,-1.82,-1.68,-1.55,-1.42,-1.19,-0.98]],
+    [4,3,[1.86,1.55,1.45,1.35,1.24,1.14,0.95,0.79]],[9,12,[4.99,4.16,3.67,3.17,2.86,2.54,2.00,1.51]],[5,6,[-0.90,-0.75,-0.70,-0.65,-0.60,-0.55,-0.46,-0.38]],[8,11,[4.20,3.50,3.26,3.03,2.80,2.56,2.14,1.77]]];
+  let t4=0;for(const[a,b,v]of T4R)HH.forEach((h,i)=>{t4=Math.max(t4,Math.abs(R.T4(h,b)-R.T4(h,a)-v[i]));});chk('Table IV: its printed rows from the fitted 7-to-n figures',t4,0,0.041,'s/day');
+  /* moving a pair along the rim keeps the moment of inertia (the rate at the mean temperature); the standard set is back after */
+  R.screws(R.screwStd.map((p,i)=>i?p:{...p,n:7}));chk('a pair moved from hole 3 to 7: moment of inertia unchanged',R.timing(0,0),I0,1e-9,'g mm2');R.screws(R.screwStd);
   R.timing(0,0);return out;})()"""
 async def main():
     async with async_playwright() as p:

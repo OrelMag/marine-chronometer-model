@@ -328,18 +328,20 @@ function buildMovement(M){
      steady pins, one in each lug (tools/lower_bridge.py) */
   /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff, at -30 deg, where the
      bridge's notch round the fusee leaves it 2.8 mm of metal; at -60 deg it would stand in the notch */
-  const ARM_S=0.8,ARM_U=-120*D2R,TBS_R=1.05,TB_CB=2.65;   /* ARM_U: the locking arm's swing from locked to unlocked, in the plan (x toward z) */   /* TB_CB: the train bridge's counterbore for its third screw (r, 23:30) */
-  /* balance locking arm: its finger (S.armF) stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (at 180 + 12 deg
-     - BETA with the balance at rest), 0.02 clear of it; the arm turns on its screw (S.arm) outside the balance's sweep, back over the screw 120 deg (ARM_U) to its stop pin (42300, pressed into the train bridge): turned 90 deg
+  const ARM_S=0.8,ARM_U=-120*D2R,ARM_BOW=0.25,TBS_R=1.05,TB_CB=2.65;   /* ARM_U: the locking arm's swing from locked to unlocked, in the plan (x toward z) */   /* TB_CB: the train bridge's counterbore for its third screw (r, 23:30) */
+  /* balance locking arm: its finger (S.armF) stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (at the arm's end,
+     180 - BETA with the balance at rest), 0.02 clear of it; the arm turns on its screw (S.arm) outside the balance's sweep, back over the screw 120 deg (ARM_U) to its stop pin (42300, pressed into the train bridge): turned 90 deg
      the other way, out from the staff, it would reach the cock and the second train pillar's screw head, which the photographed group's move brought beside it (estimated:
      Fig. 9 shows the arm, not which way it turns). Fig. 9 draws it beside the cock's foot and a large slotted screw. Since the escape arbor's move (2 October 2026) turned the balance's
-     rest 11.8 deg, its screw stands 30 deg round from the weight (18 until then), where it was, so it stays clear of the cock's foot; on the weight's other side it would stand in it */
-  { const TWA=Math.PI+2/60*TAU-BETA,FR=15.6,FA=TWA+Math.asin(1.62/FR)+0.02/FR;S.armF=add(L.B,[Math.cos(FA),Math.sin(FA)],FR);S.arm=add(L.B,[Math.cos(TWA+30*D2R),Math.sin(TWA+30*D2R)],20);
+     rest 11.8 deg, its screw stands clear of the cock's foot: 45 deg round from the weight since the weights were put at the arm's ends (3 October 2026; 30 before, 18 before the
+     escape arbor's move); turned 12 deg with its weight, the screw would stand in the cock's foot, and on the weight's other side too. The arm, locked, runs between the cock's
+     foot and the escape upper bridge: 0.8 wide and bowed 0.25 away from the staff (ARM_BOW; 1.0 and 0.6 until then) it clears both, by little (fine.py --hold) */
+  { const TWA=Math.PI-BETA,FR=15.6,FA=TWA+Math.asin(1.62/FR)+0.02/FR;S.armF=add(L.B,[Math.cos(FA),Math.sin(FA)],FR);S.arm=add(L.B,[Math.cos(TWA+45*D2R),Math.sin(TWA+45*D2R)],20);
     /* unlocked, turned ARM_U from its locked direction (dU). The stop pin stands on the arm's leading side
-       1.5 along it, clear of its bow (0.6 at mid-length, away from the staff) */
+       1.5 along it, clear of its bow (ARM_BOW at mid-length, away from the staff) */
     const dot=(a,b)=>a[0]*b[0]+a[1]*b[1],dL=unit(sub(S.armF,S.arm)),rp=v=>[-v[1],v[0]],rm=v=>[v[1],-v[0]],dU=[dL[0]*Math.cos(ARM_U)-dL[1]*Math.sin(ARM_U),dL[0]*Math.sin(ARM_U)+dL[1]*Math.cos(ARM_U)],n=ARM_U<0?rm(dU):rp(dU),AE=Math.hypot(...sub(S.armF,S.arm))+0.45,
       bowOut=-Math.sign(dot(sub(L.B,S.arm),rp(dL))),bowU=dot(rp(dU),n)*bowOut;   /* the bow's side, locked (local +z = rp(dL)) and then unlocked (local +z = rp(dU)) */
-    S.armPin=add(add(S.arm,dU,1.5),n,0.82+Math.max(0,bowU)*0.6*Math.sin(Math.PI*1.5/AE)); }
+    S.armPin=add(add(S.arm,dU,1.5),n,0.82+Math.max(0,bowU)*ARM_BOW*Math.sin(Math.PI*1.5/AE)); }
   /* train-blocking screw (42247): over the fourth wheel's spokes, its dog point 6.35 mm from the fourth's setting, between it and the lower bridge's far lug, where the restoration
      video has it (KLUwI2UUCMQ 13:49.5, framecam over f 5000-7000, to about 0.4 mm; Fig. 30's proportions agree): the measured offset from the setting, turned with the train bridge's
      frame (PR). Its access hole through the train bridge about 2.3 mm across at the top with its countersink (10:00; the dark hole of the top-view photograph), its head (r 1.05,
@@ -431,13 +433,13 @@ function buildMovement(M){
   hn(bushR(tb,...L.C,TB_T-0.1,TB_U,1.2,0.52),'42166');hn(bushR(tb,...L.T,TB_T-0.1,TB_U,1.0,0.32),'42167');   /* bored for the pivots (r 0.5, 0.3), 0.02 side shake */
   /* balance wheel locking arm (42299, Fig. 9; fitted from 1947, Bureau of Ships sketch 023263): a curved arm on the train bridge, turning on its shouldered screw (37204) and
      washer (42251) outside the balance's sweep. Locked, the finger at its end stands on the counterclockwise side of a timing weight, which the hairspring holds lightly
-     against it, and a balance screw 39 deg round stops the balance the other way ("place the locking arm over the timing weight", Sec. X); unlocked, it lies turned out
+     against it, and the balance screw in hole 3, 30 deg round, stops the balance the other way ("place the locking arm over the timing weight", Sec. X); unlocked, it lies turned out
      against its stop pin (42300), clear of everything the balance carries. Fig. 9 shows the arm curved, its screw outside the rim and its end at a timing weight; the arm's
      sizes, the screw's place and the finger's height (1.65 mm, to 0.76 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
   { const ap=part('lockArm',-62),dA=sub(S.armF,S.arm),AL=Math.hypot(...dA),dL=unit(dA),AE=AL+0.45;R.armL=Math.atan2(-dL[1],dL[0]);
     const f9=new THREE.Group();ap.add(f9);R.armF9=f9;   /* the manual's arm, its screw, washer and stop pin: hidden together when the Navy's Y-arm is fitted instead (below) */
     R.armU=-ARM_U;R.arm=new THREE.Group();R.arm.position.set(S.arm[0],TB_T,S.arm[1]);f9.add(R.arm);R.arm.rotation.y=R.armL+R.armU;
-    const bw=-0.6*Math.sign((L.B[0]-S.arm[0])*-dL[1]+(L.B[1]-S.arm[1])*dL[0]),cl=t=>[t*AE,bw*Math.sin(Math.PI*t)],N=14,side=k=>[...Array(N+1).keys()].map(i=>{const t=i/N,[x,z]=cl(t);return[x,z+k*0.5];});   /* a strip 1.0 wide, bowed 0.6 away from the staff */
+    const bw=-ARM_BOW*Math.sign((L.B[0]-S.arm[0])*-dL[1]+(L.B[1]-S.arm[1])*dL[0]),cl=t=>[t*AE,bw*Math.sin(Math.PI*t)],N=14,side=k=>[...Array(N+1).keys()].map(i=>{const t=i/N,[x,z]=cl(t);return[x,z+k*0.4];});   /* a strip 0.8 wide, bowed ARM_BOW away from the staff */
     hn(R.arm,'42299');mesh(R.arm,polyGeo(subtractCircle([...side(1),...side(-1).reverse()],[0,0],1.1,true),0.45,[hC(0,0,ARM_S)]),M.blued,0,-0.45,0);
     cylBetween(R.arm,0.4,-0.45,-2.85,M.steel,AL,0,16);   /* the finger, 2.4 tall: 0.56 up the timing weight */
     hn(mesh(f9,ringGeo(1.1,hC(0,0,ARM_S)[2],0.15),M.steel,S.arm[0],TB_T-0.525,S.arm[1]),'42251.arm');hn(screw(f9,...S.arm,TB_T-0.6,ARM_S,0.35,0.15+0.45+2.5),'37204');
@@ -723,10 +725,10 @@ function buildMovement(M){
     mesh(cg,polyGeo(pl,0.45),M.steel,0,BAL_Y-1.7,0);   /* the plate under the balance hub (0.05 clear of it) */
     hn(mesh(cg,new THREE.BoxGeometry(1.0,1.4,1.3),M.steel,HS_R,BAL_Y-1.95,0),'42191.col');hn(cylBetween(cg,0.15,BAL_Y-1.1,BAL_Y-2.8,M.steelD,HS_R,-0.4,10),'42147.col'); }   /* clamp on the tongue's end, over the spring's end; wedge pin on the side away from the spring's run */
   const BR=BAL_R,BY=BAL_Y;R.balU=hn(new THREE.Group(),'42178');R.balU.position.y=BY;R.staff.add(R.balU);
-  /* the rim (Fig. 3: a tall band): 4.3 mm high, as Fig. 3 draws it against the balance's 29 mm, and 1.12 wide, so that the moment of inertia is the 1,140 g·mm² that the
-     manual's Table II (screw changes and the rate they make, p. 70) gives; its bottom where the escape upper bridge's screws leave it (0.14 mm), its screw holes' row
-     at its mid-height (RY, in the balance's frame, + toward the plate) */
-  const RH=4.3,RW=1.12,RY=1.2-RH/2;mesh(R.balU,ring(BR,BR-RW,RH),M.steel,0,RY,0);
+  /* the rim (Fig. 3: a band): 3.5 mm high, as the restoration video gives it against its 15 deg holes and its 29 mm across (KLUwI2UUCMQ 6:49.5-6:51.0, side-on: the screws'
+     heads 0.9-1.0 of its height; Fig. 3 draws it taller), and RW wide, so that the moment of inertia is the 1,140 g·mm² that the manual's Table II (screw changes and the rate
+     they make, p. 70) gives; its plate-side edge where the escape upper bridge's screws leave it (0.14 mm), its holes' row at its mid-height (RY, in the balance's frame, + toward the plate) */
+  const RH=3.5,RW=1.578,RY=1.2-RH/2;mesh(R.balU,ring(BR,BR-RW,RH),M.steel,0,RY,0);
   /* the arm on the hub (Fig. 4): the hub (42186, on the staff) has a flange under the arm and a boss up through the arm's clearance hole; the cap (42248) over the arm
      and two hold-down screws (42249) through cap and arm into the flange. The arm is widened round the hub. Sizes estimated */
   const HD=[[1.7,0],[-1.7,0]],xa=Math.sqrt(2.2**2-1.2**2),a0=Math.atan2(1.2,xa),arc=(s,e)=>[...Array(25)].map((_,i)=>[2.2*Math.cos(s+(e-s)*i/24),2.2*Math.sin(s+(e-s)*i/24)]);   /* the bar across, joined to the 2.2 circle round the hub on both sides (subtractCircle keeps one run: it drew half the arm) */
@@ -734,40 +736,65 @@ function buildMovement(M){
   hn(mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,0.55,0),'42186',{sub:1});hn(mesh(R.balU,ringGeo(1.1,0.45,2.05),M.steel,0,0.125,0),'42186',{sub:1});   /* the hub's flange and boss, bored for the staff (as the flange is) */
   hn(mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,-0.9,0),'42248');
   for(const q of HD)hn(screw(R.balU,...q,-0.9,0.4,0.25,0.35+1.1+0.5),'42249').userData.lift=0;   /* they stay in: the hub's flange under them is on the staff, which goes with the balance */
-  { const hs=[],sa=[Math.PI/2,-Math.PI/2].flatMap(c=>[-0.5,-0.25,0,0.25,0.5].map(d=>c+d)),under=a=>sa.some(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))*BR<1.6);   /* none under a balance screw's head or washer (r 1.3), where they stood inside the head */
-    for(let k=0;k<60;k++){if(k%30===0||k%30===2||k%30===28)continue;const a=k/60*TAU;if(under(a))continue;hs.push([cylY(0.28,0.2,8),new THREE.Matrix4().compose(new THREE.Vector3((BR+0.05)*Math.cos(a),RY,(BR+0.05)*Math.sin(a)),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-a,Math.PI/2)),new THREE.Vector3(1,1,1))]);}mesh(R.balU,mergeGeo(hs),M.steelD); }   /* none at the arm ends or under the weights' screws */
-  const radial=(a,r0,len,rr,mat,seg=12,bore=0)=>{const q=mesh(R.balU,bore?ringGeo(rr,bore,len):cylY(rr,len,seg),mat,(r0+len/2)*Math.cos(a),RY,(r0+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);return q;};   /* bore: a nut's thread */
-  const BW=[],bscrew=(a,len,rr,mat,mg,kind,off,id,bore=0)=>BW.push({q:hn(radial(a,BR+off,len,rr,mat,12,bore),id),a,len,rr,mg,kind,off});   /* id: its parts-list line */
-  /* balance screws per the parts list (p. 82): 6 of 0.049 in head height (125-130 mg), 2 of 0.080 in (200-205 mg), 2 of 0.101 in (250-255 mg), in diametric
-     pairs about the quarters. The heads are 2.6 across, as Fig. 3 draws them against the rim; their masses (for the moment of inertia) need a dense metal at that size */
-  for(const c of[Math.PI/2,-Math.PI/2])for(const[d,hh,mg]of[[-0.5,1.24,127.5],[-0.25,2.57,252.5],[0,2.03,202.5],[0.25,1.24,127.5],[0.5,1.24,127.5]]){const id={127.5:'42171',202.5:'42173',252.5:'42174'}[mg];bscrew(c+d,hh,1.3,M.brass,mg,undefined,0,id);hn(radial(c+d,BR-RW-0.1,RW+0.1,0.35,M.brass,10),id,{sub:1});}   /* each with its thread in the rim's tapped hole */
-  /* 2 timing weights (93 mg) and 2 vernier timing weights (10.5 mg) beside the arm ends, each a nut on a screw in one of the rim's holes (Fig. 3). Drawn at
-     mid-travel, where the manual starts them (p. 70), off the rim by more than the 3 turns in that the rate panel allows */
-  const WT=2/60*TAU;
-  for(const c of[0,Math.PI])for(const[a,len,rr,mg,kind,off,sr]of[[c+WT,1.7,1.2,93,'t',0.55,0.4],[c-WT,1.3,0.65,10.5,'v',0.4,0.25]]){bscrew(a,len,rr,M.steelD,mg,kind,off,kind==='t'?'42176':'37115',sr+0.02);hn(radial(a,BR-1.5,2*off+len+1.55,sr,M.steel,10),kind==='t'?'42177':'42197');}   /* the weight a nut on its screw */
+  /* the rim's tapped holes, "uniformly spaced ... around the entire circumference" (Sec. II): 24 places 15 deg apart, numbered 1-13 round each half from an arm's end, as the
+     numbered balance block (Tool 54, Fig. 99) and Table IV (p. 74) number them. Hole 1 is the arm's end (the timing weight's screw), 7 the quarter (Table IV's moves are
+     symmetric about it: 3 to 4 as 11 to 10), 13 the other arm's end; 2 takes the vernier weight, 3-12 the balance screws. Both halves are numbered the same way round,
+     counterclockwise seen from the cock, so hole n of one is diametric to hole n of the other (KLUwI2UUCMQ 6:47.5, 6:52.5: the rim fitted as an ellipse, every hole and screw
+     within 1.5 deg of a 15 deg place). HA(h,n): hole n's angle on half h (0 from the arm's end at 0, 1 from π). The empty ones are one merged mesh, rebuilt by R.screws */
+  const HA=(h,n)=>h*Math.PI+(n-1)*TAU/24;R.holeA=HA;R.HOLES=[3,4,5,6,7,8,9,10,11,12];
+  const holeG=new THREE.Group();R.balU.add(holeG);let holeM=null;
+  const holesSet=used=>{const hs=[];for(const h of[0,1])for(const n of R.HOLES){if(used.has(n))continue;const a=HA(h,n);hs.push([cylY(0.28,0.2,8),new THREE.Matrix4().compose(new THREE.Vector3((BR+0.05)*Math.cos(a),RY,(BR+0.05)*Math.sin(a)),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-a,Math.PI/2)),new THREE.Vector3(1,1,1))]);}
+    holeG.visible=hs.length>0;if(!hs.length)return;const g=mergeGeo(hs);if(holeM){holeM.geometry.dispose();holeM.geometry=g;}else holeM=mesh(holeG,g,M.steelD);};   /* a group of their own: look() shows every mesh */
+  const radial=(a,r0,len,rr,mat,seg=12,bore=0,p=R.balU)=>{const q=mesh(p,bore?ringGeo(rr,bore,len):cylY(rr,len,seg),mat,(r0+len/2)*Math.cos(a),RY,(r0+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);return q;};   /* bore: a nut's thread */
+  /* 2 timing weights (93 mg) and 2 vernier timing weights (10.5 mg), each a nut on a screw (Fig. 3): the timing weights outside the rim at the arm's ends (hole 1), their
+     screws through the rim into the arm; the verniers inside the rim one hole on (hole 2), their screws' heads outside (KLUwI2UUCMQ 6:47.5, 6:53.0: a large slotted steel nut
+     at each arm's end, a small plain one inside the rim beside it). Drawn at mid-travel, where the manual starts them (p. 70), clear of the rim by more than the 3 turns
+     either way that the rate panel allows. W: the weights, d0 their centres' distance from the staff at mid-travel. The nuts' sizes are estimated */
+  const W=[],VO=0.6;
+  for(const h of[0,1]){const at=HA(h,1),av=HA(h,2);
+    W.push({kind:'t',a:at,len:1.7,rr:1.2,mg:93,d0:BR+0.55+0.85,q:hn(radial(at,BR+0.55,1.7,1.2,M.steelD,12,0.42),'42176')});hn(radial(at,BR-1.5,2*0.55+1.7+1.55,0.4,M.steel,10),'42177');
+    W.push({kind:'v',a:av,len:1.3,rr:0.65,mg:10.5,d0:BR-RW-VO-0.65,q:hn(radial(av,BR-RW-VO-1.3,1.3,0.65,M.steelD,12,0.27),'37115')});
+    hn(radial(av,BR-RW-VO-1.3-0.65,VO+1.3+0.65+RW+0.3,0.25,M.steel,10),'42197');hn(radial(av,BR,0.35,0.45,M.steel,10),'42197',{sub:1});}   /* the vernier's screw from inside the nut's furthest travel in, to its head outside the rim */
+  /* balance screws (pp. 82, 93): the parts list's 4-6 of 0.049 in head height (125-130 mg), 2 of 0.080 (200-205 mg) and 2 of 0.101 (250-255 mg), in diametric pairs. The
+     standard set is the restoration video's: four pairs, in holes 3, 5, 9 and 12 of each half (KLUwI2UUCMQ 6:47.5, 6:52.5; the longest heads in 9, about 2.6 mm side-on at
+     6:50.0-6:51.0; which of 3, 5 and 12 has the 0.080 in heads is estimated). The heads 3.3 across, 0.9-1.0 of the rim's height as the video shows them; their masses (the
+     parts list's) need a denser metal than brass at that size. Every hole 3-12 of both halves has a screw built in a group of its own, hidden but where a pair stands
+     (R.screws), its thread in the rim's tapped hole and a washer under its head shown with it (r 1.25, estimated) */
+  const BSZ={'0.040':[0.039,102.5,'42271'],'0.050':[0.049,127.5,'42171'],'0.060':[0.060,152.5,'42172'],'0.080':[0.080,202.5,'42173'],'0.100':[0.101,252.5,'42174']};
+  const BWA={'0.002':[0.002,4.5,'42181'],'0.003':[0.003,6.5,'42182'],'0.004':[0.004,8.5,'42183'],'0.006':[0.006,12.5,'42184'],'0.008':[0.008,16.5,'42185'],'0.010':[0.010,20.5,'42256']};
+  const SHR=1.65,SL={};R.BSZ=BSZ;R.BWA=BWA;
+  for(const h of[0,1])for(const n of R.HOLES){const a=HA(h,n),g=new THREE.Group();g.visible=false;R.balU.add(g);const wg=new THREE.Group();wg.visible=false;g.add(wg);
+    SL[h*100+n]={a,g,wg,len:1,q:radial(a,BR,1,SHR,M.brass,24,0,g),th:radial(a,BR-RW-0.1,RW+0.1,0.35,M.brass,12,0,g),wm:hn(radial(a,BR,1,1.25,M.steel,24,0.37,wg),'42181')};}
   /* moment of inertia of the uncut balance about the staff, in g·mm²: steel rim, hub and cap (7.9 mg/mm³), Invar arm (8.1), and the screws and weights at their
      parts-list masses, each spread along its drawn cylinder. The rim's holes, the weights' screws and the staff are left out */
   const I_FIX=(7.9*Math.PI*RH*(BR**4-(BR-RW)**4)/2+8.1*(2*BR-1)*1.1*2.4*((2*BR-1)**2+2.4**2)/12+7.9*Math.PI*(0.6*2.2**4+2.05*1.1**4+0.35*(2.2**4-1.15**4))/2)/1000;   /* rim, arm, and the hub's flange and boss and the cap (steel) */
-  const inertia=(xt,xv)=>{let I=I_FIX;for(const w of BW){const d=BR+w.off+w.len/2+(w.kind==='t'?xt:w.kind==='v'?xv:0);I+=w.mg*(d*d+w.len*w.len/12+w.rr*w.rr/4)/1000+(w.wmg?w.wmg*(BR+w.off/2)**2/1000:0);}return I;};   /* wmg: a washer under a screw's head (R.screws) */
+  const BS=[],mI=(mg,d,len,rr)=>mg*(d*d+len*len/12+rr*rr/4)/1000;
+  const inertia=(xt,xv)=>{let I=I_FIX;for(const w of W)I+=mI(w.mg,w.d0+(w.kind==='t'?xt:xv),w.len,w.rr);for(const w of BS)I+=mI(w.mg,BR+w.off+w.len/2,w.len,w.rr)+w.wmg*(BR+w.off/2)**2/1000;return I;};   /* wmg: a washer under a screw's head */
+  /* R.screws(pairs): the balance screws, a pair a list entry {n: its hole, 3-12; h: head height, a key of BSZ; w: washer under each head, a key of BWA or 0}, null for a pair
+     taken out (Op. 3; Tables II-IV on pp. 70, 74; the parts list's screws and washers, pp. 93, 99). R.screwStd is the standard set, R.pairs the list as last set; R.timing
+     then returns the moment with them. The heights are Table II's: the parts list's 0.121 in screw would reach the barrel bridge's cut round the balance (17.7 mm) */
+  R.screwStd=[{n:3,h:'0.080',w:0},{n:5,h:'0.050',w:0},{n:9,h:'0.100',w:0},{n:12,h:'0.050',w:0}];
+  R.screws=pairs=>{BS.length=0;for(const s of Object.values(SL))s.g.visible=false;const used=new Set();
+    for(const p of pairs){if(!p||used.has(p.n)||!BSZ[p.h]||!R.HOLES.includes(p.n))continue;used.add(p.n);const[hin,mg,id]=BSZ[p.h],[tin,wmg,wid]=p.w&&BWA[p.w]?BWA[p.w]:[0,0,null],t=tin*25.4,len=hin*25.4;
+      for(const h of[0,1]){const s=SL[h*100+p.n];s.g.visible=true;if(s.len!==len){s.q.geometry.dispose();s.q.geometry=cylY(SHR,len,24);s.len=len;}hn(s.q,id);hn(s.th,id,{sub:1});
+        const d=BR+t+len/2;s.q.position.set(d*Math.cos(s.a),RY,d*Math.sin(s.a));s.wg.visible=!!t;if(t){s.wm.scale.set(1,t,1);s.wm.position.set((BR+t/2)*Math.cos(s.a),RY,(BR+t/2)*Math.sin(s.a));hn(s.wm,wid);}
+        BS.push({len,rr:SHR,mg,off:t,wmg});}}
+    R.pairs=pairs.map(p=>p&&{...p});holesSet(used);};
+  R.screws(R.screwStd);
   /* the weights' thread pitch, set so that a full turn of a pair changes the rate by the manual's figures, about 40 s a day for the timing weights and 2.8 s
      for the verniers (p. 70). The period goes as √I, so moving a pair x mm out loses 86400·(dI/dx)·x/(2I) s a day */
-  const I0=inertia(0,0),dIdx=k=>BW.reduce((s,w)=>s+(w.kind===k?2*w.mg*(BR+w.off+w.len/2)/1000:0),0);
+  const I0=inertia(0,0),dIdx=k=>W.reduce((s,w)=>s+(w.kind===k?2*w.mg*w.d0/1000:0),0);
   R.pitch={t:40*2*I0/86400/dIdx('t'),v:2.8*2*I0/86400/dIdx('v')};
   /* timing(nt,nv): turns both timing weights nt turns out and both verniers nv (negative: in), so the balance stays in poise, and returns the new moment */
-  R.timing=(nt,nv)=>{const xt=nt*R.pitch.t,xv=nv*R.pitch.v;for(const w of BW)if(w.kind){const d=BR+w.off+w.len/2+(w.kind==='t'?xt:xv);w.q.position.set(d*Math.cos(w.a),RY,d*Math.sin(w.a));}return inertia(xt,xv);};
-  /* screw and washer changes (Op. 3, Tables II and III on p. 70; the parts list's screws and washers, pp. 93, 99): R.screws(heads, washers) gives each diametric pair of balance
-     screws (pair k: the k-th of the five about each quarter, in BW's order) a head height and a washer under each of its heads (keys of BSZ and BWA, inches; washer 0:
-     none), rebuilt where they stand; R.timing then returns the moment with them. The heights are Table II's: the parts list's 0.121 in screw would reach the barrel bridge's
-     cut round the balance (17.7 mm) with a washer under it. Washers r 1.0 under the heads (r 1.3); their size estimated */
-  const BSZ={'0.040':[0.039,102.5,'42271'],'0.050':[0.049,127.5,'42171'],'0.060':[0.060,152.5,'42172'],'0.080':[0.080,202.5,'42173'],'0.100':[0.101,252.5,'42174']};
-  const BWA={'0.002':[0.002,4.5,'42181'],'0.003':[0.003,6.5,'42182'],'0.004':[0.004,8.5,'42183'],'0.006':[0.006,12.5,'42184'],'0.008':[0.008,16.5,'42185'],'0.010':[0.010,20.5,'42256']};
-  const BS=BW.filter(w=>!w.kind);BS.forEach((w,i)=>{w.pair=i%5;w.h0=Object.keys(BSZ).find(k=>BSZ[k][1]===w.mg);w.h=w.h0;w.len0=w.len;w.wk=0;w.wmg=0;
-    const g=new THREE.Group();g.visible=false;R.balU.add(g);w.wg=g;w.wm=hn(mesh(g,ringGeo(1.0,0.37,1),M.steel),'42181');w.wm.rotation.set(0,-w.a,Math.PI/2);});   /* each washer in a group of its own, hidden with it (look() shows every mesh) */
-  R.screwStd=BS.slice(0,5).map(w=>w.h0);
-  R.screws=(heads,washers)=>{for(const w of BS){const h=heads[w.pair]||w.h0,k=washers[w.pair]||0,[hin,mg,id]=BSZ[h],[tin,wmg,wid]=k?BWA[k]:[0,0,null],t=tin*25.4,len=h===w.h0?w.len0:hin*25.4;   /* the standard heads keep their drawn heights, so putting them back restores the moment exactly */
-      if(h!==w.h){w.q.geometry.dispose();w.q.geometry=cylY(w.rr,len,12);w.q.userData.hn=id;}
-      Object.assign(w,{h,wk:k,len,mg,off:t,wmg});const d=BR+t+len/2;w.q.position.set(d*Math.cos(w.a),RY,d*Math.sin(w.a));
-      w.wg.visible=!!k;if(k){w.wm.scale.set(1,t,1);w.wm.position.set((BR+t/2)*Math.cos(w.a),RY,(BR+t/2)*Math.sin(w.a));w.wm.userData.hn=wid;}}};
+  R.timing=(nt,nv)=>{const xt=nt*R.pitch.t,xv=nv*R.pitch.v;for(const w of W){const d=w.d0+(w.kind==='t'?xt:xv);w.q.position.set(d*Math.cos(w.a),RY,d*Math.sin(w.a));}return inertia(xt,xv);};
+  /* Table IV (p. 74): the change in the temperature compensation, in s a day between 55 and 90 F (Op. 8), for one pair moved from the quarter (hole 7) to hole 8-12, under
+     head heights 0.120 ... 0.040 in (0.090 and 0.070: a screw and a washer). Every other move in the table is the difference of two of these, holes 3-6 mirroring 11-8
+     (invariants.py checks it). Each column fitted to all its 30 rows by least squares: the 0.040-0.100 in columns agree to 0.005 s, the 0.090 and 0.120 to 0.04 (their
+     7 to 9 rows, printed 0.96 and 1.26, disagree with the four other rows through hole 9; 7 to 10 under 0.090, printed 2.95, is a misprint for 2.05). R.T4(hh, n): the
+     figure for a pair at hole n against hole 7, hh its head's height and washer in inches, between the columns linearly */
+  const T4H=[0.120,0.100,0.090,0.080,0.070,0.060,0.050,0.040],T4={8:[0.31,0.26,0.24,0.22,0.21,0.19,0.16,0.13],9:[1.22,1.01,0.94,0.87,0.80,0.74,0.62,0.51],10:[2.65,2.20,2.06,1.90,1.76,1.61,1.35,1.11],
+    11:[4.51,3.75,3.51,3.25,3.00,2.75,2.30,1.90],12:[6.20,5.16,4.61,4.04,3.66,3.28,2.62,2.02]};
+  R.T4=(hh,n)=>{n=n<7?14-n:n;if(n===7)return 0;const r=T4[n];if(!r)return null;let i=0;while(i<T4H.length-2&&hh<T4H[i+1])i++;return r[i]+(r[i+1]-r[i])*(hh-T4H[i])/(T4H[i+1]-T4H[i]);};
   R.balS=new THREE.Group();R.balS.position.y=BY;R.balS.visible=false;R.staff.add(R.balS);
   mesh(R.balS,polyGeo([[BR-0.5,-1.1],[BR-0.5,1.1],[-(BR-0.5),1.1],[-(BR-0.5),-1.1]],1.4,[[0,0,0.45]]),M.steel,0,-0.7,0);mesh(R.balS,ringGeo(2.2,0.45,2.2),M.steel);   /* arm and hub, bored for the staff (a press fit, as the uncut balance's hub) */
   const span=160*D2R,band=(a0,r0,r1)=>{const s=new THREE.Shape(),N=48;for(let i=0;i<=N;i++){const a=a0+span*i/N;i?s.lineTo(r1*Math.cos(a),r1*Math.sin(a)):s.moveTo(r1*Math.cos(a),r1*Math.sin(a));}

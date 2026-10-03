@@ -1474,4 +1474,16 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Rate panel: the balance screws stood off the rim's holes.** The rim was
+  drilled with 60 holes 6° apart and the 10 screws stood 14.3° apart about the
+  quarters, off that grid, with the holes under their heads left out; the timing
+  weights stood 12° from the arm's ends and the verniers outside the rim. The
+  manual's numbered block (Fig. 99) and Table IV number the holes 1–13 round
+  each half with 7 on the quarter, and the restoration video (KLUwI2UUCMQ
+  6:47.5–6:53) shows 24 holes 15° apart, the timing weights at the arm's ends,
+  the verniers inside the rim one hole on, and four pairs of screws in holes 3,
+  5, 9 and 12. The rim now has those 24 places, the screws and weights stand in
+  them, the rim is 3.5 tall (the video) and 1.578 wide (refitted to 1,140) and
+  the heads 3.3 across. Keep: every screw and weight stands in a numbered hole,
+  hole 1 at the arm's end and 7 on the quarter, a pair in the same hole of each
+  half; `invariants.py` checks 1,140, Table IV and that a moved pair keeps it.
