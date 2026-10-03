@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 1.21.01 · 2026-10-03
+- The setup cover over the barrel is drawn as on real Model 21s: symmetric, its sides cut the same on either side
+- The setup ratchet, its click and the click's spring are their measured sizes: a smaller ratchet, the click pivoting nearer the arbor
+
 ## 1.21.00 · 2026-10-03
 - The balance's screws and weights sit in its 24 numbered holes, as a restored 1941 Model 21 shows them: the timing weights at the arm's ends, the small vernier weights inside the rim beside them
 - Rate panel: move a pair of balance screws to another hole, add a pair or take one out, and see what heat does to the rate (the manual's Table IV, with a temperature slider); the panel's settings are kept in the link
