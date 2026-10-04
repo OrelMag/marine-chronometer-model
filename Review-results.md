@@ -1723,6 +1723,19 @@ changes it only round its own arbors (1 below).
     "Norfolk balance brake", Norfolk Naval Shipyard, given as about 1948, though
     another source puts it in the war years). It is screwed down by the hex socket,
     not pressed as the model had it.*
+    *The arch against the hairspring (4 October 2026, `claude/navy-pins`): with the coils
+    as the video measures them (r 6.3, 6.47 to their outer edge at rest, 6.89 at full swing)
+    the arch's inner edge at 6.7 left them 0.1 mm at rest and ran 0.3 mm into them at full
+    swing (`fine.py --eval "__mv.userData.stop('navy')"`). On 2E11795's photograph, nearly
+    overhead, the two stand side by side at the spring's right side: the staff (the endstone)
+    at x 1020, the coils' edge 1133, the arch's inner edge 1160 (rows 1040-1090), so the arch's
+    inner edge is 1.24 times the coils' outer edge from the staff (1.20-1.29 with the
+    photograph's lean between the endstone's height and the arch's); the model had 1.02. The arch
+    is now drawn to that ratio (inner edge 8.0, legs 9.1 out, top 9.6). Still open: Delaney's
+    tracing gave the arch about 7.9 round the staff and its top 8.3 on the centre line, which
+    fits the ratio only if 7.9 is the inner edge (or the spring is about 5.5, against the
+    video's 6.2-6.6). Re-read the arch on Delaney's photograph, inner and outer edges, scaled
+    by the eyes.*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
