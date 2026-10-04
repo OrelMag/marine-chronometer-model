@@ -1029,7 +1029,7 @@ Contents:
   sources describe it working. Keep: the pins' end from `BAL_RH`, never a copy of
   the rim's height; locked, both pins on the rim's top edge (their lowest edge
   0.005 mm into it, under `fine.py`'s grid, so `--hold --eval
-  "__mv.userData.stop('navy')"` passes with nothing new); free, 0.5 mm clear.
+  "__mv.userData.stop('navy')"` passes with nothing new); free, 0.5 mm clear. `29cecd9`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
