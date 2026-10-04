@@ -1,0 +1,72 @@
+{
+ "anchor": "KLUwI2UUCMQ_13-44_now.json",
+ "frame": "f_KLUwI2UUCMQ_13-44.png",
+ "face_y": -23.76,
+ "target": [
+  1.6,
+  -15.0,
+  10.3
+ ],
+ "note": "KLUwI2UUCMQ 13:44 from above (train side), anchored on the train bridge's top face (TB_T). Picked at 3x on the 4K frame, about +-3 px: the balance lower setting's gilt edge, its jewel's centre and the two holes either side of it, on the balance lower bridge's slab, its top face 9.0 mm below the train bridge's top (LB_T). The face axes come out orthonormal at f 3200 (this shot is wider than 13:49.5); r 2.51-2.53 over f 2600-4000. Run video.py anchor KLUwI2UUCMQ_13-44_now.json first (re-anchored 4 October 2026 on the current holes, holes_trainBridge_4oct.json, and the barrel cut r 21.0: rim 0.44, cut 0.19 mm rms, C 0.97, T 1.08 mm)",
+ "picks": {
+  "gilt": {
+   "h": -9.0,
+   "px": [
+    [
+     1905,
+     1306.7
+    ],
+    [
+     2045,
+     1306.7
+    ],
+    [
+     1973.3,
+     1255
+    ],
+    [
+     1973.3,
+     1365
+    ],
+    [
+     1921.7,
+     1271.7
+    ],
+    [
+     2026.7,
+     1270
+    ],
+    [
+     1920,
+     1346.7
+    ],
+    [
+     2030,
+     1346.7
+    ]
+   ]
+  },
+  "jewel": {
+   "h": -9.0,
+   "px": [
+    [
+     1970.7,
+     1313.3
+    ]
+   ]
+  },
+  "holes": {
+   "h": -9.0,
+   "px": [
+    [
+     1965,
+     1221
+    ],
+    [
+     1975.7,
+     1383.3
+    ]
+   ]
+  }
+ }
+}
