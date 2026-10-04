@@ -330,6 +330,11 @@ Contents:
   the hands to the photograph's lengths (and the essay's copy of them). Keep: the dial
   95 mm; `r1`, `r2`, `ru` in `dialCanvas` in mm over `DIAL_R`. `162dfe5`
 
+- **The train wheels' rims, spokes and hubs were stock proportions**. Measured on the restoration video's flat wheels (23:45): the centre
+  wheel's hub 0.30 of its tip radius, rim from 0.79, spokes 0.10; the fourth's
+  0.36, 0.83, 0.07 (they were 0.18, about 0.86, 0.08). The third takes the
+  fourth's, estimated. Keep them measured (`WHEEL_PROP`; SHAPE-PASS.md, 3). `7ea6a5a`
+
 ## Winding and maintaining work
 
 - **Sustaining spring ran forward from its pin,** so the sustaining ratchet
@@ -630,6 +635,11 @@ Contents:
   (a second reading of its foot, 14:06 overhead, gives 21.7 mm at 71°). A first
   try that widened the old bar at a few points looked wrong; draw the blade from
   the measured edges, not by reshaping `pawlPts`. `88648e5`
+
+- **The fusee chain's pitch and the winding pawls estimated.** The chain's
+  pitch 1.7 mm (side photograph and 23:45; was 1.0), the winding pawls 2.0 wide
+  (19:12; were 0.9). The sustaining ratchet's 120 teeth and the barrel
+  arbor's square checked, unchanged. Keep them measured (SHAPE-PASS.md, 6). `9cd255c`
 
 ## Plates, bridges, screws and arbors
 
@@ -1083,6 +1093,13 @@ Contents:
   side, the blue mat). Now `M.clear` (`jewel()`'s `jm`). Keep: only the fourth's of the lower train
   bridge's two stones red. `98b48be`
 
+- **Pillars and screws estimated**. The
+  pillar screws' heads r 2.77 and 2.0 tall (side photograph; were r 2.9, 1.6);
+  the barrel pillar a cone from a wide foot to r 2.25 under a groove at 14.0 mm
+  (13:08; it was pinched at 6.3 mm, by eye); the detent block's screw flush in
+  a counterbore r 1.4 (10:46; it stood proud); the balance's timing screws end
+  2.7 mm outside the rim (6:50.0: 3.3 from its inner face). Keep them traced (SHAPE-PASS.md, 5). `fd368d4`
+
 ## Setup, case and gimbals
 
 - **Setup cover shaped as a 220° fan.** The photos show a bow-shaped plate
@@ -1188,6 +1205,12 @@ Contents:
   plate turned only through `turn()`, so the spring keeps its hook on the
   screw and its end on the pin; nothing under the bottom within 0.5 mm of it. `cce56d7`
 
+- **The case's bottom, the winding key and the box's handles drawn by eye.**
+  The case's bottom has the raised ring round the shield plate (47:35; the
+  plate r 33.3); the key is a pipe, cone, collar and flat paddle (0:45; it was
+  a T bar with balls); the side handles are a bail between two rosettes at the
+  gimbal pivot's height (0:45). Keep them traced (SHAPE-PASS.md, 7-8). `3d75292`
+
 ## Accuracy to the manual
 
 - **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,
@@ -1264,6 +1287,34 @@ after any geometry change (`BOM.md` regenerated). A thread or pin needs its
 hole in the part it holds (tapped) and the parts it passes (clear), or, where a
 hole across an extrusion or turned part can't be cut, the `embed` relation.
 An arbor needs pivots and shoulders; a stone its seat.
+
+- **The hands' outlines generic**. They were stock
+  shapes drawn for a 4 in dial and scaled; they are now traced on the
+  photographed Hamilton dial (`HAND_W`, core.js): the hour hand's swelling stem,
+  round-backed bulb and needle, 0.8 mm longer; the minute hand a long leaf, not a
+  parallel blade; the seconds hand a needle with an arrowhead counterpoise; the
+  UP-DOWN hand's boss r 1.86, not 0.9. Keep them traced, never redrawn by eye
+  (SHAPE-PASS.md, 1). `1589a10`
+
+- **The balance's hairspring, stud, arm and timing nuts estimated.** On the
+  restoration video (6:49.8-6:53, 41:58): the hairspring's coils r 6.3 and 9
+  turns (were r 5.5, 14); the stud's bar along a row of three measured holes in
+  the cock, 3.8, 6.9 and 10.4 mm from the staff, held by its screw in the middle
+  one and a steady pin at each end (was one pin, the screw 7.6 out along the
+  line to the cock screw), the cock's underside flat out past it (its cove from
+  11.3, was 9); the arm 1.9 wide (2.4); the timing nuts 2.3 long and 2.1 across
+  (1.7 and 2.4), so their travel is 2 turns either way, all the room the barrel
+  bridge's measured cut leaves (was 3); the balance upper setting gilt (41:58,
+  the cap off; the cap itself steel, as the top-view photograph shows). Keep
+  them measured (SHAPE-PASS.md, 2). `a06b0fe`
+
+- **The balance cock's arm swept into the body in an estimated cove.** On the
+  restoration video (44:02, the cock in place from its straight edge; 23:45)
+  the arm is flat underneath out to the body's wall, a square step, and its
+  underside and walls polished; the cove is gone. On the way: the stud's three
+  holes in the cock (the balance's entry) needed counterbores in the arm, which
+  stepGeo now cuts there as in the body. Keep the arm's underside traced
+  (SHAPE-PASS.md, 2). `65f770a`
 
 ## Rate panel
 
@@ -1583,6 +1634,13 @@ An arbor needs pivots and shoulders; a stone its seat.
   through arbors clear the wheels' tips in plan; exit code 1 otherwise. Keep:
   no positions or counts written into the tool. `66edc05`
 
+- **smoke.py failed under load on leaving the essay.** It clicked the 3D model
+  tab and checked after a fixed 2 s; the address is written 300 ms after a
+  change (writeHash), later when the machine is busy with other browser checks,
+  so it failed twice on 4 October 2026 though the switch is right (the hash
+  clears within 0.5 s, three trials). It now waits for the essay to close and
+  the hash to clear, up to 10 s. Wait on conditions, not fixed times, in the
+  browser checks. `4112b41`
 - **Two smoke-test checks failed now and then.** The key-winding check (close-up
   shown, sustaining spring relaxing) looked once, 2.5 s after the click, and the
   Model tab's (essay closed, hash rewritten) once, 2 s after it; on page time,

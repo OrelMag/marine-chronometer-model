@@ -106,8 +106,8 @@ const ESSAY=(()=>{
   /* ---------- the dial: the model's Hamilton dial (dialCanvas, core.js) with its hands (handShape), at time t (seconds, the hands stepping in half-seconds) and h hours since winding ---------- */
   let DIAL=null;const dial=()=>DIAL||(DIAL=dialCanvas('hamilton'));
   let HANDS=null;
-  const hands=()=>HANDS||(HANDS={hour:handShape(36.8*DK,1.2,2.5,'pear',0.68,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(45.1*DK,1.5,3,'plain',0,{boss:3.2,sq:2.44}).extractPoints(20),
-    sec:handShape(SEC_L,0.5,-10,'plain').extractPoints(20),ud:handShape(10.5*DK,0.6,2.5,'plain').extractPoints(20)});   /* the model's hands, movement.js: sizes in mm */
+  const hands=()=>HANDS||(HANDS={hour:handShape(0,0,0,HAND_W.hour,0,{boss:2.9,bore:2.33}).extractPoints(20),min:handShape(0,0,0,HAND_W.min,0,{boss:3.2,sq:2.44}).extractPoints(20),
+    sec:handShape(0,0,0,HAND_W.sec).extractPoints(20),ud:handShape(0,0,0,HAND_W.ud).extractPoints(20)});   /* the model's hands, movement.js: sizes in mm (HAND_W, core.js) */
   const udA=h=>UDA(clamp(h,0,RUN_H));   /* the up/down hand: UD_SWEEP degrees from UP to DOWN in 56 h (movement.js, UD) */
   function drawHand(x,p,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,-k);x.beginPath();
     for(const loop of[p.shape,...p.holes]){loop.forEach((v,i)=>i?x.lineTo(v.x,v.y):x.moveTo(v.x,v.y));x.closePath();}x.fill('evenodd');x.restore();}
@@ -191,7 +191,7 @@ const ESSAY=(()=>{
       else{const s=(t-0.04)/0.92;ang=TAU*N*s;r=Re;y=H*s;ox=Math.sin(Math.PI*s)*0.45*R*(th/(TAU*0.6));}
       const a=ang+th*(1-ang/(TAU*N));return v.set(r*Math.cos(a)+ox,y,-r*Math.sin(a));};
     return closeGeo(new THREE.TubeGeometry(c,Math.round(N*44),wire,6,false));}
-  const HS=[5.5,5.9,14,0.17,4.6];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the ends' radius (HS_R) */
+  const HS=[6.3,5.9,9,0.17,4.6];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the ends' radius (HS_R) */
 
   /* ---------- the balance and hairspring: T = 2π√(I/κ) ---------- */
   fig('eBal',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.5,dist:70,target:[4,1,0]}),M=G.M,A=ESC.A;

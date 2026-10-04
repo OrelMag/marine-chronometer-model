@@ -979,7 +979,7 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    a screw, at (-8.5, 27.7), where a pillar would stand in the fourth wheel.
    What it holds in the real movement is not settled (IDEAS.md 1.2; examined
    again against Figs. 29, 67 and 110 on 1 October 2026, still open).
-2. **Shape against the drawings and photographs**, part by part, not yet
+2. *Under way (4 October 2026, `claude/shape-pass`): every line triaged for its provenance, the work order and ledgers in **`SHAPE-PASS.md`**.* **Shape against the drawings and photographs**, part by part, not yet
    done. 44 web photographs were gathered (mostly all rights reserved: to be
    cited by URL, not committed). Candidates: the shield plate (Fig. 107 draws
    a disc and an open-ring spring; *now drawn so*, 2 October 2026, RESOLVED.md,
@@ -1019,7 +1019,7 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    (the hands on their arbors, the impulse jewel in its roller, pivots in their
    holes, the stud's steady pin, the sustaining spring's pin and others) are
    removed.
-5. `bom.py` in CI: about 5 minutes a run.
+5. *Done (4 October 2026, `claude/shape-pass`): `bom.py` runs in `ci.py --full`.* `bom.py` in CI: about 5 minutes a run.
 6. **The third arbor's place** (fidelity, open). Mapped through the centre,
    the fusee arbor and the wind indicator wheel (which land within 0.8 mm of
    the model), a photograph of a Model 21's dial side puts the third lower
@@ -1854,6 +1854,10 @@ changes it only round its own arbors (1 below).
     out), has its minute track at r 40.4-42.2, the seconds track r 17.9 meeting it at 6, and shows to r 45.9 inside the
     bezel, the model's bezel opening exactly: the 95 mm dial stands, and its print, at r 43.0-45.4, was 9 % too large.
     Now printed so, the hands to the photograph's lengths (`References/VIDEOS.md`, "The Hamilton dial's proportions").*
+    *The bridges' rims (4 October 2026, `claude/shape-pass`): the side photograph against the measured 87.57 mm plate puts them at least
+    38.5-39.4 mm out, the videos at 38.6-40.2, so the 40.5 stands. The top-view photograph's rims read 35.5 through its map, about 10 %
+    small against its own inner layout: that photograph is not to be used for sizes near the rim (topview.py's overlay shows a false
+    protrusion there). Its sunk screw 5 mm inside tb2 is read through the same map and does not outweigh the video's pillar: open.*
     Was open: the seconds hand and the dial's track. With the fourth at 21.6 the hand
     can be at most about 18 mm long (it must pass the hour wheel's pipe), so the seconds
     sub-dial can't meet this 95 mm dial's minute track at 6 as on the photographed dial

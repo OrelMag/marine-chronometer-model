@@ -45,5 +45,7 @@ msg = ("Geometry may have changed in " + hit + ". Before going on, isolate the p
        "render it alone with tools/isolate.py PART [--look yaw pitch dist x y z] [--ref IMAGE] (several views; the part's partName is in part('...') "
        "in movement.js), put it beside a real Model 21 (References/ photographs, a video frame from References/VIDEOS.md via tools/video.py frame, "
        "or the manual's figure), and say what matches, what differs and how sure each reading is. Where they disagree the model is wrong "
-       "(CLAUDE.md, Source of truth). If no part's shape changed (timing, a comment, a material), say so instead.")
+       "(CLAUDE.md, Source of truth). Every line you drew must be measured on such a source, not drawn by eye or for clearance: "
+       "trace its edges and side profile as points on the image (sheet the video for a side-on frame), never a stock form in their place, "
+       "with the source and numbers in its comment (CLAUDE.md, Build from measured lines). If no part's shape changed (timing, a comment, a material), say so instead.")
 print(json.dumps({"hookSpecificOutput": {"hookEventName": "PostToolUse", "additionalContext": msg}}))

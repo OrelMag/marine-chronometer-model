@@ -234,7 +234,7 @@ Before committing a change to the model:
    with `--site-url https://www.marinechronometermodel.com`, as the live site is, failing
    if building changes a built copy (commit what it writes), `escapement.js`, the type
    check, `smoke.py`, `invariants.py`, `solids.py`, `exploded.py` and `audit.py`.
-   `--full` adds `fine.py` and `maintaining.py`; `--views` renders every view before
+   `--full` adds `fine.py`, `maintaining.py` and `bom.py`; `--views` renders every view before
    and after the branch and prints the changed pixels; `--quick` is the first three only.
    Nothing runs on GitHub: merge a branch only when `ci.py` passes on it.
 7. **Record fixes.** If the change fixes a bug, add it to
