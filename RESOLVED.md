@@ -1114,6 +1114,15 @@ Contents:
   a counterbore r 1.4 (10:46; it stood proud); the balance's timing screws end
   2.7 mm outside the rim (6:50.0: 3.3 from its inner face). Keep them traced (SHAPE-PASS.md, 5). `fd368d4`
 
+- **The balance lower cap and setting 40 % too small**.
+  The cap was R 2.7 with its screws 1.9 out and a window r 1.1: the ratios read on 13:49.5,
+  scaled by an estimated screw spacing; the setting in the slab r 1.2, estimated. Measured
+  through `framecam.py` (13:49.5 from below, 13:44 from above): the cap R 4.46, its screws
+  3.25 either side of the jewel, its flat 2.78 out, its window r 1.87, the screws' heads r
+  0.85; the setting r 2.52; the slab's counterbore r 4.56 round the cap. Keep: the cap's sizes
+  and the setting's measured (`tools/anchors/cap_13-49.5.json`, `setting_13-44.json`), not
+  scaled from an estimate. HASH
+
 ## Setup, case and gimbals
 
 - **Setup cover shaped as a 220° fan.** The photos show a bow-shaped plate
