@@ -1611,6 +1611,14 @@ An arbor needs pivots and shoulders; a stone its seat.
   through arbors clear the wheels' tips in plan; exit code 1 otherwise. Keep:
   no positions or counts written into the tool. `66edc05`
 
+- **smoke.py failed under load on leaving the essay.** It clicked the 3D model
+  tab and checked after a fixed 2 s; the address is written 300 ms after a
+  change (writeHash), later when the machine is busy with other browser checks,
+  so it failed twice on 4 October 2026 though the switch is right (the hash
+  clears within 0.5 s, three trials). It now waits for the essay to close and
+  the hash to clear, up to 10 s. Wait on conditions, not fixed times, in the
+  browser checks. `4112b41`
+
 ## Essay
 
 - **The essay contradicted the model and itself.** Its last figure, "The whole
@@ -1643,10 +1651,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **smoke.py failed under load on leaving the essay.** It clicked the 3D model
-  tab and checked after a fixed 2 s; the address is written 300 ms after a
-  change (writeHash), later when the machine is busy with other browser checks,
-  so it failed twice on 4 October 2026 though the switch is right (the hash
-  clears within 0.5 s, three trials). It now waits for the essay to close and
-  the hash to clear, up to 10 s. Wait on conditions, not fixed times, in the
-  browser checks (Build, tools and docs).
+None at the moment.
