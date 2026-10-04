@@ -49,6 +49,8 @@ ALM.setDeltaT(null);{const dd=r=>ALM.deltaT(2000+(r.jd_ut-2451545)/365.25)-(r.dT
 
 {for(const[k,key]of[['Venus','venus'],['Mars','mars']]){let w=0,wu='';for(const r of REF.planets||[]){const t=tOf(r),b=ALM.planet(k,t),d=as3600(sep(b.ra,b.dec,r[key].ra,r[key].dec));if(d>w){w=d;wu=r.utc.slice(0,10);}}
   B[key]=w;chk(`${k}'s apparent place against Horizons, 1950-2049 (JPL's approximate elements: for sights, not lunars)`,w,k==='Venus'?60:120,'″',wu);}}
+{for(const[k,key]of[['Jupiter','jupiter'],['Saturn','saturn']]){let w=0,wu='';for(const r of REF.outer||[]){const t=tOf(r),b=ALM.planet(k,t),d=as3600(sep(b.ra,b.dec,r[key].ra,r[key].dec));if(d>w){w=d;wu=r.utc.slice(0,10);}}
+  B[key]=w;chk(`${k}'s apparent place against Horizons, 1950-2149 (its series fitted to DE440, tools/planets_fit.py)`,w,k==='Jupiter'?10:5,'″',wu);}}
 ALM.setDeltaT(null);
 {let wg=0,wd=0;for(let t=Date.UTC(1950,0,1);t<Date.UTC(2050,0,1);t+=8.37*864e5){const a=ALM.sun(t),h=ALM.sunHand(t);wg=Math.max(wg,Math.abs(n180(a.gha-h.gha))*60);wd=Math.max(wd,Math.abs(a.dec-h.dec)*60);}
  chk('the Sun by hand (the essay\'s formulas), 1950-2049: GHA (worst)',wg,1,'′');chk('the Sun by hand: declination (worst)',wd,1,'′');B.hand=Math.max(wg,wd);}

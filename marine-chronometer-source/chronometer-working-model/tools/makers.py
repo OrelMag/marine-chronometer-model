@@ -12,11 +12,18 @@ import json,pathlib,re,sys
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent;ROOT=MC.parent.parent
 BOM=json.loads((MC/'bom.json').read_text(encoding='utf-8'));LINES=BOM['lines'] if isinstance(BOM,dict) else BOM
 MD=(ROOT/'BOM.md').read_text(encoding='utf-8')
-fits={}
+fits={};names={}
 for row in MD.splitlines():
     if not row.startswith('| ') or row.startswith('| Idx') or row.startswith('|---'):continue
     c=[x.strip() for x in row.strip('|').split('|')]
-    if len(c)>=8:fits[c[1]+'|'+c[0]]=c[7].replace('<br>','; ')
+    if len(c)>=8:fits[c[1]+'|'+c[0]]=c[7].replace('<br>','; ');names.setdefault(c[1]+'|'+c[0],c[2])
+# the other side of each measured fit: a line another line's relation names (its pivot in this jewel, its screw in this plate) shows it on its own sheet
+taken={}
+for k,f in fits.items():
+    for seg in f.split('; '):
+        m=re.match(r'(in|round|on|mesh) ([\w.]+(?:/[\w.]+)*)(.*)',seg)
+        if not m:continue
+        for t in m.group(2).split('/'):taken.setdefault(t,[]).append(f'{names.get(k,k)}: {m.group(1)} it{m.group(3)}')
 # materials: the manual's first (exact Hamilton numbers or names), then practice by kind of part (literature)
 MANUAL={'42188':('Elinvar','the manual (Secs. I, II)','as formed and heat-treated by the maker on its form (Hamilton’s US 2,457,631); its thermoelastic coefficient set by that treatment to cancel the balance’s'),
  'trip':('Elinvar','the manual (Sec. II)','as rolled; stoned to adjust (Tool 10)'),
@@ -57,11 +64,11 @@ def material(l):
 out=[]
 for l in LINES:
     l={k:(v if v is not None else '') for k,v in l.items()};m=material(l);out.append({'id':l['id'],'idx':l.get('idx',''),'no':l.get('no',''),'name':l.get('name',''),'qty':l.get('qty',''),'part':l.get('part',''),'fn':l.get('fn',''),
-      'fit':fits.get(l.get('no','')+'|'+l.get('idx',''),''),'mat':m[0],'msrc':m[1],'treat':m[2],'cls':m[3]})
+      'fit':fits.get(l.get('no','')+'|'+l.get('idx',''),'') or ('takes '+'; '.join(taken[l['id']][:6])+(f'; and {len(taken[l["id"]])-6} more' if len(taken[l['id']])>6 else '') if l['id'] in taken else 'not measured on the model: see its function, '+l.get('fn','')),'mat':m[0],'msrc':m[1],'treat':m[2],'cls':m[3]})
 js=('/* makers.js: the maker’s sheets’ data, one entry a line of the manual’s parts list (Sec. XI): its number, name, units, card, function, the fit bom.py measured\n'
     '   on the model, and its material, finish and heat treatment (the manual’s where it names them, else practice: cls). Written by tools/makers.py from bom.json and\n'
     '   BOM.md; do not edit by hand. Declares only MAKERS */\n"use strict";\nconst MAKERS='+json.dumps(out,ensure_ascii=False,separators=(',',':'))+';\n')
 dst=MC/'js'/'makers.js'
 if '--check' in sys.argv:
     ok=dst.exists() and dst.read_text(encoding='utf-8')==js;print('makers.js','up to date' if ok else 'stale: run python makers.py');sys.exit(0 if ok else 1)
-dst.write_text(js,encoding='utf-8',newline='\n');print('wrote',dst.relative_to(ROOT),len(out),'lines,',sum(1 for o in out if o['fit']),'with measured fits,',sum(1 for o in out if o['cls']=='manual'),'materials from the manual')
+dst.write_text(js,encoding='utf-8',newline='\n');print('wrote',dst.relative_to(ROOT),len(out),'lines,',sum(1 for o in out if o['fit'] and not o['fit'].startswith('not measured')),'with measured fits,',sum(1 for o in out if o['cls']=='manual'),'materials from the manual')
