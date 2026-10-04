@@ -330,6 +330,11 @@ Contents:
   the hands to the photograph's lengths (and the essay's copy of them). Keep: the dial
   95 mm; `r1`, `r2`, `ru` in `dialCanvas` in mm over `DIAL_R`. `162dfe5`
 
+- **The train wheels' rims, spokes and hubs were stock proportions**. Measured on the restoration video's flat wheels (23:45): the centre
+  wheel's hub 0.30 of its tip radius, rim from 0.79, spokes 0.10; the fourth's
+  0.36, 0.83, 0.07 (they were 0.18, about 0.86, 0.08). The third takes the
+  fourth's, estimated. Keep them measured (`WHEEL_PROP`; SHAPE-PASS.md, 3). `7ea6a5a`
+
 ## Winding and maintaining work
 
 - **Sustaining spring ran forward from its pin,** so the sustaining ratchet
@@ -1651,8 +1656,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The train wheels' rims, spokes and hubs were stock proportions** (Going
-  train). Measured on the restoration video's flat wheels (23:45): the centre
-  wheel's hub 0.30 of its tip radius, rim from 0.79, spokes 0.10; the fourth's
-  0.36, 0.83, 0.07 (they were 0.18, about 0.86, 0.08). The third takes the
-  fourth's, estimated. Keep them measured (`WHEEL_PROP`; SHAPE-PASS.md, 3).
+None at the moment.
