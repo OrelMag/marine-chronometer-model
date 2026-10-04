@@ -1682,4 +1682,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The gimbals' lock nuts, the latch's head and the box's brass corners drawn
+  by eye.** The four lock nuts r 8.5 (were 4.2-5) and the latch's clamping head
+  r 8.5 (was 2.0), from 1:15 against the bezel and Figs. 1, 11 and 106; the
+  brass corners short caps near the top and at the foot of each edge (Fig. 1;
+  were full-height strips). The box's size checked against sale listings
+  (190-197 mm): unchanged. Keep them measured (SHAPE-PASS.md, gaps 1).
