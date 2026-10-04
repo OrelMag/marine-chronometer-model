@@ -197,18 +197,18 @@ function stepGeo(out,c,r,tA,tB,holes,cv){
   const circ=(x,z,rr)=>{const k=Math.max(16,Math.ceil(TAU*rr/0.2)),q=[];for(let i=0;i<k;i++){const t=i/k*TAU;q.push([x+rr*Math.cos(t),z+rr*Math.sin(t)]);}return q;};
   const hA=holes.filter(h=>d(h)<r),hB=holes.filter(h=>d(h)>=r),P=[],U=[];hA.forEach(h=>{if(d(h)+h[2]>r0)console.warn('stepGeo: a hole in the cove');});
   const tri=(a,b,e,ua,ub,ue)=>{P.push(...a,...b,...e);U.push(...ua,...ub,...ue);};
-  const face=(poly,hs,y,up)=>{const Y=typeof y==='function'?y:()=>y,V=v=>new THREE.Vector2(v[0],v[1]),T=THREE.ShapeUtils.triangulateShape(poly.map(V),hs.map(h=>h.map(V))),all=[...poly,...hs.flat()];   /* up: faces -y (the top) */
+  const face=(poly,hs,y,up,uv=p=>[p[0],-p[1]])=>{const Y=typeof y==='function'?y:()=>y,V=v=>new THREE.Vector2(v[0],v[1]),T=THREE.ShapeUtils.triangulateShape(poly.map(V),hs.map(h=>h.map(V))),all=[...poly,...hs.flat()];   /* up: faces -y (the top) */
     for(const[i,j,k]of T){const[a,b,e]=[all[i],all[j],all[k]],cr=(b[0]-a[0])*(e[1]-a[1])-(b[1]-a[1])*(e[0]-a[0]),f=(cr>0)===up?[a,b,e]:[a,e,b];
-      tri(...f.map(p=>[p[0],Y(p),p[1]]),...f.map(p=>[p[0],-p[1]]));}};
-  const rc=Math.cos(STRIPE_ANGLE),rs=Math.sin(STRIPE_ANGLE),uw=p=>{const t=p[0]*rc-p[1]*rs;return[-rs*38.75+t*rc,rc*38.75+t*rs];};   /* walls: along one ridge's crest of the stripes (38.75 mm across them), so they read polished, as the cock's are */
+      tri(...f.map(p=>[p[0],Y(p),p[1]]),...f.map(uv));}};   /* uv: the stripes' mapping (the top's), or uw: plain polished */
+  const rc=Math.cos(STRIPE_ANGLE),rs=Math.sin(STRIPE_ANGLE),uw=p=>{const t=p[0]*rc-p[1]*rs;return[-rs*38.75+t*rc,rc*38.75+t*rs];},pol=p=>[-rs*38.75+p[0]*1e-3,rc*38.75+p[1]*1e-3];   /* pol: a face polished all over, the stripes' map read at one crest (a 2-D patch of it: a 1-D map leaves the normal map's tangents undefined) */   /* walls: along one ridge's crest of the stripes (38.75 mm across them), so they read polished, as the cock's are */
   const wall=(p,q,y0,y1,outward,y1q=y1)=>{const[a,b]=outward?[p,q]:[q,p],[ya,yb]=outward?[y1,y1q]:[y1q,y1],ua=uw(a),ub=uw(b);   /* a quad p->q from y0 down to y1 at p (y1q at q), facing to the right of p->q when outward */
     const A0=[a[0],y0,a[1]],B0=[b[0],y0,b[1]],A1=[a[0],ya,a[1]],B1=[b[0],yb,b[1]];
     tri(A0,A1,B1,ua,ua,ub);tri(A0,B1,B0,ua,ub,ub);};
   const cw=THREE.ShapeUtils.area(O.map(v=>new THREE.Vector2(v[0],v[1])))<0,loop=(L,f)=>{for(let k=0;k<L.length;k++)f(L[k],L[(k+1)%L.length]);};
   const cbr=h=>h[3]?circ(h[0],h[1],h[3]):circ(h[0],h[1],h[2]);
   face(O,[...hA.map(cbr),...hB.map(cbr)],0,true);face(BP,hB.map(h=>circ(...h)),tB,false);
-  face([...A.slice(ia[m],ib[m]+1),...ARCS[m]],hA.map(h=>circ(...h)),tA,false);   /* the arm's underside within the last level */
-  for(let j=0;j<m;j++)face([...A.slice(ia[j],ia[j+1]+1),...ARCS[j+1].slice().reverse(),...A.slice(ib[j+1],ib[j]+1),...ARCS[j]],[],prof,false);   /* the cove, band by band */
+  face([...A.slice(ia[m],ib[m]+1),...ARCS[m]],hA.map(h=>circ(...h)),tA,false,pol);   /* the arm's underside within the last level, plain (the video's undersides are) */
+  for(let j=0;j<m;j++)face([...A.slice(ia[j],ia[j+1]+1),...ARCS[j+1].slice().reverse(),...A.slice(ib[j+1],ib[j]+1),...ARCS[j]],[],prof,false,pol);   /* the cove, band by band, polished as on the video (23:45, 41:58) */
   for(const h of[...hA,...hB].filter(h=>h[3])){const R=circ(h[0],h[1],h[3]),I=circ(h[0],h[1],h[2]),F=[...R];face(F,[I],h[4],true);}   /* the counterbore's floor (in the arm or the body) */
   for(let k=0;k<A.length-1;k++)wall(A[k],A[k+1],0,prof(A[k]),!cw,prof(A[k+1]));   /* the arm's edge, down to its underside */
   for(let k=0;k<B.length-1;k++){wall(B[k],B[k+1],0,tS,!cw);wall(B[k],B[k+1],tS,tB,!cw);}   /* the body's, split at tS where the arm's underside meets it */
@@ -968,7 +968,7 @@ function buildMovement(M){
     for(let i=1;i<24;i++){const u=i/24,v=1-u,w=[v*v*v,3*v*v*u,3*v*u*u,u*u*u];q.push([0,1].map(e=>w[0]*P0[e]+w[1]*P1[e]+w[2]*P2[e]+w[3]*P3[e]));}return[...o.slice(0,k),...q];};
   /* the arm's underside sweeps down into the body (41:58, 23:45): a cove from 9 mm round the staff, a quarter circle down to 7.6 mm under the top at the step (1 mm over
      the balance's top, 8.6 down; the hairspring keeps under the flat part, within 7.1 mm), the step's wall then going on down to the train bridge */
-  R.cock=mesh(ck,stepGeo(ckEdge(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.3),add(L.B,EPu,-3.0),5.2)])),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.8,0.8).slice(0,3),2.95,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),[...hC(...SPS,0.8).slice(0,3),0.9,0.45],[...SPHa,0.3],[...SPHc,0.3]],{r0:11.3,tS:7.6,n:12}),M.plate,0,CK_T,0);   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
+  R.cock=mesh(ck,stepGeo(ckEdge(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.3),add(L.B,EPu,-3.0),5.2)])),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.8,0.8).slice(0,3),2.95,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),[...hC(...SPS,0.8).slice(0,3),0.9,0.45],[...SPHa,0.3],[...SPHc,0.3]]),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath out to the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the arm's underside meets the body in a square step, the space under it open from the barrel bridge's horn, r 16.4, to the body's wall, 18.6; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.steel,...[L.B[0],0,L.B[1]]),'42162.bu');
   hn(mesh(ck,stoneGeo(0.95,0.22,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone */
