@@ -191,7 +191,7 @@ const ESSAY=(()=>{
       else{const s=(t-0.04)/0.92;ang=TAU*N*s;r=Re;y=H*s;ox=Math.sin(Math.PI*s)*0.45*R*(th/(TAU*0.6));}
       const a=ang+th*(1-ang/(TAU*N));return v.set(r*Math.cos(a)+ox,y,-r*Math.sin(a));};
     return closeGeo(new THREE.TubeGeometry(c,Math.round(N*44),wire,6,false));}
-  const HS=[6.3,5.9,9,0.17,4.6];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the ends' radius (HS_R) */
+  const HS=[6.3,5.9,9,0.17,4.6,4.43];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
 
   /* ---------- the balance and hairspring: T = 2π√(I/κ) ---------- */
   fig('eBal',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.5,dist:70,target:[4,1,0]}),M=G.M,A=ESC.A;
@@ -204,7 +204,7 @@ const ESSAY=(()=>{
     range(ins[0],v=>{m=v;bal.userData.S.forEach(o=>o.scale.set(Math.sqrt(v),1,Math.sqrt(v)));upd();return '×'+v.toFixed(2);});range(ins[1],v=>{k=v;upd();return '×'+v.toFixed(2);});
     q('.slow',P).addEventListener('change',e=>slow=e.target.checked);play(q('.play',P),()=>going,v=>going=v);
     return dt=>{if(going){ph+=dt*(slow?0.2:1)/(0.5*Math.sqrt(m/k));f.dirty=true;}if(!f.dirty)return;f.dirty=false;
-      const th=A*Math.sin(TAU*ph);bal.rotation.y=th;spr.geometry.dispose();spr.geometry=springGeo(HS[0],HS[1],HS[2],th,HS[3]*Math.cbrt(k),HS[4],HS[4]);V.render();};},'3d');
+      const th=A*Math.sin(TAU*ph);bal.rotation.y=th;spr.geometry.dispose();spr.geometry=springGeo(HS[0],HS[1],HS[2],th,HS[3]*Math.cbrt(k),HS[5],HS[4]);V.render();};},'3d');
 
   /* ---------- the hairspring close up: terminal curves or plain ends ---------- */
   fig('eSpr',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.95:0.6,yaw:0.45,pitch:0.28,dist:42,target:[0,4.6,0]}),M=G.M,R=5.5,H=9,N=10;
