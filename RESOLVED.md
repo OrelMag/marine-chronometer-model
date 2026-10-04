@@ -1344,16 +1344,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   stepGeo now cuts there as in the body. Keep the arm's underside traced
   (SHAPE-PASS.md, 2). `65f770a`
 
-- **The hairspring drawn a third too large** (the balance; Review-results.md,
+- **The hairspring drawn a fifth too large** (the balance; Review-results.md,
   25). Its coils were r 6.3, read on the restoration video side-on against the
   rim "between its ends", which the gloves and a timing weight hide, and against a
   disc taken for the impulse roller. Against the rim in one picture each, the
-  manual's Fig. 2, the video side-on (the rim's radius fitted to its holes) and
-  face-on, and two photographs give the coils' outer edge 4.2-5.8, median 5.0. Now
-  r 4.8, the collet scaled with it. With the Navy's brake fitted, its arch, which
-  the coils ran into at full swing, now clears them by about 1.3 mm. Keep: the
-  radius read against the rim's fitted radius or ellipse, never against its
-  visible ends; the collet scaled with the coil (CKS). Its turns were 9, from
+  video side-on (the rim's edge where it turns, behind the weight) and face-on,
+  the manual's Fig. 2 and two photographs give the coils' outer edge 4.7-5.8,
+  median 5.26. Now r 5.1, the collet scaled with it (a reading of r 4.8 the same
+  day fitted the rim to its near side's holes, which perspective spreads). With
+  the Navy's brake fitted, its arch, which the coils ran into at full swing, now
+  clears them by about 1 mm. Keep: the radius read against the rim's turning
+  edge or its fitted ellipse, never against ends a glove or weight may hide; the collet scaled with the coil (CKS). Its turns were 9, from
   wires counted 26 px apart on the video, every second one: 13 wires down each
   side, so 12 turns. Keep: count the wires by their period over the whole stack. `9c8fdc3`
 
