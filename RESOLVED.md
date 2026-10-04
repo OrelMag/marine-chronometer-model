@@ -1651,4 +1651,8 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The train wheels' rims, spokes and hubs were stock proportions** (Going
+  train). Measured on the restoration video's flat wheels (23:45): the centre
+  wheel's hub 0.30 of its tip radius, rim from 0.79, spokes 0.10; the fourth's
+  0.36, 0.83, 0.07 (they were 0.18, about 0.86, 0.08). The third takes the
+  fourth's, estimated. Keep them measured (`WHEEL_PROP`; SHAPE-PASS.md, 3).

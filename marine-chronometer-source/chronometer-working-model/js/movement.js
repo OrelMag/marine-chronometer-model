@@ -88,6 +88,13 @@ const LB_LO2=[[5.54, 4.14], [5.18, 4.15], [4.46, 4.19], [4.1, 4.22], [3.38, 4.3]
    56 hours", and with the fusee arbor's pinion of 12 sweeps the UP-DOWN hand 313.6° in 56 h, as the photographed dial's 315.7°; 13 (with 13) would fit the dial
    and the manual's seven half turns a day but run 60.6 h. Every count shown in the page (labels, part cards, walkthrough tables) comes from here */
 const TRAIN={fu:90,cp:14,cw:90,tp:12,tw:80,fp:10,fw:75,ep:10,ew:16};
+/* the train wheels' proportions [hub, rim's inner edge, spoke width] as fractions of the tip radius, measured on KLUwI2UUCMQ 23:45 (4K; the wheels lying flat on the mat, each
+   rectified by its tips' ellipse from video.py count, identified by their sizes against each other and their counts): sections through the gaps between the spokes and across the
+   spokes at 0.45-0.65 of the radius, edges at half the contrast against the blue mat. The centre wheel: hub 0.30 (0.28-0.31 over three gaps), rim from 0.79 (0.78-0.80), spokes
+   0.10 (0.094-0.109, three spokes); the fourth: hub 0.36 (three gaps), rim from 0.83 (one gap; the pale rim against the mat hides the others), spokes 0.07 (four). The third wheel
+   lies tilted on its arbor there and blurred, its sections unreadable: given the fourth's, the wheel of its size (estimated). Until 4 October 2026 all three had hub 0.18, rim 0.09
+   of the tip radius below the roots and spokes 0.08 (0.9 mm at least): stock proportions */
+const WHEEL_PROP={cw:[0.30,0.79,0.10],fw:[0.36,0.83,0.07],tw:[0.36,0.83,0.07]};
 const FW_SP=5;   /* the fourth wheel's spokes (Figs. 29, 110: the three train wheels have five each); the train-blocking screw's dog point stands between them */
 const MW={cp:14,mw:56,mp:18,hw:54};   /* motion work: cannon pinion 14 : minute wheel 56, minute pinion 18 : hour wheel 54, counted on C Spinner's video (the wheels lying whole on
    the mat, 23:45-23:46; the minute pinion's 18 leaf ends on the wheel's back, 9:06; the cannon pinion's 14 forced by the ratio of 12: References/VIDEOS.md) */
@@ -697,9 +704,9 @@ function buildMovement(M){
     R.spWire(R.spawl.userData.base); }
   /* ---------- going train (modules from MOD, 0.314 / 0.245 / 0.249; counts in TRAIN) ---------- */
   const m=MOD.train;
-  const cw=part('cw',-8);R.cw=hn(arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.36,th:0.7,spokes:5,collet:1.3,cside:1,cp:0.3,mate:TRAIN.tp},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.53,th:1.54},prof:[[TB_T-0.1,0.5],[TB_U+0.025,0.75],[y0-0.125,0.5],[5.45+DD]]}),'42068');   /* pivots r 0.5 in the bushings, shoulders 0.025 off them; the lower pivot runs on through the dial for the cannon pinion */
-  const tw=part('tw',-4);R.tw=hn(arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-4.535,th:0.65,spokes:5,cside:1,cp:0.2,mate:TRAIN.fp},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.385,th:0.95},prof:[[TB_T-0.1,0.3],[TB_U+0.025,0.55],[LT_H-2.025,0.25],[LT_H-1.55]]}),'42071');
-  const fw=part('fw',-30);R.fw=hn(arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-7.46,th:0.9,spokes:FW_SP,cside:-1,mate:TRAIN.ep},pin:{n:TRAIN.fp,m,y:-5.51,th:2.9},prof:[[LB_T+2.56,0.25],[LB_T+3.025,0.55],[LT_H-2.025,0.25],[4.6+DD]]}),'42073');   /* its lower pivot runs on through the jewel and the dial for the second hand */
+  const cw=part('cw',-8);R.cw=hn(arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.36,th:0.7,spokes:5,prop:WHEEL_PROP.cw,collet:1.3,cside:1,cp:0.3,mate:TRAIN.tp},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.53,th:1.54},prof:[[TB_T-0.1,0.5],[TB_U+0.025,0.75],[y0-0.125,0.5],[5.45+DD]]}),'42068');   /* pivots r 0.5 in the bushings, shoulders 0.025 off them; the lower pivot runs on through the dial for the cannon pinion */
+  const tw=part('tw',-4);R.tw=hn(arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-4.535,th:0.65,spokes:5,prop:WHEEL_PROP.tw,cside:1,cp:0.2,mate:TRAIN.fp},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.385,th:0.95},prof:[[TB_T-0.1,0.3],[TB_U+0.025,0.55],[LT_H-2.025,0.25],[LT_H-1.55]]}),'42071');
+  const fw=part('fw',-30);R.fw=hn(arbor(fw,M,...L.F,{wheel:{n:TRAIN.fw,m:MOD.fourth,y:-7.46,th:0.9,spokes:FW_SP,prop:WHEEL_PROP.fw,cside:-1,mate:TRAIN.ep},pin:{n:TRAIN.fp,m,y:-5.51,th:2.9},prof:[[LB_T+2.56,0.25],[LB_T+3.025,0.55],[LT_H-2.025,0.25],[4.6+DD]]}),'42073');   /* its lower pivot runs on through the jewel and the dial for the second hand */
   const E=ESC,ew=part('escW',-41,true);
   R.esc=hn(arbor(ew,M,E.EX*ES,0,{pin:{n:TRAIN.ep,m:MOD.fourth,y:-6.96,th:2.0},prof:[[TB_T+SEAT_D+0.025,0.2],[TB_T+SEAT_D+0.6,0.55],[-0.6,0.2],[-0.025]]}),'42076');   /* pivots r 0.2 in the olive-hole jewels, ends 0.025 off the endstones (Op. 69); the pinion runs from the fourth wheel toward the plate, 1.1 mm above the third wheel's teeth, which pass under it */
   R.esc.userData.wheel=escapeWheel(R.esc,M,ES,EY,E);

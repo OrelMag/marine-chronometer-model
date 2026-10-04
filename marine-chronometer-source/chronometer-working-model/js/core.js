@@ -403,7 +403,8 @@ function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.f
    BS 978 Part 2's proportions (the manual gives no profiles: estimated): a wheel's tooth 1.41 m thick at the pitch circle, radial flanks inside it, an epicycloidal
    addendum rolled by a circle half its pinion's pitch radius (o.mate leaves, default 10), capped at 1.15 m; a pinion's leaf (20 or fewer) 1.05 m thick, radial
    flanks and a round tip (addendum 0.525 m); both 1.3 m deep below the pitch circle, clear of the other's addendum. o.ratchet: a ratchet's saw teeth.
-   userData: ro (tip radius), ri (root), hub (the spokes' hub radius) */
+   userData: ro (tip radius), ri (root), hub (the spokes' hub radius). o.prop [hub, rim, spoke]: a spoked wheel's hub radius, its rim's inner radius and its spokes' width,
+   as fractions of its tip radius (measured on a wheel lying flat: WHEEL_PROP, movement.js), in place of the default proportions */
 function gearGeo(n,m,th,o={}){
   const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95,ri=rp-1.3*m;let ro;
   const root=(a0,a1)=>{for(let k=1;k<3;k++)pts.push([ri,a0+(a1-a0)*k/3]);};   /* the root between two teeth, rounded */
@@ -419,8 +420,8 @@ function gearGeo(n,m,th,o={}){
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b]);for(const[r,a]of ep)pts.push([r,c-b+a]);for(let k=ep.length-1;k>=0;k--){const[r,a]=ep[k];if(a<b-1e-9||k<ep.length-1)pts.push([r,c+b-a]);}pts.push([ri,c+b]);root(c+b,c+p-b);}}
   let xy=pts.map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);if(o.flip)xy=xy.map(([x,y])=>[x,-y]).reverse();
   const s=new THREE.Shape();s.moveTo(...xy[0]);for(let i=1;i<xy.length;i++)s.lineTo(...xy[i]);s.closePath();
-  const R0=o.hub??Math.max(1.6,roS*0.18);
-  if(o.spokes){const R1=ri-(o.rim??Math.max(0.9,roS*0.09)),sw=o.sw??Math.max(0.9,roS*0.08);
+  const P=o.prop,R0=o.hub??(P?P[0]*roS:Math.max(1.6,roS*0.18));
+  if(o.spokes){const R1=P?P[1]*roS:ri-(o.rim??Math.max(0.9,roS*0.09)),sw=P?P[2]*roS:o.sw??Math.max(0.9,roS*0.08);
     if(R1>R0+1)for(let j=0;j<o.spokes;j++){const a0=j/o.spokes*TAU,a1=(j+1)/o.spokes*TAU,d1=Math.asin(Math.min(0.9,sw/2/R1)),d0=Math.asin(Math.min(0.9,sw/2/R0));
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
@@ -440,7 +441,7 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
 function arbor(parent,M,x,z,o){
   const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
   let wy=null,cy=null;   /* the wheel's and the collet's y ranges, and the collet's radius, for the check below */
-  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
+  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate,prop:w.prop}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
     const gu=g.userData.wheel.geometry.userData;wy=[w.y-th/2,w.y+th/2,w.spokes===0?gu.ro:gu.hub];
     /* cside ±1: collet on that side of the wheel only, cp proud of it there (0.6) and 0.05 proud of the other face, not flush with it */
     if(w.collet!==0){const cp=w.cp??0.6,h=w.cside?th+0.05+cp:th+1.2,c=w.y+(w.cside||0)*(cp-0.05)/2;mesh(g,cylY(w.collet||1.6,h,20),M.brass2,0,c,0);cy=[c-h/2,c+h/2,w.collet||1.6];}}
