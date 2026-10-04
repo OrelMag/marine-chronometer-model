@@ -1326,7 +1326,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   now ends 0.1 mm inside the clamp, the clamp's lower jaw runs 0.1 mm under the
   tongue and the hub stands 0.05 mm proud of the plate. Keep: a piece set into
   another ends inside it or stands proud of it, never flush with one of its
-  faces (`audit.py` doesn't see this within one part).
+  faces (`audit.py` doesn't see this within one part). `e701c2f`
 - **Lifted views at 80 fps on a fast desktop, 15 on a phone.** Once
   every open tube went through `closeGeo` (every part a closed solid), the
   hairspring, rebuilt every frame the balance turns, paid for it: `closeGeo`
