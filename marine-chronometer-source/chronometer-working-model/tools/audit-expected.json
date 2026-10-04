@@ -1,5 +1,6 @@
 {
  "movement": {
+  "bal:Extrude | spr:Buffer | --28.60": 1,
   "barrel:Lathe | barrel:Box | +-6.00": 3,
   "barrelBridge:Extrude | barrelBridge:Cylinder | +-23.76": 1,
   "barrelBridge:Extrude | barrelBridge:Extrude | +-23.76": 2,
@@ -35,6 +36,8 @@
   "hands:Extrude | motion:Cylinder | -7.44": 1,
   "hands:Extrude | motion:Extrude | +8.78": 1,
   "lockArm:Extrude | lockArm:Lathe | +-27.18": 2,
+  "lockArm:Extrude | spr:Buffer | +-31.30": 1,
+  "lockArm:Extrude | spr:Buffer | --31.74": 1,
   "lockArm:Lathe | lockArm:Extrude | --38.06": 1,
   "lockArm:Lathe | lockArm:Lathe | +-27.18": 1,
   "lowerBridge:Extrude | lowerBridge:Cylinder | +-11.90": 1,

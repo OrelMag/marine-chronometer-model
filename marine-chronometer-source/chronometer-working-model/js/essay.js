@@ -191,7 +191,7 @@ const ESSAY=(()=>{
       else{const s=(t-0.04)/0.92;ang=TAU*N*s;r=Re;y=H*s;ox=Math.sin(Math.PI*s)*0.45*R*(th/(TAU*0.6));}
       const a=ang+th*(1-ang/(TAU*N));return v.set(r*Math.cos(a)+ox,y,-r*Math.sin(a));};
     return closeGeo(new THREE.TubeGeometry(c,Math.round(N*44),wire,6,false));}
-  const HS=[5.1,6.7,12,0.17,2.65,3.62];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
+  const HS=[5.1,6.7,12,0.17,2.65,3.2];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
 
   /* ---------- the balance and hairspring: T = 2π√(I/κ) ---------- */
   fig('eBal',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.5,dist:70,target:[4,1,0]}),M=G.M,A=ESC.A;
@@ -462,7 +462,8 @@ const ESSAY=(()=>{
         const LS=AL.LUNAR.filter(b=>{const d=AL.lunar(b,day+12*hr);return d>15&&d<120;}),lr=LS.map(b=>[b,...[0,3,6,9,12,15,18,21].map(h=>FM.dm(AL.lunar(b,day+h*hr)).replace('°','° '))]);
         o+=`<section class="e-pg"><h4>${dn}</h4>${table(rows,['GMT','Sun GHA','Dec','Aries GHA','Moon GHA','Dec','HP ′'])}
           <p class="e-pf">Sun: semi-diameter ${S12.sd.toFixed(1)}′; equation of time (apparent less mean) ${eot(S0.eot)} at 00h, ${eot(S12.eot)} at 12h; meridian passage at Greenwich ${tod(mp,0).slice(0,5)} GMT. Moon: semi-diameter ${M12.sd.toFixed(1)}′ at 12h (from the Earth’s centre). ΔT ${AL.deltaT(2000+(AL.JD(day)-2451545)/365.25).toFixed(1)} s.</p>
-          ${lr.length?table(lr,['Lunar distances','00h','03h','06h','09h','12h','15h','18h','21h']):''}</section>`;}
+          ${lr.length?table(lr,['Lunar distances','00h','03h','06h','09h','12h','15h','18h','21h']):''}
+          ${table([0,3,6,9,12,15,18,21].map(h=>{const t=day+h*hr,V=AL.planet('Venus',t),Ma=AL.planet('Mars',t);return[String(h).padStart(2,'0'),gh(V.gha),dec(V.dec),gh(Ma.gha),dec(Ma.dec)];}),['GMT','Venus GHA','Dec','Mars GHA','Dec'])}</section>`;}
       const t1=t0+12*hr,sr=AL.STARS.map((s,i)=>{const b=AL.star(i,t1);return[s[0]||'—',s[1],gh(b.sha),dec(b.dec),s[6].toFixed(1)];});
       o+=`<section class="e-pg e-stars"><h4>The stars at ${new Date(t1).toISOString().slice(0,10)}, 12h (their places change by less than 1′ in a month)</h4>${table(sr,['No.','Star','SHA','Dec','Mag.'])}</section>`;AL.setDeltaT(null);return o;}
     const show=()=>{box.innerHTML=pages();};
@@ -477,7 +478,7 @@ const ESSAY=(()=>{
   /* the workbook: one's own sights */
   fig('eWork',f=>{const box=f.el,P=figOf(box);if(!AL)return noAlm(box);const out=q('.e-out',P);let mode='sight';
     const ang=s=>{s=String(s).trim().replace(/[°′'NnEe]/g,' ').replace(/,/g,'.');let neg=/[SsWw]|^-|^−/.test(s);s=s.replace(/[SsWw−-]/g,' ').trim();const p=s.split(/\s+/).map(Number);if(!p.length||p.some(x=>!Number.isFinite(x)))return NaN;const v=p[0]+(p[1]||0)/60+(p[2]||0)/3600;return neg?-v:v;};
-    const names=['Sun','Moon',...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
+    const names=['Sun','Moon','Venus','Mars',...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
       F0={date:'2026-10-18',time:'10:15:00',err:'0',eye:'6',ic:'-1.4',T:'18',P:'1008',lat:'35 00.0 N',lon:'40 00.0 W',body:'Sun',limb:'Lower',hs:'',how:'Meridian, bearing south',
         bodyL:'Markab',ds:'',hm:'',hb:'',far:'Near',r1:'2026-10-15 16:51',e1:'23.5',r2:'2026-10-20 16:50',e2:'29.0',now:'2026-11-02 12:00'};let V={...F0};
     const fld=(k,lab,html)=>`<label class="e-in"><span>${lab}</span>${html||`<input data-k="${k}" value="${V[k]}" spellcheck="false">`}</label>`,
@@ -521,6 +522,7 @@ const ESSAY=(()=>{
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
       I0:model?Math.round(model.I0/10)*10:580,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
+    { const d=model&&model.R&&model.R.hsDesign;Object.assign(V,d?{hsB:f1(d.b,2)+' mm',hsT:f1(d.t,3)+' mm',hsL:Math.round(d.L)+' mm',hsOut:f1(d.outer.l,1)+' mm',hsIn:f1(d.inner.l,1)+' mm',hsInR:f1(d.rIn,1)+' mm',hsLat:d.lat.toExponential(1)}:{hsB:'0.23 mm',hsT:'0.221 mm',hsL:'409 mm',hsOut:'14.8 mm',hsIn:'21.8 mm',hsInR:'3.2 mm',hsLat:'2.5e-5'}); }   /* the hairspring as designed (movement.js, R.hsDesign) */
     { const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const q=(lo+hi)/2;ESC.ampAt(q)<a?lo=q:hi=q;}return(lo+hi)/2;},r=A=>{const a=A*D2R;return Math.abs(ESC.rateAt(a,sAt(a))).toFixed(2);};V.isoLo=r(247.5);V.isoHi=r(270); }   /* the escapement's rate at 1 3/8 and 1 1/2 turns of motion (makeEsc rateAt) */   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
 

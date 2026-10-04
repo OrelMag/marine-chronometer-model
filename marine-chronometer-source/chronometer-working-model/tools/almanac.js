@@ -47,6 +47,8 @@ ALM.setDeltaT(null);{const dd=r=>ALM.deltaT(2000+(r.jd_ut-2451545)/365.25)-(r.dT
    ws=Math.max(ws,Math.abs(as3600(s.alt-r.sun.el)));wm=Math.max(wm,Math.abs(as3600(m.alt-r.moon.el)));if(m.alt>5)wz=Math.max(wz,Math.abs(as3600(n180(m.az-r.moon.az)*Math.cos(m.alt*D))));}
  chk('the Sun\'s topocentric altitude against Horizons (worst)',ws,5,'″');chk('the Moon\'s topocentric altitude, its parallax included (worst)',wm,20,'″');chk('the Moon\'s azimuth (× cos alt, worst)',wz,20,'″');}
 
+{for(const[k,key]of[['Venus','venus'],['Mars','mars']]){let w=0,wu='';for(const r of REF.planets||[]){const t=tOf(r),b=ALM.planet(k,t),d=as3600(sep(b.ra,b.dec,r[key].ra,r[key].dec));if(d>w){w=d;wu=r.utc.slice(0,10);}}
+  B[key]=w;chk(`${k}'s apparent place against Horizons, 1950-2049 (JPL's approximate elements: for sights, not lunars)`,w,k==='Venus'?60:120,'″',wu);}}
 ALM.setDeltaT(null);
 {let wg=0,wd=0;for(let t=Date.UTC(1950,0,1);t<Date.UTC(2050,0,1);t+=8.37*864e5){const a=ALM.sun(t),h=ALM.sunHand(t);wg=Math.max(wg,Math.abs(n180(a.gha-h.gha))*60);wd=Math.max(wd,Math.abs(a.dec-h.dec)*60);}
  chk('the Sun by hand (the essay\'s formulas), 1950-2049: GHA (worst)',wg,1,'′');chk('the Sun by hand: declination (worst)',wd,1,'′');B.hand=Math.max(wg,wd);}

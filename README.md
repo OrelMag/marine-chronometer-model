@@ -210,6 +210,9 @@ Before committing a change to the model:
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
        node escapement.js   # the escapement's lock, let-off, overall, drop and clearances (Node.js only)
        node almanac.js      # the essay's almanac and sight reduction against JPL Horizons and skyfield (Node.js only, about 1 s)
+       node hairspring.js   # the hairspring's design: Phillips' curves, the strip, the force on the pivots (Node.js only, about 12 s)
+       node physics.js      # the energy budget, the escape wheel's chase, the detent spring's share, temperature (Node.js only)
+       python selfcontained.py   # the page alone enough to make the chronometer and navigate with it
        npx -p typescript@5.9.3 tsc -p ../jsconfig.json   # the types of the files that start with // @ts-check (TypeScript fetched by npx, nothing installed in the repository)
        python bom.py        # every part against the manual's parts list: counts, how each is held and runs, the gears, the 14 jewels (exit code 1 on a failure; --md rewrites BOM.md)
        python video.py      # teeth counted on frames of videos of real Model 21s (References/README.md); pip install opencv-python yt-dlp; videos kept outside the repository
@@ -240,10 +243,10 @@ Before committing a change to the model:
 7. **All the checks at once.** `python ci.py` at the root runs them here, one after
    another, and prints each ok or FAIL (logs in `ci-logs/`; about 5 minutes): the build
    with `--site-url https://www.marinechronometermodel.com`, as the live site is, failing
-   if building changes a built copy (commit what it writes), `escapement.js`, `almanac.js`, the type
+   if building changes a built copy (commit what it writes), `escapement.js`, `almanac.js`, `hairspring.js`, `physics.js`, `selfcontained.py`, the type
    check, `smoke.py`, `invariants.py`, `solids.py`, `exploded.py` and `audit.py`.
    `--full` adds `fine.py`, `maintaining.py` and `bom.py`; `--views` renders every view before
-   and after the branch and prints the changed pixels; `--quick` is the first four only.
+   and after the branch and prints the changed pixels; `--quick` is the first seven only.
    Nothing runs on GitHub: merge a branch only when `ci.py` passes on it.
 7. **Record fixes.** If the change fixes a bug, add it to
    [RESOLVED.md](RESOLVED.md) under the right heading, with the commit hash.

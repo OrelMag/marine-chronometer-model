@@ -4,3 +4,5 @@ declare const THREE: any;
 declare const makeEsc: typeof import('../../shared/escapement.js').makeEsc;
 // shared/almanac.js, likewise (tools/almanac.js reads it in Node): on the page ALM is a global.
 declare const ALM: typeof import('../../shared/almanac.js').ALM;
+// shared/hairspring.js, likewise (tools/hairspring.js reads it in Node): on the page HSPR is a global.
+declare const HSPR: typeof import('../../shared/hairspring.js').HSPR;

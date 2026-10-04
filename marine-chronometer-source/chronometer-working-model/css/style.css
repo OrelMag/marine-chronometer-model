@@ -222,3 +222,16 @@ html.splitting,html.splitting *{cursor:col-resize!important;user-select:none!imp
 .stage canvas:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
 /* reduced motion: no fades or slides */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+/* the maker's tools (js/maker.js): the card's sheet, the measuring readout, the build book printed alone */
+.info .mkc{margin-top:8px}.info .mkc .seg button{font-size:12.5px}
+.info .mkb{max-height:46vh;overflow:auto;margin-top:6px}
+table.mk{width:100%;min-width:640px;border-collapse:collapse;font-size:11.5px;line-height:1.3;font-variant-numeric:tabular-nums}
+table.mk th,table.mk td{text-align:left;vertical-align:top;padding:3px 4px;border-bottom:1px solid var(--line,rgba(127,127,127,.25))}table.mk th{font-weight:600;color:var(--muted)}
+table.mk td.n,table.mk th.n{text-align:right}table.mk i{display:block;font-style:normal;color:var(--muted);font-size:10.5px}
+.mkm{font-size:11.5px;color:var(--muted);margin:6px 0 0}
+#bookPrint{display:none}
+@media print{html.book-print,html.book-print body{overflow:visible!important;height:auto!important;background:#fff!important;color:#000!important}
+  html.book-print body>*:not(#bookPrint){display:none!important}html.book-print #bookPrint{display:block;font:9.5pt/1.3 Georgia,serif;color:#000}
+  #bookPrint h1{font-size:15pt}#bookPrint h2{font-size:12pt;margin:10pt 0 3pt;break-after:avoid}#bookPrint .bk{break-inside:auto}
+  #bookPrint table.mk{font-size:8pt}#bookPrint table.mk th,#bookPrint table.mk td{border-bottom:.5pt solid #999;color:#000}
+  #bookPrint svg.mkd{display:block;max-width:100%;height:auto;margin:4pt 0 10pt;color:#000;break-inside:avoid}}

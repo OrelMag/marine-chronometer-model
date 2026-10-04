@@ -286,11 +286,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function hitAt(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
     return hits.find(h=>INFO[h.object.userData.part])||null;}
-  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
+  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(typeof MAKER!=='undefined'&&MAKER.measuring()){MAKER.measureHit(hit);return;}if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
   function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.part;if(st.pick!==p)showPart(p);focusPart(p,hit.object);}else if(st.tour<0)jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
   const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
-  function showPart(p){showHelp(false);st.hid.delete(p);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
+  function showPart(p){showHelp(false);if(typeof MAKER!=='undefined')setTimeout(()=>MAKER.card(p),0);st.hid.delete(p);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[p];info.querySelector('.src').innerHTML=q.src?`<i style="--ps:${SRC[q.src][1]}"></i>${SRC[q.src][0]}: ${U(q.sn)}${q.figs?`. Figs. ${q.figs}`:''}.`:'';info.classList.add('on');hintOff();}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
@@ -546,7 +546,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function bookStats(){const run=[];for(let i=book.length-1;i>0;i--){if(book[i].rem.some(r=>BREAK.includes(r)))break;if(book[i].rate==null)continue;run.unshift(book[i].rate);if(run.length===10)break;}   /* a comparison too soon after the last for a rate is skipped, not a break */
     const m=run.length?run.reduce((a,b)=>a+b,0)/run.length:null;return{m,dev:m==null?null:run.reduce((a,b)=>a+Math.abs(b-m),0)/run.length,n:run.length};}
   /* the rate is taken against the latest comparison at least half a day back with no break since: over a shorter time, reading to the half second swamps it */
-  function bookAdd(){const e=half(dialRead()-tM),rem=[...pend];pend.clear();let prev=null;
+  /* a comparison by the sky (PLAN-self-contained.md, E3): the error as the essay's equal altitudes ashore (to about 0.5 s) or a lunar distance at sea (about
+     15 s: a tenth of a minute of distance) would find it, its scatter drawn from a fixed sequence, and so noted under Remarks */
+  let skyS=97;const skyN=()=>{skyS=(skyS*16807)%2147483647;const u=skyS/2147483647;skyS=(skyS*16807)%2147483647;return Math.sqrt(-2*Math.log(u+1e-12))*Math.cos(2*Math.PI*skyS/2147483647);};
+  function bookAdd(by){const sd=by==='sun'?0.5:by==='moon'?15:0,e=half(dialRead()-tM+sd*skyN()),rem=[...pend,...(by==='sun'?['by equal altitudes']:by==='moon'?['by a lunar distance']:[])];pend.clear();let prev=null;
     if(!rem.some(r=>BREAK.includes(r)))for(let i=book.length-1;i>=0;i--){if(tM-book[i].t>=43200){prev=book[i];break;}if(book[i].rem.some(r=>BREAK.includes(r)))break;}
     const rate=prev?(e-prev.e)/((tM-prev.t)/86400):null;book.push({t:tM,e,rate,rem:book.length?rem:['first comparison',...rem.filter(r=>r!=='weights moved'&&r!=='screws changed'&&r!=='escapement adjusted')]});bookShow();}
   function bookShow(){const S=bookStats();
@@ -559,7 +562,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(L&&S.m!=null){const pr=L.e+S.m*(tM-L.t)/86400,r=e-pr;t+=`<span>Corrected as the navigator does, the last comparison's error plus ${((tM-L.t)/86400).toFixed(1)} days at the mean rate (${fmtErr(pr)}), ${Math.abs(r)<0.25?'it is right to the half second':`the error left is ${fmtErr(r)}, ${nm(r).toFixed(2)} nautical miles`}.</span>`;}
     else t+='<span>With two comparisons a day apart and no break between, the book gives a rate to correct it with.</span>';
     bookLon.innerHTML=t;}
-  $('#bookNow').addEventListener('click',bookAdd);$('#bookClr').addEventListener('click',()=>{book=[];bookShow();});bookShow();
+  $('#bookNow').addEventListener('click',()=>bookAdd());$('#bookSun').addEventListener('click',()=>bookAdd('sun'));$('#bookMoon').addEventListener('click',()=>bookAdd('moon'));$('#bookClr').addEventListener('click',()=>{book=[];bookShow();});bookShow();
   $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('balance'));showPart('bal');});
   /* ---------- stopping and starting (Sec. III): a detent chronometer is not self-starting. The balance swings at amplitude H.amp; below ESC.AMIN a swing no longer
      carries the discharge jewel past the trip spring, unlocks the wheel and sees the impulse through, so the train stops at a locked beat and the balance runs down freely
@@ -999,7 +1002,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
-  ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
+  ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});
+  if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,cam,cv,scene,M,PARTS,INFO,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';
   document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==='dial'?'true':'false'));

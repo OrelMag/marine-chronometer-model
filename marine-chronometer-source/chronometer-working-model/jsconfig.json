@@ -2,5 +2,5 @@
 // The scripts in the page's load order; only those that start with // @ts-check are checked (app.js and essay.js not yet). js/globals.d.ts declares what TypeScript can't see.
 {
   "compilerOptions": {"allowJs": true, "checkJs": false, "noEmit": true, "target": "ES2022", "lib": ["ES2022", "DOM", "DOM.Iterable"], "strict": false, "skipLibCheck": true},
-  "files": ["js/globals.d.ts", "js/core.js", "../shared/escapement.js", "../shared/escplan.js", "../shared/almanac.js", "js/movement.js", "js/box.js", "js/essay.js", "js/app.js"]
+  "files": ["js/globals.d.ts", "js/core.js", "../shared/escapement.js", "../shared/escplan.js", "../shared/almanac.js", "../shared/hairspring.js", "js/movement.js", "js/box.js", "js/essay.js", "js/app.js"]
 }

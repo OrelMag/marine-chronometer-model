@@ -140,9 +140,37 @@ const ALM=(()=>{
       da=(c(e)+s(e)*s(a)*tn(d))*N.dpsi-c(a)*tn(d)*N.deps+(-k*(c(a)*c(L)*c(e)+s(a)*s(L))+ec*k*(c(a)*c(pi)*c(e)+s(a)*s(pi)))/c(d),
       dd=s(e)*c(a)*N.dpsi+s(a)*N.deps-k*(c(L)*c(e)*(tn(e)*c(d)-s(a)*s(d))+c(a)*s(d)*s(L))+ec*k*(c(pi)*c(e)*(tn(e)*c(d)-s(a)*s(d))+c(a)*s(d)*s(pi));
     a=n360(a+da);d+=dd;return{name,n,v,ra:a,dec:d,sha:n360(360-a),gha:n360(gmst(j)+N.dpsi*c(e)-a),sd:0,hp:0};}
+  /* ---------- Venus and Mars: JPL's approximate Keplerian elements (E. M. Standish, "Keplerian Elements for Approximate Positions of the Major Planets",
+     Table 1, 1800-2050: a au, e, I, L, long. of perihelion, long. of node, each with its rate a century; their errors 20″ and 40″ in heliocentric longitude),
+     the Earth from the Earth-Moon barycentre less the Moon's share (1/82.3 of its geocentric place), light-time, then the stars' precession, nutation and
+     aberration. Good to about a minute of arc from the Earth: for sights, not lunars. Jupiter and Saturn are left out: these elements err 400″ and 600″ for
+     them, 7-10′ seen from the Earth, too coarse to navigate by */
+  const KEP={Venus:[0.72333566,0.00677672,3.39467605,181.9790995,131.60246718,76.67984255,0.0000039,-0.00004107,-0.0007889,58517.81538729,0.00268329,-0.27769418,8.34],
+    Mars:[1.52371034,0.0933941,1.84969142,-4.55343205,-23.94362959,49.55953891,0.00001847,0.00007882,-0.00813131,19140.30268499,0.44441088,-0.29257343,4.68],
+    EMB:[1.00000261,0.01671123,-0.00001531,100.46457166,102.93768193,0,0.00000562,-0.00004392,-0.01294668,35999.37244981,0.32327364,0]};
+  /* the heliocentric place (au, ecliptic and equinox of J2000) of a body of KEP at T centuries of TT from J2000 */
+  function kep(k,T){const q=KEP[k],a=q[0]+q[6]*T,e=q[1]+q[7]*T,I=q[2]+q[8]*T,Lm=q[3]+q[9]*T,w=q[4]+q[10]*T,O=q[5]+q[11]*T,om=w-O;let M=n180(Lm-w),E=M+e/D*s(M);
+    for(let i=0;i<20;i++){const dE=(M-(E-e/D*s(E)))/(1-e*c(E));E+=dE;if(Math.abs(dE)<1e-10)break;}
+    const xp=a*(c(E)-e),yp=a*Math.sqrt(1-e*e)*s(E);
+    return[(c(om)*c(O)-s(om)*s(O)*c(I))*xp+(-s(om)*c(O)-c(om)*s(O)*c(I))*yp,(c(om)*s(O)+s(om)*c(O)*c(I))*xp+(-s(om)*s(O)+c(om)*c(O)*c(I))*yp,s(om)*s(I)*xp+c(om)*s(I)*yp];}
+  /* a place of J2000 (α0, δ0, °) carried to the apparent place of date at the Julian day of TT jde: precession (Meeus 21), nutation (23.1), annual aberration (23.3) */
+  function app(a,d,jde){const T=(jde-2451545)/36525,z1=(2306.2181*T+0.30188*T*T+0.017998*T**3)*AS,z2=(2306.2181*T+1.09468*T*T+0.018203*T**3)*AS,th=(2004.3109*T-0.42665*T*T-0.041833*T**3)*AS,
+      A=c(d)*s(a+z1),B=c(th)*c(d)*c(a+z1)-s(th)*s(d),C=s(th)*c(d)*c(a+z1)+c(th)*s(d);
+    a=n360(at2(A,B)+z2);d=Math.abs(C)>0.99?Math.sign(C)*ac(Math.hypot(A,B)):as(C);
+    const N=nut(T),e=N.eps,L=sunGeo(jde).l,k=20.49552*AS,ec=0.016708634-0.000042037*T-0.0000001267*T*T,pi=102.93735+1.71946*T+0.00046*T*T,
+      da=(c(e)+s(e)*s(a)*tn(d))*N.dpsi-c(a)*tn(d)*N.deps+(-k*(c(a)*c(L)*c(e)+s(a)*s(L))+ec*k*(c(a)*c(pi)*c(e)+s(a)*s(pi)))/c(d),
+      dd=s(e)*c(a)*N.dpsi+s(a)*N.deps-k*(c(L)*c(e)*(tn(e)*c(d)-s(a)*s(d))+c(a)*s(d)*s(L))+ec*k*(c(pi)*c(e)*(tn(e)*c(d)-s(a)*s(d))+c(a)*s(d)*s(pi));
+    return{ra:n360(a+da),dec:d+dd,N};}
+  /** @returns {Body & {au:number}} Venus or Mars at t: its apparent place, distance (au), semi-diameter and horizontal parallax (′) */
+  function planet(k,t){const j=JD(t),jde=TT(j),T=(jde-2451545)/36525,emb=kep('EMB',T),m=moon(t),e0=23.4392911,
+      ml=m.lon-nut(T).dpsi,mx=m.km/149597870.7*c(m.lat)*c(ml),my=m.km/149597870.7*c(m.lat)*s(ml),mz=m.km/149597870.7*s(m.lat),pr=(2306.2181*T)*AS,   /* the Moon to J2000's equinox, near enough for its 1/82.3 */
+      ex=emb[0]-(mx*c(pr)+my*s(pr))/82.3,ey=emb[1]-(my*c(pr)-mx*s(pr))/82.3,ez=emb[2]-mz/82.3;
+    let tau=0,g=[0,0,0],r=0;for(let i=0;i<3;i++){const p=kep(k,T-tau/36525);g=[p[0]-ex,p[1]-ey,p[2]-ez];r=Math.hypot(...g);tau=r*0.0057755183;}   /* light-time: days for an au */
+    const xq=g[0],yq=g[1]*c(e0)-g[2]*s(e0),zq=g[1]*s(e0)+g[2]*c(e0),P=app(n360(at2(yq,xq)),as(zq/r),jde);
+    return{name:k,ra:P.ra,dec:P.dec,gha:n360(gmst(j)+P.N.dpsi*c(P.N.eps)-P.ra),au:r,sd:KEP[k][12]/r/60,hp:8.794/r/60};}
   const starIx=k=>STARS.findIndex(r=>r[1]===k||r[0]===k);
-  /** a body by name: 'Sun', 'Moon', a star's name or its almanac number */
-  function body(k,t){if(k==='Sun')return sun(t);if(k==='Moon')return moon(t);const i=starIx(k);if(i<0)throw Error('no such body: '+k);return star(i,t);}
+  /** a body by name: 'Sun', 'Moon', 'Venus', 'Mars', a star's name or its almanac number */
+  function body(k,t){if(k==='Sun')return sun(t);if(k==='Moon')return moon(t);if(k==='Venus'||k==='Mars')return planet(k,t);const i=starIx(k);if(i<0)throw Error('no such body: '+k);return star(i,t);}
   /** Maskelyne's lunar-distance stars (the Nautical Almanac from 1767): those near the Moon's path, with the Sun */
   const LUNAR=['Sun','Hamal','Aldebaran','Pollux','Regulus','Spica','Antares','Altair','Fomalhaut','Markab'];
 
@@ -230,7 +258,7 @@ const ALM=(()=>{
   /* ---------- formatting, as the almanac prints: degrees and minutes to a tenth, N/S ---------- */
   const dm=(a,neg='−')=>{const g=a<0?neg:'',x=Math.abs(a),d=Math.floor(x),m=(x-d)*60;let mm=Math.round(m*10)/10,dd=d;if(mm>=60){mm-=60;dd++;}return`${g}${dd}°${mm.toFixed(1).padStart(4,'0')}′`;},
     lat=a=>dm(Math.abs(a))+(a<0?' S':' N'),lon=a=>dm(Math.abs(a))+(a<0?' W':' E'),hms=t=>new Date(t).toISOString().slice(11,19);
-  return{JD,MS,deltaT,setDeltaT:v=>{dTfix=v;},gmst:j=>gmst(j),gast,sun,sunHand,moon,star,body,STARS,LUNAR,lunar,sep,hcz,topo,refr,unrefr,dip,correct,intercept,timeSight,fix,meridianLat,latByAlt,rate,
+  return{JD,MS,deltaT,setDeltaT:v=>{dTfix=v;},gmst:j=>gmst(j),gast,sun,sunHand,moon,planet,star,body,STARS,LUNAR,lunar,sep,hcz,topo,refr,unrefr,dip,correct,intercept,timeSight,fix,meridianLat,latByAlt,rate,
     noon,equalAlt,clear,sextant,sextantLunar,n180,n360,fmt:{dm,lat,lon,hms}};
 })();
 if(typeof module!=='undefined')module.exports={ALM};

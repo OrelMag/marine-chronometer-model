@@ -1,6 +1,6 @@
 # Plan: a self-contained model, enough to make a Model 21 and use it at sea
 
-_Status: written 4 October 2026. Phase 0 done (a239864). Decisions D1–D4 taken as suggested (the user, 4 October 2026). Phase E's E1 and E2 done, E3 in part (below)._
+_Status (4 October 2026): every phase done, as the sections below record; what stays estimated is listed under each and in the model README's "Estimated" section. Decisions D1–D4 taken as suggested._
 
 ## The goal
 
@@ -74,6 +74,17 @@ manual's figures become the test.
 | A3 | **The energy budget closed.** The fusee half of IDEAS 2.2 goes further. | 1. Mainspring torque from its section (thickness from the parts list; the barrel's measured height bounds the width, and a video gives the width), its length, and set, with coil friction. 2. Fusee torque from that and the measured profile. 3. Each stage's efficiency from its cycloidal mesh. 4. Escape-wheel torque. 5. Q from a source: a filmed run-down if one exists, or literature (D1). 6. The amplitude then becomes a prediction. | The predicted amplitude is within 1⅜–1½ turns (manual) over the 56 h. The fusee's measured profile evens the derived pull to within a few %. A budget that doesn't close fails. | L |
 | A4 | **The escape wheel with mass.** | Its inertia from its drawn solid and brass. The drop and impulse become a chase: the wheel accelerates, then strikes. `makeEsc` gets a dynamic impulse; the geometry stays. | Lock, let-off, drop and overall still meet Ops. 84–97. The impulse's efficiency and the landing angle are reported, not assumed. | M |
 | A5 | **Temperature from the materials.** | The rim's and arm's expansion, and the spring's thermoelastic coefficient (alloy from D1, D2), give the linear term and the curvature. Table IV and card No. 3390 become checks, not inputs. For the variant (D2 b), the bimetal dimensions that compensate a steel spring. | The derived curve is within the card's figures (0.08 / 0.06 / 0.02 s a day) and the Bureau of Ships limits. | M |
+
+**A2 done (4 October 2026), the inner end an estimate:** the spring drawn as designed (both curves to Phillips' conditions, the strip 0.23 by 0.221, the collet's end at 3.2 inside the video's 2.8-3.9). Before that, in part: the hairspring designed (`shared/hairspring.js`, `tools/hairspring.js`, in `ci.py --quick`):
+- **Stiffness:** 91.4 µN·m a radian.
+- **Strip:** 0.23 mm wide, measured on the video, by 0.226 mm thick for Elinvar at 180 GPa (0.216 for steel). The spring is 439 mm long, and its stress at
+  the swing is about 210 MPa.
+- **Outer terminal curve:** solved to Phillips' conditions into the stud's clamp, 15.3 mm, turning 343°.
+- **Pivot force:** the designed spring leaves 2.6e-5 of couple / R on the pivots, against 2.3 % for the ends the model draws.
+- **Inner end, open:** at the collet's face as drawn (3.62), only a 1.9-turn inward spiral meets the conditions; at 3.0–3.3 a 21–24 mm curve does.
+  Measure where the spring meets the collet (Review-results.md, "The hairspring's inner end"), then draw the spring as the designed strip.
+- **Isochronism:** with the force on the pivots gone, what remains is the strip's own (its curves' small departures, the material); to be computed when
+  the spring is drawn.
 
 ## Phase B: every part fully specified (L)
 
@@ -182,3 +193,19 @@ manual's figures become the test.
 - **The alloys.** The Model 21's Elinvar and Invar can't be made without modern metallurgy.
   The achievable variant (decision D2 b) is how a chronometer was made before them, and its
   rate is less stable.
+
+## Done, phase by phase (4 October 2026)
+
+- **A1** the balance's masses read as a matched pair's (Table II 578 g·mm², `I_REST` 44). **A2** the hairspring designed and drawn (Phillips' curves both
+  ends, the strip 0.23 × 0.221 mm, 2.5e-5 of couple / R on the pivots; the collet's end at 3.2, an estimate inside the video's 2.8–3.9). **A3** the energy
+  budget closes (`tools/physics.js`): `TF` 34 s derived. **A4** the escape wheel's inertia measured on its solid, its chase onto the jewel 5° of the swing,
+  the escapement 79 % efficient. **A5** temperature from the materials (the Elinvar spring's coefficient, the steel spring's -10.3 s a day a °C, the split
+  rim's 7.0). The isochronism the spring itself leaves is that of its curves' residuals (under 1e-11 mm) and its material: not modelled further.
+- **B1** each card's maker's sheet (`js/maker.js`, `js/makers.js`). **B2** the detent spring's share of the work from Op. 78 (`fD` 0.057); the mainspring's
+  width the barrel's room (14.8); pivots, jewel holes and threads stay the model's estimates (the videos don't resolve them), each fit's clearance on the
+  sheets. **B3** the manual's tolerances in the essay. **B4** each wheel's outline in its drawing (SVG, to scale).
+- **C1** Measure. **C2** STL per part and for the movement, the model's data as JSON. **C3** each part's drawing, plan and elevation. **C4** the build book.
+- **D1–D6** the essay's workshop: the oiling chart (and on the model: Making it › Oil), adjusting the escapement, the order of work, tools, materials and heat treatment (the chronometer
+  without Elinvar and Invar), rating by the sky (the rate book's equal altitudes and lunars).
+- **E1–E3** the almanac (Sun, Moon, 58 stars, Venus and Mars), the sky sections, the workbook, the rate book from the sky. Jupiter and Saturn left out.
+- **F1–F3** the manual on the site; the single file holds the almanac, the maker's tools and data; `tools/selfcontained.py` in `ci.py --quick`.
