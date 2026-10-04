@@ -1650,6 +1650,14 @@ An arbor needs pivots and shoulders; a stone its seat.
   14°, about 3 mm off. They are now the arbors' places in `L` (the escapement
   views between the balance and the escape arbor). Keep: a camera target on a
   part is written from `L`, so it follows a change of the layout. `cce56d7`
+- **The Navy's Y-arm showed the locking arm's card** (Variants, Balance stop). Both
+  stops are the part `lockArm`, whose card, parts-list name and source were the
+  manual's arm (Fig. 9, "loosen its screw, turn the arm") whichever was fitted;
+  with the Y-arm the default, every visitor saw it. The card, name, source note,
+  spec and search text now follow the stop fitted (`STOP_INFO`, `stopFit` in
+  `app.js`). Keep: fit a stop through `stopFit` or its button, never
+  `mv.userData.stop` alone in the page, and `bom.py` fits the arm by its button,
+  so the card's numbers it checks are the arm's. `db5d5dd`
 
 ## Build, tools and docs
 
