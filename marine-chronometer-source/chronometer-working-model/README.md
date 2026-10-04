@@ -26,6 +26,7 @@ the website (see the root README).
 | `jsconfig.json`, `js/globals.d.ts` | Type checking without npm: the scripts in load order, and the globals TypeScript can't see; `core.js`, `movement.js`, `box.js` and the shared scripts start with `// @ts-check` (`ci.py` runs `tsc`) |
 | `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
 | `../shared/escplan.js` | Its plan, `drawEscPlan(ctx, w, h, state, E, o)`, drawn from the solver's outlines, as Fig. 90 has it: the walkthrough's inset and the adjuster's bench (three names, the stage written under it) and the essay's detent figure (every part named, a dial for the balance's angle); `escStage(state)` names what the escapement is doing |
+| `../shared/almanac.js` | A nautical almanac and the navigator's arithmetic, `ALM`: the Sun, Moon and 58 stars, sidereal time, the altitude corrections, sight reduction, the time sight, equal altitudes, clearing a lunar distance, and sights made from the almanac for the essay's worked examples (see "The almanac" below); shared with `tools/almanac.js` |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), screw positions and holes, pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, train-blocking screw and balance locking arm, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate that turns to admit the winding key), winding key |
 | `js/essay.js` | The Essay tab (see "The Essay tab" below): its figures, drawn from the model's code, and the tab, hash and scroll handling. One IIFE that declares only `ESSAY` |
@@ -33,6 +34,7 @@ the website (see the root README).
 | `build.py` | Inlines the CSS, JS, three.js and fonts into `dist/` (through `inline.py` at the repository root), with the version and the list of changes from the root `CHANGELOG.md` (`changelog.py`) |
 | `dist/chronometer-working-model.html` | The built single file (committed) |
 | `tools/bundle.py`, `tools/fit.py`, `tools/unproj.py` | Photo fitting: camera fits to the Fig. 2 and top-view photographs, triangulation of the balance, fusee and barrel axes, photo points projected onto the movement (see "How the layout was measured") |
+| `tools/almanac.js`, `tools/almanac-ref.json`, `tools/almanac_ref.py` | The almanac's check (Node, about 1 s): Meeus's worked examples, the Sun, Moon, stars and sidereal time against JPL Horizons and skyfield (`almanac-ref.json`, made by `almanac_ref.py` with the network: SIMBAD's catalogue, Horizons' DE441 places, skyfield 1.55 with de440s), and round trips of every reduction; the essay's stated accuracy (`data-bound` spans) must cover the worst found |
 | `tools/solve.py` | Reads `L` and `TRAIN` from `movement.js`: solves the escape arbor against `L.E`, gives the modules and wheel tips, checks the arbors clear the wheels in plan (no browser) |
 | `tools/p3map.json`, `tools/cock_outline.json`, `tools/engr.json` | Traced from the top-view photograph: its mapping into the model, the balance cock's outline, the engraving columns |
 | `tools/dyn.py`, `tools/interference-check.js` | Voxel collision check through a full escapement cycle |
@@ -133,7 +135,8 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   `.stage`, `.sl` and `h2` mean other things), its code `js/essay.js`. It is laid over the whole page (`position: fixed`), so the model's layout underneath
   is untouched, and the tab bar moves into its sticky bar while it shows.
 - **Sections** (each heading's id is its link: `#essay=detent`): time is a position, an oscillator that ignores the sea, the spring that breathes, heat,
-  constant force, winding, counting, the detent, level on a moving ship, keeping the rate, the Hamilton Model 21.
+  constant force, winding, counting, the detent, level on a moving ship, keeping the rate, Greenwich time from the sky (equal altitudes ashore), longitude by
+  chronometer (the time sight), the lunar distance, an almanac to print (with the hand rules and the workbook), the Hamilton Model 21.
 - **Figures, and what each takes from the model:**
 
   | Figure | Drawn with |
@@ -141,7 +144,7 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   | The dial at the top | `dialCanvas('hamilton')` and the hands' outlines (`handShape`, core.js) at the model's own time and state of wind (`bind`) |
   | Longitude, clock error | 2D; 4 s of time is 1′ of longitude |
   | Balance and hairspring | The Model 21's balance rebuilt in the essay (the model's is built inside `buildMovement`): `BAL_R`, the rim's section, screws and weights as `movement.js` places them; `springGeo` with the model's hairspring numbers; the swing `ESC.A`; the moment of inertia `R.timing(0,0)` |
-  | Terminal curves | `springGeo`, and a plain-ended coil (essay-only), drawn with fewer coils than the model's fourteen |
+  | Terminal curves | `springGeo`, and a plain-ended coil (essay-only), drawn with 10 coils, r 5.5 and 9 tall, to show the curves (the model's spring has 9 turns, `HS_N`) |
   | Heat | A split bimetallic rim (as history), a plain brass one and the Model 21's; the older balances' rate curves are illustrative; the Model 21's band is the Navy test's limit (Sec. IX), not a curve |
   | Constant force | The model's fusee profile and barrel turns (`R.fs.rf`, `R.fs.I`), 8¾ turns, 0 to 56¼ h; the spring's pull shown is the one the profile answers |
   | Maintaining power | The model's own maintaining-work meshes (`R.gw`, `R.ssg`, `R.sr`, `R.spawl` and the fusee's winding ratchet, cloned with their materials, bound by `bind`'s `R`, `mv` and `M`), the spring rebuilt with `R.sspGeo(d)`, the pawls seated with `seatPawl` on `R.SRP` and `R.FPR` and the ratchet where `phaseAgainst` has the sustaining pawl hold it; `d = SMAX t/10`. The fusee's turning back, half a turn a minute, is the figure's |
@@ -150,10 +153,15 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   | The detent | `drawEscPlan` with the model's `ESC` (it follows the adjuster's bench) |
   | Gimbals | `buildBox` itself, with a dial at the model's time |
   | Keeping the rate | 2D; a simulated chronometer's rate book in the form of Table I |
+  | Equal altitudes, the time sight, the lunar distance | 2D, `ALM` (`shared/almanac.js`): fixed days and places (15 and 18 October 2026, Annapolis, 35° N 40° W), each sight made by `ALM.sextant` / `sextantLunar` at the true time and place and worked from the readings alone, as a sight form |
+  | The almanac's pages, the workbook | HTML tables from `ALM` for any days (Print lays them out alone, `#almPrint`, `html.alm-print`); the workbook reduces one's own sights |
 
 - **Numbers in the text** that the model computes are `data-live` spans filled by `fillLive()` when the essay shows: the escapement's figures
   (`ESC.measure()`), the swing and the least swing that keeps it going, the roller, the centre distance, the tooth counts, the fusee's radii, the
-  moment of inertia, the sustaining spring's travel (`ssDeg`). The text's other facts come from the manual (Secs. I–IV, VIII, IX) and this README; keep them to those sources.
+  moment of inertia, the sustaining spring's travel (`ssDeg`). The text's other facts come from the manual (Secs. I–IV, VIII, IX) and this README; keep them to those sources. The sky sections
+  (from "Greenwich time from the sky" on) also use published literature, named in the text and under Sources (PLAN-self-contained.md, decision D1):
+  Meeus's *Astronomical Algorithms*, the Astronomical Almanac's short formulas for the Sun, Bowditch's *American Practical Navigator*; their stated
+  accuracy is in `data-bound` spans, which `tools/almanac.js` checks against what it finds.
 - **Building and drawing.** A figure is built the first time it comes within 300 px of the view (an `IntersectionObserver` on the essay), once the fonts
   are loaded (the dial is drawn once and kept) and, for those that read the model (the fusee), once app.js has called `ESSAY.bind()`. A figure is drawn
   only while the essay shows, and only when something in it changed. The 3D figures share one `WebGLRenderer` on a canvas off the page: each renders
@@ -163,6 +171,33 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   built). Links from the essay into the model are ordinary links (`#tour=3`, `#view=escapement&speed=0.05&part=det`, `#open=bookDet`), so Back returns
   to the essay where it was left; `sessionStorage` (`cm-essay-y`) keeps the place through a reload. The essay's old address on the live site
   (`/marine-chronometer`) is redirected to `/#essay` by `worker.js`.
+
+## The almanac
+
+The essay's sky sections carry their own almanac, `ALM` in `shared/almanac.js`, so the page alone (or its single-file copy, offline) is enough to rate
+the chronometer by the Sun, find longitude with it, and check it at sea by the Moon, with no radio signal. Angles are degrees, the corrections arcminutes,
+times JavaScript's milliseconds of UT.
+
+- **The places.** The Sun: the abridged VSOP87 series (Meeus, Appendix III) with the FK5 correction, nutation and aberration. The Moon: Meeus ch. 47 (the
+  main ELP-2000/82 terms) with nutation. The stars: the Nautical Almanac's 57 and Polaris, SIMBAD's ICRS J2000 places and proper motions, carried by
+  precession (ch. 21), nutation (23.1) and annual aberration (23.3). Sidereal time: Meeus 12.4 and the equation of the equinoxes. Nutation: the short
+  series (0.5″). `tools/almanac.js` finds, against JPL Horizons (DE441) over 1950–2149: the Sun within 0.5″, the Moon within 6.5″ (its distance to
+  42 km, 0.4″ of parallax); against skyfield, the stars within 2.1″ to 2120. Left out: the annual parallax (under 0.8″), light's bending, proper motion's
+  second order (α Cen's 3.7″ a year carried linearly gives the 2.1″).
+- **ΔT** (TT − UT1): Espenak and Meeus's polynomials to 2000, the IERS's measured values (each 1 January) from 2000 to October 2026 (69.09 s), then a
+  forecast: that value held to 2050, then growing as their long-term parabola. It only matters to the Moon against the stars: a second of ΔT moves a
+  lunar distance's Greenwich time by a second. The almanac's pages take a value instead.
+- **The sight.** Dip 1.76′ √h; refraction by Bennett's formula with temperature and pressure (run backwards, by iteration, to make a sight); the
+  semi-diameter (the Moon's augmented by 1 + sin HP sin h) and parallax HP cos h (the Moon's HP reduced for the latitude). The time sight, the intercept,
+  a least-squares fix, and equal altitudes (the chronometer's error that makes the two altitudes equal; the old rule, the middle of the readings, and the
+  equation of equal altitudes for the difference). Round trips from sights the almanac makes give the longitude back within 0.001 nm and the error by
+  equal altitudes within 0.01 s.
+- **The lunar distance** is cleared exactly on a sphere (the angle at the zenith from the apparent altitudes and distance, then the true distance from the
+  true altitudes); the Earth's figure (up to 0.2′, 24 s of time) is taken off by clearing a sight the almanac makes from the place by dead reckoning, which
+  brings the Greenwich time back within 1 s with the DR 30′ out. A distance changing under 15′ an hour is reported too slow. Refraction's flattening of the
+  discs is left out (under 0.3′ above 10°, and the same in the almanac's own sight).
+- **By hand.** `sunHand` is the Astronomical Almanac's short formulas, as the essay prints them: within 0.6′ of the full series from 1950 to 2049, enough
+  for a time sight, not for a lunar (the Moon needs the series, so its pages print).
 
 ## Testing
 
@@ -203,7 +238,7 @@ checks the model against it and writes `BOM.md` at the repository root).
 
 The browser tools in `tools/` open `index.html?snap&qa` themselves. They need
 Python with numpy, scipy and Playwright's Chromium, and write their output into
-the folder they're run from. `escapement.js` and `solve.py` need no browser. The
+the folder they're run from. `escapement.js`, `almanac.js` and `solve.py` need no browser. The
 root README's "Checking your changes" lists which to run and what they should
 report.
 
@@ -551,6 +586,11 @@ every speed); the equation gives the amplitude and the rate.
 - A photographed Model 21 dial of the U.S. Maritime Commission contract (the Hamilton dial's layout, inscriptions and hands) and a photographed movement, serial 2E12055 (the plate engraving's text and layout, and the serial used on the plates and dial). Both are in `References/`.
 - Videos of real Model 21s (`References/VIDEOS.md`, which records what each shows and every measurement): a 4K restoration of a 1941 movement, serial 2E8489 (C Spinner Watch Restorations, https://www.youtube.com/watch?v=KLUwI2UUCMQ), for the going train's tooth counts (fusee and centre wheels 90, third 80 with a pinion of 12, fourth 75, the wind indicator wheel 120) and which wheel is which, and for the balance lower bridge's form and heights; BunnSpecial's two-part teardown (https://www.youtube.com/watch?v=Jd2c3x8VKsE, https://www.youtube.com/watch?v=wcYqdgpyggQ) for the bridges and pillars off. Counted with `tools/video.py`. Like the photographs, they are a source of truth.
 - The photographed dial above, again: its UP–DOWN scale's ticks, 8 h apart, sweep 315.7° over 56 h; the model's 313.6° comes from the train.
+- For the essay's sky sections and their almanac (`shared/almanac.js`, "The almanac" above): J. Meeus, *Astronomical Algorithms*, 2nd ed. (Willmann-Bell,
+  1998), chs. 7, 10–13, 16, 21–23, 25, 40, 47 and Appendix III; F. Espenak and J. Meeus's ΔT polynomials (NASA, 2006); the IERS's measured ΔT (as skyfield
+  1.55 carries it); the Astronomical Almanac's low-precision formulas for the Sun (the essay's hand rules); N. Bowditch, *The American Practical Navigator*
+  (Pub. No. 9), and the Nautical Almanac, for the altitude corrections, sight reduction and the 57 navigational stars; SIMBAD (CDS, Strasbourg) for the
+  stars' places and motions. Checked against JPL Horizons (DE441) and skyfield 1.55 with JPL's de440s (`tools/almanac-ref.json`).
 
 ## How the layout was measured
 
@@ -611,7 +651,7 @@ every speed); the equation gives the amplitude and the rate.
 - The shapes of the springs: the winding-pawl springs (long arcs round the wheel's middle from a two-screw foot about 150° round back to the pawl, as the video, 19:12, and Figs. 28 and 69 have them; their radius, 12.1 FK, and the feet's places read to about 1 mm), the stop-bar spring, the sustaining pawl's spring's top (a straight wire set upright in the pawl, as the video has it, 35:37.5-36:15; its top end taken to stand in a hole through the train bridge, where two small sunk holes stand side by side on the bridge's face over it, 36:23-36:29, and its preload, the pawl turned 0.12 rad in from its seat there) and the setup pawl spring's thickness and height (0.3 and 0.85 mm) and its pins' places: it runs about half a turn round the ratchet at r 8.98 (the video: 1.23-1.31 of the ratchet's tip radius) from two steady pins to the click's back, as C Spinner's video (11:58) and Fig. 108 have it. The setup ratchet's 42 teeth are counted on that video to about ± 2 (`References/VIDEOS.md`), its tips at r 7.05 (the video at 11:58, against the cover screws' tapped holes 23.6 mm apart: 7.04; the top-view photograph through `tools/topview.py`'s map: 7.0-7.3); the cover's feet are steps under its ends, outside the spring; its centre hole r 3.0 and the arbor's square about 7.5 mm over the ratchet (the video: about r 3 and 8–10 mm, rough). The setup pawl turns on its pivot screw, put in from under the barrel bridge (Op. 41, Fig. 80), whose end shows in the cover as both photographs show it, 8.95 mm from the barrel arbor (2E12055 8.94, the top-view photograph 8.95, each through its fitted map; the video 1.34 tip radii, 9.4); the tip at the teeth's root about 34° round, the click 5.07 mm from pivot to tip (the video about 5.1 in the ratchet's measure, the top-view photograph 5.1). The winding-pawl springs lie in a groove in the sustaining ratchet's face on the video (19:12: about 0.7 wide at r 10.6-11.3); the model lays them over the face at that radius, the groove not cut (hidden between the fusee and its wheel; the toothed wheel would have to be built in layers). The fusee's large end has a rim 0.4 tall (estimated: as tall as it can be, 0.1 clear of the sustaining ratchet and its pawl) round its recess, its inner edge 0.84 of the end's radius (18:20). The dust seal is in its proportions on the video (6:29: the packing 0.42 of its diameter tall, the column about 3.5 mm, the flange r 8.6), its flange with a shallow concave bite between the screws on the 12's side (about 7 mm wide, 1.6 deep: rough). The sustaining spring's travel from loaded to spent (`SMAX`): the fusee wheel's turn in the longer of Sec. IV's 5 to 10 minutes of drive, 9.3°. No wind outlasts it, since model time runs at most 10× while winding. The close-up's drive left and the essay's maintaining-power figure count from these 10 minutes.
 - The sustaining spring: its band (2.1 mm wide, r 15.8–18.0), its ends and the fusee wheel's recess (wall r 18.0, a raised disc to r 9.3 and a hub) are measured on the restoration video (`References/VIDEOS.md`, 27:26), against the wheel's tips taken as 40.87 mm, and drawn ×`FK` (0.882) like every size read against the wheel; the gap (17° relaxed), the lobes' sizes, which of the fixed end's two holes has the pin, the band's thickness (1.13 mm) and the elevations' heights are estimated. It is pinned to the wheel at one end and to the sustaining ratchet at the other, as the manual has it; loaded, the ratchet's pin closes the gap and the band bows in from the wall, keeping its length.
 - The barrel arbor's core (r 1.74) and hook, the barrel wall (0.2 mm thick) and the brace lining it (0.25 mm thick, 40° of the wall), the end plate and taper pin (the plate gilt brass, r 7.0 or less to clear the centre wheel, with a raised boss round its hole and the slot of Ops. 27–29 across the boss, as Fig. 69 draws it and the video shows it, 18:22, 18:25; the boss's r 2.2 estimated; the 9.6 mm pin's ends standing out past the boss), the winding ratchet's 36 teeth (the video, 18:20: likely, not certain), and the chain's end pin and hook (its nose through a hole 0.7 mm across in the wall, as Figs. 17 and 75 have it; the hole's size and the nose's place, 0.85 mm past the last link, estimated).
-- The chain's links: figure-eight plates (Fig. 38) 0.9 mm high and 0.18 thick, three deep along the arbor, riveted at a 1.0 mm pitch. The chain is 660 links, about 26 in with its straight run; one sale listing gives 28.5 in for the Hamilton's.
+- The chain's links: figure-eight plates (Fig. 38) 0.9 mm high and 0.18 thick, three deep along the arbor, riveted at a 1.7 mm pitch (the side photograph's chain on the fusee, 1.55-1.76, and KLUwI2UUCMQ 23:45, the chain on the mat, 1.71-1.85; 1.0 until 4 October 2026); the plates' height is measured there too, their thickness estimated. The chain is about 390 links, about 26 in (660 mm) with its straight run; one sale listing gives 28.5 in for the Hamilton's.
 - The mainspring's length and lie. Its thickness is from the parts list (0.0165 in, 0.419 mm); its length (1,064 mm) is estimated, filling half the room between the core and the brace, the length that gives the most turns; C Spinner's video gives about 1.1 m (0.9–1.25; 15:54, 32:30). It lies in two packs, one on the arbor and one on the wall, their coils 0.01 mm apart (the grease), joined by one free turn (estimated). In the model's barrel, on a core of r 1.74 (estimated: the arbor's pivots are r 1.4), that spring takes 11.4 turns from its fewest to its most. The fusee's chain needs 4.85 of them on the barrel (r 17.6, measured: below), with a set-up of 0.37 turn (estimated), so it is never wound near its most. The core was r 2.4 (6.53 turns) until the fusee was measured, which needed more chain. The eye in its inner end for the arbor's hook, and the anchor pin at its outer end (the parts list's "complete with anchor pin"), drawn bearing on the brace's leading end, are estimated.
 - The detent's dimensions.
   - Its plan follows Fig. 90 and its construction Figs. 14 and 110 and the chronometerbook photograph. Thicknesses and heights are estimated.
