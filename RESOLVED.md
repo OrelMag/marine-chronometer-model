@@ -1284,6 +1284,14 @@ An arbor needs pivots and shoulders; a stone its seat.
   bridge's measured cut leaves (was 3); the endstone cap gilt, not steel. Keep
   them measured (SHAPE-PASS.md, 2). `a06b0fe`
 
+- **The balance cock's arm swept into the body in an estimated cove.** On the
+  restoration video (44:02, the cock in place from its straight edge; 23:45)
+  the arm is flat underneath out to the body's wall, a square step, and its
+  underside and walls polished; the cove is gone. On the way: the stud's three
+  holes in the cock (the balance's entry) needed counterbores in the arm, which
+  stepGeo now cuts there as in the body. Keep the arm's underside traced
+  (SHAPE-PASS.md, 2). `65f770a`
+
 ## Rate panel
 
 - **Balance far too light.** The screws and weights were drawn as cylinders
@@ -1634,10 +1642,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The balance cock's arm swept into the body in an estimated cove.** On the
-  restoration video (44:02, the cock in place from its straight edge; 23:45)
-  the arm is flat underneath out to the body's wall, a square step, and its
-  underside and walls polished; the cove is gone. On the way: the stud's three
-  holes in the cock (the balance's entry) needed counterbores in the arm, which
-  stepGeo now cuts there as in the body. Keep the arm's underside traced
-  (SHAPE-PASS.md, 2).
+None at the moment.
