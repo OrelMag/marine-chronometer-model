@@ -439,7 +439,7 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
   else{pr.push(V2(rb+0.18,y1),V2(rb,y1-0.14),V2(rb,y0));}
   return new THREE.LatheGeometry(pr,32);}
 /* arbor with wheel & pinion: returns rotating group */
-/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number}} WheelOpts
+/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[]}} WheelOpts
     n teeth of module m, centred at y, th thick (1); mate: the pinion it drives (its addenda); collet: its radius, 0 for none; cp, cside: below */
 /** @typedef {{n?:number,m:number,y:number,th?:number,bore?:number}} PinionOpts  n leaves (10), th long (2.5), centred at y */
 /** @param {any} parent @param {any} M the materials @param {number} x @param {number} z
@@ -487,9 +487,8 @@ function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y f
   const P=Array.isArray(kind)&&kind;if(P)w=P[0][1];
   const s=new THREE.Shape(),b=o&&o.boss,yb=b&&Math.sqrt(b*b-w*w/4),ab=b&&Math.acos(w/2/b);
   if(b){if(tail>yb&&!P){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);s.lineTo(w/2,-yb);s.absarc(0,0,b,-ab,ab,false);}else s.moveTo(w/2,yb);}
-  else if(P);
-  else if(tail<0){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
-  else{s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);}
+  else if(tail<0&&!P){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
+  else if(!P){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);}
   if(P){const Q=b?P.filter(p=>p[0]>yb):P,pts=[...Q.map(([y,x])=>[x/2,y]),...Q.map(([y,x])=>[-x/2,y]).reverse()].filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);
     pts.forEach(([x,y],i)=>!b&&!i?s.moveTo(x,y):s.lineTo(x,y));}
   else if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}

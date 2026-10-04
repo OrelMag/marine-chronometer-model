@@ -1664,4 +1664,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Pillars and screws estimated** (Plates, bridges, screws and arbors). The
+  pillar screws' heads r 2.77 and 2.0 tall (side photograph; were r 2.9, 1.6);
+  the barrel pillar a cone from a wide foot to r 2.25 under a groove at 14.0 mm
+  (13:08; it was pinched at 6.3 mm, by eye); the detent block's screw flush in
+  a counterbore r 1.4 (10:46; it stood proud); the balance's timing screws end
+  2.7 mm outside the rim (6:50.0: 3.3 from its inner face). Keep them traced (SHAPE-PASS.md, 5).
