@@ -1,3 +1,4 @@
+// @ts-check
 /* box.js: mounting box (glass lid hinged to the box, outer lid hinged to the glass lid), gimbal ring, case, winding key
    Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 
@@ -65,7 +66,7 @@ function buildBox(M){
   const vScrew=(p,x,z,y,r,h,len,id)=>{const g=hn(new THREE.Group(),id);p.add(g);g.userData.sc={r,h,len,rs:r*0.5};mesh(g,cylY(r,h,20),M.brass2,x,y+h/2,z);mesh(g,new THREE.BoxGeometry(r*2.02,0.3,r*0.35),M.steelD,x,y+h-0.1,z);mesh(g,cylY(r*0.5,len,12),M.brass2,x,y-len/2,z);g.userData.axis=g.children[2];return g;};   /* a screw put in from above: head from y up, shank len down */
   { const bt=BY+1.5,bp=[[LP-3.5,LP-3.5],[W-T,LP-3.5],[W-T,W-T],[LP-3.5,W-T]];
     hn(mesh(lat,polyGeo(bp,3,[hT(LP,LP,1.8),hT(LP+4.2,LP,0.5),hT(LP+5.6,LP,0.5)]),M.brass2,0,BY-1.5,0),'42109');   /* tapped for the clamping screw and the take-up spring's screws */
-    for(const[ax,t]of[['x',LP+2.5],['z',LP+2.5]]){hn(sHead(lat,ax,1,W+0.4,1.1,0.6,BY,t,T+2.4),'42115');const w=hn(mesh(lat,ringGeo(1.6,0.62,0.4),M.brass2,ax==='x'?W+0.2:t,BY,ax==='x'?t:W+0.2),'42123');if(ax==='x')w.rotation.z=Math.PI/2;else w.rotation.x=Math.PI/2;}   /* through the box wall (drawn without a hole) into the bracket */
+    for(const[ax,t]of/** @type {[string,number][]} */([['x',LP+2.5],['z',LP+2.5]])){hn(sHead(lat,ax,1,W+0.4,1.1,0.6,BY,t,T+2.4),'42115');const w=hn(mesh(lat,ringGeo(1.6,0.62,0.4),M.brass2,ax==='x'?W+0.2:t,BY,ax==='x'?t:W+0.2),'42123');if(ax==='x')w.rotation.z=Math.PI/2;else w.rotation.x=Math.PI/2;}   /* through the box wall (drawn without a hole) into the bracket */
     hn(mesh(lat,polyGeo(stadiumPts([LP+1.6,LP],[LP+6.3,LP],1.2),0.3,[hC(LP+4.2,LP,0.5),hC(LP+5.6,LP,0.5)]),M.blued,0,bt,0),'42277');   /* the take-up spring, its free end under the lever's collar */
     for(const x of[LP+4.2,LP+5.6])vScrew(lat,x,LP,bt+0.3,0.5,0.35,0.3+1.5,'42276');
     const ct=LY+0.7+0.6;hn(mesh(lat,polyGeo([[LP-2.2,LP-2.2],[LP+2.2,LP-2.2],[LP+3.2,LP+2.2],[LP+2.2,LP+3.2],[LP-2.2,LP+2.2]],0.6,[hC(LP,LP,1.8)]),M.brass2,0,ct,0),'42110');   /* the clamping bracket on the lever's boss */

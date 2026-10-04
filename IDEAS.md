@@ -763,6 +763,8 @@ At 62 KB and 484 dense lines, `app.js` holds the part descriptions, the 2-D esca
 - **Do it only when a feature needs it.** The rate book or the adjuster's bench would each add a few hundred lines.
 
 ### 7.5 Light type checking without npm (S)
+> **Done (4 October 2026), for the model's own files.** `jsconfig.json` lists the scripts in load order and `js/globals.d.ts` declares three.js and `makeEsc`; `core.js`, `movement.js`, `box.js`, `shared/escapement.js` and `shared/escplan.js` start with `// @ts-check` and type-check clean, in `ci.py` (`npx -p typescript@5.9.3 tsc`, pinned). JSDoc types on `makeEsc`'s settings, `ESC.state`'s result, `update()`'s argument, `arbor`'s options, `part` and `screw`; a misspelt setting, wheel option or state field (`psdef`) is an error, as planted ones showed. Full checking found 134 errors and no bug (all inference in the dense code); the 19 in the checked files are cleared with JSDoc casts, no code changed (placements unchanged). Open: `app.js` (91) and `essay.js` (24), mostly element types from `$` and `querySelectorAll`; `update()`'s callers are in `app.js`, so its state fields are checked once that is.
+
 - **Annotations:** add `// @ts-check` and a handful of JSDoc types on the public surfaces: `ESC.state`'s return, `mv.userData.update`'s argument, and `part()`/`arbor()`/`screw()`.
 - **Where it pays off:** VS Code checks it with no build step, and catches misspelt state fields (`psDef` against `psdef`) as you type.
 - **Optional CI step:** `npx tsc --noEmit --allowJs`. It needs Node only, which the tools already use.

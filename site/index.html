@@ -847,6 +847,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 
 </script>
 <script>
+// @ts-check
 /* core.js: helpers, materials (damascened nickel, gilt), textures, engraving, gear/spring/hand/pawl/escape-wheel geometry, dial, cross-section patch, drawing (tinted or in ink)
    Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 "use strict";
@@ -1286,6 +1287,11 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
   else{pr.push(V2(rb+0.18,y1),V2(rb,y1-0.14),V2(rb,y0));}
   return new THREE.LatheGeometry(pr,32);}
 /* arbor with wheel & pinion: returns rotating group */
+/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number}} WheelOpts
+    n teeth of module m, centred at y, th thick (1); mate: the pinion it drives (its addenda); collet: its radius, 0 for none; cp, cside: below */
+/** @typedef {{n?:number,m:number,y:number,th?:number,bore?:number}} PinionOpts  n leaves (10), th long (2.5), centred at y */
+/** @param {any} parent @param {any} M the materials @param {number} x @param {number} z
+    @param {{wheel?:WheelOpts,pin?:PinionOpts,prof?:number[][],ar?:number[],r?:number}} o  prof: a turned arbor (shaftGeo); ar: [y0, y1], a plain one of radius r (0.55) */
 function arbor(parent,M,x,z,o){
   const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
   let wy=null,cy=null;   /* the wheel's and the collet's y ranges, and the collet's radius, for the check below */
@@ -1343,7 +1349,7 @@ function dialCanvas(kind){
   const SANS='"Instrument Sans", Arial, sans-serif',up=a=>Math.cos(a)<-1e-6?a+Math.PI:a;   /* figures set radially, those in the lower half turned to read upright */
   const arcT=(t,cx,cy,r,a,low)=>{const cs=[...t],w=cs.map(ch=>x.measureText(ch).width);let th=a+w.reduce((s,v)=>s+v,0)/r/2*(low?1:-1);   /* letters along an arc, centred on a; low: along the bottom, tops inward */
     cs.forEach((ch,i)=>{const d=w[i]/r/2*(low?-1:1);th+=d;x.save();x.translate(cx+r*Math.sin(th),cy-r*Math.cos(th));x.rotate(low?th+Math.PI:th);x.fillText(ch,0,0);x.restore();th+=d;});};
-  const tri=(r1,a)=>{const p=(r,d)=>[c+r*Math.sin(a+d),c-r*Math.cos(a+d)];x.beginPath();x.moveTo(...p(r1,0.012));x.lineTo(...p(r1,-0.012));x.lineTo(...p(r1-c*0.028,0));x.closePath();x.fill();};   /* hour mark: a small triangle on the outer line, pointing in */
+  const tri=(r1,a)=>{const p=(r,d)=>/** @type {[number,number]} */([c+r*Math.sin(a+d),c-r*Math.cos(a+d)]);x.beginPath();x.moveTo(...p(r1,0.012));x.lineTo(...p(r1,-0.012));x.lineTo(...p(r1-c*0.028,0));x.closePath();x.fill();};   /* hour mark: a small triangle on the outer line, pointing in */
   if(nard){
     const sov=kind==='soviet',CYR='Arial, "Helvetica Neue", Roboto, "DejaVu Sans", sans-serif';   /* Cyrillic is outside the vendored fonts' subset: system sans */
     x.textAlign='center';x.textBaseline='middle';
@@ -1360,7 +1366,7 @@ function dialCanvas(kind){
     else{circ(c,uy,ru,S*0.0016,A(0),A(56));circ(c,uy,ru*0.92,S*0.0012,A(0),A(56));circ(c,uy,ru*0.55,S*0.0012,25*D2R,335*D2R);
       for(let h=0;h<=56;h+=8)ln(c,uy,A(h),ru*0.92,ru,S*(h%56?0.0012:0.0035));
       for(let h=8;h<=48;h+=8)rad(String(h),c,uy,A(h),ru*0.74,1,up(A(h)));
-      x.font=`500 ${S*0.02}px ${SANS}`;for(const[t,r,s]of[['UP',1.24,1],['HAUT',1.07,1],['DOWN',1.24,-1],['BAS',1.07,-1]])arcT(t,c,uy,ru*r,s*39*D2R);}
+      x.font=`500 ${S*0.02}px ${SANS}`;for(const[t,r,s]of/** @type {[string,number,number][]} */([['UP',1.24,1],['HAUT',1.07,1],['DOWN',1.24,-1],['BAS',1.07,-1]]))arcT(t,c,uy,ru*r,s*39*D2R);}
     /* hours, the 6 under the seconds sub-dial */
     if(sov){x.font=`600 ${S*0.12}px ${SANS}`;x.lineWidth=S*0.0045;x.lineJoin='round';   /* stroked over the fill: the vendored face has no bold */
       for(let i=1;i<=12;i++){if(i===6)continue;const a=i/12*TAU,r=c*(i===5||i===7?0.8:0.72),px=c+r*Math.sin(a),py=c-r*Math.cos(a)+S*0.004;x.fillText(String(i),px,py);x.strokeText(String(i),px,py);}}
@@ -1426,6 +1432,7 @@ function dialCanvas(kind){
 
 </script>
 <script>
+// @ts-check
 /* escapement.js: the Hamilton Model 21 spring detent escapement, solved in a unit 2D frame. Shared by the working model (js/movement.js), the essay's
    detent figure (src/p4.js) and the check against the manual (chronometer-working-model/tools/escapement.js, Node.js).
    makeEsc(settings) builds it; any setting below can be given, angles in degrees. Nothing is declared at the top level but makeEsc, since the pages
@@ -1434,6 +1441,11 @@ function dialCanvas(kind){
    Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (13.16/2 mm). Layout after the manual's Fig. 90 plan view. The detent's
    lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with the passing spring's tip, and the
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
+/** @typedef {{EX?:number,A?:number,G?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,TF?:number,MU?:number,fD?:number,fP?:number,HS?:number}} EscSettings
+    any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
+/** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean}} EscState
+    state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1), the wheel running free */
+/** @param {EscSettings} [o] */
 function makeEsc(o={}){
   const TAU=Math.PI*2,D2R=Math.PI/180,ES=13.16/2;
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side at the model's settings (ESC.A, the running amplitude, follows other settings: below).
@@ -1496,6 +1508,7 @@ function makeEsc(o={}){
      the detent, completes the impulse and passes the trip spring (AMIN) the wheel stays locked, which the caller keeps (the progress it reports assumes a running escapement).
      A swing that doesn't carry the discharge jewel back past the trip spring's tip (amp below -thPass) never gets it behind the spring to unlock: the spring stays bent
      against the jewel and follows it back, and the detent stays on its stop. drop: the wheel runs free, between release and the tooth landing on the impulse jewel */
+  /** @param {number} p the phase, 0 to 1 @param {number} [amp] the amplitude (rad) @returns {EscState} */
   function state(p,amp=A){
     const th=-amp*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0,pass=thPass!==null&&amp>=-thPass;
     const lift=ccw&&pass?tab(LI,th):0,psDef=ccw&&pass?0:tab(PS,th);let prog,drop=false;
@@ -1504,6 +1517,7 @@ function makeEsc(o={}){
     return{th,ccw,lift,psDef,prog,drop};
   }
   /* passing spring as root, control point and tip (unit frame) for a state: rides with the detent, tip bent along -nB on the return swing */
+  /** @param {{lift:number,psDef:number}} s @returns {[{x:number,y:number},{x:number,y:number},{x:number,y:number}]} */
   function springPts(s){const a0=rot(Ps0,s.lift),am=rot({x:(Ps0.x+Pt.x)/2,y:(Ps0.y+Pt.y)/2},s.lift),tp=rot(Pt,s.lift);tp.x-=nB.x*s.psDef;tp.y-=nB.y*s.psDef;return[a0,am,tp];}
   /* plan outlines in detent coordinates (t along the detent from Ft, n toward nB), after Fig. 90 and the detent photograph in chronometerbook post 4.
      Moving (rotate about Ft by -lift/LEN): two-strip detent spring, cross-piece, blade, jewel block, arm, horn, Z bracket. Fixed: foot, support block (shortened to clear the train pillar behind it) and stop button */
@@ -1536,7 +1550,7 @@ function makeEsc(o={}){
      taking fD and fP of the impulse's work (estimated), so there A is c.A and the rate 0. Rate: Airy's result, each push τ|dθ| (τ toward +θ) at θ advancing the
      phase by -(τ|dθ|/k)θ/(A²√(A²-θ²)) an oscillation: before the dead point a push gains and a resistance loses, after it the reverse. In s a day against the reference */
   let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=TH0+i*DT;break;}                                // unlocking swing: discharge jewel meets the trip spring
-  const T=0.5,Q=Math.PI*c.TF/T,CAL=['EX','A','TF','MU','fD','fP'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-DEF[k])<1e-9),RF=makeEsc.refs||(makeEsc.refs={}),rk=CAL.map(k=>c[k]).join();
+  const T=0.5,Q=Math.PI*c.TF/T,CAL=['EX','A','TF','MU','fD','fP'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-DEF[k])<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join();
   let wk=null;
   if(a0!==null&&released&&thOff!==null&&thPass!==null){
     const paAt=th=>{const a=bite(th);return a>-1e8?a-t0:-1e9;},pfAt=th=>-(th-thRel)*G,phiAt=th=>clampP(Math.max(pfAt(th),paAt(th))),clampP=x=>Math.min(0,Math.max(-P,x));
@@ -1557,7 +1571,7 @@ function makeEsc(o={}){
   let run,CL=null,PH0=0;
   if(isRef){let cl=null,ph=0,br=null;if(wk){const w=Math.PI*A0*A0/Q/(wk.EI*(1-c.fD-c.fP)-wk.ER);cl={w,Kd:wk.ED>0?c.fD*w*wk.EI/wk.ED:0,Kp:wk.ET>0?c.fP*w*wk.EI/wk.ET:0};br=parts(cl,A0);ph=sumP(br);}
     RF[rk]={cl,ph};CL=cl;PH0=ph;run={A:A0,rate:0,own:day(ph),parts:br,cl};}
-  else{const R0=RF[rk]||(makeEsc(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl,Wn=wk&&cl?cl.w*(wk.EI-wk.ER)-cl.Kd*wk.ED-cl.Kp*wk.ET:0,a=Wn>0?Math.sqrt(Q*Wn/Math.PI):0,br=a>=AMIN?parts(cl,a):null;
+  else{const R0=RF[rk]||(/** @type {any} */(makeEsc)(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl,Wn=wk&&cl?cl.w*(wk.EI-wk.ER)-cl.Kd*wk.ED-cl.Kp*wk.ET:0,a=Wn>0?Math.sqrt(Q*Wn/Math.PI):0,br=a>=AMIN?parts(cl,a):null;
     CL=cl;PH0=R0.ph;run={A:a,rate:br?day(sumP(br)-R0.ph)+c.HS*(a-A0)/D2R/10:NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
   if(wk&&run.cl){const cl=run.cl;Object.assign(run,{Q,Wi:cl.w*wk.EI,fu:(cl.w*wk.ER+cl.Kd*wk.ED+cl.Kp*wk.ET)/(cl.w*wk.EI),land:wk.tl,drive:wk.EI});}
   const A=run.A;
@@ -1609,6 +1623,7 @@ if(typeof module!=='undefined')module.exports={makeEsc};
 
 </script>
 <script>
+// @ts-check
 /* escplan.js: the plan of the spring detent escapement, drawn on a 2D canvas from the solver's own outlines (makeEsc, escapement.js), as the manual's Fig. 90 has it
    (from the balance cock's side). One drawing for the model's walkthrough inset and adjuster's bench and the essay's detent figure.
    Declares drawEscPlan and escStage only (TAU, D2R kept inside), since the pages that load it declare their own. */
@@ -1675,6 +1690,7 @@ function drawEscPlan(ctx,w,h,s,Ew,o={}){
 
 </script>
 <script>
+// @ts-check
 /* movement.js: the Model 21 movement: photo-measured layout, Rawlings-based escapement, bridges, crescent cock, train, maintaining work, fusee, chain and winding key
    Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 /* =====================================================================
@@ -1696,6 +1712,7 @@ function drawEscPlan(ctx,w,h,s,Ew,o={}){
    - Third arbor: measured on a restoration video (References/VIDEOS.md), 16.0 mm from the centre, where the counted wheels' size ratios put it;
      escape wheel position from the escapement (9.40 mm from the balance). The modules (MOD) follow from the arbors' spacing: 0.314 / 0.245 / 0.249.
    ===================================================================== */
+/** @type {Object<string,[number,number]>} plan places [x, z], mm */
 const L={C:[0,0],T:[-8.524,14.186],F:[0,21.6],E:[9.352,15.607],B:[1.609,10.277],Fu:[14.306,-14.519],Ba:[-22.144,-5.347],Ud:[0,-22.9],Mw:[11.3,0]};   /* the train (F, T, E) and the indicator's stud (Ud) as KLUwI2UUCMQ measures them at the plate's 87.57 mm (References/VIDEOS.md, "The fourth arbor, the pillars, the
    indicator and the ring", "The scale"): the fourth 21.6 from the centre under the seconds (34:30, 40:08), the third 16.55 at 149 deg from the 12 (34:30), the escape arbor 9.40 from
    the balance toward the escape jewel seen from above (10:00, 9.46 from it); with the modules from these spacings the wheels' sizes come out as counted (centre / third 1.45,
@@ -1978,7 +1995,7 @@ function seatPawl(pts,q,th0,pr){
   for(let i=0;i<28;i++){const m=(a+b)/2;f(m)>=0?a=m:b=m;}return a;}
 /* wheel rotation (within one tooth) at which a pawl, pivot q and angle th0 in the parent frame (wheel centre at the origin), rests at the bottom of a
    tooth space against a steep face; dir = +1: the face meets it when the wheel turns with rotation.y rising, -1: falling. Returns wheel and pawl angles */
-function phaseAgainst(pr,pts,q,th0,dir){let best=null;const N=240;
+function phaseAgainst(pr,pts,q,th0,dir){let best=/** @type {any} */(null);const N=240;
   for(let i=0;i<N;i++){const psi=pr.p*i/N,ql=toWheel(q,[0,0],psi),th=seatPawl(pts,ql,th0-psi,pr),c=Math.cos(th),sn=Math.sin(th),t=pts[PAWL_TIP];
     const r=Math.hypot(ql[0]+t[0]*c+t[1]*sn,ql[1]-t[0]*sn+t[1]*c);(best=best||[]).push([psi,r,th+psi]);}
   const rmin=Math.min(...best.map(b=>b[1]));let k=best.findIndex(b=>b[1]<rmin+0.004);
@@ -1991,6 +2008,7 @@ const toWheel=(p,c,psi)=>{const x=p[0]-c[0],z=p[1]-c[1],co=Math.cos(psi),sn=Math
 
 function buildMovement(M){
   const mv=new THREE.Group(),parts={},R={};const V2=(a,b)=>new THREE.Vector2(a,b);
+  /** @param {string} name its key (PARTS in app.js) @param {number} off its rise in the Exploded view (mm) @param {boolean} [ef] in the escapement's frame: returns that group */
   const part=(name,off,ef)=>{const g=new THREE.Group();g.userData.off=off;g.userData.partName=name;mv.add(g);parts[name]=g;
     if(ef){const e=new THREE.Group();e.position.set(L.B[0],0,L.B[1]);e.rotation.y=BETA;g.add(e);g.userData.ef=e;return e;}return g;};
   /* screw: a fillister head seated at y (in p's frame), the head toward -y, and a threaded shank len mm long toward +y, into the parts it holds (Figs. 108-110 draw
@@ -1998,6 +2016,7 @@ function buildMovement(M){
      Head, shank and slot are one group, which the Exploded view lifts out of its holes along the screw's axis, as the manual's exploded views draw them (SCREWS) */
   const SCREWS=[],loose=(g,lift)=>{g.userData.y0=g.position.y;g.userData.lift=lift;SCREWS.push(g);return g;};   /* loose: g moves on its own in the Exploded view, lift mm toward its frame's -y past its part */
   const headOn=(g,p,q)=>{g.userData.lift+=parts[p].userData.off-parts[q].userData.off;return g;};   /* a screw of part p put in through part q: it leaves with q, then lifts out of it */
+  /** @type {(p:any,...xzy_r_h_len_rs:number[])=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length and the thread's radius; numbers, so a place can be spread in (...S.blk) */
   const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r))=>{const c=Math.min(0.35,r*0.14),pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
     if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt));pr.push(V2(rs,0),V2(rs,len-n*pt-d));   /* rings of thread (drawn as turned grooves, not a helix), a chamfered tip */
       for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));}
@@ -2018,7 +2037,7 @@ function buildMovement(M){
   const y0=-PP_T;
   /* ---------- screw positions (x, z), worked out before the plates are cut: a clearance hole where a screw passes through a part (hC), a tapped hole where it holds (hT).
        42055 (pillar, bridge and mounting-ring screws) have heads r 2.9; ESCAP: the endstone caps' screws (20762) ---------- */
-  const add=(a,b,k=1)=>[a[0]+b[0]*k,a[1]+b[1]*k],sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],unit=a=>{const l=Math.hypot(...a);return[a[0]/l,a[1]/l];},ry=(a,[x,z])=>[x*Math.cos(a)+z*Math.sin(a),-x*Math.sin(a)+z*Math.cos(a)];
+  const add=(a,b,k=1)=>[a[0]+b[0]*k,a[1]+b[1]*k],sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],unit=a=>{const l=Math.hypot(...a);return[a[0]/l,a[1]/l];},ry=(a,/** @type {number[]} */[x,z])=>[x*Math.cos(a)+z*Math.sin(a),-x*Math.sin(a)+z*Math.cos(a)];
   const eu=unit(sub(L.E,L.B)),lbu=unit(sub(L.F,L.B)),ESCAP=0.45,PSR=2.9;
   /* the escape upper bridge's length (ebu): 72 deg round from the balance-escape line, across it (KLUwI2UUCMQ 10:00, from above: its end screws' line, 68 deg until the escape
      arbor's move; 13:44, where its screws land on the two lugs either side of the keyhole's escape lobe); ebn: across it, toward the balance */
@@ -2417,7 +2436,7 @@ function buildMovement(M){
   const dt=part('det',-40,true);
   R.det=hn(new THREE.Group(),'42087');R.det.position.set(E.Ft.x*ES,0,E.Ft.y*ES);dt.add(R.det);const fx=new THREE.Group();fx.position.copy(R.det.position);dt.add(fx);   /* moving about the point of flexure; fixed */
   /* pts: an outline, or the name of one of ESC.pieces, which is rebuilt from ESC when the escapement's settings change (escSet, the adjuster's bench); holes likewise, or a function */
-  const DETM=[],poly=(g,pts,ya,yb,mat,holes=[])=>{const k=typeof pts==='string'?pts:null,F=typeof pts==='function'?pts:null,G=()=>{const s=new THREE.Shape();(k?E.pieces[k]:F?F():pts).forEach((p,i)=>{const x=(p.x-E.Ft.x)*ES,z=(p.y-E.Ft.y)*ES;i?s.lineTo(x,z):s.moveTo(x,z);});s.closePath();
+  const DETM=[],poly=(g,pts,ya,yb,mat,holes=/** @type {any} */([]))=>{const k=typeof pts==='string'?pts:null,F=typeof pts==='function'?pts:null,G=()=>{const s=new THREE.Shape();(k?E.pieces[k]:F?F():pts).forEach((p,i)=>{const x=(p.x-E.Ft.x)*ES,z=(p.y-E.Ft.y)*ES;i?s.lineTo(x,z):s.moveTo(x,z);});s.closePath();
     for(const[p,r]of typeof holes==='function'?holes():holes){const h=new THREE.Path();h.absarc((p.x-E.Ft.x)*ES,(p.y-E.Ft.y)*ES,r,0,TAU,true);s.holes.push(h);}   /* holes: [unit-frame point, radius in mm] */
     const ge=extrude(s,{depth:yb-ya,bevelEnabled:false,curveSegments:12});ge.rotateX(Math.PI/2);ge.translate(0,yb,0);return ge;},m=mesh(g,G(),mat);if(k||F)DETM.push({m,G});return m;};   /* pts: an outline, one of ESC.pieces by name, or a function of ESC */
   const Fx=E.fixed,Cu=M.copper;
@@ -2794,6 +2813,12 @@ function buildMovement(M){
   /* when winding starts the spring turns the sustaining ratchet back until a steep face meets the sustaining pawl */
   const holdBack=a=>{const q0=[SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],tr=psi=>{const q=toWheel(q0,[0,0],psi),th=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-psi,SRP),t=R.spawl.userData.pts[PAWL_TIP],c=Math.cos(th),sn=Math.sin(th);return Math.hypot(q[0]+t[0]*c+t[1]*sn,q[1]-t[0]*sn+t[1]*c);};
     let b=a,r=tr(a);for(let i=0;i<60;i++){const nb=b-SRP.p/40,nr=tr(nb);if(nr>r+0.004)break;b=nb;r=Math.min(r,nr);}return b;};
+  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean}} MoveState
+      E: the escape wheel's place in teeth, which turns every arbor; th: the balance's angle (rad); lift, psDef: the detent's lift and the passing spring's bending (ESC.state);
+      n: fusee turns from full wind; winding: the key turning; slip: seconds the key has turned the hands; hkeyOn, keyOn: the hand-setting and winding keys shown;
+      blk, arm: the train-blocking screw and the locking arm, 0 (up, unlocked) to 1; ssX: the sustaining spring drawn that many times relaxed (0: as it is); dt: the frame's seconds;
+      springOn, msOn: rebuild the hairspring, the mainspring (only when they can be seen) */
+  /** @param {MoveState} s */
   mv.userData.update=(s)=>{
     const P=E.P,esc=s.E*P;
     R.esc.rotation.y=-E.t0+esc;   /* tips at t0+kP when E is whole */
@@ -3012,6 +3037,7 @@ function makeFusee(M,c){
 
 </script>
 <script>
+// @ts-check
 /* box.js: mounting box (glass lid hinged to the box, outer lid hinged to the glass lid), gimbal ring, case, winding key
    Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 
@@ -3079,7 +3105,7 @@ function buildBox(M){
   const vScrew=(p,x,z,y,r,h,len,id)=>{const g=hn(new THREE.Group(),id);p.add(g);g.userData.sc={r,h,len,rs:r*0.5};mesh(g,cylY(r,h,20),M.brass2,x,y+h/2,z);mesh(g,new THREE.BoxGeometry(r*2.02,0.3,r*0.35),M.steelD,x,y+h-0.1,z);mesh(g,cylY(r*0.5,len,12),M.brass2,x,y-len/2,z);g.userData.axis=g.children[2];return g;};   /* a screw put in from above: head from y up, shank len down */
   { const bt=BY+1.5,bp=[[LP-3.5,LP-3.5],[W-T,LP-3.5],[W-T,W-T],[LP-3.5,W-T]];
     hn(mesh(lat,polyGeo(bp,3,[hT(LP,LP,1.8),hT(LP+4.2,LP,0.5),hT(LP+5.6,LP,0.5)]),M.brass2,0,BY-1.5,0),'42109');   /* tapped for the clamping screw and the take-up spring's screws */
-    for(const[ax,t]of[['x',LP+2.5],['z',LP+2.5]]){hn(sHead(lat,ax,1,W+0.4,1.1,0.6,BY,t,T+2.4),'42115');const w=hn(mesh(lat,ringGeo(1.6,0.62,0.4),M.brass2,ax==='x'?W+0.2:t,BY,ax==='x'?t:W+0.2),'42123');if(ax==='x')w.rotation.z=Math.PI/2;else w.rotation.x=Math.PI/2;}   /* through the box wall (drawn without a hole) into the bracket */
+    for(const[ax,t]of/** @type {[string,number][]} */([['x',LP+2.5],['z',LP+2.5]])){hn(sHead(lat,ax,1,W+0.4,1.1,0.6,BY,t,T+2.4),'42115');const w=hn(mesh(lat,ringGeo(1.6,0.62,0.4),M.brass2,ax==='x'?W+0.2:t,BY,ax==='x'?t:W+0.2),'42123');if(ax==='x')w.rotation.z=Math.PI/2;else w.rotation.x=Math.PI/2;}   /* through the box wall (drawn without a hole) into the bracket */
     hn(mesh(lat,polyGeo(stadiumPts([LP+1.6,LP],[LP+6.3,LP],1.2),0.3,[hC(LP+4.2,LP,0.5),hC(LP+5.6,LP,0.5)]),M.blued,0,bt,0),'42277');   /* the take-up spring, its free end under the lever's collar */
     for(const x of[LP+4.2,LP+5.6])vScrew(lat,x,LP,bt+0.3,0.5,0.35,0.3+1.5,'42276');
     const ct=LY+0.7+0.6;hn(mesh(lat,polyGeo([[LP-2.2,LP-2.2],[LP+2.2,LP-2.2],[LP+3.2,LP+2.2],[LP+2.2,LP+3.2],[LP-2.2,LP+2.2]],0.6,[hC(LP,LP,1.8)]),M.brass2,0,ct,0),'42110');   /* the clamping bracket on the lever's boss */
