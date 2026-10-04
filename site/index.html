@@ -474,6 +474,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
           <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case's own swing (about 0.7 s, estimated) they can't, and it swings with the box"><span>Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
           <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
           <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+          <label class="ck c2 span" title="Keep the settings in this browser for the next visit: the view and Display options, theme, dial, plate finish, balance, units, rate settings and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
           <div class="seg c2 span"><button id="dispReset" title="Every Display option back to its default, and every faded or hidden part shown again (the theme stays)">Reset display</button></div></div>
       </details>
       <details class="grp more" id="partsDet">
@@ -4055,8 +4056,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const about=$('#about'),aboutOpen=()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');};$('#aboutBtn').addEventListener('click',aboutOpen);
   about.addEventListener('click',e=>{if(e.target===about)about.close();});
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
-  /* settings this browser remembers, as it does the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
-  const SET=(()=>{try{const o=JSON.parse(localStorage.getItem('cm-set')||'{}');return o&&typeof o==='object'?o:{};}catch(_){return{};}})(),keep=(k,v)=>{SET[k]=v;try{localStorage.setItem('cm-set',JSON.stringify(SET));}catch(_){}};
+  /* Remember settings (Display; off by default): only with it on (cm-remember) does this browser keep anything for the next visit. Off, nothing is stored and what was is cleared at load */
+  const RK=['cm-set','cm-theme','cm-open','cm-state'];let REM=false;try{REM=localStorage.getItem('cm-remember')==='1';if(!REM)RK.forEach(k=>localStorage.removeItem(k));}catch(_){}
+  const lsGet=k=>{if(!REM)return null;try{return localStorage.getItem(k);}catch(_){return null;}},lsSet=(k,v)=>{if(!REM)return;try{localStorage.setItem(k,v);}catch(_){}};
+  /* settings remembered, as are the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
+  const SET=(()=>{try{const o=JSON.parse(lsGet('cm-set')||'{}');return o&&typeof o==='object'?o:{};}catch(_){return{};}})(),keep=(k,v)=>{SET[k]=v;lsSet('cm-set',JSON.stringify(SET));};
   units=SET.units==='in'?'in':'mm';
   document.querySelectorAll('#units button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.v===units?'true':'false');b.addEventListener('click',()=>{units=b.dataset.v;keep('units',units);
     document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
@@ -4102,10 +4106,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     else if(performance.now()-ks.t>2500)ksEnd();}   /* the key comes off and the bezel goes back */
   ksBtn.addEventListener('click',ksStart);
   $('#spin').addEventListener('change',e=>st.spin=e.target.checked);
-  /* theme: Auto follows the system; a choice is remembered in this browser */
-  const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));try{localStorage.setItem('cm-theme',v);}catch(_){}};
+  /* theme: Auto follows the system; a choice is remembered with Remember settings */
+  const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));lsSet('cm-theme',v);};
   document.querySelectorAll('#theme button').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.v)));
-  try{const v=localStorage.getItem('cm-theme');if(v==='light'||v==='dark')setTheme(v);}catch(_){}
+  {const v=lsGet('cm-theme');if(v==='light'||v==='dark')setTheme(v);}
   /* save the view as a PNG: render and copy in the same task, while the drawing buffer is still valid, over the page background */
   $('#shot').addEventListener('click',()=>{paint();const c2=document.createElement('canvas');c2.width=cv.width;c2.height=cv.height;const x=c2.getContext('2d');x.fillStyle=getComputedStyle(document.body).backgroundColor;x.fillRect(0,0,c2.width,c2.height);x.drawImage(cv,0,0);
     c2.toBlob(b=>{if(!b)return;const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='hamilton-model-21.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);});});
@@ -4116,10 +4120,16 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* Reset display: each Display box back to its default (See-through to the view's own; the drawings before Edges, which they disable), faded and hidden parts back. The theme stays */
   $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:true,shadows:false,merge:true,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
     for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}{const r=$('#rollP');r.value=7;r.dispatchEvent(new Event('input'));}st.op={};st.hid.clear();st.iso=null;look();opRender();});
-  /* the panel's sections: each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
-  const DET=[...document.querySelectorAll('.ctl>details.grp')];
-  try{const o=JSON.parse(localStorage.getItem('cm-open')||'{}');DET.forEach(d=>{if(typeof o[d.id]==='boolean')d.open=o[d.id];});}catch(_){}
-  DET.forEach(d=>d.addEventListener('toggle',()=>{try{localStorage.setItem('cm-open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));}catch(_){}}));
+  /* the panel's sections: with Remember settings, each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
+  const DET=[...document.querySelectorAll('.ctl>details.grp')],detSave=()=>lsSet('cm-open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));
+  try{const o=JSON.parse(lsGet('cm-open')||'{}');DET.forEach(d=>{if(typeof o[d.id]==='boolean')d.open=o[d.id];});}catch(_){}
+  DET.forEach(d=>d.addEventListener('toggle',detSave));
+  /* cm-state: the hash's settings (view, moving parts only, speed, section, drawing, colours, Edges, Shadows, Performance mode, time zone, bench, balance's weights, mainspring's set),
+     without what belongs to a moment: a walkthrough step, the part shown, the hands' time, a section opened, the balance held. Written with the hash; at load it stands in for a missing hash */
+  const remSave=()=>{if(!REM||ESSAY.on()||st.tour>=0)return;const h=new URLSearchParams(hashOf());for(const k of['tour','part','t','open','arm','block'])h.delete(k);lsSet('cm-state',h.toString());};
+  $('#remember').checked=REM;$('#remember').addEventListener('change',e=>{REM=e.target.checked;
+    if(REM){try{localStorage.setItem('cm-remember','1');}catch(_){}lsSet('cm-set',JSON.stringify(SET));lsSet('cm-theme',document.documentElement.dataset.theme||'auto');detSave();remSave();}
+    else try{['cm-remember',...RK].forEach(k=>localStorage.removeItem(k));}catch(_){}});
   /* parts list: every named part, grouped. A name singles the part out as a tap does; the box hides it, as the right-click menu does */
   const BOXP=new Set(PGRP[0][1]),plist=$('#plist'),PROWS=[];
   for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);const gh=plist.lastElementChild;
@@ -4560,7 +4570,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
-  function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
+  function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
   function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):first&&!g('tour')&&own(VIEWS,SET.view)?SET.view:'dial';   /* own keys only: 'constructor' is no view or part. At load, no view in the hash: the last one seen here */
     if(h.has('essay')){ESSAY.show(true,g('essay'));return v;}ESSAY.show(false);   /* the essay: the model underneath is left as it is */
@@ -4588,6 +4598,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     return v;}
   addEventListener('hashchange',()=>applyHash(false));
   for(const k of['finish','dial','bal','stop']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k==='stop'?'stopV':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}
+  {const s=location.hash.slice(1)?'':lsGet('cm-state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
   const startView=applyHash(true);
 
   /* ---------- gimbals with inertia (2.5 in IDEAS.md): the case (with the ring, about the ring's pivots) hangs as a pendulum below each axis, its angle ψ from the vertical:
