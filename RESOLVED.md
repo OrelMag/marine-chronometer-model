@@ -1353,7 +1353,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   r 4.8, the collet scaled with it. With the Navy's brake fitted, its arch, which
   the coils ran into at full swing, now clears them by about 1.3 mm. Keep: the
   radius read against the rim's fitted radius or ellipse, never against its
-  visible ends; the collet scaled with the coil (CKS).
+  visible ends; the collet scaled with the coil (CKS). `9c8fdc3`
 
 ## Rate panel
 
