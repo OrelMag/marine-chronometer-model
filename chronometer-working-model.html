@@ -2451,12 +2451,14 @@ function buildMovement(M){
   const bl=part('bal',-80,true);
   /* the hairspring stud's holes in the cock's top, read on KLUwI2UUCMQ 41:58 (the cock top up, 4K) through a homography fitted on the cock screw's counterbore, the endstone setting, the
      cap's two screw holes and the top face's two arc-end corners (COCK_POLY 30 and 0): 0.02-0.14 mm residuals, the corners each predicted from the rest to 0.5-0.65. A row of three along
-     the cock's straight edge, at (along, across) the line from the staff to the cock screw (SPD, SPDn): a small hole 3.8 mm from the staff (SPHc), the stud screw's, wider (counterbored), 6.9
-     (SPHb), and a small one 10.4 (SPHa): the stud's two steady pins either side of its screw (the model had one pin, 5.6 out, and the screw 7.6 along SPD). The row's line passes 2.0 from the
+     the cock's straight edge, at (along, across) the line from the staff to the cock screw (SPD, SPDn): 41:58 gives (2.23, -3.07), (5.44, -4.27), (8.65, -5.73); the top-view photograph,
+     nearly overhead, with the stud in place (a pin, the slotted stud screw, a pin), through its map on the barrel bridge's screws from the setting's centre, (1.93, -3.49), (5.03, -4.97),
+     (8.36, -6.49) (its scale a few % large: the cock's top is 11 mm above that map's plane); their mean, +-0.4: a small hole 3.9 mm from the staff (SPHc), the stud screw's, wider
+     (counterbored), 7.0 (SPHb), and a small one 10.5 (SPHa): the stud's two steady pins either side of its screw (the model had one pin, 5.6 out, and the screw 7.6 along SPD). The row's line passes 2.0 from the
      staff; the stud's clamp is on it at HS_R, and the hairspring's ends are both at HS_R in the clamp's direction (SPD2; SPSI, the same as a rotation in the balance's frame). The spring rises
      HS_H from HS_Y, below the collet, to the clamp under the cock */
   const Q=S.cock,SPD=(()=>{const d=[Q[0]-L.B[0],Q[1]-L.B[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),SPDn=[-SPD[1],SPD[0]],SPH=(a,c)=>[L.B[0]+a*SPD[0]+c*SPDn[0],L.B[1]+a*SPD[1]+c*SPDn[1]];
-  const SPHc=SPH(2.23,-3.07),SPHb=SPH(5.44,-4.27),SPHa=SPH(8.65,-5.73),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),HS_R=4.6;
+  const SPHc=SPH(2.08,-3.28),SPHb=SPH(5.24,-4.62),SPHa=SPH(8.51,-6.11),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),HS_R=4.6;
   const SPCL=(()=>{const w=[SPHc[0]-L.B[0],SPHc[1]-L.B[1]],p=w[0]*SPu[0]+w[1]*SPu[1],t=-p+Math.sqrt(p*p-(w[0]**2+w[1]**2)+HS_R*HS_R);return[SPHc[0]+t*SPu[0],SPHc[1]+t*SPu[1]];})(),SPD2=[(SPCL[0]-L.B[0])/HS_R,(SPCL[1]-L.B[1])/HS_R];
   const SPSI=Math.atan2(-SPD2[1],SPD2[0])-BETA,HS_RC=6.3,HS_N=9,HS_Y=BAL_Y-2.3,HS_H=5.9,SPS=SPHb;   /* SPS: the stud screw */
   R.staff=hn(new THREE.Group(),'42186');bl.add(R.staff);
@@ -2633,18 +2635,18 @@ function buildMovement(M){
      the balance's top, 8.6 down; the hairspring keeps under the flat part, within 7.1 mm), the step's wall then going on down to the train bridge */
   R.cock=mesh(ck,stepGeo(ckEdge(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.3),add(L.B,EPu,-3.0),5.2)])),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.8,0.8).slice(0,3),2.95,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),[...hC(...SPS,0.8).slice(0,3),0.9,0.45],[...SPHa,0.3],[...SPHc,0.3]]),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath out to the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the arm's underside meets the body in a square step, the space under it open from the barrel bridge's horn, r 16.4, to the body's wall, 18.6; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
-  hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.steel,...[L.B[0],0,L.B[1]]),'42162.bu');
+  hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.gilt,...[L.B[0],0,L.B[1]]),'42162.bu');   /* gilt: KLUwI2UUCMQ 41:58, the cap off */
   hn(mesh(ck,stoneGeo(0.95,0.22,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone */
   /* its two steady pins ("complete with pins", 42066), 1.5 mm into the train bridge, under the body */
   for(const q of S.ckp)cylBetween(ck,0.4,TB_T,TB_T+1.5,M.steel,...q);
   /* one balance cock screw (parts list 42192), at its position on the top-view photograph (p3map scr_cockfoot), its head down in the counterbore */
   hn(screw(ck,...Q,CK_T+CK_CB,2.8,1.5,TB_T-CK_T-CK_CB+2.5,0.8),'42192');   /* through the cock into the train bridge */
   hn(screw(ck,...SPS,CK_T+0.45,0.8,0.45,2.6),'27760.st');   /* through the cock into the stud, its head flush in the counterbore */   /* hairspring stud screw (27760), down through the cock to the stud (Figs. 19, 84) */
-  /* endstone cap (42160) over the staff, as C Spinner's video shows it on the cock (5:51, 42:03, 42:08) and off it (41:58): a gilt brass plate 0.7 mm thick (41:58 shows it gilt round its steel setting; until 4 October 2026 drawn steel), symmetric about the
+  /* endstone cap (42160) over the staff, as C Spinner's video shows it on the cock (5:51, 42:03, 42:08) and off it (41:58): a steel plate 0.7 mm thick (the top-view photograph shows it steel; at 41:58, with it off, the gilt ring is the setting under it), symmetric about the
      staff, its screws' (20762) heads sunk flush in counterbores 0.4 deep at either end; at its centre the setting (42155), pressed in flush with both faces, has a polished
      conical oil sink 3.1 mm across in its top down to the endstone, set from below flush with the cap's underside, r 0.95, 0.025 over the pivot's end */
   const ep=new THREE.Group();ep.position.set(L.B[0],CK_T,L.B[1]);ep.rotation.y=EPa;ck.add(ep);
-  hn(mesh(ep,cbGeo(EPo,0.7,[[0,0,1.6],...EP.map(q=>[...hC(...q,0.7).slice(0,3),0.75,0.4])]),M.gilt,0,-0.7,0),'42160');
+  hn(mesh(ep,cbGeo(EPo,0.7,[[0,0,1.6],...EP.map(q=>[...hC(...q,0.7).slice(0,3),0.75,0.4])]),M.steel,0,-0.7,0),'42160');
   hn(mesh(ep,new THREE.LatheGeometry([V2(0.95,0),V2(0.95,-0.3),V2(0.75,-0.3),V2(1.55,-0.7),V2(1.6,-0.7),V2(1.6,0),V2(0.95,0)],40),M.steel),'42155');hn(mesh(ep,cylY(0.95,0.3,32),M.ruby,0,-0.15,0),'J.bue');
   for(const q of EP)hn(screw(ep,...q,-0.3,0.7,0.4,0.3+1.8),'20762.ep');
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, over the third wheel) ---------- */

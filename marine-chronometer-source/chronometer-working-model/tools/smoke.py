@@ -182,8 +182,9 @@ async def essay(b,errs,steps):
     if t is None or not 0<=t<=140:errs.append(f'#essay=detent: the section heading at {t}')
     await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
     if not await pg.evaluate("ESSAY.on()&&location.hash.startsWith('#essay')"):errs.append('#essay=detent: the essay closed once the model loaded')
-    await pg.evaluate("document.querySelector('#tabModel').click()");await pg.wait_for_timeout(2000);steps.append('back to the model tab')
-    if await pg.evaluate("ESSAY.on()||location.hash.startsWith('#essay')"):errs.append('the 3D model tab left the essay open or in the address')
+    await pg.evaluate("document.querySelector('#tabModel').click()");steps.append('back to the model tab')
+    try:await pg.wait_for_function("!ESSAY.on()&&!location.hash.startsWith('#essay')",timeout=10000)   # the address is written 300 ms after the change (writeHash), later on a loaded machine: a fixed 2 s wait raced it
+    except Exception:errs.append('the 3D model tab left the essay open or in the address')
     await pg.close()
 async def main():
     errs,steps=[],STEPS

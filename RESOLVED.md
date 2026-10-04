@@ -1281,7 +1281,8 @@ An arbor needs pivots and shoulders; a stone its seat.
   line to the cock screw), the cock's underside flat out past it (its cove from
   11.3, was 9); the arm 1.9 wide (2.4); the timing nuts 2.3 long and 2.1 across
   (1.7 and 2.4), so their travel is 2 turns either way, all the room the barrel
-  bridge's measured cut leaves (was 3); the endstone cap gilt, not steel. Keep
+  bridge's measured cut leaves (was 3); the balance upper setting gilt (41:58,
+  the cap off; the cap itself steel, as the top-view photograph shows). Keep
   them measured (SHAPE-PASS.md, 2). `a06b0fe`
 
 - **The balance cock's arm swept into the body in an estimated cove.** On the
@@ -1642,4 +1643,10 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **smoke.py failed under load on leaving the essay.** It clicked the 3D model
+  tab and checked after a fixed 2 s; the address is written 300 ms after a
+  change (writeHash), later when the machine is busy with other browser checks,
+  so it failed twice on 4 October 2026 though the switch is right (the hash
+  clears within 0.5 s, three trials). It now waits for the essay to close and
+  the hash to clear, up to 10 s. Wait on conditions, not fixed times, in the
+  browser checks (Build, tools and docs).
