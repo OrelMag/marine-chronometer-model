@@ -1671,4 +1671,7 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The fusee chain's pitch and the winding pawls estimated.** The chain's
+  pitch 1.7 mm (side photograph and 23:45; was 1.0), the winding pawls 2.0 wide
+  (19:12; were 0.9). The sustaining ratchet's 120 teeth and the barrel
+  arbor's square checked, unchanged. Keep them measured (SHAPE-PASS.md, 6).
