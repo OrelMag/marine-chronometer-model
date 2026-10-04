@@ -3107,15 +3107,23 @@ function buildBox(M){
   wood(2*W-2*T,1,2*W-2*T,0,yF+T+0.5,0,root,M.felt);
   const brassCorner=(p,x,y,z,h,cz=0)=>{const sx=Math.sign(x),sz=Math.sign(z-cz);mesh(p,new THREE.BoxGeometry(12,h,1.2),M.brass,x-sx*5.4,y,z+sz*0.6);mesh(p,new THREE.BoxGeometry(1.2,h,12),M.brass,x+sx*0.6,y,z-sz*5.4);};
   for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,yF+H0/2,sz*W,H0);}
-  for(const sx of[1,-1]){const hp=mesh(root,new THREE.BoxGeometry(1.2,22,52),M.brass,sx*(W+0.6),-38,0);
-    const hd=new THREE.Mesh(closeGeo(new THREE.TorusGeometry(20,2.2,10,32,Math.PI)),M.brass);hd.rotation.set(Math.PI,Math.PI/2,0);hd.position.set(sx*(W+3),-34,0);root.add(hd);}
+  /* the side handles as KLUwI2UUCMQ 0:45 shows them (the box's side, oblique): a bail between two round rosettes, the rosettes at the gimbal pivot's height either side of its
+     boss, their centres 0.31 of the box's width apart (61 mm) and r 15 (0.15 of it), the bail hanging below between them; read along the face against the box's 197 mm (+-10 %). The
+     bail's section and swan neck, and the rosettes' thickness, estimated. Until 4 October 2026 a plate with a half-ring below the pivot */
+  const V2=(a,b)=>new THREE.Vector2(a,b),HY=-20;   /* HY: the gimbal pivots' height (RY, below) */
+  for(const sx of[1,-1]){const RZ=30.5,RR=15;for(const sz of[1,-1]){const ro=mesh(root,cylY(RR,1.6,40),M.brass,sx*(W+0.8),HY,sz*RZ);ro.rotation.z=Math.PI/2;const ey=mesh(root,cylY(3.2,5,20),M.brass,sx*(W+1.6+2.5),HY,sz*RZ);ey.rotation.z=Math.PI/2;}
+    const hd=new THREE.Mesh(closeGeo(new THREE.TorusGeometry(RZ,2.4,10,40,Math.PI)),M.brass);hd.rotation.set(Math.PI,Math.PI/2,0);hd.position.set(sx*(W+5.5),HY,0);root.add(hd);}
   /* winding key standing in a socket on a corner block at the back right (Fig. 1), low enough for the lids to close */
-  const KX=W-T-12;wood(24,59,24,KX,yF+T+30.5,-KX,root,M.woodEdge);   /* stands on the felt */mesh(root,cylY(4.2,4,20),M.brass2,KX,yF+T+62,-KX);
-  const key=hn(new THREE.Group(),'42044');key.userData.partName='key';key.position.set(KX,-26,-KX);root.add(key);key.rotation.y=Math.PI/4;
-  mesh(key,cylY(2.2,20,16),M.brass,0,10,0);
-  const kt=mesh(key,new THREE.CylinderGeometry(3,3,20,20),M.brass,0,21,0);kt.rotation.x=Math.PI/2;for(const sz of[10,-10])mesh(key,new THREE.SphereGeometry(3,20,12),M.brass,0,21,sz);mesh(key,new THREE.SphereGeometry(4.2,20,14),M.brass,0,21,0);
-  const V2=(a,b)=>new THREE.Vector2(a,b);
-  /* slotted screw along an axis: 'x' or 'z', outward sign s, head from r0 to r0+h, and its shank (half the head's radius) sh mm back into the part under it */
+  /* the key as KLUwI2UUCMQ 0:45 shows it held up: a pipe (the socket for the fusee's square) up to a short neck, a cone widening to a collar, and a flat paddle with a rounded top,
+     in proportion to the pipe's width (traced on the frame: total 10.6 widths, the pipe 4.1 of them, cone 2.0, collar 0.9 and 2.2 wide, paddle 2.9 tall and 3.1 wide); the pipe's
+     outside r 2.2 as before, so the scale is estimated (+-15 %). Until 4 October 2026 a T bar with balls. KB: its foot, standing in its socket on the corner block, which is lower
+     by as much as the longer key needs to stay under the glass lid */
+  const KX=W-T-12,KB=-50.5,kw=4.4;wood(24,59-23,24,KX,yF+T+30.5-11.5,-KX,root,M.woodEdge);   /* stands on the felt */mesh(root,cylY(4.2,4,20),M.brass2,KX,KB-2,-KX);
+  const key=hn(new THREE.Group(),'42044');key.userData.partName='key';key.position.set(KX,KB,-KX);root.add(key);key.rotation.y=Math.PI/4;
+  mesh(key,new THREE.LatheGeometry([V2(0,0),V2(kw/2,0),V2(kw/2,4.1*kw),V2(0.6*kw,4.4*kw),V2(1.1*kw,6.1*kw),V2(1.1*kw,7.0*kw),V2(0,7.0*kw)],24),M.brass);   /* pipe, neck, cone, collar */
+  { const pw=3.1*kw/2,ph=2.9*kw,pt=0.8*kw,sh=new THREE.Shape();sh.moveTo(-1.05*kw,0);sh.lineTo(-pw,ph-pw);sh.absarc(0,ph-pw,pw,Math.PI,0,true);sh.lineTo(1.05*kw,0);sh.closePath();
+    const pg=extrude(sh,{depth:pt,bevelEnabled:false,curveSegments:24});pg.translate(0,7.0*kw,-pt/2);mesh(key,pg,M.brass); }   /* the paddle on the collar, as wide as it at its foot, widening to its rounded top; its thickness (0.8 of the pipe's width) estimated */
+    /* slotted screw along an axis: 'x' or 'z', outward sign s, head from r0 to r0+h, and its shank (half the head's radius) sh mm back into the part under it */
   const sHead=(p0,ax,s,r0,rad,h,y,t,sh=2.5)=>{const p=new THREE.Group();p0.add(p);p.userData.sc={r:rad,h,len:sh,rs:rad*0.5};const X=ax==='x',m=mesh(p,cylY(rad,h,20),M.brass2,0,y,0),sl=mesh(p,X?new THREE.BoxGeometry(0.6,rad*2.02,rad*0.35):new THREE.BoxGeometry(rad*0.35,rad*2.02,0.6),M.steelD,0,y,0),k=mesh(p,cylY(rad*0.5,sh,12),M.brass2,0,y,0);
     if(X){for(const q of[m,k])q.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);k.position.x=s*(r0-sh/2);sl.position.x=s*(r0+h-0.25);m.position.z=sl.position.z=k.position.z=t||0;}
     else{for(const q of[m,k])q.rotation.x=Math.PI/2;m.position.z=s*(r0+h/2);k.position.z=s*(r0-sh/2);sl.position.z=s*(r0+h-0.25);m.position.x=sl.position.x=k.position.x=t||0;}return p;};   /* one group: the screw's parts-list line goes on it */
@@ -3189,11 +3197,13 @@ function buildBox(M){
      solids. The shield plate under the bottom sits a full millimetre behind the floor seen from inside: at 0.05 mm its outline showed through the floor (depth precision) */
   let bot;   /* the case's bottom: rebuilt below with the shield plate's screw holes */
   const botG=hs=>{const bs=new THREE.Shape();bs.absarc(0,0,FR,0,TAU,false);for(const[x,z,r]of[[fu[0],fu[1],KH],...hs]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);bs.holes.push(h);}const fl=extrude(bs,{depth:BT,bevelEnabled:false,curveSegments:60});fl.rotateX(-Math.PI/2);return fl;};
-  { const YS=MR_FL,RF=CR-FR,arc=(r,cy,a0,a1)=>{const o=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;o.push(V2(FR+r*Math.sin(a),cy-r*Math.cos(a)));}return o;};
+  /* the bottom's outside (KLUwI2UUCMQ 47:35, the case from below, nearly face-on): a flat annulus out to an edge rounded about 1.6 mm (RF), a raised ring at r 33.5-36 round a recess
+     the shield plate fills (0.728 and 0.676 of the outer edge, read across the centre; the case's outside taken as CR). Until 4 October 2026 the bottom curved into the wall on r 11.5 */
+  { const YS=MR_FL,RF=1.6,FRo=CR-RF,arc=(r,cy,a0,a1,c0=FR)=>{const o=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;o.push(V2(c0+r*Math.sin(a),cy-r*Math.cos(a)));}return o;};
     /* the wall's section below the recess, one closed outline: inside face up from the floor's edge to the shoulder, out to the outside face and down it to the bottom's outside face */
-    const pr=[...arc(SH-FR,-FD+SH-FR,0,Math.PI/2),V2(SH,YS),V2(CR,YS),...arc(RF,-FD-BT+RF,Math.PI/2,0),V2(FR,-FD)];
+    const pr=[...arc(SH-FR,-FD+SH-FR,0,Math.PI/2),V2(SH,YS),V2(CR,YS),...arc(RF,-FD-BT+RF,Math.PI/2,0,FRo),V2(FR,-FD-BT),V2(FR,-FD)];
     hn(mesh(bowl,new THREE.LatheGeometry(pr.reverse(),120),M.brass),'42101');   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
-    bot=hn(mesh(bowl,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});   /* 60: the rim's 120 points, the lathe's own */
+    bot=hn(mesh(bowl,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});hn(mesh(bowl,ringGeo(36,33.5,0.5+0.8),M.brass,0,-FD-BT-(0.5+0.8)/2,0),'42101',{sub:1});   /* the raised ring round the shield plate, its face flush with the plate's (the height estimated) */   /* 60: the rim's 120 points, the lathe's own */
     /* the recess's wall, slotted at 12 o'clock down to the shoulder for the movement's alignment pin (Sec. III), so the pin goes in as the movement is lowered: below the
        thread, and the rim with the band outside it the bezel screws onto */
     const w=0.75/DB,a0=-Math.PI/2,bore=[...Array(121).keys()].map(k=>{const a=a0+w+(TAU-2*w)*k/120;return[DB*Math.cos(a),DB*Math.sin(a)];}),circ=r=>[...Array(120).keys()].map(k=>{const a=k/120*TAU;return[r*Math.sin(a),r*Math.cos(a)];});
@@ -3205,7 +3215,7 @@ function buildBox(M){
      the hook into the bottom, its other end turned in to a pin in the plate. Fig. 107 draws the plate's three holes (the shoulder's at its centre, the key's, the stop screw's on
      the other side) and the ring with its two ends. Estimated: the sizes, the half-radian turn, and the stop screw's hole an arc slot whose ends set the rest and open places
      (Fig. 107 draws it round; the parts list names no other stop). shield.rotation.y = 0 open, SH_REST closed */
-  const SH_REST=-0.5,KD=Math.hypot(fu[0],fu[1]),ah=Math.atan2(fu[1],fu[0]),as=ah+Math.PI,SR=36,RS=17,SW=0.8,PT=0.8,GAP=0.5,YO=-FD-BT,Y0=YO-GAP,YB=Y0-PT,YH=YB-0.05,WR=0.18,PR=4.5,PA=as+4.6;
+  const SH_REST=-0.5,KD=Math.hypot(fu[0],fu[1]),ah=Math.atan2(fu[1],fu[0]),as=ah+Math.PI,SR=33.3,RS=17,SW=0.8,PT=0.8,GAP=0.5,YO=-FD-BT,Y0=YO-GAP,YB=Y0-PT,YH=YB-0.05,WR=0.18,PR=4.5,PA=as+4.6;
   const shield=hn(new THREE.Group(),'42104');shield.position.set(0,Y0,0);bowl.add(shield);shield.userData.partName='bowl';
   const at=(r,a)=>[r*Math.cos(a),r*Math.sin(a)];   /* a: the angle in the xz plane, atan2(z, x); a plate point at a stands at a - rotation.y in the case */
   {const sh=new THREE.Shape();sh.absarc(0,0,SR,0,TAU,false);const hole=(c,r)=>{const p=new THREE.Path();p.absarc(c[0],c[1],r,0,TAU,true);sh.holes.push(p);};hole(at(KD,ah),KH);hole([0,0],1.55);

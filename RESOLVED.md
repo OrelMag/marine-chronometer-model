@@ -1676,4 +1676,8 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The case's bottom, the winding key and the box's handles drawn by eye.**
+  The case's bottom has the raised ring round the shield plate (47:35; the
+  plate r 33.3); the key is a pipe, cone, collar and flat paddle (0:45; it was
+  a T bar with balls); the side handles are a bail between two rosettes at the
+  gimbal pivot's height (0:45). Keep them traced (SHAPE-PASS.md, 7-8).
