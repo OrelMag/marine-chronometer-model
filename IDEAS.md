@@ -792,6 +792,8 @@ Small browser or Node checks on the model's arithmetic:
 - **Pawls:** after `update()` at a spread of states, every pawl's tip sits within a tolerance of its ratchet's profile.
 
 ### 8.3 Visual regression (M)
+> **Done (4 October 2026), as a report rather than committed images.** `.github/workflows/views.yml` renders every view (with and without Moving parts only) from the commit a push is based on and from the push, with the push's `views.py` (`--page` points it at the other checkout), and writes the changed pixels per view into the run's summary, the changed views in red as an artifact. On `main` the base is the commit before the push, on a branch where it left `main`. It runs only on pushes that touch the model or `vendor/`, and never fails: most visual changes are intended, and committed reference images would need re-rendering after every geometry change, on CI's Linux renderer. Before: the plan below.
+
 - **Reference images:** render the six views and a few walkthrough steps with `?snap` at a fixed size, and compare them with committed images using a perceptual tolerance.
 - **Where it helps:** material and lighting changes (4.x) and the three.js upgrade (4.3) are exactly the kind of change that silently breaks something in a view nobody opened.
 - **The renderer:** SwiftShader output is deterministic enough if the Chromium version is pinned.
