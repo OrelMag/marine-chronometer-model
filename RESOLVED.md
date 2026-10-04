@@ -1030,6 +1030,17 @@ Contents:
   the rim's height; locked, both pins on the rim's top edge (their lowest edge
   0.005 mm into it, under `fine.py`'s grid, so `--hold --eval
   "__mv.userData.stop('navy')"` passes with nothing new); free, 0.5 mm clear. `29cecd9`
+- **The Navy's balance brake through the hairspring in the Exploded view**
+  (Plates, bridges, screws and arbors; Variants, Balance stop). Lifted 22 past its
+  part, it rose 84 against the balance's and hairspring's (`spr`) 80, and passed
+  up through a piece of the hairspring's part standing 3.1 mm over it on the
+  slider's way, ending in it; the checks ran on the manual's arm, so nothing showed
+  until the Y-arm became the default. It now rises 19: above the balance under its
+  pins, below the hairspring's piece over it (`exploded.py` allows 18 to 20.6).
+  Keep: the brake's lift between the balance's and the hairspring's; with the Y-arm the default,
+  run `exploded.py` and `audit.py` as they are and with `--eval
+  "__mv.userData.stop('arm')"` for the manual's arm, and `bom.py` fits the arm
+  itself (the parts list's). `HASH`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
