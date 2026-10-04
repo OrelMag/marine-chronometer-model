@@ -271,7 +271,14 @@ times JavaScript's milliseconds of UT.
   discs is left out (under 0.3′ above 10°, and the same in the almanac's own sight).
 - **Venus and Mars** (`ALM.planet`): JPL's approximate Keplerian elements (Standish, Table 1, 1800–2050), the Earth from the Earth–Moon barycentre less
   the Moon's share, light-time, then precession, nutation and aberration: within 36″ and 102″ of Horizons from 1950 to 2049 (the essay states 1′ and 2′),
-  for sights, not lunars. Jupiter and Saturn are left out: those elements err 400″ and 600″ for them.
+  for sights, not lunars.
+- **Jupiter and Saturn** (`ALM.planet`, `PF` in `shared/almanac.js`): those elements err 400″ and 600″ for them (the two pull on each other), so their
+  heliocentric longitude, latitude and radius are short series fitted by least squares to JPL's DE440 (`tools/planets_fit.py`, from DE440s through skyfield,
+  every 4 days over 1850-2150): polynomials in T and 35-56 sine and cosine terms each in k1 λJ + k2 λS + k3 λU, chosen one at a time (the strongest left,
+  none within one cycle a span of another's frequency, so no two cancel), a factor T on the strongest. Within 8.1″ and 4.0″ of DE440 seen from the Earth at
+  worst, on the fit's dates and between them; against Horizons' apparent places at the 90 reference epochs, 6.6″ and 2.6″ (`tools/almanac.js`; the essay
+  states 10″ and 5″). Good for lunars, but only from 1850 to 2150: fitted to 1850-2100 alone, the series errs 108″ and 183″ by 2149. Semi-diameters at 1 au
+  98.44″ and 82.73″ (Meeus, Ch. 55; Saturn's globe).
 - **By hand.** `sunHand` is the Astronomical Almanac's short formulas, as the essay prints them: within 0.6′ of the full series from 1950 to 2049, enough
   for a time sight, not for a lunar (the Moon needs the series, so its pages print).
 
