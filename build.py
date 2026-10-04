@@ -15,7 +15,7 @@ Writes:
      social-movement.png   an image of the mechanism titled for the essay, for posting
      sitemap.xml, robots.txt   for search engines (with --site-url only)
 The HTML file is self-contained: three.js and the fonts are inlined, so nothing is fetched from another server.
-Its version and list of changes come from CHANGELOG.md (changelog.py); a build without --release changes neither, so CI's rebuild matches.
+Its version and list of changes come from CHANGELOG.md (changelog.py); a build without --release changes neither, so ci.py's rebuild matches.
 """
 import argparse,gzip,os,pathlib,re,shutil,subprocess,sys
 ROOT=pathlib.Path(__file__).resolve().parent

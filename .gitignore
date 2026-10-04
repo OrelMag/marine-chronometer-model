@@ -10,5 +10,7 @@ bundle.npy
 *.H.json
 holes_*.json
 !marine-chronometer-source/chronometer-working-model/tools/anchors/holes_*.json
+# ci.py's logs and renders
+ci-logs/
 # wrangler's local state
 .wrangler/

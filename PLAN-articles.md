@@ -104,7 +104,7 @@ Each page has its own `<title>`, description, `Article` JSON-LD and "Open in the
   - add an "Articles" group to the model's About dialog next to "Further reading" (`index.html:198`);
   - add the shared footer to the essay;
   - optionally add an `/articles` index page.
-- CI (`.github/workflows/checks.yml`): add the new built pages to the `git diff --exit-code` list.
+- `ci.py`: add the new built pages to `BUILT`, the built copies its build step checks.
 
 ## 5. Checks
 - **`tools/smoke.py`:** generalise `essay()` into `page(path)` and loop over every built page. For the widget pages, also change every input and toggle once, and fail on any console error.
