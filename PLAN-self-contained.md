@@ -75,6 +75,17 @@ manual's figures become the test.
 | A4 | **The escape wheel with mass.** | Its inertia from its drawn solid and brass. The drop and impulse become a chase: the wheel accelerates, then strikes. `makeEsc` gets a dynamic impulse; the geometry stays. | Lock, let-off, drop and overall still meet Ops. 84–97. The impulse's efficiency and the landing angle are reported, not assumed. | M |
 | A5 | **Temperature from the materials.** | The rim's and arm's expansion, and the spring's thermoelastic coefficient (alloy from D1, D2), give the linear term and the curvature. Table IV and card No. 3390 become checks, not inputs. For the variant (D2 b), the bimetal dimensions that compensate a steel spring. | The derived curve is within the card's figures (0.08 / 0.06 / 0.02 s a day) and the Bureau of Ships limits. | M |
 
+**A2 in part (4 October 2026):** the hairspring designed (`shared/hairspring.js`, `tools/hairspring.js`, in `ci.py --quick`):
+- **Stiffness:** 91.4 µN·m a radian.
+- **Strip:** 0.23 mm wide, measured on the video, by 0.226 mm thick for Elinvar at 180 GPa (0.216 for steel). The spring is 439 mm long, and its stress at
+  the swing is about 210 MPa.
+- **Outer terminal curve:** solved to Phillips' conditions into the stud's clamp, 15.3 mm, turning 343°.
+- **Pivot force:** the designed spring leaves 2.6e-5 of couple / R on the pivots, against 2.3 % for the ends the model draws.
+- **Inner end, open:** at the collet's face as drawn (3.62), only a 1.9-turn inward spiral meets the conditions; at 3.0–3.3 a 21–24 mm curve does.
+  Measure where the spring meets the collet (Review-results.md, "The hairspring's inner end"), then draw the spring as the designed strip.
+- **Isochronism:** with the force on the pivots gone, what remains is the strip's own (its curves' small departures, the material); to be computed when
+  the spring is drawn.
+
 ## Phase B: every part fully specified (L)
 
 | # | Item | How | Effort |

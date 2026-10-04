@@ -1,7 +1,7 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, types, smoke, invariants, solids, exploded, audit
-    python ci.py --quick      # without the browser checks (about 15 s): build, escapement, almanac, types
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, types, smoke, invariants, solids, exploded, audit
+    python ci.py --quick      # without the browser checks (about 30 s): build, escapement, almanac, hairspring, types
     python ci.py --full       # and the slow geometry checks (about 11 minutes more): fine.py, maintaining.py, bom.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
@@ -65,7 +65,8 @@ def views(log):
         subprocess.run(['git','worktree','remove','--force',wt],cwd=ROOT,capture_output=True);shutil.rmtree(tmp,ignore_errors=True)
 STEPS=[('build',build,'quick'),
  ('escapement',lambda log:run(['node',TOOLS/'escapement.js'],ROOT,log),'quick'),
- ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
+ ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),
+ ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),
  ('invariants',lambda log:run([PY,'invariants.py'],TOOLS,log),'browser'),

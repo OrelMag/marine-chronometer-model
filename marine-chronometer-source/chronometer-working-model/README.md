@@ -173,6 +173,33 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   to the essay where it was left; `sessionStorage` (`cm-essay-y`) keeps the place through a reload. The essay's old address on the live site
   (`/marine-chronometer`) is redirected to `/#essay` by `worker.js`.
 
+## The hairspring, designed
+
+`HSPR` (`shared/hairspring.js`, checked by `tools/hairspring.js`) designs the spring a maker would wind, from what the model measures: the coil (r 5.1, 12
+turns, 6.7 tall), the stud's clamp (2.65 from the staff, the stud's bar 54.8° off that radius) and the collet's face (3.62). The model doesn't draw it yet:
+`springGeo` still draws round wire with sine-ramp ends (below, the inner end is open).
+
+- **The stiffness** the balance needs: k = I (2π/T)², with Table II's I (578.5 g·mm²) and T 0.5 s: 91.4 µN·m a radian.
+- **The strip.** Its width along the axis measured on the restoration video side-on (6:49.5): each turn's section at the coil's edge 9–11 px at 45 px/mm,
+  and its share of the 0.56 mm pitch down the stack 0.38–0.50: 0.20–0.28 mm, 0.23 taken. From k = E b t³ / 12 L over the designed spring's 439 mm, its
+  thickness: 0.226 mm for an Elinvar-type alloy at 180 GPa (0.218–0.231 over 165–195 GPa and the width's range), 0.216 for spring steel (207 GPa): the
+  section about square, a wire more than a ribbon (the cube root keeps it within 4 % of the width's 13 %). Its bending stress at the 255° swing about 210 MPa.
+  Hamilton's patent US 2,379,780 ("a change in length of five one-hundred-thousandths of an inch in the usual chronometer hairspring will cause a change
+  of rate of one-tenth second per day") implies 549 mm for its usual spring, 20 % more than this one: a general figure, not the Model 21's.
+- **Phillips' conditions** (Phillips, 1861): each terminal curve's centroid on the perpendicular through the staff to the radius at its junction with the
+  coil, at R²/l from the staff, on the side the curve goes; with both, the spring's centroid stays on the staff as the coil winds and unwinds, and its
+  pull on the balance is a pure couple. Each curve is solved from its curvature (the coil's at the junction, a cubic after) for its end's place and
+  heading and the two conditions. The check (`HSPR.lateral`, Castigliano's theorem on the whole spring as a slender beam): the force the pivots carry
+  under a couple, over couple / R.
+- **The outer curve** runs into the clamp along the stud's bar toward its end (out along it toward the wedge pin, no curve meets the conditions inside
+  the coil): 15.3 mm, turning 343°, from r 5.1 to 2.65.
+- **The inner end is open.** At the collet's face as drawn (3.62, running along it) the shortest curve that meets the conditions and keeps off the collet
+  winds 1.9 turns in (54 mm); with the end held at 3.0–3.3 a curve of 21–24 mm (about 300°, like the outer) does it. The restoration video, face-on from
+  the stud's end (6:52.5), shows the outer curve, about half a turn turned in, and not the inner. So either the collet takes the spring nearer the staff
+  than drawn (Hamilton's US 2,457,631 forms the spring with "each end turned in" to the staff and to the cock), or the Model 21's inner curve doesn't meet
+  Phillips' conditions. Forces: both ends designed, 2.6e-5 of couple / R; the outer designed and the inner as drawn, 0.020; both as `springGeo` draws
+  them, 0.023: the inner end matters as much as the outer.
+
 ## The almanac
 
 The essay's sky sections carry their own almanac, `ALM` in `shared/almanac.js`, so the page alone (or its single-file copy, offline) is enough to rate
@@ -713,6 +740,7 @@ every speed); the equation gives the amplitude and the rate.
   - Reading "one full turn of timing weight" as both weights of the pair turned a turn each.
   - The weights' travel from the middle position the manual starts them at: the verniers 3 turns either way; the timing weights 2, all the room the measured nuts (2.3 mm long, 2.1 across; 6:52.5) leave between the rim and the barrel bridge's cut round the balance (r 17.6): 80 s a day either way at 40 s a turn, where 3 turns would cover the 2 minutes a day that screws and washers leave (Op. 5). Until 4 October 2026 the nuts were drawn 1.7 long with 3 turns.
   - The weights' drawn sizes.
+  - The hairspring's strip ("The hairspring, designed"): its width read on the video (0.20–0.28 mm), its moduli from published ranges (Elinvar-type alloys 165–195 GPa, spring steel 207), the spring's winding sense (counterclockwise from the collet, seen as `springGeo` draws it), and the terminal curves' form (a cubic in curvature: any curve that meets the conditions would do as well).
   - **The parts list's masses read as a matched pair's** (`PM` = ½; likely, not certain). The list prints each line once with its quantity beside it ("2", "4-6"), and Tables II and III change screws and washers only "For Pairs". Read as each one's mass: the timing nut as measured (2.1 mm across, 2.3 long, bored and slit; 6:52.5) is about 50 mg of steel, 63 solid, and can't weigh 93; the screws' heads as measured (2.9–3.2 across) would need a metal of density 12.6–14.3, gold, where read as a pair's they come to 6.3–7.1, a little lighter than solid brass (8.5; slotted and pointed); and the drawn balance falls 37 % short of Table II, against 8 % read as a pair's. What would settle it: a Model 21 balance screw or timing weight weighed, or the parts catalogue's own note on how its weights are given.
   - The washers' outer radius (1.0 mm, under the heads' 1.3) and the screws' masses at the middle of the parts list's ranges.
 - The upper train bridge's outline, the crescent of Figs. 29, 67 and 110: the disc of the rim (40.5; at least 38.5-39.4 on the side photograph against the measured plate, 38.6-40.2 on the video: `References/VIDEOS.md`, "The bridges' rims against the plate") less the cut round the barrel (r 21.0, above) and the notch round the fusee. The notch, its horn and its mouth are measured on two frames of C Spinner's restoration video (`KLUwI2UUCMQ` 23:30, the bridge lying flat face up; 13:49.5, turned over in the hand), each put on the bridge's face by `tools/video.py anchor` through the rim, the barrel's cut and the centre bushing (0.2–0.3 mm rms on the circles); `tools/train_bridge.py` builds the edge from them. Until October 2026 it was traced on Fig. 67, pushed off the holes and smoothed, which rounded the horn's end. The opening in the middle (two lobes, over the balance and the fourth's setting, and the escape passage) and the straight end past the barrel are traced on 23:30 the same way (`TB_KEY`, `TB_END`); the seats for the escape upper bridge's ends either side of the passage are not drawn (the bar lies on the face). The places of its small holes (pins, the lower bridge's screws) are the model's, not all the video's.

@@ -357,6 +357,16 @@ Suggested fix: smaller weights (a radius of about 1.1 mm keeps them within
 the rim's 2.4 mm height), set no further out than the timing weights (17.35 mm).
 Then run `dyn.py` with the variant shown.
 
+## The hairspring's inner end (open, 4 October 2026)
+
+`tools/hairspring.js` designs the spring's terminal curves to Phillips' conditions from the model's coil and ends. The outer one, into the stud's clamp
+along the bar toward its end, is 15.3 mm and turns 343°, as the video's face-on view from the stud's end shows it (6:52.5, about half a turn turned in).
+The inner one can't be like it at the collet's face as drawn (3.62 from the staff, the wire running along the face): the shortest that meets the
+conditions and keeps off the collet winds 1.9 turns in (54 mm). Held at 3.0–3.3, a curve of 21–24 mm does it. Measure where the spring's lower end meets
+the collet: a frame of the balance from the collet's side (sheet round 6:44–6:53.5 and round the hairspring's removal, Op. 4), the end's radius against
+the coil's. Then design the inner curve there, and draw the spring as the strip it is (0.23 by 0.226 mm, PLAN-self-contained.md, A2). With the ends as
+`springGeo` draws them the spring leaves 2.3 % of couple / R on the pivots; designed, 0.003 %.
+
 ## Smaller issues
 
 - **The balance's moment of inertia (open, 3 October 2026).** The restoration
