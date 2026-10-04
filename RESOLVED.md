@@ -975,6 +975,13 @@ Contents:
   phases; it now holds the balance at rest and the escape wheel locked. Keep: the
   arm stops the balance through a timing weight; unlocked, it is clear of
   everything the balance carries. `3655b52`
+- **The locking arm's eye flat, where Fig. 108 draws a raised boss.** The arm's
+  screw, washer and eye sat flush on the strip. Fig. 108 (item 31) draws a round
+  boss standing above the strip, and Fig. 9 a stack under the screw's head: the
+  eye is now a boss r 1.1, 0.45 over the strip, the washer and the screw's head
+  on it. Keep: the boss no wider than r 1.1 (the second train pillar's screw head
+  stands 0.02 from it); the strip 0.8 wide and bowed 0.25, which is all the
+  corridor between the cock's foot and the escape upper bridge allows. `22b1290`
 - **The Navy's Y-arm ugly and not as photographed** (Variants, Balance stop). It
   was three strips laid over each other at one height, plus a ring for its eye:
   coplanar faces that fought at the fork, bends pinched where the strips turned,
