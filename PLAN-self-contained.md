@@ -204,7 +204,7 @@ manual's figures become the test.
 - **B1** each card's maker's sheet (`js/maker.js`, `js/makers.js`). **B2** the detent spring's share of the work from Op. 78 (`fD` 0.057); the mainspring's
   width the barrel's room (14.8); pivots, jewel holes and threads stay the model's estimates (the videos don't resolve them), each fit's clearance on the
   sheets. **B3** the manual's tolerances in the essay. **B4** each wheel's outline in its drawing (SVG, to scale).
-- **C1** Measure. **C2** STL per part and for the movement, the model's data as JSON. **C3** each part's drawing, plan and elevation. **C4** the build book.
+- **C1** Measure. **C2** STL per part and for the movement, the model's data as JSON; the whole instrument as glTF for Blender, every part in its hierarchy with every motion as an action, and the rig that drives it (`js/blender.js`, `blender/rig.py`, 5 October 2026, on `claude/blender-export`). **C3** each part's drawing, plan and elevation. **C4** the build book.
 - **D1–D6** the essay's workshop: the oiling chart (and on the model: Making it › Oil), adjusting the escapement, the order of work, tools, materials and heat treatment (the chronometer
   without Elinvar and Invar), rating by the sky (the rate book's equal altitudes and lunars).
 - **E1–E3** the almanac (Sun, Moon, 58 stars, Venus and Mars), the sky sections, the workbook, the rate book from the sky. Jupiter and Saturn left out.

@@ -131,6 +131,7 @@
         <summary>Making it</summary>
         <p class="note" style="margin:0 0 6px">For a maker. Each part's card has its maker's sheet (its lines of the manual's parts list, the fits measured on the model, materials and heat treatment), its drawing to scale (SVG, mm) and its solid (STL). Here: measure between two points on the model, print the whole build book, or take the model's numbers away.</p>
         <div class="seg"><button id="mkMeasure" aria-pressed="false" title="Click two points on the model">Measure</button><button id="mkOil" aria-pressed="false" title="Colour each part by the oil or grease it takes (Ops. 18-71)">Oil</button><button id="mkBook" title="Every part's sheet and drawing, to print">Build book</button><button id="mkData" title="The train, the fusee's profile, the escapement's cycle, the hairspring's design and the parts list, as JSON">Data</button><button id="mkSTL" title="Every part shown, as one STL in millimetres">STL</button></div>
+        <div class="seg" style="margin-top:6px"><button id="mkGLB" title="The whole instrument for Blender (glTF 2.0): every part a named object in its own hierarchy, in its materials, with every motion the model has as an action">Blender (.glb)</button><button id="mkRig" title="A script for Blender's Text Editor, run after importing the .glb: one set of controls (time, explode, laid out, lift, lids, latch) drives every part at the model's own ratios">Blender rig (.py)</button></div>
         <div class="rate" id="mkRead" aria-live="polite"></div>
       </details>
       <details class="grp more" id="rateDet">
@@ -649,6 +650,9 @@
 <script src="js/essay.js"></script>
 <script src="js/makers.js"></script>
 <script src="js/maker.js"></script>
+<script src="js/gltf.js"></script>
+<script src="js/rigpy.js"></script>
+<script src="js/blender.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

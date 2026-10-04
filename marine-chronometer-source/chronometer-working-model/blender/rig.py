@@ -1,0 +1,205 @@
+"""The Marine Chronometer working model's rig for Blender (5.x): one set of controls that drives every part of the imported model21.glb at the model's own ratios.
+
+Import model21.glb (File, Import, glTF 2.0), then open this file in the Text Editor and press Run Script. The chronometer then runs on the timeline, in real
+time at the scene's frame rate (set the frame rate before importing: the clips come in at it), and an empty, "Chronometer controls", has properties (Object
+properties, Custom Properties) for the rest:
+    hours        hours since full wind at frame 0; the fusee, chain, barrel, mainspring and the up-down hand follow it, and the time as it runs
+    hands_set_s  how far the hand-setting key has set the hands on (seconds)
+    explode, laid_out, lift, lids, latch    0 to 1: the parts apart, the train laid out, out of the case and turned over, the lids closed, the gimbals latched
+    roll, pitch  the box tilted (the gimbals keep the case level)
+    seconds      the model's time (read only: frame / fps)
+How: the escape wheel, train, hands and motion work turn by drivers in step with the escape wheel's place, E = whole beats + the beat's own progress (the export's
+helper, "Rig · escape wheel teeth"); the balance, detent, trip spring and hairspring play the export's one-beat action (Rig · beat) on a loop; everything else plays
+its own one-parameter action (Run down, Rig · explode, ...) through an Action constraint whose time the control drives, made over into changes from the part's rest
+so that two can move one part. No Python runs in the drivers, so the file works without Auto Run Scripts.
+
+To play one of the export's clips on every part instead (Running, Winding, Exploded, ...), set PLAY below to its name and run this again; PLAY = None puts the
+rig back. Every clip's action is kept (with a fake user). Running it again is safe: it clears what it made before."""
+import bpy,math
+from mathutils import Matrix,Quaternion,Vector
+
+PLAY=None   # e.g. 'Winding': that clip on every part, in place of the rig
+CTL='Chronometer controls'
+MC='MC '   # what the rig makes: constraints and actions named so, cleared on a rerun
+
+def root():
+    for o in bpy.data.objects:
+        if 'clips' in o.keys() and 'fuseePerHour' in o.keys():return o
+    raise RuntimeError('No Marine Chronometer model in this file: import model21.glb first (File, Import, glTF 2.0)')
+
+def as_dict(x):return x.to_dict() if hasattr(x,'to_dict') else dict(x)
+
+def owner(slot):
+    """The datablock a slot of an action was made for: an object, or a mesh's shape keys."""
+    n=slot.name_display;t=slot.target_id_type
+    if t=='OBJECT':return bpy.data.objects.get(n)
+    if t=='KEY':return bpy.data.shape_keys.get(n)
+    return None
+
+def channelbag(action,slot,make=False):
+    from bpy_extras import anim_utils
+    if make:return anim_utils.action_ensure_channelbag_for_slot(action,slot)
+    return anim_utils.action_get_channelbag_for_slot(action,slot)
+
+def rest_of(o):
+    """The part's rest pose (the export's extras.rest, glTF's axes) in Blender's: y up becomes z up, as the importer turns every node."""
+    r=list(o['rest']);return Vector((r[0],-r[2],r[1])),Quaternion((r[6],r[3],-r[5],r[4])),Vector((r[7],r[9],r[8]))
+
+def clear():
+    """Undo an earlier run, and the importer's choice of clip: every part back at rest, no action assigned (all kept), our drivers and constraints gone."""
+    for a in bpy.data.actions:
+        if a.name.startswith(MC):bpy.data.actions.remove(a)
+        else:a.use_fake_user=True
+    for i in list(bpy.data.objects)+list(bpy.data.shape_keys):
+        ad=i.animation_data
+        if ad:
+            for fc in list(ad.drivers):ad.drivers.remove(fc)
+            for t in list(ad.nla_tracks):ad.nla_tracks.remove(t)
+            ad.action=None
+        if isinstance(i,bpy.types.Object):
+            for c in list(i.constraints):
+                if c.name.startswith(MC):i.constraints.remove(c)
+            if 'rest' in i.keys():
+                l,q,s=rest_of(i);i.rotation_mode='QUATERNION';i.location=l;i.rotation_quaternion=q;i.scale=s
+    for k in bpy.data.shape_keys:
+        for b in k.key_blocks[1:]:b.value=0
+
+def var(d,name,id_,path,id_type='OBJECT'):
+    v=d.variables.new();v.name=name;v.type='SINGLE_PROP';v.targets[0].id_type=id_type;v.targets[0].id=id_;v.targets[0].data_path=path;return v
+
+def play(name):
+    a=bpy.data.actions.get(name)
+    if not a:raise RuntimeError('No clip called %r: the export has %s'%(name,', '.join(x.name for x in bpy.data.actions)))
+    for s in a.slots:
+        i=owner(s)
+        if i is not None:ad=i.animation_data_create();ad.action=a;ad.action_slot=s
+    sc=bpy.context.scene;f0,f1=a.frame_range;sc.frame_start=int(f0);sc.frame_end=int(math.ceil(f1));sc.frame_set(int(f0))
+
+def controls(R):
+    c=bpy.data.objects.get(CTL)
+    if not c:
+        c=bpy.data.objects.new(CTL,None);c.empty_display_type='PLAIN_AXES';c.empty_display_size=0.02;bpy.context.scene.collection.objects.link(c)
+    rest=as_dict(R['start'])
+    P=[('seconds',0.0,None,None,'the model\'s time (s): frame / fps'),('hours',float(rest.get('hours',20)),0.0,float(R['runHours']),'hours since full wind, at frame 0'),
+       ('hands_set_s',0.0,None,None,'the hands set on by the key (s)'),('explode',0.0,0.0,1.0,'the parts apart'),('laid_out',0.0,0.0,1.0,'the train laid out'),
+       ('lift',0.0,0.0,1.0,'out of the case and turned over'),('lids',0.0,0.0,1.0,'the lids, 0 open, 1 closed'),('latch',0.0,0.0,1.0,'the gimbals latched'),
+       ('roll',0.0,-0.6,0.6,'the box rolled'),('pitch',0.0,-0.6,0.6,'the box pitched')]
+    for k,v,lo,hi,d in P:
+        if k not in c.keys():c[k]=v
+        kw={'description':d}
+        if lo is not None:kw.update(min=lo,max=hi,soft_min=lo,soft_max=hi)
+        if k in('roll','pitch'):kw['subtype']='ANGLE'
+        c.id_properties_ui(k).update(**kw)
+    ad=c.animation_data_create()
+    for fc in list(ad.drivers):ad.drivers.remove(fc)
+    d=c.driver_add('["seconds"]').driver;d.type='SCRIPTED';var(d,'fps',bpy.context.scene,'render.fps','SCENE');d.expression='frame/fps'
+    return c
+
+def loop(a):
+    """An action played over and over: a Cycles modifier on every channel."""
+    for s in a.slots:
+        cb=channelbag(a,s)
+        if not cb:continue
+        for fc in cb.fcurves:
+            if not any(m.type=='CYCLES' for m in fc.modifiers):fc.modifiers.new('CYCLES')
+
+def deltas(a,objs):
+    """a made over, for each part in objs, into the change from its rest pose (as a parent would make it: final = change x rest), keyed where a is."""
+    na=bpy.data.actions.new(MC+a.name);na.use_fake_user=True;out={}
+    for s in a.slots:
+        o=owner(s)
+        if o not in objs:continue
+        cb=channelbag(a,s)
+        if not cb or not len(cb.fcurves):continue
+        F={(fc.data_path,fc.array_index):fc for fc in cb.fcurves};T=sorted({k.co[0] for fc in cb.fcurves for k in fc.keyframe_points})
+        l0,q0,s0=rest_of(o);s0=Vector([x if abs(x)>1e-9 else 1.0 for x in s0])   # a part hidden at rest (scale 0) is changed from scale 1
+        R0=Matrix.LocRotScale(l0,q0,s0).inverted()
+        ev=lambda p,i,t,dv:F[(p,i)].evaluate(t) if (p,i) in F else dv
+        L=[[],[],[]];Q=[[],[],[]];S=[[],[],[]];le=None
+        for t in T:
+            l=Vector([ev('location',i,t,l0[i]) for i in range(3)]);q=Quaternion([ev('rotation_quaternion',i,t,q0[i]) for i in range(4)]);sc=Vector([ev('scale',i,t,s0[i]) for i in range(3)])
+            M=Matrix.LocRotScale(l,q.normalized(),sc)@R0;dl,dq,ds=M.decompose();de=dq.to_euler('XYZ',le) if le else dq.to_euler('XYZ');le=de   # Euler, each the nearest the last: the constraint reads an object's quaternion channels a half turn out (Blender 5.2)
+            for i in range(3):L[i]+=[t,dl[i]];S[i]+=[t,ds[i]];Q[i]+=[t,de[i]]
+        ns=na.slots.new('OBJECT',o.name);nb=channelbag(na,ns,True)
+        for p,arr in(('location',L),('rotation_euler',Q),('scale',S)):
+            for i,v in enumerate(arr):
+                fc=nb.fcurves.new(p,index=i);fc.keyframe_points.add(len(v)//2);fc.keyframe_points.foreach_set('co',v)
+                for k in fc.keyframe_points:k.interpolation='LINEAR'
+                fc.update()
+        out[o]=ns
+    return na,out
+
+def rig(R,c):
+    clips={x['name']:as_dict(x) for x in R['clips']};fph=float(R['fuseePerHour']);N=float(R['fuseeTurns']);runH=float(R['runHours'])
+    rest=as_dict(R['start']);h0=float(rest.get('hours',0));E0=float(rest.get('E',0))   # the rest pose: the hours of wind, the escape wheel's place (teeth)
+    sc=bpy.context.scene;fps=sc.render.fps/sc.render.fps_base
+    lin={o for o in bpy.data.objects if hasattr(o.get('rig'),'keys') and 'kE' in o['rig'].keys()}
+    # the beat, on a loop
+    beat=bpy.data.actions['Rig · beat'];loop(beat);BF=beat.frame_range[1]-beat.frame_range[0]
+    for s in beat.slots:
+        i=owner(s)
+        if i is None or i in lin:continue
+        ad=i.animation_data_create();ad.action=beat;ad.action_slot=s
+    helper=next((o for o in bpy.data.objects if o.get('rig')=='teeth'),None)
+    # the train, hands and motion work: drivers on their turn, linear in E (teeth: whole beats, the beat's progress, the hours since the rest pose) and the hands' slip
+    n=0
+    for o in lin:
+        L=o['rig'];ax=list(L['axis']);a=Vector((ax[0],-ax[2],ax[1]));kE=float(L['kE']);kS=float(L['kS'])
+        q0=rest_of(o)[1] if 'rest' in o.keys() else o.rotation_quaternion.copy()
+        th='(%r*(floor(frame/%r)+t-%r+(hh-%r)*%r)+%r*m)'%(kE,BF,E0,h0,3600*2,kS)   # E: whole beats, the beat's progress, 7200 beats an hour since the rest pose; and the hands' slip
+        ix=max(range(3),key=lambda i:abs(a[i]));v0=Vector(q0[1:])
+        if abs(abs(a[ix])-1)<1e-4 and v0.cross(a).length<1e-5:   # turning about one of its own axes, from a rest about it: one Euler angle
+            sg=1 if a[ix]>0 else -1;t0=2*math.atan2(v0.dot(a),q0[0]);o.rotation_mode='XYZ';o.rotation_euler=(0,0,0)
+            ds=[(('rotation_euler',ix),'%r+%d*%s'%(t0*sg,sg,th))]
+        else:   # else the quaternion q0 x (cos th/2, a sin th/2), written out (such a part can't take an Action constraint as well)
+            o.rotation_mode='QUATERNION';w0,x0,y0,z0=q0;dot=v0.dot(a);cr=v0.cross(a);h='%s/2'%th
+            ds=[(('rotation_quaternion',0),'%r*cos(%s)-%r*sin(%s)'%(w0,h,dot,h))]+[(('rotation_quaternion',j+1),'%r*cos(%s)+%r*sin(%s)'%(qq,h,w0*a[j]+cr[j],h)) for j,qq in enumerate((x0,y0,z0))]
+        for (path,j),e in ds:
+            d=o.driver_add(path,j).driver;d.type='SCRIPTED';var(d,'hh',c,'["hours"]');var(d,'m',c,'["hands_set_s"]')
+            v=d.variables.new();v.name='t';v.type='TRANSFORMS';v.targets[0].id=helper;v.targets[0].transform_type='LOC_X';v.targets[0].transform_space='TRANSFORM_SPACE'
+            d.expression=e
+        n+=1
+    # one parameter each: an Action constraint per part, its time the control's (the wind: hours on at frame 0, and the time as it runs)
+    PAR={'n':('min(1,max(0,(hh+frame/%r/3600)/%r))'%(fps,runH),[('hh',c,'["hours"]')])}
+    for k in('explode','laid_out','lift','lids','latch'):PAR[k]=('min(1,max(0,p))',[('p',c,'["%s"]'%k)])
+    for name,cl in clips.items():
+        r=cl.get('rig')
+        if not r or r['p'] not in PAR:continue
+        a=bpy.data.actions.get(name)
+        if not a:continue
+        objs={owner(s) for s in a.slots if isinstance(owner(s),bpy.types.Object)}
+        if r['p']=='n':objs-=lin   # the fusee and the parts geared with it turn by their drivers
+        na,slots=deltas(a,objs);ex,vs=PAR[r['p']]
+        for o,s in slots.items():
+            if o.rotation_mode=='QUATERNION':   # an Action constraint reads an object's rotation channels only in Euler, on an object turned in Euler (Blender 5.2)
+                q=o.rotation_quaternion.copy();o.rotation_mode='XYZ';o.rotation_euler=q.to_euler('XYZ')
+            k=o.constraints.new('ACTION');k.name=MC+name;k.action=na;k.action_slot=s;k.use_eval_time=True;k.frame_start=int(a.frame_range[0]);k.frame_end=int(math.ceil(a.frame_range[1]))
+            k.mix_mode='BEFORE_FULL'
+            d=o.driver_add('constraints["%s"].eval_time'%k.name).driver;d.type='SCRIPTED'
+            for v in vs:var(d,*v)
+            d.expression=ex
+    # the box rolled and pitched; the ring and case kept level in the gimbals (the case's own swing left out: the At sea clip has it)
+    role={o.get('role'):o for o in bpy.data.objects if o.get('role')}
+    for k,rot in(('box',[('pitch',0,1),('roll',1,-1)]),('ring',[('pitch',0,-1)]),('bowl',[('roll',1,1)])):
+        o=role.get(k)
+        if not o:continue
+        o.rotation_mode='XYZ'
+        for p,ix,sg in rot:
+            d=o.driver_add('rotation_euler',ix).driver;d.type='SCRIPTED';var(d,'p',c,'["%s"]'%p);d.expression='%d*p'%sg
+    return n
+
+def setup():
+    sc=bpy.context.scene;sc.unit_settings.system='METRIC';sc.unit_settings.length_unit='MILLIMETERS'
+    for scr in bpy.data.screens:
+        for ar in scr.areas:
+            for sp in ar.spaces:
+                if sp.type=='VIEW_3D':sp.clip_start=0.0001;sp.clip_end=50
+
+def main():
+    R=root();clear();setup()
+    if PLAY:play(PLAY);print('Playing',PLAY);return
+    c=controls(R);n=rig(R,c)
+    sc=bpy.context.scene;sc.frame_start=0;sc.frame_end=int(sc.render.fps*60);sc.frame_set(0)
+    print('Marine Chronometer rig: %d arbors and hands driven, controls on %r'%(n,CTL))
+
+main()

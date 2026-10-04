@@ -2,7 +2,7 @@
 
     python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, physics, selfcontained, types, smoke, invariants, solids, exploded, audit
     python ci.py --quick      # without the browser checks (about 30 s): build, escapement, almanac, hairspring, types
-    python ci.py --full       # and the slow geometry checks (about 11 minutes more): fine.py, maintaining.py, bom.py
+    python ci.py --full       # and the slow checks (about 16 minutes more): fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
 
@@ -79,6 +79,8 @@ STEPS=[('build',build,'quick'),
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),
  ('maintaining',lambda log:run([PY,'maintaining.py'],TOOLS,log),'full'),
  ('bom',lambda log:run([PY,'bom.py'],TOOLS,log),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)
+ ('gltf',lambda log:run([PY,'gltf_check.py'],TOOLS,log),'full'),   # the export to Blender, written and read back (about 2 minutes)
+ ('blender',lambda log:run([PY,'blender_check.py'],TOOLS,log),'full'),   # that file in Blender, with the rig, against its own clips (about 3 minutes; skipped where there is no Blender)
  ('views',views,'views')]
 def main():
     only=arg('--only');want={'quick'}|(set() if '--quick' in sys.argv else {'browser'})|({'full'} if '--full' in sys.argv else set())|({'views'} if '--views' in sys.argv else set())

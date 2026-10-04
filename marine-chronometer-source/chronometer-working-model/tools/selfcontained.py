@@ -8,7 +8,7 @@ It checks, on the built single file (dist/chronometer-working-model.html) and th
   - js/makers.js is what tools/makers.py writes from bom.json and BOM.md (the maker's sheets' data up to date);
   - every part card (app.js's INFO) has its line or lines in the maker's sheets, or is a part with none in the parts list (the box's cards and decorations);
   - the essay's quoted figures are the tools' (tools/almanac.js's data-bound, tools/physics.js's data-phys: those tools fail if they differ; here, that each span is there);
-  - the things a maker and a navigator need are in the page: the maker's tools (Measure, Build book, Data, STL), the almanac's print, the workbook, the hairspring's design."""
+  - the things a maker and a navigator need are in the page: the maker's tools (Measure, Build book, Data, STL, the export to Blender and its rig, js/rigpy.js up to date), the almanac's print, the workbook, the hairspring's design."""
 import pathlib,re,subprocess,sys,json
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent;ROOT=MC.parent.parent
 rows=[];bad=0
@@ -25,6 +25,8 @@ pdf=ROOT/'site'/'navships-250-624-1948.pdf'
 chk(pdf.exists() and pdf.stat().st_size>1e6 and 'navships-250-624-1948.pdf' in html,'the manual ships beside the page and the page links to it')
 r=subprocess.run([sys.executable,str(HERE/'makers.py'),'--check'],capture_output=True,text=True)
 chk(r.returncode==0,'js/makers.js is up to date with bom.json and BOM.md ('+r.stdout.strip()+')')
+r=subprocess.run([sys.executable,str(HERE/'rigpy.py'),'--check'],capture_output=True,text=True)
+chk(r.returncode==0,'js/rigpy.js is up to date with blender/rig.py ('+r.stdout.strip()+')')
 app=(MC/'js'/'app.js').read_text(encoding='utf-8')
 cards=set(re.findall(r"^\s{2}(\w+):\{t:'",app,re.M))
 mk=(MC/'js'/'makers.js').read_text(encoding='utf-8');parts={m for m in re.findall(r'"part":"(\w*)"',mk)}
@@ -41,4 +43,6 @@ for sel,what in [('id="mkMeasure"','the measuring tool'),('id="mkBook"','the bui
     chk(sel in idx,f'the page has {what}')
 for f,what in [('shared/almanac.js','the almanac'),('shared/hairspring.js','the hairspring\'s design'),('chronometer-working-model/js/maker.js','the maker\'s tools')]:
     name=f.split('/')[-1];chk(name.replace('.js','') and (f'src="../shared/{name}"' in idx or f'src="js/{name}"' in idx) and ('const ALM=' in html if 'almanac' in f else 'const HSPR=' in html if 'hairspring' in f else 'const MAKER=' in html),f'{what} ({f}) is in the built page')
+for sel,what in [('id="mkGLB"','the export to Blender'),('id="mkRig"','the Blender rig')]:chk(sel in idx,f'the page has {what}')
+for g,what in [('const GLTF=','the glTF writer (js/gltf.js)'),('const BLENDER=','the export to Blender (js/blender.js)'),('const RIG_PY=','the Blender rig (js/rigpy.js)')]:chk(g in html,f'{what} is in the built page')
 print('\n'.join(rows));print(f'{bad} failures' if bad else 'ok');sys.exit(1 if bad else 0)
