@@ -1767,7 +1767,7 @@ const SEC_L=Math.min(21.7*DK,L.F[1]-3.6);
    barrel bridge 3.4 mm on it (BB_T), cock 14.2 mm tall on the train bridge (CK_T); the escape wheel runs just under the train bridge, the fourth
    wheel and escape pinion 3.6 mm above the plate, and the third wheel lowest with the centre wheel just above it, as Figs. 13, 29 and 110 stack the train (see README, 'How the layout was measured') */
 const TB_U=-20.66,TB_T=-23.76,BB_T=-27.16,CK_T=-37.96;
-const EY=-18.96,LB_T=-14.76,BAL_Y=-26.3,LT_H=4.4;   /* escape wheel (teeth 0.95 below the train bridge), balance lower bridge's top face (photograph: 7.9-10.9 mm above the plate), balance rim */   /* bridge radius: the top-view photograph (the fusee wheel is hidden under it, as photographed) */          /* pillar plate; bridges */
+const EY=-18.96,LB_T=-14.76,BAL_Y=-26.3,BAL_RH=3.5,LT_H=4.4;   /* BAL_RH: the balance rim's height; its plate-side edge at BAL_Y + 1.2, its top (train side) at BAL_Y + 1.2 - BAL_RH */   /* escape wheel (teeth 0.95 below the train bridge), balance lower bridge's top face (photograph: 7.9-10.9 mm above the plate), balance rim */   /* bridge radius: the top-view photograph (the fusee wheel is hidden under it, as photographed) */          /* pillar plate; bridges */
 const PILLARS={barrel:[-11.35, -32.79],train:[[-27.83, 19.7],[5.5, 33.96],[34.13, -3.41]]};   /* the four pillars' feet on the bare plate (KLUwI2UUCMQ 40:08, 34:30, at the plate's 87.57: r 34.1-34.7, to about 0.4 mm and 1.5 deg; References/VIDEOS.md); until 2 October 2026 traced on the top-view photograph (PT([-15.3,-26.58]), PT([-16.63,22.48]), [5.61,35.62], PR([32.25,-10.81]): r 32.0-36.1). The second at 170.8 deg, not the video's 166.3 (its dial-side screw 166.6 on 40:08, just clear of the lower train bridge's end): there its top screw's head would stand in the cock's foot, which C Spinner's video shows clear of any screw (6:29 with the cock on, 6:47 off) and the top-view photograph has beside it (the screw at 172 deg); it clears the cock by 0.9 and the fourth wheel by 0.7. The cock's place or the dial side's angles are about 4 deg out here. The third under the train bridge's screw at the end of its tongue, where C Spinner's video has it (23:30, 36:34) and the manual (Op. 14).
    The second, traced at PT([18.17, 26.92]) = (4.61, 33.53), would stand in the fourth wheel (its tips 9.6 from the arbor, the pillar r 2.9): pushed out from the fourth arbor until it clears by 0.5,
    2.3 mm (the train bridge's hole at 23:30 is 0.3 mm from the traced place; the bare plate's fits put its top 4-6 mm further out, as they do every pillar's) */
@@ -2242,7 +2242,7 @@ function buildMovement(M){
        flange's bite round the setup cover, and the screws' threads (not drawn: the bridge is the manual's, untapped there). R.navyLock(a): a 0 free, 1 locked. In the
        Exploded view it lifts 22 mm past the locking arm's part, to -84: above the barrel bridge it stands on (-72) and the balance it reaches over (-80), and under the
        hairspring and the cock (-88, -96) */
-    const nv=loose(new THREE.Group(),22);nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.69,-19.16],AY=-31.75,AT=0.45,Y0=-30.65,Y1=-31.85,HB=-33.1,HT=-38.06,PE=BAL_Y+1.2-2*2.15-0.5;   /* the lever's top, thickness; the slot's bottom and top; the plunger head's foot and top (free); the pins' ends, 0.5 over the rim's top */
+    const nv=loose(new THREE.Group(),22);nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.69,-19.16],AY=-31.75,AT=0.45,Y0=-30.65,Y1=-31.85,HB=-33.1,HT=-38.06,PE=BAL_Y+1.2-BAL_RH-0.5;   /* the lever's top, thickness; the slot's bottom and top; the plunger head's foot and top (free); the pins' ends, 0.5 over the rim's top (from BAL_RH: set for a 4.3 rim, they stopped 0.8 over the 3.5 one, locked) */
     const lat=(o,p,m,c=NP,n=56)=>mesh(o,new THREE.LatheGeometry(p.map(([r,y])=>V2(r,y)).reverse(),n),m,c[0],0,c[1]),circ=(r,n=96)=>[...Array(n)].map((_,i)=>[r*Math.cos(i/n*TAU),r*Math.sin(i/n*TAU)]);
     /* the pivot: both photographs put it 2.5 mm from the barrel bridge's pillar screw, a large slotted head like it (2E11795), so the fitting is taken to replace that
        screw with a shouldered stud (hidden screw R.navyBB, below); the lever's end bent to it under the cap, as Delaney's photograph shows it bent there */
@@ -2281,8 +2281,10 @@ function buildMovement(M){
     const pl=new THREE.Group();nv.add(pl);lat(pl,[[0,HB],[3.35,HB],[3.35,HT],[1.3,HT],[1.3,HT+0.8],[0,HT+0.8]],M.plateSolid);
     { const hx=[...Array(6)].map((_,i)=>[0.62*Math.cos(i/6*TAU),0.62*Math.sin(i/6*TAU)]);mesh(pl,polyGeo(circ(1.28,48),0.8,[{pts:hx}]),M.steel,NP[0],HT,NP[1]); }
     cylBetween(pl,1.25,HB,AY-0.02,M.steel,...NP,32);
-    /* locking: the lever turned about the horizontal through the pivot, across it, until the farther pin is 0.02 over the rim; the plunger goes down with the lever under it */
-    { const ul=unit(sub(NP,NPV)),K=new THREE.Vector3(-ul[1],0,ul[0]),sA=q=>(q[0]-NPV[0])*ul[0]+(q[1]-NPV[1])*ul[1],th=0.48/Math.max(...NPIN.map(sA)),sP=sA(NP);
+    /* locking: screwed down, the plunger presses the lever until both pins bear on the rim's top edge, which holds the balance (Review-results.md, 13). Drawn as the
+       lever turned about the horizontal through the pivot parallel to the crossbar (pp), so the two pins, symmetric about the stem, come down the same 0.5 together; the
+       plunger goes down with the lever under it */
+    { const K=new THREE.Vector3(pp[0],0,pp[1]),sA=q=>(q[0]-NPV[0])*aa[0]+(q[1]-NPV[1])*aa[1],th=Math.asin(0.5/sA(NPIN[0])),sP=sA(NP);   /* a point s along aa from the pivot comes down s sin(th) */
       R.navyLock=a=>{na.setRotationFromAxisAngle(K,th*a);pl.position.y=sP*th*a;}; } }
   /* escape upper bridge with jewel and endstone cap */
   const eb=part('escBridge',-66),EB_Y=TB_T+SEAT_D;   /* the bar's underside: its ends in the train bridge's seats */
@@ -2595,7 +2597,7 @@ function buildMovement(M){
      (KLUwI2UUCMQ 6:47.5, 6:52.5, 6:49.5-6:51.2: 0.5-0.85 mm against the rim's 29 mm and the impulse roller's 0.249 in, which agree on the scale to 1 %); its plate-side edge where
      the escape upper bridge's screws leave it, its holes' row at its mid-height (RY, in the balance's frame, + toward the plate). Drawn so, it and the parts list's masses make
      about 730 g·mm², not the 1,140 Table II gives: I_REST (below) holds the difference */
-  const RH=3.5,RW=0.6,RY=1.2-RH/2;mesh(R.balU,ring(BR,BR-RW,RH),M.steel,0,RY,0);
+  const RH=BAL_RH,RW=0.6,RY=1.2-RH/2;mesh(R.balU,ring(BR,BR-RW,RH),M.steel,0,RY,0);
   /* the arm on the hub (Fig. 4): the hub (42186, on the staff) has a flange under the arm and a boss up through the arm's clearance hole; the cap (42248) over the arm
      and two hold-down screws (42249) through cap and arm into the flange. The arm is widened round the hub. Its width, 1.9 (AW), is the restoration video's: KLUwI2UUCMQ 6:52.5, face-on,
      82 px between its edges along its clean outer half at the rim's 43 px/mm (±0.15 with the tilt); small holes along its middle there are not drawn. Its thickness (1.1; edge-on, 6:50.0, it can't
