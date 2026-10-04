@@ -4,6 +4,13 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.07.00 · 2026-10-04
+- The hairspring is now the one a maker would wind: a 0.23 × 0.22 mm strip on terminal curves designed to Phillips' conditions, so its pull on the balance leaves no force on the pivots; the collet's end set to fit, inside the restoration video's measurement
+- Making it (in the panel): each part's card has a maker's sheet (its parts-list lines, the fits measured on the model, materials and heat treatment), a drawing to scale (SVG) and its solid (STL); Measure between two points; Oil colours each part by its lubricant; print the whole build book; take the model's numbers as data
+- Essay: five new sections for a maker — what the model gives you (with the manual's tolerances), oil and where it goes, adjusting the escapement, the order of work, and materials, hardening and tools (with the chronometer you can make without Elinvar)
+- The physics is derived, not fitted: the mainspring the fusee asks for, the escape wheel's chase onto the impulse jewel, the balance's damping and the detent spring's share from the manual's 0.770 g test
+- The almanac adds Venus and Mars; the rate book can compare the chronometer by equal altitudes of the Sun or by a lunar distance
+
 ## 2.06.05 · 2026-10-04
 - With the Navy's Y-arm fitted, its card now describes the Y-arm (the locking arm's card came up before)
 
