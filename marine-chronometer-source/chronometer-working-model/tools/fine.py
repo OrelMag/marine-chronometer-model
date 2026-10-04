@@ -29,7 +29,6 @@ EXPECTED={
  ('chain:Buffer','chain:Cylinder'):("that pin through the rivet hole of the chain's first link (an outer link: two plates and their rivets)",0.03,0.4),
  ('chain:Box','chain:Extrude'):("the barrel-end hook plate riveted to the chain's last link (an inner link's plate)",0.09,0.2),
  ('chain:Box','chain:Buffer'):("the barrel-end hook plate riveted to the chain's last link (an outer link)",0.03,0.2),
- ('bal:Box','spr:Tube(tube)'):("hairspring's inner end in the clamp on the collet's tongue",0.06,0.35),
  ('bal:Extrude','bal:Lathe'):("the balance screws' shanks in the rim's tapped holes (each screw in a group of its own, R.screws; up to five pairs)",0.6,0.75),
  ('bal:Buffer','bal:Extrude'):("the rim's empty holes, marks set 0.05 into its face (one merged mesh in a group of its own, rebuilt by R.screws)",0.25,0.6),
  ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),

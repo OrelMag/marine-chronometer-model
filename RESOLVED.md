@@ -1216,6 +1216,19 @@ Contents:
   balance's cap and hold-down screws, the balance locking arm and the
   train-blocking screw. See `Review-results.md`, "Every part against the
   manual". `63c5dce`
+- **The hairspring collet was a stand-in.** A flat 130° sector with a short
+  radial bar and a solid block for its clamp, the hub slotted on the far side
+  and the spring's end inside the block 4.6 mm out. Figs. 5, 6 and 49 draw a
+  stepped block: the hub on a plate slit from the bore to a relief hole, a
+  ledge cut back (straight, then round) over a tongue at its foot, a notch in
+  the tongue for the wedge pin, and a C-shaped clamp slid over the tongue's
+  end that pinches the spring's end against it. It is now measured on Fig. 6's
+  two drawings (README, "Estimated, not from the manual"), and the spring's
+  inner end runs straight along the end face into the clamp, 3.89 mm out.
+  The clamp closes over the spring above and below, so the hairspring now
+  comes off with the balance in the Exploded view (the spring had to pass
+  through the upper jaw). Keep: the collet's shape is Fig. 6's; the spring's
+  inner end is where the end face and clamp hold it.
 
 **The parts list against the model: parts missing, parts holding nothing,
 pivots without shoulders, jewels floating or buried** (`ae397f2`). Checked
