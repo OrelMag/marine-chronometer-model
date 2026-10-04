@@ -106,7 +106,7 @@ host, add a redirect of your own if old links matter.
 ### Versions
 
 The site has a version, `M.mm.pp` (1.05.00, for example). The panel's last
-section, Version … · what's new, just above the byline, shows it with the list of
+section, Version … · what's new, shows it with the list of
 changes; About's byline shows it too. Both come from `CHANGELOG.md` at the root,
 newest first. A plain build only reads it, so building twice gives the
 same files. To make a release, name the kind of change and what changed:
