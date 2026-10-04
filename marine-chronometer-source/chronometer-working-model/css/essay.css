@@ -81,3 +81,24 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-fallback{padding:40px 18px;text-align:center;color:var(--muted);font:15px "Instrument Sans",sans-serif}
 @media (max-width:520px){#essay{font-size:18px}.e-lbl{font-size:11px}.e-bar .e-t span{display:none}}
 @media(pointer:coarse){.e-ck{min-height:44px}.e-ck input{width:22px;height:22px}.e-go .seg a{min-height:44px;display:inline-flex;align-items:center}}
+/* the sky sections: equations, the hand rules' box, the inputs, the almanac's pages and the workbook (js/essay.js, eEqual … eWork) */
+.e-eq{text-align:center;font-size:.95em;overflow-x:auto;white-space:nowrap}
+.e-box{margin:0 0 1.2em;padding:12px 18px;border-radius:12px;background:var(--paper);font-size:.9em;line-height:1.5}.e-box p{margin:0 0 .5em!important}.e-box p:last-child{margin:0!important}
+.e-book tr.e-sep td{border-bottom:0;padding:3px}
+.e-in{display:flex;flex-direction:column;gap:3px;font:13px/1.2 "Instrument Sans",system-ui,sans-serif;color:var(--muted)}
+.e-in input,.e-in select{font:14px "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:7px;padding:5px 7px;min-width:0;font-variant-numeric:tabular-nums}
+.e-ctl .e-in{flex:0 1 150px}
+.e-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 14px;padding:6px 18px 4px}
+.e-alm{padding:4px 18px 0;max-height:640px;overflow:auto}
+.e-pg{margin:0 0 18px}.e-pg h4{font:600 15px/1.3 "Instrument Sans",sans-serif;margin:10px 0 6px;color:var(--ink)}
+.e-pg table,.e-out table{width:100%;border-collapse:collapse;font:12.5px/1.25 "Instrument Sans",sans-serif;font-variant-numeric:tabular-nums;margin-bottom:8px}
+.e-pg th,.e-pg td{text-align:right;padding:2px 5px;border-bottom:1px solid var(--rule);white-space:nowrap}.e-pg th{color:var(--muted);font-weight:500}.e-pg td:first-child,.e-pg th:first-child{text-align:left}
+.e-pf{font:12.5px/1.4 "Instrument Sans",sans-serif;color:var(--muted);margin:0 0 8px!important}
+#almPrint{display:none}
+@media print{html.alm-print,html.alm-print body{overflow:visible!important;height:auto!important;background:#fff!important;color:#000!important}
+  html.alm-print body>*:not(#almPrint){display:none!important}html.alm-print #almPrint{display:block;font:10pt/1.3 Georgia,serif;color:#000}
+  #almPrint h1{font-size:14pt;margin:0 0 4pt}#almPrint .e-pg{break-inside:avoid-page;page-break-inside:avoid}#almPrint .e-pg h4{font:bold 11pt Georgia,serif;margin:8pt 0 3pt;color:#000}
+  #almPrint table{width:100%;border-collapse:collapse;font:8.5pt/1.2 Georgia,serif;font-variant-numeric:tabular-nums}#almPrint th,#almPrint td{border-bottom:.5pt solid #999;padding:1pt 3pt;text-align:right;color:#000}
+  #almPrint td:first-child,#almPrint th:first-child{text-align:left}#almPrint .e-pf{font-size:8.5pt;color:#000}}
+.e-stars td:nth-child(2),.e-stars th:nth-child(2){text-align:left}
+@media print{#almPrint .e-stars{break-inside:auto;page-break-inside:auto}#almPrint .e-stars td:nth-child(2),#almPrint .e-stars th:nth-child(2){text-align:left}}

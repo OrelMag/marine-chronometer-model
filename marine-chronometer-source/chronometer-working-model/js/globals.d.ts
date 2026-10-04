@@ -2,3 +2,5 @@
 declare const THREE: any;
 // shared/escapement.js ends with module.exports for Node (tools/escapement.js), so TypeScript reads it as a module; on the page makeEsc is a global.
 declare const makeEsc: typeof import('../../shared/escapement.js').makeEsc;
+// shared/almanac.js, likewise (tools/almanac.js reads it in Node): on the page ALM is a global.
+declare const ALM: typeof import('../../shared/almanac.js').ALM;
