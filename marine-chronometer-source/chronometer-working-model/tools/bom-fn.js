@@ -11,11 +11,13 @@ async()=>{
     return p1.clone().add(d1.multiplyScalar(s)).distanceTo(p2.clone().add(d2.multiplyScalar(t)));};
   const amin=ESC.AMIN,f2=x=>+x.toFixed(3);
   click('#speeds button[data-v="1"]');await wait(300);
-  /* the balance locking arm (Fig. 9, Sec. X): locked, its finger stops the balance at a timing weight; unlocked, the balance doesn't start by itself (Sec. III) */
+  /* the balance locking arm (Fig. 9, Sec. X): locked, the washer at its end holds the balance by a timing weight's screw; unlocked, the balance doesn't start by itself (Sec. III) */
   { click('#armSeg button[data-v="1"]');await until(()=>H().amp===0,60000);await wait(300);const h=H();   /* the page's frames carry model time: a slow renderer takes longer */
-    const fin=[];R.arm.traverse(m=>{if(m.isMesh&&m.geometry.type==='CylinderGeometry')fin.push(ax(m));});let g=1e9;
-    for(const w of byHn('42176')){const[a,b,r]=ax(w);for(const[c,d,q]of fin)g=Math.min(g,segD(a,b,c,d)-r-q);}
-    out.push(['locking arm',h.amp===0&&h.held&&g>-0.05&&g<0.25,`locked: amplitude ${f2(h.amp)}, train held ${h.held}, finger to timing weight about ${f2(g)} mm (between their axes less their radii, which overstates it where the finger's end stands above the weight's axis; want -0.05..0.25, fine.py measures it)`]);
+    /* the washer at the arm's end (userData.lockEnd, its axis on local y): the timing weight's screw (42177) must stand in its hole, square to it, its end through the washer's inner face */
+    let wm=null;R.arm.traverse(m=>{if(m.isMesh&&m.userData.lockEnd)wm=m;});wm.updateWorldMatrix(true,false);const wh=wm.userData.lockEnd,C=new T.Vector3().setFromMatrixPosition(wm.matrixWorld),nW=new T.Vector3(0,1,0).transformDirection(wm.matrixWorld);
+    let best=null;for(const sc of byHn('42177')){const[a,b,r]=ax(sc),[base,tip]=a.distanceTo(C)<b.distanceTo(C)?[b,a]:[a,b],u=tip.clone().sub(base).normalize(),q=C.clone().sub(base),off=q.clone().sub(u.clone().multiplyScalar(q.dot(u))).length();
+      const depth=tip.clone().sub(C).dot(u)+wh.h/2;if(!best||off<best.off)best={off,depth,clear:wh.hole-r-off,sq:Math.abs(u.dot(nW))};}   /* off: the screw's axis from the washer's centre; depth: its end past the washer's inner face */
+    out.push(['locking arm',h.amp===0&&h.held&&best.clear>0&&best.depth>0.05&&best.sq>0.99,`locked: amplitude ${f2(h.amp)}, train held ${h.held}; the timing weight's screw in the washer's hole: ${f2(best.clear)} mm clear of its edge, ${f2(best.depth)} mm into it, its axis ${f2(Math.acos(Math.min(1,best.sq))*180/Math.PI)} deg off the washer's (want clear over 0, in over 0.05, square)`]);
     click('#armSeg button[data-v="0"]');await wait(2000);const h2=H();
     out.push(['locking arm, unlocked',h2.amp===0&&h2.held,`unlocked, not started: amplitude ${f2(h2.amp)}, train held ${h2.held} (a detent chronometer doesn't start by itself)`]); }
   /* the twist (Sec. III): "a single quick twist" sets the balance swinging past the escapement's least amplitude, and the train runs */

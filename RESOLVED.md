@@ -1622,4 +1622,16 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The locking arm couldn't turn: its finger passed through the balance's rim**
+  (Plates, bridges, screws and arbors). The arm on the train bridge held the
+  balance with an upright finger 2.4 mm tall beside a timing weight and turned
+  120 deg to unlock, its finger sweeping in under the balance, where the rim
+  reaches down to 1.34 mm over the train bridge: impossible, and missed because
+  fine.py tested only the turn's two ends. Fig. 9 and Sec. X have a washer at the
+  arm's end that goes over the timing weight's screw: the arm is now a level arm on
+  the barrel bridge's top at the weight opposite the cock (no place beside the cock's
+  foot fits any arm), its end a washer bent down from it, the screw's end in its
+  hole; it unlocks with a turn of 2 deg. Keep: check the locking arm's turn in
+  between too (`fine.py --hold --eval "const R=__mv.userData.R;R.armL+=R.armU*0.5"`);
+  the washer square to the screw, the screw in its hole when locked, and everything
+  outside the balance's sweep (17.35) when unlocked.

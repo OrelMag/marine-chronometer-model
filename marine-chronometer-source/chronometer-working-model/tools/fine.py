@@ -4,7 +4,7 @@
     python fine.py --dense    # also 101 phases across a full balance swing
     python fine.py --split    # with the split-balance variant shown (finding 9 in Review-results.md, fixed)
     python fine.py --eval "__mv.userData.R.timing(3,3)"   # run some JS after the page loads (a variant, the weights, a planted fault)
-    python fine.py --hold     # with the balance locking arm locked (the balance held at rest, a timing weight against the arm's finger) and the train-blocking screw down (where a spoke leaves room; else just above the wheel)
+    python fine.py --hold     # with the balance locking arm locked (the balance held at rest, a timing weight's screw in the washer at the arm's end) and the train-blocking screw down (where a spoke leaves room; else just above the wheel)
 
 dyn.py works in 0.4 mm cubes and misses thin overlaps (the escape pinion, the fourth wheel's collet, the sustaining pawl's pivot and the stop-bar
 all went unseen; see RESOLVED.md). This one resolves 0.05 mm. Each pair of meshes that meets is listed once, with its largest overlap; pairs in

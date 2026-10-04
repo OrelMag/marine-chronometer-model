@@ -1104,6 +1104,20 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    line (none, or 0.5, leaves 0.22-0.24 to the centre line; 1.0 either way runs
    into one of them); the eye can't grow either (0.02 from the second train
    pillar's screw head).*
+   *Rebuilt (4 October 2026, `claude/lock-arm-shape`): the arm's end is a washer whose hole
+   goes over a timing weight's screw (Fig. 9's round plate at the weight; Sec. X "over the
+   timing weight"), which holds the balance both ways and needs a turn of only 2 deg. The old
+   arm could not work: its finger, 2.4 mm tall, passed through the rim as it turned 120 deg
+   (the balance's rim reaches down to 1.34 mm over the train bridge, its screws out to 17.35;
+   the checks tested only the two ends of the turn). A search over every place (rasters of
+   the built model at the arm's heights, the balance at rest, the turn in 0.1 deg steps) found
+   none beside the cock's foot, at either height (the foot 0.30 outside the sweep, the escape
+   upper bridge inside), and 28 on the barrel bridge's top at the weight opposite the cock:
+   the arm now lies there, 12.5 mm along the tangent just outside the balance's screws, the
+   washer bent down from its inner edge. fine.py free, locked and halfway through the turn,
+   solids, exploded, audit and bom (its function check: the screw 0.15 into the hole, 0.12
+   clear of its edge) pass. Still to settle from a photograph: which weight, the arm's
+   length and the post's place.*
 
 ## Open questions, to settle from video (1 October 2026)
 

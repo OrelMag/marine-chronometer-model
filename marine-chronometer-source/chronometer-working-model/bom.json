@@ -1755,7 +1755,7 @@
    "parent": "42000",
    "kind": "part",
    "part": "lockArm",
-   "fn": "Turned so the finger at its end stands beside a timing weight, to hold the balance in transit (Sec. III, Fig. 9; Sec. X).",
+   "fn": "Turned so the washer at its end goes over a timing weight's screw, to hold the balance in transit (Sec. III, Fig. 9; Sec. X).",
    "rel": [
     [
      "round",
@@ -1784,7 +1784,7 @@
     ],
     [
      "in",
-     "42062",
+     "42061",
      "tap"
     ]
    ],
@@ -1821,7 +1821,7 @@
    "rel": [
     [
      "in",
-     "42062",
+     "42061",
      "press"
     ]
    ],
