@@ -1916,8 +1916,10 @@ changes it only round its own arbors (1 below).
     rim, not the 0.249 in roller. Now r 4.8 (HS_RC; 4.97 to the outer edge), the collet scaled
     with it (CKS). With the Navy brake fitted, its arch (6.6) now clears the coils by about 1.3
     mm at full swing, as 2E11795's photograph shows (finding 13). Fig. 5 is consistent but not
-    a measure (its scale rests on the drawn hub). *Still open:* the coils' number: the video
-    side-on seems to show more than 9 lines; and Fig. 5 draws the top coil at 0.82 of the
+    a measure (its scale rests on the drawn hub). The turns too: 13 wires down each side
+    on the video side-on (14.5 px apart; the first reading counted every second one, 26 px),
+    so 12 turns with the end curves, not 9. *Still open:* the wire's section (the video shows
+    flat ribbons, the model draws it round); and Fig. 5 draws the top coil at 0.82 of the
     others, the spring's upper end then about 3.9 from the staff, not the stud clamp's 4.6.
 
 ## The fusee assembly against Fig. 28 and the video
