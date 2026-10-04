@@ -8,8 +8,8 @@ properties, Custom Properties) for the rest:
     explode, laid_out, lift, lids, latch    0 to 1: the parts apart, the train laid out, out of the case and turned over, the lids closed, the gimbals latched
     roll, pitch  the box tilted (the gimbals keep the case level)
     seconds      the model's time (read only: frame / fps)
-How: the escape wheel, train, hands and motion work turn by drivers in step with the escape wheel's place, E = whole beats + the beat's own progress (the export's
-helper, "Rig · escape wheel teeth"); the balance, detent, trip spring and hairspring play the export's one-beat action (Rig · beat) on a loop; everything else plays
+How: the escape wheel, train, hands and motion work turn by drivers in step with the escape wheel's place, E = beats run + the export's helper ("Rig · escape
+wheel teeth": how far the wheel is ahead of an even run through its beat, 0 at each end); the balance, detent, trip spring and hairspring play the export's one-beat action (Rig · beat) on a loop; everything else plays
 its own one-parameter action (Run down, Rig · explode, ...) through an Action constraint whose time the control drives, made over into changes from the part's rest
 so that two can move one part. No Python runs in the drivers, so the file works without Auto Run Scripts.
 
@@ -146,7 +146,7 @@ def rig(R,c):
     for o in lin:
         L=o['rig'];ax=list(L['axis']);a=Vector((ax[0],-ax[2],ax[1]));kE=float(L['kE']);kS=float(L['kS'])
         q0=rest_of(o)[1] if 'rest' in o.keys() else o.rotation_quaternion.copy()
-        th='(%r*(floor(frame/%r)+t-%r+(hh-%r)*%r)+%r*m)'%(kE,BF,E0,h0,3600*2,kS)   # E: whole beats, the beat's progress, 7200 beats an hour since the rest pose; and the hands' slip
+        th='(%r*(frame/%r+t-%r+(hh-%r)*%r)+%r*m)'%(kE,BF,E0,h0,3600*2,kS)   # E: beats run, plus the helper's (the escape wheel's place less that even run: 0 at each beat's ends, so no seam), 7200 beats an hour since the rest pose; and the hands' slip
         ix=max(range(3),key=lambda i:abs(a[i]));v0=Vector(q0[1:])
         if abs(abs(a[ix])-1)<1e-4 and v0.cross(a).length<1e-5:   # turning about one of its own axes, from a rest about it: one Euler angle
             sg=1 if a[ix]>0 else -1;t0=2*math.atan2(v0.dot(a),q0[0]);o.rotation_mode='XYZ';o.rotation_euler=(0,0,0)

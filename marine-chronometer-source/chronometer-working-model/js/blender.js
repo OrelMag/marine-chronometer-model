@@ -29,7 +29,7 @@ const BLENDER=(()=>{
     look(C,s.dev>0.02,s.hkeyOn);}
   /* ---------- the train and balance through time: app.js frame()'s stop and start, drive and swing (ampStep, stopMove), at speed 1 ---------- */
   function sim(C,hrs){const R=C.R,drvF=A.drvF,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false};
-    const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const x=t/0.5+H.bOff,kk=Math.floor(x),p=x-kk,z=ESC.state(p,H.amp);return{E:kk+z.prog+H.eOff,s:z};};
+    const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const x=t/0.5+H.bOff,kk=Math.floor(x),p=x-kk,z=ESC.state(p,H.amp);return{E:kk+(p>0?z.prog:0)+H.eOff,s:z};};   /* at a whole beat the tooth not yet escaped: ESC.state's prog 1 there is the beat before's, which kk has counted */
     H.twist=()=>{if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;H.kick=160*D2R;};
     H.step=dt=>{const mvTo=(x,t,r)=>x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(H.lastE??0))?Math.min(b,vf-0.005):b;
       const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held;
@@ -57,12 +57,12 @@ const BLENDER=(()=>{
   function clips(C,h0,E0){const amp0=ESC.ampAt(A.drvF(h0)),G=beatGrid(amp0),st=o=>Object.assign(REST(),{n:h0*FUSEE_PER_HOUR,E:E0},o);
     const runFor=(S,beats,emit,extra)=>{let tp=0;const go=t=>{const o=S.step(t-tp);tp=t;emit(t,st(Object.assign(o,extra?extra(t):{})));};for(let b=0;b<beats;b++)for(const p of G)go((b+p)*0.5);go(beats*0.5);};
     const uni=(dur,f,emit)=>{const n=Math.round(dur*FPS);for(let i=0;i<=n;i++){const t=dur*i/n;emit(t,f(t,i?dur/n:0));}};
-    const beat=(emit,n,secs)=>{for(let i=0;i<=n;i++){const p=i/n,z=ESC.state(Math.min(p,0.99999),amp0),e=p<1?z.prog:1;emit(p*secs,st({E:e,th:z.th,lift:z.lift,psDef:z.psDef,teeth:e}));}};
+    const beat=(emit,secs)=>{for(const p of[...G,1]){const z=ESC.state(Math.min(p,0.99999),amp0),e=p<=0?0:p<1?z.prog:1;emit(p*secs,st({E:e,th:z.th,lift:z.lift,psDef:z.psDef,teeth:e-p}));}};   /* one beat on Running's phases, so the rig's beat and Running agree where the escapement acts; at 0 the tooth not yet escaped (ESC.state's 1 there is the last beat's); teeth, for the rig's helper: the escape wheel's place less an even run, 0 at both ends of the beat, so it loops without a seam */
     const out=(t,a,b,c,d)=>ramp(t,a,b)-ramp(t,c,d);   /* up from a to b, down from c to d */
     const HT=0.5/FUSEE_PER_HOUR,hW=RUN_H-0.25,wT=Math.ceil(hW/HT),per=A.rollP();
     return[
       {name:'Running',len:60,d:'the escapement and train for a minute, the second hand once round',run:emit=>runFor(sim(C,h0),120,emit)},
-      {name:'Beat (slow motion)',len:10,d:'one beat twenty times slower: unlocking, impulse, the wheel locked again a tooth on',run:emit=>beat(emit,400,10)},
+      {name:'Beat (slow motion)',len:10,d:'one beat twenty times slower: unlocking, impulse, the wheel locked again a tooth on',run:emit=>beat(emit,10)},
       /* the fusee is geared to the train, so the escape wheel goes with it, 7200 beats an hour (else the maintaining work's catch takes up the turn: update()); the arbors
          turning more than half a radian a frame (escape, fourth, third, seconds) are left out of it, as a blur */
       {name:'Run down',len:30,fast:RUN_H*7200/(30*FPS),d:'56¼ hours in 30 s: the chain off the fusee onto the barrel, the mainspring letting down, the up-down hand, the minute and hour hands',rig:{p:'n',a:0,b:FUSEE_TURNS},
@@ -84,7 +84,7 @@ const BLENDER=(()=>{
       {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to stay level',run:emit=>{const wR=TAU/per,g=gimbal();
         uni(6*per,(t,dt)=>{const a=14*D2R,roll=a*Math.sin(t*wR),pitch=a*0.55*Math.sin(t*wR*0.7+1.1);if(dt>0)g.step(dt,pitch,roll);else{g.lp=pitch;g.lr=roll;}return st({roll,pitch,gp:g.p[0],gr:g.r[0]});},emit);}},
       /* the rig's (rig.py): one parameter each, from a to b over the clip; the strips that play them are timed by the control's properties */
-      {name:'Rig · beat',len:0.5,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,240,0.5)},
+      {name:'Rig · beat',len:0.5,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},
       {name:'Rig · explode',len:2,d:'for the rig: the parts apart',rig:{p:'explode',a:0,b:1},run:emit=>uni(2,t=>st({ex:t/2}),emit)},
       {name:'Rig · laid out',len:2,d:'for the rig: the train laid out',rig:{p:'laid_out',a:0,b:1},run:emit=>uni(2,t=>st({dev:t/2}),emit)},
       {name:'Rig · lift',len:3,d:'for the rig: out of the case and turned over',rig:{p:'lift',a:0,b:1},run:emit=>uni(3,t=>st({up:t/3,flip:t/3}),emit)},
@@ -148,7 +148,7 @@ const BLENDER=(()=>{
   /* ---------- the export ---------- */
   async function build(onStep,only){const t0=performance.now(),C=copy(),h0=A.hrs();
     /* the rest pose: the page's state of wind, the escape wheel locked at the start of a beat (Running's first moment), the lids open, the movement in its case */
-    const rest=Object.assign(REST(),{n:h0*FUSEE_PER_HOUR});{const z=ESC.state(0,ESC.ampAt(A.drvF(h0)));rest.th=z.th;rest.lift=z.lift;rest.psDef=z.psDef;rest.E=z.prog;}   /* the beat's start: Running's first moment */
+    const rest=Object.assign(REST(),{n:h0*FUSEE_PER_HOUR});{const z=ESC.state(0,ESC.ampAt(A.drvF(h0)));rest.th=z.th;rest.lift=z.lift;rest.psDef=z.psDef;rest.E=0;}   /* the beat's start: Running's first moment */
     let nMax=0;for(let i=0;i<=40;i++){C.R.fs.setWind(FUSEE_TURNS*i/40,0);C.R.fs.g.traverse(o=>{if(o.isInstancedMesh)nMax=Math.max(nMax,o.count);});}nMax+=1;   /* the most links either instanced mesh draws, over a wind */
     apply(C,rest);apply(C,rest);
     const recs=table(C,nMax),cur=new Float32Array(10),vis=new Map();
@@ -228,7 +228,7 @@ const BLENDER=(()=>{
         else{const kids=flipKids.get(r);if(!kids)continue;kids.forEach((kd,j)=>{const s=new Float32Array(tl.length*3);tl.forEach(([,a],q)=>{s[q*3]=s[q*3+1]=s[q*3+2]=a===j?1:0;});
           if(s.some(v=>v!==(j!==(d.restJ||0)?0:1))){const red=GLTF.reduce(t,s,3,0.5);an.channels.push({node:kd.i,path:'scale',times:red.times,values:red.values,interp:'STEP'});}});}}
       return an;});
-    /* the root, millimetres to metres; and the rig's helper, whose x is the escape wheel's place through a beat, in teeth */
+    /* the root, millimetres to metres; and the rig's helper, whose x through a beat is the escape wheel's place in teeth less the beat's even run (E = beats + x) */
     nodes[0]={name:'Hamilton Model 21 marine chronometer',t:[0,0,0],r:[0,0,0,1],s:[0.001,0.001,0.001],children:[idx.get(keep[0])]};
     const helper=nodes.length;nodes.push({name:'Rig · escape wheel teeth',t:[0,0,0],r:[0,0,0,1],s:[1,1,1],extras:{rig:'teeth'}});
     out.forEach(([c,res],ai)=>{if(!res.teeth.length)return;const n=res.teeth.length/2,t=new Float32Array(n),v=new Float32Array(n*3);for(let j=0;j<n;j++){t[j]=res.teeth[2*j];v[3*j]=res.teeth[2*j+1];}

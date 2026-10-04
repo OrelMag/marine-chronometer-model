@@ -277,8 +277,8 @@ frame rate before importing: the clips come in at it.
   trip spring a flipbook of its shapes through a beat (the first 128, then the nearest); the stop-bar spring, the sustaining spring and the winding pawls'
   springs shape keys; the chain one object a link, a link the chain doesn't reach at scale 0. Hidden is scale 0 throughout (glTF has no visibility).
 - **The rig** (`blender/rig.py`) runs the chronometer on the timeline for as long as it plays: the escape wheel, train, hands, motion work and fusee by
-  drivers in step with the escape wheel's place (whole beats, plus the beat's own progress, read off the export's helper "Rig · escape wheel teeth"; each
-  such part was found turning about one axis in step with it, `extras.rig`), the balance, detent, trip spring and hairspring by Rig · beat on a loop, and the
+  drivers in step with the escape wheel's place (the beats run, plus how far the wheel is ahead of that even run, read off the export's helper "Rig ·
+  escape wheel teeth", 0 at each end of a beat so its loop has no seam; each such part was found turning about one axis in step with it, `extras.rig`), the balance, detent, trip spring and hairspring by Rig · beat on a loop, and the
   rest by Action constraints whose time its controls drive ("Chronometer controls": hours since full wind, the hands set on, explode, laid out, lift, lids,
   latch, roll and pitch). The constraints' actions are made over into changes from each part's rest, so two can move one part, and in Euler: Blender 5.2's
   Action constraint reads an object's rotation channels only so. No Python runs in the drivers. `PLAY = 'Winding'` (any clip) at its top plays that clip
