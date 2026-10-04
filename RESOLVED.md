@@ -1039,7 +1039,7 @@ Contents:
   1.24 times the coils' outer edge from the staff (1.20-1.29); the arch is drawn to
   it, its inner edge 8.0 (7.9 at the fillets), legs 9.1 out, top 9.6. Keep: the
   arch's inner edge at that ratio to the coils, clear of them at full swing; if the
-  hairspring's radius changes, the arch's goes with it (Review-results.md, 13). `3c52891`
+  hairspring's radius changes, the arch's goes with it (Review-results.md, 13).
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
