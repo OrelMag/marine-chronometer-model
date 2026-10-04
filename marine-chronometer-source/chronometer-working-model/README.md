@@ -215,8 +215,10 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
 - **The maker's sheet** of each part card (`MAKER.card`): its lines of the parts list (`js/makers.js`, from `bom.json`), each with the fit `bom.py` measured
   on the model (from `BOM.md`), its material, finish and heat treatment (the manual's where it names them: the Elinvar hairspring and trip spring, the
   beryllium-copper detent, the stainless rim on its Invar arm, the mahogany box; else watchmaking practice, marked as such), and the part's size, volume and
-  mass measured on its closed solids (densities by the model's material). Its **drawing**: the solids' creases over 30° projected to a plan (from the
-  cock's side) and an elevation, in millimetres, with the overall sizes. Its **STL**: its triangles in the movement's frame, mm.
+  mass measured on its closed solids (densities by the model's material), and its **holes** (`MAKER.holes`, as `tools/holes.py` reads them: the round inner
+  loops of each mesh's faces square to the arbors, both faces, so a counterbore or countersink shows as two diameters; centres from the movement's centre).
+  Its **drawing**: the solids' creases over 30° projected to a plan (from the dial side, 12 o'clock up) and an elevation, in millimetres, with the overall
+  sizes and every hole marked, numbered and its diameter given. Its **STL**: its triangles in the movement's frame, mm.
 - **Making it** (the panel): **Measure** (two points on the model, their distance and its components), **Oil** (each part coloured by the oil or grease it takes, after Ops. 18–71: red oil the jewelled pivots, argon oil the bushed ones, grease the mainspring and maintaining work), **Build book** (every card's sheet and drawing,
   printed alone: `#bookPrint`, `html.book-print`), **Data** (the train, `MOD`, `L`, the fusee's profile, the escapement's settings, figures and cycle,
   the hairspring's design and centreline, the balance's moment and pitches, the parts list), **STL** (every part shown).

@@ -25,27 +25,53 @@ const MAKER=(()=>{
     for(const o of meshesOf(p)){const k=nameOf(o.userData.mat0||o.material)||'other';let v=0;tris(o,(a,b,c)=>{box.expandByPoint(a);box.expandByPoint(b);box.expandByPoint(c);v+=a.dot(b.clone().cross(c))/6;});
       by[k]=(by[k]||0)+Math.abs(v);}
     const vol=Object.values(by).reduce((s,v)=>s+v,0),mass=Object.entries(by).reduce((s,[k,v])=>s+v*(DENS[k]||8)/1000,0);return{box,by,vol,mass};}
+  /* the holes through a part's faces square to the arbors (as tools/holes.py reads them): on each of its meshes' top and bottom faces, the outline's inner
+     loops that are round (radius within 6 % all round, under 6 mm); a hole on both faces at one place is one hole, its two diameters (a counterbore or
+     countersink shows as two). Centres in the movement's frame, mm from the movement's centre (the centre arbor): x toward 3 o'clock, z toward 6 */
+  function holes(p){const out=[];
+    for(const o of meshesOf(p)){if(o.isInstancedMesh)continue;const g=o.geometry,P=g.attributes.position,I=g.index,m=toMv(o),n=I?I.count:P.count,V=[];const v=new THREE.Vector3();
+      for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);V.push([v.x,v.y,v.z]);}
+      let y0=1e9,y1=-1e9;for(const q of V){if(q[1]<y0)y0=q[1];if(q[1]>y1)y1=q[1];}if(y1-y0<0.05)continue;
+      for(const[lev,face]of[[y1,'top'],[y0,'bottom']]){const E=new Map(),k=q=>q[0].toFixed(3)+','+q[2].toFixed(3);
+        for(let t=0;t<n;t+=3){const ix=[I?I.getX(t):t,I?I.getX(t+1):t+1,I?I.getX(t+2):t+2],T=ix.map(i=>V[i]);if(!T.every(q=>Math.abs(q[1]-lev)<2e-3))continue;
+          for(let e=0;e<3;e++){const a=k(T[e]),b=k(T[(e+1)%3]);if(a===b)continue;const key=a<b?a+'|'+b:b+'|'+a;E.set(key,(E.get(key)||0)+1);}}
+        const adj=new Map();for(const[e,c]of E)if(c===1){const[a,b]=e.split('|');(adj.get(a)||adj.set(a,[]).get(a)).push(b);(adj.get(b)||adj.set(b,[]).get(b)).push(a);}
+        const seen=new Set();for(const s of adj.keys()){if(seen.has(s))continue;const L=[];let c=s,prev=null;
+          while(c&&!seen.has(c)){seen.add(c);L.push(c.split(',').map(Number));const nx=(adj.get(c)||[]).find(x=>x!==prev&&!seen.has(x));prev=c;c=nx;}
+          if(L.length<6)continue;const cx=L.reduce((a,q)=>a+q[0],0)/L.length,cz=L.reduce((a,q)=>a+q[1],0)/L.length,rs=L.map(q=>Math.hypot(q[0]-cx,q[1]-cz)),r=rs.reduce((a,x)=>a+x,0)/rs.length;
+          if(r>6||r<0.05||Math.max(...rs.map(x=>Math.abs(x-r)))>0.06*r+0.01)continue;
+          let h=out.find(q=>Math.hypot(q.x-cx,q.z-cz)<0.15);if(!h){h={x:cx,z:cz,top:null,bottom:null,yT:null,yB:null};out.push(h);}
+          if(face==='top'){h.top=Math.max(h.top||0,r);h.yT=lev;}else{h.bottom=Math.max(h.bottom||0,r);h.yB=lev;}}}}
+    out.sort((a,b)=>Math.atan2(a.z,a.x)-Math.atan2(b.z,b.x));out.forEach((h,i)=>h.n=i+1);return out;}
+  const holeRows=H=>H.length?`<table class="mk"><thead><tr><th>Hole</th><th class="n">x</th><th class="n">z</th><th class="n">Ø top</th><th class="n">Ø bottom</th><th>Kind</th></tr></thead><tbody>${H.map(h=>{const dT=h.top?2*h.top:null,dB=h.bottom?2*h.bottom:null,
+      kind=dT&&dB?(Math.abs(dT-dB)<0.02?'through':dT>dB?'counterbored or countersunk from the top':'counterbored or countersunk from below'):dT?'blind, from the top':'blind, from below';
+      return`<tr><td>h${h.n}</td><td class="n">${mm(h.x)}</td><td class="n">${mm(h.z)}</td><td class="n">${dT?mm(dT):'—'}</td><td class="n">${dB?mm(dB):'—'}</td><td>${kind}</td></tr>`;}).join('')}</tbody></table>
+      <p class="mkm">Holes square to the arbors, read off the solids (as tools/holes.py does): centres from the movement's centre (the centre arbor), x toward 3 o'clock, z toward 6; the top is the dial side.</p>`:'';
   function sheetHTML(p){const L=MAKERS.filter(l=>l.part===p),m=measure(p),s=m.box.getSize(new THREE.Vector3()),q=A.PARTS[p]||{};
     const rows=L.map(l=>`<tr><td>${esc(l.idx)}</td><td>${esc(l.no)}</td><td>${esc(l.name)}</td><td class="n">${esc(l.qty)}</td><td>${esc(l.mat)}<i>${l.cls==='manual'?'the manual':'practice'}</i></td><td>${esc(l.treat)}</td><td>${esc(l.fit)}</td></tr>`).join('');
     return`<table class="mk"><thead><tr><th>Idx</th><th>No.</th><th>Name</th><th class="n">Units</th><th>Material</th><th>Finish, heat treatment</th><th>Fit, as measured on the model</th></tr></thead><tbody>${rows||'<tr><td colspan="7">No line of the parts list is on this card.</td></tr>'}</tbody></table>
       <p class="mkm">As built: ${mm(s.x)} × ${mm(s.y)} × ${mm(s.z)} (along the movement's x, its axis y, z), ${m.vol.toFixed(1)} mm³, about ${m.mass.toFixed(2)} g (${Object.entries(m.by).filter(([,v])=>v>0.01).map(([k,v])=>`${k} ${v.toFixed(1)} mm³`).join(', ')}).
-      Source of its shape: ${q.src?esc(A.SRC[q.src][0]):'—'}${q.sn?': '+esc(q.sn):''}. Sizes the model estimates are listed in its README's "Estimated, not from the manual".</p>`;}
-  /* the drawing: the solids' edges (creases over 30°) projected to the plan (x, z, seen from the cock's side) and an elevation (x, y), to scale, with the overall sizes */
+      Source of its shape: ${q.src?esc(A.SRC[q.src][0]):'—'}${q.sn?': '+esc(q.sn):''}. Sizes the model estimates are listed in its README's "Estimated, not from the manual".</p>${holeRows(holes(p))}`;}
+  /* the drawing: the solids' edges (creases over 30°) projected to the plan (x, z, seen from the dial side: 3 o'clock right, 12 up) and an elevation (x, y, the dial side
+     up), to scale, with the overall sizes, and the holes (holes()) marked and numbered as the sheet's table lists them */
   function drawingSVG(p,title){const segP=[],segE=[],box=new THREE.Box3();
     for(const o of meshesOf(p)){const eg=new THREE.EdgesGeometry(o.geometry,30),P=eg.attributes.position,m=toMv(o),mats=[];
       if(o.isInstancedMesh){const im=new THREE.Matrix4();for(let i=0;i<Math.min(o.count,60);i++){o.getMatrixAt(i,im);mats.push(m.clone().multiply(im));}}else mats.push(m);
       const a=new THREE.Vector3(),b=new THREE.Vector3();for(const mt of mats)for(let i=0;i<P.count;i+=2){a.fromBufferAttribute(P,i).applyMatrix4(mt);b.fromBufferAttribute(P,i+1).applyMatrix4(mt);box.expandByPoint(a);box.expandByPoint(b);segP.push([a.x,a.z,b.x,b.z]);segE.push([a.x,-a.y,b.x,-b.y]);}
       eg.dispose();}
+    const dd=L=>{const S=new Set();return L.filter(q=>{const a=q[0].toFixed(2)+','+q[1].toFixed(2),b=q[2].toFixed(2)+','+q[3].toFixed(2);if(a===b)return false;const k=a<b?a+'|'+b:b+'|'+a;if(S.has(k))return false;S.add(k);return true;});};   /* edges that coincide in the projection drawn once */
+    segP.splice(0,segP.length,...dd(segP));segE.splice(0,segE.length,...dd(segE));
     if(box.isEmpty())return'';const s=box.getSize(new THREE.Vector3()),pad=Math.max(4,0.12*Math.max(s.x,s.z)),W=s.x+2*pad,Hp=s.z+2*pad,He=s.y+2*pad,gap=6;
     const line=(q,ox,oy)=>`<line x1="${(q[0]-ox).toFixed(3)}" y1="${(q[1]-oy).toFixed(3)}" x2="${(q[2]-ox).toFixed(3)}" y2="${(q[3]-oy).toFixed(3)}"/>`;
     const oxP=box.min.x-pad,oyP=box.min.z-pad,oxE=box.min.x-pad,oyE=-box.max.y-pad-Hp-gap,fs=Math.max(1.2,W/45);
-    const dim=(x1,y1,x2,y2,t,ox,oy,vert)=>`<g class="d"><line x1="${x1-ox}" y1="${y1-oy}" x2="${x2-ox}" y2="${y2-oy}"/><text x="${(x1+x2)/2-ox+(vert?-fs*0.6:0)}" y="${(y1+y2)/2-oy+(vert?0:-fs*0.5)}" font-size="${fs}" text-anchor="middle"${vert?` transform="rotate(-90 ${(x1+x2)/2-ox-fs*0.6} ${(y1+y2)/2-oy})"`:''}>${t}</text></g>`;
-    const H=Hp+He+gap;
+    const dim=(x1,y1,x2,y2,t,ox,oy,vert)=>`<g class="d"><line x1="${x1-ox}" y1="${y1-oy}" x2="${x2-ox}" y2="${y2-oy}"/><text stroke="none" x="${(x1+x2)/2-ox+(vert?-fs*0.6:0)}" y="${(y1+y2)/2-oy+(vert?0:-fs*0.5)}" font-size="${fs}" text-anchor="middle"${vert?` transform="rotate(-90 ${(x1+x2)/2-ox-fs*0.6} ${(y1+y2)/2-oy})"`:''}>${t}</text></g>`;
+    const H=Hp+He+gap,HL=holes(p),hm=HL.map(h=>{const d=2*Math.max(h.top||0,h.bottom||0),x=h.x-oxP,y=h.z-oyP,c=Math.max(0.4,d*0.7);return`<g class="h"><line x1="${(x-c).toFixed(3)}" y1="${y.toFixed(3)}" x2="${(x+c).toFixed(3)}" y2="${y.toFixed(3)}"/><line x1="${x.toFixed(3)}" y1="${(y-c).toFixed(3)}" x2="${x.toFixed(3)}" y2="${(y+c).toFixed(3)}"/><text stroke="none" x="${(x+c*0.8).toFixed(3)}" y="${(y-c*0.8).toFixed(3)}" font-size="${(fs*0.5).toFixed(2)}">h${h.n} Ø${d.toFixed(2)}</text></g>`;}).join('');
     return`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(2)} ${H.toFixed(2)}" width="${W.toFixed(1)}mm" height="${H.toFixed(1)}mm" class="mkd"><title>${esc(title)}: plan and elevation, mm</title>
-      <g fill="none" stroke="currentColor" stroke-width="${(W/600).toFixed(3)}">${segP.map(q=>line(q,oxP,oyP)).join('')}${segE.map(q=>line(q,oxE,oyE)).join('')}</g>
-      <g stroke="currentColor" stroke-width="${(W/900).toFixed(3)}" fill="currentColor">${dim(box.min.x,box.max.z+pad*0.5,box.max.x,box.max.z+pad*0.5,s.x.toFixed(2)+' mm',oxP,oyP)}${dim(box.min.x-pad*0.5,box.min.z,box.min.x-pad*0.5,box.max.z,s.z.toFixed(2)+' mm',oxP,oyP,1)}
+      <g fill="none" stroke="currentColor" stroke-width="${(W/1500).toFixed(3)}">${segP.map(q=>line(q,oxP,oyP)).join('')}${segE.map(q=>line(q,oxE,oyE)).join('')}</g>
+      <g stroke="currentColor" stroke-width="${(W/1600).toFixed(3)}" fill="currentColor">${dim(box.min.x,box.max.z+pad*0.5,box.max.x,box.max.z+pad*0.5,s.x.toFixed(2)+' mm',oxP,oyP)}${dim(box.min.x-pad*0.5,box.min.z,box.min.x-pad*0.5,box.max.z,s.z.toFixed(2)+' mm',oxP,oyP,1)}
       ${dim(box.min.x-pad*0.5,-box.max.y,box.min.x-pad*0.5,-box.min.y,s.y.toFixed(2)+' mm',oxE,oyE,1)}</g>
-      <text x="${pad*0.3}" y="${fs*1.2}" font-size="${fs}" fill="currentColor">${esc(title)}: plan (from the cock's side), and below it the elevation; 1 unit = 1 mm</text></svg>`;}
+      <g stroke="#c0392b" fill="#c0392b" stroke-width="${(W/2400).toFixed(3)}">${hm}</g>
+      <text x="${pad*0.3}" y="${fs*1.2}" font-size="${fs}" fill="currentColor">${esc(title)}: plan (from the dial side, 12 o'clock up), and below it the elevation (the dial side up); holes h1… as the sheet lists them; 1 unit = 1 mm</text></svg>`;}
   /* a binary STL of meshes, in the movement's frame (mm) */
   function stl(ms){let n=0;for(const o of ms)tris(o,()=>{n++;});const buf=new ArrayBuffer(84+50*n),dv=new DataView(buf);let off=84;dv.setUint32(80,n,true);
     const e1=new THREE.Vector3(),e2=new THREE.Vector3();
@@ -94,5 +120,5 @@ const MAKER=(()=>{
   return{bind(api){A=api;
       $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));$('#mkOil').addEventListener('click',()=>oil(!oilOn));$('#mkBook').addEventListener('click',book);$('#mkData').addEventListener('click',data);
       $('#mkSTL').addEventListener('click',()=>save(stl(A.meshes.filter(o=>!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position&&(()=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;})())),'model21-movement.stl'));},
-    card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure};
+    card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure,holes};
 })();
