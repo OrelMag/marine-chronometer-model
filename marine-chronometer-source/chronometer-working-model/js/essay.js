@@ -519,7 +519,7 @@ const ESSAY=(()=>{
   function fillLive(){const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
-      I0:model?Math.round(model.I0/10)*10:1140,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
+      I0:model?Math.round(model.I0/10)*10:580,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
     { const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const q=(lo+hi)/2;ESC.ampAt(q)<a?lo=q:hi=q;}return(lo+hi)/2;},r=A=>{const a=A*D2R;return Math.abs(ESC.rateAt(a,sAt(a))).toFixed(2);};V.isoLo=r(247.5);V.isoHi=r(270); }   /* the escapement's rate at 1 3/8 and 1 1/2 turns of motion (makeEsc rateAt) */   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}

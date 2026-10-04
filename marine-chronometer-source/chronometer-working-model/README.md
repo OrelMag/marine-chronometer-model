@@ -367,16 +367,19 @@ and the thread pitches are the model's. Things to know before changing it:
   would not change, because the pitches are fitted to the manual's figures.
 - **The moment of inertia is Table II's.** Table II (p. 70) gives the rate a
   pair of screws of one head height makes against another: 0.100 in to 0.080
-  in, about 16 minutes a day; 0.100 to 0.050, about 43; and eight more. With
-  the parts list's masses at their heads' radii, those changes fit a balance of
-  1,140 g·mm² (least squares over the ten; Table III's washers give about 960).
-  The balance is drawn as the restoration video measures it: the rim 3.5 mm
-  tall and 0.6 thick, the screw heads 3.1 mm across (their masses, the parts
-  list's, need a denser metal than brass at that size), each screw through the
-  rim to a point inside it. Drawn so, it makes about 730 g·mm²; `I_REST` in
-  `movement.js` (410 g·mm²) adds
-  the difference, so a screw change makes Table II's rate. What carries it on
-  the real balance is open (Review-results.md, "The balance's rim").
+  in, about 16 minutes a day; 0.100 to 0.050, about 43; and eight more. The
+  parts list's masses (the screws' 125–130 mg and so on, the timing weights'
+  93 mg, the verniers' 10.5 mg, the washers') are read as a matched pair's, half
+  each (`PM` in `movement.js`; inferred, likely: "Estimated" below). With them at
+  their heads' radii, those changes fit a balance of 578 g·mm² (least squares
+  over the ten, `I_T2`; each within 2.6 minutes a day of the table). The balance
+  is drawn as the restoration video measures it: the rim 3.5 mm tall and 0.6
+  thick, the screw heads 3.1 mm across, each screw through the rim to a point
+  inside it. Drawn so, it makes 534 g·mm²; `I_REST` (44 g·mm², 8 %) adds the
+  difference, so a screw change makes Table II's rate. Read as each one's mass,
+  the same table would need 1,157 against a drawing of 731: 37 % that nothing
+  measured carries (it was `I_REST`'s 410 until 4 October 2026).
+  The hairspring's stiffness follows: I (4π)², about 91 µN·m a radian.
 - **Changing the balance changes the pitches, not the rates.** A heavier rim
   or larger screws raise `I₀`; `R.pitch` follows, and a turn stays 40 s and
   2.8 s a day.
@@ -689,13 +692,14 @@ every speed); the equation gives the amplitude and the rate.
 - The balance rim diameter (29 mm), measured on the top-view photograph.
 - Where the group's transform (`PT`) and the train disagree, an estimate takes the place (IDEAS.md 1.12): the pillars' feet are measured on the video's bare plate (r 34.1-34.7), but pillar 1 stands at 170.8° rather than the video's 166.3° (40:08, where its dial-side screw is just clear of the lower train bridge's end), where its top screw's head would stand in the cock's foot (the video shows no screw under the cock, 6:29 and 6:47; the photograph has the screw at 172°), and the lower train bridge ends 9.2 mm past the fourth (the video's 10.3) to clear that screw; the balance locking arm's screw stands 30° round from the timing weight it locks (Fig. 9 draws it beside the cock's foot), and the arm swings back over it 120° (`ARM_U`); the dust seal's screws, the setup cover, click and ratchet keep the photograph's sizes ×1.039 (`PHOTO_K`).
 - The rate panel's figures (see "The rate panel" under How the timing works). Sourced: the rate for a full turn (p. 70) and the screws' and weights' masses (parts list). Estimated:
-  - The rim's section, 3.5 by 0.6 mm (the video: 0.5–0.85 thick on three frames, scaled by the rim's 29 mm and the impulse roller's 0.249 in; its height from the heads' 0.9 of it side-on, to about 10 %), and the arm's thickness (1.1) and its widening round the hub (hidden under the hairspring on every frame; its width, 1.9, is the video's, 6:52.5). `I_REST`, 410 g·mm², added so that the moment of inertia is Table II's 1,140 (the drawn balance makes about 730). Each screw's or weight's mass is spread along its drawn cylinder; the rim's holes, the weights' screws and the staff are left out.
+  - The rim's section, 3.5 by 0.6 mm (the video: 0.5–0.85 thick on three frames, scaled by the rim's 29 mm and the impulse roller's 0.249 in; its height from the heads' 0.9 of it side-on, to about 10 %), and the arm's thickness (1.1) and its widening round the hub (hidden under the hairspring on every frame; its width, 1.9, is the video's, 6:52.5). `I_REST`, 44 g·mm², added so that the moment of inertia is Table II's 578 (the drawn balance makes 534; a rim 0.69 thick, inside the video's 0.5–0.85, would make it all). Each screw's or weight's mass is spread along its drawn cylinder; the rim's holes, the weights' screws and the staff are left out.
   - The thread pitches (0.177 and 0.151 mm), which follow from the moment of inertia and where the weights stand.
   - Which of holes 3, 5 and 12 carries the 0.080 in heads (the video shows the longest heads, about 2.6 mm, in hole 9; the others can't be told apart at its angles), and the heads' diameter (3.1 mm; the video 2.9–3.2 face-on, 6:52.5). The screws' points inside the rim (1.3 mm) and the verniers' stems outside it (1.6 mm, with a collar) are estimated from the video's look.
   - The temperature's effect taken as linear in temperature about 72.5 °F, with the standard set compensated (Table IV gives the change between 55 and 90 °F only).
   - Reading "one full turn of timing weight" as both weights of the pair turned a turn each.
   - The weights' travel from the middle position the manual starts them at: the verniers 3 turns either way; the timing weights 2, all the room the measured nuts (2.3 mm long, 2.1 across; 6:52.5) leave between the rim and the barrel bridge's cut round the balance (r 17.6): 80 s a day either way at 40 s a turn, where 3 turns would cover the 2 minutes a day that screws and washers leave (Op. 5). Until 4 October 2026 the nuts were drawn 1.7 long with 3 turns.
   - The weights' drawn sizes.
+  - **The parts list's masses read as a matched pair's** (`PM` = ½; likely, not certain). The list prints each line once with its quantity beside it ("2", "4-6"), and Tables II and III change screws and washers only "For Pairs". Read as each one's mass: the timing nut as measured (2.1 mm across, 2.3 long, bored and slit; 6:52.5) is about 50 mg of steel, 63 solid, and can't weigh 93; the screws' heads as measured (2.9–3.2 across) would need a metal of density 12.6–14.3, gold, where read as a pair's they come to 6.3–7.1, a little lighter than solid brass (8.5; slotted and pointed); and the drawn balance falls 37 % short of Table II, against 8 % read as a pair's. What would settle it: a Model 21 balance screw or timing weight weighed, or the parts catalogue's own note on how its weights are given.
   - The washers' outer radius (1.0 mm, under the heads' 1.3) and the screws' masses at the middle of the parts list's ranges.
 - The upper train bridge's outline, the crescent of Figs. 29, 67 and 110: the disc of the rim (40.5; at least 38.5-39.4 on the side photograph against the measured plate, 38.6-40.2 on the video: `References/VIDEOS.md`, "The bridges' rims against the plate") less the cut round the barrel (r 21.0, above) and the notch round the fusee. The notch, its horn and its mouth are measured on two frames of C Spinner's restoration video (`KLUwI2UUCMQ` 23:30, the bridge lying flat face up; 13:49.5, turned over in the hand), each put on the bridge's face by `tools/video.py anchor` through the rim, the barrel's cut and the centre bushing (0.2–0.3 mm rms on the circles); `tools/train_bridge.py` builds the edge from them. Until October 2026 it was traced on Fig. 67, pushed off the holes and smoothed, which rounded the horn's end. The opening in the middle (two lobes, over the balance and the fourth's setting, and the escape passage) and the straight end past the barrel are traced on 23:30 the same way (`TB_KEY`, `TB_END`); the seats for the escape upper bridge's ends either side of the passage are not drawn (the bar lies on the face). The places of its small holes (pins, the lower bridge's screws) are the model's, not all the video's.
   - Coordinates here are in the photographed group's frame, before the 14° turn (Dial orientation, step 4): the outline is measured against the bridge's rim, barrel cut and centre bushing, so `movement.js` takes it through `PT` with the barrel and fusee.
