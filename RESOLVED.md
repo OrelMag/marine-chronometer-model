@@ -1435,6 +1435,20 @@ An arbor needs pivots and shoulders; a stone its seat.
   `invariants.py` checks 578 and `I_REST` under 10 %; a balance part redrawn
   must keep the drawing near Table II's moment, not grow `I_REST`. `3d33ca5`
 
+- **The hairspring drawn as round wire with sine-ramp ends, its pull on the pivots unchecked.** Its terminal curves were a sine ramp in from the coil to
+  each end, which leaves 2.4 % of couple / R on the pivots, and its wire was round (0.34 mm). It is now the spring `HSPR` designs: both terminal curves
+  solved to Phillips' conditions (the outer from the coil to the stud's clamp along the bar, 14.8 mm; the inner to the collet's end, 21.8 mm), 2.5e-5 of
+  couple / R on the pivots; a strip 0.23 by 0.221 mm (the video's width; the thickness from the stiffness Table II's balance needs); the collet's end at
+  3.2 from the staff (the video 2.8-3.9; a short inner curve meets the conditions only at 2.9-3.3), the collet scaled from it. Keep: `invariants.py`
+  checks the strip against the stiffness, both curves' residuals and the force; `tools/hairspring.js` the design from movement.js's numbers; the
+  spring mesh keeps hn 42188, the stud clamp 42191.st and the pin 42147.st (the stud check counts the strip in the clamp). `3824b8b`
+
+- **The balance's free decay and the detent spring's share estimated, the energy unbudgeted.** `TF` was 25 s and `fD` 0.03, both guesses, and with the
+  parts list's spring and the train the balance could not have held 255° (the damping asked 4-7 times what the spring gives). `tools/physics.js` now
+  budgets it: `TF` 34 s (the Q the mainspring, fusee, train and escapement allow at 255°), `fD` 0.057 (Op. 78's 0.770 g preload over the release's lift),
+  the escape wheel's inertia measured on its solid. Keep: `physics.js` fails if the model's `TF` or `fD` leave what the budget and the test allow, and if
+  the essay's quoted figures differ from it. `203b2a6`
+
 ## Rendering
 
 - **The hairspring collet's clamp flickered.** The collet's tongue ended at
@@ -1759,15 +1773,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The hairspring drawn as round wire with sine-ramp ends, its pull on the pivots unchecked.** Its terminal curves were a sine ramp in from the coil to
-  each end, which leaves 2.4 % of couple / R on the pivots, and its wire was round (0.34 mm). It is now the spring `HSPR` designs: both terminal curves
-  solved to Phillips' conditions (the outer from the coil to the stud's clamp along the bar, 14.8 mm; the inner to the collet's end, 21.8 mm), 2.5e-5 of
-  couple / R on the pivots; a strip 0.23 by 0.221 mm (the video's width; the thickness from the stiffness Table II's balance needs); the collet's end at
-  3.2 from the staff (the video 2.8-3.9; a short inner curve meets the conditions only at 2.9-3.3), the collet scaled from it. Keep: `invariants.py`
-  checks the strip against the stiffness, both curves' residuals and the force; `tools/hairspring.js` the design from movement.js's numbers; the
-  spring mesh keeps hn 42188, the stud clamp 42191.st and the pin 42147.st (the stud check counts the strip in the clamp).
-- **The balance's free decay and the detent spring's share estimated, the energy unbudgeted.** `TF` was 25 s and `fD` 0.03, both guesses, and with the
-  parts list's spring and the train the balance could not have held 255° (the damping asked 4-7 times what the spring gives). `tools/physics.js` now
-  budgets it: `TF` 34 s (the Q the mainspring, fusee, train and escapement allow at 255°), `fD` 0.057 (Op. 78's 0.770 g preload over the release's lift),
-  the escape wheel's inertia measured on its solid. Keep: `physics.js` fails if the model's `TF` or `fD` leave what the budget and the test allow, and if
-  the essay's quoted figures differ from it.
+None at the moment.
