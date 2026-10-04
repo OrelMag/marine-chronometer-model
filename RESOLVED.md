@@ -1228,7 +1228,7 @@ Contents:
   The clamp closes over the spring above and below, so the hairspring now
   comes off with the balance in the Exploded view (the spring had to pass
   through the upper jaw). Keep: the collet's shape is Fig. 6's; the spring's
-  inner end is where the end face and clamp hold it.
+  inner end is where the end face and clamp hold it. `6839be8`
 
 **The parts list against the model: parts missing, parts holding nothing,
 pivots without shoulders, jewels floating or buried** (`ae397f2`). Checked
