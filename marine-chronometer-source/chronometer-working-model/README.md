@@ -217,7 +217,7 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   beryllium-copper detent, the stainless rim on its Invar arm, the mahogany box; else watchmaking practice, marked as such), and the part's size, volume and
   mass measured on its closed solids (densities by the model's material). Its **drawing**: the solids' creases over 30° projected to a plan (from the
   cock's side) and an elevation, in millimetres, with the overall sizes. Its **STL**: its triangles in the movement's frame, mm.
-- **Making it** (the panel): **Measure** (two points on the model, their distance and its components), **Build book** (every card's sheet and drawing,
+- **Making it** (the panel): **Measure** (two points on the model, their distance and its components), **Oil** (each part coloured by the oil or grease it takes, after Ops. 18–71: red oil the jewelled pivots, argon oil the bushed ones, grease the mainspring and maintaining work), **Build book** (every card's sheet and drawing,
   printed alone: `#bookPrint`, `html.book-print`), **Data** (the train, `MOD`, `L`, the fusee's profile, the escapement's settings, figures and cycle,
   the hairspring's design and centreline, the balance's moment and pitches, the parts list), **STL** (every part shown).
 - **The essay's workshop**: the tolerances the manual gives (end-shakes, roller fit and shake, horn and stop-button clearances, the detent spring's 0.770 g,

@@ -205,7 +205,7 @@ manual's figures become the test.
   width the barrel's room (14.8); pivots, jewel holes and threads stay the model's estimates (the videos don't resolve them), each fit's clearance on the
   sheets. **B3** the manual's tolerances in the essay. **B4** each wheel's outline in its drawing (SVG, to scale).
 - **C1** Measure. **C2** STL per part and for the movement, the model's data as JSON. **C3** each part's drawing, plan and elevation. **C4** the build book.
-- **D1–D6** the essay's workshop: the oiling chart, adjusting the escapement, the order of work, tools, materials and heat treatment (the chronometer
+- **D1–D6** the essay's workshop: the oiling chart (and on the model: Making it › Oil), adjusting the escapement, the order of work, tools, materials and heat treatment (the chronometer
   without Elinvar and Invar), rating by the sky (the rate book's equal altitudes and lunars).
 - **E1–E3** the almanac (Sun, Moon, 58 stars, Venus and Mars), the sky sections, the workbook, the rate book from the sky. Jupiter and Saturn left out.
 - **F1–F3** the manual on the site; the single file holds the almanac, the maker's tools and data; `tools/selfcontained.py` in `ci.py --quick`.

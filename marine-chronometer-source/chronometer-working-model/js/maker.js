@@ -67,6 +67,14 @@ const MAKER=(()=>{
     meas.line.geometry.setFromPoints(meas.pts.map(q=>q.w));const r=$('#mkRead');
     if(meas.pts.length===2){const d=meas.pts[0].p.distanceTo(meas.pts[1].p),dl=meas.pts[1].p.clone().sub(meas.pts[0].p);r.innerHTML=`<b>${d.toFixed(3)} mm</b> (${(d/25.4).toFixed(4)} in): across ${Math.abs(dl.x).toFixed(2)}, along the axis ${Math.abs(dl.y).toFixed(2)}, ${Math.abs(dl.z).toFixed(2)} mm`;}
     else r.textContent=`First point (${p.x.toFixed(2)}, ${p.y.toFixed(2)}, ${p.z.toFixed(2)}) mm; click the second.`;A.wake();return true;}
+  /* the oiling chart on the model (PLAN D1): each part that takes oil or grease coloured by it, after the manual's reassembly (Ops. 18-71; the essay's
+     "Oil, and where it goes"): red oil the jewelled pivots, argon oil the bushed ones, grease the mainspring and the maintaining work */
+  const OIL={red:[0xc0392b,'Red oil (Hamilton No. 47): the jewelled pivots'],argon:[0x2e86c1,'Argon oil: the bushed pivots'],grease:[0xd4ac0d,'Grease (Hamilton T-324): the mainspring and maintaining work']};
+  const OILED={fw:'red',escW:'red',bal:'red',tw:'red',cw:'argon',fusee:'argon',spawl:'argon',motion:'argon',barrel:'grease',gw:'grease',sspring:'grease',sratchet:'grease',ratchet:'grease'};
+  let oilOn=false;const oilMat={};
+  function oil(on){oilOn=on;$('#mkOil').setAttribute('aria-pressed',on?'true':'false');
+    for(const o of A.meshes){const k=OILED[o.userData.part];if(!k)continue;if(on){const m=oilMat[k]||(oilMat[k]=new THREE.MeshStandardMaterial({color:OIL[k][0],roughness:0.5,metalness:0.2}));o.material=m;}else o.material=o.userData.mat0;}
+    $('#mkRead').innerHTML=on?Object.values(OIL).map(([c,t])=>`<span style="display:inline-flex;gap:5px;align-items:center;margin-right:10px"><i style="width:10px;height:10px;border-radius:50%;background:#${c.toString(16).padStart(6,'0')}"></i>${t}</span>`).join('')+'<br>The escapement\'s working faces (the locking and impulse jewels, the trip spring) are not oiled.':'';A.wake();}
   /* the build book: every card's sheet and drawing, printed alone */
   function book(){let pr=document.getElementById('bookPrint');if(!pr){pr=document.createElement('div');pr.id='bookPrint';document.body.appendChild(pr);}
     const parts=Object.keys(A.INFO).filter(p=>meshesOf(p).length);
@@ -84,7 +92,7 @@ const MAKER=(()=>{
       balance:{I_TableII:R.I_T2,pitch:R.pitch},partsList:MAKERS};
     save(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}),'model21-data.json');}
   return{bind(api){A=api;
-      $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));$('#mkBook').addEventListener('click',book);$('#mkData').addEventListener('click',data);
+      $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));$('#mkOil').addEventListener('click',()=>oil(!oilOn));$('#mkBook').addEventListener('click',book);$('#mkData').addEventListener('click',data);
       $('#mkSTL').addEventListener('click',()=>save(stl(A.meshes.filter(o=>!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position&&(()=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;})())),'model21-movement.stl'));},
     card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure};
 })();
