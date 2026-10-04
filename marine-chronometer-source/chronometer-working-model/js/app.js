@@ -412,7 +412,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     for(const r of PROWS){const on=fm?r.figs.has(+fm[1]):q.every(w=>r.txt.includes(w));r.row.classList.toggle('hidden',!on);if(on)hit.add(r.gh);}for(const r of PROWS)r.gh.classList.toggle('hidden',!hit.has(r.gh));
     $('#pNone').classList.toggle('hidden',hit.size>0);});
   $('#pShow').addEventListener('click',()=>{st.hid.clear();st.iso=null;look();});
-  /* rate: the timing and vernier weight pairs turned in or out in eighth turns, up to 3 turns either way (R.timing, movement.js, sets the pitch from the
+  /* rate: the timing and vernier weight pairs turned in or out in eighth turns, the timing weights up to 2 turns either way and the verniers 3 (R.timing, movement.js, sets the pitch from the
      manual's rate for a turn). The period goes as √I, so the model clock runs √(I0/I) as fast as a perfect one, and the temperature (below) adds what the moved screws
      and the balance's own curvature make of it: rateW. rateK is that times escK, the escapement's share at the balance's swing now and the escape wheel's torque (ESC.rateAt,
      set each frame: 1 at the model's settings and swing); rErr is what the hands have gained since the weights, screws or escapement were changed or the hands set */
@@ -496,7 +496,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const balStr=()=>{const o=[],t=twR.valueAsNumber,v=vwR.valueAsNumber,p=SP.map(q=>q?`${q.n}_${q.h}_${q.w||0}`:'x').join('-');if(t)o.push('tw:'+t);if(v)o.push('vw:'+v);if(degF()!==T0)o.push('T:'+degF());
     if(p!==STD.map(q=>`${q.n}_${q.h}_${q.w||0}`).join('-'))o.push('p:'+p);return o.join(',');};
   const balApply=s=>{if(s===balStr())return;const q={tw:0,vw:0,T:T0,p:null};for(const kv of s.split(',')){const i=kv.indexOf(':'),k=kv.slice(0,i),v=kv.slice(i+1);if(k==='p')q.p=v;else if(k in q&&Number.isFinite(+v))q[k]=+v;}
-    twR.value=clamp(Math.round(q.tw),-24,24);vwR.value=clamp(Math.round(q.vw),-24,24);tmpR.value=clamp(Math.round(q.T*2)/2,40,100);
+    twR.value=clamp(Math.round(q.tw),-16,16);vwR.value=clamp(Math.round(q.vw),-24,24);tmpR.value=clamp(Math.round(q.T*2)/2,40,100);
     const sp=q.p==null?STD.map(p=>({...p})):q.p.split('-').slice(0,R.HOLES.length).map(e=>{const[n,h,w]=e.split('_');return R.HOLES.includes(+n)&&Object.prototype.hasOwnProperty.call(R.BSZ,h)?{n:+n,h,w:w&&Object.prototype.hasOwnProperty.call(R.BWA,w)?w:0}:null;});
     const seen=new Set();SP=sp.map(p=>p&&!seen.has(p.n)?(seen.add(p.n),p):null);spI=0;R.screws(SP);spShow();rateSet();};
   /* ---------- the navigator's rate book (Sec. IX, Recording the Rate; Table I): the dial error against the master, to the nearest half second as the hands step, compared at
