@@ -1723,6 +1723,9 @@ changes it only round its own arbors (1 below).
     "Norfolk balance brake", Norfolk Naval Shipyard, given as about 1948, though
     another source puts it in the war years). It is screwed down by the hex socket,
     not pressed as the model had it.*
+    *With the stop free, its arch runs 0.3 mm into the hairspring at full swing (`fine.py
+    --eval "__mv.userData.stop('navy')"`; on `main` too): an open question about the
+    hairspring's size, not the arch's (25 below).*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
@@ -1893,6 +1896,27 @@ changes it only round its own arbors (1 below).
     height too: 16.5 mm (side-on, 33:09.5–33:35), not 13.2; and the train
     bridge's cut round it r 21.0 (fitted 21.0–22.0 with its centre free, 24.6–25.1
     mm out), not 19.2.*
+25. **The hairspring's radius** (new, 4 October 2026, `claude/navy-pins`). The model's coils are
+    r 6.3 (6.47 to their outer edge at rest, 6.89 at full swing), measured on the restoration
+    video's 2E8489 side-on (0.43-0.45 of the rim, 6:49.8-6:50.0; by the impulse roller r 6.6)
+    and face-on (r 6.0, 6:52.5) (References/VIDEOS.md). On 2E11795's top-view photograph,
+    nearly overhead, they read smaller. The rim (top and bottom at y 784 and 1304, its right
+    side at x 1318: r 260 px for its 14.2 centre line, 18.3 px/mm) and the staff at the coils'
+    height (x 1042, between the rim's centre and the endstone at 1020: the photograph leans
+    about 46 px across the cock's height) put the coils' outer edge (x 1133, rows 1040-1090) at
+    **about 5.0 mm (4.5-5.5)**, and the Navy brake's arch beside them (its inner edge at 1160)
+    at 6.45 (±0.55), which agrees with Delaney's tracing of the arch (about 7.9 round the
+    staff, its bar 2.2 wide: 6.8 to the inner edge). Arch over coils 1.2-1.3 on the
+    photograph; the model has 1.02, and with the stop fitted its arch (6.6) runs 0.3 mm into the
+    coils at full swing (finding 13). So either the video's measurement is large, or 2E8489's
+    spring is not 2E11795's (on 2E8489, at 5:10, the arch hugs the coils, as a larger spring
+    would make it). The arch was widened to the ratio for a while (`3c52891`, reverted in
+    `b95315c`): that moved it 1.5 mm from both readings of the arch itself. *To settle:* a
+    camera fit of the top-view photograph (the staff's place at three heights, the rim and the
+    coils on it), a second look at the side-on video frames (whether the rim's width there took
+    in the screws' heads), and Delaney's photograph re-read for the arch's inner and outer
+    edges. Then the hairspring takes the measured radius and the arch keeps clear of it at full
+    swing (the coils open out about 8 %).
 
 ## The fusee assembly against Fig. 28 and the video
 

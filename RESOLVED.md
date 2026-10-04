@@ -1016,6 +1016,20 @@ Contents:
   the hex socket in its plunger: the text now says so, not a pressed cap. Keep: the
   arch's top about 8.3 mm out, its inner edge 6.6 mm or more from the staff (the
   hairspring); the arms out to the eyes nearly level with the staff. `f9ae355`
+- **The Navy's balance brake locked in mid-air** (Plates, bridges, screws and
+  arbors; Variants, Balance stop). Its pins' length was set for the 4.3 mm rim
+  (`2*2.15` in their end, `PE`), and the rim was cut to the video's 3.5 mm
+  without it: free, the pins stood 1.3 mm over the rim's top edge, and locked they
+  stopped 0.8 mm short of it, so nothing held the balance but the stop's state.
+  It also tipped the lever along its own line, so one pin came down further than
+  the other, and only to 0.02 mm over the rim. The rim's height is now one
+  constant (`BAL_RH`) that the pins' end is taken from, 0.5 mm over the rim's top,
+  and locked the lever turns about the horizontal through its pivot along the
+  crossbar, so both pins come down the same 0.5 mm onto the rim's top edge, as the
+  sources describe it working. Keep: the pins' end from `BAL_RH`, never a copy of
+  the rim's height; locked, both pins on the rim's top edge (their lowest edge
+  0.005 mm into it, under `fine.py`'s grid, so `--hold --eval
+  "__mv.userData.stop('navy')"` passes with nothing new); free, 0.5 mm clear. `29cecd9`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
