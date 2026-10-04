@@ -1,4 +1,4 @@
-# Text files are stored and checked out with LF everywhere, so the built copies are byte-for-byte the same on Windows and on the CI's Linux.
+# Text files are stored and checked out with LF everywhere, so the built copies are byte-for-byte the same on Windows and on Linux.
 * text=auto eol=lf
 *.png binary
 *.jpg binary

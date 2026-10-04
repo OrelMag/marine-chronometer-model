@@ -10,7 +10,7 @@
 The model is frozen at one escapement phase and wind state (after a moment of winding, so the fusee's angle doesn't depend on when the page ran), and the page's labels and panels are hidden, so two runs of an unchanged model
 give the same pixels (a few anti-aliased edges may differ). --keep shows only the named parts (userData.partName); --look can be repeated;
 --n sets the fusee turns from full wind (0 = fully wound). --page renders another copy of index.html with this script, so two commits are
-compared by one set of rules (CI's views workflow renders the commit a push is based on and the push, then --diff --md writes the table)."""
+compared by one set of rules (ci.py --views renders where a branch left main and the working tree, then --diff --md writes the table)."""
 import asyncio,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent

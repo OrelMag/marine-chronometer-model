@@ -772,6 +772,8 @@ At 62 KB and 484 dense lines, `app.js` holds the part descriptions, the 2-D esca
 ## 8. Testing and verification
 
 ### 8.1 Continuous integration
+> **Moved here (4 October 2026).** The checks run on this machine, `python ci.py` at the root (build and built copies, escapement, types, smoke, invariants, solids, exploded, audit; `--full` and `--views` for the rest), before a branch is merged; the GitHub workflows below were removed, their results being out of reach from here.
+
 > **Done.** `.github/workflows/checks.yml`: on every push and pull request, steps 1–4 (the build with the live site's `--site-url`, then `git diff --exit-code` of the built copies; `escapement.js`, which now exits 1 on a failure; and `tools/smoke.py`, which clicks through every control and scrolls the essay), plus `tools/invariants.py` (8.2). Weekly and on demand, `fine.py` and `maintaining.py`, which already fail on anything new; `.gitattributes` keeps the built copies LF on every platform. Step 5: `audit.py` (movement and box) runs on every push since 4 October 2026, frozen in one state and compared with its expected leftovers (`LOOSE`, `audit-expected.json`), failing on anything new; `dyn.py` needs no file of its own, `fine.py` (weekly) having replaced it with its `EXPECTED` table. `7f3668e`
 
 A GitHub Actions workflow on every push, in increasing cost:
@@ -792,7 +794,7 @@ Small browser or Node checks on the model's arithmetic:
 - **Pawls:** after `update()` at a spread of states, every pawl's tip sits within a tolerance of its ratchet's profile.
 
 ### 8.3 Visual regression (M)
-> **Done (4 October 2026), as a report rather than committed images.** `.github/workflows/views.yml` renders every view (with and without Moving parts only) from the commit a push is based on and from the push, with the push's `views.py` (`--page` points it at the other checkout), and writes the changed pixels per view into the run's summary, the changed views in red as an artifact. On `main` the base is the commit before the push, on a branch where it left `main`. It runs only on pushes that touch the model or `vendor/`, and never fails: most visual changes are intended, and committed reference images would need re-rendering after every geometry change, on CI's Linux renderer. Before: the plan below.
+> **Done (4 October 2026), as a report rather than committed images**, now `python ci.py --views` (the workflow below was removed with the others). It was: `.github/workflows/views.yml` renders every view (with and without Moving parts only) from the commit a push is based on and from the push, with the push's `views.py` (`--page` points it at the other checkout), and writes the changed pixels per view into the run's summary, the changed views in red as an artifact. On `main` the base is the commit before the push, on a branch where it left `main`. It runs only on pushes that touch the model or `vendor/`, and never fails: most visual changes are intended, and committed reference images would need re-rendering after every geometry change, on CI's Linux renderer. Before: the plan below.
 
 - **Reference images:** render the six views and a few walkthrough steps with `?snap` at a fixed size, and compare them with committed images using a perceptual tolerance.
 - **Where it helps:** material and lighting changes (4.x) and the three.js upgrade (4.3) are exactly the kind of change that silently breaks something in a view nobody opened.
