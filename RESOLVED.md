@@ -1583,6 +1583,15 @@ An arbor needs pivots and shoulders; a stone its seat.
   through arbors clear the wheels' tips in plan; exit code 1 otherwise. Keep:
   no positions or counts written into the tool. `66edc05`
 
+- **Two smoke-test checks failed now and then.** The key-winding check (close-up
+  shown, sustaining spring relaxing) looked once, 2.5 s after the click, and the
+  Model tab's (essay closed, hash rewritten) once, 2 s after it; on page time,
+  slow in a headless browser, they failed 2 runs in 11 and 1 in 4 on `main`,
+  never reproduced on demand. Both now poll up to 5 s and print the state they
+  saw when they fail. Keep: a smoke check on something that happens on page
+  time polls (`wait_for_function`, or `expect(…, wait=)`), never looks once
+  after a fixed wait. `9b49228`
+
 ## Essay
 
 - **The essay contradicted the model and itself.** Its last figure, "The whole

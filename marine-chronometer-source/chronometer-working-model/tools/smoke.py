@@ -96,7 +96,8 @@ async def model(b,errs,steps):
     # winding with the key, the spring drawn exaggerated: the close-up shows with the sustaining spring relaxed, the load path in colour; it goes 2 s (page time) after the key lets go
     await click('#ssx','exaggerate the spring')
     await click('#kwBtn','wind with the key',2500)
-    if not await pg.evaluate("__lp().ph==='w'&&__lp().cu&&!document.querySelector('#cu').classList.contains('hidden')&&__mv.userData.R.ssD>0"):errs.append('winding with the key: no close-up, or the sustaining spring not relaxed')
+    try:await pg.wait_for_function("__lp().ph==='w'&&__lp().cu&&!document.querySelector('#cu').classList.contains('hidden')&&__mv.userData.R.ssD>0",timeout=5000)   # polled: the train relaxes the spring on frame time, slow in a headless browser (one look at 2.5 s failed 2 runs in 11)
+    except Exception:errs.append('winding with the key: no close-up, or the sustaining spring not relaxed: '+await pg.evaluate("JSON.stringify({ph:__lp().ph,cu:__lp().cu,shown:!document.querySelector('#cu').classList.contains('hidden'),ssD:__mv.userData.R.ssD,held:__H().held,amp:__H().amp})"))
     await click('#kwBtn','stop winding')
     try:await pg.wait_for_function("__lp().ph===''&&document.querySelector('#cu').classList.contains('hidden')",timeout=20000)
     except Exception:errs.append('the close-up stayed after winding')
@@ -200,7 +201,8 @@ async def essay(b,errs,steps):
     await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
     if not await pg.evaluate("ESSAY.on()&&location.hash.startsWith('#essay')"):errs.append('#essay=detent: the essay closed once the model loaded')
     await pg.evaluate("document.querySelector('#tabModel').click()");await pg.wait_for_timeout(2000);steps.append('back to the model tab')
-    if await pg.evaluate("ESSAY.on()||location.hash.startsWith('#essay')"):errs.append('the 3D model tab left the essay open or in the address')
+    try:await pg.wait_for_function("!ESSAY.on()&&!location.hash.startsWith('#essay')",timeout=5000)   # polled: the hash is written 0.3 s after the change, on page time
+    except Exception:errs.append('the 3D model tab left the essay open or in the address: '+await pg.evaluate("JSON.stringify({on:ESSAY.on(),hash:location.hash})"))
     await pg.close()
 async def main():
     errs,steps=[],STEPS
