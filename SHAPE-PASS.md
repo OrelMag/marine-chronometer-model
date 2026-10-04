@@ -25,6 +25,8 @@ The cock's concave side (4 October 2026): on 23:45 (top up, from the concave sid
 
 The bridges' rims (4 October 2026): checked against the measured plate on the side photograph and on three video frames; the model's 40.5 stands, the top-view photograph's 35.5 is its own inconsistency near the rim (VIDEOS.md, "The bridges' rims against the plate"). Still open: tb2's place (the photograph's sunk screw 5 mm inside it, through the same map).
 
+*Records corrected (4 October 2026): the barrel's and mainspring's part cards and the README's motion work. The two clearance fits over readings stay open, each needing more than one part moved: the fusee end plate (r 5.6 for the centre wheel against the video's r 7: at 7 it would meet the centre wheel, so the reading, the wheel's height or the plate's must be wrong) and the barrel cap's screws (15:54 only suggests the wall's end ring). `bom.py` now runs in `ci.py --full`.*
+
 Records to correct on the way (no geometry): `js/app.js` part cards for the barrel (says 13.2 mm estimated; 16.5 measured) and the mainspring (600 mm; now 1,064); the model README's Estimated section still gives the motion work 12 : 36, 10 : 40 against the video's 14 : 56, 18 : 54 in the code. Clearance or estimate over a reading, to settle: the fusee end plate drawn r 5.6 for the centre wheel where the video reads about r 7 (42019); the barrel cap's screws into an estimated lip, where 15:54 suggests the wall's end ring; the upper endstone cap gilt at 41:58, steel in the model; the setup cover's screw holes counterbored on the video (VIDEOS.md), plain in the model.
 
 
