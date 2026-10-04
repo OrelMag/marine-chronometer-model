@@ -367,6 +367,13 @@ the collet: a frame of the balance from the collet's side (sheet round 6:44–6:
 the coil's. Then design the inner curve there, and draw the spring as the strip it is (0.23 by 0.226 mm, PLAN-self-contained.md, A2). With the ends as
 `springGeo` draws them the spring leaves 2.3 % of couple / R on the pivots; designed, 0.003 %.
 
+*Measured (4 October 2026), not settled.* KLUwI2UUCMQ 6:53.25 and 6:53.5, the balance held with the arm toward the camera: the collet's
+block and its brass wedge pin by the hub's cap, the coil's two ends as circles (Hough fits, 4K: the near end, the collet's, 229-235 px, the far 185).
+The pin's centre against the near end's 5.26 mm outer edge: 2.8 and 3.5 mm from the staff's end, 3.1 and 3.9 from the circles' centres (the view a
+little oblique, the frames blurred): 2.8-3.9, about 3.3. That spans both the model's 3.62 (Fig. 6's collet scaled to the coil) and the window where a
+short curve meets Phillips' conditions, which is sharp: the shortest inner curve is 49 mm at r 2.8, 21-26 mm (300-370°, like the outer) from 2.9 to
+3.3, and 53 mm from 3.4 to 3.62. A sharper frame of the collet's end, or the collet's own size (a Model 21 collet measured), would decide it.
+
 ## Smaller issues
 
 - **The balance's moment of inertia (open, 3 October 2026).** The restoration
