@@ -2155,7 +2155,11 @@ function buildMovement(M){
     const bw=-ARM_BOW*Math.sign((L.B[0]-S.arm[0])*-dL[1]+(L.B[1]-S.arm[1])*dL[0]),cl=t=>[t*AE,bw*Math.sin(Math.PI*t)],N=14,side=k=>[...Array(N+1).keys()].map(i=>{const t=i/N,[x,z]=cl(t);return[x,z+k*0.4];});   /* a strip 0.8 wide, bowed ARM_BOW away from the staff */
     hn(R.arm,'42299');mesh(R.arm,polyGeo(subtractCircle([...side(1),...side(-1).reverse()],[0,0],1.1,true),0.45,[hC(0,0,ARM_S)]),M.blued,0,-0.45,0);
     cylBetween(R.arm,0.4,-0.45,-2.85,M.steel,AL,0,16);   /* the finger, 2.4 tall: 0.56 up the timing weight */
-    hn(mesh(f9,ringGeo(1.1,hC(0,0,ARM_S)[2],0.15),M.steel,S.arm[0],TB_T-0.525,S.arm[1]),'42251.arm');hn(screw(f9,...S.arm,TB_T-0.6,ARM_S,0.35,0.15+0.45+2.5),'37204');
+    /* the boss round the screw, as Fig. 108 draws the arm (item 31): raised 0.45 over the strip, no wider than the eye (r 1.1), which stands 0.02 from the second
+       train pillar's screw head beside it; the washer and the screw's head on it. The strip itself keeps its width and bow: between the cock's foot and the escape upper
+       bridge the corridor at its height is about 0.88 wide, so Fig. 9's broader strip curved along the rim has no room here (Review-results.md, BOM comparison, still open 9) */
+    hn(mesh(R.arm,ringGeo(1.1,hC(0,0,ARM_S)[2],0.45),M.blued,0,-0.675,0),'42299',{sub:1});
+    hn(mesh(f9,ringGeo(1.1,hC(0,0,ARM_S)[2],0.15),M.steel,S.arm[0],TB_T-0.975,S.arm[1]),'42251.arm');hn(screw(f9,...S.arm,TB_T-1.05,ARM_S,0.35,0.15+0.9+2.5),'37204');
     hn(cylBetween(f9,0.3,TB_T+0.8,TB_T-0.8,M.steel,...S.armPin),'42300');
     /* the Navy's other balance stop (illustrative; Variants), as on serial 2E11795 (References/photo-top-view.jpg), Delaney No. 8854 and another, both photographed from
        straight above (Review-results.md, BOM comparison 8). A second dust seal on the barrel bridge like the fusee's: a nickel body on a flange held by screws, and

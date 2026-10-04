@@ -1096,7 +1096,14 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    photograph of a Model 21 overhauled after 1947 with the arm fitted (Bureau of
    Ships sketch 023263). Until then the model keeps its place and inward swing;
    the shape (a strip curved along the cock's foot, a boss round the screw) can
-   follow the figures without moving anything.
+   follow the figures without moving anything. *The boss is drawn (4 October 2026,
+   `claude/lock-arm-shape`): r 1.1, 0.45 over the strip, the washer and screw head on
+   it. The strip can't follow: measured on the built model, between the cock's foot
+   and the escape upper bridge the corridor at the arm's height is about 0.88 mm
+   wide, so the 0.8 strip clears each by 0.04 and its 0.25 bow is the best centre
+   line (none, or 0.5, leaves 0.22-0.24 to the centre line; 1.0 either way runs
+   into one of them); the eye can't grow either (0.02 from the second train
+   pillar's screw head).*
 
 ## Open questions, to settle from video (1 October 2026)
 
