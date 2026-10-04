@@ -57,6 +57,12 @@ estimates, the physics and what a maker would need.
 
 ## Phase A: the physics derived, not fitted (L)
 
+**A1 done, likely (4 October 2026):** the parts list's masses read as a matched pair's. Table II then needs 578 g·mm² and the balance as drawn makes 534, so
+`I_REST` is 44 (8 %, inside the rim's measured 0.5-0.85 mm) instead of 410. The steel timing nut as measured can weigh a pair's 93 mg but not 93, and the
+screws come out near brass instead of gold. A builder's balance is now the drawn one, to within the rim's measurement, and the hairspring it needs is about
+91 µN·m a radian (k = I (4π)²), half what was implied before. That also halves the energy the damping estimate asks of the mainspring (A3): about 70 µW
+against the 20-60 µW a spring of the parts list's thickness gives the balance. To make it certain, weigh a balance screw or a timing weight.
+
 Each item ends with a check that fails when the derivation and the manual disagree, in
 `invariants.py` or `tools/escapement.js`. The model stops being tuned to the answer; the
 manual's figures become the test.

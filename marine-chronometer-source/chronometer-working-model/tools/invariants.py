@@ -7,7 +7,7 @@
 - Wind indicator: at UP (fully wound) and after 56 h, the hand is at the ends of the dial's scale, 313.6° apart and centred on the 6 (UD_SWEEP),
   within 1% of the 315.7° a photographed Model 21 dial's ticks give.
 - Fusee: 8¾ turns of chain is 17½ half turns of the key (manual Sec. III) and 56¼ h of running, the manual's "maximum of 56 hours" (Sec. III).
-- Balance: the moment of inertia as built (1,140 g·mm², the manual's Table II, from the parts list's masses and the balance as drawn), and a full turn of the timing weights and of the vernier weights
+- Balance: the moment of inertia as built (578 g·mm², the manual's Table II fitted with the parts list's masses read as a pair's), the drawing within 10% of it (I_REST), and a full turn of the timing weights and of the vernier weights
   changing the rate by the manual's 40 s and 2.8 s a day (p. 70); Table IV (p. 74) rebuilt from its fitted seven-to-n figures; a pair of screws moved along the rim
   leaving the moment of inertia as it was.
 - Escapement: the running amplitude 255° and the escapement's rate 0 s a day at the model's settings exactly, and Airy's signs for the impulse jewel's angle and the depth of lock.
@@ -40,7 +40,7 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   chk('fusee: 8 3/4 turns of chain run (manual: 56 h at most)',FUSEE_TURNS/FUSEE_PER_HOUR,56,0.5,'h');chk('fusee: half turns of the key to wind fully',FUSEE_TURNS*2,17.5,1e-9,'');
   chk('fusee: 7 half turns restore (manual: 24 h)',7*0.5/FUSEE_PER_HOUR,24,1.6,'h');
   const I0=R.timing(0,0),rate=(t,v)=>86400*(Math.sqrt(I0/R.timing(t,v))-1);
-  chk('balance moment of inertia as built (Table II)',I0,1140.0,1,'g mm2');
+  chk('balance moment of inertia as built (Table II, masses a pair’s)',I0,578.0,1,'g mm2');chk('the drawn balance leaves to I_REST (under 10%)',R.I_REST/I0*100,0,10,'%');
   chk('timing weights, a full turn out (manual: 40 s/day)',-rate(1,0),40,2,'s/day');chk('vernier weights, a full turn out (manual: 2.8 s/day)',-rate(0,1),2.8,0.15,'s/day');
   /* Table IV (p. 74): R.T4 holds its "7 to n" figures fitted to all its rows; every row printed is the difference of two of them, holes 3-6 mirroring 11-8 */
   const HH=[0.120,0.100,0.090,0.080,0.070,0.060,0.050,0.040],T4R=[[12,11,[-1.69,-1.41,-1.10,-0.79,-0.66,-0.53,-0.32,-0.12]],[12,8,[-5.89,-4.91,-4.37,-3.82,-3.46,-3.09,-2.46,-1.89]],

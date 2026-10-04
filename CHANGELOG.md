@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.06.01 · 2026-10-04
+- The balance's weights read as a matched pair's, as the manual's tables use them: the drawn balance now carries Table II's moment of inertia (578 g·mm²), and the essay's hairspring stiffness follows (about 91 µN·m a radian)
+
 ## 2.06.00 · 2026-10-04
 - Latitude from the sky: the noon sight and the pole star, worked through in the essay
 - The workbook reduces noon sights and pole-star sights to a latitude, and works out the chronometer's daily rate from two of its errors
