@@ -1273,6 +1273,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   UP-DOWN hand's boss r 1.86, not 0.9. Keep them traced, never redrawn by eye
   (SHAPE-PASS.md, 1). `1589a10`
 
+- **The balance's hairspring, stud, arm and timing nuts estimated.** On the
+  restoration video (6:49.8-6:53, 41:58): the hairspring's coils r 6.3 and 9
+  turns (were r 5.5, 14); the stud's bar along a row of three measured holes in
+  the cock, 3.8, 6.9 and 10.4 mm from the staff, held by its screw in the middle
+  one and a steady pin at each end (was one pin, the screw 7.6 out along the
+  line to the cock screw), the cock's underside flat out past it (its cove from
+  11.3, was 9); the arm 1.9 wide (2.4); the timing nuts 2.3 long and 2.1 across
+  (1.7 and 2.4), so their travel is 2 turns either way, all the room the barrel
+  bridge's measured cut leaves (was 3); the endstone cap gilt, not steel. Keep
+  them measured (SHAPE-PASS.md, 2). `a06b0fe`
+
 ## Rate panel
 
 - **Balance far too light.** The screws and weights were drawn as cylinders
@@ -1623,13 +1634,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The balance's hairspring, stud, arm and timing nuts estimated.** On the
-  restoration video (6:49.8-6:53, 41:58): the hairspring's coils r 6.3 and 9
-  turns (were r 5.5, 14); the stud's bar along a row of three measured holes in
-  the cock, 3.8, 6.9 and 10.4 mm from the staff, held by its screw in the middle
-  one and a steady pin at each end (was one pin, the screw 7.6 out along the
-  line to the cock screw), the cock's underside flat out past it (its cove from
-  11.3, was 9); the arm 1.9 wide (2.4); the timing nuts 2.3 long and 2.1 across
-  (1.7 and 2.4), so their travel is 2 turns either way, all the room the barrel
-  bridge's measured cut leaves (was 3); the endstone cap gilt, not steel. Keep
-  them measured (SHAPE-PASS.md, 2).
+None at the moment.
