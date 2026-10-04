@@ -4,6 +4,23 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.06.02 · 2026-10-04
+- The balance's hairspring redrawn to real proportions: its coils narrower (about 10.5 mm across) and taller, with 12 turns
+- With the Navy's Y-arm fitted, its arch now clears the hairspring
+
+## 2.06.01 · 2026-10-04
+- The balance's weights read as a matched pair's, as the manual's tables use them: the drawn balance now carries Table II's moment of inertia (578 g·mm²), and the essay's hairspring stiffness follows (about 91 µN·m a radian)
+
+## 2.06.00 · 2026-10-04
+- Latitude from the sky: the noon sight and the pole star, worked through in the essay
+- The workbook reduces noon sights and pole-star sights to a latitude, and works out the chronometer's daily rate from two of its errors
+
+## 2.05.00 · 2026-10-04
+- Essay: four new sections on finding Greenwich time and longitude from the sky, with no radio — equal altitudes of the Sun to rate the chronometer ashore, the time sight for longitude at sea, and the lunar distance to check it, each worked through on a set day and place
+- The essay carries its own almanac (the Sun, the Moon and the 57 navigational stars, checked against NASA JPL's ephemeris): print its pages for any days, with the lunar distances every three hours and the hand rules for the Sun
+- A workbook for your own sextant sights: a longitude by the time sight, an intercept from your position by dead reckoning, or Greenwich time from a lunar distance
+- The 1948 Navy manual the model is built from is now on the site, linked from the essay and About
+
 ## 2.04.01 · 2026-10-04
 - Variants, Balance stop: the Navy's Y-arm now locks onto the balance — screwed down, both its pins come down onto the rim together (they stopped short of it before)
 

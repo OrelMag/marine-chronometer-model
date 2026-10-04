@@ -1344,6 +1344,23 @@ An arbor needs pivots and shoulders; a stone its seat.
   stepGeo now cuts there as in the body. Keep the arm's underside traced
   (SHAPE-PASS.md, 2). `65f770a`
 
+- **The hairspring drawn a fifth too large** (the balance; Review-results.md,
+  25). Its coils were r 6.3, read on the restoration video side-on against the
+  rim "between its ends", which the gloves and a timing weight hide, and against a
+  disc taken for the impulse roller. Against the rim in one picture each, the
+  video side-on (the rim's edge where it turns, behind the weight) and face-on,
+  the manual's Fig. 2 and two photographs give the coils' outer edge 4.7-5.8,
+  median 5.26. Now r 5.1, the collet scaled with it (a reading of r 4.8 the same
+  day fitted the rim to its near side's holes, which perspective spreads). With
+  the Navy's brake fitted, its arch, which the coils ran into at full swing, now
+  clears them by about 1 mm. Keep: the radius read against the rim's turning
+  edge or its fitted ellipse, never against ends a glove or weight may hide; the collet scaled with the coil (CKS). Its turns were 9, from
+  wires counted 26 px apart on the video, every second one: 13 wires down each
+  side, so 12 turns. Keep: count the wires by their period over the whole stack.
+  And it stood 5.9 from the rim's top edge up; the video side-on has it running
+  down behind the rim, 7.15 or more: it now starts 1.1 below the rim's top, as low
+  as the hub lets the collet go, and stands 6.7. `9c8fdc3`
+
 - **The hairspring stud's clamp was in the wrong place.** It was a block on
   the bar between the inner steady pin and the stud screw, 4.6 mm from the
   staff, the bar ending 0.8 mm past the pin. Fig. 5, Hamilton's patent
@@ -1405,6 +1422,18 @@ An arbor needs pivots and shoulders; a stone its seat.
   screws standing 1.6 outside the rim. Now drawn so, with the 410 g·mm² the
   drawing doesn't make added as `I_REST`. Keep: draw the balance as measured
   and keep the moment Table II's (`invariants.py` checks 1,140). `fa37969`
+
+- **The balance's moment of inertia 37 % more than the drawing carries (`I_REST` 410 g·mm²).**
+  Table II's screw changes, worked with the parts list's masses as each screw's,
+  need 1,157 g·mm²; the balance drawn as the video measures it made 731. The
+  masses are now read as a matched pair's (`PM` in `movement.js`): Table II then
+  needs 578 and the drawing makes 534 (`I_REST` 44, 8 %), the steel timing nut as
+  measured weighs what a pair's 93 mg gives it (about 47-53 mg; 93 is impossible
+  at its size), and the screws' heads come out near brass, not gold. The rates the
+  panel gives are unchanged (they follow Table II and the manual's 40 s and 2.8 s a
+  turn); the hairspring's stiffness halves, to about 91 µN·m a radian. Keep:
+  `invariants.py` checks 578 and `I_REST` under 10 %; a balance part redrawn
+  must keep the drawing near Table II's moment, not grow `I_REST`. `3d33ca5`
 
 ## Rendering
 

@@ -13,6 +13,7 @@ Writes:
      index.html            the working model, the site's home page, with the essay as its Essay tab (/#essay; worker.js sends the essay's old address there)
      social.png            link-preview image of the page (the dial in its box)
      social-movement.png   an image of the mechanism titled for the essay, for posting
+     navships-250-624-1948.pdf   the manual itself (References/, Google Books' scan of the 1948 Navy manual), which the page links to beside it
      sitemap.xml, robots.txt   for search engines (with --site-url only)
 The HTML file is self-contained: three.js and the fonts are inlined, so nothing is fetched from another server.
 Its version and list of changes come from CHANGELOG.md (changelog.py); a build without --release changes neither, so ci.py's rebuild matches.
@@ -24,6 +25,7 @@ from inline import inline,remote_refs
 import changelog
 MODEL=ROOT/'marine-chronometer-source/chronometer-working-model'
 SITE=ROOT/'site'
+MANUAL='navships-250-624-1948.pdf'   # the page links to it by this name, beside itself
 
 def write(p,text):
     p.write_text(text,encoding='utf-8',newline='\n');print('wrote',p.relative_to(ROOT),f'{len(text.encode())/1024:.0f} KB')
@@ -73,6 +75,7 @@ def main():
     write(SITE/'index.html',meta(model,a.site_url,'index.html',keep=a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
+    shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)
     if a.site_url:   # for search engines: the page, at the address its canonical tag names
         write(SITE/'sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
               f'<url><loc>{address(a.site_url,"index.html",a.keep_html)}</loc></url>\n'+'</urlset>\n')

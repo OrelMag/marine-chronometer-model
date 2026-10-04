@@ -38,7 +38,8 @@ Contents:
     marine-chronometer-source/
       chronometer-working-model/ the 3D model and its Essay tab: index.html, css/, js/, tools/, verification/ (reference renders),
                                  dist/ (its built file); its README has the details
-      shared/                    escapement.js, the detent escapement's solver, used by the page and the model's tools; escplan.js, its plan drawing
+      shared/                    escapement.js, the detent escapement's solver, used by the page and the model's tools; escplan.js, its plan drawing;
+                                 almanac.js, the essay's nautical almanac and sight reduction
     References/                  source material: the 1948 manual, photographs, drawings; its README lists each file
     ci.py                        the checks, run here (no GitHub workflows): build and built copies, escapement, types, smoke test, invariants, solids, exploded, audit
     RESOLVED.md                  bugs already found and fixed, from the commit history; check it before changing a part
@@ -79,6 +80,7 @@ This one command:
    - `index.html` is the model, so the site opens straight into it; the essay is at `/#essay`;
    - `social.png` is the link-preview image (the dial in its box), and `social-movement.png` an image of the mechanism titled for the essay, for posting;
    - `_headers` holds security and caching headers, read by Cloudflare Pages and Netlify.
+   - `navships-250-624-1948.pdf` is the 1948 manual itself, from `References/`, which the page links to beside it;
    - `sitemap.xml` and `robots.txt`, for search engines, when `--site-url` is given (below).
 
 The build fails if the page still loads a script, stylesheet or font from another
@@ -162,6 +164,11 @@ essay's detent figure and the model's `tools/escapement.js`, so a change to it
 reaches all three. Its plan drawing, `drawEscPlan` in `shared/escplan.js`, is
 shared by the walkthrough's inset, the adjuster's bench and the essay.
 
+The essay's sky sections (rating the chronometer by the Sun, longitude by
+chronometer, the lunar distance, an almanac to print) compute with `ALM` in
+`shared/almanac.js`, checked by `tools/almanac.js` against JPL Horizons and
+skyfield; the model README's "The almanac" says how and how well.
+
 ### The essay
 
 The essay is the model page's second tab: its text and figure markup are in
@@ -202,6 +209,7 @@ Before committing a change to the model:
        python audit.py box  # the same for the box and gimbals
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
        node escapement.js   # the escapement's lock, let-off, overall, drop and clearances (Node.js only)
+       node almanac.js      # the essay's almanac and sight reduction against JPL Horizons and skyfield (Node.js only, about 1 s)
        npx -p typescript@5.9.3 tsc -p ../jsconfig.json   # the types of the files that start with // @ts-check (TypeScript fetched by npx, nothing installed in the repository)
        python bom.py        # every part against the manual's parts list: counts, how each is held and runs, the gears, the 14 jewels (exit code 1 on a failure; --md rewrites BOM.md)
        python video.py      # teeth counted on frames of videos of real Model 21s (References/README.md); pip install opencv-python yt-dlp; videos kept outside the repository
@@ -232,10 +240,10 @@ Before committing a change to the model:
 7. **All the checks at once.** `python ci.py` at the root runs them here, one after
    another, and prints each ok or FAIL (logs in `ci-logs/`; about 5 minutes): the build
    with `--site-url https://www.marinechronometermodel.com`, as the live site is, failing
-   if building changes a built copy (commit what it writes), `escapement.js`, the type
+   if building changes a built copy (commit what it writes), `escapement.js`, `almanac.js`, the type
    check, `smoke.py`, `invariants.py`, `solids.py`, `exploded.py` and `audit.py`.
    `--full` adds `fine.py`, `maintaining.py` and `bom.py`; `--views` renders every view before
-   and after the branch and prints the changed pixels; `--quick` is the first three only.
+   and after the branch and prints the changed pixels; `--quick` is the first four only.
    Nothing runs on GitHub: merge a branch only when `ci.py` passes on it.
 7. **Record fixes.** If the change fixes a bug, add it to
    [RESOLVED.md](RESOLVED.md) under the right heading, with the commit hash.
