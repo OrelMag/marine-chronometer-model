@@ -1205,6 +1205,12 @@ Contents:
   plate turned only through `turn()`, so the spring keeps its hook on the
   screw and its end on the pin; nothing under the bottom within 0.5 mm of it. `cce56d7`
 
+- **The case's bottom, the winding key and the box's handles drawn by eye.**
+  The case's bottom has the raised ring round the shield plate (47:35; the
+  plate r 33.3); the key is a pipe, cone, collar and flat paddle (0:45; it was
+  a T bar with balls); the side handles are a bail between two rosettes at the
+  gimbal pivot's height (0:45). Keep them traced (SHAPE-PASS.md, 7-8). `3d75292`
+
 ## Accuracy to the manual
 
 - **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,
@@ -1676,8 +1682,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The case's bottom, the winding key and the box's handles drawn by eye.**
-  The case's bottom has the raised ring round the shield plate (47:35; the
-  plate r 33.3); the key is a pipe, cone, collar and flat paddle (0:45; it was
-  a T bar with balls); the side handles are a bail between two rosettes at the
-  gimbal pivot's height (0:45). Keep them traced (SHAPE-PASS.md, 7-8).
+None at the moment.
