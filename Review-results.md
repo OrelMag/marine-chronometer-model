@@ -836,8 +836,9 @@ Checked against Secs. II–IV and the handling instructions:
     its running 255°.
   - The same holds at run down: the train stops, the balance runs down, and a
     wound chronometer needs its twist.
-- **Added: the balance locking arm** (Fig. 9). Locked, its end lies under the
-  rim, its pad bears on the rim, and the balance stops within a swing or two.
+- **Added: the balance locking arm** (Fig. 9). Locked, the finger at its end
+  stands beside a timing weight (first drawn as a pad under the rim; RESOLVED.md,
+  "Locking arm under the rim"), and the balance stops within a swing or two.
   Unlocked, the arm lies against its stop pin, and the balance needs a twist.
 - **Added: the train-blocking screw** (Sec. II, Fig. 110).
   - Screwed down, its dog point stands between the fourth wheel's spokes. The
@@ -1054,7 +1055,48 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    Rebuilt again the same day from photographs taken straight above (Delaney No.
    8854 and another): the arm is a lever, screwed on a shouldered stud in the
    barrel bridge's pillar screw's place, under the cap to a crossbar with an eye
-   and a pin at each end, symmetric (an arch, level arms).*
+   and a pin at each end, symmetric (an arch, level arms).* *The restoration video's
+   movement (2E8489) has this stop: close from above at 5:10 (4K), unscrewed and lifted
+   off with its white seal at 6:15-6:24 (References/VIDEOS.md; found 4 October 2026).*
+9. **The balance locking arm against Fig. 9 and Fig. 108** (open, 4 October 2026,
+   `claude/locking-arm`). No photograph or video of the arm fitted has been found
+   (`KLUwI2UUCMQ`'s movement and the top-view photograph's carry the Navy's Y-arm,
+   8 above; RMG's 4E019, a Model 221, has neither; a web search found no other), so
+   Fig. 9, Fig. 108 (item 31) and Secs. III and X are the only sources. What
+   matches: the four parts and their numbers (108-31 to 34, read on the page), the
+   screw outside the rim, the end holding a timing weight, the counterclockwise
+   lead of Sec. X. What differs, each read on the figures:
+   - **The swing** (fairly sure): Fig. 9's hatched curved arrow and dashed unlocked
+     arm turn the arm out, away from the balance, toward the barrel bridge's horn;
+     the model turns it 120 deg in, its end passing 7.4 mm from the staff under the
+     balance.
+   - **The shape** (moderately sure): Fig. 9 draws a strip curved along the rim,
+     Fig. 108 a short flat lever with a raised round boss at its screw; the model's
+     is straight (bowed 0.25 mm) with a plain washer and a round finger 2.4 mm tall
+     that neither figure draws (Fig. 9's end seems to rise to the weight).
+   - **The length** (not sure): about 4-5 screw heads in both figures, about
+     7-10 mm; the model's 13.
+
+   What the model's layout allows (plan of the train bridge round the balance,
+   from the built model): the balance's sweep at the arm's height reaches r 17.35.
+   The weight on the cock's side (the model's) rests under the cock's foot's span
+   (the foot covers 15-76 deg from the staff beyond r 17.4); the other weight has
+   3.1-3.7 mm of train bridge outside the sweep before the barrel bridge's edge
+   (r 20.4-21.1; the bridge sits on the train bridge, 3.42 mm thick). The rest
+   angle the weights take is the real one: the restoration video at 6:29 and RMG's
+   4E019 both show the crossbar along the cock's arm at rest, as the model has it.
+   Read with this layout, Fig. 9's scene fits the model's place: the cock's foot
+   behind, the weight on its side in front of it, the arm's screw in the open
+   6 o'clock sector, the barrel bridge's raised horn and its large screw (-23.9, 23.0)
+   beyond. So the screw's place stands; but the outward swing has no room there:
+   the second train pillar's screw head (5.5, 34.0; r 2.9, 1.6 mm proud) stands
+   4 mm out from the arm's screw, and the cock's foot beside it. Either the arm
+   rides higher than the model's (on its shouldered screw, over that head; Fig. 9
+   draws a collar under the screw's head) or Fig. 9 simplifies. *To settle:* a
+   photograph of a Model 21 overhauled after 1947 with the arm fitted (Bureau of
+   Ships sketch 023263). Until then the model keeps its place and inward swing;
+   the shape (a strip curved along the cock's foot, a boss round the screw) can
+   follow the figures without moving anything.
 
 ## Open questions, to settle from video (1 October 2026)
 
@@ -1659,7 +1701,28 @@ changes it only round its own arbors (1 below).
     video of a modified movement would show its shape and how it works. *Built
     as an illustrative variant from the top-view photograph (2 October 2026);
     redrawn from it at full size, 3 October 2026; how it works is still to be
-    seen.*
+    seen.* *The video exists: `KLUwI2UUCMQ` (2E8489) has the stop, close from above
+    at 5:10, handled 5:30-5:48, taken off with its seal 6:15-6:24 (References/VIDEOS.md).*
+    *Four movements compared (4 October 2026): 2E11795 (the top-view photograph),
+    Delaney No. 8854 (straight above), the omegaforums movement ("Incoming Hamilton
+    Model 21", two red seals) and 2E8489 (the video, 5:10). All four have one design:
+    the stem from the second seal joins, at its top, a crossbar arched round the
+    cock's end, concave toward the staff, whose ends run out to an eye and a pin over
+    the rim on each side of the staff (182 and 186 deg apart where measurable).
+    Traced on Delaney's (straight above, scaled by the eyes 27.8 mm apart): the arch
+    about 7.9 mm round the staff, its top 8.3 out on the bar's centre line, the arms
+    nearly level with the staff, as the model drew them; the oblique photographs
+    make it look like one smooth curve. The model's arch stood on straight legs
+    4.5 mm long, its top 12.3 mm out (a sketch's): an error, not a variant; the legs
+    cut to 0.5, its top now 8.3 (`claude/navy-stop`). What
+    varies between movements: the packing rings' colour (black on 2E11795, red on
+    8854 and the forum's, white on 2E8489; the fusee seal's too), and whether the stop
+    is fitted at all (2E10230 in the same thread has none). How it works: two web
+    sources (WatchUSeek; Renaissance Antiques) have it lowered onto the balance and
+    raised with an Allen key through the bottom of the case, a Navy fitting (the
+    "Norfolk balance brake", Norfolk Naval Shipyard, given as about 1948, though
+    another source puts it in the war years). It is screwed down by the hex socket,
+    not pressed as the model had it.*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
@@ -1858,7 +1921,7 @@ Winding and maintaining work).
    r ≈ 18.0 (model 15.2), its bore is r ≈ 2.6–2.9 (model 1.05), and the
    recess floor has a raised disc to r ≈ 9.3 and a hub round the bore. The
    model's web is flat.
-3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *The hole fixed (4 October 2026): the plate comes off over the collar (19:58-20:00), so the collar, r 3.0, now rises from the hub through a hole of r 3.05 (Fig. 28's large hole). Still open: the arbor above the collar, r ≈ 2.2 on 19:45 (model r 1; thickening it reaches the barrel bridge's bushing and the dust seal), and the collar's height over the plate, 1.5-2 mm there (model 1.0), both read obliquely.* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %. *Now so* (RESOLVED.md, Winding and maintaining work).* A steel collar r ≈ 2.9 round the
+3. **Fusee's top** (13:30, 17:23; Fig. 28). *Fixed: the screws at r 7.0 and the collar on the plate. Open: Fig. 28 draws the hub rising through a large hole in the plate, with the stop-bar's slot beside it (the bar would then run about 3.6 mm off the axis, not 2.0); and the arbor above the collar looks thicker on the video (r 1.4–2.3) than the model's r 1. Neither is measured.* *The hole fixed (4 October 2026): the plate comes off over the collar (19:58-20:00), so the collar, r 3.0, now rises from the hub through a hole of r 3.05 (Fig. 28's large hole). The collar's height fixed too (2.8 mm over the top layer, to the barrel bridge); the arbor above it still open: see "Figs. 21, 22, 28 and 29 against the model" below (the r 2.2 first read here was the collar with the hole round it).* *Seen (2 October 2026, 20:05–20:27; `References/VIDEOS.md`): under the top plate a round recess about the arbor (r about 4–5) with a hub; the slot across the top beside the hub, open at both ends, about 3.5–5 mm off the axis, as Fig. 28 draws it; the bar's spring a round wire in an open C of about 270° in a groove round the hub. Sure: form certain, sizes ±30 %. *Now so* (RESOLVED.md, Winding and maintaining work).* A steel collar r ≈ 2.9 round the
    arbor over the top plate, and the plate's two screws at r ≈ 7.0. The model
    has no collar, a plate hole of r 1.02 and its screws at r 3.2.
 4. **Sustaining ratchet** (28:32–29:14; Fig. 28). *Fixed. Open: the video shows six slotted heads and about five holes on its underside; four are the springs' screws, the other two perhaps the pawls' pivots, not drawn.* *The other face seen (19:05): about ten holes and screw ends, four the springs' screws and two the pawls' pivots; the rest open. The pivots now drawn as studs riveted flush (2 October 2026). Not drawn: the raised plateau the pawl springs lie round (the pawls lie over it; its height isn't seen).* *Seen sharp at 4K (3 October 2026, 19:12): not a plateau but a groove about 0.7 wide at r 10.6-11.3, which the springs lie in; the model lays them at that radius over the face, the groove not cut (a hidden face; the toothed wheel would have to be built in layers).* Gilt brass, not steel; the
@@ -1906,10 +1969,66 @@ rendered one by one (isolated, by Hamilton number). Four places looked different
 
 Open, found on the way:
 
-- **The flange's holes** (9:03; `References/VIDEOS.md`): three large holes at
-  r ≈ 41, at 88°, 214° and 337° from 12, a screw end in one, and three small ones
-  near the rim at 3°, 131° and 319°. The model has its dial screws at 38°, 153°,
-  224° and 324° (two from the top-view photographs, two estimated) and the
-  mounting ring's screws at 70°, 190° and 300°. Neither set matches; which holes
-  are which isn't settled.
-- **The fusee arbor above the collar**: r ≈ 2.2 on 19:45 (model r 1).
+- **The flange's holes** (9:03, 40:05; `References/VIDEOS.md`). *Worked through
+  (4 October 2026), not settled.* The dial screws go in from the train side
+  outside the plate's rim (8:36-8:42), so the three small holes near the rim
+  (130.4°, 224.4°, 319.4°) are theirs; the three large threaded ones (88.5°,
+  212.3°, 337.8°, r ≈ 41.5) the mounting ring's screws, tapped through. The
+  model's dial screws at 223.7° and 323.5° agree within 4°; its 152.6° (from the
+  top-view photograph) is 22° from the video's 130.4°, and the video shows no
+  fourth hole at r 46 (its 2.5° hole, r ≈ 43, lies under the plate's rim). The
+  ring screws (model 70°, 190°, 300°, one from the photograph) are 18-37° off.
+  The photograph is of another movement and its map doesn't fit the copy in
+  `References/`, so the two can't be put side by side yet: refit its camera
+  (`fit.py`) and read its flange screws through it before moving any.
+- **The fusee arbor above the collar.** *The collar's height fixed (4 October
+  2026): 2.8 mm over the top layer (20:00, against the groove's pitch), up to the
+  barrel bridge.* The arbor isn't r 2.2: that read the collar. Still open: the
+  shaft above the collar reads 0.66 of the collar's width (r ≈ 1.75 against the
+  model's r 1; silhouettes against the blue mat read polished steel narrow, so
+  only the ratio is kept), and the winding square starts at a step about 11 mm
+  up (y ≈ −31.5), where the model has a plain r 1.2. The parts list gives the
+  fusee's bushings the barrel's number (42164), whose bore the model has at
+  r 1.42: a thicker arbor would fit them. Thickening it means the barrel
+  bridge's bushing, the dust seal and its ring together.
+
+### Still open after the collar's height (4 October 2026)
+
+What this pass on Figs. 21, 22, 28 and 29 leaves, most worth doing first. The
+measurements behind each are in `References/VIDEOS.md` (the rows for the fusee's
+top, the fusee arbor, the take-off slot and the flange's holes).
+
+1. **The fusee arbor's shaft and winding square.** Above the collar the real
+   arbor reads 0.66 of the collar's width (20:00, 19:59; r ≈ 1.75 against the
+   model's r 1), and the parts list gives the fusee's bushings the barrel's
+   number (42164, bored r 1.42 in the model). The square starts at a step about
+   11 mm over the fusee's top (y ≈ −31.5) and runs to a rounded end; the model
+   has a plain r 1.2 cylinder there and a 1.6 mm square at the end. Doing it
+   means the arbor, the barrel bridge's bushing (42164.fu), the dust seal (42051)
+   and its ring (42052) together, then `fine.py`, `bom.py` and `maintaining.py`.
+   Needs first: the shaft's radius from a frame where it stands against
+   something matt (a polished silhouette on the blue mat reads narrow), or a
+   ratio to the barrel arbor's pivot in one frame.
+2. **The dial screws and the mounting ring's screws.** The video's ring
+   (2E8489, 9:03 unrolled): dial screws at 130.4°, 224.4° and 319.4° (r ≈ 46),
+   none at r 46 elsewhere, a small hole at 2.5° (r ≈ 43, under the plate's rim:
+   a dial steady pin?); the ring's screws tapped through at 88.5°, 212.3° and
+   337.8°. The model: dial screws 38.0°, 152.6°, 223.7°, 323.5° (152.6° and
+   223.7° from the top-view photograph, 2E11795); ring screws 70°, 190°, 300°.
+   Needs first: the top-view photograph's camera refitted (`fit.py`, `unproj.py`)
+   and its flange screws read through it, then the two movements compared;
+   where they agree, move the model's.
+3. **`tools/p3map.json` doesn't fit `References/photo-top-view.jpg`.** Its
+   three anchors (the balance at 640, 830 and so on) don't land on those parts
+   in the copy in `References/` (2322 px square): it was fitted on another copy
+   or crop. Find that copy, or refit the map on this one, before any new reading
+   from the photograph.
+4. **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
+   round recess r 4-5 about the hub; the model has the spring's groove r 2.4-2.9
+   only. Sizes ±30 %.
+5. **Estimated, to measure if a frame allows:** the take-off slot's depth (1.0,
+   its floor brass at 9:03), the collar's radius (r 3.0 face-on at 13:30, ±0.3:
+   the dark ring round it may be the hole's gap).
+6. **Cosmetic:** the sustaining spring's blue is brighter than the video's
+   nearly black steel (27:30).
+

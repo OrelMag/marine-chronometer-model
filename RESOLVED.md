@@ -605,6 +605,11 @@ Contents:
   collar, r 3.0, now rises from the hub through a hole of r 3.05 and 1.0 past it.
   Keep: the collar inside the stop-bar slot's edge (zHi) and clear of the spring in
   the groove under it. `d135f96`
+- **The fusee's collar 1.0 mm over the top plate** (Review-results.md, Figs. 21, 22, 28 and
+  29): side-on at 20:00, against the groove's pitch, it stands 2.8 mm over the top
+  layer; now up to 0.05 under the barrel bridge (`collarT`), the arbor's shoulder
+  under its bushing. Keep: read lengths along an arbor against the fusee's pitch, not
+  against a polished part's silhouette on the blue mat, which reads narrow. `7f994a6`
 - **Sustaining pawl's spring invented, and its arbor 2.7 mm round from the
   real one.** The spring was a collet near the arbor's top with a wire across
   to a steady pin in the train bridge; C Spinner's video (35:37.5-36:29) shows a
@@ -616,6 +621,15 @@ Contents:
   the train bridge was r 0.70 between the faces (`polyGeo`'s bevel widens a
   flagged hole there); it is lined to r 0.52 straight through, as `bom.py`'s
   running fit wants (it had passed on 0.12 mm of the face). `4ab4b46`
+- **Sustaining pawl a straight bar where the real one is a curved blade.**
+  C Spinner's video (36:15, its two edges put through the fitted camera) shows a
+  blade about 10 mm long, up to 3 mm wide, bowed away from the ratchet, with a
+  short straight end face; the model's was a 1.2 mm bar. Its outline is now one
+  smooth curve through those measured edges (`SPN`, `SPE`), the tip's corner on
+  the ratchet, the spring wire in its root on the bowed side; the arbor at 69°
+  (a second reading of its foot, 14:06 overhead, gives 21.7 mm at 71°). A first
+  try that widened the old bar at a few points looked wrong; draw the blade from
+  the measured edges, not by reshaping `pawlPts`. `88648e5`
 
 ## Plates, bridges, screws and arbors
 
@@ -981,6 +995,17 @@ Contents:
   6.6 mm or more from the staff (the hairspring); both pins over the rim; the flange bitten round the setup cover
   (`fine.py --eval "__mv.userData.stop('navy')"`, with and without `--hold`;
   `exploded.py` and `audit.py` take the same `--eval`). `17fa7d4`, `f7bfddd`
+- **The Navy's balance brake's arch too tall, and pressed instead of screwed**
+  (Plates, bridges, screws and arbors; Variants, Balance stop). The crossbar's
+  arch stood on straight legs 4.5 mm long, its top 12.3 mm from the staff (after a
+  sketch). Traced on Delaney No. 8854's photograph from straight above, the arch
+  runs about 7.9 mm round the staff with its top 8.3 out and the arms nearly level
+  with the staff; 2E11795, the omegaforums movement and 2E8489 (the restoration
+  video) have the same shape. The legs are now 0.5. Two descriptions of the stop
+  have it screwed down with an Allen key through the case's bottom, which fits
+  the hex socket in its plunger: the text now says so, not a pressed cap. Keep: the
+  arch's top about 8.3 mm out, its inner edge 6.6 mm or more from the staff (the
+  hairspring); the arms out to the eyes nearly level with the staff. `f9ae355`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm

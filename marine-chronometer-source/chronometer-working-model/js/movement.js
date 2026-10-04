@@ -353,13 +353,12 @@ function buildMovement(M){
   /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge, where the restoration video has them (13:49.5, measured face-on): at the
      slab's end on the 3 o'clock side (outside every wheel, over the access hole in the pillar plate), and at the fourth end beyond the train-blocking screw (Fig. 30's order); lbp: its
      steady pins, one in each lug (tools/lower_bridge.py) */
-  /* balance locking arm (42299, Fig. 9): its screw (37204, with washer 42251) in the train bridge under the balance, 10.6 mm from the staff, at -30 deg, where the
-     bridge's notch round the fusee leaves it 2.8 mm of metal; at -60 deg it would stand in the notch */
   const ARM_S=0.8,ARM_U=-120*D2R,ARM_BOW=0.25,TBS_R=1.05,TB_CB=2.65;   /* ARM_U: the locking arm's swing from locked to unlocked, in the plan (x toward z) */   /* TB_CB: the train bridge's counterbore for its third screw (r, 23:30) */
   /* balance locking arm: its finger (S.armF) stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests on the 6 o'clock side (at the arm's end,
      180 - BETA with the balance at rest), 0.02 clear of it; the arm turns on its screw (S.arm) outside the balance's sweep, back over the screw 120 deg (ARM_U) to its stop pin (42300, pressed into the train bridge): turned 90 deg
-     the other way, out from the staff, it would reach the cock and the second train pillar's screw head, which the photographed group's move brought beside it (estimated:
-     Fig. 9 shows the arm, not which way it turns). Fig. 9 draws it beside the cock's foot and a large slotted screw. Since the escape arbor's move (2 October 2026) turned the balance's
+     the other way, out from the staff, it would reach the cock and the second train pillar's screw head, which the photographed group's move brought beside it. Fig. 9 draws
+     the arm turning the other way, out from the balance (its hatched arrow and the dashed unlocked arm), which the pillar screw's head (1.6 proud, 4 mm out) and the cock's foot leave
+     no room for here (Review-results.md, BOM comparison, still open 9). Fig. 9 draws it beside the cock's foot, the barrel bridge's horn and its large slotted screw. Since the escape arbor's move (2 October 2026) turned the balance's
      rest 11.8 deg, its screw stands clear of the cock's foot: 45 deg round from the weight since the weights were put at the arm's ends (3 October 2026; 30 before, 18 before the
      escape arbor's move); turned 12 deg with its weight, the screw would stand in the cock's foot, and on the weight's other side too. The arm, locked, runs between the cock's
      foot and the escape upper bridge: 0.8 wide and bowed 0.25 away from the staff (ARM_BOW; 1.0 and 0.6 until then) it clears both, by little (fine.py --hold) */
@@ -380,14 +379,23 @@ function buildMovement(M){
   S.seal=[2.2,-1.0].map(a=>[L.Fu[0]+PHOTO_K*7.6*Math.cos(a+PHOTO_TURN),L.Fu[1]+PHOTO_K*7.6*Math.sin(a+PHOTO_TURN)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
-  /* sustaining pawl pivot, as KLUwI2UUCMQ 36:15 (4K) puts its foot through rimfit_36-15.json's camera: 21.8 mm from the fusee axis, 67 deg round it (65.6-67.7 over f 5000-8000,
-     about 1 mm; References/VIDEOS.md), in the fusee's notch of the train bridge, on the third pillar's side; 1.38 mm outside the fusee wheel's tips, so the hub at the arbor's foot
-     (r 1.1) clears them. It was 21.35 at 74 deg, placed for clearance. SPt: the pawl's tip on the sustaining ratchet (rp 16.2 FK), 20 deg back round the ratchet from the pivot.
-     SPh: the foot of the pawl's spring wire, 2.4 mm along the pawl from the pivot (the video, 36:15), with the pawl turned 0.12 rad further in than when its tip is at SPt: the
-     wire's top stands in its hole in the train bridge there, so the bent wire turns the pawl into the teeth */
-  const SPr=21.8,SPa=53*D2R+PR_TURN,SPv=[L.Fu[0]+SPr*Math.cos(SPa),L.Fu[1]+SPr*Math.sin(SPa)],SPt=[L.Fu[0]+16.35*FK*Math.cos(SPa-20*D2R),L.Fu[1]+16.35*FK*Math.sin(SPa-20*D2R)];
-  const SPh=(()=>{const l=Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),b=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0])),tr=t=>Math.hypot(SPv[0]-l*Math.cos(t)-L.Fu[0],SPv[1]+l*Math.sin(t)-L.Fu[1]),t=b-(tr(b+0.01)>tr(b)?1:-1)*0.12;
-    return[SPv[0]-2.4*Math.cos(t),SPv[1]+2.4*Math.sin(t)];})();
+  /* sustaining pawl pivot, its foot read on two frames of KLUwI2UUCMQ (References/VIDEOS.md): 36:15 (4K) through rimfit_36-15.json's camera, 21.8 mm from the fusee axis at 67 deg
+     round it (65.6-67.7 over f 5000-8000, about 1 mm), and 14:06, nearly overhead, through a homography on the plate's centre, fusee and barrel bushings and three pillars' feet
+     (0.4-1.2 mm off them), 21.7 at 71 deg: 21.8 at 69, in the fusee's notch of the train bridge, on the third pillar's side; 1.38 mm outside the fusee wheel's tips, so the hub at the
+     arbor's foot (r 1.1) clears them. It was 21.35 at 74 deg, placed for clearance. SPt: the pawl's tip on the sustaining ratchet (rp 16.2 FK), 20 deg back round the ratchet from the
+     pivot; SPl its length, SPb0 the pawl's rotation.y when its tip is there. SPb: the side of the pawl's frame (the sign of its z) away from the ratchet, where its blade bows and its
+     spring wire stands; SPw the wire's foot in that frame (2.0 along, 1.7 across: 36:15 has it about 2.7 mm from the arbor in the blade's root, on that side). spW(th, q): a point q of
+     the pawl's frame in plan, the pawl at rotation.y th. SPh: the wire's foot with the pawl turned 0.12 rad further in than with its tip at SPt: the wire's top stands in its hole in
+     the train bridge there, so the bent wire turns the pawl into the teeth */
+  /* SPN, SPE: the blade's edges as KLUwI2UUCMQ 36:15 shows them (traced and put through rimfit_36-15.json's camera at the blade's height, 6 mm over the plate), mm along the blade from the
+     arbor and across it: SPN the edge toward the ratchet, its last point the tip's corner, which meets the teeth; SPE the back, bowed away from the ratchet. SPl: the corner's distance
+     from the arbor; SPt: where it rests on the ratchet's pitch circle (rp 16.2 FK), behind the pivot */
+  const SPN=[[1.04,-2.33],[2.16,-1.25],[3.39,-0.61],[5.30,-0.06],[7.23,0.21],[8.88,-0.06],[10.21,-0.58]],SPE=[[2.47,2.06],[4.07,2.49],[6.03,2.67],[8.03,2.27],[9.57,1.50],[10.45,0.60]];
+  const SPl=Math.hypot(...SPN[6]),SPd=Math.atan2(SPN[6][1],SPN[6][0]),SPr=21.8,SPa=55*D2R+PR_TURN,SPv=[L.Fu[0]+SPr*Math.cos(SPa),L.Fu[1]+SPr*Math.sin(SPa)],
+    SPg=Math.acos((SPr**2+(16.35*FK)**2-SPl**2)/(2*SPr*16.35*FK)),SPt=[L.Fu[0]+16.35*FK*Math.cos(SPa-SPg),L.Fu[1]+16.35*FK*Math.sin(SPa-SPg)];
+  const SPb0=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0])),spW=(th,q=SPw)=>[SPv[0]+q[0]*Math.cos(th)+q[1]*Math.sin(th),SPv[1]-q[0]*Math.sin(th)+q[1]*Math.cos(th)];
+  const SPb=Math.sign(Math.sin(SPb0)*((SPv[0]+SPt[0])/2-L.Fu[0])+Math.cos(SPb0)*((SPv[1]+SPt[1])/2-L.Fu[1])),SPw=[-2.0,1.7*SPb];
+  const SPh=(()=>{const tr=t=>{const q=spW(t,[-SPl,0]);return Math.hypot(q[0]-L.Fu[0],q[1]-L.Fu[1]);};return spW(SPb0-(tr(SPb0+0.01)>tr(SPb0)?1:-1)*0.12);})();
   /* the opening under the lower train bridge, round the third arbor (KLUwI2UUCMQ 34:30, the bare plate from the train side with the bar in it, and 40:08, the dial side: References/VIDEOS.md,
      "The plate's opening under the lower train bridge"): a circle r 11.3 about the third (11.2-11.5 over both frames and the focal lengths they allow), a lobe r 4.85 toward the balance
      and a bore r 3.2 about the fourth (its setting, at the bar's face, shows through it from the train side); the third wheel turns in it and shows through from the dial side */
@@ -480,7 +488,7 @@ function buildMovement(M){
      washer (42251) outside the balance's sweep. Locked, the finger at its end stands on the counterclockwise side of a timing weight, which the hairspring holds lightly
      against it, and the vernier's screw outside the rim, 15 deg round (hole 2), stops the balance the other way ("place the locking arm over the timing weight", Sec. X); unlocked, it lies turned out
      against its stop pin (42300), clear of everything the balance carries. Fig. 9 shows the arm curved, its screw outside the rim and its end at a timing weight; the arm's
-     sizes, the screw's place and the finger's height (1.65 mm, to 0.76 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
+     sizes, the screw's place and the finger's height (2.4 mm, to 0.56 mm up the weight) are estimated. R.arm turns: rotation.y = armL locked, armL + armU unlocked */
   { const ap=part('lockArm',-62),dA=sub(S.armF,S.arm),AL=Math.hypot(...dA),dL=unit(dA),AE=AL+0.45;R.armL=Math.atan2(-dL[1],dL[0]);
     const f9=new THREE.Group();ap.add(f9);R.armF9=f9;   /* the manual's arm, its screw, washer and stop pin: hidden together when the Navy's Y-arm is fitted instead (below) */
     R.armU=-ARM_U;R.arm=new THREE.Group();R.arm.position.set(S.arm[0],TB_T,S.arm[1]);f9.add(R.arm);R.arm.rotation.y=R.armL+R.armU;
@@ -494,12 +502,14 @@ function buildMovement(M){
        packing rings (black on 2E11795). Its bore is closed by a nickel plunger head with a hex socket screw. Under it runs a lever of spring steel: its root is screwed
        to a stud under a large shouldered screw near the bridge's rim, and it runs straight under the cap, through a slot in the seal's body, to a curved crossbar over
        the balance. The crossbar is an arch over the cock's end, its legs coming straight down, and from the foot of each, level with the staff, an arm straight
-       out to a round eye with a pin over the rim, symmetric about the stem (a sketch of the shape, 3 October 2026; Delaney's photograph close to it, its eyes level with the staff,
-       its arch's top 9.7 mm out, the sketch's taller). The outline is the boundary of bars of those widths joined with round fillets (sdfOutline), cut as one plate. The pivot screw and
+       out to a round eye with a pin over the rim, symmetric about the stem, as all four movements photographed with it have it (2E11795, Delaney's, the omegaforums one and 2E8489 in the
+       restoration video, 5:10). Traced on Delaney's photograph (straight above, scaled by the eyes 27.8 apart): the arch round the staff about 7.9 out, its top 8.3 out on
+       the bar's centre line, the arms nearly level with the staff (Review-results.md, open findings 13; until 4 October 2026 straight legs 4.5 long under the arch, its top
+       12.3 out, after a sketch). The outline is the boundary of bars of those widths joined with round fillets (sdfOutline), cut as one plate. The pivot screw and
        the eyes land within about 1 mm of where 2E11795's and Delaney's photographs put them, registered by the balance rim (on 2E11795 the cock's edge hides the
-       left end). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is a guess: the cap, pressed from
-       outside the case, pushes the plunger down on the lever, which bends about its screwed root (drawn as a turn about the pivot) until the pins bear on the rim, as
-       the wedges did (Sec. III). Estimated: the heights, the lever's thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the
+       left end). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm above), so how it works is read from the sources that describe
+       it (Review-results.md, 13): the plunger, screwed down by its hex socket with an Allen key through the bottom of the case, presses the lever down, which bends about
+       its screwed root (drawn as a turn about the pivot) until the pins bear on the rim, as the wedges did (Sec. III); screwed up, the lever springs back. Estimated: the heights, the lever's thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the
        flange's bite round the setup cover, and the screws' threads (not drawn: the bridge is the manual's, untapped there). R.navyLock(a): a 0 free, 1 locked. In the
        Exploded view it lifts 22 mm past the locking arm's part, to -84: above the barrel bridge it stands on (-72) and the balance it reaches over (-80), and under the
        hairspring and the cock (-88, -96) */
@@ -509,9 +519,9 @@ function buildMovement(M){
        screw with a shouldered stud (hidden screw R.navyBB, below); the lever's end bent to it under the cap, as Delaney's photograph shows it bent there */
     const NPV0=[-9.61,-30.95],iP=S.bb.reduce((b,q,i)=>Math.hypot(...sub(q,NPV0))<Math.hypot(...sub(S.bb[b],NPV0))?i:b,0),NPV=S.bb[iP];R.navyBB=iP;
     /* the crossbar, symmetric about the line from the staff to the post (aa; pp across it): an arch over the cock's end, its legs WA out (its inner edge 6.7 from the
-       staff, clear of the hairspring's 5.5), straight for HL then round over in a half circle to its top HA out; from each leg's foot, level with the staff, an arm straight out to an
+       staff, clear of the hairspring's 5.5), straight for HL (0.5, Delaney's photograph) then round over in a half circle to its top HA out (8.3); from each leg's foot, level with the staff, an arm straight out to an
        eye at EA, its pin over the rim (13.38-14.5). Widths from Delaney's photograph: the stem 2.9, the lever past the cap 2.5, the bar 2.2, the eyes r 1.4 */
-    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=7.8,HL=4.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
+    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=7.8,HL=0.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
     /* the seal: body, flange and screws as the fusee's (below), its chamber closed underneath, slotted through both sides at the lever's height along the lever
        (toward the crossbar and toward the pivot) */
     const SW=2.0,gaps=[loc(0,HA),NPV].map(q=>{const d=sub(q,NP);return Math.atan2(d[1],d[0]);}).sort((a,b)=>a-b);
@@ -671,14 +681,19 @@ function buildMovement(M){
      KLUwI2UUCMQ 35:37.5, 35:40 and 36:15 show it (the hub's radius read against the arbor's, about 1.3 times it; its height to about 1 mm) */
   const sp=hn(part('spawl',-22),'42096');sp.userData.axis=mesh(sp,shaftGeo([[TB_U-0.7,0.5],[TB_U+0.025,0.7],[-9.15,1.1],[y0-0.025,0.5],[y0+2]]),M.steel,SPv[0],0,SPv[1]);
   /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2 FK) at SPt, trailing the pivot so the teeth can only pass it one way */
-  R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,pawlGeo(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2,0.6,false,0.7),M.steel,0,0,0);
-  R.spawl.userData.base=Math.atan2(SPt[1]-SPv[1],-(SPt[0]-SPv[0]));R.spawl.rotation.y=R.spawl.userData.base;R.spawl.userData.pts=pawlPts(Math.hypot(SPt[0]-SPv[0],SPt[1]-SPv[1]),1.2);
-  /* sustaining pawl's spring (part of 42096, "complete with arbor and springs"): a straight steel wire (r 0.12) set upright in the pawl 2.4 mm from the pivot, standing alongside
+  /* its outline from those edges, in the pawl's frame (pivot at the origin, the tip's corner on -x at SPl, the back on the SPb side): one smooth curve from the tip's corner along SPN, round the hub behind the arbor (1.6-1.9 from it there: the video doesn't show that side) and along SPE to the
+     tip's other corner, the end face straight between them, as the video's. The tip's corner is put at PAWL_TIP, where seatPawl and phaseAgainst look for it */
+  const SPP=(()=>{const c=Math.cos(SPd),sn=Math.sin(SPd),L2=([a,q])=>new THREE.Vector2(-(a*c+q*sn),SPb*(-a*sn+q*c)),N=SPN.map(L2),E=SPE.map(L2),sN=Math.sign(N[0].y),
+      B=[[1.8,sN*80],[1.6,0],[1.9,-sN*75]].map(([r,a])=>new THREE.Vector2(r*Math.cos(a*D2R),r*Math.sin(a*D2R)));
+    return new THREE.SplineCurve([...N.slice().reverse(),...B,...E]).getPoints(150).map(v=>[v.x,v.y]).map((_,i,P)=>P[(i-PAWL_TIP+P.length)%P.length]);})();
+  R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,polyGeo(SPP,0.6,[[0,0,0.7]]),M.steel,0,-0.3,0);
+  R.spawl.userData.base=SPb0;R.spawl.rotation.y=SPb0;R.spawl.userData.pts=SPP;
+  /* sustaining pawl's spring (part of 42096, "complete with arbor and springs"): a straight steel wire (r 0.12) set upright in the pawl's root at SPw, standing alongside
      the arbor to its top (KLUwI2UUCMQ 35:37.5-35:40, 36:15: the pawl's assembly lifted and seated; 36:23, 36:27: it rises under the train bridge), its top end 1 mm up a hole
      through the train bridge at SPh (two small sunk holes stand side by side on the bridge's face there, 36:23-36:29: the pivot's and, taken to be, the wire's). The pawl turned
      from SPh bends the wire, which turns it back into the teeth. R.spWire(th): the wire from its foot, with the pawl at rotation.y th, to its top, held in the hole */
   { const WT=new THREE.Vector3(SPh[0],TB_U-1.0,SPh[1]),w=mesh(sp,cylY(0.12,1,8),M.steel),up=new THREE.Vector3(0,1,0),d=new THREE.Vector3();
-    R.spWire=th=>{const F=new THREE.Vector3(SPv[0]-2.4*Math.cos(th),-9.75,SPv[1]+2.4*Math.sin(th));d.subVectors(WT,F);w.scale.y=d.length();w.position.addVectors(F,WT).multiplyScalar(0.5);w.quaternion.setFromUnitVectors(up,d.normalize());};
+    R.spWire=th=>{const q=spW(th),F=new THREE.Vector3(q[0],-9.75,q[1]);d.subVectors(WT,F);w.scale.y=d.length();w.position.addVectors(F,WT).multiplyScalar(0.5);w.quaternion.setFromUnitVectors(up,d.normalize());};
     R.spWire(R.spawl.userData.base); }
   /* ---------- going train (modules from MOD, 0.314 / 0.245 / 0.249; counts in TRAIN) ---------- */
   const m=MOD.train;
@@ -959,7 +974,7 @@ function buildMovement(M){
   /* BB_LO: the barrel's lower face, 2.4 mm over the pillar plate (over the centre wheel, 0.55 clear), so the barrel is 16.5 mm tall cap to cap: C Spinner's video, side-on
      (33:09.5-33:35: height to radius 0.95 +- 0.06) and the 23:30 fit at the focal length that agrees with it (15.6-16.3); it was 13.2 */
   const BB_LO=y0-2.4;
-  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:17.6,bT:TB_T+1.0,bB:BB_LO,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
+  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,collarT:TB_T+0.05,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:17.6,bT:TB_T+1.0,bB:BB_LO,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
     stopDir:Math.atan2(fo[1],fo[0])+Math.atan2(-dz,dx)});   /* the winding stop outward from the plate's centre, past the fusee's top (as it was, 7.2 mm out, before the top was widened) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* winding stop (42099) on the underside of the barrel bridge, where the stop-bar's far end meets it at full wind: a stud screwed into the bridge (left-hand thread, Op. 42),
@@ -1211,9 +1226,10 @@ function makeFusee(M,c){
   lay(subtractCircle(discClip(capR,[[zHi,0,1]],128),[0,0],GRV),[hT(0,7.0*k,0.55)]);lay(discClip(capR,[[zLo,0,-1]],128),[hT(0,-7.0*k,0.55)]);   /* rim, either side of the slot, tapped for the top plate's screws */
   lay(discClip(HUB,[[zHi,0,1]],96),[[0,0,1.02]]);   /* hub round the arbor; the spring's groove round it (r HUB-GRV), cut open by the slot */
   hn(mesh(sbR,discGeo(capR-0.2,0.6,[[0,0,3.0*k+0.05],hC(0,7.0*k,0.55),hC(0,-7.0*k,0.55)]),M.gilt,0,yT-1.1,0),'42008');if(c.screw)for(const z of[7.0*k,-7.0*k])hn(c.screw(sbR,0,z,yT-1.1,0.55,0.3,0.6+0.5),'27760.fu');   /* its screws opposite each other at r 7.0 k (restoration video 13:30, face-on) */
-  hn(cylBetween(fz,3.0*k,yT-0.5,yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, from the hub up through the top plate's hole (its r 3.0 k + 0.05) and 1.0 past it, as Fig. 28 draws
+  hn(cylBetween(fz,3.0*k,yT-0.5,c.collarT??yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, from the hub up through the top plate's hole (its r 3.0 k + 0.05), as Fig. 28 draws
      the hub rising through a large hole: the plate comes off over it, the collar staying on the arbor (restoration video 19:58-20:00), and stands on the hub with the plate off
-     (20:20); r 0.326 of the plate's on 13:30, face-on. Its height over the plate estimated (19:45 reads 1.5-2 mm, oblique). It stays inside the slot's edge (zHi) and
+     (20:20); r 0.326 of the plate's on 13:30, face-on. It rises 2.8 mm over the top layer (20:00, side-on, scaled by the groove's pitch, 38-41 px a turn there), so
+     up to the barrel bridge, under whose bushing it is the arbor's shoulder: c.collarT, 0.05 under it (0.002 in, Ops. 15, 69). It stays inside the slot's edge (zHi) and
      0.12 over the stop-bar spring in the groove under it */
   const stopBar=hn(new THREE.Group(),'42024');stopBar.position.y=yT-0.25;sbR.add(stopBar);   /* in the slot, 0.025 off the top face and 0.025 under the plate */
   mesh(stopBar,new THREE.BoxGeometry(xF0-xB0,0.45,2*BW),M.steel,(xF0+xB0)/2,0,sbZ);   /* the bar (first child: tools/maintaining.py measures it) */
