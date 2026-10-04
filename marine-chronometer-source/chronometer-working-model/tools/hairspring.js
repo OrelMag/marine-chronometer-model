@@ -1,5 +1,5 @@
 // The hairspring designed (HSPR in ../../shared/hairspring.js), from the model's measured coil and ends (movement.js). Needs only Node.js:
-//   node hairspring.js          (about 3 s; exits with 1 if a designed curve misses Phillips' conditions or leaves a force on the pivots)
+//   node hairspring.js          (about 15 s; exits with 1 if a designed curve misses Phillips' conditions or leaves a force on the pivots)
 // 1. The stiffness the balance needs, k = I (2π/T)², T 0.5 s, with I Table II's (invariants.py checks it), and the strip's thickness from it, k = E b t³ / 12 L,
 //    at the width measured on the restoration video (KLUwI2UUCMQ 6:49.5, side-on: the ribbon's height at the coil's edge, 9-11 px of 45 px/mm, and its
 //    share of the 0.56 mm pitch down the stack, 0.38-0.50) and published moduli (Elinvar-type alloys 165-195 GPa, spring steel 207); the stress at the swing.
@@ -8,6 +8,8 @@
 // 3. The outer terminal curve, from the coil to the stud's clamp (HS_R from the staff, along the stud's bar into the clamp), solved to Phillips' conditions;
 //    the inner one, to the collet's face (HS_RI, running along it), and the end radius at which a short inner curve exists.
 // 4. The check that matters: the force the spring leaves on the pivots under a couple (HSPR.lateral), for the designed ends and for the ends the model draws.
+// 5. At large swings, beyond small-deflection theory: the strip as an elastica turned 300° each way (HSPR.large), the couple and the force on the pivots,
+//    and the balance's period at each swing (HSPR.period): the spring's own isochronism over the manual's 1 3/8 to 1 1/2 turns, which the essay quotes.
 const fs=require('fs'),path=require('path'),{HSPR}=require('../../shared/hairspring.js');
 const src=fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8'),num=re=>{const m=re.exec(src);if(!m)throw Error('not found in movement.js: '+re);return+m[1];};
 const D=Math.PI/180,R=num(/HS_RC=([\d.]+)/),N=num(/HS_N=(\d+)/),RI=num(/HS_RI=([\d.]+)/);
@@ -42,5 +44,19 @@ if(outer&&inner){const P=HSPR.path(R,inner,outer,N),L=P.L;
     body=(a0,a1,n)=>[...Array(n)].map((_,i)=>{const a=a0+(a1-a0)*(i+1)/n;return[R*Math.cos(a),R*Math.sin(a)];});
   const ae=Math.PI+2*Math.PI*(N-1),old=[...ramp(RI,R,0,Math.PI,200),...body(Math.PI,ae,96*(N-1)),...[...Array(201)].map((_,i)=>{const f=i/200,a=ae+Math.PI*f,r=R-(R-RS)*(1-Math.cos(f*Math.PI/2));return[r*Math.cos(a),r*Math.sin(a)];}).slice(1)];
   let a1=outer.a;while(a1<Math.PI)a1+=2*Math.PI;while((a1-Math.PI)/(2*Math.PI)<N-1.5)a1+=2*Math.PI;const half=[...ramp(RI,R,0,Math.PI,200),...body(Math.PI,a1,96*(N-1)),...outer.pts.slice(1).map(p=>[p[0],p[1]])];
-  const fd=lat(P.pts);chk(fd<1e-3,`the force on the pivots under a couple, as a share of couple / R: both ends designed ${fd.toExponential(1)}; the outer designed, the inner as drawn ${lat(half).toFixed(3)}; both as drawn (springGeo's ramps) ${lat(old).toFixed(3)}`);}
+  const fd=lat(P.pts);chk(fd<1e-3,`the force on the pivots under a couple, as a share of couple / R: both ends designed ${fd.toExponential(1)}; the outer designed, the inner as drawn ${lat(half).toFixed(3)}; both as drawn (springGeo's ramps) ${lat(old).toFixed(3)}`);
+  /* 5. at large swings: the strip as an elastica (HSPR.large), turned to 300° each way; the couple against θ / L and the force on the pivots, then the balance's
+     period at each swing against its period at small ones (HSPR.period), so the spring's own isochronism over the manual's 1 3/8 to 1 1/2 turns (248°-270°) */
+  { const ths=[];for(let a=-300;a<=300;a+=5)ths.push(a*D);const big=HSPR.large(P.pts,ths),at=a=>big.find(q=>Math.abs(q.th-a*D)<1e-9),k0=1/L;
+    const vw=[50,150,250].map(a=>{const i=big.indexOf(at(a));return Math.abs((big[i+1].U-big[i-1].U)/(big[i+1].th-big[i-1].th)/big[i].T-1);});
+    chk(Math.max(...big.map(q=>q.res))<1e-9&&Math.max(...vw)<1e-4,`the strip at large swings solved to ${Math.max(...big.map(q=>q.res)).toExponential(0)} mm at the stud; its couple and dU/dθ agree to ${Math.max(...vw).toExponential(0)}`);
+    say(`       its couple over θ EI / L: ${[90,180,270,-270].map(a=>`${a}° ${(at(a).T/(a*D*k0)).toFixed(6)}`).join(', ')}; the force on the pivots, × R / couple: ${[90,180,270].map(a=>`${a}° ${(at(a).F*R/Math.abs(at(a).T)).toExponential(1)}`).join(', ')}`);
+    /* the period integrator against a linear spring (exactly isochronous) and a Duffing one (T = θ + εθ³: ω/ω0 = 1 + 3εA²/8 to first order) */
+    const lin=HSPR.period(ths,ths.map(t=>t),255*D).ratio,eps=1e-4,duf=HSPR.period(ths,ths.map(t=>t+eps*t**3),255*D).ratio,dufW=1/(1+3*eps*(255*D)**2/8);
+    chk(Math.abs(lin-1)<1e-9&&Math.abs(duf/dufW-1)<2e-6,`the period's integration: a linear spring ${(lin-1).toExponential(0)} from 1; a Duffing spring ${duf.toFixed(7)} against ${dufW.toFixed(7)}`);
+    const Ts=big.map(q=>q.T),th=big.map(q=>q.th),rate=a=>86400*(1/HSPR.period(th,Ts,a*D).ratio-1),r1=rate(247.5),r2=rate(270),r0=rate(255),iso=r2-r1,slope=iso/22.5*10,lb=at(270).F*R/Math.abs(at(270).T);
+    say(`       the rate against small swings: 247.5° ${r1>=0?'+':''}${r1.toFixed(3)}, 255° ${r0>=0?'+':''}${r0.toFixed(3)}, 270° ${r2>=0?'+':''}${r2.toFixed(3)} s a day: the spring gains ${iso.toFixed(2)} s a day from 1 3/8 to 1 1/2 turns, ${slope>=0?'+':''}${slope.toFixed(2)} for each 10° (the model's HS, taken as 0: the spring as adjusted)`);
+    /* the essay quotes these (spans data-hs="…" in index.html, "The hairspring, designed" under What the model gives a maker) */
+    const want={iso:iso.toFixed(2),slope:(slope>=0?'+':'−')+Math.abs(slope).toFixed(2),latBig:lb.toExponential(1),stiff:(Math.round(1/(at(270).T/(270*D*k0)-1)/1000)*1000).toLocaleString('en-US')},html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};
+    for(const m of html.matchAll(/data-hs="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];for(const[k,v]of Object.entries(want))chk(got[k]===v,`the essay quotes ${k} as ${got[k]??'(missing)'}: found ${v}`); }}
 console.log(rows.join('\n'));if(fail)process.exitCode=1;

@@ -70,6 +70,34 @@ const HSPR=(()=>{
   /** the strip's section: thickness t (radial, mm) for stiffness k (N·m a radian) over length L (mm) at width b (axial, mm) and modulus E (GPa),
       k = E b t³ / 12 L; and the bending stress (MPa) at a swing of A radians */
   function section(k,L,b,E){const t=Math.cbrt(12*k*(L/1000)/(E*1e9*b/1000))*1000;return{t,stress:A=>6*k*A/((b/1000)*(t/1000)**2)/1e6};}
-  return{run,solve,design,path,lateral,section};
+  /** the spring at large swings: the path as an inextensible strip (a planar elastica, one EI, taken 1) with its drawn curvature unstressed, the stud's end
+      clamped, the collet's end turned th (rad) about the staff with its heading; the end loads (couple m0, force F at the collet's end) found by Newton's
+      method so the strip arrives at the stud as it was. Returns per angle: U the strain energy, T the couple that holds the balance there against the spring
+      (about the staff), F the force on the pivots (both × EI); T from the end loads and dU/dθ agree (virtual work), a check of the solution. ths: the angles, from 0 out each way */
+  function large(pts,ths){const n=pts.length-1,ds=[],h0=[];for(let i=0;i<n;i++){const dx=pts[i+1][0]-pts[i][0],dy=pts[i+1][1]-pts[i][1];ds.push(Math.hypot(dx,dy));h0.push(Math.atan2(dy,dx));}
+    const dh=[0];for(let i=1;i<n;i++)dh.push(wrap(h0[i]-h0[i-1]));const P0=pts[0],PN=pts[n];
+    /* integrate from the collet's end: heading of segment i = h0[0] + θ + Σ drawn turns + Σ m ds (the moment at each node from the end's loads) */
+    function shoot(th,v){const[m0,fx,fy]=v,c=Math.cos(th),s=Math.sin(th),x0=c*P0[0]-s*P0[1],y0=s*P0[0]+c*P0[1];let x=x0,y=y0,h=h0[0]+th,U=0;
+      for(let i=0;i<n;i++){const L=i?(ds[i-1]+ds[i])/2:ds[0]/2,m=m0+(x0-x)*fy-(y0-y)*fx;if(i)h+=dh[i];h+=m*L;U+=m*m*L/2;x+=ds[i]*Math.cos(h);y+=ds[i]*Math.sin(h);}
+      const m=m0+(x0-x)*fy-(y0-y)*fx,Ln=ds[n-1]/2;h+=m*Ln;U+=m*m*Ln/2;
+      return{f:[x-PN[0],y-PN[1],wrap(h-h0[n-1])],U,x0,y0};}
+    function at(th,v){let r=shoot(th,v);
+      for(let it=0;it<40;it++){const e2=r.f.reduce((q,x)=>q+x*x,0);if(e2<1e-26)break;const J=[];
+        for(let j=0;j<3;j++){const w=v.slice(),e=1e-7*Math.max(1,Math.abs(v[j]));w[j]+=e;const g=shoot(th,w).f;J.push(g.map((x,i)=>(x-r.f[i])/e));}
+        const A=[0,1,2].map(i=>[J[0][i],J[1][i],J[2][i],-r.f[i]]);for(let i=0;i<3;i++){let p=i;for(let q=i+1;q<3;q++)if(Math.abs(A[q][i])>Math.abs(A[p][i]))p=q;[A[i],A[p]]=[A[p],A[i]];
+          for(let q=0;q<3;q++)if(q!==i){const k=A[q][i]/A[i][i];for(let c=i;c<4;c++)A[q][c]-=k*A[i][c];}}
+        const d=A.map((row,i)=>row[3]/row[i]);let t=1;for(let k=0;k<20;k++){const w=v.map((x,i)=>x+t*d[i]),g=shoot(th,w);if(g.f.reduce((q,x)=>q+x*x,0)<e2){v=w;r=g;break;}t/=2;}}
+      const[m0,fx,fy]=v;return{v,th,U:r.U,T:-(m0+r.x0*fy-r.y0*fx),F:Math.hypot(fx,fy),res:Math.sqrt(r.f.reduce((q,x)=>q+x*x,0))};}
+    const out=[];for(const sg of[1,-1]){let v=[0,0,0];for(const th of ths.filter(t=>sg>0?t>=0:t<0).sort((a,b)=>sg*(a-b))){const q=at(th,v);v=q.v;out.push(q);}}
+    return out.sort((a,b)=>a.th-b.th);}
+  /** the balance's period under a couple T(θ) (sampled, rising through 0 at θ 0) against its period at small swings, at amplitude A (rad) one way: the
+      energy's turning points either side, the time over the swing by the substitution θ = mid + half·sin u (no singularity at the ends) */
+  function period(ths,Ts,A){const i0=ths.findIndex(t=>t===0),k0=(Ts[i0+1]-Ts[i0-1])/(ths[i0+1]-ths[i0-1]),Ug=ths.map(()=>0);   /* U on the grid: T piecewise linear, integrated exactly from θ 0 */
+    for(let i=i0+1;i<ths.length;i++){const h=ths[i]-ths[i-1];Ug[i]=Ug[i-1]+h*(Ts[i]+Ts[i-1])/2;}for(let i=i0-1;i>=0;i--){const h=ths[i]-ths[i+1];Ug[i]=Ug[i+1]+h*(Ts[i]+Ts[i+1])/2;}
+    const U=th=>{let i=0;while(i<ths.length-2&&ths[i+1]<th)i++;const d=th-ths[i],g=(Ts[i+1]-Ts[i])/(ths[i+1]-ths[i]);return Ug[i]+Ts[i]*d+g*d*d/2;},E=U(A);
+    let lo=-A*1.2,hi=0;for(let k=0;k<60;k++){const m=(lo+hi)/2;if(U(m)>E)lo=m;else hi=m;}const B=(lo+hi)/2,mid=(A+B)/2,half=(A-B)/2;
+    let t=0;const N=2000;for(let j=0;j<N;j++){const u=-Math.PI/2+Math.PI*(j+0.5)/N,th=mid+half*Math.sin(u),d=E-U(th);t+=d>0?half*Math.cos(u)*Math.PI/N/Math.sqrt(2*d):0;}
+    return{ratio:2*t/(2*Math.PI/Math.sqrt(k0)),back:B};}
+  return{run,solve,design,path,lateral,section,large,period};
 })();
 if(typeof module!=='undefined')module.exports={HSPR};
