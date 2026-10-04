@@ -1353,7 +1353,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   underside from there to 1.1 inside, the wedge pin's end shows in the
   bar's top face 1.7 inside, and the spring's upper end is 2.65 mm from the
   staff. Keep the clamp at the bar's end (`SP_E`, `SP_ST`, `SP_CL` in
-  `movement.js`, `HS_R` computed from them, `essay.js`'s `HS` to match).
+  `movement.js`, `HS_R` computed from them, `essay.js`'s `HS` to match). `e37f857`
 
 ## Rate panel
 
