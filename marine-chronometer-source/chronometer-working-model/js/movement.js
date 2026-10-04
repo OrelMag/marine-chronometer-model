@@ -828,12 +828,12 @@ function buildMovement(M){
   const cg=hn(new THREE.Group(),'42190');cg.rotation.y=SPSI;R.staff.add(cg);R.collet=cg;
   { const hub=[],ho=1.15,hi=0.47,so=0.1/ho,si=0.1/hi;for(let k=0;k<=24;k++){const a=-Math.PI+so+(TAU-2*so)*k/24;hub.push([ho*Math.cos(a),ho*Math.sin(a)]);}
     for(let k=0;k<=12;k++){const a=Math.PI-si-(TAU-2*si)*k/12;hub.push([hi*Math.cos(a),hi*Math.sin(a)]);}
-    mesh(cg,polyGeo(hub,1.4),M.steel,0,HS_Y-0.35,0);
+    mesh(cg,polyGeo(hub,1.45),M.steel,0,HS_Y-0.35,0);   /* 0.05 proud of the plate's face toward the balance, not in it (coplanar, they flickered) */
     const CR=4.0,pl=[],P=(r,a)=>[r*Math.cos(a*D2R),r*Math.sin(a*D2R)],t=Math.asin(0.35/CR)/D2R;
-    for(let k=0;k<=20;k++)pl.push(P(CR,-120+(120-t)*k/20));pl.push([HS_R+0.5,-0.35],[HS_R+0.5,0.35]);for(let k=0;k<=3;k++)pl.push(P(CR,t+(10-t)*k/3));
+    for(let k=0;k<=20;k++)pl.push(P(CR,-120+(120-t)*k/20));pl.push([HS_R+0.4,-0.35],[HS_R+0.4,0.35]);for(let k=0;k<=3;k++)pl.push(P(CR,t+(10-t)*k/3));
     for(let k=0;k<=20;k++)pl.push(P(0.9,10-130*k/20));
     mesh(cg,polyGeo(pl,0.45),M.steel,0,BAL_Y-1.7,0);   /* the plate under the balance hub (0.05 clear of it) */
-    hn(mesh(cg,new THREE.BoxGeometry(1.0,1.4,1.3),M.steel,HS_R,BAL_Y-1.95,0),'42191.col');hn(cylBetween(cg,0.15,BAL_Y-1.1,BAL_Y-2.8,M.steelD,HS_R,-0.4,10),'42147.col'); }   /* clamp on the tongue's end, over the spring's end; wedge pin on the side away from the spring's run */
+    hn(mesh(cg,new THREE.BoxGeometry(1.0,1.5,1.3),M.steel,HS_R,BAL_Y-1.9,0),'42191.col');hn(cylBetween(cg,0.15,BAL_Y-1.1,BAL_Y-2.8,M.steelD,HS_R,-0.4,10),'42147.col'); }   /* clamp on the tongue's end, over the spring's end, the tongue ending 0.1 inside its outer face and its lower jaw 0.1 under the tongue (the faces were coplanar and flickered); wedge pin on the side away from the spring's run */
   const BR=BAL_R,BY=BAL_Y;R.balU=hn(new THREE.Group(),'42178');R.balU.position.y=BY;R.staff.add(R.balU);
   /* the rim (Fig. 3: a band): 3.5 mm high (the restoration video: the screws' heads 0.9 of it, side-on; Fig. 3 draws it taller) and 0.6 mm thick, as the video shows it edge-on
      (KLUwI2UUCMQ 6:47.5, 6:52.5, 6:49.5-6:51.2: 0.5-0.85 mm against the rim's 29 mm and the impulse roller's 0.249 in, which agree on the scale to 1 %); its plate-side edge where

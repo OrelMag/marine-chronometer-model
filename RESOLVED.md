@@ -1318,6 +1318,15 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The hairspring collet's clamp flickered.** The collet's tongue ended at
+  5.1 mm from the staff, exactly in the clamp's outer face, and the clamp's
+  lower face lay in the plate's face toward the balance, as did the hub's: the
+  coplanar faces z-fought, showing as a patch on the clamp's outside (with the
+  balance picked, its edges drawn through the ghosted hairspring). The tongue
+  now ends 0.1 mm inside the clamp, the clamp's lower jaw runs 0.1 mm under the
+  tongue and the hub stands 0.05 mm proud of the plate. Keep: a piece set into
+  another ends inside it or stands proud of it, never flush with one of its
+  faces (`audit.py` doesn't see this within one part).
 - **Lifted views at 80 fps on a fast desktop, 15 on a phone.** Once
   every open tube went through `closeGeo` (every part a closed solid), the
   hairspring, rebuilt every frame the balance turns, paid for it: `closeGeo`
