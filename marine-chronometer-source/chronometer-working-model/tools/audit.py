@@ -29,6 +29,8 @@ LOOSE=[('barrelBridge:Cylinder',(20.95,-20.2,-21.26),0.9,"the winding-stop pin, 
  ('bal:Cylinder',None,0.4,"a timing weight's screw, its free end past the nut (it turns with the balance, so matched by radius alone; at this angle the other's end is within the probe's 0.25 mm of a part and doesn't show)"),
  ('bal:Cylinder',None,0.25,"a vernier timing weight's screw, its free end past the nut"),
  ('bal:Cylinder',None,0.25,"the other vernier weight's screw")]
+# with the Navy's balance brake fitted (--eval "__mv.userData.stop('navy')"), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked
+LOOSE_NAVY=[('lockArm:Cylinder',(14.99,-28.85,6.51),0.4,"the Navy brake's pin over the rim, free"),('lockArm:Cylinder',(-11.77,-28.85,14.05),0.4,"its other pin, the same")]
 async def run():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
@@ -53,7 +55,7 @@ def main():
     bad,gone=[],[]
     bad+=[f'page error: {e}' for e in errs]
     for k in ('dupScrews','floatScrews','isolated'):bad+=[f'{k}: {x}' for x in r[k]]
-    left=list(LOOSE) if MODE=='movement' else []
+    left=list(LOOSE)+(LOOSE_NAVY if "stop('navy')" in ' '.join(sys.argv) else []) if MODE=='movement' else []
     for x in r['looseEnds']:
         nm,pos,rad=x[0],x[1],float(x[2][1:])
         m=next((e for e in left if e[0]==nm and abs(e[2]-rad)<1e-6 and (e[1] is None or max(abs(a-b) for a,b in zip(pos,e[1]))<=0.3)),None)
