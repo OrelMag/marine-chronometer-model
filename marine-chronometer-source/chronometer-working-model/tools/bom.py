@@ -37,7 +37,7 @@ def qty_ok(q,n):
     if isinstance(q,list):return q[0]<=n<=q[1]
     if isinstance(q,int):return n==q
     return n==0
-ARM="__mv.userData.stop('arm')"   # the parts list's balance stop, the locking arm (Fig. 9): the page fits the Navy's Y-arm by default, which the manual doesn't list
+ARM="document.querySelector('#stopV button[data-v=\"arm\"]').click()"   # the parts list's balance stop, the locking arm (Fig. 9): the page fits the Navy's Y-arm by default, which the manual doesn't list (its button, so the part's card and numbers are the arm's too)
 async def run(evl):
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
