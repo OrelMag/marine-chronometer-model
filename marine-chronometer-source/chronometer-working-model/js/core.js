@@ -459,10 +459,11 @@ function arbor(parent,M,x,z,o){
   else if(o.ar){const[a,b]=o.ar;g.userData.ar=cylBetween(g,o.r||0.55,a,b,M.steel,0,0,12);}
   return g;
 }
-function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into){   /* rc, rs: radii of the inner (collet) and outer (stud) ends, where the terminal curves end; into: the previous geometry, rewritten in place (reclose) */
+function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into,lead=0){   /* rc, rs: radii of the inner (collet) and outer (stud) ends, where the terminal curves end; into: the previous geometry, rewritten in place (reclose); lead: the inner end run on straight that far along its tangent, back past where the curve begins (into the collet's clamp) */
   const c=new THREE.Curve();c.arcLengthDivisions=1400;
   const Re=R*N/(N+th/TAU*0.8),a0=0.09,tot=TAU*N+TAU;
   c.getPoint=(t,v=new THREE.Vector3())=>{let ang,r,y;
+    if(lead){const aL=0.004;if(t<aL){const z=lead*(1-t/aL);return v.set(rc*Math.cos(th)+z*Math.sin(th),0,z*Math.cos(th)-rc*Math.sin(th));}t=(t-aL)/(1-aL);}   /* turned with the end, by th */
     if(t<a0){const s=t/a0;ang=Math.PI*s;r=rc+(Re-rc)*Math.sin(s*Math.PI/2);y=H*0.05*s;}
     else if(t>1-a0){const s=(t-1+a0)/a0;ang=Math.PI+TAU*N+Math.PI*s;r=Re-(Re-rs)*(1-Math.cos(s*Math.PI/2));y=H*0.95+H*0.05*s;}
     else{const s=(t-a0)/(1-2*a0);ang=Math.PI+TAU*N*s;r=Re;y=H*0.05+H*0.9*s;}

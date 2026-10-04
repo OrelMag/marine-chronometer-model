@@ -1253,6 +1253,20 @@ Contents:
   balance's cap and hold-down screws, the balance locking arm and the
   train-blocking screw. See `Review-results.md`, "Every part against the
   manual". `63c5dce`
+- **The hairspring collet was a stand-in.** A flat 130° sector with a short
+  radial bar and a solid block for its clamp, the hub slotted on the far side
+  and the spring's end inside the block 4.6 mm out. Figs. 5, 6 and 49 draw a
+  stepped block: the hub on a plate slit from the bore to a relief hole, a
+  ledge cut back (straight, then round) over a tongue at its foot, a notch in
+  the tongue for the wedge pin, and a C-shaped clamp slid over the tongue's
+  end that pinches the spring's end against it. It is now measured on Fig. 6's
+  two drawings (README, "Estimated, not from the manual"), and the spring's
+  inner end runs straight along the end face into the clamp, 4.43 mm out (the
+  collet sized against the coil the restoration video measures, r 6.3).
+  The clamp closes over the spring above and below, so the hairspring now
+  comes off with the balance in the Exploded view (the spring had to pass
+  through the upper jaw). Keep: the collet's shape is Fig. 6's; the spring's
+  inner end is where the end face and clamp hold it. `6839be8`
 
 **The parts list against the model: parts missing, parts holding nothing,
 pivots without shoulders, jewels floating or buried** (`ae397f2`). Checked
@@ -1383,6 +1397,15 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The hairspring collet's clamp flickered.** The collet's tongue ended at
+  5.1 mm from the staff, exactly in the clamp's outer face, and the clamp's
+  lower face lay in the plate's face toward the balance, as did the hub's: the
+  coplanar faces z-fought, showing as a patch on the clamp's outside (with the
+  balance picked, its edges drawn through the ghosted hairspring). The tongue
+  now ends 0.1 mm inside the clamp, the clamp's lower jaw runs 0.1 mm under the
+  tongue and the hub stands 0.05 mm proud of the plate. Keep: a piece set into
+  another ends inside it or stands proud of it, never flush with one of its
+  faces (`audit.py` doesn't see this within one part). `e701c2f`
 - **Lifted views at 80 fps on a fast desktop, 15 on a phone.** Once
   every open tube went through `closeGeo` (every part a closed solid), the
   hairspring, rebuilt every frame the balance turns, paid for it: `closeGeo`
