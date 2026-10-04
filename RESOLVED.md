@@ -1040,7 +1040,7 @@ Contents:
   Keep: the brake's lift between the balance's and the hairspring's; with the Y-arm the default,
   run `exploded.py` and `audit.py` as they are and with `--eval
   "__mv.userData.stop('arm')"` for the manual's arm, and `bom.py` fits the arm
-  itself (the parts list's). `HASH`
+  itself (the parts list's). `73594b5`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
