@@ -35,11 +35,21 @@ never as a source for the model's shapes or sizes:
   `chronometer-working-model/tools/keystone.js` measures the model against each rule; the model README's "Against a period
   text" has the result.
 
+Articles consulted (all rights reserved: cited, not copied; the copy read is kept outside the repository,
+in `$MC_VIDEO/articles/`):
+- William R. Smith, "The Man Who Saved the Hamilton Model 21 Ship's Chronometer", *NAWCC Watch & Clock Bulletin*
+  No. 395 (January/February 2012), pp. 56-63. Pages 56-59 are public at
+  https://pubs.nawcc.org/images/stories/395_56_63a.pdf; the docs.nawcc.org copy and pages 60-63 need an NAWCC login.
+  It is history, with no dimensions. Hamilton believed the detent could only be made by hand, by the three people it
+  had who could make one. V. E. Van Hoesen, a Memphis watchmaker, made them in quantity on milling machinery in the
+  A. Graves & Steuwer jewelry store, a work the books by Whitney and Sauers don't mention. Fig. 2a is Hamilton's
+  letter of 4 January 1943 to the Chief of the Bureau of Ships (contract NOs-85310), signed by M. F. Manby, Chief,
+  Research-Engineering Division, copied to Comdr. E. B. Oliver at the Naval Observatory, asking for equipment for the
+  firm "so they can make detents which we urgently need". Fig. 3 is a *Daily Capital News* article (Jefferson City,
+  Missouri, 25 August 1943) on the work. John Huber holds unfinished Model 21 detent parts and photographs from Van
+  Hoesen's estate; the pages behind the login may show them.
+
 Not yet consulted (found 4 October 2026). These may hold facts about the Model 21 itself:
-- William R. Smith, "The Man Who Saved the Hamilton Model 21 Ship's Chronometer", *NAWCC Bulletin* No. 395
-  (January/February 2012), p. 56, the issue's free sample article:
-  https://docs.nawcc.org/Bulletins/2010/articles/2012/395/395_56_63a.pdf. The server's Cloudflare check refuses scripted
-  downloads, so download it in a browser and keep it outside the repository, like the videos.
 - NAWCC Library and Research Center, Hamilton Records Collection, Series V: Chronometers, 1940-1984
   (https://archive.nawcc.org/repositories/2/archival_objects/11056). The catalogue lists research reports, test data,
   correspondence, drawings, photographs and instructions on the production, design, assembly and performance of the M21,
@@ -47,7 +57,7 @@ Not yet consulted (found 4 October 2026). These may hold facts about the Model 2
   Ernest W. Drescher; Box 13, Folder 5). The items aren't online; the library's research service has them
   (https://nawcc.org/index.php/library-research).
 - Marvin E. Whitney, *The Ship's Chronometer* (American Watchmakers Institute Press; listings give 1984, 1985 and 1991,
-  ISBN 0918845084). Whitney was a chronometer maker at the U.S. Naval Observatory during the war, and the book gives a
+  ISBN 0918845084, and Smith's article 1981). Whitney was a chronometer maker at the U.S. Naval Observatory during the war, and the book gives a
   first-hand account of how the Model 21 and 22 were developed.
 - Jonathan Betts, *Marine Chronometers at Greenwich* (Oxford University Press): its chapter "How the Chronometer was Made"
   covers the 19th-century English trade, from bare metal to delivery on board.
