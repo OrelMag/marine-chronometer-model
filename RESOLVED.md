@@ -1648,7 +1648,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   spec and search text now follow the stop fitted (`STOP_INFO`, `stopFit` in
   `app.js`). Keep: fit a stop through `stopFit` or its button, never
   `mv.userData.stop` alone in the page, and `bom.py` fits the arm by its button,
-  so the card's numbers it checks are the arm's. `HASH`
+  so the card's numbers it checks are the arm's. `db5d5dd`
 
 ## Build, tools and docs
 
