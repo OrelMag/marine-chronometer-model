@@ -63,7 +63,7 @@ nautical miles ([3.2](#32-the-navigators-rate-book)), and a simulated test that
 fills in the manual's test card ([3.4](#34-the-30-day-performance-test)).
 
 ### Performance
-- **Too many meshes.** The scene has 545 separate meshes, and 541 of them cast shadows. See [5.1](#51-draw-calls-merge-and-instance). *(Partly done: 389 meshes, and parts too small for the shadow map cast none, `347bf5b`; merging the static parts is open.)*
+- **Too many meshes.** The scene has 545 separate meshes, and 541 of them cast shadows. See [5.1](#51-draw-calls-merge-and-instance). *(Done: 389 meshes, and parts too small for the shadow map cast none, `347bf5b`; static pieces drawn merged, `6bd6304`. Fewer triangles is next: 5.1.)*
 - **Knurling.** 155 of those meshes make up five knurled nuts: a body and 30 separate ridges each. See [5.1](#51-draw-calls-merge-and-instance). *(Done: one mesh per nut, `347bf5b`.)*
 - **Slow texture at load.** Building the plates' striped (damascened) texture takes 204 ms of the 322 ms spent on materials. See [5.2](#52-startup-the-stripe-texture). *(Done: 4.4× faster, same pixels, `6c5ed75`.)*
 - **Per-frame rebuilds.** The hairspring's geometry is rebuilt every frame whenever it can be seen. See [5.3](#53-dont-rebuild-geometry-every-frame-sm). *(Done: written in place, not rebuilt through `closeGeo`; see RESOLVED.md.)*
@@ -92,7 +92,7 @@ automated checks on GitHub. See [8.1](#81-continuous-integration).
 
 ## At a glance
 
-The fifteen ideas with the best return, roughly in order. Status as of 29 September 2026 (Stage 1 of the [roadmap](#11-roadmap) done).
+The fifteen ideas with the best return, roughly in order. Status as of 4 October 2026: all done but #15 (`claude/physics` merged in `b1293e9`).
 
 | # | Idea | Area | Effort | Why | Status |
 |---|---|---|---|---|---|
@@ -102,7 +102,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 | 4 | [Adjuster's bench for the escapement](#33-adjusters-bench-the-escapement-live) | Features | M | `ESC` is already parametric and `tools/escapement.js` already measures it. Bring both into the page | Done `630aa0f`; it drives the amplitude and rate too |
 | 5 | [One parts registry](#71-one-parts-registry) | Code | S | Adding a part touches six tables in `app.js` today | Done `5e8c578` |
 | 6 | [Make `ESC` a factory and share it](#73-make-esc-a-factory-and-share-it) | Code | S–M | Enables #4, removes the source-slicing in `tools/escapement.js` and the hand-copied solver in the essay | Done `813f7ae` |
-| 7 | [Merge static meshes; stop shadows from tiny parts](#51-draw-calls-merge-and-instance) | Performance | S–M | 545 meshes, each with its own geometry; 541 cast shadows; 124 meshes are knurling on four nuts | Done: knurls, rim holes, tiny shadows `347bf5b`; merging all static parts open |
+| 7 | [Merge static meshes; stop shadows from tiny parts](#51-draw-calls-merge-and-instance) | Performance | S–M | 545 meshes, each with its own geometry; 541 cast shadows; 124 meshes are knurling on four nuts | Done: knurls, rim holes, tiny shadows `347bf5b`; static pieces drawn merged `6bd6304` |
 | 8 | [Stop rebuilding the stripe texture at load](#52-startup-the-stripe-texture) | Performance | S | 204 ms of a 322 ms `mats()` is one per-pixel JavaScript loop | Done `6c5ed75` |
 | 9 | [Temperature and the two balances](#23-temperature) | Physics | M | The manual gives the test temperatures and the compensation figure; the split-rim variant could visibly curl | Done: Table IV's line, the balances' curvature, the split rim's curl, the Navy test's figures (`claude/physics`) |
 | 10 | [30-day performance test](#34-the-30-day-performance-test) | Features | M | The manual prints the test card and the Bureau of Ships tolerances. A satisfying way to see the physics add up | Done: run live on the model beside the card of No. 3390 (`claude/physics`) |
@@ -110,7 +110,7 @@ The fifteen ideas with the best return, roughly in order. Status as of 29 Septem
 | 12 | [Reduced motion, keyboard orbit](#61-accessibility) | Interface | S | No `prefers-reduced-motion`; the camera can't be turned from the keyboard | Done `c2af700` |
 | 13 | [Shareable links](#62-shareable-links-and-remembered-state) | Interface | S | Put view, time, speed and picked part in the URL hash | Done: hash `cf07772`; remembered settings `8a84df5` |
 | 14 | [A real fusee comparison](#22-the-fusee-earns-its-keep) | Physics | M | The fusee inset is constant by construction. Show what a going barrel would do | Done (`claude/physics`) |
-| 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) |  |
+| 15 | [Oiling and overhaul walkthrough](#35-overhaul-walkthrough-and-oiling-chart) | Features | L | Sec. VIII gives the operation order and an oiling chart (red oil and argon oil) | Open |
 
 ---
 
@@ -171,14 +171,14 @@ roller shake 0.055 mm, horn clearance 0.25 mm.
 These close gaps the model README already lists, or add parts the manual
 describes that aren't modelled yet.
 
-**Status (1 October 2026).** Closed: 1.1, 1.3, 1.4, 1.5 (what's left in them is
-noted there and left on purpose). 1.8's tooth counts are in the model, counted
-on a restoration video; the centre pinion is inferred. Open: 1.11, the third
-arbor's place and the wheels' sizes, which the same videos show differ from the
-model's (the fourth's place with it: 1.12's follow-ups). Done 2 October 2026:
-1.12, the photographed group (balance, fusee, barrel, pillars) placed where the
-real movements measure it, which closed 1.2; 1.7, the screws and washers in the
-rate panel. Open, small: 1.9 and 1.10.
+**Status (4 October 2026).** Every item is closed or done: 1.1, 1.3, 1.4, 1.5
+and 1.11 closed (what's left in them is noted there and left on purpose); 1.2
+closed with 1.12; 1.7, 1.8, 1.9 and 1.10 done, the centre pinion counted
+(likely 14) and the indicator pinion inferred (12). What's left is 1.12's
+follow-ups (the fourth arbor's place, the pillars' radii, the train bridge's
+small holes, the escape upper bridge's seats, the parts still at the
+photograph's size) and the confirmations noted under 1.8 and 1.9 (the
+indicator pinion, the escape pinion end-on, the mainspring's length).
 
 ### 1.1 Re-fit the plan positions with the new heights (M) — closed
 *Done: the tools read the model's heights; re-fitted over eight seeds, every axis stays within the fit's spread of `L` (balance 0.16–1.43 mm, mean about 0.1), so `L` stays. See the model README, step 6.* The escape wheel's 9.40 mm centre distance is solved from roller shake, so it stays fixed whatever a re-fit says.
@@ -242,7 +242,7 @@ One train-bridge screw, at (−8.5, 27.7), has no pillar under it ([movement.js]
   **How to resolve:** count the cannon pinion, minute wheel and pinion and hour wheel at C Spinner 40:15–40:30 (dial side) or BunnSpecial Part 2 at 5:10, with `video.py count`; the ratio must stay 12. Then set `MW` in movement.js (`MOD`-like sizes for the motion work follow from the posts' centre distances).
 - The escape pinion (10) follows from the fourth wheel's 75; *read side-on at C Spinner 43:20.9: 10, likely (12 would put the leaves elsewhere)*; **to confirm end-on**, count it at BunnSpecial Part 2, 17:20–17:28, where the escape wheel lies in the palm.
 
-### 1.9 Chain and mainspring detail (M) — open (small)
+### 1.9 Chain and mainspring detail (M) — done (the spring's length read, not measured)
 - **Chain:** *Done:* outer links (two figure-eight plates and their rivets) and inner links (one plate), on edge in a helical groove (Fig. 38); its hook stays in a hole in the barrel's wall over the whole wind (`3655b52`). *Done (2 October 2026, `claude/fidelity-plan`):* the hook is labelled ("Chain hook") whenever the barrel turns it into view, and the "Stored energy" step says where the chain's end goes. *Was:* make the barrel-end hook visible in the "Stored energy" step. **How to resolve:** in that step, turn the barrel so the hook faces the camera (or fade the barrel's wall near it, as the plates go see-through when winding), and point a label at it; C Spinner 15:16–16:24 shows the hole and hook for reference.
 - **Mainspring:** *Done:* drawn 0.0165 in thick, in two packs (arbor and wall) joined by a free turn, with the counts from the barrel and arbor radii (`mainspringGeo`). *Estimated:* its length (600 mm, the half-room rule): the parts list gives its thickness only, no length or width. A measured spring would settle the length and the set-up (0.30 turn in the model). *Read (2 October 2026, C Spinner 15:54 and 32:30; `References/VIDEOS.md`): about 1.1 m (0.9–1.25), in a barrel about r 18 that the same frames suggest (`Review-results.md`, Elsewhere 23); it waits on the barrel's size.* *Now 1,064 mm in the r 17.6 barrel (2 October 2026).* **How to resolve:** C Spinner 16:28–17:04 and 32:20–32:52 show the spring out of the barrel and wound back; count its turns and their radii on a sharp frame (the barrel's inside diameter as the scale) and integrate the spiral's length; or find a Model 21 mainspring listing with its length.
 
@@ -284,7 +284,7 @@ timing weights' moment of inertia. That is right for most of what the page
 shows. These ideas add the dynamics where they teach something.
 
 ### 2.1 A balance that can stop and must be started
-*Partly done: the amplitude is state (`H.amp` in `app.js`), not an integrated oscillator. It runs down freely when the train is held, against the balance locking arm at once, and builds up after Twist to start; the escapement needs `ESC.AMIN` (41.1°, worked out by `makeEsc`) to keep going, so the train stops below it and at run down. The running amplitude it comes to (`ESC.A`) is worked out by `makeEsc` from the work the impulse gives and unlocking takes, against losses fitted to the 25 s run-down, so the Adjuster's bench changes it (3.3). Still to do: the equation of motion below, with the impulse's torque, and the rate against amplitude that would follow.*
+*First step (before `claude/physics`): the amplitude is state (`H.amp` in `app.js`), not an integrated oscillator. It runs down freely when the train is held, against the balance locking arm at once, and builds up after Twist to start; the escapement needs `ESC.AMIN` (41.1°, worked out by `makeEsc`) to keep going, so the train stops below it and at run down. The running amplitude it comes to (`ESC.A`) is worked out by `makeEsc` from the work the impulse gives and unlocking takes, against losses fitted to the 25 s run-down, so the Adjuster's bench changes it (3.3). The equation of motion and the rate against amplitude followed (next paragraph).*
 
 *Done (`claude/physics`): the equation of motion averaged over a swing, not integrated step by step. In ½A² a swing gains the impulse's work less unlocking's and loses πA²/Q, so A² relaxes to `ESC.ampAt(s)²` exactly as exp(−2t/TF) for a steady torque s: stable at 3600× as at 1×, which the 1 ms substeps below would not be, and it keeps the phase on the model's clock, so the hands, the tick and every tool that sets `tSim` are unchanged. The torque comes from the drive (the fusee, the sustaining spring while winding, none at run down). The rate against amplitude is Airy's sum over the impulse and unlocking at that amplitude (`ESC.rateAt`). What the full integration would add, the balance's angle following the impulse's torque within a swing, is a fraction of a degree and not visible.*
 
@@ -379,7 +379,7 @@ The amplitude then emerges from the model instead of being fixed.
 ### 2.8 Maintaining power under load (S)
 While the key turns, only the sustaining spring drives the train, "enough to run the chronometer 5 to 10 minutes" (`INFO.spawl`). With [2.1](#21-a-balance-that-can-stop-and-must-be-started), the amplitude can dip slightly while winding and recover afterwards. The key-winding sequence already knows when winding starts and stops.
 
-*Partly done (3 October 2026, `claude/maintaining-load`): while winding the model shows the sustaining spring carrying the load: the load path in colour, a close-up of the maintaining work with the spring's drive left, an option to draw its relaxing 20 times as far, and the essay's maintaining-power figure (model README, Controls; The Essay tab). Open: the amplitude dipping while the sustaining spring drives.* *Done (`claude/physics`): while the key turns the sustaining spring drives at 0.8 of the mainspring's torque loaded (estimated), less as it relaxes, so the swing heads for 227° and comes back when the key lets go; Swing and isochronism's last-minute chart shows it, and the rate book the small loss.*
+*First step (3 October 2026, `claude/maintaining-load`): while winding the model shows the sustaining spring carrying the load: the load path in colour, a close-up of the maintaining work with the spring's drive left, an option to draw its relaxing 20 times as far, and the essay's maintaining-power figure (model README, Controls; The Essay tab). The amplitude dipping followed.* *Done (`claude/physics`): while the key turns the sustaining spring drives at 0.8 of the mainspring's torque loaded (estimated), less as it relaxes, so the swing heads for 227° and comes back when the key lets go; Swing and isochronism's last-minute chart shows it, and the rate book the small loss.*
 
 ---
 
@@ -526,7 +526,7 @@ Click two points to show the distance between them in millimetres and in inches 
 ### 3.10 Hands-on controls (M)
 - **Key:** drag in a circle to wind, half a turn at a time. It stops hard at the winding stop, with the stop-bar animation that already exists.
 - **Balance:** with the movement out and stopped, drag the rim to twist it and let go. With [2.1](#21-a-balance-that-can-stop-and-must-be-started), it swings down, or picks up and runs if the escapement engages.
-- **Lids and latch:** click the lids to open and close them. Click the gimbal latch to lock the gimbals ([2.5](#25-gimbals-with-inertia-m)).
+- **Lids and latch:** click the lids to open and close them. Click the gimbal latch to lock the gimbals ([2.5](#25-gimbals-with-inertia-m)); the latching itself is done (Gimbals latched, under Display, `c04e4d9`), the click on the part is not.
 
 ### 3.11 Sound from the escapement's own events (S–M)
 **What.** Today, the tick is filtered noise played once per half-second step, at speeds up to 1× ([app.js:318](marine-chronometer-source/chronometer-working-model/js/app.js#L318)). `ESC` knows the individual events:
@@ -617,7 +617,7 @@ Frame time on phones is dominated by draw calls and shadow rendering, not by
 the JavaScript `update()`.
 
 ### 5.1 Draw calls: merge and instance
-> **Done.** Knurled nuts and the balance rim's holes are merged (`mergeGeo` in `core.js`): 592 meshes down to 389. Rather than a fixed 1.5 mm, a mesh casts a shadow when its radius spans 6 texels of the shadow map, which follows the view (the escapement close-up's texel is 0.06 mm, so its small parts keep their shadows). Draw calls per frame, main and shadow passes: box view 1,239 to 652, dial 1,214 to 706, movement 830 to 612, escapement 571 to 451. Merging static parts and sharing geometries are still open. `347bf5b`
+> **Done.** Knurled nuts and the balance rim's holes are merged (`mergeGeo` in `core.js`): 592 meshes down to 389. Static pieces are drawn merged since `6bd6304` (below). Rather than a fixed 1.5 mm, a mesh casts a shadow when its radius spans 6 texels of the shadow map, which follows the view (the escapement close-up's texel is 0.06 mm, so its small parts keep their shadows). Draw calls per frame, main and shadow passes: box view 1,239 to 652, dial 1,214 to 706, movement 830 to 612, escapement 571 to 451. Sharing geometries is still open. `347bf5b`
 
 > **Next: fewer triangles** (measured, not started). The whole model is about 720k triangles (1.35M a frame with Edges, 2M with Shadows too), with no level of detail. Three parts carry 64 % of them. This matters most for weak GPUs and the software renderer, where the triangles are the cost, and for the shadow pass, which draws every caster again. Each changes geometry, so `fine.py` (the chain on the fusee cone is an expected contact), `solids.py` and `exploded.py` must be re-run and `EXPECTED` may need its sizes retuned; do it on its own branch.
 > - **Fusee lathe, 148k:** its profile is sampled every 0.03 mm (343 points) × 216 segments (`makeFusee` in `movement.js`). Sample the groove's flanks more coarsely or adaptively.
@@ -627,7 +627,7 @@ the JavaScript `update()`.
 
 - **Knurling (S):** `knurl()` in [box.js:26](marine-chronometer-source/chronometer-working-model/js/box.js#L26) builds 30 separate box meshes, plus the body, for each knurled nut: 124 meshes for the four on the gimbal ring, 31 more on the latch. Build each nut as one merged geometry (knurled lathe profile or merged boxes). That removes about 150 draw calls, twice over with shadows.
 - **Balance rim holes (S):** 60 separate meshes. Merge them into one geometry in the balance's frame; it rotates with the staff anyway.
-- **Merge static parts (M):** *Done (3 October 2026): `drawMerge` in `core.js`, a merged copy for drawing only, the pieces kept for the tools and picking; the Movement view's draw calls 859 to 509 (PERFORMANCE.md, "Static pieces drawn merged"). Open: merging across a whole part, and a batch with a piece hidden.* At load, merge every static mesh of a part that shares a material into one geometry. Pillar plate, bridges, pillars and cock are all static relative to their part group. Keep `userData.part` on the merged mesh; picking, colouring, fading and sections all work per part already. Copy `BufferGeometryUtils.mergeBufferGeometries` from three r128's examples into `vendor/` (MIT), or write a 30-line merge. Expect the movement's 285 meshes to drop to well under 100.
+- **Merge static parts (M):** *Done (3 October 2026, `6bd6304`): `drawMerge` in `core.js`, a merged copy for drawing only, the pieces kept for the tools and picking; the Movement view's draw calls 859 to 509 (PERFORMANCE.md, "Static pieces drawn merged"). Open: merging across a whole part, and a batch with a piece hidden.* At load, merge every static mesh of a part that shares a material into one geometry. Pillar plate, bridges, pillars and cock are all static relative to their part group. Keep `userData.part` on the merged mesh; picking, colouring, fading and sections all work per part already. Copy `BufferGeometryUtils.mergeBufferGeometries` from three r128's examples into `vendor/` (MIT), or write a 30-line merge. Expect the movement's 285 meshes to drop to well under 100.
 - **Share geometries (S):** 545 meshes, 545 geometries. Identical screws, pins and jewel settings could share one `LatheGeometry` each; cache by parameters in `screw()` and `jewel()`. That saves memory and upload time rather than draw calls.
 - **Tiny shadows (S):** 308 meshes are under 1.5 mm in radius, and 541 meshes cast shadows. Set `castShadow=false` on anything under about 1.5 mm. From 2048 px over 340 mm, a shadow texel is about 0.17 mm, so their shadows are a few texels at most.
 
@@ -782,7 +782,7 @@ A GitHub Actions workflow on every push, in increasing cost:
 5. **Nightly or manual:** `dyn.py` and `audit.py`, which are slower. Compare their output with a committed expected-leftovers file, so a new collision or loose screw fails rather than scrolling past.
 
 ### 8.2 Invariant tests (S)
-> **Done.** `tools/invariants.py` checks the hands, the escape wheel, the wind indicator's 60° and 300° ends, the fusee's 60 h, 17½ half turns and 7 half turns a day, the balance's 930 g·mm² (931 before the hub was drawn as Fig. 4 has it), and 40 s / 2.8 s a day for a turn of the weights. A planted 76-tooth third wheel fails eight checks. The pawls are left to `maintaining.py`, which already checks them. `7f3668e`
+> **Done.** `tools/invariants.py` checks the hands, the escape wheel, the wind indicator's 60° and 300° ends, the fusee's 60 h, 17½ half turns and 7 half turns a day, the balance's moment of inertia (930 g·mm² then; 1,140 g·mm², Table II's, since 1.7), and 40 s / 2.8 s a day for a turn of the weights. A planted 76-tooth third wheel fails eight checks. The pawls are left to `maintaining.py`, which already checks them. `7f3668e`
 
 Small browser or Node checks on the model's arithmetic:
 - **Hands:** at `tSim = t`, the hour, minute and second hands point where a clock reading `t` would: centre wheel 1 turn/h, fourth 1 turn/min, escape 16 teeth per 8 s.
@@ -855,18 +855,18 @@ A suggested order, so that each stage makes the next easier.
 - Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2). *Done: `c2af700`, `cf07772` (with fixes in `650c005`), a view-following canvas description `dd2c6df` and remembered settings `8a84df5`; a contrast check is open.*
 - GMT by default (3.1, first half). *Done: `23e9c58`.*
 
-**Stage 2: the chronometer as an instrument (3–5 weeks)**
-- Dynamic balance, not self-starting, twist to start (2.1). Manual setting methods (3.1, second half). Hand-setting square and balance locking arm (1.5). *Done but the equation of motion (2.1) and the shipping wedges (1.5): setting `dc06fae`, `21ea739`.*
+**Stage 2: the chronometer as an instrument (3–5 weeks)**. *Done.*
+- Dynamic balance, not self-starting, twist to start (2.1). Manual setting methods (3.1, second half). Hand-setting square and balance locking arm (1.5). *Done: setting `dc06fae`, `21ea739`; the equation of motion, averaged over a swing, with `claude/physics` (`b1293e9`); the shipping wedges set aside (1.5).*
 - Rate book and longitude error (3.2). *Done: `70baefe`.*
 - Adjuster's bench (3.3). *Done: `630aa0f`.*
 - Provenance overlay (3.6). *Done: `d42027c`, `ce76d8a`.*
 
-**Stage 3: depth (open-ended)**
-- Temperature and the two balances (2.3), isochronism (2.4), then the 30-day test (3.4).
-- The fusee comparison (2.2). Gimbals with inertia (2.5).
-- Overhaul walkthrough and oiling chart (3.5).
-- Fidelity: re-fit (1.1), outlines (1.3), cycloidal teeth (1.8), chain links (1.9).
-- Rendering: jewels and crystal (4.1), baked AO (4.2). Then decide on the three.js upgrade (4.3).
+**Stage 3: depth (open-ended)**. *Mostly done (4 October 2026); open: 3.5 and the rendering.*
+- Temperature and the two balances (2.3), isochronism (2.4), then the 30-day test (3.4). *Done (`b1293e9`).*
+- The fusee comparison (2.2). Gimbals with inertia (2.5). *Done (`b1293e9`).*
+- Overhaul walkthrough and oiling chart (3.5). *Open.*
+- Fidelity: re-fit (1.1), outlines (1.3), cycloidal teeth (1.8), chain links (1.9). *Done; 1.12's follow-ups open.*
+- Rendering: jewels and crystal (4.1), baked AO (4.2). Then decide on the three.js upgrade (4.3). *Open.*
 
 ---
 
