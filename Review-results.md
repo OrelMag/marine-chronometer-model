@@ -2095,6 +2095,12 @@ top, the fusee arbor, the take-off slot and the flange's holes).
 5. **Estimated, to measure if a frame allows:** the take-off slot's depth (1.0,
    its floor brass at 9:03), the collar's radius (r 3.0 face-on at 13:30, ±0.3:
    the dark ring round it may be the hole's gap).
+7. **The escape arbor's pinion and its distance from the wheel** (new, 4 October 2026, open). In the staking tool at 43:21.1 (4K, the arbor upright against a
+   plain ground, seen from about 20° above) the pinion's leaves run about 227 px, 3.5 mm at its own tips' 64 px/mm, where the model's pinion is 2.0 long, and
+   its end stands about 387 px (6.0 mm) above the wheel's brass hub, itself about 1.6 mm tall: about 7.6 mm from the pinion to the wheel's web, where the
+   model has 10.45 (the pinion at the fourth wheel's height, -7.46, the wheel at `EY`). The view foreshortens heights by about 6 % only. If it holds, the
+   pinion is longer and the fourth wheel or the escape wheel sits otherwise than the heights measured at 42:50-42:56 put them; check those frames and a
+   side-on view of the arbor alone before changing the train's heights. (The shank's width from the same frame is drawn: r 0.67, Every part, Jewels.)
 6. *Fixed (4 October 2026): dark tempered steel (`M.steelK`), as the frame reads it, (27, 31, 35) in shade and (154, 166, 174) where it takes the light.* **Cosmetic:** the sustaining spring's blue is brighter than the video's
    nearly black steel (27:30).
 

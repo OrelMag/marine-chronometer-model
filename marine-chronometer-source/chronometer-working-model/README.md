@@ -228,7 +228,9 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   Its **drawing**: the solids' creases over 30° projected to a plan (from the dial side, 12 o'clock up) and an elevation, in millimetres, with the overall
   sizes and every hole marked and numbered as the sheet's table lists them (centres and diameters there), printed at a standard scale its title states
   (20:1 to 1:4, the largest that fits A4's column and page), its lines and text sized for paper. A line no relation measures shows what other parts it
-  takes (the other side of their fits), or says it isn't measured. `tools/book.py` checks the book as printed. Its **STL**: its triangles in the movement's frame, mm.
+  takes (the other side of their fits), or says it isn't measured. `tools/book.py` checks the book as printed. The screws on a card are listed
+  with their heads, threads and lengths as drawn and, since Hamilton's threads are in none of the sources, the ISO 261 coarse metric thread nearest each (M1 × 0.25
+  and so on) for a maker to cut. Its **STL**: its triangles in the movement's frame, mm.
 - **Making it** (the panel): **Measure** (two points on the model, their distance and its components), **Oil** (each part coloured by the oil or grease it takes, after Ops. 18–71: red oil the jewelled pivots, argon oil the bushed ones, grease the mainspring and maintaining work), **Build book** (every card's sheet and drawing,
   printed alone: `#bookPrint`, `html.book-print`), **Data** (the train, `MOD`, `L`, the fusee's profile, the escapement's settings, figures and cycle,
   the hairspring's design and centreline, the balance's moment and pitches, the parts list), **STL** (every part shown).
@@ -245,7 +247,7 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   loses 10.3 s a day a °C; the Model 21's Elinvar spring must be treated to -22 to 10 × 10⁻⁶ a °C to cancel its balance; the split variant's rim gives back
   7.0 s a day a °C.
 - **Still estimated** (README "Estimated"): pivot and jewel-hole diameters (the balance staff's lower end, the escape jewel's hole and the third's and fourth's lower jewels now measured) and the screws' threads (the videos don't resolve them; the model's are its own,
-  each fit's clearance on the sheets), the train's efficiencies (0.85–0.95 a stage), the trip spring's section, the materials where the manual names none.
+  each fit's clearance on the sheets, with the ISO thread to cut beside each), the train's efficiencies (0.85–0.95 a stage), the trip spring's section, the materials where the manual names none.
 
 ## The almanac
 
@@ -833,7 +835,8 @@ every speed); the equation gives the amplitude and the rate.
   drawn 0.19 (the measurement's top, 0.006 side shake), the lower jewel taken the same. The patent's Fig. 4 and claim 2 give the arbor's end form: the body,
   a reduced neck, then the pivot end, as 10:12.2 shows.
   Estimated: the escape arbor's shoulders, drawn as steps: 10:12.2 shows a neck and a conical end before the lower pivot, but the arbor's shadow on the plate
-  spoils a trace (the shank reads 58 px wide traced, about 38 by eye).
+  spoils a trace (the shank reads 58 px wide traced, about 38 by eye). The arbor's body is r 0.67, measured beside the pinion in the staking tool (43:21.1:
+  0.456-0.478 of the pinion's tip radius); the escape wheel's brass hub on it is not drawn (its web is bored to the arbor).
   The lower train bridge's two jewels are measured: held to the light in the bridge (KLUwI2UUCMQ 15:00-15:06), the stones r 213-220 px against the bar's
   1,990 across (its 10.3 mm, measured at 40:08 and 14:40): r 1.13 (1.23 by the arbors' 11.30 apart; they were r 0.62). The third's hole 0.286 of its stone (0.284
   and 0.288 on two frames), r 0.32; the fourth's 0.32 (its bore seen at a slant), r 0.36; +/- 0.03 with the scale. The pivots 0.01 under them; the fourth's

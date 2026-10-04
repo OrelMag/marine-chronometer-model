@@ -88,7 +88,7 @@ function escapeWheel(parent,M,rt,y,E){
   const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
   const web=new THREE.Shape(),R1=R-0.5,R0=1.5,sw=0.5;web.absarc(0,0,R,0,TAU,false);
   for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
-  const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);
+  const hb=new THREE.Path();hb.absarc(0,0,0.67,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's body (r 0.67, movement.js); the brass hub it sits on (KLUwI2UUCMQ 43:21.1) is not drawn */
   const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
   const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
   return teeth;

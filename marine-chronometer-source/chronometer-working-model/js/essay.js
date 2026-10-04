@@ -329,7 +329,7 @@ const ESSAY=(()=>{
     const cw=arbor(S0,M,...C0,{wheel:{n:T.cw,m:MOD.centre,y:1.8,th:1,spokes:5},ar:[-3,9],r:0.75});ptr(cw,9);   /* stacked as Figs. 13, 29 and 110: the third wheel lowest, its pinion above it meshing the centre wheel; the fourth pinion under its wheel, meshing the third wheel */
     const tw=arbor(S0,M,...Tp,{wheel:{n:T.tw,m:MOD.train,y:0,th:0.9,spokes:5,cside:-1},pin:{n:T.tp,m:MOD.centre,y:1.8,th:2.6},ar:[-3,9]});ptr(tw,5);
     const fw=arbor(S0,M,...Fp,{wheel:{n:T.fw,m:MOD.fourth,y:3.6,th:0.9,spokes:5,cside:1},pin:{n:T.fp,m:MOD.train,y:1.475,th:3.25},ar:[-3,9]});ptr(fw,6);
-    const ew=arbor(S0,M,...Ep,{pin:{n:T.ep,m:MOD.fourth,y:3.6,th:2},ar:[-3,9]});escapeWheel(ew,M,ES,5.4,ESC);ptr(ew,4);
+    const ew=arbor(S0,M,...Ep,{pin:{n:T.ep,m:MOD.fourth,y:3.6,th:2},ar:[-3,9],r:0.67});escapeWheel(ew,M,ES,5.4,ESC);ptr(ew,4);
     const eT=T.ew/2;   /* the escape wheel turns once in ew half seconds */
     V.label('Centre wheel',`${T.cw} teeth, 1 turn / ${turnT(ESC_PER.cw*eT)}`,v=>v.set(C0[0]-10,2.3,C0[1]+7));V.label('Third wheel',`${T.tw} teeth, 1 turn / ${turnT(ESC_PER.tw*eT)}`,v=>v.set(Tp[0]+1,0.5,Tp[1]+9));
     V.label('Fourth wheel',`${T.fw} teeth, 1 turn / ${turnT(ESC_PER.fw*eT)}`,v=>v.set(Fp[0]+2,4.1,Fp[1]-9));V.label('Escape wheel',`${T.ew} teeth, 1 turn / ${turnT(eT)}`,v=>v.set(Ep[0]+3,6,Ep[1]+4));

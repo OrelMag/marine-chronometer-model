@@ -47,11 +47,20 @@ const MAKER=(()=>{
       kind=dT&&dB?(Math.abs(dT-dB)<0.02?'through':dT>dB?'counterbored or countersunk from the top':'counterbored or countersunk from below'):dT?'blind, from the top':'blind, from below';
       return`<tr><td>h${h.n}</td><td class="n">${mm(h.x)}</td><td class="n">${mm(h.z)}</td><td class="n">${dT?mm(dT):'—'}</td><td class="n">${dB?mm(dB):'—'}</td><td>${kind}</td></tr>`;}).join('')}</tbody></table>
       <p class="mkm">Holes square to the arbors, read off the solids (as tools/holes.py does): centres from the movement's centre (the centre arbor), x toward 3 o'clock, z toward 6; the top is the dial side.</p>`:'';
+  /* the screws on a card: head, thread and length as the model draws them, grouped by parts-list line, with the ISO 261 coarse metric thread nearest the drawn
+     thread for a maker to cut (Hamilton's own threads are in none of the sources: the manual gives none, the videos don't resolve them) */
+  const ISO=[[0.8,0.2],[1,0.25],[1.2,0.25],[1.4,0.3],[1.6,0.35],[1.8,0.35],[2,0.4],[2.5,0.45],[3,0.5],[3.5,0.6],[4,0.7],[5,0.8],[6,1]];
+  function screwRows(p){const seen=new Map();for(const o of meshesOf(p)){const g=o.parent;if(!g||!g.userData.sc||!g.userData.sc.len)continue;const c=g.userData.sc,id=g.userData.hn||'—',k=id+'|'+c.rs.toFixed(3)+'|'+c.len.toFixed(2);
+      if(!seen.has(k))seen.set(k,{id,c,n:new Set()});seen.get(k).n.add(g);}
+    if(!seen.size)return'';const iso=d=>ISO.reduce((b,q)=>Math.abs(q[0]-d)<Math.abs(b[0]-d)?q:b);
+    return`<table class="mk"><thead><tr><th>Screw</th><th class="n">Pieces</th><th class="n">Head Ø</th><th class="n">Thread Ø</th><th class="n">Under the head</th><th>Thread to cut</th></tr></thead><tbody>${[...seen.values()].map(({id,c,n})=>{const d=2*c.rs,[M,P]=iso(d);
+      return`<tr><td>${esc(id)}</td><td class="n">${n.size}</td><td class="n">${mm(2*c.r)}</td><td class="n">${mm(d)}</td><td class="n">${mm(c.len)}</td><td>M${M} × ${P} (ISO 261 coarse; the drawn ${d.toFixed(2)})</td></tr>`;}).join('')}</tbody></table>
+      <p class="mkm">Hamilton's threads are not known (the manual gives none, the videos don't resolve them): the thread to cut is the standard metric one nearest the model's, a maker's choice; tap the part each screws into, clear the parts it passes through, as the fits above say.</p>`;}
   function sheetHTML(p){const q=A.PARTS[p]||{},own=MAKERS.filter(l=>l.part===p),sp=own.length?[]:((q.sp||'').match(/\d{5}/g)||[]),L=own.length?own:MAKERS.filter(l=>sp.includes(l.no)),m=measure(p),s=m.box.getSize(new THREE.Vector3());
     const rows=L.map(l=>`<tr><td>${esc(l.idx)}</td><td>${esc(l.no)}</td><td>${esc(l.name)}</td><td class="n">${esc(l.qty)}</td><td>${esc(l.mat)}<i>${l.cls==='manual'?'the manual':'practice'}</i></td><td>${esc(l.treat)}</td><td>${esc(l.fit)}</td></tr>`).join('');
     return`<table class="mk"><thead><tr><th>Idx</th><th>No.</th><th>Name</th><th class="n">Units</th><th>Material</th><th>Finish, heat treatment</th><th>Fit, as measured on the model</th></tr></thead><tbody>${rows||'<tr><td colspan="7">No line of the parts list is on this card.</td></tr>'}</tbody></table>${!own.length&&L.length?`<p class="mkm">This card is cut on the line above, which the ${esc((A.INFO[L[0].part]||[L[0].part])[0])} card carries.</p>`:''}
       <p class="mkm">As built: ${mm(s.x)} × ${mm(s.y)} × ${mm(s.z)} (along the movement's x, its axis y, z), ${m.vol.toFixed(1)} mm³, about ${m.mass.toFixed(2)} g (${Object.entries(m.by).filter(([,v])=>v>0.01).map(([k,v])=>`${k} ${v.toFixed(1)} mm³`).join(', ')}).
-      Source of its shape: ${q.src?esc(A.SRC[q.src][0]):'—'}${q.sn?': '+esc(q.sn):''}. Sizes the model estimates are listed in its README's "Estimated, not from the manual".</p>${holeRows(holes(p))}`;}
+      Source of its shape: ${q.src?esc(A.SRC[q.src][0]):'—'}${q.sn?': '+esc(q.sn):''}. Sizes the model estimates are listed in its README's "Estimated, not from the manual".</p>${holeRows(holes(p))}${screwRows(p)}`;}
   /* the drawing: the solids' edges (creases over 30°) projected to the plan (x, z, seen from the dial side: 3 o'clock right, 12 up) and an elevation (x, y, the dial side
      up), to scale, with the overall sizes, and the holes (holes()) marked and numbered as the sheet's table lists them */
   function drawingSVG(p,title){const segP=[],segE=[],box=new THREE.Box3();
