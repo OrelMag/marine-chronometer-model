@@ -49,13 +49,50 @@ in `$MC_VIDEO/articles/`):
   Missouri, 25 August 1943) on the work. John Huber holds unfinished Model 21 detent parts and photographs from Van
   Hoesen's estate; the pages behind the login may show them.
 
+Hamilton Watch Company's patents. These are Hamilton's own records of its designs, public on Google Patents; copies are
+kept in `$MC_VIDEO/patents/`. A patent shows a principle and the company's intent, not a production part's sizes: it ranks
+below the manual, the photographs and the videos, and above a generic text. Hamilton held 64 patents with priority dates
+from 1939 to 1947 (Google Patents, assignee "Hamilton Watch"); these bear on the Model 21:
+- US 2,356,911, "Balance Wheel" (W. O. Bennett Jr., filed 19 December 1941, granted 29 August 1944): the Model 21's
+  balance principle. An unbroken stainless-steel rim and an Invar crossbar, brazed or screwed into a step under the rim
+  (Fig. III), so that heat turns the rim into an ellipse; screws in uniformly spaced, diametrically opposed threaded
+  holes all round the rim (Fig. I) set how much mass the ellipse carries, to match a hairspring that grows stronger
+  with heat, as one of Elinvar may.
+- US 2,379,780, "Hairspring Mounting" (Bennett and E. W. Drescher, filed 4 August 1943): clamping the ends of a
+  chronometer's hairspring, which has no regulator, so the point of flexure stays fixed ("a change in length of five
+  one-hundred-thousandths of an inch in the usual chronometer hairspring will cause a change of rate of one-tenth second
+  per day"). Figs. 7-12 draw a split collet and a stud bar holding the spring's end in a U-shaped clamp.
+- US 2,457,631, "Cylindrical Hairspring Form" (Bennett, filed 22 September 1943): forming the helical hairspring on a
+  stack of discs with a helical guide, each end turned in to the staff and to the cock.
+- US 2,391,816, "Hairspring Collet" (Bennett, filed 29 July 1944): a collet counterpoised against the hairspring's
+  out-of-poise effect. US 2,385,252, "Balance Screw" (Bennett, filed 12 April 1943), for poising the balance.
+- US 2,392,745, "Escape and Balance Staff" (A. J. Kleiner, filed 21 January 1943): hardening the pivots of escape and
+  balance staffs, "about 7 thousandths of an inch in diameter" in high-grade timepieces.
+- US 2,433,509, "Chronometer Box Securing Support", and US 2,425,602, "Cantilever Support for Gimbal Carried
+  Instruments" (Drescher, filed 1945): mounting the box and the gimbals on board.
+- CH 273,734, "Uhrwerk, vorzugsweise für Marinechronometer" (filed 19 February 1946, published 16 May 1951; from
+  DEPATISnet): a movement whose seconds can be stepped by whole seconds through a planetary gear between the train and
+  the escapement. Its drawing is a schematic, not the Model 21's layout.
+
 Not yet consulted (found 4 October 2026). These may hold facts about the Model 21 itself:
-- NAWCC Library and Research Center, Hamilton Records Collection, Series V: Chronometers, 1940-1984
-  (https://archive.nawcc.org/repositories/2/archival_objects/11056). The catalogue lists research reports, test data,
-  correspondence, drawings, photographs and instructions on the production, design, assembly and performance of the M21,
-  M22, M23 and 4221, among them "Care and Handling of the Hamilton Marine Chronometer, 1945" (George E. Shubrooks and
-  Ernest W. Drescher; Box 13, Folder 5). The items aren't online; the library's research service has them
-  (https://nawcc.org/index.php/library-research).
+- NAWCC Library and Research Center, Hamilton Records Collection (71 boxes), Series V: Chronometers, 1940-1984
+  (https://archive.nawcc.org/repositories/2/archival_objects/11056). The catalogue's tree is public
+  (`/repositories/2/resources/54/tree/node?node=...`); the items aren't online. Those on the Model 21, with their places:
+  - Drawings: "Chronometer Parts", 1943-1951 (Box 14, Folder 6); "Patents", 1942-1946 (Box 14, Folder 7); "Various Parts
+    and Assembly", 1942-1943 (Box 14, Folder 8); "Assembly of M21, M22, M23 Chronometer Watches", 1942-1957 (Box 14,
+    Folder 10).
+  - Photographs: "Marine Chronometer Parts", not dated (Box 14, Folder 3).
+  - Data and correspondence: "Elinvar Fuse Chains", 1945-1946 (Box 12, Folder 10); "Detailed Bill of Materials,
+    Department of Defense" (Box 12, Folder 11); "Chronometer Assembly Operations", 1944-1960 (Box 12, Folder 12).
+  - Leroy May's papers: "Notes on Hamilton Chronometer", 1941-1950 (Box 13, Folder 10); "Data, Drawings, and
+    Correspondence", 1941-1977 (Box 13, Folder 11).
+  - Publications and procedures: "Care and Handling of the Hamilton Marine Chronometer", 1945 (Shubrooks and Drescher;
+    Box 13, Folder 5); "Hamilton Ship Chronometer Manual", 1948-1950 (Box 13, Folder 14); "Leveling and Reassembly of
+    Ship Chronometer", 1981-1984 (Drescher; Box 13, Folder 17); "The Hamilton Marine Chronometer (Draft #2)", 1977
+    (Box 12, Folder 3).
+  Copies through the library's research service (research@nawcc.org, 717-684-8261; $40 a question for non-members,
+  free for members: https://nawcc.org/index.php/library-research). Membership (about $112 a year in 2025) also opens
+  the whole *Bulletin* archive, with Smith's pages 60-63.
 - Marvin E. Whitney, *The Ship's Chronometer* (American Watchmakers Institute Press; listings give 1984, 1985 and 1991,
   ISBN 0918845084, and Smith's article 1981). Whitney was a chronometer maker at the U.S. Naval Observatory during the war, and the book gives a
   first-hand account of how the Model 21 and 22 were developed.
@@ -63,6 +100,8 @@ Not yet consulted (found 4 October 2026). These may hold facts about the Model 2
   covers the 19th-century English trade, from bare metal to delivery on board.
 - W. J. Gazeley, *Clock and Watch Escapements* (1956), and George Daniels, *The Practical Watch Escapement* (1994): how
   the detent escapement is drawn and made.
+- Rupert T. Gould, *The Marine Chronometer: Its History and Development* (1923), on the Internet Archive
+  (https://archive.org/details/the-marine-chronometer): the English chronometer's construction in general.
 
 Videos consulted (YouTube, all rights reserved: cited, not copied; frames are taken from them with
 `tools/video.py` into a folder outside the repository). Videos of real Model 21s are a source of truth,
