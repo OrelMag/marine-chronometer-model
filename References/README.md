@@ -26,6 +26,34 @@ Web photographs consulted (all rights reserved, so cited, not copied here):
 - delaneyantiqueclocks.com, Hamilton Model 21 No. 8854 (1941): the dial (sub-dial centres about 0.47-0.51 of the dial's radius) and a side view of the movement.
 - Wikimedia Commons, "Hamilton Marine Chronometer Model 21.jpg": the manual's Fig. 13 (1943 edition), public domain.
 
+Books consulted. These are period texts on chronometers in general, not on the Model 21. They serve as a cross-check and
+never as a source for the model's shapes or sizes:
+- *Watch and Clock Escapements* (compiled from *The Keystone*; B. Thorpe, Philadelphia, 1904; public domain, Project Gutenberg
+  eBook 17021, https://www.gutenberg.org/ebooks/17021), Ch. III "The Chronometer Escapement" (pp. 131-152): how to draw and
+  make a spring-detent escapement, with rules for its proportions (15 teeth, an impulse roller half the wheel, the balance
+  planted where the two rims cross over a pitch, the detent spring's sizes, the locking stone's form, the tooth's angles).
+  `chronometer-working-model/tools/keystone.js` measures the model against each rule; the model README's "Against a period
+  text" has the result.
+
+Not yet consulted (found 4 October 2026). These may hold facts about the Model 21 itself:
+- William R. Smith, "The Man Who Saved the Hamilton Model 21 Ship's Chronometer", *NAWCC Bulletin* No. 395
+  (January/February 2012), p. 56, the issue's free sample article:
+  https://docs.nawcc.org/Bulletins/2010/articles/2012/395/395_56_63a.pdf. The server's Cloudflare check refuses scripted
+  downloads, so download it in a browser and keep it outside the repository, like the videos.
+- NAWCC Library and Research Center, Hamilton Records Collection, Series V: Chronometers, 1940-1984
+  (https://archive.nawcc.org/repositories/2/archival_objects/11056). The catalogue lists research reports, test data,
+  correspondence, drawings, photographs and instructions on the production, design, assembly and performance of the M21,
+  M22, M23 and 4221, among them "Care and Handling of the Hamilton Marine Chronometer, 1945" (George E. Shubrooks and
+  Ernest W. Drescher; Box 13, Folder 5). The items aren't online; the library's research service has them
+  (https://nawcc.org/index.php/library-research).
+- Marvin E. Whitney, *The Ship's Chronometer* (American Watchmakers Institute Press; listings give 1984, 1985 and 1991,
+  ISBN 0918845084). Whitney was a chronometer maker at the U.S. Naval Observatory during the war, and the book gives a
+  first-hand account of how the Model 21 and 22 were developed.
+- Jonathan Betts, *Marine Chronometers at Greenwich* (Oxford University Press): its chapter "How the Chronometer was Made"
+  covers the 19th-century English trade, from bare metal to delivery on board.
+- W. J. Gazeley, *Clock and Watch Escapements* (1956), and George Daniels, *The Practical Watch Escapement* (1994): how
+  the detent escapement is drawn and made.
+
 Videos consulted (YouTube, all rights reserved: cited, not copied; frames are taken from them with
 `tools/video.py` into a folder outside the repository). Videos of real Model 21s are a source of truth,
 with the photographs and the manual (IDEAS.md): they outrank an estimate. Times are mm:ss.

@@ -45,6 +45,7 @@ the website (see the root README).
 | `tools/solids.py`, `tools/solids-check.js` | Solid geometry check: every mesh closed (no open edge), consistently wound and not inside out, but the decals and surfaces flagged as such; loaded as it is and with Moving parts only and a section on |
 | `tools/placements.py` | Every mesh's position and bounding box in seven model states (escapement phases, train and wind positions), and a diff between two runs or two copies of the page: proves a change moved only the parts it meant to, and that the mechanism moves as before |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
+| `tools/keystone.js` | Measures the escapement against a period text's rules for the chronometer escapement (*Watch and Clock Escapements*, 1904); reports, never fails (Node.js, no browser) |
 | `tools/invariants.py` | Checks the model's arithmetic: hands against the time, the wind indicator's scale, the fusee's 56¼ h and 17½ half turns, the balance's moment of inertia and the rate for a turn of the weights (exit code 1 on a failure) |
 | `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, variants, sections, time zone, keys, a URL-hash link), then opens the Essay tab, scrolls it and works every control in it (the model not drawn under it, at most two WebGL contexts, a link into the model and Back, `#essay=detent`); fails on any console error or warning (`--model`, `--essay`: one half) |
 | `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
@@ -551,6 +552,19 @@ every speed); the equation gives the amplitude and the rate.
 - A photographed Model 21 dial of the U.S. Maritime Commission contract (the Hamilton dial's layout, inscriptions and hands) and a photographed movement, serial 2E12055 (the plate engraving's text and layout, and the serial used on the plates and dial). Both are in `References/`.
 - Videos of real Model 21s (`References/VIDEOS.md`, which records what each shows and every measurement): a 4K restoration of a 1941 movement, serial 2E8489 (C Spinner Watch Restorations, https://www.youtube.com/watch?v=KLUwI2UUCMQ), for the going train's tooth counts (fusee and centre wheels 90, third 80 with a pinion of 12, fourth 75, the wind indicator wheel 120) and which wheel is which, and for the balance lower bridge's form and heights; BunnSpecial's two-part teardown (https://www.youtube.com/watch?v=Jd2c3x8VKsE, https://www.youtube.com/watch?v=wcYqdgpyggQ) for the bridges and pillars off. Counted with `tools/video.py`. Like the photographs, they are a source of truth.
 - The photographed dial above, again: its UP–DOWN scale's ticks, 8 h apart, sweep 315.7° over 56 h; the model's 313.6° comes from the train.
+- *Watch and Clock Escapements* (compiled from *The Keystone*, 1904; Project Gutenberg eBook 17021), Ch. III "The Chronometer Escapement": a period text on the spring-detent escapement in general, not the Model 21. It is a cross-check only, below; nothing in the model is drawn from it.
+
+### Against a period text
+
+`tools/keystone.js` measures the model's escapement against each rule the 1904 text gives. It reads `ESC` as `escapement.js` builds it, the tooth outline (`ESC.toothPts`), the locking stone and detent pieces (`ESC.pieces`), and the sizes set in `core.js` and `movement.js`. The text describes a generic English chronometer, so where the manual, Hamilton's specification or a photograph gives a figure, that figure stands; the text is never a reason to change one. As of 4 October 2026:
+
+- **Agrees.** The impulse roller is 0.480 of the wheel's diameter (the text: about half). The teeth are 1.30 mm along the arbor (1/20 in, 1.27 mm). The draw is 10° (about 12°). The jewel is flush with the roller (at most 0.002 in proud). The unlocking takes 6.0° of balance (about 5°; the manual's lock is about 6°). The balance beats 14,400 an hour. The impulse covers 41.4° of balance, against the text's 43° of a 48° arc.
+- **The planting.** The text places the balance where the wheel's and roller's rims cross over one pitch (Fig. 139). Applied to the Model 21's own parts (16 teeth, a 13.16 mm wheel, the 0.249 in roller), that puts the balance 9.34 mm from the escape arbor; the model's is 9.40 mm, from the photo fit and Fig. 90. The rims cross over 20.7° of the wheel, 92% of a pitch.
+- **Hamilton's choices.** 16 teeth (the text: 15), a 13.16 mm wheel (0.55 in, 13.97 mm), a 255° swing (about 225°; the manual's 1⅜–1½ turns decide), and a beryllium-copper detent 11.32 mm from the point of flexure to the jewel (the text: as long as the wheel is wide), its spring 0.337 of that (2/7).
+- **Fig. 90 decides.** The teeth's locking face leans 15.5° from the radial (the text: 28°; Saunier 27°, Britten 20°), and the back's curve fits a circle of 3.75 mm (the text: the roller's radius, 3.16 mm). Both are traced from Fig. 90.
+- **The release.** The impulse jewel is 2.1° inside the wheel's tip circle when the wheel is released; the text allows 5°, so that the tooth meets the jewel's flat face. The model's release is set by the manual's lock, let-off, overall and drop, and its tooth lands on the jewel 0.7° after the release.
+- **The detent's turn.** At release the model's detent has turned 0.79° about its point of flexure, the jewel moving 0.16 mm. The text's "locking of about two degrees … counting the center of fluxion" would move a jewel 0.49 mm on its own 0.55 in detent, four times the depth of lock that the manual's figures give here. The passage doesn't say what the two degrees are measured on, so the comparison is left open.
+- **Estimates near the text.** The model's detent spring is two beryllium-copper strips 0.079 mm thick (0.50 and 0.45 mm wide; estimated). The text's steel spring is 0.002 × 0.080 in. Taking E as 128 GPa for beryllium copper and 200 GPa for steel, the model's spring is 29% stiffer than the text's would be at its own length. The locking stone is 0.61 mm across (Figs. 57–59 give no size), under the text's third of a tooth space (0.86 mm); its flat removes 0.37 of the diameter (the text: 4/10).
 
 ## How the layout was measured
 
@@ -957,7 +971,9 @@ for example `node escapement.js rT=0.29`. Record the results in the escapement
 entries under "Estimated, not from the manual". The essay's detent figure and
 the figures in its text (lock, let-off, drop, overall, shake, horn clearance) read
 the model's own `ESC`, so they follow the change. `node escapement.js`
-exits with 1 when a figure is out of tolerance.
+exits with 1 when a figure is out of tolerance. `node keystone.js` (same
+arguments) prints the escapement against the 1904 text's rules; update
+"Against a period text" if a figure there moves.
 
 **Update the link-preview images** after visible changes. From `tools/`, run
 `python social.py` for both, or `python social.py dial` or
