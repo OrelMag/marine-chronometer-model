@@ -2106,14 +2106,27 @@ Open:
    on the video (41:58 has the stud in place from above; sheet round it and
    round the hairspring's removal for a side view of the step), then
    `isolate.py spr` against the frame and Fig. 5. Fairly sure of the order
-   along the bar (two drawings agree); its sizes are not known.
+   along the bar (two drawings agree); its sizes are not known. *Fixed:
+   measured on the video at 6:47.5 and 6:47.75 (`References/VIDEOS.md`, "The
+   hairspring stud's clamp"): the bar now ends 2.2 inside the inner pin, the
+   clamp is a block under its end from there to 1.1 inside, the wedge pin
+   1.7 inside, through the bar's top face, and the spring's upper end is
+   2.65 mm from the staff (`SP_E`, `SP_ST`, `SP_CL` in `movement.js`).*
 7. **The stud's clamp's form.** The model's is a plain block with a pin; Fig. 6
    and the patent (Figs. 9-12) draw the same U-shaped clamp and wedge pin as at
    the collet, the pin a cylinder with a tapered flat (0.005 in over its
-   length). Draw it as the collet's when the place is measured.
+   length). Draw it as the collet's when the place is measured. *Partly:
+   the frames show a block under the bar's end and the pin's end in the bar's
+   top face, as now drawn; the U form inside it doesn't show, so the block
+   stays plain.*
 8. **The arm's height in the rim.** Patent Fig. III sets the crossbar's end in
    a step at the rim's lower edge (the hub's side, the plate side), flush with
    its face; the model's arm lies 1.2 mm above the rim's plate-side edge
    (estimated). The side-on frames (6:50.0) can't tell the arm from the rim's
    far edge; sheet 6:45-6:55 for a frame that shows the arm's end edge-on
    before changing it.
+9. **The stud's steady pins.** On 6:47.5 and 6:47.75 the two pins' holes are
+   empty or flush on the bar's top face; the model has the pins standing 0.8
+   up into the cock (the side view at 6:50.0 was read as a pin standing at
+   each end). Read the side view again, and 41:58 (the cock's holes), before
+   changing them.
