@@ -35,7 +35,7 @@ the website (see the root README).
 | `tools/solve.py` | Reads `L` and `TRAIN` from `movement.js`: solves the escape arbor against `L.E`, gives the modules and wheel tips, checks the arbors clear the wheels in plan (no browser) |
 | `tools/p3map.json`, `tools/cock_outline.json`, `tools/engr.json` | Traced from the top-view photograph: its mapping into the model, the balance cock's outline, the engraving columns |
 | `tools/dyn.py`, `tools/interference-check.js` | Voxel collision check through a full escapement cycle |
-| `tools/views.py` | Before/after renders of every view (frozen, labels hidden), a pixel diff between two runs, and close-ups of chosen parts |
+| `tools/views.py` | Before/after renders of every view (frozen, labels hidden), a pixel diff between two runs (`--md` as a table), and close-ups of chosen parts; `--page` renders another copy of the page, as CI's views workflow does for the commit a push is based on |
 | `tools/isolate.py` | Renders chosen parts alone, everything else hidden, each view beside a reference image (a photograph, a video frame, a figure): the check after any change to a part's geometry |
 | `tools/maintaining.py` | The maintaining work over run and wind cycles: the sustaining ratchet never turns back, the sustaining spring is loaded in running and only relaxes while winding, the fusee catches forward when the key lets go, the pawls sit on their teeth, and the stop-bar meets the winding stop at full wind |
 | `tools/fine.py`, `tools/fine-interference.js`, `tools/barrel-clearance.js` | Fine (0.05 mm) collision check through the escapement cycle, round the train and over the wind, against a table of expected contacts; the barrel's margins and the mainspring |
