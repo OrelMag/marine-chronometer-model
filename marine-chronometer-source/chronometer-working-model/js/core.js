@@ -404,7 +404,8 @@ function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.f
    BS 978 Part 2's proportions (the manual gives no profiles: estimated): a wheel's tooth 1.41 m thick at the pitch circle, radial flanks inside it, an epicycloidal
    addendum rolled by a circle half its pinion's pitch radius (o.mate leaves, default 10), capped at 1.15 m; a pinion's leaf (20 or fewer) 1.05 m thick, radial
    flanks and a round tip (addendum 0.525 m); both 1.3 m deep below the pitch circle, clear of the other's addendum. o.ratchet: a ratchet's saw teeth.
-   userData: ro (tip radius), ri (root), hub (the spokes' hub radius) */
+   userData: ro (tip radius), ri (root), hub (the spokes' hub radius). o.prop [hub, rim, spoke]: a spoked wheel's hub radius, its rim's inner radius and its spokes' width,
+   as fractions of its tip radius (measured on a wheel lying flat: WHEEL_PROP, movement.js), in place of the default proportions */
 function gearGeo(n,m,th,o={}){
   const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95,ri=rp-1.3*m;let ro;
   const root=(a0,a1)=>{for(let k=1;k<3;k++)pts.push([ri,a0+(a1-a0)*k/3]);};   /* the root between two teeth, rounded */
@@ -420,8 +421,8 @@ function gearGeo(n,m,th,o={}){
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b]);for(const[r,a]of ep)pts.push([r,c-b+a]);for(let k=ep.length-1;k>=0;k--){const[r,a]=ep[k];if(a<b-1e-9||k<ep.length-1)pts.push([r,c+b-a]);}pts.push([ri,c+b]);root(c+b,c+p-b);}}
   let xy=pts.map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);if(o.flip)xy=xy.map(([x,y])=>[x,-y]).reverse();
   const s=new THREE.Shape();s.moveTo(...xy[0]);for(let i=1;i<xy.length;i++)s.lineTo(...xy[i]);s.closePath();
-  const R0=o.hub??Math.max(1.6,roS*0.18);
-  if(o.spokes){const R1=ri-(o.rim??Math.max(0.9,roS*0.09)),sw=o.sw??Math.max(0.9,roS*0.08);
+  const P=o.prop,R0=o.hub??(P?P[0]*roS:Math.max(1.6,roS*0.18));
+  if(o.spokes){const R1=P?P[1]*roS:ri-(o.rim??Math.max(0.9,roS*0.09)),sw=P?P[2]*roS:o.sw??Math.max(0.9,roS*0.08);
     if(R1>R0+1)for(let j=0;j<o.spokes;j++){const a0=j/o.spokes*TAU,a1=(j+1)/o.spokes*TAU,d1=Math.asin(Math.min(0.9,sw/2/R1)),d0=Math.asin(Math.min(0.9,sw/2/R0));
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
@@ -438,7 +439,7 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
   else{pr.push(V2(rb+0.18,y1),V2(rb,y1-0.14),V2(rb,y0));}
   return new THREE.LatheGeometry(pr,32);}
 /* arbor with wheel & pinion: returns rotating group */
-/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number}} WheelOpts
+/** @typedef {{n:number,m:number,y:number,th?:number,spokes?:number,flip?:boolean,bore?:number,hub?:number,mate?:number,mat?:any,collet?:number,cp?:number,cside?:number,prop?:number[]}} WheelOpts
     n teeth of module m, centred at y, th thick (1); mate: the pinion it drives (its addenda); collet: its radius, 0 for none; cp, cside: below */
 /** @typedef {{n?:number,m:number,y:number,th?:number,bore?:number}} PinionOpts  n leaves (10), th long (2.5), centred at y */
 /** @param {any} parent @param {any} M the materials @param {number} x @param {number} z
@@ -446,7 +447,7 @@ function stoneGeo(ro,rb,h,kind){const V2=(a,b)=>new THREE.Vector2(a,b),y0=-h/2,y
 function arbor(parent,M,x,z,o){
   const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
   let wy=null,cy=null;   /* the wheel's and the collet's y ranges, and the collet's radius, for the check below */
-  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
+  if(o.wheel){const w=o.wheel,th=w.th||1;g.userData.wheel=mesh(g,gearGeo(w.n,w.m,th,{spokes:w.spokes??4,flip:w.flip,bore:w.bore,hub:w.hub,mate:w.mate,prop:w.prop}),w.mat||M.gilt,0,w.y,0);g.userData.nw=w.n;g.userData.wheel.userData.gear={z:w.n,m:w.m};
     const gu=g.userData.wheel.geometry.userData;wy=[w.y-th/2,w.y+th/2,w.spokes===0?gu.ro:gu.hub];
     /* cside ±1: collet on that side of the wheel only, cp proud of it there (0.6) and 0.05 proud of the other face, not flush with it */
     if(w.collet!==0){const cp=w.cp??0.6,h=w.cside?th+0.05+cp:th+1.2,c=w.y+(w.cside||0)*(cp-0.05)/2;mesh(g,cylY(w.collet||1.6,h,20),M.brass2,0,c,0);cy=[c-h/2,c+h/2,w.collet||1.6];}}
@@ -469,12 +470,29 @@ function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into,lead=0){   /* rc, rs: ra
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
   return reclose(into,new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
 }
-function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y from its arbor (handGeo extrudes it; the essay draws it flat). tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off) */
+/* the Hamilton dial's hands as measured: [distance from the arbor, full width] in mm, from the tail's end (or the boss) to the tip, traced on References/photo-dial-hamilton-maritime-commission.jpg
+   (face-on, 0.1674 mm/px: References/VIDEOS.md, "The Hamilton dial's proportions") by sections across each blade every 0.5 mm, the edges at half the contrast against the silver, those crossing
+   print left out; the arbors at the bosses' fitted circles: the hands' (426.3, 428.9) px, r 3.34 mm; the wind hand's (427.0, 286.9), r 1.86, to 0.2 px; the seconds' at the dial's sub-dial centre.
+   hour: the stem 1.3 at the boss swelling to 1.98 at 11.5 and narrowing to 0.9 at 21.3; the bulb's back a circle r 1.93 about 23.6 (the sections follow it to 0.07), widest 3.85 there (0.67 of the
+   hand), its front drawn in to a needle 0.3 wide from 32 to the tip at 35.2 (±0.2). min: 1.0 at the boss widening to 1.9 at 29 (0.69; ±0.15, between the print's lines), then drawn in fast to
+   0.95 at 35 and a needle to the minute track's outer line, 42.2. sec: a needle 0.25 to 17.6; its counterpoise a stem 0.38 wide to an arrowhead, its back square at 7.72 (the ramp's middle), 1.15
+   wide at 7.95-8.2, its point at 9.55. ud: a needle 0.42 narrowing to 0.25, to 9.8 (VIDEOS.md: 58.5 px). Widths under about 0.3 are at the photograph's blur (about 1.5 px) and may be thinner.
+   The minute hand shows a bevel down its length (two tones); drawn flat, as are all four (their side profile, 46:30-46:45, not yet read) */
+const HAND_W={hour:[[3.5,1.3],[5,1.45],[6.5,1.69],[7.5,1.8],[9,1.87],[10.5,1.96],[11.5,1.98],[13,1.95],[14.5,1.87],[15.5,1.78],[16.5,1.71],[17.5,1.56],[18.5,1.42],[19.5,1.26],[20.5,1.04],[21.3,0.9],[21.7,0.95],
+    [22,2.42],[22.5,3.13],[23,3.59],[23.6,3.85],[24,3.75],[24.5,3.3],[25,2.85],[25.5,2.55],[26,2.26],[26.5,1.98],[27,1.7],[27.5,1.46],[28,1.26],[28.5,1.07],[29,0.88],[29.5,0.75],[30,0.61],[30.5,0.49],[31,0.41],[32,0.32],[35,0.28],[35.2,0]],
+  min:[[3.5,1],[5.5,1.02],[7,1.07],[9,1.16],[10,1.22],[11,1.27],[12.5,1.3],[14,1.37],[16.5,1.42],[19,1.49],[20.5,1.58],[23,1.65],[25,1.7],[28,1.85],[29,1.9],[30.5,1.75],[32,1.5],[33,1.34],[34,1.16],[35,0.95],[36,0.79],[37,0.7],[38,0.52],[39,0.44],[40,0.39],[41,0.33],[42,0.3],[42.2,0]],
+  sec:[[-9.55,0],[-9.25,0.3],[-9,0.52],[-8.75,0.75],[-8.5,1],[-8.2,1.15],[-7.95,1.15],[-7.75,1.05],[-7.72,0.38],[0,0.38],[0.9,0.28],[17.4,0.25],[17.6,0]],
+  ud:[[0,0.42],[2,0.42],[4,0.33],[6,0.29],[9.5,0.25],[9.8,0]]};
+function handShape(len,w,tail,kind,at,o){   /* the hand's outline, pointing +y from its arbor (handGeo extrudes it; the essay draws it flat). tail<0: a spear counterpoise -tail long in place of the flat tail; at: the pear's bulb at at·len; o {boss, bore|sq}: a round boss of radius boss with a round or square hole (a tail shorter than the boss is left off).
+   kind an array: a measured outline (HAND_W), len, w, tail and at unused */
+  const P=Array.isArray(kind)&&kind;if(P)w=P[0][1];
   const s=new THREE.Shape(),b=o&&o.boss,yb=b&&Math.sqrt(b*b-w*w/4),ab=b&&Math.acos(w/2/b);
-  if(b){if(tail>yb){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);s.lineTo(w/2,-yb);s.absarc(0,0,b,-ab,ab,false);}else s.moveTo(w/2,yb);}
-  else if(tail<0){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
-  else{s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);}
-  if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
+  if(b){if(tail>yb&&!P){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);s.lineTo(w/2,-yb);s.absarc(0,0,b,-ab,ab,false);}else s.moveTo(w/2,yb);}
+  else if(tail<0&&!P){const T=-tail,b=w*1.3;s.moveTo(-w/2,0);s.lineTo(-w*0.35,-T*0.55);s.quadraticCurveTo(-b,-T*0.74,-b*0.85,-T*0.8);s.quadraticCurveTo(-b*0.45,-T*0.86,0,-T);s.quadraticCurveTo(b*0.45,-T*0.86,b*0.85,-T*0.8);s.quadraticCurveTo(b,-T*0.74,w*0.35,-T*0.55);s.lineTo(w/2,0);}
+  else if(!P){s.moveTo(-w/2,-tail);s.lineTo(w/2,-tail);}
+  if(P){const Q=b?P.filter(p=>p[0]>yb):P,pts=[...Q.map(([y,x])=>[x/2,y]),...Q.map(([y,x])=>[-x/2,y]).reverse()].filter((p,i,a)=>!i||p[0]!==a[i-1][0]||p[1]!==a[i-1][1]);
+    pts.forEach(([x,y],i)=>!b&&!i?s.moveTo(x,y):s.lineTo(x,y));}
+  else if(kind==='spade'){s.lineTo(w*0.3,len*0.6);s.quadraticCurveTo(w*1.3,len*0.68,w*0.95,len*0.8);s.lineTo(0,len);s.lineTo(-w*0.95,len*0.8);s.quadraticCurveTo(-w*1.3,len*0.68,-w*0.3,len*0.6);}
   else if(kind==='leaf'||kind==='lance'){const b=kind==='leaf'?w*1.9:w*1.25,m=kind==='leaf'?0.68:0.8;   /* leaf widest at m·len, drawn to a point */
     s.lineTo(w*0.35,len*(m-0.25));s.quadraticCurveTo(b,len*(m-0.06),b*0.85,len*m);s.quadraticCurveTo(b*0.45,len*(m+0.14),0,len);s.quadraticCurveTo(-b*0.45,len*(m+0.14),-b*0.85,len*m);s.quadraticCurveTo(-b,len*(m-0.06),-w*0.35,len*(m-0.25));}
   else if(kind==='pear'){const b=w*1.5,h=w*1.8,m=at?len*at:len*0.86-h;   /* poire: the stem swells to a bulb (widest at m) and runs out to a spear point */

@@ -6,7 +6,10 @@ five screws on the barrel bridge, and lay the two side by side (and blended) in 
     python topview.py --eval "__mv.userData.stop('navy')"   # with JS run after loading (a variant fitted), into r_topview.png
 
 The warp is an affine map fitted to the barrel bridge's plane (the five screws agree with it to 0.6 mm), so parts at that height line up; parts far above or
-below it (the cock, the pillar plate) are shifted by the photograph's slight tilt, up to about 3 mm. The model is frozen as in views.py."""
+below it (the cock, the pillar plate) are shifted by the photograph's slight tilt, up to about 3 mm. The model is frozen as in views.py.
+Near the rim the photograph itself is about 10 % small against its inner layout (the bridges' rims read r 35.5 through this map; the side
+photograph against the measured plate and three video frames give 38.5-40.2, the model 40.5: References/VIDEOS.md, "The bridges' rims against
+the plate"), so the model's rims and anything near them show a false protrusion here: compare sizes near the rim on other sources."""
 import asyncio,json,math,pathlib,sys
 import numpy as np
 from PIL import Image
