@@ -198,7 +198,7 @@ Before committing a change to the model:
        python solids.py     # every part a closed solid, facing out (exit code 1 on a failure)
        python exploded.py   # no two parts meet in the Exploded view, at any spread (exit code 1 on a failure)
        python placements.py dump before   # (before the change) every mesh's place in seven states; after it: dump after, then --diff before after
-       python audit.py      # screws, pivots, loose parts in the movement
+       python audit.py      # screws, pivots, loose parts in the movement (exit code 1 on anything not expected; --update after an intended change of coplanar faces)
        python audit.py box  # the same for the box and gimbals
        python p3fit.py      # render from the top-view photograph's camera (writes r_p3.png; compare with ../verification/topview-comparison.png)
        node escapement.js   # the escapement's lock, let-off, overall, drop and clearances (Node.js only)
@@ -209,10 +209,10 @@ Before committing a change to the model:
    on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
    its table `EXPECTED` gives the reason for each intended contact. The
    `views.py` diff should show changed pixels only on the parts you changed, and
-   the `placements.py` diff list only the parts you rebuilt. `solids.py` prints `0 not solid` twice and `exploded.py` `0 failing`. `audit.py` is expected to report the
-   winding-stop pin and the free ends of the balance screws and the timing
-   weights' screws; most of its
-   coplanar-face hits are faces in contact. `escapement.js` marks each figure
+   the `placements.py` diff list only the parts you rebuilt. `solids.py` prints `0 not solid` twice and `exploded.py` `0 failing`. `audit.py` ends with `OK: nothing new`:
+   it compares its findings with the expected ones (the loose ends in its
+   `LOOSE` table, each with its reason, and the coplanar faces, mostly faces in
+   contact, in `audit-expected.json`). `escapement.js` marks each figure
    `ok` or not against the manual's value. `bom.py` prints `ok` (a known
    deviation, with its reason, is printed with `~~`); after changing a part,
    run `python bom.py --md` and commit the regenerated `BOM.md`. The tools write their output files

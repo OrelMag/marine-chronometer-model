@@ -39,7 +39,7 @@ the website (see the root README).
 | `tools/isolate.py` | Renders chosen parts alone, everything else hidden, each view beside a reference image (a photograph, a video frame, a figure): the check after any change to a part's geometry |
 | `tools/maintaining.py` | The maintaining work over run and wind cycles: the sustaining ratchet never turns back, the sustaining spring is loaded in running and only relaxes while winding, the fusee catches forward when the key lets go, the pawls sit on their teeth, and the stop-bar meets the winding stop at full wind |
 | `tools/fine.py`, `tools/fine-interference.js`, `tools/barrel-clearance.js` | Fine (0.05 mm) collision check through the escapement cycle, round the train and over the wind, against a table of expected contacts; the barrel's margins and the mainspring |
-| `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts, among the parts shown (`--eval JS` after loading, e.g. to fit a variant) |
+| `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts, among the parts shown, in one frozen state; anything not expected (the loose ends in its `LOOSE` table, the coplanar faces in `tools/audit-expected.json`) fails, `--update` rewrites the coplanar faces (`--eval JS` after loading, e.g. to fit a variant or plant a fault) |
 | `tools/exploded.py`, `tools/exploded-check.js` | Exploded-view clearance: every part and screw, taken as it stands assembled, against every other, at every spread from 0 to 100 % (none may meet at full spread, or pass through another on the way), over escapement phases, train positions and the wind |
 | `tools/solids.py`, `tools/solids-check.js` | Solid geometry check: every mesh closed (no open edge), consistently wound and not inside out, but the decals and surfaces flagged as such; loaded as it is and with Moving parts only and a section on |
 | `tools/placements.py` | Every mesh's position and bounding box in seven model states (escapement phases, train and wind positions), and a diff between two runs or two copies of the page: proves a change moved only the parts it meant to, and that the mechanism moves as before |
@@ -352,7 +352,7 @@ and the thread pitches are the model's. Things to know before changing it:
   `(-3,-3)`, after the page loads (`python fine.py --eval "__mv.userData.R.timing(3,3)"` does this). `dyn.py` ignores balance–cock overlaps
   (`IGN`). The cock's body is 17.7 mm from the balance axis, on the barrel bridge's circle.
 - **`audit.py` lists the weights' screw tips as loose ends.** They stand
-  beyond the nuts, as in Fig. 3, and are expected.
+  beyond the nuts, as in Fig. 3, and are expected (its `LOOSE` table).
 - **The holes.** The rim has 24 tapped holes, 15° apart, numbered 1–13 round
   each half from an arm's end (Fig. 99's numbered block; Table IV): hole 1 is
   the arm's end, where the timing weight's screw goes through the rim into the
