@@ -369,7 +369,13 @@ Then run `dyn.py` with the variant shown.
   The model draws the measured balance and adds the difference as `I_REST`
   (410 g·mm²), so the panel's changes are the manual's. Open: what carries it.
   Candidates: a heavier arm or hub than drawn, Table II computed for another
-  balance, or a misreading of the parts list's masses. Still estimated: which
+  balance, or a misreading of the parts list's masses.
+  *Resolved, likely (4 October 2026): the masses read as a matched pair's. Table
+  II then needs 578 and the drawing makes 534 (`I_REST` 44, 8 %, inside the rim's
+  measured thickness); the steel timing nut as measured can weigh a pair's 93 mg
+  (about 50 mg each) but not 93; the heads come out near brass, not gold. What
+  would make it certain: a balance screw or timing weight weighed (README,
+  "Estimated").* Still estimated: which
   of holes 3, 5 and 12 has the 0.080 in heads (side-on, near and far heads
   overlap in projection; from above they are too foreshortened).
 
