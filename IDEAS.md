@@ -772,7 +772,7 @@ At 62 KB and 484 dense lines, `app.js` holds the part descriptions, the 2-D esca
 ## 8. Testing and verification
 
 ### 8.1 Continuous integration
-> **Done.** `.github/workflows/checks.yml`: on every push and pull request, steps 1–4 (the build with the live site's `--site-url`, then `git diff --exit-code` of the built copies; `escapement.js`, which now exits 1 on a failure; and `tools/smoke.py`, which clicks through every control and scrolls the essay), plus `tools/invariants.py` (8.2). Weekly and on demand, `fine.py` and `maintaining.py`, which already fail on anything new; `.gitattributes` keeps the built copies LF on every platform. Step 5's expected-leftovers file for `dyn.py`/`audit.py` is still open. `7f3668e`
+> **Done.** `.github/workflows/checks.yml`: on every push and pull request, steps 1–4 (the build with the live site's `--site-url`, then `git diff --exit-code` of the built copies; `escapement.js`, which now exits 1 on a failure; and `tools/smoke.py`, which clicks through every control and scrolls the essay), plus `tools/invariants.py` (8.2). Weekly and on demand, `fine.py` and `maintaining.py`, which already fail on anything new; `.gitattributes` keeps the built copies LF on every platform. Step 5: `audit.py` (movement and box) runs on every push since 4 October 2026, frozen in one state and compared with its expected leftovers (`LOOSE`, `audit-expected.json`), failing on anything new; `dyn.py` needs no file of its own, `fine.py` (weekly) having replaced it with its `EXPECTED` table. `7f3668e`
 
 A GitHub Actions workflow on every push, in increasing cost:
 1. **Build:** `python build.py`. It already fails if a page loads anything from the network.
@@ -850,7 +850,7 @@ A suggested order, so that each stage makes the next easier.
 
 **Stage 1: foundations and quick wins (1–2 weeks)**. *Done, 29 September 2026; the leftovers are noted per item.*
 - Parts registry (7.1). Derive train numbers from `TRAIN` (7.2). `ESC` as a factory, shared with the tools and the essay (7.3). *Done: `5e8c578`, `5512fe4`, `813f7ae`.*
-- CI: build, escapement check with an exit code, built-copies check, smoke test (8.1). Invariant tests (8.2). *Done: `813f7ae` (exit code), `7f3668e`; the expected-leftovers file for `dyn.py`/`audit.py` is open.*
+- CI: build, escapement check with an exit code, built-copies check, smoke test (8.1). Invariant tests (8.2). *Done: `813f7ae` (exit code), `7f3668e`; `audit.py`'s expected leftovers (4 October 2026).*
 - Performance: knurls and rim holes merged, tiny meshes out of the shadow pass (5.1). Precomputed stripe texture (5.2). No rendering when idle (5.4). *Done: `347bf5b`, `6c5ed75` (a faster loop, not precomputed images: see 5.2), `4bd930e`.*
 - Interface: reduced motion, keyboard orbit (6.1). URL hash state (6.2). *Done: `c2af700`, `cf07772` (with fixes in `650c005`), a view-following canvas description `dd2c6df` and remembered settings `8a84df5`; a contrast check is open.*
 - GMT by default (3.1, first half). *Done: `23e9c58`.*
