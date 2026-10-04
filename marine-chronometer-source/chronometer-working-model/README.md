@@ -144,7 +144,7 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   | The dial at the top | `dialCanvas('hamilton')` and the hands' outlines (`handShape`, core.js) at the model's own time and state of wind (`bind`) |
   | Longitude, clock error | 2D; 4 s of time is 1′ of longitude |
   | Balance and hairspring | The Model 21's balance rebuilt in the essay (the model's is built inside `buildMovement`): `BAL_R`, the rim's section, screws and weights as `movement.js` places them; `springGeo` with the model's hairspring numbers; the swing `ESC.A`; the moment of inertia `R.timing(0,0)` |
-  | Terminal curves | `springGeo`, and a plain-ended coil (essay-only), drawn with 10 coils, r 5.5 and 9 tall, to show the curves (the model's spring has 9 turns, `HS_N`) |
+  | Terminal curves | `springGeo`, and a plain-ended coil (essay-only), drawn with 10 coils, r 5.5 and 9 tall, to show the curves (the model's spring has 12 turns, `HS_N`) |
   | Heat | A split bimetallic rim (as history), a plain brass one and the Model 21's; the older balances' rate curves are illustrative; the Model 21's band is the Navy test's limit (Sec. IX), not a curve |
   | Constant force | The model's fusee profile and barrel turns (`R.fs.rf`, `R.fs.I`), 8¾ turns, 0 to 56¼ h; the spring's pull shown is the one the profile answers |
   | Maintaining power | The model's own maintaining-work meshes (`R.gw`, `R.ssg`, `R.sr`, `R.spawl` and the fusee's winding ratchet, cloned with their materials, bound by `bind`'s `R`, `mv` and `M`), the spring rebuilt with `R.sspGeo(d)`, the pawls seated with `seatPawl` on `R.SRP` and `R.FPR` and the ratchet where `phaseAgainst` has the sustaining pawl hold it; `d = SMAX t/10`. The fusee's turning back, half a turn a minute, is the figure's |
