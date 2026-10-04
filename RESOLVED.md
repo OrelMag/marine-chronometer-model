@@ -1768,6 +1768,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   saw when they fail. Keep: a smoke check on something that happens on page
   time polls (`wait_for_function`, or `expect(…, wait=)`), never looks once
   after a fixed wait. `9b49228`
+- **The build book's drawings were no use on paper.** Each part's drawing was
+  an SVG at 1:1 in millimetres: a screw printed 3 mm wide, its hole labels
+  0.6 mm high and its lines 0.004-0.02 mm, and print's `max-width` shrank the
+  large ones to an unknown scale; 21 sheet lines had no fit (jewels, plates,
+  the case: their fits are measured from the parts in them) and the fusee
+  arbor's square no line. `tools/book.py`, the book laid out as A4 print,
+  found 116. Now each drawing picks a standard scale (20:1 to 1:4) that fits
+  the column and page, states it in its title, and sizes its lines and text
+  in printed millimetres; a line shows the other side of the fits that name
+  it, or says it isn't measured. Keep: a drawing for paper states its scale
+  and prints at it; `book.py` (in `ci.py`) passes. `390218e`
 
 ## Essay
 

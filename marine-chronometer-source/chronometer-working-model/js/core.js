@@ -88,7 +88,7 @@ function escapeWheel(parent,M,rt,y,E){
   const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
   const web=new THREE.Shape(),R1=R-0.5,R0=1.5,sw=0.5;web.absarc(0,0,R,0,TAU,false);
   for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
-  const hb=new THREE.Path();hb.absarc(0,0,0.5,0,TAU,true);web.holes.push(hb);
+  const hb=new THREE.Path();hb.absarc(0,0,0.67,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's body (r 0.67, movement.js); the brass hub it sits on (KLUwI2UUCMQ 43:21.1) is not drawn */
   const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
   const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
   return teeth;
@@ -100,7 +100,7 @@ function mats(){
   const stx=stripeTex(),st=stx.map,wt=woodTex();
   /* Plates and bridges: nickel with damascening (Hamilton Model 21 plates were nickel). Wheels, fusee, barrel: gilt brass, slightly tarnished. */
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
-    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),clear:S(0xdfe5ea,0.1,0.08,{transparent:true,opacity:0.6}),
+    steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),steelK:S(0x4a5058,1,0.32),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),clear:S(0xdfe5ea,0.1,0.08,{transparent:true,opacity:0.6}),
     chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3),
     wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
     invar:S(0xa7aaa6,1,0.28)};

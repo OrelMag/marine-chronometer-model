@@ -209,3 +209,24 @@ manual's figures become the test.
   without Elinvar and Invar), rating by the sky (the rate book's equal altitudes and lunars).
 - **E1–E3** the almanac (Sun, Moon, 58 stars, Venus and Mars), the sky sections, the workbook, the rate book from the sky. Jupiter and Saturn left out.
 - **F1–F3** the manual on the site; the single file holds the almanac, the maker's tools and data; `tools/selfcontained.py` in `ci.py --quick`.
+
+## The second round (4-5 October 2026)
+
+What was proposed after 2.07.00, items 1-6, all taken (the user, "finish all the phases"):
+
+1. **Hole tables and dimensioned drawings** (2.07.01): every part's holes, centres and diameters, numbered on its drawing.
+2. **The estimates that decide running, measured** (2.07.01 and after): the balance staff's pivots (0.36 mm) and its lower end's
+   profile (KLUwI2UUCMQ 7:08); the escape pivots Hamilton's 0.007 in (US 2,392,745) in holes measured against the light (10:14.5);
+   the escape arbor's body r 0.67 (43:21.1); the third's and fourth's lower jewels, stones r 1.13, holes r 0.32 and 0.36
+   (15:00-15:06, `tools/jewelhole.py`); the mainspring's width (14 ± 2, the model's 14.8 kept). Threads: Hamilton's are in no
+   source; each card's sheet gives the ISO 261 thread nearest the drawn one. Efficiencies: the bounded range already in
+   `tools/physics.js`. Still estimated: the third's and fourth's upper pivots, the escape arbor's neck, the hairspring collet's end.
+3. **The build book checked as paper** (`tools/book.py`, in `ci.py`): 116 findings, all fixed (drawings at a stated scale, legible
+   on paper, every line's fit).
+4. **The hairspring's own isochronism** (`HSPR.large`, `HSPR.period`): +0.05 s a day for each 10° of swing, 0.11 over 1⅜-1½
+   turns, the escapement's way; the force on the pivots 2.4e-3 at 270°. `HS` stays 0 (the spring as adjusted).
+5. **Jupiter and Saturn**: series fitted to DE440 over 1850-2150 (`tools/planets_fit.py`), 6.6″ and 2.6″ from Horizons.
+6. **The open review findings** (Review-results.md): the stud's pins and the arm's height in the rim measured and drawn, the
+   sustaining spring's colour, finding 6 and the third arbor's place closed; measured but not yet drawn, each with its reason: the
+   stud bar's thickness, the fusee top's recess (r 5.5), the escape pinion's length and height; `p3map.json` confirmed not to fit
+   the photograph. Left to others' branches: the locking arm, the train-blocking screw's place.

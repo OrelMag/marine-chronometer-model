@@ -1,6 +1,6 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, physics, selfcontained, types, smoke, invariants, solids, exploded, audit
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, physics, selfcontained, types, smoke, invariants, solids, exploded, book, audit
     python ci.py --quick      # without the browser checks (about 30 s): build, escapement, almanac, hairspring, types
     python ci.py --full       # and the slow checks (about 16 minutes more): fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
@@ -74,6 +74,7 @@ STEPS=[('build',build,'quick'),
  ('invariants',lambda log:run([PY,'invariants.py'],TOOLS,log),'browser'),
  ('solids',lambda log:run([PY,'solids.py'],TOOLS,log),'browser'),
  ('exploded',lambda log:run([PY,'exploded.py'],TOOLS,log),'browser'),
+ ('book',lambda log:run([PY,'book.py'],TOOLS,log),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
  ('audit',lambda log:run([PY,'audit.py'],TOOLS,log),'browser'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),

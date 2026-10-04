@@ -329,7 +329,7 @@ const ESSAY=(()=>{
     const cw=arbor(S0,M,...C0,{wheel:{n:T.cw,m:MOD.centre,y:1.8,th:1,spokes:5},ar:[-3,9],r:0.75});ptr(cw,9);   /* stacked as Figs. 13, 29 and 110: the third wheel lowest, its pinion above it meshing the centre wheel; the fourth pinion under its wheel, meshing the third wheel */
     const tw=arbor(S0,M,...Tp,{wheel:{n:T.tw,m:MOD.train,y:0,th:0.9,spokes:5,cside:-1},pin:{n:T.tp,m:MOD.centre,y:1.8,th:2.6},ar:[-3,9]});ptr(tw,5);
     const fw=arbor(S0,M,...Fp,{wheel:{n:T.fw,m:MOD.fourth,y:3.6,th:0.9,spokes:5,cside:1},pin:{n:T.fp,m:MOD.train,y:1.475,th:3.25},ar:[-3,9]});ptr(fw,6);
-    const ew=arbor(S0,M,...Ep,{pin:{n:T.ep,m:MOD.fourth,y:3.6,th:2},ar:[-3,9]});escapeWheel(ew,M,ES,5.4,ESC);ptr(ew,4);
+    const ew=arbor(S0,M,...Ep,{pin:{n:T.ep,m:MOD.fourth,y:3.6,th:2},ar:[-3,9],r:0.67});escapeWheel(ew,M,ES,5.4,ESC);ptr(ew,4);
     const eT=T.ew/2;   /* the escape wheel turns once in ew half seconds */
     V.label('Centre wheel',`${T.cw} teeth, 1 turn / ${turnT(ESC_PER.cw*eT)}`,v=>v.set(C0[0]-10,2.3,C0[1]+7));V.label('Third wheel',`${T.tw} teeth, 1 turn / ${turnT(ESC_PER.tw*eT)}`,v=>v.set(Tp[0]+1,0.5,Tp[1]+9));
     V.label('Fourth wheel',`${T.fw} teeth, 1 turn / ${turnT(ESC_PER.fw*eT)}`,v=>v.set(Fp[0]+2,4.1,Fp[1]-9));V.label('Escape wheel',`${T.ew} teeth, 1 turn / ${turnT(eT)}`,v=>v.set(Ep[0]+3,6,Ep[1]+4));
@@ -463,7 +463,7 @@ const ESSAY=(()=>{
         o+=`<section class="e-pg"><h4>${dn}</h4>${table(rows,['GMT','Sun GHA','Dec','Aries GHA','Moon GHA','Dec','HP ′'])}
           <p class="e-pf">Sun: semi-diameter ${S12.sd.toFixed(1)}′; equation of time (apparent less mean) ${eot(S0.eot)} at 00h, ${eot(S12.eot)} at 12h; meridian passage at Greenwich ${tod(mp,0).slice(0,5)} GMT. Moon: semi-diameter ${M12.sd.toFixed(1)}′ at 12h (from the Earth’s centre). ΔT ${AL.deltaT(2000+(AL.JD(day)-2451545)/365.25).toFixed(1)} s.</p>
           ${lr.length?table(lr,['Lunar distances','00h','03h','06h','09h','12h','15h','18h','21h']):''}
-          ${table([0,3,6,9,12,15,18,21].map(h=>{const t=day+h*hr,V=AL.planet('Venus',t),Ma=AL.planet('Mars',t);return[String(h).padStart(2,'0'),gh(V.gha),dec(V.dec),gh(Ma.gha),dec(Ma.dec)];}),['GMT','Venus GHA','Dec','Mars GHA','Dec'])}</section>`;}
+          ${table([0,3,6,9,12,15,18,21].map(h=>{const t=day+h*hr,P=AL.PLANETS.map(k=>AL.planet(k,t));return[String(h).padStart(2,'0'),...P.flatMap(b=>[gh(b.gha),dec(b.dec)])];}),['GMT',...AL.PLANETS.flatMap(k=>[k+' GHA','Dec'])])}</section>`;}
       const t1=t0+12*hr,sr=AL.STARS.map((s,i)=>{const b=AL.star(i,t1);return[s[0]||'—',s[1],gh(b.sha),dec(b.dec),s[6].toFixed(1)];});
       o+=`<section class="e-pg e-stars"><h4>The stars at ${new Date(t1).toISOString().slice(0,10)}, 12h (their places change by less than 1′ in a month)</h4>${table(sr,['No.','Star','SHA','Dec','Mag.'])}</section>`;AL.setDeltaT(null);return o;}
     const show=()=>{box.innerHTML=pages();};
@@ -478,7 +478,7 @@ const ESSAY=(()=>{
   /* the workbook: one's own sights */
   fig('eWork',f=>{const box=f.el,P=figOf(box);if(!AL)return noAlm(box);const out=q('.e-out',P);let mode='sight';
     const ang=s=>{s=String(s).trim().replace(/[°′'NnEe]/g,' ').replace(/,/g,'.');let neg=/[SsWw]|^-|^−/.test(s);s=s.replace(/[SsWw−-]/g,' ').trim();const p=s.split(/\s+/).map(Number);if(!p.length||p.some(x=>!Number.isFinite(x)))return NaN;const v=p[0]+(p[1]||0)/60+(p[2]||0)/3600;return neg?-v:v;};
-    const names=['Sun','Moon','Venus','Mars',...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
+    const names=['Sun','Moon',...AL.PLANETS,...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
       F0={date:'2026-10-18',time:'10:15:00',err:'0',eye:'6',ic:'-1.4',T:'18',P:'1008',lat:'35 00.0 N',lon:'40 00.0 W',body:'Sun',limb:'Lower',hs:'',how:'Meridian, bearing south',
         bodyL:'Markab',ds:'',hm:'',hb:'',far:'Near',r1:'2026-10-15 16:51',e1:'23.5',r2:'2026-10-20 16:50',e2:'29.0',now:'2026-11-02 12:00'};let V={...F0};
     const fld=(k,lab,html)=>`<label class="e-in"><span>${lab}</span>${html||`<input data-k="${k}" value="${V[k]}" spellcheck="false">`}</label>`,

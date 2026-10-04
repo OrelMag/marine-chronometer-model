@@ -7,7 +7,7 @@ It checks, on the built single file (dist/chronometer-working-model.html) and th
   - the manual itself ships with the site (site/navships-250-624-1948.pdf, linked from the page);
   - js/makers.js is what tools/makers.py writes from bom.json and BOM.md (the maker's sheets' data up to date);
   - every part card (app.js's INFO) has its line or lines in the maker's sheets, or is a part with none in the parts list (the box's cards and decorations);
-  - the essay's quoted figures are the tools' (tools/almanac.js's data-bound, tools/physics.js's data-phys: those tools fail if they differ; here, that each span is there);
+  - the essay's quoted figures are the tools' (tools/almanac.js's data-bound, tools/physics.js's data-phys, tools/hairspring.js's data-hs: those tools fail if they differ; here, that each span is there);
   - the things a maker and a navigator need are in the page: the maker's tools (Measure, Build book, Data, STL, the export to Blender and its rig, js/rigpy.js up to date), the almanac's print, the workbook, the hairspring's design."""
 import pathlib,re,subprocess,sys,json
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent;ROOT=MC.parent.parent
@@ -35,8 +35,9 @@ OK_NONE={'lid','lidGlass','box','lids','gimbal','case','crystal','bowl','dial','
 missing=sorted(none-OK_NONE)
 chk(not missing,f'every part card has its parts-list lines in the maker\'s sheets ({len(cards)} cards; without lines and not expected: {", ".join(missing) or "none"})')
 idx=(MC/'index.html').read_text(encoding='utf-8')
-for k in ['sun','moon','stars','hand','lunar']:chk(f'data-bound="{k}"' in idx,f'the essay states the almanac\'s {k} accuracy (checked by tools/almanac.js)')
+for k in ['sun','moon','stars','hand','lunar','venus','mars','jupiter','saturn']:chk(f'data-bound="{k}"' in idx,f'the essay states the almanac\'s {k} accuracy (checked by tools/almanac.js)')
 for k in ['Mup','sUp','esc','chase','Q','steelRate','comp','eNeed']:chk(f'data-phys="{k}"' in idx,f'the essay quotes the physics\' {k} (checked by tools/physics.js)')
+for k in ['stiff','latBig','iso','slope']:chk(f'data-hs="{k}"' in idx,f'the essay quotes the hairspring\'s {k} at large swings (checked by tools/hairspring.js)')
 for sel,what in [('id="mkMeasure"','the measuring tool'),('id="mkBook"','the build book'),('id="mkData"','the model\'s data'),('id="mkSTL"','the movement as STL'),('id="eAlm"','the almanac\'s pages'),
                  ('class="print"','the almanac\'s print'),('id="eWork"','the workbook'),('id="bookSun"','the rate book by equal altitudes'),('id="bookMoon"','the rate book by a lunar'),
                  ('id="oil"','the oiling chart'),('id="adjust"','the escapement\'s adjustment'),('id="order"','the order of work'),('id="materials"','materials and heat treatment')]:

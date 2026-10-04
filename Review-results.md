@@ -12,7 +12,7 @@ Status: findings 1–5 were fixed after the review; see
 [Fixes for findings 1–5](#fixes-for-findings-15). Checking the fixes turned up
 finding 9 (the split-balance variant runs through the barrel bridge), fixed
 on 2 October 2026, as were the Hamilton dial's short hands. Finding 6 is
-open; finding 7 was resolved by the fine interference pass, finding 8 by the
+fixed too (2 October 2026; its heading's note); finding 7 was resolved by the fine interference pass, finding 8 by the
 case rebuilt round the movement.
 
 A later pass with a finer collision check found and fixed six more overlaps,
@@ -1047,7 +1047,7 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    holes, the stud's steady pin, the sustaining spring's pin and others) are
    removed.
 5. *Done (4 October 2026, `claude/shape-pass`): `bom.py` runs in `ci.py --full`.* `bom.py` in CI: about 5 minutes a run.
-6. **The third arbor's place** (fidelity, open). Mapped through the centre,
+6. *Closed (4 October 2026): measured on the restoration video (13:49.5, 14:45, 34:30), the third arbor now 16.55 mm from the centre at 149° from the 12, the wheels' sizes from `MOD` (RESOLVED.md, Going train, `a237869`).* **The third arbor's place** (fidelity, was open). Mapped through the centre,
    the fusee arbor and the wind indicator wheel (which land within 0.8 mm of
    the model), a photograph of a Model 21's dial side puts the third lower
    setting at about (-8.0, 18.6), 7 mm from the model's T (-4.86, 12.11), and
@@ -1064,7 +1064,8 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    5.0 mm out, toward that lug, where its access hole clears the balance
    locking arm's screw and pin ("The balance lower bridge", 7 and 8); no
    longer at either countersunk hole of the top-view photograph. Still open:
-   the 7 mm.
+   the 7 mm (4 October 2026: the model's is 6.0 mm from the fourth's arbor, at (3.9, 26.15); moving it waits on
+   `claude/lock-arm-shape`, which reworks the locking arm whose screw it clears).
 8. **A second capped post and a Y-shaped arm** (fidelity, noted). The top-view
    photograph's movement (2E11795) and others (omegaforums, Delaney No. 8854)
    have a second post with a cap near the fusee's, carrying a long Y-shaped
@@ -2083,18 +2084,24 @@ top, the fusee arbor, the take-off slot and the flange's holes).
    Needs first: the top-view photograph's camera refitted (`fit.py`, `unproj.py`)
    and its flange screws read through it, then the two movements compared;
    where they agree, move the model's.
-3. **`tools/p3map.json` doesn't fit `References/photo-top-view.jpg`.** Its
+3. *Confirmed (4 October 2026), not refitted: drawn back through its own transform, every named point misses its feature on this copy; a free similarity (searched over every pairing of two named screws with two of the 14 slotted heads seen on it, mirrored or not) puts at most 4 of its 8 screws within 30 px of a head, at 15.5 px/mm where the plate needs 20-23, so the points weren't traced on this image, turned or rescaled. Nothing reads the map's transform (the model takes its points, already in mm, through `PT`), so the model is unchanged; a new reading from this photograph needs its points traced on it afresh.* **`tools/p3map.json` doesn't fit `References/photo-top-view.jpg`.** Its
    three anchors (the balance at 640, 830 and so on) don't land on those parts
    in the copy in `References/` (2322 px square): it was fitted on another copy
    or crop. Find that copy, or refit the map on this one, before any new reading
    from the photograph.
-4. **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
+4. *Measured (4 October 2026), not yet drawn: at 20:25 (4K, the plate off, the top seen at a slant) the recess's edge fits an ellipse (seven points, within 6 %) round the collar, and the top plate's two screw holes, opposite each other through its centre, lie 1.26 times its radius out along their line: **r 5.5 mm (±0.5)** with the screws at r 7.0; two more holes in its floor, at about r 4.5. Drawing it means laying the stop-bar spring (42025) and the bar's slot (3.6 mm off the axis, which crosses a recess that wide) again together; it needs the recess's and the slot's depths (20:00, side-on) first.* **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
    round recess r 4-5 about the hub; the model has the spring's groove r 2.4-2.9
    only. Sizes ±30 %.
 5. **Estimated, to measure if a frame allows:** the take-off slot's depth (1.0,
    its floor brass at 9:03), the collar's radius (r 3.0 face-on at 13:30, ±0.3:
    the dark ring round it may be the hole's gap).
-6. **Cosmetic:** the sustaining spring's blue is brighter than the video's
+7. **The escape arbor's pinion and its distance from the wheel** (new, 4 October 2026, open). In the staking tool at 43:21.1 (4K, the arbor upright against a
+   plain ground, seen from about 20° above) the pinion's leaves run about 227 px, 3.5 mm at its own tips' 64 px/mm, where the model's pinion is 2.0 long, and
+   its end stands about 387 px (6.0 mm) above the wheel's brass hub, itself about 1.6 mm tall: about 7.6 mm from the pinion to the wheel's web, where the
+   model has 10.45 (the pinion at the fourth wheel's height, -7.46, the wheel at `EY`). The view foreshortens heights by about 6 % only. If it holds, the
+   pinion is longer and the fourth wheel or the escape wheel sits otherwise than the heights measured at 42:50-42:56 put them; check those frames and a
+   side-on view of the arbor alone before changing the train's heights. (The shank's width from the same frame is drawn: r 0.67, Every part, Jewels.)
+6. *Fixed (4 October 2026): dark tempered steel (`M.steelK`), as the frame reads it, (27, 31, 35) in shade and (154, 166, 174) where it takes the light.* **Cosmetic:** the sustaining spring's blue is brighter than the video's
    nearly black steel (27:30).
 
 
@@ -2156,13 +2163,13 @@ Open:
    the frames show a block under the bar's end and the pin's end in the bar's
    top face, as now drawn; the U form inside it doesn't show, so the block
    stays plain.*
-8. **The arm's height in the rim.** Patent Fig. III sets the crossbar's end in
+8. *Fixed (4 October 2026): side-on from a little below at 6:50.0 the arm's underside runs level with the rim's lower edge (±0.3 mm), the hub's disc below it; the arm (`AY`), hub, cap and screws moved 0.65 mm to it, the timing weights' screws now threaded through the rim alone.* **The arm's height in the rim.** Patent Fig. III sets the crossbar's end in
    a step at the rim's lower edge (the hub's side, the plate side), flush with
    its face; the model's arm lies 1.2 mm above the rim's plate-side edge
    (estimated). The side-on frames (6:50.0) can't tell the arm from the rim's
    far edge; sheet 6:45-6:55 for a frame that shows the arm's end edge-on
    before changing it.
-9. **The stud's steady pins.** On 6:47.5 and 6:47.75 the two pins' holes are
+9. *Fixed (4 October 2026): side-on at 6:50.0 (enlarged 4×, edges by brightness) both pins stand 26-29 px over the bar's top face, 0.6-0.7 mm at 43 px/mm (the pins 297 px apart), and the outer one 40 px (0.9 mm) under it too; drawn so (0.8 up and flush below before). Open: the bar there reads 31-46 px thick, 0.7-1.1 mm, against the 0.5 drawn; thickening it moves the clamp and the helical spring's height (`HS_H`), so it waits on the clamp's height measured with it.* **The stud's steady pins.** On 6:47.5 and 6:47.75 the two pins' holes are
    empty or flush on the bar's top face; the model has the pins standing 0.8
    up into the cock (the side view at 6:50.0 was read as a pin standing at
    each end). Read the side view again, and 41:58 (the cock's holes), before

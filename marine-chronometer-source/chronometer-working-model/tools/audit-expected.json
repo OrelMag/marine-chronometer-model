@@ -1,5 +1,6 @@
 {
  "movement": {
+  "bal:Extrude | bal:Extrude | +-25.10": 1,
   "bal:Extrude | spr:Buffer | --28.60": 1,
   "barrel:Lathe | barrel:Box | +-6.00": 3,
   "barrelBridge:Extrude | barrelBridge:Cylinder | +-23.76": 1,
@@ -32,6 +33,7 @@
   "fusee:Extrude | fusee:Cylinder | --10.30": 1,
   "fusee:Extrude | fusee:Extrude | --10.30": 1,
   "fusee:Lathe | fusee:Cylinder | +-10.30": 1,
+  "hands:Extrude | fw:Lathe | +7.84": 1,
   "hands:Extrude | motion:Cylinder | +7.84": 1,
   "hands:Extrude | motion:Cylinder | -7.44": 1,
   "hands:Extrude | motion:Extrude | +8.78": 1,
@@ -51,10 +53,10 @@
   "lowerBridge:Extrude | lowerBridge:Lathe | +-12.16": 2,
   "lowerBridge:Extrude | lowerBridge:Lathe | --12.16": 1,
   "lowerBridge:Extrude | lowerBridge:Lathe | --18.66": 1,
+  "ltb:Extrude | ltb:Lathe | +2.40": 2,
   "ltb:Extrude | ltb:Lathe | +3.60": 2,
   "ltb:Extrude | ltb:Lathe | -0.00": 2,
-  "ltb:Extrude | ltb:Lathe | -2.40": 4,
-  "ltb:Lathe | ltb:Lathe | -2.40": 2,
+  "ltb:Extrude | ltb:Lathe | -2.40": 2,
   "pillar:Cylinder | ltb:Extrude | -0.00": 1,
   "pillar:Extrude | dial:Lathe | +6.54": 4,
   "pillar:Extrude | dial:Lathe | -5.54": 4,

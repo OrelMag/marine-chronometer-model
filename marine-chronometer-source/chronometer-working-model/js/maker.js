@@ -47,11 +47,20 @@ const MAKER=(()=>{
       kind=dT&&dB?(Math.abs(dT-dB)<0.02?'through':dT>dB?'counterbored or countersunk from the top':'counterbored or countersunk from below'):dT?'blind, from the top':'blind, from below';
       return`<tr><td>h${h.n}</td><td class="n">${mm(h.x)}</td><td class="n">${mm(h.z)}</td><td class="n">${dT?mm(dT):'—'}</td><td class="n">${dB?mm(dB):'—'}</td><td>${kind}</td></tr>`;}).join('')}</tbody></table>
       <p class="mkm">Holes square to the arbors, read off the solids (as tools/holes.py does): centres from the movement's centre (the centre arbor), x toward 3 o'clock, z toward 6; the top is the dial side.</p>`:'';
-  function sheetHTML(p){const L=MAKERS.filter(l=>l.part===p),m=measure(p),s=m.box.getSize(new THREE.Vector3()),q=A.PARTS[p]||{};
+  /* the screws on a card: head, thread and length as the model draws them, grouped by parts-list line, with the ISO 261 coarse metric thread nearest the drawn
+     thread for a maker to cut (Hamilton's own threads are in none of the sources: the manual gives none, the videos don't resolve them) */
+  const ISO=[[0.8,0.2],[1,0.25],[1.2,0.25],[1.4,0.3],[1.6,0.35],[1.8,0.35],[2,0.4],[2.5,0.45],[3,0.5],[3.5,0.6],[4,0.7],[5,0.8],[6,1]];
+  function screwRows(p){const seen=new Map();for(const o of meshesOf(p)){const g=o.parent;if(!g||!g.userData.sc||!g.userData.sc.len)continue;const c=g.userData.sc,id=g.userData.hn||'—',k=id+'|'+c.rs.toFixed(3)+'|'+c.len.toFixed(2);
+      if(!seen.has(k))seen.set(k,{id,c,n:new Set()});seen.get(k).n.add(g);}
+    if(!seen.size)return'';const iso=d=>ISO.reduce((b,q)=>Math.abs(q[0]-d)<Math.abs(b[0]-d)?q:b);
+    return`<table class="mk"><thead><tr><th>Screw</th><th class="n">Pieces</th><th class="n">Head Ø</th><th class="n">Thread Ø</th><th class="n">Under the head</th><th>Thread to cut</th></tr></thead><tbody>${[...seen.values()].map(({id,c,n})=>{const d=2*c.rs,[M,P]=iso(d);
+      return`<tr><td>${esc(id)}</td><td class="n">${n.size}</td><td class="n">${mm(2*c.r)}</td><td class="n">${mm(d)}</td><td class="n">${mm(c.len)}</td><td>M${M} × ${P} (ISO 261 coarse; the drawn ${d.toFixed(2)})</td></tr>`;}).join('')}</tbody></table>
+      <p class="mkm">Hamilton's threads are not known (the manual gives none, the videos don't resolve them): the thread to cut is the standard metric one nearest the model's, a maker's choice; tap the part each screws into, clear the parts it passes through, as the fits above say.</p>`;}
+  function sheetHTML(p){const q=A.PARTS[p]||{},own=MAKERS.filter(l=>l.part===p),sp=own.length?[]:((q.sp||'').match(/\d{5}/g)||[]),L=own.length?own:MAKERS.filter(l=>sp.includes(l.no)),m=measure(p),s=m.box.getSize(new THREE.Vector3());
     const rows=L.map(l=>`<tr><td>${esc(l.idx)}</td><td>${esc(l.no)}</td><td>${esc(l.name)}</td><td class="n">${esc(l.qty)}</td><td>${esc(l.mat)}<i>${l.cls==='manual'?'the manual':'practice'}</i></td><td>${esc(l.treat)}</td><td>${esc(l.fit)}</td></tr>`).join('');
-    return`<table class="mk"><thead><tr><th>Idx</th><th>No.</th><th>Name</th><th class="n">Units</th><th>Material</th><th>Finish, heat treatment</th><th>Fit, as measured on the model</th></tr></thead><tbody>${rows||'<tr><td colspan="7">No line of the parts list is on this card.</td></tr>'}</tbody></table>
+    return`<table class="mk"><thead><tr><th>Idx</th><th>No.</th><th>Name</th><th class="n">Units</th><th>Material</th><th>Finish, heat treatment</th><th>Fit, as measured on the model</th></tr></thead><tbody>${rows||'<tr><td colspan="7">No line of the parts list is on this card.</td></tr>'}</tbody></table>${!own.length&&L.length?`<p class="mkm">This card is cut on the line above, which the ${esc((A.INFO[L[0].part]||[L[0].part])[0])} card carries.</p>`:''}
       <p class="mkm">As built: ${mm(s.x)} × ${mm(s.y)} × ${mm(s.z)} (along the movement's x, its axis y, z), ${m.vol.toFixed(1)} mm³, about ${m.mass.toFixed(2)} g (${Object.entries(m.by).filter(([,v])=>v>0.01).map(([k,v])=>`${k} ${v.toFixed(1)} mm³`).join(', ')}).
-      Source of its shape: ${q.src?esc(A.SRC[q.src][0]):'—'}${q.sn?': '+esc(q.sn):''}. Sizes the model estimates are listed in its README's "Estimated, not from the manual".</p>${holeRows(holes(p))}`;}
+      Source of its shape: ${q.src?esc(A.SRC[q.src][0]):'—'}${q.sn?': '+esc(q.sn):''}. Sizes the model estimates are listed in its README's "Estimated, not from the manual".</p>${holeRows(holes(p))}${screwRows(p)}`;}
   /* the drawing: the solids' edges (creases over 30°) projected to the plan (x, z, seen from the dial side: 3 o'clock right, 12 up) and an elevation (x, y, the dial side
      up), to scale, with the overall sizes, and the holes (holes()) marked and numbered as the sheet's table lists them */
   function drawingSVG(p,title){const segP=[],segE=[],box=new THREE.Box3();
@@ -61,17 +70,22 @@ const MAKER=(()=>{
       eg.dispose();}
     const dd=L=>{const S=new Set();return L.filter(q=>{const a=q[0].toFixed(2)+','+q[1].toFixed(2),b=q[2].toFixed(2)+','+q[3].toFixed(2);if(a===b)return false;const k=a<b?a+'|'+b:b+'|'+a;if(S.has(k))return false;S.add(k);return true;});};   /* edges that coincide in the projection drawn once */
     segP.splice(0,segP.length,...dd(segP));segE.splice(0,segE.length,...dd(segE));
-    if(box.isEmpty())return'';const s=box.getSize(new THREE.Vector3()),pad=Math.max(4,0.12*Math.max(s.x,s.z)),W=s.x+2*pad,Hp=s.z+2*pad,He=s.y+2*pad,gap=6;
+    if(box.isEmpty())return'';const s0=box.getSize(new THREE.Vector3()),
+      /* printed at a standard scale (sc printed mm a model mm), the largest that fits A4's column (180 mm) and a page (250 mm); lines and text in printed mm */
+      SC=[20,10,5,4,2,1,0.5,0.25],fits=k=>(s0.x*1.3+8/k)*k<=180&&((s0.z+s0.y)*1.3+30/k)*k<=250,sc=SC.find(fits)||0.2,u=1/sc,
+      pad=Math.max(12*u,0.12*Math.max(s0.x,s0.z)),s=s0,W=Math.max(s.x+2*pad,160*u),Hp=s.z+2*pad,He=s.y+2*pad,gap=6*u,
+      scT=sc>=1?`${sc}:1`:`1:${1/sc}`;
     const line=(q,ox,oy)=>`<line x1="${(q[0]-ox).toFixed(3)}" y1="${(q[1]-oy).toFixed(3)}" x2="${(q[2]-ox).toFixed(3)}" y2="${(q[3]-oy).toFixed(3)}"/>`;
-    const oxP=box.min.x-pad,oyP=box.min.z-pad,oxE=box.min.x-pad,oyE=-box.max.y-pad-Hp-gap,fs=Math.max(1.2,W/45);
+    const oxP=box.min.x-pad-(W-s.x-2*pad)/2,oyP=box.min.z-pad-8*u,oxE=oxP,oyE=-box.max.y-pad-Hp-gap-8*u,fs=2.2*u;
     const dim=(x1,y1,x2,y2,t,ox,oy,vert)=>`<g class="d"><line x1="${x1-ox}" y1="${y1-oy}" x2="${x2-ox}" y2="${y2-oy}"/><text stroke="none" x="${(x1+x2)/2-ox+(vert?-fs*0.6:0)}" y="${(y1+y2)/2-oy+(vert?0:-fs*0.5)}" font-size="${fs}" text-anchor="middle"${vert?` transform="rotate(-90 ${(x1+x2)/2-ox-fs*0.6} ${(y1+y2)/2-oy})"`:''}>${t}</text></g>`;
-    const H=Hp+He+gap,HL=holes(p),hm=HL.map(h=>{const d=2*Math.max(h.top||0,h.bottom||0),x=h.x-oxP,y=h.z-oyP,c=Math.max(0.4,d*0.7);return`<g class="h"><line x1="${(x-c).toFixed(3)}" y1="${y.toFixed(3)}" x2="${(x+c).toFixed(3)}" y2="${y.toFixed(3)}"/><line x1="${x.toFixed(3)}" y1="${(y-c).toFixed(3)}" x2="${x.toFixed(3)}" y2="${(y+c).toFixed(3)}"/><text stroke="none" x="${(x+c*0.8).toFixed(3)}" y="${(y-c*0.8).toFixed(3)}" font-size="${(fs*0.5).toFixed(2)}">h${h.n} Ø${d.toFixed(2)}</text></g>`;}).join('');
-    return`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(2)} ${H.toFixed(2)}" width="${W.toFixed(1)}mm" height="${H.toFixed(1)}mm" class="mkd"><title>${esc(title)}: plan and elevation, mm</title>
-      <g fill="none" stroke="currentColor" stroke-width="${(W/1500).toFixed(3)}">${segP.map(q=>line(q,oxP,oyP)).join('')}${segE.map(q=>line(q,oxE,oyE)).join('')}</g>
-      <g stroke="currentColor" stroke-width="${(W/1600).toFixed(3)}" fill="currentColor">${dim(box.min.x,box.max.z+pad*0.5,box.max.x,box.max.z+pad*0.5,s.x.toFixed(2)+' mm',oxP,oyP)}${dim(box.min.x-pad*0.5,box.min.z,box.min.x-pad*0.5,box.max.z,s.z.toFixed(2)+' mm',oxP,oyP,1)}
+    const H=Hp+He+gap+8*u,HL=holes(p),hm=HL.map(h=>{const d=2*Math.max(h.top||0,h.bottom||0),x=h.x-oxP,y=h.z-oyP,c=Math.max(1.5*u,d*0.7);return`<g class="h"><line x1="${(x-c).toFixed(3)}" y1="${y.toFixed(3)}" x2="${(x+c).toFixed(3)}" y2="${y.toFixed(3)}"/><line x1="${x.toFixed(3)}" y1="${(y-c).toFixed(3)}" x2="${x.toFixed(3)}" y2="${(y+c).toFixed(3)}"/><text stroke="none" x="${(x+c*0.8).toFixed(3)}" y="${(y-c*0.8).toFixed(3)}" font-size="${(1.6*u).toFixed(3)}">h${h.n}</text></g>`;}).join('');   /* the number only: each hole's diameters are in the sheet's table */
+    return`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(3)} ${H.toFixed(3)}" width="${(W*sc).toFixed(2)}mm" height="${(H*sc).toFixed(2)}mm" class="mkd"><title>${esc(title)}: plan and elevation, mm, scale ${scT}</title>
+      <g fill="none" stroke="currentColor" stroke-width="${(0.18*u).toFixed(4)}">${segP.map(q=>line(q,oxP,oyP)).join('')}${segE.map(q=>line(q,oxE,oyE)).join('')}</g>
+      <g stroke="currentColor" stroke-width="${(0.13*u).toFixed(4)}" fill="currentColor">${dim(box.min.x,box.max.z+pad*0.5,box.max.x,box.max.z+pad*0.5,s.x.toFixed(2)+' mm',oxP,oyP)}${dim(box.min.x-pad*0.5,box.min.z,box.min.x-pad*0.5,box.max.z,s.z.toFixed(2)+' mm',oxP,oyP,1)}
       ${dim(box.min.x-pad*0.5,-box.max.y,box.min.x-pad*0.5,-box.min.y,s.y.toFixed(2)+' mm',oxE,oyE,1)}</g>
-      <g stroke="#c0392b" fill="#c0392b" stroke-width="${(W/2400).toFixed(3)}">${hm}</g>
-      <text x="${pad*0.3}" y="${fs*1.2}" font-size="${fs}" fill="currentColor">${esc(title)}: plan (from the dial side, 12 o'clock up), and below it the elevation (the dial side up); holes h1… as the sheet lists them; 1 unit = 1 mm</text></svg>`;}
+      <g stroke="#c0392b" fill="#c0392b" stroke-width="${(0.13*u).toFixed(4)}">${hm}</g>
+      <text x="${3*u}" y="${3.2*u}" font-size="${(2.6*u).toFixed(3)}" fill="currentColor">${esc(title)}: scale ${scT}, sizes in mm</text>
+      <text x="${3*u}" y="${6.4*u}" font-size="${(1.8*u).toFixed(3)}" fill="currentColor">Plan from the dial side (12 o'clock up), below it the elevation (the dial side up); holes h1… as the sheet lists them</text></svg>`;}
   /* a binary STL of meshes, in the movement's frame (mm) */
   function stl(ms){let n=0;for(const o of ms)tris(o,()=>{n++;});const buf=new ArrayBuffer(84+50*n),dv=new DataView(buf);let off=84;dv.setUint32(80,n,true);
     const e1=new THREE.Vector3(),e2=new THREE.Vector3();
@@ -120,5 +134,5 @@ const MAKER=(()=>{
   return{bind(api){A=api;
       $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));$('#mkOil').addEventListener('click',()=>oil(!oilOn));$('#mkBook').addEventListener('click',book);$('#mkData').addEventListener('click',data);
       $('#mkSTL').addEventListener('click',()=>save(stl(A.meshes.filter(o=>!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position&&(()=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;})())),'model21-movement.stl'));},
-    card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure,holes};
+    card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure,holes,book};
 })();
