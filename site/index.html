@@ -1730,7 +1730,7 @@ function drawEscPlan(ctx,w,h,s,Ew,o={}){
    - Escapement: plan view of the manual's Fig. 90 (redrawn by Rawlings, chronometerbook.com post 4); escape wheel 9.40 mm from the balance,
      where the 0.249 in impulse roller leaves 0.002 in roller shake (Op. 84) and the teeth dip into its crescent (Ops. 76, 83).
    - Third arbor: measured on a restoration video (References/VIDEOS.md), 16.0 mm from the centre, where the counted wheels' size ratios put it;
-     escape wheel position from the escapement (9.40 mm from the balance). The modules (MOD) follow from the arbors' spacing: 0.314 / 0.245 / 0.249.
+     escape wheel position from the escapement (9.40 mm from the balance). The modules (MOD) follow from the arbors' spacing: 0.392 / 0.3245 / 0.251 / 0.2614 (fusee, centre, third and fourth stages; solve.py prints them).
    ===================================================================== */
 /** @type {Object<string,[number,number]>} plan places [x, z], mm */
 const L={C:[0,0],T:[-8.524,14.186],F:[0,21.6],E:[9.352,15.607],B:[1.609,10.277],Fu:[14.306,-14.519],Ba:[-22.144,-5.347],Ud:[0,-22.9],Mw:[11.3,0]};   /* the train (F, T, E) and the indicator's stud (Ud) as KLUwI2UUCMQ measures them at the plate's 87.57 mm (References/VIDEOS.md, "The fourth arbor, the pillars, the
@@ -2426,7 +2426,7 @@ function buildMovement(M){
   { const WT=new THREE.Vector3(SPh[0],TB_U-1.0,SPh[1]),w=mesh(sp,cylY(0.12,1,8),M.steel),up=new THREE.Vector3(0,1,0),d=new THREE.Vector3();
     R.spWire=th=>{const q=spW(th),F=new THREE.Vector3(q[0],-9.75,q[1]);d.subVectors(WT,F);w.scale.y=d.length();w.position.addVectors(F,WT).multiplyScalar(0.5);w.quaternion.setFromUnitVectors(up,d.normalize());};
     R.spWire(R.spawl.userData.base); }
-  /* ---------- going train (modules from MOD, 0.314 / 0.245 / 0.249; counts in TRAIN) ---------- */
+  /* ---------- going train (modules from MOD, 0.392 / 0.3245 / 0.251 / 0.2614; counts in TRAIN) ---------- */
   const m=MOD.train;
   const cw=part('cw',-8);R.cw=hn(arbor(cw,M,...L.C,{wheel:{n:TRAIN.cw,m:MOD.centre,y:-5.36,th:0.7,spokes:5,prop:WHEEL_PROP.cw,collet:1.3,cside:1,cp:0.3,mate:TRAIN.tp},pin:{n:TRAIN.cp,m:MOD.fusee,y:-6.53,th:1.54},prof:[[TB_T-0.1,0.5],[TB_U+0.025,0.75],[y0-0.125,0.5],[5.45+DD]]}),'42068');   /* pivots r 0.5 in the bushings, shoulders 0.025 off them; the lower pivot runs on through the dial for the cannon pinion */
   const tw=part('tw',-4);R.tw=hn(arbor(tw,M,...L.T,{wheel:{n:TRAIN.tw,m,y:-4.535,th:0.65,spokes:5,prop:WHEEL_PROP.tw,cside:1,cp:0.2,mate:TRAIN.fp},pin:{n:TRAIN.tp,m:MOD.centre,y:-5.385,th:0.95},prof:[[TB_T-0.1,0.3],[TB_U+0.025,0.55],[LT_H-2.025,0.25],[LT_H-1.55]]}),'42071');
