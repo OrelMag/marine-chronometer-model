@@ -1121,7 +1121,7 @@ Contents:
   3.25 either side of the jewel, its flat 2.78 out, its window r 1.87, the screws' heads r
   0.85; the setting r 2.52; the slab's counterbore r 4.56 round the cap. Keep: the cap's sizes
   and the setting's measured (`tools/anchors/cap_13-49.5.json`, `setting_13-44.json`), not
-  scaled from an estimate. HASH
+  scaled from an estimate. `d0f0cb3`
 
 ## Setup, case and gimbals
 
