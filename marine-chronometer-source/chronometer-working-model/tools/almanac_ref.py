@@ -7,7 +7,7 @@ Fetched (raw HTTP):
   - SIMBAD's TAP service (https://simbad.cds.unistra.fr/simbad/sim-tap/sync, ADQL over basic, ident, allfluxes, flux): for the Nautical Almanac's 57
     selected stars and Polaris, ICRS J2000 ra, dec (deg), pmra (mas/yr, with cos dec), pmdec, parallax (mas), radial velocity (km/s), V and the HIP
     number. A field SIMBAD leaves empty on the id asked for is taken from the entry in FILL (the system or the component) and named in "fill".
-  - JPL Horizons' API (https://ssd.jpl.nasa.gov/api/horizons.api), observer tables, TIME_TYPE UT, APPARENT AIRLESS, ANG_FORMAT DEG, EXTRA_PREC YES:
+  - JPL Horizons' API (https://ssd.jpl.nasa.gov/api/horizons.api), observer tables (Venus 299 and Mars 499 too, quantity 2 and 20, at the epochs before 2050), TIME_TYPE UT, APPARENT AIRLESS, ANG_FORMAT DEG, EXTRA_PREC YES:
     geocentric (500@399) Sun (10) and Moon (301) quantity 2 (apparent RA/Dec: for Earth-based sites "with respect to the true-equator and Earth equinox
     of-date coordinate system (EOP-corrected IAU76/80 precession and nutation ...) and adjusted to model light-time, the gravitational deflection of
     light, and stellar aberration", Horizons manual), 20 (range: the Sun in au, the Moon in km), 23 (the Moon's S-O-T elongation), 30 (TDB-UT) and 49
@@ -118,9 +118,17 @@ def main():
         for d,s,m in zip(D,a,b):
             az=lambda r:dict(az=R(f(r['Azimuth_(a-app)']),7),el=R(f(r['Elevation_(a-app)']),7))
             tp.append(dict(site=[la,lo,h],utc=iso(d),jd_ut=R(jd(d),6),sun=az(s),moon=az(m)))
+    print('Horizons planets ...');PE=sorted(d for d in E if d.year<2050);   # in time order: Horizons returns a request's rows sorted
+    tl=[cal(d) for d in PE]   # Venus and Mars, within JPL's approximate elements' 1800-2050
+    ve=horizons('299',tl,q='2,20');ma=horizons('499',tl,q='2,20');pl=[]
+    byu={e['utc']:e for e in ep}
+    for d,v,m in zip(PE,ve,ma):
+        for r in (v,m):assert r['Date__(UT)__HR:MN:SC.fff'].startswith(d.strftime('%Y-%b-%d %H:%M')),r
+        e=byu[iso(d)];pa=lambda r:dict(ra=R(f(r['R.A.__(a-app)']),7),dec=R(f(r['DEC___(a-app)']),7),au=R(f(r['delta']),9))
+        pl.append(dict(utc=iso(d),jd_ut=e['jd_ut'],dT=e['dT'],dut1=e['dut1'],venus=pa(v),mars=pa(m)))
     out=dict(made=dt.date.today().isoformat(),sources=[f"JPL Horizons API (observer tables, {SRC.get('eph','?')}, EOP {SRC.get('eop','?')})",
       'SIMBAD TAP (basic, ident, allfluxes/flux V), ICRS J2000',f'skyfield {skyfield.__version__}','JPL de440s.bsp'],
       notes='angles in degrees, gmst/gast in hours, dT = TT-UT and dut1 = UT1-UTC in seconds; Horizons apparent places are airless, true equator and equinox of date',
-      stars=st,stars_apparent=sa,epochs=ep,topo=tp)
+      stars=st,stars_apparent=sa,epochs=ep,topo=tp,planets=pl)
     OUT.write_text(json.dumps(out,separators=(',',':'),ensure_ascii=False)+'\n',encoding='utf-8');print('wrote',OUT,OUT.stat().st_size,'bytes')
 if __name__=='__main__': main()

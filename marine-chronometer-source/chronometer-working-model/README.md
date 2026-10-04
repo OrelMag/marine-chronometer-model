@@ -27,6 +27,8 @@ the website (see the root README).
 | `../shared/escapement.js` | The detent escapement's solver, `makeEsc(settings)`, shared with the essay's detent figure and `tools/escapement.js` |
 | `../shared/escplan.js` | Its plan, `drawEscPlan(ctx, w, h, state, E, o)`, drawn from the solver's outlines, as Fig. 90 has it: the walkthrough's inset and the adjuster's bench (three names, the stage written under it) and the essay's detent figure (every part named, a dial for the balance's angle); `escStage(state)` names what the escapement is doing |
 | `../shared/almanac.js` | A nautical almanac and the navigator's arithmetic, `ALM`: the Sun, Moon and 58 stars, sidereal time, the altitude corrections, sight reduction, the time sight, equal altitudes, clearing a lunar distance, and sights made from the almanac for the essay's worked examples (see "The almanac" below); shared with `tools/almanac.js` |
+| `../shared/hairspring.js` | The hairspring's design, `HSPR`: terminal curves solved to Phillips' conditions, the whole spring's path, the force it leaves on the pivots, the strip's section from the stiffness ("The hairspring, designed"); shared with `tools/hairspring.js` |
+| `js/makers.js`, `js/maker.js` | The maker's tools ("What the model gives a maker" below): `MAKERS`, each parts-list line's measured fit, material and treatment (written by `tools/makers.py`); `MAKER`, each card's maker's sheet, drawing (SVG) and STL, Measure, the build book, the model's data as JSON, the movement as STL |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), screw positions and holes, pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, train-blocking screw and balance locking arm, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate that turns to admit the winding key), winding key |
 | `js/essay.js` | The Essay tab (see "The Essay tab" below): its figures, drawn from the model's code, and the tab, hash and scroll handling. One IIFE that declares only `ESSAY` |
@@ -35,6 +37,8 @@ the website (see the root README).
 | `dist/chronometer-working-model.html` | The built single file (committed) |
 | `tools/bundle.py`, `tools/fit.py`, `tools/unproj.py` | Photo fitting: camera fits to the Fig. 2 and top-view photographs, triangulation of the balance, fusee and barrel axes, photo points projected onto the movement (see "How the layout was measured") |
 | `tools/almanac.js`, `tools/almanac-ref.json`, `tools/almanac_ref.py` | The almanac's check (Node, about 1 s): Meeus's worked examples, the Sun, Moon, stars and sidereal time against JPL Horizons and skyfield (`almanac-ref.json`, made by `almanac_ref.py` with the network: SIMBAD's catalogue, Horizons' DE441 places, skyfield 1.55 with de440s), and round trips of every reduction; the essay's stated accuracy (`data-bound` spans) must cover the worst found |
+| `tools/physics.js` | Phase A's physics derived (Node, under a second): the energy budget from the mainspring to the balance, the escape wheel's chase onto the impulse jewel (its inertia measured on the solid), the balance's Q the budget needs (which sets `TF`), the detent spring's share from Op. 78 (which sets `fD`), temperature from the materials; the essay's `data-phys` figures must be what it finds |
+| `tools/makers.py`, `tools/selfcontained.py` | `js/makers.js` from `bom.json` and `BOM.md` (`--check`: up to date); the check that the page alone is enough to make the chronometer and navigate with it (no network, the manual shipped, every card's sheet, the essay's checked figures, the tools in the page) |
 | `tools/solve.py` | Reads `L` and `TRAIN` from `movement.js`: solves the escape arbor against `L.E`, gives the modules and wheel tips, checks the arbors clear the wheels in plan (no browser) |
 | `tools/p3map.json`, `tools/cock_outline.json`, `tools/engr.json` | Traced from the top-view photograph: its mapping into the model, the balance cock's outline, the engraving columns |
 | `tools/dyn.py`, `tools/interference-check.js` | Voxel collision check through a full escapement cycle |
@@ -137,7 +141,7 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   is untouched, and the tab bar moves into its sticky bar while it shows.
 - **Sections** (each heading's id is its link: `#essay=detent`): time is a position, an oscillator that ignores the sea, the spring that breathes, heat,
   constant force, winding, counting, the detent, level on a moving ship, keeping the rate, Greenwich time from the sky (equal altitudes ashore), longitude by
-  chronometer (the time sight), the lunar distance, an almanac to print (with the hand rules and the workbook), the Hamilton Model 21.
+  chronometer (the time sight), the lunar distance, an almanac to print (with the hand rules and the workbook), what the model gives a maker (with the manual's tolerances), oil and where it goes, adjusting the escapement, the order of work, materials, hardening and tools, the Hamilton Model 21.
 - **Figures, and what each takes from the model:**
 
   | Figure | Drawn with |
@@ -204,6 +208,33 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   (residuals under 1e-11 mm) and the material's; the escapement's is `tools/escapement.js`'s. The model keeps the hairspring term at 0 (`HS`), now as the
   designed spring's, not as an assumption.
 
+## What the model gives a maker
+
+Phases B–D of `PLAN-self-contained.md`, in the page:
+
+- **The maker's sheet** of each part card (`MAKER.card`): its lines of the parts list (`js/makers.js`, from `bom.json`), each with the fit `bom.py` measured
+  on the model (from `BOM.md`), its material, finish and heat treatment (the manual's where it names them: the Elinvar hairspring and trip spring, the
+  beryllium-copper detent, the stainless rim on its Invar arm, the mahogany box; else watchmaking practice, marked as such), and the part's size, volume and
+  mass measured on its closed solids (densities by the model's material). Its **drawing**: the solids' creases over 30° projected to a plan (from the
+  cock's side) and an elevation, in millimetres, with the overall sizes. Its **STL**: its triangles in the movement's frame, mm.
+- **Making it** (the panel): **Measure** (two points on the model, their distance and its components), **Build book** (every card's sheet and drawing,
+  printed alone: `#bookPrint`, `html.book-print`), **Data** (the train, `MOD`, `L`, the fusee's profile, the escapement's settings, figures and cycle,
+  the hairspring's design and centreline, the balance's moment and pitches, the parts list), **STL** (every part shown).
+- **The essay's workshop**: the tolerances the manual gives (end-shakes, roller fit and shake, horn and stop-button clearances, the detent spring's 0.770 g,
+  the escapement's angles, the wedge pins, the mainspring's let-down, the rate before the weights); the oiling chart (Ops. 43–71, the three lubricants);
+  adjusting the escapement (Ops. 77–97 beside the model's live figures); the order of work (Sec. VIII's reassembly, the mainspring made safe first);
+  materials, hardening and tools, and the chronometer that can be made without Elinvar and Invar (a steel spring on a split bimetallic balance).
+- **Phase A's physics** (`tools/physics.js`): the fusee asks the mainspring (0.419 mm, the parts list; 14.8 wide; 1,064 long) for 1.02 N·m fully wound,
+  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 68–106 µN·m at the escape wheel, whose inertia (4.72e-9 kg·m², measured on its
+  solid) lets it catch the impulse jewel within 5° of the swing; the balance holds 255° if its Q is 171–273, so `TF` (its free swing's decay) is 34 s,
+  derived (it was 25, estimated). Op. 78's preload (0.770 g on the locking jewel) over the 0.20 mm lift at release puts the detent spring's share of the
+  balance's work at 4.4–7.1 %, so `fD` is 0.057 (it was 0.03). The escapement's own error is then -1.5 s a day, absorbed by the timing as before, and the
+  hairspring isochronism term that cancels its isochronism at 90 % of the torque -0.13 (`invariants.py`). Temperature: a steel spring on a steel balance
+  loses 10.3 s a day a °C; the Model 21's Elinvar spring must be treated to -22 to 10 × 10⁻⁶ a °C to cancel its balance; the split variant's rim gives back
+  7.0 s a day a °C.
+- **Still estimated** (README "Estimated"): pivot and jewel-hole diameters and the screws' threads (the videos don't resolve them; the model's are its own,
+  each fit's clearance on the sheets), the train's efficiencies (0.85–0.95 a stage), the trip spring's section, the materials where the manual names none.
+
 ## The almanac
 
 The essay's sky sections carry their own almanac, `ALM` in `shared/almanac.js`, so the page alone (or its single-file copy, offline) is enough to rate
@@ -228,6 +259,9 @@ times JavaScript's milliseconds of UT.
   true altitudes); the Earth's figure (up to 0.2′, 24 s of time) is taken off by clearing a sight the almanac makes from the place by dead reckoning, which
   brings the Greenwich time back within 1 s with the DR 30′ out. A distance changing under 15′ an hour is reported too slow. Refraction's flattening of the
   discs is left out (under 0.3′ above 10°, and the same in the almanac's own sight).
+- **Venus and Mars** (`ALM.planet`): JPL's approximate Keplerian elements (Standish, Table 1, 1800–2050), the Earth from the Earth–Moon barycentre less
+  the Moon's share, light-time, then precession, nutation and aberration: within 36″ and 102″ of Horizons from 1950 to 2049 (the essay states 1′ and 2′),
+  for sights, not lunars. Jupiter and Saturn are left out: those elements err 400″ and 600″ for them.
 - **By hand.** `sunHand` is the Astronomical Almanac's short formulas, as the essay prints them: within 0.6′ of the full series from 1950 to 2049, enough
   for a time sight, not for a lunar (the Moon needs the series, so its pages print).
 
@@ -360,8 +394,8 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   the fourth wheel.
 - **While it is stopped** `tSim` and the hands stand, so they lose the time it
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
-  down. It runs down freely with the train held (1/e in 25 s, `TAU_FREE`, from
-  `ESC.settings.TF`, estimated) and at once, within a swing or two, against the locking arm
+  down. It runs down freely with the train held (1/e in 34 s, `TAU_FREE`, from
+  `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker") and at once, within a swing or two, against the locking arm
   (`TAU_ARM`, 0.2 s). While the swing still carries the discharge jewel back
   past the trip spring's tip (above 39.1°), the detent lifts but the wheel
   can't turn. A smaller swing leaves the jewel on the near side of the tip: the
@@ -795,8 +829,8 @@ every speed); the equation gives the amplitude and the rate.
 - The train-blocking screw (Sec. II, Fig. 110): its size (head 1.7 mm, thread 0.84 mm, dog point 0.5 mm) and 5.6 mm travel; the wall round it (bored r 0.95 down to the seat 0.6 mm into the bridge's top: the section gives the arrangement, not the sizes) and the access hole in the train bridge (r 0.72). Its place, 5.0 mm from the fourth arbor, is a countersunk hole on the top-view photograph, to about 1 mm.
 - The balance locking arm's sizes (Fig. 9 shows it curved, its screw outside the rim and its end at a timing weight; Sec. X: "place the locking arm over the timing weight"): a strip 0.8 mm wide and 0.45 thick, bowed 0.25 mm away from the staff, turning 120° on its screw 20 mm from the staff in the open 6 o'clock sector of the train bridge (at 45° from the timing weight, just clear of the barrel bridge's far horn; locked, the arm passes between the cock's foot and the escape upper bridge, clear of both by little), with a round finger 2.4 mm tall at its end. Locked, the finger stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests at the arm's end on the 6 o'clock side (0.02 mm clear), and the vernier weight's screw, standing 1.6 mm outside the rim one hole on, stops the balance 15° the other way. Unlocked, it lies against its stop pin, clear of the balance. It gets there by turning 120° with its end passing in under the balance, where Fig. 9 turns it the other way, out from the balance; here the second train pillar's screw head (1.6 mm proud, 4 mm out from the arm's screw) and the cock's foot leave no room for that (Review-results.md, BOM comparison, still open 9). Fig. 9 draws the arm curved along the rim and Fig. 108 a short flat lever with a raised boss round its screw, about 4 to 5 screw heads long (about 7-10 mm; the model's is 13). No photograph or video of the arm fitted has been found: `KLUwI2UUCMQ`'s movement and the top-view photograph's carry the Navy's Y-arm instead.
 - The Navy's Y-arm balance stop (Variants, Balance stop; illustrative): as on serial 2E11795 (the top-view photograph), Delaney No. 8854 and a third movement, the last two photographed from straight above. A second dust seal on the barrel bridge, like the fusee's: a nickel body on a flange held by screws, packing rings (black on 2E11795, the cap the fusee seal's size), and a nickel plunger head with a hex socket screw. Under it runs a lever of spring steel (satin, as photographed). Its root is held on a shouldered stud by a large slotted screw near the bridge's rim; the stud takes the place of the barrel bridge's pillar screw, which both photographs put within 2.5 mm of it. The lever runs straight under the cap, through a slot in the seal's body, to a crossbar symmetric about it: an arch round the cock's end, its legs coming down 7.8 mm either side of the staff (clear of the hairspring) and rounding over in a half circle, its top 8.3 mm out on the bar's centre line, and from the foot of each leg, level with the staff, an arm straight out to a round eye with a pin over the rim (13.9 mm out). Measured: the widths, on Delaney's photograph (stem 2.9 mm, lever 2.5, bar 2.2, eyes r 1.4), and the eyes' places (level with the staff, over the rim; Delaney's and 2E11795's photographs registered by the balance rim agree with them to about 1 mm; the cock's edge hides the left end on 2E11795). The arch is traced on Delaney's photograph (its radius about 7.9 mm, its top 8.3, the arms nearly level with the staff); all four movements photographed with the stop (2E11795, Delaney's, the omegaforums one and 2E8489 in the restoration video) have this shape (Review-results.md, open findings 13). Until 4 October 2026 its top stood 12.3 mm out, after a sketch. The outline is the boundary of bars of those widths joined with round fillets, cut as one plate. Estimated: the heights, the lever's 0.45 mm thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the flange's bite round the setup cover's end and foot, and the screws' threads (not drawn; the bridge is the manual's). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm), so how it works is taken from two descriptions of it (Review-results.md, 13): the plunger, screwed down by its hex socket with an Allen key through the bottom of the case, presses the lever down, which bends about its screwed root (drawn as a turn about the horizontal through the pivot, along the crossbar, so both pins come down together) until the pins bear on the rim's top edge, as the wedges did; free, they stand 0.5 mm over it. Locked and Unlocked under Stopping and starting work it as they work the locking arm.
-- Stopping and starting: the balance's free run-down (1/e in 25 s), the arm's braking (0.2 s), the twist's swing (160°) and the build-up to `ESC.A` (3 s). `ESC.AMIN` is worked out from the escapement.
-- The escapement's amplitude and rate ("The escapement's amplitude and rate"): the free run-down's 25 s (`TF`) sets Q = 157 and so the scale of every escapement error; friction at the locking jewel μ = 0.15 (steel on sapphire); the detent spring's and trip spring's shares of the impulse's work at the model's settings, 3% and 0.5% (`fD`, `fP`). With them the wheel's torque comes out about 0.22 mN·m at the escape arbor (1,140 g·mm², a 0.5 s oscillation). The escapement's own error at the model's settings (−1.4 s a day) is taken to be timed out; the rate shown is the change from it.
+- Stopping and starting: the arm's braking (0.2 s), the twist's swing (160°) and the build-up to `ESC.A` (3 s). `ESC.AMIN` is worked out from the escapement.
+- The escapement's amplitude and rate ("The escapement's amplitude and rate"): the free run-down's 34 s (`TF`, Q 214) is derived from the energy budget (`tools/physics.js`), but over the train's efficiencies (0.85–0.95 a stage, published practice) the budget allows 27–43 s; friction at the locking jewel μ = 0.15 (steel on sapphire); the trip spring's share of the impulse's work at the model's settings, 0.5 % (`fP`), estimated (the detent spring's, 5.7 %, `fD`, follows from Op. 78). The escapement's own error at the model's settings (−1.5 s a day) is taken to be timed out; the rate shown is the change from it.
 - The sustaining pawl's arbor is placed on C Spinner's video, its foot read on two frames (36:15 through `rimfit_36-15.json`'s camera: 21.8 mm from the fusee axis at 67°; 14:06, nearly overhead, through a homography on the plate's bushings and pillars' feet: 21.7 at 71°), the model 21.8 at 69°; its blade the crescent 36:15 shows (its two edges put through that camera at the blade's height). its outline one smooth curve through those edges, the tip's end face straight between them. Estimated: the root's back behind the arbor (the video doesn't show it; drawn 1.6-1.9 mm from the arbor), the hub's height (to about 1 mm) and the arbor's radius (0.7; the video's reads about 0.9, against the pillar beyond it).
 
 ## Modifying the model

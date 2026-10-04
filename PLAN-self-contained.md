@@ -1,6 +1,6 @@
 # Plan: a self-contained model, enough to make a Model 21 and use it at sea
 
-_Status: written 4 October 2026. Phase 0 done (a239864). Decisions D1–D4 taken as suggested (the user, 4 October 2026). Phase E's E1 and E2 done, E3 in part (below)._
+_Status (4 October 2026): every phase done, as the sections below record; what stays estimated is listed under each and in the model README's "Estimated" section. Decisions D1–D4 taken as suggested._
 
 ## The goal
 
@@ -193,3 +193,19 @@ manual's figures become the test.
 - **The alloys.** The Model 21's Elinvar and Invar can't be made without modern metallurgy.
   The achievable variant (decision D2 b) is how a chronometer was made before them, and its
   rate is less stable.
+
+## Done, phase by phase (4 October 2026)
+
+- **A1** the balance's masses read as a matched pair's (Table II 578 g·mm², `I_REST` 44). **A2** the hairspring designed and drawn (Phillips' curves both
+  ends, the strip 0.23 × 0.221 mm, 2.5e-5 of couple / R on the pivots; the collet's end at 3.2, an estimate inside the video's 2.8–3.9). **A3** the energy
+  budget closes (`tools/physics.js`): `TF` 34 s derived. **A4** the escape wheel's inertia measured on its solid, its chase onto the jewel 5° of the swing,
+  the escapement 79 % efficient. **A5** temperature from the materials (the Elinvar spring's coefficient, the steel spring's -10.3 s a day a °C, the split
+  rim's 7.0). The isochronism the spring itself leaves is that of its curves' residuals (under 1e-11 mm) and its material: not modelled further.
+- **B1** each card's maker's sheet (`js/maker.js`, `js/makers.js`). **B2** the detent spring's share of the work from Op. 78 (`fD` 0.057); the mainspring's
+  width the barrel's room (14.8); pivots, jewel holes and threads stay the model's estimates (the videos don't resolve them), each fit's clearance on the
+  sheets. **B3** the manual's tolerances in the essay. **B4** each wheel's outline in its drawing (SVG, to scale).
+- **C1** Measure. **C2** STL per part and for the movement, the model's data as JSON. **C3** each part's drawing, plan and elevation. **C4** the build book.
+- **D1–D6** the essay's workshop: the oiling chart, adjusting the escapement, the order of work, tools, materials and heat treatment (the chronometer
+  without Elinvar and Invar), rating by the sky (the rate book's equal altitudes and lunars).
+- **E1–E3** the almanac (Sun, Moon, 58 stars, Venus and Mars), the sky sections, the workbook, the rate book from the sky. Jupiter and Saturn left out.
+- **F1–F3** the manual on the site; the single file holds the almanac, the maker's tools and data; `tools/selfcontained.py` in `ci.py --quick`.

@@ -403,7 +403,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-stars td:nth-child(2),.e-stars th:nth-child(2){text-align:left}
 @media print{#almPrint .e-stars{break-inside:auto;page-break-inside:auto}#almPrint .e-stars td:nth-child(2),#almPrint .e-stars th:nth-child(2){text-align:left}}
 .e-steps{padding-left:1.3em}.e-steps li{margin:0 0 .5em}
-#essay .e-book td:nth-child(3){text-align:left}
+#essay .e-tbl th,#essay .e-tbl td{text-align:left;vertical-align:top}#essay .e-tbl td:first-child{white-space:nowrap}
 </style>
 
 <link rel="canonical" href="https://www.marinechronometermodel.com/">
@@ -825,7 +825,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 
 <h2 id="sky"><a class="e-h" href="#essay=sky">Greenwich time from the sky</a></h2>
 <p>Every comparison in the rate book needs a master clock, and in the Navy’s day that was a radio signal. There is an older one that nothing can switch off: the sky. The Earth’s turning gives the local time anywhere the Sun or a star can be seen. And the Moon, which moves against the stars by about its own width every hour, is the hand of a clock whose dial is the sky and whose time is Greenwich’s. With an almanac that says where each body stands at each moment of Greenwich time, a sextant and the chronometer, a navigator can rate the chronometer ashore, find the ship’s longitude with it at sea, and check it, or start it again, in mid-ocean. The next four sections do all of it, with the numbers worked through.</p>
-<p>The almanac is the hard part, and these pages carry their own. They compute the Sun from the abridged VSOP87 series and the Moon from the main terms of the ELP-2000/82 theory, as Jean Meeus gives them in <em>Astronomical Algorithms</em>, and the Nautical Almanac’s 57 navigational stars and Polaris from their catalogued places and motions. Against the Jet Propulsion Laboratory’s ephemeris, from 1950 to 2149, the Sun comes within <span class="e-live" data-bound="sun">1</span>″, the Moon within <span class="e-live" data-bound="moon">7</span>″ and the stars within <span class="e-live" data-bound="stars">3</span>″. The printed Nautical Almanac gives its places to a tenth of a minute of arc, 6″.</p>
+<p>The almanac is the hard part, and these pages carry their own. They compute the Sun from the abridged VSOP87 series and the Moon from the main terms of the ELP-2000/82 theory, as Jean Meeus gives them in <em>Astronomical Algorithms</em>, and the Nautical Almanac’s 57 navigational stars and Polaris from their catalogued places and motions; Venus and Mars, for sights, come from the Jet Propulsion Laboratory’s approximate elements. Against the Jet Propulsion Laboratory’s ephemeris, from 1950 to 2149, the Sun comes within <span class="e-live" data-bound="sun">1</span>″, the Moon within <span class="e-live" data-bound="moon">7</span>″ and the stars within <span class="e-live" data-bound="stars">3</span>″. Venus comes within <span class="e-live" data-bound="venus">60</span>″ and Mars within <span class="e-live" data-bound="mars">120</span>″, good for a sight but not for a lunar, and Jupiter and Saturn are left out: the same elements put them several minutes of arc astray. The printed Nautical Almanac gives its places to a tenth of a minute of arc, 6″.</p>
 <p>In port, at a place whose longitude is charted, the chronometer is rated by <em>equal altitudes</em>. The Sun’s altitude is taken in the morning and the chronometer read, and the chronometer is read again in the afternoon when the Sun comes down to the same altitude. Halfway between is local apparent noon, the moment the Sun crosses the meridian, or very nearly: the Sun’s declination changes a little between the two readings, which the <em>equation of equal altitudes</em> allows for. The almanac gives the Greenwich time of local apparent noon at that longitude, and the difference is the chronometer’s error.</p>
 <p>What the altitude is doesn’t matter, only that it is the same twice. The sextant’s index error, refraction and the dip of the horizon are the same morning and afternoon, and cancel. Ashore, with no sea horizon, the Sun is taken off an artificial horizon, a dish of mercury or oil, whose reflection shows it at twice its altitude. Done again on later days, the errors give the rate.</p>
 <figure>
@@ -907,12 +907,25 @@ html.essay-on,html.essay-on body{overflow:hidden}
 
 <h2 id="make"><a class="e-h" href="#essay=make">What the model gives a maker</a></h2>
 <p>The working model on the other tab is drawn from the manual, photographs and videos of real Model 21s, and every part in it is a closed solid in millimetres. That makes it something to work from, not only to look at. Each part's card has a <em>maker's sheet</em>: its lines of the manual's parts list, each with the fit the model measures (a pivot running in its jewel, a screw tapped into a bridge, with the least clearance), its material, finish and heat treatment, its size and its mass. The card also gives the part's drawing, plan and elevation to scale, and its solid as an STL file. The panel's <em>Making it</em> section measures between any two points, prints the whole build book, and gives the model's numbers as data: the train's counts and modules, the fusee's profile, the escapement's cycle and the hairspring's design.</p>
+<p>The manual holds a repairer to these limits, and a maker to the same; where it gives none, the fits on the sheets are the model's own:</p>
+<div class="e-book e-tbl"><table><thead><tr><th>What</th><th>The manual</th><th>Where</th></tr></thead><tbody>
+<tr><td>end-shake of every arbor, the balance staff's too</td><td>0.001–0.003 in</td><td>Sec. VIII, Ops. 15, 69, 74</td></tr>
+<tr><td>the impulse roller pressed on the staff</td><td>to within 0.010 in of its shoulder</td><td>Sec. VII</td></tr>
+<tr><td>roller shake</td><td>about 0.002 in; a combined shake much more or less than 0.004 in, a new roller (made in O.D. 0.249–0.253 in)</td><td>Op. 84, Fig. 90; parts list</td></tr>
+<tr><td>the horn's clearance to the unlocking jewel</td><td>about 0.010 in</td><td>Op. 88</td></tr>
+<tr><td>the detent's stop button</td><td>0.005 in clearance</td><td>Sec. VIII, the detent's figures</td></tr>
+<tr><td>the detent spring's strength</td><td>0.770 g on the locking jewel just parts it from the stop</td><td>Op. 78</td></tr>
+<tr><td>lock, let-off, overall, drop</td><td>about 6°, at least 6°, 26–30°, about 2°</td><td>Ops. 85–87, 97</td></tr>
+<tr><td>the wedge pins of the collet and stud</td><td>about 0.050 in left to drive</td><td>Sec. VII</td></tr>
+<tr><td>the mainspring at assembly</td><td>wound fully, then let down about a quarter turn</td><td>Op. 56</td></tr>
+<tr><td>the rate before the weights</td><td>within two minutes a day by screws and washers (Tables II, III), then the weights</td><td>Sec. IX, Op. 5</td></tr>
+</tbody></table></div>
 <p>The model's moving parts are designed, not only drawn. The hairspring the balance needs is a strip <span class="e-live" data-live="hsB">0.23 mm</span> wide (as the restoration video measures it) by <span class="e-live" data-live="hsT">0.221 mm</span> thick, <span class="e-live" data-live="hsL">409 mm</span> long, the thickness from the stiffness the balance's moment of inertia asks for in an Elinvar-type alloy. Its two terminal curves, <span class="e-live" data-live="hsOut">14.8 mm</span> into the stud and <span class="e-live" data-live="hsIn">21.8 mm</span> to the collet, are solved to the conditions Édouard Phillips gave in 1861, so that the spring's pull on the balance is a pure couple: it leaves <span class="e-live" data-live="hsLat">2.5e-5</span> of its couple over the coil's radius on the pivots, where plain ends would leave about 2 %.</p>
-<p>The energy is budgeted the same way. The fusee is cut to even out a mainspring that pulls a little over twice as hard wound as run down; a spring of the parts list's 0.0165 in thickness does that with <span class="e-live" data-phys="Mup">1.02</span>&nbsp;N·m fully wound, its steel at <span class="e-live" data-phys="sUp">2.36</span>&nbsp;GPa, within a hardened mainspring's range. Through the train that is <span class="e-live" data-phys="esc">68-106</span>&nbsp;µN·m at the escape wheel, which, once unlocked, chases the impulse jewel through about <span class="e-live" data-phys="chase">5</span>° of the balance's swing before it catches it. The balance holds its 255° if it loses no more than a balance in air does: a quality factor of <span class="e-live" data-phys="Q">167-266</span>. The numbers behind all this are in the model's README and its tools; what the model has to estimate is listed there too.</p>
+<p>The energy is budgeted the same way. The fusee is cut to even out a mainspring that pulls a little over twice as hard wound as run down; a spring of the parts list's 0.0165 in thickness does that with <span class="e-live" data-phys="Mup">1.02</span>&nbsp;N·m fully wound, its steel at <span class="e-live" data-phys="sUp">2.36</span>&nbsp;GPa, within a hardened mainspring's range. Through the train that is <span class="e-live" data-phys="esc">68-106</span>&nbsp;µN·m at the escape wheel, which, once unlocked, chases the impulse jewel through about <span class="e-live" data-phys="chase">5</span>° of the balance's swing before it catches it. The balance holds its 255° if it loses no more than a balance in air does: a quality factor of <span class="e-live" data-phys="Q">171-273</span>. The numbers behind all this are in the model's README and its tools; what the model has to estimate is listed there too.</p>
 
 <h2 id="oil"><a class="e-h" href="#essay=oil">Oil, and where it goes</a></h2>
 <p>The manual uses three lubricants, and says not to use any “unless specifically required”: Hamilton No. 47 Red Oil for the jewelled pivots, Atlantic Refining Argon “R” mineral oil for the bushed pivots, and Hamilton T-324 grease for the mainspring and the maintaining work. A smear draws oil away from where it should stay, so nothing is wiped after oiling, and the oiler's tip is cleaned in pith. The points, in the order of reassembly:</p>
-<div class="e-book"><table><thead><tr><th>Op.</th><th>Oil</th><th>Where</th><th>Fig.</th></tr></thead><tbody>
+<div class="e-book e-tbl"><table><thead><tr><th>Op.</th><th>Oil</th><th>Where</th><th>Fig.</th></tr></thead><tbody>
 <tr><td>18–26</td><td>grease</td><td>the winding ratchet's teeth, the sustaining spring's working end, the fusee wheel's lip and the two elevations in its recess</td><td>—</td></tr>
 <tr><td>35–37</td><td>grease</td><td>the mainspring brace, and the whole flat of the mainspring</td><td>—</td></tr>
 <tr><td>43</td><td>argon</td><td>the upper sustaining pawl pivot</td><td>80</td></tr>
@@ -928,7 +941,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 
 <h2 id="adjust"><a class="e-h" href="#essay=adjust">Adjusting the escapement</a></h2>
 <p>The detent is the one part of the chronometer that is adjusted, not only assembled. The manual's operations, with what the model's escapement measures against each:</p>
-<div class="e-book"><table><thead><tr><th>Op.</th><th>What</th><th>The manual</th><th>The model</th></tr></thead><tbody>
+<div class="e-book e-tbl"><table><thead><tr><th>Op.</th><th>What</th><th>The manual</th><th>The model</th></tr></thead><tbody>
 <tr><td>78</td><td>the detent spring's strength: a 0.770 g weight hung on the locking jewel (Tool No. 8, Fig. 88) should just part the spring from its stop button</td><td>0.770 g</td><td>—</td></tr>
 <tr><td>79</td><td>the trip spring: it must lift the detent cleanly and fall off on the return swing</td><td>by eye</td><td>falls off at the return</td></tr>
 <tr><td>83</td><td>the escape teeth strike the face of the impulse jewel</td><td>by eye</td><td>drives it 19.4° of the wheel</td></tr>
@@ -939,7 +952,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 <tr><td>88</td><td>the horn's clearance to the unlocking jewel</td><td>about 0.010 in</td><td><span class="e-live" data-live="horn">0.25 mm</span></td></tr>
 <tr><td>97</td><td>drop</td><td>about 2°</td><td><span class="e-live" data-live="drop">2.1°</span></td></tr>
 </tbody></table></div>
-<p>The angles are read on the balance with the graduated sector (Tool No. 12) and its gauge pin, the detent seen under the special illuminator (Tool No. 104); the lock is set by the locking jewel's depth, the overall by where the detent's banking stops it, and the drop with the drop-adjusting tool, which turns the unlocking roller. The adjuster's bench in the model's panel moves the same settings and gives the same figures as they change.</p>
+<p>The angles are read on the balance with the graduated sector (Tool No. 12) and its gauge pin, the detent seen under the special illuminator (Tool No. 104); the lock and the detent's banking are set by the support block's lock-adjusting and detent-adjusting screws (Fig. 90), and the drop with the drop-adjusting tool, which turns the unlocking roller. The adjuster's bench in the model's panel moves the same settings and gives the same figures as they change.</p>
 <p class="e-see"><a href="#view=escapement&amp;speed=0.05&amp;part=det">The escapement, slowed, with its detent picked out</a></p>
 
 <h2 id="order"><a class="e-h" href="#essay=order">The order of work</a></h2>
@@ -1663,14 +1676,14 @@ function dialCanvas(kind){
 function makeEsc(o={}){
   const TAU=Math.PI*2,D2R=Math.PI/180,ES=13.16/2;
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side at the model's settings (ESC.A, the running amplitude, follows other settings: below).
-     TF: the balance's free run-down (s): 37, from the energy budget (tools/physics.js: the mainspring the fusee asks for, through the train and this escapement, holds 255° if the balance's Q is 167-266, its free swing decaying in 27-42 s; 33 at each stage's 0.9, the escape wheel's inertia measured on its solid; it was 25, estimated, until 4 October 2026); MU: steel on sapphire; fD, fP: the detent and trip springs' share of the impulse's work at the model's settings (estimated). EX: the centre distance (9.40 mm; the model passes the one in its L).
+     TF: the balance's free run-down (s): 37, from the energy budget (tools/physics.js: the mainspring the fusee asks for, through the train and this escapement, holds 255° if the balance's Q is 171-273, its free swing decaying in 27-43 s; 34 at each stage's 0.9, the escape wheel's inertia measured on its solid; it was 25, estimated, until 4 October 2026); MU: steel on sapphire; fD, fP: the detent and trip springs' share of the impulse's work at the model's settings: fD 0.057 from Op. 78 (a 0.770 g weight on the locking jewel just parts the detent spring from its stop: that preload over the 0.20 mm lift at release, 4.4-7.1 % of the balance's work, tools/physics.js; it was 0.03, estimated, until 4 October 2026), fP estimated. EX: the centre distance (9.40 mm; the model passes the one in its L).
      HS: the hairspring's own isochronism, s a day gained for each 10 deg the swing is above A (0: isochronous, the model's default; the adjuster's bench sets it).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
      rT: passing-spring tip; rd: discharge jewel reach; dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.286,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:269.6,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,TF:33,MU:0.15,fD:0.03,fP:0.005,HS:0};
+  const DEF={EX:-9.3997/ES,A:255,G:3.5,rRoll:0.48,rp:0.48,rT:0.286,rd:0.305,rDR:0.22,wI:0.06,wD:0.048,dL:0.019,DRAW:10,aI:181.3,aD:269.6,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,TF:34,MU:0.15,fD:0.057,fP:0.005,HS:0};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,G=c.G,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
@@ -2046,9 +2059,37 @@ const ALM=(()=>{
       da=(c(e)+s(e)*s(a)*tn(d))*N.dpsi-c(a)*tn(d)*N.deps+(-k*(c(a)*c(L)*c(e)+s(a)*s(L))+ec*k*(c(a)*c(pi)*c(e)+s(a)*s(pi)))/c(d),
       dd=s(e)*c(a)*N.dpsi+s(a)*N.deps-k*(c(L)*c(e)*(tn(e)*c(d)-s(a)*s(d))+c(a)*s(d)*s(L))+ec*k*(c(pi)*c(e)*(tn(e)*c(d)-s(a)*s(d))+c(a)*s(d)*s(pi));
     a=n360(a+da);d+=dd;return{name,n,v,ra:a,dec:d,sha:n360(360-a),gha:n360(gmst(j)+N.dpsi*c(e)-a),sd:0,hp:0};}
+  /* ---------- Venus and Mars: JPL's approximate Keplerian elements (E. M. Standish, "Keplerian Elements for Approximate Positions of the Major Planets",
+     Table 1, 1800-2050: a au, e, I, L, long. of perihelion, long. of node, each with its rate a century; their errors 20″ and 40″ in heliocentric longitude),
+     the Earth from the Earth-Moon barycentre less the Moon's share (1/82.3 of its geocentric place), light-time, then the stars' precession, nutation and
+     aberration. Good to about a minute of arc from the Earth: for sights, not lunars. Jupiter and Saturn are left out: these elements err 400″ and 600″ for
+     them, 7-10′ seen from the Earth, too coarse to navigate by */
+  const KEP={Venus:[0.72333566,0.00677672,3.39467605,181.9790995,131.60246718,76.67984255,0.0000039,-0.00004107,-0.0007889,58517.81538729,0.00268329,-0.27769418,8.34],
+    Mars:[1.52371034,0.0933941,1.84969142,-4.55343205,-23.94362959,49.55953891,0.00001847,0.00007882,-0.00813131,19140.30268499,0.44441088,-0.29257343,4.68],
+    EMB:[1.00000261,0.01671123,-0.00001531,100.46457166,102.93768193,0,0.00000562,-0.00004392,-0.01294668,35999.37244981,0.32327364,0]};
+  /* the heliocentric place (au, ecliptic and equinox of J2000) of a body of KEP at T centuries of TT from J2000 */
+  function kep(k,T){const q=KEP[k],a=q[0]+q[6]*T,e=q[1]+q[7]*T,I=q[2]+q[8]*T,Lm=q[3]+q[9]*T,w=q[4]+q[10]*T,O=q[5]+q[11]*T,om=w-O;let M=n180(Lm-w),E=M+e/D*s(M);
+    for(let i=0;i<20;i++){const dE=(M-(E-e/D*s(E)))/(1-e*c(E));E+=dE;if(Math.abs(dE)<1e-10)break;}
+    const xp=a*(c(E)-e),yp=a*Math.sqrt(1-e*e)*s(E);
+    return[(c(om)*c(O)-s(om)*s(O)*c(I))*xp+(-s(om)*c(O)-c(om)*s(O)*c(I))*yp,(c(om)*s(O)+s(om)*c(O)*c(I))*xp+(-s(om)*s(O)+c(om)*c(O)*c(I))*yp,s(om)*s(I)*xp+c(om)*s(I)*yp];}
+  /* a place of J2000 (α0, δ0, °) carried to the apparent place of date at the Julian day of TT jde: precession (Meeus 21), nutation (23.1), annual aberration (23.3) */
+  function app(a,d,jde){const T=(jde-2451545)/36525,z1=(2306.2181*T+0.30188*T*T+0.017998*T**3)*AS,z2=(2306.2181*T+1.09468*T*T+0.018203*T**3)*AS,th=(2004.3109*T-0.42665*T*T-0.041833*T**3)*AS,
+      A=c(d)*s(a+z1),B=c(th)*c(d)*c(a+z1)-s(th)*s(d),C=s(th)*c(d)*c(a+z1)+c(th)*s(d);
+    a=n360(at2(A,B)+z2);d=Math.abs(C)>0.99?Math.sign(C)*ac(Math.hypot(A,B)):as(C);
+    const N=nut(T),e=N.eps,L=sunGeo(jde).l,k=20.49552*AS,ec=0.016708634-0.000042037*T-0.0000001267*T*T,pi=102.93735+1.71946*T+0.00046*T*T,
+      da=(c(e)+s(e)*s(a)*tn(d))*N.dpsi-c(a)*tn(d)*N.deps+(-k*(c(a)*c(L)*c(e)+s(a)*s(L))+ec*k*(c(a)*c(pi)*c(e)+s(a)*s(pi)))/c(d),
+      dd=s(e)*c(a)*N.dpsi+s(a)*N.deps-k*(c(L)*c(e)*(tn(e)*c(d)-s(a)*s(d))+c(a)*s(d)*s(L))+ec*k*(c(pi)*c(e)*(tn(e)*c(d)-s(a)*s(d))+c(a)*s(d)*s(pi));
+    return{ra:n360(a+da),dec:d+dd,N};}
+  /** @returns {Body & {au:number}} Venus or Mars at t: its apparent place, distance (au), semi-diameter and horizontal parallax (′) */
+  function planet(k,t){const j=JD(t),jde=TT(j),T=(jde-2451545)/36525,emb=kep('EMB',T),m=moon(t),e0=23.4392911,
+      ml=m.lon-nut(T).dpsi,mx=m.km/149597870.7*c(m.lat)*c(ml),my=m.km/149597870.7*c(m.lat)*s(ml),mz=m.km/149597870.7*s(m.lat),pr=(2306.2181*T)*AS,   /* the Moon to J2000's equinox, near enough for its 1/82.3 */
+      ex=emb[0]-(mx*c(pr)+my*s(pr))/82.3,ey=emb[1]-(my*c(pr)-mx*s(pr))/82.3,ez=emb[2]-mz/82.3;
+    let tau=0,g=[0,0,0],r=0;for(let i=0;i<3;i++){const p=kep(k,T-tau/36525);g=[p[0]-ex,p[1]-ey,p[2]-ez];r=Math.hypot(...g);tau=r*0.0057755183;}   /* light-time: days for an au */
+    const xq=g[0],yq=g[1]*c(e0)-g[2]*s(e0),zq=g[1]*s(e0)+g[2]*c(e0),P=app(n360(at2(yq,xq)),as(zq/r),jde);
+    return{name:k,ra:P.ra,dec:P.dec,gha:n360(gmst(j)+P.N.dpsi*c(P.N.eps)-P.ra),au:r,sd:KEP[k][12]/r/60,hp:8.794/r/60};}
   const starIx=k=>STARS.findIndex(r=>r[1]===k||r[0]===k);
-  /** a body by name: 'Sun', 'Moon', a star's name or its almanac number */
-  function body(k,t){if(k==='Sun')return sun(t);if(k==='Moon')return moon(t);const i=starIx(k);if(i<0)throw Error('no such body: '+k);return star(i,t);}
+  /** a body by name: 'Sun', 'Moon', 'Venus', 'Mars', a star's name or its almanac number */
+  function body(k,t){if(k==='Sun')return sun(t);if(k==='Moon')return moon(t);if(k==='Venus'||k==='Mars')return planet(k,t);const i=starIx(k);if(i<0)throw Error('no such body: '+k);return star(i,t);}
   /** Maskelyne's lunar-distance stars (the Nautical Almanac from 1767): those near the Moon's path, with the Sun */
   const LUNAR=['Sun','Hamal','Aldebaran','Pollux','Regulus','Spica','Antares','Altair','Fomalhaut','Markab'];
 
@@ -2136,7 +2177,7 @@ const ALM=(()=>{
   /* ---------- formatting, as the almanac prints: degrees and minutes to a tenth, N/S ---------- */
   const dm=(a,neg='−')=>{const g=a<0?neg:'',x=Math.abs(a),d=Math.floor(x),m=(x-d)*60;let mm=Math.round(m*10)/10,dd=d;if(mm>=60){mm-=60;dd++;}return`${g}${dd}°${mm.toFixed(1).padStart(4,'0')}′`;},
     lat=a=>dm(Math.abs(a))+(a<0?' S':' N'),lon=a=>dm(Math.abs(a))+(a<0?' W':' E'),hms=t=>new Date(t).toISOString().slice(11,19);
-  return{JD,MS,deltaT,setDeltaT:v=>{dTfix=v;},gmst:j=>gmst(j),gast,sun,sunHand,moon,star,body,STARS,LUNAR,lunar,sep,hcz,topo,refr,unrefr,dip,correct,intercept,timeSight,fix,meridianLat,latByAlt,rate,
+  return{JD,MS,deltaT,setDeltaT:v=>{dTfix=v;},gmst:j=>gmst(j),gast,sun,sunHand,moon,planet,star,body,STARS,LUNAR,lunar,sep,hcz,topo,refr,unrefr,dip,correct,intercept,timeSight,fix,meridianLat,latByAlt,rate,
     noon,equalAlt,clear,sextant,sextantLunar,n180,n360,fmt:{dm,lat,lon,hms}};
 })();
 if(typeof module!=='undefined')module.exports={ALM};
@@ -4309,7 +4350,8 @@ const ESSAY=(()=>{
         const LS=AL.LUNAR.filter(b=>{const d=AL.lunar(b,day+12*hr);return d>15&&d<120;}),lr=LS.map(b=>[b,...[0,3,6,9,12,15,18,21].map(h=>FM.dm(AL.lunar(b,day+h*hr)).replace('°','° '))]);
         o+=`<section class="e-pg"><h4>${dn}</h4>${table(rows,['GMT','Sun GHA','Dec','Aries GHA','Moon GHA','Dec','HP ′'])}
           <p class="e-pf">Sun: semi-diameter ${S12.sd.toFixed(1)}′; equation of time (apparent less mean) ${eot(S0.eot)} at 00h, ${eot(S12.eot)} at 12h; meridian passage at Greenwich ${tod(mp,0).slice(0,5)} GMT. Moon: semi-diameter ${M12.sd.toFixed(1)}′ at 12h (from the Earth’s centre). ΔT ${AL.deltaT(2000+(AL.JD(day)-2451545)/365.25).toFixed(1)} s.</p>
-          ${lr.length?table(lr,['Lunar distances','00h','03h','06h','09h','12h','15h','18h','21h']):''}</section>`;}
+          ${lr.length?table(lr,['Lunar distances','00h','03h','06h','09h','12h','15h','18h','21h']):''}
+          ${table([0,3,6,9,12,15,18,21].map(h=>{const t=day+h*hr,V=AL.planet('Venus',t),Ma=AL.planet('Mars',t);return[String(h).padStart(2,'0'),gh(V.gha),dec(V.dec),gh(Ma.gha),dec(Ma.dec)];}),['GMT','Venus GHA','Dec','Mars GHA','Dec'])}</section>`;}
       const t1=t0+12*hr,sr=AL.STARS.map((s,i)=>{const b=AL.star(i,t1);return[s[0]||'—',s[1],gh(b.sha),dec(b.dec),s[6].toFixed(1)];});
       o+=`<section class="e-pg e-stars"><h4>The stars at ${new Date(t1).toISOString().slice(0,10)}, 12h (their places change by less than 1′ in a month)</h4>${table(sr,['No.','Star','SHA','Dec','Mag.'])}</section>`;AL.setDeltaT(null);return o;}
     const show=()=>{box.innerHTML=pages();};
@@ -4324,7 +4366,7 @@ const ESSAY=(()=>{
   /* the workbook: one's own sights */
   fig('eWork',f=>{const box=f.el,P=figOf(box);if(!AL)return noAlm(box);const out=q('.e-out',P);let mode='sight';
     const ang=s=>{s=String(s).trim().replace(/[°′'NnEe]/g,' ').replace(/,/g,'.');let neg=/[SsWw]|^-|^−/.test(s);s=s.replace(/[SsWw−-]/g,' ').trim();const p=s.split(/\s+/).map(Number);if(!p.length||p.some(x=>!Number.isFinite(x)))return NaN;const v=p[0]+(p[1]||0)/60+(p[2]||0)/3600;return neg?-v:v;};
-    const names=['Sun','Moon',...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
+    const names=['Sun','Moon','Venus','Mars',...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
       F0={date:'2026-10-18',time:'10:15:00',err:'0',eye:'6',ic:'-1.4',T:'18',P:'1008',lat:'35 00.0 N',lon:'40 00.0 W',body:'Sun',limb:'Lower',hs:'',how:'Meridian, bearing south',
         bodyL:'Markab',ds:'',hm:'',hb:'',far:'Near',r1:'2026-10-15 16:51',e1:'23.5',r2:'2026-10-20 16:50',e2:'29.0',now:'2026-11-02 12:00'};let V={...F0};
     const fld=(k,lab,html)=>`<label class="e-in"><span>${lab}</span>${html||`<input data-k="${k}" value="${V[k]}" spellcheck="false">`}</label>`,

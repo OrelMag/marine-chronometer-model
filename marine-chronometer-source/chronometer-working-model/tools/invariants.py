@@ -76,7 +76,7 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   chk('temperature: Model 21 balance, 72.5 F above the mean of 55 and 90 F',-(MTE.uncut(55)+MTE.uncut(90))/2,0.07,0.002,'s/day');
   chk('temperature: split balance, 0 at 72.5 F',MTE.split(72.5),0,1e-12,'s/day');
   /* the hairspring set against the escapement (HS, the adjuster's bench): -0.1 s a day per 10 deg all but cancels the escapement's loss at a smaller swing */
-  { const h=es({HS:-0.075}),a=h.ampAt(0.9);chk('hairspring at -0.075 (cancels the escapement’s, TF 33): rate at 90% of the torque, nearly isochronous',h.rateAt(a,0.9),0,0.03,'s/day'); }
+  { const h=es({HS:-0.13}),a=h.ampAt(0.9);chk('hairspring at -0.13 (cancels the escapement’s, TF 34, fD 0.057): rate at 90% of the torque, nearly isochronous',h.rateAt(a,0.9),0,0.03,'s/day'); }
   /* the 30-day performance test (Sec. IX) on the model as loaded: within every Bureau of Ships limit, its temperature figures the card of No. 3390's (0.08, 0.06, 0.02) */
   { const t=window.__test();chk('performance test: regulation (limit 1.55)',t.reg,0,0.2,'s/day');chk('performance test: 90 against 72.5 F (card 0.08, limit 0.75)',t.t1,0.07,0.015,'s/day');
     chk('performance test: 72.5 against 55 F (card 0.06, limit 0.75)',t.t2,0.07,0.015,'s/day');chk('performance test: 90 against 55 F (card 0.02, limit 1.20)',t.t3,0,0.03,'s/day');chk('performance test: isochronism (card 0.00, limit 0.50)',t.iso,0,0.05,'s'); }
