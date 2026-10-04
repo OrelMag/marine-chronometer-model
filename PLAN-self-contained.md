@@ -1,6 +1,6 @@
 # Plan: a self-contained model, enough to make a Model 21 and use it at sea
 
-_Status: planned (written 4 October 2026). Phase 0 done on `claude/self-contained`, a239864._
+_Status: written 4 October 2026. Phase 0 done (a239864). Decisions D1–D4 taken as suggested (the user, 4 October 2026). Phase E's E1 and E2 done, E3 in part (below)._
 
 ## The goal
 
@@ -38,7 +38,7 @@ estimates, the physics and what a maker would need.
    isn't shipped: `site/` is one page.
 8. **The time can't be found without radio.** The essay assumes radio time signals.
 
-## Decisions for the user (before Phase A)
+## Decisions (taken 4 October 2026: each as suggested)
 
 | # | Decision | Options | Suggested |
 |---|---|---|---|
@@ -99,6 +99,34 @@ manual's figures become the test.
 | D6 | **Rating:** the 30-day test, Tables I–IV, timing and vernier weights, as now, plus how to rate against the sky (Phase E) instead of a time signal. | Sec. IX (Test and Adjustment). | S |
 
 ## Phase E: time and longitude without radio (M–L)
+
+**Done (4 October 2026), on `claude/self-contained`:**
+- **E1, the almanac.** `shared/almanac.js` (`ALM`) is the almanac and the navigator's arithmetic. It has:
+  - the Sun (VSOP87 abridged), the Moon (ELP-2000/82's main terms), the 57 stars and Polaris (SIMBAD), sidereal time, nutation, aberration and ΔT;
+  - dip, refraction, parallax and semi-diameter;
+  - the time sight, the intercept and a fix;
+  - equal altitudes, and the lunar distance cleared exactly, with the Earth's figure taken off from the DR;
+  - sights made from the almanac, for the worked examples.
+
+  `tools/almanac.js` checks it, about 1 s, and is in `ci.py --quick`. The references are JPL Horizons and skyfield, written to `almanac-ref.json` by
+  `almanac_ref.py`. Its findings:
+  - the Sun within 0.5″ and the Moon within 6.5″ over 1950–2149, and the stars within 2.1″;
+  - round trips give the longitude back within 0.001 nm, the error by equal altitudes within 0.01 s, and a lunar's GMT within 1 s;
+  - the Sun's hand rule is within 0.6′.
+
+  The page's own accuracy statements are checked against these findings.
+- **E2, the essay.** Four sections after "Keeping the rate":
+  - "Greenwich time from the sky" (equal altitudes ashore);
+  - "Longitude by chronometer" (the time sight, with the corrections);
+  - "The lunar distance" (clearing, and the time it gives);
+  - "An almanac to print" (the almanac's pages for any days and Print, the hand rules for the Sun and the sight, and a workbook for one's own sights).
+
+  Each worked example is a fixed day and place, made by the almanac and worked from the readings alone.
+- **E3, in part.** The model already keeps a rate book (`#open=bookDet`), and the workbook gives the chronometer's error from a lunar. Still open: the rate book
+  taking comparisons from equal altitudes or lunars as well as from the master time.
+
+**Still open in E:** a meridian transit and the noon sight for latitude (only the time sight is worked); the planets, which the Nautical Almanac
+tabulated for lunars too; the rate book above.
 
 | # | Item | How | Effort |
 |---|---|---|---|

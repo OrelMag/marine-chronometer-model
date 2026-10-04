@@ -232,7 +232,9 @@
   <nav class="e-toc" aria-label="Contents"><b>Contents</b><ol>
     <li><a href="#essay=time">Time is a position</a></li><li><a href="#essay=oscillator">An oscillator that ignores the sea</a></li><li><a href="#essay=spring">The spring that breathes</a></li>
     <li><a href="#essay=heat">Heat</a></li><li><a href="#essay=force">Constant force</a></li><li><a href="#essay=winding">Winding</a></li><li><a href="#essay=counting">Counting</a></li>
-    <li><a href="#essay=detent">The detent</a></li><li><a href="#essay=gimbals">Level on a moving ship</a></li><li><a href="#essay=rate">Keeping the rate</a></li><li><a href="#essay=model21">The Hamilton Model 21</a></li></ol></nav>
+    <li><a href="#essay=detent">The detent</a></li><li><a href="#essay=gimbals">Level on a moving ship</a></li><li><a href="#essay=rate">Keeping the rate</a></li>
+    <li><a href="#essay=sky">Greenwich time from the sky</a></li><li><a href="#essay=sight">Longitude by chronometer</a></li><li><a href="#essay=lunar">The lunar distance</a></li><li><a href="#essay=almanac">An almanac to print</a></li>
+    <li><a href="#essay=model21">The Hamilton Model 21</a></li></ol></nav>
 </header>
 
 <h2 id="time"><a class="e-h" href="#essay=time">Time is a position</a></h2>
@@ -419,6 +421,87 @@
 <p class="e-see"><a href="#open=testDet">Run the thirty-day test on the working model, beside a real Model 21’s card</a></p>
 <p class="e-see"><a href="#open=bookDet">Keep a rate book for the working model: it compares its dial with the master time each day</a></p>
 
+<h2 id="sky"><a class="e-h" href="#essay=sky">Greenwich time from the sky</a></h2>
+<p>Every comparison in the rate book needs a master clock, and in the Navy’s day that was a radio signal. There is an older one that nothing can switch off: the sky. The Earth’s turning gives the local time anywhere the Sun or a star can be seen. And the Moon, which moves against the stars by about its own width every hour, is the hand of a clock whose dial is the sky and whose time is Greenwich’s. With an almanac that says where each body stands at each moment of Greenwich time, a sextant and the chronometer, a navigator can rate the chronometer ashore, find the ship’s longitude with it at sea, and check it, or start it again, in mid-ocean. The next four sections do all of it, with the numbers worked through.</p>
+<p>The almanac is the hard part, and these pages carry their own. They compute the Sun from the abridged VSOP87 series and the Moon from the main terms of the ELP-2000/82 theory, as Jean Meeus gives them in <em>Astronomical Algorithms</em>, and the Nautical Almanac’s 57 navigational stars and Polaris from their catalogued places and motions. Against the Jet Propulsion Laboratory’s ephemeris, from 1950 to 2149, the Sun comes within <span class="e-live" data-bound="sun">1</span>″, the Moon within <span class="e-live" data-bound="moon">7</span>″ and the stars within <span class="e-live" data-bound="stars">3</span>″. The printed Nautical Almanac gives its places to a tenth of a minute of arc, 6″.</p>
+<p>In port, at a place whose longitude is charted, the chronometer is rated by <em>equal altitudes</em>. The Sun’s altitude is taken in the morning and the chronometer read, and the chronometer is read again in the afternoon when the Sun comes down to the same altitude. Halfway between is local apparent noon, the moment the Sun crosses the meridian, or very nearly: the Sun’s declination changes a little between the two readings, which the <em>equation of equal altitudes</em> allows for. The almanac gives the Greenwich time of local apparent noon at that longitude, and the difference is the chronometer’s error.</p>
+<p>What the altitude is doesn’t matter, only that it is the same twice. The sextant’s index error, refraction and the dip of the horizon are the same morning and afternoon, and cancel. Ashore, with no sea horizon, the Sun is taken off an artificial horizon, a dish of mercury or oil, whose reflection shows it at twice its altitude. Done again on later days, the errors give the rate.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eEqual"><canvas aria-label="The Sun's altitude through a day against the chronometer's reading, with two equal altitudes"></canvas></div>
+  <div class="e-ctl">
+    <div class="seg" role="group" aria-label="Port"><button aria-pressed="true" data-v="0">Annapolis</button><button aria-pressed="false" data-v="1">Greenwich</button><button aria-pressed="false" data-v="2">Honolulu</button></div>
+    <label class="e-sl"><span>Altitude taken</span><input type="range" min="8" max="45" step="0.5" value="25"><output></output></label>
+    <label class="e-sl"><span>The chronometer is</span><input type="range" min="-90" max="90" step="0.5" value="23.5"><output></output></label>
+  </div>
+  <div class="e-book"></div>
+  <div class="e-ro"></div>
+  <figcaption>15 October 2026, the Sun’s centre. The chronometer’s error is set by the slider and hidden from the arithmetic, which works only from the two readings, the port’s place and the almanac; it finds the error again. The Sun’s declination falls through the October day, too little to see in the curve but, uncorrected, enough to put the chronometer’s error out by several seconds.</figcaption>
+</figure>
+
+<h2 id="sight"><a class="e-h" href="#essay=sight">Longitude by chronometer</a></h2>
+<p>At sea the chronometer supplies Greenwich time, corrected by its error and rate from the rate book, and a sight of the Sun or a star supplies the local time. With the latitude known, from the noon sight or the pole star, the body’s altitude, its declination and the latitude make a spherical triangle between the pole, the zenith and the body. Its angle at the pole is the body’s local hour angle. The almanac gives the body’s Greenwich hour angle at the chronometer’s time, and the difference between the two is the longitude. This is the <em>time sight</em>, the way longitude was worked for most of the chronometer’s life. Marcq St Hilaire’s intercept method of 1875 does the same arithmetic at any bearing, from a position by dead reckoning, and the workbook at the end gives both.</p>
+<p>The sextant reads the angle from the sea horizon to the Sun’s lower limb. Before it can go into the triangle it is corrected: for the sextant’s <em>index error</em>; for the <em>dip</em>, since the eye stands above the sea (1.76′ for the square root of the eye’s height in metres); for <em>refraction</em>, which lifts every body, about 34′ at the horizon and 1′ at 45°; for the <em>semi-diameter</em>, from the limb to the centre; and for <em>parallax</em>, since the almanac gives places seen from the Earth’s centre: 0.15′ for the Sun, nearly a degree for the Moon.</p>
+<p>A sight is best taken with the body near east or west, where its altitude changes fastest and an error in the latitude matters least. Every second the chronometer is out moves the longitude 15″ of arc, a quarter of a mile at the equator, whatever the body.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eSight"><canvas aria-label="The error in longitude from an error in the latitude, by the time of the sight"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Sight taken at</span><input type="range" min="9.75" max="12.5" step="0.05" value="10.25"><output></output></label>
+    <label class="e-sl"><span>Chronometer error missed</span><input type="range" min="-60" max="60" step="1" value="0"><output></output></label>
+    <label class="e-sl"><span>Latitude out by</span><input type="range" min="-10" max="10" step="0.5" value="0"><output></output></label>
+  </div>
+  <div class="e-book"></div>
+  <div class="e-ro"></div>
+  <figcaption>18 October 2026, a ship at 35° N, 40° W, the morning Sun’s lower limb from an eye 6 m above the sea, the sextant’s index correction −1.4′, 18 °C and 1008 hPa. The sight is made by the almanac at the true place and worked as the navigator would, on the latitude given; the curve is how far an error of the latitude moves the longitude, by the time of the sight. As the Sun nears the meridian a latitude error grows into the longitude.</figcaption>
+</figure>
+
+<h2 id="lunar"><a class="e-h" href="#essay=lunar">The lunar distance</a></h2>
+<p>A chronometer can stop, or jump, and a small ship may carry only one. The Moon goes round the sky in a month, about half a degree an hour against the stars, so its distance from the Sun, or from a bright star near its path, tells Greenwich time to anyone who can measure the angle and has an almanac that gives the distance in advance. Nevil Maskelyne’s <em>Nautical Almanac</em>, first published for 1767, printed those distances for every three hours; the bodies here are the Sun and the nine bright stars near the Moon’s path these pages tabulate: Hamal, Aldebaran, Pollux, Regulus, Spica, Antares, Altair, Fomalhaut and Markab.</p>
+<p>The sextant measures from limb to limb and from the deck, not from the Earth’s centre, so the distance must be <em>cleared</em>. Refraction lifts each body, and the Moon’s parallax lowers it by most of a degree, and both change the distance. Both act along each body’s own vertical, so the angle at the zenith between the two verticals is the same before and after. It is found from the apparent altitudes and the apparent distance, and then gives the true distance from the true altitudes:</p>
+<p class="e-eq">cos ΔZ = (cos <i>d</i> − sin <i>a</i>₁ sin <i>a</i>₂) / (cos <i>a</i>₁ cos <i>a</i>₂)&emsp;&emsp;cos <i>D</i> = sin <i>h</i>₁ sin <i>h</i>₂ + cos <i>h</i>₁ cos <i>h</i>₂ cos ΔZ</p>
+<p>That treats the Earth as a sphere, which leaves up to 0.2′. From a position by dead reckoning, the almanac clears a sight it makes itself at that place and moment and takes off what remains. Then the almanac is searched for the moment the Moon’s distance from the body, seen from the Earth’s centre, is <i>D</i>: that moment is Greenwich time. A minute of arc of distance is about two minutes of time, so a sextant read to a tenth of a minute gives Greenwich time to about twelve seconds. Worked backwards from a sight the almanac makes, the clearing gives the time back within <span class="e-live" data-bound="lunar">3</span>&nbsp;s. A body whose distance from the Moon changes slowly is no use: below about 15′ an hour, a tenth of a minute is more than 20 seconds.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eLunar"><canvas aria-label="The Moon's distance from a star through the evening, and the cleared distance that gives Greenwich time"></canvas></div>
+  <div class="e-ctl">
+    <div class="seg" role="group" aria-label="Body"><button aria-pressed="true" data-v="Markab">Markab</button><button aria-pressed="false" data-v="Hamal">Hamal</button><button aria-pressed="false" data-v="Altair">Altair</button></div>
+    <label class="e-sl"><span>The chronometer is out</span><input type="range" min="-40" max="40" step="1" value="17"><output></output></label>
+    <label class="e-sl"><span>Distance read out by</span><input type="range" min="-0.5" max="0.5" step="0.05" value="0"><output></output></label>
+  </div>
+  <div class="e-book"></div>
+  <div class="e-ro"></div>
+  <figcaption>18 October 2026, the same ship at dusk, 21:00 GMT. The Moon’s lower limb and the star are taken with the distance, near limb to the star, all as the almanac makes them; the chronometer’s reading only says where to start looking. Altair, far from the Moon’s path, closes on it slowly that evening, and an error in the distance becomes a large error in time.</figcaption>
+</figure>
+
+<h2 id="almanac"><a class="e-h" href="#essay=almanac">An almanac to print</a></h2>
+<p>A screen may not outlast the voyage. The almanac below prints, for any run of days: each hour’s Greenwich hour angle and declination of the Sun and the Moon, the hour angle of Aries, the Moon’s horizontal parallax, the semi-diameters, the equation of time and the times of meridian passage, the Moon’s distances from the Sun and the lunar stars every three hours, and the stars’ places. Printed for the years ahead, with the rules below for working by hand, it is everything the sections above need.</p>
+<p>The Moon has to be printed: its motion takes the full series. The Sun can be worked by hand to within <span class="e-live" data-bound="hand">1</span>′ (the Astronomical Almanac’s short formulas), which is enough for a time sight but not for a lunar. With <i>n</i> the days from 2000 January 1, 12h UT, angles in degrees:</p>
+<div class="e-box">
+  <p><i>L</i> = 280.460 + 0.9856474 <i>n</i>,&ensp;<i>g</i> = 357.528 + 0.9856003 <i>n</i>,&ensp;λ = <i>L</i> + 1.915 sin <i>g</i> + 0.020 sin 2<i>g</i>,&ensp;ε = 23.439 − 0.0000004 <i>n</i></p>
+  <p>right ascension α = atan2(cos ε sin λ, cos λ),&ensp;declination δ = asin(sin ε sin λ),&ensp;equation of time = 4 (<i>L</i> − α) minutes</p>
+  <p>GHA Aries = 99.9678 + 0.98564737 <i>D</i> + 15.0410686 <i>H</i>, with <i>D</i> whole days after 2000 January 1, 0h UT and <i>H</i> hours of UT;&ensp;GHA Sun = GHA Aries − α</p>
+  <p>the triangle: sin <i>H</i><sub>c</sub> = sin φ sin δ + cos φ cos δ cos LHA;&ensp;the time sight: cos <i>t</i> = (sin <i>H</i><sub>o</sub> − sin φ sin δ) / (cos φ cos δ); longitude = LHA − GHA</p>
+  <p>dip = 1.76′ √<i>h</i> (<i>h</i> in metres);&ensp;refraction = 1′ / tan(<i>h</i><sub>a</sub> + 7.31 / (<i>h</i><sub>a</sub> + 4.4)), <i>h</i><sub>a</sub> in degrees (Bennett’s formula, at 10 °C and 1010 hPa);&ensp;parallax = HP cos <i>h</i>;&ensp;the Moon’s semi-diameter grows by (1 + sin HP sin <i>h</i>) above the horizon</p>
+</div>
+<figure>
+  <div class="e-ctl">
+    <label class="e-in"><span>From</span><input type="date" class="d0" value="2026-10-18"></label>
+    <label class="e-in"><span>Days</span><select class="nd"><option>1</option><option selected>3</option><option>7</option><option>31</option></select></label>
+    <label class="e-in"><span>ΔT</span><input type="number" class="dt" step="0.1" placeholder="auto" aria-label="ΔT in seconds; empty for the almanac's own"></label>
+    <button class="today">Today</button><button class="print">Print</button>
+  </div>
+  <div class="e-alm" id="eAlm"></div>
+  <figcaption>ΔT, the difference between the Earth’s turning and uniform time, was 69.1 s in 2026, measured; past that it is a forecast, and a second of it moves a lunar’s Greenwich time by a second, nothing else. A value given here is used instead.</figcaption>
+</figure>
+<p>And for one’s own sights, the same arithmetic as a workbook. It reduces a sextant altitude to a longitude by the time sight, or to an intercept and bearing from a position by dead reckoning, or clears a lunar distance to Greenwich time.</p>
+<figure>
+  <div class="e-ctl">
+    <div class="seg" role="group" aria-label="Sight"><button aria-pressed="true" data-v="sight">Altitude</button><button aria-pressed="false" data-v="lunar">Lunar distance</button></div>
+    <button class="ex">The example above</button>
+  </div>
+  <div class="e-work" id="eWork"></div>
+  <div class="e-book e-out"></div>
+  <figcaption>Angles as degrees and minutes (35 12.4), times as GMT by the chronometer, corrected by its error (+ fast) from the rate book. North and east are positive; a latitude or longitude may be written 35 12.4 S, or −35 12.4.</figcaption>
+</figure>
+
 <h2 id="model21"><a class="e-h" href="#essay=model21">The Hamilton Model 21</a></h2>
 <p>The Model 21 was designed and made by the Hamilton Watch Company of Lancaster, Pennsylvania, to U.S. Navy Specification 18-C-7; the dial in these pages is from one made under a U.S. Maritime Commission contract. The Navy assigned its serial numbers and engraved them on the dial and the barrel bridge. It has fourteen jewels. It changed in service: chronometers put into the field before 1944 may have a one-piece roller, replaced at overhaul by two, whose angle can be set; later ones have a train-blocking screw, from serial 4003, to hold the mainspring’s power while the balance and escapement are out; and from the end of 1947 a balance locking arm was fitted at overhaul, in place of the folded wedges that had held the balance still in shipment.</p>
 <p>Most of what is known of it in this detail comes from one book, the Navy’s <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em> (NAVSHIPS 250-624, 1948). The model on the other tab is built from it and from photographs of surviving movements; the Royal Museums Greenwich holds one, No. 4E019.</p>
@@ -483,6 +566,7 @@
 <script src="js/core.js"></script>
 <script src="../shared/escapement.js"></script>
 <script src="../shared/escplan.js"></script>
+<script src="../shared/almanac.js"></script>
 <script src="js/movement.js"></script>
 <script src="js/box.js"></script>
 <script src="js/essay.js"></script>
