@@ -2,7 +2,7 @@
 
     python ci.py              # the checks on every change (about 5 minutes): build, escapement, types, smoke, invariants, solids, exploded, audit
     python ci.py --quick      # without the browser checks (about 15 s): build, escapement, types
-    python ci.py --full       # and the slow geometry checks (about 5 minutes more): fine.py, maintaining.py
+    python ci.py --full       # and the slow geometry checks (about 11 minutes more): fine.py, maintaining.py, bom.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
 
@@ -74,6 +74,7 @@ STEPS=[('build',build,'quick'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),
  ('maintaining',lambda log:run([PY,'maintaining.py'],TOOLS,log),'full'),
+ ('bom',lambda log:run([PY,'bom.py'],TOOLS,log),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)
  ('views',views,'views')]
 def main():
     only=arg('--only');want={'quick'}|(set() if '--quick' in sys.argv else {'browser'})|({'full'} if '--full' in sys.argv else set())|({'views'} if '--views' in sys.argv else set())

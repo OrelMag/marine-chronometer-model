@@ -1019,7 +1019,7 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    (the hands on their arbors, the impulse jewel in its roller, pivots in their
    holes, the stud's steady pin, the sustaining spring's pin and others) are
    removed.
-5. `bom.py` in CI: about 5 minutes a run.
+5. *Done (4 October 2026, `claude/shape-pass`): `bom.py` runs in `ci.py --full`.* `bom.py` in CI: about 5 minutes a run.
 6. **The third arbor's place** (fidelity, open). Mapped through the centre,
    the fusee arbor and the wind indicator wheel (which land within 0.8 mm of
    the model), a photograph of a Model 21's dial side puts the third lower
