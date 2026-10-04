@@ -180,6 +180,15 @@ const ALM=(()=>{
       const det=xx*yy-xy*xy;if(Math.abs(det)<1e-9)break;const de=(yy*xa-xy*ya)/det,dn=(xx*ya-xy*xa)/det;la+=dn/60;lo+=de/60/c(la);if(Math.hypot(de,dn)<1e-4)break;}
     return{lat:la,lon:n180(lo)};}
 
+  /** latitude from a meridian altitude (the noon sight): ho the observed altitude as the body crosses the meridian, highest, dec its declination; south: it
+      bears south. The zenith distance 90° − ho, added to the declination for a body to the south, taken from it for one to the north */
+  const meridianLat=(ho,dec,south)=>south?dec+90-ho:dec-90+ho;
+  /** latitude from a star's altitude at any time, the pole star's above all (within a degree of the pole, its altitude is the latitude to within that
+      degree): the triangle solved for the latitude that gives altitude ho at local hour angle lha (Greenwich hour angle + the DR longitude), from lat0 */
+  function latByAlt(ho,dec,lha,lat0=ho){let la=lat0;for(let k=0;k<40;k++){const h=hcz(la,dec,lha).hc,g=(hcz(la+1e-4,dec,lha).hc-h)/1e-4;if(!g)break;const d=(ho-h)/g;la+=d;if(Math.abs(d)<1e-10)break;}return la;}
+  /** the daily rate (s a day, + gaining) from two errors of the chronometer, e1 at t1 and e2 at t2 (s, + fast), and its error carried to t by that rate */
+  function rate(t1,e1,t2,e2){const r=(e2-e1)/((t2-t1)/864e5);return{r,at:t=>e2+r*(t-t2)/864e5};}
+
   /* ---------- Greenwich time from the sky ---------- */
   /** the GMT (ms) of local apparent noon at longitude lon (east +), nearest t */
   function noon(lon,t){for(let k=0;k<8;k++){const dt=-n180(sun(t).gha+lon)/15*3.6e6;t+=dt;if(Math.abs(dt)<1)break;}return t;}
@@ -221,7 +230,7 @@ const ALM=(()=>{
   /* ---------- formatting, as the almanac prints: degrees and minutes to a tenth, N/S ---------- */
   const dm=(a,neg='−')=>{const g=a<0?neg:'',x=Math.abs(a),d=Math.floor(x),m=(x-d)*60;let mm=Math.round(m*10)/10,dd=d;if(mm>=60){mm-=60;dd++;}return`${g}${dd}°${mm.toFixed(1).padStart(4,'0')}′`;},
     lat=a=>dm(Math.abs(a))+(a<0?' S':' N'),lon=a=>dm(Math.abs(a))+(a<0?' W':' E'),hms=t=>new Date(t).toISOString().slice(11,19);
-  return{JD,MS,deltaT,setDeltaT:v=>{dTfix=v;},gmst:j=>gmst(j),gast,sun,sunHand,moon,star,body,STARS,LUNAR,lunar,sep,hcz,topo,refr,unrefr,dip,correct,intercept,timeSight,fix,
+  return{JD,MS,deltaT,setDeltaT:v=>{dTfix=v;},gmst:j=>gmst(j),gast,sun,sunHand,moon,star,body,STARS,LUNAR,lunar,sep,hcz,topo,refr,unrefr,dip,correct,intercept,timeSight,fix,meridianLat,latByAlt,rate,
     noon,equalAlt,clear,sextant,sextantLunar,n180,n360,fmt:{dm,lat,lon,hms}};
 })();
 if(typeof module!=='undefined')module.exports={ALM};

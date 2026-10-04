@@ -423,9 +423,11 @@ const ESSAY=(()=>{
     const la=35,lo=-40,day=Date.UTC(2026,9,18),O={eye:6,ic:-1.4,T:18,P:1008,limb:'L'};let H=10.25,Em=0,dL=0;
     const work=(hh,em,dl)=>{const t=day+hh*hr,hs=AL.sextant('Sun',t,la,lo,O),tn=t+em*1000,B=AL.sun(tn),c=AL.correct(hs,B,{...O,lat:la}),east=AL.topo(AL.sun(t),la,lo).az<180,
       r=AL.timeSight(la+dl/60,B.dec,c.ho,B.gha,east);return{t,tn,hs,B,c,east,r,err:r?AL.n180(r.lon-lo)*60*Math.cos(la*Math.PI/180):NaN};};
+    const N=(()=>{const t=AL.noon(lo,day+12*hr-lo/15*hr),S=AL.sun(t),hs=AL.sextant('Sun',t,la,lo,O),c=AL.correct(hs,S,{...O,lat:la});return{t,S,hs,c,lat:AL.meridianLat(c.ho,S.dec,true)};})();   /* that day's noon sight, the ship hove to */
     const upd=()=>{const w=work(H,Em,dL),{B,c,r}=w;if(!r){tb.innerHTML='';ro.innerHTML='The Sun is too near the meridian for a time sight.';f.dirty=true;return;}
       tb.innerHTML=table([['GMT by the chronometer',tod(w.tn),Em?`${mins(Em)} not allowed for`:''],...corrRows(c,B),null,['The Sun’s GHA, by the almanac',FM.dm(B.gha),''],['its declination',dmS(B.dec),''],
-        ['Latitude',dmS(la+dL/60),dL?`${sgn(dL)} out`:'from the noon sight'],['Meridian angle t',FM.dm(r.t),w.east?'east':'west'],['Local hour angle',FM.dm(r.lha),'= 360° − t'],['Longitude = LHA − GHA',`<b>${dmS(r.lon,'E','W')}</b>`,'']]);
+        ['Latitude',dmS(la+dL/60),dL?`${sgn(dL)} out`:'from the noon sight'],['Meridian angle t',FM.dm(r.t),w.east?'east':'west'],['Local hour angle',FM.dm(r.lha),'= 360° − t'],['Longitude = LHA − GHA',`<b>${dmS(r.lon,'E','W')}</b>`,''],null,
+        ['That noon, '+tod(N.t,0)+' GMT: the lower limb on the meridian',FM.dm(N.hs),'sextant'],['observed altitude',FM.dm(N.c.ho),''],['the Sun’s declination',dmS(N.S.dec),''],['Latitude = declination + (90° − Ho)',`<b>${dmS(N.lat)}</b>`,'the Sun bears south']]);
       ro.innerHTML=`The ship is at 40°00.0′ W: the sight puts it <b>${Math.abs(w.err).toFixed(1)} nautical miles</b> ${w.err>0?'east':'west'} of it${Math.abs(w.err)<0.05?' (the arithmetic gives it back)':''}. The Sun bears ${AL.topo(AL.sun(w.t),la,lo).az.toFixed(0)}°.`;f.dirty=true;};
     range(ti,v=>{H=v;upd();return tod(day+v*hr,0).slice(0,5)+' GMT';});range(ei,v=>{Em=v;upd();return mins(v);});range(li,v=>{dL=v;upd();return sgn(v);});
     return()=>{if(!f.dirty)return;f.dirty=false;const per=x=>work(x,0,1).err,all=x=>work(x,Em,dL).err,ys=[];for(let x=9.75;x<=12.5;x+=0.25)ys.push(per(x),all(x));
@@ -476,17 +478,29 @@ const ESSAY=(()=>{
   fig('eWork',f=>{const box=f.el,P=figOf(box);if(!AL)return noAlm(box);const out=q('.e-out',P);let mode='sight';
     const ang=s=>{s=String(s).trim().replace(/[°′'NnEe]/g,' ').replace(/,/g,'.');let neg=/[SsWw]|^-|^−/.test(s);s=s.replace(/[SsWw−-]/g,' ').trim();const p=s.split(/\s+/).map(Number);if(!p.length||p.some(x=>!Number.isFinite(x)))return NaN;const v=p[0]+(p[1]||0)/60+(p[2]||0)/3600;return neg?-v:v;};
     const names=['Sun','Moon',...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
-      F0={date:'2026-10-18',time:'10:15:00',err:'0',eye:'6',ic:'-1.4',T:'18',P:'1008',lat:'35 00.0 N',lon:'40 00.0 W',body:'Sun',limb:'Lower',hs:'',bodyL:'Markab',ds:'',hm:'',hb:'',far:'Near'};let V={...F0};
-    const fld=(k,lab,html)=>`<label class="e-in"><span>${lab}</span>${html||`<input data-k="${k}" value="${V[k]}" spellcheck="false">`}</label>`;
-    function form(){box.innerHTML=`<div class="e-grid">${fld('date','Date (GMT)',`<input type="date" data-k="date" value="${V.date}">`)+fld('time','Chronometer reads')+fld('err','its error, s (+ fast)')+fld('lat','Latitude (DR)')+fld('lon','Longitude (DR)')+fld('eye','Height of eye, m')+fld('ic','Index correction, ′')+fld('T','Temperature, °C')+fld('P','Pressure, hPa')+
-      (mode==='sight'?fld('body','Body',`<select data-k="body">${opt(names,V.body)}</select>`)+fld('limb','Limb',`<select data-k="limb">${opt(['Lower','Upper','Centre'],V.limb)}</select>`)+fld('hs','Sextant altitude'):
-        fld('bodyL','Body',`<select data-k="bodyL">${opt(AL.LUNAR,V.bodyL)}</select>`)+fld('ds','Distance (sextant)')+fld('far','Moon’s limb',`<select data-k="far">${opt(['Near','Far'],V.far)}</select>`)+fld('hm','Moon’s lower limb, altitude')+fld('hb','Body’s altitude'))}</div>`;
+      F0={date:'2026-10-18',time:'10:15:00',err:'0',eye:'6',ic:'-1.4',T:'18',P:'1008',lat:'35 00.0 N',lon:'40 00.0 W',body:'Sun',limb:'Lower',hs:'',how:'Meridian, bearing south',
+        bodyL:'Markab',ds:'',hm:'',hb:'',far:'Near',r1:'2026-10-15 16:51',e1:'23.5',r2:'2026-10-20 16:50',e2:'29.0',now:'2026-11-02 12:00'};let V={...F0};
+    const fld=(k,lab,html)=>`<label class="e-in"><span>${lab}</span>${html||`<input data-k="${k}" value="${V[k]}" spellcheck="false">`}</label>`,
+      when=s=>{const x=String(s).trim().replace(' ','T');return Date.parse(x+(/T\d\d:\d\d$/.test(x)?':00':'')+'Z');},
+      sel=(k,lab,a)=>fld(k,lab,`<select data-k="${k}">${opt(a,V[k])}</select>`),HOW=['Meridian, bearing south','Meridian, bearing north','Pole star'];
+    function form(){const base=fld('date','Date (GMT)',`<input type="date" data-k="date" value="${V.date}">`)+fld('time','Chronometer reads')+fld('err','its error, s (+ fast)')+fld('lat','Latitude (DR)')+fld('lon','Longitude (DR)')+fld('eye','Height of eye, m')+fld('ic','Index correction, ′')+fld('T','Temperature, °C')+fld('P','Pressure, hPa');
+      box.innerHTML=`<div class="e-grid">${mode==='rate'?fld('r1','First error found, GMT')+fld('e1','its error, s (+ fast)')+fld('r2','Second, GMT')+fld('e2','its error, s')+fld('now','Carried to, GMT'):
+        base+(mode==='sight'?sel('body','Body',names)+sel('limb','Limb',['Lower','Upper','Centre'])+fld('hs','Sextant altitude'):
+        mode==='lat'?sel('how','Taken',HOW)+sel('body','Body',names)+sel('limb','Limb',['Lower','Upper','Centre'])+fld('hs','Sextant altitude'):
+        sel('bodyL','Body',AL.LUNAR)+fld('ds','Distance (sextant)')+sel('far','Moon’s limb',['Near','Far'])+fld('hm','Moon’s lower limb, altitude')+fld('hb','Body’s altitude'))}</div>`;
       qa('[data-k]',box).forEach(e=>e.addEventListener(e.tagName==='SELECT'||e.type==='date'?'change':'input',()=>{V[e.dataset.k]=e.value;calc();}));calc();}
-    function calc(){const tc=Date.parse(V.date+'T'+V.time.trim()+'Z'),E=+V.err||0,t=tc-E*1000,la=ang(V.lat),lo=ang(V.lon),O={eye:+V.eye||0,ic:+V.ic||0,T:+V.T,P:+V.P};
+    function calc(){
+      if(mode==='rate'){const t1=when(V.r1),t2=when(V.r2),tn=when(V.now),e1=+V.e1,e2=+V.e2;if(![t1,t2,tn,e1,e2].every(Number.isFinite)||t2<=t1){out.innerHTML='<p class="e-ro">Give two errors, the later second, each with its time as 2026-10-15 16:51, and the time to carry it to.</p>';return;}
+        const r=AL.rate(t1,e1,t2,e2),e=r.at(tn);out.innerHTML=table([['Days between',((t2-t1)/864e5).toFixed(2),''],['Daily rate',`<b>${sgn(r.r,2,' s')}</b>`,r.r>=0?'gaining':'losing'],
+          ['The error at '+String(V.now).trim(),`<b>${mins(e)}</b>`,e>=0?'fast: take it off the reading':'slow: add it to the reading'],['In longitude, if it were left out',FM.dm(Math.abs(e)/240),'15″ of arc a second']]);return;}
+      const tc=Date.parse(V.date+'T'+V.time.trim()+'Z'),E=+V.err||0,t=tc-E*1000,la=ang(V.lat),lo=ang(V.lon),O={eye:+V.eye||0,ic:+V.ic||0,T:+V.T,P:+V.P};
       if(!Number.isFinite(t)||!Number.isFinite(la)||!Number.isFinite(lo)||!Number.isFinite(O.T)||!Number.isFinite(O.P)){out.innerHTML='<p class="e-ro">Fill in the date, the time (hh:mm:ss), the place by dead reckoning and the weather.</p>';return;}
-      if(mode==='sight'){const hs=ang(V.hs);if(!Number.isFinite(hs)){out.innerHTML='<p class="e-ro">Give the sextant’s altitude, as degrees and minutes (31 41.2).</p>';return;}
-        const B=AL.body(V.body,t),c=AL.correct(hs,B,{...O,limb:V.limb[0],lat:la}),i=AL.intercept(la,lo,B.gha,B.dec,c.ho),east=i.lha>180,r=AL.timeSight(la,B.dec,c.ho,B.gha,east);
-        out.innerHTML=table([['GMT',tod(t),E?`chronometer ${mins(E)}`:''],...corrRows(c,B),null,[B.name+'’s GHA',FM.dm(B.gha),''],['declination',dmS(B.dec),''],null,
+      if(mode==='sight'||mode==='lat'){const hs=ang(V.hs);if(!Number.isFinite(hs)){out.innerHTML='<p class="e-ro">Give the sextant’s altitude, as degrees and minutes (31 41.2).</p>';return;}
+        const pole=mode==='lat'&&V.how==='Pole star',B=AL.body(pole?'Polaris':V.body,t),c=AL.correct(hs,B,{...O,limb:pole?'C':V.limb[0],lat:la}),head=[['GMT',tod(t),E?`chronometer ${mins(E)}`:''],...corrRows(c,B),null,[B.name+'’s GHA',FM.dm(B.gha),''],['declination',dmS(B.dec),'']];
+        if(mode==='lat'){const lha=AL.n360(B.gha+lo),l=pole?AL.latByAlt(c.ho,B.dec,lha,la):AL.meridianLat(c.ho,B.dec,V.how.endsWith('south'));
+          out.innerHTML=table([...head,null,pole?['Local hour angle',FM.dm(lha),'GHA + the DR longitude']:['Zenith distance',FM.dm(90-c.ho),'90° − Ho'],['Latitude',`<b>${dmS(l)}</b>`,pole?'the triangle solved':V.how.endsWith('south')?'declination + zenith distance':'declination − zenith distance']]);return;}
+        const i=AL.intercept(la,lo,B.gha,B.dec,c.ho),east=i.lha>180,r=AL.timeSight(la,B.dec,c.ho,B.gha,east);
+        out.innerHTML=table([...head,null,
           ['Time sight: longitude',r?`<b>${dmS(r.lon,'E','W')}</b>`:'—',r?`on latitude ${dmS(la)}`:'the altitude can’t be reached at that latitude'],
           ['Intercept from the DR',`<b>${Math.abs(i.a).toFixed(1)}′ ${i.a>=0?'toward':'away'}</b>`,`bearing ${i.zn.toFixed(1)}°; computed altitude ${FM.dm(i.hc)}`]]);}
       else{const ds=ang(V.ds),hm=ang(V.hm),hb=ang(V.hb);if(![ds,hm,hb].every(Number.isFinite)){out.innerHTML='<p class="e-ro">Give the distance and both altitudes, as degrees and minutes.</p>';return;}
@@ -494,9 +508,10 @@ const ESSAY=(()=>{
         out.innerHTML=table([['The Moon’s centre, apparent and true',FM.dm(r.am)+' · '+FM.dm(r.moon.ho),''],[V.bodyL+', apparent and true',FM.dm(r.ab)+' · '+FM.dm(r.body.ho),''],['Apparent distance',FM.dm(r.d),''],
           ['Cleared distance',`<b>${FM.dm(r.Dc)}</b>`,`changing ${Math.abs(r.rate).toFixed(1)}′ an hour${Math.abs(r.rate)<15?': too slow, take another body':''}`],['Greenwich time',`<b>${tod(r.gmt)}</b>`,''],['The chronometer’s error',`<b>${mins((tc-r.gmt)/1000)}</b>`,'+ fast']]);}}
     seg(q('.seg',P),v=>{mode=v;form();});
-    q('.ex',P).addEventListener('click',()=>{const la=35,lo=-40,O={eye:6,ic:-1.4,T:18,P:1008};V={...F0};
-      if(mode==='sight'){V.hs=FM.dm(AL.sextant('Sun',Date.UTC(2026,9,18,10,15),la,lo,{...O,limb:'L'})).replace('°',' ').replace('′','');}
-      else{const t=Date.UTC(2026,9,18,21),S=AL.sextantLunar('Markab',t,la,lo,{...O,limbM:'L'}),g=a=>FM.dm(a).replace('°',' ').replace('′','');Object.assign(V,{time:'21:17:00',ds:g(S.ds),hm:g(S.hm),hb:g(S.hb)});}
+    q('.ex',P).addEventListener('click',()=>{const la=35,lo=-40,O={eye:6,ic:-1.4,T:18,P:1008},g=a=>FM.dm(a).replace('°',' ').replace('′','');V={...F0};
+      if(mode==='sight')V.hs=g(AL.sextant('Sun',Date.UTC(2026,9,18,10,15),la,lo,{...O,limb:'L'}));
+      else if(mode==='lat'){const tN=Math.round(AL.noon(lo,Date.UTC(2026,9,18,14,40))/1000)*1000;Object.assign(V,{time:tod(tN,0),hs:g(AL.sextant('Sun',tN,la,lo,{...O,limb:'L'}))});}
+      else if(mode==='lunar'){const t=Date.UTC(2026,9,18,21),S=AL.sextantLunar('Markab',t,la,lo,{...O,limbM:'L'});Object.assign(V,{time:'21:17:00',ds:g(S.ds),hm:g(S.hm),hb:g(S.hb)});}
       form();});
     form();return()=>{};});
 

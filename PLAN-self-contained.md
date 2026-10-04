@@ -125,8 +125,9 @@ manual's figures become the test.
 - **E3, in part.** The model already keeps a rate book (`#open=bookDet`), and the workbook gives the chronometer's error from a lunar. Still open: the rate book
   taking comparisons from equal altitudes or lunars as well as from the master time.
 
-**Still open in E:** a meridian transit and the noon sight for latitude (only the time sight is worked); the planets, which the Nautical Almanac
-tabulated for lunars too; the rate book above.
+**Added after the 2.05.00 release:** the latitude, by the noon sight (worked in the time sight's figure) and by the pole star; and the workbook's Latitude and Rate modes (the daily rate from two errors, and the error carried on).
+
+**Still open in E:** the planets, which the Nautical Almanac tabulated for lunars and sights too; the model's rate book taking its comparisons from the sky.
 
 | # | Item | How | Effort |
 |---|---|---|---|
