@@ -636,6 +636,11 @@ Contents:
   try that widened the old bar at a few points looked wrong; draw the blade from
   the measured edges, not by reshaping `pawlPts`. `88648e5`
 
+- **The fusee chain's pitch and the winding pawls estimated.** The chain's
+  pitch 1.7 mm (side photograph and 23:45; was 1.0), the winding pawls 2.0 wide
+  (19:12; were 0.9). The sustaining ratchet's 120 teeth and the barrel
+  arbor's square checked, unchanged. Keep them measured (SHAPE-PASS.md, 6). `9cd255c`
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the
@@ -1671,7 +1676,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The fusee chain's pitch and the winding pawls estimated.** The chain's
-  pitch 1.7 mm (side photograph and 23:45; was 1.0), the winding pawls 2.0 wide
-  (19:12; were 0.9). The sustaining ratchet's 120 teeth and the barrel
-  arbor's square checked, unchanged. Keep them measured (SHAPE-PASS.md, 6).
+None at the moment.
