@@ -1030,6 +1030,17 @@ Contents:
   the rim's height; locked, both pins on the rim's top edge (their lowest edge
   0.005 mm into it, under `fine.py`'s grid, so `--hold --eval
   "__mv.userData.stop('navy')"` passes with nothing new); free, 0.5 mm clear. `29cecd9`
+- **The Navy's balance brake through the hairspring in the Exploded view**
+  (Plates, bridges, screws and arbors; Variants, Balance stop). Lifted 22 past its
+  part, it rose 84 against the balance's and hairspring's (`spr`) 80, and passed
+  up through a piece of the hairspring's part standing 3.1 mm over it on the
+  slider's way, ending in it; the checks ran on the manual's arm, so nothing showed
+  until the Y-arm became the default. It now rises 19: above the balance under its
+  pins, below the hairspring's piece over it (`exploded.py` allows 18 to 20.6).
+  Keep: the brake's lift between the balance's and the hairspring's; with the Y-arm the default,
+  run `exploded.py` and `audit.py` as they are and with `--eval
+  "__mv.userData.stop('arm')"` for the manual's arm, and `bom.py` fits the arm
+  itself (the parts list's). `73594b5`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
@@ -1113,6 +1124,15 @@ Contents:
   (13:08; it was pinched at 6.3 mm, by eye); the detent block's screw flush in
   a counterbore r 1.4 (10:46; it stood proud); the balance's timing screws end
   2.7 mm outside the rim (6:50.0: 3.3 from its inner face). Keep them traced (SHAPE-PASS.md, 5). `fd368d4`
+
+- **The balance lower cap and setting 40 % too small**.
+  The cap was R 2.7 with its screws 1.9 out and a window r 1.1: the ratios read on 13:49.5,
+  scaled by an estimated screw spacing; the setting in the slab r 1.2, estimated. Measured
+  through `framecam.py` (13:49.5 from below, 13:44 from above): the cap R 4.46, its screws
+  3.25 either side of the jewel, its flat 2.78 out, its window r 1.87, the screws' heads r
+  0.85; the setting r 2.52; the slab's counterbore r 4.56 round the cap. Keep: the cap's sizes
+  and the setting's measured (`tools/anchors/cap_13-49.5.json`, `setting_13-44.json`), not
+  scaled from an estimate. `d0f0cb3`
 
 ## Setup, case and gimbals
 
