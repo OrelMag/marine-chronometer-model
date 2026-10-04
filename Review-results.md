@@ -357,7 +357,7 @@ Suggested fix: smaller weights (a radius of about 1.1 mm keeps them within
 the rim's 2.4 mm height), set no further out than the timing weights (17.35 mm).
 Then run `dyn.py` with the variant shown.
 
-## The hairspring's inner end (open, 4 October 2026)
+## The hairspring's inner end (settled as an estimate, 4 October 2026)
 
 `tools/hairspring.js` designs the spring's terminal curves to Phillips' conditions from the model's coil and ends. The outer one, into the stud's clamp
 along the bar toward its end, is 15.3 mm and turns 343°, as the video's face-on view from the stud's end shows it (6:52.5, about half a turn turned in).
@@ -373,6 +373,10 @@ The pin's centre against the near end's 5.26 mm outer edge: 2.8 and 3.5 mm from 
 little oblique, the frames blurred): 2.8-3.9, about 3.3. That spans both the model's 3.62 (Fig. 6's collet scaled to the coil) and the window where a
 short curve meets Phillips' conditions, which is sharp: the shortest inner curve is 49 mm at r 2.8, 21-26 mm (300-370°, like the outer) from 2.9 to
 3.3, and 53 mm from 3.4 to 3.62. A sharper frame of the collet's end, or the collet's own size (a Model 21 collet measured), would decide it.
+
+*Drawn (4 October 2026): the end at 3.2, inside both the frames' 2.8-3.9 and the window, the collet scaled from it (`CKC`, 0.83 of Fig. 6 against the
+coil's 0.93); both terminal curves meet the conditions (14.8 and 21.8 mm), the pivots carry 2.5e-5 of couple / R. A sharper frame or a measured collet
+would still settle it.*
 
 ## Smaller issues
 

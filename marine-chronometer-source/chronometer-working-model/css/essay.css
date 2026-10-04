@@ -102,3 +102,5 @@ html.essay-on,html.essay-on body{overflow:hidden}
   #almPrint td:first-child,#almPrint th:first-child{text-align:left}#almPrint .e-pf{font-size:8.5pt;color:#000}}
 .e-stars td:nth-child(2),.e-stars th:nth-child(2){text-align:left}
 @media print{#almPrint .e-stars{break-inside:auto;page-break-inside:auto}#almPrint .e-stars td:nth-child(2),#almPrint .e-stars th:nth-child(2){text-align:left}}
+.e-steps{padding-left:1.3em}.e-steps li{margin:0 0 .5em}
+#essay .e-book td:nth-child(3){text-align:left}

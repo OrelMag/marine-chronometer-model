@@ -470,6 +470,18 @@ function springGeo(R,H,N,th,wire,rc=R*0.2,rs=R*0.3,into,lead=0){   /* rc, rs: ra
     const a=ang+th*(1-ang/tot);return v.set(r*Math.cos(a),y,-r*Math.sin(a));};
   return reclose(into,new THREE.TubeGeometry(c,Math.round(N*46),wire,6,false));
 }
+/* ribbonGeo(P, b, t, into): a strip of rectangular section, b along y (the spring's axis) by t across in plan, swept along the centreline P ([x, y, z] points, the
+   section square to the plan's tangent), a closed solid: each ring's four corners twice, so the four faces are flat across, and a cap at each end. into: the strip
+   built before with as many points, its positions rewritten in place (a spring that moves: the same strip, bent differently) */
+function ribbonGeo(P,b,t,into){const n=P.length,V=n*8+8,re=!!(into&&into.attributes.position&&into.attributes.position.count===V);if(into&&!re)into.dispose();const g=re?into:new THREE.BufferGeometry(),pos=re?g.attributes.position.array:new Float32Array(V*3),
+    S=[[1,1],[-1,1],[-1,-1],[1,-1]],put=(i,x,y,z)=>{pos[3*i]=x;pos[3*i+1]=y;pos[3*i+2]=z;};   /* the corners (across, along y): outer-up, inner-up, inner-down, outer-down */
+  for(let i=0;i<n;i++){const a=P[Math.max(0,i-1)],c=P[Math.min(n-1,i+1)],dx=c[0]-a[0],dz=c[2]-a[2],l=Math.hypot(dx,dz)||1,nx=dz/l,nz=-dx/l,p=P[i];
+    for(let f=0;f<4;f++)for(let e=0;e<2;e++){const k=S[(f+e)%4];put(i*8+f*2+e,p[0]+k[0]*t/2*nx,p[1]+k[1]*b/2,p[2]+k[0]*t/2*nz);}
+    if(i===0||i===n-1)for(let k=0;k<4;k++)put(n*8+(i?4:0)+k,p[0]+S[k][0]*t/2*nx,p[1]+S[k][1]*b/2,p[2]+S[k][0]*t/2*nz);}
+  if(!re){const I=[];for(let i=0;i<n-1;i++)for(let f=0;f<4;f++){const a=i*8+f*2,b2=a+1,c=a+9,d=a+8;I.push(a,c,d,a,b2,c);}
+    const s0=n*8,s1=n*8+4;I.push(s0,s0+2,s0+1,s0,s0+3,s0+2,s1,s1+1,s1+2,s1,s1+2,s1+3);g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setIndex(I);}
+  else g.attributes.position.needsUpdate=true;
+  g.computeVertexNormals();g.computeBoundingSphere();if(g.boundingBox)g.computeBoundingBox();return g;}
 /* the Hamilton dial's hands as measured: [distance from the arbor, full width] in mm, from the tail's end (or the boss) to the tip, traced on References/photo-dial-hamilton-maritime-commission.jpg
    (face-on, 0.1674 mm/px: References/VIDEOS.md, "The Hamilton dial's proportions") by sections across each blade every 0.5 mm, the edges at half the contrast against the silver, those crossing
    print left out; the arbors at the bosses' fitted circles: the hands' (426.3, 428.9) px, r 3.34 mm; the wind hand's (427.0, 286.9), r 1.86, to 0.2 px; the seconds' at the dial's sub-dial centre.

@@ -127,6 +127,12 @@
         <div class="row" style="margin-top:8px"><span class="lab">Sizes in</span><div class="seg" id="units" role="group" aria-label="Units for the sizes on the part cards"><button data-v="mm" aria-pressed="true">mm</button><button data-v="in" aria-pressed="false" title="Inches, as the manual gives them">inches</button></div></div>
         <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
       </details>
+      <details class="grp more" id="makeDet">
+        <summary>Making it</summary>
+        <p class="note" style="margin:0 0 6px">For a maker. Each part's card has its maker's sheet (its lines of the manual's parts list, the fits measured on the model, materials and heat treatment), its drawing to scale (SVG, mm) and its solid (STL). Here: measure between two points on the model, print the whole build book, or take the model's numbers away.</p>
+        <div class="seg"><button id="mkMeasure" aria-pressed="false" title="Click two points on the model">Measure</button><button id="mkBook" title="Every part's sheet and drawing, to print">Build book</button><button id="mkData" title="The train, the fusee's profile, the escapement's cycle, the hairspring's design and the parts list, as JSON">Data</button><button id="mkSTL" title="Every part shown, as one STL in millimetres">STL</button></div>
+        <div class="rate" id="mkRead" aria-live="polite"></div>
+      </details>
       <details class="grp more" id="rateDet">
         <summary>Rate and timing weights</summary>
         <p class="note" style="margin:0 0 4px">There is no regulator. The rate is set with the weights on the balance rim, each a nut on a screw: the two timing weights at the arm’s ends, or the small vernier weights inside the rim beside them for fine changes. Both of a pair are turned alike, so the balance stays in poise. Out moves their mass further from the staff, which raises the balance’s moment of inertia and slows it: the hands lose.</p>
@@ -153,7 +159,7 @@
         <summary>Rate book</summary>
         <p class="note" style="margin:0 0 6px">The navigator doesn't set the hands: the chronometer's error is compared with a time signal, daily, and recorded with its rate, and applied to every reading (Sec. III, Setting; Sec. IX, Table I). Error and daily rate in seconds: + fast or gaining, − slow or losing. Here the signal is the master time, which runs with the model; the hands step in half seconds, so the error is read to the nearest half second.</p>
         <div id="bookT"></div>
-        <div class="seg" style="margin-top:8px"><button id="bookNow" title="Compare the dial with the master now">Compare now</button><button id="bookClr">Clear</button></div>
+        <div class="seg" style="margin-top:8px"><button id="bookNow" title="Compare the dial with the master now">Compare now</button><button id="bookSun" title="The error as equal altitudes of the Sun find it ashore (the essay's Greenwich time from the sky): to about half a second">By equal altitudes</button><button id="bookMoon" title="The error as a lunar distance finds it at sea (the essay's lunar distance): to about 15 seconds">By a lunar</button><button id="bookClr">Clear</button></div>
         <label class="sl rw" style="margin-top:8px"><span>Latitude</span><input type="number" id="lat" min="-89" max="89" step="1" value="30" style="width:64px" aria-label="Latitude, degrees (north positive)"><span>°</span></label>
         <div class="rate" id="bookLon" aria-live="polite"></div>
       </details>
@@ -234,6 +240,7 @@
     <li><a href="#essay=heat">Heat</a></li><li><a href="#essay=force">Constant force</a></li><li><a href="#essay=winding">Winding</a></li><li><a href="#essay=counting">Counting</a></li>
     <li><a href="#essay=detent">The detent</a></li><li><a href="#essay=gimbals">Level on a moving ship</a></li><li><a href="#essay=rate">Keeping the rate</a></li>
     <li><a href="#essay=sky">Greenwich time from the sky</a></li><li><a href="#essay=sight">Longitude by chronometer</a></li><li><a href="#essay=lunar">The lunar distance</a></li><li><a href="#essay=almanac">An almanac to print</a></li>
+    <li><a href="#essay=make">What the model gives a maker</a></li><li><a href="#essay=oil">Oil, and where it goes</a></li><li><a href="#essay=adjust">Adjusting the escapement</a></li><li><a href="#essay=order">The order of work</a></li><li><a href="#essay=materials">Materials, hardening and tools</a></li>
     <li><a href="#essay=model21">The Hamilton Model 21</a></li></ol></nav>
 </header>
 
@@ -503,6 +510,61 @@
   <figcaption>Angles as degrees and minutes (35 12.4), times as GMT by the chronometer, corrected by its error (+ fast) from the rate book. North and east are positive; a latitude or longitude may be written 35 12.4 S, or −35 12.4.</figcaption>
 </figure>
 
+<h2 id="make"><a class="e-h" href="#essay=make">What the model gives a maker</a></h2>
+<p>The working model on the other tab is drawn from the manual, photographs and videos of real Model 21s, and every part in it is a closed solid in millimetres. That makes it something to work from, not only to look at. Each part's card has a <em>maker's sheet</em>: its lines of the manual's parts list, each with the fit the model measures (a pivot running in its jewel, a screw tapped into a bridge, with the least clearance), its material, finish and heat treatment, its size and its mass. The card also gives the part's drawing, plan and elevation to scale, and its solid as an STL file. The panel's <em>Making it</em> section measures between any two points, prints the whole build book, and gives the model's numbers as data: the train's counts and modules, the fusee's profile, the escapement's cycle and the hairspring's design.</p>
+<p>The model's moving parts are designed, not only drawn. The hairspring the balance needs is a strip <span class="e-live" data-live="hsB">0.23 mm</span> wide (as the restoration video measures it) by <span class="e-live" data-live="hsT">0.221 mm</span> thick, <span class="e-live" data-live="hsL">409 mm</span> long, the thickness from the stiffness the balance's moment of inertia asks for in an Elinvar-type alloy. Its two terminal curves, <span class="e-live" data-live="hsOut">14.8 mm</span> into the stud and <span class="e-live" data-live="hsIn">21.8 mm</span> to the collet, are solved to the conditions Édouard Phillips gave in 1861, so that the spring's pull on the balance is a pure couple: it leaves <span class="e-live" data-live="hsLat">2.5e-5</span> of its couple over the coil's radius on the pivots, where plain ends would leave about 2 %.</p>
+<p>The energy is budgeted the same way. The fusee is cut to even out a mainspring that pulls a little over twice as hard wound as run down; a spring of the parts list's 0.0165 in thickness does that with <span class="e-live" data-phys="Mup">1.02</span>&nbsp;N·m fully wound, its steel at <span class="e-live" data-phys="sUp">2.36</span>&nbsp;GPa, within a hardened mainspring's range. Through the train that is <span class="e-live" data-phys="esc">68-106</span>&nbsp;µN·m at the escape wheel, which, once unlocked, chases the impulse jewel through about <span class="e-live" data-phys="chase">5</span>° of the balance's swing before it catches it. The balance holds its 255° if it loses no more than a balance in air does: a quality factor of <span class="e-live" data-phys="Q">167-266</span>. The numbers behind all this are in the model's README and its tools; what the model has to estimate is listed there too.</p>
+
+<h2 id="oil"><a class="e-h" href="#essay=oil">Oil, and where it goes</a></h2>
+<p>The manual uses three lubricants, and says not to use any “unless specifically required”: Hamilton No. 47 Red Oil for the jewelled pivots, Atlantic Refining Argon “R” mineral oil for the bushed pivots, and Hamilton T-324 grease for the mainspring and the maintaining work. A smear draws oil away from where it should stay, so nothing is wiped after oiling, and the oiler's tip is cleaned in pith. The points, in the order of reassembly:</p>
+<div class="e-book"><table><thead><tr><th>Op.</th><th>Oil</th><th>Where</th><th>Fig.</th></tr></thead><tbody>
+<tr><td>18–26</td><td>grease</td><td>the winding ratchet's teeth, the sustaining spring's working end, the fusee wheel's lip and the two elevations in its recess</td><td>—</td></tr>
+<tr><td>35–37</td><td>grease</td><td>the mainspring brace, and the whole flat of the mainspring</td><td>—</td></tr>
+<tr><td>43</td><td>argon</td><td>the upper sustaining pawl pivot</td><td>80</td></tr>
+<tr><td>46</td><td>argon</td><td>the fusee, barrel, centre and third upper bushings</td><td>78</td></tr>
+<tr><td>47</td><td>red</td><td>the fourth upper jewel, the escape lower jewel, the balance lower jewel</td><td>78</td></tr>
+<tr><td>48</td><td>argon</td><td>the fusee, barrel and centre lower bushings, the sustaining pawl's pivot</td><td>79</td></tr>
+<tr><td>49</td><td>red</td><td>the third and fourth lower jewels</td><td>79</td></tr>
+<tr><td>58</td><td>argon</td><td>the cannon pinion's bearing on the centre staff</td><td>81</td></tr>
+<tr><td>67</td><td>red</td><td>the escape upper jewel</td><td>84</td></tr>
+<tr><td>71</td><td>red</td><td>the balance upper jewel</td><td>85</td></tr>
+</tbody></table></div>
+<p>The escapement's working faces, the locking and impulse jewels and the trip spring, are not oiled. Without the Navy's oils, a maker uses the nearest modern ones: a fine synthetic watch oil for the jewels, a heavier one for the bushed train pivots, and a mainspring grease; before synthetic oils, chronometers ran on refined animal oils, porpoise-jaw oil the classic.</p>
+
+<h2 id="adjust"><a class="e-h" href="#essay=adjust">Adjusting the escapement</a></h2>
+<p>The detent is the one part of the chronometer that is adjusted, not only assembled. The manual's operations, with what the model's escapement measures against each:</p>
+<div class="e-book"><table><thead><tr><th>Op.</th><th>What</th><th>The manual</th><th>The model</th></tr></thead><tbody>
+<tr><td>78</td><td>the detent spring's strength: a 0.770 g weight hung on the locking jewel (Tool No. 8, Fig. 88) should just part the spring from its stop button</td><td>0.770 g</td><td>—</td></tr>
+<tr><td>79</td><td>the trip spring: it must lift the detent cleanly and fall off on the return swing</td><td>by eye</td><td>falls off at the return</td></tr>
+<tr><td>83</td><td>the escape teeth strike the face of the impulse jewel</td><td>by eye</td><td>drives it 19.4° of the wheel</td></tr>
+<tr><td>84</td><td>roller shake</td><td>about 0.002 in</td><td><span class="e-live" data-live="shake">0.056 mm</span></td></tr>
+<tr><td>85</td><td>lock, on every tooth</td><td>about 6°</td><td><span class="e-live" data-live="lock">6.0°</span></td></tr>
+<tr><td>86</td><td>let-off</td><td>at least 6°</td><td><span class="e-live" data-live="letoff">10.3°</span></td></tr>
+<tr><td>87</td><td>overall</td><td>26–30°</td><td><span class="e-live" data-live="overall">28.2°</span></td></tr>
+<tr><td>88</td><td>the horn's clearance to the unlocking jewel</td><td>about 0.010 in</td><td><span class="e-live" data-live="horn">0.25 mm</span></td></tr>
+<tr><td>97</td><td>drop</td><td>about 2°</td><td><span class="e-live" data-live="drop">2.1°</span></td></tr>
+</tbody></table></div>
+<p>The angles are read on the balance with the graduated sector (Tool No. 12) and its gauge pin, the detent seen under the special illuminator (Tool No. 104); the lock is set by the locking jewel's depth, the overall by where the detent's banking stops it, and the drop with the drop-adjusting tool, which turns the unlocking roller. The adjuster's bench in the model's panel moves the same settings and gives the same figures as they change.</p>
+<p class="e-see"><a href="#view=escapement&amp;speed=0.05&amp;part=det">The escapement, slowed, with its detent picked out</a></p>
+
+<h2 id="order"><a class="e-h" href="#essay=order">The order of work</a></h2>
+<p>A chronometer is taken down in the reverse of the order it goes together, and the first step either way is to make the mainspring safe: the balance stopped, the train blocked by its screw lowered between the fourth wheel's arms (or, on early movements, a wire loop round the fourth wheel), and the spring let down through its set-up with the let-down key before the chain is unhooked. The manual's reassembly, Section VIII, runs:</p>
+<ol class="e-steps">
+<li>The pillar plate on its ring; the pillars and the lower train bridge; the third, centre and fourth wheels in their holes, the sustaining pawl; the train-blocking screw; the upper train bridge with the balance lower bridge on it; each arbor's end-shake checked (Ops. 1–15).</li>
+<li>The fusee built on its block: winding ratchet, pawls and their springs, sustaining spring and ratchet, fusee wheel, end plate and taper pin, stop-bar and its spring, top plate; the chain wound on all but its last turn (Ops. 16–33).</li>
+<li>The fusee in; the mainspring brace and spring greased into the barrel, the barrel cap's five screws; the barrel bridge; the train blocked (Ops. 34–45).</li>
+<li>Oiled, as above; the setup ratchet, pawl and spring, the winding stop (a left-hand thread) and the setup cover; the chain wound to test the stop-bar; the mainspring wound fully and let down about a quarter turn (Ops. 46–56).</li>
+<li>Dialing: the cannon pinion, the motion work, the dial, the hands set to the hour (Ops. 58–65).</li>
+<li>The escape wheel under its upper bridge; the balance as a unit, the cock over it (Ops. 66–73).</li>
+<li>The detent: its springs tested, set in and adjusted (Ops. 77–97, above); the train released; the second hand set by the balance's beat; the check list; the movement into its case (Ops. 98–103).</li>
+</ol>
+<p>Every operation in the manual names its tool and figure; the model's walkthrough and exploded view show each part's place and the order it comes off in.</p>
+
+<h2 id="materials"><a class="e-h" href="#essay=materials">Materials, hardening and tools</a></h2>
+<p>The manual names few materials, because it expected parts from Hamilton: an Elinvar hairspring and trip spring, a beryllium-copper detent, a stainless rim silver-soldered to an Invar arm, a mahogany box. The rest is watchmaking practice, which the maker's sheets give part by part: steel for staffs, arbors, pinions, pivots, screws and springs, hardened by quenching from a red heat (about 780–800 °C) and tempered by colour, pale straw (about 220 °C) for what must stay hard and take a burnish, blue (about 290–300 °C) for springs and screws; hard-drawn brass, not heat-treated, for plates, bridges and wheels; jewels of ruby or sapphire, or for the train, hard bronze or brass bushings round hardened steel pivots.</p>
+<p>Two of the Model 21's materials can't be made in a small shop: Elinvar, whose stiffness hardly changes with heat, and Invar. A chronometer can still be made without them, as every one was before them. A plain steel spring on a steel balance loses about <span class="e-live" data-phys="steelRate">10.3</span> seconds a day for each degree Celsius, because the steel softens as it warms. The answer is the compensation balance this essay began with: a rim of brass fused to steel, cut through near each arm, whose free ends curl inward as it warms and so make the balance smaller. Made like the model's split variant, it gives back about <span class="e-live" data-phys="comp">7.0</span> seconds a day a degree; its screws, moved toward the free ends, do the rest, and Table IV's moves are the tool for it. With Elinvar, the spring's own heat treatment sets its temperature coefficient to between <span class="e-live" data-phys="eNeed">-22 to 10</span> parts in a million a degree, which cancels this balance, and the screws trim what is left.</p>
+<p>The manual's Section XIII lists the tools of a Navy overhaul shop, 111 numbers, from end-shaking stands and roller presses to the graduated sector and the detent-testing fixture. To make the parts, rather than mend them, a maker needs more: a lathe with turns for pivots, a wheel-cutting engine with cycloidal cutters for the train's modules (the model gives each stage's), a depthing tool to set each pair of wheels at its centre distance, a staking set, a mainspring winder, and a way to harden and temper by colour. None of it is beyond what a skilled hand made with files and a bow lathe two centuries ago; the model gives the sizes, the fits and the order.</p>
+
 <h2 id="model21"><a class="e-h" href="#essay=model21">The Hamilton Model 21</a></h2>
 <p>The Model 21 was designed and made by the Hamilton Watch Company of Lancaster, Pennsylvania, to U.S. Navy Specification 18-C-7; the dial in these pages is from one made under a U.S. Maritime Commission contract. The Navy assigned its serial numbers and engraved them on the dial and the barrel bridge. It has fourteen jewels. It changed in service: chronometers put into the field before 1944 may have a one-piece roller, replaced at overhaul by two, whose angle can be set; later ones have a train-blocking screw, from serial 4003, to hold the mainspring’s power while the balance and escapement are out; and from the end of 1947 a balance locking arm was fitted at overhaul, in place of the folded wedges that had held the balance still in shipment.</p>
 <p>Most of what is known of it in this detail comes from one book, the Navy’s <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em> (NAVSHIPS 250-624, 1948), which this site carries: <a href="navships-250-624-1948.pdf">the manual</a> (113 pages, 8.9 MB, a scan by Google Books of a library’s copy). The model on the other tab is built from it and from photographs of surviving movements; the Royal Museums Greenwich holds one, No. 4E019.</p>
@@ -568,9 +630,12 @@
 <script src="../shared/escapement.js"></script>
 <script src="../shared/escplan.js"></script>
 <script src="../shared/almanac.js"></script>
+<script src="../shared/hairspring.js"></script>
 <script src="js/movement.js"></script>
 <script src="js/box.js"></script>
 <script src="js/essay.js"></script>
+<script src="js/makers.js"></script>
+<script src="js/maker.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

@@ -75,7 +75,7 @@ manual's figures become the test.
 | A4 | **The escape wheel with mass.** | Its inertia from its drawn solid and brass. The drop and impulse become a chase: the wheel accelerates, then strikes. `makeEsc` gets a dynamic impulse; the geometry stays. | Lock, let-off, drop and overall still meet Ops. 84–97. The impulse's efficiency and the landing angle are reported, not assumed. | M |
 | A5 | **Temperature from the materials.** | The rim's and arm's expansion, and the spring's thermoelastic coefficient (alloy from D1, D2), give the linear term and the curvature. Table IV and card No. 3390 become checks, not inputs. For the variant (D2 b), the bimetal dimensions that compensate a steel spring. | The derived curve is within the card's figures (0.08 / 0.06 / 0.02 s a day) and the Bureau of Ships limits. | M |
 
-**A2 in part (4 October 2026):** the hairspring designed (`shared/hairspring.js`, `tools/hairspring.js`, in `ci.py --quick`):
+**A2 done (4 October 2026), the inner end an estimate:** the spring drawn as designed (both curves to Phillips' conditions, the strip 0.23 by 0.221, the collet's end at 3.2 inside the video's 2.8-3.9). Before that, in part: the hairspring designed (`shared/hairspring.js`, `tools/hairspring.js`, in `ci.py --quick`):
 - **Stiffness:** 91.4 µN·m a radian.
 - **Strip:** 0.23 mm wide, measured on the video, by 0.226 mm thick for Elinvar at 180 GPa (0.216 for steel). The spring is 439 mm long, and its stress at
   the swing is about 210 MPa.

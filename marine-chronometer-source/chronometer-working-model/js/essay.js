@@ -191,7 +191,7 @@ const ESSAY=(()=>{
       else{const s=(t-0.04)/0.92;ang=TAU*N*s;r=Re;y=H*s;ox=Math.sin(Math.PI*s)*0.45*R*(th/(TAU*0.6));}
       const a=ang+th*(1-ang/(TAU*N));return v.set(r*Math.cos(a)+ox,y,-r*Math.sin(a));};
     return closeGeo(new THREE.TubeGeometry(c,Math.round(N*44),wire,6,false));}
-  const HS=[5.1,6.7,12,0.17,2.65,3.62];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
+  const HS=[5.1,6.7,12,0.17,2.65,3.2];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
 
   /* ---------- the balance and hairspring: T = 2π√(I/κ) ---------- */
   fig('eBal',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.5,dist:70,target:[4,1,0]}),M=G.M,A=ESC.A;
@@ -521,6 +521,7 @@ const ESSAY=(()=>{
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
       I0:model?Math.round(model.I0/10)*10:580,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
+    { const d=model&&model.R&&model.R.hsDesign;Object.assign(V,d?{hsB:f1(d.b,2)+' mm',hsT:f1(d.t,3)+' mm',hsL:Math.round(d.L)+' mm',hsOut:f1(d.outer.l,1)+' mm',hsIn:f1(d.inner.l,1)+' mm',hsInR:f1(d.rIn,1)+' mm',hsLat:d.lat.toExponential(1)}:{hsB:'0.23 mm',hsT:'0.221 mm',hsL:'409 mm',hsOut:'14.8 mm',hsIn:'21.8 mm',hsInR:'3.2 mm',hsLat:'2.5e-5'}); }   /* the hairspring as designed (movement.js, R.hsDesign) */
     { const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const q=(lo+hi)/2;ESC.ampAt(q)<a?lo=q:hi=q;}return(lo+hi)/2;},r=A=>{const a=A*D2R;return Math.abs(ESC.rateAt(a,sAt(a))).toFixed(2);};V.isoLo=r(247.5);V.isoHi=r(270); }   /* the escapement's rate at 1 3/8 and 1 1/2 turns of motion (makeEsc rateAt) */   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
 

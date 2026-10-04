@@ -10,20 +10,21 @@
 // 4. The check that matters: the force the spring leaves on the pivots under a couple (HSPR.lateral), for the designed ends and for the ends the model draws.
 const fs=require('fs'),path=require('path'),{HSPR}=require('../../shared/hairspring.js');
 const src=fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8'),num=re=>{const m=re.exec(src);if(!m)throw Error('not found in movement.js: '+re);return+m[1];};
-const D=Math.PI/180,R=num(/HS_RC=([\d.]+)/),N=num(/HS_N=(\d+)/),CKS=R/num(/CKS=HS_RC\/([\d.]+)/),RI=num(/HS_RI=([\d.]+)\*CKS/)*CKS+num(/HS_RI=[\d.]+\*CKS\+([\d.]+)/);
+const D=Math.PI/180,R=num(/HS_RC=([\d.]+)/),N=num(/HS_N=(\d+)/),RI=num(/HS_RI=([\d.]+)/);
 /* the stud's clamp, in the frame of SPD (the staff toward the cock's screw) as movement.js lays it: the inner pin SPH(2.08,-3.28), the small pin SPH(8.51,-6.11),
    the clamp SP_CL inside the inner pin along their line */
-const hc=/SPHc=SPH\(([-\d.]+),([-\d.]+)\)/.exec(src),ha=/SPHa=SPH\(([-\d.]+),([-\d.]+)\)/.exec(src),SP_CL=num(/SP_CL=([\d.]+)/),pc=[+hc[1],+hc[2]],pa=[+ha[1],+ha[2]],
+const hc=/SPHc=SPH\(([-\d.]+),([-\d.]+)\)/.exec(src),ha=/SPHa=SPH\(([-\d.]+),([-\d.]+)\)/.exec(src),SP_CL=num(/SP_CL=([\d.]+)/),SP_ST=num(/SP_ST=([\d.]+)/),pc=[+hc[1],+hc[2]],pa=[+ha[1],+ha[2]],
   ul=Math.hypot(pa[0]-pc[0],pa[1]-pc[1]),u=[(pa[0]-pc[0])/ul,(pa[1]-pc[1])/ul],cl=[pc[0]-SP_CL*u[0],pc[1]-SP_CL*u[1]],RS=Math.hypot(...cl),
-  bar=Math.atan2(cl[0]*u[1]-cl[1]*u[0],cl[0]*u[0]+cl[1]*u[1]);   /* the bar's angle from the clamp's radius, in the spring's own frame (counterclockwise seen as springGeo draws it) */
+  bar=Math.atan2(cl[0]*u[1]-cl[1]*u[0],cl[0]*u[0]+cl[1]*u[1]),
+  st=[pc[0]-SP_ST*u[0],pc[1]-SP_ST*u[1]],stL=[(st[0]*cl[0]+st[1]*cl[1])/RS,(cl[0]*st[1]-cl[1]*st[0])/RS];   /* where the clamp takes the spring, at its step, in the spring's frame (x toward the wedge pin's radius) */   /* the bar's angle from the clamp's radius, in the spring's own frame (counterclockwise seen as springGeo draws it) */
 const rows=[];let fail=0;const say=s=>rows.push(s),chk=(ok,s)=>{if(!ok)fail=1;say(`${ok?'  ok ':'  !! '} ${s}`);};
 /* 1. the stiffness and the strip */
 const I=578.5,k=I*1e-9*(4*Math.PI)**2,A=255*D;
 say(`  the coil: r ${R}, ${N} turns; the stud's clamp ${RS.toFixed(2)} from the staff, the bar ${(bar/D).toFixed(1)}° off its radius; the collet's face ${RI.toFixed(2)}`);
 say(`  the stiffness the balance needs: I ${I} g·mm² (Table II), k = I (4π)² = ${(k*1e6).toFixed(1)} µN·m a radian`);
 /* 3 before 2: the curves give the length */
-const outer=HSPR.design(R,1,[RS,0],bar+Math.PI,1.2),outerOut=HSPR.design(R,1,[RS,0],bar,1.2);   /* the bar at +bar from the clamp's radius: in toward its end is bar + π */
-chk(!!outer&&outer.res<1e-7,`the outer curve, into the clamp along the bar toward its end: ${outer?`${outer.l.toFixed(2)} mm, turning ${((outer.pts[outer.pts.length-1][2]-outer.pts[0][2])/D).toFixed(0)}°, r ${Math.min(...outer.pts.map(p=>Math.hypot(p[0],p[1]))).toFixed(2)}-${R}, Phillips' conditions to ${outer.res.toExponential(1)} mm`:'none'}`);
+const outer=HSPR.design(R,1,stL,bar+Math.PI,1.2),outerOut=HSPR.design(R,1,stL,bar,1.2);   /* the bar at +bar from the clamp's radius: in toward its end is bar + π */
+chk(!!outer&&outer.res<1e-7,`the outer curve, from the coil to the clamp's step (${Math.hypot(...stL).toFixed(2)} from the staff), along the bar toward its end: ${outer?`${outer.l.toFixed(2)} mm, turning ${((outer.pts[outer.pts.length-1][2]-outer.pts[0][2])/D).toFixed(0)}°, r ${Math.min(...outer.pts.map(p=>Math.hypot(p[0],p[1]))).toFixed(2)}-${R}, Phillips' conditions to ${outer.res.toExponential(1)} mm`:'none'}`);
 say(`       along the bar the other way, out toward the wedge pin: ${outerOut?`${outerOut.l.toFixed(2)} mm`:'no curve meets the conditions inside the coil'}`);
 const innerAt=re=>{let b=null;for(const span of[0.4,0.6,0.8,1,1.2,1.4,1.6,1.8,2,2.2])for(let a0=-3;a0<=3;a0+=0.25){const s=HSPR.solve(R,-1,[re,0],-Math.PI/2,[Math.PI*span+a0*0.3,Math.PI*span*(R+re)/2,0,0,0]);
   if(!s||s.res>1e-7)continue;const rr=s.pts.map(p=>Math.hypot(p[0],p[1]));if(Math.min(...rr)<re-0.06||Math.max(...rr)>R+0.2)continue;if(!b||s.l<b.l)b=s;}return b;};
