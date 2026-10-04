@@ -189,9 +189,9 @@ times JavaScript's milliseconds of UT.
   lunar distance's Greenwich time by a second. The almanac's pages take a value instead.
 - **The sight.** Dip 1.76′ √h; refraction by Bennett's formula with temperature and pressure (run backwards, by iteration, to make a sight); the
   semi-diameter (the Moon's augmented by 1 + sin HP sin h) and parallax HP cos h (the Moon's HP reduced for the latitude). The time sight, the intercept,
-  a least-squares fix, and equal altitudes (the chronometer's error that makes the two altitudes equal; the old rule, the middle of the readings, and the
-  equation of equal altitudes for the difference). Round trips from sights the almanac makes give the longitude back within 0.001 nm and the error by
-  equal altitudes within 0.01 s.
+  a least-squares fix, the latitude by a meridian altitude (the noon sight) or by the pole star (the triangle solved for the latitude, at any hour angle), the daily rate from two errors, and equal altitudes (the chronometer's error that makes the two altitudes equal; the old rule, the middle of the readings, and the
+  equation of equal altitudes for the difference). Round trips from sights the almanac makes give the longitude back within 0.001 nm, the error by
+  equal altitudes within 0.01 s, the latitude by noon sights within 0.001′ and by the pole star within 0.33′ (with the DR longitude 30′ out).
 - **The lunar distance** is cleared exactly on a sphere (the angle at the zenith from the apparent altitudes and distance, then the true distance from the
   true altitudes); the Earth's figure (up to 0.2′, 24 s of time) is taken off by clearing a sight the almanac makes from the place by dead reckoning, which
   brings the Greenwich time back within 1 s with the DR 30′ out. A distance changing under 15′ an hour is reported too slow. Refraction's flattening of the

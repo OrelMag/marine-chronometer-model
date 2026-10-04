@@ -441,6 +441,7 @@
 <h2 id="sight"><a class="e-h" href="#essay=sight">Longitude by chronometer</a></h2>
 <p>At sea the chronometer supplies Greenwich time, corrected by its error and rate from the rate book, and a sight of the Sun or a star supplies the local time. With the latitude known, from the noon sight or the pole star, the body’s altitude, its declination and the latitude make a spherical triangle between the pole, the zenith and the body. Its angle at the pole is the body’s local hour angle. The almanac gives the body’s Greenwich hour angle at the chronometer’s time, and the difference between the two is the longitude. This is the <em>time sight</em>, the way longitude was worked for most of the chronometer’s life. Marcq St Hilaire’s intercept method of 1875 does the same arithmetic at any bearing, from a position by dead reckoning, and the workbook at the end gives both.</p>
 <p>The sextant reads the angle from the sea horizon to the Sun’s lower limb. Before it can go into the triangle it is corrected: for the sextant’s <em>index error</em>; for the <em>dip</em>, since the eye stands above the sea (1.76′ for the square root of the eye’s height in metres); for <em>refraction</em>, which lifts every body, about 34′ at the horizon and 1′ at 45°; for the <em>semi-diameter</em>, from the limb to the centre; and for <em>parallax</em>, since the almanac gives places seen from the Earth’s centre: 0.15′ for the Sun, nearly a degree for the Moon.</p>
+<p>The latitude comes from the sky as well. At noon the Sun crosses the meridian at its highest, and needs no exact time to be taken: the navigator watches it rise until it stops. Its zenith distance there, 90° less the observed altitude, added to its declination when it bears south, or taken from it when it bears north, is the latitude. At night the pole star stands within a degree of the pole, so its altitude is the latitude to within that degree, and the same triangle, with its declination and hour angle from the almanac, gives it exactly. The figure below works that day’s noon sight too.</p>
 <p>A sight is best taken with the body near east or west, where its altitude changes fastest and an error in the latitude matters least. Every second the chronometer is out moves the longitude 15″ of arc, a quarter of a mile at the equator, whatever the body.</p>
 <figure>
   <div class="e-st flat e-chart" id="eSight"><canvas aria-label="The error in longitude from an error in the latitude, by the time of the sight"></canvas></div>
@@ -491,10 +492,10 @@
   <div class="e-alm" id="eAlm"></div>
   <figcaption>ΔT, the difference between the Earth’s turning and uniform time, was 69.1 s in 2026, measured; past that it is a forecast, and a second of it moves a lunar’s Greenwich time by a second, nothing else. A value given here is used instead.</figcaption>
 </figure>
-<p>And for one’s own sights, the same arithmetic as a workbook. It reduces a sextant altitude to a longitude by the time sight, or to an intercept and bearing from a position by dead reckoning, or clears a lunar distance to Greenwich time.</p>
+<p>And for one’s own sights, the same arithmetic as a workbook. It reduces a sextant altitude to a longitude by the time sight, or to an intercept and bearing from a position by dead reckoning; a meridian altitude or the pole star to the latitude; clears a lunar distance to Greenwich time; and from two of the chronometer’s errors, by equal altitudes or lunars, gives its daily rate and its error now.</p>
 <figure>
   <div class="e-ctl">
-    <div class="seg" role="group" aria-label="Sight"><button aria-pressed="true" data-v="sight">Altitude</button><button aria-pressed="false" data-v="lunar">Lunar distance</button></div>
+    <div class="seg" role="group" aria-label="Sight"><button aria-pressed="true" data-v="sight">Altitude</button><button aria-pressed="false" data-v="lat">Latitude</button><button aria-pressed="false" data-v="lunar">Lunar distance</button><button aria-pressed="false" data-v="rate">Rate</button></div>
     <button class="ex">The example above</button>
   </div>
   <div class="e-work" id="eWork"></div>

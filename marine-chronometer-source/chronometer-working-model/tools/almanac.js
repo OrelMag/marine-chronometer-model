@@ -67,6 +67,12 @@ let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647,O={eye:6,ic:-
     const L=ALM.sextantLunar(key,t,la,lo,O),r=ALM.clear(L.ds,L.hm,L.hb,key,t+25*6e4,{...O,lat:la,dr:{lat:la+0.5,lon:lo-0.5}});if(Math.abs(r.rate)<15){slow++;continue;}   /* too slow: the navigator takes another body */
     const e=Math.abs(r.gmt-t)/1000,s0=Math.abs(ALM.clear(L.ds,L.hm,L.hb,key,t+25*6e4,{...O,lat:la}).gmt-t)/1000;if(e>wt){wt=e;wn=key;}ws=Math.max(ws,s0);dd+=Math.abs(r.rate);n++;}B.lunar=wt;
  chk(`lunar distances (${n}, the Sun and Maskelyne's stars): GMT back from 25 min out, DR 30′ out (worst)`,wt,3,'s',`(${wn}; the sphere alone ${ws.toFixed(0)} s; ${slow} under 15′ an hour left out; 1′ of distance is ${(60/(dd/n)*60).toFixed(0)} s of time)`);}
+{let wn=0,wp=0,nn=0,np=0;for(let k=0;(nn<80||np<80)&&k<20000;k++){const day=Date.UTC(2026,0,1)+Math.floor(rnd()*3650)*864e5,la=-60+120*rnd(),lo=-180+360*rnd();
+    if(nn<80){const t=ALM.noon(lo,day+12*36e5-lo/15*36e5),S=ALM.sun(t),p=ALM.topo(S,la,lo);if(p.alt>8&&p.alt<85){const hs=ALM.sextant('Sun',t,la,lo,{...O,limb:'L'}),c=ALM.correct(hs,S,{...O,limb:'L',lat:la});
+      wn=Math.max(wn,Math.abs(ALM.meridianLat(c.ho,S.dec,Math.cos(p.az*D)<0)-la)*60);nn++;}}   /* the noon sight, at the Sun's meridian passage there */
+    if(np<80&&la>3){const t=day+rnd()*864e5,P=ALM.body('Polaris',t),p=ALM.topo(P,la,lo),Sn=ALM.topo(ALM.sun(t),la,lo);if(Sn.alt<-6&&p.alt>3){const hs=ALM.sextant('Polaris',t,la,lo,{...O,limb:'C'}),c=ALM.correct(hs,P,{...O,limb:'C'}),
+      l=ALM.latByAlt(c.ho,P.dec,ALM.n360(P.gha+lo-0.5));wp=Math.max(wp,Math.abs(l-la)*60);np++;}}}   /* the pole star at twilight or night, the DR longitude 30′ out */
+ chk(`noon sights (${nn}): latitude back (worst)`,wn,0.1,'′');chk(`the pole star (${np}, the DR longitude 30′ out): latitude back (worst)`,wp,1,'′','(it stands 0.64° from the pole: 30′ of hour angle moves it at most 30′ × sin 0.64°, 0.33′)');}
 {let w=0,n=0;for(let k=0;n<60&&k<3000;k++){const t=Date.UTC(2026,0,1)+rnd()*3650*864e5,la=-60+120*rnd(),lo=-180+360*rnd(),up=ALM.STARS.map((s,i)=>i).filter(i=>{const p=ALM.topo(ALM.star(i,t),la,lo);return p.alt>20&&p.alt<70;});
     if(up.length<3)continue;const pick=[up[0],up[Math.floor(up.length/2)],up[up.length-1]],ss=pick.map(i=>{const B=ALM.star(i,t),hs=ALM.sextant(B.name,t,la,lo,{...O,limb:'C'});return{gha:B.gha,dec:B.dec,ho:ALM.correct(hs,B,{...O,limb:'C'}).ho};});
     const f=ALM.fix(ss,la+0.7,lo-0.9);w=Math.max(w,Math.hypot(f.lat-la,n180(f.lon-lo)*Math.cos(la*D))*60);n++;}
