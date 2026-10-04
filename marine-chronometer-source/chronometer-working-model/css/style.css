@@ -197,6 +197,14 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
   .info{top:50px;max-height:calc(100% - 110px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y}.hud{right:14px;bottom:50px}.cu{bottom:96px;width:176px;height:150px}}
 /* the HUD sits above the tools on narrow and landscape phones; clear the taller touch buttons */
 @media(pointer:coarse) and (max-width:600px),(pointer:coarse) and (orientation:landscape) and (max-height:560px){.hud{bottom:62px}}
+/* Hide panel: a tab on the stage's edge by the panel. Where the panel sits beside the stage (wide windows, landscape phones), the stage takes the whole width; with the panel below it (portrait) the tab isn't offered.
+   Before the cards in the page, so they draw over it */
+#panelBtn{display:none;position:absolute;right:0;top:50%;transform:translateY(-50%);width:22px;height:56px;padding:0 0 2px;border-right:0;border-radius:10px 0 0 10px;font-size:20px;line-height:1;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+@media(pointer:coarse){#panelBtn{width:30px;height:64px}}.stage:fullscreen #panelBtn{display:none!important}
+.stage:-webkit-full-screen #panelBtn{display:none!important}
+@media(min-width:960px),(orientation:landscape) and (max-height:560px){#panelBtn{display:block}html.nopanel .panel{display:none}}
+@media(min-width:960px){html.nopanel header,html.nopanel .wrap{max-width:none}html.nopanel .wrap{grid-template-columns:minmax(0,1fr)}}
+@media(orientation:landscape) and (max-height:560px){html.nopanel body{grid-template-columns:minmax(0,1fr);padding-right:env(safe-area-inset-right,0px)}html.nopanel header{display:none}}
 /* the model takes keyboard focus (arrow keys turn it) */
 .stage canvas:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
 /* reduced motion: no fades or slides */

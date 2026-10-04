@@ -258,6 +258,14 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
   .info{top:50px;max-height:calc(100% - 110px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y}.hud{right:14px;bottom:50px}.cu{bottom:96px;width:176px;height:150px}}
 /* the HUD sits above the tools on narrow and landscape phones; clear the taller touch buttons */
 @media(pointer:coarse) and (max-width:600px),(pointer:coarse) and (orientation:landscape) and (max-height:560px){.hud{bottom:62px}}
+/* Hide panel: a tab on the stage's edge by the panel. Where the panel sits beside the stage (wide windows, landscape phones), the stage takes the whole width; with the panel below it (portrait) the tab isn't offered.
+   Before the cards in the page, so they draw over it */
+#panelBtn{display:none;position:absolute;right:0;top:50%;transform:translateY(-50%);width:22px;height:56px;padding:0 0 2px;border-right:0;border-radius:10px 0 0 10px;font-size:20px;line-height:1;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+@media(pointer:coarse){#panelBtn{width:30px;height:64px}}.stage:fullscreen #panelBtn{display:none!important}
+.stage:-webkit-full-screen #panelBtn{display:none!important}
+@media(min-width:960px),(orientation:landscape) and (max-height:560px){#panelBtn{display:block}html.nopanel .panel{display:none}}
+@media(min-width:960px){html.nopanel header,html.nopanel .wrap{max-width:none}html.nopanel .wrap{grid-template-columns:minmax(0,1fr)}}
+@media(orientation:landscape) and (max-height:560px){html.nopanel body{grid-template-columns:minmax(0,1fr);padding-right:env(safe-area-inset-right,0px)}html.nopanel header{display:none}}
 /* the model takes keyboard focus (arrow keys turn it) */
 .stage canvas:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
 /* reduced motion: no fades or slides */
@@ -365,6 +373,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
   <div class="stage" id="stage">
     <canvas tabindex="0" aria-label="3D working model of a marine chronometer. Arrow keys turn it, plus and minus zoom, 0 resets the view."></canvas>
     <div class="labels"></div>
+    <button id="panelBtn" aria-controls="panel" aria-expanded="true" aria-label="Hide the panel" title="Hide the panel, for a larger model (P)">›</button>
     <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div><div class="src"></div></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it does; right-click to fade, hide or isolate it.</span><span class="t-only">Tap a part to see what it does; long-press to fade, hide or isolate it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
@@ -376,7 +385,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <section class="hc mouse"><h4>With a mouse</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Shift-drag or middle-drag</dt><dd>Pan</dd><dt>Scroll</dt><dd>Zoom</dd>
           <dt>Click a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Right-click a part</dt><dd>Fade, hide or isolate it</dd><dt>Right-click empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
-          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 9</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
+          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 9</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>?</dt><dd>Open or close this card</dd><dt>P</dt><dd>Hide or show the panel, where it sits beside the model</dd></dl></section>
         <section class="hc touch"><h4>On a phone or tablet</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Drag two fingers</dt><dd>Pan</dd><dt>Pinch</dt><dd>Zoom</dd>
           <dt>Tap a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Long-press a part</dt><dd>Fade, hide or isolate it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
@@ -386,7 +395,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
     <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Marine Chronometer: an essay on how it keeps time at sea, with live figures drawn from this model">Essay</button></div>
     <div class="loading" id="loading">Assembling the movement…</div>
   </div>
-  <div class="panel">
+  <div class="panel" id="panel">
     <div class="card tour" id="tourCard">
       <div id="tourIntro">
         <h2>How it works</h2>
@@ -3890,6 +3899,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
   document.addEventListener('keydown',e=>{if(ESSAY.on())return;   /* the essay shows: its keys scroll it, and the tabs take their own (essay.js) */
     if(e.key==='Escape'){closeOpm();showHelp(false);}
+    if((e.key==='p'||e.key==='P')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open&&panelSide())pnb.click();
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
     /* space bar: stop and restart, unless typing or pressing a button */
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
@@ -4269,6 +4279,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function partsSync(){for(const q of PROWS){const h=st.hid.has(q.p)||isoOut(q.p);q.ck.checked=!h;q.row.classList.toggle('off',h);q.b.setAttribute('aria-pressed',st.pick===q.p?'true':'false');q.b.disabled=st.drive&&(BOXP.has(q.p)||DRIVE_HIDE.has(q.p));}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}else{(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);}});
+  /* Hide panel (P, or the tab on the stage's edge): the stage takes the panel's column, remembered here; the walkthrough and a link opening a panel section bring it back. Offered only where the panel sits beside the stage (style.css) */
+  const pnb=$('#panelBtn'),panelSide=()=>getComputedStyle(pnb).display!=='none',panelOn=on=>{document.documentElement.classList.toggle('nopanel',!on);pnb.textContent=on?'›':'‹';pnb.setAttribute('aria-label',on?'Hide the panel':'Show the panel');pnb.title=(on?'Hide the panel, for a larger model':'Show the panel')+' (P)';pnb.setAttribute('aria-expanded',on?'true':'false');keep('nopanel',!on);};
+  if(SET.nopanel)panelOn(false);pnb.addEventListener('click',()=>panelOn(document.documentElement.classList.contains('nopanel')));
   /* tick sound, on by default: browsers start audio only from a user gesture (and warn if a page tries sooner), so the context is made or resumed on the first
      click, tap or key, and the ticks are silent until then */
   let ac=null;const unlock=()=>{if(!st.sound)return;if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(_){}}if(ac&&ac.state==='suspended')ac.resume();};
@@ -4328,7 +4341,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
   /* the viewer's own settings, kept when the walkthrough starts and given back when it ends */
   let preTour=null;
-  function tourGo(i){if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
+  function tourGo(i){panelOn(true);if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
@@ -4436,7 +4449,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(sc){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
       if(!first)setView(v);}
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
-    const od=DET.find(d=>d.id===g('open'));if(od){od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}   /* open=bookDet: a link from the essay to a panel section */
+    const od=DET.find(d=>d.id===g('open'));if(od){panelOn(true);od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}   /* open=bookDet: a link from the essay to a panel section */
     return v;}
   addEventListener('hashchange',()=>applyHash(false));
   for(const k of['finish','dial','bal','stop']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k==='stop'?'stopV':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}
