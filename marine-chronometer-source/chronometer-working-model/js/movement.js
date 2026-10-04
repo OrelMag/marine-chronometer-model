@@ -672,7 +672,7 @@ function buildMovement(M){
     const pw=W+SPW;return polyGeo([...o,...I.reverse()],1.13,[[14.6*FK*Math.cos(pw),14.6*FK*Math.sin(pw),0.42],...SSH.map(q=>[...q,0.42])]);};   /* 0.02 over the floor, 0.03 inside the wall */
   /* the sustaining spring and its pin into the wheel: their own part, turning with the fusee wheel, in whose recess the spring lies (Figs. 28, 71) */
   const ssP=part('sspring',-18);R.ssg=new THREE.Group();R.ssg.position.set(L.Fu[0],0,L.Fu[1]);ssP.add(R.ssg);
-  hn(R.ssg,'42016');R.sspring=mesh(R.ssg,sspGeo(0),M.blued,0,-8.75,0);
+  hn(R.ssg,'42016');R.sspring=mesh(R.ssg,sspGeo(0),M.steelK,0,-8.75,0);   /* dark tempered steel, not blued: nearly black in shade, light grey where it takes the light, (27, 31, 35) and (154, 166, 174) on KLUwI2UUCMQ 27:30 */
   mesh(R.ssg,cylY(0.4,1.5,10),M.steel,SSH[0][0],-8.1,SSH[0][1]);
   /* sustaining ratchet wheel (42009): free on the fusee arbor, open in the middle round the fusee's winding ratchet and its screws (Fig. 28) */
   const srP=part('sratchet',-22);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
@@ -903,11 +903,14 @@ function buildMovement(M){
      and two hold-down screws (42249) through cap and arm into the flange. The arm is widened round the hub. Its width, 1.9 (AW), is the restoration video's: KLUwI2UUCMQ 6:52.5, face-on,
      82 px between its edges along its clean outer half at the rim's 43 px/mm (±0.15 with the tilt); small holes along its middle there are not drawn. Its thickness (1.1; edge-on, 6:50.0, it can't
      be told from the hub's flange) and the widening round the hub (hidden under the hairspring on every frame) are estimated */
-  const AW=1.9,HD=[[1.7,0],[-1.7,0]],xa=Math.sqrt(2.2**2-(AW/2)**2),a0=Math.atan2(AW/2,xa),arc=(s,e)=>[...Array(25)].map((_,i)=>[2.2*Math.cos(s+(e-s)*i/24),2.2*Math.sin(s+(e-s)*i/24)]);   /* the bar across, joined to the 2.2 circle round the hub on both sides (subtractCircle keeps one run: it drew half the arm) */
-  mesh(R.balU,polyGeo([[BR-0.5,-AW/2],[BR-0.5,AW/2],...arc(a0,Math.PI-a0),[-(BR-0.5),AW/2],[-(BR-0.5),-AW/2],...arc(Math.PI+a0,TAU-a0)],1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,-0.55,0);
-  hn(mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,0.55,0),'42186',{sub:1});hn(mesh(R.balU,ringGeo(1.1,0.45,2.05),M.steel,0,0.125,0),'42186',{sub:1});   /* the hub's flange and boss, bored for the staff (as the flange is) */
-  hn(mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,-0.9,0),'42248');
-  for(const q of HD)hn(screw(R.balU,...q,-0.9,0.4,0.25,0.35+1.1+0.5),'42249').userData.lift=0;   /* they stay in: the hub's flange under them is on the staff, which goes with the balance */
+  /* AY: the arm's cock-side face, its plate-side face flush with the rim's plate-side edge (RY + RH/2): side-on from a little below at KLUwI2UUCMQ 6:50.0 the arm's underside
+     runs level with the rim's lower edge (±0.3 mm) to its end at the timing weight, the hub's disc standing below it, as Hamilton's US 2,356,911 (Fig. III) sets the crossbar's end
+     in a step at the rim's lower edge; 0.65 inside it, estimated, until 4 October 2026. The hub, its cap and screws go with it */
+  const AY=RY+RH/2-1.1,AW=1.9,HD=[[1.7,0],[-1.7,0]],xa=Math.sqrt(2.2**2-(AW/2)**2),a0=Math.atan2(AW/2,xa),arc=(s,e)=>[...Array(25)].map((_,i)=>[2.2*Math.cos(s+(e-s)*i/24),2.2*Math.sin(s+(e-s)*i/24)]);   /* the bar across, joined to the 2.2 circle round the hub on both sides (subtractCircle keeps one run: it drew half the arm) */
+  mesh(R.balU,polyGeo([[BR-0.5,-AW/2],[BR-0.5,AW/2],...arc(a0,Math.PI-a0),[-(BR-0.5),AW/2],[-(BR-0.5),-AW/2],...arc(Math.PI+a0,TAU-a0)],1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,AY,0);
+  hn(mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,AY+1.1,0),'42186',{sub:1});hn(mesh(R.balU,ringGeo(1.1,0.45,2.05),M.steel,0,AY+0.675,0),'42186',{sub:1});   /* the hub's flange and boss, bored for the staff (as the flange is) */
+  hn(mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,AY-0.35,0),'42248');
+  for(const q of HD)hn(screw(R.balU,...q,AY-0.35,0.4,0.25,0.35+1.1+0.5),'42249').userData.lift=0;   /* they stay in: the hub's flange under them is on the staff, which goes with the balance */
   /* the rim's tapped holes, "uniformly spaced ... around the entire circumference" (Sec. II): 24 places 15 deg apart, numbered 1-13 round each half from an arm's end, as the
      numbered balance block (Tool 54, Fig. 99) and Table IV (p. 74) number them. Hole 1 is the arm's end (the timing weight's screw), 7 the quarter (Table IV's moves are
      symmetric about it: 3 to 4 as 11 to 10), 13 the other arm's end; 2 takes the vernier weight, 3-12 the balance screws. Both halves are numbered the same way round,
@@ -934,7 +937,7 @@ function buildMovement(M){
      measured 0.5-0.85 thickness and Table II's own spread: Table III's washers give 16 % less) */
   const W=[],VO=0.6,TWL=2.3,TR=1.05,TG=0.35,PM=0.5;
   for(const h of[0,1]){const at=HA(h,1),av=HA(h,2);
-    W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42),'42176')});hn(radial(at,BR-1.5,1.5+2.7,0.4,M.steel,10),'42177');   /* the screw from 1.5 inside the rim (in the arm; estimated) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, inside the barrel bridge's cut (17.6); just past the nut at mid-travel, inside it at full travel out */
+    W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42),'42176')});hn(radial(at,BR-0.6,0.6+2.7,0.4,M.steel,10),'42177');   /* the screw threaded through the rim, from its inner face (the arm's end lies below it, at the rim's plate-side edge, AY; the screw was drawn 1.5 inside, into the arm, until 4 October 2026) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, inside the barrel bridge's cut (17.6); just past the nut at mid-travel, inside it at full travel out */
     W.push({kind:'v',a:av,len:1.3,rr:0.65,mg:10.5*PM,d0:BR-RW-VO-0.65,q:hn(radial(av,BR-RW-VO-1.3,1.3,0.65,M.steelD,12,0.27),'37115')});
     hn(radial(av,BR-RW-VO-1.3-0.65,VO+1.3+0.65+RW+1.6,0.25,M.steel,10),'42197');hn(radial(av,BR+1.1,0.5,0.42,M.steel,12),'42197',{sub:1});}   /* the vernier's screw from inside the nut's furthest travel in, through the rim to a stem 1.6 outside it with a collar at its end (6:53.0; sizes estimated) */
   /* balance screws (pp. 82, 93): the parts list's 4-6 of 0.049 in head height (125-130 mg), 2 of 0.080 (200-205 mg) and 2 of 0.101 (250-255 mg), in diametric pairs. The
@@ -1045,7 +1048,7 @@ function buildMovement(M){
     const pw=[wp[0]+0.4*un[0]*Math.sign(un[1]||1),wp[1]+0.4*un[1]*Math.sign(un[1]||1)];   /* the wedge pin 0.4 across from the spring's end, to the side the model had it */
     mesh(st,polyGeo([[e0[0]-q[0],e0[1]-q[1]],[e1[0]-q[0],e1[1]-q[1]],[e1[0]+q[0],e1[1]+q[1]],[e0[0]+q[0],e0[1]+q[1]]].map(loc),0.5,[hT(...loc(SPHb),0.8),[...loc(SPHa),0.3],[...loc(SPHc),0.3],[...pw,0.17]]),M.steel,0,yb,0);   /* tapped for the stud screw; the steady pins pressed through it; the wedge pin's hole */
     const cl=hn(mesh(st,new THREE.BoxGeometry(SP_E-SP_ST,0.7,2.0),M.steel,cb[0],yb+0.85,cb[1]),'42191.st');cl.rotation.y=-Math.atan2(ux[1],ux[0]);
-    hn(cylBetween(st,0.15,yb+0.02,yb+1.17,M.steelD,...pw,10),'42147.st');for(const h of[SPHa,SPHc])cylBetween(st,0.295,yb-0.8,yb+0.5,M.steel,...loc(h),12); }   /* wedge pin from just under the bar's top face (its end shows there on the video, 6:47.5; Ops. 9, 10: "file pin below the top surface of the stud") down through the clamp, cut off inside its lower face (it stood 0.16 proud, into the coil under the clamp); the steady pins up into the cock, 0.8 (r 0.295: inside the r 0.3 holes' facets) */
+    hn(cylBetween(st,0.15,yb+0.02,yb+1.17,M.steelD,...pw,10),'42147.st');for(const[h,y1]of[[SPHa,yb+1.4],[SPHc,yb+0.5]])cylBetween(st,0.295,yb-0.65,y1,M.steel,...loc(h),12); }   /* wedge pin from just under the bar's top face (its end shows there on the video, 6:47.5; Ops. 9, 10: "file pin below the top surface of the stud") down through the clamp, cut off inside its lower face (it stood 0.16 proud, into the coil under the clamp); the steady pins up into the cock 0.65, the outer one 0.9 below the bar too (r 0.295: inside the r 0.3 holes' facets): side-on at KLUwI2UUCMQ 6:50.0, both stand 26-29 px over the bar's top face and the outer 40 px under it, the inner none (the clamp's step), at 43 px/mm (the pins 297 px apart for their 6.6-7.0 mm); 0.8 and flush below, estimated, until 4 October 2026. The bar there reads 31-46 px thick, 0.7-1.1 mm, against the 0.5 drawn: not changed, as its thickness moves the clamp and the spring's height (Review-results) */
   /* balance cock: massive bridge from a foot at the right-back (Fig. 2) over the balance */
   const ck=hn(part('cock',-96),'42066');
   /* balance cock traced on the top-view photograph: a broad crescent whose outer edge follows the plate rim (top-left
