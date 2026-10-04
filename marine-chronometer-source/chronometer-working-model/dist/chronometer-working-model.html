@@ -2863,13 +2863,16 @@ function buildMovement(M){
      nearly overhead, with the stud in place (a pin, the slotted stud screw, a pin), through its map on the barrel bridge's screws from the setting's centre, (1.93, -3.49), (5.03, -4.97),
      (8.36, -6.49) (its scale a few % large: the cock's top is 11 mm above that map's plane); their mean, +-0.4: a small hole 3.9 mm from the staff (SPHc), the stud screw's, wider
      (counterbored), 7.0 (SPHb), and a small one 10.5 (SPHa): the stud's two steady pins either side of its screw (the model had one pin, 5.6 out, and the screw 7.6 along SPD). The row's line passes 2.0 from the
-     staff; the stud's clamp is on it at HS_R, and the hairspring's upper end is at HS_R in the clamp's direction (SPD2; SPSI, the same as a rotation in the balance's frame), its
+     staff. The stud's clamp is under the bar's inner end, past the inner pin (Fig. 5; Hamilton's patent US 2,379,780, Fig. 10): on KLUwI2UUCMQ 6:47.5 and 6:47.75 (the balance
+     lifted out, the stud seen from the cock side, 33 px/mm at 4K), put in mm along the row by a 1D perspective fit on the three holes, the wedge pin's hole is 1.76 and 1.68 inside
+     the inner pin (SP_CL, 1.7), the bar's end 2.24 and 2.10 (SP_E, 2.2) and the step where the clamp drops from its underside 1.13 and 1.10 (SP_ST); the bar's outer end 0.79 and 0.77
+     past the outer pin (the 0.8 drawn). The hairspring's upper end is in the clamp, HS_R from the staff (2.65; it was 4.6, the clamp drawn between the pin and the screw), in its direction (SPD2; SPSI, the same as a rotation in the balance's frame), its
      lower end in the same direction against the collet's end face (HS_RI: the face and the wire's half width), bent to run HS_LEAD straight along it into the clamp (Fig. 6 draws
      the end bent; Op. 4 cuts it one wire width past the bend). The spring rises HS_H from HS_Y, the collet's tongue, to the clamp under the cock. CKS: the collet's scale, its
      drawing's coil (read as r 5.5) against the measured one */
   const Q=S.cock,SPD=(()=>{const d=[Q[0]-L.B[0],Q[1]-L.B[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),SPDn=[-SPD[1],SPD[0]],SPH=(a,c)=>[L.B[0]+a*SPD[0]+c*SPDn[0],L.B[1]+a*SPD[1]+c*SPDn[1]];
-  const SPHc=SPH(2.08,-3.28),SPHb=SPH(5.24,-4.62),SPHa=SPH(8.51,-6.11),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),HS_R=4.6;
-  const SPCL=(()=>{const w=[SPHc[0]-L.B[0],SPHc[1]-L.B[1]],p=w[0]*SPu[0]+w[1]*SPu[1],t=-p+Math.sqrt(p*p-(w[0]**2+w[1]**2)+HS_R*HS_R);return[SPHc[0]+t*SPu[0],SPHc[1]+t*SPu[1]];})(),SPD2=[(SPCL[0]-L.B[0])/HS_R,(SPCL[1]-L.B[1])/HS_R];
+  const SPHc=SPH(2.08,-3.28),SPHb=SPH(5.24,-4.62),SPHa=SPH(8.51,-6.11),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})();
+  const SP_CL=1.7,SP_E=2.2,SP_ST=1.1,SPin=s=>[SPHc[0]-s*SPu[0],SPHc[1]-s*SPu[1]],SPCL=SPin(SP_CL),HS_R=Math.hypot(SPCL[0]-L.B[0],SPCL[1]-L.B[1]),SPD2=[(SPCL[0]-L.B[0])/HS_R,(SPCL[1]-L.B[1])/HS_R];   /* SPin(s): s mm inside the inner pin along the row */
   const SPSI=Math.atan2(-SPD2[1],SPD2[0])-BETA,HS_RC=5.1,HS_N=12,CKS=HS_RC/5.5,HS_RI=3.72*CKS+0.17,HS_LEAD=1.25*CKS,HS_Y=BAL_Y-1.5,HS_H=6.7,SPS=SPHb;   /* SPS: the stud screw. HS_Y, HS_H: the collet's tongue (the spring's lower end) 1.1 below the rim's top edge, as low as the hub allows (the collet
      0.07 over the hub's boss and the cap's screws; 0.8 lower until 4 October 2026, level with the rim's top), and the spring up to the stud's clamp, whose height the cock fixes (below) */
   R.staff=hn(new THREE.Group(),'42186');bl.add(R.staff);
@@ -3054,13 +3057,18 @@ function buildMovement(M){
      balance and hairspring assembly does with its stud (Sec. II) */
   const spg=part('spr',-80,true),sg=new THREE.Group();sg.rotation.y=SPSI;spg.add(sg);R.spring=hn(mesh(sg,new THREE.BufferGeometry(),M.steel,0,HS_Y,0),'42188');R.spring.rotation.x=Math.PI;
   /* hairspring stud (Figs. 5, 19, 84, 85): a flat bar under the cock along the row of its holes (SPHc, SPHb, SPHa, above), held by the stud screw from the cock's top and two steady
-     pins, with a clamp near its inner end holding the spring's upper end by a wedge pin, as the collet does. Side-on (6:50.0) it runs from over the coils out past them, a pin standing
-     up from it at each end. Its ends 0.8 past the pins, its width (1.6) and thickness (0.5) are estimated. loc: a point of the movement's plan in the stud's frame */
+     pins, and at its inner end, past the inner pin, the clamp holding the spring's upper end by a wedge pin, as the collet does (Fig. 5; patent US 2,379,780, Figs. 10, 11).
+     Measured on KLUwI2UUCMQ 6:47.5 and 6:47.75 (above): the bar runs from SP_E inside the inner pin to 0.8 past the outer one; the clamp is a block under its end, from SP_E to
+     SP_ST, about 1.3 times the bar's width there (43 px against its 33 on both frames; drawn centred, the side it stands out to unread), and the wedge pin's end shows in the bar's top
+     face over it, SP_CL in and 0.4 off the bar's middle line (13-14 px of the frame), the spring's end beside it. The block's drop (0.7) is the spring's measured height, HS_H, to its
+     middle; the frames read 0.9-1.3 with the tilt unknown. Side-on (6:50.0) the bar runs from over the coils out past them, a pin standing up from it at each end. Its width (1.6) and
+     thickness (0.5) are estimated. loc: a point of the movement's plan in the stud's frame */
   { const st=hn(new THREE.Group(),'42189');st.rotation.y=SPSI;spg.add(st);const yb=CK_T+2.6,tw=SPSI+BETA,loc=p=>{const d=[p[0]-L.B[0],p[1]-L.B[1]];return[d[0]*Math.cos(tw)-d[1]*Math.sin(tw),d[0]*Math.sin(tw)+d[1]*Math.cos(tw)];};
-    const e0=[SPHc[0]-0.8*SPu[0],SPHc[1]-0.8*SPu[1]],e1=[SPHa[0]+0.8*SPu[0],SPHa[1]+0.8*SPu[1]],q=[-SPu[1]*0.8,SPu[0]*0.8];
-    mesh(st,polyGeo([[e0[0]-q[0],e0[1]-q[1]],[e1[0]-q[0],e1[1]-q[1]],[e1[0]+q[0],e1[1]+q[1]],[e0[0]+q[0],e0[1]+q[1]]].map(loc),0.5,[hT(...loc(SPHb),0.8),[...loc(SPHa),0.3],[...loc(SPHc),0.3]]),M.steel,0,yb,0);   /* tapped for the stud screw; the steady pins pressed through it */
-    hn(mesh(st,new THREE.BoxGeometry(1.0,0.7,1.3),M.steel,HS_R,yb+0.85,0),'42191.st');
-    hn(cylBetween(st,0.15,yb+0.5,yb+1.17,M.steelD,HS_R,0.4,10),'42147.st');for(const h of[SPHa,SPHc])cylBetween(st,0.295,yb-0.8,yb+0.5,M.steel,...loc(h),12); }   /* wedge pin through the clamp, cut off and filed below the clamp's face (Ops. 9, 10: "file pin below the top surface of the stud"; it stood 0.16 proud, into the coil under the clamp); the steady pins up into the cock, 0.8 (r 0.295: inside the r 0.3 holes' facets) */
+    const e0=SPin(SP_E),e1=[SPHa[0]+0.8*SPu[0],SPHa[1]+0.8*SPu[1]],q=[-SPu[1]*0.8,SPu[0]*0.8],ux=loc([L.B[0]+SPu[0],L.B[1]+SPu[1]]),un=[-ux[1],ux[0]],cb=loc(SPin((SP_E+SP_ST)/2)),wp=loc(SPCL);
+    const pw=[wp[0]+0.4*un[0]*Math.sign(un[1]||1),wp[1]+0.4*un[1]*Math.sign(un[1]||1)];   /* the wedge pin 0.4 across from the spring's end, to the side the model had it */
+    mesh(st,polyGeo([[e0[0]-q[0],e0[1]-q[1]],[e1[0]-q[0],e1[1]-q[1]],[e1[0]+q[0],e1[1]+q[1]],[e0[0]+q[0],e0[1]+q[1]]].map(loc),0.5,[hT(...loc(SPHb),0.8),[...loc(SPHa),0.3],[...loc(SPHc),0.3],[...pw,0.17]]),M.steel,0,yb,0);   /* tapped for the stud screw; the steady pins pressed through it; the wedge pin's hole */
+    const cl=hn(mesh(st,new THREE.BoxGeometry(SP_E-SP_ST,0.7,2.0),M.steel,cb[0],yb+0.85,cb[1]),'42191.st');cl.rotation.y=-Math.atan2(ux[1],ux[0]);
+    hn(cylBetween(st,0.15,yb+0.02,yb+1.17,M.steelD,...pw,10),'42147.st');for(const h of[SPHa,SPHc])cylBetween(st,0.295,yb-0.8,yb+0.5,M.steel,...loc(h),12); }   /* wedge pin from just under the bar's top face (its end shows there on the video, 6:47.5; Ops. 9, 10: "file pin below the top surface of the stud") down through the clamp, cut off inside its lower face (it stood 0.16 proud, into the coil under the clamp); the steady pins up into the cock, 0.8 (r 0.295: inside the r 0.3 holes' facets) */
   /* balance cock: massive bridge from a foot at the right-back (Fig. 2) over the balance */
   const ck=hn(part('cock',-96),'42066');
   /* balance cock traced on the top-view photograph: a broad crescent whose outer edge follows the plate rim (top-left
@@ -3839,7 +3847,7 @@ const ESSAY=(()=>{
       else{const s=(t-0.04)/0.92;ang=TAU*N*s;r=Re;y=H*s;ox=Math.sin(Math.PI*s)*0.45*R*(th/(TAU*0.6));}
       const a=ang+th*(1-ang/(TAU*N));return v.set(r*Math.cos(a)+ox,y,-r*Math.sin(a));};
     return closeGeo(new THREE.TubeGeometry(c,Math.round(N*44),wire,6,false));}
-  const HS=[5.1,6.7,12,0.17,4.6,3.62];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
+  const HS=[5.1,6.7,12,0.17,2.65,3.62];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
 
   /* ---------- the balance and hairspring: T = 2π√(I/κ) ---------- */
   fig('eBal',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.5,dist:70,target:[4,1,0]}),M=G.M,A=ESC.A;

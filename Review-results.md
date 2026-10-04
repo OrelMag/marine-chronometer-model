@@ -2076,3 +2076,73 @@ top, the fusee arbor, the take-off slot and the flange's holes).
 6. **Cosmetic:** the sustaining spring's blue is brighter than the video's
    nearly black steel (27:30).
 
+
+## The balance and hairspring against Hamilton's patents (4 October 2026)
+
+US 2,356,911 (the balance) and US 2,379,780 (the hairspring's mounting), in
+`References/`, set beside the model with `isolate.py`, then against the manual
+(Figs. 3-6) and the restoration video. A patent is Hamilton's drawing of a
+principle: where the manual or a real Model 21 shows the part, they decide.
+
+Right as it is:
+
+1. **The rim and its screws** (patent Figs. I, II). An unbroken rim with
+   threaded holes all round, diametrically paired, screws with slotted heads
+   outside and points through it, as the model has (24 holes, Sec. II and the
+   video, 6:47.5, 6:52.5). Sure.
+2. **The arm's outline.** The patent draws the crossbar wider at the hub and
+   flared into the rim at each end; the real arm (6:52.5, `arm_6-52.5`) is a
+   straight bar of even width with small holes along it, meeting the rim
+   without a flare, as the model draws it (1.9 wide). The patent is a sketch of
+   the principle here. Sure.
+3. **The joint.** Patent: the crossbar brazed or screwed to the rim; manual
+   (p. 9): an Invar arm "silver-soldered" to the solid stainless rim. The model
+   draws one joined part. No change.
+4. **The stud's holes.** Patent Fig. 10: a bar with a pin at each end and a
+   central opening for the cock; the model's three holes, measured on the
+   video (41:58: pin, stud screw, pin), are that row. Sure.
+5. **The collet's clamp.** Patent Figs. 7-9 and 12: the spring's end held
+   against the collet's end face by a U-shaped clamp over a recessed tongue,
+   pulled tight by a wedge pin bearing on the edge of a cut-out; the model's
+   collet (manual Fig. 6) has the same parts. The patent's collet is slit
+   through to its edge where Fig. 6's ends in a relief hole; Fig. 6 decides.
+
+Open:
+
+6. **The stud's clamp is in the wrong place.** Manual Fig. 5 draws the stud as
+   a bar with a steady pin near each end and the screw's hole between them,
+   its end past the inner pin stepping down to the clamp over the coils; patent
+   Fig. 10 puts the clamp's recess (32) at the bar's end past a pin too. The
+   model has the clamp between the inner pin and the stud screw (4.06 mm along
+   the row from the line's nearest point to the staff, the pin at 3.23, the
+   screw at 6.66), 4.6 mm from the staff (`HS_R`, listed as an estimate), and
+   its bar flat, ending 0.8 past the pin. Moving the clamp past the inner pin
+   moves the spring's upper end in, to about 3 mm from the staff, which changes
+   the spring's terminal curve. Measure it before changing: the stud and clamp
+   on the video (41:58 has the stud in place from above; sheet round it and
+   round the hairspring's removal for a side view of the step), then
+   `isolate.py spr` against the frame and Fig. 5. Fairly sure of the order
+   along the bar (two drawings agree); its sizes are not known. *Fixed:
+   measured on the video at 6:47.5 and 6:47.75 (`References/VIDEOS.md`, "The
+   hairspring stud's clamp"): the bar now ends 2.2 inside the inner pin, the
+   clamp is a block under its end from there to 1.1 inside, the wedge pin
+   1.7 inside, through the bar's top face, and the spring's upper end is
+   2.65 mm from the staff (`SP_E`, `SP_ST`, `SP_CL` in `movement.js`).*
+7. **The stud's clamp's form.** The model's is a plain block with a pin; Fig. 6
+   and the patent (Figs. 9-12) draw the same U-shaped clamp and wedge pin as at
+   the collet, the pin a cylinder with a tapered flat (0.005 in over its
+   length). Draw it as the collet's when the place is measured. *Partly:
+   the frames show a block under the bar's end and the pin's end in the bar's
+   top face, as now drawn; the U form inside it doesn't show, so the block
+   stays plain.*
+8. **The arm's height in the rim.** Patent Fig. III sets the crossbar's end in
+   a step at the rim's lower edge (the hub's side, the plate side), flush with
+   its face; the model's arm lies 1.2 mm above the rim's plate-side edge
+   (estimated). The side-on frames (6:50.0) can't tell the arm from the rim's
+   far edge; sheet 6:45-6:55 for a frame that shows the arm's end edge-on
+   before changing it.
+9. **The stud's steady pins.** On 6:47.5 and 6:47.75 the two pins' holes are
+   empty or flush on the bar's top face; the model has the pins standing 0.8
+   up into the cock (the side view at 6:50.0 was read as a pin standing at
+   each end). Read the side view again, and 41:58 (the cock's holes), before
+   changing them.

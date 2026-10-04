@@ -1361,6 +1361,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   down behind the rim, 7.15 or more: it now starts 1.1 below the rim's top, as low
   as the hub lets the collet go, and stands 6.7. `9c8fdc3`
 
+- **The hairspring stud's clamp was in the wrong place.** It was a block on
+  the bar between the inner steady pin and the stud screw, 4.6 mm from the
+  staff, the bar ending 0.8 mm past the pin. Fig. 5, Hamilton's patent
+  US 2,379,780 (Fig. 10) and the restoration video (6:47.5, 6:47.75, the
+  stud seen from the cock side) put it under the bar's inner end, past the
+  pin: the bar ends 2.2 mm inside the pin, the clamp drops from its
+  underside from there to 1.1 inside, the wedge pin's end shows in the
+  bar's top face 1.7 inside, and the spring's upper end is 2.65 mm from the
+  staff. Keep the clamp at the bar's end (`SP_E`, `SP_ST`, `SP_CL` in
+  `movement.js`, `HS_R` computed from them, `essay.js`'s `HS` to match). `e37f857`
+
 ## Rate panel
 
 - **Balance far too light.** The screws and weights were drawn as cylinders
