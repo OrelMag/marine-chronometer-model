@@ -1395,6 +1395,18 @@ An arbor needs pivots and shoulders; a stone its seat.
   drawing doesn't make added as `I_REST`. Keep: draw the balance as measured
   and keep the moment Table II's (`invariants.py` checks 1,140). `fa37969`
 
+- **The balance's moment of inertia 37 % more than the drawing carries (`I_REST` 410 g·mm²).**
+  Table II's screw changes, worked with the parts list's masses as each screw's,
+  need 1,157 g·mm²; the balance drawn as the video measures it made 731. The
+  masses are now read as a matched pair's (`PM` in `movement.js`): Table II then
+  needs 578 and the drawing makes 534 (`I_REST` 44, 8 %), the steel timing nut as
+  measured weighs what a pair's 93 mg gives it (about 47-53 mg; 93 is impossible
+  at its size), and the screws' heads come out near brass, not gold. The rates the
+  panel gives are unchanged (they follow Table II and the manual's 40 s and 2.8 s a
+  turn); the hairspring's stiffness halves, to about 91 µN·m a radian. Keep:
+  `invariants.py` checks 578 and `I_REST` under 10 %; a balance part redrawn
+  must keep the drawing near Table II's moment, not grow `I_REST`. `3d33ca5`
+
 ## Rendering
 
 - **The hairspring collet's clamp flickered.** The collet's tongue ended at
@@ -1719,14 +1731,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The balance's moment of inertia 37 % more than the drawing carries (`I_REST` 410 g·mm²).**
-  Table II's screw changes, worked with the parts list's masses as each screw's,
-  need 1,157 g·mm²; the balance drawn as the video measures it made 731. The
-  masses are now read as a matched pair's (`PM` in `movement.js`): Table II then
-  needs 578 and the drawing makes 534 (`I_REST` 44, 8 %), the steel timing nut as
-  measured weighs what a pair's 93 mg gives it (about 47-53 mg; 93 is impossible
-  at its size), and the screws' heads come out near brass, not gold. The rates the
-  panel gives are unchanged (they follow Table II and the manual's 40 s and 2.8 s a
-  turn); the hairspring's stiffness halves, to about 91 µN·m a radian. Keep:
-  `invariants.py` checks 578 and `I_REST` under 10 %; a balance part redrawn
-  must keep the drawing near Table II's moment, not grow `I_REST`.
+None at the moment.
