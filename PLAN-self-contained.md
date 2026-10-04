@@ -136,6 +136,8 @@ tabulated for lunars too; the rate book above.
 
 ## Phase F: packaging and the check that keeps it so (S–M)
 
+**F1 done (4 October 2026):** the root build copies the manual's scan into `site/` as `navships-250-624-1948.pdf` (Google's digitisation page kept as its first page), linked from the essay's Hamilton Model 21 section, its further reading and About › Sources. The single-file copy links to it beside itself: keep the two together.
+
 | # | Item | How | Effort |
 |---|---|---|---|
 | F1 | **The manual shipped** (decision D3). | It is linked from About › Sources and from each part card's figure and operation reference. | S |

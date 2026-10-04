@@ -80,6 +80,7 @@ This one command:
    - `index.html` is the model, so the site opens straight into it; the essay is at `/#essay`;
    - `social.png` is the link-preview image (the dial in its box), and `social-movement.png` an image of the mechanism titled for the essay, for posting;
    - `_headers` holds security and caching headers, read by Cloudflare Pages and Netlify.
+   - `navships-250-624-1948.pdf` is the 1948 manual itself, from `References/`, which the page links to beside it;
    - `sitemap.xml` and `robots.txt`, for search engines, when `--site-url` is given (below).
 
 The build fails if the page still loads a script, stylesheet or font from another
