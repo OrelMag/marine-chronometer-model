@@ -21,15 +21,20 @@
 <body>
 <header>
   <h1>The Marine Chronometer, <em>working</em></h1>
-  <p>A two-day fusee chronometer with a spring detent escapement, built part by part and running in real time. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+  <div class="hd">
+    <p>A two-day fusee chronometer with a spring detent escapement, built part by part and running in real time. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
+  </div>
 </header>
 <div class="wrap">
   <div class="stage" id="stage">
     <canvas tabindex="0" aria-label="3D working model of a marine chronometer. Arrow keys turn it, plus and minus zoom, 0 resets the view."></canvas>
     <div class="labels"></div>
+    <button id="panelBtn" aria-controls="panel" aria-expanded="true" aria-label="Hide the panel" title="Hide the panel, for a larger model (P)">›</button>
     <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div><div class="src"></div></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it does; right-click to fade, hide or isolate it.</span><span class="t-only">Tap a part to see what it does; long-press to fade, hide or isolate it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
+    <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
     <div class="srckey hidden" id="srcKey" aria-label="Colour by source: what each colour means"></div>
     <div class="hud" id="hud"></div>
     <div class="cu hidden" id="cu" aria-hidden="true"><div class="cu-t">Sustaining spring, close up<span id="cuX"></span></div><div class="cu-g" id="ssGauge"><i><b></b></i><span></span></div></div>
@@ -37,18 +42,19 @@
       <div class="hcols">
         <section class="hc mouse"><h4>With a mouse</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Shift-drag or middle-drag</dt><dd>Pan</dd><dt>Scroll</dt><dd>Zoom</dd>
-          <dt>Click a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Right-click a part</dt><dd>Fade, hide or isolate it</dd><dt>Right-click empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
-          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 9</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>?</dt><dd>Open or close this card</dd></dl></section>
+          <dt>Click a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Double-click a part</dt><dd>Zoom in on it; the view then turns about it</dd><dt>Double-click empty space</dt><dd>Back to the whole view</dd><dt>Right-click a part</dt><dd>Fade, hide or isolate it</dd><dt>Right-click empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
+          <dt>Space</dt><dd>Stop and restart</dd><dt>1 to 9</dt><dd>The views, in the order of their buttons</dd><dt>Arrow keys, + and −</dt><dd>Turn and zoom the view, once the model has focus (click it, or Tab to it)</dd><dt>0</dt><dd>Reset the view</dd><dt>Backspace, Shift-Backspace</dt><dd>Back and forward through the places the view has been</dd><dt>?</dt><dd>Open or close this card</dd><dt>P</dt><dd>Hide or show the panel, where it sits beside the model</dd></dl></section>
         <section class="hc touch"><h4>On a phone or tablet</h4><dl>
           <dt>Drag</dt><dd>Turn the view</dd><dt>Drag two fingers</dt><dd>Pan</dd><dt>Pinch</dt><dd>Zoom</dd>
-          <dt>Tap a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Long-press a part</dt><dd>Fade, hide or isolate it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
+          <dt>Tap a part</dt><dd>What it does, and its Hamilton part number</dd><dt>Double-tap a part</dt><dd>Zoom in on it; the view then turns about it</dd><dt>Double-tap empty space</dt><dd>Back to the whole view</dd><dt>Long-press a part</dt><dd>Fade, hide or isolate it</dd><dt>Long-press empty space</dt><dd>Bring hidden parts back, or all of them after isolating one</dd>
           <dt>Tap empty space</dt><dd>Close a card</dd><dt>Turn the phone sideways</dt><dd>A larger model, with the controls beside it</dd></dl></section></div>
-      <p class="note">Reset brings the camera back to the chosen view. Parts too small to tap are listed under Parts. To see how the chronometer works, start the walkthrough under How it works.</p></div>
+      <p class="note">Reset brings the camera back to the chosen view; ↶ and ↷, under the tabs, go back and forward through the places it has been. Parts too small to tap are listed under Parts. To see how the chronometer works, start the walkthrough under How it works.</p></div>
     <div class="tools"><button id="helpBtn" aria-label="How to use it" aria-controls="help" aria-expanded="false" title="How to use it: mouse, touch and keys">?</button><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="link" title="Copy a link to this view: the view, speed, part and settings">Link</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
     <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Marine Chronometer: an essay on how it keeps time at sea, with live figures drawn from this model">Essay</button></div>
     <div class="loading" id="loading">Assembling the movement…</div>
   </div>
-  <div class="panel">
+  <div class="panel" id="panel">
+    <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
     <div class="card tour" id="tourCard">
       <div id="tourIntro">
         <h2>How it works</h2>
@@ -210,7 +216,6 @@
         <div class="changes-box"><!--changelog--><p class="note">The built page lists each version’s changes here, from CHANGELOG.md.</p><!--/changelog--></div>
       </details>
     </div>
-    <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
   </div>
 </div>
 <article id="essay" role="tabpanel" aria-labelledby="tabEssay" tabindex="-1" hidden>

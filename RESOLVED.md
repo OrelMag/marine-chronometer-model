@@ -1623,6 +1623,14 @@ An arbor needs pivots and shoulders; a stone its seat.
   clears within 0.5 s, three trials). It now waits for the essay to close and
   the hash to clear, up to 10 s. Wait on conditions, not fixed times, in the
   browser checks. `4112b41`
+- **Two smoke-test checks failed now and then.** The key-winding check (close-up
+  shown, sustaining spring relaxing) looked once, 2.5 s after the click, and the
+  Model tab's (essay closed, hash rewritten) once, 2 s after it; on page time,
+  slow in a headless browser, they failed 2 runs in 11 and 1 in 4 on `main`,
+  never reproduced on demand. Both now poll up to 5 s and print the state they
+  saw when they fail. Keep: a smoke check on something that happens on page
+  time polls (`wait_for_function`, or `expect(…, wait=)`), never looks once
+  after a fixed wait. `9b49228`
 
 ## Essay
 

@@ -248,10 +248,25 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     expR.setAttribute('aria-label',k==='laidout'?'How far the train is laid out in a line':'How far apart the exploded parts are');
     if(!keepSee){st.see=!!vv.see;}look();if(hashReady)keep('view',k);
     document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
+  /* where the view has been: ↶ (Backspace) and ↷ (Shift-Backspace) step back and forward through the places a view button, Reset, a zoom to a part, a panel's Show button
+     or winding left. jump(f) moves the camera with f and keeps the place it left, unless f didn't move it. The walkthrough keeps its own steps; links and the opening view aren't kept */
+  const HB=[],HF=[],histEl=$('#hist'),hB=$('#hBack'),hF=$('#hFwd');
+  const pose=g=>({view:st.view,see:st.see,yaw:g?G.yaw:C.yaw,pitch:g?G.pitch:C.pitch,dist:g?G.dist:C.dist,follow:G.follow,tgt:G.target.clone(),pan:panO.clone()});
+  const same=(a,b)=>!!a&&!!b&&a.view===b.view&&a.follow===b.follow&&Math.abs(a.yaw-b.yaw)<0.02&&Math.abs(a.pitch-b.pitch)<0.02&&Math.abs(a.dist/b.dist-1)<0.02&&a.pan.distanceTo(b.pan)<0.5&&(!!a.follow||a.tgt.distanceTo(b.tgt)<0.5);
+  function histSync(){hB.disabled=!HB.length;hF.disabled=!HF.length;const on=(HB.length||HF.length)&&st.tour<0;if(on&&histEl.classList.contains('hidden'))hintOff();histEl.classList.toggle('hidden',!on);}
+  function jump(f){const p=pose();f();if(st.tour>=0||!hashReady||same(p,pose(true)))return;if(!same(p,HB[HB.length-1])){HB.push(p);if(HB.length>30)HB.shift();}HF.length=0;histSync();}
+  function histGo(from,to){if(st.tour>=0||!from.length)return;to.push(pose());const p=from.pop();st.see=p.see;if(p.view!==st.view)setView(p.view,true);else look();
+    G.yaw=C.yaw+((((p.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=p.pitch;G.dist=p.dist;G.follow=p.follow;if(!p.follow)G.target.copy(p.tgt);panO.copy(p.pan);camFree=false;histSync();}
+  hB.addEventListener('click',()=>histGo(HB,HF));hF.addEventListener('click',()=>histGo(HF,HB));
+  /* double-click (double-tap) a part: the camera closes in to fit it (never backing away from a part larger than the view) and turns about it, following it as the movement lifts or spreads; 0 or Reset gives back the view */
+  const fb=new THREE.Box3(),fbb=new THREE.Box3();
+  function focusPart(p,o){fb.makeEmpty();BX.root.updateMatrixWorld();BX.root.traverse(m=>{if(m.isMesh&&m.userData.part===p&&shown(m)&&m.geometry.attributes.position){if(!m.geometry.boundingBox)m.geometry.computeBoundingBox();fbb.copy(m.geometry.boundingBox).applyMatrix4(m.matrixWorld);fb.union(fbb);}});
+    if(fb.isEmpty())return;const c=fb.getCenter(new THREE.Vector3()),rad=Math.max(fb.getSize(new THREE.Vector3()).length()/2,1),lc=o.worldToLocal(c.clone()),v=cam.fov*Math.PI/360,hv=Math.atan(Math.tan(v)*cam.aspect);
+    jump(()=>{G.follow=()=>o.localToWorld(lc.clone());panO.set(0,0,0);G.yaw=C.yaw;G.pitch=C.pitch;G.dist=clamp(Math.min(rad/Math.tan(Math.min(v,hv))*1.05,C.dist),30,1500);camFree=false;});}
   /* the hint under the stage stays until the model is first tapped, dragged, scrolled or given a key (or a card, help or the walkthrough covers it) */
   const hintOff=()=>{$('#hint').style.opacity=0;};for(const ev of['pointerdown','wheel','keydown'])cv.addEventListener(ev,hintOff,{once:true,passive:true});
   /* pointer: orbit, pinch, tap to pick; on touch, a long press (500 ms, barely moving) opens the fade/hide menu, since iOS fires no contextmenu */
-  const ptrs=new Map();let pinch=0,down=null,rMoved=0,lpT=0,lpAt=-1e9;const lpStop=()=>{clearTimeout(lpT);lpT=0;};
+  const ptrs=new Map();let pinch=0,down=null,rMoved=0,lpT=0,lpAt=-1e9,lastTap=null;const lpStop=()=>{clearTimeout(lpT);lpT=0;};
   cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cv.setPointerCapture(e.pointerId);}catch(_){}stage.classList.add('grab');down={x:e.clientX,y:e.clientY,t:performance.now(),moved:0,btn:e.button,pan:e.shiftKey||e.button===1};if(e.button===1)e.preventDefault();
     lpStop();if(e.pointerType!=='mouse'&&ptrs.size===1){const x=e.clientX,y=e.clientY;lpT=setTimeout(()=>{lpT=0;if(!down||down.moved>6||ptrs.size!==1)return;down.lp=true;lpAt=performance.now();openOpm(x,y);if(opm.classList.contains('on')&&navigator.vibrate)navigator.vibrate(10);},500);}});
   cv.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;
@@ -262,14 +277,17 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     p.x=e.clientX;p.y=e.clientY;
     if(ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)C.dist=G.dist=clamp(C.dist*pinch/d,30,1500);pinch=d;panBy(pdx/2,pdy/2);if(down)down.moved=99;}});
   const up=e=>{lpStop();if(down&&down.btn===2)rMoved=down.moved;const wasTap=down&&down.btn===0&&!down.lp&&down.moved<6&&ptrs.size===1&&performance.now()-down.t<500;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(!ptrs.size){stage.classList.remove('grab');}
-    if(wasTap&&e.type==='pointerup')pick(e);if(!ptrs.size)down=null;};
+    if(wasTap&&e.type==='pointerup'){const t=e.timeStamp;if(lastTap&&t-lastTap.t<400&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<24){lastTap=null;dblPick(e);}else{lastTap={t,x:e.clientX,y:e.clientY};pick(e);}}   /* a second tap or click within 0.4 s, in the same place: a double (timed by the events, not by when they are handled: opening the first part's card can keep a slow device busy) */
+    if(!ptrs.size)down=null;};
   cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  $('#info').addEventListener('pointerup',e=>{if(e.button===0&&lastTap&&e.timeStamp-lastTap.t<400&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<24){const t=lastTap;lastTap=null;dblPick({clientX:t.x,clientY:t.y});}});   /* the card the first click opened may lie under the second: still a double on the part */
   cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
   const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();ray.layers.enable(2);   /* layer 2: the pieces drawn merged (drawMerge) */
-  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
+  function hitAt(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
-    const hit=hits.find(h=>INFO[h.object.userData.part]);
-    if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
+    return hits.find(h=>INFO[h.object.userData.part])||null;}
+  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
+  function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.part;if(st.pick!==p)showPart(p);focusPart(p,hit.object);}else if(st.tour<0)jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
   const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
   function showPart(p){showHelp(false);st.hid.delete(p);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
@@ -305,6 +323,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
   document.addEventListener('keydown',e=>{if(ESSAY.on())return;   /* the essay shows: its keys scroll it, and the tabs take their own (essay.js) */
     if(e.key==='Escape'){closeOpm();showHelp(false);}
+    if((e.key==='p'||e.key==='P')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open&&panelSide())pnb.click();
+    if(e.key==='Backspace'&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();if(e.shiftKey)histGo(HF,HB);else histGo(HB,HF);}   /* back and forward through the places the view has been */
     if(e.key==='?'&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)&&!$('#about').open)showHelp(!help.classList.contains('on'));
     /* space bar: stop and restart, unless typing or pressing a button */
     if(e.key===' '&&!/^(INPUT|BUTTON|SELECT|TEXTAREA|SUMMARY)$/.test(document.activeElement.tagName)&&!$('#about').open){e.preventDefault();setSpeed(st.speed?0:(lastSpeed||1));}
@@ -315,7 +335,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(document.activeElement===cv&&!e.ctrlKey&&!e.metaKey&&!e.altKey){const a={ArrowLeft:[0.08,0],ArrowRight:[-0.08,0],ArrowUp:[0,-0.06],ArrowDown:[0,0.06]}[e.key];
       if(a){e.preventDefault();camFree=true;C.yaw+=a[0];C.pitch=clamp(C.pitch+a[1],-1.52,1.52);G.yaw=C.yaw;G.pitch=C.pitch;}
       else if(/^[-+=_]$/.test(e.key)){e.preventDefault();C.dist=G.dist=clamp(C.dist*(/^[-_]$/.test(e.key)?1.12:1/1.12),30,1500);}
-      else if(e.key==='0'){e.preventDefault();setView(st.view,true);}}});
+      else if(e.key==='0'){e.preventDefault();jump(()=>setView(st.view,true));}}});
 
   /* ---------- controls ---------- */
   /* speed: presets, or any value from 0.01x to 10000x on a log slider or typed in */
@@ -328,7 +348,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN)));
     const snap=[0.05,0.1,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
   spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
-  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();setView(b.dataset.v);}));
+  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();jump(()=>setView(b.dataset.v));}));
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   $('#driveOn').addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');});
   /* about: sources and method in a dialog */
@@ -353,7 +373,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const showH=()=>{hOut.textContent=hrs.toFixed(1)+' h';hIn.value=hrs.toFixed(1);};
   hIn.addEventListener('input',()=>{if(kw)kwStop();hrs=parseFloat(hIn.value);winding=false;showH();});showH();
   $('#wind').addEventListener('click',()=>{if(kw)kwStop();winding=true;});
-  $('#reset').addEventListener('click',()=>{setView(st.view,true);});
+  $('#reset').addEventListener('click',()=>{jump(()=>setView(st.view,true));});
   /* exploded view: how far apart the parts spread */
   const expR=$('#expR'),expO=$('#expWrap output');function expV(){return expR.valueAsNumber/100;}
   const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(st.tour<0){if(st.view==='exploded')tgt.explode=expV();else if(st.view==='laidout')tgt.dev=expV();}});
@@ -370,7 +390,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      passes 60. The second hand is never touched, so the dial can still be up to 30 s out, and it goes into the record. ks.ph: 1 turning forward, 2 waiting for the master's 60, 3 done */
   const setOut=$('#setOut'),ksBtn=$('#ksBtn'),minT=()=>tSim+(H.bOff+H.eOff)/2+slip;
   function ksStart(){if(ks){ksEnd();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();
-    sw=null;ks={ph:1,t:0,latch0:st.latch,fast:(((tM-30-minT())%43200)+43200)%43200>21600};st.latch=true;$('#latch').checked=true;setView('dial');look();
+    sw=null;ks={ph:1,t:0,latch0:st.latch,fast:(((tM-30-minT())%43200)+43200)%43200>21600};st.latch=true;$('#latch').checked=true;jump(()=>setView('dial'));look();
     ksBtn.textContent='Stop setting';ksBtn.setAttribute('aria-pressed','true');setOut.classList.remove('hidden');}
   function ksEnd(){if(!ks)return;st.latch=ks.latch0;$('#latch').checked=st.latch;ks=null;look();ksBtn.textContent='With the key';ksBtn.setAttribute('aria-pressed','false');}
   function ksStep(dt){const d=(((tM-30-minT())%43200)+43200)%43200;   /* how far forward the minute hand still has to go */
@@ -522,7 +542,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     else t+='<span>With two comparisons a day apart and no break between, the book gives a rate to correct it with.</span>';
     bookLon.innerHTML=t;}
   $('#bookNow').addEventListener('click',bookAdd);$('#bookClr').addEventListener('click',()=>{book=[];bookShow();});bookShow();
-  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('balance');showPart('bal');});
+  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('balance'));showPart('bal');});
   /* ---------- stopping and starting (Sec. III): a detent chronometer is not self-starting. The balance swings at amplitude H.amp; below ESC.AMIN a swing no longer
      carries the discharge jewel past the trip spring, unlocks the wheel and sees the impulse through, so the train stops at a locked beat and the balance runs down freely
      (TAU_FREE, estimated). The locking arm (Fig. 9) brakes it within a swing or two; the train-blocking screw's dog point stops the fourth wheel at a spoke; at run down
@@ -577,7 +597,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!m.runs){benchBad=m.why;for(const k in bset)bset[k]=ESC.settings[k];}else{benchBad='';const was=ESC.run.rate;Object.assign(ESC,E2);mv.userData.escSet();if(ESC.run.rate!==was){rErr=0;pend.add('escapement adjusted');rateShow();}}benchShow();wake();}
   const benchDiff=()=>BENCH.filter(([k])=>Math.abs(bset[k]-BDEF[k])>1e-9);
   $('#benchReset').addEventListener('click',()=>{Object.assign(bset,BDEF);benchApply();});
-  $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('escapement');});
+  $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('escapement'));});
   function benchDraw(s,E){if(!$('#benchDet').open)return;const w=bcv.clientWidth||280,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);
     if(bcv.width!==Math.round(w*d)){bcv.width=Math.round(w*d);bcv.height=Math.round(h*d);bcv.style.height=h+'px';}const x=bcv.getContext('2d');x.setTransform(d,0,0,d,0,0);drawEsc2D(x,w,h,s,E,dark());}
   $('#benchDet').addEventListener('toggle',()=>{if($('#benchDet').open)benchShow();});
@@ -663,7 +683,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       L.map(([k,n,t,w])=>`<tr><td title="${w}">${n}</td><td class="n${R2[k]>t?' bad':''}">${R2[k].toFixed(2)}</td><td class="n">${C3390[k].toFixed(2)}</td><td class="n">${t.toFixed(2)}</td></tr>`).join('')+'</tbody></table>';}
   tsDet.addEventListener('toggle',()=>{tsKey='';tsLast=0;testShow(performance.now());});
   if(/[?&]qa\b/.test(location.search))window.__test=testCalc;   /* for invariants.py: the test's figures as the card has them */
-  $('#stopLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();setView('movement');st.see=true;st.focus=new Set(['lockArm','tblock','bal','fw']);look();goCam({yaw:2.6,pitch:0.62,dist:95,target:mvL((L.B[0]+L.F[0])/2,-20,(L.B[1]+L.F[1])/2)});});
+  $('#stopLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('movement'));st.see=true;st.focus=new Set(['lockArm','tblock','bal','fw']);look();goCam({yaw:2.6,pitch:0.62,dist:95,target:mvL((L.B[0]+L.F[0])/2,-20,(L.B[1]+L.F[1])/2)});});
   /* wind with the key, on the wall clock so slow frames don't slow it: half turns of 0.7 s with a 0.3 s pause to change grip, until the chain pushes the stop-bar in the fusee top out against
      the winding stop. Plates see-through, the winding stop kept solid (look), the parts that take part in winding picked out */
   const HT=0.5/FUSEE_PER_HOUR,kwBtn=$('#kwBtn'),kwOut=$('#kwOut'),KWF=['fusee','chain','sq','barrel','mainspring','gw','sratchet','sspring','spawl'];
@@ -671,7 +691,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const halfs=v=>Math.abs(v*2-Math.round(v*2))<0.02?(Math.floor(v+0.01)||'')+(v%1>0.25?'½':''):v.toFixed(1);
   function kwStart(){if(kw){kwStop();return;}if(st.tour>=0)tourEnd();closeInfo();
     if($('#kwFull').checked||hrs<0.2)hrs=RUN_H;   /* run down: the chain all on the barrel, 17½ half turns to wind */
-    kw={t0:performance.now(),t:0,h0:hrs,end:0};winding=true;st.drive=false;setView('movement');st.see=true;st.focus=new Set(KWF);look();
+    kw={t0:performance.now(),t:0,h0:hrs,end:0};winding=true;st.drive=false;jump(()=>setView('movement'));st.see=true;st.focus=new Set(KWF);look();
     goCam(KWV());
     kwBtn.textContent='Stop winding';kwBtn.setAttribute('aria-pressed','true');kwOut.classList.remove('hidden');}
   function kwStop(){if(kw&&kw.zoom)goCam(KWV());kw=null;winding=false;st.focus=null;look();kwBtn.textContent='Wind with the key';kwBtn.setAttribute('aria-pressed','false');}
@@ -684,6 +704,19 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function partsSync(){for(const q of PROWS){const h=st.hid.has(q.p)||isoOut(q.p);q.ck.checked=!h;q.row.classList.toggle('off',h);q.b.setAttribute('aria-pressed',st.pick===q.p?'true':'false');q.b.disabled=st.drive&&(BOXP.has(q.p)||DRIVE_HIDE.has(q.p));}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}else{(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);}});
+  /* Hide panel (P, or the tab on the stage's edge): the stage takes the panel's column, remembered here; the walkthrough and a link opening a panel section bring it back. Offered only where the panel sits beside the stage (style.css) */
+  const pnb=$('#panelBtn'),panelSide=()=>getComputedStyle(pnb).display!=='none',panelOn=on=>{document.documentElement.classList.toggle('nopanel',!on);pnb.textContent=on?'›':'‹';pnb.setAttribute('aria-label',on?'Hide the panel':'Show the panel');pnb.title=(on?'Hide the panel, for a larger model':'Show the panel')+' (P)';pnb.setAttribute('aria-expanded',on?'true':'false');keep('nopanel',!on);};
+  if(SET.nopanel)panelOn(false);pnb.addEventListener('click',()=>panelOn(document.documentElement.classList.contains('nopanel')));
+  /* the panel's width (wide windows): drag the line in the gap between the model and the panel, or the arrow keys on it; double-click for the usual 350 px.
+     Remembered in cm-set (pw); style.css keeps it between 320 and 640 px and leaves the stage 600 px (--pwc), whatever is kept */
+  const spl=$('#split'),PW0=350,pwMax=()=>Math.max(320,Math.min(640,innerWidth-658));let spD=null;
+  const pwSet=(w,save)=>{w=Math.round(clamp(w,320,pwMax()));document.documentElement.style.setProperty('--pw',w+'px');spl.setAttribute('aria-valuenow',w);spl.setAttribute('aria-valuemax',pwMax());if(save){keep('pw',w===PW0?undefined:w);if(insetCv)setInset(insetKind);}};
+  pwSet(+SET.pw||PW0);
+  spl.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();spD={x:e.clientX,w:$('#panel').offsetWidth};try{spl.setPointerCapture(e.pointerId);}catch(_){}spl.classList.add('on');document.documentElement.classList.add('splitting');});
+  spl.addEventListener('pointermove',e=>{if(spD)pwSet(spD.w-(e.clientX-spD.x));});
+  const spUp=()=>{if(!spD)return;spD=null;spl.classList.remove('on');document.documentElement.classList.remove('splitting');pwSet($('#panel').offsetWidth,true);};spl.addEventListener('pointerup',spUp);spl.addEventListener('pointercancel',spUp);
+  spl.addEventListener('dblclick',()=>pwSet(PW0,true));
+  spl.addEventListener('keydown',e=>{const d={ArrowLeft:20,ArrowRight:-20}[e.key];if(d){e.preventDefault();pwSet($('#panel').offsetWidth+d,true);}else if(e.key==='Home'||e.key==='End'){e.preventDefault();pwSet(e.key==='Home'?320:pwMax(),true);}});
   /* tick sound, on by default: browsers start audio only from a user gesture (and warn if a page tries sooner), so the context is made or resumed on the first
      click, tap or key, and the ticks are silent until then */
   let ac=null;const unlock=()=>{if(!st.sound)return;if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(_){}}if(ac&&ac.state==='suspended')ac.resume();};
@@ -743,7 +776,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
   /* the viewer's own settings, kept when the walkthrough starts and given back when it ends */
   let preTour=null;
-  function tourGo(i){if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
+  function tourGo(i){panelOn(true);if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
@@ -851,7 +884,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(sc){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
       if(!first)setView(v);}
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
-    const od=DET.find(d=>d.id===g('open'));if(od){od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}   /* open=bookDet: a link from the essay to a panel section */
+    const od=DET.find(d=>d.id===g('open'));if(od){panelOn(true);od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}   /* open=bookDet: a link from the essay to a panel section */
     return v;}
   addEventListener('hashchange',()=>applyHash(false));
   for(const k of['finish','dial','bal','stop']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k==='stop'?'stopV':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}

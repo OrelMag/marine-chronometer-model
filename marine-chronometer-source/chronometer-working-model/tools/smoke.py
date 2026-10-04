@@ -75,11 +75,29 @@ async def model(b,errs,steps):
     await click('#drawInk');await click('#dispReset','reset display from the ink drawing',600)
     if await pg.evaluate("document.querySelector('#drawInk').checked||!document.querySelector('#edges').checked"):errs.append('Reset display left the ink drawing on or Edges off')
     await click('#link','copy link',400)
+    await click('#panelBtn','hide the panel',400)
+    if await pg.evaluate("getComputedStyle(document.querySelector('#panel')).display!=='none'||document.querySelector('#stage').offsetWidth<1000"):errs.append('Hide panel left the panel or the stage narrow')
+    await click('#panelBtn','show the panel',400)
+    if await pg.evaluate("getComputedStyle(document.querySelector('#panel')).display==='none'"):errs.append('Show panel left the panel hidden')
+    # where the view has been: Back and Forward; a part zoomed by a double-click, and back; the panel's width by keys and a double-click
+    pv=lambda:pg.evaluate("document.querySelector('#views button[aria-pressed=\"true\"]')?.dataset.v")
+    await click('#views button[data-v="train"]','view train');await click('#views button[data-v="escapement"]','view escapement')
+    await click('#hBack','back');b1=await pv();await click('#hFwd','forward');b2=await pv()
+    if(b1,b2)!=('train','escapement'):errs.append(f'Back and Forward gave {b1}, {b2}, not train, escapement')
+    cc=await pg.evaluate("(()=>{const r=document.querySelector('#stage canvas').getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]})()");d0=await pg.evaluate("JSON.parse(__camInfo()).C.dist")
+    await pg.mouse.dblclick(*cc);await pg.wait_for_timeout(800);steps.append('double-click a part');d1=await pg.evaluate("JSON.parse(__camInfo()).C.dist")
+    if not await pg.evaluate("document.querySelector('#info').classList.contains('on')") or not d1<d0*0.95:errs.append(f'Double-click on a part: card {await pg.evaluate("document.querySelector(\'#info\').classList.contains(\'on\')")}, distance {d0:.0f} to {d1:.0f}')
+    await pg.keyboard.press('Backspace');await pg.wait_for_timeout(800);steps.append('Backspace, back from the zoom')
+    if abs(await pg.evaluate("JSON.parse(__camInfo()).C.dist")-d0)>2:errs.append('Backspace did not go back from the zoom')
+    await pg.focus('#split');await pg.keyboard.press('ArrowLeft');await pg.wait_for_timeout(200);steps.append('panel wider');w1=await pg.evaluate("document.querySelector('#panel').offsetWidth")
+    await pg.dblclick('#split');await pg.wait_for_timeout(200);steps.append('panel width reset');w2=await pg.evaluate("document.querySelector('#panel').offsetWidth")
+    if(w1,w2)!=(370,350):errs.append(f'Panel width {w1}, {w2}, not 370, 350')
     await click('#speeds button[data-v="3600"]','3600x',600);await click('#speeds button[data-v="0.05"]','1/20x',600);await click('#speeds button[data-v="1"]','1x')
     # winding with the key, the spring drawn exaggerated: the close-up shows with the sustaining spring relaxed, the load path in colour; it goes 2 s (page time) after the key lets go
     await click('#ssx','exaggerate the spring')
     await click('#kwBtn','wind with the key',2500)
-    if not await pg.evaluate("__lp().ph==='w'&&__lp().cu&&!document.querySelector('#cu').classList.contains('hidden')&&__mv.userData.R.ssD>0"):errs.append('winding with the key: no close-up, or the sustaining spring not relaxed')
+    try:await pg.wait_for_function("__lp().ph==='w'&&__lp().cu&&!document.querySelector('#cu').classList.contains('hidden')&&__mv.userData.R.ssD>0",timeout=5000)   # polled: the train relaxes the spring on frame time, slow in a headless browser (one look at 2.5 s failed 2 runs in 11)
+    except Exception:errs.append('winding with the key: no close-up, or the sustaining spring not relaxed: '+await pg.evaluate("JSON.stringify({ph:__lp().ph,cu:__lp().cu,shown:!document.querySelector('#cu').classList.contains('hidden'),ssD:__mv.userData.R.ssD,held:__H().held,amp:__H().amp})"))
     await click('#kwBtn','stop winding')
     try:await pg.wait_for_function("__lp().ph===''&&document.querySelector('#cu').classList.contains('hidden')",timeout=20000)
     except Exception:errs.append('the close-up stayed after winding')
@@ -182,9 +200,9 @@ async def essay(b,errs,steps):
     if t is None or not 0<=t<=140:errs.append(f'#essay=detent: the section heading at {t}')
     await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
     if not await pg.evaluate("ESSAY.on()&&location.hash.startsWith('#essay')"):errs.append('#essay=detent: the essay closed once the model loaded')
-    await pg.evaluate("document.querySelector('#tabModel').click()");steps.append('back to the model tab')
-    try:await pg.wait_for_function("!ESSAY.on()&&!location.hash.startsWith('#essay')",timeout=10000)   # the address is written 300 ms after the change (writeHash), later on a loaded machine: a fixed 2 s wait raced it
-    except Exception:errs.append('the 3D model tab left the essay open or in the address')
+    await pg.evaluate("document.querySelector('#tabModel').click()");await pg.wait_for_timeout(2000);steps.append('back to the model tab')
+    try:await pg.wait_for_function("!ESSAY.on()&&!location.hash.startsWith('#essay')",timeout=5000)   # polled: the hash is written 0.3 s after the change, on page time
+    except Exception:errs.append('the 3D model tab left the essay open or in the address: '+await pg.evaluate("JSON.stringify({on:ESSAY.on(),hash:location.hash})"))
     await pg.close()
 async def main():
     errs,steps=[],STEPS
