@@ -1356,7 +1356,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   clears them by about 1 mm. Keep: the radius read against the rim's turning
   edge or its fitted ellipse, never against ends a glove or weight may hide; the collet scaled with the coil (CKS). Its turns were 9, from
   wires counted 26 px apart on the video, every second one: 13 wires down each
-  side, so 12 turns. Keep: count the wires by their period over the whole stack. `9c8fdc3`
+  side, so 12 turns. Keep: count the wires by their period over the whole stack.
+  And it stood 5.9 from the rim's top edge up; the video side-on has it running
+  down behind the rim, 7.15 or more: it now starts 1.1 below the rim's top, as low
+  as the hub lets the collet go, and stands 6.7. `9c8fdc3`
 
 ## Rate panel
 

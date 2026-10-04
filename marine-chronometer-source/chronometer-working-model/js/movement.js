@@ -820,7 +820,8 @@ function buildMovement(M){
   const Q=S.cock,SPD=(()=>{const d=[Q[0]-L.B[0],Q[1]-L.B[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),SPDn=[-SPD[1],SPD[0]],SPH=(a,c)=>[L.B[0]+a*SPD[0]+c*SPDn[0],L.B[1]+a*SPD[1]+c*SPDn[1]];
   const SPHc=SPH(2.08,-3.28),SPHb=SPH(5.24,-4.62),SPHa=SPH(8.51,-6.11),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),HS_R=4.6;
   const SPCL=(()=>{const w=[SPHc[0]-L.B[0],SPHc[1]-L.B[1]],p=w[0]*SPu[0]+w[1]*SPu[1],t=-p+Math.sqrt(p*p-(w[0]**2+w[1]**2)+HS_R*HS_R);return[SPHc[0]+t*SPu[0],SPHc[1]+t*SPu[1]];})(),SPD2=[(SPCL[0]-L.B[0])/HS_R,(SPCL[1]-L.B[1])/HS_R];
-  const SPSI=Math.atan2(-SPD2[1],SPD2[0])-BETA,HS_RC=5.1,HS_N=12,CKS=HS_RC/5.5,HS_RI=3.72*CKS+0.17,HS_LEAD=1.25*CKS,HS_Y=BAL_Y-2.3,HS_H=5.9,SPS=SPHb;   /* SPS: the stud screw */
+  const SPSI=Math.atan2(-SPD2[1],SPD2[0])-BETA,HS_RC=5.1,HS_N=12,CKS=HS_RC/5.5,HS_RI=3.72*CKS+0.17,HS_LEAD=1.25*CKS,HS_Y=BAL_Y-1.5,HS_H=6.7,SPS=SPHb;   /* SPS: the stud screw. HS_Y, HS_H: the collet's tongue (the spring's lower end) 1.1 below the rim's top edge, as low as the hub allows (the collet
+     0.07 over the hub's boss and the cap's screws; 0.8 lower until 4 October 2026, level with the rim's top), and the spring up to the stud's clamp, whose height the cock fixes (below) */
   R.staff=hn(new THREE.Group(),'42186');bl.add(R.staff);
   mesh(R.staff,shaftGeo([[CK_T+0.025,0.2],[CK_T+0.7,0.45],[LB_T+1.9,0.2],[LB_T+2.575]]),M.steel);   /* the staff turned to its pivots (r 0.2), each in its olive-hole jewel and 0.025 short of its endstone: endshake 0.05 mm (0.001-0.003 in, Op. 74); the shoulders 0.1 off the jewels */
   /* impulse roller (O.D. 0.249 in, as thick as the escape wheel, post 30) with its crescent: the large portion behind the impulse jewel, where each tooth
@@ -977,15 +978,18 @@ function buildMovement(M){
      3.9 × 10⁻⁶ /mm a °F; a point φ from the fixed end then comes in by R² Δκ (1 - cos φ), 0.05 mm at the free end for 27½ °F. dF: °F from 72½, x: the exaggeration it is drawn with */
   R.CURLX=20;R.balCurl=(dF,x=R.CURLX)=>{const d=BR*BR*1.5*(19e-6-11.5e-6)/1.8/1.6*dF*x;if(Math.abs(d-(R.balSD||0))<1e-4)return;R.balSD=d;
     for(const q of balSR){q.st.geometry.dispose();q.br.geometry.dispose();q.st.geometry=band(q.a0,BR-1.6,BR-0.9,d);q.br.geometry=band(q.a0,BR-0.9,BR,d);const r=BR+1.1-d*(1-Math.cos(q.wa-q.a0));q.w.position.x=r*Math.cos(q.wa);q.w.position.z=-r*Math.sin(q.wa);}};
-  /* helical hairspring (Fig. 2): its coils r 5.1 (HS_RC; 5.27 to their outer edge) and 12 turns (HS_N; 13 wires down each side with the end curves), 5.9 tall (HS_H). The radius is the coils' outer edge against the balance
+  /* helical hairspring (Fig. 2): its coils r 5.1 (HS_RC; 5.27 to their outer edge) and 12 turns (HS_N; 13 wires down each side with the end curves), 6.7 tall (HS_H). The radius is the coils' outer edge against the balance
      rim (r 14.5) on five sources, each a ratio in one picture: the restoration video side-on (KLUwI2UUCMQ 6:49.5: the coils 257.5 px across about the staff, x 648.75; the rim's
      back edge turns at x 998-1003, behind the timing weight's root, so 351 px out; the left end is under the glove), 0.367, r 5.3; face-on (6:52.5: the coils 310 px, the rim
      835, both ends of the coils within a few % of each other), 0.355-0.371, r 5.2-5.4; the top-view photograph (2E11795), about 0.35, r 5.0; the manual's Fig. 2 (600 dpi: the
      rim's top edge an ellipse 1012.7 px across, 1 % rms, the pillar plate's 87.57 mm, about 3090 px, agreeing on the scale; the coils 323-340 px), 0.32-0.34, r 4.7-4.9; the
      oblique photograph, roughly 0.40, r 5.8. Their median, 0.363, 5.26 to the outer edge. Until 4 October 2026 r 6.3, read side-on against the rim "between its ends", whose
      left end the glove hides (Review-results.md, 25). The turns: side-on (6:49.5) 13 wires down each side, 14.5 px apart (the stack's autocorrelation 14.5-15 px), Fig. 5 and
-     the oblique photograph 13-15; until 4 October 2026 9 turns, from wires counted 26 px apart, every second one. At that frame's scale (24.2 px/mm by the rim) the stack,
-     165-172 px, reads 6.8-7.1 tall against HS_H's 5.9, which the cock's and collet's measured heights fix: open (Review-results.md, 25) */
+     the oblique photograph 13-15; until 4 October 2026 9 turns, from wires counted 26 px apart, every second one. The heights, side-on (6:49.5) at
+     24.2 px/mm by the rim, the camera 5.7 deg above the rim's plane (its top edge's front and back 70 px apart), read at the staff's depth: the top wire 5.8 above the rim's top
+     edge (the model 5.9, set by the stud), the coils seen down to the rim's front edge, 1.4 below it, and running on behind it, so 7.15 or more tall; Fig. 2 (41 deg) puts their
+     lower end about 2.1 below the rim's top. Until 4 October 2026 the spring started level with the rim's top and stood 5.9. It now starts 1.1 below, as low as the hub's
+     estimated boss, cap and screws let the collet go, and stands 6.7: still 0.5 or more short, which says the hub stands too high (Review-results.md, 25) */
   /* with the balance in the Exploded view: the collet's clamp closes over the spring's end above and below (Fig. 6), so the two come off together, as the
      balance and hairspring assembly does with its stud (Sec. II) */
   const spg=part('spr',-80,true),sg=new THREE.Group();sg.rotation.y=SPSI;spg.add(sg);R.spring=hn(mesh(sg,new THREE.BufferGeometry(),M.steel,0,HS_Y,0),'42188');R.spring.rotation.x=Math.PI;

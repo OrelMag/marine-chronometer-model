@@ -1917,9 +1917,14 @@ changes it only round its own arbors (1 below).
     looked small against the wheel. The turns too: 13 wires down each side on the video
     side-on (14.5 px apart; the first reading counted every second one, 26 px), so 12 turns
     with the end curves, not 9. With the Navy brake fitted its arch (6.6) clears the coils by
-    about 1 mm at full swing (finding 13). *Still open:* the stack's height: at 6:49.5's scale
-    (24.2 px/mm by the rim) it is 6.8-7.1 mm, the model's 5.9 (fixed by the cock's and the
-    collet's measured heights); the wire's section (the video shows flat ribbons, the model
+    about 1 mm at full swing (finding 13). The stack's height: side-on (6:49.5, 24.2 px/mm by the
+    rim, the camera 5.7 deg above its plane) the top wire is 5.8 mm over the rim's top edge at
+    the staff's depth (the model 5.9, set by the stud under the cock), and the coils run down
+    past the rim's front edge, 1.4 below its top, behind it, so 7.15 or more; Fig. 2 puts their
+    foot about 2.1 below the rim's top. The spring now starts 1.1 below it (HS_Y) and stands 6.7
+    (HS_H), the collet as low as the hub lets it go (0.07 over the hub's boss and the cap's
+    screws). *Still open:* 0.5 mm or more of it, which says the hub's estimated boss, cap and
+    screws stand too high (Fig. 4 draws the hub; no frame shows it side-on yet); the wire's section (the video shows flat ribbons, the model
     draws it round); and Fig. 5 draws the top coil at 0.82 of the others, the spring's upper
     end then about 4.3 from the staff, near the stud clamp's 4.6.
 
