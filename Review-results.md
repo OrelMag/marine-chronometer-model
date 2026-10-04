@@ -2089,7 +2089,7 @@ top, the fusee arbor, the take-off slot and the flange's holes).
    in the copy in `References/` (2322 px square): it was fitted on another copy
    or crop. Find that copy, or refit the map on this one, before any new reading
    from the photograph.
-4. **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
+4. *Measured (4 October 2026), not yet drawn: at 20:25 (4K, the plate off, the top seen at a slant) the recess's edge fits an ellipse (seven points, within 6 %) round the collar, and the top plate's two screw holes, opposite each other through its centre, lie 1.26 times its radius out along their line: **r 5.5 mm (±0.5)** with the screws at r 7.0; two more holes in its floor, at about r 4.5. Drawing it means laying the stop-bar spring (42025) and the bar's slot (3.6 mm off the axis, which crosses a recess that wide) again together; it needs the recess's and the slot's depths (20:00, side-on) first.* **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
    round recess r 4-5 about the hub; the model has the spring's groove r 2.4-2.9
    only. Sizes ±30 %.
 5. **Estimated, to measure if a frame allows:** the take-off slot's depth (1.0,
