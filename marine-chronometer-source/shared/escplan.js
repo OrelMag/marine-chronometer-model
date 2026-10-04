@@ -1,3 +1,4 @@
+// @ts-check
 /* escplan.js: the plan of the spring detent escapement, drawn on a 2D canvas from the solver's own outlines (makeEsc, escapement.js), as the manual's Fig. 90 has it
    (from the balance cock's side). One drawing for the model's walkthrough inset and adjuster's bench and the essay's detent figure.
    Declares drawEscPlan and escStage only (TAU, D2R kept inside), since the pages that load it declare their own. */

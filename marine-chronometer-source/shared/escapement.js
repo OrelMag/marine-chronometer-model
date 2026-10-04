@@ -1,3 +1,4 @@
+// @ts-check
 /* escapement.js: the Hamilton Model 21 spring detent escapement, solved in a unit 2D frame. Shared by the working model (js/movement.js), the essay's
    detent figure (src/p4.js) and the check against the manual (chronometer-working-model/tools/escapement.js, Node.js).
    makeEsc(settings) builds it; any setting below can be given, angles in degrees. Nothing is declared at the top level but makeEsc, since the pages
@@ -6,6 +7,11 @@
    Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (13.16/2 mm). Layout after the manual's Fig. 90 plan view. The detent's
    lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with the passing spring's tip, and the
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
+/** @typedef {{EX?:number,A?:number,G?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,TF?:number,MU?:number,fD?:number,fP?:number,HS?:number}} EscSettings
+    any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
+/** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean}} EscState
+    state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1), the wheel running free */
+/** @param {EscSettings} [o] */
 function makeEsc(o={}){
   const TAU=Math.PI*2,D2R=Math.PI/180,ES=13.16/2;
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side at the model's settings (ESC.A, the running amplitude, follows other settings: below).
@@ -68,6 +74,7 @@ function makeEsc(o={}){
      the detent, completes the impulse and passes the trip spring (AMIN) the wheel stays locked, which the caller keeps (the progress it reports assumes a running escapement).
      A swing that doesn't carry the discharge jewel back past the trip spring's tip (amp below -thPass) never gets it behind the spring to unlock: the spring stays bent
      against the jewel and follows it back, and the detent stays on its stop. drop: the wheel runs free, between release and the tooth landing on the impulse jewel */
+  /** @param {number} p the phase, 0 to 1 @param {number} [amp] the amplitude (rad) @returns {EscState} */
   function state(p,amp=A){
     const th=-amp*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0,pass=thPass!==null&&amp>=-thPass;
     const lift=ccw&&pass?tab(LI,th):0,psDef=ccw&&pass?0:tab(PS,th);let prog,drop=false;
@@ -76,6 +83,7 @@ function makeEsc(o={}){
     return{th,ccw,lift,psDef,prog,drop};
   }
   /* passing spring as root, control point and tip (unit frame) for a state: rides with the detent, tip bent along -nB on the return swing */
+  /** @param {{lift:number,psDef:number}} s @returns {[{x:number,y:number},{x:number,y:number},{x:number,y:number}]} */
   function springPts(s){const a0=rot(Ps0,s.lift),am=rot({x:(Ps0.x+Pt.x)/2,y:(Ps0.y+Pt.y)/2},s.lift),tp=rot(Pt,s.lift);tp.x-=nB.x*s.psDef;tp.y-=nB.y*s.psDef;return[a0,am,tp];}
   /* plan outlines in detent coordinates (t along the detent from Ft, n toward nB), after Fig. 90 and the detent photograph in chronometerbook post 4.
      Moving (rotate about Ft by -lift/LEN): two-strip detent spring, cross-piece, blade, jewel block, arm, horn, Z bracket. Fixed: foot, support block (shortened to clear the train pillar behind it) and stop button */
@@ -108,7 +116,7 @@ function makeEsc(o={}){
      taking fD and fP of the impulse's work (estimated), so there A is c.A and the rate 0. Rate: Airy's result, each push τ|dθ| (τ toward +θ) at θ advancing the
      phase by -(τ|dθ|/k)θ/(A²√(A²-θ²)) an oscillation: before the dead point a push gains and a resistance loses, after it the reverse. In s a day against the reference */
   let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=TH0+i*DT;break;}                                // unlocking swing: discharge jewel meets the trip spring
-  const T=0.5,Q=Math.PI*c.TF/T,CAL=['EX','A','TF','MU','fD','fP'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-DEF[k])<1e-9),RF=makeEsc.refs||(makeEsc.refs={}),rk=CAL.map(k=>c[k]).join();
+  const T=0.5,Q=Math.PI*c.TF/T,CAL=['EX','A','TF','MU','fD','fP'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-DEF[k])<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join();
   let wk=null;
   if(a0!==null&&released&&thOff!==null&&thPass!==null){
     const paAt=th=>{const a=bite(th);return a>-1e8?a-t0:-1e9;},pfAt=th=>-(th-thRel)*G,phiAt=th=>clampP(Math.max(pfAt(th),paAt(th))),clampP=x=>Math.min(0,Math.max(-P,x));
@@ -129,7 +137,7 @@ function makeEsc(o={}){
   let run,CL=null,PH0=0;
   if(isRef){let cl=null,ph=0,br=null;if(wk){const w=Math.PI*A0*A0/Q/(wk.EI*(1-c.fD-c.fP)-wk.ER);cl={w,Kd:wk.ED>0?c.fD*w*wk.EI/wk.ED:0,Kp:wk.ET>0?c.fP*w*wk.EI/wk.ET:0};br=parts(cl,A0);ph=sumP(br);}
     RF[rk]={cl,ph};CL=cl;PH0=ph;run={A:A0,rate:0,own:day(ph),parts:br,cl};}
-  else{const R0=RF[rk]||(makeEsc(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl,Wn=wk&&cl?cl.w*(wk.EI-wk.ER)-cl.Kd*wk.ED-cl.Kp*wk.ET:0,a=Wn>0?Math.sqrt(Q*Wn/Math.PI):0,br=a>=AMIN?parts(cl,a):null;
+  else{const R0=RF[rk]||(/** @type {any} */(makeEsc)(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl,Wn=wk&&cl?cl.w*(wk.EI-wk.ER)-cl.Kd*wk.ED-cl.Kp*wk.ET:0,a=Wn>0?Math.sqrt(Q*Wn/Math.PI):0,br=a>=AMIN?parts(cl,a):null;
     CL=cl;PH0=R0.ph;run={A:a,rate:br?day(sumP(br)-R0.ph)+c.HS*(a-A0)/D2R/10:NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
   if(wk&&run.cl){const cl=run.cl;Object.assign(run,{Q,Wi:cl.w*wk.EI,fu:(cl.w*wk.ER+cl.Kd*wk.ED+cl.Kp*wk.ET)/(cl.w*wk.EI),land:wk.tl,drive:wk.EI});}
   const A=run.A;

@@ -22,6 +22,8 @@ jobs:
         run: git diff --exit-code --stat -- chronometer-working-model.html site marine-chronometer-source/chronometer-working-model/dist
       - name: Escapement against the manual's figures
         run: node marine-chronometer-source/chronometer-working-model/tools/escapement.js
+      - name: Types (the files that start with // @ts-check; TypeScript fetched by npx, not a dependency)
+        run: npx -y -p typescript@5.9.3 tsc -p marine-chronometer-source/chronometer-working-model/jsconfig.json
   browser:
     runs-on: ubuntu-latest
     defaults:
