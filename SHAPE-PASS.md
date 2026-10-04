@@ -8,6 +8,16 @@ Provenance: **M** measured, **F** after a manual figure by eye, **E** estimated,
 
 Frames named here are `KLUwI2UUCMQ` (C Spinner's restoration, 4K) unless marked; they and their crops stay in `$MC_VIDEO` (E:\mc-video), never in the repository.
 
+## The main gaps after release 2.03.00 (4 October 2026)
+
+What the pass left, by how much it shows; each with what would close it.
+
+1. **The box and gimbals (Fig. 106)**: barely measured (the key and side handles only). The box's size (about 155 mm inside on the photographs against the model's 177, unconfirmed: the top-view photograph reads 10 % small near the rim), the gimbal ring's band, the support straps and their level-setting slots, the knurled lock nuts (one about 20-25 mm across against the model's 10), and the latch's bracket, lever, clamping screw and handle (several 2-5 times the model's size). The restoration video shows them only obliquely and moving (0:20-1:30): a still, square-on frame or photograph, and the manual's Figs. 1, 7, 94 and 106 and Secs. II-III, would close it. *Under way: `claude/box-gimbals`.*
+2. **Layout disagreements between sources**: tb2's place (the top-view photograph's sunk screw 5 mm inside the video's), pillar 1's 4 deg (the dial side against the cock), and the top-view photograph's 10 % at the rim. One clean overhead photograph of a Model 21, or a frame with the pillars' feet and the bridges' holes together, would settle all three.
+3. **Fits estimated or set for clearance**, each needing several parts moved together: the fusee end plate (r 5.6 against the video's 7: at 7 it meets the centre wheel, so a height or a reading is wrong), the barrel cap's screws (an estimated lip, where 15:54 suggests the wall's end ring), and the motion work's heights (estimated; why the dial-side pillar screws keep 1.6 mm heads, not the measured 2.0).
+4. **Sizes no frame has given**: the detent's thicknesses and heights (its form matches; seen only hand-held and oblique), the escape wheel's plate, spokes and collet (edge-on only), the third wheel's proportions (the fourth's), the bezel's flare and knurling (merged with the case's silhouette), the case support bracket, the sustaining ratchet's centre opening, the chain's hook; the key's absolute size (from an estimated pipe) and the cock's arm (2.6 against 2.9 +- 0.3).
+5. **Smaller loose ends**: the hands' side profile and the minute hand's bevel (flat in the model); the wind indicator wheel's size (35-38 mm on the video against the model's 22.4: large, open since 2 October); the balance arm's thickness and hub widening (hidden on every frame), the vernier nuts, the timing nut's slit.
+
 ## Work order
 
 Grouped so one reference serves several parts; the most visible gaps first. Status: open unless marked.
