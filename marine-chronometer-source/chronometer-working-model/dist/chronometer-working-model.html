@@ -2239,15 +2239,10 @@ function buildMovement(M){
     /* the pivot: both photographs put it 2.5 mm from the barrel bridge's pillar screw, a large slotted head like it (2E11795), so the fitting is taken to replace that
        screw with a shouldered stud (hidden screw R.navyBB, below); the lever's end bent to it under the cap, as Delaney's photograph shows it bent there */
     const NPV0=[-9.61,-30.95],iP=S.bb.reduce((b,q,i)=>Math.hypot(...sub(q,NPV0))<Math.hypot(...sub(S.bb[b],NPV0))?i:b,0),NPV=S.bb[iP];R.navyBB=iP;
-    /* the crossbar, symmetric about the line from the staff to the post (aa; pp across it): an arch over the cock's end, its legs WA out, straight for HL (0.5, Delaney's
-       photograph) then round over in a half circle to its top HA out; from each leg's foot, level with the staff, an arm straight out to an eye at EA, its pin over the rim
-       (13.38-14.5). Widths from Delaney's photograph: the stem 2.9, the lever past the cap 2.5, the bar 2.2, the eyes r 1.4. The arch's inner edge stands 1.24 times the
-       hairspring's outer edge from the staff (1.20-1.29), as the top-view photograph (2E11795, nearly overhead) has them beside each other at the spring's right side: the
-       staff (the endstone) at x 1020, the coils' edge 1133, the arch's inner edge 1160 (rows 1040-1090); the spring's outer edge at rest 6.47 (HS_RC 6.3 and its wire)
-       puts it 8.0 out, WA 9.1 (until 4 October 2026 WA 7.8, its inner edge 6.7, fitted against the 5.5 spring then drawn: the coils, 6.89 out at full swing, ran into it).
-       Delaney's tracing gave the arch about 7.9 round the staff and its top 8.3 out on the centre line, which the coils' 6.3 leaves no room for unless 7.9 is the inner
-       edge (Review-results.md, 13) */
-    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=1.1+1.24*6.47,HL=0.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
+    /* the crossbar, symmetric about the line from the staff to the post (aa; pp across it): an arch over the cock's end, its legs WA out (its inner edge 6.7 from the
+       staff, clear of the hairspring's 5.5), straight for HL (0.5, Delaney's photograph) then round over in a half circle to its top HA out (8.3); from each leg's foot, level with the staff, an arm straight out to an
+       eye at EA, its pin over the rim (13.38-14.5). Widths from Delaney's photograph: the stem 2.9, the lever past the cap 2.5, the bar 2.2, the eyes r 1.4 */
+    const aa=unit(sub(NP,L.B)),pp=[-aa[1],aa[0]],loc=(X,Y)=>[L.B[0]+X*pp[0]+Y*aa[0],L.B[1]+X*pp[1]+Y*aa[1]],WA=7.8,HL=0.5,HA=HL+WA,EA=13.9,NPIN=[loc(EA,0),loc(-EA,0)];
     /* the seal: body, flange and screws as the fusee's (below), its chamber closed underneath, slotted through both sides at the lever's height along the lever
        (toward the crossbar and toward the pivot) */
     const SW=2.0,gaps=[loc(0,HA),NPV].map(q=>{const d=sub(q,NP);return Math.atan2(d[1],d[0]);}).sort((a,b)=>a-b);

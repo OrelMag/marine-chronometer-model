@@ -1014,8 +1014,8 @@ Contents:
   video) have the same shape. The legs are now 0.5. Two descriptions of the stop
   have it screwed down with an Allen key through the case's bottom, which fits
   the hex socket in its plunger: the text now says so, not a pressed cap. Keep: the
-  arms out to the eyes nearly level with the staff (the arch's size since
-  superseded: the next entry but one). `f9ae355`
+  arch's top about 8.3 mm out, its inner edge 6.6 mm or more from the staff (the
+  hairspring); the arms out to the eyes nearly level with the staff. `f9ae355`
 - **The Navy's balance brake locked in mid-air** (Plates, bridges, screws and
   arbors; Variants, Balance stop). Its pins' length was set for the 4.3 mm rim
   (`2*2.15` in their end, `PE`), and the rim was cut to the video's 3.5 mm
@@ -1030,16 +1030,6 @@ Contents:
   the rim's height; locked, both pins on the rim's top edge (their lowest edge
   0.005 mm into it, under `fine.py`'s grid, so `--hold --eval
   "__mv.userData.stop('navy')"` passes with nothing new); free, 0.5 mm clear. `29cecd9`
-- **The Navy's balance brake's arch in the hairspring** (Plates, bridges, screws
-  and arbors; Variants, Balance stop). The arch's inner edge stood 6.7 mm from the
-  staff, fitted when the hairspring was drawn r 5.5; measured on the video at r 6.3,
-  its coils (6.47 to their outer edge at rest) had 0.1 mm, and at full swing, opened
-  out to 6.89, ran 0.3 mm into the arch (`fine.py --eval
-  "__mv.userData.stop('navy')"`). On 2E11795's photograph the arch's inner edge is
-  1.24 times the coils' outer edge from the staff (1.20-1.29); the arch is drawn to
-  it, its inner edge 8.0 (7.9 at the fillets), legs 9.1 out, top 9.6. Keep: the
-  arch's inner edge at that ratio to the coils, clear of them at full swing; if the
-  hairspring's radius changes, the arch's goes with it (Review-results.md, 13).
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
