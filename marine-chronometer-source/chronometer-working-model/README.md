@@ -226,7 +226,9 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   mass measured on its closed solids (densities by the model's material), and its **holes** (`MAKER.holes`, as `tools/holes.py` reads them: the round inner
   loops of each mesh's faces square to the arbors, both faces, so a counterbore or countersink shows as two diameters; centres from the movement's centre).
   Its **drawing**: the solids' creases over 30° projected to a plan (from the dial side, 12 o'clock up) and an elevation, in millimetres, with the overall
-  sizes and every hole marked, numbered and its diameter given. Its **STL**: its triangles in the movement's frame, mm.
+  sizes and every hole marked and numbered as the sheet's table lists them (centres and diameters there), printed at a standard scale its title states
+  (20:1 to 1:4, the largest that fits A4's column and page), its lines and text sized for paper. A line no relation measures shows what other parts it
+  takes (the other side of their fits), or says it isn't measured. `tools/book.py` checks the book as printed. Its **STL**: its triangles in the movement's frame, mm.
 - **Making it** (the panel): **Measure** (two points on the model, their distance and its components), **Oil** (each part coloured by the oil or grease it takes, after Ops. 18–71: red oil the jewelled pivots, argon oil the bushed ones, grease the mainspring and maintaining work), **Build book** (every card's sheet and drawing,
   printed alone: `#bookPrint`, `html.book-print`), **Data** (the train, `MOD`, `L`, the fusee's profile, the escapement's settings, figures and cycle,
   the hairspring's design and centreline, the balance's moment and pitches, the parts list), **STL** (every part shown).
