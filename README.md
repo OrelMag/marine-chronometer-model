@@ -5,7 +5,10 @@ a two-day fusee chronometer with a spring detent escapement, made for the U.S.
 Navy from 1941. An essay on how it keeps time at sea is its second tab.
 
 Orel Magidish (assisted by Claude Opus 5.5) – September 2026  
-[orelmag@gmail.com](mailto:orelmag@gmail.com)
+[orelmag@gmail.com](mailto:orelmag@gmail.com). On the page, **Report a bug or inaccuracy** (under About, on
+every part's card and at the essay's end) writes the report into an email to
+this address, with the version, the model's settings, the browser and the
+page's last errors.
 
 | File | What it is |
 |---|---|

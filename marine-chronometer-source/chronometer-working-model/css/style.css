@@ -127,14 +127,29 @@ details.more[open]>summary{margin-bottom:9px}
 .sub-h{font:500 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:10px 0 6px}.sub-h:first-of-type{margin-top:0}
 .about-btn{display:block;width:100%;margin:0 0 12px;border-style:dashed;border-width:1.2px;font-weight:500}
 header .by{margin-top:6px;font-size:12.5px}.by span{white-space:nowrap}.by a{color:inherit;text-underline-offset:2px}
-dialog#about{max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;padding:22px 26px 18px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);font-size:14.5px;line-height:1.55}
-dialog#about::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
-dialog#about h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
-dialog#about h3{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
-dialog#about a{color:var(--blue);text-underline-offset:2px}
-dialog#about p{margin:0 0 .6em}dialog#about p.by{color:var(--muted);margin:-4px 0 12px}dialog#about ul,dialog#about ol{margin:0;padding-left:1.25em}dialog#about li{margin:0 0 .45em}
-dialog#about .dx{position:absolute;right:12px;top:12px;margin:0}
-dialog#about .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}
+dialog:is(#about,#report){max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;padding:22px 26px 18px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);font-size:14.5px;line-height:1.55}
+dialog:is(#about,#report)::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
+dialog:is(#about,#report) h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
+dialog:is(#about,#report) h3{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
+dialog:is(#about,#report) a{color:var(--blue);text-underline-offset:2px}
+dialog:is(#about,#report) p{margin:0 0 .6em}dialog:is(#about,#report) p.by{color:var(--muted);margin:-4px 0 12px}dialog:is(#about,#report) ul,dialog:is(#about,#report) ol{margin:0;padding-left:1.25em}dialog:is(#about,#report) li{margin:0 0 .45em}
+dialog:is(#about,#report) .dx{position:absolute;right:12px;top:12px;margin:0}
+dialog:is(#about,#report) .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}
+/* Report a bug or inaccuracy (js/report.js) */
+dialog#report{max-width:min(560px,calc(100vw - 32px))}
+.rp-f{display:block;margin:10px 0 0}.rp-f>span{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:0 0 3px}
+.rp-f input,.rp-f textarea{box-sizing:border-box;width:100%;font:14px/1.45 "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--panel);border:1.5px solid var(--rule);border-radius:10px;padding:7px 10px}
+.rp-f textarea{resize:vertical;min-height:96px;display:block}.rp-f textarea:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+#report #rpHint{margin:8px 0 0}#report #rpOut{margin:8px 0 0;color:var(--ink)}#rpOut:empty{display:none}
+.rp-ck{margin:12px 0 0;font-size:13.5px;align-items:flex-start}.rp-ck input{flex-shrink:0;margin:2px 0 0}
+#rpPrev{margin:8px 0 0;font-size:13px}#rpPrev summary{cursor:pointer;color:var(--blue)}
+#rpPrev pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:220px;overflow:auto;background:var(--panel);border-radius:8px;padding:8px 10px;font:12px/1.45 ui-monospace,Consolas,monospace;margin:6px 0 0}
+.rp-go{margin:14px 0 0}
+dialog#report a.rp-b{font:600 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--blue);border:1.5px solid var(--blue);border-radius:999px;padding:6px 13px;text-decoration:none}
+dialog#report a.rp-b.primary{background:var(--blue);color:var(--panel)}
+button.rp-l{border:0;padding:0;border-radius:0;background:none;font:inherit;color:var(--blue);text-decoration:underline;text-underline-offset:2px}
+.info .rp-l{display:block;margin-top:6px;font-size:12.5px}
+@media(pointer:coarse){dialog#report a.rp-b{display:inline-flex;align-items:center;box-sizing:border-box;min-height:44px}p button.rp-l{min-height:0}}   /* the links as tall as the buttons beside them; one in a line of text stays a link */
 /* Version … · what's new: the list of changes from CHANGELOG.md (changelog.py), the last section of the panel */
 .changes-box{font-size:13px;line-height:1.45}.changes-box ol.changes{list-style:none;margin:0;padding:0}.changes-box ol.changes>li{margin:0 0 .8em}
 .changes-box ol.changes time{color:var(--muted);margin-left:.4em}.changes-box ol.changes ul{margin:.25em 0 0;padding-left:1.1em}.changes-box ol.changes ul li{margin:0 0 .3em}

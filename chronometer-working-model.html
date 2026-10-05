@@ -188,14 +188,29 @@ details.more[open]>summary{margin-bottom:9px}
 .sub-h{font:500 12.5px "Instrument Sans",sans-serif;color:var(--muted);margin:10px 0 6px}.sub-h:first-of-type{margin-top:0}
 .about-btn{display:block;width:100%;margin:0 0 12px;border-style:dashed;border-width:1.2px;font-weight:500}
 header .by{margin-top:6px;font-size:12.5px}.by span{white-space:nowrap}.by a{color:inherit;text-underline-offset:2px}
-dialog#about{max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;padding:22px 26px 18px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);font-size:14.5px;line-height:1.55}
-dialog#about::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
-dialog#about h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
-dialog#about h3{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
-dialog#about a{color:var(--blue);text-underline-offset:2px}
-dialog#about p{margin:0 0 .6em}dialog#about p.by{color:var(--muted);margin:-4px 0 12px}dialog#about ul,dialog#about ol{margin:0;padding-left:1.25em}dialog#about li{margin:0 0 .45em}
-dialog#about .dx{position:absolute;right:12px;top:12px;margin:0}
-dialog#about .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}
+dialog:is(#about,#report){max-width:min(640px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;padding:22px 26px 18px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);font-size:14.5px;line-height:1.55}
+dialog:is(#about,#report)::backdrop{background:rgba(10,14,18,.55);backdrop-filter:blur(2px)}
+dialog:is(#about,#report) h2{font:400 26px/1.15 Spectral,Georgia,serif;color:var(--ink);margin:0 30px 10px 0}
+dialog:is(#about,#report) h3{font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
+dialog:is(#about,#report) a{color:var(--blue);text-underline-offset:2px}
+dialog:is(#about,#report) p{margin:0 0 .6em}dialog:is(#about,#report) p.by{color:var(--muted);margin:-4px 0 12px}dialog:is(#about,#report) ul,dialog:is(#about,#report) ol{margin:0;padding-left:1.25em}dialog:is(#about,#report) li{margin:0 0 .45em}
+dialog:is(#about,#report) .dx{position:absolute;right:12px;top:12px;margin:0}
+dialog:is(#about,#report) .dx button{border:0;font-size:22px;line-height:1;padding:4px 10px;color:var(--muted)}
+/* Report a bug or inaccuracy (js/report.js) */
+dialog#report{max-width:min(560px,calc(100vw - 32px))}
+.rp-f{display:block;margin:10px 0 0}.rp-f>span{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:0 0 3px}
+.rp-f input,.rp-f textarea{box-sizing:border-box;width:100%;font:14px/1.45 "Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--panel);border:1.5px solid var(--rule);border-radius:10px;padding:7px 10px}
+.rp-f textarea{resize:vertical;min-height:96px;display:block}.rp-f textarea:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+#report #rpHint{margin:8px 0 0}#report #rpOut{margin:8px 0 0;color:var(--ink)}#rpOut:empty{display:none}
+.rp-ck{margin:12px 0 0;font-size:13.5px;align-items:flex-start}.rp-ck input{flex-shrink:0;margin:2px 0 0}
+#rpPrev{margin:8px 0 0;font-size:13px}#rpPrev summary{cursor:pointer;color:var(--blue)}
+#rpPrev pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:220px;overflow:auto;background:var(--panel);border-radius:8px;padding:8px 10px;font:12px/1.45 ui-monospace,Consolas,monospace;margin:6px 0 0}
+.rp-go{margin:14px 0 0}
+dialog#report a.rp-b{font:600 13.5px "Instrument Sans",system-ui,sans-serif;color:var(--blue);border:1.5px solid var(--blue);border-radius:999px;padding:6px 13px;text-decoration:none}
+dialog#report a.rp-b.primary{background:var(--blue);color:var(--panel)}
+button.rp-l{border:0;padding:0;border-radius:0;background:none;font:inherit;color:var(--blue);text-decoration:underline;text-underline-offset:2px}
+.info .rp-l{display:block;margin-top:6px;font-size:12.5px}
+@media(pointer:coarse){dialog#report a.rp-b{display:inline-flex;align-items:center;box-sizing:border-box;min-height:44px}p button.rp-l{min-height:0}}   /* the links as tall as the buttons beside them; one in a line of text stays a link */
 /* Version … · what's new: the list of changes from CHANGELOG.md (changelog.py), the last section of the panel */
 .changes-box{font-size:13px;line-height:1.45}.changes-box ol.changes{list-style:none;margin:0;padding:0}.changes-box ol.changes>li{margin:0 0 .8em}
 .changes-box ol.changes time{color:var(--muted);margin-left:.4em}.changes-box ol.changes ul{margin:.25em 0 0;padding-left:1.1em}.changes-box ol.changes ul li{margin:0 0 .3em}
@@ -420,7 +435,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
     <canvas tabindex="0" aria-label="3D working model of a marine chronometer. Arrow keys turn it, plus and minus zoom, 0 resets the view."></canvas>
     <div class="labels"></div>
     <button id="panelBtn" aria-controls="panel" aria-expanded="true" aria-label="Hide the panel" title="Hide the panel, for a larger model (P)">›</button>
-    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div><div class="src"></div></div>
+    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div><div class="src"></div><button class="rp-l" data-report="inacc">Something wrong with this part? Report it</button></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it does; right-click to fade, hide or isolate it.</span><span class="t-only">Tap a part to see what it does; long-press to fade, hide or isolate it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
     <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
@@ -607,6 +622,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
       </details>
     </div>
     <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
+    <button class="about-btn" id="reportBtn" data-report title="Something broken, or something that differs from a real Model 21 or the manual: written into an email to the author, with the details that help fix it">Report a bug or inaccuracy</button>
     <div class="card ctl">
       <details class="grp more" id="changesDet">
         <summary><span>Version <span data-ver>2.14.01</span> · what’s new</span></summary>
@@ -978,13 +994,14 @@ html.essay-on,html.essay-on body{overflow:hidden}
 </div>
 
 <hr>
+<p class="e-report">Found a mistake, in the essay or in the model, or something that differs from a real Model 21? <button class="rp-l" data-report="inacc">Report it</button>: it opens as an email to me, with the section you are reading filled in.</p>
 <p class="e-refs"><strong>Further reading.</strong> <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em>, NAVSHIPS 250-624, Bureau of Ships (1948): the source of the Model 21’s figures here, <a href="navships-250-624-1948.pdf">here in full</a>. Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed. (1998), and Nathaniel Bowditch, <em>The American Practical Navigator</em> (Pub. No. 9): the almanac and the arithmetic of the sky sections, whose places are checked against the Jet Propulsion Laboratory’s Horizons ephemeris; the stars’ places are SIMBAD’s (CDS, Strasbourg). Rupert T. Gould, <em>The Marine Chronometer: Its History and Development</em> (1923). David Boettcher’s notes on <a href="https://vintagewatchstraps.com/MTEpdf.php">middle temperature error</a>. The Royal Museums Greenwich’s <a href="https://www.rmg.co.uk/collections/objects/rmgc-object-387425">Hamilton Model 21, No. 4E019</a>. Bartosz Ciechanowski, <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>, whose approach inspired this essay. The working model’s sources are listed under “About this model” on the other tab.</p>
 </div>
 </article>
 <dialog id="about" aria-labelledby="aboutT">
   <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
   <h2 id="aboutT">About this model</h2>
-  <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a> · version <span data-ver>2.14.01</span></p>
+  <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a> · version <span data-ver>2.14.01</span> · <button class="rp-l" data-report>Report a bug or inaccuracy</button></p>
   <p>A working 3D model of the Hamilton Model 21 marine chronometer: a two-day fusee chronometer with a spring detent escapement, made in Lancaster, Pennsylvania, for the U.S. Navy from 1941. Every part runs from one clock: the balance beats twice a second, the hands step in half-seconds, and the fusee and chain follow the hours since winding.</p>
   <h3>Using it</h3>
   <ul>
@@ -1028,6 +1045,91 @@ html.essay-on,html.essay-on body{overflow:hidden}
   <h3>Licence</h3>
   <p>Code under the MIT licence; text, drawings and the model under Creative Commons Attribution 4.0. Built with three.js (MIT) and the Spectral and Instrument Sans typefaces (SIL Open Font License).</p>
 </dialog>
+<dialog id="report" aria-labelledby="rpT">
+  <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
+  <h2 id="rpT">Report a bug or inaccuracy</h2>
+  <p class="by">To Orel Magidish, at <a id="rpTo" href="mailto:orelmag@gmail.com">orelmag@gmail.com</a>. Nothing is sent from this page: the report opens in your own email, where you can read and change all of it before you send it.</p>
+  <div class="seg" id="rpKind"><button data-v="bug" aria-pressed="true">Something’s broken</button><button data-v="inacc" aria-pressed="false">Something’s inaccurate</button><button data-v="other" aria-pressed="false">Something else</button></div>
+  <p class="note" id="rpHint"></p>
+  <label class="rp-f"><span>Where</span><input id="rpWhere" autocomplete="off" placeholder="A part, a view, a control or a section of the essay"></label>
+  <label class="rp-f"><span>What’s wrong</span><textarea id="rpWhat" rows="5"></textarea></label>
+  <label class="rp-f hidden" id="rpSrcF"><span>What shows it (if you know)</span><input id="rpSrc" autocomplete="off" placeholder="A photograph or video (and the time in it), or the manual’s page, figure or Op."></label>
+  <label class="ck rp-ck"><input type="checkbox" id="rpTech" checked> Include technical details: the version, the model’s settings, the browser, screen and graphics, and the page’s last errors</label>
+  <details id="rpPrev"><summary>What will be sent</summary><pre></pre></details>
+  <div class="seg rp-go"><a class="rp-b primary" id="rpMail" href="mailto:orelmag@gmail.com">Write it in my email</a><a class="rp-b" id="rpGmail" href="https://mail.google.com/" target="_blank" rel="noopener">In Gmail</a><button id="rpCopy">Copy it</button></div>
+  <p class="note" id="rpOut" aria-live="polite"></p>
+</dialog>
+<script>
+// @ts-check
+/* Report a bug or inaccuracy: the dialog (#report) opened from the panel, a part's card, About and the essay's end ([data-report]). Nothing leaves the page by
+   itself (no fetch: tools/selfcontained.py): the report is written into the visitor's own email, through a mailto: link or Gmail's compose page, or copied,
+   addressed to TO. Loaded first, so it keeps the page's last errors and warnings from every later script; they go into the report's technical details with
+   the version, the address (the model's state is in its hash), the browser, the screen and the graphics. Declares only REPORT; app.js calls REPORT.bind(). */
+const REPORT=(()=>{
+  const TO='orelmag@gmail.com',T0=performance.now(),LOG=[],NLOG=30,MAILTO=1900,GMAIL=7500;   /* longest links: a mailto: past about 2,000 characters is cut short by some mail programs */
+  /* a URL's directories go (on a local copy, the visitor's own folders): its file, line and column stay */
+  const clean=s=>s.replace(/\b(?:file|https?):\/\/[^\s)'"]*\//g,'').replace(/\s+/g,' ').trim().slice(0,300);
+  const str=x=>x instanceof Error?(x.stack&&x.stack.includes(x.message)?x.stack:x.message+' '+(x.stack||'')):typeof x==='string'?x:(()=>{try{return JSON.stringify(x);}catch(_){return String(x);}})();
+  const sec=()=>((performance.now()-T0)/1000).toFixed(1)+' s';
+  function note(k,a){const s=clean(a.map(str).join(' ')),l=LOG[LOG.length-1];if(l&&l.k===k&&l.s===s){l.n++;return;}LOG.push({t:sec(),k,s,n:1});if(LOG.length>NLOG)LOG.shift();}
+  for(const k of['error','warn']){const f=console[k];console[k]=function(...a){note(k,a);return f.apply(this,a);};}
+  addEventListener('error',e=>{const t=/** @type {any} */(e.target);if(t&&t!==window&&(t.src||t.href))note('load',['failed to load',t.tagName,t.src||t.href]);else note('error',[e.error&&e.error.stack?'Uncaught '+e.error.stack:e.message+(e.filename?` (${e.filename}:${e.lineno}:${e.colno})`:'')]);},true);
+  addEventListener('unhandledrejection',e=>note('error',['unhandled rejection:',e.reason]));
+
+  const KIND={bug:['Bug','What you did, what you expected and what happened instead. The technical details help reproduce it.'],
+    inacc:['Inaccuracy','Where the model or the essay differs from a real Model 21 or the manual, and what shows it. Photographs and videos of real Model 21s and the 1948 manual decide what the model looks like and does, so a source settles it fastest.'],
+    other:['Note','A suggestion, a question, a broken link, anything else.']};
+  /** @type {{where?:()=>string,state?:()=>[string,string][],r?:any}} */
+  let B={};let kind='bug',auto=true,gpu='';
+  const $=s=>/** @type {any} */(document.querySelector(s)),kinds=()=>/** @type {NodeListOf<HTMLButtonElement>} */(document.querySelectorAll('#rpKind button'));
+  const ver=()=>{const v=document.querySelector('[data-ver]');return v?v.textContent:'dev';};
+  /* the page's address: on a local copy, the file's name alone, not the folders it is in */
+  const page=()=>location.protocol==='file:'?'local copy, '+decodeURIComponent(location.pathname.split('/').pop()||'')+location.search+location.hash:location.href;
+  function gpuName(){if(gpu||!B.r)return gpu;try{const gl=B.r.getContext(),g2=typeof WebGL2RenderingContext!=='undefined'&&gl instanceof WebGL2RenderingContext;
+      let n=gl.getParameter(gl.RENDERER);if(/^WebKit WebGL$/.test(n)){const x=gl.getExtension('WEBGL_debug_renderer_info');if(x)n=gl.getParameter(x.UNMASKED_RENDERER_WEBGL);}   /* Firefox names the renderer itself, and warns of the extension */
+      gpu=`${g2?'WebGL 2':'WebGL 1'}, ${n}, textures to ${gl.getParameter(gl.MAX_TEXTURE_SIZE)} px`;}catch(e){gpu='unknown ('+e.message+')';}return gpu;}
+  function tech(){const n=navigator,s=screen,mm=q=>matchMedia(q).matches,tz=-new Date().getTimezoneOffset(),d=new Date(Date.now()+tz*6e4).toISOString().slice(0,16).replace('T',' ');
+    let st=[];try{st=B.state?B.state():[];}catch(e){st=[['Model state','unreadable ('+e.message+')']];}
+    const L=[['Version',ver()],['Page',page()],...st,['Browser',n.userAgent],['Language',n.language],
+      ['Screen',`${s.width}×${s.height}, window ${innerWidth}×${innerHeight}, pixel ratio ${devicePixelRatio}, ${n.maxTouchPoints?'touch':'no touch'}, ${mm('(pointer:fine)')?'mouse':'no mouse'}${mm('(prefers-reduced-motion:reduce)')?', reduced motion':''}${mm('(prefers-color-scheme:dark)')?', dark':''}`],
+      ['Graphics',gpuName()||'not started'],['Open for',sec()],['Local time',`${d} (UTC${tz<0?'−':'+'}${Math.floor(Math.abs(tz)/60)}${Math.abs(tz)%60?':'+String(Math.abs(tz)%60).padStart(2,'0'):''})`]];
+    return L.map(([k,v])=>k+': '+v).join('\n')+'\n\nRecent errors and warnings'+(LOG.length?` (the last ${LOG.length}):\n`+LOG.map(l=>`  ${l.t} ${l.k}${l.n>1?' ×'+l.n:''}: ${l.s}`).join('\n'):': none');}
+  const val=id=>String($(id).value).trim();
+  function subject(){const w=val('#rpWhat').split('\n')[0];return`Model 21 ${KIND[kind][0].toLowerCase()}${w?': '+(w.length>60?w.slice(0,59)+'…':w):''} (v${ver()})`;}
+  function body(){const src=kind==='inacc'?val('#rpSrc'):'';
+    return`Kind: ${KIND[kind][0]}\nWhere: ${val('#rpWhere')||'(not given)'}\n\nWhat's wrong:\n${val('#rpWhat')||'(write it here)'}\n`+(src?`\nSource: ${src}\n`:'')+($('#rpTech').checked?'\n-- Technical details --\n'+tech()+'\n':'');}
+  /* a link no longer than max: the body is cut from its end (the oldest of it, the log, goes first) and the whole report put on the clipboard as the link opens */
+  const CUT='\n\n[Shortened to fit the link. The whole report is on your clipboard: paste it here in its place.]';
+  function fit(mk,max,s,b){if(mk(s,b).length<=max)return{u:mk(s,b),cut:false};let lo=0,hi=b.length;while(lo<hi){const m=(lo+hi+1)>>1;if(mk(s,b.slice(0,m)+CUT).length<=max)lo=m;else hi=m-1;}return{u:mk(s,b.slice(0,lo)+CUT),cut:true};}
+  const E=encodeURIComponent,mailto=(s,b)=>`mailto:${TO}?subject=${E(s)}&body=${E(b.replace(/\n/g,'\r\n'))}`,gmail=(s,b)=>`https://mail.google.com/mail/?view=cm&fs=1&to=${E(TO)}&su=${E(s)}&body=${E(b)}`;
+  let links={m:{u:'',cut:false},g:{u:'',cut:false}};
+  function sync(){const s=subject(),b=body();$('#rpPrev pre').textContent='To: '+TO+'\nSubject: '+s+'\n\n'+b;links={m:fit(mailto,MAILTO,s,b),g:fit(gmail,GMAIL,s,b)};$('#rpMail').href=links.m.u;$('#rpGmail').href=links.g.u;}
+  function say(t){const o=$('#rpOut');o.textContent=t;}
+  function copy(then){const t=$('#rpPrev pre').textContent,sel=()=>{const p=$('#rpPrev');p.open=true;const r=document.createRange();r.selectNodeContents($('#rpPrev pre'));const g=getSelection();if(g){g.removeAllRanges();g.addRange(r);}};
+    try{navigator.clipboard.writeText(t).then(()=>then(true),()=>{sel();then(false);});}catch(_){sel();then(false);}}
+  function setKind(k){kind=k;kinds().forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));$('#rpHint').textContent=KIND[k][1];$('#rpSrcF').classList.toggle('hidden',k!=='inacc');sync();}
+  /** @param {{kind?:string,where?:string,fresh?:boolean}} [o] where: what the report is about; fresh: from a part's card or the essay, so where is theirs even if one was typed */
+  function open(o={}){const d=$('#report');if(!d)return;const ab=$('#about');if(ab&&ab.open)ab.close();
+    if(o.kind)setKind(o.kind);let w=o.where;if(w==null&&(auto||o.fresh)&&B.where){try{w=B.where();}catch(_){w='';}}if(w!=null){$('#rpWhere').value=w;auto=true;}
+    say('');sync();if(d.showModal){if(!d.open)d.showModal();}else d.setAttribute('open','');$('#rpWhat').focus();}
+  /** @param {{where?:()=>string,state?:()=>[string,string][],r?:any}} b */
+  function bind(b){B=b;const d=$('#report');if(!d)return;
+    if(B.r&&B.r.domElement){const c=B.r.domElement;c.addEventListener('webglcontextlost',()=>note('warn',['WebGL context lost']));c.addEventListener('webglcontextrestored',()=>note('warn',['WebGL context restored']));}
+    document.addEventListener('click',e=>{const t=/** @type {any} */(e.target),a=t&&t.closest&&t.closest('[data-report]');if(!a)return;e.preventDefault();open({kind:a.dataset.report||undefined,fresh:!!a.dataset.report});});
+    d.addEventListener('click',e=>{if(e.target===d)d.close();});
+    d.addEventListener('keydown',e=>e.stopPropagation());   /* typing here never reaches the model's or the essay's keys */
+    kinds().forEach(b=>b.addEventListener('click',()=>setKind(b.dataset.v)));
+    $('#rpWhere').addEventListener('input',()=>{auto=!val('#rpWhere');});
+    for(const id of['#rpWhere','#rpWhat','#rpSrc','#rpTech'])$(id).addEventListener('input',sync);$('#rpTech').addEventListener('change',sync);
+    $('#rpPrev').addEventListener('toggle',sync);
+    for(const[id,k]of[['#rpMail','m'],['#rpGmail','g']])$(id).addEventListener('click',()=>{sync();const l=links[k];if(!val('#rpWhat'))say('Say what’s wrong in the email before you send it.');
+      if(l.cut)copy(ok=>say(ok?'The report was too long for the link: the whole of it is on your clipboard, to paste into the email.':'The report was too long for the link: copy the whole of it from “What will be sent” (now selected) into the email.'));});
+    $('#rpCopy').addEventListener('click',()=>{sync();copy(ok=>say(ok?`Copied. Paste it into an email to ${TO}.`:`Selected under “What will be sent”: copy it (Ctrl+C, or ⌘C) into an email to ${TO}.`));});
+    $('#rpTo').textContent=TO;$('#rpTo').href='mailto:'+TO;setKind('bug');}
+  return{bind,open,note:(...a)=>note('note',a),text:()=>{sync();return $('#rpPrev pre').textContent;},links:()=>{sync();return{mailto:links.m.u,gmail:links.g.u};}};
+})();
+
+</script>
 <script>
 /**
  * @license
@@ -6001,6 +6103,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     requestAnimationFrame(frame);
   }
   ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});
+  /* Report a bug or inaccuracy (js/report.js): what it is about (the essay's section, the part picked or the view) and what the hash doesn't hold of the model's state */
+  REPORT.bind({r,where:()=>{if(ESSAY.on()){const s=ESSAY.section(),h=s&&document.getElementById(s);return'The essay'+(h?', “'+h.textContent.trim()+'”':'');}if(st.pick)return INFO[st.pick][0];const b=$('#views [aria-pressed="true"]');return'The model'+(st.tour>=0?', the walkthrough':b?', '+b.textContent.trim()+' view':'');},
+    state:()=>[['Tab',ESSAY.on()?'essay':'model'],['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; speed ${st.speed}×; ${renders} frames drawn`]]});
   /* the export to Blender (blender.js): its own copy of the model, set as the page's is (the dial, balance and stop chosen, the timing weights, screws and temperature) */
   if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
     config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');
