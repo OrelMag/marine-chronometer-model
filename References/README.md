@@ -53,6 +53,26 @@ Web photographs consulted (all rights reserved, so cited, not copied here):
 - omegaforums.net, "Incoming Hamilton Model 21 chronometer" (thread 78172): side views of the train between the plates (the third wheel lowest with its pinion above it, the fourth pinion long under its wheel; the train-blocking screw's dog point at the fourth wheel), and the train-blocking screw's head circled on the bridge.
 - delaneyantiqueclocks.com, Hamilton Model 21 No. 8854 (1941): the dial (sub-dial centres about 0.47-0.51 of the dial's radius) and a side view of the movement.
 - Wikimedia Commons, "Hamilton Marine Chronometer Model 21.jpg": the manual's Fig. 13 (1943 edition), public domain.
+- Royal Museums Greenwich, five Model 21s in their collection, each with a long catalogue description and four to six photographs (1,280 px; found 5 October 2026):
+  ZBA7849 (No. 5674, 1942, `www.rmg.co.uk/collections/objects/rmgc-object-252898`), ZBA7835 (No. 53, 1941, `rmgc-object-252882`), ZBA7845 (No. 3653, `-252893`),
+  ZBA7848 (No. 5513, `-252897`), No. 333 (`-79229`). The text of ZBA7849: the barrel's cap "secured with five screws into the edge of the barrel wall"; "The
+  barrel has a fixed steel hook and an additional steel-hooking piece in the barrel at the outer terminal of the mainspring, for protection of the hooking.
+  This piece runs just under three quarters of the way round the inside of the barrel, a fixed hook in the mainspring proper locating in a hole in the piece";
+  the mainspring unsigned; the detent "beryllium-copper (?)" on a nickel block, its passing spring Elinvar, "cranked out to run parallel to the detent blade"; the
+  dial 104 mm (104.2 on No. 53) across, held by four screws, the movement by three. Used for the barrel's wall and brace (SHAPE-PASS.md, 109-6). The photographs
+  show the box (British Ministry of Defence boxes, a pressed brass sliding catch) and the latch from above and in front (No. 333 and 5674: the knurled head on its
+  post, a rectangular plate under it at the lever's end, the lever and its knurled handle to the ring), and the movement from the bridge side, obliquely, with
+  the barrel and chain (No. 53); none shows the box's right side, the gimbal straps' screws or the inside of the movement.
+
+Searched without result (5 October 2026), for the records: NAWCC message board threads on the Model 21 (`mb.nawcc.org/threads/...`, "Tool suggestion for
+hairspring removal on Hamilton Model 21", "First marine chronometer overhaul", "Hamilton Model 21 #N2623") answer every fetch with a Cloudflare challenge;
+the Wayback Machine holds only the last, which has no sizes but names a member's teardown with about 25 photographs, *NAWCC Bulletin* No. 365 (December
+2006), behind the members' login. historictimekeepers.com's Model 21 parts page (detent, locking jewel, escapement jewels, escape wheel and pinion,
+balance staff) gives no sizes. An eBay listing of Model 21 parts (item 206182812628) and the omegaforums thread "Hamilton Model 21 chronometer porn" (150793)
+gave nothing to measure (eBay refuses automated fetches). No supplier lists the Model 21's mainspring by its sizes; Google Patents' Hamilton patents of
+1939-1947 (above) give none for the barrel, mainspring, ratchets, stop work, detent or box. YouTube searched through yt-dlp ("Hamilton Model 21
+chronometer", "... repair", "... mainspring", "... detent", "... fusee chain", "marine chronometer Hamilton restoration", "... service"): the videos found
+are in the table below and in VIDEOS.md.
 
 Books consulted. These are period texts on chronometers in general, not on the Model 21. They serve as a cross-check and
 never as a source for the model's shapes or sizes:
@@ -144,3 +164,6 @@ which open gaps each could close. The table below is the summary.
 | BunnSpecial, "How I take apart a marine chronometer, Hamilton, Model 21", Part 1 of 2 (prep) and Part 2 of 2 (plates, wheels), 27 min each, 720p (https://www.youtube.com/watch?v=Jd2c3x8VKsE, https://www.youtube.com/watch?v=wcYqdgpyggQ) | Part 2: the motion work off the dial side (5:10), the barrel bridge off (12:00), the barrel and fusee out (13:00-15:50), the upper train bridge off with the balance lower bridge on it, held to the camera (19:30-20:40), two train wheels on the bare plate (20:50-21:10), the pillar plate bare with its four pillars, train side up (21:50-23:20), and its dial side (23:30-24:10) | The pillars' places (IDEAS.md 1.2, not yet fitted) |
 | bunnspecial, "Hamilton Model 21 Marine Chronometer, Part 1 of 3", 3 min (https://www.youtube.com/watch?v=We1dLNXiBj0); RM Watch & Clock, "Hamilton Model 21 Marine Chronometer", 30 s, 1080p (https://www.youtube.com/watch?v=s7VW3RiJ97E) | The escapement running, close up | Not yet used: candidates for the escapement's motion and the balance's swing |
 | Boulder Horological Society, "Zoom #19: Hamilton 21 Marine Chronometer Deconstructed" (https://www.youtube.com/watch?v=TWQsSVWuikk) | 43:13: the upper train bridge upturned, with the balance lower bridge on it | The balance lower bridge's form, with C Spinner's 36:01 |
+| TN24H - Clocks & Watches, "Assembling and Testing 1941 Hamilton Chronometer Model 21" (https://www.youtube.com/watch?v=3SFDplGq6vs) and "Exploring Clock 15: Disassemble Hamilton Marine 21" (https://www.youtube.com/watch?v=R-DrJz1DYOY), 4.5 and 3.5 min, 1080p; one movement, dial N4104 | Every part laid flat, the barrel face-on with its spring and arbor, the movement side-on with the barrel and chain | The barrel's wall (0:16), the arbor's core, the coils' pitch (VIDEOS.md) |
+| James Martin, "Hamilton Model 21 Inspection for Rob from Michigan # 131" (https://www.youtube.com/watch?v=SNLqsS9wrrM), 9 min, 720p; "Sounds of a Hamilton model 21 ..." (xDKFZaY88cM) | A unit inspected, not taken down: shipping can, case, dial, escapement, the barrel and fusee side-on | Searched for the ratchets, collar and stop work: not shown |
+| Deafboy, "Hamilton Model 21 detent" (https://www.youtube.com/watch?v=XJQCgMV_GA8) and "... ship's chronometer (4k)" (W9gy2gjvZHc); pefkipefki, "Hamilton model 21 chronometer detent escapement" (FpolZSipVmQ) | The escapement running through the keyhole; a movement out of its case at 4K | Searched for the detent's heights, the trip spring and the collet: blurred or hidden |
