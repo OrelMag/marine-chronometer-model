@@ -242,7 +242,7 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   adjusting the escapement (Ops. 77–97 beside the model's live figures); the order of work (Sec. VIII's reassembly, the mainspring made safe first);
   materials, hardening and tools, and the chronometer that can be made without Elinvar and Invar (a steel spring on a split bimetallic balance).
 - **Phase A's physics** (`tools/physics.js`): the fusee asks the mainspring (0.419 mm, the parts list; 14.8 wide; 1,064 long) for 1.02 N·m fully wound,
-  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 68–106 µN·m at the escape wheel, whose inertia (4.75e-9 kg·m², measured on its
+  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 68–106 µN·m at the escape wheel, whose inertia (4.80e-9 kg·m², measured on its
   solid; `invariants.py` checks the two agree) lets it catch the impulse jewel within 5° of the swing; the balance holds 255° if its Q is 171–274, so `TF` (its free swing's decay) is 34 s,
   derived (it was 25, estimated). **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
   run dry), 0.91–0.97, at the top of the range assumed; the balance's damping from the air on its screws, nuts and arm (Cd 0.8–1.4 at Re about 180), its

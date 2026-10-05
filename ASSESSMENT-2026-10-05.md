@@ -174,3 +174,15 @@ patent drawing. Those changes are small and sure.
    from it.
 6. **Decide the thread policy.** Either keep the drawn diameters and suggest the nearest standard (now), or draw each screw at
    its standard thread, so that model and sheet agree.
+
+## Addendum (5 October 2026): two items re-worked
+
+- **The escape pinion (item 9, section 2.5) was mostly a scale error.** Its first reading took the scale from the model's own pinion tips. Read
+  again against the escape wheel (Hamilton's 13.16 mm, whose widest points lie at the arbor's depth), allowing for the pinion standing 4-5 mm
+  nearer a camera a few centimetres away and for the view's tilt: the pinion's end stands 8.7-10.1 mm from the wheel's web, the model's 10.45
+  inside that, so **the train's measured heights stand**. What remains is the pinion's own length, 3.6-4.7 mm against the 2.0 drawn: drawn 4.0
+  now, about the same mesh. The lesson of section 3 applies to my own reading: a scale borrowed from the model carries its estimates in.
+- **Pivot friction is in the energy budget (next step 1, done).** `tools/physics.js` A6 computes each stage from its measured pivots and teeth
+  (0.91-0.97, the top of the range assumed) and the balance's damping from its parts (Q 202-390). The staff's pivot end is flat on the 7:08 trace,
+  and that decides it: a domed end would leave the balance under-damped, swinging far past 1½ turns. With the mainspring's own losses (5-15 %) the
+  budget needs 169-243, and the model's `TF` 34 s (Q 214) lies inside both ranges, now supported from the parts as well as from the budget.

@@ -2095,7 +2095,7 @@ top, the fusee arbor, the take-off slot and the flange's holes).
 5. **Estimated, to measure if a frame allows:** the take-off slot's depth (1.0,
    its floor brass at 9:03), the collar's radius (r 3.0 face-on at 13:30, ±0.3:
    the dark ring round it may be the hole's gap).
-7. **The escape arbor's pinion and its distance from the wheel** (new, 4 October 2026, open). In the staking tool at 43:21.1 (4K, the arbor upright against a
+7. *Re-read (5 October 2026): the distance agrees, the pinion was too short (drawn 4.0 now).* The first reading's scale came from the model's own pinion tips; scaled instead by the escape wheel (Hamilton's 13.16 mm, 760-775 px across at the arbor's depth), with the pinion 4-5 mm nearer a camera a few centimetres away (6-9 % larger) and the view 20-30° from above, its end stands 8.7-10.1 mm from the wheel's web (the model's 10.45 inside that: the train's heights stand) and its leaves run 3.6-4.7 mm (the model's 2.0 was short; now 4.0 about the same mesh). **The escape arbor's pinion and its distance from the wheel** (new, 4 October 2026). In the staking tool at 43:21.1 (4K, the arbor upright against a
    plain ground, seen from about 20° above) the pinion's leaves run about 227 px, 3.5 mm at its own tips' 64 px/mm, where the model's pinion is 2.0 long, and
    its end stands about 387 px (6.0 mm) above the wheel's brass hub, itself about 1.6 mm tall: about 7.6 mm from the pinion to the wheel's web, where the
    model has 10.45 (the pinion at the fourth wheel's height, -7.46, the wheel at `EY`). The view foreshortens heights by about 6 % only. If it holds, the

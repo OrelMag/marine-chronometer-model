@@ -28,7 +28,7 @@ say(`the train fusee wheel to escape wheel ${f(ratioT,0)}:1; the escape wheel's 
 
 /* ---------- A4: the escape wheel with mass: its chase onto the impulse jewel ---------- */
 say('A4: the escape wheel with mass');
-const J=4.75e-9;   /* the escape wheel, its pinion and arbor about their axis, kg·m²: the drawn solid in steel (7.85), integrated on the mesh (invariants.py checks this against it; 4.72e-9 before the arbor was measured, 4 October 2026) */
+const J=4.80e-9;   /* the escape wheel, its pinion and arbor about their axis, kg·m²: the drawn solid in steel (7.85), integrated on the mesh (invariants.py checks this against it; 4.72e-9 before the arbor and pinion were measured, 4-5 October 2026) */
 const rI=6.32/2/1000,rE=13.16/2/1000,wB=A*4*Math.PI;   /* the impulse roller's radius (0.249 in), the wheel's (13.16 mm), the balance's speed through the middle of its swing */
 const chase=tq=>{const vJ=wB*rI,we=vJ/rE,a=tq/J,tc=we/a,phw=a*tc*tc/2,phb=wB*tc,ke=J*we*we/2;return{tc,phw,phb,ke};};
 const c9=chase(esc(0.9));
