@@ -1707,6 +1707,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The build book left out the box, the gimbals and the hairspring.** The maker's tools were given
+  the movement's meshes only, so the mounting box, the winding key, the gimbal ring, its straps and
+  pivots and the latch had no sheet; the hairspring, built only when it can be seen, had no geometry
+  when the book was made. book.py checked each section as paper, not what was missing. Keep: book.py
+  checks that every parts-list line on a part of the model is on some sheet (`R.springReady` builds the
+  hairspring for the maker). `ccf4075`
 - **Root copy of the model was stale.** It is refreshed from `dist/`, and the
   root build now does this. Keep: commit the regenerated root copies and `site/`
   with source changes. `a3b22fc`, `f591611`

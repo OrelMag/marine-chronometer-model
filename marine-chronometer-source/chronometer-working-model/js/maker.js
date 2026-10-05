@@ -8,11 +8,11 @@ const MAKER=(()=>{
   const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const mm=v=>A&&A.units()==='in'?(v/25.4).toFixed(3)+' in':v.toFixed(2)+' mm';
   /* densities (g/cm³) by the model's material: steel 7.85, brass 8.5, Invar 8.1, stainless 7.9, corundum 4.0, glass 2.5, mahogany 0.6, gold 17, silver 10.5 */
-  const DENS={steel:7.85,steelD:7.85,blued:7.85,brass:8.5,gilt:8.5,brassD:8.5,invar:8.1,ruby:4.0,glass:2.5,wood:0.6,gold:17,silver:10.5,nickel:8.9,chain:7.85,chain2:7.85};
+  const DENS={steel:7.85,steelD:7.85,blued:7.85,brass:8.5,gilt:8.5,brassD:8.5,invar:8.1,ruby:4.0,glass:2.5,wood:0.6,woodEdge:0.6,felt:0.3,fibre:1.3,packing:1.2,delrin:1.4,gold:17,silver:10.5,nickel:8.9,chain:7.85,chain2:7.85};
   let matName=null;
   const nameOf=m=>{if(!matName){matName=new Map();for(const[k,v]of Object.entries(A.M))if(v&&v.isMaterial)matName.set(v,k);}return matName.get(m)||'';};
   /* the part's meshes as built (the merged copies are drawing only: the pieces are still under the movement), visible or not, without the engravings */
-  const meshesOf=p=>A.meshes.filter(o=>(p.includes('.')?o.userData.pk===p:o.userData.part===p)&&!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position);
+  const meshesOf=p=>(A.R&&A.R.springReady&&A.R.springReady(),[...A.meshes,...(A.boxMeshes||[])]).filter(o=>(p.includes('.')?o.userData.pk===p:o.userData.part===p)&&!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position);
   const toMv=o=>{const m=new THREE.Matrix4().copy(A.mv.matrixWorld).invert();return m.multiply(o.matrixWorld);};
   /* each triangle of a mesh in the movement's frame (mm), instances included */
   function tris(o,f){const g=o.geometry,P=g.attributes.position,I=g.index,mats=[];const base=toMv(o);
@@ -116,11 +116,17 @@ const MAKER=(()=>{
   function oil(on){oilOn=on;$('#mkOil').setAttribute('aria-pressed',on?'true':'false');
     for(const o of A.meshes){const k=OILED[o.userData.part];if(!k)continue;if(on){const m=oilMat[k]||(oilMat[k]=new THREE.MeshStandardMaterial({color:OIL[k][0],roughness:0.5,metalness:0.2}));o.material=m;}else o.material=o.userData.mat0;}
     $('#mkRead').innerHTML=on?Object.values(OIL).map(([c,t])=>`<span style="display:inline-flex;gap:5px;align-items:center;margin-right:10px"><i style="width:10px;height:10px;border-radius:50%;background:#${c.toString(16).padStart(6,'0')}"></i>${t}</span>`).join('')+'<br>The escapement\'s working faces (the locking and impulse jewels, the trip spring) are not oiled.':'';A.wake();}
-  /* the build book: every card's sheet and drawing, printed alone */
+  /* the build book: every card's sheet and drawing, printed alone. A part with pieces (app.js PIECES) is an assembly: its card, its pieces named, its drawing as assembled,
+     then each piece to make with its own sheet and drawing (none but the pieces' carry its lines, so each line is on one sheet: tools/book.py); a piece marked nb, a variant
+     or another part's copy (the split balance, the winding key on the hands' square), is left out */
   function book(){let pr=document.getElementById('bookPrint');if(!pr){pr=document.createElement('div');pr.id='bookPrint';document.body.appendChild(pr);}
-    const parts=Object.keys(A.INFO).filter(p=>meshesOf(p).length);
+    const parts=Object.keys(A.INFO).filter(p=>!p.includes('.')&&meshesOf(p).length),PCE=A.PCE||{};
+    const sec=p=>{const q=A.PARTS[p]||{},pcs=(q.pcs||[]).map(c=>p+'.'+c.k).filter(k=>!PCE[k].nb&&meshesOf(k).length);
+      if(!pcs.length)return`<section class="bk"><h2>${esc(A.INFO[p][0])}</h2><p>${esc(A.INFO[p][1])}</p>${sheetHTML(p)}${drawingSVG(p,A.INFO[p][0])}</section>`;
+      return`<section class="bk asm"><h2>${esc(A.INFO[p][0])}</h2><p>${esc(A.INFO[p][1])}</p><p class="mkm">An assembly of ${pcs.length} pieces, each on its own sheet below: ${pcs.map(k=>esc(A.INFO[k][0])).join(', ')}. Its drawing as assembled.</p>${drawingSVG(p,A.INFO[p][0]+', assembled')}</section>`+
+        pcs.map(k=>`<section class="bk pc"><h2>${esc(A.INFO[k][0])}</h2><p class="mkm">Part of the ${esc(A.INFO[p][0].toLowerCase())}.</p><p>${esc(A.INFO[k][1])}</p>${sheetHTML(k)}${drawingSVG(k,A.INFO[k][0])}</section>`).join('');};
     pr.innerHTML=`<h1>The Hamilton Model 21: a build book</h1><p>Generated from the working model: every part card's lines of the manual's parts list (NAVSHIPS 250-624, Sec. XI), each line's fit as measured on the model, its material and treatment (the manual's where it names them, else watchmaking practice), and the part's drawing from the model's solids, in millimetres. What the model estimates is listed in its README's "Estimated, not from the manual"; the hairspring's and the escapement's design figures are in the essay and the README.</p>`+
-      parts.map(p=>`<section class="bk"><h2>${esc(A.INFO[p][0])}</h2><p>${esc(A.INFO[p][1])}</p>${sheetHTML(p)}${drawingSVG(p,A.INFO[p][0])}</section>`).join('');
+      parts.map(sec).join('');
     document.documentElement.classList.add('book-print');const done=()=>{document.documentElement.classList.remove('book-print');removeEventListener('afterprint',done);};addEventListener('afterprint',done);
     if(!navigator.webdriver)print();else done();}
   /* the model's numbers: the train, the fusee's profile, the escapement's cycle, the hairspring's design, the parts list with its fits and materials */
