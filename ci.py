@@ -67,7 +67,8 @@ STEPS=[('build',build,'quick'),
  ('escapement',lambda log:run(['node',TOOLS/'escapement.js'],ROOT,log),'quick'),
  ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),
  ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),
- ('physics',lambda log:run(['node',TOOLS/'physics.js'],ROOT,log),'quick'),   # the energy budget, the escape wheel's chase, temperature from the materials (under a second)
+ ('physics',lambda log:run(['node',TOOLS/'physics.js'],ROOT,log),'quick'),
+ ('tolerances',lambda log:run(['node',TOOLS/'tolerances.js'],ROOT,log),'quick'),   # how closely the springs the sources don't size must be made, and that the sheets say so (under a second)   # the energy budget, the escape wheel's chase, temperature from the materials (under a second)
  ('selfcontained',lambda log:run([PY,'selfcontained.py'],TOOLS,log),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),

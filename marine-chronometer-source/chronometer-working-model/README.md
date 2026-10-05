@@ -256,6 +256,7 @@ The mainspring's shape in its barrel is the strip's equilibrium, not a drawing (
 
 Phases B–D of `PLAN-self-contained.md`, in the page:
 
+- **Tolerances for what the sources don't size** (`tools/tolerances.js`, `tools/tolerances.json`; OPEN-QUESTIONS.md): the mainspring's, the detent spring's and the trip spring's sections are known to no source, so their sheets say how closely each must be made, from the model's escapement (`ESC.atK`: the swing and rate with the drive and the two springs' stiffness scaled). The balance keeps the manual's 1⅜–1½ turns (247.5–270°) for a mainspring within −5 % to +11 % of the drawn stiffness (0.411–0.434 mm thick at the drawn width and length), a detent spring up to about twice the drawn stiffness (0.098 mm; set its preload by Op. 78), a trip spring up to about 12 times (0.136 mm). A 0.375 mm mainspring, the packed coils' pitch on two movements, would swing it 213°: the manual's swing, with the model's train and balance, favours the parts list's 0.0165 in.
 - **The maker's sheet** of each part card (`MAKER.card`): its lines of the parts list (`js/makers.js`, from `bom.json`), each with the fit `bom.py` measured
   on the model (from `BOM.md`), its material, finish and heat treatment (the manual's where it names them: the Elinvar hairspring and trip spring, the
   beryllium-copper detent, the stainless rim on its Invar arm, the mahogany box; else watchmaking practice, marked as such), and the part's size, volume and

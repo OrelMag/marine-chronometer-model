@@ -32,6 +32,14 @@ The goal they are judged against: someone with only the site can make a Model 21
 
 **What would settle it.** A close side-on photograph of a Model 21 detent out of its movement with a scale beside it, or measured thicknesses; or the sources below.
 
+## Meanwhile: how closely they must be made
+
+`tools/tolerances.js` works out, from the model's own escapement, how far each of these can be off before the balance leaves the manual's running swing (1⅜-1½ turns, 247.5-270°), and the maker's sheets of the three lines (and so the build book) say so:
+
+- **The mainspring:** its stiffness E b t³/12 L within −5 % to +11 % of the drawn spring's: 0.411-0.434 mm thick at the drawn 13.55 width and 1,064 length, about 0.85-1.00 N·m fully wound. A 0.375 mm strip of the same length swings the balance only 213°: it runs, below the manual's figure. So the manual's swing, with the model's train and balance, favours the parts list's 0.0165 in over the coils' measured pitch (the balance's damping and the train's efficiency are estimated: physics.js gives their ranges).
+- **The detent spring:** up to about twice the drawn stiffness (0.098 mm thick; the drawn 0.079) the balance keeps 247.5°; there is no lower limit from its work. Its preload is set by Op. 78's test. Whether a much thinner spring returns the detent in time to lock the next tooth is not computed.
+- **The trip spring:** forgiving, up to about 12 times the drawn stiffness (0.136 mm; the drawn 0.06).
+
 ## The likeliest sources (both behind NAWCC membership)
 
 - Doug Sinclair, "From the Workshop: The Hamilton Series XXI Marine Chronometer", *NAWCC Bulletin* No. 365 (December 2006), p. 707: a teardown with about 25 photographs.
