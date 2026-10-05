@@ -302,7 +302,7 @@
    "parent": "42100A",
    "kind": "part",
    "part": "ring",
-   "fn": "Locks the case rear pivot screw.",
+   "fn": "Locks the case rear pivot screw, inside the ring (the top-view photograph).",
    "rel": [
     [
      "on",
@@ -339,11 +339,11 @@
    "parent": "42100A",
    "kind": "part",
    "part": "ring",
-   "fn": "Locks the case front pivot screw.",
+   "fn": "Locks the case front pivot screw, inside the ring (the top-view photograph shows the rear's so; no nut outside the strap at 6).",
    "rel": [
     [
      "on",
-     "42108"
+     "42106"
     ]
    ],
    "figs": "106"
@@ -746,7 +746,7 @@
    "parent": "42296",
    "kind": "part",
    "part": "bowl",
-   "fn": "On the case, facing the ring's slot; the latch lever's tip goes between its cheeks.",
+   "fn": "On the case, facing the ring's slot; the latch lever's tip goes into its window (KLUwI2UUCMQ 1:21.5-1:24.5).",
    "rel": [
     [
      "on",
@@ -764,12 +764,12 @@
    "parent": "42296",
    "kind": "part",
    "part": "bowl",
-   "fn": "Holds the keeper to the case.",
+   "fn": "Holds the keeper to the case, from outside through its plate into the case's wall.",
    "rel": [
     [
      "in",
-     "42101",
-     "embed"
+     "42113",
+     "clear"
     ],
     [
      "in",
@@ -778,7 +778,7 @@
     ],
     [
      "in",
-     "42113",
+     "42101",
      "embed"
     ]
    ],
