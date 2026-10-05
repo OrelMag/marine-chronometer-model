@@ -266,7 +266,7 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   with their heads, threads and lengths as drawn and, since Hamilton's threads are in none of the sources, the ISO 261 coarse metric thread nearest each (M1 × 0.25
   and so on) for a maker to cut. Its **STL**: its triangles in the movement's frame, mm.
 - **Making it** (the panel): **Measure** (two points on the model, their distance and its components), **Oil** (each part coloured by the oil or grease it takes, after Ops. 18–71: red oil the jewelled pivots, argon oil the bushed ones, grease the mainspring and maintaining work), **Build book** (every card's sheet and drawing,
-  printed alone: `#bookPrint`, `html.book-print`), **Data** (the train, `MOD`, `L`, the fusee's profile, the escapement's settings, figures and cycle,
+  printed alone: `#bookPrint`, `html.book-print`; the box and gimbals' parts with the movement's; a part with pieces as an assembly, its card and its drawing as assembled, then each piece to make on its own sheet, so each parts-list line is on one sheet; the split balance and the key on the hands' square, a variant and a copy, left out), **Data** (the train, `MOD`, `L`, the fusee's profile, the escapement's settings, figures and cycle,
   the hairspring's design and centreline, the balance's moment and pitches, the parts list), **STL** (every part shown), **Blender (.glb)** and **Blender rig (.py)** ("The model in Blender" below).
 - **The essay's workshop**: the tolerances the manual gives (end-shakes, roller fit and shake, horn and stop-button clearances, the detent spring's 0.770 g,
   the escapement's angles, the wedge pins, the mainspring's let-down, the rate before the weights); the oiling chart (Ops. 43–71, the three lubricants);
