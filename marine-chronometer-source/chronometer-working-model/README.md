@@ -877,7 +877,9 @@ every speed); the equation gives the amplitude and the rate.
   its silhouette's width traced every 8 px along the axis: the pivot 0.36 mm across (+/- 0.03; the polished pivot shows two dark edges round a bright highlight,
   the outer edges taken) for 0.65 mm, a concave cone to a shoulder 2.07 mm across 3.63 mm from the end, a seat 1.68 mm across up to the unlocking roller
   (4.7 mm from the end in the frame, 5.08 in the model, the seat drawn to the roller). Estimated: the upper end, drawn as the lower out to the body; the body's
-  r 0.45 between the seats (the rollers', hub's and collet's bores are sized to it); the jewel holes, r 0.19 round the pivots' 0.18 (0.01 side shake).
+  r 0.45 between the seats (the rollers', hub's and collet's bores are sized to it); the jewel holes, r 0.19 round the pivots' 0.18 (0.01 side shake). Between the hub's flange and the impulse roller the staff
+  is sheathed in the hub's brass sleeve, 3.24 mm across (34:12, measured against the roller), so the thin body shows only past the rollers. Estimated:
+  the hub's flange, a steel disc 4.4 across, where 34:12 shows a brass disc about 7 mm across under the sleeve (its part not settled).
   The escape upper jewel's hole is measured: its bridge held to the light (KLUwI2UUCMQ 10:14.5), the hole a white disc 36-44 px across in the stone's 446
   (the stone 1.96 mm at the cap window's scale, the model's 1.9), 0.17 +/- 0.02 mm. The pivots are Hamilton's figure for escape staffs, "about 7 thousandths of an inch" (0.178 mm; US 2,392,745, 1946), so the holes are
   drawn 0.19 (the measurement's top, 0.006 side shake), the lower jewel taken the same. The patent's Fig. 4 and claim 2 give the arbor's end form: the body,
