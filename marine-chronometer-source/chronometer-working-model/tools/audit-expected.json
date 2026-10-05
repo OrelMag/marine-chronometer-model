@@ -14,7 +14,7 @@
   "barrelBridge:Extrude | ratchet:Extrude | +-27.16": 1,
   "cock:Buffer | cock:Cylinder | +-37.96": 1,
   "cock:Buffer | cock:Cylinder | --38.26": 1,
-  "cock:Buffer | cock:Lathe | --37.96": 4,
+  "cock:Buffer | cock:Lathe | --37.96": 3,
   "cock:Lathe | cock:Cylinder | +-37.96": 1,
   "cock:Lathe | cock:Lathe | --37.96": 1,
   "det:Extrude | det:Extrude | --17.86": 1,
