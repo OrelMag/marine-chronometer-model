@@ -197,4 +197,8 @@ patent drawing. Those changes are small and sure.
   heads); `p3fit.py`'s fitted camera is the check to use, with each point at its height.
 - **Threads (next step 6): decided.** The sheets keep the drawn diameters and give the nearest ISO 261 thread to cut, since Hamilton's threads are in
   no source; drawing each screw at a standard thread would change sizes the photographs measured.
+- **Closed from the web and the frames (5 October 2026):** the balance staff traced whole on a bare staff (watchdoc.com); the hub's flange brass, 7.0
+  across (34:12); the fusee top's recess cut to r 5.5 (20:25; its depth drawn shallower than the 1.2-2.0 read, an estimate); the gimbal latch's head
+  raised 5.5 on a 7.1 mm post over the lever (Bonhams' photograph of this very movement in its box), its knob moved beside it. The locking arm stays
+  as it was (no source places it), its swing's fault recorded.
 
