@@ -17,7 +17,6 @@
   "cock:Buffer | cock:Lathe | --37.96": 4,
   "cock:Lathe | cock:Cylinder | +-37.96": 1,
   "cock:Lathe | cock:Lathe | --37.96": 1,
-  "det:Extrude | det:Extrude | +-17.46": 1,
   "det:Extrude | det:Extrude | --17.86": 1,
   "escBridge:Cylinder | escBridge:Lathe | +-23.46": 1,
   "escBridge:Extrude | escBridge:Cylinder | +-23.46": 1,
