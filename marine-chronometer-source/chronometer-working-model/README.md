@@ -239,9 +239,14 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   adjusting the escapement (Ops. 77–97 beside the model's live figures); the order of work (Sec. VIII's reassembly, the mainspring made safe first);
   materials, hardening and tools, and the chronometer that can be made without Elinvar and Invar (a steel spring on a split bimetallic balance).
 - **Phase A's physics** (`tools/physics.js`): the fusee asks the mainspring (0.419 mm, the parts list; 14.8 wide; 1,064 long) for 1.02 N·m fully wound,
-  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 68–106 µN·m at the escape wheel, whose inertia (4.72e-9 kg·m², measured on its
-  solid) lets it catch the impulse jewel within 5° of the swing; the balance holds 255° if its Q is 171–273, so `TF` (its free swing's decay) is 34 s,
-  derived (it was 25, estimated). Op. 78's preload (0.770 g on the locking jewel) over the 0.20 mm lift at release puts the detent spring's share of the
+  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 68–106 µN·m at the escape wheel, whose inertia (4.75e-9 kg·m², measured on its
+  solid; `invariants.py` checks the two agree) lets it catch the impulse jewel within 5° of the swing; the balance holds 255° if its Q is 171–274, so `TF` (its free swing's decay) is 34 s,
+  derived (it was 25, estimated). **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
+  run dry), 0.91–0.97, at the top of the range assumed; the balance's damping from the air on its screws, nuts and arm (Cd 0.8–1.4 at Re about 180), its
+  staff's flat end turning on the endstone (the end flat on the 7:08 trace; domed it would lose 60 times less), the spring's residual side force and its own
+  internal damping (Q 1,000–5,000): Q 202–390, a free decay of 32–62 s. With the mainspring's own coil friction and set (5–15 %, left out of its torque) the
+  budget needs 169–243, so the two meet and the model's 34 s (Q 214) is inside both: `TF` is now supported by the friction and the air as well as by the
+  budget. Without the flat end the balance would lose too little and swing far past the manual's 1½ turns. Op. 78's preload (0.770 g on the locking jewel) over the 0.20 mm lift at release puts the detent spring's share of the
   balance's work at 4.4–7.1 %, so `fD` is 0.057 (it was 0.03). The escapement's own error is then -1.5 s a day, absorbed by the timing as before, and the
   hairspring isochronism term that cancels its isochronism at 90 % of the torque -0.13 (`invariants.py`). Temperature: a steel spring on a steel balance
   loses 10.3 s a day a °C; the Model 21's Elinvar spring must be treated to -22 to 10 × 10⁻⁶ a °C to cancel its balance; the split variant's rim gives back

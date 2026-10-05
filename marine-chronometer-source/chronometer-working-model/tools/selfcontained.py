@@ -34,7 +34,7 @@ missing=sorted(none-OK_NONE)
 chk(not missing,f'every part card has its parts-list lines in the maker\'s sheets ({len(cards)} cards; without lines and not expected: {", ".join(missing) or "none"})')
 idx=(MC/'index.html').read_text(encoding='utf-8')
 for k in ['sun','moon','stars','hand','lunar','venus','mars','jupiter','saturn']:chk(f'data-bound="{k}"' in idx,f'the essay states the almanac\'s {k} accuracy (checked by tools/almanac.js)')
-for k in ['Mup','sUp','esc','chase','Q','steelRate','comp','eNeed']:chk(f'data-phys="{k}"' in idx,f'the essay quotes the physics\' {k} (checked by tools/physics.js)')
+for k in ['Mup','sUp','esc','chase','Q','steelRate','comp','eNeed','stage','Qparts','TFparts']:chk(f'data-phys="{k}"' in idx,f'the essay quotes the physics\' {k} (checked by tools/physics.js)')
 for k in ['stiff','latBig','iso','slope']:chk(f'data-hs="{k}"' in idx,f'the essay quotes the hairspring\'s {k} at large swings (checked by tools/hairspring.js)')
 for sel,what in [('id="mkMeasure"','the measuring tool'),('id="mkBook"','the build book'),('id="mkData"','the model\'s data'),('id="mkSTL"','the movement as STL'),('id="eAlm"','the almanac\'s pages'),
                  ('class="print"','the almanac\'s print'),('id="eWork"','the workbook'),('id="bookSun"','the rate book by equal altitudes'),('id="bookMoon"','the rate book by a lunar'),

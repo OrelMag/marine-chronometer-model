@@ -49,7 +49,7 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
     mv.traverse(o=>{if(!o.isMesh||o.userData.part!=='escW')return;const g=o.geometry,P=g.attributes.position,I=g.index,m=inv.clone().multiply(o.matrixWorld),n=I?I.count:P.count;
       for(let k=0;k<n;k+=3){a.fromBufferAttribute(P,I?I.getX(k):k).applyMatrix4(m);b.fromBufferAttribute(P,I?I.getX(k+1):k+1).applyMatrix4(m);c.fromBufferAttribute(P,I?I.getX(k+2):k+2).applyMatrix4(m);
         for(const q of[a,b,c]){q.x-=L.E[0];q.z-=L.E[1];}const v=a.dot(b.clone().cross(c))/6;J+=v*(a.x*a.x+b.x*b.x+c.x*c.x+a.x*b.x+a.x*c.x+b.x*c.x+a.z*a.z+b.z*b.z+c.z*c.z+a.z*b.z+a.z*c.z+b.z*c.z)/10;}});
-    chk('escape wheel: its moment of inertia on the solid, steel (tools/physics.js takes 4.72e-9 kg m2)',J*7.85e-12,4.72e-9,0.15e-9,'kg m2'); }
+    chk('escape wheel: its moment of inertia on the solid, steel (tools/physics.js takes %PJ% kg m2)',J*7.85e-12,%PJ%,0.15e-9,'kg m2'); }
   chk('timing weights, a full turn out (manual: 40 s/day)',-rate(1,0),40,2,'s/day');chk('vernier weights, a full turn out (manual: 2.8 s/day)',-rate(0,1),2.8,0.15,'s/day');
   /* Table IV (p. 74): R.T4 holds its "7 to n" figures fitted to all its rows; every row printed is the difference of two of them, holes 3-6 mirroring 11-8 */
   const HH=[0.120,0.100,0.090,0.080,0.070,0.060,0.050,0.040],T4R=[[12,11,[-1.69,-1.41,-1.10,-0.79,-0.66,-0.53,-0.32,-0.12]],[12,8,[-5.89,-4.91,-4.37,-3.82,-3.46,-3.09,-2.46,-1.89]],
@@ -81,6 +81,8 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   { const t=window.__test();chk('performance test: regulation (limit 1.55)',t.reg,0,0.2,'s/day');chk('performance test: 90 against 72.5 F (card 0.08, limit 0.75)',t.t1,0.07,0.015,'s/day');
     chk('performance test: 72.5 against 55 F (card 0.06, limit 0.75)',t.t2,0.07,0.015,'s/day');chk('performance test: 90 against 55 F (card 0.02, limit 1.20)',t.t3,0,0.03,'s/day');chk('performance test: isochronism (card 0.00, limit 0.50)',t.iso,0,0.05,'s'); }
   R.timing(0,0);return out;})()"""
+import re as _re
+JS=JS.replace('%PJ%',_re.search(r'const J=([\d.e-]+)',(HERE/'physics.js').read_text(encoding='utf-8')).group(1))   # the escape wheel's inertia as tools/physics.js takes it: the check holds the two together
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
