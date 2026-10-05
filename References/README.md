@@ -47,6 +47,8 @@ chronometer boxes; blank forms may be in the National Archives, Record Group 19
 (`books.google.com/books?id=hiE6oREONHEC`, `?id=z8gE8mun6OMC`).
 
 Web photographs consulted (all rights reserved, so cited, not copied here):
+- Renaissance Antiques, a Hamilton 21 case side-on (`www.renaissanceantiques.com/product/rare-american-hamilton-21-marine-chronometer-master-clock/`, image `antique-clock-LPEC109-4.jpg`, 900 px): the case's profile (band, step, wall, chamfer, base), traced for `box.js` (5 October 2026).
+- Leland Little, two Model 21 lots (`www.lelandlittle.com/items/332339/...` and `.../items/239771/...`; full-size images under `/images/inventory/original/`, up to 5,120 px): the empty case from below and inside, its brackets and keeper, the gimbal ring in the box, the key block. Fontaines (`www.fontainesauction.com/auction-lot/hamilton-watch-co.-model-21-marine-chronometer_2C7482D97F`): the case in its gimbal ring out of the box.
 - watchdoc.com, "Hamilton Model 21 WW2 Ship Chronometer Balance Staff" (`www.watchdoc.com/products/hamilton-ww2-ship-chronometer-balance-staff-for-model-21`, image `Hamilton_21_Balance_Staff.jpg`, 748 px): a bare Model 21 balance staff side-on, the only whole staff found; the model's staff is traced on it (5 October 2026).
 - omegaforums.net, "Incoming Hamilton Model 21 chronometer" (thread 78172): side views of the train between the plates (the third wheel lowest with its pinion above it, the fourth pinion long under its wheel; the train-blocking screw's dog point at the fourth wheel), and the train-blocking screw's head circled on the bridge.
 - delaneyantiqueclocks.com, Hamilton Model 21 No. 8854 (1941): the dial (sub-dial centres about 0.47-0.51 of the dial's radius) and a side view of the movement.
