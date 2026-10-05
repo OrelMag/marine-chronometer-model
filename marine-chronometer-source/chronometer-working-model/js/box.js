@@ -65,10 +65,13 @@ function buildBox(M){
   /* the straps on the ring (Fig. 106): curved pieces of band on its outside, each held by two screws into the band (a turned band can't be holed across: drawn inside it) */
   const strap=(ax,s)=>{const f=ax==='x'?s*Math.PI/2:(s>0?0:Math.PI),w=25/RO,pr=[V2(RO,-8),V2(RO+1.2,-8),V2(RO+1.2,8),V2(RO,8),V2(RO,-8)];
     hn(mesh(ring,closeGeo(new THREE.LatheGeometry(pr,24,f-w,2*w)),M.brass2),ax==='x'?'42107':'42108');
-    for(const t of[-16.3,16.3]){const g=new THREE.Group();g.rotation.y=t/RO;ring.add(g);hn(sHead(g,ax,s,RO+1.2,3.75,4.8,-4,0),ax==='x'?'42116.gs':'42116.cs');}};   /* each screw square to the band, where it lies: cheese heads
+    for(const t of[-16.3,16.3]){const g=new THREE.Group();g.rotation.y=t/RO;ring.add(g);hn(sHead(g,ax,s,RO+1.2,ax==='x'?3.3:3.75,ax==='x'?2.0:4.8,-4,0),ax==='x'?'42116.gs':'42116.cs');}};   /* each screw square to the band, where it lies: cheese heads
      7.3-7.7 across, standing 4.8 out, 16.3 either side of the pivot, the strap about 50 long (the top-view photograph of 2E11795, at the ring's 15.65 px/mm: the case strap's; the gimbal
      strap's screws about 30 apart there, its sizes not read; drawn as the case strap's); the video's unit (N5892) gives 7.5-8.8 across and 11-13 apart (0:36.33, 0:47.5, rough); the photograph's
-     straps are straight bars, drawn as pieces of band. Heads r 1.3, 0.7 tall, 7.5 either side, the strap 22 long, until 5 October 2026 */
+     straps are straight bars, drawn as pieces of band. Heads r 1.3, 0.7 tall, 7.5 either side, the strap 22 long, until 5 October 2026. The gimbal strap's (at 3) measured on TN24H's box from straight above (3SFDplGq6vs 4:21, 1080 px: scaled by the box's
+     outside, 678 px for its 190-197 mm, 3.44-3.57 px/mm at its rim, and about 4 % for the strap's depth): heads 22.5 px across (r 3.2-3.4), standing 6.5 px off the strap
+     (1.9 +-0.6), 115 px apart (32-35, the model's 32.6 kept), the strap 176 px long (49-51); drawn r 3.3 and 2.0 out (r 3.75 and 4.8, the case strap's, until 5 October 2026);
+     about +-10 % with the box's size */
   /* a boss on the ring or a strap, bored for its pivot bushing (42214) or its pivot screw's thread */
   const boss=(ax,s,r0,r1,rad,bore)=>{const m=mesh(ring,ringGeo(rad,bore,r1-r0),M.brass2,0,0,0);if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+r1)/2;}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+r1)/2;}return m;};
   const bush=(ax,s,r0,r1,id)=>{const m=hn(mesh(ring,ringGeo(1.4,0.82,r1-r0),M.steel,0,0,0),id);if(ax==='x'){m.rotation.z=Math.PI/2;m.position.x=s*(r0+r1)/2;}else{m.rotation.x=Math.PI/2;m.position.z=s*(r0+r1)/2;}};
