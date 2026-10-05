@@ -4,6 +4,13 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.15.00 · 2026-10-05
+- The motion work under the dial, the balance's rollers and hub, and the escape and third wheels at their measured sizes
+- The barrel's cap, the fusee's winding ratchet and its pawls, the cock's tall screw and the train bridge's bushings with their oil sinks as a real movement has them
+- The balance cap and the train-blocking screw as the manual draws them; the dust seal's packing rings in fibre
+- The case's profile and its shield plate as on a real case, the plate's stop screw turning with it
+- The gimbals' large pivot screws and washers, the case pivots' lock nuts inside the ring, the latch farther forward and its keeper a windowed block
+
 ## 2.14.01 · 2026-10-05
 - The hairspring stud's screw at its measured size, in a smaller counterbore on the balance cock
 
