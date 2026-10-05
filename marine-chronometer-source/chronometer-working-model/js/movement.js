@@ -484,7 +484,7 @@ function buildMovement(M){
                pillar stands in the open notch. Its keyhole opening frees the balance's staff and rollers and the escape arbor ---------- */
   const tb=part('trainBridge',-62);
   const TBpoly=clipPoly(crescent(BR_R,TB_CUT,TB_CR,TB_EDGE),p=>{const[a,b]=TB_END,c=(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);return Math.max(-c,p[0]+30);});   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110); measured on the video, 22.56 mm out, it is where the barrel stands */
-  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.2,1],[...L.T,1,1],{pts:TB_KEY},[...SPv,0.52,1],[...SPh,0.25,1],
+  R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.95,1],[...L.T,1.9,1],{pts:TB_KEY},[...SPv,0.52,1],[...SPh,0.25,1],
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),[...S.tb[2],TB_CB,1],hT(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),[...S.blk,1.4,1],...S.dpin.map(q=>[...q,0.53,1]),hT(...S.cock,2.8,0.8),...S.ckp.map(q=>[...q,0.42,1]),
     hT(...S.arm,ARM_S),[...S.tBlock,0.9,1],[...S.armPin,0.3,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');
   for(const f of TB_SEAT){const ins=([x,z])=>{let c=false;for(let i=0,j=f.length-1;i<f.length;j=i++){const[a,b]=f[i],[e,d]=f[j];if((b>z)!==(d>z)&&x<(e-a)*(z-b)/(d-b)+a)c=!c;}return c;};   /* each seat's floor, with its screw's tapped hole and its pin's hole */
@@ -501,7 +501,10 @@ function buildMovement(M){
      Op. 81, with the train side up; KLUwI2UUCMQ 10:45, 11:08). Nothing stands over it: the barrel bridge's horn, which covered it before the photographed group's turn, is clear */
   hn(screw(tb,...S.blk,TB_T+0.5,1.0,0.5,3.1-0.5+2.4),'42056.blk');hn(mesh(tb,ringGeo(1.39,hC(0,0,1.0)[2],3.1-0.5),M.plate,S.blk[0],TB_T+0.5+(3.1-0.5)/2,S.blk[1]),'42062',{sub:1});   /* its head flush in a counterbore r 1.4 (KLUwI2UUCMQ 10:46, the screwdriver on it: the head about r 1.0, the counterbore 1.4, against a pillar screw's head, r 2.77, in the same frame; +-0.15; its depth, the head's 0.5, estimated); proud, r 0.9, until 4 October 2026. The floor round the shank */
   /* centre and third upper bushings in the train bridge (42166, 42167); they lie in the opening round the balance, so they can be oiled with the barrel bridge on (Sec. VIII, Op. 46) */
-  hn(bushR(tb,...L.C,TB_T-0.1,TB_U,1.2,0.52),'42166');hn(bushR(tb,...L.T,TB_T-0.1,TB_U,1.0,0.32),'42167');   /* bored for the pivots (r 0.5, 0.3), 0.02 side shake */
+  /* their outsides r 1.95 and 1.9 and their oil sinks, polished cones out to r 1.0-1.15 (KLUwI2UUCMQ 23:30 and 13:44 through the anchored homographies, the rim r 40.5: circles fitted on
+     rays, 1.91 and 1.90 for the centre's, 1.80 and 1.95-2.00 for the third's; gilt brass); r 1.2 and 1.0, plain, until 5 October 2026. The sink's angle (90 deg) and how far they stand proud estimated */
+  const bushO=(x,z,ro,ri,rs)=>{const y1=TB_T-0.1,y2=TB_U,P=(r,y)=>new THREE.Vector2(r,y),pr=[P(ri,y2),P(ro,y2),P(ro,y1),P(rs,y1),P(ri,y1+(rs-ri)),P(ri,y2)].reverse();return mesh(tb,new THREE.LatheGeometry(pr,48),M.brass2,x,0,z);};
+  hn(bushO(...L.C,1.95,0.52,1.08),'42166');hn(bushO(...L.T,1.9,0.32,1.08),'42167');   /* bored for the pivots (r 0.5, 0.3), 0.02 side shake */
   /* balance wheel locking arm (42299, Fig. 9; fitted from 1947, Bureau of Ships sketch 023263): a curved arm on the train bridge, turning on its shouldered screw (37204) and
      washer (42251) outside the balance's sweep. Locked, the finger at its end stands on the counterclockwise side of a timing weight, which the hairspring holds lightly
      against it, and the vernier's screw outside the rim, 15 deg round (hole 2), stops the balance the other way ("place the locking arm over the timing weight", Sec. X); unlocked, it lies turned out

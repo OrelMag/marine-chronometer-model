@@ -84,13 +84,13 @@
   "trainBridge:Extrude | barrelBridge:Extrude | --23.76": 2,
   "trainBridge:Extrude | cock:Buffer | +-23.76": 1,
   "trainBridge:Extrude | cock:Cylinder | --23.76": 2,
-  "trainBridge:Extrude | cw:Lathe | --23.86": 1,
   "trainBridge:Extrude | lowerBridge:Extrude | --20.66": 2,
-  "trainBridge:Extrude | trainBridge:Extrude | +-20.66": 2,
+  "trainBridge:Extrude | trainBridge:Lathe | +-20.66": 2,
   "trainBridge:Extrude | trainBridge:Lathe | --23.76": 2,
-  "trainBridge:Extrude | tw:Lathe | --23.86": 1,
   "trainBridge:Lathe | barrelBridge:Extrude | +-23.76": 2,
-  "trainBridge:Lathe | barrelBridge:Extrude | --23.76": 2
+  "trainBridge:Lathe | barrelBridge:Extrude | --23.76": 2,
+  "trainBridge:Lathe | cw:Lathe | --23.86": 1,
+  "trainBridge:Lathe | tw:Lathe | --23.86": 1
  },
  "box": {
   "bowl:Extrude | bowl:Cylinder | +-62.80": 1,
