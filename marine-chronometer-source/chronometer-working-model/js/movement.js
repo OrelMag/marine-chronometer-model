@@ -1452,9 +1452,11 @@ function makeFusee(M,c){
       const nl=rB-(c.Rb-0.1);hkN.position.copy(pe).addScaledVector(ub,-nl/2);hkN.quaternion.setFromUnitVectors(Y,ub);hkN.scale.set(1,nl/0.3,1); }
   }
   /* the mainspring's turns: Tup at full wind (where the stop-bar stops the key), Tdown = Tup less the barrel's IN turns at run down, and the set-up, what it is
-     still wound past its slack (T0, the turns at which the held spring pulls nothing, solved: MSHAPE). Its outer end (theta = TAU T in mainspringGeo) 0.4 mm past
-     the pin, so turning it by rot puts the end there at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
-  const IN=Ib(N),MD=msStates(),y0=c.bT+0.9,y1=c.bB-0.8,ym=(y0+y1)/2,e0=0.6/MSPRING.ra,e1=e0+1.06/MSPRING.ra,MS={Tup:Math.min(MD.Thi,MD.T0+0.37+IN),y0,y1,ey:[e0,e1,ym-1.3,ym+1.3]};   /* fully wound: the set-up (0.37 turn, estimated) and the chain's barrel turns past the spring's slack */
+     still wound past its slack (T0, the turns at which the held spring pulls nothing, solved: MSHAPE). The set-up is where the solved spring's pull falls over the
+     chain's IN turns as the fusee's measured profile evens out, rmin / rmax: a fusee is cut for its spring. Its outer end (theta = TAU T in mainspringGeo) 0.4 mm
+     past the pin, so turning it by rot puts the end there at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
+  const IN=Ib(N),MD=msStates(),rho0=c.rmin/c.rmax;let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+IN)<rho0)ta=m;else tb=m;}
+  const y0=c.bT+0.9,y1=c.bB-0.8,ym=(y0+y1)/2,e0=0.6/MSPRING.ra,e1=e0+1.06/MSPRING.ra,MS={Tup:ta+IN,y0,y1,ey:[e0,e1,ym-1.3,ym+1.3]};   /* fully wound: the set-up and the chain's barrel turns past the spring's slack */
   MS.Tdown=MS.Tup-IN;MS.setup=MS.Tdown-MD.T0;MS.rot=TAU*MS.Tup+Math.PI/2-PIN-0.4/(MSPRING.Rw-MSPRING.t/2);MS.hookA=(e0+e1)/2-MS.rot;ms.rotation.y=MS.rot;
   /* the spring's pull (illustrative): the profile evens out exactly a pull falling in step with the barrel's turns, from 1 fully wound to rmin/rmax run down (pullB's first
      factor, at x of the barrel's turns let down); a real spring in its barrel rises more steeply than that near full wind, where its coils crowd the arbor, and falls off more

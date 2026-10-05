@@ -328,6 +328,8 @@ function msStates(){if(MSD)return MSD;const u16=b=>{const s=atob(b),a=new Uint16
   return MSD={n,s,st,T0:MSHAPE.T0,Tlo:MSHAPE.T[0],Thi:MSHAPE.T[MSHAPE.T.length-1]};}
 function msShape(T){const D=msStates(),st=D.st;let k=0;while(k<st.length-2&&st[k+1].T<=T)k++;const A=st[k],B=st[k+1],f=clamp((T-A.T)/(B.T-A.T),0,1),r=new Float64Array(D.n),th=new Float64Array(D.n);
   for(let i=0;i<D.n;i++){r[i]=lerp(A.r[i],B.r[i],f);th[i]=lerp(A.th[i],B.th[i],f);}return{r,th};}
+/* msPull(T): the solved spring's pull at T turns against its most (MSHAPE.pull, the energy's slope), between the states */
+function msPull(T){const P=MSHAPE.pull,X=MSHAPE.T;let k=0;while(k<X.length-2&&X[k+1]<=T)k++;return lerp(P[k],P[k+1],clamp((T-X[k])/(X[k+1]-X[k]),0,1));}
 /* the solid for T turns, between y0 and y1: its centre line r(theta) from msShape, theta rising from the inner end. An eye through the strip near the inner end
    (ey: [theta0, theta1, yLo, yHi]) takes the arbor's hook. Faces: outer and inner (in three bands, the middle one open over the eye), top, bottom, the eye's
    floor, roof and ends, the strip's ends */

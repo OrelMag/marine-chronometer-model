@@ -29,7 +29,7 @@ torch.set_default_dtype(torch.float64)
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent
 t=0.419;gap=0.01;p=t+gap;ra=1.8;Rw=17.6-0.46;L=1064.0;a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 17.6 less its wall and the brace; the core r 1.8
 HOLD=1.0   # rad: the inner end on the core (the eye, 0.6-1.66 mm from the end on r 1.8: MS.ey in movement.js)
-M=48;STEP=0.25;TLO=12.5;THI=18.25   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter)
+M=48;STEP=0.25;TLO=12.5;THI=19.75   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter)
 # the free spring (KLUwI2UUCMQ 32:18): its turns' radii, px along the horizontal through its centre, innermost first
 FREE_PX=[97,185,250,328,405,502,632,750]
 rk=np.array(FREE_PX,float);rk*=L/(2*math.pi*rk.sum())
@@ -105,6 +105,8 @@ def write(d):
     err=max(abs(rebuild(g,rs[k])[-1]-2*math.pi*st[k]['T']) for k in range(len(st)))
     enc=lambda a,u:base64.b64encode(np.round(np.asarray(a)/u).astype('<u2').tobytes()).decode()
     T=[x['T'] for x in st];E=[x['E'] for x in st];tq=np.gradient(E,T)
+    Ta=np.array(T);far=Ta>=d['T0']+0.5;q=np.polyder(np.polyfit(Ta[far],np.array(E)[far],4));tq[far]=np.polyval(q,Ta[far])   # the slope smoothed (a quartic through the
+    # energies from half a turn past the slack: each state's own is good to about 1e-3, so plain differences scatter the pull by 3 %); steeper below, as differenced
     js=('/* mainspring.js: the mainspring\'s shape in its barrel over the wind, solved by tools/mainspring.py (its docstring: the strip\'s least bending energy from the\n'
         '   free spring\'s natural curve, measured on C Spinner\'s video 32:18, its coils pressing on each other, the inner end on the arbor\'s hook, the outer along the brace).\n'
         '   Generated: run python tools/mainspring.py, not edited. T: turns from the inner end to the outer, a state every step; s: the grid along the strip (mm, in\n'
