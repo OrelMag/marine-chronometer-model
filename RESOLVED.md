@@ -1730,7 +1730,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   the part's rest, keyed where the clip is and interpolated straight; for a part turning about its own origin, off its parent's
   (the barrel, 18.8 mm from the fusee group's), the change's location cuts the chord between keys, 0.03 mm in at mid-span of
   Run down's 6.7 deg keys, past `blender_check.py`'s 0.02 (shown when the barrel was measured larger and its keys moved). Each
-  span is now keyed in four (0.002 mm). Keep: after changing `rig.py`, run `tools/rigpy.py` and `blender_check.py`. `HASH`
+  span is now keyed in four (0.002 mm). Keep: after changing `rig.py`, run `tools/rigpy.py` and `blender_check.py`. `ffe9ad6`
 - **The build book left out the box, the gimbals and the hairspring.** The maker's tools were given
   the movement's meshes only, so the mounting box, the winding key, the gimbal ring, its straps and
   pivots and the latch had no sheet; the hairspring, built only when it can be seen, had no geometry
