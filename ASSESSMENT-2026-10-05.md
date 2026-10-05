@@ -192,3 +192,9 @@ patent drawing. Those changes are small and sure.
 - **The stud bar (next step 4), done; the fusee top's recess, still open.** The bar 0.85 thick and its clamp's 0.6 drop, both on 6:50.0, put
   the hairspring's height at 6.4 (pitch 0.533, inside the coils' 0.52-0.56). The recess's depth can't be read side-on (20:00: it lies inside
   the top), so it waits on an oblique view of its floor.
+- **`p3map.json` (next step 5): confirmed lost, not retraced.** Screw heads found automatically (31 circles) fit at best 5 of its 8 screws by chance, and
+  the map was committed a day before the photograph: it was traced on another copy. Its names don't say enough to trace them again, so closing it
+  needs the original image (`chronometer_mech_1.jpg`) or a refit of the photograph-placed parts.
+- **Threads (next step 6): decided.** The sheets keep the drawn diameters and give the nearest ISO 261 thread to cut, since Hamilton's threads are in
+  no source; drawing each screw at a standard thread would change sizes the photographs measured.
+
