@@ -183,7 +183,7 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
 ## The hairspring, designed
 
 `HSPR` (`shared/hairspring.js`, checked by `tools/hairspring.js` and `invariants.py`) designs the spring a maker would wind, and the model draws it
-(`R.hsDesign`, `R.spPath`, `ribbonGeo` in `core.js`), from what the model measures: the coil (r 5.1, 12 turns, 6.7 tall), the stud's clamp (its step
+(`R.hsDesign`, `R.spPath`, `ribbonGeo` in `core.js`), from what the model measures: the coil (r 5.1, 12 turns, 6.4 tall: the stud bar and its clamp measured at 6:50.0), the stud's clamp (its step
 3.03 from the staff, the stud's bar 54.8° off the clamp's radius) and the collet's end (3.2).
 
 - **The stiffness** the balance needs: k = I (2π/T)², with Table II's I (578.5 g·mm²) and T 0.5 s: 91.4 µN·m a radian.
@@ -242,9 +242,14 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   adjusting the escapement (Ops. 77–97 beside the model's live figures); the order of work (Sec. VIII's reassembly, the mainspring made safe first);
   materials, hardening and tools, and the chronometer that can be made without Elinvar and Invar (a steel spring on a split bimetallic balance).
 - **Phase A's physics** (`tools/physics.js`): the fusee asks the mainspring (0.419 mm, the parts list; 14.8 wide; 1,064 long) for 1.02 N·m fully wound,
-  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 68–106 µN·m at the escape wheel, whose inertia (4.72e-9 kg·m², measured on its
-  solid) lets it catch the impulse jewel within 5° of the swing; the balance holds 255° if its Q is 171–273, so `TF` (its free swing's decay) is 34 s,
-  derived (it was 25, estimated). Op. 78's preload (0.770 g on the locking jewel) over the 0.20 mm lift at release puts the detent spring's share of the
+  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 68–106 µN·m at the escape wheel, whose inertia (4.80e-9 kg·m², measured on its
+  solid; `invariants.py` checks the two agree) lets it catch the impulse jewel within 5° of the swing; the balance holds 255° if its Q is 171–274, so `TF` (its free swing's decay) is 34 s,
+  derived (it was 25, estimated). **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
+  run dry), 0.91–0.97, at the top of the range assumed; the balance's damping from the air on its screws, nuts and arm (Cd 0.8–1.4 at Re about 180), its
+  staff's flat end turning on the endstone (the end flat on the 7:08 trace; domed it would lose 60 times less), the spring's residual side force and its own
+  internal damping (Q 1,000–5,000): Q 202–390, a free decay of 32–62 s. With the mainspring's own coil friction and set (5–15 %, left out of its torque) the
+  budget needs 169–243, so the two meet and the model's 34 s (Q 214) is inside both: `TF` is now supported by the friction and the air as well as by the
+  budget. Without the flat end the balance would lose too little and swing far past the manual's 1½ turns. Op. 78's preload (0.770 g on the locking jewel) over the 0.20 mm lift at release puts the detent spring's share of the
   balance's work at 4.4–7.1 %, so `fD` is 0.057 (it was 0.03). The escapement's own error is then -1.5 s a day, absorbed by the timing as before, and the
   hairspring isochronism term that cancels its isochronism at 90 % of the torque -0.13 (`invariants.py`). Temperature: a steel spring on a steel balance
   loses 10.3 s a day a °C; the Model 21's Elinvar spring must be treated to -22 to 10 × 10⁻⁶ a °C to cancel its balance; the split variant's rim gives back
@@ -872,7 +877,9 @@ every speed); the equation gives the amplitude and the rate.
   its silhouette's width traced every 8 px along the axis: the pivot 0.36 mm across (+/- 0.03; the polished pivot shows two dark edges round a bright highlight,
   the outer edges taken) for 0.65 mm, a concave cone to a shoulder 2.07 mm across 3.63 mm from the end, a seat 1.68 mm across up to the unlocking roller
   (4.7 mm from the end in the frame, 5.08 in the model, the seat drawn to the roller). Estimated: the upper end, drawn as the lower out to the body; the body's
-  r 0.45 between the seats (the rollers', hub's and collet's bores are sized to it); the jewel holes, r 0.19 round the pivots' 0.18 (0.01 side shake).
+  r 0.45 between the seats (the rollers', hub's and collet's bores are sized to it); the jewel holes, r 0.19 round the pivots' 0.18 (0.01 side shake). Between the hub's flange and the impulse roller the staff
+  is sheathed in the hub's brass sleeve, 3.24 mm across (34:12, measured against the roller), so the thin body shows only past the rollers. Estimated:
+  the hub's flange, a steel disc 4.4 across, where 34:12 shows a brass disc about 7 mm across under the sleeve (its part not settled).
   The escape upper jewel's hole is measured: its bridge held to the light (KLUwI2UUCMQ 10:14.5), the hole a white disc 36-44 px across in the stone's 446
   (the stone 1.96 mm at the cap window's scale, the model's 1.9), 0.17 +/- 0.02 mm. The pivots are Hamilton's figure for escape staffs, "about 7 thousandths of an inch" (0.178 mm; US 2,392,745, 1946), so the holes are
   drawn 0.19 (the measurement's top, 0.006 side shake), the lower jewel taken the same. The patent's Fig. 4 and claim 2 give the arbor's end form: the body,

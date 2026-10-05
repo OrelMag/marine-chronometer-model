@@ -1779,6 +1779,13 @@ An arbor needs pivots and shoulders; a stone its seat.
   in printed millimetres; a line shows the other side of the fits that name
   it, or says it isn't measured. Keep: a drawing for paper states its scale
   and prints at it; `book.py` (in `ci.py`) passes. `390218e`
+- **The endshake check could miss a pivot's end.** `bom-check.js` measured a
+  part's free travel along its axis from a sample of 6,000 of its vertices;
+  when the balance hub gained its sleeve, the sample skipped the staff's lower
+  pivot end, and the travel toward the dial read 0.093 mm to the hairspring
+  instead of 0.025 to the endstone. Now it always takes the 3,000 vertices
+  furthest along each way, and a sample of the rest. Keep: a clearance along an
+  axis is measured from the extreme vertices along it. `746f25a`
 
 ## Essay
 
