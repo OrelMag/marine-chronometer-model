@@ -1726,6 +1726,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The mainspring's maker's sheet measured only its anchor pin** (0.5 × 0.6 × 0.65 mm): its coils
+  are built only when they can be seen, so the sheet, drawing and book had none. `R.springReady`
+  builds it fully wound for the maker, as it does the hairspring. `7848915`
 - **The Blender rig put the barrel 0.03 mm off.** `rig.py`'s `deltas()` turns each clip into the change from
   the part's rest, keyed where the clip is and interpolated straight; for a part turning about its own origin, off its parent's
   (the barrel, 18.8 mm from the fusee group's), the change's location cuts the chord between keys, 0.03 mm in at mid-span of
