@@ -850,11 +850,11 @@
    "parent": "42296",
    "kind": "part",
    "part": "bowl",
-   "fn": "In the plate's arc slot: stops it closed and open.",
+   "fn": "Screwed into the plate, turning with it (KLUwI2UUCMQ 47:24, 47:36.5); its end in the gap carries the return spring's hook.",
    "rel": [
     [
      "in",
-     "42101",
+     "42104",
      "tap"
     ]
    ],
@@ -2222,7 +2222,23 @@
      "tap"
     ]
    ],
-   "figs": "109"
+   "figs": "109",
+   "dev": [
+    {
+     "rel": [
+      "in",
+      "42168"
+     ],
+     "inst": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "why": "threaded 0.2 deep in the barrel's end ring, drawn only where the mainspring's edge leaves room: the screws' place (r 16.6, KLUwI2UUCMQ 15:54) is measured, the spring's width (14.8, the room between the caps) is not, so the ring's depth is estimated (SHAPE-PASS 109-1)"
+    }
+   ]
   },
   {
    "id": "42170",

@@ -111,7 +111,8 @@ function buildBox(M){
     mesh(kp,new THREE.BoxGeometry(0.6,4,6),M.brass2,CR+0.6,0,0);for(const s of[1,-1])mesh(kp,new THREE.BoxGeometry(2,4,1.3),M.brass2,CR+1.4,0,s*2.35);
     hn(mesh(kp,ringGeo(1.4,0.5,0.3),M.brass2,CR+0.15,0,0),'42128').rotation.z=Math.PI/2;
     hn(sHead(kp,'x',-1,-SH,0.9,0.6,0,0,CR-SH+0.8),'42116.k'); }
-  const KH=2.3,fu=L.Fu,BT=1;   /* key hole through the flat bottom at the fusee axis (Fig. 7). The bottom is BT thick (inside face at -FD, outside at -FD-BT), the wall CR-DB; both
+  const KH=3.34,fu=L.Fu,BT=1;   /* key hole through the flat bottom at the fusee axis (Fig. 7), r 3.34 +-0.15: the shield plate's, the plate turned open with the mat seen through both
+     (KLUwI2UUCMQ 47:36.5, rectified on the plate's edge and its shoulder screw, scaled by the key hole's 20.38 mm from the centre); the case's taken the same (r 2.3 until 5 October 2026). The bottom is BT thick (inside face at -FD, outside at -FD-BT), the wall CR-DB; both
      solids. The shield plate under the bottom sits a full millimetre behind the floor seen from inside: at 0.05 mm its outline showed through the floor (depth precision) */
   let bot;   /* the case's bottom: rebuilt below with the shield plate's screw holes */
   const botG=hs=>{const bs=new THREE.Shape();bs.absarc(0,0,FR,0,TAU,false);for(const[x,z,r]of[[fu[0],fu[1],KH],...hs]){const h=new THREE.Path();h.absarc(x,-z,r,0,TAU,true);bs.holes.push(h);}const fl=extrude(bs,{depth:BT,bevelEnabled:false,curveSegments:60});fl.rotateX(-Math.PI/2);return fl;};
@@ -127,7 +128,7 @@ function buildBox(M){
     const CW=CR*0.962,CI=CW-1.2,YB=YTB-13.5,YC=-FD-BT+11.4,RB=CR*0.82;
     const pr=[V2(FR,-FD),V2(RB-1.2,-FD),V2(CI,YC+0.6),V2(CI,YB-0.6),V2(SH,YB+0.6),V2(SH,YS),V2(CR,YS),V2(CR,YB),V2(CW,YB),V2(CW,YC),V2(RB,-FD-BT),V2(FR,-FD-BT),V2(FR,-FD)];
     hn(mesh(bowl,new THREE.LatheGeometry(pr.reverse(),120),M.brass),'42101');   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
-    bot=hn(mesh(bowl,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});hn(mesh(bowl,ringGeo(36,33.5,0.5+0.8),M.brass,0,-FD-BT-(0.5+0.8)/2,0),'42101',{sub:1});   /* the raised ring round the shield plate, its face flush with the plate's (the height estimated) */   /* 60: the rim's 120 points, the lathe's own */
+    bot=hn(mesh(bowl,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});hn(mesh(bowl,ringGeo(33.7,30.5,0.5+0.8+0.3),M.brass,0,-FD-BT-(0.5+0.8+0.3)/2,0),'42101',{sub:1});   /* the raised ring round the shield plate, r 30.5-33.7 (47:36.5, rough: its crest about 32), the plate sitting 0.3 below its top (the far side's inner wall shows; the depth estimated); r 33.5-36 and flush with the plate until 5 October 2026 */   /* 60: the rim's 120 points, the lathe's own */
     /* the recess's wall, slotted at 12 o'clock down to the shoulder for the movement's alignment pin (Sec. III), so the pin goes in as the movement is lowered: below the
        thread, and the rim with the band outside it the bezel screws onto */
     const w=0.75/DB,a0=-Math.PI/2,bore=[...Array(121).keys()].map(k=>{const a=a0+w+(TAU-2*w)*k/120;return[DB*Math.cos(a),DB*Math.sin(a)];}),circ=r=>[...Array(120).keys()].map(k=>{const a=k/120*TAU;return[r*Math.sin(a),r*Math.cos(a)];});
@@ -137,29 +138,31 @@ function buildBox(M){
      shoulder screw (42124) at the case's centre. Its hole, as far out as the case's key hole, lines up with it when the plate is turned clockwise (seen from below); let go, the
      return spring (42126) turns it back: an open ring of wire between the plate and the bottom, its hooked end round the stop screw (42125), which goes up through the plate and
      the hook into the bottom, its other end turned in to a pin in the plate. Fig. 107 draws the plate's three holes (the shoulder's at its centre, the key's, the stop screw's on
-     the other side) and the ring with its two ends. Estimated: the sizes, the half-radian turn, and the stop screw's hole an arc slot whose ends set the rest and open places
-     (Fig. 107 draws it round; the parts list names no other stop). shield.rotation.y = 0 open, SH_REST closed */
-  const SH_REST=-0.5,KD=Math.hypot(fu[0],fu[1]),ah=Math.atan2(fu[1],fu[0]),as=ah+Math.PI,SR=33.3,RS=17,SW=0.8,PT=0.8,GAP=0.5,YO=-FD-BT,Y0=YO-GAP,YB=Y0-PT,YH=YB-0.05,WR=0.18,PR=4.5,PA=as+4.6;
+     the other side) and the ring with its two ends. Measured (KLUwI2UUCMQ 47:24.0 at rest, 47:36.5 turned open: the plate's edge traced, 268 and 274 points, rectified on it and the
+     shoulder screw, scaled by the key hole's place): the plate r 30.1 +-0.8, the key hole r 3.34, the stop screw's head 4.6 across, 16.0-16.6 out and 179.4-179.8 deg from the key
+     hole in both states, so it is screwed into the plate and turns with it; a fourth hole r 1.6-1.85 at the key hole's radius, 88-91 deg from it (clockwise seen from below), brass
+     showing through it in both states. So the screw's end stands up into the gap, the return spring's hook round it, the spring's other end on a pin in the case's bottom; what
+     stops the plate's turn lies under it, unseen (the spring holds it at rest). Estimated: the thicknesses, the gap, the half-radian turn (not seen: 47:20-47:44, 8:33). Until 5 October
+     2026 the plate was r 33.3 with an arc slot round a stop screw fixed in the case. shield.rotation.y = 0 open, SH_REST closed */
+  const SH_REST=-0.5,KD=Math.hypot(fu[0],fu[1]),ah=Math.atan2(fu[1],fu[0]),as=ah+Math.PI,SR=30.1,RS=16.3,PT=0.8,GAP=0.5,YO=-FD-BT,Y0=YO-GAP,YB=Y0-PT,YH=YB-0.05,WR=0.18,PR=4.5,PA=as+5.6;
   const shield=hn(new THREE.Group(),'42104');shield.position.set(0,Y0,0);bowl.add(shield);shield.userData.partName='bowl';
   const at=(r,a)=>[r*Math.cos(a),r*Math.sin(a)];   /* a: the angle in the xz plane, atan2(z, x); a plate point at a stands at a - rotation.y in the case */
-  {const sh=new THREE.Shape();sh.absarc(0,0,SR,0,TAU,false);const hole=(c,r)=>{const p=new THREE.Path();p.absarc(c[0],c[1],r,0,TAU,true);sh.holes.push(p);};hole(at(KD,ah),KH);hole([0,0],1.55);
-    {const sp=[],N=24,sg=Math.sign(SH_REST),cap=(a,t0)=>{const c=at(RS,a);for(let i=1;i<N/2;i++){const t=t0+sg*i/(N/2)*Math.PI;sp.push([c[0]+SW*Math.cos(t),c[1]+SW*Math.sin(t)]);}};   /* arc slot for the stop screw, round-ended */
-      for(let i=0;i<=N;i++)sp.push(at(RS+SW,as+SH_REST*i/N));cap(as+SH_REST,as+SH_REST);for(let i=N;i>=0;i--)sp.push(at(RS-SW,as+SH_REST*i/N));cap(as,as+Math.PI);
-      sh.holes.push(new THREE.Path(sp.map(q=>new THREE.Vector2(q[0],q[1]))));}
+  {const sh=new THREE.Shape();sh.absarc(0,0,SR,0,TAU,false);const hole=(c,r)=>{const p=new THREE.Path();p.absarc(c[0],c[1],r,0,TAU,true);sh.holes.push(p);};hole(at(KD,ah),KH);hole([0,0],1.55);hole(at(RS,as),0.52);hole(at(KD,ah-Math.PI/2),1.7);   /* the key's, the shoulder's, the stop screw's (tapped), the fourth hole (its use unknown) */
     const pg=extrude(sh,{depth:PT,bevelEnabled:false,curveSegments:48});pg.rotateX(Math.PI/2);   /* rotateX(+90): (x,y,z) -> (x,-z,y), so the outline's y is world z and the plate hangs from Y0 */
-    mesh(shield,pg,M.brass2);const q=at(PR,PA);hn(mesh(shield,cylY(0.35,0.9,10),M.steel,q[0],-0.05,q[1]),'42126',{sub:1}); }   /* the spring's pin, pressed into the plate, standing up into the gap */
-  /* fixed to the case: shoulder screw (its shoulder from the bottom through the plate, slotted head under it) and stop screw (shank through the plate's slot and the spring's hook) */
+    mesh(shield,pg,M.brass2);const q=at(PR,PA);hn(mesh(bowl,cylY(0.35,0.9,10),M.steel,q[0],YO-0.025,q[1]),'42126',{sub:1}); }   /* the spring's pin, pressed into the case's bottom, standing down into the gap */
+  /* fixed to the case: shoulder screw (its shoulder from the bottom through the plate, slotted head under it); the stop screw in the plate, turning with it */
   const yScrew=(x,z,rs,rh,hh,rt)=>{const g=new THREE.Group();bowl.add(g);mesh(g,cylY(rs,YO-YH,16),M.steel,x,(YO+YH)/2,z);mesh(g,cylY(rh,hh,24),M.steel,x,YH-hh/2,z);const sl=mesh(g,new THREE.BoxGeometry(rh*2.02,0.6,rh*0.35),M.steelD,x,YH-hh+0.25,z);sl.rotation.y=0.6;
     g.userData.axis=mesh(g,cylY(rt,BT+0.1,12),M.steel,x,YO+BT/2-0.05,z);return g;};   /* rt: its thread, up through the case's bottom (tapped), from 0.1 inside the shoulder (not flush with the bottom's face) */
-  hn(yScrew(0,0,1.5,2.8,0.8,1.0),'42124');
-  const ss=at(RS,as);hn(yScrew(ss[0],ss[1],0.7,1.3,0.8,0.5),'42125');
-  bot.geometry.dispose();bot.geometry=botG([[0,0,1.02],[ss[0],ss[1],0.52]]);
-  /* the return spring, in the case's frame: a hook round the stop screw, the ring (r RS-0.92) round the long way to the plate's pin, and its end turned in to the pin. It is
+  hn(yScrew(0,0,1.5,4.55,0.8,1.0),'42124');   /* its head 9.0-9.3 across (47:24.0, 47:36.5, scaled as the plate; 0.136 of the plate's width by eye agrees); r 2.8 until 5 October 2026 */
+  const ss=at(RS,as);{const g=new THREE.Group();shield.add(g);mesh(g,cylY(2.3,0.8,24),M.steel,ss[0],-PT-0.4,ss[1]);const sl=mesh(g,new THREE.BoxGeometry(4.65,0.6,0.8),M.steelD,ss[0],-PT-0.55,ss[1]);sl.rotation.y=0.6;
+    g.userData.axis=mesh(g,cylY(0.5,PT+GAP-0.05,12),M.steel,ss[0],(GAP-0.05-PT)/2,ss[1]);hn(g,'42125');}   /* its head 4.6 across (47:24.0) under the plate, its thread up through the plate into the gap, 0.05 under the bottom */
+  bot.geometry.dispose();bot.geometry=botG([[0,0,1.02]]);
+  /* the return spring, in the case's frame: a hook round the stop screw's end (in the plate, so it moves as the plate turns), the ring (r RS-0.92) round the long way to the case's pin, and its end turned in to the pin. It is
      built for the plate's turn and rebuilt in place (reclose) when it turns (shield.userData.turn, which app.js calls), so the hook stays on the screw and the end on the pin */
   { const ys=YO-GAP/2,ring=RS-0.92,V=(r,a)=>new THREE.Vector3(r*Math.cos(a),ys,r*Math.sin(a));
-    const geo=(rot,old)=>{const pe=PA-rot,P=[],hc=new THREE.Vector3(ss[0],ys,ss[1]);
-      for(let i=0;i<=8;i++){const t=as-Math.PI/2+(Math.PI/2+Math.PI)*i/8;P.push(hc.clone().add(new THREE.Vector3(0.92*Math.cos(t),0,0.92*Math.sin(t))));}   /* the hook, three quarters round the screw, ending on the ring */
-      const n=Math.max(8,Math.round((pe-as)/0.08));for(let i=1;i<=n;i++)P.push(V(ring,as+(pe-as)*i/n));
+    const geo=(rot,old)=>{const hA=as-rot,pe=PA,c=at(RS,hA),P=[],hc=new THREE.Vector3(c[0],ys,c[1]);
+      for(let i=0;i<=8;i++){const t=hA-Math.PI/2+(Math.PI/2+Math.PI)*i/8;P.push(hc.clone().add(new THREE.Vector3(0.92*Math.cos(t),0,0.92*Math.sin(t))));}   /* the hook, three quarters round the screw, ending on the ring */
+      const n=Math.max(8,Math.round((pe-hA)/0.08));for(let i=1;i<=n;i++)P.push(V(ring,hA+(pe-hA)*i/n));
       for(let i=1;i<=6;i++)P.push(V(ring-(ring-PR-0.35-WR)*i/6,pe));   /* the end turned in, to the pin */
       return reclose(old,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P,false,'centripetal'),P.length*3,WR,6,false));};
     const sp=hn(mesh(bowl,geo(SH_REST,null),M.steel),'42126');let last=SH_REST;

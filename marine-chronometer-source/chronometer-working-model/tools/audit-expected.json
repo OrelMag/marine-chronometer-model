@@ -93,10 +93,10 @@
   "trainBridge:Lathe | barrelBridge:Extrude | --23.76": 2
  },
  "box": {
-  "bowl:Extrude | bowl:Cylinder | +-62.80": 2,
-  "bowl:Extrude | bowl:Cylinder | +-63.80": 2,
-  "bowl:Extrude | bowl:Extrude | --65.10": 1,
-  "bowl:Lathe | bowl:Cylinder | +-62.80": 2,
+  "bowl:Extrude | bowl:Cylinder | +-62.80": 1,
+  "bowl:Extrude | bowl:Cylinder | +-63.80": 1,
+  "bowl:Extrude | bowl:Cylinder | --65.10": 1,
+  "bowl:Lathe | bowl:Cylinder | +-62.80": 1,
   "latch:Extrude | latch:Cylinder | +-17.50": 1,
   "ring:Lathe | bowl:Extrude | --27.00": 2
  }
