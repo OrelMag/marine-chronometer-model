@@ -1143,6 +1143,12 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The winding key's copies stayed a T bar with balls** after the box's key was redrawn from
+  KLUwI2UUCMQ 0:45 (pipe, neck, cone, collar, paddle; `3d75292`): the key shown on the fusee's
+  square while winding and on the hands' square while setting kept the old form, and the hand-setting
+  copy carried the cannon pinion's line, so that piece's sheet measured the key too. One key
+  (`windingKey`, core.js) now serves all three, the copies tagged with its own line (42044).
+  Keep: a part drawn in more than one place is built by one function. `91ea7d2`
 - **Setup cover shaped as a 220° fan.** The photos show a bow-shaped plate
   straddling the barrel arbor, with a curved slot showing the ratchet and click,
   and screws inside the outline. `9606cc3`, `cc70482`

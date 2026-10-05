@@ -51,9 +51,90 @@ const PARTS={
   hands:{t:'Hands',g:4,src:'photo',sn:'After the photographed U.S. Maritime Commission dial; how the hands are fitted after Op. 64',figs:'107',c:'#1b1b1b',pri:6,d:'Blued steel: an hour hand with a bulb and a long spear point, a plain minute hand, a long seconds hand with a spear counterpoise. The minute hand, broached square, sits on the cannon pinion’s square below its bright end and turns with it once an hour; the hour hand is pressed on the hour wheel’s round pipe, which turns once in 12 hours (Op. 64); both are driven from the centre wheel staff. The second hand is on the fourth wheel staff, the wind indicator hand on its own wheel. The hands advance in half-second increments.',sp:'Nos. 42032–42035'},
   motion:{t:'Motion work',g:4,src:'est',sn:'Its counts are chosen but the wind indicator wheel’s 120, counted on a restoration video; with the fusee arbor’s pinion of 12 the hand sweeps 314° in 56 hours, as a photographed dial’s scale; the hand-setting square after Fig. 8; the solid minute and hour wheels and the five-spoked wind indicator wheel as photographs of a Model 21’s dial side show them',figs:'8, 81, 107',c:'#a45a3c',pri:5,d:'Cannon pinion, minute wheel and hour wheel under the dial, the pipes of the cannon pinion and hour wheel rising through it; the minute wheel turns on a post screwed to the pillar plate. The cannon pinion is a friction fit on the centre arbor, so the hands can be set without moving the train, and its pipe ends above the dial in the bright square that takes the winding key, turned by its shank, to set the hour and minute hands, forward only. The cannon pinion and its square turn with the minute hand, once an hour; through the minute wheel (12 into 36, then 10 into 40) they turn the hour wheel at a twelfth of that, so its pipe, turning free round the cannon pinion’s and carrying the hour hand, makes one turn in 12 hours: being round, it seems to stand still. A pinion on the dial end of the fusee arbor drives the wind indicator wheel, which turns on a post of its own and carries the wind indicator hand on its pipe.',sp:'Nos. 42077, 42078, 42080, 42081 · posts 42085, 42084'}
 };
-/* the tables the rest of app.js reads */
-const INFO={},PCOL={},PRI={},PGRP=PG.map(g=>[g,[]]);
+/* the pieces of the parts that are several things in one: each part's list in order, k its key (picked, hidden, isolated and linked as part.k: #part=bal.staff), t name, h the
+   parts-list lines (bom.json ids) its meshes carry, d what it does, sp Hamilton numbers, and src, sn, figs where they differ from its part's. A mesh is the piece its nearest pc
+   tag names (pc() in core.js), else the piece that lists the line it carries (userData.hn, or its nearest tagged ancestor's): the first listed, where two list it (the staff's
+   42186, which the hub's tag overrides). A part's pieces cover all its meshes (tools/smoke.py) */
+const PIECES={
+  bal:[{k:'wheel',t:'Balance wheel',h:'42178',d:'The solid, uncut stainless-steel rim silver-soldered to an Invar arm, with tapped holes all round for the balance screws and the timing weights (Sec. II). About 29 mm across, measured on a top-view photograph.',sp:'No. 42178, complete with spoke',figs:'3, 4'},
+    {k:'staff',t:'Balance staff',h:'42186',d:'Turned to its pivots, which run in olive-hole jewels in the balance cock and the balance lower bridge, each end against an endstone. It carries the hub, the impulse and unlocking rollers and the hairspring collet, and turns with the balance.',sp:'No. 42186, the hub complete with staff'},
+    {k:'impulse',t:'Impulse roller and jewel',h:'42263 286',d:'On the staff, as thick as the escape wheel. Once each oscillation a tooth of the escape wheel drives its jewel, giving the balance its impulse (Sec. IV). The jewel is flat on its impulse face and curved behind; the roller has three holes, and its diameter (0.249 in.) sets the roller shake (Op. 84).',sp:'Roller 42263 · impulse jewel 286',figs:'14, 61'},
+    {k:'unlock',t:'Unlocking roller and jewel',h:'42252 287',d:'A collar on the staff below the impulse roller, its jewel in a slot along it. On one swing the jewel lifts the detent through the trip spring and unlocks the escape wheel; on the return it only pushes the trip spring aside (Sec. IV). Turned on the staff to set the drop (Op. 97).',sp:'Roller 42252 · unlocking jewel 287',figs:'14, 64'},
+    {k:'collet',t:'Hairspring collet',h:'42190 42191.col 42147.col',d:'Slotted to grip the balance staff. Its tongue carries the clamp that holds the hairspring’s inner end, locked by a wedge pin so the spring is not bent (Sec. II).',sp:'Collet 42190 · clamp 42191 · wedge pin 42147',figs:'5, 6'},
+    {k:'hub',t:'Balance hub, cap and screws',h:'42186 42248 42249',d:'The hub’s flange, on the staff, carries the arm clear of the staff; a cap goes over the arm, and two hold-down screws pass through cap and arm into the flange (Fig. 4).',sp:'Hub 42186 · cap 42248 · hold-down screws 42249',figs:'4'},
+    {k:'screws',t:'Balance screws',h:'42171 42172 42173 42174 42271 42181 42182 42183 42184 42185 42256',d:'Ten screws in diametric pairs about the quarters of the rim: six with heads 0.049 in. high, two of 0.080 in. and two of 0.101 in. Changing a pair, or putting timing washers under their heads, sets the rate and the temperature adjustment (Secs. II, IX; Tables II, III).',sp:'Nos. 42171, 42173, 42174 · timing washers 42181–42185, 42256 as required',figs:'3'},
+    {k:'weights',t:'Timing weights',h:'42176 42177 37115 42197',d:'Two timing weights and two vernier timing weights beside the arm ends, each a nut on a screw in the rim. A full turn of a pair changes the rate about 40 s a day for the timing weights, 2.8 s for the verniers (p. 70).',sp:'Timing weights 42176 on screws 42177 · vernier weights 37115 on screws 42197',figs:'3'},
+    {k:'split',t:'Split bimetallic balance',h:'42186',src:'est',sn:'illustrative, the older kind; not the Model 21’s',figs:'',d:'The older balance, fitted in place of the Model 21’s under Variants: each half of the rim a band of brass outside steel, cut through near the arm, with a compensation weight on each half.',sp:''}],
+  spr:[{k:'spring',t:'Hairspring',h:'42188',d:'Cylindrical, of Hamilton Elinvar. Its restoring force and the balance’s moment of inertia set the rate (Sec. II); there is no regulator.',sp:'No. 42188',figs:'5, 6'},
+    {k:'stud',t:'Hairspring stud',h:'42189 42191.st 42147.st',d:'A bar under the balance cock, held by the stud screw from the cock’s top and a steady pin. Its clamp holds the spring’s upper end by a wedge pin, without bending it (Figs. 5, 6).',sp:'Stud 42189 · clamp 42191 · wedge pin 42147',figs:'5, 6, 19'}],
+  det:[{k:'detent',t:'Detent',h:'42087',d:'Beryllium copper, its foot clamped to the support block: the two-strip spring (the point of flexure), the blade with the locking jewel, and the horn the trip spring rests on. Lifted by the unlocking jewel through the trip spring, it frees one tooth of the escape wheel (Sec. IV).',sp:'No. 42087',figs:'14, 54–60, 90'},
+    {k:'jewel',t:'Locking jewel',h:'285 42089',d:'Round, with a flat set at about 10° of draw. Each tooth of the escape wheel locks on it until the detent is lifted; a wedge pin holds it in its hole (Figs. 57–59).',sp:'Jewel 285 · wedge pin 42089',figs:'14, 57–59, 90'},
+    {k:'trip',t:'Trip spring and bracket',h:'42088 42092 1770.br 1770.ts',d:'A thin flat strip of Hamilton Elinvar screwed to an angle bracket on the detent, resting on the horn. The unlocking jewel lifts the detent through it on one swing and pushes it aside on the return (Sec. IV).',sp:'Spring 42088 · bracket 42092 · screws 1770',figs:'14, 54'},
+    {k:'block',t:'Detent support block',h:'42086',d:'Fixed under the upper train bridge by one screw and two positioning pins. It carries the detent, the stop button the detent rests against, and the adjusting screws (Secs. II, IV).',sp:'No. 42086, complete with button and pins',figs:'14, 110'},
+    {k:'screws',t:'Detent clamp and adjusting screws',h:'37024 42251.det 20756 42091.cl 42091.lk',d:'The clamp screw, with its washer and two steady pins, holds the detent’s foot to the block. The adjusting screw sets the detent lengthwise (Ops. 84, 93); the lock-adjusting screw sets the depth of lock through the stop button (Op. 85), and its clamp screw holds it.',sp:'Clamp screw 37024, washer 42251 · adjusting screw 20756 · lock-adjusting and clamp screws 42091',figs:'14, 90, 110'}],
+  cock:[{k:'cock',t:'Balance cock',h:'42066 42192',d:'Its foot stands on the upper train bridge beside the barrel bridge, held by one screw. Its nose carries the balance upper jewel and endstone cap over the staff, and the hairspring stud underneath.',sp:'Cock 42066 · screw 42192'},
+    {k:'jewel',t:'Balance upper jewel',h:'42162.bu J.bu',d:'An olive-hole jewel in its setting, pressed into the cock’s nose; the balance staff’s upper pivot runs in it.',sp:'Setting 42162 with its jewel'},
+    {k:'cap',t:'Balance upper endstone cap',h:'42160 42155 J.bue 20762.ep',d:'The cap jewel in its setting, held over the olive-hole jewel by the cap and two screws. It stops the staff’s upper pivot end: endshake 0.001–0.003 in. (Op. 74).',sp:'Cap 42160 · setting 42155 with its jewel · screws 20762'},
+    {k:'stud',t:'Hairspring stud screw',h:'27760.st',d:'Holds the hairspring stud under the cock, put in from the cock’s top (Figs. 19, 84).',sp:'No. 27760',figs:'19, 84'}],
+  fusee:[{k:'body',t:'Fusee',h:'42021',d:'Its spiral groove evens the mainspring’s pull on the train (Sec. II): the chain lies in it between thin flanges, on the small end when the spring is fully wound and strongest, on the large end when it is nearly run down.',sp:'No. 42021',figs:'12, 28'},
+    {k:'arbor',t:'Fusee arbor',h:'42022',d:'Squared at its top for the winding key. The fusee wheel and the maintaining work turn free on it; the pinion on its dial end drives the wind indicator wheel (Sec. II).',sp:'No. 42022, complete with wind indicator pinion',figs:'7, 12'},
+    {k:'wratchet',t:'Winding ratchet',h:'42013 42014',d:'Screwed to the fusee’s large end. In running its teeth drive the winding pawls on the sustaining ratchet wheel; while the key winds they slip under them (Sec. IV).',sp:'Wheel 42013 · screws 42014',figs:'12, 69'},
+    {k:'end',t:'Fusee end plate and taper pin',h:'42019 42020',d:'Under the fusee wheel: the end plate, held by a taper pin through the arbor, keeps the fusee wheel and the maintaining work on it (Figs. 28, 70).',sp:'Plate 42019 · taper pin 42020',figs:'28, 70'},
+    {k:'top',t:'Fusee top plate',h:'42008 27760.fu',d:'Covers the winding stop-bar and its spring in the fusee’s top, held by two screws.',sp:'Plate 42008 · screws 27760',figs:'73'},
+    {k:'stop',t:'Winding stop-bar and spring',h:'42024 42025',d:'The bar lies in a slot across the fusee’s top, its nose down in the groove’s top turn. The chain, winding onto that turn, pushes the nose in; the bar’s other end then stands out past the rim and meets the winding stop under the barrel bridge, and the key can turn no further. Its spring draws it back when the chain runs off.',sp:'Stop-bar 42024 · spring 42025',figs:'12, 73'}],
+  barrel:[{k:'drum',t:'Barrel',h:'42168',d:'Holds the mainspring, whose outer end hooks to it by the anchor pin at the brace. Turns clockwise in running, drawing the chain off the fusee (Sec. IV).',sp:'No. 42168'},
+    {k:'cap',t:'Barrel cap and screws',h:'42169 37023',d:'Closes the barrel on the pillar-plate end, held by five screws (Figs. 26, 109).',sp:'Cap 42169 · screws 37023',figs:'26, 109'},
+    {k:'brace',t:'Mainspring brace',h:'42037',d:'A strip lining the barrel’s wall where the mainspring’s outer end hooks (Fig. 75).',sp:'No. 42037',figs:'75'}],
+  ratchet:[{k:'wheel',t:'Setup ratchet wheel',h:'42026',d:'On the barrel arbor above the barrel bridge, held by the click, so the arbor never turns in winding or running (Sec. II).',sp:'No. 42026'},
+    {k:'arbor',t:'Barrel arbor',h:'42170',d:'It stands still: the mainspring’s inner end hooks on it inside the barrel, and the setup ratchet and click hold it. It turns only with a let-down key on its square, to let the mainspring down before servicing or set it up again.',sp:'No. 42170',figs:'26, 75'},
+    {k:'click',t:'Setup click',h:'42027 42036',d:'The setup pawl: it bears on the ratchet’s steep faces against the mainspring’s pull, turning on its pivot screw through the cover plate (Sec. II).',sp:'Pawl 42027 · pivot screw 42036'},
+    {k:'spring',t:'Setup click spring',h:'42028',d:'Holds the click in the setup ratchet’s teeth.',sp:'No. 42028, complete with pins'},
+    {k:'cover',t:'Setup cover plate',h:'42029 42056.cv',d:'The bow-shaped plate over the setup ratchet and click, standing on its feet, held to the barrel bridge by two screws. It carries the click’s pivot screw.',sp:'Plate 42029 · screws 42056'}],
+  post:[{k:'seal',t:'Dust seal',h:'42051 42056.sl',d:'Nickel, on the barrel bridge where the fusee arbor rises through it, its flange held by two screws. The key reaches the arbor’s square through it.',sp:'Seal 42051 · screws 42056'},
+    {k:'packing',t:'Dust seal packing',h:'42052 42053 42054',d:'Three packing rings over a seal ring, which a helical spring presses against its seat round the fusee arbor.',sp:'Packing rings 42054 · seal ring 42052 · spring 42053'}],
+  sratchet:[{k:'wheel',t:'Sustaining ratchet wheel',h:'42009',d:'Free on the fusee arbor. In running the mainspring’s pull passes through it and the sustaining spring to the fusee wheel; while the key winds, the sustaining pawl holds it (Sec. IV).',sp:'No. 42009'},
+    {k:'pawls',t:'Winding pawls',h:'42009',d:'Two pawls on studs in the sustaining ratchet wheel, their tips on the fusee’s winding ratchet: driven by its steep faces in running, slipping over them while the key winds.',sp:'No. 42009, the wheel complete with pawls'},
+    {k:'springs',t:'Winding pawl springs',h:'42007 42012',d:'A long thin spring round the wheel for each pawl, holding it in the winding ratchet’s teeth. Each foot is held by two screws put in from the wheel’s underside.',sp:'Springs 42007 · screws 42012',figs:'28, 69'}],
+  pillar:[{k:'plate',t:'Pillar plate',h:'42060',d:'Foundation of the movement, 87.57 mm across and 3.86 mm thick. The barrel and train bridges stand off it on four pillars; on its dial side are the lower train bridge, the escape wheel’s lower endstone cap and the motion work’s posts.',sp:'No. 42060 · 87.57 mm diameter, 3.86 mm thick'},
+    {k:'ring',t:'Mounting ring',h:'42057 42055.ring',d:'A deep lacquered brass ring under the plate’s dial side. It carries the dial and holds the movement in its case, its alignment pin in the case’s slot (Sec. III); three screws hold the plate to it from the train side.',sp:'Ring 42057 · screws 42055'},
+    {k:'screws',t:'Pillar screws',h:'42055.pil 42055.pilb',d:'Four screws from the dial side of the pillar plate, one into the foot of each pillar.',sp:'Nos. 42055'},
+    {k:'bush',t:'Pillar plate bushings',h:'42165 42164.fl 42164.bl',d:'Bearings in the pillar plate for the centre arbor and the lower ends of the fusee and barrel arbors.',sp:'Centre 42165 · fusee and barrel 42164'},
+    {k:'escape',t:'Escape lower jewel and endstone',h:'42162.el J.el 42159.el J.ele 20762.elc',d:'The escape arbor’s lower pivot runs in an olive-hole jewel set in the pillar plate. On the dial side an endstone cap, held by two screws, stops its end.',sp:'Setting 42162 with its jewel · cap 42159 with its jewel · screws 20762'},
+    {k:'posts',t:'Motion work posts',h:'42084 42085 35779.mw 35779.ud',d:'The minute wheel and the wind indicator wheel turn on posts fixed to the pillar plate’s dial side by screws from its train side (Fig. 110).',sp:'Posts 42085, 42084 · screws 35779'},
+    {k:'dial',t:'Dial screws',h:'35756',d:'Four screws from the mounting ring’s flange into the dial’s feet (Fig. 107).',sp:'No. 35756',figs:'107'}],
+  ltb:[{k:'bar',t:'Lower train bridge',h:'42063',d:'A straight steel bar screwed to the dial side of the pillar plate, across an opening round the third arbor, located by two steady pins.',sp:'No. 42063, complete with pins'},
+    {k:'screws',t:'Lower train bridge screws',h:'42163',d:'Two screws into the pillar plate, their heads flush in counterbores (Ops. 7, 53).',sp:'Nos. 42163'},
+    {k:'jewels',t:'Third and fourth lower jewels',h:'42161.tl J.tl 42161.fl J.fl',d:'Bar-hole jewels in their settings, sunk in counterbores in the bar, for the dial-side pivots of the third and fourth arbors.',sp:'Settings 42161 with their jewels'}],
+  trainBridge:[{k:'bridge',t:'Upper train bridge',h:'42062',d:'The crescent plate over the train. It carries the centre and third wheel upper bushings; the balance cock, balance lower bridge, escape upper bridge and detent support block are mounted to it.',sp:'No. 42062'},
+    {k:'screws',t:'Upper train bridge screws',h:'42055.tb',d:'Three screws, each into its pillar (Op. 14).',sp:'Nos. 42055'},
+    {k:'bush',t:'Centre and third upper bushings',h:'42166 42167',d:'Bearings for the upper pivots of the centre and third arbors. They lie in the opening round the balance, so they can be oiled with the barrel bridge on (Op. 46).',sp:'Centre 42166 · third 42167'},
+    {k:'blk',t:'Detent support block screw',h:'42056.blk',d:'Holds the detent support block under the train bridge: put in from above, through the bridge into the block, between its two positioning pins.',sp:'No. 42056'}],
+  barrelBridge:[{k:'bridge',t:'Barrel bridge',h:'42061',d:'The large upper plate, on the train bridge, cut round the balance. It holds the upper pivots of the barrel and the fusee; the setup ratchet and the dust seal sit on top.',sp:'No. 42061'},
+    {k:'screws',t:'Barrel bridge screws',h:'42055.bb 42055.bbp',d:'One screw into the barrel pillar and two into the upper train bridge.',sp:'Nos. 42055'},
+    {k:'bush',t:'Barrel and fusee upper bushings',h:'42164.fu 42164.bu',d:'Bearings in the barrel bridge for the upper ends of the barrel and fusee arbors.',sp:'Nos. 42164'},
+    {k:'stop',t:'Fusee winding stop',h:'42099',d:'A stud screwed into the barrel bridge’s underside (left-hand thread, Op. 42). The fusee’s stop-bar meets it at full wind.',sp:'No. 42099',figs:'12'}],
+  lowerBridge:[{k:'bridge',t:'Balance lower bridge',h:'42065',d:'Two levels: a slab curved like a lens, and a lug at each end against the underside of the upper train bridge. It carries the balance staff’s lower jewel and endstone, the fourth wheel’s upper jewel and the train-blocking screw.',sp:'No. 42065, complete with pins'},
+    {k:'screws',t:'Balance lower bridge screws',h:'42055.lb',d:'Two screws, put in from below through the lugs into the upper train bridge (Ops. 12, 50).',sp:'Nos. 42055'},
+    {k:'balance',t:'Balance lower jewel and endstone',h:'42162.bl J.bl 42159.bl J.ble 20762.blc',d:'The balance staff’s lower pivot runs in an olive-hole jewel in the bridge; the endstone cap underneath, in a round counterbore, stops its end.',sp:'Setting 42162 with its jewel · cap 42159 with its jewel · screws 20762'},
+    {k:'fourth',t:'Fourth wheel upper jewel',h:'42161.fu J.fu',d:'A bar-hole jewel in its setting, for the fourth arbor’s upper pivot.',sp:'Setting 42161 with its jewel'}],
+  escBridge:[{k:'bridge',t:'Escape upper bridge',h:'42064',d:'A flat bar across the train bridge’s escape opening, its ends in seats in the bridge, with a round boss under its middle that holds the escape wheel’s upper jewel.',sp:'No. 42064, complete with pins'},
+    {k:'screws',t:'Escape upper bridge screws',h:'20762.eb',d:'Two screws into the upper train bridge, their heads flush in the bar’s top (Op. 69).',sp:'Nos. 20762'},
+    {k:'jewel',t:'Escape upper jewel and endstone',h:'42162.eu J.eu 42159.eu J.eue 20762.euc',d:'The escape arbor’s upper pivot runs in an olive-hole jewel pressed into the boss. The endstone cap over it, held by two screws, is milled or changed to set the endshake (Op. 69).',sp:'Setting 42162 with its jewel · cap 42159 with its jewel · screws 20762',figs:'86, 110'}],
+  hands:[{k:'hour',t:'Hour hand',h:'42032',d:'Pressed on the hour wheel’s pipe (Op. 64); turns once in 12 hours.',sp:'No. 42032'},
+    {k:'minute',t:'Minute hand',h:'42033',d:'Broached square, on the cannon pinion’s square below its bright end (Op. 64); turns once an hour.',sp:'No. 42033'},
+    {k:'seconds',t:'Seconds hand',h:'42034',d:'On the fourth wheel’s arbor; turns once a minute, in half-second steps.',sp:'No. 42034, complete with pin'},
+    {k:'wind',t:'Wind indicator hand',h:'42035',d:'On the wind indicator wheel’s pipe; shows the hours run since winding, from UP to DOWN.',sp:'No. 42035'}],
+  motion:[{k:'cannon',t:'Cannon pinion',h:'42077',d:'A friction fit on the centre arbor (Op. 58), slipping when the hands are set. It turns once an hour with the minute hand, and its pipe ends above the dial in the square the key sets the hands by (Fig. 8).',sp:'No. 42077',figs:'8, 107'},
+    {k:'minute',t:'Minute wheel',h:'42078',d:'Driven by the cannon pinion; its pinion drives the hour wheel. It turns on its post.',sp:'No. 42078, complete with pinion',figs:'107'},
+    {k:'hour',t:'Hour wheel',h:'42080',d:'Turns free on the cannon pinion’s pipe (Op. 59), once in 12 hours, carrying the hour hand on its own pipe.',sp:'No. 42080',figs:'107'},
+    {k:'wind',t:'Wind indicator wheel and pinion',h:'42081 42022',d:'The pinion on the dial end of the fusee arbor drives the wheel, which turns on its post and carries the wind indicator hand: 314° in 56 hours.',sp:'Wheel 42081 · pinion on the fusee arbor 42022',figs:'107'},
+    {k:'key',t:'Winding key on the hands’ square',h:'42044',d:'Setting the hands while it runs, the winding key goes on the cannon pinion’s square above the dial and is turned by its shank, forward only: the minute hand on its marker half a minute behind the master’s, then on as its second hand passes 60 (Sec. III, “Setting While Running”; Fig. 8). Shown only while the hands are being set.',sp:'No. 42044',figs:'8'}]};
+/* the tables the rest of app.js reads: a piece's card, colour and entry under its key (part.k), its part's PHN its lines' pieces. A piece's colour in Colour by part: a shade of its part's,
+   lighter and darker in turn and its hue a little round, so the pieces of a part tell apart and still read as one part */
+const INFO={},PCOL={},PRI={},PCE={},PHN={},PGRP=PG.map(g=>[g,[]]),kp=k=>k.split('.')[0];   /* kp: the part a key is or belongs to */
 for(const[k,p]of Object.entries(PARTS)){INFO[k]=[p.t,p.d,p.sp];if(p.c)PCOL[k]=p.c;if(p.pri)PRI[k]=p.pri;PGRP[p.g][1].push(k);}
+const shade=(c,i)=>{if(!i)return c;const o=new THREE.Color(c),h={};o.getHSL(h);o.setHSL((h.h+(i%2?1:-1)*0.035*Math.ceil(i/2)+1)%1,h.s,clamp(h.l+[0.17,-0.17,0.3,-0.3,0.09,-0.09,0.24,-0.24,0.37,-0.37][(i-1)%10],0.14,0.88));return '#'+o.getHexString();};
+for(const[p,ps]of Object.entries(PIECES)){const q=PARTS[p];q.pcs=ps;PHN[p]={};ps.forEach((c,i)=>{const k=p+'.'+c.k;INFO[k]=[c.t,c.d,c.sp];PCE[k]=c;if(q.c)PCOL[k]=shade(q.c,i);for(const h of c.h.split(' '))PHN[p][h]=PHN[p][h]||c.k;});}
 const PLATES=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate)),DRIVE_HIDE=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate||PARTS[k].dh));
 
 /* ================= 2D escapement inset ================= */
@@ -96,14 +177,16 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   window.__look=(yaw,pitch,dist,x,y,z)=>{goCam({yaw,pitch,dist,target:mvL(x,y,z)});};}
   $('#srcKey').innerHTML=Object.values(SRC).map(([t,c,d])=>`<span title="${t}: ${d}"><i style="--ps:${c}"></i>${t}</span>`).join('');
   const partOf=o=>{while(o){if(o.userData&&o.userData.partName)return o.userData.partName;o=o.parent;}return null;};
+  /* a mesh's key: its piece (part.k) where its part has pieces: the nearest pc tag up to the part, else the piece listing the nearest parts-list line; its part's otherwise */
+  const pkOf=o=>{const p=o.userData.part;if(!PHN[p])return p;let h=null;for(let q=o;q;q=q.parent){const u=q.userData;if(u.pc)return p+'.'+u.pc;if(h==null&&u.hn)h=u.hn;if(u.partName)break;}return PHN[p][h]?p+'.'+PHN[p][h]:p;};
   const shown=o=>{for(;o;o=o.parent)if(!o.visible)return false;return true;};   /* r128's raycaster ignores visibility: a mesh in a hidden group (the hand-setting key, another dial style's hands) must not take a click or hide a label */
   /* a mesh casts a shadow only when its radius spans SHK texels of the shadow map (shThr, set as the shadow camera follows the view): smaller shadows were a
      few texels at most, each an extra draw call. Far views drop the screws and pins (under about 1.5 mm); close-ups keep them. Instanced meshes (the chain) always cast */
   BX.root.updateMatrixWorld(true);const wsc=new THREE.Vector3(),rad=o=>{if(o.isInstancedMesh)return 1e9;const g=o.geometry,b0=g.boundingSphere;g.computeBoundingSphere();const r=g.boundingSphere.radius;g.boundingSphere=b0;if(!(r>0))return 1e9;o.getWorldScale(wsc);return r*Math.max(wsc.x,wsc.y,wsc.z);};   /* three computes its own bounding sphere when it first needs it, as before; geometries rebuilt as they move (hairspring, passing spring) start empty, and always cast */
   const SHK=6;let shThr=SHK*2*scam.right/key.shadow.mapSize.x;const castOn=m=>{m.castShadow=!!m.userData.cs&&m.userData.rad>=shThr;};
   const lpOf=o=>{for(;o&&o!==mv;o=o.parent)if(o.userData.lp)return o.userData.lp;return '';};   /* the load-path tag (movement.js) of a mesh or the nearest group above it */
-  const MVM=[];mv.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.lpk=lpOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);MVM.push(o);}});
-  BOXM.forEach(o=>{o.userData.part=partOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);o.userData.cs=o.material!==M.glass;castOn(o);});
+  const MVM=[];mv.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.pk=pkOf(o);o.userData.lpk=lpOf(o);o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);MVM.push(o);}});
+  BOXM.forEach(o=>{o.userData.part=partOf(o);o.userData.pk=o.userData.part;o.userData.mat0=o.material;o.receiveShadow=true;o.userData.rad=rad(o);o.userData.cs=o.material!==M.glass;castOn(o);});
   /* a frame: rendered, drawn (tinted or in ink), or rendered with Edges (the drawing's lines over it, the movement's only) (makeInk in core.js, set up the first time it is asked for) */
   let ink=null;const INKM=[...MVM,...BOXM];BOXM.forEach(o=>o.userData.inkBox=true);INKM.forEach(inkTag);   /* Edges' ids, up front (inkTag, core.js) */
   const INKH=[sh,...MVM.filter(o=>o.userData.decal)];   /* left out of Edges' ids: the floor shadow, and the engravings, which would outline themselves on their plates */
@@ -147,8 +230,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const fmtErr=e=>{const a=Math.abs(e),h=Math.floor(a/3600),m=Math.floor(a%3600/60),x=Math.round((a%60)*2)/2;return(e<0?'−':'+')+(h?h+' h ':'')+(h||m?m+' min ':'')+(h?'':x+' s');};   /* to the half second, as a navigator records it */
   /* colour mode: one flat CAD-style colour per part, or per source (Colour by source: where its shape and size come from, SRC); the part labels double as the legend */
   const COLM=new Map();
-  const colOf=p=>st.csrc?PARTS[p]&&PARTS[p].src&&SRC[PARTS[p].src][1]:PCOL[p];
-  function colourOf(m0,p){const col=p&&colOf(p);if(!col||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+p+(st.csrc?':s':'');let c=COLM.get(k);
+  const colOf=(p,k)=>{if(st.csrc){const s=PCE[k]&&PCE[k].src||PARTS[p]&&PARTS[p].src;return s&&SRC[s][1];}return PCOL[k]||PCOL[p];};   /* k: the mesh's key, its piece's colour or source where it has one */
+  function colourOf(m0,p,pk){const col=p&&colOf(p,pk);if(!col||p==='dial'||m0.transparent||!m0.color)return m0;const k=m0.uuid+pk+(st.csrc?':s':'');let c=COLM.get(k);
     if(!c){c=m0.clone();c.userData={};c.map=null;c.normalMap=null;c.color=sc(col);if('metalness'in c){c.metalness=0.1;c.roughness=0.55;}if(c.emissive)c.emissive.setRGB(0,0,0);
       patchSection(c,!!m0.userData.secCap);c.userData.side0=m0.userData.side0??m0.side;c.side=m0.side;c.clippingPlanes=[...(m0.clippingPlanes||[])];COLM.set(k,c);}return c;}
   /* per-part opacity, set from the right-click menu */
@@ -156,13 +239,16 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function fadeOf(m0,p,op){const k=m0.uuid+p;let f=FADE.get(k);
     if(!f){f=m0.clone();f.userData={inkDecal:m0.userData.inkDecal};f.transparent=true;f.depthWrite=false;patchSection(f,false);f.userData.side0=m0.userData.side0??m0.side;f.side=m0.side;f.clippingPlanes=[...(m0.clippingPlanes||[])];FADE.set(k,f);}
     f.opacity=(m0.opacity??1)*op;return syncMat(f,m0);}
-  const base=m=>{const p=m.userData.part,m0=st.colr||st.csrc?colourOf(m.userData.mat0,p):m.userData.mat0,op=st.op[p];return op!=null&&op<1?fadeOf(m0,p,op):m0;};
+  const opOf=m=>st.op[m.userData.pk]??st.op[m.userData.part];   /* a piece's own opacity, else its part's */
+  const base=m=>{const p=m.userData.part,k=m.userData.pk,m0=st.colr||st.csrc?colourOf(m.userData.mat0,p,k):m.userData.mat0,op=opOf(m);return op!=null&&op<1?fadeOf(m0,k,op):m0;};
   const fin=m=>st.draw?drawOf(base(m)):base(m);   /* the drawing (st.draw 'tint' or 'ink'): the wash copy of whatever the part shows; see-through parts stay ghosts, drawn in outline */
-  const isoOut=p=>!!st.iso&&!st.iso.has(p)&&!(p==='mainspring'&&st.iso.has('barrel'));   /* isolated: only the parts in st.iso are drawn (the mainspring with its barrel) */
+  /* the keys in st.pick, st.focus, st.hid, st.iso and st.op are parts or pieces (part.k), a part's covering its pieces. anyOf: the set holds part p or a piece of it; inK: it holds mesh m's part or piece */
+  const anyOf=(s,p)=>!!s&&[...s].some(k=>kp(k)===p),inK=(s,m)=>s.has(m.userData.part)||s.has(m.userData.pk);
+  const isoOut=(p,k)=>!!st.iso&&!st.iso.has(p)&&!(k?st.iso.has(k):anyOf(st.iso,p))&&!(p==='mainspring'&&anyOf(st.iso,'barrel'));   /* isolated: only the parts and pieces in st.iso are drawn (the mainspring with its barrel); k: a mesh's key, none for a part as a whole (shown while any piece of it is) */
   const isoDrop=p=>{if(st.iso){st.iso.delete(p);if(!st.iso.size)st.iso=null;}};   /* the last isolated part hidden: the rest of the model comes back */
-  const opHide=m=>st.hid.has(m.userData.part)||st.op[m.userData.part]===0||isoOut(m.userData.part);
+  const opHide=m=>{const u=m.userData;return st.hid.has(u.part)||st.hid.has(u.pk)||opOf(m)===0||isoOut(u.part,u.pk);};
   /* the mainspring is drawn only when the barrel is opened up: drive-train mode, any cross-section, the barrel or spring picked or isolated, or the barrel faded or hidden */
-  const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus,ob=st.op.barrel;return st.drive||secMode!=='off'||st.hid.has('barrel')||(ob!=null&&ob<1)||!!(foc&&(foc.has('mainspring')||foc.has('barrel')))||!!(st.iso&&(st.iso.has('mainspring')||st.iso.has('barrel')));};
+  const msShown=()=>{const foc=st.pick?new Set([st.pick]):st.focus,ob=Object.keys(st.op).some(k=>kp(k)==='barrel'&&st.op[k]<1);return st.drive||secMode!=='off'||anyOf(st.hid,'barrel')||ob||anyOf(foc,'mainspring')||anyOf(foc,'barrel')||anyOf(st.iso,'mainspring')||anyOf(st.iso,'barrel');};
   /* the load path (Load path in colour, Winding): while winding (lpPh 'w') the sustaining spring drives the fusee wheel (rose), pushing off its ratchet, which the sustaining
      pawl holds (teal); for 2 s after the key lets go (lpPh 'r') the drive is the mainspring's again: barrel, chain, fusee, winding pawls, sustaining ratchet, spring, fusee wheel. A tinted copy of what the part shows: its colour drawn
      toward the tint and a little of it lit, so it holds under the drawing (drawOf keeps the colour, not the glow) */
@@ -171,16 +257,18 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function tintOf(m0,c){if(!m0.color)return m0;const k=m0.uuid+c;let t=TINT.get(k);
     if(!t){t=m0.clone();t.userData={inkDecal:m0.userData.inkDecal};patchSection(t,!!m0.userData.secCap);t.userData.side0=m0.userData.side0??m0.side;t.side=m0.side;t.clippingPlanes=[...(m0.clippingPlanes||[])];TINT.set(k,t);}
     if(t.map!==m0.map){t.map=m0.map;t.needsUpdate=true;}t.color.copy(m0.color).lerp(LPC[c],0.8);if(t.emissive){t.emissive.copy(LPC[c]);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}t.opacity=m0.opacity??1;return t;}   /* less metal, so the colour shows rather than the room it reflects */
+  /* a movement mesh drawn see-through (a ghost): plates with See-through, the laid-out view's schematic plates, the barrel's wall in drive mode, and whatever is outside the focus foc */
+  const ghOf=(m,foc)=>{const p=m.userData.part;return !(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||m.userData.devPlate||(st.drive&&m.userData.driveGhost)||(foc&&!inK(foc,m)&&!(p==='mainspring'&&anyOf(foc,'barrel'))));};
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;
     const foc=st.pick?new Set([st.pick]):st.focus,dvOn=(st.tour<0&&st.view==='laidout')||devShown;   /* laid out: the real plates' holes no longer meet the arbors; schematic ones stand in */
     for(const m of MVM){const p=m.userData.part;let vis=true;
       if(((st.drive||dvOn)&&DRIVE_HIDE.has(p))||(st.drive&&!st.mwOn&&(p==='motion'||p==='hands')))vis=false;
       if(m.userData.onlyDrive&&!msShown())vis=false;
       if((st.drive||dvOn)&&m.userData.driveHide)vis=false;if(m.userData.devPlate&&(!dvOn||st.drive))vis=false;
-      const gh=!(kw&&m.userData.wstop)&&((st.see&&PLATES.has(p))||m.userData.devPlate||(st.drive&&m.userData.driveGhost)||(foc&&!foc.has(p)&&!(p==='mainspring'&&foc.has('barrel'))));
+      const gh=ghOf(m,foc);
       if(m.userData.noShadow&&gh)vis=false;
       m.visible=vis&&!opHide(m);const lc=!gh&&lpCol(m);m.material=gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
-    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!foc.has(m.userData.part)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
+    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
     /* Shadows (off by default): the key light's shadow map, an extra pass over every caster (about 380 draw calls and all the triangles again) and a costlier shader.
        The floor's shadow (sh) is a texture, always there. Turned off, the map (2048 px, 1024 on phones) is freed (three makes it again when it is next needed) */
@@ -283,15 +371,21 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   $('#info').addEventListener('pointerup',e=>{if(e.button===0&&lastTap&&e.timeStamp-lastTap.t<400&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<24){const t=lastTap;lastTap=null;dblPick({clientX:t.x,clientY:t.y});}});   /* the card the first click opened may lie under the second: still a double on the part */
   cv.addEventListener('wheel',e=>{e.preventDefault();C.dist=G.dist=clamp(C.dist*Math.exp(e.deltaY*0.0012),30,1500);},{passive:false});
   const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();ray.layers.enable(2);   /* layer 2: the pieces drawn merged (drawMerge) */
+  /* what a click passes through: what is faded below half, glass, or see-through as it would be with nothing picked; so with a part or piece picked, the ghosted rest still takes a click */
+  const through=m=>{const o=opOf(m),m0=m.userData.mat0;if(o!=null&&o<0.5||m0.transparent&&m0.opacity<0.5)return true;return m.userData.inkBox?!!(st.focus&&!inK(st.focus,m)):!!ghOf(m,st.focus);};
   function hitAt(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
-    const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
+    const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!through(h.object));
     return hits.find(h=>INFO[h.object.userData.part])||null;}
-  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(typeof MAKER!=='undefined'&&MAKER.measuring()){MAKER.measureHit(hit);return;}if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
-  function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.part;if(st.pick!==p)showPart(p);focusPart(p,hit.object);}else if(st.tour<0)jump(()=>setView(st.view,true));}
+  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(typeof MAKER!=='undefined'&&MAKER.measuring()){MAKER.measureHit(hit);return;}if(!hit){closeInfo();return;}showPart(hit.object.userData.pk);}   /* the piece, where its part has pieces */
+  function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.pk;if(st.pick!==p)showPart(p);focusPart(hit.object.userData.part,hit.object);}else if(st.tour<0)jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
   const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
-  function showPart(p){showHelp(false);if(typeof MAKER!=='undefined')setTimeout(()=>MAKER.card(p),0);st.hid.delete(p);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
-    const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[p];info.querySelector('.src').innerHTML=q.src?`<i style="--ps:${SRC[q.src][1]}"></i>${SRC[q.src][0]}: ${U(q.sn)}${q.figs?`. Figs. ${q.figs}`:''}.`:'';info.classList.add('on');hintOff();}
+  /* a piece's card: its own text, and its source, note and figures where it has them, else its part's; a line up to its part. A part with pieces lists them, each a link to its card */
+  function showPart(p){showHelp(false);const pp=kp(p);if(typeof MAKER!=='undefined')setTimeout(()=>MAKER.card(p),0);st.hid.delete(p);st.hid.delete(pp);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
+    const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[pp],c=PCE[p]||{},src=c.src||q.src,sn=c.src?c.sn:q.sn,figs=c.figs??q.figs;
+    info.querySelector('.src').innerHTML=src?`<i style="--ps:${SRC[src][1]}"></i>${SRC[src][0]}${pp!==p&&!c.src?` (the ${q.t.toLowerCase()} as a whole)`:''}${sn?': '+U(sn):''}${figs?`. Figs. ${figs}`:''}.`:'';   /* a piece without a source of its own: its part's, said so */
+    const lk=k=>`<button data-p="${k}">${INFO[k][0]}</button>`;info.querySelector('.of').innerHTML=pp!==p?`Part of: ${lk(pp)}`:q.pcs?'Its pieces: '+q.pcs.map(x=>lk(pp+'.'+x.k)).join(', '):'';info.classList.add('on');hintOff();}
+  $('#info .of').addEventListener('click',e=>{const b=e.target.closest('button[data-p]');if(b&&Object.prototype.hasOwnProperty.call(INFO,b.dataset.p))showPart(b.dataset.p);});
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
   /* right-click (or long-press) a part: opacity, hide and isolate. Prefers the nearest solid part, so faded parts in front can be looked through.
@@ -307,9 +401,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   cv.addEventListener('contextmenu',e=>{e.preventDefault();lpStop();if(performance.now()-lpAt<800)return;if((down?down.moved:rMoved)>6)return;if(down)down.lp=true;openOpm(e.clientX,e.clientY);});
   function openOpm(cx,cy){const rc=cv.getBoundingClientRect();ndc.set((cx-rc.left)/rc.width*2-1,-(cy-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&INFO[h.object.userData.part]);
-    const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>st.op[h.object.userData.part]!=null);
+    const hit=hits.find(h=>!(h.object.material.transparent&&h.object.material.opacity<0.5))||hits.find(h=>opOf(h.object)!=null);
     if(!hit&&!st.hid.size&&!st.iso){closeOpm();return;}
-    opPart=hit?hit.object.userData.part:null;opm.classList.add('on');opRender();
+    opPart=hit?hit.object.userData.pk:null;opm.classList.add('on');opRender();
     const sr=stage.getBoundingClientRect();opm.style.left=clamp(cx-sr.left+8,8,sr.width-opm.offsetWidth-8)+'px';opm.style.top=clamp(cy-sr.top+8,8,sr.height-opm.offsetHeight-8)+'px';}
   opIn.addEventListener('input',()=>{if(!opPart)return;const v=opIn.valueAsNumber/100;if(v>=1)delete st.op[opPart];else st.op[opPart]=v;opOut.textContent=opIn.value+'%';look();});
   opm.querySelectorAll('button[data-a]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.a;
@@ -438,16 +532,25 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   $('#remember').checked=REM;$('#remember').addEventListener('change',e=>{REM=e.target.checked;
     if(REM){try{localStorage.setItem('cm-remember','1');}catch(_){}lsSet('cm-set',JSON.stringify(SET));lsSet('cm-theme',document.documentElement.dataset.theme||'auto');detSave();remSave();}
     else try{['cm-remember',...RK].forEach(k=>localStorage.removeItem(k));}catch(_){}});
-  /* parts list: every named part, grouped. A name singles the part out as a tap does; the box hides it, as the right-click menu does */
-  const BOXP=new Set(PGRP[0][1]),plist=$('#plist'),PROWS=[];
+  /* parts list: every named part, grouped; under a part with pieces, its pieces, folded until the part or one of them is picked (or the fold opened). A name singles the part or piece
+     out as a tap does; the box hides it, as the right-click menu does. A part's box is half ticked while some of its pieces are hidden; ticking a piece of a hidden part shows that piece alone of it */
+  const BOXP=new Set(PGRP[0][1]),plist=$('#plist'),PROWS=[],figSet=s=>new Set((s||'').split(', ').filter(Boolean).flatMap(f=>{const[a,z]=f.split('–').map(Number);return z?Array.from({length:z-a+1},(_,i)=>a+i):[a];}));
+  const fold=(r,on)=>{r.sub.classList.toggle('open',on);r.pf.setAttribute('aria-expanded',on?'true':'false');};
+  function prow(k,box,gh,par){const p=kp(k),c=PCE[k],q=PARTS[p],row=document.createElement('div');row.className=c?'prow sub':'prow';row.innerHTML=`<input type="checkbox" checked aria-label="Show ${INFO[k][0]}"><button class="pn">${INFO[k][0]}</button>`;
+    const src=c&&c.src||q.src;if(PCOL[k])row.style.setProperty('--pc',PCOL[k]);if(src)row.style.setProperty('--ps',SRC[src][1]);const ck=row.firstChild,b=row.lastChild;
+    ck.addEventListener('change',()=>{if(ck.checked){st.hid.delete(k);if(c&&st.hid.has(p)){st.hid.delete(p);for(const x of q.pcs)if(p+'.'+x.k!==k)st.hid.add(p+'.'+x.k);}if(!c)for(const x of[...st.hid])if(kp(x)===p)st.hid.delete(x);if(st.iso)st.iso.add(k);}
+      else{st.hid.add(k);isoDrop(k);if(st.pick&&(st.pick===k||!c&&kp(st.pick)===p))closeInfo();}look();});   /* while isolated, a box ticked adds its part or piece to the isolation */
+    b.addEventListener('click',()=>{st.pick===k?closeInfo():showPart(k);});box.appendChild(row);
+    const r={p:k,row,ck,b,gh,par,txt:(c?[k,c.t,c.sp,c.h,q.t]:[k,q.t,q.sp,q.sn]).join(' ').toLowerCase(),figs:figSet(c&&c.figs!=null?c.figs:q.figs)};PROWS.push(r);return r;}
   for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);const gh=plist.lastElementChild;
-    for(const p of ps){const row=document.createElement('div');row.className='prow';row.innerHTML=`<input type="checkbox" checked aria-label="Show ${INFO[p][0]}"><button class="pn">${INFO[p][0]}</button>`;
-      if(PCOL[p])row.style.setProperty('--pc',PCOL[p]);if(PARTS[p].src)row.style.setProperty('--ps',SRC[PARTS[p].src][1]);const ck=row.firstChild,b=row.lastChild;
-      ck.addEventListener('change',()=>{if(ck.checked){st.hid.delete(p);if(st.iso)st.iso.add(p);}else{st.hid.add(p);isoDrop(p);if(st.pick===p)closeInfo();}look();});   /* while isolated, a box ticked adds its part to the isolation */
-      b.addEventListener('click',()=>{st.pick===p?closeInfo():showPart(p);});plist.appendChild(row);PROWS.push({p,row,ck,b,gh,txt:[p,INFO[p][0],PARTS[p].sp,PARTS[p].sn].join(' ').toLowerCase(),figs:new Set((PARTS[p].figs||'').split(', ').flatMap(f=>{const[a,z]=f.split('–').map(Number);return z?Array.from({length:z-a+1},(_,i)=>a+i):[a];}))});}}
-  /* search: by name, key, Hamilton part number (42087 finds the detent) or source note, every word; or by figure, fig 90 (the manual's figures that show it, ranges included). A group with nothing found hides its heading */
+    for(const p of ps){const r=prow(p,plist,gh);if(!PARTS[p].pcs)continue;
+      r.row.insertAdjacentHTML('beforeend',`<button class="pf" aria-expanded="false" aria-label="Pieces of ${PARTS[p].t}" title="Its pieces">›</button>`);r.pf=r.row.lastChild;r.sub=document.createElement('div');r.sub.className='psub';plist.appendChild(r.sub);
+      r.pf.addEventListener('click',()=>fold(r,!r.sub.classList.contains('open')));r.kids=PARTS[p].pcs.map(c=>prow(p+'.'+c.k,r.sub,gh,r));}}
+  /* search: by name, key, Hamilton part number (42087 finds the detent) or source note, every word; or by figure, fig 90 (the manual's figures that show it, ranges included). A piece found
+     shows with its part, its fold opened while the search lasts. A group with nothing found hides its heading */
   const pSearch=$('#pSearch');pSearch.addEventListener('input',()=>{const v=pSearch.value.trim().toLowerCase(),fm=/^figs?\.?\s*(\d+)$/.exec(v),q=v.split(/\s+/).filter(Boolean),hit=new Set();
-    for(const r of PROWS){const on=fm?r.figs.has(+fm[1]):q.every(w=>r.txt.includes(w));r.row.classList.toggle('hidden',!on);if(on)hit.add(r.gh);}for(const r of PROWS)r.gh.classList.toggle('hidden',!hit.has(r.gh));
+    for(const r of PROWS)r.on=fm?r.figs.has(+fm[1]):q.every(w=>r.txt.includes(w));for(const r of PROWS)if(r.on&&r.par)r.par.on=true;
+    for(const r of PROWS){r.row.classList.toggle('hidden',!r.on);if(r.on)hit.add(r.gh);if(r.kids)r.sub.classList.toggle('found',!!v&&r.kids.some(x=>x.on));}for(const r of PROWS)r.gh.classList.toggle('hidden',!hit.has(r.gh));
     $('#pNone').classList.toggle('hidden',hit.size>0);});
   $('#pShow').addEventListener('click',()=>{st.hid.clear();st.iso=null;look();});
   /* rate: the timing and vernier weight pairs turned in or out in eighth turns, the timing weights up to 2 turns either way and the verniers 3 (R.timing, movement.js, sets the pitch from the
@@ -722,7 +825,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(hrs===0){kw.end=kw.t+3;kwOut.innerHTML=`<b>Fully wound after ${halfs(tot)} half turns.</b> The chain has pushed the stop-bar in the fusee top out against the winding stop under the barrel bridge, and the key can turn no further.`;}
     else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}, counterclockwise. ${(RUN_H-hrs).toFixed(1)} h of running stored. The sustaining spring drives the train meanwhile.`;}
   kwBtn.addEventListener('click',kwStart);
-  function partsSync(){for(const q of PROWS){const h=st.hid.has(q.p)||isoOut(q.p);q.ck.checked=!h;q.row.classList.toggle('off',h);q.b.setAttribute('aria-pressed',st.pick===q.p?'true':'false');q.b.disabled=st.drive&&(BOXP.has(q.p)||DRIVE_HIDE.has(q.p));}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
+  function partsSync(){for(const q of PROWS){const k=q.p,p=kp(k),h=k!==p?st.hid.has(k)||st.hid.has(p)||isoOut(p,k):st.hid.has(p)||isoOut(p);q.ck.checked=!h;q.row.classList.toggle('off',h);
+      if(q.kids){q.ck.indeterminate=!h&&q.kids.some(x=>st.hid.has(x.p)||isoOut(p,x.p));if(st.pick!==q.seen){q.seen=st.pick;if(st.pick&&kp(st.pick)===p)fold(q,true);}}   /* a part or piece of it picked: its fold opens, once */
+      q.b.setAttribute('aria-pressed',st.pick===k?'true':'false');q.b.disabled=st.drive&&(BOXP.has(p)||DRIVE_HIDE.has(p));}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}else{(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);}});
   /* Hide panel (P, or the tab on the stage's edge): the stage takes the panel's column, remembered here; the walkthrough and a link opening a panel section bring it back. Offered only where the panel sits beside the stage (style.css) */
@@ -851,7 +956,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     for(const l of LS){
       /* off by default; the walkthrough always names the parts of its step */
       let show=(st.labels||st.tour>=0)&&(l.grp==='mv'?(cur.lift>0.8||st.drive)&&cur.flip>0.8:l.grp==='motion'?st.drive&&st.mwOn&&cur.flip<0.3:l.grp==='dial'?cur.lift<0.1&&cur.lidM>0.9&&!st.drive:cur.lift<0.1&&cur.lidT>0.9&&!st.drive);
-      if(show&&foc&&!foc.has(l.part))show=false;
+      if(show&&foc&&!anyOf(foc,l.part))show=false;
       if(show&&st.drive&&DRIVE_HIDE.has(l.part))show=false;if(show&&isoOut(l.part))show=false;
       if(!show){l.el.style.opacity=0;continue;}
       const P0=l.fn();
@@ -1010,7 +1115,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
     config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');
       if(d)u.dial(d);if(b)u.balance(b);if(sv)u.stop(sv);u.R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);u.R.screws(SP);u.R.balCurl(degF()-T0);}});
-  if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,cam,cv,scene,M,PARTS,INFO,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
+  if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,cam,cv,scene,M,PARTS,INFO,PCE,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';
   document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==='dial'?'true':'false'));

@@ -51,6 +51,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .info p{margin:0;font-size:13.5px;color:var(--ink)}
 .info .spec{margin-top:6px;color:var(--muted);font-size:12.5px}
 .info .src{margin-top:4px;color:var(--muted);font-size:12.5px}.info .src:empty{display:none}.info .src i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;background:var(--ps)}
+.info .of{margin:-2px 0 6px;color:var(--muted);font-size:12.5px}.info .of:empty{display:none}.info .of button{border:0;padding:0;min-height:0;background:none;font:inherit;color:var(--blue);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 .info .x{position:absolute;right:8px;top:8px;border:0;padding:2px 8px;font-size:18px;line-height:1;color:var(--muted)}
 /* how to use it: mouse and touch side by side, this device's first and marked */
 .help{z-index:7;top:52px;width:min(620px,calc(100% - 24px));max-width:none;max-height:calc(100% - 118px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y}
@@ -119,6 +120,8 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .prow .pn:hover{background:color-mix(in srgb,var(--blue) 12%,transparent)}
 .prow .pn[aria-pressed="true"]{background:var(--blue);color:var(--panel)}
 .prow.off .pn{color:var(--muted);text-decoration:line-through}
+.prow .pf{border:0;padding:2px 7px;font-size:15px;line-height:1;color:var(--muted);transition:transform .15s}.prow .pf[aria-expanded="true"]{transform:rotate(90deg)}
+.psub{display:none;margin:0 0 4px 22px}.psub.open,.psub.found{display:block}.prow.sub .pn{font-weight:400;font-size:13px}
 details.more>summary{cursor:pointer;list-style:none;font:600 12.5px "Instrument Sans",sans-serif;color:var(--muted);display:flex;align-items:center;gap:6px;user-select:none}
 details.more>summary::-webkit-details-marker{display:none}
 details.more>summary::before{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin:0 3px 0 1px}
