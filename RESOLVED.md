@@ -1245,6 +1245,13 @@ Contents:
   a T bar with balls); the side handles are a bail between two rosettes at the
   gimbal pivot's height (0:45). Keep them traced (SHAPE-PASS.md, 7-8). `3d75292`
 
+- **The gimbals' lock nuts, the latch's head and the box's brass corners drawn
+  by eye.** The four lock nuts r 8.5 (were 4.2-5) and the latch's clamping head
+  r 8.5 (was 2.0), from 1:15 against the bezel and Figs. 1, 11 and 106; the
+  brass corners short caps near the top and at the foot of each edge (Fig. 1;
+  were full-height strips). The box's size checked against sale listings
+  (190-197 mm): unchanged. Keep them measured (SHAPE-PASS.md, gaps 1). `7bb49ad`
+
 ## Accuracy to the manual
 
 - **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,

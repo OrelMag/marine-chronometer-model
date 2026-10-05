@@ -14,7 +14,9 @@ function buildBox(M){
   wood(T,H0,2*W-2*T,W-T/2,yF+H0/2,0);wood(T,H0,2*W-2*T,-W+T/2,yF+H0/2,0);
   wood(2*W-2*T,1,2*W-2*T,0,yF+T+0.5,0,root,M.felt);
   const brassCorner=(p,x,y,z,h,cz=0)=>{const sx=Math.sign(x),sz=Math.sign(z-cz);mesh(p,new THREE.BoxGeometry(12,h,1.2),M.brass,x-sx*5.4,y,z+sz*0.6);mesh(p,new THREE.BoxGeometry(1.2,h,12),M.brass,x+sx*0.6,y,z-sz*5.4);};
-  for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,yF+H0/2,sz*W,H0);}
+  /* brass corner caps, two to each vertical edge, 0.2 of the base's height: one from 0.05 to 0.25 of it below the top, one at the foot (Fig. 1, the far front corner seen upright;
+     the near one fits; KLUwI2UUCMQ 0:45, 1:15). Until 4 October 2026 one strip the full height of each edge */
+  for(const sx of[1,-1])for(const sz of[1,-1]){brassCorner(root,sx*W,-0.15*H0,sz*W,0.2*H0);brassCorner(root,sx*W,yF+0.1*H0,sz*W,0.2*H0);}
   /* the side handles as KLUwI2UUCMQ 0:45 shows them (the box's side, oblique): a bail between two round rosettes, the rosettes at the gimbal pivot's height either side of its
      boss, their centres 0.31 of the box's width apart (61 mm) and r 15 (0.15 of it), the bail hanging below between them; read along the face against the box's 197 mm (+-10 %). The
      bail's section and swan neck, and the rosettes' thickness, estimated. Until 4 October 2026 a plate with a half-ring below the pivot */
@@ -45,7 +47,9 @@ function buildBox(M){
      of the case"), and the bezel screws on outside the rim (TR). The rim's 105 across and the gimbal ring's 66-68 radius are from the top-view photographs (estimated); the
      rest estimated. YT the rim's top, YTB the thread's foot; FD the floor's inside depth, FR the floor's edge (the bowl's inside rounds into it with radius SH-FR) */
   const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,TR=DB+4.5,YT=MR_Y+DIAL_T+0.6,YTB=5.2,FD=64,FR=38;
-  const RY=-20,RI=CR+16.5,RO=RI+2;
+  /* NUT_R: the four pivots' knurled lock nuts (42121), r 8.5: KLUwI2UUCMQ 1:15, against the bezel in the frame (12.5 px/mm): one at least 16 mm across where it shows, deeper in the box;
+     Fig. 106 draws all four as large discs and Sec. III calls the case rear one "the large, knurled lock nut". Until 4 October 2026 r 4.2 and 5. Their thickness (2.5) estimated */
+  const RY=-20,RI=CR+16.5,RO=RI+2,NUT_R=8.5;
   const ring=hn(new THREE.Group(),'42106');ring.userData.partName='ring';ring.position.y=RY;root.add(ring);
   /* the band, with a slot at the front right (Fig. 106) that the latch lever passes through to the case: the band round the rest of the ring, the band above and
      below the slot, and the slot's two side walls */
@@ -65,12 +69,12 @@ function buildBox(M){
      inside against the wall; its point (r 0.8) runs in the bushing, its shoulder just clear of it */
   for(const sx of[1,-1]){const r0=sx>0?RO+3.2:RO+2.4,sh=hn(mesh(gp,cylY(1.6,W+0.8-(r0+0.05),12),M.steel,sx*(r0+0.05+W+0.8)/2,0,0),'42120',{sub:1});sh.rotation.z=Math.PI/2;
     const pt=hn(mesh(gp,cylY(0.8,1.85,12),M.steel,sx*(r0+0.05-0.925),0,0),'42120',{sub:1});pt.rotation.z=Math.PI/2;
-    const ws=hn(mesh(gp,ringGeo(5.5,1.62,0.8),M.brass2,sx*(W+0.4),0,0),'42122');ws.rotation.z=Math.PI/2;const g=new THREE.Group();gp.add(g);hn(knurl(g,'x',-sx,-(W-T),4.2,2,1.62),'42121.g');hn(sHead(gp,'x',sx,W+0.8,3.6,2.2,0,0,0.05),'42120');}
+    const ws=hn(mesh(gp,ringGeo(5.5,1.62,0.8),M.brass2,sx*(W+0.4),0,0),'42122');ws.rotation.z=Math.PI/2;const g=new THREE.Group();gp.add(g);hn(knurl(g,'x',-sx,-(W-T),NUT_R,2.5,1.62),'42121.g');hn(sHead(gp,'x',sx,W+0.8,3.6,2.2,0,0,0.05),'42120');}
   /* gimbal latch at the front right (Figs. 1, 8, 106): the support bracket in the corner of the box, held by two screws from outside with washers; the lever turns on the
      knurled clamping screw, which goes down through the clamping bracket and the lever into the support bracket, so tightening it clamps the lever; the take-up spring,
      screwed to the support bracket, presses up on a collar under the lever to take up its play. Released, the lever lies along the right wall; latched, it swings in 45°
      through the slot in the ring to the keeper on the case, locking both. Knurled handle on the lever. Sizes estimated */
-  const lat=new THREE.Group();lat.userData.partName='latch';root.add(lat);const LP=W-T-8.5,LY=RY+0.6,BY=RY-2.2;   /* LY: the lever's middle; the support bracket's top at BY+1.5 */
+  const lat=new THREE.Group();lat.userData.partName='latch';root.add(lat);const LP=W-T-9,LY=RY+0.6,BY=RY-2.2;   /* LP: the lever's pivot 9 in from each wall of the corner, a clearance fit (the clamping head, r 8.5, clears each wall by 0.5 mm; not measured: README "Estimated"); LY: the lever's middle; the support bracket's top at BY+1.5 */
   const vScrew=(p,x,z,y,r,h,len,id)=>{const g=hn(new THREE.Group(),id);p.add(g);g.userData.sc={r,h,len,rs:r*0.5};mesh(g,cylY(r,h,20),M.brass2,x,y+h/2,z);mesh(g,new THREE.BoxGeometry(r*2.02,0.3,r*0.35),M.steelD,x,y+h-0.1,z);mesh(g,cylY(r*0.5,len,12),M.brass2,x,y-len/2,z);g.userData.axis=g.children[2];return g;};   /* a screw put in from above: head from y up, shank len down */
   { const bt=BY+1.5,bp=[[LP-3.5,LP-3.5],[W-T,LP-3.5],[W-T,W-T],[LP-3.5,W-T]];
     hn(mesh(lat,polyGeo(bp,3,[hT(LP,LP,1.8),hT(LP+4.2,LP,0.5),hT(LP+5.6,LP,0.5)]),M.brass2,0,BY-1.5,0),'42109');   /* tapped for the clamping screw and the take-up spring's screws */
@@ -79,7 +83,7 @@ function buildBox(M){
     for(const x of[LP+4.2,LP+5.6])vScrew(lat,x,LP,bt+0.3,0.5,0.35,0.3+1.5,'42276');
     const ct=LY+0.7+0.6;hn(mesh(lat,polyGeo([[LP-2.2,LP-2.2],[LP+2.2,LP-2.2],[LP+3.2,LP+2.2],[LP+2.2,LP+3.2],[LP-2.2,LP+2.2]],0.6,[hC(LP,LP,1.8)]),M.brass2,0,ct,0),'42110');   /* the clamping bracket on the lever's boss */
     hn(cylBetween(lat,0.6,bt,ct,M.brass2,LP+2.5,LP+2.5),'42110',{sub:1});   /* its leg down to the support bracket, which keeps it from turning */
-    const cs=hn(new THREE.Group(),'42114');lat.add(cs);cs.userData.sc={r:1.8,h:1.5,len:ct+0.6-(bt-2.5),rs:0.9};const kg=new THREE.Group();kg.position.set(LP,ct+0.6,LP);kg.rotation.x=-Math.PI/2;cs.add(kg);knurl(kg,'z',1,0,2.0,1.5);
+    const cs=hn(new THREE.Group(),'42114');lat.add(cs);cs.userData.sc={r:8.5,h:5,len:ct+0.6-(bt-2.5),rs:0.9};   /* its knurled head as drawn below (r 8.5 x 5), for the maker's sheet */const kg=new THREE.Group();kg.position.set(LP,ct+0.6,LP);kg.rotation.x=-Math.PI/2;cs.add(kg);knurl(kg,'z',1,0,8.5,5);   /* the clamping screw's knurled head, r 8.5 (KLUwI2UUCMQ 1:15, against the bezel: 17-20 mm across, nearer the camera; Fig. 1 and Fig. 106 item 17 a large disc on a post); r 2.0 until 4 October 2026; its thickness (5) estimated */
     cs.userData.axis=cylBetween(cs,0.9,bt-2.5,ct+0.6,M.steel,LP,LP); }   /* the clamping screw: knurled head on the clamping bracket, its shank the lever's pivot, 2.5 into the support bracket */
   const lv=hn(new THREE.Group(),'42111');lv.position.set(LP,LY,LP);lv.rotation.y=LATCH_OFF;lat.add(lv);
   { const len=Math.SQRT2*LP-(CR+0.3);mesh(lv,polyGeo([[-1.5,-1.5],[len,-1.5],[len,1.5],[-1.5,1.5]],1.4,[[0,0,0.95]]),M.brass,0,-0.7,0);mesh(lv,ringGeo(1.3,0.95,0.6),M.brass,0,1.0,0);mesh(lv,ringGeo(1.3,0.95,0.3),M.brass,0,-0.85,0);   /* the lever, bored for the clamping screw, with a boss above and a collar below */
@@ -93,8 +97,8 @@ function buildBox(M){
     const b=hn(mesh(bowl,ringGeo(1.4,0.82,2.5),M.steel,0,0,sz*(CR+5.25)),'42214.c');b.rotation.x=Math.PI/2;   /* pressed into the bracket's outer end */
     const rE=sz>0?RO+3.2:RO+2.4,sh=hn(mesh(ring,cylY(1.6,rE-(CR+6.55),12),M.steel,0,0,sz*(rE+CR+6.55)/2),sz>0?'42119':'42118',{sub:1});sh.rotation.x=Math.PI/2;
     const pt=hn(mesh(ring,cylY(0.8,2.05,12),M.steel,0,0,sz*(CR+6.55-1.025)),sz>0?'42119':'42118',{sub:1});pt.rotation.x=Math.PI/2;}   /* the shank through the ring to its shoulder, 0.05 off the bushing, and its point in it */
-  strap('z',1);hn(boss('z',1,RO+1.2,RO+3.2,3.2,1.6),'42108',{sub:1});{const g=new THREE.Group();ring.add(g);hn(knurl(g,'z',1,RO+3.2,5,2.5,1.62),'42121.cf');}hn(sHead(ring,'z',1,RO+5.7,3.4,2,0),'42119');
-  boss('z',-1,RO,RO+2.4,3.2,1.6);{const g=new THREE.Group();ring.add(g);hn(knurl(g,'z',-1,RO+2.4,5,2.5,1.62),'42121.cr');}hn(sHead(ring,'z',-1,RO+4.9,3.4,2,0),'42118');
+  strap('z',1);hn(boss('z',1,RO+1.2,RO+3.2,3.2,1.6),'42108',{sub:1});{const g=new THREE.Group();ring.add(g);hn(knurl(g,'z',1,RO+3.2,NUT_R,2.5,1.62),'42121.cf');}hn(sHead(ring,'z',1,RO+5.7,3.4,2,0),'42119');
+  boss('z',-1,RO,RO+2.4,3.2,1.6);{const g=new THREE.Group();ring.add(g);hn(knurl(g,'z',-1,RO+2.4,NUT_R,2.5,1.62),'42121.cr');}hn(sHead(ring,'z',-1,RO+4.9,3.4,2,0),'42118');
   /* latch keeper on the case, facing the latch through the ring's slot: a back on a separating washer (42128) against the wall, held by its screw (42116) from inside the
      case, and two cheeks, the lever's tip between them against the back when latched */
   { const kp=hn(new THREE.Group(),'42113');kp.position.set(0,0,0);kp.rotation.y=LATCH_A-Math.PI/2;bowl.add(kp);
