@@ -35,9 +35,7 @@ function buildBox(M){
      by as much as the longer key needs to stay under the glass lid */
   const KX=W-T-12,KB=-50.5,kw=4.4;wood(24,59-23,24,KX,yF+T+30.5-11.5,-KX,root,M.woodEdge);   /* stands on the felt */mesh(root,cylY(4.2,4,20),M.brass2,KX,KB-2,-KX);
   const key=hn(new THREE.Group(),'42044');key.userData.partName='key';key.position.set(KX,KB,-KX);root.add(key);key.rotation.y=Math.PI/4;
-  mesh(key,new THREE.LatheGeometry([V2(0,0),V2(kw/2,0),V2(kw/2,4.1*kw),V2(0.6*kw,4.4*kw),V2(1.1*kw,6.1*kw),V2(1.1*kw,7.0*kw),V2(0,7.0*kw)],24),M.brass);   /* pipe, neck, cone, collar */
-  { const pw=3.1*kw/2,ph=2.9*kw,pt=0.8*kw,sh=new THREE.Shape();sh.moveTo(-1.05*kw,0);sh.lineTo(-pw,ph-pw);sh.absarc(0,ph-pw,pw,Math.PI,0,true);sh.lineTo(1.05*kw,0);sh.closePath();
-    const pg=extrude(sh,{depth:pt,bevelEnabled:false,curveSegments:24});pg.translate(0,7.0*kw,-pt/2);mesh(key,pg,M.brass); }   /* the paddle on the collar, as wide as it at its foot, widening to its rounded top; its thickness (0.8 of the pipe's width) estimated */
+  windingKey(key,M);   /* the key itself (core.js), the same one the movement shows on the fusee's square and the hands' */
     /* slotted screw along an axis: 'x' or 'z', outward sign s, head from r0 to r0+h, and its shank (half the head's radius) sh mm back into the part under it */
   const sHead=(p0,ax,s,r0,rad,h,y,t,sh=2.5)=>{const p=new THREE.Group();p0.add(p);p.userData.sc={r:rad,h,len:sh,rs:rad*0.5};const X=ax==='x',m=mesh(p,cylY(rad,h,20),M.brass2,0,y,0),sl=mesh(p,X?new THREE.BoxGeometry(0.6,rad*2.02,rad*0.35):new THREE.BoxGeometry(rad*0.35,rad*2.02,0.6),M.steelD,0,y,0),k=mesh(p,cylY(rad*0.5,sh,12),M.brass2,0,y,0);
     if(X){for(const q of[m,k])q.rotation.z=Math.PI/2;m.position.x=s*(r0+h/2);k.position.x=s*(r0-sh/2);sl.position.x=s*(r0+h-0.25);m.position.z=sl.position.z=k.position.z=t||0;}

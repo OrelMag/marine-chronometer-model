@@ -383,6 +383,14 @@ function reclose(old,g){const u=old&&old.userData.capOf,p=g.attributes.position,
 function ringGeo(ro,ri,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,TAU,true);s.holes.push(hp);
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 /* a round collet or socket with a square hole a across (a hand broached square, a key's socket), centred on its y like ringGeo */
+/* the winding key (42044) as KLUwI2UUCMQ 0:45 shows it held up (box.js, where it stands; movement.js, on the fusee's square and the hands' square): its pipe from its end at y 0
+   along +y, a square socket in the pipe's first 4.5 mm (2.46 across, over the fusee's 2.4 square and the cannon pinion's 2.16), a short neck, a cone widening to a collar, and a
+   flat paddle with a rounded top, in proportion to the pipe's width kw (traced on the frame: total 10.6 widths, the pipe 4.1 of them, cone 2.0, collar 0.9 and 2.2 wide, paddle 2.9
+   tall and 3.1 wide); the pipe's outside r 2.2, so the scale is estimated (+-15 %); the paddle's thickness (0.8 of the pipe's width) estimated */
+function windingKey(g,M){const kw=4.4,V=(a,b)=>new THREE.Vector2(a,b);mesh(g,sqRingGeo(kw/2,2.46,4.5),M.brass,0,2.25,0);
+  mesh(g,new THREE.LatheGeometry([V(0,4.5),V(kw/2,4.5),V(kw/2,4.1*kw),V(0.6*kw,4.4*kw),V(1.1*kw,6.1*kw),V(1.1*kw,7.0*kw),V(0,7.0*kw)],24),M.brass);   /* pipe, neck, cone, collar */
+  const pw=3.1*kw/2,ph=2.9*kw,pt=0.8*kw,sh=new THREE.Shape();sh.moveTo(-1.05*kw,0);sh.lineTo(-pw,ph-pw);sh.absarc(0,ph-pw,pw,Math.PI,0,true);sh.lineTo(1.05*kw,0);sh.closePath();
+  const pg=extrude(sh,{depth:pt,bevelEnabled:false,curveSegments:24});pg.translate(0,7.0*kw,-pt/2);mesh(g,pg,M.brass);return g;}   /* the paddle on the collar, as wide as it at its foot, widening to its rounded top */
 function sqRingGeo(ro,a,h){const s=new THREE.Shape();s.absarc(0,0,ro,0,TAU,false);s.holes.push(sqPath(a));
   const g=extrude(s,{depth:h,bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);return g;}
 function sqPath(a){const q=a/2,h=new THREE.Path();h.moveTo(q,q);h.lineTo(q,-q);h.lineTo(-q,-q);h.lineTo(-q,q);h.closePath();return h;}   /* clockwise, a hole */

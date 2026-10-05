@@ -127,7 +127,8 @@ const PIECES={
   motion:[{k:'cannon',t:'Cannon pinion',h:'42077',d:'A friction fit on the centre arbor (Op. 58), slipping when the hands are set. It turns once an hour with the minute hand, and its pipe ends above the dial in the square the key sets the hands by (Fig. 8).',sp:'No. 42077',figs:'8, 107'},
     {k:'minute',t:'Minute wheel',h:'42078',d:'Driven by the cannon pinion; its pinion drives the hour wheel. It turns on its post.',sp:'No. 42078, complete with pinion',figs:'107'},
     {k:'hour',t:'Hour wheel',h:'42080',d:'Turns free on the cannon pinion’s pipe (Op. 59), once in 12 hours, carrying the hour hand on its own pipe.',sp:'No. 42080',figs:'107'},
-    {k:'wind',t:'Wind indicator wheel and pinion',h:'42081 42022',d:'The pinion on the dial end of the fusee arbor drives the wheel, which turns on its post and carries the wind indicator hand: 314° in 56 hours.',sp:'Wheel 42081 · pinion on the fusee arbor 42022',figs:'107'}]};
+    {k:'wind',t:'Wind indicator wheel and pinion',h:'42081 42022',d:'The pinion on the dial end of the fusee arbor drives the wheel, which turns on its post and carries the wind indicator hand: 314° in 56 hours.',sp:'Wheel 42081 · pinion on the fusee arbor 42022',figs:'107'},
+    {k:'key',t:'Winding key on the hands’ square',h:'42044',d:'Setting the hands while it runs, the winding key goes on the cannon pinion’s square above the dial and is turned by its shank, forward only: the minute hand on its marker half a minute behind the master’s, then on as its second hand passes 60 (Sec. III, “Setting While Running”; Fig. 8). Shown only while the hands are being set.',sp:'No. 42044',figs:'8'}]};
 /* the tables the rest of app.js reads: a piece's card, colour and entry under its key (part.k), its part's PHN its lines' pieces. A piece's colour in Colour by part: a shade of its part's,
    lighter and darker in turn and its hue a little round, so the pieces of a part tell apart and still read as one part */
 const INFO={},PCOL={},PRI={},PCE={},PHN={},PGRP=PG.map(g=>[g,[]]),kp=k=>k.split('.')[0];   /* kp: the part a key is or belongs to */
@@ -380,7 +381,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
   const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
   /* a piece's card: its own text, and its source, note and figures where it has them, else its part's; a line up to its part. A part with pieces lists them, each a link to its card */
-  function showPart(p){showHelp(false);const pp=kp(p);if(typeof MAKER!=='undefined')setTimeout(()=>MAKER.card(pp),0);st.hid.delete(p);st.hid.delete(pp);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
+  function showPart(p){showHelp(false);const pp=kp(p);if(typeof MAKER!=='undefined')setTimeout(()=>MAKER.card(p),0);st.hid.delete(p);st.hid.delete(pp);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[pp],c=PCE[p]||{},src=c.src||q.src,sn=c.src?c.sn:q.sn,figs=c.figs??q.figs;
     info.querySelector('.src').innerHTML=src?`<i style="--ps:${SRC[src][1]}"></i>${SRC[src][0]}${pp!==p&&!c.src?` (the ${q.t.toLowerCase()} as a whole)`:''}${sn?': '+U(sn):''}${figs?`. Figs. ${figs}`:''}.`:'';   /* a piece without a source of its own: its part's, said so */
     const lk=k=>`<button data-p="${k}">${INFO[k][0]}</button>`;info.querySelector('.of').innerHTML=pp!==p?`Part of: ${lk(pp)}`:q.pcs?'Its pieces: '+q.pcs.map(x=>lk(pp+'.'+x.k)).join(', '):'';info.classList.add('on');hintOff();}
@@ -1114,7 +1115,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
     config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');
       if(d)u.dial(d);if(b)u.balance(b);if(sv)u.stop(sv);u.R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);u.R.screws(SP);u.R.balCurl(degF()-T0);}});
-  if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,cam,cv,scene,M,PARTS,INFO,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
+  if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,cam,cv,scene,M,PARTS,INFO,PCE,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';
   document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==='dial'?'true':'false'));

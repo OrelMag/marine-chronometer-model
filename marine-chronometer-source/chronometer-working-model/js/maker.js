@@ -12,7 +12,7 @@ const MAKER=(()=>{
   let matName=null;
   const nameOf=m=>{if(!matName){matName=new Map();for(const[k,v]of Object.entries(A.M))if(v&&v.isMaterial)matName.set(v,k);}return matName.get(m)||'';};
   /* the part's meshes as built (the merged copies are drawing only: the pieces are still under the movement), visible or not, without the engravings */
-  const meshesOf=p=>A.meshes.filter(o=>o.userData.part===p&&!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position);
+  const meshesOf=p=>A.meshes.filter(o=>(p.includes('.')?o.userData.pk===p:o.userData.part===p)&&!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position);
   const toMv=o=>{const m=new THREE.Matrix4().copy(A.mv.matrixWorld).invert();return m.multiply(o.matrixWorld);};
   /* each triangle of a mesh in the movement's frame (mm), instances included */
   function tris(o,f){const g=o.geometry,P=g.attributes.position,I=g.index,mats=[];const base=toMv(o);
@@ -56,7 +56,8 @@ const MAKER=(()=>{
     return`<table class="mk"><thead><tr><th>Screw</th><th class="n">Pieces</th><th class="n">Head Ø</th><th class="n">Thread Ø</th><th class="n">Under the head</th><th>Thread to cut</th></tr></thead><tbody>${[...seen.values()].map(({id,c,n})=>{const d=2*c.rs,[M,P]=iso(d);
       return`<tr><td>${esc(id)}</td><td class="n">${n.size}</td><td class="n">${mm(2*c.r)}</td><td class="n">${mm(d)}</td><td class="n">${mm(c.len)}</td><td>M${M} × ${P} (ISO 261 coarse; the drawn ${d.toFixed(2)})</td></tr>`;}).join('')}</tbody></table>
       <p class="mkm">Hamilton's threads are not known (the manual gives none, the videos don't resolve them): the thread to cut is the standard metric one nearest the model's, a maker's choice; tap the part each screws into, clear the parts it passes through, as the fits above say.</p>`;}
-  function sheetHTML(p){const q=A.PARTS[p]||{},own=MAKERS.filter(l=>l.part===p),sp=own.length?[]:((q.sp||'').match(/\d{5}/g)||[]),L=own.length?own:MAKERS.filter(l=>sp.includes(l.no)),m=measure(p),s=m.box.getSize(new THREE.Vector3());
+  /* a piece's sheet (part.k): the parts-list lines it lists (PIECES' h), its own meshes, its source where it has one, else its part's */
+  function sheetHTML(p){const pc=A.PCE&&A.PCE[p],q=pc&&pc.src?{src:pc.src,sn:pc.sn}:A.PARTS[p.split('.')[0]]||{},own=pc?MAKERS.filter(l=>pc.h.split(' ').includes(l.id)):MAKERS.filter(l=>l.part===p),sp=own.length?[]:((q.sp||'').match(/\d{5}/g)||[]),L=own.length?own:MAKERS.filter(l=>sp.includes(l.no)),m=measure(p),s=m.box.getSize(new THREE.Vector3());
     const rows=L.map(l=>`<tr><td>${esc(l.idx)}</td><td>${esc(l.no)}</td><td>${esc(l.name)}</td><td class="n">${esc(l.qty)}</td><td>${esc(l.mat)}<i>${l.cls==='manual'?'the manual':'practice'}</i></td><td>${esc(l.treat)}</td><td>${esc(l.fit)}</td></tr>`).join('');
     return`<table class="mk"><thead><tr><th>Idx</th><th>No.</th><th>Name</th><th class="n">Units</th><th>Material</th><th>Finish, heat treatment</th><th>Fit, as measured on the model</th></tr></thead><tbody>${rows||'<tr><td colspan="7">No line of the parts list is on this card.</td></tr>'}</tbody></table>${!own.length&&L.length?`<p class="mkm">This card is cut on the line above, which the ${esc((A.INFO[L[0].part]||[L[0].part])[0])} card carries.</p>`:''}
       <p class="mkm">As built: ${mm(s.x)} × ${mm(s.y)} × ${mm(s.z)} (along the movement's x, its axis y, z), ${m.vol.toFixed(1)} mm³, about ${m.mass.toFixed(2)} g (${Object.entries(m.by).filter(([,v])=>v>0.01).map(([k,v])=>`${k} ${v.toFixed(1)} mm³`).join(', ')}).
