@@ -108,7 +108,7 @@ function mats(){
   const M={plate:S(PLATE_FINISH.nickel,1,0.2,{map:st,normalMap:stx.normal,normalScale:new THREE.Vector2(0.7,0.7)}),plateSolid:S(PLATE_FINISH.nickel,1,0.3),gilt:S(0xcaa45a,1,0.34),brass:S(0xd4a955,1,0.3),brass2:S(0xb8903f,1,0.42),copper:S(0xc98d52,1,0.34),
     steel:S(0xdcdfe4,1,0.17),steelD:S(0x8f959d,1,0.3),steelS:S(0xbcc0c5,1,0.36),blued:S(0x1a2c7a,0.9,0.24),steelK:S(0x4a5058,1,0.32),ruby:S(0xc8163c,0.1,0.12,{emissive:sc(0x3a0010)}),clear:S(0xdfe5ea,0.1,0.08,{transparent:true,opacity:0.6}),
     chain:S(0x8c9199,1,0.3),chain2:S(0x6c717a,1,0.35),delrin:S(0xf1e8d6,0,0.55),mspring:S(0x3c4a70,0.9,0.3),
-    wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
+    wood:S(0x9c7466,0,0.36,{map:wt}),woodEdge:S(0x3a130a,0,0.45),felt:S(0x1d3a2e,0,0.95),packing:S(0x1c1c1e,0,0.93),fibre:S(0x5e3818,0,0.55),glass:S(0xffffff,0,0.02,{transparent:true,opacity:0.12,depthWrite:false}),
     invar:S(0xa7aaa6,1,0.28)};
   /* plateCrest: a uv on one of the damascening's ridge crests (row 29.6 of the tile at its left edge, where the map is brightest and its normal flat), through the
      map's transform: plainFaces pins a plate's faces off its train side there, so they read as plain nickel */
