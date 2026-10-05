@@ -54,7 +54,7 @@ chk(Qm>=q0&&Qm<=q1,`the model's TF ${TFm} s (Q ${f(Qm,0)}, shared/escapement.js)
 say('A6: friction from the measured parts');
 const pv=re=>{const m=re.exec(mv);if(!m)throw Error('not found in movement.js: '+re);return m.slice(1).map(Number);};
 const pvC=pv(/R\.cw=hn\(arbor[^;]*?prof:\[\[TB_T-0\.1,([\d.]+)\],\[TB_U\+0\.025,[\d.]+\],\[y0-0\.125,([\d.]+)\]/),pvT=pv(/R\.tw=hn\(arbor[^;]*?prof:\[\[TB_T-0\.1,([\d.]+)\],\[TB_U\+0\.025,[\d.]+\],\[LT_H-2\.025,([\d.]+)\]/),
-  pvF=pv(/R\.fw=hn\(arbor[^;]*?prof:\[\[LB_T\+2\.56,([\d.]+)\],\[LB_T\+3\.025,[\d.]+\],\[LT_H-2\.025,([\d.]+)\]/),pvE=pv(/R\.esc=hn\(arbor[^;]*?prof:\[\[TB_T\+SEAT_D\+0\.025,([\d.]+)\],\[TB_T\+SEAT_D\+0\.6,[\d.]+\],\[-0\.6,([\d.]+)\]/),pvB=pv(/const PV=([\d.]+),SPV=/);
+  pvF=pv(/R\.fw=hn\(arbor[^;]*?prof:\[\[LB_T\+2\.56,([\d.]+)\],\[LB_T\+3\.025,[\d.]+\],\[LT_H-2\.025,([\d.]+)\]/),pvE=pv(/R\.esc=hn\(arbor[^;]*?prof:\[\[TB_T\+SEAT_D\+0\.025,([\d.]+)\],\[TB_T\+SEAT_D\+0\.6,[\d.]+\],\[-0\.6,([\d.]+)\]/),pvB=pv(/const PV=([\d.]+),yT=CK_T/);
 const MODS={fusee:0.392,centre:0.3245,third:0.251,fourth:0.2614};   /* tools/solve.py: from the arbors' places and the counts */
 const STG=[['centre',MODS.fusee,TRAIN.fu,TRAIN.cp,MODS.centre*TRAIN.cw/2,pvC],['third',MODS.centre,TRAIN.cw,TRAIN.tp,MODS.third*TRAIN.tw/2,pvT],['fourth',MODS.third,TRAIN.tw,TRAIN.fp,MODS.fourth*TRAIN.fw/2,pvF],['escape',MODS.fourth,TRAIN.fw,TRAIN.ep,rE*1000,pvE]];   /* the arbor driven, the module of its pinion's mesh, the driving wheel's teeth, its pinion's leaves, its own wheel's radius (mm; the escape wheel's to the tooth's tip), its pivots' radii */
 const stage=(s,mp,mt,c)=>{const[,m,zw,zp,rw,p]=s,rp=m*zp/2,rpv=(p[0]+p[1])/2,dp=mp*rpv*(1/rp+1/rw),dm=mt*Math.PI*(1/zw+1/zp)*c;return{eta:(1-dp)*(1-dm),dp,dm};};
