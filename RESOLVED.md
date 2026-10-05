@@ -31,6 +31,13 @@ Contents:
 
 ## Escapement
 
+- **Four overlaps from this batch's measured sizes** (fine.py, 5 October 2026): the impulse roller at
+  its measured 1.47 met the hub's sleeve, sized to the old 1.3; the escape bridge at 5.6 wide overhung
+  its seats, grown from the old 5.2; the detent block's pins at r 0.53 stood in holes r 0.42; the block
+  at its measured 3.1 width met the second train pillar's top collar by 0.28 (the pillar moved 0.33,
+  inside its reading). Keep: a size measured on one part goes to every part sized from it (the sleeve
+  from `RIT`, the seats from the bar's width in `tools/train_bridge.py`, the holes from the pins).
+  `0b4dab2`
 - **Escape wheel had 15 teeth** while the timing stepped 1/16 turn, so a tooth
   didn't rest on the locking stone every beat. It now has 16, Hamilton's count.
   Keep: the mesh's tooth count and the timing's step must agree. `5aab9f7`
