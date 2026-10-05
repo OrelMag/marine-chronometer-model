@@ -1125,6 +1125,20 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    Ships sketch 023263). Until then the model keeps its place and inward swing;
    the shape (a strip curved along the cock's foot, a boss round the screw) can
    follow the figures without moving anything.
+   *Worked again (5 October 2026), from the manual's Fig. 9 at 400 dpi:*
+   - **The bug is real.** The model's arm turns 120° inward, and its finger, standing 2.4 mm up into the rim's height band, passes 6.97 mm
+     from the staff at 50° into the turn: through a balance at rest. `fine.py` doesn't see it, since it tests only the locked and unlocked
+     states, not the swing between them.
+   - **The model's layout has no room for any swing.** Turned outward (Fig. 9's way), the arm meets the cock's foot by 30° and a train-bridge
+     screw head by 90° (`fine.py --eval "__mv.userData.stop('arm')"`).
+   - **Fig. 9 is not to scale.** Fitted on its rim (an ellipse about the hairspring's axis, about 48 px/mm, the view about 24° above the plane),
+     it draws the hairspring 11.6 mm tall against the measured 6.4. It is an illustration, so it can't place the arm in millimetres.
+   - **What it does support:** an arm about 4-4.5 of its screw's heads long, 6.4-7.1 mm at the rim's scale (the model's 13), a curved strip with a
+     round end, swinging out round the front of its screw toward the barrel bridge's large screw.
+   - **Shortened to 7 mm along its present line**, the arm's screw lands on the escape upper bridge, so the real arm stands elsewhere in plan,
+     and nothing measured says where.
+   *To settle:* a photograph of a movement with the arm fitted (none found on the web, 5 October 2026). Until then any new place is a fit for
+   room, which `claude/lock-arm-shape` was faulted for; the model keeps its arm, with the swing's fault recorded.
 
 ## Open questions, to settle from video (1 October 2026)
 
