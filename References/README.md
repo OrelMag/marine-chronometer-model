@@ -47,6 +47,7 @@ chronometer boxes; blank forms may be in the National Archives, Record Group 19
 (`books.google.com/books?id=hiE6oREONHEC`, `?id=z8gE8mun6OMC`).
 
 Web photographs consulted (all rights reserved, so cited, not copied here):
+- watchdoc.com, "Hamilton Model 21 WW2 Ship Chronometer Balance Staff" (`www.watchdoc.com/products/hamilton-ww2-ship-chronometer-balance-staff-for-model-21`, image `Hamilton_21_Balance_Staff.jpg`, 748 px): a bare Model 21 balance staff side-on, the only whole staff found; the model's staff is traced on it (5 October 2026).
 - omegaforums.net, "Incoming Hamilton Model 21 chronometer" (thread 78172): side views of the train between the plates (the third wheel lowest with its pinion above it, the fourth pinion long under its wheel; the train-blocking screw's dog point at the fourth wheel), and the train-blocking screw's head circled on the bridge.
 - delaneyantiqueclocks.com, Hamilton Model 21 No. 8854 (1941): the dial (sub-dial centres about 0.47-0.51 of the dial's radius) and a side view of the movement.
 - Wikimedia Commons, "Hamilton Marine Chronometer Model 21.jpg": the manual's Fig. 13 (1943 edition), public domain.
