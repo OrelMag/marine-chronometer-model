@@ -155,6 +155,9 @@ function makeEsc(o={}){
      wheel trips, escaping an extra tooth (app.js's jolt) */
   const TRIP=a0===null?Infinity:TAU+a0;
   const rateAt=(a,s=1)=>{if(!wk||!CL||!(a>=AMIN))return NaN;const p=parts(CL,a);return day(s*(p.imp+p.draw)+p.detent+p.trip-PH0)+c.HS*(a-A0)/D2R/10;};
+  /* atK(s, kd, kp): the swing it settles at and its rate there with the escape wheel's torque s times the model's and the detent and trip springs' stiffness kd and kp times
+     the model's (a strip's stiffness goes as its thickness cubed): what a maker's error in the mainspring or the springs does (tools/tolerances.js). rate NaN under AMIN */
+  const atK=(s,kd=1,kp=1)=>{if(!wk||!CL)return{A:0,rate:NaN};const Wn=s*CL.w*(wk.EI-wk.ER)-kd*CL.Kd*wk.ED-kp*CL.Kp*wk.ET,a=Wn>0?Math.sqrt(Q*Wn/Math.PI):0;if(!(a>=AMIN))return{A:a,rate:NaN};const p=parts(CL,a);return{A:a,rate:day(s*(p.imp+p.draw)+kd*p.detent+kp*p.trip-PH0)+c.HS*(a-A0)/D2R/10};};
   /* the manual's adjustment figures (Sec. VIII, Ops. 76, 84-88, 97), measured with its own definitions: printed by chronometer-working-model/tools/escapement.js, shown
      live by the model's adjuster's bench. runs: false, with why, when the escapement would not run at these settings (its other figures are then NaN where they can't be had) */
   let meas=null;
@@ -186,6 +189,6 @@ function makeEsc(o={}){
       {k:'drop',name:'drop (Op. 97)',v:f(r.drop)+'°',want:'about 2°',ok:Math.abs(r.drop-2)<1&&r.ahead>0},
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,T,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,T,measure,checks,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};

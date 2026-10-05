@@ -2,6 +2,7 @@
 print at A4's printable width (190 mm) and checks each part's section as a maker would use it, the page alone in hand:
 
   - the sheet: its parts-list lines, each with a material and a fit (not blank), the overall size, the source of its shape;
+  - every line with a tolerance (tools/tolerances.js) shows it on its sheet;
   - every line of the parts list on a part of the model (the movement's and the box's) on some sheet; a part with pieces is an assembly page (its card and drawing, no sheet),
     its lines on its pieces' sheets;
   - the drawing: printed at a stated scale (its title says "scale N:1" or "1:N", and the print matches it within 1 %: max-width must not shrink it), no
@@ -24,7 +25,8 @@ JS=r"""()=>{MAKER.book();document.documentElement.classList.add('book-print');co
     out.push(r);}
   /* the lines on the model (the parts' cards': MAKERS' part), and each part that has meshes: every one must be on a sheet in the book */
   const onModel=new Set(Object.keys(window.__parts).filter(p=>window.__mv&&(()=>{let n=0;let root=window.__mv;while(root.parent)root=root.parent;root.traverse(o=>{if(o.isMesh&&o.userData.part===p)n++;});return n;})()));
-  return {sec:out,lines:MAKERS.filter(l=>l.part&&onModel.has(l.part)).map(l=>[l.no,l.name,l.part])};}"""
+  const txt=document.getElementById('bookPrint').textContent;
+  return {sec:out,lines:MAKERS.filter(l=>l.part&&onModel.has(l.part)).map(l=>[l.no,l.name,l.part]),tol:MAKERS.filter(l=>l.tol).map(l=>[l.no,l.name,txt.includes('Tolerance ('+l.no+').')])};}"""
 async def main():
     pdf=sys.argv[sys.argv.index('--pdf')+1] if '--pdf' in sys.argv else None
     async with async_playwright() as p:
@@ -37,6 +39,8 @@ async def main():
     printed={td[1] for r in S for td in r['lines'] if len(td)>=7}
     for no,name,part in R['lines']:
         if no not in printed:say(name,f'line {no} ({part}) is on no sheet of the book')
+    for no,name,shown in R['tol']:   # a line the sources don't size (tools/tolerances.js): its sheet says how closely to make it
+        if not shown:say(name,f'line {no}: its tolerance is on no sheet of the book')
     for r in S:
         n=r['name']
         if not r['asm']:   # an assembly (a part with pieces) has its card and its drawing as assembled; its lines are on its pieces' sheets
