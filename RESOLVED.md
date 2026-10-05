@@ -620,7 +620,7 @@ Contents:
   from its bore r 2.92. Now drawn so, the fusee's boss widened for the threads
   and the collar stepped under the sustaining ratchet (inferred). Keep: the
   counterbores inside the teeth's roots (r 6.08); nothing of the winding ratchet
-  stands above its face. (this commit)
+  stands above its face. `f2c5053`
 - **The setup click's tip 0.1 mm in the ratchet's teeth** (Review-results.md, BOM
   comparison 3): its pivot 9.25 mm out, from the top-view photograph. At the video's
   10.25 (11:58), its tip at the teeth's root 32 deg round, it seats 0.52 mm. Keep:
