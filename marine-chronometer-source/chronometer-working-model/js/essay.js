@@ -191,7 +191,7 @@ const ESSAY=(()=>{
       else{const s=(t-0.04)/0.92;ang=TAU*N*s;r=Re;y=H*s;ox=Math.sin(Math.PI*s)*0.45*R*(th/(TAU*0.6));}
       const a=ang+th*(1-ang/(TAU*N));return v.set(r*Math.cos(a)+ox,y,-r*Math.sin(a));};
     return closeGeo(new THREE.TubeGeometry(c,Math.round(N*44),wire,6,false));}
-  const HS=[6.3,5.9,9,0.17,4.6];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the ends' radius (HS_R) */
+  const HS=[5.1,6.7,12,0.17,2.65,3.2];   /* the Model 21's hairspring as movement.js draws it: radius, height, turns, wire, the stud end's radius (HS_R) and the collet end's (HS_RI; its straight lead into the collet's clamp left off, with the collet) */
 
   /* ---------- the balance and hairspring: T = 2π√(I/κ) ---------- */
   fig('eBal',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.6,yaw:0.55,pitch:0.5,dist:70,target:[4,1,0]}),M=G.M,A=ESC.A;
@@ -204,7 +204,7 @@ const ESSAY=(()=>{
     range(ins[0],v=>{m=v;bal.userData.S.forEach(o=>o.scale.set(Math.sqrt(v),1,Math.sqrt(v)));upd();return '×'+v.toFixed(2);});range(ins[1],v=>{k=v;upd();return '×'+v.toFixed(2);});
     q('.slow',P).addEventListener('change',e=>slow=e.target.checked);play(q('.play',P),()=>going,v=>going=v);
     return dt=>{if(going){ph+=dt*(slow?0.2:1)/(0.5*Math.sqrt(m/k));f.dirty=true;}if(!f.dirty)return;f.dirty=false;
-      const th=A*Math.sin(TAU*ph);bal.rotation.y=th;spr.geometry.dispose();spr.geometry=springGeo(HS[0],HS[1],HS[2],th,HS[3]*Math.cbrt(k),HS[4],HS[4]);V.render();};},'3d');
+      const th=A*Math.sin(TAU*ph);bal.rotation.y=th;spr.geometry.dispose();spr.geometry=springGeo(HS[0],HS[1],HS[2],th,HS[3]*Math.cbrt(k),HS[5],HS[4]);V.render();};},'3d');
 
   /* ---------- the hairspring close up: terminal curves or plain ends ---------- */
   fig('eSpr',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.95:0.6,yaw:0.45,pitch:0.28,dist:42,target:[0,4.6,0]}),M=G.M,R=5.5,H=9,N=10;
@@ -329,7 +329,7 @@ const ESSAY=(()=>{
     const cw=arbor(S0,M,...C0,{wheel:{n:T.cw,m:MOD.centre,y:1.8,th:1,spokes:5},ar:[-3,9],r:0.75});ptr(cw,9);   /* stacked as Figs. 13, 29 and 110: the third wheel lowest, its pinion above it meshing the centre wheel; the fourth pinion under its wheel, meshing the third wheel */
     const tw=arbor(S0,M,...Tp,{wheel:{n:T.tw,m:MOD.train,y:0,th:0.9,spokes:5,cside:-1},pin:{n:T.tp,m:MOD.centre,y:1.8,th:2.6},ar:[-3,9]});ptr(tw,5);
     const fw=arbor(S0,M,...Fp,{wheel:{n:T.fw,m:MOD.fourth,y:3.6,th:0.9,spokes:5,cside:1},pin:{n:T.fp,m:MOD.train,y:1.475,th:3.25},ar:[-3,9]});ptr(fw,6);
-    const ew=arbor(S0,M,...Ep,{pin:{n:T.ep,m:MOD.fourth,y:3.6,th:2},ar:[-3,9]});escapeWheel(ew,M,ES,5.4,ESC);ptr(ew,4);
+    const ew=arbor(S0,M,...Ep,{pin:{n:T.ep,m:MOD.fourth,y:3.6,th:2},ar:[-3,9],r:0.67});escapeWheel(ew,M,ES,5.4,ESC);ptr(ew,4);
     const eT=T.ew/2;   /* the escape wheel turns once in ew half seconds */
     V.label('Centre wheel',`${T.cw} teeth, 1 turn / ${turnT(ESC_PER.cw*eT)}`,v=>v.set(C0[0]-10,2.3,C0[1]+7));V.label('Third wheel',`${T.tw} teeth, 1 turn / ${turnT(ESC_PER.tw*eT)}`,v=>v.set(Tp[0]+1,0.5,Tp[1]+9));
     V.label('Fourth wheel',`${T.fw} teeth, 1 turn / ${turnT(ESC_PER.fw*eT)}`,v=>v.set(Fp[0]+2,4.1,Fp[1]-9));V.label('Escape wheel',`${T.ew} teeth, 1 turn / ${turnT(eT)}`,v=>v.set(Ep[0]+3,6,Ep[1]+4));
@@ -386,12 +386,143 @@ const ESSAY=(()=>{
       ctx.strokeStyle=PAL.red;ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(X(end),Y(pred(end)));ctx.lineTo(X(end),Y(e[end]));ctx.stroke();
       ctx.fillStyle=PAL.muted;ctx.textAlign='right';ctx.fillText('read to the half second',X(9)-6,Y(y0)-8);ctx.fillStyle=PAL.blue;ctx.fillText('mean rate',X(end)-6,Y(pred(end))+(e[end]>pred(end)?16:-10));};});
 
+  /* ---------- Greenwich time from the sky: the almanac and the navigator's arithmetic (ALM, shared/almanac.js, checked by tools/almanac.js against JPL Horizons
+     and skyfield). The worked examples are fixed days and places, so a reader can follow them on paper; each sight is made by the almanac at the true time and
+     place (ALM.sextant: refraction, dip, parallax and semi-diameter put in) and worked as the navigator works it, from the readings alone ---------- */
+  const AL=typeof ALM!=='undefined'?ALM:null,FM=AL&&AL.fmt,hr=36e5,
+    dmS=(a,p='N',m='S')=>FM.dm(Math.abs(a))+' '+(a<0?m:p),sgn=(v,n=1,u='′')=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n)+u,
+    tod=(t,n=1)=>{const d=new Date(Math.round(t/100)*100),z=x=>String(x).padStart(2,'0');return`${z(d.getUTCHours())}:${z(d.getUTCMinutes())}:${(d.getUTCSeconds()+d.getUTCMilliseconds()/1000).toFixed(n).padStart(n?n+3:2,'0')}`;},
+    mins=s=>{const a=Math.abs(s),m=Math.floor(a/60);return(s<-0.05?'−':s>0.05?'+':'±')+(m?m+' min ':'')+(a-60*m).toFixed(1)+' s';},
+    table=(rows,head)=>'<table>'+(head?'<thead><tr>'+head.map(h=>`<th>${h}</th>`).join('')+'</tr></thead>':'')+'<tbody>'+rows.map(r=>r?'<tr>'+r.map(c=>`<td>${c??''}</td>`).join('')+'</tr>':'<tr class="e-sep"><td colspan="9"></td></tr>').join('')+'</tbody></table>',
+    noAlm=st=>{st.innerHTML='<div class="e-fallback">The almanac’s script didn’t load. Reload the page to try again.</div>';return()=>{};};
+  /* the corrections of a sight as the navigator writes them down */
+  const corrRows=(c,b)=>[['Sextant altitude',FM.dm(c.hs),''],['Index correction',sgn(c.ic),''],['Dip',sgn(-c.dip),'1.76′ √ eye'],['Apparent altitude',FM.dm(c.ha),''],
+    ['Refraction',sgn(-c.R),'Bennett'],['Semi-diameter',sgn(c.sd),b.name==='Moon'?'augmented':''],['Parallax',sgn(c.pa,2),'HP cos h'],['Observed altitude',`<b>${FM.dm(c.ho)}</b>`,'']];
+
+  /* equal altitudes ashore: the chronometer's error from two readings of the Sun at the same altitude */
+  fig('eEqual',f=>{const st=f.el,P=figOf(st);if(!AL)return noAlm(st);const C=c2d(st,f,w=>w<520?0.66:0.42),[hi,ei]=qa('input[type=range]',P),tb=q('.e-book',P),ro=q('.e-ro',P);
+    const PORTS=[{n:'Annapolis',lat:38+59/60,lon:-(76+29/60)},{n:'Greenwich',lat:51+28.7/60,lon:-0.1/60},{n:'Honolulu',lat:21+18.4/60,lon:-(157+51.5/60)}],day=Date.UTC(2026,9,15);
+    let port=PORTS[0],h=25,E=23.5,run=null;
+    const upd=()=>{const{lat,lon}=port,alt=t=>{const S=AL.sun(t);return AL.hcz(lat,S.dec,AL.n360(S.gha+lon)).hc;},ln=AL.noon(lon,day+12*hr-lon/15*hr),top=alt(ln);
+      const cross=(a,b)=>{for(let i=0;i<50;i++){const m=(a+b)/2;(alt(m)<h)===(alt(a)<h)?a=m:b=m;}return(a+b)/2;};
+      run={alt,ln,top,ok:h<top-0.5};if(!run.ok){tb.innerHTML='';ro.innerHTML=`At ${port.n} the Sun climbs only to <b>${top.toFixed(1)}°</b> that day: take a lower altitude.`;f.dirty=true;return;}
+      const t1=cross(ln-9*hr,ln),t2=cross(ln,ln+9*hr),c1=t1+E*1000,c2=t2+E*1000,r=AL.equalAlt(lat,lon,c1,c2);Object.assign(run,{c1,c2,r});
+      tb.innerHTML=table([['The Sun at '+h.toFixed(1)+'°, morning: the chronometer reads',tod(c1),''],['afternoon, at the same altitude',tod(c2),''],['Halfway between',tod(r.mid),'noon, as the chronometer has it'],
+        ['Equation of equal altitudes',mins(-r.eqn),'the Sun’s change of declination'],['Local apparent noon at '+port.n+', '+dmS(lon,'E','W')+', by the almanac',tod(r.noon),'GMT'],
+        ['The chronometer’s error',`<b>${mins(r.E)}</b>`,r.E>=0?'fast':'slow']]);
+      ro.innerHTML=`Found <b>${mins(r.E)}</b> against the ${mins(E)} set: the arithmetic needs only the two readings, ${port.n}’s longitude and the almanac. Taking the middle of the readings for noon, without the equation, would have been ${Math.abs(r.eqn).toFixed(1)} s out.`;f.dirty=true;};
+    seg(q('.seg',P),v=>{port=PORTS[+v];upd();});range(hi,v=>{h=v;upd();return v.toFixed(1)+'°';});range(ei,v=>{E=v;upd();return mins(v)+(v>0?' fast':v<0?' slow':'');});
+    return()=>{if(!f.dirty||!run)return;f.dirty=false;const{alt,ln,top}=run,x0=(ln-day)/hr-7,x1=x0+14,y1=Math.ceil((top+6)/10)*10,cs=E/3600;
+      const xt=[];for(let v=Math.ceil(x0);v<=x1;v+=2)xt.push(v);const yt=[];for(let v=0;v<=y1;v+=10)yt.push(v);
+      chart(C,{x0,x1,y0:0,y1,xt,xf:v=>String(((v%24)+24)%24).padStart(2,'0')+'h',yt,yf:v=>v+'°',xl:'the chronometer’s reading',yl:'the Sun’s altitude',
+        bands:run.ok?[{x0,x1,y0:h-0.25,y1:h+0.25,color:PAL.brass}]:[],cursor:run.ok?(run.r.mid-day)/hr:null,
+        series:[{f:x=>alt(day+(x-cs)*hr),color:PAL.ink,label:port.n,lx:(ln-day)/hr+cs+3.2,dx:8,dy:-4}],marks:run.ok?[{x:(run.c1-day)/hr,y:h,color:PAL.blue},{x:(run.c2-day)/hr,y:h,color:PAL.blue},{x:(ln-day)/hr+cs,y:top,color:PAL.red}]:[]});};});
+
+  /* the time sight at sea */
+  fig('eSight',f=>{const st=f.el,P=figOf(st);if(!AL)return noAlm(st);const C=c2d(st,f,w=>w<520?0.62:0.36),[ti,ei,li]=qa('input[type=range]',P),tb=q('.e-book',P),ro=q('.e-ro',P);
+    const la=35,lo=-40,day=Date.UTC(2026,9,18),O={eye:6,ic:-1.4,T:18,P:1008,limb:'L'};let H=10.25,Em=0,dL=0;
+    const work=(hh,em,dl)=>{const t=day+hh*hr,hs=AL.sextant('Sun',t,la,lo,O),tn=t+em*1000,B=AL.sun(tn),c=AL.correct(hs,B,{...O,lat:la}),east=AL.topo(AL.sun(t),la,lo).az<180,
+      r=AL.timeSight(la+dl/60,B.dec,c.ho,B.gha,east);return{t,tn,hs,B,c,east,r,err:r?AL.n180(r.lon-lo)*60*Math.cos(la*Math.PI/180):NaN};};
+    const N=(()=>{const t=AL.noon(lo,day+12*hr-lo/15*hr),S=AL.sun(t),hs=AL.sextant('Sun',t,la,lo,O),c=AL.correct(hs,S,{...O,lat:la});return{t,S,hs,c,lat:AL.meridianLat(c.ho,S.dec,true)};})();   /* that day's noon sight, the ship hove to */
+    const upd=()=>{const w=work(H,Em,dL),{B,c,r}=w;if(!r){tb.innerHTML='';ro.innerHTML='The Sun is too near the meridian for a time sight.';f.dirty=true;return;}
+      tb.innerHTML=table([['GMT by the chronometer',tod(w.tn),Em?`${mins(Em)} not allowed for`:''],...corrRows(c,B),null,['The Sun’s GHA, by the almanac',FM.dm(B.gha),''],['its declination',dmS(B.dec),''],
+        ['Latitude',dmS(la+dL/60),dL?`${sgn(dL)} out`:'from the noon sight'],['Meridian angle t',FM.dm(r.t),w.east?'east':'west'],['Local hour angle',FM.dm(r.lha),'= 360° − t'],['Longitude = LHA − GHA',`<b>${dmS(r.lon,'E','W')}</b>`,''],null,
+        ['That noon, '+tod(N.t,0)+' GMT: the lower limb on the meridian',FM.dm(N.hs),'sextant'],['observed altitude',FM.dm(N.c.ho),''],['the Sun’s declination',dmS(N.S.dec),''],['Latitude = declination + (90° − Ho)',`<b>${dmS(N.lat)}</b>`,'the Sun bears south']]);
+      ro.innerHTML=`The ship is at 40°00.0′ W: the sight puts it <b>${Math.abs(w.err).toFixed(1)} nautical miles</b> ${w.err>0?'east':'west'} of it${Math.abs(w.err)<0.05?' (the arithmetic gives it back)':''}. The Sun bears ${AL.topo(AL.sun(w.t),la,lo).az.toFixed(0)}°.`;f.dirty=true;};
+    range(ti,v=>{H=v;upd();return tod(day+v*hr,0).slice(0,5)+' GMT';});range(ei,v=>{Em=v;upd();return mins(v);});range(li,v=>{dL=v;upd();return sgn(v);});
+    return()=>{if(!f.dirty)return;f.dirty=false;const per=x=>work(x,0,1).err,all=x=>work(x,Em,dL).err,ys=[];for(let x=9.75;x<=12.5;x+=0.25)ys.push(per(x),all(x));
+      const lo2=Math.min(0,...ys.filter(Number.isFinite)),hi2=Math.max(1,...ys.filter(Number.isFinite)),y0=Math.floor(lo2-0.5),y1=Math.ceil(hi2+0.5),sp=y1-y0>12?4:y1-y0>6?2:1,yt=[];for(let v=y0;v<=y1;v+=sp)yt.push(v);
+      chart(C,{x0:9.75,x1:12.5,y0,y1,xt:[10,10.5,11,11.5,12,12.5],xf:v=>tod(day+v*hr,0).slice(0,5),yt,xl:'the sight’s time, GMT',yl:'miles east',cursor:H,
+        series:[{f:per,color:PAL.blue,label:'a latitude 1′ out',lx:10.1,dy:-12},{f:all,color:PAL.red,width:1.6,dash:[5,4],label:'this sight',lx:11.6,dy:14}]});};});
+
+  /* the lunar distance */
+  fig('eLunar',f=>{const st=f.el,P=figOf(st);if(!AL)return noAlm(st);const C=c2d(st,f,w=>w<520?0.62:0.36),[oi,di]=qa('input[type=range]',P),tb=q('.e-book',P),ro=q('.e-ro',P);
+    const la=35,lo=-40,t=Date.UTC(2026,9,18,21),O={eye:6,ic:-1.4,T:18,P:1008,limbM:'L'};let k='Markab',off=17,dd=0,run=null;
+    const upd=()=>{const S=AL.sextantLunar(k,t,la,lo,O),t0=t+off*6e4,r=AL.clear(S.ds+dd/60,S.hm,S.hb,k,t0,{...O,lat:la+0.3,dr:{lat:la+0.3,lon:lo-0.4}});run={S,t0,r};
+      tb.innerHTML=table([['The chronometer reads',tod(t0,0),'GMT, it is thought'],['Distance, the Moon’s near limb to '+k,FM.dm(S.ds+dd/60),dd?sgn(dd,2)+' misread':'sextant'],['The Moon’s lower limb',FM.dm(S.hm),'sextant'],[k,FM.dm(S.hb),'sextant'],null,
+        ['The Moon’s centre, apparent',FM.dm(r.am),'index, dip, semi-diameter'],[k+', apparent',FM.dm(r.ab),'index, dip'],['Apparent distance of the centres',FM.dm(r.d),'index, semi-diameter'],
+        ['The Moon’s centre, true',FM.dm(r.moon.ho),'refraction, parallax'],[k+', true',FM.dm(r.body.ho),'refraction'],['Angle at the zenith, ΔZ',FM.dm(r.dz),''],
+        ['True distance, the Earth a sphere',FM.dm(r.D),''],['The Earth’s figure, from the DR',sgn(r.fig,2),'the almanac’s own sight'],['Cleared distance',`<b>${FM.dm(r.Dc)}</b>`,`changing ${Math.abs(r.rate).toFixed(1)}′ an hour`],null,
+        ['The almanac has it at',`<b>${tod(r.gmt)}</b>`,'GMT'],['So the chronometer is',`<b>${mins(r.err)}</b>`,r.err>=0?'fast':'slow']]);
+      ro.innerHTML=`The chronometer was ${mins(off*60)} out; the Moon finds ${mins(r.err)}, <b>${Math.abs(r.err-off*60).toFixed(1)} s</b> from it. Here a tenth of a minute of distance is ${(6/Math.abs(r.rate)*60).toFixed(0)} s of time, ${(6/Math.abs(r.rate)*15).toFixed(1)}′ of longitude.`+
+        (Math.abs(r.rate)<15?` <b>${k} is too slow tonight</b>: navigators took a body whose distance changes fast.`:'');f.dirty=true;};
+    seg(q('.seg',P),v=>{k=v;upd();});range(oi,v=>{off=v;upd();return(v>0?'+':v<0?'−':'')+Math.abs(v)+' min';});range(di,v=>{dd=v;upd();return sgn(v,2);});
+    return()=>{if(!f.dirty||!run)return;f.dirty=false;const{r,t0}=run,x0=19,x1=23,base=Date.UTC(2026,9,18),L=x=>AL.lunar(k,base+x*hr),ya=L(x0),yb=L(x1),y0=Math.floor(Math.min(ya,yb)*2)/2-0.5,y1=Math.ceil(Math.max(ya,yb)*2)/2+0.5;
+      const yt=[],sp=y1-y0>3?1:0.5;for(let v=Math.ceil(y0/sp)*sp;v<=y1;v+=sp)yt.push(v);
+      chart(C,{x0,x1,y0,y1,xt:[19,20,21,22,23],xf:v=>v+'h',yt,yf:v=>v.toFixed(1)+'°',xl:'Greenwich time',yl:'the Moon’s distance from '+k+', from the Earth’s centre',cursor:(t0-base)/hr,
+        bands:[{x0,x1,y0:r.Dc-0.01,y1:r.Dc+0.01,color:PAL.brass}],series:[{f:L,color:PAL.ink}],marks:[{x:(r.gmt-base)/hr,y:r.Dc,color:PAL.red}]});};});
+
+  /* the almanac's pages, and printing them */
+  fig('eAlm',f=>{const box=f.el,P=figOf(box);if(!AL)return noAlm(box);const d0=q('.d0',P),nd=q('.nd',P),dt=q('.dt',P);
+    const dec=a=>(a<0?'S ':'N ')+FM.dm(Math.abs(a)).replace('°','° '),gh=a=>FM.dm(a).replace('°','° ');
+    function pages(){const t0=Date.parse(d0.value+'T00:00:00Z'),n=+nd.value,v=dt.value.trim();if(!Number.isFinite(t0))return'<p>Give a date.</p>';AL.setDeltaT(v!==''&&Number.isFinite(+v)?+v:null);
+      let o='';for(let i=0;i<n;i++){const day=t0+i*864e5,dn=new Date(day).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}),rows=[];
+        for(let h=0;h<24;h++){const t=day+h*hr,S=AL.sun(t),M=AL.moon(t);rows.push([String(h).padStart(2,'0'),gh(S.gha),dec(S.dec),gh(AL.n360(AL.gast(AL.JD(t)))),gh(M.gha),dec(M.dec),M.hp.toFixed(1)]);}
+        const S0=AL.sun(day),S12=AL.sun(day+12*hr),M12=AL.moon(day+12*hr),mp=AL.noon(0,day+12*hr),eot=m=>{const a=Math.abs(m*60),mm=Math.floor(a/60);return(m<0?'−':'+')+mm+'m '+(a-mm*60).toFixed(0).padStart(2,'0')+'s';};
+        const LS=AL.LUNAR.filter(b=>{const d=AL.lunar(b,day+12*hr);return d>15&&d<120;}),lr=LS.map(b=>[b,...[0,3,6,9,12,15,18,21].map(h=>FM.dm(AL.lunar(b,day+h*hr)).replace('°','° '))]);
+        o+=`<section class="e-pg"><h4>${dn}</h4>${table(rows,['GMT','Sun GHA','Dec','Aries GHA','Moon GHA','Dec','HP ′'])}
+          <p class="e-pf">Sun: semi-diameter ${S12.sd.toFixed(1)}′; equation of time (apparent less mean) ${eot(S0.eot)} at 00h, ${eot(S12.eot)} at 12h; meridian passage at Greenwich ${tod(mp,0).slice(0,5)} GMT. Moon: semi-diameter ${M12.sd.toFixed(1)}′ at 12h (from the Earth’s centre). ΔT ${AL.deltaT(2000+(AL.JD(day)-2451545)/365.25).toFixed(1)} s.</p>
+          ${lr.length?table(lr,['Lunar distances','00h','03h','06h','09h','12h','15h','18h','21h']):''}
+          ${table([0,3,6,9,12,15,18,21].map(h=>{const t=day+h*hr,P=AL.PLANETS.map(k=>AL.planet(k,t));return[String(h).padStart(2,'0'),...P.flatMap(b=>[gh(b.gha),dec(b.dec)])];}),['GMT',...AL.PLANETS.flatMap(k=>[k+' GHA','Dec'])])}</section>`;}
+      const t1=t0+12*hr,sr=AL.STARS.map((s,i)=>{const b=AL.star(i,t1);return[s[0]||'—',s[1],gh(b.sha),dec(b.dec),s[6].toFixed(1)];});
+      o+=`<section class="e-pg e-stars"><h4>The stars at ${new Date(t1).toISOString().slice(0,10)}, 12h (their places change by less than 1′ in a month)</h4>${table(sr,['No.','Star','SHA','Dec','Mag.'])}</section>`;AL.setDeltaT(null);return o;}
+    const show=()=>{box.innerHTML=pages();};
+    [d0,nd,dt].forEach(e=>e.addEventListener('change',show));
+    q('.today',P).addEventListener('click',()=>{d0.value=new Date().toISOString().slice(0,10);show();});
+    q('.print',P).addEventListener('click',()=>{let pr=document.getElementById('almPrint');if(!pr){pr=document.createElement('div');pr.id='almPrint';document.body.appendChild(pr);}
+      pr.innerHTML=`<h1>Nautical almanac, from ${d0.value}</h1><p>Computed by The Marine Chronometer’s pages: the Sun by VSOP87, the Moon by ELP-2000/82 (Meeus, Astronomical Algorithms), the stars from SIMBAD’s catalogue. Hour angles and declinations are apparent, of date, from the Earth’s centre.</p>`+pages();
+      document.documentElement.classList.add('alm-print');const done=()=>{document.documentElement.classList.remove('alm-print');removeEventListener('afterprint',done);};addEventListener('afterprint',done);
+      if(!navigator.webdriver)print();else done();});
+    show();return()=>{};});
+
+  /* the workbook: one's own sights */
+  fig('eWork',f=>{const box=f.el,P=figOf(box);if(!AL)return noAlm(box);const out=q('.e-out',P);let mode='sight';
+    const ang=s=>{s=String(s).trim().replace(/[°′'NnEe]/g,' ').replace(/,/g,'.');let neg=/[SsWw]|^-|^−/.test(s);s=s.replace(/[SsWw−-]/g,' ').trim();const p=s.split(/\s+/).map(Number);if(!p.length||p.some(x=>!Number.isFinite(x)))return NaN;const v=p[0]+(p[1]||0)/60+(p[2]||0)/3600;return neg?-v:v;};
+    const names=['Sun','Moon',...AL.PLANETS,...AL.STARS.map(s=>s[1])],opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join(''),
+      F0={date:'2026-10-18',time:'10:15:00',err:'0',eye:'6',ic:'-1.4',T:'18',P:'1008',lat:'35 00.0 N',lon:'40 00.0 W',body:'Sun',limb:'Lower',hs:'',how:'Meridian, bearing south',
+        bodyL:'Markab',ds:'',hm:'',hb:'',far:'Near',r1:'2026-10-15 16:51',e1:'23.5',r2:'2026-10-20 16:50',e2:'29.0',now:'2026-11-02 12:00'};let V={...F0};
+    const fld=(k,lab,html)=>`<label class="e-in"><span>${lab}</span>${html||`<input data-k="${k}" value="${V[k]}" spellcheck="false">`}</label>`,
+      when=s=>{const x=String(s).trim().replace(' ','T');return Date.parse(x+(/T\d\d:\d\d$/.test(x)?':00':'')+'Z');},
+      sel=(k,lab,a)=>fld(k,lab,`<select data-k="${k}">${opt(a,V[k])}</select>`),HOW=['Meridian, bearing south','Meridian, bearing north','Pole star'];
+    function form(){const base=fld('date','Date (GMT)',`<input type="date" data-k="date" value="${V.date}">`)+fld('time','Chronometer reads')+fld('err','its error, s (+ fast)')+fld('lat','Latitude (DR)')+fld('lon','Longitude (DR)')+fld('eye','Height of eye, m')+fld('ic','Index correction, ′')+fld('T','Temperature, °C')+fld('P','Pressure, hPa');
+      box.innerHTML=`<div class="e-grid">${mode==='rate'?fld('r1','First error found, GMT')+fld('e1','its error, s (+ fast)')+fld('r2','Second, GMT')+fld('e2','its error, s')+fld('now','Carried to, GMT'):
+        base+(mode==='sight'?sel('body','Body',names)+sel('limb','Limb',['Lower','Upper','Centre'])+fld('hs','Sextant altitude'):
+        mode==='lat'?sel('how','Taken',HOW)+sel('body','Body',names)+sel('limb','Limb',['Lower','Upper','Centre'])+fld('hs','Sextant altitude'):
+        sel('bodyL','Body',AL.LUNAR)+fld('ds','Distance (sextant)')+sel('far','Moon’s limb',['Near','Far'])+fld('hm','Moon’s lower limb, altitude')+fld('hb','Body’s altitude'))}</div>`;
+      qa('[data-k]',box).forEach(e=>e.addEventListener(e.tagName==='SELECT'||e.type==='date'?'change':'input',()=>{V[e.dataset.k]=e.value;calc();}));calc();}
+    function calc(){
+      if(mode==='rate'){const t1=when(V.r1),t2=when(V.r2),tn=when(V.now),e1=+V.e1,e2=+V.e2;if(![t1,t2,tn,e1,e2].every(Number.isFinite)||t2<=t1){out.innerHTML='<p class="e-ro">Give two errors, the later second, each with its time as 2026-10-15 16:51, and the time to carry it to.</p>';return;}
+        const r=AL.rate(t1,e1,t2,e2),e=r.at(tn);out.innerHTML=table([['Days between',((t2-t1)/864e5).toFixed(2),''],['Daily rate',`<b>${sgn(r.r,2,' s')}</b>`,r.r>=0?'gaining':'losing'],
+          ['The error at '+String(V.now).trim(),`<b>${mins(e)}</b>`,e>=0?'fast: take it off the reading':'slow: add it to the reading'],['In longitude, if it were left out',FM.dm(Math.abs(e)/240),'15″ of arc a second']]);return;}
+      const tc=Date.parse(V.date+'T'+V.time.trim()+'Z'),E=+V.err||0,t=tc-E*1000,la=ang(V.lat),lo=ang(V.lon),O={eye:+V.eye||0,ic:+V.ic||0,T:+V.T,P:+V.P};
+      if(!Number.isFinite(t)||!Number.isFinite(la)||!Number.isFinite(lo)||!Number.isFinite(O.T)||!Number.isFinite(O.P)){out.innerHTML='<p class="e-ro">Fill in the date, the time (hh:mm:ss), the place by dead reckoning and the weather.</p>';return;}
+      if(mode==='sight'||mode==='lat'){const hs=ang(V.hs);if(!Number.isFinite(hs)){out.innerHTML='<p class="e-ro">Give the sextant’s altitude, as degrees and minutes (31 41.2).</p>';return;}
+        const pole=mode==='lat'&&V.how==='Pole star',B=AL.body(pole?'Polaris':V.body,t),c=AL.correct(hs,B,{...O,limb:pole?'C':V.limb[0],lat:la}),head=[['GMT',tod(t),E?`chronometer ${mins(E)}`:''],...corrRows(c,B),null,[B.name+'’s GHA',FM.dm(B.gha),''],['declination',dmS(B.dec),'']];
+        if(mode==='lat'){const lha=AL.n360(B.gha+lo),l=pole?AL.latByAlt(c.ho,B.dec,lha,la):AL.meridianLat(c.ho,B.dec,V.how.endsWith('south'));
+          out.innerHTML=table([...head,null,pole?['Local hour angle',FM.dm(lha),'GHA + the DR longitude']:['Zenith distance',FM.dm(90-c.ho),'90° − Ho'],['Latitude',`<b>${dmS(l)}</b>`,pole?'the triangle solved':V.how.endsWith('south')?'declination + zenith distance':'declination − zenith distance']]);return;}
+        const i=AL.intercept(la,lo,B.gha,B.dec,c.ho),east=i.lha>180,r=AL.timeSight(la,B.dec,c.ho,B.gha,east);
+        out.innerHTML=table([...head,null,
+          ['Time sight: longitude',r?`<b>${dmS(r.lon,'E','W')}</b>`:'—',r?`on latitude ${dmS(la)}`:'the altitude can’t be reached at that latitude'],
+          ['Intercept from the DR',`<b>${Math.abs(i.a).toFixed(1)}′ ${i.a>=0?'toward':'away'}</b>`,`bearing ${i.zn.toFixed(1)}°; computed altitude ${FM.dm(i.hc)}`]]);}
+      else{const ds=ang(V.ds),hm=ang(V.hm),hb=ang(V.hb);if(![ds,hm,hb].every(Number.isFinite)){out.innerHTML='<p class="e-ro">Give the distance and both altitudes, as degrees and minutes.</p>';return;}
+        const r=AL.clear(ds,hm,hb,V.bodyL,t,{...O,lat:la,limbM:'L',far:V.far==='Far',dr:{lat:la,lon:lo}});
+        out.innerHTML=table([['The Moon’s centre, apparent and true',FM.dm(r.am)+' · '+FM.dm(r.moon.ho),''],[V.bodyL+', apparent and true',FM.dm(r.ab)+' · '+FM.dm(r.body.ho),''],['Apparent distance',FM.dm(r.d),''],
+          ['Cleared distance',`<b>${FM.dm(r.Dc)}</b>`,`changing ${Math.abs(r.rate).toFixed(1)}′ an hour${Math.abs(r.rate)<15?': too slow, take another body':''}`],['Greenwich time',`<b>${tod(r.gmt)}</b>`,''],['The chronometer’s error',`<b>${mins((tc-r.gmt)/1000)}</b>`,'+ fast']]);}}
+    seg(q('.seg',P),v=>{mode=v;form();});
+    q('.ex',P).addEventListener('click',()=>{const la=35,lo=-40,O={eye:6,ic:-1.4,T:18,P:1008},g=a=>FM.dm(a).replace('°',' ').replace('′','');V={...F0};
+      if(mode==='sight')V.hs=g(AL.sextant('Sun',Date.UTC(2026,9,18,10,15),la,lo,{...O,limb:'L'}));
+      else if(mode==='lat'){const tN=Math.round(AL.noon(lo,Date.UTC(2026,9,18,14,40))/1000)*1000;Object.assign(V,{time:tod(tN,0),hs:g(AL.sextant('Sun',tN,la,lo,{...O,limb:'L'}))});}
+      else if(mode==='lunar'){const t=Date.UTC(2026,9,18,21),S=AL.sextantLunar('Markab',t,la,lo,{...O,limbM:'L'});Object.assign(V,{time:'21:17:00',ds:g(S.ds),hm:g(S.hm),hb:g(S.hb)});}
+      form();});
+    form();return()=>{};});
+
   /* ---------- numbers in the text, from the model's code (the escapement's figures follow the adjuster's bench) ---------- */
   function fillLive(){const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
-      I0:model?Math.round(model.I0/10)*10:1140,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
+      I0:model?Math.round(model.I0/10)*10:580,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
+    { const d=model&&model.R&&model.R.hsDesign;Object.assign(V,d?{hsB:f1(d.b,2)+' mm',hsT:f1(d.t,3)+' mm',hsL:Math.round(d.L)+' mm',hsOut:f1(d.outer.l,1)+' mm',hsIn:f1(d.inner.l,1)+' mm',hsInR:f1(d.rIn,1)+' mm',hsLat:d.lat.toExponential(1)}:{hsB:'0.23 mm',hsT:'0.221 mm',hsL:'409 mm',hsOut:'14.8 mm',hsIn:'21.8 mm',hsInR:'3.2 mm',hsLat:'2.5e-5'}); }   /* the hairspring as designed (movement.js, R.hsDesign) */
     { const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const q=(lo+hi)/2;ESC.ampAt(q)<a?lo=q:hi=q;}return(lo+hi)/2;},r=A=>{const a=A*D2R;return Math.abs(ESC.rateAt(a,sAt(a))).toFixed(2);};V.isoLo=r(247.5);V.isoHi=r(270); }   /* the escapement's rate at 1 3/8 and 1 1/2 turns of motion (makeEsc rateAt) */   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */
     qa('[data-live]').forEach(el=>{const v=V[el.dataset.live];if(v!=null)el.textContent=v;});}
 

@@ -115,6 +115,7 @@
           <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case's own swing (about 0.7 s, estimated) they can't, and it swings with the box"><span>Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
           <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
           <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+          <label class="ck c2 span" title="Keep the settings in this browser for the next visit: the view and Display options, theme, dial, plate finish, balance, units, rate settings and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
           <div class="seg c2 span"><button id="dispReset" title="Every Display option back to its default, and every faded or hidden part shown again (the theme stays)">Reset display</button></div></div>
       </details>
       <details class="grp more" id="partsDet">
@@ -125,6 +126,13 @@
         <div id="plist"></div>
         <div class="row" style="margin-top:8px"><span class="lab">Sizes in</span><div class="seg" id="units" role="group" aria-label="Units for the sizes on the part cards"><button data-v="mm" aria-pressed="true">mm</button><button data-v="in" aria-pressed="false" title="Inches, as the manual gives them">inches</button></div></div>
         <div class="seg" style="margin-top:8px"><button id="pShow">Show all</button></div>
+      </details>
+      <details class="grp more" id="makeDet">
+        <summary>Making it</summary>
+        <p class="note" style="margin:0 0 6px">For a maker. Each part's card has its maker's sheet (its lines of the manual's parts list, the fits measured on the model, materials and heat treatment), its drawing to scale (SVG, mm) and its solid (STL). Here: measure between two points on the model, print the whole build book, or take the model's numbers away.</p>
+        <div class="seg"><button id="mkMeasure" aria-pressed="false" title="Click two points on the model">Measure</button><button id="mkOil" aria-pressed="false" title="Colour each part by the oil or grease it takes (Ops. 18-71)">Oil</button><button id="mkBook" title="Every part's sheet and drawing, to print">Build book</button><button id="mkData" title="The train, the fusee's profile, the escapement's cycle, the hairspring's design and the parts list, as JSON">Data</button><button id="mkSTL" title="Every part shown, as one STL in millimetres">STL</button></div>
+        <div class="seg" style="margin-top:6px"><button id="mkGLB" title="The whole instrument for Blender (glTF 2.0): every part a named object in its own hierarchy, in its materials, with every motion the model has as an action">Blender (.glb)</button><button id="mkRig" title="A script for Blender's Text Editor, run after importing the .glb: one set of controls (time, explode, laid out, lift, lids, latch) drives every part at the model's own ratios">Blender rig (.py)</button></div>
+        <div class="rate" id="mkRead" aria-live="polite"></div>
       </details>
       <details class="grp more" id="rateDet">
         <summary>Rate and timing weights</summary>
@@ -152,7 +160,7 @@
         <summary>Rate book</summary>
         <p class="note" style="margin:0 0 6px">The navigator doesn't set the hands: the chronometer's error is compared with a time signal, daily, and recorded with its rate, and applied to every reading (Sec. III, Setting; Sec. IX, Table I). Error and daily rate in seconds: + fast or gaining, − slow or losing. Here the signal is the master time, which runs with the model; the hands step in half seconds, so the error is read to the nearest half second.</p>
         <div id="bookT"></div>
-        <div class="seg" style="margin-top:8px"><button id="bookNow" title="Compare the dial with the master now">Compare now</button><button id="bookClr">Clear</button></div>
+        <div class="seg" style="margin-top:8px"><button id="bookNow" title="Compare the dial with the master now">Compare now</button><button id="bookSun" title="The error as equal altitudes of the Sun find it ashore (the essay's Greenwich time from the sky): to about half a second">By equal altitudes</button><button id="bookMoon" title="The error as a lunar distance finds it at sea (the essay's lunar distance): to about 15 seconds">By a lunar</button><button id="bookClr">Clear</button></div>
         <label class="sl rw" style="margin-top:8px"><span>Latitude</span><input type="number" id="lat" min="-89" max="89" step="1" value="30" style="width:64px" aria-label="Latitude, degrees (north positive)"><span>°</span></label>
         <div class="rate" id="bookLon" aria-live="polite"></div>
       </details>
@@ -206,7 +214,7 @@
         <h3 class="sub-h">Balance</h3>
         <div class="seg" id="bal"><button data-v="uncut" aria-pressed="true">Uncut rim (Hamilton)</button><button data-v="split">Split bimetallic rim</button></div>
         <h3 class="sub-h">Balance stop</h3>
-        <div class="seg" id="stopV"><button data-v="arm" aria-pressed="true" title="The manual's balance locking arm (Fig. 9)">Locking arm (manual)</button><button data-v="navy" aria-pressed="false" title="The Navy's balance brake: an arm over the balance, screwed down onto it with an Allen key, as on serial 2E11795; the manual doesn't describe it">Y-arm (as on 2E11795)</button></div>
+        <div class="seg" id="stopV"><button data-v="navy" aria-pressed="true" title="The Navy's balance brake: an arm over the balance, screwed down onto it with an Allen key, as on serial 2E11795; the manual doesn't describe it">Y-arm (as on 2E11795)</button><button data-v="arm" aria-pressed="false" title="The manual's balance locking arm (Fig. 9)">Locking arm (manual)</button></div>
       </details>
     </div>
     <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
@@ -231,7 +239,10 @@
   <nav class="e-toc" aria-label="Contents"><b>Contents</b><ol>
     <li><a href="#essay=time">Time is a position</a></li><li><a href="#essay=oscillator">An oscillator that ignores the sea</a></li><li><a href="#essay=spring">The spring that breathes</a></li>
     <li><a href="#essay=heat">Heat</a></li><li><a href="#essay=force">Constant force</a></li><li><a href="#essay=winding">Winding</a></li><li><a href="#essay=counting">Counting</a></li>
-    <li><a href="#essay=detent">The detent</a></li><li><a href="#essay=gimbals">Level on a moving ship</a></li><li><a href="#essay=rate">Keeping the rate</a></li><li><a href="#essay=model21">The Hamilton Model 21</a></li></ol></nav>
+    <li><a href="#essay=detent">The detent</a></li><li><a href="#essay=gimbals">Level on a moving ship</a></li><li><a href="#essay=rate">Keeping the rate</a></li>
+    <li><a href="#essay=sky">Greenwich time from the sky</a></li><li><a href="#essay=sight">Longitude by chronometer</a></li><li><a href="#essay=lunar">The lunar distance</a></li><li><a href="#essay=almanac">An almanac to print</a></li>
+    <li><a href="#essay=make">What the model gives a maker</a></li><li><a href="#essay=oil">Oil, and where it goes</a></li><li><a href="#essay=adjust">Adjusting the escapement</a></li><li><a href="#essay=order">The order of work</a></li><li><a href="#essay=materials">Materials, hardening and tools</a></li>
+    <li><a href="#essay=model21">The Hamilton Model 21</a></li></ol></nav>
 </header>
 
 <h2 id="time"><a class="e-h" href="#essay=time">Time is a position</a></h2>
@@ -272,7 +283,7 @@
   <div class="e-ro"></div>
   <figcaption>The Model 21’s balance as the model builds it: a stainless-steel rim 29&nbsp;mm across on an Invar arm, with its balance screws and timing weights, swinging <span class="e-live" data-live="A">255°</span> each way under its cylindrical hairspring. The mass slider thickens the screws; the stiffness slider thickens the spring’s wire.</figcaption>
 </figure>
-<p>The Model 21’s balance makes one full oscillation in half a second. Watchmakers count each swing in one direction as a <em>vibration</em>, so that is 14,400 vibrations an hour, and the escapement pushes the balance once in every oscillation, which is why the hands step in half-seconds. By the model’s arithmetic the balance, with its screws and weights, has a moment of inertia of about <span class="e-live" data-live="I0">1140</span>&nbsp;g·mm², so its hairspring has to turn it back with about <span class="e-live" data-live="kappa">147</span>&nbsp;micronewton-metres for each radian of twist.</p>
+<p>The Model 21’s balance makes one full oscillation in half a second. Watchmakers count each swing in one direction as a <em>vibration</em>, so that is 14,400 vibrations an hour, and the escapement pushes the balance once in every oscillation, which is why the hands step in half-seconds. By the model’s arithmetic the balance, with its screws and weights, has a moment of inertia of about <span class="e-live" data-live="I0">580</span>&nbsp;g·mm², so its hairspring has to turn it back with about <span class="e-live" data-live="kappa">92</span>&nbsp;micronewton-metres for each radian of twist.</p>
 <p>Hamilton’s rim is solid and uncut. It is free of the centrifugal effects that open a split rim at speed, so it can swing further, 1⅜ to 1½ turns from one end of its swing to the other (the model swings it <span class="e-live" data-live="motion">1.42</span>), and it could be made larger and 35 percent lighter for the same moment of inertia, which eases its pivots.</p>
 <p class="e-see"><a href="#tour=7">The balance and hairspring in the working model</a></p>
 
@@ -418,9 +429,159 @@
 <p class="e-see"><a href="#open=testDet">Run the thirty-day test on the working model, beside a real Model 21’s card</a></p>
 <p class="e-see"><a href="#open=bookDet">Keep a rate book for the working model: it compares its dial with the master time each day</a></p>
 
+<h2 id="sky"><a class="e-h" href="#essay=sky">Greenwich time from the sky</a></h2>
+<p>Every comparison in the rate book needs a master clock, and in the Navy’s day that was a radio signal. There is an older one that nothing can switch off: the sky. The Earth’s turning gives the local time anywhere the Sun or a star can be seen. And the Moon, which moves against the stars by about its own width every hour, is the hand of a clock whose dial is the sky and whose time is Greenwich’s. With an almanac that says where each body stands at each moment of Greenwich time, a sextant and the chronometer, a navigator can rate the chronometer ashore, find the ship’s longitude with it at sea, and check it, or start it again, in mid-ocean. The next four sections do all of it, with the numbers worked through.</p>
+<p>The almanac is the hard part, and these pages carry their own. They compute the Sun from the abridged VSOP87 series and the Moon from the main terms of the ELP-2000/82 theory, as Jean Meeus gives them in <em>Astronomical Algorithms</em>, and the Nautical Almanac’s 57 navigational stars and Polaris from their catalogued places and motions; Venus and Mars, for sights, come from the Jet Propulsion Laboratory’s approximate elements. Against the Jet Propulsion Laboratory’s ephemeris, from 1950 to 2149, the Sun comes within <span class="e-live" data-bound="sun">1</span>″, the Moon within <span class="e-live" data-bound="moon">7</span>″ and the stars within <span class="e-live" data-bound="stars">3</span>″. Venus comes within <span class="e-live" data-bound="venus">60</span>″ and Mars within <span class="e-live" data-bound="mars">120</span>″, good for a sight but not for a lunar. The same elements would put Jupiter and Saturn several minutes of arc astray, for they pull on each other; their places come from short series fitted to the Laboratory’s DE440 ephemeris over 1850 to 2150, and come within <span class="e-live" data-bound="jupiter">10</span>″ and <span class="e-live" data-bound="saturn">5</span>″, good for a lunar too, but only between those years. The printed Nautical Almanac gives its places to a tenth of a minute of arc, 6″.</p>
+<p>In port, at a place whose longitude is charted, the chronometer is rated by <em>equal altitudes</em>. The Sun’s altitude is taken in the morning and the chronometer read, and the chronometer is read again in the afternoon when the Sun comes down to the same altitude. Halfway between is local apparent noon, the moment the Sun crosses the meridian, or very nearly: the Sun’s declination changes a little between the two readings, which the <em>equation of equal altitudes</em> allows for. The almanac gives the Greenwich time of local apparent noon at that longitude, and the difference is the chronometer’s error.</p>
+<p>What the altitude is doesn’t matter, only that it is the same twice. The sextant’s index error, refraction and the dip of the horizon are the same morning and afternoon, and cancel. Ashore, with no sea horizon, the Sun is taken off an artificial horizon, a dish of mercury or oil, whose reflection shows it at twice its altitude. Done again on later days, the errors give the rate.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eEqual"><canvas aria-label="The Sun's altitude through a day against the chronometer's reading, with two equal altitudes"></canvas></div>
+  <div class="e-ctl">
+    <div class="seg" role="group" aria-label="Port"><button aria-pressed="true" data-v="0">Annapolis</button><button aria-pressed="false" data-v="1">Greenwich</button><button aria-pressed="false" data-v="2">Honolulu</button></div>
+    <label class="e-sl"><span>Altitude taken</span><input type="range" min="8" max="45" step="0.5" value="25"><output></output></label>
+    <label class="e-sl"><span>The chronometer is</span><input type="range" min="-90" max="90" step="0.5" value="23.5"><output></output></label>
+  </div>
+  <div class="e-book"></div>
+  <div class="e-ro"></div>
+  <figcaption>15 October 2026, the Sun’s centre. The chronometer’s error is set by the slider and hidden from the arithmetic, which works only from the two readings, the port’s place and the almanac; it finds the error again. The Sun’s declination falls through the October day, too little to see in the curve but, uncorrected, enough to put the chronometer’s error out by several seconds.</figcaption>
+</figure>
+
+<h2 id="sight"><a class="e-h" href="#essay=sight">Longitude by chronometer</a></h2>
+<p>At sea the chronometer supplies Greenwich time, corrected by its error and rate from the rate book, and a sight of the Sun or a star supplies the local time. With the latitude known, from the noon sight or the pole star, the body’s altitude, its declination and the latitude make a spherical triangle between the pole, the zenith and the body. Its angle at the pole is the body’s local hour angle. The almanac gives the body’s Greenwich hour angle at the chronometer’s time, and the difference between the two is the longitude. This is the <em>time sight</em>, the way longitude was worked for most of the chronometer’s life. Marcq St Hilaire’s intercept method of 1875 does the same arithmetic at any bearing, from a position by dead reckoning, and the workbook at the end gives both.</p>
+<p>The sextant reads the angle from the sea horizon to the Sun’s lower limb. Before it can go into the triangle it is corrected: for the sextant’s <em>index error</em>; for the <em>dip</em>, since the eye stands above the sea (1.76′ for the square root of the eye’s height in metres); for <em>refraction</em>, which lifts every body, about 34′ at the horizon and 1′ at 45°; for the <em>semi-diameter</em>, from the limb to the centre; and for <em>parallax</em>, since the almanac gives places seen from the Earth’s centre: 0.15′ for the Sun, nearly a degree for the Moon.</p>
+<p>The latitude comes from the sky as well. At noon the Sun crosses the meridian at its highest, and needs no exact time to be taken: the navigator watches it rise until it stops. Its zenith distance there, 90° less the observed altitude, added to its declination when it bears south, or taken from it when it bears north, is the latitude. At night the pole star stands within a degree of the pole, so its altitude is the latitude to within that degree, and the same triangle, with its declination and hour angle from the almanac, gives it exactly. The figure below works that day’s noon sight too.</p>
+<p>A sight is best taken with the body near east or west, where its altitude changes fastest and an error in the latitude matters least. Every second the chronometer is out moves the longitude 15″ of arc, a quarter of a mile at the equator, whatever the body.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eSight"><canvas aria-label="The error in longitude from an error in the latitude, by the time of the sight"></canvas></div>
+  <div class="e-ctl">
+    <label class="e-sl"><span>Sight taken at</span><input type="range" min="9.75" max="12.5" step="0.05" value="10.25"><output></output></label>
+    <label class="e-sl"><span>Chronometer error missed</span><input type="range" min="-60" max="60" step="1" value="0"><output></output></label>
+    <label class="e-sl"><span>Latitude out by</span><input type="range" min="-10" max="10" step="0.5" value="0"><output></output></label>
+  </div>
+  <div class="e-book"></div>
+  <div class="e-ro"></div>
+  <figcaption>18 October 2026, a ship at 35° N, 40° W, the morning Sun’s lower limb from an eye 6 m above the sea, the sextant’s index correction −1.4′, 18 °C and 1008 hPa. The sight is made by the almanac at the true place and worked as the navigator would, on the latitude given; the curve is how far an error of the latitude moves the longitude, by the time of the sight. As the Sun nears the meridian a latitude error grows into the longitude.</figcaption>
+</figure>
+
+<h2 id="lunar"><a class="e-h" href="#essay=lunar">The lunar distance</a></h2>
+<p>A chronometer can stop, or jump, and a small ship may carry only one. The Moon goes round the sky in a month, about half a degree an hour against the stars, so its distance from the Sun, or from a bright star near its path, tells Greenwich time to anyone who can measure the angle and has an almanac that gives the distance in advance. Nevil Maskelyne’s <em>Nautical Almanac</em>, first published for 1767, printed those distances for every three hours; the bodies here are the Sun and the nine bright stars near the Moon’s path these pages tabulate: Hamal, Aldebaran, Pollux, Regulus, Spica, Antares, Altair, Fomalhaut and Markab.</p>
+<p>The sextant measures from limb to limb and from the deck, not from the Earth’s centre, so the distance must be <em>cleared</em>. Refraction lifts each body, and the Moon’s parallax lowers it by most of a degree, and both change the distance. Both act along each body’s own vertical, so the angle at the zenith between the two verticals is the same before and after. It is found from the apparent altitudes and the apparent distance, and then gives the true distance from the true altitudes:</p>
+<p class="e-eq">cos ΔZ = (cos <i>d</i> − sin <i>a</i>₁ sin <i>a</i>₂) / (cos <i>a</i>₁ cos <i>a</i>₂)&emsp;&emsp;cos <i>D</i> = sin <i>h</i>₁ sin <i>h</i>₂ + cos <i>h</i>₁ cos <i>h</i>₂ cos ΔZ</p>
+<p>That treats the Earth as a sphere, which leaves up to 0.2′. From a position by dead reckoning, the almanac clears a sight it makes itself at that place and moment and takes off what remains. Then the almanac is searched for the moment the Moon’s distance from the body, seen from the Earth’s centre, is <i>D</i>: that moment is Greenwich time. A minute of arc of distance is about two minutes of time, so a sextant read to a tenth of a minute gives Greenwich time to about twelve seconds. Worked backwards from a sight the almanac makes, the clearing gives the time back within <span class="e-live" data-bound="lunar">3</span>&nbsp;s. A body whose distance from the Moon changes slowly is no use: below about 15′ an hour, a tenth of a minute is more than 20 seconds.</p>
+<figure>
+  <div class="e-st flat e-chart" id="eLunar"><canvas aria-label="The Moon's distance from a star through the evening, and the cleared distance that gives Greenwich time"></canvas></div>
+  <div class="e-ctl">
+    <div class="seg" role="group" aria-label="Body"><button aria-pressed="true" data-v="Markab">Markab</button><button aria-pressed="false" data-v="Hamal">Hamal</button><button aria-pressed="false" data-v="Altair">Altair</button></div>
+    <label class="e-sl"><span>The chronometer is out</span><input type="range" min="-40" max="40" step="1" value="17"><output></output></label>
+    <label class="e-sl"><span>Distance read out by</span><input type="range" min="-0.5" max="0.5" step="0.05" value="0"><output></output></label>
+  </div>
+  <div class="e-book"></div>
+  <div class="e-ro"></div>
+  <figcaption>18 October 2026, the same ship at dusk, 21:00 GMT. The Moon’s lower limb and the star are taken with the distance, near limb to the star, all as the almanac makes them; the chronometer’s reading only says where to start looking. Altair, far from the Moon’s path, closes on it slowly that evening, and an error in the distance becomes a large error in time.</figcaption>
+</figure>
+
+<h2 id="almanac"><a class="e-h" href="#essay=almanac">An almanac to print</a></h2>
+<p>A screen may not outlast the voyage. The almanac below prints, for any run of days: each hour’s Greenwich hour angle and declination of the Sun and the Moon, the hour angle of Aries, the Moon’s horizontal parallax, the semi-diameters, the equation of time and the times of meridian passage, the Moon’s distances from the Sun and the lunar stars every three hours, and the stars’ places. Printed for the years ahead, with the rules below for working by hand, it is everything the sections above need.</p>
+<p>The Moon has to be printed: its motion takes the full series. The Sun can be worked by hand to within <span class="e-live" data-bound="hand">1</span>′ (the Astronomical Almanac’s short formulas), which is enough for a time sight but not for a lunar. With <i>n</i> the days from 2000 January 1, 12h UT, angles in degrees:</p>
+<div class="e-box">
+  <p><i>L</i> = 280.460 + 0.9856474 <i>n</i>,&ensp;<i>g</i> = 357.528 + 0.9856003 <i>n</i>,&ensp;λ = <i>L</i> + 1.915 sin <i>g</i> + 0.020 sin 2<i>g</i>,&ensp;ε = 23.439 − 0.0000004 <i>n</i></p>
+  <p>right ascension α = atan2(cos ε sin λ, cos λ),&ensp;declination δ = asin(sin ε sin λ),&ensp;equation of time = 4 (<i>L</i> − α) minutes</p>
+  <p>GHA Aries = 99.9678 + 0.98564737 <i>D</i> + 15.0410686 <i>H</i>, with <i>D</i> whole days after 2000 January 1, 0h UT and <i>H</i> hours of UT;&ensp;GHA Sun = GHA Aries − α</p>
+  <p>the triangle: sin <i>H</i><sub>c</sub> = sin φ sin δ + cos φ cos δ cos LHA;&ensp;the time sight: cos <i>t</i> = (sin <i>H</i><sub>o</sub> − sin φ sin δ) / (cos φ cos δ); longitude = LHA − GHA</p>
+  <p>dip = 1.76′ √<i>h</i> (<i>h</i> in metres);&ensp;refraction = 1′ / tan(<i>h</i><sub>a</sub> + 7.31 / (<i>h</i><sub>a</sub> + 4.4)), <i>h</i><sub>a</sub> in degrees (Bennett’s formula, at 10 °C and 1010 hPa);&ensp;parallax = HP cos <i>h</i>;&ensp;the Moon’s semi-diameter grows by (1 + sin HP sin <i>h</i>) above the horizon</p>
+</div>
+<figure>
+  <div class="e-ctl">
+    <label class="e-in"><span>From</span><input type="date" class="d0" value="2026-10-18"></label>
+    <label class="e-in"><span>Days</span><select class="nd"><option>1</option><option selected>3</option><option>7</option><option>31</option></select></label>
+    <label class="e-in"><span>ΔT</span><input type="number" class="dt" step="0.1" placeholder="auto" aria-label="ΔT in seconds; empty for the almanac's own"></label>
+    <button class="today">Today</button><button class="print">Print</button>
+  </div>
+  <div class="e-alm" id="eAlm"></div>
+  <figcaption>ΔT, the difference between the Earth’s turning and uniform time, was 69.1 s in 2026, measured; past that it is a forecast, and a second of it moves a lunar’s Greenwich time by a second, nothing else. A value given here is used instead.</figcaption>
+</figure>
+<p>And for one’s own sights, the same arithmetic as a workbook. It reduces a sextant altitude to a longitude by the time sight, or to an intercept and bearing from a position by dead reckoning; a meridian altitude or the pole star to the latitude; clears a lunar distance to Greenwich time; and from two of the chronometer’s errors, by equal altitudes or lunars, gives its daily rate and its error now.</p>
+<figure>
+  <div class="e-ctl">
+    <div class="seg" role="group" aria-label="Sight"><button aria-pressed="true" data-v="sight">Altitude</button><button aria-pressed="false" data-v="lat">Latitude</button><button aria-pressed="false" data-v="lunar">Lunar distance</button><button aria-pressed="false" data-v="rate">Rate</button></div>
+    <button class="ex">The example above</button>
+  </div>
+  <div class="e-work" id="eWork"></div>
+  <div class="e-book e-out"></div>
+  <figcaption>Angles as degrees and minutes (35 12.4), times as GMT by the chronometer, corrected by its error (+ fast) from the rate book. North and east are positive; a latitude or longitude may be written 35 12.4 S, or −35 12.4.</figcaption>
+</figure>
+
+<h2 id="make"><a class="e-h" href="#essay=make">What the model gives a maker</a></h2>
+<p>The working model on the other tab is drawn from the manual, photographs and videos of real Model 21s, and every part in it is a closed solid in millimetres. That makes it something to work from, not only to look at. Each part's card has a <em>maker's sheet</em>: its lines of the manual's parts list, each with the fit the model measures (a pivot running in its jewel, a screw tapped into a bridge, with the least clearance), its material, finish and heat treatment, its size and its mass. The card also gives the part's drawing, plan and elevation to scale, and its solid as an STL file. The panel's <em>Making it</em> section measures between any two points, prints the whole build book, and gives the model's numbers as data: the train's counts and modules, the fusee's profile, the escapement's cycle and the hairspring's design.</p>
+<p>The manual holds a repairer to these limits, and a maker to the same; where it gives none, the fits on the sheets are the model's own:</p>
+<div class="e-book e-tbl"><table><thead><tr><th>What</th><th>The manual</th><th>Where</th></tr></thead><tbody>
+<tr><td>end-shake of every arbor, the balance staff's too</td><td>0.001–0.003 in</td><td>Sec. VIII, Ops. 15, 69, 74</td></tr>
+<tr><td>the impulse roller pressed on the staff</td><td>to within 0.010 in of its shoulder</td><td>Sec. VII</td></tr>
+<tr><td>roller shake</td><td>about 0.002 in; a combined shake much more or less than 0.004 in, a new roller (made in O.D. 0.249–0.253 in)</td><td>Op. 84, Fig. 90; parts list</td></tr>
+<tr><td>the horn's clearance to the unlocking jewel</td><td>about 0.010 in</td><td>Op. 88</td></tr>
+<tr><td>the detent's stop button</td><td>0.005 in clearance</td><td>Sec. VIII, the detent's figures</td></tr>
+<tr><td>the detent spring's strength</td><td>0.770 g on the locking jewel just parts it from the stop</td><td>Op. 78</td></tr>
+<tr><td>lock, let-off, overall, drop</td><td>about 6°, at least 6°, 26–30°, about 2°</td><td>Ops. 85–87, 97</td></tr>
+<tr><td>the wedge pins of the collet and stud</td><td>about 0.050 in left to drive</td><td>Sec. VII</td></tr>
+<tr><td>the mainspring at assembly</td><td>wound fully, then let down about a quarter turn</td><td>Op. 56</td></tr>
+<tr><td>the rate before the weights</td><td>within two minutes a day by screws and washers (Tables II, III), then the weights</td><td>Sec. IX, Op. 5</td></tr>
+</tbody></table></div>
+<p>The model's moving parts are designed, not only drawn. The hairspring the balance needs is a strip <span class="e-live" data-live="hsB">0.23 mm</span> wide (as the restoration video measures it) by <span class="e-live" data-live="hsT">0.221 mm</span> thick, <span class="e-live" data-live="hsL">409 mm</span> long, the thickness from the stiffness the balance's moment of inertia asks for in an Elinvar-type alloy. Its two terminal curves, <span class="e-live" data-live="hsOut">14.8 mm</span> into the stud and <span class="e-live" data-live="hsIn">21.8 mm</span> to the collet, are solved to the conditions Édouard Phillips gave in 1861, so that the spring's pull on the balance is a pure couple: it leaves <span class="e-live" data-live="hsLat">2.5e-5</span> of its couple over the coil's radius on the pivots, where plain ends would leave about 2 %. Phillips worked with small deflections. Turned through a whole swing, the strip bends a little past them: solved as an elastica, the spring's couple stiffens by one part in <span data-hs="stiff">81,000</span> at 270°, the force on the pivots grows to <span data-hs="latBig">2.4e-3</span> of it, and the spring gains <span data-hs="iso">0.11</span> s a day from a swing of 1⅜ turns to one of 1½, <span data-hs="slope">+0.05</span> s a day for each 10° more. That is the same way the escapement goes, so the adjuster who sets the spring against the escapement (the bench's last slider) has a little more to take out than the model's −0.13. The model takes the spring as adjusted, isochronous; the designed figure is what a maker starts from (<code>tools/hairspring.js</code>).</p>
+<p>The energy is budgeted the same way. The fusee is cut to even out a mainspring that pulls a little over twice as hard wound as run down; a spring of the parts list's 0.0165 in thickness does that with <span class="e-live" data-phys="Mup">1.02</span>&nbsp;N·m fully wound, its steel at <span class="e-live" data-phys="sUp">2.36</span>&nbsp;GPa, within a hardened mainspring's range. Through the train that is <span class="e-live" data-phys="esc">68-106</span>&nbsp;µN·m at the escape wheel, which, once unlocked, chases the impulse jewel through about <span class="e-live" data-phys="chase">5</span>° of the balance's swing before it catches it. The balance holds its 255° if it loses no more than a balance in air does: a quality factor of <span class="e-live" data-phys="Q">171-274</span>. Worked out from the parts instead, the same budget holds: the measured pivots and the teeth make each stage of the train <span class="e-live" data-phys="stage">0.91-0.97</span> efficient, and the air on the balance’s screws, its staff’s flat end turning on the endstone and the spring’s own damping give it a quality factor of <span class="e-live" data-phys="Qparts">202-390</span>, its free swing dying away in <span class="e-live" data-phys="TFparts">32-62</span> s, where the model takes 34. The numbers behind all this are in the model's README and its tools; what the model has to estimate is listed there too.</p>
+
+<h2 id="oil"><a class="e-h" href="#essay=oil">Oil, and where it goes</a></h2>
+<p>The manual uses three lubricants, and says not to use any “unless specifically required”: Hamilton No. 47 Red Oil for the jewelled pivots, Atlantic Refining Argon “R” mineral oil for the bushed pivots, and Hamilton T-324 grease for the mainspring and the maintaining work. A smear draws oil away from where it should stay, so nothing is wiped after oiling, and the oiler's tip is cleaned in pith. The points, in the order of reassembly:</p>
+<div class="e-book e-tbl"><table><thead><tr><th>Op.</th><th>Oil</th><th>Where</th><th>Fig.</th></tr></thead><tbody>
+<tr><td>18–26</td><td>grease</td><td>the winding ratchet's teeth, the sustaining spring's working end, the fusee wheel's lip and the two elevations in its recess</td><td>—</td></tr>
+<tr><td>35–37</td><td>grease</td><td>the mainspring brace, and the whole flat of the mainspring</td><td>—</td></tr>
+<tr><td>43</td><td>argon</td><td>the upper sustaining pawl pivot</td><td>80</td></tr>
+<tr><td>46</td><td>argon</td><td>the fusee, barrel, centre and third upper bushings</td><td>78</td></tr>
+<tr><td>47</td><td>red</td><td>the fourth upper jewel, the escape lower jewel, the balance lower jewel</td><td>78</td></tr>
+<tr><td>48</td><td>argon</td><td>the fusee, barrel and centre lower bushings, the sustaining pawl's pivot</td><td>79</td></tr>
+<tr><td>49</td><td>red</td><td>the third and fourth lower jewels</td><td>79</td></tr>
+<tr><td>58</td><td>argon</td><td>the cannon pinion's bearing on the centre staff</td><td>81</td></tr>
+<tr><td>67</td><td>red</td><td>the escape upper jewel</td><td>84</td></tr>
+<tr><td>71</td><td>red</td><td>the balance upper jewel</td><td>85</td></tr>
+</tbody></table></div>
+<p>The escapement's working faces, the locking and impulse jewels and the trip spring, are not oiled. Without the Navy's oils, a maker uses the nearest modern ones: a fine synthetic watch oil for the jewels, a heavier one for the bushed train pivots, and a mainspring grease; before synthetic oils, chronometers ran on refined animal oils, porpoise-jaw oil the classic.</p>
+
+<h2 id="adjust"><a class="e-h" href="#essay=adjust">Adjusting the escapement</a></h2>
+<p>The detent is the one part of the chronometer that is adjusted, not only assembled. The manual's operations, with what the model's escapement measures against each:</p>
+<div class="e-book e-tbl"><table><thead><tr><th>Op.</th><th>What</th><th>The manual</th><th>The model</th></tr></thead><tbody>
+<tr><td>78</td><td>the detent spring's strength: a 0.770 g weight hung on the locking jewel (Tool No. 8, Fig. 88) should just part the spring from its stop button</td><td>0.770 g</td><td>—</td></tr>
+<tr><td>79</td><td>the trip spring: it must lift the detent cleanly and fall off on the return swing</td><td>by eye</td><td>falls off at the return</td></tr>
+<tr><td>83</td><td>the escape teeth strike the face of the impulse jewel</td><td>by eye</td><td>drives it 19.4° of the wheel</td></tr>
+<tr><td>84</td><td>roller shake</td><td>about 0.002 in</td><td><span class="e-live" data-live="shake">0.056 mm</span></td></tr>
+<tr><td>85</td><td>lock, on every tooth</td><td>about 6°</td><td><span class="e-live" data-live="lock">6.0°</span></td></tr>
+<tr><td>86</td><td>let-off</td><td>at least 6°</td><td><span class="e-live" data-live="letoff">10.3°</span></td></tr>
+<tr><td>87</td><td>overall</td><td>26–30°</td><td><span class="e-live" data-live="overall">28.2°</span></td></tr>
+<tr><td>88</td><td>the horn's clearance to the unlocking jewel</td><td>about 0.010 in</td><td><span class="e-live" data-live="horn">0.25 mm</span></td></tr>
+<tr><td>97</td><td>drop</td><td>about 2°</td><td><span class="e-live" data-live="drop">2.1°</span></td></tr>
+</tbody></table></div>
+<p>The angles are read on the balance with the graduated sector (Tool No. 12) and its gauge pin, the detent seen under the special illuminator (Tool No. 104); the lock and the detent's banking are set by the support block's lock-adjusting and detent-adjusting screws (Fig. 90), and the drop with the drop-adjusting tool, which turns the unlocking roller. The adjuster's bench in the model's panel moves the same settings and gives the same figures as they change.</p>
+<p class="e-see"><a href="#view=escapement&amp;speed=0.05&amp;part=det">The escapement, slowed, with its detent picked out</a></p>
+
+<h2 id="order"><a class="e-h" href="#essay=order">The order of work</a></h2>
+<p>A chronometer is taken down in the reverse of the order it goes together, and the first step either way is to make the mainspring safe: the balance stopped, the train blocked by its screw lowered between the fourth wheel's arms (or, on early movements, a wire loop round the fourth wheel), and the spring let down through its set-up with the let-down key before the chain is unhooked. The manual's reassembly, Section VIII, runs:</p>
+<ol class="e-steps">
+<li>The pillar plate on its ring; the pillars and the lower train bridge; the third, centre and fourth wheels in their holes, the sustaining pawl; the train-blocking screw; the upper train bridge with the balance lower bridge on it; each arbor's end-shake checked (Ops. 1–15).</li>
+<li>The fusee built on its block: winding ratchet, pawls and their springs, sustaining spring and ratchet, fusee wheel, end plate and taper pin, stop-bar and its spring, top plate; the chain wound on all but its last turn (Ops. 16–33).</li>
+<li>The fusee in; the mainspring brace and spring greased into the barrel, the barrel cap's five screws; the barrel bridge; the train blocked (Ops. 34–45).</li>
+<li>Oiled, as above; the setup ratchet, pawl and spring, the winding stop (a left-hand thread) and the setup cover; the chain wound to test the stop-bar; the mainspring wound fully and let down about a quarter turn (Ops. 46–56).</li>
+<li>Dialing: the cannon pinion, the motion work, the dial, the hands set to the hour (Ops. 58–65).</li>
+<li>The escape wheel under its upper bridge; the balance as a unit, the cock over it (Ops. 66–73).</li>
+<li>The detent: its springs tested, set in and adjusted (Ops. 77–97, above); the train released; the second hand set by the balance's beat; the check list; the movement into its case (Ops. 98–103).</li>
+</ol>
+<p>Every operation in the manual names its tool and figure; the model's walkthrough and exploded view show each part's place and the order it comes off in.</p>
+
+<h2 id="materials"><a class="e-h" href="#essay=materials">Materials, hardening and tools</a></h2>
+<p>The manual names few materials, because it expected parts from Hamilton: an Elinvar hairspring and trip spring, a beryllium-copper detent, a stainless rim silver-soldered to an Invar arm, a mahogany box. The rest is watchmaking practice, which the maker's sheets give part by part: steel for staffs, arbors, pinions, pivots, screws and springs, hardened by quenching from a red heat (about 780–800 °C) and tempered by colour, pale straw (about 220 °C) for what must stay hard and take a burnish, blue (about 290–300 °C) for springs and screws; hard-drawn brass, not heat-treated, for plates, bridges and wheels; jewels of ruby or sapphire, or for the train, hard bronze or brass bushings round hardened steel pivots.</p>
+<p>Two of the Model 21's materials can't be made in a small shop: Elinvar, whose stiffness hardly changes with heat, and Invar. A chronometer can still be made without them, as every one was before them. A plain steel spring on a steel balance loses about <span class="e-live" data-phys="steelRate">10.3</span> seconds a day for each degree Celsius, because the steel softens as it warms. The answer is the compensation balance this essay began with: a rim of brass fused to steel, cut through near each arm, whose free ends curl inward as it warms and so make the balance smaller. Made like the model's split variant, it gives back about <span class="e-live" data-phys="comp">7.0</span> seconds a day a degree; its screws, moved toward the free ends, do the rest, and Table IV's moves are the tool for it. With Elinvar, the spring's own heat treatment sets its temperature coefficient to between <span class="e-live" data-phys="eNeed">-22 to 10</span> parts in a million a degree, which cancels this balance, and the screws trim what is left.</p>
+<p>The manual's Section XIII lists the tools of a Navy overhaul shop, 111 numbers, from end-shaking stands and roller presses to the graduated sector and the detent-testing fixture. To make the parts, rather than mend them, a maker needs more: a lathe with turns for pivots, a wheel-cutting engine with cycloidal cutters for the train's modules (the model gives each stage's), a depthing tool to set each pair of wheels at its centre distance, a staking set, a mainspring winder, and a way to harden and temper by colour. None of it is beyond what a skilled hand made with files and a bow lathe two centuries ago; the model gives the sizes, the fits and the order.</p>
+
 <h2 id="model21"><a class="e-h" href="#essay=model21">The Hamilton Model 21</a></h2>
 <p>The Model 21 was designed and made by the Hamilton Watch Company of Lancaster, Pennsylvania, to U.S. Navy Specification 18-C-7; the dial in these pages is from one made under a U.S. Maritime Commission contract. The Navy assigned its serial numbers and engraved them on the dial and the barrel bridge. It has fourteen jewels. It changed in service: chronometers put into the field before 1944 may have a one-piece roller, replaced at overhaul by two, whose angle can be set; later ones have a train-blocking screw, from serial 4003, to hold the mainspring’s power while the balance and escapement are out; and from the end of 1947 a balance locking arm was fitted at overhaul, in place of the folded wedges that had held the balance still in shipment.</p>
-<p>Most of what is known of it in this detail comes from one book, the Navy’s <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em> (NAVSHIPS 250-624, 1948). The model on the other tab is built from it and from photographs of surviving movements; the Royal Museums Greenwich holds one, No. 4E019.</p>
+<p>Most of what is known of it in this detail comes from one book, the Navy’s <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em> (NAVSHIPS 250-624, 1948), which this site carries: <a href="navships-250-624-1948.pdf">the manual</a> (113 pages, 8.9 MB, a scan by Google Books of a library’s copy). The model on the other tab is built from it and from photographs of surviving movements; the Royal Museums Greenwich holds one, No. 4E019.</p>
 <p>Radio time signals, and later satellite navigation, retired the chronometer from its work. The instrument itself, a small steel wheel swinging twice a second to keep a ship’s place on the planet, remains one of the most elegant answers ever built to a problem that once cost thousands of lives.</p>
 <div class="e-go">
   <p>See it working: every part can be picked out and named, and the hands keep Greenwich time, as the Navy’s chronometers were kept.</p>
@@ -428,7 +589,7 @@
 </div>
 
 <hr>
-<p class="e-refs"><strong>Further reading.</strong> <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em>, NAVSHIPS 250-624, Bureau of Ships (1948): the source of the Model 21’s figures here. Rupert T. Gould, <em>The Marine Chronometer: Its History and Development</em> (1923). David Boettcher’s notes on <a href="https://vintagewatchstraps.com/MTEpdf.php">middle temperature error</a>. The Royal Museums Greenwich’s <a href="https://www.rmg.co.uk/collections/objects/rmgc-object-387425">Hamilton Model 21, No. 4E019</a>. Bartosz Ciechanowski, <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>, whose approach inspired this essay. The working model’s sources are listed under “About this model” on the other tab.</p>
+<p class="e-refs"><strong>Further reading.</strong> <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em>, NAVSHIPS 250-624, Bureau of Ships (1948): the source of the Model 21’s figures here, <a href="navships-250-624-1948.pdf">here in full</a>. Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed. (1998), and Nathaniel Bowditch, <em>The American Practical Navigator</em> (Pub. No. 9): the almanac and the arithmetic of the sky sections, whose places are checked against the Jet Propulsion Laboratory’s Horizons ephemeris; the stars’ places are SIMBAD’s (CDS, Strasbourg). Rupert T. Gould, <em>The Marine Chronometer: Its History and Development</em> (1923). David Boettcher’s notes on <a href="https://vintagewatchstraps.com/MTEpdf.php">middle temperature error</a>. The Royal Museums Greenwich’s <a href="https://www.rmg.co.uk/collections/objects/rmgc-object-387425">Hamilton Model 21, No. 4E019</a>. Bartosz Ciechanowski, <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>, whose approach inspired this essay. The working model’s sources are listed under “About this model” on the other tab.</p>
 </div>
 </article>
 <dialog id="about" aria-labelledby="aboutT">
@@ -449,7 +610,7 @@
   </ul>
   <h3>Sources</h3>
   <ol>
-    <li><i>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer, with Parts Catalog</i>, NAVSHIPS 250-624, Bureau of Ships, 1948. The structure and how it is assembled, the fusee and maintaining work, the winding stop, the detent and its adjustments (lock, let-off, overall, drop and roller shake), the roller sizes, the balance and hairspring, the gimbal mounting, the dial, the winding figures and the part numbers.</li>
+    <li><i>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer, with Parts Catalog</i>, NAVSHIPS 250-624, Bureau of Ships, 1948. The structure and how it is assembled, the fusee and maintaining work, the winding stop, the detent and its adjustments (lock, let-off, overall, drop and roller shake), the roller sizes, the balance and hairspring, the gimbal mounting, the dial, the winding figures and the part numbers. <a href="navships-250-624-1948.pdf">The manual itself</a> (PDF, 8.9 MB), beside this page.</li>
     <li>A new-old-stock Model 21 pillar plate listing: 87.57 mm across, 3.86 mm thick.</li>
     <li>W. Rawlings’ plan of the Model 21 escapement, a redrawing of the manual’s Fig. 90, and a photograph of a Model 21 detent (chronometerbook.com, post 4).</li>
     <li>A restorer’s escape-wheel specification (chronometerbook.com, post 30): 16 teeth, 13.16 mm across, 1.3 mm thick, and the locking jewel set at 8–12° of draw.</li>
@@ -482,9 +643,16 @@
 <script src="js/core.js"></script>
 <script src="../shared/escapement.js"></script>
 <script src="../shared/escplan.js"></script>
+<script src="../shared/almanac.js"></script>
+<script src="../shared/hairspring.js"></script>
 <script src="js/movement.js"></script>
 <script src="js/box.js"></script>
 <script src="js/essay.js"></script>
+<script src="js/makers.js"></script>
+<script src="js/maker.js"></script>
+<script src="js/gltf.js"></script>
+<script src="js/rigpy.js"></script>
+<script src="js/blender.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

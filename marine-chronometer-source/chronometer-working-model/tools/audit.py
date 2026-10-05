@@ -1,13 +1,13 @@
 """Geometry audit: screws that overlap or have nothing under their seat, cylinders (arbors, pins) whose ends sit in nothing,
 coplanar overlapping faces (possible z-fighting), and parts that touch nothing (visible ones only). Usage: python audit.py [box] [--eval JS] [--update]
-(--eval runs JS after loading, e.g. "__mv.userData.stop('navy')" to fit the Navy's Y-arm)
+(--eval runs JS after loading, e.g. "__mv.userData.stop('arm')" to fit the manual's locking arm in place of the Navy's Y-arm, the default)
 
 The model is frozen in one state first (the escapement locked, the fusee 2.5 turns from full wind: placements.py's first state), so a run
 doesn't depend on the time of day. Then every finding is compared with what is expected: no overlapping or floating screw and no isolated
 part at all; the loose ends in LOOSE below, each with its reason; and the coplanar faces in audit-expected.json (pairs of parts with the face
 level they share, and how many: most are faces in contact). Anything new fails (exit code 1); an expected entry no longer found is listed,
 to be taken out. After a change that adds or removes coplanar faces on purpose, look at what is new, then rewrite the file with --update.
-With --eval the comparison still runs: a planted fault proves the check, and a variant (the Navy's arm) lists what it changes."""
+With --eval the comparison still runs: a planted fault proves the check, and a variant (the manual's arm) lists what it changes."""
 import asyncio,json,pathlib,sys
 from collections import Counter
 from playwright.async_api import async_playwright
@@ -26,9 +26,10 @@ LOOSE=[('barrelBridge:Cylinder',(20.95,-20.2,-21.26),0.9,"the winding-stop pin, 
  ('det:Cylinder',(2.62,-22.11,24.99),0.4,"the block's other positioning pin, the same"),
  ('det:Cylinder',(-3.35,-18.31,33.84),0.22,"a steady pin across the detent's foot, standing out of it"),
  ('det:Cylinder',(-2.06,-18.31,28.06),0.22,"the foot's other steady pin, the same"),
- ('bal:Cylinder',None,0.4,"a timing weight's screw, its free end past the nut (it turns with the balance, so matched by radius alone; at this angle the other's end is within the probe's 0.25 mm of a part and doesn't show)"),
  ('bal:Cylinder',None,0.25,"a vernier timing weight's screw, its free end past the nut"),
  ('bal:Cylinder',None,0.25,"the other vernier weight's screw")]
+# with the Navy's balance brake fitted (the page's default; --eval "__mv.userData.stop('arm')" fits the manual's arm instead), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked
+LOOSE_NAVY=[('lockArm:Cylinder',(14.99,-28.85,6.51),0.4,"the Navy brake's pin over the rim, free"),('lockArm:Cylinder',(-11.77,-28.85,14.05),0.4,"its other pin, the same")]
 async def run():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
@@ -53,7 +54,7 @@ def main():
     bad,gone=[],[]
     bad+=[f'page error: {e}' for e in errs]
     for k in ('dupScrews','floatScrews','isolated'):bad+=[f'{k}: {x}' for x in r[k]]
-    left=list(LOOSE) if MODE=='movement' else []
+    left=list(LOOSE)+(LOOSE_NAVY if "stop('arm')" not in ' '.join(sys.argv) else []) if MODE=='movement' else []
     for x in r['looseEnds']:
         nm,pos,rad=x[0],x[1],float(x[2][1:])
         m=next((e for e in left if e[0]==nm and abs(e[2]-rad)<1e-6 and (e[1] is None or max(abs(a-b) for a,b in zip(pos,e[1]))<=0.3)),None)

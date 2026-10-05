@@ -286,11 +286,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function hitAt(e){const rc=cv.getBoundingClientRect();ndc.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);ray.setFromCamera(ndc,cam);
     const hits=ray.intersectObjects([BX.root],true).filter(h=>shown(h.object)&&h.object.userData.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5));
     return hits.find(h=>INFO[h.object.userData.part])||null;}
-  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
+  function pick(e){if(help.classList.contains('on')){showHelp(false);return;}const hit=hitAt(e);if(typeof MAKER!=='undefined'&&MAKER.measuring()){MAKER.measureHit(hit);return;}if(!hit){closeInfo();return;}showPart(hit.object.userData.part);}
   function dblPick(e){if(help.classList.contains('on'))return;const hit=hitAt(e);if(hit){const p=hit.object.userData.part;if(st.pick!==p)showPart(p);focusPart(p,hit.object);}else if(st.tour<0)jump(()=>setView(st.view,true));}
   /* the cards' sizes in millimetres or in inches, the manual's unit (a range converts both ends; areas, volumes and sizes already in inches are left) */
   const U=t=>units==='in'?t.replace(/(\d+(?:\.\d+)?)(?:\s?[–-]\s?(\d+(?:\.\d+)?))?\s?mm(?![²³\w])/g,(m,a,b)=>(a/25.4).toFixed(3)+(b?'–'+(b/25.4).toFixed(3):'')+' in'):t;
-  function showPart(p){showHelp(false);st.hid.delete(p);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
+  function showPart(p){showHelp(false);if(typeof MAKER!=='undefined')setTimeout(()=>MAKER.card(p),0);st.hid.delete(p);if(st.iso)st.iso.add(p);st.pick=p;look();let[t,d,sp]=INFO[p];d=U(d);sp=U(sp||'');
     const info=$('#info');info.querySelector('h3').textContent=t;info.querySelector('p').textContent=d;info.querySelector('.spec').textContent=sp||'';const q=PARTS[p];info.querySelector('.src').innerHTML=q.src?`<i style="--ps:${SRC[q.src][1]}"></i>${SRC[q.src][0]}: ${U(q.sn)}${q.figs?`. Figs. ${q.figs}`:''}.`:'';info.classList.add('on');hintOff();}
   function closeInfo(){if(st.pick){st.pick=null;look();}$('#info').classList.remove('on');}
   $('#info .x').addEventListener('click',closeInfo);
@@ -355,13 +355,25 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const about=$('#about'),aboutOpen=()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');};$('#aboutBtn').addEventListener('click',aboutOpen);
   about.addEventListener('click',e=>{if(e.target===about)about.close();});
   $('#mwOn').addEventListener('change',e=>{st.mwOn=e.target.checked;look();});
-  /* settings this browser remembers, as it does the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
-  const SET=(()=>{try{const o=JSON.parse(localStorage.getItem('cm-set')||'{}');return o&&typeof o==='object'?o:{};}catch(_){return{};}})(),keep=(k,v)=>{SET[k]=v;try{localStorage.setItem('cm-set',JSON.stringify(SET));}catch(_){}};
+  /* Remember settings (Display; off by default): only with it on (cm-remember) does this browser keep anything for the next visit. Off, nothing is stored and what was is cleared at load */
+  const RK=['cm-set','cm-theme','cm-open','cm-state'];let REM=false;try{REM=localStorage.getItem('cm-remember')==='1';if(!REM)RK.forEach(k=>localStorage.removeItem(k));}catch(_){}
+  const lsGet=k=>{if(!REM)return null;try{return localStorage.getItem(k);}catch(_){return null;}},lsSet=(k,v)=>{if(!REM)return;try{localStorage.setItem(k,v);}catch(_){}};
+  /* settings remembered, as are the theme and the open sections: plate finish, dial, balance and the last view (applied at load, beside the hash) */
+  const SET=(()=>{try{const o=JSON.parse(lsGet('cm-set')||'{}');return o&&typeof o==='object'?o:{};}catch(_){return{};}})(),keep=(k,v)=>{SET[k]=v;lsSet('cm-set',JSON.stringify(SET));};
   units=SET.units==='in'?'in':'mm';
   document.querySelectorAll('#units button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.v===units?'true':'false');b.addEventListener('click',()=>{units=b.dataset.v;keep('units',units);
     document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
   document.querySelectorAll('#bal button').forEach(b=>b.addEventListener('click',()=>{mv.userData.balance(b.dataset.v);rateSet();keep('bal',b.dataset.v);document.querySelectorAll('#bal button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
-  document.querySelectorAll('#stopV button').forEach(b=>b.addEventListener('click',()=>{mv.userData.stop(b.dataset.v);keep('stop',b.dataset.v);document.querySelectorAll('#stopV button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));   /* the balance stop fitted; Stopping and starting's Locked works either */
+  /* the balance stop fitted, the Navy's Y-arm by default (the button pressed in the markup; a kept choice below); Stopping and starting's Locked works either. Both are the part lockArm,
+     whose card, name and source follow the stop fitted (the Y-arm's from the README's "Estimated" entry for it, and Review-results.md 13) */
+  const STOP_INFO={arm:{t:PARTS.lockArm.t,src:PARTS.lockArm.src,sn:PARTS.lockArm.sn,figs:PARTS.lockArm.figs,d:PARTS.lockArm.d,sp:PARTS.lockArm.sp},
+    navy:{t:'Balance brake (Navy Y-arm)',src:'photo',sn:'As on serial 2E11795, Delaney No. 8854 and two other movements photographed with it: the lever’s widths (stem 2.9 mm, bar 2.2), the arch round the cock’s end and the eyes over the rim measured on the photographs taken from above; its heights, thickness and the seal’s inside estimated. The manual doesn’t describe it',figs:'',
+      d:'Holds the balance still in transit, in place of the manual’s locking arm (Fig. 9). A second dust seal on the barrel bridge, like the fusee’s, holds a plunger with a hex socket. Screwed down with an Allen key through the bottom of the case, the plunger presses down a spring-steel lever, held at its root on a stud that takes the place of the barrel bridge’s pillar screw; the lever bends until the pins in the eyes of its crossbar bear on the balance rim’s top edge, as the folded wedges did before the locking arm. The crossbar arches round the cock’s end, clear of the hairspring; free, the pins stand 0.5 mm over the rim. How it works is taken from two descriptions of it. Lock and unlock it under Stopping and starting.',
+      sp:'Not in the manual’s parts list'}};
+  const stopFit=v=>{mv.userData.stop(v);const q=STOP_INFO[v]||STOP_INFO.arm;Object.assign(PARTS.lockArm,q);INFO.lockArm=[q.t,q.d,q.sp];};
+  document.querySelectorAll('#stopV button').forEach(b=>b.addEventListener('click',()=>{stopFit(b.dataset.v);keep('stop',b.dataset.v);document.querySelectorAll('#stopV button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+    const r=PROWS.find(x=>x.p==='lockArm'),q=PARTS.lockArm;if(r){r.b.textContent=q.t;r.ck.setAttribute('aria-label','Show '+q.t);r.row.style.setProperty('--ps',SRC[q.src][1]);r.txt=['lockArm',q.t,q.sp,q.sn].join(' ').toLowerCase();r.figs=new Set(q.figs?q.figs.split(', ').map(Number):[]);}
+    if(st.pick==='lockArm')showPart('lockArm');}));stopFit($('#stopV [aria-pressed="true"]').dataset.v);
   $('#ghost').addEventListener('change',e=>{st.see=e.target.checked;look();});$('#colr').addEventListener('change',e=>{st.colr=e.target.checked;if(st.colr)st.csrc=false;look();});$('#colrSrc').addEventListener('change',e=>{st.csrc=e.target.checked;if(st.csrc)st.colr=false;look();});$('#draw').addEventListener('change',e=>{st.draw=e.target.checked?'tint':false;look();});$('#drawInk').addEventListener('change',e=>{st.draw=e.target.checked?'ink':false;look();});$('#edges').addEventListener('change',e=>{st.edges=e.target.checked;look();});$('#shadows').addEventListener('change',e=>{st.shadows=e.target.checked;look();});$('#merge').addEventListener('change',e=>{st.merge=e.target.checked;look();});
   const DIAL_INFO={hamilton:[INFO.dial[1],INFO.hands[1]],roman:['Black on silver-white, in the German style of the A. Lange & Söhne deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads AUF (up) to AB (down). Its scale is drawn on this movement’s 314° sweep.','Gilt leaf hour hand and lance minute hand, gilt wind indicator hand, blued seconds hand. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
     swiss:['Black on white, in the style of the Ulysse Nardin (Le Locle) deck chronometers (maker’s name and number left off): Roman hours set radially, with IIII and the VI covered by a large seconds sub-dial; railroad minute and seconds tracks; the wind indicator reads UP / HAUT to DOWN / BAS. Its scale is drawn on this movement’s 314° sweep.','Blued pear hour and minute hands, blued wind indicator hand, a long blued seconds hand with a spear counterpoise. Hour and minute hands on the centre wheel staff, second hand on the fourth wheel staff. The hands advance in half-second increments.'],
@@ -402,10 +414,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     else if(performance.now()-ks.t>2500)ksEnd();}   /* the key comes off and the bezel goes back */
   ksBtn.addEventListener('click',ksStart);
   $('#spin').addEventListener('change',e=>st.spin=e.target.checked);
-  /* theme: Auto follows the system; a choice is remembered in this browser */
-  const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));try{localStorage.setItem('cm-theme',v);}catch(_){}};
+  /* theme: Auto follows the system; a choice is remembered with Remember settings */
+  const setTheme=v=>{const de=document.documentElement;if(v==='auto')delete de.dataset.theme;else de.dataset.theme=v;document.querySelectorAll('#theme button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));lsSet('cm-theme',v);};
   document.querySelectorAll('#theme button').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.v)));
-  try{const v=localStorage.getItem('cm-theme');if(v==='light'||v==='dark')setTheme(v);}catch(_){}
+  {const v=lsGet('cm-theme');if(v==='light'||v==='dark')setTheme(v);}
   /* save the view as a PNG: render and copy in the same task, while the drawing buffer is still valid, over the page background */
   $('#shot').addEventListener('click',()=>{paint();const c2=document.createElement('canvas');c2.width=cv.width;c2.height=cv.height;const x=c2.getContext('2d');x.fillStyle=getComputedStyle(document.body).backgroundColor;x.fillRect(0,0,c2.width,c2.height);x.drawImage(cv,0,0);
     c2.toBlob(b=>{if(!b)return;const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='hamilton-model-21.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);});});
@@ -416,10 +428,16 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* Reset display: each Display box back to its default (See-through to the view's own; the drawings before Edges, which they disable), faded and hidden parts back. The theme stays */
   $('#dispReset').addEventListener('click',()=>{const D={lbls:false,draw:false,drawInk:false,edges:true,shadows:false,merge:true,ghost:!!VIEWS[st.view].see,colr:false,colrSrc:false,rock:false,latch:false,spin:false};
     for(const k in D){const c=$('#'+k);if(c.checked!==D[k]){c.checked=D[k];c.dispatchEvent(new Event('change'));}}{const r=$('#rollP');r.value=7;r.dispatchEvent(new Event('input'));}st.op={};st.hid.clear();st.iso=null;look();opRender();});
-  /* the panel's sections: each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
-  const DET=[...document.querySelectorAll('.ctl>details.grp')];
-  try{const o=JSON.parse(localStorage.getItem('cm-open')||'{}');DET.forEach(d=>{if(typeof o[d.id]==='boolean')d.open=o[d.id];});}catch(_){}
-  DET.forEach(d=>d.addEventListener('toggle',()=>{try{localStorage.setItem('cm-open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));}catch(_){}}));
+  /* the panel's sections: with Remember settings, each viewer's open and closed ones are remembered (without a record, View, Time, Winding and Display are open) */
+  const DET=[...document.querySelectorAll('.ctl>details.grp')],detSave=()=>lsSet('cm-open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));
+  try{const o=JSON.parse(lsGet('cm-open')||'{}');DET.forEach(d=>{if(typeof o[d.id]==='boolean')d.open=o[d.id];});}catch(_){}
+  DET.forEach(d=>d.addEventListener('toggle',detSave));
+  /* cm-state: the hash's settings (view, moving parts only, speed, section, drawing, colours, Edges, Shadows, Performance mode, time zone, bench, balance's weights, mainspring's set),
+     without what belongs to a moment: a walkthrough step, the part shown, the hands' time, a section opened, the balance held. Written with the hash; at load it stands in for a missing hash */
+  const remSave=()=>{if(!REM||ESSAY.on()||st.tour>=0)return;const h=new URLSearchParams(hashOf());for(const k of['tour','part','t','open','arm','block'])h.delete(k);lsSet('cm-state',h.toString());};
+  $('#remember').checked=REM;$('#remember').addEventListener('change',e=>{REM=e.target.checked;
+    if(REM){try{localStorage.setItem('cm-remember','1');}catch(_){}lsSet('cm-set',JSON.stringify(SET));lsSet('cm-theme',document.documentElement.dataset.theme||'auto');detSave();remSave();}
+    else try{['cm-remember',...RK].forEach(k=>localStorage.removeItem(k));}catch(_){}});
   /* parts list: every named part, grouped. A name singles the part out as a tap does; the box hides it, as the right-click menu does */
   const BOXP=new Set(PGRP[0][1]),plist=$('#plist'),PROWS=[];
   for(const[g,ps]of PGRP){plist.insertAdjacentHTML('beforeend',`<div class="plist-h">${g}</div>`);const gh=plist.lastElementChild;
@@ -528,7 +546,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function bookStats(){const run=[];for(let i=book.length-1;i>0;i--){if(book[i].rem.some(r=>BREAK.includes(r)))break;if(book[i].rate==null)continue;run.unshift(book[i].rate);if(run.length===10)break;}   /* a comparison too soon after the last for a rate is skipped, not a break */
     const m=run.length?run.reduce((a,b)=>a+b,0)/run.length:null;return{m,dev:m==null?null:run.reduce((a,b)=>a+Math.abs(b-m),0)/run.length,n:run.length};}
   /* the rate is taken against the latest comparison at least half a day back with no break since: over a shorter time, reading to the half second swamps it */
-  function bookAdd(){const e=half(dialRead()-tM),rem=[...pend];pend.clear();let prev=null;
+  /* a comparison by the sky (PLAN-self-contained.md, E3): the error as the essay's equal altitudes ashore (to about 0.5 s) or a lunar distance at sea (about
+     15 s: a tenth of a minute of distance) would find it, its scatter drawn from a fixed sequence, and so noted under Remarks */
+  let skyS=97;const skyN=()=>{skyS=(skyS*16807)%2147483647;const u=skyS/2147483647;skyS=(skyS*16807)%2147483647;return Math.sqrt(-2*Math.log(u+1e-12))*Math.cos(2*Math.PI*skyS/2147483647);};
+  function bookAdd(by){const sd=by==='sun'?0.5:by==='moon'?15:0,e=half(dialRead()-tM+sd*skyN()),rem=[...pend,...(by==='sun'?['by equal altitudes']:by==='moon'?['by a lunar distance']:[])];pend.clear();let prev=null;
     if(!rem.some(r=>BREAK.includes(r)))for(let i=book.length-1;i>=0;i--){if(tM-book[i].t>=43200){prev=book[i];break;}if(book[i].rem.some(r=>BREAK.includes(r)))break;}
     const rate=prev?(e-prev.e)/((tM-prev.t)/86400):null;book.push({t:tM,e,rate,rem:book.length?rem:['first comparison',...rem.filter(r=>r!=='weights moved'&&r!=='screws changed'&&r!=='escapement adjusted')]});bookShow();}
   function bookShow(){const S=bookStats();
@@ -541,7 +562,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(L&&S.m!=null){const pr=L.e+S.m*(tM-L.t)/86400,r=e-pr;t+=`<span>Corrected as the navigator does, the last comparison's error plus ${((tM-L.t)/86400).toFixed(1)} days at the mean rate (${fmtErr(pr)}), ${Math.abs(r)<0.25?'it is right to the half second':`the error left is ${fmtErr(r)}, ${nm(r).toFixed(2)} nautical miles`}.</span>`;}
     else t+='<span>With two comparisons a day apart and no break between, the book gives a rate to correct it with.</span>';
     bookLon.innerHTML=t;}
-  $('#bookNow').addEventListener('click',bookAdd);$('#bookClr').addEventListener('click',()=>{book=[];bookShow();});bookShow();
+  $('#bookNow').addEventListener('click',()=>bookAdd());$('#bookSun').addEventListener('click',()=>bookAdd('sun'));$('#bookMoon').addEventListener('click',()=>bookAdd('moon'));$('#bookClr').addEventListener('click',()=>{book=[];bookShow();});bookShow();
   $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('balance'));showPart('bal');});
   /* ---------- stopping and starting (Sec. III): a detent chronometer is not self-starting. The balance swings at amplitude H.amp; below ESC.AMIN a swing no longer
      carries the discharge jewel past the trip spring, unlocks the wheel and sees the impulse through, so the train stops at a locked beat and the balance runs down freely
@@ -860,7 +881,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
-  function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
+  function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
   function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):first&&!g('tour')&&own(VIEWS,SET.view)?SET.view:'dial';   /* own keys only: 'constructor' is no view or part. At load, no view in the hash: the last one seen here */
     if(h.has('essay')){ESSAY.show(true,g('essay'));return v;}ESSAY.show(false);   /* the essay: the model underneath is left as it is */
@@ -888,6 +909,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     return v;}
   addEventListener('hashchange',()=>applyHash(false));
   for(const k of['finish','dial','bal','stop']){const b=[...document.querySelectorAll(`#${k==='dial'?'dialSt':k==='stop'?'stopV':k} button`)].find(x=>x.dataset.v===SET[k]);if(b&&b.getAttribute('aria-pressed')!=='true')b.click();}
+  {const s=location.hash.slice(1)?'':lsGet('cm-state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
   const startView=applyHash(true);
 
   /* ---------- gimbals with inertia (2.5 in IDEAS.md): the case (with the ring, about the ring's pivots) hangs as a pendulum below each axis, its angle ψ from the vertical:
@@ -980,7 +1002,12 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
-  ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
+  ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});
+  /* the export to Blender (blender.js): its own copy of the model, set as the page's is (the dial, balance and stop chosen, the timing weights, screws and temperature) */
+  if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
+    config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');
+      if(d)u.dial(d);if(b)u.balance(b);if(sv)u.stop(sv);u.R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);u.R.screws(SP);u.R.balCurl(degF()-T0);}});
+  if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,cam,cv,scene,M,PARTS,INFO,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';
   document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==='dial'?'true':'false'));

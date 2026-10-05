@@ -4,6 +4,73 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.10.00 · 2026-10-05
+- The train's friction and the balance's damping worked out from the measured pivots, teeth and air: the balance's swing now follows from its parts
+- The escape pinion at its measured length, and the balance hub's brass sleeve on the staff, as a real movement has them
+- The hairspring stud's bar and clamp measured, and the hairspring's height with them
+
+## 2.09.00 · 2026-10-05
+- Export to Blender: the whole chronometer as a glTF file, every part a named object in its place, in its materials, with every motion as an animation (running, a beat in slow motion, run down, winding, setting the hands, stopping and starting, exploded, laid out, lifting out, the lids, the latch, at sea)
+- A Blender rig: run it after importing and the chronometer keeps going on Blender's timeline at its own ratios, with controls for the wind, the hands, explode, laid out, lift, lids, latch, roll and pitch
+- Sharper textures in the Blender export: the engravings, the damascening, the dial and the wood drawn finer
+
+## 2.08.00 · 2026-10-05
+- Jupiter and Saturn in the almanac and the workbook, within 10 and 5 seconds of arc
+- The build book prints each part's drawing at a stated scale, legible on paper, every line with its fit, and each screw with a thread to cut
+- The third and fourth wheels' lower jewels and the escape arbor measured on a real movement
+- The hairspring's own isochronism worked out at the balance's real swing
+- The balance arm sits flush in its rim, the hairspring stud's pins as a real one has them, the sustaining spring in dark steel
+
+## 2.07.01 · 2026-10-04
+- The maker's sheets list every part's holes, with their centres and diameters, and number them on the drawings
+- The balance staff's pivots and cones measured on a real staff: 0.36 mm pivots in their jewels
+- The escape wheel's pivots made Hamilton's own 0.007 in, in jewel holes measured against the light
+
+## 2.07.00 · 2026-10-04
+- The hairspring is now the one a maker would wind: a 0.23 × 0.22 mm strip on terminal curves designed to Phillips' conditions, so its pull on the balance leaves no force on the pivots; the collet's end set to fit, inside the restoration video's measurement
+- Making it (in the panel): each part's card has a maker's sheet (its parts-list lines, the fits measured on the model, materials and heat treatment), a drawing to scale (SVG) and its solid (STL); Measure between two points; Oil colours each part by its lubricant; print the whole build book; take the model's numbers as data
+- Essay: five new sections for a maker — what the model gives you (with the manual's tolerances), oil and where it goes, adjusting the escapement, the order of work, and materials, hardening and tools (with the chronometer you can make without Elinvar)
+- The physics is derived, not fitted: the mainspring the fusee asks for, the escape wheel's chase onto the impulse jewel, the balance's damping and the detent spring's share from the manual's 0.770 g test
+- The almanac adds Venus and Mars; the rate book can compare the chronometer by equal altitudes of the Sun or by a lunar distance
+
+## 2.06.05 · 2026-10-04
+- With the Navy's Y-arm fitted, its card now describes the Y-arm (the locking arm's card came up before)
+
+## 2.06.04 · 2026-10-04
+- The balance's lower jewel cap and setting drawn to their measured size (the cap about 9 mm across, as on a real Model 21)
+
+## 2.06.03 · 2026-10-04
+- The Navy's Y-arm balance brake is now fitted by default (Variants: the manual's locking arm is still there)
+
+## 2.06.02 · 2026-10-04
+- The balance's hairspring redrawn to real proportions: its coils narrower (about 10.5 mm across) and taller, with 12 turns
+- With the Navy's Y-arm fitted, its arch now clears the hairspring
+
+## 2.06.01 · 2026-10-04
+- The balance's weights read as a matched pair's, as the manual's tables use them: the drawn balance now carries Table II's moment of inertia (578 g·mm²), and the essay's hairspring stiffness follows (about 91 µN·m a radian)
+
+## 2.06.00 · 2026-10-04
+- Latitude from the sky: the noon sight and the pole star, worked through in the essay
+- The workbook reduces noon sights and pole-star sights to a latitude, and works out the chronometer's daily rate from two of its errors
+
+## 2.05.00 · 2026-10-04
+- Essay: four new sections on finding Greenwich time and longitude from the sky, with no radio — equal altitudes of the Sun to rate the chronometer ashore, the time sight for longitude at sea, and the lunar distance to check it, each worked through on a set day and place
+- The essay carries its own almanac (the Sun, the Moon and the 57 navigational stars, checked against NASA JPL's ephemeris): print its pages for any days, with the lunar distances every three hours and the hand rules for the Sun
+- A workbook for your own sextant sights: a longitude by the time sight, an intercept from your position by dead reckoning, or Greenwich time from a lunar distance
+- The 1948 Navy manual the model is built from is now on the site, linked from the essay and About
+
+## 2.04.01 · 2026-10-04
+- Variants, Balance stop: the Navy's Y-arm now locks onto the balance — screwed down, both its pins come down onto the rim together (they stopped short of it before)
+
+## 2.04.00 · 2026-10-04
+- The hairspring's collet is drawn as the manual's figures show it: the hub on a stepped block, slit to a small relief hole, a ledge cut back over the tongue, and the clamp that pinches the spring's end against it, held by its wedge pin
+- The hairspring's lower end runs straight along the collet into its clamp
+- In the Exploded view the hairspring comes off with the balance
+- Fixed a flicker on the collet's clamp
+
+## 2.03.01 · 2026-10-04
+- Display: Remember settings — tick it and the page keeps your settings (view, display options, theme, dial, panel) for your next visit; off by default, so nothing is stored
+
 ## 2.03.00 · 2026-10-04
 - The hands are traced from a real Model 21's dial: the hour hand's bulb and needle, the minute hand's leaf, the seconds hand's arrowhead
 - The balance as a restoration video measures it: its hairspring, the stud and its holes in the cock, the arm, the timing weights' nuts

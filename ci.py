@@ -1,8 +1,8 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, types, smoke, invariants, solids, exploded, audit
-    python ci.py --quick      # without the browser checks (about 15 s): build, escapement, types
-    python ci.py --full       # and the slow geometry checks (about 11 minutes more): fine.py, maintaining.py, bom.py
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, physics, selfcontained, types, smoke, invariants, solids, exploded, book, audit
+    python ci.py --quick      # without the browser checks (about 30 s): build, escapement, almanac, hairspring, types
+    python ci.py --full       # and the slow checks (about 16 minutes more): fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
 
@@ -65,16 +65,23 @@ def views(log):
         subprocess.run(['git','worktree','remove','--force',wt],cwd=ROOT,capture_output=True);shutil.rmtree(tmp,ignore_errors=True)
 STEPS=[('build',build,'quick'),
  ('escapement',lambda log:run(['node',TOOLS/'escapement.js'],ROOT,log),'quick'),
+ ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),
+ ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),
+ ('physics',lambda log:run(['node',TOOLS/'physics.js'],ROOT,log),'quick'),   # the energy budget, the escape wheel's chase, temperature from the materials (under a second)
+ ('selfcontained',lambda log:run([PY,'selfcontained.py'],TOOLS,log),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),
  ('invariants',lambda log:run([PY,'invariants.py'],TOOLS,log),'browser'),
  ('solids',lambda log:run([PY,'solids.py'],TOOLS,log),'browser'),
  ('exploded',lambda log:run([PY,'exploded.py'],TOOLS,log),'browser'),
+ ('book',lambda log:run([PY,'book.py'],TOOLS,log),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
  ('audit',lambda log:run([PY,'audit.py'],TOOLS,log),'browser'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),
  ('maintaining',lambda log:run([PY,'maintaining.py'],TOOLS,log),'full'),
  ('bom',lambda log:run([PY,'bom.py'],TOOLS,log),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)
+ ('gltf',lambda log:run([PY,'gltf_check.py'],TOOLS,log),'full'),   # the export to Blender, written and read back (about 2 minutes)
+ ('blender',lambda log:run([PY,'blender_check.py'],TOOLS,log),'full'),   # that file in Blender, with the rig, against its own clips (about 3 minutes; skipped where there is no Blender)
  ('views',views,'views')]
 def main():
     only=arg('--only');want={'quick'}|(set() if '--quick' in sys.argv else {'browser'})|({'full'} if '--full' in sys.argv else set())|({'views'} if '--views' in sys.argv else set())

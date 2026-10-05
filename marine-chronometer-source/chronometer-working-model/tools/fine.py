@@ -29,10 +29,10 @@ EXPECTED={
  ('chain:Buffer','chain:Cylinder'):("that pin through the rivet hole of the chain's first link (an outer link: two plates and their rivets)",0.03,0.4),
  ('chain:Box','chain:Extrude'):("the barrel-end hook plate riveted to the chain's last link (an inner link's plate)",0.09,0.2),
  ('chain:Box','chain:Buffer'):("the barrel-end hook plate riveted to the chain's last link (an outer link)",0.03,0.2),
- ('bal:Box','spr:Tube(tube)'):("hairspring's inner end in the clamp on the collet's tongue",0.06,0.35),
  ('bal:Extrude','bal:Lathe'):("the balance screws' shanks in the rim's tapped holes (each screw in a group of its own, R.screws; up to five pairs)",0.6,0.75),
  ('bal:Buffer','bal:Extrude'):("the rim's empty holes, marks set 0.05 into its face (one merged mesh in a group of its own, rebuilt by R.screws)",0.25,0.6),
- ('spr:Box','spr:Tube(tube)'):("hairspring's upper end in the stud's clamp",0.06,0.35),
+ ('spr:Box','spr:Buffer'):("the hairspring's upper end in the stud's clamp: the designed strip (0.23 x 0.221) runs from the clamp's step along the bar toward its end, lying in its slot (until 4 October 2026 a round wire entering it 35 deg off the bar, 0.071 mm3)",0.07,0.3),
+ ('bal:Buffer','spr:Buffer'):("the hairspring's inner end held in the collet's clamp (its straight lead along the collet's end face, HS_LEAD, under the clamp's jaw)",0.005,0.3),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
  ('barrel:Buffer(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end",215,16.5),
  ('barrel:Buffer(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75); the wall is tested as the drum it encloses, so the nose counts as inside it",0.04,0.6),

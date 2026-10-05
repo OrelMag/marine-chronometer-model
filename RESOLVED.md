@@ -1016,6 +1016,31 @@ Contents:
   the hex socket in its plunger: the text now says so, not a pressed cap. Keep: the
   arch's top about 8.3 mm out, its inner edge 6.6 mm or more from the staff (the
   hairspring); the arms out to the eyes nearly level with the staff. `f9ae355`
+- **The Navy's balance brake locked in mid-air** (Plates, bridges, screws and
+  arbors; Variants, Balance stop). Its pins' length was set for the 4.3 mm rim
+  (`2*2.15` in their end, `PE`), and the rim was cut to the video's 3.5 mm
+  without it: free, the pins stood 1.3 mm over the rim's top edge, and locked they
+  stopped 0.8 mm short of it, so nothing held the balance but the stop's state.
+  It also tipped the lever along its own line, so one pin came down further than
+  the other, and only to 0.02 mm over the rim. The rim's height is now one
+  constant (`BAL_RH`) that the pins' end is taken from, 0.5 mm over the rim's top,
+  and locked the lever turns about the horizontal through its pivot along the
+  crossbar, so both pins come down the same 0.5 mm onto the rim's top edge, as the
+  sources describe it working. Keep: the pins' end from `BAL_RH`, never a copy of
+  the rim's height; locked, both pins on the rim's top edge (their lowest edge
+  0.005 mm into it, under `fine.py`'s grid, so `--hold --eval
+  "__mv.userData.stop('navy')"` passes with nothing new); free, 0.5 mm clear. `29cecd9`
+- **The Navy's balance brake through the hairspring in the Exploded view**
+  (Plates, bridges, screws and arbors; Variants, Balance stop). Lifted 22 past its
+  part, it rose 84 against the balance's and hairspring's (`spr`) 80, and passed
+  up through a piece of the hairspring's part standing 3.1 mm over it on the
+  slider's way, ending in it; the checks ran on the manual's arm, so nothing showed
+  until the Y-arm became the default. It now rises 19: above the balance under its
+  pins, below the hairspring's piece over it (`exploded.py` allows 18 to 20.6).
+  Keep: the brake's lift between the balance's and the hairspring's; with the Y-arm the default,
+  run `exploded.py` and `audit.py` as they are and with `--eval
+  "__mv.userData.stop('arm')"` for the manual's arm, and `bom.py` fits the arm
+  itself (the parts list's). `73594b5`
 - **Mounting ring drawn as a flange round the plate's edge.** Figs. 29, 67
   and 110 draw it as a deep ring under the plate, and the side and dial-side
   photographs show it: a band as wide as the plate, then a flange 95.9 mm
@@ -1099,6 +1124,15 @@ Contents:
   (13:08; it was pinched at 6.3 mm, by eye); the detent block's screw flush in
   a counterbore r 1.4 (10:46; it stood proud); the balance's timing screws end
   2.7 mm outside the rim (6:50.0: 3.3 from its inner face). Keep them traced (SHAPE-PASS.md, 5). `fd368d4`
+
+- **The balance lower cap and setting 40 % too small**.
+  The cap was R 2.7 with its screws 1.9 out and a window r 1.1: the ratios read on 13:49.5,
+  scaled by an estimated screw spacing; the setting in the slab r 1.2, estimated. Measured
+  through `framecam.py` (13:49.5 from below, 13:44 from above): the cap R 4.46, its screws
+  3.25 either side of the jewel, its flat 2.78 out, its window r 1.87, the screws' heads r
+  0.85; the setting r 2.52; the slab's counterbore r 4.56 round the cap. Keep: the cap's sizes
+  and the setting's measured (`tools/anchors/cap_13-49.5.json`, `setting_13-44.json`), not
+  scaled from an estimate. `d0f0cb3`
 
 ## Setup, case and gimbals
 
@@ -1246,6 +1280,20 @@ Contents:
   balance's cap and hold-down screws, the balance locking arm and the
   train-blocking screw. See `Review-results.md`, "Every part against the
   manual". `63c5dce`
+- **The hairspring collet was a stand-in.** A flat 130° sector with a short
+  radial bar and a solid block for its clamp, the hub slotted on the far side
+  and the spring's end inside the block 4.6 mm out. Figs. 5, 6 and 49 draw a
+  stepped block: the hub on a plate slit from the bore to a relief hole, a
+  ledge cut back (straight, then round) over a tongue at its foot, a notch in
+  the tongue for the wedge pin, and a C-shaped clamp slid over the tongue's
+  end that pinches the spring's end against it. It is now measured on Fig. 6's
+  two drawings (README, "Estimated, not from the manual"), and the spring's
+  inner end runs straight along the end face into the clamp, 4.43 mm out (the
+  collet sized against the coil the restoration video measures, r 6.3).
+  The clamp closes over the spring above and below, so the hairspring now
+  comes off with the balance in the Exploded view (the spring had to pass
+  through the upper jaw). Keep: the collet's shape is Fig. 6's; the spring's
+  inner end is where the end face and clamp hold it. `6839be8`
 
 **The parts list against the model: parts missing, parts holding nothing,
 pivots without shoulders, jewels floating or buried** (`ae397f2`). Checked
@@ -1323,6 +1371,34 @@ An arbor needs pivots and shoulders; a stone its seat.
   stepGeo now cuts there as in the body. Keep the arm's underside traced
   (SHAPE-PASS.md, 2). `65f770a`
 
+- **The hairspring drawn a fifth too large** (the balance; Review-results.md,
+  25). Its coils were r 6.3, read on the restoration video side-on against the
+  rim "between its ends", which the gloves and a timing weight hide, and against a
+  disc taken for the impulse roller. Against the rim in one picture each, the
+  video side-on (the rim's edge where it turns, behind the weight) and face-on,
+  the manual's Fig. 2 and two photographs give the coils' outer edge 4.7-5.8,
+  median 5.26. Now r 5.1, the collet scaled with it (a reading of r 4.8 the same
+  day fitted the rim to its near side's holes, which perspective spreads). With
+  the Navy's brake fitted, its arch, which the coils ran into at full swing, now
+  clears them by about 1 mm. Keep: the radius read against the rim's turning
+  edge or its fitted ellipse, never against ends a glove or weight may hide; the collet scaled with the coil (CKS). Its turns were 9, from
+  wires counted 26 px apart on the video, every second one: 13 wires down each
+  side, so 12 turns. Keep: count the wires by their period over the whole stack.
+  And it stood 5.9 from the rim's top edge up; the video side-on has it running
+  down behind the rim, 7.15 or more: it now starts 1.1 below the rim's top, as low
+  as the hub lets the collet go, and stands 6.7. `9c8fdc3`
+
+- **The hairspring stud's clamp was in the wrong place.** It was a block on
+  the bar between the inner steady pin and the stud screw, 4.6 mm from the
+  staff, the bar ending 0.8 mm past the pin. Fig. 5, Hamilton's patent
+  US 2,379,780 (Fig. 10) and the restoration video (6:47.5, 6:47.75, the
+  stud seen from the cock side) put it under the bar's inner end, past the
+  pin: the bar ends 2.2 mm inside the pin, the clamp drops from its
+  underside from there to 1.1 inside, the wedge pin's end shows in the
+  bar's top face 1.7 inside, and the spring's upper end is 2.65 mm from the
+  staff. Keep the clamp at the bar's end (`SP_E`, `SP_ST`, `SP_CL` in
+  `movement.js`, `HS_R` computed from them, `essay.js`'s `HS` to match). `e37f857`
+
 ## Rate panel
 
 - **Balance far too light.** The screws and weights were drawn as cylinders
@@ -1374,8 +1450,43 @@ An arbor needs pivots and shoulders; a stone its seat.
   drawing doesn't make added as `I_REST`. Keep: draw the balance as measured
   and keep the moment Table II's (`invariants.py` checks 1,140). `fa37969`
 
+- **The balance's moment of inertia 37 % more than the drawing carries (`I_REST` 410 g·mm²).**
+  Table II's screw changes, worked with the parts list's masses as each screw's,
+  need 1,157 g·mm²; the balance drawn as the video measures it made 731. The
+  masses are now read as a matched pair's (`PM` in `movement.js`): Table II then
+  needs 578 and the drawing makes 534 (`I_REST` 44, 8 %), the steel timing nut as
+  measured weighs what a pair's 93 mg gives it (about 47-53 mg; 93 is impossible
+  at its size), and the screws' heads come out near brass, not gold. The rates the
+  panel gives are unchanged (they follow Table II and the manual's 40 s and 2.8 s a
+  turn); the hairspring's stiffness halves, to about 91 µN·m a radian. Keep:
+  `invariants.py` checks 578 and `I_REST` under 10 %; a balance part redrawn
+  must keep the drawing near Table II's moment, not grow `I_REST`. `3d33ca5`
+
+- **The hairspring drawn as round wire with sine-ramp ends, its pull on the pivots unchecked.** Its terminal curves were a sine ramp in from the coil to
+  each end, which leaves 2.4 % of couple / R on the pivots, and its wire was round (0.34 mm). It is now the spring `HSPR` designs: both terminal curves
+  solved to Phillips' conditions (the outer from the coil to the stud's clamp along the bar, 14.8 mm; the inner to the collet's end, 21.8 mm), 2.5e-5 of
+  couple / R on the pivots; a strip 0.23 by 0.221 mm (the video's width; the thickness from the stiffness Table II's balance needs); the collet's end at
+  3.2 from the staff (the video 2.8-3.9; a short inner curve meets the conditions only at 2.9-3.3), the collet scaled from it. Keep: `invariants.py`
+  checks the strip against the stiffness, both curves' residuals and the force; `tools/hairspring.js` the design from movement.js's numbers; the
+  spring mesh keeps hn 42188, the stud clamp 42191.st and the pin 42147.st (the stud check counts the strip in the clamp). `3824b8b`
+
+- **The balance's free decay and the detent spring's share estimated, the energy unbudgeted.** `TF` was 25 s and `fD` 0.03, both guesses, and with the
+  parts list's spring and the train the balance could not have held 255° (the damping asked 4-7 times what the spring gives). `tools/physics.js` now
+  budgets it: `TF` 34 s (the Q the mainspring, fusee, train and escapement allow at 255°), `fD` 0.057 (Op. 78's 0.770 g preload over the release's lift),
+  the escape wheel's inertia measured on its solid. Keep: `physics.js` fails if the model's `TF` or `fD` leave what the budget and the test allow, and if
+  the essay's quoted figures differ from it. `203b2a6`
+
 ## Rendering
 
+- **The hairspring collet's clamp flickered.** The collet's tongue ended at
+  5.1 mm from the staff, exactly in the clamp's outer face, and the clamp's
+  lower face lay in the plate's face toward the balance, as did the hub's: the
+  coplanar faces z-fought, showing as a patch on the clamp's outside (with the
+  balance picked, its edges drawn through the ghosted hairspring). The tongue
+  now ends 0.1 mm inside the clamp, the clamp's lower jaw runs 0.1 mm under the
+  tongue and the hub stands 0.05 mm proud of the plate. Keep: a piece set into
+  another ends inside it or stands proud of it, never flush with one of its
+  faces (`audit.py` doesn't see this within one part). `e701c2f`
 - **Lifted views at 80 fps on a fast desktop, 15 on a phone.** Once
   every open tube went through `closeGeo` (every part a closed solid), the
   hairspring, rebuilt every frame the balance turns, paid for it: `closeGeo`
@@ -1560,6 +1671,14 @@ An arbor needs pivots and shoulders; a stone its seat.
   14°, about 3 mm off. They are now the arbors' places in `L` (the escapement
   views between the balance and the escape arbor). Keep: a camera target on a
   part is written from `L`, so it follows a change of the layout. `cce56d7`
+- **The Navy's Y-arm showed the locking arm's card** (Variants, Balance stop). Both
+  stops are the part `lockArm`, whose card, parts-list name and source were the
+  manual's arm (Fig. 9, "loosen its screw, turn the arm") whichever was fitted;
+  with the Y-arm the default, every visitor saw it. The card, name, source note,
+  spec and search text now follow the stop fitted (`STOP_INFO`, `stopFit` in
+  `app.js`). Keep: fit a stop through `stopFit` or its button, never
+  `mv.userData.stop` alone in the page, and `bom.py` fits the arm by its button,
+  so the card's numbers it checks are the arm's. `db5d5dd`
 
 ## Build, tools and docs
 
@@ -1656,6 +1775,24 @@ An arbor needs pivots and shoulders; a stone its seat.
   saw when they fail. Keep: a smoke check on something that happens on page
   time polls (`wait_for_function`, or `expect(…, wait=)`), never looks once
   after a fixed wait. `9b49228`
+- **The build book's drawings were no use on paper.** Each part's drawing was
+  an SVG at 1:1 in millimetres: a screw printed 3 mm wide, its hole labels
+  0.6 mm high and its lines 0.004-0.02 mm, and print's `max-width` shrank the
+  large ones to an unknown scale; 21 sheet lines had no fit (jewels, plates,
+  the case: their fits are measured from the parts in them) and the fusee
+  arbor's square no line. `tools/book.py`, the book laid out as A4 print,
+  found 116. Now each drawing picks a standard scale (20:1 to 1:4) that fits
+  the column and page, states it in its title, and sizes its lines and text
+  in printed millimetres; a line shows the other side of the fits that name
+  it, or says it isn't measured. Keep: a drawing for paper states its scale
+  and prints at it; `book.py` (in `ci.py`) passes. `390218e`
+- **The endshake check could miss a pivot's end.** `bom-check.js` measured a
+  part's free travel along its axis from a sample of 6,000 of its vertices;
+  when the balance hub gained its sleeve, the sample skipped the staff's lower
+  pivot end, and the travel toward the dial read 0.093 mm to the hairspring
+  instead of 0.025 to the endstone. Now it always takes the 3,000 vertices
+  furthest along each way, and a sample of the rest. Keep: a clearance along an
+  axis is measured from the extreme vertices along it. `746f25a`
 
 ## Essay
 

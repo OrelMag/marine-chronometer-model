@@ -1,6 +1,7 @@
 __pycache__/
 # outputs of the tools in marine-chronometer-source/chronometer-working-model/tools/, written to the directory they run from
 r_*.png
+r_*.glb
 fit.json
 p3fit.json
 unproj.json
@@ -14,3 +15,6 @@ holes_*.json
 ci-logs/
 # wrangler's local state
 .wrangler/
+# worktrees of side branches, and folders the tools write (r_ill/, r_esc/ ...)
+.claude/worktrees/
+r_*/

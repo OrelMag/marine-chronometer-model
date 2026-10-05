@@ -37,18 +37,20 @@ def qty_ok(q,n):
     if isinstance(q,list):return q[0]<=n<=q[1]
     if isinstance(q,int):return n==q
     return n==0
+ARM="document.querySelector('#stopV button[data-v=\"arm\"]').click()"   # the parts list's balance stop, the locking arm (Fig. 9): the page fits the Navy's Y-arm by default, which the manual doesn't list (its button, so the part's card and numbers are the arm's too)
 async def run(evl):
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1000,"height":700});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
-        await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.wait_for_timeout(300)
+        await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(ARM);await pg.wait_for_timeout(300)
         if evl:await pg.evaluate(evl)
         res=await pg.evaluate(JS,BOM)
         if '--no-fn' in sys.argv:res['fn']=[]
         else:   # on a fresh page: bom-check.js turns the train and balance through update(), and a held train isn't redrawn from the page's own state
             await pg.reload();await pg.wait_for_function("window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
+            await pg.evaluate(ARM)
             if evl:await pg.evaluate(evl)
             res['fn']=await pg.evaluate(FNJS)
         sp=await pg.evaluate("Object.fromEntries(Object.entries(window.__parts).map(([k,v])=>[k,v.sp||'']))")

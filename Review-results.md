@@ -12,7 +12,7 @@ Status: findings 1–5 were fixed after the review; see
 [Fixes for findings 1–5](#fixes-for-findings-15). Checking the fixes turned up
 finding 9 (the split-balance variant runs through the barrel bridge), fixed
 on 2 October 2026, as were the Hamilton dial's short hands. Finding 6 is
-open; finding 7 was resolved by the fine interference pass, finding 8 by the
+fixed too (2 October 2026; its heading's note); finding 7 was resolved by the fine interference pass, finding 8 by the
 case rebuilt round the movement.
 
 A later pass with a finer collision check found and fixed six more overlaps,
@@ -357,6 +357,27 @@ Suggested fix: smaller weights (a radius of about 1.1 mm keeps them within
 the rim's 2.4 mm height), set no further out than the timing weights (17.35 mm).
 Then run `dyn.py` with the variant shown.
 
+## The hairspring's inner end (settled as an estimate, 4 October 2026)
+
+`tools/hairspring.js` designs the spring's terminal curves to Phillips' conditions from the model's coil and ends. The outer one, into the stud's clamp
+along the bar toward its end, is 15.3 mm and turns 343°, as the video's face-on view from the stud's end shows it (6:52.5, about half a turn turned in).
+The inner one can't be like it at the collet's face as drawn (3.62 from the staff, the wire running along the face): the shortest that meets the
+conditions and keeps off the collet winds 1.9 turns in (54 mm). Held at 3.0–3.3, a curve of 21–24 mm does it. Measure where the spring's lower end meets
+the collet: a frame of the balance from the collet's side (sheet round 6:44–6:53.5 and round the hairspring's removal, Op. 4), the end's radius against
+the coil's. Then design the inner curve there, and draw the spring as the strip it is (0.23 by 0.226 mm, PLAN-self-contained.md, A2). With the ends as
+`springGeo` draws them the spring leaves 2.3 % of couple / R on the pivots; designed, 0.003 %.
+
+*Measured (4 October 2026), not settled.* KLUwI2UUCMQ 6:53.25 and 6:53.5, the balance held with the arm toward the camera: the collet's
+block and its brass wedge pin by the hub's cap, the coil's two ends as circles (Hough fits, 4K: the near end, the collet's, 229-235 px, the far 185).
+The pin's centre against the near end's 5.26 mm outer edge: 2.8 and 3.5 mm from the staff's end, 3.1 and 3.9 from the circles' centres (the view a
+little oblique, the frames blurred): 2.8-3.9, about 3.3. That spans both the model's 3.62 (Fig. 6's collet scaled to the coil) and the window where a
+short curve meets Phillips' conditions, which is sharp: the shortest inner curve is 49 mm at r 2.8, 21-26 mm (300-370°, like the outer) from 2.9 to
+3.3, and 53 mm from 3.4 to 3.62. A sharper frame of the collet's end, or the collet's own size (a Model 21 collet measured), would decide it.
+
+*Drawn (4 October 2026): the end at 3.2, inside both the frames' 2.8-3.9 and the window, the collet scaled from it (`CKC`, 0.83 of Fig. 6 against the
+coil's 0.93); both terminal curves meet the conditions (14.8 and 21.8 mm), the pivots carry 2.5e-5 of couple / R. A sharper frame or a measured collet
+would still settle it.*
+
 ## Smaller issues
 
 - **The balance's moment of inertia (open, 3 October 2026).** The restoration
@@ -369,7 +390,13 @@ Then run `dyn.py` with the variant shown.
   The model draws the measured balance and adds the difference as `I_REST`
   (410 g·mm²), so the panel's changes are the manual's. Open: what carries it.
   Candidates: a heavier arm or hub than drawn, Table II computed for another
-  balance, or a misreading of the parts list's masses. Still estimated: which
+  balance, or a misreading of the parts list's masses.
+  *Resolved, likely (4 October 2026): the masses read as a matched pair's. Table
+  II then needs 578 and the drawing makes 534 (`I_REST` 44, 8 %, inside the rim's
+  measured thickness); the steel timing nut as measured can weigh a pair's 93 mg
+  (about 50 mg each) but not 93; the heads come out near brass, not gold. What
+  would make it certain: a balance screw or timing weight weighed (README,
+  "Estimated").* Still estimated: which
   of holes 3, 5 and 12 has the 0.080 in heads (side-on, near and far heads
   overlap in projection; from above they are too foreshortened).
 
@@ -1020,7 +1047,7 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    holes, the stud's steady pin, the sustaining spring's pin and others) are
    removed.
 5. *Done (4 October 2026, `claude/shape-pass`): `bom.py` runs in `ci.py --full`.* `bom.py` in CI: about 5 minutes a run.
-6. **The third arbor's place** (fidelity, open). Mapped through the centre,
+6. *Closed (4 October 2026): measured on the restoration video (13:49.5, 14:45, 34:30), the third arbor now 16.55 mm from the centre at 149° from the 12, the wheels' sizes from `MOD` (RESOLVED.md, Going train, `a237869`).* **The third arbor's place** (fidelity, was open). Mapped through the centre,
    the fusee arbor and the wind indicator wheel (which land within 0.8 mm of
    the model), a photograph of a Model 21's dial side puts the third lower
    setting at about (-8.0, 18.6), 7 mm from the model's T (-4.86, 12.11), and
@@ -1037,7 +1064,8 @@ m(z1+z2)/2, modules matching, ratios and senses right (table in BOM.md).
    5.0 mm out, toward that lug, where its access hole clears the balance
    locking arm's screw and pin ("The balance lower bridge", 7 and 8); no
    longer at either countersunk hole of the top-view photograph. Still open:
-   the 7 mm.
+   the 7 mm (4 October 2026: the model's is 6.0 mm from the fourth's arbor, at (3.9, 26.15); moving it waits on
+   `claude/lock-arm-shape`, which reworks the locking arm whose screw it clears).
 8. **A second capped post and a Y-shaped arm** (fidelity, noted). The top-view
    photograph's movement (2E11795) and others (omegaforums, Delaney No. 8854)
    have a second post with a cap near the fusee's, carrying a long Y-shaped
@@ -1723,6 +1751,9 @@ changes it only round its own arbors (1 below).
     "Norfolk balance brake", Norfolk Naval Shipyard, given as about 1948, though
     another source puts it in the war years). It is screwed down by the hex socket,
     not pressed as the model had it.*
+    *With the stop free, its arch ran 0.3 mm into the hairspring at full swing: the
+    hairspring was drawn too large (r 6.3). At r 4.8 (25 below) the arch clears it by about
+    1.3 mm, as on 2E11795's photograph.*
 21. **The upper train bridge's notch, horn and mouth** (new, 1 October 2026,
     branch `claude/train-bridge-outline`). **Rebuilt from the video**
     (`tools/train_bridge.py`; 23:30 flat and 13:49.5 turned over, each put on
@@ -1893,6 +1924,37 @@ changes it only round its own arbors (1 below).
     height too: 16.5 mm (side-on, 33:09.5–33:35), not 13.2; and the train
     bridge's cut round it r 21.0 (fitted 21.0–22.0 with its centre free, 24.6–25.1
     mm out), not 19.2.*
+25. **The hairspring's radius** (4 October 2026, `claude/navy-pins`; **settled, r 5.1**,
+    `claude/hairspring-radius`). The model's coils were r 6.3, read on the restoration video
+    side-on (6:49.8) as 0.43-0.45 of the rim "between its ends" (the glove hides the left end)
+    and by a disc taken for the impulse roller (it is about 4.9 mm against the rim). Five
+    sources, each a ratio of the coils' outer edge to the balance rim in one picture:
+    - the video side-on (6:49.5): the coils 257.5 px across about the staff (x 648.75), the rim's
+      back edge turning at x 998-1003 behind the timing weight's root, 351 px out: 0.367, r 5.3;
+    - the video face-on (6:52.5): the coils 310 px, the rim 835 (the camera on the spring's
+      side, by which of the arm and the coils hides the other; the coils' two ends within a few %):
+      0.355-0.371, r 5.2-5.4;
+    - the top-view photograph (2E11795): about 0.35, r 5.0;
+    - the manual's Fig. 2 (600 dpi): the rim's top edge fitted as an ellipse, 1012.7 px across
+      (1 % rms; the pillar plate's 87.57 mm, about 3090 px, agrees on the scale), the coils
+      323-340 px: 0.32-0.34, r 4.7-4.9;
+    - the oblique photograph: roughly 0.40, r 5.8.
+    Median 0.363, 5.26 to the outer edge: r 5.1 (HS_RC), the collet scaled with it (CKS). A
+    second reading the same day, r 4.8, fitted the rim's radius to the near side's holes, which
+    perspective spreads (that fit's centre fell 100 px off the staff), and the coils then
+    looked small against the wheel. The turns too: 13 wires down each side on the video
+    side-on (14.5 px apart; the first reading counted every second one, 26 px), so 12 turns
+    with the end curves, not 9. With the Navy brake fitted its arch (6.6) clears the coils by
+    about 1 mm at full swing (finding 13). The stack's height: side-on (6:49.5, 24.2 px/mm by the
+    rim, the camera 5.7 deg above its plane) the top wire is 5.8 mm over the rim's top edge at
+    the staff's depth (the model 5.9, set by the stud under the cock), and the coils run down
+    past the rim's front edge, 1.4 below its top, behind it, so 7.15 or more; Fig. 2 puts their
+    foot about 2.1 below the rim's top. The spring now starts 1.1 below it (HS_Y) and stands 6.7
+    (HS_H), the collet as low as the hub lets it go (0.07 over the hub's boss and the cap's
+    screws). *Still open:* 0.5 mm or more of it, which says the hub's estimated boss, cap and
+    screws stand too high (Fig. 4 draws the hub; no frame shows it side-on yet); the wire's section (the video shows flat ribbons, the model
+    draws it round); and Fig. 5 draws the top coil at 0.82 of the others, the spring's upper
+    end then about 4.3 from the staff, near the stud clamp's 4.6.
 
 ## The fusee assembly against Fig. 28 and the video
 
@@ -2022,17 +2084,94 @@ top, the fusee arbor, the take-off slot and the flange's holes).
    Needs first: the top-view photograph's camera refitted (`fit.py`, `unproj.py`)
    and its flange screws read through it, then the two movements compared;
    where they agree, move the model's.
-3. **`tools/p3map.json` doesn't fit `References/photo-top-view.jpg`.** Its
+3. *Confirmed (4 October 2026), not refitted: drawn back through its own transform, every named point misses its feature on this copy; a free similarity (searched over every pairing of two named screws with two of the 14 slotted heads seen on it, mirrored or not) puts at most 4 of its 8 screws within 30 px of a head, at 15.5 px/mm where the plate needs 20-23, so the points weren't traced on this image, turned or rescaled. Nothing reads the map's transform (the model takes its points, already in mm, through `PT`), so the model is unchanged; a new reading from this photograph needs its points traced on it afresh.* **`tools/p3map.json` doesn't fit `References/photo-top-view.jpg`.** Its
    three anchors (the balance at 640, 830 and so on) don't land on those parts
    in the copy in `References/` (2322 px square): it was fitted on another copy
    or crop. Find that copy, or refit the map on this one, before any new reading
    from the photograph.
-4. **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
+4. *Measured (4 October 2026), not yet drawn: at 20:25 (4K, the plate off, the top seen at a slant) the recess's edge fits an ellipse (seven points, within 6 %) round the collar, and the top plate's two screw holes, opposite each other through its centre, lie 1.26 times its radius out along their line: **r 5.5 mm (±0.5)** with the screws at r 7.0; two more holes in its floor, at about r 4.5. Drawing it means laying the stop-bar spring (42025) and the bar's slot (3.6 mm off the axis, which crosses a recess that wide) again together; it needs the recess's and the slot's depths (20:00, side-on) first.* **The recess under the fusee's top plate.** The video (20:05-20:27) shows a
    round recess r 4-5 about the hub; the model has the spring's groove r 2.4-2.9
    only. Sizes ±30 %.
 5. **Estimated, to measure if a frame allows:** the take-off slot's depth (1.0,
    its floor brass at 9:03), the collar's radius (r 3.0 face-on at 13:30, ±0.3:
    the dark ring round it may be the hole's gap).
-6. **Cosmetic:** the sustaining spring's blue is brighter than the video's
+8. **The balance hub's flange** (new, 5 October 2026, open). At 34:12 (the balance lying, rollers up) a brass disc about 7 mm across, a screw hole in its face, lies under the hub's sleeve (the sleeve now drawn, 3.24 across, from 34:12); the model's flange is a steel disc 4.4 across with the hold-down screws at 1.7. Side-on from below at 6:50.0 the hub's disc reads about 5.2 mm against the rim's 29 (rough), so the two readings disagree. Identify the disc (the hub's flange, its cap, or the arm's boss) on a frame of the balance from the plate side before resizing anything.
+7. *Re-read (5 October 2026): the distance agrees, the pinion was too short (drawn 4.0 now).* The first reading's scale came from the model's own pinion tips; scaled instead by the escape wheel (Hamilton's 13.16 mm, 760-775 px across at the arbor's depth), with the pinion 4-5 mm nearer a camera a few centimetres away (6-9 % larger) and the view 20-30° from above, its end stands 8.7-10.1 mm from the wheel's web (the model's 10.45 inside that: the train's heights stand) and its leaves run 3.6-4.7 mm (the model's 2.0 was short; now 4.0 about the same mesh). **The escape arbor's pinion and its distance from the wheel** (new, 4 October 2026). In the staking tool at 43:21.1 (4K, the arbor upright against a
+   plain ground, seen from about 20° above) the pinion's leaves run about 227 px, 3.5 mm at its own tips' 64 px/mm, where the model's pinion is 2.0 long, and
+   its end stands about 387 px (6.0 mm) above the wheel's brass hub, itself about 1.6 mm tall: about 7.6 mm from the pinion to the wheel's web, where the
+   model has 10.45 (the pinion at the fourth wheel's height, -7.46, the wheel at `EY`). The view foreshortens heights by about 6 % only. If it holds, the
+   pinion is longer and the fourth wheel or the escape wheel sits otherwise than the heights measured at 42:50-42:56 put them; check those frames and a
+   side-on view of the arbor alone before changing the train's heights. (The shank's width from the same frame is drawn: r 0.67, Every part, Jewels.)
+6. *Fixed (4 October 2026): dark tempered steel (`M.steelK`), as the frame reads it, (27, 31, 35) in shade and (154, 166, 174) where it takes the light.* **Cosmetic:** the sustaining spring's blue is brighter than the video's
    nearly black steel (27:30).
 
+
+## The balance and hairspring against Hamilton's patents (4 October 2026)
+
+US 2,356,911 (the balance) and US 2,379,780 (the hairspring's mounting), in
+`References/`, set beside the model with `isolate.py`, then against the manual
+(Figs. 3-6) and the restoration video. A patent is Hamilton's drawing of a
+principle: where the manual or a real Model 21 shows the part, they decide.
+
+Right as it is:
+
+1. **The rim and its screws** (patent Figs. I, II). An unbroken rim with
+   threaded holes all round, diametrically paired, screws with slotted heads
+   outside and points through it, as the model has (24 holes, Sec. II and the
+   video, 6:47.5, 6:52.5). Sure.
+2. **The arm's outline.** The patent draws the crossbar wider at the hub and
+   flared into the rim at each end; the real arm (6:52.5, `arm_6-52.5`) is a
+   straight bar of even width with small holes along it, meeting the rim
+   without a flare, as the model draws it (1.9 wide). The patent is a sketch of
+   the principle here. Sure.
+3. **The joint.** Patent: the crossbar brazed or screwed to the rim; manual
+   (p. 9): an Invar arm "silver-soldered" to the solid stainless rim. The model
+   draws one joined part. No change.
+4. **The stud's holes.** Patent Fig. 10: a bar with a pin at each end and a
+   central opening for the cock; the model's three holes, measured on the
+   video (41:58: pin, stud screw, pin), are that row. Sure.
+5. **The collet's clamp.** Patent Figs. 7-9 and 12: the spring's end held
+   against the collet's end face by a U-shaped clamp over a recessed tongue,
+   pulled tight by a wedge pin bearing on the edge of a cut-out; the model's
+   collet (manual Fig. 6) has the same parts. The patent's collet is slit
+   through to its edge where Fig. 6's ends in a relief hole; Fig. 6 decides.
+
+Open:
+
+6. **The stud's clamp is in the wrong place.** Manual Fig. 5 draws the stud as
+   a bar with a steady pin near each end and the screw's hole between them,
+   its end past the inner pin stepping down to the clamp over the coils; patent
+   Fig. 10 puts the clamp's recess (32) at the bar's end past a pin too. The
+   model has the clamp between the inner pin and the stud screw (4.06 mm along
+   the row from the line's nearest point to the staff, the pin at 3.23, the
+   screw at 6.66), 4.6 mm from the staff (`HS_R`, listed as an estimate), and
+   its bar flat, ending 0.8 past the pin. Moving the clamp past the inner pin
+   moves the spring's upper end in, to about 3 mm from the staff, which changes
+   the spring's terminal curve. Measure it before changing: the stud and clamp
+   on the video (41:58 has the stud in place from above; sheet round it and
+   round the hairspring's removal for a side view of the step), then
+   `isolate.py spr` against the frame and Fig. 5. Fairly sure of the order
+   along the bar (two drawings agree); its sizes are not known. *Fixed:
+   measured on the video at 6:47.5 and 6:47.75 (`References/VIDEOS.md`, "The
+   hairspring stud's clamp"): the bar now ends 2.2 inside the inner pin, the
+   clamp is a block under its end from there to 1.1 inside, the wedge pin
+   1.7 inside, through the bar's top face, and the spring's upper end is
+   2.65 mm from the staff (`SP_E`, `SP_ST`, `SP_CL` in `movement.js`).*
+7. **The stud's clamp's form.** The model's is a plain block with a pin; Fig. 6
+   and the patent (Figs. 9-12) draw the same U-shaped clamp and wedge pin as at
+   the collet, the pin a cylinder with a tapered flat (0.005 in over its
+   length). Draw it as the collet's when the place is measured. *Partly:
+   the frames show a block under the bar's end and the pin's end in the bar's
+   top face, as now drawn; the U form inside it doesn't show, so the block
+   stays plain.*
+8. *Fixed (4 October 2026): side-on from a little below at 6:50.0 the arm's underside runs level with the rim's lower edge (±0.3 mm), the hub's disc below it; the arm (`AY`), hub, cap and screws moved 0.65 mm to it, the timing weights' screws now threaded through the rim alone.* **The arm's height in the rim.** Patent Fig. III sets the crossbar's end in
+   a step at the rim's lower edge (the hub's side, the plate side), flush with
+   its face; the model's arm lies 1.2 mm above the rim's plate-side edge
+   (estimated). The side-on frames (6:50.0) can't tell the arm from the rim's
+   far edge; sheet 6:45-6:55 for a frame that shows the arm's end edge-on
+   before changing it.
+9. *Fixed (4 October 2026): side-on at 6:50.0 (enlarged 4×, edges by brightness) both pins stand 26-29 px over the bar's top face, 0.6-0.7 mm at 43 px/mm (the pins 297 px apart), and the outer one 40 px (0.9 mm) under it too; drawn so (0.8 up and flush below before). The bar there reads 31-46 px thick, 0.7-1.1 mm, against the 0.5 drawn: *drawn 0.85 (5 October 2026), with the clamp's drop measured on the same frame (27 px, 0.6) and the spring's height from the two, 6.4 (its pitch 0.533, inside the coils' 0.52-0.56).* **The stud's steady pins.** On 6:47.5 and 6:47.75 the two pins' holes are
+   empty or flush on the bar's top face; the model has the pins standing 0.8
+   up into the cock (the side view at 6:50.0 was read as a pin standing at
+   each end). Read the side view again, and 41:58 (the cock's holes), before
+   changing them.
