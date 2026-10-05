@@ -31,7 +31,7 @@
     <canvas tabindex="0" aria-label="3D working model of a marine chronometer. Arrow keys turn it, plus and minus zoom, 0 resets the view."></canvas>
     <div class="labels"></div>
     <button id="panelBtn" aria-controls="panel" aria-expanded="true" aria-label="Hide the panel" title="Hide the panel, for a larger model (P)">›</button>
-    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div><div class="src"></div></div>
+    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><p></p><div class="spec"></div><div class="src"></div><button class="rp-l" data-report="inacc">Something wrong with this part? Report it</button></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it does; right-click to fade, hide or isolate it.</span><span class="t-only">Tap a part to see what it does; long-press to fade, hide or isolate it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
     <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
@@ -218,6 +218,7 @@
       </details>
     </div>
     <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
+    <button class="about-btn" id="reportBtn" data-report title="Something broken, or something that differs from a real Model 21 or the manual: written into an email to the author, with the details that help fix it">Report a bug or inaccuracy</button>
     <div class="card ctl">
       <details class="grp more" id="changesDet">
         <summary><span>Version <span data-ver>dev</span> · what’s new</span></summary>
@@ -589,13 +590,14 @@
 </div>
 
 <hr>
+<p class="e-report">Found a mistake, in the essay or in the model, or something that differs from a real Model 21? <button class="rp-l" data-report="inacc">Report it</button>: it opens as an email to me, with the section you are reading filled in.</p>
 <p class="e-refs"><strong>Further reading.</strong> <em>Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer</em>, NAVSHIPS 250-624, Bureau of Ships (1948): the source of the Model 21’s figures here, <a href="navships-250-624-1948.pdf">here in full</a>. Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed. (1998), and Nathaniel Bowditch, <em>The American Practical Navigator</em> (Pub. No. 9): the almanac and the arithmetic of the sky sections, whose places are checked against the Jet Propulsion Laboratory’s Horizons ephemeris; the stars’ places are SIMBAD’s (CDS, Strasbourg). Rupert T. Gould, <em>The Marine Chronometer: Its History and Development</em> (1923). David Boettcher’s notes on <a href="https://vintagewatchstraps.com/MTEpdf.php">middle temperature error</a>. The Royal Museums Greenwich’s <a href="https://www.rmg.co.uk/collections/objects/rmgc-object-387425">Hamilton Model 21, No. 4E019</a>. Bartosz Ciechanowski, <a href="https://ciechanow.ski/mechanical-watch/">Mechanical Watch</a>, whose approach inspired this essay. The working model’s sources are listed under “About this model” on the other tab.</p>
 </div>
 </article>
 <dialog id="about" aria-labelledby="aboutT">
   <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
   <h2 id="aboutT">About this model</h2>
-  <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a> · version <span data-ver>dev</span></p>
+  <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a> · version <span data-ver>dev</span> · <button class="rp-l" data-report>Report a bug or inaccuracy</button></p>
   <p>A working 3D model of the Hamilton Model 21 marine chronometer: a two-day fusee chronometer with a spring detent escapement, made in Lancaster, Pennsylvania, for the U.S. Navy from 1941. Every part runs from one clock: the balance beats twice a second, the hands step in half-seconds, and the fusee and chain follow the hours since winding.</p>
   <h3>Using it</h3>
   <ul>
@@ -639,6 +641,21 @@
   <h3>Licence</h3>
   <p>Code under the MIT licence; text, drawings and the model under Creative Commons Attribution 4.0. Built with three.js (MIT) and the Spectral and Instrument Sans typefaces (SIL Open Font License).</p>
 </dialog>
+<dialog id="report" aria-labelledby="rpT">
+  <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
+  <h2 id="rpT">Report a bug or inaccuracy</h2>
+  <p class="by">To Orel Magidish, at <a id="rpTo" href="mailto:orelmag@gmail.com">orelmag@gmail.com</a>. Nothing is sent from this page: the report opens in your own email, where you can read and change all of it before you send it.</p>
+  <div class="seg" id="rpKind"><button data-v="bug" aria-pressed="true">Something’s broken</button><button data-v="inacc" aria-pressed="false">Something’s inaccurate</button><button data-v="other" aria-pressed="false">Something else</button></div>
+  <p class="note" id="rpHint"></p>
+  <label class="rp-f"><span>Where</span><input id="rpWhere" autocomplete="off" placeholder="A part, a view, a control or a section of the essay"></label>
+  <label class="rp-f"><span>What’s wrong</span><textarea id="rpWhat" rows="5"></textarea></label>
+  <label class="rp-f hidden" id="rpSrcF"><span>What shows it (if you know)</span><input id="rpSrc" autocomplete="off" placeholder="A photograph or video (and the time in it), or the manual’s page, figure or Op."></label>
+  <label class="ck rp-ck"><input type="checkbox" id="rpTech" checked> Include technical details: the version, the model’s settings, the browser, screen and graphics, and the page’s last errors</label>
+  <details id="rpPrev"><summary>What will be sent</summary><pre></pre></details>
+  <div class="seg rp-go"><a class="rp-b primary" id="rpMail" href="mailto:orelmag@gmail.com">Write it in my email</a><a class="rp-b" id="rpGmail" href="https://mail.google.com/" target="_blank" rel="noopener">In Gmail</a><button id="rpCopy">Copy it</button></div>
+  <p class="note" id="rpOut" aria-live="polite"></p>
+</dialog>
+<script src="js/report.js"></script>
 <script src="../../vendor/three.min.js"></script>
 <script src="js/core.js"></script>
 <script src="../shared/escapement.js"></script>

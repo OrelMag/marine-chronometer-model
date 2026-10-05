@@ -1003,6 +1003,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     requestAnimationFrame(frame);
   }
   ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});
+  /* Report a bug or inaccuracy (js/report.js): what it is about (the essay's section, the part picked or the view) and what the hash doesn't hold of the model's state */
+  REPORT.bind({r,where:()=>{if(ESSAY.on()){const s=ESSAY.section(),h=s&&document.getElementById(s);return'The essay'+(h?', “'+h.textContent.trim()+'”':'');}if(st.pick)return INFO[st.pick][0];const b=$('#views [aria-pressed="true"]');return'The model'+(st.tour>=0?', the walkthrough':b?', '+b.textContent.trim()+' view':'');},
+    state:()=>[['Tab',ESSAY.on()?'essay':'model'],['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; speed ${st.speed}×; ${renders} frames drawn`]]});
   /* the export to Blender (blender.js): its own copy of the model, set as the page's is (the dial, balance and stop chosen, the timing weights, screws and temperature) */
   if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
     config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');
