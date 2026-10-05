@@ -15,3 +15,6 @@ holes_*.json
 ci-logs/
 # wrangler's local state
 .wrangler/
+# worktrees of side branches, and folders the tools write (r_ill/, r_esc/ ...)
+.claude/worktrees/
+r_*/
