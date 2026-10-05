@@ -15,6 +15,12 @@ It is a single self-contained HTML file: download it and open it in any modern
 browser. It works offline and needs no server. three.js and the fonts are built
 into the file.
 
+In Blender: the model's panel, Making it, **Blender (.glb)** saves the whole instrument as a glTF 2.0 file, every part a
+named object in its hierarchy, in its materials, with every motion the model has as an action (running, a beat in slow motion, run down, winding, setting
+the hands, stopping and starting, exploded, laid out, lifting out, the lids, the latch, at sea). **Blender rig (.py)** saves a script: import the file in
+Blender 5 (File, Import, glTF 2.0), open the script in the Text Editor and run it, and the chronometer runs on the timeline at its own ratios, with controls
+for the wind, the hands, explode, laid out, lift, lids, latch, roll and pitch. The model's README, "The model in Blender", has the details.
+
 Contents:
 [Repository layout](#repository-layout) ·
 [Setting up](#setting-up) ·
@@ -216,6 +222,8 @@ Before committing a change to the model:
        npx -p typescript@5.9.3 tsc -p ../jsconfig.json   # the types of the files that start with // @ts-check (TypeScript fetched by npx, nothing installed in the repository)
        python bom.py        # every part against the manual's parts list: counts, how each is held and runs, the gears, the 14 jewels (exit code 1 on a failure; --md rewrites BOM.md)
        python video.py      # teeth counted on frames of videos of real Model 21s (References/README.md); pip install opencv-python yt-dlp; videos kept outside the repository
+       python gltf_check.py     # the export to Blender, written (r_model21.glb) and read back: structure, the tree, names, every clip (about 2 minutes)
+       python blender_check.py  # that file in Blender 5 headless (MC_BLENDER, else the usual install; skipped without one): the rig against the export's own clips, two renders
 
    `dyn.py` should list only intended joints: pivots in their jewels, collets
    on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
@@ -245,7 +253,7 @@ Before committing a change to the model:
    with `--site-url https://www.marinechronometermodel.com`, as the live site is, failing
    if building changes a built copy (commit what it writes), `escapement.js`, `almanac.js`, `hairspring.js`, `physics.js`, `selfcontained.py`, the type
    check, `smoke.py`, `invariants.py`, `solids.py`, `exploded.py` and `audit.py`.
-   `--full` adds `fine.py`, `maintaining.py` and `bom.py`; `--views` renders every view before
+   `--full` adds `fine.py`, `maintaining.py`, `bom.py`, `gltf_check.py` and `blender_check.py`; `--views` renders every view before
    and after the branch and prints the changed pixels; `--quick` is the first seven only.
    Nothing runs on GitHub: merge a branch only when `ci.py` passes on it.
 7. **Record fixes.** If the change fixes a bug, add it to

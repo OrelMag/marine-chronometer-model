@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.09.00 · 2026-10-05
+- Export to Blender: the whole chronometer as a glTF file, every part a named object in its place, in its materials, with every motion as an animation (running, a beat in slow motion, run down, winding, setting the hands, stopping and starting, exploded, laid out, lifting out, the lids, the latch, at sea)
+- A Blender rig: run it after importing and the chronometer keeps going on Blender's timeline at its own ratios, with controls for the wind, the hands, explode, laid out, lift, lids, latch, roll and pitch
+- Sharper textures in the Blender export: the engravings, the damascening, the dial and the wood drawn finer
+
 ## 2.08.00 · 2026-10-05
 - Jupiter and Saturn in the almanac and the workbook, within 10 and 5 seconds of arc
 - The build book prints each part's drawing at a stated scale, legible on paper, every line with its fit, and each screw with a thread to cut

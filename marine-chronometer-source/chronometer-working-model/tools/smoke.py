@@ -40,6 +40,9 @@ async def model(b,errs,steps):
         await click(f'#secs button[data-v="{v}"]',f'section {v}');await click('#secFlip',f'section {v}, other half');await click('#secFlip')
     await click('#secs button[data-v="off"]','section off')
     await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT');await click('#now','Now')
+    # the export to Blender: the rig's script saved (the export itself, a minute and more in SwiftShader, is gltf_check.py's)
+    await pg.evaluate("document.querySelector('#makeDet').open=true");await click('#mkRig','Blender rig')
+    if not await pg.evaluate("!!document.querySelector('#mkGLB')&&typeof BLENDER==='object'&&typeof GLTF==='object'&&RIG_PY.length>1000"):errs.append('the export to Blender is not in the page')
     await click('#tabEssay','Essay tab',600);await click('#tabModel','3D model tab')
     # the parts list: search (a part number, a figure, nothing), sizes in inches on a card and back
     await pg.evaluate("document.querySelector('#partsDet').open=true")
