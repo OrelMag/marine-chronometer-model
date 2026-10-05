@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.17.00 · 2026-10-05
+- Parts that are several things in one now list their pieces: a tap picks the balance wheel, a roller, the collet or a screw, each with its own card from the parts list and the manual
+- Each piece has its own maker's sheet, drawing and STL, and hides, fades and isolates on its own; the parts list folds them under their part
+- The winding key shown on the fusee and on the hands' square is the real key, as on the box, not a T bar
+
 ## 2.16.00 · 2026-10-05
 - Report a bug or inaccuracy: from the panel, any part's card or the essay, a report written into an email to the author, with the details that help fix it
 
