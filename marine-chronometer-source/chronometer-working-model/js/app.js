@@ -1003,6 +1003,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     requestAnimationFrame(frame);
   }
   ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});
+  /* the export to Blender (blender.js): its own copy of the model, set as the page's is (the dial, balance and stop chosen, the timing weights, screws and temperature) */
+  if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
+    config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');
+      if(d)u.dial(d);if(b)u.balance(b);if(sv)u.stop(sv);u.R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);u.R.screws(SP);u.R.balCurl(degF()-T0);}});
   if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,cam,cv,scene,M,PARTS,INFO,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';

@@ -526,6 +526,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <summary>Making it</summary>
         <p class="note" style="margin:0 0 6px">For a maker. Each part's card has its maker's sheet (its lines of the manual's parts list, the fits measured on the model, materials and heat treatment), its drawing to scale (SVG, mm) and its solid (STL). Here: measure between two points on the model, print the whole build book, or take the model's numbers away.</p>
         <div class="seg"><button id="mkMeasure" aria-pressed="false" title="Click two points on the model">Measure</button><button id="mkOil" aria-pressed="false" title="Colour each part by the oil or grease it takes (Ops. 18-71)">Oil</button><button id="mkBook" title="Every part's sheet and drawing, to print">Build book</button><button id="mkData" title="The train, the fusee's profile, the escapement's cycle, the hairspring's design and the parts list, as JSON">Data</button><button id="mkSTL" title="Every part shown, as one STL in millimetres">STL</button></div>
+        <div class="seg" style="margin-top:6px"><button id="mkGLB" title="The whole instrument for Blender (glTF 2.0): every part a named object in its own hierarchy, in its materials, with every motion the model has as an action">Blender (.glb)</button><button id="mkRig" title="A script for Blender's Text Editor, run after importing the .glb: one set of controls (time, explode, laid out, lift, lids, latch) drives every part at the model's own ratios">Blender rig (.py)</button></div>
         <div class="rate" id="mkRead" aria-live="polite"></div>
       </details>
       <details class="grp more" id="rateDet">
@@ -1078,39 +1079,40 @@ function plainFaces(m,uv0,top=true,root=null){let g=m.geometry;if(!g.attributes.
     if(top&&n.y<-0.9)continue;for(let k=0;k<3;k++)uv.setXY(i+k,uv0[0],uv0[1]);}
   uv.needsUpdate=true;}
 /* Damascening (Hamilton Model 21 plates): broad parallel ridges ~2.5 mm apart with a gentle wave, as on the photographed movement.
-   Returns {map, normal}; one 1024 px tile = 40 mm = 16 ridges. */
-function stripeTex(){
-  const N=1024,P=64,cm=document.createElement('canvas'),cn=document.createElement('canvas');cm.width=cm.height=cn.width=cn.height=N;
+   Returns {map, normal}; one 1024 px tile = 40 mm = 16 ridges. K: drawn K times as fine (the same tile; the export to Blender, blender.js), its textures' redraw(K) the same at K */
+function stripeTex(K=1){
+  const N=1024*K,P=64*K,cm=document.createElement('canvas'),cn=document.createElement('canvas');cm.width=cm.height=cn.width=cn.height=N;
   const xm=cm.getContext('2d'),xn=cn.getContext('2d'),im=xm.createImageData(N,N),inn=xn.createImageData(N,N);
   /* height h(x,y) = sin(pi*t)^1.6 of the ridge phase t, the ridges waving with x. Each h is computed once, in three rolling rows (rows y-1, y, y+1 over
      x = -1..N), not five times over for the slopes, and the wave per column once: the same pixels as the direct formula, about a fifth of the time */
-  const A=new Float64Array(N+2),B=new Float64Array(N+2);for(let x=-1;x<=N;x++){A[x+1]=7*Math.sin(TAU*x/N);B[x+1]=2.5*Math.sin(TAU*3*x/N+1.3);}
+  const A=new Float64Array(N+2),B=new Float64Array(N+2);for(let x=-1;x<=N;x++){A[x+1]=7*K*Math.sin(TAU*x/N);B[x+1]=2.5*K*Math.sin(TAU*3*x/N+1.3);}
   const row=(y,o)=>{for(let i=0;i<N+2;i++){const w=y+A[i]+B[i],t=(w%P+P)%P/P;o[i]=Math.pow(Math.sin(Math.PI*t),1.6);}return o;};
   let r0=row(-1,new Float64Array(N+2)),r1=row(0,new Float64Array(N+2)),r2=new Float64Array(N+2);const dm=im.data,dn=inn.data;
   for(let y=0;y<N;y++){row(y+1,r2);
     for(let x=0;x<N;x++){const k=4*(y*N+x),v=r1[x+1],dy=(r2[x+1]-r0[x+1])*0.5,dx=(r1[x+2]-r1[x])*0.5;
       const g=Math.round(255*(0.7+0.3*v));dm[k]=dm[k+1]=dm[k+2]=g;dm[k+3]=255;
-      let nx=-dx*5,ny=dy*5,nz=1;const l=Math.sqrt(nx*nx+ny*ny+1);nx/=l;ny/=l;nz/=l;
+      let nx=-dx*5*K,ny=dy*5*K,nz=1;const l=Math.sqrt(nx*nx+ny*ny+1);nx/=l;ny/=l;nz/=l;
       dn[k]=Math.round((nx*0.5+0.5)*255);dn[k+1]=Math.round((ny*0.5+0.5)*255);dn[k+2]=Math.round((nz*0.5+0.5)*255);dn[k+3]=255;}
     const t=r0;r0=r1;r1=r2;r2=t;}
   xm.putImageData(im,0,0);xn.putImageData(inn,0,0);
   const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)t.encoding=THREE.sRGBEncoding;return t;};
-  return{map:mk(cm,true),normal:mk(cn,false)};
+  const out={map:mk(cm,true),normal:mk(cn,false)};let re=null;const at=k=>re&&re.k===k?re:(re={k,...stripeTex(k)});
+  out.map.redraw=k=>at(k).map.image;out.normal.redraw=k=>at(k).normal.image;return out;
 }
 const STRIPE_ANGLE=(-82.3-19.42)*Math.PI/180;   /* ridge direction, in plate (shape) coordinates, from the photograph, turned with the photographed group (movement.js, PHOTO_TURN 19.42 deg) */
-function woodTex(){
-  const c=document.createElement('canvas');c.width=512;c.height=1024;const x=c.getContext('2d');
+function woodTex(K=1){   /* K: drawn K times as fine (redraw, for the export to Blender) */
+  const c=document.createElement('canvas');c.width=512*K;c.height=1024*K;const x=c.getContext('2d');x.scale(K,K);
   x.fillStyle='#5a2413';x.fillRect(0,0,512,1024);
   let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
   for(let i=0;i<260;i++){const xx=rnd()*512,w=0.6+rnd()*2.6,a=0.05+rnd()*0.14,ph=rnd()*6,amp=2+rnd()*9;
     x.strokeStyle=rnd()<0.5?`rgba(20,6,2,${a})`:`rgba(150,70,35,${a*0.8})`;x.lineWidth=w;x.beginPath();
     for(let y=0;y<=1024;y+=16){const px=xx+Math.sin(y/140+ph)*amp+Math.sin(y/37+ph*2)*amp*0.25;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();}
-  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.redraw=k=>woodTex(k).image;return t;
 }
 /* Engraving textures are mapped to the movement: canvas centre = movement centre, 96 mm across,
    canvas up = 6 o'clock (+z), so text reads upright when the movement is viewed from the bridge side. */
-function engraveCanvas(draw){const S=1024,c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d');const k=S/96;
-  x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t;}
+function engraveCanvas(draw,K=1){const S=1024,c=document.createElement('canvas');c.width=c.height=S*K;const x=c.getContext('2d');x.scale(K,K);const k=S/96;   /* K: drawn K times as fine (redraw, for the export to Blender) */
+  x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=q=>engraveCanvas(draw,q).image;return t;}
 function engraveArc(x,S,k,txt,r,psiDeg,spreadDeg,size){x.font=`600 ${size*k}px Spectral, Georgia, serif`;const ch=[...txt],n=ch.length,phi0=-psiDeg*D2R,sp=spreadDeg*D2R;
   ch.forEach((q,i)=>{const phi=phi0+((n-1)/2-i)*sp;x.save();x.translate(S/2+r*k*Math.cos(phi),S/2+r*k*Math.sin(phi));x.rotate(phi-Math.PI/2);x.fillText(q,0,0);x.restore();});}
 /* letters of t spread (or squeezed) to width w, centred on the origin; gx narrows each letter first, as on the engraved plates */
@@ -1564,8 +1566,8 @@ function handGeo(len,w,tail,kind,at,o){const g=extrude(handShape(len,w,tail,kind
    'swiss' and 'soviet': the Ulysse Nardin deck chronometers (Roman hours, UP/HAUT–DOWN/BAS) and the First Moscow Watch Factory's copies of them
    (Arabic hours, ЗАВОД–СПУСК, СДЕЛАНО В СССР): white face, railroad track, a large seconds sub-dial with lines at 5, 15 … 55 s; makers' names
    and numbers left off, wind scales on the movement's sweep (UDA) */
-function dialCanvas(kind){
-  const S=1536,c=S/2,cv=document.createElement('canvas');cv.width=cv.height=S;const x=cv.getContext('2d'),nard=kind==='swiss'||kind==='soviet';
+function dialCanvas(kind,K=1){   /* K: drawn K times as fine (the export to Blender) */
+  const S=1536,c=S/2,cv=document.createElement('canvas');cv.width=cv.height=S*K;const x=cv.getContext('2d');x.scale(K,K);const nard=kind==='swiss'||kind==='soviet';
   const g=x.createRadialGradient(c*0.7,c*0.6,S*0.05,c,c,c);g.addColorStop(0,nard?'#f8f7f2':'#f4f4f1');g.addColorStop(1,nard?'#e2e0d8':'#d9dad6');
   x.fillStyle=g;x.beginPath();x.arc(c,c,c,0,TAU);x.fill();
   if(!nard){x.globalAlpha=0.06;x.strokeStyle='#000';for(let r=6;r<c;r+=5){x.lineWidth=1;x.beginPath();x.arc(c,c,r,0,TAU);x.stroke();}x.globalAlpha=1;}   /* graining on the silvered dials; the Nardin-pattern faces are white */
@@ -2918,7 +2920,7 @@ function buildMovement(M){
   /* ---------- dial (on the mounting ring's flange), hands, motion work ---------- */
   const dl=part('dial',32);
   hn(dl,'42030');mesh(dl,discGeo(DIAL_R,DIAL_T,[[...L.C,2.5],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,MR_Y,0);
-  const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;
+  const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;dtex.redraw=k=>dialCanvas(undefined,k);   /* redraw: finer, for the export to Blender */
   /* the face lies 0.02 above the brass disc's top; polygon offset keeps it in front in the depth buffer, else the brass shows through in streaks when zoomed out */
   const dface=mesh(dl,new THREE.RingGeometry(2.5,DIAL_R,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,MR_Y+DIAL_T+0.02,0);dface.userData.noCap=true;dface.userData.surface=true;
   /* four feet down into the ring's flange, each held by a dial screw (35756, Fig. 107) from the flange's train side into its tapped end */
@@ -2937,7 +2939,7 @@ function buildMovement(M){
   for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31*DK,1.4,6,'pear',0,HO),m),k,hcol(m));dk(mesh(R.min,handGeo(46.5*DK,0.9,8,'pear',0,MO),m),k,mcol(m));
     dk(mesh(R.sec,handGeo(19*DK,0.45,-8,'plain'),M.blued,0,0.25,0),k);dk(mesh(R.ud,handGeo((k==='swiss'?11.5:8.5)*DK,0.6,2.5,'plain'),M.blued,0,0.25,0),k);}
   const DTEX={hamilton:dtex};hd.traverse(o=>{if(o.userData.dk&&o.userData.dk!=='hamilton')o.visible=false;});
-  mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;}
+  mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>dialCanvas(kind,k);}
     const m=dface.userData.mat0||dface.material;m.map=DTEX[kind];m.needsUpdate=true;hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===kind;});};   /* the face's own material (app.js may be showing a see-through or faded copy of it, which follows on the next look()) */
   const mw=part('motion',16);
   /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75+DD), and ends in the
@@ -4653,6 +4655,339 @@ const MAKER=(()=>{
 
 </script>
 <script>
+// @ts-check
+/* GLTF: a binary glTF 2.0 (.glb) writer, for the export to Blender (blender.js). Generic: nodes, meshes, materials, textures and animations, nothing of the chronometer.
+   GLTF.write(doc) resolves to a Blob. doc:
+     nodes [{name, t:[x,y,z], r:[x,y,z,w], s:[x,y,z], mesh, children:[i], extras}], roots [i], extras (the asset's), generator
+     meshes [{name, prims:[{pos, nrm, uv, idx, mat, targets:[{pos, nrm}]}], weights, targetNames}]: Float32Arrays (idx any integer array); targets are offsets from pos
+     materials [{name, color:[r,g,b,a] (linear), metal, rough, emissive:[r,g,b], map, nmap, nscale, xf:{o:[u,v], s:[u,v], r}, blend, double, trans, ior}]: map, nmap texture indices
+     textures [{img: a canvas, flip: drawn upside down (three's flipY, so the UVs go as they are), green: the normal map's green turned over with it, repeat}]
+     animations [{name, channels:[{node, path: translation | rotation | scale | weights, times, values, interp: LINEAR | STEP}]}]: channels sharing a times array share its accessor
+   GLTF.reduce(times, values, n, tol, quat) drops the keys that linear interpolation (normalised for a quaternion) puts back within tol */
+const GLTF=(()=>{
+  const TYPE=['','SCALAR','VEC2','VEC3','VEC4'],ARR=34962,ELT=34963;
+  /** @param {any} doc @returns {Promise<Blob>} */
+  async function write(doc){
+    /** @type {any} */
+    const J={asset:{version:'2.0',generator:doc.generator||'GLTF.write'},scene:0,scenes:[{nodes:doc.roots}],nodes:[],accessors:[],bufferViews:[],buffers:[]},ext=new Set(),parts=[];let len=0;
+    const view=(a,target)=>{const pad=(4-len%4)%4;if(pad){parts.push(new Uint8Array(pad));len+=pad;}const b=a instanceof Uint8Array?a:new Uint8Array(a.buffer,a.byteOffset,a.byteLength);
+      J.bufferViews.push(Object.assign({buffer:0,byteOffset:len,byteLength:b.byteLength},target?{target}:{}));parts.push(b);len+=b.byteLength;return J.bufferViews.length-1;};
+    /** @param {any} a @param {number} n @param {number} [target] @param {boolean} [mm] */
+    const acc=(a,n,target,mm)=>{const ct=a instanceof Float32Array?5126:a instanceof Uint16Array?5123:5125,o=/** @type {any} */({bufferView:view(a,target),componentType:ct,count:a.length/n,type:TYPE[n]});
+      if(mm){const mn=Array(n).fill(Infinity),mx=Array(n).fill(-Infinity);for(let i=0;i<a.length;i++){const k=i%n,v=a[i];if(v<mn[k])mn[k]=v;if(v>mx[k])mx[k]=v;}o.min=mn;o.max=mx;}J.accessors.push(o);return J.accessors.length-1;};
+    const unit=a=>{const o=new Float32Array(a.length);for(let i=0;i<a.length;i+=3){const l=Math.hypot(a[i],a[i+1],a[i+2]);if(l>1e-12){o[i]=a[i]/l;o[i+1]=a[i+1]/l;o[i+2]=a[i+2]/l;}else o[i+1]=1;}return o;};   /* unit normals, as the spec has them (a degenerate triangle's none: up) */
+    const ints=a=>{let m=0;for(let i=0;i<a.length;i++)if(a[i]>m)m=a[i];return m<65535?Uint16Array.from(a):Uint32Array.from(a);};
+    /* textures: PNG from the canvas, turned over as three would sample it */
+    const png=async t=>{const c=document.createElement('canvas');c.width=t.img.width;c.height=t.img.height;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
+      if(t.flip){x.translate(0,c.height);x.scale(1,-1);}x.drawImage(t.img,0,0);
+      if(t.green){const d=x.getImageData(0,0,c.width,c.height);for(let i=1;i<d.data.length;i+=4)d.data[i]=255-d.data[i];x.putImageData(d,0,0);}
+      const b=await new Promise(r=>c.toBlob(r,'image/png'));return new Uint8Array(await /** @type {Blob} */(b).arrayBuffer());};
+    const T=doc.textures||[];if(T.length){J.images=[];J.textures=[];J.samplers=[{magFilter:9729,minFilter:9987,wrapS:10497,wrapT:10497},{magFilter:9729,minFilter:9987,wrapS:33071,wrapT:33071}];
+      for(const t of T){J.images.push({bufferView:view(await png(t)),mimeType:'image/png'});J.textures.push({source:J.images.length-1,sampler:t.repeat?0:1});}}
+    const texRef=(i,xf)=>{const o=/** @type {any} */({index:i});if(xf){ext.add('KHR_texture_transform');o.extensions={KHR_texture_transform:{offset:xf.o,scale:xf.s,rotation:xf.r}};}return o;};
+    J.materials=(doc.materials||[]).map(m=>{const o=/** @type {any} */({name:m.name,pbrMetallicRoughness:{baseColorFactor:m.color,metallicFactor:m.metal,roughnessFactor:m.rough}});
+      if(m.map!=null)o.pbrMetallicRoughness.baseColorTexture=texRef(m.map,m.xf);
+      if(m.nmap!=null){o.normalTexture=texRef(m.nmap,m.xf);o.normalTexture.scale=m.nscale??1;}
+      if(m.emissive&&m.emissive.some(v=>v>0))o.emissiveFactor=m.emissive;if(m.blend)o.alphaMode='BLEND';if(m.double)o.doubleSided=true;
+      if(m.trans){ext.add('KHR_materials_transmission');ext.add('KHR_materials_ior');o.extensions={KHR_materials_transmission:{transmissionFactor:m.trans},KHR_materials_ior:{ior:m.ior??1.5}};}
+      return o;});
+    J.meshes=doc.meshes.map(m=>{const o=/** @type {any} */({name:m.name,primitives:m.prims.map(p=>{const q=/** @type {any} */({attributes:{POSITION:acc(p.pos,3,ARR,true),NORMAL:acc(unit(p.nrm),3,ARR)},mode:4});
+        if(p.uv)q.attributes.TEXCOORD_0=acc(p.uv,2,ARR);if(p.idx)q.indices=acc(ints(p.idx),1,ELT);if(p.mat!=null)q.material=p.mat;
+        if(p.targets&&p.targets.length)q.targets=p.targets.map(t=>{const a=/** @type {any} */({POSITION:acc(t.pos,3,ARR,true)});if(t.nrm)a.NORMAL=acc(t.nrm,3,ARR);return a;});return q;})});
+      if(m.weights)o.weights=m.weights;if(m.targetNames)o.extras={targetNames:m.targetNames};return o;});
+    J.nodes=doc.nodes.map(n=>{const o=/** @type {any} */({name:n.name});if(n.t&&n.t.some(v=>v!==0))o.translation=n.t;if(n.r&&(n.r[0]||n.r[1]||n.r[2]||n.r[3]!==1))o.rotation=n.r;
+      if(n.s&&n.s.some(v=>v!==1))o.scale=n.s;if(n.mesh!=null)o.mesh=n.mesh;if(n.children&&n.children.length)o.children=n.children;if(n.extras)o.extras=n.extras;return o;});
+    if(doc.animations&&doc.animations.length){const tA=new Map(),N={translation:3,rotation:4,scale:3};
+      J.animations=doc.animations.filter(a=>a.channels.length).map(a=>{const S=[],C=[];
+        for(const c of a.channels){let ti=tA.get(c.times);if(ti==null){ti=acc(c.times,1,undefined,true);tA.set(c.times,ti);}
+          S.push({input:ti,output:acc(c.values,1,undefined),interpolation:c.interp||'LINEAR'});const ac=J.accessors[J.accessors.length-1];ac.type=TYPE[N[c.path]||1];ac.count=c.values.length/(N[c.path]||1);   /* weights: the targets' count per key, as scalars */
+          C.push({sampler:S.length-1,target:{node:c.node,path:c.path}});}
+        return{name:a.name,samplers:S,channels:C};});}
+    if(doc.extras)J.asset.extras=doc.extras;if(ext.size)J.extensionsUsed=[...ext];
+    J.buffers=[{byteLength:len+(4-len%4)%4}];
+    let js=new TextEncoder().encode(JSON.stringify(J));const jp=(4-js.length%4)%4;if(jp){const b=new Uint8Array(js.length+jp);b.set(js);b.fill(32,js.length);js=b;}
+    const bp=(4-len%4)%4;if(bp)parts.push(new Uint8Array(bp));const bl=len+bp,h=new DataView(new ArrayBuffer(20)),h2=new DataView(new ArrayBuffer(8));
+    h.setUint32(0,0x46546C67,true);h.setUint32(4,2,true);h.setUint32(8,12+8+js.length+8+bl,true);h.setUint32(12,js.length,true);h.setUint32(16,0x4E4F534A,true);
+    h2.setUint32(0,bl,true);h2.setUint32(4,0x004E4942,true);
+    return new Blob([h.buffer,js,h2.buffer,...parts],{type:'model/gltf-binary'});}
+  /* keyframe reduction (Douglas-Peucker on the track): keys a straight line between their neighbours puts back within tol are dropped. quat: the values are
+     quaternions, compared after normalising the interpolation (slerp's error over a small step is far under tol) */
+  /** @param {Float32Array} t @param {Float32Array} v @param {number} n @param {number} tol @param {boolean} [quat] */
+  function reduce(t,v,n,tol,quat){const m=t.length;if(m<3)return{times:t,values:v};const keep=new Uint8Array(m);keep[0]=keep[m-1]=1;const st=[[0,m-1]],q=new Float64Array(n);
+    while(st.length){const[a,b]=/** @type {number[]} */(st.pop());let w=-1,wi=-1;
+      for(let i=a+1;i<b;i++){const u=(t[i]-t[a])/((t[b]-t[a])||1);let l=0;for(let k=0;k<n;k++){q[k]=v[a*n+k]+(v[b*n+k]-v[a*n+k])*u;l+=q[k]*q[k];}
+        l=quat?Math.sqrt(l)||1:1;let e=0;for(let k=0;k<n;k++)e=Math.max(e,Math.abs(q[k]/l-v[i*n+k]));if(e>w){w=e;wi=i;}}
+      if(w>tol){keep[wi]=1;st.push([a,wi],[wi,b]);}}
+    let c=0;for(let i=0;i<m;i++)c+=keep[i];const T=new Float32Array(c),V=new Float32Array(c*n);let j=0;
+    for(let i=0;i<m;i++)if(keep[i]){T[j]=t[i];for(let k=0;k<n;k++)V[j*n+k]=v[i*n+k];j++;}return{times:T,values:V};}
+  return{write,reduce};
+})();
+
+</script>
+<script>
+/* rigpy.js: the Blender rig (blender/rig.py), as text, for the panel's Blender rig button (blender.js). Written by tools/rigpy.py; do not edit by hand.
+   Declares only RIG_PY */
+"use strict";
+const RIG_PY="\"\"\"The Marine Chronometer working model's rig for Blender (5.x): one set of controls that drives every part of the imported model21.glb at the model's own ratios.\n\nImport model21.glb (File, Import, glTF 2.0), then open this file in the Text Editor and press Run Script. The chronometer then runs on the timeline, in real\ntime at the scene's frame rate (set the frame rate before importing: the clips come in at it), and an empty, \"Chronometer controls\", has properties (Object\nproperties, Custom Properties) for the rest:\n    hours        hours since full wind at frame 0; the fusee, chain, barrel, mainspring and the up-down hand follow it, and the time as it runs\n    hands_set_s  how far the hand-setting key has set the hands on (seconds)\n    explode, laid_out, lift, lids, latch    0 to 1: the parts apart, the train laid out, out of the case and turned over, the lids closed, the gimbals latched\n    roll, pitch  the box tilted (the gimbals keep the case level)\n    seconds      the model's time (read only: frame / fps)\nHow: the escape wheel, train, hands and motion work turn by drivers in step with the escape wheel's place, E = beats run + the export's helper (\"Rig · escape\nwheel teeth\": how far the wheel is ahead of an even run through its beat, 0 at each end); the balance, detent, trip spring and hairspring play the export's one-beat action (Rig · beat) on a loop; everything else plays\nits own one-parameter action (Run down, Rig · explode, ...) through an Action constraint whose time the control drives, made over into changes from the part's rest\nso that two can move one part. No Python runs in the drivers, so the file works without Auto Run Scripts.\n\nTo play one of the export's clips on every part instead (Running, Winding, Exploded, ...), set PLAY below to its name and run this again; PLAY = None puts the\nrig back. Every clip's action is kept (with a fake user). Running it again is safe: it clears what it made before.\"\"\"\nimport bpy,math\nfrom mathutils import Matrix,Quaternion,Vector\n\nPLAY=None   # e.g. 'Winding': that clip on every part, in place of the rig\nCTL='Chronometer controls'\nMC='MC '   # what the rig makes: constraints and actions named so, cleared on a rerun\n\ndef root():\n    for o in bpy.data.objects:\n        if 'clips' in o.keys() and 'fuseePerHour' in o.keys():return o\n    raise RuntimeError('No Marine Chronometer model in this file: import model21.glb first (File, Import, glTF 2.0)')\n\ndef as_dict(x):return x.to_dict() if hasattr(x,'to_dict') else dict(x)\n\ndef owner(slot):\n    \"\"\"The datablock a slot of an action was made for: an object, or a mesh's shape keys.\"\"\"\n    n=slot.name_display;t=slot.target_id_type\n    if t=='OBJECT':return bpy.data.objects.get(n)\n    if t=='KEY':return bpy.data.shape_keys.get(n)\n    return None\n\ndef channelbag(action,slot,make=False):\n    from bpy_extras import anim_utils\n    if make:return anim_utils.action_ensure_channelbag_for_slot(action,slot)\n    return anim_utils.action_get_channelbag_for_slot(action,slot)\n\ndef rest_of(o):\n    \"\"\"The part's rest pose (the export's extras.rest, glTF's axes) in Blender's: y up becomes z up, as the importer turns every node.\"\"\"\n    r=list(o['rest']);return Vector((r[0],-r[2],r[1])),Quaternion((r[6],r[3],-r[5],r[4])),Vector((r[7],r[9],r[8]))\n\ndef clear():\n    \"\"\"Undo an earlier run, and the importer's choice of clip: every part back at rest, no action assigned (all kept), our drivers and constraints gone.\"\"\"\n    for a in bpy.data.actions:\n        if a.name.startswith(MC):bpy.data.actions.remove(a)\n        else:a.use_fake_user=True\n    for i in list(bpy.data.objects)+list(bpy.data.shape_keys):\n        ad=i.animation_data\n        if ad:\n            for fc in list(ad.drivers):ad.drivers.remove(fc)\n            for t in list(ad.nla_tracks):ad.nla_tracks.remove(t)\n            ad.action=None\n        if isinstance(i,bpy.types.Object):\n            for c in list(i.constraints):\n                if c.name.startswith(MC):i.constraints.remove(c)\n            if 'rest' in i.keys():\n                l,q,s=rest_of(i);i.rotation_mode='QUATERNION';i.location=l;i.rotation_quaternion=q;i.scale=s\n    for k in bpy.data.shape_keys:\n        for b in k.key_blocks[1:]:b.value=0\n\ndef var(d,name,id_,path,id_type='OBJECT'):\n    v=d.variables.new();v.name=name;v.type='SINGLE_PROP';v.targets[0].id_type=id_type;v.targets[0].id=id_;v.targets[0].data_path=path;return v\n\ndef play(name):\n    a=bpy.data.actions.get(name)\n    if not a:raise RuntimeError('No clip called %r: the export has %s'%(name,', '.join(x.name for x in bpy.data.actions)))\n    for s in a.slots:\n        i=owner(s)\n        if i is not None:ad=i.animation_data_create();ad.action=a;ad.action_slot=s\n    sc=bpy.context.scene;f0,f1=a.frame_range;sc.frame_start=int(f0);sc.frame_end=int(math.ceil(f1));sc.frame_set(int(f0))\n\ndef controls(R):\n    c=bpy.data.objects.get(CTL)\n    if not c:\n        c=bpy.data.objects.new(CTL,None);c.empty_display_type='PLAIN_AXES';c.empty_display_size=0.02;bpy.context.scene.collection.objects.link(c)\n    rest=as_dict(R['start'])\n    P=[('seconds',0.0,None,None,'the model\\'s time (s): frame / fps'),('hours',float(rest.get('hours',20)),0.0,float(R['runHours']),'hours since full wind, at frame 0'),\n       ('hands_set_s',0.0,None,None,'the hands set on by the key (s)'),('explode',0.0,0.0,1.0,'the parts apart'),('laid_out',0.0,0.0,1.0,'the train laid out'),\n       ('lift',0.0,0.0,1.0,'out of the case and turned over'),('lids',0.0,0.0,1.0,'the lids, 0 open, 1 closed'),('latch',0.0,0.0,1.0,'the gimbals latched'),\n       ('roll',0.0,-0.6,0.6,'the box rolled'),('pitch',0.0,-0.6,0.6,'the box pitched')]\n    for k,v,lo,hi,d in P:\n        if k not in c.keys():c[k]=v\n        kw={'description':d}\n        if lo is not None:kw.update(min=lo,max=hi,soft_min=lo,soft_max=hi)\n        if k in('roll','pitch'):kw['subtype']='ANGLE'\n        c.id_properties_ui(k).update(**kw)\n    ad=c.animation_data_create()\n    for fc in list(ad.drivers):ad.drivers.remove(fc)\n    d=c.driver_add('[\"seconds\"]').driver;d.type='SCRIPTED';var(d,'fps',bpy.context.scene,'render.fps','SCENE');d.expression='frame/fps'\n    return c\n\ndef loop(a):\n    \"\"\"An action played over and over: a Cycles modifier on every channel.\"\"\"\n    for s in a.slots:\n        cb=channelbag(a,s)\n        if not cb:continue\n        for fc in cb.fcurves:\n            if not any(m.type=='CYCLES' for m in fc.modifiers):fc.modifiers.new('CYCLES')\n\ndef deltas(a,objs):\n    \"\"\"a made over, for each part in objs, into the change from its rest pose (as a parent would make it: final = change x rest), keyed where a is.\"\"\"\n    na=bpy.data.actions.new(MC+a.name);na.use_fake_user=True;out={}\n    for s in a.slots:\n        o=owner(s)\n        if o not in objs:continue\n        cb=channelbag(a,s)\n        if not cb or not len(cb.fcurves):continue\n        F={(fc.data_path,fc.array_index):fc for fc in cb.fcurves};T=sorted({k.co[0] for fc in cb.fcurves for k in fc.keyframe_points})\n        l0,q0,s0=rest_of(o);s0=Vector([x if abs(x)>1e-9 else 1.0 for x in s0])   # a part hidden at rest (scale 0) is changed from scale 1\n        R0=Matrix.LocRotScale(l0,q0,s0).inverted()\n        ev=lambda p,i,t,dv:F[(p,i)].evaluate(t) if (p,i) in F else dv\n        L=[[],[],[]];Q=[[],[],[]];S=[[],[],[]];le=None\n        for t in T:\n            l=Vector([ev('location',i,t,l0[i]) for i in range(3)]);q=Quaternion([ev('rotation_quaternion',i,t,q0[i]) for i in range(4)]);sc=Vector([ev('scale',i,t,s0[i]) for i in range(3)])\n            M=Matrix.LocRotScale(l,q.normalized(),sc)@R0;dl,dq,ds=M.decompose();de=dq.to_euler('XYZ',le) if le else dq.to_euler('XYZ');le=de   # Euler, each the nearest the last: the constraint reads an object's quaternion channels a half turn out (Blender 5.2)\n            for i in range(3):L[i]+=[t,dl[i]];S[i]+=[t,ds[i]];Q[i]+=[t,de[i]]\n        ns=na.slots.new('OBJECT',o.name);nb=channelbag(na,ns,True)\n        for p,arr in(('location',L),('rotation_euler',Q),('scale',S)):\n            for i,v in enumerate(arr):\n                fc=nb.fcurves.new(p,index=i);fc.keyframe_points.add(len(v)//2);fc.keyframe_points.foreach_set('co',v)\n                for k in fc.keyframe_points:k.interpolation='LINEAR'\n                fc.update()\n        out[o]=ns\n    return na,out\n\ndef rig(R,c):\n    clips={x['name']:as_dict(x) for x in R['clips']};fph=float(R['fuseePerHour']);N=float(R['fuseeTurns']);runH=float(R['runHours'])\n    rest=as_dict(R['start']);h0=float(rest.get('hours',0));E0=float(rest.get('E',0))   # the rest pose: the hours of wind, the escape wheel's place (teeth)\n    sc=bpy.context.scene;fps=sc.render.fps/sc.render.fps_base\n    lin={o for o in bpy.data.objects if hasattr(o.get('rig'),'keys') and 'kE' in o['rig'].keys()}\n    # the beat, on a loop\n    beat=bpy.data.actions['Rig · beat'];loop(beat);BF=beat.frame_range[1]-beat.frame_range[0]\n    for s in beat.slots:\n        i=owner(s)\n        if i is None or i in lin:continue\n        ad=i.animation_data_create();ad.action=beat;ad.action_slot=s\n    helper=next((o for o in bpy.data.objects if o.get('rig')=='teeth'),None)\n    # the train, hands and motion work: drivers on their turn, linear in E (teeth: whole beats, the beat's progress, the hours since the rest pose) and the hands' slip\n    n=0\n    for o in lin:\n        L=o['rig'];ax=list(L['axis']);a=Vector((ax[0],-ax[2],ax[1]));kE=float(L['kE']);kS=float(L['kS'])\n        q0=rest_of(o)[1] if 'rest' in o.keys() else o.rotation_quaternion.copy()\n        th='(%r*(frame/%r+t-%r+(hh-%r)*%r)+%r*m)'%(kE,BF,E0,h0,3600*2,kS)   # E: beats run, plus the helper's (the escape wheel's place less that even run: 0 at each beat's ends, so no seam), 7200 beats an hour since the rest pose; and the hands' slip\n        ix=max(range(3),key=lambda i:abs(a[i]));v0=Vector(q0[1:])\n        if abs(abs(a[ix])-1)<1e-4 and v0.cross(a).length<1e-5:   # turning about one of its own axes, from a rest about it: one Euler angle\n            sg=1 if a[ix]>0 else -1;t0=2*math.atan2(v0.dot(a),q0[0]);o.rotation_mode='XYZ';o.rotation_euler=(0,0,0)\n            ds=[(('rotation_euler',ix),'%r+%d*%s'%(t0*sg,sg,th))]\n        else:   # else the quaternion q0 x (cos th/2, a sin th/2), written out (such a part can't take an Action constraint as well)\n            o.rotation_mode='QUATERNION';w0,x0,y0,z0=q0;dot=v0.dot(a);cr=v0.cross(a);h='%s/2'%th\n            ds=[(('rotation_quaternion',0),'%r*cos(%s)-%r*sin(%s)'%(w0,h,dot,h))]+[(('rotation_quaternion',j+1),'%r*cos(%s)+%r*sin(%s)'%(qq,h,w0*a[j]+cr[j],h)) for j,qq in enumerate((x0,y0,z0))]\n        for (path,j),e in ds:\n            d=o.driver_add(path,j).driver;d.type='SCRIPTED';var(d,'hh',c,'[\"hours\"]');var(d,'m',c,'[\"hands_set_s\"]')\n            v=d.variables.new();v.name='t';v.type='TRANSFORMS';v.targets[0].id=helper;v.targets[0].transform_type='LOC_X';v.targets[0].transform_space='TRANSFORM_SPACE'\n            d.expression=e\n        n+=1\n    # one parameter each: an Action constraint per part, its time the control's (the wind: hours on at frame 0, and the time as it runs)\n    PAR={'n':('min(1,max(0,(hh+frame/%r/3600)/%r))'%(fps,runH),[('hh',c,'[\"hours\"]')])}\n    for k in('explode','laid_out','lift','lids','latch'):PAR[k]=('min(1,max(0,p))',[('p',c,'[\"%s\"]'%k)])\n    for name,cl in clips.items():\n        r=cl.get('rig')\n        if not r or r['p'] not in PAR:continue\n        a=bpy.data.actions.get(name)\n        if not a:continue\n        objs={owner(s) for s in a.slots if isinstance(owner(s),bpy.types.Object)}\n        if r['p']=='n':objs-=lin   # the fusee and the parts geared with it turn by their drivers\n        na,slots=deltas(a,objs);ex,vs=PAR[r['p']]\n        for o,s in slots.items():\n            if o.rotation_mode=='QUATERNION':   # an Action constraint reads an object's rotation channels only in Euler, on an object turned in Euler (Blender 5.2)\n                q=o.rotation_quaternion.copy();o.rotation_mode='XYZ';o.rotation_euler=q.to_euler('XYZ')\n            k=o.constraints.new('ACTION');k.name=MC+name;k.action=na;k.action_slot=s;k.use_eval_time=True;k.frame_start=int(a.frame_range[0]);k.frame_end=int(math.ceil(a.frame_range[1]))\n            k.mix_mode='BEFORE_FULL'\n            d=o.driver_add('constraints[\"%s\"].eval_time'%k.name).driver;d.type='SCRIPTED'\n            for v in vs:var(d,*v)\n            d.expression=ex\n    # the box rolled and pitched; the ring and case kept level in the gimbals (the case's own swing left out: the At sea clip has it)\n    role={o.get('role'):o for o in bpy.data.objects if o.get('role')}\n    for k,rot in(('box',[('pitch',0,1),('roll',1,-1)]),('ring',[('pitch',0,-1)]),('bowl',[('roll',1,1)])):\n        o=role.get(k)\n        if not o:continue\n        o.rotation_mode='XYZ'\n        for p,ix,sg in rot:\n            d=o.driver_add('rotation_euler',ix).driver;d.type='SCRIPTED';var(d,'p',c,'[\"%s\"]'%p);d.expression='%d*p'%sg\n    return n\n\ndef setup():\n    sc=bpy.context.scene;sc.unit_settings.system='METRIC';sc.unit_settings.length_unit='MILLIMETERS'\n    for scr in bpy.data.screens:\n        for ar in scr.areas:\n            for sp in ar.spaces:\n                if sp.type=='VIEW_3D':sp.clip_start=0.0001;sp.clip_end=50\n\ndef main():\n    R=root();clear();setup()\n    if PLAY:play(PLAY);print('Playing',PLAY);return\n    c=controls(R);n=rig(R,c)\n    sc=bpy.context.scene;sc.frame_start=0;sc.frame_end=int(sc.render.fps*60);sc.frame_set(0)\n    print('Marine Chronometer rig: %d arbors and hands driven, controls on %r'%(n,CTL))\n\nmain()\n";
+
+</script>
+<script>
+/* blender.js: the instrument as a glTF (.glb) for Blender, every part a node in the model's own hierarchy (box, ring, bowl, movement, parts, arbors, pieces), named,
+   in its materials, with every motion the model has as an animation (Blender: an action each), and the tables the rig (blender/rig.py, js/rigpy.js) drives it from.
+   The export builds a copy of its own (buildBox, buildMovement, set as the page's choices are: A.config), so the model on the page is never touched: update() keeps
+   state from call to call (the maintaining work's catch), and each clip is played through the copy in time order, from the same equations as app.js's loop. What
+   moves is read back off the copy's nodes: a node that changes gets a track (translation, rotation, scale; hidden is scale 0); a piece rebuilt as it moves (the hairspring,
+   the trip spring, the mainspring, the springs of the maintaining work) shape keys while its vertices and triangles stay the same, else a flipbook of its shapes; the
+   chain one node a link. One IIFE; the page sees only BLENDER. app.js calls BLENDER.bind() once the model is built */
+const BLENDER=(()=>{
+  let A=null;const TEXK=2,ENGK=4,FPS=30,TOLP=0.0005,TOLQ=0.00005,TOLS=0.004,FLIPS=48;   /* tolerances: translation (mm), rotation (quaternion), a shape's vertices (mm); FLIPS: the most shapes a flipbook takes in a clip */
+  const sleep=()=>new Promise(r=>setTimeout(r,0)),say=t=>{const r=document.getElementById('mkRead');if(r)r.innerHTML=t;};
+  function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
+  /* ---------- the copy, set as the page is ---------- */
+  function copy(){const BX=buildBox(A.M),mv=buildMovement(A.M);BX.bowl.add(mv);A.config(mv);const R=mv.userData.R,ms=[],inMv=new Set();mv.traverse(o=>inMv.add(o));
+    const partOf=o=>{for(;o;o=o.parent)if(o.userData&&o.userData.partName)return o.userData.partName;return null;};
+    BX.root.traverse(o=>{if(o.isMesh){o.userData.part=partOf(o);o.userData.v0=o.visible;o.userData.inBox=!inMv.has(o);ms.push(o);}});
+    return{BX,mv,R,ms};}
+  /* the page's look for a state (app.js look()): laid out (dv), the real plates and the box give way to the schematic plates; setting the hands (ks), the bezel and crystal are off */
+  function look(C,dv,ks){for(const m of C.ms){const u=m.userData;let v=u.v0;
+    if(u.devPlate)v=v&&dv;else if(dv&&(A.DRIVE_HIDE.has(u.part)||u.driveHide||u.inBox))v=false;if(ks&&u.bezel)v=false;m.visible=v;}}
+  /* a state: the movement's (MoveState), the views' (lids, lift and turn, explode, laid out), the box's (pitch, roll, the case's angles in the gimbals, latch, twist), the shield plate */
+  const REST=()=>({E:0,th:0,lift:0,psDef:0,n:0,winding:false,slip:0,hkeyOn:false,keyOn:false,blk:0,arm:0,dt:0,lidM:1,lidT:1,up:0,flip:0,ex:0,dev:0,pitch:0,roll:0,gp:0,gr:0,latch:0,tw:0,sh:null,teeth:null});
+  function apply(C,s){const{BX,mv}=C;
+    mv.userData.update({E:s.E,th:s.th,lift:s.lift,psDef:s.psDef,n:s.n,winding:s.winding,slip:s.slip,hkeyOn:s.hkeyOn,keyOn:s.keyOn,blk:s.blk,arm:s.arm,ssX:0,dt:s.dt,springOn:true,msOn:true});
+    BX.shield.userData.turn(s.sh==null?BX.shRest:s.sh);
+    const lM=s.up>0.05?Math.max(s.lidM,0.97):s.lidM,lT=s.up>0.05?Math.max(s.lidT,0.97):s.lidT;BX.mid.rotation.x=-lM*1.6;BX.top.rotation.x=-Math.max(0,lT*1.92-lM*1.6);   /* as app.js frame() */
+    mv.userData.explode(smooth(s.ex));mv.userData.develop(smooth(s.dev));
+    const L1=smooth(s.up/0.55),L2=smooth((s.up-0.35)/0.65);mv.position.y=L1*130+L2*95;mv.rotation.x=Math.min(smooth(s.flip),L2)*Math.PI;
+    BX.root.rotation.set(s.pitch,s.tw,s.roll,'ZYX');BX.ring.rotation.x=s.gp-s.pitch;BX.bowl.rotation.z=s.gr-s.roll;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(s.latch));
+    look(C,s.dev>0.02,s.hkeyOn);}
+  /* ---------- the train and balance through time: app.js frame()'s stop and start, drive and swing (ampStep, stopMove), at speed 1 ---------- */
+  function sim(C,hrs){const R=C.R,drvF=A.drvF,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false};
+    const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const x=t/0.5+H.bOff,kk=Math.floor(x),p=x-kk,z=ESC.state(p,H.amp);return{E:kk+(p>0?z.prog:0)+H.eOff,s:z};};   /* at a whole beat the tooth not yet escaped: ESC.state's prog 1 there is the beat before's, which kk has counted */
+    H.twist=()=>{if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;H.kick=160*D2R;};
+    H.step=dt=>{const mvTo=(x,t,r)=>x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(H.lastE??0))?Math.min(b,vf-0.005):b;
+      const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held;
+      { let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dt/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
+        else if(brake)a*=Math.exp(-dt/A.TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/A.TF));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a; }
+      let E,s;
+      if(!H.held){let q=at(H.tSim);const Eb=H.lastE??q.E,locked=q.s.prog<=0||q.s.prog>=1,room=blocked()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff;};
+        if(dt>0&&locked&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}
+        else{if(dt>0){H.tSim+=dt;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+dt/3600);q=at(H.tSim);}E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
+      if(H.held){H.bph+=dt/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);E=H.Eh;const lockedP=s.prog<=0||s.prog>=1;
+        if(run&&!brake&&H.amp>=ESC.AMIN&&!(blocked()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockedP){H.held=false;H.bOff=(((H.bph-H.tSim/0.5)%1)+1)%1;const x=H.tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}
+      H.lastE=E;return{E,th:s.th,lift:s.lift,psDef:s.psDef,n:H.hrs*FUSEE_PER_HOUR,blk:H.blk,arm:H.arm,winding:H.winding,dt};};
+    return H;}
+  /* the phases of a beat sampled: evenly, 120 a beat (a straight line between two is then within 0.1 degree of the balance at its fastest), and closely where the escapement acts (unlocking, impulse: the detent, trip spring and escape wheel move in a few hundredths of a beat) */
+  function beatGrid(amp){const N=2400,P=new Set();for(let i=0;i<120;i++)P.add(i/120);let last=-1,z0=ESC.state(0,amp);
+    for(let i=1;i<=N;i++){const z=ESC.state(i/N,amp);if((z.prog!==z0.prog||z.lift!==z0.lift||z.psDef!==z0.psDef)&&i/N-last>=1/720){P.add((i-1)/N);last=(i-1)/N;}z0=z;}
+    return[...P].filter(p=>p<1).sort((a,b)=>a-b);}
+  /* the gimbals' pendulum (app.js gimStep): the case hangs below each axis, ψ'' = -ω0²ψ - 2ζω0(ψ' - φ'), stopped 25 degrees off the box */
+  function gimbal(){const GW0=TAU/0.7,GZ=0.05,G={p:[0,0],r:[0,0],lp:0,lr:0};
+    G.step=(dt,ph,rl)=>{const n=Math.ceil(dt/0.002),h=dt/n,vp=(ph-G.lp)/dt,vr=(rl-G.lr)/dt;
+      for(const[q,v,f0]of[[G.p,vp,G.lp],[G.r,vr,G.lr]]){for(let i=0;i<n;i++){q[1]+=h*(-GW0*GW0*q[0]-2*GZ*GW0*(q[1]-v));q[0]+=h*q[1];}const f=f0+v*dt,lim=25*D2R;if(Math.abs(q[0]-f)>lim){q[0]=f+Math.sign(q[0]-f)*lim;q[1]=v;}}
+      G.lp=ph;G.lr=rl;};return G;}
+  /* ---------- the clips: each calls emit(t, state) in time order; len: its length (s), rig: the parameter the rig drives it by ---------- */
+  const ramp=(t,a,b)=>clamp((t-a)/(b-a),0,1);
+  function clips(C,h0,E0){const amp0=ESC.ampAt(A.drvF(h0)),G=beatGrid(amp0),st=o=>Object.assign(REST(),{n:h0*FUSEE_PER_HOUR,E:E0},o);
+    const runFor=(S,beats,emit,extra)=>{let tp=0;const go=t=>{const o=S.step(t-tp);tp=t;emit(t,st(Object.assign(o,extra?extra(t):{})));};for(let b=0;b<beats;b++)for(const p of G)go((b+p)*0.5);go(beats*0.5);};
+    const uni=(dur,f,emit)=>{const n=Math.round(dur*FPS);for(let i=0;i<=n;i++){const t=dur*i/n;emit(t,f(t,i?dur/n:0));}};
+    const beat=(emit,secs)=>{for(const p of[...G,1]){const z=ESC.state(Math.min(p,0.99999),amp0),e=p<=0?0:p<1?z.prog:1;emit(p*secs,st({E:e,th:z.th,lift:z.lift,psDef:z.psDef,teeth:e-p}));}};   /* one beat on Running's phases, so the rig's beat and Running agree where the escapement acts; at 0 the tooth not yet escaped (ESC.state's 1 there is the last beat's); teeth, for the rig's helper: the escape wheel's place less an even run, 0 at both ends of the beat, so it loops without a seam */
+    const out=(t,a,b,c,d)=>ramp(t,a,b)-ramp(t,c,d);   /* up from a to b, down from c to d */
+    const HT=0.5/FUSEE_PER_HOUR,hW=RUN_H-0.25,wT=Math.ceil(hW/HT),per=A.rollP();
+    return[
+      {name:'Running',len:60,d:'the escapement and train for a minute, the second hand once round',run:emit=>runFor(sim(C,h0),120,emit)},
+      {name:'Beat (slow motion)',len:10,d:'one beat twenty times slower: unlocking, impulse, the wheel locked again a tooth on',run:emit=>beat(emit,10)},
+      /* the fusee is geared to the train, so the escape wheel goes with it, 7200 beats an hour (else the maintaining work's catch takes up the turn: update()); the arbors
+         turning more than half a radian a frame (escape, fourth, third, seconds) are left out of it, as a blur */
+      {name:'Run down',len:30,fast:RUN_H*7200/(30*FPS),d:'56¼ hours in 30 s: the chain off the fusee onto the barrel, the mainspring letting down, the up-down hand, the minute and hour hands',rig:{p:'n',a:0,b:FUSEE_TURNS},
+        run:emit=>uni(30,t=>{const h=RUN_H*t/30;return st({n:h*FUSEE_PER_HOUR,E:E0+(h-h0)*7200});},emit)},
+      {name:'Winding',len:wT+6,d:'wound with the key from a quarter of an hour short of run down, the sustaining spring driving the train meanwhile, until the stop-bar meets the winding stop',run:emit=>{
+        const S=sim(C,hW),T0=1;let tp=0,sh=C.BX.shRest,hz=-1;
+        for(let i=0;;i++){const t=i/60;if(t>T0+wT+5)break;const dt=t-tp;tp=t;const kt=t-T0,on=kt>=0&&(hz<0||kt<hz+3);   /* half turns of 0.7 s with a 0.3 s pause to change grip (kwStep); 3 s on the stop, then let go */
+          if(on){S.winding=true;const j=Math.floor(kt);S.hrs=Math.max(0,hW-HT*(j+smooth(Math.min(1,(kt-j)/0.7))));if(S.hrs===0&&hz<0)hz=kt;}else S.winding=false;
+          const o=S.step(dt),T=on?0:C.BX.shRest;sh=lerp(sh,T,1-Math.exp(-dt*(T?12:6)));emit(t,st(Object.assign(o,{keyOn:on,sh})));}}},
+      {name:'Setting the hands',len:10,d:'the key on the centre arbor sets the hands an hour on, the train going',run:emit=>runFor(sim(C,h0),20,emit,t=>({slip:3600*smooth(ramp(t,1.5,8.5)),hkeyOn:t>0.5&&t<9.5}))},
+      {name:'Stop and start',len:26,d:'the locking arm stops the balance and holds it; unlocked, a twist of the box starts it; the train-blocking screw comes down between the fourth wheel\'s spokes and up again',run:emit=>{
+        const S=sim(C,h0);let tp=0,tw=-1;for(let i=0;i<=26*120;i++){const t=i/120,dt=t-tp;tp=t;S.armT=t>=1&&t<6?1:0;if(tw<0&&t>=8){S.twist();tw=t;}S.blkT=t>=15&&t<21?1:0;
+          const o=S.step(dt),w=tw>=0?t-tw:-1;emit(t,st(Object.assign(o,{tw:w>0&&w<0.5?0.2*Math.sin(Math.PI*w/0.5)*(1-w/0.5):0})));}}},
+      {name:'Exploded',len:11,d:'out of the case, turned over, the parts and screws apart along their arbors, and back',run:emit=>uni(11,t=>{const u=out(t,0,2.5,8.5,11);return st({up:u,flip:u,ex:out(t,2.5,5,6,8.5)});},emit)},
+      {name:'Laid out',len:11,d:'the train laid out along the barrel-fusee line, as the textbooks draw it, and back',run:emit=>uni(11,t=>{const u=out(t,0,2.5,8.5,11);return st({up:u,flip:u,dev:out(t,2.5,5,6,8.5)});},emit)},
+      {name:'Lift out',len:7,d:'the movement lifted out of its case and turned over, and back',run:emit=>uni(7,t=>{const u=out(t,0,3,4,7);return st({up:u,flip:u});},emit)},
+      {name:'Lids',len:7,d:'the glass lid and the outer lid closed and opened again',run:emit=>uni(7,t=>{const c=out(t,0,3,4,7);return st({lidM:1-c,lidT:1-c});},emit)},
+      {name:'Latch',len:4,d:'the latch lever brought in, locking the gimbals, and out again',run:emit=>uni(4,t=>st({latch:out(t,0,1.5,2.5,4)}),emit)},
+      {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to stay level',run:emit=>{const wR=TAU/per,g=gimbal();
+        uni(6*per,(t,dt)=>{const a=14*D2R,roll=a*Math.sin(t*wR),pitch=a*0.55*Math.sin(t*wR*0.7+1.1);if(dt>0)g.step(dt,pitch,roll);else{g.lp=pitch;g.lr=roll;}return st({roll,pitch,gp:g.p[0],gr:g.r[0]});},emit);}},
+      /* the rig's (rig.py): one parameter each, from a to b over the clip; the strips that play them are timed by the control's properties */
+      {name:'Rig · beat',len:0.5,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},
+      {name:'Rig · explode',len:2,d:'for the rig: the parts apart',rig:{p:'explode',a:0,b:1},run:emit=>uni(2,t=>st({ex:t/2}),emit)},
+      {name:'Rig · laid out',len:2,d:'for the rig: the train laid out',rig:{p:'laid_out',a:0,b:1},run:emit=>uni(2,t=>st({dev:t/2}),emit)},
+      {name:'Rig · lift',len:3,d:'for the rig: out of the case and turned over',rig:{p:'lift',a:0,b:1},run:emit=>uni(3,t=>st({up:t/3,flip:t/3}),emit)},
+      {name:'Rig · lids',len:2,d:'for the rig: the lids, 0 open to 1 closed',rig:{p:'lids',a:0,b:1},run:emit=>uni(2,t=>st({lidM:1-t/2,lidT:1-t/2}),emit)},
+      {name:'Rig · latch',len:1.5,d:'for the rig: the latch lever, 0 out to 1 in',rig:{p:'latch',a:0,b:1},run:emit=>uni(1.5,t=>st({latch:t/1.5}),emit)}];}
+  /* ---------- the node table: every object under the box; the chain's links nodes of their own (as many as the chain ever has) ---------- */
+  function table(C,nMax){const recs=[],RN=new Map();for(const k in C.R){const o=C.R[k];if(o&&o.isObject3D&&!RN.has(o))RN.set(o,k);}
+    const PN=new Map(Object.entries(C.mv.userData.parts).map(([k,g])=>[g,k])),INFO=A.INFO,MK=new Map(MAKERS.map(m=>[m.id,m]));
+    const title=p=>(INFO[p]||[p])[0],label=o=>{const p=PN.get(o);if(p)return title(p)+' ('+p+')';if(o===C.BX.root)return title('box');if(o===C.mv)return 'Movement';const r=RN.get(o);if(r)return r;
+      if(o.userData.hn&&!o.userData.sub){const m=MK.get(o.userData.hn);if(m)return m.no+' '+m.name;}if(o.userData.partName&&!(o.parent&&o.parent.userData.partName===o.userData.partName))return title(o.userData.partName);return '';};
+    const walk=(o,par)=>{if(o.isLight||o.isCamera)return;const r={o,par,kids:[],name:label(o)};recs.push(r);if(par)par.kids.push(r);
+      if(o.isInstancedMesh)for(let k=0;k<nMax;k++){const l={o:null,im:o,k,par:r,kids:[],name:`chain link ${String(k+1).padStart(3,'0')}`};recs.push(l);r.kids.push(l);}
+      for(const c of o.children)walk(c,r);};
+    walk(C.BX.root,null);return recs;}
+  /* ---------- reading the copy ---------- */
+  const M4=new THREE.Matrix4(),V3=new THREE.Vector3(),Q4=new THREE.Quaternion(),S3=new THREE.Vector3();
+  function read(r,out){if(r.im){const im=r.im,on=r.k<im.count;if(on){im.getMatrixAt(r.k,M4);M4.decompose(V3,Q4,S3);out[0]=V3.x;out[1]=V3.y;out[2]=V3.z;out[3]=Q4.x;out[4]=Q4.y;out[5]=Q4.z;out[6]=Q4.w;out[7]=S3.x;out[8]=S3.y;out[9]=S3.z;r.lt=Float32Array.from(out);}
+      else{if(r.lt)out.set(r.lt);else{out.fill(0);out[6]=1;}out[7]=out[8]=out[9]=0;}return on;}   /* a link the chain doesn't reach now: where it was, at scale 0 */
+    const o=r.o,v=o.visible?1:0;out[0]=o.position.x;out[1]=o.position.y;out[2]=o.position.z;out[3]=o.quaternion.x;out[4]=o.quaternion.y;out[5]=o.quaternion.z;out[6]=o.quaternion.w;
+    out[7]=o.scale.x*v;out[8]=o.scale.y*v;out[9]=o.scale.z*v;return o.visible;}
+  const same=(a,b)=>{for(let k=0;k<10;k++)if(Math.abs(a[k]-b[k])>1e-9)return false;return true;};
+  /* shapes. snap: a geometry's arrays, copied. A mesh whose geometry changes starts as morph: its rest shape and shape keys chosen as it goes, each shape the blend of the
+     two nearest keys if that is within TOLS, else a key of its own. The first shape with other vertices or triangles turns it to flip: its distinct shapes (the keys so far
+     among them), each shown alone, one at most every FLIPSth of a clip (the mainspring letting down), or, with a cap (the trip spring, the same few shapes each beat), the
+     first cap of them and then the nearest. The hairspring is keyed by its balance's angle instead (build). tl[clip]: [t, a, b, w] (morph: keys a and b, w of b) or [t, j]
+     (flip: shape j) where it changes */
+  const snap=g=>{const P=g.attributes.position,U=g.attributes.uv;if(!g.attributes.normal)g.computeVertexNormals();
+    return{pos:Float32Array.from(P.array.subarray(0,P.count*3)),nrm:Float32Array.from(g.attributes.normal.array.subarray(0,P.count*3)),uv:U?Float32Array.from(U.array.subarray(0,P.count*2)):null,idx:g.index?Uint32Array.from(g.index.array):null};};
+  const sameIdx=(a,b)=>{if(!a||!b)return!a&&!b;if(a.length!==b.length)return false;for(let i=0;i<a.length;i++)if(a[i]!==b[i])return false;return true;};
+  function shapeOf(d,g,t,clip){const P=g.attributes.position,a=P.array,n=P.count*3,ix=g.index?g.index.array:null;
+    if(d.mode==='morph'){let ok=d.ok.get(g);if(ok==null){ok=n===d.keys[0].pos.length&&sameIdx(ix,d.keys[0].idx);d.ok.set(g,ok);}
+      if(!ok){d.mode='flip';d.shapes=d.keys;for(const c in d.tl)d.tl[c]=d.tl[c].map(([tt,x,y,w])=>[tt,w<0.5?x:y]);if(d.last)d.last=[d.last[2]<0.5?d.last[0]:d.last[1]];}}
+    if(d.mode==='morph'){const K=d.keys,sd=Math.max(1,Math.floor(n/3/64))*3,dist=k=>{let s=0;for(let i=0;i<n;i+=sd){const e=a[i]-k[i],f=a[i+1]-k[i+1],h=a[i+2]-k[i+2];s+=e*e+f*f+h*h;}return s;};
+      let x=0,y=0,dx=Infinity,dy=Infinity;for(let j=0;j<K.length;j++){const s=dist(K[j].pos);if(s<dx){y=x;dy=dx;x=j;dx=s;}else if(s<dy){y=j;dy=s;}}
+      const ka=K[x].pos,kb=K[y].pos;let w=0;if(y!==x){let num=0,den=0;for(let i=0;i<n;i++){const e=kb[i]-ka[i];num+=(a[i]-ka[i])*e;den+=e*e;}w=den>0?clamp(num/den,0,1):0;}
+      let err=0;for(let i=0;i<n&&err<=TOLS;i++)err=Math.max(err,Math.abs(a[i]-ka[i]-w*(kb[i]-ka[i])));
+      if(err>TOLS&&(!d.cap||K.length<d.cap)){K.push(snap(g));x=y=K.length-1;w=0;}return[x,y,w];}
+    const S=d.shapes;for(let j=0;j<S.length;j++){const s=S[j];if(s.pos.length!==n||!sameIdx(ix,s.idx))continue;let e=0;for(let i=0;i<n&&e<=TOLS;i++)e=Math.max(e,Math.abs(a[i]-s.pos[i]));if(e<=TOLS)return[j];}
+    if(d.cap){if(S.length<d.cap){S.push(snap(g));return[S.length-1];}let bj=-1,bd=Infinity;   /* past its cap, the nearest shape it has */
+      for(let j=0;j<S.length;j++){const q=S[j].pos;if(q.length!==n)continue;let e=0;for(let i=0;i<n;i+=3){const u=a[i]-q[i],v=a[i+1]-q[i+1],z=a[i+2]-q[i+2];e+=u*u+v*v+z*z;}if(e<bd){bd=e;bj=j;}}return bj>=0?[bj]:d.last||[0];}
+    if(d.last&&t-(d.added[clip]??-1e9)<d.gap)return d.last;d.added[clip]=t;S.push(snap(g));return[S.length-1];}
+  /* plays a clip through the copy: every node's TRS (and visibility, as scale 0) where it changes, with a key just before each change so a hold stays a hold; shapes likewise */
+  async function record(C,recs,clip,defs){for(const d of defs.values())if(d.theta||d.rots)d.last=null;const cur=new Float32Array(10),tr=new Map(),last=new Map(),vis=new Map(),teeth=[];let tPrev=0,first=true,dur=0,k=0;
+    const emit=(t,s)=>{apply(C,s);dur=t;if(s.teeth!=null)teeth.push(t,s.teeth);
+      for(const r of recs){const pv=r.par?vis.get(r.par)!==false:true,v=read(r,cur)&&pv;vis.set(r,v);if(v)r.ever=true;
+        if(first){last.set(r,Float32Array.from(cur));continue;}const L=/** @type {Float32Array} */(last.get(r));
+        if(!same(cur,L)){let T=tr.get(r);if(!T){T={t:[0],v:[...L]};tr.set(r,T);}if(T.t[T.t.length-1]<tPrev){T.t.push(tPrev);T.v.push(...L);}T.t.push(t);T.v.push(...cur);L.set(cur);}}
+      for(const r of recs){const o=r.o;if(!o||!o.isMesh||o.isInstancedMesh||!r.rest)continue;const dh=defs.get(r);
+        if(dh&&dh.theta){const{TH,K}=dh.theta,u=(clamp(s.th,-TH,TH)+TH)/(2*TH)*(K-1),j=Math.min(K-2,Math.floor(u)),w=[1+j,2+j,u-j],T=dh.tl[clip.name]||(dh.tl[clip.name]=[]);   /* the hairspring: between the two keys either side of the balance's angle */
+          const lw=dh.last||dh.rest0;if(!T.length&&t>0)T.push([0,...lw]);if(T.length&&T[T.length-1][0]<tPrev)T.push([tPrev,...lw]);if(lw[0]!==w[0]||lw[2]!==w[2])T.push([t,...w]);dh.last=w;continue;}
+        if(dh&&dh.rots){const q=C.R.fs.fz.rotation.y;let j=0;for(let i=1;i<dh.rots.length;i++)if(Math.abs(dh.rots[i]-q)<Math.abs(dh.rots[j]-q))j=i;const w=[j],T=dh.tl[clip.name]||(dh.tl[clip.name]=[]);   /* the mainspring: the shape nearest the fusee's turn */
+          const lw=dh.last||dh.rest0;if(!T.length&&t>0)T.push([0,...lw]);if(T.length&&T[T.length-1][0]<tPrev)T.push([tPrev,...lw]);if(lw[0]!==w[0])T.push([t,...w]);dh.last=w;continue;}
+        const g=o.geometry,P=g.attributes.position;
+        const sig=first?r.restSig:r.sig;if(sig&&sig[0]===g&&sig[1]===P.version&&sig[2]===P.count){r.sig=sig;continue;}r.sig=[g,P.version,P.count];
+        let d=defs.get(r);if(!d){d={mode:'morph',keys:[r.rest],shapes:null,tl:{},added:{},ok:new Map(),last:null,gap:0,cap:o===C.R.pspring?128:0};defs.set(r,d);}
+        if(first)d.last=null;d.gap=clip.len/FLIPS;const w=shapeOf(d,g,t,clip.name),T=d.tl[clip.name]||(d.tl[clip.name]=[]),lw=d.last||(d.mode==='morph'?[0,0,0]:[0]);
+        if(!T.length&&t>0)T.push([0,...lw]);if(T.length&&T[T.length-1][0]<tPrev)T.push([tPrev,...lw]);T.push([t,...w]);d.last=w;}
+      first=false;tPrev=t;};
+    clip.run((t,s)=>{emit(t,s);k++;});
+    await sleep();return{tr,dur,teeth,samples:k};}
+  /* ---------- the export ---------- */
+  async function build(onStep,only){const t0=performance.now(),C=copy(),h0=A.hrs();
+    /* the rest pose: the page's state of wind, the escape wheel locked at the start of a beat (Running's first moment), the lids open, the movement in its case */
+    const rest=Object.assign(REST(),{n:h0*FUSEE_PER_HOUR});{const z=ESC.state(0,ESC.ampAt(A.drvF(h0)));rest.th=z.th;rest.lift=z.lift;rest.psDef=z.psDef;rest.E=0;}   /* the beat's start: Running's first moment */
+    let nMax=0;for(let i=0;i<=40;i++){C.R.fs.setWind(FUSEE_TURNS*i/40,0);C.R.fs.g.traverse(o=>{if(o.isInstancedMesh)nMax=Math.max(nMax,o.count);});}nMax+=1;   /* the most links either instanced mesh draws, over a wind */
+    apply(C,rest);apply(C,rest);
+    const recs=table(C,nMax),cur=new Float32Array(10),vis=new Map();
+    for(const r of recs){const pv=r.par?vis.get(r.par)!==false:true,v=read(r,cur)&&pv;vis.set(r,v);if(v)r.ever=true;r.restV=Float32Array.from(cur);
+      if(r.o&&r.o.isMesh&&!r.o.isInstancedMesh&&r.o.geometry.attributes.position&&r.o.geometry.attributes.position.count){const g=r.o.geometry;r.rest=snap(g);r.restSig=[g,g.attributes.position.version,g.attributes.position.count];}}
+    /* the rig's linear drives: a node turned about one axis in step with the escape wheel (E, in teeth) and the hand-setting key (slip, s), found by setting the copy at a
+       few E and slip and checking the node's turn against a straight line through them, to within a turn */
+    const lin=new Map();
+    { const pr=[[0,0],[0.37,0],[5.13,0],[33.7,0],[0,97],[0,2711],[5.13,2711]],QS=pr.map(([E,slip])=>{apply(C,Object.assign({},rest,{E:rest.E+E,slip}));return recs.map(r=>r.o?[r.o.quaternion.clone(),r.o.position.clone()]:null);});
+      apply(C,rest);apply(C,rest);const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
+      recs.forEach((r,i)=>{if(!r.o)return;const[q0,p0]=/** @type {any[]} */(QS[0][i]);let ax=null,big=0;const ang=[];
+        for(let j=1;j<pr.length;j++){const[q,p]=/** @type {any[]} */(QS[j][i]);if(p.distanceTo(p0)>1e-6)return;const d=q0.clone().invert().multiply(q);if(d.w<0)d.set(-d.x,-d.y,-d.z,-d.w);
+          const s=Math.hypot(d.x,d.y,d.z),a=2*Math.atan2(s,d.w);if(s>1e-7&&a>big){big=a;ax=new THREE.Vector3(d.x,d.y,d.z).divideScalar(s);}ang.push([d,a,s]);}
+        if(!ax||big<1e-6)return;const sg=ang.map(([d,a,s])=>{if(s<1e-7)return 0;const c=(d.x*ax.x+d.y*ax.y+d.z*ax.z)/s;return Math.abs(Math.abs(c)-1)>1e-4?NaN:c>0?a:-a;});
+        if(sg.some(Number.isNaN))return;const kE=sg[0]/0.37,kS=sg[3]/97;if(pr.slice(1).every(([E,s],j)=>Math.abs(wrap(kE*E+kS*s-sg[j]))<2e-4))lin.set(r,{axis:[ax.x,ax.y,ax.z],kE,kS});});}
+    /* the hairspring, whose shape is its balance's angle's alone (R.spPath): shape keys at angles 0.15 rad apart over the widest swing (the chord between two, at the
+       collet 5.5 mm out, is then within 0.015 mm of the spring), drawn by the copy's own update(); each moment the blend of the two either side */
+    const defs=new Map();
+    { const sr=recs.find(r=>r.o===C.R.spring);if(sr&&sr.rest){const TH=1.1*Math.max(...[0,0.25,0.5,0.75,0.99].map(f=>ESC.ampAt(A.drvF(f*RUN_H))),ESC.ampAt(A.SUS),160*D2R),K=Math.ceil(2*TH/0.15)+1,keys=[sr.rest];
+        for(let j=0;j<K;j++){apply(C,Object.assign({},rest,{th:-TH+2*TH*j/(K-1)}));keys.push(snap(C.R.spring.geometry));}apply(C,rest);apply(C,rest);
+        const u=(clamp(rest.th,-TH,TH)+TH)/(2*TH)*(K-1),j=Math.min(K-2,Math.floor(u));defs.set(sr,{mode:'morph',keys,shapes:null,tl:{},added:{},ok:new Map(),last:null,gap:0,theta:{TH,K},rest0:[1+j,2+j,u-j]});} }
+    /* the mainspring, whose shape is the fusee's turn's alone (its vertices change with it, so a flipbook): 24 shapes over the whole wind, the fusee turned with the train
+       (7200 beats an hour), each moment the nearest; inside the barrel, it is seen only with the barrel opened up */
+    { const mr=recs.find(r=>r.o===C.R.fs.ms);if(mr&&mr.rest){const K=24,shapes=[],rots=[],q0=C.R.fs.fz.rotation.y;
+        for(let j=0;j<K;j++){const h=RUN_H*j/(K-1);apply(C,Object.assign({},rest,{n:h*FUSEE_PER_HOUR,E:rest.E+(h-h0)*7200}));shapes.push(snap(C.R.fs.ms.geometry));rots.push(C.R.fs.fz.rotation.y);}apply(C,rest);apply(C,rest);
+        let rj=0;rots.forEach((q,j)=>{if(Math.abs(q-q0)<Math.abs(rots[rj]-q0))rj=j;});
+        defs.set(mr,{mode:'flip',keys:shapes,shapes,tl:{},added:{},ok:new Map(),last:null,gap:0,rots,restJ:rj,rest0:[rj]});} }
+    /* the clips, each from the rest pose */
+    const cl=clips(C,h0,rest.E).filter(c=>!only||only.includes(c.name)),out=[];let ci=0;
+    for(const c of cl){onStep(`Recording <b>${c.name}</b> (${++ci} of ${cl.length})…`);await sleep();apply(C,rest);apply(C,rest);out.push([c,await record(C,recs,c,defs)]);}
+    apply(C,rest);onStep('Writing the file…');await sleep();
+    return writeDoc(C,recs,out,defs,lin,h0,t0,rest);}
+  /* ---------- to the glTF document ---------- */
+  async function writeDoc(C,recs,out,defs,lin,h0,t0,rest){
+    const keep=recs.filter(r=>r.ever),idx=new Map(keep.map((r,i)=>[r,i+1])),nodes=[],meshes=[],materials=[],textures=[],MI=new Map(),TI=new Map(),GI=new Map(),used=new Map();
+    const uniq=n=>{const c=used.get(n)||0;used.set(n,c+1);return c?`${n} #${c+1}`:n;};
+    /* textures drawn again finer than the page's where they can be (redraw, core.js: a three r128 texture has no userData): TEXK times, the engravings' small lettering ENGK times */
+    const tex=(t,green,fine)=>{const k=t.uuid+(green?'g':'');if(TI.has(k))return TI.get(k);if(!t.image||!t.image.width)return null;const img=t.redraw?t.redraw(fine||TEXK):t.image;
+      textures.push({img,flip:t.flipY,green,repeat:t.wrapS===THREE.RepeatWrapping});TI.set(k,textures.length-1);return textures.length-1;};
+    const xfOf=t=>{if(!t)return null;const sx=t.repeat.x,sy=t.repeat.y,c=Math.cos(t.rotation),s=Math.sin(t.rotation),cx=t.center.x,cy=t.center.y;   /* three's uvTransform as KHR_texture_transform (the same for an even repeat) */
+      if(sx===1&&sy===1&&!t.rotation&&!t.offset.x&&!t.offset.y)return null;return{o:[-sx*(c*cx+s*cy)+cx+t.offset.x,-sy*(-s*cx+c*cy)+cy+t.offset.y],s:[sx,sy],r:t.rotation};};
+    const M=A.M,MN=new Map(Object.entries(M).filter(([,v])=>v&&v.isMaterial).map(([k,v])=>[v,k])),GLASS=new Set([M.glass,M.clear].filter(Boolean));
+    /* the materials as they are, the jewels and glass as what they are made of: transmission, with the index of ruby (1.77) and of glass (1.52), in place of the page's stand-ins */
+    const matOf=m=>{if(MI.has(m))return MI.get(m);const c=m.color||new THREE.Color(1,1,1),e=m.emissive?m.emissive.clone().multiplyScalar(m.emissiveIntensity??1):null,gl=GLASS.has(m),jw=m===M.ruby;
+      const mo=/** @type {any} */({name:MN.get(m)||m.name||'material '+materials.length,color:[c.r,c.g,c.b,m.transparent&&!gl?m.opacity:1],metal:m.metalness??0,rough:m.roughness??1,emissive:jw||!e?null:[e.r,e.g,e.b],double:m.side===THREE.DoubleSide,blend:m.transparent&&!gl});
+      if(m.map){const ti=tex(m.map,false,m.userData.inkDecal?ENGK:0);if(ti!=null){mo.map=ti;mo.xf=xfOf(m.map);}}
+      if(m.normalMap){const ti=tex(m.normalMap,true);if(ti!=null){mo.nmap=ti;mo.nscale=m.normalScale?m.normalScale.x:1;mo.xf=mo.xf||xfOf(m.normalMap);}}
+      if(gl){mo.trans=1;mo.ior=m===M.clear?1.77:1.52;mo.rough=Math.min(mo.rough,0.05);mo.metal=0;}if(jw){mo.trans=0.85;mo.ior=1.77;mo.metal=0;}
+      materials.push(mo);MI.set(m,materials.length-1);return materials.length-1;};
+    const meshOf=(g,m,s,name,share)=>{const k=g.uuid+'|'+(Array.isArray(m)?m.map(x=>x.uuid).join():m.uuid);if(share&&GI.has(k))return GI.get(k);
+      const prims=Array.isArray(m)&&g.groups.length?g.groups.map(gr=>({...s,idx:s.idx?s.idx.slice(gr.start,gr.start+gr.count):Uint32Array.from({length:gr.count},(_,i)=>gr.start+i),mat:matOf(m[gr.materialIndex])})):[{...s,mat:matOf(Array.isArray(m)?m[0]:m)}];
+      meshes.push({name,prims});if(share)GI.set(k,meshes.length-1);return meshes.length-1;};
+    const flipKids=new Map();
+    const moves=new Set([...lin.keys(),...defs.keys()]);for(const[,res]of out)for(const r of res.tr.keys())moves.add(r);   /* nodes that move in some clip: the rig puts them back at rest (extras.rest) */
+    const ROLE=new Map([[C.BX.root,'box'],[C.BX.ring,'ring'],[C.BX.bowl,'bowl'],[C.mv,'movement'],[C.BX.mid,'lidGlass'],[C.BX.top,'lid'],[C.BX.latch,'latch']]);   /* for the rig: the nodes it turns itself */
+    keep.forEach((r,i)=>{const v=r.restV,o=r.o,par=r.par&&r.par.name,mn=o&&o.isMesh&&!Array.isArray(o.material)?MN.get(o.material):'',nm=uniq(r.name||(o&&o.isMesh?(par||'piece')+(mn?' · '+mn:' · piece'):(par?par+' · frame':'frame')));
+      const n=/** @type {any} */({name:nm,t:[v[0],v[1],v[2]],r:[v[3],v[4],v[5],v[6]],s:[v[7],v[8],v[9]],children:r.kids.filter(k=>idx.has(k)).map(k=>idx.get(k))}),x={};
+      const ro=o&&ROLE.get(o);if(ro)x.role=ro;if(o&&o.userData.part)x.part=o.userData.part;if(moves.has(r))x.rest=Array.from(v,q=>+q.toFixed(7));if(o&&o.userData.hn)x.hn=o.userData.hn;const L=lin.get(r);if(L)x.rig=L;
+      const d=defs.get(r);
+      if(r.im){const g=r.im.geometry;n.mesh=meshOf(g,r.im.material,snap(g),'chain link '+(r.k%2?'B':'A'),true);}
+      else if(r.rest){if(!d)n.mesh=meshOf(o.geometry,o.material,r.rest,nm,true);
+        else if(d.mode==='morph'){const K=d.keys,base=K[0],mi=meshOf(o.geometry,o.material,base,nm,false),pm=meshes[mi].prims[0];
+          if(K.length>1){pm.targets=K.slice(1).map(q=>{const p=new Float32Array(base.pos.length);for(let j=0;j<p.length;j++)p[j]=q.pos[j]-base.pos[j];return{pos:p};});
+            const rw=K.slice(1).map(()=>0);if(d.rest0){rw[d.rest0[0]-1]+=1-d.rest0[2];rw[d.rest0[1]-1]+=d.rest0[2];}meshes[mi].weights=rw;d.rw=rw;meshes[mi].targetNames=K.slice(1).map((_,j)=>'shape '+(j+1));x.shapes=K.length-1;}n.mesh=mi;}
+        else{const rj=d.restJ||0;flipKids.set(r,d.shapes.map((s,j)=>({name:uniq(nm+' · shape '+(j+1)),t:[0,0,0],r:[0,0,0,1],s:j!==rj?[0,0,0]:[1,1,1],extras:{rest:[0,0,0,0,0,0,1,...(j!==rj?[0,0,0]:[1,1,1])]},mesh:meshOf(o.geometry,o.material,s,nm+' · shape '+(j+1),false)})));x.shapes=d.shapes.length;x.flipbook=true;}}
+      if(Object.keys(x).length)n.extras=x;nodes[i+1]=n;});
+    for(const[r,kids]of flipKids){const n=nodes[/** @type {number} */(idx.get(r))];for(const kd of kids){nodes.push(kd);kd.i=nodes.length-1;n.children.push(kd.i);}}   /* a flipbook's shapes, after the tree's nodes */
+    /* the animations: per clip, each node's channels that change, and the shapes' weights (morph) or which shape shows (flip, STEP) */
+    const anims=out.map(([c,res])=>{const an={name:c.name,channels:[]},end=res.dur;
+      for(const[r,tk]of res.tr){if(!idx.has(r))continue;if(c.fast&&lin.has(r)&&Math.abs(lin.get(r).kE)*c.fast>0.5)continue;const ni=idx.get(r);if(tk.t[tk.t.length-1]<end){tk.t.push(end);tk.v.push(...tk.v.slice(-10));}
+        const t=Float32Array.from(tk.t),m=t.length,V=tk.v,ch=(o,n,path,tol,q)=>{const a=new Float32Array(m*n);let moved=false;
+          for(let j=0;j<m;j++)for(let k=0;k<n;k++){a[j*n+k]=V[j*10+o+k];if(Math.abs(a[j*n+k]-a[k])>1e-9)moved=true;}
+          if(!moved)return;if(q)for(let j=1;j<m;j++){let dd=0;for(let k=0;k<4;k++)dd+=a[j*4+k]*a[(j-1)*4+k];if(dd<0)for(let k=0;k<4;k++)a[j*4+k]=-a[j*4+k];}   /* each quaternion on the side of the last, so the turn between them is the short way */
+          const red=GLTF.reduce(t,a,n,tol,q);an.channels.push({node:ni,path,times:red.times,values:red.values,interp:'LINEAR'});};
+        ch(0,3,'translation',TOLP);ch(3,4,'rotation',TOLQ,true);ch(7,3,'scale',TOLS);}
+      for(const[r,d]of defs){if(!idx.has(r))continue;const tl=d.tl[c.name];if(!tl||!tl.length)continue;if(tl[tl.length-1][0]<end)tl.push([end,...tl[tl.length-1].slice(1)]);const t=Float32Array.from(tl.map(q=>q[0]));
+        if(d.mode==='morph'){const K=d.keys.length-1;if(!K)continue;const w=new Float32Array(tl.length*K);
+          tl.forEach(([,a,b,u],j)=>{if(a)w[j*K+a-1]+=b===a?1:1-u;if(b&&b!==a)w[j*K+b-1]+=u;});const rw=d.rw||[];if(w.every((v,q)=>Math.abs(v-(rw[q%K]||0))<1e-6))continue;const red=GLTF.reduce(t,w,K,0.002);an.channels.push({node:idx.get(r),path:'weights',times:red.times,values:red.values,interp:'LINEAR'});}
+        else{const kids=flipKids.get(r);if(!kids)continue;kids.forEach((kd,j)=>{const s=new Float32Array(tl.length*3);tl.forEach(([,a],q)=>{s[q*3]=s[q*3+1]=s[q*3+2]=a===j?1:0;});
+          if(s.some(v=>v!==(j!==(d.restJ||0)?0:1))){const red=GLTF.reduce(t,s,3,0.5);an.channels.push({node:kd.i,path:'scale',times:red.times,values:red.values,interp:'STEP'});}});}}
+      return an;});
+    /* the root, millimetres to metres; and the rig's helper, whose x through a beat is the escape wheel's place in teeth less the beat's even run (E = beats + x) */
+    nodes[0]={name:'Hamilton Model 21 marine chronometer',t:[0,0,0],r:[0,0,0,1],s:[0.001,0.001,0.001],children:[idx.get(keep[0])]};
+    const helper=nodes.length;nodes.push({name:'Rig · escape wheel teeth',t:[0,0,0],r:[0,0,0,1],s:[1,1,1],extras:{rig:'teeth'}});
+    out.forEach(([c,res],ai)=>{if(!res.teeth.length)return;const n=res.teeth.length/2,t=new Float32Array(n),v=new Float32Array(n*3);for(let j=0;j<n;j++){t[j]=res.teeth[2*j];v[3*j]=res.teeth[2*j+1];}
+      anims[ai].channels.push({node:helper,path:'translation',times:t,values:v,interp:'LINEAR'});});
+    const ver=(document.querySelector('meta[name=version]')||{}).getAttribute?.('content')||'';
+    const extras={made:'The Marine Chronometer working model'+(ver?' '+ver:'')+', '+location.href.split('#')[0],units:'millimetres under the root node, which scales them to metres',start:{hours:h0,E:rest.E,slip:0},
+      beat:0.5,fuseePerHour:FUSEE_PER_HOUR,runHours:RUN_H,fuseeTurns:FUSEE_TURNS,fps:FPS,clips:out.map(([c,res])=>Object.assign({name:c.name,about:c.d,seconds:+res.dur.toFixed(4),samples:res.samples},c.rig?{rig:c.rig}:{}))};
+    nodes[0].extras=extras;   /* Blender keeps a node's extras as the object's custom properties (the asset's it drops): the rig reads them here */
+    const blob=await GLTF.write({generator:'Marine Chronometer working model (blender.js)',nodes,roots:[0,helper],meshes,materials,textures,animations:anims,extras});
+    return{blob,stats:{nodes:nodes.length,meshes:meshes.length,materials:materials.length,clips:anims.length,s:((performance.now()-t0)/1000).toFixed(1)}};}
+  async function exportGLB(){const b=/** @type {HTMLButtonElement|null} */(document.getElementById('mkGLB'));if(b)b.disabled=true;
+    try{const{blob,stats}=await build(say);save(blob,'model21.glb');
+      say(`<b>model21.glb</b>: ${(blob.size/1048576).toFixed(1)} MB, ${stats.nodes} nodes, ${stats.meshes} meshes, ${stats.materials} materials, ${stats.clips} animations, made in ${stats.s} s. In Blender: File, Import, glTF 2.0; then open the rig (Blender rig) in the Text Editor and run it.`);}
+    catch(e){say('The export failed: '+e.message);throw e;}finally{if(b)b.disabled=false;}}
+  return{bind(api){A=api;const g=document.getElementById('mkGLB'),r=document.getElementById('mkRig');
+      if(g)g.addEventListener('click',()=>{exportGLB();});
+      if(r)r.addEventListener('click',()=>save(new Blob([typeof RIG_PY==='string'?RIG_PY:''],{type:'text/x-python'}),'model21-rig.py'));
+      if(/[?&]qa\b/.test(location.search))window.__glb=async(only)=>{const{blob,stats}=await build(m=>console.log('glb '+Math.round(performance.now())+' '+m.replace(/<[^>]+>/g,'')),only);save(blob,'model21.glb');return stats;};},   /* for the tools: the export, saved as a download */
+    build};
+})();
+
+</script>
+<script>
 /* app.js: renderer, camera, controls, cross-sections, label placement, part info, walkthrough, animation loop; ?qa hooks for verification
    Part of 'The Marine Chronometer, working' (three.js r128). See README.md. */
 
@@ -5658,6 +5993,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     requestAnimationFrame(frame);
   }
   ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});
+  /* the export to Blender (blender.js): its own copy of the model, set as the page's is (the dial, balance and stop chosen, the timing weights, screws and temperature) */
+  if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
+    config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');
+      if(d)u.dial(d);if(b)u.balance(b);if(sv)u.stop(sv);u.R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);u.R.screws(SP);u.R.balCurl(degF()-T0);}});
   if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,cam,cv,scene,M,PARTS,INFO,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';

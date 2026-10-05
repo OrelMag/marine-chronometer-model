@@ -29,6 +29,8 @@ the website (see the root README).
 | `../shared/almanac.js` | A nautical almanac and the navigator's arithmetic, `ALM`: the Sun, Moon and 58 stars, sidereal time, the altitude corrections, sight reduction, the time sight, equal altitudes, clearing a lunar distance, and sights made from the almanac for the essay's worked examples (see "The almanac" below); shared with `tools/almanac.js` |
 | `../shared/hairspring.js` | The hairspring's design, `HSPR`: terminal curves solved to Phillips' conditions, the whole spring's path, the force it leaves on the pivots, the strip's section from the stiffness ("The hairspring, designed"); shared with `tools/hairspring.js` |
 | `js/makers.js`, `js/maker.js` | The maker's tools ("What the model gives a maker" below): `MAKERS`, each parts-list line's measured fit, material and treatment (written by `tools/makers.py`); `MAKER`, each card's maker's sheet, drawing (SVG) and STL, Measure, the build book, the model's data as JSON, the movement as STL |
+| `js/gltf.js`, `js/blender.js` | The export to Blender ("The model in Blender" below): `GLTF`, a binary glTF 2.0 writer (nodes, meshes, materials, textures, morph targets, animations; one IIFE); `BLENDER`, the export itself: its own copy of the model, every motion played through it and read back |
+| `blender/rig.py`, `js/rigpy.js` | The rig, run in Blender's Text Editor after the import (Blender 5.x); `js/rigpy.js` is its text for the panel's Blender rig button, written by `tools/rigpy.py` (`--check`: up to date) |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), screw positions and holes, pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, train-blocking screw and balance locking arm, motion work, and the per-frame `update()` |
 | `js/box.js` | Mounting box, lids, gimbal ring, chronometer case (bowl, bezel, crystal, shield plate that turns to admit the winding key), winding key |
 | `js/essay.js` | The Essay tab (see "The Essay tab" below): its figures, drawn from the model's code, and the tab, hash and scroll handling. One IIFE that declares only `ESSAY` |
@@ -55,6 +57,7 @@ the website (see the root README).
 | `tools/invariants.py` | Checks the model's arithmetic: hands against the time, the wind indicator's scale, the fusee's 56¼ h and 17½ half turns, the balance's moment of inertia and the rate for a turn of the weights (exit code 1 on a failure) |
 | `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, variants, sections, time zone, keys, a URL-hash link), then opens the Essay tab, scrolls it and works every control in it (the model not drawn under it, at most two WebGL contexts, a link into the model and Back, `#essay=detent`); fails on any console error or warning (`--model`, `--essay`: one half) |
 | `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
+| `tools/gltf_check.py`, `tools/blender_check.py` | The export to Blender checked: the page's own export written to `r_model21.glb` and read back (structure, accessors, the tree, names, every clip), then that file imported into Blender headless (`MC_BLENDER`, else the usual install; skipped without one), the rig run and set against the export's own clips, and two renders (`r_blender_*.png`) |
 | `verification/lower-bridge-comparison.png` | The balance lower bridge against its sources: the restoration video's face-on frame (13:49.5) beside the model seen from the same camera (`tools/framecam.py`), the model's outline drawn on the frame, the measured and model plans (`tools/lower_bridge.py`), the two levels side-on (36:45), Figs. 110, 29 and 30, and the model from below, in place and from above |
 | `tools/lower_bridge.py` | Lays out the balance lower bridge after the restoration video's (13:49.5, measured with `tools/framecam.py`; formerly 36:01, measured through a camera fitted to the train bridge's rim; Figs. 29, 30, 110) round the model's arbors and what it must clear, reports the clearances, prints `LB_UP`, `LB_WALL` and `LB_LO` for `movement.js` and draws the plan beside the video's outline (no browser) |
 | `tools/rimfit.py`, `tools/rimfit_36-01.json` | A plate or bridge lying on the blue mat in a video frame, put in millimetres through a perspective camera fitted to its rim (and to round settings traced on it, made to come out circular): picked points at their heights above the face, turned onto the model by named arbors (no browser). The specs: the restoration video's upturned train bridge with the balance lower bridge (36:01), the dial side (40:08) and the bare plate from the train side (34:30, its rim traced beforehand: `rim_pts`) |
@@ -233,7 +236,7 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   and so on) for a maker to cut. Its **STL**: its triangles in the movement's frame, mm.
 - **Making it** (the panel): **Measure** (two points on the model, their distance and its components), **Oil** (each part coloured by the oil or grease it takes, after Ops. 18–71: red oil the jewelled pivots, argon oil the bushed ones, grease the mainspring and maintaining work), **Build book** (every card's sheet and drawing,
   printed alone: `#bookPrint`, `html.book-print`), **Data** (the train, `MOD`, `L`, the fusee's profile, the escapement's settings, figures and cycle,
-  the hairspring's design and centreline, the balance's moment and pitches, the parts list), **STL** (every part shown).
+  the hairspring's design and centreline, the balance's moment and pitches, the parts list), **STL** (every part shown), **Blender (.glb)** and **Blender rig (.py)** ("The model in Blender" below).
 - **The essay's workshop**: the tolerances the manual gives (end-shakes, roller fit and shake, horn and stop-button clearances, the detent spring's 0.770 g,
   the escapement's angles, the wedge pins, the mainspring's let-down, the rate before the weights); the oiling chart (Ops. 43–71, the three lubricants);
   adjusting the escapement (Ops. 77–97 beside the model's live figures); the order of work (Sec. VIII's reassembly, the mainspring made safe first);
@@ -248,6 +251,45 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   7.0 s a day a °C.
 - **Still estimated** (README "Estimated"): pivot and jewel-hole diameters (the balance staff's lower end, the escape jewel's hole and the third's and fourth's lower jewels now measured) and the screws' threads (the videos don't resolve them; the model's are its own,
   each fit's clearance on the sheets, with the ISO thread to cut beside each), the train's efficiencies (0.85–0.95 a stage), the trip spring's section, the materials where the manual names none.
+
+## The model in Blender
+
+**Blender (.glb)** in Making it writes the whole instrument as a glTF 2.0 file (`model21.glb`, about 95 MB, a minute or so to make), and **Blender rig
+(.py)** the script that drives it. In Blender (5.x): File, Import, glTF 2.0; then open the rig in the Text Editor and press Run Script. Set the scene's
+frame rate before importing: the clips come in at it.
+
+- **What comes across.** Every part a named object in the model's own hierarchy: the root (millimetres scaled to metres), the box, ring, case, movement,
+  each part (named as its card, with its key: "Escape wheel (escW)"), each arbor and pivot group (by its name in the code: `esc`, `staff`, `fz`), each
+  piece (by its line of the parts list: "42173 Screw - Balance, 200-205 mg, …", else its part and material). Custom properties keep the part key, the
+  parts-list line (`hn`) and, for the rig, the rest pose and the drives. The materials as the page has them (colour, metal, roughness, the damascening's
+  stripes and normal map through `KHR_texture_transform`, the wood, the engravings and the dial as textures, drawn again for the file finer than the page's: twice as fine, the engravings' lettering four
+  times (each texture's `redraw` in `core.js`, the same drawing at a size)), but the jewels and the crystal as what they
+  are, not the page's stand-ins: transmitting, with the published refractive indices of ruby (1.77) and glass (1.52). Only the variants chosen on the page
+  (dial, balance, stop, plate finish, the timing weights' places and the screws) are in it. The page's own lighting is not: give Blender a world (an HDRI).
+- **The clips**, each an action: Running (a minute, the second hand once round), Beat (slow motion, one beat 20 times slower), Run down (56¼ hours in 30 s;
+  the escape, fourth and third wheels and the seconds hand left out, as a blur), Winding (from a quarter of an hour short of run down to the stop, the
+  sustaining spring driving the train), Setting the hands, Stop and start (the locking arm, a twist, the train-blocking screw), Exploded, Laid out, Lift
+  out, Lids, Latch and At sea (the box rolling, the case swinging in its gimbals); and the rig's own, one parameter each (Rig · beat, Rig · explode, …).
+  They are played through the export's own copy of the model with the equations of `app.js`'s loop (the stopping and starting, the balance's amplitude,
+  the gimbals' pendulum), each from the rest pose (the page's state of wind, the escape wheel at the start of a beat, the lids open), and read back off its
+  nodes: a node that moves gets keys where it changes, as few as put it back within 0.0005 mm and about 0.006°.
+- **What deforms.** The hairspring is keyed by the balance's angle: shape keys 0.15 rad apart over the widest swing, each moment a blend of the two either
+  side (within about 0.015 mm). The mainspring, whose vertices change with its wind, is a flipbook of 24 shapes over the whole wind, the nearest shown; the
+  trip spring a flipbook of its shapes through a beat (the first 128, then the nearest); the stop-bar spring, the sustaining spring and the winding pawls'
+  springs shape keys; the chain one object a link, a link the chain doesn't reach at scale 0. Hidden is scale 0 throughout (glTF has no visibility).
+- **The rig** (`blender/rig.py`) runs the chronometer on the timeline for as long as it plays: the escape wheel, train, hands, motion work and fusee by
+  drivers in step with the escape wheel's place (the beats run, plus how far the wheel is ahead of that even run, read off the export's helper "Rig ·
+  escape wheel teeth", 0 at each end of a beat so its loop has no seam; each such part was found turning about one axis in step with it, `extras.rig`), the balance, detent, trip spring and hairspring by Rig · beat on a loop, and the
+  rest by Action constraints whose time its controls drive ("Chronometer controls": hours since full wind, the hands set on, explode, laid out, lift, lids,
+  latch, roll and pitch). The constraints' actions are made over into changes from each part's rest, so two can move one part, and in Euler: Blender 5.2's
+  Action constraint reads an object's rotation channels only so. No Python runs in the drivers. `PLAY = 'Winding'` (any clip) at its top plays that clip
+  on every part instead. Against the clips (`tools/blender_check.py`), the rig puts every part where Running has it within 0.02 mm and 0.1°, but the chain's
+  links (0.05 mm: Run down's moments are 1.9 hours of wind apart), and explode, laid out, lift and lids at 1 where their clips end.
+- **Checked against the page** (`tools/blender_check.py --looks`): close-ups of the engraving, the serial, the damascening, the dial and the box, rendered by
+  the page and by Blender (Cycles) from the same cameras, agree in place, orientation and scale: the engraving reads as on the page, the stripes run the same
+  way at the same pitch and the bridges' undersides are plain, the dial is the page's. Blender's plates look more mirror-like: the same nickel (metal,
+  roughness 0.2), but path-traced, reflecting the parts round them; give it an HDRI, or raise the plates' roughness, for the page's satin look.
+- **Not carried across**: the escapement's settings as a bench to adjust (the export is at the page's), the jolt, the oiling and drawing modes, sections.
 
 ## The almanac
 
@@ -303,7 +345,8 @@ Two URL flags help with testing:
   `__unproj`) and camera controls (`__cam`, `__look`, `__camInfo()`) for the
   tools, plus the parts registry (`__parts`), the renderer (`__r`), a count
   of frames drawn (`__renders()`) and the stopping-and-starting state
-  (`__H()`: amplitude, whether the train is held, the arm and screw).
+  (`__H()`: amplitude, whether the train is held, the arm and screw), and the export to Blender (`__glb(clips)`: the file saved as a download,
+  the named clips only if given; `tools/gltf_check.py`).
 
 The stage is drawn only when something shown has changed: the camera, the
 lids and lift, the wheels and balance, the wind, ship motion or a section, or
