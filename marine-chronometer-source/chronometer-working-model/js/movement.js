@@ -1133,7 +1133,16 @@ function buildMovement(M){
   /* BB_LO: the barrel's lower face, 2.4 mm over the pillar plate (over the centre wheel, 0.55 clear), so the barrel is 16.5 mm tall cap to cap: C Spinner's video, side-on
      (33:09.5-33:35: height to radius 0.95 +- 0.06) and the 23:30 fit at the focal length that agrees with it (15.6-16.3); it was 13.2 */
   const BB_LO=y0-2.4;
-  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,collarT:TB_T+0.05,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:17.6,bT:TB_T+1.0,bB:BB_LO,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
+  /* the barrel's outside, r 18.3 +-0.5 (likely): TN24H 3SFDplGq6vs 0:12.6-0:12.75, its cap lying flat on the cloth beside the fusee wheel, the two outlines' convex hulls
+     (216 and 182 points) put back on the cloth's plane through a pinhole camera whose tilt makes both come out round (each alone tilts it 7.8 and 8.5 deg, the same way:
+     both flat), the focal length 1400 px (1200-1600) from the barrel's top, 16.5 mm up, moving 1.117 times the cloth's 390 px between 12.68 and 13.38 (the camera
+     157 mm up, at the cloth's 8.96 px/mm): the cap 1.009 of the fusee wheel's tips (r 18.09, 90 teeth at this centre distance: tools/solve.py), r 18.26, 17.9-18.5
+     over the principal point +-200 px, five frames and that focal length; the barrel's own end, standing at 13.38, 1.02 of the cap past its height's 1.117, so the
+     end and the cap flush with the wall. BunnSpecial's side-on turntable (bEWF2ivi1Rg 0:06, 0:21, 720p) has the wall a plain cylinder, its silhouette 1.8-2.2 mm in
+     from the pillar plate's edge (87.57), r 18.1-19.9 over the barrel's measured 22.1-23.5 from the centre (rough). It was r 17.6 (the 23:30 cylinder fit, 17.4-19.6)
+     until 5 October 2026; 20.5, which the coils' pitch with the parts list's 0.419 strip would ask (References/VIDEOS.md), is ruled out */
+  const RB_O=18.3;
+  const fs=makeFusee(M,{yS:-19.86,yB:-10.9,collarT:TB_T+0.05,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:RB_O,bT:TB_T+1.0,bB:BB_LO,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
     stopDir:Math.atan2(fo[1],fo[0])+Math.atan2(-dz,dx)});   /* the winding stop outward from the plate's centre, past the fusee's top (as it was, 7.2 mm out, before the top was widened) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* winding stop (42099) on the underside of the barrel bridge, where the stop-bar's far end meets it at full wind: a stud screwed into the bridge (left-hand thread, Op. 42),
@@ -1421,10 +1430,10 @@ function makeFusee(M,c){
   const stud=[fx+xS*ca+zS*sa,-xS*sa+zS*ca];
   const bz=hn(new THREE.Group(),'42168');bz.position.x=bx;bz.userData.partName='barrel';g.add(bz);
   /* the wall, BWT thick from end to end: its end face's inner edge 0.874-0.905 of its outer (KLUwI2UUCMQ 15:54 0.905, 16:54 0.874-0.888; TN24H's own barrel, 3SFDplGq6vs
-     0:16, nearly face-on, 0.891: ellipses fitted to the yellow face's two edges, 0.89 the mean, so 0.11 Rb, 1.95 +-0.3 on r 17.6), and at 16:54, the spring out, the inside a
+     0:16, nearly face-on, 0.891: ellipses fitted to the yellow face's two edges, 0.89 the mean, so 0.11 Rb, 2.0 +-0.3 on r 18.3; 1.95 on r 17.6 until 5 October 2026), and at 16:54, the spring out, the inside a
      plain cylinder from that face to the floor, no step; the cap's five screws go into the wall's edge (Royal Museums Greenwich ZBA7849, Hamilton 5674: "secured with five
      screws into the edge of the barrel wall"), on r 16.6 in its middle. It was 0.2 (estimated) until 5 October 2026 */
-  const BWT=1.95,BWE=0.8;   /* BWE: the end ring at the cap, the wall's last 0.8 drawn apart with the screws' tapped holes (their threads' length) */
+  const BWT=2.0,BWE=0.8;   /* 0.11 of r 18.3 */   /* BWE: the end ring at the cap, the wall's last 0.8 drawn apart with the screws' tapped holes (their threads' length) */
   /* the mainspring's edges (its width, 13.55): toward the cap 1.45 under the cap's seat (KLUwI2UUCMQ 15:54, the arbor out, looking in from the cap's end: the far wall shows
      as a brass band 42 px tall between the end face's inner edge and the first coil's top edge on three columns, 33 px less the brace's 0.25, at the face's inner
      ellipse, 563 px on its long axis for the inside radius and tilted 41 deg: 0.089 of that radius, 1.4-1.55 +-0.3), toward the barrel's own end 0.3 off its floor
@@ -1432,8 +1441,8 @@ function makeFusee(M,c){
   const MSY0=c.bT+0.9,MSY1=c.bB-0.6-1.45;
   const bw=new THREE.Mesh(ringGeo(c.Rb,c.Rb-BWT,Math.abs(c.bT-c.bB)-1.2-BWE),M.brass);bw.position.y=(c.bT+c.bB-BWE)/2;bz.add(bw);bw.userData.driveGhost=true;bw.userData.barrelWall=c.Rb;   /* between the barrel's end and the end ring (a dashed ring in Edges) */
   const CSA=[0,1,2,3,4].map(k=>(115+72*k)*D2R),CS=CSA.map(a=>[(c.Rb-1.0)*Math.cos(a),(c.Rb-1.0)*Math.sin(a)]);   /* the cap's screws, into the wall's end (their starting angle estimated), on r 16.6 +-0.3 (KLUwI2UUCMQ 15:54 rectified: 0.918-0.969 of the wall's outer edge; 72 deg apart, gaps 69-75); r 17.2 until 5 October 2026 */
-  mesh(bz,ringGeo(c.Rb+0.7,1.43,0.6),M.gilt,0,c.bT+0.3,0).userData.driveGhost=true;   /* the barrel's own end, its lip r Rb+0.7: 18.3, as the video's fit reads the barrel's top edge (23:30; Review-results.md, Elsewhere 23) */
-  { const cp=hn(mesh(bz,discGeo(c.Rb+0.4,0.6,[[0,0,1.43],...CS.map(q=>hC(...q,0.3))]),M.gilt,0,c.bB-0.6,0),'42169');cp.userData.driveGhost=true;   /* the cap (42169), r 18.0, about flush with the wall (33:34: its four screw heads at 0.918-0.969 of its outline, 17.6-18.2); r 19.0 until 5 October 2026, read off 23:30's bottom outline */
+  mesh(bz,ringGeo(c.Rb,1.43,0.6),M.gilt,0,c.bT+0.3,0).userData.driveGhost=true;   /* the barrel's own end, flush with the wall (TN24H 0:13.38, standing on its cap's end: 1.02 of the cap; bEWF2ivi1Rg 0:06 side-on, a plain cylinder); a lip r Rb+0.7 over a r 17.6 wall until 5 October 2026, as 23:30's fit read the top edge, 18.3 */
+  { const cp=hn(mesh(bz,discGeo(c.Rb,0.6,[[0,0,1.43],...CS.map(q=>hC(...q,0.3))]),M.gilt,0,c.bB-0.6,0),'42169');cp.userData.driveGhost=true;   /* the cap (42169), r 18.3, flush with the wall (TN24H 3SFDplGq6vs 0:12.6, the cap flat on the cloth: r 18.26 +-0.5, above at RB_O); r 18.0 (Rb + 0.4) until 5 October 2026, then about flush with the wall (33:34: its four screw heads at 0.918-0.969 of its outline, 17.6-18.2); r 19.0 until 5 October 2026, read off 23:30's bottom outline */
     const ls=new THREE.Shape();ls.absarc(0,0,c.Rb,0,TAU,false);const lh=new THREE.Path();lh.absarc(0,0,c.Rb-BWT,0,TAU,true);ls.holes.push(lh);for(const q of CS){const h=new THREE.Path();h.absarc(q[0],-q[1],hT(0,0,0.3)[2],0,TAU,true);ls.holes.push(h);}
     const lg=extrude(ls,{depth:BWE,bevelEnabled:false,curveSegments:96});lg.rotateX(-Math.PI/2);mesh(bz,lg,M.brass,0,c.bB-0.6-BWE,0).userData.driveGhost=true;   /* the wall's end at the cap, tapped for them */
     if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;bz.add(fl);for(const q of CS)hn(c.screw(fl,q[0],-q[1],-c.bB,0.3,0.25,0.6+BWE),'37023');   /* through the cap and BWE into the wall's end */} }

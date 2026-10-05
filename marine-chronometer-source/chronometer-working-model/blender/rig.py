@@ -112,6 +112,7 @@ def deltas(a,objs):
         cb=channelbag(a,s)
         if not cb or not len(cb.fcurves):continue
         F={(fc.data_path,fc.array_index):fc for fc in cb.fcurves};T=sorted({k.co[0] for fc in cb.fcurves for k in fc.keyframe_points})
+        T=[a+(b-a)*j/4 for a,b in zip(T,T[1:]) for j in range(4)]+T[-1:]   # each span in four: the change's location, keyed straight, would cut the chord of a part turning about its own origin off its parent's (the barrel, 18.8 mm off the fusee group's, 0.03 mm in at mid-span of Run down's 6.7 deg keys); in four, 0.002
         l0,q0,s0=rest_of(o);s0=Vector([x if abs(x)>1e-9 else 1.0 for x in s0])   # a part hidden at rest (scale 0) is changed from scale 1
         R0=Matrix.LocRotScale(l0,q0,s0).inverted()
         ev=lambda p,i,t,dv:F[(p,i)].evaluate(t) if (p,i) in F else dv
