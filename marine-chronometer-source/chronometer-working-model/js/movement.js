@@ -686,8 +686,10 @@ function buildMovement(M){
   /* sustaining ratchet wheel (42009): free on the fusee arbor, open in the middle round the fusee's winding ratchet and its screws (Fig. 28) */
   const srP=part('sratchet',-22);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
   const WPR=8.9,WPF=[2.44,2.62],WPS=[0,1].map(k=>{const a=k*Math.PI+0.4;return WPF.map(t=>[WPR*Math.cos(a+t),WPR*Math.sin(a+t)]);});   /* the winding pawl springs' screws, at their feet about 150 deg round from their pawls */
-  hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(SRT.z,SRT.m,0.7,{ratchet:true,flip:true,bore:5*FK,holes:WPS.flat().map(q=>hC(...q,0.4))}),M.gilt,0,-9.45,0),'42009',{sub:1,gear:{z:SRT.z,m:SRT.m,ratchet:1}});
-  mesh(R.sr,ringGeo(5*FK,2.75*FK,0.3),M.gilt,0,-9.25,0);   /* its web, free on the fusee arbor's collar (0.05 side shake; Fig. 69, arrow 5), under the heads of the winding ratchet's screws, which turn round inside the wheel's open centre as the key winds */   /* steep faces lead against the running direction, so the sustaining pawl holds it */
+  /* solid from its bore, r 2.92, to the rim (KLUwI2UUCMQ 19:12 rectified on its own tips, r 14.53: the bore 0.2013 +-0.0023 of them), free on the collar's step (0.05 side
+     shake; Fig. 69, arrow 5), now that the winding ratchet's screw heads lie flush below it; open to r 4.41, with a web on the collar (r 2.38), until 5 October 2026. The
+     plateau its face shows inside r 8.6-9.2 (19:12) is not drawn: its height isn't seen */
+  hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(SRT.z,SRT.m,0.7,{ratchet:true,flip:true,bore:2.92,holes:WPS.flat().map(q=>hC(...q,0.4))}),M.gilt,0,-9.45,0),'42009',{sub:1,gear:{z:SRT.z,m:SRT.m,ratchet:1}});   /* steep faces lead against the running direction, so the sustaining pawl holds it */
   R.ssPin=mesh(R.sr,cylY(0.4,1.45,10),M.steel,14.6*FK*Math.cos(SSP),-8.375,14.6*FK*Math.sin(SSP));   /* the pin from the sustaining spring's working end, in the ratchet (the manual pins the spring to both wheels) */
   /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4 FK): pushed by its steep faces when running, slipping over them when winding.
      Each is held in by a winding-pawl spring (42007), a long thin arc round the wheel at about the pivots' radius, from its foot about 150 deg round (toward the side its pawl's
@@ -1368,10 +1370,19 @@ function makeFusee(M,c){
      sit (restoration video 28:08, 28:17, 28:35; Fig. 69, arrow 5: "grease fusee arbor above ratchet wheel"), its end 0.02 past the wheel so the end plate bears on it and leaves
      the wheel free; then on to the plate */
   const yC0=c.yB+0.6,yC1=-5.88;hn(cylBetween(fz,1,c.aT??-33,yC0,M.steel,0,0,12),'42022');hn(cylBetween(fz,2.7*k,yC0,yC1,M.steel,0,0,32),'42022',{sub:1});hn(cylBetween(fz,1,yC1,-PP_T-0.1,M.steel,0,0,12),'42022',{sub:1});hn(cylBetween(fz,0.55,-PP_T-0.1,1.0,M.steel,0,0,12),'42022',{sub:1});   /* its lower pivot, through the plate bushing to the wind indicator pinion turned on its end */   /* arbor, then its lower pivot through the plate bushing to the wind-indicator pinion */
-  /* winding ratchet wheel (42013) on the fusee's large end, fixed by two screws (42014) put in from below, their heads in the sustaining ratchet's open centre (Figs. 28, 69) */
-  const WRS=[0.6,0.6+Math.PI].map(a=>[3.4*k*Math.cos(a),3.4*k*Math.sin(a)]);
-  hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.5,{ratchet:true,bore:2.75*k,holes:WRS.map(q=>hC(...q,0.55))}),M.steel,0,c.yB+0.85,0),'42013',{gear:{z:WRT.z,m:WRT.m/FK*k,ratchet:1}});mesh(fz,discGeo(5*k,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,0.55))]),M.gilt,0,c.yB-1.1,0);
-  if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;fz.add(fl);for(const q of WRS)hn(c.screw(fl,q[0],-q[1],-(c.yB+1.1),0.55,0.3,0.6+1.2),'42014');}
+  /* winding ratchet wheel (42013) on the fusee's large end, fixed by two screws (42014) opposite each other, their heads flush in counterbores (Figs. 28, 69): the screws
+     at r 4.6-4.9 (KLUwI2UUCMQ 23:30 rectified through the bridge homography, 4.6 +-0.3; James Martin's unit, SNLqsS9wrrM 7:11, the fusee's large end face-on with the
+     wheel off: 0.705 of the ratchet's tips' radius, 4.86 on its 6.9), heads r 1.15 (7:11, 0.17 of the tips' radius) in counterbores r 1.4 (23:30), through holes r 0.7;
+     drawn at 23:30's 4.6, where the counterbore stays inside the teeth's roots (r 6.08); the counterbores' depth (0.35, the heads 0.3 and sunk 0.05) and the fusee's boss under it,
+     out to r 5.8 to take their threads, estimated. The screws stood proud at r 3.0, heads r 0.55,
+     in the sustaining ratchet's open centre until 5 October 2026 */
+  const WRS=[0.6,0.6+Math.PI].map(a=>[4.6/FK*k*Math.cos(a),4.6/FK*k*Math.sin(a)]),wrG={z:WRT.z,m:WRT.m/FK*k,ratchet:1};
+  hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.35,{ratchet:true,bore:2.75*k,holes:WRS.map(q=>[...q,1.4])}),M.steel,0,c.yB+0.925,0),'42013',{gear:wrG});   /* its upper 0.35, counterbored */
+  hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.15,{ratchet:true,bore:2.75*k,holes:WRS.map(q=>[...q,0.7])}),M.steel,0,c.yB+0.675,0),'42013',{sub:1});mesh(fz,discGeo(5.8/FK*k,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,0.55))]),M.gilt,0,c.yB-1.1,0);
+  if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;fz.add(fl);for(const q of WRS)hn(c.screw(fl,q[0],-q[1],-(c.yB+0.75),1.15,0.3,0.15+1.2,0.55),'42014');}
+  /* the collar's step under the sustaining ratchet: r 2.87, its bore's 2.92 less a running fit (Fig. 69: free on the arbor), between the winding ratchet's top and the
+     fusee wheel's level; inferred from that bore (KLUwI2UUCMQ 19:12), no frame shows it (28:08 too oblique; 7:11 end-on) */
+  hn(cylBetween(fz,2.87,c.yB+1.2,c.yB+1.7,M.steel,0,0,40),'42022',{sub:1});
   /* fusee end plate (42019) under the fusee wheel, against the collar's end, and the taper pin (42020) through the arbor below it that holds the stack on (Figs. 28, 70).
      The plate is r 7.0 k, or less to keep 0.3 clear of the centre wheel's teeth, which run at its height (c.epR: 5.6; Figs. 28 and 69 draw it about 0.37 of the wheel across, r 6.7), so it reaches under the wheel's bore, and its
      outer face has a raised boss round its hole with a slot across it, the notches the pin lies in (Ops. 27-29: "the end plate notches correspond to the taper of the taper

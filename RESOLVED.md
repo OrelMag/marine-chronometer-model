@@ -602,6 +602,25 @@ Contents:
   held at 0.37 turn (it was pinned to the spring's most, which the longer
   spring made 6.4 turns). Keep: the barrel's inner parts follow `c.Rb`; the
   set-up a turn fraction, not the spring's range. `2e0db4f`
+- **The barrel's wall 0.2 mm thick and its brace a 40° strip** (SHAPE-PASS.md, 109-5, 109-6).
+  Both estimates, against the video: the end face's inner edge is 0.874-0.905 of
+  its outer on three frames of two movements, and the inside is plain to the
+  floor (KLUwI2UUCMQ 16:54), so the wall is 1.95 (0.11 of r 17.6) all the way;
+  the cap's screws go into its edge, and the brace runs about three quarters
+  round (Royal Museums Greenwich's catalogue). Now drawn so, the spring's pin in
+  a window through the brace, the barrel's hook at its end; the mainspring
+  re-solved in the smaller room (`tools/mainspring.py`) and 13.55 wide (15:54).
+  Keep: the spring's room follows the wall (`MSPRING.Rw` in core.js and
+  `tools/mainspring.py` together; regenerate `js/mainspring.js` after either);
+  its length 1,064, not half the room (857 would overstress it: `physics.js`).
+  `f29d657`
+- **The winding ratchet's screws at r 3.0, standing proud in the sustaining ratchet's open centre** (SHAPE-PASS.md,
+  109-11, 109-14). The video has them at r 4.6, flush in counterbores (23:30;
+  another movement 4.86, SNLqsS9wrrM 7:11), and the sustaining ratchet solid
+  from its bore r 2.92. Now drawn so, the fusee's boss widened for the threads
+  and the collar stepped under the sustaining ratchet (inferred). Keep: the
+  counterbores inside the teeth's roots (r 6.08); nothing of the winding ratchet
+  stands above its face. (this commit)
 - **The setup click's tip 0.1 mm in the ratchet's teeth** (Review-results.md, BOM
   comparison 3): its pivot 9.25 mm out, from the top-view photograph. At the video's
   10.25 (11:58), its tip at the teeth's root 32 deg round, it seats 0.52 mm. Keep:
