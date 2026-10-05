@@ -309,25 +309,32 @@ function drawMerge(scene,meshes){
         if(on!==b.on){for(const o of b.list)lay(o,on);b.on=on;}
         if(b.mesh){const vis=on&&shown(b.parent);b.mesh.visible=vis;if(vis){b.mesh.matrix.copy(b.parent.matrixWorld);b.mesh.matrixWorld.copy(b.parent.matrixWorld);b.mesh.castShadow=b.list.some(o=>o.castShadow);}}}
       if(re)relist();}};}
-/* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: filling half the room between arbor and wall, which gives the most turns),
-   coiled in two packs, one on the arbor (from ra) and one on the wall (out to Rw), joined by k free turns. Its coils in a pack lie gap apart (the grease).
-   Running peels coils off the arbor pack onto the wall pack. msPack(la,o): the packs with la mm on the arbor; T, the turns from the inner end to the outer.
-   ra 1.8 (the arbor's core, estimated). Rw: the barrel's wall less its thickness and the brace's (the barrel r 17.6, C Spinner's video: Review-results.md, Elsewhere 23).
-   len: half the room between them (the rule above), 1,063 mm; the video's coils (15:54) and free spring (32:30) give about 1.1 m (0.9-1.25) */
-const MSPRING={t:0.419,gap:0.01,ra:1.8,Rw:17.6-0.46,len:Math.round(Math.PI*((17.6-0.46)**2-1.8**2)/2/(0.419+0.01)),k:1};
-function msPack(la,o=MSPRING){const p=o.t+o.gap,a0=o.ra+o.t/2,R0=o.Rw-o.t/2,ni=(Math.sqrt(a0*a0+la*p/Math.PI)-a0)/p,ri=a0+ni*p;let ro=R0,lf=0,no=0;
-  for(let i=0;i<30;i++){lf=o.k*Math.PI*(ri+ro);no=(R0-Math.sqrt(Math.max(0,R0*R0-Math.max(0,o.len-la-lf)*p/Math.PI)))/p;ro=R0-no*p;}
-  return{p,a0,R0,ni,ri,no,ro,lf,T:ni+o.k+no};}
-/* the turns it can take: Tmin with nothing on the arbor, Tmax with the arbor pack as large as leaves the free turn its length and room (ro - ri >= p); laMax, that pack's length */
-function msRange(o=MSPRING){let a=0,b=o.len;for(let i=0;i<50;i++){const m=(a+b)/2,q=msPack(m,o);if(q.ro-q.ri>=q.p&&m+q.lf<=o.len)a=m;else b=m;}return{Tmin:msPack(0,o).T,Tmax:msPack(a,o).T,laMax:a};}
-/* the solid for T turns, between y0 and y1: its centre line r(theta) along the arbor pack, the free turn (its slope that of the packs at both ends, so each turn lies
-   at least p outside the one before) and the wall pack, theta rising from the inner end. An eye through the strip near the inner end (ey: [theta0, theta1, yLo, yHi])
-   takes the arbor's hook. Faces: outer and inner (in three bands, the middle one open over the eye), top, bottom, the eye's floor, roof and ends, the strip's ends */
+/* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: filling half the room between arbor and wall, the most turns; it lets down
+   to 12 coils on the wall as C Spinner's 15:54 shows), on the arbor's core (ra 1.8, estimated) inside the brace (Rw: the barrel r 17.6, C Spinner's video:
+   Review-results.md, Elsewhere 23, less its wall and the brace). Its coils lie at least gap apart (the grease). len: the video's coils (15:54) and free spring
+   (32:30) give about 1.1 m (0.9-1.25). Its shape over the wind is solved, not drawn: tools/mainspring.py finds the strip's least bending energy from the free
+   spring's natural curve (measured on the video, 32:18), its coils pressing on each other, its inner end on the hook, its outer along the brace, and writes the
+   states into js/mainspring.js (MSHAPE). Let down, it lies in a pack on the wall with loose turns inside; wound, the coils draw in round the arbor, spread
+   across the barrel rather than in two packs, and the pack on the wall thins to a turn or two */
+const MSPRING={t:0.419,gap:0.01,ra:1.8,Rw:17.6-0.46,len:Math.round(Math.PI*((17.6-0.46)**2-1.8**2)/2/(0.419+0.01))};
+/* MSHAPE decoded once: the grid along the strip (s, mm) and each state's r there, its theta rebuilt from r (each step's run round the arbor) and spread so it
+   ends at TAU T exactly. msShape(T): the state at T, each piece of steel (each s) placed between its places in the two solved states either side */
+let MSD=null;
+function msStates(){if(MSD)return MSD;const u16=b=>{const s=atob(b),a=new Uint16Array(s.length/2);for(let i=0;i<a.length;i++)a[i]=s.charCodeAt(2*i)|s.charCodeAt(2*i+1)<<8;return a;};
+  const n=MSHAPE.n,S=u16(MSHAPE.s),RR=u16(MSHAPE.r),s=Float64Array.from(S,x=>x*0.05);
+  const st=MSHAPE.T.map((T,k)=>{const r=new Float64Array(n),th=new Float64Array(n);for(let i=0;i<n;i++)r[i]=RR[k*n+i]*0.0005;
+    for(let i=1;i<n;i++){const ds=s[i]-s[i-1],dr=r[i]-r[i-1];th[i]=th[i-1]+Math.sqrt(Math.max(ds*ds-dr*dr,1e-12))/((r[i]+r[i-1])/2);}
+    const f=TAU*T/th[n-1];for(let i=0;i<n;i++)th[i]*=f;return{T,r,th};});
+  return MSD={n,s,st,T0:MSHAPE.T0,Tlo:MSHAPE.T[0],Thi:MSHAPE.T[MSHAPE.T.length-1]};}
+function msShape(T){const D=msStates(),st=D.st;let k=0;while(k<st.length-2&&st[k+1].T<=T)k++;const A=st[k],B=st[k+1],f=clamp((T-A.T)/(B.T-A.T),0,1),r=new Float64Array(D.n),th=new Float64Array(D.n);
+  for(let i=0;i<D.n;i++){r[i]=lerp(A.r[i],B.r[i],f);th[i]=lerp(A.th[i],B.th[i],f);}return{r,th};}
+/* the solid for T turns, between y0 and y1: its centre line r(theta) from msShape, theta rising from the inner end. An eye through the strip near the inner end
+   (ey: [theta0, theta1, yLo, yHi]) takes the arbor's hook. Faces: outer and inner (in three bands, the middle one open over the eye), top, bottom, the eye's
+   floor, roof and ends, the strip's ends */
 function mainspringGeo(T,y0,y1,ey,o=MSPRING){
-  const R=msRange(o);let a=0,b=R.laMax;for(let i=0;i<50;i++){const m=(a+b)/2;if(msPack(m,o).T<T)a=m;else b=m;}
-  const q=msPack(a,o),{p,a0,ni,ri,ro}=q,k=o.k,end=TAU*T,rad=u=>u<=ni?a0+p*u:u<=ni+k?ri+p*(u-ni)+(ro-ri-p*k)*smooth((u-ni)/k):ro+p*(u-ni-k);
-  const th=[...new Set([...Array(Math.ceil(T*72)+1)].map((_,i)=>Math.min(end,i*TAU/72)).concat([ey[0],ey[1],end]))].sort((x,z)=>x-z),N=th.length-1,s0=th.indexOf(ey[0]),s1=th.indexOf(ey[1]);
-  const Y=[y0,ey[2],ey[3],y1],C=th.map(t=>{const r=rad(t/TAU),c=Math.cos(t),s=Math.sin(t),ro_=r+o.t/2,ri_=r-o.t/2;return{O:Y.map(y=>[ro_*c,y,ro_*s]),I:Y.map(y=>[ri_*c,y,ri_*s])};});
+  const sh=msShape(T),rad=t=>{const a=sh.th;let lo=0,hi=a.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(a[m]<=t)lo=m;else hi=m;}return lerp(sh.r[lo],sh.r[hi],clamp((t-a[lo])/(a[hi]-a[lo]),0,1));};
+  const th=[...new Set([...sh.th,ey[0],ey[1]])].sort((x,z)=>x-z),N=th.length-1,s0=th.indexOf(ey[0]),s1=th.indexOf(ey[1]);
+  const Y=[y0,ey[2],ey[3],y1],C=th.map(t=>{const r=rad(t),c=Math.cos(t),s=Math.sin(t),ro_=r+o.t/2,ri_=r-o.t/2;return{O:Y.map(y=>[ro_*c,y,ro_*s]),I:Y.map(y=>[ri_*c,y,ri_*s])};});
   const pos=[],idx=[];
   /* a ribbon from corner A to corner B over samples i0..i1, facing (B - A) x the strip's direction */
   const rib=(A,B,i0,i1)=>{const b=pos.length/3;for(let i=i0;i<=i1;i++)pos.push(...A(C[i]),...B(C[i]));for(let i=0;i<i1-i0;i++){const j=b+i*2;idx.push(j,j+1,j+3,j,j+3,j+2);}};
@@ -339,7 +346,7 @@ function mainspringGeo(T,y0,y1,ey,o=MSPRING){
   wall(C[0],0);wall(C[N],1);wall(C[s0],2);const e=C[s1];quad(e.O[1],e.I[1],e.I[2],e.O[2]);   /* the ends; the eye's two ends face into it */
   let v=0;const P=k=>new THREE.Vector3(pos[3*k],pos[3*k+1],pos[3*k+2]);for(let i=0;i<idx.length;i+=3)v+=P(idx[i]).dot(P(idx[i+1]).cross(P(idx[i+2])));
   if(v<0)for(let i=0;i<idx.length;i+=3){const t=idx[i+1];idx[i+1]=idx[i+2];idx[i+2]=t;}
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();g.userData={la:a,...q};return g;
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();g.userData={T};return g;
 }
 /* extrude(s,o): ExtrudeGeometry with every hole's wall facing into the hole. r128 turns the holes only when it reverses a counterclockwise outline, so with a
    clockwise outline a clockwise hole got its wall wound into the metal: culled, the plate looked a hollow shell round its holes and cut-outs, and a section

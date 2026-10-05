@@ -6,3 +6,5 @@ declare const makeEsc: typeof import('../../shared/escapement.js').makeEsc;
 declare const ALM: typeof import('../../shared/almanac.js').ALM;
 // shared/hairspring.js, likewise (tools/hairspring.js reads it in Node): on the page HSPR is a global.
 declare const HSPR: typeof import('../../shared/hairspring.js').HSPR;
+// js/mainspring.js (written by tools/mainspring.py, loaded after core.js): the mainspring's solved states, which core.js's msStates decodes.
+declare const MSHAPE: {T0: number, T: number[], pull: number[], n: number, s: string, r: string};

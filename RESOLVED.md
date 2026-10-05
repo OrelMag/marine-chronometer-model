@@ -1826,4 +1826,13 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Mainspring didn't coil and uncoil as a real one does** (Winding and maintaining work). It was drawn
+  as two packs, on the arbor and on the wall, joined by one free turn of a stock shape: fully wound, ten
+  coils still lay on the wall and four on the arbor, and the coils never spread across the barrel. Its
+  shape is now solved (`tools/mainspring.py`, `js/mainspring.js`): the strip's least bending energy from
+  its natural curve, measured on the free spring (KLUwI2UUCMQ 32:18), its coils pressing on each other,
+  its inner end on the hook and its outer along the brace; the page blends the solved states a quarter
+  turn apart, each piece of steel between its places in them. Its turns now count from the solved
+  slack (12.5), not from the two packs' fewest. Keep: the spring's shape comes from the solve, not a
+  drawn law; after changing its length, thickness, core, barrel or free curve, rerun the tool; states
+  half a turn apart blend 3 mm out and let the coils touch.
