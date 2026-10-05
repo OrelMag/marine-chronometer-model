@@ -238,7 +238,7 @@ const ESSAY=(()=>{
 
   /* ---------- constant force: the barrel, chain and fusee, in the model's profile ---------- */
   fig('eFus',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.85:0.55,yaw:Math.PI-0.45,pitch:0.42,dist:112,target:[0,3.5,0]}),M=G.M,S=V.scene;
-    const fs=model.fs,rf=fs.rf,N=FUSEE_TURNS,H=8.96,yf=m=>H*(1-m/N),Rb=17.6,d=Math.hypot(L.Fu[0]-L.Ba[0],L.Fu[1]-L.Ba[1]),fx=d/2,bx=-d/2,V2=(a,b)=>new THREE.Vector2(a,b);
+    const fs=model.fs,rf=fs.rf,N=FUSEE_TURNS,H=8.96,yf=m=>H*(1-m/N),Rb=18.3,d=Math.hypot(L.Fu[0]-L.Ba[0],L.Fu[1]-L.Ba[1]),fx=d/2,bx=-d/2,V2=(a,b)=>new THREE.Vector2(a,b);
     /* barrel turns for n fusee turns of chain, as the model reckons them (makeFusee's I, which counts the chain's thickness) */
     const I=n=>fs.I(n);
     const fz=new THREE.Group();fz.position.x=fx;S.add(fz);
@@ -248,7 +248,7 @@ const ESSAY=(()=>{
     mesh(fz,cylY(0.9,H+10,12),M.steel,0,H/2,0);mesh(fz,new THREE.BoxGeometry(2.4,3,2.4),M.steel,0,H+6.2,0);
     const gw=mesh(fz,gearGeo(TRAIN.fu,MOD.fusee,1.2,{spokes:4}),M.copper,0,-3,0);
     const bz=new THREE.Group();bz.position.x=bx;S.add(bz);mesh(bz,new THREE.CylinderGeometry(Rb,Rb,H+2,64),M.brass2,0,H/2,0);
-    for(const y of[-1.2,H+1.2])mesh(bz,new THREE.CylinderGeometry(Rb+0.7,Rb+0.7,0.8,64),M.brass,0,y,0);mesh(bz,cylY(0.6,0.6,10),M.steel,Rb*0.55,H+1.9,0);mesh(bz,cylY(1.1,H+8,12),M.steel,0,H/2,0);
+    for(const y of[-1.2,H+1.2])mesh(bz,new THREE.CylinderGeometry(Rb+0.05,Rb+0.05,0.8,64),M.brass,0,y,0);mesh(bz,cylY(0.6,0.6,10),M.steel,Rb*0.55,H+1.9,0);mesh(bz,cylY(1.1,H+8,12),M.steel,0,H/2,0);
     const chain=mesh(S,undefined,M.chain);let n=0,hrs=6;
     function wind(nn){n=nn;fz.rotation.y=n*TAU;bz.rotation.y=I(n)*TAU;const Pp=[],Vv=(x,y,z)=>Pp.push(new THREE.Vector3(x,y,z));
       for(let m=N;m>n;m-=0.03){const a=-Math.PI/2+TAU*(m-n),r=rf(m);Vv(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}

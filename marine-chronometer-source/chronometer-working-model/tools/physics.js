@@ -15,7 +15,7 @@ say('A3: the energy budget');
 const I=578.5e-9,k=I*(4*Math.PI)**2,A=255*D,Eb=k*A*A/2;   /* the balance (Table II, invariants.py), its stiffness, the swing (tools/escapement.js), its energy */
 const b=0.01355,t=MS.t/1000,L=MS.len/1000,E=207e9;   /* the mainspring: the parts list's 0.0165 in (0.419 mm); its width, 13.55 (the cap-side edge 1.45 under the cap's seat on KLUwI2UUCMQ 15:54: movement.js, MSY1); its length (estimated, 1,064); spring steel's modulus (207 GPa) */
 const m1=2*Math.PI*E*b*t**3/(12*L);   /* its stiffness: N·m a turn, linear (a strip bent in its plane; set and coil friction left out) */
-const IN=4.85,ratio=14.8/7.0,rB=17.6+0.45+0.04;   /* the barrel's turns over the 56 h (the chain's run on the drum), the fusee's run-down and full-wind radii (7.0, 14.8: invariants.py), the chain's pitch radius on the barrel */
+const IN=4.67,ratio=14.8/7.0,rB=18.3+0.45+0.04;   /* the barrel's turns over the 56 h (the chain's run on the drum: makeFusee's Ib(N) in the r 18.3 barrel, 4.85 in the r 17.6 until 5 October 2026), the fusee's run-down and full-wind radii (7.0, 14.8: invariants.py), the chain's pitch radius on the barrel */
 /* the fusee is cut so its torque is even: pull x radius constant, so the spring's moment falls in the ratio of the radii over the barrel's IN turns. With the
    moment falling m1 a turn, Mup - IN m1 = Mup / ratio */
 const Mup=IN*m1/(1-1/ratio),Mdn=Mup/ratio,sUp=6*Mup/(b*t*t),Tf=Mup*7.0/rB;

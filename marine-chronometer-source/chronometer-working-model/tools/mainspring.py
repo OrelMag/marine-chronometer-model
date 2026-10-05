@@ -20,15 +20,17 @@ the energy is nearly flat just above it and climbs steeply below), is where the 
 The page blends the two states either side of its T, each piece of steel (the same s) moving between its places in them, so the shape changes smoothly as
 the barrel turns. Checked (5 October 2026): a blend a quarter turn from both its states has the energy of the state solved there to 0.4 % (the energy is nearly
 flat, so shapes of about equal energy may lie up to 4 mm apart in places), its coils at least the strip's thickness apart; theta rebuilt from r is good to 0.04 mm
-along the coil. Let down with the arbor out (--letdown) it gives 14.3 turns, 11.9 of them packed on the wall and the rest loose (r 10, 9, 5), where the 15:54 frame
-shows 12 +- 1 packed and one loose turn of about r 8 (the wall measured 1.95 thick, 5 October 2026; with the 0.2 drawn before it gave 9.5 packed and 2.5 loose).
-The strip's 1,064 mm is 0.69 of the room between the core and the brace now (half the room, the most turns, would be 857).
+along the coil. Let down with the arbor out (--letdown) it gives 13.6 turns, about 10½ packed on the wall (their spacing within the strip and its grease over the
+outer ten turns; packs() reports 1.9, its run broken by the outer end's last samples) and the rest loose (mean radii 11.0, 9.3, 5.0), where the 15:54 frame shows
+12 +- 1 packed and one loose turn of about r 8 (in the barrel of r 17.6 it gave 14.3 turns, 11.9 packed; the barrel measured r 18.3, 5 October 2026).
+The strip's 1,064 mm is 0.59 of the room between the core and the brace now (half the room, the most turns, would be 903, which would bend it to 2.68 GPa
+fully wound: physics.js). Solved in the r 18.3 barrel (5 October 2026): slack at 13.5 turns (14.5 in the r 17.6), the set-up 1.0 from the fusee's ratio.
 """
 import json,math,sys,base64,pathlib
 import numpy as np,torch
 torch.set_default_dtype(torch.float64)
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent
-t=0.419;gap=0.01;p=t+gap;ra=1.8;Rw=17.6-1.95-0.26;L=1064.0;a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 17.6 less its wall (1.95), the brace and 0.01; the core r 1.8
+t=0.419;gap=0.01;p=t+gap;ra=1.8;Rw=18.3-2.0-0.26;L=1064.0;a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 1.8
 HOLD=1.0   # rad: the inner end on the core (the eye, 0.6-1.66 mm from the end on r 1.8: MS.ey in movement.js)
 M=48;STEP=0.25;TLO=13.0;THI=21.25   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter)
 # the free spring (KLUwI2UUCMQ 32:18): its turns' radii, px along the horizontal through its centre, innermost first

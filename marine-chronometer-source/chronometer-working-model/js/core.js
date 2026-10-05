@@ -315,14 +315,14 @@ function drawMerge(scene,meshes){
         if(b.mesh){const vis=on&&shown(b.parent);b.mesh.visible=vis;if(vis){b.mesh.matrix.copy(b.parent.matrixWorld);b.mesh.matrixWorld.copy(b.parent.matrixWorld);b.mesh.castShadow=b.list.some(o=>o.castShadow);}}}
       if(re)relist();}};}
 /* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: 1,064 mm, as C Spinner's 15:54 and 32:30 give, 0.9-1.25 m; it was half the
-   room between arbor and wall, the most turns, until the wall was measured 1.95 thick, 5 October 2026: half the room now left, 857 mm, would bend the strip to
-   2.93 GPa fully wound over the chain's 4.85 barrel turns, past a hardened steel spring's 2.6, tools/physics.js), on the arbor's core (ra 1.8, estimated) inside the
-   brace (Rw: the barrel r 17.6, C Spinner's video: Review-results.md, Elsewhere 23, less its wall, 1.95, the brace, 0.25, and 0.01). Its coils lie at least gap
+   room between arbor and wall, the most turns, until the wall was measured 1.95 thick, 5 October 2026: half the room now left, 903 mm in the r 18.3 barrel, would
+   bend the strip to 2.68 GPa fully wound over the chain's 4.67 barrel turns, past a hardened steel spring's 2.6, tools/physics.js), on the arbor's core (ra 1.8, estimated) inside the
+   brace (Rw: the barrel r 18.3, TN24H's cap against the fusee wheel: movement.js RB_O; r 17.6 until 5 October 2026; less its wall, 2.0, the brace, 0.25, and 0.01). Its coils lie at least gap
    apart (the grease). Its shape over the wind is solved, not drawn: tools/mainspring.py finds the strip's least bending energy from the free
    spring's natural curve (measured on the video, 32:18), its coils pressing on each other, its inner end on the hook, its outer along the brace, and writes the
    states into js/mainspring.js (MSHAPE). Let down, it lies in a pack on the wall with loose turns inside; wound, the coils draw in round the arbor, spread
    across the barrel rather than in two packs, and the pack on the wall thins to a turn or two */
-const MSPRING={t:0.419,gap:0.01,ra:1.8,Rw:17.6-1.95-0.26,len:1064};
+const MSPRING={t:0.419,gap:0.01,ra:1.8,Rw:18.3-2.0-0.26,len:1064};
 /* MSHAPE decoded once: the grid along the strip (s, mm) and each state's r there, its theta rebuilt from r (each step's run round the arbor) and spread so it
    ends at TAU T exactly. msShape(T): the state at T, each piece of steel (each s) placed between its places in the two solved states either side */
 let MSD=null;
