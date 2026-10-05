@@ -4,8 +4,9 @@
     python smoke.py --model    # the model only
     python smoke.py --essay    # the Essay tab only
 
-Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, every cross-section
-(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, Version · what's new and About, winding with the key (the sustaining spring's close-up and load path,
+Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, the parts' pieces
+(every mesh of a part with pieces in one, a piece's card and its part's, one found by its number, hidden and shown from the list), every cross-section
+(and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, Version · what's new, About and Report a bug or inaccuracy (from the panel, a part's card and the essay), winding with the key (the sustaining spring's close-up and load path,
 shown while winding and gone after), the keyboard, and a link through the URL hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
 two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
@@ -47,8 +48,32 @@ async def model(b,errs,steps):
     # the parts list: search (a part number, a figure, nothing), sizes in inches on a card and back
     await pg.evaluate("document.querySelector('#partsDet').open=true")
     for q in['42087','fig 90','zzz','']:await pg.evaluate("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",q);steps.append(f'parts search {q!r}')
+    # the parts' pieces (PIECES, app.js): every mesh of a part with pieces is one of them, carrying a line its piece lists, and every piece has meshes; a piece's card links up to its part,
+    # whose card lists its pieces; a piece found by its number shows under its part; a piece unticked hides it alone, and ticked again shows it
+    for b in await pg.evaluate("""(()=>{const P=window.__parts,bad=[],n={};let root=window.__mv;while(root.parent)root=root.parent;
+      root.traverse(o=>{const u=o.userData,p=u.part;if(!o.isMesh||!p||!P[p]||!P[p].pcs)return;if(u.pk===p){bad.push(p+': a mesh in no piece ('+u.hn+')');return;}n[u.pk]=(n[u.pk]||0)+1;
+        let h=null;for(let q=o;q;q=q.parent){if(q.userData.hn){h=q.userData.hn;break;}if(q.userData.partName)break;}const c=P[p].pcs.find(x=>p+'.'+x.k===u.pk);
+        if(!c)bad.push(u.pk+': no such piece');else if(h&&!c.h.split(' ').includes(h))bad.push(u.pk+': a mesh carrying '+h+', which it does not list');});
+      for(const[p,q]of Object.entries(P))for(const c of q.pcs||[])if(!n[p+'.'+c.k])bad.push(p+'.'+c.k+': no mesh');return bad;})()"""):errs.append('pieces: '+b)
+    await pg.evaluate("location.hash='#part=bal.staff'");await pg.wait_for_timeout(400);steps.append('a piece by its link')
+    if await pg.evaluate("document.querySelector('#info h3').textContent+'|'+document.querySelector('#info .of').textContent")!='Balance staff|Part of: Balance and hairspring assembly':errs.append('#part=bal.staff did not open the staff with its part')
+    await click('#info .of button','the piece card\'s link to its part')
+    if not (await pg.evaluate("document.querySelector('#info .of').textContent")).startswith('Its pieces: Balance wheel'):errs.append('the balance card does not list its pieces')
+    await pg.evaluate("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",'42263');steps.append("parts search '42263'")
+    if not await pg.evaluate("[...document.querySelectorAll('#plist .prow.sub')].some(r=>!r.classList.contains('hidden')&&r.offsetParent&&r.querySelector('.pn').textContent==='Impulse roller and jewel')"):errs.append('searching 42263 does not show the impulse roller')
+    await pg.evaluate("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",'')
+    vis="k=>{const v=[];let r=window.__mv;while(r.parent)r=r.parent;r.traverse(o=>{if(o.isMesh&&o.userData.pk===k)v.push(o.visible);});return v;}"
+    tick="t=>[...document.querySelectorAll('#plist .prow.sub')].find(r=>r.querySelector('.pn').textContent===t).firstChild.click()"
+    await pg.evaluate(tick,'Balance staff');await pg.wait_for_timeout(200);steps.append('the staff unticked')
+    if any(await pg.evaluate(vis,'bal.staff')) or not any(await pg.evaluate(vis,'bal.wheel')):errs.append('unticking the staff did not hide it alone')
+    if not await pg.evaluate("[...document.querySelectorAll('#plist .prow')].find(r=>r.querySelector('.pn').textContent==='Balance and hairspring assembly').firstChild.indeterminate"):errs.append('the balance\'s box is not half ticked with its staff hidden')
+    await pg.evaluate(tick,'Balance staff');await pg.wait_for_timeout(200);steps.append('the staff ticked')
+    if not all(await pg.evaluate(vis,'bal.staff')):errs.append('ticking the staff did not show it again')
     await click('#units button[data-v="in"]','sizes in inches');await pg.evaluate("location.hash='#part=pillar'");await pg.wait_for_timeout(400)
     if '3.448 in' not in await pg.evaluate("document.querySelector('#info .spec').textContent"):errs.append('the pillar plate card is not in inches')
+    await click('#info [data-report]','report from the part card');w=await pg.evaluate("[document.querySelector('#rpWhere').value,document.querySelector('#info h3').textContent]")
+    if w[0]!=w[1]:errs.append(f'the part card’s report is about "{w[0]}", not "{w[1]}"')
+    await pg.evaluate("document.querySelector('#report').close()")
     await click('#units button[data-v="mm"]','sizes in mm')
     for sel in['#colr','#colrSrc','#ghost','#edges','#shadows','#merge','#lbls','#rock','#latch','#spin','#snd']:await click(sel,f'{sel} on');await click(sel,f'{sel} off')
     # the tinted and ink drawings (makeInk, core.js): every view, with see-through plates, colour by part, a section and moving parts only
@@ -157,6 +182,12 @@ async def model(b,errs,steps):
     if not await pg.evaluate("document.querySelector('#changesDet summary [data-ver]')&&document.querySelector('#changesDet').open"):errs.append("Version · what's new is missing")
     await pg.evaluate("document.querySelector('#changesDet').open=false")
     await click('#aboutBtn','About');await pg.evaluate("document.querySelector('#about').close()");steps.append('About closed')
+    # Report a bug or inaccuracy: the email it writes, read from its links (never followed: a mailto: would leave the page), and Copy
+    await click('#reportBtn','Report a bug or inaccuracy');await click('#rpKind button[data-v="inacc"]','report: inaccurate');await pg.fill('#rpWhat','smoke test');await click('#rpCopy','report: copy')
+    rp=await pg.evaluate("""(()=>{const l=REPORT.links(),t=decodeURIComponent(l.mailto);return{open:document.querySelector('#report').open,source:!document.querySelector('#rpSrcF').classList.contains('hidden'),
+      mailto:l.mailto.startsWith('mailto:orelmag@gmail.com?subject='),gmail:l.gmail.startsWith('https://mail.google.com/mail/?'),text:t.includes('smoke test'),version:t.includes('Version: '+document.querySelector('[data-ver]').textContent),gl:t.includes('Graphics: WebGL'),short:l.mailto.length<=1900};})()""")
+    if not all(rp.values()):errs.append(f'the report: {rp}')
+    await pg.evaluate("document.querySelector('#report').close()");steps.append('report closed')
     await pg.focus('#stage canvas')
     for k in['ArrowLeft','ArrowUp','+','-','0','1','Space']:await pg.keyboard.press(k);await pg.wait_for_timeout(150)
     await pg.keyboard.press('Space');steps.append('keyboard')
@@ -187,6 +218,10 @@ async def essay(b,errs,steps):
     glc=await pg.evaluate("window.__glc.size")
     if glc>2:errs.append(f'{glc} WebGL contexts (the model and one for the essay expected)')
     if await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&s._fig.fail).map(s=>s.id).join()"):errs.append('essay figures failed: '+await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&s._fig.fail).map(s=>s.id).join()"))
+    await pg.evaluate("document.querySelector('#essay .e-report button').click()");steps.append("the essay's report");await pg.wait_for_timeout(300)
+    w=await pg.evaluate("document.querySelector('#report').open&&document.querySelector('#rpWhere').value")
+    if not(w and w.startswith('The essay')):errs.append(f"the essay's report: {w!r}")
+    await pg.evaluate("document.querySelector('#report').close()")
     # a link into the model: the walkthrough's step 3, then Back to the essay where it was
     await pg.evaluate("document.querySelector('#essay a[href=\"#tour=3\"]').scrollIntoView({block:'center'})");await pg.wait_for_timeout(400)
     y=await pg.evaluate("document.querySelector('#essay').scrollTop");await pg.wait_for_timeout(500)
