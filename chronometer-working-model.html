@@ -3125,21 +3125,23 @@ function buildMovement(M){
   const SPSI=Math.atan2(-SPD2[1],SPD2[0])-BETA,HS_RC=5.1,HS_N=12,CKS=HS_RC/5.5,HS_B=0.23,HS_T=0.221,HS_RI=3.2,CKC=(HS_RI-HS_T/2)/3.72,HS_LEAD=1.25*CKC,HS_Y=BAL_Y-1.5,SB_T=0.85,CLD=0.6,HS_H=HS_Y-(CK_T+2.6+SB_T+CLD/2),SPS=SPHb;   /* SPS: the stud screw. HS_Y, HS_H: the collet's tongue (the spring's lower end) 1.1 below the rim's top edge, as low as the hub allows (the collet
      0.07 over the hub's boss and the cap's screws; 0.8 lower until 4 October 2026, level with the rim's top), and the spring up to the stud's clamp, whose height the cock fixes (below) */
   R.staff=hn(new THREE.Group(),'42186');bl.add(R.staff);
-  { /* the staff's ends, traced on a staff out of its balance, its lower end side-on (KLUwI2UUCMQ 7:08; the impulse roller's 0.249 in, Op. 83, 495 px: 78.3 px/mm): the silhouette's width
-       across the axis every 8 px from the pivot's end (u, mm) at half the background's brightness (the polished pivot shows two dark edges round a bright line; their outer edges taken).
-       The pivot 0.36 mm (+/- 0.03) for 0.65 mm, then a concave cone to a shoulder 2.07 mm across at 3.63 mm and a seat 1.68 mm across for the unlocking roller (which the frame puts
-       4.7 mm from the end, the model 5.08: the seat drawn to the roller). The upper end isn't seen: drawn as the lower (an estimate) as far as the body's r 0.45 (not measured).
-       Each pivot in its olive-hole jewel and 0.025 short of its endstone: endshake 0.05 mm (0.001-0.003 in, Op. 74); the cones 0.08 off the jewels. Pivots r 0.2 until 4 October 2026 */
-    const PV=0.18,SPV=[[.66,.39],[.77,.396],[.87,.402],[.97,.415],[1.07,.453],[1.17,.485],[1.28,.511],[1.38,.562],[1.48,.594],[1.58,.645],[1.69,.696],[1.79,.747],[1.89,.779],[1.99,.856],[2.09,.926],[2.2,.99],
-      [2.3,1.047],[2.4,1.13],[2.5,1.22],[2.61,1.296],[2.71,1.367],[2.81,1.456],[2.91,1.552],[3.01,1.66],[3.12,1.737],[3.22,1.839],[3.32,1.928],[3.42,1.96],[3.52,2.024],[3.63,2.075],[3.73,2.043],[3.83,1.986],
-      [3.93,1.909],[4.04,1.871],[4.14,1.833],[4.24,1.794],[4.34,1.762],[4.44,1.724],[4.55,1.686],[4.65,1.679]],yT=CK_T+0.025,yB=LB_T+2.575,uC=yB-(EY+1.2+0.5);   /* uC: the unlocking roller's face toward the pivot */
-    const up=SPV.filter(([,d])=>d<0.9).map(([u,d])=>[d/2,yT+u]),lo=SPV.map(([u,d])=>[d/2,yB-u]).reverse();
-    mesh(R.staff,new THREE.LatheGeometry([[0,yT],[PV,yT],[PV,yT+0.65],...up,[0.45,up[up.length-1][1]+0.03],[0.45,yB-uC],[1.679/2,yB-uC],...lo,[PV,yB-0.65],[PV,yB],[0,yB]].map(([r,y])=>new THREE.Vector2(r,y)),24),M.steel); }
+  { /* the balance staff, traced whole on a bare Model 21 staff photographed on its own (watchdoc.com's "Hamilton Model 21 WW2 Ship Chronometer Balance Staff", 748 px: References/README.md,
+       web photographs): its width along the axis by brightness edges, scaled by its length between the pivots' tips, 697 px for this model's 25.75 (27.1 px/mm; ±3 %). From the lower
+       (dial-side) tip: a cone of about 2.2 mm to 1.37 mm across; 1.37 to a collar 2.62 across and about 1.3 long, the impulse roller's seat (drawn at the roller's measured height, EY);
+       1.84 under the hub's sleeve and the hub; 1.53 (the hairspring's collet) to 1.22 near the cock, then the upper cone. The step from 1.84 to 1.53 is drawn at the hub boss's top
+       (the photograph puts it 0.7 nearer the roller, inside its scale's error). The pivots r 0.18 for 0.65 mm: KLUwI2UUCMQ 7:08 (two dark edges round a bright core, 0.36 ±0.03 mm
+       across); that frame's 2.07 mm shoulder and 1.68 seat by the lower end belong to the unlocking roller's boss, not the staff, which the bare staff shows 1.37 there. The upper
+       pivot taken as the lower. Each pivot in its olive-hole jewel and 0.025 short of its endstone: endshake 0.05 mm (0.001-0.003 in, Op. 74). Until 5 October 2026 the body was
+       r 0.45 throughout (estimated) */
+    const PV=0.18,yT=CK_T+0.025,yB=LB_T+2.575,LS=yB-yT,u=y=>yB-y,uR0=u(EY-0.07+0.65),uR1=u(EY-0.07-0.65),uH=u(BAL_Y-0.25);   /* uH: the hub boss's cock-side end (its AY-0.35 in the balance's frame) */
+    const prof=[[0,0],[PV,0],[PV,0.65],[0.195,0.65],[0.685,2.2],[0.685,uR0],[1.31,uR0],[1.31,uR1],[0.92,uR1],[0.92,uH],[0.765,uH],[0.765,22.1],[0.61,22.1],[0.61,23.4],[0.195,LS-0.65],[PV,LS-0.65],[PV,LS],[0,LS]];
+    R.STAFF={r0:0.685,rC:1.31,rH:0.92,rS:0.765};   /* the bores round it: the unlocking roller's, the impulse roller's, the hub's and its sleeve's, the collet's */
+    mesh(R.staff,new THREE.LatheGeometry(prof.map(([r,uu])=>new THREE.Vector2(r,yB-uu)).reverse(),24),M.steel); }
   /* impulse roller (O.D. 0.249 in, as thick as the escape wheel, post 30) with its crescent: the large portion behind the impulse jewel, where each tooth
      drops in and meets the jewel, and the small portion ahead of it, which the teeth never enter (Ops. 76, 83). Shape angle = minus the unit-frame angle */
   const rR=E.rRoll*ES,rollG=()=>{const ir=new THREE.Shape(),n0=-E.aI,n1=n0+0.6;ir.absarc(0,0,rR,n1,n0-0.2+TAU,false);ir.absarc(0,0,rR-0.9,n0-0.2,n0,false);   /* the notch the impulse jewel is set in, down to its inner end (rR - 0.9) */ir.absarc(0,0,rR*0.55,n0,n1,false);
     for(let k=1;k<=3;k++){const a=n0+k*Math.PI/2,h=new THREE.Path();h.absarc(0.62*rR*Math.cos(a),0.62*rR*Math.sin(a),0.5,0,TAU,true);ir.holes.push(h);}   /* its three holes (Figs. 14, 61, 90), a quarter turn apart from the jewel */
-    const hb=new THREE.Path();hb.absarc(0,0,0.45,0,TAU,true);ir.holes.push(hb);
+    const hb=new THREE.Path();hb.absarc(0,0,R.STAFF.rC,0,TAU,true);ir.holes.push(hb);   /* bored to the staff's collar, its seat */
     const irg=extrude(ir,{depth:1.3,bevelEnabled:false,curveSegments:32});irg.rotateX(-Math.PI/2);irg.translate(0,-0.65,0);return irg;};
   const roll=hn(mesh(R.staff,rollG(),M.steel,0,EY-0.07,0),'42263');
   /* the jewels as placed for ESC (again by escSet): the impulse jewel, the wheel centred on it, showing above and below (Op. 82); the discharge jewel on its roller */
@@ -3159,7 +3161,7 @@ function buildMovement(M){
       for(;a<c-h;a+=TAU/N)pt(ro*Math.cos(a),ro*Math.sin(a));pt(ro*Math.cos(c-h),ro*Math.sin(c-h));
       pt(ro2*ux-w/2*nx,ro2*uy-w/2*ny);pt(rin*ux-w/2*nx,rin*uy-w/2*ny);pt(rin*ux+w/2*nx,rin*uy+w/2*ny);pt(ro2*ux+w/2*nx,ro2*uy+w/2*ny);a=c+h;}
     for(;a<TAU-1e-9;a+=TAU/N)pt(ro*Math.cos(a),ro*Math.sin(a));sh.closePath();
-    const hb=new THREE.Path();hb.absarc(0,0,0.45,0,TAU,true);sh.holes.push(hb);
+    const hb=new THREE.Path();hb.absarc(0,0,R.STAFF.r0,0,TAU,true);sh.holes.push(hb);   /* bored to the staff there */
     const g=extrude(sh,{depth:1.0,bevelEnabled:false,curveSegments:32});g.rotateX(-Math.PI/2);g.translate(0,-0.5,0);return g;};
   const collar=hn(mesh(R.staff,collarG(),M.steel,0,EY+1.2,0),'42252');const pD=hn(palSet(mesh(R.staff,new THREE.BufferGeometry(),M.ruby,0,EY+1.2,0),...palD()),'287');
   /* hairspring collet (Sec. II; Figs. 5, 6, 49, the only source: no photograph or video shows one), measured on Fig. 6's drawings, the collet alone and in the spring's
@@ -3172,7 +3174,7 @@ function buildMovement(M){
      held against the end face by the clamp, a block slotted for the tongue and closed over the spring, drawn tight by the wedge pin, which bears on the notch's outer wall
      (Op. 4 ff.). Turned to the stud's direction (SPSI); the tongue's mid-height is the spring's end, HS_Y; drawn as one solid */
   const cg=hn(new THREE.Group(),'42190');cg.rotation.y=SPSI;R.collet=cg;R.staff.add(cg);
-  { const k=CKC,CZ=-1.35*k,CU=3.72*k,CG=-2.49*k,CP=0.54*k,CT=0.5*k,CW=1.08*k,CHB=1.6*k,HO=1.17*k,HI=0.47,AC=[1.21*k,-0.42*k],AR=5.33*k,LC=[1.79*k,-2.19*k],LR=1.6*k,NX=[1.87*k,2.78*k],CH=[-2.18*k,2.22*k,0.3*k],GA=164*D2R,   /* HI: the staff's */
+  { const k=CKC,CZ=-1.35*k,CU=3.72*k,CG=-2.49*k,CP=0.54*k,CT=0.5*k,CW=1.08*k,CHB=1.6*k,HO=1.17*k,HI=R.STAFF.rS+0.02,AC=[1.21*k,-0.42*k],AR=5.33*k,LC=[1.79*k,-2.19*k],LR=1.6*k,NX=[1.87*k,2.78*k],CH=[-2.18*k,2.22*k,0.3*k],GA=164*D2R,   /* HI: the staff's */
       y0=HS_Y-CT/2-CW,arc=(c,r,a0,a1,n)=>[...Array(n+1)].map((_,i)=>{const a=(a0+(a1-a0)*i/n)*D2R;return[c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)];}),
       LA=arc(LC,LR,97.4,148.4,16),E=LA[0],C=[CU,0.08*k],D=[CU,-0.32*k],zl=x=>E[1]+(x-E[0])*(D[1]-E[1])/(CU-E[0]),ledge=[C,D,...LA],   /* the ledge: from the end face straight to E, tangent there to the round part (7.2 and 7.4 deg), which meets the front edge */
       B=[AC[0]+AR*Math.cos(136.7*D2R),AC[1]+AR*Math.sin(136.7*D2R)],out=[...arc(AC,AR,190.05,136.7,28),...ledge],g=[Math.cos(GA),Math.sin(GA)],gn=[-g[1],g[0]],
@@ -3207,8 +3209,8 @@ function buildMovement(M){
      in a step at the rim's lower edge; 0.65 inside it, estimated, until 4 October 2026. The hub, its cap and screws go with it */
   const AY=RY+RH/2-1.1,AW=1.9,HD=[[1.7,0],[-1.7,0]],xa=Math.sqrt(2.2**2-(AW/2)**2),a0=Math.atan2(AW/2,xa),arc=(s,e)=>[...Array(25)].map((_,i)=>[2.2*Math.cos(s+(e-s)*i/24),2.2*Math.sin(s+(e-s)*i/24)]);   /* the bar across, joined to the 2.2 circle round the hub on both sides (subtractCircle keeps one run: it drew half the arm) */
   mesh(R.balU,polyGeo([[BR-0.5,-AW/2],[BR-0.5,AW/2],...arc(a0,Math.PI-a0),[-(BR-0.5),AW/2],[-(BR-0.5),-AW/2],...arc(Math.PI+a0,TAU-a0)],1.1,[[0,0,1.2],...HD.map(q=>hC(...q,0.4))]),M.invar,0,AY,0);
-  hn(mesh(R.balU,discGeo(2.2,0.6,[[0,0,0.45],...HD.map(q=>hT(...q,0.4))]),M.steel,0,AY+1.1,0),'42186',{sub:1});hn(mesh(R.balU,ringGeo(1.1,0.45,2.05),M.steel,0,AY+0.675,0),'42186',{sub:1});   /* the hub's flange and boss, bored for the staff (as the flange is) */
-  { const y0=AY+1.7,y1=EY-0.07-0.65-BY;hn(mesh(R.balU,ringGeo(1.62,0.45,y1-y0),M.brass,0,(y0+y1)/2,0),'42186',{sub:1}); }   /* the hub's brass sleeve on the staff, from its flange up to the impulse roller's face: KLUwI2UUCMQ 34:12 (the balance lying, rollers up, 4K), 518 px across against the roller's 1,012 (its 0.249 in), 3.24 mm; it runs the whole way from the flange to the roller there, as the model's gap does (4.8 mm). The bare staff was drawn there until 5 October 2026 */
+  hn(mesh(R.balU,discGeo(2.2,0.6,[[0,0,R.STAFF.rH],...HD.map(q=>hT(...q,0.4))]),M.steel,0,AY+1.1,0),'42186',{sub:1});hn(mesh(R.balU,ringGeo(1.1,R.STAFF.rH,2.05),M.steel,0,AY+0.675,0),'42186',{sub:1});   /* the hub's flange and boss, bored for the staff (as the flange is) */
+  { const y0=AY+1.7,y1=EY-0.07-0.65-BY;hn(mesh(R.balU,ringGeo(1.62,R.STAFF.rH,y1-y0),M.brass,0,(y0+y1)/2,0),'42186',{sub:1}); }   /* the hub's brass sleeve on the staff, from its flange up to the impulse roller's face: KLUwI2UUCMQ 34:12 (the balance lying, rollers up, 4K), 518 px across against the roller's 1,012 (its 0.249 in), 3.24 mm; it runs the whole way from the flange to the roller there, as the model's gap does (4.8 mm). The bare staff was drawn there until 5 October 2026 */
   hn(mesh(R.balU,polyGeo([...Array(64)].map((_,i)=>[2.2*Math.cos(i/64*TAU),2.2*Math.sin(i/64*TAU)]),0.35,[[0,0,1.15],...HD.map(q=>hC(...q,0.4))]),M.steel,0,AY-0.35,0),'42248');
   for(const q of HD)hn(screw(R.balU,...q,AY-0.35,0.4,0.25,0.35+1.1+0.5),'42249').userData.lift=0;   /* they stay in: the hub's flange under them is on the staff, which goes with the balance */
   /* the rim's tapped holes, "uniformly spaced ... around the entire circumference" (Sec. II): 24 places 15 deg apart, numbered 1-13 round each half from an arm's end, as the
