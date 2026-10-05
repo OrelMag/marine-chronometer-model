@@ -254,7 +254,7 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
 
 ## The model in Blender
 
-**Blender (.glb)** in Making it writes the whole instrument as a glTF 2.0 file (`model21.glb`, about 85 MB, a minute or so to make), and **Blender rig
+**Blender (.glb)** in Making it writes the whole instrument as a glTF 2.0 file (`model21.glb`, about 95 MB, a minute or so to make), and **Blender rig
 (.py)** the script that drives it. In Blender (5.x): File, Import, glTF 2.0; then open the rig in the Text Editor and press Run Script. Set the scene's
 frame rate before importing: the clips come in at it.
 
@@ -262,7 +262,8 @@ frame rate before importing: the clips come in at it.
   each part (named as its card, with its key: "Escape wheel (escW)"), each arbor and pivot group (by its name in the code: `esc`, `staff`, `fz`), each
   piece (by its line of the parts list: "42173 Screw - Balance, 200-205 mg, …", else its part and material). Custom properties keep the part key, the
   parts-list line (`hn`) and, for the rig, the rest pose and the drives. The materials as the page has them (colour, metal, roughness, the damascening's
-  stripes and normal map through `KHR_texture_transform`, the wood, the engravings and the dial as textures), but the jewels and the crystal as what they
+  stripes and normal map through `KHR_texture_transform`, the wood, the engravings and the dial as textures, drawn again for the file finer than the page's: twice as fine, the engravings' lettering four
+  times (each texture's `redraw` in `core.js`, the same drawing at a size)), but the jewels and the crystal as what they
   are, not the page's stand-ins: transmitting, with the published refractive indices of ruby (1.77) and glass (1.52). Only the variants chosen on the page
   (dial, balance, stop, plate finish, the timing weights' places and the screws) are in it. The page's own lighting is not: give Blender a world (an HDRI).
 - **The clips**, each an action: Running (a minute, the second hand once round), Beat (slow motion, one beat 20 times slower), Run down (56¼ hours in 30 s;
@@ -284,6 +285,10 @@ frame rate before importing: the clips come in at it.
   Action constraint reads an object's rotation channels only so. No Python runs in the drivers. `PLAY = 'Winding'` (any clip) at its top plays that clip
   on every part instead. Against the clips (`tools/blender_check.py`), the rig puts every part where Running has it within 0.02 mm and 0.1°, but the chain's
   links (0.05 mm: Run down's moments are 1.9 hours of wind apart), and explode, laid out, lift and lids at 1 where their clips end.
+- **Checked against the page** (`tools/blender_check.py --looks`): close-ups of the engraving, the serial, the damascening, the dial and the box, rendered by
+  the page and by Blender (Cycles) from the same cameras, agree in place, orientation and scale: the engraving reads as on the page, the stripes run the same
+  way at the same pitch and the bridges' undersides are plain, the dial is the page's. Blender's plates look more mirror-like: the same nickel (metal,
+  roughness 0.2), but path-traced, reflecting the parts round them; give it an HDRI, or raise the plates' roughness, for the page's satin look.
 - **Not carried across**: the escapement's settings as a bench to adjust (the export is at the page's), the jolt, the oiling and drawing modes, sections.
 
 ## The almanac

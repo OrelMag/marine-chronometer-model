@@ -1073,39 +1073,40 @@ function plainFaces(m,uv0,top=true,root=null){let g=m.geometry;if(!g.attributes.
     if(top&&n.y<-0.9)continue;for(let k=0;k<3;k++)uv.setXY(i+k,uv0[0],uv0[1]);}
   uv.needsUpdate=true;}
 /* Damascening (Hamilton Model 21 plates): broad parallel ridges ~2.5 mm apart with a gentle wave, as on the photographed movement.
-   Returns {map, normal}; one 1024 px tile = 40 mm = 16 ridges. */
-function stripeTex(){
-  const N=1024,P=64,cm=document.createElement('canvas'),cn=document.createElement('canvas');cm.width=cm.height=cn.width=cn.height=N;
+   Returns {map, normal}; one 1024 px tile = 40 mm = 16 ridges. K: drawn K times as fine (the same tile; the export to Blender, blender.js), its textures' redraw(K) the same at K */
+function stripeTex(K=1){
+  const N=1024*K,P=64*K,cm=document.createElement('canvas'),cn=document.createElement('canvas');cm.width=cm.height=cn.width=cn.height=N;
   const xm=cm.getContext('2d'),xn=cn.getContext('2d'),im=xm.createImageData(N,N),inn=xn.createImageData(N,N);
   /* height h(x,y) = sin(pi*t)^1.6 of the ridge phase t, the ridges waving with x. Each h is computed once, in three rolling rows (rows y-1, y, y+1 over
      x = -1..N), not five times over for the slopes, and the wave per column once: the same pixels as the direct formula, about a fifth of the time */
-  const A=new Float64Array(N+2),B=new Float64Array(N+2);for(let x=-1;x<=N;x++){A[x+1]=7*Math.sin(TAU*x/N);B[x+1]=2.5*Math.sin(TAU*3*x/N+1.3);}
+  const A=new Float64Array(N+2),B=new Float64Array(N+2);for(let x=-1;x<=N;x++){A[x+1]=7*K*Math.sin(TAU*x/N);B[x+1]=2.5*K*Math.sin(TAU*3*x/N+1.3);}
   const row=(y,o)=>{for(let i=0;i<N+2;i++){const w=y+A[i]+B[i],t=(w%P+P)%P/P;o[i]=Math.pow(Math.sin(Math.PI*t),1.6);}return o;};
   let r0=row(-1,new Float64Array(N+2)),r1=row(0,new Float64Array(N+2)),r2=new Float64Array(N+2);const dm=im.data,dn=inn.data;
   for(let y=0;y<N;y++){row(y+1,r2);
     for(let x=0;x<N;x++){const k=4*(y*N+x),v=r1[x+1],dy=(r2[x+1]-r0[x+1])*0.5,dx=(r1[x+2]-r1[x])*0.5;
       const g=Math.round(255*(0.7+0.3*v));dm[k]=dm[k+1]=dm[k+2]=g;dm[k+3]=255;
-      let nx=-dx*5,ny=dy*5,nz=1;const l=Math.sqrt(nx*nx+ny*ny+1);nx/=l;ny/=l;nz/=l;
+      let nx=-dx*5*K,ny=dy*5*K,nz=1;const l=Math.sqrt(nx*nx+ny*ny+1);nx/=l;ny/=l;nz/=l;
       dn[k]=Math.round((nx*0.5+0.5)*255);dn[k+1]=Math.round((ny*0.5+0.5)*255);dn[k+2]=Math.round((nz*0.5+0.5)*255);dn[k+3]=255;}
     const t=r0;r0=r1;r1=r2;r2=t;}
   xm.putImageData(im,0,0);xn.putImageData(inn,0,0);
   const mk=(cv,srgb)=>{const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/40,1/40);t.rotation=STRIPE_ANGLE;t.anisotropy=8;if(srgb)t.encoding=THREE.sRGBEncoding;return t;};
-  return{map:mk(cm,true),normal:mk(cn,false)};
+  const out={map:mk(cm,true),normal:mk(cn,false)};let re=null;const at=k=>re&&re.k===k?re:(re={k,...stripeTex(k)});
+  out.map.redraw=k=>at(k).map.image;out.normal.redraw=k=>at(k).normal.image;return out;
 }
 const STRIPE_ANGLE=(-82.3-19.42)*Math.PI/180;   /* ridge direction, in plate (shape) coordinates, from the photograph, turned with the photographed group (movement.js, PHOTO_TURN 19.42 deg) */
-function woodTex(){
-  const c=document.createElement('canvas');c.width=512;c.height=1024;const x=c.getContext('2d');
+function woodTex(K=1){   /* K: drawn K times as fine (redraw, for the export to Blender) */
+  const c=document.createElement('canvas');c.width=512*K;c.height=1024*K;const x=c.getContext('2d');x.scale(K,K);
   x.fillStyle='#5a2413';x.fillRect(0,0,512,1024);
   let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
   for(let i=0;i<260;i++){const xx=rnd()*512,w=0.6+rnd()*2.6,a=0.05+rnd()*0.14,ph=rnd()*6,amp=2+rnd()*9;
     x.strokeStyle=rnd()<0.5?`rgba(20,6,2,${a})`:`rgba(150,70,35,${a*0.8})`;x.lineWidth=w;x.beginPath();
     for(let y=0;y<=1024;y+=16){const px=xx+Math.sin(y/140+ph)*amp+Math.sin(y/37+ph*2)*amp*0.25;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();}
-  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.redraw=k=>woodTex(k).image;return t;
 }
 /* Engraving textures are mapped to the movement: canvas centre = movement centre, 96 mm across,
    canvas up = 6 o'clock (+z), so text reads upright when the movement is viewed from the bridge side. */
-function engraveCanvas(draw){const S=1024,c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d');const k=S/96;
-  x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t;}
+function engraveCanvas(draw,K=1){const S=1024,c=document.createElement('canvas');c.width=c.height=S*K;const x=c.getContext('2d');x.scale(K,K);const k=S/96;   /* K: drawn K times as fine (redraw, for the export to Blender) */
+  x.fillStyle='rgba(38,40,42,0.78)';x.textAlign='center';x.textBaseline='middle';draw(x,S,k);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=q=>engraveCanvas(draw,q).image;return t;}
 function engraveArc(x,S,k,txt,r,psiDeg,spreadDeg,size){x.font=`600 ${size*k}px Spectral, Georgia, serif`;const ch=[...txt],n=ch.length,phi0=-psiDeg*D2R,sp=spreadDeg*D2R;
   ch.forEach((q,i)=>{const phi=phi0+((n-1)/2-i)*sp;x.save();x.translate(S/2+r*k*Math.cos(phi),S/2+r*k*Math.sin(phi));x.rotate(phi-Math.PI/2);x.fillText(q,0,0);x.restore();});}
 /* letters of t spread (or squeezed) to width w, centred on the origin; gx narrows each letter first, as on the engraved plates */
@@ -1559,8 +1560,8 @@ function handGeo(len,w,tail,kind,at,o){const g=extrude(handShape(len,w,tail,kind
    'swiss' and 'soviet': the Ulysse Nardin deck chronometers (Roman hours, UP/HAUT–DOWN/BAS) and the First Moscow Watch Factory's copies of them
    (Arabic hours, ЗАВОД–СПУСК, СДЕЛАНО В СССР): white face, railroad track, a large seconds sub-dial with lines at 5, 15 … 55 s; makers' names
    and numbers left off, wind scales on the movement's sweep (UDA) */
-function dialCanvas(kind){
-  const S=1536,c=S/2,cv=document.createElement('canvas');cv.width=cv.height=S;const x=cv.getContext('2d'),nard=kind==='swiss'||kind==='soviet';
+function dialCanvas(kind,K=1){   /* K: drawn K times as fine (the export to Blender) */
+  const S=1536,c=S/2,cv=document.createElement('canvas');cv.width=cv.height=S*K;const x=cv.getContext('2d');x.scale(K,K);const nard=kind==='swiss'||kind==='soviet';
   const g=x.createRadialGradient(c*0.7,c*0.6,S*0.05,c,c,c);g.addColorStop(0,nard?'#f8f7f2':'#f4f4f1');g.addColorStop(1,nard?'#e2e0d8':'#d9dad6');
   x.fillStyle=g;x.beginPath();x.arc(c,c,c,0,TAU);x.fill();
   if(!nard){x.globalAlpha=0.06;x.strokeStyle='#000';for(let r=6;r<c;r+=5){x.lineWidth=1;x.beginPath();x.arc(c,c,r,0,TAU);x.stroke();}x.globalAlpha=1;}   /* graining on the silvered dials; the Nardin-pattern faces are white */
@@ -2913,7 +2914,7 @@ function buildMovement(M){
   /* ---------- dial (on the mounting ring's flange), hands, motion work ---------- */
   const dl=part('dial',32);
   hn(dl,'42030');mesh(dl,discGeo(DIAL_R,DIAL_T,[[...L.C,2.5],[...L.F,1.2],[...L.Ud,1.2]]),M.brass2,0,MR_Y,0);
-  const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;
+  const dtex=new THREE.CanvasTexture(dialCanvas());dtex.encoding=THREE.sRGBEncoding;dtex.anisotropy=8;dtex.redraw=k=>dialCanvas(undefined,k);   /* redraw: finer, for the export to Blender */
   /* the face lies 0.02 above the brass disc's top; polygon offset keeps it in front in the depth buffer, else the brass shows through in streaks when zoomed out */
   const dface=mesh(dl,new THREE.RingGeometry(2.5,DIAL_R,128,1).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:dtex,metalness:0.35,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,MR_Y+DIAL_T+0.02,0);dface.userData.noCap=true;dface.userData.surface=true;
   /* four feet down into the ring's flange, each held by a dial screw (35756, Fig. 107) from the flange's train side into its tapped end */
@@ -2932,7 +2933,7 @@ function buildMovement(M){
   for(const[k,m]of[['swiss',M.blued],['soviet',hb]]){dk(mesh(R.hour,handGeo(31*DK,1.4,6,'pear',0,HO),m),k,hcol(m));dk(mesh(R.min,handGeo(46.5*DK,0.9,8,'pear',0,MO),m),k,mcol(m));
     dk(mesh(R.sec,handGeo(19*DK,0.45,-8,'plain'),M.blued,0,0.25,0),k);dk(mesh(R.ud,handGeo((k==='swiss'?11.5:8.5)*DK,0.6,2.5,'plain'),M.blued,0,0.25,0),k);}
   const DTEX={hamilton:dtex};hd.traverse(o=>{if(o.userData.dk&&o.userData.dk!=='hamilton')o.visible=false;});
-  mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;}
+  mv.userData.dial=kind=>{if(!DTEX[kind]){const t=DTEX[kind]=new THREE.CanvasTexture(dialCanvas(kind));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>dialCanvas(kind,k);}
     const m=dface.userData.mat0||dface.material;m.map=DTEX[kind];m.needsUpdate=true;hd.traverse(o=>{if(o.userData.dk)o.visible=o.userData.dk===kind;});};   /* the face's own material (app.js may be showing a see-through or faded copy of it, which follows on the next look()) */
   const mw=part('motion',16);
   /* the cannon pinion, a friction fit on the centre arbor (Op. 58) that slips when the hands are set: its pipe runs up through the hour wheel and dial to the shoulder the minute hand sits on (5.75+DD), and ends in the
@@ -4733,7 +4734,7 @@ const RIG_PY="\"\"\"The Marine Chronometer working model's rig for Blender (5.x)
    the trip spring, the mainspring, the springs of the maintaining work) shape keys while its vertices and triangles stay the same, else a flipbook of its shapes; the
    chain one node a link. One IIFE; the page sees only BLENDER. app.js calls BLENDER.bind() once the model is built */
 const BLENDER=(()=>{
-  let A=null;const FPS=30,TOLP=0.0005,TOLQ=0.00005,TOLS=0.004,FLIPS=48;   /* tolerances: translation (mm), rotation (quaternion), a shape's vertices (mm); FLIPS: the most shapes a flipbook takes in a clip */
+  let A=null;const TEXK=2,ENGK=4,FPS=30,TOLP=0.0005,TOLQ=0.00005,TOLS=0.004,FLIPS=48;   /* tolerances: translation (mm), rotation (quaternion), a shape's vertices (mm); FLIPS: the most shapes a flipbook takes in a clip */
   const sleep=()=>new Promise(r=>setTimeout(r,0)),say=t=>{const r=document.getElementById('mkRead');if(r)r.innerHTML=t;};
   function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
   /* ---------- the copy, set as the page is ---------- */
@@ -4912,14 +4913,16 @@ const BLENDER=(()=>{
   async function writeDoc(C,recs,out,defs,lin,h0,t0,rest){
     const keep=recs.filter(r=>r.ever),idx=new Map(keep.map((r,i)=>[r,i+1])),nodes=[],meshes=[],materials=[],textures=[],MI=new Map(),TI=new Map(),GI=new Map(),used=new Map();
     const uniq=n=>{const c=used.get(n)||0;used.set(n,c+1);return c?`${n} #${c+1}`:n;};
-    const tex=(t,green)=>{const k=t.uuid+(green?'g':'');if(TI.has(k))return TI.get(k);if(!t.image||!t.image.width)return null;textures.push({img:t.image,flip:t.flipY,green,repeat:t.wrapS===THREE.RepeatWrapping});TI.set(k,textures.length-1);return textures.length-1;};
+    /* textures drawn again finer than the page's where they can be (redraw, core.js: a three r128 texture has no userData): TEXK times, the engravings' small lettering ENGK times */
+    const tex=(t,green,fine)=>{const k=t.uuid+(green?'g':'');if(TI.has(k))return TI.get(k);if(!t.image||!t.image.width)return null;const img=t.redraw?t.redraw(fine||TEXK):t.image;
+      textures.push({img,flip:t.flipY,green,repeat:t.wrapS===THREE.RepeatWrapping});TI.set(k,textures.length-1);return textures.length-1;};
     const xfOf=t=>{if(!t)return null;const sx=t.repeat.x,sy=t.repeat.y,c=Math.cos(t.rotation),s=Math.sin(t.rotation),cx=t.center.x,cy=t.center.y;   /* three's uvTransform as KHR_texture_transform (the same for an even repeat) */
       if(sx===1&&sy===1&&!t.rotation&&!t.offset.x&&!t.offset.y)return null;return{o:[-sx*(c*cx+s*cy)+cx+t.offset.x,-sy*(-s*cx+c*cy)+cy+t.offset.y],s:[sx,sy],r:t.rotation};};
     const M=A.M,MN=new Map(Object.entries(M).filter(([,v])=>v&&v.isMaterial).map(([k,v])=>[v,k])),GLASS=new Set([M.glass,M.clear].filter(Boolean));
     /* the materials as they are, the jewels and glass as what they are made of: transmission, with the index of ruby (1.77) and of glass (1.52), in place of the page's stand-ins */
     const matOf=m=>{if(MI.has(m))return MI.get(m);const c=m.color||new THREE.Color(1,1,1),e=m.emissive?m.emissive.clone().multiplyScalar(m.emissiveIntensity??1):null,gl=GLASS.has(m),jw=m===M.ruby;
       const mo=/** @type {any} */({name:MN.get(m)||m.name||'material '+materials.length,color:[c.r,c.g,c.b,m.transparent&&!gl?m.opacity:1],metal:m.metalness??0,rough:m.roughness??1,emissive:jw||!e?null:[e.r,e.g,e.b],double:m.side===THREE.DoubleSide,blend:m.transparent&&!gl});
-      if(m.map){const ti=tex(m.map,false);if(ti!=null){mo.map=ti;mo.xf=xfOf(m.map);}}
+      if(m.map){const ti=tex(m.map,false,m.userData.inkDecal?ENGK:0);if(ti!=null){mo.map=ti;mo.xf=xfOf(m.map);}}
       if(m.normalMap){const ti=tex(m.normalMap,true);if(ti!=null){mo.nmap=ti;mo.nscale=m.normalScale?m.normalScale.x:1;mo.xf=mo.xf||xfOf(m.normalMap);}}
       if(gl){mo.trans=1;mo.ior=m===M.clear?1.77:1.52;mo.rough=Math.min(mo.rough,0.05);mo.metal=0;}if(jw){mo.trans=0.85;mo.ior=1.77;mo.metal=0;}
       materials.push(mo);MI.set(m,materials.length-1);return materials.length-1;};

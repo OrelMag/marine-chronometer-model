@@ -2,6 +2,8 @@
 About 3 minutes (most of it the import). Needs Blender 5.x: MC_BLENDER, else the usual install path; with neither it says so and exits 0.
 
     python blender_check.py [GLB]       # default r_model21.glb in the current directory; renders r_blender_*.png there
+    python blender_check.py [GLB] --looks   # and close-ups of the textures (the damascening, the engravings, the dial, the box) from the page and from
+                                        # Blender (Cycles) by the same cameras: r_tex_NAME_page.png beside r_tex_NAME_blender.png (about 5 minutes more)
 
 Checks: every clip came in as an action; the parts are objects in their hierarchy, the jewels and crystal transmitting; the rig made its controls and drivers;
 at a series of moments the rig (the timeline at t) puts every part the Running clip moves (the balance, detent, escape wheel, train, hands, fusee) where that clip
@@ -12,13 +14,39 @@ try:
 except ImportError:
     bpy=None
 HERE=pathlib.Path(__file__).resolve().parent;RIG=HERE.parent/'blender'/'rig.py'
+# the close-ups (--looks): name, the page's view (its lift, lids), and __look's yaw, pitch, distance (mm) and target in the movement's frame (mm)
+LOOKS=[('engraving','movement',0.35,1.05,70,0,-21,-26),('serial','movement',0.6,1.0,38,10,-21,33),('damascening','movement',-0.9,0.45,55,-12,-21,8),
+       ('dial','dial',0.3,1.25,110,0,8,0),('box','box',0.72,0.4,640,0,-26,0)]
+W,H,FOV=1200,800,32
+def page_looks():
+    """The page's renders of LOOKS, the panels hidden, the model frozen as views.py freezes it"""
+    import asyncio
+    from playwright.async_api import async_playwright
+    page=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+    css=("header,.panel,.hud,.tools,.hint,.labels,.loading{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
+         ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
+    async def go():
+        async with async_playwright() as p:
+            b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+            w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
+            pg=await b.new_page(viewport={"width":W,"height":H},device_scale_factor=1,color_scheme='light')
+            await pg.goto(page);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
+            await pg.add_style_tag(content=css);await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
+            for n,v,*l in LOOKS:
+                await pg.evaluate(f"document.querySelector('#views button[data-v=\"{v}\"]').click()");await pg.wait_for_timeout(2500)
+                await pg.evaluate(f"window.__cam(0,0.5,300,{FOV})");await pg.evaluate(f"window.__look({','.join(map(str,l))})");await pg.wait_for_timeout(1500)
+                await pg.screenshot(path=f'r_tex_{n}_page.png',timeout=180000)
+            await b.close()
+    asyncio.run(go())
 if bpy is None:   # outside Blender: find it and run this file in it
     exe=os.environ.get('MC_BLENDER')
     if not exe:
         for p in sorted(pathlib.Path(r'C:\Program Files\Blender Foundation').glob('Blender */blender.exe'),reverse=True):exe=str(p);break
     if not exe or not pathlib.Path(exe).exists():print('Blender not found (set MC_BLENDER): skipped');sys.exit(0)
-    glb=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else 'r_model21.glb').resolve()
-    r=subprocess.run([exe,'-b','--factory-startup','--python',str(pathlib.Path(__file__).resolve()),'--',str(glb),str(RIG),str(pathlib.Path.cwd())],capture_output=True,text=True,encoding='utf-8',errors='replace')
+    pos=[x for x in sys.argv[1:] if not x.startswith('--')];looks='--looks' in sys.argv
+    glb=pathlib.Path(pos[0] if pos else 'r_model21.glb').resolve()
+    if looks:page_looks()
+    r=subprocess.run([exe,'-b','--factory-startup','--python',str(pathlib.Path(__file__).resolve()),'--',str(glb),str(RIG),str(pathlib.Path.cwd())]+(['looks'] if looks else []),capture_output=True,text=True,encoding='utf-8',errors='replace')
     out=[l for l in r.stdout.splitlines() if l.startswith(('MC ','FAIL','Traceback','  File','Error'))or 'Error' in l]
     print('\n'.join(out));ok=any(l.startswith('MC passed') for l in out)
     if not ok:print(r.stderr[-3000:])
@@ -111,4 +139,20 @@ try:
         sc.render.filepath=str(OUT/('r_blender_%s.png'%tag));bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath)
         ctl[k]=0.0;ctl['lift']=0.0
 except Exception as e:fail('render: %s'%e)
+# the close-ups (--looks), by the page's cameras: three's world in mm, y up, is Blender's in m, z up (x, -z, y), the root's 0.001 and the importer's turn
+if len(argv)>3 and argv[3]=='looks':
+    try:
+        sc.render.engine='CYCLES';sc.cycles.samples=48;sc.cycles.use_denoising=True;sc.render.resolution_x=W;sc.render.resolution_y=H
+        cam.data.sensor_fit='VERTICAL';cam.data.angle_y=math.radians(FOV);cam.data.clip_start=0.0005
+        wd=bpy.data.worlds.new('mc');sc.world=wd;wd.use_nodes=True;bg=wd.node_tree.nodes['Background'];bg.inputs[0].default_value=(0.62,0.64,0.68,1);bg.inputs[1].default_value=1.0
+        sun=bpy.data.objects.new('sun',bpy.data.lights.new('sun','SUN'));sc.collection.objects.link(sun);sun.data.energy=3.0
+        kd=Vector((160,-240,420)).normalized();sun.rotation_euler=(-kd).to_track_quat('-Z','Y').to_euler()   # the page's key light, from (160, 420, 240)
+        mv=next(o for o in bpy.data.objects if o.get('role')=='movement')
+        for n,v,yaw,pitch,dist,x,y,z in LOOKS:
+            ctl['lift']=1.0 if v=='movement' else 0.0;ctl['lids']=1.0 if v=='box' else 0.0;   # as the page's views have them
+            ctl.update_tag();sc.frame_set(0);bpy.context.view_layer.update()
+            tg=mv.matrix_world@Vector((x,-z,y));cp=math.cos(pitch);off=Vector((dist*cp*math.sin(yaw),-dist*cp*math.cos(yaw),dist*math.sin(pitch)))/1000
+            cam.location=tg+off;cam.rotation_euler=(tg-cam.location).to_track_quat('-Z','Y').to_euler()
+            sc.render.filepath=str(OUT/('r_tex_%s_blender.png'%n));bpy.ops.render.render(write_still=True);print('MC rendered',sc.render.filepath)
+    except Exception as e:fail('looks: %s'%e)
 print('MC passed' if not bad else 'MC %d failures'%len(bad))

@@ -6,7 +6,7 @@
    the trip spring, the mainspring, the springs of the maintaining work) shape keys while its vertices and triangles stay the same, else a flipbook of its shapes; the
    chain one node a link. One IIFE; the page sees only BLENDER. app.js calls BLENDER.bind() once the model is built */
 const BLENDER=(()=>{
-  let A=null;const FPS=30,TOLP=0.0005,TOLQ=0.00005,TOLS=0.004,FLIPS=48;   /* tolerances: translation (mm), rotation (quaternion), a shape's vertices (mm); FLIPS: the most shapes a flipbook takes in a clip */
+  let A=null;const TEXK=2,ENGK=4,FPS=30,TOLP=0.0005,TOLQ=0.00005,TOLS=0.004,FLIPS=48;   /* tolerances: translation (mm), rotation (quaternion), a shape's vertices (mm); FLIPS: the most shapes a flipbook takes in a clip */
   const sleep=()=>new Promise(r=>setTimeout(r,0)),say=t=>{const r=document.getElementById('mkRead');if(r)r.innerHTML=t;};
   function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
   /* ---------- the copy, set as the page is ---------- */
@@ -185,14 +185,16 @@ const BLENDER=(()=>{
   async function writeDoc(C,recs,out,defs,lin,h0,t0,rest){
     const keep=recs.filter(r=>r.ever),idx=new Map(keep.map((r,i)=>[r,i+1])),nodes=[],meshes=[],materials=[],textures=[],MI=new Map(),TI=new Map(),GI=new Map(),used=new Map();
     const uniq=n=>{const c=used.get(n)||0;used.set(n,c+1);return c?`${n} #${c+1}`:n;};
-    const tex=(t,green)=>{const k=t.uuid+(green?'g':'');if(TI.has(k))return TI.get(k);if(!t.image||!t.image.width)return null;textures.push({img:t.image,flip:t.flipY,green,repeat:t.wrapS===THREE.RepeatWrapping});TI.set(k,textures.length-1);return textures.length-1;};
+    /* textures drawn again finer than the page's where they can be (redraw, core.js: a three r128 texture has no userData): TEXK times, the engravings' small lettering ENGK times */
+    const tex=(t,green,fine)=>{const k=t.uuid+(green?'g':'');if(TI.has(k))return TI.get(k);if(!t.image||!t.image.width)return null;const img=t.redraw?t.redraw(fine||TEXK):t.image;
+      textures.push({img,flip:t.flipY,green,repeat:t.wrapS===THREE.RepeatWrapping});TI.set(k,textures.length-1);return textures.length-1;};
     const xfOf=t=>{if(!t)return null;const sx=t.repeat.x,sy=t.repeat.y,c=Math.cos(t.rotation),s=Math.sin(t.rotation),cx=t.center.x,cy=t.center.y;   /* three's uvTransform as KHR_texture_transform (the same for an even repeat) */
       if(sx===1&&sy===1&&!t.rotation&&!t.offset.x&&!t.offset.y)return null;return{o:[-sx*(c*cx+s*cy)+cx+t.offset.x,-sy*(-s*cx+c*cy)+cy+t.offset.y],s:[sx,sy],r:t.rotation};};
     const M=A.M,MN=new Map(Object.entries(M).filter(([,v])=>v&&v.isMaterial).map(([k,v])=>[v,k])),GLASS=new Set([M.glass,M.clear].filter(Boolean));
     /* the materials as they are, the jewels and glass as what they are made of: transmission, with the index of ruby (1.77) and of glass (1.52), in place of the page's stand-ins */
     const matOf=m=>{if(MI.has(m))return MI.get(m);const c=m.color||new THREE.Color(1,1,1),e=m.emissive?m.emissive.clone().multiplyScalar(m.emissiveIntensity??1):null,gl=GLASS.has(m),jw=m===M.ruby;
       const mo=/** @type {any} */({name:MN.get(m)||m.name||'material '+materials.length,color:[c.r,c.g,c.b,m.transparent&&!gl?m.opacity:1],metal:m.metalness??0,rough:m.roughness??1,emissive:jw||!e?null:[e.r,e.g,e.b],double:m.side===THREE.DoubleSide,blend:m.transparent&&!gl});
-      if(m.map){const ti=tex(m.map,false);if(ti!=null){mo.map=ti;mo.xf=xfOf(m.map);}}
+      if(m.map){const ti=tex(m.map,false,m.userData.inkDecal?ENGK:0);if(ti!=null){mo.map=ti;mo.xf=xfOf(m.map);}}
       if(m.normalMap){const ti=tex(m.normalMap,true);if(ti!=null){mo.nmap=ti;mo.nscale=m.normalScale?m.normalScale.x:1;mo.xf=mo.xf||xfOf(m.normalMap);}}
       if(gl){mo.trans=1;mo.ior=m===M.clear?1.77:1.52;mo.rough=Math.min(mo.rough,0.05);mo.metal=0;}if(jw){mo.trans=0.85;mo.ior=1.77;mo.metal=0;}
       materials.push(mo);MI.set(m,materials.length-1);return materials.length-1;};
