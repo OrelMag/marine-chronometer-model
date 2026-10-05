@@ -87,11 +87,16 @@ function escapeWheel(parent,M,rt,y,E){
     gs.push([extrude(new THREE.Shape(q.map(([r,b])=>new THREE.Vector2(r*rt*Math.cos(b),-r*rt*Math.sin(b)))),{depth:1.3,bevelEnabled:false}),new THREE.Matrix4()]);}
   const tg=mergeGeo(gs);tg.rotateX(-Math.PI/2);tg.translate(0,-0.65,0);
   const teeth=new THREE.Mesh(tg,M.gilt);teeth.position.y=y-0.1;parent.add(teeth);
-  const web=new THREE.Shape(),R1=R-0.5,R0=1.5,sw=0.5;web.absarc(0,0,R,0,TAU,false);
+  /* the rim, spokes and hub as KLUwI2UUCMQ 43:21.1 shows the wheel face up in the staking tool (4K, along the tips' ellipse's long axis, 378 px for the tips' radius): the rim's
+     inner edge 0.77 of the tips (290 px), the four spokes 0.105 wide (40 px, on the front spoke, whose width lies along the long axis), the hub r 0.31 (the collet's foot, 116 px)
+     with the collet's pipe r 0.20 (74 px) standing about 1.9 toward the pinion (its height off the ellipse's 25 deg tilt: rough). Until 5 October 2026 the rim 0.5 wide,
+     the spokes 0.5 and the hub r 1.5, estimated after Fig. 14 */
+  const web=new THREE.Shape(),R1=0.77*rt,R0=0.31*rt,sw=0.105*rt;web.absarc(0,0,R,0,TAU,false);
   for(let j=0;j<4;j++){const a0=j/4*TAU+0.3,a1=(j+1)/4*TAU+0.3,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0),h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);web.holes.push(h);}
-  const hb=new THREE.Path();hb.absarc(0,0,0.67,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's body (r 0.67, movement.js); the brass hub it sits on (KLUwI2UUCMQ 43:21.1) is not drawn */
+  const hb=new THREE.Path();hb.absarc(0,0,0.67,0,TAU,true);web.holes.push(hb);   /* bored to the escape arbor's body (r 0.67, movement.js) */
   const wg=extrude(web,{depth:0.5,bevelEnabled:false,curveSegments:128});wg.rotateX(-Math.PI/2);wg.translate(0,-0.25,0);
   const wm=new THREE.Mesh(wg,M.gilt);wm.position.y=y+0.3;parent.add(wm);
+  const cl=new THREE.Mesh(ringGeo(0.20*rt,0.67,1.9),M.brass);cl.position.y=y+0.55+0.95;parent.add(cl);   /* the collet's pipe, on the web's face toward the pinion */
   return teeth;
 }
 const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74};

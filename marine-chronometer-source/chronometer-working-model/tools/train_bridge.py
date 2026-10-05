@@ -53,7 +53,7 @@ def circle(P):   # least squares (Kasa, then Gauss-Newton)
 # lobe, from 23:30 at the wrong focal length, was r 4.7); and the escape upper bridge's seats (KLUwI2UUCMQ 10:50, 23:30: recessed and frosted, each with its screw and pin hole):
 # the bar's ends (5.2 wide, round, 8.4 out along the bar) grown 0.25 (clear of the bridge face's bevel), from the passage out. All in the bridge's frame: the model's escape arbor and the bar's direction (ebu in
 # movement.js) taken back through PR. movement.js sinks them SEAT_D deep: the opening cut through is TB_KEY (the seats with it), and TB_SEAT their floors
-ESC_B=np.array([12.849,12.881]);ESC_R=6.9;EBU_B=np.array([-0.0444,0.9990]);SEAT_W=2.6+0.25;SEAT_T=(5.5,8.4)
+ESC_B=np.array([12.849,12.881]);ESC_R=6.9;EBU_B=np.array([-0.0444,0.9990]);SEAT_W=2.8+0.25;SEAT_T=(5.5,8.4)
 def key_outline(px=0.02,seats=True):   # the union of the lobes' circles and the hull of their centres (and the seats), its boundary traced on a 0.02 mm raster (opencv) and simplified to 0.02 mm
     import cv2
     C=[(k,*circle(P)[:2]) for k,P in KEY23.items()];cs=A([c for _,c,_ in C]);m=cs.mean(0);hull=cs[np.argsort(np.arctan2(*(cs-m).T[::-1]))]
