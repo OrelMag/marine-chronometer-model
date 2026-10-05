@@ -49,7 +49,7 @@ function buildBox(M){
      dial lies in it, as it does when the movement is put upside down on the case to be started (Sec. III: "the dial carefully located in the shoulder recess around the top edge
      of the case"), and the bezel screws on outside the rim (TR). The rim's 105 across and the gimbal ring's 66-68 radius are from the top-view photographs (estimated); the
      rest estimated. YT the rim's top, YTB the thread's foot; FD the floor's inside depth, FR the floor's edge (the bowl's inside rounds into it with radius SH-FR) */
-  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,TR=DB+4.5,YT=MR_Y+DIAL_T+0.6,YTB=5.2,FD=64,FR=38;
+  const DB=MR_RO+0.05,SH=DB-0.9,CR=DB+1.5,TR=DB+4.5,YT=MR_Y+DIAL_T+0.6,YTB=5.2,FD=42.8,FR=38;   /* FD: the case 49 mm from the bezel's edge (YTB) to its outside bottom on Renaissance Antiques' photograph (LPEC109-4, the band's 712 px as CR's 99 mm: the base to the bezel 352 px), the floor 1 thick (BT); the movement's lowest part, the balance cock, at -37.96, so the floor clears it by 4.8. 64, set for clearance, until 5 October 2026 */
   /* NUT_R: the four pivots' knurled lock nuts (42121), r 8.5: KLUwI2UUCMQ 1:15, against the bezel in the frame (12.5 px/mm): one at least 16 mm across where it shows, deeper in the box;
      Fig. 106 draws all four as large discs and Sec. III calls the case rear one "the large, knurled lock nut". Until 4 October 2026 r 4.2 and 5. Their thickness (2.5) estimated */
   const RY=-20,RI=CR+16.5,RO=RI+2,NUT_R=8.5;
@@ -119,7 +119,13 @@ function buildBox(M){
      the shield plate fills (0.728 and 0.676 of the outer edge, read across the centre; the case's outside taken as CR). Until 4 October 2026 the bottom curved into the wall on r 11.5 */
   { const YS=MR_FL,RF=1.6,FRo=CR-RF,arc=(r,cy,a0,a1,c0=FR)=>{const o=[];for(let i=0;i<=12;i++){const a=a0+(a1-a0)*i/12;o.push(V2(c0+r*Math.sin(a),cy-r*Math.cos(a)));}return o;};
     /* the wall's section below the recess, one closed outline: inside face up from the floor's edge to the shoulder, out to the outside face and down it to the bottom's outside face */
-    const pr=[...arc(SH-FR,-FD+SH-FR,0,Math.PI/2),V2(SH,YS),V2(CR,YS),...arc(RF,-FD-BT+RF,Math.PI/2,0,FRo),V2(FR,-FD-BT),V2(FR,-FD)];
+    /* its outside as a real case's (Renaissance Antiques' photograph of a Model 21's case side-on, LPEC109-4, 900 px, its silhouette traced column by column; KLUwI2UUCMQ 8:33, the case
+       upside down): under the bezel a band, then a step in to a straight wall 0.962 of the band across (685 px against 712), then a chamfer over the bottom 11 mm (80 px) to a base 0.82
+       of the band across (584 px). The band is kept at CR, which holds the movement's ring, so the scale rests on it (the photograph's bezel then reads 108 against the top-view
+       photograph's 105: ±3 %); from the bezel's edge (YTB) down: a cove 5.6 mm (40 px), the band 7.9 (57 px), the wall 24 (173 px), the chamfer 11.4 (82 px). The cove, flaring from the band to about
+       r 54 at the bezel, is drawn as the band (the bezel's own r 52.5 limits it; not modelled). Until 5 October 2026 the wall was a plain cylinder r CR to a 1.6 mm round at the bottom */
+    const CW=CR*0.962,CI=CW-1.2,YB=YTB-13.5,YC=-FD-BT+11.4,RB=CR*0.82;
+    const pr=[V2(FR,-FD),V2(RB-1.2,-FD),V2(CI,YC+0.6),V2(CI,YB-0.6),V2(SH,YB+0.6),V2(SH,YS),V2(CR,YS),V2(CR,YB),V2(CW,YB),V2(CW,YC),V2(RB,-FD-BT),V2(FR,-FD-BT),V2(FR,-FD)];
     hn(mesh(bowl,new THREE.LatheGeometry(pr.reverse(),120),M.brass),'42101');   /* one front-facing solid: its inside face faces in (a double-sided sheet had its shadow normalBias pushed the wrong way: speckled floor) */
     bot=hn(mesh(bowl,botG([]),M.brass,0,-FD-BT,0),'42101',{sub:1});hn(mesh(bowl,ringGeo(36,33.5,0.5+0.8),M.brass,0,-FD-BT-(0.5+0.8)/2,0),'42101',{sub:1});   /* the raised ring round the shield plate, its face flush with the plate's (the height estimated) */   /* 60: the rim's 120 points, the lathe's own */
     /* the recess's wall, slotted at 12 o'clock down to the shoulder for the movement's alignment pin (Sec. III), so the pin goes in as the movement is lowered: below the
