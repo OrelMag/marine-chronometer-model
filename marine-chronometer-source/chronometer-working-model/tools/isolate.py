@@ -20,6 +20,9 @@ CSS=("header,.panel,.hud,.tools,.hint,.labels,.loading,.tabs,.modeTabs{display:n
 FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
   const s=ESC.state(0.4),u=(n,w)=>mv.userData._u({E:1000+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n,winding:w,springOn:true,msOn:false});u(0,true);u(2.5,false);})()"""
 KEEP="""(K=>{const mv=window.__mv;for(const c of mv.children)if(c.userData.partName)c.visible=K.includes(c.userData.partName);
+  mv.traverse(o=>{if(o.parent!==mv&&o!==mv&&o.userData.partName)o.visible=K.includes(o.userData.partName);});   /* a part inside another's group (the mainspring in the fusee's): */
+  const up=new Set();mv.traverse(o=>{if(o.userData.partName&&K.includes(o.userData.partName))for(let p=o.parent;p&&p!==mv;p=p.parent){p.visible=true;up.add(p);}});   /* shown, and the groups it is in, */
+  for(const p of up)if(p.userData.partName&&!K.includes(p.userData.partName))for(const c of p.children)if(!up.has(c)&&!K.includes(c.userData.partName))c.visible=false;   /* those only for it (the spring's pin in the barrel's) */
   let sc=mv;while(sc.parent)sc=sc.parent;const ins=o=>{for(let p=o;p;p=p.parent)if(p===mv)return true;return false;};sc.traverse(o=>{if(o.isMesh&&!ins(o))o.visible=false;});
   const b=new THREE.Box3();for(const c of mv.children)if(c.visible&&c.userData.partName)b.expandByObject(c);const m=new THREE.Matrix4().copy(mv.matrixWorld).invert();b.applyMatrix4(m);
   const c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3());return [c.x,c.y,c.z,Math.max(s.x,s.y,s.z)];})(%s)"""

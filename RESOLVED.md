@@ -647,6 +647,18 @@ Contents:
   pitch 1.7 mm (side photograph and 23:45; was 1.0), the winding pawls 2.0 wide
   (19:12; were 0.9). The sustaining ratchet's 120 teeth and the barrel
   arbor's square checked, unchanged. Keep them measured (SHAPE-PASS.md, 6). `9cd255c`
+- **Mainspring didn't coil and uncoil as a real one does.** It was drawn
+  as two packs, on the arbor and on the wall, joined by one free turn of a stock shape: fully wound, ten
+  coils still lay on the wall and four on the arbor, and the coils never spread across the barrel. Its
+  shape is now solved (`tools/mainspring.py`, `js/mainspring.js`): the strip's least bending energy from
+  its natural curve, measured on the free spring (KLUwI2UUCMQ 32:18), its coils pressing on each other,
+  its inner end on the hook and its outer along the brace; the page blends the solved states a quarter
+  turn apart, each piece of steel between its places in them. Its turns now count from the solved
+  slack (12.5), not from the two packs' fewest, and it is set up where its solved pull falls over the
+  wind as the fusee's measured profile evens out (1.62 turns; the 0.37 guessed before let it fall to
+  about 0.2 of full wind against the fusee's 0.473). Keep: the spring's shape comes from the solve, not a
+  drawn law; after changing its length, thickness, core, barrel or free curve, rerun the tool; states
+  half a turn apart blend 3 mm out and let the coils touch. `04ff466`
 
 ## Plates, bridges, screws and arbors
 
