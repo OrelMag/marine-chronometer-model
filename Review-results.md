@@ -2170,7 +2170,7 @@ Open:
    (estimated). The side-on frames (6:50.0) can't tell the arm from the rim's
    far edge; sheet 6:45-6:55 for a frame that shows the arm's end edge-on
    before changing it.
-9. *Fixed (4 October 2026): side-on at 6:50.0 (enlarged 4×, edges by brightness) both pins stand 26-29 px over the bar's top face, 0.6-0.7 mm at 43 px/mm (the pins 297 px apart), and the outer one 40 px (0.9 mm) under it too; drawn so (0.8 up and flush below before). Open: the bar there reads 31-46 px thick, 0.7-1.1 mm, against the 0.5 drawn; thickening it moves the clamp and the helical spring's height (`HS_H`), so it waits on the clamp's height measured with it.* **The stud's steady pins.** On 6:47.5 and 6:47.75 the two pins' holes are
+9. *Fixed (4 October 2026): side-on at 6:50.0 (enlarged 4×, edges by brightness) both pins stand 26-29 px over the bar's top face, 0.6-0.7 mm at 43 px/mm (the pins 297 px apart), and the outer one 40 px (0.9 mm) under it too; drawn so (0.8 up and flush below before). The bar there reads 31-46 px thick, 0.7-1.1 mm, against the 0.5 drawn: *drawn 0.85 (5 October 2026), with the clamp's drop measured on the same frame (27 px, 0.6) and the spring's height from the two, 6.4 (its pitch 0.533, inside the coils' 0.52-0.56).* **The stud's steady pins.** On 6:47.5 and 6:47.75 the two pins' holes are
    empty or flush on the bar's top face; the model has the pins standing 0.8
    up into the cock (the side view at 6:50.0 was read as a pin standing at
    each end). Read the side view again, and 41:58 (the cock's holes), before

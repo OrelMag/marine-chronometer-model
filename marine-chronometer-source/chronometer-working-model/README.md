@@ -183,7 +183,7 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
 ## The hairspring, designed
 
 `HSPR` (`shared/hairspring.js`, checked by `tools/hairspring.js` and `invariants.py`) designs the spring a maker would wind, and the model draws it
-(`R.hsDesign`, `R.spPath`, `ribbonGeo` in `core.js`), from what the model measures: the coil (r 5.1, 12 turns, 6.7 tall), the stud's clamp (its step
+(`R.hsDesign`, `R.spPath`, `ribbonGeo` in `core.js`), from what the model measures: the coil (r 5.1, 12 turns, 6.4 tall: the stud bar and its clamp measured at 6:50.0), the stud's clamp (its step
 3.03 from the staff, the stud's bar 54.8° off the clamp's radius) and the collet's end (3.2).
 
 - **The stiffness** the balance needs: k = I (2π/T)², with Table II's I (578.5 g·mm²) and T 0.5 s: 91.4 µN·m a radian.

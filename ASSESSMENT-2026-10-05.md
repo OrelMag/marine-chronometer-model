@@ -186,3 +186,9 @@ patent drawing. Those changes are small and sure.
   (0.91-0.97, the top of the range assumed) and the balance's damping from its parts (Q 202-390). The staff's pivot end is flat on the 7:08 trace,
   and that decides it: a domed end would leave the balance under-damped, swinging far past 1½ turns. With the mainspring's own losses (5-15 %) the
   budget needs 169-243, and the model's `TF` 34 s (Q 214) lies inside both ranges, now supported from the parts as well as from the budget.
+- **The balance staff (next step 3), in part.** Between the hub's flange and the impulse roller the real staff is sheathed in the hub's brass
+  sleeve, 3.24 mm across (34:12, against the impulse roller), now drawn. The disc under it reads 5.2-7 mm on two frames against the 4.4 mm
+  flange drawn: open until it is identified. The bare body still shows only past the rollers, where it was measured (7:08).
+- **The stud bar (next step 4), done; the fusee top's recess, still open.** The bar 0.85 thick and its clamp's 0.6 drop, both on 6:50.0, put
+  the hairspring's height at 6.4 (pitch 0.533, inside the coils' 0.52-0.56). The recess's depth can't be read side-on (20:00: it lies inside
+  the top), so it waits on an oblique view of its floor.
