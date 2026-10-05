@@ -115,7 +115,7 @@ const MOD=(()=>{const d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
    at the plate's own scale on the side photograph the wheel is 36.0-36.9 (IDEAS.md 1.12), and the model's, from the centre distance, is (fu+2) m. So every size read off
    those frames scales by FK (0.882): the cone, the wheel's recess and sustaining spring, the two ratchets, the pawls, the end plate, the top's screws and collars. The chain,
    the barrel, the arbor and its square keep theirs. WRT, SRT: the fusee's winding ratchet and the sustaining ratchet (tools/maintaining.py reads them) */
-const FK=(TRAIN.fu+2)*MOD.fusee/40.87,WRT={z:36,m:0.47*40/36*FK},SRT={z:120,m:0.27*FK};   /* the winding ratchet's 36 teeth: C Spinner 18:20 (spectral count, 35 and 37 close; References/VIDEOS.md), on the pitch radius it had with 40 */
+const FK=(TRAIN.fu+2)*MOD.fusee/40.87,WRT={z:36,m:6.9/18.95},SRT={z:120,m:0.27*FK};   /* the winding ratchet's 36 teeth: C Spinner 18:20 (spectral count, 35 and 37 close; References/VIDEOS.md), on the pitch radius it had with 40 */
 const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);return[dx/l,dz/l];})(),BETA=Math.atan2(-EU[1],EU[0]);
 /* Spring detent escapement: solved by makeEsc in ../shared/escapement.js (shared with the essay and tools/escapement.js), with the centre distance in L (9.40 mm).
    Unit frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius ES */
@@ -681,7 +681,7 @@ function buildMovement(M){
   mesh(R.ssg,cylY(0.4,1.5,10),M.steel,SSH[0][0],-8.1,SSH[0][1]);
   /* sustaining ratchet wheel (42009): free on the fusee arbor, open in the middle round the fusee's winding ratchet and its screws (Fig. 28) */
   const srP=part('sratchet',-22);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
-  const WPR=12.1*FK,WPF=[2.44,2.62],WPS=[0,1].map(k=>{const a=k*Math.PI+0.4;return WPF.map(t=>[WPR*Math.cos(a+t),WPR*Math.sin(a+t)]);});   /* the winding pawl springs' screws, at their feet about 150 deg round from their pawls */
+  const WPR=8.9,WPF=[2.44,2.62],WPS=[0,1].map(k=>{const a=k*Math.PI+0.4;return WPF.map(t=>[WPR*Math.cos(a+t),WPR*Math.sin(a+t)]);});   /* the winding pawl springs' screws, at their feet about 150 deg round from their pawls */
   hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(SRT.z,SRT.m,0.7,{ratchet:true,flip:true,bore:5*FK,holes:WPS.flat().map(q=>hC(...q,0.4))}),M.gilt,0,-9.45,0),'42009',{sub:1,gear:{z:SRT.z,m:SRT.m,ratchet:1}});
   mesh(R.sr,ringGeo(5*FK,2.75*FK,0.3),M.gilt,0,-9.25,0);   /* its web, free on the fusee arbor's collar (0.05 side shake; Fig. 69, arrow 5), under the heads of the winding ratchet's screws, which turn round inside the wheel's open centre as the key winds */   /* steep faces lead against the running direction, so the sustaining pawl holds it */
   R.ssPin=mesh(R.sr,cylY(0.4,1.45,10),M.steel,14.6*FK*Math.cos(SSP),-8.375,14.6*FK*Math.sin(SSP));   /* the pin from the sustaining spring's working end, in the ratchet (the manual pins the spring to both wheels) */
@@ -693,9 +693,12 @@ function buildMovement(M){
      wpsGeo: the spring for pawl angle th, its arc fixed and its last stretch bent so the end stays on the arm; update() rebuilds it as the pawl rides the teeth in winding */
   const wpsGeo=(pw,th)=>{const u=pw.userData,bk=pawlBack(u.pts,0.96,u.q,th,[0,0]),E=[bk.p[0]+bk.n[0]*0.095,bk.p[1]+bk.n[1]*0.095];
     return stripGeo([...u.arc,E],0.3,0.3);};   /* from its foot (screwed down, drawn once) round to its end on the arm */
-  /* WPW: the pawls' width, 2.0 (C Spinner 19:12, against the fusee wheel's tips, 36.1 mm across, 1139 px: 1.9 by the eye, 2.2 at the square end, the eye r about 1.35; +-0.2), 0.9 until
+  /* the winding ratchet's tips r 6.9 and the pawls' pivots r 8.78, ends r 6.8, width 1.6, their springs r 8.9 (5 October 2026: the toothed outline at 19:12 is the sustaining ratchet,
+     116-120 teeth, not the fusee wheel; rescaled on its tips, r 14.53, everything read there was 1.24 times too large, and 23:30 through the bridge homography gives the ratchet's tips
+     r 6.9 independently). The ratchet keeps its 36 teeth (38 +/- 2 at 23:30). Until then tips 8.75, pivots 10.85, ends 7.9, width 2.0, springs 10.68.
+     Earlier, WPW: the pawls' width, 2.0 (C Spinner 19:12, against the fusee wheel's tips, 36.1 mm across, 1139 px: 1.9 by the eye, 2.2 at the square end, the eye r about 1.35; +-0.2), 0.9 until
      4 October 2026; their pivots about 10.4 mm out and their ends 8.8 there, as the model has them within 0.5-0.9 */
-  const WPW=2.0;R.wp=[];for(let k=0;k<2;k++){const a=k*Math.PI+0.4,P=[12.3*FK*Math.cos(a),12.3*FK*Math.sin(a)],T=[8.95*FK*Math.cos(a+0.3),8.95*FK*Math.sin(a+0.3)],ln=Math.hypot(T[0]-P[0],T[1]-P[1])+0.2,pw=mesh(R.sr,pawlGeo(ln,WPW,0.5),M.steel,P[0],-10.05,P[1]);
+  const WPW=1.6;R.wp=[];for(let k=0;k<2;k++){const a=k*Math.PI+0.4,P=[8.78*Math.cos(a),8.78*Math.sin(a)],T=[6.8*Math.cos(a+0.3),6.8*Math.sin(a+0.3)],ln=Math.hypot(T[0]-P[0],T[1]-P[1])+0.2,pw=mesh(R.sr,pawlGeo(ln,WPW,0.5),M.steel,P[0],-10.05,P[1]);
     hn(cylBetween(R.sr,0.22,-9.45,-10.3,M.steel,...P,12),'42009',{sub:1});   /* the stud it turns on, pressed into the wheel, riveted flush with the pawl's top, which the fusee's underside turns over (C Spinner 19:12: each pawl on a stud; two of the holes under the wheel, 19:05) */
     pw.userData.q=P;pw.userData.th0=Math.atan2(T[1]-P[1],-(T[0]-P[0]));pw.userData.pts=pawlPts(ln,WPW);R.wp.push(pw);
     const pol=(r,t)=>[r*Math.cos(a+t),r*Math.sin(a+t)],r0=pol(WPR,WPF[1]),r1=pol(WPR,WPF[0]);pw.userData.arc=[];for(let t=WPF[0]-0.03;t>0.45;t-=0.06)pw.userData.arc.push(pol(WPR,t));
