@@ -1785,7 +1785,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   pivot end, and the travel toward the dial read 0.093 mm to the hairspring
   instead of 0.025 to the endstone. Now it always takes the 3,000 vertices
   furthest along each way, and a sample of the rest. Keep: a clearance along an
-  axis is measured from the extreme vertices along it. (Fixed, not yet committed)
+  axis is measured from the extreme vertices along it. `746f25a`
 
 ## Essay
 
