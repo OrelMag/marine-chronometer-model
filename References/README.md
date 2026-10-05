@@ -16,6 +16,9 @@ the layout was measured") says what was taken from each file.
 | `photo-dial-soviet-kirov.png` | Dial of a First Moscow Watch Factory (МЧЗ имени Кирова) deck chronometer, serial 14024 | The Variants panel's Soviet dial (`dialCanvas('soviet')`) and its hands; the maker's name and number are left off | a pasted image (`1.png`) |
 | `photo-dial-side-lower-train-bridge.png` | Dial side of a Model 21 in its mounting ring during reassembly (404 × 321 px; source unknown): the lower train bridge, the motion work and the wind indicator wheel going in | The lower train bridge's shape (a square-ended steel bar, settings inboard, a screw toward each end), the opening in the plate under it, the minute wheel's side, the motion work's shapes, the mounting ring's bore (the plate sunk in it); mapped through the centre, the fusee arbor and the wind indicator wheel | a pasted image (`1.png`) |
 | `drawing-lexicon-plan-and-section.png` | German encyclopedia figure (c. 1900): plan and section of a marine chronometer, with a lettered key | Visual reference for the general arrangement | `L-Cronometer.png` |
+| `photo-plate-cork-as-shown.jpg` | The half-round enamel plate inside the lid of a Navy chronometer box (697 × 666 px; source unknown): "Cork as shown", the balance drawn with a wedge under its rim at each end of the arm, "See Ship's Chronometer Record Book (Form N.B.S. 702) 'Transportation' Paragraph 2 (A)" | Where the transport instructions were: the record book below, and the manual's corking (Sec. X, p. 75; Sec. III, Fig. 10). The same plate is in the lid in *Quartermaster 1 & C*'s Fig. 2 | a pasted image |
+| `bureau-of-ships-manual-ch24-ship-control-equipment-1946.pdf` | *Bureau of Ships Manual*, Chapter 24, "Ship Control Equipment", 1946 edition (printed 1948), 28 page scans (University of Illinois copy, Google-digitized, public domain; HathiTrust `uiug.30112069885678`), grayscale | Art. 24-33 (p. 24-41): "Complete instructions relative to the care and handling of chronometers … are contained in the Ships Chronometer Record Book (Form NavShips 702)", the plate's "N.B.S. 702" under the Bureau's later prefix; Arts. 24-31 to 24-34: issue, exchange at the chronometer pools, overhaul by the Naval Observatory only, submerged timepieces | HathiTrust page images (whole-book download needs a member library's login) |
+| *Quartermaster 1 & C* (not committed: 29 MB; cited) | *Quartermaster 1 & C*, Bureau of Naval Personnel, 1952, 412 page scans (University of Illinois copy, Google-digitized, public domain; HathiTrust `uiug.30112106656264`, also on Google Books, below); kept out of the repository for its size, to fetch from HathiTrust | pp. 16-21, "Care of Chronometers": the record book's instructions summarised (winding to the left, about seven half-turns, the last bringing up gently against the stop; daily at 1130, reported at 1200; the gimbal ring locked before moving; carried by hand from ship to pool; express shipment by BuShips instructions); by 1952 each chronometer's *Record Book* is NavShips 3587, a new one issued with each overhaul. Fig. 2 (p. 16): a Hamilton box with the cork plate in its lid | HathiTrust page images |
 | `screenshot-model-exploded-view.jpg` | Screenshot of this model's exploded view | Record of the model's look | `Web view.jpg` |
 | `patent-US2356911-balance-wheel.pdf` | US 2,356,911, "Balance Wheel", W. O. Bennett Jr., Hamilton, filed 19 Dec. 1941, granted 29 Aug. 1944 (Google Patents) | The balance's construction: stainless rim, Invar crossbar in a step under it, screws in paired holes (below, "Hamilton Watch Company's patents") | `US2356911.pdf` |
 | `patent-US2356911-balance-wheel-sheet1.png` | Its drawing sheet, rendered at 200 dpi | Reference image for `isolate.py --ref` | (rendered) |
@@ -33,6 +36,15 @@ the layout was measured") says what was taken from each file.
 
 Names: `manual-*` are figures from the manual, `photo-*` photographs of real
 movements, `patent-*` Hamilton's patents, `drawing-*` other drawings, `screenshot-*` captures of this model.
+The two Navy books keep their own titles.
+
+The Ships Chronometer Record Book itself (Form N.B.S. 702, later NavShips 702,
+then NavShips 3587) is not online: HathiTrust's full text has no "N.B.S. 702",
+and "NavShips 702" only in the Bureau of Ships Manual above (4 October 2026).
+A new one went out with every overhauled chronometer, so copies turn up in Navy
+chronometer boxes; blank forms may be in the National Archives, Record Group 19
+(Bureau of Ships). Google Books has both Navy books as whole PDFs
+(`books.google.com/books?id=hiE6oREONHEC`, `?id=z8gE8mun6OMC`).
 
 Web photographs consulted (all rights reserved, so cited, not copied here):
 - omegaforums.net, "Incoming Hamilton Model 21 chronometer" (thread 78172): side views of the train between the plates (the third wheel lowest with its pinion above it, the fourth pinion long under its wheel; the train-blocking screw's dog point at the fourth wheel), and the train-blocking screw's head circled on the bridge.
