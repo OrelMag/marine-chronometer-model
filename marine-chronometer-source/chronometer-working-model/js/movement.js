@@ -41,6 +41,7 @@ const PHOTO_K=1.039,PHOTO_TURN=19.42*Math.PI/180,PHOTO_T=[-3.891,0.879],PR_TURN=
 const PT=([x,z])=>[PHOTO_K*(x*Math.cos(PHOTO_TURN)-z*Math.sin(PHOTO_TURN))+PHOTO_T[0],PHOTO_K*(x*Math.sin(PHOTO_TURN)+z*Math.cos(PHOTO_TURN))+PHOTO_T[1]],
   PTi=([x,z])=>{const u=(x-PHOTO_T[0])/PHOTO_K,v=(z-PHOTO_T[1])/PHOTO_K;return[u*Math.cos(PHOTO_TURN)+v*Math.sin(PHOTO_TURN),-u*Math.sin(PHOTO_TURN)+v*Math.cos(PHOTO_TURN)];},
   PTr=p=>{const q=PT(p),r=Math.hypot(...p),rq=Math.hypot(...q);if(r<=30)return q;const w=Math.min(1,Math.max(0,(40.5-r)/10.5)),R=r+(rq-r)*w;return[q[0]*R/rq,q[1]*R/rq];},
+  PTri=q=>{const m=Math.hypot(...q),p=s=>PTi([q[0]*s/m,q[1]*s/m]);let lo=0.7*m,hi=1.3*m;for(let i=0;i<50;i++){const s=(lo+hi)/2;Math.hypot(...PTr(p(s)))<m?lo=s:hi=s;}return p((lo+hi)/2);},   /* PTr back: a point measured in the movement's frame, for an outline laid out in the photographs' */
   PR=([x,z])=>[x*Math.cos(PR_TURN)-z*Math.sin(PR_TURN),x*Math.sin(PR_TURN)+z*Math.cos(PR_TURN)];
 const PP_R=87.57/2,PP_T=3.86,BR_R=40.5;
 /* the mounting ring (42057) under the plate's dial side, and the dial on it, from the side photograph (18.9 px/mm by the plate's width): a band as wide as the plate down to 6.0 mm
@@ -177,6 +178,10 @@ function lobedCircle(c,r,lobes){
 function clipPoly(poly,f){const out=[];
   for(let i=0;i<poly.length;i++){const P0=poly[i],P1=poly[(i+1)%poly.length],f0=f(P0),f1=f(P1);
     if(f0>=0)out.push(P0);if((f0>=0)!==(f1>=0)){const t=f0/(f0-f1);out.push([P0[0]+(P1[0]-P0[0])*t,P0[1]+(P1[1]-P0[1])*t]);}}
+  return out;}
+/* the same, the cut from one crossing to the next run along z = g(x) (clipPoly alone draws a curved cut as its chord) */
+function clipCurve(poly,f,g){const c=clipPoly(poly,f),out=[];
+  for(let i=0;i<c.length;i++){const a=c[i],b=c[(i+1)%c.length];out.push(a);if(Math.abs(f(a))<1e-3&&Math.abs(f(b))<1e-3){const n=Math.ceil(Math.abs(b[0]-a[0])/0.25);for(let k=1;k<n;k++){const x=a[0]+(b[0]-a[0])*k/n;out.push([x,g(x)]);}}}
   return out;}
 /* polygon of a disc clipped by half-planes z*s > a + b*x  (s=+1 keeps above the line, -1 below) */
 function discClip(R,cuts,N=160){
@@ -601,14 +606,27 @@ function buildMovement(M){
   /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24). The cut is the balance's
      clearance circle (r 17.7 about the staff; the screws and weights sweep 17.2) joined with the circle fitted to its edge on the top-view photograph (r 17.6 about
      5.24, 6.33; points within 1.3 mm), which reaches 20.5 mm from the staff toward the barrel: the barrel's cap and the fusee's large end show through it */
-  const cutR=BAL_R+3.2,ckE=x=>2.93+0.06*(x-32.87);   /* a straight cut under the cock's straight edge (COCK_POLY 30-32, below, which bends a little): 0.1 off it at the bend, 0.2 at the ends */
-  /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim (top-view photograph, through the five bridge screws:
-     the cut's tip (-5.45, 21.46) and its end at the rim (-6.21, 34.01), within about 0.6 mm; C Spinner 23:30, the bridge flat, to about 2 mm). It carries the bridge's
-     second screw into the train bridge, and a clearance hole over the train bridge's screw at pillar 0 */
-  const hk=(-6.21+5.45)/(34.01-21.46),hornX=z=>-5.45+(z-21.46)*hk,bis=(f,lo,hi)=>{for(let i=0;i<50;i++){const m=(lo+hi)/2;(f(m)>0)===(f(lo)>0)?lo=m:hi=m;}return(lo+hi)/2;};
-  const zC=(150.45+21.46*hk)/(10+hk),zH=bis(z=>Math.hypot(hornX(z),z)-BR_R,21,BR_R),aH=Math.atan2(zH,hornX(zH)),aR=bis(a=>BR_R*Math.sin(a)-14.5+0.1*BR_R*Math.cos(a),0,Math.PI/2);
-  const BBo=[];for(let k=0,n=Math.ceil((aR+TAU-aH)/(TAU/360));k<=n;k++){const t=aH+(aR+TAU-aH)*k/n;BBo.push([BR_R*Math.cos(t),BR_R*Math.sin(t)]);}BBo.push([145-10*zC,zC]);   /* the rim from the horn's end round to the chord, the chord to its corner with the cut, the cut back to the rim */
-  const BBpoly=clipPoly(subtractCircle(subtractCircle(BBo,PTi(L.B),cutR/PHOTO_K),[5.24,6.33],17.6),p=>ckE(p[0])-p[1]+Math.max(0,15-p[0])*100).map(PTr);   /* laid out in the photographs' frame, then into the movement's (PTr) */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  const cutR=BAL_R+3.2,bis=(f,lo,hi)=>{for(let i=0;i<50;i++){const m=(lo+hi)/2;(f(m)>0)===(f(lo)>0)?lo=m:hi=m;}return(lo+hi)/2;};
+  /* the horn on the cock's side ends in a cut under the cock's straight edge, from the rim to the cut round the balance: the chord is the line fitted to that edge
+     (COCK_POLY 30-32, below: 0.1 off it at its bend, 0.2 at the ends), and the cut is bowed into the bridge off it, 0.055 of the chord at most, 0.45 of the way in from
+     the rim (0.88 mm here): traced on the flat bridge (C Spinner 23:45, the frame mapped onto the bridge's face by a homography on its rim, r 40.5, and the fusee and
+     barrel bushings; the holes beside the horns' ends check to 1.3-1.4 mm), 1.02 mm off its 15.2 mm chord at most, 0.59, 0.83, 0.46 at a quarter, half and three
+     quarters (the bow t(1-t)(0.1805+0.2841t-0.4073t^2) of the chord, t from the rim, to 0.07 mm rms); in place with the cock off (6:47.5) about 0.7 mm on 17, the
+     same way and steepest near the rim, read against the hole beside it for the view's foreshortening (no camera: three fits of 6:29 disagree). A straight cut until 6 October 2026 */
+  const ckL=x=>2.93+0.06*(x-32.87),cB=PTi(L.B),ck0=bis(x=>Math.hypot(x-cB[0],ckL(x)-cB[1])-cutR/PHOTO_K,15,BR_R),ck1=bis(x=>Math.hypot(x,ckL(x))-BR_R,30,BR_R+1),
+    ckE=x=>{const t=Math.min(1,Math.max(0,(ck1-x)/(ck1-ck0)));return ckL(x)-(ck1-ck0)*t*(1-t)*(0.1805+0.2841*t-0.4073*t*t);};
+  /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim, curved, not straight: traced on the flat bridge
+     (23:45, the same homography) from the bite to 1.5 mm short of the rim, FH (movement frame, every 1.69 mm along z, a cubic through the trace to 0.03 mm rms): it
+     bows 0.46 mm off its 12.8 mm chord, most two thirds of the way out, leaving the bite turned about 15 deg further round than where it meets the rim. The top-view
+     photograph, through the five bridge screws, traces the same bow, 0.59 mm on 11.0 to where its rim shows (10 % small there). Placed with its tip where the
+     photograph has it, (-5.45, 21.46) in its frame (the flat frame's is 2.6 mm off, at its holes' check), and run on straight from its last 1.7 mm to the rim, it meets
+     the rim 0.7 mm from where the straight cut from that tip to (-6.21, 34.01) did until 6 October 2026. The horn carries the bridge's second screw into the train
+     bridge, and a clearance hole over the train bridge's screw at pillar 0 */
+  const FH=[[-16.58,20.02],[-17.48,21.71],[-18.30,23.40],[-19.03,25.09],[-19.67,26.78],[-20.21,28.47],[-20.64,30.16],[-20.95,31.84]];
+  const uo=unit(sub(FH[7],FH[6])),pH=PTri(add(FH[7],uo,bis(l=>Math.hypot(...add(FH[7],uo,l))-BR_R,0,20))),aH=Math.atan2(pH[1],pH[0]),aR=bis(a=>BR_R*Math.sin(a)-14.5+0.1*BR_R*Math.cos(a),0,Math.PI/2);
+  const BBo=[];for(let k=0,n=Math.ceil((aR+TAU-aH)/(TAU/360));k<=n;k++){const t=aH+(aR+TAU-aH)*k/n;BBo.push([BR_R*Math.cos(t),BR_R*Math.sin(t)]);}
+  BBo.push(...[add(FH[0],unit(sub(FH[0],FH[1])),4),...FH].map(PTri));   /* the rim from the horn's end round to past the cock's edge, across inside the cut round the balance (cut away below), and the horn's end from 4 mm inside the cut out to the rim */
+  const BBpoly=clipCurve(subtractCircle(subtractCircle(BBo,cB,cutR/PHOTO_K),[5.24,6.33],17.6),p=>ckE(p[0])-p[1]+Math.max(0,15-p[0])*100,ckE).map(PTr);   /* laid out in the photographs' frame, then into the movement's (PTr) */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,1.6,1],[...L.Ba,1.95,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.cover.map(q=>hT(...q,0.9)),hT(...S.click,0.6)];   /* and the winding stop's, added below once its place is known */
   R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,1.6,1.02),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,1.95,1.42),'42164.bu');   /* fusee and barrel upper bushings (42164) */
@@ -1090,7 +1108,7 @@ function buildMovement(M){
   /* balance cock traced on the top-view photograph: a broad crescent whose outer edge follows the plate rim (top-left
      in the photo), a straight edge to the endstone over the staff and a concave arc back to the rim. Outline shifted
      by the cock's parallax so the endstone sits over the balance staff. */
-  const COCK_POLY=[[25.38, 31.05], [26.19, 30.36], [26.99, 29.66], [27.77, 28.93], [28.53, 28.18], [29.26, 27.42], [29.98, 26.63], [30.68, 25.82], [31.35, 25.0], [32.0, 24.16], [32.63, 23.3], [33.24, 22.43], [33.82, 21.54], [34.38, 20.63], [34.92, 19.71], [35.43, 18.78], [35.92, 17.83], [36.38, 16.87], [36.81, 15.9], [37.22, 14.92], [37.6, 13.93], [37.96, 12.92], [38.29, 11.91], [38.59, 10.89], [38.87, 9.86], [39.12, 8.83], [39.34, 7.79], [39.53, 6.74], [39.69, 5.69], [39.83, 4.63], [39.94, 3.58], [32.87, 3.03], [26.51, 2.76], [20.15, 2.49], [13.87, 2.62], [8.04, 2.86], [5.77, 3.99], [5.53, 5.72], [6.88, 7.11], [13.2, 9.07], [17.2, 11.96], [19.38, 16.1], [20.84, 20.82], [21.82, 25.22]].map(PTr);
+  const COCK_RAW=[[25.38, 31.05], [26.19, 30.36], [26.99, 29.66], [27.77, 28.93], [28.53, 28.18], [29.26, 27.42], [29.98, 26.63], [30.68, 25.82], [31.35, 25.0], [32.0, 24.16], [32.63, 23.3], [33.24, 22.43], [33.82, 21.54], [34.38, 20.63], [34.92, 19.71], [35.43, 18.78], [35.92, 17.83], [36.38, 16.87], [36.81, 15.9], [37.22, 14.92], [37.6, 13.93], [37.96, 12.92], [38.29, 11.91], [38.59, 10.89], [38.87, 9.86], [39.12, 8.83], [39.34, 7.79], [39.53, 6.74], [39.69, 5.69], [39.83, 4.63], [39.94, 3.58], [32.87, 3.03], [26.51, 2.76], [20.15, 2.49], [13.87, 2.62], [8.04, 2.86], [5.77, 3.99], [5.53, 5.72], [6.88, 7.11], [13.2, 9.07], [17.2, 11.96], [19.38, 16.1], [20.84, 20.82], [21.82, 25.22]],COCK_POLY=COCK_RAW.map(PTr);
   /* the balance upper setting and jewel are pressed into the cock under the endstone cap (manual Figs. 19, 36, 85), and the cap lies on the cock with metal all
      round it (top-view photograph). The traced edge passes 0.7 mm from the staff and left the cap and its outer screw over nothing: the tracing, taken at plate
      height and shifted for parallax, misses the nose. So the nose, from the straight edge's corner to the concave edge, is the hull round the cap, 0.9 mm clear of it */
@@ -1107,7 +1125,12 @@ function buildMovement(M){
     for(let i=1;i<24;i++){const u=i/24,v=1-u,w=[v*v*v,3*v*v*u,3*v*u*u,u*u*u];q.push([0,1].map(e=>w[0]*P0[e]+w[1]*P1[e]+w[2]*P2[e]+w[3]*P3[e]));}return[...o.slice(0,k),...q];};
   /* the arm's underside sweeps down into the body (41:58, 23:45): a cove from 9 mm round the staff, a quarter circle down to 7.6 mm under the top at the step (1 mm over
      the balance's top, 8.6 down; the hairspring keeps under the flat part, within 7.1 mm), the step's wall then going on down to the train bridge */
-  R.cock=mesh(ck,stepGeo(ckEdge(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.3),add(L.B,EPu,-3.0),5.2)])),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.75,1.0).slice(0,3),3.05,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),[...hC(...SPS,0.6).slice(0,3),0.65,0.45],[...SPHa,0.3],[...SPHc,0.3]]),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath out to the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the arm's underside meets the body in a square step, the space under it open from the barrel bridge's horn, r 16.4, to the body's wall, 18.6; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
+  /* the straight edge, from the rim to the cut round the balance, takes the barrel bridge's bow (ckE, above) and keeps the 0.1-0.2 mm off its cut that the five traced
+     points had: the top-view photograph traces the cock's top edge bowed the same way, steepest near the rim, 0.43 mm off 10.4 mm of it (x 513-711 px, inside the
+     screw head that hides the rest; its slope -0.46 to -0.22). Straight between COCK_POLY 30 and 33 until 6 October 2026 */
+  const ckBow=o=>{const i=o.indexOf(COCK_POLY[30]),j=o.indexOf(COCK_POLY[33]),Q=COCK_RAW.slice(30,34),q=[],zo=x=>{let k=0;while(k<2&&x<Q[k+1][0])k++;return Q[k][1]+(Q[k+1][1]-Q[k][1])*(x-Q[k][0])/(Q[k+1][0]-Q[k][0]);};
+    for(let x=Q[0][0]-0.5;x>Q[3][0]+0.25;x-=0.5)q.push(PTr([x,zo(x)-(ckL(x)-ckE(x))]));return[...o.slice(0,i+1),...q,...o.slice(j)];};
+  R.cock=mesh(ck,stepGeo(ckEdge(ckBow(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.3),add(L.B,EPu,-3.0),5.2)]))),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.75,1.0).slice(0,3),3.05,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),[...hC(...SPS,0.6).slice(0,3),0.65,0.45],[...SPHa,0.3],[...SPHc,0.3]]),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath out to the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the arm's underside meets the body in a square step, the space under it open from the barrel bridge's horn, r 16.4, to the body's wall, 18.6; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.gilt,...[L.B[0],0,L.B[1]]),'42162.bu');   /* gilt: KLUwI2UUCMQ 41:58, the cap off */
   hn(mesh(ck,stoneGeo(0.95,0.19,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone; its hole r 0.19, 0.01 round the pivot's measured r 0.18 (the staff's comment): the hole's size an estimate */
