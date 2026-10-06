@@ -35,6 +35,10 @@ the layout was measured") says what was taken from each file.
 | `patent-US2425602-cantilever-support-gimbal.pdf` | US 2,425,602, "Cantilever Support for Gimbal Carried Instruments", Drescher, filed 13 Jan. 1945, granted 12 Aug. 1947 | The gimbals' support | `US2425602.pdf` |
 | `patent-CH273734-movement-for-marine-chronometers.pdf` | CH 273,734, "Uhrwerk, vorzugsweise für Marinechronometer", Hamilton, filed 19 Feb. 1946, published 16 May 1951 (DEPATISnet, four pages joined) | A schematic seconds-stepping movement; not the Model 21's layout | `CH000000273734A_1.pdf`-`_4.pdf` |
 
+Photographs consulted, not kept (cited only):
+
+- A 1941 Model 21, serial 2E7832, its dial N 7832 (photographs of a sale listing, pasted 6 October 2026): the movement from above, the barrel bridge's horn on the 6 o'clock side and the cock's edge (compared with the model's barrel bridge, `RESOLVED.md`), and the dial face-on, which the Navy dial (`dialCanvas('usn')`) is measured on.
+
 Names: `manual-*` are figures from the manual, `photo-*` photographs of real
 movements, `patent-*` Hamilton's patents, `drawing-*` other drawings, `screenshot-*` captures of this model.
 The two Navy books keep their own titles.
