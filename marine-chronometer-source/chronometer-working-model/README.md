@@ -1146,7 +1146,14 @@ wheel and centre pinion `fu`/`cp`, then the going train), `MW` (motion work) and
 `core.js`: chapter ring, numerals, the seconds and UP–DOWN sub-dials and the
 inscription. The default, Hamilton dial follows a photographed Model 21 dial of
 the U.S. Maritime Commission contract; `SERIAL` (top of `core.js`) is printed
-in its seconds sub-dial and engraved on the plates. The numerals are sized from
+in its seconds sub-dial and engraved on the plates. `dialCanvas('usn')` is the
+same face as made for the U.S. Navy: a ringed N with the dial's Navy number above
+the seconds' centre and the year below it, in place of the serial and the
+contract, measured on a photograph of 2E7832's dial (N 7832, 1941) against the
+seconds track and checked on C Spinner's video (46:44, N 5892 on movement
+2E8489: the number is the dial's, not the movement's); `NAVY` (top of `core.js`)
+prints 2E7832's, since none is known for 2E12055. It wears the Hamilton hands.
+The numerals are sized from
 the loaded face's measured figure height, so `app.js` loads the canvas-only
 font faces before building the model. `dialCanvas('roman')` draws the Variants panel's alternative, a
 Roman dial after the A. Lange & Söhne deck chronometers (no maker's name or
