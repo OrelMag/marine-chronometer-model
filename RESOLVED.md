@@ -1179,10 +1179,24 @@ Contents:
   through a homography on its rim and bushings) and the top-view photograph
   show both curved: the far horn's 0.46-0.59 mm off its chord, the cock's
   side bowed into the bridge 0.7-1.0 mm, steepest near the rim, and the
-  cock's top edge with it. Keep: both cuts traced (`FH`, the bow in `ckE`),
-  the cock's straight edge following the bridge's cut (`ckBow`), and a
-  curved cut built with `clipCurve`, not `clipPoly`, which draws it as its
-  chord. `d463348`
+  cock's top edge with it. Keep: both cuts traced (`FH`; on the cock's side
+  the bridge now follows the cock's traced edge, `CK_TR`, below, which bows
+  the same way), and a curved cut drawn along its curve (`clipUnder`), not
+  `clipPoly`, which draws it as its chord. `d463348`
+
+- **The balance cock's top face a straight edge, a widened nose and a bulging
+  concave edge; its arm one thickness.** Seen from above, the cock's straight
+  edge was one line to a corner at the nose (the nose widened round the cap)
+  and its concave edge a cubic bulging about 1 mm into the opening. A real
+  cock (the restoration video's 41:58, and a photograph from above, the
+  concave edge as the user marked it) has the straight edge level with the
+  stud's holes from the nose, bending about 23 deg toward the rim, up to
+  2.6 mm outside the old line; a round nose with no corner; and the concave
+  edge `CK_TR` traces. And the arm is in two thicknesses (44:02, 41:58): 2.6 mm
+  from the nose, a square step down to 6.0 mm on a line 12.1-13.7 mm from the
+  staff, then the body. The barrel bridge's horn now follows the new straight
+  edge (`clipUnder`). Keep: the cap on metal all round (0.3 mm), the stud's
+  bar under the thin part, the horn 0.15 mm off the straight edge. `8cce550`
 
 ## Setup, case and gimbals
 
