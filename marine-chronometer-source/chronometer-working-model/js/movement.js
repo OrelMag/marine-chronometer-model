@@ -60,6 +60,25 @@ const PILLARS={barrel:[-11.35, -32.79],train:[[-27.83, 19.7],[5.82, 34.03],[34.1
    The second, traced at PT([18.17, 26.92]) = (4.61, 33.53), would stand in the fourth wheel (its tips 9.6 from the arbor, the pillar r 2.9): pushed out from the fourth arbor until it clears by 0.5,
    2.3 mm (the train bridge's hole at 23:30 is 0.3 mm from the traced place; the bare plate's fits put its top 4-6 mm further out, as they do every pillar's). The second (5.5, 33.96) moved 0.33 out from the detent support block (5 October 2026), inside the reading's 0.4 mm and 1.5 deg (r 34.52, 0.5 deg round), to clear the block at its measured 3.1 width (11:26.435), whose straight edge passes its top collar (r 3.3, 42:56) there; at (5.5, 33.96) the two met by 0.28 */
 const COCK_FOOT=PT([28.3,6.4]),BAL_R=14.5;
+/* the balance cock's top face, from the corner where its straight edge meets the rim, along the straight edge (0-21) to the nose, round the nose (22-38) and down the
+   concave edge (39-60) toward the horn's tip (movement frame, mm; the rim's arc is COCK_POLY, at the cock). Traced on two pictures of real Model 21 cocks, each put on the
+   cock's top through a homography on its holes as the model places them (the cock screw's counterbore, the setting, the cap's two screw holes, the stud's three holes):
+   KLUwI2UUCMQ 41:58 (the cock alone, top up, 4K; residuals 0.03-0.6 mm, the counterbore and setting fitted as circles and the rim's arc as one about the centre), its
+   outline found where the top face's gilt meets the blue mat and the polished walls (R-B > 15), and a photograph of a Model 21's cock from above (photo-cock-top.png,
+   376 px; References/README.md), its edges picked by hand and the concave edge as the user marked it on it (6 October 2026). The two agree within 0.3 mm round the nose
+   and 0.4-1.0 along the concave edge (the mark is a 0.6 mm stroke): the mean, smoothed. Along the straight edge the two read 1.1-1.6 mm apart past x 23 (the far end's
+   perspective rests on the screw's hole alone): their mean, so +-0.8 there. The straight edge is not straight: level with the stud's holes, 0.6 mm outside them, from the
+   nose to about x 15, then bending about 23 deg toward the rim (the photograph's 26 deg, the frame's 23), meeting it 0.85 mm further round than the old trace's corner
+   and lying up to 2.6 mm outside its straight line midway (x 25: z 11.85 against 14.9). The nose has no corner: the edge runs level into it. The concave edge's last
+   3.9 mm to the tip (z 35-38.9) the frames don't resolve (the tip's bevel): straight to it */
+const CK_TR=[[36.16, 17.21], [35.5, 16.8], [34, 15.92], [32.5, 15.1], [31, 14.34], [29.5, 13.64], [28, 12.99], [26.5, 12.4], [25, 11.85], [23.5, 11.35], [22, 10.89], [20.5, 10.48], [19, 10.1], [17.5, 9.77], [16, 9.46], [14.5, 9.19], [13, 8.94], [11.5, 8.72], [10, 8.53], [8.5, 8.36], [7, 8.2], [5.5, 8.06], [0.07, 7.93], [-0.37, 8.1], [-0.77, 8.3], [-1.15, 8.53], [-1.51, 8.79], [-1.83, 9.11], [-2.12, 9.47], [-2.36, 9.89], [-2.53, 10.35], [-2.61, 10.85], [-2.6, 11.38], [-2.49, 11.9], [-2.26, 12.39], [-1.93, 12.83], [-1.51, 13.18], [-1.01, 13.42], [-0.48, 13.52], [1.75, 14.25], [2.65, 15], [3.74, 16], [4.71, 17], [5.57, 18], [6.32, 19], [6.97, 20], [7.52, 21], [7.99, 22], [8.37, 23], [8.68, 24], [8.92, 25], [9.1, 26], [9.22, 27], [9.3, 28], [9.33, 29], [9.33, 30], [9.3, 31], [9.24, 32], [9.17, 33], [9.09, 34], [9, 35]];
+/* the arm's step: the arm is thin (2.6 mm, the stud's place under it) over the balance and thicker toward the body, a square step on its underside across it. On
+   KLUwI2UUCMQ 44:02 (the cock in place, from its straight edge, 4K) the arm's side drops from 88 px to 206 px deep at x 2305, 8.70 mm past the stud's inner hole along
+   their row (a 1-D projective map on the row's three holes; the same map puts the body's wall 18.5-18.65 mm from the staff, where it was read before, 18.6): 12.1 mm from
+   the staff. On 41:58 the concave side's polished band steps down at (8.4, 22.1), 13.7 mm from it (the kink VIDEOS.md read as the body's wall). The step is the line
+   through the two; the thick part 206/88 = 2.34 times the thin, 6.0 mm (the body's visible 10.8 mm down to the barrel bridge's horn, 378 px there, gives 2.5 and 5.9).
+   Whether it is straight across the underside no frame shows (estimated) */
+const CK_SP=[[13.72,9.96],[8.4,22.1]],CK_TM=6.0;
 /* the upper train bridge's notch round the fusee and its horn, measured on two frames of a restoration video (tools/train_bridge.py: KLUwI2UUCMQ 23:30 and 13:49.5):
    the notch a circle (TB_NOTCH: x, z, r), the horn between it and the barrel's cut ending in a straight cut across, the mouth a sharp corner and a straight edge
    turning into the rim through a round corner (r 6). TB_EDGE runs from outside the rim along the mouth, round the notch, across the horn's end and into the barrel's cut, as crescent() takes it.
@@ -144,9 +163,10 @@ function subtractCircle(poly,c,r,uni){
 /* convex hull of points (Andrew's monotone chain) */
 function hull(P){P=[...P].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]),h=[];
   for(const s of[P,[...P].reverse()]){const k=h.length;for(const p of s){while(h.length>=k+2&&cr(h[h.length-2],h[h.length-1],p)<=0)h.pop();h.push(p);}h.pop();}return h;}
-/* outline with its stretch from point i0 to point i1 replaced by the outer side of the hull of those two points and pts */
+/* outline with its stretch from point i0 to point i1 replaced by the outer side of the hull of those two points and pts (the longer way round the hull) */
 function hullSplice(poly,i0,i1,pts){const H=hull([poly[i0],...pts,poly[i1]]),n=H.length,a=H.indexOf(poly[i0]),b=H.indexOf(poly[i1]);
-  const run=d=>{const r=[];for(let k=a;;k=(k+d+n)%n){r.push(H[k]);if(k===b)break;}return r;},f=run(1);return[...poly.slice(0,i0),...(f.length>2?f:run(-1)),...poly.slice(i1+1)];}
+  const run=d=>{const r=[];for(let k=a;;k=(k+d+n)%n){r.push(H[k]);if(k===b)break;}return r;},len=r=>r.reduce((s,p,i)=>i?s+Math.hypot(p[0]-r[i-1][0],p[1]-r[i-1][1]):0,0),f=run(1),g=run(-1);
+  return[...poly.slice(0,i0),...(len(f)>len(g)?f:g),...poly.slice(i1+1)];}
 /* the upper train bridge's outline (Figs. 29, 67, 110): the disc of radius R less the cut round the barrel (circle bc, br) and the notch round the fusee,
    whose edge e (a polyline) starts outside the rim and ends inside the barrel's cut. The rim runs from the notch's mouth (angle rising) to where the barrel's
    cut meets it, the cut's arc back toward the plate's centre to where the edge enters it, and the edge back to the mouth */
@@ -178,51 +198,61 @@ function clipPoly(poly,f){const out=[];
   for(let i=0;i<poly.length;i++){const P0=poly[i],P1=poly[(i+1)%poly.length],f0=f(P0),f1=f(P1);
     if(f0>=0)out.push(P0);if((f0>=0)!==(f1>=0)){const t=f0/(f0-f1);out.push([P0[0]+(P1[0]-P0[0])*t,P0[1]+(P1[1]-P0[1])*t]);}}
   return out;}
+/* polygon clipped to z <= e(x) wherever x >= x0, e a polyline [[x, z], ...] with x rising (held level past its ends): the cut follows e between the crossings */
+function clipUnder(poly,E,x0){const e=x=>{if(x<=E[0][0])return E[0][1];for(let k=1;k<E.length;k++)if(x<=E[k][0])return E[k-1][1]+(E[k][1]-E[k-1][1])*(x-E[k-1][0])/(E[k][0]-E[k-1][0]);return E[E.length-1][1];};
+  const f=p=>p[0]<x0?1:e(p[0])-p[1],s=poly.findIndex(p=>f(p)>=0),P=[...poly.slice(s),...poly.slice(0,s)],out=[];let A=null;
+  for(let i=0;i<P.length;i++){const P0=P[i],P1=P[(i+1)%P.length],f0=f(P0),f1=f(P1);if(f0>=0)out.push(P0);
+    if((f0>=0)!==(f1>=0)){const t=f0/(f0-f1),X=[P0[0]+(P1[0]-P0[0])*t,P0[1]+(P1[1]-P0[1])*t];
+      if(f0>=0){A=X;out.push(X);}else{const B=X,q=E.filter(v=>(v[0]-A[0])*(v[0]-B[0])<0);if(A[0]>B[0])q.reverse();out.push(...q,B);}}}
+  return out;}
 /* polygon of a disc clipped by half-planes z*s > a + b*x  (s=+1 keeps above the line, -1 below) */
 function discClip(R,cuts,N=160){
   let poly=[];for(let i=0;i<N;i++){const a=i/N*TAU;poly.push([R*Math.cos(a),R*Math.sin(a)]);}
   for(const[a,b,s]of cuts)poly=clipPoly(poly,p=>s*(p[1]-(a+b*p[0])));
   return poly;
 }
-/* a solid in two depths, closed and facing out (like polyGeo, unbevelled): the outline out at depth tA, and the part of it outside the circle (c, r) at depth tB,
-   with the step's wall on that circle's arc. Top at y 0, depths toward +y. Holes [x,z,r]: through tA inside the circle, through tB outside it; a hole [x,z,r,rc,dc]
-   is counterbored rc to dc. cv {r0, tS, n}: a cove under the part inside the circle, its underside at tA within r0 of c, sweeping down as a quarter circle to tS at r,
-   where the step goes on to tB (n bands, each triangulated flat). UVs: the top's in plan, as ExtrudeGeometry gives them, so the plate's stripes lie as on the other
+/* a solid in three depths, closed and facing out (like polyGeo, unbevelled): the outline at the top (y 0); the part of it outside the circle (c, r) down to tB (the
+   body), with the step's wall on that circle's arc; the rest (the arm) down to tA on c's side of the line through sp.p and sp.q and to sp.t beyond it, with the step's
+   wall along that line (sp {p, q, t}; without it the arm is tA throughout). Depths toward +y. Holes [x,z,r]: through tA in the arm (on c's side of the line), through
+   tB in the body; a hole [x,z,r,rc,dc] is counterbored rc to dc. UVs: the top's in plan, as ExtrudeGeometry gives them, so the plate's stripes lie as on the other
    plates; the walls' along one ridge (below) */
-function stepGeo(out,c,r,tA,tB,holes,cv){
-  const d=p=>Math.hypot(p[0]-c[0],p[1]-c[1]),m=cv?cv.n:0,r0=cv?cv.r0:r,tS=cv?cv.tS:tA,RS=[r];for(let k=m-1;k>=0;k--)RS.push(r0+(r-r0)*Math.sin(Math.PI/2*k/m));   /* RS: the levels, r first, r0 last */
-  const prof=p=>{const q=d(p);if(!cv||q<=r0)return tA;const u=Math.min(1,(q-r0)/(r-r0));return tA+(tS-tA)*(1-Math.sqrt(1-u*u));};
-  const O=[];for(let k=0;k<out.length;k++){const a=out[k],b=out[(k+1)%out.length];O.push(a);const X=[];   /* the outline, with the points where it crosses each level */
-    RS.forEach((R,j)=>{if((d(a)<R)!==(d(b)<R)){let u=0,v=1;for(let i=0;i<40;i++){const w=(u+v)/2,q=[a[0]+(b[0]-a[0])*w,a[1]+(b[1]-a[1])*w];(d(q)<R)===(d(a)<R)?u=w:v=w;}X.push([u,[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u],j]);}});
+function stepGeo(out,c,r,tA,tB,holes,sp){
+  const d=p=>Math.hypot(p[0]-c[0],p[1]-c[1]),tM=sp?sp.t:tA;
+  const sd=sp?(()=>{const u=[sp.q[0]-sp.p[0],sp.q[1]-sp.p[1]],l=Math.hypot(...u),nn=[-u[1]/l,u[0]/l],f=p=>(p[0]-sp.p[0])*nn[0]+(p[1]-sp.p[1])*nn[1],s=Math.sign(f(c));return p=>-s*f(p);})():()=>-1;   /* sd > 0 beyond the line from c */
+  const O=[];for(let k=0;k<out.length;k++){const a=out[k],b=out[(k+1)%out.length];O.push(a);const X=/** @type {any[]} */([]);   /* the outline, with the points where it crosses the circle (lv 0) and the line (lv 1): [u, point, lv] */
+    if((d(a)<r)!==(d(b)<r)){let u=0,v=1;for(let i=0;i<40;i++){const w=(u+v)/2,q=[a[0]+(b[0]-a[0])*w,a[1]+(b[1]-a[1])*w];(d(q)<r)===(d(a)<r)?u=w:v=w;}X.push([u,[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u],0]);}
+    if(sp&&(sd(a)>0)!==(sd(b)>0)){const u=sd(a)/(sd(a)-sd(b));X.push([u,[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u],1]);}
     X.sort((x,y)=>x[0]-y[0]).forEach(([,q,j])=>{q.lv=j;O.push(q);});}
   const n=O.length,X0=O.map((p,i)=>p.lv===0?i:-1).filter(i=>i>=0);if(X0.length!==2)console.error('stepGeo: the circle crosses the outline '+X0.length+' times');
   const chain=(i,j)=>{const q=[];for(let k=i;;k=(k+1)%n){q.push(O[k]);if(k===j)break;}return q;},[i0,i1]=X0,inA=d(O[(i0+1)%n])<r;
   const A=inA?chain(i0,i1):chain(i1,i0),B=inA?chain(i1,i0):chain(i0,i1);   /* A: the stretch inside the circle (the arm), from crossing to crossing; B: the rest */
   const ins=p=>{let w=false;for(let i=0,j=O.length-1;i<O.length;j=i++){const[xi,zi]=O[i],[xj,zj]=O[j];if((zi>p[1])!==(zj>p[1])&&p[0]<(xj-xi)*(p[1]-zi)/(zj-zi)+xi)w=!w;}return w;};
-  const ia=[],ib=[];RS.forEach((R,j)=>{const k=A.map((p,i)=>p.lv===j?i:-1).filter(i=>i>=0);if(k.length!==2)console.error('stepGeo: level '+j+' crosses the arm '+k.length+' times');ia.push(k[0]);ib.push(k[k.length-1]);});
+  const L1=A.map((p,i)=>p.lv===1?i:-1).filter(i=>i>=0);if(sp&&L1.length!==2)console.error('stepGeo: the line crosses the arm '+L1.length+' times');
+  const[ka,kb]=sp?L1:[0,A.length-1];   /* A[ka..kb]: the arm's thin part, on c's side of the line; before and after it, the thick part */
   const arc=(R,p,q)=>{const a0=Math.atan2(p[1]-c[1],p[0]-c[0]);let da=Math.atan2(q[1]-c[1],q[0]-c[0])-a0;da=((da%TAU)+TAU)%TAU;const mid=a0+da/2;if(!ins([c[0]+R*Math.cos(mid),c[1]+R*Math.sin(mid)]))da-=TAU;   /* from p round to q inside the outline, ends left out */
     const na=Math.max(2,Math.ceil(Math.abs(da)*R/0.25)),o=[];for(let k=1;k<na;k++){const t=a0+da*k/na;o.push([c[0]+R*Math.cos(t),c[1]+R*Math.sin(t)]);}return o;};
-  const ARCS=RS.map((R,j)=>arc(R,A[ib[j]],A[ia[j]])),ARC=ARCS[0];   /* each level's arc across the arm, from its outer crossing back to its inner one */
+  const ARC=arc(r,A[A.length-1],A[0]);   /* the circle's arc across the arm, from its outer crossing back to its inner one */
   const BP=[...B,...ARC.slice().reverse()];   /* the body's foot */
   const circ=(x,z,rr)=>{const k=Math.max(16,Math.ceil(TAU*rr/0.2)),q=[];for(let i=0;i<k;i++){const t=i/k*TAU;q.push([x+rr*Math.cos(t),z+rr*Math.sin(t)]);}return q;};
-  const hA=holes.filter(h=>d(h)<r),hB=holes.filter(h=>d(h)>=r),P=[],U=[];hA.forEach(h=>{if(d(h)+h[2]>r0)console.warn('stepGeo: a hole in the cove');});
+  const hA=holes.filter(h=>d(h)<r),hB=holes.filter(h=>d(h)>=r),P=[],U=[];hA.forEach(h=>{if(sd(h)>-h[2])console.warn('stepGeo: a hole in the thick part of the arm');});
   const tri=(a,b,e,ua,ub,ue)=>{P.push(...a,...b,...e);U.push(...ua,...ub,...ue);};
-  const face=(poly,hs,y,up,uv=p=>[p[0],-p[1]])=>{const Y=typeof y==='function'?y:()=>y,V=v=>new THREE.Vector2(v[0],v[1]),T=THREE.ShapeUtils.triangulateShape(poly.map(V),hs.map(h=>h.map(V))),all=[...poly,...hs.flat()];   /* up: faces -y (the top) */
+  const face=(poly,hs,y,up,uv=p=>[p[0],-p[1]])=>{const V=v=>new THREE.Vector2(v[0],v[1]),T=THREE.ShapeUtils.triangulateShape(poly.map(V),hs.map(h=>h.map(V))),all=[...poly,...hs.flat()];   /* up: faces -y (the top) */
     for(const[i,j,k]of T){const[a,b,e]=[all[i],all[j],all[k]],cr=(b[0]-a[0])*(e[1]-a[1])-(b[1]-a[1])*(e[0]-a[0]),f=(cr>0)===up?[a,b,e]:[a,e,b];
-      tri(...f.map(p=>[p[0],Y(p),p[1]]),...f.map(uv));}};   /* uv: the stripes' mapping (the top's), or uw: plain polished */
+      tri(...f.map(p=>[p[0],y,p[1]]),...f.map(uv));}};   /* uv: the stripes' mapping (the top's), or uw: plain polished */
   const rc=Math.cos(STRIPE_ANGLE),rs=Math.sin(STRIPE_ANGLE),uw=p=>{const t=p[0]*rc-p[1]*rs;return[-rs*38.75+t*rc,rc*38.75+t*rs];},pol=p=>[-rs*38.75+p[0]*1e-3,rc*38.75+p[1]*1e-3];   /* pol: a face polished all over, the stripes' map read at one crest (a 2-D patch of it: a 1-D map leaves the normal map's tangents undefined) */   /* walls: along one ridge's crest of the stripes (38.75 mm across them), so they read polished, as the cock's are */
-  const wall=(p,q,y0,y1,outward,y1q=y1)=>{const[a,b]=outward?[p,q]:[q,p],[ya,yb]=outward?[y1,y1q]:[y1q,y1],ua=uw(a),ub=uw(b);   /* a quad p->q from y0 down to y1 at p (y1q at q), facing to the right of p->q when outward */
-    const A0=[a[0],y0,a[1]],B0=[b[0],y0,b[1]],A1=[a[0],ya,a[1]],B1=[b[0],yb,b[1]];
+  const wall=(p,q,y0,y1,outward)=>{const[a,b]=outward?[p,q]:[q,p],ua=uw(a),ub=uw(b);   /* a quad p->q from y0 down to y1, its normal (dz, -dx) of p->q when outward */
+    const A0=[a[0],y0,a[1]],B0=[b[0],y0,b[1]],A1=[a[0],y1,a[1]],B1=[b[0],y1,b[1]];
     tri(A0,A1,B1,ua,ua,ub);tri(A0,B1,B0,ua,ub,ub);};
   const cw=THREE.ShapeUtils.area(O.map(v=>new THREE.Vector2(v[0],v[1])))<0,loop=(L,f)=>{for(let k=0;k<L.length;k++)f(L[k],L[(k+1)%L.length]);};
   const cbr=h=>h[3]?circ(h[0],h[1],h[3]):circ(h[0],h[1],h[2]);
   face(O,[...hA.map(cbr),...hB.map(cbr)],0,true);face(BP,hB.map(h=>circ(...h)),tB,false);
-  face([...A.slice(ia[m],ib[m]+1),...ARCS[m]],hA.map(h=>circ(...h)),tA,false,pol);   /* the arm's underside within the last level, plain (the video's undersides are) */
-  for(let j=0;j<m;j++)face([...A.slice(ia[j],ia[j+1]+1),...ARCS[j+1].slice().reverse(),...A.slice(ib[j+1],ib[j]+1),...ARCS[j]],[],prof,false,pol);   /* the cove, band by band, polished as on the video (23:45, 41:58) */
+  face(A.slice(ka,kb+1),hA.map(h=>circ(...h)),tA,false,pol);   /* the arm's underside, plain (the video's undersides are): its thin part, */
+  if(sp)face([...A.slice(0,ka+1),...A.slice(kb),...ARC],[],tM,false,pol);   /* and its thick part, out to the body */
   for(const h of[...hA,...hB].filter(h=>h[3])){const R=circ(h[0],h[1],h[3]),I=circ(h[0],h[1],h[2]),F=[...R];face(F,[I],h[4],true);}   /* the counterbore's floor (in the arm or the body) */
-  for(let k=0;k<A.length-1;k++)wall(A[k],A[k+1],0,prof(A[k]),!cw,prof(A[k+1]));   /* the arm's edge, down to its underside */
-  for(let k=0;k<B.length-1;k++){wall(B[k],B[k+1],0,tS,!cw);wall(B[k],B[k+1],tS,tB,!cw);}   /* the body's, split at tS where the arm's underside meets it */
-  const Arc=[A[A.length-1],...ARC,A[0]];for(let k=0;k<Arc.length-1;k++)wall(Arc[k],Arc[k+1],tS,tB,cw);   /* the step under the arm */
+  for(let k=0;k<A.length-1;k++){wall(A[k],A[k+1],0,tA,!cw);if(sp&&(k<ka||k>=kb))wall(A[k],A[k+1],tA,tM,!cw);}   /* the arm's edge, down to its underside, split at tA where the step meets it */
+  for(let k=0;k<B.length-1;k++){wall(B[k],B[k+1],0,tA,!cw);if(sp)wall(B[k],B[k+1],tA,tM,!cw);wall(B[k],B[k+1],tM,tB,!cw);}   /* the body's, split where the arm's undersides meet it */
+  const Arc=[A[A.length-1],...ARC,A[0]];for(let k=0;k<Arc.length-1;k++)wall(Arc[k],Arc[k+1],tM,tB,cw);   /* the step under the arm */
+  if(sp){const p=A[ka],q=A[kb],m=[(p[0]+q[0])/2-c[0],(p[1]+q[1])/2-c[1]];wall(p,q,tA,tM,(q[1]-p[1])*-m[0]+(p[0]-q[0])*-m[1]>0);}   /* the step along the line, facing c */
   const hole=(L,y0,y1)=>{const ccw=THREE.ShapeUtils.area(L.map(v=>new THREE.Vector2(v[0],v[1])))>0;loop(L,(p,q)=>wall(p,q,y0,y1,!ccw));};   /* faces into the hole */
   for(const h of hA)if(h[3]){hole(circ(h[0],h[1],h[3]),0,h[4]);hole(circ(h[0],h[1],h[2]),h[4],tA);}else hole(circ(...h),0,tA);for(const h of hB)if(h[3]){hole(circ(h[0],h[1],h[3]),0,h[4]);hole(circ(h[0],h[1],h[2]),h[4],tB);}else hole(circ(...h),0,tB);
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g.computeVertexNormals();return g;}
@@ -601,14 +631,14 @@ function buildMovement(M){
   /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24). The cut is the balance's
      clearance circle (r 17.7 about the staff; the screws and weights sweep 17.2) joined with the circle fitted to its edge on the top-view photograph (r 17.6 about
      5.24, 6.33; points within 1.3 mm), which reaches 20.5 mm from the staff toward the barrel: the barrel's cap and the fusee's large end show through it */
-  const cutR=BAL_R+3.2,ckE=x=>2.93+0.06*(x-32.87);   /* a straight cut under the cock's straight edge (COCK_POLY 30-32, below, which bends a little): 0.1 off it at the bend, 0.2 at the ends */
+  const cutR=BAL_R+3.2,ckE=[...CK_TR.slice(0,22).reverse(),[38.5,18.61]].map(([x,z])=>[x,z-0.15]);   /* the horn's cut 0.15 under the cock's straight edge (CK_TR 0-21, at the top), on past the rim along its last slope */
   /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim (top-view photograph, through the five bridge screws:
      the cut's tip (-5.45, 21.46) and its end at the rim (-6.21, 34.01), within about 0.6 mm; C Spinner 23:30, the bridge flat, to about 2 mm). It carries the bridge's
      second screw into the train bridge, and a clearance hole over the train bridge's screw at pillar 0 */
   const hk=(-6.21+5.45)/(34.01-21.46),hornX=z=>-5.45+(z-21.46)*hk,bis=(f,lo,hi)=>{for(let i=0;i<50;i++){const m=(lo+hi)/2;(f(m)>0)===(f(lo)>0)?lo=m:hi=m;}return(lo+hi)/2;};
   const zC=(150.45+21.46*hk)/(10+hk),zH=bis(z=>Math.hypot(hornX(z),z)-BR_R,21,BR_R),aH=Math.atan2(zH,hornX(zH)),aR=bis(a=>BR_R*Math.sin(a)-14.5+0.1*BR_R*Math.cos(a),0,Math.PI/2);
   const BBo=[];for(let k=0,n=Math.ceil((aR+TAU-aH)/(TAU/360));k<=n;k++){const t=aH+(aR+TAU-aH)*k/n;BBo.push([BR_R*Math.cos(t),BR_R*Math.sin(t)]);}BBo.push([145-10*zC,zC]);   /* the rim from the horn's end round to the chord, the chord to its corner with the cut, the cut back to the rim */
-  const BBpoly=clipPoly(subtractCircle(subtractCircle(BBo,PTi(L.B),cutR/PHOTO_K),[5.24,6.33],17.6),p=>ckE(p[0])-p[1]+Math.max(0,15-p[0])*100).map(PTr);   /* laid out in the photographs' frame, then into the movement's (PTr) */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  const BBpoly=clipUnder(subtractCircle(subtractCircle(BBo,PTi(L.B),cutR/PHOTO_K),[5.24,6.33],17.6).map(PTr),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,1.6,1],[...L.Ba,1.95,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.cover.map(q=>hT(...q,0.9)),hT(...S.click,0.6)];   /* and the winding stop's, added below once its place is known */
   R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,1.6,1.02),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,1.95,1.42),'42164.bu');   /* fusee and barrel upper bushings (42164) */
@@ -1087,27 +1117,23 @@ function buildMovement(M){
     hn(cylBetween(st,0.15,yb+0.02,yb+SB_T+CLD-0.03,M.steelD,...pw,10),'42147.st');for(const[h,y1]of[[SPHa,yb+SB_T+0.9],[SPHc,yb+SB_T]])cylBetween(st,0.295,yb-0.65,y1,M.steel,...loc(h),12); }   /* wedge pin from just under the bar's top face (its end shows there on the video, 6:47.5; Ops. 9, 10: "file pin below the top surface of the stud") down through the clamp, cut off inside its lower face (it stood 0.16 proud, into the coil under the clamp); the steady pins up into the cock 0.65, the outer one 0.9 below the bar too (r 0.295: inside the r 0.3 holes' facets): side-on at KLUwI2UUCMQ 6:50.0, both stand 26-29 px over the bar's top face and the outer 40 px under it, the inner none (the clamp's step), at 43 px/mm (the pins 297 px apart for their 6.6-7.0 mm); 0.8 and flush below, estimated, until 4 October 2026. The bar (SB_T) 0.85 thick, the middle of the 0.7-1.1 mm (31-46 px) it reads there (0.5, estimated, until 5 October 2026); the clamp under its end (CLD) drops 0.6 (27 px on the same frame), and the spring's end lies at the clamp's middle, so the spring rises HS_H 6.4 (the 12 turns' pitch 0.533, inside the 0.52-0.56 the coils read at 6:49.5 and 6:50.0; 6.7 before) */
   /* balance cock: massive bridge from a foot at the right-back (Fig. 2) over the balance */
   const ck=hn(part('cock',-96),'42066');
-  /* balance cock traced on the top-view photograph: a broad crescent whose outer edge follows the plate rim (top-left
-     in the photo), a straight edge to the endstone over the staff and a concave arc back to the rim. Outline shifted
-     by the cock's parallax so the endstone sits over the balance staff. */
-  const COCK_POLY=[[25.38, 31.05], [26.19, 30.36], [26.99, 29.66], [27.77, 28.93], [28.53, 28.18], [29.26, 27.42], [29.98, 26.63], [30.68, 25.82], [31.35, 25.0], [32.0, 24.16], [32.63, 23.3], [33.24, 22.43], [33.82, 21.54], [34.38, 20.63], [34.92, 19.71], [35.43, 18.78], [35.92, 17.83], [36.38, 16.87], [36.81, 15.9], [37.22, 14.92], [37.6, 13.93], [37.96, 12.92], [38.29, 11.91], [38.59, 10.89], [38.87, 9.86], [39.12, 8.83], [39.34, 7.79], [39.53, 6.74], [39.69, 5.69], [39.83, 4.63], [39.94, 3.58], [32.87, 3.03], [26.51, 2.76], [20.15, 2.49], [13.87, 2.62], [8.04, 2.86], [5.77, 3.99], [5.53, 5.72], [6.88, 7.11], [13.2, 9.07], [17.2, 11.96], [19.38, 16.1], [20.84, 20.82], [21.82, 25.22]].map(PTr);
-  /* the balance upper setting and jewel are pressed into the cock under the endstone cap (manual Figs. 19, 36, 85), and the cap lies on the cock with metal all
-     round it (top-view photograph). The traced edge passes 0.7 mm from the staff and left the cap and its outer screw over nothing: the tracing, taken at plate
-     height and shifted for parallax, misses the nose. So the nose, from the straight edge's corner to the concave edge, is the hull round the cap, 0.9 mm clear of it */
-  /* cap: 7.2 x 4.6 mm, its corners rounded r 1.2 at the nose's end and r 0.4 at the foot's (C Spinner's video, 5:51 and 42:03; the top-view photograph) */
-  const EPo=[];for(const[cx,cz,r,a0]of[[2.4,1.1,1.2,0],[-3.2,1.9,0.4,90],[-3.2,-1.9,0.4,180],[2.4,-1.1,1.2,270]])for(let k=0;k<=8;k++){const a=(a0+90*k/8)*D2R;EPo.push([cx+r*Math.cos(a),cz+r*Math.sin(a)]);}
+  /* the outer edge, traced on the top-view photograph: it follows the plate's rim (top-left in the photo) from the horn's tip to the corner at the straight edge,
+     shifted by the cock's parallax (PTr); then on, at the radius of its end, to the corner the cock's own pictures give, and the rest of the top face from them (CK_TR) */
+  const COCK_POLY=[[25.38, 31.05], [26.19, 30.36], [26.99, 29.66], [27.77, 28.93], [28.53, 28.18], [29.26, 27.42], [29.98, 26.63], [30.68, 25.82], [31.35, 25.0], [32.0, 24.16], [32.63, 23.3], [33.24, 22.43], [33.82, 21.54], [34.38, 20.63], [34.92, 19.71], [35.43, 18.78], [35.92, 17.83], [36.38, 16.87], [36.81, 15.9], [37.22, 14.92], [37.6, 13.93], [37.96, 12.92], [38.29, 11.91], [38.59, 10.89], [38.87, 9.86], [39.12, 8.83], [39.34, 7.79], [39.53, 6.74], [39.69, 5.69], [39.83, 4.63], [39.94, 3.58]].map(PTr);
+  const ckO=[...COCK_POLY],cA0=Math.atan2(COCK_POLY[30][1],COCK_POLY[30][0]),cA1=Math.atan2(CK_TR[0][1],CK_TR[0][0]),cR=Math.hypot(...COCK_POLY[30]);
+  for(let k=1;k<4;k++){const t=cA0+(cA1-cA0)*k/4;ckO.push([cR*Math.cos(t),cR*Math.sin(t)]);}ckO.push(...CK_TR);
+  /* the balance upper setting and jewel are pressed into the cock under the endstone cap (manual Figs. 19, 36, 85), and the cap lies on the cock with metal all round it
+     (top-view photograph). The traced nose leaves the cap's corner at the straight edge 0.5 mm over it (the cap is placed by the staff, the trace by the cock's holes): the
+     nose is the hull of its trace and the cap's outline 0.3 mm out, from the straight edge at x 5.5 to the concave edge's first point (CK_TR 21-39) */
+  /* cap: 7.2 x 4.6 mm, its corners rounded r 1.2 at the nose's end and r 0.4 at the foot's (C Spinner's video, 5:51 and 42:03; the top-view photograph); EPq(g): g out */
+  const EPq=g=>{const o=[];for(const[cx,cz,r,a0]of[[2.4,1.1,1.2,0],[-3.2,1.9,0.4,90],[-3.2,-1.9,0.4,180],[2.4,-1.1,1.2,270]])for(let k=0;k<=8;k++){const a=(a0+90*k/8)*D2R;o.push([cx+(r+g)*Math.cos(a),cz+(r+g)*Math.sin(a)]);}return o;},EPo=EPq(0);
+  const ck0=ckO.indexOf(CK_TR[21]),ck1=ckO.indexOf(CK_TR[39]),ckOut=hullSplice(ckO,ck0,ck1,[...ckO.slice(ck0+1,ck1),...EPq(0.3).map(q=>add(L.B,ry(EPa,q)))]);
   /* one solid block, as it comes off the movement (C Spinner's restoration video, 41:58 and 23:45; the side at 2:36; References/VIDEOS.md): its outer wall follows
-     the rim the full 14.2 mm down to the train bridge, its straight edge stands against the barrel bridge's horn, and only the nose is a 2.6 mm arm over the balance.
-     The body is all of the outline more than CK_RP from the staff, the circle the barrel bridge is cut on round the balance; its face on that arc is the step under
-     the arm. The screw's head lies in a counterbore (41:58, 6:29) */
+     the rim the full 14.2 mm down to the train bridge, its straight edge stands against the barrel bridge's horn, and only the arm over the balance is thinner: 2.6 mm
+     at the nose and CK_TM beyond the step CK_SP (at the top), where the video shows it in two thicknesses. The body is all of the outline more than CK_RP from the staff,
+     the circle the barrel bridge is cut on round the balance; its face on that arc is the step under the arm. The screw's head lies in a counterbore (41:58, 6:29) */
   const CK_RP=BAL_R+3.2,CK_CB=9.4;   /* the cock screw's counterbore: the head's 8.2 and 1.2 more, its top that far under the cock's top (below) */
-  /* the concave edge one smooth curve from the nose's round to the horn's tip, as at 41:58 and 6:29: a cubic tangent to the nose and to the traced edge at the horn,
-     fitted to the traced points (within 0.43 mm); the tracing's corner where the widened nose met it is gone */
-  const ckEdge=o=>{const k=o.indexOf(COCK_POLY[40]),P0=o[k-1],P3=o[0],P1=add(P0,unit(sub(P0,o[k-2])),21.17),P2=add(P3,unit(sub(P3,COCK_POLY[43])),-19.72),q=[];
-    for(let i=1;i<24;i++){const u=i/24,v=1-u,w=[v*v*v,3*v*v*u,3*v*u*u,u*u*u];q.push([0,1].map(e=>w[0]*P0[e]+w[1]*P1[e]+w[2]*P2[e]+w[3]*P3[e]));}return[...o.slice(0,k),...q];};
-  /* the arm's underside sweeps down into the body (41:58, 23:45): a cove from 9 mm round the staff, a quarter circle down to 7.6 mm under the top at the step (1 mm over
-     the balance's top, 8.6 down; the hairspring keeps under the flat part, within 7.1 mm), the step's wall then going on down to the train bridge */
-  R.cock=mesh(ck,stepGeo(ckEdge(hullSplice(COCK_POLY,34,40,[COCK_POLY[35],...stadiumPts(add(L.B,EPu,1.3),add(L.B,EPu,-3.0),5.2)])),L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.75,1.0).slice(0,3),3.05,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),[...hC(...SPS,0.6).slice(0,3),0.65,0.45],[...SPHa,0.3],[...SPHc,0.3]]),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath out to the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the arm's underside meets the body in a square step, the space under it open from the barrel bridge's horn, r 16.4, to the body's wall, 18.6; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
+  R.cock=mesh(ck,stepGeo(ckOut,L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,1.5],[...hC(...S.cock,2.75,1.0).slice(0,3),3.05,CK_CB],...S.ep.map(q=>hT(...q,0.7).slice(0,3)),[...hC(...SPS,0.6).slice(0,3),0.65,0.45],[...SPHa,0.3],[...SPHc,0.3]],{p:CK_SP[0],q:CK_SP[1],t:CK_TM}),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath in its two depths, square steps between them and at the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the thin part's underside steps down to the thick part's, which meets the body in a square step, the space under it open from the barrel bridge's horn, r 16.4, to the body's wall, 18.6; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(1.5,CK_T),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.gilt,...[L.B[0],0,L.B[1]]),'42162.bu');   /* gilt: KLUwI2UUCMQ 41:58, the cap off */
   hn(mesh(ck,stoneGeo(0.95,0.19,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone; its hole r 0.19, 0.01 round the pivot's measured r 0.18 (the staff's comment): the hole's size an estimate */
