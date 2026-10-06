@@ -101,6 +101,7 @@ function escapeWheel(parent,M,rt,y,E){
 }
 const PLATE_FINISH={nickel:0xeceeea,gilt:0xe0bd74};
 const SERIAL='2E12055';   /* the photographed movement's serial: engraved on the plates, printed on the Hamilton dial */
+const NAVY={no:'7832',yr:'1941'};   /* the Navy dial's number and year, as photographed on 2E7832's (dialCanvas('usn')) */
 function mats(){
   const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
   const stx=stripeTex(),st=stx.map,wt=woodTex();
@@ -635,6 +636,14 @@ function dialCanvas(kind,K=1){   /* K: drawn K times as fine (the export to Blen
   /* inscriptions: maker and town across the centre, split round the hands' boss; serial and contract in the seconds sub-dial */
   x.font=`600 ${S*0.042}px ${SANS}`;trk('HAMILTON',c,c-c*0.13,c*0.5);
   x.font=`600 ${S*0.027}px ${SANS}`;trk('LANCASTER,',c-c*0.32,c-c*0.005,c*0.35);trk('PA., U.S.A.',c+c*0.31,c-c*0.005,c*0.33);
-  trk(SERIAL,c,sy-c*0.145,c*0.23);trk('U.S. MARITIME',c,sy+c*0.1,c*0.44);trk('COMMISSION',c,sy+c*0.215,c*0.41);
+  if(kind==='usn'){   /* the Navy's: the same face, with the dial's Navy number (a ringed N and its figures) above the seconds' centre and the year below, in place of the serial
+     and the contract (a photograph of 2E7832's dial, N 7832, 1941; C Spinner's restoration video, 46:44, N 5892, 1941, on movement 2E8489: the number is the Navy's, not the
+     movement's). Measured face-on on 2E7832's against the seconds track's outer radius rs (59 px): the figures 0.195 rs tall and 0.44 wide, the ringed N 0.24 across (0.27
+     there, 0.21 on the video's sharper frame, read across, where its oblique view doesn't foreshorten), the group 0.72 wide (0.71; 0.77 on the video), centred 0.245 rs above
+     the centre; the year 0.21 rs tall, 0.36 wide, 0.235 below. Printed as on 2E7832's: no Navy number is known for 2E12055 */
+    const cap=(t,h,cx,cy,w)=>{x.save();x.textBaseline='alphabetic';x.font=`400 100px ${SANS}`;const m=x.measureText(t);x.font=`400 ${100*h/m.actualBoundingBoxAscent}px ${SANS}`;x.translate(cx,cy+h/2);fillTracked(x,t,w);x.restore();};
+    const d=rs*0.24,g=rs*0.04,wd=rs*0.44,x0=c-(d+g+wd)/2,ny=sy-rs*0.245;circ(x0+d/2,ny,d/2,rs*0.022);
+    cap('N',d*0.56,x0+d/2,ny,d*0.5);cap(NAVY.no,rs*0.195,x0+d+g+wd/2,ny,wd);cap(NAVY.yr,rs*0.21,c,sy+rs*0.235,rs*0.36);}
+  else{trk(SERIAL,c,sy-c*0.145,c*0.23);trk('U.S. MARITIME',c,sy+c*0.1,c*0.44);trk('COMMISSION',c,sy+c*0.215,c*0.41);}
   return cv;
 }

@@ -1171,6 +1171,18 @@ Contents:
   0.85; the setting r 2.52; the slab's counterbore r 4.56 round the cap. Keep: the cap's sizes
   and the setting's measured (`tools/anchors/cap_13-49.5.json`, `setting_13-44.json`), not
   scaled from an estimate. `d0f0cb3`
+- **Barrel bridge's horn ends cut straight.** Both ends of the barrel
+  bridge's opening were straight cuts: the far horn's from the cut round
+  the balance to the rim (with a kink where `PTr` bent it near the rim), and
+  the cock's side along a line fitted to the cock's straight edge, which its
+  five traced points also left straight. The flat bridge (C Spinner 23:45,
+  through a homography on its rim and bushings) and the top-view photograph
+  show both curved: the far horn's 0.46-0.59 mm off its chord, the cock's
+  side bowed into the bridge 0.7-1.0 mm, steepest near the rim, and the
+  cock's top edge with it. Keep: both cuts traced (`FH`, the bow in `ckE`),
+  the cock's straight edge following the bridge's cut (`ckBow`), and a
+  curved cut built with `clipCurve`, not `clipPoly`, which draws it as its
+  chord. `d463348`
 
 ## Setup, case and gimbals
 
