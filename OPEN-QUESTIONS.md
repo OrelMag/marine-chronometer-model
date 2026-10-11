@@ -58,8 +58,10 @@ The goal they are judged against: someone with only the site can make a Model 21
   6, 49); Hamilton's patents US 2,391,816 (a counterpoised collet: a round hub under a thin sector plate, the spring on the plate's arc) and
   US 2,457,631 show the form, not the Model 21's sizes; KLUwI2UUCMQ 6:52.5-6:53.5 (the balance arm to the camera) show the sector plate
   reaching about 3.9 mm out but not the body under it, nor the inner curve's path clearly (`$MC_VIDEO/balance/c6-53.5.png`). KLUwI2UUCMQ 7:23-7:26
-  (found 11 October 2026, not yet measured) look down the spring's axis onto the sector plate face-on: its slit, a hole near its wide end, the collar,
-  so the plate's outline and the inner end's entry can be traced there; the body under the plate is hidden from that side too. What would settle
+  (found 11 October 2026) look down the spring's axis onto the sector plate face-on: it agrees with Fig. 6 (the hole near its narrow end about 2.6 mm
+  from the staff, the model's 2.58), and the body under it is hidden from that side too. Hamilton's US 2,391,816 (a watch collet, its spring staked in
+  a groove round the flange's edge, not the Model 21's clamp) draws no body under the flange, only the hub: a hint that the hidden side is short, not
+  a measurement. What would settle
   it: a photograph of a Model 21 collet off its staff, or of the spring's inner end from below the balance.
 
 ## The likeliest sources (both behind NAWCC membership)
