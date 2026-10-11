@@ -36,7 +36,8 @@ const L={C:[0,0],T:[-8.524,14.186],F:[0,21.6],E:[9.352,15.607],B:[1.609,10.277],
    across and made to fit the plate, x0.955), turned and set off the centre by 4 mm. The dial's 12-6 axis, the centre, third and fourth arbors, the indicator and the
    motion work stay. PTr: PT for outlines that run to the rim, which keep their radius about the centre near it (the bridges' rims stay concentric with the plate).
    PR: the 14 deg turn alone, for what was measured on the video in the train bridge's frame (its rim, barrel cut and centre bushing): the notch, the third screw and
-   its pillar, the cut round the barrel. The escape arbor solved again, 9.40 from the balance (the escapement) and 10.585 from the fourth (their mesh) */
+   its pillar, the cut round the barrel. The escape arbor solved again, 9.40 from the balance (the escapement) and then 10.585 from the fourth (their mesh); with the fourth
+   at its measured place since 2 October 2026 it is 11.107 from it, 9.40 from the balance toward the escape jewel seen from above (KLUwI2UUCMQ 10:00; tools/solve.py) */
 const PHOTO_K=1.039,PHOTO_TURN=19.42*Math.PI/180,PHOTO_T=[-3.891,0.879],PR_TURN=14*Math.PI/180;
 const PT=([x,z])=>[PHOTO_K*(x*Math.cos(PHOTO_TURN)-z*Math.sin(PHOTO_TURN))+PHOTO_T[0],PHOTO_K*(x*Math.sin(PHOTO_TURN)+z*Math.cos(PHOTO_TURN))+PHOTO_T[1]],
   PTi=([x,z])=>{const u=(x-PHOTO_T[0])/PHOTO_K,v=(z-PHOTO_T[1])/PHOTO_K;return[u*Math.cos(PHOTO_TURN)+v*Math.sin(PHOTO_TURN),-u*Math.sin(PHOTO_TURN)+v*Math.cos(PHOTO_TURN)];},
@@ -129,7 +130,8 @@ const RUN_H=FUSEE_TURNS/FUSEE_PER_HOUR;         /* 56.25 h: runs down when the c
 /* wind indicator: wheel 120 (counted on the video), the fusee arbor's pinion 12 (inferred: see TRAIN). Its hand sweeps UD_SWEEP degrees in 56 h, centred on the 6
    (UP at the upper right, DOWN at the upper left); UDA(h) is its angle after h hours, for the hand here and every dial's scale (core.js, essay.js) */
 const UD={pin:12,wheel:120,m:2*Math.hypot(L.Fu[0]-L.Ud[0],L.Fu[1]-L.Ud[1])/(12+120)},UD_SWEEP=56*FUSEE_PER_HOUR*UD.pin/UD.wheel*360,UD_UP=180-UD_SWEEP/2,UDA=h=>(UD_UP+UD_SWEEP*h/56)*Math.PI/180;
-/* modules from the centre distances in L, so each pair meshes there; fourth: the escape pinion meshes at the 10.585 mm the escape wheel's 9.40 mm from the balance leaves */
+/* modules from the centre distances in L, so each pair meshes there; fourth: the escape pinion meshes at the 11.107 mm from the fourth's measured place to the escape arbor's,
+   9.40 mm from the balance toward the escape jewel (tools/solve.py): module 0.2614 (it was 0.3113, at 10.585 mm with the counts 60 : 8, before October 2026) */
 const MOD=(()=>{const d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
   return{fusee:2*d(L.Fu,L.C)/(TRAIN.fu+TRAIN.cp),centre:2*d(L.C,L.T)/(TRAIN.cw+TRAIN.tp),train:2*d(L.T,L.F)/(TRAIN.tw+TRAIN.fp),fourth:2*d(L.F,L.E)/(TRAIN.fw+TRAIN.ep)};})();
 /* FK: the fusee and its maintaining work were measured (the side photograph, the restoration video's 27:26-29:05) against the fusee wheel's tips taken as 40.87 mm across;
@@ -1265,23 +1267,29 @@ function buildMovement(M){
   const sqP=part('sq',-84);R.sq=hn(new THREE.Group(),'42022',{sub:1});R.sq.position.set(L.Fu[0],0,L.Fu[1]);sqP.add(R.sq);   /* the fusee arbor's square */cylBetween(R.sq,1.2,-36.56,-27.16,M.steel);mesh(R.sq,new THREE.BoxGeometry(2.4,1.6,2.4),M.steel,0,-37.16,0);
   /* winding key: its socket fits the fusee arbor square and turns it (never the barrel arbor, which the setup ratchet holds) */
   R.wkey=hn(windingKey(new THREE.Group(),M),'42044',{sub:1});R.wkey.position.y=-36.36;R.wkey.rotation.x=Math.PI;R.wkey.visible=false;R.sq.add(R.wkey);   /* its socket over the square (-36.36 to -37.96), the pipe out through the case's key hole (r 3.34 for its r 2.2), the collar and paddle 18 mm beyond the case's bottom and the shield plate; a T bar with balls until 5 October 2026 */
-  /* ---------- tooth phasing: driver tooth centred on the line of centres, driven gap centred there ---------- */
-  const ph=(A,pa,na,extA,B,pb,nb,extB)=>{const phi=Math.atan2(-(pb[1]-pa[1]),pb[0]-pa[0]);A.rotation.y=phi-0.375*TAU/na-(extA||0);B.rotation.y=phi+Math.PI-0.875*TAU/nb-(extB||0);};
+  /* ---------- tooth phasing, under load: the driver's tooth centred on the line of centres, the driven gap there, then the driven member turned back until its flank
+       lies on the driver's driving flank (0.005 mm off) where they come closest over a tooth (gearLash, core.js); a loaded train runs with its backlash all on the far
+       side (until 11 October 2026 it was centred, 0.04-0.06 mm a side where closest). s: the way the driver turns as the train runs, as update() turns it: the fusee wheel
+       drives the centre pinion, the centre wheel the third pinion, the third wheel the fourth pinion, the fourth wheel the escape pinion; the cannon pinion the
+       minute wheel and the minute pinion the hour wheel (the key, setting the hands forward, drives them the same way through the cannon pinion); the fusee
+       arbor's pinion the wind indicator wheel as it runs down (winding turns it back, and its backlash would cross to the other flank: not drawn). extB: the
+       turn of the driven member's frame (the escape arbor's, in the escapement's frame BETA, its tips at -t0 when E is whole) ---------- */
+  const ph=(A,pa,B,pb,s,extB)=>{const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b-(extB||0);};
   const U=R.gw.userData,CW=R.cw.userData,TW=R.tw.userData,FW=R.fw.userData,EW=R.esc.userData;
-  ph(U.wheel,L.Fu,TRAIN.fu,0,CW.pin,L.C,TRAIN.cp,0);
-  ph(CW.wheel,L.C,TRAIN.cw,0,TW.pin,L.T,TRAIN.tp,0);
-  ph(TW.wheel,L.T,TRAIN.tw,0,FW.pin,L.F,TRAIN.fp,0);
-  ph(FW.wheel,L.F,TRAIN.fw,0,EW.pin,L.E,TRAIN.ep,BETA-ESC.t0);
-  ph(R.cannon.userData.pin,L.C,MW.cp,0,R.minW.userData.wheel,L.Mw,MW.mw,0);
-  ph(R.minW.userData.pin,L.Mw,MW.mp,0,R.hourW.userData.wheel,L.C,MW.hw,0);
-  ph(R.fp.userData.pin,L.Fu,UD.pin,0,R.udW.userData.wheel,L.Ud,UD.wheel,0);
+  ph(U.wheel,L.Fu,CW.pin,L.C,1);
+  ph(CW.wheel,L.C,TW.pin,L.T,-1);
+  ph(TW.wheel,L.T,FW.pin,L.F,1);
+  ph(FW.wheel,L.F,EW.pin,L.E,-1,BETA-ESC.t0);
+  ph(R.cannon.userData.pin,L.C,R.minW.userData.wheel,L.Mw,-1);
+  ph(R.minW.userData.pin,L.Mw,R.hourW.userData.wheel,L.C,1);
+  ph(R.fp.userData.pin,L.Fu,R.udW.userData.wheel,L.Ud,1);
   /* ---------- laid out (the textbooks' developed drawing): the barrel and fusee stay; each later arbor goes onto the barrel-fusee line at its real centre
        distance from the one before, so every pair still meshes; the escape wheel, detent and balance turn together about the escape arbor (by DEV.g) ---------- */
   const DEV=(()=>{const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],fi=p=>Math.atan2(-p[1],p[0]),d=sub(L.Fu,L.Ba),l=Math.hypot(...d),w=[d[0]/l,d[1]/l],P={Fu:L.Fu};
     for(const[a,b]of[['Fu','C'],['C','T'],['T','F'],['F','E'],['E','B']]){const r=Math.hypot(...sub(L[b],L[a]));P[b]=[P[a][0]+w[0]*r,P[a][1]+w[1]*r];}
     return{w,P,fi,sub,g:fi(w)-fi(sub(L.B,L.E)),mid:[(L.Ba[0]+P.B[0])/2,(L.Ba[1]+P.B[1])/2],len:Math.hypot(...sub(P.B,L.Ba))};})();
   /* driven pinions: when a pair's line of centres turns by D, the driver standing, the pinion turns D(1 + n driver / n pinion) to stay in mesh (a coin rolled
-     round a coin); the escape pinion less the turn of its frame. Taken within half a pitch */
+     round a coin); the escape pinion less the turn of its frame. Taken within half a pitch, on top of the loaded phase ph() gave it (r0), which rolling keeps */
   const DPH=[[CW.pin,'Fu','C',TRAIN.fu,TRAIN.cp,0],[TW.pin,'C','T',TRAIN.cw,TRAIN.tp,0],[FW.pin,'T','F',TRAIN.tw,TRAIN.fp,0],[EW.pin,'F','E',TRAIN.fw,TRAIN.ep,DEV.g]].map(([m,a,b,na,nb,x])=>{
     const p=TAU/nb,c=(DEV.fi(DEV.w)-DEV.fi(DEV.sub(L[b],L[a])))*(1+na/nb)-x;return{m,r0:m.rotation.y,c:(((c+p/2)%p)+p)%p-p/2};});
   const dOf=k=>DEV.sub(DEV.P[k],L[k]),dC=dOf('C'),dF=dOf('F'),dE=dOf('E'),EFP=['escW','det','bal','spr'].map(k=>parts[k]);

@@ -359,6 +359,29 @@ Contents:
   wheel's hub 0.30 of its tip radius, rim from 0.79, spokes 0.10; the fourth's
   0.36, 0.83, 0.07 (they were 0.18, about 0.86, 0.08). The third takes the
   fourth's, estimated. Keep them measured (`WHEEL_PROP`; SHAPE-PASS.md, 3). `7ea6a5a`
+- **Every mesh drawn with its backlash centred** (kinematics audit, 11 October
+  2026). Each pair was phased with the driver's tooth on the line of centres and
+  the driven gap centred on it, so the driving flank stood 0.04-0.06 mm off its
+  leaf at the closest, and as far on the other side; a loaded train runs with
+  the driving flanks touching and all the backlash behind. `gearLash` (core.js)
+  now turns each driven member back onto the driver's driving flank, to 0.005 mm
+  where the two outlines come closest over a whole tooth (the cycloidal profiles
+  aren't conjugate, so the gap varies as they turn): the fusee wheel onto the
+  centre pinion, the centre, third and fourth wheels onto the third, fourth and
+  escape pinions, the cannon pinion onto the minute wheel, the minute pinion
+  onto the hour wheel, the fusee arbor's pinion onto the indicator wheel; the
+  laid-out view keeps it. Keep: `ph()` passes the way each driver turns as
+  `update()` turns it (if a driver's sense changes there, its `s` changes too);
+  the gap measured on the outlines as drawn (`pl`), never on pitch circles; at
+  the audit's E values and over a dense sweep of a tooth of each driver no
+  outline overlaps and the closest gap is 0.005 mm, on the driving flank. `d81364f`
+- **Comments and the README quoting the escape pinion's old mesh** (kinematics
+  audit, 11 October 2026). Two comments in `movement.js` (the photographed
+  group's, and `MOD`'s) and two places in the model README still put the escape
+  pinion 10.585 mm from the fourth, the module 0.3113 or 0.249; the fourth's
+  measured place makes it 11.107 mm and 0.2614 (`tools/solve.py`). Keep: a
+  figure that follows from `L` quoted as `solve.py` prints it, the old value
+  only as history. `05b2ef2`
 
 ## Winding and maintaining work
 
@@ -1923,6 +1946,16 @@ An arbor needs pivots and shoulders; a stone its seat.
   renderer off screen, each copied onto its own 2D canvas, and are built only
   when first near the view. Keep: at most two WebGL contexts on the page
   (`smoke.py` counts them). `9ffe479`
+- **The counting figure's teeth inside each other** (kinematics audit, 11 October
+  2026). "Counting" built the centre, third, fourth and escape arbors with
+  `arbor()` on its own layout and never phased the meshes, so at every beat
+  each wheel's teeth stood inside its pinion's leaves (an outline check found
+  93-194 points of one inside the other, against none for the model's own
+  train); the centre wheel's addenda were also rolled for a 10-leaf pinion, not
+  its 12. Each pinion is now phased on its wheel by `gearLash`, as the model's
+  are (the backlash behind, the escape pinion's frame at -t0), and each wheel
+  takes its pinion as `mate`. Keep: an essay figure that meshes gears phases
+  them with `gearLash` and the way the model turns its wheels. `96fba58`
 
 ---
 
