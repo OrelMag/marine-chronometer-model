@@ -450,8 +450,9 @@ Beside it runs the master time `tM`: a perfect clock, standing for the time sign
   `tSim + (bOff + eOff)/2`, and Now sets both offsets to 0. The train goes by this phase
   at every speed (above `REAL_X` only the drawn balance is slowed), and the wheel never turns
   back (the progress at a phase changes with the swing).
-- The fusee and chain follow the hours since winding: one fusee turn per 90/14
-  = 6.43 hours. The model runs down after 56¼ h (`RUN_H`, the fusee's 8¾ turns),
+- The fusee and chain follow the hours since winding (`hrs`, which runs with the
+  train's own time, `tSim`, so a fast chronometer runs down sooner by the master's
+  clock): one fusee turn per 90/14 = 6.43 hours. The model runs down after 56¼ h (`RUN_H`, the fusee's 8¾ turns),
   when the chain is all on the barrel; the dial's UP–DOWN scale covers the rated
   56 h.
 - The chain lies in the fusee's helical groove, locked to it: `setWind(n, eps)`
@@ -500,7 +501,8 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   see the impulse through (the tooth leaves the jewel at +20.7°). `makeEsc` works out that least amplitude
   from its own tables: `ESC.AMIN`, 42.3° with 2° to spare.
 - **When the train stops.** It stops at a locked beat when there is no power
-  (run down), when the swing falls below `AMIN`, when the locking arm brakes
+  (run down: a frame runs the train no further than the chain has left, and only the
+  beat under way then finishes), when the swing falls below `AMIN`, when the locking arm brakes
   the balance, or when the train-blocking screw's dog point is down and the
   next beat would bring a spoke onto it (`R.blockRoom(E)`, the beats left). It
   stops at the last whole beat before a spoke meets the dog point, within 3° of
