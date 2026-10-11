@@ -32,15 +32,16 @@ const BLENDER=(()=>{
     const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const y=t/0.5+H.bOff+PL,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,H.drv);z.p=p;return{E:k-1+(p>0?z.prog:0)+H.eOff,s:z};},lockd=z=>!(z.p>0&&z.prog>0&&z.prog<1);   /* as app.js: at a whole phase the tooth not yet escaped, whatever ESC.state's prog there */
     H.twist=()=>{if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;H.kick=160*D2R;};
     H.step=dt=>{const mvTo=(x,t,r)=>x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(H.lastE??0))?Math.min(b,vf-0.005):b;
-      const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held;
+      const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held,bank=H.held&&H.bk!=null&&H.amp>Math.abs(H.bk);
       { let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dt/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
-        else if(brake)a*=Math.exp(-dt/A.TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/A.TF));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a; }
+        else if(brake||bank)a*=Math.exp(-dt/A.TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/A.TF));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a; }
       let E,s;
-      if(!H.held){let q=at(H.tSim);const Eb=H.lastE!=null?Math.max(q.E,H.lastE):q.E,room=blocked()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff+PL;};
-        const stop=!run||H.amp<ESC.AMIN||brake;if(dt>0&&lockd(q.s)&&(stop||Eb+1>room)){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}
-        else{if(dt>0){let adv=dt;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!H.winding)adv=Math.min(adv,(RUN_H-H.hrs)*3600);H.tSim+=adv;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+adv/3600);q=at(H.tSim);}E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){hold();H.Eh=room;}}}
-      if(H.held){H.bph+=dt/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp,drv);s.p=p;E=H.Eh;
-        if(run&&!brake&&H.amp>=ESC.AMIN&&!(blocked()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockd(s)){H.held=false;H.bOff=(((H.bph-PL-H.tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(H.tSim).E);}}
+      if(!H.held){let q=at(H.tSim);const Eb=H.lastE!=null?Math.max(q.E,H.lastE):q.E,room=blocked()?Eb-1e-4+R.blockRoom(Eb-1e-4):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff+PL;};
+        const stop=!run||H.amp<ESC.AMIN||brake;if(dt>0&&lockd(q.s)&&stop){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}
+        else{if(dt>0){let adv=dt;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!H.winding)adv=Math.min(adv,(RUN_H-H.hrs)*3600);H.tSim+=adv;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+adv/3600);q=at(H.tSim);}E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){if(Math.abs(E-Math.round(E))<1e-6)E=Math.round(E);hold();H.Eh=E;}}}
+      if(H.held){H.bph+=dt/0.5;if(H.Eh%1&&run&&!blocked()){H.Eh=Math.ceil(H.Eh-1e-6);if(H.bk>0&&H.amp<H.bk){H.amp=H.bk;H.bph=Math.floor(H.bph)+0.5;}}if(H.bkE!==H.Eh){H.bkE=H.Eh;H.bk=H.Eh%1?bankAt(H.Eh%1):null;}   /* the spoke, the screw raised and the banked balance as app.js */
+        const p=((H.bph%1)+1)%1;s=bankState(p,H.amp,drv,H.bk);s.p=p;E=H.Eh;
+        if(run&&!brake&&H.amp>=ESC.AMIN&&!(H.Eh%1)&&!(blocked()&&R.blockRoom(H.Eh-1e-4)<2e-4)&&lockd(s)){H.held=false;H.bOff=(((H.bph-PL-H.tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(H.tSim).E);}}
       H.lastE=E;return{E,th:s.th,lift:s.lift,psDef:s.psDef,n:H.hrs*FUSEE_PER_HOUR,blk:H.blk,arm:H.arm,winding:H.winding,dt};};
     return H;}
   /* the phases of a beat sampled: evenly, 120 a beat (a straight line between two is then within 0.1 degree of the balance at its fastest), and closely where the escapement acts (unlocking, impulse: the detent, trip spring and escape wheel move in a few hundredths of a beat) */

@@ -1810,6 +1810,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   go with the train's own time, and a frame runs the train no further than the chain has left (then,
   stopping, only to the end of the beat under way). Keep: `hrs` advances with `tSim`, never past
   `RUN_H`, and what may drive the train after it (`canDrive`) carries it on without moving `hrs`.
+- **The train-blocking screw held the train at the last lock before the spoke.** The train stopped
+  at the last whole beat before a spoke would meet the dog point. In a real one the next unlocking
+  lets the wheel go until the spoke meets it, a fraction of a tooth (Op. 6: the escapement works
+  "until the train is stopped by the blocking screw bearing against one of the arms of the fourth
+  wheel"), the detent back on its stop with no tooth on it. Now so: held at the spoke, the tooth
+  it holds stands in the impulse jewel's path (unless within 0.04 of a tooth of a lock), the jewel
+  strikes it each return swing and the balance swings only on its side of it, stopped about as
+  quickly as by the arm (`bankAt`, `bankState` in `box.js`); raised, the wheel runs on to the next
+  lock and the train goes again only from a whole beat. Keep: hold and release by the same spoke
+  (`blockRoom` read from 1e-4 of a beat before, so a spoke against the point reads 0, not a
+  spacing); nothing restarts the train off its stone.
 
 ## Build, tools and docs
 

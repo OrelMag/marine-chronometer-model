@@ -502,11 +502,19 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   from its own tables: `ESC.AMIN`, 42.3° with 2° to spare.
 - **When the train stops.** It stops at a locked beat when there is no power
   (run down: a frame runs the train no further than the chain has left, and only the
-  beat under way then finishes), when the swing falls below `AMIN`, when the locking arm brakes
-  the balance, or when the train-blocking screw's dog point is down and the
-  next beat would bring a spoke onto it (`R.blockRoom(E)`, the beats left). It
-  stops at the last whole beat before a spoke meets the dog point, within 3° of
-  the fourth wheel.
+  beat under way then finishes), when the swing falls below `AMIN`, or when the locking arm brakes
+  the balance. With the train-blocking screw's dog point down between the fourth
+  wheel's spokes it goes on until the next unlocking lets the escape wheel go and a
+  spoke meets the point (`R.blockRoom(E)`, the beats left), a fraction of a tooth past
+  the lock, as the manual's Op. 6 has it ("allow the escapement to function until the
+  train is stopped by the blocking screw bearing against one of the arms of the fourth
+  wheel"). The detent is back on its stop with no tooth on it, and the tooth the spoke
+  holds stands in the impulse jewel's path (unless it stopped within 0.04 of a tooth of
+  either lock): the jewel strikes it on each return swing (`bankAt`, `bankState` in
+  `box.js`, the angle where `ESC.PA` meets the wheel's place), so the balance swings
+  only on its own side of the tooth and is stopped as quickly as by the arm (`TAU_ARM`,
+  estimated). Raised, the screw lets the wheel run on to the next tooth's lock, a
+  whole beat again.
 - **While it is stopped** `tSim` and the hands stand, so they lose the time it
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
   down. It runs down freely with the train held (1/e in 52 s, `TAU_FREE`, from
@@ -517,8 +525,10 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   trip spring stays bent against it and follows it back, and the detent stays on
   its stop (`ESC.state`).
 - **When it goes again.** The train runs again when there is power, the arm is
-  off, the screw is up and the swing is above `AMIN`. That happens at once if
-  the balance is still swinging: the screw raised, or the chronometer wound,
+  off, the screw is up (or leaves a spoke's room) and the swing is above `AMIN`, the
+  wheel on its stone and the balance where its swing doesn't unlock it. That happens at once if
+  the balance is still swinging: the screw raised before a spoke stopped the train (or
+  after, if the tooth it held was clear of the jewel), or the chronometer wound,
   before the balance has run down. Otherwise it takes Twist to start. The twist
   turns the box sharply and back and sets the balance swinging (160°), and the
   impulses bring it up to the swing the train's torque gives (`ESC.ampAt`, 255°

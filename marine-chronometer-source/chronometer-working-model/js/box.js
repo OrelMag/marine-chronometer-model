@@ -202,5 +202,17 @@ function buildBox(M){
   for(const sx of[1,-1]){const h=mesh(root,cylY(2.6,30,14),M.brass,sx*55,0,-W-2);h.rotation.z=Math.PI/2;const h2=mesh(mid,cylY(2.6,30,14),M.brass,sx*55,38,-2);h2.rotation.z=Math.PI/2;}
   return{root,ring,bowl,mid,top,shield,shRest:SH_REST,latch:lv,RO,CR};
 }
+/* ================= motions the page (app.js) and the export (blender.js) both play: the gimbals, the twist, the banked balance ================= */
+/* the escape wheel held by the train-blocking screw's dog point a fraction f of a tooth past its lock (the next unlocking let it go until a spoke met the point): the tooth
+   stands in the impulse jewel's path where ESC.PA (the wheel's angle the jewel holds it at, along the balance's angle) comes to -f P, and the jewel strikes it there on each
+   return swing. bankAt(f): that angle of the balance, null where the tooth is clear of the jewel's path (f under 0.04 or over 0.96) */
+/** @param {number} f */
+function bankAt(f){const P=ESC.PA,g=-f*ESC.P;for(let i=0;i<P.length-1;i++)if(P[i]>=g&&P[i+1]<g)return ESC.TH0+(i+(P[i]-g)/(P[i]-P[i+1]))*ESC.DT;return null;}
+/* the balance's state (ESC.state) at phase p, swing a and drive s, banked at angle b (bankAt; null: free): it was on the far side of the tooth when the wheel stopped, so it
+   swings only there, turning back where the jewel meets the tooth (the free swing's part from b round through its far turn, repeated), and once its swing is less than b it
+   lies against the tooth, if b is past its rest (b > 0), or swings free short of it */
+/** @param {number} p @param {number} a @param {number} s @param {number|null} b */
+function bankState(p,a,s,b){if(b==null||a<=Math.abs(b)&&b<=0)return ESC.state(p,a,s);if(a<=b)return ESC.state(0.5,b,s);
+  const ps=Math.acos(clamp(-b/a,-1,1))/TAU,L=1-2*ps,r=((p-ps)%1+1)%1;return ESC.state(ps+r%L,a,s);}
 function shadowTex(){const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');const g=x.createRadialGradient(128,128,20,128,128,128);g.addColorStop(0,'rgba(0,0,0,0.42)');g.addColorStop(0.6,'rgba(0,0,0,0.16)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,256,256);return new THREE.CanvasTexture(cv);}
 
