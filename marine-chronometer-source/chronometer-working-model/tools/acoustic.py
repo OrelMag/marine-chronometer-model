@@ -1,45 +1,50 @@
 """The escapement heard: the clicks inside each beat of recordings of real, running Model 21s, timed and fitted with the model's escapement in time
-(dynamics.js), the balance's swing the only free parameter (References/VIDEOS.md, "Methods": the clicks of a beat). No browser; numpy, scipy, matplotlib
-and imageio-ffmpeg (its ffmpeg reads the audio), yt-dlp for --fetch. The recordings stay in $MC_VIDEO (default ~/mc-video), so ci.py can't run it.
+(dynamics.js), the balance's swing the free parameter (References/VIDEOS.md, "Methods": the clicks of a beat). No browser; numpy, scipy, matplotlib and
+imageio-ffmpeg (its ffmpeg reads the audio), yt-dlp for --fetch. The recordings stay in $MC_VIDEO (default ~/mc-video), so ci.py can't run it.
 
-  python acoustic.py ID [ID ...]        each recording's beat, its onsets and the fits; about 10 s a recording (3 min of audio) and 15 s for the models
-        [--fetch]                         fetch a recording first, with its sound: $MC_VIDEO/run_ID.mkv (yt-dlp, 1080p at most)
+  python acoustic.py ID [ID ...]        each recording's beat, its onsets and the fits: about 20 s for the models, then 15 s to 2 min a recording
+                                          (the fit with the beat error free tries every pairing on a 2-parameter grid: longest where many onsets are found)
+        [--fetch]                         fetch a recording first, with its sound: $MC_VIDEO/run_ID.mkv (yt-dlp, 1080p at most; video.py fetch takes no sound)
         [--from mm:ss] [--to mm:ss]       only that stretch (every recording)
-        [--boot 200]                      bootstrap resamples over beats (the onsets' and the swing's uncertainty)
-        [--plots DIR]                     where the plots go (default $MC_VIDEO/acoustic): ac_ID.png, the beat with onsets and both models' best fits
-        [--write]                         write tools/acoustic.json (per recording: beats used, onsets, each model's fit and residuals)
-  python acoustic.py s7VW3RiJ97E xDKFZaY88cM We1dLNXiBj0 --write   (the three of VIDEOS.md, about 1 min)
+        [--boot 200]                      bootstrap resamples over beats (the onsets' spread, and the swing's over the first 100)
+        [--plots DIR]                     where the plots go (default $MC_VIDEO/acoustic): ac_ID.png, the beat with its onsets and both models' best fits
+        [--write]                         write tools/acoustic.json (per recording: beats used, onsets, each model's fits and residuals, single intervals)
+  python acoustic.py s7VW3RiJ97E We1dLNXiBj0 xDKFZaY88cM XJQCgMV_GA8 FpolZSipVmQ --write   (the five of VIDEOS.md with running sound, about 4 min)
 
 Method. 1. The audio, mono at 48 kHz, filtered to 4-12 kHz (timing: the case rings near 1 kHz, every 1.1 ms in a lower band's envelope) and 1.5-4 kHz
 (shown); the envelope |hilbert|, smoothed to 3 kHz (both zero-phase). 2. The beat: the envelope's autocorrelation between 0.3 and 1.2 s (0.5 s, one
-impulse an oscillation); its phase by folding. 3. Each beat placed by cross-correlating its envelope (-30..+40 ms) with the trimmed mean of the beats
-so far, within 4 ms of the beat train's straight line (the chronometer keeps time to a few ppm; the recording's clock only to tens: only intervals inside
-a beat are used, never the rate), three passes. 4. Beats rejected when their quiet floor (80-200 ms after the click, where nothing in the escapement moves)
-is over twice the median (speech, handling), or their correlation with the template is under half the median. 5. Each beat over its own floor, the
-trimmed mean (20 % each end) per band, in dB over the floor: 0 dB is the quiet floor. 6. Onsets: where the level first stands DLO dB (1.5) over the
-highest it reached in the 3 ms before (to 0.3 ms before), on a rise that goes on to DHI dB (3) over it: a click's ringing never rises above its own
-earlier peaks, a new click on its tail does. Their spread over --boot resamples of the beats (with replacement) is each onset's uncertainty and how
-often it is found. 7. The model: dynamics.js's time-domain escapement at drives covering 132-370 deg, each beat's events relative to the strike: 4 the
-discharge jewel meets the passing spring (unlocking), 3 the detent lands on its stop, 0 the tooth strikes the impulse jewel, 1 the next tooth locks on
-the stone, and on the return swing 8 the jewel meets the trip spring and 9 the spring comes clear; the old model (before 11 October 2026, 39d6919)
-from its kinematic angles, t(theta) = acos(-theta/A)/(4 pi) from the far turning point (return swing T - t). 8. The fit: swing A and a shift t0 (which
-click the beats were aligned on is free: the strike in one recording, the lock in another) minimising a symmetric chamfer cost: each model event to its
-nearest onset and each onset found in 80 % of resamples to its nearest event, (distance / sigma)^2 capped at 9, sigma the onset's spread and 0.3 ms
-(the onset's definition, Opus's smearing of transients by up to a millisecond) in quadrature. The swing's uncertainty is the spread of the fit over the
-resamples. 9. Single intervals, each read as a swing on the corrected model alone: strike to lock (corrected 8.45 ms at 255 deg, old 12.9) and the
-return swing's clicks to the strike (the lift-angle method: times from a known angle to another, the swing alone sets them)."""
+impulse an oscillation). 3. Candidate clicks: the loudest point of every stretch 0.8 of a beat long, kept where another stands a beat off within 5 ms
+(edited videos jump in phase at their cuts, so no one beat train runs through a recording); each then placed by cross-correlating its envelope
+(-30..+40 ms) with the trimmed mean of the beats kept, within 8 ms, three passes. Only intervals inside a beat are used: the recording's clock is good to
+tens of ppm, not the rate. 4. Beats rejected when their quiet floor (FL, 300-440 ms after the click: after the return swing, before the next beat) is
+over twice the median (speech, handling), or their correlation with the template under half the median. 5. Each beat over its own floor, the trimmed
+mean (20 % each end) per band, in dB: 0 dB is the quiet floor. 6. Onsets: where the level first stands DLO (1.5 dB) over the highest it reached 4 to 2 ms
+before, on a rise that goes on to DHI (2 dB) over it: a click's ringing never rises above its own earlier peaks, a new click on its tail does, and a rise
+of up to 2 ms is measured whole. Their spread over --boot resamples of the beats (with replacement) is each onset's uncertainty, and how often it is
+found its weight: an onset rising STRONG (3 dB) in 80 % of them must be explained, a weaker one may be. 7. The model: dynamics.js's time-domain
+escapement at 15 drives (about 140-350 deg) and 7 beat errors (bE -12 to +12 deg), each beat's events relative to the strike: 4 the discharge jewel meets
+the passing spring (unlocking), 2 the wheel released (the tooth leaves the stone), 3 the detent lands on its stop, 0 the tooth strikes the impulse
+jewel, 1 the next tooth locks on the stone, and on the return swing 8 the jewel meets the trip spring and 9 the spring comes clear; the old model (before
+11 October 2026, 39d6919) from its kinematic angles, t(theta) = acos((bE - theta)/A)/(4 pi) from the far turning point (the return swing T - t). 8. The
+fit: every order-keeping one-to-one pairing of events with onsets (which click the beats were aligned on is free: the strike in one recording, the lock
+in another); for each, the shift by weighted least squares at every swing, the cost the pairs' chi^2 (sigma: the onset's spread and SM, 0.3 ms, the
+onset's definition and Opus's smearing of transients, in quadrature) plus UE (4) an event unheard and UO (9) a strong onset unexplained. Swing only
+(in beat), its uncertainty the 16-84 % of the fit over resamples; then the beat error free too, a second parameter (the chronometer's own state, like
+its swing), its ranges where the cost stays within 1 of the least. The runner-up is the best pairing of other onsets: what the reading had to beat.
+9. Single intervals between paired onsets, each read as a swing on the corrected model alone: unlocking to strike to lock (corrected 7.2 and 8.5 ms at
+255 deg, old 2.1 and 12.9: their ratio, about 0.85 against 0.16, doesn't depend on the swing) and the return swing's clicks to the next unlocking (the
+lift-angle method: from one known angle to another, the swing alone sets the time)."""
 import numpy as np, sys, os, glob, json, subprocess, re
 from itertools import combinations
 from scipy import signal, stats
 TOOLS = os.path.dirname(os.path.abspath(__file__)); HOME = os.environ.get('MC_VIDEO', os.path.expanduser('~/mc-video')); FS = 48000
 BANDS = {'4-12 kHz': (4000, 12000), '1.5-4 kHz': (1500, 4000)}; TB = '4-12 kHz'
 W0, W1, R0, R1 = -30, 40, 215, 295   # the windows read, ms from the aligned click: the active swing's clicks and the return swing's, half a period on
-DLO, DHI, STRONG, SM = 1.5, 2.0, 3.0, 0.3   # onset thresholds (dB; an onset rising STRONG or more must be explained, a weaker one may be),
+DLO, DHI, STRONG, SM = 1.5, 2.0, 3.0, 0.3   # onset thresholds (dB; an onset rising STRONG or more must be explained, a weaker one may be), and the timing sigma (ms) every onset carries besides its spread: the onset's definition, Opus's smearing of transients
 FL = (300, 440)   # the quiet floor, ms after the aligned click: after the return swing's clicks, before the next beat (a click rings for 100 ms in xDKFZaY88cM)
-# and the timing sigma every onset carries besides its spread (ms): the definition, Opus
 GB = (4, 2)   # the baseline: the highest level 4 to 2 ms before (a rise of up to 2 ms is measured whole; ringing, every 1.1 ms, stays under its earlier peaks)
-NAMES = {4: 'jewel meets passing spring', 3: 'detent lands', 0: 'strike', 1: 'lock', 8: 'jewel meets trip spring', 9: 'trip spring clear'}
-FIT = [4, 3, 0, 1, 8, 9]; CORE = [0, 1, 8, 9]
+NAMES = {4: 'jewel meets passing spring', 2: 'wheel released', 3: 'detent lands', 0: 'strike', 1: 'lock', 8: 'jewel meets trip spring', 9: 'trip spring clear'}
+FIT = [4, 2, 3, 0, 1, 8, 9]; CORE = [0, 1, 8, 9]
 UE, UO = 4.0, 9.0   # the fit's price for a model event left unheard (2 sigma squared: some contacts are quiet) and for a clear onset no event explains (3 sigma squared)
 def opt(a, k, n, d):
     if k in a: i = a.index(k); v = a[i + 1:i + 1 + n]; del a[i:i + 1 + n]; return v if n > 1 else v[0]
@@ -52,7 +57,7 @@ def find(i):   # the copy of recording i that has a sound track (run_ID.mkv, fet
         if f.split('.')[-1] in ('mkv', 'webm', 'mp4') and 'Audio:' in subprocess.run([ffmpeg(), '-hide_banner', '-i', f], capture_output=True, text=True).stderr: return f
     sys.exit(f'{i}: no copy with sound in {HOME}; python acoustic.py {i} --fetch')
 def fetch(i):
-    subprocess.run([sys.executable, '-m', 'yt_dlp', '-f', 'bv*[height<=1080]+ba/b', '--merge-output-format', 'mkv', '--ffmpeg-location', ffmpeg(),
+    subprocess.run([sys.executable, '-m', 'yt_dlp', '-f', 'bv*[height<=1080]+ba/b', '--merge-output-format', 'mkv', '--no-progress', '--ffmpeg-location', ffmpeg(),
                     '-o', os.path.join(HOME, f'run_{i}.%(ext)s'), 'https://www.youtube.com/watch?v=' + i], check=True)
 def audio(f, t0=0, t1=None):
     r = subprocess.run([ffmpeg(), '-v', 'error', '-ss', str(t0)] + (['-to', str(t1)] if t1 else []) + ['-i', f, '-vn', '-ac', '1', '-ar', str(FS), '-f', 'f32le', '-'], capture_output=True, check=True)
@@ -110,38 +115,42 @@ def match(on, bs):   # each onset's spread over the resamples (nearest within 1 
 
 # ---------- the models ----------
 JS = r"""const {sim,ESC}=require(process.argv[1]+'/dynamics.js'),D=Math.PI/180,out=[];
-for(const s of [0.35,0.4,0.45,0.5,0.6,0.7,0.8,0.9,1,1.1,1.25,1.4,1.6,1.8,2]){const tr=[],r=sim({mode:'phys',T:4,from:3,trace:tr,s,A:ESC.ampAt(s)/D}),ev=tr.map(x=>[+x[0],x[1]]);
-  const st=ev.filter(e=>e[1]===0&&e[0]>2.9&&e[0]<3.4)[0][0],E={};for(const[t,k]of ev){const d=(t-st)*1e3;if(d<-20||d>300)continue;if(E[k]===undefined)E[k]=d;}
-  out.push({s,A:r.A,E});}
+for(const bE of [-12,-8,-4,0,4,8,12])for(const s of [0.35,0.4,0.45,0.5,0.6,0.7,0.8,0.9,1,1.1,1.25,1.4,1.6,1.8,2]){const tr=[],r=sim({mode:'phys',T:4,from:3,trace:tr,s,bE,A:ESC.ampAt(s)/D}),ev=tr.map(x=>[+x[0],x[1]]);
+  const q=ev.filter(e=>e[1]===0&&e[0]>2.9&&e[0]<3.4);if(!q.length)continue;const st=q[0][0],E={};for(const[t,k]of ev){const d=(t-st)*1e3;if(d<-20||d>300)continue;if(E[k]===undefined)E[k]=d;}
+  if([4,2,3,0,1,8,9].every(k=>E[k]!==undefined))out.push({s,bE,A:r.A,E});}   /* far out of beat at the strongest drive it trips: no clean beat, left out */
 console.log(JSON.stringify(out));"""
-def corrected():
+DB = [-12, -8, -4, 0, 4, 8, 12]   # out of beat (deg) the model is run at: the hairspring's rest that far from the escapement's zero (dynamics.js bE)
+def corrected():   # {bE: (swings, {event: times})} over the drives
     r = subprocess.run(['node', '-e', JS, os.path.join(TOOLS)], capture_output=True, text=True, check=True); T = json.loads(r.stdout)
-    A = np.array([x['A'] for x in T]); E = {k: np.array([x['E'][str(k)] for x in T]) for k in FIT}
-    return A, E
+    return {d: (np.array([x['A'] for x in T if x['bE'] == d]), {k: np.array([x['E'][str(k)] for x in T if x['bE'] == d]) for k in FIT}) for d in DB}
 # the old model (39d6919's makeEsc, kinematic, no time-domain version): angles from its measure() at the model's settings: the jewel meets the passing spring at
-# contact -27.32 deg, the tooth lands on the impulse jewel (run.land) -20.65, the detent falls back (off) -10.96, impulse ends at the lock (impEnd) +20.75; on the
+# contact -27.32 deg, the wheel is released (rel) -21.28, the tooth lands on the impulse jewel (run.land) -20.65, the detent falls back (off) -10.96, impulse ends at the lock (impEnd) +20.75; on the
 # return swing the jewel meets the trip spring at -15.88 (its PS table's first contact) and the spring comes clear (poff) -39.12
-OLD = {4: -27.32, 0: -20.65, 3: -10.96, 1: 20.75, 8: -15.88, 9: -39.12}
-def old_at(A):
-    t = lambda th: np.arccos(np.clip(-th / A, -1, 1)) / (4 * np.pi) * 1000; s = t(OLD[0])
+OLD = {4: -27.32, 2: -21.28, 0: -20.65, 3: -10.96, 1: 20.75, 8: -15.88, 9: -39.12}
+def old_at(A, d=0.0):   # the balance at d - A cos(wt): out of beat by d, the oscillation's centre d from the escapement's zero
+    t = lambda th: np.arccos(np.clip((d - th) / A, -1, 1)) / (4 * np.pi) * 1000; s = t(OLD[0])
     return {k: (500 - t(v) - s if k in (8, 9) else t(v) - s) for k, v in OLD.items()}
-def table(kind, Ag, CA=None, CE=None):
-    """the model's event times (ms from the strike) on the swing grid Ag"""
-    if kind == 'old': return {k: np.array([old_at(A)[k] for A in Ag]) for k in FIT}
-    return {k: np.interp(Ag, CA, CE[k]) for k in FIT}
-def fit(on, Ag, M, evs):
+def table(kind, GA, GD, C=None):
+    """the model's event times (ms from the strike) on the grid of swings GA and beat errors GD (parallel arrays)"""
+    if kind == 'old': return {k: np.array([old_at(A, d)[k] for A, d in zip(GA, GD)]) for k in FIT}
+    at = lambda d: {k: np.interp(GA, C[d][0], C[d][1][k]) for k in FIT}; out = {k: np.zeros(len(GA)) for k in FIT}
+    for j in range(len(DB) - 1):   # linear between the beat errors run
+        m = (GD >= DB[j]) & (GD <= DB[j + 1]); f = (GD[m] - DB[j]) / (DB[j + 1] - DB[j]); a0, a1 = at(DB[j]), at(DB[j + 1])
+        for k in FIT: out[k][m] = (1 - f) * a0[k][m] + f * a1[k][m]
+    return out
+def fit(on, Ag, M, evs, GD=None):
     """every order-keeping one-to-one pairing of model events with onsets; for each swing on the grid the shift t0 by weighted least squares; the cost the
     pairs' chi^2, UE for each event left unpaired and UO for each onset rising STRONG, found in 80 % of resamples, left unexplained. Returns the best (A, t0, cost,
     pairs, chi2) and, as alt, the best that pairs different onsets (the runner-up reading: what the fit had to beat)"""
-    ot = np.array([o['t'] for o in on]); sg = np.hypot([o['sd'] for o in on], SM); strong = np.array([o['p'] >= 0.8 and o['rise'] >= STRONG for o in on]); ev = sorted(evs, key=lambda k: M[k][len(Ag) // 2]); top = {}
+    ot = np.array([o['t'] for o in on]); sg = np.hypot([o['sd'] for o in on], SM); strong = np.array([o['p'] >= 0.8 and o['rise'] >= STRONG for o in on]); ev = sorted(evs, key=lambda k: M[k][len(Ag) // 2]); top = {}; prof = np.full(len(Ag), np.inf)
     for m in range(1, min(len(ev), len(on)) + 1):
         for E in combinations(range(len(ev)), m):
             mt = np.stack([M[ev[e]] for e in E], 1)
             for O in combinations(range(len(on)), m):
                 O = list(O); w = 1 / sg[O] ** 2; r = ot[O][None] - mt; t0 = (r * w).sum(1) / w.sum(); chi = ((r - t0[:, None]) ** 2 * w).sum(1)
-                cost = chi + UE * (len(ev) - m) + UO * (strong.sum() - strong[O].sum()); i = int(np.argmin(cost)); key = tuple(O)
-                if key not in top or cost[i] < top[key]['cost'] - 1e-9: top[key] = dict(A=float(Ag[i]), i=i, t0=float(t0[i]), cost=float(cost[i]), chi2=float(chi[i]), pairs=[(ev[e], o) for e, o in zip(E, O)])
-    r = sorted(top.values(), key=lambda f: f['cost']); best = r[0]
+                cost = chi + UE * (len(ev) - m) + UO * (strong.sum() - strong[O].sum()); i = int(np.argmin(cost)); key = tuple(O); prof = np.minimum(prof, cost)
+                if key not in top or cost[i] < top[key]['cost'] - 1e-9: top[key] = dict(A=float(Ag[i]), bE=float(GD[i]) if GD is not None else 0.0, i=i, t0=float(t0[i]), cost=float(cost[i]), chi2=float(chi[i]), pairs=[(ev[e], o) for e, o in zip(E, O)])
+    r = sorted(top.values(), key=lambda f: f['cost']); best = r[0]; best['prof'] = prof
     best['alt'] = next((f for f in r[1:] if {o for _, o in f['pairs']} != {o for _, o in best['pairs']} and len(f['pairs']) > 1), None); return best
 def residuals(on, M, f):
     return {NAMES[k]: dict(model=round(float(M[k][f['i']] + f['t0']), 2), onset=on[o]['t'], res=round(float(on[o]['t'] - M[k][f['i']] - f['t0']), 2)) for k, o in f['pairs']}
@@ -154,9 +163,11 @@ if __name__ == '__main__':
     t0s, t1s = opt(a, '--from', 1, None), opt(a, '--to', 1, None); B = int(opt(a, '--boot', 1, '200')); NB = min(B, 100); pd = opt(a, '--plots', 1, os.path.join(HOME, 'acoustic'))
     write = '--write' in a; get = '--fetch' in a; ids = [x for x in a if not x.startswith('--')]
     os.makedirs(pd, exist_ok=True); rng = np.random.default_rng(1)
-    CA, CE = corrected(); Ag = np.arange(max(140, np.ceil(CA.min())), min(360, np.floor(CA.max())) + 0.01, 0.5); MC, MO = table('new', Ag, CA, CE), table('old', Ag)
+    C = corrected(); lo_, hi_ = max(max(140, np.ceil(C[d][0].min())) for d in DB), min(min(360, np.floor(C[d][0].max())) for d in DB)
+    Ag = np.arange(lo_, hi_ + 0.01, 0.5); Z = np.zeros(len(Ag)); MC, MO = table('new', Ag, Z, C), table('old', Ag, Z)
+    A2, D2 = [g.ravel() for g in np.meshgrid(np.arange(lo_, hi_ + 0.01, 1.0), np.arange(-12, 12.01, 1.0))]; MC2, MO2 = table('new', A2, D2, C), table('old', A2, D2)
     i255 = np.argmin(abs(Ag - 255))
-    print(f'  corrected model (dynamics.js), at {CA.min():.0f}-{CA.max():.0f} deg; at 255 deg: ' + ', '.join(f'{NAMES[k]} {MC[k][i255]:+.2f}' for k in FIT) + ' ms from the strike')
+    print(f'  corrected model (dynamics.js), at {lo_:.0f}-{hi_:.0f} deg; at 255 deg: ' + ', '.join(f'{NAMES[k]} {MC[k][i255]:+.2f}' for k in FIT) + ' ms from the strike')
     print(f'  old model (39d6919, kinematic), at 255 deg: ' + ', '.join(f'{NAMES[k]} {MO[k][i255]:+.2f}' for k in FIT))
     res = {}
     for i in ids:
@@ -186,6 +197,13 @@ if __name__ == '__main__':
                 if F['alt']:
                     G = F['alt']; R['fits'][f'{nm}/{evn}']['alt'] = dict(A=G['A'], cost=round(G['cost'], 2), pairs={NAMES[k]: on[o]['t'] for k, o in G['pairs']})
                     print(f'       runner-up: swing {G["A"]:.0f} deg, cost {G["cost"]:.1f}: ' + ', '.join(f'{NAMES[k]} at {on[o]["t"]:+.2f}' for k, o in G['pairs']))
+        # and with the beat error free too (a second parameter, the chronometer's own state like its swing): the range where the cost stays within 1 of its least
+        for nm, M in (('corrected', MC2), ('old', MO2)):
+            F = fit(on, A2, M, FIT, D2); pr = F['prof']; okA = pr <= F['cost'] + 1; aR, dR = (A2[okA].min(), A2[okA].max()), (D2[okA].min(), D2[okA].max())
+            R['fits'][f'{nm}/beat'] = dict(A=F['A'], bE=F['bE'], A_range=[float(v) for v in aR], bE_range=[float(v) for v in dR], t0=round(F['t0'], 2), cost=round(F['cost'], 2), chi2=round(F['chi2'], 2),
+                                           paired=len(F['pairs']), res=residuals(on, M, F)); bt[(nm, 'beat')] = F
+            print(f'  {nm:9s} beat: swing {F["A"]:.0f} deg ({aR[0]:.0f}-{aR[1]:.0f}), out of beat {F["bE"]:+.0f} deg ({dR[0]:+.0f} to {dR[1]:+.0f}), cost {F["cost"]:.1f} (chi2 {F["chi2"]:.1f} on {len(F["pairs"])} pairs): '
+                  + ', '.join(f'{k} {v["res"]:+.2f}' for k, v in R['fits'][f'{nm}/beat']['res'].items()))
         # single intervals read on the corrected model, between the onsets its fit paired with two events
         F = bt[('corrected', 'all')]; ev = {k: on[o] for k, o in F['pairs']}; one = {}
         for a_, b_ in ((0, 1), (4, 0), (8, 9), (8, 4), (9, 4), (8, 0), (9, 0)):
