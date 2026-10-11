@@ -1790,6 +1790,12 @@ An arbor needs pivots and shoulders; a stone its seat.
   `tSim + (bOff + eOff)/2 = k/2`, as on a chronometer set to a signal, and `dialRead()` reads what the
   hands show; Now puts the balance's phase on the master's too. Keep: the hands land on the mark at
   the time `dialRead()` gives for it.
+- **The export's train could step back on restarting.** `blender.js`'s copy of the loop counted a
+  beat's progress as 0 at a whole phase in `at()` but took `ESC.state`'s 1 there on restarting, so on
+  its 1/120 s grid the escape wheel stepped back a tooth (40 to 39) for 4 of 240 times the screw was
+  raised. Its `sim` is now the page's loop line for line (the phase with `PL`, the wheel never back,
+  the restart's count from `at()` itself), started so Running is as before. Keep: `sim` in
+  `blender.js` and the train in `app.js`'s `frame` change together.
 
 ## Build, tools and docs
 

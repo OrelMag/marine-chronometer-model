@@ -28,19 +28,19 @@ const BLENDER=(()=>{
     BX.root.rotation.set(s.pitch,s.tw,s.roll,'ZYX');BX.ring.rotation.x=s.gp-s.pitch;BX.bowl.rotation.z=s.gr-s.roll;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(s.latch));
     look(C,s.dev>0.02,s.hkeyOn);}
   /* ---------- the train and balance through time: app.js frame()'s stop and start, drive and swing (ampStep, stopMove), at speed 1 ---------- */
-  function sim(C,hrs){const R=C.R,drvF=A.drvF,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false};
-    const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const x=t/0.5+H.bOff,kk=Math.floor(x),p=x-kk,z=ESC.state(p,H.amp);return{E:kk+(p>0?z.prog:0)+H.eOff,s:z};};   /* at a whole beat the tooth not yet escaped: ESC.state's prog 1 there is the beat before's, which kk has counted */
+  function sim(C,hrs){const R=C.R,drvF=A.drvF,PL=A.PL,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:-PL,eOff:1,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false};   /* bOff -PL, eOff 1: at 0 s the balance at its far turn and E 0, the rest pose (Rig · beat's start) */
+    const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const y=t/0.5+H.bOff+PL,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp);z.p=p;return{E:k-1+(p>0?z.prog:0)+H.eOff,s:z};},lockd=z=>!(z.p>0&&z.prog>0&&z.prog<1);   /* as app.js: at a whole phase the tooth not yet escaped, whatever ESC.state's prog there */
     H.twist=()=>{if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;H.kick=160*D2R;};
     H.step=dt=>{const mvTo=(x,t,r)=>x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(H.lastE??0))?Math.min(b,vf-0.005):b;
       const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held;
       { let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dt/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
         else if(brake)a*=Math.exp(-dt/A.TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/A.TF));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a; }
       let E,s;
-      if(!H.held){let q=at(H.tSim);const Eb=H.lastE??q.E,locked=q.s.prog<=0||q.s.prog>=1,room=blocked()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff;};
-        if(dt>0&&locked&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}
-        else{if(dt>0){H.tSim+=dt;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+dt/3600);q=at(H.tSim);}E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
-      if(H.held){H.bph+=dt/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);E=H.Eh;const lockedP=s.prog<=0||s.prog>=1;
-        if(run&&!brake&&H.amp>=ESC.AMIN&&!(blocked()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockedP){H.held=false;H.bOff=(((H.bph-H.tSim/0.5)%1)+1)%1;const x=H.tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}
+      if(!H.held){let q=at(H.tSim);const Eb=H.lastE!=null?Math.max(q.E,H.lastE):q.E,room=blocked()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff+PL;};
+        if(dt>0&&lockd(q.s)&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}
+        else{if(dt>0){H.tSim+=dt;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+dt/3600);q=at(H.tSim);}E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){hold();H.Eh=room;}}}
+      if(H.held){H.bph+=dt/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;
+        if(run&&!brake&&H.amp>=ESC.AMIN&&!(blocked()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockd(s)){H.held=false;H.bOff=(((H.bph-PL-H.tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(H.tSim).E);}}
       H.lastE=E;return{E,th:s.th,lift:s.lift,psDef:s.psDef,n:H.hrs*FUSEE_PER_HOUR,blk:H.blk,arm:H.arm,winding:H.winding,dt};};
     return H;}
   /* the phases of a beat sampled: evenly, 120 a beat (a straight line between two is then within 0.1 degree of the balance at its fastest), and closely where the escapement acts (unlocking, impulse: the detent, trip spring and escape wheel move in a few hundredths of a beat) */
