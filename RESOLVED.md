@@ -700,7 +700,7 @@ Contents:
   the barrel by the chain's arc paid off the fusee, but the straight run between the drums,
   their common tangent, lengthens from 35.85 to 37.42 mm as the fusee's radius grows, so the
   barrel over-turned 0.013 turn (4.8°) by run down, the links crept round it and the hook's
-  plate stretched and shrank. The barrel now takes the arc less the tangent's gain (`Iw`), and
+  plate stretched and shrank. The barrel now takes the arc less the tangent's gain (`Iw`, now `wrapB`), and
   the chain keeps its length to 0.03 mm (586.40 mm, end pin to hook) over the wind; the
   chain's barrel turns over the run are 4.656 (were 4.670). Keep: whatever turns the barrel
   uses `Ib`; `tools/invariants.py` checks the length (`chainLen`). `273f317`

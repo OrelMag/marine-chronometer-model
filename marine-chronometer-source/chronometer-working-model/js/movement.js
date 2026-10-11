@@ -339,11 +339,12 @@ const DENSE=new WeakMap(),dense=pts=>{let d=DENSE.get(pts);if(!d){d=[];for(let i
 /* the same points with their distance from the pivot, farthest first (cached per outline): a point d from the pivot never comes nearer the ratchet's centre than |q|-d,
    so seatPawl tests only the leading ones that can reach within ro+0.5 of it, and gets the same answer for about half the work (it runs every frame for each pawl) */
 const NEAR=new WeakMap(),near=pts=>{let d=NEAR.get(pts);if(!d){d=dense(pts).map(([x,z])=>[x,z,Math.hypot(x,z)]).sort((a,b)=>b[2]-a[2]);NEAR.set(pts,d);}return d;};
-function seatPawl(pts,q,th0,pr){
+function seatPawl(pts,q,th0,pr,thW){   /* thW: where it was (the last frame's seat in this frame), to start just outside it */
   const P=near(pts),lim=Math.hypot(q[0],q[1])-pr.ro-0.5-1e-9;let n=0;while(n<P.length&&P[n][2]>lim)n++;
   const f=th=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(let i=0;i<n;i++){const x=P[i][0],z=P[i][1],X=q[0]+x*c+z*sn,Z=q[1]-x*sn+z*c,r=Math.hypot(X,Z);if(r<pr.ro+0.5)m=Math.min(m,r-pr.r(Math.atan2(Z,X)));}return m;};
   const rm=th=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(let i=0;i<n;i++)m=Math.min(m,Math.hypot(q[0]+P[i][0]*c+P[i][1]*sn,q[1]-P[i][0]*sn+P[i][1]*c));return m;};   /* its nearest point to the wheel's centre */
   const so=rm(th0+0.01)>rm(th0)?1:-1;let a=th0+so*0.5,b=th0-so*0.5;if(f(a)<0)return a;
+  if(thW!==undefined&&Math.abs(thW-th0)<0.5){let w=thW+so*0.02;while(so*(a-w)>0&&f(w)<0)w+=so*0.02;if(so*(a-w)>0)a=w;}   /* from just outside where it was: the same first touch, a few steps in, as it moves a little each frame */
   /* in from outside, 0.005 rad a step, to the first touch, then closed on: the seat the pawl reaches (a bisection over the whole range could settle on the far side
      of a tooth it would have met first, 0.25 mm deep where the reachable seat is 0.01: until 11 October 2026) */
   const K=200,st=(b-a)/K;let x=a,hit=false;for(let k=1;k<=K;k++){const y=a+st*k;if(f(y)<0){b=y;hit=true;break;}x=y;}if(!hit)return b;a=x;
@@ -1406,9 +1407,9 @@ function buildMovement(M){
        the working end's pin then moves round the ratchet with the spring's hole (dv - d), so the ratchet and its pawls stay where the train has them */
     { const d=Math.min(SMAX,gA-srA);R.ssD=d;R.held=holding;let dv=d;if(s.ssX){const t=Math.min(SMAX,s.ssX*d);ssV=t>=ssV||s.dt==null?t:Math.max(t,ssV-SMAX*s.dt/0.4);dv=Math.max(d,ssV);}else ssV=d;
       if(Math.abs(dv-lastD)>0.002){R.sspring.geometry.dispose();R.sspring.geometry=sspGeo(dv);lastD=dv;const a=SSP+dv-d;R.ssPin.position.x=14.6*FK*Math.cos(a);R.ssPin.position.z=14.6*FK*Math.sin(a);} }
-    for(const pw of R.wp){const psi=fzW-srA,u=pw.userData;pw.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,FPR)+psi;
+    for(const pw of R.wp){const psi=fzW-srA,u=pw.userData;if(psi!==u.psi){pw.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,FPR,u.psi===undefined?undefined:pw.rotation.y-psi)+psi;u.psi=psi;}   /* seated again only when the fusee has turned against the ratchet (in running, never) */
       if(Math.abs(pw.rotation.y-u.sprTh)>0.002){u.spr.geometry.dispose();u.spr.geometry=wpsGeo(pw,pw.rotation.y);u.sprTh=pw.rotation.y;}}   /* the spring follows its pawl */
-    { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP)+srA;if(R.spawl.rotation.y!==lastSp){lastSp=R.spawl.rotation.y;R.spWire(lastSp);} }   /* its spring wire bends with it */
+    { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP,lastSp===null?undefined:R.spawl.rotation.y-srA)+srA;if(R.spawl.rotation.y!==lastSp){lastSp=R.spawl.rotation.y;R.spWire(lastSp);} }   /* its spring wire bends with it */
     R.staff.rotation.y=-s.th;
     { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyLock(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;
