@@ -496,7 +496,9 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
 - **What keeps it going.** A swing must carry the discharge jewel past the trip
   spring on the return (it comes clear of the jewel's end at −40.2°), unlock the wheel (−21.3°) and
   see the impulse through (the tooth leaves the jewel at +20.7°). `makeEsc` works out that least amplitude
-  from its own tables: `ESC.AMIN`, 42.3° with 2° to spare.
+  from its own tables: `ESC.AMIN`, 40.2°, the trip spring's the one that binds. Exactly so: the 2° it
+  was given to spare until 11 October 2026 had the train held between 40.2° and 42.3° while
+  `ESC.state` drew the detent unlocking it.
 - **When the train stops.** It stops at a locked beat when there is no power
   (run down), when the swing falls below `AMIN`, when the locking arm brakes
   the balance, or when the train-blocking screw's dog point is down and the
@@ -777,7 +779,7 @@ on what would stop the chronometer.
     or a bouncy stop, and even with no preload at all.
   - *Starting and stopping.* Twisted to 160°, the balance comes within 2° of its
     swing in a minute or so; the least drive that keeps it going is about 12 % of
-    the calibrated torque, at makeEsc's `AMIN`.
+    the calibrated torque, the balance swinging about 41° (makeEsc: 13 %, at its `AMIN`, 40.2°).
   - *Knocks and the sea.* A twist about the staff upsets the beat at about
     29 rad/s in 2 ms (it gains a beat); a blow across the plate frees the wheel
     at about 55 g over 3 ms, 140 g over 0.5 ms (the detent isn't poised about

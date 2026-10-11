@@ -233,9 +233,11 @@ function makeEsc(o={}){
   const detLift=(q,th,amp)=>{const l=tab(LI,th),f=depart(amp);if(!f||q<=f.p)return l;return Math.max(th<thOff?l:0,fallD(f.d0,f.v0,(q-f.p)*T)*LEN);};
   /* the detent home: the balance's angle where it lands on its stop for good at swing amp (for tools/escapement.js and dynamics.js) */
   const homeAt=amp=>{const f=depart(amp);if(!f)return null;for(let q=f.p;q<0.5;q+=2e-6)if(detLift(q,-amp*Math.cos(TAU*q),amp)===0){let z=q+2e-6;while(z<0.5&&detLift(z,-amp*Math.cos(TAU*z),amp)>0)z+=2e-6;if(z-q<4e-6)return-amp*Math.cos(TAU*q);q=z;}return null;};
-  /* AMIN: the least amplitude that keeps the escapement going, with 2 degrees to spare: the swing must carry the discharge jewel past the trip spring on the return
-     (where it comes clear, thPass), unlock the wheel (thRel) and see the impulse to its end before it turns. Below it the balance swings on without unlocking */
-  let AMIN=aLo+2*D2R;if(CL){let a=aLo;while(a<TAU){const im=impulse(1,a,CL.w);if(im&&im.end!==null&&im.end<a)break;a+=0.25*D2R;}AMIN=a+2*D2R;}
+  /* AMIN: the least amplitude that keeps the escapement going: the swing must carry the discharge jewel past the trip spring on the return (where it comes clear, thPass),
+     unlock the wheel (thRel) and see the impulse to its end before it turns. Below it the balance swings on without unlocking. Exactly so: the 2 degrees it was given to spare
+     until 11 October 2026 had the train held while state showed the detent unlocking between 40.2 and 42.3 deg */
+  let AMIN=Math.max(-thRel,-(thPass??TH0));
+  if(CL){const ok=a=>{const im=impulse(1,a,CL.w);return!!im&&im.end!==null&&im.end<a;};let a=AMIN;if(!ok(a)){let lo=a;while(a<TAU&&!ok(a)){lo=a;a+=0.25*D2R;}for(let i=0;i<30;i++){const m=(lo+a)/2;ok(m)?a=m:lo=m;}}AMIN=a;}
   if(run.A>0&&run.A<AMIN){run.rate=NaN;run.own=NaN;}
   if(CL&&run.A>0){const im=impulse(1,run.A,CL.w);if(im)Object.assign(run,{Q,Wi:im.E,fu:(CL.w*ER+EDp+EDk+ETp)/im.E,land:im.land,end:im.end,drive:im.turn,strike:im.strike/im.E,detent:(EDp+EDk)/im.E,vw:im.vw,vj:im.vj});}
   const A=run.A;

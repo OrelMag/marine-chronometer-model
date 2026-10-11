@@ -213,6 +213,12 @@ Contents:
   tooth at any phase and swing (`tools/escapement.js`'s `stoneClash`, which fails past 1 µm: it read
   0.08 mm on the old state); the fall's place is dynamics.js's; fine.py's `PH` has phases through
   the fall (0.2425-0.2445) and the run to the stone.
+- **`AMIN` 2° above where the escapement works.** It was the least swing that passes the trip
+  spring (−40.2°), unlocks and sees the impulse through, plus 2° to spare; between 40.2° and 42.3°
+  `app.js` held the train while `ESC.state` drew the detent unlocking it on every swing. Now
+  `AMIN` is that least swing exactly (40.2° at the model's settings, refined by bisection when a
+  setting moves it). Keep: `AMIN` where `state`'s own `pass` begins, so the train holds only
+  when the escapement can't work.
 
 ## Going train and heights
 
