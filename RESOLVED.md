@@ -1880,6 +1880,22 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **Setting the time turned the train, backward as often as forward** (kinematics handoff 7). The time field, Now and Local/GMT moved `tSim`, the model's own clock,
+  so the whole train jumped to the time and `update()` re-seated the maintaining work. Now
+  (`setHands`, app.js) the hour and minute hands go round by the cannon pinion's slip, as the
+  key turns them, and the second hand is put right as Stop to set does it: the locking arm
+  stops the balance, comes off once it has stopped, and a twist starts it as the time comes
+  round (early by the twist's length and two frames' model time); a moment missed while the
+  arm swings off waits for the next minute, the minute then taken out by the slip; the zone
+  moves the master and the hands by the slip alone. Keep: the escape wheel's count never goes
+  down when the time is set (smoke.py's Now check); a time in the page's address is still set
+  directly as it loads (social.py passes its ten past ten so). `143ff32`
+- **The twist started the balance at the click, not through the box's turn** (kinematics handoff 7). The swing the integration gives at the twist's end was eased
+  in from the click while the box was still turning. Now the balance is drawn along the
+  integrated path (`TWIST.path`, box.js) as the box turns and takes the end state as the turn
+  ends, the twist on the model's time (the master's), so it slows and speeds with everything
+  else; the export's Stop and start clip does the same (blender.js). Keep: reduced motion,
+  which doesn't turn the box, applies the end state at once, eased. `143ff32`
 - **Train-blocking screw down, the train held a frame and freed the next.**
   The train halts when its next whole beat would bring a spoke to the dog
   point (`Eb+1 > floor(Eb+blockRoom)`), but it restarted whenever

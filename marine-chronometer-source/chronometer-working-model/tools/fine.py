@@ -1,6 +1,7 @@
 """Fine interference check: every pair of solid meshes, 0.05 mm grid, through the escapement cycle, round the train and over the wind.
 
-    python fine.py            # 18 escapement phases, then 15 train positions and wind states (full wind and winding included)
+    python fine.py            # 27 escapement phases, then 15 train positions and wind states (full wind and winding included), then a wind with the
+                              # page's Wind button from 20 minutes short of run down, checked five times along it (the page's own loop; not with --hold)
     python fine.py --dense    # also 101 phases across a full balance swing
     python fine.py --split    # with the split-balance variant shown (finding 9 in Review-results.md, fixed)
     python fine.py --eval "__mv.userData.R.timing(3,3)"   # run some JS after the page loads (a variant, the weights, a planted fault)
@@ -74,6 +75,27 @@ async def main():
                 k=tuple(sorted((o['a'],o['b'])));o['state']=f"ph {ph} +{dE} teeth, {n} turns{' winding' if w else ''}"
                 if k not in seen or o['vol']>seen[k]['vol']:seen[k]={**o,'hits':seen.get(k,{}).get('hits',0)}
                 seen[k]['hits']+=1
+        # a physical wind, as a visitor does it: the page's own loop (update() put back), running 20 minutes short of run down, then Wind (the fusee turned back under
+        # the key while the sustaining spring drives the train, until full, and let go: app.js windEnd), checked at moments along it (a check holds the page for some
+        # seconds, which the loop takes as one capped frame, 0.05 s); the wind states above jump the fusee straight to a state instead (until 11 October 2026, only so)
+        if '--hold' not in sys.argv:
+            await pg.evaluate("document.querySelector('#views button[data-v=\"movement\"]').click()");await pg.wait_for_timeout(3000)   # out of its case, where the hairspring is seen and so rebuilt each frame (update()'s springOn): in the case it keeps the shape it had
+            await pg.evaluate("(()=>{const u=window.__mv.userData;if(u._u){u.update=u._u;delete u._u;}const i=document.querySelector('#hrs');i.value=55.9;i.dispatchEvent(new Event('input'));document.querySelector('#speeds button[data-v=\"1\"]').click();})()")
+            async def at(label,cond,ms):
+                await pg.wait_for_function(cond,timeout=60000);await pg.wait_for_timeout(ms)
+                h=await pg.evaluate("window.__H().hrs")
+                for o in json.loads(await pg.evaluate(chk))['out']:
+                    k=tuple(sorted((o['a'],o['b'])));o['state']=f"wind sequence: {label} ({h:.2f} h)"
+                    if k not in seen or o['vol']>seen[k]['vol']:seen[k]={**o,'hits':seen.get(k,{}).get('hits',0)}
+                    seen[k]['hits']+=1
+                states.append((label,0,h,None))
+            await at('running, near run down','true',1500)
+            await pg.evaluate("document.querySelector('#wind').click()")
+            await at('winding, the key just on','window.__H().hrs<55.5',0)
+            await at('winding, half wound','window.__H().hrs<28',0)
+            await at('let go at full wind','window.__H().hrs<0.5',100)
+            await at('running again, a second on','true',1000)
+            await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         bc=open(HERE/'barrel-clearance.js').read();near={};spring=None
         for n,w in WIND:
             await pg.evaluate(FREEZE.format(ph=0.4,dE=0,n=n,w=str(w).lower(),hold=str('--hold' in sys.argv).lower()).replace('msOn:false','msOn:true'))

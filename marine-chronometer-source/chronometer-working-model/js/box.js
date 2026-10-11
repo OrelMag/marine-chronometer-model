@@ -244,7 +244,10 @@ function gimStep(G,dt,ph,rl,sea,fr){if(dt<=0){G.lp=ph;G.lr=rl;return;}
    the 42° the escapement needs. TWIST.at(t): the box's angle t s into the twist; TWIST.run(th, u, w, sg): the balance's θ and θ'/ω at the twist's end from th and u at its start (ω = w), the box turned sg = 1 or -1 */
 const TWIST={A:35*D2R,T1:0.1,T2:0.25,T:0.35,
   /** @param {number} t */ at:t=>TWIST.A*(smooth(t/TWIST.T1)-smooth((t-TWIST.T2)/TWIST.T1)),
-  /** @param {number} th @param {number} u @param {number} w @param {number} sg */ run(th,u,w,sg){const n=700,h=TWIST.T/n,c=sg*TWIST.A/(TWIST.T1*TWIST.T1),a2=x=>x<=0||x>=1?0:6-12*x;let v=u*w;
-    for(let i=0;i<n;i++){const t=(i+0.5)*h;v+=h*(-w*w*th-c*(a2(t/TWIST.T1)-a2((t-TWIST.T2)/TWIST.T1)));th+=h*v;}return[th,v/w];}};
+  /** @param {number} th @param {number} u @param {number} w @param {number} sg */ run(th,u,w,sg){const p=TWIST.path(th,u,w,sg);return[p.th,p.u];},
+  /* the same, with the balance's angle at every step of the twist (P[i] at i/n of TWIST.T), so the page draws it turning with the box, not jumping to its end state */
+  /** @param {number} th @param {number} u @param {number} w @param {number} sg @returns {{P:Float64Array,th:number,u:number}} */
+  path(th,u,w,sg){const n=700,h=TWIST.T/n,c=sg*TWIST.A/(TWIST.T1*TWIST.T1),a2=/** @param {number} x */x=>x<=0||x>=1?0:6-12*x,P=new Float64Array(n+1);let v=u*w;P[0]=th;
+    for(let i=0;i<n;i++){const t=(i+0.5)*h;v+=h*(-w*w*th-c*(a2(t/TWIST.T1)-a2((t-TWIST.T2)/TWIST.T1)));th+=h*v;P[i+1]=th;}return{P,th,u:v/w};}};
 function shadowTex(){const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');const g=x.createRadialGradient(128,128,20,128,128,128);g.addColorStop(0,'rgba(0,0,0,0.42)');g.addColorStop(0.6,'rgba(0,0,0,0.16)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,256,256);return new THREE.CanvasTexture(cv);}
 

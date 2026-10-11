@@ -4,6 +4,8 @@
 // movement shows. Needs only Node.js and the two JSON files (swing.json from swing.py, acoustic_stretches.json from acoustic.py --every), so it runs without
 // the video:
 //   node startup.js            (about 5 minutes: 7 run-downs x 10 drives, each start integrated for 70 s; it reports, never fails)
+//   node startup.js --split    (the same with the balance's damping in its parts, physics.js's shares at 255 deg: air 0.35, the endstone's friction 0.51,
+//                               the rest viscous; dynamics.js's o.split: TF is then the run-down at 255 deg)
 // The drive and the run-down trade against each other along the fit (a slower run-down wants less drive for the same build-up), so the rms is ragged at
 // the drive's 5 % steps; read the least run-down that fits, not the best one.
 // swing.json's A_t is the mean of the video's readings; its aliases (a whole screw hole in the growth, half a hole at the start) are fitted too: low (A0 62.6,
@@ -14,7 +16,8 @@ const W=JSON.parse(fs.readFileSync(path.join(__dirname,'swing.json'),'utf8')).We
 let S=[];try{S=JSON.parse(fs.readFileSync(path.join(__dirname,'acoustic_stretches.json'),'utf8').replace(/\bNaN\b/g,'null')).recordings.We1dLNXiBj0.stretches.map(r=>[r.t,r.corrected.A_strike_lock]).filter(([t,a])=>a!=null&&a===a&&t<T0+70);}catch(e){}
 const curves={low:[62.6,181.8],middle:[a0,g0],high:[70.1,196.8]},series=(A0,G)=>At.map(([t,A])=>[t,A0+(A-a0)*G/g0]);
 /* the model's start: from rest at the release's swing; its swing at time t the mean of the turning points round it (two a period) */
-const run=(s,TF,A0,T=70)=>{const a=sim({mode:'phys',T,from:T-1,s,TF,A:A0}).amps;return t=>{const k=Math.round(t/0.25),w=a.slice(Math.max(0,k-2),k+2);return w.reduce((x,y)=>x+y,0)/w.length/D;};};
+const SPLIT=process.argv.includes('--split')?[0.35,0.51,0.14]:undefined;
+const run=(s,TF,A0,T=70)=>{const a=sim({mode:'phys',T,from:T-1,s,TF,A:A0,split:SPLIT}).amps;return t=>{const k=Math.round(t/0.25),w=a.slice(Math.max(0,k-2),k+2);return w.reduce((x,y)=>x+y,0)/w.length/D;};};
 const rms=(m,pts)=>Math.sqrt(pts.reduce((q,[t,A])=>q+(m(t-T0)-A)**2,0)/pts.length);
 const TFS=[52,80,120,160,200,260,320],SS=[0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9];
 console.log(`  the video's start (swing.py, We1dLNXiBj0 0:55.4-2:03.4): ${At.length} points, ${f(a0)} to ${f(At[At.length-1][1])} deg on the middle reading`);

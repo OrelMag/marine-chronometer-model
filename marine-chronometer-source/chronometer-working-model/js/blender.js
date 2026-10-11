@@ -28,10 +28,10 @@ const BLENDER=(()=>{
     BX.root.rotation.set(s.pitch,s.tw,s.roll,'ZYX');BX.ring.rotation.x=s.gp-s.pitch;BX.bowl.rotation.z=s.gr-s.roll;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(s.latch));
     look(C,s.dev>0.02,s.hkeyOn);}
   /* ---------- the train and balance through time: app.js frame()'s stop and start, drive and swing (ampStep, stopMove), at speed 1 ---------- */
-  function sim(C,hrs){const R=C.R,drvF=A.drvF,PL=A.PL,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:-PL,eOff:1,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false};   /* bOff -PL, eOff 1: at 0 s the balance at its far turn and E 0, the rest pose (Rig · beat's start) */
+  function sim(C,hrs){const R=C.R,drvF=A.drvF,PL=A.PL,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:-PL,eOff:1,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false,tw:null};   /* bOff -PL, eOff 1: at 0 s the balance at its far turn and E 0, the rest pose (Rig · beat's start) */
     const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const y=t/0.5+H.bOff+PL,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,H.drv);z.p=p;return{E:k-1+(p>0?z.prog:0)+H.eOff,s:z};},lockd=z=>!(z.p>0&&z.prog>0&&z.prog<1);   /* as app.js: at a whole phase the tooth not yet escaped, whatever ESC.state's prog there */
-    H.twist=sg=>{const y=H.held?H.bph:H.tSim/0.5+H.bOff+PL,p=y-Math.floor(y),a=H.amp,[th,u]=TWIST.run(-a*Math.cos(TAU*p),a*Math.sin(TAU*p),TAU/0.5,sg),a1=Math.hypot(th,u),p1=Math.atan2(u,-th)/TAU-TWIST.T/0.5;
-      if(H.held){H.bph=Math.floor(H.bph)+p1;if(a1>a)H.kick=a1;else{H.amp=a1;H.kick=0;}}};   /* app.js's twist with the train standing (the clip twists it only so) */
+    H.twist=sg=>{const y=H.held?H.bph:H.tSim/0.5+H.bOff+PL,p=y-Math.floor(y),a=H.amp,tp=TWIST.path(-a*Math.cos(TAU*p),a*Math.sin(TAU*p),TAU/0.5,sg);
+      if(H.held)H.tw={P:tp.P,a1:Math.hypot(tp.th,tp.u),pe:Math.atan2(tp.u,-tp.th)/TAU,t:0};};   /* app.js's twist with the train standing (the clip twists it only so): the balance follows the box's turn, its end state taken as the turn ends */
     H.step=dt=>{const mvTo=(x,t,r)=>x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(H.lastE??0))?Math.min(b,vf-0.005):b;
       const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.drv=H.winding?R.ssF():Math.max(run?drvF(H.hrs):0,R.ssF()),go=drv>1e-6,driven=go&&!H.held,bank=H.held&&H.bk!=null&&H.amp>Math.abs(H.bk);
       { let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dt/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
@@ -43,6 +43,7 @@ const BLENDER=(()=>{
       if(H.held){H.bph+=dt/0.5;if(H.Eh%1&&go&&!blocked()){H.Eh=Math.ceil(H.Eh-1e-6);if(H.bk>0&&H.amp<H.bk){H.amp=H.bk;H.bph=Math.floor(H.bph)+0.5;}}if(H.bkE!==H.Eh){H.bkE=H.Eh;H.bk=H.Eh%1?bankAt(H.Eh%1):null;}   /* the spoke, the screw raised and the banked balance as app.js */
         const p=((H.bph%1)+1)%1;s=bankState(p,H.amp,drv,H.bk);s.p=p;E=H.Eh;
         if(go&&!brake&&H.amp>=ESC.AMIN&&!(H.Eh%1)&&!(blocked()&&R.blockRoom(H.Eh-1e-4)<2e-4)&&lockd(s)){H.held=false;H.bOff=(((H.bph-PL-H.tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(H.tSim).E);}}
+      if(H.tw){H.tw.t+=dt;const k=H.tw.t/TWIST.T;if(k<1&&H.held){const P=H.tw.P;s={...s,th:P[Math.min(P.length-1,Math.round(k*(P.length-1)))]};}else{if(H.held){H.bph=Math.floor(H.bph)+H.tw.pe;H.amp=H.tw.a1;H.kick=0;}H.tw=null;}}   /* as app.js's loop */
       H.lastE=E;return{E,th:s.th,lift:s.lift,psDef:s.psDef,n:H.hrs*FUSEE_PER_HOUR,blk:H.blk,arm:H.arm,winding:H.winding,dt};};
     return H;}
   /* the phases of a beat sampled: evenly, 120 a beat (a straight line between two is then within 0.1 degree of the balance at its fastest), and closely where the escapement acts (unlocking, impulse: the detent, trip spring and escape wheel move in a few hundredths of a beat) */
@@ -66,11 +67,11 @@ const BLENDER=(()=>{
          turning more than half a radian a frame (escape, fourth, third, seconds) are left out of it, as a blur */
       {name:'Run down',len:30,fast:RUN_H*7200/(30*FPS),d:'56¼ hours in 30 s: the chain off the fusee onto the barrel, the mainspring letting down, the up-down hand, the minute and hour hands',rig:{p:'n',a:0,b:FUSEE_TURNS},
         run:emit=>uni(30,t=>{const h=RUN_H*t/30;return st({n:h*FUSEE_PER_HOUR,E:E0+(h-h0)*7200});},emit)},
-      {name:'Winding',len:wT+6,d:'wound with the key from a quarter of an hour short of run down, the sustaining spring driving the train meanwhile, until the stop-bar meets the winding stop',run:emit=>{
-        const S=sim(C,hW),T0=1;let tp=0,sh=C.BX.shRest,hz=-1;
+      {name:'Winding',len:wT+6,d:'wound with the key from a quarter of an hour short of run down, the sustaining spring driving the train meanwhile, until the stop-bar meets the winding stop',run:(emit,clip)=>{
+        const S=sim(C,hW),T0=1,HS=clip.hours=[];let tp=0,sh=C.BX.shRest,hz=-1;   /* HS: the hours since full wind every 0.25 s, written with the clip, so blender_check.py can set the rig to the same wind and see where it parts from the clip */
         for(let i=0;;i++){const t=i/60;if(t>T0+wT+5)break;const dt=t-tp;tp=t;const kt=t-T0,on=kt>=0&&(hz<0||kt<hz+3);   /* half turns of 0.7 s with a 0.3 s pause to change grip (kwStep); 3 s on the stop, then let go */
           if(on){S.winding=true;const j=Math.floor(kt);S.hrs=Math.max(0,hW-HT*(j+smooth(Math.min(1,(kt-j)/0.7))));if(S.hrs===0&&hz<0)hz=kt;}else{if(S.winding)S.hrs=clamp(S.hrs+C.R.release()/FUSEE_PER_HOUR,0,RUN_H);S.winding=false;}   /* let go: the fusee's catch and the spring's reload come off the mainspring, as app.js's windEnd */
-          const o=S.step(dt),T=on?0:C.BX.shRest;sh=lerp(sh,T,1-Math.exp(-dt*(T?12:6)));emit(t,st(Object.assign(o,{keyOn:on,sh})));}}},
+          const o=S.step(dt),T=on?0:C.BX.shRest;sh=lerp(sh,T,1-Math.exp(-dt*(T?12:6)));if(i%15===0)HS.push([+t.toFixed(3),+S.hrs.toFixed(5)]);emit(t,st(Object.assign(o,{keyOn:on,sh})));}}},
       {name:'Setting the hands',len:10,d:'the key on the centre arbor sets the hands an hour on, the train going',run:emit=>runFor(sim(C,h0),20,emit,t=>({slip:3600*smooth(ramp(t,1.5,8.5)),hkeyOn:t>0.5&&t<9.5}))},
       {name:'Stop and start',len:26,d:'the locking arm stops the balance and holds it; unlocked, a twist of the box starts it; the train-blocking screw comes down between the fourth wheel\'s spokes and up again, and a twist starts it again if the tooth the spoke held stopped the balance',run:emit=>{
         const S=sim(C,h0);let tp=0,tw=-1,t2=-1;for(let i=0;i<=26*120;i++){const t=i/120,dt=t-tp;tp=t;S.armT=t>=1&&t<6?1:0;if(tw<0&&t>=8){S.twist(1);tw=t;}S.blkT=t>=15&&t<21?1:0;if(t2===-1&&t>=22){t2=-2;if(S.held){S.twist(-1);t2=t;}}
@@ -143,7 +144,7 @@ const BLENDER=(()=>{
         if(first)d.last=null;d.gap=clip.len/FLIPS;const w=shapeOf(d,g,t,clip.name),T=d.tl[clip.name]||(d.tl[clip.name]=[]),lw=d.last||(d.mode==='morph'?[0,0,0]:[0]);
         if(!T.length&&t>0)T.push([0,...lw]);if(T.length&&T[T.length-1][0]<tPrev)T.push([tPrev,...lw]);T.push([t,...w]);d.last=w;}
       first=false;tPrev=t;};
-    clip.run((t,s)=>{emit(t,s);k++;});
+    clip.run((t,s)=>{emit(t,s);k++;},clip);
     await sleep();return{tr,dur,teeth,samples:k};}
   /* ---------- the export ---------- */
   async function build(onStep,only){const t0=performance.now(),C=copy(),h0=A.hrs();
@@ -237,7 +238,7 @@ const BLENDER=(()=>{
       anims[ai].channels.push({node:helper,path:'translation',times:t,values:v,interp:'LINEAR'});});
     const ver=(document.querySelector('meta[name=version]')||{}).getAttribute?.('content')||'';
     const extras={made:'The Marine Chronometer working model'+(ver?' '+ver:'')+', '+location.href.split('#')[0],units:'millimetres under the root node, which scales them to metres',start:{hours:h0,E:rest.E,slip:0},
-      beat:0.5,fuseePerHour:FUSEE_PER_HOUR,runHours:RUN_H,fuseeTurns:FUSEE_TURNS,fps:FPS,clips:out.map(([c,res])=>Object.assign({name:c.name,about:c.d,seconds:+res.dur.toFixed(4),samples:res.samples},c.rig?{rig:c.rig}:{}))};
+      beat:0.5,fuseePerHour:FUSEE_PER_HOUR,runHours:RUN_H,fuseeTurns:FUSEE_TURNS,fps:FPS,clips:out.map(([c,res])=>Object.assign({name:c.name,about:c.d,seconds:+res.dur.toFixed(4),samples:res.samples},c.rig?{rig:c.rig}:{},c.hours?{hours:c.hours}:{}))};
     nodes[0].extras=extras;   /* Blender keeps a node's extras as the object's custom properties (the asset's it drops): the rig reads them here */
     const blob=await GLTF.write({generator:'Marine Chronometer working model (blender.js)',nodes,roots:[0,helper],meshes,materials,textures,animations:anims,extras});
     return{blob,stats:{nodes:nodes.length,meshes:meshes.length,materials:materials.length,clips:anims.length,s:((performance.now()-t0)/1000).toFixed(1)}};}
