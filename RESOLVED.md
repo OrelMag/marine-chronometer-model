@@ -227,6 +227,14 @@ Contents:
   both; from 255° the swing reaches 40.2° in 47 s, not 96. Keep: the held run-down is
   `ESC.freeStep` (app.js's `ampStep`, and blender.js's copy of the loop), checked against
   `tools/dynamics.js`'s integration of a held train.
+- **The hairspring didn't breathe.** `R.spPath` turned each point of the coil rigidly by θ(1 − s/L)
+  about the staff, keeping every radius, where a spring of 11.86 turns swung 255° changes its
+  coils' radii by θ/(2πN), about 6 % each way. Now every part of the free length changes its
+  curvature by θ/L (the pure couple Phillips' conditions give), drawn from the stud's end back
+  (movement.js); against the elastica (`HSPR.large`) within 0.025 mm at 255° (the rigid turn was
+  0.28 off). Keep: the shape the couple gives, the length kept, the clamped ends exact; it is
+  rebuilt only when θ changes (ribbonGeo in place, 0.1 ms). It brought out that the inner curve
+  passes 0.04 mm from the collet at rest (OPEN-QUESTIONS.md).
 
 ## Going train and heights
 

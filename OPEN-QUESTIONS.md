@@ -47,6 +47,19 @@ The goal they are judged against: someone with only the site can make a Model 21
 - **The discharge jewel's end.** Drawn square, its 0.32 mm end held both springs' tips across its whole width and overall came to about 38°, past Op. 87's 26-30°. The model now stones it to a half round (`rnd`) and its settings (reach, trip spring's tip, angle, depth of lock) were re-chosen to the manual's figures: overall 27.8°. No source shows the end. Real recordings (11 October 2026, `tools/acoustic.py`) hear the return swing's trip-spring clicks, but where they fall against the active swing's depends on each movement's beat error (5-12° in the fits), so they don't test the end's shape. **What would settle it:** a close photograph of a Model 21's discharge jewel in its roller, side-on and end-on.
 - **The balance's free run-down.** With the wheel's chase onto the impulse jewel and the detent's whole lift counted, the model's 255° at a torque the train gives wants a balance running down freely in about 52 s (Q 327; `TF` was 34): inside what the budget needs (243-341) and what the balance's parts give (202-390), but resting on both. **A real start disagrees** (11 October 2026): `We1dLNXiBj0`'s balance, let go from a twist at 0:55 and its swing read frame by frame (`tools/swing.py`, 66° to 244-267° at 2:03, still rising), builds up far more slowly than a 52 s run-down allows. Run in `dynamics.js` (`tools/startup.js`), 52 s misses the build-up by 15-16° rms at any drive; it fits within 3-6° only from about 120-160 s up (Q 750-1,000), the drive then 55-65 % of the calibrated torque, and the fit sets no upper bound. The sound of the same start (`tools/acoustic.py --every`) fits a slow build-up better too (rms 18° against 34° at 52 s), though it reads higher. One movement, started by hand, its absolute swing known only to a screw hole: not enough to change `TF`, but the budget's Q (202-390, from the pivots' friction and the air) is the reading most at risk. **What would settle it:** the free run-down of a real Model 21's balance (the train held by the blocking screw, its swing timed on video), and its running swing on a timegrapher; a steady swing on video with one feature in view (a timing weight), without the screw comb's aliases.
 
+## Found by drawing the hairspring breathing (11 October 2026)
+
+- **The inner terminal curve against the collet (42188, 108-13).** Drawn as the couple bends it (every part of the strip's
+  curvature changing by θ/L, model README "The hairspring, designed"), the inner curve curls inward by about θs²/2L near the
+  collet's clamp. At rest it passes 0.04 mm from the collet's corner 7 mm from the clamp; wound past about 50° it runs into the
+  collet's outline, 0.09-0.13 mm at the 255° swing (`fine.py`'s balance–hairspring pair at phase 0 will show it). A real spring
+  can't touch its collet without upsetting its rate, so one of the two is wrong: the collet's size (drawn after Figs. 5 and 6 and
+  scaled so its end face is at `HS_RI` 3.2 mm, itself an estimate: the video reads the wedge pin 2.8-3.9 mm out) or the inner curve
+  (the shortest that meets Phillips' conditions from that end, `HSPR.design`). What would settle it: Fig. 6 measured for the
+  collet's size against the staff rather than the coil, a frame showing the spring's inner end leaving the collet (KLUwI2UUCMQ
+  6:53, the balance held arm to the camera, is the nearest), or the inner curve designed to keep clear of the collet's outline
+  (a constraint `HSPR.design` doesn't have: it keeps only a radius off the staff).
+
 ## The likeliest sources (both behind NAWCC membership)
 
 - Doug Sinclair, "From the Workshop: The Hamilton Series XXI Marine Chronometer", *NAWCC Bulletin* No. 365 (December 2006), p. 707: a teardown with about 25 photographs.

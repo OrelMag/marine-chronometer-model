@@ -217,6 +217,18 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   spring gains 0.141 s a day at 247.5° and 0.253 at 270° against small swings, **0.11 s a day over the manual's 1⅜ to 1½ turns, +0.05 for each 10°**, the same
   way as the escapement's error, so the adjuster's setting (`HS`, the bench) is about -0.18 for the designed spring where the model's -0.13 assumes an isochronous one.
   The model keeps `HS` 0 (the spring as adjusted, as the performance card shows it); the essay quotes the figures (`data-hs`, checked by `tools/hairspring.js`).
+- **It breathes** (`R.spPath`, since 11 October 2026; before, each point turned rigidly by θ(1 − s/L) about the staff, the coils
+  keeping their radii). With the ends meeting Phillips' conditions the collet's pull is a pure couple, so the bending moment is the
+  same all along the strip and every part of the free length changes its curvature by θ/L: the heading at s turns θ(1 − s/L). The
+  coils close as the balance turns one way and open the other, each by θ/(2πN) of its radius (r 4.83 to 5.40 over the 255° swing,
+  5.10 at rest; 4.74 to 5.51 at 347°, the most a jolt gives), concentric to 0.04 mm, the terminal curves curling by as much, the
+  length kept. Drawn from the stud's end back, each 0.3 mm segment turned at its middle; the second-order miss at the collet's end
+  (0.024 mm at 255°) is taken out along the free length. Against the elastica (`HSPR.large`, the strip as drawn compared point
+  for point with its solved shape) it is within 0.025 mm at 255° and 0.039 at 345°; the rigid turn was 0.28-0.46 off. The turns
+  stay 0.2 mm or more apart (a helix: each turn 0.56 above the last). No photograph or video shows a Model 21's spring breathing.
+  **Against the collet:** at rest the inner curve passes 0.04 mm from the collet's corner 7 mm from its clamp; wound past about
+  50°, curling inward by θs²/2L there, it runs into the collet's outline (0.09-0.13 mm at 255°). Both are estimates (the collet
+  drawn after Fig. 6 at an estimated scale, the curve designed): OPEN-QUESTIONS.md.
 - **Isochronism.** In small-deflection theory, with the force on the pivots gone, the spring's own isochronism error is what its curves' departure from the
   conditions leaves (residuals under 1e-11 mm) and the material's; the escapement's is `tools/escapement.js`'s. At the balance's real swing the strip's large
   deflection adds +0.05 s a day for each 10° (above). The model keeps the hairspring term at 0 (`HS`): the spring as an adjuster leaves it, set against the

@@ -1117,7 +1117,19 @@ function buildMovement(M){
     for(let i=0;i<=n;i++){const sx=S0+(S1-S0)*i/n;while(j<raw.length-2&&raw[j+1][2]<sx)j++;const a=raw[j],b=raw[j+1],f=b[2]>a[2]?(sx-a[2])/(b[2]-a[2]):0;pts.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,sx]);}
     return{outer,inner,L:P.L,turns:P.turns,pts,lat:HSPR.lateral(P.pts,HS_RC).ratio};})();
   R.hsDesign=HSD;HSD.b=HS_B;HSD.t=HS_T;HSD.rIn=HS_RI;
-  R.spPath=th=>HSD.pts.map(([x,v,sx])=>{const f=Math.min(1,Math.max(0,sx/HSD.L)),a=th*(1-f),c=Math.cos(a),sn=Math.sin(a);return[x*c-v*sn,HS_H*f,-(x*sn+v*c)];});
+  /* R.spPath(th): the spring with the collet turned th, the stud held. It breathes (since 11 October 2026; before, each point turned rigidly by th(1 - s/L) about the
+     staff, the coils keeping their radii): its ends meeting Phillips' conditions, the collet's pull is a pure couple, the bending moment the same all along the strip,
+     so every part of the free length (L) changes its curvature by th/L and the heading at s turns th(1 - s/L). The coils close as the collet is turned against the way
+     they run from it (seen in the spring's frame) and open the other way, each by th/(2π N) of its radius, 6 % at the 255° swing and 8 % at 347° (the most a jolt
+     gives), concentric, the terminal curves curling by as much; the length is kept (each segment turns, none stretches). Built from the stud's end back, each 0.3 mm
+     segment turned at its middle; what second order leaves at the collet's end (0.024 mm at 255°, 0.071 at 347°) is taken out along the free length in proportion to
+     1 - s/L. Against the strip solved as an elastica (HSPR.large), the drawn centreline is within 0.025 mm at 255° and 0.039 at 345° (the rigid turn was 0.28-0.46 off).
+     Wound past about 50°, the inner curve, 0.04 mm from the collet's corner 7 mm from the clamp at rest, curls onto it (0.09-0.13 mm at 255°): the collet's size and the
+     inner curve are both estimated (OPEN-QUESTIONS.md) */
+  R.spPath=th=>{const P=HSD.pts,n=P.length,L=HSD.L,q=new Float64Array(2*n);let x=P[n-1][0],v=P[n-1][1];q[2*n-2]=x;q[2*n-1]=v;
+    for(let i=n-2;i>=0;i--){const a=P[i],b=P[i+1],d=th*(1-Math.min(L,Math.max(0,(a[2]+b[2])/2))/L),c=Math.cos(d),s=Math.sin(d),dx=b[0]-a[0],dv=b[1]-a[1];x-=dx*c-dv*s;v-=dx*s+dv*c;q[2*i]=x;q[2*i+1]=v;}
+    const ex=q[0]-(P[0][0]*Math.cos(th)-P[0][1]*Math.sin(th)),ev=q[1]-(P[0][0]*Math.sin(th)+P[0][1]*Math.cos(th));
+    return P.map(([,,sx],i)=>{const f=Math.min(1,Math.max(0,sx/L));return[q[2*i]-ex*(1-f),HS_H*f,-(q[2*i+1]-ev*(1-f))];});};
   /* hairspring stud (Figs. 5, 19, 84, 85): a flat bar under the cock along the row of its holes (SPHc, SPHb, SPHa, above), held by the stud screw from the cock's top and two steady
      pins, and at its inner end, past the inner pin, the clamp holding the spring's upper end by a wedge pin, as the collet does (Fig. 5; patent US 2,379,780, Figs. 10, 11).
      Measured on KLUwI2UUCMQ 6:47.5 and 6:47.75 (above): the bar runs from SP_E inside the inner pin to 0.8 past the outer one; the clamp is a block under its end, from SP_E to
