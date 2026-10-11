@@ -10,6 +10,8 @@
 //      rounded end and the springs' own work on 11 October 2026: this is what found them missing).
 //   2. Whether the detent is back on its banking in time to lock the next tooth (OPEN-QUESTIONS.md 2): the detent as a body on its beryllium-copper spring,
 //      preloaded as Op. 78 sets it, its inertia from the drawn pieces (movement.js), bouncing off its stop button.
+//      And makeEsc's own drawing of its fall (ESC.state since 11 October 2026: off the jewel, a preloaded spring and mass in closed form, hopping on the
+//      stop): where it leaves the jewel and first lands, against the integration's.
 //   3. Starting, the least drive that keeps it going, and what knocks it out: a twist about the staff (it trips or stops) and a blow across the plate
 //      (the detent is not poised about its flexure, so a hard enough blow lifts it off its stop and lets a tooth go).
 //   4. The ship's motion: yaw about the staff and the lateral accelerations of a roll, and what they do to the rate.
@@ -88,7 +90,7 @@ function sim(o={}){
   const hf=o.hf??4e-6,hc=o.hc??1e-4;
   let t=0,th=-(o.A??ESC.A/D)*D,w=0,d=0,dv=0,ph=0,pv=0,wm=0,dm=0,pc=false,pp=0,passed=true;   /* wm: wheel locked 0, free 1, on the jewel 2; dm: detent on its stop 0, free 1, pushed 2 */
   if(o.phase!=null){th=(o.A??ESC.A/D)*D*Math.cos(TAU*o.phase);w=-(o.A??ESC.A/D)*D*W0*Math.sin(TAU*o.phase);}
-  const st={pass:[],cross:[],beats:0,esc:0,caught:false,lastBeat:-1,trips:0,land:[],rel:[],off:[],margin:[],liftAt:[],bounce:0,maxBack:0,lastBank:-1,lastOff:-1,bnc:0,stopAt:null,kicks:0,missed:0};
+  const st={pass:[],cross:[],beats:0,esc:0,caught:false,lastBeat:-1,trips:0,land:[],rel:[],off:[],margin:[],liftAt:[],bounce:0,maxBack:0,lastBank:-1,lastOff:-1,bnc:0,home:[],stopAt:null,kicks:0,missed:0};
   const X={al:0,ax:0,ay:0};
   const lift=()=>(phys?DM.mx*X.ay-DM.my*X.ax:0)+id*X.al;   /* the case's acceleration as a moment lifting the detent: its unbalance about Ft (DM.mx, DM.my: m·r), and the yaw */
   let ddd=0,phd=0,lamD=0,lamW=0;
@@ -155,7 +157,7 @@ function sim(o={}){
         st.land.push(th/D);st.caught=true;break;}
       case 1:{const sl=d*LEN;if(sl<ESC.lRel){st.beats++;st.lastBeat=t;if(!st.caught)st.esc++;st.caught=false;st.liftAt.push(sl/ESC.lRel);if(st.lastBank>0)st.margin.push(t-st.lastBank);wm=0;ph=0;pv=0;}else{st.trips++;ph+=P;wm=1;}break;}
       case 2:{wm=1;pv=0;st.rel.push(th/D);break;}
-      case 3:{if(st.lastBank<st.lastOff)st.lastBank=t;st.bnc++;dv=-eB*dv;d=0;if(eB===0||Math.abs(dv)<1e-3||2*id*Math.abs(dv)/(pre+1e-30)<4*hf){dm=0;dv=0;}break;}   /* rebounds too short to resolve (a ball's bounces) end on the stop */
+      case 3:{if(st.lastBank<st.lastOff){st.lastBank=t;st.home.push(th/D);}st.bnc++;dv=-eB*dv;d=0;if(eB===0||Math.abs(dv)<1e-3||2*id*Math.abs(dv)/(pre+1e-30)<4*hf){dm=0;dv=0;}break;}   /* rebounds too short to resolve (a ball's bounces) end on the stop */
       case 4:{const h1=(at(S21,th)||0)/LEN,g1=wm===2?(at(G1,th)||0):0,Mb=I+J*g1*g1,c=dv-h1*w,L=hit(c,1/id+h1*h1/Mb,0);dv+=L/id;w-=L*h1/Mb;dm=2;d=at(S2,th)/LEN;dv=h1*w;break;}
       case 5:{dm=1;st.off.push(th/D);st.lastOff=t;break;}
       case 6:{wm=1;break;}
@@ -172,7 +174,7 @@ function sim(o={}){
   const am=amps.slice(-8),A=am.length?am.reduce((a,b)=>a+b,0)/am.length/D:0;
   const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN,tail=a=>a.slice(Math.floor(a.length/2));
   return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),margin:Math.min(...tail(st.margin)),
-    liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,amps,cross:st.cross,stopped:st.beats===0};
+    liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,home:mean(tail(st.home)),amps,cross:st.cross,stopped:st.beats===0};
 }
 module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,KTIP,DREL,LEN,lD,tD,LTS,CDR,day,S2};
 if(require.main!==module)return;
@@ -184,7 +186,7 @@ const f=(x,n=2)=>(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixe
 say('The bodies');
 say(`the balance ${I*1e9} g·mm² on k ${f(K*1e6,1)} µN·m a radian, damped as its free run-down TF ${TF} s (Q ${f(Math.PI*TF/T0,0)})`);
 say(`the escape wheel ${f(JE*1e9,2)} g·mm² (physics.js) and the fourth wheel's reflected ${f(J4*(TR.ep/TR.fw)**2*1e9,2)} (estimated): ${f(JT*1e9,2)}; driven at ${f(TAUE*1e6,1)} µN·m, the torque the model is calibrated at`);
-chk(Math.abs(JT*1e9-S.JW)<0.1&&Math.abs(KD/(ESC.KD*ESC.kB)-1)<0.01&&Math.abs(MPRE/(ESC.MP*ESC.kB)-1)<0.01&&Math.abs(KTIP*ES*ES/(ESC.KP*ESC.kB)-1)<0.01,`the model's bodies and springs (JW ${S.JW}, the detent's ${f(ESC.KD*ESC.kB*1e3,3)} mN·m a radian and ${f(ESC.MP*ESC.kB*1e6,1)} µN·m, the trip spring's) are these, from the drawn parts`);
+chk(Math.abs(JT*1e9-S.JW)<0.1&&Math.abs(ID*1e9-S.ID)<0.01&&Math.abs(KD/(ESC.KD*ESC.kB)-1)<0.01&&Math.abs(MPRE/(ESC.MP*ESC.kB)-1)<0.01&&Math.abs(KTIP*ES*ES/(ESC.KP*ESC.kB)-1)<0.01,`the model's bodies and springs (JW ${S.JW}, the detent's inertia ID ${S.ID}, its spring's ${f(ESC.KD*ESC.kB*1e3,3)} mN·m a radian and ${f(ESC.MP*ESC.kB*1e6,1)} µN·m, the trip spring's) are these, from the drawn parts`);
 say(`the detent: ${f(DM.m*1e6,1)} mg, ${f(ID*1e9,3)} g·mm² about its flexure, its centre of mass ${f(rCM*1000,2)} mm from it (the drawn pieces, the trip spring with it)`);
 say(`its spring: two strips ${H.spring.map(([h])=>f(h*1000,2)).join(' + ')} mm tall, ${f(tD*1000,3)} thick, ${f(lD*1000,2)} long: ${f(KD*1e3,3)} mN·m a radian (beryllium copper, 128 GPa), preloaded ${f(MPRE*1e6,1)} µN·m by Op. 78 (as if bent ${f(MPRE/KD/D,2)}° past its stop)`);
 say(`the wheel is free at ${f(DREL/D,3)}° of the detent (lRel ${f(ESC.lRel*ESC.ES,3)} mm at the passing spring's tip); the trip spring ${f(LTS*1000,1)} × ${f(tsT*1000,2)} × 0.3 mm, ${f(KTIP,1)} N/m at its tip (Elinvar-type, 180 GPa)`);
@@ -216,6 +218,11 @@ say('2. The detent as a body: its inertia, bouncing on its stop');
 const ph=sim({mode:'phys',T:70,from:40}),ownP=ph.rate-ref.rate;
 say(`the swing ${f(ph.A,1)}°, the escapement's own rate ${sg(ownP)} s a day; the tooth lands ${f(ph.land-ph.rel,1)}° after the release`);
 chk(Math.abs(ph.A-ESC.A/D)<3&&Math.abs(ownP-RU.own)<0.3,`the detent's own inertia and bounce change little: the swing ${sg(ph.A-ESC.A/D,1)}°, the rate ${sg(ownP-RU.own)} s a day against the model`);
+/* the detent's fall as makeEsc shows it (ESC.state: off the jewel where its end runs away faster than the detent can follow, then a preloaded spring and mass in closed
+   form, hopping on its stop): where it leaves the jewel and first lands, against the integration's, at the integration's swing */
+{const am=ph.A*D,fD=ESC.depart(am),land=fD.land/D;
+  say(`the detent leaves the discharge jewel at ${f(ph.off,2)}° and first lands on its stop at ${f(ph.home,2)}° (makeEsc's fall: ${f(fD.th/D,2)}° and ${f(land,2)}°; home for good at ${f(ESC.homeAt(am)/D,2)}°)`);
+  chk(Math.abs(ph.off-fD.th/D)<0.5&&Math.abs(ph.home-land)<0.5,`the detent's fall back to its stop in the model is the integration's, within 0.5° of the balance (it went home in one step at ${f(ESC.thOff/D,1)}° until 11 October 2026)`);}
 chk(ph.trips===0&&ph.beats>100&&ph.margin>0,`no tooth gets past the stone: ${ph.beats} beats; the detent is back on its stop ${f(1000*ph.margin,2)} ms before the next tooth reaches it, still ${f(100*ph.liftAt,1)} % lifted as it arrives`);
 const sweep=[];
 for(const[nm,o]of[['spring half as stiff',{kD:0.5}],['spring twice as stiff',{kD:2}],[`spring 0.06 mm thick (${f((0.06/(tD*1000))**3,2)}× as stiff)`,{kD:(0.06/(tD*1000))**3}],['preload half',{pre:0.5}],['preload 1.5×',{pre:1.5}],

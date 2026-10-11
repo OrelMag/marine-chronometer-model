@@ -203,6 +203,16 @@ Contents:
   return swing's progress 1, and the hands stood a beat ahead for that frame (blender.js worked
   round it). Now p is taken mod 1 and [0, ½) is the active swing. Keep: p 0 the active swing's
   start, progress 0.
+- **The detent snapped home.** `ESC.state` took the lift from the jewel's table, which drops from
+  0.3 mm to 0 in one 0.02° step where the passing spring's tip leaves the jewel (−12.4°), with the
+  escaping tooth only an eighth of a pitch on: the stone stood up to 0.07 mm in its way for about
+  0.6 ms (visible at 0.002×). The detent is a body (Op. 78's preload, the drawn spring, its drawn
+  inertia `ID`): it now leaves the jewel where the jewel's end runs away faster than it can follow,
+  falls in closed form, lands at −9.75° (dynamics.js −9.76°) and hops on its stop (`eS`); a detent
+  back before the escaping tooth has passed rides its back (`ride`). Keep: the stone never inside a
+  tooth at any phase and swing (`tools/escapement.js`'s `stoneClash`, which fails past 1 µm: it read
+  0.08 mm on the old state); the fall's place is dynamics.js's; fine.py's `PH` has phases through
+  the fall (0.2425-0.2445) and the run to the stone.
 
 ## Going train and heights
 
