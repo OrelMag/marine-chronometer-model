@@ -750,7 +750,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const joltB=$('#jolt');
   function jolt(){if(kw)kwStop();H.jT=performance.now();H.jS=Math.random()<0.5?-1:1;gimKick(H.jS*0.8);wake();
     if(H.held||H.amp<ESC.AMIN||H.arm>0.05){stopMsg('<b>Jolted.</b> <span>The balance isn’t driving the train, so there is nothing to upset.</span>');return;}
-    const x=tSim/0.5+H.bOff+PL,ph=x-Math.floor(x),z0=ESC.state(ph,H.amp);if(ph>0&&z0.prog>0&&z0.prog<1){stopMsg('<b>Jolted during an impulse.</b> <span>The tooth is on the impulse jewel and rides it out; try again.</span>');return;}
+    const x=tSim/0.5+H.bOff+PL,ph=x-Math.floor(x),z0=ESC.state(ph,H.amp,driveNow());if(ph>0&&z0.prog>0&&z0.prog<1){stopMsg('<b>Jolted during an impulse.</b> <span>The tooth is on the impulse jewel and rides it out; try again.</span>');return;}
     const w=TAU/0.5,th=-H.amp*Math.cos(TAU*ph),v=H.amp*w*Math.sin(TAU*ph)+H.jS*(0.6+0.4*Math.random())*ESC.A*w,a0=Math.hypot(th,v/w),a=Math.min(a0,ESC.TRIP+15*D2R),before=H.amp;
     H.amp=a;H.kick=0;   /* the swing's new size; its phase is kept (the model's clock), so the train stays on its half second */
     const trip=a0>ESC.TRIP,set=a<ESC.AMIN,d=x=>Math.round(x/D2R)+'°';if(trip){H.eOff+=1;rErr+=0.5;}pend.add('jolted');
@@ -943,7 +943,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       }
       else if(insetKind==='bal'){const win=0.5*(st.speed<=0.05?1:2);ctx.clearRect(0,0,w,h);const tb=H.held?H.bph*0.5:tSim+(H.bOff+PL)*0.5,X=t=>8+(1-(tb-t)/win)*(w-16),Y=th=>h/2-th/(270*D2R)*(h/2-16);   /* tb: the balance's own time, which runs on while the train is held */
         ctx.strokeStyle=dk?'#2a323a':'#dde1e4';ctx.beginPath();ctx.moveTo(8,h/2);ctx.lineTo(w-8,h/2);ctx.stroke();
-        const N=240,pts=[];for(let i=0;i<=N;i++){const t=tb-win+win*i/N,q=t/0.5-Math.floor(t/0.5),z=ESC.state(q,H.amp);pts.push([t,z.th,!H.held&&z.prog>0&&z.prog<1]);}
+        const N=240,pts=[],dv=driveNow();for(let i=0;i<=N;i++){const t=tb-win+win*i/N,q=t/0.5-Math.floor(t/0.5),z=ESC.state(q,H.amp,dv);pts.push([t,z.th,!H.held&&z.prog>0&&z.prog<1]);}
         ctx.fillStyle=dk?'rgba(224,180,79,.35)':'rgba(184,134,11,.28)';for(const q of pts)if(q[2])ctx.fillRect(X(q[0])-1,10,2.5,h-26);
         ctx.strokeStyle=dk?'#91adf2':'#26479c';ctx.lineWidth=2;ctx.beginPath();pts.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.stroke();
         ctx.fillStyle=dk?'#e4e8eb':'#141a20';ctx.beginPath();ctx.arc(X(tb),Y(s.th),4,0,TAU);ctx.fill();
@@ -1059,20 +1059,21 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     tVis+=dt;stopMove(dt);
     const brake=H.arm>0.75,drv=driveNow();ampStep(dtS*rateK,brake,go&&!H.held,drv);   /* the arm's finger is beside the timing weight from about three quarters of its turn */
     if(!H.held&&H.amp>=ESC.AMIN){const r=ESC.rateAt(H.amp,drv);if(Number.isFinite(r))escK=1+r/86400;}rateK=rateW*escK;swRec(now,drv);   /* the escapement's share at this swing and torque */
-    /* the train's state at model time t: the beats E the escape wheel has escaped (whole while it is locked, a fraction from the unlocking to the next lock) and the balance's state.
+    /* the train's state at model time t: the beats E the escape wheel has escaped (whole while it is locked, a fraction from the unlocking to the next lock) and the balance's state
+       (ESC.state at the swing and the drive: the wheel's chase after the unlocking goes with the torque).
        The balance's phase is y = t/0.5 + bOff + PL, its beats counted from its far turn before the unlocking: E = floor(y) - 1 + its progress through the beat (ESC.state; at a
        whole y the tooth not yet escaped) + eOff (whole). The train goes by this real phase at every speed, so it stops and starts on whole beats and a change of speed moves
        nothing. Up to REAL_X the balance is drawn so (10 Hz at 5x, still a few frames a swing); faster it would be a blur, so it is drawn swinging at 0.9 Hz (shown), detent and
        trip spring still, and the HUD says so */
-    const at=t=>{const y=t/0.5+H.bOff+PL,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp);z.p=p;return{E:k-1+(p>0?z.prog:0)+H.eOff,s:z};},
-      lockd=z=>!(z.p>0&&z.prog>0&&z.prog<1),shown=z=>{if(st.speed<=REAL_X)return z;const p=(tVis*0.9)%1,d=ESC.state(p,H.amp);d.p=p;d.lift=0;d.psDef=0;return d;};
+    const at=t=>{const y=t/0.5+H.bOff+PL,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,drv);z.p=p;return{E:k-1+(p>0?z.prog:0)+H.eOff,s:z};},
+      lockd=z=>!(z.p>0&&z.prog>0&&z.prog<1),shown=z=>{if(st.speed<=REAL_X)return z;const p=(tVis*0.9)%1,d=ESC.state(p,H.amp,drv);d.p=p;d.lift=0;d.psDef=0;return d;};
     let E,s;
     if(!H.held){let q=at(tSim);const Eb=lastE!=null?Math.max(q.E,lastE):q.E,room=blockedNow()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity;   /* Eb: the wheel never turns back (the progress ESC.state gives at a phase changes with the swing: a swing cut short by the arm in a frame, or a knock, can leave the count ahead of the phase until the next unlocking); room: the last whole beat before a spoke meets the dog point */
       const hold=()=>{H.held=true;H.bph=tSim/0.5+H.bOff+PL;};
       if(dtS>0&&lockd(q.s)&&(!go||H.amp<ESC.AMIN||brake||Eb+1>room)){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}   /* the train stops at a locked beat */
       else{if(dtS>0){tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}q=at(tSim);}
         E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){hold();H.Eh=room;}}}
-    if(H.held){H.bph+=dtS*rateW/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
+    if(H.held){H.bph+=dtS*rateW/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp,drv);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
       if(go&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockd(s)){H.held=false;   /* the train goes again from where the balance is, on a whole beat, unless the dog point leaves it no whole beat (the hold's own test) */
         H.bOff=(((H.bph-PL-tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(tSim).E);}}
     s=shown(s);

@@ -1796,6 +1796,13 @@ An arbor needs pivots and shoulders; a stone its seat.
   raised. Its `sim` is now the page's loop line for line (the phase with `PL`, the wheel never back,
   the restart's count from `at()` itself), started so Running is as before. Keep: `sim` in
   `blender.js` and the train in `app.js`'s `frame` change together.
+- **The drawn escape wheel chased the impulse jewel at the calibrated torque whatever the drive.**
+  The swing and the rate took the drive (`ESC.ampAt`, `ESC.rateAt` with `driveNow()`), but the loop,
+  the balance inset and the export called `ESC.state(p, amp)` without it, so after the unlocking the
+  wheel ran to the jewel as at full torque: the tooth landed 2.6° of the balance early at 0.8 of the
+  torque, 7° at 0.3 (run nearly down, or on the sustaining spring). They pass the drive now (the
+  export its Running's, `drvF(h0)`, in the beat it samples and the rig's beat too). Keep: every
+  `ESC.state` call that draws the train passes the drive the swing is worked out at.
 
 ## Build, tools and docs
 
