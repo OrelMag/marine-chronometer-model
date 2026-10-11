@@ -1,0 +1,150 @@
+{
+ "We1dLNXiBj0": {
+  "A_deg": 255.7,
+  "sigma_deg": 8.9,
+  "at": "2:03.4",
+  "aliases_deg": [
+   244.5,
+   252.0,
+   259.5,
+   267.0
+  ],
+  "rising_deg_per_s": 0.97,
+  "stretch": "0:55.4-2:03.4 (camera on a tripod 0:45-2:04)",
+  "start": {
+   "rest": "0:46.0-0:52.4",
+   "release": "0:55.2",
+   "twist_deg": -62.0,
+   "first_swing_2A_mod15_deg": 5.2,
+   "A0_deg": [
+    62.6,
+    70.1
+   ]
+  },
+  "growth_deg": {
+   "summed": 191.0,
+   "mod15_first_last": [
+    2.9,
+    0.8
+   ],
+   "aliases": [
+    181.8,
+    196.8
+   ]
+  },
+  "frames": {
+   "read": 2397,
+   "turning_points": 274,
+   "registrations": 136,
+   "good": 85
+  },
+  "period_s": {
+   "median": 0.5003,
+   "first_5_s": 0.5008,
+   "last_20_s": 0.49994,
+   "note": "file time (29.97 fps nominal)"
+  },
+  "rolling_shutter_frames": -0.34,
+  "fit": {
+   "form": "A^2 = Ainf^2 - (Ainf^2 - A0^2) exp(-2t/TF), on the middle curve",
+   "Ainf_deg": 292,
+   "TF_s": 102,
+   "rms_deg": 1.8,
+   "over_aliases": {
+    "Ainf_deg": [
+     280,
+     304
+    ],
+    "TF_s": [
+     98,
+     105
+    ]
+   }
+  },
+  "A_t": [
+   [
+    55.4,
+    66.4
+   ],
+   [
+    59.4,
+    103.0
+   ],
+   [
+    63.4,
+    127.8
+   ],
+   [
+    67.4,
+    147.9
+   ],
+   [
+    71.4,
+    164.5
+   ],
+   [
+    75.4,
+    178.5
+   ],
+   [
+    79.4,
+    188.4
+   ],
+   [
+    83.4,
+    197.0
+   ],
+   [
+    87.4,
+    205.1
+   ],
+   [
+    91.4,
+    211.9
+   ],
+   [
+    95.4,
+    217.8
+   ],
+   [
+    99.4,
+    224.1
+   ],
+   [
+    103.4,
+    229.8
+   ],
+   [
+    107.4,
+    235.8
+   ],
+   [
+    111.4,
+    241.7
+   ],
+   [
+    115.4,
+    247.7
+   ],
+   [
+    119.4,
+    252.6
+   ],
+   [
+    123.4,
+    255.7
+   ]
+  ],
+  "sure": "likely within the stated range, not certain to better than one alias: this is a start from a twist, not the steady swing (still rising about 1 deg/s at 2:03); the growth is summed over 135 periods (one side only 1:06-1:15 and 1:21-1:40, neither side 1:15.7-1:20.5, interpolated) and known exactly only modulo one screw hole (15 deg): 181.8 or 196.8 (the sum, 191, is nearer 196.8); 211.8 is unlikely (a 9 deg/s burst in the blind 4.8 s, or a 30 % under-reading not seen where the second side joins); the start only modulo 7.5 deg; the steady swing (Ainf) is an extrapolation of the fit, not a measurement"
+ },
+ "_surveyed": {
+  "We1dLNXiBj0 2:37-3:02": "not measured: the camera back on the tripod in a new place (a plate homography maps the band), but the turning-point frames show the screws smeared and low in contrast (mirror similarity 0.65-0.8, registrations below 0.5 correlation); no absolute link to the earlier stretch either",
+  "We1dLNXiBj0 0:00-0:52": "no swing: the balance stands still (consecutive frames alike at 0:30, 0:46-0:52); the movement is started at 0:55",
+  "FpolZSipVmQ": "rejected: the rollers seen edge-on through the keyhole, hand-held; the impulse jewel shows over a narrow arc only and the balance arm crosses the view for one frame (0:20); no angle readable over a swing; 0:00-1:06",
+  "run_s7VW3RiJ97E": "rejected: the plate seen from above for about 5 s (0:04-0:09) while the camera pans and zooms, then the movement lifted and side-on; too short",
+  "XJQCgMV_GA8": "rejected: keyhole view of the locking stone and escape wheel (portrait), no part of the balance in view; 0:00-1:12",
+  "run_xDKFZaY88cM": "rejected, and a warning: 2:00-2:40 shows the balance close and oblique (brass screws, the timing nut), running, but the footage is edited: 2:03-2:15 repeats its frame-sharpness sequence exactly every 2.00 s (frames 60 apart most alike, not 15), 2:15-2:39 holds frames for 20 at a time (slow motion or stills); not a real-time record (its sound may be edited too); 0:00-1:58 is restoration footage",
+  "bEWF2ivi1Rg": "rejected: the movement turned on a turntable side-on (0:10-1:40), the barrel and fusee; the balance not in view",
+  "R-DrJz1DYOY": "rejected: the movement on a turntable seen from above (2:54-3:24), turning all the time; the balance under the cock, not followed"
+ }
+}
