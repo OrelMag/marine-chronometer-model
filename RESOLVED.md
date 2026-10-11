@@ -2239,4 +2239,4 @@ An arbor needs pivots and shoulders; a stone its seat.
   (`phaseAgainst`'s `deep`), 0.43 inside the tips; bom-fn.js's setup-click check asks that the
   free turn bring only a back under the click (under half the face's rise), not that the gap
   open, which only a leaning face gives. Keep: the click's seating, the clearance bisection's
-  `RT` and the drawn teeth all from one depth and profile.
+  `RT` and the drawn teeth all from one depth and profile. `4918893`
