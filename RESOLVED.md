@@ -191,18 +191,18 @@ Contents:
   counted the recoil, `cdr`). Now the tooth is pushed back along the flat as the shapes require
   (`ESC.recoil`, at most 0.18° of the wheel), the progress just under 0. Keep: the locked tooth
   where the stone's outline lets it be at every lift; `tools/escapement.js` checks the stone is
-  never inside a tooth.
+  never inside a tooth. `2fee3fe`
 - **The next tooth reached the stone in one step after the impulse.** Where the impulse jewel let
   the tooth go (+20.7°, 0.96 of a pitch) the wheel's place fell back to the free chase from the
   release, far ahead, and the progress went to 1 at once. Now the tooth runs on from the jewel's
   place and speed under the wheel's torque (`thE`, `phE`, `gE`), locking about 1.4° of the
   balance later (`run` in the state: the stage "relock"). Keep: the wheel's place continuous
-  through the let-go.
+  through the let-go. `2fee3fe`
 - **The train a tooth ahead at the phase's start.** `ESC.state(0)` took sin(2πp) > 0 for the
   active swing, so at p = 0 exactly (whenever tSim/0.5 + bOff is a whole number) it reported the
   return swing's progress 1, and the hands stood a beat ahead for that frame (blender.js worked
   round it). Now p is taken mod 1 and [0, ½) is the active swing. Keep: p 0 the active swing's
-  start, progress 0.
+  start, progress 0. `2fee3fe`
 - **The detent snapped home.** `ESC.state` took the lift from the jewel's table, which drops from
   0.3 mm to 0 in one 0.02° step where the passing spring's tip leaves the jewel (−12.4°), with the
   escaping tooth only an eighth of a pitch on: the stone stood up to 0.07 mm in its way for about
@@ -212,13 +212,13 @@ Contents:
   back before the escaping tooth has passed rides its back (`ride`). Keep: the stone never inside a
   tooth at any phase and swing (`tools/escapement.js`'s `stoneClash`, which fails past 1 µm: it read
   0.08 mm on the old state); the fall's place is dynamics.js's; fine.py's `PH` has phases through
-  the fall (0.2425-0.2445) and the run to the stone.
+  the fall (0.2425-0.2445) and the run to the stone. `6923ac5`
 - **`AMIN` 2° above where the escapement works.** It was the least swing that passes the trip
   spring (−40.2°), unlocks and sees the impulse through, plus 2° to spare; between 40.2° and 42.3°
   `app.js` held the train while `ESC.state` drew the detent unlocking it on every swing. Now
   `AMIN` is that least swing exactly (40.2° at the model's settings, refined by bisection when a
   setting moves it). Keep: `AMIN` where `state`'s own `pass` begins, so the train holds only
-  when the escapement can't work.
+  when the escapement can't work. `d8e896a`
 - **A held balance ran down as if nothing touched it.** `ampStep` let the swing fall as
   exp(−t/TF) whenever the train was held, but while the swing still carries the discharge jewel
   back past the trip spring, the jewel bends the trip spring on every return and lifts the detent
@@ -226,7 +226,7 @@ Contents:
   pivots' loss at 255° and five times it at 45°. Now `ESC.freeStep` (closed form, any step) takes
   both; from 255° the swing reaches 40.2° in 47 s, not 96. Keep: the held run-down is
   `ESC.freeStep` (app.js's `ampStep`, and blender.js's copy of the loop), checked against
-  `tools/dynamics.js`'s integration of a held train.
+  `tools/dynamics.js`'s integration of a held train. `9f1ed20`
 - **The hairspring didn't breathe.** `R.spPath` turned each point of the coil rigidly by θ(1 − s/L)
   about the staff, keeping every radius, where a spring of 11.86 turns swung 255° changes its
   coils' radii by θ/(2πN), about 6 % each way. Now every part of the free length changes its
@@ -234,7 +234,7 @@ Contents:
   (movement.js); against the elastica (`HSPR.large`) within 0.025 mm at 255° (the rigid turn was
   0.28 off). Keep: the shape the couple gives, the length kept, the clamped ends exact; it is
   rebuilt only when θ changes (ribbonGeo in place, 0.1 ms). It brought out that the inner curve
-  passes 0.04 mm from the collet at rest (OPEN-QUESTIONS.md).
+  passes 0.04 mm from the collet at rest (OPEN-QUESTIONS.md). `9714a9d`
 
 ## Going train and heights
 
