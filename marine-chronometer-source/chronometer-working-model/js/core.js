@@ -458,6 +458,7 @@ function gearGeo(n,m,th,o={}){
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
+  for(const c of o.cuts||[]){const v=c.map(([x,z])=>new THREE.Vector2(x,-z));if(!THREE.ShapeUtils.isClockWise(v))v.reverse();const h=new THREE.Path();v.forEach((q,i)=>i?h.lineTo(q.x,q.y):h.moveTo(q.x,q.y));h.closePath();s.holes.push(h);}   /* cuts: outlines [[x, z], ...] cut through it (a face layer's recesses), wound as the holes */
   const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro,ri,hub:R0,pl:xy});return g;
 }
 /* gearLash: a meshing pair phased as it runs, under load. A drives B (gearGeo meshes, their gear {z} in userData; their arbors at pa and pb, [x, z]); s is the way A turns as
