@@ -2091,7 +2091,7 @@ An arbor needs pivots and shoulders; a stone its seat.
 - **OPEN-QUESTIONS.md carried a merge's conflict markers** (released in 2.23.00 and 2.24.00): merging main into
   `claude/kin-simpl` (`a5b2f6e`) left both sides of the set-up ratchet's section, the older reading (a face leaning
   back) beside the measured one (undercut 3-6°). Kept the measured section and the winding-pawl springs' section.
-  Keep: after a merge, `git grep -n '^<<<<<<< \|^>>>>>>> '` before committing. HASH
+  Keep: after a merge, `git grep -n '^<<<<<<< \|^>>>>>>> '` before committing. `2339b4e`
 - **The mainspring's maker's sheet measured only its anchor pin** (0.5 × 0.6 × 0.65 mm): its coils
   are built only when they can be seen, so the sheet, drawing and book had none. `R.springReady`
   builds it fully wound for the maker, as it does the hairspring. `7848915`
