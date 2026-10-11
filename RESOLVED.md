@@ -1828,6 +1828,15 @@ An arbor needs pivots and shoulders; a stone its seat.
   comes sooner or later and the dial error shows the knock's time error (a phase landing between the
   unlocking and the lock waits for the next swing; a trip adds its tooth). Keep: a knock moves the
   beat by the phase it gives, the escape wheel's count unbroken.
+- **The twist turned the box 7° and gave the balance 160°.** The box's twist was drawn as a turn of
+  at most 0.12 rad out and back over half a second, while the balance was set to 160°. A twist can give
+  the balance only what the box turns under it: the balance stays where it is in space, so relative
+  to the movement θ″ = −ω²θ − α″, at most about twice the box's turn, and the drawn one would have left
+  it 7°. The box now turns 35° in 0.1 s and back a quarter of a second later (`TWIST` in `box.js`),
+  which leaves a balance at rest swinging 67° (a real start by hand: 62-66°), worked out from where the
+  balance is (`TWIST.run`; with the train going, a twist is a knock, as a jolt is); the build-up
+  from it follows the video's start within its readings. The export's Stop and start plays the same
+  twist. Keep: the balance's kick from the box's own turn, never set apart from it.
 
 ## Build, tools and docs
 

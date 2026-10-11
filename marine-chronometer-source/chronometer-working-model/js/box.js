@@ -214,5 +214,14 @@ function bankAt(f){const P=ESC.PA,g=-f*ESC.P;for(let i=0;i<P.length-1;i++)if(P[i
 /** @param {number} p @param {number} a @param {number} s @param {number|null} b */
 function bankState(p,a,s,b){if(b==null||a<=Math.abs(b)&&b<=0)return ESC.state(p,a,s);if(a<=b)return ESC.state(0.5,b,s);
   const ps=Math.acos(clamp(-b/a,-1,1))/TAU,L=1-2*ps,r=((p-ps)%1+1)%1;return ESC.state(ps+r%L,a,s);}
+/* the twist that starts a stopped chronometer (Sec. III: "a single quick twist to the right or the left", the box grasped with both hands on its table): the box turned TWIST.A about
+   the vertical in TWIST.T1 and back as quickly, TWIST.T2 later, on smoothsteps (35°, 0.1 s and 0.25 s: illustrative). The balance, free on its jewelled pivots but for the
+   hairspring, stays where it is in space while the box turns under it, so its angle in the movement goes as θ'' = -ω²θ - α''; turning back half its period later doubles what
+   the first turn gave, and a twist from rest leaves it swinging about 67°, a little more than a real start by hand (62-66°: References/VIDEOS.md, We1dLNXiBj0 0:55), well over
+   the 42° the escapement needs. TWIST.at(t): the box's angle t s into the twist; TWIST.run(th, u, w, sg): the balance's θ and θ'/ω at the twist's end from th and u at its start (ω = w), the box turned sg = 1 or -1 */
+const TWIST={A:35*D2R,T1:0.1,T2:0.25,T:0.35,
+  /** @param {number} t */ at:t=>TWIST.A*(smooth(t/TWIST.T1)-smooth((t-TWIST.T2)/TWIST.T1)),
+  /** @param {number} th @param {number} u @param {number} w @param {number} sg */ run(th,u,w,sg){const n=700,h=TWIST.T/n,c=sg*TWIST.A/(TWIST.T1*TWIST.T1),a2=x=>x<=0||x>=1?0:6-12*x;let v=u*w;
+    for(let i=0;i<n;i++){const t=(i+0.5)*h;v+=h*(-w*w*th-c*(a2(t/TWIST.T1)-a2((t-TWIST.T2)/TWIST.T1)));th+=h*v;}return[th,v/w];}};
 function shadowTex(){const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');const g=x.createRadialGradient(128,128,20,128,128,128);g.addColorStop(0,'rgba(0,0,0,0.42)');g.addColorStop(0.6,'rgba(0,0,0,0.16)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,256,256);return new THREE.CanvasTexture(cv);}
 

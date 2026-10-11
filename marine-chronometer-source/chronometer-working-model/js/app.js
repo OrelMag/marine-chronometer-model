@@ -695,9 +695,15 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      The balance's phase is tSim/0.5 + bOff + PL (H.bph while the train stands), so with bOff and eOff 0 the hand lands on the mark k/2 s at tSim = k/2, as on a chronometer set
      to a time signal (at another swing or torque a few milliseconds off it) */
   const PL=(()=>{let lo=0,hi=0.5;for(let i=0;i<50;i++){const m=(lo+hi)/2;ESC.state(m).prog>=1?hi=m:lo=m;}return hi;})();
+  /* the twist that starts it (Sec. III, "a single quick twist"): the box turned sharply about the vertical and back (TWIST in box.js, drawn on frame time). The balance stays
+     where it is in space while the box turns under it, so it is left swinging: from rest about 67°, enough to unlock the wheel, and the impulses build it up. Its swing and
+     phase at the twist's end are worked out from where it is now (taken as if the twist were over at once): the train standing, they are the balance's own (a larger swing
+     eased up to over 0.15 s, ampStep's kick); going, the twist is a knock, as a jolt is */
   const twist=()=>{if(H.armT){stopMsg('Unlock the balance first: the arm holds its rim.');return;}
-    if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;   /* from rest: the balance at its dead point, on the return swing */
-    H.kick=160*D2R;H.twT=performance.now();wake();
+    const y=H.held?H.bph:tSim/0.5+H.bOff+PL,p=y-Math.floor(y),a=H.amp,sg=Math.random()<0.5?-1:1,[th,u]=TWIST.run(-a*Math.cos(TAU*p),a*Math.sin(TAU*p),TAU/0.5,sg),a1=Math.hypot(th,u),p1=Math.atan2(u,-th)/TAU-TWIST.T/0.5;
+    H.twS=sg;H.twT=performance.now();wake();
+    if(H.held){H.bph=Math.floor(H.bph)+p1;if(a1>a)H.kick=a1;else{H.amp=a1;H.kick=0;}}
+    else{const er=knock(Math.min(a1,ESC.TRIP+15*D2R),p1,a1>ESC.TRIP?1:0);pend.add('twisted');stopMsg(`<b>Twisted while it was going.</b> <span>The swing went from ${Math.round(a/D2R)}° to ${Math.round(Math.min(a1,ESC.TRIP+15*D2R)/D2R)}°${a1<ESC.AMIN?', too little to unlock the wheel: it stops':''}, and the beat moved: the hands ${er>=0?'gained':'lost'} ${fmtS(er).slice(1)}.</span>`);return;}
     if(hrs>=RUN_H)stopMsg('Twisted, but it is run down: with no power the balance swings down again. Wind it first.');else if(blockedNow())stopMsg('Twisted, but the train is blocked: the balance swings without unlocking the wheel. Raise the screw.');};twistB.addEventListener('click',twist);
   /* setting when stopped (Sec. III, Setting When Stopped): stop the balance (here with the locking arm), wait until the master overtakes a fast dial, or until the second hands
      agree on a slow one, unlock, and start it with a twist at that instant. The escape wheel stands locked, so the second hand is on a half second. sw: the steps under way */
@@ -1101,9 +1107,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const jt=H.jT>0?(now-H.jT)/1000:1;const jk=jt<0.25&&!RM.matches?H.jS*2.5*D2R*Math.sin(Math.PI*jt/0.25)*(1-jt/0.25):0;if(jt>=1)H.jT=0;   /* a jolt knocks the box over and back in a quarter second */
     /* latching: the ring and case are brought level with the box, then the lever swings in; released, the reverse. Latched, they tilt with the box */
     latchK=SNAP||RM.matches?+st.latch:clamp(latchK+(st.latch?1:-1)*dt*1.2,0,1);const fr=1-smooth(Math.min(1,latchK*2));
-    const tw=H.twT<0||RM.matches?0:(now-H.twT)/1000;if(tw>0.5)H.twT=-1;   /* the twist that starts it: the box turned sharply and back */
+    const tw=H.twT<0||RM.matches?0:(now-H.twT)/1000;if(tw>TWIST.T)H.twT=-1;   /* the twist that starts it: the box turned sharply and back (TWIST) */
     gimStep(dt,pitch,roll+jk,fr);
-    BX.root.rotation.set(pitch,tw>0&&tw<0.5?0.2*Math.sin(Math.PI*tw/0.5)*(1-tw/0.5):0,roll+jk,'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,latchK*2-1)));
+    BX.root.rotation.set(pitch,tw>0&&tw<TWIST.T?H.twS*TWIST.at(tw):0,roll+jk,'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,latchK*2-1)));
     BX.root.updateMatrixWorld(true);if(secMode!=='off')secPlane.copy(secLocal).applyMatrix4(mv.matrixWorld);
     if(G.follow)G.target.copy(G.follow()).add(panO);
     if(st.spin&&!ptrs.size){G.yaw+=dt*0.2;if(camFree)C.yaw+=dt*0.2;}

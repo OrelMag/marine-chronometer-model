@@ -30,7 +30,8 @@ const BLENDER=(()=>{
   /* ---------- the train and balance through time: app.js frame()'s stop and start, drive and swing (ampStep, stopMove), at speed 1 ---------- */
   function sim(C,hrs){const R=C.R,drvF=A.drvF,PL=A.PL,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:-PL,eOff:1,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false};   /* bOff -PL, eOff 1: at 0 s the balance at its far turn and E 0, the rest pose (Rig · beat's start) */
     const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const y=t/0.5+H.bOff+PL,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,H.drv);z.p=p;return{E:k-1+(p>0?z.prog:0)+H.eOff,s:z};},lockd=z=>!(z.p>0&&z.prog>0&&z.prog<1);   /* as app.js: at a whole phase the tooth not yet escaped, whatever ESC.state's prog there */
-    H.twist=()=>{if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;H.kick=160*D2R;};
+    H.twist=sg=>{const y=H.held?H.bph:H.tSim/0.5+H.bOff+PL,p=y-Math.floor(y),a=H.amp,[th,u]=TWIST.run(-a*Math.cos(TAU*p),a*Math.sin(TAU*p),TAU/0.5,sg),a1=Math.hypot(th,u),p1=Math.atan2(u,-th)/TAU-TWIST.T/0.5;
+      if(H.held){H.bph=Math.floor(H.bph)+p1;if(a1>a)H.kick=a1;else{H.amp=a1;H.kick=0;}}};   /* app.js's twist with the train standing (the clip twists it only so) */
     H.step=dt=>{const mvTo=(x,t,r)=>x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(H.lastE??0))?Math.min(b,vf-0.005):b;
       const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held,bank=H.held&&H.bk!=null&&H.amp>Math.abs(H.bk);
       { let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dt/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
@@ -74,9 +75,9 @@ const BLENDER=(()=>{
           if(on){S.winding=true;const j=Math.floor(kt);S.hrs=Math.max(0,hW-HT*(j+smooth(Math.min(1,(kt-j)/0.7))));if(S.hrs===0&&hz<0)hz=kt;}else S.winding=false;
           const o=S.step(dt),T=on?0:C.BX.shRest;sh=lerp(sh,T,1-Math.exp(-dt*(T?12:6)));emit(t,st(Object.assign(o,{keyOn:on,sh})));}}},
       {name:'Setting the hands',len:10,d:'the key on the centre arbor sets the hands an hour on, the train going',run:emit=>runFor(sim(C,h0),20,emit,t=>({slip:3600*smooth(ramp(t,1.5,8.5)),hkeyOn:t>0.5&&t<9.5}))},
-      {name:'Stop and start',len:26,d:'the locking arm stops the balance and holds it; unlocked, a twist of the box starts it; the train-blocking screw comes down between the fourth wheel\'s spokes and up again',run:emit=>{
-        const S=sim(C,h0);let tp=0,tw=-1;for(let i=0;i<=26*120;i++){const t=i/120,dt=t-tp;tp=t;S.armT=t>=1&&t<6?1:0;if(tw<0&&t>=8){S.twist();tw=t;}S.blkT=t>=15&&t<21?1:0;
-          const o=S.step(dt),w=tw>=0?t-tw:-1;emit(t,st(Object.assign(o,{tw:w>0&&w<0.5?0.2*Math.sin(Math.PI*w/0.5)*(1-w/0.5):0})));}}},
+      {name:'Stop and start',len:26,d:'the locking arm stops the balance and holds it; unlocked, a twist of the box starts it; the train-blocking screw comes down between the fourth wheel\'s spokes and up again, and a twist starts it again if the tooth the spoke held stopped the balance',run:emit=>{
+        const S=sim(C,h0);let tp=0,tw=-1,t2=-1;for(let i=0;i<=26*120;i++){const t=i/120,dt=t-tp;tp=t;S.armT=t>=1&&t<6?1:0;if(tw<0&&t>=8){S.twist(1);tw=t;}S.blkT=t>=15&&t<21?1:0;if(t2===-1&&t>=22){t2=-2;if(S.held){S.twist(-1);t2=t;}}
+          const o=S.step(dt),w=t2>=0?t-t2:tw>=0?t-tw:-1,sg=t2>=0?-1:1;emit(t,st(Object.assign(o,{tw:w>0&&w<TWIST.T?sg*TWIST.at(w):0})));}}},
       {name:'Exploded',len:11,d:'out of the case, turned over, the parts and screws apart along their arbors, and back',run:emit=>uni(11,t=>{const u=out(t,0,2.5,8.5,11);return st({up:u,flip:u,ex:out(t,2.5,5,6,8.5)});},emit)},
       {name:'Laid out',len:11,d:'the train laid out along the barrel-fusee line, as the textbooks draw it, and back',run:emit=>uni(11,t=>{const u=out(t,0,2.5,8.5,11);return st({up:u,flip:u,dev:out(t,2.5,5,6,8.5)});},emit)},
       {name:'Lift out',len:7,d:'the movement lifted out of its case and turned over, and back',run:emit=>uni(7,t=>{const u=out(t,0,3,4,7);return st({up:u,flip:u});},emit)},
