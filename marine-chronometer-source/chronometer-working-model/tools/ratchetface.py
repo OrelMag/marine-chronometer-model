@@ -4,7 +4,7 @@ No browser; opencv-python, numpy (matplotlib for --fold). Frames from video.py f
   python ratchetface.py FRAME --box x0 y0 x1 y1 --c cx cy [--arc a0 a1] [--rc R] [--thr V] [--z 42] [--ro 7.05] [--sigma s ...] [--fold OUT.png]
 
 The wheel must stand dark against a lighter ground over the arc used (image angles a0..a1 in degrees, atan2(y, x) about the guessed centre
-cx, cy, y down; default the upper half), as the setup ratchet does held loose over the plate (KLUwI2UUCMQ 38:25.8, 38:26.0). Its outline at
+cx, cy, y down; default the upper half; a0 > a1 for an arc through 180), as the setup ratchet does held loose over the plate (KLUwI2UUCMQ 38:25.8, 38:26.0). Its outline at
 level V (HSV value, default 90) is traced on a 4x upsampled crop of the box (the dark region round the centre, cut off at R px from it, so
 dark ground beyond the tips doesn't join it); its tips (the farthest point in each pitch) fitted by an ellipse, dropping those off it by more
 than 1 %, and the outline mapped through it onto a circle of radius RO mm (an affine map: perspective across the wheel is left out). Each
@@ -36,7 +36,9 @@ def outline(V,box,c,arc,thr,rc,U=4):
     ring=[lab[int((cy+0.7*rc*math.sin(q)-y0)*U),int((cx+0.7*rc*math.cos(q)-x0)*U)] for q in np.linspace(0,2*math.pi,180)];ring=[v for v in ring if v>0]
     w=cv2.morphologyEx((lab==max(set(ring),key=ring.count)).astype(np.uint8),cv2.MORPH_CLOSE,np.ones((9,9),np.uint8))
     cs,_=cv2.findContours(w,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE);C=max(cs,key=len)[:,0,:].astype(float)/U+[x0,y0]+(0.5/U-0.5)
-    th=np.degrees(np.arctan2(C[:,1]-cy,C[:,0]-cx));k=(th>arc[0])&(th<arc[1]);C,th=C[k],th[k];o=np.argsort(th);return C[o],th[o]
+    th=np.degrees(np.arctan2(C[:,1]-cy,C[:,0]-cx))
+    if arc[0]>arc[1]:th=np.where(th<arc[0],th+360,th);arc=(arc[0],arc[1]+360)   # an arc through 180 deg (a0 > a1): angles past it carried on
+    k=(th>arc[0])&(th<arc[1]);C,th=C[k],th[k];o=np.argsort(th);return C[o],th[o]
 
 def analyse(C,th,c,z,ro_mm):
     cx,cy=c;r=np.hypot(C[:,0]-cx,C[:,1]-cy);pd=360/z;tips=[]
