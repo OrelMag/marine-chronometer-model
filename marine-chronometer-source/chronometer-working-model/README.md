@@ -830,7 +830,7 @@ can't run them).
     unlocking, strike and lock with the swing alone free (chi² about 0 in all nine;
     the old model worse in all), and the strike-to-lock interval falls from 10.2
     to 7.5 ms as the swing builds, read as 217-286°; after it, the unlocking-to-strike
-    interval holds at 6.3-6.4 ms, **290-295° running**.
+    interval holds at 6.3-6.4 ms, **290-295° running** (that stretch alone can't tell those two clicks from the strike and the lock, 331°; the build-up, where all three are heard, says which they are).
   - `xDKFZaY88cM` (a reverberant room, an edited video): roughly 180-210°;
     `XJQCgMV_GA8` (13 s of sound) and `FpolZSipVmQ`: inconclusive.
 - **`tools/swing.py`, the swing on video.** Only `We1dLNXiBj0` shows the balance

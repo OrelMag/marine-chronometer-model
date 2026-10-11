@@ -9,7 +9,7 @@ imageio-ffmpeg (its ffmpeg reads the audio), yt-dlp for --fetch. The recordings 
         [--boot 200]                      bootstrap resamples over beats (the onsets' spread, and the swing's over the first 100)
         [--plots DIR]                     where the plots go (default $MC_VIDEO/acoustic): ac_ID.png, the beat with its onsets and both models' best fits
         [--every S]                       stretch by stretch, S s each (a swing that changes: a start), the active swing's clicks alone
-        [--write]                         write tools/acoustic.json (per recording: beats used, onsets, each model's fits and residuals, single intervals)
+        [--write]                         write tools/acoustic.json (per recording, merged: beats used, onsets, each model's fits and residuals, single intervals)
   python acoustic.py s7VW3RiJ97E We1dLNXiBj0 xDKFZaY88cM XJQCgMV_GA8 FpolZSipVmQ --write   (the five of VIDEOS.md with running sound, about 4 min)
   python acoustic.py We1dLNXiBj0 --every 6 --from 0:56 --write   (the balance started by hand at 0:55, swing.py's build-up: acoustic_stretches.json, 30 s)
 
@@ -256,4 +256,6 @@ if __name__ == '__main__':
         plt.tight_layout(); p = os.path.join(pd, f'ac_{i}.png'); plt.savefig(p, dpi=80); plt.close(); print('  plot', p)
     if write:
         out = dict(note='acoustic.py: onsets in ms from each recording\'s aligned click; fits: swing A (deg) with the 16-84 % of resamples, shift t0, cost, residual per event (onset - model, ms)', recordings=res)
-        json.dump(out, open(os.path.join(TOOLS, 'acoustic_stretches.json' if every else 'acoustic.json'), 'w', encoding='utf-8', newline=''), indent=1, ensure_ascii=False); print('\nwrote', os.path.join(TOOLS, 'acoustic_stretches.json' if every else 'acoustic.json'))
+        fn = os.path.join(TOOLS, 'acoustic_stretches.json' if every else 'acoustic.json')   # merged: a recording run again replaces its own entry only
+        if os.path.exists(fn): out['recordings'] = {**json.load(open(fn, encoding='utf-8')).get('recordings', {}), **res}
+        json.dump(out, open(fn, 'w', encoding='utf-8', newline=''), indent=1, ensure_ascii=False); print('\nwrote', os.path.join(TOOLS, 'acoustic_stretches.json' if every else 'acoustic.json'))
