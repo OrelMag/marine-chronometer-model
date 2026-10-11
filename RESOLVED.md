@@ -185,6 +185,24 @@ Contents:
   staff; `fine.py --split` passes. Keep: anything on the balance stays inside
   17.7 mm and above the escape upper bridge's screw heads, as the uncut rim's
   parts do. `3c9608c`
+- **The locked tooth didn't recoil as the stone was drawn out.** `ESC.state` held the wheel at its
+  locked place (progress 0) while the detent lifted, so the stone, its flat set at 10° of draw,
+  passed about 0.01 mm into the tooth's tip from −26° to −22.8° of the balance (the work already
+  counted the recoil, `cdr`). Now the tooth is pushed back along the flat as the shapes require
+  (`ESC.recoil`, at most 0.18° of the wheel), the progress just under 0. Keep: the locked tooth
+  where the stone's outline lets it be at every lift; `tools/escapement.js` checks the stone is
+  never inside a tooth.
+- **The next tooth reached the stone in one step after the impulse.** Where the impulse jewel let
+  the tooth go (+20.7°, 0.96 of a pitch) the wheel's place fell back to the free chase from the
+  release, far ahead, and the progress went to 1 at once. Now the tooth runs on from the jewel's
+  place and speed under the wheel's torque (`thE`, `phE`, `gE`), locking about 1.4° of the
+  balance later (`run` in the state: the stage "relock"). Keep: the wheel's place continuous
+  through the let-go.
+- **The train a tooth ahead at the phase's start.** `ESC.state(0)` took sin(2πp) > 0 for the
+  active swing, so at p = 0 exactly (whenever tSim/0.5 + bOff is a whole number) it reported the
+  return swing's progress 1, and the hands stood a beat ahead for that frame (blender.js worked
+  round it). Now p is taken mod 1 and [0, ½) is the active swing. Keep: p 0 the active swing's
+  start, progress 0.
 
 ## Going train and heights
 

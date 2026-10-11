@@ -9,8 +9,9 @@
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
 /** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rnd?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,hD?:number,EB?:number,ET?:number,HS?:number}} EscSettings
     any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
-/** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean}} EscState
-    state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1), the wheel running free */
+/** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean}} EscState
+    state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1; a
+    little under 0 while the unlocking draws the locked tooth back), the wheel running free (drop: from the release to the impulse jewel; run: from the jewel on to the locking stone) */
 /** @param {EscSettings} [o] */
 function makeEsc(o={}){
   const TAU=Math.PI*2,D2R=Math.PI/180,ES=13.16/2;
@@ -82,19 +83,37 @@ function makeEsc(o={}){
   /* one tooth's outline (unit frame, polar [r, angle]) with its tip at angle a, the back trailing (+angle, the wheel turning to -angle): front root, tip, land, hollow back,
      root circle to the next tooth's front root. Drawn by the model's wheel (core.js escapeWheel) and the 2D inset */
   const toothPts=a=>{const q=[[r0,a+U*P],[1,a],[1,a+c.land*P]];for(let k=1;k<=16;k++){const f=k/16;q.push([1-(1-r0)*(1-Math.pow(1-f,1.6)),a+P*(c.land+(c.B-c.land)*f)]);}q.push([r0,a+P*(c.B+1+U)/2]);return q;};
-  /* state at balance phase p (0..1 over one 0.5 s oscillation): balance angle, detent lift, passing-spring deflection, escape-wheel tooth progress.
+  /* the unlocking's recoil: the locked tooth's tip rests on the stone's flat, set at DRAW, so drawing the stone out pushes the tooth back along the flat (the wheel recoils,
+     which the work counts as cdr below) until the flat's inner end has passed the tip, which then rides round the stone's edge until the stone is clear (lRel). toothBack(l):
+     the tooth tip's angle with the stone lifted l, from the shapes: the most forward place where no point of the stone is inside the tooth (its tip at r 1, its undercut face
+     below it, as bite); RC: the wheel's turn back from its locked place over the lift (until 11 October 2026 the wheel stood still and the stone passed 0.007 mm into the tip) */
+  const toothBack=l=>{let a=-Infinity;const q=stone.map(s=>rot(s,l)),n=q.length;
+    for(let k=0;k<n;k++){const p0=q[k],p1=q[(k+1)%n],m=Math.max(2,Math.ceil(Math.hypot(p1.x-p0.x,p1.y-p0.y)/2e-4));
+      for(let j=0;j<=m;j++){const x=p0.x+(p1.x-p0.x)*j/m-EX,y=p0.y+(p1.y-p0.y)*j/m,r=Math.hypot(x,y);if(r<=1&&r>=r0)a=Math.max(a,Math.atan2(y,x)-U*P*(1-r)/(1-r0));}}
+    return a;};
+  /* past the flat's end the tip slides round the stone's edge and is free about 0.025 mm short of lRel, which keeps 0.02 mm to spare (above): the tooth is held at its
+     locked place over that last stretch, the release taken at lRel as everywhere else in the model */
+  const NL=300,a00=toothBack(0),RC=new Float64Array(NL+1);for(let j=0;j<=NL;j++){const b=toothBack(lRel*j/NL);RC[j]=b>-1e8?Math.max(0,b-a00):0;}
+  const recoil=l=>{const f=Math.min(1,Math.max(0,l/lRel))*NL,j=Math.min(NL-1,Math.floor(f));return RC[j]+(RC[j+1]-RC[j])*(f-j);};
+  /* state at balance phase p (0..1 over one 0.5 s oscillation, 0 the active swing's start): balance angle, detent lift, passing-spring deflection, escape-wheel tooth progress.
      amp: the swing's amplitude in radians (A, the running amplitude, by default); smaller while the balance starts or runs down. Below the angle that unlocks
      the detent, completes the impulse and passes the trip spring (AMIN) the wheel stays locked, which the caller keeps (the progress it reports assumes a running escapement).
      A swing that doesn't carry the discharge jewel back past the trip spring's tip (amp below -thPass) never gets it behind the spring to unlock: the spring stays bent
      against the jewel and follows it back, and the detent stays on its stop. drop: the wheel runs free, between release and the tooth landing on the impulse jewel.
-     Released, the wheel starts from rest and gathers speed under its torque (s times the calibrated) against its own and the train's inertia, chasing the jewel (chase) */
+     Released, the wheel starts from rest and gathers speed under its torque (s times the calibrated) against its own and the train's inertia, chasing the jewel (chase).
+     While the stone lifts, the locked tooth recoils (recoil); the tooth leaving the impulse jewel runs on
+     to the stone from where and how fast the jewel let it go (run). Until 11 October 2026 the phase's start (p 0, where sin(2πp) is 0) counted as the return swing, the
+     train a tooth ahead for that instant */
   /** @param {number} p the phase, 0 to 1 @param {number} [amp] the amplitude (rad) @param {number} [s] the drive, times the calibrated @returns {EscState} */
   function state(p,amp=A,s=1){
-    const th=-amp*Math.cos(TAU*p),ccw=Math.sin(TAU*p)>0,pass=thPass!==null&&amp>=-thPass;
-    const lift=ccw&&pass?tab(LI,th):0,psDef=ccw&&pass?0:tab(PS,th);let prog,drop=false;
-    if(ccw&&pass&&th>thRel){const a=bite(th),pf=chase(th,amp,s),pa=a>-1e8?a-t0:-1e9,phi=Math.max(pf,pa);prog=phi<=-P?1:-phi/P;drop=pf>pa&&phi>-P;}
-    else prog=ccw?0:1;
-    return{th,ccw,lift,psDef,prog,drop};
+    const q=p-Math.floor(p),th=-amp*Math.cos(TAU*q),ccw=q<0.5,pass=thPass!==null&&amp>=-thPass;
+    const psDef=ccw&&pass?0:tab(PS,th);let lift=ccw&&pass?tab(LI,th):0,prog,drop=false,run=false;
+    if(ccw&&pass&&th>thRel){const pf=chase(th,amp,s);
+      if(th>thE&&chase(thE,amp,s)<phE){const t=(Math.acos(Math.max(-1,Math.min(1,-th/amp)))-Math.acos(Math.max(-1,Math.min(1,-thE/amp))))/W0,wE=W0*Math.sqrt(Math.max(0,amp*amp-thE*thE)),
+          phi=phE+gE*wE*t-0.5*s*accW*t*t;prog=phi<=-P?1:-phi/P;run=phi>-P;}   /* off the jewel (it landed before thE): on at the jewel's speed, gathering more, to the stone */
+      else{const a=bite(th),pa=a>-1e8?a-t0:-1e9,phi=Math.max(pf,pa);prog=phi<=-P?1:-phi/P;drop=pf>pa&&phi>-P;}}
+    else prog=ccw&&pass&&lift>0?-recoil(lift)/P:ccw?0:1;
+    return{th,ccw,lift,psDef,prog,drop,run};
   }
   /* passing spring as root, control point and tip (unit frame) for a state: rides with the detent, tip bent along -nB on the return swing */
   /** @param {{lift:number,psDef:number}} s @returns {[{x:number,y:number},{x:number,y:number},{x:number,y:number}]} */
@@ -174,6 +193,10 @@ function makeEsc(o={}){
   else{const R0=RF[rk]||(/** @type {any} */(makeEsc)(Object.fromEntries(CAL.map(k=>[k,c[k]]))),RF[rk]),cl=R0.cl;CL=cl;PH0=R0.ph;
     const a=cl?solveA(1,cl.w):0,br=a>0?parts(a,1,cl.w):null;run={A:a,rate:br?day(sumP(br)-R0.ph)+c.HS*(a-A0)/D2R/10:NaN,own:br?day(sumP(br)):NaN,parts:br,cl};}
   if(CL)accW=CL.w/JR;
+  /* the tooth leaves the impulse jewel at thE (where the jewel's tip passes out of the teeth's path, or the tooth reaches the stone on it), at phE, moving with the jewel
+     (gE: the wheel's turn a radian of the balance there, over the last 0.1 deg); state runs it on from there to the stone (until 11 October 2026 it reached the stone at once) */
+  let iE=null;for(let i=iRel+1;i<NTB-1;i++)if(!isNaN(PA[i])&&PA[i]>-P&&(isNaN(PA[i+1])||PA[i+1]<=-P)){iE=i;break;}
+  const thE=iE===null?Infinity:TH0+iE*DT,phE=iE===null?0:PA[iE],gE=iE===null||isNaN(PA[iE-5])?0:(PA[iE]-PA[iE-5])/(5*DT);
   /* AMIN: the least amplitude that keeps the escapement going, with 2 degrees to spare: the swing must carry the discharge jewel past the trip spring on the return
      (where it comes clear, thPass), unlock the wheel (thRel) and see the impulse to its end before it turns. Below it the balance swings on without unlocking */
   let AMIN=aLo+2*D2R;if(CL){let a=aLo;while(a<TAU){const im=impulse(1,a,CL.w);if(im&&im.end!==null&&im.end<a)break;a+=0.25*D2R;}AMIN=a+2*D2R;}
@@ -210,7 +233,7 @@ function makeEsc(o={}){
     let tIn=null;for(let t=TH0;t<1.2;t+=0.01*D2R)if(bite(t)>-1e8){tIn=t;break;}
     if(tIn===null)no('no tooth reaches the impulse jewel');
     r.drop=deg(tIn==null?null:thRel-tIn);r.ahead=deg(t0-bite(thRel));                                    // drop (Op. 97); >0: jewel is past the waiting tooth at release
-    let tE=null;for(let k=0;k<=40000;k++){const p=0.5*k/40000;if(Math.sin(TAU*p)<=0)continue;const s=state(p,A0);if(tE===null&&s.prog>=1){tE=s.th;break;}}
+    let tE=null;for(let k=0;k<=40000;k++){const p=0.5*k/40000;if(Math.sin(TAU*p)<=0)continue;const s=state(p,A0);if(tE===null&&(s.prog>=1||s.run)){tE=s.th;break;}}   /* the impulse's end: the tooth leaves the jewel (it then runs on to the stone) */
     if(tE===null)no('the tooth never finishes its impulse: the wheel would not advance');
     r.impEnd=deg(tE);r.hornClr=mm(Math.min(...pieces.horn.map(q=>Math.hypot(q.x,q.y)))-rd);r.jewels=deg(aD-aI);r.lRel=mm(lRel);
     r.A=deg(A);r.AMIN=deg(AMIN);r.rate=run.rate;r.fu=run.fu;
@@ -228,6 +251,6 @@ function makeEsc(o={}){
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
   const wn=(s,a)=>CL?wnK(s,a,CL.w):-Infinity;   /* the work an oscillation nets the balance at drive s and swing a (units of k): tools/physics.js's budget */
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,lockA};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};

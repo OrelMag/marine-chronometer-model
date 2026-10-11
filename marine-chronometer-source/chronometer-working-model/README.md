@@ -439,7 +439,12 @@ Beside it runs the master time `tM`: a perfect clock, standing for the time sign
 
 - The balance phase is `p = frac(tSim / 0.5)`, one oscillation per half-second.
 - `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection
-  and the escape wheel’s progress through its current tooth.
+  and the escape wheel’s progress through its current tooth. `p` 0 is the active
+  swing's start, the wheel locked (progress 0). The progress dips a little under
+  0 while the stone is drawn out against the locked tooth (the recoil, at most
+  0.18° of the wheel, from −27.8° to −22.6° of the balance), and after the impulse
+  the tooth runs on from where the jewel lets it go (0.96 of a pitch, +20.7°) to
+  the stone at the speed it had and more, locking at +22.1° (at 255°).
 - Escape wheel position is `E = completed oscillations + progress`, counted in
   teeth. Every other arbor is a fixed ratio of `E`. The hands therefore advance
   in half-second steps, as the manual states (Sec. IX, p. 66).
@@ -642,9 +647,10 @@ the rate from its own geometry, so the Adjuster's bench changes both (`ESC.A`,
   Adjuster's bench's last slider. At −0.22 the spring all but cancels the
   escapement's loss at a smaller swing (0.01 s a day at 90% of the torque).
   `tools/escapement.js HS=-0.22` prints it.
-- **Not modelled:** friction at the impulse, the recoil in the motion (it
-  counts in the work only) and the detent's own inertia and bounce (`tools/dynamics.js`:
-  they change the swing by about 1° and the rate by about 0.1 s a day).
+- **Not modelled:** friction at the impulse and, in the work, the detent's own
+  inertia and bounce (`tools/dynamics.js`: they change the swing by about 1° and the
+  rate by about 0.1 s a day). The recoil is drawn (`ESC.state`, since 11 October
+  2026) and counts in the work as before.
 
 ### The balance's dynamics
 
@@ -1005,7 +1011,7 @@ the repository with short audio excerpts and the video frames).
   - Depth of lock is 0.112 mm, and the trip spring's tip lifts 0.18 mm to release (the settings rd 0.300, rT 0.290, aD 271°, dL 0.017 of the unit, re-chosen on 11 October 2026 when the contacts were solved from the jewel's rounded end: 0.305, 0.286, 269.6° and 0.019 before).
   - The discharge jewel meets the trip spring at −27.8° of balance and releases the wheel at −21.3°. The wheel catches the impulse jewel at −4.8° and drives it to +20.7°.
   - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip comes clear of the jewel (−12.4° and −40.2°): pushed along the jewel's face, then round its end, which is stoned to a half round (`rnd`, estimated: no source shows it; drawn square, the end held the tips across its whole width, 0.32 mm, and overall came to about 38°, past Op. 87). Let-off and overall are measured to the fall, as the manual's gauge reads them.
-  - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release (the recoil counts in the work unlocking takes from the balance only). Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
+  - Unlocking against the 10° of draw turns the wheel back (recoil): the locked tooth's tip pushed back along the stone's flat as it lifts, at most 0.18° of the wheel at 0.145 mm of lift, until the flat's inner end passes the tip (`ESC.recoil`, from the shapes). Past it the tip would slide round the stone's edge and be free about 0.025 mm short of the release, where the model keeps 0.02 mm to spare (`lRel`); the tooth is held at its locked place over that stretch. The tooth leaving the impulse jewel runs on to the stone from the jewel's place and speed under the wheel's torque (`ESC.thE`, about 1.4° of the balance). Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
 - The escapement's parts beyond the plan.
   - The escape teeth: their form follows Fig. 90 and an original wheel photographed in chronometerbook post 30 (a land 0.13 mm wide at the tip, the root circle at 5.5 mm). The undercut of the locking face (the root trails the tip by 0.14 of a pitch, about 16°), the length of the hollow back (0.55 of a pitch) and its curve (meeting the root circle tangentially) are traced from Fig. 90. Fig. 14's cut-away gives the arrangement: the teeth stand the wheel's full thickness on a thin rim and spokes. The rim's inner edge (0.77 of the tips), the spokes (0.105 of the tips wide), the hub (r 0.31) and the collet's pipe (r 0.20, toward the pinion) are measured on 43:21.1, the wheel face up in the staking tool; the web's thickness (0.5), the pipe's length (1.9, off the view's tilt: rough) and the collet's foot, a collar about 0.65 tall there where the model has the web's 0.5, are estimated.
   - The impulse roller's three holes (0.5 mm radius, a quarter turn apart from the jewel, Figs. 14, 61 and 90) and the impulse jewel's section (flat on the impulse face, curved behind, thinning to 0.45 of its width at the ends; "curved side of the jewel", Sec. VII) are estimated in size.
