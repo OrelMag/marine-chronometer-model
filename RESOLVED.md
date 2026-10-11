@@ -699,11 +699,11 @@ Contents:
 - **The chain grew 1.6 mm over the wind** (kinematics audit, 11 October 2026). `Ib` turned
   the barrel by the chain's arc paid off the fusee, but the straight run between the drums,
   their common tangent, lengthens from 35.85 to 37.42 mm as the fusee's radius grows, so the
-  barrel over-turned 0.013 turn (4.8Â°) by run down, the links crept round it and the hook's
+  barrel over-turned 0.013 turn (4.8°) by run down, the links crept round it and the hook's
   plate stretched and shrank. The barrel now takes the arc less the tangent's gain (`Iw`), and
   the chain keeps its length to 0.03 mm (586.40 mm, end pin to hook) over the wind; the
   chain's barrel turns over the run are 4.656 (were 4.670). Keep: whatever turns the barrel
-  uses `Ib`; `tools/invariants.py` checks the length (`chainLen`).
+  uses `Ib`; `tools/invariants.py` checks the length (`chainLen`). `273f317`
 - **The fusee's torque taken on the groove's floor, and two different mainsprings**
   (kinematics audit, 11 October 2026). The torque was the pull times the groove's floor
   radius, though the chain pulls along its pitch line, 0.49 mm further out (7.51 to 15.22
@@ -715,20 +715,20 @@ Contents:
   on the chain's lever where it leaves the fusee (`fs.pull`, `fs.lever`, `fs.torque`), the
   set-up matched to the levers' ratio (1.25 turns past the slack, was 0.99); the torque is
   level within about 2 % (0.986-1.021 of its mean). `pullB`, the going barrel for
-  comparison, is the same spring. `physics.js` takes the pitch line: 0.93 NÂ·m fully wound
-  (was 0.90), 2.36 GPa, 64-100 ÂµNÂ·m at the escape wheel. Keep: one spring, `msPull`, for
-  the drawing, the set-up and the drive; levers on the chain's pitch line (`rc`).
+  comparison, is the same spring. `physics.js` takes the pitch line: 0.93 N·m fully wound
+  (was 0.90), 2.36 GPa, 64-100 µN·m at the escape wheel. Keep: one spring, `msPull`, for
+  the drawing, the set-up and the drive; levers on the chain's pitch line (`rc`). `c519c71`
 - **The drive stopped dead at run down with chain still on the fusee** (kinematics audit,
   11 October 2026). At `RUN_H` the chain still wrapped 0.032 turn of the fusee (the tangent
   point drifts round as the fusee's radius grows), yet the drive fell from full to nothing
   at once. Past the tangent the chain's end pin swings on toward the barrel and the chain
   runs straight from it, so the lever falls to nothing where its line passes through the
-  arbor (`geo` in `makeFusee`: 65Â°, 1.2 h). The pin (`ME`) is now 8.54 turns down the groove,
-  placed so that rest is at `RUN_H`, the manual's 17Â½ half turns from full wind; the drive
+  arbor (`geo` in `makeFusee`: 65°, 1.2 h). The pin (`ME`) is now 8.54 turns down the groove,
+  placed so that rest is at `RUN_H`, the manual's 17½ half turns from full wind; the drive
   tapers with the lever from 55.1 h, and the train stops about 5 minutes before `RUN_H`,
   under the 0.14 of the drive that keeps the balance above `ESC.AMIN`. The chain is 566 mm
   (was 586) and the set-up matches the levers over the 4.51 barrel turns the chain takes to
-  leave the fusee. Keep: the drive's end comes from the chain's geometry, at `RUN_H`.
+  leave the fusee. Keep: the drive's end comes from the chain's geometry, at `RUN_H`. `9d9da23`
 - **Winding pawls never touched their teeth in running, and the pawl seat could pass
   through a tooth** (kinematics audit, 11 October 2026). `phaseAgainst` found the winding
   pawls' rest by the radius of their tip corner, which on those pawls stood 0.6-1.0 mm
@@ -742,24 +742,24 @@ Contents:
   and `seatPawl` turns the pawl in from outside to its first touch, keeping the teeth's tips
   out of its outline too (they stood up to 0.05 mm in between its test points). The pawls
   now go 0.48 mm into the winding ratchet's teeth at `WPH`; the sustaining pawl 0.33 of 0.54.
-  The setup click's seat moved 0.14Â° out with the tips kept out. Keep: a pawl's seat is the
-  first touch from outside; `tools/maintaining.py` measures the gap with the tips.
+  The setup click's seat moved 0.14° out with the tips kept out. Keep: a pawl's seat is the
+  first touch from outside; `tools/maintaining.py` measures the gap with the tips. `5489422`
 - **Ratchet locking faces leaned back** (kinematics audit, 11 October 2026). The ratchets
   dropped from tip to root over 0.07 of a pitch, so a pawl's load pushed it outward (1:10)
   and only friction held it. The winding and sustaining ratchets' faces are now radial
-  (`ratchetProf(â€¦, radial)`, gearGeo's `ratchet:'radial'`, the back the exact chord gearGeo
+  (`ratchetProf(…, radial)`, gearGeo's `ratchet:'radial'`, the back the exact chord gearGeo
   draws), as the winding ratchet looks at 18:20 and the winding pawls' square ends lie at
   19:12; the load on each pawl now draws it in. The setup ratchet keeps its leaning faces
-  (not changed here). Keep: the maintaining work's profiles radial and drawn as computed.
+  (not changed here). Keep: the maintaining work's profiles radial and drawn as computed. `5489422`
 - **Winding began by dragging the winding pawls back over their faces** (kinematics audit,
   11 October 2026). As the key started, `holdBack` dropped the sustaining ratchet back to its
-  pawl (up to 2.6Â°) in one frame while the fusee had not moved, so the winding pawls on the
+  pawl (up to 2.6°) in one frame while the fusee had not moved, so the winding pawls on the
   ratchet were pulled back over the winding ratchet's locking faces (their depth 0.159 to
   0.01-0.04 mm in 33 of 40 winds). The spring now pushes the ratchet back with the fusee,
   the pawls still on their faces, until the sustaining pawl catches it; only then do the
   winding pawls ride over the teeth. `holdBack` is now the next place a face meets the pawl,
   every tooth from `phaseAgainst`'s (its walk stopped on a tooth's crest in about one hold
-  in ten). Keep: `tools/maintaining.py`'s `lift` check.
+  in ten). Keep: `tools/maintaining.py`'s `lift` check. `240a80a`
 - **The catch when the key let go took (motion) mod one tooth, and its hours were never
   spent** (kinematics audit, 11 October 2026). `eps += wrap(target - eps)` turned the fusee
   forward by the motion modulo a winding tooth, and by a whole tooth when nothing had moved;
@@ -767,14 +767,14 @@ Contents:
   `eps` grew without bound over partial winds. The catch (`catchAt`) is now the gap to the
   pawls (none if on them) plus the reload to the drive's balance, exactly; `R.release`
   foretells it and `app.js` (`windEnd`, where the key lets go) adds its hours, so over 40
-  partial winds `eps` stays within 6.5Â°. Keep: `windEnd` wherever winding stops.
+  partial winds `eps` stays within 6.5°. Keep: `windEnd` wherever winding stops. `240a80a`
 - **The sustaining spring dropped the drive to 0.8 the moment winding started** (kinematics
   audit, 11 October 2026). Running at its loaded mark it carried the whole drive, nothing
   banking it (the parts drawn have none, and the manual has it "under load during the entire
   running cycle"), yet `driveNow` gave 0.8 of the drive (`SUS`, estimated) as the key turned.
   The spring now pushes 1 - d / SMAX of the 12-hour drive (`R.ssF`), so it starts with what it
   carried and falls as it relaxes; running, it sits where it balances the fusee's drive
-  (`R.drvN`, the set included). Keep: the drive while winding is the spring's push.
+  (`R.drvN`, the set included). Keep: the drive while winding is the spring's push. `240a80a`
 - **Run down, the spring stayed loaded while the drive vanished** (kinematics audit,
   11 October 2026). At run down `driveNow` gave 0 while `update()` kept the sustaining spring
   at full load. Now the spring follows the fusee's drive down the run-down taper (1.2 h,
@@ -782,18 +782,18 @@ Contents:
   slider set to run down, a set taken) lets the spring push the ratchet back to its pawl and
   drive the train alone, the fusee standing (`canDrive` holds the train only when neither
   drives); winding a run-down movement starts from the spring's state. Keep: `canDrive`
-  from `driveNow`.
+  from `driveNow`. `240a80a`
 - **Setting the hands dragged the maintaining work through its teeth** (kinematics audit,
   11 October 2026). Setting the time (the field, Now) jumps the train, so the sustaining
   ratchet (`srA = gA`) and `eps` jumped with it, backward too. `update()` now takes a jump of
   the fusee wheel (back, or more than 0.25 rad in a frame, or `s.reset`) as a set: the
   ratchet moves with the wheel, the spring as it was (a held ratchet on its pawl's tooth),
-  and the fusee stays on its turns on the nearest tooth. Keep: `maintaining.py`'s set case.
+  and the fusee stays on its turns on the nearest tooth. Keep: `maintaining.py`'s set case. `240a80a`
 - **The key walkthrough let the mainspring down at once when under 0.2 h had run**
   (kinematics audit, 11 October 2026): `kwStart` set `hrs` to `RUN_H` to have something to
   wind, a run down that no chronometer does. With *From run down* unticked it now says the
   chronometer is already fully wound (less than a tenth of a half turn to go); ticked, the
-  walkthrough still starts from run down, as asked.
+  walkthrough still starts from run down, as asked. `240a80a`
 
 ## Plates, bridges, screws and arbors
 
