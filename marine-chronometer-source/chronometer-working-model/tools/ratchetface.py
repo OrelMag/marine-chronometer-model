@@ -16,14 +16,14 @@ The readings are biased by that blur, so the same is done on synthetic frames: t
 each tooth a triangle on the root circle (its back the chord from the root to its tip, at 0.97 of the pitch as gearGeo draws, its
 face to the next root, leaning back or undercut by a known angle), at a known depth, blurred by a Gaussian of
 each sigma given (default: the frame's, from its edge width, and one either side) with noise. A blurred V-shaped gap reads shallower and
-its face leaning back (the root pulled into the gap): at sigma 4 and teeth 0.5 deep, radial reads +1.9 deg and 0.5 reads 0.395. The tool
+its face leaning back (the root pulled into the gap): at sigma 4 and teeth 0.5 deep, 0.5 reads 0.39 and a radial face +2.3 deg. The tool
 prints, for each sigma, the depth and lean that read as the frame's; --fold draws the frame's teeth folded onto one tooth against the
 synthetic ones (the frame's arc only, teeth near its middle, where the wheel's thickness hides its other face's outline).
 
-Setup ratchet, 11 October 2026 (References/VIDEOS.md, "Setup ratchet's teeth"): 38:26.0 --box 1650 400 2850 1400 --c 2260 960 --rc 430,
-38:25.8 the same with --c 2287 912: edges 12.75 px (sigma 4); gaps 0.386 and 0.427 read, 0.49-0.54 mm true (0.53-0.58 at sigma 5); faces
--2.5 and -5.6 deg (median), radial or undercut a few degrees (radial reads +1.9, leaning back 6 deg +7.1). About 2 s a frame, 10 s with the
-calibration."""
+Setup ratchet, 11 October 2026 (References/VIDEOS.md, "Setup ratchet's teeth: depth and faces"): 38:26.0 --box 1650 400 2850 1400 --c 2260 960,
+38:25.8 the same with --c 2287 912: edges as sigma 3.0 and 2.7; gaps read 0.383 and 0.423, so 0.45 and 0.50 mm deep (0.42-0.53 with sigma 1
+either way); faces read -2.5 and -5.6 deg, undercut 3-6 deg (a face leaning back 6 deg reads +5.5 to +6.6). A synthetic frame of known
+teeth (0.50 deep, undercut 4 deg, sigma 3) comes back 0.50 and -3.7. About 2 minutes a frame, most of it the calibration."""
 import sys,math,argparse,numpy as np,cv2
 
 def outline(V,box,c,arc,thr,rc,U=4):
