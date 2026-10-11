@@ -1805,7 +1805,8 @@ An arbor needs pivots and shoulders; a stone its seat.
   as `tSim` itself: the dial error left out the 0.12 s the hands were ahead on average, and Now set
   them so. The balance's phase now runs `PL` ahead, so the hand comes to rest on the mark k/2 s at
   `tSim + (bOff + eOff)/2 = k/2`, as on a chronometer set to a signal, and `dialRead()` reads what the
-  hands show; Now puts the balance's phase on the master's too. Keep: the hands land on the mark at
+  hands show (the train standing, the mark the second hand stands on: `handT`); Now puts the balance's
+  phase on the master's too. Keep: the hands land on the mark at
   the time `dialRead()` gives for it.
 - **The export's train could step back on restarting.** `blender.js`'s copy of the loop counted a
   beat's progress as 0 at a whole phase in `at()` but took `ESC.state`'s 1 there on restarting, so on

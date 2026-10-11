@@ -225,9 +225,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
      minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
      seconds from the second hand as a comparator reads it (the mark it last came to rest on and the time since: it lands on the mark k/2 s at tSim + (bOff + eOff)/2 = k/2, PL
-     below) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
+     below; the train standing, the mark it stands on: handT) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
   tM=tSim;
-  const dialRead=()=>{const sT=tSim+(H.bOff+H.eOff)/2,ss=((sT%60)+60)%60,r=Math.round((sT+slip-ss)/60)*60+ss,e=r-tM;return tM+(((e+21600)%43200)+43200)%43200-21600;};
+  const handT=()=>H.held?H.Eh/2:tSim+(H.bOff+H.eOff)/2,dialRead=()=>{const sT=handT(),ss=((sT%60)+60)%60,r=Math.round((sT+slip-ss)/60)*60+ss,e=r-tM;return tM+(((e+21600)%43200)+43200)%43200-21600;};
   const fmtErr=e=>{const a=Math.abs(e),h=Math.floor(a/3600),m=Math.floor(a%3600/60),x=Math.round((a%60)*2)/2;return(e<0?'−':'+')+(h?h+' h ':'')+(h||m?m+' min ':'')+(h?'':x+' s');};   /* to the half second, as a navigator records it */
   /* colour mode: one flat CAD-style colour per part, or per source (Colour by source: where its shape and size come from, SRC); the part labels double as the legend */
   const COLM=new Map();
@@ -495,7 +495,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* setting the hands while it runs, as the manual does it (Sec. III, Setting While Running): gimbals latched, bezel off, the key on the square at the centre of the dial, turned by its
      shank, forward only. The minute hand goes on its marker half a minute behind the master (as the master's second hand passes 30), then to the next marker as the master's
      passes 60. The second hand is never touched, so the dial can still be up to 30 s out, and it goes into the record. ks.ph: 1 turning forward, 2 waiting for the master's 60, 3 done */
-  const setOut=$('#setOut'),ksBtn=$('#ksBtn'),minT=()=>tSim+(H.bOff+H.eOff)/2+slip;
+  const setOut=$('#setOut'),ksBtn=$('#ksBtn'),minT=()=>handT()+slip;
   function ksStart(){if(ks){ksEnd();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();
     sw=null;ks={ph:1,t:0,latch0:st.latch,fast:(((tM-30-minT())%43200)+43200)%43200>21600};st.latch=true;$('#latch').checked=true;jump(()=>setView('dial'));look();
     ksBtn.textContent='Stop setting';ksBtn.setAttribute('aria-pressed','true');setOut.classList.remove('hidden');}
@@ -710,7 +710,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const ssBtn=$('#ssBtn');
   ssBtn.addEventListener('click',()=>{if(ks)ksEnd();if(!H.armT&&!H.held){sw={t:0};armSet(1);setOut.classList.remove('hidden');}else if(H.armT){sw=sw||{t:0};armSet(0);}else{sw={t:performance.now(),go:!H.armT};twist();}});
   const ssLabel=()=>{const l=H.armT?'Unlock arm':H.held?'Twist to start':'Stop to set';if(ssBtn.textContent!==l)ssBtn.textContent=l;};   /* the button is the next step, whatever stopped it */
-  function ssStep(dt){const e=dialRead()-tM,sT=tSim+(H.bOff+H.eOff)/2,w=(((sT-tM)%60)+60)%60;
+  function ssStep(dt){const e=dialRead()-tM,sT=handT(),w=(((sT-tM)%60)+60)%60;
     if(!H.held&&!H.armT){if(sw.go){const a=(performance.now()-sw.t)/1000;if(a>6)sw=null;else if(a>0.3&&!sw.said){sw.said=1;setOut.innerHTML=`<b>Started.</b> The dial reads ${Math.abs(e)<0.25?'with the master':`<b>${fmtErr(e)}</b> ${e>0?'fast':'slow'}`}: what is left is the moment of the twist.${Math.abs(e)>=30?' Set the minutes with the key.':''}`;}}else if(H.amp>=ESC.AMIN)sw=null;return;}
     if(H.armT&&!H.held){setOut.innerHTML='The locking arm is coming onto the rim: the balance stops within a swing or two.';return;}
     setOut.innerHTML=(H.armT?`Stopped with the locking arm; the second hand stands on a half second. `:'')+(e>0.25?`The dial is <b>${fmtErr(e)}</b> fast: the master overtakes it in <b>${e.toFixed(1)} s</b>. ${H.armT?'Unlock the arm, then twist':'Twist'} to start at that instant.`:
