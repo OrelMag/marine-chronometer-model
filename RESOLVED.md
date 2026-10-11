@@ -240,7 +240,7 @@ Contents:
   plate's corner; no inner curve meeting Phillips' conditions from the collet's end clears that corner. The hidden
   side, which no source shows, now stops 0.9 of the way to it: the strip clears the collet by 0.063 mm at 347°, the
   widest swing the model allows. Keep: a real spring never touches its collet; the strip at least 0.05 mm off it
-  beyond the clamp's edge at every swing up to TRIP + 15°.
+  beyond the clamp's edge at every swing up to TRIP + 15°. `43260af`
 
 ## Going train and heights
 
