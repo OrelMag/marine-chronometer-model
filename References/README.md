@@ -173,6 +173,22 @@ Betts's Greenwich catalogue have no online copy. YouTube, about 95 queries (time
 detent, in ten languages) and the channels of every video's maker: 17 new Model 21 videos (References/VIDEOS.md), none with a free
 run-down, a timegrapher, the mainspring out or the detent out; Bilibili refused (HTTP 412).
 
+Searched again (12 October 2026), forums, photographs and archives: 51 NAWCC threads through the Wayback Machine (its CDX index of
+`mb.nawcc.org/threads/*`, 11 pages, and the old `showthread.php` addresses; 13 copies empty, 3 not archived; attachments only as 250 px
+thumbnails), uhrforum.de (403), forum.watch.ru (502), WatchUSeek (a bot wall), practicalmachinist (403), Worthpoint, eBay and Rock
+Island (403, through the Wayback Machine too), LiveAuctioneers, Invaluable, Heritage, Etsy, Flickr, Commons, the Science Museum Group,
+Reddit (PullPush), tz-uk, thewatchforum, hamiltonparts.com, Google Patents (Hamilton before 1955): no measured mainspring, detent or
+trip spring, no amplitude or lift angle, no run-down. Found: Hamilton's assembly record card for No. 2E10860 (March 1945, "JOB-
+ISOCHRONISM"; landandseacollection.com/id1352.html, 1,000 px): an isochronism row in turns of swing from 1 to 1½, read roughly "ok",
++.2, +.7, +.9, 1.2 (units and signs uncertain at this size; probably seconds a day), the mainspring's maker likely "Wallace Barnes",
+the balance screws' corrections; Jones-Horan lots 63662 (sale 230507) and 38240 (sale 1902), the box's side square-on with the latch
+support bracket's two screws (OPEN-QUESTIONS.md); nonosore's two break-circuit Model 21s (ramassespoussiere.free.fr/Model21.html, 59
+photographs: the escapement side-on under the train bridge, 43.jpg, the flexure hidden); Duwan's No. 3922 on forumamontres (the detent
+assembly out, oblique, 794 px; the mainspring relaxed beside its barrel, 7-8 open turns); horlogeforum.nl thread 462279 (the barrel and
+arbor out, 4,032 px); G. Franco Toriz's balance staffs (LinkedIn, 2019; the arm's seat labelled 2 mm). Qualitative: a worn trip spring
+taken up by slotting its screw's hole (forumamontres t189277; NAWCC 154431); DeweyC: the first ~400 had a steel detent and a one-piece
+roller, detents now over $700. The searches and downloads are in `$MC_VIDEO/oq/` (outside the repository).
+
 Not yet consulted (found 4 October 2026). These may hold facts about the Model 21 itself:
 - NAWCC Library and Research Center, Hamilton Records Collection (71 boxes), Series V: Chronometers, 1940-1984
   (https://archive.nawcc.org/repositories/2/archival_objects/11056). The catalogue's tree is public
