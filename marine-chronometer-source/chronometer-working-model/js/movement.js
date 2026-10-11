@@ -1271,8 +1271,8 @@ function buildMovement(M){
      the core stays 0.1 clear of the turning caps */
   { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(TB_T+1.9+BB_LO-0.8)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
     cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],32); }
-  hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
-  { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
+  const asq=hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
+  { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));const cth0=clk.rotation.y;
     /* turn the ratchet (it is fixed in running) so a steep face bears on the click's tip, then rest the click on it */
     const pr=ratchetProf(SRZ,SRM,true),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1);
     srw.rotation.y=ph.psi;clk.rotation.y=ph.th;
@@ -1288,7 +1288,13 @@ function buildMovement(M){
        about as much; 0.3 thick and 0.85 tall, the pins' places estimated) */
     const bk=pawlBack(pts,1.1,Pv,ph.th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13],SR=1.273*SUT/PHOTO_K,eA=(Math.atan2(E[1]-L.Ba[1],E[0]-L.Ba[0])-PHOTO_TURN)/D2R,arcP=[];   /* eA in P2's angles (the photographs' frame) */
     const e1=(eA+360)%360-6,a0=e1-174;for(let a=a0;a<e1;a+=6)arcP.push(P2(SR,a));
-    hn(mesh(rt,stripGeo([...arcP,E],0.3,0.85),M.blued,0,BB_T-0.85,0),'42028');   /* on the bridge, up to the click's middle */
+    const cspr=hn(mesh(rt,stripGeo([...arcP,E],0.3,0.85),M.blued,0,BB_T-0.85,0),'42028');   /* on the bridge, up to the click's middle */
+    /* letting the mainspring down and setting it up again (update()'s ld and clk): the arbor, its ratchet and square turn; the click is held out of the teeth or rides
+       over them, its spring's end on its back (as at build). R.su: what update() needs; lift, the click's turn out until its nearest point is 0.3 clear of the tips */
+    { const q=[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],rmC=th=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(const[x,z]of pts)m=Math.min(m,Math.hypot(q[0]+x*c+z*sn,q[1]-x*sn+z*c));return m;};
+      const so=rmC(ph.th+0.01)>rmC(ph.th)?1:-1;let lift=0;while(lift<0.6&&rmC(ph.th+so*lift)<pr.ro+0.3)lift+=0.005;
+      R.su={srw,clk,asq,ba,spr:cspr,pts,pr,q,c:[...L.Ba],base:srw.rotation.y,seat:ph.th,th0:cth0,so,lift,ld:0,cl:0,th:ph.th,
+        sprGeo:th=>{const bk=pawlBack(pts,1.1,Pv,th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13];return stripGeo([...arcP,E],0.3,0.85);}}; }
     for(const q of[P2(SR+0.42,a0+3),P2(SR-0.42,a0+12)])hn(cylBetween(rt,0.25,-27.71,-27.16,M.steel,...q),'42028',{sub:1});}
   const nBefore=rt.children.length;
   { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
@@ -1384,7 +1390,7 @@ function buildMovement(M){
     R.blockRoom=E=>Math.min(...sp(E).map(a=>(((a-u.half)%q)+q)%q))*ESC_PER.fw/ESC.P;
     R.blockClear=E=>sp(E).every(a=>Math.abs((((a%q)+q+q/2)%q)-q/2)>=u.half); }
   const RF=ESC_PER.fw,RT=ESC_PER.tw,RC=ESC_PER.cw,MR=MW.cp/MW.mw,HR=MR*MW.mp/MW.hw;   /* escape turns per fourth, third, centre turn; minute wheel and hour wheel per centre turn */
-  let lastN=-1,lastEps=0,lastIn=-1,lastTh=null,lastPs='',lastSp=null,srA=0,holding=false,lastD=1e9,ssV=0;
+  let lastN=-1,lastEps=0,lastIn=-1,lastLd=0,lastTh=null,lastPs='',lastSp=null,srA=0,holding=false,lastD=1e9,ssV=0;
   R.springReady=()=>{if(lastTh===null){R.spring.geometry=ribbonGeo(R.spPath(0),HS_B,HS_T,R.spring.geometry);lastTh=0;}if(lastIn<0){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=0;}};   /* the hairspring at rest and the mainspring fully wound, built if they haven't been yet (each is built only when it can be seen): for the maker's sheets, drawings and STL (maker.js) */
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
   const FPR=ratchetProf(WRT.z,WRT.m,false,true,WRT.d),SRP=ratchetProf(SRT.z,SRT.m,true,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1,true).psi;
@@ -1405,12 +1411,12 @@ function buildMovement(M){
   R.drvN=n=>fs.torque(n)/fs.torque(12*FUSEE_PER_HOUR);   /* the fusee's drive at n turns, of the 12-hour drive: app.js sets its own (with the mainspring's set) */
   R.ssF=()=>Math.max(0,1-R.ssD/SMAX);R.holdBack=holdBack;   /* the sustaining spring's push, of the 12-hour drive */
   R.release=()=>MWK.w&&MWK.g!==null?(catchAt(srA,MWK.fa,MWK.g,MWK.dq).fa-MWK.fa)/TAU:0;   /* fusee turns the catch will take if the key lets go now: app.js adds their hours */
-  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean}} MoveState
+  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean,ld?:number,clk?:number}} MoveState
       E: the escape wheel's place in teeth, which turns every arbor; th: the balance's angle (rad); lift, psDef: the detent's lift and the passing spring's bending (ESC.state);
       n: fusee turns from full wind; winding: the key turning; spent: run down (the fusee drives nothing); reset: the train set (the hands set, Now), not run;
       slip: seconds the key has turned the hands; hkeyOn, keyOn: the hand-setting and winding keys shown;
       blk, arm: the train-blocking screw and the locking arm, 0 (up, unlocked) to 1; ssX: the sustaining spring drawn that many times relaxed (0: as it is); dt: the frame's seconds;
-      springOn, msOn: rebuild the hairspring, the mainspring (only when they can be seen) */
+      springOn, msOn: rebuild the hairspring, the mainspring (only when they can be seen); ld, clk: the mainspring let down that many turns, the set-up click held out (0 to 1) */
   /** @param {MoveState} s */
   mv.userData.update=(s)=>{
     const P=E.P,esc=s.E*P;
@@ -1463,7 +1469,15 @@ function buildMovement(M){
     R.det.rotation.y=s.lift/E.LEN;
     const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
     udX=udX===null||(!s.winding&&fa<udF-1e-9)?fa:clamp(udX,fa,fa+UD_LASH);udF=fa;const udA=udX*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-UD_UP*D2R-udA;   /* udX: the fusee's turn the wheel stands at, within the backlash of fa; the fusee set back without the key (the slider, the export's clips) is a set: on the running flank */
-    if(s.msOn){const In=fs.Ib(s.n,eps);if(Math.abs(In-lastIn)>=0.002){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup-In,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=In;}}   /* rebuilt when the barrel has turned 0.7 deg */
+    /* the mainspring let down (Op. 8) or set up (Op. 53): ld, the turns the barrel arbor has been let down by (0 in use: it never turns, Sec. II), the way the spring
+       pulls it (its ratchet's steep faces meet the click as rotation.y falls); clk, how far the click is held out of the teeth (0 to 1; at 0 with ld > 0 it rides over
+       them as the arbor is set up). The spring's inner end turns with the arbor's hook, its outer end stays with the barrel: drawn with ld fewer turns, turned with the arbor */
+    const LDn=s.ld||0,CLn=s.clk||0,su=R.su;
+    if(su&&(LDn!==su.ld||CLn!==su.cl)){const ph=-LDn*TAU,[bx,bz]=su.c,c=Math.cos(ph),sn=Math.sin(ph);su.srw.rotation.y=su.base+ph;su.asq.rotation.y=ph;
+      su.ba.rotation.y=ph;su.ba.position.x=bx-(bx*c+bz*sn);su.ba.position.z=bz-(-bx*sn+bz*c);   /* the arbor's group turned about the barrel's axis */
+      const psi=su.srw.rotation.y,th=CLn>0?su.seat+su.so*su.lift*smooth(CLn):LDn>0?seatPawl(su.pts,toWheel(su.q,[0,0],psi),su.seat-psi,su.pr,su.th-psi)+psi:su.seat;
+      if(th!==su.th){su.clk.rotation.y=th;su.th=th;su.spr.geometry.dispose();su.spr.geometry=su.sprGeo(th);}su.ld=LDn;su.cl=CLn;fs.ms.rotation.y=fs.MS.rot+ph;}
+    if(s.msOn){const In=fs.Ib(s.n,eps)+LDn;if(Math.abs(In-lastIn)>=0.002||(LDn===0)!==(lastLd===0)){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup-In,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=In;lastLd=LDn;}}   /* rebuilt when the barrel (or the arbor) has turned 0.7 deg */
     if(s.springOn&&s.th!==lastTh){R.spring.geometry=ribbonGeo(R.spPath(s.th),HS_B,HS_T,R.spring.geometry);lastTh=s.th;}   /* rewritten in place, and only when the balance has turned */
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing. Rebuilt only when either changes (still for most of each swing) */
     const psK=s.lift+','+s.psDef;if(psK!==lastPs){lastPs=psK;R.pspring.geometry.dispose();R.pspring.geometry=tripGeo(E.springPts(s));}
