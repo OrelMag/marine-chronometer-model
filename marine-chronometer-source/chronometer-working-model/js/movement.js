@@ -291,9 +291,14 @@ function barBossPts(c,u,l,w,r){const v=[-u[1],u[0]],P=(t,n)=>[c[0]+t*u[0]+n*v[0]
 /* screw holes: thread radius sR for a head of radius r; a clearance hole (hC) where the screw passes through a part, a tapped hole (hT) where it screws in; [x, z, r, 1] as polyGeo takes (the 1: polyGeo keeps its size at the faces, below) */
 const sR=r=>r*0.5,hC=(x,z,r,rs=sR(r))=>[x,z,+(rs*1.12+0.01).toFixed(3),1],hT=(x,z,r,rs=sR(r))=>[x,z,+(rs+0.02).toFixed(3),1];   /* rs: a thread radius other than half the head's */
 
-/* ratchet tooth profile (as gearGeo's ratchet) in the wheel's own XZ frame: radius at XZ angle b */
-function ratchetProf(n,m,flip){const rp=m*n/2,ro=rp+m*0.95,ri=ro-2.25*m,p=TAU/n;
-  return{ro,ri,p,r:b=>{const a=flip?b:-b,t=(((a%p)+p)%p)/p;return t<0.9?ri+(ro-ri)*t/0.9:t<0.97?ro-(ro-ri)*(t-0.9)/0.07:ri;}};}
+/* ratchet tooth profile (as gearGeo's ratchet) in the wheel's own XZ frame: radius at XZ angle b. radial (the maintaining work's ratchets, gearGeo's ratchet 'radial'):
+   the back the straight chord gearGeo draws, from the root to the tip at 0.97 of a pitch, the locking face along a radius there, so a pawl's load bears square on it
+   and draws nothing out (the faces leaned back over 0.07 of a pitch until 11 October 2026: under load they pushed a pawl out, 1:10). The winding ratchet's faces look
+   radial on C Spinner's video (18:20, oblique) and the winding pawls' square ends lie along a radius (19:12: within 1 deg); the sustaining ratchet's aren't seen: radial,
+   estimated. Else the back interpolated by angle to the tip at 0.9, the face leaning back to the root at 0.97 (the setup ratchet's) */
+function ratchetProf(n,m,flip,radial){const rp=m*n/2,ro=rp+m*0.95,ri=ro-2.25*m,p=TAU/n,c=0.97*p,ch=a=>ri*ro*Math.sin(c)/(ri*Math.sin(a)+ro*Math.sin(c-a));
+  return{ro,ri,p,r:b=>{const a=flip?b:-b,u=((a%p)+p)%p,t=u/p;if(radial)return t<0.97?ch(u):ri;return t<0.9?ri+(ro-ri)*t/0.9:t<0.97?ro-(ro-ri)*(t-0.9)/0.07:ri;},
+    tipB:k=>(flip?1:-1)*(k+(radial?0.97:0.9))*p};}   /* tipB(k): the XZ angle of tooth k's tip */
 /* outline of pawlGeo(len,w) in the pawl's own XZ frame (pivot at the origin, tip toward -x); point PAWL_TIP is the tip corner */
 const PAWL_TIP=50;
 function pawlPts(len,w){const r=w*0.72,S=[[0,r]];for(let k=1;k<=12;k++){const a=Math.PI/2-Math.PI*k/12;S.push([r*Math.cos(a),r*Math.sin(a)]);}
@@ -337,18 +342,28 @@ const NEAR=new WeakMap(),near=pts=>{let d=NEAR.get(pts);if(!d){d=dense(pts).map(
 function seatPawl(pts,q,th0,pr){
   const P=near(pts),lim=Math.hypot(q[0],q[1])-pr.ro-0.5-1e-9;let n=0;while(n<P.length&&P[n][2]>lim)n++;
   const f=th=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(let i=0;i<n;i++){const x=P[i][0],z=P[i][1],X=q[0]+x*c+z*sn,Z=q[1]-x*sn+z*c,r=Math.hypot(X,Z);if(r<pr.ro+0.5)m=Math.min(m,r-pr.r(Math.atan2(Z,X)));}return m;};
-  const tip=pts[PAWL_TIP],tr=th=>{const c=Math.cos(th),sn=Math.sin(th);return Math.hypot(q[0]+tip[0]*c+tip[1]*sn,q[1]-tip[0]*sn+tip[1]*c);};
-  const so=tr(th0+0.01)>tr(th0)?1:-1;let a=th0+so*0.5,b=th0-so*0.5;if(f(b)>=0)return b;if(f(a)<0)return a;
-  for(let i=0;i<28;i++){const m=(a+b)/2;f(m)>=0?a=m:b=m;}return a;}
+  const rm=th=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(let i=0;i<n;i++)m=Math.min(m,Math.hypot(q[0]+P[i][0]*c+P[i][1]*sn,q[1]-P[i][0]*sn+P[i][1]*c));return m;};   /* its nearest point to the wheel's centre */
+  const so=rm(th0+0.01)>rm(th0)?1:-1;let a=th0+so*0.5,b=th0-so*0.5;if(f(a)<0)return a;
+  /* in from outside, 0.005 rad a step, to the first touch, then closed on: the seat the pawl reaches (a bisection over the whole range could settle on the far side
+     of a tooth it would have met first, 0.25 mm deep where the reachable seat is 0.01: until 11 October 2026) */
+  const K=200,st=(b-a)/K;let x=a,hit=false;for(let k=1;k<=K;k++){const y=a+st*k;if(f(y)<0){b=y;hit=true;break;}x=y;}if(!hit)return b;a=x;
+  /* the outline is tested at points 0.1 mm apart, so a sharp tip could stand up to 0.05 mm into it between them: the last steps also keep every tip out of the outline */
+  const tipIn=th=>{const c=Math.cos(th),sn=Math.sin(th),Q=pts.map(([x,z])=>[q[0]+x*c+z*sn,q[1]-x*sn+z*c]),b0=Math.atan2(Q[0][1],Q[0][0]),k0=Math.round(b0*Math.sign(pr.tipB(1)-pr.tipB(0))/pr.p);
+    for(let k=k0-6;k<=k0+6;k++){const tb=pr.tipB(k),tx=pr.ro*Math.cos(tb),tz=pr.ro*Math.sin(tb);let ins=false;for(let i=0,j=Q.length-1;i<Q.length;j=i++){const[xi,zi]=Q[i],[xj,zj]=Q[j];if(((zi>tz)!==(zj>tz))&&(tx<(xj-xi)*(tz-zi)/(zj-zi)+xi))ins=!ins;}if(ins)return true;}return false;};
+  for(let k=0;k<20&&tipIn(a);k++)a-=st;   /* a tip already in: back out */
+  for(let i=0;i<24;i++){const m=(a+b)/2;f(m)>=0&&!tipIn(m)?a=m:b=m;}return a;}
 /* wheel rotation (within one tooth) at which a pawl, pivot q and angle th0 in the parent frame (wheel centre at the origin), rests at the bottom of a
-   tooth space against a steep face; dir = +1: the face meets it when the wheel turns with rotation.y rising, -1: falling. Returns wheel and pawl angles */
-function phaseAgainst(pr,pts,q,th0,dir){let best=/** @type {any} */(null);const N=240;
+   tooth space against a steep face; dir = +1: the face meets it when the wheel turns with rotation.y rising, -1: falling. Returns wheel and pawl angles.
+   How deep it rests: its tip's corner (PAWL_TIP), or with deep its whole outline's nearest point to the wheel's centre (the winding pawls, whose square ends go in
+   by their inner corner: the tip corner of a pointed pawl lay 0.6-1.0 mm outside their teeth, so the rest found was off the root, until 11 October 2026). With a
+   radial profile (drawn exactly as gearGeo draws it) it rests on the plateau's end, at the face; else 0.6 % of a tooth back from it */
+function phaseAgainst(pr,pts,q,th0,dir,deep){let best=/** @type {any} */(null);const N=240,D=dense(pts);
   for(let i=0;i<N;i++){const psi=pr.p*i/N,ql=toWheel(q,[0,0],psi),th=seatPawl(pts,ql,th0-psi,pr),c=Math.cos(th),sn=Math.sin(th),t=pts[PAWL_TIP];
-    const r=Math.hypot(ql[0]+t[0]*c+t[1]*sn,ql[1]-t[0]*sn+t[1]*c);(best=best||[]).push([psi,r,th+psi]);}
+    const r=deep?Math.min(...D.map(([x,z])=>Math.hypot(ql[0]+x*c+z*sn,ql[1]-x*sn+z*c))):Math.hypot(ql[0]+t[0]*c+t[1]*sn,ql[1]-t[0]*sn+t[1]*c);(best=best||[]).push([psi,r,th+psi]);}
   const rmin=Math.min(...best.map(b=>b[1]));let k=best.findIndex(b=>b[1]<rmin+0.004);
   /* walk along the plateau of deepest rest in the direction the face arrives from, to its end */
   for(let j=0;j<N;j++){const n=(k+dir+N)%N;if(best[n][1]<rmin+0.004)k=n;else break;}
-  k=(k-4*dir+N)%N;   /* back off 0.6 % of a tooth: the teeth are drawn as chords, the profile interpolates by angle */
+  if(!deep)k=(k-4*dir+N)%N;   /* back off 0.6 % of a tooth: the teeth are drawn as chords, the old profile interpolates by angle */
   return{psi:best[k][0],th:best[k][2]};}
 /* point / angle from a parent frame into a wheel's frame (wheel at c, rotation.y psi) */
 const toWheel=(p,c,psi)=>{const x=p[0]-c[0],z=p[1]-c[1],co=Math.cos(psi),sn=Math.sin(psi);return[x*co-z*sn,x*sn+z*co];};
@@ -732,7 +747,7 @@ function buildMovement(M){
   /* solid from its bore, r 2.92, to the rim (KLUwI2UUCMQ 19:12 rectified on its own tips, r 14.53: the bore 0.2013 +-0.0023 of them), free on the collar's step (0.05 side
      shake; Fig. 69, arrow 5), now that the winding ratchet's screw heads lie flush below it; open to r 4.41, with a web on the collar (r 2.38), until 5 October 2026. The
      plateau its face shows inside r 8.6-9.2 (19:12) is not drawn: its height isn't seen */
-  hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(SRT.z,SRT.m,0.7,{ratchet:true,flip:true,bore:2.92,holes:WPS.flat().map(q=>hC(...q,0.4))}),M.gilt,0,-9.45,0),'42009',{sub:1,gear:{z:SRT.z,m:SRT.m,ratchet:1}});   /* steep faces lead against the running direction, so the sustaining pawl holds it */
+  hn(R.sr,'42009');hn(mesh(R.sr,gearGeo(SRT.z,SRT.m,0.7,{ratchet:'radial',flip:true,bore:2.92,holes:WPS.flat().map(q=>hC(...q,0.4))}),M.gilt,0,-9.45,0),'42009',{sub:1,gear:{z:SRT.z,m:SRT.m,ratchet:1}});   /* steep faces lead against the running direction, so the sustaining pawl holds it */
   R.ssPin=mesh(R.sr,cylY(0.4,1.45,10),M.steel,14.6*FK*Math.cos(SSP),-8.375,14.6*FK*Math.sin(SSP));   /* the pin from the sustaining spring's working end, in the ratchet (the manual pins the spring to both wheels) */
   /* two winding pawls on the sustaining ratchet wheel, their tips on the fusee's winding ratchet (rp 9.4 FK): pushed by its steep faces when running, slipping over them when winding.
      Each is held in by a winding-pawl spring (42007), a long thin arc round the wheel at about the pivots' radius, from its foot about 150 deg round (toward the side its pawl's
@@ -747,9 +762,18 @@ function buildMovement(M){
      r 6.9 independently). The ratchet keeps its 36 teeth (38 +/- 2 at 23:30). Until then tips 8.75, pivots 10.85, ends 7.9, width 2.0, springs 10.68.
      Earlier, WPW: the pawls' width, 2.0 (C Spinner 19:12, against the fusee wheel's tips, 36.1 mm across, 1139 px: 1.9 by the eye, 2.2 at the square end, the eye r about 1.35; +-0.2), 0.9 until
      4 October 2026; their pivots about 10.4 mm out and their ends 8.8 there, as the model has them within 0.5-0.9 */
-  const WPW=1.6;R.wp=[];for(let k=0;k<2;k++){const a=k*Math.PI+0.4,P=[8.78*Math.cos(a),8.78*Math.sin(a)],T=[6.8*Math.cos(a+0.3),6.8*Math.sin(a+0.3)],ln=Math.hypot(T[0]-P[0],T[1]-P[1])+0.2,pw=mesh(R.sr,pawlGeo(ln,WPW,0.5),M.steel,P[0],-10.05,P[1]);
+  /* WPO: each winding pawl's outline (C Spinner 19:12, 4K, the springs off: the left pawl's edges traced at 37.5 px/mm on the sustaining ratchet's tips, r 14.53, the frame's
+     0.93 foreshortening taken out; +-0.15 mm): mm along the lever from its pivot (s) and across it (t, negative toward the ratchet's centre). An eye r 1.1 round the stud, an
+     arm 1.25-1.4 wide flaring to a square end 2.1 long, (4.02, 1.06) to (4.50, -1.06), that lies along a radius of the ratchet (within 1 deg on the frame) from r 5.9 to 7.9,
+     its centre r 6.92 at 28 deg round from the pivot (the right pawl 30 deg, its end a little further in): its inner corner goes to the tooth's root and the end bears
+     square on the radial locking face, across the whole tooth and 1 mm above it. Until 11 October 2026 a pointed pawl (pawlGeo, 17 deg round, its end r 6.8) whose
+     point stood 0.6-1.0 mm outside the teeth and whose end reached 0.30 mm into their 0.82 */
+  const WPO=(()=>{const o=[],e0=Math.atan2(0.73,0.82),e1=TAU-Math.atan2(0.45,1.0);for(let i=0;i<=24;i++){const f=e0+(e1-e0)*i/24;o.push([1.1*Math.cos(f),1.1*Math.sin(f)]);}
+    return o.concat([[1.73,-0.48],[2.59,-0.58],[3.24,-0.60],[3.87,-0.97],[4.50,-1.06],[4.02,1.06],[3.49,0.905],[2.68,0.80],[1.61,0.75]]);})();
+  R.wp=[];for(let k=0;k<2;k++){const a=k*Math.PI+0.4,P=[8.78*Math.cos(a),8.78*Math.sin(a)],T=[6.92*Math.cos(a+28.2*D2R),6.92*Math.sin(a+28.2*D2R)],th0=Math.atan2(T[1]-P[1],-(T[0]-P[0]));
+    const zc=-P[0]*Math.sin(th0)-P[1]*Math.cos(th0),pts=WPO.map(([u,t])=>[-u,-t*Math.sign(zc)]),pw=mesh(R.sr,polyGeo(pts,0.5,[[0,0,0.403]]),M.steel,P[0],-10.3,P[1]);   /* zc: the ratchet's centre across the pawl's frame */
     pc(hn(cylBetween(R.sr,0.22,-9.45,-10.3,M.steel,...P,12),'42009',{sub:1}),'pawls');pc(pw,'pawls');   /* the stud it turns on, pressed into the wheel, riveted flush with the pawl's top, which the fusee's underside turns over (C Spinner 19:12: each pawl on a stud; two of the holes under the wheel, 19:05) */
-    pw.userData.q=P;pw.userData.th0=Math.atan2(T[1]-P[1],-(T[0]-P[0]));pw.userData.pts=pawlPts(ln,WPW);R.wp.push(pw);
+    pw.userData.q=P;pw.userData.th0=th0;pw.userData.pts=pts;R.wp.push(pw);
     const pol=(r,t)=>[r*Math.cos(a+t),r*Math.sin(a+t)],r0=pol(WPR,WPF[1]),r1=pol(WPR,WPF[0]);pw.userData.arc=[];for(let t=WPF[0]-0.03;t>0.45;t-=0.06)pw.userData.arc.push(pol(WPR,t));
     pw.userData.spr=hn(mesh(R.sr,wpsGeo(pw,pw.userData.th0),M.blued,0,-10.1,0),'42007');pw.userData.sprTh=pw.userData.th0;
     hn(mesh(R.sr,stadium(r0,r1,1.0,0.47,[r0,r1].map(q=>hT(...q,0.4))),M.blued,0,-10.27,0),'42007',{sub:1});
@@ -1315,7 +1339,7 @@ function buildMovement(M){
   let lastN=-1,lastEps=0,lastIn=-1,lastTh=null,lastPs='',lastSp=null,srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0,ssV=0;
   R.springReady=()=>{if(lastTh===null){R.spring.geometry=ribbonGeo(R.spPath(0),HS_B,HS_T,R.spring.geometry);lastTh=0;}if(lastIn<0){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=0;}};   /* the hairspring at rest and the mainspring fully wound, built if they haven't been yet (each is built only when it can be seen): for the maker's sheets, drawings and STL (maker.js) */
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
-  const FPR=ratchetProf(WRT.z,WRT.m,false),SRP=ratchetProf(SRT.z,SRT.m,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1).psi;
+  const FPR=ratchetProf(WRT.z,WRT.m,false,true),SRP=ratchetProf(SRT.z,SRT.m,true,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1,true).psi;
   R.WPH=WPH;R.SMAX=SMAX;R.sspGeo=sspGeo;R.ssD=0;R.FPR=FPR;R.SRP=SRP;   /* SMAX: the sustaining spring's travel from loaded to spent (with sspGeo); ssD: how far it has relaxed now (update()); the ratchets' profiles, for the essay's figure */
   /* the load path, which app.js picks out while winding: lp 'm' the mainspring's side (barrel, mainspring, chain, the fusee and its winding ratchet, the winding pawls and
      their springs), 's' the sustaining spring and its pins, 'r' the sustaining ratchet, 'h' the sustaining pawl, which holds the ratchet while the key turns, 'w' the fusee wheel */
@@ -1428,8 +1452,8 @@ function makeFusee(M,c){
      out to r 5.8 to take their threads, estimated. The screws stood proud at r 3.0, heads r 0.55,
      in the sustaining ratchet's open centre until 5 October 2026 */
   const WRS=[0.6,0.6+Math.PI].map(a=>[4.6/FK*k*Math.cos(a),4.6/FK*k*Math.sin(a)]),wrG={z:WRT.z,m:WRT.m/FK*k,ratchet:1};
-  hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.35,{ratchet:true,bore:2.75*k,holes:WRS.map(q=>[...q,1.4])}),M.steel,0,c.yB+0.925,0),'42013',{gear:wrG});   /* its upper 0.35, counterbored */
-  hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.15,{ratchet:true,bore:2.75*k,holes:WRS.map(q=>[...q,0.7])}),M.steel,0,c.yB+0.675,0),'42013',{sub:1});mesh(fz,discGeo(5.8/FK*k,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,1.15,0.55))]),M.gilt,0,c.yB-1.1,0);
+  hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.35,{ratchet:'radial',bore:2.75*k,holes:WRS.map(q=>[...q,1.4])}),M.steel,0,c.yB+0.925,0),'42013',{gear:wrG});   /* its upper 0.35, counterbored */
+  hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.15,{ratchet:'radial',bore:2.75*k,holes:WRS.map(q=>[...q,0.7])}),M.steel,0,c.yB+0.675,0),'42013',{sub:1});mesh(fz,discGeo(5.8/FK*k,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,1.15,0.55))]),M.gilt,0,c.yB-1.1,0);
   if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;fz.add(fl);for(const q of WRS)hn(c.screw(fl,q[0],-q[1],-(c.yB+0.75),1.15,0.3,0.15+1.2,0.55),'42014');}
   /* the collar's step under the sustaining ratchet: r 2.87, its bore's 2.92 less a running fit (Fig. 69: free on the arbor), between the winding ratchet's top and the
      fusee wheel's level; inferred from that bore (KLUwI2UUCMQ 19:12), no frame shows it (28:08 too oblique; 7:11 end-on) */

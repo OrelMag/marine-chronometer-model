@@ -729,6 +729,28 @@ Contents:
   under the 0.14 of the drive that keeps the balance above `ESC.AMIN`. The chain is 566 mm
   (was 586) and the set-up matches the levers over the 4.51 barrel turns the chain takes to
   leave the fusee. Keep: the drive's end comes from the chain's geometry, at `RUN_H`.
+- **Winding pawls never touched their teeth in running, and the pawl seat could pass
+  through a tooth** (kinematics audit, 11 October 2026). `phaseAgainst` found the winding
+  pawls' rest by the radius of their tip corner, which on those pawls stood 0.6-1.0 mm
+  outside the teeth: at `WPH` they sat 0.11-0.16 mm into a 0.29 seat, and fully seated
+  their end reached 0.30 mm into 0.82 mm teeth. `seatPawl`'s bisection over its whole
+  range could return a seat on the far side of a tooth the pawl would have met first
+  (0.25 mm deep where the reachable seat was 0.01), and in about 8 % of winds the sustaining
+  pawl held on the top of a face (0.08-0.17 mm) for it. The winding pawls are now traced on
+  C Spinner's video (19:12: a lever with an eye r 1.1 and a square end 2.1 long that lies
+  along a radius of the ratchet), `phaseAgainst` takes the outline's nearest point (`deep`),
+  and `seatPawl` turns the pawl in from outside to its first touch, keeping the teeth's tips
+  out of its outline too (they stood up to 0.05 mm in between its test points). The pawls
+  now go 0.48 mm into the winding ratchet's teeth at `WPH`; the sustaining pawl 0.33 of 0.54.
+  The setup click's seat moved 0.14Â° out with the tips kept out. Keep: a pawl's seat is the
+  first touch from outside; `tools/maintaining.py` measures the gap with the tips.
+- **Ratchet locking faces leaned back** (kinematics audit, 11 October 2026). The ratchets
+  dropped from tip to root over 0.07 of a pitch, so a pawl's load pushed it outward (1:10)
+  and only friction held it. The winding and sustaining ratchets' faces are now radial
+  (`ratchetProf(â€¦, radial)`, gearGeo's `ratchet:'radial'`, the back the exact chord gearGeo
+  draws), as the winding ratchet looks at 18:20 and the winding pawls' square ends lie at
+  19:12; the load on each pawl now draws it in. The setup ratchet keeps its leaning faces
+  (not changed here). Keep: the maintaining work's profiles radial and drawn as computed.
 
 ## Plates, bridges, screws and arbors
 

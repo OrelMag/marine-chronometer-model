@@ -431,13 +431,13 @@ function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.f
 /* toothed wheel or pinion, n teeth of module m, th thick. Teeth centred at a + 0.375 of a pitch (spaces at 0.875), as ph() phases them. Cycloidal clock teeth, in
    BS 978 Part 2's proportions (the manual gives no profiles: estimated): a wheel's tooth 1.41 m thick at the pitch circle, radial flanks inside it, an epicycloidal
    addendum rolled by a circle half its pinion's pitch radius (o.mate leaves, default 10), capped at 1.15 m; a pinion's leaf (20 or fewer) 1.05 m thick, radial
-   flanks and a round tip (addendum 0.525 m); both 1.3 m deep below the pitch circle, clear of the other's addendum. o.ratchet: a ratchet's saw teeth.
+   flanks and a round tip (addendum 0.525 m); both 1.3 m deep below the pitch circle, clear of the other's addendum. o.ratchet: a ratchet's saw teeth ('radial': locking faces along a radius).
    userData: ro (tip radius), ri (root), hub (the spokes' hub radius). o.prop [hub, rim, spoke]: a spoked wheel's hub radius, its rim's inner radius and its spokes' width,
    as fractions of its tip radius (measured on a wheel lying flat: WHEEL_PROP, movement.js), in place of the default proportions */
 function gearGeo(n,m,th,o={}){
   const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95,ri=rp-1.3*m;let ro;
   const root=(a0,a1)=>{for(let k=1;k<3;k++)pts.push([ri,a0+(a1-a0)*k/3]);};   /* the root between two teeth, rounded */
-  if(o.ratchet){ro=roS;const r0=ro-2.25*m;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*0.9],[r0,a+p*0.97]);}}
+  if(o.ratchet){ro=roS;const r0=ro-2.25*m,f=o.ratchet==='radial'?0.97:0.9;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*f],[r0,a+p*0.97]);}}   /* 'radial': the locking face along a radius (the maintaining work's: movement.js ratchetProf), else leaning back over 0.07 of a pitch */
   else if(n<=20){const b=0.525*m/rp,rt=0.525*m;ro=rp+rt;
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b],[rp,c-b]);
       for(let k=1;k<12;k++){const t=Math.PI*k/12,u=rp+rt*Math.sin(t),v=-rt*Math.cos(t);pts.push([Math.hypot(u,v),c+Math.atan2(v,u)]);}   /* the round tip, a semicircle on the pitch circle */

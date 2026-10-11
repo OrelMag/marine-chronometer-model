@@ -16,11 +16,16 @@ from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
- const D=180/Math.PI,FPR=ratchetProf(WRT.z,WRT.m,false),SRP=ratchetProf(SRT.z,SRT.m,true),SMAX=R.SMAX??10/D,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);};
+ const D=180/Math.PI,FPR=R.FPR,SRP=R.SRP,SMAX=R.SMAX??10/D,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);};
  const TPH=7200,NPH=FUSEE_PER_HOUR,st={E:1000,n:3};let prev=null,k=0,wasW=false;
  /* how far into its ratchet's teeth a pawl reaches (negative: inside), pawl frame as seatPawl */
  const dense=pts=>{const d=[];for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/0.1));for(let k=0;k<n;k++)d.push([a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n]);}return d;};   /* as seatPawl measures it (movement.js): every 0.1 mm along the outline's edges */
- const depth=(pts,q,th,pr)=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(const[x,z]of dense(pts)){const X=q[0]+x*c+z*sn,Z=q[1]-x*sn+z*c,r=Math.hypot(X,Z);if(r<pr.ro+0.5)m=Math.min(m,r-pr.r(Math.atan2(Z,X)));}return m;};
+ /* and the teeth's tips against its edges (a tip can touch an edge between the points): the nearest tip's distance outside the outline, negative inside */
+ const depth=(pts,q,th,pr)=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(const[x,z]of dense(pts)){const X=q[0]+x*c+z*sn,Z=q[1]-x*sn+z*c,r=Math.hypot(X,Z);if(r<pr.ro+0.5)m=Math.min(m,r-pr.r(Math.atan2(Z,X)));}
+   const Q=pts.map(([x,z])=>[q[0]+x*c+z*sn,q[1]-x*sn+z*c]),sg=Math.sign(pr.tipB(1)-pr.tipB(0)),k0=Math.round(Math.atan2(Q[0][1],Q[0][0])*sg/pr.p);
+   for(let k=k0-6;k<=k0+6;k++){const b=pr.tipB(k),tx=pr.ro*Math.cos(b),tz=pr.ro*Math.sin(b);let ins=false,d=1e9;
+     for(let i=0,j=Q.length-1;i<Q.length;j=i++){const[xi,zi]=Q[i],[xj,zj]=Q[j];if(((zi>tz)!==(zj>tz))&&(tx<(xj-xi)*(tz-zi)/(zj-zi)+xi))ins=!ins;const l2=(xi-xj)**2+(zi-zj)**2,t=Math.max(0,Math.min(1,((tx-xj)*(xi-xj)+(tz-zj)*(zi-zj))/l2));d=Math.min(d,Math.hypot(tx-xj-t*(xi-xj),tz-zj-t*(zi-zj)));}
+     m=Math.min(m,ins?-d:d);}return m;};
  const stud=[];mv.traverse(o=>{if(o.userData.wstop&&o.geometry&&o.geometry.parameters&&o.geometry.parameters.radiusTop)stud.push(o);});
  const barGap=()=>{mv.updateMatrixWorld(true);const bar=R.fs.stopBar.children[0],p=bar.geometry.parameters,inv=bar.matrixWorld.clone().invert(),s=stud[0],c=new THREE.Vector3();s.getWorldPosition(c);c.applyMatrix4(inv);
    const dx=Math.max(0,Math.abs(c.x)-p.width/2),dz=Math.max(0,Math.abs(c.z)-p.depth/2);return Math.hypot(dx,dz)-s.geometry.parameters.radiusTop;};
