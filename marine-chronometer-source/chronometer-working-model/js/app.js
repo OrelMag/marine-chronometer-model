@@ -488,8 +488,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;slip=0;pend.add('set');tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);};
   todIn.addEventListener('change',()=>setTod(todIn.value));
   $('#now').addEventListener('click',()=>{tSim=tM=Date.now()/1000+tzOff();slip=0;pend.add('set');bookDay=dayOf(tM);lastE=null;todS=-1;rErr=0;handsSet=false;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);});
-  /* GMT or local: the hands move by the difference, as when they are set */
-  const setTz=v=>{const o=tzOff();tz=v;tSim+=tzOff()-o;tM+=tzOff()-o;bookDay=dayOf(tM);if(hashReady)pend.add('set');lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
+  /* GMT or local: the hands move by the difference, as when they are set (held, the beats they stand at with them) */
+  const setTz=v=>{const o=tzOff();tz=v;const d=tzOff()-o;tSim+=d;tM+=d;if(H.held)H.Eh+=2*d;bookDay=dayOf(tM);if(hashReady)pend.add('set');lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
   document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
   /* setting the hands while it runs, as the manual does it (Sec. III, Setting While Running): gimbals latched, bezel off, the key on the square at the centre of the dial, turned by its
      shank, forward only. The minute hand goes on its marker half a minute behind the master (as the master's second hand passes 30), then to the next marker as the master's

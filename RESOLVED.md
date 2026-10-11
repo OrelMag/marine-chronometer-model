@@ -1767,6 +1767,11 @@ An arbor needs pivots and shoulders; a stone its seat.
   `app.js`). Keep: fit a stop through `stopFit` or its button, never
   `mv.userData.stop` alone in the page, and `bom.py` fits the arm by its button,
   so the card's numbers it checks are the arm's. `db5d5dd`
+- **GMT or local changed while the train stood was lost.** `setTz` moved `tSim` and the master by the
+  zone's difference, but with the train held the hands stand at `H.Eh`, which it left alone (setting the
+  time and Now reset it): on restarting the hands carried on from where they stood and the dial read
+  the difference slow (3 h for a zone 3 h off). Held, the beats the hands stand at now move with it
+  (`H.Eh += 2d`). Keep: whatever moves `tSim` while the train is held moves `H.Eh` with it.
 
 ## Build, tools and docs
 
