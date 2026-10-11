@@ -7,7 +7,8 @@
 function escStage(s){
   if(s.held)return s.lift>0.005?'hLift':s.ccw&&s.psDef>0.005?'hSmall':s.psDef>0.005?'hPass':'hFree';
   if(!s.ccw)return s.psDef>0.005?'pass':'free';
-  if(s.lift>0.005&&s.prog===0)return'unlock';
+  if(s.lift>0.005&&s.prog<=0)return'unlock';   /* the locked tooth drawn back a little as the stone lifts (prog just under 0) */
+  if(s.run)return'relock';   /* off the impulse jewel, running on to the stone */
   if(s.prog>0&&s.prog<1)return s.drop?'drop':'impulse';
   return s.lift>0.005?'relock':'free';}
 /* drawEscPlan(ctx,w,h,s,Ew,o): the plan in a w x h box. s: the balance's state, Ew: the escape wheel's position in teeth. o: E (the escapement, default ESC),
@@ -59,7 +60,7 @@ function drawEscPlan(ctx,w,h,s,Ew,o={}){
     ctx.fillStyle=C.muted;ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('balance',gx,gy+gr+4);ctx.fillText((Math.round(s.th/D2R)||0)+'°',gx,gy+gr+18);ctx.textBaseline='alphabetic';}
   if(o.cap){const t={hLift:'Stopped: the detent lifts, the wheel can’t turn',hSmall:'Stopped: too small a swing to pass the trip spring',hPass:'Stopped: trip spring bends aside, detent still',hFree:'Stopped: wheel locked, balance swinging free',
       pass:'Return swing: trip spring bends aside, detent still',free:'Wheel locked, balance swinging free',unlock:'Unlocking: the jewel pushes trip spring and detent',
-      drop:'Unlocked: the wheel drops onto the impulse jewel',impulse:'Impulse: a tooth drives the balance',relock:'Detent returns and locks the next tooth'}[escStage(s)];
+      drop:'Unlocked: the wheel drops onto the impulse jewel',impulse:'Impulse: a tooth drives the balance',relock:'Impulse over: the next tooth runs on to the locking jewel'}[escStage(s)];
     ctx.fillStyle=C.ink;ctx.font='600 12px "Instrument Sans",sans-serif';ctx.textAlign='left';ctx.fillText(t,8,h-8);
     ctx.textAlign='right';ctx.fillStyle=C.muted;ctx.font='11px "Instrument Sans",sans-serif';ctx.fillText('balance '+(Math.round(s.th/D2R)||0)+'°',w-8,14);
     ctx.fillText('from the cock side, as Fig. 90',w-8,h-26);}   /* the manual's side; the 3D Escapement view looks from the pillar plate, so it is mirrored */

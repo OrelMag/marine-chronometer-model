@@ -317,7 +317,7 @@ function drawMerge(scene,meshes){
       if(re)relist();}};}
 /* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: 1,064 mm, as C Spinner's 15:54 and 32:30 give, 0.9-1.25 m; it was half the
    room between arbor and wall, the most turns, until the wall was measured 1.95 thick, 5 October 2026: half the room now left, 903 mm in the r 18.3 barrel, would
-   bend the strip to 2.68 GPa fully wound over the chain's 4.67 barrel turns, past a hardened steel spring's 2.6, tools/physics.js), on the arbor's core (ra 1.8, estimated) inside the
+   bend the strip to 2.68 GPa fully wound over the chain's 4.61 barrel turns, past a hardened steel spring's 2.6, tools/physics.js), on the arbor's core (ra 1.8, estimated) inside the
    brace (Rw: the barrel r 18.3, TN24H's cap against the fusee wheel: movement.js RB_O; r 17.6 until 5 October 2026; less its wall, 2.0, the brace, 0.25, and 0.01). Its coils lie at least gap
    apart (the grease). Its shape over the wind is solved, not drawn: tools/mainspring.py finds the strip's least bending energy from the free
    spring's natural curve (measured on the video, 32:18), its coils pressing on each other, its inner end on the hook, its outer along the brace, and writes the
@@ -431,13 +431,14 @@ function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.f
 /* toothed wheel or pinion, n teeth of module m, th thick. Teeth centred at a + 0.375 of a pitch (spaces at 0.875), as ph() phases them. Cycloidal clock teeth, in
    BS 978 Part 2's proportions (the manual gives no profiles: estimated): a wheel's tooth 1.41 m thick at the pitch circle, radial flanks inside it, an epicycloidal
    addendum rolled by a circle half its pinion's pitch radius (o.mate leaves, default 10), capped at 1.15 m; a pinion's leaf (20 or fewer) 1.05 m thick, radial
-   flanks and a round tip (addendum 0.525 m); both 1.3 m deep below the pitch circle, clear of the other's addendum. o.ratchet: a ratchet's saw teeth.
+   flanks and a round tip (addendum 0.525 m); both 1.3 m deep below the pitch circle, clear of the other's addendum. o.ratchet: a ratchet's saw teeth ('radial': locking faces along a radius).
    userData: ro (tip radius), ri (root), hub (the spokes' hub radius). o.prop [hub, rim, spoke]: a spoked wheel's hub radius, its rim's inner radius and its spokes' width,
-   as fractions of its tip radius (measured on a wheel lying flat: WHEEL_PROP, movement.js), in place of the default proportions */
-function gearGeo(n,m,th,o={}){
-  const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95,ri=rp-1.3*m;let ro;
+   as fractions of its tip radius (measured on a wheel lying flat: WHEEL_PROP, movement.js), in place of the default proportions; pl, its outline (gearOutline) */
+/** @param {number} n @param {number} m @param {any} [o] @returns {{xy:number[][],ro:number,ri:number}} the outline in the shape's plane (x, y), its tip and root radii */
+function gearOutline(n,m,o={}){
+  const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95,ri=rp-1.3*m;let ro=roS;
   const root=(a0,a1)=>{for(let k=1;k<3;k++)pts.push([ri,a0+(a1-a0)*k/3]);};   /* the root between two teeth, rounded */
-  if(o.ratchet){ro=roS;const r0=ro-2.25*m;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*0.9],[r0,a+p*0.97]);}}
+  if(o.ratchet){ro=roS;const r0=ro-2.25*m,f=o.ratchet==='radial'?0.97:0.9;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*f],[r0,a+p*0.97]);}}   /* 'radial': the locking face along a radius (the maintaining work's: movement.js ratchetProf), else leaning back over 0.07 of a pitch */
   else if(n<=20){const b=0.525*m/rp,rt=0.525*m;ro=rp+rt;
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b],[rp,c-b]);
       for(let k=1;k<12;k++){const t=Math.PI*k/12,u=rp+rt*Math.sin(t),v=-rt*Math.cos(t);pts.push([Math.hypot(u,v),c+Math.atan2(v,u)]);}   /* the round tip, a semicircle on the pitch circle */
@@ -448,14 +449,48 @@ function gearGeo(n,m,th,o={}){
     ro=ep[ep.length-1][0];
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b]);for(const[r,a]of ep)pts.push([r,c-b+a]);for(let k=ep.length-1;k>=0;k--){const[r,a]=ep[k];if(a<b-1e-9||k<ep.length-1)pts.push([r,c+b-a]);}pts.push([ri,c+b]);root(c+b,c+p-b);}}
   let xy=pts.map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);if(o.flip)xy=xy.map(([x,y])=>[x,-y]).reverse();
-  const s=new THREE.Shape();s.moveTo(...xy[0]);for(let i=1;i<xy.length;i++)s.lineTo(...xy[i]);s.closePath();
+  return{xy,ro,ri};}
+function gearGeo(n,m,th,o={}){
+  const{xy,ro,ri}=gearOutline(n,m,o),roS=m*n/2+m*0.95,s=new THREE.Shape();s.moveTo(...xy[0]);for(let i=1;i<xy.length;i++)s.lineTo(...xy[i]);s.closePath();
   const P=o.prop,R0=o.hub??(P?P[0]*roS:Math.max(1.6,roS*0.18));
   if(o.spokes){const R1=P?P[1]*roS:ri-(o.rim??Math.max(0.9,roS*0.09)),sw=P?P[2]*roS:o.sw??Math.max(0.9,roS*0.08);
     if(R1>R0+1)for(let j=0;j<o.spokes;j++){const a0=j/o.spokes*TAU,a1=(j+1)/o.spokes*TAU,d1=Math.asin(Math.min(0.9,sw/2/R1)),d0=Math.asin(Math.min(0.9,sw/2/R0));
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
-  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro,ri,hub:R0});return g;
+  const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro,ri,hub:R0,pl:xy});return g;
+}
+/* gearLash: a meshing pair phased as it runs, under load. A drives B (gearGeo meshes, their gear {z} in userData; their arbors at pa and pb, [x, z]); s is the way A turns as
+   the train runs (the sign of its rotation.y's change), B turning the other way. A's tooth is centred on the line of centres and B's gap opposite (gearGeo's teeth at 0.375
+   of a pitch, spaces at 0.875), then B is turned back against its motion until its flanks lie h off A's driving flanks where the two come closest over a whole tooth of
+   A's turn: the cycloidal profiles aren't conjugate at these centres, so the gap varies as they turn, and the least is taken, so the flanks touch there (to h: the
+   0.05 mm interference checks then see no overlap) and never pass. The gap is measured on the outlines as drawn (pl), at 48 places over a tooth, between the segments
+   that reach within M of the other's tips (so it is exact below M); each step turns B by the gap over B's tip radius, which no point of B can close by more, so it
+   never overshoots. Returns [A's rotation.y, B's, B's turn from centred] in the movement's frame; a group turned under either is the caller's (ph() in movement.js) */
+/** @param {any} A @param {number[]} pa @param {any} B @param {number[]} pb @param {number} s @param {number} [h] @returns {number[]} */
+function gearLash(A,pa,B,pb,s,h=0.005){
+  const za=A.userData.gear.z,zb=B.userData.gear.z,ua=A.geometry.userData,ub=B.geometry.userData,ax=pa[0],ay=-pa[1],bx=pb[0],by=-pb[1],phi=Math.atan2(by-ay,bx-ax),
+    d=Math.hypot(bx-ax,by-ay),a0=phi-0.375*TAU/za,b0=phi+Math.PI-0.875*TAU/zb,N=48,k=za/zb,M=0.2;
+  /* the outline's segments that can reach the other gear: turned t0, within the angle about dir that the other's tips (+M) allow, and a pitch and a half for the sweep */
+  const near=(u,rO,t0,dir,z)=>{const w=r=>Math.acos(Math.max(-1,Math.min(1,(r*r+d*d-(rO+M)**2)/(2*r*d)))),W=Math.max(w(u.ro),w(u.ri))+1.5*TAU/z+0.02,pl=u.pl,I=[];
+    const ok=q=>{const e=Math.atan2(q[1],q[0])+t0-dir;return Math.abs(Math.atan2(Math.sin(e),Math.cos(e)))<W;};
+    for(let i=0;i<pl.length;i++)if(ok(pl[i])||ok(pl[(i+1)%pl.length]))I.push(i);return I;};
+  const IA=near(ua,ub.ro,a0,phi,za),IB=near(ub,ua.ro,b0,phi+Math.PI,zb);
+  const pd=(px,py,x0,y0,x1,y1)=>{const dx=x1-x0,dy=y1-y0,l=dx*dx+dy*dy,t=l?Math.max(0,Math.min(1,((px-x0)*dx+(py-y0)*dy)/l)):0;return Math.hypot(px-x0-t*dx,py-y0-t*dy);};
+  /* those segments turned t about (cx, cy) in plan (x, -z), kept if within R of (ox, oy): x0, y0, x1, y1 each */
+  const segs=(pl,I,cx,cy,t,ox,oy,R)=>{const c=Math.cos(t),sn=Math.sin(t),S=[],n=pl.length;
+    for(const i of I){const p=pl[i],q=pl[(i+1)%n],x0=cx+p[0]*c-p[1]*sn,y0=cy+p[0]*sn+p[1]*c,x1=cx+q[0]*c-q[1]*sn,y1=cy+q[0]*sn+q[1]*c;if(pd(ox,oy,x0,y0,x1,y1)<R)S.push(x0,y0,x1,y1);}return S;};
+  const cr=(a,b,c,d,e,f)=>(c-a)*(f-b)-(d-b)*(e-a);   /* the side of (e, f) from the line (a, b)-(c, d) */
+  const SA=[...Array(N).keys()].map(j=>segs(ua.pl,IA,ax,ay,a0+s*j/N*TAU/za,bx,by,ub.ro+M));   /* A over a tooth */
+  let jb=0;
+  const gap=dl=>{let mn=M;for(let jj=0;jj<N;jj++){const j=(jb+jj)%N,P=SA[j],Q=segs(ub.pl,IB,bx,by,b0+s*dl-s*k*j/N*TAU/za,ax,ay,ua.ro+M);
+    for(let p=0;p<P.length;p+=4){const a=P[p],b=P[p+1],c=P[p+2],e=P[p+3];
+      for(let q=0;q<Q.length;q+=4){const f=Q[q],g=Q[q+1],x=Q[q+2],y=Q[q+3];
+        if(Math.min(f,x)-Math.max(a,c)>mn||Math.min(a,c)-Math.max(f,x)>mn||Math.min(g,y)-Math.max(b,e)>mn||Math.min(b,e)-Math.max(g,y)>mn)continue;   /* boxes farther apart than the least yet */
+        const v=cr(a,b,c,e,f,g)*cr(a,b,c,e,x,y)<0&&cr(f,g,x,y,a,b)*cr(f,g,x,y,c,e)<0?0:Math.min(pd(a,b,f,g,x,y),pd(c,e,f,g,x,y),pd(f,g,a,b,c,e),pd(x,y,a,b,c,e));
+        if(v<mn){mn=v;jb=j;}}}}return mn;};
+  let dl=0;for(let it=0;it<60;it++){const g=gap(dl);if(!it&&g<=0)console.error('gearLash: the teeth meet as phased',{za,zb,pa,pb});dl+=(g-h)/ub.ro;if(Math.abs(g-h)<1e-4)break;}
+  return[a0,b0+s*dl,s*dl];
 }
 /* a turned arbor or staff: prof [[y, r], ...] is radius r from y to the next y (the last entry's y is the end), so a pivot steps up to the body at a shoulder; one closed solid */
 function shaftGeo(prof,seg=16){const V2=(a,b)=>new THREE.Vector2(a,b),pr=[V2(0,prof[0][0])];for(let i=0;i+1<prof.length;i++){pr.push(V2(prof[i][1],prof[i][0]),V2(prof[i][1],prof[i+1][0]));}

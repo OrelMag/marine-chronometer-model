@@ -27,6 +27,34 @@ Contents:
 [Essay](#essay) ·
 [Fixed, not yet committed](#fixed-not-yet-committed)
 
+- **The up-and-down indicator's wheel followed the fusee's pinion both ways on
+  one flank** (the kinematics audit, 11 October 2026). With the drive flanks in
+  contact (`gearLash`), winding turned the pinion back into the wheel. The
+  wheel now stands while the pinion crosses its backlash (`UD_LASH`, from
+  `gearLash` both ways, 0.107 rad of the fusee) and follows on the other flank;
+  after winding it waits for the pinion to come round again. Keep: a mesh whose
+  driver reverses crosses its backlash before the driven wheel moves. `bf75917`
+
+- **The run down's taper said "Stopping: twist to start"** once the drive fell
+  under what keeps the balance unlocking, a few minutes before `RUN_H`. The HUD
+  and the stop panel now say Run down there (`spentNow`). Keep: the stop
+  messages follow the drive, not the hours. `bf75917`
+- **The export's drive and wind lagged the page's** after the maintaining work's
+  state machine: its `sim` took the fusee's drive or a 0.8 spring, not the
+  greater of the fusee and the sustaining spring (`R.ssF`), and didn't add the
+  catch's and reload's hours when the key let go (`R.release`). Keep: blender.js's
+  `sim` mirrors app.js's drive, go and windEnd. `bf75917`
+
+- **The loop's never-back clamp hid the escape wheel's recoil.** Once the
+  escapement drew the recoil (progress under 0 while the stone is drawn out),
+  `E = max(q.E, lastE)` held the wheel still through it. The clamp now lets
+  that dip through, in the page and the export. Keep: the only turn back the
+  train makes is the unlocking's recoil, a few hundredths of a tooth. `9a7e7db`
+- **The adjuster's bench left the hand landing off its mark.** `PL`, the phase
+  at which the next tooth locks, was worked out once at load; a bench setting
+  moves the lock. It is recomputed when the escapement is rebuilt, the
+  balance's phase kept. Keep: `PL` follows ESC. `e66cced`
+
 ---
 
 ## Escapement
@@ -185,6 +213,62 @@ Contents:
   staff; `fine.py --split` passes. Keep: anything on the balance stays inside
   17.7 mm and above the escape upper bridge's screw heads, as the uncut rim's
   parts do. `3c9608c`
+- **The locked tooth didn't recoil as the stone was drawn out.** `ESC.state` held the wheel at its
+  locked place (progress 0) while the detent lifted, so the stone, its flat set at 10° of draw,
+  passed about 0.01 mm into the tooth's tip from −26° to −22.8° of the balance (the work already
+  counted the recoil, `cdr`). Now the tooth is pushed back along the flat as the shapes require
+  (`ESC.recoil`, at most 0.18° of the wheel), the progress just under 0. Keep: the locked tooth
+  where the stone's outline lets it be at every lift; `tools/escapement.js` checks the stone is
+  never inside a tooth. `2fee3fe`
+- **The next tooth reached the stone in one step after the impulse.** Where the impulse jewel let
+  the tooth go (+20.7°, 0.96 of a pitch) the wheel's place fell back to the free chase from the
+  release, far ahead, and the progress went to 1 at once. Now the tooth runs on from the jewel's
+  place and speed under the wheel's torque (`thE`, `phE`, `gE`), locking about 1.4° of the
+  balance later (`run` in the state: the stage "relock"). Keep: the wheel's place continuous
+  through the let-go. `2fee3fe`
+- **The train a tooth ahead at the phase's start.** `ESC.state(0)` took sin(2πp) > 0 for the
+  active swing, so at p = 0 exactly (whenever tSim/0.5 + bOff is a whole number) it reported the
+  return swing's progress 1, and the hands stood a beat ahead for that frame (blender.js worked
+  round it). Now p is taken mod 1 and [0, ½) is the active swing. Keep: p 0 the active swing's
+  start, progress 0. `2fee3fe`
+- **The detent snapped home.** `ESC.state` took the lift from the jewel's table, which drops from
+  0.3 mm to 0 in one 0.02° step where the passing spring's tip leaves the jewel (−12.4°), with the
+  escaping tooth only an eighth of a pitch on: the stone stood up to 0.07 mm in its way for about
+  0.6 ms (visible at 0.002×). The detent is a body (Op. 78's preload, the drawn spring, its drawn
+  inertia `ID`): it now leaves the jewel where the jewel's end runs away faster than it can follow,
+  falls in closed form, lands at −9.75° (dynamics.js −9.76°) and hops on its stop (`eS`); a detent
+  back before the escaping tooth has passed rides its back (`ride`). Keep: the stone never inside a
+  tooth at any phase and swing (`tools/escapement.js`'s `stoneClash`, which fails past 1 µm: it read
+  0.08 mm on the old state); the fall's place is dynamics.js's; fine.py's `PH` has phases through
+  the fall (0.2425-0.2445) and the run to the stone. `6923ac5`
+- **`AMIN` 2° above where the escapement works.** It was the least swing that passes the trip
+  spring (−40.2°), unlocks and sees the impulse through, plus 2° to spare; between 40.2° and 42.3°
+  `app.js` held the train while `ESC.state` drew the detent unlocking it on every swing. Now
+  `AMIN` is that least swing exactly (40.2° at the model's settings, refined by bisection when a
+  setting moves it). Keep: `AMIN` where `state`'s own `pass` begins, so the train holds only
+  when the escapement can't work. `d8e896a`
+- **A held balance ran down as if nothing touched it.** `ampStep` let the swing fall as
+  exp(−t/TF) whenever the train was held, but while the swing still carries the discharge jewel
+  back past the trip spring, the jewel bends the trip spring on every return and lifts the detent
+  on every active swing, the wheel unable to turn: 0.033 of k an oscillation, 17 % of the air and
+  pivots' loss at 255° and five times it at 45°. Now `ESC.freeStep` (closed form, any step) takes
+  both; from 255° the swing reaches 40.2° in 47 s, not 96. Keep: the held run-down is
+  `ESC.freeStep` (app.js's `ampStep`, and blender.js's copy of the loop), checked against
+  `tools/dynamics.js`'s integration of a held train. `9f1ed20`
+- **The hairspring didn't breathe.** `R.spPath` turned each point of the coil rigidly by θ(1 − s/L)
+  about the staff, keeping every radius, where a spring of 11.86 turns swung 255° changes its
+  coils' radii by θ/(2πN), about 6 % each way. Now every part of the free length changes its
+  curvature by θ/L (the pure couple Phillips' conditions give), drawn from the stud's end back
+  (movement.js); against the elastica (`HSPR.large`) within 0.025 mm at 255° (the rigid turn was
+  0.28 off). Keep: the shape the couple gives, the length kept, the clamped ends exact; it is
+  rebuilt only when θ changes (ribbonGeo in place, 0.1 ms). It brought out that the inner curve
+  passes 0.04 mm from the collet at rest (OPEN-QUESTIONS.md). `9714a9d`
+- **The breathing hairspring ran into its collet.** Wound past about 50°, the inner curve, curling inward near the
+  clamp, met the corner of the collet's body (0.09-0.13 mm at 255°), whose hidden side had been taken back to the
+  plate's corner; no inner curve meeting Phillips' conditions from the collet's end clears that corner. The hidden
+  side, which no source shows, now stops 0.9 of the way to it: the strip clears the collet by 0.063 mm at 347°, the
+  widest swing the model allows. Keep: a real spring never touches its collet; the strip at least 0.05 mm off it
+  beyond the clamp's edge at every swing up to TRIP + 15°. `43260af`
 
 ## Going train and heights
 
@@ -359,6 +443,29 @@ Contents:
   wheel's hub 0.30 of its tip radius, rim from 0.79, spokes 0.10; the fourth's
   0.36, 0.83, 0.07 (they were 0.18, about 0.86, 0.08). The third takes the
   fourth's, estimated. Keep them measured (`WHEEL_PROP`; SHAPE-PASS.md, 3). `7ea6a5a`
+- **Every mesh drawn with its backlash centred** (kinematics audit, 11 October
+  2026). Each pair was phased with the driver's tooth on the line of centres and
+  the driven gap centred on it, so the driving flank stood 0.04-0.06 mm off its
+  leaf at the closest, and as far on the other side; a loaded train runs with
+  the driving flanks touching and all the backlash behind. `gearLash` (core.js)
+  now turns each driven member back onto the driver's driving flank, to 0.005 mm
+  where the two outlines come closest over a whole tooth (the cycloidal profiles
+  aren't conjugate, so the gap varies as they turn): the fusee wheel onto the
+  centre pinion, the centre, third and fourth wheels onto the third, fourth and
+  escape pinions, the cannon pinion onto the minute wheel, the minute pinion
+  onto the hour wheel, the fusee arbor's pinion onto the indicator wheel; the
+  laid-out view keeps it. Keep: `ph()` passes the way each driver turns as
+  `update()` turns it (if a driver's sense changes there, its `s` changes too);
+  the gap measured on the outlines as drawn (`pl`), never on pitch circles; at
+  the audit's E values and over a dense sweep of a tooth of each driver no
+  outline overlaps and the closest gap is 0.005 mm, on the driving flank. `d81364f`
+- **Comments and the README quoting the escape pinion's old mesh** (kinematics
+  audit, 11 October 2026). Two comments in `movement.js` (the photographed
+  group's, and `MOD`'s) and two places in the model README still put the escape
+  pinion 10.585 mm from the fourth, the module 0.3113 or 0.249; the fourth's
+  measured place makes it 11.107 mm and 0.2614 (`tools/solve.py`). Keep: a
+  figure that follows from `L` quoted as `solve.py` prints it, the old value
+  only as history. `05b2ef2`
 
 ## Winding and maintaining work
 
@@ -696,6 +803,104 @@ Contents:
   about 0.2 of full wind against the fusee's 0.473). Keep: the spring's shape comes from the solve, not a
   drawn law; after changing its length, thickness, core, barrel or free curve, rerun the tool; states
   half a turn apart blend 3 mm out and let the coils touch. `04ff466`
+- **The chain grew 1.6 mm over the wind** (kinematics audit, 11 October 2026). `Ib` turned
+  the barrel by the chain's arc paid off the fusee, but the straight run between the drums,
+  their common tangent, lengthens from 35.85 to 37.42 mm as the fusee's radius grows, so the
+  barrel over-turned 0.013 turn (4.8°) by run down, the links crept round it and the hook's
+  plate stretched and shrank. The barrel now takes the arc less the tangent's gain (`Iw`, now `wrapB`), and
+  the chain keeps its length to 0.03 mm (586.40 mm, end pin to hook) over the wind; the
+  chain's barrel turns over the run are 4.656 (were 4.670). Keep: whatever turns the barrel
+  uses `Ib`; `tools/invariants.py` checks the length (`chainLen`). `273f317`
+- **The fusee's torque taken on the groove's floor, and two different mainsprings**
+  (kinematics audit, 11 October 2026). The torque was the pull times the groove's floor
+  radius, though the chain pulls along its pitch line, 0.49 mm further out (7.51 to 15.22
+  where it leaves the fusee, not 7.0 to 14.8), and the set-up was matched to the floor's
+  ratio (0.473, not 0.490); `tools/physics.js` mixed the two (the floor on the fusee, the
+  pitch line on the barrel). And the drive (amplitude and rate) came from an illustrative
+  pull, linear and 3 % steeper at each end, while the spring drawn and its set-up came from
+  the solved one (`msPull`). The drive is now the solved spring's pull at the barrel's turns
+  on the chain's lever where it leaves the fusee (`fs.pull`, `fs.lever`, `fs.torque`), the
+  set-up matched to the levers' ratio (1.25 turns past the slack, was 0.99); the torque is
+  level within about 2 % (0.986-1.021 of its mean). `pullB`, the going barrel for
+  comparison, is the same spring. `physics.js` takes the pitch line: 0.93 N·m fully wound
+  (was 0.90), 2.36 GPa, 64-100 µN·m at the escape wheel. Keep: one spring, `msPull`, for
+  the drawing, the set-up and the drive; levers on the chain's pitch line (`rc`). `c519c71`
+- **The drive stopped dead at run down with chain still on the fusee** (kinematics audit,
+  11 October 2026). At `RUN_H` the chain still wrapped 0.032 turn of the fusee (the tangent
+  point drifts round as the fusee's radius grows), yet the drive fell from full to nothing
+  at once. Past the tangent the chain's end pin swings on toward the barrel and the chain
+  runs straight from it, so the lever falls to nothing where its line passes through the
+  arbor (`geo` in `makeFusee`: 65°, 1.2 h). The pin (`ME`) is now 8.54 turns down the groove,
+  placed so that rest is at `RUN_H`, the manual's 17½ half turns from full wind; the drive
+  tapers with the lever from 55.1 h, and the train stops about 5 minutes before `RUN_H`,
+  under the 0.14 of the drive that keeps the balance above `ESC.AMIN`. The chain is 566 mm
+  (was 586) and the set-up matches the levers over the 4.51 barrel turns the chain takes to
+  leave the fusee. Keep: the drive's end comes from the chain's geometry, at `RUN_H`. `9d9da23`
+- **Winding pawls never touched their teeth in running, and the pawl seat could pass
+  through a tooth** (kinematics audit, 11 October 2026). `phaseAgainst` found the winding
+  pawls' rest by the radius of their tip corner, which on those pawls stood 0.6-1.0 mm
+  outside the teeth: at `WPH` they sat 0.11-0.16 mm into a 0.29 seat, and fully seated
+  their end reached 0.30 mm into 0.82 mm teeth. `seatPawl`'s bisection over its whole
+  range could return a seat on the far side of a tooth the pawl would have met first
+  (0.25 mm deep where the reachable seat was 0.01), and in about 8 % of winds the sustaining
+  pawl held on the top of a face (0.08-0.17 mm) for it. The winding pawls are now traced on
+  C Spinner's video (19:12: a lever with an eye r 1.1 and a square end 2.1 long that lies
+  along a radius of the ratchet), `phaseAgainst` takes the outline's nearest point (`deep`),
+  and `seatPawl` turns the pawl in from outside to its first touch, keeping the teeth's tips
+  out of its outline too (they stood up to 0.05 mm in between its test points). The pawls
+  now go 0.48 mm into the winding ratchet's teeth at `WPH`; the sustaining pawl 0.33 of 0.54.
+  The setup click's seat moved 0.14° out with the tips kept out. Keep: a pawl's seat is the
+  first touch from outside; `tools/maintaining.py` measures the gap with the tips. `5489422`
+- **Ratchet locking faces leaned back** (kinematics audit, 11 October 2026). The ratchets
+  dropped from tip to root over 0.07 of a pitch, so a pawl's load pushed it outward (1:10)
+  and only friction held it. The winding and sustaining ratchets' faces are now radial
+  (`ratchetProf(…, radial)`, gearGeo's `ratchet:'radial'`, the back the exact chord gearGeo
+  draws), as the winding ratchet looks at 18:20 and the winding pawls' square ends lie at
+  19:12; the load on each pawl now draws it in. The setup ratchet keeps its leaning faces
+  (not changed here). Keep: the maintaining work's profiles radial and drawn as computed. `5489422`
+- **Winding began by dragging the winding pawls back over their faces** (kinematics audit,
+  11 October 2026). As the key started, `holdBack` dropped the sustaining ratchet back to its
+  pawl (up to 2.6°) in one frame while the fusee had not moved, so the winding pawls on the
+  ratchet were pulled back over the winding ratchet's locking faces (their depth 0.159 to
+  0.01-0.04 mm in 33 of 40 winds). The spring now pushes the ratchet back with the fusee,
+  the pawls still on their faces, until the sustaining pawl catches it; only then do the
+  winding pawls ride over the teeth. `holdBack` is now the next place a face meets the pawl,
+  every tooth from `phaseAgainst`'s (its walk stopped on a tooth's crest in about one hold
+  in ten). Keep: `tools/maintaining.py`'s `lift` check. `240a80a`
+- **The catch when the key let go took (motion) mod one tooth, and its hours were never
+  spent** (kinematics audit, 11 October 2026). `eps += wrap(target - eps)` turned the fusee
+  forward by the motion modulo a winding tooth, and by a whole tooth when nothing had moved;
+  and the fusee's turn to catch the pawls and reload the spring came off no mainspring, so
+  `eps` grew without bound over partial winds. The catch (`catchAt`) is now the gap to the
+  pawls (none if on them) plus the reload to the drive's balance, exactly; `R.release`
+  foretells it and `app.js` (`windEnd`, where the key lets go) adds its hours, so over 40
+  partial winds `eps` stays within 6.5°. Keep: `windEnd` wherever winding stops. `240a80a`
+- **The sustaining spring dropped the drive to 0.8 the moment winding started** (kinematics
+  audit, 11 October 2026). Running at its loaded mark it carried the whole drive, nothing
+  banking it (the parts drawn have none, and the manual has it "under load during the entire
+  running cycle"), yet `driveNow` gave 0.8 of the drive (`SUS`, estimated) as the key turned.
+  The spring now pushes 1 - d / SMAX of the 12-hour drive (`R.ssF`), so it starts with what it
+  carried and falls as it relaxes; running, it sits where it balances the fusee's drive
+  (`R.drvN`, the set included). Keep: the drive while winding is the spring's push. `240a80a`
+- **Run down, the spring stayed loaded while the drive vanished** (kinematics audit,
+  11 October 2026). At run down `driveNow` gave 0 while `update()` kept the sustaining spring
+  at full load. Now the spring follows the fusee's drive down the run-down taper (1.2 h,
+  slower than its 10 minutes, so its pawl never holds); a sudden fall of the drive (the
+  slider set to run down, a set taken) lets the spring push the ratchet back to its pawl and
+  drive the train alone, the fusee standing (`canDrive` holds the train only when neither
+  drives); winding a run-down movement starts from the spring's state. Keep: `canDrive`
+  from `driveNow`. `240a80a`
+- **Setting the hands dragged the maintaining work through its teeth** (kinematics audit,
+  11 October 2026). Setting the time (the field, Now) jumps the train, so the sustaining
+  ratchet (`srA = gA`) and `eps` jumped with it, backward too. `update()` now takes a jump of
+  the fusee wheel (back, or more than 0.25 rad in a frame, or `s.reset`) as a set: the
+  ratchet moves with the wheel, the spring as it was (a held ratchet on its pawl's tooth),
+  and the fusee stays on its turns on the nearest tooth. Keep: `maintaining.py`'s set case. `240a80a`
+- **The key walkthrough let the mainspring down at once when under 0.2 h had run**
+  (kinematics audit, 11 October 2026): `kwStart` set `hrs` to `RUN_H` to have something to
+  wind, a run down that no chronometer does. With *From run down* unticked it now says the
+  chronometer is already fully wound (less than a tenth of a half turn to go); ticked, the
+  walkthrough still starts from run down, as asked. `240a80a`
 
 ## Plates, bridges, screws and arbors
 
@@ -1340,6 +1545,23 @@ Contents:
   were full-height strips). The box's size checked against sale listings
   (190-197 mm): unchanged. Keep them measured (SHAPE-PASS.md, gaps 1). `7bb49ad`
 
+- **The gimbals kept the case level at sea.** The case hung as a pendulum on pivots fixed in space,
+  so as the box rolled it stayed within 0.14° of level. At sea the box rolls about the ship's axis,
+  metres below it, so the pivots accelerate and the case hangs along the apparent vertical, gravity
+  less their acceleration, which leans it several degrees at the ends of a roll. The pendulum now
+  takes the pivots' acceleration from the ship's roll and pitch about axes 5 m below (`gimStep`,
+  `GIM` in `box.js`, estimated), one function for the page and the export: 5.4° at 7 s and 14°,
+  within 0.2° of the apparent vertical; faster than a ship rolls the box stands for one rocked about
+  its pivots. Rocking now eases in as it eases out. Keep: the page and the export call the one
+  `gimStep`; the ship's motion comes with its rates (`GIM.sea`). `1fb1c1d`
+- **The export's At sea jumped where it looped.** The pitch ran at 0.7 of the roll's rate, so the
+  clip's six rolls held 4.2 pitches and a looping clip jumped 1.4° of pitch at its seam (5.45° to
+  6.88°), and the case started level, its own swing still settling. The pitch now runs at two thirds
+  of the roll's rate on the page and in the export (`GIM.PR`), so the motion repeats every three
+  rolls and the six loop, and the clip lets the case settle over whole repeats (30 s and more)
+  before it starts: the seam is under 1e-5°. Keep: a looping clip's motions in whole cycles of it,
+  started from their steady state. `b8ba747`
+
 ## Accuracy to the manual
 
 - **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,
@@ -1767,6 +1989,77 @@ An arbor needs pivots and shoulders; a stone its seat.
   `app.js`). Keep: fit a stop through `stopFit` or its button, never
   `mv.userData.stop` alone in the page, and `bom.py` fits the arm by its button,
   so the card's numbers it checks are the arm's. `db5d5dd`
+- **GMT or local changed while the train stood was lost.** `setTz` moved `tSim` and the master by the
+  zone's difference, but with the train held the hands stand at `H.Eh`, which it left alone (setting the
+  time and Now reset it): on restarting the hands carried on from where they stood and the dial read
+  the difference slow (3 h for a zone 3 h off). Held, the beats the hands stand at now move with it
+  (`H.Eh += 2d`). Keep: whatever moves `tSim` while the train is held moves `H.Eh` with it. `ef53013`
+- **Above 5× the escape wheel ran smoothly, held off its stone and stepped back on a change of speed.**
+  Faster than `REAL_X` the beats were `2t` plus offsets, continuous, so a hold there stored a fraction
+  of a tooth and the restart a fractional `eOff`: back at 1× every locked beat stood off the locking
+  stone, the second hand between its marks, until Now (a run-down at 3600× held at E = 2360.25). The
+  two formulas also differed by up to 0.74 of a tooth, so crossing 5× stepped the wheel back. The train
+  now goes by the balance's real phase at every speed (`at()` in `app.js`; above `REAL_X` only the
+  drawn balance swings at 0.9 Hz), so it stops and starts on whole beats, a change of speed moves
+  nothing, and the wheel never turns back (`Eb`: the progress `ESC.state` gives at a phase changes
+  with the swing, which a frame of the arm's braking at 10× cut from 255° to 21°). Keep: the
+  train's beats from the real phase whatever the speed; `REAL_X` chooses only how the balance is drawn. `3b564e3`
+- **The second hand landed on its mark 0.37 s before the time it stood for.** The beats were
+  counted from the balance's far turn, so the wheel escaped and the hand landed a quarter of a
+  swing after the half second (`PL`, 0.263 of an oscillation, at 255°), while the dial was read
+  as `tSim` itself: the dial error left out the 0.12 s the hands were ahead on average, and Now set
+  them so. The balance's phase now runs `PL` ahead, so the hand comes to rest on the mark k/2 s at
+  `tSim + (bOff + eOff)/2 = k/2`, as on a chronometer set to a signal, and `dialRead()` reads what the
+  hands show (the train standing, the mark the second hand stands on: `handT`); Now puts the balance's
+  phase on the master's too. Keep: the hands land on the mark at
+  the time `dialRead()` gives for it. `3b564e3`, `bc5638e`
+- **The export's train could step back on restarting.** `blender.js`'s copy of the loop counted a
+  beat's progress as 0 at a whole phase in `at()` but took `ESC.state`'s 1 there on restarting, so on
+  its 1/120 s grid the escape wheel stepped back a tooth (40 to 39) for 4 of 240 times the screw was
+  raised. Its `sim` is now the page's loop line for line (the phase with `PL`, the wheel never back,
+  the restart's count from `at()` itself), started so Running is as before. Keep: `sim` in
+  `blender.js` and the train in `app.js`'s `frame` change together. `24908fc`
+- **The drawn escape wheel chased the impulse jewel at the calibrated torque whatever the drive.**
+  The swing and the rate took the drive (`ESC.ampAt`, `ESC.rateAt` with `driveNow()`), but the loop,
+  the balance inset and the export called `ESC.state(p, amp)` without it, so after the unlocking the
+  wheel ran to the jewel as at full torque: the tooth landed 2.6° of the balance early at 0.8 of the
+  torque, 7° at 0.3 (run nearly down, or on the sustaining spring). They pass the drive now (the
+  export its Running's, `drvF(h0)`, in the beat it samples and the rig's beat too). Keep: every
+  `ESC.state` call that draws the train passes the drive the swing is worked out at. `59a4c5b`
+- **The fusee ran on the master's time and past its chain.** The hours since winding (`hrs`) went
+  with the frame's master time while the train went with it times the rate, so a fast or slow
+  chronometer's fusee and wind indicator drifted from its own train; and the frame that ran it down
+  ran the train its whole length, up to 500 s past the chain's end at 10,000×. The fusee's hours now
+  go with the train's own time, and a frame runs the train no further than the chain has left (then,
+  stopping, only to the end of the beat under way). Keep: `hrs` advances with `tSim`, never past
+  `RUN_H`, and what may drive the train after it (`canDrive`) carries it on without moving `hrs`. `df4abfd`
+- **The train-blocking screw held the train at the last lock before the spoke.** The train stopped
+  at the last whole beat before a spoke would meet the dog point. In a real one the next unlocking
+  lets the wheel go until the spoke meets it, a fraction of a tooth (Op. 6: the escapement works
+  "until the train is stopped by the blocking screw bearing against one of the arms of the fourth
+  wheel"), the detent back on its stop with no tooth on it. Now so: held at the spoke, the tooth
+  it holds stands in the impulse jewel's path (unless within 0.04 of a tooth of a lock), the jewel
+  strikes it each return swing and the balance swings only on its side of it, stopped about as
+  quickly as by the arm (`bankAt`, `bankState` in `box.js`); raised, the wheel runs on to the next
+  lock and the train goes again only from a whole beat. Keep: hold and release by the same spoke
+  (`blockRoom` read from 1e-4 of a beat before, so a spoke against the point reads 0, not a
+  spacing); nothing restarts the train off its stone. `ea286e9`
+- **A jolt kept the balance's phase.** From where the balance was in its swing (θ, θ′) a jolt worked
+  out the new swing, √(θ² + (θ′/ω)²), but kept the old phase, so the train stayed on its half second as
+  if the knock had cost no time. A knock changes the phase too: the balance now goes on at the phase
+  θ and θ′/ω give, the escape wheel staying on its stone (`knock` in `app.js`), so the next unlocking
+  comes sooner or later and the dial error shows the knock's time error (a phase landing between the
+  unlocking and the lock waits for the next swing; a trip adds its tooth). Keep: a knock moves the
+  beat by the phase it gives, the escape wheel's count unbroken. `70f7f3e`
+- **The twist turned the box 7° and gave the balance 160°.** The box's twist was drawn as a turn of
+  at most 0.12 rad out and back over half a second, while the balance was set to 160°. A twist can give
+  the balance only what the box turns under it: the balance stays where it is in space, so relative
+  to the movement θ″ = −ω²θ − α″, at most about twice the box's turn, and the drawn one would have left
+  it 7°. The box now turns 35° in 0.1 s and back a quarter of a second later (`TWIST` in `box.js`),
+  which leaves a balance at rest swinging 67° (a real start by hand: 62-66°), worked out from where the
+  balance is (`TWIST.run`; with the train going, a twist is a knock, as a jolt is); the build-up
+  from it follows the video's start within its readings. The export's Stop and start plays the same
+  twist. Keep: the balance's kick from the box's own turn, never set apart from it. `e237416`
 
 ## Build, tools and docs
 
@@ -1923,6 +2216,16 @@ An arbor needs pivots and shoulders; a stone its seat.
   renderer off screen, each copied onto its own 2D canvas, and are built only
   when first near the view. Keep: at most two WebGL contexts on the page
   (`smoke.py` counts them). `9ffe479`
+- **The counting figure's teeth inside each other** (kinematics audit, 11 October
+  2026). "Counting" built the centre, third, fourth and escape arbors with
+  `arbor()` on its own layout and never phased the meshes, so at every beat
+  each wheel's teeth stood inside its pinion's leaves (an outline check found
+  93-194 points of one inside the other, against none for the model's own
+  train); the centre wheel's addenda were also rolled for a 10-leaf pinion, not
+  its 12. Each pinion is now phased on its wheel by `gearLash`, as the model's
+  are (the backlash behind, the escape pinion's frame at -t0), and each wheel
+  takes its pinion as `mate`. Keep: an essay figure that meshes gears phases
+  them with `gearLash` and the way the model turns its wheels. `96fba58`
 
 ---
 

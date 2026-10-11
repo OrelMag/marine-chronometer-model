@@ -256,9 +256,9 @@ const ESSAY=(()=>{
       for(let m=n-0.03;m>=0;m-=0.03){const b=-Math.PI/2-TAU*(In-I(m));Vv(bx+Rb*Math.cos(b),yf(m),Rb*Math.sin(b));}if(Pp.length<4)Vv(bx-Rb,y0,0);
       chain.geometry.dispose();chain.geometry=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(Pp,false,'centripetal'),Math.min(1600,Pp.length*3),0.38,5,false);}
     V.label('Barrel','mainspring inside',v=>v.set(bx,H+3,0));V.label('Fusee','',v=>v.set(fx,H+2,0));V.label('Chain','',v=>v.set(0,yf(n),-lerp(rf(n),Rb,0.5)));V.label('Fusee wheel','drives the train',v=>v.set(fx+16,-3,0));
-    const cst=q('#eFusChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.6:0.32),ro=q('.e-ro',P),pull=h=>fs.pull(h*FUSEE_PER_HOUR),T12=fs.torque(12*FUSEE_PER_HOUR),tq=h=>fs.torque(h*FUSEE_PER_HOUR)/T12,gb=h=>fs.pullB(Math.min(1,h/RUN_H))/fs.pullB(0.5)*tq(RUN_H/2);   /* the model's illustrative spring (makeFusee); gb: a going barrel with it, the same at 28 h */
+    const cst=q('#eFusChart'),cf={dirty:true},C=c2d(cst,cf,w=>w<520?0.6:0.32),ro=q('.e-ro',P),pull=h=>fs.pull(h*FUSEE_PER_HOUR),T12=fs.torque(12*FUSEE_PER_HOUR),tq=h=>fs.torque(h*FUSEE_PER_HOUR)/T12,gb=h=>fs.pullB(Math.min(1,h/RUN_H))/fs.pullB(0.5)*tq(RUN_H/2);   /* the model's mainspring (its solved coils, msPull) at the chain's lever (makeFusee); gb: a going barrel with it, the same at 28 h */
     const inp=q('input[type=range]',P);inp.max=RUN_H;
-    range(inp,v=>{hrs=v;wind(v*FUSEE_PER_HOUR);ro.innerHTML=`Spring pull <b>${Math.round(pull(v)*100)}%</b> of full, lever arm on the fusee <b>${rf(n).toFixed(1)} mm</b>, ${(rf(n)/rf(0)).toFixed(2)}× the smallest, turning force on the fusee wheel <b>${Math.round(tq(v)*100)}%</b> (a going barrel: ${Math.round(gb(v)*100)}%)`;f.dirty=true;cf.dirty=true;return v.toFixed(1)+' h';});
+    range(inp,v=>{hrs=v;wind(v*FUSEE_PER_HOUR);ro.innerHTML=`Spring pull <b>${Math.round(pull(v)*100)}%</b> of full, lever arm on the fusee <b>${fs.lever(n).toFixed(1)} mm</b>, ${(fs.lever(n)/fs.lever(0)).toFixed(2)}× the smallest, turning force on the fusee wheel <b>${Math.round(tq(v)*100)}%</b> (a going barrel: ${Math.round(gb(v)*100)}%)`;f.dirty=true;cf.dirty=true;return v.toFixed(1)+' h';});
     return()=>{if(f.dirty){f.dirty=false;V.render();}
       if(cf.dirty){cf.dirty=false;const{X,Y}=chart(C,{x0:0,x1:RUN_H,y0:0,y1:1.6,xt:[0,8,16,24,32,40,48,56],yt:[0,0.5,1,1.5],yf:y=>Math.round(y*100)+'%',xl:'Hours since winding',yl:'Force',cursor:hrs,
         series:[{f:pull,color:PAL.red,label:'the spring’s pull on the chain',lx:40,dy:16,la:'center'},{f:tq,color:PAL.blue,label:'pull × lever: the force on the train',lx:26,dy:-12,la:'center'},{f:gb,color:PAL.muted,width:1.4,dash:[5,4],label:'a going barrel',lx:10,dy:-12,la:'center'}],
@@ -326,10 +326,13 @@ const ESSAY=(()=>{
     const pl=(p,d,a)=>[p[0]+d*Math.cos(a*D2R),p[1]+d*Math.sin(a*D2R)],C0=[0,0],Tp=pl(C0,dCT,-25),Fp=pl(Tp,dTF,40),Ep=pl(Fp,dFE,-35),mid=[(C0[0]+Ep[0])/2,(C0[1]+Ep[1])/2];
     const V=new View3D(st,f,{aspect:w=>w<520?0.95:0.58,yaw:0.25,pitch:0.85,dist:98,target:[mid[0],2,mid[1]]});V.scene.add(S0);
     const ptr=(g,len)=>mesh(g,new THREE.BoxGeometry(len,0.5,0.9),M.blued,len/2,9.3,0);
-    const cw=arbor(S0,M,...C0,{wheel:{n:T.cw,m:MOD.centre,y:1.8,th:1,spokes:5},ar:[-3,9],r:0.75});ptr(cw,9);   /* stacked as Figs. 13, 29 and 110: the third wheel lowest, its pinion above it meshing the centre wheel; the fourth pinion under its wheel, meshing the third wheel */
-    const tw=arbor(S0,M,...Tp,{wheel:{n:T.tw,m:MOD.train,y:0,th:0.9,spokes:5,cside:-1},pin:{n:T.tp,m:MOD.centre,y:1.8,th:2.6},ar:[-3,9]});ptr(tw,5);
-    const fw=arbor(S0,M,...Fp,{wheel:{n:T.fw,m:MOD.fourth,y:3.6,th:0.9,spokes:5,cside:1},pin:{n:T.fp,m:MOD.train,y:1.475,th:3.25},ar:[-3,9]});ptr(fw,6);
+    const cw=arbor(S0,M,...C0,{wheel:{n:T.cw,m:MOD.centre,y:1.8,th:1,spokes:5,mate:T.tp},ar:[-3,9],r:0.75});ptr(cw,9);   /* stacked as Figs. 13, 29 and 110: the third wheel lowest, its pinion above it meshing the centre wheel; the fourth pinion under its wheel, meshing the third wheel */
+    const tw=arbor(S0,M,...Tp,{wheel:{n:T.tw,m:MOD.train,y:0,th:0.9,spokes:5,cside:-1,mate:T.fp},pin:{n:T.tp,m:MOD.centre,y:1.8,th:2.6},ar:[-3,9]});ptr(tw,5);
+    const fw=arbor(S0,M,...Fp,{wheel:{n:T.fw,m:MOD.fourth,y:3.6,th:0.9,spokes:5,cside:1,mate:T.ep},pin:{n:T.fp,m:MOD.train,y:1.475,th:3.25},ar:[-3,9]});ptr(fw,6);
     const ew=arbor(S0,M,...Ep,{pin:{n:T.ep,m:MOD.fourth,y:3.6,th:2},ar:[-3,9],r:0.67});escapeWheel(ew,M,ES,5.4,ESC);ptr(ew,4);
+    /* each pinion phased on its wheel as the model phases its train (ph() in movement.js, gearLash in core.js): the teeth in mesh, the backlash on the far side; the
+       wheels turn as update() turns the model's (the centre back, the third forward, the fourth back), the escape pinion's frame at -t0 when the beat is whole */
+    for(const[A,pa,B,pb,s,x]of[[cw.userData.wheel,C0,tw.userData.pin,Tp,-1,0],[tw.userData.wheel,Tp,fw.userData.pin,Fp,1,0],[fw.userData.wheel,Fp,ew.userData.pin,Ep,-1,-ESC.t0]]){const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b-x;}
     const eT=T.ew/2;   /* the escape wheel turns once in ew half seconds */
     V.label('Centre wheel',`${T.cw} teeth, 1 turn / ${turnT(ESC_PER.cw*eT)}`,v=>v.set(C0[0]-10,2.3,C0[1]+7));V.label('Third wheel',`${T.tw} teeth, 1 turn / ${turnT(ESC_PER.tw*eT)}`,v=>v.set(Tp[0]+1,0.5,Tp[1]+9));
     V.label('Fourth wheel',`${T.fw} teeth, 1 turn / ${turnT(ESC_PER.fw*eT)}`,v=>v.set(Fp[0]+2,4.1,Fp[1]-9));V.label('Escape wheel',`${T.ew} teeth, 1 turn / ${turnT(eT)}`,v=>v.set(Ep[0]+3,6,Ep[1]+4));
@@ -520,7 +523,7 @@ const ESSAY=(()=>{
   function fillLive(){const m=ESC.measure(),T=TRAIN,f1=(v,n=1)=>v.toFixed(n),V={lock:f1(m.lock)+'°',letoff:f1(m.letoff)+'°',drop:f1(m.drop)+'°',overall:f1(m.overall)+'°',shake:f1(m.shake,3)+' mm',horn:f1(m.hornClr,2)+' mm',D:f1(m.D,2)+' mm',
       roller:f1(2*ESC.rRoll*ESC.ES,1)+' mm',A:Math.round(ESC.A/D2R)+'°',AMIN:Math.round(ESC.AMIN/D2R)+'°',motion:f1(2*ESC.A/TAU,2),ew:T.ew,fu:T.fu,cp:T.cp,cw:T.cw,tw:T.tw,fw:T.fw,tp:T.tp,fp:T.fp,ep:T.ep,
       gwT:(TRAIN.ew/2*ESC_PER.gw/3600).toFixed(2)+' hours',ssDeg:(FUSEE_PER_HOUR*360/6).toFixed(1)+'°',halfT:(0.5/FUSEE_PER_HOUR).toFixed(2),run:Math.round(RUN_H),turns:'8¾',
-      I0:model?Math.round(model.I0/10)*10:580,rmin:model?f1(model.fs.rf(0)):'7.0',rmax:model?f1(model.fs.rf(FUSEE_TURNS)):'14.8'};
+      I0:model?Math.round(model.I0/10)*10:580,rmin:model?f1(model.fs.lever(0)):'7.5',rmax:model?f1(model.fs.rc(model.fs.ME)):'14.7'};
     V.kappa=f1(V.I0*1e-9*(4*Math.PI)**2*1e6,0);
     { const d=model&&model.R&&model.R.hsDesign;Object.assign(V,d?{hsB:f1(d.b,2)+' mm',hsT:f1(d.t,3)+' mm',hsL:Math.round(d.L)+' mm',hsOut:f1(d.outer.l,1)+' mm',hsIn:f1(d.inner.l,1)+' mm',hsInR:f1(d.rIn,1)+' mm',hsLat:d.lat.toExponential(1)}:{hsB:'0.23 mm',hsT:'0.221 mm',hsL:'409 mm',hsOut:'14.8 mm',hsIn:'21.8 mm',hsInR:'3.2 mm',hsLat:'2.5e-5'}); }   /* the hairspring as designed (movement.js, R.hsDesign) */
     { const sAt=a=>{let lo=0.05,hi=4;for(let k=0;k<50;k++){const q=(lo+hi)/2;ESC.ampAt(q)<a?lo=q:hi=q;}return(lo+hi)/2;},r=A=>{const a=A*D2R;return Math.abs(ESC.rateAt(a,sAt(a))).toFixed(2);};V.isoLo=r(247.5);V.isoHi=r(270); }   /* the escapement's rate at 1 3/8 and 1 1/2 turns of motion (makeEsc rateAt) */   /* κ = I (2π/T)², T = 0.5 s, in µN·m per radian */

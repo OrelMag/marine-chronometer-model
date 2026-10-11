@@ -859,7 +859,7 @@ Checked against Secs. II–IV and the handling instructions:
     the trip spring's tip (above 39.1°). Below that the jewel stays on the near
     side of the tip: the trip spring stays bent against it and follows it back,
     and the detent stays on its stop.
-  - Twist to start sets it swinging again (160°), after which it builds up to
+  - Twist to start sets it swinging again (160° then; since the kinematics audit of 11 October 2026 the box's own twist, about 67° from rest), after which it builds up to
     its running 255°.
   - The same holds at run down: the train stops, the balance runs down, and a
     wound chronometer needs its twist.

@@ -72,7 +72,7 @@ the website (see the root README).
 
 ## Controls
 
-Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Up to 5× (`REAL_X` in `app.js`) the balance swings as it really does and the escape wheel steps; faster, a real swing would be a blur, so the balance swings at 0.9 Hz with the detent and trip spring still, the wheels turn smoothly, and the HUD adds "balance swing shown slowed". While winding, model time runs at most 10× (`WIND_X`), so a wind takes at most about 3 minutes of it, inside the 5 to 10 minutes the sustaining spring drives the train (Sec. IV); the HUD says so. Right-click a part to fade, hide or isolate it (Isolate shows that part alone, box and floor shadow gone; picking a part from the parts list, or ticking its box, adds it to the isolated ones); right-click empty space to bring hidden parts back or leave isolation. On touch screens a long press (half a second, barely moving) does the same; Android's own long-press `contextmenu` and the page's timer open the menu once between them, and the press never picks.
+Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Up to 5× (`REAL_X` in `app.js`) the balance is drawn swinging as it really does; faster, a real swing would be a blur, so it is drawn swinging at 0.9 Hz with the detent and trip spring still, and the HUD adds "balance swing shown slowed". At every speed the train goes by the balance's real phase, so the escape wheel steps a tooth a beat, stops and starts on whole beats, and a change of speed moves nothing. While winding, model time runs at most 10× (`WIND_X`), so a wind takes at most about 3 minutes of it, inside the 5 to 10 minutes the sustaining spring drives the train (Sec. IV); the HUD says so. Right-click a part to fade, hide or isolate it (Isolate shows that part alone, box and floor shadow gone; picking a part from the parts list, or ticking its box, adds it to the isolated ones); right-click empty space to bring hidden parts back or leave isolation. On touch screens a long press (half a second, barely moving) does the same; Android's own long-press `contextmenu` and the page's timer open the menu once between them, and the press never picks.
 
 - The **?** button on the model (or the **?** key) opens a card listing every control, for a mouse and for touch, with this device's first; the header and the hint word the gestures for the device too (`.m-only` / `.t-only`, switched by `@media (hover:none)`). A tap in the model, × or Esc closes it; dragging doesn't, so the gestures can be tried with it open.
 - Keys 1–9 pick the views, in the order of their buttons. Exploded has a Spread slider.
@@ -103,7 +103,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - 30-day performance test: the Navy's test (Sec. IX) run on the model as it stands: six periods of five days at 90, 72½, 55, 55, 72½ and 90 °F, wound at each daily reading, read to 0.01 s; the daily rates per period, and regulation, rating, largest difference, the three temperature compensation figures, recovery and isochronism against the Bureau of Ships' limits, beside the factory card of No. 3390. It is computed again whenever a setting changes (`testCalc` in `app.js`; `__test` with `?qa`).
 - Swing and isochronism: a Mainspring set slider (0–30%, Op. 13, kept in the link as `mset=`) weakens the spring's pull all through its run; and a chart of the balance's swing over the last minute, the rate against the swing at a steady torque, or the swing over a wind with the fusee and, ticked, a going barrel; the swing and the escapement's rate now, the rate's spread over a wind and the manual's isochronism check (Sec. IX). See "The balance's dynamics".
 - Parts: every named part by group, to single out (as a tap does) or hide. A part that is several things (the balance, the fusee, the barrel, the detent, the cock, the setup ratchet, the plates and bridges with their jewels and screws, the motion work, the hands…) lists its pieces under it, folded until it or one of them is picked. A tap on the model picks the piece: its card says what it is part of, with a link up, and the part's card lists its pieces. A piece hides, fades and isolates on its own (the right-click menu, or its box), its part's box half ticked meanwhile; with a part or piece picked, the ghosted rest still takes a tap. Display adds a slow turn and an Auto/Light/Dark theme, and Reset display puts every Display box back to its default (See-through to the view's own) and shows faded and hidden parts again, leaving the theme. Save writes the view as a PNG; Link copies the page's address with the state in its hash (without clipboard access it is put in the address bar instead).
-- Roll period (Display, under Ship motion): how long the box takes to roll, 0.4–12 s (7 s by default). The case hangs in the gimbals as a pendulum with its own period of about 0.7 s (estimated), so at a ship's period it stays level and near its own it swings with the box ("The balance's dynamics").
+- Roll period (Display, under Ship motion): how long the box takes to roll, 0.4–12 s (7 s by default). The case hangs in the gimbals as a pendulum with its own period of about 0.7 s (estimated), so at a ship's period it hangs along the apparent vertical (leaning a few degrees against the roll at its ends, the ship's axes being 5 m below, estimated) and near its own it swings with the box ("The balance's dynamics").
 - Gimbals latched (Display) swings the latch lever in through the slot in the gimbal ring to the keeper on the case, bringing ring and case level with the box first; latched, they tilt with the box, as Ship motion then shows. Unticked, the lever swings back along the wall and the gimbals are free. A walkthrough step with ship motion releases them.
 - Tick sound (Time) is on by default: a click at each beat, while the model runs at up to 1×. Browsers start audio only from a user gesture, so the page makes or resumes its audio context on the first click, tap or key press, and it is silent until then.
 - Tinted drawing and Ink drawing (Display; `draw=1` and `draw=ink` in the hash; one at a time) draw the live model as a pen-and-wash drawing, tinted or in ink alone; the tint is laid light (pigment density `INK.wash` 0.75), so the live model reads through it. (The numbers were first those of an overview drawing rendered from the model, the Illustration tab, which the Essay tab replaced.)
@@ -217,6 +217,20 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   spring gains 0.141 s a day at 247.5° and 0.253 at 270° against small swings, **0.11 s a day over the manual's 1⅜ to 1½ turns, +0.05 for each 10°**, the same
   way as the escapement's error, so the adjuster's setting (`HS`, the bench) is about -0.18 for the designed spring where the model's -0.13 assumes an isochronous one.
   The model keeps `HS` 0 (the spring as adjusted, as the performance card shows it); the essay quotes the figures (`data-hs`, checked by `tools/hairspring.js`).
+- **It breathes** (`R.spPath`, since 11 October 2026; before, each point turned rigidly by θ(1 − s/L) about the staff, the coils
+  keeping their radii). With the ends meeting Phillips' conditions the collet's pull is a pure couple, so the bending moment is the
+  same all along the strip and every part of the free length changes its curvature by θ/L: the heading at s turns θ(1 − s/L). The
+  coils close as the balance turns one way and open the other, each by θ/(2πN) of its radius (r 4.83 to 5.40 over the 255° swing,
+  5.10 at rest; 4.74 to 5.51 at 347°, the most a jolt gives), concentric to 0.04 mm, the terminal curves curling by as much, the
+  length kept. Drawn from the stud's end back, each 0.3 mm segment turned at its middle; the second-order miss at the collet's end
+  (0.024 mm at 255°) is taken out along the free length. Against the elastica (`HSPR.large`, the strip as drawn compared point
+  for point with its solved shape) it is within 0.025 mm at 255° and 0.039 at 345°; the rigid turn was 0.28-0.46 off. The turns
+  stay 0.2 mm or more apart (a helix: each turn 0.56 above the last). No photograph or video shows a Model 21's spring breathing.
+  **Against the collet:** curling inward by θs²/2L near its clamp (0.39 mm 7 mm from it at 347°), the inner curve ran into the corner of
+  the collet's body, whose hidden side was taken back to the plate's corner (0.02 mm off the strip at rest). No inner curve meeting Phillips'
+  conditions from the collet's end clears that corner (the farthest out passes it at r 3.64; it would need 4.0), so the body's hidden side,
+  which no source shows, now stops short of it: the strip clears the collet by 0.063 mm at the widest swing the model allows (347° wound),
+  0.14 at 255° and 0.35 at rest, beyond the clamp's edge (the "Estimated" section, the collet).
 - **Isochronism.** In small-deflection theory, with the force on the pivots gone, the spring's own isochronism error is what its curves' departure from the
   conditions leaves (residuals under 1e-11 mm) and the material's; the escapement's is `tools/escapement.js`'s. At the balance's real swing the strip's large
   deflection adds +0.05 s a day for each 10° (above). The model keeps the hairspring term at 0 (`HS`): the spring as an adjuster leaves it, set against the
@@ -247,10 +261,10 @@ The mainspring's shape in its barrel is the strip's equilibrium, not a drawing (
   9½ packed and 2½ loose); in the measured r 18.3 the pack is a turn or so thinner than the frame's, which the grease's friction, left out, may hold.
 - **Its pull** (`MSHAPE.pull`, the energy's slope, smoothed by a quartic from half a turn past the slack): nothing at the slack (13.5 turns), rising
   steeply over the first turn, then about evenly. **The set-up comes from it:** a fusee is cut for its spring, so the spring is set up where its pull falls
-  over the chain's 4.67 barrel turns as the fusee's measured profile evens out, rmin / rmax = 0.473 (`fs.MS` in `movement.js`): 1.0 turn past the slack
-  (run down at 14.5 turns, fully wound at 19.17, in the barrel measured r 18.3; 0.47 in the r 17.6 barrel until then, 1.62 in the thin-walled one before
-  5 October 2026, and 0.37 estimated before that). The drive's pull is not taken from it (the timing's
-  illustrative pull, "How the timing works", is the even fall the fusee is cut for).
+  over the 4.51 barrel turns the chain takes to leave the fusee as the chain's lever there grows, 7.51 to 14.72 mm on its pitch line (0.510; `fs.MS` in
+  `movement.js`): 1.26 turns past the slack (run down at 14.76 turns, fully wound at 19.37, in the barrel measured r 18.3; 0.99 on the groove's floor's
+  0.473 until 11 October 2026, 0.47 in the r 17.6 barrel before 5 October, 1.62 in the thin-walled one, and 0.37 estimated before that). **The drive is
+  taken from it** too ("How the timing works", the drive): until 11 October 2026 the timing had an illustrative pull of its own.
 
 ## What the model gives a maker
 
@@ -276,15 +290,16 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   adjusting the escapement (Ops. 77–97 beside the model's live figures); the order of work (Sec. VIII's reassembly, the mainspring made safe first);
   materials, hardening and tools, and the chronometer that can be made without Elinvar and Invar (a steel spring on a split bimetallic balance).
 - **Phase A's physics** (`tools/physics.js`): the fusee asks the mainspring (0.419 mm, the parts list; 13.55 wide, KLUwI2UUCMQ 15:54; 1,064 long) for 0.93 N·m fully wound,
-  2.27 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 57–90 µN·m at the escape wheel. Released from rest, the wheel (4.80e-9 kg·m², measured on its
+  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 64–100 µN·m at the escape wheel. Released from rest, the wheel (4.80e-9 kg·m², measured on its
   solid; `invariants.py` checks the two agree) and the fourth wheel behind it chase the impulse jewel, already running away from them, and catch it about 17° of the
   balance after the release, striking it at more than twice its speed (the escapement, `makeEsc`, counts the chase and the strike; `tools/dynamics.js` checks it beat by
-  beat). The balance holds 255° if its Q is 266–528. **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
+  beat). The balance holds 255° if its Q is 229–440. **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
   run dry), 0.91–0.97, at the top of the range assumed; the balance's damping from the air on its screws, nuts and arm (Cd 0.8–1.4 at Re about 180), its
   staff's flat end turning on the endstone (the end flat on the 7:08 trace; domed it would lose 60 times less), the spring's residual side force and its own
-  internal damping (Q 1,000–5,000): Q 202–390, a free decay of 32–62 s. With the train's efficiency from its parts the budget needs 243–341, so the two meet;
-  `TF` (the free swing's decay) is 52 s (Q 327), inside both, the torque the model is calibrated at (78 µN·m) what the train gives less the mainspring's own
-  coil friction and set (5–15 %). It was 34 s (Q 214) until 11 October 2026, when the escapement still left out the chase and the detent's whole lift.
+  internal damping (Q 1,000–5,000): Q 202–390, a free decay of 32–62 s. With the train's efficiency from its parts the budget needs 210–291, 225–370 with
+  the mainspring's own coil friction and set (5–15 %), so the two meet; `TF` (the free swing's decay) is 52 s (Q 327), inside the parts' range and the
+  budget's with the spring's losses, the torque the model is calibrated at (78 µN·m) what the train gives less them. (With the fusee's torque taken on the
+  groove's floor instead of the chain's pitch line, until 11 October 2026, the budget needed 243–341.) It was 34 s (Q 214) until 11 October 2026, when the escapement still left out the chase and the detent's whole lift.
   Without the flat end the balance would lose too little and swing far past the manual's 1½ turns. Op. 78's preload (0.770 g on the locking jewel) is the detent
   spring's own in the model; the discharge jewel carries the detent on past the release to 1.8 times the release lift, so the detent takes about 10 % of the impulse
   (`fD`, 5.7 %, was fitted to the lift at release until 11 October 2026). The escapement's own error is −3.6 s a day, absorbed by the timing, and the
@@ -311,7 +326,7 @@ frame rate before importing: the clips come in at it.
 - **The clips**, each an action: Running (a minute, the second hand once round), Beat (slow motion, one beat 20 times slower), Run down (56¼ hours in 30 s;
   the escape, fourth and third wheels and the seconds hand left out, as a blur), Winding (from a quarter of an hour short of run down to the stop, the
   sustaining spring driving the train), Setting the hands, Stop and start (the locking arm, a twist, the train-blocking screw), Exploded, Laid out, Lift
-  out, Lids, Latch and At sea (the box rolling, the case swinging in its gimbals); and the rig's own, one parameter each (Rig · beat, Rig · explode, …).
+  out, Lids, Latch and At sea (the box rolling, the case swinging in its gimbals; six rolls, which loop, the case's swing settled first); and the rig's own, one parameter each (Rig · beat, Rig · explode, …).
   They are played through the export's own copy of the model with the equations of `app.js`'s loop (the stopping and starting, the balance's amplitude,
   the gimbals' pendulum), each from the rest pose (the page's state of wind, the escape wheel at the start of a beat, the lids open), and read back off its
   nodes: a node that moves gets keys where it changes, as few as put it back within 0.0005 mm and about 0.006°.
@@ -437,41 +452,83 @@ Everything is driven from one model clock `tSim`, in seconds of the time kept (G
 
 Beside it runs the master time `tM`: a perfect clock, standing for the time signal the chronometer is compared with. It runs at the model's speed, also while the chronometer stands, and doesn't follow the weights. The dial error is what the hands show (`dialRead()` in `app.js`: the second hand's time, continuous as a comparator reads it, with the minutes from the minute hand) less `tM`; it grows with the rate, with the time the chronometer stood, and with setting the hands.
 
-- The balance phase is `p = frac(tSim / 0.5)`, one oscillation per half-second.
+- The balance's phase is `y = tSim / 0.5 + bOff + PL`, one oscillation per half-second, counted
+  from its far turn before the unlocking; `p = frac(y)`.
 - `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection
-  and the escape wheel’s progress through its current tooth.
-- Escape wheel position is `E = completed oscillations + progress`, counted in
-  teeth. Every other arbor is a fixed ratio of `E`. The hands therefore advance
-  in half-second steps, as the manual states (Sec. IX, p. 66).
-- The fusee and chain follow the hours since winding: one fusee turn per 90/14
-  = 6.43 hours. The model runs down after 56¼ h (`RUN_H`, the fusee's 8¾ turns),
-  when the chain is all on the barrel; the dial's UP–DOWN scale covers the rated
-  56 h.
+  and the escape wheel’s progress through its current tooth. `p` 0 is the active
+  swing's start, the wheel locked (progress 0). The progress dips a little under
+  0 while the stone is drawn out against the locked tooth (the recoil, at most
+  0.18° of the wheel, from −27.8° to −22.6° of the balance), and after the impulse
+  the tooth runs on from where the jewel lets it go (0.96 of a pitch, +20.7°) to
+  the stone at the speed it had and more, locking at +22.1° (at 255°).
+- Escape wheel position is `E = floor(y) − 1 + progress + eOff`, counted in
+  teeth (`eOff` whole). Every other arbor is a fixed ratio of `E`. The hands therefore advance
+  in half-second steps, as the manual states (Sec. IX, p. 66). `PL` (0.263 of an
+  oscillation at 255°) is where the next tooth locks and the second hand comes to rest, so
+  with `bOff` and `eOff` 0 the hand lands on the mark k/2 s at `tSim` = k/2, as on a
+  chronometer set to a time signal; `dialRead()` gives the time the hands show,
+  `tSim + (bOff + eOff)/2`, and Now sets both offsets to 0. The train goes by this phase
+  at every speed (above `REAL_X` only the drawn balance is slowed), and the wheel never turns
+  back (the progress at a phase changes with the swing).
+- The fusee and chain follow the hours since winding (`hrs`, which runs with the
+  train's own time, `tSim`, so a fast chronometer runs down sooner by the master's
+  clock): one fusee turn per 90/14 = 6.43 hours. The model runs down after 56¼ h (`RUN_H`, the fusee's 8¾ turns,
+  the manual's 17½ half turns from completely run down); the dial's UP–DOWN scale
+  covers the rated 56 h. The run down is the chain's own: its last turn leaves the
+  fusee at 55.1 h, and its end pin (`ME`, 8.54 turns down the groove, 0.21 turn
+  short of the groove's end) then swings on past the tangent toward the barrel, the
+  chain running straight from it, so the chain's lever on the fusee (the arbor's
+  distance from that line, `fs.lever`) falls from 14.7 mm to nothing over 1.2 h,
+  where the line passes through the arbor (`geo` in `makeFusee`). The pin is placed
+  so that is at `RUN_H`: the chain's end on the fusee isn't seen in any source, and
+  the manual's 17½ half turns are the fusee's turns from that rest. The drive falls
+  with the lever, and the train stops about 5 minutes before `RUN_H`, its drive
+  under the 0.14 that keeps the balance above `ESC.AMIN`. Until 11 October 2026
+  the chain ran to the groove's end and the drive stopped at `RUN_H` from full,
+  with 0.03 turn of chain still on the fusee.
 - The chain lies in the fusee's helical groove, locked to it: `setWind(n, eps)`
-  places its joints 1 mm apart along a pitch line wound on the fusee from its
-  large end to where it leaves (`md`, the fusee's turn plus the common
+  places its joints 1.7 mm apart along a pitch line wound on the fusee from its
+  end pin (`ME`) to where it leaves (`md`, the fusee's turn plus the common
   tangent's drift), then along the drums' common tangent and round the barrel
+  (the barrel taking up what that straight run gains, so the chain keeps its length)
   to its hook. The stop-bar's travel comes from the same place: while the
   incoming run passes over the nose in the groove's top turn it presses it
   in (`barTravel`), so the bar's far end stands out past the rim for the last
   0.7 turn of a wind and meets the winding stop at full wind.
-- Maintaining work: when running, the fusee's winding ratchet drives the
-  sustaining ratchet through the two winding pawls, and a pin on that ratchet
-  drives the fusee wheel through the sustaining spring, at its loaded
-  deflection: the ratchet and the fusee wheel turn together. The fusee and
-  chain follow the hours, the fusee wheel the train, so the fusee sits `eps`
-  (less than one winding tooth) past its `n` turns, where its ratchet bears on
-  the pawls. When winding, the spring turns the sustaining ratchet back until
-  the sustaining pawl holds it (`holdBack`), then relaxes as it alone drives
-  the train (drawn up to `SMAX`, 9.3°; `R.ssD` is how far it has relaxed); `eps` runs down with `n`, so the
-  stop-bar meets the winding stop at full wind. When the key lets go, the fusee
-  turns forward until its ratchet catches the pawls, and the sustaining ratchet
-  forward to load the spring again. Nothing turns back; `tools/maintaining.py`
-  checks this. Every pawl is rested on its ratchet's teeth each frame
-  (`seatPawl`), so it rides over them or bears on a steep face. The winding
+- Maintaining work (`update()` in `movement.js`): when running, the fusee's
+  winding ratchet drives the sustaining ratchet through the two winding pawls,
+  and a pin on that ratchet drives the fusee wheel through the sustaining
+  spring, which carries the whole drive (the manual: "through the sustaining
+  spring, under load during the entire running cycle"; nothing banks it). `R.ssD`
+  is how far it has relaxed from its load at the 12-hour drive; it pushes with
+  1 − `R.ssD`/`SMAX` of that drive (`R.ssF`, `SMAX` 9.3°, the fusee wheel's turn
+  in 10 minutes), so running it sits where it balances the fusee's drive
+  (`R.drvN`, the mainspring's set included): within 0.2° of its 12-hour load all
+  the run, then relaxing as the drive tapers to run down (a taper of 1.2 h,
+  far slower than the spring's 10 minutes, so it follows it and the sustaining
+  pawl never holds). The fusee turns with the sustaining ratchet, its faces on
+  the winding pawls, so it sits `eps` (`R.eps`, within a tooth) past its `n`
+  turns. Should the fusee's drive fall faster than the train relaxes the spring
+  (the slider set to run down, a set taken), the spring turns the ratchet back
+  until the sustaining pawl holds it (`holdBack`: the next place a face meets
+  it, every tooth from `phaseAgainst`'s) and drives the train alone, the fusee
+  standing. When winding starts, the spring pushes the ratchet back with the
+  fusee, the winding pawls still on their faces, until the sustaining pawl
+  catches it; only then do the winding pawls ride over the winding ratchet's
+  teeth, and the spring relaxes as it drives the train; `eps` runs down with
+  `n`, so the stop-bar meets the winding stop at full wind. When the key lets
+  go (`catchAt`), the fusee turns forward to the first place its ratchet meets
+  the pawls (none if it is on them), then on with the ratchet until the spring
+  is loaded to the drive again; `R.release` gives those turns and `app.js`
+  (`windEnd`) takes their hours off the mainspring, so `eps` stays within a
+  tooth over any number of partial winds. A set of the hands moves the ratchet
+  with the train (the spring as it was; the loop can say so with `reset`), a
+  jump of the slider the fusee to its new turns on the nearest tooth. Nothing
+  turns back but as said; `tools/maintaining.py` checks it all. Every pawl is rested on its ratchet's teeth each frame
+  (`seatPawl`: turned in from outside to its first touch, the teeth's tips kept out of its outline too), so it rides over them or bears on a steep face. The winding
   pawls' flat springs are rebuilt with them (`wpsGeo`), their ends kept on the
   arm as the pawls swing out over the teeth while winding.
-- The mainspring (`mainspringGeo` in `core.js`) is rebuilt from the barrel's turns `I(n)`: its turns from the inner end to the outer fall from `Tup` at full wind by the barrel's turns (`fs.MS`), and its shape at each is the solved one ("The mainspring, solved" below): wound, its coils drawn in round the arbor, a gap at the wall; running, they open out toward the wall (let right down, as for service, most would lie in a pack against it with loose turns inside). Its inner end is held by the arbor's hook in an eye, and its outer end turns with the barrel, its anchor pin on the brace. The arbor never turns, and the setup click faces the spring's pull.
+- The mainspring (`mainspringGeo` in `core.js`) is rebuilt from the barrel's turns `Ib(n, eps)`: its turns from the inner end to the outer fall from `Tup` at full wind by the barrel's turns (`fs.MS`), and its shape at each is the solved one ("The mainspring, solved" below): wound, its coils drawn in round the arbor, a gap at the wall; running, they open out toward the wall (let right down, as for service, most would lie in a pack against it with loose turns inside). Its inner end is held by the arbor's hook in an eye, and its outer end turns with the barrel, its anchor pin on the brace. The arbor never turns, and the setup click faces the spring's pull.
 - What turns while winding: the fusee wheel follows the train (`gA`), not the
   fusee, so it keeps turning forward, driven by the sustaining spring, while
   the key turns the fusee and its winding ratchet back and the sustaining
@@ -491,27 +548,49 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
 - **What keeps it going.** A swing must carry the discharge jewel past the trip
   spring on the return (it comes clear of the jewel's end at −40.2°), unlock the wheel (−21.3°) and
   see the impulse through (the tooth leaves the jewel at +20.7°). `makeEsc` works out that least amplitude
-  from its own tables: `ESC.AMIN`, 42.3° with 2° to spare.
+  from its own tables: `ESC.AMIN`, 40.2°, the trip spring's the one that binds. Exactly so: the 2° it
+  was given to spare until 11 October 2026 had the train held between 40.2° and 42.3° while
+  `ESC.state` drew the detent unlocking it.
 - **When the train stops.** It stops at a locked beat when there is no power
-  (run down), when the swing falls below `AMIN`, when the locking arm brakes
-  the balance, or when the train-blocking screw's dog point is down and the
-  next beat would bring a spoke onto it (`R.blockRoom(E)`, the beats left). It
-  stops at the last whole beat before a spoke meets the dog point, within 3° of
-  the fourth wheel.
+  (run down: a frame runs the train no further than the chain has left, and only the
+  beat under way then finishes), when the swing falls below `AMIN`, or when the locking arm brakes
+  the balance. With the train-blocking screw's dog point down between the fourth
+  wheel's spokes it goes on until the next unlocking lets the escape wheel go and a
+  spoke meets the point (`R.blockRoom(E)`, the beats left), a fraction of a tooth past
+  the lock, as the manual's Op. 6 has it ("allow the escapement to function until the
+  train is stopped by the blocking screw bearing against one of the arms of the fourth
+  wheel"). The detent is back on its stop with no tooth on it, and the tooth the spoke
+  holds stands in the impulse jewel's path (unless it stopped within 0.04 of a tooth of
+  either lock): the jewel strikes it on each return swing (`bankAt`, `bankState` in
+  `box.js`, the angle where `ESC.PA` meets the wheel's place), so the balance swings
+  only on its own side of the tooth and is stopped as quickly as by the arm (`TAU_ARM`,
+  estimated). Raised, the screw lets the wheel run on to the next tooth's lock, a
+  whole beat again.
 - **While it is stopped** `tSim` and the hands stand, so they lose the time it
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
-  down. It runs down freely with the train held (1/e in 52 s, `TAU_FREE`, from
-  `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker") and at once, within a swing or two, against the locking arm
-  (`TAU_ARM`, 0.2 s). While the swing still carries the discharge jewel back
-  past the trip spring's tip (above 40.2°), the detent lifts but the wheel
-  can't turn. A smaller swing leaves the jewel on the near side of the tip: the
+  down. With the train held it runs down free of the impulse (the air and pivots, 1/e in 52 s, `TAU_FREE`, from
+  `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker"), but while the swing still carries the discharge jewel back
+  past the trip spring's tip (above 40.2°) the jewel still bends the trip spring on the return and lifts the
+  detent on the next swing, and the wheel can't turn: the springs take `ESC.EH`, 0.033 of k
+  an oscillation (17 % of the air and pivots' loss at 255°, more than theirs below about 105°), so from
+  255° it comes down to 40.2° in 47 s, not 96 (`ESC.freeStep`, in closed form for any step; `tools/dynamics.js`
+  integrates the same run-down within 2°). Against the locking arm it stops at once, within a swing or two
+  (`TAU_ARM`, 0.2 s). A smaller swing leaves the jewel on the near side of the tip: the
   trip spring stays bent against it and follows it back, and the detent stays on
   its stop (`ESC.state`).
 - **When it goes again.** The train runs again when there is power, the arm is
-  off, the screw is up and the swing is above `AMIN`. That happens at once if
-  the balance is still swinging: the screw raised, or the chronometer wound,
+  off, the screw is up (or leaves a spoke's room) and the swing is above `AMIN`, the
+  wheel on its stone and the balance where its swing doesn't unlock it. That happens at once if
+  the balance is still swinging: the screw raised before a spoke stopped the train (or
+  after, if the tooth it held was clear of the jewel), or the chronometer wound,
   before the balance has run down. Otherwise it takes Twist to start. The twist
-  turns the box sharply and back and sets the balance swinging (160°), and the
+  turns the box sharply 35° about the vertical and back a quarter of a second
+  later (`TWIST` in `box.js`, illustrative); the balance, free on its pivots but for
+  the hairspring, stays where it is in space while the box turns under it, so
+  relative to the movement θ″ = −ω²θ − α″, and turning back half its period later
+  doubles what the first turn gave: from rest it is left swinging about 67° (a real
+  start by hand, `We1dLNXiBj0` 0:55, was 62-66°), worked out from where the balance is
+  (`TWIST.run`; with the train going, a twist is a knock, as a jolt is), and the
   impulses bring it up to the swing the train's torque gives (`ESC.ampAt`, 255°
   at the calibrated torque), settling over a minute or so (A² relaxes as exp(−2t/TF), 26 s; below, The balance's
   dynamics).
@@ -642,9 +721,10 @@ the rate from its own geometry, so the Adjuster's bench changes both (`ESC.A`,
   Adjuster's bench's last slider. At −0.22 the spring all but cancels the
   escapement's loss at a smaller swing (0.01 s a day at 90% of the torque).
   `tools/escapement.js HS=-0.22` prints it.
-- **Not modelled:** friction at the impulse, the recoil in the motion (it
-  counts in the work only) and the detent's own inertia and bounce (`tools/dynamics.js`:
-  they change the swing by about 1° and the rate by about 0.1 s a day).
+- **Not modelled:** friction at the impulse and, in the work, the detent's own
+  inertia and bounce (`tools/dynamics.js`: they change the swing by about 1° and the
+  rate by about 0.1 s a day). The recoil is drawn (`ESC.state`, since 11 October
+  2026) and counts in the work as before.
 
 ### The balance's dynamics
 
@@ -658,21 +738,31 @@ every speed); the equation gives the amplitude and the rate.
   hairspring's stiffness, a swing gains that work and loses πA²/Q. So A²
   relaxes to `ESC.ampAt(s)²` as exp(−2t/TF), exactly for a steady torque.
   `ampStep` steps it so, at any speed. A² settles as exp(−2t/TF), 26 s.
-  Free, with no impulse, the swing falls as exp(−t/TF), as before.
+  Free, with no impulse (the train held), d(A²)/dt = −2A²/TF − 2·EH/T while the swing still
+  passes the trip spring (the detent's and trip spring's work, `ESC.EH`, lost as each flies
+  back), −2A²/TF below it: `ESC.freeStep`, exact for any step. Until 11 October 2026 it fell as
+  exp(−t/TF) at every swing.
 - **The drive** (`driveNow` in `app.js`). Running, the mainspring through the
   fusee: `R.fs.torque`, 1 at 12 h from full wind, the middle of a day's
-  running. While the key turns, the sustaining spring alone drives: 0.8 of
-  that when loaded (estimated), falling linearly to nothing as it relaxes over
-  its 10 minutes (`R.ssD` of `R.SMAX`). So the swing dips while winding (224°
-  at the spring's full load) and comes back when the key lets go. Run down,
-  there is no drive.
-- **The spring's pull** (`makeFusee`'s `pull`, `pullB`, `torque`;
-  illustrative). The profile evens out exactly a pull falling in step with the
-  barrel's turns, from 1 to rmin/rmax. The model's spring is that pull made 3%
-  steeper at each end, as a real spring's is where its coils crowd the arbor
-  fully wound and near run down. The torque on the fusee wheel then keeps a
-  ±3% residual. A going barrel with the same spring (`pullB`, its pull falling
-  evenly with time, geared to match at 28 h) would vary 2:1.
+  running, falling to nothing over the last 1.2 h as the chain's end pin swings
+  round (the train stops about 5 minutes before `RUN_H`, under 0.14 of it).
+  The sustaining spring carries it, so while the key turns it drives alone
+  with all it carried, falling linearly to nothing as it relaxes over its 10
+  minutes (`R.ssF`): a wind of a few minutes takes the swing from 255° to
+  about 207° (0.7 of the drive) and it comes back when the key lets go. The
+  same push drives the train when the fusee's drive falls faster than the
+  spring relaxes (`canDrive` holds the train only when neither drives). Until
+  11 October 2026 the drive dropped to 0.8 the moment the key turned, as if
+  the spring were weaker than the drive it had been carrying.
+- **The spring's pull** (`makeFusee`'s `pull`, `lever`, `torque`). The solved
+  spring's pull (`msPull`) at the barrel's turns, times the chain's lever on
+  the fusee (its pitch line where it leaves the fusee): with the set-up the
+  profile asks for, the torque on the fusee wheel keeps within about 2 % of its
+  mean (0.986–1.021) while the chain leaves the fusee, the residual of the solved
+  spring's curve against the profile. A going barrel with the same spring
+  (`pullB`, its pull falling evenly with time, geared to match at 28 h) would
+  vary about 2:1. Until 11 October 2026 the drive took an illustrative pull,
+  the profile's even fall made 3 % steeper at each end, on the groove's floor.
 - **Rate against swing** (`ESC.rateAt(a, s)`): Airy's sum over the impulse,
   the unlocking and the springs at amplitude a, against the reference.
   A smaller swing feels the escapement's pushes more:
@@ -685,11 +775,12 @@ every speed); the equation gives the amplitude and the rate.
 
   Each frame, `escK = 1 + ESC.rateAt(H.amp, drive)/86400` while the train
   runs, so the dip while winding and a jolt show in the rate book.
-- **Over a wind.** With the fusee the rate stays within −0.11 to +0.06 s a day
-  from full wind to run down; with a going barrel, −1.84 to +0.78. The manual's
+- **Over a wind.** With the fusee the rate stays within −0.01 to +0.08 s a day
+  while the chain leaves the fusee (to 55.1 h; then it falls with the drive);
+  with a going barrel, −1.47 to +0.71. The manual's
   isochronism check (Sec. IX: the 12-hour rate against half the 24-hour rate
   at 72½ °F, wound at the start; tolerance 0.50 s, the factory test card of
-  No. 3390 reads 0.00) comes to +0.01 s with the fusee and +0.08 s with a
+  No. 3390 reads 0.00) comes to +0.01 s with the fusee and +0.07 s with a
   going barrel. `tools/escapement.js` prints the rate at 1⅜ and 1½ turns.
 - **The mainspring's set** (`MSET`; Op. 13, "Check condition and set of
   mainspring"). A spring that has taken a set pulls less all through its run;
@@ -712,16 +803,24 @@ every speed); the equation gives the amplitude and the rate.
   under `AMIN`, it sets (stops). Carried past `ESC.TRIP` (a full turn plus the
   angle where the discharge jewel meets the trip spring, 332.2°), the jewel
   comes round and unlocks a second time, so the wheel trips: one extra tooth,
-  and the hands jump half a second. The phase is kept, so the train stays on
-  its half second.
-- **Gimbals with inertia** (`gimStep`; illustrative). The case, with the ring
-  about the ring's pivots, hangs as a pendulum below each axis:
-  ψ″ = −ω0²ψ − 2ζω0(ψ′ − φ′), φ the box's angle. The case's own period is
-  0.7 s (estimated: its weight some 15 mm below the pivots, radius of gyration
-  about 45 mm) and ζ is 0.05. At a ship's roll period (7 s by default) the
-  case stays level within a few hundredths of the roll. Near 0.7 s (the Roll
-  period slider) it swings with the box, stopping 25° off it against the ring.
-  A jolt kicks it. `?snap` and reduced motion keep it exactly level, as
+  and the hands jump half a second. The knock also moves the balance's phase,
+  to the one θ and θ′/ω give (`knock` in `app.js`): the escape wheel stays on its
+  stone, so the next unlocking comes sooner or later, and the dial error shows the
+  knock's time error (a few hundredths of a second, more when it nearly sets).
+- **Gimbals with inertia** (`gimStep` and `GIM` in `box.js`, the page's and the
+  export's; illustrative). The case, with the ring about the ring's pivots, hangs as
+  a pendulum below each axis: ψ″ = −ω0²((1 + av/g) sin ψ − (ah/g) cos ψ) − 2ζω0(ψ′ − φ′),
+  φ the box's angle. At sea the box rolls and pitches about the ship's axes, taken
+  5 m below it (`GIM.RD`, estimated: a chart room above the centre of roll), so the
+  pivots move with it, ah = RD(φ″ cos φ − φ′² sin φ) and av = −RD(φ″ sin φ + φ′² cos φ),
+  and the case hangs along the apparent vertical, gravity less the pivots'
+  acceleration, not the true one: at the default 7 s and 14° it leans 5.4° against the
+  roll at its ends (1.9° at 12 s), within 0.2° of the apparent vertical. A box rolled
+  faster than a ship rolls (under 4 s, the distance falling to 0 at 2 s) stands for one
+  rocked about its own pivots. The case's own period is 0.7 s (estimated: its weight
+  some 15 mm below the pivots, radius of gyration about 45 mm) and ζ is 0.05; near
+  0.7 s (the Roll period slider) it swings with the box, stopping 25° off it against
+  the ring. A jolt kicks it. `?snap` and reduced motion keep it exactly level, as
   before.
 - **Temperature** (`MTE` in `core.js`). The balance's own curvature, on top of
   Table IV's line. The Model 21's balance: the second difference of the
@@ -763,13 +862,17 @@ on what would stop the chronometer.
     over its whole lift, not a fitted share; and 255° with those wants a balance
     running down in 52 s (Q 327), as the energy budget and the balance's parts
     allow (`TF` was 34).
-  - *The detent's return* (OPEN-QUESTIONS.md 2): the detent is back on its stop
+  - *The detent's return* (OPEN-QUESTIONS.md 2): makeEsc draws its fall as dynamics.js
+    integrates it (leaving the jewel at −12.84°, first on its stop at −9.75°; dynamics.js
+    −9.76°). The detent is back on its stop
     about 10 ms before the next tooth reaches the stone, from half to twice the
     drawn spring's stiffness, at half or 1.5 times Op. 78's preload, with a dead
     or a bouncy stop, and even with no preload at all.
-  - *Starting and stopping.* Twisted to 160°, the balance comes within 2° of its
+  - *Starting and stopping.* Twisted to 67° (the page's twist from rest, box.js `TWIST`), the balance comes within 2° of its
     swing in a minute or so; the least drive that keeps it going is about 12 % of
-    the calibrated torque, at makeEsc's `AMIN`.
+    the calibrated torque, the balance swinging about 41° (makeEsc: 13 %, at its `AMIN`, 40.2°).
+  - *Run down with the train held* (no torque): from 150°, 108° after 10 s and 65° after 20
+    (makeEsc's `freeStep` 108.5° and 66.9°; the air and pivots alone would leave 124° and 102°).
   - *Knocks and the sea.* A twist about the staff upsets the beat at about
     29 rad/s in 2 ms (it gains a beat); a blow across the plate frees the wheel
     at about 55 g over 3 ms, 140 g over 0.5 ms (the detent isn't poised about
@@ -940,11 +1043,11 @@ the repository with short audio excerpts and the video frames).
    - the balance on its lower cap, read face-on on the train bridge's underside (KLUwI2UUCMQ 13:49.5, `tools/framecam.py`); the upper train bridge's opening has its balance lobe centred 0.6 mm from it (23:30);
    - the fusee 20.4 mm from the centre: the bare plate fitted at 34:30 and 36:15 (`tools/rimfit.py`, 20.2–20.8), the side photograph's fusee wheel at the plate's scale (36.0–36.9 mm across, which with its 90 teeth and the centre pinion's 14 puts it 20.3–20.9 out), and the train bridge's notch round it (20.9); on the angle the dial side gives (43–45° from the indicator's stud, `rimfit_40-08.json`);
    - the barrel at the centre of the train bridge's cut round it, 22.56 mm out (the bare plate: 21.4–23.5).
-   All three land within 0.23–0.31 mm: the photographs' own layout holds, at 1.039 times the size it was given (about undoing the 0.955) and set 4 mm off the centre. Outlines that run to the rim keep their radius there (`PTr`), so the bridges' rims stay concentric with the plate. What was measured on the video in the train bridge's own frame (its rim, barrel cut and centre bushing) goes through the 14° turn alone (`PR`): the notch, mouth and end, the opening in the middle, the third screw and its pillar. The escape arbor is solved again from the balance (9.40 mm, the escapement) and the fourth (10.585, their mesh); the escapement's plan and the detent turn with it, about 29° from before.
+   All three land within 0.23–0.31 mm: the photographs' own layout holds, at 1.039 times the size it was given (about undoing the 0.955) and set 4 mm off the centre. Outlines that run to the rim keep their radius there (`PTr`), so the bridges' rims stay concentric with the plate. What was measured on the video in the train bridge's own frame (its rim, barrel cut and centre bushing) goes through the 14° turn alone (`PR`): the notch, mouth and end, the opening in the middle, the third screw and its pillar. The escape arbor is solved again from the balance (9.40 mm, the escapement) and the fourth (10.585 then, their mesh; 11.107 since the fourth's place was measured, step 5); the escapement's plan and the detent turn with it, about 29° from before.
 5. **The train.** The fourth, third and escape arbors are measured on the restoration video (`References/VIDEOS.md`, "The fourth arbor, the pillars, the indicator and the ring" and "The scale"; 2 October 2026), at the plate's 87.57 mm: the fourth 21.6 mm from the centre under the seconds (34:30, 40:08; 23.9 until then), the third 16.55 mm out at 149° from the 12 (34:30; earlier (−6.18, 14.75), from the train bridge's underside at 13:49.5), and the escape arbor 9.40 mm from the balance toward the escape jewel seen from above (10:00, where it is 9.46 from it), 11.1 mm from the fourth. With the modules from these spacings (`MOD`: 0.325, 0.251, 0.261) the centre, third and fourth wheels come out in the size ratios counted on the video (centre ÷ third 1.45 against 1.36–1.39, centre ÷ fourth 1.48 against 1.48–1.50), and the fourth's setting stands in the train bridge's keyhole lobe over it (it stood 0.7 mm outside it). The video's plate and ring agree only with a 4–5 % error in one of them; the ring's own proportions put it in the ring's bore, so the plate's 87.57 stands. `tools/solve.py` checks the spacings.
    - The escape wheel sits 9.40 mm from the balance. There the 0.249 in impulse roller clears the teeth either side of it by 0.002 in (roller shake, Op. 84), and the teeth dip into its crescent (Ops. 76, 83).
    - An earlier scaling of Rawlings' drawing gave 10.2 mm. Readings of the drawing vary with the feature used for scale; the manual's specifications fix the distance.
-   - The escape arbor keeps its depth with the fourth wheel: that stage's module, 0.249, fits the 10.59 mm centre distance the escape wheel's position leaves.
+   - The escape arbor keeps its depth with the fourth wheel: that stage's module, 0.2614, fits the 11.107 mm centre distance between the fourth's measured place and the escape wheel's (`tools/solve.py`; 0.249 at the 10.585 mm it was before the fourth was measured).
 6. **Heights.** A side photograph of an unmounted movement is scaled by the pillar plate's 3.86 mm edge (75 px; the plate's width gives the same scale to 2 %). On it, in mm above the pillar plate:
    - The pillars are 16.8 tall, the train bridge 3.1 thick, and the barrel bridge 3.4 thick on top of it.
    - The cock stands 14.2 tall on the train bridge.
@@ -960,7 +1063,7 @@ the repository with short audio excerpts and the video frames).
 
 ## Estimated, not from the manual
 
-- The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull (the profile's pull made 3% steeper at each end), the sustaining spring's strength (0.8 of the drive, loaded) and its linear relaxing, the free run-down (52 s, from the energy budget and the balance's parts), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
+- The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull at the barrel (the solved spring's, `tools/mainspring.py`: its free curve measured, its length estimated; until 11 October 2026 the drive took an illustrative pull, the profile's made 3% steeper at each end), the sustaining spring's linear relaxing (from the drive it carries: no banking is seen on the video or in the figures, and the manual has it under load all through the running; its 10 minutes from Sec. IV's five to ten), the free run-down (52 s, from the energy budget and the balance's parts), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
 
 - Tooth counts: the fusee wheel (90), centre wheel (90), third wheel (80) and its pinion (12), fourth wheel (75) and the wind indicator wheel (120) were counted on a restoration video of a 1941 Model 21 (`References/README.md`, "Videos consulted"; `tools/video.py`; IDEAS.md 1.8), not taken from the manual; the escape wheel (16) is Hamilton's. The fourth and escape pinions (10, 10) follow from those counts and a one-minute fourth wheel. The centre pinion (14) is counted on the same video, likely but not certain (end-on at 13:59.5, from above at 35:23.66; no frame shows every leaf); the fusee arbor's pinion (12) is inferred, not counted: 14 makes the manual's 17½ half turns hold its "maximum of 56 hours", and 14 × 12 sweeps the UP–DOWN hand 313.6° in 56 h, against the 315.7° a photographed dial's scale spans. 13 and 13 would fit the dial and the manual's seven half turns a day better, but run 60.6 h. The motion work (cannon pinion 14 : minute wheel 56, minute pinion 18 : hour wheel 54, `MW` in movement.js) is counted on the video, the wheels lying whole on the mat (`References/VIDEOS.md`); it was 12 : 36, 10 : 40, chosen, until the count.
 - Dimensions and positions, estimated from the figures and the dial (95 mm, the side photograph), except where the photographs give them (plan: "How the layout was measured", steps 1–5; heights: step 6).
@@ -981,8 +1084,10 @@ the repository with short audio excerpts and the video frames).
 - The stop-bar's size, nose and travel, and the fusee's top: a slotted layer with a groove for the stop-bar spring, and the top plate (r 9.15) with its two screws (at r 7.0, and the steel collar r 3.0 on the arbor, measured on the restoration video, 13:30, which stands on the hub and rises through the plate's hole, r 3.05, as Fig. 28 draws it: the plate comes off over it, 19:58-20:00; its height, 2.8 mm over the top layer, measured side-on at 20:00 against the groove's pitch, so it reaches the barrel bridge, 0.05 under it, the arbor's shoulder under the bushing). Sec. IV describes the mechanism (the chain bears on one end, the other moves out to the winding stop), not its dimensions. The model's bar lies in a slot open to the rim at both ends, beside the hub 3.6 mm off the axis (Figs. 12, 28; C Spinner's video, 20:05-20:27, puts it 3.5-5 mm off, the recess round the hub r 4-5), its spring a round wire in an open C of about 270° in the groove round the hub (r 2.4-2.9), then into the slot to the bar's tab (the video, 20:20; the sizes to about 30 %); a nose from its end hangs 1.6 mm proud of the groove's floor in the top turn, 0.7 turn in, through a window in the top rim, and the chain winding over it slides the bar 1.64 mm, so the far end stands about 1.4 mm past the rim, where the winding stop hangs. The spring bears on a tab on the bar's inner side. The groove is led in over 0.12 turn at its start, where the chain leaves the fusee at full wind, and out over 0.04 at its end.
 - The shapes of the springs: the winding-pawl springs (long arcs round the wheel's middle from a two-screw foot about 150° round back to the pawl, as the video, 19:12, and Figs. 28 and 69 have them; their radius, 8.9 (19:12 scaled on the sustaining ratchet's tips), and the feet's places read to about 1 mm), the stop-bar spring, the sustaining pawl's spring's top (a straight wire set upright in the pawl, as the video has it, 35:37.5-36:15; its top end taken to stand in a hole through the train bridge, where two small sunk holes stand side by side on the bridge's face over it, 36:23-36:29, and its preload, the pawl turned 0.12 rad in from its seat there) and the setup pawl spring's thickness and height (0.3 and 0.85 mm) and its pins' places: it runs about half a turn round the ratchet at r 8.98 (the video: 1.23-1.31 of the ratchet's tip radius) from two steady pins to the click's back, as C Spinner's video (11:58) and Fig. 108 have it. The setup ratchet's 42 teeth are counted on that video to about ± 2 (`References/VIDEOS.md`), its tips at r 7.05 (the video at 11:58, against the cover screws' tapped holes 23.6 mm apart: 7.04; the top-view photograph through `tools/topview.py`'s map: 7.0-7.3); the cover's feet are steps under its ends, outside the spring; its centre hole r 3.0 and the arbor's square about 7.5 mm over the ratchet (the video: about r 3 and 8–10 mm, rough). The setup pawl turns on its pivot screw, put in from under the barrel bridge (Op. 41, Fig. 80), whose end shows in the cover as both photographs show it, 8.95 mm from the barrel arbor (2E12055 8.94, the top-view photograph 8.95, each through its fitted map; the video 1.34 tip radii, 9.4); the tip at the teeth's root about 34° round, the click 5.07 mm from pivot to tip (the video about 5.1 in the ratchet's measure, the top-view photograph 5.1). The winding-pawl springs lie in a groove in the sustaining ratchet's face on the video (19:12: about 0.7 wide at r 10.6-11.3); the model lays them over the face at that radius, the groove not cut (hidden between the fusee and its wheel; the toothed wheel would have to be built in layers). The fusee's large end has a rim 0.4 tall (estimated: as tall as it can be, 0.1 clear of the sustaining ratchet and its pawl) round its recess, its inner edge 0.84 of the end's radius (18:20). The dust seal is in its proportions on the video (6:29: the packing 0.42 of its diameter tall, the column about 3.5 mm, the flange r 8.6), its flange with a shallow concave bite between the screws on the 12's side (about 7 mm wide, 1.6 deep: rough). The sustaining spring's travel from loaded to spent (`SMAX`): the fusee wheel's turn in the longer of Sec. IV's 5 to 10 minutes of drive, 9.3°. No wind outlasts it, since model time runs at most 10× while winding. The close-up's drive left and the essay's maintaining-power figure count from these 10 minutes.
 - The sustaining spring: its band (2.1 mm wide, r 15.8–18.0), its ends and the fusee wheel's recess (wall r 18.0, a raised disc to r 9.3 and a hub) are measured on the restoration video (`References/VIDEOS.md`, 27:26), against the wheel's tips taken as 40.87 mm, and drawn ×`FK` (0.882) like every size read against the wheel; the gap (17° relaxed), the lobes' sizes, which of the fixed end's two holes has the pin, the band's thickness (1.13 mm) and the elevations' heights are estimated. It is pinned to the wheel at one end and to the sustaining ratchet at the other, as the manual has it; loaded, the ratchet's pin closes the gap and the band bows in from the wall, keeping its length.
+- The maintaining work's ratchet teeth. The winding ratchet's 36 teeth on tips r 6.9 and the sustaining ratchet's 120 on r 14.5 are measured (18:20, 23:30; 28:35, 19:12); their depth is the gear convention (2.25 m: 0.82 and 0.54 mm), not measured. Their locking faces are drawn along a radius (`ratchetProf`, gearGeo's `'radial'`): the winding ratchet's look so at 18:20 (oblique, to the frame's resolution) and the winding pawls' square ends lie along a radius at 19:12 (within 1°); the sustaining ratchet's aren't seen and are drawn so on the same grounds (a face leaning back pushes the pawl out under load). The winding pawls are traced on 19:12 (`WPO` in `movement.js`, ±0.15 mm): seated, their ends go 0.48 mm into the 0.82 tooth, the flare on their inner side meeting the back of the tooth behind, and bear on the locking face near its top, the load drawing the pawl in; a real tooth about 0.45 deep, or a flare a little narrower (inside the trace's ±0.15), would seat them square to the root. The teeth in profile at 18:20 look shallower than the model's (by eye about 0.4-0.55 of the pitch, the model's 0.68; the frame is oblique and too soft to trace them): a face-on frame of the winding ratchet would settle it. The sustaining pawl (36:15, traced) goes 0.33 into its 0.54.
 - The barrel arbor's core (r 1.74; measured about r 5.1 ± 0.5 on two movements, KLUwI2UUCMQ 33:20.5 and TN24H 3SFDplGq6vs 0:16, 0.29-0.33 of the barrel's outer radius, r 4.9-5.6 on the barrel since measured r 18.3, but not drawn: tried in `tools/mainspring.py` on r 5.2 (5 October 2026), the parts list's 0.419 strip, 1,064 mm long, is slack at 13.5 turns and coil-bound on the core past 18.25, 4.75 turns on, where the fusee asks its 4.67 and a set-up; a thinner strip (the coils' measured pitch, 0.375 in this barrel, `References/VIDEOS.md`) would have the room, so the core waits on the strip's thickness, the parts list's against the two movements' coils, SHAPE-PASS.md 109-4 and 109-6) and hook; the brace's thickness (0.25), the window its anchor pin sits in, the barrel's fixed hook's size and where round the wall the brace lies (its reach, 255°, from the Royal Museums Greenwich catalogue's "just under three quarters", rough; the wall's 1.95 is measured, 0.11 of the radius on three frames of two movements); the end plate and taper pin (the plate gilt brass, r 7.0 or less to clear the centre wheel, with a raised boss round its hole and the slot of Ops. 27–29 across the boss, as Fig. 69 draws it and the video shows it, 18:22, 18:25; the boss's r 2.2 estimated; the 9.6 mm pin's ends standing out past the boss), the winding ratchet's 36 teeth (the video, 18:20: likely, not certain), and the chain's end pin and hook (its nose through a hole 0.7 mm across in the wall, as Figs. 17 and 75 have it; the hole's size and the nose's place, 0.85 mm past the last link, estimated).
-- The chain's links: figure-eight plates (Fig. 38) 0.9 mm high and 0.18 thick, three deep along the arbor, riveted at a 1.7 mm pitch (the side photograph's chain on the fusee, 1.55-1.76, and KLUwI2UUCMQ 23:45, the chain on the mat, 1.71-1.85; 1.0 until 4 October 2026); the plates' height is measured there too, their thickness estimated. The chain is about 390 links, about 26 in (660 mm) with its straight run; one sale listing gives 28.5 in for the Hamilton's.
+- The chain's links: figure-eight plates (Fig. 38) 0.9 mm high and 0.18 thick, three deep along the arbor, riveted at a 1.7 mm pitch (the side photograph's chain on the fusee, 1.55-1.76, and KLUwI2UUCMQ 23:45, the chain on the mat, 1.71-1.85; 1.0 until 4 October 2026); the plates' height is measured there too, their thickness estimated. The chain is 566 mm along its pitch line, end pin to hook (333 pitches; 586 until 11 October 2026, when it ran to the groove's end); one sale listing gives 28.5 in (724 mm) for the Hamilton's.
+- The chain's end on the fusee (`ME`, 8.54 turns down the 8¾-turn groove, 0.21 turn short of its end): placed so that run down, where the chain's line from its end pin passes through the fusee's arbor and the fusee's torque is gone, falls at the manual's 17½ half turns from full wind (`RUN_H`). No source shows where the chain ends; with the chain to the groove's end the fusee would turn 8.96 turns to that rest (17.9 half turns).
 - The mainspring's length and lie. Its thickness is from the parts list (0.0165 in, 0.419 mm); its width (13.55) from its cap-side edge, 1.45 under the barrel's open face (KLUwI2UUCMQ 15:54, ±0.3; the floor-side gap, 0.3, estimated); its length (1,064 mm) is estimated, as C Spinner's video gives it, about 1.1 m (0.9–1.25; 15:54, 32:30), no longer half the room (903 in the measured barrel, r 18.3 with its 2.0 wall, which would bend it to 2.68 GPa fully wound, past hardened steel's 2.6: `tools/physics.js`). No catalogue gives it: Hamilton's material catalogues of 1947, 1951 and 1953 (NAWCC's scans) leave the marine chronometer's parts out ("Materials for all war timepieces, therefore, require separate inquiry direct to the Material Sales Department"), and their mainspring chart lists watch sizes only. How it lies is solved from its natural curve ("The mainspring, solved"), measured on the video's free spring; the solver leaves out the coils' friction, and its slack (13.5 turns, to about 0.25: 14.5 in the r 17.6 barrel) rests on the estimated length and core. In the model's barrel, on a core of r 1.74 (estimated: the arbor's pivots are r 1.4; the video's about r 5, above), the fusee's chain needs 4.67 turns on the barrel (r 18.3, measured: below; 4.85 on the r 17.6 drawn until 5 October 2026), with a set-up of 1.0 turn past the slack (0.47 in the r 17.6 barrel): where the solved spring's pull falls over them as the fusee's measured profile evens out (0.473; "The mainspring, solved"). It rests on the solved pull, which leaves out coil friction (5–15 %) and the free curve's 15 %; it was 0.37 (estimated) until 5 October 2026, then 0.47, and 1.0 since the barrel was measured r 18.3 (the slack's place is read to a quarter turn, the grid of the solved states, so the set-up is good to about that). The core was r 2.4 (6.53 turns) until the fusee was measured, which needed more chain. The eye in its inner end for the arbor's hook (15:54 shows an oblong about 7.2 long and 5.2 across, 2.2 from the end, rough: not drawn on the estimated core, which it would wrap 220° of) and the anchor pin at its outer end (the parts list's "complete with anchor pin"), in a window through the brace near its leading end (the RMG catalogue: "a fixed hook in the mainspring proper locating in a hole in the piece"), are estimated in size and place.
 - The detent's dimensions.
   - Its plan follows Fig. 90 and its construction Figs. 14 and 110 and the chronometerbook photograph. Thicknesses and heights are estimated.
@@ -1004,8 +1109,9 @@ the repository with short audio excerpts and the video frames).
 
   - Depth of lock is 0.112 mm, and the trip spring's tip lifts 0.18 mm to release (the settings rd 0.300, rT 0.290, aD 271°, dL 0.017 of the unit, re-chosen on 11 October 2026 when the contacts were solved from the jewel's rounded end: 0.305, 0.286, 269.6° and 0.019 before).
   - The discharge jewel meets the trip spring at −27.8° of balance and releases the wheel at −21.3°. The wheel catches the impulse jewel at −4.8° and drives it to +20.7°.
-  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip comes clear of the jewel (−12.4° and −40.2°): pushed along the jewel's face, then round its end, which is stoned to a half round (`rnd`, estimated: no source shows it; drawn square, the end held the tips across its whole width, 0.32 mm, and overall came to about 38°, past Op. 87). Let-off and overall are measured to the fall, as the manual's gauge reads them.
-  - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release (the recoil counts in the work unlocking takes from the balance only). Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
+  - The detent falls back in time (`ESC.state`, since 11 October 2026; it went home in one step at −12.4°, the stone standing 0.07 mm in the escaping tooth's way for about 0.6 ms): it leaves the jewel where the jewel's end runs away faster than it can follow (−12.84° at 255°), falls as a preloaded spring and mass (Op. 78's preload, the drawn spring's stiffness, its inertia `ID` 2.67 g·mm² from the drawn pieces, `tools/dynamics.js`), first lands on its stop button at −9.75° and hops on it (restitution `eS` 0.3, estimated, as dynamics.js has it) until −6.5°; its own damping (Q about 100, estimated) is left out. dynamics.js, integrating the same detent through its contacts, has it leave at −12.84° and land at −9.76°. A detent that falls back before the escaping tooth has passed (a swing larger than the drive keeps, after a jolt or while the key turns) lands on the tooth's land or back and rides it down (`ESC.state`'s `ride`); `tools/escapement.js` checks that the stone is never inside a tooth, at ten swings from `AMIN` to 340°.
+  - The trip spring flies back on the return swing where the spring's tip comes clear of the jewel (−40.2°), as the detent leaves it on the active swing (−12.4° for a massless detent): pushed along the jewel's face, then round its end, which is stoned to a half round (`rnd`, estimated: no source shows it; drawn square, the end held the tips across its whole width, 0.32 mm, and overall came to about 38°, past Op. 87). Let-off and overall are measured to the fall, as the manual's gauge reads them.
+  - Unlocking against the 10° of draw turns the wheel back (recoil): the locked tooth's tip pushed back along the stone's flat as it lifts, at most 0.18° of the wheel at 0.145 mm of lift, until the flat's inner end passes the tip (`ESC.recoil`, from the shapes). Past it the tip would slide round the stone's edge and be free about 0.025 mm short of the release, where the model keeps 0.02 mm to spare (`lRel`); the tooth is held at its locked place over that stretch. The tooth leaving the impulse jewel runs on to the stone from the jewel's place and speed under the wheel's torque (`ESC.thE`, about 1.4° of the balance). Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
 - The escapement's parts beyond the plan.
   - The escape teeth: their form follows Fig. 90 and an original wheel photographed in chronometerbook post 30 (a land 0.13 mm wide at the tip, the root circle at 5.5 mm). The undercut of the locking face (the root trails the tip by 0.14 of a pitch, about 16°), the length of the hollow back (0.55 of a pitch) and its curve (meeting the root circle tangentially) are traced from Fig. 90. Fig. 14's cut-away gives the arrangement: the teeth stand the wheel's full thickness on a thin rim and spokes. The rim's inner edge (0.77 of the tips), the spokes (0.105 of the tips wide), the hub (r 0.31) and the collet's pipe (r 0.20, toward the pinion) are measured on 43:21.1, the wheel face up in the staking tool; the web's thickness (0.5), the pipe's length (1.9, off the view's tilt: rough) and the collet's foot, a collar about 0.65 tall there where the model has the web's 0.5, are estimated.
   - The impulse roller's three holes (0.5 mm radius, a quarter turn apart from the jewel, Figs. 14, 61 and 90) and the impulse jewel's section (flat on the impulse face, curved behind, thinning to 0.45 of its width at the ends; "curved side of the jewel", Sec. VII) are estimated in size.
@@ -1042,7 +1148,7 @@ the repository with short audio excerpts and the video frames).
 - The balance cock's solid: the body stands outside the barrel bridge's 17.7 mm circle about the staff, and the arm is in two thicknesses, flat underneath, with square steps between them and at the body's wall (the restoration video, 44:02: the cock in place seen from its straight edge, the space under the arm open from the barrel bridge's horn, 16.4 mm from the staff, to the body's wall, 18.6; 23:45, flat faces). Along the straight edge the arm's side deepens from 88 to 206 px at a step 12.1 mm from the staff (44:02, placed along the stud's three holes by a 1-D projective map that also puts the body's wall at 18.5-18.65, as read before); on the concave side the polished band steps down 13.7 mm from it (41:58). The step is drawn as the straight line through those two places (straight across the underside: estimated); the thin part 2.6 mm (the stud and the hairspring hang from it; 2.5 against the body's 10.8 mm visible down to the horn), the thick 6.0, 2.34 times it (5.9 by the same scale). Until 6 October 2026 the arm was 2.6 mm out to the body's wall (the "2.9 ± 0.3" read there was the thick part), and until 4 October 2026 its underside swept down into the body in an estimated quarter-circle cove. The top face beyond the rim's arc is traced (`CK_TR`): the mean of the restoration video's cock alone (41:58, 4K, its outline segmented where the gilt face meets the blue mat and the polished walls) and a photograph from above (`References/photo-cock-top.png`, its edges picked by hand and the concave edge as the user marked it), each put on the cock's top through a homography on its holes as the model places them. They agree within 0.3 mm round the nose and 0.4-1.0 mm along the concave edge; along the straight edge past x 23 they read 1.1-1.6 mm apart (the far end's perspective rests on the screw's hole alone), so ±0.8 there. The straight edge runs level with the stud's holes from the nose, 0.6 mm outside them, then bends about 23° toward the rim, up to 2.6 mm outside the old trace's straight line midway; the corner at the rim moved 0.85 mm round; the concave edge's last 3.9 mm to the tip the frames don't resolve (straight to it). Until 6 October 2026 the straight edge was one straight line to a corner where the nose was widened round the cap, and the concave edge a cubic bulging about 1 mm into the opening. Through those homographies the pictures put the cock screw about 22 mm from the staff (scaled by the cap's screws and the stud's holes) where the model has 26.8: the cock's own layout and the balance's place disagree (OPEN-QUESTIONS.md), and the trace takes the cock's holes as placed. The counterbore (1.5 mm, as deep as the screw's head) and the two steady pins' places (where the train bridge shows two plain holes under the cock with it off, 6:47, placed to about 2 mm) are estimated. The walls are drawn plain, as the video shows them polished; the top keeps the plates' damascening.
 - The balance cock's nose and its endstone cap. The top-view photograph gives the cap's place, width and screws to about 0.3 mm: a steel plate 4.6 mm wide lying along the cock's straight edge, its two screws 2.75 mm either side of the staff, the cock's metal all round it. C Spinner's video gives its form, close (5:51 and 42:03, 42:08 on the cock, 41:58 off it; `References/VIDEOS.md`): symmetric about the staff, 7.2 mm long (to about 0.3 mm, scaled by the screws and the cone), its corners rounded r 1.2 at the nose's end and r 0.4 at the foot's (about 0.3 mm), the screws' heads (r 0.7) sunk flush in counterbores, and a polished conical oil sink 3.1 mm across (two thirds of the plate's width in each view; on the 1941 movement of the top-view photograph it looks nearer 2.2 mm) down to the endstone, set from below in its setting (42155), which shows on the underside as a ring about 3.4 mm across. The plate's thickness (0.7), the counterbores' depth (0.4) and the stone's size (r 0.95) are estimated. On the real cock the cap ends at the nose's end (within about 0.3 mm). The nose is traced (above); with the cap placed by the staff, its corner at the straight edge would stand 0.5 mm over the traced edge, so the nose is the hull of the trace and the cap's outline 0.3 mm out (until 6 October 2026, 0.9 mm out on an outline that passed 0.7 mm from the staff). The manual's drawings show the setting inside the cock's nose and the cap on it (Figs. 19, 85). The settings' and jewels' sizes are estimated.
 - The collet and stud: their outlines and sizes, and the stud's direction.
-  - The collet is measured on Fig. 6's two drawings of it (alone, and in the spring's lowest coil; Figs. 5 and 49 agree), the only source: no photograph or video shows one. The points were put back on the plan through a parallel projection foreshortened 0.63, the coil's ellipse; at that value the plate's outer edge comes out a circle (within 0.06 mm), the ledge's round cut a circle (0.03 mm) tangent to its straight part, the notch's walls square to the front edge, and the ledge's top and foot fall on one another (0.1 mm). The hub's own ellipse is drawn flatter (0.45) and was not used. The scale is the hub against the coil, 0.213 of its diameter, the coil as five sources measure it (r 5.1: the drawing's points were read against it as r 5.5 and scaled by 5.1/5.5; until 4 October 2026 by 6.3/5.5): the hub 2.17 mm across; the outer arc r 4.95 about a point 1.21 mm off the staff, 3.72–3.93 from it; the front edge 1.25 mm from the staff, the end face 3.45 along it; the notch 0.84 wide and to the ledge; the hub 1.48 tall, the body 1.47, the tongue 0.46 of it and the front left end 0.50. Read to about 10 % (the two drawings differ by up to 20 % on the tongue's thickness and the clamp's length). Estimated: the body's hidden side behind the front step (taken back to the plate's corner), the groove's depth (0.15), the bore (the staff's, 0.47; the drawings draw it wider), the slit's width (0.1), the clamp's sizes (2.23 × 0.73, jaws 0.42, from the exploded drawing's proportions) and the wedge pin's (r 0.17, straight, not tapered). Its counterpoising is not modelled.
+  - The collet is measured on Fig. 6's two drawings of it (alone, and in the spring's lowest coil; Figs. 5 and 49 agree), the only source: no photograph or video shows one. The points were put back on the plan through a parallel projection foreshortened 0.63, the coil's ellipse; at that value the plate's outer edge comes out a circle (within 0.06 mm), the ledge's round cut a circle (0.03 mm) tangent to its straight part, the notch's walls square to the front edge, and the ledge's top and foot fall on one another (0.1 mm). The hub's own ellipse is drawn flatter (0.45) and was not used. The scale is the hub against the coil, 0.213 of its diameter, the coil as five sources measure it (r 5.1: the drawing's points were read against it as r 5.5 and scaled by 5.1/5.5; until 4 October 2026 by 6.3/5.5): the hub 2.17 mm across; the outer arc r 4.95 about a point 1.21 mm off the staff, 3.72–3.93 from it; the front edge 1.25 mm from the staff, the end face 3.45 along it; the notch 0.84 wide and to the ledge; the hub 1.48 tall, the body 1.47, the tongue 0.46 of it and the front left end 0.50. Read to about 10 % (the two drawings differ by up to 20 % on the tongue's thickness and the clamp's length). Estimated: the body's hidden side behind the front step (it ends 0.9 of the way to the plate's corner, 2.31 mm out on the step's line: taken to the corner until 11 October 2026, it stood 0.02 mm off the inner terminal curve at rest and in its way once the breathing spring, wound, curled in; no inner curve meeting Phillips' conditions from the collet's end passes the corner (searched: the farthest out of 3,000 passes it at r 3.64, the corner at 3.48 needing 4.0 at a 347° swing), so the hidden side is drawn as short of the corner as leaves the strip 0.05 mm at 347°: 0.063, 0.35 at rest; the plate above it, measured, unchanged), the groove's depth (0.15), the bore (the staff's, 0.47; the drawings draw it wider), the slit's width (0.1), the clamp's sizes (2.23 × 0.73, jaws 0.42, from the exploded drawing's proportions) and the wedge pin's (r 0.17, straight, not tapered). Its counterpoising is not modelled.
   - The spring's inner end lies against the collet's end face, 3.45 + 0.17 mm from the staff, not at the stud end's 2.65, bent to run 1.43 mm straight along it into the clamp (Fig. 6 draws the end bent; Op. 4); the lead's length is estimated.
   - The stud's bar: 1.6 wide and 0.5 thick (estimated; side-on at 6:50.0 it reads 0.7-1.1 mm thick, not yet drawn so: its thickness moves the clamp and the spring's height), its steady pins measured there (0.65 into the cock, the outer one 0.9 under the bar too), and the stud screw's counterbore in the cock (r 0.9, its head flush). Its ends are measured on the restoration video (6:47.5, 6:47.75: the balance lifted out, the stud seen from the cock side, 33 px/mm at 4K, put in mm along the row by a 1D perspective fit on its three holes): the outer 0.8 past the outer pin (0.79, 0.77), the inner 2.2 inside the inner pin (2.24, 2.10), and the clamp is a block under the inner end, from there to 1.1 inside the pin (1.13, 1.10), the wedge pin's end showing in the bar's top face 1.7 inside the pin (1.76, 1.68), 0.4 off the bar's middle line; Fig. 5 and Hamilton's patent US 2,379,780 (Fig. 10) put the clamp there too. Estimated: the block's width (2.0, about 1.3 times the bar's on both frames, drawn centred: the side its extra width stands out to isn't read), its drop under the bar (0.7, to the spring's measured height; the frames give 0.9-1.3 with their tilt unknown), and which side of the middle line the wedge pin is on. Until 4 October 2026 the clamp was a block between the inner pin and the stud screw, 4.6 mm from the staff, and the bar ended 0.8 past the inner pin. Open: the frames show the steady pins' holes empty or flush on the bar's top face, where the model has the pins standing 0.8 into the cock. Its holes are measured: three in a row along the cock's straight edge, 3.9, 7.0 and 10.5 mm from the staff, the screw's the middle one: the mean of the restoration video (41:58, through a homography on the cock's screw, setting, cap screws and outline corners) and the top-view photograph (the stud in place, through its map on the barrel bridge's screws from the setting's centre), which agree within 0.5-0.8 mm; the side view (6:50.0) shows the bar running out past the coils with a pin standing up at each end. Until 4 October 2026 it was a bar 5.7 long toward the cock screw, the screw 7.6 from the staff and one steady pin at 5.6.
   - The spring's upper end is in the stud's clamp, 2.65 mm from the staff (measured, above), its terminal curve running in from the coils over the last half turn (the curve's form is estimated); both ends lie in the stud's direction when the balance is at rest.
@@ -1092,14 +1198,16 @@ the repository with short audio excerpts and the video frames).
 - The screws' shanks: a thread of half the head's diameter (0.07 mm for the trip-spring screw in the bracket's thin leg; the cock screw's measured, r 1.0, its head a cheese head 8.2 long in a counterbore 9.4 deep: 5:59, 44:02), drawn as turned rings, and each one's length. The parts list gives the screws, not their threads or lengths. The cock screw sits 0.3 mm off its traced position (within the tracing's 0.4 mm) so its thread cleared the edge of the foot the cock was once drawn on.
 - The lower train bridge: its sizes are measured on C Spinner's video (40:08, the dial side fitted at the plate's scale; `References/VIDEOS.md`, "The lower train bridge"): 4.4 mm thick (4.2-4.9), about 10 wide (9.7-10.3), from 18.3 mm short of the third arbor to 10.3 past the fourth (9.2 in the model: see pillar 1 below), its screws 13.6 and 6.1 out, the settings in counterbores r 3.0 at its top. The settings run through it: gilt at its train-side face too, about r 2.5 (34:30). The opening in the plate under it is measured on 34:30 and 40:08 (`References/VIDEOS.md`, "The plate's opening under the lower train bridge"): a circle r 11.3 about the third arbor, a lobe r 4.85 at (2.9, 10.9) toward the balance, and a bore r 3.2 about the fourth (the lobe's place to about 1 mm). Estimated: the counterbores' depths (0.8), the settings' size (r 2.5), where the stones sit in them, the bore under the stones (r 1.1), and the steady pins' places (16.4 short of the third, past the screw, and beside the fourth's setting; outside the opening).
 - The motion work's counts are C Spinner's video's (cannon pinion 14 : minute wheel 56, minute pinion 18 : hour wheel 54; the wheels whole on the mat at 23:45-23:46, the pinion's 18 leaf ends on the wheel's back at 9:06, the cannon pinion's 14 forced by the ratio of 12); their modules come from the minute wheel's place, at 3 o'clock 11.3 mm from the centre, where C Spinner's video puts its stud (40:08 at the plate's scale; the dial-side photograph, mapped through anchors that have since moved, gave 10.5; Fig. 107 draws it on that side of the hour wheel). On the mat the minute wheel reads about 1.13 times the hour wheel across (the model's 1.07) and its pinion 0.28 of it (0.33): by eye on an oblique frame, not acted on.
-- The teeth's profiles: cycloidal clock teeth in BS 978 Part 2's proportions (the manual gives no profiles): a wheel's tooth 1.41 module thick at the pitch circle with radial flanks and an epicycloidal addendum capped at 1.15 module, a pinion's leaf 1.05 module thick with a round tip, both 1.3 module deep.
+- The teeth's profiles: cycloidal clock teeth in BS 978 Part 2's proportions (the manual gives no profiles): a wheel's tooth 1.41 module thick at the pitch circle with radial flanks and an epicycloidal addendum capped at 1.15 module, a pinion's leaf 1.05 module thick with a round tip, both 1.3 module deep. So the backlash is estimated too: each mesh is drawn as it runs, the driven flank on the driver's driving flank and the rest behind (`gearLash`, "Meshing" under Modifying the model).
+- The train wheels' sizes: their modules follow from the measured centre distances and the counted teeth (`MOD`), so the third stage (0.251) comes out finer than the fourth (0.261). The video's size ratios agree for the fourth wheel against the centre wheel but make the third 4-7 % larger than drawn, which its measured place can't hold; open (`OPEN-QUESTIONS.md`).
 - The pillar screws from the dial side (four), the mounting ring's three screws' places other than the one at 6 o'clock (the screws go in from the train side, through the plate into the ring, as reassembly Op. 1 and Fig. 29 have them; the top-view photographs show the 6 o'clock one on the plate at the rim, half under the train bridge: 40.6 mm out at 100°, the others at 210° and 340°), the dial screws (one into each foot), and the posts of the minute and wind indicator wheels with their screws from the train side. The parts list and Figs. 107 and 110 give the parts, not their sizes or positions.
 - The endstone caps: the escape lower cap, a steel plate 1.3 mm wide over the setting, its screws 2.1 mm either side of the arbor (estimated); the escape upper and balance lower caps are measured (above), their screws' heads r 0.75 and r 0.5 on the video though the parts list gives one screw (20762) for all of them; the threads (r 0.225) estimated. The balance lower bridge's steady pins (one in each lug) are estimated: no frame shows the joint they would be hidden in.
 - The balance's hub, cap and hold-down screws (Fig. 4): a flange 0.6 mm thick under the arm, a boss through it; the cap a lobed link as Figs. 4 and 108 draw it (lobes r 1.5 round the screws, 7.3 long, 0.85 thick, its collar a rim round the staff; hidden on every frame), the screws' heads r 0.85 flush in its counterbores, 2.15 mm from the staff (measured). The balance's moment of inertia counts them in place of the old hub.
 - The train-blocking screw (Sec. II, Fig. 110): its sizes after Fig. 110's section (head 1.74 across and 1.34 tall, spigot 0.92 and 2.4 tall, thread 1.22, dog point 0.7; the drawing partly schematic), and its 5.6 mm travel (the figure's 2.4 draws the lower bridge on the train bridge); the wall round it (bored r 0.95 down to the seat 0.6 mm into the bridge's top: the section gives the arrangement, not the sizes) and the access hole in the train bridge (r 0.72). Its place, 5.0 mm from the fourth arbor, is a countersunk hole on the top-view photograph, to about 1 mm.
 - The balance locking arm's sizes (Fig. 9 shows it curved, its screw outside the rim and its end at a timing weight; Sec. X: "place the locking arm over the timing weight"): a strip 0.8 mm wide and 0.45 thick, bowed 0.25 mm away from the staff, turning 120° on its screw 20 mm from the staff in the open 6 o'clock sector of the train bridge (at 45° from the timing weight, just clear of the barrel bridge's far horn; locked, the arm passes between the cock's foot and the escape upper bridge, clear of both by little), with a round finger 2.4 mm tall at its end. Locked, the finger stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests at the arm's end on the 6 o'clock side (0.02 mm clear), and the vernier weight's screw, standing 1.6 mm outside the rim one hole on, stops the balance 15° the other way. Unlocked, it lies against its stop pin, clear of the balance. It gets there by turning 120° with its end passing in under the balance, where Fig. 9 turns it the other way, out from the balance; here the second train pillar's screw head (1.6 mm proud, 4 mm out from the arm's screw) and the cock's foot leave no room for that (Review-results.md, BOM comparison, still open 9). Fig. 9 draws the arm curved along the rim and Fig. 108 a short flat lever with a raised boss round its screw, about 4 to 5 screw heads long (about 7-10 mm; the model's is 13). No photograph or video of the arm fitted has been found: `KLUwI2UUCMQ`'s movement and the top-view photograph's carry the Navy's Y-arm instead.
 - The Navy's Y-arm balance stop (Variants, Balance stop, fitted by default; the manual's locking arm is the other choice; illustrative): as on serial 2E11795 (the top-view photograph), Delaney No. 8854 and a third movement, the last two photographed from straight above. A second dust seal on the barrel bridge, like the fusee's: a nickel body on a flange held by screws, packing rings (black on 2E11795, the cap the fusee seal's size), and a nickel plunger head with a hex socket screw. Under it runs a lever of spring steel (satin, as photographed). Its root is held on a shouldered stud by a large slotted screw near the bridge's rim; the stud takes the place of the barrel bridge's pillar screw, which both photographs put within 2.5 mm of it. The lever runs straight under the cap, through a slot in the seal's body, to a crossbar symmetric about it: an arch round the cock's end, its legs coming down 7.8 mm either side of the staff (clear of the hairspring) and rounding over in a half circle, its top 8.3 mm out on the bar's centre line, and from the foot of each leg, level with the staff, an arm straight out to a round eye with a pin over the rim (13.9 mm out). Measured: the widths, on Delaney's photograph (stem 2.9 mm, lever 2.5, bar 2.2, eyes r 1.4), and the eyes' places (level with the staff, over the rim; Delaney's and 2E11795's photographs registered by the balance rim agree with them to about 1 mm; the cock's edge hides the left end on 2E11795). The arch is traced on Delaney's photograph (its radius about 7.9 mm, its top 8.3, the arms nearly level with the staff); all four movements photographed with the stop (2E11795, Delaney's, the omegaforums one and 2E8489 in the restoration video) have this shape (Review-results.md, open findings 13). Until 4 October 2026 its top stood 12.3 mm out, after a sketch. The outline is the boundary of bars of those widths joined with round fillets, cut as one plate. Estimated: the heights, the lever's 0.45 mm thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the flange's bite round the setup cover's end and foot, and the screws' threads (not drawn; the bridge is the manual's). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm), so how it works is taken from two descriptions of it (Review-results.md, 13): the plunger, screwed down by its hex socket with an Allen key through the bottom of the case, presses the lever down, which bends about its screwed root (drawn as a turn about the horizontal through the pivot, along the crossbar, so both pins come down together) until the pins bear on the rim's top edge, as the wedges did; free, they stand 0.5 mm over it. Locked and Unlocked under Stopping and starting work it as they work the locking arm. It is the same part as the locking arm (`lockArm`), and that part's card, name and source note follow the stop fitted (`STOP_INFO` in `app.js`).
-- Stopping and starting: the arm's braking (0.2 s), the twist's swing (160°) and the build-up to `ESC.A` (3 s). `ESC.AMIN` is worked out from the escapement.
+- The gimbals at sea: the ship's roll and pitch axes 5 m below the box (`GIM.RD`; their distance sets how far the case leans to the apparent vertical: 5.4° at 7 s and 14°), faded to 0 for periods under 4 s; the case's own period (0.7 s) and damping (ζ 0.05); the ship's motion (14° of roll, 0.55 of it in pitch at two thirds of its rate, so it repeats every three rolls).
+- Stopping and starting: the arm's braking (0.2 s), and the balance banking on a tooth the train-blocking screw holds in the impulse jewel's path stopped as quickly; the twist's 35° turn of the box, out in 0.1 s and back 0.25 s later (the balance's swing from it, 67° from rest, follows from the turn); the build-up to `ESC.A` follows the balance's dynamics (with the twist's 67°: 203° after 25 s, 232° after 45 s, 246° after 68 s, against the video's start, 190°, 230° and 256 ± 9°). `ESC.AMIN` is worked out from the escapement.
 - The escapement's amplitude and rate ("The escapement's amplitude and rate"): the free run-down's 52 s (`TF`, Q 327) is set inside both what the energy budget needs with the train's efficiency from its parts (243–341) and what the balance's parts give (202–390), at a torque the train gives (`tools/physics.js`); friction at the locking jewel μ = 0.15 (steel on sapphire); the fourth wheel's inertia in the wheel's chase (about 1.4 of `JW`'s 6.2 g·mm²); the detent spring's and trip spring's sections (`hD`, `tsH`: OPEN-QUESTIONS.md) and moduli; the discharge jewel's rounded end (`rnd`). The escapement's own error at the model's settings (−3.6 s a day) is taken to be timed out; the rate shown is the change from it.
 - The sustaining pawl's arbor is placed on C Spinner's video, its foot read on two frames (36:15 through `rimfit_36-15.json`'s camera: 21.8 mm from the fusee axis at 67°; 14:06, nearly overhead, through a homography on the plate's bushings and pillars' feet: 21.7 at 71°), the model 21.8 at 69°; its blade the crescent 36:15 shows (its two edges put through that camera at the blade's height). its outline one smooth curve through those edges, the tip's end face straight between them. Estimated: the root's back behind the arbor (the video doesn't show it; drawn 1.6-1.9 mm from the arbor), the hub's height (to about 1 mm) and the arbor's radius (0.7; the video's reads about 0.9, against the pillar beyond it).
 
@@ -1215,7 +1323,21 @@ box and gimbals.
   addendum is rolled by a circle half its pinion's pitch radius (`wheel.mate`,
   the pinion's leaves), a pinion's leaves have round tips; the geometry's
   `userData` gives its tip radius (`ro`), root (`ri`) and hub, which `arbor()`
-  uses to check that a pinion ends at its wheel's boss.
+  uses to check that a pinion ends at its wheel's boss, and its outline (`pl`).
+- **Meshing.** Each pair is phased once, as it runs under load: `ph()` in
+  `movement.js` calls `gearLash` (`core.js`), which centres the driver's tooth on
+  the line of centres and the driven gap opposite, then turns the driven member
+  back until its flank lies 0.005 mm off the driver's driving flank where the two
+  come closest over a whole tooth (the profiles aren't conjugate, so the gap
+  varies as they turn), so the backlash is all on the far side and the teeth
+  never pass. It needs the way the driver turns as the train runs, as `update()`
+  turns it (its `rotation.y` rising for the fusee wheel, third wheel, minute
+  pinion and fusee arbor, falling for the centre wheel, fourth wheel and cannon
+  pinion). The laid-out view
+  keeps the phase (`DPH` rolls each pinion on), and so does the Essay's train
+  figure. Winding turns the fusee arbor's pinion back, and setting the hands
+  back turns the cannon pinion back; the backlash would then cross to the other
+  flank, which isn't drawn.
 - **Arbor positions** come from the photo fit, in `L` at the top of
   `movement.js`. Don't move them without re-running the tools in `tools/`.
 

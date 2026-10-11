@@ -37,8 +37,10 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   const ud=()=>(-R.ud.rotation.y)/D;
   u(0,0,true);u(0,0,false);chk('wind indicator at UP (fully wound)',ud(),UD_UP,0.95,'deg');
   u(56*7200,56*FUSEE_PER_HOUR,false);u(56*7200,56*FUSEE_PER_HOUR,false);chk('wind indicator after 56 h (DOWN end of the scale)',ud(),UD_UP+UD_SWEEP,0.95,'deg');chk('wind indicator sweep against the photographed dial',UD_SWEEP,315.7,3.2,'deg');
-  chk('fusee: 8 3/4 turns of chain run (manual: 56 h at most)',FUSEE_TURNS/FUSEE_PER_HOUR,56,0.5,'h');chk('fusee: half turns of the key to wind fully',FUSEE_TURNS*2,17.5,1e-9,'');
+  chk('fusee: 8 3/4 turns of the fusee run (manual: 56 h at most)',FUSEE_TURNS/FUSEE_PER_HOUR,56,0.5,'h');chk('fusee: half turns of the key to wind fully',FUSEE_TURNS*2,17.5,1e-9,'');
   chk('fusee: 7 half turns restore (manual: 24 h)',7*0.5/FUSEE_PER_HOUR,24,1.6,'h');
+  /* the chain keeps its length (makeFusee chainLen: the end pin to the hook along its pitch line) from full wind to run down: the barrel takes up what the straight run between the drums gains */
+  { let lo=1e9,hi=-1e9;for(let i=0;i<=35;i++){const l=R.fs.chainLen(FUSEE_TURNS*i/35);lo=Math.min(lo,l);hi=Math.max(hi,l);}chk('chain: its length kept over the wind (fusee pin to hook)',hi-lo,0,0.05,'mm'); }
   const I0=R.timing(0,0),rate=(t,v)=>86400*(Math.sqrt(I0/R.timing(t,v))-1);
   chk('balance moment of inertia as built (Table II, masses a pair’s)',I0,578.0,1,'g mm2');chk('the drawn balance leaves to I_REST (under 10%)',R.I_REST/I0*100,0,10,'%');
   { const d=R.hsDesign,k=R.I_T2*1e-9*(4*Math.PI)**2,sec=HSPR.section(k,d.L,d.b,180);   /* the hairspring as designed (shared/hairspring.js) */
@@ -68,11 +70,12 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
      its swing stays after TF ln 4; the manual's 1 3/8 to 1 1/2 turns take a torque within the fusee's residual of it; a smaller swing loses (the escapement's isochronism) */
   chk('dynamics: the calibrated torque swings the balance 255 deg',ESC.ampAt(1)/D,255,1e-9,'deg');chk('dynamics: and its rate there',ESC.rateAt(ESC.A,1),0,1e-12,'s/day');
   chk('dynamics: a smaller swing (90% of the torque) loses',ESC.rateAt(ESC.ampAt(0.9),0.9),-0.3,0.15,'s/day');
-  /* the fusee (makeFusee pull, torque): the illustrative spring's pull falls from 1 to rmin/rmax; the torque on the fusee wheel keeps within its 3% residual; the going barrel's
-     doesn't (the essay's and walkthrough's dashed line) */
-  const F=R.fs,N=FUSEE_TURNS;let tq=[1e9,-1e9];for(let i=0;i<=100;i++){const v=F.torque(N*i/100);tq=[Math.min(tq[0],v),Math.max(tq[1],v)];}
-  chk('fusee: the spring pulls 1 fully wound',F.pull(0),1.03,1e-9,'');chk('fusee: and rmin/rmax run down',F.pull(N),F.rf(0)/F.rf(N)*0.97,1e-9,'');
-  chk('fusee: torque on the fusee wheel within 3% of its mean',(tq[1]-tq[0])/2,0.03,0.0005,'');
+  /* the fusee (makeFusee pull, lever, torque): the solved spring's pull falls from 1 to the chain's lever ratio, fully wound against run down, where the set-up puts it; the
+     torque on the fusee wheel, pull times the chain's pitch radius, keeps within its residual of about 2 % (the solved spring's curve against the profile) */
+  const F=R.fs,N=FUSEE_TURNS;let tq=[1e9,-1e9],tm=0;for(let i=0;i<=100;i++){const v=F.torque(F.nT*i/100);tq=[Math.min(tq[0],v),Math.max(tq[1],v)];tm+=v/101;}
+  chk('fusee: the spring pulls 1 fully wound',F.pull(0),1,1e-12,'');chk('fusee: and the lever ratio as the chain leaves it (the set-up)',F.pull(F.nT),F.lever(0)/F.lever(F.nT),1e-6,'');
+  chk('fusee: its torque gone at run down (the chain’s line through the arbor)',F.torque(N),0,1e-9,'');
+  chk('fusee: torque on the fusee wheel within 2% of its mean, while the chain leaves the fusee',(tq[1]-tq[0])/2/tm,0.017,0.003,'');
   /* temperature (core.js MTE): the Model 21's curvature against the test card of No. 3390 (90 F -0.02, 72.5 +0.06, 55 0.00 s a day: 72.5 above the ends' mean by 0.07) */
   chk('temperature: Model 21 balance, 72.5 F above the mean of 55 and 90 F',-(MTE.uncut(55)+MTE.uncut(90))/2,0.07,0.002,'s/day');
   chk('temperature: split balance, 0 at 72.5 F',MTE.split(72.5),0,1e-12,'s/day');
