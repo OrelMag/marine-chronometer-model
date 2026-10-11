@@ -1,0 +1,1568 @@
+{
+ "note": "acoustic.py: onsets in ms from each recording's aligned click; fits: swing A (deg) with the 16-84 % of resamples, shift t0, cost, residual per event (onset - model, ms)",
+ "recordings": {
+  "s7VW3RiJ97E": {
+   "file": "run_s7VW3RiJ97E.mkv",
+   "stretch": [
+    "0:00",
+    "end"
+   ],
+   "beats": 57,
+   "kept": 49,
+   "onsets": [
+    {
+     "t": -12.44,
+     "sd": 0.273,
+     "p": 1.0,
+     "rise": 5.0,
+     "level": 7.9
+    },
+    {
+     "t": -3.678,
+     "sd": 0.287,
+     "p": 1.0,
+     "rise": 31.9,
+     "level": 38.8
+    },
+    {
+     "t": 6.628,
+     "sd": 0.054,
+     "p": 0.99,
+     "rise": 4.1,
+     "level": 33.6
+    },
+    {
+     "t": 246.161,
+     "sd": 0.281,
+     "p": 1.0,
+     "rise": 6.1,
+     "level": 7.2
+    },
+    {
+     "t": 254.97,
+     "sd": 0.074,
+     "p": 1.0,
+     "rise": 12.3,
+     "level": 14.9
+    }
+   ],
+   "fits": {
+    "corrected/all": {
+     "A": 212.0,
+     "A16": 211.5,
+     "A84": 218.0,
+     "t0": -3.92,
+     "cost": 21.78,
+     "chi2": 0.78,
+     "paired": 4,
+     "same_pairing": 0.95,
+     "edge": false,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -12.3,
+       "onset": -12.44,
+       "res": -0.14
+      },
+      "strike": {
+       "model": -3.92,
+       "onset": -3.678,
+       "res": 0.24
+      },
+      "lock": {
+       "model": 6.54,
+       "onset": 6.628,
+       "res": 0.09
+      },
+      "jewel meets trip spring": {
+       "model": 255.12,
+       "onset": 254.97,
+       "res": -0.15
+      }
+     },
+     "alt": {
+      "A": 212.0,
+      "cost": 33.51,
+      "pairs": {
+       "strike": -12.44,
+       "lock": -3.678,
+       "jewel meets trip spring": 246.161,
+       "trip spring clear": 254.97
+      }
+     }
+    },
+    "corrected/core": {
+     "A": 212.0,
+     "A16": 211.42,
+     "A84": 217.5,
+     "t0": -12.87,
+     "cost": 21.51,
+     "chi2": 12.51,
+     "paired": 4,
+     "same_pairing": 0.66,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -12.87,
+       "onset": -12.44,
+       "res": 0.43
+      },
+      "lock": {
+       "model": -2.42,
+       "onset": -3.678,
+       "res": -1.26
+      },
+      "jewel meets trip spring": {
+       "model": 246.16,
+       "onset": 246.161,
+       "res": -0.0
+      },
+      "trip spring clear": {
+       "model": 254.52,
+       "onset": 254.97,
+       "res": 0.45
+      }
+     },
+     "alt": {
+      "A": 216.5,
+      "cost": 22.39,
+      "pairs": {
+       "strike": -3.678,
+       "lock": 6.628,
+       "jewel meets trip spring": 254.97
+      }
+     }
+    },
+    "old/all": {
+     "A": 245.5,
+     "A16": 226.84,
+     "A84": 258.08,
+     "t0": -6.84,
+     "cost": 34.03,
+     "chi2": 0.03,
+     "paired": 3,
+     "same_pairing": 0.52,
+     "edge": false,
+     "res": {
+      "detent lands": {
+       "model": -3.69,
+       "onset": -3.678,
+       "res": 0.01
+      },
+      "lock": {
+       "model": 6.6,
+       "onset": 6.628,
+       "res": 0.03
+      },
+      "jewel meets trip spring": {
+       "model": 255.01,
+       "onset": 254.97,
+       "res": -0.04
+      }
+     },
+     "alt": {
+      "A": 200.0,
+      "cost": 34.45,
+      "pairs": {
+       "jewel meets passing spring": -12.44,
+       "lock": 6.628,
+       "jewel meets trip spring": 254.97
+      }
+     }
+    },
+    "old/core": {
+     "A": 325.0,
+     "A16": 175.5,
+     "A84": 344.65999999999997,
+     "t0": -3.73,
+     "cost": 23.16,
+     "chi2": 1.16,
+     "paired": 3,
+     "same_pairing": 0.97,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -3.73,
+       "onset": -3.678,
+       "res": 0.05
+      },
+      "lock": {
+       "model": 6.41,
+       "onset": 6.628,
+       "res": 0.21
+      },
+      "jewel meets trip spring": {
+       "model": 255.22,
+       "onset": 254.97,
+       "res": -0.25
+      }
+     },
+     "alt": {
+      "A": 171.0,
+      "cost": 24.07,
+      "pairs": {
+       "strike": -12.44,
+       "lock": 6.628,
+       "jewel meets trip spring": 254.97
+      }
+     }
+    },
+    "corrected/beat": {
+     "A": 209.0,
+     "bE": -12.0,
+     "A_range": [
+      205.0,
+      213.0
+     ],
+     "bE_range": [
+      -12.0,
+      -12.0
+     ],
+     "t0": -4.12,
+     "cost": 11.07,
+     "chi2": 3.07,
+     "paired": 5,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -12.21,
+       "onset": -12.44,
+       "res": -0.23
+      },
+      "strike": {
+       "model": -4.12,
+       "onset": -3.678,
+       "res": 0.44
+      },
+      "lock": {
+       "model": 6.91,
+       "onset": 6.628,
+       "res": -0.28
+      },
+      "jewel meets trip spring": {
+       "model": 246.3,
+       "onset": 246.161,
+       "res": -0.14
+      },
+      "trip spring clear": {
+       "model": 254.72,
+       "onset": 254.97,
+       "res": 0.25
+      }
+     }
+    },
+    "old/beat": {
+     "A": 203.0,
+     "bE": -11.0,
+     "A_range": [
+      199.0,
+      207.0
+     ],
+     "bE_range": [
+      -11.0,
+      -11.0
+     ],
+     "t0": -9.73,
+     "cost": 21.55,
+     "chi2": 0.55,
+     "paired": 4,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -12.35,
+       "onset": -12.44,
+       "res": -0.09
+      },
+      "lock": {
+       "model": 6.55,
+       "onset": 6.628,
+       "res": 0.08
+      },
+      "jewel meets trip spring": {
+       "model": 245.97,
+       "onset": 246.161,
+       "res": 0.2
+      },
+      "trip spring clear": {
+       "model": 255.11,
+       "onset": 254.97,
+       "res": -0.14
+      }
+     }
+    }
+   },
+   "intervals": {
+    "strike -> lock": {
+     "ms": 10.31,
+     "sd": 0.29,
+     "A": 214.7601636905049,
+     "A_range": [
+      222.42484550439897,
+      207.21074224815752
+     ],
+     "corrected_255": 8.47,
+     "old_255": 12.93
+    },
+    "jewel meets passing spring -> strike": {
+     "ms": 8.76,
+     "sd": 0.4,
+     "A": 200.74242906494078,
+     "A_range": [
+      215.59697977898475,
+      187.24556540843957
+     ],
+     "corrected_255": 7.16,
+     "old_255": 2.09
+    },
+    "jewel meets trip spring -> jewel meets passing spring": {
+     "ms": 232.59,
+     "sd": 0.28,
+     "A": 212.05015268017647,
+     "A_range": [
+      206.97113851370258,
+      217.28893980578357
+     ],
+     "corrected_255": 235.54,
+     "old_255": 236.5
+    },
+    "jewel meets trip spring -> strike": {
+     "ms": 241.35,
+     "sd": 0.3,
+     "A": 220.17366839102905,
+     "A_range": [
+      211.3094486474886,
+      229.79777817462596
+     ],
+     "corrected_255": 242.71,
+     "old_255": 238.59
+    }
+   }
+  },
+  "We1dLNXiBj0": {
+   "file": "run_We1dLNXiBj0.mkv",
+   "stretch": [
+    "2:08",
+    "end"
+   ],
+   "beats": 95,
+   "kept": 93,
+   "onsets": [
+    {
+     "t": -8.33,
+     "sd": 0.021,
+     "p": 1.0,
+     "rise": 9.0,
+     "level": 9.8
+    },
+    {
+     "t": -1.969,
+     "sd": 0.008,
+     "p": 1.0,
+     "rise": 21.9,
+     "level": 28.5
+    },
+    {
+     "t": 246.459,
+     "sd": 0.151,
+     "p": 0.79,
+     "rise": 2.4,
+     "level": 3.5
+    },
+    {
+     "t": 252.338,
+     "sd": 0.02,
+     "p": 1.0,
+     "rise": 14.5,
+     "level": 16.0
+    }
+   ],
+   "fits": {
+    "corrected/all": {
+     "A": 331.0,
+     "A16": 330.5,
+     "A84": 331.0,
+     "t0": -8.24,
+     "cost": 13.58,
+     "chi2": 1.58,
+     "paired": 4,
+     "same_pairing": 0.74,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -8.24,
+       "onset": -8.33,
+       "res": -0.09
+      },
+      "lock": {
+       "model": -1.88,
+       "onset": -1.969,
+       "res": -0.08
+      },
+      "jewel meets trip spring": {
+       "model": 246.64,
+       "onset": 246.459,
+       "res": -0.18
+      },
+      "trip spring clear": {
+       "model": 252.02,
+       "onset": 252.338,
+       "res": 0.32
+      }
+     },
+     "alt": {
+      "A": 330.5,
+      "cost": 16.09,
+      "pairs": {
+       "strike": -8.33,
+       "lock": -1.969,
+       "trip spring clear": 252.338
+      }
+     }
+    },
+    "corrected/core": {
+     "A": 331.0,
+     "A16": 330.5,
+     "A84": 331.0,
+     "t0": -8.24,
+     "cost": 1.58,
+     "chi2": 1.58,
+     "paired": 4,
+     "same_pairing": 0.74,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -8.24,
+       "onset": -8.33,
+       "res": -0.09
+      },
+      "lock": {
+       "model": -1.88,
+       "onset": -1.969,
+       "res": -0.08
+      },
+      "jewel meets trip spring": {
+       "model": 246.64,
+       "onset": 246.459,
+       "res": -0.18
+      },
+      "trip spring clear": {
+       "model": 252.02,
+       "onset": 252.338,
+       "res": 0.32
+      }
+     },
+     "alt": {
+      "A": 330.5,
+      "cost": 4.09,
+      "pairs": {
+       "strike": -8.33,
+       "lock": -1.969,
+       "trip spring clear": 252.338
+      }
+     }
+    },
+    "old/all": {
+     "A": 353.0,
+     "A16": 353.0,
+     "A84": 353.0,
+     "t0": -10.99,
+     "cost": 19.9,
+     "chi2": 3.9,
+     "paired": 3,
+     "same_pairing": 0.65,
+     "edge": true,
+     "res": {
+      "detent lands": {
+       "model": -8.81,
+       "onset": -8.33,
+       "res": 0.48
+      },
+      "lock": {
+       "model": -1.66,
+       "onset": -1.969,
+       "res": -0.31
+      },
+      "trip spring clear": {
+       "model": 252.5,
+       "onset": 252.338,
+       "res": -0.16
+      }
+     },
+     "alt": {
+      "A": 353.0,
+      "cost": 20.22,
+      "pairs": {
+       "detent lands": -8.33,
+       "lock": -1.969,
+       "jewel meets trip spring": 246.459,
+       "trip spring clear": 252.338
+      }
+     }
+    },
+    "old/core": {
+     "A": 324.0,
+     "A16": 313.92,
+     "A84": 337.65999999999997,
+     "t0": -12.33,
+     "cost": 13.71,
+     "chi2": 0.71,
+     "paired": 3,
+     "same_pairing": 0.74,
+     "edge": false,
+     "res": {
+      "lock": {
+       "model": -2.16,
+       "onset": -1.969,
+       "res": 0.19
+      },
+      "jewel meets trip spring": {
+       "model": 246.65,
+       "onset": 246.459,
+       "res": -0.19
+      },
+      "trip spring clear": {
+       "model": 252.38,
+       "onset": 252.338,
+       "res": -0.04
+      }
+     },
+     "alt": {
+      "A": 292.0,
+      "cost": 17.0,
+      "pairs": {
+       "jewel meets trip spring": -8.33,
+       "trip spring clear": -1.969
+      }
+     }
+    },
+    "corrected/beat": {
+     "A": 320.0,
+     "bE": 12.0,
+     "A_range": [
+      311.0,
+      331.0
+     ],
+     "bE_range": [
+      -1.0,
+      12.0
+     ],
+     "t0": -8.45,
+     "cost": 12.99,
+     "chi2": 0.99,
+     "paired": 4,
+     "res": {
+      "strike": {
+       "model": -8.45,
+       "onset": -8.33,
+       "res": 0.12
+      },
+      "lock": {
+       "model": -2.05,
+       "onset": -1.969,
+       "res": 0.08
+      },
+      "jewel meets trip spring": {
+       "model": 246.39,
+       "onset": 246.459,
+       "res": 0.07
+      },
+      "trip spring clear": {
+       "model": 252.59,
+       "onset": 252.338,
+       "res": -0.26
+      }
+     }
+    },
+    "old/beat": {
+     "A": 203.0,
+     "bE": -8.0,
+     "A_range": [
+      196.0,
+      211.0
+     ],
+     "bE_range": [
+      -8.0,
+      -8.0
+     ],
+     "t0": -5.73,
+     "cost": 16.03,
+     "chi2": 0.03,
+     "paired": 3,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -8.35,
+       "onset": -8.33,
+       "res": 0.02
+      },
+      "detent lands": {
+       "model": -1.93,
+       "onset": -1.969,
+       "res": -0.04
+      },
+      "jewel meets trip spring": {
+       "model": 252.32,
+       "onset": 252.338,
+       "res": 0.02
+      }
+     }
+    }
+   },
+   "intervals": {
+    "strike -> lock": {
+     "ms": 6.36,
+     "sd": 0.02,
+     "A": 330.88694649534835,
+     "A_range": [
+      351.1548587384844,
+      317.73501614883014
+     ],
+     "corrected_255": 8.47,
+     "old_255": 12.93
+    },
+    "jewel meets trip spring -> trip spring clear": {
+     "ms": 5.88,
+     "sd": 0.15,
+     "A": 299.8306806530937,
+     "A_range": [
+      318.03894581348277,
+      283.75297969150546
+     ],
+     "corrected_255": 6.91,
+     "old_255": 7.3
+    },
+    "jewel meets trip spring -> strike": {
+     "ms": 245.21,
+     "sd": 0.15,
+     "A": 331.0161315338186,
+     "A_range": [
+      330.7895003119839,
+      331.07343117922824
+     ],
+     "corrected_255": 242.71,
+     "old_255": 238.59
+    },
+    "trip spring clear -> strike": {
+     "ms": 239.33,
+     "sd": 0.03,
+     "A": 330.61205043641115,
+     "A_range": [
+      325.542404810566,
+      330.9006728827296
+     ],
+     "corrected_255": 235.79,
+     "old_255": 231.29
+    }
+   }
+  },
+  "xDKFZaY88cM": {
+   "file": "run_xDKFZaY88cM.mkv",
+   "stretch": [
+    "0:00",
+    "end"
+   ],
+   "beats": 249,
+   "kept": 190,
+   "onsets": [
+    {
+     "t": -13.739,
+     "sd": 0.334,
+     "p": 0.72,
+     "rise": 8.1,
+     "level": 12.8
+    },
+    {
+     "t": -4.368,
+     "sd": 0.074,
+     "p": 1.0,
+     "rise": 20.2,
+     "level": 45.4
+    },
+    {
+     "t": 5.626,
+     "sd": 0.056,
+     "p": 0.47,
+     "rise": 2.0,
+     "level": 47.3
+    },
+    {
+     "t": 253.421,
+     "sd": 0.197,
+     "p": 0.84,
+     "rise": 2.6,
+     "level": 10.5
+    },
+    {
+     "t": 256.805,
+     "sd": 0.185,
+     "p": 0.99,
+     "rise": 3.8,
+     "level": 15.2
+    }
+   ],
+   "fits": {
+    "corrected/all": {
+     "A": 179.5,
+     "A16": 172.0,
+     "A84": 180.07999999999998,
+     "t0": -4.29,
+     "cost": 16.16,
+     "chi2": 0.16,
+     "paired": 3,
+     "same_pairing": 0.94,
+     "edge": false,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -13.87,
+       "onset": -13.739,
+       "res": 0.13
+      },
+      "strike": {
+       "model": -4.29,
+       "onset": -4.368,
+       "res": -0.08
+      },
+      "jewel meets trip spring": {
+       "model": 256.78,
+       "onset": 256.805,
+       "res": 0.03
+      }
+     },
+     "alt": {
+      "A": 331.5,
+      "cost": 17.82,
+      "pairs": {
+       "wheel released": -4.368,
+       "lock": 5.626,
+       "trip spring clear": 256.805
+      }
+     }
+    },
+    "corrected/core": {
+     "A": 320.0,
+     "A16": 200.34,
+     "A84": 317.65999999999997,
+     "t0": -4.37,
+     "cost": 8.0,
+     "chi2": 0.0,
+     "paired": 2,
+     "same_pairing": 0.2,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -4.37,
+       "onset": -4.368,
+       "res": 0.0
+      },
+      "trip spring clear": {
+       "model": 256.81,
+       "onset": 256.805,
+       "res": -0.0
+      }
+     },
+     "alt": {
+      "A": 226.0,
+      "cost": 16.54,
+      "pairs": {
+       "strike": -4.368,
+       "lock": 5.626,
+       "jewel meets trip spring": 253.421
+      }
+     }
+    },
+    "old/all": {
+     "A": 308.0,
+     "A16": 176.0,
+     "A84": 316.65999999999997,
+     "t0": -2.64,
+     "cost": 20.0,
+     "chi2": 0.0,
+     "paired": 2,
+     "same_pairing": 0.05,
+     "edge": false,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -4.37,
+       "onset": -4.368,
+       "res": -0.0
+      },
+      "jewel meets trip spring": {
+       "model": 256.8,
+       "onset": 256.805,
+       "res": 0.0
+      }
+     },
+     "alt": {
+      "A": 258.5,
+      "cost": 27.25,
+      "pairs": {
+       "detent lands": -4.368,
+       "lock": 5.626,
+       "jewel meets trip spring": 253.421
+      }
+     }
+    },
+    "old/core": {
+     "A": 260.5,
+     "A16": 192.5,
+     "A84": 334.08,
+     "t0": -4.37,
+     "cost": 8.0,
+     "chi2": 0.0,
+     "paired": 2,
+     "same_pairing": 0.22,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -4.37,
+       "onset": -4.368,
+       "res": -0.0
+      },
+      "jewel meets trip spring": {
+       "model": 256.8,
+       "onset": 256.805,
+       "res": 0.0
+      }
+     },
+     "alt": {
+      "A": 330.0,
+      "cost": 17.0,
+      "pairs": {
+       "strike": -4.368,
+       "lock": 5.626
+      }
+     }
+    },
+    "corrected/beat": {
+     "A": 209.0,
+     "bE": 3.0,
+     "A_range": [
+      205.0,
+      214.0
+     ],
+     "bE_range": [
+      3.0,
+      4.0
+     ],
+     "t0": -4.7,
+     "cost": 14.81,
+     "chi2": 2.81,
+     "paired": 4,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -13.28,
+       "onset": -13.739,
+       "res": -0.46
+      },
+      "strike": {
+       "model": -4.7,
+       "onset": -4.368,
+       "res": 0.34
+      },
+      "lock": {
+       "model": 5.83,
+       "onset": 5.626,
+       "res": -0.21
+      },
+      "jewel meets trip spring": {
+       "model": 256.68,
+       "onset": 256.805,
+       "res": 0.12
+      }
+     }
+    },
+    "old/beat": {
+     "A": 336.0,
+     "bE": 5.0,
+     "A_range": [
+      143.0,
+      350.0
+     ],
+     "bE_range": [
+      -8.0,
+      11.0
+     ],
+     "t0": -4.21,
+     "cost": 16.01,
+     "chi2": 0.01,
+     "paired": 3,
+     "res": {
+      "wheel released": {
+       "model": -4.36,
+       "onset": -4.368,
+       "res": -0.01
+      },
+      "lock": {
+       "model": 5.6,
+       "onset": 5.626,
+       "res": 0.02
+      },
+      "jewel meets trip spring": {
+       "model": 256.82,
+       "onset": 256.805,
+       "res": -0.02
+      }
+     }
+    }
+   },
+   "intervals": {
+    "jewel meets passing spring -> strike": {
+     "ms": 9.37,
+     "sd": 0.34,
+     "A": 184.53681536440192,
+     "A_range": [
+      196.47233688143206,
+      173.54329463432285
+     ],
+     "corrected_255": 7.16,
+     "old_255": 2.09
+    },
+    "jewel meets trip spring -> jewel meets passing spring": {
+     "ms": 229.46,
+     "sd": 0.38,
+     "A": 180.3524839112624,
+     "A_range": [
+      176.18001136027428,
+      184.52495646225003
+     ],
+     "corrected_255": 235.54,
+     "old_255": 236.5
+    },
+    "jewel meets trip spring -> strike": {
+     "ms": 238.83,
+     "sd": 0.2,
+     "A": 178.0429503169965,
+     "A_range": [
+      173.2402230165706,
+      182.84567761742315
+     ],
+     "corrected_255": 242.71,
+     "old_255": 238.59
+    }
+   }
+  },
+  "XJQCgMV_GA8": {
+   "file": "run_XJQCgMV_GA8.mkv",
+   "stretch": [
+    "0:00",
+    "end"
+   ],
+   "beats": 28,
+   "kept": 26,
+   "onsets": [
+    {
+     "t": -7.719,
+     "sd": 0.417,
+     "p": 0.86,
+     "rise": 2.5,
+     "level": 6.3
+    },
+    {
+     "t": -6.92,
+     "sd": 0.295,
+     "p": 0.93,
+     "rise": 3.0,
+     "level": 6.8
+    },
+    {
+     "t": -4.565,
+     "sd": 0.234,
+     "p": 0.97,
+     "rise": 4.9,
+     "level": 11.7
+    },
+    {
+     "t": -1.905,
+     "sd": 0.076,
+     "p": 0.91,
+     "rise": 30.0,
+     "level": 41.7
+    },
+    {
+     "t": 7.301,
+     "sd": 0.368,
+     "p": 0.95,
+     "rise": 2.1,
+     "level": 32.0
+    },
+    {
+     "t": 7.967,
+     "sd": 0.11,
+     "p": 0.94,
+     "rise": 3.3,
+     "level": 31.6
+    },
+    {
+     "t": 246.291,
+     "sd": 0.302,
+     "p": 0.82,
+     "rise": 3.4,
+     "level": 7.1
+    },
+    {
+     "t": 250.946,
+     "sd": 0.154,
+     "p": 1.0,
+     "rise": 20.5,
+     "level": 27.8
+    }
+   ],
+   "fits": {
+    "corrected/all": {
+     "A": 332.5,
+     "A16": 331.92,
+     "A84": 333.0,
+     "t0": -0.81,
+     "cost": 28.22,
+     "chi2": 11.22,
+     "paired": 5,
+     "same_pairing": 0.22,
+     "edge": false,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -6.46,
+       "onset": -6.92,
+       "res": -0.46
+      },
+      "wheel released": {
+       "model": -4.91,
+       "onset": -4.565,
+       "res": 0.35
+      },
+      "detent lands": {
+       "model": -1.9,
+       "onset": -1.905,
+       "res": -0.01
+      },
+      "jewel meets trip spring": {
+       "model": 245.26,
+       "onset": 246.291,
+       "res": 1.03
+      },
+      "trip spring clear": {
+       "model": 251.56,
+       "onset": 250.946,
+       "res": -0.61
+      }
+     },
+     "alt": {
+      "A": 333.5,
+      "cost": 32.07,
+      "pairs": {
+       "jewel meets passing spring": -6.92,
+       "wheel released": -4.565,
+       "detent lands": -1.905,
+       "trip spring clear": 246.291
+      }
+     }
+    },
+    "corrected/core": {
+     "A": 331.0,
+     "A16": 287.76,
+     "A84": 331.5,
+     "t0": -8.58,
+     "cost": 35.63,
+     "chi2": 8.63,
+     "paired": 4,
+     "same_pairing": 0.47,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -8.58,
+       "onset": -7.719,
+       "res": 0.86
+      },
+      "lock": {
+       "model": -2.22,
+       "onset": -1.905,
+       "res": 0.32
+      },
+      "jewel meets trip spring": {
+       "model": 246.3,
+       "onset": 246.291,
+       "res": -0.01
+      },
+      "trip spring clear": {
+       "model": 251.68,
+       "onset": 250.946,
+       "res": -0.74
+      }
+     },
+     "alt": {
+      "A": 331.5,
+      "cost": 36.21,
+      "pairs": {
+       "strike": -6.92,
+       "jewel meets trip spring": 246.291,
+       "trip spring clear": 250.946
+      }
+     }
+    },
+    "old/all": {
+     "A": 259.0,
+     "A16": 254.5,
+     "A84": 353.0,
+     "t0": -4.78,
+     "cost": 30.48,
+     "chi2": 0.48,
+     "paired": 4,
+     "same_pairing": 0.32,
+     "edge": false,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -6.84,
+       "onset": -6.92,
+       "res": -0.08
+      },
+      "strike": {
+       "model": -4.78,
+       "onset": -4.565,
+       "res": 0.21
+      },
+      "detent lands": {
+       "model": -1.8,
+       "onset": -1.905,
+       "res": -0.11
+      },
+      "lock": {
+       "model": 7.95,
+       "onset": 7.967,
+       "res": 0.01
+      }
+     },
+     "alt": {
+      "A": 272.5,
+      "cost": 39.51,
+      "pairs": {
+       "jewel meets passing spring": -6.92,
+       "strike": -4.565,
+       "detent lands": -1.905,
+       "lock": 7.301
+      }
+     }
+    },
+    "old/core": {
+     "A": 353.0,
+     "A16": 248.42,
+     "A84": 353.0,
+     "t0": -11.86,
+     "cost": 39.19,
+     "chi2": 8.19,
+     "paired": 3,
+     "same_pairing": 0.61,
+     "edge": true,
+     "res": {
+      "lock": {
+       "model": -2.53,
+       "onset": -1.905,
+       "res": 0.62
+      },
+      "jewel meets trip spring": {
+       "model": 246.37,
+       "onset": 246.291,
+       "res": -0.08
+      },
+      "trip spring clear": {
+       "model": 251.63,
+       "onset": 250.946,
+       "res": -0.68
+      }
+     },
+     "alt": {
+      "A": 338.0,
+      "cost": 43.72,
+      "pairs": {
+       "lock": -4.565,
+       "jewel meets trip spring": 246.291,
+       "trip spring clear": 250.946
+      }
+     }
+    },
+    "corrected/beat": {
+     "A": 269.0,
+     "bE": -10.0,
+     "A_range": [
+      261.0,
+      277.0
+     ],
+     "bE_range": [
+      -10.0,
+      -10.0
+     ],
+     "t0": -0.3,
+     "cost": 20.15,
+     "chi2": 3.15,
+     "paired": 5,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -6.92,
+       "onset": -6.92,
+       "res": -0.0
+      },
+      "wheel released": {
+       "model": -5.01,
+       "onset": -4.565,
+       "res": 0.44
+      },
+      "detent lands": {
+       "model": -1.5,
+       "onset": -1.905,
+       "res": -0.41
+      },
+      "lock": {
+       "model": 7.91,
+       "onset": 7.967,
+       "res": 0.05
+      },
+      "jewel meets trip spring": {
+       "model": 250.87,
+       "onset": 250.946,
+       "res": 0.08
+      }
+     }
+    },
+    "old/beat": {
+     "A": 259.0,
+     "bE": -9.0,
+     "A_range": [
+      252.0,
+      267.0
+     ],
+     "bE_range": [
+      -9.0,
+      -9.0
+     ],
+     "t0": -4.77,
+     "cost": 17.48,
+     "chi2": 0.48,
+     "paired": 5,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -6.83,
+       "onset": -6.92,
+       "res": -0.09
+      },
+      "strike": {
+       "model": -4.77,
+       "onset": -4.565,
+       "res": 0.21
+      },
+      "detent lands": {
+       "model": -1.8,
+       "onset": -1.905,
+       "res": -0.11
+      },
+      "lock": {
+       "model": 7.97,
+       "onset": 7.967,
+       "res": -0.0
+      },
+      "jewel meets trip spring": {
+       "model": 250.92,
+       "onset": 250.946,
+       "res": 0.03
+      }
+     }
+    }
+   },
+   "intervals": {
+    "jewel meets trip spring -> trip spring clear": {
+     "ms": 4.66,
+     "sd": 0.34,
+     "A": NaN,
+     "A_range": [
+      NaN,
+      NaN
+     ],
+     "corrected_255": 6.91,
+     "old_255": 7.3
+    },
+    "jewel meets trip spring -> jewel meets passing spring": {
+     "ms": 246.79,
+     "sd": 0.42,
+     "A": 332.2461893491624,
+     "A_range": [
+      332.15827074047985,
+      332.33410795784505
+     ],
+     "corrected_255": 235.54,
+     "old_255": 236.5
+    },
+    "trip spring clear -> jewel meets passing spring": {
+     "ms": 242.13,
+     "sd": 0.33,
+     "A": 332.52823829203277,
+     "A_range": [
+      332.4433404854491,
+      332.6131360986165
+     ],
+     "corrected_255": 228.63,
+     "old_255": 229.2
+    }
+   }
+  },
+  "FpolZSipVmQ": {
+   "file": "run_FpolZSipVmQ.mkv",
+   "stretch": [
+    "0:00",
+    "end"
+   ],
+   "beats": 120,
+   "kept": 112,
+   "onsets": [
+    {
+     "t": -16.071,
+     "sd": 0.095,
+     "p": 1.0,
+     "rise": 27.1,
+     "level": 40.8
+    },
+    {
+     "t": -1.136,
+     "sd": 0.217,
+     "p": 1.0,
+     "rise": 2.4,
+     "level": 41.5
+    },
+    {
+     "t": -0.665,
+     "sd": 0.165,
+     "p": 1.0,
+     "rise": 7.2,
+     "level": 46.3
+    },
+    {
+     "t": 31.867,
+     "sd": 0.297,
+     "p": 0.83,
+     "rise": 2.2,
+     "level": 27.8
+    },
+    {
+     "t": 221.879,
+     "sd": 0.099,
+     "p": 0.71,
+     "rise": 2.3,
+     "level": 9.1
+    },
+    {
+     "t": 245.24,
+     "sd": 0.124,
+     "p": 0.95,
+     "rise": 2.9,
+     "level": 7.7
+    },
+    {
+     "t": 263.59,
+     "sd": 0.4,
+     "p": 0.57,
+     "rise": 2.3,
+     "level": 7.8
+    }
+   ],
+   "fits": {
+    "corrected/all": {
+     "A": 153.0,
+     "A16": 175.34,
+     "A84": 293.01999999999987,
+     "t0": -16.07,
+     "cost": 20.0,
+     "chi2": 0.0,
+     "paired": 2,
+     "same_pairing": 0.07,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -16.07,
+       "onset": -16.071,
+       "res": -0.0
+      },
+      "lock": {
+       "model": -0.67,
+       "onset": -0.665,
+       "res": 0.0
+      }
+     },
+     "alt": {
+      "A": 336.5,
+      "cost": 26.9,
+      "pairs": {
+       "detent lands": -1.136,
+       "strike": -0.665,
+       "jewel meets trip spring": 221.879
+      }
+     }
+    },
+    "corrected/core": {
+     "A": 153.0,
+     "A16": 152.42,
+     "A84": 185.0,
+     "t0": -16.07,
+     "cost": 8.0,
+     "chi2": 0.0,
+     "paired": 2,
+     "same_pairing": 0.57,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -16.07,
+       "onset": -16.071,
+       "res": -0.0
+      },
+      "lock": {
+       "model": -0.67,
+       "onset": -0.665,
+       "res": 0.0
+      }
+     },
+     "alt": {
+      "A": 316.5,
+      "cost": 17.0,
+      "pairs": {
+       "strike": -16.071,
+       "trip spring clear": 245.24
+      }
+     }
+    },
+    "old/all": {
+     "A": 217.5,
+     "A16": 184.74,
+     "A84": 253.82,
+     "t0": -15.84,
+     "cost": 20.0,
+     "chi2": 0.0,
+     "paired": 2,
+     "same_pairing": 0.12,
+     "edge": false,
+     "res": {
+      "wheel released": {
+       "model": -16.07,
+       "onset": -16.071,
+       "res": -0.0
+      },
+      "lock": {
+       "model": -0.67,
+       "onset": -0.665,
+       "res": 0.0
+      }
+     },
+     "alt": {
+      "A": 202.5,
+      "cost": 25.2,
+      "pairs": {
+       "wheel released": -1.136,
+       "strike": -0.665,
+       "jewel meets trip spring": 263.59
+      }
+     }
+    },
+    "old/core": {
+     "A": 214.0,
+     "A16": 212.5,
+     "A84": 267.5,
+     "t0": -16.08,
+     "cost": 8.0,
+     "chi2": 0.0,
+     "paired": 2,
+     "same_pairing": 0.74,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -16.08,
+       "onset": -16.071,
+       "res": 0.01
+      },
+      "lock": {
+       "model": -0.66,
+       "onset": -0.665,
+       "res": -0.01
+      }
+     },
+     "alt": {
+      "A": 221.0,
+      "cost": 17.0,
+      "pairs": {
+       "strike": -16.071,
+       "lock": -1.136
+      }
+     }
+    },
+    "corrected/beat": {
+     "A": 226.0,
+     "bE": 11.0,
+     "A_range": [
+      149.0,
+      265.0
+     ],
+     "bE_range": [
+      -5.0,
+      12.0
+     ],
+     "t0": -10.1,
+     "cost": 16.02,
+     "chi2": 0.02,
+     "paired": 3,
+     "res": {
+      "wheel released": {
+       "model": -16.08,
+       "onset": -16.071,
+       "res": 0.01
+      },
+      "lock": {
+       "model": -0.69,
+       "onset": -0.665,
+       "res": 0.02
+      },
+      "trip spring clear": {
+       "model": 263.65,
+       "onset": 263.59,
+       "res": -0.06
+      }
+     }
+    },
+    "old/beat": {
+     "A": 217.0,
+     "bE": 10.0,
+     "A_range": [
+      160.0,
+      255.0
+     ],
+     "bE_range": [
+      -4.0,
+      12.0
+     ],
+     "t0": -15.86,
+     "cost": 16.01,
+     "chi2": 0.01,
+     "paired": 3,
+     "res": {
+      "wheel released": {
+       "model": -16.09,
+       "onset": -16.071,
+       "res": 0.02
+      },
+      "lock": {
+       "model": -0.64,
+       "onset": -0.665,
+       "res": -0.03
+      },
+      "trip spring clear": {
+       "model": 263.59,
+       "onset": 263.59,
+       "res": 0.0
+      }
+     }
+    }
+   },
+   "intervals": {
+    "strike -> lock": {
+     "ms": 15.41,
+     "sd": 0.19,
+     "A": 152.93294906774554,
+     "A_range": [
+      155.76909097908663,
+      150.09680715640445
+     ],
+     "corrected_255": 8.47,
+     "old_255": 12.93
+    }
+   }
+  }
+ }
+}

@@ -801,6 +801,67 @@ on what would stop the chronometer.
   temperature curve dominate. The empirical terms are the card's, not physics:
   the model has no other source for a chronometer's day-to-day scatter.
 
+### Checked against real chronometers
+
+The tools above check the model against itself and against the manual's
+figures: parity, not proof. Two tests (11 October 2026) compare it with
+recordings of real, running Model 21s it was never fitted to (References/VIDEOS.md,
+Measurements and Methods; the recordings stay outside the repository, so `ci.py`
+can't run them).
+
+- **`tools/acoustic.py`, the clicks inside a beat.** The beats of a recording
+  averaged (aligned by cross-correlation, speech and handling rejected), the
+  onsets found on the 4-12 kHz envelope with their spread over bootstrap
+  resamples, and paired one to one with `dynamics.js`'s events (unlocking,
+  release, detent landing, strike, lock; on the return swing the trip spring
+  met and coming clear), the swing the free parameter; then the beat error too.
+  The corrected escapement puts the strike 7.2 ms after the unlocking and the lock
+  8.5 ms after the strike at 255°; the old one (before 11 October, its wheel
+  kinematic) 2.1 and 12.9. Both shrink as the swing grows, but their ratio
+  doesn't: about 0.85 against 0.16, so hearing all three tells the models apart.
+  - `s7VW3RiJ97E` (the cleanest): **212° (211-218)**, the unlocking, strike, lock
+    and the trip spring met paired at chi² 0.8; four intervals each read as a swing
+    within 201-220°; measured ratio 0.85. The old model can't place its strike
+    2 ms after an unlocking that is 8.8 ms before the loudest click: its best leaves
+    the loudest click unexplained. With the beat error free, all five onsets at
+    209°, 12° out of beat.
+  - `We1dLNXiBj0`, a balance started by hand at 0:55 (below): read in 6 s
+    stretches, from 1:23 to 2:05 the corrected escapement pairs three clicks as
+    unlocking, strike and lock with the swing alone free (chi² about 0 in all nine;
+    the old model worse in all), and the strike-to-lock interval falls from 10.2
+    to 7.5 ms as the swing builds, read as 217-286°; after it, the unlocking-to-strike
+    interval holds at 6.3-6.4 ms, **about 295° running** (290-302° over eight stretches) (that stretch alone can't tell those two clicks from the strike and the lock, 331°; the build-up, where all three are heard, says which they are).
+  - `xDKFZaY88cM` (a reverberant room, an edited video): roughly 180-210°;
+    `XJQCgMV_GA8` (13 s of sound) and `FpolZSipVmQ`: inconclusive.
+- **`tools/swing.py`, the swing on video.** Only `We1dLNXiBj0` shows the balance
+  long enough, through the plate's cutouts, and it shows a start: let go from a
+  twist at 0:55.2, **256 ± 9° at 2:03.4** (four readings, 244-267°, a screw hole
+  apart; 267° the likeliest), still rising about 1°/s.
+- **Do they agree?** Through the start, sound and picture agree within 2-15° up to
+  about 180°; above it the sound reads 15° (the video's likeliest reading) to 30°
+  (its middle) higher, about 1.5 sigma of the sound's reading and one alias of the
+  video's; the sound's running 295° (290-302°) sits inside the video's extrapolated
+  280-311°. So the two independent tests agree within their uncertainties, the
+  sound a little high. If that excess is real, it is the escapement's strike-to-lock
+  arc about 6 % too long in the model; nothing here can tell it from the video's
+  aliases.
+- **What they say about the model.** (1) The corrected escapement's timing is what a
+  real Model 21 does: the wheel catches the impulse jewel 7-9 ms after the unlocking,
+  not 2 ms, and the intervals follow the swing as `dynamics.js` has them; the old
+  kinematic wheel is ruled out. (2) Real swings differ from unit to unit and with the
+  state of the movement: 212° and about 295° on two movements, around the manual's
+  247.5-270° and the model's 255°. (3) The return swing's clicks sit a few
+  milliseconds off where an in-beat balance puts them, differently in each
+  recording: each movement's beat error (5-12°), fitted as such; so the sound
+  doesn't test the trip spring's own geometry. (4) The balance's free run-down: the
+  start builds up far more slowly than the model's `TF` of 52 s allows. Run in
+  `dynamics.js` (`tools/startup.js`), 52 s misses the video's build-up by 15-16°
+  rms at any drive; it fits within 3-6° only from TF about 120-160 s up (Q 750-1,000), with the
+  drive at 55-65 % of the calibrated torque, and the fit gives no upper bound. That is
+  past the 32-62 s the balance's parts give in `physics.js`: OPEN-QUESTIONS.md. The
+  model isn't changed for it: one movement, started by hand, and its absolute swing
+  known to a screw hole.
+
 ## Sources
 
 - *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948. Used for:

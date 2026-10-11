@@ -1,0 +1,805 @@
+{
+ "note": "acoustic.py: onsets in ms from each recording's aligned click; fits: swing A (deg) with the 16-84 % of resamples, shift t0, cost, residual per event (onset - model, ms)",
+ "recordings": {
+  "We1dLNXiBj0": {
+   "file": "run_We1dLNXiBj0.mkv",
+   "every": 6.0,
+   "stretches": [
+    {
+     "t": 59.0,
+     "beats": 9,
+     "onsets": [
+      [
+       -7.821,
+       6.7
+      ],
+      [
+       -5.053,
+       10.1
+      ],
+      [
+       -1.279,
+       8.6
+      ],
+      [
+       17.736,
+       7.1
+      ]
+     ],
+     "corrected": {
+      "A": 219.5,
+      "cost": 17.4,
+      "pairs": {
+       "jewel meets passing spring": -7.821,
+       "wheel released": -5.053,
+       "detent lands": -1.279
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     },
+     "old": {
+      "A": 200.5,
+      "cost": 17.0,
+      "pairs": {
+       "jewel meets passing spring": -7.821,
+       "strike": -5.053,
+       "detent lands": -1.279
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 65.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -12.256,
+       4.4
+      ],
+      [
+       -5.013,
+       17.2
+      ],
+      [
+       12.408,
+       5.5
+      ],
+      [
+       14.105,
+       4.5
+      ]
+     ],
+     "corrected": {
+      "A": 143.0,
+      "cost": 19.0,
+      "pairs": {
+       "wheel released": -12.256,
+       "strike": -5.013,
+       "lock": 12.408
+      },
+      "strike_lock": 17.42,
+      "A_strike_lock": NaN
+     },
+     "old": {
+      "A": 153.0,
+      "cost": 22.8,
+      "pairs": {
+       "jewel meets passing spring": -12.256,
+       "detent lands": -5.013,
+       "lock": 12.408
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 71.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -10.749,
+       2.9
+      ],
+      [
+       -10.043,
+       2.4
+      ],
+      [
+       -3.062,
+       20.6
+      ],
+      [
+       10.611,
+       5.0
+      ]
+     ],
+     "corrected": {
+      "A": 168.5,
+      "cost": 8.0,
+      "pairs": {
+       "wheel released": -10.043,
+       "strike": -3.062,
+       "lock": 10.611
+      },
+      "strike_lock": 13.67,
+      "A_strike_lock": 168.49192970492916
+     },
+     "old": {
+      "A": 185.5,
+      "cost": 8.0,
+      "pairs": {
+       "jewel meets passing spring": -10.043,
+       "detent lands": -3.062,
+       "lock": 10.611
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 77.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -9.347,
+       4.4
+      ],
+      [
+       -2.447,
+       24.0
+      ],
+      [
+       8.984,
+       5.2
+      ],
+      [
+       10.476,
+       2.0
+      ]
+     ],
+     "corrected": {
+      "A": 218.5,
+      "cost": 8.8,
+      "pairs": {
+       "jewel meets passing spring": -9.347,
+       "detent lands": -2.447,
+       "lock": 8.984
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     },
+     "old": {
+      "A": 210.0,
+      "cost": 10.3,
+      "pairs": {
+       "jewel meets passing spring": -9.347,
+       "detent lands": -2.447,
+       "lock": 8.984
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 83.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -9.39,
+       5.7
+      ],
+      [
+       -1.972,
+       25.9
+      ],
+      [
+       8.229,
+       5.6
+      ]
+     ],
+     "corrected": {
+      "A": 224.5,
+      "cost": 9.7,
+      "pairs": {
+       "jewel meets passing spring": -9.39,
+       "strike": -1.972,
+       "lock": 8.229
+      },
+      "strike_lock": 10.2,
+      "A_strike_lock": 216.68241892922924
+     },
+     "old": {
+      "A": 223.5,
+      "cost": 20.2,
+      "pairs": {
+       "jewel meets passing spring": -9.39,
+       "detent lands": -1.972,
+       "lock": 8.229
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 89.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -9.215,
+       6.1
+      ],
+      [
+       -1.812,
+       24.4
+      ],
+      [
+       7.298,
+       3.7
+      ]
+     ],
+     "corrected": {
+      "A": 241.0,
+      "cost": 8.1,
+      "pairs": {
+       "jewel meets passing spring": -9.215,
+       "strike": -1.812,
+       "lock": 7.298
+      },
+      "strike_lock": 9.11,
+      "A_strike_lock": 239.0556021684397
+     },
+     "old": {
+      "A": 341.0,
+      "cost": 21.0,
+      "pairs": {
+       "detent lands": -9.215,
+       "lock": -1.812
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 95.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -9.16,
+       5.7
+      ],
+      [
+       -1.805,
+       22.0
+      ],
+      [
+       6.814,
+       3.9
+      ]
+     ],
+     "corrected": {
+      "A": 250.0,
+      "cost": 8.0,
+      "pairs": {
+       "jewel meets passing spring": -9.16,
+       "strike": -1.805,
+       "lock": 6.814
+      },
+      "strike_lock": 8.62,
+      "A_strike_lock": 251.17574428522687
+     },
+     "old": {
+      "A": 178.0,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -9.16,
+       "detent lands": -1.805
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 101.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -8.882,
+       6.2
+      ],
+      [
+       -1.875,
+       24.9
+      ],
+      [
+       6.429,
+       3.3
+      ]
+     ],
+     "corrected": {
+      "A": 260.5,
+      "cost": 8.0,
+      "pairs": {
+       "jewel meets passing spring": -8.882,
+       "strike": -1.875,
+       "lock": 6.429
+      },
+      "strike_lock": 8.3,
+      "A_strike_lock": 259.60356183306493
+     },
+     "old": {
+      "A": 215.5,
+      "cost": 21.0,
+      "pairs": {
+       "strike": -8.882,
+       "lock": 6.429
+      },
+      "strike_lock": 15.31,
+      "A_strike_lock": 215.50484882174908
+     }
+    },
+    {
+     "t": 107.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -8.608,
+       7.6
+      ],
+      [
+       -1.818,
+       23.1
+      ],
+      [
+       6.167,
+       5.5
+      ]
+     ],
+     "corrected": {
+      "A": 269.5,
+      "cost": 8.0,
+      "pairs": {
+       "jewel meets passing spring": -8.608,
+       "strike": -1.818,
+       "lock": 6.167
+      },
+      "strike_lock": 7.98,
+      "A_strike_lock": 268.73803862830255
+     },
+     "old": {
+      "A": 316.0,
+      "cost": 21.0,
+      "pairs": {
+       "detent lands": -1.818,
+       "lock": 6.167
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 113.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -23.348,
+       2.7
+      ],
+      [
+       -22.552,
+       4.1
+      ],
+      [
+       -19.963,
+       2.5
+      ],
+      [
+       -8.417,
+       6.6
+      ],
+      [
+       -1.744,
+       23.5
+      ],
+      [
+       5.958,
+       4.1
+      ]
+     ],
+     "corrected": {
+      "A": 277.5,
+      "cost": 17.0,
+      "pairs": {
+       "jewel meets passing spring": -8.417,
+       "strike": -1.744,
+       "lock": 5.958
+      },
+      "strike_lock": 7.7,
+      "A_strike_lock": 277.97925256664996
+     },
+     "old": {
+      "A": 227.5,
+      "cost": 23.4,
+      "pairs": {
+       "wheel released": -23.348,
+       "strike": -22.552,
+       "detent lands": -19.963,
+       "lock": -8.417
+      },
+      "strike_lock": 14.13,
+      "A_strike_lock": 233.38133468989727
+     }
+    },
+    {
+     "t": 119.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -18.863,
+       2.2
+      ],
+      [
+       -18.043,
+       2.2
+      ],
+      [
+       -17.516,
+       2.5
+      ],
+      [
+       -15.991,
+       3.0
+      ],
+      [
+       -14.557,
+       2.0
+      ],
+      [
+       -13.645,
+       2.2
+      ],
+      [
+       -8.227,
+       3.7
+      ],
+      [
+       -1.867,
+       23.0
+      ],
+      [
+       5.73,
+       3.2
+      ]
+     ],
+     "corrected": {
+      "A": 284.5,
+      "cost": 8.1,
+      "pairs": {
+       "jewel meets passing spring": -8.227,
+       "strike": -1.867,
+       "lock": 5.73
+      },
+      "strike_lock": 7.6,
+      "A_strike_lock": 281.4488700641286
+     },
+     "old": {
+      "A": 175.5,
+      "cost": 14.3,
+      "pairs": {
+       "jewel meets passing spring": -15.991,
+       "wheel released": -13.645,
+       "detent lands": -8.227,
+       "lock": 5.73
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 125.0,
+     "beats": 8,
+     "onsets": [
+      [
+       -15.872,
+       2.4
+      ],
+      [
+       -8.23,
+       4.1
+      ],
+      [
+       -6.73,
+       4.0
+      ],
+      [
+       -1.687,
+       19.3
+      ],
+      [
+       5.777,
+       3.6
+      ]
+     ],
+     "corrected": {
+      "A": 282.0,
+      "cost": 4.4,
+      "pairs": {
+       "jewel meets passing spring": -8.23,
+       "wheel released": -6.73,
+       "strike": -1.687,
+       "lock": 5.777
+      },
+      "strike_lock": 7.46,
+      "A_strike_lock": 285.8437188942682
+     },
+     "old": {
+      "A": 187.5,
+      "cost": 10.8,
+      "pairs": {
+       "jewel meets passing spring": -8.23,
+       "wheel released": -6.73,
+       "detent lands": -1.687
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 131.0,
+     "beats": 10,
+     "onsets": [
+      [
+       -8.208,
+       8.1
+      ],
+      [
+       -1.815,
+       20.0
+      ]
+     ],
+     "corrected": {
+      "A": 329.5,
+      "cost": 12.0,
+      "pairs": {
+       "strike": -8.208,
+       "lock": -1.815
+      },
+      "strike_lock": 6.39,
+      "A_strike_lock": 329.4638709555607
+     },
+     "old": {
+      "A": 204.5,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.208,
+       "detent lands": -1.815
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 143.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -8.188,
+       9.5
+      ],
+      [
+       -1.895,
+       20.7
+      ],
+      [
+       5.239,
+       2.9
+      ]
+     ],
+     "corrected": {
+      "A": 297.0,
+      "cost": 8.0,
+      "pairs": {
+       "jewel meets passing spring": -8.188,
+       "strike": -1.895,
+       "lock": 5.239
+      },
+      "strike_lock": 7.13,
+      "A_strike_lock": 298.17636445774684
+     },
+     "old": {
+      "A": 208.0,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.188,
+       "detent lands": -1.895
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 149.0,
+     "beats": 10,
+     "onsets": [
+      [
+       -21.247,
+       2.1
+      ],
+      [
+       -8.476,
+       6.8
+      ],
+      [
+       -2.102,
+       20.6
+      ]
+     ],
+     "corrected": {
+      "A": 223.0,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.476,
+       "detent lands": -2.102
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     },
+     "old": {
+      "A": 205.0,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.476,
+       "detent lands": -2.102
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 155.0,
+     "beats": 7,
+     "onsets": [
+      [
+       -16.756,
+       2.1
+      ],
+      [
+       -15.347,
+       2.3
+      ],
+      [
+       -8.034,
+       6.8
+      ],
+      [
+       -1.874,
+       20.3
+      ]
+     ],
+     "corrected": {
+      "A": 201.5,
+      "cost": 12.0,
+      "pairs": {
+       "wheel released": -8.034,
+       "strike": -1.874
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     },
+     "old": {
+      "A": 212.5,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.034,
+       "detent lands": -1.874
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 161.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -8.545,
+       8.8
+      ],
+      [
+       -2.207,
+       22.8
+      ]
+     ],
+     "corrected": {
+      "A": 293.0,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.545,
+       "strike": -2.207
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     },
+     "old": {
+      "A": 206.5,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.545,
+       "detent lands": -2.207
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 167.0,
+     "beats": 11,
+     "onsets": [
+      [
+       -8.138,
+       8.6
+      ],
+      [
+       -1.852,
+       23.1
+      ]
+     ],
+     "corrected": {
+      "A": 336.0,
+      "cost": 12.0,
+      "pairs": {
+       "strike": -8.138,
+       "lock": -1.852
+      },
+      "strike_lock": 6.29,
+      "A_strike_lock": 335.96188928852337
+     },
+     "old": {
+      "A": 208.0,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.138,
+       "detent lands": -1.852
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    },
+    {
+     "t": 173.0,
+     "beats": 10,
+     "onsets": [
+      [
+       -8.317,
+       8.4
+      ],
+      [
+       -1.941,
+       22.5
+      ]
+     ],
+     "corrected": {
+      "A": 192.0,
+      "cost": 12.0,
+      "pairs": {
+       "wheel released": -8.317,
+       "strike": -1.941
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     },
+     "old": {
+      "A": 205.0,
+      "cost": 12.0,
+      "pairs": {
+       "jewel meets passing spring": -8.317,
+       "detent lands": -1.941
+      },
+      "strike_lock": null,
+      "A_strike_lock": NaN
+     }
+    }
+   ]
+  }
+ }
+}

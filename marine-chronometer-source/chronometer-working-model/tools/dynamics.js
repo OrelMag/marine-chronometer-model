@@ -77,10 +77,12 @@ const at=(T,x)=>{const f=ti(x),i=Math.floor(f),a=T[i],b=T[i+1];if(isNaN(a))retur
    (their stiffness, times), pre (the preload, times), dI (the detent's inertia, times), J (the wheel and train's), eB (the detent's restitution on its stop
    button: estimated 0.3, metal on a steel button, its range tried below), eW (the tooth on the impulse jewel: plastic), A (start, degrees), T, from (when
    the rate is measured from), ideal (no escapement: a kick at the dead point, which by Airy changes no rate, to measure the damping's own share), ext(t):
-   the case's angular acceleration al (rad/s²) about the staff and its linear acceleration ax, ay (m/s², unit frame); TF (the balance's run-down, s);
-   trace: an array that collects each event as [t, event, θ°, θ', lift/release lift, detent mode, wheel mode, wheel/pitch] (for debugging) */
+   the case's angular acceleration al (rad/s²) about the staff and its linear acceleration ax, ay (m/s², unit frame); TF (the balance's run-down, s); bE (degrees: out of beat, the hairspring at rest with the balance that far from the escapement's zero);
+   trace: an array that collects each event as [t, event, θ°, θ', lift/release lift, detent mode, wheel mode, wheel/pitch] (events: 4 the jewel meets the passing spring, 2 the wheel
+   released, 5 the detent leaves the jewel, 3 it lands on its stop, 0 the tooth strikes the impulse jewel, 1 the next tooth locks; on the return swing 8 the jewel
+   meets the trip spring, 9 the spring comes clear: acoustic.py times them against recordings) */
 function sim(o={}){
-  const s=o.s??1,C=2*I/(o.TF??TF),phys=(o.mode??'phys')==='phys',tauE=TAUE*s,J=JT*(o.J??1),eB=o.eB??(phys?0.3:0),eW=o.eW??0,ext=o.ext,T=o.T??80,from=o.from??40,ideal=!!o.ideal;
+  const s=o.s??1,C=2*I/(o.TF??TF),phys=(o.mode??'phys')==='phys',tauE=TAUE*s,J=JT*(o.J??1),eB=o.eB??(phys?0.3:0),eW=o.eW??0,ext=o.ext,T=o.T??80,from=o.from??40,ideal=!!o.ideal,bE=(o.bE??0)*D;
   const id=phys?ID*(o.dI??1):ID*1e-4,kr=KD*(o.kD??1),pre=MPRE*(o.pre??1),kp=KTIP*ES*ES*(o.kP??1);
   const cd=2*Math.sqrt(kr*id)/(2*(o.Qd??100)),mDraw=tauE*CDR/DREL;   /* the detent's own damping (Q 100, estimated); the draw's resistance spread over the lift to release */
   const hf=o.hf??4e-6,hc=o.hc??1e-4;
@@ -94,7 +96,7 @@ function sim(o={}){
   const acc=(tt,th,w,d,dv,ph,pv)=>{
     if(ext){const e=ext(tt);X.al=e.al||0;X.ax=e.ax||0;X.ay=e.ay||0;}
     const Ml=lift(),draw=wm===0&&d>0?mDraw:0;
-    let M=I,F=-K*th-C*w-I*X.al,h1=0,h2=0,g1=0,g2=0;
+    let M=I,F=-K*(th-bE)-C*w-I*X.al,h1=0,h2=0,g1=0,g2=0;
     if(pc){const p=at(Q2,th),q=at(Q21,th);if(!isNaN(p)&&!isNaN(q))F-=kp*p*q;}   /* the trip spring bent on the return, quasi-static */
     if(dm===2){h1=at(S21,th)/LEN;h2=at(S22,th)/LEN;if(isNaN(h1))h1=0;if(isNaN(h2))h2=0;M+=id*h1*h1;F+=-id*h1*h2*w*w+h1*(Ml-pre-kr*d-cd*h1*w-draw);}
     if(wm===2){g1=at(G1,th);g2=at(G2,th);if(isNaN(g1))g1=0;if(isNaN(g2))g2=0;M+=J*g1*g1;F+=-J*g1*g2*w*w+g1*(-tauE-J*X.al);}
@@ -144,8 +146,8 @@ function sim(o={}){
        is past it (passed: the next active swing can unlock) only if the tip comes clear while the return swing goes on; turned back first, the spring follows
        the jewel back and the detent stays on its stop (makeEsc's AMIN) */
     if(!ideal){const a=at(Q1,th),b=at(Q2,th);
-      if(pc){if(!isNaN(b)&&b>0&&a<pp)pp=b;else{pc=false;pp=0;passed=w<0;if(passed)st.pass.push(th/D);}}
-      else if(w<0&&!isNaN(b)&&b>0&&a<0){pc=true;pp=b;passed=false;}}
+      if(pc){if(!isNaN(b)&&b>0&&a<pp)pp=b;else{pc=false;pp=0;passed=w<0;if(passed)st.pass.push(th/D);if(o.trace)o.trace.push([t.toFixed(5),9,(th/D).toFixed(2),w.toFixed(2),'','','','']);}}
+      else if(w<0&&!isNaN(b)&&b>0&&a<0){pc=true;pp=b;passed=false;if(o.trace)o.trace.push([t.toFixed(5),8,(th/D).toFixed(2),w.toFixed(2),'','','','']);}}   /* traced as 8 (the jewel meets the trip spring) and 9 (it comes clear): the return swing's clicks (acoustic.py) */
     if(ideal)continue;
     if(o.trace&&hit_>=0)o.trace.push([t.toFixed(5),hit_,(th/Math.PI*180).toFixed(2),(w).toFixed(2),(d/DREL).toFixed(3),dm,wm,(ph/P).toFixed(3)]);
     switch(hit_){
