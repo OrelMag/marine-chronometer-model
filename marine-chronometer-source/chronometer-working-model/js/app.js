@@ -1070,8 +1070,9 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     let E,s;
     if(!H.held){let q=at(tSim);const Eb=lastE!=null?Math.max(q.E,lastE):q.E,room=blockedNow()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity;   /* Eb: the wheel never turns back (the progress ESC.state gives at a phase changes with the swing: a swing cut short by the arm in a frame, or a knock, can leave the count ahead of the phase until the next unlocking); room: the last whole beat before a spoke meets the dog point */
       const hold=()=>{H.held=true;H.bph=tSim/0.5+H.bOff+PL;};
-      if(dtS>0&&lockd(q.s)&&(!go||H.amp<ESC.AMIN||brake||Eb+1>room)){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}   /* the train stops at a locked beat */
-      else{if(dtS>0){tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}q=at(tSim);}
+      const stop=!go||H.amp<ESC.AMIN||brake;if(dtS>0&&lockd(q.s)&&(stop||Eb+1>room)){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}   /* the train stops at a locked beat */
+      else{if(dtS>0){let adv=dtS*rateK;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!winding)adv=Math.min(adv,(RUN_H-hrs)*3600);   /* the train's time this frame: stopping, only the beat under way finishes; the fusee runs no further than its chain */
+          tSim+=adv;rErr+=adv*(1-1/rateK);if(!winding){hrs=Math.min(RUN_H,hrs+adv/3600);if(st.speed>1)showH();}q=at(tSim);}   /* the fusee turns with the train, so its hours go with the train's time (rateK), not the master's */
         E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){hold();H.Eh=room;}}}
     if(H.held){H.bph+=dtS*rateW/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp,drv);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
       if(go&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockd(s)){H.held=false;   /* the train goes again from where the balance is, on a whole beat, unless the dog point leaves it no whole beat (the hold's own test) */

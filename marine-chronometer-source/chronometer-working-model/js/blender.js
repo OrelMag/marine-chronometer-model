@@ -37,8 +37,8 @@ const BLENDER=(()=>{
         else if(brake)a*=Math.exp(-dt/A.TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/A.TF));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a; }
       let E,s;
       if(!H.held){let q=at(H.tSim);const Eb=H.lastE!=null?Math.max(q.E,H.lastE):q.E,room=blocked()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff+PL;};
-        if(dt>0&&lockd(q.s)&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}
-        else{if(dt>0){H.tSim+=dt;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+dt/3600);q=at(H.tSim);}E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){hold();H.Eh=room;}}}
+        const stop=!run||H.amp<ESC.AMIN||brake;if(dt>0&&lockd(q.s)&&(stop||Eb+1>room)){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}
+        else{if(dt>0){let adv=dt;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!H.winding)adv=Math.min(adv,(RUN_H-H.hrs)*3600);H.tSim+=adv;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+adv/3600);q=at(H.tSim);}E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){hold();H.Eh=room;}}}
       if(H.held){H.bph+=dt/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp,drv);s.p=p;E=H.Eh;
         if(run&&!brake&&H.amp>=ESC.AMIN&&!(blocked()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockd(s)){H.held=false;H.bOff=(((H.bph-PL-H.tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(H.tSim).E);}}
       H.lastE=E;return{E,th:s.th,lift:s.lift,psDef:s.psDef,n:H.hrs*FUSEE_PER_HOUR,blk:H.blk,arm:H.arm,winding:H.winding,dt};};

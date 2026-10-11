@@ -1803,6 +1803,13 @@ An arbor needs pivots and shoulders; a stone its seat.
   torque, 7° at 0.3 (run nearly down, or on the sustaining spring). They pass the drive now (the
   export its Running's, `drvF(h0)`, in the beat it samples and the rig's beat too). Keep: every
   `ESC.state` call that draws the train passes the drive the swing is worked out at.
+- **The fusee ran on the master's time and past its chain.** The hours since winding (`hrs`) went
+  with the frame's master time while the train went with it times the rate, so a fast or slow
+  chronometer's fusee and wind indicator drifted from its own train; and the frame that ran it down
+  ran the train its whole length, up to 500 s past the chain's end at 10,000×. The fusee's hours now
+  go with the train's own time, and a frame runs the train no further than the chain has left (then,
+  stopping, only to the end of the beat under way). Keep: `hrs` advances with `tSim`, never past
+  `RUN_H`, and what may drive the train after it (`canDrive`) carries it on without moving `hrs`.
 
 ## Build, tools and docs
 
