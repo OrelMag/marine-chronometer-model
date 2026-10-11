@@ -123,4 +123,6 @@ chk(comp>0.3*need&&comp<1.7*need,`against the ${f(need,1)} s a day a °C a steel
 {const want={stage:`${f(etaEq(Plo),2)}-${f(etaEq(Phi),2)}`,Qparts:`${f(qLo,0)}-${f(qHi,0)}`,TFparts:`${f(TF(qLo),0)}-${f(TF(qHi),0)}`,Mup:f(Mup,2),sUp:f(sUp/1e9,2),esc:range(esc,0.85,0.95).map(x=>f(x*1e6,0)).join('-'),chase:f(c9.phb/D,0),Q:`${f(q0,0)}-${f(q1,0)}`,steelRate:f(-rate(eSt,aSt,aSt),1),comp:f(comp,1),eNeed:`${f(e0*1e6,0)} to ${f(e1*1e6,0)}`};
  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-phys="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];
  for(const[k,v]of Object.entries(want))chk(got[k]===v,`the essay quotes ${k} as ${got[k]??'(missing)'}: found ${v}`);}
-console.log(rows.join('\n'));if(fail)process.exitCode=1;
+/* for dynamics.js, strength.js and errorbudget.js: the fusee's torque, the train's ratio and efficiencies, the balance's damping from its parts */
+module.exports={Tf,Mup,Mdn,sUp,ratioT,Plo,Phi,qLo,qHi,qAir,qEnd,sideQ,qMat,Eb,MS,b,E,IN,rB,TFm,Qm,I,k,A,mBal,J};
+if(require.main===module){console.log(rows.join('\n'));if(fail)process.exitCode=1;}
