@@ -49,16 +49,16 @@ The goal they are judged against: someone with only the site can make a Model 21
 
 ## Found by drawing the hairspring breathing (11 October 2026)
 
-- **The inner terminal curve against the collet (42188, 108-13).** Drawn as the couple bends it (every part of the strip's
-  curvature changing by θ/L, model README "The hairspring, designed"), the inner curve curls inward by about θs²/2L near the
-  collet's clamp. At rest it passes 0.04 mm from the collet's corner 7 mm from the clamp; wound past about 50° it runs into the
-  collet's outline, 0.09-0.13 mm at the 255° swing (`fine.py`'s balance–hairspring pair at phase 0 will show it). A real spring
-  can't touch its collet without upsetting its rate, so one of the two is wrong: the collet's size (drawn after Figs. 5 and 6 and
-  scaled so its end face is at `HS_RI` 3.2 mm, itself an estimate: the video reads the wedge pin 2.8-3.9 mm out) or the inner curve
-  (the shortest that meets Phillips' conditions from that end, `HSPR.design`). What would settle it: Fig. 6 measured for the
-  collet's size against the staff rather than the coil, a frame showing the spring's inner end leaving the collet (KLUwI2UUCMQ
-  6:53, the balance held arm to the camera, is the nearest), or the inner curve designed to keep clear of the collet's outline
-  (a constraint `HSPR.design` doesn't have: it keeps only a radius off the staff).
+- **The collet's hidden side against the inner terminal curve (42190, 42188; 108-13).** Drawn as the couple bends it, the inner curve curls
+  inward by about θs²/2L near the collet's clamp (0.39 mm, 7 mm out, at the 347° the model allows). With the collet's body taken back to the
+  plate's corner (its hidden side: Fig. 6 draws only the front), the corner stood 0.02 mm off the strip at rest and in its way wound past about
+  50°. No inner curve that meets Phillips' conditions from the collet's end clears it (searched with two more terms in its curvature: the
+  farthest out of 3,000 passes the corner at r 3.64 where 4.0 is needed), so the hidden side is now drawn stopping 0.9 of the way to the corner:
+  0.063 mm clear at 347°, 0.35 at rest. Searched for a source (11 October 2026): the manual gives no collet sizes (parts list 42190, Figs. 5,
+  6, 49); Hamilton's patents US 2,391,816 (a counterpoised collet: a round hub under a thin sector plate, the spring on the plate's arc) and
+  US 2,457,631 show the form, not the Model 21's sizes; KLUwI2UUCMQ 6:52.5-6:53.5 (the balance arm to the camera) show the sector plate
+  reaching about 3.9 mm out but not the body under it, nor the inner curve's path clearly (`$MC_VIDEO/balance/c6-53.5.png`). What would settle
+  it: a photograph of a Model 21 collet off its staff, or of the spring's inner end from below the balance.
 
 ## The likeliest sources (both behind NAWCC membership)
 

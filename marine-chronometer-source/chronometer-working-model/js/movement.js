@@ -959,7 +959,10 @@ function buildMovement(M){
     for(let k=0;k<=16;k++){const a=al+Math.PI+dh+(TAU-2*dh)*k/16;key.push([CH[0]+CH[2]*Math.cos(a),CH[1]+CH[2]*Math.sin(a)]);}
     const kh={pts:key},hub=[],ob=Math.asin(hw/HO),T=(gm,y)=>[gm,new THREE.Matrix4().makeTranslation(0,y,0)];
     for(let k=0;k<=32;k++){const a=al+ob+(TAU-2*ob)*k/32;hub.push([HO*Math.cos(a),HO*Math.sin(a)]);}for(let k=0;k<=16;k++){const a=al+TAU-db-(TAU-2*db)*k/16;hub.push([HI*Math.cos(a),HI*Math.sin(a)]);}
-    const low=[[CG,CZ],B,...ledge],tl=[[NX[0],CZ],[NX[0],zl(NX[0])],...LA],tr=[[NX[1],CZ],[CU,CZ],D,[NX[1],zl(NX[1])]];   /* the body behind the step (CG), its hidden side taken back to the corner B; the tongue either side of the notch, which runs back to the ledge */
+    const Bh=[CG+(B[0]-CG)*0.9,CZ+(B[1]-CZ)*0.9],low=[[CG,CZ],Bh,...ledge],tl=[[NX[0],CZ],[NX[0],zl(NX[0])],...LA],tr=[[NX[1],CZ],[CU,CZ],D,[NX[1],zl(NX[1])]];   /* the body behind the step (CG), its hidden side (no view shows it) ending at Bh, 0.9 of the way to the plate's corner B: taken to B until 11 October 2026,
+       the corner stood 0.02 mm off the inner terminal curve at rest and in its way once the spring, wound, curls in (R.spPath); no curve meeting Phillips' conditions from
+       the collet's end passes it (searched), and a real spring never touches its collet, so the hidden side is drawn as short of B as gives the strip 0.05 mm at the widest
+       swing (347 deg, 0.06), the plate (measured, Fig. 6) unchanged above; the tongue either side of the notch, which runs back to the ledge */
     mesh(cg,mergeGeo([T(polyGeo(hub,CHB),y0-CHB),T(polyGeo(top,0.15,[kh]),y0),T(polyGeo(out,CP-0.15,[kh]),y0+0.15),T(polyGeo(low,HS_Y+CT/2-y0-CP,[kh]),y0+CP),
       T(polyGeo(tl,CT),HS_Y-CT/2),T(polyGeo(tr,CT),HS_Y-CT/2)]),M.steel);
     /* clamp (at the drawing's scale, then by k): jaws 0.45 thick over and under the tongue (0.02 clear), the back closing the slot 0.34 past the end face (the spring's wire),
@@ -1124,8 +1127,8 @@ function buildMovement(M){
      gives), concentric, the terminal curves curling by as much; the length is kept (each segment turns, none stretches). Built from the stud's end back, each 0.3 mm
      segment turned at its middle; what second order leaves at the collet's end (0.024 mm at 255°, 0.071 at 347°) is taken out along the free length in proportion to
      1 - s/L. Against the strip solved as an elastica (HSPR.large), the drawn centreline is within 0.025 mm at 255° and 0.039 at 345° (the rigid turn was 0.28-0.46 off).
-     Wound past about 50°, the inner curve, 0.04 mm from the collet's corner 7 mm from the clamp at rest, curls onto it (0.09-0.13 mm at 255°): the collet's size and the
-     inner curve are both estimated (OPEN-QUESTIONS.md) */
+     Near the collet's clamp the inner curve curls in by about th s²/2L (0.39 mm 7 mm out at 347°): the collet's body (its hidden side, Bh above) leaves it 0.063 mm at
+     347°, 0.35 at rest (OPEN-QUESTIONS.md) */
   R.spPath=th=>{const P=HSD.pts,n=P.length,L=HSD.L,q=new Float64Array(2*n);let x=P[n-1][0],v=P[n-1][1];q[2*n-2]=x;q[2*n-1]=v;
     for(let i=n-2;i>=0;i--){const a=P[i],b=P[i+1],d=th*(1-Math.min(L,Math.max(0,(a[2]+b[2])/2))/L),c=Math.cos(d),s=Math.sin(d),dx=b[0]-a[0],dv=b[1]-a[1];x-=dx*c-dv*s;v-=dx*s+dv*c;q[2*i]=x;q[2*i+1]=v;}
     const ex=q[0]-(P[0][0]*Math.cos(th)-P[0][1]*Math.sin(th)),ev=q[1]-(P[0][0]*Math.sin(th)+P[0][1]*Math.cos(th));

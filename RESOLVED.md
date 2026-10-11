@@ -235,6 +235,12 @@ Contents:
   0.28 off). Keep: the shape the couple gives, the length kept, the clamped ends exact; it is
   rebuilt only when θ changes (ribbonGeo in place, 0.1 ms). It brought out that the inner curve
   passes 0.04 mm from the collet at rest (OPEN-QUESTIONS.md). `9714a9d`
+- **The breathing hairspring ran into its collet.** Wound past about 50°, the inner curve, curling inward near the
+  clamp, met the corner of the collet's body (0.09-0.13 mm at 255°), whose hidden side had been taken back to the
+  plate's corner; no inner curve meeting Phillips' conditions from the collet's end clears that corner. The hidden
+  side, which no source shows, now stops 0.9 of the way to it: the strip clears the collet by 0.063 mm at 347°, the
+  widest swing the model allows. Keep: a real spring never touches its collet; the strip at least 0.05 mm off it
+  beyond the clamp's edge at every swing up to TRIP + 15°.
 
 ## Going train and heights
 
