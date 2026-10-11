@@ -3364,12 +3364,14 @@ function buildMovement(M){
      r 8.9-8.7, then from 84 deg turns in to r 7.04 and runs on there to its foot; k=1's at r 9.28-9.11 to 132 deg, where its foot begins. WPE: the springs' ends on the arms
      (wpsGeo's E), where the beds start. WPK[k]: the foot's pocket (to, ti: where its outer and inner walls leave the bed's; ri, ro its radii; t1 its far end) and the foot's two
      screws (sc, t and r: the holes, 0.67 across, on the frame: k=0's at -130.0 and -159.1 deg on it, k=1's at 10.4 and 42.6, the pivots at -5.8 and -178.4, 172.6 deg apart
-     where the model's are opposite: the pivots stand 0.85 proud, which the frame's 23 deg tilt can move 4 deg). k=0's pocket's inner wall is the traced r 7.04 line;
+     where the model's are opposite: the pivots stand 0.85 proud, which the frame's 23 deg tilt can move 4 deg). k=0's pocket's inner wall is the traced r 7.04 line
+     (the band's inner edge, r 7.0: the fusee's winding ratchet turns at that height inside it, its tips at r 6.9, so the foot and the spring lie outside it, the spring's centre
+     held to r 7.2 where it enters the foot; until fine.py found the foot 0.35 into the ratchet's tips, the line was taken as the bed's centre and the wall put at r 6.8);
      its outer wall (lit) and the whole of k=1's pocket aren't seen: estimated, ro the bed's outer edge, ri k=0's. BD, the beds' depth, isn't seen: 0.2, estimated.
      Until 11 October 2026 the face was flat, the springs at r 8.9 and their feet's screws 10 deg apart at 140-150 deg (read to about 1 mm) */
   const WPB=[[[24,8.90],[30,8.94],[36,8.90],[42,8.83],[48,8.78],[54,8.74],[60,8.72],[66,8.69],[72,8.72],[78,8.69],[81,8.64],[84,8.51],[87,8.36],[90,8.17],[93,7.96],[96,7.68],[99,7.26],[102,7.04],[108,7.04],[114,7.05],[120,7.06],[123,7.06]],
       [[36,9.28],[42,9.28],[48,9.30],[54,9.32],[60,9.32],[66,9.35],[72,9.34],[78,9.29],[84,9.26],[90,9.21],[96,9.21],[102,9.24],[108,9.18],[114,9.15],[120,9.15],[126,9.16],[132,9.11]]],
-    WPE=[7.87,9.10],BH=0.3,BD=0.2,WPK=[{to:81,ti:123,t0:102,t1:160,ri:6.8,ro:8.94,sc:[[124.2,8.35],[153.3,8.28]]},{to:132,ti:132,t0:132.6,t1:176,ri:6.8,ro:9.41,sc:[[139.0,7.81],[171.2,8.19]]}],
+    WPE=[7.87,9.10],BH=0.3,BD=0.2,WPK=[{to:81,ti:99,t0:102,t1:160,ri:7.0,ro:8.94,sc:[[124.2,8.35],[153.3,8.28]]},{to:132,ti:132,t0:132.6,t1:176,ri:7.0,ro:9.41,sc:[[139.0,7.81],[171.2,8.19]]}],
     wpA=k=>k*Math.PI+0.4,wpP=(k,t,r)=>[r*Math.cos(wpA(k)+t*D2R),r*Math.sin(wpA(k)+t*D2R)],
     wpR=(k,t)=>{const T=WPB[k];if(t<=T[0][0])return WPE[1]+(T[0][1]-WPE[1])*(t-WPE[0])/(T[0][0]-WPE[0]);for(let i=1;i<T.length;i++)if(t<=T[i][0])return T[i-1][1]+(T[i][1]-T[i-1][1])*(t-T[i-1][0])/(T[i][0]-T[i-1][0]);return T[T.length-1][1];},
     wpBed=k=>{const K=WPK[k],ts=[];for(let t=6;t<K.t1;t+=1.5)ts.push(t);ts.push(K.t1);const o=[],n=[];let st=false;   /* the bed and its foot's pocket, one outline */
@@ -3407,7 +3409,7 @@ function buildMovement(M){
     const zc=-P[0]*Math.sin(th0)-P[1]*Math.cos(th0),pts=WPO.map(([u,t])=>[-u,-t*Math.sign(zc)]),pw=mesh(R.sr,polyGeo(pts,0.5,[[0,0,0.403]]),M.steel,P[0],-10.3,P[1]);   /* zc: the ratchet's centre across the pawl's frame */
     pc(hn(cylBetween(R.sr,0.22,-9.45,-10.3,M.steel,...P,12),'42009',{sub:1}),'pawls');pc(pw,'pawls');   /* the stud it turns on, pressed into the wheel, riveted flush with the pawl's top, which the fusee's underside turns over (C Spinner 19:12: each pawl on a stud; two of the holes under the wheel, 19:05) */
     pw.userData.q=P;pw.userData.th0=th0;pw.userData.pts=pts;R.wp.push(pw);
-    const K=WPK[k],FP=[];pw.userData.arc=[];for(let t=K.t0+2;t>20;t-=3)pw.userData.arc.push(wpP(k,t,wpR(k,t)));   /* along its bed's centre, from its foot */
+    const K=WPK[k],FP=[];pw.userData.arc=[];for(let t=K.t0+2;t>20;t-=3)pw.userData.arc.push(wpP(k,t,Math.max(wpR(k,t),K.ri+0.2)));   /* along its bed's centre, from its foot (0.05 clear of the pocket's inner wall) */
     for(let t=K.t0;t<K.t1-0.4;t+=2)FP.push(wpP(k,t,K.ro-0.05));FP.push(wpP(k,K.t1-0.4,K.ro-0.05),wpP(k,K.t1-0.4,K.ri+0.05));for(let t=K.t1-2.4;t>K.t0;t-=2)FP.push(wpP(k,t,K.ri+0.05));FP.push(wpP(k,K.t0,K.ri+0.05));
     pw.userData.spr=hn(mesh(R.sr,wpsGeo(pw,pw.userData.th0),M.blued,0,-10.1,0),'42007');pw.userData.sprTh=pw.userData.th0;
     hn(mesh(R.sr,polyGeo(FP,0.47+BD,WPS[k].map(q=>hT(...q,0.4))),M.blued,0,-10.27,0),'42007',{sub:1});
