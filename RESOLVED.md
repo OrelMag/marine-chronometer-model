@@ -1340,6 +1340,16 @@ Contents:
   were full-height strips). The box's size checked against sale listings
   (190-197 mm): unchanged. Keep them measured (SHAPE-PASS.md, gaps 1). `7bb49ad`
 
+- **The gimbals kept the case level at sea.** The case hung as a pendulum on pivots fixed in space,
+  so as the box rolled it stayed within 0.14° of level. At sea the box rolls about the ship's axis,
+  metres below it, so the pivots accelerate and the case hangs along the apparent vertical, gravity
+  less their acceleration, which leans it several degrees at the ends of a roll. The pendulum now
+  takes the pivots' acceleration from the ship's roll and pitch about axes 5 m below (`gimStep`,
+  `GIM` in `box.js`, estimated), one function for the page and the export: 5.4° at 7 s and 14°,
+  within 0.2° of the apparent vertical; faster than a ship rolls the box stands for one rocked about
+  its pivots. Rocking now eases in as it eases out. Keep: the page and the export call the one
+  `gimStep`; the ship's motion comes with its rates (`GIM.sea`).
+
 ## Accuracy to the manual
 
 - **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,

@@ -214,6 +214,29 @@ function bankAt(f){const P=ESC.PA,g=-f*ESC.P;for(let i=0;i<P.length-1;i++)if(P[i
 /** @param {number} p @param {number} a @param {number} s @param {number|null} b */
 function bankState(p,a,s,b){if(b==null||a<=Math.abs(b)&&b<=0)return ESC.state(p,a,s);if(a<=b)return ESC.state(0.5,b,s);
   const ps=Math.acos(clamp(-b/a,-1,1))/TAU,L=1-2*ps,r=((p-ps)%1+1)%1;return ESC.state(ps+r%L,a,s);}
+/* the gimbals with inertia (2.5 in IDEAS.md): the case (with the ring, about the ring's pivots) hangs below each axis as a pendulum, ψ its angle from the vertical and φ the box's.
+   At sea the box rolls and pitches about the ship's axes, GIM.RD metres below it (5, illustrative: a chart room above the ship's centre of roll), so the pivots move with the box and
+   their acceleration a leans the case toward the apparent vertical, gravity less a. Per axis, ψ'' = -ω0² ((1 + av/g) sin ψ - (ah/g) cos ψ) - 2ζω0 (ψ' - φ'), with
+   ah = RD (φ'' cos φ - φ'² sin φ) and av = -RD (φ'' sin φ + φ'² cos φ) from the ship's angle and its rates (sea: [φ, φ', φ''] each and rd, the RD used, or null); the box being above the axis, at the ends of
+   a roll the case leans against it by RD ω²/g of the roll, about 6° at the default 7 s and 14°. The pivots' friction pulls it after the box (φ' from the box's angles, a jolt with them).
+   ω0: the case's own period, about 0.7 s (the case and movement's weight some 15 mm below the pivots, their radius of gyration about 45 mm, estimated); ζ estimated. fr: how free
+   the gimbals are (0 latched: the case goes with the box). It stops against the ring 25° off the box. G: {p, r: [ψ, ψ'], lp, lr: the box's last angles, ap, ar: the apparent vertical} */
+/* the ship's motion the box shows (Display, Ship motion; illustrative): rolling 14° each way at the period chosen, pitching 0.55 of that at 0.7 of its rate. GIM.sea(u, w, k): u the
+   roll's phase (rad), w its rate (rad/s), k how much of it (0 to 1, easing in and out; its own rate of change left out): pitch and roll, each [angle, rate, acceleration], and rd,
+   the axes' distance below the box: GIM.RD at a ship's periods (4 s and up), falling to 0 at 2 s, since a box rolled faster than any ship rolls stands for one rocked about
+   its own pivots (the slider's short end, which shows the case's own period) */
+const GIM={W0:TAU/0.7,Z:0.05,LIM:25*D2R,RD:5,G:9.80665,PR:0.7,
+  /** @param {number} u @param {number} w @param {number} k */ sea(u,w,k){const a=14*D2R*k,b=0.55*a,f=GIM.PR,v=f*u+1.1;return{r:[a*Math.sin(u),a*w*Math.cos(u),-a*w*w*Math.sin(u)],p:[b*Math.sin(v),b*f*w*Math.cos(v),-b*f*f*w*w*Math.sin(v)],rd:GIM.RD*clamp((TAU/w-2)/2,0,1)};}};
+/** @param {{p:number[],r:number[],lp:number,lr:number,ap?:number,ar?:number}} G @param {number} dt @param {number} ph the box's pitch @param {number} rl its roll
+    @param {{p:number[],r:number[],rd:number}|null} sea the ship's pitch and roll with their rates (GIM.sea) @param {number} fr */
+function gimStep(G,dt,ph,rl,sea,fr){if(dt<=0){G.lp=ph;G.lr=rl;return;}
+  const n=Math.ceil(dt/0.002),h=dt/n,W2=GIM.W0*GIM.W0,ZW=2*GIM.Z*GIM.W0,rd=sea?sea.rd:0;
+  for(const[q,f,f0,m,k]of/** @type {[number[],number,number,number[]|null,string][]} */([[G.p,ph,G.lp,sea&&sea.p,'ap'],[G.r,rl,G.lr,sea&&sea.r,'ar']])){const v=(f-f0)/dt;
+    const ah=m?rd*(m[2]*Math.cos(m[0])-m[1]*m[1]*Math.sin(m[0]))/GIM.G:0,av=m?1-rd*(m[2]*Math.sin(m[0])+m[1]*m[1]*Math.cos(m[0]))/GIM.G:1;G[k]=Math.atan2(ah,av);   /* av: 1 + the vertical acceleration over g */
+    if(fr<1e-3){q[0]=f;q[1]=v;continue;}
+    for(let i=0;i<n;i++){q[1]+=h*(-W2*(av*Math.sin(q[0])-ah*Math.cos(q[0]))-ZW*(q[1]-v));q[0]+=h*q[1];}
+    if(Math.abs(q[0]-f)>GIM.LIM){q[0]=f+Math.sign(q[0]-f)*GIM.LIM;q[1]=v;}}
+  G.lp=ph;G.lr=rl;}
 /* the twist that starts a stopped chronometer (Sec. III: "a single quick twist to the right or the left", the box grasped with both hands on its table): the box turned TWIST.A about
    the vertical in TWIST.T1 and back as quickly, TWIST.T2 later, on smoothsteps (35°, 0.1 s and 0.25 s: illustrative). The balance, free on its jewelled pivots but for the
    hairspring, stays where it is in space while the box turns under it, so its angle in the movement goes as θ'' = -ω²θ - α''; turning back half its period later doubles what

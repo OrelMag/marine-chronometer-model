@@ -1035,21 +1035,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   {const s=location.hash.slice(1)?'':lsGet('cm-state');if(s)history.replaceState(null,'','#'+s);}   /* no hash: the settings remembered, as if they were one */
   const startView=applyHash(true);
 
-  /* ---------- gimbals with inertia (2.5 in IDEAS.md): the case (with the ring, about the ring's pivots) hangs as a pendulum below each axis, its angle ψ from the vertical:
-     ψ'' = -ω0² ψ - 2ζω0 (ψ' - φ'), φ the box's angle, the pivots' friction pulling it after the box. Rolling slowly the case stays level; near its own period (GW0, about 0.7 s:
-     the case and movement's weight some 15 mm below the pivots, their radius of gyration about 45 mm, estimated) it can't, and it swings with the box. ζ estimated. The box rolls
-     about the pivots, so they don't move; a jolt kicks the case. Latched (fr 0) it goes with the box; ?snap and reduced motion keep it exactly level, as before ---------- */
-  const GW0=TAU/0.7,GZ=0.05,GM={p:[0,0],r:[0,0],lp:0,lr:0};
+  /* ---------- gimbals with inertia (2.5 in IDEAS.md; gimStep and GIM in box.js): the case hangs below each axis as a pendulum, leaning to the apparent vertical as the box rolls and pitches
+     about the ship's axes below it; the pivots' friction pulls it after the box, a jolt kicks it. Latched (fr 0) it goes with the box; ?snap and reduced motion keep it exactly level ---------- */
+  const GM={p:[0,0],r:[0,0],lp:0,lr:0};
   const gimKick=v=>{GM.r[1]+=v;GM.p[1]+=v*0.3;};
-  function gimStep(dt,ph,rl,fr){const inst=SNAP||RM.matches;if(inst||dt<=0){if(inst){GM.p=[0,0];GM.r=[0,0];}GM.lp=ph;GM.lr=rl;return;}
-    const n=Math.ceil(dt/0.002),h=dt/n,vp=(ph-GM.lp)/dt,vr=(rl-GM.lr)/dt;
-    for(const[q,v,f0]of[[GM.p,vp,GM.lp],[GM.r,vr,GM.lr]]){if(fr<1e-3){q[0]=f0+v*dt;q[1]=v;continue;}for(let i=0;i<n;i++){q[1]+=h*(-GW0*GW0*q[0]-2*GZ*GW0*(q[1]-v));q[0]+=h*q[1];}
-      const f=f0+v*dt,lim=25*D2R;if(Math.abs(q[0]-f)>lim){q[0]=f+Math.sign(q[0]-f)*lim;q[1]=v;}}   /* the case stops against the ring 25 degrees off the box */
-    GM.lp=ph;GM.lr=rl;}
   /* ---------- loop ---------- */
   const SNAP=/[?&]snap\b/.test(location.search),REAL_X=5,WIND_X=10;   /* REAL_X: the fastest speed at which the balance is drawn swinging as it really does. WIND_X: the fastest model time runs while winding, so a wind
      (17½ half turns of the key in about 17 s, or Wind in 4 s) takes at most 3 min of model time, well inside the 5 to 10 minutes the sustaining spring drives the train (Sec. IV) */
-  let last=performance.now(),loaded=false,hudS='';const hud=$('#hud');
+  let last=performance.now(),loaded=false,hudS='',rockW=0;const hud=$('#hud');
   /* idle: when nothing that shows has changed (camera, lids, lift, wheels, balance, wind, ship motion, section), no input came in the last 0.6 s and the
      stage was drawn less than a second ago, the frame skips the render, the labels and the inset (a stopped model with a still camera draws once a second).
      Off-screen stages aren't drawn, nor is the stage while the essay covers it (the model keeps time meanwhile). ?snap draws every frame, for the tools that change the model directly.
@@ -1103,12 +1096,12 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
     if((cur.dev>0.02)!==devShown){devShown=cur.dev>0.02;look();}
     const L1=smooth(cur.lift/0.55),L2=smooth((cur.lift-0.35)/0.65);mv.position.y=L1*130+L2*95;mv.rotation.x=Math.min(smooth(cur.flip),L2)*Math.PI;
-    const wR=TAU/(+$('#rollP').value||7);if(st.rock)rockT+=dt*wR;const a=st.rock?14*D2R:0;roll=lerp(roll,a*Math.sin(rockT),st.rock?1:k);pitch=lerp(pitch,a*0.55*Math.sin(rockT*0.7+1.1),st.rock?1:k);   /* pitch at 0.7 the roll's rate */
+    const wR=TAU/(+$('#rollP').value||7);rockW+=((st.rock?1:0)-rockW)*k;if(!st.rock&&rockW<1e-4)rockW=0;if(rockW>0)rockT+=dt*wR;const sea=rockW>0?GIM.sea(rockT,wR,rockW):null;roll=sea?sea.r[0]:0;pitch=sea?sea.p[0]:0;   /* the ship's motion (GIM.sea), eased in and out; its rates and accelerations move the gimbals' pivots */
     const jt=H.jT>0?(now-H.jT)/1000:1;const jk=jt<0.25&&!RM.matches?H.jS*2.5*D2R*Math.sin(Math.PI*jt/0.25)*(1-jt/0.25):0;if(jt>=1)H.jT=0;   /* a jolt knocks the box over and back in a quarter second */
     /* latching: the ring and case are brought level with the box, then the lever swings in; released, the reverse. Latched, they tilt with the box */
     latchK=SNAP||RM.matches?+st.latch:clamp(latchK+(st.latch?1:-1)*dt*1.2,0,1);const fr=1-smooth(Math.min(1,latchK*2));
     const tw=H.twT<0||RM.matches?0:(now-H.twT)/1000;if(tw>TWIST.T)H.twT=-1;   /* the twist that starts it: the box turned sharply and back (TWIST) */
-    gimStep(dt,pitch,roll+jk,fr);
+    if(SNAP||RM.matches){GM.p=[0,0];GM.r=[0,0];GM.lp=pitch;GM.lr=roll+jk;}else gimStep(GM,dt,pitch,roll+jk,sea,fr);
     BX.root.rotation.set(pitch,tw>0&&tw<TWIST.T?H.twS*TWIST.at(tw):0,roll+jk,'ZYX');BX.ring.rotation.x=(GM.p[0]-pitch)*fr;BX.bowl.rotation.z=(GM.r[0]-roll-jk)*fr;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(Math.max(0,latchK*2-1)));
     BX.root.updateMatrixWorld(true);if(secMode!=='off')secPlane.copy(secLocal).applyMatrix4(mv.matrixWorld);
     if(G.follow)G.target.copy(G.follow()).add(panO);

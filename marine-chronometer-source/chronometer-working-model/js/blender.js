@@ -49,11 +49,8 @@ const BLENDER=(()=>{
   function beatGrid(amp,drv){const N=2400,P=new Set();for(let i=0;i<120;i++)P.add(i/120);let last=-1,z0=ESC.state(0,amp,drv);
     for(let i=1;i<=N;i++){const z=ESC.state(i/N,amp,drv);if((z.prog!==z0.prog||z.lift!==z0.lift||z.psDef!==z0.psDef)&&i/N-last>=1/720){P.add((i-1)/N);last=(i-1)/N;}z0=z;}
     return[...P].filter(p=>p<1).sort((a,b)=>a-b);}
-  /* the gimbals' pendulum (app.js gimStep): the case hangs below each axis, ψ'' = -ω0²ψ - 2ζω0(ψ' - φ'), stopped 25 degrees off the box */
-  function gimbal(){const GW0=TAU/0.7,GZ=0.05,G={p:[0,0],r:[0,0],lp:0,lr:0};
-    G.step=(dt,ph,rl)=>{const n=Math.ceil(dt/0.002),h=dt/n,vp=(ph-G.lp)/dt,vr=(rl-G.lr)/dt;
-      for(const[q,v,f0]of[[G.p,vp,G.lp],[G.r,vr,G.lr]]){for(let i=0;i<n;i++){q[1]+=h*(-GW0*GW0*q[0]-2*GZ*GW0*(q[1]-v));q[0]+=h*q[1];}const f=f0+v*dt,lim=25*D2R;if(Math.abs(q[0]-f)>lim){q[0]=f+Math.sign(q[0]-f)*lim;q[1]=v;}}
-      G.lp=ph;G.lr=rl;};return G;}
+  /* the gimbals' pendulum, the page's (gimStep in box.js): the case hangs below each axis and leans to the apparent vertical as the box rolls about the ship's axes */
+  function gimbal(){const G={p:[0,0],r:[0,0],lp:0,lr:0,step:null};G.step=(dt,ph,rl,sea)=>gimStep(G,dt,ph,rl,sea,1);return G;}
   /* ---------- the clips: each calls emit(t, state) in time order; len: its length (s), rig: the parameter the rig drives it by ---------- */
   const ramp=(t,a,b)=>clamp((t-a)/(b-a),0,1);
   function clips(C,h0,E0){const drv0=A.drvF(h0),amp0=ESC.ampAt(drv0),G=beatGrid(amp0,drv0),st=o=>Object.assign(REST(),{n:h0*FUSEE_PER_HOUR,E:E0},o);
@@ -84,7 +81,7 @@ const BLENDER=(()=>{
       {name:'Lids',len:7,d:'the glass lid and the outer lid closed and opened again',run:emit=>uni(7,t=>{const c=out(t,0,3,4,7);return st({lidM:1-c,lidT:1-c});},emit)},
       {name:'Latch',len:4,d:'the latch lever brought in, locking the gimbals, and out again',run:emit=>uni(4,t=>st({latch:out(t,0,1.5,2.5,4)}),emit)},
       {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to stay level',run:emit=>{const wR=TAU/per,g=gimbal();
-        uni(6*per,(t,dt)=>{const a=14*D2R,roll=a*Math.sin(t*wR),pitch=a*0.55*Math.sin(t*wR*0.7+1.1);if(dt>0)g.step(dt,pitch,roll);else{g.lp=pitch;g.lr=roll;}return st({roll,pitch,gp:g.p[0],gr:g.r[0]});},emit);}},
+        uni(6*per,(t,dt)=>{const sea=GIM.sea(t*wR,wR,1),roll=sea.r[0],pitch=sea.p[0];if(dt>0)g.step(dt,pitch,roll,sea);else{g.lp=pitch;g.lr=roll;}return st({roll,pitch,gp:g.p[0],gr:g.r[0]});},emit);}},
       /* the rig's (rig.py): one parameter each, from a to b over the clip; the strips that play them are timed by the control's properties */
       {name:'Rig · beat',len:0.5,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},
       {name:'Rig · explode',len:2,d:'for the rig: the parts apart',rig:{p:'explode',a:0,b:1},run:emit=>uni(2,t=>st({ex:t/2}),emit)},
