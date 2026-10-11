@@ -86,7 +86,6 @@ The manual gives no tooth profiles, threads or most pivot sizes. The site tells 
 
 ## The set-up ratchet's locking faces (11 October 2026)
 
-- **Known:** KLUwI2UUCMQ 38:28 shows the set-up ratchet (42026) whole: about 42 saw teeth, each a short steep face and a long back. The model draws the face leaning back over 0.07 of a pitch (about 5° at r 7), as the maintaining work's ratchets were drawn until 11 October 2026, when theirs were made radial (the load then draws the click home; the winding pawls' trace at 19:12 shows a square end bearing on a radial face).
-- **Conflict:** at a few pixels a face, the frame can't tell radial from a 5° lean. A radial face was tried; the click (seated by `phaseAgainst` on the profile as a function of angle) then sat 0.3 mm into the tooth's corner (bom.py's setup-click check), so it was put back until the click is seated on the outline as the winding pawls are (`deep`).
-- **What would settle it:** a face-on close-up of the set-up ratchet (the barrel bridge off), or of the click on its tooth.
-
+- **Known:** the set-up ratchet (42026) held loose and nearly face-on (KLUwI2UUCMQ 38:25.8, 38:26.0) gives its teeth 0.48 mm deep and its locking faces undercut 3-6° against the radius (`tools/ratchetface.py`, calibrated on synthetic frames; References/VIDEOS.md). A face leaning back, as the model drew until 11 October 2026, is ruled out. The model draws the faces radial and the teeth 0.48 deep (`SRD`), the click seated by its outline.
+- **Open:** the undercut's size. Tooth to tooth the readings spread 4-5°, and on a tilted wheel's sides its other face's outline can shift a reading by a few degrees; an undercut also can't be drawn by `ratchetProf` (one radius to each angle), which the click's seating uses.
+- **What would settle it:** a still, face-on frame of the ratchet off its arbor (not moving in tweezers), or of the click on its tooth.

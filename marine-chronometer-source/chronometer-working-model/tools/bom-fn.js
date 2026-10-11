@@ -39,7 +39,9 @@ async()=>{
     out.push(['gimbal latch',free[0]<1.5&&free[1]>3&&held<0.5,`rolling: released, the case ${f2(free[0])} deg from level with the box ${f2(free[1])} deg from it; latched, the case ${f2(held)} deg from the box`]); }
   /* the setup click (Sec. II: the setup ratchet and pawl "prevent the barrel arbor from turning during winding and running"): the mainspring pulls the arbor the way
      opposite to the barrel's turn in running; turned a little that way the ratchet's steep face runs into the click's tip, turned the other way its tip only rides up a
-     tooth's back. The ratchet's outline is read off its mesh (its top face's boundary, along a ray from the axis), the click's tip as its point nearest the axis */
+     tooth's back (a radial face's corner has the next back just behind it, so the outline under the tip rises a little that way too, at the back's slope: under half the
+     face's rise; until 11 October 2026 it wanted the gap to open, which only a face leaning back gives). The ratchet's outline is read off its mesh (its top face's
+     boundary, along a ray from the axis), the click's tip as its point nearest the axis */
   { const bz=byHn('42168')[0],rw=byHn('42026').find(o=>o.isMesh),ck=byHn('42027').find(o=>o.isMesh),axis=o=>new T.Vector3(0,1,0).transformDirection(o.matrixWorld);
     const ang=o=>{o.updateWorldMatrix(true,false);const a=axis(o),x=new T.Vector3(1,0,0).transformDirection(o.matrixWorld);return[a,x];};
     click('#speeds button[data-v="60"]');const[a0,x0]=ang(bz);await wait(4000);const[,x1]=ang(bz);click('#speeds button[data-v="1"]');
@@ -57,6 +59,6 @@ async()=>{
       rw.rotation.y=r0;rw.updateWorldMatrix(true,false);return[Math.atan2(tip[1],tip[0]),rt];};
     const depth=dl=>{const[a,r]=tipAt(dl);return rOut(a)-r;},held=depth(0.02*pull),free=depth(-0.02*pull),rest=depth(0);
     const[ta,tr]=tipAt(0);let top=0;for(let j=1;j<=30;j++)top=Math.max(top,rOut(ta+pull*0.001*j));   /* the tooth top behind the face the tip bears on */
-    out.push(['setup click',wb!==0&&held>rest&&free<rest-0.1&&top-tr>0.3,`the barrel turns ${wb>0?'+':'-'} about its axis in running; turned 0.02 rad the way the spring pulls the arbor, the tooth's face comes onto the click's tip (outline ${f2(rest)} -> ${f2(held)} mm from it), turned the other way the gap opens under it (${f2(free)}): it holds the arbor the right way. The tip stands ${f2(top-tr)} mm inside the teeth's tips (want over 0.3: seated, the pivot where both photographs have it)`]); }
+    out.push(['setup click',wb!==0&&held-rest>0.25&&free-rest<(held-rest)/2&&top-tr>0.3,`the barrel turns ${wb>0?'+':'-'} about its axis in running; turned 0.02 rad the way the spring pulls the arbor, the tooth's face comes onto the click's tip (outline ${f2(rest)} -> ${f2(held)} mm from it), turned the other way only a back passes under it (${f2(free)}, under half the face's rise): it holds the arbor the right way. The tip stands ${f2(top-tr)} mm inside the teeth's tips (want over 0.3: seated, the pivot where both photographs have it)`]); }
   click('#speeds button[data-v="0"]');
   return out;}

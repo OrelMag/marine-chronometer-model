@@ -2231,4 +2231,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The setup ratchet's teeth 0.72 deep with faces leaning back** (Setup, case and gimbals;
+  OPEN-QUESTIONS.md). Measured on the wheel held loose at KLUwI2UUCMQ 38:25.8 and 38:26.0
+  (`tools/ratchetface.py`, calibrated on synthetic frames blurred as the video): 0.48 mm deep
+  (0.42-0.53), the faces undercut 3-6°; a lean back is ruled out. Now 0.48 (`SRD`, gearGeo's
+  `rd`, `ratchetProf`'s `rd`) with radial faces, and the click seated on its outline
+  (`phaseAgainst`'s `deep`), 0.43 inside the tips; bom-fn.js's setup-click check asks that the
+  free turn bring only a back under the click (under half the face's rise), not that the gap
+  open, which only a leaning face gives. Keep: the click's seating, the clearance bisection's
+  `RT` and the drawn teeth all from one depth and profile.
