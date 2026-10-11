@@ -80,7 +80,8 @@ const BLENDER=(()=>{
       {name:'Lift out',len:7,d:'the movement lifted out of its case and turned over, and back',run:emit=>uni(7,t=>{const u=out(t,0,3,4,7);return st({up:u,flip:u});},emit)},
       {name:'Lids',len:7,d:'the glass lid and the outer lid closed and opened again',run:emit=>uni(7,t=>{const c=out(t,0,3,4,7);return st({lidM:1-c,lidT:1-c});},emit)},
       {name:'Latch',len:4,d:'the latch lever brought in, locking the gimbals, and out again',run:emit=>uni(4,t=>st({latch:out(t,0,1.5,2.5,4)}),emit)},
-      {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to stay level',run:emit=>{const wR=TAU/per,g=gimbal();
+      {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to hang along the apparent vertical; it loops',run:emit=>{const wR=TAU/per,g=gimbal(),T0=3*per*Math.ceil(30/(3*per)),n0=Math.round(T0*FPS);   /* the pitch at 2/3 the roll's rate (GIM.PR), so the motion repeats every three rolls and the clip's six loop; the case's swing settled first over whole repeats (30 s and more: its own decays in 2.2 s), so it loops too */
+        {const s0=GIM.sea(-T0*wR,wR,1);g.lp=s0.p[0];g.lr=s0.r[0];for(let j=1;j<=n0;j++){const s=GIM.sea((-T0+T0*j/n0)*wR,wR,1);g.step(T0/n0,s.p[0],s.r[0],s);}}
         uni(6*per,(t,dt)=>{const sea=GIM.sea(t*wR,wR,1),roll=sea.r[0],pitch=sea.p[0];if(dt>0)g.step(dt,pitch,roll,sea);else{g.lp=pitch;g.lr=roll;}return st({roll,pitch,gp:g.p[0],gr:g.r[0]});},emit);}},
       /* the rig's (rig.py): one parameter each, from a to b over the clip; the strips that play them are timed by the control's properties */
       {name:'Rig · beat',len:0.5,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},

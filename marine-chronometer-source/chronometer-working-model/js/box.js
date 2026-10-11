@@ -221,11 +221,11 @@ function bankState(p,a,s,b){if(b==null||a<=Math.abs(b)&&b<=0)return ESC.state(p,
    a roll the case leans against it by RD ω²/g of the roll, about 6° at the default 7 s and 14°. The pivots' friction pulls it after the box (φ' from the box's angles, a jolt with them).
    ω0: the case's own period, about 0.7 s (the case and movement's weight some 15 mm below the pivots, their radius of gyration about 45 mm, estimated); ζ estimated. fr: how free
    the gimbals are (0 latched: the case goes with the box). It stops against the ring 25° off the box. G: {p, r: [ψ, ψ'], lp, lr: the box's last angles, ap, ar: the apparent vertical} */
-/* the ship's motion the box shows (Display, Ship motion; illustrative): rolling 14° each way at the period chosen, pitching 0.55 of that at 0.7 of its rate. GIM.sea(u, w, k): u the
+/* the ship's motion the box shows (Display, Ship motion; illustrative): rolling 14° each way at the period chosen, pitching 0.55 of that at two thirds of its rate (so the motion repeats every three rolls, and the export's At sea loops). GIM.sea(u, w, k): u the
    roll's phase (rad), w its rate (rad/s), k how much of it (0 to 1, easing in and out; its own rate of change left out): pitch and roll, each [angle, rate, acceleration], and rd,
    the axes' distance below the box: GIM.RD at a ship's periods (4 s and up), falling to 0 at 2 s, since a box rolled faster than any ship rolls stands for one rocked about
    its own pivots (the slider's short end, which shows the case's own period) */
-const GIM={W0:TAU/0.7,Z:0.05,LIM:25*D2R,RD:5,G:9.80665,PR:0.7,
+const GIM={W0:TAU/0.7,Z:0.05,LIM:25*D2R,RD:5,G:9.80665,PR:2/3,
   /** @param {number} u @param {number} w @param {number} k */ sea(u,w,k){const a=14*D2R*k,b=0.55*a,f=GIM.PR,v=f*u+1.1;return{r:[a*Math.sin(u),a*w*Math.cos(u),-a*w*w*Math.sin(u)],p:[b*Math.sin(v),b*f*w*Math.cos(v),-b*f*f*w*w*Math.sin(v)],rd:GIM.RD*clamp((TAU/w-2)/2,0,1)};}};
 /** @param {{p:number[],r:number[],lp:number,lr:number,ap?:number,ar?:number}} G @param {number} dt @param {number} ph the box's pitch @param {number} rl its roll
     @param {{p:number[],r:number[],rd:number}|null} sea the ship's pitch and roll with their rates (GIM.sea) @param {number} fr */

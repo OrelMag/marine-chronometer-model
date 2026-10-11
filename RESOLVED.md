@@ -1349,6 +1349,13 @@ Contents:
   within 0.2° of the apparent vertical; faster than a ship rolls the box stands for one rocked about
   its pivots. Rocking now eases in as it eases out. Keep: the page and the export call the one
   `gimStep`; the ship's motion comes with its rates (`GIM.sea`).
+- **The export's At sea jumped where it looped.** The pitch ran at 0.7 of the roll's rate, so the
+  clip's six rolls held 4.2 pitches and a looping clip jumped 1.4° of pitch at its seam (5.45° to
+  6.88°), and the case started level, its own swing still settling. The pitch now runs at two thirds
+  of the roll's rate on the page and in the export (`GIM.PR`), so the motion repeats every three
+  rolls and the six loop, and the clip lets the case settle over whole repeats (30 s and more)
+  before it starts: the seam is under 1e-5°. Keep: a looping clip's motions in whole cycles of it,
+  started from their steady state.
 
 ## Accuracy to the manual
 
