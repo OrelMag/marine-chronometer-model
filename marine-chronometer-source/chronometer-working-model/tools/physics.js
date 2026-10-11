@@ -124,5 +124,5 @@ chk(comp>0.3*need&&comp<1.7*need,`against the ${f(need,1)} s a day a °C a steel
  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-phys="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];
  for(const[k,v]of Object.entries(want))chk(got[k]===v,`the essay quotes ${k} as ${got[k]??'(missing)'}: found ${v}`);}
 /* for dynamics.js, strength.js and errorbudget.js: the fusee's torque, the train's ratio and efficiencies, the balance's damping from its parts */
-module.exports={Tf,Mup,Mdn,sUp,ratioT,Plo,Phi,qLo,qHi,qAir,qEnd,sideQ,qMat,Eb,MS,b,E,IN,rB,TFm,Qm,I,k,A,mBal,J};
+module.exports={Tf,Mup,Mdn,sUp,ratioT,Plo,Phi,qLo,qHi,qAir,qEnd,sideQ,qMat,Eb,MS,b,E,IN,rB,TFm,Qm,I,k,A,mBal,J,MODS,STG,TRAIN};
 if(require.main===module){console.log(rows.join('\n'));if(fail)process.exitCode=1;}

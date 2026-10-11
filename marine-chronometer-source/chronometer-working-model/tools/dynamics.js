@@ -169,7 +169,7 @@ function sim(o={}){
   return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),margin:Math.min(...tail(st.margin)),
     liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,amps,cross:st.cross,stopped:st.beats===0};
 }
-module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,KTIP,DREL,LEN,lD,tD,LTS,day,S2};
+module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,KTIP,DREL,LEN,lD,tD,LTS,CDR,day,S2};
 if(require.main!==module)return;
 
 /* ---------- the report ---------- */
