@@ -7,7 +7,10 @@ About 3 minutes (most of it the import). Needs Blender 5.x: MC_BLENDER, else the
 
 Checks: every clip came in as an action; the parts are objects in their hierarchy, the jewels and crystal transmitting; the rig made its controls and drivers;
 at a series of moments the rig (the timeline at t) puts every part the Running clip moves (the balance, detent, escape wheel, train, hands, fusee) where that clip
-has it at t, to 0.02 mm and 0.1 degree in the world; the explode, laid out, lift and lids controls at 1 match the end of their own clips. Exit code 1 on a failure."""
+has it at t, to 0.02 mm and 0.1 degree in the world; the explode, laid out, lift and lids controls at 1 match the end of their own clips; and the rig set to the
+Winding clip's wind every 0.5 s (its hours, which the export writes with it) leaves the parts that follow the wind (fusee, barrel, chain, up-down indicator)
+within stated bounds of the clip: the rig has no fusee catch, up-down backlash or maintaining work, so those differ, and the rest goes by the clip alone.
+Exit code 1 on a failure."""
 import os,pathlib,subprocess,sys
 try:
     import bpy
@@ -111,6 +114,11 @@ play('Running')
 for t in TS:sc.frame_set(int(t*fps),subframe=t*fps-int(t*fps));ref[t]=pose(moved)
 for c in['Rig · explode','Rig · laid out','Rig · lift','Rig · lids']:
     a=play(c);sc.frame_set(int(a.frame_range[1]));ref[c]=pose(a and [owner(s) for s in a.slots if isinstance(owner(s),bpy.types.Object)])
+# the Winding clip's poses every 0.5 s, and the wind it had then (the export's hours), for the rig to be set to the same wind below
+win=next((c for c in clips if c['name']=='Winding'),None);refW={};HW=[]
+if win and 'hours' in win:
+    aw=play('Winding');movW=[o for o in {owner(x) for x in aw.slots} if isinstance(o,bpy.types.Object)];HW=[tuple(x) for x in win['hours']][::2]
+    for t,h in HW:sc.frame_set(int(t*fps),subframe=t*fps-int(t*fps));refW[t]=pose(movW)
 clear()
 ns={'__name__':'__main__','__file__':RIGP};exec(compile(open(RIGP,encoding='utf-8').read(),RIGP,'exec'),ns)
 ctl=bpy.data.objects.get('Chronometer controls')
@@ -123,6 +131,29 @@ for t in TS:
     ch='chain' in w[1]   # a link between two of Run down's moments, 1.9 hours of wind apart
     if w[0]>(0.1 if ch else 0.02) or w[2]>(0.25 if ch else 0.1):fail('rig at %.2f s off the Running clip: %.4f mm, %.3f deg (%s)'%(t,w[0],w[2],w[1]))
 print('MC rig against Running: worst %.5f mm, %.4f deg (%s) over %d moments'%(worst[0],worst[2],worst[1],len(TS)))
+# the rig against the Winding clip, part by part, the rig's hours set to the clip's wind at each moment (its hours are those at frame 0, the time running on)
+if refW:
+    per={};h0=ctl['hours']
+    for t,h in HW:
+        ctl['hours']=h-t/3600;ctl.update_tag();sc.frame_set(int(t*fps),subframe=t*fps-int(t*fps));P=pose(movW)
+        for k in refW[t]:
+            w=diff({k:refW[t][k]},{k:P[k]})
+            if k not in per or w[0]+w[2]*0.2>per[k][0]+per[k][2]*0.2:per[k]=(w[0],t,w[2])
+    ctl['hours']=h0;ctl.update_tag()
+    # the rig turns the wind's parts by its hours alone (the Run down action): it has no catch, so the fusee stands by the winding ratchet's offset, nor the
+    # up-down wheel's backlash (UD_LASH) or the maintaining work's state (the sustaining ratchet held while the spring drives the train): those go by the
+    # clip only, as do the train, hands and balance, whose beat the clip starts elsewhere than the rig's frame 0. Checked: the parts that follow the wind,
+    # each within what the rig was found to leave on 11 October 2026 (a growth fails; a fix shows here as a smaller number)
+    WIND={'the fusee and its arbor, square, end plate, stop-bar':(('Fusee - Complete','fp','sq','Stop-bar'),0.05,7.0),'the barrel':(('Barrel - Mainspring',),0.05,5.5),
+          'the chain':(('Fusee chain','chain link'),13.0,8.0),'the up-down indicator':(('ud','udW'),0.05,1.0)}
+    print('MC rig against Winding (%d moments): what follows the wind (the rest goes by the clip only: the maintaining work, the train, hands and balance):'%len(HW))
+    for g,(pats,mm,deg) in WIND.items():
+        hit=[(k,v) for k,v in per.items() if any((k==p or k.startswith(p+' ')) if len(p)<=4 else p in k for p in pats)]   # a part's code exactly, a catalogue name anywhere
+        if not hit:fail('Winding: no part for %s'%g);continue
+        k,(d,t,ang)=max(hit,key=lambda kv:kv[1][0]+kv[1][2]*0.2)
+        print('MC   %-50s %8.4f mm %7.3f deg (%s, at %.1f s; allowed %g mm, %g deg)'%(g,d,ang,k[:30],t,mm,deg))
+        if d>mm or ang>deg:fail('rig off the Winding clip: %s %.4f mm, %.3f deg (%s at %.1f s; allowed %g mm, %g deg)'%(g,d,ang,k,t,mm,deg))
+    print('MC   not rigged for winding, the worst: %s'%', '.join('%s %.0f deg'%(k[:16],v[2]) for k,v in sorted(per.items(),key=lambda kv:-kv[1][2])[:4]))
 sc.frame_set(0)
 for c,k in[('Rig · explode','explode'),('Rig · laid out','laid_out'),('Rig · lift','lift'),('Rig · lids','lids')]:
     ctl[k]=1.0;ctl.update_tag();sc.frame_set(0);P=pose([bpy.data.objects[n] for n in ref[c]]);w=diff(ref[c],P);ctl[k]=0.0;ctl.update_tag()

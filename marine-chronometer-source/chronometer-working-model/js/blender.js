@@ -67,11 +67,11 @@ const BLENDER=(()=>{
          turning more than half a radian a frame (escape, fourth, third, seconds) are left out of it, as a blur */
       {name:'Run down',len:30,fast:RUN_H*7200/(30*FPS),d:'56¼ hours in 30 s: the chain off the fusee onto the barrel, the mainspring letting down, the up-down hand, the minute and hour hands',rig:{p:'n',a:0,b:FUSEE_TURNS},
         run:emit=>uni(30,t=>{const h=RUN_H*t/30;return st({n:h*FUSEE_PER_HOUR,E:E0+(h-h0)*7200});},emit)},
-      {name:'Winding',len:wT+6,d:'wound with the key from a quarter of an hour short of run down, the sustaining spring driving the train meanwhile, until the stop-bar meets the winding stop',run:emit=>{
-        const S=sim(C,hW),T0=1;let tp=0,sh=C.BX.shRest,hz=-1;
+      {name:'Winding',len:wT+6,d:'wound with the key from a quarter of an hour short of run down, the sustaining spring driving the train meanwhile, until the stop-bar meets the winding stop',run:(emit,clip)=>{
+        const S=sim(C,hW),T0=1,HS=clip.hours=[];let tp=0,sh=C.BX.shRest,hz=-1;   /* HS: the hours since full wind every 0.25 s, written with the clip, so blender_check.py can set the rig to the same wind and see where it parts from the clip */
         for(let i=0;;i++){const t=i/60;if(t>T0+wT+5)break;const dt=t-tp;tp=t;const kt=t-T0,on=kt>=0&&(hz<0||kt<hz+3);   /* half turns of 0.7 s with a 0.3 s pause to change grip (kwStep); 3 s on the stop, then let go */
           if(on){S.winding=true;const j=Math.floor(kt);S.hrs=Math.max(0,hW-HT*(j+smooth(Math.min(1,(kt-j)/0.7))));if(S.hrs===0&&hz<0)hz=kt;}else{if(S.winding)S.hrs=clamp(S.hrs+C.R.release()/FUSEE_PER_HOUR,0,RUN_H);S.winding=false;}   /* let go: the fusee's catch and the spring's reload come off the mainspring, as app.js's windEnd */
-          const o=S.step(dt),T=on?0:C.BX.shRest;sh=lerp(sh,T,1-Math.exp(-dt*(T?12:6)));emit(t,st(Object.assign(o,{keyOn:on,sh})));}}},
+          const o=S.step(dt),T=on?0:C.BX.shRest;sh=lerp(sh,T,1-Math.exp(-dt*(T?12:6)));if(i%15===0)HS.push([+t.toFixed(3),+S.hrs.toFixed(5)]);emit(t,st(Object.assign(o,{keyOn:on,sh})));}}},
       {name:'Setting the hands',len:10,d:'the key on the centre arbor sets the hands an hour on, the train going',run:emit=>runFor(sim(C,h0),20,emit,t=>({slip:3600*smooth(ramp(t,1.5,8.5)),hkeyOn:t>0.5&&t<9.5}))},
       {name:'Stop and start',len:26,d:'the locking arm stops the balance and holds it; unlocked, a twist of the box starts it; the train-blocking screw comes down between the fourth wheel\'s spokes and up again, and a twist starts it again if the tooth the spoke held stopped the balance',run:emit=>{
         const S=sim(C,h0);let tp=0,tw=-1,t2=-1;for(let i=0;i<=26*120;i++){const t=i/120,dt=t-tp;tp=t;S.armT=t>=1&&t<6?1:0;if(tw<0&&t>=8){S.twist(1);tw=t;}S.blkT=t>=15&&t<21?1:0;if(t2===-1&&t>=22){t2=-2;if(S.held){S.twist(-1);t2=t;}}
@@ -144,7 +144,7 @@ const BLENDER=(()=>{
         if(first)d.last=null;d.gap=clip.len/FLIPS;const w=shapeOf(d,g,t,clip.name),T=d.tl[clip.name]||(d.tl[clip.name]=[]),lw=d.last||(d.mode==='morph'?[0,0,0]:[0]);
         if(!T.length&&t>0)T.push([0,...lw]);if(T.length&&T[T.length-1][0]<tPrev)T.push([tPrev,...lw]);T.push([t,...w]);d.last=w;}
       first=false;tPrev=t;};
-    clip.run((t,s)=>{emit(t,s);k++;});
+    clip.run((t,s)=>{emit(t,s);k++;},clip);
     await sleep();return{tr,dur,teeth,samples:k};}
   /* ---------- the export ---------- */
   async function build(onStep,only){const t0=performance.now(),C=copy(),h0=A.hrs();
@@ -238,7 +238,7 @@ const BLENDER=(()=>{
       anims[ai].channels.push({node:helper,path:'translation',times:t,values:v,interp:'LINEAR'});});
     const ver=(document.querySelector('meta[name=version]')||{}).getAttribute?.('content')||'';
     const extras={made:'The Marine Chronometer working model'+(ver?' '+ver:'')+', '+location.href.split('#')[0],units:'millimetres under the root node, which scales them to metres',start:{hours:h0,E:rest.E,slip:0},
-      beat:0.5,fuseePerHour:FUSEE_PER_HOUR,runHours:RUN_H,fuseeTurns:FUSEE_TURNS,fps:FPS,clips:out.map(([c,res])=>Object.assign({name:c.name,about:c.d,seconds:+res.dur.toFixed(4),samples:res.samples},c.rig?{rig:c.rig}:{}))};
+      beat:0.5,fuseePerHour:FUSEE_PER_HOUR,runHours:RUN_H,fuseeTurns:FUSEE_TURNS,fps:FPS,clips:out.map(([c,res])=>Object.assign({name:c.name,about:c.d,seconds:+res.dur.toFixed(4),samples:res.samples},c.rig?{rig:c.rig}:{},c.hours?{hours:c.hours}:{}))};
     nodes[0].extras=extras;   /* Blender keeps a node's extras as the object's custom properties (the asset's it drops): the rig reads them here */
     const blob=await GLTF.write({generator:'Marine Chronometer working model (blender.js)',nodes,roots:[0,helper],meshes,materials,textures,animations:anims,extras});
     return{blob,stats:{nodes:nodes.length,meshes:meshes.length,materials:materials.length,clips:anims.length,s:((performance.now()-t0)/1000).toFixed(1)}};}
