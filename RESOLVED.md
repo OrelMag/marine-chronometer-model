@@ -34,11 +34,6 @@ Contents:
   `gearLash` both ways, 0.107 rad of the fusee) and follows on the other flank;
   after winding it waits for the pinion to come round again. Keep: a mesh whose
   driver reverses crosses its backlash before the driven wheel moves. `bf75917`
-- **The set-up ratchet's locking faces leaned back** over 0.07 of a pitch, so
-  the mainspring's pull lifted the click out. They are radial now, as the
-  maintaining work's (KLUwI2UUCMQ 38:28 shows saw teeth with short steep faces;
-  radial or a few degrees can't be told there), and the click is seated on that
-  profile. Keep: a ratchet's locking faces radial or undercut. `7c0c0d9`
 
 - **The run down's taper said "Stopping: twist to start"** once the drive fell
   under what keeps the balance unlocking, a few minutes before `RUN_H`. The HUD

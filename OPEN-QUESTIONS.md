@@ -83,3 +83,10 @@ Each is drawn from the manual's figure or a rough reading; none changes how the 
 ## Estimated by design
 
 The manual gives no tooth profiles, threads or most pivot sizes. The site tells a maker to use standard practice for these (BS 978 cycloidal teeth; the nearest ISO metric thread; the maker's sheets' fits as measured on the model), as a maker would; they are not open questions.
+
+## The set-up ratchet's locking faces (11 October 2026)
+
+- **Known:** KLUwI2UUCMQ 38:28 shows the set-up ratchet (42026) whole: about 42 saw teeth, each a short steep face and a long back. The model draws the face leaning back over 0.07 of a pitch (about 5° at r 7), as the maintaining work's ratchets were drawn until 11 October 2026, when theirs were made radial (the load then draws the click home; the winding pawls' trace at 19:12 shows a square end bearing on a radial face).
+- **Conflict:** at a few pixels a face, the frame can't tell radial from a 5° lean. A radial face was tried; the click (seated by `phaseAgainst` on the profile as a function of angle) then sat 0.3 mm into the tooth's corner (bom.py's setup-click check), so it was put back until the click is seated on the outline as the winding pawls are (`deep`).
+- **What would settle it:** a face-on close-up of the set-up ratchet (the barrel bridge off), or of the click on its tooth.
+

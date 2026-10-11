@@ -1241,7 +1241,7 @@ function buildMovement(M){
   /* SRZ: the setup ratchet's teeth, about 42 on C Spinner's video (11:58, 12:19, 38:28: pitch 8.3-8.8 deg; References/VIDEOS.md); SUT its tips' radius, 7.05 mm: the video
      (11:58) has the cover screws' tapped holes, 23.6 mm apart, 3.35 tip radii apart (7.04), and the top-view photograph the tips at 7.0-7.3 through topview.py's map */
   const SRZ=42,SUT=7.05,SRM=SUT/(SRZ/2+0.95);
-  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* steep faces meet the click against the mainspring's pull, along a radius (KLUwI2UUCMQ 38:28, the ratchet seen whole: saw teeth, each with a short steep face near radial and a long back; at a few pixels a face, radial or a 5 deg lean can't be told apart, so radial, as the maintaining work's, the click's load then drawing it home: low confidence) */
+  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:true,flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* steep faces meet the click against the mainspring's pull */
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
   const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);hn(cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28),'42170',{sub:1});
@@ -1253,9 +1253,9 @@ function buildMovement(M){
   hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
   { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
     /* turn the ratchet (it is fixed in running) so a steep face bears on the click's tip, then rest the click on it */
-    const pr=ratchetProf(SRZ,SRM,true,true),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1);
+    const pr=ratchetProf(SRZ,SRM,true),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1);
     srw.rotation.y=ph.psi;clk.rotation.y=ph.th;
-    { const n=SRZ,m=SRM,rp=m*n/2,ro=rp+m*0.95,ri=ro-2.25*m,pp=TAU/n,RT=[];for(let i=0;i<n;i++){const a=i*pp;RT.push([ri,a],[ro,a+pp*0.97],[ri,a+pp*0.97]);}   /* the drawn outline (gearGeo, flipped, radial) */
+    { const n=SRZ,m=SRM,rp=m*n/2,ro=rp+m*0.95,ri=ro-2.25*m,pp=TAU/n,RT=[];for(let i=0;i<n;i++){const a=i*pp;RT.push([ri,a],[ro,a+pp*0.9],[ri,a+pp*0.97]);}   /* the drawn outline (gearGeo, flipped) */
       const CP=pts.map(([x,z])=>{const c=Math.cos(ph.th),sn=Math.sin(ph.th);return[Pv[0]+x*c+z*sn,Pv[1]-x*sn+z*c];});
       const gap=psi=>{const W=RT.map(([r,a])=>{const x=r*Math.cos(a),z=r*Math.sin(a),c=Math.cos(psi),sn=Math.sin(psi);return[L.Ba[0]+x*c+z*sn,L.Ba[1]-x*sn+z*c];});let d=1e9,inside=false;
         for(const P of CP){let w=false;for(let i=0,j=W.length-1;i<W.length;j=i++){const[xi,zi]=W[i],[xj,zj]=W[j];if((zi>P[1])!==(zj>P[1])&&P[0]<(xj-xi)*(P[1]-zi)/(zj-zi)+xi)w=!w;
@@ -1325,7 +1325,7 @@ function buildMovement(M){
   ph(R.fp.userData.pin,L.Fu,R.udW.userData.wheel,L.Ud,1);
   /* the indicator's backlash in the fusee's turn: running, the pinion drives the wheel on one flank; wound, the fusee turned back, it crosses the gap to the other before the wheel
      follows (update(): the wheel stands while the pinion is within it) */
-  const UD_LASH=Math.abs(gearLash(R.fp.userData.pin,L.Fu,R.udW.userData.wheel,L.Ud,-1)[1]-gearLash(R.fp.userData.pin,L.Fu,R.udW.userData.wheel,L.Ud,1)[1])*UD.wheel/UD.pin;let udX=null;R.UD_LASH=UD_LASH;
+  const UD_LASH=Math.abs(gearLash(R.fp.userData.pin,L.Fu,R.udW.userData.wheel,L.Ud,-1)[1]-gearLash(R.fp.userData.pin,L.Fu,R.udW.userData.wheel,L.Ud,1)[1])*UD.wheel/UD.pin;let udX=null,udF=0;R.UD_LASH=UD_LASH;
   /* ---------- laid out (the textbooks' developed drawing): the barrel and fusee stay; each later arbor goes onto the barrel-fusee line at its real centre
        distance from the one before, so every pair still meshes; the escape wheel, detent and balance turn together about the escape arbor (by DEV.g) ---------- */
   const DEV=(()=>{const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],fi=p=>Math.atan2(-p[1],p[0]),d=sub(L.Fu,L.Ba),l=Math.hypot(...d),w=[d[0]/l,d[1]/l],P={Fu:L.Fu};
@@ -1423,7 +1423,8 @@ function buildMovement(M){
       if(mw.w&&!tele){const c=catchAt(srA,mw.fa,gA,dq);mw.fa=c.fa;srA=c.sr;holding=c.held;}   /* let go */
       else{const st=gA-dq;
         if(st>=srA){srA=st;holding=false;}else if(!holding){const hb=holdBack(srA);if(st>=hb)srA=st;else{srA=hb;holding=true;}}   /* the spring pushes the ratchet back: to its pawl at most */
-        if(!holding||tele)mw.fa=srA+WPH+p*Math.round((base+mw.fa-mw.base-srA-WPH)/p);}}   /* on the tooth that keeps eps where it was */
+        if(!holding||tele)mw.fa=srA+WPH+p*Math.round((base+mw.fa-mw.base-srA-WPH)/p);;
+        while(mw.fa<fs.g.rotation.y-1e-9)mw.fa+=p;}}   /* on the tooth that keeps eps where it was, never past the full wind's stop (a wind set by the slider to full: the next tooth on) */
     if(srA<gA-SMAX){srA=gA-SMAX;mw.hold=Math.max(mw.hold,srA);}   /* the spring at its free length: turned on past it, it draws the ratchet after the wheel (its pawl lets it go forward) */
     mw.g=gA;mw.n=s.n;mw.w=!!s.winding;mw.base=base;mw.dq=dq;const eps=mw.fa-base;R.eps=eps;
     if(Math.abs(s.n-lastN)>0.0008||Math.abs(eps-lastEps)>0.002){fs.setWind(s.n,eps);lastN=s.n;lastEps=eps;}   /* the chain, barrel and stop-bar; the chain lies in the groove, so it follows eps too */
@@ -1440,7 +1441,7 @@ function buildMovement(M){
     { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyLock(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;
     const fa=s.n*TAU+eps;R.fp.rotation.y=fa;R.sq.rotation.y=fa;R.wkey.visible=!!s.keyOn;   /* the arbor, its square and pinion turn with the fusee */
-    udX=udX===null?fa:clamp(udX,fa,fa+UD_LASH);const udA=udX*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-UD_UP*D2R-udA;   /* udX: the fusee's turn the wheel stands at, within the backlash of fa */
+    udX=udX===null||(!s.winding&&fa<udF-1e-9)?fa:clamp(udX,fa,fa+UD_LASH);udF=fa;const udA=udX*UD.pin/UD.wheel;R.udW.rotation.y=-udA;R.ud.rotation.y=-UD_UP*D2R-udA;   /* udX: the fusee's turn the wheel stands at, within the backlash of fa; the fusee set back without the key (the slider, the export's clips) is a set: on the running flank */
     if(s.msOn){const In=fs.Ib(s.n,eps);if(Math.abs(In-lastIn)>=0.002){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup-In,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=In;}}   /* rebuilt when the barrel has turned 0.7 deg */
     if(s.springOn&&s.th!==lastTh){R.spring.geometry=ribbonGeo(R.spPath(s.th),HS_B,HS_T,R.spring.geometry);lastTh=s.th;}   /* rewritten in place, and only when the balance has turned */
     /* passing spring: rides with the detent while unlocking; bends aside by itself on the return swing. Rebuilt only when either changes (still for most of each swing) */
