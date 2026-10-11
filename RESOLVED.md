@@ -469,7 +469,7 @@ Contents:
 
 ## Winding and maintaining work
 
-- **Winding-pawl spring's foot 0.35 into the winding ratchet's tips** (found by `fine.py` on the branch that cut the springs' beds, before it was merged). The traced r 7.04 line was taken as the bed's centre and the foot's pocket run in to r 6.8, inside the fusee's winding ratchet (tips r 6.9), which turns at the springs' height. The line is the pocket's inner wall (r 7.0); the feet and springs lie outside it. Keep: nothing on the sustaining ratchet's face toward the fusee comes inside r 6.9 + clearance; run `fine.py` after touching the beds. (this branch)
+- **Winding-pawl spring's foot 0.35 into the winding ratchet's tips** (found by `fine.py` on the branch that cut the springs' beds, before it was merged). The traced r 7.04 line was taken as the bed's centre and the foot's pocket run in to r 6.8, inside the fusee's winding ratchet (tips r 6.9), which turns at the springs' height. The line is the pocket's inner wall (r 7.0); the feet and springs lie outside it. Keep: nothing on the sustaining ratchet's face toward the fusee comes inside r 6.9 + clearance; run `fine.py` after touching the beds. `703a20a`
 - **Sustaining spring ran forward from its pin,** so the sustaining ratchet
   couldn't drive the fusee wheel through it. It now curves back to a free end
   pressed by a pin on the ratchet. `967570c`
