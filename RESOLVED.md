@@ -1821,6 +1821,13 @@ An arbor needs pivots and shoulders; a stone its seat.
   lock and the train goes again only from a whole beat. Keep: hold and release by the same spoke
   (`blockRoom` read from 1e-4 of a beat before, so a spoke against the point reads 0, not a
   spacing); nothing restarts the train off its stone.
+- **A jolt kept the balance's phase.** From where the balance was in its swing (θ, θ′) a jolt worked
+  out the new swing, √(θ² + (θ′/ω)²), but kept the old phase, so the train stayed on its half second as
+  if the knock had cost no time. A knock changes the phase too: the balance now goes on at the phase
+  θ and θ′/ω give, the escape wheel staying on its stone (`knock` in `app.js`), so the next unlocking
+  comes sooner or later and the dial error shows the knock's time error (a phase landing between the
+  unlocking and the lock waits for the next swing; a trip adds its tooth). Keep: a knock moves the
+  beat by the phase it gives, the escape wheel's count unbroken.
 
 ## Build, tools and docs
 

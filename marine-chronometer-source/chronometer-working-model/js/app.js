@@ -742,21 +742,27 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function ampStep(dts,brake,driven,drv){let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;   /* a twist adds swing, never takes it away */
     if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dts/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
     else if(brake)a*=Math.exp(-dts/TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dts/TAU_FREE));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a;}
+  /* a knock while the train goes (a jolt, a twist): from where it is in its swing the balance goes on at swing a and phase p2 (oscillations, now). The escape wheel stays on its
+     stone, so the next unlocking comes sooner or later and the hands with it: the knock's time error, carried in bOff (and eOff, whole, so the wheel's count holds). A phase
+     between the unlocking and the lock counts as past it: the swing was turned there, so the jewel didn't unlock on the way, and the wheel waits for the next swing (the loop
+     never turns it back). extra: teeth escaped besides (a trip). Returns the error (s) */
+  function knock(a,p2,extra){const y=tSim/0.5+H.bOff+PL,d=((((p2-y)%1)+1.5)%1)-0.5,e0=(H.bOff+H.eOff)/2,E0=lastE??Math.floor(tSim/0.5+H.bOff)+H.eOff,y2=y+d,k=Math.floor(y2),q=y2-k;
+    H.bOff+=d;H.amp=a;H.kick=0;H.eOff=Math.round(E0-(k-1+(q>0&&ESC.state(q,a,driveNow()).prog>0?1:0)))+extra;lastE=E0+extra;const e=(H.bOff+H.eOff)/2-e0;rErr+=e;return e;}
   /* a jolt (2.7 in IDEAS.md, illustrative): a sharp knock turning the box about the balance staff jerks the balance's speed by 0.6 to 1 of its running top speed, either way, at random.
-     From where it is in its swing (θ, θ') the balance goes on at A = √(θ² + (θ'/ω)²): checked below AMIN it sets (stops: twist to start); carried past a full turn plus the angle
-     where the discharge jewel meets the trip spring (ESC.TRIP) it unlocks the detent a second time in that swing and the wheel trips, escaping an extra tooth, the hands half a
-     second on, and the tooth striking the roller as it trips takes the excess (the swing kept under TRIP + 15 degrees); between, the swing is upset and settles again. Only while
-     the train is going, at a locked beat; the box and gimbals are knocked too (H.jT) */
-  const joltB=$('#jolt');
+     From where it is in its swing (θ, θ') the balance goes on at A = √(θ² + (θ'/ω)²) and the phase that θ and θ'/ω give (knock): the knock moves the beat, a time error in the dial.
+     Checked below AMIN it sets (stops: twist to start); carried past a full turn plus the angle where the discharge jewel meets the trip spring (ESC.TRIP) it unlocks the detent
+     a second time in that swing and the wheel trips, escaping an extra tooth, the hands half a second on, and the tooth striking the roller as it trips takes the excess (the
+     swing kept under TRIP + 15 degrees); between, the swing is upset and settles again. Only while the train is going, at a locked beat; the box and gimbals are knocked too (H.jT) */
+  const joltB=$('#jolt'),fmtS=e=>(e<0?'−':'+')+Math.abs(e).toFixed(2)+' s';
   function jolt(){if(kw)kwStop();H.jT=performance.now();H.jS=Math.random()<0.5?-1:1;gimKick(H.jS*0.8);wake();
     if(H.held||H.amp<ESC.AMIN||H.arm>0.05){stopMsg('<b>Jolted.</b> <span>The balance isn’t driving the train, so there is nothing to upset.</span>');return;}
     const x=tSim/0.5+H.bOff+PL,ph=x-Math.floor(x),z0=ESC.state(ph,H.amp,driveNow());if(ph>0&&z0.prog>0&&z0.prog<1){stopMsg('<b>Jolted during an impulse.</b> <span>The tooth is on the impulse jewel and rides it out; try again.</span>');return;}
     const w=TAU/0.5,th=-H.amp*Math.cos(TAU*ph),v=H.amp*w*Math.sin(TAU*ph)+H.jS*(0.6+0.4*Math.random())*ESC.A*w,a0=Math.hypot(th,v/w),a=Math.min(a0,ESC.TRIP+15*D2R),before=H.amp;
-    H.amp=a;H.kick=0;   /* the swing's new size; its phase is kept (the model's clock), so the train stays on its half second */
-    const trip=a0>ESC.TRIP,set=a<ESC.AMIN,d=x=>Math.round(x/D2R)+'°';if(trip){H.eOff+=1;rErr+=0.5;}pend.add('jolted');
+    const trip=a0>ESC.TRIP,set=a<ESC.AMIN,d=x=>Math.round(x/D2R)+'°',er=knock(a,Math.atan2(v/w,-th)/TAU,trip?1:0);pend.add('jolted');   /* the swing's new size and phase */
+    const et=`The knock moved the beat: the hands ${er>=0?'gained':'lost'} ${fmtS(er).slice(1)}.`;
     stopMsg(set?`<b>Jolted: it has set.</b> <span>The knock came against the balance’s swing and checked it from ${d(before)} to ${d(a)}, under the ${d(ESC.AMIN)} it needs to unlock the wheel: the chronometer stops. Twist to start.</span>`:
-      trip?`<b>Jolted: it tripped.</b> <span>The knock came with the swing and carried the balance past a full turn, so the discharge jewel came round and unlocked the detent a second time: the escape wheel escaped an extra tooth and the hands jumped half a second ahead. The swing settles back to ${d(ESC.ampAt(driveNow()))} in a minute or so.</span>`:
-      `<b>Jolted.</b> <span>The swing went from ${d(before)} to ${d(a)}; it settles back to ${d(ESC.ampAt(driveNow()))} in a minute or so${Math.abs(a-before)>20*D2R?', and the rate wanders meanwhile':''}.</span>`);}
+      trip?`<b>Jolted: it tripped.</b> <span>The knock came with the swing and carried the balance past a full turn, so the discharge jewel came round and unlocked the detent a second time: the escape wheel escaped an extra tooth and the hands jumped half a second ahead (${fmtS(er)} in all). The swing settles back to ${d(ESC.ampAt(driveNow()))} in a minute or so.</span>`:
+      `<b>Jolted.</b> <span>The swing went from ${d(before)} to ${d(a)}; it settles back to ${d(ESC.ampAt(driveNow()))} in a minute or so${Math.abs(a-before)>20*D2R?', and the rate wanders meanwhile':''}. ${et}</span>`);}
   joltB.addEventListener('click',jolt);
   /* ---------- swing and isochronism: the balance's amplitude over the last minute (frame time), the rate against the swing at a steady torque (ESC.rateAt along ESC.ampAt), and both over
      a wind with the fusee (drvF) and, ticked, a going barrel (drvB); the manual's isochronism check, wound at 0 h: the gain over 12 h less half the gain over 24 ---------- */

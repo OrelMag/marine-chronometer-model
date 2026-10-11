@@ -731,8 +731,10 @@ every speed); the equation gives the amplitude and the rate.
   under `AMIN`, it sets (stops). Carried past `ESC.TRIP` (a full turn plus the
   angle where the discharge jewel meets the trip spring, 332.2°), the jewel
   comes round and unlocks a second time, so the wheel trips: one extra tooth,
-  and the hands jump half a second. The phase is kept, so the train stays on
-  its half second.
+  and the hands jump half a second. The knock also moves the balance's phase,
+  to the one θ and θ′/ω give (`knock` in `app.js`): the escape wheel stays on its
+  stone, so the next unlocking comes sooner or later, and the dial error shows the
+  knock's time error (a few hundredths of a second, more when it nearly sets).
 - **Gimbals with inertia** (`gimStep`; illustrative). The case, with the ring
   about the ring's pivots, hangs as a pendulum below each axis:
   ψ″ = −ω0²ψ − 2ζω0(ψ′ − φ′), φ the box's angle. The case's own period is
