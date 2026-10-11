@@ -718,6 +718,17 @@ Contents:
   comparison, is the same spring. `physics.js` takes the pitch line: 0.93 NÂ·m fully wound
   (was 0.90), 2.36 GPa, 64-100 ÂµNÂ·m at the escape wheel. Keep: one spring, `msPull`, for
   the drawing, the set-up and the drive; levers on the chain's pitch line (`rc`).
+- **The drive stopped dead at run down with chain still on the fusee** (kinematics audit,
+  11 October 2026). At `RUN_H` the chain still wrapped 0.032 turn of the fusee (the tangent
+  point drifts round as the fusee's radius grows), yet the drive fell from full to nothing
+  at once. Past the tangent the chain's end pin swings on toward the barrel and the chain
+  runs straight from it, so the lever falls to nothing where its line passes through the
+  arbor (`geo` in `makeFusee`: 65Â°, 1.2 h). The pin (`ME`) is now 8.54 turns down the groove,
+  placed so that rest is at `RUN_H`, the manual's 17Â½ half turns from full wind; the drive
+  tapers with the lever from 55.1 h, and the train stops about 5 minutes before `RUN_H`,
+  under the 0.14 of the drive that keeps the balance above `ESC.AMIN`. The chain is 566 mm
+  (was 586) and the set-up matches the levers over the 4.51 barrel turns the chain takes to
+  leave the fusee. Keep: the drive's end comes from the chain's geometry, at `RUN_H`.
 
 ## Plates, bridges, screws and arbors
 

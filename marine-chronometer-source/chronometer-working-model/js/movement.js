@@ -125,7 +125,7 @@ const MWM=(()=>{const d=Math.hypot(...L.Mw);return{a:2*d/(MW.cp+MW.mw),b:2*d/(MW
 /* escape-wheel turns per turn of the fourth, third, centre and fusee wheels: 7.5, 60, 450, 2893 */
 const ESC_PER=(()=>{const fw=TRAIN.fw/TRAIN.ep,tw=fw*TRAIN.tw/TRAIN.fp,cw=tw*TRAIN.cw/TRAIN.tp;return{fw,tw,cw,gw:cw*TRAIN.fu/TRAIN.cp};})();
 const FUSEE_PER_HOUR=TRAIN.cp/TRAIN.fu,FUSEE_TURNS=8.75; /* "17-1/2 half turns will be required for a full winding" (manual Sec. III) */
-const RUN_H=FUSEE_TURNS/FUSEE_PER_HOUR;         /* 56.25 h: runs down when the chain is all on the barrel, the manual's "maximum of 56 hours" and the end of the dial's UP-DOWN scale */
+const RUN_H=FUSEE_TURNS/FUSEE_PER_HOUR;         /* 56.25 h: run down, the chain all on the barrel and its end pin swung round until the chain's line passes through the fusee's arbor (makeFusee, ME): the fusee's torque gone; the manual's "maximum of 56 hours" and the end of the dial's UP-DOWN scale */
 /* wind indicator: wheel 120 (counted on the video), the fusee arbor's pinion 12 (inferred: see TRAIN). Its hand sweeps UD_SWEEP degrees in 56 h, centred on the 6
    (UP at the upper right, DOWN at the upper left); UDA(h) is its angle after h hours, for the hand here and every dial's scale (core.js, essay.js) */
 const UD={pin:12,wheel:120,m:2*Math.hypot(L.Fu[0]-L.Ud[0],L.Fu[1]-L.Ud[1])/(12+120)},UD_SWEEP=56*FUSEE_PER_HOUR*UD.pin/UD.wheel*360,UD_UP=180-UD_SWEEP/2,UDA=h=>(UD_UP+UD_SWEEP*h/56)*Math.PI/180;
@@ -1526,15 +1526,30 @@ function makeFusee(M,c){
      whose nose goes into the barrel's wall; placed from the chain's path */
   const endM=m=>{m.userData.partName='chain';hn(m,'42001',{sub:1});g.add(m);return m;},fPin=endM(new THREE.Mesh(cylY(0.17,0.8,10),M.steel)),hkB=endM(new THREE.Mesh(new THREE.BoxGeometry(1.3,TK,H),M.chain)),hkN=endM(new THREE.Mesh(cylY(0.28,0.3,10),M.chain));hkN.userData.hookNose=true;   /* in its hole in the barrel's wall: barrel-clearance.js leaves it out */
   const Y=new THREE.Vector3(0,1,0),rad=(o,cx,p)=>new THREE.Vector3(p.x-cx,0,p.z).normalize();
-  /* the chain's pitch line, locked to the groove (local angle phi0 + TAU m on the fusee turned rot): wound on the fusee from its large end (m = N) to md, where it
+  /* the chain's pitch line, locked to the groove (local angle phi0 + TAU m on the fusee turned rot): wound on the fusee from its end pin (m = ME) to md, where it
      leaves along the drums' common tangent (dl past their lowest point), then wound on the barrel from md back to its hook (m = 0) */
-  const md=rot=>{let m=rot/TAU;for(let i=0;i<3;i++)m=(-Math.PI/2+dl(m)+rot-phi0)/TAU;return m;};
-  /* the barrel's turns from full wind with the fusee turned n (+ eps): the chain wound on the barrel, TAU Iw(m0) from where it meets it at the drums' tangent (-PI/2 + dl
+  const md0=rot=>{let m=rot/TAU;for(let i=0;i<3;i++)m=(-Math.PI/2+dl(m)+rot-phi0)/TAU;return m;};
+  /* the barrel's turns from full wind with the fusee turned n (+ eps): the chain wound on the barrel, wrapB (below) from where it meets it at the drums' tangent (-PI/2 + dl
      past the barrel's lowest point), so the hook at its end stays in its hole in the wall (with I(n), the fusee's turns, the hook slid 8 mm round the barrel over a wind).
      The chain keeps its length: what comes off the fusee goes onto the barrel less what the straight run between the drums gains, Tg (their common tangent, 35.85 mm
      fully wound to 37.42 run down, as the fusee's radius grows); taking the fusee's arc alone over-turned the barrel 0.013 turn by run down (until 11 October 2026) */
-  const Tg=m=>Math.sqrt((fx-bx)**2-(rB-rc(m))**2),m00=md(0),Iw=m0=>I(m0)-(Tg(m0)-Tg(m00))/(TAU*rB);
-  const IB0=I(m00)-dl(m00)/TAU,Ib=(n,eps=0)=>{const m0=md(n*TAU+eps);return Iw(m0)-dl(m0)/TAU-IB0;};
+  const Tg=m=>Math.sqrt((fx-bx)**2-(rB-rc(m))**2),m00=md0(0);
+  /* run down (Sec. III: "a maximum of 56 hours"; "when the chronometer is completely run down, 17-1/2 half turns will be required for a full winding"): once the last turn
+     has left the fusee, its end pin (m = ME) swings on past the tangent toward the barrel and the chain runs straight from it to the barrel, so the chain's lever on the
+     fusee (the arbor's distance from that line) falls from its pitch radius to nothing over about 0.18 turn (65 deg; 1.2 h), where the line passes through the arbor: the
+     fusee's torque is gone and it comes to rest. The pin is placed so that is at N turns from full wind (RUN_H, the 17 1/2 half turns), 0.18 turn short of the groove's
+     end, which is the measured profile's (the chain's end on the fusee isn't seen in any source); the train stops a little before, its drive under what keeps the
+     balance swinging (about 0.14 of it). Until 11 October 2026 the chain ended at the groove's end and the drive stopped at RUN_H with 0.03 turn still wound on: abruptly.
+     geo(rot): m0 (where the chain leaves the fusee, at most ME), the leaving point F0, the barrel's tangent point (bt its angle) and the straight run S between them, the
+     turn round the barrel to the hook (wrap: the chain keeps its length) and the lever, the arbor's distance from the straight run */
+  const tgS=(()=>{const d=dl(N),P=[fx+rc(N)*Math.sin(d)-bx,-rc(N)*Math.cos(d)],ps=Math.atan2(P[1],P[0]),gm=Math.acos(rB/Math.hypot(...P)),w=a=>Math.abs(Math.atan2(Math.sin(a-d+Math.PI/2),Math.cos(a-d+Math.PI/2)));return w(ps-gm)<w(ps+gm)?-1:1;})();   /* which tangent from a point to the barrel the run takes: the lower */
+  const pinGeo=(me,rot)=>{const a=phi0+TAU*me-rot,r=rc(me),F0=[fx+r*Math.cos(a),r*Math.sin(a)],v=[F0[0]-bx,F0[1]],bt=Math.atan2(v[1],v[0])+tgS*Math.acos(rB/Math.hypot(...v)),B0=[bx+rB*Math.cos(bt),rB*Math.sin(bt)],
+    S=Math.hypot(B0[0]-F0[0],B0[1]-F0[1]),ux=(B0[0]-F0[0])/S,uz=(B0[1]-F0[1])/S;return{m0:me,F0,B0,bt,S,lever:-((F0[0]-fx)*uz-F0[1]*ux)};};
+  const rotT=me=>TAU*me+dl(mF)-dl(me),deadRot=me=>{let a=rotT(me),b=a+Math.PI;for(let i=0;i<50;i++){const m=(a+b)/2;if(pinGeo(me,m).lever>0)a=m;else b=m;}return a;};
+  const ME=(()=>{let a=N-0.5,b=N;for(let i=0;i<50;i++){const m=(a+b)/2;if(deadRot(m)<N*TAU)a=m;else b=m;}return a;})(),RT=rotT(ME);
+  const geo=rot=>{if(rot>RT)return pinGeo(ME,rot);const m0=md0(rot),d=dl(m0),r0=rc(m0);return{m0,F0:[fx+r0*Math.sin(d),-r0*Math.cos(d)],B0:[bx+rB*Math.sin(d),-rB*Math.cos(d)],bt:-Math.PI/2+d,S:Tg(m0),lever:r0};},md=rot=>geo(rot).m0;
+  const wrapB=q=>TAU*I(q.m0)+(Tg(m00)-q.S)/rB;   /* the chain's turn round the barrel, tangent point to hook: what has come off the fusee, less the straight run's gain */
+  const IB0=I(m00)-dl(m00)/TAU,Ib=(n,eps=0)=>{const q=geo(n*TAU+eps);return(-Math.PI/2-q.bt+wrapB(q))/TAU-IB0;};
   /* the chain's hook: its end on the barrel (m = 0) stays at HKA in the barrel's frame; its nose goes through a hole in the wall there (Figs. 17, 75), 0.7 mm across
      (estimated); the wall is one solid with the hole through it */
   const HKA=-Math.PI/2-TAU*IB0,HKN=HKA-0.85/rB,HKY=yb(0),HKW=0.35;   /* HKA: the chain's end; HKN: the nose, 0.85 on along the drum, past the last link's plates */
@@ -1552,15 +1567,14 @@ function makeFusee(M,c){
       q(V(0,M,1),V(0,M,2),V(1,M,2),V(1,M,1),tan(M));q(V(0,0,1),V(0,0,2),V(1,0,2),V(1,0,1),tan(0).negate()); }   /* its sides */
     let wg=new THREE.BufferGeometry();wg.setAttribute('position',new THREE.Float32BufferAttribute(P,3));wg.setIndex(I);wg=wg.toNonIndexed();wg.computeVertexNormals();   /* flat faces, as the extruded wall had */
     bw.geometry.dispose();bw.geometry=wg;bw.position.y=0; }
-  function path(m0,rot){const P=[],V=(x,y,z)=>P.push(new THREE.Vector3(x,y,z)),d=dl(m0),r0=rc(m0);
-    for(let m=N;m>m0;m-=0.01){const a=phi0+TAU*m-rot,r=rc(m);V(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}
-    const F0=[fx+r0*Math.sin(d),-r0*Math.cos(d)],B0=[bx+rB*Math.sin(d),-rB*Math.cos(d)],y0=yf(m0),y1=yb(m0);V(F0[0],y0,F0[1]);
-    for(let s=0.1;s<1;s+=0.1)V(lerp(F0[0],B0[0],s),lerp(y0,y1,s),lerp(F0[1],B0[1],s));
-    const In=I(m0),kw=In>0?Iw(m0)/In:1;for(let m=m0;m>=0;m-=0.01){const b=-Math.PI/2+d-TAU*(In-I(m))*kw;V(bx+rB*Math.cos(b),yb(m),rB*Math.sin(b));}return P;}   /* round the barrel TAU Iw(m0) to the hook */
+  function path(rot){const P=[],V=(x,y,z)=>P.push(new THREE.Vector3(x,y,z)),q=geo(rot),m0=q.m0,F0=q.F0,B0=q.B0,y0=yf(m0),y1=yb(m0);
+    for(let m=ME;m>m0;m-=0.01){const a=phi0+TAU*m-rot,r=rc(m);V(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}
+    V(F0[0],y0,F0[1]);for(let s=0.1;s<1;s+=0.1)V(lerp(F0[0],B0[0],s),lerp(y0,y1,s),lerp(F0[1],B0[1],s));
+    const In=I(m0),kw=In>0?wrapB(q)/(TAU*In):1;for(let m=m0;m>=0;m-=0.01){const b=q.bt-TAU*(In-I(m))*kw;V(bx+rB*Math.cos(b),yb(m),rB*Math.sin(b));}return P;}   /* round the barrel wrapB to the hook */
   /* n turns from full wind, the fusee eps past them (the maintaining work's catch, update()): the fusee, barrel, chain and stop-bar */
   function setWind(n,eps=0){
     const rot=n*TAU+eps,m0=md(rot);fz.rotation.y=rot;bz.rotation.y=Ib(n,eps)*TAU;setBar(barTravel(m0));
-    const P=path(m0,rot),J=[P[0].clone()];   /* the joints, PC apart along the pitch line */
+    const P=path(rot),J=[P[0].clone()];   /* the joints, PC apart along the pitch line */
     { let acc=0,next=PC;for(let i=1;i<P.length;i++){const seg=P[i].distanceTo(P[i-1]);while(acc+seg>=next){J.push(new THREE.Vector3().lerpVectors(P[i-1],P[i],(next-acc)/seg));next+=PC;}acc+=seg;} }
     let ia=0,ib=0;
     for(let k=0;k+1<J.length&&ia<MAX&&ib<MAX;k++){q0.copy(J[k]);q1.copy(J[k+1]);pos.addVectors(q0,q1).multiplyScalar(0.5);t.subVectors(q1,q0).normalize();
@@ -1568,7 +1582,7 @@ function makeFusee(M,c){
     imA.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
     { fPin.position.copy(J[0]).addScaledVector(Y,0.05);   /* through the first outer link's rivet hole, down into the fusee under the last turn */
       /* the hook at the chain's end on the barrel (HKA in the barrel's frame, turned with it), its plate from the last joint to it (the same length all through the wind:
-         the chain keeps its length, Iw), its nose through the wall to mid-thickness */
+         the chain keeps its length, wrapB), its nose through the wall to mid-thickness */
       const ha=HKN-bz.rotation.y,pe=new THREE.Vector3(bx+rB*Math.cos(ha),HKY,rB*Math.sin(ha)),pb=J[J.length-1],ub=rad(0,bx,pe),tb=new THREE.Vector3().subVectors(pe,pb),tl=tb.length();tb.normalize();
       const nb=new THREE.Vector3().crossVectors(tb,Y).normalize();const mp=pb.clone().add(pe).multiplyScalar(0.5),mr=Math.hypot(mp.x-bx,mp.z);mp.x=bx+(mp.x-bx)*rB/mr;mp.z*=rB/mr;   /* its middle on the pitch circle, so the chord doesn't sag into the wall */
       mtx.makeBasis(tb,Y,nb).setPosition(mp);hkB.matrix.copy(mtx);hkB.matrix.decompose(hkB.position,hkB.quaternion,hkB.scale);hkB.scale.x=(tl+0.4)/1.3;
@@ -1579,17 +1593,17 @@ function makeFusee(M,c){
      chain's IN turns as the chain's lever on the fusee grows, rho0: its pitch line where it leaves the fusee, fully wound against run down (0.490; the groove's floor,
      rmin / rmax, 0.473 until 11 October 2026): a fusee is cut for its spring. Its outer end (theta = TAU T in mainspringGeo) 0.4 mm
      past the pin, so turning it by rot puts the end there at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
-  const IN=Ib(N),MD=msStates(),rho0=rc(md(0))/rc(md(N*TAU));let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+IN)<rho0)ta=m;else tb=m;}
-  const y0=MSY0,y1=MSY1,ym=(y0+y1)/2,e0=0.6/MSPRING.ra,e1=e0+1.06/MSPRING.ra,MS={Tup:ta+IN,y0,y1,ey:[e0,e1,ym-1.3,ym+1.3]};   /* fully wound: the set-up and the chain's barrel turns past the spring's slack */
+  const IN=Ib(N),INT=Ib(RT/TAU),MD=msStates(),rho0=rc(md(0))/rc(ME);let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+INT)<rho0)ta=m;else tb=m;}   /* INT: the barrel's turns while the chain leaves the fusee, its lever rising from rc(md(0)) to rc(ME) */
+  const y0=MSY0,y1=MSY1,ym=(y0+y1)/2,e0=0.6/MSPRING.ra,e1=e0+1.06/MSPRING.ra,MS={Tup:ta+INT,y0,y1,ey:[e0,e1,ym-1.3,ym+1.3]};   /* fully wound: the set-up and the chain's barrel turns past the spring's slack */
   MS.Tdown=MS.Tup-IN;MS.setup=MS.Tdown-MD.T0;MS.rot=TAU*MS.Tup+Math.PI/2-PIN-0.4/(MSPRING.Rw-MSPRING.t/2);MS.hookA=(e0+e1)/2-MS.rot;ms.rotation.y=MS.rot;
   /* the drive, from the spring drawn: pull(n), the solved spring's pull (msPull, the slope of its energy: tools/mainspring.py) at the barrel's turns Ib(n), n fusee turns
-     from full wind, against its pull fully wound; lever(n), the chain's pitch line where it leaves the fusee (rc at md, the line the pull acts along); torque(n), their
+     from full wind, against its pull fully wound; lever(n), the arbor's distance from the line the pull acts along (the chain's pitch radius where it leaves the fusee, then falling to nothing as the end pin swings round to run down, geo); torque(n), their
      product against the fully wound pitch radius: the fusee wheel's torque, level to about 1.6 % with the set-up above. pullB(x): what a going barrel with the same spring
      would deliver, x of the barrel's IN turns let down, evenly with time. Until 11 October 2026 the drive was an illustrative pull (the even fall the profile is cut for,
      3 % steeper at each end) on the groove's floor, a second spring beside the solved one the model drew */
-  const P0=msPull(MS.Tup),pull=n=>msPull(MS.Tup-Ib(clamp(n,0,N)))/P0,pullB=x=>msPull(MS.Tup-clamp(x,0,1)*IN)/P0,lever=n=>rc(md(clamp(n,0,N)*TAU)),torque=n=>pull(n)*lever(n)/rc(md(0));
+  const P0=msPull(MS.Tup),pull=n=>msPull(MS.Tup-Ib(clamp(n,0,N)))/P0,pullB=x=>msPull(MS.Tup-clamp(x,0,1)*IN)/P0,lever=n=>Math.max(0,geo(clamp(n,0,N)*TAU).lever),torque=n=>pull(n)*lever(n)/rc(md(0));
   /* the chain's length along its pitch line, the fusee's end pin to the hook's end, at n turns (+ eps): the joints' path and the hook's plate (tools/invariants.py: it keeps its length) */
-  const chainLen=(n,eps=0)=>{const rot=n*TAU+eps,P=path(md(rot),rot),ha=HKN-Ib(n,eps)*TAU;let l=0;for(let i=1;i<P.length;i++)l+=P[i].distanceTo(P[i-1]);
+  const chainLen=(n,eps=0)=>{const rot=n*TAU+eps,P=path(rot),ha=HKN-Ib(n,eps)*TAU;let l=0;for(let i=1;i<P.length;i++)l+=P[i].distanceTo(P[i-1]);
     return l+P[P.length-1].distanceTo(new THREE.Vector3(bx+rB*Math.cos(ha+0.85/rB),HKY,rB*Math.sin(ha+0.85/rB)));};
-  return{g,fz,bz,setWind,rf,rc,yf,fx,bx,ms,I,Ib,IN,MS,stopBar,setBar,barTravel,mF,stud,N,pull,pullB,lever,torque,chainLen};
+  return{g,fz,bz,setWind,rf,rc,yf,fx,bx,ms,I,Ib,IN,INT,ME,nT:RT/TAU,MS,stopBar,setBar,barTravel,mF,stud,N,pull,pullB,lever,torque,chainLen};
 }
