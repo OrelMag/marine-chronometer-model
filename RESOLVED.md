@@ -1363,6 +1363,23 @@ Contents:
   were full-height strips). The box's size checked against sale listings
   (190-197 mm): unchanged. Keep them measured (SHAPE-PASS.md, gaps 1). `7bb49ad`
 
+- **The gimbals kept the case level at sea.** The case hung as a pendulum on pivots fixed in space,
+  so as the box rolled it stayed within 0.14° of level. At sea the box rolls about the ship's axis,
+  metres below it, so the pivots accelerate and the case hangs along the apparent vertical, gravity
+  less their acceleration, which leans it several degrees at the ends of a roll. The pendulum now
+  takes the pivots' acceleration from the ship's roll and pitch about axes 5 m below (`gimStep`,
+  `GIM` in `box.js`, estimated), one function for the page and the export: 5.4° at 7 s and 14°,
+  within 0.2° of the apparent vertical; faster than a ship rolls the box stands for one rocked about
+  its pivots. Rocking now eases in as it eases out. Keep: the page and the export call the one
+  `gimStep`; the ship's motion comes with its rates (`GIM.sea`). `1fb1c1d`
+- **The export's At sea jumped where it looped.** The pitch ran at 0.7 of the roll's rate, so the
+  clip's six rolls held 4.2 pitches and a looping clip jumped 1.4° of pitch at its seam (5.45° to
+  6.88°), and the case started level, its own swing still settling. The pitch now runs at two thirds
+  of the roll's rate on the page and in the export (`GIM.PR`), so the motion repeats every three
+  rolls and the six loop, and the clip lets the case settle over whole repeats (30 s and more)
+  before it starts: the seam is under 1e-5°. Keep: a looping clip's motions in whole cycles of it,
+  started from their steady state. `b8ba747`
+
 ## Accuracy to the manual
 
 - **UP/DOWN scale laid out wrong.** It follows Fig. 107: UP at upper right,
@@ -1790,6 +1807,77 @@ An arbor needs pivots and shoulders; a stone its seat.
   `app.js`). Keep: fit a stop through `stopFit` or its button, never
   `mv.userData.stop` alone in the page, and `bom.py` fits the arm by its button,
   so the card's numbers it checks are the arm's. `db5d5dd`
+- **GMT or local changed while the train stood was lost.** `setTz` moved `tSim` and the master by the
+  zone's difference, but with the train held the hands stand at `H.Eh`, which it left alone (setting the
+  time and Now reset it): on restarting the hands carried on from where they stood and the dial read
+  the difference slow (3 h for a zone 3 h off). Held, the beats the hands stand at now move with it
+  (`H.Eh += 2d`). Keep: whatever moves `tSim` while the train is held moves `H.Eh` with it. `ef53013`
+- **Above 5× the escape wheel ran smoothly, held off its stone and stepped back on a change of speed.**
+  Faster than `REAL_X` the beats were `2t` plus offsets, continuous, so a hold there stored a fraction
+  of a tooth and the restart a fractional `eOff`: back at 1× every locked beat stood off the locking
+  stone, the second hand between its marks, until Now (a run-down at 3600× held at E = 2360.25). The
+  two formulas also differed by up to 0.74 of a tooth, so crossing 5× stepped the wheel back. The train
+  now goes by the balance's real phase at every speed (`at()` in `app.js`; above `REAL_X` only the
+  drawn balance swings at 0.9 Hz), so it stops and starts on whole beats, a change of speed moves
+  nothing, and the wheel never turns back (`Eb`: the progress `ESC.state` gives at a phase changes
+  with the swing, which a frame of the arm's braking at 10× cut from 255° to 21°). Keep: the
+  train's beats from the real phase whatever the speed; `REAL_X` chooses only how the balance is drawn. `3b564e3`
+- **The second hand landed on its mark 0.37 s before the time it stood for.** The beats were
+  counted from the balance's far turn, so the wheel escaped and the hand landed a quarter of a
+  swing after the half second (`PL`, 0.263 of an oscillation, at 255°), while the dial was read
+  as `tSim` itself: the dial error left out the 0.12 s the hands were ahead on average, and Now set
+  them so. The balance's phase now runs `PL` ahead, so the hand comes to rest on the mark k/2 s at
+  `tSim + (bOff + eOff)/2 = k/2`, as on a chronometer set to a signal, and `dialRead()` reads what the
+  hands show (the train standing, the mark the second hand stands on: `handT`); Now puts the balance's
+  phase on the master's too. Keep: the hands land on the mark at
+  the time `dialRead()` gives for it. `3b564e3`, `bc5638e`
+- **The export's train could step back on restarting.** `blender.js`'s copy of the loop counted a
+  beat's progress as 0 at a whole phase in `at()` but took `ESC.state`'s 1 there on restarting, so on
+  its 1/120 s grid the escape wheel stepped back a tooth (40 to 39) for 4 of 240 times the screw was
+  raised. Its `sim` is now the page's loop line for line (the phase with `PL`, the wheel never back,
+  the restart's count from `at()` itself), started so Running is as before. Keep: `sim` in
+  `blender.js` and the train in `app.js`'s `frame` change together. `24908fc`
+- **The drawn escape wheel chased the impulse jewel at the calibrated torque whatever the drive.**
+  The swing and the rate took the drive (`ESC.ampAt`, `ESC.rateAt` with `driveNow()`), but the loop,
+  the balance inset and the export called `ESC.state(p, amp)` without it, so after the unlocking the
+  wheel ran to the jewel as at full torque: the tooth landed 2.6° of the balance early at 0.8 of the
+  torque, 7° at 0.3 (run nearly down, or on the sustaining spring). They pass the drive now (the
+  export its Running's, `drvF(h0)`, in the beat it samples and the rig's beat too). Keep: every
+  `ESC.state` call that draws the train passes the drive the swing is worked out at. `59a4c5b`
+- **The fusee ran on the master's time and past its chain.** The hours since winding (`hrs`) went
+  with the frame's master time while the train went with it times the rate, so a fast or slow
+  chronometer's fusee and wind indicator drifted from its own train; and the frame that ran it down
+  ran the train its whole length, up to 500 s past the chain's end at 10,000×. The fusee's hours now
+  go with the train's own time, and a frame runs the train no further than the chain has left (then,
+  stopping, only to the end of the beat under way). Keep: `hrs` advances with `tSim`, never past
+  `RUN_H`, and what may drive the train after it (`canDrive`) carries it on without moving `hrs`. `df4abfd`
+- **The train-blocking screw held the train at the last lock before the spoke.** The train stopped
+  at the last whole beat before a spoke would meet the dog point. In a real one the next unlocking
+  lets the wheel go until the spoke meets it, a fraction of a tooth (Op. 6: the escapement works
+  "until the train is stopped by the blocking screw bearing against one of the arms of the fourth
+  wheel"), the detent back on its stop with no tooth on it. Now so: held at the spoke, the tooth
+  it holds stands in the impulse jewel's path (unless within 0.04 of a tooth of a lock), the jewel
+  strikes it each return swing and the balance swings only on its side of it, stopped about as
+  quickly as by the arm (`bankAt`, `bankState` in `box.js`); raised, the wheel runs on to the next
+  lock and the train goes again only from a whole beat. Keep: hold and release by the same spoke
+  (`blockRoom` read from 1e-4 of a beat before, so a spoke against the point reads 0, not a
+  spacing); nothing restarts the train off its stone. `ea286e9`
+- **A jolt kept the balance's phase.** From where the balance was in its swing (θ, θ′) a jolt worked
+  out the new swing, √(θ² + (θ′/ω)²), but kept the old phase, so the train stayed on its half second as
+  if the knock had cost no time. A knock changes the phase too: the balance now goes on at the phase
+  θ and θ′/ω give, the escape wheel staying on its stone (`knock` in `app.js`), so the next unlocking
+  comes sooner or later and the dial error shows the knock's time error (a phase landing between the
+  unlocking and the lock waits for the next swing; a trip adds its tooth). Keep: a knock moves the
+  beat by the phase it gives, the escape wheel's count unbroken. `70f7f3e`
+- **The twist turned the box 7° and gave the balance 160°.** The box's twist was drawn as a turn of
+  at most 0.12 rad out and back over half a second, while the balance was set to 160°. A twist can give
+  the balance only what the box turns under it: the balance stays where it is in space, so relative
+  to the movement θ″ = −ω²θ − α″, at most about twice the box's turn, and the drawn one would have left
+  it 7°. The box now turns 35° in 0.1 s and back a quarter of a second later (`TWIST` in `box.js`),
+  which leaves a balance at rest swinging 67° (a real start by hand: 62-66°), worked out from where the
+  balance is (`TWIST.run`; with the train going, a twist is a knock, as a jolt is); the build-up
+  from it follows the video's start within its readings. The export's Stop and start plays the same
+  twist. Keep: the balance's kick from the box's own turn, never set apart from it. `e237416`
 
 ## Build, tools and docs
 

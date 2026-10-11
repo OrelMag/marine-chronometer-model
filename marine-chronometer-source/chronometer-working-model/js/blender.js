@@ -28,36 +28,35 @@ const BLENDER=(()=>{
     BX.root.rotation.set(s.pitch,s.tw,s.roll,'ZYX');BX.ring.rotation.x=s.gp-s.pitch;BX.bowl.rotation.z=s.gr-s.roll;BX.latch.rotation.y=lerp(LATCH_OFF,LATCH_ON,smooth(s.latch));
     look(C,s.dev>0.02,s.hkeyOn);}
   /* ---------- the train and balance through time: app.js frame()'s stop and start, drive and swing (ampStep, stopMove), at speed 1 ---------- */
-  function sim(C,hrs){const R=C.R,drvF=A.drvF,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false};
-    const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const x=t/0.5+H.bOff,kk=Math.floor(x),p=x-kk,z=ESC.state(p,H.amp);return{E:kk+(p>0?z.prog:0)+H.eOff,s:z};};   /* at a whole beat the tooth not yet escaped: ESC.state's prog 1 there is the beat before's, which kk has counted */
-    H.twist=()=>{if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;H.kick=160*D2R;};
+  function sim(C,hrs){const R=C.R,drvF=A.drvF,PL=A.PL,H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:-PL,eOff:1,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,tSim:0,hrs,lastE:null,winding:false};   /* bOff -PL, eOff 1: at 0 s the balance at its far turn and E 0, the rest pose (Rig · beat's start) */
+    const blocked=()=>H.blk>R.tbs.userData.vFace,at=t=>{const y=t/0.5+H.bOff+PL,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,H.drv);z.p=p;return{E:k-1+(p>0?z.prog:0)+H.eOff,s:z};},lockd=z=>!(z.p>0&&z.prog>0&&z.prog<1);   /* as app.js: at a whole phase the tooth not yet escaped, whatever ESC.state's prog there */
+    H.twist=sg=>{const y=H.held?H.bph:H.tSim/0.5+H.bOff+PL,p=y-Math.floor(y),a=H.amp,[th,u]=TWIST.run(-a*Math.cos(TAU*p),a*Math.sin(TAU*p),TAU/0.5,sg),a1=Math.hypot(th,u),p1=Math.atan2(u,-th)/TAU-TWIST.T/0.5;
+      if(H.held){H.bph=Math.floor(H.bph)+p1;if(a1>a)H.kick=a1;else{H.amp=a1;H.kick=0;}}};   /* app.js's twist with the train standing (the clip twists it only so) */
     H.step=dt=>{const mvTo=(x,t,r)=>x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(H.lastE??0))?Math.min(b,vf-0.005):b;
-      const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held;
+      const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held,bank=H.held&&H.bk!=null&&H.amp>Math.abs(H.bk);
       { let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dt/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
-        else if(brake)a*=Math.exp(-dt/A.TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/A.TF));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a; }
+        else if(brake||bank)a*=Math.exp(-dt/A.TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/A.TF));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a; }
       let E,s;
-      if(!H.held){let q=at(H.tSim);const Eb=H.lastE??q.E,locked=q.s.prog<=0||q.s.prog>=1,room=blocked()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff;};
-        if(dt>0&&locked&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}
-        else{if(dt>0){H.tSim+=dt;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+dt/3600);q=at(H.tSim);}E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
-      if(H.held){H.bph+=dt/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);E=H.Eh;const lockedP=s.prog<=0||s.prog>=1;
-        if(run&&!brake&&H.amp>=ESC.AMIN&&!(blocked()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockedP){H.held=false;H.bOff=(((H.bph-H.tSim/0.5)%1)+1)%1;const x=H.tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}
+      if(!H.held){let q=at(H.tSim);const Eb=H.lastE!=null?Math.max(q.E,H.lastE):q.E,room=blocked()?Eb-1e-4+R.blockRoom(Eb-1e-4):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff+PL;};
+        const stop=!run||H.amp<ESC.AMIN||brake;if(dt>0&&lockd(q.s)&&stop){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}
+        else{if(dt>0){let adv=dt;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!H.winding)adv=Math.min(adv,(RUN_H-H.hrs)*3600);H.tSim+=adv;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+adv/3600);q=at(H.tSim);}E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){if(Math.abs(E-Math.round(E))<1e-6)E=Math.round(E);hold();H.Eh=E;}}}
+      if(H.held){H.bph+=dt/0.5;if(H.Eh%1&&run&&!blocked()){H.Eh=Math.ceil(H.Eh-1e-6);if(H.bk>0&&H.amp<H.bk){H.amp=H.bk;H.bph=Math.floor(H.bph)+0.5;}}if(H.bkE!==H.Eh){H.bkE=H.Eh;H.bk=H.Eh%1?bankAt(H.Eh%1):null;}   /* the spoke, the screw raised and the banked balance as app.js */
+        const p=((H.bph%1)+1)%1;s=bankState(p,H.amp,drv,H.bk);s.p=p;E=H.Eh;
+        if(run&&!brake&&H.amp>=ESC.AMIN&&!(H.Eh%1)&&!(blocked()&&R.blockRoom(H.Eh-1e-4)<2e-4)&&lockd(s)){H.held=false;H.bOff=(((H.bph-PL-H.tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(H.tSim).E);}}
       H.lastE=E;return{E,th:s.th,lift:s.lift,psDef:s.psDef,n:H.hrs*FUSEE_PER_HOUR,blk:H.blk,arm:H.arm,winding:H.winding,dt};};
     return H;}
   /* the phases of a beat sampled: evenly, 120 a beat (a straight line between two is then within 0.1 degree of the balance at its fastest), and closely where the escapement acts (unlocking, impulse: the detent, trip spring and escape wheel move in a few hundredths of a beat) */
-  function beatGrid(amp){const N=2400,P=new Set();for(let i=0;i<120;i++)P.add(i/120);let last=-1,z0=ESC.state(0,amp);
-    for(let i=1;i<=N;i++){const z=ESC.state(i/N,amp);if((z.prog!==z0.prog||z.lift!==z0.lift||z.psDef!==z0.psDef)&&i/N-last>=1/720){P.add((i-1)/N);last=(i-1)/N;}z0=z;}
+  function beatGrid(amp,drv){const N=2400,P=new Set();for(let i=0;i<120;i++)P.add(i/120);let last=-1,z0=ESC.state(0,amp,drv);
+    for(let i=1;i<=N;i++){const z=ESC.state(i/N,amp,drv);if((z.prog!==z0.prog||z.lift!==z0.lift||z.psDef!==z0.psDef)&&i/N-last>=1/720){P.add((i-1)/N);last=(i-1)/N;}z0=z;}
     return[...P].filter(p=>p<1).sort((a,b)=>a-b);}
-  /* the gimbals' pendulum (app.js gimStep): the case hangs below each axis, ψ'' = -ω0²ψ - 2ζω0(ψ' - φ'), stopped 25 degrees off the box */
-  function gimbal(){const GW0=TAU/0.7,GZ=0.05,G={p:[0,0],r:[0,0],lp:0,lr:0};
-    G.step=(dt,ph,rl)=>{const n=Math.ceil(dt/0.002),h=dt/n,vp=(ph-G.lp)/dt,vr=(rl-G.lr)/dt;
-      for(const[q,v,f0]of[[G.p,vp,G.lp],[G.r,vr,G.lr]]){for(let i=0;i<n;i++){q[1]+=h*(-GW0*GW0*q[0]-2*GZ*GW0*(q[1]-v));q[0]+=h*q[1];}const f=f0+v*dt,lim=25*D2R;if(Math.abs(q[0]-f)>lim){q[0]=f+Math.sign(q[0]-f)*lim;q[1]=v;}}
-      G.lp=ph;G.lr=rl;};return G;}
+  /* the gimbals' pendulum, the page's (gimStep in box.js): the case hangs below each axis and leans to the apparent vertical as the box rolls about the ship's axes */
+  function gimbal(){const G={p:[0,0],r:[0,0],lp:0,lr:0,step:null};G.step=(dt,ph,rl,sea)=>gimStep(G,dt,ph,rl,sea,1);return G;}
   /* ---------- the clips: each calls emit(t, state) in time order; len: its length (s), rig: the parameter the rig drives it by ---------- */
   const ramp=(t,a,b)=>clamp((t-a)/(b-a),0,1);
-  function clips(C,h0,E0){const amp0=ESC.ampAt(A.drvF(h0)),G=beatGrid(amp0),st=o=>Object.assign(REST(),{n:h0*FUSEE_PER_HOUR,E:E0},o);
+  function clips(C,h0,E0){const drv0=A.drvF(h0),amp0=ESC.ampAt(drv0),G=beatGrid(amp0,drv0),st=o=>Object.assign(REST(),{n:h0*FUSEE_PER_HOUR,E:E0},o);
     const runFor=(S,beats,emit,extra)=>{let tp=0;const go=t=>{const o=S.step(t-tp);tp=t;emit(t,st(Object.assign(o,extra?extra(t):{})));};for(let b=0;b<beats;b++)for(const p of G)go((b+p)*0.5);go(beats*0.5);};
     const uni=(dur,f,emit)=>{const n=Math.round(dur*FPS);for(let i=0;i<=n;i++){const t=dur*i/n;emit(t,f(t,i?dur/n:0));}};
-    const beat=(emit,secs)=>{for(const p of[...G,1]){const z=ESC.state(Math.min(p,0.99999),amp0),e=p<=0?0:p<1?z.prog:1;emit(p*secs,st({E:e,th:z.th,lift:z.lift,psDef:z.psDef,teeth:e-p}));}};   /* one beat on Running's phases, so the rig's beat and Running agree where the escapement acts; at 0 the tooth not yet escaped (ESC.state's 1 there is the last beat's); teeth, for the rig's helper: the escape wheel's place less an even run, 0 at both ends of the beat, so it loops without a seam */
+    const beat=(emit,secs)=>{for(const p of[...G,1]){const z=ESC.state(Math.min(p,0.99999),amp0,drv0),e=p<=0?0:p<1?z.prog:1;emit(p*secs,st({E:e,th:z.th,lift:z.lift,psDef:z.psDef,teeth:e-p}));}};   /* one beat on Running's phases, so the rig's beat and Running agree where the escapement acts; at 0 the tooth not yet escaped (ESC.state's 1 there is the last beat's); teeth, for the rig's helper: the escape wheel's place less an even run, 0 at both ends of the beat, so it loops without a seam */
     const out=(t,a,b,c,d)=>ramp(t,a,b)-ramp(t,c,d);   /* up from a to b, down from c to d */
     const HT=0.5/FUSEE_PER_HOUR,hW=RUN_H-0.25,wT=Math.ceil(hW/HT),per=A.rollP();
     return[
@@ -73,16 +72,17 @@ const BLENDER=(()=>{
           if(on){S.winding=true;const j=Math.floor(kt);S.hrs=Math.max(0,hW-HT*(j+smooth(Math.min(1,(kt-j)/0.7))));if(S.hrs===0&&hz<0)hz=kt;}else S.winding=false;
           const o=S.step(dt),T=on?0:C.BX.shRest;sh=lerp(sh,T,1-Math.exp(-dt*(T?12:6)));emit(t,st(Object.assign(o,{keyOn:on,sh})));}}},
       {name:'Setting the hands',len:10,d:'the key on the centre arbor sets the hands an hour on, the train going',run:emit=>runFor(sim(C,h0),20,emit,t=>({slip:3600*smooth(ramp(t,1.5,8.5)),hkeyOn:t>0.5&&t<9.5}))},
-      {name:'Stop and start',len:26,d:'the locking arm stops the balance and holds it; unlocked, a twist of the box starts it; the train-blocking screw comes down between the fourth wheel\'s spokes and up again',run:emit=>{
-        const S=sim(C,h0);let tp=0,tw=-1;for(let i=0;i<=26*120;i++){const t=i/120,dt=t-tp;tp=t;S.armT=t>=1&&t<6?1:0;if(tw<0&&t>=8){S.twist();tw=t;}S.blkT=t>=15&&t<21?1:0;
-          const o=S.step(dt),w=tw>=0?t-tw:-1;emit(t,st(Object.assign(o,{tw:w>0&&w<0.5?0.2*Math.sin(Math.PI*w/0.5)*(1-w/0.5):0})));}}},
+      {name:'Stop and start',len:26,d:'the locking arm stops the balance and holds it; unlocked, a twist of the box starts it; the train-blocking screw comes down between the fourth wheel\'s spokes and up again, and a twist starts it again if the tooth the spoke held stopped the balance',run:emit=>{
+        const S=sim(C,h0);let tp=0,tw=-1,t2=-1;for(let i=0;i<=26*120;i++){const t=i/120,dt=t-tp;tp=t;S.armT=t>=1&&t<6?1:0;if(tw<0&&t>=8){S.twist(1);tw=t;}S.blkT=t>=15&&t<21?1:0;if(t2===-1&&t>=22){t2=-2;if(S.held){S.twist(-1);t2=t;}}
+          const o=S.step(dt),w=t2>=0?t-t2:tw>=0?t-tw:-1,sg=t2>=0?-1:1;emit(t,st(Object.assign(o,{tw:w>0&&w<TWIST.T?sg*TWIST.at(w):0})));}}},
       {name:'Exploded',len:11,d:'out of the case, turned over, the parts and screws apart along their arbors, and back',run:emit=>uni(11,t=>{const u=out(t,0,2.5,8.5,11);return st({up:u,flip:u,ex:out(t,2.5,5,6,8.5)});},emit)},
       {name:'Laid out',len:11,d:'the train laid out along the barrel-fusee line, as the textbooks draw it, and back',run:emit=>uni(11,t=>{const u=out(t,0,2.5,8.5,11);return st({up:u,flip:u,dev:out(t,2.5,5,6,8.5)});},emit)},
       {name:'Lift out',len:7,d:'the movement lifted out of its case and turned over, and back',run:emit=>uni(7,t=>{const u=out(t,0,3,4,7);return st({up:u,flip:u});},emit)},
       {name:'Lids',len:7,d:'the glass lid and the outer lid closed and opened again',run:emit=>uni(7,t=>{const c=out(t,0,3,4,7);return st({lidM:1-c,lidT:1-c});},emit)},
       {name:'Latch',len:4,d:'the latch lever brought in, locking the gimbals, and out again',run:emit=>uni(4,t=>st({latch:out(t,0,1.5,2.5,4)}),emit)},
-      {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to stay level',run:emit=>{const wR=TAU/per,g=gimbal();
-        uni(6*per,(t,dt)=>{const a=14*D2R,roll=a*Math.sin(t*wR),pitch=a*0.55*Math.sin(t*wR*0.7+1.1);if(dt>0)g.step(dt,pitch,roll);else{g.lp=pitch;g.lr=roll;}return st({roll,pitch,gp:g.p[0],gr:g.r[0]});},emit);}},
+      {name:'At sea',len:6*per,d:'the box rolling 14 degrees and pitching, the case swinging in its gimbals to hang along the apparent vertical; it loops',run:emit=>{const wR=TAU/per,g=gimbal(),T0=3*per*Math.ceil(30/(3*per)),n0=Math.round(T0*FPS);   /* the pitch at 2/3 the roll's rate (GIM.PR), so the motion repeats every three rolls and the clip's six loop; the case's swing settled first over whole repeats (30 s and more: its own decays in 2.2 s), so it loops too */
+        {const s0=GIM.sea(-T0*wR,wR,1);g.lp=s0.p[0];g.lr=s0.r[0];for(let j=1;j<=n0;j++){const s=GIM.sea((-T0+T0*j/n0)*wR,wR,1);g.step(T0/n0,s.p[0],s.r[0],s);}}
+        uni(6*per,(t,dt)=>{const sea=GIM.sea(t*wR,wR,1),roll=sea.r[0],pitch=sea.p[0];if(dt>0)g.step(dt,pitch,roll,sea);else{g.lp=pitch;g.lr=roll;}return st({roll,pitch,gp:g.p[0],gr:g.r[0]});},emit);}},
       /* the rig's (rig.py): one parameter each, from a to b over the clip; the strips that play them are timed by the control's properties */
       {name:'Rig · beat',len:0.5,d:'for the rig: one beat, the escape wheel a tooth on',rig:{p:'beat',a:0,b:1},run:emit=>beat(emit,0.5)},
       {name:'Rig · explode',len:2,d:'for the rig: the parts apart',rig:{p:'explode',a:0,b:1},run:emit=>uni(2,t=>st({ex:t/2}),emit)},

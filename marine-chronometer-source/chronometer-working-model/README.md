@@ -72,7 +72,7 @@ the website (see the root README).
 
 ## Controls
 
-Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Up to 5× (`REAL_X` in `app.js`) the balance swings as it really does and the escape wheel steps; faster, a real swing would be a blur, so the balance swings at 0.9 Hz with the detent and trip spring still, the wheels turn smoothly, and the HUD adds "balance swing shown slowed". While winding, model time runs at most 10× (`WIND_X`), so a wind takes at most about 3 minutes of it, inside the 5 to 10 minutes the sustaining spring drives the train (Sec. IV); the HUD says so. Right-click a part to fade, hide or isolate it (Isolate shows that part alone, box and floor shadow gone; picking a part from the parts list, or ticking its box, adds it to the isolated ones); right-click empty space to bring hidden parts back or leave isolation. On touch screens a long press (half a second, barely moving) does the same; Android's own long-press `contextmenu` and the page's timer open the menu once between them, and the press never picks.
+Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Up to 5× (`REAL_X` in `app.js`) the balance is drawn swinging as it really does; faster, a real swing would be a blur, so it is drawn swinging at 0.9 Hz with the detent and trip spring still, and the HUD adds "balance swing shown slowed". At every speed the train goes by the balance's real phase, so the escape wheel steps a tooth a beat, stops and starts on whole beats, and a change of speed moves nothing. While winding, model time runs at most 10× (`WIND_X`), so a wind takes at most about 3 minutes of it, inside the 5 to 10 minutes the sustaining spring drives the train (Sec. IV); the HUD says so. Right-click a part to fade, hide or isolate it (Isolate shows that part alone, box and floor shadow gone; picking a part from the parts list, or ticking its box, adds it to the isolated ones); right-click empty space to bring hidden parts back or leave isolation. On touch screens a long press (half a second, barely moving) does the same; Android's own long-press `contextmenu` and the page's timer open the menu once between them, and the press never picks.
 
 - The **?** button on the model (or the **?** key) opens a card listing every control, for a mouse and for touch, with this device's first; the header and the hint word the gestures for the device too (`.m-only` / `.t-only`, switched by `@media (hover:none)`). A tap in the model, × or Esc closes it; dragging doesn't, so the gestures can be tried with it open.
 - Keys 1–9 pick the views, in the order of their buttons. Exploded has a Spread slider.
@@ -103,7 +103,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 - 30-day performance test: the Navy's test (Sec. IX) run on the model as it stands: six periods of five days at 90, 72½, 55, 55, 72½ and 90 °F, wound at each daily reading, read to 0.01 s; the daily rates per period, and regulation, rating, largest difference, the three temperature compensation figures, recovery and isochronism against the Bureau of Ships' limits, beside the factory card of No. 3390. It is computed again whenever a setting changes (`testCalc` in `app.js`; `__test` with `?qa`).
 - Swing and isochronism: a Mainspring set slider (0–30%, Op. 13, kept in the link as `mset=`) weakens the spring's pull all through its run; and a chart of the balance's swing over the last minute, the rate against the swing at a steady torque, or the swing over a wind with the fusee and, ticked, a going barrel; the swing and the escapement's rate now, the rate's spread over a wind and the manual's isochronism check (Sec. IX). See "The balance's dynamics".
 - Parts: every named part by group, to single out (as a tap does) or hide. A part that is several things (the balance, the fusee, the barrel, the detent, the cock, the setup ratchet, the plates and bridges with their jewels and screws, the motion work, the hands…) lists its pieces under it, folded until it or one of them is picked. A tap on the model picks the piece: its card says what it is part of, with a link up, and the part's card lists its pieces. A piece hides, fades and isolates on its own (the right-click menu, or its box), its part's box half ticked meanwhile; with a part or piece picked, the ghosted rest still takes a tap. Display adds a slow turn and an Auto/Light/Dark theme, and Reset display puts every Display box back to its default (See-through to the view's own) and shows faded and hidden parts again, leaving the theme. Save writes the view as a PNG; Link copies the page's address with the state in its hash (without clipboard access it is put in the address bar instead).
-- Roll period (Display, under Ship motion): how long the box takes to roll, 0.4–12 s (7 s by default). The case hangs in the gimbals as a pendulum with its own period of about 0.7 s (estimated), so at a ship's period it stays level and near its own it swings with the box ("The balance's dynamics").
+- Roll period (Display, under Ship motion): how long the box takes to roll, 0.4–12 s (7 s by default). The case hangs in the gimbals as a pendulum with its own period of about 0.7 s (estimated), so at a ship's period it hangs along the apparent vertical (leaning a few degrees against the roll at its ends, the ship's axes being 5 m below, estimated) and near its own it swings with the box ("The balance's dynamics").
 - Gimbals latched (Display) swings the latch lever in through the slot in the gimbal ring to the keeper on the case, bringing ring and case level with the box first; latched, they tilt with the box, as Ship motion then shows. Unticked, the lever swings back along the wall and the gimbals are free. A walkthrough step with ship motion releases them.
 - Tick sound (Time) is on by default: a click at each beat, while the model runs at up to 1×. Browsers start audio only from a user gesture, so the page makes or resumes its audio context on the first click, tap or key press, and it is silent until then.
 - Tinted drawing and Ink drawing (Display; `draw=1` and `draw=ink` in the hash; one at a time) draw the live model as a pen-and-wash drawing, tinted or in ink alone; the tint is laid light (pigment density `INK.wash` 0.75), so the live model reads through it. (The numbers were first those of an overview drawing rendered from the model, the Illustration tab, which the Essay tab replaced.)
@@ -311,7 +311,7 @@ frame rate before importing: the clips come in at it.
 - **The clips**, each an action: Running (a minute, the second hand once round), Beat (slow motion, one beat 20 times slower), Run down (56¼ hours in 30 s;
   the escape, fourth and third wheels and the seconds hand left out, as a blur), Winding (from a quarter of an hour short of run down to the stop, the
   sustaining spring driving the train), Setting the hands, Stop and start (the locking arm, a twist, the train-blocking screw), Exploded, Laid out, Lift
-  out, Lids, Latch and At sea (the box rolling, the case swinging in its gimbals); and the rig's own, one parameter each (Rig · beat, Rig · explode, …).
+  out, Lids, Latch and At sea (the box rolling, the case swinging in its gimbals; six rolls, which loop, the case's swing settled first); and the rig's own, one parameter each (Rig · beat, Rig · explode, …).
   They are played through the export's own copy of the model with the equations of `app.js`'s loop (the stopping and starting, the balance's amplitude,
   the gimbals' pendulum), each from the rest pose (the page's state of wind, the escape wheel at the start of a beat, the lids open), and read back off its
   nodes: a node that moves gets keys where it changes, as few as put it back within 0.0005 mm and about 0.006°.
@@ -437,14 +437,22 @@ Everything is driven from one model clock `tSim`, in seconds of the time kept (G
 
 Beside it runs the master time `tM`: a perfect clock, standing for the time signal the chronometer is compared with. It runs at the model's speed, also while the chronometer stands, and doesn't follow the weights. The dial error is what the hands show (`dialRead()` in `app.js`: the second hand's time, continuous as a comparator reads it, with the minutes from the minute hand) less `tM`; it grows with the rate, with the time the chronometer stood, and with setting the hands.
 
-- The balance phase is `p = frac(tSim / 0.5)`, one oscillation per half-second.
+- The balance's phase is `y = tSim / 0.5 + bOff + PL`, one oscillation per half-second, counted
+  from its far turn before the unlocking; `p = frac(y)`.
 - `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection
   and the escape wheel’s progress through its current tooth.
-- Escape wheel position is `E = completed oscillations + progress`, counted in
-  teeth. Every other arbor is a fixed ratio of `E`. The hands therefore advance
-  in half-second steps, as the manual states (Sec. IX, p. 66).
-- The fusee and chain follow the hours since winding: one fusee turn per 90/14
-  = 6.43 hours. The model runs down after 56¼ h (`RUN_H`, the fusee's 8¾ turns),
+- Escape wheel position is `E = floor(y) − 1 + progress + eOff`, counted in
+  teeth (`eOff` whole). Every other arbor is a fixed ratio of `E`. The hands therefore advance
+  in half-second steps, as the manual states (Sec. IX, p. 66). `PL` (0.263 of an
+  oscillation at 255°) is where the next tooth locks and the second hand comes to rest, so
+  with `bOff` and `eOff` 0 the hand lands on the mark k/2 s at `tSim` = k/2, as on a
+  chronometer set to a time signal; `dialRead()` gives the time the hands show,
+  `tSim + (bOff + eOff)/2`, and Now sets both offsets to 0. The train goes by this phase
+  at every speed (above `REAL_X` only the drawn balance is slowed), and the wheel never turns
+  back (the progress at a phase changes with the swing).
+- The fusee and chain follow the hours since winding (`hrs`, which runs with the
+  train's own time, `tSim`, so a fast chronometer runs down sooner by the master's
+  clock): one fusee turn per 90/14 = 6.43 hours. The model runs down after 56¼ h (`RUN_H`, the fusee's 8¾ turns),
   when the chain is all on the barrel; the dial's UP–DOWN scale covers the rated
   56 h.
 - The chain lies in the fusee's helical groove, locked to it: `setWind(n, eps)`
@@ -493,11 +501,20 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   see the impulse through (the tooth leaves the jewel at +20.7°). `makeEsc` works out that least amplitude
   from its own tables: `ESC.AMIN`, 42.3° with 2° to spare.
 - **When the train stops.** It stops at a locked beat when there is no power
-  (run down), when the swing falls below `AMIN`, when the locking arm brakes
-  the balance, or when the train-blocking screw's dog point is down and the
-  next beat would bring a spoke onto it (`R.blockRoom(E)`, the beats left). It
-  stops at the last whole beat before a spoke meets the dog point, within 3° of
-  the fourth wheel.
+  (run down: a frame runs the train no further than the chain has left, and only the
+  beat under way then finishes), when the swing falls below `AMIN`, or when the locking arm brakes
+  the balance. With the train-blocking screw's dog point down between the fourth
+  wheel's spokes it goes on until the next unlocking lets the escape wheel go and a
+  spoke meets the point (`R.blockRoom(E)`, the beats left), a fraction of a tooth past
+  the lock, as the manual's Op. 6 has it ("allow the escapement to function until the
+  train is stopped by the blocking screw bearing against one of the arms of the fourth
+  wheel"). The detent is back on its stop with no tooth on it, and the tooth the spoke
+  holds stands in the impulse jewel's path (unless it stopped within 0.04 of a tooth of
+  either lock): the jewel strikes it on each return swing (`bankAt`, `bankState` in
+  `box.js`, the angle where `ESC.PA` meets the wheel's place), so the balance swings
+  only on its own side of the tooth and is stopped as quickly as by the arm (`TAU_ARM`,
+  estimated). Raised, the screw lets the wheel run on to the next tooth's lock, a
+  whole beat again.
 - **While it is stopped** `tSim` and the hands stand, so they lose the time it
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
   down. It runs down freely with the train held (1/e in 52 s, `TAU_FREE`, from
@@ -508,10 +525,18 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   trip spring stays bent against it and follows it back, and the detent stays on
   its stop (`ESC.state`).
 - **When it goes again.** The train runs again when there is power, the arm is
-  off, the screw is up and the swing is above `AMIN`. That happens at once if
-  the balance is still swinging: the screw raised, or the chronometer wound,
+  off, the screw is up (or leaves a spoke's room) and the swing is above `AMIN`, the
+  wheel on its stone and the balance where its swing doesn't unlock it. That happens at once if
+  the balance is still swinging: the screw raised before a spoke stopped the train (or
+  after, if the tooth it held was clear of the jewel), or the chronometer wound,
   before the balance has run down. Otherwise it takes Twist to start. The twist
-  turns the box sharply and back and sets the balance swinging (160°), and the
+  turns the box sharply 35° about the vertical and back a quarter of a second
+  later (`TWIST` in `box.js`, illustrative); the balance, free on its pivots but for
+  the hairspring, stays where it is in space while the box turns under it, so
+  relative to the movement θ″ = −ω²θ − α″, and turning back half its period later
+  doubles what the first turn gave: from rest it is left swinging about 67° (a real
+  start by hand, `We1dLNXiBj0` 0:55, was 62-66°), worked out from where the balance is
+  (`TWIST.run`; with the train going, a twist is a knock, as a jolt is), and the
   impulses bring it up to the swing the train's torque gives (`ESC.ampAt`, 255°
   at the calibrated torque), settling over a minute or so (A² relaxes as exp(−2t/TF), 26 s; below, The balance's
   dynamics).
@@ -712,16 +737,24 @@ every speed); the equation gives the amplitude and the rate.
   under `AMIN`, it sets (stops). Carried past `ESC.TRIP` (a full turn plus the
   angle where the discharge jewel meets the trip spring, 332.2°), the jewel
   comes round and unlocks a second time, so the wheel trips: one extra tooth,
-  and the hands jump half a second. The phase is kept, so the train stays on
-  its half second.
-- **Gimbals with inertia** (`gimStep`; illustrative). The case, with the ring
-  about the ring's pivots, hangs as a pendulum below each axis:
-  ψ″ = −ω0²ψ − 2ζω0(ψ′ − φ′), φ the box's angle. The case's own period is
-  0.7 s (estimated: its weight some 15 mm below the pivots, radius of gyration
-  about 45 mm) and ζ is 0.05. At a ship's roll period (7 s by default) the
-  case stays level within a few hundredths of the roll. Near 0.7 s (the Roll
-  period slider) it swings with the box, stopping 25° off it against the ring.
-  A jolt kicks it. `?snap` and reduced motion keep it exactly level, as
+  and the hands jump half a second. The knock also moves the balance's phase,
+  to the one θ and θ′/ω give (`knock` in `app.js`): the escape wheel stays on its
+  stone, so the next unlocking comes sooner or later, and the dial error shows the
+  knock's time error (a few hundredths of a second, more when it nearly sets).
+- **Gimbals with inertia** (`gimStep` and `GIM` in `box.js`, the page's and the
+  export's; illustrative). The case, with the ring about the ring's pivots, hangs as
+  a pendulum below each axis: ψ″ = −ω0²((1 + av/g) sin ψ − (ah/g) cos ψ) − 2ζω0(ψ′ − φ′),
+  φ the box's angle. At sea the box rolls and pitches about the ship's axes, taken
+  5 m below it (`GIM.RD`, estimated: a chart room above the centre of roll), so the
+  pivots move with it, ah = RD(φ″ cos φ − φ′² sin φ) and av = −RD(φ″ sin φ + φ′² cos φ),
+  and the case hangs along the apparent vertical, gravity less the pivots'
+  acceleration, not the true one: at the default 7 s and 14° it leans 5.4° against the
+  roll at its ends (1.9° at 12 s), within 0.2° of the apparent vertical. A box rolled
+  faster than a ship rolls (under 4 s, the distance falling to 0 at 2 s) stands for one
+  rocked about its own pivots. The case's own period is 0.7 s (estimated: its weight
+  some 15 mm below the pivots, radius of gyration about 45 mm) and ζ is 0.05; near
+  0.7 s (the Roll period slider) it swings with the box, stopping 25° off it against
+  the ring. A jolt kicks it. `?snap` and reduced motion keep it exactly level, as
   before.
 - **Temperature** (`MTE` in `core.js`). The balance's own curvature, on top of
   Table IV's line. The Model 21's balance: the second difference of the
@@ -1100,7 +1133,8 @@ the repository with short audio excerpts and the video frames).
 - The train-blocking screw (Sec. II, Fig. 110): its sizes after Fig. 110's section (head 1.74 across and 1.34 tall, spigot 0.92 and 2.4 tall, thread 1.22, dog point 0.7; the drawing partly schematic), and its 5.6 mm travel (the figure's 2.4 draws the lower bridge on the train bridge); the wall round it (bored r 0.95 down to the seat 0.6 mm into the bridge's top: the section gives the arrangement, not the sizes) and the access hole in the train bridge (r 0.72). Its place, 5.0 mm from the fourth arbor, is a countersunk hole on the top-view photograph, to about 1 mm.
 - The balance locking arm's sizes (Fig. 9 shows it curved, its screw outside the rim and its end at a timing weight; Sec. X: "place the locking arm over the timing weight"): a strip 0.8 mm wide and 0.45 thick, bowed 0.25 mm away from the staff, turning 120° on its screw 20 mm from the staff in the open 6 o'clock sector of the train bridge (at 45° from the timing weight, just clear of the barrel bridge's far horn; locked, the arm passes between the cock's foot and the escape upper bridge, clear of both by little), with a round finger 2.4 mm tall at its end. Locked, the finger stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests at the arm's end on the 6 o'clock side (0.02 mm clear), and the vernier weight's screw, standing 1.6 mm outside the rim one hole on, stops the balance 15° the other way. Unlocked, it lies against its stop pin, clear of the balance. It gets there by turning 120° with its end passing in under the balance, where Fig. 9 turns it the other way, out from the balance; here the second train pillar's screw head (1.6 mm proud, 4 mm out from the arm's screw) and the cock's foot leave no room for that (Review-results.md, BOM comparison, still open 9). Fig. 9 draws the arm curved along the rim and Fig. 108 a short flat lever with a raised boss round its screw, about 4 to 5 screw heads long (about 7-10 mm; the model's is 13). No photograph or video of the arm fitted has been found: `KLUwI2UUCMQ`'s movement and the top-view photograph's carry the Navy's Y-arm instead.
 - The Navy's Y-arm balance stop (Variants, Balance stop, fitted by default; the manual's locking arm is the other choice; illustrative): as on serial 2E11795 (the top-view photograph), Delaney No. 8854 and a third movement, the last two photographed from straight above. A second dust seal on the barrel bridge, like the fusee's: a nickel body on a flange held by screws, packing rings (black on 2E11795, the cap the fusee seal's size), and a nickel plunger head with a hex socket screw. Under it runs a lever of spring steel (satin, as photographed). Its root is held on a shouldered stud by a large slotted screw near the bridge's rim; the stud takes the place of the barrel bridge's pillar screw, which both photographs put within 2.5 mm of it. The lever runs straight under the cap, through a slot in the seal's body, to a crossbar symmetric about it: an arch round the cock's end, its legs coming down 7.8 mm either side of the staff (clear of the hairspring) and rounding over in a half circle, its top 8.3 mm out on the bar's centre line, and from the foot of each leg, level with the staff, an arm straight out to a round eye with a pin over the rim (13.9 mm out). Measured: the widths, on Delaney's photograph (stem 2.9 mm, lever 2.5, bar 2.2, eyes r 1.4), and the eyes' places (level with the staff, over the rim; Delaney's and 2E11795's photographs registered by the balance rim agree with them to about 1 mm; the cock's edge hides the left end on 2E11795). The arch is traced on Delaney's photograph (its radius about 7.9 mm, its top 8.3, the arms nearly level with the staff); all four movements photographed with the stop (2E11795, Delaney's, the omegaforums one and 2E8489 in the restoration video) have this shape (Review-results.md, open findings 13). Until 4 October 2026 its top stood 12.3 mm out, after a sketch. The outline is the boundary of bars of those widths joined with round fillets, cut as one plate. Estimated: the heights, the lever's 0.45 mm thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the flange's bite round the setup cover's end and foot, and the screws' threads (not drawn; the bridge is the manual's). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm), so how it works is taken from two descriptions of it (Review-results.md, 13): the plunger, screwed down by its hex socket with an Allen key through the bottom of the case, presses the lever down, which bends about its screwed root (drawn as a turn about the horizontal through the pivot, along the crossbar, so both pins come down together) until the pins bear on the rim's top edge, as the wedges did; free, they stand 0.5 mm over it. Locked and Unlocked under Stopping and starting work it as they work the locking arm. It is the same part as the locking arm (`lockArm`), and that part's card, name and source note follow the stop fitted (`STOP_INFO` in `app.js`).
-- Stopping and starting: the arm's braking (0.2 s), the twist's swing (160°) and the build-up to `ESC.A` (3 s). `ESC.AMIN` is worked out from the escapement.
+- The gimbals at sea: the ship's roll and pitch axes 5 m below the box (`GIM.RD`; their distance sets how far the case leans to the apparent vertical: 5.4° at 7 s and 14°), faded to 0 for periods under 4 s; the case's own period (0.7 s) and damping (ζ 0.05); the ship's motion (14° of roll, 0.55 of it in pitch at two thirds of its rate, so it repeats every three rolls).
+- Stopping and starting: the arm's braking (0.2 s), and the balance banking on a tooth the train-blocking screw holds in the impulse jewel's path stopped as quickly; the twist's 35° turn of the box, out in 0.1 s and back 0.25 s later (the balance's swing from it, 67° from rest, follows from the turn); the build-up to `ESC.A` follows the balance's dynamics (with the twist's 67°: 203° after 25 s, 232° after 45 s, 246° after 68 s, against the video's start, 190°, 230° and 256 ± 9°). `ESC.AMIN` is worked out from the escapement.
 - The escapement's amplitude and rate ("The escapement's amplitude and rate"): the free run-down's 52 s (`TF`, Q 327) is set inside both what the energy budget needs with the train's efficiency from its parts (243–341) and what the balance's parts give (202–390), at a torque the train gives (`tools/physics.js`); friction at the locking jewel μ = 0.15 (steel on sapphire); the fourth wheel's inertia in the wheel's chase (about 1.4 of `JW`'s 6.2 g·mm²); the detent spring's and trip spring's sections (`hD`, `tsH`: OPEN-QUESTIONS.md) and moduli; the discharge jewel's rounded end (`rnd`). The escapement's own error at the model's settings (−3.6 s a day) is taken to be timed out; the rate shown is the change from it.
 - The sustaining pawl's arbor is placed on C Spinner's video, its foot read on two frames (36:15 through `rimfit_36-15.json`'s camera: 21.8 mm from the fusee axis at 67°; 14:06, nearly overhead, through a homography on the plate's bushings and pillars' feet: 21.7 at 71°), the model 21.8 at 69°; its blade the crescent 36:15 shows (its two edges put through that camera at the blade's height). its outline one smooth curve through those edges, the tip's end face straight between them. Estimated: the root's back behind the arbor (the video doesn't show it; drawn 1.6-1.9 mm from the arbor), the hub's height (to about 1 mm) and the arbor's radius (0.7; the video's reads about 0.9, against the pillar beyond it).
 
