@@ -24,7 +24,8 @@ along the coil. Let down with the arbor out (--letdown) it gives 13.6 turns, abo
 outer ten turns; packs() reports 1.9, its run broken by the outer end's last samples) and the rest loose (mean radii 11.0, 9.3, 5.0), where the 15:54 frame shows
 12 +- 1 packed and one loose turn of about r 8 (in the barrel of r 17.6 it gave 14.3 turns, 11.9 packed; the barrel measured r 18.3, 5 October 2026).
 The strip's 1,064 mm is 0.59 of the room between the core and the brace now (half the room, the most turns, would be 903, which would bend it to 2.68 GPa
-fully wound: physics.js). Solved in the r 18.3 barrel (5 October 2026): slack at 13.5 turns (14.5 in the r 17.6), the set-up 1.0 from the fusee's ratio.
+fully wound: physics.js). Solved in the r 18.3 barrel (5 October 2026): slack at 13.5 turns (14.5 in the r 17.6), the set-up 1.0 from the fusee's ratio
+(1.26 since 11 October 2026, matched in movement.js to the chain's lever on its pitch line: no re-solve, the states 13.0-21.25 cover it).
 """
 import json,math,sys,base64,pathlib
 import numpy as np,torch

@@ -460,9 +460,10 @@ Beside it runs the master time `tM`: a perfect clock, standing for the time sign
   the chain ran to the groove's end and the drive stopped at `RUN_H` from full,
   with 0.03 turn of chain still on the fusee.
 - The chain lies in the fusee's helical groove, locked to it: `setWind(n, eps)`
-  places its joints 1 mm apart along a pitch line wound on the fusee from its
-  large end to where it leaves (`md`, the fusee's turn plus the common
+  places its joints 1.7 mm apart along a pitch line wound on the fusee from its
+  end pin (`ME`) to where it leaves (`md`, the fusee's turn plus the common
   tangent's drift), then along the drums' common tangent and round the barrel
+  (the barrel taking up what that straight run gains, so the chain keeps its length)
   to its hook. The stop-bar's travel comes from the same place: while the
   incoming run passes over the nose in the groove's top turn it presses it
   in (`barTravel`), so the bar's far end stands out past the rim for the last
