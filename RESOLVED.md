@@ -375,6 +375,13 @@ Contents:
   the gap measured on the outlines as drawn (`pl`), never on pitch circles; at
   the audit's E values and over a dense sweep of a tooth of each driver no
   outline overlaps and the closest gap is 0.005 mm, on the driving flank.
+- **Comments and the README quoting the escape pinion's old mesh** (kinematics
+  audit, 11 October 2026). Two comments in `movement.js` (the photographed
+  group's, and `MOD`'s) and two places in the model README still put the escape
+  pinion 10.585 mm from the fourth, the module 0.3113 or 0.249; the fourth's
+  measured place makes it 11.107 mm and 0.2614 (`tools/solve.py`). Keep: a
+  figure that follows from `L` quoted as `solve.py` prints it, the old value
+  only as history.
 
 ## Winding and maintaining work
 
