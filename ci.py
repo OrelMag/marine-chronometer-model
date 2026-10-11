@@ -1,8 +1,8 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, physics, selfcontained, types, smoke, invariants, solids, exploded, book, audit
-    python ci.py --quick      # without the browser checks (about 30 s): build, escapement, almanac, hairspring, types
-    python ci.py --full       # and the slow checks (about 16 minutes more): fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, physics, tolerances, strength, dynamics, errorbudget, selfcontained, types, smoke, invariants, solids, exploded, book, audit
+    python ci.py --quick      # without the browser checks (about 50 s): build, escapement, almanac, hairspring, physics, tolerances, strength, dynamics, errorbudget, selfcontained, types
+    python ci.py --full       # and the slow checks (about 17 minutes more): dynamics.js in full, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
 
@@ -69,6 +69,9 @@ STEPS=[('build',build,'quick'),
  ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),
  ('physics',lambda log:run(['node',TOOLS/'physics.js'],ROOT,log),'quick'),
  ('tolerances',lambda log:run(['node',TOOLS/'tolerances.js'],ROOT,log),'quick'),   # how closely the springs the sources don't size must be made, and that the sheets say so (under a second)   # the energy budget, the escape wheel's chase, temperature from the materials (under a second)
+ ('strength',lambda log:run(['node',TOOLS/'strength.js'],ROOT,log),'quick'),   # every loaded part against its material's range, and the knocks it takes (under a second)
+ ('dynamics',lambda log:run(['node',TOOLS/'dynamics.js','--quick'],ROOT,log),'quick'),   # the escapement integrated in time against the averaged model; the detent's return (about 15 s)
+ ('errorbudget',lambda log:run(['node',TOOLS/'errorbudget.js'],ROOT,log),'quick'),   # as made (Monte Carlo) and the error carried at sea (about 6 s)
  ('selfcontained',lambda log:run([PY,'selfcontained.py'],TOOLS,log),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),
@@ -78,6 +81,7 @@ STEPS=[('build',build,'quick'),
  ('book',lambda log:run([PY,'book.py'],TOOLS,log),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
  ('audit',lambda log:run([PY,'audit.py'],TOOLS,log),'browser'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
+ ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),
  ('maintaining',lambda log:run([PY,'maintaining.py'],TOOLS,log),'full'),
  ('bom',lambda log:run([PY,'bom.py'],TOOLS,log),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)

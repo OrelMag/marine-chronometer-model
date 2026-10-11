@@ -2189,3 +2189,16 @@ Open:
    up into the cock (the side view at 6:50.0 was read as a pin standing at
    each end). Read the side view again, and 41:58 (the cock's holes), before
    changing them.
+
+## The physics checked in time (11 October 2026)
+
+*Fixed (11 October 2026): findings 1-4 below are in the model now (RESOLVED.md, Escapement): makeEsc chases from rest and counts the strike, solves the contacts from the jewel's shapes with its end rounded and the settings re-chosen to the manual, takes the springs as their own, and `TF` is 52 s. `tools/dynamics.js` checks it agrees. What stays open is in OPEN-QUESTIONS.md (the jewel's end, the balance's free run-down).*
+
+`tools/dynamics.js` integrates the escapement beat by beat; `tools/strength.js` and `tools/errorbudget.js` follow from it (model README, "Checked in time"). Open findings against the averaged physics the page runs on, most consequential first:
+
+1. **The escape wheel's chase.** makeEsc's kinematic wheel (`G` 3.5) lands the tooth on the impulse jewel 0.6° after the release; with the drawn inertias (the escape wheel's 4.80 g·mm², the fourth wheel's about 1.4 reflected) the wheel, starting from rest, needs 2v/a, about 4 ms, to catch a jewel already running away from it: about 13° of the balance. `physics.js`'s A4 counts only the time to reach the jewel's speed (half of it), and the essay quotes it (`data-phys="chase"`, 6°). The averaged swing (255°) and the escapement's own rate (−1.5 s a day) rest on the early landing: in time they are 232° and −4.3 s a day. Fix: give makeEsc the wheel's inertia (the chase from rest, 2v/a) in place of `G`, recalibrate, and correct the essay's figure.
+2. **The discharge jewel's square end** holds both springs' tips until it sweeps past: let-off about 20° and overall about 38° measured so, against Op. 87's 26-30° (makeEsc lets the detent fall 1.5° after the tip slides off the face, through the jewel's end). OPEN-QUESTIONS.md has what would settle the jewel's shape.
+3. **The detent's work** is Op. 78's preload over the whole lift (2.6 times the release lift), about 12 % of the impulse; `physics.js`'s B2 counts the lift to release only, measured at the passing spring's tip rather than at the jewel, and makeEsc's `fD` (5.7 %) follows it.
+4. With 1-3 together, the drawn escapement swings the balance about 215° at the calibrated torque (Q 214); 255° wants about 113 µN·m at the escape wheel (the train as built gives 76-96) or Q about 330 (the parts give 202-390). Settle with a real balance's free run-down (OPEN-QUESTIONS.md).
+
+Not findings: the detent comes back in time over every spring, preload and stop tried; nothing loaded is past its material's range (the fusee wheel's teeth, the fusee bushing, the trip spring's root and the mainspring are the thinnest); the ship's motion moves the rate by about 0.01 s a day.

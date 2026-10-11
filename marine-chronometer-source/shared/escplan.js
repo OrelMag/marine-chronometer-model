@@ -26,14 +26,16 @@ function drawEscPlan(ctx,w,h,s,Ew,o={}){
   const ai=E.aI+s.th,rr=E.rRoll;
   { const arc=(r,a0,a1,n)=>{for(let i=0;i<=n;i++){const q=a0+(a1-a0)*i/n;ctx.lineTo(X(r*Math.cos(q)),Y(r*Math.sin(q)));}};   /* impulse roller with its crescent, as built */
     ctx.fillStyle=C.steel;ctx.globalAlpha=0.25;ctx.beginPath();arc(rr,ai+0.16,ai-0.6+TAU,60);arc(rr*0.55,ai-0.6,ai,12);arc(rr*0.86,ai,ai+0.16,4);ctx.closePath();ctx.fill();ctx.globalAlpha=1; }
-  const jewel=(ang,r0,r1,wd)=>{const c=Math.cos(ang),sn=Math.sin(ang),px=-sn*wd/2,py=c*wd/2;ctx.fillStyle=ruby;ctx.beginPath();ctx.moveTo(X(r0*c+px),Y(r0*sn+py));ctx.lineTo(X(r1*c+px),Y(r1*sn+py));ctx.lineTo(X(r1*c-px),Y(r1*sn-py));ctx.lineTo(X(r0*c-px),Y(r0*sn-py));ctx.closePath();ctx.fill();};
+  const jewel=(ang,r0,r1,wd,rnd)=>{const c=Math.cos(ang),sn=Math.sin(ang),px=-sn*wd/2,py=c*wd/2;ctx.fillStyle=ruby;ctx.beginPath();ctx.moveTo(X(r0*c+px),Y(r0*sn+py));
+    if(rnd){const rc=r1-wd/2;for(let i=0;i<=12;i++){const f=Math.PI/2-Math.PI*i/12;ctx.lineTo(X(rc*c+wd/2*(Math.cos(f)*c-Math.sin(f)*sn)),Y(rc*sn+wd/2*(Math.cos(f)*sn+Math.sin(f)*c)));}}   /* its outer end a half round (ESC.settings.rnd) */
+    else{ctx.lineTo(X(r1*c+px),Y(r1*sn+py));ctx.lineTo(X(r1*c-px),Y(r1*sn-py));}ctx.lineTo(X(r0*c-px),Y(r0*sn-py));ctx.closePath();ctx.fill();};
   jewel(E.aIc+s.th,E.rRoll-0.08,E.rp,E.wI);
   const del=-s.lift/E.LEN,cd=Math.cos(del),sd=Math.sin(del),Ft=E.Ft,R=p2=>({x:Ft.x+(p2.x-Ft.x)*cd-(p2.y-Ft.y)*sd,y:Ft.y+(p2.x-Ft.x)*sd+(p2.y-Ft.y)*cd});
   const poly=(pts,col,fix)=>{ctx.beginPath();pts.forEach((q,i)=>{const r=fix?q:R(q);i?ctx.lineTo(X(r.x),Y(r.y)):ctx.moveTo(X(r.x),Y(r.y));});ctx.closePath();ctx.fillStyle=col;ctx.fill();};
   ctx.globalAlpha=0.35;for(const k in E.fixed)poly(E.fixed[k],k==='foot'?C.copper:C.steel,true);ctx.globalAlpha=1;for(const k in E.pieces)poly(E.pieces[k],k==='stone'?ruby:C.copper);   /* support block and stop button fixed; the detent turns about its point of flexure */
   const[a0,am,tp]=E.springPts(s);
   ctx.strokeStyle=C.steel;ctx.lineWidth=o.labels==='full'?Math.max(2,0.014*sc):2;ctx.beginPath();ctx.moveTo(X(a0.x),Y(a0.y));ctx.quadraticCurveTo(X(am.x),Y(am.y),X(tp.x),Y(tp.y));ctx.stroke();
-  ctx.fillStyle=C.steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();jewel(E.aD+s.th,E.rDR-0.05,E.rd,E.wD);
+  ctx.fillStyle=C.steel;ctx.beginPath();ctx.arc(X(0),Y(0),E.rDR*sc,0,TAU);ctx.fill();jewel(E.aD+s.th,E.rDR-0.05,E.rd,E.wD,E.settings.rnd);
   ctx.fillStyle=C.ink;ctx.beginPath();ctx.arc(X(0),Y(0),3,0,TAU);ctx.fill();
   if(o.labels==='short'){ctx.fillStyle=C.muted;ctx.font='11px "Instrument Sans",sans-serif';ctx.textAlign='left';
     ctx.fillText('escape wheel',X(-2.35),Y(1.02));ctx.fillText('detent',X(-2.4),Y(-1.2));ctx.fillText('balance rollers',X(0.1),Y(0.75));}

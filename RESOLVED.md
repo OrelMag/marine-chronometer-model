@@ -31,6 +31,24 @@ Contents:
 
 ## Escapement
 
+- **The escape wheel moved as a kinematic gear** (makeEsc's `G` 3.5: from the release its angle ran 3.5 times the
+  balance's), so the tooth landed on the impulse jewel 0.6° after the release. A wheel released from rest has to catch a
+  jewel already running away from it: with the drawn inertias (the escape wheel's 4.80 g·mm² and the fourth wheel's,
+  reflected) it lands about 16° later and strikes it at more than twice its speed. `tools/dynamics.js`, integrating the
+  escapement beat by beat, found the swing 23° short of the model's and the escapement's own rate 3 s a day off.
+  `makeEsc` now chases from rest (`JW`), counts the strike and the wheel's speed lost at each lock. Keep: the
+  escapement's work and timing come from the wheel's motion under its torque and inertia, and `dynamics.js` agrees with
+  `makeEsc` (it fails if the swing, landing, fall or rate part). `4988099`
+- **The detent fell back through the discharge jewel's end** (makeEsc let it fall over 1.5° once the passing spring's tip
+  slid off the jewel's face; the square end, 0.32 mm across, holds it until the jewel has swept past, which put overall at
+  about 38°, past Op. 87's 26-30°). The contacts are now solved from the shapes, the jewel's end a half round (`rnd`),
+  and the settings re-chosen to the manual's figures (rd 0.300, rT 0.290, aD 271°, dL 0.017: lock 6.4°, let-off 8.9°,
+  overall 27.8°, drop 2.0°). Keep: no tip passes through a jewel; the tables are the shapes' (`span`), not a fall. `4988099`
+- **The detent's and trip spring's work was a fitted share** (`fD` 0.057, from Op. 78's preload over the lift at
+  release only; `fP` 0.005, estimated). The jewel carries the detent on past the release, to 1.8 times that lift; the
+  springs are now their own (Op. 78's weight, the drawn sections and moduli: `W78`, `hD`, `EB`, `tsH`, `ET`), and
+  `TF` 52 s (Q 327; it was 34) so that 255° comes at a torque the train gives, inside the budget's and the parts' Q
+  (`tools/physics.js`). Keep: only the wheel's torque is fitted. `4988099`
 - **Four overlaps from this batch's measured sizes** (fine.py, 5 October 2026): the impulse roller at
   its measured 1.47 met the hub's sleeve, sized to the old 1.3; the escape bridge at 5.6 wide overhung
   its seats, grown from the old 5.2; the detent block's pins at r 0.53 stood in holes r 0.42; the block

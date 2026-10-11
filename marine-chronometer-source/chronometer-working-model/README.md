@@ -41,7 +41,7 @@ the website (see the root README).
 | `dist/chronometer-working-model.html` | The built single file (committed) |
 | `tools/bundle.py`, `tools/fit.py`, `tools/unproj.py` | Photo fitting: camera fits to the Fig. 2 and top-view photographs, triangulation of the balance, fusee and barrel axes, photo points projected onto the movement (see "How the layout was measured") |
 | `tools/almanac.js`, `tools/almanac-ref.json`, `tools/almanac_ref.py` | The almanac's check (Node, about 1 s): Meeus's worked examples, the Sun, Moon, stars and sidereal time against JPL Horizons and skyfield (`almanac-ref.json`, made by `almanac_ref.py` with the network: SIMBAD's catalogue, Horizons' DE441 places, skyfield 1.55 with de440s), and round trips of every reduction; the essay's stated accuracy (`data-bound` spans) must cover the worst found |
-| `tools/physics.js` | Phase A's physics derived (Node, under a second): the energy budget from the mainspring to the balance, the escape wheel's chase onto the impulse jewel (its inertia measured on the solid), the balance's Q the budget needs (which sets `TF`), the detent spring's share from Op. 78 (which sets `fD`), temperature from the materials; the essay's `data-phys` figures must be what it finds |
+| `tools/physics.js` | Phase A's physics derived (Node, under a second): the energy budget from the mainspring to the balance, the escape wheel's chase onto the impulse jewel (its inertia measured on the solid), the balance's Q the budget needs (which sets `TF`), the detent spring's preload from Op. 78 and its share of the work, temperature from the materials; the essay's `data-phys` figures must be what it finds |
 | `tools/makers.py`, `tools/selfcontained.py` | `js/makers.js` from `bom.json` and `BOM.md` (`--check`: up to date); the check that the page alone is enough to make the chronometer and navigate with it (no network, the manual shipped, every card's sheet, the essay's checked figures, the tools in the page) |
 | `tools/solve.py` | Reads `L` and `TRAIN` from `movement.js`: solves the escape arbor against `L.E`, gives the modules and wheel tips, checks the arbors clear the wheels in plan (no browser) |
 | `tools/p3map.json`, `tools/cock_outline.json`, `tools/engr.json` | Traced from the top-view photograph: its mapping into the model, the balance cock's outline, the engraving columns |
@@ -276,16 +276,19 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   adjusting the escapement (Ops. 77–97 beside the model's live figures); the order of work (Sec. VIII's reassembly, the mainspring made safe first);
   materials, hardening and tools, and the chronometer that can be made without Elinvar and Invar (a steel spring on a split bimetallic balance).
 - **Phase A's physics** (`tools/physics.js`): the fusee asks the mainspring (0.419 mm, the parts list; 13.55 wide, KLUwI2UUCMQ 15:54; 1,064 long) for 0.93 N·m fully wound,
-  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 62–97 µN·m at the escape wheel, whose inertia (4.80e-9 kg·m², measured on its
-  solid; `invariants.py` checks the two agree) lets it catch the impulse jewel within 5° of the swing; the balance holds 255° if its Q is 188–301, so `TF` (its free swing's decay) is 34 s,
-  derived (it was 25, estimated). **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
+  2.27 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 57–90 µN·m at the escape wheel. Released from rest, the wheel (4.80e-9 kg·m², measured on its
+  solid; `invariants.py` checks the two agree) and the fourth wheel behind it chase the impulse jewel, already running away from them, and catch it about 17° of the
+  balance after the release, striking it at more than twice its speed (the escapement, `makeEsc`, counts the chase and the strike; `tools/dynamics.js` checks it beat by
+  beat). The balance holds 255° if its Q is 266–528. **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
   run dry), 0.91–0.97, at the top of the range assumed; the balance's damping from the air on its screws, nuts and arm (Cd 0.8–1.4 at Re about 180), its
   staff's flat end turning on the endstone (the end flat on the 7:08 trace; domed it would lose 60 times less), the spring's residual side force and its own
-  internal damping (Q 1,000–5,000): Q 202–390, a free decay of 32–62 s. With the mainspring's own coil friction and set (5–15 %, left out of its torque) the
-  budget needs 169–243, so the two meet and the model's 34 s (Q 214) is inside both: `TF` is now supported by the friction and the air as well as by the
-  budget. Without the flat end the balance would lose too little and swing far past the manual's 1½ turns. Op. 78's preload (0.770 g on the locking jewel) over the 0.20 mm lift at release puts the detent spring's share of the
-  balance's work at 4.4–7.1 %, so `fD` is 0.057 (it was 0.03). The escapement's own error is then -1.5 s a day, absorbed by the timing as before, and the
-  hairspring isochronism term that cancels its isochronism at 90 % of the torque -0.13 (`invariants.py`). Temperature: a steel spring on a steel balance
+  internal damping (Q 1,000–5,000): Q 202–390, a free decay of 32–62 s. With the train's efficiency from its parts the budget needs 243–341, so the two meet;
+  `TF` (the free swing's decay) is 52 s (Q 327), inside both, the torque the model is calibrated at (78 µN·m) what the train gives less the mainspring's own
+  coil friction and set (5–15 %). It was 34 s (Q 214) until 11 October 2026, when the escapement still left out the chase and the detent's whole lift.
+  Without the flat end the balance would lose too little and swing far past the manual's 1½ turns. Op. 78's preload (0.770 g on the locking jewel) is the detent
+  spring's own in the model; the discharge jewel carries the detent on past the release to 1.8 times the release lift, so the detent takes about 10 % of the impulse
+  (`fD`, 5.7 %, was fitted to the lift at release until 11 October 2026). The escapement's own error is −3.6 s a day, absorbed by the timing, and the
+  hairspring isochronism term that cancels its isochronism at 90 % of the torque −0.22 (`invariants.py`). Temperature: a steel spring on a steel balance
   loses 10.3 s a day a °C; the Model 21's Elinvar spring must be treated to -22 to 10 × 10⁻⁶ a °C to cancel its balance; the split variant's rim gives back
   7.0 s a day a °C.
 - **Still estimated** (README "Estimated"): pivot and jewel-hole diameters (the balance staff's lower end, the escape jewel's hole and the third's and fourth's lower jewels now measured) and the screws' threads (the videos don't resolve them; the model's are its own,
@@ -407,7 +410,7 @@ checks the model against it and writes `BOM.md` at the repository root).
 
 The browser tools in `tools/` open `index.html?snap&qa` themselves. They need
 Python with numpy, scipy and Playwright's Chromium, and write their output into
-the folder they're run from. `escapement.js`, `almanac.js` and `solve.py` need no browser. The
+the folder they're run from. `escapement.js`, `almanac.js`, `solve.py` and the checks of the physics (`physics.js`, `dynamics.js`, `strength.js`, `errorbudget.js`: "Checked in time" below) need no browser. The
 root README's "Checking your changes" lists which to run and what they should
 report.
 
@@ -486,9 +489,9 @@ amplitude is kept as state (`H.amp` in `app.js`; running, it comes to `ESC.A`, 2
 and `ESC.state(p, amp)` gives the escapement at that amplitude.
 
 - **What keeps it going.** A swing must carry the discharge jewel past the trip
-  spring on the return (it falls off at −39.1°), unlock the wheel (−21.3°) and
-  see the impulse through (+20.8°). `makeEsc` works out that least amplitude
-  from its own tables: `ESC.AMIN`, 41.1° with 2° to spare.
+  spring on the return (it comes clear of the jewel's end at −40.2°), unlock the wheel (−21.3°) and
+  see the impulse through (the tooth leaves the jewel at +20.7°). `makeEsc` works out that least amplitude
+  from its own tables: `ESC.AMIN`, 42.3° with 2° to spare.
 - **When the train stops.** It stops at a locked beat when there is no power
   (run down), when the swing falls below `AMIN`, when the locking arm brakes
   the balance, or when the train-blocking screw's dog point is down and the
@@ -497,10 +500,10 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   the fourth wheel.
 - **While it is stopped** `tSim` and the hands stand, so they lose the time it
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
-  down. It runs down freely with the train held (1/e in 34 s, `TAU_FREE`, from
+  down. It runs down freely with the train held (1/e in 52 s, `TAU_FREE`, from
   `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker") and at once, within a swing or two, against the locking arm
   (`TAU_ARM`, 0.2 s). While the swing still carries the discharge jewel back
-  past the trip spring's tip (above 39.1°), the detent lifts but the wheel
+  past the trip spring's tip (above 40.2°), the detent lifts but the wheel
   can't turn. A smaller swing leaves the jewel on the near side of the tip: the
   trip spring stays bent against it and follows it back, and the detent stays on
   its stop (`ESC.state`).
@@ -510,7 +513,7 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   before the balance has run down. Otherwise it takes Twist to start. The twist
   turns the box sharply and back and sets the balance swinging (160°), and the
   impulses bring it up to the swing the train's torque gives (`ESC.ampAt`, 255°
-  at the calibrated torque), settling in about 12.5 s (below, The balance's
+  at the calibrated torque), settling over a minute or so (A² relaxes as exp(−2t/TF), 26 s; below, The balance's
   dynamics).
 - **Nothing jumps on restarting.** `H.bOff` and `H.eOff` carry the balance's
   phase and the beat count across, so neither the balance nor the hands jump.
@@ -586,51 +589,62 @@ the rate from its own geometry, so the Adjuster's bench changes both (`ESC.A`,
 `ESC.run`).
 
 - **Amplitude, from the work done each oscillation.** Work is counted in units
-  of the hairspring's stiffness. The impulse gives w (the wheel's torque over
-  the stiffness) times the wheel's turn while it drives the jewel: at the
-  model's settings the tooth lands on the jewel at −20.6° and drives it through
-  19.4° of the wheel's 22.5° pitch, the rest being the drop onto it and the
-  tooth's fall off its tip to the locking jewel. Unlocking takes back three
-  things: the locking jewel drawn back against the tooth and rubbing on it,
-  dL(tan DRAW + μ)/(1 − μ tan DRAW) of the wheel's turn; the detent spring
-  lifted (lost as the detent falls back); and the trip spring bent on the
-  return (lost as it flies back). The swing loses πA²/Q, Q = πTF/T from the
-  balance's free run-down, so A = √(QW/π). The constants are fitted so the
-  model's settings give 255°, with unlocking taking 5.4% of the impulse's work.
+  of the hairspring's stiffness k. Released from rest, the escape wheel and the
+  train behind it (`JW`, 6.2 g·mm²: the escape wheel's 4.80 measured on its
+  solid, the fourth wheel's reflected through its pinion, estimated) gather
+  speed under the torque w k and chase the impulse jewel, already running away
+  from them: at the model's settings the tooth lands on it at −4.8°, 16.5° of
+  the balance after the release, running at 2.7 times the jewel's speed. The
+  strike gives the balance J v_j (v_w − v_j) (29 % of the impulse); then the
+  tooth drives the jewel through 12.1° of the wheel, w times that turn less what
+  speeding the wheel up with the jewel takes (lost when the next tooth locks).
+  Unlocking takes back three things: the locking jewel drawn back against the
+  tooth and rubbing on it, dL(tan DRAW + μ)/(1 − μ tan DRAW) of the wheel's
+  turn; the detent, lifted against Op. 78's preload and its spring's stiffness
+  (`W78`, `hD`, `EB`) all the way the discharge jewel carries it, 1.8 times the
+  lift at release (lost as it falls back); and the trip spring (`tsH`, `ET`),
+  bent on the return round the jewel's end (lost as it flies back). The swing
+  loses πA²/Q, Q = πTF/T from the balance's free run-down, so πA²/Q = Wn(A).
+  Only w is fitted, so the model's settings give 255°; unlocking then takes
+  16 % of the impulse's work, the detent 10 %. Until 11 October 2026 the wheel
+  moved as a kinematic gear (`G`, landing 0.6° after release) and the
+  springs' shares were fitted (`fD`, `fP`); `tools/dynamics.js`, integrating
+  the escapement beat by beat, found both wrong, and now agrees with it.
 - **Rate, by Airy's result.** A push at balance angle θ moves the phase by
   −(τ|dθ|/k)·θ/(A²√(A²−θ²)) an oscillation: a push before the dead point gains
   and one after it loses, a resistance the reverse. Summed over the impulse
   and the unlocking, and taken against the model's settings, this is the rate
-  in s a day. The escapement's own error at the model's settings (−1.4 s a day:
-  impulse −0.5, draw −0.5, detent spring −0.6, trip spring +0.2) is taken up in
+  in s a day. The escapement's own error at the model's settings (−3.6 s a day:
+  impulse −2.7, draw −0.3, detent spring −1.4, trip spring +0.8) is taken up in
   the timing, so it shows as 0.
 - **What the settings do.**
 
   | Setting | Amplitude | Rate | Why |
   |---|---|---|---|
-  | Impulse jewel at 184° | 244° | +1.0 s a day | The impulse ends sooner after the dead point (18.0°) |
-  | Impulse jewel at 178° | 264° | −1.9 s a day | |
-  | Depth of lock 0.20 mm (0.03) | 248° | −3.6 s a day | More resistance before the dead point |
-  | Depth of lock 0.33 mm (0.05) | 225° | −9.1 s a day | |
-  | Discharge jewel at 262° | 230° | −7.1 s a day | |
+  | Impulse jewel at 184° | 246° | +0.5 s a day | The impulse ends sooner after the dead point (18.0°) |
+  | Impulse jewel at 178° | 266° | −0.5 s a day | |
+  | Depth of lock 0.17 mm (0.025) | 244° | −1.5 s a day | More resistance before the dead point |
+  | Depth of lock 0.20 mm (0.03) | 237° | −2.7 s a day | |
+  | Discharge jewel at 262° | 225° | −4.2 s a day | |
 
   One slider alone keeps the balance above `AMIN`. Several together can bring
   it under, and the bench then refuses the setting.
 - **The model's settings are the reference.** There `ESC.A` is exactly 255°
   and the rate exactly 0. Every tool that calls `ESC.state(p)` with the default
   amplitude sees no change. The reference's constants are cached on
-  `makeEsc.refs`, by the calibration settings (`EX`, `A`, `TF`, `MU`, `fD`,
-  `fP`).
+  `makeEsc.refs`, by the calibration settings (`EX`, `A`, `TF`, `MU` and the
+  bodies' and springs' `I`, `JW`, `W78`, `hD`, `EB`, `ET`, `tsH`).
 - **While the train is held,** the balance swings free: it has no escapement
   error and keeps the weights' rate alone.
 - **Isochronism** is the escapement's, its rate at another swing
   (`ESC.rateAt`, below), plus the hairspring's own, `HS` s a day for each 10°
   more swing: 0 by default (the spring taken as isochronous), set on the
-  Adjuster's bench's last slider. At −0.1 the spring all but cancels the
-  escapement's loss at a smaller swing (0.00 s a day at 90% of the torque).
-  `tools/escapement.js HS=-0.1` prints it.
-- **Not modelled:** friction at the impulse, and the recoil in the motion (it
-  counts in the work only).
+  Adjuster's bench's last slider. At −0.22 the spring all but cancels the
+  escapement's loss at a smaller swing (0.01 s a day at 90% of the torque).
+  `tools/escapement.js HS=-0.22` prints it.
+- **Not modelled:** friction at the impulse, the recoil in the motion (it
+  counts in the work only) and the detent's own inertia and bounce (`tools/dynamics.js`:
+  they change the swing by about 1° and the rate by about 0.1 s a day).
 
 ### The balance's dynamics
 
@@ -643,13 +657,13 @@ every speed); the equation gives the amplitude and the rate.
   it; the detent and trip springs' work doesn't. In ½A², in units of the
   hairspring's stiffness, a swing gains that work and loses πA²/Q. So A²
   relaxes to `ESC.ampAt(s)²` as exp(−2t/TF), exactly for a steady torque.
-  `ampStep` steps it so, at any speed. The swing settles in TF/2, 12.5 s.
+  `ampStep` steps it so, at any speed. A² settles as exp(−2t/TF), 26 s.
   Free, with no impulse, the swing falls as exp(−t/TF), as before.
 - **The drive** (`driveNow` in `app.js`). Running, the mainspring through the
   fusee: `R.fs.torque`, 1 at 12 h from full wind, the middle of a day's
   running. While the key turns, the sustaining spring alone drives: 0.8 of
   that when loaded (estimated), falling linearly to nothing as it relaxes over
-  its 10 minutes (`R.ssD` of `R.SMAX`). So the swing dips while winding (227°
+  its 10 minutes (`R.ssD` of `R.SMAX`). So the swing dips while winding (224°
   at the spring's full load) and comes back when the key lets go. Run down,
   there is no drive.
 - **The spring's pull** (`makeFusee`'s `pull`, `pullB`, `torque`;
@@ -665,30 +679,30 @@ every speed); the equation gives the amplitude and the rate.
 
   | Swing | Torque | Rate |
   |---|---|---|
-  | 247.5° (1⅜ turns) | 94% | −0.07 s a day |
+  | 247.5° (1⅜ turns) | 95% | −0.15 s a day |
   | 255° | 100% | 0 |
-  | 270° (1½ turns) | 112% | +0.13 s a day |
+  | 270° (1½ turns) | 111% | +0.28 s a day |
 
   Each frame, `escK = 1 + ESC.rateAt(H.amp, drive)/86400` while the train
   runs, so the dip while winding and a jolt show in the rate book.
-- **Over a wind.** With the fusee the rate stays within −0.05 to +0.02 s a day
-  from full wind to run down; with a going barrel, −0.76 to +0.33. The manual's
+- **Over a wind.** With the fusee the rate stays within −0.11 to +0.06 s a day
+  from full wind to run down; with a going barrel, −1.84 to +0.78. The manual's
   isochronism check (Sec. IX: the 12-hour rate against half the 24-hour rate
   at 72½ °F, wound at the start; tolerance 0.50 s, the factory test card of
-  No. 3390 reads 0.00) comes to 0.00 s with the fusee and +0.03 s with a
+  No. 3390 reads 0.00) comes to +0.01 s with the fusee and +0.08 s with a
   going barrel. `tools/escapement.js` prints the rate at 1⅜ and 1½ turns.
 - **The mainspring's set** (`MSET`; Op. 13, "Check condition and set of
   mainspring"). A spring that has taken a set pulls less all through its run;
   the drive is scaled by 1 − set, so the fusee keeps it level but lower. At
-  20% the balance swings 227° and the chronometer loses about 0.3 s a day.
+  20% the balance swings 224° and the chronometer loses about 0.7 s a day.
 - **The 30-day performance test** (`testCalc`). Each day's rate is the
   model's at the period's temperature: √(I₀/I) from the weights and screws,
   the balance's temperature curve, and the escapement's and hairspring's rate
   averaged over the 24 hours after winding (wound at each daily reading). The
   errors are rounded to the comparator's 0.01 s and the rates read from them,
-  as on the card. At the model's settings it passes: regulation 0.07,
+  as on the card. At the model's settings it passes: regulation 0.06,
   temperature 0.07, 0.07 and 0.00 (the card of No. 3390: 0.08, 0.06, 0.02),
-  isochronism 0.00; the split balance fails 90 against 72½ °F (1.46, limit
+  isochronism 0.01; the split balance fails 90 against 72½ °F (1.46, limit
   0.75), and an eighth of a turn on the timing weights fails regulation. The
   model has no day-to-day scatter, so rating and recovery come out 0.00 (the
   card's real chronometer: 0.03 and 0.06).
@@ -696,7 +710,7 @@ every speed); the equation gives the amplitude and the rate.
   the balance's speed by 0.6 to 1 of its running top speed, either way at
   random. From θ and θ′ the balance goes on at A = √(θ² + (θ′/ω)²). Checked
   under `AMIN`, it sets (stops). Carried past `ESC.TRIP` (a full turn plus the
-  angle where the discharge jewel meets the trip spring, 332.7°), the jewel
+  angle where the discharge jewel meets the trip spring, 332.2°), the jewel
   comes round and unlocks a second time, so the wheel trips: one extra tooth,
   and the hands jump half a second. The phase is kept, so the train stays on
   its half second.
@@ -721,6 +735,71 @@ every speed); the equation gives the amplitude and the rate.
   about 3.9 × 10⁻⁶ /mm a °F for brass on steel 1.6 mm thick. A point φ from the
   fixed end then comes in by R²Δκ(1 − cos φ), 0.05 mm at the free end for
   27½ °F, drawn 20 times as far (`R.CURLX`).
+
+### Checked in time: the escapement, strength and an error budget
+
+Three Node tools (no browser) check the averaged physics above against a model
+that doesn't average, and ask the questions it can't: would it work, would it
+fall apart, would it keep time. They fail on a disagreement with the model and
+on what would stop the chronometer.
+
+- **`tools/dynamics.js`, the escapement in time.** The balance, the escape
+  wheel (the fourth wheel's inertia reflected onto it) and the detent as
+  bodies, integrated through every contact (RK4, each contact found by
+  bisection), on the contact geometry worked out apart from makeEsc's (the two
+  agree to 0.01 µm). The integrator is checked against a damped oscillator kicked
+  at its dead point (−ζ²/2). Against makeEsc, with its springs and a massless
+  detent: the swing 255.6° (255°), the tooth landing 16.4° after the release
+  (16.5°), the detent falling back at −12.4° (−12.4°), the escapement's own rate
+  within 0.1 s a day, its isochronism within 0.01 s a day over the manual's
+  swing. With the detent's own inertia (2.67 g·mm², from the drawn pieces) and
+  its bounce on the stop button, the swing 1° less and the rate 0.1 s a day.
+  - *What it found* (11 October 2026), now in makeEsc: the wheel, released from
+    rest, catches the impulse jewel well after the release (it was taken as a
+    kinematic gear landing 0.6° after it), and strikes it; the discharge jewel's
+    square end held both springs' tips across its whole width (overall about
+    38°, past Op. 87: the end is now stoned round and the jewel's settings
+    re-chosen to the manual's figures); the detent's work is Op. 78's preload
+    over its whole lift, not a fitted share; and 255° with those wants a balance
+    running down in 52 s (Q 327), as the energy budget and the balance's parts
+    allow (`TF` was 34).
+  - *The detent's return* (OPEN-QUESTIONS.md 2): the detent is back on its stop
+    about 10 ms before the next tooth reaches the stone, from half to twice the
+    drawn spring's stiffness, at half or 1.5 times Op. 78's preload, with a dead
+    or a bouncy stop, and even with no preload at all.
+  - *Starting and stopping.* Twisted to 160°, the balance comes within 2° of its
+    swing in a minute or so; the least drive that keeps it going is about 12 % of
+    the calibrated torque, at makeEsc's `AMIN`.
+  - *Knocks and the sea.* A twist about the staff upsets the beat at about
+    29 rad/s in 2 ms (it gains a beat); a blow across the plate frees the wheel
+    at about 55 g over 3 ms, 140 g over 0.5 ms (the detent isn't poised about
+    its flexure: a steady 47 g lifts it far enough). Yaw of ±10° and ±0.3 g
+    sideways at the period of a roll move the rate by under 0.01 s a day.
+- **`tools/strength.js`, would it fall apart.** Every loaded part fully wound,
+  against its material's published range (the margin at both ends): the train's
+  teeth by Lewis (each stage lossless), the escape wheel's tooth struck at the
+  jewel's speed, the pivots and the fusee's bushing, the chain and its end
+  fittings at the chain's 48 N, the mainspring, hairspring, detent spring (by
+  Goodman, preload and whole lift) and trip spring, and the knocks that bend a
+  pivot (the balance staff's at about 700–1,400 g). Nothing fails. The thinnest
+  margins: the fusee wheel's teeth (1.5–2.2), the fusee bushing's pressure
+  (1.0–3.6) and the mainspring, which works near its limit, as a mainspring does
+  (it fails by taking a set).
+- **`tools/errorbudget.js`, would it keep time.** As made: makeEsc with a
+  maker's tolerances on every escapement setting (Monte Carlo, estimated
+  tolerances): about 92 % run as made and 89 % swing inside the manual's band,
+  about a fifth meet every adjustment figure before adjusting (overall, drop
+  and let-off are the usual misses: the adjuster's work, Ops. 84–97). At sea:
+  60 days from a winter port into the tropics, rated over 10 days in port, each
+  day's rate the sum of the test card's temperature curve, scatter and drift
+  (calibrated so the simulated Navy test reads as No. 3390's card), the
+  barometer through the air's share of the damping and the time-domain
+  isochronism, the oil thickening (estimated) and heavy weather from
+  dynamics.js. A chronometer like No. 3390 carries about 1.4 s after a month (a
+  third of a mile of longitude on the equator), 4 s after two; one that passes
+  the Navy's test only half the time, about 15 s and 38 s. Drift and the
+  temperature curve dominate. The empirical terms are the card's, not physics:
+  the model has no other source for a chronometer's day-to-day scatter.
 
 ## Sources
 
@@ -769,12 +848,12 @@ every speed); the equation gives the amplitude and the rate.
 
 `tools/keystone.js` measures the model's escapement against each rule the 1904 text gives. It reads `ESC` as `escapement.js` builds it, the tooth outline (`ESC.toothPts`), the locking stone and detent pieces (`ESC.pieces`), and the sizes set in `core.js` and `movement.js`. The text describes a generic English chronometer, so where the manual, Hamilton's specification or a photograph gives a figure, that figure stands; the text is never a reason to change one. As of 4 October 2026:
 
-- **Agrees.** The impulse roller is 0.480 of the wheel's diameter (the text: about half). The teeth are 1.30 mm along the arbor (1/20 in, 1.27 mm). The draw is 10° (about 12°). The jewel is flush with the roller (at most 0.002 in proud). The unlocking takes 6.0° of balance (about 5°; the manual's lock is about 6°). The balance beats 14,400 an hour. The impulse covers 41.4° of balance, against the text's 43° of a 48° arc.
+- **Agrees.** The impulse roller is 0.480 of the wheel's diameter (the text: about half). The teeth are 1.30 mm along the arbor (1/20 in, 1.27 mm). The draw is 10° (about 12°). The jewel is flush with the roller (at most 0.002 in proud). The unlocking takes 6.0° of balance (about 5°; the manual's lock is about 6°). The balance beats 14,400 an hour.
 - **The planting.** The text places the balance where the wheel's and roller's rims cross over one pitch (Fig. 139). Applied to the Model 21's own parts (16 teeth, a 13.16 mm wheel, the 0.249 in roller), that puts the balance 9.34 mm from the escape arbor; the model's is 9.40 mm, from the photo fit and Fig. 90. The rims cross over 20.7° of the wheel, 92% of a pitch.
 - **Hamilton's choices.** 16 teeth (the text: 15), a 13.16 mm wheel (0.55 in, 13.97 mm), a 255° swing (about 225°; the manual's 1⅜–1½ turns decide), and a beryllium-copper detent 11.32 mm from the point of flexure to the jewel (the text: as long as the wheel is wide), its spring 0.337 of that (2/7).
 - **Fig. 90 decides.** The teeth's locking face leans 15.5° from the radial (the text: 28°; Saunier 27°, Britten 20°), and the back's curve fits a circle of 3.75 mm (the text: the roller's radius, 3.16 mm). Both are traced from Fig. 90.
-- **The release.** The impulse jewel is 2.1° inside the wheel's tip circle when the wheel is released; the text allows 5°, so that the tooth meets the jewel's flat face. The model's release is set by the manual's lock, let-off, overall and drop, and its tooth lands on the jewel 0.7° after the release.
-- **The detent's turn.** At release the model's detent has turned 0.79° about its point of flexure, the jewel moving 0.16 mm. The text's "locking of about two degrees … counting the center of fluxion" would move a jewel 0.49 mm on its own 0.55 in detent, four times the depth of lock that the manual's figures give here. The passage doesn't say what the two degrees are measured on, so the comparison is left open.
+- **The release.** The impulse jewel is 2.0° inside the wheel's tip circle when the wheel is released; the text allows 5°, so that the tooth meets the jewel's flat face. The model's release is set by the manual's lock, let-off, overall and drop. The wheel, released from rest, catches the jewel 16.5° of balance later (at −4.8°), so the impulse covers 25.6° of balance against the text's 43° of a 48° arc: the text's figure is the geometric arc, the model's what a wheel of this inertia at this torque reaches (`tools/dynamics.js` agrees beat by beat).
+- **The detent's turn.** At release the model's detent has turned 0.73° about its point of flexure, the jewel moving 0.14 mm. The text's "locking of about two degrees … counting the center of fluxion" would move a jewel 0.49 mm on its own 0.55 in detent, four times the depth of lock that the manual's figures give here. The passage doesn't say what the two degrees are measured on, so the comparison is left open.
 - **Estimates near the text.** The model's detent spring is two beryllium-copper strips 0.079 mm thick (0.50 and 0.45 mm wide; estimated). The text's steel spring is 0.002 × 0.080 in. Taking E as 128 GPa for beryllium copper and 200 GPa for steel, the model's spring is 29% stiffer than the text's would be at its own length. The locking stone is 0.61 mm across (Figs. 57–59 give no size), under the text's third of a tooth space (0.86 mm); its flat removes 0.37 of the diameter (the text: 4/10).
 
 ## How the layout was measured
@@ -814,7 +893,7 @@ every speed); the equation gives the amplitude and the rate.
 
 ## Estimated, not from the manual
 
-- The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull (the profile's pull made 3% steeper at each end), the sustaining spring's strength (0.8 of the drive, loaded) and its linear relaxing, the free run-down (25 s, as before), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
+- The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull (the profile's pull made 3% steeper at each end), the sustaining spring's strength (0.8 of the drive, loaded) and its linear relaxing, the free run-down (52 s, from the energy budget and the balance's parts), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
 
 - Tooth counts: the fusee wheel (90), centre wheel (90), third wheel (80) and its pinion (12), fourth wheel (75) and the wind indicator wheel (120) were counted on a restoration video of a 1941 Model 21 (`References/README.md`, "Videos consulted"; `tools/video.py`; IDEAS.md 1.8), not taken from the manual; the escape wheel (16) is Hamilton's. The fourth and escape pinions (10, 10) follow from those counts and a one-minute fourth wheel. The centre pinion (14) is counted on the same video, likely but not certain (end-on at 13:59.5, from above at 35:23.66; no frame shows every leaf); the fusee arbor's pinion (12) is inferred, not counted: 14 makes the manual's 17½ half turns hold its "maximum of 56 hours", and 14 × 12 sweeps the UP–DOWN hand 313.6° in 56 h, against the 315.7° a photographed dial's scale spans. 13 and 13 would fit the dial and the manual's seven half turns a day better, but run 60.6 h. The motion work (cannon pinion 14 : minute wheel 56, minute pinion 18 : hour wheel 54, `MW` in movement.js) is counted on the video, the wheels lying whole on the mat (`References/VIDEOS.md`); it was 12 : 36, 10 : 40, chosen, until the count.
 - Dimensions and positions, estimated from the figures and the dial (95 mm, the side photograph), except where the photographs give them (plan: "How the layout was measured", steps 1–5; heights: step 6).
@@ -847,18 +926,18 @@ every speed); the equation gives the amplitude and the rate.
 
   | Setting | Model | Manual |
   |---|---|---|
-  | Lock: detent leaves the stop button, until the tooth drops off | 6.0° | about 6° (Op. 85) |
-  | Let-off: tooth drops off, until the detent falls back | 10.2° | at least 6° (Op. 86) |
-  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 28.0° | 26–30° (Op. 87) |
-  | Drop | 2.1° | about 2° (Op. 97) |
+  | Lock: detent leaves the stop button, until the tooth drops off | 6.4° | about 6° (Op. 85) |
+  | Let-off: tooth drops off, until the detent falls back | 8.9° | at least 6° (Op. 86) |
+  | Overall: trip spring falls off the jewel on the passing swing, until the detent falls back on the unlocking swing | 27.8° | 26–30° (Op. 87) |
+  | Drop | 2.0° | about 2° (Op. 97) |
   | Roller shake | 0.055 mm | about 0.002 in (Op. 84) |
   | Horn clearance | 0.25 mm | about 0.010 in (Op. 88) |
   | Angle between the jewels | 88° | about 90° in Fig. 90 and Op. 7 (adjustable) |
   | Locking-jewel draw | 10° | 8–12° (chronometerbook post 30) |
 
-  - Depth of lock is 0.125 mm, and the trip spring's tip lifts 0.20 mm to release.
-  - The discharge jewel meets the trip spring at −27.3° of balance and releases the wheel at −21.3°. The impulse runs from −20.7° to +20.7°, centred on the dead point.
-  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip leaves the jewel's end (−11.1° and −39.1°). The push peaks about a degree earlier, where the tip slides off the jewel's side onto its end. Let-off and overall are measured to the fall, as the manual's gauge reads them.
+  - Depth of lock is 0.112 mm, and the trip spring's tip lifts 0.18 mm to release (the settings rd 0.300, rT 0.290, aD 271°, dL 0.017 of the unit, re-chosen on 11 October 2026 when the contacts were solved from the jewel's rounded end: 0.305, 0.286, 269.6° and 0.019 before).
+  - The discharge jewel meets the trip spring at −27.8° of balance and releases the wheel at −21.3°. The wheel catches the impulse jewel at −4.8° and drives it to +20.7°.
+  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip comes clear of the jewel (−12.4° and −40.2°): pushed along the jewel's face, then round its end, which is stoned to a half round (`rnd`, estimated: no source shows it; drawn square, the end held the tips across its whole width, 0.32 mm, and overall came to about 38°, past Op. 87). Let-off and overall are measured to the fall, as the manual's gauge reads them.
   - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release (the recoil counts in the work unlocking takes from the balance only). Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
 - The escapement's parts beyond the plan.
   - The escape teeth: their form follows Fig. 90 and an original wheel photographed in chronometerbook post 30 (a land 0.13 mm wide at the tip, the root circle at 5.5 mm). The undercut of the locking face (the root trails the tip by 0.14 of a pitch, about 16°), the length of the hollow back (0.55 of a pitch) and its curve (meeting the root circle tangentially) are traced from Fig. 90. Fig. 14's cut-away gives the arrangement: the teeth stand the wheel's full thickness on a thin rim and spokes. The rim's inner edge (0.77 of the tips), the spokes (0.105 of the tips wide), the hub (r 0.31) and the collet's pipe (r 0.20, toward the pinion) are measured on 43:21.1, the wheel face up in the staking tool; the web's thickness (0.5), the pipe's length (1.9, off the view's tilt: rough) and the collet's foot, a collar about 0.65 tall there where the model has the web's 0.5, are estimated.
@@ -954,7 +1033,7 @@ every speed); the equation gives the amplitude and the rate.
 - The balance locking arm's sizes (Fig. 9 shows it curved, its screw outside the rim and its end at a timing weight; Sec. X: "place the locking arm over the timing weight"): a strip 0.8 mm wide and 0.45 thick, bowed 0.25 mm away from the staff, turning 120° on its screw 20 mm from the staff in the open 6 o'clock sector of the train bridge (at 45° from the timing weight, just clear of the barrel bridge's far horn; locked, the arm passes between the cock's foot and the escape upper bridge, clear of both by little), with a round finger 2.4 mm tall at its end. Locked, the finger stands 15.6 mm from the staff on the counterclockwise side of the timing weight that rests at the arm's end on the 6 o'clock side (0.02 mm clear), and the vernier weight's screw, standing 1.6 mm outside the rim one hole on, stops the balance 15° the other way. Unlocked, it lies against its stop pin, clear of the balance. It gets there by turning 120° with its end passing in under the balance, where Fig. 9 turns it the other way, out from the balance; here the second train pillar's screw head (1.6 mm proud, 4 mm out from the arm's screw) and the cock's foot leave no room for that (Review-results.md, BOM comparison, still open 9). Fig. 9 draws the arm curved along the rim and Fig. 108 a short flat lever with a raised boss round its screw, about 4 to 5 screw heads long (about 7-10 mm; the model's is 13). No photograph or video of the arm fitted has been found: `KLUwI2UUCMQ`'s movement and the top-view photograph's carry the Navy's Y-arm instead.
 - The Navy's Y-arm balance stop (Variants, Balance stop, fitted by default; the manual's locking arm is the other choice; illustrative): as on serial 2E11795 (the top-view photograph), Delaney No. 8854 and a third movement, the last two photographed from straight above. A second dust seal on the barrel bridge, like the fusee's: a nickel body on a flange held by screws, packing rings (black on 2E11795, the cap the fusee seal's size), and a nickel plunger head with a hex socket screw. Under it runs a lever of spring steel (satin, as photographed). Its root is held on a shouldered stud by a large slotted screw near the bridge's rim; the stud takes the place of the barrel bridge's pillar screw, which both photographs put within 2.5 mm of it. The lever runs straight under the cap, through a slot in the seal's body, to a crossbar symmetric about it: an arch round the cock's end, its legs coming down 7.8 mm either side of the staff (clear of the hairspring) and rounding over in a half circle, its top 8.3 mm out on the bar's centre line, and from the foot of each leg, level with the staff, an arm straight out to a round eye with a pin over the rim (13.9 mm out). Measured: the widths, on Delaney's photograph (stem 2.9 mm, lever 2.5, bar 2.2, eyes r 1.4), and the eyes' places (level with the staff, over the rim; Delaney's and 2E11795's photographs registered by the balance rim agree with them to about 1 mm; the cock's edge hides the left end on 2E11795). The arch is traced on Delaney's photograph (its radius about 7.9 mm, its top 8.3, the arms nearly level with the staff); all four movements photographed with the stop (2E11795, Delaney's, the omegaforums one and 2E8489 in the restoration video) have this shape (Review-results.md, open findings 13). Until 4 October 2026 its top stood 12.3 mm out, after a sketch. The outline is the boundary of bars of those widths joined with round fillets, cut as one plate. Estimated: the heights, the lever's 0.45 mm thickness, the stud and its screw, the chamber and slot inside the body, the second flange screw's place, the flange's bite round the setup cover's end and foot, and the screws' threads (not drawn; the bridge is the manual's). The manual doesn't describe the stop (its "balance stop", Sec. I, is Fig. 9's arm), so how it works is taken from two descriptions of it (Review-results.md, 13): the plunger, screwed down by its hex socket with an Allen key through the bottom of the case, presses the lever down, which bends about its screwed root (drawn as a turn about the horizontal through the pivot, along the crossbar, so both pins come down together) until the pins bear on the rim's top edge, as the wedges did; free, they stand 0.5 mm over it. Locked and Unlocked under Stopping and starting work it as they work the locking arm. It is the same part as the locking arm (`lockArm`), and that part's card, name and source note follow the stop fitted (`STOP_INFO` in `app.js`).
 - Stopping and starting: the arm's braking (0.2 s), the twist's swing (160°) and the build-up to `ESC.A` (3 s). `ESC.AMIN` is worked out from the escapement.
-- The escapement's amplitude and rate ("The escapement's amplitude and rate"): the free run-down's 34 s (`TF`, Q 214) is derived from the energy budget (`tools/physics.js`), but over the train's efficiencies (0.85–0.95 a stage, published practice) the budget allows 27–43 s; friction at the locking jewel μ = 0.15 (steel on sapphire); the trip spring's share of the impulse's work at the model's settings, 0.5 % (`fP`), estimated (the detent spring's, 5.7 %, `fD`, follows from Op. 78). The escapement's own error at the model's settings (−1.5 s a day) is taken to be timed out; the rate shown is the change from it.
+- The escapement's amplitude and rate ("The escapement's amplitude and rate"): the free run-down's 52 s (`TF`, Q 327) is set inside both what the energy budget needs with the train's efficiency from its parts (243–341) and what the balance's parts give (202–390), at a torque the train gives (`tools/physics.js`); friction at the locking jewel μ = 0.15 (steel on sapphire); the fourth wheel's inertia in the wheel's chase (about 1.4 of `JW`'s 6.2 g·mm²); the detent spring's and trip spring's sections (`hD`, `tsH`: OPEN-QUESTIONS.md) and moduli; the discharge jewel's rounded end (`rnd`). The escapement's own error at the model's settings (−3.6 s a day) is taken to be timed out; the rate shown is the change from it.
 - The sustaining pawl's arbor is placed on C Spinner's video, its foot read on two frames (36:15 through `rimfit_36-15.json`'s camera: 21.8 mm from the fusee axis at 67°; 14:06, nearly overhead, through a homography on the plate's bushings and pillars' feet: 21.7 at 71°), the model 21.8 at 69°; its blade the crescent 36:15 shows (its two edges put through that camera at the blade's height). its outline one smooth curve through those edges, the tip's end face straight between them. Estimated: the root's back behind the arbor (the video doesn't show it; drawn 1.6-1.9 mm from the arbor), the hub's height (to about 1 mm) and the arbor's radius (0.7; the video's reads about 0.9, against the pillar beyond it).
 
 ## Modifying the model

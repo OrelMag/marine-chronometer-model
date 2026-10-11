@@ -732,7 +732,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function stopMove(dt){const inst=SNAP||RM.matches,mvTo=(x,t,r)=>inst?t:x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);
     const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(lastE??0))?Math.min(b,vf-0.005):b;}
   /* the balance's equation of motion, averaged over a swing (makeEsc, ampAt): driven at torque drv, A² relaxes to ESC.ampAt(drv)² as exp(-2t/TF), exactly whatever the step, so the
-     time it takes to settle (TF/2, 12.5 s) is the same at every speed; free, the same with no impulse, A falling as exp(-t/TF). The arm brakes it; a twist kicks it up */
+     time it takes to settle (TF/2, 26 s) is the same at every speed; free, the same with no impulse, A falling as exp(-t/TF). The arm brakes it; a twist kicks it up */
   function ampStep(dts,brake,driven,drv){let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;   /* a twist adds swing, never takes it away */
     if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dts/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
     else if(brake)a*=Math.exp(-dts/TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dts/TAU_FREE));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a;}
@@ -749,8 +749,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     H.amp=a;H.kick=0;   /* the swing's new size; its phase is kept (the model's clock), so the train stays on its half second */
     const trip=a0>ESC.TRIP,set=a<ESC.AMIN,d=x=>Math.round(x/D2R)+'°';if(trip){H.eOff+=1;rErr+=0.5;}pend.add('jolted');
     stopMsg(set?`<b>Jolted: it has set.</b> <span>The knock came against the balance’s swing and checked it from ${d(before)} to ${d(a)}, under the ${d(ESC.AMIN)} it needs to unlock the wheel: the chronometer stops. Twist to start.</span>`:
-      trip?`<b>Jolted: it tripped.</b> <span>The knock came with the swing and carried the balance past a full turn, so the discharge jewel came round and unlocked the detent a second time: the escape wheel escaped an extra tooth and the hands jumped half a second ahead. The swing settles back to ${d(ESC.ampAt(driveNow()))} in half a minute.</span>`:
-      `<b>Jolted.</b> <span>The swing went from ${d(before)} to ${d(a)}; it settles back to ${d(ESC.ampAt(driveNow()))} in half a minute${Math.abs(a-before)>20*D2R?', and the rate wanders meanwhile':''}.</span>`);}
+      trip?`<b>Jolted: it tripped.</b> <span>The knock came with the swing and carried the balance past a full turn, so the discharge jewel came round and unlocked the detent a second time: the escape wheel escaped an extra tooth and the hands jumped half a second ahead. The swing settles back to ${d(ESC.ampAt(driveNow()))} in a minute or so.</span>`:
+      `<b>Jolted.</b> <span>The swing went from ${d(before)} to ${d(a)}; it settles back to ${d(ESC.ampAt(driveNow()))} in a minute or so${Math.abs(a-before)>20*D2R?', and the rate wanders meanwhile':''}.</span>`);}
   joltB.addEventListener('click',jolt);
   /* ---------- swing and isochronism: the balance's amplitude over the last minute (frame time), the rate against the swing at a steady torque (ESC.rateAt along ESC.ampAt), and both over
      a wind with the fusee (drvF) and, ticked, a going barrel (drvB); the manual's isochronism check, wound at 0 h: the gain over 12 h less half the gain over 24 ---------- */
