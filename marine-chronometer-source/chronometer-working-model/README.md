@@ -830,7 +830,7 @@ can't run them).
     unlocking, strike and lock with the swing alone free (chi² about 0 in all nine;
     the old model worse in all), and the strike-to-lock interval falls from 10.2
     to 7.5 ms as the swing builds, read as 217-286°; after it, the unlocking-to-strike
-    interval holds at 6.3-6.4 ms, **290-295° running** (that stretch alone can't tell those two clicks from the strike and the lock, 331°; the build-up, where all three are heard, says which they are).
+    interval holds at 6.3-6.4 ms, **about 295° running** (290-302° over eight stretches) (that stretch alone can't tell those two clicks from the strike and the lock, 331°; the build-up, where all three are heard, says which they are).
   - `xDKFZaY88cM` (a reverberant room, an edited video): roughly 180-210°;
     `XJQCgMV_GA8` (13 s of sound) and `FpolZSipVmQ`: inconclusive.
 - **`tools/swing.py`, the swing on video.** Only `We1dLNXiBj0` shows the balance
@@ -840,7 +840,7 @@ can't run them).
 - **Do they agree?** Through the start, sound and picture agree within 2-15° up to
   about 180°; above it the sound reads 15° (the video's likeliest reading) to 30°
   (its middle) higher, about 1.5 sigma of the sound's reading and one alias of the
-  video's; the sound's running 290-295° sits inside the video's extrapolated
+  video's; the sound's running 295° (290-302°) sits inside the video's extrapolated
   280-311°. So the two independent tests agree within their uncertainties, the
   sound a little high. If that excess is real, it is the escapement's strike-to-lock
   arc about 6 % too long in the model; nothing here can tell it from the video's
@@ -849,7 +849,7 @@ can't run them).
   real Model 21 does: the wheel catches the impulse jewel 7-9 ms after the unlocking,
   not 2 ms, and the intervals follow the swing as `dynamics.js` has them; the old
   kinematic wheel is ruled out. (2) Real swings differ from unit to unit and with the
-  state of the movement: 212° and 290-295° on two movements, around the manual's
+  state of the movement: 212° and about 295° on two movements, around the manual's
   247.5-270° and the model's 255°. (3) The return swing's clicks sit a few
   milliseconds off where an in-beat balance puts them, differently in each
   recording: each movement's beat error (5-12°), fitted as such; so the sound
