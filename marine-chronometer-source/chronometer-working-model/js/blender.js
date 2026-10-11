@@ -33,16 +33,16 @@ const BLENDER=(()=>{
     H.twist=sg=>{const y=H.held?H.bph:H.tSim/0.5+H.bOff+PL,p=y-Math.floor(y),a=H.amp,[th,u]=TWIST.run(-a*Math.cos(TAU*p),a*Math.sin(TAU*p),TAU/0.5,sg),a1=Math.hypot(th,u),p1=Math.atan2(u,-th)/TAU-TWIST.T/0.5;
       if(H.held){H.bph=Math.floor(H.bph)+p1;if(a1>a)H.kick=a1;else{H.amp=a1;H.kick=0;}}};   /* app.js's twist with the train standing (the clip twists it only so) */
     H.step=dt=>{const mvTo=(x,t,r)=>x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(H.lastE??0))?Math.min(b,vf-0.005):b;
-      const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.drv=H.winding?A.SUS*clamp(1-R.ssD/R.SMAX,0,1):run?drvF(H.hrs):0,driven=run&&!H.held,bank=H.held&&H.bk!=null&&H.amp>Math.abs(H.bk);
+      const run=H.hrs<RUN_H,brake=H.arm>0.75,drv=H.drv=H.winding?R.ssF():Math.max(run?drvF(H.hrs):0,R.ssF()),go=drv>1e-6,driven=go&&!H.held,bank=H.held&&H.bk!=null&&H.amp>Math.abs(H.bk);
       { let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dt/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
         else if(brake||bank)a*=Math.exp(-dt/A.TAU_ARM);else if(driven){const u=ESC.ampAt(drv)**2;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/A.TF));}else a=ESC.freeStep(a,dt);H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a; }
       let E,s;
       if(!H.held){let q=at(H.tSim);const Eb=H.lastE!=null?Math.max(q.E,H.lastE):q.E,room=blocked()?Eb-1e-4+R.blockRoom(Eb-1e-4):Infinity,hold=()=>{H.held=true;H.bph=H.tSim/0.5+H.bOff+PL;};
-        const stop=!run||H.amp<ESC.AMIN||brake;if(dt>0&&lockd(q.s)&&stop){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}
-        else{if(dt>0){let adv=dt;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!H.winding)adv=Math.min(adv,(RUN_H-H.hrs)*3600);H.tSim+=adv;if(!H.winding)H.hrs=Math.min(RUN_H,H.hrs+adv/3600);q=at(H.tSim);}E=Math.max(Eb,Math.min(q.E,room));if(q.s.prog<0&&q.E<E&&E-q.E<0.05)E=q.E;s=q.s;if(q.E>room){if(Math.abs(E-Math.round(E))<1e-6)E=Math.round(E);hold();H.Eh=E;}}}
-      if(H.held){H.bph+=dt/0.5;if(H.Eh%1&&run&&!blocked()){H.Eh=Math.ceil(H.Eh-1e-6);if(H.bk>0&&H.amp<H.bk){H.amp=H.bk;H.bph=Math.floor(H.bph)+0.5;}}if(H.bkE!==H.Eh){H.bkE=H.Eh;H.bk=H.Eh%1?bankAt(H.Eh%1):null;}   /* the spoke, the screw raised and the banked balance as app.js */
+        const stop=!go||H.amp<ESC.AMIN||brake;if(dt>0&&lockd(q.s)&&stop){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}
+        else{if(dt>0){let adv=dt;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!H.winding)adv=Math.min(adv,(RUN_H-H.hrs)*3600);H.tSim+=adv;if(!H.winding&&!R.held)H.hrs=Math.min(RUN_H,H.hrs+adv/3600);q=at(H.tSim);}E=Math.max(Eb,Math.min(q.E,room));if(q.s.prog<0&&q.E<E&&E-q.E<0.05)E=q.E;s=q.s;if(q.E>room){if(Math.abs(E-Math.round(E))<1e-6)E=Math.round(E);hold();H.Eh=E;}}}
+      if(H.held){H.bph+=dt/0.5;if(H.Eh%1&&go&&!blocked()){H.Eh=Math.ceil(H.Eh-1e-6);if(H.bk>0&&H.amp<H.bk){H.amp=H.bk;H.bph=Math.floor(H.bph)+0.5;}}if(H.bkE!==H.Eh){H.bkE=H.Eh;H.bk=H.Eh%1?bankAt(H.Eh%1):null;}   /* the spoke, the screw raised and the banked balance as app.js */
         const p=((H.bph%1)+1)%1;s=bankState(p,H.amp,drv,H.bk);s.p=p;E=H.Eh;
-        if(run&&!brake&&H.amp>=ESC.AMIN&&!(H.Eh%1)&&!(blocked()&&R.blockRoom(H.Eh-1e-4)<2e-4)&&lockd(s)){H.held=false;H.bOff=(((H.bph-PL-H.tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(H.tSim).E);}}
+        if(go&&!brake&&H.amp>=ESC.AMIN&&!(H.Eh%1)&&!(blocked()&&R.blockRoom(H.Eh-1e-4)<2e-4)&&lockd(s)){H.held=false;H.bOff=(((H.bph-PL-H.tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(H.tSim).E);}}
       H.lastE=E;return{E,th:s.th,lift:s.lift,psDef:s.psDef,n:H.hrs*FUSEE_PER_HOUR,blk:H.blk,arm:H.arm,winding:H.winding,dt};};
     return H;}
   /* the phases of a beat sampled: evenly, 120 a beat (a straight line between two is then within 0.1 degree of the balance at its fastest), and closely where the escapement acts (unlocking, impulse: the detent, trip spring and escape wheel move in a few hundredths of a beat) */
@@ -69,7 +69,7 @@ const BLENDER=(()=>{
       {name:'Winding',len:wT+6,d:'wound with the key from a quarter of an hour short of run down, the sustaining spring driving the train meanwhile, until the stop-bar meets the winding stop',run:emit=>{
         const S=sim(C,hW),T0=1;let tp=0,sh=C.BX.shRest,hz=-1;
         for(let i=0;;i++){const t=i/60;if(t>T0+wT+5)break;const dt=t-tp;tp=t;const kt=t-T0,on=kt>=0&&(hz<0||kt<hz+3);   /* half turns of 0.7 s with a 0.3 s pause to change grip (kwStep); 3 s on the stop, then let go */
-          if(on){S.winding=true;const j=Math.floor(kt);S.hrs=Math.max(0,hW-HT*(j+smooth(Math.min(1,(kt-j)/0.7))));if(S.hrs===0&&hz<0)hz=kt;}else S.winding=false;
+          if(on){S.winding=true;const j=Math.floor(kt);S.hrs=Math.max(0,hW-HT*(j+smooth(Math.min(1,(kt-j)/0.7))));if(S.hrs===0&&hz<0)hz=kt;}else{if(S.winding)S.hrs=clamp(S.hrs+C.R.release()/FUSEE_PER_HOUR,0,RUN_H);S.winding=false;}   /* let go: the fusee's catch and the spring's reload come off the mainspring, as app.js's windEnd */
           const o=S.step(dt),T=on?0:C.BX.shRest;sh=lerp(sh,T,1-Math.exp(-dt*(T?12:6)));emit(t,st(Object.assign(o,{keyOn:on,sh})));}}},
       {name:'Setting the hands',len:10,d:'the key on the centre arbor sets the hands an hour on, the train going',run:emit=>runFor(sim(C,h0),20,emit,t=>({slip:3600*smooth(ramp(t,1.5,8.5)),hkeyOn:t>0.5&&t<9.5}))},
       {name:'Stop and start',len:26,d:'the locking arm stops the balance and holds it; unlocked, a twist of the box starts it; the train-blocking screw comes down between the fourth wheel\'s spokes and up again, and a twist starts it again if the tooth the spoke held stopped the balance',run:emit=>{

@@ -486,11 +486,12 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(st.tour<0){if(st.view==='exploded')tgt.explode=expV();else if(st.view==='laidout')tgt.dev=expV();}});
   /* set the hands: only the time of day changes (the balance keeps its phase) and no power is used */
   const todIn=$('#tod');let todS=-1;
-  const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;slip=0;pend.add('set');tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);};
+  let mvReset=false;   /* the hands set by turning the train to the time (setTod, Now, setTz): update() re-seats the maintaining work rather than reading the jump as running */
+  const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;mvReset=true;slip=0;pend.add('set');tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);};
   todIn.addEventListener('change',()=>setTod(todIn.value));
-  $('#now').addEventListener('click',()=>{tSim=tM=Date.now()/1000+tzOff();slip=0;pend.add('set');bookDay=dayOf(tM);lastE=null;todS=-1;rErr=0;handsSet=false;H.bOff=H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5);});   /* the beat put on the master's (the balance's phase with it): the hand lands on each half second at it */
+  $('#now').addEventListener('click',()=>{mvReset=true;tSim=tM=Date.now()/1000+tzOff();slip=0;pend.add('set');bookDay=dayOf(tM);lastE=null;todS=-1;rErr=0;handsSet=false;H.bOff=H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5);});   /* the beat put on the master's (the balance's phase with it): the hand lands on each half second at it */
   /* GMT or local: the hands move by the difference, as when they are set (held, the beats they stand at with them) */
-  const setTz=v=>{const o=tzOff();tz=v;const d=tzOff()-o;tSim+=d;tM+=d;if(H.held)H.Eh+=2*d;bookDay=dayOf(tM);if(hashReady)pend.add('set');lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
+  const setTz=v=>{mvReset=true;const o=tzOff();tz=v;const d=tzOff()-o;tSim+=d;tM+=d;if(H.held)H.Eh+=2*d;bookDay=dayOf(tM);if(hashReady)pend.add('set');lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
   document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
   /* setting the hands while it runs, as the manual does it (Sec. III, Setting While Running): gimbals latched, bezel off, the key on the square at the centre of the dial, turned by its
      shank, forward only. The minute hand goes on its marker half a minute behind the master (as the master's second hand passes 30), then to the next marker as the master's
@@ -685,7 +686,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   let MSET=0;const SUS=1,FT12=R.fs.torque(12*FUSEE_PER_HOUR),drvF=h=>R.fs.torque(h*FUSEE_PER_HOUR)/FT12*(1-MSET),drvB=h=>R.fs.pullB(clamp(h/RUN_H,0,1))/R.fs.pullB(0.5)*drvF(RUN_H/2);
   R.drvN=n=>drvF(n/FUSEE_PER_HOUR);   /* the fusee's drive for the maintaining work (update()), the set included */
   const driveNow=()=>winding?R.ssF():Math.max(hrs<RUN_H?drvF(hrs):0,R.ssF());   /* running, the spring pushes what the fusee gives it, or more while its pawl holds it */
-  const canDrive=()=>driveNow()>1e-6;   /* whether anything can drive the train: the train holds when it can't, and a twist only starts it when it can */
+  const canDrive=()=>driveNow()>1e-6,spentNow=()=>hrs<RUN_H&&!winding&&RUN_H-hrs<2&&!(ESC.ampAt(driveNow())>=ESC.AMIN);   /* spentNow: in the run down's last taper, the drive too weak to keep the balance unlocking the wheel (the train stops a few minutes before RUN_H) */   /* whether anything can drive the train: the train holds when it can't, and a twist only starts it when it can */
   /* the key lets go: the fusee turns forward to catch the winding pawls and reload the sustaining spring (update()'s catch), which takes those hours off the mainspring */
   const windEnd=()=>{if(!winding)return;hrs=clamp(hrs+R.release()/FUSEE_PER_HOUR,0,RUN_H);winding=false;};
   const H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,twT:-1},TAU_FREE=ESC.settings.TF,TAU_ARM=0.2,stopOut=$('#stopOut'),twistB=$('#twist');let lastSO=0;
@@ -695,7 +696,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   document.querySelectorAll('#armSeg button').forEach(b=>b.addEventListener('click',()=>armSet(+b.dataset.v)));
   document.querySelectorAll('#blkSeg button').forEach(b=>b.addEventListener('click',()=>blkSet(+b.dataset.v)));
   const blockedNow=()=>H.blk>R.tbs.userData.vFace;
-  function stopWhy(run){if(!run)return'Run down';if(!H.held)return'';if(H.arm>0.5)return'Balance locked';if(blockedNow())return'Train blocked';return H.amp>0.5*D2R?'Stopping: the balance swings too little to unlock':'Stopped: twist to start';}
+  function stopWhy(run){if(!run||(H.held&&spentNow()))return'Run down';if(!H.held)return'';if(H.arm>0.5)return'Balance locked';if(blockedNow())return'Train blocked';return H.amp>0.5*D2R?'Stopping: the balance swings too little to unlock':'Stopped: twist to start';}
   /* PL: the balance's phase (oscillations from its far turn before the unlocking) at which the next tooth locks at the running swing, the second hand coming to rest on its mark.
      The balance's phase is tSim/0.5 + bOff + PL (H.bph while the train stands), so with bOff and eOff 0 the hand lands on the mark k/2 s at tSim = k/2, as on a chronometer set
      to a time signal (at another swing or torque a few milliseconds off it) */
@@ -788,7 +789,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function swCalc(){const k=[ESC.A,ESC.run.rate,ESC.AMIN,ESC.settings.HS,MSET].join();if(k===swKey)return swC;swKey=k;const iso=fn=>gain(fn,12)-gain(fn,24)/2;
     const sp=fn=>{const r=steady(fn).map(q=>q[2]).filter(Number.isFinite);return[Math.min(...r),Math.max(...r)];};
     const cv=[];for(let sv=0.15;sv<=1.8;sv+=0.01){const a=ESC.ampAt(sv);if(a>=ESC.AMIN)cv.push([a/D2R,ESC.rateAt(a,sv)]);}
-    return swC={F:steady(drvF),B:steady(drvB),isoF:iso(drvF),isoB:iso(drvB),spF:sp(drvF),spB:sp(drvB),cv,sus:ESC.ampAt(SUS)/D2R};}
+    return swC={F:steady(drvF),B:steady(drvB),isoF:iso(drvF),isoB:iso(drvB),spF:sp(drvF),spB:sp(drvB),cv,sus:ESC.ampAt(SUS)/D2R,sus3:ESC.ampAt(SUS*(1-3/60*FUSEE_PER_HOUR*TAU/R.SMAX))/D2R};}
   function swDraw(now){if(!swDet.open||now-swLast<(swKind==='t'?100:500))return;swLast=now;const dk=dark(),blue=dk?'#91adf2':'#26479c',red='#c0392b',brass=dk?'#e0b44f':'#8a5d10',band=dk?'rgba(145,173,242,.12)':'rgba(38,71,156,.08)',fz=dk?'#4a5560':'#9aa3ab';
     const C=swCalc(),amin=ESC.AMIN/D2R,A=H.amp/D2R,drv=driveNow(),sg=(v,n=2)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n),man={x0:247.5,x1:270,col:band,lab:'1⅜–1½ turns'};
     if(swKind==='t'){const pts=swTr.map(q=>[(q[0]-now)/1000,q[1]]);
@@ -802,7 +803,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
         series:(B?[{pts:C.B.map(q=>[q[0],q[1]]),col:fz,w:1.6,dash:[5,4]}]:[]).concat([{pts:C.F.map(q=>[q[0],q[1]]),col:blue,w:2.2}]),
         marks:[{x:hrs,y:ESC.ampAt(drvF(hrs))/D2R,col:blue}].concat(B?[{x:hrs,y:ESC.ampAt(drvB(hrs))/D2R,col:fz,r:3}]:[]),texts:[{x:1,y:318,t:B?'swing: the fusee; dashed, a going barrel':'swing with the fusee'}]});}
     const now2=H.held?'':`<span>Now ${Math.round(A)}° each way, the escape wheel driven at ${Math.round(drv*100)}% of its torque${winding?' by the sustaining spring':''}; the escapement${ESC.settings.HS?' and hairspring':''} ${86400*(escK-1)>=0?'gain':'lose'}${ESC.settings.HS?'':'s'} ${Math.abs(86400*(escK-1)).toFixed(2)} s a day at this swing.</span>`;
-    swOut.innerHTML=`<b>Isochronism check ${sg(C.isoF)} s</b>${now2}<span>With the fusee the rate stays within ${sg(C.spF[0])} to ${sg(C.spF[1])} s a day from full wind to run down; a going barrel with the same spring would range ${sg(C.spB[0])} to ${sg(C.spB[1])}, and its isochronism check would read ${sg(C.isoB)} s. While the key turns the sustaining spring alone would swing the balance ${Math.round(C.sus)}°.${MSET?` The mainspring’s set takes ${Math.round(MSET*100)}% off its pull, so the balance swings ${Math.round(ESC.ampAt(drvF(12))/D2R)}° at 12 h, not ${Math.round(ESC.A/D2R)}°.`:''}</span>`;}
+    swOut.innerHTML=`<b>Isochronism check ${sg(C.isoF)} s</b>${now2}<span>With the fusee the rate stays within ${sg(C.spF[0])} to ${sg(C.spF[1])} s a day from full wind to run down; a going barrel with the same spring would range ${sg(C.spB[0])} to ${sg(C.spB[1])}, and its isochronism check would read ${sg(C.isoB)} s. While the key turns the sustaining spring alone drives the train: it starts at the full drive, the balance swinging ${Math.round(C.sus)}°, and relaxes as it gives the train its travel, ${Math.round(C.sus3)}° after 3 minutes.${MSET?` The mainspring’s set takes ${Math.round(MSET*100)}% off its pull, so the balance swings ${Math.round(ESC.ampAt(drvF(12))/D2R)}° at 12 h, not ${Math.round(ESC.A/D2R)}°.`:''}</span>`;}
   /* the mainspring's set: a slider in Swing and isochronism, kept in the link as mset=15 (per cent) */
   const msR=$('#msetR'),msShow=()=>{msR.nextElementSibling.textContent=MSET?Math.round(MSET*100)+'% weaker':'as new';};
   const msSet=v=>{v=clamp(Math.round(v),0,30)/100;if(v===MSET)return;MSET=v;msR.value=Math.round(v*100);msShow();rErr=0;pend.add('mainspring changed');swLast=0;wake();writeHash();};
@@ -956,7 +957,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
         ctx.font='11px "Instrument Sans",sans-serif';ctx.strokeStyle=dk?'#2a323a':'#dde1e4';ctx.fillStyle=dk?'#9aa4ad':'#5b656e';ctx.lineWidth=1;
         for(const x of[0,14,28,42,56]){ctx.beginPath();ctx.moveTo(X(x),T0);ctx.lineTo(X(x),T0+ph);ctx.stroke();ctx.textAlign='center';ctx.fillText(x+' h',X(x),h-12);}
         for(const y of[0,0.5,1,1.5]){ctx.beginPath();ctx.moveTo(L0,Y(y));ctx.lineTo(L0+pw,Y(y));ctx.stroke();ctx.textAlign='right';ctx.fillText(Math.round(y*100)+'%',L0-4,Y(y)+4);}
-        const F=R.fs,nn=q=>q*FUSEE_PER_HOUR,f=[[drvB,dk?'#5b656e':'#9aa3ab','a going barrel',[5,4]],[q=>F.pull(nn(q)),'#c0392b','spring pull'],[q=>F.rf(nn(q))/F.rf(FUSEE_TURNS),'#2e6bd8','radius on the fusee'],[drvF,dk?'#e0b44f':'#8a5d10','torque (pull × radius), 1 at 12 h']];   /* the spring illustrative (makeFusee) */
+        const F=R.fs,nn=q=>q*FUSEE_PER_HOUR,f=[[drvB,dk?'#5b656e':'#9aa3ab','a going barrel',[5,4]],[q=>F.pull(nn(q)),'#c0392b','spring pull'],[q=>F.lever(nn(q))/F.rc(F.ME),'#2e6bd8','the chain’s lever on the fusee'],[drvF,dk?'#e0b44f':'#8a5d10','torque (pull × radius), 1 at 12 h']];   /* the spring illustrative (makeFusee) */
         f.forEach(([fn,col,nm,ds])=>{ctx.strokeStyle=col;ctx.lineWidth=ds?1.6:2.2;ctx.setLineDash(ds||[]);ctx.beginPath();for(let i=0;i<=100;i++){const q=RUN_H*i/100,yy=fn(q);i?ctx.lineTo(X(q),Y(yy)):ctx.moveTo(X(q),Y(yy));}ctx.stroke();ctx.setLineDash([]);
           ctx.fillStyle=col;ctx.beginPath();ctx.arc(X(hrs),Y(fn(hrs)),ds?3:4,0,TAU);ctx.fill();});
       }
@@ -1084,7 +1085,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       const hold=()=>{H.held=true;H.bph=tSim/0.5+H.bOff+PL;};
       const stop=!go||H.amp<ESC.AMIN||brake;if(dtS>0&&lockd(q.s)&&stop){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}   /* the train stops at a locked beat. Below: the one turn back the wheel makes, the recoil as the stone is drawn out against the locked tooth (progress under 0, a few hundredths of a tooth) */
       else{if(dtS>0){let adv=dtS*rateK;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!winding)adv=Math.min(adv,(RUN_H-hrs)*3600);   /* the train's time this frame: stopping, only the beat under way finishes; the fusee runs no further than its chain */
-          tSim+=adv;rErr+=adv*(1-1/rateK);if(!winding){hrs=Math.min(RUN_H,hrs+adv/3600);if(st.speed>1)showH();}q=at(tSim);}   /* the fusee turns with the train, so its hours go with the train's time (rateK), not the master's */
+          tSim+=adv;rErr+=adv*(1-1/rateK);if(!winding&&!R.held){hrs=Math.min(RUN_H,hrs+adv/3600);if(st.speed>1)showH();}q=at(tSim);}   /* the fusee turns with the train, so its hours go with the train's time (rateK), not the master's */
         E=Math.max(Eb,Math.min(q.E,room));if(q.s.prog<0&&q.E<E&&E-q.E<0.05)E=q.E;s=q.s;if(q.E>room){if(Math.abs(E-Math.round(E))<1e-6)E=Math.round(E);hold();H.Eh=E;}}}   /* held at the spoke (a spoke met at a lock: whole) */
     if(H.held){H.bph+=dtS*rateW/0.5;
       if(H.Eh%1&&go&&!blockedNow()){H.Eh=Math.ceil(H.Eh-1e-6);if(H.bk>0&&H.amp<H.bk){H.amp=H.bk;H.bph=Math.floor(H.bph)+0.5;}}   /* the screw raised: the wheel runs on to the next tooth's lock, letting go of a balance that lay against it */
@@ -1097,7 +1098,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
     {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
@@ -1125,7 +1126,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     placeLabels(now);}
     if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}if(!ESSAY.on()){swDraw(now);testShow(now);}
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run&&!(H.held&&spentNow())?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
