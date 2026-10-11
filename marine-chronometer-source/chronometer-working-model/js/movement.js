@@ -1241,7 +1241,7 @@ function buildMovement(M){
   /* SRZ: the setup ratchet's teeth, about 42 on C Spinner's video (11:58, 12:19, 38:28: pitch 8.3-8.8 deg; References/VIDEOS.md); SUT its tips' radius, 7.05 mm: the video
      (11:58) has the cover screws' tapped holes, 23.6 mm apart, 3.35 tip radii apart (7.04), and the top-view photograph the tips at 7.0-7.3 through topview.py's map */
   const SRZ=42,SUT=7.05,SRM=SUT/(SRZ/2+0.95);
-  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:true,flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* steep faces meet the click against the mainspring's pull */
+  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* steep faces meet the click against the mainspring's pull, along a radius (KLUwI2UUCMQ 38:28, the ratchet seen whole: saw teeth, each with a short steep face near radial and a long back; at a few pixels a face, radial or a 5 deg lean can't be told apart, so radial, as the maintaining work's, the click's load then drawing it home: low confidence) */
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
   const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);hn(cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28),'42170',{sub:1});
@@ -1253,9 +1253,9 @@ function buildMovement(M){
   hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
   { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));
     /* turn the ratchet (it is fixed in running) so a steep face bears on the click's tip, then rest the click on it */
-    const pr=ratchetProf(SRZ,SRM,true),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1);
+    const pr=ratchetProf(SRZ,SRM,true,true),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1);
     srw.rotation.y=ph.psi;clk.rotation.y=ph.th;
-    { const n=SRZ,m=SRM,rp=m*n/2,ro=rp+m*0.95,ri=ro-2.25*m,pp=TAU/n,RT=[];for(let i=0;i<n;i++){const a=i*pp;RT.push([ri,a],[ro,a+pp*0.9],[ri,a+pp*0.97]);}   /* the drawn outline (gearGeo, flipped) */
+    { const n=SRZ,m=SRM,rp=m*n/2,ro=rp+m*0.95,ri=ro-2.25*m,pp=TAU/n,RT=[];for(let i=0;i<n;i++){const a=i*pp;RT.push([ri,a],[ro,a+pp*0.97],[ri,a+pp*0.97]);}   /* the drawn outline (gearGeo, flipped, radial) */
       const CP=pts.map(([x,z])=>{const c=Math.cos(ph.th),sn=Math.sin(ph.th);return[Pv[0]+x*c+z*sn,Pv[1]-x*sn+z*c];});
       const gap=psi=>{const W=RT.map(([r,a])=>{const x=r*Math.cos(a),z=r*Math.sin(a),c=Math.cos(psi),sn=Math.sin(psi);return[L.Ba[0]+x*c+z*sn,L.Ba[1]-x*sn+z*c];});let d=1e9,inside=false;
         for(const P of CP){let w=false;for(let i=0,j=W.length-1;i<W.length;j=i++){const[xi,zi]=W[i],[xj,zj]=W[j];if((zi>P[1])!==(zj>P[1])&&P[0]<(xj-xi)*(P[1]-zi)/(zj-zi)+xi)w=!w;

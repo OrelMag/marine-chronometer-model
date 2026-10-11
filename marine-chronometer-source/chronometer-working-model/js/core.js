@@ -317,7 +317,7 @@ function drawMerge(scene,meshes){
       if(re)relist();}};}
 /* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: 1,064 mm, as C Spinner's 15:54 and 32:30 give, 0.9-1.25 m; it was half the
    room between arbor and wall, the most turns, until the wall was measured 1.95 thick, 5 October 2026: half the room now left, 903 mm in the r 18.3 barrel, would
-   bend the strip to 2.68 GPa fully wound over the chain's 4.67 barrel turns, past a hardened steel spring's 2.6, tools/physics.js), on the arbor's core (ra 1.8, estimated) inside the
+   bend the strip to 2.68 GPa fully wound over the chain's 4.61 barrel turns, past a hardened steel spring's 2.6, tools/physics.js), on the arbor's core (ra 1.8, estimated) inside the
    brace (Rw: the barrel r 18.3, TN24H's cap against the fusee wheel: movement.js RB_O; r 17.6 until 5 October 2026; less its wall, 2.0, the brace, 0.25, and 0.01). Its coils lie at least gap
    apart (the grease). Its shape over the wind is solved, not drawn: tools/mainspring.py finds the strip's least bending energy from the free
    spring's natural curve (measured on the video, 32:18), its coils pressing on each other, its inner end on the hook, its outer along the brace, and writes the
