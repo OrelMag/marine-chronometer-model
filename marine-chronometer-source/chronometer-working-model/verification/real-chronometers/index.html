@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hamilton Model 21: the model checked against real chronometers</title>
+<style>
+:root{color-scheme:light;--surface:#fcfcfb;--panel:#f3f2ef;--ink:#0b0b0b;--ink2:#52514e;--muted:#8a8984;--grid:#e4e3df;--rule:#d6d5d0;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--band:rgba(42,120,214,.13);--manual:rgba(27,175,122,.12);--good:#008300;--warn:#b36b00;--bad:#c02f2f}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){color-scheme:dark;--surface:#1a1a19;--panel:#232321;--ink:#f0efec;--ink2:#c3c2b7;--muted:#8f8e86;
+  --grid:#33332f;--rule:#3d3d39;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--band:rgba(57,135,229,.18);--manual:rgba(25,158,112,.16);--good:#4cb84c;--warn:#e0a030;--bad:#e66767}}
+:root[data-theme="dark"]{color-scheme:dark;--surface:#1a1a19;--panel:#232321;--ink:#f0efec;--ink2:#c3c2b7;--muted:#8f8e86;--grid:#33332f;--rule:#3d3d39;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--band:rgba(57,135,229,.18);--manual:rgba(25,158,112,.16);--good:#4cb84c;--warn:#e0a030;--bad:#e66767}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1060px;margin:0 auto;padding:28px 22px 80px}
+h1{font-size:30px;line-height:1.25;margin:8px 0 6px}h2{font-size:23px;margin:46px 0 8px;padding-top:12px;border-top:1px solid var(--rule)}h3{font-size:18px;margin:28px 0 6px}
+p,li{color:var(--ink)}.sub{color:var(--ink2);margin:0 0 18px}.small{font-size:13.5px;color:var(--ink2)}
+a{color:var(--s1)}code{font:13.5px ui-monospace,Consolas,monospace;background:var(--panel);padding:1px 5px;border-radius:4px}
+nav.toc{background:var(--panel);border-radius:10px;padding:12px 18px;font-size:14.5px;margin:18px 0}nav.toc a{margin-right:14px;white-space:nowrap}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--panel);border-radius:10px;padding:14px 16px}.tile .k{font-size:13px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+.tile .v{font-size:24px;font-weight:650;margin:4px 0 2px}.tile .n{font-size:13.5px;color:var(--ink2)}
+.verdict{display:inline-block;font-size:12.5px;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid currentColor}
+.ok{color:var(--good)}.mid{color:var(--warn)}.no{color:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{color:var(--ink2);font-weight:600}td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+figure{margin:16px 0 22px}figure img{max-width:100%;border-radius:8px;display:block;background:#fff}figcaption{font-size:13.5px;color:var(--ink2);margin-top:6px}
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:10px 8px 4px;position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}.chart text{fill:var(--ink2);font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink2);padding:2px 10px 6px}.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px}.legend i.dot{width:9px;height:9px;border-radius:50%}
+.tip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:7px 10px;font-size:12.5px;line-height:1.45;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);display:none;max-width:280px;z-index:3}
+details{margin:6px 0 14px}summary{cursor:pointer;color:var(--ink2);font-size:13.5px}
+audio{width:100%;max-width:330px;height:34px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.callout{border-left:3px solid var(--s1);background:var(--panel);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.gap{border-left:3px solid var(--warn)}.themebtn{float:right;font-size:13px;background:var(--panel);color:var(--ink2);border:1px solid var(--rule);border-radius:8px;padding:4px 10px;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<button class="themebtn" id="theme" type="button">Light / dark</button>
+<p class="small">Marine Chronometer model · external validation · 11 October 2026 · branch <code>claude/validation</code></p>
+<h1>Does the model behave like a real Hamilton Model 21?</h1>
+<p class="sub">The model already agreed with itself and with the 1948 manual's adjustment figures: that is parity, not proof. Here it is compared with recordings of
+real, running Model 21s it was never fitted to, by two independent tests: the <b>sound</b> (the timing of the clicks inside each beat) and the <b>picture</b> (the balance's
+swing read frame by frame).</p>
+
+<div class="tiles">
+ <div class="tile"><div class="k">Escapement timing</div><div class="v ok">Confirmed</div><div class="n">The tooth strikes the impulse jewel 7–9 ms after the unlocking, as the corrected model has it. The old model's 2 ms is ruled out.</div></div>
+ <div class="tile"><div class="k">Real swings</div><div class="v">212° · ≈295°</div><div class="n">Two movements, by sound. The manual asks for 247.5–270°; the model runs at 255°.</div></div>
+ <div class="tile"><div class="k">Sound vs picture</div><div class="v mid">Agree, sound high</div><div class="n">Within their uncertainties; the sound reads about 15° above the video's likeliest reading.</div></div>
+ <div class="tile"><div class="k">Balance's run-down</div><div class="v no">TF ≥ 120–160 s</div><div class="n">A real start builds up far more slowly than the model's 52 s allows. Recorded as an open question; the model is not changed.</div></div>
+</div>
+
+<nav class="toc"><a href="#what">What is tested</a><a href="#recordings">Recordings</a><a href="#sound">The sound</a><a href="#start">A real start</a><a href="#video">The video</a>
+<a href="#agree">Do they agree?</a><a href="#implications">Implications</a><a href="#gaps">Gaps</a><a href="#method">Method &amp; files</a></nav>
+
+<h2 id="what">What is tested</h2>
+<p>A detent escapement makes its sounds once per oscillation of the balance (every 0.5 s). On the <b>active swing</b>: the discharge jewel meets the passing spring and
+lifts the detent (<b>unlocking</b>), the wheel is <b>released</b>, the detent <b>lands</b> back on its stop, the escape wheel's tooth <b>strikes</b> the impulse jewel, and the
+next tooth <b>locks</b> on the stone. Half a period later, on the <b>return swing</b>, the jewel meets the trip (gold) spring and the spring comes clear.</p>
+<p>The times between these clicks depend on the balance's swing (a larger swing crosses the escapement's angles faster) and on how the escape wheel moves once released.
+That is exactly what release 2.21.00 changed: the old model treated the wheel as a gear that lands on the jewel at once; the corrected one lets it start from rest and
+chase the jewel. The two make different predictions:</p>
+<table>
+<tr><th>At a swing of 255°</th><th>Corrected model (<code>dynamics.js</code>)</th><th>Old model (39d6919)</th></tr>
+<tr><td>Unlocking → strike</td><td class="num">7.2 ms</td><td class="num">2.1 ms</td></tr>
+<tr><td>Strike → lock</td><td class="num">8.5 ms</td><td class="num">12.9 ms</td></tr>
+<tr><td>Their ratio (does not depend on the swing)</td><td class="num">≈ 0.85 (0.77–0.89 over 190–330°)</td><td class="num">0.16</td></tr>
+</table>
+<p>Both intervals shrink as the swing grows, so one interval alone reads as a swing. Their <b>ratio</b> doesn't, so hearing all three clicks tells the models apart at any swing.</p>
+
+<h2 id="recordings">The recordings</h2>
+
+<p class="small">YouTube videos of real Model 21s, catalogued in <code>References/VIDEOS.md</code>. They are other people's work, cited and never copied into the repository:
+each is linked at the moment used. A local copy of this report, built outside the repository (<code>build_report.py --local</code>), also carries short audio excerpts and the video frames.</p>
+<table>
+<tr><th>Video</th><th>What it is</th><th>Listen</th><th>Used for</th></tr>
+<tr><td><code>s7VW3RiJ97E</code><br><span class="small">RM Watch &amp; Clock, 30 s, 1080p</span></td><td>The escapement running, close; the cleanest sound</td>
+ <td> <a href="https://www.youtube.com/watch?v=s7VW3RiJ97E&amp;t=5s">listen from 0:05</a> </td><td>Sound: the best test of the models</td></tr>
+<tr><td><code>We1dLNXiBj0</code><br><span class="small">bunnspecial, Part 1 of 3, 3 min, 720p</span></td><td>Balance visible through the plate's cutouts; at rest, then <b>started by hand at 0:55</b>; speech over it</td>
+ <td> <a href="https://www.youtube.com/watch?v=We1dLNXiBj0&amp;t=52s">the start, 0:52</a> · <a href="https://www.youtube.com/watch?v=We1dLNXiBj0&amp;t=140s">running, 2:20</a> </td><td>Sound and video: the cross-check</td></tr>
+<tr><td><code>xDKFZaY88cM</code><br><span class="small">James Martin, 3 min, 1080p</span></td><td>A unit running in an echoing room; the video is edited</td><td> <a href="https://www.youtube.com/watch?v=xDKFZaY88cM&amp;t=10s">listen from 0:10</a> </td><td>Sound: rough</td></tr>
+<tr><td><code>XJQCgMV_GA8</code><br><span class="small">Deafboy, 75 s</span></td><td>Keyhole view of the locking stone; sound only in the first 13 s</td><td> <a href="https://www.youtube.com/watch?v=XJQCgMV_GA8&amp;t=1s">listen from 0:01</a> </td><td>Sound: inconclusive</td></tr>
+<tr><td><code>FpolZSipVmQ</code><br><span class="small">pefkipefki, 68 s</span></td><td>Rollers seen from above, hand-held</td><td> <a href="https://www.youtube.com/watch?v=FpolZSipVmQ&amp;t=10s">listen from 0:10</a> </td><td>Sound: inconclusive</td></tr>
+</table>
+
+
+<h2 id="sound">Test 1: the sound (<code>tools/acoustic.py</code>)</h2>
+<p>Each recording's beats are averaged (each placed on the running average by cross-correlation; beats with speech or handling are rejected by their quiet floor),
+the clicks' <b>onsets</b> are found on the 4–12 kHz envelope in decibels (the case rings near 1 kHz, so lower bands blur), each with its spread over 200 bootstrap
+resamples of the beats. The model's events are then paired one to one with the onsets, the swing the only free parameter (then the beat error too), for both models.</p>
+
+<h3>s7VW3RiJ97E: the cleanest recording <span class="verdict ok">corrected model fits; old model can't</span></h3>
+<figure><img src="assets/ac_s7VW3RiJ97E.png" alt="Average beat of s7VW3RiJ97E with onsets and both models' best fits">
+<figcaption>Left: the active swing, right: the return swing half a period later. Orange 4–12 kHz, blue 1.5–4 kHz, in dB over the beat's quiet floor. Black lines: onsets found;
+green solid: the corrected model at its best swing; red dashed: the old model at its best. Numbers on the lines: 4 unlocking, 2 release, 3 detent lands, 0 strike, 1 lock,
+8 the jewel meets the trip spring, 9 it comes clear.</figcaption></figure>
+<ul>
+<li>Onsets at −12.44, −3.68 (the loudest), +6.63, +246.16 and +254.97 ms (±0.05–0.3 ms; 49 beats).</li>
+<li>The corrected model pairs four of them (unlocking, strike, lock, the trip spring met) at a swing of <b>212° (211–218°)</b>, χ² 0.8. Four intervals read separately all
+give 201–220°. With the beat error free too, all five onsets fit at 209° (205–213°), 12° out of beat.</li>
+<li>Measured ratio unlocking→strike / strike→lock: 8.76 / 10.31 = <b>0.85</b>; corrected model at 212°: 0.83; old model: 0.16 at any swing. The old model's best fit leaves the loudest
+click unexplained (cost 34 against 22).</li>
+</ul>
+
+<h3>The other recordings</h3>
+<div class="cols">
+ <figure><img src="assets/ac_We1dLNXiBj0.png" alt="Average beat of We1dLNXiBj0 from 2:08"><figcaption><code>We1dLNXiBj0</code> from 2:08 (running, 93 beats). Two loud clicks 6.36 ms apart; on their own they fit
+ either as unlocking→strike (about 295°) or strike→lock (331°). The start-up below shows which.</figcaption></figure>
+ <figure><img src="assets/ac_xDKFZaY88cM.png" alt="Average beat of xDKFZaY88cM"><figcaption><code>xDKFZaY88cM</code>: the room rings for 100 ms and hides the clicks after the loudest. Corrected model about 180° in beat,
+ 209° with 3° beat error: rough, and the video is edited so its sound may be too.</figcaption></figure>
+ <figure><img src="assets/ac_XJQCgMV_GA8.png" alt="Average beat of XJQCgMV_GA8"><figcaption><code>XJQCgMV_GA8</code>: only 24 beats (13 s of sound), several weak onsets on the loudest click's flank; corrected (269°) and old
+ (259°) fit about equally. Inconclusive.</figcaption></figure>
+ <figure><img src="assets/ac_FpolZSipVmQ.png" alt="Average beat of FpolZSipVmQ"><figcaption><code>FpolZSipVmQ</code>: the loudest click is spread over 8 ms and no clear click is heard on the return swing; every fit pairs only two
+ or three clicks. Inconclusive.</figcaption></figure>
+</div>
+
+<h2 id="start">A real start: the best test (<code>We1dLNXiBj0</code>)</h2>
+<p>In <code>We1dLNXiBj0</code> the balance stands still until 0:52, a stick turns it about 65° and lets go at 0:55.2, and the escapement builds the swing up over the next
+minutes. The video measures that swing; the sound, read in 6-second stretches, shows the clicks moving as it grows. This turns one recording into a whole range of swings.</p>
+<figure><img src="assets/we1d_stretches.png" alt="Average beats in successive 6-second stretches, the unlocking and lock closing in on the strike">
+<figcaption>Each trace is the average of about 11 beats. The loudest click (the strike) is at 0. The unlocking (about −9 ms) and the lock (from +12 ms at 1:05 to +5 ms at 2:05) close in
+as the swing grows. After about 2:05 the lock falls under the detection threshold; the unlocking stays.</figcaption></figure>
+
+<h3>Strike → lock against the swing the video measures</h3>
+<div class="chart" id="c1"></div>
+<details><summary>Data table</summary><div id="t1"></div></details>
+<p>From 1:23 to 2:05 the corrected model pairs the three clicks as unlocking, strike and lock with only the swing free, χ² ≈ 0 in all nine stretches, and the old model
+fits worse in every one. The measured points fall along the corrected curve's shape (and nowhere near the old one), but sit 6–14 % below it at the video's swing: equivalently,
+the sound reads a swing 15–30° above the video's from 1:20 on (the horizontal bars span the video's possible readings).</p>
+
+<h3>The swing through the start: video, sound, and the model</h3>
+<div class="chart" id="c2"></div>
+<details><summary>Data table</summary><div id="t2"></div></details>
+<p>The video's swing (blue line; shaded: its possible readings, a screw hole apart) rises from 66° to 244–267° at 2:03 and is still rising about 1°/s. The sound's
+swing (orange dots) agrees with it within 2–15° up to about 180°, then reads higher, and settles at about 295° (290–302°, eight stretches) after 2:10. The grey curves are the same start run in the model
+(<code>tools/startup.js</code>): with the model's balance run-down <code>TF</code> = 52 s the swing builds up too fast and flattens too early (15–16° rms from the video at any
+drive); a run-down of 160 s or more, with the drive at 55–65 % of the model's torque, follows the video within 3–5° rms.</p>
+
+<h2 id="video">Test 2: the swing on video (<code>tools/swing.py</code>)</h2>
+<p>At 30 frames a second a 0.5 s oscillation has only 15 frames, and in mid-swing the balance turns about 100° per frame and is a blur. Near each turning point it is almost
+still, so those frames are nearly sharp. The tool finds the turning points by mirror symmetry (frames equally before and after a turn look alike), reads the screws' angle there,
+and measures how far each extreme moves from one turning point to the same side's two periods later.</p>
+
+<p>The frames it reads are not reproduced here (the video is other people's work): the balance at rest at <a href="https://www.youtube.com/watch?v=We1dLNXiBj0&amp;t=49s">0:49</a>, held by the stick and let go at
+<a href="https://www.youtube.com/watch?v=We1dLNXiBj0&amp;t=55s">0:55.2</a>, its turning points through to <a href="https://www.youtube.com/watch?v=We1dLNXiBj0&amp;t=121s">2:01</a>; <code>swing.py</code> draws them, with the screws' 5° ticks, into <code>$MC_VIDEO/swing</code>.</p>
+<figure><img src="assets/swing_We1dLNXiBj0.png" alt="Measured swing against time with alias band, and growth rate per side">
+<figcaption>Left: the measured swing (black, the middle reading; grey band, the alternatives) with the averaged build-up law fitted (orange: settling at 292°, TF 102 s), the manual's
+band (green) and the model's 255° (blue line). Right: the growth rate from each side of the swing; the two sides agree, and a slip of one screw hole would show as a 15°/s spike.</figcaption></figure>
+<ul>
+<li><b>256 ± 9° at 2:03.4</b>, four possible readings 244, 252, 259, 267°: the start is known only modulo half a screw hole (7.5°), the growth modulo a hole (15°). <b>267° is the likeliest</b>
+(its growth, 196.8°, is nearest the summed 191°). A +30° slip is unlikely (it needs a 9°/s burst in 4.8 s with no screws in view).</li>
+<li>This is a start, not a steady swing: a lower bound on this movement's running swing.</li>
+<li>Rejected, with the reasons in <code>swing.json</code>: <code>xDKFZaY88cM</code> (edited: frames repeated and held), <code>FpolZSipVmQ</code> (rollers edge-on), <code>s7VW3RiJ97E</code> (5 s from above, panning),
+<code>XJQCgMV_GA8</code>, <code>bEWF2ivi1Rg</code>, <code>R-DrJz1DYOY</code> (no balance in view from above).</li>
+</ul>
+
+<h2 id="agree">Do the two tests agree?</h2>
+<div class="chart" id="c3"></div>
+<details><summary>Data table</summary><div id="t3"></div></details>
+<p><b>Yes, within their uncertainties, with the sound a little high.</b> Through the start the two agree within 2–15° up to about 180°. Above, the sound reads 15° (the
+video's likeliest reading) to 30° (its middle) higher: about 1.5 σ of the sound's reading (±10° from ±0.3 ms) and one screw hole of the video's. The sound's running swing,
+about 295° (290–302°), sits inside the video's extrapolated 280–311°. If the excess is real, the model's strike-to-lock arc is about 6 % too long; these data can't separate that from the video's aliases.</p>
+
+<h2 id="implications">Implications for the model</h2>
+<ol>
+<li><b>The corrected escapement is right where it mattered.</b> On real Model 21s the wheel catches the impulse jewel 7–9 ms after the unlocking, and the intervals follow the swing
+as <code>dynamics.js</code> computes them, through a whole start from 136° to 286°. The old kinematic wheel (strike 2 ms after the unlocking) is ruled out by the cleanest recording and by every stretch of the start.</li>
+<li><b>Real swings vary from unit to unit.</b> 212° on one movement, about 295° running on another (about 180–210° on a third, roughly). The manual's 247.5–270° and the model's 255° lie between:
+the model's swing is a reasonable middle, not a measured value for any one chronometer.</li>
+<li><b>Each movement has a beat error.</b> The return swing's clicks fall a few milliseconds off where an in-beat balance puts them, differently in each recording: 5–12° out of beat when fitted.
+The model assumes a chronometer exactly in beat (the manual's adjustment); that is fine, but it means the sound can't test the trip spring's geometry or the discharge jewel's rounded end.</li>
+<li><b>The balance loses its swing more slowly than the model says.</b> A real start rises far more slowly than a 52 s run-down allows; the fit wants TF of at least about 120–160 s
+(Q ≈ 750–1,000) with about 55–65 % of the model's drive, and gives no upper bound. That is beyond the 32–62 s the balance's parts allow in <code>physics.js</code>. It is recorded
+in <code>OPEN-QUESTIONS.md</code>; the model is not changed on one hand-started movement whose absolute swing is known only to a screw hole.</li>
+<li><b>If the sound's small excess is real</b>, the model's arc from strike to lock is about 6 % too long (the strike a little early in angle, or the lock a little late).</li>
+</ol>
+
+<h2 id="gaps">Gaps, and what would close them</h2>
+<table>
+<tr><th>Gap</th><th>Why it matters</th><th>What would close it</th></tr>
+<tr><td>No steady swing seen on video without aliases</td><td>The video reading is known only to a 15° screw hole, which limits the sound–picture comparison to ~1.5 σ</td><td>A Model 21 running steadily with one balance feature in view from above (a timing weight, an arm's end) for a minute, on a tripod</td></tr>
+<tr><td>The balance's free run-down never measured</td><td>Sets Q (the model's <code>TF</code> 52 s), the drive the train must give, and the build-up time; the start suggests ≥ 120–160 s</td><td>A video of the balance swinging freely with the train held by the blocking screw, its swing timed until it stops</td></tr>
+<tr><td>One clean recording decides old vs corrected outright</td><td>Elsewhere the unlocking is too quiet or the room too live to hear all three clicks</td><td>More close recordings with a still microphone, or a timegrapher (it hears the same clicks)</td></tr>
+<tr><td>Which click is which, on a steady recording</td><td>Two loud clicks 6.4 ms apart read as about 295° or 331° depending on their names</td><td>A start (as in <code>We1dLNXiBj0</code>) or a contact microphone with a slowed-down video of the escapement in sync</td></tr>
+<tr><td>Beat error confounds the return swing</td><td>Hides any test of the trip spring and the jewel's rounded end</td><td>Video of the escapement's return swing at high frame rate, or a unit put exactly in beat first</td></tr>
+<tr><td>Different movements, different states</td><td>Swings range 180–295°; mainspring, oil and adjustment are unknown</td><td>A timegrapher reading (swing, beat error, rate) on a serviced unit, fully wound</td></tr>
+<tr><td>Recording artefacts</td><td>YouTube's Opus coding smears transients by up to ~1 ms (0.3 ms allowed per onset); the video in <code>xDKFZaY88cM</code> is edited</td><td>Original, uncompressed recordings</td></tr>
+</table>
+
+<h2 id="method">Method, limits and files</h2>
+<ul>
+<li><b>Sound:</b> <code>python acoustic.py s7VW3RiJ97E We1dLNXiBj0 xDKFZaY88cM XJQCgMV_GA8 FpolZSipVmQ --write</code> (about 4 min) and <code>python acoustic.py We1dLNXiBj0 --every 6 --from 0:56 --write</code> (30 s).
+Onset: the level first 1.5 dB over its highest 4–2 ms before, on a rise reaching 2 dB; an onset of 3 dB or more in 80 % of resamples must be explained by the fit, a weaker one may be.
+Cost: χ² of the pairs + 4 for each model event unheard + 9 for each strong onset unexplained. Only intervals inside a beat are used: the recordings' clocks are good to tens of ppm, not to the rate.</li>
+<li><b>Video:</b> <code>python swing.py We1dLNXiBj0</code> (7 s). <b>Start in the model:</b> <code>node startup.js</code> (5 min).</li>
+<li><b>Results in the repository</b> (branch <code>claude/validation</code>, not merged): <code>tools/acoustic.json</code>, <code>acoustic_stretches.json</code>, <code>swing.json</code>; the model README's
+"Checked against real chronometers", <code>References/VIDEOS.md</code> (Measurements, Methods), <code>OPEN-QUESTIONS.md</code>.</li>
+
+<li><b>This report:</b> <code>verification/real-chronometers/</code>, rebuilt by <code>python build_report.py</code> there (its model curves by <code>node reportdata.js</code>, about 10 s); <code>python build_report.py --local DIR</code> builds a fuller copy, with audio excerpts and video frames, outside the repository.</li>
+</ul>
+<p class="small">Readings are cited by video ID and time. "Sure", "fairly sure", "rough" and "inconclusive" are stated per result in <code>References/VIDEOS.md</code>.</p>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+const DATA={"model_sl": [[132.0, 18.415], [134.0, 18.106], [136.0, 17.798], [138.0, 17.49], [140.0, 17.182], [142.0, 16.873], [144.0, 16.565], [146.0, 16.28], [148.0, 16.028], [150.0, 15.777], [152.0, 15.526], [154.0, 15.275], [156.0, 15.023], [158.0, 14.786], [160.0, 14.573], [162.0, 14.361], [164.0, 14.148], [166.0, 13.936], [168.0, 13.724], [170.0, 13.542], [172.0, 13.374], [174.0, 13.207], [176.0, 13.039], [178.0, 12.871], [180.0, 12.703], [182.0, 12.535], [184.0, 12.367], [186.0, 12.199], [188.0, 12.031], [190.0, 11.876], [192.0, 11.742], [194.0, 11.608], [196.0, 11.474], [198.0, 11.34], [200.0, 11.206], [202.0, 11.072], [204.0, 10.938], [206.0, 10.804], [208.0, 10.674], [210.0, 10.565], [212.0, 10.456], [214.0, 10.347], [216.0, 10.239], [218.0, 10.13], [220.0, 10.021], [222.0, 9.912], [224.0, 9.804], [226.0, 9.705], [228.0, 9.614], [230.0, 9.523], [232.0, 9.432], [234.0, 9.341], [236.0, 9.25], [238.0, 9.158], [240.0, 9.067], [242.0, 8.984], [244.0, 8.904], [246.0, 8.825], [248.0, 8.745], [250.0, 8.665], [252.0, 8.586], [254.0, 8.506], [256.0, 8.429], [258.0, 8.36], [260.0, 8.29], [262.0, 8.221], [264.0, 8.151], [266.0, 8.082], [268.0, 8.012], [270.0, 7.945], [272.0, 7.884], [274.0, 7.824], [276.0, 7.763], [278.0, 7.702], [280.0, 7.642], [282.0, 7.581], [284.0, 7.521], [286.0, 7.46], [288.0, 7.399], [290.0, 7.342], [292.0, 7.291], [294.0, 7.241], [296.0, 7.19], [298.0, 7.139], [300.0, 7.088], [302.0, 7.037], [304.0, 6.987], [306.0, 6.936], [308.0, 6.885], [310.0, 6.84], [312.0, 6.794], [314.0, 6.748], [316.0, 6.702], [318.0, 6.656], [320.0, 6.61], [322.0, 6.564], [324.0, 6.518], [326.0, 6.472], [328.0, 6.427], [330.0, 6.381], [332.0, 6.344], [334.0, 6.315], [336.0, 6.286], [338.0, 6.256], [340.0, 6.227], [342.0, 6.198], [344.0, 6.169], [346.0, 6.14], [348.0, 6.11], [350.0, 6.09]], "old_sl": [[132.0, 25.062], [134.0, 24.685], [136.0, 24.319], [138.0, 23.964], [140.0, 23.619], [142.0, 23.284], [144.0, 22.958], [146.0, 22.641], [148.0, 22.333], [150.0, 22.034], [152.0, 21.742], [154.0, 21.458], [156.0, 21.181], [158.0, 20.911], [160.0, 20.649], [162.0, 20.392], [164.0, 20.142], [166.0, 19.898], [168.0, 19.66], [170.0, 19.428], [172.0, 19.201], [174.0, 18.979], [176.0, 18.762], [178.0, 18.55], [180.0, 18.343], [182.0, 18.141], [184.0, 17.943], [186.0, 17.749], [188.0, 17.56], [190.0, 17.374], [192.0, 17.192], [194.0, 17.014], [196.0, 16.84], [198.0, 16.669], [200.0, 16.502], [202.0, 16.338], [204.0, 16.177], [206.0, 16.02], [208.0, 15.865], [210.0, 15.714], [212.0, 15.565], [214.0, 15.419], [216.0, 15.276], [218.0, 15.135], [220.0, 14.997], [222.0, 14.862], [224.0, 14.729], [226.0, 14.598], [228.0, 14.47], [230.0, 14.343], [232.0, 14.219], [234.0, 14.098], [236.0, 13.978], [238.0, 13.86], [240.0, 13.744], [242.0, 13.63], [244.0, 13.518], [246.0, 13.408], [248.0, 13.3], [250.0, 13.193], [252.0, 13.088], [254.0, 12.985], [256.0, 12.883], [258.0, 12.783], [260.0, 12.685], [262.0, 12.588], [264.0, 12.492], [266.0, 12.398], [268.0, 12.305], [270.0, 12.214], [272.0, 12.124], [274.0, 12.035], [276.0, 11.948], [278.0, 11.862], [280.0, 11.777], [282.0, 11.693], [284.0, 11.611], [286.0, 11.529], [288.0, 11.449], [290.0, 11.37], [292.0, 11.292], [294.0, 11.215], [296.0, 11.139], [298.0, 11.064], [300.0, 10.99], [302.0, 10.918], [304.0, 10.846], [306.0, 10.775], [308.0, 10.705], [310.0, 10.635], [312.0, 10.567], [314.0, 10.5], [316.0, 10.433], [318.0, 10.367], [320.0, 10.303], [322.0, 10.238], [324.0, 10.175], [326.0, 10.113], [328.0, 10.051], [330.0, 9.99], [332.0, 9.93], [334.0, 9.87], [336.0, 9.811], [338.0, 9.753], [340.0, 9.696], [342.0, 9.639], [344.0, 9.583], [346.0, 9.527], [348.0, 9.473], [350.0, 9.418]], "pts": [{"t": 65.0, "x": 142.26, "xlo": 129.32, "xhi": 142.26, "xmid": 135.84, "y": 17.42, "A": 138.4}, {"t": 71.0, "x": 170.36999999999998, "xlo": 155.20999999999998, "xhi": 170.36999999999998, "xmid": 162.83999999999997, "y": 13.67, "A": 168.5}, {"t": 77.0, "x": 190.71999999999997, "xlo": 174.1, "xhi": 190.71999999999997, "xmid": 182.45999999999998, "y": 11.43, "A": 196.6}, {"t": 83.0, "x": 205.0, "xlo": 187.17999999999998, "xhi": 205.0, "xmid": 196.14, "y": 10.2, "A": 216.7}, {"t": 89.0, "x": 217.14, "xlo": 198.4, "xhi": 217.14, "xmid": 207.82, "y": 9.11, "A": 239.1}, {"t": 95.0, "x": 226.89, "xlo": 207.43, "xhi": 226.89, "xmid": 217.21, "y": 8.62, "A": 251.2}, {"t": 101.0, "x": 236.39999999999998, "xlo": 216.26, "xhi": 236.39999999999998, "xmid": 226.38, "y": 8.3, "A": 259.6}, {"t": 107.0, "x": 245.57999999999998, "xlo": 224.72, "xhi": 245.57999999999998, "xmid": 235.2, "y": 7.98, "A": 268.8}, {"t": 113.0, "x": 254.82, "xlo": 233.28, "xhi": 254.82, "xmid": 244.09999999999997, "y": 7.7, "A": 278.0}, {"t": 119.0, "x": 263.19, "xlo": 240.93, "xhi": 263.19, "xmid": 252.10999999999999, "y": 7.6, "A": 281.5}], "snd": [{"t": 65.0, "A": 138.4, "how": "strike to lock", "ms": 17.42}, {"t": 71.0, "A": 168.5, "how": "strike to lock", "ms": 13.67}, {"t": 77.0, "A": 196.6, "how": "strike to lock", "ms": 11.43}, {"t": 83.0, "A": 216.7, "how": "strike to lock", "ms": 10.2}, {"t": 89.0, "A": 239.1, "how": "strike to lock", "ms": 9.11}, {"t": 95.0, "A": 251.2, "how": "strike to lock", "ms": 8.62}, {"t": 101.0, "A": 259.6, "how": "strike to lock", "ms": 8.3}, {"t": 107.0, "A": 268.8, "how": "strike to lock", "ms": 7.98}, {"t": 113.0, "A": 278.0, "how": "strike to lock", "ms": 7.7}, {"t": 119.0, "A": 281.5, "how": "strike to lock", "ms": 7.6}, {"t": 125.0, "A": 285.9, "how": "strike to lock", "ms": 7.46}, {"t": 131.0, "A": 290.2, "how": "unlocking to strike", "ms": 6.39}, {"t": 143.0, "A": 295.3, "how": "unlocking to strike", "ms": 6.29}, {"t": 149.0, "A": 291.1, "how": "unlocking to strike", "ms": 6.37}, {"t": 155.0, "A": 302.1, "how": "unlocking to strike", "ms": 6.16}, {"t": 161.0, "A": 293.0, "how": "unlocking to strike", "ms": 6.34}, {"t": 167.0, "A": 295.7, "how": "unlocking to strike", "ms": 6.29}, {"t": 173.0, "A": 291.0, "how": "unlocking to strike", "ms": 6.38}], "vid": {"low": [[55.4, 62.6], [59.4, 97.7], [63.4, 121.6], [67.4, 140.9], [71.4, 156.8], [75.4, 170.3], [79.4, 179.8], [83.4, 188.0], [87.4, 195.8], [91.4, 202.3], [95.4, 208.0], [99.4, 214.1], [103.4, 219.5], [107.4, 225.3], [111.4, 231.0], [115.4, 236.7], [119.4, 241.4], [123.4, 244.4]], "mid": [[55.4, 66.4], [59.4, 103.0], [63.4, 127.8], [67.4, 147.9], [71.4, 164.5], [75.4, 178.5], [79.4, 188.4], [83.4, 197.0], [87.4, 205.1], [91.4, 211.9], [95.4, 217.8], [99.4, 224.1], [103.4, 229.8], [107.4, 235.8], [111.4, 241.7], [115.4, 247.7], [119.4, 252.6], [123.4, 255.7]], "high": [[55.4, 70.1], [59.4, 108.2], [63.4, 133.9], [67.4, 154.8], [71.4, 172.1], [75.4, 186.6], [79.4, 196.9], [83.4, 205.9], [87.4, 214.3], [91.4, 221.4], [95.4, 227.5], [99.4, 234.0], [103.4, 240.0], [107.4, 246.2], [111.4, 252.3], [115.4, 258.6], [119.4, 263.7], [123.4, 266.9]]}, "start": {"TF52": [[55.7, 83.4], [56.7, 97.5], [57.7, 109.2], [58.7, 119.3], [59.7, 128], [60.7, 135.7], [61.7, 142.7], [62.7, 149], [63.7, 154.8], [64.7, 160], [65.7, 164.9], [66.7, 169.4], [67.7, 173.5], [68.7, 177.4], [69.7, 180.9], [70.7, 184.3], [71.7, 187.4], [72.7, 190.3], [73.7, 193], [74.7, 195.5], [75.7, 197.9], [76.7, 200.2], [77.7, 202.3], [78.7, 204.2], [79.7, 206.1], [80.7, 207.9], [81.7, 209.5], [82.7, 211.1], [83.7, 212.6], [84.7, 213.9], [85.7, 215.3], [86.7, 216.5], [87.7, 217.7], [88.7, 218.8], [89.7, 219.8], [90.7, 220.8], [91.7, 221.8], [92.7, 222.6], [93.7, 223.5], [94.7, 224.3], [95.7, 225], [96.7, 225.7], [97.7, 226.4], [98.7, 227], [99.7, 227.7], [100.7, 228.2], [101.7, 228.8], [102.7, 229.3], [103.7, 229.8], [104.7, 230.2], [105.7, 230.7], [106.7, 231.1], [107.7, 231.5], [108.7, 231.9], [109.7, 232.2], [110.7, 232.6], [111.7, 232.9], [112.7, 233.2], [113.7, 233.5], [114.7, 233.8], [115.7, 234], [116.7, 234.3], [117.7, 234.5], [118.7, 234.8], [119.7, 235], [120.7, 235.2], [121.7, 235.4], [122.7, 235.5], [123.7, 235.7]], "TF160": [[55.7, 79.7], [56.7, 90.6], [57.7, 100], [58.7, 108.3], [59.7, 115.8], [60.7, 122.7], [61.7, 129], [62.7, 134.9], [63.7, 140.4], [64.7, 145.5], [65.7, 150.4], [66.7, 155], [67.7, 159.3], [68.7, 163.5], [69.7, 167.4], [70.7, 171.1], [71.7, 174.7], [72.7, 178.1], [73.7, 181.4], [74.7, 184.5], [75.7, 187.5], [76.7, 190.3], [77.7, 193.1], [78.7, 195.8], [79.7, 198.3], [80.7, 200.8], [81.7, 203.2], [82.7, 205.5], [83.7, 207.7], [84.7, 209.8], [85.7, 211.9], [86.7, 213.9], [87.7, 215.8], [88.7, 217.6], [89.7, 219.5], [90.7, 221.2], [91.7, 222.9], [92.7, 224.5], [93.7, 226.1], [94.7, 227.7], [95.7, 229.2], [96.7, 230.6], [97.7, 232], [98.7, 233.4], [99.7, 234.7], [100.7, 236], [101.7, 237.2], [102.7, 238.5], [103.7, 239.6], [104.7, 240.8], [105.7, 241.9], [106.7, 243], [107.7, 244], [108.7, 245.1], [109.7, 246.1], [110.7, 247], [111.7, 248], [112.7, 248.9], [113.7, 249.8], [114.7, 250.6], [115.7, 251.5], [116.7, 252.3], [117.7, 253.1], [118.7, 253.9], [119.7, 254.7], [120.7, 255.4], [121.7, 256.1], [122.7, 256.8], [123.7, 257.5]], "TF320": [[55.7, 79], [56.7, 89.1], [57.7, 98], [58.7, 105.9], [59.7, 113.2], [60.7, 119.8], [61.7, 126], [62.7, 131.8], [63.7, 137.2], [64.7, 142.4], [65.7, 147.2], [66.7, 151.8], [67.7, 156.2], [68.7, 160.4], [69.7, 164.4], [70.7, 168.2], [71.7, 171.9], [72.7, 175.4], [73.7, 178.8], [74.7, 182.1], [75.7, 185.3], [76.7, 188.3], [77.7, 191.3], [78.7, 194.1], [79.7, 196.9], [80.7, 199.5], [81.7, 202.1], [82.7, 204.6], [83.7, 207], [84.7, 209.4], [85.7, 211.7], [86.7, 213.9], [87.7, 216.1], [88.7, 218.2], [89.7, 220.2], [90.7, 222.2], [91.7, 224.2], [92.7, 226.1], [93.7, 227.9], [94.7, 229.7], [95.7, 231.5], [96.7, 233.2], [97.7, 234.8], [98.7, 236.5], [99.7, 238.1], [100.7, 239.6], [101.7, 241.1], [102.7, 242.6], [103.7, 244.1], [104.7, 245.5], [105.7, 246.9], [106.7, 248.2], [107.7, 249.5], [108.7, 250.8], [109.7, 252.1], [110.7, 253.4], [111.7, 254.6], [112.7, 255.8], [113.7, 256.9], [114.7, 258.1], [115.7, 259.2], [116.7, 260.3], [117.7, 261.3], [118.7, 262.4], [119.7, 263.4], [120.7, 264.4], [121.7, 265.4], [122.7, 266.4], [123.7, 267.3]]}, "rows": [["s7VW3RiJ97E", "sound", 212, 211, 218, "four clicks, in beat"], ["s7VW3RiJ97E", "sound", 209, 205, 213, "five clicks, 12\u00b0 out of beat"], ["We1dLNXiBj0 running (2:11-2:53)", "sound", 294, 290, 302, "unlocking to strike, 8 stretches"], ["We1dLNXiBj0 at 2:03 (still rising)", "video", 267, 244, 267, "four readings 244-267; 267 likeliest"], ["We1dLNXiBj0 at 2:03 (still rising)", "sound", 286, 276, 296, "strike to lock at 2:05, \u00b10.3 ms"], ["We1dLNXiBj0 settling (extrapolated)", "video", 292, 280, 311, "averaged build-up law"], ["xDKFZaY88cM", "sound", 195, 180, 210, "rough: echoing room, edited video"]]};
+const NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id),tip=$('tip');
+const el=(n,a={},p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const ticks=(a,b,n)=>{const s=Math.pow(10,Math.floor(Math.log10((b-a)/n))),m=[1,2,5,10].find(k=>(b-a)/(s*k)<=n)*s,o=[];for(let v=Math.ceil(a/m)*m;v<=b+1e-9;v+=m)o.push(+v.toFixed(6));return o;};
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function showTip(chart,html,x,y){tip.innerHTML=html;tip.style.display='block';const r=chart.getBoundingClientRect();let L=r.left+window.scrollX+x+14,T=r.top+window.scrollY+y-10;
+  tip.style.left=L+'px';tip.style.top=T+'px';const w=tip.offsetWidth;if(L+w>window.scrollX+document.documentElement.clientWidth-8)tip.style.left=(L-w-28)+'px';}
+/* a chart: x/y domains, series of lines, dots (with optional x error bars) and bands; hover finds the nearest point in data space */
+function chart(id,o){const host=$(id);host.innerHTML='';const W=980,H=o.h||400,m={l:58,r:o.r||120,t:16,b:46};const sx=v=>m.l+(v-o.x[0])/(o.x[1]-o.x[0])*(W-m.l-m.r),sy=v=>H-m.b-(v-o.y[0])/(o.y[1]-o.y[0])*(H-m.t-m.b);
+  const lg=document.createElement('div');lg.className='legend';host.appendChild(lg);
+  for(const s of o.series){const sp=document.createElement('span');sp.innerHTML=`<i class="${s.type==='dots'?'dot':''}" style="background:${s.type==='band'?css('--band'):`var(${s.c})`};${s.dash?'background:repeating-linear-gradient(90deg,var('+s.c+') 0 5px,transparent 5px 8px)':''}"></i>${s.name}`;lg.appendChild(sp);}
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.label},host);
+  for(const b of o.hbands||[])el('rect',{x:m.l,width:W-m.l-m.r,y:sy(b.y1),height:sy(b.y0)-sy(b.y1),fill:`var(${b.c})`},svg);
+  for(const v of ticks(o.y[0],o.y[1],6)){el('line',{x1:m.l,x2:W-m.r,y1:sy(v),y2:sy(v),stroke:'var(--grid)'},svg);el('text',{x:m.l-8,y:sy(v)+4,'text-anchor':'end'},svg).textContent=v;}
+  for(const v of ticks(o.x[0],o.x[1],9)){el('text',{x:sx(v),y:H-m.b+18,'text-anchor':'middle'},svg).textContent=o.xf?o.xf(v):v;}
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,stroke:'var(--muted)'},svg);
+  el('text',{x:(m.l+W-m.r)/2,y:H-6,'text-anchor':'middle'},svg).textContent=o.xl;const yl=el('text',{x:14,y:(m.t+H-m.b)/2,'text-anchor':'middle',transform:`rotate(-90 14 ${(m.t+H-m.b)/2})`},svg);yl.textContent=o.yl;
+  for(const r of o.vrefs||[]){el('line',{x1:sx(r.x),x2:sx(r.x),y1:m.t,y2:H-m.b,stroke:'var(--muted)','stroke-dasharray':'3 4'},svg);el('text',{x:sx(r.x)+4,y:m.t+12},svg).textContent=r.t;}
+  for(const r of o.hrefs||[]){el('line',{x1:m.l,x2:W-m.r,y1:sy(r.y),y2:sy(r.y),stroke:'var(--muted)','stroke-dasharray':'3 4'},svg);el('text',{x:W-m.r+6,y:sy(r.y)+4},svg).textContent=r.t;}
+  const pts=[];
+  for(const s of o.series){
+    if(s.type==='band'){const d=s.lo.map(p=>`${sx(p[0])},${sy(p[1])}`).concat(s.hi.slice().reverse().map(p=>`${sx(p[0])},${sy(p[1])}`));el('polygon',{points:d.join(' '),fill:'var(--band)'},svg);continue;}
+    if(s.type==='line'){el('polyline',{points:s.data.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' '),fill:'none',stroke:`var(${s.c})`,'stroke-width':2,'stroke-dasharray':s.dash||'','stroke-linejoin':'round'},svg);
+      const q=s.data[s.lab??s.data.length-1];if(s.label)el('text',{x:sx(q[0])+6,y:sy(q[1])+(s.dy||4),style:'fill:var(--ink2);font-size:12px'},svg).textContent=s.label;
+      for(const p of s.data)pts.push({x:p[0],y:p[1],s,tip:s.tip?s.tip(p):`${s.name}<br>${o.xl}: ${p[0]}<br>${o.yl}: ${p[1]}`});}
+    if(s.type==='dots')for(const p of s.data){if(p.xlo!=null)el('line',{x1:sx(p.xlo),x2:sx(p.xhi),y1:sy(p.y),y2:sy(p.y),stroke:`var(${s.c})`,'stroke-width':1.5,opacity:.7},svg);
+      el('circle',{cx:sx(p.x),cy:sy(p.y),r:5,fill:`var(${s.c})`,stroke:'var(--surface)','stroke-width':2},svg);pts.push({x:p.x,y:p.y,s,tip:s.tip(p)});
+      if(s.label&&p===s.data[s.data.length-1])el('text',{x:sx(p.x)+9,y:sy(p.y)+(s.dy||4),style:'fill:var(--ink2);font-size:12px'},svg).textContent=s.label;}}
+  const hov=el('circle',{r:7,fill:'none',stroke:'var(--ink)','stroke-width':1.5,visibility:'hidden'},svg);
+  svg.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect(),k=W/r.width,X=(ev.clientX-r.left)*k,Y=(ev.clientY-r.top)*k;let b=null,bd=1e9;
+    for(const p of pts){const d=Math.hypot(sx(p.x)-X,sy(p.y)-Y);if(d<bd){bd=d;b=p;}}
+    if(b&&bd<40){hov.setAttribute('cx',sx(b.x));hov.setAttribute('cy',sy(b.y));hov.setAttribute('visibility','visible');showTip(host,b.tip,(sx(b.x))/k,(sy(b.y))/k);}else{hov.setAttribute('visibility','hidden');tip.style.display='none';}});
+  svg.addEventListener('mouseleave',()=>{hov.setAttribute('visibility','hidden');tip.style.display='none';});}
+const mmss=s=>`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+const table=(id,head,rows)=>{$(id).innerHTML='<table><tr>'+head.map(h=>`<th>${h}</th>`).join('')+'</tr>'+rows.map(r=>'<tr>'+r.map(c=>`<td class="num">${c}</td>`).join('')+'</tr>').join('')+'</table>';};
+function draw(){
+  chart('c1',{label:'Strike to lock interval against the swing: corrected model, old model and measured points',x:[130,350],y:[0,20],xl:'swing (°)',yl:'strike → lock (ms)',
+    vrefs:[{x:255,t:'model 255°'}],series:[
+    {type:'line',name:'corrected model (dynamics.js)',c:'--s1',data:DATA.model_sl,label:'corrected',lab:DATA.model_sl.length-1,dy:14,tip:p=>`corrected model<br>swing ${p[0]}°: ${p[1].toFixed(2)} ms`},
+    {type:'line',name:'old model (kinematic wheel)',c:'--s2',data:DATA.old_sl,label:'old',dy:-6,tip:p=>`old model<br>swing ${p[0]}°: ${p[1].toFixed(2)} ms`},
+    {type:'dots',name:'measured, We1dLNXiBj0 (x: video swing, likeliest reading; bar: all readings)',c:'--s3',data:DATA.pts,label:'measured',dy:16,
+     tip:p=>`<b>We1dLNXiBj0 ${mmss(p.t)}</b><br>strike → lock ${p.y.toFixed(2)} ms<br>video swing ${p.xlo.toFixed(0)}–${p.xhi.toFixed(0)}° (middle ${p.xmid.toFixed(0)}°)<br>read on the corrected model: ${p.A.toFixed(0)}°`}]});
+  table('t1',['time','strike → lock (ms)','video swing, readings (°)','video, middle (°)','sound read on the model (°)'],DATA.pts.map(p=>[mmss(p.t),p.y.toFixed(2),`${p.xlo.toFixed(0)}–${p.xhi.toFixed(0)}`,p.xmid.toFixed(0),p.A.toFixed(0)]));
+  const V=DATA.vid,S=DATA.start;
+  chart('c2',{label:'Swing through the start: video, sound and the model at two run-down times',x:[55,180],y:[50,340],xl:'time in We1dLNXiBj0 (m:ss)',yl:'swing (°)',xf:mmss,r:150,
+    hbands:[{y0:247.5,y1:270,c:'--manual'}],hrefs:[{y:258.75,t:'manual 247.5–270°'}],series:[
+    {type:'band',name:'video, possible readings',lo:V.low,hi:V.high},
+    {type:'line',name:'video (swing.py), middle reading',c:'--s1',data:V.mid,label:'video',dy:18,tip:p=>`video ${mmss(p[0])}<br>middle ${p[1].toFixed(0)}°`},
+    {type:'dots',name:'sound (acoustic.py --every)',c:'--s2',data:DATA.snd.map(s=>({x:s.t,y:s.A,...s})),label:'sound',dy:-8,tip:p=>`<b>sound ${mmss(p.t)}</b><br>${p.how} ${p.ms} ms<br>read on the corrected model: ${p.A.toFixed(0)}°`},
+    {type:'line',name:'model, TF 52 s (as built), 90 % drive',c:'--muted',dash:'7 5',data:S.TF52,label:'model, TF 52 s',lab:40,dy:20,tip:p=>`model TF 52 s, 90 % drive<br>${mmss(p[0])}: ${p[1].toFixed(0)}°`},
+    {type:'line',name:'model, TF 160 s, 65 % drive',c:'--ink2',dash:'2 4',data:S.TF160,label:'model, TF 160 s',dy:-12,tip:p=>`model TF 160 s, 65 % drive<br>${mmss(p[0])}: ${p[1].toFixed(0)}°`}]});
+  table('t2',['time','video low (°)','video middle (°)','video high (°)','model TF 52 s (°)','model TF 160 s (°)'],V.mid.map((p,i)=>{const at=c=>{const q=c.reduce((a,b)=>Math.abs(b[0]-p[0])<Math.abs(a[0]-p[0])?b:a);return q[1].toFixed(0);};
+    return[mmss(p[0]),V.low[i][1].toFixed(0),p[1].toFixed(0),V.high[i][1].toFixed(0),at(S.TF52),at(S.TF160)];}).concat(DATA.snd.map(s=>[mmss(s.t)+' (sound)','',`${s.A.toFixed(0)} (${s.how})`,'','',''])));
+  /* the swing each test reads, one row per reading: a dot with its range */
+  const R=DATA.rows,host=$('c3');host.innerHTML='';const W=980,rh=36,H=R.length*rh+70,l=290,r=40,x0=160,x1=340,sx=v=>l+(v-x0)/(x1-x0)*(W-l-r);
+  const lg=document.createElement('div');lg.className='legend';lg.innerHTML='<span><i class="dot" style="background:var(--s1)"></i>sound (acoustic.py)</span><span><i class="dot" style="background:var(--s2)"></i>video (swing.py)</span><span><i style="background:var(--manual);height:10px"></i>the manual\'s running swing</span>';host.appendChild(lg);
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Swing read by each test, per recording'},host);
+  el('rect',{x:sx(247.5),width:sx(270)-sx(247.5),y:4,height:H-50,fill:'var(--manual)'},svg);
+  for(const v of ticks(x0,x1,9)){el('line',{x1:sx(v),x2:sx(v),y1:4,y2:H-46,stroke:'var(--grid)'},svg);el('text',{x:sx(v),y:H-28,'text-anchor':'middle'},svg).textContent=v;}
+  el('line',{x1:sx(255),x2:sx(255),y1:4,y2:H-46,stroke:'var(--muted)','stroke-dasharray':'3 4'},svg);el('text',{x:sx(255)+4,y:H-50},svg).textContent='model 255°';
+  el('text',{x:(l+W-r)/2,y:H-6,'text-anchor':'middle'},svg).textContent='swing (°)';
+  R.forEach((q,i)=>{const y=20+i*rh,c=q[1]==='sound'?'--s1':'--s2';el('text',{x:l-12,y:y+4,'text-anchor':'end',style:'fill:var(--ink);font-size:12.5px'},svg).textContent=q[0];
+    el('line',{x1:sx(q[3]),x2:sx(q[4]),y1:y,y2:y,stroke:`var(${c})`,'stroke-width':3,'stroke-linecap':'round'},svg);const d=el('circle',{cx:sx(q[2]),cy:y,r:6,fill:`var(${c})`,stroke:'var(--surface)','stroke-width':2},svg);
+    el('text',{x:sx(Math.max(q[4],q[2]))+10,y:y+4,style:'fill:var(--ink2);font-size:11.5px'},svg).textContent=q[5];
+    const hit=el('rect',{x:l-280,y:y-rh/2,width:W-l+270,height:rh,fill:'transparent'},svg);
+    hit.addEventListener('mousemove',ev=>{const rr=svg.getBoundingClientRect(),k=W/rr.width;showTip(host,`<b>${q[0]}</b><br>${q[1]}: ${q[2]}° (${q[3]}–${q[4]}°)<br>${q[5]}`,sx(q[2])/k,y/k);});
+    hit.addEventListener('mouseleave',()=>tip.style.display='none');});
+  table('t3',['recording','test','swing (°)','range (°)','note'],R.map(q=>[q[0],q[1],q[2],`${q[3]}–${q[4]}`,q[5]]));}
+draw();
+$('theme').onclick=()=>{const h=document.documentElement,dark=h.dataset.theme?h.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;h.dataset.theme=dark?'light':'dark';};
+</script>
+</body>
+</html>

@@ -862,6 +862,12 @@ can't run them).
   model isn't changed for it: one movement, started by hand, and its absolute swing
   known to a screw hole.
 
+The whole of it, with the charts (hover for values; each with its data table),
+the analysis plots, the implications and the gaps, is a report:
+`verification/real-chronometers/index.html` (open the file; `build_report.py`
+there rebuilds it from the tools' results, `--local DIR` a fuller copy outside
+the repository with short audio excerpts and the video frames).
+
 ## Sources
 
 - *Manual for Overhaul, Repair and Handling of Hamilton Ship Chronometer*, NAVSHIPS 250-624, Bureau of Ships, 1948. Used for:
