@@ -478,8 +478,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   $('#lbls').addEventListener('change',e=>st.labels=e.target.checked);$('#lpOn').addEventListener('change',e=>{st.lp=e.target.checked;look();});$('#cuOn').addEventListener('change',e=>{st.cu=e.target.checked;cuShow();});$('#ssx').addEventListener('change',e=>{st.ssx=e.target.checked;cuShow();});$('#rock').addEventListener('change',e=>st.rock=e.target.checked);{const r=$('#rollP'),o=()=>{r.nextElementSibling.textContent=(+r.value).toFixed(1)+' s';};r.addEventListener('input',o);o();}$('#latch').addEventListener('change',e=>st.latch=e.target.checked);
   const hIn=$('#hrs'),hOut=hIn.parentElement.querySelector('output');
   const showH=()=>{hOut.textContent=hrs.toFixed(1)+' h';hIn.value=hrs.toFixed(1);};
-  hIn.addEventListener('input',()=>{if(kw)kwStop();hrs=parseFloat(hIn.value);winding=false;showH();});showH();
-  $('#wind').addEventListener('click',()=>{if(kw)kwStop();winding=true;});
+  hIn.addEventListener('input',()=>{if(kw)kwStop();if(ldq)ldStop();hrs=parseFloat(hIn.value);winding=false;showH();});showH();
+  $('#wind').addEventListener('click',()=>{if(kw)kwStop();if(ldq)ldStop();winding=true;});
   $('#reset').addEventListener('click',()=>{jump(()=>setView(st.view,true));});
   /* exploded view: how far apart the parts spread */
   const expR=$('#expR'),expO=$('#expWrap output');function expV(){return expR.valueAsNumber/100;}
@@ -838,7 +838,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const HT=0.5/FUSEE_PER_HOUR,kwBtn=$('#kwBtn'),kwOut=$('#kwOut'),KWF=['fusee','chain','sq','barrel','mainspring','gw','sratchet','sspring','spawl'];
   const KWV=()=>{const f=1+3.6/Math.hypot(...L.Fu);return{yaw:0.53,pitch:0.32,dist:120,target:mvL(L.Fu[0]*f,-36,L.Fu[1]*f)};};   /* key and fusee, from the winding stop's side */
   const halfs=v=>Math.abs(v*2-Math.round(v*2))<0.02?(Math.floor(v+0.01)||'')+(v%1>0.25?'½':''):v.toFixed(1);
-  function kwStart(){if(kw){kwStop();return;}if(st.tour>=0)tourEnd();closeInfo();
+  function kwStart(){if(kw){kwStop();return;}if(ldq)ldStop();if(st.tour>=0)tourEnd();closeInfo();
     if($('#kwFull').checked)hrs=RUN_H;   /* run down: the chain all on the barrel, 17½ half turns to wind */
     else if(hrs<HT/10){kwOut.innerHTML='<b>Already fully wound:</b> the stop-bar in the fusee top is against the winding stop, and the key turns no further. Tick <i>From run down</i> to watch a whole winding.';kwOut.classList.remove('hidden');return;}   /* less than a tenth of a half turn to wind (until 11 October 2026 it was let down to run down at once, under 0.2 h) */
     kw={t0:performance.now(),t:0,h0:hrs,end:0};winding=true;st.drive=false;jump(()=>setView('movement'));st.see=true;st.focus=new Set(KWF);look();
@@ -851,6 +851,26 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(hrs===0){kw.end=kw.t+3;kwOut.innerHTML=`<b>Fully wound after ${halfs(tot)} half turns.</b> The chain has pushed the stop-bar in the fusee top out against the winding stop under the barrel bridge, and the key can turn no further.`;}
     else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}, counterclockwise. ${(RUN_H-hrs).toFixed(1)} h of running stored. ${H.held?'The train is stopped: once wound, a twist of the box starts it (Sec. III).':'The sustaining spring drives the train meanwhile.'}`;}
   kwBtn.addEventListener('click',kwStart);
+  /* let the mainspring down and set it up again, as the manual does (Sec. II: the barrel arbor turns only then; Op. 8, Op. 53), on the wall clock: from run down, the
+     set-up click held out of its ratchet (clk), the arbor let back the set-up's turns (ld, R.fs.MS.setup, 1.26: "about one turn", Op. 53) slowly until the spring is slack,
+     a pause, the click let go onto the teeth and the arbor turned forward again, the click dropping into each tooth. update() turns the arbor, its ratchet and the
+     spring's inner end; the chronometer is left run down */
+  const ldBtn=$('#ldBtn'),ldOut=$('#ldOut'),LDv={ld:0,clk:0};let ldq=null;
+  const LDV=()=>({yaw:0.9,pitch:0.85,dist:62,target:mvL(L.Ba[0],-28,L.Ba[1])});   /* the set-up ratchet and click from above the barrel bridge */
+  function ldStart(){if(ldq){ldStop();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();hrs=RUN_H;showH();
+    ldq={t0:performance.now(),S:R.fs.MS.setup,op0:st.op['ratchet.cover']};st.op['ratchet.cover']=0.2;jump(()=>setView('movement'));st.see=true;st.focus=new Set(['ratchet','mainspring']);look();goCam(LDV());   /* the cover faded over the ratchet and click, the barrel see-through round the spring */
+    ldBtn.textContent='Stop';ldBtn.setAttribute('aria-pressed','true');ldOut.classList.remove('hidden');}
+  function ldStop(){if(ldq.op0===undefined)delete st.op['ratchet.cover'];else st.op['ratchet.cover']=ldq.op0;ldq=null;LDv.ld=0;LDv.clk=0;st.focus=null;look();ldBtn.textContent='Let down and set up';ldBtn.setAttribute('aria-pressed','false');}
+  function ldStep(now){const t=(now-ldq.t0)/1000,S=ldq.S,TL=S*6,ph=[1.5,0.8,TL,2.5,0.8,TL,3.5],T=[];ph.reduce((a,d)=>(T.push(a+d),a+d),0);const f=(i,t0)=>smooth(clamp((t-t0)/ph[i],0,1)),tn=TT=>(S*42*TT).toFixed(0);
+    if(t<T[0]){LDv.clk=0;LDv.ld=0;ldOut.innerHTML='<b>Run down</b>, the train stopped. The let-down key (Tool No. 18) goes on the barrel arbor’s square, over the set-up ratchet.';}
+    else if(t<T[1]){LDv.clk=f(1,T[0]);ldOut.innerHTML='The <b>set-up click is held away</b> from its ratchet (Op. 8): the key now holds the mainspring’s pull.';}
+    else if(t<T[2]){LDv.clk=1;LDv.ld=S*f(2,T[1]);ldOut.innerHTML=`<b>Letting down</b>: the key turns slowly back in the fingers, ${(LDv.ld).toFixed(2)} of ${S.toFixed(2)} turns, the spring’s inner end going round with the arbor’s hook while the barrel holds its outer end.`;}
+    else if(t<T[3]){LDv.clk=1;LDv.ld=S;ldOut.innerHTML='<b>Let down.</b> The mainspring is slack, pulling nothing: the chain can be unhooked from the barrel and the movement taken apart (Op. 8).';}
+    else if(t<T[4]){LDv.clk=1-f(4,T[3]);LDv.ld=S;ldOut.innerHTML='Put together again, the chain hooked on the barrel: the <b>click let go</b> onto the ratchet’s teeth.';}
+    else if(t<T[5]){LDv.clk=0;const u=f(5,T[4]);LDv.ld=S*(1-u);ldOut.innerHTML=`<b>Setting up</b> (Op. 53, “wind barrel about one turn”): ${(S*u).toFixed(2)} of ${S.toFixed(2)} turns, the click dropping into each tooth, ${tn(u)} of ${tn(1)}.`;}
+    else if(t<T[6]){LDv.clk=0;LDv.ld=0;ldOut.innerHTML=`<b>Set up ${S.toFixed(2)} turns</b>: the click holds the arbor, and the spring still pulls at run down, so the fusee gets an even pull from it all the way. Wind it to start it again.`;}
+    else ldStop();}
+  ldBtn.addEventListener('click',ldStart);
   function partsSync(){for(const q of PROWS){const k=q.p,p=kp(k),h=k!==p?st.hid.has(k)||st.hid.has(p)||isoOut(p,k):st.hid.has(p)||isoOut(p);q.ck.checked=!h;q.row.classList.toggle('off',h);
       if(q.kids){q.ck.indeterminate=!h&&q.kids.some(x=>st.hid.has(x.p)||isoOut(p,x.p));if(st.pick!==q.seen){q.seen=st.pick;if(st.pick&&kp(st.pick)===p)fold(q,true);}}   /* a part or piece of it picked: its fold opens, once */
       q.b.setAttribute('aria-pressed',st.pick===k?'true':'false');q.b.disabled=st.drive&&(BOXP.has(p)||DRIVE_HIDE.has(p));}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
@@ -1067,6 +1087,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     for(const q of['lift','flip','explode','lidM','lidT','dev','fov'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
     const run=hrs<RUN_H,go=canDrive(),dtS=dt*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
+    if(ldq)ldStep(now);
     if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)windEnd();showH();}
     if(winding)lpEnd=now+2000;{const ph=winding?'w':now<lpEnd?'r':'';if(ph!==lpPh){lpPh=ph;look();cuShow();}}   /* the load path's phase: winding, then 2 s of the mainspring's drive again */
     tVis+=dt;stopMove(dt);
@@ -1098,7 +1119,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
     {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,ld:LDv.ld,clk:LDv.clk,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
@@ -1119,7 +1140,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
     const balHid=cur.lift<0.02&&cur.explode<0.01&&cur.dev<0.01&&!st.drive&&secMode==='off'&&!st.see&&!st.iso&&!st.hid.size&&!Object.keys(st.op).length&&!insetKind&&!benchD.open;   /* the balance can't be seen */
-    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(!ESSAY.on()&&onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
