@@ -359,6 +359,22 @@ Contents:
   wheel's hub 0.30 of its tip radius, rim from 0.79, spokes 0.10; the fourth's
   0.36, 0.83, 0.07 (they were 0.18, about 0.86, 0.08). The third takes the
   fourth's, estimated. Keep them measured (`WHEEL_PROP`; SHAPE-PASS.md, 3). `7ea6a5a`
+- **Every mesh drawn with its backlash centred** (kinematics audit, 11 October
+  2026). Each pair was phased with the driver's tooth on the line of centres and
+  the driven gap centred on it, so the driving flank stood 0.04-0.06 mm off its
+  leaf at the closest, and as far on the other side; a loaded train runs with
+  the driving flanks touching and all the backlash behind. `gearLash` (core.js)
+  now turns each driven member back onto the driver's driving flank, to 0.005 mm
+  where the two outlines come closest over a whole tooth (the cycloidal profiles
+  aren't conjugate, so the gap varies as they turn): the fusee wheel onto the
+  centre pinion, the centre, third and fourth wheels onto the third, fourth and
+  escape pinions, the cannon pinion onto the minute wheel, the minute pinion
+  onto the hour wheel, the fusee arbor's pinion onto the indicator wheel; the
+  laid-out view keeps it. Keep: `ph()` passes the way each driver turns as
+  `update()` turns it (if a driver's sense changes there, its `s` changes too);
+  the gap measured on the outlines as drawn (`pl`), never on pitch circles; at
+  the audit's E values and over a dense sweep of a tooth of each driver no
+  outline overlaps and the closest gap is 0.005 mm, on the driving flank.
 
 ## Winding and maintaining work
 

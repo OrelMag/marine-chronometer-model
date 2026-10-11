@@ -1215,7 +1215,21 @@ box and gimbals.
   addendum is rolled by a circle half its pinion's pitch radius (`wheel.mate`,
   the pinion's leaves), a pinion's leaves have round tips; the geometry's
   `userData` gives its tip radius (`ro`), root (`ri`) and hub, which `arbor()`
-  uses to check that a pinion ends at its wheel's boss.
+  uses to check that a pinion ends at its wheel's boss, and its outline (`pl`).
+- **Meshing.** Each pair is phased once, as it runs under load: `ph()` in
+  `movement.js` calls `gearLash` (`core.js`), which centres the driver's tooth on
+  the line of centres and the driven gap opposite, then turns the driven member
+  back until its flank lies 0.005 mm off the driver's driving flank where the two
+  come closest over a whole tooth (the profiles aren't conjugate, so the gap
+  varies as they turn), so the backlash is all on the far side and the teeth
+  never pass. It needs the way the driver turns as the train runs, as `update()`
+  turns it (its `rotation.y` rising for the fusee wheel, third wheel, minute
+  pinion and fusee arbor, falling for the centre wheel, fourth wheel and cannon
+  pinion). The laid-out view
+  keeps the phase (`DPH` rolls each pinion on), and so does the Essay's train
+  figure. Winding turns the fusee arbor's pinion back, and setting the hands
+  back turns the cannon pinion back; the backlash would then cross to the other
+  flank, which isn't drawn.
 - **Arbor positions** come from the photo fit, in `L` at the top of
   `movement.js`. Don't move them without re-running the tools in `tools/`.
 
