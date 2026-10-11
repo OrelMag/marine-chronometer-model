@@ -681,6 +681,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* MSET: the mainspring's set (Op. 13, "check condition and set of mainspring"): a spring that has taken a set pulls that much less all through, which the fusee can't make up */
   let MSET=0;const SUS=0.8,FT12=R.fs.torque(12*FUSEE_PER_HOUR),drvF=h=>R.fs.torque(h*FUSEE_PER_HOUR)/FT12*(1-MSET),drvB=h=>R.fs.pullB(clamp(h/RUN_H,0,1))/R.fs.pullB(0.5)*drvF(RUN_H/2);
   const driveNow=()=>winding?SUS*clamp(1-R.ssD/R.SMAX,0,1):hrs<RUN_H?drvF(hrs):0;
+  const canDrive=()=>hrs<RUN_H;   /* whether anything can drive the train: the train holds when it can't, and a twist only starts it when it can */
   const H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,twT:-1},TAU_FREE=ESC.settings.TF,TAU_ARM=0.2,stopOut=$('#stopOut'),twistB=$('#twist');let lastSO=0;
   if(/[?&]qa\b/.test(location.search))window.__H=()=>({...H,E:lastE,tSim,hrs,tM,slip,rateK,escK,rateW,drive:driveNow()});   /* for the tools: the stop/start state, the master time, the hands' slip, the rate (escK: the escapement's share, rateW the rest) and the drive */
   const segSet=(sel,v)=>document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===v?'true':'false'));
@@ -1047,11 +1048,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const dt=clamp((now-last)/1000,0,0.05);last=now;   /* the first frame's time can come before last was set: never a step back */const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
     for(const q of['lift','flip','explode','lidM','lidT','dev','fov'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
-    const run=hrs<RUN_H,dtS=dt*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
+    const run=hrs<RUN_H,go=canDrive(),dtS=dt*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
     if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
     if(winding)lpEnd=now+2000;{const ph=winding?'w':now<lpEnd?'r':'';if(ph!==lpPh){lpPh=ph;look();cuShow();}}   /* the load path's phase: winding, then 2 s of the mainspring's drive again */
     tVis+=dt;stopMove(dt);
-    const brake=H.arm>0.75,drv=driveNow();ampStep(dtS*rateK,brake,run&&!H.held,drv);   /* the arm's finger is beside the timing weight from about three quarters of its turn */
+    const brake=H.arm>0.75,drv=driveNow();ampStep(dtS*rateK,brake,go&&!H.held,drv);   /* the arm's finger is beside the timing weight from about three quarters of its turn */
     if(!H.held&&H.amp>=ESC.AMIN){const r=ESC.rateAt(H.amp,drv);if(Number.isFinite(r))escK=1+r/86400;}rateK=rateW*escK;swRec(now,drv);   /* the escapement's share at this swing and torque */
     /* the train's state at model time t: beats E (whole beats locked, a fraction during an impulse; continuous above REAL_X) and the balance's state. Up to REAL_X the balance
        swings as it really does (10 Hz at 5x, still a few frames a swing); faster, it would be a blur, so it swings at 0.9 Hz, detent and trip spring still, and the HUD says so */
@@ -1060,18 +1061,18 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     let E,s;
     if(!H.held){let q=at(tSim);const Eb=lastE??q.E,locked=q.s.prog<=0||q.s.prog>=1||st.speed>REAL_X,room=blockedNow()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity;   /* room: the last whole beat before a spoke meets the dog point */
       const hold=()=>{H.held=true;H.bph=tSim/0.5+H.bOff;};
-      if(dtS>0&&locked&&(!run||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}   /* the train stops at a locked beat */
+      if(dtS>0&&locked&&(!go||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}   /* the train stops at a locked beat */
       else{if(dtS>0){tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}q=at(tSim);}
         E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
     if(H.held){H.bph+=dtS*rateW/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
       const lockedP=s.prog<=0||s.prog>=1;
-      if(run&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is, unless the dog point leaves it no whole beat (the hold's own test: a fractional beat at speed must not free it) */
+      if(go&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is, unless the dog point leaves it no whole beat (the hold's own test: a fractional beat at speed must not free it) */
         H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
     {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,slip,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
