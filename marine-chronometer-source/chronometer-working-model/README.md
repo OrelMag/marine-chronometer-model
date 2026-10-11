@@ -247,10 +247,10 @@ The mainspring's shape in its barrel is the strip's equilibrium, not a drawing (
   9½ packed and 2½ loose); in the measured r 18.3 the pack is a turn or so thinner than the frame's, which the grease's friction, left out, may hold.
 - **Its pull** (`MSHAPE.pull`, the energy's slope, smoothed by a quartic from half a turn past the slack): nothing at the slack (13.5 turns), rising
   steeply over the first turn, then about evenly. **The set-up comes from it:** a fusee is cut for its spring, so the spring is set up where its pull falls
-  over the chain’s 4.66 barrel turns as the fusee's measured profile evens out, rmin / rmax = 0.473 (`fs.MS` in `movement.js`): 1.0 turn past the slack
-  (run down at 14.5 turns, fully wound at 19.15, in the barrel measured r 18.3; 0.47 in the r 17.6 barrel until then, 1.62 in the thin-walled one before
-  5 October 2026, and 0.37 estimated before that). The drive's pull is not taken from it (the timing's
-  illustrative pull, "How the timing works", is the even fall the fusee is cut for).
+  over the 4.51 barrel turns the chain takes to leave the fusee as the chain's lever there grows, 7.51 to 14.72 mm on its pitch line (0.510; `fs.MS` in
+  `movement.js`): 1.26 turns past the slack (run down at 14.76 turns, fully wound at 19.37, in the barrel measured r 18.3; 0.99 on the groove's floor's
+  0.473 until 11 October 2026, 0.47 in the r 17.6 barrel before 5 October, 1.62 in the thin-walled one, and 0.37 estimated before that). **The drive is
+  taken from it** too ("How the timing works", the drive): until 11 October 2026 the timing had an illustrative pull of its own.
 
 ## What the model gives a maker
 
@@ -467,23 +467,40 @@ Beside it runs the master time `tM`: a perfect clock, standing for the time sign
   incoming run passes over the nose in the groove's top turn it presses it
   in (`barTravel`), so the bar's far end stands out past the rim for the last
   0.7 turn of a wind and meets the winding stop at full wind.
-- Maintaining work: when running, the fusee's winding ratchet drives the
-  sustaining ratchet through the two winding pawls, and a pin on that ratchet
-  drives the fusee wheel through the sustaining spring, at its loaded
-  deflection: the ratchet and the fusee wheel turn together. The fusee and
-  chain follow the hours, the fusee wheel the train, so the fusee sits `eps`
-  (less than one winding tooth) past its `n` turns, where its ratchet bears on
-  the pawls. When winding, the spring turns the sustaining ratchet back until
-  the sustaining pawl holds it (`holdBack`), then relaxes as it alone drives
-  the train (drawn up to `SMAX`, 9.3°; `R.ssD` is how far it has relaxed); `eps` runs down with `n`, so the
-  stop-bar meets the winding stop at full wind. When the key lets go, the fusee
-  turns forward until its ratchet catches the pawls, and the sustaining ratchet
-  forward to load the spring again. Nothing turns back; `tools/maintaining.py`
-  checks this. Every pawl is rested on its ratchet's teeth each frame
+- Maintaining work (`update()` in `movement.js`): when running, the fusee's
+  winding ratchet drives the sustaining ratchet through the two winding pawls,
+  and a pin on that ratchet drives the fusee wheel through the sustaining
+  spring, which carries the whole drive (the manual: "through the sustaining
+  spring, under load during the entire running cycle"; nothing banks it). `R.ssD`
+  is how far it has relaxed from its load at the 12-hour drive; it pushes with
+  1 − `R.ssD`/`SMAX` of that drive (`R.ssF`, `SMAX` 9.3°, the fusee wheel's turn
+  in 10 minutes), so running it sits where it balances the fusee's drive
+  (`R.drvN`, the mainspring's set included): within 0.2° of its 12-hour load all
+  the run, then relaxing as the drive tapers to run down (a taper of 1.2 h,
+  far slower than the spring's 10 minutes, so it follows it and the sustaining
+  pawl never holds). The fusee turns with the sustaining ratchet, its faces on
+  the winding pawls, so it sits `eps` (`R.eps`, within a tooth) past its `n`
+  turns. Should the fusee's drive fall faster than the train relaxes the spring
+  (the slider set to run down, a set taken), the spring turns the ratchet back
+  until the sustaining pawl holds it (`holdBack`: the next place a face meets
+  it, every tooth from `phaseAgainst`'s) and drives the train alone, the fusee
+  standing. When winding starts, the spring pushes the ratchet back with the
+  fusee, the winding pawls still on their faces, until the sustaining pawl
+  catches it; only then do the winding pawls ride over the winding ratchet's
+  teeth, and the spring relaxes as it drives the train; `eps` runs down with
+  `n`, so the stop-bar meets the winding stop at full wind. When the key lets
+  go (`catchAt`), the fusee turns forward to the first place its ratchet meets
+  the pawls (none if it is on them), then on with the ratchet until the spring
+  is loaded to the drive again; `R.release` gives those turns and `app.js`
+  (`windEnd`) takes their hours off the mainspring, so `eps` stays within a
+  tooth over any number of partial winds. A set of the hands moves the ratchet
+  with the train (the spring as it was; the loop can say so with `reset`), a
+  jump of the slider the fusee to its new turns on the nearest tooth. Nothing
+  turns back but as said; `tools/maintaining.py` checks it all. Every pawl is rested on its ratchet's teeth each frame
   (`seatPawl`: turned in from outside to its first touch, the teeth's tips kept out of its outline too), so it rides over them or bears on a steep face. The winding
   pawls' flat springs are rebuilt with them (`wpsGeo`), their ends kept on the
   arm as the pawls swing out over the teeth while winding.
-- The mainspring (`mainspringGeo` in `core.js`) is rebuilt from the barrel's turns `I(n)`: its turns from the inner end to the outer fall from `Tup` at full wind by the barrel's turns (`fs.MS`), and its shape at each is the solved one ("The mainspring, solved" below): wound, its coils drawn in round the arbor, a gap at the wall; running, they open out toward the wall (let right down, as for service, most would lie in a pack against it with loose turns inside). Its inner end is held by the arbor's hook in an eye, and its outer end turns with the barrel, its anchor pin on the brace. The arbor never turns, and the setup click faces the spring's pull.
+- The mainspring (`mainspringGeo` in `core.js`) is rebuilt from the barrel's turns `Ib(n, eps)`: its turns from the inner end to the outer fall from `Tup` at full wind by the barrel's turns (`fs.MS`), and its shape at each is the solved one ("The mainspring, solved" below): wound, its coils drawn in round the arbor, a gap at the wall; running, they open out toward the wall (let right down, as for service, most would lie in a pack against it with loose turns inside). Its inner end is held by the arbor's hook in an eye, and its outer end turns with the barrel, its anchor pin on the brace. The arbor never turns, and the setup click faces the spring's pull.
 - What turns while winding: the fusee wheel follows the train (`gA`), not the
   fusee, so it keeps turning forward, driven by the sustaining spring, while
   the key turns the fusee and its winding ratchet back and the sustaining
@@ -673,18 +690,25 @@ every speed); the equation gives the amplitude and the rate.
   Free, with no impulse, the swing falls as exp(−t/TF), as before.
 - **The drive** (`driveNow` in `app.js`). Running, the mainspring through the
   fusee: `R.fs.torque`, 1 at 12 h from full wind, the middle of a day's
-  running. While the key turns, the sustaining spring alone drives: 0.8 of
-  that when loaded (estimated), falling linearly to nothing as it relaxes over
-  its 10 minutes (`R.ssD` of `R.SMAX`). So the swing dips while winding (224°
-  at the spring's full load) and comes back when the key lets go. Run down,
-  there is no drive.
-- **The spring's pull** (`makeFusee`'s `pull`, `pullB`, `torque`;
-  illustrative). The profile evens out exactly a pull falling in step with the
-  barrel's turns, from 1 to rmin/rmax. The model's spring is that pull made 3%
-  steeper at each end, as a real spring's is where its coils crowd the arbor
-  fully wound and near run down. The torque on the fusee wheel then keeps a
-  ±3% residual. A going barrel with the same spring (`pullB`, its pull falling
-  evenly with time, geared to match at 28 h) would vary 2:1.
+  running, falling to nothing over the last 1.2 h as the chain's end pin swings
+  round (the train stops about 5 minutes before `RUN_H`, under 0.14 of it).
+  The sustaining spring carries it, so while the key turns it drives alone
+  with all it carried, falling linearly to nothing as it relaxes over its 10
+  minutes (`R.ssF`): a wind of a few minutes takes the swing from 255° to
+  about 207° (0.7 of the drive) and it comes back when the key lets go. The
+  same push drives the train when the fusee's drive falls faster than the
+  spring relaxes (`canDrive` holds the train only when neither drives). Until
+  11 October 2026 the drive dropped to 0.8 the moment the key turned, as if
+  the spring were weaker than the drive it had been carrying.
+- **The spring's pull** (`makeFusee`'s `pull`, `lever`, `torque`). The solved
+  spring's pull (`msPull`) at the barrel's turns, times the chain's lever on
+  the fusee (its pitch line where it leaves the fusee): with the set-up the
+  profile asks for, the torque on the fusee wheel keeps within about 2 % of its
+  mean (0.986–1.021) while the chain leaves the fusee, the residual of the solved
+  spring's curve against the profile. A going barrel with the same spring
+  (`pullB`, its pull falling evenly with time, geared to match at 28 h) would
+  vary about 2:1. Until 11 October 2026 the drive took an illustrative pull,
+  the profile's even fall made 3 % steeper at each end, on the groove's floor.
 - **Rate against swing** (`ESC.rateAt(a, s)`): Airy's sum over the impulse,
   the unlocking and the springs at amplitude a, against the reference.
   A smaller swing feels the escapement's pushes more:
@@ -697,11 +721,12 @@ every speed); the equation gives the amplitude and the rate.
 
   Each frame, `escK = 1 + ESC.rateAt(H.amp, drive)/86400` while the train
   runs, so the dip while winding and a jolt show in the rate book.
-- **Over a wind.** With the fusee the rate stays within −0.11 to +0.06 s a day
-  from full wind to run down; with a going barrel, −1.84 to +0.78. The manual's
+- **Over a wind.** With the fusee the rate stays within −0.01 to +0.08 s a day
+  while the chain leaves the fusee (to 55.1 h; then it falls with the drive);
+  with a going barrel, −1.47 to +0.71. The manual's
   isochronism check (Sec. IX: the 12-hour rate against half the 24-hour rate
   at 72½ °F, wound at the start; tolerance 0.50 s, the factory test card of
-  No. 3390 reads 0.00) comes to +0.01 s with the fusee and +0.08 s with a
+  No. 3390 reads 0.00) comes to +0.01 s with the fusee and +0.07 s with a
   going barrel. `tools/escapement.js` prints the rate at 1⅜ and 1½ turns.
 - **The mainspring's set** (`MSET`; Op. 13, "Check condition and set of
   mainspring"). A spring that has taken a set pulls less all through its run;
@@ -972,7 +997,7 @@ the repository with short audio excerpts and the video frames).
 
 ## Estimated, not from the manual
 
-- The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull at the barrel (the solved spring's, `tools/mainspring.py`: its free curve measured, its length estimated; until 11 October 2026 the drive took an illustrative pull, the profile's made 3% steeper at each end), the sustaining spring's strength (0.8 of the drive, loaded) and its linear relaxing, the free run-down (52 s, from the energy budget and the balance's parts), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
+- The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull at the barrel (the solved spring's, `tools/mainspring.py`: its free curve measured, its length estimated; until 11 October 2026 the drive took an illustrative pull, the profile's made 3% steeper at each end), the sustaining spring's linear relaxing (from the drive it carries: no banking is seen on the video or in the figures, and the manual has it under load all through the running; its 10 minutes from Sec. IV's five to ten), the free run-down (52 s, from the energy budget and the balance's parts), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
 
 - Tooth counts: the fusee wheel (90), centre wheel (90), third wheel (80) and its pinion (12), fourth wheel (75) and the wind indicator wheel (120) were counted on a restoration video of a 1941 Model 21 (`References/README.md`, "Videos consulted"; `tools/video.py`; IDEAS.md 1.8), not taken from the manual; the escape wheel (16) is Hamilton's. The fourth and escape pinions (10, 10) follow from those counts and a one-minute fourth wheel. The centre pinion (14) is counted on the same video, likely but not certain (end-on at 13:59.5, from above at 35:23.66; no frame shows every leaf); the fusee arbor's pinion (12) is inferred, not counted: 14 makes the manual's 17½ half turns hold its "maximum of 56 hours", and 14 × 12 sweeps the UP–DOWN hand 313.6° in 56 h, against the 315.7° a photographed dial's scale spans. 13 and 13 would fit the dial and the manual's seven half turns a day better, but run 60.6 h. The motion work (cannon pinion 14 : minute wheel 56, minute pinion 18 : hour wheel 54, `MW` in movement.js) is counted on the video, the wheels lying whole on the mat (`References/VIDEOS.md`); it was 12 : 36, 10 : 40, chosen, until the count.
 - Dimensions and positions, estimated from the figures and the dial (95 mm, the side photograph), except where the photographs give them (plan: "How the layout was measured", steps 1–5; heights: step 6).

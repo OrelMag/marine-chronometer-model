@@ -733,7 +733,7 @@ function buildMovement(M){
      state (0 in running, up to SMAX while winding). SMAX: the fusee wheel's turn in 10 minutes, the longer of the 5 to 10 minutes it drives the train (Sec. IV); app.js runs model
      time at most WIND_X fast while winding, so no wind outlasts it. Gap, lobes, pin places and the band's thickness (1.13) estimated */
   const SMAX=FUSEE_PER_HOUR*TAU/6,SSG=17*D2R,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
-  const sspGeo=d=>{d=clamp(d,0,SMAX);const W=SSF+SSG-SMAX+d,a0=W+SWL,a1=SSF+TAU-SFL,sp=a1-a0,B=(SRO-SSW/2)*(SMAX-d)/sp*Math.PI/2,o=[],I=[];   /* W: the working end's tip; the band's free part runs from a0 to a1 */
+  const sspGeo=d=>{d=clamp(d,-SMAX/4,SMAX);const W=SSF+SSG-SMAX+d,a0=W+SWL,a1=SSF+TAU-SFL,sp=a1-a0,B=(SRO-SSW/2)*(SMAX-d)/sp*Math.PI/2,o=[],I=[];   /* W: the working end's tip; the band's free part runs from a0 to a1 */
     const st=(x,w,r)=>x<w?r:x<w+0.14?lerp(r,SRO-SSW,smooth((x-w)/0.14)):SRO-SSW,rin=a=>Math.min(st(a-W,SWL-0.14,13.9*FK),st(SSF+TAU-a,SFL-0.14,12.8*FK));   /* the lobes' inner edges, eased into the band's over 8 deg */
     for(let i=0,N=200;i<=N;i++){const a=W+(SSF+TAU-W)*i/N,b=a>a0&&a<a1?B*Math.sin(Math.PI*(a-a0)/sp):0,ro=SRO-b,ri=Math.min(rin(a),ro-SSW);o.push([ro*Math.cos(a),ro*Math.sin(a)]);I.push([ri*Math.cos(a),ri*Math.sin(a)]);}
     const pw=W+SPW;return polyGeo([...o,...I.reverse()],1.13,[[14.6*FK*Math.cos(pw),14.6*FK*Math.sin(pw),0.42],...SSH.map(q=>[...q,0.42])]);};   /* 0.02 over the floor, 0.03 inside the wall */
@@ -1336,22 +1336,31 @@ function buildMovement(M){
     R.blockRoom=E=>Math.min(...sp(E).map(a=>(((a-u.half)%q)+q)%q))*ESC_PER.fw/ESC.P;
     R.blockClear=E=>sp(E).every(a=>Math.abs((((a%q)+q+q/2)%q)-q/2)>=u.half); }
   const RF=ESC_PER.fw,RT=ESC_PER.tw,RC=ESC_PER.cw,MR=MW.cp/MW.mw,HR=MR*MW.mp/MW.hw;   /* escape turns per fourth, third, centre turn; minute wheel and hour wheel per centre turn */
-  let lastN=-1,lastEps=0,lastIn=-1,lastTh=null,lastPs='',lastSp=null,srA=0,holding=false,lastD=1e9,eps=null,nW0=0,eps0=0,ssV=0;
+  let lastN=-1,lastEps=0,lastIn=-1,lastTh=null,lastPs='',lastSp=null,srA=0,holding=false,lastD=1e9,ssV=0;
   R.springReady=()=>{if(lastTh===null){R.spring.geometry=ribbonGeo(R.spPath(0),HS_B,HS_T,R.spring.geometry);lastTh=0;}if(lastIn<0){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=0;}};   /* the hairspring at rest and the mainspring fully wound, built if they haven't been yet (each is built only when it can be seen): for the maker's sheets, drawings and STL (maker.js) */
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
   const FPR=ratchetProf(WRT.z,WRT.m,false,true),SRP=ratchetProf(SRT.z,SRT.m,true,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1,true).psi;
-  R.WPH=WPH;R.SMAX=SMAX;R.sspGeo=sspGeo;R.ssD=0;R.FPR=FPR;R.SRP=SRP;   /* SMAX: the sustaining spring's travel from loaded to spent (with sspGeo); ssD: how far it has relaxed now (update()); the ratchets' profiles, for the essay's figure */
+  R.WPH=WPH;R.SMAX=SMAX;R.sspGeo=sspGeo;R.ssD=0;R.held=false;R.eps=0;R.FPR=FPR;R.SRP=SRP;   /* SMAX: the sustaining spring's travel from loaded to spent (with sspGeo); ssD: how far it has relaxed now (update()); the ratchets' profiles, for the essay's figure */
   /* the load path, which app.js picks out while winding: lp 'm' the mainspring's side (barrel, mainspring, chain, the fusee and its winding ratchet, the winding pawls and
      their springs), 's' the sustaining spring and its pins, 'r' the sustaining ratchet, 'h' the sustaining pawl, which holds the ratchet while the key turns, 'w' the fusee wheel */
   parts.gw.userData.lp='w';parts.sspring.userData.lp='s';parts.sratchet.userData.lp='r';parts.spawl.userData.lp='h';
   for(const pw of R.wp){pw.userData.lp='m';pw.userData.spr.userData.lp='m';}R.sr.children.filter(o=>o.isMesh&&o.userData.hn==='42007').forEach(o=>o.userData.lp='m');   /* the pawls, their springs and the springs' feet */
   R.fs.g.traverse(o=>{if(o.userData.partName&&['fusee','chain','barrel','mainspring'].includes(o.userData.partName))o.userData.lp='m';});
-  /* when winding starts the spring turns the sustaining ratchet back until a steep face meets the sustaining pawl */
-  const holdBack=a=>{const q0=[SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],tr=psi=>{const q=toWheel(q0,[0,0],psi),th=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-psi,SRP),t=R.spawl.userData.pts[PAWL_TIP],c=Math.cos(th),sn=Math.sin(th);return Math.hypot(q[0]+t[0]*c+t[1]*sn,q[1]-t[0]*sn+t[1]*c);};
-    let b=a,r=tr(a);for(let i=0;i<60;i++){const nb=b-SRP.p/40,nr=tr(nb);if(nr>r+0.004)break;b=nb;r=Math.min(r,nr);}return b;};
-  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean}} MoveState
+  /* where the sustaining pawl catches the ratchet turning back from a: the last place at or behind a where a steep face meets it, every tooth from where phaseAgainst
+     finds one (SHP). Until 11 October 2026 it walked back until the pawl first rose, which, started while the pawl was still dropping off a tooth's crest, held the
+     ratchet there, the pawl on the crest's corner (0.05-0.29 mm deep where the face holds it 0.33), about one hold in ten */
+  const SHP=phaseAgainst(SRP,R.spawl.userData.pts,[SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],R.spawl.userData.base,-1).psi,holdBack=a=>SHP+SRP.p*Math.floor((a-SHP)/SRP.p+1e-9);
+  /* the catch when the key lets go, the sustaining ratchet held at sh, the fusee at fa: forward to the first place its ratchet's faces meet the winding pawls (none if they
+     are on them), then on with the ratchet until the spring balances the drive again (dq); held still if the spring already pushes harder than the fusee */
+  const catchAt=(sh,fa,gA,dq)=>{const fc=sh+WPH+FPR.p*Math.ceil((fa-sh-WPH)/FPR.p-1e-9),dl=Math.max(0,gA-dq-sh);return{fa:fc+dl,sr:sh+dl,held:dl<=0};};
+  const MWK={g:/** @type {number|null} */(null),n:/** @type {number|null} */(null),w:false,fa:0,base:0,lock:0,top:0,hold:0,nW0:0,eps0:0,dq:0};   /* the maintaining work's state between frames (update()) */
+  R.drvN=n=>fs.torque(n)/fs.torque(12*FUSEE_PER_HOUR);   /* the fusee's drive at n turns, of the 12-hour drive: app.js sets its own (with the mainspring's set) */
+  R.ssF=()=>Math.max(0,1-R.ssD/SMAX);R.holdBack=holdBack;   /* the sustaining spring's push, of the 12-hour drive */
+  R.release=()=>MWK.w&&MWK.g!==null?(catchAt(srA,MWK.fa,MWK.g,MWK.dq).fa-MWK.fa)/TAU:0;   /* fusee turns the catch will take if the key lets go now: app.js adds their hours */
+  /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean}} MoveState
       E: the escape wheel's place in teeth, which turns every arbor; th: the balance's angle (rad); lift, psDef: the detent's lift and the passing spring's bending (ESC.state);
-      n: fusee turns from full wind; winding: the key turning; slip: seconds the key has turned the hands; hkeyOn, keyOn: the hand-setting and winding keys shown;
+      n: fusee turns from full wind; winding: the key turning; spent: run down (the fusee drives nothing); reset: the train set (the hands set, Now), not run;
+      slip: seconds the key has turned the hands; hkeyOn, keyOn: the hand-setting and winding keys shown;
       blk, arm: the train-blocking screw and the locking arm, 0 (up, unlocked) to 1; ssX: the sustaining spring drawn that many times relaxed (0: as it is); dt: the frame's seconds;
       springOn, msOn: rebuild the hairspring, the mainspring (only when they can be seen) */
   /** @param {MoveState} s */
@@ -1363,20 +1372,39 @@ function buildMovement(M){
     const cA=esc/RC,hA=cA+(s.slip||0)/3600*TAU;R.cw.rotation.y=-cA;R.cannon.rotation.y=-hA;R.min.rotation.y=-hA;   /* slip: seconds the key has turned the hands on the centre arbor (the cannon pinion slips); the second hand is never touched */
     R.minW.rotation.y=hA*MR;R.hourW.rotation.y=-hA*HR;R.hour.rotation.y=-hA*HR;R.hkey.visible=!!s.hkeyOn;
     const gA=cA*TRAIN.cp/TRAIN.fu;R.gw.rotation.y=gA;R.ssg.rotation.y=gA;
-    /* Maintaining work. Running: fusee -> winding ratchet -> winding pawls -> sustaining ratchet -> spring (loaded, d = 0) -> fusee wheel, so the sustaining ratchet turns
-       with the fusee wheel, and the fusee sits eps past its n turns, where its ratchet's steep faces bear on the pawls (eps follows the train and any jump of the slider).
-       Winding: the key turns the fusee back; the spring turns the sustaining ratchet back until the sustaining pawl holds it (holdBack), then relaxes as it alone drives the
-       train; eps runs down to 0 with n, so the stop-bar meets the stop at full wind. When the key lets go, the mainspring turns the fusee forward until its ratchet catches
-       the pawls, and drives the sustaining ratchet forward to load the spring again: nothing turns back */
-    const base=fs.g.rotation.y+s.n*TAU,p=FPR.p,wrap=x=>((x%p)+p)%p,target=gA+WPH-base;if(eps===null)eps=wrap(target);
-    if(!s.winding){if(holding){eps+=wrap(target-eps);holding=false;}else eps+=wrap(target-eps+p/2)-p/2;srA=gA;}
-    else{if(!holding){holding=true;srA=holdBack(srA);nW0=s.n;eps0=eps;}eps=nW0>0?eps0*Math.min(1,s.n/nW0):0;}
+    /* Maintaining work (Sec. IV). The sustaining spring, between the sustaining ratchet (srA) and the fusee wheel (gA), carries the whole drive (the manual: "through the
+       sustaining spring, under load during the entire running cycle"; nothing banks it): d = gA - srA is how far it has relaxed from its load at the 12-hour drive, and it
+       pushes with 1 - d / SMAX of that drive (R.ssF). Running, the fusee drives the ratchet through its winding ratchet and pawls, and the spring sits where it balances the
+       fusee's drive D (R.drvN: d = SMAX (1 - D), so near 0 most of the run, and relaxing as the drive tapers to run down); the fusee turns with the ratchet, its faces on the
+       pawls (fa = srA + WPH, whole teeth on; eps = fa less its n turns). Should the fusee's drive fall faster than the train relaxes the spring (run down at once, a jump of the
+       wind, a set taken), the spring turns the ratchet back until the sustaining pawl holds it (holdBack) and then drives the train alone, the fusee standing.
+       Winding: the key turns the fusee back; the spring pushes the ratchet back with it, the winding pawls still on their faces, until the sustaining pawl catches it, and
+       only then do the winding pawls ride over the teeth; the spring relaxes as it drives the train; eps runs down to 0 with n, so the stop-bar meets the stop at full wind.
+       Let go (catchAt): the mainspring turns the fusee forward until its ratchet meets the pawls, then on with the ratchet until the spring is loaded again to D; the
+       hours that took come off the mainspring (R.release, which app.js adds when the key lets go). Until 11 October 2026 the ratchet jumped back to its pawl in one
+       frame as winding began, dragging the winding pawls back over their faces; the catch took (motion) mod one tooth, a whole tooth when nothing had moved; the
+       spring stayed loaded at run down while the drive fell to nothing; and a set of the hands dragged the pawls through teeth */
+    const base=fs.g.rotation.y+s.n*TAU,p=FPR.p,D=s.spent?0:R.drvN(s.n),dq=SMAX*clamp(1-D,-0.25,1),mw=MWK;   /* dq: the spring's relaxation where it balances the fusee's drive */
+    if(mw.g===null){srA=gA-dq;mw.fa=srA+WPH+p*Math.ceil((base-srA-WPH)/p-1e-9);holding=false;mw.base=base;}
+    else if(s.reset||gA<mw.g-1e-9||gA-mw.g>0.25){const o=srA;srA=holding?holdBack(srA+gA-mw.g):srA+gA-mw.g;mw.hold+=srA-o;mw.top+=srA-o;mw.lock-=srA-o;}   /* the train set, not run (back, or more than it turns in a frame): the ratchet with it, the spring as it was (held, on its pawl's tooth) */
+    const tele=mw.n!==null&&Math.abs(s.n-mw.n)>0.15;   /* the wind set (the slider), not wound or run: the fusee to its new turns, its pawls on the nearest tooth */
+    if(s.winding){
+      if(!mw.w||tele){mw.lock=mw.fa-srA;mw.top=srA;mw.hold=holding?srA:Math.min(srA,Math.max(holdBack(srA),gA-SMAX));mw.nW0=s.n;mw.eps0=mw.fa-mw.base;}   /* the key takes the fusee: the spring turns the ratchet back with it to its pawl, or as far as it pushes at all */
+      mw.fa=base+(mw.nW0>0?mw.eps0*Math.min(1,s.n/mw.nW0):0);
+      srA=clamp(mw.fa-mw.lock,mw.hold,mw.top);holding=srA<=mw.hold+1e-12;   /* the ratchet back with the fusee until its pawl holds it */
+    }else{
+      if(mw.w&&!tele){const c=catchAt(srA,mw.fa,gA,dq);mw.fa=c.fa;srA=c.sr;holding=c.held;}   /* let go */
+      else{const st=gA-dq;
+        if(st>=srA){srA=st;holding=false;}else if(!holding){const hb=holdBack(srA);if(st>=hb)srA=st;else{srA=hb;holding=true;}}   /* the spring pushes the ratchet back: to its pawl at most */
+        if(!holding||tele)mw.fa=srA+WPH+p*Math.round((base+mw.fa-mw.base-srA-WPH)/p);}}   /* on the tooth that keeps eps where it was */
+    if(srA<gA-SMAX){srA=gA-SMAX;mw.hold=Math.max(mw.hold,srA);}   /* the spring at its free length: turned on past it, it draws the ratchet after the wheel (its pawl lets it go forward) */
+    mw.g=gA;mw.n=s.n;mw.w=!!s.winding;mw.base=base;mw.dq=dq;const eps=mw.fa-base;R.eps=eps;
     if(Math.abs(s.n-lastN)>0.0008||Math.abs(eps-lastEps)>0.002){fs.setWind(s.n,eps);lastN=s.n;lastEps=eps;}   /* the chain, barrel and stop-bar; the chain lies in the groove, so it follows eps too */
-    fs.fz.rotation.y=s.n*TAU+eps;const fzW=base+eps;
+    fs.fz.rotation.y=s.n*TAU+eps;const fzW=mw.fa;
     R.sr.rotation.y=srA;
     /* the spring drawn relaxed by dv: d itself, or with ssX (app.js's Exaggerate) ssX times d while winding, eased back over about 0.4 s (s.dt) when the key lets go;
        the working end's pin then moves round the ratchet with the spring's hole (dv - d), so the ratchet and its pawls stay where the train has them */
-    { const d=Math.min(SMAX,gA-srA);R.ssD=d;let dv=d;if(s.ssX){const t=Math.min(SMAX,s.ssX*d);ssV=t>=ssV||s.dt==null?t:Math.max(t,ssV-SMAX*s.dt/0.4);dv=Math.max(d,ssV);}else ssV=d;
+    { const d=Math.min(SMAX,gA-srA);R.ssD=d;R.held=holding;let dv=d;if(s.ssX){const t=Math.min(SMAX,s.ssX*d);ssV=t>=ssV||s.dt==null?t:Math.max(t,ssV-SMAX*s.dt/0.4);dv=Math.max(d,ssV);}else ssV=d;
       if(Math.abs(dv-lastD)>0.002){R.sspring.geometry.dispose();R.sspring.geometry=sspGeo(dv);lastD=dv;const a=SSP+dv-d;R.ssPin.position.x=14.6*FK*Math.cos(a);R.ssPin.position.z=14.6*FK*Math.sin(a);} }
     for(const pw of R.wp){const psi=fzW-srA,u=pw.userData;pw.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,FPR)+psi;
       if(Math.abs(pw.rotation.y-u.sprTh)>0.002){u.spr.geometry.dispose();u.spr.geometry=wpsGeo(pw,pw.rotation.y);u.sprTh=pw.rotation.y;}}   /* the spring follows its pawl */

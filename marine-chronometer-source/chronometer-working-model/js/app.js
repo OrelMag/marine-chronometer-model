@@ -675,13 +675,18 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      While the train is held tSim and the hands stand, and the balance keeps its own phase in H.bph (oscillations); on restarting, H.bOff (phase) and H.eOff (beats)
      carry both across, so neither the balance nor the hands jump. H.arm and H.blk move on frame time: the arm 0 unlocked to 1 locked, the screw 0 up to 1 down ---------- */
   /* the drive: the escape wheel's torque as a share of the one the escapement is calibrated at (ESC.ampAt, ESC.rateAt). Running, the mainspring through the fusee (R.fs.torque:
-     the solved spring's pull on the chain's pitch line, level to about 2 %), 1 at 12 h from full wind, the middle of a day's running; while the key turns, the sustaining spring alone, SUS of it when
-     loaded (estimated) and falling to nothing as it relaxes over its 10 minutes (R.ssD of R.SMAX, update()); run down, none. drvB(h): what a going barrel with the same spring
-     would give, its pull falling evenly with time, geared to give the same at 28 h (Swing and isochronism) */
+     the solved spring's pull on the chain's lever, level to about 2 %, then falling to nothing over the last 1.2 h as the chain's end pin swings round to run down), 1 at 12 h
+     from full wind, the middle of a day's running. The sustaining spring carries it to the fusee wheel (update() in movement.js), so it pushes with all the drive it was
+     carrying when the fusee stops driving (SUS: 1, of the 12-hour drive, at the load the drawing calls 0; 0.8 estimated, the drive dropping at once, until 11 October 2026),
+     and less as it relaxes over its 10 minutes (R.ssF: 1 - R.ssD / R.SMAX): while the key turns, or when the fusee's drive has fallen faster than the train relaxes it.
+     drvB(h): what a going barrel with the same spring would give, its pull falling evenly with time, geared to give the same at 28 h (Swing and isochronism) */
   /* MSET: the mainspring's set (Op. 13, "check condition and set of mainspring"): a spring that has taken a set pulls that much less all through, which the fusee can't make up */
-  let MSET=0;const SUS=0.8,FT12=R.fs.torque(12*FUSEE_PER_HOUR),drvF=h=>R.fs.torque(h*FUSEE_PER_HOUR)/FT12*(1-MSET),drvB=h=>R.fs.pullB(clamp(h/RUN_H,0,1))/R.fs.pullB(0.5)*drvF(RUN_H/2);
-  const driveNow=()=>winding?SUS*clamp(1-R.ssD/R.SMAX,0,1):hrs<RUN_H?drvF(hrs):0;
-  const canDrive=()=>hrs<RUN_H;   /* whether anything can drive the train: the train holds when it can't, and a twist only starts it when it can */
+  let MSET=0;const SUS=1,FT12=R.fs.torque(12*FUSEE_PER_HOUR),drvF=h=>R.fs.torque(h*FUSEE_PER_HOUR)/FT12*(1-MSET),drvB=h=>R.fs.pullB(clamp(h/RUN_H,0,1))/R.fs.pullB(0.5)*drvF(RUN_H/2);
+  R.drvN=n=>drvF(n/FUSEE_PER_HOUR);   /* the fusee's drive for the maintaining work (update()), the set included */
+  const driveNow=()=>winding?R.ssF():Math.max(hrs<RUN_H?drvF(hrs):0,R.ssF());   /* running, the spring pushes what the fusee gives it, or more while its pawl holds it */
+  const canDrive=()=>driveNow()>1e-6;   /* whether anything can drive the train: the train holds when it can't, and a twist only starts it when it can */
+  /* the key lets go: the fusee turns forward to catch the winding pawls and reload the sustaining spring (update()'s catch), which takes those hours off the mainspring */
+  const windEnd=()=>{if(!winding)return;hrs=clamp(hrs+R.release()/FUSEE_PER_HOUR,0,RUN_H);winding=false;};
   const H={amp:ESC.ampAt(drvF(hrs)),held:false,bph:0,bOff:0,eOff:0,Eh:0,arm:0,armT:0,blk:0,blkT:0,kick:0,twT:-1},TAU_FREE=ESC.settings.TF,TAU_ARM=0.2,stopOut=$('#stopOut'),twistB=$('#twist');let lastSO=0;
   if(/[?&]qa\b/.test(location.search))window.__H=()=>({...H,E:lastE,tSim,hrs,tM,slip,rateK,escK,rateW,drive:driveNow()});   /* for the tools: the stop/start state, the master time, the hands' slip, the rate (escK: the escapement's share, rateW the rest) and the drive */
   const segSet=(sel,v)=>document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===v?'true':'false'));
@@ -815,16 +820,17 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const KWV=()=>{const f=1+3.6/Math.hypot(...L.Fu);return{yaw:0.53,pitch:0.32,dist:120,target:mvL(L.Fu[0]*f,-36,L.Fu[1]*f)};};   /* key and fusee, from the winding stop's side */
   const halfs=v=>Math.abs(v*2-Math.round(v*2))<0.02?(Math.floor(v+0.01)||'')+(v%1>0.25?'½':''):v.toFixed(1);
   function kwStart(){if(kw){kwStop();return;}if(st.tour>=0)tourEnd();closeInfo();
-    if($('#kwFull').checked||hrs<0.2)hrs=RUN_H;   /* run down: the chain all on the barrel, 17½ half turns to wind */
+    if($('#kwFull').checked)hrs=RUN_H;   /* run down: the chain all on the barrel, 17½ half turns to wind */
+    else if(hrs<HT/10){kwOut.innerHTML='<b>Already fully wound:</b> the stop-bar in the fusee top is against the winding stop, and the key turns no further. Tick <i>From run down</i> to watch a whole winding.';kwOut.classList.remove('hidden');return;}   /* less than a tenth of a half turn to wind (until 11 October 2026 it was let down to run down at once, under 0.2 h) */
     kw={t0:performance.now(),t:0,h0:hrs,end:0};winding=true;st.drive=false;jump(()=>setView('movement'));st.see=true;st.focus=new Set(KWF);look();
     goCam(KWV());
     kwBtn.textContent='Stop winding';kwBtn.setAttribute('aria-pressed','true');kwOut.classList.remove('hidden');}
-  function kwStop(){if(kw&&kw.zoom)goCam(KWV());kw=null;winding=false;st.focus=null;look();kwBtn.textContent='Wind with the key';kwBtn.setAttribute('aria-pressed','false');}
+  function kwStop(){if(kw&&kw.zoom)goCam(KWV());kw=null;windEnd();st.focus=null;look();kwBtn.textContent='Wind with the key';kwBtn.setAttribute('aria-pressed','false');}
   function kwStep(now){kw.t=(now-kw.t0)/1000;if(kw.end){if(kw.t>kw.end)kwStop();return;}
     const i=Math.floor(kw.t),tot=kw.h0/HT;hrs=Math.max(0,kw.h0-HT*(i+smooth(Math.min(1,(kw.t-i)/0.7))));showH();
     if(!kw.zoom&&hrs<(R.fs.mF+0.25)/FUSEE_PER_HOUR){kw.zoom=true;goCam({yaw:0.53,pitch:0.6,dist:58,target:mvL(L.Fu[0],-20.5,L.Fu[1])});}   /* close in on the fusee top before the chain reaches the stop-bar's nose, for the catch */
     if(hrs===0){kw.end=kw.t+3;kwOut.innerHTML=`<b>Fully wound after ${halfs(tot)} half turns.</b> The chain has pushed the stop-bar in the fusee top out against the winding stop under the barrel bridge, and the key can turn no further.`;}
-    else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}, counterclockwise. ${(RUN_H-hrs).toFixed(1)} h of running stored. The sustaining spring drives the train meanwhile.`;}
+    else kwOut.innerHTML=`Half turn <b>${Math.min(Math.ceil(tot),i+1)}</b> of ${halfs(tot)}, counterclockwise. ${(RUN_H-hrs).toFixed(1)} h of running stored. ${H.held?'The train is stopped: once wound, a twist of the box starts it (Sec. III).':'The sustaining spring drives the train meanwhile.'}`;}
   kwBtn.addEventListener('click',kwStart);
   function partsSync(){for(const q of PROWS){const k=q.p,p=kp(k),h=k!==p?st.hid.has(k)||st.hid.has(p)||isoOut(p,k):st.hid.has(p)||isoOut(p);q.ck.checked=!h;q.row.classList.toggle('off',h);
       if(q.kids){q.ck.indeterminate=!h&&q.kids.some(x=>st.hid.has(x.p)||isoOut(p,x.p));if(st.pick!==q.seen){q.seen=st.pick;if(st.pick&&kp(st.pick)===p)fold(q,true);}}   /* a part or piece of it picked: its fold opens, once */
@@ -1049,7 +1055,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     for(const q of['lift','flip','explode','lidM','lidT','dev','fov'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
     const run=hrs<RUN_H,go=canDrive(),dtS=dt*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
-    if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)winding=false;showH();}
+    if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)windEnd();showH();}
     if(winding)lpEnd=now+2000;{const ph=winding?'w':now<lpEnd?'r':'';if(ph!==lpPh){lpPh=ph;look();cuShow();}}   /* the load path's phase: winding, then 2 s of the mainspring's drive again */
     tVis+=dt;stopMove(dt);
     const brake=H.arm>0.75,drv=driveNow();ampStep(dtS*rateK,brake,go&&!H.held,drv);   /* the arm's finger is beside the timing weight from about three quarters of its turn */

@@ -751,6 +751,49 @@ Contents:
   draws), as the winding ratchet looks at 18:20 and the winding pawls' square ends lie at
   19:12; the load on each pawl now draws it in. The setup ratchet keeps its leaning faces
   (not changed here). Keep: the maintaining work's profiles radial and drawn as computed.
+- **Winding began by dragging the winding pawls back over their faces** (kinematics audit,
+  11 October 2026). As the key started, `holdBack` dropped the sustaining ratchet back to its
+  pawl (up to 2.6Â°) in one frame while the fusee had not moved, so the winding pawls on the
+  ratchet were pulled back over the winding ratchet's locking faces (their depth 0.159 to
+  0.01-0.04 mm in 33 of 40 winds). The spring now pushes the ratchet back with the fusee,
+  the pawls still on their faces, until the sustaining pawl catches it; only then do the
+  winding pawls ride over the teeth. `holdBack` is now the next place a face meets the pawl,
+  every tooth from `phaseAgainst`'s (its walk stopped on a tooth's crest in about one hold
+  in ten). Keep: `tools/maintaining.py`'s `lift` check.
+- **The catch when the key let go took (motion) mod one tooth, and its hours were never
+  spent** (kinematics audit, 11 October 2026). `eps += wrap(target - eps)` turned the fusee
+  forward by the motion modulo a winding tooth, and by a whole tooth when nothing had moved;
+  and the fusee's turn to catch the pawls and reload the spring came off no mainspring, so
+  `eps` grew without bound over partial winds. The catch (`catchAt`) is now the gap to the
+  pawls (none if on them) plus the reload to the drive's balance, exactly; `R.release`
+  foretells it and `app.js` (`windEnd`, where the key lets go) adds its hours, so over 40
+  partial winds `eps` stays within 6.5Â°. Keep: `windEnd` wherever winding stops.
+- **The sustaining spring dropped the drive to 0.8 the moment winding started** (kinematics
+  audit, 11 October 2026). Running at its loaded mark it carried the whole drive, nothing
+  banking it (the parts drawn have none, and the manual has it "under load during the entire
+  running cycle"), yet `driveNow` gave 0.8 of the drive (`SUS`, estimated) as the key turned.
+  The spring now pushes 1 - d / SMAX of the 12-hour drive (`R.ssF`), so it starts with what it
+  carried and falls as it relaxes; running, it sits where it balances the fusee's drive
+  (`R.drvN`, the set included). Keep: the drive while winding is the spring's push.
+- **Run down, the spring stayed loaded while the drive vanished** (kinematics audit,
+  11 October 2026). At run down `driveNow` gave 0 while `update()` kept the sustaining spring
+  at full load. Now the spring follows the fusee's drive down the run-down taper (1.2 h,
+  slower than its 10 minutes, so its pawl never holds); a sudden fall of the drive (the
+  slider set to run down, a set taken) lets the spring push the ratchet back to its pawl and
+  drive the train alone, the fusee standing (`canDrive` holds the train only when neither
+  drives); winding a run-down movement starts from the spring's state. Keep: `canDrive`
+  from `driveNow`.
+- **Setting the hands dragged the maintaining work through its teeth** (kinematics audit,
+  11 October 2026). Setting the time (the field, Now) jumps the train, so the sustaining
+  ratchet (`srA = gA`) and `eps` jumped with it, backward too. `update()` now takes a jump of
+  the fusee wheel (back, or more than 0.25 rad in a frame, or `s.reset`) as a set: the
+  ratchet moves with the wheel, the spring as it was (a held ratchet on its pawl's tooth),
+  and the fusee stays on its turns on the nearest tooth. Keep: `maintaining.py`'s set case.
+- **The key walkthrough let the mainspring down at once when under 0.2 h had run**
+  (kinematics audit, 11 October 2026): `kwStart` set `hrs` to `RUN_H` to have something to
+  wind, a run down that no chronometer does. With *From run down* unticked it now says the
+  chronometer is already fully wound (less than a tenth of a half turn to go); ticked, the
+  walkthrough still starts from run down, as asked.
 
 ## Plates, bridges, screws and arbors
 
