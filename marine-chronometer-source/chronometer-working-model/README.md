@@ -407,7 +407,7 @@ checks the model against it and writes `BOM.md` at the repository root).
 
 The browser tools in `tools/` open `index.html?snap&qa` themselves. They need
 Python with numpy, scipy and Playwright's Chromium, and write their output into
-the folder they're run from. `escapement.js`, `almanac.js` and `solve.py` need no browser. The
+the folder they're run from. `escapement.js`, `almanac.js`, `solve.py` and the checks of the physics (`physics.js`, `dynamics.js`, `strength.js`, `errorbudget.js`: "Checked in time" below) need no browser. The
 root README's "Checking your changes" lists which to run and what they should
 report.
 
@@ -721,6 +721,77 @@ every speed); the equation gives the amplitude and the rate.
   about 3.9 × 10⁻⁶ /mm a °F for brass on steel 1.6 mm thick. A point φ from the
   fixed end then comes in by R²Δκ(1 − cos φ), 0.05 mm at the free end for
   27½ °F, drawn 20 times as far (`R.CURLX`).
+
+### Checked in time: the escapement, strength and an error budget
+
+Three Node tools (no browser) check the averaged physics above against a model
+that doesn't average, and ask the questions it can't: would it work, would it
+fall apart, would it keep time. Where they disagree with the model they report
+the difference with `~~` and don't fail; they fail on what would stop the
+chronometer.
+
+- **`tools/dynamics.js`, the escapement in time.** The balance, the escape
+  wheel (the fourth wheel's inertia reflected onto it) and the detent as
+  bodies, integrated through every contact (RK4, each contact found by
+  bisection), on makeEsc's own contact geometry (checked against its `LI` and
+  `PS` to 0.01 µm). The integrator is checked against a damped oscillator kicked
+  at its dead point (−ζ²/2, −0.24 s a day). What it finds (11 October 2026):
+  - *The wheel's chase.* Released from rest, the escape wheel must catch an
+    impulse jewel already running away from it. With the drawn inertias that
+    takes 2v/a, about 4 ms, so the tooth lands about 13° after the release,
+    not the 0.6° of makeEsc's kinematic wheel (`G`), and strikes the jewel at
+    twice its speed. With the averaged model's springs the balance then swings
+    232°, not 255°, and the escapement's own rate is −4.3 s a day, not −1.5
+    (the timing takes that up). Isochronism stays small: +0.26 s a day for each
+    10° of swing (the averaged model: +0.11 to +0.16).
+  - *The jewel's square end.* Both springs' tips ride the discharge jewel's end
+    (0.32 mm across as drawn) until it has swept past: the detent can't fall
+    back until about −2°, where makeEsc lets it fall at −11°, and the trip
+    spring comes off on the return at about −49°, not −39°. Measured so,
+    let-off is about 20° and overall about 38°, past Op. 87's 26–30°: the real
+    jewel's end must let the tips off sooner (thinner, or rounded). The least
+    swing that keeps it going becomes about 51°, not 41°.
+  - *The detent's work.* The detent goes on lifting after the release, to 2.6
+    times the release lift, so Op. 78's preload over the whole lift takes about
+    12 % of the tooth's work (makeEsc's `fD` 5.7 %). With the drawn springs and
+    the calibrated torque the balance swings about 215°; 255° wants about
+    113 µN·m at the escape wheel (the train, as physics.js builds it, gives
+    76–96), or a balance running down freely in about 52 s (Q about 330; its
+    parts give 202–390).
+  - *The detent's return* (OPEN-QUESTIONS.md 2): the detent is back on its stop
+    about 7 ms before the next tooth reaches the stone, from half to twice the
+    drawn spring's stiffness, at half or 1.5 times Op. 78's preload, with a dead
+    or a bouncy stop, and even with no preload at all.
+  - *Knocks and the sea.* A twist about the staff upsets the beat at about
+    30 rad/s in 2 ms (it gains a beat); a blow across the plate frees the wheel
+    at about 60 g over 3 ms, 140 g over 0.5 ms (the detent isn't poised about
+    its flexure: a steady 49 g lifts it far enough). Yaw of ±10° and ±0.3 g
+    sideways at the period of a roll move the rate by about +0.01 s a day.
+- **`tools/strength.js`, would it fall apart.** Every loaded part fully wound,
+  against its material's published range (the margin at both ends): the train's
+  teeth by Lewis (each stage lossless), the escape wheel's tooth struck at the
+  jewel's speed, the pivots and the fusee's bushing, the chain and its end
+  fittings at the chain's 48 N, the mainspring, hairspring, detent spring (by
+  Goodman, preload and whole lift) and trip spring, and the knocks that bend a
+  pivot (the balance staff's at about 700–1,400 g). Nothing fails. The thinnest
+  margins: the fusee wheel's teeth (1.5–2.2), the fusee bushing's pressure
+  (1.0–3.6), the trip spring's clamped root (1.2–1.7) and the mainspring, which
+  works near its limit, as a mainspring does (it fails by taking a set).
+- **`tools/errorbudget.js`, would it keep time.** As made: makeEsc with a
+  maker's tolerances on every escapement setting (Monte Carlo, estimated
+  tolerances): all run, 97 % swing inside the manual's band at the reference
+  torque, about a third meet every adjustment figure before adjusting (overall
+  and drop are the usual misses, the adjuster's work). At sea: 60 days from a
+  winter port into the tropics, rated over 10 days in port, each day's rate the
+  sum of the test card's temperature curve, scatter and drift (calibrated so the
+  simulated Navy test reads as No. 3390's card), the barometer through the air's
+  share of the damping and the time-domain isochronism, the oil thickening
+  (estimated) and heavy weather from dynamics.js. A chronometer like No. 3390
+  carries about 1.4 s after a month (a third of a mile of longitude on the
+  equator), 4 s after two; one that passes the Navy's test only half the time,
+  about 15 s and 38 s. Drift and the temperature curve dominate. The empirical
+  terms are the card's, not physics: the model has no other source for a
+  chronometer's day-to-day scatter.
 
 ## Sources
 

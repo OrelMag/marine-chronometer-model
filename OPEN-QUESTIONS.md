@@ -37,8 +37,15 @@ The goal they are judged against: someone with only the site can make a Model 21
 `tools/tolerances.js` works out, from the model's own escapement, how far each of these can be off before the balance leaves the manual's running swing (1⅜-1½ turns, 247.5-270°), and the maker's sheets of the three lines (and so the build book) say so:
 
 - **The mainspring:** its stiffness E b t³/12 L within −5 % to +11 % of the drawn spring's: 0.411-0.434 mm thick at the drawn 13.55 width and 1,064 length, about 0.85-1.00 N·m fully wound. A 0.375 mm strip of the same length swings the balance only 213°: it runs, below the manual's figure. So the manual's swing, with the model's train and balance, favours the parts list's 0.0165 in over the coils' measured pitch (the balance's damping and the train's efficiency are estimated: physics.js gives their ranges).
-- **The detent spring:** up to about twice the drawn stiffness (0.098 mm thick; the drawn 0.079) the balance keeps 247.5°; there is no lower limit from its work. Its preload is set by Op. 78's test. Whether a much thinner spring returns the detent in time to lock the next tooth is not computed.
+- **The detent spring:** up to about twice the drawn stiffness (0.098 mm thick; the drawn 0.079) the balance keeps 247.5°; there is no lower limit from its work. Its preload is set by Op. 78's test. A thinner spring still returns the detent in time (`tools/dynamics.js`, 11 October 2026): from half to twice the drawn stiffness, and with no preload at all, the detent is back on its stop about 7 ms before the next tooth reaches the stone.
 - **The trip spring:** forgiving, up to about 12 times the drawn stiffness (0.136 mm; the drawn 0.06).
+
+## Found by integrating the escapement in time (11 October 2026)
+
+`tools/dynamics.js` integrates the escapement beat by beat on the model's own geometry (model README, "Checked in time"). Two readings it leaves open:
+
+- **The discharge jewel's end.** Drawn square and 0.32 mm across, it holds both springs' tips until it has swept past: the detent falls back at about −2° (makeEsc: −11°) and the trip spring comes off on the return at about −49° (makeEsc: −39°). Measured so, overall is about 38°, past Op. 87's 26-30°. So the real jewel's end lets the tips off sooner: thinner, rounded or bevelled. **What would settle it:** a close photograph of a Model 21's discharge jewel in its roller, side-on and end-on.
+- **What swings the balance 255°.** With the wheel's chase onto the impulse jewel (it lands about 13° after release, not 0.6°) and the detent lifting on after release (Op. 78's preload over 2.6 times the release lift, about 12 % of the impulse), the drawn escapement wants about 113 µN·m at the escape wheel, or a balance running down freely in about 52 s (Q about 330). The train as `physics.js` builds it gives 76-96 µN·m, and the balance's parts allow Q 202-390. **What would settle it:** the free run-down of a real Model 21's balance (the train held by the blocking screw, its swing timed on video), and its running swing on a timegrapher.
 
 ## The likeliest sources (both behind NAWCC membership)
 
