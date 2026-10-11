@@ -374,14 +374,14 @@ Contents:
   `update()` turns it (if a driver's sense changes there, its `s` changes too);
   the gap measured on the outlines as drawn (`pl`), never on pitch circles; at
   the audit's E values and over a dense sweep of a tooth of each driver no
-  outline overlaps and the closest gap is 0.005 mm, on the driving flank.
+  outline overlaps and the closest gap is 0.005 mm, on the driving flank. `d81364f`
 - **Comments and the README quoting the escape pinion's old mesh** (kinematics
   audit, 11 October 2026). Two comments in `movement.js` (the photographed
   group's, and `MOD`'s) and two places in the model README still put the escape
   pinion 10.585 mm from the fourth, the module 0.3113 or 0.249; the fourth's
   measured place makes it 11.107 mm and 0.2614 (`tools/solve.py`). Keep: a
   figure that follows from `L` quoted as `solve.py` prints it, the old value
-  only as history.
+  only as history. `05b2ef2`
 
 ## Winding and maintaining work
 
@@ -1955,7 +1955,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   its 12. Each pinion is now phased on its wheel by `gearLash`, as the model's
   are (the backlash behind, the escape pinion's frame at -t0), and each wheel
   takes its pinion as `mate`. Keep: an essay figure that meshes gears phases
-  them with `gearLash` and the way the model turns its wheels.
+  them with `gearLash` and the way the model turns its wheels. `96fba58`
 
 ---
 
