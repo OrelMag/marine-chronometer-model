@@ -37,7 +37,7 @@ const f=(x,n=2)=>x.toFixed(n),rows=[
   ['Balance from the escape arbor, by the book\'s construction','rims crossing over a pitch (Fig. 139)',`${f(plant(P,rr)*ES)} mm by the rule; the model ${f(ex*ES)} mm`,'L (photo fit, Fig. 90)',`agrees to ${f(Math.abs(plant(P,rr)-ex)*ES)} mm`],
   ['Rims\' crossing, on the wheel','a pitch, 24° for 15 teeth (Fig. 139)',`${f(arcW*D,1)}° (pitch ${f(P*D,1)}°)`,'follows from the above',`${f(100*arcW/P,0)}% of a pitch`],
   ['Rims\' crossing, on the roller (balance arc)',`about 48° (Fig. 139; ${f(arcR15*D,1)}° by its own figures)`,`${f(arcR*D,1)}°`,'follows from the above','smaller wheel, smaller arc'],
-  ['Impulse arc (balance)','43° of the 48° (Fig. 141)',`${f(r.impEnd-u.land*D,1)}° (tooth lands ${f(u.land*D,1)}°, ends ${f(r.impEnd,1)}°)`,'solved (manual Ops. 85-87, 97)','agrees within 2°'],
+  ['Impulse arc (balance)','43° of the 48° (Fig. 141)',`${f(r.impEnd-u.land*D,1)}° (tooth lands ${f(u.land*D,1)}°, ends ${f(r.impEnd,1)}°)`,'solved (manual Ops. 85-87, 97)','less: the wheel, from rest, catches the jewel 16° after release (tools/dynamics.js)'],
   ['Jewel inside the wheel before release','5° (Fig. 141)',thIn===null?'-':`${f((E.thRel-thIn)*D,1)}°`,'solved','less: the manual\'s figures set the release'],
   ['Unlocking: balance arc','about 5° (p. 146)',`${f(r.rel-r.contact,1)}°`,'manual Op. 85 (about 6°)','agrees; the manual decides'],
   ['Unlocking: the detent\'s turn','about 2° (p. 150, Drop and draw)',`${f(E.lRel/E.LEN*D,2)}°`,'solved','less; the book\'s 2° is ambiguous (README)'],

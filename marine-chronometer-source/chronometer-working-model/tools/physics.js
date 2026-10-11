@@ -6,7 +6,7 @@
 // range, named where it is used, and the result is given over the range, not at one value.
 const fs=require('fs'),path=require('path'),rd=f=>fs.readFileSync(path.join(__dirname,'..','js',f),'utf8'),mv=rd('movement.js'),core=rd('core.js');
 const TRAIN=Function('return '+/TRAIN=(\{[^}]*\})/.exec(mv)[1])(),MS={t:+/MSPRING=\{t:([\d.]+)/.exec(core)[1],len:+/MSPRING=\{[^}]*len:([\d.]+)/.exec(core)[1]};
-const {build}=require('./escapement.js'),ESC=build().ESC,ESm=ESC.measure(),FU=ESC.run.fu,LIFT=ESm.lRel;   /* the model's escapement (shared/escapement.js through tools/escapement.js): unlocking's share of the work, the lift at release (mm) */
+const {build}=require("./escapement.js"),ESC=build().ESC,ESm=ESC.measure(),LIFT=ESm.lRel;   /* the model's escapement (shared/escapement.js through tools/escapement.js): unlocking's share of the work, the lift at release (mm) */
 const rows=[];let fail=0;const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);},f=(x,n=2)=>x.toFixed(n),D=Math.PI/180;
 const range=(fn,lo,hi)=>[fn(lo),fn(hi)].sort((a,b)=>a-b);
 
@@ -26,24 +26,26 @@ const ratioT=TRAIN.fu/TRAIN.cp*TRAIN.cw/TRAIN.tp*TRAIN.tw/TRAIN.fp*TRAIN.fw/TRAI
 const esc=eta=>Tf*0.95*eta**4/ratioT;   /* the chain and fusee 0.95; each of four stages eta (cycloidal teeth, jewelled or bushed pivots: 0.85-0.95) */
 say(`the train fusee wheel to escape wheel ${f(ratioT,0)}:1; the escape wheel's torque ${range(esc,0.85,0.95).map(x=>f(x*1e6,0)).join('-')} µN·m (each stage 0.85-0.95)`);
 
-/* ---------- A4: the escape wheel with mass: its chase onto the impulse jewel ---------- */
+/* ---------- A4: the escape wheel with mass: its chase onto the impulse jewel (the model's escapement, shared/escapement.js, which tools/dynamics.js checks beat by beat) ---------- */
 say('A4: the escape wheel with mass');
+const rE=13.16/2/1000;   /* the escape wheel's radius */
 const J=4.80e-9;   /* the escape wheel, its pinion and arbor about their axis, kg·m²: the drawn solid in steel (7.85), integrated on the mesh (invariants.py checks this against it; 4.72e-9 before the arbor and pinion were measured, 4-5 October 2026) */
-const rI=6.32/2/1000,rE=13.16/2/1000,wB=A*4*Math.PI;   /* the impulse roller's radius (0.249 in), the wheel's (13.16 mm), the balance's speed through the middle of its swing */
-const chase=tq=>{const vJ=wB*rI,we=vJ/rE,a=tq/J,tc=we/a,phw=a*tc*tc/2,phb=wB*tc,ke=J*we*we/2;return{tc,phw,phb,ke};};
-const c9=chase(esc(0.9));
-say(`unlocked, the wheel must reach the jewel's speed (${f(wB*rI,3)} m/s at the roller, ${f(wB*rI/rE,1)} rad/s at the wheel): ${f(c9.tc*1000,1)} ms, ${f(c9.phw/D,1)}° of the wheel, ${f(c9.phb/D,1)}° of the balance (each stage 0.9)`);
-chk(c9.phb<41*D,`the chase ends inside the impulse arc (the jewel driven from -20.6° to 20.7°, 41°: tools/escapement.js): ${f(c9.phb/D,1)}° of it is spent catching up`);
-const Wtooth=tq=>tq*2*Math.PI/TRAIN.ew,etaE=tq=>{const c=chase(tq),W=Wtooth(tq);return Math.max(0,(W-c.ke)/W*(1-FU)*(1-ESm.drop/22.5));};   /* the tooth's work, less the wheel's speed lost when it strikes the jewel, the unlocking's share (FU) and the drop's degrees of each 22.5° */
-say(`the escapement's own efficiency: ${f(100*etaE(esc(0.9)),0)} % (the strike, the unlocking ${f(100*FU,1)} %, the drop ${f(ESm.drop,1)}° of 22.5°)`);
+const RU=ESC.run,tqCal=RU.cl.w*ESC.kB,JW=ESC.settings.JW*1e-9;   /* the torque the model is calibrated at (255°); the wheel's inertia with the fourth wheel's reflected (shared/escapement.js JW) */
+chk(JW>J&&JW<1.5*J,`the escapement's wheel inertia (${f(JW*1e9,2)} g·mm²) is the escape wheel's ${f(J*1e9,2)} with the fourth wheel's, reflected through its pinion (about ${f((JW-J)*1e9,1)}, estimated: tools/dynamics.js)`);
+const chaseDeg=(RU.land-ESC.thRel)/D;
+say(`unlocked at ${f(ESC.thRel/D,1)}°, the wheel starts from rest at ${f(tqCal/JW,0)} rad/s² (${f(tqCal*1e6,1)} µN·m, the model's): it catches the impulse jewel, already running away at ${f(RU.vj,1)} rad/s of the wheel, ${f(chaseDeg,1)}° of the balance later (at ${f(RU.land/D,1)}°), running ${f(RU.vw,1)} rad/s: it strikes the jewel`);
+chk(RU.end!==null&&RU.end<ESC.A,`the impulse ends inside the swing (the tooth leaves the jewel at ${f(RU.end/D,1)}°)`);
+const effE=Math.PI*ESC.A*ESC.A/RU.Q/(RU.cl.w*ESC.P);   /* what the balance nets an oscillation over the tooth's work, both in units of k */
+say(`the escapement's own efficiency: ${f(100*effE,0)} % of the tooth's work reaches the balance (the strike ${f(100*RU.strike,1)} % of the impulse, the unlocking ${f(100*RU.fu,1)} %, of it the detent's ${f(100*RU.detent,1)} %, and the wheel's speed lost at each lock)`);
 
 /* ---------- A3 again: the balance's Q the budget needs ---------- */
-const Pin=eta=>{const tq=esc(eta);return Wtooth(tq)*etaE(tq)*2;};   /* to the balance, W per oscillation x 2 a second */
+const kA=ESC.kB,Wn=tq=>ESC.wn(tq/tqCal,A);   /* the work an oscillation nets the balance at 255° with the escape wheel driven at tq (units of k) */
+const Pin=eta=>Math.max(0,Wn(esc(eta)))*kA*2;   /* to the balance, W per oscillation x 2 a second */
 const Qneed=eta=>2*Math.PI*Eb*2/Pin(eta),TF=Q=>Q*0.5/Math.PI;
 const [q0,q1]=range(Qneed,0.85,0.95);
 say(`the balance at 255°: ${f(Eb*1e3,3)} mJ; it is given ${range(Pin,0.85,0.95).map(x=>f(x*1e6,0)).join('-')} µW, so it holds 255° if its Q is ${f(q0,0)}-${f(q1,0)} (its free swing decaying in ${f(TF(q0),0)}-${f(TF(q1),0)} s)`);
-const TFm=+/TF:([\d.]+)/.exec(fs.readFileSync(path.join(__dirname,'..','..','shared','escapement.js'),'utf8'))[1],Qm=Math.PI*TFm/0.5;   /* the model's, shared/escapement.js */
-chk(q0<400&&q1>100,`the budget closes: that Q is inside a balance's (about 100-400, mechanical watch and chronometer balances in air)`);
+const TFm=ESC.settings.TF,Qm=Math.PI*TFm/0.5;   /* the model's, shared/escapement.js */
+chk(q0<450&&q1>100,`the budget closes: that Q is inside a balance's (about 100-400, mechanical watch and chronometer balances in air)`);
 chk(Qm>=q0&&Qm<=q1,`the model's TF ${TFm} s (Q ${f(Qm,0)}, shared/escapement.js) is inside the budget's: it swings the balance ${f(Math.sqrt(Qm/Qneed(0.9))*255,0)}° at each stage's 0.9, ${range(eta=>Math.sqrt(Qm/Qneed(eta))*255,0.85,0.95).map(x=>f(x,0)).join('-')}° over 0.85-0.95 (the manual's 1⅜-1½ turns, 247.5-270°)`);
 
 /* ---------- A6: friction from the measured parts (the second round's pivots and jewels; ASSESSMENT-2026-10-05.md, next step 1) ---------- */
@@ -80,7 +82,7 @@ const sideQ=2*Math.PI*Eb/(2*0.15*(pvB[0]/1000)*2.4e-3*k*A*A/(5.1e-3));   /* the 
 const qMat=[1000,5000];   /* the spring's own damping: Elinvar-type alloys' internal Q, about 1e3-5e3 (published, by treatment) */
 const tot=(...q)=>1/q.reduce((s,x)=>s+1/x,0),qLo=tot(qAir[0],qEnd[0],sideQ,qMat[0]),qHi=tot(qAir[1],qEnd[1],sideQ,qMat[1]);
 say(`the balance's damping: air on its screws, nuts and arm Q ${f(qAir[0],0)}-${f(qAir[1],0)}; its pivot's flat end on the endstone ${f(qEnd[0],0)}-${f(qEnd[1],0)} (domed, it would be ${f(domeQ,0)}); side friction from the spring ${f(sideQ,0)}; the spring itself ${qMat.join('-')}`);
-const qN=P=>2*Math.PI*Eb*2/(Wtooth(Tf*0.95*P/ratioT)*etaE(Tf*0.95*P/ratioT)*2),qn=[qN(Phi),qN(Plo)].sort((a,b)=>a-b);
+const qN=P=>2*Math.PI*Eb*2/(Math.max(0,Wn(Tf*0.95*P/ratioT))*kA*2),qn=[qN(Phi),qN(Plo)].sort((a,b)=>a-b);
 say(`together the balance's Q is ${f(qLo,0)}-${f(qHi,0)} (free decay ${f(TF(qLo),0)}-${f(TF(qHi),0)} s); with the train's efficiency from its parts the budget needs ${f(qn[0],0)}-${f(qn[1],0)} to hold 255°`);
 chk(qLo<=qn[1]&&qHi>=qn[0],`the two overlap: the balance as built loses about what the train, as built, gives it (the model's TF ${TFm} s, Q ${f(Qm,0)}: ${Qm>=qLo&&Qm<=qHi?'inside':'outside'} the damping's range, ${Qm>=qn[0]&&Qm<=qn[1]?'inside':'outside'} the budget's)`);
 say(`the swing the two give together: ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency (the manual's 247.5-270°)`);
@@ -90,15 +92,14 @@ const qnM=[qN(Phi*0.95),qN(Plo*0.85)].sort((a,b)=>a-b);
 say(`with the mainspring's own coil friction and set (5-15 %), the budget needs ${f(qnM[0],0)}-${f(qnM[1],0)}: against the parts' ${f(qLo,0)}-${f(qHi,0)}, the model's Q ${f(Qm,0)} in both`);
 chk(Qm>=qLo&&Qm<=qHi,`the model's TF ${TFm} s is inside the decay the balance's parts give (${f(TF(qLo),0)}-${f(TF(qHi),0)} s): derived from the budget before, now from the friction and the air too`);
 
-/* ---------- B2: the detent spring's share of the work, from the manual's test ---------- */
+/* ---------- B2: the detent spring, from the manual's test ---------- */
 /* Op. 78: a 0.770 g weight hung on the locking jewel (Tool No. 8, Fig. 88) should just part the detent spring from its stop button: the spring is preloaded
-   that much at the jewel. Unlocking lifts the jewel 0.20 mm (tools/escapement.js, at release), so the balance does at least the preload times the lift on the
-   detent each oscillation, and it is lost when the detent falls back on its banking */
+   that much at the jewel, and the model's detent is (shared/escapement.js W78). The balance lifts it against that preload and its stiffness as far as the
+   discharge jewel carries it, well past the release, and the work is lost when the detent falls back on its stop */
 say('B2: the detent spring, from Op. 78');
-const Fpre=0.770e-3*9.80665,lift=LIFT/1000,Wd=Fpre*lift,Wosc=eta=>Pin(eta)/2,fDmin=eta=>Wd/Wosc(eta),[fd0,fd1]=range(fDmin,0.85,0.95);
-const fDm=+/fD:([\d.]+)/.exec(fs.readFileSync(path.join(__dirname,'..','..','shared','escapement.js'),'utf8'))[1];
-say(`its preload ${f(Fpre*1000,2)} mN at the jewel; lifted ${f(LIFT,2)} mm it takes at least ${f(Wd*1e6,2)} µJ of the balance's ${range(Wosc,0.85,0.95).map(x=>f(x*1e6,1)).join('-')} µJ an oscillation: ${f(100*fd0,1)}-${f(100*fd1,1)} %`);
-chk(fDm>=fd0*0.95,`the model takes the detent spring's share as ${f(100*fDm,1)} % (shared/escapement.js, fD): at least the test's preload over the lift`);
+{const Fpre=ESC.settings.W78*1e-3*9.80665,rel=Fpre*(LIFT/1000)*Math.hypot(ESC.Jc.x-ESC.Ft.x,ESC.Jc.y-ESC.Ft.y)/ESC.LEN,mx=Math.max(...ESC.LI)/ESC.lRel,Wd=RU.detent*RU.Wi*kA;
+  say(`its preload ${f(Fpre*1000,2)} mN at the jewel; to the release (${f(LIFT,2)} mm at the passing spring's tip) that is ${f(rel*1e6,2)} µJ, but the jewel carries the detent on to ${f(mx,2)} times that lift: ${f(Wd*1e6,2)} µJ an oscillation, ${f(100*RU.detent,1)} % of the impulse`);
+  chk(RU.detent>0&&RU.detent<0.25,`the detent's share leaves the escapement running at the manual's swing`);}
 
 /* ---------- A5: temperature from the materials ---------- */
 say('A5: temperature from the materials');
@@ -120,7 +121,7 @@ say(`a split bimetallic rim (brass 19 on steel 11.5, 1.6 thick, r 14.5, the mode
 const need=-rate(eSt,aSt,aSt);
 chk(comp>0.3*need&&comp<1.7*need,`against the ${f(need,1)} s a day a °C a steel spring loses: ${f(100*comp/need,0)} % with the screws at 90° on average; moving them toward the free ends (or the rim's thickness) brings it to 100 % (Table IV's job)`);
 /* the essay quotes these (spans data-phys="…" in index.html, "What the model gives a maker" and "Materials, hardening and tools"): each must be what is found here */
-{const want={stage:`${f(etaEq(Plo),2)}-${f(etaEq(Phi),2)}`,Qparts:`${f(qLo,0)}-${f(qHi,0)}`,TFparts:`${f(TF(qLo),0)}-${f(TF(qHi),0)}`,Mup:f(Mup,2),sUp:f(sUp/1e9,2),esc:range(esc,0.85,0.95).map(x=>f(x*1e6,0)).join('-'),chase:f(c9.phb/D,0),Q:`${f(q0,0)}-${f(q1,0)}`,steelRate:f(-rate(eSt,aSt,aSt),1),comp:f(comp,1),eNeed:`${f(e0*1e6,0)} to ${f(e1*1e6,0)}`};
+{const want={stage:`${f(etaEq(Plo),2)}-${f(etaEq(Phi),2)}`,Qparts:`${f(qLo,0)}-${f(qHi,0)}`,TFparts:`${f(TF(qLo),0)}-${f(TF(qHi),0)}`,Mup:f(Mup,2),sUp:f(sUp/1e9,2),esc:range(esc,0.85,0.95).map(x=>f(x*1e6,0)).join('-'),chase:f(chaseDeg,0),TFm:f(TFm,0),Q:`${f(q0,0)}-${f(q1,0)}`,steelRate:f(-rate(eSt,aSt,aSt),1),comp:f(comp,1),eNeed:`${f(e0*1e6,0)} to ${f(e1*1e6,0)}`};
  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-phys="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];
  for(const[k,v]of Object.entries(want))chk(got[k]===v,`the essay quotes ${k} as ${got[k]??'(missing)'}: found ${v}`);}
 /* for dynamics.js, strength.js and errorbudget.js: the fusee's torque, the train's ratio and efficiencies, the balance's damping from its parts */

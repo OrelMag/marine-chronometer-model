@@ -1,14 +1,15 @@
 // The escapement in time: the balance, the escape wheel (with the fourth wheel behind it) and the detent as masses on springs, integrated through every
 // contact, instead of the swing-averaged equations the model runs on (shared/escapement.js: the swing from the work done an oscillation, the rate by Airy's
 // sum). Needs only Node.js:
-//   node dynamics.js            (about a minute; exits with 1 if the time-domain escapement disagrees with the averaged one beyond the stated bounds,
+//   node dynamics.js            (about a minute; exits with 1 if the time-domain escapement disagrees with the model's beyond the stated bounds,
 //                                misses a beat at the model's settings, or the detent comes back too late to lock the next tooth)
 //   node dynamics.js --quick    (the cross-check and the detent only, about 15 s)
-// What it answers that the averaged model can't:
-//   1. Whether the averaging holds: the swing and the escapement's own rate integrated beat by beat, with the escape wheel's chase onto the impulse jewel
-//      and its strike (which the averaged model leaves out), against makeEsc's figures at the same settings.
-//   2. Whether the detent is back on its banking in time to lock the next tooth (OPEN-QUESTIONS.md 2, tolerances.js: "not computed"): the detent as a
-//      body on its beryllium-copper spring, preloaded as Op. 78 sets it, its inertia from the drawn pieces (movement.js), bouncing off its stop button.
+// What it answers that the averaged model can't, or checks it on:
+//   1. Whether the averaging holds: the swing, where the tooth lands after the wheel's chase from rest, where the detent falls back and the escapement's own
+//      rate, integrated beat by beat, against makeEsc's figures at the same settings and springs (they agree, since makeEsc took up the chase, the jewel's
+//      rounded end and the springs' own work on 11 October 2026: this is what found them missing).
+//   2. Whether the detent is back on its banking in time to lock the next tooth (OPEN-QUESTIONS.md 2): the detent as a body on its beryllium-copper spring,
+//      preloaded as Op. 78 sets it, its inertia from the drawn pieces (movement.js), bouncing off its stop button.
 //   3. Starting, the least drive that keeps it going, and what knocks it out: a twist about the staff (it trips or stops) and a blow across the plate
 //      (the detent is not poised about its flexure, so a hard enough blow lifts it off its stop and lets a tooth go).
 //   4. The ship's motion: yaw about the staff and the lateral accelerations of a roll, and what they do to the rate.
@@ -21,12 +22,12 @@ const D=Math.PI/180,TAU=2*Math.PI,G0=9.80665,ES=ESC.ES/1000,day=x=>86400*x;   /*
 
 /* ---------- the bodies ---------- */
 const I=num(/const I=([\d.e-]+),k=/,phys,'the balance (physics.js)'),T0=ESC.T,W0=TAU/T0,K=I*W0*W0;   /* Table II's balance; the hairspring's stiffness for 0.5 s */
-const TF=ESC.settings.TF,C=2*I/TF;   /* the balance's damping, viscous, from the free run-down TF (physics.js derives it from the parts: 32-62 s, the model's 34) */
+const TF=ESC.settings.TF,C=2*I/TF;   /* the balance's damping, viscous, from the free run-down TF (physics.js: inside what the parts give and the budget needs) */
 const JE=num(/const J=([\d.e-]+);/,phys,'the escape wheel\'s inertia (physics.js)');
 /* the fourth wheel turns with the escape wheel through its pinion (the drive keeps the mesh closed), so its inertia counts, reflected by (10/75)²: a brass
    disc of the drawn module, teeth and thickness, 0.7 of it left by the spokes (estimated); the third wheel, reflected again by (10/80)², is negligible */
 const TR=Function('return '+/TRAIN=(\{[^}]*\})/.exec(mv)[1])(),M4=0.2614,r4=M4*TR.fw/2/1000,J4=0.7*0.5*8500*Math.PI*r4**4*0.9e-3,JT=JE+J4*(TR.ep/TR.fw)**2;
-const TAUE=ESC.run.cl.w*K;   /* the escape wheel's torque the averaged model is calibrated at (255°): physics.js's budget gives 57-90 µN·m for it */
+const TAUE=ESC.run.cl.w*K;   /* the escape wheel's torque the model is calibrated at (255°): physics.js's budget checks the train gives it */
 /* the detent: its pieces as movement.js draws them (poly(R.det, piece, bottom, top, material)), their plan ESC.pieces about the point of flexure Ft;
    beryllium copper (C17200, 8.25 g/cm³), the locking stone ruby (3.98), the trip spring Elinvar-type (8.15) 7.9 mm long, tsT thick and 0.3 deep (movement.js) */
 const RHO={Cu:8250,ruby:3980,El:8150},Ft=ESC.Ft,H={};
@@ -54,14 +55,16 @@ const KTIP=3*180e9*(0.3e-3*tsT**3/12)/LTS**3;
 const LEN=ESC.LEN,DREL=ESC.lRel/LEN,P=ESC.P,S=ESC.settings,CDR=S.dL*(Math.tan(S.DRAW*D)+S.MU)/(1-S.MU*Math.tan(S.DRAW*D));   /* the wheel's turn back as the stone is drawn out against the tooth (makeEsc) */
 
 /* ---------- contact tables over the balance's angle (the roller's jewels, periodic in 2π) ---------- */
-/* the discharge jewel as makeEsc has it: a slab wD thick along the direction aD + θ, from the staff out to reach, and the passing spring's tip a disc
+/* the discharge jewel as makeEsc has it, worked out apart: a slab wD thick along the direction aD + θ, from the staff out to reach, its end rounded, and the passing spring's tip a disc
    radius ρ at Pt + s dir. The tip overlaps the jewel for s in (s1, s2); the jewel pushes it out to s2 (dir nH: the detent, backed by the horn, on the
    active swing; -nB: the trip spring bending on the return). Checked against makeEsc's LI and PS below */
 const HT=2e-5,NTB=Math.ceil(TAU/HT)+3,wrap=a=>a-TAU*Math.floor((a+Math.PI)/TAU),ti=a=>(wrap(a)+Math.PI)/HT;
 const slab=(th,dir)=>{const u={x:Math.cos(ESC.aD+th),y:Math.sin(ESC.aD+th)},m={x:-u.y,y:u.x},w=ESC.wD/2+ESC.rho,reach=ESC.rd+0.5*ESC.rho;
   const pm=PT.x*m.x+PT.y*m.y,dm=dir.x*m.x+dir.y*m.y,pu=PT.x*u.x+PT.y*u.y,du=dir.x*u.x+dir.y*u.y;let lo=-Infinity,hi=Infinity;
   const cut=(p,d,a,b)=>{if(Math.abs(d)<1e-12){if(p<=a||p>=b){lo=1;hi=0;}return;}let x=(a-p)/d,y=(b-p)/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);};
-  cut(pm,dm,-w,w);cut(pu,du,0,reach);return lo<hi?[lo,hi]:null;};
+  const cR=ESC.settings.rnd?w:0;cut(pm,dm,-w,w);cut(pu,du,0,reach-cR);let r=lo<hi?[lo,hi]:null;   /* the jewel's end a half round (makeEsc's rnd): a disc at reach - w */
+  if(cR>0){const cx=PT.x-(reach-cR)*u.x,cy=PT.y-(reach-cR)*u.y,b=cx*dir.x+cy*dir.y,q=b*b-(cx*cx+cy*cy-cR*cR);if(q>0){const a=-b-Math.sqrt(q),c=-b+Math.sqrt(q);r=r?[Math.min(r[0],a),Math.max(r[1],c)]:[a,c];}}
+  return r;};
 const mk=()=>new Float64Array(NTB).fill(NaN),G=mk(),S1=mk(),S2=mk(),Q1=mk(),Q2=mk(),mB={x:-ESC.nB.x,y:-ESC.nB.y};
 for(let i=0;i<NTB;i++){const th=-Math.PI+i*HT,b=ESC.bite(th);if(b>-1e8)G[i]=b-ESC.t0;const a=slab(th,ESC.nH);if(a){S1[i]=a[0];S2[i]=a[1];}const c=slab(th,mB);if(c){Q1[i]=c[0];Q2[i]=c[1];}}
 const dif=(T)=>{const d=mk();for(let i=1;i<NTB-1;i++){const a=T[i-1],b=T[i],c=T[i+1];d[i]=!isNaN(a)&&!isNaN(c)?(c-a)/(2*HT):!isNaN(b)&&!isNaN(c)?(c-b)/HT:!isNaN(a)&&!isNaN(b)?(b-a)/HT:NaN;}return d;};
@@ -69,16 +72,16 @@ const G1=dif(G),G2=dif(G1),S21=dif(S2),S22=dif(S21),Q21=dif(Q2);
 const at=(T,x)=>{const f=ti(x),i=Math.floor(f),a=T[i],b=T[i+1];if(isNaN(a))return isNaN(b)||f-i<0.5?NaN:b;if(isNaN(b))return f-i>0.5?NaN:a;return a+(b-a)*(f-i);};
 
 /* ---------- the integration ---------- */
-/* one run. o: drive s (the escape wheel's torque, times the calibrated), mode 'avg' (the springs as the averaged model has them: the detent and trip
-   spring's work fitted to fD, fP, no preload, the detent all but massless) or 'phys' (the drawn springs, Op. 78's preload, the detent's inertia), kD/kP
+/* one run. o: drive s (the escape wheel's torque, times the calibrated), mode 'avg' (the model's springs, the detent all but massless and dead on its stop,
+   as makeEsc takes it) or 'phys' (the same springs, the detent's own inertia, bouncing on its stop), kD/kP
    (their stiffness, times), pre (the preload, times), dI (the detent's inertia, times), J (the wheel and train's), eB (the detent's restitution on its stop
    button: estimated 0.3, metal on a steel button, its range tried below), eW (the tooth on the impulse jewel: plastic), A (start, degrees), T, from (when
    the rate is measured from), ideal (no escapement: a kick at the dead point, which by Airy changes no rate, to measure the damping's own share), ext(t):
    the case's angular acceleration al (rad/s²) about the staff and its linear acceleration ax, ay (m/s², unit frame); TF (the balance's run-down, s);
    trace: an array that collects each event as [t, event, θ°, θ', lift/release lift, detent mode, wheel mode, wheel/pitch] (for debugging) */
 function sim(o={}){
-  const s=o.s??1,C=2*I/(o.TF??TF),phys=(o.mode??'phys')==='phys',tauE=TAUE*s,J=JT*(o.J??1),eB=o.eB??0.3,eW=o.eW??0,ext=o.ext,T=o.T??80,from=o.from??40,ideal=!!o.ideal;
-  const id=phys?ID*(o.dI??1):ID*1e-4,kr=(phys?KD:K*ESC.run.cl.Kd*LEN*LEN)*(o.kD??1),pre=phys?MPRE*(o.pre??1):0,kp=(phys?KTIP*ES*ES:K*ESC.run.cl.Kp)*(o.kP??1);
+  const s=o.s??1,C=2*I/(o.TF??TF),phys=(o.mode??'phys')==='phys',tauE=TAUE*s,J=JT*(o.J??1),eB=o.eB??(phys?0.3:0),eW=o.eW??0,ext=o.ext,T=o.T??80,from=o.from??40,ideal=!!o.ideal;
+  const id=phys?ID*(o.dI??1):ID*1e-4,kr=KD*(o.kD??1),pre=MPRE*(o.pre??1),kp=KTIP*ES*ES*(o.kP??1);
   const cd=2*Math.sqrt(kr*id)/(2*(o.Qd??100)),mDraw=tauE*CDR/DREL;   /* the detent's own damping (Q 100, estimated); the draw's resistance spread over the lift to release */
   const hf=o.hf??4e-6,hc=o.hc??1e-4;
   let t=0,th=-(o.A??ESC.A/D)*D,w=0,d=0,dv=0,ph=0,pv=0,wm=0,dm=0,pc=false,pp=0,passed=true;   /* wm: wheel locked 0, free 1, on the jewel 2; dm: detent on its stop 0, free 1, pushed 2 */
@@ -174,74 +177,64 @@ if(require.main!==module)return;
 
 /* ---------- the report ---------- */
 const PH=require('./physics.js'),quick=process.argv.includes('--quick'),rows=[];let fail=0;
-const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);},note=s=>rows.push(`  ~~  ${s}`);   /* ~~: a disagreement found and reported, not failed (README, "The escapement in time") */
+const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);};
 const f=(x,n=2)=>(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),t0=Date.now(),flush=()=>{console.log(rows.splice(0).join('\n'));console.log(`  (${f((Date.now()-t0)/1000,0)} s)`);};
-/* the drive (times the calibrated) that swings the balance A degrees: secant on runs started at A, long enough for A² to settle within about a degree */
-const driveFor=(A,o={})=>{let a=0.9,b=1.4,fa=sim({mode:'phys',s:a,A,T:40,from:30,...o}).A-A,fb=sim({mode:'phys',s:b,A,T:40,from:30,...o}).A-A;
-  for(let i=0;i<5&&Math.abs(fb)>0.5;i++){const c=b-fb*(b-a)/(fb-fa);a=b;fa=fb;b=Math.max(0.3,Math.min(3,c));fb=sim({mode:'phys',s:b,A,T:40,from:30,...o}).A-A;}return b;};
 say('The bodies');
 say(`the balance ${I*1e9} g·mm² on k ${f(K*1e6,1)} µN·m a radian, damped as its free run-down TF ${TF} s (Q ${f(Math.PI*TF/T0,0)})`);
-say(`the escape wheel ${f(JE*1e9,2)} g·mm² (physics.js) and the fourth wheel's reflected ${f(J4*(TR.ep/TR.fw)**2*1e9,2)} (estimated): ${f(JT*1e9,2)}; driven at ${f(TAUE*1e6,1)} µN·m, the torque the averaged model is calibrated at`);
+say(`the escape wheel ${f(JE*1e9,2)} g·mm² (physics.js) and the fourth wheel's reflected ${f(J4*(TR.ep/TR.fw)**2*1e9,2)} (estimated): ${f(JT*1e9,2)}; driven at ${f(TAUE*1e6,1)} µN·m, the torque the model is calibrated at`);
+chk(Math.abs(JT*1e9-S.JW)<0.1&&Math.abs(KD/(ESC.KD*ESC.kB)-1)<0.01&&Math.abs(MPRE/(ESC.MP*ESC.kB)-1)<0.01&&Math.abs(KTIP*ES*ES/(ESC.KP*ESC.kB)-1)<0.01,`the model's bodies and springs (JW ${S.JW}, the detent's ${f(ESC.KD*ESC.kB*1e3,3)} mN·m a radian and ${f(ESC.MP*ESC.kB*1e6,1)} µN·m, the trip spring's) are these, from the drawn parts`);
 say(`the detent: ${f(DM.m*1e6,1)} mg, ${f(ID*1e9,3)} g·mm² about its flexure, its centre of mass ${f(rCM*1000,2)} mm from it (the drawn pieces, the trip spring with it)`);
 say(`its spring: two strips ${H.spring.map(([h])=>f(h*1000,2)).join(' + ')} mm tall, ${f(tD*1000,3)} thick, ${f(lD*1000,2)} long: ${f(KD*1e3,3)} mN·m a radian (beryllium copper, 128 GPa), preloaded ${f(MPRE*1e6,1)} µN·m by Op. 78 (as if bent ${f(MPRE/KD/D,2)}° past its stop)`);
 say(`the wheel is free at ${f(DREL/D,3)}° of the detent (lRel ${f(ESC.lRel*ESC.ES,3)} mm at the passing spring's tip); the trip spring ${f(LTS*1000,1)} × ${f(tsT*1000,2)} × 0.3 mm, ${f(KTIP,1)} N/m at its tip (Elinvar-type, 180 GPa)`);
-{let dl=0,dp=0,nl=0,np=0;for(let i=0;i<5001;i++){const th=ESC.TH0+i*ESC.DT;if(th>ESC.thRel)break;const l=ESC.LI[i];if(l>0){const s=at(S2,th);if(!isNaN(s)){dl=Math.max(dl,Math.abs(s-l));nl++;}}}
-  for(let i=5000;i>=0;i--){const th=ESC.TH0+i*ESC.DT,p=ESC.PS[i];if(th<ESC.thPass+D)break;if(p>0){const s=at(Q2,th);if(!isNaN(s)){dp=Math.max(dp,Math.abs(s-p));np++;}}}
-  chk(nl>100&&np>100&&dl<1e-4&&dp<1e-4,`the contacts are makeEsc's: its lift to release (${nl} points, to ${f(dl*ESC.ES*1000,2)} µm) and the trip spring's bending (${np} points, to ${f(dp*ESC.ES*1000,2)} µm)`);}
+{let dl=0,dp=0,nl=0,np=0;for(let i=0;i<5001;i++){const th=ESC.TH0+i*ESC.DT,l=ESC.LI[i];if(l>0&&ESC.LI[i+1]>0){const s=at(S2,th);if(!isNaN(s)){dl=Math.max(dl,Math.abs(s-l));nl++;}}}
+  for(let i=5000;i>0;i--){const th=ESC.TH0+i*ESC.DT,p=ESC.PS[i];if(p>0&&ESC.PS[i-1]>0){const s=at(Q2,th);if(!isNaN(s)){dp=Math.max(dp,Math.abs(s-p));np++;}}}
+  chk(nl>100&&np>100&&dl<1e-4&&dp<1e-4,`the contacts are makeEsc's, worked out apart: the detent's lift over the whole active swing (${nl} points, to ${f(dl*ESC.ES*1000,2)} µm) and the trip spring's bending (${np} points, to ${f(dp*ESC.ES*1000,2)} µm)`);}
 /* the integrator: with the escapement replaced by a kick at the dead point (Airy: no rate), the balance keeps a damped oscillator's -ζ²/2 */
 const kick=Math.PI*C*ESC.A/I,ref=sim({ideal:true,kick,T:50,from:10}),zeta=C/(2*I*W0),theo=day(Math.sqrt(1-zeta*zeta)-1),ref2=sim({ideal:true,kick,T:50,from:10,hf:2e-6,hc:5e-5});
 chk(Math.abs(ref.rate-theo)<0.01&&Math.abs(ref2.rate-ref.rate)<0.003,`the integrator: kicked at the dead point the balance keeps ${sg(ref.rate,3)} s a day, the damping's own (−ζ²/2: ${sg(theo,3)}; at half the steps ${sg(ref2.rate,3)})`);
 flush();
 
-say('1. The averaged model, beat by beat (its springs, the detent all but massless)');
-const avg=sim({mode:'avg',A:232,T:70,from:40}),avgH=sim({mode:'avg',A:232,T:70,from:40,hf:2e-6}),own=avg.rate-ref.rate;
-say(`makeEsc: the swing ${f(ESC.A/D,1)}°, the tooth lands on the impulse jewel ${f(ESC.run.land/D-ESC.thRel/D,1)}° after the release, the escapement's own rate ${sg(ESC.run.own)} s a day`);
-say(`in time:  the swing ${f(avg.A,1)}°, the tooth lands ${f(avg.land-avg.rel,1)}° after the release (at ${f(avg.land,1)}°), the escapement's own rate ${sg(own)} s a day (at half the step ${sg(avgH.rate-ref.rate)})`);
+say('1. The model, beat by beat (its springs, the detent all but massless and dead on its stop, as makeEsc has it)');
+const avg=sim({mode:'avg',T:70,from:40}),avgH=sim({mode:'avg',T:70,from:40,hf:2e-6}),own=avg.rate-ref.rate,RU=ESC.run;
+say(`makeEsc: the swing ${f(ESC.A/D,1)}°, the tooth lands on the impulse jewel ${f((RU.land-ESC.thRel)/D,1)}° after the release, the detent falls back at ${f(ESC.thOff/D,1)}°, the escapement's own rate ${sg(RU.own)} s a day`);
+say(`in time:  the swing ${f(avg.A,1)}°, the tooth lands ${f(avg.land-avg.rel,1)}° after the release, the detent falls back at ${f(avg.off,1)}°, the escapement's own rate ${sg(own)} s a day (at half the step ${sg(avgH.rate-ref.rate)})`);
 chk(avg.trips===0&&avg.beats>100,`it runs, beat by beat: ${avg.beats} beats, no tooth lost or gained`);
-{const v=W0*ESC.A*Math.cos(Math.asin(ESC.thRel/ESC.A))*Math.abs(at(G1,ESC.thRel+3*D)),a=TAUE/JT,tc=2*v/a;
-  note(`the wheel's chase: released from rest, it must catch a jewel already running away from it at ${f(v,1)} rad/s (of the wheel); at ${f(a,0)} rad/s² (the torque over the wheel's and the fourth wheel's inertia) that takes 2v/a = ${f(tc*1000,2)} ms, ${f(W0*ESC.A*tc/D,1)}° of the balance, not the ${f(ESC.run.land/D-ESC.thRel/D,1)}° makeEsc's kinematic wheel (G ${ESC.settings.G}) gives; physics.js's A4 counts only the time to match the jewel's speed (half of it). The tooth strikes the jewel at twice its speed`);}
-note(`so the impulse comes later and shorter: the swing ${sg(avg.A-ESC.A/D,1)}° and the escapement's own rate ${sg(own-ESC.run.own)} s a day against the averaged model's (the timing takes up the rate; the swing it can't)`);
-{const lo=sim({mode:'avg',s:0.95,A:226,T:70,from:40}),hi=sim({mode:'avg',s:1.11,A:245,T:70,from:40}),pa=x=>ESC.rateAt(ESC.ampAt(x),x);
+chk(Math.abs(avg.A-ESC.A/D)<3,`the swing within 3° of the model's: ${sg(avg.A-ESC.A/D,1)}° (the wheel's chase from rest, its strike on the jewel and the springs as the model counts them)`);
+chk(Math.abs(avg.land-avg.rel-(RU.land-ESC.thRel)/D)<1.5,`the tooth lands where the model has it, within 1.5° of the balance`);
+chk(Math.abs(avg.off-ESC.thOff/D)<1,`the detent falls back where the model has it, within 1°`);
+chk(Math.abs(own-RU.own)<0.3,`the escapement's own rate within 0.3 s a day of Airy's sum: ${sg(own-RU.own)} s a day apart`);
+{const lo=sim({mode:'avg',s:0.95,A:ESC.ampAt(0.95)/D,T:70,from:40}),hi=sim({mode:'avg',s:1.11,A:ESC.ampAt(1.11)/D,T:70,from:40}),pa=x=>ESC.rateAt(ESC.ampAt(x),x);
   const dT=hi.rate-lo.rate,dM=pa(1.11)-pa(0.95),sl=dT/(hi.A-lo.A)*10;
-  say(`the drive 95 % → 111 %: averaged ${f(ESC.ampAt(0.95)/D,0)}° → ${f(ESC.ampAt(1.11)/D,0)}°, the rate ${sg(dM)} s a day; in time ${f(lo.A,0)}° → ${f(hi.A,0)}°, ${sg(dT)} s a day (${sg(sl,3)} s a day for each 10° of swing)`);
-  chk(Math.abs(sl)<0.5,`isochronism stays small (under 0.5 s a day for each 10° of swing): what the fusee keeps even, the escapement doesn't undo`);
-  }
+  say(`the drive 95 % → 111 %: the model ${f(ESC.ampAt(0.95)/D,0)}° → ${f(ESC.ampAt(1.11)/D,0)}°, the rate ${sg(dM)} s a day; in time ${f(lo.A,0)}° → ${f(hi.A,0)}°, ${sg(dT)} s a day (${sg(sl,3)} s a day for each 10° of swing)`);
+  chk(Math.abs(dT-dM)<0.1,`isochronism (the rate's change over the manual's range of swing) within 0.1 s a day of the model's`);
+  chk(Math.abs(sl)<0.5,`and small (under 0.5 s a day for each 10° of swing): what the fusee keeps even, the escapement doesn't undo`);}
 flush();
 
-say('2. The drawn springs: the detent as a body, Op. 78\'s preload');
-const ph=sim({mode:'phys',A:215,T:70,from:40}),ownP=ph.rate-ref.rate;
+say('2. The detent as a body: its inertia, bouncing on its stop');
+const ph=sim({mode:'phys',T:70,from:40}),ownP=ph.rate-ref.rate;
 say(`the swing ${f(ph.A,1)}°, the escapement's own rate ${sg(ownP)} s a day; the tooth lands ${f(ph.land-ph.rel,1)}° after the release`);
+chk(Math.abs(ph.A-ESC.A/D)<3&&Math.abs(ownP-RU.own)<0.3,`the detent's own inertia and bounce change little: the swing ${sg(ph.A-ESC.A/D,1)}°, the rate ${sg(ownP-RU.own)} s a day against the model`);
 chk(ph.trips===0&&ph.beats>100&&ph.margin>0,`no tooth gets past the stone: ${ph.beats} beats; the detent is back on its stop ${f(1000*ph.margin,2)} ms before the next tooth reaches it, still ${f(100*ph.liftAt,1)} % lifted as it arrives`);
-{const off=ph.off,letoff=off-ESC.thRel/D,overall=off-ESC.thPass/D;
-  note(`the passing spring's tip rides the discharge jewel's end (${f(ESC.wD*ESC.ES,2)} mm across, and the tip ${f(2*ESC.rho*ESC.ES,2)}) until about ${f(off,1)}°, where makeEsc lets it fall at ${f(ESC.measure().off,1)}°: the detent can't fall back through the jewel. Measured so, let-off is ${f(letoff,1)}° (Op. 86: at least 6°) and overall ${f(overall,1)}° (Op. 87: 26-30°)${overall>30?': past the manual, so the real jewel\'s end must let the tip off sooner (thinner, or rounded) than the drawn square end':''}`);}
-{let smax=0;for(let th=ESC.thRel;th<0;th+=1e-4){const s=at(S2,th);if(!isNaN(s))smax=Math.max(smax,s);}const dmax=smax/LEN,Wd=MPRE*dmax+KD*dmax*dmax/2,Wi=TAUE*P;
-  note(`the detent goes on lifting after the release, to ${f(smax/ESC.lRel,2)} times the release lift: Op. 78's preload over the whole lift takes ${f(Wd*1e6,2)} µJ a beat, ${f(100*Wd/Wi,1)} % of the tooth's ${f(Wi*1e6,1)} µJ (physics.js's B2 counts the lift to release, at the passing spring: ${f(MPRE*DREL*1e6,2)} µJ; makeEsc's fD ${f(100*S.fD,1)} %)`);}
 const sweep=[];
 for(const[nm,o]of[['spring half as stiff',{kD:0.5}],['spring twice as stiff',{kD:2}],[`spring 0.06 mm thick (${f((0.06/(tD*1000))**3,2)}× as stiff)`,{kD:(0.06/(tD*1000))**3}],['preload half',{pre:0.5}],['preload 1.5×',{pre:1.5}],
   ['detent twice its inertia',{dI:2}],['bouncy stop (restitution 0.7)',{eB:0.7}],['dead stop (restitution 0)',{eB:0}],['the train 1.5× its inertia',{J:1.5}]]){
-  const r=sim({mode:'phys',A:215,T:20,from:10,...o});sweep.push([nm,r]);
+  const r=sim({mode:'phys',T:20,from:10,...o});sweep.push([nm,r]);
   say(`  ${nm.padEnd(38)} ${f(r.A,0)}°, trips ${r.trips}, back ${f(1000*r.margin,2)} ms before the tooth, ${f(100*r.liftAt,0)} % lifted as it arrives`);}
 chk(sweep.every(([,r])=>r.trips===0&&r.margin>0),`over all of these the detent is home before the next tooth: what brings it back is the preload Op. 78 sets, not the spring's thickness`);
-{const ok=m=>{const r=sim({mode:'phys',A:215,T:8,from:4,pre:m});return r.trips===0&&r.beats>8;};
+{const ok=m=>{const r=sim({mode:'phys',T:8,from:4,pre:m});return r.trips===0&&r.beats>8;};
   if(ok(0))say(`with no preload at all the spring's own stiffness still brings the detent home in time: Op. 78's preload is for the locking's safety against knocks (below), not for the return`);
   else{let lo=1e-3,hi=1;for(let i=0;i<8;i++){const m=Math.sqrt(lo*hi);ok(m)?hi=m:lo=m;}say(`the preload could fall to about ${f(100*hi,1)} % of Op. 78's (a ${f(770*hi,0)} mg weight) before a tooth gets past`);}}
-if(!quick){
-  const s255=driveFor(255),tq=s255*TAUE,av=[PH.Plo,PH.Phi].map(x=>PH.Tf*0.95*x/PH.ratioT);
-  note(`to swing the manual's 255° the drawn escapement wants ${f(tq*1e6,1)} µN·m at the escape wheel (${f(100*s255,0)} % of the calibrated), against ${av.map(x=>f(x*1e6,0)).join('-')} µN·m the fusee gives through the train as physics.js's A6 builds it (${av.map(x=>f(x*0.9*1e6,0)).join('-')} with the mainspring's own 10 % losses)`);
-  let a=TF,b=TF*1.6,fa=sim({mode:'phys',A:255,T:40,from:30,TF:a}).A-255,fb=sim({mode:'phys',A:255,T:40,from:30,TF:b}).A-255;
-  for(let i=0;i<5&&Math.abs(fb)>0.5;i++){const c=b-fb*(b-a)/(fb-fa);a=b;fa=fb;b=Math.max(10,Math.min(200,c));fb=sim({mode:'phys',A:255,T:40,from:30,TF:b}).A-255;}
-  note(`or, at the calibrated torque, a balance that runs down freely in ${f(b,0)} s (Q ${f(Math.PI*b/T0,0)}), against the ${f(PH.qLo,0)}-${f(PH.qHi,0)} its parts give (physics.js A6) and the model's ${TF} s`);}
 flush();
 if(quick){if(fail)process.exitCode=1;return;}
 
 say('3. Starting, the least drive, knocks');
-{const r=sim({mode:'phys',A:160,T:60,from:50}),am=r.amps,tgt=r.A;let tS=null;for(let i=0;i<am.length;i++)if(Math.abs(am[i]/D-tgt)<2){tS=i*T0/2;break;}
+{const r=sim({mode:'phys',A:160,T:240,from:230}),am=r.amps,tgt=r.A;let tS=null;for(let i=0;i<am.length;i++)if(Math.abs(am[i]/D-tgt)<2){tS=i*T0/2;break;}
   say(`started by Twist (160°), the swing comes within 2° of its ${f(tgt,0)}° in ${tS==null?'(never)':f(tS,1)+' s'} (the averaged model's exp(-2t/TF): ${f(-TF/2*Math.log(((tgt-2)**2-tgt**2)/(160**2-tgt**2)),1)} s)`);}
 {/* started just above where the escapement unlocks: a drive too weak lets the swing fall under it within a few seconds (TF ln(70/50)) and the beats stop */
   let lo=0.02,hi=1,r=null;for(let i=0;i<8;i++){const m=(lo+hi)/2,q=sim({mode:'phys',s:m,A:70,T:30,from:20});if(q.lastBeat>28){hi=m;r=q;}else lo=m;}
   const am=(()=>{let a=0.01,b=1;for(let i=0;i<40;i++){const m=(a+b)/2;ESC.ampAt(m)<ESC.AMIN?a=m:b=m;}return b;})();
   say(`the least drive that keeps it going: ${f(100*hi,0)} % of the calibrated torque, the balance then swinging about ${f(r.A,0)}° (the averaged model: ${f(100*am,0)} %, at its AMIN ${f(ESC.AMIN/D,0)}°)`);
-  note(`the trip spring's tip, too, rides the discharge jewel's end on the return swing, to ${f(ph.pass,1)}° (makeEsc: it falls off at ${f(ESC.thPass/D,1)}°), so the least swing that keeps the escapement going is about ${f(-ph.pass+2,0)}°, not ${f(ESC.AMIN/D,0)}°: still far below any swing it runs at`);
+  chk(Math.abs(ph.pass-ESC.thPass/D)<1,`the trip spring comes clear on the return where the model has it (${f(ph.pass,1)}°, the model ${f(ESC.thPass/D,1)}°), so the least swing that keeps it going is the model's AMIN, ${f(ESC.AMIN/D,0)}°: far below any swing it runs at`);
   }
 const pulse=(t1,dur,fn)=>tt=>{const u=(tt-t1)/dur;return u>0&&u<1?fn(Math.sin(Math.PI*u)):{al:0,ax:0,ay:0};};
 const base=sim({mode:'phys',A:215,T:4,from:3});

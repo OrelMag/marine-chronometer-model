@@ -2192,6 +2192,8 @@ Open:
 
 ## The physics checked in time (11 October 2026)
 
+*Fixed (11 October 2026): findings 1-4 below are in the model now (RESOLVED.md, Escapement): makeEsc chases from rest and counts the strike, solves the contacts from the jewel's shapes with its end rounded and the settings re-chosen to the manual, takes the springs as their own, and `TF` is 52 s. `tools/dynamics.js` checks it agrees. What stays open is in OPEN-QUESTIONS.md (the jewel's end, the balance's free run-down).*
+
 `tools/dynamics.js` integrates the escapement beat by beat; `tools/strength.js` and `tools/errorbudget.js` follow from it (model README, "Checked in time"). Open findings against the averaged physics the page runs on, most consequential first:
 
 1. **The escape wheel's chase.** makeEsc's kinematic wheel (`G` 3.5) lands the tooth on the impulse jewel 0.6° after the release; with the drawn inertias (the escape wheel's 4.80 g·mm², the fourth wheel's about 1.4 reflected) the wheel, starting from rest, needs 2v/a, about 4 ms, to catch a jewel already running away from it: about 13° of the balance. `physics.js`'s A4 counts only the time to reach the jewel's speed (half of it), and the essay quotes it (`data-phys="chase"`, 6°). The averaged swing (255°) and the escapement's own rate (−1.5 s a day) rest on the early landing: in time they are 232° and −4.3 s a day. Fix: give makeEsc the wheel's inertia (the chase from rest, 2v/a) in place of `G`, recalibrate, and correct the essay's figure.

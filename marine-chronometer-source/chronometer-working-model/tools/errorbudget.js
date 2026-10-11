@@ -46,7 +46,7 @@ console.log(rows.splice(0).join('\n'));console.log(`  (${f((Date.now()-t0)/1000,
 /* ---------- 2. at sea ---------- */
 say('2. At sea: 60 days from a port in winter (55 °F) into the tropics (85 °F), rated over 10 days in port, the error the navigator carries');
 /* the escapement's isochronism in time (dynamics.js, the drawn springs, near the manual's swing): s a day for each degree of swing */
-const lo=sim({mode:'phys',s:1.24,A:248,T:40,from:25}),hi=sim({mode:'phys',s:1.40,A:262,T:40,from:25}),isoS=(hi.rate-lo.rate)/(hi.A-lo.A);
+const lo=sim({mode:'phys',s:0.95,A:248,T:40,from:25}),hi=sim({mode:'phys',s:1.11,A:270,T:40,from:25}),isoS=(hi.rate-lo.rate)/(hi.A-lo.A);
 say(`the escapement's isochronism in time, near 255°: ${sg(isoS*10,3)} s a day for each 10° of swing (dynamics.js; ${f(lo.A,0)}° → ${f(hi.A,0)}°)`);
 chk(Math.abs(isoS*10)<0.5,`small, as the fusee and the detent escapement are meant to make it`);
 /* the swing's response: A ∝ √(Q W), so dA/A = dQ/2Q; the drive's from makeEsc's ampAt */
