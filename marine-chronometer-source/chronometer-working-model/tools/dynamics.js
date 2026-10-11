@@ -235,8 +235,8 @@ flush();
 if(quick){if(fail)process.exitCode=1;return;}
 
 say('3. Starting, the least drive, knocks');
-{const r=sim({mode:'phys',A:160,T:240,from:230}),am=r.amps,tgt=r.A;let tS=null;for(let i=0;i<am.length;i++)if(Math.abs(am[i]/D-tgt)<2){tS=i*T0/2;break;}
-  say(`started by Twist (160°), the swing comes within 2° of its ${f(tgt,0)}° in ${tS==null?'(never)':f(tS,1)+' s'} (the averaged model's exp(-2t/TF): ${f(-TF/2*Math.log(((tgt-2)**2-tgt**2)/(160**2-tgt**2)),1)} s)`);}
+{const r=sim({mode:'phys',A:67,T:240,from:230}),am=r.amps,tgt=r.A;let tS=null;for(let i=0;i<am.length;i++)if(Math.abs(am[i]/D-tgt)<2){tS=i*T0/2;break;}
+  say(`started by Twist (67°, the page's from rest: box.js TWIST), the swing comes within 2° of its ${f(tgt,0)}° in ${tS==null?'(never)':f(tS,1)+' s'} (the averaged model's exp(-2t/TF): ${f(-TF/2*Math.log(((tgt-2)**2-tgt**2)/(160**2-tgt**2)),1)} s)`);}
 {/* started just above where the escapement unlocks: a drive too weak lets the swing fall under it within a few seconds (TF ln(70/50)) and the beats stop */
   let lo=0.02,hi=1,r=null;for(let i=0;i<8;i++){const m=(lo+hi)/2,q=sim({mode:'phys',s:m,A:70,T:30,from:20});if(q.lastBeat>28){hi=m;r=q;}else lo=m;}
   const am=(()=>{let a=0.01,b=1;for(let i=0;i<40;i++){const m=(a+b)/2;ESC.ampAt(m)<ESC.AMIN?a=m:b=m;}return b;})();

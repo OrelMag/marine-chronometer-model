@@ -694,7 +694,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* PL: the balance's phase (oscillations from its far turn before the unlocking) at which the next tooth locks at the running swing, the second hand coming to rest on its mark.
      The balance's phase is tSim/0.5 + bOff + PL (H.bph while the train stands), so with bOff and eOff 0 the hand lands on the mark k/2 s at tSim = k/2, as on a chronometer set
      to a time signal (at another swing or torque a few milliseconds off it) */
-  const PL=(()=>{let lo=0,hi=0.5;for(let i=0;i<50;i++){const m=(lo+hi)/2;ESC.state(m).prog>=1?hi=m:lo=m;}return hi;})();
+  const plOf=()=>{let lo=0,hi=0.5;for(let i=0;i<50;i++){const m=(lo+hi)/2;ESC.state(m).prog>=1?hi=m:lo=m;}return hi;};let PL=plOf();   /* recomputed when the adjuster's bench changes the escapement */
   /* the twist that starts it (Sec. III, "a single quick twist"): the box turned sharply about the vertical and back (TWIST in box.js, drawn on frame time). The balance stays
      where it is in space while the box turns under it, so it is left swinging: from rest about 67°, enough to unlock the wheel, and the impulses build it up. Its swing and
      phase at the twist's end are worked out from where it is now (taken as if the twist were over at once): the train standing, they are the balance's own (a larger swing
@@ -730,7 +730,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     const n=ESC.checks().filter(c=>!c.ok).length;benchOut.innerHTML=(benchBad?`<b>It would not run at that setting</b><span>${benchBad}: it is kept at the last setting that runs.</span>`:`<b>${n?n+' figure'+(n>1?'s':'')+' outside the manual’s':'Every figure within the manual’s'}</b>`)+
       `<span>The balance must swing at least ${Math.round(ESC.AMIN/D2R)}° to unlock the wheel and see the impulse through${H.amp<ESC.AMIN?': it swings less, so the train has stopped (twist to start)':''}.</span>`;}
   function benchApply(){benchQ=false;const E2=makeEsc({EX:EX0,...bset}),m=E2.measure();
-    if(!m.runs){benchBad=m.why;for(const k in bset)bset[k]=ESC.settings[k];}else{benchBad='';const was=ESC.run.rate;Object.assign(ESC,E2);mv.userData.escSet();if(ESC.run.rate!==was){rErr=0;pend.add('escapement adjusted');rateShow();}}benchShow();wake();}
+    if(!m.runs){benchBad=m.why;for(const k in bset)bset[k]=ESC.settings[k];}else{benchBad='';const was=ESC.run.rate;Object.assign(ESC,E2);{const d=plOf()-PL;PL+=d;H.bOff-=d;}mv.userData.escSet();if(ESC.run.rate!==was){rErr=0;pend.add('escapement adjusted');rateShow();}}benchShow();wake();}
   const benchDiff=()=>BENCH.filter(([k])=>Math.abs(bset[k]-BDEF[k])>1e-9);
   $('#benchReset').addEventListener('click',()=>{Object.assign(bset,BDEF);benchApply();});
   $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('escapement'));});

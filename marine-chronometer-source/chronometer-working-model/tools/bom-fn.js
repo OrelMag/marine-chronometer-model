@@ -23,8 +23,8 @@ async()=>{
   /* the train-blocking screw (Sec. II, Fig. 110): down, its dog point between the fourth wheel's spokes holds the train; raised, the train goes on */
   { click('#blkSeg button[data-v="1"]');await until(()=>H().held,180000);await wait(3000);const h=H(),E0=h.E;await wait(3000);const h1=H();   /* it waits over the wheel for a gap between spokes; held, the wheel runs on to the spoke: then it stands */
     out.push(['train-blocking screw',h1.held&&h1.E===E0,h.held?`screwed down: train held ${h1.held}, escape wheel ${E0} then ${h1.E}`:'screwed down: the train not held within 180 s']);
-    click('#blkSeg button[data-v="0"]');await until(()=>!H().held,60000);const h2=H(),E2=h2.E;await until(()=>H().E!==E2,30000);const h3=H();
-    const ok=h3.amp>amin?!h3.held&&h3.E!==E2:true;out.push(['train-blocking screw, raised',ok,`raised: train held ${h3.held}, escape wheel ${E2} then ${h3.E}, amplitude ${f2(h3.amp)}`]); }
+    click('#blkSeg button[data-v="0"]');await until(()=>!H().held,10000);if(H().held){click('#twist');await until(()=>!H().held,60000);}   /* held at the spoke, a tooth in the impulse jewel's path banks the balance, which may have stopped: then it needs its twist */const h2=H(),E2=h2.E;await until(()=>H().E!==E2,30000);const h3=H();
+    const ok=!h3.held&&h3.E!==E2;out.push(['train-blocking screw, raised',ok,`raised: train held ${h3.held}, escape wheel ${E2} then ${h3.E}, amplitude ${f2(h3.amp)}`]); }
   /* the shield plate (Fig. 107; Sec. III, Fig. 7): at rest its metal covers the case's key hole; turned open, its hole lines up with it */
   { const sh=byHn('42104')[0],u=sh.userData.hole,bowl=sh.parent,d=rot=>{sh.userData.turn(rot);sh.updateWorldMatrix(true,false);
       const p=new T.Vector3(u.p[0],0,u.p[1]).applyMatrix4(sh.matrixWorld),c=new T.Vector3(u.c[0],0,u.c[1]).applyMatrix4(bowl.matrixWorld);return Math.hypot(p.x-c.x,p.z-c.z);};

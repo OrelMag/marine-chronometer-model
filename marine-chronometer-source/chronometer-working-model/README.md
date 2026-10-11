@@ -830,7 +830,7 @@ on what would stop the chronometer.
     about 10 ms before the next tooth reaches the stone, from half to twice the
     drawn spring's stiffness, at half or 1.5 times Op. 78's preload, with a dead
     or a bouncy stop, and even with no preload at all.
-  - *Starting and stopping.* Twisted to 160°, the balance comes within 2° of its
+  - *Starting and stopping.* Twisted to 67° (the page's twist from rest, box.js `TWIST`), the balance comes within 2° of its
     swing in a minute or so; the least drive that keeps it going is about 12 % of
     the calibrated torque, the balance swinging about 41° (makeEsc: 13 %, at its `AMIN`, 40.2°).
   - *Run down with the train held* (no torque): from 150°, 108° after 10 s and 65° after 20
