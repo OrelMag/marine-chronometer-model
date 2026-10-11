@@ -10,9 +10,7 @@
 //      rounded end and the springs' own work on 11 October 2026: this is what found them missing).
 //   2. Whether the detent is back on its banking in time to lock the next tooth (OPEN-QUESTIONS.md 2): the detent as a body on its beryllium-copper spring,
 //      preloaded as Op. 78 sets it, its inertia from the drawn pieces (movement.js), bouncing off its stop button.
-//      And makeEsc's own drawing of its fall (ESC.state since 11 October 2026: off the jewel, a preloaded spring and mass in closed form, hopping on the
-//      stop): where it leaves the jewel and first lands, against the integration's.
-//   3. Starting, the least drive that keeps it going, and what knocks it out: a twist about the staff (it trips or stops) and a blow across the plate
+//   3. Starting, the least drive that keeps it going, a held train's run-down (makeEsc's freeStep: the springs' work as well as the air's), and what knocks it out: a twist about the staff (it trips or stops) and a blow across the plate
 //      (the detent is not poised about its flexure, so a hard enough blow lifts it off its stop and lets a tooth go).
 //   4. The ship's motion: yaw about the staff and the lateral accelerations of a roll, and what they do to the rate.
 // Every number from outside the model (moduli, densities, restitution) is a published range or marked estimated, as in physics.js.
@@ -126,7 +124,7 @@ function sim(o={}){
       if(dm===0)r[7]=pre+(wm===0?0:0)-lift()+1e-12;}
     return r;};
   const hit=(c,inv,e)=>-(1+e)*c/inv;   /* the impulse a contact takes: c the closing velocity along it, inv the sum of the inverse effective inertias */
-  let A0=null,lastW=0,thM=0;const amps=[];
+  let A0=null,lastW=0,thM=0;const amps=[],ampT=[];
   const t1=T;let guard=0;
   while(t<t1){
     const tw=wrap(th),near=(tw>-0.8&&tw<0.55)||wm!==0||dm!==0||pc||(ext&&o.extFine&&o.extFine(t));
@@ -141,7 +139,7 @@ function sim(o={}){
     const thO=th,wO=w;t+=h;th=out[0];w=out[1];d=out[2];dv=out[3];ph=out[4];pv=out[5];
     /* the rate: the return swing's dead point, interpolated */
     if(thO>0&&th<=0&&w<0)st.cross.push(t-h+h*thO/(thO-th));
-    if(wO>0&&w<=0){amps.push(Math.abs(th));thM=th;}if(wO<0&&w>=0)amps.push(Math.abs(th));
+    if(wO>0&&w<=0){amps.push(Math.abs(th));ampT.push(t);thM=th;}if(wO<0&&w>=0){amps.push(Math.abs(th));ampT.push(t);}
     if(ideal&&thO<0&&th>=0&&w>0){w+=o.kick;st.kicks++;}
     /* the trip spring: bent while the jewel holds its tip on the return swing; let go, its energy is lost */
     /* the trip spring, massless: once the jewel bends it on the return it stays on the jewel (on its face, then its end) while the jewel is in the way. The jewel
@@ -174,7 +172,7 @@ function sim(o={}){
   const am=amps.slice(-8),A=am.length?am.reduce((a,b)=>a+b,0)/am.length/D:0;
   const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN,tail=a=>a.slice(Math.floor(a.length/2));
   return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),margin:Math.min(...tail(st.margin)),
-    liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,home:mean(tail(st.home)),amps,cross:st.cross,stopped:st.beats===0};
+    liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,home:mean(tail(st.home)),amps,ampT,cross:st.cross,stopped:st.beats===0};
 }
 module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,KTIP,DREL,LEN,lD,tD,LTS,CDR,day,S2};
 if(require.main!==module)return;
@@ -245,6 +243,12 @@ say('3. Starting, the least drive, knocks');
   say(`the least drive that keeps it going: ${f(100*hi,0)} % of the calibrated torque, the balance then swinging about ${f(r.A,0)}° (the averaged model: ${f(100*am,0)} %, at its AMIN ${f(ESC.AMIN/D,0)}°)`);
   chk(Math.abs(ph.pass-ESC.thPass/D)<1,`the trip spring comes clear on the return where the model has it (${f(ph.pass,1)}°, the model ${f(ESC.thPass/D,1)}°), so the least swing that keeps it going is the model's AMIN, ${f(ESC.AMIN/D,0)}°: far below any swing it runs at`);
   }
+/* the train held with no torque (run down): the balance swings free, but while it carries the discharge jewel back past the trip spring it still lifts the detent and bends
+   the trip spring every oscillation; makeEsc's freeStep (app.js's run-down) against the integration */
+{const A0=150,r=sim({mode:'phys',s:0,A:A0,T:60,from:50}),at=t=>{let i=r.ampT.findIndex(x=>x>=t);if(i<0)i=r.ampT.length-1;return r.amps.slice(Math.max(0,i-1),i+1).reduce((a,b)=>a+b,0)/Math.min(2,i+1)/D;};
+  const m=t=>ESC.freeStep(A0*D,t)/D,ts=[5,10,20,30,45],dev=Math.max(...ts.map(t=>Math.abs(at(t)-m(t))));
+  say(`run down from ${A0}° with the train held: ${ts.map(t=>`${t} s ${f(at(t),1)}° (model ${f(m(t),1)}°, viscous alone ${f(A0*Math.exp(-t/TF),1)}°)`).join(', ')}`);
+  chk(dev<2,`the held balance runs down as makeEsc's freeStep has it, within 2° (${f(dev,2)}°): the springs take ${f(ESC.EH,4)} k an oscillation down to ${f(ESC.AH/D,1)}°, the air and pivots the rest`);}
 const pulse=(t1,dur,fn)=>tt=>{const u=(tt-t1)/dur;return u>0&&u<1?fn(Math.sin(Math.PI*u)):{al:0,ax:0,ay:0};};
 const base=sim({mode:'phys',A:215,T:4,from:3});
 const upset=r=>r.trips>0||Math.abs(r.beats-base.beats)>0;

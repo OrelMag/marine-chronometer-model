@@ -219,6 +219,14 @@ Contents:
   `AMIN` is that least swing exactly (40.2° at the model's settings, refined by bisection when a
   setting moves it). Keep: `AMIN` where `state`'s own `pass` begins, so the train holds only
   when the escapement can't work.
+- **A held balance ran down as if nothing touched it.** `ampStep` let the swing fall as
+  exp(−t/TF) whenever the train was held, but while the swing still carries the discharge jewel
+  back past the trip spring, the jewel bends the trip spring on every return and lifts the detent
+  on every active swing, the wheel unable to turn: 0.033 of k an oscillation, 17 % of the air and
+  pivots' loss at 255° and five times it at 45°. Now `ESC.freeStep` (closed form, any step) takes
+  both; from 255° the swing reaches 40.2° in 47 s, not 96. Keep: the held run-down is
+  `ESC.freeStep` (app.js's `ampStep`, and blender.js's copy of the loop), checked against
+  `tools/dynamics.js`'s integration of a held train.
 
 ## Going train and heights
 

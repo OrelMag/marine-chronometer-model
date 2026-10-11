@@ -238,6 +238,15 @@ function makeEsc(o={}){
      until 11 October 2026 had the train held while state showed the detent unlocking between 40.2 and 42.3 deg */
   let AMIN=Math.max(-thRel,-(thPass??TH0));
   if(CL){const ok=a=>{const im=impulse(1,a,CL.w);return!!im&&im.end!==null&&im.end<a;};let a=AMIN;if(!ok(a)){let lo=a;while(a<TAU&&!ok(a)){lo=a;a+=0.25*D2R;}for(let i=0;i<30;i++){const m=(lo+a)/2;ok(m)?a=m:lo=m;}}AMIN=a;}
+  /* the train held (run down, or the dog point holding it), the balance swinging free: no impulse and no draw (no torque on the stone), but a swing that carries the discharge
+     jewel back past the trip spring (AH, -thPass) still bends the trip spring on the return and lifts the detent on the next swing, EH of its energy an oscillation (units of k),
+     lost as each flies back. freeStep(a, dt): the swing dt seconds on, A² falling as d(A²)/dt = -2A²/TF - 2EH/T above AH and -2A²/TF below it, in closed form for any step
+     (app.js's ampStep; until 11 October 2026 the viscous part alone, exp(-t/TF) at every swing, where the springs take more than the air and pivots below
+     about 105 deg: from 255 deg it reaches AH in 47 s, not 96) */
+  const EH=EDp+EDk+ETp,AH=thPass===null?Infinity:-thPass;
+  const freeStep=(a,dt)=>{if(!(dt>0)||!(a>0))return a;let u=a*a;const h=AH*AH,cc=EH*c.TF/T;
+    if(u>h&&EH>0){const tx=c.TF/2*Math.log((u+cc)/(h+cc));if(dt<=tx)return Math.sqrt(Math.max(0,(u+cc)*Math.exp(-2*dt/c.TF)-cc));dt-=tx;u=h;}
+    return Math.sqrt(u*Math.exp(-2*dt/c.TF));};
   if(run.A>0&&run.A<AMIN){run.rate=NaN;run.own=NaN;}
   if(CL&&run.A>0){const im=impulse(1,run.A,CL.w);if(im)Object.assign(run,{Q,Wi:im.E,fu:(CL.w*ER+EDp+EDk+ETp)/im.E,land:im.land,end:im.end,drive:im.turn,strike:im.strike/im.E,detent:(EDp+EDk)/im.E,vw:im.vw,vj:im.vj});}
   const A=run.A;
@@ -289,6 +298,6 @@ function makeEsc(o={}){
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
   const wn=(s,a)=>CL?wnK(s,a,CL.w):-Infinity;   /* the work an oscillation nets the balance at drive s and swing a (units of k): tools/physics.js's budget */
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,lockA};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,AH,freeStep,lockA};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};

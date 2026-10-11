@@ -507,11 +507,14 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   the fourth wheel.
 - **While it is stopped** `tSim` and the hands stand, so they lose the time it
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
-  down. It runs down freely with the train held (1/e in 52 s, `TAU_FREE`, from
-  `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker") and at once, within a swing or two, against the locking arm
-  (`TAU_ARM`, 0.2 s). While the swing still carries the discharge jewel back
-  past the trip spring's tip (above 40.2°), the detent lifts but the wheel
-  can't turn. A smaller swing leaves the jewel on the near side of the tip: the
+  down. With the train held it runs down free of the impulse (the air and pivots, 1/e in 52 s, `TAU_FREE`, from
+  `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker"), but while the swing still carries the discharge jewel back
+  past the trip spring's tip (above 40.2°) the jewel still bends the trip spring on the return and lifts the
+  detent on the next swing, and the wheel can't turn: the springs take `ESC.EH`, 0.033 of k
+  an oscillation (17 % of the air and pivots' loss at 255°, more than theirs below about 105°), so from
+  255° it comes down to 40.2° in 47 s, not 96 (`ESC.freeStep`, in closed form for any step; `tools/dynamics.js`
+  integrates the same run-down within 2°). Against the locking arm it stops at once, within a swing or two
+  (`TAU_ARM`, 0.2 s). A smaller swing leaves the jewel on the near side of the tip: the
   trip spring stays bent against it and follows it back, and the detent stays on
   its stop (`ESC.state`).
 - **When it goes again.** The train runs again when there is power, the arm is
@@ -666,7 +669,10 @@ every speed); the equation gives the amplitude and the rate.
   hairspring's stiffness, a swing gains that work and loses πA²/Q. So A²
   relaxes to `ESC.ampAt(s)²` as exp(−2t/TF), exactly for a steady torque.
   `ampStep` steps it so, at any speed. A² settles as exp(−2t/TF), 26 s.
-  Free, with no impulse, the swing falls as exp(−t/TF), as before.
+  Free, with no impulse (the train held), d(A²)/dt = −2A²/TF − 2·EH/T while the swing still
+  passes the trip spring (the detent's and trip spring's work, `ESC.EH`, lost as each flies
+  back), −2A²/TF below it: `ESC.freeStep`, exact for any step. Until 11 October 2026 it fell as
+  exp(−t/TF) at every swing.
 - **The drive** (`driveNow` in `app.js`). Running, the mainspring through the
   fusee: `R.fs.torque`, 1 at 12 h from full wind, the middle of a day's
   running. While the key turns, the sustaining spring alone drives: 0.8 of
@@ -780,6 +786,8 @@ on what would stop the chronometer.
   - *Starting and stopping.* Twisted to 160°, the balance comes within 2° of its
     swing in a minute or so; the least drive that keeps it going is about 12 % of
     the calibrated torque, the balance swinging about 41° (makeEsc: 13 %, at its `AMIN`, 40.2°).
+  - *Run down with the train held* (no torque): from 150°, 108° after 10 s and 65° after 20
+    (makeEsc's `freeStep` 108.5° and 66.9°; the air and pivots alone would leave 124° and 102°).
   - *Knocks and the sea.* A twist about the staff upsets the beat at about
     29 rad/s in 2 ms (it gains a beat); a blow across the plate frees the wheel
     at about 55 g over 3 ms, 140 g over 0.5 ms (the detent isn't poised about

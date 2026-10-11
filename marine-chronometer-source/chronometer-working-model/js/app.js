@@ -733,10 +733,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function stopMove(dt){const inst=SNAP||RM.matches,mvTo=(x,t,r)=>inst?t:x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);
     const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(lastE??0))?Math.min(b,vf-0.005):b;}
   /* the balance's equation of motion, averaged over a swing (makeEsc, ampAt): driven at torque drv, A² relaxes to ESC.ampAt(drv)² as exp(-2t/TF), exactly whatever the step, so the
-     time it takes to settle (TF/2, 26 s) is the same at every speed; free, the same with no impulse, A falling as exp(-t/TF). The arm brakes it; a twist kicks it up */
+     time it takes to settle (TF/2, 26 s) is the same at every speed; free (the train held), ESC.freeStep: no impulse, but a swing that still passes the trip spring lifts the
+     detent and bends the trip spring each oscillation, so it runs down faster than exp(-t/TF) until it no longer does (above 40.2 deg), exactly whatever the step. The arm brakes it; a twist kicks it up */
   function ampStep(dts,brake,driven,drv){let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;   /* a twist adds swing, never takes it away */
     if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dts/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
-    else if(brake)a*=Math.exp(-dts/TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dts/TAU_FREE));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a;}
+    else if(brake)a*=Math.exp(-dts/TAU_ARM);else if(driven){const u=ESC.ampAt(drv)**2;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dts/TAU_FREE));}else a=ESC.freeStep(a,dts);H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a;}
   /* a jolt (2.7 in IDEAS.md, illustrative): a sharp knock turning the box about the balance staff jerks the balance's speed by 0.6 to 1 of its running top speed, either way, at random.
      From where it is in its swing (θ, θ') the balance goes on at A = √(θ² + (θ'/ω)²): checked below AMIN it sets (stops: twist to start); carried past a full turn plus the angle
      where the discharge jewel meets the trip spring (ESC.TRIP) it unlocks the detent a second time in that swing and the wheel trips, escaping an extra tooth, the hands half a
