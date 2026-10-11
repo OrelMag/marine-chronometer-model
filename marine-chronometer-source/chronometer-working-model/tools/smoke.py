@@ -41,6 +41,17 @@ async def model(b,errs,steps):
         await click(f'#secs button[data-v="{v}"]',f'section {v}');await click('#secFlip',f'section {v}, other half');await click('#secFlip')
     await click('#secs button[data-v="off"]','section off')
     await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT');await click('#now','Now')
+    # Now sets the hour and minute hands by the cannon pinion's slip and the seconds by stopping the balance (setHands, app.js): at 20x the stop is over in under a
+    # minute even in SwiftShader; the train never turns back (the escape wheel's count only grows) and the dial ends within a few frames' model time of the master (a frame is up to 0.05 s, 1 s of model time at 20x)
+    await pg.evaluate("(()=>{const i=document.querySelector('#spdN');i.value=20;i.dispatchEvent(new Event('input'));i.dispatchEvent(new Event('change'));})()")
+    r=await pg.evaluate("""async()=>{const E=[],t0=performance.now(),dial=h=>{const sT=h.held?h.Eh/2:h.tSim+(h.bOff+h.eOff)/2,ss=((sT%60)+60)%60,r=Math.round((sT+h.slip-ss)/60)*60+ss,e=r-h.tM;return(((e+21600)%43200)+43200)%43200-21600;};
+      let seen=false;while(performance.now()-t0<150000){const h=window.__H();if(h.E!==null)E.push(h.E);if(h.armT||h.held)seen=true;if(seen&&!h.armT&&!h.held&&h.amp>0.5)break;await new Promise(r=>setTimeout(r,100));}
+      await new Promise(r=>setTimeout(r,1500));const h=window.__H();return{back:E.some((e,i)=>i&&e<E[i-1]-1e-6),done:seen&&!h.held&&!h.armT,err:dial(h),why:`seen ${seen}, held ${h.held}, arm ${h.armT}/${h.arm.toFixed(2)}, swing ${(h.amp*57.3).toFixed(0)} deg, speed ${document.querySelector('#spdN').value}: ${document.querySelector('#setOut').innerText.slice(0,120)}`};}""")
+    await pg.evaluate("document.querySelector('#speeds button[data-v=\"1\"]').click()")
+    steps.append(f"Now: set by stopping, the dial {r['err']:+.2f} s from the master")
+    if r['back']:errs.append('Now turned the train back')
+    if not r['done']:errs.append('Now: the stop to set the seconds did not finish: '+r['why'])
+    if abs(r['err'])>3.0:errs.append(f"Now: the dial ended {r['err']:+.2f} s from the master (want within three frames' model time, 3 s at 20x)")
     # the export to Blender: the rig's script saved (the export itself, a minute and more in SwiftShader, is gltf_check.py's)
     await pg.evaluate("document.querySelector('#makeDet').open=true");await click('#mkRig','Blender rig')
     if not await pg.evaluate("!!document.querySelector('#mkGLB')&&typeof BLENDER==='object'&&typeof GLTF==='object'&&RIG_PY.length>1000"):errs.append('the export to Blender is not in the page')

@@ -44,12 +44,10 @@ async def shot(b,out,view,drive,cam,text=None,tod=None):
     errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
     # applied before the page's scripts run, so the renderer starts at this size
     await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=%r;document.head.appendChild(s);});"%css(text))
-    await pg.goto(PAGE);await pg.wait_for_timeout(4500)
+    await pg.goto(PAGE+(f'#t={tod}' if tod else ''));await pg.wait_for_timeout(4500)   # the hands at the time given, set as the page loads (the field, once shown, sets them as a watchmaker would: the seconds by stopping the balance)
     await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate("(()=>{const e=document.querySelector('#shadows');if(!e.checked)e.click();})()")   # with the lamp's shadows (off by default)
     if drive:await pg.evaluate("document.querySelector('#driveOn').click()")
     await pg.evaluate(f"document.querySelector('#views button[data-v=\"{view}\"]').click()");await pg.wait_for_timeout(2500)
-    # the hands at ten past ten, as watches are photographed (the model is stopped, so they stay there)
-    if tod:await pg.evaluate("t=>{const i=document.querySelector('#tod');i.value=t;i.dispatchEvent(new Event('change'))}",tod)
     if cam:await pg.evaluate(f"window.__cam({cam[0]},{cam[1]},{cam[2]},{cam[3]})");await pg.wait_for_timeout(2500)
     if text:
         h=(f'<div class="k">{html.escape(text["kicker"])}</div><h1>{text["title"]}</h1><p>{html.escape(text["sub"])}</p>'
