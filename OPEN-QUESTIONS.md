@@ -90,6 +90,20 @@ The manual gives no tooth profiles, threads or most pivot sizes. The site tells 
 
 ## The set-up ratchet's locking faces (11 October 2026)
 
+<<<<<<< HEAD
+- **Known:** KLUwI2UUCMQ 38:28 shows the set-up ratchet (42026) whole: about 42 saw teeth, each a short steep face and a long back. The model draws the face leaning back over 0.07 of a pitch (about 5° at r 7), as the maintaining work's ratchets were drawn until 11 October 2026, when theirs were made radial (the load then draws the click home; the winding pawls' trace at 19:12 shows a square end bearing on a radial face).
+- **Conflict:** at a few pixels a face, the frame can't tell radial from a 5° lean. A radial face was tried; the click (seated by `phaseAgainst` on the profile as a function of angle) then sat 0.3 mm into the tooth's corner (bom.py's setup-click check), so it was put back until the click is seated on the outline as the winding pawls are (`deep`).
+- **What would settle it:** a face-on close-up of the set-up ratchet (the barrel bridge off), or of the click on its tooth.
+
+
+## The winding-pawl springs' beds and feet (11 October 2026)
+
+- **Known:** KLUwI2UUCMQ 19:12 (4K, the springs off) shows each spring's bed in the sustaining ratchet's face, traced every degree on the frame rectified on the ratchet's tips: one from the right pawl at r 8.9-8.7, turning in from 84° to r 7.04 at 102° and on there to its foot; the other from the left pawl at r 9.28-9.11 to 132°; 0.55-0.6 wide. The feet's screw holes: 29° apart at r 8.3 for the first, 32° apart at r 7.8-8.2 for the second. 19:15 and 19:20, lit from one side, show a raised middle round the bore and the face outside the beds.
+- **Conflict:** the two beds differ (one turns in to r 7.04 thirty degrees before its foot, the other doesn't before 132°), and so do their feet's places from their pawls (16° apart), though the springs are one part number (42007, two off). Which wall of the feet's pockets shows depends on the light: the first pocket's inner wall (r 7.04) is traced, its outer wall and the whole of the second pocket are lit or in glare. The beds' depth and the feet's own shape aren't seen (the springs are off in every frame found).
+- **In the model:** each bed as traced, the first pocket's inner wall on the traced line (r 7.0, outside the winding ratchet's tips at r 6.9, which turn at that height), the unseen walls estimated (outer the bed's outer edge, the second pocket's inner as the first's), depth 0.2, the feet filling their pockets.
+- **What would settle it:** a frame with the springs on (before 18:20, as the sustaining ratchet comes off the fusee) or of the face lit from the other side; Fig. 28 or 69 enlarged.
+=======
 - **Known:** the set-up ratchet (42026) held loose and nearly face-on (KLUwI2UUCMQ 38:25.8, 38:26.0) gives its teeth 0.48 mm deep and its locking faces undercut 3-6° against the radius (`tools/ratchetface.py`, calibrated on synthetic frames; References/VIDEOS.md). A face leaning back, as the model drew until 11 October 2026, is ruled out. The model draws the faces radial and the teeth 0.48 deep (`SRD`), the click seated by its outline.
 - **Open:** the undercut's size. Tooth to tooth the readings spread 4-5°, and on a tilted wheel's sides its other face's outline can shift a reading by a few degrees; an undercut also can't be drawn by `ratchetProf` (one radius to each angle), which the click's seating uses.
 - **What would settle it:** a still, face-on frame of the ratchet off its arbor (not moving in tweezers), or of the click on its tooth.
+>>>>>>> origin/main

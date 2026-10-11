@@ -8,7 +8,7 @@ hour), and when the key lets go adds the catch's hours (R.release) as app.js doe
   - the sustaining ratchet never turns back, except as winding starts (locked to the fusee, its winding pawls on their faces, until its pawl holds it) and when the
     spring pushes it back to its pawl (a sudden drop of the fusee's drive), each time by less than one of its teeth;
   - the spring: running, where it balances the fusee's drive (d = SMAX (1 - D)) unless its pawl holds the ratchet; while held or winding it only relaxes, up to SMAX;
-  - the winding pawls: running, on the steep faces of the fusee's winding ratchet (R.WPH) and at least 0.4 mm into its teeth; as winding starts, still on the faces
+  - the winding pawls: running, on the steep faces of the fusee's winding ratchet (R.WPH) and at least half its teeth's depth into them (0.4 mm of 0.82 until the teeth were measured 0.55 deep, 11 October 2026); as winding starts, still on the faces
     and as deep while the ratchet goes back with the fusee (they ride over the teeth only once the sustaining pawl holds it);
   - the catch when the key lets go: the fusee (and the arbor, square and wind-indicator pinion with it) turns forward by the gap to the pawls plus the spring's
     reload, exactly (catchAt in movement.js), never back, never a tooth short or a whole tooth too many (with nothing moved it turns none), and R.release foretold it;
@@ -22,7 +22,7 @@ from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
- const D=180/Math.PI,FPR=R.FPR,SRP=R.SRP,SMAX=R.SMAX,TAU=2*Math.PI,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);},info={};
+ const D=180/Math.PI,FPR=R.FPR,WD=(FPR.ro-FPR.ri)/2,SRP=R.SRP,SMAX=R.SMAX,TAU=2*Math.PI,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);},info={};
  const TPH=7200,NPH=FUSEE_PER_HOUR,st={E:1000,n:3,spent:false,reset:false};let prev=null,k=0,ws=null;
  /* how far a pawl is from its ratchet's teeth (negative: inside): its outline every 0.1 mm against the profile (as seatPawl tests it), and the teeth's tips against
     its edges (a tip can touch an edge between the points): the nearest tip's distance outside the outline, negative inside */
@@ -49,7 +49,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
        if(w&&ws&&!prev.held&&(Math.abs(psi-ws.psi0)<1e-9||cur.held)){if(ws.sr0-sr>=SRP.p)fail('ratchet back',`${at}: went back ${((ws.sr0-sr)*D).toFixed(2)} deg with the fusee as winding started, a tooth or more (${(SRP.p*D).toFixed(1)})`);}   /* locked to the fusee until its pawl holds it */
        else if(!w&&cur.held&&!prev.held&&-dsr<SRP.p){}   /* pushed back to its pawl: the fusee's drive fell faster than the spring relaxes */
        else fail('ratchet back',`${at}: sustaining ratchet turned back ${(-dsr*D).toFixed(2)} deg${prev.w&&!w?' as winding stopped':''}`);}
-     if(w&&ws&&!cur.held){const u=R.wp[0].userData,ql=toWheel(u.q,[0,0],psi),dp=deep(u.pts,ql,R.wp[0].rotation.y-psi,FPR);if(mod(psi-R.WPH,FPR.p)>1e-4||dp<0.4)fail('lift',`${at}: winding pawls ${dp.toFixed(3)} mm into the teeth, ${(mod(psi-R.WPH,FPR.p)*D).toFixed(2)} deg off their faces, while the ratchet goes back with the fusee`);}
+     if(w&&ws&&!cur.held){const u=R.wp[0].userData,ql=toWheel(u.q,[0,0],psi),dp=deep(u.pts,ql,R.wp[0].rotation.y-psi,FPR);if(mod(psi-R.WPH,FPR.p)>1e-4||dp<WD)fail('lift',`${at}: winding pawls ${dp.toFixed(3)} mm into the teeth, ${(mod(psi-R.WPH,FPR.p)*D).toFixed(2)} deg off their faces, while the ratchet goes back with the fusee`);}
      if(prev.w&&!w&&!jump){const sh=prev.sr,fc=sh+R.WPH+FPR.p*Math.ceil((prev.fz-sh-R.WPH)/FPR.p-1e-9),want=fc+Math.max(0,gA-dq-sh)-prev.fz,got=fz-prev.fz;   /* the catch: gap to the pawls, then the reload */
        catches.push(got);if(got<-1e-9)fail('catch',`${at}: fusee turned back ${(-got*D).toFixed(2)} deg when the key let go`);
        if(Math.abs(got-want)>2e-4)fail('catch',`${at}: the catch turned the fusee ${(got*D).toFixed(3)} deg, the gap and reload ${(want*D).toFixed(3)}`);
@@ -59,7 +59,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
    if((w||cur.held)&&prev&&(prev.w||prev.held)&&!/slider|set/.test(tag)&&d<prev.gA-prev.sr-1e-9)fail('load',`${at}: spring loaded again while ${w?'winding':'held'}`);
    if(d>SMAX+1e-6)fail('load',`${at}: spring relaxed ${(d*D).toFixed(2)} deg, past its ${(SMAX*D).toFixed(1)}`);
    if(!w&&!cur.held&&R.WPH!=null){const e=mod(psi-R.WPH,FPR.p);if(e>1e-4)fail('engage',`${at}: winding pawls ${(e*D).toFixed(2)} deg off the steep faces in running`);
-     const u=R.wp[0].userData,ql=toWheel(u.q,[0,0],psi),dp=deep(u.pts,ql,R.wp[0].rotation.y-psi,FPR);info.wdeep=Math.min(info.wdeep??9,dp);if(dp<0.4)fail('engage',`${at}: winding pawls only ${dp.toFixed(3)} mm into the teeth in running`);}
+     const u=R.wp[0].userData,ql=toWheel(u.q,[0,0],psi),dp=deep(u.pts,ql,R.wp[0].rotation.y-psi,FPR);info.wdeep=Math.min(info.wdeep??9,dp);if(dp<WD)fail('engage',`${at}: winding pawls only ${dp.toFixed(3)} mm into the teeth in running`);}
    for(const pw of R.wp){const ql=toWheel(pw.userData.q,[0,0],psi),dp=gap(pw.userData.pts,ql,pw.rotation.y-psi,FPR);if(dp<-0.01||dp>0.02)fail('pawl',`${at}: winding pawl ${dp.toFixed(3)} mm from its teeth`);}
    { const q=toWheel([R.spawl.position.x-L.Fu[0],R.spawl.position.z-L.Fu[1]],[0,0],sr),dp=gap(R.spawl.userData.pts,q,R.spawl.rotation.y-sr,SRP);if(dp<-0.01||dp>0.02)fail('pawl',`${at}: sustaining pawl ${dp.toFixed(3)} mm from its teeth`);
      if(cur.held){const dd=deep(R.spawl.userData.pts,q,R.spawl.rotation.y-sr,SRP);info.sdeep=[Math.min(info.sdeep?.[0]??9,dd),Math.max(info.sdeep?.[1]??0,dd)];} }

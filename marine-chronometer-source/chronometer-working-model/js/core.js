@@ -436,9 +436,9 @@ function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.f
    as fractions of its tip radius (measured on a wheel lying flat: WHEEL_PROP, movement.js), in place of the default proportions; pl, its outline (gearOutline) */
 /** @param {number} n @param {number} m @param {any} [o] @returns {{xy:number[][],ro:number,ri:number}} the outline in the shape's plane (x, y), its tip and root radii */
 function gearOutline(n,m,o={}){
-  const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95,ri=rp-1.3*m;let ro=roS;
+  const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95;let ri=rp-1.3*m,ro=roS;
   const root=(a0,a1)=>{for(let k=1;k<3;k++)pts.push([ri,a0+(a1-a0)*k/3]);};   /* the root between two teeth, rounded */
-  if(o.ratchet){ro=roS;const r0=ro-(o.rd||2.25*m),f=o.ratchet==='radial'?0.97:0.9;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*f],[r0,a+p*0.97]);}}   /* 'radial': the locking face along a radius (the maintaining work's: movement.js ratchetProf), else leaning back over 0.07 of a pitch */
+  if(o.ratchet){ro=roS;const r0=ro-(o.rd||2.25*m),f=o.ratchet==='radial'?0.97:0.9;ri=r0;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*f],[r0,a+p*0.97]);}}   /* 'radial': the locking face along a radius (the maintaining work's: movement.js ratchetProf), else leaning back over 0.07 of a pitch */
   else if(n<=20){const b=0.525*m/rp,rt=0.525*m;ro=rp+rt;
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b],[rp,c-b]);
       for(let k=1;k<12;k++){const t=Math.PI*k/12,u=rp+rt*Math.sin(t),v=-rt*Math.cos(t);pts.push([Math.hypot(u,v),c+Math.atan2(v,u)]);}   /* the round tip, a semicircle on the pitch circle */
@@ -458,6 +458,7 @@ function gearGeo(n,m,th,o={}){
       const h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
   if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
   for(const[hx,hz,hr]of o.holes||[]){const h=new THREE.Path();h.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(h);}   /* holes [x, z, r] in the wheel's own frame (screw holes) */
+  for(const c of o.cuts||[]){const v=c.map(([x,z])=>new THREE.Vector2(x,-z));if(!THREE.ShapeUtils.isClockWise(v))v.reverse();const h=new THREE.Path();v.forEach((q,i)=>i?h.lineTo(q.x,q.y):h.moveTo(q.x,q.y));h.closePath();s.holes.push(h);}   /* cuts: outlines [[x, z], ...] cut through it (a face layer's recesses), wound as the holes */
   const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro,ri,hub:R0,pl:xy});return g;
 }
 /* gearLash: a meshing pair phased as it runs, under load. A drives B (gearGeo meshes, their gear {z} in userData; their arbors at pa and pb, [x, z]); s is the way A turns as
