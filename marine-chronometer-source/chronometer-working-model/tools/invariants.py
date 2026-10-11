@@ -70,11 +70,11 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
      its swing stays after TF ln 4; the manual's 1 3/8 to 1 1/2 turns take a torque within the fusee's residual of it; a smaller swing loses (the escapement's isochronism) */
   chk('dynamics: the calibrated torque swings the balance 255 deg',ESC.ampAt(1)/D,255,1e-9,'deg');chk('dynamics: and its rate there',ESC.rateAt(ESC.A,1),0,1e-12,'s/day');
   chk('dynamics: a smaller swing (90% of the torque) loses',ESC.rateAt(ESC.ampAt(0.9),0.9),-0.3,0.15,'s/day');
-  /* the fusee (makeFusee pull, torque): the illustrative spring's pull falls from 1 to rmin/rmax; the torque on the fusee wheel keeps within its 3% residual; the going barrel's
-     doesn't (the essay's and walkthrough's dashed line) */
-  const F=R.fs,N=FUSEE_TURNS;let tq=[1e9,-1e9];for(let i=0;i<=100;i++){const v=F.torque(N*i/100);tq=[Math.min(tq[0],v),Math.max(tq[1],v)];}
-  chk('fusee: the spring pulls 1 fully wound',F.pull(0),1.03,1e-9,'');chk('fusee: and rmin/rmax run down',F.pull(N),F.rf(0)/F.rf(N)*0.97,1e-9,'');
-  chk('fusee: torque on the fusee wheel within 3% of its mean',(tq[1]-tq[0])/2,0.03,0.0005,'');
+  /* the fusee (makeFusee pull, lever, torque): the solved spring's pull falls from 1 to the chain's lever ratio, fully wound against run down, where the set-up puts it; the
+     torque on the fusee wheel, pull times the chain's pitch radius, keeps within its residual of about 2 % (the solved spring's curve against the profile) */
+  const F=R.fs,N=FUSEE_TURNS;let tq=[1e9,-1e9],tm=0;for(let i=0;i<=100;i++){const v=F.torque(N*i/100);tq=[Math.min(tq[0],v),Math.max(tq[1],v)];tm+=v/101;}
+  chk('fusee: the spring pulls 1 fully wound',F.pull(0),1,1e-12,'');chk('fusee: and the lever ratio run down (the set-up)',F.pull(N),F.lever(0)/F.lever(N),1e-6,'');
+  chk('fusee: torque on the fusee wheel within 2% of its mean',(tq[1]-tq[0])/2/tm,0.017,0.003,'');
   /* temperature (core.js MTE): the Model 21's curvature against the test card of No. 3390 (90 F -0.02, 72.5 +0.06, 55 0.00 s a day: 72.5 above the ends' mean by 0.07) */
   chk('temperature: Model 21 balance, 72.5 F above the mean of 55 and 90 F',-(MTE.uncut(55)+MTE.uncut(90))/2,0.07,0.002,'s/day');
   chk('temperature: split balance, 0 at 72.5 F',MTE.split(72.5),0,1e-12,'s/day');

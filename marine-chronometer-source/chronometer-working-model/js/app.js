@@ -675,7 +675,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      While the train is held tSim and the hands stand, and the balance keeps its own phase in H.bph (oscillations); on restarting, H.bOff (phase) and H.eOff (beats)
      carry both across, so neither the balance nor the hands jump. H.arm and H.blk move on frame time: the arm 0 unlocked to 1 locked, the screw 0 up to 1 down ---------- */
   /* the drive: the escape wheel's torque as a share of the one the escapement is calibrated at (ESC.ampAt, ESC.rateAt). Running, the mainspring through the fusee (R.fs.torque:
-     its small residual, the spring being illustrative), 1 at 12 h from full wind, the middle of a day's running; while the key turns, the sustaining spring alone, SUS of it when
+     the solved spring's pull on the chain's pitch line, level to about 2 %), 1 at 12 h from full wind, the middle of a day's running; while the key turns, the sustaining spring alone, SUS of it when
      loaded (estimated) and falling to nothing as it relaxes over its 10 minutes (R.ssD of R.SMAX, update()); run down, none. drvB(h): what a going barrel with the same spring
      would give, its pull falling evenly with time, geared to give the same at 28 h (Swing and isochronism) */
   /* MSET: the mainspring's set (Op. 13, "check condition and set of mainspring"): a spring that has taken a set pulls that much less all through, which the fusee can't make up */

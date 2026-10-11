@@ -704,6 +704,20 @@ Contents:
   the chain keeps its length to 0.03 mm (586.40 mm, end pin to hook) over the wind; the
   chain's barrel turns over the run are 4.656 (were 4.670). Keep: whatever turns the barrel
   uses `Ib`; `tools/invariants.py` checks the length (`chainLen`).
+- **The fusee's torque taken on the groove's floor, and two different mainsprings**
+  (kinematics audit, 11 October 2026). The torque was the pull times the groove's floor
+  radius, though the chain pulls along its pitch line, 0.49 mm further out (7.51 to 15.22
+  where it leaves the fusee, not 7.0 to 14.8), and the set-up was matched to the floor's
+  ratio (0.473, not 0.490); `tools/physics.js` mixed the two (the floor on the fusee, the
+  pitch line on the barrel). And the drive (amplitude and rate) came from an illustrative
+  pull, linear and 3 % steeper at each end, while the spring drawn and its set-up came from
+  the solved one (`msPull`). The drive is now the solved spring's pull at the barrel's turns
+  on the chain's lever where it leaves the fusee (`fs.pull`, `fs.lever`, `fs.torque`), the
+  set-up matched to the levers' ratio (1.25 turns past the slack, was 0.99); the torque is
+  level within about 2 % (0.986-1.021 of its mean). `pullB`, the going barrel for
+  comparison, is the same spring. `physics.js` takes the pitch line: 0.93 NÂ·m fully wound
+  (was 0.90), 2.36 GPa, 64-100 ÂµNÂ·m at the escape wheel. Keep: one spring, `msPull`, for
+  the drawing, the set-up and the drive; levers on the chain's pitch line (`rc`).
 
 ## Plates, bridges, screws and arbors
 

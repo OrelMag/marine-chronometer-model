@@ -276,15 +276,16 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   adjusting the escapement (Ops. 77–97 beside the model's live figures); the order of work (Sec. VIII's reassembly, the mainspring made safe first);
   materials, hardening and tools, and the chronometer that can be made without Elinvar and Invar (a steel spring on a split bimetallic balance).
 - **Phase A's physics** (`tools/physics.js`): the fusee asks the mainspring (0.419 mm, the parts list; 13.55 wide, KLUwI2UUCMQ 15:54; 1,064 long) for 0.93 N·m fully wound,
-  2.27 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 57–90 µN·m at the escape wheel. Released from rest, the wheel (4.80e-9 kg·m², measured on its
+  2.36 GPa in its steel; through the train (2,893:1, each stage 0.85–0.95) 64–100 µN·m at the escape wheel. Released from rest, the wheel (4.80e-9 kg·m², measured on its
   solid; `invariants.py` checks the two agree) and the fourth wheel behind it chase the impulse jewel, already running away from them, and catch it about 17° of the
   balance after the release, striking it at more than twice its speed (the escapement, `makeEsc`, counts the chase and the strike; `tools/dynamics.js` checks it beat by
-  beat). The balance holds 255° if its Q is 266–528. **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
+  beat). The balance holds 255° if its Q is 230–441. **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
   run dry), 0.91–0.97, at the top of the range assumed; the balance's damping from the air on its screws, nuts and arm (Cd 0.8–1.4 at Re about 180), its
   staff's flat end turning on the endstone (the end flat on the 7:08 trace; domed it would lose 60 times less), the spring's residual side force and its own
-  internal damping (Q 1,000–5,000): Q 202–390, a free decay of 32–62 s. With the train's efficiency from its parts the budget needs 243–341, so the two meet;
-  `TF` (the free swing's decay) is 52 s (Q 327), inside both, the torque the model is calibrated at (78 µN·m) what the train gives less the mainspring's own
-  coil friction and set (5–15 %). It was 34 s (Q 214) until 11 October 2026, when the escapement still left out the chase and the detent's whole lift.
+  internal damping (Q 1,000–5,000): Q 202–390, a free decay of 32–62 s. With the train's efficiency from its parts the budget needs 211–291, 225–370 with
+  the mainspring's own coil friction and set (5–15 %), so the two meet; `TF` (the free swing's decay) is 52 s (Q 327), inside the parts' range and the
+  budget's with the spring's losses, the torque the model is calibrated at (78 µN·m) what the train gives less them. (With the fusee's torque taken on the
+  groove's floor instead of the chain's pitch line, until 11 October 2026, the budget needed 243–341.) It was 34 s (Q 214) until 11 October 2026, when the escapement still left out the chase and the detent's whole lift.
   Without the flat end the balance would lose too little and swing far past the manual's 1½ turns. Op. 78's preload (0.770 g on the locking jewel) is the detent
   spring's own in the model; the discharge jewel carries the detent on past the release to 1.8 times the release lift, so the detent takes about 10 % of the impulse
   (`fD`, 5.7 %, was fitted to the lift at release until 11 October 2026). The escapement's own error is −3.6 s a day, absorbed by the timing, and the

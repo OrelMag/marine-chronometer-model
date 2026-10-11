@@ -1576,18 +1576,20 @@ function makeFusee(M,c){
   }
   /* the mainspring's turns: Tup at full wind (where the stop-bar stops the key), Tdown = Tup less the barrel's IN turns at run down, and the set-up, what it is
      still wound past its slack (T0, the turns at which the held spring pulls nothing, solved: MSHAPE). The set-up is where the solved spring's pull falls over the
-     chain's IN turns as the fusee's measured profile evens out, rmin / rmax: a fusee is cut for its spring. Its outer end (theta = TAU T in mainspringGeo) 0.4 mm
+     chain's IN turns as the chain's lever on the fusee grows, rho0: its pitch line where it leaves the fusee, fully wound against run down (0.490; the groove's floor,
+     rmin / rmax, 0.473 until 11 October 2026): a fusee is cut for its spring. Its outer end (theta = TAU T in mainspringGeo) 0.4 mm
      past the pin, so turning it by rot puts the end there at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
-  const IN=Ib(N),MD=msStates(),rho0=c.rmin/c.rmax;let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+IN)<rho0)ta=m;else tb=m;}
+  const IN=Ib(N),MD=msStates(),rho0=rc(md(0))/rc(md(N*TAU));let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+IN)<rho0)ta=m;else tb=m;}
   const y0=MSY0,y1=MSY1,ym=(y0+y1)/2,e0=0.6/MSPRING.ra,e1=e0+1.06/MSPRING.ra,MS={Tup:ta+IN,y0,y1,ey:[e0,e1,ym-1.3,ym+1.3]};   /* fully wound: the set-up and the chain's barrel turns past the spring's slack */
   MS.Tdown=MS.Tup-IN;MS.setup=MS.Tdown-MD.T0;MS.rot=TAU*MS.Tup+Math.PI/2-PIN-0.4/(MSPRING.Rw-MSPRING.t/2);MS.hookA=(e0+e1)/2-MS.rot;ms.rotation.y=MS.rot;
-  /* the spring's pull (illustrative): the profile evens out exactly a pull falling in step with the barrel's turns, from 1 fully wound to rmin/rmax run down (pullB's first
-     factor, at x of the barrel's turns let down); a real spring in its barrel rises more steeply than that near full wind, where its coils crowd the arbor, and falls off more
-     steeply near run down: 3% at each end, flat between (SPR). pull(m): at m fusee turns from full wind; torque(m): pull times the chain's radius on the fusee, against
-     the smallest, the fusee's small residual. A going barrel would deliver pullB(x) itself, x running evenly with time */
-  const SPR=0.03,rho=c.rmin/c.rmax,pullB=x=>(1-(1-rho)*x)*(1+SPR*(1-2*x)**3),xb=m=>(1-rf(0)/rf(m))/(1-rho),pull=m=>pullB(xb(clamp(m,0,N))),torque=m=>pull(m)*rf(clamp(m,0,N))/rf(0);
+  /* the drive, from the spring drawn: pull(n), the solved spring's pull (msPull, the slope of its energy: tools/mainspring.py) at the barrel's turns Ib(n), n fusee turns
+     from full wind, against its pull fully wound; lever(n), the chain's pitch line where it leaves the fusee (rc at md, the line the pull acts along); torque(n), their
+     product against the fully wound pitch radius: the fusee wheel's torque, level to about 1.6 % with the set-up above. pullB(x): what a going barrel with the same spring
+     would deliver, x of the barrel's IN turns let down, evenly with time. Until 11 October 2026 the drive was an illustrative pull (the even fall the profile is cut for,
+     3 % steeper at each end) on the groove's floor, a second spring beside the solved one the model drew */
+  const P0=msPull(MS.Tup),pull=n=>msPull(MS.Tup-Ib(clamp(n,0,N)))/P0,pullB=x=>msPull(MS.Tup-clamp(x,0,1)*IN)/P0,lever=n=>rc(md(clamp(n,0,N)*TAU)),torque=n=>pull(n)*lever(n)/rc(md(0));
   /* the chain's length along its pitch line, the fusee's end pin to the hook's end, at n turns (+ eps): the joints' path and the hook's plate (tools/invariants.py: it keeps its length) */
   const chainLen=(n,eps=0)=>{const rot=n*TAU+eps,P=path(md(rot),rot),ha=HKN-Ib(n,eps)*TAU;let l=0;for(let i=1;i<P.length;i++)l+=P[i].distanceTo(P[i-1]);
     return l+P[P.length-1].distanceTo(new THREE.Vector3(bx+rB*Math.cos(ha+0.85/rB),HKY,rB*Math.sin(ha+0.85/rB)));};
-  return{g,fz,bz,setWind,rf,yf,fx,bx,ms,I,Ib,IN,MS,stopBar,setBar,barTravel,mF,stud,N,pull,pullB,torque,chainLen};
+  return{g,fz,bz,setWind,rf,rc,yf,fx,bx,ms,I,Ib,IN,MS,stopBar,setBar,barTravel,mF,stud,N,pull,pullB,lever,torque,chainLen};
 }
