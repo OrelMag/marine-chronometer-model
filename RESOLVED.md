@@ -27,6 +27,39 @@ Contents:
 [Essay](#essay) ·
 [Fixed, not yet committed](#fixed-not-yet-committed)
 
+- **The up-and-down indicator's wheel followed the fusee's pinion both ways on
+  one flank** (the kinematics audit, 11 October 2026). With the drive flanks in
+  contact (`gearLash`), winding turned the pinion back into the wheel. The
+  wheel now stands while the pinion crosses its backlash (`UD_LASH`, from
+  `gearLash` both ways, 0.107 rad of the fusee) and follows on the other flank;
+  after winding it waits for the pinion to come round again. Keep: a mesh whose
+  driver reverses crosses its backlash before the driven wheel moves. `bf75917`
+- **The set-up ratchet's locking faces leaned back** over 0.07 of a pitch, so
+  the mainspring's pull lifted the click out. They are radial now, as the
+  maintaining work's (KLUwI2UUCMQ 38:28 shows saw teeth with short steep faces;
+  radial or a few degrees can't be told there), and the click is seated on that
+  profile. Keep: a ratchet's locking faces radial or undercut. `7c0c0d9`
+
+- **The run down's taper said "Stopping: twist to start"** once the drive fell
+  under what keeps the balance unlocking, a few minutes before `RUN_H`. The HUD
+  and the stop panel now say Run down there (`spentNow`). Keep: the stop
+  messages follow the drive, not the hours. `bf75917`
+- **The export's drive and wind lagged the page's** after the maintaining work's
+  state machine: its `sim` took the fusee's drive or a 0.8 spring, not the
+  greater of the fusee and the sustaining spring (`R.ssF`), and didn't add the
+  catch's and reload's hours when the key let go (`R.release`). Keep: blender.js's
+  `sim` mirrors app.js's drive, go and windEnd. `bf75917`
+
+- **The loop's never-back clamp hid the escape wheel's recoil.** Once the
+  escapement drew the recoil (progress under 0 while the stone is drawn out),
+  `E = max(q.E, lastE)` held the wheel still through it. The clamp now lets
+  that dip through, in the page and the export. Keep: the only turn back the
+  train makes is the unlocking's recoil, a few hundredths of a tooth. `9a7e7db`
+- **The adjuster's bench left the hand landing off its mark.** `PL`, the phase
+  at which the next tooth locks, was worked out once at load; a bench setting
+  moves the lock. It is recomputed when the escapement is rebuilt, the
+  balance's phase kept. Keep: `PL` follows ESC. `e66cced`
+
 ---
 
 ## Escapement
