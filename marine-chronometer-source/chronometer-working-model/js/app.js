@@ -224,7 +224,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   let hrs=20,winding=false,kw=null,rateK=1,escK=1,rateW=1,rErr=0,tSim=Date.now()/1000+tzOff(),tM=0,slip=0,ks=null,sw=null,units='mm',book=[],pend=new Set(),bookDay=0,wasHeld=false,tVis=0,rockT=0,roll=0,pitch=0,latchK=0,lastE=null;
   /* the master time tM: a perfect clock, the time signal the dial is compared with. It runs at the model's speed, also while the chronometer stands. slip: how far the hour and
      minute hands have been turned on the centre arbor with the key (s; the cannon pinion slips), which leaves the second hand alone. dialRead(): the time the hands show, the
-     seconds from the second hand (continuous: as a comparator reads it) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
+     seconds from the second hand as a comparator reads it (the mark it last came to rest on and the time since: it lands on the mark k/2 s at tSim + (bOff + eOff)/2 = k/2, PL
+     below) and the minutes from the minute hand, taken within 6 h of the master (the dial has 12 hours) */
   tM=tSim;
   const dialRead=()=>{const sT=tSim+(H.bOff+H.eOff)/2,ss=((sT%60)+60)%60,r=Math.round((sT+slip-ss)/60)*60+ss,e=r-tM;return tM+(((e+21600)%43200)+43200)%43200-21600;};
   const fmtErr=e=>{const a=Math.abs(e),h=Math.floor(a/3600),m=Math.floor(a%3600/60),x=Math.round((a%60)*2)/2;return(e<0?'−':'+')+(h?h+' h ':'')+(h||m?m+' min ':'')+(h?'':x+' s');};   /* to the half second, as a navigator records it */
@@ -487,7 +488,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const todIn=$('#tod');let todS=-1;
   const setTod=v=>{const m=/^(\d+):(\d+)(?::(\d+))?/.exec(v);if(!m)return;slip=0;pend.add('set');tSim=Math.floor(tSim/86400)*86400+(+m[1])*3600+(+m[2])*60+(+(m[3]||0))+(tSim%1);lastE=null;todS=-1;rErr=0;handsSet=true;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);};
   todIn.addEventListener('change',()=>setTod(todIn.value));
-  $('#now').addEventListener('click',()=>{tSim=tM=Date.now()/1000+tzOff();slip=0;pend.add('set');bookDay=dayOf(tM);lastE=null;todS=-1;rErr=0;handsSet=false;H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5+H.bOff);});
+  $('#now').addEventListener('click',()=>{tSim=tM=Date.now()/1000+tzOff();slip=0;pend.add('set');bookDay=dayOf(tM);lastE=null;todS=-1;rErr=0;handsSet=false;H.bOff=H.eOff=0;if(H.held)H.Eh=Math.floor(tSim/0.5);});   /* the beat put on the master's (the balance's phase with it): the hand lands on each half second at it */
   /* GMT or local: the hands move by the difference, as when they are set (held, the beats they stand at with them) */
   const setTz=v=>{const o=tzOff();tz=v;const d=tzOff()-o;tSim+=d;tM+=d;if(H.held)H.Eh+=2*d;bookDay=dayOf(tM);if(hashReady)pend.add('set');lastE=null;todS=-1;rErr=0;document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));$('#now').title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';};
   document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz)setTz(b.dataset.v);}));
@@ -690,6 +691,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   document.querySelectorAll('#blkSeg button').forEach(b=>b.addEventListener('click',()=>blkSet(+b.dataset.v)));
   const blockedNow=()=>H.blk>R.tbs.userData.vFace;
   function stopWhy(run){if(!run)return'Run down';if(!H.held)return'';if(H.arm>0.5)return'Balance locked';if(blockedNow())return'Train blocked';return H.amp>0.5*D2R?'Stopping: the balance swings too little to unlock':'Stopped: twist to start';}
+  /* PL: the balance's phase (oscillations from its far turn before the unlocking) at which the next tooth locks at the running swing, the second hand coming to rest on its mark.
+     The balance's phase is tSim/0.5 + bOff + PL (H.bph while the train stands), so with bOff and eOff 0 the hand lands on the mark k/2 s at tSim = k/2, as on a chronometer set
+     to a time signal (at another swing or torque a few milliseconds off it) */
+  const PL=(()=>{let lo=0,hi=0.5;for(let i=0;i<50;i++){const m=(lo+hi)/2;ESC.state(m).prog>=1?hi=m:lo=m;}return hi;})();
   const twist=()=>{if(H.armT){stopMsg('Unlock the balance first: the arm holds its rim.');return;}
     if(H.amp<0.5*D2R)H.bph=Math.floor(H.bph)+0.75;   /* from rest: the balance at its dead point, on the return swing */
     H.kick=160*D2R;H.twT=performance.now();wake();
@@ -744,8 +749,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      the train is going, at a locked beat; the box and gimbals are knocked too (H.jT) */
   const joltB=$('#jolt');
   function jolt(){if(kw)kwStop();H.jT=performance.now();H.jS=Math.random()<0.5?-1:1;gimKick(H.jS*0.8);wake();
-    const sl=st.speed>REAL_X;if(H.held||H.amp<ESC.AMIN||H.arm>0.05){stopMsg('<b>Jolted.</b> <span>The balance isn’t driving the train, so there is nothing to upset.</span>');return;}
-    const x=tSim/0.5+H.bOff,ph=x-Math.floor(x),z0=ESC.state(ph,H.amp);if(!sl&&z0.prog>0&&z0.prog<1){stopMsg('<b>Jolted during an impulse.</b> <span>The tooth is on the impulse jewel and rides it out; try again.</span>');return;}
+    if(H.held||H.amp<ESC.AMIN||H.arm>0.05){stopMsg('<b>Jolted.</b> <span>The balance isn’t driving the train, so there is nothing to upset.</span>');return;}
+    const x=tSim/0.5+H.bOff+PL,ph=x-Math.floor(x),z0=ESC.state(ph,H.amp);if(ph>0&&z0.prog>0&&z0.prog<1){stopMsg('<b>Jolted during an impulse.</b> <span>The tooth is on the impulse jewel and rides it out; try again.</span>');return;}
     const w=TAU/0.5,th=-H.amp*Math.cos(TAU*ph),v=H.amp*w*Math.sin(TAU*ph)+H.jS*(0.6+0.4*Math.random())*ESC.A*w,a0=Math.hypot(th,v/w),a=Math.min(a0,ESC.TRIP+15*D2R),before=H.amp;
     H.amp=a;H.kick=0;   /* the swing's new size; its phase is kept (the model's clock), so the train stays on its half second */
     const trip=a0>ESC.TRIP,set=a<ESC.AMIN,d=x=>Math.round(x/D2R)+'°';if(trip){H.eOff+=1;rErr+=0.5;}pend.add('jolted');
@@ -936,7 +941,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
         f.forEach(([fn,col,nm,ds])=>{ctx.strokeStyle=col;ctx.lineWidth=ds?1.6:2.2;ctx.setLineDash(ds||[]);ctx.beginPath();for(let i=0;i<=100;i++){const q=RUN_H*i/100,yy=fn(q);i?ctx.lineTo(X(q),Y(yy)):ctx.moveTo(X(q),Y(yy));}ctx.stroke();ctx.setLineDash([]);
           ctx.fillStyle=col;ctx.beginPath();ctx.arc(X(hrs),Y(fn(hrs)),ds?3:4,0,TAU);ctx.fill();});
       }
-      else if(insetKind==='bal'){const win=0.5*(st.speed<=0.05?1:2);ctx.clearRect(0,0,w,h);const tb=H.held?H.bph*0.5:tSim+H.bOff*0.5,X=t=>8+(1-(tb-t)/win)*(w-16),Y=th=>h/2-th/(270*D2R)*(h/2-16);   /* tb: the balance's own time, which runs on while the train is held */
+      else if(insetKind==='bal'){const win=0.5*(st.speed<=0.05?1:2);ctx.clearRect(0,0,w,h);const tb=H.held?H.bph*0.5:tSim+(H.bOff+PL)*0.5,X=t=>8+(1-(tb-t)/win)*(w-16),Y=th=>h/2-th/(270*D2R)*(h/2-16);   /* tb: the balance's own time, which runs on while the train is held */
         ctx.strokeStyle=dk?'#2a323a':'#dde1e4';ctx.beginPath();ctx.moveTo(8,h/2);ctx.lineTo(w-8,h/2);ctx.stroke();
         const N=240,pts=[];for(let i=0;i<=N;i++){const t=tb-win+win*i/N,q=t/0.5-Math.floor(t/0.5),z=ESC.state(q,H.amp);pts.push([t,z.th,!H.held&&z.prog>0&&z.prog<1]);}
         ctx.fillStyle=dk?'rgba(224,180,79,.35)':'rgba(184,134,11,.28)';for(const q of pts)if(q[2])ctx.fillRect(X(q[0])-1,10,2.5,h-26);
@@ -1054,20 +1059,23 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     tVis+=dt;stopMove(dt);
     const brake=H.arm>0.75,drv=driveNow();ampStep(dtS*rateK,brake,go&&!H.held,drv);   /* the arm's finger is beside the timing weight from about three quarters of its turn */
     if(!H.held&&H.amp>=ESC.AMIN){const r=ESC.rateAt(H.amp,drv);if(Number.isFinite(r))escK=1+r/86400;}rateK=rateW*escK;swRec(now,drv);   /* the escapement's share at this swing and torque */
-    /* the train's state at model time t: beats E (whole beats locked, a fraction during an impulse; continuous above REAL_X) and the balance's state. Up to REAL_X the balance
-       swings as it really does (10 Hz at 5x, still a few frames a swing); faster, it would be a blur, so it swings at 0.9 Hz, detent and trip spring still, and the HUD says so */
-    const at=t=>{if(st.speed>REAL_X){const p=(tVis*0.9)%1,z=ESC.state(p,H.amp);z.p=p;z.lift=0;z.psDef=0;return{E:t*2+H.bOff+H.eOff,s:z};}
-      const x=t/0.5+H.bOff,kk=Math.floor(x),p=x-kk,z=ESC.state(p,H.amp);z.p=p;return{E:kk+z.prog+H.eOff,s:z};};
+    /* the train's state at model time t: the beats E the escape wheel has escaped (whole while it is locked, a fraction from the unlocking to the next lock) and the balance's state.
+       The balance's phase is y = t/0.5 + bOff + PL, its beats counted from its far turn before the unlocking: E = floor(y) - 1 + its progress through the beat (ESC.state; at a
+       whole y the tooth not yet escaped) + eOff (whole). The train goes by this real phase at every speed, so it stops and starts on whole beats and a change of speed moves
+       nothing. Up to REAL_X the balance is drawn so (10 Hz at 5x, still a few frames a swing); faster it would be a blur, so it is drawn swinging at 0.9 Hz (shown), detent and
+       trip spring still, and the HUD says so */
+    const at=t=>{const y=t/0.5+H.bOff+PL,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp);z.p=p;return{E:k-1+(p>0?z.prog:0)+H.eOff,s:z};},
+      lockd=z=>!(z.p>0&&z.prog>0&&z.prog<1),shown=z=>{if(st.speed<=REAL_X)return z;const p=(tVis*0.9)%1,d=ESC.state(p,H.amp);d.p=p;d.lift=0;d.psDef=0;return d;};
     let E,s;
-    if(!H.held){let q=at(tSim);const Eb=lastE??q.E,locked=q.s.prog<=0||q.s.prog>=1||st.speed>REAL_X,room=blockedNow()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity;   /* room: the last whole beat before a spoke meets the dog point */
-      const hold=()=>{H.held=true;H.bph=tSim/0.5+H.bOff;};
-      if(dtS>0&&locked&&(!go||H.amp<ESC.AMIN||brake||Eb+1>room)){hold();H.Eh=Eb;E=Eb;s=q.s;}   /* the train stops at a locked beat */
+    if(!H.held){let q=at(tSim);const Eb=lastE!=null?Math.max(q.E,lastE):q.E,room=blockedNow()?Math.floor(Eb+R.blockRoom(Eb)+1e-6):Infinity;   /* Eb: the wheel never turns back (the progress ESC.state gives at a phase changes with the swing: a swing cut short by the arm in a frame, or a knock, can leave the count ahead of the phase until the next unlocking); room: the last whole beat before a spoke meets the dog point */
+      const hold=()=>{H.held=true;H.bph=tSim/0.5+H.bOff+PL;};
+      if(dtS>0&&lockd(q.s)&&(!go||H.amp<ESC.AMIN||brake||Eb+1>room)){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}   /* the train stops at a locked beat */
       else{if(dtS>0){tSim+=dtS*rateK;rErr+=dtS*(rateK-1);if(!winding){hrs=Math.min(RUN_H,hrs+dtS/3600);if(st.speed>1)showH();}q=at(tSim);}
-        E=Math.min(q.E,room);s=q.s;if(q.E>room){hold();H.Eh=room;}}}
+        E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){hold();H.Eh=room;}}}
     if(H.held){H.bph+=dtS*rateW/0.5;const p=((H.bph%1)+1)%1;s=ESC.state(p,H.amp);s.p=p;E=H.Eh;   /* ESC.state leaves the detent alone in a swing too small to pass the trip spring */
-      const lockedP=s.prog<=0||s.prog>=1;
-      if(go&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&(lockedP||st.speed>REAL_X)){H.held=false;   /* the train goes again, from where the balance is, unless the dog point leaves it no whole beat (the hold's own test: a fractional beat at speed must not free it) */
-        H.bOff=(((H.bph-tSim/0.5)%1)+1)%1;if(st.speed>REAL_X)H.eOff=H.Eh-(tSim/0.5+H.bOff);else{const x=tSim/0.5+H.bOff;H.eOff=H.Eh-(Math.floor(x)+(s.prog>=1?1:0));}}}
+      if(go&&!brake&&H.amp>=ESC.AMIN&&!(blockedNow()&&H.Eh+1>Math.floor(H.Eh+R.blockRoom(H.Eh)+1e-6))&&lockd(s)){H.held=false;   /* the train goes again from where the balance is, on a whole beat, unless the dog point leaves it no whole beat (the hold's own test) */
+        H.bOff=(((H.bph-PL-tSim/0.5)%1)+1)%1;H.eOff=0;H.eOff=H.Eh-Math.round(at(tSim).E);}}
+    s=shown(s);
     if(st.sound&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tick();
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */

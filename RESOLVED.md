@@ -1772,6 +1772,24 @@ An arbor needs pivots and shoulders; a stone its seat.
   time and Now reset it): on restarting the hands carried on from where they stood and the dial read
   the difference slow (3 h for a zone 3 h off). Held, the beats the hands stand at now move with it
   (`H.Eh += 2d`). Keep: whatever moves `tSim` while the train is held moves `H.Eh` with it.
+- **Above 5× the escape wheel ran smoothly, held off its stone and stepped back on a change of speed.**
+  Faster than `REAL_X` the beats were `2t` plus offsets, continuous, so a hold there stored a fraction
+  of a tooth and the restart a fractional `eOff`: back at 1× every locked beat stood off the locking
+  stone, the second hand between its marks, until Now (a run-down at 3600× held at E = 2360.25). The
+  two formulas also differed by up to 0.74 of a tooth, so crossing 5× stepped the wheel back. The train
+  now goes by the balance's real phase at every speed (`at()` in `app.js`; above `REAL_X` only the
+  drawn balance swings at 0.9 Hz), so it stops and starts on whole beats, a change of speed moves
+  nothing, and the wheel never turns back (`Eb`: the progress `ESC.state` gives at a phase changes
+  with the swing, which a frame of the arm's braking at 10× cut from 255° to 21°). Keep: the
+  train's beats from the real phase whatever the speed; `REAL_X` chooses only how the balance is drawn.
+- **The second hand landed on its mark 0.37 s before the time it stood for.** The beats were
+  counted from the balance's far turn, so the wheel escaped and the hand landed a quarter of a
+  swing after the half second (`PL`, 0.263 of an oscillation, at 255°), while the dial was read
+  as `tSim` itself: the dial error left out the 0.12 s the hands were ahead on average, and Now set
+  them so. The balance's phase now runs `PL` ahead, so the hand comes to rest on the mark k/2 s at
+  `tSim + (bOff + eOff)/2 = k/2`, as on a chronometer set to a signal, and `dialRead()` reads what the
+  hands show; Now puts the balance's phase on the master's too. Keep: the hands land on the mark at
+  the time `dialRead()` gives for it.
 
 ## Build, tools and docs
 

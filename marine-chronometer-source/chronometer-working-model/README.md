@@ -72,7 +72,7 @@ the website (see the root README).
 
 ## Controls
 
-Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Up to 5× (`REAL_X` in `app.js`) the balance swings as it really does and the escape wheel steps; faster, a real swing would be a blur, so the balance swings at 0.9 Hz with the detent and trip spring still, the wheels turn smoothly, and the HUD adds "balance swing shown slowed". While winding, model time runs at most 10× (`WIND_X`), so a wind takes at most about 3 minutes of it, inside the 5 to 10 minutes the sustaining spring drives the train (Sec. IV); the HUD says so. Right-click a part to fade, hide or isolate it (Isolate shows that part alone, box and floor shadow gone; picking a part from the parts list, or ticking its box, adds it to the isolated ones); right-click empty space to bring hidden parts back or leave isolation. On touch screens a long press (half a second, barely moving) does the same; Android's own long-press `contextmenu` and the page's timer open the menu once between them, and the press never picks.
+Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or typed in; the space bar stops and restarts. Up to 5× (`REAL_X` in `app.js`) the balance is drawn swinging as it really does; faster, a real swing would be a blur, so it is drawn swinging at 0.9 Hz with the detent and trip spring still, and the HUD adds "balance swing shown slowed". At every speed the train goes by the balance's real phase, so the escape wheel steps a tooth a beat, stops and starts on whole beats, and a change of speed moves nothing. While winding, model time runs at most 10× (`WIND_X`), so a wind takes at most about 3 minutes of it, inside the 5 to 10 minutes the sustaining spring drives the train (Sec. IV); the HUD says so. Right-click a part to fade, hide or isolate it (Isolate shows that part alone, box and floor shadow gone; picking a part from the parts list, or ticking its box, adds it to the isolated ones); right-click empty space to bring hidden parts back or leave isolation. On touch screens a long press (half a second, barely moving) does the same; Android's own long-press `contextmenu` and the page's timer open the menu once between them, and the press never picks.
 
 - The **?** button on the model (or the **?** key) opens a card listing every control, for a mouse and for touch, with this device's first; the header and the hint word the gestures for the device too (`.m-only` / `.t-only`, switched by `@media (hover:none)`). A tap in the model, × or Esc closes it; dragging doesn't, so the gestures can be tried with it open.
 - Keys 1–9 pick the views, in the order of their buttons. Exploded has a Spread slider.
@@ -437,12 +437,19 @@ Everything is driven from one model clock `tSim`, in seconds of the time kept (G
 
 Beside it runs the master time `tM`: a perfect clock, standing for the time signal the chronometer is compared with. It runs at the model's speed, also while the chronometer stands, and doesn't follow the weights. The dial error is what the hands show (`dialRead()` in `app.js`: the second hand's time, continuous as a comparator reads it, with the minutes from the minute hand) less `tM`; it grows with the rate, with the time the chronometer stood, and with setting the hands.
 
-- The balance phase is `p = frac(tSim / 0.5)`, one oscillation per half-second.
+- The balance's phase is `y = tSim / 0.5 + bOff + PL`, one oscillation per half-second, counted
+  from its far turn before the unlocking; `p = frac(y)`.
 - `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection
   and the escape wheel’s progress through its current tooth.
-- Escape wheel position is `E = completed oscillations + progress`, counted in
-  teeth. Every other arbor is a fixed ratio of `E`. The hands therefore advance
-  in half-second steps, as the manual states (Sec. IX, p. 66).
+- Escape wheel position is `E = floor(y) − 1 + progress + eOff`, counted in
+  teeth (`eOff` whole). Every other arbor is a fixed ratio of `E`. The hands therefore advance
+  in half-second steps, as the manual states (Sec. IX, p. 66). `PL` (0.263 of an
+  oscillation at 255°) is where the next tooth locks and the second hand comes to rest, so
+  with `bOff` and `eOff` 0 the hand lands on the mark k/2 s at `tSim` = k/2, as on a
+  chronometer set to a time signal; `dialRead()` gives the time the hands show,
+  `tSim + (bOff + eOff)/2`, and Now sets both offsets to 0. The train goes by this phase
+  at every speed (above `REAL_X` only the drawn balance is slowed), and the wheel never turns
+  back (the progress at a phase changes with the swing).
 - The fusee and chain follow the hours since winding: one fusee turn per 90/14
   = 6.43 hours. The model runs down after 56¼ h (`RUN_H`, the fusee's 8¾ turns),
   when the chain is all on the barrel; the dial's UP–DOWN scale covers the rated
