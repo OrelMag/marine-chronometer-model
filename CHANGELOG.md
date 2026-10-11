@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.22.00 · 2026-10-11
+- Every moving part checked against how a real chronometer works: the detent falls back to its stop, the escape wheel recoils and runs on to its lock, the chain keeps its length
+- Winding as a real fusee winds: the pawls stay on their teeth, the maintaining spring carries the train, and the drive fades away at run down
+- The hairspring breathes, the gears' teeth bear on each other, the seconds hand lands on its mark at the signal, and the gimbals hang to the ship's motion
+
 ## 2.21.00 · 2026-10-11
 - The escapement now moves as a real one does: released from rest, the escape wheel chases the impulse jewel, strikes it about 16° of the balance later and drives it
 - The discharge jewel's end is rounded, and lock, let-off, overall and drop all meet the manual's figures
