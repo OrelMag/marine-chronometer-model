@@ -90,3 +90,10 @@ The manual gives no tooth profiles, threads or most pivot sizes. The site tells 
 - **Conflict:** at a few pixels a face, the frame can't tell radial from a 5° lean. A radial face was tried; the click (seated by `phaseAgainst` on the profile as a function of angle) then sat 0.3 mm into the tooth's corner (bom.py's setup-click check), so it was put back until the click is seated on the outline as the winding pawls are (`deep`).
 - **What would settle it:** a face-on close-up of the set-up ratchet (the barrel bridge off), or of the click on its tooth.
 
+
+## The winding-pawl springs' beds and feet (11 October 2026)
+
+- **Known:** KLUwI2UUCMQ 19:12 (4K, the springs off) shows each spring's bed in the sustaining ratchet's face, traced every degree on the frame rectified on the ratchet's tips: one from the right pawl at r 8.9-8.7, turning in from 84° to r 7.04 at 102° and on there to its foot; the other from the left pawl at r 9.28-9.11 to 132°; 0.55-0.6 wide. The feet's screw holes: 29° apart at r 8.3 for the first, 32° apart at r 7.8-8.2 for the second. 19:15 and 19:20, lit from one side, show a raised middle round the bore and the face outside the beds.
+- **Conflict:** the two beds differ (one turns in to r 7.04 thirty degrees before its foot, the other doesn't before 132°), and so do their feet's places from their pawls (16° apart), though the springs are one part number (42007, two off). Which wall of the feet's pockets shows depends on the light: the first pocket's inner wall (r 7.04) is traced, its outer wall and the whole of the second pocket are lit or in glare. The beds' depth and the feet's own shape aren't seen (the springs are off in every frame found).
+- **In the model:** each bed as traced, the pockets' unseen walls estimated (outer the bed's outer edge, inner r 6.8), depth 0.2, the feet filling their pockets.
+- **What would settle it:** a frame with the springs on (before 18:20, as the sustaining ratchet comes off the fusee) or of the face lit from the other side; Fig. 28 or 69 enlarged.
