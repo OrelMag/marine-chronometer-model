@@ -1939,6 +1939,16 @@ An arbor needs pivots and shoulders; a stone its seat.
   renderer off screen, each copied onto its own 2D canvas, and are built only
   when first near the view. Keep: at most two WebGL contexts on the page
   (`smoke.py` counts them). `9ffe479`
+- **The counting figure's teeth inside each other** (kinematics audit, 11 October
+  2026). "Counting" built the centre, third, fourth and escape arbors with
+  `arbor()` on its own layout and never phased the meshes, so at every beat
+  each wheel's teeth stood inside its pinion's leaves (an outline check found
+  93-194 points of one inside the other, against none for the model's own
+  train); the centre wheel's addenda were also rolled for a 10-leaf pinion, not
+  its 12. Each pinion is now phased on its wheel by `gearLash`, as the model's
+  are (the backlash behind, the escape pinion's frame at -t0), and each wheel
+  takes its pinion as `mate`. Keep: an essay figure that meshes gears phases
+  them with `gearLash` and the way the model turns its wheels.
 
 ---
 
