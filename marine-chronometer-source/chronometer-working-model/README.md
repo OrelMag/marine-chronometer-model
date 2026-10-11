@@ -217,6 +217,20 @@ a 15-tooth escape wheel, 8 fusee turns, a Roman dial, the old names for the esca
   spring gains 0.141 s a day at 247.5° and 0.253 at 270° against small swings, **0.11 s a day over the manual's 1⅜ to 1½ turns, +0.05 for each 10°**, the same
   way as the escapement's error, so the adjuster's setting (`HS`, the bench) is about -0.18 for the designed spring where the model's -0.13 assumes an isochronous one.
   The model keeps `HS` 0 (the spring as adjusted, as the performance card shows it); the essay quotes the figures (`data-hs`, checked by `tools/hairspring.js`).
+- **It breathes** (`R.spPath`, since 11 October 2026; before, each point turned rigidly by θ(1 − s/L) about the staff, the coils
+  keeping their radii). With the ends meeting Phillips' conditions the collet's pull is a pure couple, so the bending moment is the
+  same all along the strip and every part of the free length changes its curvature by θ/L: the heading at s turns θ(1 − s/L). The
+  coils close as the balance turns one way and open the other, each by θ/(2πN) of its radius (r 4.83 to 5.40 over the 255° swing,
+  5.10 at rest; 4.74 to 5.51 at 347°, the most a jolt gives), concentric to 0.04 mm, the terminal curves curling by as much, the
+  length kept. Drawn from the stud's end back, each 0.3 mm segment turned at its middle; the second-order miss at the collet's end
+  (0.024 mm at 255°) is taken out along the free length. Against the elastica (`HSPR.large`, the strip as drawn compared point
+  for point with its solved shape) it is within 0.025 mm at 255° and 0.039 at 345°; the rigid turn was 0.28-0.46 off. The turns
+  stay 0.2 mm or more apart (a helix: each turn 0.56 above the last). No photograph or video shows a Model 21's spring breathing.
+  **Against the collet:** curling inward by θs²/2L near its clamp (0.39 mm 7 mm from it at 347°), the inner curve ran into the corner of
+  the collet's body, whose hidden side was taken back to the plate's corner (0.02 mm off the strip at rest). No inner curve meeting Phillips'
+  conditions from the collet's end clears that corner (the farthest out passes it at r 3.64; it would need 4.0), so the body's hidden side,
+  which no source shows, now stops short of it: the strip clears the collet by 0.063 mm at the widest swing the model allows (347° wound),
+  0.14 at 255° and 0.35 at rest, beyond the clamp's edge (the "Estimated" section, the collet).
 - **Isochronism.** In small-deflection theory, with the force on the pivots gone, the spring's own isochronism error is what its curves' departure from the
   conditions leaves (residuals under 1e-11 mm) and the material's; the escapement's is `tools/escapement.js`'s. At the balance's real swing the strip's large
   deflection adds +0.05 s a day for each 10° (above). The model keeps the hairspring term at 0 (`HS`): the spring as an adjuster leaves it, set against the
@@ -440,7 +454,12 @@ Beside it runs the master time `tM`: a perfect clock, standing for the time sign
 - The balance's phase is `y = tSim / 0.5 + bOff + PL`, one oscillation per half-second, counted
   from its far turn before the unlocking; `p = frac(y)`.
 - `ESC.state(p)` returns the balance angle, detent lift, trip-spring deflection
-  and the escape wheel’s progress through its current tooth.
+  and the escape wheel’s progress through its current tooth. `p` 0 is the active
+  swing's start, the wheel locked (progress 0). The progress dips a little under
+  0 while the stone is drawn out against the locked tooth (the recoil, at most
+  0.18° of the wheel, from −27.8° to −22.6° of the balance), and after the impulse
+  the tooth runs on from where the jewel lets it go (0.96 of a pitch, +20.7°) to
+  the stone at the speed it had and more, locking at +22.1° (at 255°).
 - Escape wheel position is `E = floor(y) − 1 + progress + eOff`, counted in
   teeth (`eOff` whole). Every other arbor is a fixed ratio of `E`. The hands therefore advance
   in half-second steps, as the manual states (Sec. IX, p. 66). `PL` (0.263 of an
@@ -499,7 +518,9 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
 - **What keeps it going.** A swing must carry the discharge jewel past the trip
   spring on the return (it comes clear of the jewel's end at −40.2°), unlock the wheel (−21.3°) and
   see the impulse through (the tooth leaves the jewel at +20.7°). `makeEsc` works out that least amplitude
-  from its own tables: `ESC.AMIN`, 42.3° with 2° to spare.
+  from its own tables: `ESC.AMIN`, 40.2°, the trip spring's the one that binds. Exactly so: the 2° it
+  was given to spare until 11 October 2026 had the train held between 40.2° and 42.3° while
+  `ESC.state` drew the detent unlocking it.
 - **When the train stops.** It stops at a locked beat when there is no power
   (run down: a frame runs the train no further than the chain has left, and only the
   beat under way then finishes), when the swing falls below `AMIN`, or when the locking arm brakes
@@ -517,11 +538,14 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   whole beat again.
 - **While it is stopped** `tSim` and the hands stand, so they lose the time it
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
-  down. It runs down freely with the train held (1/e in 52 s, `TAU_FREE`, from
-  `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker") and at once, within a swing or two, against the locking arm
-  (`TAU_ARM`, 0.2 s). While the swing still carries the discharge jewel back
-  past the trip spring's tip (above 40.2°), the detent lifts but the wheel
-  can't turn. A smaller swing leaves the jewel on the near side of the tip: the
+  down. With the train held it runs down free of the impulse (the air and pivots, 1/e in 52 s, `TAU_FREE`, from
+  `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker"), but while the swing still carries the discharge jewel back
+  past the trip spring's tip (above 40.2°) the jewel still bends the trip spring on the return and lifts the
+  detent on the next swing, and the wheel can't turn: the springs take `ESC.EH`, 0.033 of k
+  an oscillation (17 % of the air and pivots' loss at 255°, more than theirs below about 105°), so from
+  255° it comes down to 40.2° in 47 s, not 96 (`ESC.freeStep`, in closed form for any step; `tools/dynamics.js`
+  integrates the same run-down within 2°). Against the locking arm it stops at once, within a swing or two
+  (`TAU_ARM`, 0.2 s). A smaller swing leaves the jewel on the near side of the tip: the
   trip spring stays bent against it and follows it back, and the detent stays on
   its stop (`ESC.state`).
 - **When it goes again.** The train runs again when there is power, the arm is
@@ -667,9 +691,10 @@ the rate from its own geometry, so the Adjuster's bench changes both (`ESC.A`,
   Adjuster's bench's last slider. At −0.22 the spring all but cancels the
   escapement's loss at a smaller swing (0.01 s a day at 90% of the torque).
   `tools/escapement.js HS=-0.22` prints it.
-- **Not modelled:** friction at the impulse, the recoil in the motion (it
-  counts in the work only) and the detent's own inertia and bounce (`tools/dynamics.js`:
-  they change the swing by about 1° and the rate by about 0.1 s a day).
+- **Not modelled:** friction at the impulse and, in the work, the detent's own
+  inertia and bounce (`tools/dynamics.js`: they change the swing by about 1° and the
+  rate by about 0.1 s a day). The recoil is drawn (`ESC.state`, since 11 October
+  2026) and counts in the work as before.
 
 ### The balance's dynamics
 
@@ -683,7 +708,10 @@ every speed); the equation gives the amplitude and the rate.
   hairspring's stiffness, a swing gains that work and loses πA²/Q. So A²
   relaxes to `ESC.ampAt(s)²` as exp(−2t/TF), exactly for a steady torque.
   `ampStep` steps it so, at any speed. A² settles as exp(−2t/TF), 26 s.
-  Free, with no impulse, the swing falls as exp(−t/TF), as before.
+  Free, with no impulse (the train held), d(A²)/dt = −2A²/TF − 2·EH/T while the swing still
+  passes the trip spring (the detent's and trip spring's work, `ESC.EH`, lost as each flies
+  back), −2A²/TF below it: `ESC.freeStep`, exact for any step. Until 11 October 2026 it fell as
+  exp(−t/TF) at every swing.
 - **The drive** (`driveNow` in `app.js`). Running, the mainspring through the
   fusee: `R.fs.torque`, 1 at 12 h from full wind, the middle of a day's
   running. While the key turns, the sustaining spring alone drives: 0.8 of
@@ -796,13 +824,17 @@ on what would stop the chronometer.
     over its whole lift, not a fitted share; and 255° with those wants a balance
     running down in 52 s (Q 327), as the energy budget and the balance's parts
     allow (`TF` was 34).
-  - *The detent's return* (OPEN-QUESTIONS.md 2): the detent is back on its stop
+  - *The detent's return* (OPEN-QUESTIONS.md 2): makeEsc draws its fall as dynamics.js
+    integrates it (leaving the jewel at −12.84°, first on its stop at −9.75°; dynamics.js
+    −9.76°). The detent is back on its stop
     about 10 ms before the next tooth reaches the stone, from half to twice the
     drawn spring's stiffness, at half or 1.5 times Op. 78's preload, with a dead
     or a bouncy stop, and even with no preload at all.
   - *Starting and stopping.* Twisted to 160°, the balance comes within 2° of its
     swing in a minute or so; the least drive that keeps it going is about 12 % of
-    the calibrated torque, at makeEsc's `AMIN`.
+    the calibrated torque, the balance swinging about 41° (makeEsc: 13 %, at its `AMIN`, 40.2°).
+  - *Run down with the train held* (no torque): from 150°, 108° after 10 s and 65° after 20
+    (makeEsc's `freeStep` 108.5° and 66.9°; the air and pivots alone would leave 124° and 102°).
   - *Knocks and the sea.* A twist about the staff upsets the beat at about
     29 rad/s in 2 ms (it gains a beat); a blow across the plate frees the wheel
     at about 55 g over 3 ms, 140 g over 0.5 ms (the detent isn't poised about
@@ -1037,8 +1069,9 @@ the repository with short audio excerpts and the video frames).
 
   - Depth of lock is 0.112 mm, and the trip spring's tip lifts 0.18 mm to release (the settings rd 0.300, rT 0.290, aD 271°, dL 0.017 of the unit, re-chosen on 11 October 2026 when the contacts were solved from the jewel's rounded end: 0.305, 0.286, 269.6° and 0.019 before).
   - The discharge jewel meets the trip spring at −27.8° of balance and releases the wheel at −21.3°. The wheel catches the impulse jewel at −4.8° and drives it to +20.7°.
-  - The detent falls back, and on the return swing the trip spring flies back, where the spring's tip comes clear of the jewel (−12.4° and −40.2°): pushed along the jewel's face, then round its end, which is stoned to a half round (`rnd`, estimated: no source shows it; drawn square, the end held the tips across its whole width, 0.32 mm, and overall came to about 38°, past Op. 87). Let-off and overall are measured to the fall, as the manual's gauge reads them.
-  - Simplified: unlocking against the 10° of draw would turn the wheel back a little (recoil, about 0.2° of the wheel); the model's wheel stands until release (the recoil counts in the work unlocking takes from the balance only). Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
+  - The detent falls back in time (`ESC.state`, since 11 October 2026; it went home in one step at −12.4°, the stone standing 0.07 mm in the escaping tooth's way for about 0.6 ms): it leaves the jewel where the jewel's end runs away faster than it can follow (−12.84° at 255°), falls as a preloaded spring and mass (Op. 78's preload, the drawn spring's stiffness, its inertia `ID` 2.67 g·mm² from the drawn pieces, `tools/dynamics.js`), first lands on its stop button at −9.75° and hops on it (restitution `eS` 0.3, estimated, as dynamics.js has it) until −6.5°; its own damping (Q about 100, estimated) is left out. dynamics.js, integrating the same detent through its contacts, has it leave at −12.84° and land at −9.76°. A detent that falls back before the escaping tooth has passed (a swing larger than the drive keeps, after a jolt or while the key turns) lands on the tooth's land or back and rides it down (`ESC.state`'s `ride`); `tools/escapement.js` checks that the stone is never inside a tooth, at ten swings from `AMIN` to 340°.
+  - The trip spring flies back on the return swing where the spring's tip comes clear of the jewel (−40.2°), as the detent leaves it on the active swing (−12.4° for a massless detent): pushed along the jewel's face, then round its end, which is stoned to a half round (`rnd`, estimated: no source shows it; drawn square, the end held the tips across its whole width, 0.32 mm, and overall came to about 38°, past Op. 87). Let-off and overall are measured to the fall, as the manual's gauge reads them.
+  - Unlocking against the 10° of draw turns the wheel back (recoil): the locked tooth's tip pushed back along the stone's flat as it lifts, at most 0.18° of the wheel at 0.145 mm of lift, until the flat's inner end passes the tip (`ESC.recoil`, from the shapes). Past it the tip would slide round the stone's edge and be free about 0.025 mm short of the release, where the model keeps 0.02 mm to spare (`lRel`); the tooth is held at its locked place over that stretch. The tooth leaving the impulse jewel runs on to the stone from the jewel's place and speed under the wheel's torque (`ESC.thE`, about 1.4° of the balance). Roller shake is equal on both sides, where Op. 84 prefers slightly more on the outgoing tooth. The solver, the mesh and the 2D inset share one tooth outline (`ESC.toothPts`).
 - The escapement's parts beyond the plan.
   - The escape teeth: their form follows Fig. 90 and an original wheel photographed in chronometerbook post 30 (a land 0.13 mm wide at the tip, the root circle at 5.5 mm). The undercut of the locking face (the root trails the tip by 0.14 of a pitch, about 16°), the length of the hollow back (0.55 of a pitch) and its curve (meeting the root circle tangentially) are traced from Fig. 90. Fig. 14's cut-away gives the arrangement: the teeth stand the wheel's full thickness on a thin rim and spokes. The rim's inner edge (0.77 of the tips), the spokes (0.105 of the tips wide), the hub (r 0.31) and the collet's pipe (r 0.20, toward the pinion) are measured on 43:21.1, the wheel face up in the staking tool; the web's thickness (0.5), the pipe's length (1.9, off the view's tilt: rough) and the collet's foot, a collar about 0.65 tall there where the model has the web's 0.5, are estimated.
   - The impulse roller's three holes (0.5 mm radius, a quarter turn apart from the jewel, Figs. 14, 61 and 90) and the impulse jewel's section (flat on the impulse face, curved behind, thinning to 0.45 of its width at the ends; "curved side of the jewel", Sec. VII) are estimated in size.
@@ -1075,7 +1108,7 @@ the repository with short audio excerpts and the video frames).
 - The balance cock's solid: the body stands outside the barrel bridge's 17.7 mm circle about the staff, and the arm is in two thicknesses, flat underneath, with square steps between them and at the body's wall (the restoration video, 44:02: the cock in place seen from its straight edge, the space under the arm open from the barrel bridge's horn, 16.4 mm from the staff, to the body's wall, 18.6; 23:45, flat faces). Along the straight edge the arm's side deepens from 88 to 206 px at a step 12.1 mm from the staff (44:02, placed along the stud's three holes by a 1-D projective map that also puts the body's wall at 18.5-18.65, as read before); on the concave side the polished band steps down 13.7 mm from it (41:58). The step is drawn as the straight line through those two places (straight across the underside: estimated); the thin part 2.6 mm (the stud and the hairspring hang from it; 2.5 against the body's 10.8 mm visible down to the horn), the thick 6.0, 2.34 times it (5.9 by the same scale). Until 6 October 2026 the arm was 2.6 mm out to the body's wall (the "2.9 ± 0.3" read there was the thick part), and until 4 October 2026 its underside swept down into the body in an estimated quarter-circle cove. The top face beyond the rim's arc is traced (`CK_TR`): the mean of the restoration video's cock alone (41:58, 4K, its outline segmented where the gilt face meets the blue mat and the polished walls) and a photograph from above (`References/photo-cock-top.png`, its edges picked by hand and the concave edge as the user marked it), each put on the cock's top through a homography on its holes as the model places them. They agree within 0.3 mm round the nose and 0.4-1.0 mm along the concave edge; along the straight edge past x 23 they read 1.1-1.6 mm apart (the far end's perspective rests on the screw's hole alone), so ±0.8 there. The straight edge runs level with the stud's holes from the nose, 0.6 mm outside them, then bends about 23° toward the rim, up to 2.6 mm outside the old trace's straight line midway; the corner at the rim moved 0.85 mm round; the concave edge's last 3.9 mm to the tip the frames don't resolve (straight to it). Until 6 October 2026 the straight edge was one straight line to a corner where the nose was widened round the cap, and the concave edge a cubic bulging about 1 mm into the opening. Through those homographies the pictures put the cock screw about 22 mm from the staff (scaled by the cap's screws and the stud's holes) where the model has 26.8: the cock's own layout and the balance's place disagree (OPEN-QUESTIONS.md), and the trace takes the cock's holes as placed. The counterbore (1.5 mm, as deep as the screw's head) and the two steady pins' places (where the train bridge shows two plain holes under the cock with it off, 6:47, placed to about 2 mm) are estimated. The walls are drawn plain, as the video shows them polished; the top keeps the plates' damascening.
 - The balance cock's nose and its endstone cap. The top-view photograph gives the cap's place, width and screws to about 0.3 mm: a steel plate 4.6 mm wide lying along the cock's straight edge, its two screws 2.75 mm either side of the staff, the cock's metal all round it. C Spinner's video gives its form, close (5:51 and 42:03, 42:08 on the cock, 41:58 off it; `References/VIDEOS.md`): symmetric about the staff, 7.2 mm long (to about 0.3 mm, scaled by the screws and the cone), its corners rounded r 1.2 at the nose's end and r 0.4 at the foot's (about 0.3 mm), the screws' heads (r 0.7) sunk flush in counterbores, and a polished conical oil sink 3.1 mm across (two thirds of the plate's width in each view; on the 1941 movement of the top-view photograph it looks nearer 2.2 mm) down to the endstone, set from below in its setting (42155), which shows on the underside as a ring about 3.4 mm across. The plate's thickness (0.7), the counterbores' depth (0.4) and the stone's size (r 0.95) are estimated. On the real cock the cap ends at the nose's end (within about 0.3 mm). The nose is traced (above); with the cap placed by the staff, its corner at the straight edge would stand 0.5 mm over the traced edge, so the nose is the hull of the trace and the cap's outline 0.3 mm out (until 6 October 2026, 0.9 mm out on an outline that passed 0.7 mm from the staff). The manual's drawings show the setting inside the cock's nose and the cap on it (Figs. 19, 85). The settings' and jewels' sizes are estimated.
 - The collet and stud: their outlines and sizes, and the stud's direction.
-  - The collet is measured on Fig. 6's two drawings of it (alone, and in the spring's lowest coil; Figs. 5 and 49 agree), the only source: no photograph or video shows one. The points were put back on the plan through a parallel projection foreshortened 0.63, the coil's ellipse; at that value the plate's outer edge comes out a circle (within 0.06 mm), the ledge's round cut a circle (0.03 mm) tangent to its straight part, the notch's walls square to the front edge, and the ledge's top and foot fall on one another (0.1 mm). The hub's own ellipse is drawn flatter (0.45) and was not used. The scale is the hub against the coil, 0.213 of its diameter, the coil as five sources measure it (r 5.1: the drawing's points were read against it as r 5.5 and scaled by 5.1/5.5; until 4 October 2026 by 6.3/5.5): the hub 2.17 mm across; the outer arc r 4.95 about a point 1.21 mm off the staff, 3.72–3.93 from it; the front edge 1.25 mm from the staff, the end face 3.45 along it; the notch 0.84 wide and to the ledge; the hub 1.48 tall, the body 1.47, the tongue 0.46 of it and the front left end 0.50. Read to about 10 % (the two drawings differ by up to 20 % on the tongue's thickness and the clamp's length). Estimated: the body's hidden side behind the front step (taken back to the plate's corner), the groove's depth (0.15), the bore (the staff's, 0.47; the drawings draw it wider), the slit's width (0.1), the clamp's sizes (2.23 × 0.73, jaws 0.42, from the exploded drawing's proportions) and the wedge pin's (r 0.17, straight, not tapered). Its counterpoising is not modelled.
+  - The collet is measured on Fig. 6's two drawings of it (alone, and in the spring's lowest coil; Figs. 5 and 49 agree), the only source: no photograph or video shows one. The points were put back on the plan through a parallel projection foreshortened 0.63, the coil's ellipse; at that value the plate's outer edge comes out a circle (within 0.06 mm), the ledge's round cut a circle (0.03 mm) tangent to its straight part, the notch's walls square to the front edge, and the ledge's top and foot fall on one another (0.1 mm). The hub's own ellipse is drawn flatter (0.45) and was not used. The scale is the hub against the coil, 0.213 of its diameter, the coil as five sources measure it (r 5.1: the drawing's points were read against it as r 5.5 and scaled by 5.1/5.5; until 4 October 2026 by 6.3/5.5): the hub 2.17 mm across; the outer arc r 4.95 about a point 1.21 mm off the staff, 3.72–3.93 from it; the front edge 1.25 mm from the staff, the end face 3.45 along it; the notch 0.84 wide and to the ledge; the hub 1.48 tall, the body 1.47, the tongue 0.46 of it and the front left end 0.50. Read to about 10 % (the two drawings differ by up to 20 % on the tongue's thickness and the clamp's length). Estimated: the body's hidden side behind the front step (it ends 0.9 of the way to the plate's corner, 2.31 mm out on the step's line: taken to the corner until 11 October 2026, it stood 0.02 mm off the inner terminal curve at rest and in its way once the breathing spring, wound, curled in; no inner curve meeting Phillips' conditions from the collet's end passes the corner (searched: the farthest out of 3,000 passes it at r 3.64, the corner at 3.48 needing 4.0 at a 347° swing), so the hidden side is drawn as short of the corner as leaves the strip 0.05 mm at 347°: 0.063, 0.35 at rest; the plate above it, measured, unchanged), the groove's depth (0.15), the bore (the staff's, 0.47; the drawings draw it wider), the slit's width (0.1), the clamp's sizes (2.23 × 0.73, jaws 0.42, from the exploded drawing's proportions) and the wedge pin's (r 0.17, straight, not tapered). Its counterpoising is not modelled.
   - The spring's inner end lies against the collet's end face, 3.45 + 0.17 mm from the staff, not at the stud end's 2.65, bent to run 1.43 mm straight along it into the clamp (Fig. 6 draws the end bent; Op. 4); the lead's length is estimated.
   - The stud's bar: 1.6 wide and 0.5 thick (estimated; side-on at 6:50.0 it reads 0.7-1.1 mm thick, not yet drawn so: its thickness moves the clamp and the spring's height), its steady pins measured there (0.65 into the cock, the outer one 0.9 under the bar too), and the stud screw's counterbore in the cock (r 0.9, its head flush). Its ends are measured on the restoration video (6:47.5, 6:47.75: the balance lifted out, the stud seen from the cock side, 33 px/mm at 4K, put in mm along the row by a 1D perspective fit on its three holes): the outer 0.8 past the outer pin (0.79, 0.77), the inner 2.2 inside the inner pin (2.24, 2.10), and the clamp is a block under the inner end, from there to 1.1 inside the pin (1.13, 1.10), the wedge pin's end showing in the bar's top face 1.7 inside the pin (1.76, 1.68), 0.4 off the bar's middle line; Fig. 5 and Hamilton's patent US 2,379,780 (Fig. 10) put the clamp there too. Estimated: the block's width (2.0, about 1.3 times the bar's on both frames, drawn centred: the side its extra width stands out to isn't read), its drop under the bar (0.7, to the spring's measured height; the frames give 0.9-1.3 with their tilt unknown), and which side of the middle line the wedge pin is on. Until 4 October 2026 the clamp was a block between the inner pin and the stud screw, 4.6 mm from the staff, and the bar ended 0.8 past the inner pin. Open: the frames show the steady pins' holes empty or flush on the bar's top face, where the model has the pins standing 0.8 into the cock. Its holes are measured: three in a row along the cock's straight edge, 3.9, 7.0 and 10.5 mm from the staff, the screw's the middle one: the mean of the restoration video (41:58, through a homography on the cock's screw, setting, cap screws and outline corners) and the top-view photograph (the stud in place, through its map on the barrel bridge's screws from the setting's centre), which agree within 0.5-0.8 mm; the side view (6:50.0) shows the bar running out past the coils with a pin standing up at each end. Until 4 October 2026 it was a bar 5.7 long toward the cock screw, the screw 7.6 from the staff and one steady pin at 5.6.
   - The spring's upper end is in the stud's clamp, 2.65 mm from the staff (measured, above), its terminal curve running in from the coils over the last half turn (the curve's form is estimated); both ends lie in the stud's direction when the balance is at rest.

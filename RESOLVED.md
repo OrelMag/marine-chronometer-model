@@ -185,6 +185,62 @@ Contents:
   staff; `fine.py --split` passes. Keep: anything on the balance stays inside
   17.7 mm and above the escape upper bridge's screw heads, as the uncut rim's
   parts do. `3c9608c`
+- **The locked tooth didn't recoil as the stone was drawn out.** `ESC.state` held the wheel at its
+  locked place (progress 0) while the detent lifted, so the stone, its flat set at 10° of draw,
+  passed about 0.01 mm into the tooth's tip from −26° to −22.8° of the balance (the work already
+  counted the recoil, `cdr`). Now the tooth is pushed back along the flat as the shapes require
+  (`ESC.recoil`, at most 0.18° of the wheel), the progress just under 0. Keep: the locked tooth
+  where the stone's outline lets it be at every lift; `tools/escapement.js` checks the stone is
+  never inside a tooth. `2fee3fe`
+- **The next tooth reached the stone in one step after the impulse.** Where the impulse jewel let
+  the tooth go (+20.7°, 0.96 of a pitch) the wheel's place fell back to the free chase from the
+  release, far ahead, and the progress went to 1 at once. Now the tooth runs on from the jewel's
+  place and speed under the wheel's torque (`thE`, `phE`, `gE`), locking about 1.4° of the
+  balance later (`run` in the state: the stage "relock"). Keep: the wheel's place continuous
+  through the let-go. `2fee3fe`
+- **The train a tooth ahead at the phase's start.** `ESC.state(0)` took sin(2πp) > 0 for the
+  active swing, so at p = 0 exactly (whenever tSim/0.5 + bOff is a whole number) it reported the
+  return swing's progress 1, and the hands stood a beat ahead for that frame (blender.js worked
+  round it). Now p is taken mod 1 and [0, ½) is the active swing. Keep: p 0 the active swing's
+  start, progress 0. `2fee3fe`
+- **The detent snapped home.** `ESC.state` took the lift from the jewel's table, which drops from
+  0.3 mm to 0 in one 0.02° step where the passing spring's tip leaves the jewel (−12.4°), with the
+  escaping tooth only an eighth of a pitch on: the stone stood up to 0.07 mm in its way for about
+  0.6 ms (visible at 0.002×). The detent is a body (Op. 78's preload, the drawn spring, its drawn
+  inertia `ID`): it now leaves the jewel where the jewel's end runs away faster than it can follow,
+  falls in closed form, lands at −9.75° (dynamics.js −9.76°) and hops on its stop (`eS`); a detent
+  back before the escaping tooth has passed rides its back (`ride`). Keep: the stone never inside a
+  tooth at any phase and swing (`tools/escapement.js`'s `stoneClash`, which fails past 1 µm: it read
+  0.08 mm on the old state); the fall's place is dynamics.js's; fine.py's `PH` has phases through
+  the fall (0.2425-0.2445) and the run to the stone. `6923ac5`
+- **`AMIN` 2° above where the escapement works.** It was the least swing that passes the trip
+  spring (−40.2°), unlocks and sees the impulse through, plus 2° to spare; between 40.2° and 42.3°
+  `app.js` held the train while `ESC.state` drew the detent unlocking it on every swing. Now
+  `AMIN` is that least swing exactly (40.2° at the model's settings, refined by bisection when a
+  setting moves it). Keep: `AMIN` where `state`'s own `pass` begins, so the train holds only
+  when the escapement can't work. `d8e896a`
+- **A held balance ran down as if nothing touched it.** `ampStep` let the swing fall as
+  exp(−t/TF) whenever the train was held, but while the swing still carries the discharge jewel
+  back past the trip spring, the jewel bends the trip spring on every return and lifts the detent
+  on every active swing, the wheel unable to turn: 0.033 of k an oscillation, 17 % of the air and
+  pivots' loss at 255° and five times it at 45°. Now `ESC.freeStep` (closed form, any step) takes
+  both; from 255° the swing reaches 40.2° in 47 s, not 96. Keep: the held run-down is
+  `ESC.freeStep` (app.js's `ampStep`, and blender.js's copy of the loop), checked against
+  `tools/dynamics.js`'s integration of a held train. `9f1ed20`
+- **The hairspring didn't breathe.** `R.spPath` turned each point of the coil rigidly by θ(1 − s/L)
+  about the staff, keeping every radius, where a spring of 11.86 turns swung 255° changes its
+  coils' radii by θ/(2πN), about 6 % each way. Now every part of the free length changes its
+  curvature by θ/L (the pure couple Phillips' conditions give), drawn from the stud's end back
+  (movement.js); against the elastica (`HSPR.large`) within 0.025 mm at 255° (the rigid turn was
+  0.28 off). Keep: the shape the couple gives, the length kept, the clamped ends exact; it is
+  rebuilt only when θ changes (ribbonGeo in place, 0.1 ms). It brought out that the inner curve
+  passes 0.04 mm from the collet at rest (OPEN-QUESTIONS.md). `9714a9d`
+- **The breathing hairspring ran into its collet.** Wound past about 50°, the inner curve, curling inward near the
+  clamp, met the corner of the collet's body (0.09-0.13 mm at 255°), whose hidden side had been taken back to the
+  plate's corner; no inner curve meeting Phillips' conditions from the collet's end clears that corner. The hidden
+  side, which no source shows, now stops 0.9 of the way to it: the strip clears the collet by 0.063 mm at 347°, the
+  widest swing the model allows. Keep: a real spring never touches its collet; the strip at least 0.05 mm off it
+  beyond the clamp's edge at every swing up to TRIP + 15°. `43260af`
 
 ## Going train and heights
 

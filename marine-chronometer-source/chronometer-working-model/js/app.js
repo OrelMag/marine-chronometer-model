@@ -744,10 +744,11 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function stopMove(dt){const inst=SNAP||RM.matches,mvTo=(x,t,r)=>inst?t:x+clamp(t-x,-dt/r,dt/r);H.arm=mvTo(H.arm,H.armT,0.8);
     const b=mvTo(H.blk,H.blkT,2.5),vf=R.tbs.userData.vFace;H.blk=(b>vf-0.005&&H.blk<=vf&&!R.blockClear(lastE??0))?Math.min(b,vf-0.005):b;}
   /* the balance's equation of motion, averaged over a swing (makeEsc, ampAt): driven at torque drv, A² relaxes to ESC.ampAt(drv)² as exp(-2t/TF), exactly whatever the step, so the
-     time it takes to settle (TF/2, 26 s) is the same at every speed; free, the same with no impulse, A falling as exp(-t/TF). The arm brakes it; a twist kicks it up */
+     time it takes to settle (TF/2, 26 s) is the same at every speed; free (the train held), ESC.freeStep: no impulse, but a swing that still passes the trip spring lifts the
+     detent and bends the trip spring each oscillation, so it runs down faster than exp(-t/TF) until it no longer does (above 40.2 deg), exactly whatever the step. The arm brakes it; a twist kicks it up */
   function ampStep(dts,brake,driven,drv){let a=H.amp;if(H.kick>0&&a>=H.kick)H.kick=0;   /* a twist adds swing, never takes it away */
     if(H.kick>0){a+=(H.kick-a)*(1-Math.exp(-dts/0.15));if(H.kick-a<0.2*D2R)H.kick=0;}
-    else if(brake)a*=Math.exp(-dts/TAU_ARM);else{const u=driven?ESC.ampAt(drv)**2:0;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dts/TAU_FREE));}H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a;}
+    else if(brake)a*=Math.exp(-dts/TAU_ARM);else if(driven){const u=ESC.ampAt(drv)**2;a=Math.sqrt(u+(a*a-u)*Math.exp(-2*dts/TAU_FREE));}else a=ESC.freeStep(a,dts);H.amp=a<0.2*D2R&&!driven&&!H.kick?0:a;}
   /* a knock while the train goes (a jolt, a twist): from where it is in its swing the balance goes on at swing a and phase p2 (oscillations, now). The escape wheel stays on its
      stone, so the next unlocking comes sooner or later and the hands with it: the knock's time error, carried in bOff (and eOff, whole, so the wheel's count holds). A phase
      between the unlocking and the lock counts as past it: the swing was turned there, so the jewel didn't unlock on the way, and the wheel waits for the next swing (the loop
@@ -1075,10 +1076,10 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     let E,s;
     if(!H.held){let q=at(tSim);const Eb=lastE!=null?Math.max(q.E,lastE):q.E,room=blockedNow()?Eb-1e-4+R.blockRoom(Eb-1e-4):Infinity;   /* Eb: the wheel never turns back (the progress ESC.state gives at a phase changes with the swing: a swing cut short by the arm in a frame, or a knock, can leave the count ahead of the phase until the next unlocking); room: where a spoke meets the dog point (from a hair before, so a spoke against it now reads 0, not a whole turn's spacing); the next unlocking lets the wheel go that far, a fraction of a tooth (Op. 6: the escapement works "until the train is stopped by the blocking screw bearing against one of the arms of the fourth wheel") */
       const hold=()=>{H.held=true;H.bph=tSim/0.5+H.bOff+PL;};
-      const stop=!go||H.amp<ESC.AMIN||brake;if(dtS>0&&lockd(q.s)&&stop){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}   /* the train stops at a locked beat */
+      const stop=!go||H.amp<ESC.AMIN||brake;if(dtS>0&&lockd(q.s)&&stop){E=H.Eh=Math.ceil(Eb-1e-9);hold();s=q.s;}   /* the train stops at a locked beat. Below: the one turn back the wheel makes, the recoil as the stone is drawn out against the locked tooth (progress under 0, a few hundredths of a tooth) */
       else{if(dtS>0){let adv=dtS*rateK;if(stop)adv=Math.min(adv,Math.max(0,0.5-q.s.p)*0.5);else if(run&&!winding)adv=Math.min(adv,(RUN_H-hrs)*3600);   /* the train's time this frame: stopping, only the beat under way finishes; the fusee runs no further than its chain */
           tSim+=adv;rErr+=adv*(1-1/rateK);if(!winding){hrs=Math.min(RUN_H,hrs+adv/3600);if(st.speed>1)showH();}q=at(tSim);}   /* the fusee turns with the train, so its hours go with the train's time (rateK), not the master's */
-        E=Math.max(Eb,Math.min(q.E,room));s=q.s;if(q.E>room){if(Math.abs(E-Math.round(E))<1e-6)E=Math.round(E);hold();H.Eh=E;}}}   /* held at the spoke (a spoke met at a lock: whole) */
+        E=Math.max(Eb,Math.min(q.E,room));if(q.s.prog<0&&q.E<E&&E-q.E<0.05)E=q.E;s=q.s;if(q.E>room){if(Math.abs(E-Math.round(E))<1e-6)E=Math.round(E);hold();H.Eh=E;}}}   /* held at the spoke (a spoke met at a lock: whole) */
     if(H.held){H.bph+=dtS*rateW/0.5;
       if(H.Eh%1&&go&&!blockedNow()){H.Eh=Math.ceil(H.Eh-1e-6);if(H.bk>0&&H.amp<H.bk){H.amp=H.bk;H.bph=Math.floor(H.bph)+0.5;}}   /* the screw raised: the wheel runs on to the next tooth's lock, letting go of a balance that lay against it */
       if(H.bkE!==H.Eh){H.bkE=H.Eh;H.bk=H.Eh%1?bankAt(H.Eh%1):null;}   /* held at the spoke, a tooth in the impulse jewel's path banks the balance (box.js) */

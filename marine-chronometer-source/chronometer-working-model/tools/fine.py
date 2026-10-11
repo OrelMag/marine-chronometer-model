@@ -18,7 +18,7 @@ import asyncio,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
-PH=[0.0,0.232,0.235,0.238,0.242,0.246,0.25,0.255,0.26,0.264,0.28,0.4,0.6,0.74,0.758,0.764,0.77,0.9]   # unlocking 0.232-0.244, impulse 0.237-0.263, passing 0.756-0.773
+PH=[0.0,0.232,0.234,0.235,0.238,0.242,0.2425,0.243,0.2435,0.244,0.2445,0.246,0.25,0.255,0.26,0.2632,0.2636,0.264,0.28,0.4,0.5,0.6,0.74,0.758,0.764,0.77,0.9]   # unlocking 0.232-0.244 (the locked tooth recoiling 0.233-0.236), impulse 0.237-0.263, the detent falling back 0.242-0.246 (home 0.2441, its hops to 0.2459), the tooth's run on to the stone 0.2630-0.2639, the balance at its far turn (the hairspring opened) 0.5, passing 0.756-0.773
 WIND=[(2.5,False),(8.7,False),(0.05,False),(4,True),(1,False),(6,True),(8.7,True),(0.3,False),(3.3,False),(5.5,False),(7.1,True),(2,False),(0,False),(0,True),(0.02,True)]   # fusee turns from full wind, winding
 STATES=[(ph,0,2.5,False) for ph in PH]+[(0.4,97*k,n,w) for k,(n,w) in enumerate(WIND,1)]
 # (part:geometry, part:geometry) sorted: (reason, largest volume mm3, largest depth along y mm) seen when recorded
