@@ -696,6 +696,14 @@ Contents:
   about 0.2 of full wind against the fusee's 0.473). Keep: the spring's shape comes from the solve, not a
   drawn law; after changing its length, thickness, core, barrel or free curve, rerun the tool; states
   half a turn apart blend 3 mm out and let the coils touch. `04ff466`
+- **The chain grew 1.6 mm over the wind** (kinematics audit, 11 October 2026). `Ib` turned
+  the barrel by the chain's arc paid off the fusee, but the straight run between the drums,
+  their common tangent, lengthens from 35.85 to 37.42 mm as the fusee's radius grows, so the
+  barrel over-turned 0.013 turn (4.8Â°) by run down, the links crept round it and the hook's
+  plate stretched and shrank. The barrel now takes the arc less the tangent's gain (`Iw`), and
+  the chain keeps its length to 0.03 mm (586.40 mm, end pin to hook) over the wind; the
+  chain's barrel turns over the run are 4.656 (were 4.670). Keep: whatever turns the barrel
+  uses `Ib`; `tools/invariants.py` checks the length (`chainLen`).
 
 ## Plates, bridges, screws and arbors
 

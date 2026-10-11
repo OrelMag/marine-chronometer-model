@@ -1529,9 +1529,12 @@ function makeFusee(M,c){
   /* the chain's pitch line, locked to the groove (local angle phi0 + TAU m on the fusee turned rot): wound on the fusee from its large end (m = N) to md, where it
      leaves along the drums' common tangent (dl past their lowest point), then wound on the barrel from md back to its hook (m = 0) */
   const md=rot=>{let m=rot/TAU;for(let i=0;i<3;i++)m=(-Math.PI/2+dl(m)+rot-phi0)/TAU;return m;};
-  /* the barrel's turns from full wind with the fusee turned n (+ eps): the chain wound on the barrel, TAU I(m0) from where it meets it at the drums' tangent (-PI/2 + dl
-     past the barrel's lowest point), so the hook at its end stays in its hole in the wall (with I(n), the fusee's turns, the hook slid 8 mm round the barrel over a wind) */
-  const IB0=I(md(0))-dl(md(0))/TAU,Ib=(n,eps=0)=>{const m0=md(n*TAU+eps);return I(m0)-dl(m0)/TAU-IB0;};
+  /* the barrel's turns from full wind with the fusee turned n (+ eps): the chain wound on the barrel, TAU Iw(m0) from where it meets it at the drums' tangent (-PI/2 + dl
+     past the barrel's lowest point), so the hook at its end stays in its hole in the wall (with I(n), the fusee's turns, the hook slid 8 mm round the barrel over a wind).
+     The chain keeps its length: what comes off the fusee goes onto the barrel less what the straight run between the drums gains, Tg (their common tangent, 35.85 mm
+     fully wound to 37.42 run down, as the fusee's radius grows); taking the fusee's arc alone over-turned the barrel 0.013 turn by run down (until 11 October 2026) */
+  const Tg=m=>Math.sqrt((fx-bx)**2-(rB-rc(m))**2),m00=md(0),Iw=m0=>I(m0)-(Tg(m0)-Tg(m00))/(TAU*rB);
+  const IB0=I(m00)-dl(m00)/TAU,Ib=(n,eps=0)=>{const m0=md(n*TAU+eps);return Iw(m0)-dl(m0)/TAU-IB0;};
   /* the chain's hook: its end on the barrel (m = 0) stays at HKA in the barrel's frame; its nose goes through a hole in the wall there (Figs. 17, 75), 0.7 mm across
      (estimated); the wall is one solid with the hole through it */
   const HKA=-Math.PI/2-TAU*IB0,HKN=HKA-0.85/rB,HKY=yb(0),HKW=0.35;   /* HKA: the chain's end; HKN: the nose, 0.85 on along the drum, past the last link's plates */
@@ -1553,7 +1556,7 @@ function makeFusee(M,c){
     for(let m=N;m>m0;m-=0.01){const a=phi0+TAU*m-rot,r=rc(m);V(fx+r*Math.cos(a),yf(m),r*Math.sin(a));}
     const F0=[fx+r0*Math.sin(d),-r0*Math.cos(d)],B0=[bx+rB*Math.sin(d),-rB*Math.cos(d)],y0=yf(m0),y1=yb(m0);V(F0[0],y0,F0[1]);
     for(let s=0.1;s<1;s+=0.1)V(lerp(F0[0],B0[0],s),lerp(y0,y1,s),lerp(F0[1],B0[1],s));
-    const In=I(m0);for(let m=m0;m>=0;m-=0.01){const b=-Math.PI/2+d-TAU*(In-I(m));V(bx+rB*Math.cos(b),yb(m),rB*Math.sin(b));}return P;}
+    const In=I(m0),kw=In>0?Iw(m0)/In:1;for(let m=m0;m>=0;m-=0.01){const b=-Math.PI/2+d-TAU*(In-I(m))*kw;V(bx+rB*Math.cos(b),yb(m),rB*Math.sin(b));}return P;}   /* round the barrel TAU Iw(m0) to the hook */
   /* n turns from full wind, the fusee eps past them (the maintaining work's catch, update()): the fusee, barrel, chain and stop-bar */
   function setWind(n,eps=0){
     const rot=n*TAU+eps,m0=md(rot);fz.rotation.y=rot;bz.rotation.y=Ib(n,eps)*TAU;setBar(barTravel(m0));
@@ -1564,8 +1567,8 @@ function makeFusee(M,c){
       up.set(0,1,0).addScaledVector(t,-t.y).normalize();nn.crossVectors(t,up);mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0)imA.setMatrixAt(ia++,mtx);else imB.setMatrixAt(ib++,mtx);}
     imA.count=ia;imB.count=ib;imA.instanceMatrix.needsUpdate=true;imB.instanceMatrix.needsUpdate=true;
     { fPin.position.copy(J[0]).addScaledVector(Y,0.05);   /* through the first outer link's rivet hole, down into the fusee under the last turn */
-      /* the hook at the chain's end on the barrel (HKA in the barrel's frame, turned with it), its plate from the last joint to it (the chain's length between the drums
-         changes by about 0.3 mm over the wind; the plate takes it up), its nose through the wall to mid-thickness */
+      /* the hook at the chain's end on the barrel (HKA in the barrel's frame, turned with it), its plate from the last joint to it (the same length all through the wind:
+         the chain keeps its length, Iw), its nose through the wall to mid-thickness */
       const ha=HKN-bz.rotation.y,pe=new THREE.Vector3(bx+rB*Math.cos(ha),HKY,rB*Math.sin(ha)),pb=J[J.length-1],ub=rad(0,bx,pe),tb=new THREE.Vector3().subVectors(pe,pb),tl=tb.length();tb.normalize();
       const nb=new THREE.Vector3().crossVectors(tb,Y).normalize();const mp=pb.clone().add(pe).multiplyScalar(0.5),mr=Math.hypot(mp.x-bx,mp.z);mp.x=bx+(mp.x-bx)*rB/mr;mp.z*=rB/mr;   /* its middle on the pitch circle, so the chord doesn't sag into the wall */
       mtx.makeBasis(tb,Y,nb).setPosition(mp);hkB.matrix.copy(mtx);hkB.matrix.decompose(hkB.position,hkB.quaternion,hkB.scale);hkB.scale.x=(tl+0.4)/1.3;
@@ -1583,5 +1586,8 @@ function makeFusee(M,c){
      steeply near run down: 3% at each end, flat between (SPR). pull(m): at m fusee turns from full wind; torque(m): pull times the chain's radius on the fusee, against
      the smallest, the fusee's small residual. A going barrel would deliver pullB(x) itself, x running evenly with time */
   const SPR=0.03,rho=c.rmin/c.rmax,pullB=x=>(1-(1-rho)*x)*(1+SPR*(1-2*x)**3),xb=m=>(1-rf(0)/rf(m))/(1-rho),pull=m=>pullB(xb(clamp(m,0,N))),torque=m=>pull(m)*rf(clamp(m,0,N))/rf(0);
-  return{g,fz,bz,setWind,rf,yf,fx,bx,ms,I,Ib,IN,MS,stopBar,setBar,barTravel,mF,stud,N,pull,pullB,torque};
+  /* the chain's length along its pitch line, the fusee's end pin to the hook's end, at n turns (+ eps): the joints' path and the hook's plate (tools/invariants.py: it keeps its length) */
+  const chainLen=(n,eps=0)=>{const rot=n*TAU+eps,P=path(md(rot),rot),ha=HKN-Ib(n,eps)*TAU;let l=0;for(let i=1;i<P.length;i++)l+=P[i].distanceTo(P[i-1]);
+    return l+P[P.length-1].distanceTo(new THREE.Vector3(bx+rB*Math.cos(ha+0.85/rB),HKY,rB*Math.sin(ha+0.85/rB)));};
+  return{g,fz,bz,setWind,rf,yf,fx,bx,ms,I,Ib,IN,MS,stopBar,setBar,barTravel,mF,stud,N,pull,pullB,torque,chainLen};
 }

@@ -39,6 +39,8 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   u(56*7200,56*FUSEE_PER_HOUR,false);u(56*7200,56*FUSEE_PER_HOUR,false);chk('wind indicator after 56 h (DOWN end of the scale)',ud(),UD_UP+UD_SWEEP,0.95,'deg');chk('wind indicator sweep against the photographed dial',UD_SWEEP,315.7,3.2,'deg');
   chk('fusee: 8 3/4 turns of chain run (manual: 56 h at most)',FUSEE_TURNS/FUSEE_PER_HOUR,56,0.5,'h');chk('fusee: half turns of the key to wind fully',FUSEE_TURNS*2,17.5,1e-9,'');
   chk('fusee: 7 half turns restore (manual: 24 h)',7*0.5/FUSEE_PER_HOUR,24,1.6,'h');
+  /* the chain keeps its length (makeFusee chainLen: the end pin to the hook along its pitch line) from full wind to run down: the barrel takes up what the straight run between the drums gains */
+  { let lo=1e9,hi=-1e9;for(let i=0;i<=35;i++){const l=R.fs.chainLen(FUSEE_TURNS*i/35);lo=Math.min(lo,l);hi=Math.max(hi,l);}chk('chain: its length kept over the wind (fusee pin to hook)',hi-lo,0,0.05,'mm'); }
   const I0=R.timing(0,0),rate=(t,v)=>86400*(Math.sqrt(I0/R.timing(t,v))-1);
   chk('balance moment of inertia as built (Table II, masses a pair’s)',I0,578.0,1,'g mm2');chk('the drawn balance leaves to I_REST (under 10%)',R.I_REST/I0*100,0,10,'%');
   { const d=R.hsDesign,k=R.I_T2*1e-9*(4*Math.PI)**2,sec=HSPR.section(k,d.L,d.b,180);   /* the hairspring as designed (shared/hairspring.js) */

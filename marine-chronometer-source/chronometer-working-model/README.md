@@ -247,8 +247,8 @@ The mainspring's shape in its barrel is the strip's equilibrium, not a drawing (
   9½ packed and 2½ loose); in the measured r 18.3 the pack is a turn or so thinner than the frame's, which the grease's friction, left out, may hold.
 - **Its pull** (`MSHAPE.pull`, the energy's slope, smoothed by a quartic from half a turn past the slack): nothing at the slack (13.5 turns), rising
   steeply over the first turn, then about evenly. **The set-up comes from it:** a fusee is cut for its spring, so the spring is set up where its pull falls
-  over the chain's 4.67 barrel turns as the fusee's measured profile evens out, rmin / rmax = 0.473 (`fs.MS` in `movement.js`): 1.0 turn past the slack
-  (run down at 14.5 turns, fully wound at 19.17, in the barrel measured r 18.3; 0.47 in the r 17.6 barrel until then, 1.62 in the thin-walled one before
+  over the chain’s 4.66 barrel turns as the fusee's measured profile evens out, rmin / rmax = 0.473 (`fs.MS` in `movement.js`): 1.0 turn past the slack
+  (run down at 14.5 turns, fully wound at 19.15, in the barrel measured r 18.3; 0.47 in the r 17.6 barrel until then, 1.62 in the thin-walled one before
   5 October 2026, and 0.37 estimated before that). The drive's pull is not taken from it (the timing's
   illustrative pull, "How the timing works", is the even fall the fusee is cut for).
 
