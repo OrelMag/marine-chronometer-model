@@ -119,7 +119,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 108-45 | 42164 | Bushing - Fusee upper | 1 | 1 | barrelBridge | Bearing for the fusee arbor's upper end. | in 42061 (press): 0.097 mm, least gap 0.0198 | ✓ |
 | 108-46 | 42028 | Spring - Setup pawl, complete with pins | 1 | 1 | ratchet | Holds the click in the setup ratchet's teeth. | on 42027: 0.0165 mm | ✓ |
 | 108-47 | 42036 | Screw - Setup pawl pivot | 1 | 1 | ratchet | The click turns on it; through the cover into the barrel bridge. | in 42029 (clear): 1.037 mm, least gap 0.1048<br>in 42061 (tap): 3.359 mm, least gap 0.0602 | ✓ |
-| 108-48 | 42099 | Stop - Fusee winding stop-bar | 1 | 1 | barrelBridge | Stud under the barrel bridge (left-hand thread, Op. 42) that the stop-bar meets at full wind (Sec. II). | in 42061 (tap): 2.017 mm, least gap 0.0334<br>also: maintaining.py: stop-bar meets the stop | ✓ |
+| 108-48 | 42099 | Stop - Fusee winding stop-bar | 1 | 1 | barrelBridge | Stud under the barrel bridge (left-hand thread, Op. 42) that the stop-bar meets at full wind (Sec. II). | in 42061 (tap): 1.988 mm, least gap 0.062<br>also: maintaining.py: stop-bar meets the stop | ✓ |
 
 ## Fig. 109: barrel and fusee
 
@@ -141,7 +141,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 109-14 | 42013 | Wheel - Winding ratchet | 1 | 1 | fusee | Screwed to the fusee's large end; its teeth drive the winding pawls in running, slip under them in winding (Sec. IV). | on 42021: 0 mm<br>also: maintaining.py: fusee catches forward | ✓ |
 | 109-15 | 42014 | Screw - Winding ratchet wheel | 2 | 2 | fusee | Hold the winding ratchet to the fusee. | in 42013 (clear): 0.477 mm, least gap 0.1502<br>in 42021 (tap): 1.192 mm, least gap 0.0228 | ✓ |
 | 109-16 | 42008 | Plate - Fusee top | 1 | 1 | fusee | Covers the stop-bar and its spring in the fusee's top. | on 42021: 0 mm | ✓ |
-| 109-17 | 27760 | Screw - Fusee top plate | 2 | 2 | fusee | Hold the top plate. | in 42008 (clear): 0.568 mm, least gap 0.0434<br>in 42021 (tap): 0.52 mm, least gap 0.0203 | ✓ |
+| 109-17 | 27760 | Screw - Fusee top plate | 2 | 2 | fusee | Hold the top plate. | in 42008 (clear): 0.568 mm, least gap 0.0441<br>in 42021 (tap): 0.52 mm, least gap 0.0211 | ✓ |
 | 109-18 | 42025 | Spring - Winding stop-bar | 1 | 1 | fusee | Draws the stop-bar back when the chain runs off its last turn. | on 42024: 0 mm | ✓ |
 | 109-19 | 42024 | Stop-bar - Winding | 1 | 1 | fusee | Pushed out by the chain at full wind to meet the winding stop (Secs. II, IV). | also: maintaining.py: stop-bar meets the stop | ✓ |
 | 109-20 | 42021 | Fusee - Complete with arbor | 1 | 1 | fusee | Its spiral groove evens the mainspring's pull on the train (Sec. II). |  | ✓ |

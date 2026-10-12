@@ -1266,7 +1266,7 @@ function buildMovement(M){
   hn(mesh(ep,new THREE.LatheGeometry([V2(0.95,0),V2(0.95,-0.3),V2(0.75,-0.3),V2(1.88,-0.7),V2(1.93,-0.7),V2(1.93,0),V2(0.95,0)],40),M.steel),'42155');hn(mesh(ep,cylY(0.95,0.3,32),M.ruby,0,-0.15,0),'J.bue');
   for(const q of EP)hn(screw(ep,...q,-0.3,0.85,0.4,0.3+1.8),'20762.ep');
   /* ---------- fusee (8-3/4 turns), chain, barrel (radius 13.5, over the third wheel) ---------- */
-  const fsP=part('fs',-50);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz);
+  const fsP=part('fs',-50);const dx=L.Fu[0]-L.Ba[0],dz=L.Fu[1]-L.Ba[1],fd=Math.hypot(dx,dz),WSP=[4.0,-19.9],WSR=1.15;   /* the winding stop's base and radius (below) */
   /* the fusee's profile from the side photograph (References/photo-side-view.jpg), read against the fusee wheel's tips taken as 40.87 mm (16.98 px/mm): the groove's floor on
      its eight upper turns is 8.33, 8.54, 8.95, 9.54, 10.19, 11.07, 12.16, 13.81, which r0 / sqrt(1 - a m) fits to 0.085 mm rms with r0 7.95 and 16.8 at the large end; at the
      plate's scale (FK, above) 7.01 and 14.82 */
@@ -1283,15 +1283,22 @@ function buildMovement(M){
      until 5 October 2026; 20.5, which the coils' pitch with the parts list's 0.419 strip would ask (References/VIDEOS.md), is ruled out */
   const RB_O=18.3;
   const fs=makeFusee(M,{yS:-19.86,yB:-10.9,collarT:TB_T+0.05,rmin:7.95*FK,rmax:16.8*FK,k:FK,epR:Math.hypot(...L.Fu)-(TRAIN.cw+2)*MOD.centre/2-0.3,N:FUSEE_TURNS,Rb:RB_O,bT:TB_T+1.0,bB:BB_LO,cT:-19.86,cB:-10.9,aT:BB_T,d:fd,cap:0.64,screw,loose,endLift:fsP.userData.off+6,   /* end plate to 6 mm, under the fusee wheel */
-    stopDir:Math.atan2(fo[1],fo[0])+Math.atan2(-dz,dx)});   /* the winding stop outward from the plate's centre, past the fusee's top (as it was, 7.2 mm out, before the top was widened) */
+    stopDir:Math.atan2(WSP[1]-L.Fu[1],WSP[0]-L.Fu[0])+Math.atan2(-dz,dx),stopR:Math.hypot(WSP[0]-L.Fu[0],WSP[1]-L.Fu[1]),stopRs:WSR});   /* the winding stop's place, measured (below) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
-  /* winding stop (42099) on the underside of the barrel bridge, where the stop-bar's far end meets it at full wind: a stud screwed into the bridge (left-hand thread, Op. 42),
-     down through the train bridge's notch to 0.075 short of the bar's far face (covering 0.375 of its 0.45), clear above the chain's top turn and 0.2 above the nose's top (yNt), which
-     passes under it on every turn but the last: more than the fusee's widest endshake (0.003 in, 0.076 mm, Ops. 15, 69), which dial up takes toward the stud. It ended at -20.45,
-     0.05 over the nose (the whole drawn endshake), until 12 October 2026 (Review-results.md, "The winding stop-bar's function"). Its end's height estimated; kept solid while the key winds (app.js) */
-  { const q=fs.stud,c=Math.cos(fs.g.rotation.y),s=Math.sin(fs.g.rotation.y),WS=[fs.g.position.x+q[0]*c+q[1]*s,fs.g.position.z-q[0]*s+q[1]*c];
-    hn(cylBetween(bb,0.9,TB_T,-20.6,M.steel,...WS),'42099').userData.wstop=true;hn(cylBetween(bb,0.45,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1});   /* the stud, and its thread 2 mm up into the bridge */
-    R.barrelBridge.geometry.dispose();R.barrelBridge.geometry=polyGeo(BBpoly,TB_T-BB_T,[...BBH,hT(...WS,0.9)],0.25); }
+  /* winding stop (42099): a plain steel stud screwed into the barrel bridge's underside (left-hand thread, Ops. 32, 42), square to it, no collar or head, its free end cut
+     across by three grooves (the drive to screw it in; Fig. 12 draws the notched end, Figs. 24 and 80 a short post near the bridge's edge). KLUwI2UUCMQ 12:58.45-13:04.45
+     (4K, the bridge off and held upside down: side-on at 13:00.45 and 13:00.74, the grooves at 13:03.32, end-on 13:03.9-13:04.4), mapped onto the bridge's plan by a
+     homography on both bushing rings (0.21-0.24 mm rms; holes it didn't use 0.8-2.4 mm off): 2.3 +-0.2 across (silhouettes 2.29, 2.34, end-on 2.38-2.45, the bushing ring
+     7.03 in both frames), 5.5 +-0.5 long (5.33, 5.47, 5.75; L/D 2.3), its base (WSP) at (4.0, -19.9) +-0.5 (four mappings), 11.6 from the fusee's axis toward 9:50, 40-42 deg
+     from the fusee-to-barrel line toward 12 (wcYqdgpyggQ 11:59.05, 12:15.47, another movement: 10.5-12 from the bushing, the same side); the grooves 0.3-0.36 wide, about
+     as wide as the lands between, 0.5 deep (+-30 %); their direction across it not read (drawn along the line to the fusee). Not seen: its thread (drawn r 0.8, 2 mm into
+     the bridge: the nearest ISO, M1.6). Until 12 October 2026 an estimated stud r 0.9, 3.2 long, 9.5 mm from the fusee about 108 deg round from here; kept solid while
+     the key winds (app.js) */
+  { const q=fs.stud,c=Math.cos(fs.g.rotation.y),s=Math.sin(fs.g.rotation.y),WS=[fs.g.position.x+q[0]*c+q[1]*s,fs.g.position.z-q[0]*s+q[1]*c],WL=5.5,WG=0.5,ga=Math.atan2(L.Fu[1]-WS[1],L.Fu[0]-WS[0]);
+    hn(cylBetween(bb,WSR,TB_T,TB_T+WL-WG,M.steel,...WS,40),'42099').userData.wstop=true;hn(cylBetween(bb,0.8,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1});   /* the stud, and its thread 2 mm up into the bridge */
+    const gr=new THREE.Group();gr.position.set(WS[0],TB_T+WL-WG,WS[1]);gr.rotation.y=-ga;bb.add(gr);   /* its end: four lands between three grooves, seven bands of equal width */
+    const w=2*WSR/7;for(let i=0;i<4;i++){const z0=-WSR+2*i*w,z1=z0+w,cuts=[];if(i>0)cuts.push([z0,0,1]);if(i<3)cuts.push([z1,0,-1]);hn(mesh(gr,polyGeo(discClip(WSR,cuts,64),WG),M.steel),'42099',{sub:1});}
+    R.barrelBridge.geometry.dispose();R.barrelBridge.geometry=polyGeo(BBpoly,TB_T-BB_T,[...BBH,hT(...WS,1.6)],0.25); }
   /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), traced on the top-view photograph (fitted to
      its two screws and the arbor): a waisted plate across the arbor, its two ends arcs about 13 mm out along 107 deg / 287 deg, and both long sides
      concave, coming within about 6 mm of the arbor, so the ratchet's teeth show on either side and the click's tip on the rim side */
@@ -1560,30 +1567,56 @@ function makeFusee(M,c){
   const I=m=>(c.rmin*2/A*(1-Math.sqrt(1-A*clamp(m,0,N)))+(rc(0)-c.rmin)*m)/rB;
   const fz=hn(new THREE.Group(),'42021');fz.position.x=fx;fz.userData.partName='fusee';g.add(fz);
   const cap=c.cap??0.64,capR=c.capR??c.rmin+1.4,V2=(a,b)=>new THREE.Vector2(a,b),yT=c.yS-cap;
-  /* ---- the winding stop-bar (42024, Sec. IV; Figs. 12, 28, 73): a bar across the fusee's top in a slot open to the rim at both ends, beside the arbor, pressed by the
-     stop-bar spring toward its nose end. The nose hangs from that end into the top turn of the groove (at mF, 0.7 turn in), standing 1.6 mm proud of the groove's floor;
-     the chain, winding on over its last turn, bears on the nose and slides the bar along, so its other end stands out past the rim into the path of the winding stop
-     under the barrel bridge. Built in the bar's frame (x along the bar, the slot across z, sbR turned by al); the stop's place (c.stopDir, the fusee/barrel group's frame)
-     sets al, and al where the nose falls in the groove. The slot runs beside the hub 3.6 mm off the axis, as Fig. 28 draws it and C Spinner's video shows it
-     (20:05-20:27: 3.5-5 mm), the hub r 2.4 with the spring's groove round it to r 2.9 (the video's recess r 4-5 with its hub; sizes to about 30 %). Nose and travel
-     estimated ---- */
-  const sbZ=-3.6,BW=0.5,zHi=sbZ+BW+0.42,zLo=sbZ-BW-0.05,HUB=2.4,GRV=2.9,RS=0.9,xS=Math.sqrt((capR+0.15+RS)**2-(sbZ+BW+RS)**2),zS=sbZ+BW+RS,xF0=Math.sqrt((capR-0.05)**2-(sbZ-BW)**2),xB0=-xF0;
-  /* xf: along the bar, where a circle r about the arbor meets the nose's outer corner (0.25 further out than the bar's line), which the chain reaches first */
-  const xf=r=>-Math.sqrt(r*r-(Math.abs(sbZ)+0.25)**2),al=Math.atan2(zS,xS)-(c.stopDir||0);let mF=0.5,xN=0,rN=0;
-  for(let i=0;i<6;i++){rN=rc(mF)-H/2;xN=xf(rN+1.6);const aN=Math.atan2(sbZ,xN)-al,phi0=-Math.PI/2+dl(mF);mF=(((aN-phi0)/TAU)%1+1)%1;}   /* the chain lies at local angle phi0 + TAU m */
-  const TR=xf(rN)-xN,phi0=-Math.PI/2+dl(mF),yNb=yf(mF)+0.25,yNt=-20.4,xWin=xB0+0.5+TR+0.15;   /* travel; the nose from just under the winding stop's end to the chain's lower half */
+  /* ---- the winding stop-bar (42024, Sec. IV; Figs. 12, 28, 73), measured on KLUwI2UUCMQ (4K): a flat steel bar in a slot across the fusee's top, under the top plate, the
+     slot open to the rim at both ends; its spring (42025) holds it toward its chain end. The chain, winding onto the top turn, bears on that end where it stands out over the
+     groove and pushes it in, so the other end, the stop end, stands out past the rim into the winding stop's path (Sec. IV). 20:01.23 (the plate off, nearly overhead,
+     rectified on the recess's arc, 13 points, and scaled on the top plate's two screw holes): 15.0 +-0.6 long (14.9, 15.1 along its edges), 1.8 (1.6-1.9) wide, its edges 2.9
+     and 4.9 from the axis; both ends cut at a slant the same way, a parallelogram (18 and 23 deg from square, six points an end); side-on at 26:05-26:23 (the plate on, the
+     bar pushed in with tweezers): the stop end 0.7 +-0.15 thick, the chain end 1.1 +-0.2, a step between them about mid-length (20:04.27, on the mat: moderate), its travel
+     2.4 +-0.3 (the two fullest pushes agree), no hook or nose; a hole 0.28 of the length from the chain end (20:10-20:11), not on its top face (20:01.23, 25:38, 25:40), so
+     in the face that lies down. Which end is which: at 25:40 the spring's end bears on the bar 0.27 of its length from the end whose inner corner stands out, and that
+     is the end the tweezers push in at 26:05-26:23, so that is the chain end; at the stop end the outer corner stands out. Built in the bar's frame (x along the bar toward
+     the stop end, z across, sbR turned by al), released, the ends as traced on 20:01.23 (seen from the key's end): the stop end's corners (7.08, 2.81) and (7.89, 4.81),
+     the chain end's (-7.81, 2.91) and (-7.17, 4.78), drawn as one slant of 20 deg through the end's middle at 7.5. Winding turns the fusee counterclockwise seen from the
+     key's end (Sec. II), so the stop end leads with its outer face, the one whose corner stands out. The chain pushes the chain end in until its outer corner, the one
+     furthest out, is at the chain's inner face, rN: the travel TR, 2.05 (the side views' 2.4 +-0.3 with the tweezers, which push it to a stop past where the chain does);
+     where that falls in the groove, mF, and the bar's turn, al, follow from the stop end meeting the winding stop at full wind (c.stopDir, c.stopR, c.stopRs: movement.js). The stop end, thinner, passes over the chain's top turn
+     unpushed (the step's use): the chain end, 0.14 turn into the top turn, reaches the top plates of its links by about 0.1; how deep it reaches into the groove isn't
+     seen (no frame at full wind). Until 12 October 2026 it was a bar 14.6 x 1.0 x 0.45 on the arbor's other side, its ends square, an estimated nose hanging into the groove, its
+     travel 1.82 ---- */
+  const SBZ=3.9,SBW=1.9,SBX=7.5,LN=Math.tan(20*D2R),TS=0.7,TC=1.1,Z0=SBZ-SBW/2,Z1=SBZ+SBW/2,zLo=Z0-0.05,zHi=Z1+0.05,HUB=2.4,ex=(s,z)=>s*SBX+LN*(z-SBZ),TBX=-SBX+0.28*2*SBX;
+  /* Z0 the bar's inner edge, Z1 its outer; ex(s,z): an end's x at z (s +1 the stop end, -1 the chain end); xc0, the chain end's outer corner, which the chain reaches first; xf(r), where along the bar a circle r
+     about the arbor meets that corner's line; TBX, the hole for the spring's hook */
+  const xc0=ex(-1,Z1),xf=r=>-Math.sqrt(Math.max(r*r-Z1*Z1,0)),SD=c.stopDir||0,SR=c.stopR||11.63,SRs=c.stopRs||1.15;
+  /* the stop end at full travel against the stud (its centre SR from the axis at SD in the group's frame): in the bar's frame the stud comes round onto the side the bar leads
+     with while winding (points turn toward a larger atan2(z, x) as n falls), its leading corner, and al turns the bar so that the first touch falls at n = 0 */
+  const dPoly=(px,pz,T)=>{const P=[[ex(1,Z0)+T,Z0],[ex(1,Z1)+T,Z1],[ex(-1,Z1)+T,Z1],[ex(-1,Z0)+T,Z0]];let d=1e9;for(let i=0;i<4;i++){const[ax,az]=P[i],[qx,qz]=P[(i+1)%4],vx=qx-ax,vz=qz-az,u=clamp(((px-ax)*vx+(pz-az)*vz)/(vx*vx+vz*vz),0,1);d=Math.min(d,Math.hypot(px-ax-u*vx,pz-az-u*vz));}return d;};
+  const touch=T=>{const f=a=>dPoly(SR*Math.cos(a),SR*Math.sin(a),T)-SRs;let a=Math.atan2(Z1,ex(1,Z1)+T)+1.5;while(a>-Math.PI&&f(a)>0)a-=0.002;let lo=a,hi=a+0.002;for(let i=0;i<30;i++){const m=(lo+hi)/2;if(f(m)>0)hi=m;else lo=m;}return hi;};
+  let mF=0.2,rN=0,TR=0,al=0;
+  for(let i=0;i<8;i++){rN=rc(mF)-H/2;TR=xf(rN)-xc0;al=touch(TR)-SD;const aN=Math.atan2(Z1,xc0)-al,p0=-Math.PI/2+dl(mF);mF=(((aN-p0)/TAU)%1+1)%1;}   /* the chain lies at local angle phi0 + TAU m */
+  const phi0=-Math.PI/2+dl(mF);
   /* ---- the fusee: a lathe whose outer surface is pushed out to the helical groove: the floor rf(m) under each turn of the chain, a flange 0.16-0.3 thick between turns
-     standing 1.25 mm over the floor of the turn below it (1.4 at the top: the top face), as on the side photograph, solid above the groove's start and below its end
+     standing 1.25 mm over the floor of the turn below it, as on the side photograph, solid below its end; above the top turn no flange: the slotted top layer is the
+     rim there (capR, rf(0) + 1.4: the top), so the stop-bar's slot runs out through it at both ends (a turned flange there, as drawn until 12 October 2026, can't take a
+     straight slot)
      (led in over 0.12 turn at the start, where the chain leaves the fusee at full wind, and out over 0.04 at the end, past the chain's end link),
-     and a window through the top turn for the stop-bar's nose ---- */
-  const HF=1.25,HT=1.4,FT=0.08,FR=0.15,LI=0.12,ca=Math.cos(al),sa=Math.sin(al);
+     its top carved for the stop-bar (below) ---- */
+  const HF=1.25,HT=1.4,FT=0.08,FR=0.15,LI=0.12;
   const R=(x,z,y)=>{const th=Math.atan2(z,x),mu=(y-c.yS)/PT,ph=(((th-phi0)/TAU)%1+1)%1,nu=mu-ph,k=Math.floor(nu+0.5),u=nu-k,mc=k+ph;
-    let r;if(mc<-LI)r=rf(0)+HT;else if(mc>N+LI/3)r=rf(N)+HF;else{const rg=rf(mc),mfl=mc+(u<0?-0.5:0.5),tip=mfl<0?rf(0)+HT:rf(mfl+0.5)+HF,d=(0.5-Math.abs(u))*PT,w=d<=FT?1:d>=FR?0:(FR-d)/(FR-FT);r=rg+(tip-rg)*w;}
-    const cs=Math.cos(th+al),sn=Math.sin(th+al),rw=xWin/cs;if(y<=yNb+0.08&&cs<0&&r>rw&&Math.max(r*sn,rw*sn)>sbZ-0.6&&Math.min(r*sn,rw*sn)<sbZ+0.6)r=rw;   /* the nose's window: cut back to x = xWin in the bar's frame, where the ray meets the slot */
+    let r;if(mc<-LI)r=rf(0);else if(mc>N+LI/3)r=rf(N)+HF;else{const rg=rf(mc),mfl=mc+(u<0?-0.5:0.5),tip=mfl<0?rf(0):rf(mfl+0.5)+HF,d=(0.5-Math.abs(u))*PT,w=d<=FT?1:d>=FR?0:(FR-d)/(FR-FT);r=rg+(tip-rg)*w;}
     return r;};
-  const yBot=c.yB+0.6,pr=[V2(1.05,yT)],NY=Math.ceil((yBot-yT)/0.03);for(let i=0;i<=NY;i++)pr.push(V2(c.rmax,lerp(yT,yBot,i/NY)));
-  pr.push(V2(5.8/FK*k,yBot),V2(5.8/FK*k,c.yB-1.1),V2(1.05,c.yB-1.1),V2(1.05,yT));   /* a recess in the large end holds a disc tapped for the winding ratchet's screws (r 5.8, with them at r 4.6: estimated) */
-  const lg=new THREE.LatheGeometry(pr,216),lp=lg.attributes.position;for(let i=0;i<lp.count;i++){const x=lp.getX(i),z=lp.getZ(i),r=Math.hypot(x,z);if(r>6.2){const q=R(x,z,lp.getY(i))/r;lp.setX(i,x*q);lp.setZ(i,z*q);}}
+  /* its top: yL, under the slotted layer (below); its face ringed every 0.1 out to RIN (inside the top turn's floor, rf(0)) so it can be carved: the recess round the hub
+     down to yR, and the slot under the stop-bar's chain half down to yD, from the step's place at full travel out through the rim, where the outer surface above yD
+     comes down to it (the slot open into the top turn, where the chain end stands over the chain) */
+  const REC=5.3,RIN=7.0,yL=yT-0.5+TS+0.05,yD=yT-0.475+TC+0.025,yR=yT-0.5+TC+0.34,ySp=yR-0.155;   /* ySp: the stop-bar spring's wire, 0.025 over the recess's floor and 0.03 under the bar */
+  const yBot=c.yB+0.6,pr=[],NY=Math.ceil((yBot-yL)/0.03);for(let r=1.05;r<RIN-1e-6;r+=0.1)pr.push(V2(r,yL));pr.push(V2(RIN,yL));for(let i=0;i<=NY;i++)pr.push(V2(c.rmax,lerp(yL,yBot,i/NY)));
+  pr.push(V2(5.8/FK*k,yBot),V2(5.8/FK*k,c.yB-1.1),V2(1.05,c.yB-1.1),V2(1.05,yL));   /* a recess in the large end holds a disc tapped for the winding ratchet's screws (r 5.8, with them at r 4.6: estimated) */
+  const lg=new THREE.LatheGeometry(pr,216),lp=lg.attributes.position;
+  for(let i=0;i<lp.count;i++){let x=lp.getX(i),z=lp.getZ(i);const y=lp.getY(i),r=Math.hypot(x,z);if(r>RIN+0.5){const q=R(x,z,y)/r;x*=q;z*=q;}
+    if(y<yD-1e-6){const rr=Math.hypot(x,z),th=Math.atan2(z,x)+al,xb=rr*Math.cos(th),zb=rr*Math.sin(th),m=rr*TAU/216+0.02;   /* m: a cell's width, so the cut's edges stay outside the bar */
+      if(rr<=REC+1e-6&&Math.abs(y-yL)<1e-6)lp.setY(i,yR);
+      else if(zb>zLo-m&&zb<zHi+m&&xb<TR+0.15+m)lp.setY(i,yD);}   /* in the slot's strip at its own radius: down to the floor (the strip isn't radial, so nothing is drawn in) */
+    lp.setX(i,x);lp.setZ(i,z);}
   lg.computeVertexNormals();mesh(fz,lg,M.gilt);
   mesh(fz,ringGeo(c.rmax,0.84*c.rmax,0.4),M.gilt,0,yBot+0.2,0);   /* the large end's rim, standing 0.4 round a recess that holds the winding ratchet, its pawls and their springs (C Spinner 18:20, 28:17: the rim's inner edge about 0.84 of the end's radius; its height estimated: as tall as it can be and stay 0.1 clear of the sustaining ratchet and its pawl) */
   /* the arbor: through the fusee, then a collar r 2.7 k from the fusee's large end to the end plate, on which the winding ratchet's centre, the sustaining ratchet and the fusee wheel
@@ -1611,34 +1644,36 @@ function makeFusee(M,c){
   { const ep=new THREE.Group(),EPR=c.epR??7.0*k;fz.add(ep);if(c.loose)c.loose(ep,c.endLift);hn(mesh(ep,ringGeo(EPR,1.02,0.25),M.gilt,0,-5.755,0),'42019');
     for(const sg of[1,-1])hn(mesh(ep,polyGeo(subtractCircle(discClip(2.2*k,[[sg*0.24,0,sg]],64),[0,0],1.02),0.25),M.gilt,0,-5.63,0),'42019',{sub:1});   /* the boss, either side of the slot */
     const tp=hn(mesh(ep,new THREE.CylinderGeometry(0.17,0.23,9.6*k,10),M.steel,0,-5.39,0),'42020');tp.rotation.z=Math.PI/2; }   /* in the slot, 0.01 off its floor, about two thirds of the plate across (Fig. 28) */
-  /* the fusee's top (Figs. 28, 73, 109): on the top face a slotted layer, the stop-bar in the slot, the stop-bar spring (42025) in a groove round the arbor, and the top plate
+  /* the fusee's top (Figs. 28, 73, 109): on the top face a slotted layer, the stop-bar in the slot, the stop-bar spring (42025) in the recess round the hub, and the top plate
      (42008) over them with two screws (27760) into the layer */
   const sbR=new THREE.Group();sbR.rotation.y=al;fz.add(sbR);
-  const lay=(pts,holes)=>mesh(sbR,polyGeo(pts,0.5,holes||[]),M.gilt,0,yT-0.5,0);
-  const REC=5.5*k;   /* the recess round the hub, r 5.5 (KLUwI2UUCMQ 20:25, the plate off: the recess's edge an ellipse about the collar, the top plate's screw holes, opposite each other at r 7.0, 1.26 times its radius out along their line); its depth 1.2-2.0 (the far wall's band, 35 px at 44 px/mm, seen 29 deg from face-on) is drawn as the layer's 0.5, the floor below it not cut (the stop-bar and its spring lie on it). Until 5 October 2026 the layer was cut only by the spring's groove, r 2.9 */
+  const lay=(pts,holes,th=yL-yT+0.5)=>mesh(sbR,polyGeo(pts,th,holes||[]),M.gilt,0,yT-0.5,0);   /* TS + 0.05 thick: the stop half and 0.025 either side */
+  /* REC: the recess round the hub, r 5.3 (KLUwI2UUCMQ 20:01.23 rectified on its arc, 13 points, scaled on the top plate's screw holes, as the stop-bar; 20:25: the plate off: the recess's edge an ellipse about the collar, the top plate's screw holes, opposite each other at r 7.0, 1.26 times its radius out along their line, r 4.85 as drawn until 12 October 2026, under the hole for the spring's hook); its depth 1.2-2.0 (the far wall's band, 35 px at 44 px/mm, seen 29 deg from face-on) is drawn 1.64 deep (yR), so the spring lies under the bar's chain half (the 25:04 slot and recess: 1.1-1.6 deep, +-50 %); 0.5 until 12 October 2026. Until 5 October 2026 the layer was cut only by the spring's groove, r 2.9 */
   lay(subtractCircle(discClip(capR,[[zHi,0,1]],128),[0,0],REC),[hT(0,7.0*k,0.55)]);lay(subtractCircle(discClip(capR,[[zLo,0,-1]],128),[0,0],REC),[hT(0,-7.0*k,0.55)]);   /* the rim round the recess, either side of the slot, tapped for the top plate's screws */
-  lay(discClip(HUB,[[zHi,0,1]],96),[[0,0,1.02]]);   /* hub round the arbor; the spring's groove round it (r HUB-GRV), cut open by the slot */
+  lay(discClip(HUB,[],96),[[0,0,1.02]],yR-yT+0.5);   /* the hub round the arbor, standing up from the recess's floor */
   hn(mesh(sbR,discGeo(capR-0.2,0.6,[[0,0,3.0*k+0.05],hC(0,7.0*k,0.55),hC(0,-7.0*k,0.55)]),M.gilt,0,yT-1.1,0),'42008');if(c.screw)for(const z of[7.0*k,-7.0*k])hn(c.screw(sbR,0,z,yT-1.1,0.55,0.3,0.6+0.5),'27760.fu');   /* its screws opposite each other at r 7.0 k (restoration video 13:30, face-on) */
   hn(cylBetween(fz,3.0*k,yT-0.5,c.collarT??yT-2.1,M.steel,0,0,40),'42022',{sub:1});   /* a steel collar on the arbor, from the hub up through the top plate's hole (its r 3.0 k + 0.05), as Fig. 28 draws
      the hub rising through a large hole: the plate comes off over it, the collar staying on the arbor (restoration video 19:58-20:00), and stands on the hub with the plate off
      (20:20); r 0.326 of the plate's on 13:30, face-on. It rises 2.8 mm over the top layer (20:00, side-on, scaled by the groove's pitch, 38-41 px a turn there), so
-     up to the barrel bridge, under whose bushing it is the arbor's shoulder: c.collarT, 0.05 under it (0.002 in, Ops. 15, 69). It stays inside the slot's edge (zHi) and
-     0.12 over the stop-bar spring in the groove under it */
-  const stopBar=hn(new THREE.Group(),'42024');stopBar.position.y=yT-0.25;sbR.add(stopBar);   /* in the slot, 0.025 off the top face and 0.025 under the plate */
-  mesh(stopBar,new THREE.BoxGeometry(xF0-xB0,0.45,2*BW),M.steel,(xF0+xB0)/2,0,sbZ);   /* the bar (first child: tools/maintaining.py measures it) */
-  { const s=new THREE.Shape(),yb0=0.225,Y=y=>y-(yT-0.25);[[xB0+0.5,yb0],[xB0,yb0],[xB0,Y(yNt)],[xN,Y(yNt)],[xN,Y(yNb)],[xN+0.5,Y(yNb)],[xN+0.5,Y(yNt)+0.1],[xB0+0.5,Y(yNt)+0.1]].forEach(([x,y],i)=>i?s.lineTo(x,y):s.moveTo(x,y));
-    const ng=extrude(s,{depth:0.5,bevelEnabled:false});ng.translate(0,0,sbZ-0.25);mesh(stopBar,ng,M.steel); }   /* the nose: from under the bar's end, below the winding stop's end, then down into the groove */
-  mesh(stopBar,new THREE.BoxGeometry(0.4,0.45,0.35),M.steel,-1.6,0,sbZ+BW+0.175);   /* a tab on the bar's inner side, which the spring's end bears on */
-  const bsp=hn(mesh(sbR,new THREE.BufferGeometry(),M.steel,0,yT-0.25,0),'42025');let barX=null;
-  /* the spring (42025): a round wire bent to an open C, about 270 deg in the groove round the hub from its fixed end, then into the slot beside the bar and against the tab,
-     following it as it slides (Fig. 28; C Spinner 20:20, 20:27) */
-  const setBar=x=>{if(x===barX)return;barX=x;stopBar.position.x=x;const P=[],rg=(HUB+GRV)/2,zs=sbZ+BW+0.21,a1=-Math.acos(0.9/rg);for(let k=0;k<=40;k++){const a=Math.PI+0.25-(Math.PI+0.25-a1)*k/40;P.push(new THREE.Vector3(rg*Math.cos(a),0,rg*Math.sin(a)));}
-    P.push(new THREE.Vector3(0.9,0,zs),new THREE.Vector3(-1.4+x+0.02,0,zs));   /* out of the groove where the slot opens it (x 0.9, past the tab's reach at full travel) */bsp.geometry=reclose(bsp.geometry,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P),60,0.13,6,false));};
+     up to the barrel bridge, under whose bushing it is the arbor's shoulder: c.collarT, 0.05 under it (0.002 in, Ops. 15, 69). It stays inside the slot's inner edge (zLo) */
+  const stopBar=hn(new THREE.Group(),'42024');stopBar.position.y=yT-0.475;sbR.add(stopBar);   /* in the slot, its top 0.025 under the plate */
+  { const half=(sg,T,y0=0,holes=[])=>mesh(stopBar,polyGeo(sg>0?[[0,Z0],[ex(1,Z0),Z0],[ex(1,Z1),Z1],[0,Z1]]:[[ex(-1,Z0),Z0],[0,Z0],[0,Z1],[ex(-1,Z1),Z1]],T,holes),M.steel,0,y0,0);
+    half(1,TS);half(-1,TS);half(-1,TC-TS,TS,[[TBX,SBZ,0.22]]); }   /* the stop half 0.7 thick (first child: tools/maintaining.py measures the bar's children), the chain half 1.3, its lower
+     0.65 with the hole for the spring's hook (0.44 across: 20:10.0, 0.35-0.5) */
+  const bsp=hn(mesh(sbR,new THREE.BufferGeometry(),M.steel,0,ySp,0),'42025');let barX=null;const yHk=yT-0.475+TS,hk=hn(mesh(sbR,cylY(0.13,ySp-yHk,10),M.steel,0,(ySp+yHk)/2,0),'42025',{sub:1});   /* hk: the hook, from the wire up the hole to its end */
+  /* the spring (42025): a round wire (r 0.13) bent to an open C on the recess's floor, from its end fixed in a hole round the collar's far side past a peg (r 4.8 and 4.4 on 20:01.23's scale, 0.87 and 0.85 of the recess's radius)
+     (20:01.23: the two balls about level with the arbor, either side of it along the bar, the C over the collar's far side; the two holes in the recess at 25:04, 0.86 of its radius), then under the bar's chain half to a hooked end up in the
+     bar's hole, so it holds the bar toward its chain end (with the spring free that end stands out: 26:05, 26:23.75), following it as it slides; the holes' angles and its
+     path between them estimated (until 12 October 2026 a wire in a groove round the hub bearing on a tab) */
+  const setBar=x=>{if(x===barX)return;barX=x;stopBar.position.x=x;const P=[],hx=TBX+x,ha=Math.atan2(SBZ,hx)-TAU,hr=Math.hypot(hx,SBZ),a0=-5*D2R,a1=-175*D2R,rA=0.87*REC,rP=0.85*REC;
+    for(let k=0;k<=24;k++){const a=a0+(a1-a0)*k/24,r=lerp(rA,rP,k/24);P.push(new THREE.Vector3(r*Math.cos(a),0,r*Math.sin(a)));}
+    for(let k=1;k<=16;k++){const a=a1+(ha-a1)*k/16,r=lerp(rP,hr,smooth(k/16));P.push(new THREE.Vector3(r*Math.cos(a),0,r*Math.sin(a)));}
+    hk.position.x=hx;hk.position.z=SBZ;bsp.geometry=reclose(bsp.geometry,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P,false,'centripetal'),72,0.13,6,false));};
   setBar(0);
-  /* how far the chain has pushed the nose in when it leaves the fusee at m: the incoming run's inner face, a turn fraction m - mF ahead of it, lies rN / cos of that angle out */
-  const barTravel=m=>{const a=TAU*(m-mF);if(a>=Math.PI/2)return 0;const r=a<=0?rN:rN/Math.cos(a);return clamp(xf(Math.max(r,rN))-xN,0,TR);};
-  /* the winding stop's place (group frame): where it meets the bar's leading side at full wind, 0.15 clear of the rim */
-  const stud=[fx+xS*ca+zS*sa,-xS*sa+zS*ca];
+  /* how far the chain has pushed the chain end in when it leaves the fusee at m: the incoming run's inner face, a turn fraction m - mF ahead of it, lies rN / cos of that angle out */
+  const barTravel=m=>{const a=TAU*(m-mF);if(a>=Math.PI/2)return 0;const r=a<=0?rN:rN/Math.cos(a);return clamp(xf(Math.max(r,rN))-xc0,0,TR);};
+  /* the winding stop's place (group frame), as measured (movement.js) */
+  const stud=[fx+SR*Math.cos(SD),SR*Math.sin(SD)];
   const bz=hn(new THREE.Group(),'42168');bz.position.x=bx;bz.userData.partName='barrel';g.add(bz);
   /* the wall, BWT thick from end to end: its end face's inner edge 0.874-0.905 of its outer (KLUwI2UUCMQ 15:54 0.905, 16:54 0.874-0.888; TN24H's own barrel, 3SFDplGq6vs
      0:16, nearly face-on, 0.891: ellipses fitted to the yellow face's two edges, 0.89 the mean, so 0.11 Rb, 2.0 +-0.3 on r 18.3; 1.95 on r 17.6 until 5 October 2026), and at 16:54, the spring out, the inside a

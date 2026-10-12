@@ -19,7 +19,7 @@ EXP=HERE/'audit-expected.json'
 FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
   const s=ESC.state(0),E=1000+s.prog;mv.userData._u({E,th:s.th,lift:s.lift,psDef:s.psDef,n:2.5,winding:false,springOn:true,msOn:false,arm:0,blk:0});})()"""   # placements.py's first state
 # loose ends expected (part:geometry, place in the movement frame at the frozen state, radius, why); matched within 0.3 mm
-LOOSE=[('barrelBridge:Cylinder',(20.95,-20.2,-21.26),0.9,"the winding-stop pin, standing out of the barrel bridge's underside into the stop-bar's path"),
+LOOSE=[('barrelBridge:Cylinder',(4.0,-18.51,-19.9),1.15,"the winding stop, a stud standing 5.5 out of the barrel bridge's underside beside the fusee's top, into the stop-bar's path"),
  ('lowerBridge:Cylinder',(20.62,-21.91,14.01),0.4,"a steady pin of the balance lower bridge: its hole in the train bridge is drawn through, so the end above sits in a hole"),
  ('lowerBridge:Cylinder',(-13.6,-21.91,16.4),0.4,"the lower bridge's other steady pin, the same"),
  ('det:Cylinder',(-1.82,-22.11,35.98),0.53,"a positioning pin of the detent support block: its hole in the train bridge is drawn through, so the end above sits in a hole"),
