@@ -1407,6 +1407,18 @@ Contents:
   the bridge now follows the cock's traced edge, `CK_TR`, below, which bows
   the same way), and a curved cut drawn along its curve (`clipUnder`), not
   `clipPoly`, which draws it as its chord. `d463348`
+- **The balance cock's endstone cap, settings and screw counterbore about
+  20 % small.** The cap was 7.2 × 4.6 mm with its screws 2.75 mm either side
+  of the staff, its setting r 1.6, the cock's setting r 1.5, and the cock
+  screw's counterbore r 3.05 with a head r 2.75: the photographs scaled by
+  the top-view photograph's cap screws, which read every size on the cock's
+  top about 0.83 of the video's. Through the camera fitted on C Spinner's
+  6:49.0 (the same camera as 6:29, the cap on), the cap's screws are 6.66 mm
+  apart, the plate 8.9 × 5.5, its setting 3.85 across, the counterbore 7.4;
+  the cock's setting r 2.2 (41:58). Now so, the head 0.90 of the counterbore
+  (r 3.33) and 1.5 times its width long, as the photographs and 5:59 have
+  it. Keep: sizes on the cock's top from the video's camera, not scaled by
+  the top-view photograph; the cap on metal all round (`hullSplice`).
 
 - **The balance cock's top face a straight edge, a widened nose and a bulging
   concave edge; its arm one thickness.** Seen from above, the cock's straight
