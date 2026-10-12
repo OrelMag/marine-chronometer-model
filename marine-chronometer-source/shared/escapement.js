@@ -27,16 +27,18 @@ function makeEsc(o={}){
      works it out from movement.js and checks this), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
      rB: the radius stoned on the back corner of the discharge jewel's end (unit frame), its acting corner left square: "set with a jewel with a radius to the back of
      the acting part of the tip" (the British Museum's Model 21, Catalogue of Watches VI, 1990, no. 117A), and KLUwI2UUCMQ 6:58.17-6:58.33 shows the acting face flat to
-     a sharp corner. 0 is a square end, wD/2 (the most) the back half of a half round. The radius isn't given: 0.01 (0.066 mm) is the least that brings overall within
-     Op. 87's 26-30° (29.7°) with rd at 0.296, where the jewel stands 0.50 mm proud of its roller (the frames: 0.4-0.5); estimated. Until 12 October 2026 the end was a
-     half round (rnd), both corners, and rd 0.300 and aD 271
+     a sharp corner. 0 is a square end, wD/2 (the most) the back half of a half round. The radius isn't given (estimated): wD/2, 0.158 mm, with rd at 0.296, where the
+     jewel stands 0.50 mm proud of its roller (the frames: 0.4-0.5, its most), and rT 0.2894 puts overall in the middle of Op. 87's 26-30° (28.0°) with the most lift to
+     spare past the release (0.28 mm at the tip against 0.18): the square acting corner holds the trip spring's tip on the return, so overall wants less overlap of the
+     jewel past the tips, and less overlap leaves less lift; a larger radius lets the detent off sooner at the same overlap (rB 0.010, 0.066 mm, the least within 30°, gave
+     29.7° and 0.27 mm). Until 12 October 2026 the end was a half round (rnd), both corners, and rT 0.290, rd 0.300 and aD 271
      HS: the hairspring's own isochronism, s a day gained for each 10 deg the swing is above A (0: isochronous, the model's default; the adjuster's bench sets it).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
      rT: passing-spring tip; rd: discharge jewel reach (its grown outline's; the frames at 6:58 put the jewel 0.4-0.5 mm proud of its roller); dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.29,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.01,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:52,MU:0.15,
+  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:52,MU:0.15,
     I:578.5,JW:6.2,W78:0.770,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
