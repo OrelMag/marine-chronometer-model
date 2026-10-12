@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building the Model 21: verification</title>
+<style>
+:root{color-scheme:light;--surface:#fcfcfb;--panel:#f3f2ef;--ink:#0b0b0b;--ink2:#52514e;--muted:#8a8984;--grid:#e4e3df;--rule:#d6d5d0;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--band:rgba(42,120,214,.13);--manual:rgba(27,175,122,.12);--good:#008300;--warn:#b36b00;--bad:#c02f2f}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){color-scheme:dark;--surface:#1a1a19;--panel:#232321;--ink:#f0efec;--ink2:#c3c2b7;--muted:#8f8e86;
+  --grid:#33332f;--rule:#3d3d39;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--band:rgba(57,135,229,.18);--manual:rgba(25,158,112,.16);--good:#4cb84c;--warn:#e0a030;--bad:#e66767}}
+:root[data-theme="dark"]{color-scheme:dark;--surface:#1a1a19;--panel:#232321;--ink:#f0efec;--ink2:#c3c2b7;--muted:#8f8e86;--grid:#33332f;--rule:#3d3d39;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--band:rgba(57,135,229,.18);--manual:rgba(25,158,112,.16);--good:#4cb84c;--warn:#e0a030;--bad:#e66767}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1060px;margin:0 auto;padding:28px 16px 80px}
+h1{font-size:30px;line-height:1.25;margin:8px 0 6px}h2{font-size:23px;margin:46px 0 8px;padding-top:12px;border-top:1px solid var(--rule)}h3{font-size:18px;margin:28px 0 6px}
+p,li{color:var(--ink)}.sub{color:var(--ink2);margin:0 0 18px}.small{font-size:13.5px;color:var(--ink2)}
+a{color:var(--s1)}code{font:13.5px ui-monospace,Consolas,monospace;background:var(--panel);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+pre{font:12.5px/1.5 ui-monospace,Consolas,monospace;background:var(--panel);padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre-wrap}
+nav.toc{background:var(--panel);border-radius:10px;padding:12px 18px;font-size:14.5px;margin:18px 0}nav.toc a{margin-right:14px;white-space:nowrap;display:inline-block}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--panel);border-radius:10px;padding:14px 16px}.tile .k{font-size:13px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+.tile .v{font-size:24px;font-weight:650;margin:4px 0 2px}.tile .n{font-size:13.5px;color:var(--ink2)}
+.ok{color:var(--good)}.mid{color:var(--warn)}.no{color:var(--bad)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{color:var(--ink2);font-weight:600}td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+figure{margin:16px 0 22px}figcaption{font-size:13.5px;color:var(--ink2);margin-top:6px}
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:10px 8px 4px;position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}.chart text{fill:var(--ink2);font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink2);padding:2px 10px 6px}.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px}.legend i.dot{width:9px;height:9px;border-radius:50%}.legend i.ramp{width:90px;height:9px;border-radius:2px}
+.tip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:7px 10px;font-size:12.5px;line-height:1.45;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);display:none;max-width:280px;z-index:3}
+details{margin:6px 0 14px}summary{cursor:pointer;color:var(--ink2);font-size:13.5px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.callout{border-left:3px solid var(--s1);background:var(--panel);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.gap{border-left:3px solid var(--warn)}.themebtn{float:right;font-size:13px;background:var(--panel);color:var(--ink2);border:1px solid var(--rule);border-radius:8px;padding:4px 10px;cursor:pointer}
+.eq{font-family:Georgia,"Times New Roman",serif;font-style:italic;white-space:nowrap}
+ol.src li{margin-bottom:6px;font-size:14.5px}
+</style>
+</head>
+<body>
+<main>
+<button class="themebtn" id="theme" type="button">Light / dark</button>
+<p class="small">Marine Chronometer model · verification for a build · <!--MADE--> · branch <code>claude/build-verify</code></p>
+<h1>Would a chronometer made to the model run and keep time?</h1>
+<p class="sub">The aim has changed from parity with the 1948 Hamilton Model 21 to a <b>working marine chronometer</b>, made with a CNC and a 3D printer, steady enough
+to navigate by. The model already agreed with the manual and with recordings of real Model 21s; this report covers the checks added to answer the maker's
+question: will the gears run when the holes are bored by a machine, will it hold together and stay in adjustment from cold to hot, does the hairspring do what its
+design says, and how will the made chronometer be tested and rated. Every figure here is computed by a script in the repository, named beside it, from the model's
+own geometry and numbers.</p>
+
+<div class="tiles" id="tiles"></div>
+
+<nav class="toc"><a href="#approach">Approach</a><a href="#gears">1. Gears</a><a href="#thermal">2. Temperature</a><a href="#fea">3. Finite elements</a>
+<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
+<a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+
+<h2 id="approach">Approach</h2>
+<p>A chronometer keeps time if three things hold: its <b>train delivers a steady torque</b> to the escapement (so the balance's swing, and with it the rate, stays put),
+its <b>geometry stays in adjustment</b> under load and temperature, and its <b>balance and hairspring</b> oscillate at a rate that changes little with swing and
+temperature. The model's existing checks cover the escapement in detail (its figures against the manual, its motion in time, the energy budget, the stresses and an
+error budget for a voyage). Six checks were added for the build:</p>
+<div class="tw"><table>
+<tr><th>#</th><th>Question</th><th>Method</th><th>Script</th></tr>
+<tr><td>1</td><td>Do the gears mesh, and how exactly must the holes be placed?</td><td>Tooth-by-tooth contact on the model's own cycloidal outlines, with friction; the train run in time through the escapement's equation</td><td><code>tools/gearing.js</code></td></tr>
+<tr><td>2</td><td>Does it stay in adjustment from 40 to 100 °F?</td><td>Differential expansion of brass against steel through the depths, the endshake and the escapement solver</td><td><code>tools/thermal.js</code></td></tr>
+<tr><td>3</td><td>Do the plates and bridges hold the arbors where they belong?</td><td>Linear finite elements (voxel bricks, multigrid) on every part that carries a pivot, assembled by superposition</td><td><code>tools/fea.py</code></td></tr>
+<tr><td>4</td><td>Does the hairspring behave as designed at large swings?</td><td>Co-rotational beam elements, Newton's method, against the existing shooting elastica</td><td><code>tools/hairspring-fe.js</code></td></tr>
+<tr><td>5</td><td>What must the made parts measure?</td><td>The model's figures turned into bench tests with pass figures, in the build book</td><td><code>tools/bench.js</code></td></tr>
+<tr><td>6</td><td>Does the made chronometer keep time?</td><td>The Navy's 30-day test worked on the maker's log; the rate fitted, backtested and projected for a voyage</td><td><code>tools/rating.py</code></td></tr>
+</table></div>
+<p class="small">Units: millimetres and micrometres (µm), newtons, seconds a day (s/d, + gaining). The swing is the balance's amplitude, each way; the manual asks for
+1⅜–1½ turns, 247.5–270°, and the model runs at 255°. A rate of 4 s of time is a mile of longitude at the equator.</p>
+
+<h2 id="gears">1. The gears, tooth by tooth</h2>
+<p>The going train is four meshes: the fusee wheel drives the centre pinion, then centre → third → fourth → escape pinion. The model draws its teeth to BS 978 Part 2's
+clock proportions (cycloidal wheel teeth: an epicycloidal addendum, radial flanks; pinion leaves with round tips), which the manual doesn't give and the model
+estimates. <code>gearing.js</code> takes those outlines from the model's own code (<code>core.js gearOutline</code>), sampled finer (400 points an addendum, 240 a tip), and
+places wheel and pinion at their centre distance <span class="eq">m(z₁+z₂)/2</span>. For each of 120 steps through one pitch of the wheel it turns the pinion back
+against its load until the outlines touch (bisection to well under a micrometre), takes the contact's normal from the touching outline and the slip from the two
+bodies' velocities, and so the torque the pinion receives against the wheel's, with tooth friction µ (0.10–0.20: hardened steel on brass, unlubricated, the range
+<code>physics.js</code> uses). A ratio of 1 is a perfect, frictionless mesh.</p>
+<figure><div class="chart" id="c1"></div><figcaption>Figure 1. Torque the pinion receives over one pitch of the wheel, against the nominal ratio, µ = 0.20. The ratio is highest at the
+pitch point and falls as the contact runs away from it, most before the line of centres (left), where friction acts against the drive; the fusee mesh's deep dips are
+where the wheel's tooth, capped at 1.15 module, works on the leaf with its corner. The small zigzag (about 0.003) is the outlines' sampling, not the teeth.
+<code>gearing.js</code>, <code>stage()</code>.</figcaption></figure>
+<div id="t1" class="tw"></div>
+<p>None of the four meshes drops (the next tooth always engages before the last lets go), about a fifth of the action is before the line of centres, and the mean loss is
+2–5 % a mesh. The escape wheel's torque is the product of the four ratios as their wheels turn (the centre once an hour, the fusee wheel once in 6.4 h); the balance's
+swing follows it through the escapement's own equation (<code>shared/escapement.js</code>: <span class="eq">A²</span> relaxes towards <span class="eq">ampAt(drive)²</span>
+with the balance's free run-down time TF = 68 s), and its rate through <code>rateAt</code>.</p>
+<figure><div class="chart" id="c2"></div><figcaption>Figure 2. The balance's swing over half an hour of the train, the teeth's ripple included, at the two friction coefficients; the band is the
+manual's 247.5–270°. The slow wave is the fusee wheel's teeth (one every 4.3 minutes), the fast one the third and fourth. Over six hours the swing stays within the
+same limits (<span id="sixh"></span>). <code>gearing.js</code>, <code>day()</code>.</figcaption></figure>
+<p>The ripple moves the rate by a few hundredths of a second a day for minutes at a time and repeats every day, so a navigator's daily rate takes it in; the time it
+wanders about its mean is <span id="wander"></span>. What matters is that the swing never leaves the band.</p>
+<h3>The depthing window and the CNC's tolerance</h3>
+<p>Each mesh's centres were then moved, the others left as drawn, until one of three things happened: it <b>jams</b> (the wheel's tips reach the pinion's root, or no
+backlash is left), its extra friction takes the day's <b>mean swing</b> out of the band with the set-up as drawn, or, the set-up restoring the mean (Op. 13), its
+<b>ripple</b> takes the swing out at some moment.</p>
+<figure><div class="chart" id="c3"></div><figcaption>Figure 3. Each mesh's depthing window about its drawn centres (bar), the closer side ended by jamming, the wider by the ripple or the
+search's end at one module; the dark mark is the CNC's tolerance band, ± the hole tolerance doubled plus the pivots' shake. <code>gearing.js</code>, <code>gearing.json</code>.</figcaption></figure>
+<p>Each arbor has two holes, each off by up to <span class="eq">t</span> in any direction, and its pivots shake about 10 µm in their holes (estimated: 1–2 % of a jewelled
+pivot's diameter), so a mesh's centres close by at most <span class="eq">2t + 10 µm</span>. Aimed at the drawn centres (BS 978's depth, kept for the teeth's sake: wider
+would leave less engagement for wear and knocks), the tightest mesh sets <b>t = ±<span id="tp"></span> µm</b>: a good CNC holds it with the holes bored, not drilled,
+and checked with gauge pins. Every mesh takes several times as much error wide as close, so a hole that errs should err wide.</p>
+
+<h2 id="thermal">2. From 40 to 100 °F</h2>
+<p>The movement is brass where it holds things (plates, bridges, pillars, wheels) and steel where it turns or locks (pinions, arbors, escape wheel, roller, detent).
+Brass grows <span id="da"></span> × 10⁻⁶ a °C more than hardened steel (published ranges: leaded clock brass 18.7–20.9, carbon steel 10.8–12.5). From 20 °C, where the
+movement is put together, to 40 °F and 100 °F (wider than the Navy test's 55–90 °F, for a cabin at sea):</p>
+<div id="t2" class="tw"></div>
+<p>A mesh's depth changes only by the pinion's radius times the difference, because the wheel and its hole are both brass. The endshake, over the train's 16.8 mm span
+(measured on a side photograph), changes by <span id="esh"></span>: set at <b><span id="esset"></span> µm</b> at 20 °C, it stays inside Ops. 15, 69 and 74's 0.001–0.003 in
+at both ends. In the escapement, the balance's and the detent foot's places are brass-held and the wheel, roller and detent are steel; <code>makeEsc</code> rebuilt with
+those distances grown moves lock and drop a tenth of a degree and the rate a few hundredths of a second a day. The temperature error is the balance's and its
+spring's alone, which is measured, not computed (section 5).</p>
+
+<h2 id="fea">3. Finite elements on the plates and bridges</h2>
+<p>The largest loads in the movement are the fusee chain's pull (the mainspring's moment on the barrel's pitch radius, <code>physics.js</code>) and the first mesh's tooth force.
+<code>fea.py</code> takes the six parts that hold pivots from the page itself (each part's solid, closed and consistently wound, <code>solids.py</code>):
+the pillar plate, the train, barrel, escape and lower bridges, and the bridge on the dial side carrying the third's and fourth's lower jewels. A tetrahedral mesher (gmsh)
+was tried first; it found self-overlapping facets in the page's surfaces, so each solid is instead cut into voxel bricks (a ray up each column finding where it is
+inside), 0.25–0.55 mm in plan and 6–14 layers through the thickness. Trilinear bricks, brass at E = 100 GPa (97–110), ν = 0.34, assembled in numpy and solved by
+conjugate gradients preconditioned with smoothed-aggregation multigrid (pyamg), the six rigid-body modes given.</p>
+<figure><div class="chart" id="c4"></div><figcaption>Figure 4. The solver checked: a brass cantilever 20 × 2 × 2 mm, 1 N at its tip, against Timoshenko's deflection
+<span class="eq">PL³/3EI + PL/κGA</span>, as the bricks get finer through the depth. Trilinear bricks are stiff in bending until fine; the parts here have 6–14 layers. <code>fea.py --check</code>.</figcaption></figure>
+<p><b>Loads</b>, every stage lossless (the largest): the chain's pull along the external tangent of the fusee and barrel at its height on them (fully wound on the fusee's
+top turn, run down on its bottom), and at each mesh the tooth force, tangential from the torque and radial from the mesh's mean pressure angle (section 1, 9–11°). Each is
+split between its arbor's two bearings by the lever rule; a pivot's load goes on its hole's wall over the half it bears on, as cos θ. <b>Supports</b>: a bridge is held
+where it is screwed (every node within the screw head's radius, through its thickness); the pillar plate at its rim, where the case's seat ring takes it. <b>Assembly</b>
+by superposition: each fixing's reaction is put on what is beneath it (another part, or a pillar, a 6.7 mm brass rod fixed at both ends, bending as a beam); each part
+then follows its fixings as a rigid body fitted in plan, plus its own bending. The run is repeated with coarser bricks as a convergence check.</p>
+<figure><div class="chart" id="c5"></div><figcaption>Figure 5. The barrel bridge fully wound, in plan as the dial side sees it (3 o'clock right, 12 up): each 0.6 mm column's largest in-plane
+movement. The chain pulls the fusee's bushing and the barrel's toward each other; the bridge is held at its three screws, round its rim. <code>fea.py --json</code>.</figcaption></figure>
+<figure><div class="chart" id="c6"></div><figcaption>Figure 6. How far each arbor's two bearing holes move under load, both cases; the hole tolerance from section 1 is ±13 µm, off the scale.
+<code>fea.py</code>.</figcaption></figure>
+<div id="t3" class="tw"></div>
+<p>The plates and bridges are many times stiffer than they need to be: the hole positions and the depthing are what the maker must hold, not the parts' stiffness.</p>
+
+<h2 id="hair">4. The hairspring, by a second method</h2>
+<p>The model's hairspring is designed, not drawn by eye (<code>shared/hairspring.js</code>): a helix of 12 turns, r 5.1 mm, with terminal curves solved to Phillips'
+conditions (1861) so its pull on the balance is a pure couple, and checked at large swings as an inextensible planar elastica solved by shooting
+(<code>hairspring.js</code>). <code>hairspring-fe.js</code> solves the same path a different way: <span id="hn"></span> co-rotational beam elements (Crisfield 1991, ch. 7; each element
+straight between its nodes, axial and bending stiffness, the tangent consistent), the strip extensible (0.221 mm thick: EA/EI = 12/t²), the stud's end clamped and
+the collet's end turned about the staff in 2.5° steps to ±300°, each step to equilibrium by Newton's method with a block-tridiagonal factorization.</p>
+<figure><div class="chart" id="c7"></div><figcaption>Figure 7. The couple's departure from linear, each method against its own stiffness at 5° (parts per million): the spring
+stiffens a little at large swings, which makes it gain there. <code>hairspring-fe.js</code>, <code>hairspring.js</code>.</figcaption></figure>
+<figure><div class="chart" id="c8"></div><figcaption>Figure 8. The force the spring leaves on the balance's pivots, as a share of couple / R (0 for a pure couple, about 1 for a spring with
+plain ends).</figcaption></figure>
+<p>The two agree on the couple's shape to a few parts in 10⁷ and on the force to two figures; their absolute stiffnesses differ by 5 × 10⁻⁴, the elements' chords being
+shorter than the curve. The spring's own isochronism, the rate it gives across the manual's band, is <span id="hiso"></span>. What neither holds: the strip's own mass,
+and the elastic modulus's change with temperature, which is the spring maker's to set and the bench's to measure.</p>
+
+<h2 id="bench">5. Tests on the bench</h2>
+<p>The analysis says the design works; only tests on the made parts say a chronometer made to it does. <code>bench.js</code> turns the model's figures into tests with pass
+figures; <code>makers.py</code> puts each on its part's card (its maker's sheet) and the whole list in the build book's last chapter (Making it → Build book).</p>
+<div id="t4" class="tw"></div>
+
+<h2 id="rating">6. The rating trial</h2>
+<p>The made chronometer is rated as the Navy rated the Model 21 (Sec. IX: thirty days in six periods of five, at 90, 72½, 55, 55, 72½ and 90 °F, compared daily with a
+time signal). <code>rating.py</code> reads the maker's log (the time, the chronometer's error, the temperature) and works the test's figures exactly as the model's
+test card does (<code>app.js testCalc</code>), fits the daily rates as a constant, a linear drift and a temperature curve with the rest as day-to-day scatter, backtests
+a ten-day rate carried on through the log itself, and projects 2000 voyages. Below it is run on a made-up log with known properties (the error budget's chronometer
+like No. 3390: rate +0.35 s/d, scatter 0.042 s/d, a temperature curve), sixty days, the first thirty the Navy's periods.</p>
+<figure><div class="chart" id="c9"></div><figcaption>Figure 9. The made-up log: the chronometer's error against the time signal, the shaded spans the Navy test's periods and their
+temperatures. <code>rating.py --demo</code>.</figcaption></figure>
+<div class="cols"><div id="t5" class="tw"></div><div id="t6" class="tw"></div></div>
+<p>The fit recovers what the log was made with (the rate to 0.01 s/d, the scatter to 0.002), so on a real log its figures can be trusted as far as the log goes.
+<b>Good enough to navigate by</b> is taken as 95 % of projected voyages under 30 s (7½ miles) after 30 days.</p>
+
+<h2 id="devs">7. The build's deviations from the Model 21</h2>
+<p>The checks above found nothing that needs changing for the chronometer to work; two changes, both with 1950s materials, make it easier to make and steadier to
+keep. Each is on its part's card in the page as the build's, with the Model 21's original beside it and a button back to it (the link keeps <code>orig=</code> for one set
+back); the 3D model stays the Model 21. <code>tools/deviations.js</code> works their numbers and writes <code>deviations.json</code>, which <code>makers.py</code> puts on the
+sheets.</p>
+<div id="t7" class="tw"></div>
+<p class="small">Glucydur's own density and expansion aren't published; beryllium bronze's (CuBe2, C17200) are used. Nivarox's expansion (7–10 × 10⁻⁶/°C) and modulus
+(165–195 GPa) are estimated, as Elinvar-type alloys'. The spring's thermoelastic coefficient is what the spring maker grades; the temperature test settles the pair.</p>
+<h2 id="context">The checks the model already had</h2>
+<p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
+<!--CONTEXT-->
+
+<h2 id="limits">What only the bench can settle</h2>
+<div class="callout gap"><ul>
+<li><b>The mainspring.</b> Its thickness isn't in any source (OPEN-QUESTIONS.md 1); the model's 0.394 mm is the coils' spacing on videos. It works near its material's limit (margin 1.1–1.2), as mainsprings do. Bench test 1.</li>
+<li><b>The escapement as made.</b> With a careful hand's tolerances, about one escapement in five runs only after adjusting (<code>errorbudget.js</code>, a Monte Carlo of <code>makeEsc</code>); the manual's Ops. 84–97 are that work. Bench test 6.</li>
+<li><b>The hairspring's temperature coefficient.</b> Set by the alloy's heat treatment; only the running chronometer at 55, 72½ and 90 °F shows it. The Navy test.</li>
+<li><b>Day-to-day scatter and drift.</b> The error budget takes them from a real Model 21's test card; a made chronometer has its own. The rating trial.</li>
+<li><b>The estimates.</b> The tooth form (BS 978), the pivots' shake, the detent's and trip spring's sections, the brass and steel grades are the model's estimates, listed in its README's "Estimated, not from the manual".</li></ul></div>
+
+<h2 id="reproduce">Reproduce</h2>
+<p>From <code>marine-chronometer-source/chronometer-working-model/tools/</code> (Node.js 22, Python 3.13 with numpy, scipy, pyamg and Playwright's Chromium; times on the author's machine):</p>
+<pre>node gearing.js            # about 2 min (--quick 15 s; --write rewrites gearing.json)
+node thermal.js            # under a second
+python fea.py              # about 3 min (--check 5 s; --reuse skips the browser)
+node hairspring-fe.js      # about 20 s
+node bench.js              # a second (--write, then python makers.py)
+python rating.py --demo    # under a second; python rating.py LOG.csv for a real log</pre>
+<p>and this report, from <code>verification/build-verification/</code>:</p>
+<pre>node reportdata.js                                                 # about 35 s: assets/data.json
+python ../../tools/fea.py --reuse --json assets/fea.json           # about 3 min
+python ../../tools/rating.py --demo --json assets/rating.json      # under a second
+python build_report.py                                             # index.html (runs the earlier checks for their output, about 30 s)</pre>
+<p><code>python ci.py</code> at the repository's root runs the quick ones on every change, <code>--full</code> adds <code>gearing.js</code> in full and <code>fea.py</code>.</p>
+
+<h2 id="scripts">Scripts</h2>
+<div class="tw"><table>
+<tr><th>Script</th><th>What it does</th><th>Fails when</th></tr>
+<tr><td><a href="../../tools/gearing.js"><code>tools/gearing.js</code></a></td><td>The four meshes tooth by tooth; the train in time; the depthing windows and the hole tolerance (<code>gearing.json</code>)</td><td>a mesh jams or the swing leaves 247.5–270° at the drawn centres; gearing.json stale</td></tr>
+<tr><td><a href="../../tools/thermal.js"><code>tools/thermal.js</code></a></td><td>40–100 °F: the depths, endshake, the escapement's figures, the chain</td><td>a depth uses a tenth of its window, endshake leaves the manual's, a figure leaves the manual's</td></tr>
+<tr><td><a href="../../tools/fea.py"><code>tools/fea.py</code></a></td><td>Voxel finite elements on the six pivot-holding parts, superposed; the cantilever check</td><td>a depth moves a tenth of its close side; stress past two thirds of brass's yield; the check off by 3 %</td></tr>
+<tr><td><a href="../../tools/hairspring-fe.js"><code>tools/hairspring-fe.js</code></a></td><td>The hairspring by co-rotational beam elements against <code>hairspring.js</code>'s elastica</td><td>the couple's shape, the force on the pivots or the rate part from the elastica's</td></tr>
+<tr><td><a href="../../tools/bench.js"><code>tools/bench.js</code></a></td><td>The bench tests and their figures (<code>bench.json</code>, through <code>makers.py</code> into the cards and the build book; <code>book.py</code> checks them printed)</td><td>bench.json stale</td></tr>
+<tr><td><a href="../../tools/rating.py"><code>tools/rating.py</code></a></td><td>A made chronometer's log: the Navy test's figures, the fit, the backtest, the projection</td><td>(--demo) the fit misses what the log was made with</td></tr>
+<tr><td><a href="../../tools/acoustic.py"><code>tools/acoustic.py</code></a></td><td>The swing from a recording of the beat (now any recording's path, a made movement's)</td><td>—</td></tr>
+<tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This report's data and page</td><td>—</td></tr>
+</table></div>
+
+<h2 id="sources">Sources</h2>
+<ol class="src">
+<li>Bureau of Ships, <i>Overhaul, Repair and Handling of Hamilton Model 21 Chronometer</i>, NAVSHIPS 250-624 (1948): Secs. II, IX (the Navy test and its limits), XI (the parts list), Ops. 13, 15, 69, 74, 78, 84–97. In the repository, <code>References/</code>; served beside the page as <a href="https://www.marinechronometermodel.com/navships-250-624-1948.pdf">navships-250-624-1948.pdf</a>.</li>
+<li>British Standards Institution, BS 978 Part 2, <i>Specification for fine pitch gears: cycloidal type gears</i> (the tooth proportions the model draws; estimated, not from the manual).</li>
+<li>M. A. Crisfield, <i>Non-linear Finite Element Analysis of Solids and Structures</i>, vol. 1, Wiley (1991), ch. 7: the co-rotational beam element.</li>
+<li>S. P. Timoshenko and J. M. Gere, <i>Mechanics of Materials</i>: the cantilever's deflection with shear (the solver's check).</li>
+<li>E. Phillips, "Mémoire sur le spiral réglant des chronomètres et des montres", <i>Annales des Mines</i> (1861): the terminal curves' conditions.</li>
+<li>L. N. Olson and J. B. Schroder, <i>PyAMG: Algebraic Multigrid Solvers in Python</i> (2018), <a href="https://github.com/pyamg/pyamg">github.com/pyamg/pyamg</a>: the multigrid preconditioner.</li>
+<li>Material ranges (published handbook values, as the tools state them): leaded brass CuZn39Pb3, E 97–110 GPa, expansion 18.7–20.9 × 10⁻⁶/°C, yield 300–450 MPa; hardened carbon steel, expansion 10.8–12.5 × 10⁻⁶/°C; tooth friction 0.10–0.20 (<code>physics.js</code>).</li>
+<li>Jacques Allemann, <i>Nivaflex 45/5 data sheet</i> JAS-014 (2021): composition, E 220 GPa, density 8.50 g/cm³, expansion 11.2 × 10⁻⁶/K, tensile strength over 3000 N/mm², non-magnetic, resistant to seawater: <a href="https://www.jacques-allemann.com/media/cms/Legierungen%20/%20Tech-Sheets/JAS%20-%20Tech%20Sheet%20/%20Werkstoffe/jas-014-werkstoffdatenblatt-nivaflex-45-5-draht.pdf">jacques-allemann.com</a>.</li>
+<li>Vacuumschmelze, <i>Nivaflex 45/18</i> brochure: tensile strength up to 2900 MPa, mainsprings among its uses: <a href="https://www.vacuumschmelze.com/03_Documents/Brochures/Nivaflex_45_18_en.pdf">vacuumschmelze.com</a>.</li>
+<li>Nivaflex (patented 1948, the name registered 1957): <a href="https://www.wikipedia.com/wiki/Nivaflex">Wikipedia</a>; <a href="https://wiki.grail-watch.com/index.php/Straumann,_Reinhard">Grail-Watch wiki, Reinhard Straumann</a>.</li>
+<li>Nivarox (perfected 1933, patented 1935; Fe-Ni-Cr-Be, its thermoelastic coefficient set by alloy and heat treatment) and Glucydur (beryllium bronze for monometallic balances): <a href="https://watchesbysjx.com/2025/08/08">WatchesbySJX, Hairspring Materials and Evolution Part II</a>; <a href="https://vintagewatchstraps.com/blognivarox.php">VintageWatchstraps, Nivarox balance springs</a>; <a href="https://en.wikipedia.org/wiki/Glucydur">Wikipedia, Glucydur</a>; <a href="https://wiki.grail-watch.com/index.php/Glucydur">Grail-Watch wiki, Glucydur</a>.</li>
+<li>Xometry, <i>Beryllium bronze C17200 data sheet</i>: density 8.25 g/cm³, expansion 17 × 10⁻⁶/°C: <a href="https://xometry.asia/wp-content/uploads/2025/07/1774155019-Beryllium-Bronze-Datahseet.pdf">xometry.asia</a>.</li>
+<li>The working model's own README (model of the escapement, the balance's dynamics, "Checked in time", "Estimated, not from the manual") and the report <a href="../real-chronometers/index.html">Does the model behave like a real Hamilton Model 21?</a> (the model against recordings of real Model 21s).</li>
+</ol>
+<p class="small">The scripts' outputs that feed this page are embedded in it, so it opens from the file. Built by <code>build_report.py</code>; do not edit <code>index.html</code> by hand.</p>
+<div class="tip" id="tip"></div>
+</main>
+<script>
+const DATA=/*DATA*/null;
+const NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id),tip=$('tip');
+const el=(n,a={},p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const ticks=(a,b,n)=>{const s=Math.pow(10,Math.floor(Math.log10((b-a)/n))),m=[1,2,5,10].find(k=>(b-a)/(s*k)<=n)*s,o=[];for(let v=Math.ceil(a/m)*m;v<=b+1e-9;v+=m)o.push(+v.toFixed(6));return o;};
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const f=(x,n=2)=>(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n);
+function showTip(chart,html,x,y){tip.innerHTML=html;tip.style.display='block';const r=chart.getBoundingClientRect(),o=tip.offsetParent.getBoundingClientRect();let L=r.left-o.left+x+14,T=r.top-o.top+y-10;
+  tip.style.left=L+'px';tip.style.top=T+'px';const w=tip.offsetWidth;if(r.left+x+14+w>document.documentElement.clientWidth-8)tip.style.left=(L-w-28)+'px';}
+const hide=()=>{tip.style.display='none';};
+const legend=(host,items)=>{const lg=document.createElement('div');lg.className='legend';lg.innerHTML=items.map(([c,t,dot])=>`<span><i class="${dot?'dot':''}" style="background:var(${c})"></i>${t}</span>`).join('');host.appendChild(lg);};
+/* a line chart: x/y domains, series of lines and dots, horizontal bands and references; hover finds the nearest point */
+function chart(id,o){const host=$(id);host.innerHTML='';const W=980,H=o.h||380,m={l:62,r:o.r||130,t:16,b:46};const sx=v=>m.l+(v-o.x[0])/(o.x[1]-o.x[0])*(W-m.l-m.r),sy=v=>H-m.b-(v-o.y[0])/(o.y[1]-o.y[0])*(H-m.t-m.b);
+  if(o.series.length>1)legend(host,o.series.map(s=>[s.c,s.name,s.type==='dots']));
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.label},host);
+  for(const b of o.hbands||[])el('rect',{x:m.l,width:W-m.l-m.r,y:sy(b.y1),height:sy(b.y0)-sy(b.y1),fill:`var(${b.c})`},svg);
+  for(const b of o.vbands||[]){el('rect',{x:sx(b.x0),width:sx(b.x1)-sx(b.x0),y:m.t,height:H-m.b-m.t,fill:`var(${b.c})`},svg);if(b.t)el('text',{x:(sx(b.x0)+sx(b.x1))/2,y:m.t+12,'text-anchor':'middle'},svg).textContent=b.t;}
+  for(const v of ticks(o.y[0],o.y[1],6)){el('line',{x1:m.l,x2:W-m.r,y1:sy(v),y2:sy(v),stroke:'var(--grid)'},svg);el('text',{x:m.l-8,y:sy(v)+4,'text-anchor':'end'},svg).textContent=o.yf?o.yf(v):v;}
+  for(const v of ticks(o.x[0],o.x[1],9)){el('text',{x:sx(v),y:H-m.b+18,'text-anchor':'middle'},svg).textContent=o.xf?o.xf(v):v;}
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,stroke:'var(--muted)'},svg);
+  el('text',{x:(m.l+W-m.r)/2,y:H-6,'text-anchor':'middle'},svg).textContent=o.xl;const yl=el('text',{x:14,y:(m.t+H-m.b)/2,'text-anchor':'middle',transform:`rotate(-90 14 ${(m.t+H-m.b)/2})`},svg);yl.textContent=o.yl;
+  for(const r of o.hrefs||[]){el('line',{x1:m.l,x2:W-m.r,y1:sy(r.y),y2:sy(r.y),stroke:'var(--muted)','stroke-dasharray':'3 4'},svg);el('text',{x:W-m.r+6,y:sy(r.y)+4},svg).textContent=r.t;}
+  const pts=[];
+  for(const s of o.series){
+    if(s.type==='line'){el('polyline',{points:s.data.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' '),fill:'none',stroke:`var(${s.c})`,'stroke-width':2,'stroke-dasharray':s.dash||'','stroke-linejoin':'round'},svg);
+      const q=s.data[s.lab??s.data.length-1];if(s.label&&!o.endLabels)el('text',{x:sx(q[0])+6,y:sy(q[1])+(s.dy||4),style:'fill:var(--ink2);font-size:12px'},svg).textContent=s.label;
+      const step=Math.max(1,Math.floor(s.data.length/400));for(let i=0;i<s.data.length;i+=step){const p=s.data[i];pts.push({x:p[0],y:p[1],tip:s.tip(p)});}}
+    if(s.type==='dots')for(const p of s.data){el('circle',{cx:sx(p[0]),cy:sy(p[1]),r:5,fill:`var(${s.c})`,stroke:'var(--surface)','stroke-width':2},svg);pts.push({x:p[0],y:p[1],tip:s.tip(p)});}}
+  if(o.endLabels){const L=o.series.filter(s=>s.label).map(s=>{const q=s.data[s.data.length-1];return{t:s.label,y:sy(q[1]),x:sx(q[0])};}).sort((a,b)=>a.y-b.y);
+    for(let i=1;i<L.length;i++)if(L[i].y-L[i-1].y<14)L[i].y=L[i-1].y+14;for(const l of L)el('text',{x:l.x+8,y:l.y+4,style:'fill:var(--ink2);font-size:12px'},svg).textContent=l.t;}
+  const hov=el('circle',{r:7,fill:'none',stroke:'var(--ink)','stroke-width':1.5,visibility:'hidden'},svg);
+  svg.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect(),k=W/r.width,X=(ev.clientX-r.left)*k,Y=(ev.clientY-r.top)*k;let b=null,bd=1e9;
+    for(const p of pts){const d=Math.hypot(sx(p.x)-X,sy(p.y)-Y);if(d<bd){bd=d;b=p;}}
+    if(b&&bd<40){hov.setAttribute('cx',sx(b.x));hov.setAttribute('cy',sy(b.y));hov.setAttribute('visibility','visible');showTip(host,b.tip,sx(b.x)/k,sy(b.y)/k);}else{hov.setAttribute('visibility','hidden');hide();}});
+  svg.addEventListener('mouseleave',()=>{hov.setAttribute('visibility','hidden');hide();});}
+/* rows of ranges: each row a bar [lo, hi] and optional marks; hover per row */
+function ranges(id,o){const host=$(id);host.innerHTML='';const W=980,rh=o.rh||40,H=o.rows.length*rh+64,l=o.l||250,r=40,sx=v=>l+(v-o.x[0])/(o.x[1]-o.x[0])*(W-l-r);
+  legend(host,o.legend);const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.label},host);
+  for(const v of ticks(o.x[0],o.x[1],9)){el('line',{x1:sx(v),x2:sx(v),y1:4,y2:H-46,stroke:'var(--grid)'},svg);el('text',{x:sx(v),y:H-28,'text-anchor':'middle'},svg).textContent=v;}
+  if(o.zero!=null)el('line',{x1:sx(o.zero),x2:sx(o.zero),y1:4,y2:H-46,stroke:'var(--muted)','stroke-dasharray':'3 4'},svg);
+  el('text',{x:(l+W-r)/2,y:H-8,'text-anchor':'middle'},svg).textContent=o.xl;
+  o.rows.forEach((R,i)=>{const y=14+i*rh+rh/2;el('text',{x:l-10,y:y+4,'text-anchor':'end',style:'fill:var(--ink);font-size:13px'},svg).textContent=R.name;
+    for(const b of R.bars){el('rect',{x:sx(b[0]),width:Math.max(2,sx(b[1])-sx(b[0])),y:y-(b[3]||8)/2,height:b[3]||8,rx:3,fill:`var(${b[2]})`},svg);}
+    for(const d of R.dots||[])el('circle',{cx:sx(d[0]),cy:y+(d[2]||0),r:5,fill:`var(${d[1]})`,stroke:'var(--surface)','stroke-width':2},svg);
+    const hit=el('rect',{x:0,width:W,y:y-rh/2,height:rh,fill:'transparent'},svg);hit.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect(),k=W/r.width;showTip(host,R.tip,(ev.clientX-r.left),y/k);});hit.addEventListener('mouseleave',hide);});}
+/* a plan of a part: one square a column, coloured by a sequential ramp (blue, light to dark; reversed on the dark surface) */
+const RAMP=['#cde2fb','#b7d3f6','#9ec5f4','#86b6ef','#6da7ec','#5598e7','#3987e5','#2a78d6','#256abf','#1c5cab','#184f95','#104281','#0d366b'];
+function plan(id,o){const host=$(id);host.innerHTML='';const P=o.pts,xs=P.map(p=>p[0]),zs=P.map(p=>p[1]),x0=Math.min(...xs)-1,x1=Math.max(...xs)+1,z0=Math.min(...zs)-1,z1=Math.max(...zs)+1,vmax=Math.max(...P.map(p=>p[2]));
+  const dark=matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark',ramp=dark?RAMP.slice().reverse():RAMP;
+  const col=v=>ramp[Math.min(ramp.length-1,Math.floor(v/vmax*ramp.length))];
+  const lg=document.createElement('div');lg.className='legend';lg.innerHTML=`<span>0 µm <i class="ramp" style="background:linear-gradient(90deg,${ramp.join(',')})"></i> ${f(vmax,3)} µm, in-plane movement</span>`;host.appendChild(lg);
+  const W=980,S=(W-80)/(x1-x0),H=(z1-z0)*S+20,svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.label},host),sx=x=>40+(x-x0)*S,sz=z=>10+(z-z0)*S,g=0.6*S;
+  for(const p of P)el('rect',{x:sx(p[0])-g/2,y:sz(p[1])-g/2,width:g+0.4,height:g+0.4,fill:col(p[2])},svg);
+  for(const m of o.marks||[]){el('circle',{cx:sx(m[0]),cy:sz(m[1]),r:6,fill:'none',stroke:'var(--ink)','stroke-width':1.5},svg);el('text',{x:sx(m[0])+9,y:sz(m[1])+4,style:'fill:var(--ink);font-size:12px'},svg).textContent=m[2];}
+  svg.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect(),k=W/r.width,X=(ev.clientX-r.left)*k,Y=(ev.clientY-r.top)*k;let b=null,bd=1e9;for(const p of P){const d=Math.hypot(sx(p[0])-X,sz(p[1])-Y);if(d<bd){bd=d;b=p;}}
+    if(b&&bd<12)showTip(host,`x ${f(b[0],1)}, z ${f(b[1],1)} mm<br>moves ${f(b[2]*1000,1)} nm`,sx(b[0])/k,sz(b[1])/k);else hide();});svg.addEventListener('mouseleave',hide);}
+const table=(id,head,rows,txt)=>{$(id).innerHTML='<table><tr>'+head.map(h=>`<th>${h}</th>`).join('')+'</tr>'+rows.map(r=>'<tr>'+r.map((c,i)=>`<td${i&&!txt?' class="num"':''}>${c}</td>`).join('')+'</tr>').join('')+'</table>';};   /* txt: a table of text, its cells wrapping */
+const C=['--s1','--s2','--s3','--s4'],short=n=>n.replace(' wheel','').replace(' pinion','');
+function draw(){const D=DATA,G=D.data,FE=D.fea,RT=D.rating;
+  /* tiles */
+  const tp=Math.min(...G.windows.stages.map(w=>w.tp))*1000,fw=FE.cases['fully wound'],maxHole=Math.max(...Object.values(fw.arbors).flatMap(a=>a.um)),maxDepth=Math.max(...Object.values(FE.cases).flatMap(c=>c.depths.map(d=>Math.abs(d.um)))),maxVm=Math.max(...Object.values(fw.parts).map(p=>p.vmmax));
+  $('tiles').innerHTML=[['Gears','Run, no drop',`Every mesh at its drawn centres; the swing ${f(Math.min(...G.days.map(d=>d.amin)),0)}–${f(Math.max(...G.days.map(d=>d.amax)),0)}° through the teeth's ripple.`,'ok'],
+    ['CNC holes',`±${f(tp,0)} µm`,'Aimed at the drawn centres, bored and checked; a hole that errs should err wide.',''],
+    ['Plates and bridges',`${f(maxHole,2)} µm`,`The most a pivot hole moves under load; depths change ${f(maxDepth,3)} µm; stress at most ${f(maxVm,0)} MPa against 300.`,'ok'],
+    ['40–100 °F','In adjustment',`Depths under 0.5 µm, endshake ${f(G.thermal.dC*1000,1)} / ${sg(G.thermal.dH*1000,1)} µm, the escapement's rate a few hundredths of a s/d.`,'ok'],
+    ['Hairspring','Two methods agree',`Its isochronism ${f(G.hair.rates.fe[2]-G.hair.rates.fe[0],2)} s/d over the manual's band, by elements and by the elastica.`,'ok'],
+    ['Made chronometer','Bench and log',`${G.bench.length} bench tests in the build book; the rating trial's tool recovers a known log.`,'mid']].map(([k,v,n,c])=>`<div class="tile"><div class="k">${k}</div><div class="v ${c}">${v}</div><div class="n">${n}</div></div>`).join('');
+  /* 1 */
+  chart('c1',{label:'Torque ratio over a pitch for the four meshes at mu 0.20',x:[0,1],y:[0.86,1.01],endLabels:true,r:110,xl:'fraction of the wheel\'s pitch',yl:'torque ratio (1 = ideal)',hrefs:[{y:1,t:'ideal'}],
+    series:G.meshes.map((M,i)=>({type:'line',name:`${short(M.name)} (${M.zA}:${M.zB})`,c:C[i],data:M.curve.map(p=>[p[0],p[3]]),label:short(M.name).split(' →')[0],
+      tip:p=>`<b>${M.name}</b><br>${f(p[0]*100,0)} % of a pitch: ${f(p[1],4)}`}))});
+  table('t1',['Mesh','teeth','module','µ 0: min–max','µ 0.10: mean (min)','µ 0.20: mean (min)','before the line of centres','backlash','tip clearance','pressure angle'],
+    G.meshes.map(M=>[M.name,`${M.zA}:${M.zB}`,M.m,`${f(M.stats[0].mn,3)}–${f(M.stats[0].mx,3)}`,`${f(M.stats[1].mean,3)} (${f(M.stats[1].mn,3)})`,`${f(M.stats[2].mean,3)} (${f(M.stats[2].mn,3)})`,`${f(M.approach*100,0)} %`,`${f(M.backlash,0)} µm`,`${f(M.tip,0)} µm`,`${f(M.phi,1)}°`]));
+  /* 2 */
+  chart('c2',{label:'Swing over half an hour',x:[0,30],y:[245,272],xl:'minutes',yl:'swing (°)',endLabels:true,hbands:[{y0:247.5,y1:270,c:'--manual'}],
+    series:G.days.map((d,i)=>({type:'line',name:`µ ${d.mu}`,c:C[i],data:d.trace.filter(p=>p[0]<=0.6).map(p=>[(p[0]-d.trace[0][0])*60,p[1]]).filter(p=>p[0]<=30),label:`µ ${d.mu}`,tip:p=>`µ ${d.mu}, ${f(p[0],1)} min<br>swing ${f(p[1],2)}°`}))});
+  $('sixh').textContent=G.days.map(d=>`${f(d.amin,1)}–${f(d.amax,1)}° at µ ${d.mu}`).join(', ');$('wander').textContent=G.days.map(d=>`${f(d.wander*1e6,0)} µs at µ ${d.mu}`).join(' and ');$('tp').textContent=f(tp,0);
+  /* 3 */
+  ranges('c3',{label:'Depthing windows',x:[-80,340],xl:'centre distance against the drawn (µm)',zero:0,legend:[['--manual','the window'],['--s1','the CNC\'s ±(2t + shake)']],
+    rows:G.windows.stages.map(w=>{const t=2*tp+G.windows.SH*1000;return{name:short(w.stage),bars:[[w.lo*1000,w.hi*1000,'--manual',22],[-t,t,'--s1',8]],tip:`<b>${w.stage}</b><br>window ${f(w.lo*1000,0)} to +${f(w.hi*1000,0)} µm<br>its own hole tolerance ±${f(w.tp*1000,1)} µm<br>pressure angle ${w.phi}°`};})});
+  /* 2: temperature */
+  const TH=G.thermal;$('da').textContent=`${f(TH.DA[0]*1e6,1)}–${f(TH.DA[1]*1e6,1)}`;$('esh').textContent=`${f(TH.dC*1000,1)} µm at 40 °F and ${sg(TH.dH*1000,1)} µm at 100 °F`;$('esset').textContent=`${f(TH.ES[0]*1000-TH.dC*1000,0)}–${f(TH.ES[1]*1000-TH.dH*1000,0)}`;
+  table('t2',['','40 °F','100 °F','limit or room'],[
+    ...TH.depth.map(d=>[`${short(d.stage)}: depth`,`${f(d.cold*1000,2)} µm deeper`,`${f(d.hot*1000,2)} µm shallower`,`window ${f(d.lo*1000,0)} / +${f(d.hi*1000,0)} µm`]),
+    ['Endshake over 16.8 mm',`${f(TH.dC*1000,1)} µm`,`${sg(TH.dH*1000,1)} µm`,'25–76 µm (Ops. 15, 69, 74)'],
+    ...['lock','letoff','overall','drop'].map(k=>[`Escapement: ${k==='letoff'?'let-off':k} (°)`,f(TH.esc[0][k],2),f(TH.esc[1][k],2),`${f(TH.m0[k],2)} at 20 °C`]),
+    ['Escapement: its rate',`${sg(TH.esc[0].rate,3)} s/d`,`${sg(TH.esc[1].rate,3)} s/d`,'the timing takes it up'],
+    ['Fusee chain (605 mm)','—',`${f(TH.dl*1000,0)} µm`,`${f(TH.dl/1.7*100,1)} % of a link`]]);
+  /* 3: FEA */
+  chart('c4',{label:'Cantilever check',x:[3,13],y:[-6,1],xl:'bricks through the depth',yl:'error against Timoshenko (%)',hrefs:[{y:0,t:'exact'}],
+    series:[{type:'line',name:'voxel bricks',c:'--s1',data:FE.check.map(c=>[c.depth,c.err*100]),tip:p=>`${p[0]} through the depth: ${f(p[1],1)} %`},{type:'dots',name:'runs',c:'--s1',data:FE.check.map(c=>[c.depth,c.err*100]),tip:p=>`${p[0]} through the depth: ${f(p[1],1)} %`}]});
+  const ARBN={Fu:'fusee',Ba:'barrel',C:'centre',T:'third',F:'fourth',E:'escape'};
+  plan('c5',{label:'Barrel bridge displacement field, fully wound',pts:fw.fields.barrelBridge,marks:[[14.306,-14.519,'fusee'],[-22.144,-5.347,'barrel']]});
+  const cs=Object.keys(FE.cases);
+  ranges('c6',{label:'Pivot hole movements',x:[0,0.5],xl:'pivot hole movement (µm)',l:150,legend:[['--s1','fully wound',1],['--s2','run down',1]],
+    rows:Object.keys(fw.arbors).map(a=>({name:ARBN[a]+' arbor',bars:[],dots:cs.flatMap((c,j)=>FE.cases[c].arbors[a].um.map(u=>[u,j?'--s2':'--s1',j?6:-6])),
+      tip:`<b>${ARBN[a]} arbor</b><br>${cs.map(c=>{const q=FE.cases[c].arbors[a];return`${c}: ${q.parts[0]} ${f(q.um[0],3)} µm, ${q.parts[1]} ${f(q.um[1],3)} µm, leans ${f(q.lean_urad,1)} µrad`;}).join('<br>')}`}))});
+  table('t3',['Part','bricks','brick (mm)','stress, 99.5 % under','stress, most (MPa)'],Object.entries(fw.parts).map(([n,p])=>[n,p.bricks.toLocaleString('en-US'),`${f(p.h,2)} × ${f(p.dy,2)}`,`${f(p.vm995,2)} MPa`,f(p.vmmax,1)])
+    .concat(cs.flatMap(c=>FE.cases[c].depths.map(d=>[`${short(d.stage)}, ${c}: depth change`,'','',`${sg(d.um,3)} µm (coarser ${sg(d.coarse,3)})`,`of ${f(-d.lo,0)} µm close`]))));
+  /* 4: hairspring */
+  const HC=G.hair.curves;$('hn').textContent=G.hair.N-1;$('hiso').textContent=`${f(G.hair.rates.fe[2]-G.hair.rates.fe[0],3)} s/d by elements and ${f(G.hair.rates.el[2]-G.hair.rates.el[0],3)} by the elastica (247.5° to 270°)`;
+  const base=(k)=>{const s=HC.find(c=>c.deg===5);return HC.map(c=>[c.deg,((1+c[k])/(1+s[k])-1)*1e6]);};
+  chart('c7',{label:'Couple departure from linear',x:[-300,300],y:[-5,20],xl:'collet turned (°)',yl:'ppm',h:320,r:90,
+    series:[{type:'line',name:'beam elements',c:'--s1',data:base('fe'),label:'elements',lab:5,dy:-8,tip:p=>`elements ${p[0]}°: ${f(p[1],2)} ppm`},{type:'line',name:'elastica (shooting)',c:'--s2',dash:'6 4',data:base('el'),label:'elastica',dy:14,tip:p=>`elastica ${p[0]}°: ${f(p[1],2)} ppm`}]});
+  chart('c8',{label:'Force on the pivots',x:[-300,300],y:[0,0.004],xl:'collet turned (°)',yl:'force × R / couple',yf:v=>f(v*1000,1)+'e-3',h:320,r:90,
+    series:[{type:'line',name:'beam elements',c:'--s1',data:HC.map(c=>[c.deg,c.feF]),label:'elements',lab:5,dy:-8,tip:p=>`elements ${p[0]}°: ${p[1].toExponential(2)}`},{type:'line',name:'elastica (shooting)',c:'--s2',dash:'6 4',data:HC.map(c=>[c.deg,c.elF]),label:'elastica',dy:14,tip:p=>`elastica ${p[0]}°: ${p[1].toExponential(2)}`}]});
+  /* 5: bench */
+  table('t4',['Test','When','It must read'],G.bench.map(t=>[`<b>${t.title}</b>`,t.when,t.pass]),true);
+  /* 7: deviations */
+  table('t7',['Deviation','Period','Why, and what it changes','Sources'],G.devs.map(d=>[`<b>${d.title}</b>`,d.period,d.why,d.sources.join('; ')]),true);
+  /* 6: rating */
+  const PS=[['I',90],['II',72.5],['III',55],['IV',55],['V',72.5],['VI',90]];
+  chart('c9',{label:'Made-up log',x:[0,60],y:[0,26],xl:'days',yl:'error against the time signal (s)',vbands:PS.map(([n,T],i)=>({x0:i*5,x1:i*5+5,c:i%2?'--band':'--manual',t:`${n} ${T}°`})),
+    series:[{type:'line',name:'error',c:'--s1',data:RT.d.map((d,i)=>[d,RT.e[i]]),tip:p=>`day ${f(p[0],0)}: ${sg(p[1],2)} s`}]});
+  const NM={reg:'Regulation',dev:'Rating',dif:'Largest difference',t1:'90 / 72½ °F',t2:'72½ / 55 °F',t3:'90 / 55 °F',rec:'Recovery'};
+  table('t5',['Navy test figure (s/d)','found','limit'],Object.entries(RT.navy).map(([k,v])=>[NM[k],f(v,2),`${f(RT.limits[k],2)} <span class="${v<=RT.limits[k]?'ok':'no'}">${v<=RT.limits[k]?'pass':'fail'}</span>`]));
+  table('t6',['Carried (2000 voyages)','median','95 %'],Object.entries(RT.project).map(([N,[m,q]])=>[`${N} days`,`${f(m,1)} s (${f(m/4,2)} mi)`,`${f(q,1)} s (${f(q/4,2)} mi)`])
+    .concat([['Fit: rate (made +0.350)',sg(RT.fit.rate,3)+' s/d',''],['Fit: scatter (made 0.042)',f(RT.sig,3)+' s/d',''],['Fit: temperature (made −0.0040)',sg(RT.fit.temp,4)+' s/d/°F','']]));}
+draw();
+const th=$('theme');th.addEventListener('click',()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=dark?'light':'dark';draw();});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+</script>
+</body>
+</html>

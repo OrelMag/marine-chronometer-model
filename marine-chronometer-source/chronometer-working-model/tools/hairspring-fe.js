@@ -61,4 +61,6 @@ chk(Math.abs(fr(270)-fs(270))<1e-3&&fr(270)<5e-3,`at 270° the spring leaves ${f
 const th=out.map(q=>q.th),Ts=out.map(q=>q.T),rate=a=>86400*(1/HSPR.period(th,Ts,a*D).ratio-1),r=[247.5,255,270].map(rate),rs=[H.rates.r1,H.rates.r0,H.rates.r2],dr=Math.max(...r.map((x,i)=>Math.abs(x-rs[i])));
 chk(dr<0.01,`the rate against small swings: 247.5° ${f(r[0])}, 255° ${f(r[1])}, 270° ${f(r[2])} s a day (the elastica ${rs.map(x=>f(x)).join(', ')}): the spring's own isochronism, ${f(r[2]-r[0],2)} s a day over the manual's band, agrees to ${dr.toExponential(1)}`);
 say('what neither method holds: the strip\'s own mass (about a hundredth of the balance\'s inertia, which the timing takes up), its coils touching (they stand apart in the helix), and the elastic coefficient\'s change with temperature, which is measured');
-console.log(rows.join('\n'));process.exit(fail);
+/* for the report (verification/build-verification): both methods' couples against linear and their forces on the pivots, each angle */
+module.exports={rows,fail,N,Ltot,L:H.P.L,curves:out.map(q=>{const s=at(sh,q.th/D);return{deg:Math.round(q.th/D),fe:q.T/(q.th*k0||1),el:s?s.T/(q.th*k0||1):null,feF:q.F*H.R/Math.abs(q.T||1),elF:s?s.F*H.R/Math.abs(s.T||1):null};}).filter(q=>q.deg!==0),rates:{fe:r,el:rs}};
+if(require.main===module){console.log(rows.join('\n'));process.exit(fail);}
