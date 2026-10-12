@@ -1,8 +1,8 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, smoke, invariants, solids, exploded, book, audit
-    python ci.py --quick      # without the browser checks (about 60 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types
-    python ci.py --full       # and the slow checks (about 30 minutes more): dynamics.js in full, tripping.js in full, gearing.js in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, smoke, invariants, massprops, solids, exploded, book, audit
+    python ci.py --quick      # without the browser checks (about 80 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types
+    python ci.py --full       # and the slow checks (about 34 minutes more): dynamics.js in full, tripping.js in full, gimbals.js in full, mainspring_friction.py (the model's strip and the build's Nivaflex), gearing.js in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
 
@@ -73,6 +73,7 @@ STEPS=[('build',build,'quick'),
  ('strength',lambda log:run(['node',TOOLS/'strength.js'],ROOT,log),'quick'),   # every loaded part against its material's range, and the knocks it takes (under a second)
  ('dynamics',lambda log:run(['node',TOOLS/'dynamics.js','--quick'],ROOT,log),'quick'),   # the escapement integrated in time against the averaged model; the detent's return (about 15 s)
  ('tripping',lambda log:run(['node',TOOLS/'tripping.js','--quick'],ROOT,log),'quick'),   # the detent as a frame: its modes, and the frame made rigid running as dynamics.js does (about 10 s)
+ ('gimbals',lambda log:run(['node',TOOLS/'gimbals.js','--quick'],ROOT,log),'quick'),   # the case and ring weighed on the model: their periods and resonance (about 20 s)
  ('errorbudget',lambda log:run(['node',TOOLS/'errorbudget.js'],ROOT,log),'quick'),   # as made (Monte Carlo) and the error carried at sea (about 6 s)
  ('gearing',lambda log:run(['node',TOOLS/'gearing.js','--quick'],ROOT,log),'quick'),   # the train's meshes tooth by tooth at their drawn centres, the swing over hours (about 15 s)
  ('thermal',lambda log:run(['node',TOOLS/'thermal.js'],ROOT,log),'quick'),   # 40-100 °F: the depths, endshake, the escapement (under a second)
@@ -84,6 +85,7 @@ STEPS=[('build',build,'quick'),
  ('types',tsc,'quick'),
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),
  ('invariants',lambda log:run([PY,'invariants.py'],TOOLS,log),'browser'),
+ ('massprops',lambda log:run([PY,'massprops.py'],TOOLS,log),'browser'),   # the case and ring weighed on the model, against gimbals.json (about 30 s)
  ('solids',lambda log:run([PY,'solids.py'],TOOLS,log),'browser'),
  ('exploded',lambda log:run([PY,'exploded.py'],TOOLS,log),'browser'),
  ('book',lambda log:run([PY,'book.py'],TOOLS,log),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
@@ -91,6 +93,9 @@ STEPS=[('build',build,'quick'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)
+ ('mainspring-friction',lambda log:run([PY,'mainspring_friction.py','--check'],TOOLS,log),'full'),   # the mainspring's coil friction, against mainspring_friction.json (about a minute)
+ ('mainspring-friction-nivaflex',lambda log:run([PY,'mainspring_friction.py','--nivaflex','--check'],TOOLS,log),'full'),   # the same for the build's Nivaflex strip (mainspring_t0.386.js), against mainspring_friction_t0.386.json (about a minute)
+ ('gimbals-full',lambda log:run(['node',TOOLS/'gimbals.js'],ROOT,log),'full'),   # and the seas, the stops, what reaches the escapement (about 2½ minutes)
  ('gearing-full',lambda log:run(['node',TOOLS/'gearing.js'],ROOT,log),'full'),   # and each mesh's depthing window, the holes' tolerance, against gearing.json (about 2 minutes)
  ('fea',lambda log:run([PY,'fea.py'],TOOLS,log),'full'),   # finite elements on the plates and bridges: the pivots' holes under the chain's and teeth's loads, against the depths' windows (about 3 minutes)
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),

@@ -2229,6 +2229,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The mainspring's room to coil-bound read a quarter turn short.** `bench.js` took it as the last state in the
+  quarter-turn table (`js/mainspring.js`, 19.0) less full wind, 0.13 turn, and the build book's mainspring test and
+  the report said so; the coils are solid only past 19.20 (`mainspring.py --bound`, the states past the table's last
+  solved warm to 0.05 turn), 0.33 turn. `bench.js` now reads `mainspring_friction.json`'s `room`, from
+  `mainspring_bound.json`. The friction figures were right (they come from the solved states either side of full wind).
+  Keep: a limit found where a sampled table stops is a bound to its step, not the limit; solve it finer before quoting it. `8d3f5ce`
 - **The mainspring's maker's sheet measured only its anchor pin** (0.5 × 0.6 × 0.65 mm): its coils
   are built only when they can be seen, so the sheet, drawing and book had none. `R.springReady`
   builds it fully wound for the maker, as it does the hairspring. `7848915`
