@@ -6,7 +6,7 @@ Handoff for the next session (updated 12 October 2026, after the tripping, gimba
 
 ## The goal (the user's, 12 October 2026)
 
-The user wants a **real, working marine chronometer** made from the model, not historical parity with the Hamilton Model 21.
+The model should describe a **real, working marine chronometer** that could be made from it, not only historical parity with the Hamilton Model 21. **The user has no physical chronometer and never will** (neither an original nor one built from the model; CLAUDE.md): never ask them for measurements or equipment; the build's tools are guidance for any maker, and what only a made chronometer could settle stays an estimate.
 - **Manufacture:** CNC and 3D printing.
 - **Accuracy:** good enough to navigate by: a steady rate of a second or two a day. Navy test-card class isn't required.
 - **Deviations:** allowed when they help, with 1950s–60s technology only. Tell the user about each, and show it on the part's card with a way back to the original (`deviations.js`; the 3D model stays the Model 21).
@@ -36,20 +36,18 @@ For the Model 21 itself the source of truth is unchanged: the manual, photograph
 
 ## Decisions waiting on the user
 
-1. **Test equipment.** Still unanswered: what do they have (torque gauge, vibrating tool, timegrapher, microscope, temperature box; a phone now covers the detent's ring test)? It decides which jigs to make.
-2. **The mainspring's room.** The coil-friction finding conflicts with real Model 21s swinging in the band fully wound, so either the real spring has more room (its thickness is OPEN-QUESTIONS.md 1) or the friction model overstates pressure near coil-bound. Changing the model's spring (length, thickness) is a model change: show the evidence and let the user decide. Do the Nivaflex re-solve (next steps, 1) first.
-3. **Release.** Suggest a minor release with lines for visitors (the bench's new tests on the cards and in the build book); deploy only on the user's word.
+1. **The mainspring's room.** The coil-friction finding conflicts with real Model 21s swinging in the band fully wound, so either the real spring has more room (its thickness is OPEN-QUESTIONS.md 1) or the friction model overstates pressure near coil-bound. Changing the model's spring (length, thickness) is a model change: show the evidence and let the user decide. Do the Nivaflex re-solve (next steps, 1) first; settle it from sources (videos of real springs, literature on mainspring room), never by asking the user to measure.
+2. **Release.** Suggest a minor release with lines for visitors (the bench's new tests on the cards and in the build book); deploy only on the user's word.
 
 ## What to do next, in order
 
 1. **Re-solve the spring for the build's Nivaflex strip** (0.386 mm, `deviations.json`) to see its room to coil-bound. `mainspring.py` takes the strip's thickness as a constant `t` at its top; it runs about 20 min on 14 processes and writes `js/mainspring.js`, which the page draws from, so **don't overwrite the model's** `MSHAPE`: run it on a copy or add an option that writes elsewhere, then point `mainspring_friction.py` at it. Report the room and the fusee's running output at full wind.
 2. **Rate while the temperature changes** (simulation item 4). The thin hairspring warms faster than the balance rim, so even a compensated pair runs off-rate during a change: heat flow through box, case, movement, balance and spring over a ship's day-night cycle; the error a navigator carries; how the Glucydur/Nivarox pair copes. Materials' thermal figures from data sheets, cited (never from memory). New tool, a report section 11.
 3. **Which estimates matter most** (simulation item 5): push every estimate (tooth form and friction, the springs' sections, the detent's damping and the contacts' restitution, materials, the spring's room) through `dynamics.js` and a voyage (`errorbudget.js`), ranked by effect on the rate: which bench measurements to make first.
-4. **Jigs**, once the equipment is known: a torque lever for the barrel arbor's square and the fusee arbor, a barrel holder, a degree card for the escapement's angles, a stand for vibrating the balance, a clamp for the detent's foot (the ring test). Measure every seat on the model first (`holes.py`, `isolate.py`); STL through `MAKER.stl` or a small tool; add each to the build book's tests chapter.
-5. **The "as made" Monte Carlo with CNC tolerances** in `errorbudget.js`: hole positions ±13 µm (`gearing.json`), turned diameters ±5 µm; ask the user what their machine holds.
+4. **Jigs**, as guidance for any maker (the user has no chronometer; don't ask about equipment): a torque lever for the barrel arbor's square and the fusee arbor, a barrel holder, a degree card for the escapement's angles, a stand for vibrating the balance, a clamp for the detent's foot (the ring test). Measure every seat on the model first (`holes.py`, `isolate.py`); STL through `MAKER.stl` or a small tool; add each to the build book's tests chapter.
+5. **The "as made" Monte Carlo with CNC tolerances** in `errorbudget.js`: hole positions ±13 µm (`gearing.json`), turned diameters ±5 µm, a typical CNC's from published figures.
 6. **Carry the deviations into the physics tools:** `strength.js` and `tolerances.js` still judge the steel mainspring (add Nivaflex from `deviations.json`); `physics.js` A5 should report the Glucydur/Nivarox requirement beside the Model 21's.
 7. **Lower priority:** the arbors' own bending (`fea.py` takes them rigid; the fusee arbor carries up to 59 N); Archard wear on the fusee/centre mesh; the fusee chain's link-by-link ripple; oil friction with speed and temperature; the hairspring as a 3D helix with mass.
-8. **When the user brings measurements:** `benchcheck.py MEAS.json`, `rating.py LOG.csv`, `acoustic.py PATH`, `benchcheck.py --ring FILE`. Measured values replace their estimates (in `deviations.js`/`bench.js`, noted in the README's "Estimated, not from the manual"), then rebuild the report.
 
 ## How to work
 
