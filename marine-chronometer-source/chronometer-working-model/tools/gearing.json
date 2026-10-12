@@ -1,0 +1,30 @@
+{
+ "note": "tools/gearing.js: each mesh's depthing window about its drawn centres (mm), the window's middle, and the hole position tolerance (mm) for it; read by thermal.js and fea.py",
+ "SH": 0.01,
+ "stages": [
+  {
+   "stage": "fusee wheel → centre pinion",
+   "lo": -0.057881249999999995,
+   "hi": 0.17226562500000003,
+   "tp": 0.023940624999999997
+  },
+  {
+   "stage": "centre wheel → third pinion",
+   "lo": -0.048675,
+   "hi": 0.3245,
+   "tp": 0.0193375
+  },
+  {
+   "stage": "third wheel → fourth pinion",
+   "lo": -0.037649999999999996,
+   "hi": 0.251,
+   "tp": 0.013824999999999997
+  },
+  {
+   "stage": "fourth wheel → escape pinion",
+   "lo": -0.036855,
+   "hi": 0.2457,
+   "tp": 0.013427499999999998
+  }
+ ]
+}
