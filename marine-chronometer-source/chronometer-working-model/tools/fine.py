@@ -35,7 +35,7 @@ EXPECTED={
  ('spr:Box','spr:Buffer'):("the hairspring's upper end in the stud's clamp: the designed strip (0.23 x 0.221) runs from the clamp's step along the bar toward its end, lying in its slot (until 4 October 2026 a round wire entering it 35 deg off the bar, 0.071 mm3)",0.07,0.3),
  ('bal:Buffer','spr:Buffer'):("the hairspring's inner end held in the collet's clamp (its straight lead along the collet's end face, HS_LEAD, under the clamp's jaw)",0.005,0.3),
  # bevelled hole: polyGeo's bevel narrows the train bridge's holes near one face, and this pin nearly fills its hole (inside the bridge, not visible)
- ('barrel:Buffer(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end (the core r 4.84 and 15 tall, about 1,100 mm3, since 12 October 2026: the videos' core; 142 on r 1.74)",1200,16.5),
+ ('barrel:Buffer(drum)','ratchet:Cylinder'):("barrel arbor and its core, on the barrel's axis: it carries the barrel and the mainspring's inner end (the core r 4.84 and 15 tall, 1,057 mm3, since 12 October 2026: the videos' core; 142 on r 1.74)",1200,16.5),
  ('barrel:Buffer(drum)','chain:Cylinder'):("the chain's hook: its nose through the hole in the barrel's wall (Figs. 17, 75); the wall is tested as the drum it encloses, so the nose counts as inside it; since 5 October 2026 to the middle of the measured 1.95 wall",0.25,0.6),
  ('barrel:Buffer(drum)','barrel:Lathe'):("the barrel cap's five screws, threaded into the lip inside the barrel's rim",0.03,0.45),
  ('barrel:Buffer(drum)','ratchet:Box'):("the barrel arbor's hook for the mainspring's inner end, inside the barrel",1.2,2.5),

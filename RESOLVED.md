@@ -935,6 +935,21 @@ Contents:
   wind, a run down that no chronometer does. With *From run down* unticked it now says the
   chronometer is already fully wound (less than a tenth of a half turn to go); ticked, the
   walkthrough still starts from run down, as asked. `240a80a`
+- **The mainspring the parts list's 0.419 mm on an estimated core r 1.74, against the videos' coils and core**
+  (OPEN-QUESTIONS.md 1, the owner's decision of 12 October 2026). The coils' pitch read round the whole turn on
+  KLUwI2UUCMQ's let-down spring (1/41.0-1/41.8 of the measured barrel's inside radius, 15:54, 33:06) puts the strip at
+  most 0.394 mm in the measured barrel, its L/t about 2,700; the core reads r 4.8-5.7 on two 1941 movements (33:20.5,
+  33:06, TN24H 0:16), on which the parts list's strip is coil-bound short of the fusee's turns. Now the strip 0.394 ×
+  1,064 on the core r 4.9 (`MSPRING`, `tools/mainspring.py`), the eye as 15:54 reads it (7.2 × 5.2, 2.2 off the end)
+  with the hook against its end; re-solved: slack 13.25 turns, set up 1.01 (Op. 53: about one), fully wound 18.87,
+  coil-bound past 19.0; `write()` leaves out states past coil-bound. Keep: `MSPRING`, `mainspring.py`'s constants and
+  `fine.py`'s `CORE` together; the set-up from the fusee's rule (`fs.MS`), not a number; the parts list's 0.0165 in
+  stays named as the open conflict wherever the thickness is stated. `8e95032`
+- **The catch when the key let go foretold at the wrong drive** (maintaining.py, 12 October 2026). `R.release` reloaded
+  the sustaining spring to the drive at the fusee's turns before the catch, `update()` to the drive at the turns after
+  it (the catch's hours spent), so in the run-down taper it foretold the catch up to 0.02° long, past `maintaining.py`'s
+  2e-4 rad once the new mainspring's pull moved it. It now finds the catch at the drive where its hours leave the fusee.
+  Keep: `R.release` and `update()`'s let-go take the drive at the same turns. `9fa5f35`
 
 ## Plates, bridges, screws and arbors
 
@@ -1789,6 +1804,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   bar's top face 1.7 inside, and the spring's upper end is 2.65 mm from the
   staff. Keep the clamp at the bar's end (`SP_E`, `SP_ST`, `SP_CL` in
   `movement.js`, `HS_R` computed from them, `essay.js`'s `HS` to match). `e37f857`
+- **The balance's damping rested on an endstone friction worked out ten to twenty times too large, and `TF` 52 s on
+  the parts list's spring** (OPEN-QUESTIONS.md, "The balance's free run-down", 12 October 2026). physics.js gave the
+  staff's flat end on its endstone 49-53 % of the loss at 255° (μ 0.10-0.15 across its whole face, Q 378-793); a real
+  Model 21's small free swings (BunnSpecial's No. 2182, `Jd2c3x8VKsE` 14:04 and 16:10) fall in a straight line at
+  0.16-0.238° a second, a constant torque k c T / 4 of 32-47 nN·m, Q 6,760-10,050, 4-6 % of the loss. Now the
+  measured friction (the parts' Q 406-712, 65-113 s), and with the videos' mainspring (0.78 N·m fully wound, 0.83 of the
+  old) `TF` 68 s (Q 427), so the calibrated torque, 62.6 µN·m, is the new spring's through the same train and losses
+  as the old calibration took; the overlap of the parts' Q with the budget counts the mainspring's own losses (278-463),
+  without which the parts would swing a loss-free spring's balance past 1½ turns. Keep: physics.js's endstone term
+  from the measured swings, not a μ; `TF` re-derived whenever the mainspring's stiffness changes; the essay's
+  `data-phys` figures physics.js's. `6a918d8`
 
 ## Rate panel
 
