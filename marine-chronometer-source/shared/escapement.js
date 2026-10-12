@@ -17,8 +17,11 @@ function makeEsc(o={}){
   const TAU=Math.PI*2,D2R=Math.PI/180,ES=13.16/2;
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side at the model's settings (ESC.A, the running amplitude, follows other settings: below).
      TF: the balance's free run-down (s), set so the escape wheel's torque the model is calibrated at is what the train gives (tools/physics.js A6: the fusee through the
-     measured pivots and teeth, less the mainspring's own losses) and inside the decay the balance's parts allow (the same, 32-62 s); 34 until 11 October 2026, when the
-     escapement's work still left out the wheel's chase and the detent's whole lift (tools/dynamics.js). MU: steel on sapphire. EX: the centre distance (9.40 mm; the model passes the one in its L).
+     measured pivots and teeth, less the mainspring's own losses) and inside the decay the balance's parts allow (the same, 65-113 s with the endstone's friction measured
+     on BunnSpecial's Jd2c3x8VKsE, 12 October 2026). 68 since 12 October 2026, when the mainspring became the videos' 0.394 mm strip (its torque 0.83 of the parts list's
+     0.419): the calibrated torque, 62.6 µN·m, is within 0.4 % of what that spring gives the escape
+     wheel through the same train and losses as 52 s took for the old one (62.4 µN·m against 75.0: 0.611 of the fusee's torque reaching the escape wheel); 52 until then, and 34 until 11 October 2026, when the escapement's work still left out the wheel's chase and the detent's whole lift
+     (tools/dynamics.js). MU: steel on sapphire. EX: the centre distance (9.40 mm; the model passes the one in its L).
      The bodies and springs, physical rather than fitted (since 11 October 2026; fD and fP, their shares of the work, were fitted before): I, the balance (g·mm², Table II);
      JW, the escape wheel and arbor (4.80 g·mm², its drawn solid: tools/physics.js) with the fourth wheel's inertia reflected through its pinion (about 1.1, estimated: tools/dynamics.js; 6.2 with 1.4 until 12 October 2026, the fourth larger at the escape arbor's old place);
      W78, Op. 78's weight (g): hung on the locking jewel it just parts the detent spring from its stop button, so that is the spring's preload; hD, the detent spring's two
@@ -38,7 +41,7 @@ function makeEsc(o={}){
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:52,MU:0.15,
+  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:68,MU:0.15,
     I:578.5,JW:5.9,W78:0.770,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
