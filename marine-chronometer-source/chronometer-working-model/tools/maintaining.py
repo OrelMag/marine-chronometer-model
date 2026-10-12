@@ -68,7 +68,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
      const u=R.wp[0].userData,ql=toWheel(u.q,[0,0],psi),dp=deep(u.pts,ql,R.wp[0].rotation.y-psi,FPR);info.wdeep=Math.min(info.wdeep??9,dp);if(dp<WD)fail('engage',`${at}: winding pawls only ${dp.toFixed(3)} mm into the teeth in running`);}
    for(const pw of R.wp){const ql=toWheel(pw.userData.q,[0,0],psi),dp=gap(pw.userData.pts,ql,pw.rotation.y-psi,FPR);if(dp<-0.01||dp>0.02)fail('pawl',`${at}: winding pawl ${dp.toFixed(3)} mm from its teeth`);}
    { const q=toWheel([R.spawl.position.x-L.Fu[0],R.spawl.position.z-L.Fu[1]],[0,0],sr),dp=gap(R.spawl.userData.pts,q,R.spawl.rotation.y-sr,SRP);if(dp<-0.01||dp>0.02)fail('pawl',`${at}: sustaining pawl ${dp.toFixed(3)} mm from its teeth`);
-     if(cur.held){const dd=deep(R.spawl.userData.pts,q,R.spawl.rotation.y-sr,SRP);info.sdeep=[Math.min(info.sdeep?.[0]??9,dd),Math.max(info.sdeep?.[1]??0,dd)];} }
+     if(cur.held&&d<SMAX-1e-6){const dd=deep(R.spawl.userData.pts,q,R.spawl.rotation.y-sr,SRP);info.sdeep=[Math.min(info.sdeep?.[0]??9,dd),Math.max(info.sdeep?.[1]??0,dd)];} }   /* the hold's depth where the spring pushes on it: a spent spring (run down) leaves the pawl resting anywhere on a tooth's back */
    if(!w){epsR=[Math.min(epsR[0],R.eps),Math.max(epsR[1],R.eps)];}
    cur.rel=w?R.release():null;prev=cur;return cur;}
  const run=(frames,dE)=>{for(let i=0;i<frames;i++){st.E+=dE;st.n=Math.min(FUSEE_TURNS,st.n+dE/TPH*NPH);st.spent=st.n>=FUSEE_TURNS;frame(false,'running');}};
@@ -79,6 +79,12 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  st.n=0.5;frame(true,'winding start');bar.push(['half a turn before full wind',barGap()]);wind(0,0.02);bar.push(['full wind again',barGap()]);
  letGo();run(1,5);bar.push(['let go at full wind',barGap()]);run(30,29);
  st.n+=2.3;frame(false,'slider');run(20,7);wind(4,0.043);letGo();run(20,3);wind(3.9,0.011);letGo();run(20,13);st.n-=1.1;frame(false,'slider');run(10,5);
+ /* set and wound in one frame, as the page's From run down does (the wind jumped to run down, the key turning from that frame): the ratchet goes back with the fusee
+    (the 'lift' check) and its pawl holds it within a tooth of its turn back; until 12 October 2026 it stood while the fusee turned back most of a turn */
+ { run(20,9);const sr0=R.sr.rotation.y;st.n=FUSEE_TURNS;st.spent=true;frame(true,'winding start');const f0=R.fs.g.rotation.y+R.fs.fz.rotation.y;let back=null;
+   while(st.n>FUSEE_TURNS-0.3){st.n-=0.004;st.spent=false;st.E+=0.07;frame(true,'winding');if(R.held&&back===null)back=f0-(R.fs.g.rotation.y+R.fs.fz.rotation.y);}
+   info.setWind={back:back===null?null:back*D,fall:(sr0-R.sr.rotation.y)*D};if(back===null||back>SRP.p+0.004*TAU+1e-9)fail('set wind',`wound from a set: the sustaining pawl held the ratchet ${back===null?'never':'only after the fusee turned back '+(back*D).toFixed(2)+' deg'} (a tooth is ${(SRP.p*D).toFixed(2)})`);
+   letGo();run(5,10); }
  /* the key let go with nothing moved: no tooth taken */
  { run(3,9);frame(true,'winding');letGo();const c0=catches.length;run(1,0.001);const c=catches[c0];if(c!==undefined&&c>FPR.p/2)fail('catch',`let go with nothing moved: the fusee turned ${(c*D).toFixed(2)} deg (a tooth is ${(FPR.p*D).toFixed(0)})`); }
  /* the hands set: the train jumps forward and back, running and while winding (the loop's reset) */
@@ -120,6 +126,7 @@ async def main():
     print(f"winding pawls into the teeth in running: at least {i.get('wdeep',0):.3f} mm; sustaining pawl holding {i.get('sdeep',[0,0])[0]:.3f}-{i.get('sdeep',[0,0])[1]:.3f} mm")
     print(f"eps over 40 partial winds: {i['eps'][0]:.2f} to {i['eps'][1]:.2f} deg")
     print(f"run down: spring relaxed {i['runDown']['spring']:.2f} deg, the fusee's drive {i['runDown']['drive']:.3f}, held {i['runDown']['held']} of 121 frames")
+    sw=i['setWind'];print(f"wound from a set (From run down): the pawl holds after the fusee turns back {sw['back']:.2f} deg, the ratchet falling {sw['fall']:.2f} deg" if sw['back'] is not None else "wound from a set: the pawl never held")
     print(f"run down at once: the spring's push {i['sudden']['push0']:.3f} then {i['sudden']['push1']:.3f} (held {i['sudden']['held']})")
     for f in r['fails']:print('FAIL',f)
     for t,c in r['cnt'].items():print(f"{c:5d} frames failed '{t}'")
