@@ -16,6 +16,7 @@ hour), and when the key lets go adds the catch's hours (R.release) as app.js doe
   - run down: the drive tapers and the spring relaxes with it; suddenly run down (the slider), the spring drives the train alone, the fusee standing;
   - the winding and sustaining pawls rest on their teeth, not in them (the gap measured with the teeth's tips against the pawls' edges);
   - winding to the stop, the stop-bar meets the winding stop at full wind and is clear of it half a turn earlier.
+  - the fusee swept from full wind to run down, the stop-bar (bar, nose, tab) passes the winding stop more than the manual's widest endshake clear (0.1 mm).
 Exit code 1 on any failure."""
 import asyncio,json,pathlib,sys
 from playwright.async_api import async_playwright
@@ -35,8 +36,12 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  /* how far into the teeth a pawl reaches: below the tips, at its nearest point to the wheel's centre */
  const deep=(pts,q,th,pr)=>{const c=Math.cos(th),sn=Math.sin(th);let m=1e9;for(const[x,z]of dense(pts))m=Math.min(m,Math.hypot(q[0]+x*c+z*sn,q[1]-x*sn+z*c));return pr.ro-m;};
  const stud=[];mv.traverse(o=>{if(o.userData.wstop&&o.geometry&&o.geometry.parameters&&o.geometry.parameters.radiusTop)stud.push(o);});
- const barGap=()=>{mv.updateMatrixWorld(true);const bar=R.fs.stopBar.children[0],p=bar.geometry.parameters,inv=bar.matrixWorld.clone().invert(),s=stud[0],c=new THREE.Vector3();s.getWorldPosition(c);c.applyMatrix4(inv);
-   const dx=Math.max(0,Math.abs(c.x)-p.width/2),dz=Math.max(0,Math.abs(c.z)-p.depth/2);return Math.hypot(dx,dz)-s.geometry.parameters.radiusTop;};
+ /* the stop-bar's meshes (its halves) sampled over their triangles in the bar's frame, against the stud's cylinder: the least distance, negative inside */
+ const SB=R.fs.stopBar,SBP=[];{mv.updateMatrixWorld(true);const bi=SB.matrixWorld.clone().invert();SB.traverse(o=>{if(!o.isMesh)return;const g=o.geometry,ps=g.attributes.position,ix=g.index,nT=(ix?ix.count:ps.count)/3,m=bi.clone().multiply(o.matrixWorld),v=i=>new THREE.Vector3().fromBufferAttribute(ps,ix?ix.getX(i):i).applyMatrix4(m);
+   for(let t=0;t<nT;t++){const a=v(3*t),b=v(3*t+1),c=v(3*t+2);for(let i=0;i<=8;i++)for(let j=0;j<=8-i;j++)SBP.push(a.clone().multiplyScalar(1-(i+j)/8).addScaledVector(b,i/8).addScaledVector(c,j/8));}});}
+ const barDist=()=>{mv.updateMatrixWorld(true);const S=stud[0],sr=S.geometry.parameters.radiusTop,sh=S.geometry.parameters.height,M=new THREE.Matrix4().copy(S.matrixWorld).invert().multiply(SB.matrixWorld),q=new THREE.Vector3();let g=1e9,how='';
+   for(const p of SBP){q.copy(p).applyMatrix4(M);const rr=Math.hypot(q.x,q.z)-sr,dy=Math.abs(q.y)-sh/2,d=dy>0?Math.hypot(Math.max(rr,0),dy):rr;if(d<g){g=d;how=dy>0&&rr<0?'along the arbor':dy>0?'round the end edge':'radially';}}return{g,how};};
+ const barGap=()=>barDist().g;
  const mod=(x,p)=>{const r=((x%p)+p)%p;return Math.min(r,p-r);};
  let catches=[],epsR=[1e9,-1e9];
  function frame(w,tag){const s=ESC.state(0.4);mv.userData._u({E:st.E+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n:st.n,winding:w,spent:st.spent,reset:st.reset,springOn:false,msOn:false});k++;st.reset=false;
@@ -93,6 +98,12 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
    st.spent=false;wind(FUSEE_TURNS-0.5,0.03);letGo();run(5,10); }
  const gOK=[bar[0][1]>=-0.02&&bar[0][1]<=0.02,bar[1][1]>0.02,bar[2][1]>=-0.02&&bar[2][1]<=0.02,bar[3][1]>=-0.02];
  bar.forEach(([t,g],i)=>{if(!gOK[i])fail('stop',`${t}: stop-bar ${g.toFixed(3)} mm from the winding stop`);});
+ /* the stop-bar's passes: the fusee swept from full wind to run down, every 0.002 turn; the bar, nose and tab (their triangles sampled, in the bar's frame) against the
+    stud. Past the approach to full wind (n 0.01 on) nothing may come within ESH of it: the manual's widest endshake, 0.003 in (Ops. 15, 69), with 0.024 to spare, since
+    the fusee is drawn at one end of its shake and dial up sits at the other, toward the stud (Review-results.md, "The winding stop-bar's function") */
+ { const ESH=0.1;let worst={gap:1e9,n:0,how:''};
+   for(let n=0.01;n<=FUSEE_TURNS+1e-9;n+=0.002){R.fs.setWind(n,0);const d=barDist();if(d.g<worst.gap)worst={gap:d.g,n,how:d.how};}
+   info.pass=worst;if(!(worst.gap>ESH))fail('stop pass',`the stop-bar passes the winding stop ${worst.gap.toFixed(3)} mm clear (${worst.how}) at ${worst.n.toFixed(3)} turns from full wind; want more than ${ESH}`); }
  info.catches=catches.length;return JSON.stringify({frames:k,fails,cnt,bar,SMAX:SMAX*D,info});})()"""
 async def main():
     async with async_playwright() as p:
@@ -104,6 +115,7 @@ async def main():
     i=r['info']
     print(f"{r['frames']} frames; spring travel {r['SMAX']:.1f} deg; {i['catches']} catches")
     for t,g in r['bar']:print(f"stop-bar to winding stop, {t}: {g:.3f} mm")
+    print(f"stop-bar passing the winding stop, full wind to run down: at least {i['pass']['gap']:.3f} mm ({i['pass']['how']}, {i['pass']['n']:.3f} turns from full wind)")
     print(f"winding pawls into the teeth in running: at least {i.get('wdeep',0):.3f} mm; sustaining pawl holding {i.get('sdeep',[0,0])[0]:.3f}-{i.get('sdeep',[0,0])[1]:.3f} mm")
     print(f"eps over 40 partial winds: {i['eps'][0]:.2f} to {i['eps'][1]:.2f} deg")
     print(f"run down: spring relaxed {i['runDown']['spring']:.2f} deg, the fusee's drive {i['runDown']['drive']:.3f}, held {i['runDown']['held']} of 121 frames")

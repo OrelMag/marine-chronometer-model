@@ -514,6 +514,29 @@ Contents:
 
 ## Winding and maintaining work
 
+- **Stop-bar and winding stop drawn from estimates: the stud in the wrong place and too small, the bar too narrow, square-ended, on
+  the wrong side, pushed by a nose no source shows.** Measured on KLUwI2UUCMQ (OPEN-QUESTIONS.md, model README "Estimated"): the
+  stud 2.3 across and 5.5 long with three grooves across its end, its base 11.6 mm from the fusee's axis, about 108 deg round from
+  where it was (an estimate radially out from the plate's centre, r 0.9, 3.2 long); the bar 15.0 x 1.8, both ends slanted the same
+  way, 0.7 thick at its stop end and 1.1 at its chain end, on the side of the arbor where, winding counterclockwise from the key's
+  end, the stop end leads with the corner that stands out (it was 14.6 x 1.0 x 0.45 with an estimated nose hanging into the groove);
+  the spring a wire C round the collar hooked into the bar (it was in a groove round the hub, on a tab). The motion now follows the
+  measured parts: the chain pushes the chain end in 1.97 mm, the bar's turn is solved so its stop end's corner first touches the stud
+  at full wind (0.47 mm into its path), every other pass 0.6 mm or more clear. The fusee's top carries the slot: the recess 1.44
+  deep, the slot under the chain half to the slot's floor and out through the rim, no turned flange over the top turn (a lathe can't
+  take a straight slot: carving it radially or folding the flange onto the floor left material in the bar and a double sheet that
+  `fine.py` read as solid). Keep: `fs.stud` is the measured place (`WSP`), not a function of the bar; the bar's ends and sides as the
+  frames show them (which end is which from 25:40 and 26:05-26:23); `tools/maintaining.py` must pass, its sweep included; the groove's phase (`phi0`, `rotT`: `MG`) fixed, not taken from the bar (taken from it, the redrawn bar turned the groove 0.003 rad and moved the fusee's torque past `invariants.py`'s 0.0002). `f196703`
+
+- **The stop-bar's nose passed under the winding stop with only the fusee's endshake to spare.** On every turn but the last,
+  with the bar back, its nose stands out past the fusee's rim and passed 0.05 mm under the stud's end (−20.40 against −20.45):
+  the whole drawn endshake (the collar 0.05 under the barrel bridge's bushing), which dial up the fusee's weight takes toward the
+  stud, so at the manual's widest (0.003 in, 0.076 mm) the nose would meet the stud's side and stop the key a turn or more early.
+  The stud now ends at −20.60, 0.20 mm over the nose, still covering 0.375 of the bar's 0.45 mm. Found by sweeping the fusee
+  from full wind to run down every 0.001 turn; `tools/maintaining.py` now does so (every 0.002 turn) and fails on any pass of the
+  bar, nose or tab within 0.1 mm of the stud. Keep: what passes the winding stop clears it by more than the fusee's widest
+  endshake. `ba2bd04` (The stud and bar were then measured and redrawn, the entry above; the nose is gone.)
+
 - **The chain counted its links afresh every frame.** `setWind` laid as many whole pitches as fit along the pitch line, a
   polyline sampled in 0.01-turn steps whose length is constant only to its sampling; with the measured mainspring core (12 October
   2026) that length sat within a few hundredths of a whole number of pitches, so a link came and went as the chain moved and the
