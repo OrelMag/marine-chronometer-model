@@ -1293,6 +1293,26 @@ changes it only round its own arbors (1 below).
    on 14. A top-view reading (13:44) of two 5 mm lobes is withdrawn: its
    four-point fit had the handedness of a dial-side view, which a train-side
    frame can't have (VIDEOS.md, "Which part is which").
+26. **Against a photograph** (new, 12 October 2026). A close phone photograph
+   of a Model 21's upper train bridge underside up with the lower bridge on it
+   (`References/photo-lower-bridge-underside.jpg`), its camera fitted on the
+   train bridge (rim 0.07 mm rms, barrel cut 0.23, f about 970 px, fixed by the
+   3 o'clock lug's screw head; `tools/anchors/photo_lower_bridge*.json`) and the
+   model drawn through it. Confirmed: the arrangement (1-5), the two lug
+   screws (0.7 and 1.1 mm from the model's) and the train-blocking screw's
+   threaded hole in the slab (5.8-6.7 mm from the fourth's setting, the
+   model's bearing within 5°; 7). The slab's outline agrees with 13:49.5's to
+   1.2-1.4 mm rms, but only at a slab height of 4-6 mm off the train bridge's
+   underside, where the cap's counterbore comes out 8.6-9.2 mm across (model
+   8.6) and the cap 10.6-11.0 mm from the fourth's setting (13:49.5: 11.0); at
+   the model's 8.9 they come out 7.4-8.0 and 9.2. The photograph's parallax
+   can't be trusted for heights over the side views' 7.4-8.4 (4), so the slab
+   stays; its height is in `OPEN-QUESTIONS.md`. The rest of the outline's
+   differences (1-2.5 mm: a straight edge past the far screw where 13:49.5 has
+   a corner, the settings 2 mm toward the fourth's end) are within the
+   photograph's reach, and the model's own departures (the bulges round its
+   arbors, the third arbor's slot, the train-blocking screw's column) are 1
+   and 14's. No change.
 
 ### The train-blocking screw (42247)
 
@@ -1969,6 +1989,21 @@ changes it only round its own arbors (1 below).
     screws stand too high (Fig. 4 draws the hub; no frame shows it side-on yet); the wire's section (the video shows flat ribbons, the model
     draws it round); and Fig. 5 draws the top coil at 0.82 of the others, the spring's upper
     end then about 4.3 from the staff, near the stud clamp's 4.6.
+27. **The upper train bridge's holes near its ends** (new, 12 October 2026). On the
+    photograph of 26 the train bridge's underside is anchored on its rim and barrel
+    cut (0.07 and 0.23 mm rms), so holes in that face read to about 0.5 mm. The
+    centre bushing, h2 (the large hole at the fusee end), h3 and h4 pair within
+    1 mm. Near the fusee end the photograph has countersunk holes at about (29.9,
+    14.8), (34.5, 6.6) and (30.7, 1.7) with no model hole within 1.5 mm, and plain
+    metal where the model has h5 (29.0, 8.0, r 1.4); toward the barrel end a
+    tapped hole at (−23.6, 27.4) and a gilt countersunk hole at (−22.1, 20.8) have
+    none, and the model's h22 is 1.9 mm from the large hole there (`holes.py
+    trainBridge` numbering; `tools/anchors/photo_lower_bridge.json`). The model
+    README already says its small holes are the model's, not all the video's
+    ("Estimated, not from the manual", the upper train bridge's outline).
+    Open: which screw or pin each takes (the `S` table, the manual's parts list),
+    checked on `KLUwI2UUCMQ` 23:30 before moving any; a different production run
+    could also differ.
 
 ## The fusee assembly against Fig. 28 and the video
 

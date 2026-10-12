@@ -242,7 +242,7 @@ elif cmd == 'anchor':
     # the train side (+x, 3 o'clock, on the image's left when 12 is up); "below" from the dial side, or a part turned over to show its underside
     import json, itertools; from scipy.optimize import linear_sum_assignment
     sp = a[0]; S = json.load(open(sp)); here = os.path.dirname(os.path.abspath(sp))
-    fr = S['frame'] if os.path.isabs(S['frame']) else os.path.join(HOME, 'frames', S['frame']); img = cv2.imread(fr)
+    fr = S['frame'] if os.path.isabs(S['frame']) else os.path.join(here, S['frame']) if os.path.exists(os.path.join(here, S['frame'])) else os.path.join(HOME, 'frames', S['frame']); img = cv2.imread(fr)   # a frame in $MC_VIDEO/frames, or a photograph in References/ by its path from the SPEC
     hs = S['holes']; hs = json.load(open(os.path.join(here, hs)))['holes'] if isinstance(hs, str) else hs
     use = S.get('use', list(hs)); mk = [k for k in hs if k in use]; Mh = np.array([hs[k][:2] for k in mk], float)
     pk = list(S['picks']); Fp = np.array([S['picks'][k] for k in pk], float); mir = -1 if S['view'] == 'above' else 1
