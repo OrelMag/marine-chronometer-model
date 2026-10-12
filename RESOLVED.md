@@ -62,13 +62,16 @@ Contents:
 - **The discharge jewel's end was a half round** (`rnd`, both corners stoned round; estimated, no source then).
   The British Museum's Model 21 (*Catalogue of Watches* VI, 1990, no. 117A) is "set with a jewel with a radius to
   the back of the acting part of the tip", and KLUwI2UUCMQ 6:58.17-6:58.33 shows the acting face flat to a sharp
-  corner. Now the acting corner is square and the back radiused, `rB` 0.010 (0.066 mm, the least that keeps
-  overall inside Op. 87), with `rd` 0.296 (the jewel 0.50 mm proud of its roller, as the frames allow) and `aD`
-  269.1°: lock 5.4°, let-off 10.9°, overall 29.7°, drop 2.0°. With the square corner the detent leaves the jewel
-  at the corner first and falls back onto its end (dynamics.js found makeEsc's fall 7° early); makeEsc's
-  `depart` now catches it there. Keep: the acting corner square; makeEsc's contacts, dynamics.js's own, the
-  plan (escplan.js) and the 3D jewel (movement.js) have the same end; a detent that falls onto the jewel's end
-  is carried on by it. `44caeee`
+  corner. Now the acting corner is square and the back radiused. The square corner holds the trip spring's tip
+  on the return, so overall wants less overlap and leaves less lift past the release: `rB` and `rT` (both
+  estimates) were searched together with `rd` inside the frames' 0.4-0.5 mm proud (OPEN-QUESTIONS.md has the
+  table). `rB` 0.024 (0.158 mm, half the width), `rT` 0.2894, `rd` 0.296 (0.50 mm proud), `aD` 269.1°: lock
+  5.5°, let-off 8.7°, overall 28.0°, drop 2.0°; 81 % of escapements made to a maker's tolerances run (92 % with
+  the half round; the first choice, `rB` 0.010 and `rT` 0.290, gave overall 29.7° at the band's edge and 77 %).
+  With the square corner the detent leaves the jewel at the corner first and falls back onto its end
+  (dynamics.js found makeEsc's fall 7° early); makeEsc's `depart` now catches it there. Keep: the acting corner
+  square; makeEsc's contacts, dynamics.js's own, the plan (escplan.js) and the 3D jewel (movement.js) have the
+  same end; a detent that falls onto the jewel's end is carried on by it. `44caeee`, `a726d8a`
 - **The escape wheel moved as a kinematic gear** (makeEsc's `G` 3.5: from the release its angle ran 3.5 times the
   balance's), so the tooth landed on the impulse jewel 0.6° after the release. A wheel released from rest has to catch a
   jewel already running away from it: with the drawn inertias (the escape wheel's 4.80 g·mm² and the fourth wheel's,
