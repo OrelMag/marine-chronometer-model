@@ -185,7 +185,7 @@ as <code>dynamics.js</code> computes them, through a whole start from 136° to 2
 <li><b>Real swings vary from unit to unit.</b> 212° on one movement, about 295° running on another (about 180–210° on a third, roughly). The manual's 247.5–270° and the model's 255° lie between:
 the model's swing is a reasonable middle, not a measured value for any one chronometer.</li>
 <li><b>Each movement has a beat error.</b> The return swing's clicks fall a few milliseconds off where an in-beat balance puts them, differently in each recording: 5–12° out of beat when fitted.
-The model assumes a chronometer exactly in beat (the manual's adjustment); that is fine, but it means the sound can't test the trip spring's geometry or the discharge jewel's rounded end.</li>
+The model assumes a chronometer exactly in beat (the manual's adjustment); that is fine, but it means the sound can't test the trip spring's geometry or the shape of the discharge jewel's end (its back's radius).</li>
 <li><b>The balance loses its swing more slowly than the model says.</b> A real start rises far more slowly than a 52 s run-down allows; the fit wants TF of at least about 120–160 s
 (Q ≈ 750–1,000) with about 55–65 % of the model's drive, and gives no upper bound. That is beyond the 32–62 s the balance's parts allow in <code>physics.js</code>. It is recorded
 in <code>OPEN-QUESTIONS.md</code>; the model is not changed on one hand-started movement whose absolute swing is known only to a screw hole.</li>
@@ -199,7 +199,7 @@ in <code>OPEN-QUESTIONS.md</code>; the model is not changed on one hand-started 
 <tr><td>The balance's free run-down never measured</td><td>Sets Q (the model's <code>TF</code> 52 s), the drive the train must give, and the build-up time; the start suggests ≥ 120–160 s</td><td>A video of the balance swinging freely with the train held by the blocking screw, its swing timed until it stops</td></tr>
 <tr><td>One clean recording decides old vs corrected outright</td><td>Elsewhere the unlocking is too quiet or the room too live to hear all three clicks</td><td>More close recordings with a still microphone, or a timegrapher (it hears the same clicks)</td></tr>
 <tr><td>Which click is which, on a steady recording</td><td>Two loud clicks 6.4 ms apart read as about 295° or 331° depending on their names</td><td>A start (as in <code>We1dLNXiBj0</code>) or a contact microphone with a slowed-down video of the escapement in sync</td></tr>
-<tr><td>Beat error confounds the return swing</td><td>Hides any test of the trip spring and the jewel's rounded end</td><td>Video of the escapement's return swing at high frame rate, or a unit put exactly in beat first</td></tr>
+<tr><td>Beat error confounds the return swing</td><td>Hides any test of the trip spring and the shape of the jewel's end</td><td>Video of the escapement's return swing at high frame rate, or a unit put exactly in beat first</td></tr>
 <tr><td>Different movements, different states</td><td>Swings range 180–295°; mainspring, oil and adjustment are unknown</td><td>A timegrapher reading (swing, beat error, rate) on a serviced unit, fully wound</td></tr>
 <tr><td>Recording artefacts</td><td>YouTube's Opus coding smears transients by up to ~1 ms (0.3 ms allowed per onset); the video in <code>xDKFZaY88cM</code> is edited</td><td>Original, uncompressed recordings</td></tr>
 </table>

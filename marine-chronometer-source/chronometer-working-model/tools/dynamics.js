@@ -55,16 +55,20 @@ const KTIP=3*180e9*(0.3e-3*tsT**3/12)/LTS**3;
 const LEN=ESC.LEN,DREL=ESC.lRel/LEN,P=ESC.P,S=ESC.settings,CDR=S.dL*(Math.tan(S.DRAW*D)+S.MU)/(1-S.MU*Math.tan(S.DRAW*D));   /* the wheel's turn back as the stone is drawn out against the tooth (makeEsc) */
 
 /* ---------- contact tables over the balance's angle (the roller's jewels, periodic in 2π) ---------- */
-/* the discharge jewel as makeEsc has it, worked out apart: a slab wD thick along the direction aD + θ, from the staff out to reach, its end rounded, and the passing spring's tip a disc
-   radius ρ at Pt + s dir. The tip overlaps the jewel for s in (s1, s2); the jewel pushes it out to s2 (dir nH: the detent, backed by the horn, on the
-   active swing; -nB: the trip spring bending on the return). Checked against makeEsc's LI and PS below */
+/* the discharge jewel as makeEsc has it, worked out apart: a slab wD thick along the direction aD + θ, from the staff out to reach, its end's acting corner (+m, leading on
+   the active swing) square and its back corner rounded rB (makeEsc's rB), and the passing spring's tip a disc radius ρ at Pt + s dir. The tip overlaps the jewel where its
+   centre is within ρ of the jewel (the jewel's distance field, convex: its least along the line by golden section, the run's ends by bisection), for s in (s1, s2); the jewel
+   pushes it out to s2 (dir nH: the detent, backed by the horn, on the active swing; -nB: the trip spring bending on the return). makeEsc grows the outline instead and cuts
+   it into boxes and discs. Checked against makeEsc's LI and PS below */
 const HT=2e-5,NTB=Math.ceil(TAU/HT)+3,wrap=a=>a-TAU*Math.floor((a+Math.PI)/TAU),ti=a=>(wrap(a)+Math.PI)/HT;
-const slab=(th,dir)=>{const u={x:Math.cos(ESC.aD+th),y:Math.sin(ESC.aD+th)},m={x:-u.y,y:u.x},w=ESC.wD/2+ESC.rho,reach=ESC.rd+0.5*ESC.rho;
-  const pm=PT.x*m.x+PT.y*m.y,dm=dir.x*m.x+dir.y*m.y,pu=PT.x*u.x+PT.y*u.y,du=dir.x*u.x+dir.y*u.y;let lo=-Infinity,hi=Infinity;
+const JH=ESC.wD/2,JR=ESC.rd-0.5*ESC.rho,JB=Math.min(ESC.settings.rB,JH);   /* the jewel itself: half its width, its reach (the grown outline's less ρ), the back corner's radius */
+const jd=(pu,pm)=>{const r=pu>JR/2&&pm<0?JB:0,qx=Math.abs(pu-JR/2)-JR/2+r,qy=Math.abs(pm)-JH+r;return Math.hypot(Math.max(qx,0),Math.max(qy,0))+Math.min(Math.max(qx,qy),0)-r;};   /* signed distance to the slab, the corner at the back of its end rounded */
+const slab=(th,dir)=>{const u={x:Math.cos(ESC.aD+th),y:Math.sin(ESC.aD+th)},m={x:-u.y,y:u.x},rho=ESC.rho,w=JH+rho;
+  const pm=PT.x*m.x+PT.y*m.y,dm=dir.x*m.x+dir.y*m.y,pu=PT.x*u.x+PT.y*u.y,du=dir.x*u.x+dir.y*u.y,f=s=>jd(pu+s*du,pm+s*dm)-rho;let lo=-Infinity,hi=Infinity;
   const cut=(p,d,a,b)=>{if(Math.abs(d)<1e-12){if(p<=a||p>=b){lo=1;hi=0;}return;}let x=(a-p)/d,y=(b-p)/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);};
-  const cR=ESC.settings.rnd?w:0;cut(pm,dm,-w,w);cut(pu,du,0,reach-cR);let r=lo<hi?[lo,hi]:null;   /* the jewel's end a half round (makeEsc's rnd): a disc at reach - w */
-  if(cR>0){const cx=PT.x-(reach-cR)*u.x,cy=PT.y-(reach-cR)*u.y,b=cx*dir.x+cy*dir.y,q=b*b-(cx*cx+cy*cy-cR*cR);if(q>0){const a=-b-Math.sqrt(q),c=-b+Math.sqrt(q);r=r?[Math.min(r[0],a),Math.max(r[1],c)]:[a,c];}}
-  return r;};
+  cut(pm,dm,-w,w);cut(pu,du,-rho,JR+rho);if(!(lo<hi))return null;   /* the box round it first */
+  let a=lo,b=hi;for(let k=0;k<80;k++){const c=b-(b-a)*0.618034,d=a+(b-a)*0.618034;f(c)<f(d)?b=d:a=c;}const s0=(a+b)/2;if(!(f(s0)<0))return null;
+  const end=(x,y)=>{for(let k=0;k<60;k++){const z=(x+y)/2;f(z)<0?x=z:y=z;}return(x+y)/2;};return[end(s0,lo),end(s0,hi)];};
 const mk=()=>new Float64Array(NTB).fill(NaN),G=mk(),S1=mk(),S2=mk(),Q1=mk(),Q2=mk(),mB={x:-ESC.nB.x,y:-ESC.nB.y};
 for(let i=0;i<NTB;i++){const th=-Math.PI+i*HT,b=ESC.bite(th);if(b>-1e8)G[i]=b-ESC.t0;const a=slab(th,ESC.nH);if(a){S1[i]=a[0];S2[i]=a[1];}const c=slab(th,mB);if(c){Q1[i]=c[0];Q2[i]=c[1];}}
 const dif=(T)=>{const d=mk();for(let i=1;i<NTB-1;i++){const a=T[i-1],b=T[i],c=T[i+1];d[i]=!isNaN(a)&&!isNaN(c)?(c-a)/(2*HT):!isNaN(b)&&!isNaN(c)?(c-b)/HT:!isNaN(a)&&!isNaN(b)?(b-a)/HT:NaN;}return d;};
@@ -92,7 +96,7 @@ function sim(o={}){
   const hf=o.hf??4e-6,hc=o.hc??1e-4;
   let t=0,th=-(o.A??ESC.A/D)*D,w=0,d=0,dv=0,ph=0,pv=0,wm=0,dm=0,pc=false,pp=0,passed=true;   /* wm: wheel locked 0, free 1, on the jewel 2; dm: detent on its stop 0, free 1, pushed 2 */
   if(o.phase!=null){th=(o.A??ESC.A/D)*D*Math.cos(TAU*o.phase);w=-(o.A??ESC.A/D)*D*W0*Math.sin(TAU*o.phase);}
-  const st={pass:[],cross:[],beats:0,esc:0,caught:false,lastBeat:-1,trips:0,land:[],rel:[],off:[],margin:[],liftAt:[],bounce:0,maxBack:0,lastBank:-1,lastOff:-1,bnc:0,home:[],stopAt:null,kicks:0,missed:0};
+  const st={pass:[],cross:[],beats:0,esc:0,caught:false,lastBeat:-1,trips:0,land:[],rel:[],off:[],offF:[],offTh:NaN,margin:[],liftAt:[],bounce:0,maxBack:0,lastBank:-1,lastOff:-1,bnc:0,home:[],stopAt:null,kicks:0,missed:0};
   const X={al:0,ax:0,ay:0};
   const lift=()=>(phys?DM.mx*X.ay-DM.my*X.ax:0)+id*X.al;   /* the case's acceleration as a moment lifting the detent: its unbalance about Ft (DM.mx, DM.my: m·r), and the yaw */
   let ddd=0,phd=0,lamD=0,lamW=0;
@@ -159,15 +163,15 @@ function sim(o={}){
         st.land.push(th/D);st.caught=true;break;}
       case 1:{const sl=d*LEN;if(sl<ESC.lRel){st.beats++;st.lastBeat=t;if(!st.caught)st.esc++;st.caught=false;st.liftAt.push(sl/ESC.lRel);if(st.lastBank>0)st.margin.push(t-st.lastBank);wm=0;ph=0;pv=0;}else{st.trips++;ph+=P;wm=1;}break;}
       case 2:{wm=1;pv=0;st.rel.push(th/D);break;}
-      case 3:{if(st.lastBank<st.lastOff){st.lastBank=t;st.home.push(th/D);}st.bnc++;dv=-eB*dv;d=0;if(eB===0||Math.abs(dv)<1e-3||2*id*Math.abs(dv)/(pre+1e-30)<4*hf){dm=0;dv=0;}break;}   /* rebounds too short to resolve (a ball's bounces) end on the stop */
+      case 3:{if(st.lastBank<st.lastOff){st.lastBank=t;st.home.push(th/D);st.offF.push(st.offTh);}st.bnc++;dv=-eB*dv;d=0;if(eB===0||Math.abs(dv)<1e-3||2*id*Math.abs(dv)/(pre+1e-30)<4*hf){dm=0;dv=0;}break;}   /* rebounds too short to resolve (a ball's bounces) end on the stop */
       case 4:{const h1=(at(S21,th)||0)/LEN,g1=wm===2?(at(G1,th)||0):0,Mb=I+J*g1*g1,c=dv-h1*w,L=hit(c,1/id+h1*h1/Mb,0);dv+=L/id;w-=L*h1/Mb;dm=2;d=at(S2,th)/LEN;dv=h1*w;break;}
-      case 5:{dm=1;st.off.push(th/D);st.lastOff=t;break;}
+      case 5:{dm=1;st.off.push(th/D);st.lastOff=t;st.offTh=th/D;break;}
       case 6:{wm=1;break;}
       case 7:{dm=1;break;}}
     /* contacts whose surface ends (no bisection: a step's error) */
-    if(dm===2&&isNaN(at(S2,th))){dm=1;st.off.push(th/D);st.lastOff=t;}
+    if(dm===2&&isNaN(at(S2,th))){dm=1;st.off.push(th/D);st.lastOff=t;st.offTh=th/D;}
     if(wm===2&&(isNaN(at(G,th))||at(G,th)<=-P))wm=1;
-    if(dm===2||wm===2){y[0]=th;y[1]=w;y[2]=d;y[3]=dv;y[4]=ph;y[5]=pv;acc(t,th,w,d,dv,ph,pv);if(dm===2&&lamD<-1e-12){dm=1;st.off.push(th/D);st.lastOff=t;}if(wm===2&&lamW<-1e-12)wm=1;}
+    if(dm===2||wm===2){y[0]=th;y[1]=w;y[2]=d;y[3]=dv;y[4]=ph;y[5]=pv;acc(t,th,w,d,dv,ph,pv);if(dm===2&&lamD<-1e-12){dm=1;st.off.push(th/D);st.lastOff=t;st.offTh=th/D;}if(wm===2&&lamW<-1e-12)wm=1;}
     if(dm===1&&d<0){acc(t,th,w,0,0,ph,pv);if(dv<0&&eB>0&&Math.abs(dv)>1e-3&&2*id*Math.abs(dv)/(pre+1e-30)>=4*hf){d=0;dv=-eB*dv;}else if(lift()>pre){d=0;dv=Math.max(dv,0);}else{dm=0;d=0;dv=0;}}
     if(dm===1&&st.lastOff>st.lastBank)st.maxBack=Math.max(st.maxBack,d/DREL);
     if(++guard>5e8)throw Error('dynamics: runaway');
@@ -175,7 +179,7 @@ function sim(o={}){
   const c=st.cross.filter(x=>x>=from),n=c.length,Tm=n>1?(c[n-1]-c[0])/(n-1):NaN;
   const am=amps.slice(-8),A=am.length?am.reduce((a,b)=>a+b,0)/am.length/D:0;
   const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN,tail=a=>a.slice(Math.floor(a.length/2));
-  return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),margin:Math.min(...tail(st.margin)),
+  return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),offF:mean(tail(st.offF)),margin:Math.min(...tail(st.margin)),
     liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,home:mean(tail(st.home)),amps,ampT,cross:st.cross,stopped:st.beats===0};
 }
 module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,KTIP,DREL,LEN,lD,tD,LTS,CDR,day,S2};
@@ -221,10 +225,11 @@ const ph=sim({mode:'phys',T:70,from:40}),ownP=ph.rate-ref.rate;
 say(`the swing ${f(ph.A,1)}°, the escapement's own rate ${sg(ownP)} s a day; the tooth lands ${f(ph.land-ph.rel,1)}° after the release`);
 chk(Math.abs(ph.A-ESC.A/D)<3&&Math.abs(ownP-RU.own)<0.3,`the detent's own inertia and bounce change little: the swing ${sg(ph.A-ESC.A/D,1)}°, the rate ${sg(ownP-RU.own)} s a day against the model`);
 /* the detent's fall as makeEsc shows it (ESC.state: off the jewel where its end runs away faster than the detent can follow, then a preloaded spring and mass in closed
-   form, hopping on its stop): where it leaves the jewel and first lands, against the integration's, at the integration's swing */
+   form, hopping on its stop; caught again by the jewel's end if it falls onto it): where it leaves the jewel for the last time and first lands, against the integration's,
+   at the integration's swing */
 {const am=ph.A*D,fD=ESC.depart(am),land=fD.land/D;
-  say(`the detent leaves the discharge jewel at ${f(ph.off,2)}° and first lands on its stop at ${f(ph.home,2)}° (makeEsc's fall: ${f(fD.th/D,2)}° and ${f(land,2)}°; home for good at ${f(ESC.homeAt(am)/D,2)}°)`);
-  chk(Math.abs(ph.off-fD.th/D)<0.5&&Math.abs(ph.home-land)<0.5,`the detent's fall back to its stop in the model is the integration's, within 0.5° of the balance (it went home in one step at ${f(ESC.thOff/D,1)}° until 11 October 2026)`);}
+  say(`the detent leaves the discharge jewel for the last time at ${f(ph.offF,2)}°${Math.abs(ph.off-ph.offF)>0.05?` (first at its acting corner, falling back onto its end)`:''} and first lands on its stop at ${f(ph.home,2)}° (makeEsc's fall: ${f(fD.th/D,2)}° and ${f(land,2)}°; home for good at ${f(ESC.homeAt(am)/D,2)}°)`);
+  chk(Math.abs(ph.offF-fD.th/D)<0.5&&Math.abs(ph.home-land)<0.5,`the detent's fall back to its stop in the model is the integration's, within 0.5° of the balance (it went home in one step at ${f(ESC.thOff/D,1)}° until 11 October 2026)`);}
 chk(ph.trips===0&&ph.beats>100&&ph.margin>0,`no tooth gets past the stone: ${ph.beats} beats; the detent is back on its stop ${f(1000*ph.margin,2)} ms before the next tooth reaches it, still ${f(100*ph.liftAt,1)} % lifted as it arrives`);
 const sweep=[];
 for(const[nm,o]of[['spring half as stiff',{kD:0.5}],['spring twice as stiff',{kD:2}],[`spring 0.06 mm thick (${f((0.06/(tD*1000))**3,2)}× as stiff)`,{kD:(0.06/(tD*1000))**3}],['preload half',{pre:0.5}],['preload 1.5×',{pre:1.5}],
