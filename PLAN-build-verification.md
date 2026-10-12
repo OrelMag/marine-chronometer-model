@@ -80,6 +80,8 @@ Lower priority: the fusee chain's link-by-link pull ripple, oil friction that ch
 - makeEsc's recoil table steps with the stone's sampled outline; differentiate it as a secant over 1 % of `lRel`, never point by point (the staircase made the wheel chatter and cost a spurious 1.1° of swing).
 - Contact dampers must be sized on the mass each contact meets locally (1/|r|² over the kept modes); sized on the whole detent's they made RK4 unstable on the light arm and trip spring. The stone's friction is smoothed below 1 mm/s for the same reason.
 - Results at the model's settings, the estimates varied, the swing pushed and the knocks: the report's section 8 (`assets/trip.json`).
+- On the bench (12 October 2026, `tripping.js --write` → `tripping.json` → `bench.js`): the lock's floor is the manual's 5° (the stone's chatter while held is 20-50 µm whatever the depth); the detent's ring, its foot clamped (137 Hz as drawn, 137-342 Hz for its spring 0.079-0.150 mm), measures the detent spring's section, the open question; `benchcheck.py --ring FILE` reads a recording. Against knocks the preload holds, not the lock. dynamics.js counts a second unlocking in a swing as a trip.
+- The largest lift is a maximum of chaotic chatter (two runs a hair apart differ by ten points): treat it as a margin. The rest solve's Newton can diverge where a contact switches inside its difference step; it now falls back to letting the detent settle.
 
 ## Estimates the report flags (replace them when sources or measurements arrive)
 
