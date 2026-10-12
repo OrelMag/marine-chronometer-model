@@ -66,17 +66,21 @@ const COCK_FOOT=PT([28.3,6.4]),BAL_R=14.5;
    6.1 until 12 October 2026), its head r 3.33, 0.90 of it (the photographs' 0.904; photo-cock-top.png 0.87), 1.5 times its width long (CKH_L), the thread 0.37 of it (CKH_T), as the screw's comment below */
 const CK_CBR=3.7,CKH_R=3.33,CKH_L=10.0,CKH_T=1.23;
 /* the balance cock's top face, from the corner where its straight edge meets the rim, along the straight edge (0-21) to the nose, round the nose (22-38) and down the
-   concave edge (39-60) toward the horn's tip (movement frame, mm; the rim's arc is COCK_POLY, at the cock). Traced on two pictures of real Model 21 cocks, each put on the
-   cock's top through a homography on its holes as the model places them (the cock screw's counterbore, the setting, the cap's two screw holes, the stud's three holes):
-   KLUwI2UUCMQ 41:58 (the cock alone, top up, 4K; residuals 0.03-0.6 mm, the counterbore and setting fitted as circles and the rim's arc as one about the centre), its
-   outline found where the top face's gilt meets the blue mat and the polished walls (R-B > 15), and a photograph of a Model 21's cock from above (photo-cock-top.png,
-   376 px; References/README.md), its edges picked by hand and the concave edge as the user marked it on it (6 October 2026). The two agree within 0.3 mm round the nose
-   and 0.4-1.0 along the concave edge (the mark is a 0.6 mm stroke): the mean, smoothed. Along the straight edge the two read 1.1-1.6 mm apart past x 23 (the far end's
-   perspective rests on the screw's hole alone): their mean, so +-0.8 there. The straight edge is not straight: level with the stud's holes, 0.6 mm outside them, from the
-   nose to about x 15, then bending about 23 deg toward the rim (the photograph's 26 deg, the frame's 23), meeting it 0.85 mm further round than the old trace's corner
-   and lying up to 2.6 mm outside its straight line midway (x 25: z 11.85 against 14.9). The nose has no corner: the edge runs level into it. The concave edge's last
-   3.9 mm to the tip (z 35-38.9) the frames don't resolve (the tip's bevel): straight to it */
-const CK_TR=[[36.16, 17.21], [35.5, 16.8], [34, 15.92], [32.5, 15.1], [31, 14.34], [29.5, 13.64], [28, 12.99], [26.5, 12.4], [25, 11.85], [23.5, 11.35], [22, 10.89], [20.5, 10.48], [19, 10.1], [17.5, 9.77], [16, 9.46], [14.5, 9.19], [13, 8.94], [11.5, 8.72], [10, 8.53], [8.5, 8.36], [7, 8.2], [5.5, 8.06], [0.07, 7.93], [-0.37, 8.1], [-0.77, 8.3], [-1.15, 8.53], [-1.51, 8.79], [-1.83, 9.11], [-2.12, 9.47], [-2.36, 9.89], [-2.53, 10.35], [-2.61, 10.85], [-2.6, 11.38], [-2.49, 11.9], [-2.26, 12.39], [-1.93, 12.83], [-1.51, 13.18], [-1.01, 13.42], [-0.48, 13.52], [1.75, 14.25], [2.65, 15], [3.74, 16], [4.71, 17], [5.57, 18], [6.32, 19], [6.97, 20], [7.52, 21], [7.99, 22], [8.37, 23], [8.68, 24], [8.92, 25], [9.1, 26], [9.22, 27], [9.3, 28], [9.33, 29], [9.33, 30], [9.3, 31], [9.24, 32], [9.17, 33], [9.09, 34], [9, 35]];
+   concave edge (39-60) to the tip (movement frame, mm; the rim's arc is COCK_POLY, at the cock). Traced on KLUwI2UUCMQ 41:58 (the cock alone, top up, 4K), its outline found
+   where the top face meets the blue mat and the outer wall (which mirrors the mat: B-R < 20) and, along the concave edge and round the nose, where its gilt meets the
+   polished wall (R-B > 15), put on the cock's top through a homography fitted on its holes at their measured places and its rim held to r 40.1 about the movement's
+   centre (the outer wall on the plate's rim, COCK_POLY): the cock screw's counterbore and the setting where the model has them, the cap's two screw holes 3.33 either
+   side of the staff and the stud's three holes where 6:29 reads them (the camera fitted on 6:49.0, moved rigidly onto the cap's centre and the counterbore: (6.17, 7.22),
+   (10.22, 7.67), (14.18, 8.16), 4.0 mm apart); the holes fit to 0.08-0.28 mm, the rim to +-0.15. With the holes alone the rim comes out r 40.02 +- 0.37 (as the old
+   layout placed them, 40.79 +- 0.75). Checks: the straight edge read on 6:29 through its camera lies 0.02-0.25 mm from it at x 6-14 and about 0.8 mm off near the
+   rim; photo-cock-top.png (376 px; References/README.md) through its own homography on the same holes (0.01-0.2 mm) puts the straight edge, the nose and the upper
+   concave edge 0.01-0.64 mm from it, the lower concave edge (z > 27, far from its holes) 0.8-1.6 mm toward the opening, where 6:29 sides with 41:58. The straight edge
+   runs 0.5 mm outside the stud's holes from the nose, then bends about 28 deg toward the rim; the corner is at 23.4 deg, the tip at 76 deg (COCK_POLY's 75.6).
+   Until 12 October 2026 the trace (the mean of the two pictures) went through the holes as the model placed them, the cap's screws 2.75 either side and the stud's
+   row read through them (3.9, 7.0, 10.5 from the staff): every size there about 0.83 of the video's, so the straight edge lay 1.9-3.5 mm and the concave edge 1.4-3.3 mm
+   inside the real cock's (at x 5.5, z 8.06 against 6.60). The stud and its holes (SPHa-c, below) are still drawn where the old reading put them, 1.7-2.3 mm
+   inside 6:29's (OPEN-QUESTIONS.md): moving them moves the hairspring's outer end */
+const CK_TR=[[36.76, 15.88], [35.50, 14.99], [34.00, 13.88], [32.50, 12.85], [31.00, 11.94], [29.50, 11.15], [28.00, 10.45], [26.50, 9.82], [25.00, 9.25], [23.50, 8.76], [22.00, 8.35], [20.50, 8.00], [19.00, 7.73], [17.50, 7.53], [16.00, 7.40], [14.50, 7.28], [13.00, 7.18], [11.50, 7.09], [10.00, 6.98], [8.50, 6.83], [7.00, 6.71], [5.50, 6.60], [0.14, 6.61], [-0.55, 6.82], [-1.10, 7.29], [-1.67, 7.74], [-2.19, 8.24], [-2.57, 8.86], [-2.88, 9.52], [-3.07, 10.22], [-3.10, 10.94], [-2.94, 11.65], [-2.70, 12.34], [-2.34, 12.97], [-1.86, 13.51], [-1.31, 13.98], [-0.64, 14.27], [0.06, 14.46], [0.70, 14.80], [1.17, 15.20], [2.80, 16.29], [4.31, 17.37], [5.60, 18.46], [6.65, 19.54], [7.49, 20.63], [8.20, 21.71], [8.80, 22.80], [9.30, 23.89], [9.70, 24.97], [10.03, 26.06], [10.36, 27.14], [10.69, 28.23], [10.92, 29.31], [11.01, 30.40], [10.99, 31.49], [10.94, 32.57], [10.85, 33.66], [10.72, 34.74], [10.55, 35.83], [10.36, 36.91], [10.14, 38.00]];
 /* the arm's step: the arm is thin (2.6 mm, the stud's place under it) over the balance and thicker toward the body, a square step on its underside across it. On
    KLUwI2UUCMQ 44:02 (the cock in place, from its straight edge, 4K) the arm's side drops from 88 px to 206 px deep at x 2305, 8.70 mm past the stud's inner hole along
    their row (a 1-D projective map on the row's three holes; the same map puts the body's wall 18.5-18.65 mm from the staff, where it was read before, 18.6): 12.1 mm from
@@ -660,8 +664,10 @@ function buildMovement(M){
      barrel bushings: 1.02 mm off its 15.2 mm chord at most, 0.59, 0.83, 0.46 at a quarter, half and three quarters, steepest near the rim; in place with the cock off,
      6:47.5, about 0.7 mm on 17): the cock's traced edge bows 1.2 on its chord, the same within 0.3. Hung on the old trace's ends, that bow put the cut 1.5-1.8 mm nearer
      the cock along its length than the cock's own pictures put its edge, a disagreement of where, not of shape (OPEN-QUESTIONS.md, the cock screw against the staff):
-     the cock's edge is kept and the bridge follows it. A straight cut until 6 October 2026 */
-  const ckE=[...CK_TR.slice(0,22).reverse(),[38.5,18.61]].map(([x,z])=>[x,z-0.15]);
+     the cock's edge is kept and the bridge follows it. A straight cut until 6 October 2026. On KLUwI2UUCMQ 6:49.0 (the cock out) through the camera fitted there, the bridge's
+     top edge, traced as 13 points from its inner corner to the rim, lies within 0.6 mm of the cock's edge as traced again on 12 October 2026 (at f 5,000; +-1.5 over
+     f 4,000-6,000), where it was 0.9-3.2 mm off the old trace */
+  const ckE=[...CK_TR.slice(0,22).reverse(),[38.5,17.12]].map(([x,z])=>[x,z-0.15]);   /* past the rim on the straight edge's last slope */
   /* the far horn: past the balance, round to about 100 deg, where it ends in a cut from the bite's edge to the rim, curved, not straight: traced on the flat bridge
      (23:45, the same homography) from the bite to 1.5 mm short of the rim, FH (movement frame, every 1.69 mm along z, a cubic through the trace to 0.03 mm rms): it
      bows 0.46 mm off its 12.8 mm chord, most two thirds of the way out, leaving the bite turned about 15 deg further round than where it meets the rim. The top-view

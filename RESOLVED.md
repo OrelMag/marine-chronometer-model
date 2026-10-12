@@ -1419,6 +1419,17 @@ Contents:
   (r 3.33) and 1.5 times its width long, as the photographs and 5:59 have
   it. Keep: sizes on the cock's top from the video's camera, not scaled by
   the top-view photograph; the cap on metal all round (`hullSplice`).
+- **The balance cock's top face traced through its holes at the old
+  scale.** `CK_TR` went through homographies on the cock's holes as the model
+  placed them: the cap's screws 2.75 either side of the staff and the stud's
+  row read through them, both about 0.83 of their real size, so the straight
+  edge lay 1.9-3.5 mm and the concave edge 1.4-3.3 mm inside the real cock
+  (and the barrel bridge's horn, which follows that edge, as far off the
+  bridge's own edge at 6:49.0). Traced again on 41:58 through the holes as
+  6:29 measures them, with the rim held to r 40.1: the straight edge within
+  0.25 mm of 6:29's, the horn's measured edge within 0.6 mm of it at f 5,000.
+  Keep: the cock's top traced through holes measured on the video, its rim
+  as a constraint; the horn 0.15 mm off the straight edge.
 
 - **The balance cock's top face a straight edge, a widened nose and a bulging
   concave edge; its arm one thickness.** Seen from above, the cock's straight
