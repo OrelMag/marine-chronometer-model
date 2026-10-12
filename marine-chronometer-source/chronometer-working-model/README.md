@@ -994,6 +994,24 @@ on what would stop the chronometer.
   a navigator would be out after 10, 30 and 60 days; acoustic.py takes a
   recording of the made movement for its swing.
 
+- **`tools/deviations.js`, the build's two changes.** Nothing the checks
+  found needs changing for the chronometer to work; two changes, with 1950s
+  materials, make it easier to make and steadier to keep, each on its part's
+  card as the build's with the Model 21's original beside it and a button back
+  (the link keeps `orig=mainspring,balance` for those set back; the 3D model
+  stays the Model 21). The mainspring in Nivaflex 45/5 (Straumann, patented
+  1948): the same torque from a strip 0.386 mm thick (E 220 GPa against carbon
+  steel's 207), stressed 2,309 MPa fully wound, a margin of 1.30 on its
+  3,000 N/mm² against carbon steel's 1.13–1.17, and it doesn't set, rust or
+  magnetize. The balance in Glucydur (beryllium bronze, monometallic) with a
+  Nivarox hairspring (Straumann, 1933): the balance 2.5–5.8 % heavier for its
+  shape, which the spring's length takes up, and the spring's thermoelastic
+  coefficient graded to +4 to +14 × 10⁻⁶ a °C for the pair, within ±1.4 to
+  meet the Navy's temperature figure.
+- **The report**, `verification/build-verification/index.html` (open the
+  file; `build_report.py` rebuilds it): the process, figures, sources and
+  scripts of these checks, the earlier ones' output beside them.
+
 ### Checked against real chronometers
 
 The tools above check the model against itself and against the manual's
@@ -1155,6 +1173,8 @@ the repository with short audio excerpts and the video frames).
 8. **Visual check.** `tools/topview.py` renders the model from above and warps it onto the top-view photograph through five barrel-bridge screws: `verification/topview-comparison.png` shows the photo, the model and the two blended. Parts far above or below the barrel bridge (the cock, the balance's endstone) are off by up to about 3 mm there, from the photograph's tilt. The photographed movement has the balance locking arm (Fig. 9), which the model now has too, though its shape is estimated. `tools/p3fit.py` renders from the camera fitted to the photograph the tracing was first done on.
 
 ## Estimated, not from the manual
+
+- The build's deviations (tools/deviations.js): Glucydur's density and expansion taken as beryllium bronze's (CuBe2, C17200: 8.25-8.36 g/cm³, 17-17.5 × 10⁻⁶/°C), Nivarox's expansion (7-10 × 10⁻⁶/°C) and modulus (165-195 GPa, as Elinvar-type alloys'), so the spring's thermoelastic coefficient for the pair (+4 to +14 × 10⁻⁶ a °C); Nivaflex's 3000 N/mm² is its maker's achievable strength, aged. The gear-mesh and FEA checks' inputs: tooth friction 0.10-0.20, the pivots' shake 10 µm, brass E 97-110 GPa and the expansions of brass and steel (published ranges), the chain's height on the fusee (makeFusee's yS, yB).
 
 - The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull at the barrel (the solved spring's, `tools/mainspring.py`: its free curve measured, its length estimated; until 11 October 2026 the drive took an illustrative pull, the profile's made 3% steeper at each end), the sustaining spring's linear relaxing (from the drive it carries: no banking is seen on the video, looked for again on 11 October 2026 at 18:49-18:58 (the fusee wheel's face, the spring in and coming out: its two pins and the raised disc's step, which a shadow shows as a crescent, no slot) and 19:05-19:09 (the sustaining ratchet bare), and on a second movement (2E7437, `TWQsSVWuikk` 45:40, the recess open face-on: a plain ring of spring, nothing to bank it), or in Figs. 69-73 and Ops. 19-29, and the manual has it under load all through the running; its 10 minutes from Sec. IV's five to ten), the free run-down (68 s, from the energy budget and the balance's parts), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
 

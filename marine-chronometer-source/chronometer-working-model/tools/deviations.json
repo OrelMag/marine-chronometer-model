@@ -1,0 +1,103 @@
+{
+ "note": "tools/deviations.js: the build's deviations from the Model 21, each on its parts' cards with the original beside it (read by makers.py)",
+ "devs": [
+  {
+   "id": "mainspring",
+   "title": "Mainspring in Nivaflex 45/5",
+   "period": "Straumann's Nivaflex: patented 1948, the name registered 1957",
+   "parts": [
+    "mainspring",
+    "barrel"
+   ],
+   "lines": [
+    "42038"
+   ],
+   "vmat": "Nivaflex 45/5 (Co 45, Ni 21, Cr 18, Fe 5, W 4, Mo 4, Ti 1, Be 0.2 %)",
+   "vtreat": "cold-drawn strip 0.386 mm thick (0.379-0.400 keeps the manual's swing) × 13.55 mm × 1064 mm, aged 2 h at 500 °C to over 3000 N/mm²; coiled; greased",
+   "why": "The same torque from a strip 0.386 mm thick (E 220 GPa against carbon steel's 207), so the fusee, the swing and the rate are unchanged. Fully wound it is stressed 2309 MPa, a margin of 1.30 on Nivaflex's 3000 N/mm² against carbon steel's 1.13-1.17; it doesn't take a set, rust in salt air or magnetize, so its pull, and with it the rate, holds steady over the months a navigator carries it.",
+   "sources": [
+    "Jacques Allemann, Nivaflex 45/5 data sheet JAS-014 (2021): composition, E 220 GPa, density 8.50, expansion 11.2 × 10⁻⁶/K, strength over 3000 N/mm², non-magnetic, corrosion",
+    "Vacuumschmelze, Nivaflex 45/18 brochure: tensile strength up to 2900 MPa, hardness up to 800 HV, mainsprings among its uses",
+    "Nivaflex, Wikipedia; R. Straumann, Grail-Watch wiki: patented 1948, Nivaflex SA, the name registered 1957"
+   ],
+   "numbers": {
+    "t0": 0.394,
+    "t1": 0.3860813087074577,
+    "E0": 207,
+    "E1": 220,
+    "s0": 2217.297152036569,
+    "s1": 2309.185327930447,
+    "SN": 3000,
+    "SS": [
+     2500,
+     2600
+    ],
+    "tb": [
+     0.37922199611620844,
+     0.39979993388995616
+    ]
+   }
+  },
+  {
+   "id": "balance",
+   "title": "Balance in Glucydur, hairspring in Nivarox",
+   "period": "Glucydur (beryllium bronze, 1930s) and Nivarox (Straumann, perfected 1933, patented 1935), offered together by 1940",
+   "parts": [
+    "bal",
+    "spr"
+   ],
+   "lines": [
+    "42178",
+    "42188"
+   ],
+   "vmat": {
+    "42178": "Glucydur (beryllium bronze, Cu-Be-Fe), monometallic",
+    "42188": "Nivarox (Fe-Ni-Cr-Be, self-compensating), graded to the balance"
+   },
+   "vtreat": {
+    "42178": "turned and hardened (about 400 HB); the rim uncut; poised, the screws as drawn",
+    "42188": "the same helix and terminal curves (hairspring.js), the strip 0.215-0.228 mm × 0.23 mm; its thermoelastic coefficient graded to 4 to 14 × 10⁻⁶ a °C for the made balance (within ±1.4); vibrated to the balance, its length taken at the stud"
+   },
+   "why": "A monometallic bronze balance with a self-compensating spring replaces a balance of two metals and an Elinvar spring whose heat treatment must be matched to it: the spring is bought graded to the balance, the temperature error trimmed on the bench, and the balance is turned in one piece on the CNC. The balance comes out 2-6 % heavier for its shape, which the spring's length takes up; the spring must cancel the bronze's expansion, 4 to 14 × 10⁻⁶ a °C, within ±1.4 to meet the Navy's temperature figure. The density and expansion are beryllium bronze's (CuBe2), Nivarox's expansion and modulus estimated: the temperature test (the bench's last) settles it.",
+   "sources": [
+    "Glucydur, Wikipedia; Horopedia: beryllium bronze with iron, about 400 HB, non-magnetic, for balances",
+    "Xometry, beryllium bronze C17200 data sheet: density 8.25 g/cm³, expansion 17 × 10⁻⁶/°C",
+    "Nivarox, Wikipedia; WatchesbySJX, \"Hairspring Materials and Evolution Part II\" (2025); VintageWatchstraps, \"Nivarox balance springs\": Fe-Ni-Cr-Be, its thermoelastic coefficient set by alloy and heat treatment, positive for monometallic balances; perfected 1933, patented 1935",
+    "The manual (Sec. II): the Model 21's stainless rim, Invar arm and Elinvar spring"
+   ],
+   "numbers": {
+    "I0": 578.5,
+    "rhoO": [
+     7.9,
+     8.05
+    ],
+    "rhoG": [
+     8.25,
+     8.36
+    ],
+    "Ir": [
+     1.0248447204968942,
+     1.0582278481012657
+    ],
+    "aB": [
+     0.000017,
+     0.0000175
+    ],
+    "aS": [
+     0.000007,
+     0.00001
+    ],
+    "eReq": [
+     0.000003999999999999996,
+     0.000013999999999999998
+    ],
+    "eTol": 0.0000014285714285714286,
+    "k0": 0.00009135305833648311,
+    "tStrip": [
+     0.21547383677955823,
+     0.22781278882148565
+    ]
+   }
+  }
+ ]
+}

@@ -5,6 +5,7 @@ windows, gearing.js) and to the arbors' upright. Opens ../index.html?snap&qa onc
   python fea.py              # the parts at two resolutions (the coarse a check on the fine), both load cases: about 3 minutes
   python fea.py --check      # the solver against a cantilever's textbook deflection, at three resolutions (about 20 s)
   python fea.py --reuse      # the geometry from the last run's r_fea_geom.json, without the browser
+  python fea.py --json OUT   # and the results as JSON (the report in verification/build-verification reads it)
 
 Exit code 1 if a mesh's depth moves by more than a tenth of the room its window leaves past the holes' tolerance, or a part is
 stressed past brass's yield, or --check misses the textbook by more than 6 %.
@@ -127,13 +128,14 @@ def box(L, w, t):
     q = [(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)]
     return np.array([[v[a], v[b], v[c]] for a, b, c, d in q for a, b, c in ((a, b, c), (a, c, d))])
 
+CHECK = []   # the cantilever's rows, for --json
 def check():
     """a brass cantilever 20 long, 2 wide, 2 deep, held at one end, 1 N on the other: Timoshenko's deflection P L³/3EI + P L/(κ G A)"""
     L, w, t, P = 20.0, 2.0, 2.0, 1.0; I = w * t ** 3 / 12; G = E_B / (2 * (1 + NU)); exact = P * L ** 3 / (3 * E_B * I) + P * L / (5 / 6 * G * w * t); worst = 0
     for h in (0.5, 0.25, 0.1667):
         G_ = voxelize(box(L, w, t), h, ratio=1.0); X, conn, e = mesh_of(G_); fixed = X[:, 0] < 1e-6; tip = X[:, 0] > L - 1e-6
         F = np.zeros_like(X); F[tip, 1] = -P / tip.sum(); u, R, vm, rr = solve(X, conn, h, G_['dy'], fixed, F)
-        d = -u[tip, 1].mean(); err = d / exact - 1; worst = err if abs(err) > abs(worst) else worst
+        d = -u[tip, 1].mean(); err = d / exact - 1; worst = err if abs(err) > abs(worst) else worst; CHECK.append(dict(h=h, bricks=len(conn), depth=round(t / G_['dy']), tip=d * 1000, exact=exact * 1000, err=err))
         print(f'  h {h:.3f} mm ({len(conn)} bricks, {t / G_["dy"]:.0f} through the depth): tip {d * 1000:.2f} µm against {exact * 1000:.2f} ({err * 100:+.1f} %); reactions {R[:, 1].sum():+.4f} N against {P:+.4f}; residual {rr:.0e}')
     return abs(worst) <= 0.06 and abs(err) <= 0.03, err
 
@@ -300,20 +302,27 @@ def main():
         def at(c):
             (d1, y1), (d2, y2) = r['pos'][c]; k = (y - y1) / (y2 - y1); return d1 + k * (d2 - d1)
         pa, pb = np.array(Lp[a], float), np.array(Lp[b], float); u = (pb - pa) / np.hypot(*(pb - pa)); return float((at(b) - at(a)) @ u)
+    J = dict(check=CHECK, E=E_B, Erange=E_RANGE, yieldMPa=YIELD, cases={})
     for case in cases:
-        r = fine[case]; rc = coarse[case]; say(''); say(f'{case}: the chain pulls {r["Tc"]:.1f} N, every stage lossless')
+        r = fine[case]; rc = coarse[case]; jc = J['cases'][case] = dict(Tc=r['Tc'], parts={}, arbors={}, depths=[], fields={}); say(''); say(f'{case}: the chain pulls {r["Tc"]:.1f} N, every stage lossless')
         if case == list(cases)[0]:
             say('  what each part is held by (its screws), and what each fixing carries:')
             for n in r['order'][:-1]: say(f'    {n}: ' + ', '.join(f'{u} {np.hypot(R[0], R[2]):.2f} N' for k, (pn, u, R) in r['sup'].items() if pn == n))
         for n, p in r['P'].items():
             say(f'  {n:12s} {len(p.conn):6d} bricks ({p.h:.2f} mm, {p.dy:.2f} deep), solved to {p.rr:.0e}; stress under {np.percentile(p.vm, 99.5):.2f} MPa in 99.5 % of it, at most {p.vm.max():.2f} (at a voxel\'s corner)')
+            jc['parts'][n] = dict(bricks=len(p.conn), h=p.h, dy=p.dy, vm995=float(np.percentile(p.vm, 99.5)), vmmax=float(p.vm.max()), res=float(p.rr))
+            if n == 'barrelBridge' and case == list(cases)[0]:   # the field in plan (the report draws it): each column's largest in-plane movement, on a 0.6 mm grid
+                um = np.hypot(p.u[:, 0], p.u[:, 2]) * 1000; key = np.round(p.X[:, [0, 2]] / 0.6).astype(int); o = np.lexsort((-um, key[:, 1], key[:, 0])); k2 = key[o]; first = np.r_[True, (np.diff(k2, axis=0) != 0).any(1)]
+                jc['fields'][n] = [[round(float(kx) * 0.6, 2), round(float(kz) * 0.6, 2), round(float(v), 4)] for (kx, kz), v in zip(k2[first], um[o][first])]
             chk(p.vm.max() < YIELD[0] / 1.5, f'  {n}: at most {p.vm.max():.1f} MPa, against brass\'s yield {YIELD[0]}-{YIELD[1]}')
         for a, ((d1, y1), (d2, y2)) in r['pos'].items():
+            jc['arbors'][a] = dict(parts=ARB[a], y=[y1, y2], um=[float(np.hypot(*d1) * 1000), float(np.hypot(*d2) * 1000)], lean_urad=float(np.hypot(*(d2 - d1)) / abs(y2 - y1) * 1e6))
             say(f'  {a:2s}: its holes move {np.hypot(*d1) * 1000:.3f} µm (y {y1:.1f}, {ARB[a][0]}) and {np.hypot(*d2) * 1000:.3f} µm (y {y2:.1f}, {ARB[a][1]}); it leans {np.hypot(*(d2 - d1)) / abs(y2 - y1) * 1e6:.1f} µrad')
         for (a, b, y), g in zip(stg, GJ['stages']):
-            d, dc = depth(r, a, b, y), depth(rc, a, b, y)
+            d, dc = depth(r, a, b, y), depth(rc, a, b, y); jc['depths'].append(dict(stage=g['stage'], um=d * 1000, coarse=dc * 1000, lo=g['lo'] * 1000, tp=g['tp'] * 1000))
             chk(abs(d) < 0.1 * (-g['lo']), f'  {g["stage"]}: the centres {"part" if d > 0 else "close"} {abs(d) * 1000:.3f} µm (coarser bricks {abs(dc) * 1000:.3f}), {abs(d) / -g["lo"] * 100:.2f} % of the {-g["lo"] * 1000:.0f} µm the depth may close, against the holes\' ±{g["tp"] * 1000:.0f} µm')
     say(''); say(f'the deflections are at E {E_B / 1e3:.0f} GPa; at {E_RANGE[0] / 1e3:.0f}-{E_RANGE[1] / 1e3:.0f} they are {E_B / E_RANGE[1]:.2f}-{E_B / E_RANGE[0]:.2f} times as large')
+    if '--json' in sys.argv: out = sys.argv[sys.argv.index('--json') + 1]; json.dump(J, open(out, 'w', encoding='utf-8')); rows.append(f'  wrote {out}')
     print('\n'.join(rows)); sys.exit(fail[0])
 
 if __name__ == '__main__': main()

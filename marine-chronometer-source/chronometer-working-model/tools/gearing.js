@@ -50,10 +50,12 @@ function mesh(A,B,d){const k=A.z/B.z,a0=-0.375*A.p,b0=Math.PI-0.875*B.p;
     else{hi=lo;lo-=h;let n=0;while(!ok(al,lo)){hi=lo;lo-=h;if(++n>800)return null;}}
     for(let i=0;i<it;i++){const md=(lo+hi)/2;ok(al,md)?lo=md:hi=md;}return lo;};
   const back=(al,e)=>{const h=B.p/100;let x=e-h,n=0;while(ok(al,x)){x-=h;if(++n>200)return Infinity;}let lo=x,hi=x+h;for(let i=0;i<20;i++){const md=(lo+hi)/2;ok(al,md)?hi=md:lo=md;}return e-hi;};   /* backlash, B's angle */
-  /* the contact's normal: the segment of the other outline nearest the deepest point */
-  const normal=(al,be,w,Pt)=>{const G=w==='A'?B:A,th=w==='A'?be:al,ox=w==='A'?d:0,c=Math.cos(-th),s=Math.sin(-th),x=c*(Pt[0]-ox)-s*Pt[1],y=s*(Pt[0]-ox)+c*Pt[1];let bd=Infinity,bn=null;
+  /* the contact's normal: the segment of the other outline nearest the deepest point (its direction steps about 0.01 rad from one segment to the next,
+     which shows as a zigzag of about 0.003 in the torque ratio from one step to the next: the sampling, not the teeth) */
+  const normal=(al,be,w,Pt)=>{const G=w==='A'?B:A,th=w==='A'?be:al,ox=w==='A'?d:0,c=Math.cos(-th),s=Math.sin(-th),x=c*(Pt[0]-ox)-s*Pt[1],y=s*(Pt[0]-ox)+c*Pt[1];let bd=Infinity,bi=0;
     for(let i=0;i<G.P.length-1;i++){const[x0,y0]=G.P[i],[x1,y1]=G.P[i+1],dx=x1-x0,dy=y1-y0,L2=dx*dx+dy*dy;if(!L2)continue;const t=Math.max(0,Math.min(1,((x-x0)*dx+(y-y0)*dy)/L2)),dd=Math.hypot(x-x0-t*dx,y-y0-t*dy);
-      if(dd<bd){bd=dd;const L=Math.sqrt(L2);bn=[dy/L,-dx/L];}}
+      if(dd<bd){bd=dd;bi=i;}}
+    const[x0,y0]=G.P[bi],[x1,y1]=G.P[bi+1],nl=Math.hypot(x1-x0,y1-y0),bn=[(y1-y0)/nl,-(x1-x0)/nl];
     const C=Math.cos(th),S=Math.sin(th);return[C*bn[0]-S*bn[1],S*bn[0]+C*bn[1]];};   /* outward, world */
   return{k,a0,b0,lag,back,pen,normal,d};}
 
@@ -74,30 +76,31 @@ function stage(zA,zB,m,dd=0,NS=NS0){const A=gear(zA,m,zB),B=gear(zB,m),d=m*(zA+z
   if(!Number.isFinite(out.bl)||out.bl<=0)out.jam=true;
   out.blmm=out.bl*m*zB/2;return out;}
 const st=(a)=>{const n=a.length,mn=Math.min(...a),mx=Math.max(...a),mean=a.reduce((s,x)=>s+x,0)/n;return{mn,mx,mean};};
-module.exports={gear,mesh,stage,st,MU};if(require.main!==module)return;
+const T=PH.TRAIN,M=PH.MODS,STG=[['fusee wheel → centre pinion',T.fu,T.cp,M.fusee,90/14*3600],['centre wheel → third pinion',T.cw,T.tp,M.centre,3600],['third wheel → fourth pinion',T.tw,T.fp,M.third,3600/(T.cw/T.tp)],['fourth wheel → escape pinion',T.fw,T.ep,M.fourth,60]];   /* name, teeth, leaves, module, seconds a turn of the wheel */
+let base=null;   /* the drawn meshes, set below (or by a caller through setBase) */
+const ESC=build().ESC,TF=ESC.settings.TF,A1=ESC.A,AMIN=ESC.AMIN;
+const interp=(s,j,al)=>{const n=s.al.length-1,u=((al-s.al[0])/(s.al[n]-s.al[0])%1+1)%1*n,i=Math.floor(u),t=u-i;return s.fac[j][i]*(1-t)+s.fac[j][Math.min(n,i+1)]*t;};
+/* a day of the train (or `hours`), every stage's wheel at its own speed; stages[] may replace one stage; returns the swing's range and the time's wander (and with trace, the swing every trace seconds: [hours, degrees]) */
+function day(stages,j,hours=24,ph=[0.13,0.57,0.31,0.89],means=base.map(s=>st(s.fac[j]).mean),trace=0){
+  /* the swing stepped every 0.1 s; the rate taken each second at the swing and the second's mean drive; the wander against the mean rate, which the navigator finds.
+     means: what each stage's ratio is taken against (the drawn mesh's mean: the set-up as drawn; or the stage's own: the set-up restoring the mean swing) */
+  const dt=0.1,N=Math.round(hours*3600/dt),R=[],tr=[];let A2=null,amin=Infinity,amax=-Infinity,aS=0,aN=0,sS=0,nS=0;
+  for(let i=0;i<N;i++){const t=i*dt;let s=1;stages.forEach((S,k)=>{s*=interp(S,j,TAU*(t/STG[k][4]+ph[k]))/means[k];});
+    const aT=ESC.ampAt(s);if(A2===null)A2=aT*aT;A2+=(aT*aT-A2)*(1-Math.exp(-2*dt/TF));const a=Math.sqrt(A2);if(trace&&i%Math.round(trace/dt)===0)tr.push([+(t/3600).toFixed(4),+(a/D).toFixed(3)]);
+    if(t>4*TF){amin=Math.min(amin,a);amax=Math.max(amax,a);aS+=a;aN++;sS+=s;nS++;if(nS===10){R.push(ESC.rateAt(a,sS/nS));sS=0;nS=0;}}}
+  const mr=R.reduce((q,x)=>q+x,0)/R.length;let err=0,emin=0,emax=0;for(const r of R){err+=(r-mr)/86400;emin=Math.min(emin,err);emax=Math.max(emax,err);}
+  return{amin:amin/D,amax:amax/D,amean:aS/aN/D,wander:emax-emin,rate:mr,tr};}
+module.exports={gear,mesh,stage,st,MU,STG,day,ESC,setBase:b=>{base=b;}};if(require.main!==module)return;
 
 /* ---------- 1. each mesh at its drawn centres ---------- */
-const T=PH.TRAIN,M=PH.MODS,STG=[['fusee wheel → centre pinion',T.fu,T.cp,M.fusee,90/14*3600],['centre wheel → third pinion',T.cw,T.tp,M.centre,3600],['third wheel → fourth pinion',T.tw,T.fp,M.third,3600/(T.cw/T.tp)],['fourth wheel → escape pinion',T.fw,T.ep,M.fourth,60]];   /* name, teeth, leaves, module, seconds a turn of the wheel */
 say('1. Each mesh at its drawn centres (the model\'s cycloidal outlines; the wheel drives, the pinion lags under load); torque ratio against the nominal, at mu 0 / 0.10 / 0.20');
-const base=STG.map(([nm,zA,zB,m])=>{const s=stage(zA,zB,m);if(s.jam){chk(false,`${nm}: jams at its drawn centres`);return s;}
+base=STG.map(([nm,zA,zB,m])=>{const s=stage(zA,zB,m);if(s.jam){chk(false,`${nm}: jams at its drawn centres`);return s;}
   const S=s.fac.map(st);
   chk(!s.jam&&S[2].mn>0.5,`${nm} (${zA}:${zB}, m ${m}): ${S.map(x=>`${f(x.mn,3)}-${f(x.mx,3)}`).join(' / ')} (mean ${S.map(x=>f(x.mean,3)).join(' / ')}); ${f(100*s.approach,0)} % of the action before the line of centres; drop ${f(100*s.drop,1)} % of a pitch; backlash ${f(s.blmm*1000,0)} µm; tip clearance ${f(s.tip*1000,0)} µm`);
   return s;});
 if(fail){console.log(rows.join('\n'));process.exit(1);}
 
 /* ---------- 2. the train in time: the escape wheel's drive, the swing, the rate ---------- */
-const ESC=build().ESC,TF=ESC.settings.TF,A1=ESC.A,AMIN=ESC.AMIN;
-const interp=(s,j,al)=>{const n=s.al.length-1,u=((al-s.al[0])/(s.al[n]-s.al[0])%1+1)%1*n,i=Math.floor(u),t=u-i;return s.fac[j][i]*(1-t)+s.fac[j][Math.min(n,i+1)]*t;};
-/* a day of the train (or `hours`), every stage's wheel at its own speed; stages[] may replace one stage; returns the swing's range and the time's wander */
-function day(stages,j,hours=24,ph=[0.13,0.57,0.31,0.89],means=base.map(s=>st(s.fac[j]).mean)){
-  /* the swing stepped every 0.1 s; the rate taken each second at the swing and the second's mean drive; the wander against the mean rate, which the navigator finds.
-     means: what each stage's ratio is taken against (the drawn mesh's mean: the set-up as drawn; or the stage's own: the set-up restoring the mean swing) */
-  const dt=0.1,N=Math.round(hours*3600/dt),R=[];let A2=null,amin=Infinity,amax=-Infinity,aS=0,aN=0,sS=0,nS=0;
-  for(let i=0;i<N;i++){const t=i*dt;let s=1;stages.forEach((S,k)=>{s*=interp(S,j,TAU*(t/STG[k][4]+ph[k]))/means[k];});
-    const aT=ESC.ampAt(s);if(A2===null)A2=aT*aT;A2+=(aT*aT-A2)*(1-Math.exp(-2*dt/TF));const a=Math.sqrt(A2);
-    if(t>4*TF){amin=Math.min(amin,a);amax=Math.max(amax,a);aS+=a;aN++;sS+=s;nS++;if(nS===10){R.push(ESC.rateAt(a,sS/nS));sS=0;nS=0;}}}
-  const mr=R.reduce((q,x)=>q+x,0)/R.length;let err=0,emin=0,emax=0;for(const r of R){err+=(r-mr)/86400;emin=Math.min(emin,err);emax=Math.max(emax,err);}
-  return{amin:amin/D,amax:amax/D,amean:aS/aN/D,wander:emax-emin,rate:mr};}
 say('');say('2. The train in time: the four stages\' ratios as their wheels turn (the centre once an hour), the escape wheel\'s drive against its mean, the balance\'s swing following');
 say(`   it as the escapement's equation has it (A² towards ampAt(drive)², TF ${TF} s), its rate (rateAt) and the time it gains and loses over a day against its mean rate`);
 const DAY=QUICK?6:24;

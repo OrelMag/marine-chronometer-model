@@ -1045,7 +1045,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
-    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));return h.toString().split('%3A').join(':').split('%2C').join(',');}
+    if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));if(typeof MAKER!=='undefined'&&MAKER.orig().length)h.set('orig',MAKER.orig().join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   /* first: at load, when the opening move to the view is still to come (it goes to the view returned) */
@@ -1058,6 +1058,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();if(first&&!H.armT)H.amp=ESC.ampAt(driveNow());} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings; at load the balance is already swinging as they make it */
     balApply(g('bal')||'');   /* bal=...: the balance's weights and screws (balStr) */
     msSet(+(g('mset')||0)||0);   /* mset=15: the mainspring's set, per cent */
+    if(typeof MAKER!=='undefined')MAKER.setOrig((g('orig')||'').split(',').filter(Boolean));   /* orig=mainspring,balance: the build's deviations set back to the Model 21 on their cards (maker.js) */
     const ed=g('edges')!=='0',shd=g('shadows')==='1',mg=g('merge')!=='0';   /* Edges and Performance mode are on by default, Shadows off: the hash says edges=0, merge=0 or shadows=1 only against that */
     const dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
@@ -1180,7 +1181,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   if(typeof BLENDER!=='undefined')BLENDER.bind({M,INFO,DRIVE_HIDE,drvF,SUS,TF:TAU_FREE,TAU_ARM,PL,hrs:()=>hrs,rollP:()=>+$('#rollP').value||7,
     config:m=>{const u=m.userData,on=k=>{const b=document.querySelector(`#${k} button[aria-pressed="true"]`);return b&&b.dataset.v;},d=on('dialSt'),b=on('bal'),sv=on('stopV');
       if(d)u.dial(d);if(b)u.balance(b);if(sv)u.stop(sv);u.R.timing(twR.valueAsNumber/8,vwR.valueAsNumber/8);u.R.screws(SP);u.R.balCurl(degF()-T0);}});
-  if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,boxMeshes:BOXM,cam,cv,scene,M,PARTS,INFO,PCE,SRC,units:()=>units,wake,R});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
+  if(typeof MAKER!=='undefined')MAKER.bind({mv,meshes:MVM,boxMeshes:BOXM,cam,cv,scene,M,PARTS,INFO,PCE,SRC,units:()=>units,wake,R,changed:()=>writeHash()});   /* the maker's sheets, drawings, STL, measuring, the build book (maker.js) */   /* R, mv, M: the maintaining work's parts and materials, for the essay's figure */
   look();
   Object.assign(tgt,{lidM:0,lidT:0});st.view='dial';
   document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==='dial'?'true':'false'));

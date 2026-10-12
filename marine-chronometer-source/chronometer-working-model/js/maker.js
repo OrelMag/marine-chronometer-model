@@ -4,7 +4,11 @@
    model's numbers as JSON. One IIFE; the page sees only MAKER. app.js calls MAKER.bind() once the model is built, with what it needs */
 "use strict";
 const MAKER=(()=>{
-  let A=null;   /* app.js's: mv, meshes, cam, cv, scene, M, PARTS, INFO, units(), wake(), R */
+  let A=null;   /* app.js's: mv, meshes, cam, cv, scene, M, PARTS, INFO, units(), wake(), R, changed() */
+  /* the build's deviations from the Model 21 (MAKERS.devs, tools/deviations.js): on by default, each set back to the original by its card's button; ORIG holds
+     those set back (the link keeps them: orig=mainspring,balance, app.js) */
+  const ORIG=new Set(),devOn=id=>!ORIG.has(id),devsOf=p=>(MAKERS.devs||[]).filter(d=>d.parts.includes(p.split('.')[0]));
+  const devHTML=(d,btn)=>`<div class="mkdev"><p class="mkm mkt"><b>${devOn(d.id)?'Changed for the build':'The Model 21 as made; the build changes it'}: ${esc(d.title)}</b> (${esc(d.period)}). ${esc(d.why)}${btn?'':` Sources: ${d.sources.map(esc).join('; ')}.`}</p>${btn?`<button type="button" class="mkdevb" data-dev="${d.id}">${devOn(d.id)?'Show the original Model 21':'Show the build\'s'}</button>`:''}</div>`;
   const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const mm=v=>A&&A.units()==='in'?(v/25.4).toFixed(3)+' in':v.toFixed(2)+' mm';
   /* densities (g/cm³) by the model's material: steel 7.85, brass 8.5, Invar 8.1, stainless 7.9, corundum 4.0, glass 2.5, mahogany 0.6, gold 17, silver 10.5 */
@@ -58,9 +62,9 @@ const MAKER=(()=>{
       <p class="mkm">Hamilton's threads are not known (the manual gives none, the videos don't resolve them): the thread to cut is the standard metric one nearest the model's, a maker's choice; tap the part each screws into, clear the parts it passes through, as the fits above say.</p>`;}
   /* a piece's sheet (part.k): the parts-list lines it lists (PIECES' h), its own meshes, its source where it has one, else its part's */
   function sheetHTML(p){const pc=A.PCE&&A.PCE[p],q=pc&&pc.src?{src:pc.src,sn:pc.sn}:A.PARTS[p.split('.')[0]]||{},own=pc?MAKERS.filter(l=>pc.h.split(' ').includes(l.id)):MAKERS.filter(l=>l.part===p),sp=own.length?[]:((q.sp||'').match(/\d{5}/g)||[]),L=own.length?own:MAKERS.filter(l=>sp.includes(l.no)),m=measure(p),s=m.box.getSize(new THREE.Vector3());
-    const rows=L.map(l=>`<tr><td>${esc(l.idx)}</td><td>${esc(l.no)}</td><td>${esc(l.name)}</td><td class="n">${esc(l.qty)}</td><td>${esc(l.mat)}<i>${l.cls==='manual'?'the manual':'practice'}</i></td><td>${esc(l.treat)}</td><td>${esc(l.fit)}</td></tr>`).join('');
+    const dv=l=>l.dev&&devOn(l.dev),rows=L.map(l=>`<tr><td>${esc(l.idx)}</td><td>${esc(l.no)}</td><td>${esc(l.name)}</td><td class="n">${esc(l.qty)}</td><td>${esc(dv(l)?l.vmat:l.mat)}<i>${dv(l)?'the build\'s (1950s)':l.cls==='manual'?'the manual':'practice'}</i></td><td>${esc(dv(l)?l.vtreat:l.treat)}</td><td>${esc(l.fit)}</td></tr>`).join('');
     return`<table class="mk"><thead><tr><th>Idx</th><th>No.</th><th>Name</th><th class="n">Units</th><th>Material</th><th>Finish, heat treatment</th><th>Fit, as measured on the model</th></tr></thead><tbody>${rows||'<tr><td colspan="7">No line of the parts list is on this card.</td></tr>'}</tbody></table>${!own.length&&L.length?`<p class="mkm">This card is cut on the line above, which the ${esc((A.INFO[L[0].part]||[L[0].part])[0])} card carries.</p>`:''}
-      ${L.filter(l=>l.tol).map(l=>`<p class="mkm mkt"><b>Tolerance (${esc(l.no)}).</b> ${esc(l.tol)}</p>`).join('')}${L.filter(l=>l.bench).map(l=>`<p class="mkm mkt"><b>Test on the bench (${esc(l.no)}).</b> ${esc(l.bench)} The build book's last chapter says how.</p>`).join('')}
+      ${(MAKERS.devs||[]).filter(d=>L.some(l=>l.dev===d.id)).map(d=>devHTML(d,false)+(devOn(d.id)?`<p class="mkm">The Model 21 as made: ${L.filter(l=>l.dev===d.id).map(l=>`${esc(l.no)}, ${esc(l.mat)}; ${esc(l.treat)}`).join('. ')}.</p>`:'')).join('')}${L.filter(l=>l.tol).map(l=>`<p class="mkm mkt"><b>Tolerance (${esc(l.no)}).</b> ${esc(l.tol)}</p>`).join('')}${L.filter(l=>l.bench).map(l=>`<p class="mkm mkt"><b>Test on the bench (${esc(l.no)}).</b> ${esc(l.bench)} The build book's last chapter says how.</p>`).join('')}
       <p class="mkm">As built: ${mm(s.x)} × ${mm(s.y)} × ${mm(s.z)} (along the movement's x, its axis y, z), ${m.vol.toFixed(1)} mm³, about ${m.mass.toFixed(2)} g (${Object.entries(m.by).filter(([,v])=>v>0.01).map(([k,v])=>`${k} ${v.toFixed(1)} mm³`).join(', ')}).
       Source of its shape: ${q.src?esc(A.SRC[q.src][0]):'—'}${q.sn?': '+esc(q.sn):''}. Sizes the model estimates are listed in its README's "Estimated, not from the manual".</p>${holeRows(holes(p))}${screwRows(p)}`;}
   /* the drawing: the solids' edges (creases over 30°) projected to the plan (x, z, seen from the dial side: 3 o'clock right, 12 up) and an elevation (x, y, the dial side
@@ -96,7 +100,8 @@ const MAKER=(()=>{
   function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
   /* the card: a sheet below the description, opened on demand */
   function card(p){const info=$('#info');let mk=info.querySelector('.mkc');if(!mk){mk=document.createElement('div');mk.className='mkc';info.appendChild(mk);}
-    mk.innerHTML=`<div class="seg"><button data-a="sheet">Maker's sheet</button><button data-a="dwg">Drawing</button><button data-a="stl">STL</button></div><div class="mkb"></div>`;
+    mk.innerHTML=`${devsOf(p).map(d=>devHTML(d,true)).join('')}<div class="seg"><button data-a="sheet">Maker's sheet</button><button data-a="dwg">Drawing</button><button data-a="stl">STL</button></div><div class="mkb"></div>`;
+    for(const b of mk.querySelectorAll('.mkdevb'))b.onclick=()=>{const id=b.dataset.dev;ORIG.has(id)?ORIG.delete(id):ORIG.add(id);const open=mk.querySelector('.mkb').dataset.v==='s';card(p);if(open)mk.querySelector('[data-a=sheet]').click();if(A&&A.changed)A.changed();};
     const body=mk.querySelector('.mkb'),title=(A.INFO[p]||[p])[0];
     mk.querySelector('[data-a=sheet]').onclick=()=>{body.innerHTML=body.dataset.v==='s'?'':sheetHTML(p);body.dataset.v=body.dataset.v==='s'?'':'s';};
     mk.querySelector('[data-a=dwg]').onclick=()=>save(new Blob([drawingSVG(p,title)],{type:'image/svg+xml'}),`model21-${p}.svg`);
@@ -126,7 +131,7 @@ const MAKER=(()=>{
       if(!pcs.length)return`<section class="bk"><h2>${esc(A.INFO[p][0])}</h2><p>${esc(A.INFO[p][1])}</p>${sheetHTML(p)}${drawingSVG(p,A.INFO[p][0])}</section>`;
       return`<section class="bk asm"><h2>${esc(A.INFO[p][0])}</h2><p>${esc(A.INFO[p][1])}</p><p class="mkm">An assembly of ${pcs.length} pieces, each on its own sheet below: ${pcs.map(k=>esc(A.INFO[k][0])).join(', ')}. Its drawing as assembled.</p>${drawingSVG(p,A.INFO[p][0]+', assembled')}</section>`+
         pcs.map(k=>`<section class="bk pc"><h2>${esc(A.INFO[k][0])}</h2><p class="mkm">Part of the ${esc(A.INFO[p][0].toLowerCase())}.</p><p>${esc(A.INFO[k][1])}</p>${sheetHTML(k)}${drawingSVG(k,A.INFO[k][0])}</section>`).join('');};
-    pr.innerHTML=`<h1>The Hamilton Model 21: a build book</h1><p>Generated from the working model: every part card's lines of the manual's parts list (NAVSHIPS 250-624, Sec. XI), each line's fit as measured on the model, its material and treatment (the manual's where it names them, else watchmaking practice), and the part's drawing from the model's solids, in millimetres. What the model estimates is listed in its README's "Estimated, not from the manual"; the hairspring's and the escapement's design figures are in the essay and the README.</p>`+
+    pr.innerHTML=`<h1>The Hamilton Model 21: a build book</h1><p>Generated from the working model: every part card's lines of the manual's parts list (NAVSHIPS 250-624, Sec. XI), each line's fit as measured on the model, its material and treatment (the manual's where it names them, else watchmaking practice), and the part's drawing from the model's solids, in millimetres. What the model estimates is listed in its README's "Estimated, not from the manual"; the hairspring's and the escapement's design figures are in the essay and the README.</p>${(MAKERS.devs||[]).length?`<p>${(MAKERS.devs||[]).map(d=>`${esc(d.title)}: ${devOn(d.id)?'the build\'s, a deviation from the Model 21 (the original is beside it on its sheet)':'the Model 21\'s, as made'}`).join('; ')}. Each part card switches between the two.</p>`:''}`+
       parts.map(sec).join('')+
       /* the tests on the bench (tools/bench.js through makers.py): what the parts and the finished movement must read, from the model's checks and the manual's */
       `<section class="bk tests"><h2>Tests on the bench</h2><p>The analysis says the design works; only these say a chronometer made to it does. Each figure is the working model's own (its checks: tools/ in the repository) or the manual's.</p>${(MAKERS.tests||[]).map((t,i)=>`<h3>${i+1}. ${esc(t.title)}</h3><p class="mkm"><b>When:</b> ${esc(t.when)}.</p><p><b>How.</b> ${esc(t.how)}</p><p><b>It must read.</b> ${esc(t.pass)}</p>`).join('')}</section>`;
@@ -144,5 +149,5 @@ const MAKER=(()=>{
   return{bind(api){A=api;
       $('#mkMeasure').addEventListener('click',()=>measureOn(!meas));$('#mkOil').addEventListener('click',()=>oil(!oilOn));$('#mkBook').addEventListener('click',book);$('#mkData').addEventListener('click',data);
       $('#mkSTL').addEventListener('click',()=>save(stl(A.meshes.filter(o=>!o.userData.decal&&!o.userData.surface&&o.geometry&&o.geometry.attributes.position&&(()=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;})())),'model21-movement.stl'));},
-    card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure,holes,book};
+    card,measuring:()=>!!meas,measureHit,sheetHTML,drawingSVG,stl,measure,holes,book,orig:()=>[...ORIG].sort(),setOrig:ids=>{ORIG.clear();for(const i of ids)if((MAKERS.devs||[]).some(d=>d.id===i))ORIG.add(i);}};
 })();

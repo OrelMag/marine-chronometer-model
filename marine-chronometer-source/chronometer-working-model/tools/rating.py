@@ -5,6 +5,7 @@ model's thirty-day test card, app.js testCalc), and what a navigator carrying it
   python rating.py --demo             a log made up with known properties (the error budget's chronometer like No. 3390, errorbudget.js), worked and checked: exit 1
                                       if the figures it finds are not the ones it was made with (a few seconds)
   python rating.py --template OUT.csv a blank log to fill in
+  python rating.py --demo --json OUT  the demo's log and figures as JSON (the report in verification/build-verification reads it)
 
 The log: one row a comparison, a header naming its columns:
   when      the date and time of the comparison (ISO, 2026-11-02 12:00; the same hour each day is best, but any times do)
@@ -129,7 +130,7 @@ def report(path_or_data):
     good = pj[30][1] < 30; L.append(f"{'ok' if good else '!!'}  good enough to navigate by: 95 % of voyages under 30 s (7½ miles) after 30 days" + ('' if good else ': rate it again, find the drift or the temperature term, or adjust'))
     return L, F, sig, nv, ok and good
 
-def demo():
+def demo(jout=None):
     """a log like the error budget's chronometer like No. 3390 (errorbudget.js: scatter 0.042 s a day, its temperature curve), through the Navy test's periods,
     worked; the figures found against those it was made with"""
     rng = np.random.default_rng(3390); F0 = dict(rate=0.35, drift=0.002, temp=-0.004, temp2=0.0002); sig0 = 0.042; d, e, T, P = [0.0], [0.0], [90.0], ['I']; t = 0
@@ -146,13 +147,18 @@ def demo():
     L2, F2, sig2, _, _ = report((d, e, T, [''] * len(d)))
     print('the same with thirty more days at 70 °F:'); print('\n'.join('  ' + x for x in L2))
     good = nv is not None and abs(F2['rate'] - F0['rate']) < 0.05 and abs(sig2 - sig0) < 0.02 and abs(F2.get('temp', 0) - F0['temp']) < 0.004
+    if jout:
+        import json; r, tm, Tm, dd = rates(d, e, T); nv2 = navy(d[:31], e[:31], T[:31], P[:31])
+        json.dump(dict(made=dict(F0, sig=sig0), d=d.tolist(), e=e.tolist(), T=T.tolist(), rates=r.tolist(), tm=tm.tolist(), navy=nv2[1] if nv2 else None,
+                       periods=[dict(n=q['n'], T=q['T'], m=q['m'], dev=q['dev'], dif=q['dif']) for q in nv2[0]] if nv2 else None, limits=LIM, fit=F2, sig=sig2,
+                       backtest={str(k): v for k, v in backtest(d, e).items()}, project={str(k): v for k, v in project(F2, sig2, Tm).items()}), open(jout, 'w', encoding='utf-8'), default=float)
     print(('  ok ' if good else '  !! ') + f"the fit finds rate {F2['rate']:+.3f} (made {F0['rate']:+.3f}), scatter {sig2:.3f} ({sig0}), temperature {F2.get('temp', 0):+.4f} ({F0['temp']:+.4f}), the comparator's 0.01 s rounding in it")
     return good
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8'); a = sys.argv[1:]
     if not a: sys.exit(__doc__)
-    if a[0] == '--demo': sys.exit(0 if demo() else 1)
+    if a[0] == '--demo': sys.exit(0 if demo(a[a.index('--json') + 1] if '--json' in a else None) else 1)
     if a[0] == '--template':
         out = a[1] if len(a) > 1 else 'rating-log.csv'; open(out, 'w', encoding='utf-8').write('when,error,temp,period,wound\n2026-11-02 12:00,0.0,90,I,y\n'); print('wrote', out); return
     L, F, sig, nv, ok = report(read(a[0])); print('\n'.join('  ' + x for x in L)); sys.exit(0 if ok else 1)
