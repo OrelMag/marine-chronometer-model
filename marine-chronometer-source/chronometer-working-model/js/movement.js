@@ -1454,7 +1454,7 @@ function buildMovement(M){
   R.springReady=()=>{if(lastTh===null){R.spring.geometry=ribbonGeo(R.spPath(0),HS_B,HS_T,R.spring.geometry);lastTh=0;}if(lastIn<0){fs.ms.geometry.dispose();fs.ms.geometry=mainspringGeo(fs.MS.Tup,fs.MS.y0,fs.MS.y1,fs.MS.ey);lastIn=0;}};   /* the hairspring at rest and the mainspring fully wound, built if they haven't been yet (each is built only when it can be seen): for the maker's sheets, drawings and STL (maker.js) */
   /* ratchet profiles; WPH: fusee-ratchet angle (in the sustaining ratchet's frame) at which the winding pawls bear on its steep faces */
   const FPR=ratchetProf(WRT.z,WRT.m,false,true,WRT.d*WRT.m),SRP=ratchetProf(SRT.z,SRT.m,true,true),WPH=phaseAgainst(FPR,R.wp[0].userData.pts,R.wp[0].userData.q,R.wp[0].userData.th0,1,true).psi;
-  R.WPH=WPH;R.SMAX=SMAX;R.sspGeo=sspGeo;R.ssD=0;R.held=false;R.eps=0;R.FPR=FPR;R.SRP=SRP;   /* SMAX: the sustaining spring's travel from loaded to spent (with sspGeo); ssD: how far it has relaxed now (update()); the ratchets' profiles, for the essay's figure */
+  R.WPH=WPH;R.SMAX=SMAX;R.SSG=SSG;R.sspGeo=sspGeo;R.ssD=0;R.held=false;R.eps=0;R.FPR=FPR;R.SRP=SRP;   /* SMAX: the sustaining spring's travel from loaded to spent (with sspGeo); SSG: its gap relaxed (the close-up's explanation, app.js); ssD: how far it has relaxed now (update()); the ratchets' profiles, for the essay's figure */
   /* the load path, which app.js picks out while winding: lp 'm' the mainspring's side (barrel, mainspring, chain, the fusee and its winding ratchet, the winding pawls and
      their springs), 's' the sustaining spring and its pins, 'r' the sustaining ratchet, 'h' the sustaining pawl, which holds the ratchet while the key turns, 'w' the fusee wheel */
   parts.gw.userData.lp='w';parts.sspring.userData.lp='s';parts.sratchet.userData.lp='r';parts.spawl.userData.lp='h';
@@ -1507,7 +1507,9 @@ function buildMovement(M){
     else if(s.reset||gA<mw.g-1e-9||gA-mw.g>0.25){const o=srA;srA=holding?holdBack(srA+gA-mw.g):srA+gA-mw.g;mw.hold+=srA-o;mw.top+=srA-o;mw.lock-=srA-o;}   /* the train set, not run (back, or more than it turns in a frame): the ratchet with it, the spring as it was (held, on its pawl's tooth) */
     const tele=mw.n!==null&&Math.abs(s.n-mw.n)>0.15;   /* the wind set (the slider), not wound or run: the fusee to its new turns, its pawls on the nearest tooth */
     if(s.winding){
-      if(!mw.w||tele){mw.lock=mw.fa-srA;mw.top=srA;mw.hold=holding?srA:Math.min(srA,Math.max(holdBack(srA),gA-SMAX));mw.nW0=s.n;mw.eps0=mw.fa-mw.base;}   /* the key takes the fusee: the spring turns the ratchet back with it to its pawl, or as far as it pushes at all */
+      if(!mw.w||tele){if(tele)mw.fa=srA+WPH+p*Math.round((base+mw.fa-mw.base-srA-WPH)/p);   /* set and wound in one frame (the page's From run down): the fusee first to its new turns, its pawls on the nearest tooth */
+        mw.lock=mw.fa-srA;mw.top=srA;mw.hold=holding?srA:Math.min(srA,Math.max(holdBack(srA),gA-SMAX));mw.nW0=s.n;mw.eps0=mw.fa-(tele?base:mw.base);}   /* the key takes the fusee: the spring turns the ratchet back with it to its pawl, or as far as it pushes at all.
+        Until 12 October 2026 a set took the lock from the fusee's old place, so the ratchet stood still while the fusee turned back most of a turn, then dropped past a tooth at once */
       mw.fa=base+(mw.nW0>0?mw.eps0*Math.min(1,s.n/mw.nW0):0);
       srA=clamp(mw.fa-mw.lock,mw.hold,mw.top);holding=srA<=mw.hold+1e-12;   /* the ratchet back with the fusee until its pawl holds it */
     }else{

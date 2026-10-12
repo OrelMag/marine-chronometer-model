@@ -514,6 +514,18 @@ Contents:
 
 ## Winding and maintaining work
 
+- **Wound straight from a set, the sustaining ratchet stood while the fusee
+  turned back most of a turn, then dropped past a tooth.** Wind with the key
+  with From run down sets the wind to run down and starts winding in the same
+  frame; `update()` took the winding pawls' lock from the fusee's old place, so
+  the ratchet didn't go back with the fusee (its winding pawls off their faces)
+  and its pawl caught it only after about 0.8 turn, 2.7° back where a tooth is
+  3°. The fusee is now carried to its new turns first, its pawls on the nearest
+  tooth, and the lock taken from there: the pawl holds on the first step.
+  Keep: a wind started in the frame of a set goes back with the fusee and is
+  held within a tooth; `tools/maintaining.py` checks it ("wound from a set").
+  Its hold depth now counts only holds the spring pushes on (a spent spring
+  leaves the pawl anywhere on a tooth's back). `6824826`
 - **The mainspring packed its coils coarser than the video it came from.** The strip's 0.394 mm is the packed coils'
   pitch on KLUwI2UUCMQ (1/41.4 of the barrel's inside radius), the strip and whatever lies between them; `mainspring.py`
   took it as the bare strip and kept its coils a further 0.01 apart, so the model packed at 0.404, 1/40.3 of the inside

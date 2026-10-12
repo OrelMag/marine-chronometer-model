@@ -169,7 +169,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const BOXM=[];BX.root.traverse(o=>{if(o.isMesh)BOXM.push(o);});
   const mv=buildMovement(M);BX.bowl.add(mv);
   const sh=new THREE.Mesh(new THREE.PlaneGeometry(640,640).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({map:shadowTex(),transparent:true,depthWrite:false}));sh.position.y=-101;sh.userData.surface=true;scene.add(sh);
-  const R=mv.userData.R,P=mv.userData.parts;if(/[?&]qa\b/.test(location.search)){window.__mv=mv;window.__M=M;window.__BX=BX;window.__parts=PARTS;window.__r=r;window.__renders=()=>renders;window.__lp=()=>({ph:lpPh,end:lpEnd,cu:cuOn,now:performance.now()});window.__proj=(pts,yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(0,-26,0);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();return pts.map(p=>{const v=new THREE.Vector3(...p);mv.localToWorld(v);v.project(c2);return[(v.x+1)/2*W,(1-v.y)/2*Hh];});};window.__unproj=(pts,yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(0,-26,0);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();
+  const R=mv.userData.R,P=mv.userData.parts;if(/[?&]qa\b/.test(location.search)){window.__mv=mv;window.__M=M;window.__BX=BX;window.__parts=PARTS;window.__r=r;window.__renders=()=>renders;window.__lp=()=>({ph:lpPh,end:lpEnd,cu:cuOn,now:mClk});window.__cu=()=>({z:cuV.z,p:cuV.p.toArray(),f:cuV.f,big:cuBig,pin:cuPin,help:cuHelp,slow:cuSlowK(),si:cuSlowI,on:cuOn});window.__proj=(pts,yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(0,-26,0);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();return pts.map(p=>{const v=new THREE.Vector3(...p);mv.localToWorld(v);v.project(c2);return[(v.x+1)/2*W,(1-v.y)/2*Hh];});};window.__unproj=(pts,yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(0,-26,0);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();
     const inv=new THREE.Matrix4().copy(mv.matrixWorld).invert();return pts.map(([sx,sy,h])=>{const ndc=new THREE.Vector2(sx/W*2-1,-(sy/Hh*2-1));const rc=new THREE.Raycaster();rc.setFromCamera(ndc,c2);
       const o=rc.ray.origin.clone().applyMatrix4(inv),dd=rc.ray.direction.clone().transformDirection(inv);const tt=(h-o.y)/dd.y;return[o.x+dd.x*tt,o.z+dd.z*tt];});};
   window.__camInfo=()=>JSON.stringify({fov:cam.fov,aspect:cam.aspect,pos:cam.position.toArray().map(v=>+v.toFixed(2)),tgt:C.target.toArray().map(v=>+v.toFixed(2)),C:{yaw:C.yaw,pitch:C.pitch,dist:C.dist},W,Hh});
@@ -253,8 +253,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   /* the load path (Load path in colour, Winding): while winding (lpPh 'w') the sustaining spring drives the fusee wheel (rose), pushing off its ratchet, which the sustaining
      pawl holds (teal); for 2 s after the key lets go (lpPh 'r') the drive is the mainspring's again: barrel, chain, fusee, winding pawls, sustaining ratchet, spring, fusee wheel. A tinted copy of what the part shows: its colour drawn
      toward the tint and a little of it lit, so it holds under the drawing (drawOf keeps the colour, not the glow) */
-  let lpPh='',lpEnd=0;const LPC={d:sc('#e0306a'),h:sc('#0e9f92')},TINT=new Map();   /* rose and teal: hues no metal in the movement has */
-  const lpCol=m=>{const k=m.userData.lpk;if(!st.lp||!lpPh||!k)return null;return lpPh==='w'?(k==='s'?'d':k==='h'||k==='r'?'h':null):(k==='h'?null:'d');};
+  let lpPh='',lpEnd=0,mClk=0;const LPC={d:sc('#e0306a'),h:sc('#0e9f92')},TINT=new Map();   /* rose and teal: hues no metal in the movement has */
+  const lpCol=(m,ph=lpPh)=>{const k=m.userData.lpk;if(!st.lp||!ph||!k)return null;return ph==='w'?(k==='s'?'d':k==='h'||k==='r'?'h':null):(k==='h'?null:'d');};   /* ph: the close-up kept open in running colours the mainspring's path ('r') */
   function tintOf(m0,c){if(!m0.color)return m0;const k=m0.uuid+c;let t=TINT.get(k);
     if(!t){t=m0.clone();t.userData={inkDecal:m0.userData.inkDecal};patchSection(t,!!m0.userData.secCap);t.userData.side0=m0.userData.side0??m0.side;t.side=m0.side;t.clippingPlanes=[...(m0.clippingPlanes||[])];TINT.set(k,t);}
     if(t.map!==m0.map){t.map=m0.map;t.needsUpdate=true;}t.color.copy(m0.color).lerp(LPC[c],0.8);if(t.emissive){t.emissive.copy(LPC[c]);t.emissiveIntensity=0.25;}if('metalness'in t){t.metalness=Math.min(m0.metalness,0.2);t.roughness=Math.max(m0.roughness,0.5);}t.opacity=m0.opacity??1;return t;}   /* less metal, so the colour shows rather than the room it reflects */
@@ -282,28 +282,85 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   }
 
   /* ---------- the sustaining spring close up (Close-up, Winding) ----------
-     While winding and for 2 s after (lpPh), the fusee wheel's maintaining work drawn again into the box #cu, on the stage's own canvas (the page keeps to two WebGL contexts):
+     While winding and for 2 s after (lpPh), or kept open (cuPin: its pin, or Open the close-up), the fusee wheel's maintaining work drawn again into the box #cu, on the stage's own canvas (the page keeps to two WebGL contexts):
      only its parts (layer 1: the fusee wheel, the sustaining spring, ratchet and pawl, the fusee's winding ratchet), seen from the train bridge's side in the movement's own frame,
      so it holds whatever the view, the sustaining ratchet see-through so the spring under it shows, tinted as the load path. Under it, how long the spring can still drive the
-     train: R.ssD of R.SMAX, the model's 10 minutes (movement.js) */
-  const cuEl=$('#cu'),cuG=$('#ssGauge'),cuX=$('#cuX'),cam2=new THREE.PerspectiveCamera(30,1,1,2000),CUP=new Set(['gw','sspring','sratchet','spawl']);
+     train: R.ssD of R.SMAX, the model's 10 minutes (movement.js); kept open in running, how hard it pushes.
+     Its tools (cuBind): the wheel, a pinch or + and - zoom (about the pointer), a drag moves, a double-click resets (cuV: zoom z, pan p in the movement frame, f a part followed:
+     the spring's working end and gap, the sustaining pawl, a winding pawl); enlarge (.big); slow motion (CUSL, while it shows: the key, model time and the spring's easing, on mClk);
+     keep open; and how the spring takes the load (#cuh, cuHelpSet: the phase now picked out, its figures live) */
+  const cuEl=$('#cu'),cuG=$('#ssGauge'),cuX=$('#cuX'),cuH=$('#cuh'),cam2=new THREE.PerspectiveCamera(30,1,0.3,2000),CUP=new Set(['gw','sspring','sratchet','spawl']);
   const CU=MVM.filter(m=>CUP.has(m.userData.part)||m.userData.hn==='42013');CU.forEach(m=>m.layers.enable(1));scene.traverse(o=>{if(o.isLight)o.layers.enable(1);});cam2.layers.set(1);
   const CUG=new Set(CU.filter(m=>m.userData.part==='sratchet'&&m.userData.mat0===M.gilt)),CUGM=new Map();   /* the sustaining ratchet wheel and its web, drawn at 45% */
   const cuGhost=m0=>{let g=CUGM.get(m0);if(!g){g=m0.clone();g.userData={};g.transparent=true;g.opacity=0.45;g.depthWrite=false;patchSection(g,false);g.clippingPlanes=[...(m0.clippingPlanes||[])];CUGM.set(m0,g);}return syncMat(g,m0);};
-  let cuOn=false,cuS='';const cuBg=new THREE.Color(),cuCC=new THREE.Color(),cuT=new THREE.Vector3(),cuE=new THREE.Vector3();
+  let cuOn=false,cuS='',cuPin=false,cuBig=false,cuHelp=false,cuSlowI=0,cuHS='';const cuBg=new THREE.Color(),cuCC=new THREE.Color(),cuT=new THREE.Vector3(),cuE=new THREE.Vector3(),cuQ=new THREE.Vector3(),cuBox=new THREE.Box3();
+  /* the view: from outward of the fusee (away from the movement's centre) and below, on the train bridge's side, looking into the recess; right and up on the box, in the movement frame */
+  const cuUl=Math.hypot(L.Fu[0],L.Fu[1]),cuUx=L.Fu[0]/cuUl,cuUz=L.Fu[1]/cuUl,CU_T0=new THREE.Vector3(L.Fu[0]+cuUx*2,-8.6,L.Fu[1]+cuUz*2),CU_OFF=new THREE.Vector3(cuUx*19,-56,cuUz*19),CU_D=CU_OFF.length();
+  const cuBk=CU_OFF.clone().normalize(),cuUp=new THREE.Vector3(-cuUx,0,-cuUz),cuRt=new THREE.Vector3().crossVectors(cuUp,cuBk).normalize();cuUp.crossVectors(cuBk,cuRt);
+  const cuV={z:1,p:new THREE.Vector3(),f:/** @type {string|null} */(null)},cuVP={cx:0,cy:0,h:1},CUZ=[0.6,16];
+  const CUSL=[1,1/4,1/10,1/25],CUSN=['1×','¼×','⅒×','1/25×'],cuSlowK=()=>(cuOn||(st.cu&&winding))?CUSL[cuSlowI]:1;   /* slow motion acts only while the close-up shows */
+  const cuFol=k=>{const o=k==='gap'?R.ssPin:k==='spawl'?R.spawl:k==='wp'?R.wp[0]:null;if(!o)return null;if(k==='gap')o.getWorldPosition(cuQ);else cuBox.setFromObject(o).getCenter(cuQ);return mv.worldToLocal(cuQ);};
+  const cuMpp=()=>2*CU_D/cuV.z*Math.tan(15*D2R)/cuVP.h;   /* mm a pixel at the target */
+  const cuPan=(dx,dy)=>{const k=cuMpp();cuV.p.addScaledVector(cuRt,-dx*k).addScaledVector(cuUp,dy*k);wake();};
+  const cuZoom=(f,x,y)=>{const z1=clamp(cuV.z*f,CUZ[0],CUZ[1]),k0=cuMpp(),k1=k0*cuV.z/z1;if(x!=null){const ox=x-cuVP.cx,oy=y-cuVP.cy;cuV.p.addScaledVector(cuRt,ox*(k0-k1)).addScaledVector(cuUp,-oy*(k0-k1));}cuV.z=z1;wake();};   /* the point under the pointer stays under it */
+  const cuReset=()=>{cuV.z=1;cuV.p.set(0,0,0);cuV.f=null;wake();};
+  const cuGo=k=>{cuV.f=k;cuV.p.set(0,0,0);cuV.z=k==='spawl'?3.5:3;wake();};
   const cuRect=()=>{const b=cuEl.getBoundingClientRect(),s=stage.getBoundingClientRect();return{x0:b.left-s.left,y0:b.top-s.top,x1:b.right-s.left,y1:b.bottom-s.top};};
-  function cuShow(){cuOn=st.cu&&!!lpPh;cuEl.classList.toggle('hidden',!cuOn);cuX.textContent=st.ssx?'spring ×20':'';cuS='';}
+  /* the explanation beside the close-up, or above it where the stage is too narrow */
+  function cuPlace(){if(cuH.classList.contains('hidden'))return;const b=cuRect(),sw=stage.clientWidth,sh=stage.clientHeight;
+    if(sw-b.x1-22>=300)Object.assign(cuH.style,{left:b.x1+8+'px',bottom:(sh-b.y1)+'px',width:Math.min(340,sw-b.x1-22)+'px',maxHeight:(b.y1-10)+'px'});
+    else Object.assign(cuH.style,{left:'14px',bottom:(sh-b.y0+8)+'px',width:Math.min(340,sw-28)+'px',maxHeight:Math.max(100,b.y0-62)+'px'});}   /* under the 3D model / Essay tabs */
+  function cuShow(){cuOn=(st.cu&&!!lpPh)||cuPin;cuEl.classList.toggle('hidden',!cuOn);cuEl.classList.toggle('big',cuBig);cuX.textContent=st.ssx?'spring ×20':'';cuS='';cuHS='';
+    $('#cuBig').setAttribute('aria-pressed',String(cuBig));$('#cuPin').setAttribute('aria-pressed',String(cuPin));$('#cuOpen').setAttribute('aria-pressed',String(cuPin));$('#cuOpen').textContent=cuPin?'Close the close-up':'Open the close-up';$('#cuHelp').setAttribute('aria-pressed',String(cuHelp));
+    const sb=$('#cuSlow');sb.textContent=CUSN[cuSlowI];sb.classList.toggle('on',cuSlowI>0);sb.setAttribute('aria-label','Slow motion: '+(cuSlowI?CUSN[cuSlowI]+' speed':'real speed'));
+    cuH.classList.toggle('hidden',!(cuOn&&cuHelp));if(cuOn&&cuHelp){if(!cuH.firstChild)cuHelpBuild();cuPlace();}wake();}
+  /* how the spring takes the load: the three phases, the one now picked out and open (cuHelpSet), with the figures of the moment. From the manual (Sec. IV) and movement.js's update() */
+  function cuHelpBuild(){const go=(k,t)=>`<button class="go" data-f="${k}" title="Zoom the close-up there">${t}</button>`;
+    cuH.innerHTML=`<h4>How the sustaining spring takes the load</h4>
+      <p>The spring is a flat steel band lying round the inside of the fusee wheel’s recess, nearly a full ring. One end is pinned to the fusee wheel; the other, across a small gap (${go('gap','see it')}), to the sustaining ratchet wheel, which turns free on the same arbor. Nothing else joins the ratchet to the wheel, so all the drive passes through the band: the ratchet pushes the band’s working end toward its fixed end, closing the gap a little, and the band, squeezed round the recess, pushes the fusee wheel on.</p>
+      <ol><li data-ph="run"><b>Running: the mainspring loads it.</b><span class="tx"> <span class="path">Barrel → chain → fusee → its winding ratchet → the two ${go('wp','winding pawls')} on the sustaining ratchet → the spring → the fusee wheel → the centre pinion.</span> The ratchet closes the gap until the spring pushes as hard as the fusee drives; then the two turn together, once in 6.4 hours. <span class="num" data-v="run"></span></span></li>
+      <li data-ph="w"><b>Winding: the spring drives alone.</b><span class="tx"> The key turns the fusee back, so it no longer pushes. The spring pushes the sustaining ratchet back with it until the ${go('spawl','sustaining pawl')}, pivoted in the frame, drops into a tooth and holds it; from then the fusee’s winding ratchet slips back under the winding pawls. Its working end held still, the spring pushes the fusee wheel on by its fixed end, and the train keeps going. It relaxes as it turns the wheel: the gap opens and its push falls. <span class="num" data-v="w"></span></span></li>
+      <li data-ph="r"><b>Key let go: the mainspring takes the load back.</b><span class="tx"> The fusee turns forward until its winding ratchet meets the winding pawls, then carries the sustaining ratchet forward off its pawl, closing the gap until the spring again pushes as hard as the fusee drives. That turn of the fusee draws chain off the barrel: running time taken from the mainspring. <span class="num" data-v="r"></span></span></li></ol>
+      <p><small>The spring pushes in proportion to how far it is closed from free: spent once the fusee wheel has turned ${(R.SMAX/D2R).toFixed(1)}° on it, 10 minutes of running (the manual: 5 to 10). Its gap, travel and strength are estimated. Rose drives, teal holds. <i>Exaggerate the spring’s motion</i>, under Winding, draws it opening 20 times as far.</small></p>`;
+    cuH.querySelectorAll('button.go').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();cuGo(/** @type {HTMLElement} */(b).dataset.f);}));
+    cuH.querySelectorAll('li').forEach(li=>li.addEventListener('click',()=>{if(!li.classList.contains('now'))li.classList.toggle('open');}));}   /* the phase now is open; the others open on a click */
+  function cuHelpSet(){if(!cuHelp||!cuOn)return;const ph=lpPh==='w'?'w':lpPh==='r'?'r':'run',pu=Math.round(R.ssF()*100),fd=Math.round((hrs<RUN_H?drvF(hrs):0)*100),gap=((R.SSG-R.SMAX+R.ssD)/D2R).toFixed(1),A=Math.round(H.amp/D2R);
+    const left=10*clamp(1-R.ssD/R.SMAX,0,1),mn=Math.floor(left+1e-9),sc=Math.min(59,Math.floor((left-mn)*60)),rl=ph==='w'?R.release():0,cs=rl/FUSEE_PER_HOUR*60;
+    const v={run:ph!=='run'?'':hrs>=RUN_H?'Now: run down, the fusee drives nothing.':`Now: the fusee drives ${fd}% of its 12-hour drive; the spring pushes ${pu}%, its gap ${gap}°.`,
+      w:ph!=='w'?'':`Now: the spring pushes ${pu}% of the 12-hour drive, its gap ${gap}°, the balance swinging ${A}°; ${R.ssD>=R.SMAX?'spent: the train stops':`${mn} min ${String(sc).padStart(2,'0')} s of drive left`}. Let go now, the fusee would turn ${(rl*360).toFixed(1)}° forward to load it again: ${cs<1?Math.round(cs*60)+' s':cs.toFixed(1)+' min'} of the mainspring’s running.`,
+      r:ph!=='r'?'':`Now: the spring pushes ${pu}%, its gap ${gap}°.`};
+    const k=ph+v.run+v.w+v.r;if(k===cuHS)return;cuHS=k;cuH.querySelectorAll('li').forEach(li=>li.classList.toggle('now',/** @type {HTMLElement} */(li).dataset.ph===ph));cuH.querySelectorAll('[data-v]').forEach(e=>e.textContent=v[/** @type {HTMLElement} */(e).dataset.v]);}
   function cuDraw(){if(!cuOn)return;const b=cuRect(),gH=cuG.offsetHeight,tH=18,w=b.x1-b.x0-2,h=b.y1-b.y0-2-gH-tH;if(w<20||h<20)return;   /* between the title and the gauge */
-    const ul=Math.hypot(L.Fu[0],L.Fu[1]),ux=L.Fu[0]/ul,uz=L.Fu[1]/ul;   /* outward from the movement's centre through the fusee */
-    cuT.set(L.Fu[0]+ux*2,-8.6,L.Fu[1]+uz*2);cuE.set(L.Fu[0]+ux*21,-8.6-56,L.Fu[1]+uz*21);mv.localToWorld(cuT);mv.localToWorld(cuE);
-    cam2.position.copy(cuE);cam2.up.set(-ux,0,-uz).transformDirection(mv.matrixWorld);cam2.lookAt(cuT);cam2.aspect=w/h;cam2.updateProjectionMatrix();
-    const keep=CU.map(m=>m.material);for(const m of CU){const lc=lpCol(m),b0=base(m),t=lc?tintOf(b0,lc):b0;m.material=CUG.has(m)?cuGhost(t):t;}
+    {const sb=stage.getBoundingClientRect();cuVP.cx=sb.left+b.x0+1+w/2;cuVP.cy=sb.top+b.y0+1+tH+h/2;cuVP.h=h;}
+    const fo=cuV.f?cuFol(cuV.f):null;cuT.copy(fo||CU_T0).add(cuV.p);cuE.copy(CU_OFF).divideScalar(cuV.z).add(cuT);mv.localToWorld(cuT);mv.localToWorld(cuE);
+    cam2.position.copy(cuE);cam2.up.set(-cuUx,0,-cuUz).transformDirection(mv.matrixWorld);cam2.lookAt(cuT);cam2.aspect=w/h;cam2.updateProjectionMatrix();
+    const ph=lpPh||'r',keep=CU.map(m=>m.material);for(const m of CU){const lc=lpCol(m,ph),b0=base(m),t=lc?tintOf(b0,lc):b0;m.material=CUG.has(m)?cuGhost(t):t;}
     const au=r.shadowMap.autoUpdate,ca=r.getClearAlpha();r.getClearColor(cuCC);r.shadowMap.autoUpdate=false;cuBg.set(getComputedStyle(stage).getPropertyValue('--card').trim()||'#ffffff');
     r.setScissorTest(true);r.setViewport(b.x0+1,Hh-b.y1+1+gH,w,h);r.setScissor(b.x0+1,Hh-b.y1+1,w,h+gH+tH);r.setClearColor(cuBg,1);r.clear();r.render(scene,cam2);
     r.setClearColor(cuCC,ca);r.setScissorTest(false);r.setViewport(0,0,W,Hh);r.shadowMap.autoUpdate=au;CU.forEach((m,i)=>m.material=keep[i]);
-    const left=10*clamp(1-R.ssD/R.SMAX,0,1),mn=Math.floor(left+1e-9),sc=Math.min(59,Math.floor((left-mn)*60)),run=lpPh!=='w';
-    const t=run?'Key let go: the mainspring drives the train again, through the fusee, and loads the sustaining spring<br><em class="d">the mainspring’s drive</em>':`<b>${mn} min ${String(sc).padStart(2,'0')} s</b> of drive left <small>(manual: 5 to 10 min)</small><br><em class="d">spring drives</em> <em class="h">ratchet and pawl hold</em>`;
-    const k=t+run;if(k!==cuS){cuS=k;cuG.classList.toggle('run',run);cuG.querySelector('b').style.width=(left*10).toFixed(1)+'%';cuG.querySelector('span').innerHTML=t;}}
+    const left=10*clamp(1-R.ssD/R.SMAX,0,1),mn=Math.floor(left+1e-9),sc=Math.min(59,Math.floor((left-mn)*60)),run=lpPh!=='w',pu=Math.round(R.ssF()*100);
+    const t=lpPh==='r'?'Key let go: the mainspring drives the train again, through the fusee, and loads the sustaining spring<br><em class="d">the mainspring’s drive</em>':
+      run?`Running: the spring carries the whole drive, pushing <b>${pu}%</b> of the 12-hour drive<br><em class="d">the mainspring’s drive</em>`:
+      `<b>${mn} min ${String(sc).padStart(2,'0')} s</b> of drive left <small>(manual: 5 to 10 min)</small><br><em class="d">spring drives</em> <em class="h">ratchet and pawl hold</em>`;
+    const k=t+run;if(k!==cuS){cuS=k;cuG.classList.toggle('run',run);cuG.querySelector('b').style.width=clamp(lpPh?left*10:pu,0,100).toFixed(1)+'%';cuG.querySelector('span').innerHTML=t;}cuHelpSet();}
+  /* the close-up's own pointer: one finger or the mouse moves it, two pinch, the wheel zooms about the pointer, a double-click resets; and its buttons */
+  function cuBind(){const pts=new Map();
+    cuEl.addEventListener('pointerdown',e=>{if(/** @type {Element} */(e.target).closest('button'))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cuEl.setPointerCapture(e.pointerId);}catch(_){}cuEl.classList.add('grab');e.preventDefault();});
+    cuEl.addEventListener('pointermove',e=>{const q=pts.get(e.pointerId);if(!q)return;
+      if(pts.size===1){if(cuV.f){const fo=cuFol(cuV.f);if(fo)cuV.p.add(fo).sub(CU_T0);cuV.f=null;}cuPan(e.clientX-q.x,e.clientY-q.y);}   /* a drag lets go of the part followed, from where it is */
+      else if(pts.size===2){const o=[...pts.entries()].find(([id])=>id!==e.pointerId)[1],d0=Math.hypot(q.x-o.x,q.y-o.y),d1=Math.hypot(e.clientX-o.x,e.clientY-o.y);if(d0>4)cuZoom(d1/d0,(e.clientX+o.x)/2,(e.clientY+o.y)/2);}
+      q.x=e.clientX;q.y=e.clientY;});
+    const up=e=>{pts.delete(e.pointerId);if(!pts.size)cuEl.classList.remove('grab');};cuEl.addEventListener('pointerup',up);cuEl.addEventListener('pointercancel',up);
+    cuEl.addEventListener('wheel',e=>{e.preventDefault();cuZoom(Math.exp(-e.deltaY*0.0015),e.clientX,e.clientY);},{passive:false});
+    cuEl.addEventListener('dblclick',e=>{if(!/** @type {Element} */(e.target).closest('button'))cuReset();});
+    $('#cuIn').addEventListener('click',()=>cuZoom(1.5));$('#cuOut').addEventListener('click',()=>cuZoom(1/1.5));
+    $('#cuBig').addEventListener('click',()=>{cuBig=!cuBig;cuShow();});
+    $('#cuSlow').addEventListener('click',()=>{cuSlowI=(cuSlowI+1)%CUSL.length;cuShow();});
+    $('#cuPin').addEventListener('click',()=>{cuPin=!cuPin;cuShow();});
+    $('#cuOpen').addEventListener('click',()=>{cuPin=!cuPin;if(cuPin){st.cu=true;$('#cuOn').checked=true;}cuShow();});
+    $('#cuHelp').addEventListener('click',()=>{cuHelp=!cuHelp;cuShow();});
+    new ResizeObserver(cuPlace).observe(cuEl);new ResizeObserver(cuPlace).observe(stage);}
+  cuBind();
   /* ---------- camera ---------- */
   const C={yaw:0.75,pitch:0.42,dist:640,target:new THREE.Vector3(0,-20,0)},G={yaw:C.yaw,pitch:C.pitch,dist:C.dist,target:C.target.clone(),follow:null};
   let W=1,Hh=1;const resize=()=>{W=stage.clientWidth;Hh=stage.clientHeight;r.setSize(W,Hh,false);cam.aspect=W/Hh;cam.updateProjectionMatrix();};new ResizeObserver(resize).observe(stage);resize();
@@ -848,7 +905,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   tsDet.addEventListener('toggle',()=>{tsKey='';tsLast=0;testShow(performance.now());});
   if(/[?&]qa\b/.test(location.search))window.__test=testCalc;   /* for invariants.py: the test's figures as the card has them */
   $('#stopLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('movement'));st.see=true;st.focus=new Set(['lockArm','tblock','bal','fw']);look();goCam({yaw:2.6,pitch:0.62,dist:95,target:mvL((L.B[0]+L.F[0])/2,-20,(L.B[1]+L.F[1])/2)});});
-  /* wind with the key, on the wall clock so slow frames don't slow it: half turns of 0.7 s with a 0.3 s pause to change grip, until the chain pushes the stop-bar in the fusee top out against
+  /* wind with the key, on the wall clock so slow frames don't slow it (mClk: slowed only by the close-up's slow motion): half turns of 0.7 s with a 0.3 s pause to change grip, until the chain pushes the stop-bar in the fusee top out against
      the winding stop. Plates see-through, the winding stop kept solid (look), the parts that take part in winding picked out */
   const HT=0.5/FUSEE_PER_HOUR,kwBtn=$('#kwBtn'),kwOut=$('#kwOut'),KWF=['fusee','chain','sq','barrel','mainspring','gw','sratchet','sspring','spawl'];
   const KWV=()=>{const f=1+3.6/Math.hypot(...L.Fu);return{yaw:0.53,pitch:0.32,dist:120,target:mvL(L.Fu[0]*f,-36,L.Fu[1]*f)};};   /* key and fusee, from the winding stop's side */
@@ -856,7 +913,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   function kwStart(){if(kw){kwStop();return;}if(ldq)ldStop();if(st.tour>=0)tourEnd();closeInfo();
     if($('#kwFull').checked)hrs=RUN_H;   /* run down: the chain all on the barrel, 17½ half turns to wind */
     else if(hrs<HT/10){kwOut.innerHTML='<b>Already fully wound:</b> the stop-bar in the fusee top is against the winding stop, and the key turns no further. Tick <i>From run down</i> to watch a whole winding.';kwOut.classList.remove('hidden');return;}   /* less than a tenth of a half turn to wind (until 11 October 2026 it was let down to run down at once, under 0.2 h) */
-    kw={t0:performance.now(),t:0,h0:hrs,end:0};winding=true;st.drive=false;jump(()=>setView('movement'));st.see=true;st.focus=new Set(KWF);look();
+    kw={t0:mClk,t:0,h0:hrs,end:0};winding=true;st.drive=false;jump(()=>setView('movement'));st.see=true;st.focus=new Set(KWF);look();
     goCam(KWV());
     kwBtn.textContent='Stop winding';kwBtn.setAttribute('aria-pressed','true');kwOut.classList.remove('hidden');}
   function kwStop(){if(kw&&kw.zoom)goCam(KWV());kw=null;windEnd();st.focus=null;look();kwBtn.textContent='Wind with the key';kwBtn.setAttribute('aria-pressed','false');}
@@ -1099,13 +1156,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   new ResizeObserver(wake).observe(stage);cv.addEventListener('webglcontextrestored',wake);
   new IntersectionObserver(e=>{onScreen=e[e.length-1].isIntersecting;if(onScreen)wake();}).observe(stage);
   function frame(now){
-    const dt=clamp((now-last)/1000,0,0.05);last=now;   /* the first frame's time can come before last was set: never a step back */const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
+    const sk=cuSlowK(),dt=clamp((now-last)/1000,0,0.05),dtM=dt*sk;mClk+=Math.max(0,now-last)*sk;last=now;   /* sk: the close-up's slow motion; mClk, the key's and the load path's clock, slowed with it */   /* the first frame's time can come before last was set: never a step back */const k=SNAP||RM.matches?1:1-Math.exp(-dt*3.0);
     for(const q of['lift','flip','explode','lidM','lidT','dev','fov'])cur[q]+=(tgt[q]-cur[q])*k;
     if(cur.lift>0.05){cur.lidM=Math.max(cur.lidM,0.97);cur.lidT=Math.max(cur.lidT,0.97);}
-    const run=hrs<RUN_H,go=canDrive(),dtS=dt*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
+    const run=hrs<RUN_H,go=canDrive(),dtS=dtM*(winding?Math.min(st.speed,WIND_X):st.speed);tM+=dtS;
     if(ldq)ldStep(now);
-    if(kw)kwStep(now);else if(winding){hrs=Math.max(0,hrs-dt*14);if(hrs===0)windEnd();showH();}
-    if(winding)lpEnd=now+2000;{const ph=winding?'w':now<lpEnd?'r':'';if(ph!==lpPh){lpPh=ph;look();cuShow();}}   /* the load path's phase: winding, then 2 s of the mainspring's drive again */
+    if(kw)kwStep(mClk);else if(winding){hrs=Math.max(0,hrs-dtM*14);if(hrs===0)windEnd();showH();}
+    if(winding)lpEnd=mClk+2000;{const ph=winding?'w':mClk<lpEnd?'r':'';if(ph!==lpPh){lpPh=ph;look();cuShow();}}   /* the load path's phase: winding, then 2 s of the mainspring's drive again */
     tVis+=dt;stopMove(dt);
     const brake=H.arm>0.75,drv=driveNow(),bank=H.held&&H.bk!=null&&H.amp>Math.abs(H.bk);ampStep(dtS*rateK,brake||bank,go&&!H.held,drv);   /* the arm's finger is beside the timing weight from about three quarters of its turn; bank: the impulse jewel strikes a tooth the dog point holds in its path, which stops the balance as quickly */
     if(!H.held&&H.amp>=ESC.AMIN){const r=ESC.rateAt(H.amp,drv);if(Number.isFinite(r))escK=1+r/86400;}rateK=rateW*escK;swRec(now,drv);   /* the escapement's share at this swing and torque */
@@ -1137,7 +1194,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     lastE=E;const n=hrs*FUSEE_PER_HOUR;if(benchQ)benchApply();if(ks)ksStep(dt);else if(sw)ssStep(dt);ssLabel();
     if(H.held!==wasHeld){if(loaded)pend.add(H.held?(run?'stopped':'not wound'):'started');wasHeld=H.held;}   /* remarks for the rate book */
     {const d=dayOf(tM);if(d!==bookDay){if(d>bookDay)bookAdd();bookDay=d;}}bookLive(now);   /* after the train has moved, so the hands and the master are of the same moment */
-    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,ld:LDv.ld,clk:LDv.clk,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
+    mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,ld:LDv.ld,clk:LDv.clk,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt:dtM,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
     mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
@@ -1165,7 +1222,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     placeLabels(now);}
     if(!still&&!ESSAY.on()){s.held=H.held;drawInset(E,s,n);benchDraw(s,E);}if(!ESSAY.on()){swDraw(now);testShow(now);}
     const dR=dialRead(),dE=dR-tM,tod=((dR%86400)+86400)%86400,hh=Math.floor(tod/3600),mm=Math.floor(tod%3600/60),ss=Math.floor(tod%60);
-    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run&&!(H.held&&spentNow())?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
+    const hs=`<b>${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</b> ${tz==='gmt'?'GMT':'local'}${Math.abs(dE)>=0.25?`, dial <b>${fmtErr(dE)}</b>`:''}&ensp;${run&&!(H.held&&spentNow())?`${(RUN_H-hrs).toFixed(1)} h of power left${H.held?'&ensp;<b>'+stopWhy(run)+'</b>':''}`:`Run down. Wind it, then twist to start.`}${st.speed!==1?`&ensp;<b>${fmtSpd(st.speed)}</b>${st.speed>REAL_X?', balance swing shown slowed':''}`:''}${winding?'&ensp;<b>Winding</b>'+(run?', maintaining power driving the train':'')+(st.speed>WIND_X?', time at '+fmtSpd(WIND_X):''):''}${sk<1?'&ensp;<b>Slow motion '+CUSN[cuSlowI]+'</b>':''}${now<noteT?'&ensp;<b>'+noteTx+'</b>':''}`;
     if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
