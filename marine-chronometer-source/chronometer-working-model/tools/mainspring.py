@@ -40,13 +40,15 @@ torch.set_default_dtype(torch.float64)
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent
 if '--nivaflex' in sys.argv:   # the build's strip (deviations.json: its thickness for the model's torque, to a micrometre, and Nivaflex's modulus); for this tool and mainspring_friction.py
     _n=json.loads((HERE/'deviations.json').read_text(encoding='utf-8'))['devs'][0]['numbers'];os.environ['MC_MS_T']=f"{_n['t1']:.3f}";os.environ['MC_MS_E']=f"{_n['E1']:g}"
-VAR=os.environ.get('MC_MS_T');E_GPA=float(os.environ.get('MC_MS_E',207))   # a variant strip's thickness (mm) and modulus (GPa; the bending energy's EI/2 is left out of the solve, so it scales the torque only)
-t=float(VAR) if VAR else 0.394;gap=0.01;p=t+gap;ra=4.9;Rw=18.3-2.0-0.26;L=1064.0;a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
+ENV=lambda k,d:float(os.environ.get(k,d));E_GPA=ENV('MC_MS_E',207)   # a variant: the strip's thickness MC_MS_T and length MC_MS_L (mm), the core MC_MS_RA, the film between packed coils MC_MS_GAP, its modulus (GPa; the bending
+# energy's EI/2 is left out of the solve, so it scales the torque only), named MC_MS_TAG (else t and its thickness): files mainspring_TAG.*
+VAR=os.environ.get('MC_MS_TAG') or (f"t{os.environ['MC_MS_T']}" if os.environ.get('MC_MS_T') else None)
+t=ENV('MC_MS_T',0.394);gap=ENV('MC_MS_GAP',0.01);p=t+gap;ra=ENV('MC_MS_RA',4.9);Rw=18.3-2.0-0.26;L=ENV('MC_MS_L',1064.0);a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
 EYE=9.4   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
 HOLD=EYE/a0   # rad: the inner end lies on the core through the eye, where the hook holds it (1.0 on the r 1.8 core until 12 October 2026)
-M=48;STEP=0.25;TLO=12.75;THI=float(os.environ.get('MC_MS_THI',19.5))   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
-SJ='mainspring.json' if not VAR else f'mainspring_t{VAR}.json'   # the solved states (current directory, not committed)
-JS=MC/'js'/'mainspring.js' if not VAR else HERE/f'mainspring_t{VAR}.js'   # the table: the page's, or a variant's beside this tool (its free curve the model's: a spring set the same way)
+M=48;STEP=0.25;TLO=ENV('MC_MS_TLO',12.75);THI=ENV('MC_MS_THI',19.5)   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
+SJ='mainspring.json' if not VAR else f'mainspring_{VAR}.json'   # the solved states (current directory, not committed)
+JS=MC/'js'/'mainspring.js' if not VAR else HERE/f'mainspring_{VAR}.js'   # the table: the page's, or a variant's beside this tool (its free curve the model's: a spring set the same way)
 BOUND=HERE/'mainspring_bound.json'
 # the free spring (KLUwI2UUCMQ 32:18): its turns' radii, px along the horizontal through its centre, innermost first
 FREE_PX=[97,185,250,328,405,502,632,750]
@@ -162,8 +164,8 @@ def bound(n=12,step=0.05):
         last=T
     if last==Ts[-1]:print('  !! still not coil-bound: run with a larger N')
     D=json.loads(BOUND.read_text(encoding='utf-8')) if BOUND.exists() else {}
-    D[f'{t}']=dict(t=t,E=E_GPA,T0=T0,quarter=T1,bound=last,step=step);BOUND.write_text(json.dumps(D,indent=1,sort_keys=True)+'\n',encoding='utf-8',newline='\n')
-    print(f'strip {t} mm: coil-bound past {last:.2f} turns (the table ends at {T1}); wrote {BOUND.name}');return last
+    D[VAR or 'model']=dict(t=t,gap=gap,L=L,ra=ra,E=E_GPA,T0=T0,quarter=T1,bound=last,step=step);BOUND.write_text(json.dumps(D,indent=1,sort_keys=True)+'\n',encoding='utf-8',newline='\n')
+    print(f'{VAR or "the model"}, the strip {t} x {L:.0f} mm on r {ra}: coil-bound past {last:.2f} turns (the table ends at {T1}); wrote {BOUND.name}');return last
 def rebuild(s,r):
     ds=np.diff(s);dr=np.diff(r);return np.concatenate([[0],np.cumsum(np.sqrt(np.maximum(ds*ds-dr*dr,1e-12))/((r[1:]+r[:-1])/2))])
 def plot(d,out,Ts=None):
