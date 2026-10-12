@@ -17,7 +17,8 @@ one way, a spiral set and no reverse curve), its turns' radii read along the lin
 scaled so the turns add up to the strip's length. Read on an oblique frame, the radii are good to about 15 %.
 Its shape at T turns from the inner end to the outer is the one of least bending energy,  integral (k - k0(s))^2 ds  (EI/2 left out), with:
   - its length L;
-  - its coils at least p (t and 0.01 of grease) apart, r(theta + 2 pi) - r(theta) >= p, between the arbor's core (a0, the strip's middle on it) and the brace (R0);
+  - its coils at least p apart, the pitch the videos measure packed (t and the film between them, GAP; the film 0: no source gives one, and the videos'
+    pitch is the strip's thickness at most: 0.01 of grease, a pitch 1/40.3 of the inside radius, coarser than every source, until 12 October 2026), r(theta + 2 pi) - r(theta) >= p, between the arbor's core (a0, the strip's middle on it) and the brace (R0);
   - its inner end held on the core by the arbor's hook (r = a0 for its first HOLD rad, through the eye), its outer end lying along the brace (its last two samples at R0).
 That is the strip's equilibrium with the coils pressing on each other without friction (each free stretch bent from its natural curve by the moment it carries,
 k - k0 = M / EI). Solved by an augmented Lagrangian over L-BFGS, 48 samples a turn; states every STEP turns over the wind, each from an even spiral and then
@@ -26,10 +27,11 @@ the energy is nearly flat just above it and climbs steeply below), is where the 
 The page blends the two states either side of its T, each piece of steel (the same s) moving between its places in them, so the shape changes smoothly as
 the barrel turns. Checked (5 October 2026): a blend a quarter turn from both its states has the energy of the state solved there to 0.4 % (the energy is nearly
 flat, so shapes of about equal energy may lie up to 4 mm apart in places), its coils at least the strip's thickness apart; theta rebuilt from r is good to 0.04 mm
-along the coil. Solved (12 October 2026) for the videos' 0.394 strip on the core r 4.9: slack at 13.25 turns, coil-bound on the core past 19.0 (19.25 and
-19.5 can't keep both the coils apart and the length, so write() leaves them out); the fusee's rule in movement.js sets it up 1.01 turns, fully wound at 18.87.
-Let down with the arbor out (--letdown) it gives 13.41 turns, 10.4 packed on the wall along a ray (up to 11; packs() reports 1.0, its run broken by the outer
-end's last samples) and the rest loose (mean radii 5.0, 9.3, 11.4), where the 15:54 frame shows 12 +- 1 packed and one loose turn of about r 8.
+along the coil. Solved (12 October 2026) for the videos' 0.394 strip on the core r 4.9, packed at their pitch (no film): slack at 13.25 turns, coil-bound on
+the core past 19.35 (--bound; 19.5 on can't keep both the coils apart and the length, so write() leaves them out); the fusee's rule in movement.js sets it up
+0.89 turn, fully wound at 18.75, 0.60 turn short of coil-bound. Let down with the arbor out (--letdown) it gives 13.38 turns, 11.2 packed on the wall along
+a ray (11-12) and the rest loose (mean radii 5.1, 9.4, 11.6), where the 15:54 frame shows 12 +- 1 packed and one loose turn of about r 8. With the 0.01 film
+(until then; mainspring_film01.js): coil-bound past 19.20, set up 1.01, fully wound at 18.87, 0.33 short; let down 13.41 turns, 10.4 packed (up to 11).
 Until then the parts list's 0.419 strip on an estimated core r 1.8: slack at 13.5 turns, set up 1.26, let down 13.6 turns and about 10½ packed (in the barrel
 of r 17.6, until 5 October 2026, 14.3 turns, 11.9 packed). Its 1,064 mm is the videos' L/t, about 2,700 (References/VIDEOS.md); half the room would be
 shorter. About 20 minutes on 14 processes; run it alone.
@@ -43,7 +45,7 @@ if '--nivaflex' in sys.argv:   # the build's strip (deviations.json: its thickne
 ENV=lambda k,d:float(os.environ.get(k,d));E_GPA=ENV('MC_MS_E',207)   # a variant: the strip's thickness MC_MS_T and length MC_MS_L (mm), the core MC_MS_RA, the film between packed coils MC_MS_GAP, its modulus (GPa; the bending
 # energy's EI/2 is left out of the solve, so it scales the torque only), named MC_MS_TAG (else t and its thickness): files mainspring_TAG.*
 VAR=os.environ.get('MC_MS_TAG') or (f"t{os.environ['MC_MS_T']}" if os.environ.get('MC_MS_T') else None)
-t=ENV('MC_MS_T',0.394);gap=ENV('MC_MS_GAP',0.01);p=t+gap;ra=ENV('MC_MS_RA',4.9);Rw=18.3-2.0-0.26;L=ENV('MC_MS_L',1064.0);a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
+t=ENV('MC_MS_T',0.394);gap=ENV('MC_MS_GAP',0.0);p=t+gap;ra=ENV('MC_MS_RA',4.9);Rw=18.3-2.0-0.26;L=ENV('MC_MS_L',1064.0);a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
 EYE=9.4   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
 HOLD=EYE/a0   # rad: the inner end lies on the core through the eye, where the hook holds it (1.0 on the r 1.8 core until 12 October 2026)
 M=48;STEP=0.25;TLO=ENV('MC_MS_TLO',12.75);THI=ENV('MC_MS_THI',19.5)   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
@@ -118,6 +120,10 @@ def write(d):
     while st and not ok(st[-1]):print(f"T {st[-1]['T']}: past coil-bound (overlap {st[-1]['viol']:.4f} mm, length {st[-1]['dL']:+.3f}), not written");st.pop()
     bad=[x['T'] for x in st if not ok(x)]
     if bad:raise SystemExit(f'infeasible states inside the range: {bad}')
+    # a state solved right at coil-bound keeps its coils apart and its length, but its energy jumps (the strip solid: 2.06 against 0.24 a quarter turn on the
+    # Nivaflex strip packed at its pitch, 12 October 2026), and the pull's quartic through it swings over the whole wind: such states aren't the working spring
+    dE=np.diff([x['E'] for x in st if x['T']>=d['T0']+0.5]);med=float(np.median(dE)) if len(dE) else 0
+    while len(st)>2 and med>0 and st[-1]['E']-st[-2]['E']>3*med:print(f"T {st[-1]['T']}: at coil-bound (its energy {st[-1]['E']-st[-2]['E']:.3f} over the last, the median step {med:.3f}), not written");st.pop()
     R=[];S=[];TH=[]
     for x in st:
         r=np.array(x['r']);N=len(r)-1;th=np.arange(N+1)*2*math.pi*x['T']/N;P=np.stack([r*np.cos(th),r*np.sin(th)],1);s=np.concatenate([[0],np.cumsum(np.linalg.norm(np.diff(P,axis=0),axis=1))]);s*=L/s[-1]

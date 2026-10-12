@@ -327,7 +327,7 @@ function drawMerge(scene,meshes){
    it lies in a pack on the wall with loose turns inside; wound, the coils draw in round the arbor, spread across the barrel rather than in two packs, and the pack
    on the wall thins to a turn or two. ey: the eye in its inner end for the arbor's hook, an oblong 7.2 along the strip and 5.2 across from 2.2 off the end
    (KLUwI2UUCMQ 15:54, the innermost turn's front, rough +-20 %): along the strip's centre line on the core, mm */
-const MSPRING={t:0.394,gap:0.01,ra:4.9,Rw:18.3-2.0-0.26,len:1064,ey:[2.2,9.4,5.2]};
+const MSPRING={t:0.394,gap:0,ra:4.9,Rw:18.3-2.0-0.26,len:1064,ey:[2.2,9.4,5.2]};
 /* MSHAPE decoded once: the grid along the strip (s, mm) and each state's r there, its theta rebuilt from r (each step's run round the arbor) and spread so it
    ends at TAU T exactly. msShape(T): the state at T, each piece of steel (each s) placed between its places in the two solved states either side */
 let MSD=null;

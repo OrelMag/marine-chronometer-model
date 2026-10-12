@@ -2410,4 +2410,14 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The mainspring packed its coils coarser than the video it came from.** The strip's 0.394 mm is the packed coils'
+  pitch on KLUwI2UUCMQ (1/41.4 of the barrel's inside radius), the strip and whatever lies between them; `mainspring.py`
+  took it as the bare strip and kept its coils a further 0.01 apart, so the model packed at 0.404, 1/40.3 of the inside
+  radius, coarser than every source (1/41.0-1/43.7), had 0.33 turn from full wind to coil-bound and swung 225° fully
+  wound, under the manual's band for about six hours. The film is now 0 (`MC_MS_GAP`; no source gives one), the strip
+  still 0.394: set up 0.89 turn, 0.60 turn of room, the swing 248° fully wound and in the band all through the wind; let
+  down with the arbor out it packs 11.2 coils on the wall (10.4 before) against the video's 12 ± 1. The old table is
+  `tools/mainspring_film01.js`. And `write()` drops trailing states at coil-bound whose energy jumps (over three times
+  the median step), which had bent the smoothed pull over the whole wind on the Nivaflex strip packed the same way.
+  Keep: the solver's pitch is what the videos measure; a thickness read off a pitch is the pitch less a film, and the
+  film is the solver's only to add when a source gives one.
