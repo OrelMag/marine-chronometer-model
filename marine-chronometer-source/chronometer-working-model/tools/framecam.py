@@ -4,12 +4,12 @@
     python framecam.py SPEC.json look [--f 6000]               # the --look for isolate.py that sees the model from the frame's camera
     python framecam.py SPEC.json warp RENDER.png OUT.png yaw pitch dist [--f 6000]   # an isolate.py render (1200x800, that --look) mapped onto the frame, beside it
 
-SPEC: {"anchor": the video.py anchor spec whose ANCHOR.H.json holds H (model (x, z) on the face -> pixels), "frame": the frame (in $MC_VIDEO/frames), "face_y": the anchored face's
+SPEC: {"anchor": the video.py anchor spec whose ANCHOR.H.json holds H (model (x, z) on the face -> pixels), "frame": the frame (in $MC_VIDEO/frames, or a photograph by its path from the SPEC), "size": [width, height] (default 3840 x 2160, a 4K frame), "face_y": the anchored face's
 y in the movement frame (the train bridge's underside: -20.66), "target": [x, y, z] (where the look aims), "picks": {NAME: {"h": mm toward the camera off the face,
 "px": [[u, v], ...]}}}. The camera: K with the principal point at the frame's centre and focal length f, R and t from H; f is where the two face axes come out orthonormal
 (the ratio of H's first two columns through K^-1 is 1), which for KLUwI2UUCMQ 13:49.5 is about 6000 px (5000-7000 move points 0.5 mm or less). A point h above the face is
-put back through K [r1 r2 t + h n]. Example: anchors/lower_bridge_13-49.5.json, the balance lower bridge on the train bridge's underside (tools/lower_bridge.py's MEAS).
-About 1 s; look and warp open the page (about 30 s each)."""
+put back through K [r1 r2 t + h n]. Example: anchors/lower_bridge_13-49.5.json, the balance lower bridge on the train bridge's underside (tools/lower_bridge.py's MEAS);
+anchors/photo_lower_bridge_cam.json, the same on a phone photograph (References/photo-lower-bridge-underside.jpg, about f 970: its lug screw fixes it). About 1 s; look and warp open the page (about 30 s each)."""
 import asyncio,json,os,re,sys,numpy as np,cv2
 HERE=os.path.dirname(os.path.abspath(__file__));HOME=os.environ.get('MC_VIDEO',os.path.expanduser('~/mc-video'))
 a=sys.argv[1:]
@@ -19,7 +19,7 @@ def opt(k,d):
     return d
 F=float(opt('--f',6000));sp=a[0];S=json.load(open(sp));here=os.path.dirname(os.path.abspath(sp))
 H=np.array(json.load(open(os.path.join(here,S['anchor'].replace('.json','.H.json'))))['H'],float)
-fr=S['frame'] if os.path.isabs(S['frame']) else os.path.join(HOME,'frames',S['frame']);W,Hh=3840,2160
+fr=S['frame'] if os.path.isabs(S['frame']) else os.path.join(here,S['frame']) if os.path.exists(os.path.join(here,S['frame'])) else os.path.join(HOME,'frames',S['frame']);W,Hh=S.get('size',[3840,2160])   # a 4K frame, or a photograph's size
 def camera(f):
     K=np.array([[f,0,W/2],[0,f,Hh/2],[0,0,1.0]]);M=np.linalg.inv(K)@H;l=1/np.linalg.norm(M[:,0]);r1,r2,t=M[:,0]*l,M[:,1]*l,M[:,2]*l
     if t[2]<0:r1,r2,t=-r1,-r2,-t

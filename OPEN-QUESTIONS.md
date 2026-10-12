@@ -90,11 +90,9 @@ The manual gives no tooth profiles, threads or most pivot sizes. The site tells 
 
 ## The set-up ratchet's locking faces (11 October 2026)
 
-<<<<<<< HEAD
-- **Known:** KLUwI2UUCMQ 38:28 shows the set-up ratchet (42026) whole: about 42 saw teeth, each a short steep face and a long back. The model draws the face leaning back over 0.07 of a pitch (about 5° at r 7), as the maintaining work's ratchets were drawn until 11 October 2026, when theirs were made radial (the load then draws the click home; the winding pawls' trace at 19:12 shows a square end bearing on a radial face).
-- **Conflict:** at a few pixels a face, the frame can't tell radial from a 5° lean. A radial face was tried; the click (seated by `phaseAgainst` on the profile as a function of angle) then sat 0.3 mm into the tooth's corner (bom.py's setup-click check), so it was put back until the click is seated on the outline as the winding pawls are (`deep`).
-- **What would settle it:** a face-on close-up of the set-up ratchet (the barrel bridge off), or of the click on its tooth.
-
+- **Known:** the set-up ratchet (42026) held loose and nearly face-on (KLUwI2UUCMQ 38:25.8, 38:26.0) gives its teeth 0.48 mm deep and its locking faces undercut 3-6° against the radius (`tools/ratchetface.py`, calibrated on synthetic frames; References/VIDEOS.md). A face leaning back, as the model drew until 11 October 2026, is ruled out. The model draws the faces radial and the teeth 0.48 deep (`SRD`), the click seated by its outline.
+- **Open:** the undercut's size. Tooth to tooth the readings spread 4-5°, and on a tilted wheel's sides its other face's outline can shift a reading by a few degrees; an undercut also can't be drawn by `ratchetProf` (one radius to each angle), which the click's seating uses.
+- **What would settle it:** a still, face-on frame of the ratchet off its arbor (not moving in tweezers), or of the click on its tooth.
 
 ## The winding-pawl springs' beds and feet (11 October 2026)
 
@@ -102,8 +100,9 @@ The manual gives no tooth profiles, threads or most pivot sizes. The site tells 
 - **Conflict:** the two beds differ (one turns in to r 7.04 thirty degrees before its foot, the other doesn't before 132°), and so do their feet's places from their pawls (16° apart), though the springs are one part number (42007, two off). Which wall of the feet's pockets shows depends on the light: the first pocket's inner wall (r 7.04) is traced, its outer wall and the whole of the second pocket are lit or in glare. The beds' depth and the feet's own shape aren't seen (the springs are off in every frame found).
 - **In the model:** each bed as traced, the first pocket's inner wall on the traced line (r 7.0, outside the winding ratchet's tips at r 6.9, which turn at that height), the unseen walls estimated (outer the bed's outer edge, the second pocket's inner as the first's), depth 0.2, the feet filling their pockets.
 - **What would settle it:** a frame with the springs on (before 18:20, as the sustaining ratchet comes off the fusee) or of the face lit from the other side; Fig. 28 or 69 enlarged.
-=======
-- **Known:** the set-up ratchet (42026) held loose and nearly face-on (KLUwI2UUCMQ 38:25.8, 38:26.0) gives its teeth 0.48 mm deep and its locking faces undercut 3-6° against the radius (`tools/ratchetface.py`, calibrated on synthetic frames; References/VIDEOS.md). A face leaning back, as the model drew until 11 October 2026, is ruled out. The model draws the faces radial and the teeth 0.48 deep (`SRD`), the click seated by its outline.
-- **Open:** the undercut's size. Tooth to tooth the readings spread 4-5°, and on a tilted wheel's sides its other face's outline can shift a reading by a few degrees; an undercut also can't be drawn by `ratchetProf` (one radius to each angle), which the click's seating uses.
-- **What would settle it:** a still, face-on frame of the ratchet off its arbor (not moving in tweezers), or of the click on its tooth.
->>>>>>> origin/main
+
+## The balance lower bridge's slab height (12 October 2026)
+
+- **Known:** three side views of the restoration video, scaled by the pillars (16.8 mm plate to train bridge), put the slab's underside 8.4-9.4 mm above the plate, its face 7.4-8.4 mm off the train bridge's underside; the model has 8.9, with the escape wheel turning between the slab and the train bridge (Review-results.md, "The balance lower bridge", 4).
+- **Conflict:** a close phone photograph of the bridge on the upturned train bridge (`References/photo-lower-bridge-underside.jpg`, its camera fitted on the train bridge: `tools/anchors/photo_lower_bridge*.json`) fits best with the slab's face 4-6 mm off: there the cap's counterbore comes out 8.6-9.2 mm across (model 8.6), the cap 10.6-11.0 mm from the fourth's setting (the video's 11.0) and the outline within 1.2-1.4 mm of the video's; at 8.9 they come out 7.4-8.0, 9.2 and 2.7 mm rms. The photograph's camera is 35 mm away and its focal length is fixed only by one screw head (Review-results.md, 26), so the side views stand.
+- **What would settle it:** a side-on photograph of the train bridge underside up with the lower bridge on it, the camera level with the bridge's edge and a ruler beside it; or the escape wheel's clearance under the slab read side-on (42:56).
