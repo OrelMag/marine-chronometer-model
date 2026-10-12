@@ -3,7 +3,7 @@ from the model's own solved shapes. No browser; torch (CPU), numpy, scipy.
 
     python mainspring_friction.py              # about 3 minutes (14 processes); writes mainspring_friction.json here, read by physics.js and benchcheck.py
     python mainspring_friction.py --check      # the same, exit 1 if mainspring_friction.json is not what it finds
-    python mainspring_friction.py --variants [--check]   # each variant mainspring.py --bound has solved (mainspring_bound.json), about a minute each
+    python mainspring_friction.py --variants [--check] [--fz]   # each variant mainspring.py --bound has solved (mainspring_bound.json), about a minute each; --fz adds drive.js's candidates
     python mainspring_friction.py --nivaflex [--check]   # (or MC_MS_T=0.386 MC_MS_E=220) a variant strip (the build's Nivaflex: mainspring.py's variant, mainspring_t0.386.js),
                                                # into mainspring_friction_t0.386.json: the fusee's rule sets it up, its full wind and run down found here
 
@@ -182,10 +182,11 @@ def variants():
     import subprocess,os
     D=json.loads((HERE/'mainspring_bound.json').read_text(encoding='utf-8'));rc=0
     for k,v in sorted(D.items()):
-        if k=='model':continue
-        env=dict(os.environ,MC_MS_TAG=k,MC_MS_T=f"{v['t']}",MC_MS_GAP=f"{v.get('gap',0.01)}",MC_MS_L=f"{v['L']}",MC_MS_RA=f"{v['ra']}",MC_MS_E=f"{v['E']:g}")
+        if k=='model' or (k.startswith('fz') and '--fz' not in sys.argv):continue   # fz*: drive.js's candidates (PLAN-drive-and-damping.md), with --fz only
+        if v['bound']-v['T0']<IN:print(f'== {k}: coil-bound {v["bound"]-v["T0"]:.2f} turns past slack, short of the whole wind, {IN:.2f}: nothing to run');continue
+        env=dict(os.environ,MC_MS_TAG=k,MC_MS_T=f"{v['t']}",MC_MS_GAP=f"{v.get('gap',0.01)}",MC_MS_L=f"{v['L']}",MC_MS_RA=f"{v['ra']}",MC_MS_E=f"{v['E']:g}",MC_MS_TILT=f"{v.get('tilt',0)}")
         print(f'== {k}: the strip {v["t"]} x {v["L"]:.0f} mm on r {v["ra"]}',flush=True)
-        r=subprocess.run([sys.executable,__file__]+[a for a in sys.argv[1:] if a!='--variants'],env=env,cwd=HERE,capture_output=True,text=True,encoding='utf-8')
+        r=subprocess.run([sys.executable,__file__]+[a for a in sys.argv[1:] if a not in('--variants','--fz')],env=env,cwd=HERE,capture_output=True,text=True,encoding='utf-8')
         print('\n'.join(r.stdout.strip().splitlines()[-4:]),flush=True);rc=rc or r.returncode
     sys.exit(rc)
 if __name__=='__main__':

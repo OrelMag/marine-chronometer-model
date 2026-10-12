@@ -171,6 +171,22 @@ band (green) and the model's 255° (blue line). Right: the growth rate from each
 <code>XJQCgMV_GA8</code>, <code>bEWF2ivi1Rg</code>, <code>R-DrJz1DYOY</code> (no balance in view from above).</li>
 </ul>
 
+<h3 id="xm">A second movement recovering: <code>xM_mxtGfeqQ</code> <span class="verdict">slow, like the start</span></h3>
+<p>BunnSpecial's carrying-case video (a break-circuit Model 21) has the camera on a tripod about 45° above the running movement from 8:56 to 11:20, the balance's rim and screws
+seen through the train bridge's cutout. It was first read as a steady swing; it is not. The movement had been handled on its side (8:00–8:50) and set down flat at about 8:52, and
+<b>the swing grows from 170° at 8:56 to 186 ± 2° at 9:12, 201° at 9:28, 216–224° at 9:58–10:12 and 226–229° at 10:19–10:43</b>, both extremes moving outward about a fixed rest.
+The turn patterns give the swing modulo 90° (the same brass screw at the front at both turns); 96° and 366° are excluded by how the frames near a turn are blurred, and 276° by the
+sound (<code>acoustic.py</code> on 8 s stretches reads 195–212° at 9:00–9:24) and by how the click interval shortens as the swing grows (188 ± 14° at 9:12, needing no image scale).
+Period 0.50002 s over 214 periods. <!--R The frames are not reproduced here: <a href="https://www.youtube.com/watch?v=xM_mxtGfeqQ&amp;t=536s">8:56</a>,
+<a href="https://www.youtube.com/watch?v=xM_mxtGfeqQ&amp;t=597s">9:57</a>, <a href="https://www.youtube.com/watch?v=xM_mxtGfeqQ&amp;t=619s">10:19</a>. R-->
+The scripts and plots are in <code>$MC_VIDEO/oq/xm</code>; the series is <code>swing.json</code>'s <code>xM_mxtGfeqQ</code>.</p>
+<div class="chart" id="c4"></div>
+<details><summary>Data table</summary><div id="t4"></div></details>
+<p><b>It recovers as slowly as the start builds up.</b> The averaged law alone (A² relaxing to its final value as exp(−2t/TF)) fits it with <span id="xmF"></span>. Run in
+<code>dynamics.js</code> from its first reading (<code>startup.js --xm</code>), the model at its own TF of <span class="xmTF"></span> s misses it by 7.3° rms at its best drive, 80 %;
+the fit improves steadily with a slower run-down, 4.3° at 120 s, 2.5° at 200 s, 1.5° at 320 s (the grid's end), at 45–60 % of the drive. A second movement, a different kind
+of disturbance (a recovery from handling, not a start from rest) and a swing read to ±2–4° rather than a screw hole: it says the same as <code>We1dLNXiBj0</code>.</p>
+
 <h2 id="agree">Do the two tests agree?</h2>
 <div class="chart" id="c3"></div>
 <details><summary>Data table</summary><div id="t3"></div></details>
@@ -187,16 +203,18 @@ the model's swing is a reasonable middle, not a measured value for any one chron
 <li><b>Each movement has a beat error.</b> The return swing's clicks fall a few milliseconds off where an in-beat balance puts them, differently in each recording: 5–12° out of beat when fitted.
 The model assumes a chronometer exactly in beat (the manual's adjustment); that is fine, but it means the sound can't test the trip spring's geometry or the shape of the discharge jewel's end (its back's radius).</li>
 <li><b>The balance loses its swing more slowly than the model says.</b> A real start rises far more slowly than the model's 68 s run-down allows; the fit wants TF of at least about 120–200 s
-(Q ≈ 750–1,250) with about 70–85 % of the model's drive, and gives no upper bound. That is beyond the 65–113 s the balance's parts allow in <code>physics.js</code> with the endstone's friction measured (32–62 s before it was). It is recorded
-in <code>OPEN-QUESTIONS.md</code>; the model is not changed on one hand-started movement whose absolute swing is known only to a screw hole.</li>
+(Q ≈ 750–1,250) with about 70–85 % of the model's drive, and gives no upper bound. That is beyond the 65–113 s the balance's parts allow in <code>physics.js</code> with the endstone's friction measured (32–62 s before it was). A second movement says the same (12 October 2026): <code>xM_mxtGfeqQ</code>'s swing, recovering after handling and read to ±2–4°, fits TF 133 ± 4 s by the averaged law and 200–320 s in
+<code>dynamics.js</code> (the model's 68 s: 7.3° rms). Against that, published figures put chronometer balances at Q 300–700 (Rawlings, as quoted by Vardi 2014) and a "Hamilton chronometer"
+at about 220 (Bateman's chart in Vardi 2014): TF 35–110 s. Two readings of the build-up need the same thing: that the model's escapement gives the balance its work as real ones do at every swing,
+since how fast a swing settles depends on how that work changes with the swing as much as on the damping. Recorded in <code>OPEN-QUESTIONS.md</code>; the model is not changed (the owner's decision).</li>
 <li><b>If the sound's small excess is real</b>, the model's arc from strike to lock is about 6 % too long (the strike a little early in angle, or the lock a little late).</li>
 </ol>
 
 <h2 id="gaps">Gaps, and what would close them</h2>
 <table>
 <tr><th>Gap</th><th>Why it matters</th><th>What would close it</th></tr>
-<tr><td>No steady swing seen on video without aliases</td><td>The video reading is known only to a 15° screw hole, which limits the sound–picture comparison to ~1.5 σ</td><td>A Model 21 running steadily with one balance feature in view from above (a timing weight, an arm's end) for a minute, on a tripod</td></tr>
-<tr><td>The balance's free run-down never measured</td><td>Sets Q (the model's <code>TF</code> 68 s), the drive the train must give, and the build-up time; the start suggests ≥ 120–160 s</td><td>A video of the balance swinging freely with the train held by the blocking screw, its swing timed until it stops</td></tr>
+<tr><td>No steady swing seen on video without aliases</td><td>The video reading is known only to a 15° screw hole, which limits the sound–picture comparison to ~1.5 σ. <code>xM_mxtGfeqQ</code> picks its alias by the sound and the clicks' interval, but it is still recovering at 229°</td><td>A Model 21 running steadily with one balance feature in view from above (a timing weight, an arm's end) for a minute, on a tripod; <code>KLUwI2UUCMQ</code> 47:03 and <code>W9gy2gjvZHc</code> are candidates, not yet measured</td></tr>
+<tr><td>The balance's free run-down never measured</td><td>Sets Q (the model's <code>TF</code> 68 s), the drive the train must give, and the build-up time; the start suggests ≥ 120–160 s, the second movement's recovery 133 s by the averaged law; none is in any downloaded video (searched again 12 October 2026)</td><td>A video of the balance swinging freely with the train held by the blocking screw, its swing timed until it stops</td></tr>
 <tr><td>One clean recording decides old vs corrected outright</td><td>Elsewhere the unlocking is too quiet or the room too live to hear all three clicks</td><td>More close recordings with a still microphone, or a timegrapher (it hears the same clicks)</td></tr>
 <tr><td>Which click is which, on a steady recording</td><td>Two loud clicks 6.4 ms apart read as about 295° or 331° depending on their names</td><td>A start (as in <code>We1dLNXiBj0</code>) or a contact microphone with a slowed-down video of the escapement in sync</td></tr>
 <tr><td>Beat error confounds the return swing</td><td>Hides any test of the trip spring and the shape of the jewel's end</td><td>Video of the escapement's return swing at high frame rate, or a unit put exactly in beat first</td></tr>
@@ -272,6 +290,16 @@ function draw(){
     {type:'line',name:'model, TF 160 s, 80 % drive',c:'--ink2',dash:'2 4',data:S.TF160,label:'model, TF 160 s',dy:-12,tip:p=>`model TF 160 s, 80 % drive<br>${mmss(p[0])}: ${p[1].toFixed(0)}°`}]});
   table('t2',['time','video low (°)','video middle (°)','video high (°)',`model TF ${DATA.startTF.TFm} s (°)`,'model TF 160 s (°)'],V.mid.map((p,i)=>{const at=c=>{const q=c.reduce((a,b)=>Math.abs(b[0]-p[0])<Math.abs(a[0]-p[0])?b:a);return q[1].toFixed(0);};
     return[mmss(p[0]),V.low[i][1].toFixed(0),p[1].toFixed(0),V.high[i][1].toFixed(0),at(S.TFm),at(S.TF160)];}).concat(DATA.snd.map(s=>[mmss(s.t)+' (sound)','',`${s.A.toFixed(0)} (${s.how})`,'','',''])));
+  {const X=DATA.xm,F=X.fit,t0=X.pts[0][0],law=[];for(let t=0;t<=X.pts[X.pts.length-1][0]-t0+1;t+=1)law.push([t0+t,Math.sqrt(F.Ainf_deg**2-(F.Ainf_deg**2-F.A0_deg**2)*Math.exp(-2*t/F.TF_s))]);
+   $('xmF').textContent=`TF ${F.TF_s} ± ${F.TF_sd} s, settling at ${F.Ainf_deg}° (${F.rms_deg}° rms; the later stretches' angle scale ±7 %: ${F.over_scale.split(': ')[1]})`;document.querySelectorAll('.xmTF').forEach(e=>e.textContent=X.TF.TFm);
+   chart('c4',{label:'xM_mxtGfeqQ: the swing recovering after handling, against the model at three run-down times',x:[530,650],y:[160,260],xl:'time in xM_mxtGfeqQ (m:ss)',yl:'swing (°)',xf:mmss,r:150,
+    hbands:[{y0:247.5,y1:270,c:'--manual'}],series:[
+    {type:'dots',name:'video, the 186° reading',c:'--s1',data:X.pts.map(p=>({x:p[0],y:p[1]})),tip:p=>`video ${mmss(p.x)}<br>${p.y.toFixed(0)}°`},
+    {type:'line',name:`averaged law, TF ${F.TF_s} s`,c:'--s2',data:law,label:`law, TF ${F.TF_s} s`,dy:-6,tip:p=>`averaged law<br>${mmss(p[0])}: ${p[1].toFixed(0)}°`},
+    {type:'line',name:`model, TF ${X.TF.TFm} s (as built), ${Math.round(100*X.s.TFm)} % drive`,c:'--muted',dash:'7 5',data:X.curves.TFm,label:`model, TF ${X.TF.TFm} s`,dy:10,tip:p=>`model TF ${X.TF.TFm} s<br>${mmss(p[0])}: ${p[1].toFixed(0)}°`},
+    {type:'line',name:`model, TF 200 s, ${Math.round(100*X.s.TF200)} % drive`,c:'--ink2',dash:'2 4',data:X.curves.TF200,label:'model, TF 200 s',dy:14,tip:p=>`model TF 200 s<br>${mmss(p[0])}: ${p[1].toFixed(0)}°`}]});
+   const at=(c,t)=>c.reduce((a,b)=>Math.abs(b[0]-t)<Math.abs(a[0]-t)?b:a)[1].toFixed(0);
+   table('t4',['time','video (°)',`model TF ${X.TF.TFm} s (°)`,'model TF 200 s (°)','model TF 320 s (°)'],X.pts.filter((p,i)=>i%6===0).map(p=>[mmss(p[0]),p[1].toFixed(0),at(X.curves.TFm,p[0]),at(X.curves.TF200,p[0]),at(X.curves.TF320,p[0])]));}
   /* the swing each test reads, one row per reading: a dot with its range */
   const R=DATA.rows,host=$('c3');host.innerHTML='';const W=980,rh=36,H=R.length*rh+70,l=290,r=40,x0=160,x1=340,sx=v=>l+(v-x0)/(x1-x0)*(W-l-r);
   const lg=document.createElement('div');lg.className='legend';lg.innerHTML='<span><i class="dot" style="background:var(--s1)"></i>sound (acoustic.py)</span><span><i class="dot" style="background:var(--s2)"></i>video (swing.py)</span><span><i style="background:var(--manual);height:10px"></i>the manual\'s running swing</span>';host.appendChild(lg);

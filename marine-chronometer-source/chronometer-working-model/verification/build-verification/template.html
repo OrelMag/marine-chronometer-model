@@ -54,7 +54,7 @@ own geometry and numbers.</p>
 <div class="tiles" id="tiles"></div>
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#gears">1. Gears</a><a href="#thermal">2. Temperature</a><a href="#fea">3. Finite elements</a>
-<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
+<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#drive">11. The spring and the damping</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
 <a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
@@ -318,6 +318,45 @@ proportions in the model's barrel. The band is the manual's, 247.5-270°. <code>
 <li><b>What it means for the build.</b> <span id="mfC"></span></li>
 <li><b>What it leaves out.</b> The strip's edges rubbing on the barrel's floor and cap, and the steel's own hysteresis, which add to it; the ring equations take
 each packed coil as round, its pressure even round it. Mainsprings measured run 10-20 % under their winding (ICMFF9), which the coils alone don't reach.</li></ul></div>
+
+<h2 id="drive">11. The mainspring the fusee asks for, and how much the balance loses</h2>
+<p><b>Why.</b> Two readings the sources leave open are tied together: the mainspring's strip (0.394 mm drawn, from the videos' coils; the parts list's 0.419; the British Museum's 0.44)
+and the balance's damping, its free run-down <code>TF</code> (68 s in the model). The balance's steady swing fixes only their product, drive against loss, and the model's <code>TF</code>
+was set to give 255° with the drawn strip. So each is worked out here from evidence that doesn't involve the other: the spring from the fusee's measured profile, the damping from real
+balances whose swing changes on video (<code>PLAN-drive-and-damping.md</code>; <code>OPEN-QUESTIONS.md</code> 1 and "The balance's free run-down").</p>
+<h3>The spring the fusee was cut for</h3>
+<p><b>Method.</b> The fusee's profile is measured (the groove's floors fit r₀/√(1−a·m) to 0.085 mm, a 1.96 : 1 taper; model README), and a fusee is cut to even one spring's pull: the
+spring it was cut for is the one whose pull falls by that taper over the chain's turns at a set-up near the manual's "about one turn" (Op. 53), and whose pull it evens best. Each
+candidate strip, 0.374, 0.394, 0.419 and 0.44 mm, at the videos' length over thickness (2,700), on the cores r 4.9 (drawn), 5.4 (a third of the barrel's inside) and 6.5 (the museum's
+13 mm arbor), is solved in the model's measured barrel by <code>mainspring.py</code> (the strip's least bending energy over the wind from its measured free curve, each a variant beside
+the model's), its coil-bound found by <code>mainspring.py --bound</code>, its coils' friction by <code>mainspring_friction.py</code>, and <code>drive.js</code> then applies the page's
+fusee rule (the set-up where the pull falls by the taper over the 4.51 turns the chain takes to leave the fusee) and runs the escapement's averaged swing (<code>ampAt</code>) at the
+fusee wheel's torque against the model's spring's at 12 h, both running at μ 0.10. The earlier proportions' variants (section 10) are included. <b>The taper's uncertainty:</b> a
+bootstrap of the profile's fit puts the levers' ratio to ±1.4 %; the floors' turns placed a quarter turn either way along the cone move it ±4 % (the formula extrapolated over the
+last turn and a quarter, where it climbs steeply): the set-up is given at ±3 %.</p>
+<div id="t18" class="tw"></div>
+<figure><div class="chart" id="c18"></div><figcaption>Figure 18. The balance's swing over the fusee's turns from full wind at the model's TF, for each strip the fusee can set up, at μ 0.10. The band is the manual's,
+247.5-270°. <code>drive.js</code> from <code>mainspring.py</code> and <code>mainspring_friction.py</code>.</figcaption></figure>
+<p><span id="dfA"></span></p>
+<h3>The damping, from real balances whose swing changes</h3>
+<p><b>Method.</b> How fast a swing settles after it is disturbed says how little the balance loses, almost whatever the drive. Two real movements show it on video, each read frame by
+frame: <code>We1dLNXiBj0</code>'s balance let go by hand from rest (<code>swing.py</code>, 66° to 256° over 68 s, the absolute swing known to a screw hole), and <code>xM_mxtGfeqQ</code>'s
+recovering after the movement was handled on its side (170° to 229° over 107 s, its 186° reading at 9:12 picked by the sound and the clicks' interval; References/VIDEOS.md). Each is run in
+the model's escapement in time (<code>dynamics.js</code>, through <code>startup.js</code>) from its first reading, at run-downs of 52 to 320 s, the drive free in 5 % steps; the best drive's
+miss at each TF is plotted. And the published figures for balances' Q, gathered from the literature (below).</p>
+<figure><div class="chart" id="c19"></div><figcaption>Figure 19. How well each real swing is followed by the model's escapement in time at each run-down TF, at the drive that fits best (rms of the miss). The
+model runs at 68 s. <code>startup.js</code>.</figcaption></figure>
+<div id="t19" class="tw"></div>
+<p class="small">Table 19. Published figures for balances' damping (Q = π TF / T; the loss a swing 2π/Q of the balance's energy). Read 12 October 2026; second-hand where marked.</p>
+<p><span id="dfB"></span></p>
+<h3>Together</h3>
+<p><span id="dfC"></span></p>
+<div class="callout gap"><ul>
+<li><b>What it means.</b> <span id="dfD"></span></li>
+<li><b>What it leaves out.</b> The barrel's size against the fusee (the conflict over the museum's 38 mm, OPEN-QUESTIONS.md 1: a larger barrel takes fewer turns of chain, which these runs, in the
+model's barrel, don't count); the free curve's read (about 15 %, 32:18, oblique); the slack's place, to a quarter turn's grid (the set-up to about ±0.1 turn); two movements, one hand-started
+and one recovering from handling, in unknown states of oil and adjustment; and the link between the fusee's torque and the balance's impulse (the train's efficiency, the escapement's work
+against the swing), which is the model's own.</li></ul></div>
 
 <h2 id="context">The checks the model already had</h2>
 <p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
@@ -589,6 +628,45 @@ function draw(){const D=DATA,G=D.data,FE=D.fea,RT=D.rating;
       const M=by('model').S,P=by('pitch'),K=by('klu'),K5=by('klu52'),TN=by('tn24h'),BM=by('bm');
       $('mfE').textContent=`Packed at the pitch the videos measure, the model's spring has ${P?f(P.S.room,2):'?'} turn of room against ${f(M.room,2)}, and its swing ${P&&under(P.swing)<0.05?'stays in the manual\'s band all through the wind':'is under the band for about '+f(under(P.swing),1)+' h'} (KLUwI2UUCMQ's pitch with the solver's film, ${f(K.S.room,2)} turn; TN24H's finer pitch ${f(TN.S.room,2)}). Most of the model's shortfall is that one step: the videos' pitch taken as the bare strip, a film added on top. The core is the other lever: on its mean reading, r 5.2 (0.32 of the inside radius) where the model has r 4.9 (0.30, the lowest), the room is ${K5?f(K5.S.room,2):'?'} turn; and the British Museum's proportions, a finer strip but a core of 0.34, give ${f(BM.S.room,2)} turn and a fusee output uneven to ${pc1(BM.S.even0)} without friction (the model's fusee isn't cut for that spring's pull: set up only ${f(BM.S.Tdown-BM.S.T0,2)} turn, it runs down where the pull falls away, and the swing with it). The museum's barrel is also larger against its fusee than the model's (the open conflict over the barrel's size, OPEN-QUESTIONS.md 1); a larger barrel takes fewer turns of chain, which these runs, in the model's barrel, don't count. Within about ±0.1 turn (the set-up comes from the solved pull's slope over quarter-turn states). So the sources settle the pitch but not the room: at the videos' pitch on the model's core, the lowest of the core's readings, the spring has the half turn a fusee spring wants; on the readings' mean it has less than the model has now. What decides it now is the core, read to about ±0.4 mm on two movements, and the barrel's size against the fusee.`;}
       $('mfD').textContent=`Eight micrometres thinner, the Nivaflex strip packs ${f(N.bound-S.bound,2)} turn further before it is solid, and the fusee's rule, from its own pull, winds it ${f(S.Tup-N.Tup,2)} turn less, so it has ${f(N.room,2)} turn of room against the model's ${f(S.room,2)}: about the half turn a spring wants. Fully wound its coils are pressed less, so they take ${pc1(N.loss['0.1'])} of the work running against ${pc1(S.loss['0.1'])}, and the fusee wheel gets ${pc1(N.fusee.top['0.1'])} of its frictionless torque there against ${pc1(S.fusee.top['0.1'])}. The swing starts at ${f(sw[1][0][1],0)}° and is in the band within about ${f(under(sw[1]),1)} h of winding, against ${f(under(sw[0]),1)} h from ${f(sw[0][0][1],0)}°. Most of the mainspring's room problem is the strip's thickness: the build's strip mends it, and the model's 0.394 mm, read off videos to about this precision, is as near the edge as the reading allows. The friction near coil-bound climbs so steeply that a few hundredths of a millimetre decide it, which only the made spring wound to coil-bound on the bench settles (the bench's mainspring test).`;}
+    /* 11: the mainspring the fusee asks for, and the balance's damping */
+    {const DR=D.drive,R=DR.rows,by=k=>R.find(r=>r.key===k),pc1=x=>f(100*x,1)+' %',SRC={model:'the model (the videos\' pitch as the strip)',pitch:'packed at the videos\' pitch',klu:'KLUwI2UUCMQ\'s pitch',klu52:'the same, core r 5.2',
+      tn24h:'TN24H\'s pitch',bm:'the British Museum\'s proportions','t0.386':'the build\'s Nivaflex (E 220)'},nm=r=>SRC[r.key]||(r.tilt?`L/t 2,700, the free curve tilted ${r.tilt>0?'+':'−'}${f(100*Math.abs(r.tilt),0)} %`:'L/t 2,700'),ok=r=>!r.short&&r.setup!==null;
+      table('t18',['strip','core r','length','slack (turns)','set-up (taper ±3 %)','full, coil-bound, room','even (none; μ 0.10)','swing at TF '+DR.TF+' s (12 h; over the wind)','TF for 255°'],R.map(r=>
+        r.short?[`${f(r.t,3)} mm: ${nm(r)}`,f(r.ra,1),f(r.L,0),f(r.T0,2),`can't be wound: coil-bound ${f(r.span,2)} turns past slack`,'','','','']:
+        r.setup===null?[`${f(r.t,3)} mm: ${nm(r)}`,f(r.ra,1),f(r.L,0),f(r.T0,2),'can\'t be set up: the taper only past coil-bound','','','','']:
+        [`${f(r.t,3)} mm: ${nm(r)}`,f(r.ra,1),f(r.L,0),f(r.T0,2),`${f(r.setup,2)} (${r.setupLo}–${r.setupHi})`,`${f(r.Tup,2)}, ${f(r.bound,2)}, ${f(r.room,2)}`,`${pc1(r.even0)}; ${pc1(r.even1)}`,`${f(r.A12,0)}° (${f(r.Amin,0)}–${f(r.Amax,0)})`,`${f(r.TF255,0)} s`]));
+      const CO={model:'--s2',fz374r49:'--s1',pitch:'--s3',tn24h:'--s4'},sh=R.filter(r=>ok(r)&&CO[r.key]);
+      chart('c18',{label:'The balance\'s swing over the wind at the model\'s TF, for the strips the fusee can set up',x:[0,8.75],y:[200,275],xl:'the fusee\'s turns from full wind',yl:'swing (°)',h:330,r:150,
+        hbands:[{y0:247.5,y1:270,c:'--manual'}],endLabels:true,
+        series:sh.map(r=>({type:'line',name:`${f(r.t,3)} mm on r ${f(r.ra,1)}: ${nm(r)}`,c:CO[r.key],label:`${f(r.t,3)} mm`,data:r.swing,tip:p=>`${f(p[0],2)} fusee turns, ${f(r.t,3)} mm on r ${f(r.ra,1)}: ${f(p[1],0)}°`}))});
+      const M=by('model'),T4=by('fz374r49'),PI=by('pitch'),fit=R.filter(r=>ok(r)&&r.E!==220&&!r.tilt),nf=R.filter(r=>!ok(r)&&!r.tilt);   /* the strips (the build's Nivaflex, E 220, and the free curve's tilts apart) */
+      $('dfA').textContent=`In the model's barrel the fusee can set up only the thinner strips on the drawn core: ${fit.map(r=>`${f(r.t,3)} mm (r ${f(r.ra,1)}) ${f(r.setup,2)} turn`).join(', ')}. `+
+        `None of the others can be: ${nf.map(r=>`${f(r.t,3)} on r ${f(r.ra,1)}`).join(', ')} reach the taper only past coil-bound, or can't be wound the chain's 4.61 turns at all: the parts list's 0.419 mm and the museum's 0.44 among them, and every core larger than r 4.9. `+
+        `Among those that can, Op. 53's "about one turn" of set-up is met best by 0.384-0.394 mm (0.89-1.01 turn; the 0.374 strip wants ${T4?f(T4.setup,2)+', '+T4.setupLo+'-'+T4.setupHi+' over the taper':'?'}), and the fusee evens them all alike, to 3-4 % without friction: `+
+        `the evenness doesn't choose among them; the room past full wind does a little (the drawn spring ${f(M.room,2)} turn, 0.374 mm ${T4?f(T4.room,2):'?'}, the videos' pitch packed with a thinner film ${PI?f(PI.room,2):'?'}). `+
+        `So the fusee says a strip of about 0.37-0.39 mm on a core near r 5 in this barrel: the videos' strip, not the parts list's 0.419 nor the museum's 0.44, unless the barrel is larger than measured. `+
+        `At the model's TF those strips swing the balance ${fit.map(r=>f(r.A12,0)).join(', ')}° at 12 h, and want TF ${fit.map(r=>f(r.TF255,0)).join(', ')} s for 255°.`;
+      const S=D.st,W=S.curves.high,X=S.xm,rmsTF=b=>b.map(g=>[g.TF,g.r]),wLo=Math.min(...W.byTF.filter(g=>g.r<=2*W.best.r).map(g=>g.TF));
+      chart('c19',{label:'The miss against the run-down TF, two real movements',x:[40,330],y:[0,Math.ceil(Math.max(...W.byTF.map(g=>g.r),...X.byTF.map(g=>g.r))/2)*2+1],xl:'the balance\'s free run-down TF (s)',yl:'rms miss (°)',h:300,r:170,
+        vbands:[{x0:35,x1:111,c:'--manual',t:'published figures'},{x0:DR.TF-1,x1:DR.TF+1,c:'--muted'}],endLabels:true,
+        series:[{type:'line',name:'We1dLNXiBj0, a start (likeliest reading)',c:'--s1',label:'start, We1d',data:rmsTF(W.byTF),tip:p=>`We1dLNXiBj0's start, TF ${p[0]} s: ${f(p[1],1)}° rms`},
+          {type:'line',name:'xM_mxtGfeqQ, recovering',c:'--s2',label:'recovery, xM',data:rmsTF(X.byTF),tip:p=>`xM_mxtGfeqQ's recovery, TF ${p[0]} s: ${f(p[1],1)}° rms`}]});
+      table('t19',['Source','What','Q','TF at 2 Hz'],[
+        ['Bateman\'s chart, in Vardi, <i>Bulletin SSC</i> 75 (2014), Fig. 1, p. 58','"Hamilton chronometer" (the Model 21 or the Model 22 watch; how measured not stated); "Mercer marine chronometer"','about 220; about 315 (read off the log chart, ±5 %)','35 s; 50 s'],
+        ['Rawlings, <i>The Science of Clocks and Watches</i>, 3rd ed. (1993), p. 103, as quoted by Vardi (2014), p. 57','a marine chronometer\'s balance and spring (typical)','300-700','48-111 s'],
+        ['Bateman, <i>Horological Journal</i> 120 (1977), as quoted by Agnew (2019)','spring balances (typical)','100-300','16-48 s'],
+        ['Girardin and Jeannet, <i>Bull. SSC & LSRH</i> 45 (1970), as summarised by Vardi (2014), p. 61','watch balances at 10⁻⁴ mmHg against air','doubled at 3-4 Hz, tripled at 5 Hz: the air 50-67 % of the loss',''],
+        ['Cartier, US 9,389,588 B2 and US 9,535,404 B2 (2011)','four 4 Hz watches at 1 mbar, the drive unchanged: 210-220° to 260-270°; Q 300 to 450','the air 28-40 % of the loss',''],
+        ['Thalmann et al., <i>J. Mech. Des.</i> 142 (2020) 075001','a balance and spring (typical)','"barely surpasses 200", the bearings the main loss',''],
+        ['physics.js: the model\'s parts (the air on screws, nuts and arm; the endstone, measured; the spring)','the Model 21 as drawn','406-712','65-113 s'],
+        ['These videos (dynamics.js through startup.js)','We1dLNXiBj0 started from rest; xM_mxtGfeqQ recovering','',`${wLo}-320+ s; ${X.lo}-${X.hi}+ s (within twice the best miss)`]],true);
+      $('dfB').textContent=`Both real movements settle far more slowly than the model's ${DR.TF} s allows: the start misses by ${f(W.byTF.find(g=>g.TF===DR.TF).r,1)}° rms at its best drive there and fits best at ${W.best.TF} s (${f(W.best.r,1)}°); the recovery misses by ${f(X.byTF.find(g=>g.TF===DR.TF).r,1)}° and fits best at ${X.best.TF} s (${f(X.best.r,1)}°), the averaged law alone 133 ± 4 s. Neither sets an upper bound. `+
+        `The literature puts a chronometer's balance at Q 300-700 (TF 48-111 s), and nothing published reaches the Q of 750-2,000 these fits want; but none of those figures is a measured free run-down of a Model 21, and the watch measurements in vacuum put the air at 28-67 % of a small balance's loss, which for this larger, slower one the drag on its screws makes less (physics.js's parts allow Q 406-712; more if the air is smaller than physics.js takes it).`;
+      const nd=t=>DR.need.find(x=>x[0]===t)[1];
+      $('dfC').textContent=`They don't agree through the model. A run-down of 133 s (the averaged law on the recovery) swings the balance 255° at ${f(100*nd(133),0)} % of the drive the model is calibrated at, 200 s at ${f(100*nd(200),0)} %; the strips the fusee can set up give ${fit.map(r=>f(100*r.s12,0)).join(', ')} % at 12 h. A strip weak enough would be about ${f(0.394*Math.sqrt(nd(133)/M.s12),3)} mm at the same length over thickness, thinner than any source reads. `+
+        `And the calibration itself is weaker than the drawn spring: physics.js, whose energy budget sets the calibrated torque and so the model's TF, works the spring fully wound as ${f(DR.Mph,3)} N·m from E b t³/12 L and the fusee's taper (a linear spring, which would want a set-up of about 4.7 turns), where the solved spring gives ${f(DR.Msolved,3)} N·m, ${f(100*(DR.Msolved/DR.Mph-1),0)} % more: through the same train that would swing the balance about 295° at TF ${DR.TF} s and want about 46 s for 255°, further still from the videos. `+
+        `So if the videos' slow settling is the balance's damping, those movements' trains and escapements deliver about half the impulse the model's would from such a spring (the model takes each stage at 0.9, physics.js allows 0.85-0.95; mainsprings measured lose 10-20 % against the coils' 3.4 % here), or the model's escapement gives the balance its work differently as the swing changes than a real one does.`;
+      $('dfD').textContent=`The fusee and the barrel point to the videos' strip, about 0.37-0.39 mm on a core near r 5, and against the parts list's and the museum's thicker ones in this barrel. The damping is not settled: two real movements say TF of 130 s or more, the published figures and the model's parts about 50-110 s, and the model's link between the spring and the swing (the train's efficiency, the escapement's work as the swing changes, physics.js's torque) is where they part. Nothing in the model is changed here.`;}
     /* 9: the box and gimbals in a seaway */
     {const GM=D.gim,BD=GM.bodies,lg=Math.log10,S=GM.seas;
       table('t13',['','the case with the movement','the gimbal ring'],[['mass',`${f(BD.bowl.m*1000,0)} g`,`${f(BD.ring.m*1000,0)} g`],

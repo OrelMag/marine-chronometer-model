@@ -7,6 +7,8 @@
 //   node startup.js --split    (the same with the balance's damping in its parts, physics.js's shares at 255 deg and the model's TF: the air (its range's
 //                               middle), the endstone's constant friction (measured, Jd2c3x8VKsE), the rest viscous; dynamics.js's o.split: TF is then the
 //                               run-down at 255 deg. The air 0.35 and the endstone 0.51 until 12 October 2026, the endstone's friction worked out then)
+//   node startup.js --xm       (a second movement alone: xM_mxtGfeqQ's swing recovering after handling, swing.json; about 5 minutes)
+//   node startup.js --json OUT (also writes the fits, for the build-verification report's assets/startup.json)
 // The drive and the run-down trade against each other along the fit (a slower run-down wants less drive for the same build-up), so the rms is ragged at
 // the drive's 5 % steps; read the least run-down that fits, not the best one.
 // swing.json's A_t is the mean of the video's readings; its aliases (a whole screw hole in the growth, half a hole at the start) are fitted too: low (A0 62.6,
@@ -23,7 +25,8 @@ const run=(s,TF,A0,T=70)=>{const a=sim({mode:'phys',T,from:T-1,s,TF,A:A0,split:S
 const rms=(m,pts)=>Math.sqrt(pts.reduce((q,[t,A])=>q+(m(t-T0)-A)**2,0)/pts.length);
 const TFS=[...new Set([52,TFM,80,120,160,200,260,320])].sort((a,b)=>a-b),SS=[0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05];   /* to 1.05: the model runs at 1 (its calibrated torque at 12 h), which since TF 68 s (12 October 2026) a fast run-down wants */
 console.log(`  the video's start (swing.py, We1dLNXiBj0 0:55.4-2:03.4): ${At.length} points, ${f(a0)} to ${f(At[At.length-1][1])} deg on the middle reading`);
-for(const[nm,[A0,G]]of Object.entries(curves)){
+const XM=process.argv.includes('--xm'),J={TFM,T0,curves:{}},sample=(m,pts)=>{const t1=pts[pts.length-1][0]-pts[0][0]+(pts[0][0]>=T0?pts[0][0]-T0:0),o=[];for(let t=0;t<=t1;t+=1)o.push([+t.toFixed(1),+m(t).toFixed(1)]);return o;};   /* --json OUT: the fits for the build-verification report */   /* --xm: the second movement's recovery alone (below) */
+for(const[nm,[A0,G]]of XM?[]:Object.entries(curves)){
   const pts=series(A0,G),grid=[];
   for(const TF of TFS)for(const s of SS)grid.push({TF,s,r:rms(run(s,TF,A0),pts)});
   const best=grid.reduce((a,b)=>b.r<a.r?b:a),byTF=TFS.map(TF=>grid.filter(g=>g.TF===TF).reduce((a,b)=>b.r<a.r?b:a));
@@ -32,5 +35,21 @@ for(const[nm,[A0,G]]of Object.entries(curves)){
   console.log(`  ${nm.padEnd(6)} (start ${f(A0,1)}, growth ${f(G,1)}, ${f(pts[pts.length-1][1])} deg at 2:03.4): best TF ${best.TF} s at ${f(100*best.s)} % of the torque, rms ${f(best.r,1)} deg, settling at ${f(Ainf)} deg; `+
     `within twice that from TF ${lo} s${best.TF===TFS[TFS.length-1]?' up to the end of the grid (no bound from above)':''}; at the model's ${TFM} s the best is rms ${f(byTF[i52].r,1)} deg (${f(100*byTF[i52].s)} %)`);
   console.log('         per TF (best drive, rms): '+byTF.map(g=>`${g.TF}: ${f(100*g.s)} %, ${f(g.r,1)}`).join('; '));
+  J.curves[nm]={A0,G,pts,best,byTF,model:sample(run(byTF[i52].s,TFM,A0),pts),fit:sample(run(best.s,best.TF,A0),pts),Ainf};
   if(S.length&&nm==='high')console.log(`         against the sound's swings (acoustic.py --every, ${S.length} stretches): rms ${f(rms(run(best.s,best.TF,A0),S),1)} deg at that fit, ${f(rms(run(byTF[i52].s,TFM,A0),S),1)} at TF ${TFM}`);
 }
+/* a second movement (12 October 2026): xM_mxtGfeqQ's balance recovering after the movement was handled on its side and set down flat (swing.json, from $MC_VIDEO/oq/xm: 170 deg at
+   8:56 to 229 at 10:43, three still stretches, the 186 deg alias at 9:12 picked by the sound and the clicks' interval). Not a start from rest: the model's balance is set
+   going at the first reading and its recovery fitted, the drive and TF free as above. The averaged law alone gave TF 133 +- 4 s, settling at 244 deg */
+const X=JSON.parse(fs.readFileSync(path.join(__dirname,'swing.json'),'utf8')).xM_mxtGfeqQ;
+if(X){const xt0=X.A_t[0][0],xa0=X.A_t[0][1],xT=X.A_t[X.A_t.length-1][0]-xt0+2,xp=X.A_t.map(([t,A])=>[t-xt0,A]);
+  const xr=(m)=>Math.sqrt(xp.reduce((q,[t,A])=>q+(m(t)-A)**2,0)/xp.length),XS=[0.35,0.4,...SS],grid=[];
+  for(const TF of TFS)for(const s of XS)grid.push({TF,s,r:xr(run(s,TF,xa0,xT))});
+  const best=grid.reduce((a,b)=>b.r<a.r?b:a),byTF=TFS.map(TF=>grid.filter(g=>g.TF===TF).reduce((a,b)=>b.r<a.r?b:a)),m=run(best.s,best.TF,xa0,3*best.TF),Ainf=m(3*best.TF-1);
+  const lo=Math.min(...byTF.filter(g=>g.r<=2*best.r).map(g=>g.TF)),hi=Math.max(...byTF.filter(g=>g.r<=2*best.r).map(g=>g.TF)),iM=TFS.indexOf(TFM);
+  console.log(`  xM_mxtGfeqQ's recovery (8:56-10:43, ${xp.length} points, ${f(xa0)} to ${f(X.A_t[X.A_t.length-1][1])} deg): best TF ${best.TF} s at ${f(100*best.s)} % of the torque, rms ${f(best.r,1)} deg, settling at ${f(Ainf)} deg; `+
+    `within twice that TF ${lo}-${hi} s${best.TF===TFS[TFS.length-1]?' (the end of the grid)':''}; at the model's ${TFM} s the best is rms ${f(byTF[iM].r,1)} deg (${f(100*byTF[iM].s)} %)`);
+  console.log('         per TF (best drive, rms): '+byTF.map(g=>`${g.TF}: ${f(100*g.s)} %, ${f(g.r,1)}`).join('; '));
+  J.xm={t0:xt0,pts:xp,best,byTF,lo,hi,Ainf,model:(()=>{const m=run(byTF[iM].s,TFM,xa0,xT),o=[];for(let t=0;t<=xT;t+=1)o.push([t,+m(t).toFixed(1)]);return o;})(),fit:(()=>{const m=run(best.s,best.TF,xa0,xT),o=[];for(let t=0;t<=xT;t+=1)o.push([t,+m(t).toFixed(1)]);return o;})()};}
+
+const jo=process.argv.indexOf('--json');if(jo>0){fs.writeFileSync(process.argv[jo+1],JSON.stringify(J));console.log('wrote',process.argv[jo+1]);}
