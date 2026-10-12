@@ -54,14 +54,14 @@ own geometry and numbers.</p>
 <div class="tiles" id="tiles"></div>
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#gears">1. Gears</a><a href="#thermal">2. Temperature</a><a href="#fea">3. Finite elements</a>
-<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
+<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
 <a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>A chronometer keeps time if three things hold: its <b>train delivers a steady torque</b> to the escapement (so the balance's swing, and with it the rate, stays put),
 its <b>geometry stays in adjustment</b> under load and temperature, and its <b>balance and hairspring</b> oscillate at a rate that changes little with swing and
 temperature. The model's existing checks cover the escapement in detail (its figures against the manual, its motion in time, the energy budget, the stresses and an
-error budget for a voyage). Eight checks were added for the build:</p>
+error budget for a voyage). Nine checks were added for the build:</p>
 <div class="tw"><table>
 <tr><th>#</th><th>Question</th><th>Method</th><th>Script</th></tr>
 <tr><td>1</td><td>Do the gears mesh, and how exactly must the holes be placed?</td><td>Tooth-by-tooth contact on the model's own cycloidal outlines, with friction; the train run in time through the escapement's equation</td><td><code>tools/gearing.js</code></td></tr>
@@ -70,6 +70,7 @@ error budget for a voyage). Eight checks were added for the build:</p>
 <tr><td>4</td><td>Does the hairspring behave as designed at large swings?</td><td>Co-rotational beam elements, Newton's method, against the existing shooting elastica</td><td><code>tools/hairspring-fe.js</code></td></tr>
 <tr><td>5</td><td>What must the made parts measure?</td><td>The model's figures turned into bench tests with pass figures, in the build book</td><td><code>tools/bench.js</code></td></tr>
 <tr><td>6</td><td>Does the made chronometer keep time?</td><td>The Navy's 30-day test worked on the maker's log; the rate fitted, backtested and projected for a voyage</td><td><code>tools/rating.py</code></td></tr>
+<tr><td>10</td><td>How much does the mainspring lose to its own coils, and does the fusee still even it?</td><td>The coils' slip followed on the solved spring from state to state, the packed coils' pressure by the ring equations; the fusee's output running</td><td><code>tools/mainspring_friction.py</code></td></tr>
 <tr><td>9</td><td>Do the gimbals keep it level at sea, and does anything resonate?</td><td>The case and ring weighed on the model, run as two rigid bodies on their pivots under a ship's random roll, pitch, yaw and heave; what reaches the escapement run through it in time</td><td><code>tools/gimbals.js</code>, <code>tools/massprops.py</code></td></tr>
 <tr><td>8</td><td>Does a knock, or a swing too large, let a tooth past the locking stone?</td><td>The detent as a frame of beam elements from the drawn parts, its modes carried in time with the balance and the wheel through elastic contacts; validated against the rigid detent</td><td><code>tools/tripping.js</code></td></tr>
 </table></div>
@@ -266,6 +267,30 @@ analysis above assumes it is.</li>
 <li><b>What it leaves out.</b> The box's inside, which sets where the case meets it (<span id="gmStop"></span>), is estimated, as are the pivots' damping, the blows'
 stiffness and restitution, and the box's place in the ship.</li></ul></div>
 
+<h2 id="coil">10. The mainspring's coil friction</h2>
+<p>A mainspring takes more torque to wind than it gives back running: its coils slide on each other as it winds and unwinds, and rub. The energy budget had
+allowed for it as a published 5-15 %, the largest number in it taken on trust. Here it is worked out on the model's own spring.</p>
+<p><b>Method.</b> <code>mainspring.py</code> solves the strip's shape at every quarter turn of the wind as the one of least bending energy, its coils kept apart but
+frictionless (<code>js/mainspring.js</code>). Each of those states is polished by the same solve (<code>mainspring_friction.py</code>). <b>The slip</b> follows the
+steel: the two pieces that touch, on a coil and on the one over it, are followed from one state to the next, and the difference of their movements along the strip is how
+far they slide on each other; on the barrel's wall against the barrel's turn, on the core against the arbor's. <b>The pressure</b> between packed coils comes from the
+packed spiral's ring equations: each coil a ring bent by its own moment, EI(k − k₀), the torque the same at every section, so each coil's hoop force is
+(τ − M)/r, and each ring's radial balance passes the pressure on to the next from the pack's free edge (the solver's own multipliers and the rod's equations by
+differentiation were tried first, and failed their own checks in the packs: the second derivatives of a sampled shape are too rough). The friction's work, μ times
+pressure times slip, over each quarter turn is a torque that adds to winding and comes off running. μ: greased steel on steel, 0.08-0.2 lubricated (the CRC
+Handbook, as cited in US 3,939,081); 0.10 taken, 0.08 and 0.16 tried.</p>
+<div id="t15" class="tw"></div>
+<figure><div class="chart" id="c14"></div><figcaption>Figure 14. How much more winding takes than running gives, over the spring's turns from its inner end, at three friction coefficients. The
+shaded span is the fusee's working range, from run down to fully wound; past 19 turns the coils are packed solid. <code>mainspring_friction.py</code>.</figcaption></figure>
+<p><span id="mfA"></span></p>
+<figure><div class="chart" id="c15"></div><figcaption>Figure 15. The fusee wheel's torque running, over the fusee's turns from full wind, against its mean: the solved spring without friction and
+with it. The band is the bench's, the escape wheel's torque that keeps the swing in the manual's 247.5-270°. <code>mainspring_friction.py</code>.</figcaption></figure>
+<p><span id="mfB"></span></p>
+<div class="callout gap"><ul>
+<li><b>What it means for the build.</b> <span id="mfC"></span></li>
+<li><b>What it leaves out.</b> The strip's edges rubbing on the barrel's floor and cap, and the steel's own hysteresis, which add to it; the ring equations take
+each packed coil as round, its pressure even round it. Mainsprings measured run 10-20 % under their winding (ICMFF9), which the coils alone don't reach.</li></ul></div>
+
 <h2 id="context">The checks the model already had</h2>
 <p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
 <!--CONTEXT-->
@@ -289,6 +314,7 @@ python rating.py --demo    # under a second; python rating.py LOG.csv for a real
 node tripping.js           # about 6 min (--quick 10 s: the frame, the validation, the bench's pitches)
 python massprops.py        # about 30 s (the browser): the case and ring weighed; --write writes gimbals.json
 node gimbals.js            # about 2½ min: the gimbals in a seaway
+python mainspring_friction.py  # about a minute (14 processes): the coils' friction (mainspring_friction.json, read by physics.js and bench.js)
 node tripping.js --write   # about 2 min: tripping.json, the bench's lock floor and the detent's ring (then node bench.js --write, python makers.py)</pre>
 <p>and this report, from <code>verification/build-verification/</code>:</p>
 <pre>node reportdata.js                                                 # about 35 s: assets/data.json
@@ -311,6 +337,7 @@ python build_report.py                                             # index.html 
 <tr><td><a href="../../tools/rating.py"><code>tools/rating.py</code></a></td><td>A made chronometer's log: the Navy test's figures, the fit, the backtest, the projection</td><td>(--demo) the fit misses what the log was made with</td></tr>
 <tr><td><a href="../../tools/tripping.js"><code>tools/tripping.js</code></a></td><td>The detent as a frame: its modes; the frame made rigid against dynamics.js; running as drawn, the estimates varied, the swing pushed, the knocks that trip it</td><td>the rigid frame parts from dynamics.js; a tooth gets past at the model's settings or under any estimate varied; a held tooth's stone uses half the depth of lock; a blow under 20 g trips it; tripping.json is stale</td></tr>
 <tr><td><a href="../../tools/gimbals.js"><code>tools/gimbals.js</code></a>, <a href="../../tools/massprops.py"><code>tools/massprops.py</code></a></td><td>The case and ring weighed on the model (gimbals.json); their swing at sea, the resonance curve, the stops, what reaches the escapement</td><td>the gimbals' periods among a ship's or the beat; a working sea tilts the case 2° from the apparent vertical, reaches its stops or moves the rate 0.05 s a day; what reaches the escapement comes within half of what trips it; gimbals.json stale</td></tr>
+<tr><td><a href="../../tools/mainspring_friction.py"><code>tools/mainspring_friction.py</code></a></td><td>The mainspring's coil friction over the wind, the fusee's output running, the set-up against it (mainspring_friction.json)</td><td>(--check) the file is stale; invariants.py holds its fusee to the page</td></tr>
 <tr><td><a href="../../tools/acoustic.py"><code>tools/acoustic.py</code></a></td><td>The swing from a recording of the beat (now any recording's path, a made movement's)</td><td>—</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This report's data and page</td><td>—</td></tr>
 </table></div>
@@ -321,6 +348,8 @@ python build_report.py                                             # index.html 
 <li>British Standards Institution, BS 978 Part 2, <i>Specification for fine pitch gears: cycloidal type gears</i> (the tooth proportions the model draws; estimated, not from the manual).</li>
 <li>NORDFORSK, <i>Assessment of Ship Performance in a Seaway</i>, Marintek (1987): the operability criteria, lateral acceleration 0.12 g rms at the bridge (as applied in later seakeeping studies, e.g. <a href="https://sjsutst.polsl.pl/archives/2026/vol131/275_SJSUTST131_2026_Wulandari_Alamsyah_Syahab_Agusty_Pratama.htm">Wulandari et al., 2026</a>).</li>
 <li>MARIN, <a href="https://marin.nl/en/publications/on-empirical-methods-to-predict-the-rolling-period-of-ships"><i>On empirical methods to predict the rolling period of ships</i></a> (IMDC 2024), and Jachowski et al., KONES (2012): merchant ships' roll periods, 14-32 s in the latter's cases.</li>
+<li>Mainspring torque, winding against unwinding: "the torque during unwinding is 10 to 20 per cent less than that during winding" (<a href="https://gruppofrattura.it/ocs/index.php/ICMFF/ICMFF9/paper/download/11771/10940">ICMFF9, gruppofrattura.it</a>).</li>
+<li>Friction of lubricated steel on steel, 0.08-0.2: the CRC Handbook of Chemistry and Physics, 43rd ed., p. 2181, as cited in <a href="https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/3939081">US 3,939,081</a>; <a href="https://us.misumi-ec.com/blog/coefficient-of-friction/">Misumi's table</a> (grease 0.16 static, oil 0.08 kinetic).</li>
 <li>J. S. Przemieniecki, <i>Theory of Matrix Structural Analysis</i>, McGraw-Hill (1968), chs. 5 and 11: the plane frame element and its consistent mass.</li>
 <li>P. Wriggers, <i>Computational Contact Mechanics</i>, 2nd ed., Springer (2006), ch. 2: penalty contact.</li>
 <li>L. L. Howell, <i>Compliant Mechanisms</i>, Wiley (2001), ch. 5: the small-length flexural pivot, which turns about its middle.</li>
@@ -489,6 +518,22 @@ function draw(){const D=DATA,G=D.data,FE=D.fea,RT=D.rating;
       $('tbThin').textContent=`thinner springs ring more: ${f(100*Math.min(...thin.map(r=>r.lift)),0)}-${f(100*Math.max(...thin.map(r=>r.lift)),0)} % against ${f(100*Math.min(...thick.map(r=>r.lift)),0)}-${f(100*Math.max(...thick.map(r=>r.lift)),0)} % as drawn and thicker`;
       table('t11',['Lock (depth at the stone)','drop','the stone, at most','trips','3 ms blow'],LK.rows.map(r=>[`${f(r.lock,1)}° (${f(r.depth,0)} µm)`,`${f(Math.abs(r.drop)<0.05?0:r.drop,1)}°`,`${pc0(r.lift)} (${f(r.liftUm,0)} µm)`,r.trips,r.drop>0?`${f(r.blow,0)} g`:'(no drop)']));
       table('t12',['Detent spring','rings at','the stone, at most','trips'],RG.rows.map(r=>[`${f(r.t,3)} mm${Math.abs(r.f1-RG.f0)<0.5?' (drawn)':''}`,`${f(r.f1,0)} Hz`,pc0(r.lift),r.trips]));}
+    /* 10: the mainspring's coil friction */
+    {const MF=D.mf,S=MF.summary,R=MF.rows.filter(r=>r.M0>0&&r.T>=S.Tdown-0.3),pc1=x=>f(100*x,1)+' %',U=S.setup;
+      table('t15',['Over the fusee\'s turns','μ 0.08','μ 0.10','μ 0.16'],[['the coils\' friction, of the spring\'s work running',...['0.08','0.1','0.16'].map(k=>pc1(S.loss[k]))],
+        ['winding against running',...['0.08','0.1','0.16'].map(k=>pc1(S.hyst[k]))],['the fusee wheel\'s torque, even to (without friction '+pc1(S.fusee.even0)+')',...['0.08','0.1','0.16'].map(k=>pc1(S.fusee.even[k]))],
+        ['fully wound, of the frictionless torque',...['0.08','0.1','0.16'].map(k=>pc1(S.fusee.top[k]))]]);
+      chart('c14',{label:'Winding against running over the spring\'s turns',x:[14,19],y:[0,Math.min(80,Math.ceil(Math.max(...R.map(r=>200*r.dM['0.16']/r.M0))/10)*10)],xl:'the spring\'s turns from its inner end',yl:'winding against running (%)',h:320,r:110,
+        vbands:[{x0:S.Tdown,x1:S.Tup,c:'--manual',t:'the fusee\'s turns'}],endLabels:true,
+        series:[['0.08','--s3'],['0.1','--s1'],['0.16','--s2']].map(([k,c])=>({type:'line',name:`μ ${k==='0.1'?'0.10':k}`,c,label:`μ ${k==='0.1'?'0.10':k}`,data:R.map(r=>[r.T,200*r.dM[k]/r.M0]),tip:p=>`${f(p[0],2)} turns, μ ${k}: winding takes ${f(p[1],1)} % more than running gives`}))});
+      const fr=S.fusee.frictionless,ru=S.fusee.running,m0=fr.reduce((a,q)=>a+q[2],0)/fr.length,b=MF.band;
+      chart('c15',{label:'The fusee wheel\'s torque running over the fusee\'s turns',x:[0,8.75],y:[0.7,1.1],xl:'the fusee\'s turns from full wind',yl:'torque, of its mean without friction',h:320,r:120,
+        hbands:[{y0:1+b[0],y1:1+b[1],c:'--manual'}],endLabels:true,
+        series:[{type:'line',name:'without friction',c:'--s3',label:'frictionless',data:fr.map(q=>[q[0],q[2]/m0]),tip:p=>`${f(p[0],2)} turns: ${f(p[1],3)} without friction`},
+          ...[['0.1','--s1'],['0.16','--s2']].map(([k,c])=>({type:'line',name:`running, μ ${k==='0.1'?'0.10':k}`,c,label:`μ ${k==='0.1'?'0.10':k}`,data:ru[k].map(q=>[q[0],q[2]/m0]),tip:p=>`${f(p[0],2)} turns: ${f(p[1],3)} running, μ ${k}`}))]});
+      $('mfA').textContent=`Over the fusee's turns the coils take ${pc1(S.loss['0.1'])} of the spring's work running (${f(100*S.loss['0.08'],1)}-${pc1(S.loss['0.16'])}), and winding takes ${pc1(S.hyst['0.1'])} more than running gives. But not evenly: in the middle of the wind no pack is pressed and the friction is under 1 %; it is where coils peel off the wall's pack, just above run down, and where the arbor's pack tightens, near full wind, that they slide under pressure, and in the last half turn before the coils pack solid it climbs to tens of per cent. The energy budget (physics.js) now takes the spring's own losses as the coils' friction up to what mainsprings measure; the model's damping sits near the top of it, which the strip's edges and its steel's own hysteresis would make up.`;
+      $('mfB').textContent=`On the model's spring, fully wound lies only ${f(MF.room,2)} turn short of the coils packing solid on the arbor. Running, the fusee wheel's torque there is ${pc1(S.fusee.top['0.1'])} of what the frictionless spring gives, so the swing just after winding falls under the manual's band, and ${f(100*U.now[1],0)} % of the wind, about ${U.hours} of its 56 hours, runs outside the bench's band; the set-up can't mend it (wound ${f(-U.best[0],2)} turn less, ${f(100*U.best[1],0)} %), since easing the top end lowers the run-down end.`;
+      $('mfC').textContent=`The spring needs room: from its slack to coil-bound it should have the set-up and the fusee's ${f(S.Tup-S.Tdown,2)} turns with about half a turn to spare. The bench's mainspring test now counts those turns, and expects unwinding to read a little under winding. The model's spring's thickness, 0.394 mm, is read off videos (an open question, OPEN-QUESTIONS.md 1); the build's Nivaflex strip is a little thinner and leaves a little more room.`;}
     /* 9: the box and gimbals in a seaway */
     {const GM=D.gim,BD=GM.bodies,lg=Math.log10,S=GM.seas;
       table('t13',['','the case with the movement','the gimbal ring'],[['mass',`${f(BD.bowl.m*1000,0)} g`,`${f(BD.ring.m*1000,0)} g`],

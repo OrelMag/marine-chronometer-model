@@ -6,8 +6,8 @@
    "title": "The mainspring's torque",
    "no": "42038",
    "when": "before it goes into the barrel, and again in the barrel",
-   "how": "Hold the barrel and turn its arbor with a lever and weights or a torque gauge: a 3D-printed lever 50 mm long and a hanging weight do (1 kg at 50 mm is 0.49 N·m). Wind it up from let down by its set-up and read the torque each half turn over the 4.51 turns the fusee uses, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again.",
-   "pass": "Fully wound 0.74-0.86 N·m (the model's 0.78; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 84 mN·m a turn, to about 0.40 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13)."
+   "how": "Hold the barrel and turn its arbor with a lever and weights or a torque gauge: a 3D-printed lever 50 mm long and a hanging weight do (1 kg at 50 mm is 0.49 N·m). Wind it up from let down by its set-up and read the torque each half turn over the 4.51 turns the fusee uses, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, in its barrel, wind it on from let down until its coils lie tight on the arbor and count the turns: from its slack to there it must have the set-up and the fusee's 4.61 turns with half a turn to spare (the model's spring has 0.13: so near coil-bound the coils' friction takes up to 22 % of its pull running, mainspring_friction.py, and the swing falls under the manual's for the first hours after each wind).",
+   "pass": "Fully wound 0.74-0.86 N·m (the model's 0.78; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 84 mN·m a turn, to about 0.40 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13). Unwinding it reads less than winding: the coils' friction gives 5-11 % on the model's spring, mainsprings run 10-20 % under their winding (ICMFF9: 11-22 % read so; the strip's edges and its steel too); over 22 %, clean and grease it."
   },
   {
    "id": "fusee",
@@ -76,7 +76,7 @@
  ],
  "lines": {
   "42015": "The fusee evens the pull, the chain on, the barrel set up, before the train goes in: Every reading within -5 to +11 % of their mean (the model's even 311 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope.",
-  "42038": "The mainspring's torque, before it goes into the barrel, and again in the barrel: Fully wound 0.74-0.86 N·m (the model's 0.78; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 84 mN·m a turn, to about 0.40 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13).",
+  "42038": "The mainspring's torque, before it goes into the barrel, and again in the barrel: Fully wound 0.74-0.86 N·m (the model's 0.78; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 84 mN·m a turn, to about 0.40 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13). Unwinding it reads less than winding: the coils' friction gives 5-11 % on the model's spring, mainsprings run 10-20 % under their winding (ICMFF9: 11-22 % read so; the strip's edges and its steel too); over 22 %, clean and grease it.",
   "42068": "The train's depths, the plates and bridges bored, before the jewels and bushes go in: Centres 20.383, 16.550, 11.297, 10.444 mm (fusee-centre, centre-third, third-fourth, fourth-escape), each within ±13 µm (tools/gearing.js: the wheel's tips stay off the pinion's root with the pivots' shake taken off). Every mesh turns smoothly with shake at its pinion; none butts or catches. A hole that errs should err wide: each mesh takes several times as much wide as close.",
   "42071": "Endshake, each arbor in its bearings, before the escapement goes in: 28-73 µm at 20 °C (Ops. 15, 69 and 74's 0.001-0.003 in, less what the brass takes from it at 40 °F and gives at 100 °F: tools/thermal.js).",
   "42087": "The detent rings, the detent made, before it goes in: 137 Hz with the spring as drawn (0.079 mm thick); 137-342 Hz for a spring 0.079-0.150 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to 56 % of the depth of lock, against 23 % as drawn: tools/tripping.js); higher than 342 Hz, unlocking takes too much of the impulse (tools/tolerances.js). From about 194 Hz (0.10 mm) it rings least (the stone 16 % of the depth of lock). The escapement's figures, the detent, its springs and the balance in; the train's power let down to the set-up: The manual's figures: lock about 6° (the model 5.5°, Op. 85), let-off at least 6° (8.7°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.0°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78's weight, 0.770 g on the locking jewel. Never a lock under 5°: shallower, the detent's ringing after each lock comes to over half the depth of lock (102 µm at the stone at 5°), the drop is gone at 3.4° and a tooth gets past at 2.4° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (53-61 g over 3 ms).",
@@ -85,6 +85,17 @@
  },
  "criteria": {
   "mainspring": {
+   "friction": {
+    "coils": [
+     0.0542,
+     0.1083
+    ],
+    "measured": [
+     0.1053,
+     0.2222
+    ],
+    "room": 0.1306
+   },
    "full": [
     0.74,
     0.86

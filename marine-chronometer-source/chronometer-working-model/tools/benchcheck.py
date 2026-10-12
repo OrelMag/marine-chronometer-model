@@ -13,7 +13,7 @@ the stud's pinning point, which of the manual's operations moves an escapement f
 How each is judged (the figures and their sources: bench.js, and the build book):
   mainspring   thickness in its material's band (Nivaflex 45/5, the build's, or carbon steel, the Model 21's); the torque fully wound (the highest
                reading going up) in the band; its fall a turn (a straight line through the readings going up) against the model's; the friction, up
-               against down (the model allows 5-15 % for the coils' friction and set: physics.js); a week later, still in the band. Too weak: the set-up
+               against down (the coils' friction alone gives 5-11 % on the model's spring, mainspring_friction.py; mainsprings run 10-20 % under their winding, ICMFF9, 11-22 % read so; more warns); a week later, still in the band. Too weak: the set-up
                turns that bring it into the band at the slope measured.
   fusee        every reading within the band of their mean (-5 to +11 %: the swing's band through ampAt). Not even: its slope along the wind says which
                way the set-up is off. Each turn of set-up adds the same moment at both ends, so it changes the ratio of fully wound to run down, which
@@ -65,7 +65,7 @@ def check(M):
             res(lo <= full <= hi, 'mainspring fully wound', f'{full:.3f} N·m, the band {lo:.2f}-{hi:.2f} (the model {B["mainspring"]["model"]:.2f})', todo)
             if dn:
                 fr = [(u[1] - d[1]) / (0.5 * (u[1] + d[1])) for u in up for d in dn if abs(u[0] - d[0]) < 1e-6]
-                if fr: f_ = sum(fr) / len(fr); res(f_ <= 0.15 or 'warn', 'mainspring friction', f'up against down {f_ * 100:.0f} % (the model allows 5-15 %)', 'more than that: the coils dry or rough; clean and grease (Hamilton T-324), or the barrel\'s wall rubs')
+                if fr: f_ = sum(fr) / len(fr); fb=B['mainspring'].get('friction',{});res(f_ <= fb.get('measured',[0,0.222])[1] or 'warn', 'mainspring friction', f"up against down {f_ * 100:.0f} % (the coils' friction alone {fb.get('coils',[0,0])[0]*100:.0f}-{fb.get('coils',[0,0])[1]*100:.0f} % on the model's spring; mainsprings 11-22 %)", 'more than that: the coils dry or rough; clean and grease (Hamilton T-324), or the barrel\'s wall rubs')
             wk = ms.get('after_week_fully_wound_Nm')
             if wk is not None: res(lo <= wk <= hi, 'mainspring after a week', f'{wk:.3f} N·m fully wound ({(wk / full - 1) * 100:+.1f} % on the first reading)', 'it has set: replace it, or set it up a tooth (Op. 13) and test again' if wk < 0.98 * full else 'below its band from the start: the set-up above')
     fu = [x for x in (M.get('fusee') or {}).get('torque_Nm', []) if x is not None]

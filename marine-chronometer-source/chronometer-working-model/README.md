@@ -1067,6 +1067,19 @@ on what would stop the chronometer.
   storm) the case swings onto its stops; each blow nudges the balance's phase
   by about 0.15 ms, a few tenths of a second a day while it lasts, and passes
   on under 1 g to the escapement, against the 61 g that trips it.
+- **`tools/mainspring_friction.py`, the mainspring's coil friction.** On the
+  solved spring, the coils' slip followed from state to state and the packed
+  coils' pressure by the ring equations of a packed spiral: over the fusee's
+  turns the coils take 3.4 % of the spring's work running (2.7-5.4 % at
+  friction 0.08-0.16), winding 6.8 % more than running gives; under 1 % in
+  the middle of the wind, steep in the last half turn before coil-bound.
+  Mainsprings measure running 10-20 % under winding (ICMFF9; the strip's edges
+  and its steel too): physics.js now takes the spring's losses between the two
+  (it had a published 5-15 %). The model's spring, fully wound, is 0.13 turn
+  from coil-bound, so running the fusee wheel gets 78.5 % of its frictionless
+  torque at full wind and the swing falls under the manual's band for the
+  first hours after winding; the set-up can't mend it. The build's spring
+  wants half a turn of room (bench.js's mainspring test counts it).
 - **The report**, `verification/build-verification/index.html` (open the
   file; `build_report.py` rebuilds it): the process, figures, sources and
   scripts of these checks, the earlier ones' output beside them.
