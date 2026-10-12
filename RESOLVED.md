@@ -2219,7 +2219,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   set-up ratchet's older reading (a 5° lean) beside its newer one (0.48 mm
   teeth, undercut faces), with the winding-pawl springs' section inside the
   conflict. Kept main's set-up ratchet and the springs' section. Keep: after a
-  merge, `git grep -n '^<<<<<<<\|^>>>>>>>'` finds nothing before committing.
+  merge, `git grep -n '^<<<<<<<\|^>>>>>>>'` finds nothing before committing. `52fd85c`
 
 ## Essay
 
