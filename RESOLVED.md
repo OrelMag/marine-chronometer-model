@@ -1418,7 +1418,7 @@ Contents:
   the cock's setting r 2.2 (41:58). Now so, the head 0.90 of the counterbore
   (r 3.33) and 1.5 times its width long, as the photographs and 5:59 have
   it. Keep: sizes on the cock's top from the video's camera, not scaled by
-  the top-view photograph; the cap on metal all round (`hullSplice`).
+  the top-view photograph; the cap on metal all round (`hullSplice`). `a88cd81`, `78880fd`
 - **The balance cock's top face traced through its holes at the old
   scale.** `CK_TR` went through homographies on the cock's holes as the model
   placed them: the cap's screws 2.75 either side of the staff and the stud's
@@ -1429,7 +1429,7 @@ Contents:
   6:29 measures them, with the rim held to r 40.1: the straight edge within
   0.25 mm of 6:29's, the horn's measured edge within 0.6 mm of it at f 5,000.
   Keep: the cock's top traced through holes measured on the video, its rim
-  as a constraint; the horn 0.15 mm off the straight edge.
+  as a constraint; the horn 0.15 mm off the straight edge. `eb65570`
 - **The barrel bridge's cut round the balance too small between the horn and
   the fusee.** The cut was the balance's clearance circle (r 17.7) and the
   top-view photograph's circle, so the horn on the cock's side met it at
@@ -1438,14 +1438,14 @@ Contents:
   (23.7, 8.4) toward the fusee 21.6-22.3 mm from the staff. A circle through
   those 9 points is now cut too, run on behind the fusee's dust cap. Keep:
   the cut traced on the video there, not the photograph's edge in the cock's
-  shadow (16.7-18 mm, plain train bridge on 6:49.0).
+  shadow (16.7-18 mm, plain train bridge on 6:49.0). `f290f01`
 - **The barrel bridge's two screws into the train bridge 3-6 mm too near
   the centre.** They were placed through `PT` from the top-view photograph's
   five-screw map, which is about 10 % small near the rim: (28.99, 7.95) and
   (−23.88, 22.98), r 30.1 and 33.1. On 6:49.0 through its fitted camera (and
   6:29) their heads stand at (35.18, 8.06) and (−24.85, 26.27), r 36.1-36.2,
   and the photograph has them 4.5-4.9 mm inside its rim; now so. Keep: a
-  screw near the rim measured against the rim, not through `PT`.
+  screw near the rim measured against the rim, not through `PT`. `ee8b601`
 
 - **The balance cock's top face a straight edge, a widened nose and a bulging
   concave edge; its arm one thickness.** Seen from above, the cock's straight
