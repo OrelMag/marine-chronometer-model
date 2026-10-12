@@ -36,12 +36,23 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .hud{position:absolute;left:14px;bottom:12px;right:290px;pointer-events:none;font:13px/1.4 "Instrument Sans",sans-serif;color:var(--muted);font-variant-numeric:tabular-nums}
 .hud b{color:var(--ink);font-weight:600}
 /* the sustaining spring close up while winding (app.js cuDraw): the movement rendered again into this box on the stage's canvas, its time left under it */
-.cu{position:absolute;left:14px;bottom:64px;width:250px;height:210px;border:1px solid var(--rule);border-radius:10px;pointer-events:none;overflow:hidden;font:12px/1.3 "Instrument Sans",system-ui,sans-serif;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.cu{position:absolute;left:14px;bottom:64px;width:250px;height:210px;border:1px solid var(--rule);border-radius:10px;overflow:hidden;touch-action:none;cursor:grab;font:12px/1.3 "Instrument Sans",system-ui,sans-serif;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .cu-t{position:absolute;left:0;right:0;top:0;padding:4px 8px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:6px}.cu-t span{color:var(--brass);font-weight:600}
 .cu-g{position:absolute;left:0;right:0;bottom:0;padding:5px 8px 6px;background:color-mix(in srgb,var(--card) 88%,transparent);font-variant-numeric:tabular-nums}
 .cu-g i{display:block;height:5px;border-radius:3px;background:var(--rule);margin-bottom:4px;overflow:hidden}.cu-g i b{display:block;height:100%;width:100%;background:#e0306a;border-radius:3px}
 .cu-g.run i b{background:var(--muted)}.cu-g span b{font-weight:600}.cu-g small{color:var(--muted);font-size:11px}
 .cu-g em{font-style:normal;white-space:nowrap;margin-right:6px}.cu-g em::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:#e0306a}.cu-g em.h::before{background:#0e9f92}
+/* its tools in a row under the title (app.js cuBind): zoom, enlarge, slow motion, keep open, how it takes the load; .big the enlarged box; .cuh the explanation beside it (cuPlace) */
+.cu.grab{cursor:grabbing}.cu.big{width:min(600px,calc(100% - 28px));height:min(470px,calc(100% - 140px))}
+.cu-b{position:absolute;right:4px;top:20px;display:flex;gap:3px}
+.cu-b button{width:22px;height:20px;padding:0;font:600 13px/1 "Instrument Sans",system-ui,sans-serif;border-radius:6px;background:color-mix(in srgb,var(--card) 85%,transparent);color:var(--ink);border:1px solid var(--rule);cursor:pointer}
+.cu-b button[aria-pressed="true"]{background:var(--brass);color:var(--card);border-color:var(--brass)}.cu-b #cuSlow{font-size:10px}.cu-b #cuSlow.on{background:#e0306a;color:#fff;border-color:#e0306a}
+.cuh{position:absolute;bottom:64px;left:274px;width:300px;max-height:calc(100% - 80px);overflow:auto;overscroll-behavior:contain;padding:10px 12px;border:1px solid var(--rule);border-radius:10px;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font:12px/1.42 "Instrument Sans",system-ui,sans-serif;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.cuh h4{margin:0 0 6px;font-size:13px}.cuh p{margin:0 0 7px}.cuh ol{margin:0 0 7px;padding-left:18px}.cuh li{margin:0 0 5px;padding:3px 6px;border-radius:6px;color:var(--muted)}.cuh li b{color:var(--ink)}
+.cuh li{cursor:pointer}.cuh li:not(.now):not(.open) .tx{display:none}.cuh li:not(.now)>b::before{content:"▸ ";color:var(--muted)}.cuh li.open:not(.now)>b::before{content:"▾ "}
+.cuh li.now{color:var(--ink);background:color-mix(in srgb,var(--brass) 14%,transparent);cursor:default}.cuh li.now b::after{content:" · now";color:var(--brass);font-weight:600}
+.cuh .path{font-size:11.5px}.cuh .num{font-variant-numeric:tabular-nums;color:var(--ink)}.cuh small{color:var(--muted);font-size:11px}
+.cuh button.go{background:none;border:0;padding:0;font:inherit;color:var(--blue);text-decoration:underline dotted;cursor:pointer}
 .tools{position:absolute;right:10px;bottom:10px;display:flex;gap:6px}
 .tools button{background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .info{position:absolute;left:12px;top:12px;max-width:min(340px,calc(100% - 24px));background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
@@ -198,7 +209,7 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
 @media(max-width:600px){header{padding:14px 16px 8px}header p{font-size:13px}
   .info{z-index:7;left:8px;right:8px;top:auto;bottom:8px;max-width:none;max-height:45%;overflow:auto;overscroll-behavior:contain;touch-action:pan-y}
   .help{width:auto;max-height:78%}
-  .lbl{font-size:11px}.lbl i{display:none}.hud{right:14px;bottom:50px}.cu{bottom:96px;width:176px;height:150px}}
+  .lbl{font-size:11px}.lbl i{display:none}.hud{right:14px;bottom:50px}.cu{bottom:96px;width:210px;height:205px}.cu.big{width:calc(100% - 28px);height:min(62%,420px)}}
 /* narrow phones and landscape phones: Display's group labels above their boxes, which take the full width in two columns */
 @media(max-width:400px),(orientation:landscape) and (max-height:560px){.dgrid{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:2px}.dgrid .lab{grid-column:1/-1}.dgrid .lab.g{margin-top:10px}.dgrid .ck.g{margin-top:0}.dgrid .c2{grid-column:1}.dgrid .span{grid-column:1/-1}.dgrid .seg:last-child{margin-top:6px}}
 /* touch: finger-sized targets */
@@ -214,7 +225,7 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
   header{grid-column:2;grid-row:1;max-width:none;margin:0;padding:10px 0 8px}h1{font-size:1.3rem}header p{display:none}header p.by{display:block;margin-top:2px;font-size:12px}
   .stage{grid-column:1;grid-row:1/span 2;top:0;height:100vh;height:100svh;min-height:0;max-height:none;border-radius:0}
   .panel{grid-column:2;grid-row:2;padding:0 0 24px}
-  .info{top:50px;max-height:calc(100% - 110px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y}.hud{right:14px;bottom:50px}.cu{bottom:96px;width:176px;height:150px}}
+  .info{top:50px;max-height:calc(100% - 110px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y}.hud{right:14px;bottom:50px}.cu{bottom:96px;width:210px;height:205px}.cu.big{width:calc(100% - 28px);height:min(62%,420px)}}
 /* the HUD sits above the tools on narrow and landscape phones; clear the taller touch buttons */
 @media(pointer:coarse) and (max-width:600px),(pointer:coarse) and (orientation:landscape) and (max-height:560px){.hud{bottom:62px}}
 /* Hide panel: a tab on the stage's edge by the panel. Where the panel sits beside the stage (wide windows, landscape phones), the stage takes the whole width; with the panel below it (portrait) the tab isn't offered.

@@ -37,7 +37,10 @@
     <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
     <div class="srckey hidden" id="srcKey" aria-label="Colour by source: what each colour means"></div>
     <div class="hud" id="hud"></div>
-    <div class="cu hidden" id="cu" aria-hidden="true"><div class="cu-t">Sustaining spring, close up<span id="cuX"></span></div><div class="cu-g" id="ssGauge"><i><b></b></i><span></span></div></div>
+    <div class="cu hidden" id="cu" role="region" aria-label="Close-up of the sustaining spring: turn the wheel or pinch to zoom, drag to move, double-click to reset"><div class="cu-t">Sustaining spring<span id="cuX"></span></div>
+      <div class="cu-b"><button id="cuIn" title="Zoom in (or turn the mouse wheel over the close-up, or pinch)" aria-label="Zoom in">+</button><button id="cuOut" title="Zoom out" aria-label="Zoom out">−</button><button id="cuBig" aria-pressed="false" title="Enlarge the close-up" aria-label="Enlarge">⤢</button><button id="cuSlow" title="Slow motion while the close-up shows: the key, the train and the spring together. Click for the next speed" aria-label="Slow motion: real speed">1×</button><button id="cuPin" aria-pressed="false" title="Keep the close-up open after the key lets go, to watch the spring under load in running" aria-label="Keep open">⊙</button><button id="cuHelp" aria-pressed="false" title="How the sustaining spring takes the load" aria-label="How it takes the load">?</button></div>
+      <div class="cu-g" id="ssGauge"><i><b></b></i><span></span></div></div>
+    <div class="cuh hidden" id="cuh" aria-live="polite"></div>
     <div class="info help" id="help" role="dialog" aria-labelledby="helpT"><button class="x" aria-label="Close">×</button><h3 id="helpT">How to use it</h3>
       <div class="hcols">
         <section class="hc mouse"><h4>With a mouse</h4><dl>
@@ -100,6 +103,7 @@
         <label class="ck ind kwf" title="While winding, colour the parts that carry the train's load: the sustaining spring driving it (rose) and the sustaining ratchet and pawl holding (teal); for 2 s after, the mainspring's path again"><input type="checkbox" id="lpOn" checked> Load path in colour</label>
         <label class="ck ind kwf" title="While winding, a close-up of the fusee wheel's maintaining work, the sustaining ratchet see-through, with how long the sustaining spring can still drive the train"><input type="checkbox" id="cuOn" checked> Close-up of the sustaining spring</label>
         <label class="ck ind kwf" title="Draw the sustaining spring relaxing 20 times as far as it does, so it can be seen opening as it drives the train and closing again when the key lets go. The ratchet and pawls stay where they are; the time left is the real one"><input type="checkbox" id="ssx"> Exaggerate the spring's motion (×20)</label>
+        <div class="ind kwf"><button id="cuOpen" aria-pressed="false" title="Open the close-up now and keep it open, in running too: zoom and move in it, enlarge it, slow the motion down, and read how the spring takes the load">Open the close-up</button></div>
         <p class="note ind hidden" id="kwOut" aria-live="polite" style="margin-top:6px;margin-bottom:0"></p>
         <div class="row"><span class="lab">Mainspring</span><button id="ldBtn" aria-pressed="false" title="As the manual does before servicing (Op. 8) and after (Op. 53): from run down, the let-down key on the barrel arbor's square, the set-up click held out of its ratchet while the arbor turns back until the mainspring is slack; then the spring set up again, the click dropping into each tooth">Let down and set up</button></div>
         <p class="note ind hidden" id="ldOut" aria-live="polite" style="margin-top:6px;margin-bottom:0"></p>

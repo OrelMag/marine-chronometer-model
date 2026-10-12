@@ -7,7 +7,7 @@
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, the parts' pieces
 (every mesh of a part with pieces in one, a piece's card and its part's, one found by its number, hidden and shown from the list), every cross-section
 (and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, Version · what's new, About and Report a bug or inaccuracy (from the panel, a part's card and the essay), winding with the key (the sustaining spring's close-up and load path,
-shown while winding and gone after), the keyboard, and a link through the URL hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
+shown while winding and gone after; its zoom, enlarge, slow motion and explanation; kept open in running), the keyboard, and a link through the URL hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
 two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it."""
 import asyncio,pathlib,sys
@@ -137,9 +137,17 @@ async def model(b,errs,steps):
     await click('#kwBtn','wind with the key',2500)
     try:await pg.wait_for_function("__lp().ph==='w'&&__lp().cu&&!document.querySelector('#cu').classList.contains('hidden')&&__mv.userData.R.ssD>0",timeout=5000)   # polled: the train relaxes the spring on frame time, slow in a headless browser (one look at 2.5 s failed 2 runs in 11)
     except Exception:errs.append('winding with the key: no close-up, or the sustaining spring not relaxed: '+await pg.evaluate("JSON.stringify({ph:__lp().ph,cu:__lp().cu,shown:!document.querySelector('#cu').classList.contains('hidden'),ssD:__mv.userData.R.ssD,held:__H().held,amp:__H().amp})"))
+    # the close-up's tools while winding: zoom, enlarge, every slow-motion speed (back to 1x), how it takes the load and its links to parts
+    for c in['#cuIn','#cuIn','#cuOut','#cuBig','#cuHelp','#cuh button.go[data-f="spawl"]','#cuh button.go[data-f="wp"]','#cuh button.go[data-f="gap"]','#cuSlow','#cuSlow','#cuSlow','#cuSlow','#cuBig']:await click(c,'close-up '+c)
+    if await pg.evaluate("__cu().si")!=0:errs.append('the close-up\'s slow motion did not come back to 1x')
     await click('#kwBtn','stop winding')
     try:await pg.wait_for_function("__lp().ph===''&&document.querySelector('#cu').classList.contains('hidden')",timeout=20000)
     except Exception:errs.append('the close-up stayed after winding')
+    # kept open in running (Open the close-up), its explanation on the running phase; closed again
+    await click('#cuOpen','open the close-up',600)
+    if not await pg.evaluate("__cu().on&&[...document.querySelectorAll('#cuh li.now')].map(l=>l.dataset.ph).join()==='run'"):errs.append('Open the close-up: not shown, or its explanation not on running')
+    await click('#cuHelp','close-up explanation off');await click('#cuPin','close the close-up',400)
+    if await pg.evaluate("__cu().on"):errs.append('the close-up stayed open after its pin was let go')
     for c in['#lpOn','#cuOn']:await click(c,c+' off')
     await click('#wind','wind',800)
     if not await pg.evaluate("document.querySelector('#cu').classList.contains('hidden')"):errs.append('Close-up unticked, but it showed while winding')
