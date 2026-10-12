@@ -1307,11 +1307,17 @@ function buildMovement(M){
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
   const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);hn(cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28),'42170',{sub:1});
-  /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The hook stands in the eye near the spring's
-     inner end (fs.MS.hookA in the fusee/barrel group's frame, which the arbor never turns from), no higher than the strip is thick, so the next coil passes over it;
-     the core stays 0.1 clear of the turning caps */
-  { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(TB_T+1.9+BB_LO-0.8)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
-    cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],32); }
+  /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The core r 4.84, 0.06 under the strip's
+     inner face on MSPRING.ra 4.9: the low end of three readings on two 1941 movements, r 4.8-5.7 (KLUwI2UUCMQ 33:20.5, the cap off and the arbor in, its edge with the
+     innermost coil 0.32-0.36 of the end face's inner ellipse; 33:06, the spring's inner end curled at 0.30-0.34 of the inside radius before the arbor goes in; TN24H
+     3SFDplGq6vs 0:16, nearly face-on, 0.326 of the outer radius; References/VIDEOS.md), the largest the measured spring winds the fusee's turns on with its set-up
+     (OPEN-QUESTIONS.md 1); r 1.74, estimated, until 12 October 2026. A plain cylinder: no frame shows its profile side-on (the barrel's ends hide it), so its ends,
+     0.1 clear of the turning caps, are estimated. The hook stands in the eye near the spring's inner end (MSPRING.ey: the eye 7.2 along the strip and 5.2 across from 2.2
+     off its end, KLUwI2UUCMQ 15:54), against the eye's end toward the strip's end, where the spring's pull bears (fs.MS.hookA in the fusee/barrel group's frame, which
+     the arbor never turns from), at the eye's middle height, no higher than the strip is thick, so the next coil passes over it; its size (0.9 along, 2.4 tall, 0.5
+     deep) is estimated */
+  { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(fs.MS.y0+fs.MS.y1)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
+    cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],64); }
   const asq=hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
   { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));const cth0=clk.rotation.y;
     /* the click 5.07 mm long (S.click), aimed at the old root (2.25 m deep); turn the ratchet (it is fixed in running) so a face bears on the click, then rest the click on it,
@@ -1751,8 +1757,8 @@ function makeFusee(M,c){
      rmin / rmax, 0.473 until 11 October 2026): a fusee is cut for its spring. Its outer end (theta = TAU T in mainspringGeo) 0.4 mm
      past the pin, so turning it by rot puts the end there at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
   const IN=Ib(N),INT=Ib(RT/TAU),MD=msStates(),rho0=rc(md(0))/rc(ME);let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+INT)<rho0)ta=m;else tb=m;}   /* INT: the barrel's turns while the chain leaves the fusee, its lever rising from rc(md(0)) to rc(ME) */
-  const y0=MSY0,y1=MSY1,ym=(y0+y1)/2,e0=0.6/MSPRING.ra,e1=e0+1.06/MSPRING.ra,MS={Tup:ta+INT,y0,y1,ey:[e0,e1,ym-1.3,ym+1.3]};   /* fully wound: the set-up and the chain's barrel turns past the spring's slack */
-  MS.Tdown=MS.Tup-IN;MS.setup=MS.Tdown-MD.T0;MS.rot=TAU*MS.Tup+Math.PI/2-PIN-0.4/(MSPRING.Rw-MSPRING.t/2);MS.hookA=(e0+e1)/2-MS.rot;ms.rotation.y=MS.rot;
+  const a0=MSPRING.ra+MSPRING.t/2,y0=MSY0,y1=MSY1,ym=(y0+y1)/2,e0=MSPRING.ey[0]/a0,e1=MSPRING.ey[1]/a0,MS={Tup:ta+INT,y0,y1,ey:[e0,e1,ym-MSPRING.ey[2]/2,ym+MSPRING.ey[2]/2]};   /* fully wound: the set-up and the chain's barrel turns past the spring's slack; the eye (MSPRING.ey) along the strip's centre on the core, a0 */
+  MS.Tdown=MS.Tup-IN;MS.setup=MS.Tdown-MD.T0;MS.rot=TAU*MS.Tup+Math.PI/2-PIN-0.4/(MSPRING.Rw-MSPRING.t/2);MS.hookA=e0+0.5/a0-MS.rot;ms.rotation.y=MS.rot;   /* the hook 0.05 off the eye's end toward the strip's end */
   /* the drive, from the spring drawn: pull(n), the solved spring's pull (msPull, the slope of its energy: tools/mainspring.py) at the barrel's turns Ib(n), n fusee turns
      from full wind, against its pull fully wound; lever(n), the arbor's distance from the line the pull acts along (the chain's pitch radius where it leaves the fusee, then falling to nothing as the end pin swings round to run down, geo); torque(n), their
      product against the fully wound pitch radius: the fusee wheel's torque, level to about 1.6 % with the set-up above. pullB(x): what a going barrel with the same spring

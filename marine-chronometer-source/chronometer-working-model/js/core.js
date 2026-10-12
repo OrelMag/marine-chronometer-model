@@ -315,15 +315,19 @@ function drawMerge(scene,meshes){
         if(on!==b.on){for(const o of b.list)lay(o,on);b.on=on;}
         if(b.mesh){const vis=on&&shown(b.parent);b.mesh.visible=vis;if(vis){b.mesh.matrix.copy(b.parent.matrixWorld);b.mesh.matrixWorld.copy(b.parent.matrixWorld);b.mesh.castShadow=b.list.some(o=>o.castShadow);}}}
       if(re)relist();}};}
-/* mainspring: a strip t thick (0.0165 in, the parts list) and len long (estimated: 1,064 mm, as C Spinner's 15:54 and 32:30 give, 0.9-1.25 m; it was half the
-   room between arbor and wall, the most turns, until the wall was measured 1.95 thick, 5 October 2026: half the room now left, 903 mm in the r 18.3 barrel, would
-   bend the strip to 2.68 GPa fully wound over the chain's 4.61 barrel turns, past a hardened steel spring's 2.6, tools/physics.js), on the arbor's core (ra 1.8, estimated) inside the
-   brace (Rw: the barrel r 18.3, TN24H's cap against the fusee wheel: movement.js RB_O; r 17.6 until 5 October 2026; less its wall, 2.0, the brace, 0.25, and 0.01). Its coils lie at least gap
-   apart (the grease). Its shape over the wind is solved, not drawn: tools/mainspring.py finds the strip's least bending energy from the free
-   spring's natural curve (measured on the video, 32:18), its coils pressing on each other, its inner end on the hook, its outer along the brace, and writes the
-   states into js/mainspring.js (MSHAPE). Let down, it lies in a pack on the wall with loose turns inside; wound, the coils draw in round the arbor, spread
-   across the barrel rather than in two packs, and the pack on the wall thins to a turn or two */
-const MSPRING={t:0.419,gap:0.01,ra:1.8,Rw:18.3-2.0-0.26,len:1064};
+/* mainspring: a strip t thick and len long, as the videos give it (12 October 2026, the owner's decision: References/VIDEOS.md, Measurements): the coils' pitch read
+   round the whole turn on KLUwI2UUCMQ's let-down spring is 1/41.0-1/41.8 of the measured barrel's inside radius (15:54, 33:06), so at most 0.394 mm in the r 18.3 barrel
+   (0.38-0.41 over r 17.8-18.8); the length over the thickness, the pack's area over the pitch squared, about 2,700 without a scale (2,630-2,790 on two movements),
+   so 1,064 mm. The parts list says 0.0165 in (0.419; until 12 October 2026 drawn so) and the British Museum's late Model 21 0.44: that strip doesn't wind the
+   fusee's turns on the measured core in this barrel (OPEN-QUESTIONS.md 1, still open). On the arbor's core ra 4.9, the low end of three readings on two 1941
+   movements (r 4.8-5.7: KLUwI2UUCMQ 33:20.5 and 33:06, TN24H 3SFDplGq6vs 0:16; r 1.8, estimated, until 12 October 2026), inside the brace (Rw: the barrel r 18.3,
+   TN24H's cap against the fusee wheel: movement.js RB_O; less its wall, 2.0, the brace, 0.25, and 0.01). Its coils lie at least gap apart (the grease). Its shape
+   over the wind is solved, not drawn: tools/mainspring.py finds the strip's least bending energy from the free spring's natural curve (measured on the video,
+   32:18), its coils pressing on each other, its inner end on the hook, its outer along the brace, and writes the states into js/mainspring.js (MSHAPE). Let down,
+   it lies in a pack on the wall with loose turns inside; wound, the coils draw in round the arbor, spread across the barrel rather than in two packs, and the pack
+   on the wall thins to a turn or two. ey: the eye in its inner end for the arbor's hook, an oblong 7.2 along the strip and 5.2 across from 2.2 off the end
+   (KLUwI2UUCMQ 15:54, the innermost turn's front, rough +-20 %): along the strip's centre line on the core, mm */
+const MSPRING={t:0.394,gap:0.01,ra:4.9,Rw:18.3-2.0-0.26,len:1064,ey:[2.2,9.4,5.2]};
 /* MSHAPE decoded once: the grid along the strip (s, mm) and each state's r there, its theta rebuilt from r (each step's run round the arbor) and spread so it
    ends at TAU T exactly. msShape(T): the state at T, each piece of steel (each s) placed between its places in the two solved states either side */
 let MSD=null;

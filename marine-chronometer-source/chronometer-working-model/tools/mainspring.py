@@ -1,18 +1,20 @@
 """The mainspring's shape in its barrel, solved: js/mainspring.js (MSHAPE), which mainspringGeo in core.js draws from. No browser; torch (CPU) and numpy.
 
-    python mainspring.py               # solves the wind's states (about 11 min, 14 processes) into mainspring.json (here), then writes ../js/mainspring.js
+    python mainspring.py               # solves the wind's states (about 20 min, 14 processes) into mainspring.json (here), then writes ../js/mainspring.js
     python mainspring.py --write       # ../js/mainspring.js from the mainspring.json already solved (a second)
     python mainspring.py --letdown     # the spring with the arbor out (as C Spinner's 15:54), against the video's count (about 2 min)
     python mainspring.py --plot OUT.png [T,...]   # the solved states drawn straight down the arbor, with the wall and the core
 
-The strip (the parts list's 0.0165 in, 0.419 mm; 1,064 mm long and 13.55 wide, core.js MSPRING and movement.js MSY0/MSY1) is a curve r(theta) about the arbor, theta from its inner end. Its natural
+The strip (0.394 mm thick, the videos' coils' pitch in the measured barrel, and 1,064 mm long, their L/t of about 2,700; 13.55 wide; core.js MSPRING and movement.js
+MSY0/MSY1; the parts list's 0.0165 in, 0.419, until 12 October 2026) on the arbor's core r 4.9 (the videos' r 4.8-5.7; 1.8, estimated, until then) is a curve r(theta)
+about the arbor, theta from its inner end. Its natural
 curvature k0(s), at s mm from the inner end, is the free spring's (KLUwI2UUCMQ 32:18, the spring out of its barrel on the bench: about 7½ turns, all bent
 one way, a spiral set and no reverse curve), its turns' radii read along the line through its centre (px, the coils' edge-on sides left and right) and
 scaled so the turns add up to the strip's length. Read on an oblique frame, the radii are good to about 15 %.
 Its shape at T turns from the inner end to the outer is the one of least bending energy,  integral (k - k0(s))^2 ds  (EI/2 left out), with:
   - its length L;
   - its coils at least p (t and 0.01 of grease) apart, r(theta + 2 pi) - r(theta) >= p, between the arbor's core (a0, the strip's middle on it) and the brace (R0);
-  - its inner end held on the core by the arbor's hook (r = a0 for its first HOLD rad, the eye in it), its outer end lying along the brace (its last two samples at R0).
+  - its inner end held on the core by the arbor's hook (r = a0 for its first HOLD rad, through the eye), its outer end lying along the brace (its last two samples at R0).
 That is the strip's equilibrium with the coils pressing on each other without friction (each free stretch bent from its natural curve by the moment it carries,
 k - k0 = M / EI). Solved by an augmented Lagrangian over L-BFGS, 48 samples a turn; states every STEP turns over the wind, each from an even spiral and then
 from its neighbours' solutions, the least energy kept. T0, the turns at which the held spring pulls nothing (the state of least energy, to about 0.1 turn:
@@ -20,20 +22,22 @@ the energy is nearly flat just above it and climbs steeply below), is where the 
 The page blends the two states either side of its T, each piece of steel (the same s) moving between its places in them, so the shape changes smoothly as
 the barrel turns. Checked (5 October 2026): a blend a quarter turn from both its states has the energy of the state solved there to 0.4 % (the energy is nearly
 flat, so shapes of about equal energy may lie up to 4 mm apart in places), its coils at least the strip's thickness apart; theta rebuilt from r is good to 0.04 mm
-along the coil. Let down with the arbor out (--letdown) it gives 13.6 turns, about 10½ packed on the wall (their spacing within the strip and its grease over the
-outer ten turns; packs() reports 1.9, its run broken by the outer end's last samples) and the rest loose (mean radii 11.0, 9.3, 5.0), where the 15:54 frame shows
-12 +- 1 packed and one loose turn of about r 8 (in the barrel of r 17.6 it gave 14.3 turns, 11.9 packed; the barrel measured r 18.3, 5 October 2026).
-The strip's 1,064 mm is 0.59 of the room between the core and the brace now (half the room, the most turns, would be 903, which would bend it to 2.68 GPa
-fully wound: physics.js). Solved in the r 18.3 barrel (5 October 2026): slack at 13.5 turns (14.5 in the r 17.6), the set-up 1.0 from the fusee's ratio
-(1.26 since 11 October 2026, matched in movement.js to the chain's lever on its pitch line: no re-solve, the states 13.0-21.25 cover it).
+along the coil. Solved (12 October 2026) for the videos' 0.394 strip on the core r 4.9: slack at 13.25 turns, coil-bound on the core past 19.0 (19.25 and
+19.5 can't keep both the coils apart and the length, so write() leaves them out); the fusee's rule in movement.js sets it up 1.01 turns, fully wound at 18.87.
+Let down with the arbor out (--letdown) it gives 13.41 turns, 10.4 packed on the wall along a ray (up to 11; packs() reports 1.0, its run broken by the outer
+end's last samples) and the rest loose (mean radii 5.0, 9.3, 11.4), where the 15:54 frame shows 12 +- 1 packed and one loose turn of about r 8.
+Until then the parts list's 0.419 strip on an estimated core r 1.8: slack at 13.5 turns, set up 1.26, let down 13.6 turns and about 10½ packed (in the barrel
+of r 17.6, until 5 October 2026, 14.3 turns, 11.9 packed). Its 1,064 mm is the videos' L/t, about 2,700 (References/VIDEOS.md); half the room would be
+shorter. About 20 minutes on 14 processes; run it alone.
 """
 import json,math,sys,base64,pathlib
 import numpy as np,torch
 torch.set_default_dtype(torch.float64)
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent
-t=0.419;gap=0.01;p=t+gap;ra=1.8;Rw=18.3-2.0-0.26;L=1064.0;a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 1.8
-HOLD=1.0   # rad: the inner end on the core (the eye, 0.6-1.66 mm from the end on r 1.8: MS.ey in movement.js)
-M=48;STEP=0.25;TLO=13.0;THI=21.25   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter)
+t=0.394;gap=0.01;p=t+gap;ra=4.9;Rw=18.3-2.0-0.26;L=1064.0;a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
+EYE=9.4   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
+HOLD=EYE/a0   # rad: the inner end lies on the core through the eye, where the hook holds it (1.0 on the r 1.8 core until 12 October 2026)
+M=48;STEP=0.25;TLO=12.75;THI=19.5   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
 # the free spring (KLUwI2UUCMQ 32:18): its turns' radii, px along the horizontal through its centre, innermost first
 FREE_PX=[97,185,250,328,405,502,632,750]
 rk=np.array(FREE_PX,float);rk*=L/(2*math.pi*rk.sum())
@@ -97,7 +101,12 @@ def sweep():
     out=dict(T0=T0,M=M,step=STEP,states=[best[T] for T in Ts]);json.dump(out,open('mainspring.json','w'));return out
 def write(d):
     """the table: a common grid in s (each piece of steel), dense enough that a sample is at most 7.5 deg round the arbor in every state; each state's r there"""
-    st=d['states'];R=[];S=[];TH=[]
+    ok=lambda x:x['viol']<0.005 and abs(x['dL'])<0.05   # coils apart and the length kept: past coil-bound the solve can't meet both
+    st=list(d['states'])
+    while st and not ok(st[-1]):print(f"T {st[-1]['T']}: past coil-bound (overlap {st[-1]['viol']:.4f} mm, length {st[-1]['dL']:+.3f}), not written");st.pop()
+    bad=[x['T'] for x in st if not ok(x)]
+    if bad:raise SystemExit(f'infeasible states inside the range: {bad}')
+    R=[];S=[];TH=[]
     for x in st:
         r=np.array(x['r']);N=len(r)-1;th=np.arange(N+1)*2*math.pi*x['T']/N;P=np.stack([r*np.cos(th),r*np.sin(th)],1);s=np.concatenate([[0],np.cumsum(np.linalg.norm(np.diff(P,axis=0),axis=1))]);s*=L/s[-1]
         R.append(r);S.append(s);TH.append(th)
@@ -136,7 +145,12 @@ if __name__=='__main__':
     if '--letdown' in a:
         r,T,E,viol,dL=solve(12.3,free_inner=True);w,_=packs(r,T);N=len(r)-1;th=np.arange(N+1)*2*math.pi*T/N
         mr=[round(float(np.mean(r[(th>=2*math.pi*j)&(th<2*math.pi*(j+1))])),1) for j in range(3)]
-        print(f'let down, the arbor out: {T:.2f} turns, {w:.1f} packed on the wall; the inner turns\' mean radii {mr} mm'
+        cnt=[]   # the coils packed on the wall along 36 rays, counted from the wall in as the frame's stripes are: each within the strip and 0.03 of the one outside it
+        for phi in np.linspace(0,2*math.pi,36,endpoint=False):
+            rr=[np.interp(phi+2*math.pi*j,th,r) for j in range(int(T)+1) if phi+2*math.pi*j<=th[-1]][::-1];n=1
+            while n<len(rr) and rr[n-1]-rr[n]<=p+0.03:n+=1
+            cnt.append(n)
+        print(f'let down, the arbor out: {T:.2f} turns, {np.mean(cnt):.1f} packed on the wall along a ray ({min(cnt)}-{max(cnt)}; the first unbroken run from the outer end, {w:.1f}); the inner turns\' mean radii {mr} mm'
               ' (KLUwI2UUCMQ 15:54: 12 +- 1 coils on the wall, one loose inner turn of about r 8)')
         json.dump(dict(T0=T,states=[dict(T=T,E=E,r=r.tolist())]),open('mainspring_letdown.json','w'))
     elif '--plot' in a:
