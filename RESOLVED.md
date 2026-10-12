@@ -59,6 +59,25 @@ Contents:
 
 ## Escapement
 
+- **The held run-down left out the detent's own inertia.** `ESC.freeStep` (the page's run-down with the train held, and the
+  export's) took the springs' energy where the jewel releases a massless detent (`EH`); the drawn detent (2.67 g·mm²) leaves
+  the jewel earlier, where its end runs away faster than it can follow (`depart`), still moving, and loses its springs' and its
+  own kinetic energy there, about 9 % more. With `TF` 68 s the run-down ran 2.8° behind `tools/dynamics.js`'s integration at
+  30 s (2.5° at 28 s with 52 s, between the check's samples). `EHd(a)` now takes it from `depart`, stepped a second at a time:
+  within 0.7°. Keep: the averaged model's losses come from the same detent the integration moves. `9637b0e`
+- **The discharge jewel's end was a half round** (`rnd`, both corners stoned round; estimated, no source then).
+  The British Museum's Model 21 (*Catalogue of Watches* VI, 1990, no. 117A) is "set with a jewel with a radius to
+  the back of the acting part of the tip", and KLUwI2UUCMQ 6:58.17-6:58.33 shows the acting face flat to a sharp
+  corner. Now the acting corner is square and the back radiused. The square corner holds the trip spring's tip
+  on the return, so overall wants less overlap and leaves less lift past the release: `rB` and `rT` (both
+  estimates) were searched together with `rd` inside the frames' 0.4-0.5 mm proud (OPEN-QUESTIONS.md has the
+  table). `rB` 0.024 (0.158 mm, half the width), `rT` 0.2894, `rd` 0.296 (0.50 mm proud), `aD` 269.1°: lock
+  5.5°, let-off 8.7°, overall 28.0°, drop 2.0°; 81 % of escapements made to a maker's tolerances run (92 % with
+  the half round; the first choice, `rB` 0.010 and `rT` 0.290, gave overall 29.7° at the band's edge and 77 %).
+  With the square corner the detent leaves the jewel at the corner first and falls back onto its end
+  (dynamics.js found makeEsc's fall 7° early); makeEsc's `depart` now catches it there. Keep: the acting corner
+  square; makeEsc's contacts, dynamics.js's own, the plan (escplan.js) and the 3D jewel (movement.js) have the
+  same end; a detent that falls onto the jewel's end is carried on by it. `44caeee`, `a726d8a`
 - **The escape wheel moved as a kinematic gear** (makeEsc's `G` 3.5: from the release its angle ran 3.5 times the
   balance's), so the tooth landed on the impulse jewel 0.6° after the release. A wheel released from rest has to catch a
   jewel already running away from it: with the drawn inertias (the escape wheel's 4.80 g·mm² and the fourth wheel's,
@@ -279,7 +298,7 @@ Contents:
   above; the dial printed the seconds at a fixed 0.472 of its radius (right for a
   50.8 mm dial, 1.5 mm off on the 47.5). Now F (0, 21.6), T and E as measured,
   E 9.40 from the balance; the wheels' size ratios come out as counted. Keep:
-  `tools/solve.py`'s FE 11.107; the dial's `k` from `L.F` and `DIAL_R`;
+  `tools/solve.py`'s FE 11.107 (10.444 since the escape arbor was measured, below); the dial's `k` from `L.F` and `DIAL_R`;
   `SEC_L` (the seconds hand clears the hour wheel's pipe); the train bridge's
   escape opening r 6.9 about `L.E`; the lower bridge from `tools/lower_bridge.py`
   with the model's arbors; the balance locking arm's screw 30 deg from its
@@ -467,8 +486,36 @@ Contents:
   figure that follows from `L` quoted as `solve.py` prints it, the old value
   only as history. `05b2ef2`
 
+- **The escape arbor 0.74 mm off its measured place, the fourth wheel too
+  large** (OPEN-QUESTIONS.md, the fourth wheel's size). It was solved 9.40 mm
+  from the balance toward the escape jewel as 10:00 was then anchored (on the
+  third arbor's old place), 11.107 mm from the fourth, which made the fourth
+  stage's module 0.2614 and the fourth's tips r 10.10 (third ÷ fourth 1.02,
+  measured 1.05-1.10 on two movements). Its lower setting on the bare plate
+  (KLUwI2UUCMQ 34:30, 14:45, 13:52.0, 40:08; `rimfit.py`'s camera on the face
+  edge, a rigid fit on the centre, fusee and barrel bushings) lies 4.3° further
+  round the balance. Now 9.40 from the balance at the four frames' mean
+  direction, (8.926, 16.178), 10.444 from the fourth: module 0.2457, tips
+  r 9.50. The escapement turns with it about the balance (the detent, its
+  block and pins, the locking arm, the balance at rest), the escape upper
+  bridge, its seats and the train bridge's escape passage (`train_bridge.py`),
+  and the balance lower bridge's lugs (`lower_bridge.py`, the detent's plan
+  turned with it); `JW` 5.9 (the smaller fourth's inertia reflected). Keep:
+  `L.E` measured, 9.40 from `L.B`; `tools/solve.py`'s FE the distance it
+  gives (10.444); the hard-coded copies of it (`train_bridge.py`'s `ESC_B`,
+  `EBU_B`; `lower_bridge.py`'s `E`, `ARM`; `physics.js`'s and `dynamics.js`'s
+  fourth module; `audit.py`'s detent pins) follow it. `8fcc1e5`
+
 ## Winding and maintaining work
 
+- **The chain counted its links afresh every frame.** `setWind` laid as many whole pitches as fit along the pitch line, a
+  polyline sampled in 0.01-turn steps whose length is constant only to its sampling; with the measured mainspring core (12 October
+  2026) that length sat within a few hundredths of a whole number of pitches, so a link came and went as the chain moved and the
+  hook's plate jumped between 1.36 and 3.06 mm (the page's live loop and the export's Run down flipping at different winds:
+  `blender_check.py` found the rig 0.88 mm off at 29.98 s of Running; before, the same flip fell at 37 s, outside its sample). The
+  links are now counted once, at full wind (`NJ`), and a line a hair short of them carries its last joints on round the barrel's
+  pitch circle (its step's sign taken across ±π). Keep: a chain's link count is fixed; nothing it draws may be counted from a
+  sampled length each frame. `eaccab2`
 - **Winding-pawl spring's foot 0.35 into the winding ratchet's tips** (found by `fine.py` on the branch that cut the springs' beds, before it was merged). The traced r 7.04 line was taken as the bed's centre and the foot's pocket run in to r 6.8, inside the fusee's winding ratchet (tips r 6.9), which turns at the springs' height. The line is the pocket's inner wall (r 7.0); the feet and springs lie outside it. Keep: nothing on the sustaining ratchet's face toward the fusee comes inside r 6.9 + clearance; run `fine.py` after touching the beds. `703a20a`
 - **Sustaining spring ran forward from its pin,** so the sustaining ratchet
   couldn't drive the fusee wheel through it. It now curves back to a free end
@@ -902,6 +949,21 @@ Contents:
   wind, a run down that no chronometer does. With *From run down* unticked it now says the
   chronometer is already fully wound (less than a tenth of a half turn to go); ticked, the
   walkthrough still starts from run down, as asked. `240a80a`
+- **The mainspring the parts list's 0.419 mm on an estimated core r 1.74, against the videos' coils and core**
+  (OPEN-QUESTIONS.md 1, the owner's decision of 12 October 2026). The coils' pitch read round the whole turn on
+  KLUwI2UUCMQ's let-down spring (1/41.0-1/41.8 of the measured barrel's inside radius, 15:54, 33:06) puts the strip at
+  most 0.394 mm in the measured barrel, its L/t about 2,700; the core reads r 4.8-5.7 on two 1941 movements (33:20.5,
+  33:06, TN24H 0:16), on which the parts list's strip is coil-bound short of the fusee's turns. Now the strip 0.394 ×
+  1,064 on the core r 4.9 (`MSPRING`, `tools/mainspring.py`), the eye as 15:54 reads it (7.2 × 5.2, 2.2 off the end)
+  with the hook against its end; re-solved: slack 13.25 turns, set up 1.01 (Op. 53: about one), fully wound 18.87,
+  coil-bound past 19.0; `write()` leaves out states past coil-bound. Keep: `MSPRING`, `mainspring.py`'s constants and
+  `fine.py`'s `CORE` together; the set-up from the fusee's rule (`fs.MS`), not a number; the parts list's 0.0165 in
+  stays named as the open conflict wherever the thickness is stated. `8e95032`
+- **The catch when the key let go foretold at the wrong drive** (maintaining.py, 12 October 2026). `R.release` reloaded
+  the sustaining spring to the drive at the fusee's turns before the catch, `update()` to the drive at the turns after
+  it (the catch's hours spent), so in the run-down taper it foretold the catch up to 0.02° long, past `maintaining.py`'s
+  2e-4 rad once the new mainspring's pull moved it. It now finds the catch at the drive where its hours leave the fusee.
+  Keep: `R.release` and `update()`'s let-go take the drive at the same turns. `9fa5f35`
 
 ## Plates, bridges, screws and arbors
 
@@ -1407,6 +1469,45 @@ Contents:
   the bridge now follows the cock's traced edge, `CK_TR`, below, which bows
   the same way), and a curved cut drawn along its curve (`clipUnder`), not
   `clipPoly`, which draws it as its chord. `d463348`
+- **The balance cock's endstone cap, settings and screw counterbore about
+  20 % small.** The cap was 7.2 × 4.6 mm with its screws 2.75 mm either side
+  of the staff, its setting r 1.6, the cock's setting r 1.5, and the cock
+  screw's counterbore r 3.05 with a head r 2.75: the photographs scaled by
+  the top-view photograph's cap screws, which read every size on the cock's
+  top about 0.83 of the video's. Through the camera fitted on C Spinner's
+  6:49.0 (the same camera as 6:29, the cap on), the cap's screws are 6.66 mm
+  apart, the plate 8.9 × 5.5, its setting 3.85 across, the counterbore 7.4;
+  the cock's setting r 2.2 (41:58). Now so, the head 0.90 of the counterbore
+  (r 3.33) and 1.5 times its width long, as the photographs and 5:59 have
+  it. Keep: sizes on the cock's top from the video's camera, not scaled by
+  the top-view photograph; the cap on metal all round (`hullSplice`). `a88cd81`, `78880fd`
+- **The balance cock's top face traced through its holes at the old
+  scale.** `CK_TR` went through homographies on the cock's holes as the model
+  placed them: the cap's screws 2.75 either side of the staff and the stud's
+  row read through them, both about 0.83 of their real size, so the straight
+  edge lay 1.9-3.5 mm and the concave edge 1.4-3.3 mm inside the real cock
+  (and the barrel bridge's horn, which follows that edge, as far off the
+  bridge's own edge at 6:49.0). Traced again on 41:58 through the holes as
+  6:29 measures them, with the rim held to r 40.1: the straight edge within
+  0.25 mm of 6:29's, the horn's measured edge within 0.6 mm of it at f 5,000.
+  Keep: the cock's top traced through holes measured on the video, its rim
+  as a constraint; the horn 0.15 mm off the straight edge. `eb65570`
+- **The barrel bridge's cut round the balance too small between the horn and
+  the fusee.** The cut was the balance's clearance circle (r 17.7) and the
+  top-view photograph's circle, so the horn on the cock's side met it at
+  (19.5, 9.87). On C Spinner's 6:49.0 (the cock out) through the camera
+  fitted there, the bridge's edge runs from the horn's inner corner at
+  (23.7, 8.4) toward the fusee 21.6-22.3 mm from the staff. A circle through
+  those 9 points is now cut too, run on behind the fusee's dust cap. Keep:
+  the cut traced on the video there, not the photograph's edge in the cock's
+  shadow (16.7-18 mm, plain train bridge on 6:49.0). `f290f01`
+- **The barrel bridge's two screws into the train bridge 3-6 mm too near
+  the centre.** They were placed through `PT` from the top-view photograph's
+  five-screw map, which is about 10 % small near the rim: (28.99, 7.95) and
+  (−23.88, 22.98), r 30.1 and 33.1. On 6:49.0 through its fitted camera (and
+  6:29) their heads stand at (35.18, 8.06) and (−24.85, 26.27), r 36.1-36.2,
+  and the photograph has them 4.5-4.9 mm inside its rim; now so. Keep: a
+  screw near the rim measured against the rim, not through `PT`. `ee8b601`
 
 - **The balance cock's top face a straight edge, a widened nose and a bulging
   concave edge; its arm one thickness.** Seen from above, the cock's straight
@@ -1717,6 +1818,17 @@ An arbor needs pivots and shoulders; a stone its seat.
   bar's top face 1.7 inside, and the spring's upper end is 2.65 mm from the
   staff. Keep the clamp at the bar's end (`SP_E`, `SP_ST`, `SP_CL` in
   `movement.js`, `HS_R` computed from them, `essay.js`'s `HS` to match). `e37f857`
+- **The balance's damping rested on an endstone friction worked out ten to twenty times too large, and `TF` 52 s on
+  the parts list's spring** (OPEN-QUESTIONS.md, "The balance's free run-down", 12 October 2026). physics.js gave the
+  staff's flat end on its endstone 49-53 % of the loss at 255° (μ 0.10-0.15 across its whole face, Q 378-793); a real
+  Model 21's small free swings (BunnSpecial's No. 2182, `Jd2c3x8VKsE` 14:04 and 16:10) fall in a straight line at
+  0.16-0.238° a second, a constant torque k c T / 4 of 32-47 nN·m, Q 6,760-10,050, 4-6 % of the loss. Now the
+  measured friction (the parts' Q 406-712, 65-113 s), and with the videos' mainspring (0.78 N·m fully wound, 0.83 of the
+  old) `TF` 68 s (Q 427), so the calibrated torque, 62.6 µN·m, is the new spring's through the same train and losses
+  as the old calibration took; the overlap of the parts' Q with the budget counts the mainspring's own losses (278-463),
+  without which the parts would swing a loss-free spring's balance past 1½ turns. Keep: physics.js's endstone term
+  from the measured swings, not a μ; `TF` re-derived whenever the mainspring's stiffness changes; the essay's
+  `data-phys` figures physics.js's. `6a918d8`
 
 ## Rate panel
 

@@ -142,6 +142,54 @@ from 1939 to 1947 (Google Patents, assignee "Hamilton Watch"); these bear on the
   DEPATISnet): a movement whose seconds can be stepped by whole seconds through a planetary gear between the train and
   the escapement. Its drawing is a schematic, not the Model 21's layout.
 
+- A. G. Randall and R. Good, *Catalogue of Watches in the British Museum VI: Pocket Chronometers, Marine Chronometers and Other
+  Portable Precision Timekeepers* (British Museum Publications, 1990), cat. no. 117A, pp. 127-128, Plates 78-79 (a public scan in the
+  Internet Archive's item `horology-books-and-catalogs`; found 12 October 2026, the figures checked on the page images). A Model 21
+  numbered ZE 10228 (BM 1988,4-10,2), assembled for Hamilton UK's managing director "from the last parts available at the factory"
+  (dated 1959-65: a late example; its balance is an uncut stainless-steel rim on an Invar arm with a Ni-Span-C spring, not the wartime
+  balance). Measured: the barrel's "inside dim. 38 mm, internal available h. 15·3 mm, mainspring h. 15·0 mm, th. 0·44 mm", the
+  mainspring with a brace, the arbor solid steel and 13 mm across; the detent 3.00 mm wide, its spring two strips each 0.5 mm wide and
+  3.5 mm long, the passing spring's bracket about 2.4 mm tall with a bent horn and a nib, a D-shaped locking stone pinned in a square
+  section, a gold stop on the block's extension; the discharge roller a long split collet with two flats, its jewel "with a radius to
+  the back of the acting part of the tip", the impulse jewel's face radial; the stop work's spring-loaded slider in the fusee meeting
+  a stud in the barrel bridge; the sustaining pawl ("detent") with an integral wire spring parallel to its arbor; the train 90; 14/90,
+  12/80, 10/75, 10/16 (the model's), 14,400 beats an hour; the motion work 14, 18, 54, 56 and the up-and-down 12/120; the dial ring's
+  flange 106.6 mm reduced to 97.7, 9.0 thick, "front plate" 97.8 and "back plate" 87.7 across (which plates these name isn't sure:
+  the back plate is described as the one on three pillars with the barrel's and fusee's cut-outs, the upper train bridge, whose rim the
+  model has at r 40.5; the 87.7 is the pillar plate's 87.57), the frame 46.6 mm high. Plate 79b reproduces Hamilton's drawing of the
+  stud, hairspring and collet; 79c the mainspring and brace; 79d the rate certificate. Used in OPEN-QUESTIONS.md (the mainspring, the
+  detent, the discharge jewel, the collet).
+
+Searched without result (12 October 2026), for the open readings (OPEN-QUESTIONS.md): HathiTrust's full-text search and Google Books
+(refused: a Cloudflare check and the API's quota); scholar.archive.org (an anti-scraping check); the Internet Archive's full-text search
+("42038", "42087", "42088", "0.0165" with mainspring, "model 21" with mainspring, detent or Elinvar, "lift angle" with Hamilton,
+"Bureau of Ships" with Hamilton chronometer, "spring, main" chronometer: only advertisements and parts queries in *American Horologist
+& Jeweler*, 1963-1981); RMG ZBA4526 (Hamilton No. 4E019, its impulse roller "0.250" dia", no spring sizes); Navy Department
+Specification 18W7 (1945, the chronometer watch, not the Model 21); TM 9-1575 (1945, no chronometers); NAVPERS 10193-A (1961);
+Gould (1923/1960, no Hamilton); Bowman (1945); T. Bales's Time Travelers Clock manual (2022; a Model 21 kept in step with GPS by
+turning it, no amplitude); the NAWCC Bulletin's articles (docs.nawcc.org 403; the Wayback Machine holds only login pages) and threads
+185214, 164627, 166328, 154431, 156100, 60629 through the Wayback Machine (no sizes; Smith's article is in the Bulletin of January/February
+2012, from p. 57; Van Hoesen made the detents; DeweyC: Hamilton detents nearly unobtainable). Whitney's *The Ship's Chronometer* and
+Betts's Greenwich catalogue have no online copy. YouTube, about 95 queries (timegrapher, amplitude, lift angle, free swing, mainspring,
+detent, in ten languages) and the channels of every video's maker: 17 new Model 21 videos (References/VIDEOS.md), none with a free
+run-down, a timegrapher, the mainspring out or the detent out; Bilibili refused (HTTP 412).
+
+Searched again (12 October 2026), forums, photographs and archives: 51 NAWCC threads through the Wayback Machine (its CDX index of
+`mb.nawcc.org/threads/*`, 11 pages, and the old `showthread.php` addresses; 13 copies empty, 3 not archived; attachments only as 250 px
+thumbnails), uhrforum.de (403), forum.watch.ru (502), WatchUSeek (a bot wall), practicalmachinist (403), Worthpoint, eBay and Rock
+Island (403, through the Wayback Machine too), LiveAuctioneers, Invaluable, Heritage, Etsy, Flickr, Commons, the Science Museum Group,
+Reddit (PullPush), tz-uk, thewatchforum, hamiltonparts.com, Google Patents (Hamilton before 1955): no measured mainspring, detent or
+trip spring, no amplitude or lift angle, no run-down. Found: Hamilton's assembly record card for No. 2E10860 (March 1945, "JOB-
+ISOCHRONISM"; landandseacollection.com/id1352.html, 1,000 px): an isochronism row in turns of swing from 1 to 1½, read roughly "ok",
++.2, +.7, +.9, 1.2 (units and signs uncertain at this size; probably seconds a day), the mainspring's maker likely "Wallace Barnes",
+the balance screws' corrections; Jones-Horan lots 63662 (sale 230507) and 38240 (sale 1902), the box's side square-on with the latch
+support bracket's two screws (OPEN-QUESTIONS.md); nonosore's two break-circuit Model 21s (ramassespoussiere.free.fr/Model21.html, 59
+photographs: the escapement side-on under the train bridge, 43.jpg, the flexure hidden); Duwan's No. 3922 on forumamontres (the detent
+assembly out, oblique, 794 px; the mainspring relaxed beside its barrel, 7-8 open turns); horlogeforum.nl thread 462279 (the barrel and
+arbor out, 4,032 px); G. Franco Toriz's balance staffs (LinkedIn, 2019; the arm's seat labelled 2 mm). Qualitative: a worn trip spring
+taken up by slotting its screw's hole (forumamontres t189277; NAWCC 154431); DeweyC: the first ~400 had a steel detent and a one-piece
+roller, detents now over $700. The searches and downloads are in `$MC_VIDEO/oq/` (outside the repository).
+
 Not yet consulted (found 4 October 2026). These may hold facts about the Model 21 itself:
 - NAWCC Library and Research Center, Hamilton Records Collection (71 boxes), Series V: Chronometers, 1940-1984
   (https://archive.nawcc.org/repositories/2/archival_objects/11056). The catalogue's tree is public
