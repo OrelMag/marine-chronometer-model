@@ -1,0 +1,321 @@
+{
+ "anchor": "photo_lower_bridge.json",
+ "frame": "../../../../References/photo-lower-bridge-underside.jpg",
+ "size": [
+  1932,
+  2576
+ ],
+ "face_y": -20.66,
+ "target": [
+  3.0,
+  -17.0,
+  15.0
+ ],
+ "note": "The balance lower bridge on the upturned train bridge, a phone photograph (run video.py anchor on photo_lower_bridge.json first, for its H.json). f about 970 px: the face's axes come out orthonormal anywhere from 600 to 1200 px (ratio 0.999 at 970, 0.989 at 1200), and the 3 o'clock lug's screw head lands on the model's screw at 970 and visibly off at 1400; an iPhone's ultra-wide (macro) lens is about 970 on this image. Picked by eye at full size, about +-5 px: the slab's face edge from its corner at the fourth's end round its convex edges, its end at the 3 o'clock lug and along the concave edge; the cap's jewel, the fourth's gilt setting, the cap's counterbore and the gilt setting's rim (left, right, top, bottom), the train-blocking screw's threaded hole in the slab, and the two lug screws' heads (h 4.0, the model's head). The slab's height is not settled by this photograph: at the model's 8.9 mm (the side views 7.4-8.4) the counterbore comes out 7.4-8.0 across (model 8.6) and the cap 9.2 mm from the fourth's setting (13:49.5: 11.0); at 4-6 mm they come out 8.6-9.2 and 10.6-11.0, and the outline meets 13:49.5's to 1.2-1.4 mm rms (Review-results.md, 'The balance lower bridge', 26).",
+ "picks": {
+  "slab": {
+   "h": 8.9,
+   "px": [
+    [
+     1091,
+     612
+    ],
+    [
+     1160,
+     649
+    ],
+    [
+     1291,
+     774
+    ],
+    [
+     1447,
+     940
+    ],
+    [
+     1440,
+     973
+    ],
+    [
+     1433,
+     1047
+    ],
+    [
+     1413,
+     1120
+    ],
+    [
+     1387,
+     1180
+    ],
+    [
+     1353,
+     1233
+    ],
+    [
+     1313,
+     1287
+    ],
+    [
+     1267,
+     1340
+    ],
+    [
+     1220,
+     1390
+    ],
+    [
+     1050,
+     1240
+    ],
+    [
+     1143,
+     1193
+    ],
+    [
+     1150,
+     1100
+    ],
+    [
+     1140,
+     1033
+    ],
+    [
+     1122,
+     990
+    ],
+    [
+     1066,
+     940
+    ],
+    [
+     1010,
+     915
+    ],
+    [
+     954,
+     899
+    ],
+    [
+     897,
+     884
+    ],
+    [
+     879,
+     806
+    ]
+   ]
+  },
+  "slab_5": {
+   "h": 5.0,
+   "px": [
+    [
+     1091,
+     612
+    ],
+    [
+     1160,
+     649
+    ],
+    [
+     1291,
+     774
+    ],
+    [
+     1447,
+     940
+    ],
+    [
+     1440,
+     973
+    ],
+    [
+     1433,
+     1047
+    ],
+    [
+     1413,
+     1120
+    ],
+    [
+     1387,
+     1180
+    ],
+    [
+     1353,
+     1233
+    ],
+    [
+     1313,
+     1287
+    ],
+    [
+     1267,
+     1340
+    ],
+    [
+     1220,
+     1390
+    ],
+    [
+     1050,
+     1240
+    ],
+    [
+     1143,
+     1193
+    ],
+    [
+     1150,
+     1100
+    ],
+    [
+     1140,
+     1033
+    ],
+    [
+     1122,
+     990
+    ],
+    [
+     1066,
+     940
+    ],
+    [
+     1010,
+     915
+    ],
+    [
+     954,
+     899
+    ],
+    [
+     897,
+     884
+    ],
+    [
+     879,
+     806
+    ]
+   ]
+  },
+  "cap": {
+   "h": 8.9,
+   "px": [
+    [
+     1262,
+     978
+    ]
+   ]
+  },
+  "fourth": {
+   "h": 8.9,
+   "px": [
+    [
+     1044,
+     812
+    ]
+   ]
+  },
+  "cap_5": {
+   "h": 5.0,
+   "px": [
+    [
+     1262,
+     978
+    ]
+   ]
+  },
+  "fourth_5": {
+   "h": 5.0,
+   "px": [
+    [
+     1044,
+     812
+    ]
+   ]
+  },
+  "counterbore": {
+   "h": 8.9,
+   "px": [
+    [
+     1135,
+     974
+    ],
+    [
+     1397,
+     990
+    ],
+    [
+     1266,
+     874
+    ],
+    [
+     1260,
+     1077
+    ]
+   ]
+  },
+  "gilt": {
+   "h": 8.9,
+   "px": [
+    [
+     969,
+     812
+    ],
+    [
+     1122,
+     809
+    ],
+    [
+     1047,
+     754
+    ],
+    [
+     1047,
+     874
+    ]
+   ]
+  },
+  "tblock": {
+   "h": 8.9,
+   "px": [
+    [
+     1182,
+     734
+    ]
+   ]
+  },
+  "tblock_5": {
+   "h": 5.0,
+   "px": [
+    [
+     1182,
+     734
+    ]
+   ]
+  },
+  "screws": {
+   "h": 4.0,
+   "px": [
+    [
+     1012,
+     1412
+    ],
+    [
+     1260,
+     671
+    ]
+   ]
+  },
+  "bush": {
+   "h": 0,
+   "px": [
+    [
+     1536,
+     1182
+    ]
+   ]
+  }
+ }
+}

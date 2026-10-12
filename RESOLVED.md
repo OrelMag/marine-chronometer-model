@@ -2192,10 +2192,6 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
-- **OPEN-QUESTIONS.md carried a merge's conflict markers** (released in 2.23.00 and 2.24.00): merging main into
-  `claude/kin-simpl` (`a5b2f6e`) left both sides of the set-up ratchet's section, the older reading (a face leaning
-  back) beside the measured one (undercut 3-6°). Kept the measured section and the winding-pawl springs' section.
-  Keep: after a merge, `git grep -n '^<<<<<<< \|^>>>>>>> '` before committing. `2339b4e`
 - **The mainspring's maker's sheet measured only its anchor pin** (0.5 × 0.6 × 0.65 mm): its coils
   are built only when they can be seen, so the sheet, drawing and book had none. `R.springReady`
   builds it fully wound for the maker, as it does the hairspring. `7848915`
@@ -2321,6 +2317,13 @@ An arbor needs pivots and shoulders; a stone its seat.
   instead of 0.025 to the endstone. Now it always takes the 3,000 vertices
   furthest along each way, and a sample of the rest. Keep: a clearance along an
   axis is measured from the extreme vertices along it. `746f25a`
+- **`OPEN-QUESTIONS.md` carried a merge's conflict markers.** Merging `main`
+  into `claude/ratchets` (`0fdbb46`) left both sides of its last section in the
+  file between `<<<<<<<` and `>>>>>>>`, released with 2.23.00 and 2.24.00: the
+  set-up ratchet's older reading (a 5° lean) beside its newer one (0.48 mm
+  teeth, undercut faces), with the winding-pawl springs' section inside the
+  conflict. Kept main's set-up ratchet and the springs' section. Keep: after a
+  merge, `git grep -n '^<<<<<<<\|^>>>>>>>'` finds nothing before committing. `52fd85c`
 
 ## Essay
 

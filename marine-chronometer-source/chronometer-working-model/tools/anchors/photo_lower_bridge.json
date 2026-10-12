@@ -1,0 +1,300 @@
+{
+ "frame": "../../../../References/photo-lower-bridge-underside.jpg",
+ "view": "below",
+ "holes": "holes_trainBridge_4oct.json",
+ "note": "A phone photograph (References/photo-lower-bridge-underside.jpg, 1932 x 2576, supplied 12 October 2026): the upper train bridge underside up on a mat, the balance lower bridge, the escape wheel and the detent's block on it, oblique. Fitted on the rim (r 40.5) and the cut round the barrel (TB_CUT, r 21.0, in the model's frame since the 14 deg turn), traced on the plate's silhouette against the mat where its wall faces away from the camera (the rim's upper-left arc; the cut and the horn's upper edge, less where the lower bridge's slab overhangs it); the centre bushing (C) and the large hole at the fusee end (h2) named. Every other pick is a check: h3 and h4 pair within 1 mm; the countersunk holes at about (29.9, 14.8), (34.5, 6.6) and (30.7, 1.7) have no model hole, and the model's h5 (29.0, 8.0) none on the photograph (Review-results.md, 'Elsewhere', 27).",
+ "picks": {
+  "gC": [
+   1536,
+   1182
+  ],
+  "p_big": [
+   1205,
+   2195
+  ],
+  "p1": [
+   1182,
+   548
+  ],
+  "p2": [
+   1357,
+   525
+  ],
+  "p3": [
+   1289,
+   616
+  ],
+  "p4": [
+   771,
+   1676
+  ],
+  "p5": [
+   1112,
+   1642
+  ],
+  "p6": [
+   1162,
+   1712
+  ],
+  "p7": [
+   904,
+   1970
+  ],
+  "p8": [
+   1110,
+   1947
+  ]
+ },
+ "pairs": {
+  "C": "gC",
+  "h2": "p_big"
+ },
+ "circles": {
+  "rim": {
+   "c": [
+    0,
+    0
+   ],
+   "r": 40.5,
+   "pts": [
+    [
+     1234,
+     473
+    ],
+    [
+     1194,
+     480
+    ],
+    [
+     1154,
+     489
+    ],
+    [
+     1114,
+     500
+    ],
+    [
+     1074,
+     513
+    ],
+    [
+     1034,
+     528
+    ],
+    [
+     994,
+     542
+    ],
+    [
+     955,
+     560
+    ],
+    [
+     915,
+     581
+    ],
+    [
+     876,
+     603
+    ],
+    [
+     838,
+     628
+    ],
+    [
+     802,
+     656
+    ],
+    [
+     767,
+     683
+    ],
+    [
+     733,
+     714
+    ],
+    [
+     703,
+     742
+    ],
+    [
+     677,
+     776
+    ],
+    [
+     648,
+     810
+    ],
+    [
+     624,
+     844
+    ],
+    [
+     601,
+     879
+    ],
+    [
+     579,
+     918
+    ],
+    [
+     559,
+     956
+    ],
+    [
+     542,
+     996
+    ],
+    [
+     527,
+     1036
+    ],
+    [
+     515,
+     1076
+    ],
+    [
+     503,
+     1115
+    ],
+    [
+     494,
+     1155
+    ],
+    [
+     488,
+     1195
+    ],
+    [
+     482,
+     1235
+    ],
+    [
+     479,
+     1275
+    ],
+    [
+     477,
+     1315
+    ],
+    [
+     476,
+     1355
+    ],
+    [
+     478,
+     1395
+    ]
+   ]
+  },
+  "bcut": {
+   "c": [
+    -24.124,
+    -5.754
+   ],
+   "r": 21.0,
+   "pts": [
+    [
+     1797,
+     1215
+    ],
+    [
+     1767,
+     1207
+    ],
+    [
+     1738,
+     1196
+    ],
+    [
+     1708,
+     1185
+    ],
+    [
+     1679,
+     1171
+    ],
+    [
+     1649,
+     1155
+    ],
+    [
+     1620,
+     1138
+    ],
+    [
+     1591,
+     1121
+    ],
+    [
+     1564,
+     1102
+    ],
+    [
+     1541,
+     1084
+    ],
+    [
+     1517,
+     1062
+    ],
+    [
+     1491,
+     1038
+    ],
+    [
+     1470,
+     1012
+    ],
+    [
+     1381,
+     848
+    ],
+    [
+     1374,
+     818
+    ],
+    [
+     1371,
+     788
+    ],
+    [
+     1372,
+     758
+    ],
+    [
+     1377,
+     728
+    ],
+    [
+     1384,
+     698
+    ],
+    [
+     1396,
+     669
+    ],
+    [
+     1412,
+     643
+    ],
+    [
+     1430,
+     616
+    ],
+    [
+     1451,
+     592
+    ],
+    [
+     1476,
+     572
+    ],
+    [
+     1504,
+     556
+    ]
+   ]
+  }
+ }
+}
