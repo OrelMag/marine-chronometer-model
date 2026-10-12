@@ -22,10 +22,10 @@ FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userD
 LOOSE=[('barrelBridge:Cylinder',(20.95,-20.2,-21.26),0.9,"the winding-stop pin, standing out of the barrel bridge's underside into the stop-bar's path"),
  ('lowerBridge:Cylinder',(20.62,-21.91,14.01),0.4,"a steady pin of the balance lower bridge: its hole in the train bridge is drawn through, so the end above sits in a hole"),
  ('lowerBridge:Cylinder',(-13.6,-21.91,16.4),0.4,"the lower bridge's other steady pin, the same"),
- ('det:Cylinder',(0.13,-22.11,36.16),0.53,"a positioning pin of the detent support block: its hole in the train bridge is drawn through, so the end above sits in a hole"),
- ('det:Cylinder',(2.62,-22.11,24.99),0.53,"the block's other positioning pin, the same"),
- ('det:Cylinder',(-3.65,-18.31,35.21),0.22,"a steady pin across the detent's foot, standing out of it"),
- ('det:Cylinder',(-2.06,-18.31,28.06),0.22,"the foot's other steady pin, the same"),
+ ('det:Cylinder',(-1.82,-22.11,35.98),0.53,"a positioning pin of the detent support block: its hole in the train bridge is drawn through, so the end above sits in a hole"),
+ ('det:Cylinder',(1.5,-22.11,25.02),0.53,"the block's other positioning pin, the same"),
+ ('det:Cylinder',(-5.53,-18.31,34.74),0.22,"a steady pin across the detent's foot, standing out of it"),
+ ('det:Cylinder',(-3.32,-18.31,27.47),0.22,"the foot's other steady pin, the same"),
  ('bal:Cylinder',None,0.25,"a vernier timing weight's screw, its free end past the nut"),
  ('bal:Cylinder',None,0.25,"the other vernier weight's screw")]
 # with the Navy's balance brake fitted (the page's default; --eval "__mv.userData.stop('arm')" fits the manual's arm instead), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked

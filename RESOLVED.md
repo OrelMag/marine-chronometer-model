@@ -292,7 +292,7 @@ Contents:
   above; the dial printed the seconds at a fixed 0.472 of its radius (right for a
   50.8 mm dial, 1.5 mm off on the 47.5). Now F (0, 21.6), T and E as measured,
   E 9.40 from the balance; the wheels' size ratios come out as counted. Keep:
-  `tools/solve.py`'s FE 11.107; the dial's `k` from `L.F` and `DIAL_R`;
+  `tools/solve.py`'s FE 11.107 (10.444 since the escape arbor was measured, below); the dial's `k` from `L.F` and `DIAL_R`;
   `SEC_L` (the seconds hand clears the hour wheel's pipe); the train bridge's
   escape opening r 6.9 about `L.E`; the lower bridge from `tools/lower_bridge.py`
   with the model's arbors; the balance locking arm's screw 30 deg from its
@@ -479,6 +479,26 @@ Contents:
   measured place makes it 11.107 mm and 0.2614 (`tools/solve.py`). Keep: a
   figure that follows from `L` quoted as `solve.py` prints it, the old value
   only as history. `05b2ef2`
+
+- **The escape arbor 0.74 mm off its measured place, the fourth wheel too
+  large** (OPEN-QUESTIONS.md, the fourth wheel's size). It was solved 9.40 mm
+  from the balance toward the escape jewel as 10:00 was then anchored (on the
+  third arbor's old place), 11.107 mm from the fourth, which made the fourth
+  stage's module 0.2614 and the fourth's tips r 10.10 (third ÷ fourth 1.02,
+  measured 1.05-1.10 on two movements). Its lower setting on the bare plate
+  (KLUwI2UUCMQ 34:30, 14:45, 13:52.0, 40:08; `rimfit.py`'s camera on the face
+  edge, a rigid fit on the centre, fusee and barrel bushings) lies 4.3° further
+  round the balance. Now 9.40 from the balance at the four frames' mean
+  direction, (8.926, 16.178), 10.444 from the fourth: module 0.2457, tips
+  r 9.50. The escapement turns with it about the balance (the detent, its
+  block and pins, the locking arm, the balance at rest), the escape upper
+  bridge, its seats and the train bridge's escape passage (`train_bridge.py`),
+  and the balance lower bridge's lugs (`lower_bridge.py`, the detent's plan
+  turned with it); `JW` 5.9 (the smaller fourth's inertia reflected). Keep:
+  `L.E` measured, 9.40 from `L.B`; `tools/solve.py`'s FE the distance it
+  gives (10.444); the hard-coded copies of it (`train_bridge.py`'s `ESC_B`,
+  `EBU_B`; `lower_bridge.py`'s `E`, `ARM`; `physics.js`'s and `dynamics.js`'s
+  fourth module; `audit.py`'s detent pins) follow it. `8fcc1e5`
 
 ## Winding and maintaining work
 
