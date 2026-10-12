@@ -526,7 +526,7 @@ Contents:
   deep, the slot under the chain half to the slot's floor and out through the rim, no turned flange over the top turn (a lathe can't
   take a straight slot: carving it radially or folding the flange onto the floor left material in the bar and a double sheet that
   `fine.py` read as solid). Keep: `fs.stud` is the measured place (`WSP`), not a function of the bar; the bar's ends and sides as the
-  frames show them (which end is which from 25:40 and 26:05-26:23); `tools/maintaining.py` must pass, its sweep included. `f196703`
+  frames show them (which end is which from 25:40 and 26:05-26:23); `tools/maintaining.py` must pass, its sweep included; the groove's phase (`phi0`, `rotT`: `MG`) fixed, not taken from the bar (taken from it, the redrawn bar turned the groove 0.003 rad and moved the fusee's torque past `invariants.py`'s 0.0002). `f196703`
 
 - **The stop-bar's nose passed under the winding stop with only the fusee's endshake to spare.** On every turn but the last,
   with the bar back, its nose stands out past the fusee's rim and passed 0.05 mm under the stud's end (−20.40 against −20.45):

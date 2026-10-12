@@ -4224,9 +4224,12 @@ function makeFusee(M,c){
      with while winding (points turn toward a larger atan2(z, x) as n falls), its leading corner, and al turns the bar so that the first touch falls at n = 0 */
   const dPoly=(px,pz,T)=>{const P=[[ex(1,Z0)+T,Z0],[ex(1,Z1)+T,Z1],[ex(-1,Z1)+T,Z1],[ex(-1,Z0)+T,Z0]];let d=1e9;for(let i=0;i<4;i++){const[ax,az]=P[i],[qx,qz]=P[(i+1)%4],vx=qx-ax,vz=qz-az,u=clamp(((px-ax)*vx+(pz-az)*vz)/(vx*vx+vz*vz),0,1);d=Math.min(d,Math.hypot(px-ax-u*vx,pz-az-u*vz));}return d;};
   const touch=T=>{const f=a=>dPoly(SR*Math.cos(a),SR*Math.sin(a),T)-SRs;let a=Math.atan2(Z1,ex(1,Z1)+T)+1.5;while(a>-Math.PI&&f(a)>0)a-=0.002;let lo=a,hi=a+0.002;for(let i=0;i<30;i++){const m=(lo+hi)/2;if(f(m)>0)hi=m;else lo=m;}return hi;};
+  /* phi0: the groove's phase, the chain lying at local angle phi0 + TAU m; the drums' tangent's drift dl taken at m MG, 0.7201035, where the old stop-bar's nose fell (rotT too),
+     as it has been since the fusee was laid out (its torque and barrel turns, tools/mainspring_friction.py's table and the invariants rest on it); it was recomputed from
+     the bar until 12 October 2026, so moving the bar moved the groove by up to 0.003 rad */
+  const MG=0.7201035,phi0=-Math.PI/2+dl(MG);
   let mF=0.2,rN=0,TR=0,al=0;
-  for(let i=0;i<8;i++){rN=rc(mF)-H/2;TR=xf(rN)-xc0;al=touch(TR)-SD;const aN=Math.atan2(Z1,xc0)-al,p0=-Math.PI/2+dl(mF);mF=(((aN-p0)/TAU)%1+1)%1;}   /* the chain lies at local angle phi0 + TAU m */
-  const phi0=-Math.PI/2+dl(mF);
+  for(let i=0;i<8;i++){rN=rc(mF)-H/2;TR=xf(rN)-xc0;al=touch(TR)-SD;const aN=Math.atan2(Z1,xc0)-al;mF=(((aN-phi0)/TAU)%1+1)%1;}
   /* ---- the fusee: a lathe whose outer surface is pushed out to the helical groove: the floor rf(m) under each turn of the chain, a flange 0.16-0.3 thick between turns
      standing 1.25 mm over the floor of the turn below it, as on the side photograph, solid below its end; above the top turn no flange: the slotted top layer is the
      rim there (capR, rf(0) + 1.4: the top), so the stop-bar's slot runs out through it at both ends (a turned flange there, as drawn until 12 October 2026, can't take a
@@ -4381,7 +4384,7 @@ function makeFusee(M,c){
   const tgS=(()=>{const d=dl(N),P=[fx+rc(N)*Math.sin(d)-bx,-rc(N)*Math.cos(d)],ps=Math.atan2(P[1],P[0]),gm=Math.acos(rB/Math.hypot(...P)),w=a=>Math.abs(Math.atan2(Math.sin(a-d+Math.PI/2),Math.cos(a-d+Math.PI/2)));return w(ps-gm)<w(ps+gm)?-1:1;})();   /* which tangent from a point to the barrel the run takes: the lower */
   const pinGeo=(me,rot)=>{const a=phi0+TAU*me-rot,r=rc(me),F0=[fx+r*Math.cos(a),r*Math.sin(a)],v=[F0[0]-bx,F0[1]],bt=Math.atan2(v[1],v[0])+tgS*Math.acos(rB/Math.hypot(...v)),B0=[bx+rB*Math.cos(bt),rB*Math.sin(bt)],
     S=Math.hypot(B0[0]-F0[0],B0[1]-F0[1]),ux=(B0[0]-F0[0])/S,uz=(B0[1]-F0[1])/S;return{m0:me,F0,B0,bt,S,lever:-((F0[0]-fx)*uz-F0[1]*ux)};};
-  const rotT=me=>TAU*me+dl(mF)-dl(me),deadRot=me=>{let a=rotT(me),b=a+Math.PI;for(let i=0;i<50;i++){const m=(a+b)/2;if(pinGeo(me,m).lever>0)a=m;else b=m;}return a;};
+  const rotT=me=>TAU*me+dl(MG)-dl(me),deadRot=me=>{let a=rotT(me),b=a+Math.PI;for(let i=0;i<50;i++){const m=(a+b)/2;if(pinGeo(me,m).lever>0)a=m;else b=m;}return a;};
   const ME=(()=>{let a=N-0.5,b=N;for(let i=0;i<50;i++){const m=(a+b)/2;if(deadRot(m)<N*TAU)a=m;else b=m;}return a;})(),RT=rotT(ME);
   const geo=rot=>{if(rot>RT)return pinGeo(ME,rot);const m0=md0(rot),d=dl(m0),r0=rc(m0);return{m0,F0:[fx+r0*Math.sin(d),-r0*Math.cos(d)],B0:[bx+rB*Math.sin(d),-rB*Math.cos(d)],bt:-Math.PI/2+d,S:Tg(m0),lever:r0};},md=rot=>geo(rot).m0;
   const wrapB=q=>TAU*I(q.m0)+(Tg(m00)-q.S)/rB;   /* the chain's turn round the barrel, tangent point to hook: what has come off the fusee, less the straight run's gain */
