@@ -59,7 +59,7 @@ function mesh(A,B,d){const k=A.z/B.z,a0=-0.375*A.p,b0=Math.PI-0.875*B.p;
 
 /* a stage through one pitch of A: the torque ratio (B's over A's, against the nominal zB/zA) at each step for each mu, drop, backlash, approach */
 const MU=[0,0.10,0.20],NS0=120;
-function stage(zA,zB,m,dd=0,NS=NS0){const A=gear(zA,m,zB),B=gear(zB,m),d=m*(zA+zB)/2+dd,M=mesh(A,B,d),out={al:[],fac:MU.map(()=>[]),approach:0,drop:0,bl:Infinity,jam:false,tip:Math.min(d-A.ro-B.ri,d-B.ro-A.ri)};
+function stage(zA,zB,m,dd=0,NS=NS0){const A=gear(zA,m,zB),B=gear(zB,m),d=m*(zA+zB)/2+dd,M=mesh(A,B,d),out={al:[],fac:MU.map(()=>[]),approach:0,drop:0,bl:Infinity,jam:false,phi:0,tip:Math.min(d-A.ro-B.ri,d-B.ro-A.ri)};
   if(out.tip<=0){out.jam=true;return out;}
   let e=0,prev=null;const span=A.p,start=M.a0-span/2;
   /* go round once first, so the step at the pitch's start is caught from the tooth before */
@@ -67,7 +67,7 @@ function stage(zA,zB,m,dd=0,NS=NS0){const A=gear(zA,m,zB),B=gear(zB,m),d=m*(zA+z
     if(pass===0){e=ee;continue;}
     if(prev!==null&&ee-prev>M.k*span/NS*1.5+1e-6)out.drop=Math.max(out.drop,(ee-prev)/M.k/A.p);   /* B fell back to the next tooth: A ran free that far (a fraction of its pitch) */
     prev=ee;e=ee;const be=M.b0-M.k*(al-M.a0)+ee,pp=M.pen(al,be+1e-9),[,w,Pt]=pp,n=M.normal(al,be,w,Pt),nB=w==='A'?[-n[0],-n[1]]:n;
-    if(i<NS)out.approach+=(Pt[1]<0?1:0)/NS;
+    if(i<NS){out.approach+=(Pt[1]<0?1:0)/NS;out.phi+=Math.atan2(Math.abs(nB[0]),Math.abs(nB[1]))/NS;}   /* the pressure angle: the force's lean off the tangent (the line of centres along x) */
     if(i%10===0)out.bl=Math.min(out.bl,M.back(al,ee));
     const vA=[-Pt[1],Pt[0]],vB=[M.k*Pt[1],-M.k*(Pt[0]-d)],vr=[vA[0]-vB[0],vA[1]-vB[1]],vn=vr[0]*nB[0]+vr[1]*nB[1],t=[vr[0]-vn*nB[0],vr[1]-vn*nB[1]],tl=Math.hypot(...t)||1;
     out.al.push(al);MU.forEach((mu,j)=>{const F=[nB[0]+mu*t[0]/tl,nB[1]+mu*t[1]/tl],tB=(Pt[0]-d)*F[1]-Pt[1]*F[0],tA=-(Pt[0]*F[1]-Pt[1]*F[0]);out.fac[j].push((tB/tA)*M.k);});}
@@ -115,7 +115,7 @@ if(!QUICK){say('');say('3. Each mesh\'s depthing window: its centres moved (the 
       const own=base.map(b=>st(b.fac[j]).mean);own[k]=st(s.fac[j]).mean;const q=day(st2,j,h,undefined,own);if(!(q.amin>=247.5&&q.amax<=270))return`the swing ${f(q.amin,1)}-${f(q.amax,1)}° (mu ${MU[j]}, the mean restored)`;}return'';};
     /* bisect from the drawn centres (which pass) to the search's end (0.3 m closer, 1 m wider: the teeth then engage 0.7 m, little left for a knock), to a micrometre */
     const edge=sg=>{let lo=0,hi=(sg<0?0.3:1.0)*m,why=okAt(sg*hi);if(!why)return[sg*hi,'passes to the end of the search'];while(hi-lo>0.001){const md=(lo+hi)/2,w=okAt(sg*md);if(w){hi=md;why=w;}else lo=md;}return[sg*lo,why];};
-    const[lo,wl]=edge(-1),[hi,wh]=edge(1);win.push({stage:nm,lo,hi});
+    const[lo,wl]=edge(-1),[hi,wh]=edge(1);win.push({stage:nm,lo,hi,phi:+(base[k].phi*180/Math.PI).toFixed(2)});
     say(`  ${nm}: ${f(lo*1000,0)} to +${f(hi*1000,0)} µm about its drawn centres (closer: ${wl}; wider: ${wh})`);}
   /* a CNC's hole positions: each of the mesh's two arbors has two holes (plate and bridge), each off by up to tp in any direction, and its pivots' shake s;
      the centres come closer or part by at most 2 tp + s (the arbors' two ends moving alike, the worst case). Aimed at the drawn centres (BS 978's depth), the closer side
@@ -126,7 +126,7 @@ if(!QUICK){say('');say('3. Each mesh\'s depthing window: its centres moved (the 
   const worst=win.reduce((a,b)=>a.tp<b.tp?a:b),tp=worst.tp;
   chk(tp>=0.005,`aimed at the drawn centres, the holes must sit within ±${f(tp*1000,0)} µm of their places (the ${worst.stage.split(' →')[0]}'s mesh, its tip clearance less the pivots' ${f(SH*1000,0)} µm shake): ${tp>=0.02?'a hobby CNC holds it':tp>=0.01?'a good CNC holds it with the holes bored, not drilled, and checked on a measuring machine or with gauge pins':'a jig borer\'s work, or the depthing set by hand as watchmakers do (a depthing tool, then the bushes or jewels moved)'}`);
   say(`  every mesh tolerates far more wide than close (the wide side's limit is the ripple, or the search's end at 1 m): a hole that errs should err wide`);
-  const J={note:'tools/gearing.js: each mesh\'s depthing window about its drawn centres (mm), the window\'s middle, and the hole position tolerance (mm) for it; read by thermal.js and fea.py',SH,stages:win};
+  const J={note:'tools/gearing.js: each mesh\'s depthing window about its drawn centres (mm), the hole position tolerance (mm) aimed at the drawn centres, and its mean pressure angle (deg, frictionless contact); read by thermal.js and fea.py',SH,stages:win};
   if(process.argv.includes('--write'))fs.writeFileSync(OUT,JSON.stringify(J,null,1)+'\n');
   else if(!fs.existsSync(OUT)||JSON.stringify(JSON.parse(fs.readFileSync(OUT,'utf8')).stages.map(w=>[w.lo,w.hi].map(x=>Math.round(x*1e4))))!==JSON.stringify(win.map(w=>[w.lo,w.hi].map(x=>Math.round(x*1e4)))))chk(false,'tools/gearing.json is not what this finds: run node gearing.js --write');}
 

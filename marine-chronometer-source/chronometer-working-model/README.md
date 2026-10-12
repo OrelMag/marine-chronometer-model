@@ -957,6 +957,21 @@ on what would stop the chronometer.
   2 µm, which moves lock and drop a tenth of a degree and its rate a few
   hundredths of a second a day. The temperature error is the balance's and its
   spring's alone, which is measured on the bench, not worked out.
+- **`tools/fea.py`, do the plates and bridges hold the arbors.** Finite
+  elements on the six parts that hold pivots (the pillar plate, the train,
+  barrel, escape and lower bridges, and the bridge on the plate's dial side
+  that carries the third's and fourth's lower jewels): each part's solid cut
+  into voxel bricks (trilinear, about 0.25–0.55 mm), brass at 100 GPa, solved
+  by multigrid; the solver comes within 1.4 % of a cantilever's textbook
+  deflection. Loaded fully wound (the chain's 41 N along its drums' tangent at
+  the fusee's top turn, three quarters of it on the barrel bridge) and run down
+  (21 N on its bottom turn), with every mesh's tooth force; each part held at
+  its screws, the parts put together by superposition. No pivot hole moves
+  more than 0.4 µm, no arbor leans more than 13 µrad, and no mesh's depth
+  changes by more than 0.02 µm, a thousandth of the ±13 µm the holes are given;
+  the most stress is 13 MPa, at a voxel's corner on the barrel bridge, against
+  brass's 300. The plates and bridges are many times stiffer than they need to
+  be: the hole positions and the depthing are what the maker must hold.
 
 ### Checked against real chronometers
 
