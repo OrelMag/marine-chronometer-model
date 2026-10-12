@@ -64,7 +64,7 @@ Contents:
   the jewel earlier, where its end runs away faster than it can follow (`depart`), still moving, and loses its springs' and its
   own kinetic energy there, about 9 % more. With `TF` 68 s the run-down ran 2.8° behind `tools/dynamics.js`'s integration at
   30 s (2.5° at 28 s with 52 s, between the check's samples). `EHd(a)` now takes it from `depart`, stepped a second at a time:
-  within 0.7°. Keep: the averaged model's losses come from the same detent the integration moves. HASH
+  within 0.7°. Keep: the averaged model's losses come from the same detent the integration moves. `9637b0e`
 - **The discharge jewel's end was a half round** (`rnd`, both corners stoned round; estimated, no source then).
   The British Museum's Model 21 (*Catalogue of Watches* VI, 1990, no. 117A) is "set with a jewel with a radius to
   the back of the acting part of the tip", and KLUwI2UUCMQ 6:58.17-6:58.33 shows the acting face flat to a sharp
