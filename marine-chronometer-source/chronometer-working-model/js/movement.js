@@ -679,7 +679,14 @@ function buildMovement(M){
   const uo=unit(sub(FH[7],FH[6])),pH=PTri(add(FH[7],uo,bis(l=>Math.hypot(...add(FH[7],uo,l))-BR_R,0,20))),aH=Math.atan2(pH[1],pH[0]),aR=bis(a=>BR_R*Math.sin(a)-14.5+0.1*BR_R*Math.cos(a),0,Math.PI/2);
   const BBo=[];for(let k=0,n=Math.ceil((aR+TAU-aH)/(TAU/360));k<=n;k++){const t=aH+(aR+TAU-aH)*k/n;BBo.push([BR_R*Math.cos(t),BR_R*Math.sin(t)]);}
   BBo.push(...[add(FH[0],unit(sub(FH[0],FH[1])),4),...FH].map(PTri));   /* the rim from the horn's end round to past the cock's edge, across inside the cut round the balance (cut away below), and the horn's end from 4 mm inside the cut out to the rim */
-  const BBpoly=clipUnder(subtractCircle(subtractCircle(BBo,PTi(L.B),cutR/PHOTO_K),[5.24,6.33],17.6).map(PTr),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  /* between the horn on the cock's side and the fusee the cut runs further out: on KLUwI2UUCMQ 6:49.0 (the cock and balance out) through the camera fitted there, its top
+     edge from the horn's inner corner toward the fusee, traced as 9 points, lies 21.6-22.3 mm from the staff (21.2-22.5 over f 4,000-6,000), where the circles above give
+     about 17.7; a circle through them, BB_CUT (r 16.85 about (6.84, 9.53); 16.55-17.28 about (6.54, 8.59)-(7.02, 10.08) over those focal lengths), meets the horn's edge at
+     (23.67, 8.65), the corner the frame shows at (23.71, 8.42). Past (20.5, -0.2) the fusee's dust cap hides it; drawn on round, it comes out left of the cap where the
+     frame shows the cut's wall on the circle about the staff (estimated between). The top-view photograph's edge there, under the cock's shadow, reads 16.7-18 mm from
+     the staff, on plain train bridge in the video: not used. Until 12 October 2026 the two circles alone, the horn's inner corner at (19.5, 9.87) */
+  const BB_CUT=[6.84,9.53,16.85];
+  const BBpoly=clipUnder(subtractCircle(subtractCircle(subtractCircle(BBo,PTi(L.B),cutR/PHOTO_K),[5.24,6.33],17.6).map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,1.6,1],[...L.Ba,1.95,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.cover.map(q=>hT(...q,0.9)),hT(...S.click,0.6)];   /* and the winding stop's, added below once its place is known */
   R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,1.6,1.02),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,1.95,1.42),'42164.bu');   /* fusee and barrel upper bushings (42164) */

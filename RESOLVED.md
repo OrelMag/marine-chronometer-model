@@ -1430,6 +1430,15 @@ Contents:
   0.25 mm of 6:29's, the horn's measured edge within 0.6 mm of it at f 5,000.
   Keep: the cock's top traced through holes measured on the video, its rim
   as a constraint; the horn 0.15 mm off the straight edge.
+- **The barrel bridge's cut round the balance too small between the horn and
+  the fusee.** The cut was the balance's clearance circle (r 17.7) and the
+  top-view photograph's circle, so the horn on the cock's side met it at
+  (19.5, 9.87). On C Spinner's 6:49.0 (the cock out) through the camera
+  fitted there, the bridge's edge runs from the horn's inner corner at
+  (23.7, 8.4) toward the fusee 21.6-22.3 mm from the staff. A circle through
+  those 9 points is now cut too, run on behind the fusee's dust cap. Keep:
+  the cut traced on the video there, not the photograph's edge in the cock's
+  shadow (16.7-18 mm, plain train bridge on 6:49.0).
 
 - **The balance cock's top face a straight edge, a widened nose and a bulging
   concave edge; its arm one thickness.** Seen from above, the cock's straight
