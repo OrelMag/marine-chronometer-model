@@ -1,104 +1,75 @@
 # Plan: verifying a chronometer built from the model
 
-Handoff for the next session (written 12 October 2026). Read this, then `CLAUDE.md`, then the memory file `build-goal.md`.
+Handoff for the next session (updated 12 October 2026, after the tripping, gimbals and mainspring-friction work).
+
+**Read first, in this order:** this file; `CLAUDE.md` (the repo's rules, every tool with its run time); the memory files `build-goal.md` and `results-in-html-report.md`; then, for whatever you touch, the tool's own header comment and the matching section of the report.
 
 ## The goal (the user's, 12 October 2026)
 
 The user wants a **real, working marine chronometer** made from the model, not historical parity with the Hamilton Model 21.
 - **Manufacture:** CNC and 3D printing.
-- **Accuracy:** good enough to navigate by, meaning a steady rate of a second or two a day. Navy test-card class isn't required.
-- **Deviations:** allowed when they help, with 1950s–60s technology only. Tell the user about each one, and show it on the part's card with a way back to the original.
-- **Questions:** check with the user when a decision is theirs.
-- **Merging:** merge and push often. Deploy only when the user asks; every deploy is a release.
+- **Accuracy:** good enough to navigate by: a steady rate of a second or two a day. Navy test-card class isn't required.
+- **Deviations:** allowed when they help, with 1950s–60s technology only. Tell the user about each, and show it on the part's card with a way back to the original (`deviations.js`; the 3D model stays the Model 21).
+- **Questions:** ask the user when a decision is theirs (a change to the model, a deviation, a release).
+- **Merging:** merge into `main` and push often. **Deploy only when the user asks**; every deploy is a release.
+- **Documentation:** every test's method and results go into the HTML report, not only the console (the user asked for this explicitly).
 
-For the Model 21 itself, the source of truth is unchanged: the manual, photographs and videos. The build's changes live in a revertible layer (`deviations.js`), never overwriting the original.
+For the Model 21 itself the source of truth is unchanged: the manual, photographs and videos.
 
 ## Where things stand
 
-- **Branch:** `claude/build-verify`, worktree `.claude/worktrees/build-verify`. It is merged into `main` and both are pushed.
-- **Live site:** **2.26.00**, which carries the deviations on the cards and the bench-test chapter.
-- **Unreleased on `main`:** `benchcheck.py`, plus one new sentence in the build book's chapter. The next release should take them.
-- **The report:** `marine-chronometer-source/chronometer-working-model/verification/build-verification/index.html`. Open the file; `build_report.py` rebuilds it, and its "Reproduce" section lists the steps.
+- **Branch:** `claude/build-verify`, worktree `.claude/worktrees/build-verify`. Merged into `main` (last merge `25943b8`), both pushed. Start by `git merge --ff-only main` in the worktree.
+- **Live site:** 2.26.00. **Unreleased on `main`:** `benchcheck.py`; the bench tests' new figures (the detent's ring, the lock's floor, the mainspring's friction and room to coil-bound), which change `js/makers.js` and so the site's build book and cards; `?qa` now exposes `__M` and `__BX`. A **minor** release is due when the user asks (suggest lines; the user decides).
+- **The report:** `marine-chronometer-source/chronometer-working-model/verification/build-verification/index.html`, built by `build_report.py` from `template.html` and `assets/*.json`. Sections 1–7 earlier work, **8 tripping, 9 gimbals at sea, 10 mainspring coil friction**. Its "Reproduce" section lists every step.
+- **CI:** `python ci.py` passes 28 of 28 (about 8 min). `smoke.py` once failed under load in its winding step and passed alone: rerun it alone before believing a smoke failure.
 
-### Tools added (all in `chronometer-working-model/tools/`, all listed in CLAUDE.md with run times)
+## Done in this round, and what each found
 
-| Tool | What it checks | Current result |
+| Tool (in `tools/`) | What it does | Finding |
 |---|---|---|
-| `gearing.js` | The four train meshes tooth by tooth on `gearOutline`'s own outlines, with friction. The swing over time through `ampAt`/`rateAt`. Each mesh's depthing window, written to `gearing.json`. | Every mesh runs with no drop. The swing stays at 250–259°. **Holes ±13 µm**, aimed at the drawn centres. |
-| `thermal.js` | Brass against steel from 40 to 100 °F: the depths, endshake, the escapement through `makeEsc`, the chain. | Depths change under 0.5 µm. Set endshake at 28–73 µm at 20 °C. Escapement rate change about 0.03 s a day. |
-| `fea.py` | Voxel-brick finite elements (pyamg) on the six pivot-holding parts, joined by superposition. The solver is checked against a cantilever (`--check`). | Holes move at most 0.36 µm, depths at most 0.02 µm. Stress at most 13 MPa. |
-| `hairspring-fe.js` | The designed hairspring solved by co-rotational beam elements, against `hairspring.js`'s elastica. | The couple's shape agrees to 4e-7. The spring's isochronism is 0.11 s a day. |
-| `bench.js` | The 8 bench tests with their pass figures. Writes `bench.json` (`tests`, `lines`, `criteria`); `makers.py` puts them on the cards and in the build book. | — |
-| `benchcheck.py` | Judges the maker's measurements (JSON) against `criteria`, and says what to do where one fails. | `--demo` finds 8 of 8 planted faults. |
-| `rating.py` | A made chronometer's log of daily comparisons: the Navy test's figures, a fit, a backtest, and an error projected over 10, 30 and 60 days. | `--demo` recovers the made-up log's parameters. |
-| `deviations.js` | The build's changes and their numbers, written to `deviations.json`; `makers.py` and `maker.js` put them on the cards. | Nivaflex mainspring 0.386 mm, margin 1.30. Glucydur balance with a Nivarox spring: thermoelastic coefficient +4 to +14 ppm/°C, within ±1.4. |
-| `acoustic.py` | Now also accepts a recording's file path, for the made movement's swing. | — |
+| `tripping.js` (+ `tripping.json` via `--write`) | The detent as a 37-element plane frame from the drawn pieces, its modes in time with the balance and wheel, every contact elastic. Validated against `dynamics.js` with the frame rigid and hinged. | No trip at the model's settings: a held tooth's stone uses at most ~11 % (22 % worst estimate) of the 114 µm depth of lock. Trips from a 337° swing (the jewel comes round) or a 61 g / 3 ms blow. **The real margin is the depth of lock** (makeEsc's `lRel` keeps room to spare). The flexure turns about its middle: 39 % stiffer than the hinge. |
+| bench additions | `bench.js` test "The detent rings"; the lock's floor in the escapement test; `benchcheck.py --ring FILE` reads a recording's pitch. | Never a lock under 5°. The ring (137 Hz as drawn; 137–342 Hz for a 0.079–0.150 mm spring) measures the detent spring's section, an open question. Against knocks the preload (Op. 78) holds, not the lock. |
+| `dynamics.js` fix | A second unlocking in one swing now counts as a trip (it was booked as a beat). `RESOLVED.md`, Escapement. | — |
+| `massprops.py` + `massprops-check.js` (→ `gimbals.json`) | Weighs the case with the movement and the gimbal ring on the model (every solid at its density), and how far each swings before it meets the box. | Case 1,669 g, ring 140 g; stops at 29.5° as drawn. **The drawn pivots aren't levelled** (the case would hang 35° out); the manual levels them by the brackets and straps (p. 13). |
+| `gimbals.js` | The ring and case as two coupled rigid bodies on their pivots, driven by a ship's random roll, pitch, yaw and heave; what reaches the escapement run through `dynamics.js`. | Levelled periods 0.72 s / 0.68 s (the page's 0.7 s holds), far from ships' 10–30 s roll and 35 % clear of the 0.5 s beat. In working seas (to NORDFORSK's 0.12 g) the case stays within 0.3° of the apparent vertical, the rate moves 0.005 s a day. Beyond, it meets its stops: ~0.15 ms a blow, harmless to the escapement. |
+| `mainspring_friction.py` (→ `mainspring_friction.json`) | The coils' friction from the solved spring states: slip followed on the steel, packed coils' pressure by the ring equations of a packed spiral. | Coils take 3.4 % of the work running (6.8 % hysteresis). `physics.js` now takes the spring's losses from it up to what mainsprings measure (running 10–20 % under winding → x up to 11 %). **The model's spring is fully wound 0.13 turn from coil-bound**: running, the fusee's output there is 78.5 %, the swing ~220° for the first ~9 h after winding. The set-up can't mend it; the spring needs ~½ turn of room (the bench's mainspring test now counts it). |
 
-**How a deviation works in the page:**
-- `MAKERS.devs` holds the list; each affected line in `makers.js` carries `dev`, `vmat` and `vtreat`.
-- In `maker.js`, `ORIG`, `devOn` and `devHTML` drive the card's note and button.
-- `MAKER.orig()` and `setOrig()` read and set the choice; `app.js` keeps it in the link as `orig=`.
-- The cards default to the build's version. The 3D model is unchanged.
+## Decisions waiting on the user
+
+1. **Test equipment.** Still unanswered: what do they have (torque gauge, vibrating tool, timegrapher, microscope, temperature box; a phone now covers the detent's ring test)? It decides which jigs to make.
+2. **The mainspring's room.** The coil-friction finding conflicts with real Model 21s swinging in the band fully wound, so either the real spring has more room (its thickness is OPEN-QUESTIONS.md 1) or the friction model overstates pressure near coil-bound. Changing the model's spring (length, thickness) is a model change: show the evidence and let the user decide. Do the Nivaflex re-solve (next steps, 1) first.
+3. **Release.** Suggest a minor release with lines for visitors (the bench's new tests on the cards and in the build book); deploy only on the user's word.
 
 ## What to do next, in order
 
-1. **Ask the user what test equipment they have** (torque gauge, vibrating tool, microscope, timegrapher, temperature box). Then make the 3D-printable jigs the bench tests call for, each from the model's own dimensions:
-   - a torque lever for the barrel arbor's square and the fusee arbor;
-   - a holder for the barrel;
-   - a degree card for reading the escapement's angles;
-   - a stand for vibrating the balance.
+1. **Re-solve the spring for the build's Nivaflex strip** (0.386 mm, `deviations.json`) to see its room to coil-bound. `mainspring.py` takes the strip's thickness as a constant `t` at its top; it runs about 20 min on 14 processes and writes `js/mainspring.js`, which the page draws from, so **don't overwrite the model's** `MSHAPE`: run it on a copy or add an option that writes elsewhere, then point `mainspring_friction.py` at it. Report the room and the fusee's running output at full wind.
+2. **Rate while the temperature changes** (simulation item 4). The thin hairspring warms faster than the balance rim, so even a compensated pair runs off-rate during a change: heat flow through box, case, movement, balance and spring over a ship's day-night cycle; the error a navigator carries; how the Glucydur/Nivarox pair copes. Materials' thermal figures from data sheets, cited (never from memory). New tool, a report section 11.
+3. **Which estimates matter most** (simulation item 5): push every estimate (tooth form and friction, the springs' sections, the detent's damping and the contacts' restitution, materials, the spring's room) through `dynamics.js` and a voyage (`errorbudget.js`), ranked by effect on the rate: which bench measurements to make first.
+4. **Jigs**, once the equipment is known: a torque lever for the barrel arbor's square and the fusee arbor, a barrel holder, a degree card for the escapement's angles, a stand for vibrating the balance, a clamp for the detent's foot (the ring test). Measure every seat on the model first (`holes.py`, `isolate.py`); STL through `MAKER.stl` or a small tool; add each to the build book's tests chapter.
+5. **The "as made" Monte Carlo with CNC tolerances** in `errorbudget.js`: hole positions ±13 µm (`gearing.json`), turned diameters ±5 µm; ask the user what their machine holds.
+6. **Carry the deviations into the physics tools:** `strength.js` and `tolerances.js` still judge the steel mainspring (add Nivaflex from `deviations.json`); `physics.js` A5 should report the Glucydur/Nivarox requirement beside the Model 21's.
+7. **Lower priority:** the arbors' own bending (`fea.py` takes them rigid; the fusee arbor carries up to 59 N); Archard wear on the fusee/centre mesh; the fusee chain's link-by-link ripple; oil friction with speed and temperature; the hairspring as a 3D helix with mass.
+8. **When the user brings measurements:** `benchcheck.py MEAS.json`, `rating.py LOG.csv`, `acoustic.py PATH`, `benchcheck.py --ring FILE`. Measured values replace their estimates (in `deviations.js`/`bench.js`, noted in the README's "Estimated, not from the manual"), then rebuild the report.
 
-   Measure the squares and seats on the model (`holes.py`, `isolate.py`) before drawing anything; CLAUDE.md requires every size to be measured first. Write STL with the existing STL writer (`MAKER.stl`, or a small Python tool), and add each jig to the build book's tests chapter.
-2. **Redo the "as made" Monte Carlo with CNC tolerances.** `errorbudget.js` section 1 uses a careful hand's tolerances. Add a CNC set: hole positions ±13 µm (`gearing.json`), turned diameters about ±5 µm, the adjusted escapement settings left as they are. Report how many escapements run and how many fall in the band before adjustment. Ask the user what their machine actually holds.
-3. **Carry the deviations into the physics tools.** `strength.js` and `tolerances.js` still judge the steel mainspring. Add the Nivaflex variant's line (E 220 GPa, strip 0.386 mm, strength over 3000 N/mm²), reading `deviations.json` rather than repeating its numbers. `physics.js` A5 should report the Glucydur/Nivarox requirement beside the Model 21's.
-4. **Open checks the analysis hasn't done yet:**
-   - **The box and gimbals under ship motion:** a modal analysis, and whether a gimbal resonance falls near the balance's 2 Hz.
-   - **The arbors' own bending:** `fea.py` treats arbors as rigid. The fusee arbor carries up to 59 N; take its profile from `movement.js` and treat it as a beam.
-   - **Tooth wear over years:** Archard wear on the fusee/centre mesh, which carries the highest load (strength.js says 187 MPa).
-5. **When the user brings measurements:**
-   - Run `benchcheck.py` on them and `rating.py` on their log, and `acoustic.py PATH` on a recording of the made movement.
-   - Feed measured values back in: the build's parts become the build's source of truth. Each measured value replaces its estimate in `deviations.js` or `bench.js`, gets a note in the README's "Estimated, not from the manual", and the report is rebuilt.
-6. **Release** `benchcheck.py` and whatever follows, when the user asks to deploy. Use `python build.py --release patch|minor -m "…" --site-url https://www.marinechronometermodel.com`, commit, merge, then `python deploy.py` from `main` and `git push origin main --follow-tags`. Suggest the release kind and lines; the user decides.
+## How to work
 
-## Simulation and nonlinear mechanics: what's next
-
-The existing tools rule out the obvious failures. What's left are the nonlinear, at-sea effects that decide whether a detent chronometer keeps a steady rate. In order of value:
-
-1. **The escapement under shock, with a flexible detent.** Done (12 October 2026): `tools/tripping.js`, the report's section 8. See "Tripping" below.
-2. **The box and gimbals in a seaway.** Done (12 October 2026): `tools/massprops.py` weighs the case and ring on the model (`gimbals.json`), `tools/gimbals.js` runs them in a seaway; the report's section 9. Levelled, the case swings in 0.72 s (the ring 0.68), far from a ship's roll and clear of the beat; in working seas (to NORDFORSK's 0.12 g) it stays within 0.3° of the apparent vertical and the rate moves 0.005 s a day; beyond, it meets its stops, about 0.15 ms a blow. The drawn pivots aren't levelled (the case would hang 35° out): a made one must be levelled by its brackets and straps (manual p. 13).
-3. **The mainspring's coil friction.** Done (12 October 2026): `tools/mainspring_friction.py`, the report's section 10. The coils take 3.4 % running (6.8 % hysteresis) over the fusee's turns; physics.js takes the spring's losses from it up to what mainsprings measure. The model's spring is fully wound 0.13 turn from coil-bound, where the friction climbs: the fusee's output at full wind is 78.5 % running and the swing falls under the band for the first hours; the set-up can't mend it, the spring needs half a turn of room (bench.js counts it). Next, re-solve mainspring.py for the build's Nivaflex 0.386 strip to see its room. Lesson: in packed coils, contact forces from the energy solver's multipliers or from differentiated rod equations are unreliable; the ring equations work.
-4. **Rate during temperature changes.** The thin hairspring warms faster than the balance rim, so even a well-compensated pair runs off-rate while the temperature is changing. Heat flow through box, movement, balance and spring over a ship's day-night cycle: the error a navigator actually carries, and how well the Glucydur/Nivarox pair copes.
-5. **Which estimates matter most.** Push every estimate (tooth form, friction, the springs' sections, materials, and now the detent's damping and the contacts' restitution) through the time-domain escapement and a voyage, ranked by their effect on the rate: which bench measurements to make first.
-
-Lower priority: the fusee chain's link-by-link pull ripple, oil friction that changes with speed and temperature, and the hairspring as a full 3D helix with its own mass. Each is a small effect on the rate.
-
-### Tripping (`tools/tripping.js`), what it found
-
-- The detent as a plane frame from the drawn pieces (37 beam elements; mass and inertia within 1 % of dynamics.js's). Made rigid and hinged at Ft, with the draw as a steady moment, it runs as dynamics.js does (swing 0.4°, rate 0.1 s a day, release, fall and landing within 0.1°) and is step-converged.
-- As drawn, the spring bends about its middle: the detent is 39 % stiffer at the stone than dynamics.js's hinge (first mode 137 Hz, not 112). Small effect on swing and rate.
-- **The margin is the depth of lock, not makeEsc's `lRel`.** makeEsc's recoil peaks where the tooth's tip reaches the flat's inner end (77 % of `lRel`); past it the tip rides the stone's rounded edge and its pressure pushes the stone *out*; the tip is free at 82 %. `lRel` keeps room to spare. An early version that held the tooth to `lRel` left the stone hovering on the edge and "tripped" with a blade half as stiff; that was the convention, not physics.
-- makeEsc's recoil table steps with the stone's sampled outline; differentiate it as a secant over 1 % of `lRel`, never point by point (the staircase made the wheel chatter and cost a spurious 1.1° of swing).
-- Contact dampers must be sized on the mass each contact meets locally (1/|r|² over the kept modes); sized on the whole detent's they made RK4 unstable on the light arm and trip spring. The stone's friction is smoothed below 1 mm/s for the same reason.
-- Results at the model's settings, the estimates varied, the swing pushed and the knocks: the report's section 8 (`assets/trip.json`).
-- On the bench (12 October 2026, `tripping.js --write` → `tripping.json` → `bench.js`): the lock's floor is the manual's 5° (the stone's chatter while held is 20-50 µm whatever the depth); the detent's ring, its foot clamped (137 Hz as drawn, 137-342 Hz for its spring 0.079-0.150 mm), measures the detent spring's section, the open question; `benchcheck.py --ring FILE` reads a recording. Against knocks the preload holds, not the lock. dynamics.js counts a second unlocking in a swing as a trip.
-- The largest lift is a maximum of chaotic chatter (two runs a hair apart differ by ten points): treat it as a margin. The rest solve's Newton can diverge where a contact switches inside its difference step; it now falls back to letting the detent settle.
+- **Every new check**: its own tool with a header (purpose, usage, run time, what it fails on); a line in CLAUDE.md's tool list and its time in the timing paragraph; a bullet in the model README's "Checked in time"; a report section (method, figures, tables, charts, sources, what it leaves out) fed through `assets/*.json` or a tool JSON read by `build_report.py`; a CI step (`ci.py`: quick if under ~20 s, else `full`). Render the report in light and dark (and at 390 px) and look at it before committing.
+- **Order before merging:** in the worktree, regenerate what you changed (`node bench.js --write` → `python makers.py` → `python build.py --site-url https://www.marinechronometermodel.com` → `python build_report.py`), run `python ci.py` (alone: browser checks under load fail), commit, push the branch, check `main`'s checkout is clean and in step with `origin`, then `git merge --no-ff` and push `main`. A bug fix gets a `RESOLVED.md` entry with its hash.
+- **Validate a new model against the old one first.** Every new simulation here was first made to reproduce the existing tool (frame rigid and hinged = `dynamics.js`; the gimbals' periods against the page's GIM) before its new physics was trusted. Keep doing that, and keep the check in the tool.
+- **Distrust results that change sharply with a tiny input change**: they were a solver failure every time this round (a Newton rest solve diverging; an augmented-Lagrangian multiplier dominated by its penalty; a sampled table's staircase).
+- **Contact forces:** penalty contacts need their dampers sized on the local mass (1/|r|² over the kept modes) and the step sized on every contact's frequency and damping rate (`tripping.js` model()). In packed spirals, forces from differentiated shapes or solver multipliers are unreliable; equilibrium (ring) equations work.
+- **Slip/kinematics:** follow material points, not fixed angles (a spiral's cumulative angle renumbers its coils between states).
+- **Sources:** material and seakeeping figures from cited sources (search when needed); say "estimated" where there is none, and list it in the report's limits.
+- **Shell pitfalls:** heredocs in the Bash tool collapse `\\` to `\` and turn `\n` into real newlines; write Python edit scripts with the Write tool into the scratchpad and run them, or use the Edit tool. The project's geometry hook fires on any command or file that merely mentions `escapement.js`/`movement.js`: if no part's shape changed, say so.
+- **Run times on this machine:** `tripping.js` ~6 min (`--quick` 10 s, `--write` 2 min), `gimbals.js` ~2½ min, `massprops.py` 30 s, `mainspring_friction.py` ~1 min, `ci.py` ~8 min. Give an ETA before each run (CLAUDE.md requires it).
 
 ## Estimates the report flags (replace them when sources or measurements arrive)
 
-- Tooth form: BS 978 Part 2. Tooth friction 0.10–0.20. Pivot shake 10 µm.
-- Brass E 97–110 GPa. Expansion: brass 18.7–20.9, steel 10.8–12.5 ×10⁻⁶/°C.
-- Glucydur figures taken as CuBe2's (C17200). Nivarox expansion 7–10 ×10⁻⁶/°C and modulus 165–195 GPa assumed.
-- Nivaflex's 3000 N/mm² is the aged figure its maker says can be reached.
-- The mainspring's thickness, and the detent and trip springs' sections, are still open (OPEN-QUESTIONS.md 1–2).
-- In `benchcheck.py`, the bands around the manual's "about" figures are estimates (bench.js's comment says so).
-
-## How to work (lessons from this session)
-
-- **Worktree:** reuse `claude/build-verify`. Before merging, run `git merge main` into it, then run `python ci.py` (about 7 min; `--full` after a geometry change). Merge only when it passes, always with `git merge --no-ff`, then push both branches. Check that the main checkout is clean and in step with origin before merging (other sessions release there too).
-- **Rebuilding:** use `python build.py --site-url https://www.marinechronometermodel.com`; a bare build drops robots.txt and the sitemap. After changing a tool the report uses, run `node reportdata.js`, then `fea.py --reuse --json` / `rating.py --demo --json` as needed, then `python build_report.py`. After changing a figure the cards use: `node bench.js --write` / `node deviations.js --write` / `node gearing.js --write`, then `python makers.py`, then the build.
-- **Editing files from the shell:** heredocs in this Bash tool collapse `\\` to `\`, which broke several Python edit scripts. Write edit scripts with the Write tool into the scratchpad, then run them. In sed, avoid writing `\n` inside JS strings.
-- **Watch for shadowed names in long functions:** in `fea.py`'s `main()`, a loop variable `a` hid `sys.argv`, so `--json` silently did nothing. Read options from `sys.argv` directly.
-- **Gear contact normals:** smoothing them made the results worse. The ±0.003 zigzag in the torque ratio is the outline's sampling, documented in `gearing.js`. Don't "fix" it without checking that the frictionless mean ratio stays at 1.000.
-- **gmsh can't mesh the page's solids:** their surfaces have self-overlapping facets, which is why `fea.py` uses voxels. pyamg, scikit-fem, gmsh, meshio and pypdf are installed.
-- **Charts:** follow the dataviz skill. The report uses the validated palette (blue, orange, aqua, yellow). Aqua and yellow are below 3:1 contrast on the light surface, so every chart has direct labels and a table. Render the page and look at it before committing.
-- **Sources:** never write a material figure or a manual criterion from memory. The Navy test's limits are in `app.js` `testCalc`; materials come from data sheets, cited in `deviations.js` and the report's sources.
+- Tooth form BS 978 Part 2; tooth friction 0.10–0.20; pivot shake 10 µm.
+- Brass E 97–110 GPa; expansion brass 18.7–20.9, steel 10.8–12.5 ×10⁻⁶/°C.
+- Glucydur as CuBe2 (C17200); Nivarox expansion 7–10 ×10⁻⁶/°C, modulus 165–195 GPa; Nivaflex's 3000 N/mm² is its maker's aged figure.
+- The mainspring's thickness and the detent and trip springs' sections are open (OPEN-QUESTIONS.md 1–2).
+- `tripping.js`: the contacts' restitution (0.3; 0 at the jewels) and the detent's damping (Q 100).
+- `gimbals.js`: the box's inside (stops 29.5°), the pivots' damping (ζ 0.05), the blows' stiffness and restitution, the box's place in the ship, small craft's motion; the balance's poise error (2 µm).
+- `mainspring_friction.py`: μ 0.10 (0.08–0.16); the ring equations take packed coils as round; the strip's edges on the barrel and the steel's own hysteresis are left out.
+- `benchcheck.py`: the bands around the manual's "about" figures.
