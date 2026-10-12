@@ -972,6 +972,14 @@ on what would stop the chronometer.
   the most stress is 13 MPa, at a voxel's corner on the barrel bridge, against
   brass's 300. The plates and bridges are many times stiffer than they need to
   be: the hole positions and the depthing are what the maker must hold.
+- **`tools/hairspring-fe.js`, the hairspring by another method.** The designed
+  spring (hairspring.js) solved again as 1,359 co-rotational beam elements
+  (Crisfield; the strip extensible, 0.221 mm thick), the stud clamped and the
+  collet turned to ±300° in steps by Newton's method, against the shooting
+  elastica it was designed with: the couple's departure from linear agrees to
+  4 in 10⁷, the force on the pivots at 270° (2.4 × 10⁻³ of couple / R) to two
+  figures, and the spring's own isochronism, 0.11 s a day over the manual's
+  band, to 0.002 s a day.
 
 ### Checked against real chronometers
 

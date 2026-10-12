@@ -1,7 +1,7 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, selfcontained, types, smoke, invariants, solids, exploded, book, audit
-    python ci.py --quick      # without the browser checks (about 50 s): build, escapement, almanac, hairspring, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, selfcontained, types
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, selfcontained, types, smoke, invariants, solids, exploded, book, audit
+    python ci.py --quick      # without the browser checks (about 50 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, selfcontained, types
     python ci.py --full       # and the slow checks (about 22 minutes more): dynamics.js in full, gearing.js in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
@@ -67,6 +67,7 @@ STEPS=[('build',build,'quick'),
  ('escapement',lambda log:run(['node',TOOLS/'escapement.js'],ROOT,log),'quick'),
  ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),
  ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),
+ ('hairspring-fe',lambda log:run(['node',TOOLS/'hairspring-fe.js'],ROOT,log),'quick'),   # the hairspring at large swings by co-rotational beam elements, against hairspring.js's elastica (about 20 s)
  ('physics',lambda log:run(['node',TOOLS/'physics.js'],ROOT,log),'quick'),
  ('tolerances',lambda log:run(['node',TOOLS/'tolerances.js'],ROOT,log),'quick'),   # how closely the springs the sources don't size must be made, and that the sheets say so (under a second)   # the energy budget, the escape wheel's chase, temperature from the materials (under a second)
  ('strength',lambda log:run(['node',TOOLS/'strength.js'],ROOT,log),'quick'),   # every loaded part against its material's range, and the knocks it takes (under a second)
