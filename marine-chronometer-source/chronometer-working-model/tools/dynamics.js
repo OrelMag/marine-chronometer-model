@@ -257,7 +257,7 @@ say('3. Starting, the least drive, knocks');
 {const A0=150,r=sim({mode:'phys',s:0,A:A0,T:60,from:50}),at=t=>{let i=r.ampT.findIndex(x=>x>=t);if(i<0)i=r.ampT.length-1;return r.amps.slice(Math.max(0,i-1),i+1).reduce((a,b)=>a+b,0)/Math.min(2,i+1)/D;};
   const m=t=>ESC.freeStep(A0*D,t)/D,ts=[5,10,20,30,45],dev=Math.max(...ts.map(t=>Math.abs(at(t)-m(t))));
   say(`run down from ${A0}° with the train held: ${ts.map(t=>`${t} s ${f(at(t),1)}° (model ${f(m(t),1)}°, viscous alone ${f(A0*Math.exp(-t/TF),1)}°)`).join(', ')}`);
-  chk(dev<2,`the held balance runs down as makeEsc's freeStep has it, within 2° (${f(dev,2)}°): the springs take ${f(ESC.EH,4)} k an oscillation down to ${f(ESC.AH/D,1)}°, the air and pivots the rest`);}
+  chk(dev<2,`the held balance runs down as makeEsc's freeStep has it, within 2° (${f(dev,2)}°): the springs take ${f(ESC.EHd(150*D),4)}-${f(ESC.EHd(ESC.AH+1e-3),4)} k an oscillation (the drawn detent leaving the jewel still moving; ${f(ESC.EH,4)} for a massless one) down to ${f(ESC.AH/D,1)}°, the air and pivots the rest`);}
 const pulse=(t1,dur,fn)=>tt=>{const u=(tt-t1)/dur;return u>0&&u<1?fn(Math.sin(Math.PI*u)):{al:0,ax:0,ay:0};};
 const base=sim({mode:'phys',A:215,T:4,from:3});
 const upset=r=>r.trips>0||Math.abs(r.beats-base.beats)>0;

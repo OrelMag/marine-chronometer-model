@@ -584,11 +584,12 @@ and `ESC.state(p, amp)` gives the escapement at that amplitude.
   stood, as a real one does. The balance keeps its own phase (`H.bph`) and runs
   down. With the train held it runs down free of the impulse (the air and pivots, 1/e in 68 s, `TAU_FREE`, from
   `ESC.settings.TF`, derived from the energy budget: "What the model gives a maker"), but while the swing still carries the discharge jewel back
-  past the trip spring's tip (above 40.2°) the jewel still bends the trip spring on the return and lifts the
-  detent on the next swing, and the wheel can't turn: the springs take `ESC.EH`, 0.033 of k
-  an oscillation (17 % of the air and pivots' loss at 255°, more than theirs below about 105°), so from
-  255° it comes down to 40.2° in 47 s, not 96 (`ESC.freeStep`, in closed form for any step; `tools/dynamics.js`
-  integrates the same run-down within 2°). Against the locking arm it stops at once, within a swing or two
+  past the trip spring's tip (above 40.6°) the jewel still bends the trip spring on the return and lifts the
+  detent on the next swing, and the wheel can't turn: the springs take `ESC.EHd`, 0.027 of k
+  an oscillation (19 % of the air and pivots' loss at 255°, more than theirs below about 109°: the drawn detent leaves the jewel still
+  moving and loses its springs' and its own kinetic energy there, about 9 % more than a massless one's 0.025, `ESC.EH`), so from
+  255° it comes down to 40.6° in 59 s, not 125 (`ESC.freeStep`, in closed form a second at a time; `tools/dynamics.js`
+  integrates the same run-down within 0.7°). Against the locking arm it stops at once, within a swing or two
   (`TAU_ARM`, 0.2 s). A smaller swing leaves the jewel on the near side of the tip: the
   trip spring stays bent against it and follows it back, and the detent stays on
   its stop (`ESC.state`).
@@ -755,9 +756,10 @@ every speed); the equation gives the amplitude and the rate.
   hairspring's stiffness, a swing gains that work and loses πA²/Q. So A²
   relaxes to `ESC.ampAt(s)²` as exp(−2t/TF), exactly for a steady torque.
   `ampStep` steps it so, at any speed. A² settles as exp(−2t/TF), 34 s.
-  Free, with no impulse (the train held), d(A²)/dt = −2A²/TF − 2·EH/T while the swing still
-  passes the trip spring (the detent's and trip spring's work, `ESC.EH`, lost as each flies
-  back), −2A²/TF below it: `ESC.freeStep`, exact for any step. Until 11 October 2026 it fell as
+  Free, with no impulse (the train held), d(A²)/dt = −2A²/TF − 2·EHd(A)/T while the swing still
+  passes the trip spring (the detent's and trip spring's work, `ESC.EHd`, lost as each flies
+  back: the detent's from where it leaves the jewel, `depart`, its springs' energy and its own kinetic energy), −2A²/TF below it:
+  `ESC.freeStep`, in closed form a second at a time. Until 11 October 2026 it fell as
   exp(−t/TF) at every swing.
 - **The drive** (`driveNow` in `app.js`). Running, the mainspring through the
   fusee: `R.fs.torque`, 1 at 12 h from full wind, the middle of a day's
@@ -893,9 +895,9 @@ on what would stop the chronometer.
     swing in about a minute and a half (93.5 s; the averaged model 124 s); the least drive that keeps it going is about 12 % of
     the calibrated torque, the balance swinging about 41° (makeEsc: 13 %, at its `AMIN`, 40.6°).
   - *Run down with the train held* (no torque): from 150°, 117.4° after 10 s and 85.0° after 20
-    (makeEsc's `freeStep` 117.8° and 86.3°; the air and pivots alone would leave 129.5° and 111.8°). Near the swing where the springs stop taking their share
-    (40.6°) the integration runs down about 1 s ahead of `freeStep`, which leaves out the detent's own inertia and bounce: 48.8° against 51.6° at 30 s (with `TF` 68 s;
-    up to 2.5° at 28 s with 52 s): dynamics.js's check, within 2° at 5, 10, 20, 30 and 45 s, fails there (open, 12 October 2026).
+    (makeEsc's `freeStep` 117.1° and 84.7°; the air and pivots alone would leave 129.5° and 111.8°), 48.8° after 30 s (48.4°): within 0.7° at 5, 10, 20, 30 and 45 s
+    (dynamics.js's check, within 2°). Until 12 October 2026 `freeStep` took a massless detent's loss (`ESC.EH`, the springs' energy where the jewel releases it), and ran
+    2.8° behind the integration at 30 s: the drawn detent (2.67 g·mm²) leaves the jewel earlier, still moving, and loses about 9 % more (`ESC.EHd`).
   - *Knocks and the sea.* A twist about the staff upsets the beat at about
     29 rad/s in 2 ms (it gains a beat); a blow across the plate frees the wheel
     at about 55 g over 3 ms, 140 g over 0.5 ms (the detent isn't poised about

@@ -252,13 +252,18 @@ function makeEsc(o={}){
   if(CL){const ok=a=>{const im=impulse(1,a,CL.w);return!!im&&im.end!==null&&im.end<a;};let a=AMIN;if(!ok(a)){let lo=a;while(a<TAU&&!ok(a)){lo=a;a+=0.25*D2R;}for(let i=0;i<30;i++){const m=(lo+a)/2;ok(m)?a=m:lo=m;}}AMIN=a;}
   /* the train held (run down, or the dog point holding it), the balance swinging free: no impulse and no draw (no torque on the stone), but a swing that carries the discharge
      jewel back past the trip spring (AH, -thPass) still bends the trip spring on the return and lifts the detent on the next swing, EH of its energy an oscillation (units of k),
-     lost as each flies back. freeStep(a, dt): the swing dt seconds on, A² falling as d(A²)/dt = -2A²/TF - 2EH/T above AH and -2A²/TF below it, in closed form for any step
+     lost as each flies back. freeStep(a, dt): the swing dt seconds on, A² falling as d(A²)/dt = -2A²/TF - 2EHd(A)/T above AH and -2A²/TF below it, in closed form for any step
      (app.js's ampStep; until 11 October 2026 the viscous part alone, exp(-t/TF) at every swing, where the springs take more than the air and pivots below
      about 105 deg: from 255 deg it reaches AH in 47 s, not 96) */
-  const EH=EDp+EDk+ETp,AH=thPass===null?Infinity:-thPass;
-  const freeStep=(a,dt)=>{if(!(dt>0)||!(a>0))return a;let u=a*a;const h=AH*AH,cc=EH*c.TF/T;
-    if(u>h&&EH>0){const tx=c.TF/2*Math.log((u+cc)/(h+cc));if(dt<=tx)return Math.sqrt(Math.max(0,(u+cc)*Math.exp(-2*dt/c.TF)-cc));dt-=tx;u=h;}
-    return Math.sqrt(u*Math.exp(-2*dt/c.TF));};
+  /* EHd(a): what the springs take an oscillation at swing a. A massless detent rides the jewel down to its release and loses the springs' energy there (EDp + EDk); the drawn
+     detent leaves the jewel earlier, where its end runs away faster than the detent can follow (depart), still moving, and loses its springs' energy and its own kinetic
+     energy at that point (preload MP d0 + KD d0²/2 + ID v0²/2), about 9 % more at every swing from 45 to 150 deg (12 October 2026: with the massless account, the held
+     run-down ran 2.8 deg behind tools/dynamics.js's integration of the drawn detent at 30 s) */
+  const EH=EDp+EDk+ETp,AH=thPass===null?Infinity:-thPass,EHd=a=>{const d=a>AH?depart(a):null;return d?ETp+MP*d.d0+KD*d.d0*d.d0/2+IDk*d.v0*d.v0/2:EH;};
+  const freeStep=(a,dt)=>{if(!(dt>0)||!(a>0))return a;let u=a*a;const h=AH*AH;
+    while(u>h&&dt>0){const eh=EHd(Math.sqrt(u));if(!(eh>0))break;const cc=eh*c.TF/T,st=Math.min(dt,1),tx=c.TF/2*Math.log((u+cc)/(h+cc));   /* 1 s steps, each in closed form at its swing's EHd */
+      if(st<tx){u=Math.max(h,(u+cc)*Math.exp(-2*st/c.TF)-cc);dt-=st;}else{dt-=tx;u=h;}}
+    return dt>0?Math.sqrt(u*Math.exp(-2*dt/c.TF)):Math.sqrt(u);};
   if(run.A>0&&run.A<AMIN){run.rate=NaN;run.own=NaN;}
   if(CL&&run.A>0){const im=impulse(1,run.A,CL.w);if(im)Object.assign(run,{Q,Wi:im.E,fu:(CL.w*ER+EDp+EDk+ETp)/im.E,land:im.land,end:im.end,drive:im.turn,strike:im.strike/im.E,detent:(EDp+EDk)/im.E,vw:im.vw,vj:im.vj});}
   const A=run.A;
@@ -310,6 +315,6 @@ function makeEsc(o={}){
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
   const wn=(s,a)=>CL?wnK(s,a,CL.w):-Infinity;   /* the work an oscillation nets the balance at drive s and swing a (units of k): tools/physics.js's budget */
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,AH,freeStep,lockA};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};
