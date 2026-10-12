@@ -85,6 +85,7 @@
   "trainBridge:Extrude | barrelBridge:Extrude | --23.76": 2,
   "trainBridge:Extrude | cock:Buffer | +-23.76": 1,
   "trainBridge:Extrude | cock:Cylinder | --23.76": 2,
+  "trainBridge:Extrude | escBridge:Extrude | --23.46": 2,
   "trainBridge:Extrude | lowerBridge:Extrude | --20.66": 2,
   "trainBridge:Extrude | trainBridge:Lathe | +-20.66": 2,
   "trainBridge:Extrude | trainBridge:Lathe | --23.76": 2,

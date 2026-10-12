@@ -5,8 +5,8 @@
 Measured, taken as they stand in L (the model README, "How the layout was measured"; IDEAS.md 1.11, 1.12): the centre arbor C; the fourth F, under the
 seconds hand (manual p. 15); the third T (KLUwI2UUCMQ 13:49.5); the balance B, the fusee Fu and the barrel Ba (the photographed group, placed by one
 similarity on the measured balance cap, fusee and barrel). Solved:
-  - the escape arbor E: 9.40 mm from the balance (the impulse roller's 0.249 in clears the teeth by 0.002 in either side, roller shake, Op. 84) and the
-    fourth's mesh distance from the fourth, on the side L has it; compared with L.E;
+  - the escape arbor E: 9.40 mm from the balance (the impulse roller's 0.249 in clears the teeth by 0.002 in either side, roller shake, Op. 84) and FE from
+    the fourth, the distance its measured place gives (KLUwI2UUCMQ, the bare plate), on the side L has it; compared with L.E;
   - each stage's module, m = 2 d / (z1 + z2), the centre distance over the teeth (movement.js MOD does the same); the wheels' tips at m (z/2 + 1.15)
     (BS 978 Part 2's proportions, README "Estimated");
   - clearances, in plan: no arbor that runs up from the plate through the wheels' levels (r 1 mm with its boss) within a wheel's tips it doesn't mesh
@@ -19,7 +19,7 @@ def obj(name):   # a one-line JS object literal of numbers and [x, z] pairs, as 
     s=re.search(r'^const '+name+r'=(\{.*?\});',SRC,re.M).group(1)
     return eval(re.sub(r'([{,])(\w+):',r'\1"\2":',s))
 L,TR=obj('L'),obj('TRAIN')
-EB=9.40;FE=11.107   # the escapement's centre distance; the fourth to the escape arbor (KLUwI2UUCMQ: the escape jewel from above, 10:00, put 9.40 from the balance, and the fourth at 21.6; 10.585 until 2 October 2026)
+EB=9.40;FE=10.444   # the escapement's centre distance; the fourth to the escape arbor: the escape arbor's lower setting on the bare plate (KLUwI2UUCMQ 34:30, 14:45, 13:52.0, 40:08: its direction from the balance, the mean of the four; movement.js L), the fourth at 21.6 (11.107 until 12 October 2026, toward the escape jewel seen from above at 10:00; 10.585 until 2 October 2026)
 d=lambda a,b:math.hypot(a[0]-b[0],a[1]-b[1])
 def circ(p,q,r1,r2,near):   # the intersection of circles r1 about p and r2 about q nearer `near`
     D=d(p,q);a=(r1*r1-r2*r2+D*D)/(2*D);h=math.sqrt(max(0,r1*r1-a*a));ex,ez=(q[0]-p[0])/D,(q[1]-p[1])/D;mx,mz=p[0]+a*ex,p[1]+a*ez

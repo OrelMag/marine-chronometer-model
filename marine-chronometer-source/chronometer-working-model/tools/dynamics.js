@@ -26,7 +26,7 @@ const TF=ESC.settings.TF,C=2*I/TF;   /* the balance's damping, viscous, from the
 const JE=num(/const J=([\d.e-]+);/,phys,'the escape wheel\'s inertia (physics.js)');
 /* the fourth wheel turns with the escape wheel through its pinion (the drive keeps the mesh closed), so its inertia counts, reflected by (10/75)²: a brass
    disc of the drawn module, teeth and thickness, 0.7 of it left by the spokes (estimated); the third wheel, reflected again by (10/80)², is negligible */
-const TR=Function('return '+/TRAIN=(\{[^}]*\})/.exec(mv)[1])(),M4=0.2614,r4=M4*TR.fw/2/1000,J4=0.7*0.5*8500*Math.PI*r4**4*0.9e-3,JT=JE+J4*(TR.ep/TR.fw)**2;
+const TR=Function('return '+/TRAIN=(\{[^}]*\})/.exec(mv)[1])(),M4=0.2457,r4=M4*TR.fw/2/1000,J4=0.7*0.5*8500*Math.PI*r4**4*0.9e-3,JT=JE+J4*(TR.ep/TR.fw)**2;
 const TAUE=ESC.run.cl.w*K;   /* the escape wheel's torque the model is calibrated at (255°): physics.js's budget checks the train gives it */
 /* the detent: its pieces as movement.js draws them (poly(R.det, piece, bottom, top, material)), their plan ESC.pieces about the point of flexure Ft;
    beryllium copper (C17200, 8.25 g/cm³), the locking stone ruby (3.98), the trip spring Elinvar-type (8.15) 7.9 mm long, tsT thick and 0.3 deep (movement.js) */

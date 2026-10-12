@@ -20,7 +20,7 @@ function makeEsc(o={}){
      measured pivots and teeth, less the mainspring's own losses) and inside the decay the balance's parts allow (the same, 32-62 s); 34 until 11 October 2026, when the
      escapement's work still left out the wheel's chase and the detent's whole lift (tools/dynamics.js). MU: steel on sapphire. EX: the centre distance (9.40 mm; the model passes the one in its L).
      The bodies and springs, physical rather than fitted (since 11 October 2026; fD and fP, their shares of the work, were fitted before): I, the balance (g·mm², Table II);
-     JW, the escape wheel and arbor (4.80 g·mm², its drawn solid: tools/physics.js) with the fourth wheel's inertia reflected through its pinion (about 1.4, estimated: tools/dynamics.js);
+     JW, the escape wheel and arbor (4.80 g·mm², its drawn solid: tools/physics.js) with the fourth wheel's inertia reflected through its pinion (about 1.1, estimated: tools/dynamics.js; 6.2 with 1.4 until 12 October 2026, the fourth larger at the escape arbor's old place);
      W78, Op. 78's weight (g): hung on the locking jewel it just parts the detent spring from its stop button, so that is the spring's preload; hD, the detent spring's two
      strips' height together (mm: 0.50 + 0.45 as movement.js draws them, estimated) and EB its modulus (GPa, hardened beryllium copper); tsH, the trip spring's depth (mm,
      estimated) and ET its modulus (GPa, Elinvar-type). ID: the detent's moment of inertia about its flexure (g·mm², its drawn pieces with the trip spring: tools/dynamics.js
@@ -34,7 +34,7 @@ function makeEsc(o={}){
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
   const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.29,rd:0.3,rDR:0.22,wI:0.06,wD:0.048,rnd:1,dL:0.017,DRAW:10,aI:181.3,aD:271,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:52,MU:0.15,
-    I:578.5,JW:6.2,W78:0.770,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
+    I:578.5,JW:5.9,W78:0.770,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
