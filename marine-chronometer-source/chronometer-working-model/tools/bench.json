@@ -1,0 +1,78 @@
+{
+ "note": "tools/bench.js: the tests on the bench (the build book's chapter) and the line each tests (its card); read by makers.py",
+ "tests": [
+  {
+   "id": "mainspring",
+   "title": "The mainspring's torque",
+   "no": "42038",
+   "when": "before it goes into the barrel, and again in the barrel",
+   "how": "Hold the barrel and turn its arbor with a lever and weights or a torque gauge: a 3D-printed lever 50 mm long and a hanging weight do (1 kg at 50 mm is 0.49 N·m). Wind it up from let down by its set-up and read the torque each half turn over the 4.51 turns the fusee uses, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again.",
+   "pass": "Fully wound 0.74-0.86 N·m (the model's 0.78; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 84 mN·m a turn, to about 0.40 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13)."
+  },
+  {
+   "id": "fusee",
+   "title": "The fusee evens the pull",
+   "no": "42015",
+   "when": "the chain on, the barrel set up, before the train goes in",
+   "how": "With the fusee wheel's arbor on a torque gauge (or the same lever on its square), read the torque each half turn of the fusee, from fully wound (the chain on the fusee's top turn) to run down, 17.5 half turns.",
+   "pass": "Every reading within -5 to +11 % of their mean (the model's even 311 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope."
+  },
+  {
+   "id": "depths",
+   "title": "The train's depths",
+   "no": "42068",
+   "when": "the plates and bridges bored, before the jewels and bushes go in",
+   "how": "Measure each pair of holes' centres with gauge pins in them and a micrometer (or on a measuring machine), on the plate and on the bridge. Then the arbors in, each mesh tried in turn, the escape wheel held: feel the shake at the pinion and watch the teeth through a loupe as the wheel is turned slowly.",
+   "pass": "Centres 20.383, 16.550, 11.297, 10.444 mm (fusee-centre, centre-third, third-fourth, fourth-escape), each within ±13 µm (tools/gearing.js: the wheel's tips stay off the pinion's root with the pivots' shake taken off). Every mesh turns smoothly with shake at its pinion; none butts or catches. A hole that errs should err wide: each mesh takes several times as much wide as close."
+  },
+  {
+   "id": "endshake",
+   "title": "Endshake",
+   "no": "42071",
+   "when": "each arbor in its bearings, before the escapement goes in",
+   "how": "Lift each arbor by its wheel with tweezers and watch the shoulder against a dial indicator, or feel it.",
+   "pass": "28-73 µm at 20 °C (Ops. 15, 69 and 74's 0.001-0.003 in, less what the brass takes from it at 40 °F and gives at 100 °F: tools/thermal.js)."
+  },
+  {
+   "id": "balance",
+   "title": "The balance and its hairspring vibrated",
+   "no": "42188",
+   "when": "the hairspring pinned to its collet and stud, the balance on its staff",
+   "how": "Vibrate the balance with its spring in a vibrating tool (or the cock on a holder) against a master or a phone's timer: count the oscillations over two minutes, or record the beat (python acoustic.py FILE reads a recording).",
+   "pass": "2 oscillations a second (7,200 an hour): Table II's balance (578.5 g·mm²) wants a spring of 91.4 µN·m a radian. Within 40 s a day of it (one turn of the timing weights, Sec. IX) before the spring goes in; the weights take up the rest."
+  },
+  {
+   "id": "escapement",
+   "title": "The escapement's figures",
+   "no": "42087",
+   "when": "the detent, its springs and the balance in; the train's power let down to the set-up",
+   "how": "Turn the balance slowly by hand with a protractor on the cock (a printed card under the balance does) and read each angle where the manual's operations read it, through a loupe; the roller's shake and the horn's clearance with feeler gauges.",
+   "pass": "The manual's figures: lock about 6° (the model 5.5°, Op. 85), let-off at least 6° (8.7°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.0°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78's weight, 0.770 g on the locking jewel."
+  },
+  {
+   "id": "swing",
+   "title": "The swing",
+   "no": "42178",
+   "when": "the movement running, fully wound and again run down",
+   "how": "Read the balance's swing by eye against marks on the cock, from a phone's slow-motion video (the screws' sweep), or from a recording of the beat (python acoustic.py FILE fits the escapement's clicks to the model in time).",
+   "pass": "1⅜-1½ turns, 247.5-270° each way, fully wound and run down alike (Sec. II, Sec. IX). Low at both ends: the train's freedom or the depths; low at one end only: the fusee and the spring (the fusee test); high: the mainspring is too strong for its band."
+  },
+  {
+   "id": "rate",
+   "title": "The rate, and the Navy's test",
+   "no": null,
+   "when": "the movement in its box, cased and in its gimbals",
+   "how": "Each day at the same hour compare it with a time signal (radio, GPS, or a network time service read on a phone) to the tenth of a second, and keep the log: python rating.py LOG.csv works the daily rates, the Navy test's figures and what it would carry at sea. For temperature, keep it a week each at about 55, 72½ and 90 °F (a wine cooler, a room, a box with a lamp and a thermostat), as the Navy test does.",
+   "pass": "Good enough to navigate by: its daily rate steady, whatever it is, the navigator carrying it. The Navy's test (Sec. IX, the working model's thirty-day test card) is the yardstick: regulation, the largest mean daily rate of any period, within 1.55 s a day; rating, the mean deviation of the daily rates, 0.50; the largest difference between two daily rates in a period 0.75; the mean rates at 90 and 72½, 72½ and 55, and 90 and 55 °F within 0.75, 0.75 and 1.20; recovery 0.70; isochronism, the 12-hour rate against half the 24-hour, 0.50. Then rating.py's voyage: what it would carry after 30 days, 4 s of time a mile of longitude on the equator."
+  }
+ ],
+ "lines": {
+  "42015": "The fusee evens the pull, the chain on, the barrel set up, before the train goes in: Every reading within -5 to +11 % of their mean (the model's even 311 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope.",
+  "42038": "The mainspring's torque, before it goes into the barrel, and again in the barrel: Fully wound 0.74-0.86 N·m (the model's 0.78; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 84 mN·m a turn, to about 0.40 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13).",
+  "42068": "The train's depths, the plates and bridges bored, before the jewels and bushes go in: Centres 20.383, 16.550, 11.297, 10.444 mm (fusee-centre, centre-third, third-fourth, fourth-escape), each within ±13 µm (tools/gearing.js: the wheel's tips stay off the pinion's root with the pivots' shake taken off). Every mesh turns smoothly with shake at its pinion; none butts or catches. A hole that errs should err wide: each mesh takes several times as much wide as close.",
+  "42071": "Endshake, each arbor in its bearings, before the escapement goes in: 28-73 µm at 20 °C (Ops. 15, 69 and 74's 0.001-0.003 in, less what the brass takes from it at 40 °F and gives at 100 °F: tools/thermal.js).",
+  "42087": "The escapement's figures, the detent, its springs and the balance in; the train's power let down to the set-up: The manual's figures: lock about 6° (the model 5.5°, Op. 85), let-off at least 6° (8.7°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.0°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78's weight, 0.770 g on the locking jewel.",
+  "42178": "The swing, the movement running, fully wound and again run down: 1⅜-1½ turns, 247.5-270° each way, fully wound and run down alike (Sec. II, Sec. IX). Low at both ends: the train's freedom or the depths; low at one end only: the fusee and the spring (the fusee test); high: the mainspring is too strong for its band.",
+  "42188": "The balance and its hairspring vibrated, the hairspring pinned to its collet and stud, the balance on its staff: 2 oscillations a second (7,200 an hour): Table II's balance (578.5 g·mm²) wants a spring of 91.4 µN·m a radian. Within 40 s a day of it (one turn of the timing weights, Sec. IX) before the spring goes in; the weights take up the rest."
+ }
+}

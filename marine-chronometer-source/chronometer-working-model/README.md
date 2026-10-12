@@ -980,6 +980,19 @@ on what would stop the chronometer.
   4 in 10⁷, the force on the pivots at 270° (2.4 × 10⁻³ of couple / R) to two
   figures, and the spring's own isochronism, 0.11 s a day over the manual's
   band, to 0.002 s a day.
+- **`tools/bench.js` and `tools/rating.py`, a made chronometer tested.** The
+  analysis can't say a chronometer made to the model keeps time; the bench
+  can. bench.js writes the tests (the build book's last chapter, and each on
+  its part's sheet) with what each must read from the model's own figures: the
+  mainspring 0.74–0.86 N·m fully wound (tolerances.js), the fusee's torque
+  within −5 to +11 % at every half turn (the swing's band through `ampAt`), the
+  centres to ±13 µm (gearing.js), endshake 28–73 µm at 20 °C (thermal.js), the
+  balance 7,200 an hour, the escapement's and the swing's figures (the
+  manual's), and the Navy's test. rating.py works the maker's log of daily
+  comparisons with a time signal as the test card does, fits its rate against
+  time and temperature, backtests a ten-day rate carried on, and projects what
+  a navigator would be out after 10, 30 and 60 days; acoustic.py takes a
+  recording of the made movement for its swing.
 
 ### Checked against real chronometers
 

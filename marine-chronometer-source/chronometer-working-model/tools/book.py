@@ -2,7 +2,8 @@
 print at A4's printable width (190 mm) and checks each part's section as a maker would use it, the page alone in hand:
 
   - the sheet: its parts-list lines, each with a material and a fit (not blank), the overall size, the source of its shape;
-  - every line with a tolerance (tools/tolerances.js) shows it on its sheet;
+  - every line with a tolerance (tools/tolerances.js) shows it on its sheet, and every line with a test on the bench (tools/bench.js) its test; the
+    chapter of those tests (the book's last, section.tests: text, not a part) has every one;
   - every line of the parts list on a part of the model (the movement's and the box's) on some sheet; a part with pieces is an assembly page (its card and drawing, no sheet),
     its lines on its pieces' sheets;
   - the drawing: printed at a stated scale (its title says "scale N:1" or "1:N", and the print matches it within 1 %: max-width must not shrink it), no
@@ -17,7 +18,7 @@ from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent;PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 PX=96/25.4;COL=190;PAGE_H=277
 JS=r"""()=>{MAKER.book();document.documentElement.classList.add('book-print');const out=[];
-  for(const s of document.querySelectorAll('#bookPrint section.bk')){const h=s.querySelector('h2').textContent,svg=s.querySelector('svg.mkd'),r={name:h,asm:s.classList.contains('asm'),lines:[],asBuilt:/As built: /.test(s.textContent),src:(s.textContent.match(/Source of its shape: ([^.]*)/)||[])[1]||''};
+  for(const s of document.querySelectorAll('#bookPrint section.bk:not(.tests)')){const h=s.querySelector('h2').textContent,svg=s.querySelector('svg.mkd'),r={name:h,asm:s.classList.contains('asm'),lines:[],asBuilt:/As built: /.test(s.textContent),src:(s.textContent.match(/Source of its shape: ([^.]*)/)||[])[1]||''};
     for(const tr of s.querySelectorAll('table.mk:first-of-type tbody tr')){const td=[...tr.children].map(x=>x.textContent.trim());r.lines.push(td);}
     if(svg){const b=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal,wmm=parseFloat(svg.getAttribute('width')),k=b.width/vb.width;   /* px a unit as laid out */
       const fs=[...svg.querySelectorAll('text')].map(t=>parseFloat(t.getAttribute('font-size'))||0).filter(x=>x>0),sw=[...svg.querySelectorAll('g[stroke-width]')].map(g=>parseFloat(g.getAttribute('stroke-width')));
@@ -26,7 +27,7 @@ JS=r"""()=>{MAKER.book();document.documentElement.classList.add('book-print');co
   /* the lines on the model (the parts' cards': MAKERS' part), and each part that has meshes: every one must be on a sheet in the book */
   const onModel=new Set(Object.keys(window.__parts).filter(p=>window.__mv&&(()=>{let n=0;let root=window.__mv;while(root.parent)root=root.parent;root.traverse(o=>{if(o.isMesh&&o.userData.part===p)n++;});return n;})()));
   const txt=document.getElementById('bookPrint').textContent;
-  return {sec:out,lines:MAKERS.filter(l=>l.part&&onModel.has(l.part)).map(l=>[l.no,l.name,l.part]),tol:MAKERS.filter(l=>l.tol).map(l=>[l.no,l.name,txt.includes('Tolerance ('+l.no+').')])};}"""
+  return {sec:out,lines:MAKERS.filter(l=>l.part&&onModel.has(l.part)).map(l=>[l.no,l.name,l.part]),tol:MAKERS.filter(l=>l.tol).map(l=>[l.no,l.name,txt.includes('Tolerance ('+l.no+').')]),tests:[document.querySelectorAll('#bookPrint section.tests h3').length,(MAKERS.tests||[]).length],bench:MAKERS.filter(l=>l.bench).map(l=>[l.no,l.name,txt.includes('Test on the bench ('+l.no+').')])};}"""
 async def main():
     pdf=sys.argv[sys.argv.index('--pdf')+1] if '--pdf' in sys.argv else None
     async with async_playwright() as p:
@@ -41,6 +42,9 @@ async def main():
         if no not in printed:say(name,f'line {no} ({part}) is on no sheet of the book')
     for no,name,shown in R['tol']:   # a line the sources don't size (tools/tolerances.js): its sheet says how closely to make it
         if not shown:say(name,f'line {no}: its tolerance is on no sheet of the book')
+    for no,name,shown in R['bench']:   # a line with a test on the bench (tools/bench.js): its sheet says so
+        if not shown:say(name,f'line {no}: its test on the bench is on no sheet of the book')
+    if R['tests'][0]!=R['tests'][1] or not R['tests'][1]:say('Tests on the bench',f"the chapter has {R['tests'][0]} tests of tools/bench.json's {R['tests'][1]}")
     for r in S:
         n=r['name']
         if not r['asm']:   # an assembly (a part with pieces) has its card and its drawing as assembled; its lines are on its pieces' sheets
