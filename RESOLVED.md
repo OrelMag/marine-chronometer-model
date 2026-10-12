@@ -2213,6 +2213,13 @@ An arbor needs pivots and shoulders; a stone its seat.
   instead of 0.025 to the endstone. Now it always takes the 3,000 vertices
   furthest along each way, and a sample of the rest. Keep: a clearance along an
   axis is measured from the extreme vertices along it. `746f25a`
+- **`OPEN-QUESTIONS.md` carried a merge's conflict markers.** Merging `main`
+  into `claude/ratchets` (`0fdbb46`) left both sides of its last section in the
+  file between `<<<<<<<` and `>>>>>>>`, released with 2.23.00 and 2.24.00: the
+  set-up ratchet's older reading (a 5° lean) beside its newer one (0.48 mm
+  teeth, undercut faces), with the winding-pawl springs' section inside the
+  conflict. Kept main's set-up ratchet and the springs' section. Keep: after a
+  merge, `git grep -n '^<<<<<<<\|^>>>>>>>'` finds nothing before committing.
 
 ## Essay
 
