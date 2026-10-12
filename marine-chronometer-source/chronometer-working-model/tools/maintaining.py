@@ -58,7 +58,8 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
      if(prev.w&&!w&&!jump){const sh=prev.sr,fc=sh+R.WPH+FPR.p*Math.ceil((prev.fz-sh-R.WPH)/FPR.p-1e-9),want=fc+Math.max(0,gA-dq-sh)-prev.fz,got=fz-prev.fz;   /* the catch: gap to the pawls, then the reload */
        catches.push(got);if(got<-1e-9)fail('catch',`${at}: fusee turned back ${(-got*D).toFixed(2)} deg when the key let go`);
        if(Math.abs(got-want)>2e-4)fail('catch',`${at}: the catch turned the fusee ${(got*D).toFixed(3)} deg, the gap and reload ${(want*D).toFixed(3)}`);
-       const fore=prev.rel*TAU+(gA-prev.gA);if(Math.abs(got-fore)>2e-4)fail('catch',`${at}: R.release foretold ${(prev.rel*360).toFixed(3)} deg and the train turned ${((gA-prev.gA)*D).toFixed(3)}, the catch took ${(got*D).toFixed(3)}`);}   /* the frame's own running turns the fusee too */
+       const nR=prev.n+prev.rel,qR=SMAX*Math.max(-0.25,Math.min(1,1-(nR>=FUSEE_TURNS?0:R.drvN(nR)))),rl=g=>Math.max(0,g-qR-sh),fore=prev.rel*TAU+rl(gA)-rl(prev.gA);   /* the frame's own running turns the fusee too, by what it adds to the reload at the drive R.release took (where the catch leaves the fusee): none while the spring is still held, part of it as the reload starts (the train's whole turn added, until 12 October 2026, failed a catch the reload began in) */
+       if(Math.abs(got-fore)>2e-4)fail('catch',`${at}: R.release foretold ${(prev.rel*360).toFixed(3)} deg and the frame's running reloaded ${((rl(gA)-rl(prev.gA))*D).toFixed(3)}, the catch took ${(got*D).toFixed(3)}`);}
    }
    if(!w&&!cur.held&&Math.abs(d-dq)>1e-6)fail('load',`${at}: spring relaxed ${(d*D).toFixed(3)} deg in running, where the drive puts it ${(dq*D).toFixed(3)}`);
    if((w||cur.held)&&prev&&(prev.w||prev.held)&&!/slider|set/.test(tag)&&d<prev.gA-prev.sr-1e-9)fail('load',`${at}: spring loaded again while ${w?'winding':'held'}`);

@@ -514,6 +514,15 @@ Contents:
 
 ## Winding and maintaining work
 
+- **Stop-bar spring hooked into the bar from below, top turn 0.34 mm high, slot cut deeper than the bar's band.** Read again on
+  KLUwI2UUCMQ: the spring's end goes sideways into a hole in the bar's inner side face (25:14-25:17) and its fixed end down into a
+  tapped hole in the recess floor (the "balls" of 20:01.23 are the holes); the step is on the bar's underside, 0.52 of its length
+  from the chain end; the chain end's lower face is level with the band under the top plate and with the top of the chain's links
+  on the top turn (37:22-37:26), so the band is as deep as the chain end, its slot's floor flat, and the top turn lower. Drawn so,
+  the recess r 5.1 with a floor plate carrying the two holes, the wire 0.30. The groove's start moved 0.34 lower (`yS`, `cT`), the
+  top plate where the collar puts it (`cap` 0.98). Keep: the slot's floor flat, the band as deep as the chain end; the bar's top
+  face whole (it is built in bands down from its top). `c5eefb5`
+
 - **Stop-bar and winding stop drawn from estimates: the stud in the wrong place and too small, the bar too narrow, square-ended, on
   the wrong side, pushed by a nose no source shows.** Measured on KLUwI2UUCMQ (OPEN-QUESTIONS.md, model README "Estimated"): the
   stud 2.3 across and 5.5 long with three grooves across its end, its base 11.6 mm from the fusee's axis, about 108 deg round from
@@ -2421,3 +2430,9 @@ An arbor needs pivots and shoulders; a stone its seat.
   the median step), which had bent the smoothed pull over the whole wind on the Nivaflex strip packed the same way.
   Keep: the solver's pitch is what the videos measure; a thickness read off a pitch is the pitch less a film, and the
   film is the solver's only to add when a source gives one.
+- **`maintaining.py` foretold a catch wrong where the spring's reload begins.** It checked `R.release` by adding the
+  frame's whole running to the catch it foretold, but the reload is `max(0, …)`: with the spring held as the key lets go
+  and the train's running starting the reload within the frame, only part of it adds (frame 212 at full wind: foretold
+  2.351 + 0.039, took 2.371, the reload 0.020). The packed-at-the-pitch spring's drive (0.993 of the 12-hour drive fully
+  wound) put a catch there. It now adds what the running adds to the reload at the drive `R.release` took. Keep: a
+  check's own arithmetic follows the kinks of what it checks.
