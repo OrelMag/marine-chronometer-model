@@ -1050,6 +1050,23 @@ on what would stop the chronometer.
   a measure of the spring's section no source gives: bench.js's test
   "The detent rings", benchcheck.py `--ring`. dynamics.js now counts a second
   unlocking in one swing as a trip (it was booked as a beat).
+- **`tools/gimbals.js` and `tools/massprops.py`, the box and gimbals in a
+  seaway.** The case with the movement weighs 1,669 g on the model (every solid
+  at its material's density) and the gimbal ring 140 g; as drawn the case's
+  centre of gravity lies 11.2 mm under its pivots and 7.8 mm to one side, so
+  the drawn pivots aren't levelled (it would hang 35° out of level), and the
+  manual levels a chronometer by its case brackets and straps (p. 13), as the
+  analysis does. Levelled, the case swings in 0.72 s on its pivots and 0.68 s
+  with the ring (the page's estimate, 0.7 s, holds), far from a ship's roll
+  (10-30 s) and 35 % clear of the balance's 0.5 s beat, which can't set it
+  swinging (a balance 2 µm out of poise moves it a fraction of a second of
+  arc). In a merchant ship's seas, up to NORDFORSK's operability limit (0.12 g
+  athwartships), the case leans up to 10° from the true vertical but stays
+  within 0.3° of the apparent, never reaches its stops (29.5° as drawn), and
+  the rate moves 0.005 s a day. Beyond it (a small vessel's quick roll, a
+  storm) the case swings onto its stops; each blow nudges the balance's phase
+  by about 0.15 ms, a few tenths of a second a day while it lasts, and passes
+  on under 1 g to the escapement, against the 61 g that trips it.
 - **The report**, `verification/build-verification/index.html` (open the
   file; `build_report.py` rebuilds it): the process, figures, sources and
   scripts of these checks, the earlier ones' output beside them.
