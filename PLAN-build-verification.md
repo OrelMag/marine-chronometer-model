@@ -60,6 +60,27 @@ For the Model 21 itself, the source of truth is unchanged: the manual, photograp
    - Feed measured values back in: the build's parts become the build's source of truth. Each measured value replaces its estimate in `deviations.js` or `bench.js`, gets a note in the README's "Estimated, not from the manual", and the report is rebuilt.
 6. **Release** `benchcheck.py` and whatever follows, when the user asks to deploy. Use `python build.py --release patch|minor -m "…" --site-url https://www.marinechronometermodel.com`, commit, merge, then `python deploy.py` from `main` and `git push origin main --follow-tags`. Suggest the release kind and lines; the user decides.
 
+## Simulation and nonlinear mechanics: what's next
+
+The existing tools rule out the obvious failures. What's left are the nonlinear, at-sea effects that decide whether a detent chronometer keeps a steady rate. In order of value:
+
+1. **The escapement under shock, with a flexible detent.** Done (12 October 2026): `tools/tripping.js`, the report's section 8. See "Tripping" below.
+2. **The box and gimbals in a seaway.** The current check assumes the gimbals keep the balance staff upright. A real gimbal swings like a pendulum and can resonate with a ship's 8–15 s roll. Drive the gimbals with ship-motion spectra, using the gimbals' real masses from `box.js`. Output: how far the movement tilts and what accelerations reach the escapement, to feed `tripping.js`'s `ext`.
+3. **The mainspring's coil friction.** `mainspring.py` finds the spring's resting shape but leaves out the coils rubbing on each other. With friction and contact added: the winding-against-unwinding hysteresis (now an assumed 5–15 %) and the torque curve the fusee must even out. It replaces the biggest assumed number in the energy budget and checks benchcheck.py's set-up advice.
+4. **Rate during temperature changes.** The thin hairspring warms faster than the balance rim, so even a well-compensated pair runs off-rate while the temperature is changing. Heat flow through box, movement, balance and spring over a ship's day-night cycle: the error a navigator actually carries, and how well the Glucydur/Nivarox pair copes.
+5. **Which estimates matter most.** Push every estimate (tooth form, friction, the springs' sections, materials, and now the detent's damping and the contacts' restitution) through the time-domain escapement and a voyage, ranked by their effect on the rate: which bench measurements to make first.
+
+Lower priority: the fusee chain's link-by-link pull ripple, oil friction that changes with speed and temperature, and the hairspring as a full 3D helix with its own mass. Each is a small effect on the rate.
+
+### Tripping (`tools/tripping.js`), what it found
+
+- The detent as a plane frame from the drawn pieces (37 beam elements; mass and inertia within 1 % of dynamics.js's). Made rigid and hinged at Ft, with the draw as a steady moment, it runs as dynamics.js does (swing 0.4°, rate 0.1 s a day, release, fall and landing within 0.1°) and is step-converged.
+- As drawn, the spring bends about its middle: the detent is 39 % stiffer at the stone than dynamics.js's hinge (first mode 137 Hz, not 112). Small effect on swing and rate.
+- **The margin is the depth of lock, not makeEsc's `lRel`.** makeEsc's recoil peaks where the tooth's tip reaches the flat's inner end (77 % of `lRel`); past it the tip rides the stone's rounded edge and its pressure pushes the stone *out*; the tip is free at 82 %. `lRel` keeps room to spare. An early version that held the tooth to `lRel` left the stone hovering on the edge and "tripped" with a blade half as stiff; that was the convention, not physics.
+- makeEsc's recoil table steps with the stone's sampled outline; differentiate it as a secant over 1 % of `lRel`, never point by point (the staircase made the wheel chatter and cost a spurious 1.1° of swing).
+- Contact dampers must be sized on the mass each contact meets locally (1/|r|² over the kept modes); sized on the whole detent's they made RK4 unstable on the light arm and trip spring. The stone's friction is smoothed below 1 mm/s for the same reason.
+- Results at the model's settings, the estimates varied, the swing pushed and the knocks: the report's section 8 (`assets/trip.json`).
+
 ## Estimates the report flags (replace them when sources or measurements arrive)
 
 - Tooth form: BS 978 Part 2. Tooth friction 0.10–0.20. Pivot shake 10 µm.
