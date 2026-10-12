@@ -3,6 +3,7 @@ from the model's own solved shapes. No browser; torch (CPU), numpy, scipy.
 
     python mainspring_friction.py              # about 3 minutes (14 processes); writes mainspring_friction.json here, read by physics.js and benchcheck.py
     python mainspring_friction.py --check      # the same, exit 1 if mainspring_friction.json is not what it finds
+    python mainspring_friction.py --variants [--check]   # each variant mainspring.py --bound has solved (mainspring_bound.json), about a minute each
     python mainspring_friction.py --nivaflex [--check]   # (or MC_MS_T=0.386 MC_MS_E=220) a variant strip (the build's Nivaflex: mainspring.py's variant, mainspring_t0.386.js),
                                                # into mainspring_friction_t0.386.json: the fusee's rule sets it up, its full wind and run down found here
 
@@ -29,7 +30,7 @@ HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent;sys.path.insert(0,st
 import mainspring as MS
 E_ST=MS.E_GPA*1e3;B=13.55;EI=E_ST*B*MS.t**3/12   # N·mm²: carbon steel (physics.js), the strip 13.55 × 0.394; or a variant's (MC_MS_T, MC_MS_E)
 MUS=[0.08,0.10,0.16];MU0=0.10
-OUT=HERE/('mainspring_friction.json' if not MS.VAR else f'mainspring_friction_t{MS.VAR}.json')
+OUT=HERE/('mainspring_friction.json' if not MS.VAR else f'mainspring_friction_{MS.VAR}.json')
 # the fusee as the page builds it (movement.js makeFusee: R.fs.MS.Tup and Tdown, the spring's turns fully wound and run down; and at n fusee turns from full wind, the
 # barrel's turns Ib(n) and the fusee wheel's torque(n) against fully wound, from the solved spring without friction). tools/invariants.py holds them to the page
 TUP,TDOWN=18.8694,14.26024
@@ -169,14 +170,28 @@ def main():
         q,o,e=shifted(d,MU0);SH.append([round(float(d),2),round(float(o),4),round(float(e),4)])
     best=min(SH,key=lambda x:(x[1],x[2]));q0,o0,_=shifted(0,MU0)
     SU=dict(rows=SH,best=best,now=[0,round(float(o0),4)],band=band,hours=round(o0*56,1))
-    BD=json.loads((HERE/'mainspring_bound.json').read_text(encoding='utf-8')).get(f'{MS.t}') if (HERE/'mainspring_bound.json').exists() else None   # coil-bound (mainspring.py --bound)
-    summary=dict(setup=SU,Tup=TUP,Tdown=TDOWN,t=MS.t,E=MS.E_GPA,T0=T0,bound=BD and BD['bound'],room=BD and round(BD['bound']-TUP,4),loss={str(mu):round(over(mu),4) for mu in MUS},hyst={str(mu):round(2*over(mu),4) for mu in MUS},
+    BD=json.loads((HERE/'mainspring_bound.json').read_text(encoding='utf-8')).get(MS.VAR or 'model') if (HERE/'mainspring_bound.json').exists() else None   # coil-bound (mainspring.py --bound)
+    summary=dict(setup=SU,Tup=TUP,Tdown=TDOWN,t=MS.t,gap=MS.gap,L=MS.L,ra=MS.ra,E=MS.E_GPA,T0=T0,bound=BD and BD['bound'],room=BD and round(BD['bound']-TUP,4),loss={str(mu):round(over(mu),4) for mu in MUS},hyst={str(mu):round(2*over(mu),4) for mu in MUS},
       fusee=dict(frictionless=FUSEE,running=run,even0=round(ev([q[2] for q in FUSEE]),4),even={str(mu):round(ev([q[2] for q in run[str(mu)]]),4) for mu in MUS},
         top={str(mu):round(1-fr(mu,TUP),4) for mu in MUS}))
     return dict(summary=summary,note='tools/mainspring_friction.py: the mainspring\'s coil friction from the model\'s solved states (mainspring.js): T the turns from the inner end, M0 the frictionless torque (N·m), dM the friction\'s torque (N·m) at each mu, added winding and taken away running; parts: coil on coil, on the wall, on the core at mu 0.10',
                 T0=T0,EI=EI,mus=MUS,rows=rows)
+def variants():
+    """--variants: this tool once a variant in mainspring_bound.json (the strips mainspring.py --bound has solved: the build's Nivaflex and the sources'
+    proportions), each in its own process with its strip set; exit 1 if any fails"""
+    import subprocess,os
+    D=json.loads((HERE/'mainspring_bound.json').read_text(encoding='utf-8'));rc=0
+    for k,v in sorted(D.items()):
+        if k=='model':continue
+        env=dict(os.environ,MC_MS_TAG=k,MC_MS_T=f"{v['t']}",MC_MS_GAP=f"{v.get('gap',0.01)}",MC_MS_L=f"{v['L']}",MC_MS_RA=f"{v['ra']}",MC_MS_E=f"{v['E']:g}")
+        print(f'== {k}: the strip {v["t"]} x {v["L"]:.0f} mm on r {v["ra"]}',flush=True)
+        r=subprocess.run([sys.executable,__file__]+[a for a in sys.argv[1:] if a!='--variants'],env=env,cwd=HERE,capture_output=True,text=True,encoding='utf-8')
+        print('\n'.join(r.stdout.strip().splitlines()[-4:]),flush=True);rc=rc or r.returncode
+    sys.exit(rc)
 if __name__=='__main__':
-    sys.stdout.reconfigure(encoding='utf-8');d=main()
+    sys.stdout.reconfigure(encoding='utf-8')
+    if '--variants' in sys.argv:variants()
+    d=main()
     for r_ in d['rows']:
         h={mu:2*r_['dM'][str(mu)]/r_['M0'] if r_['M0']>0 else float('nan') for mu in MUS}
         print(f"T {r_['T']:6.3f}  M0 {r_['M0']*1000:7.1f} mN·m  friction {r_['dM']['0.1']*1000:6.2f} mN·m at 0.10 (coil {r_['parts']['cc']*1000:5.2f}, wall {r_['parts']['wall']*1000:5.2f}, core {r_['parts']['core']*1000:5.2f})  winding against running {100*h[0.1]:5.1f} % ({100*h[0.08]:.1f}-{100*h[0.16]:.1f})")
@@ -186,5 +201,5 @@ if __name__=='__main__':
     U=S_['setup'];print(f"set up as the page sets it, {100*U['now'][1]:.0f} % of the wind (about {U['hours']} of its 56 hours) drives outside the bench's band; set up {U['best'][0]:+.2f} turns, {100*U['best'][1]:.0f} % (even to {100*U['best'][2]:.1f} %)")
     txt=json.dumps(d,indent=1)+'\n'
     if '--check' in sys.argv:
-        ok=OUT.exists() and OUT.read_text(encoding='utf-8')==txt;print('  ok  mainspring_friction.json is up to date' if ok else '  !!  mainspring_friction.json is not what this finds: python mainspring_friction.py');sys.exit(0 if ok else 1)
+        ok=OUT.exists() and OUT.read_text(encoding='utf-8')==txt;print(f'  ok  {OUT.name} is up to date' if ok else f'  !!  {OUT.name} is not what this finds: python mainspring_friction.py');sys.exit(0 if ok else 1)
     OUT.write_text(txt,encoding='utf-8',newline='\n');print('wrote tools/'+OUT.name)

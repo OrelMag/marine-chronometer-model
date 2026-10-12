@@ -1084,7 +1084,14 @@ on what would stop the chronometer.
   mainspring test counts it). The build's Nivaflex strip, 0.386 mm
   (`--nivaflex`: solved by mainspring.py beside the model's spring, set up by
   the page's fusee rule), has 0.59 turn: 90.5 % fully wound, the swing from
-  241°, in the band within about an hour (the report's section 10).
+  241°, in the band within about an hour (the report's section 10). The
+  sources' proportions solved in the model's barrel (variants:
+  `MC_MS_T`/`_L`/`_RA`/`_GAP`/`_TAG`, `mainspring_friction.py --variants`):
+  the model packs its coils at 1/40.3 of the inside radius, coarser than the
+  videos' 1/41.0-1/43.7 (their pitch taken as the bare strip and a 0.01 film
+  added); packed at the videos' pitch it has 0.60 turn, but on the core's
+  mean reading (r 5.2) 0.20, and in the British Museum's proportions 0.30
+  (OPEN-QUESTIONS.md 1).
 - **The report**, `verification/build-verification/index.html` (open the
   file; `build_report.py` rebuilds it): the process, figures, sources and
   scripts of these checks, the earlier ones' output beside them.
