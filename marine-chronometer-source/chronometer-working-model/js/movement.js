@@ -960,16 +960,18 @@ function buildMovement(M){
   const roll=hn(mesh(R.staff,rollG(),M.steel,0,EY-0.07,0),'42263');
   /* the jewels as placed for ESC (again by escSet): the impulse jewel, the wheel centred on it, showing above and below (Op. 82); the discharge jewel on its roller */
   /* a jewel along the radius at ang from r0 to r1, w wide, h tall. d: the impulse jewel's section, flat on its impulse face (the -angle side, which the teeth drive) and
-     curved on its back ("curved side of the jewel toward the operator", Sec. VII roller jewelling), thinning to 0.45 w at its ends; d 'round': a flat plate whose
-     outer end is stoned to a half round (the discharge jewel, ESC.settings.rnd: square, its end would hold the springs' tips past the manual's overall, Op. 87); else a flat plate */
+     curved on its back ("curved side of the jewel toward the operator", Sec. VII roller jewelling), thinning to 0.45 w at its ends; d {rB}: a flat plate whose
+     outer end is square at its acting face (shape y -w/2: the unit frame's +m, leading on the active swing) and stoned to a radius rB at its back (the discharge jewel,
+     ESC.settings.rB: "a jewel with a radius to the back of the acting part of the tip", the British Museum's Model 21, cat. 117A; the acting corner sharp at KLUwI2UUCMQ
+     6:58.17-6:58.33; a half round, both corners, until 12 October 2026); else a flat plate */
   const palSet=(q,ang,r0,r1,w,h,d)=>{if(q.geometry)q.geometry.dispose();
-    if(d==='round'){const sh=new THREE.Shape();sh.moveTo(r0,w/2);sh.lineTo(r1-w/2,w/2);sh.absarc(r1-w/2,0,w/2,Math.PI/2,-Math.PI/2,true);sh.lineTo(r0,-w/2);sh.closePath();
+    if(d&&typeof d==='object'){const sh=new THREE.Shape(),b=Math.min(d.rB,w/2);sh.moveTo(r0,w/2);sh.lineTo(r1-b,w/2);if(b>0)sh.absarc(r1-b,w/2-b,b,Math.PI/2,0,true);sh.lineTo(r1,-w/2);sh.lineTo(r0,-w/2);sh.closePath();
       const g=extrude(sh,{depth:h,bevelEnabled:false,curveSegments:12});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);q.geometry=g;q.position.x=0;q.position.z=0;}
     else if(d){const sh=new THREE.Shape(),zE=-w/2+0.45*w;sh.moveTo(r0,w/2);sh.lineTo(r1,w/2);sh.lineTo(r1,-zE);sh.quadraticCurveTo((r0+r1)/2,-(w-zE),r0,-zE);sh.closePath();   /* shape y = -local z */
       const g=extrude(sh,{depth:h,bevelEnabled:false,curveSegments:12});g.rotateX(-Math.PI/2);g.translate(0,-h/2,0);q.geometry=g;q.position.x=0;q.position.z=0;}
     else{q.geometry=new THREE.BoxGeometry(r1-r0,h,w);q.position.x=(r0+r1)/2*Math.cos(ang);q.position.z=(r0+r1)/2*Math.sin(ang);}
     q.rotation.y=-ang;return q;};
-  const palI=()=>[E.aIc,rR-0.9,E.rp*ES,E.wI*ES,RIT,true],palD=()=>[E.aD,E.rDR*ES-0.4,E.rd*ES,E.wD*ES,0.7,E.settings.rnd?'round':false];
+  const palI=()=>[E.aIc,rR-0.9,E.rp*ES,E.wI*ES,RIT,true],palD=()=>[E.aD,E.rDR*ES-0.4,E.rd*ES,E.wD*ES,0.7,{rB:E.settings.rB*ES}];
   const pI=hn(palSet(mesh(R.staff,new THREE.BufferGeometry(),M.ruby,0,EY-0.09,0),...palI()),'286');
   /* unlocking roller (42252, Fig. 64): a collar on the staff, its jewel in a slot along it (the jewel's width), and a wider slot opposite; turned on the staff to set the drop (Op. 97) */
   /* the unlocking roller as a staff out of its balance shows it, side-on against the light (KLUwI2UUCMQ 34:09.26, 158.5 px/mm by the impulse roller's 1,003 px; 6:50.0 and 7:08 agree

@@ -7,7 +7,7 @@
    Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (13.16/2 mm). Layout after the manual's Fig. 90 plan view. The detent's
    lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with the passing spring's tip, and the
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
-/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rnd?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number}} EscSettings
+/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number}} EscSettings
     any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
 /** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean}} EscState
     state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1; a
@@ -25,15 +25,18 @@ function makeEsc(o={}){
      strips' height together (mm: 0.50 + 0.45 as movement.js draws them, estimated) and EB its modulus (GPa, hardened beryllium copper); tsH, the trip spring's depth (mm,
      estimated) and ET its modulus (GPa, Elinvar-type). ID: the detent's moment of inertia about its flexure (g·mm², its drawn pieces with the trip spring: tools/dynamics.js
      works it out from movement.js and checks this), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
-     rnd: the discharge jewel's end stoned to a half round (1) or left square (0): square, it holds the springs' tips across its
-     whole width and overall comes to about 38° against Op. 87's 26-30° (tools/dynamics.js), so the jewel's end is taken as rounded, as stoned jewels' ends are (estimated).
+     rB: the radius stoned on the back corner of the discharge jewel's end (unit frame), its acting corner left square: "set with a jewel with a radius to the back of
+     the acting part of the tip" (the British Museum's Model 21, Catalogue of Watches VI, 1990, no. 117A), and KLUwI2UUCMQ 6:58.17-6:58.33 shows the acting face flat to
+     a sharp corner. 0 is a square end, wD/2 (the most) the back half of a half round. The radius isn't given: 0.01 (0.066 mm) is the least that brings overall within
+     Op. 87's 26-30° (29.7°) with rd at 0.296, where the jewel stands 0.50 mm proud of its roller (the frames: 0.4-0.5); estimated. Until 12 October 2026 the end was a
+     half round (rnd), both corners, and rd 0.300 and aD 271
      HS: the hairspring's own isochronism, s a day gained for each 10 deg the swing is above A (0: isochronous, the model's default; the adjuster's bench sets it).
      rRoll: impulse roller O.D. 0.249 in (parts list); rp: the impulse jewel ends flush with it, so a tooth reaches the jewel by dipping into the crescent (Ops. 76, 83).
-     rT: passing-spring tip; rd: discharge jewel reach; dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
+     rT: passing-spring tip; rd: discharge jewel reach (its grown outline's; the frames at 6:58 put the jewel 0.4-0.5 mm proud of its roller); dL: depth of lock; aI, aD: impulse and discharge jewels at rest. These set lock, let-off, overall and drop (Ops. 85-87, 97) */
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.29,rd:0.3,rDR:0.22,wI:0.06,wD:0.048,rnd:1,dL:0.017,DRAW:10,aI:181.3,aD:271,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:52,MU:0.15,
+  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.29,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.01,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:52,MU:0.15,
     I:578.5,JW:6.2,W78:0.770,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
@@ -55,18 +58,20 @@ function makeEsc(o={}){
   /* lift at which the whole stone clears the tooth tips' path (with 0.02 mm to spare) */
   const clear=l=>Math.min(...stone.map(q=>{const r=rot(q,l);return Math.hypot(r.x-EX,r.y);}))>1+0.003;
   let lo=0,hi=0.3;for(let i=0;i<40;i++){const m=(lo+hi)/2;clear(m)?hi=m:lo=m;}const lRel=hi;
-  /* contact tables over the balance angle, from the shapes. The discharge jewel is a slab wD thick from the staff out to its reach, its end a half round (rnd 1) or
-     square; the passing spring's tip is a disc rho round, moving along a line: along nH as the detent lifts (the horn backs the spring), along -nB as the trip spring bends.
-     Where that line runs through the jewel (grown by the tip's radius), the jewel holds the tip at the run's far end. Active swing (th rising): the jewel's face pushes
+  /* contact tables over the balance angle, from the shapes. The discharge jewel is a slab wD thick from the staff out to its reach, its end square at the acting
+     face (+m, leading on the active swing) and rounded rB at its back (-m); the passing spring's tip is a disc rho round, moving along a line: along nH as the detent lifts (the horn backs the spring), along -nB as the trip spring bends.
+     Where that line runs through the jewel (grown by the tip's radius: its corners rounded rho and rB + rho), the jewel holds the tip at the run's far end. Active swing (th rising): the jewel's face pushes
      the tip, and with it the detent, the tip sliding along the face and round the jewel's end until it comes clear; the detent then falls back to its stop. Return swing
      (th falling): the jewel bends the trip spring the same way, the detent staying on its stop, until the tip comes clear. Until 11 October 2026 the end was square and the
-     detent was let fall over 1.5° once the tip slid off the face, through the jewel's end; tools/dynamics.js checks these tables beat by beat */
-  const TH0=-70*D2R,DT=0.02*D2R,NTB=5001,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho,wJ=wD/2+rho,cR=c.rnd?wJ:0;
+     detent was let fall over 1.5° once the tip slid off the face, through the jewel's end, and until 12 October 2026 a half round; tools/dynamics.js checks these tables beat by beat */
+  const TH0=-70*D2R,DT=0.02*D2R,NTB=5001,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho,wJ=wD/2+rho,cA=rho,cB=Math.min(c.rB+rho,wJ);
   /* the run (s1, s2) of the line Pt + s dir inside the jewel at balance angle th, or null */
   const span=(th,dir)=>{const u={x:Math.cos(aD+th),y:Math.sin(aD+th)},m={x:-u.y,y:u.x},pm=Pt.x*m.x+Pt.y*m.y,dm=dir.x*m.x+dir.y*m.y,pu=Pt.x*u.x+Pt.y*u.y,du=dir.x*u.x+dir.y*u.y;
-    let lo=-Infinity,hi=Infinity;const cut=(p,d,a,b)=>{if(Math.abs(d)<1e-12){if(p<=a||p>=b){lo=1;hi=0;}return;}let x=(a-p)/d,y=(b-p)/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);};
-    cut(pm,dm,-wJ,wJ);cut(pu,du,0,reach-cR);/** @type {number[]|null} */let r=lo<hi?[lo,hi]:null;
-    if(cR>0){const cx=Pt.x-(reach-cR)*u.x,cy=Pt.y-(reach-cR)*u.y,b=cx*dir.x+cy*dir.y,q=b*b-(cx*cx+cy*cy-cR*cR);if(q>0){const s0=-b-Math.sqrt(q),s1=-b+Math.sqrt(q);r=r?[Math.min(r[0],s0),Math.max(r[1],s1)]:[s0,s1];}}
+    /** @type {number[]|null} */let r=null;const add=(a,b)=>{if(a<b)r=r?[Math.min(r[0],a),Math.max(r[1],b)]:[a,b];};
+    const box=(m0,m1,u1)=>{let lo=-Infinity,hi=Infinity;const cut=(p,d,a,b)=>{if(Math.abs(d)<1e-12){if(p<=a||p>=b){lo=1;hi=0;}return;}let x=(a-p)/d,y=(b-p)/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);};
+      if(m0<m1){cut(pm,dm,m0,m1);cut(pu,du,0,u1);add(lo,hi);}};
+    const disc=(cu,cm,R)=>{const cx=Pt.x-cu*u.x-cm*m.x,cy=Pt.y-cu*u.y-cm*m.y,b=cx*dir.x+cy*dir.y,q=b*b-(cx*cx+cy*cy-R*R);if(q>0)add(-b-Math.sqrt(q),-b+Math.sqrt(q));};
+    box(-wJ+cB,wJ-cA,reach);box(-wJ,-wJ+cB,reach-cB);box(wJ-cA,wJ,reach-cA);disc(reach-cB,-wJ+cB,cB);disc(reach-cA,wJ-cA,cA);   /* the grown outline as boxes and its corners' discs: convex, so the run is their runs' hull */
     return r;};
   /* the tip held at the run's far end while the jewel is round it, from where the run first takes in the tip's rest to where the jewel has passed it; T: the travel */
   const scan=(T,dir,i0,di)=>{let s=0,on=false,done=false,iOff=null;for(let i=i0;i>=0&&i<NTB;i+=di){const r=done?null:span(TH0+i*DT,dir);
@@ -220,7 +225,9 @@ function makeEsc(o={}){
   const depart=amp=>{const k=Math.round(amp*1e5);let r=depM.get(k);if(r!==undefined)return r;r=null;
     if(iOff!==null&&amp>-thOff)for(let i=Math.max(1,iPk);i<iOff;i++){const th=TH0+i*DT,w=W0*Math.sqrt(Math.max(0,amp*amp-th*th)),last=i+1>=iOff,
       l1=last?(LI[i]-LI[i-1])/DT:(LI[i+1]-LI[i-1])/(2*DT),l2=last?-Infinity:(LI[i+1]-2*LI[i]+LI[i-1])/(DT*DT);
-      if((l2*w*w-l1*W0*W0*th)/LEN<-(MP+KD*LI[i]/LEN)/IDk){const p=Math.acos(-th/amp)/TAU,d0=LI[i]/LEN,v0=l1*w/LEN;r={p,d0,v0,th,land:-amp*Math.cos(TAU*(p+fall1(d0,v0)/T))};break;}}
+      if((l2*w*w-l1*W0*W0*th)/LEN<-(MP+KD*LI[i]/LEN)/IDk){const p=Math.acos(-th/amp)/TAU,d0=LI[i]/LEN,v0=l1*w/LEN,a0=Math.acos(-th/amp);
+        let j=i+1;for(;j<iOff;j++){const t=(Math.acos(Math.max(-1,Math.min(1,-(TH0+j*DT)/amp)))-a0)/W0;if(t<fall1(d0,v0)&&fallD(d0,v0,t)*LEN<LI[j])break;}   /* off the acting corner, it falls back onto the jewel's end: carried on from there */
+        if(j<iOff){i=j-1;continue;}r={p,d0,v0,th,land:-amp*Math.cos(TAU*(p+fall1(d0,v0)/T))};break;}}
     if(depM.size>4000)depM.clear();depM.set(k,r);return r;};
   /* the detent's angle t s after it leaves the jewel at d0, v0; fall1: the time it takes to reach its stop */
   const fall1=(d0,v0)=>(Math.atan2(v0/wDt,d0+eD)+Math.acos(Math.min(1,eD/Math.hypot(d0+eD,v0/wDt))))/wDt;

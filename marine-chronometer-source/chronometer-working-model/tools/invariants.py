@@ -61,11 +61,12 @@ JS="""(()=>{const mv=window.__mv,R=mv.userData.R,TAU=Math.PI*2,D=Math.PI/180;
   /* moving a pair along the rim keeps the moment of inertia (the rate at the mean temperature); the standard set is back after */
   R.screws(R.screwStd.map((p,i)=>i?p:{...p,n:7}));chk('a pair moved from hole 3 to 7: moment of inertia unchanged',R.timing(0,0),I0,1e-9,'g mm2');R.screws(R.screwStd);
   /* the escapement's running amplitude and rate (makeEsc, the adjuster's bench): exactly 255 deg and 0 s a day at the model's settings; away from them Airy's signs: the impulse
-     jewel set on (aI 184) ends the impulse sooner after the dead point and gains, set back (aI 178) loses; a deeper lock (dL 0.03, 0.20 mm) takes more from the balance before it and loses
-     (the figures since the escapement took up the wheel's chase and the springs' own work, 11 October 2026: tools/dynamics.js) */
+     jewel set on (aI 184) ends the impulse sooner after the dead point and gains, set back (aI 178) loses; a deeper lock (dL 0.025, 0.165 mm) takes more from the balance before it and loses
+     (the figures since the escapement took up the wheel's chase and the springs' own work, 11 October 2026: tools/dynamics.js; dL 0.03 until 12 October 2026, when the discharge
+     jewel's acting corner became square: past about 0.18 mm of lock the jewel no longer lifts the detent far enough to free the wheel) */
   const es=o=>makeEsc({EX:ESC.EX,...o});chk("escapement: running amplitude at the model's settings",ESC.A/D,255,1e-9,'deg');chk("escapement: rate at the model's settings",ESC.run.rate,0,0,'s/day');
   chk('escapement: impulse jewel at 184 deg gains',es({aI:184}).run.rate,0.5,0.35,'s/day');chk('escapement: impulse jewel at 178 deg loses',es({aI:178}).run.rate,-0.5,0.35,'s/day');
-  const dl=es({dL:0.03});chk('escapement: deeper lock (0.20 mm, from 0.11) swings less',dl.A/D,237,5,'deg');chk('escapement: deeper lock loses',dl.run.rate,-2.7,1.5,'s/day');
+  const dl=es({dL:0.025});chk('escapement: deeper lock (0.165 mm, from 0.11) swings less',dl.A/D,246,5,'deg');chk('escapement: deeper lock loses',dl.run.rate,-1.25,0.75,'s/day');
   /* the balance's dynamics (makeEsc ampAt, rateAt): the torque the escapement is calibrated at gives its 255 deg and rate 0; free, it decays as exp(-t/TF), a quarter of
      its swing stays after TF ln 4; the manual's 1 3/8 to 1 1/2 turns take a torque within the fusee's residual of it; a smaller swing loses (the escapement's isochronism) */
   chk('dynamics: the calibrated torque swings the balance 255 deg',ESC.ampAt(1)/D,255,1e-9,'deg');chk('dynamics: and its rate there',ESC.rateAt(ESC.A,1),0,1e-12,'s/day');
