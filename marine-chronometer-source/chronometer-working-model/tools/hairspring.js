@@ -55,8 +55,9 @@ if(outer&&inner){const P=HSPR.path(R,inner,outer,N),L=P.L;
     const lin=HSPR.period(ths,ths.map(t=>t),255*D).ratio,eps=1e-4,duf=HSPR.period(ths,ths.map(t=>t+eps*t**3),255*D).ratio,dufW=1/(1+3*eps*(255*D)**2/8);
     chk(Math.abs(lin-1)<1e-9&&Math.abs(duf/dufW-1)<2e-6,`the period's integration: a linear spring ${(lin-1).toExponential(0)} from 1; a Duffing spring ${duf.toFixed(7)} against ${dufW.toFixed(7)}`);
     const Ts=big.map(q=>q.T),th=big.map(q=>q.th),rate=a=>86400*(1/HSPR.period(th,Ts,a*D).ratio-1),r1=rate(247.5),r2=rate(270),r0=rate(255),iso=r2-r1,slope=iso/22.5*10,lb=at(270).F*R/Math.abs(at(270).T);
+    Object.assign(module.exports,{P,big,R,k,rate,rates:{r1,r0,r2,iso},lb});   /* for hairspring-fe.js, the check by another method */
     say(`       the rate against small swings: 247.5° ${r1>=0?'+':''}${r1.toFixed(3)}, 255° ${r0>=0?'+':''}${r0.toFixed(3)}, 270° ${r2>=0?'+':''}${r2.toFixed(3)} s a day: the spring gains ${iso.toFixed(2)} s a day from 1 3/8 to 1 1/2 turns, ${slope>=0?'+':''}${slope.toFixed(2)} for each 10° (the model's HS, taken as 0: the spring as adjusted)`);
     /* the essay quotes these (spans data-hs="…" in index.html, "The hairspring, designed" under What the model gives a maker) */
     const want={iso:iso.toFixed(2),slope:(slope>=0?'+':'−')+Math.abs(slope).toFixed(2),latBig:lb.toExponential(1),stiff:(Math.round(1/(at(270).T/(270*D*k0)-1)/1000)*1000).toLocaleString('en-US')},html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};
     for(const m of html.matchAll(/data-hs="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];for(const[k,v]of Object.entries(want))chk(got[k]===v,`the essay quotes ${k} as ${got[k]??'(missing)'}: found ${v}`); }}
-console.log(rows.join('\n'));if(fail)process.exitCode=1;
+if(require.main===module){console.log(rows.join('\n'));if(fail)process.exitCode=1;}
