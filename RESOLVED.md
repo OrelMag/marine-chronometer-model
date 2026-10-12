@@ -521,7 +521,7 @@ Contents:
   The stud now ends at −20.60, 0.20 mm over the nose, still covering 0.375 of the bar's 0.45 mm. Found by sweeping the fusee
   from full wind to run down every 0.001 turn; `tools/maintaining.py` now does so (every 0.002 turn) and fails on any pass of the
   bar, nose or tab within 0.1 mm of the stud. Keep: what passes the winding stop clears it by more than the fusee's widest
-  endshake. (this commit)
+  endshake. `ba2bd04`
 
 - **The chain counted its links afresh every frame.** `setWind` laid as many whole pitches as fit along the pitch line, a
   polyline sampled in 0.01-turn steps whose length is constant only to its sampling; with the measured mainspring core (12 October
