@@ -55,6 +55,7 @@ def secs(s): m, x = s.split(':'); return int(m) * 60 + float(x)
 def ffmpeg():
     import imageio_ffmpeg; return imageio_ffmpeg.get_ffmpeg_exe()
 def find(i):   # the copy of recording i that has a sound track (run_ID.mkv, fetched with --fetch; video.py's fetch takes the picture alone)
+    if os.path.isfile(i): return i   # a recording of your own (a phone's, of the movement you made): any file ffmpeg reads
     for f in sorted(glob.glob(os.path.join(HOME, f'*{i}*')), key=lambda f: not os.path.basename(f).startswith('run_')):
         if f.split('.')[-1] in ('mkv', 'webm', 'mp4') and 'Audio:' in subprocess.run([ffmpeg(), '-hide_banner', '-i', f], capture_output=True, text=True).stderr: return f
     sys.exit(f'{i}: no copy with sound in {HOME}; python acoustic.py {i} --fetch')

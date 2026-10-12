@@ -61,14 +61,15 @@ def material(l):
     for pat,m,fi,ht in KINDS:
         if re.search(pat,nm,re.I):return (m,'practice (literature)',(fi+'; ' if fi else '')+ht,'literature')
     return ('as drawn','not known','','unknown')
+BENCH=json.loads((HERE/'bench.json').read_text(encoding='utf-8')) if (HERE/'bench.json').exists() else {'tests':[],'lines':{}}   # the tests on the bench (tools/bench.js): each tested line's, and the build book's chapter
 TOL=json.loads((HERE/'tolerances.json').read_text(encoding='utf-8')) if (HERE/'tolerances.json').exists() else {}   # how closely the lines the sources don't size must be made (tools/tolerances.js)
 out=[]
 for l in LINES:
     l={k:(v if v is not None else '') for k,v in l.items()};m=material(l);out.append({'id':l['id'],'idx':l.get('idx',''),'no':l.get('no',''),'name':l.get('name',''),'qty':l.get('qty',''),'part':l.get('part',''),'fn':l.get('fn',''),
-      'fit':fits.get(l.get('no','')+'|'+l.get('idx',''),'') or ('takes '+'; '.join(taken[l['id']][:6])+(f'; and {len(taken[l["id"]])-6} more' if len(taken[l['id']])>6 else '') if l['id'] in taken else 'not measured on the model: see its function, '+l.get('fn','')),'mat':m[0],'msrc':m[1],'treat':m[2],'cls':m[3],**({'tol':TOL[l['id']]} if l['id'] in TOL else {})})
+      'fit':fits.get(l.get('no','')+'|'+l.get('idx',''),'') or ('takes '+'; '.join(taken[l['id']][:6])+(f'; and {len(taken[l["id"]])-6} more' if len(taken[l['id']])>6 else '') if l['id'] in taken else 'not measured on the model: see its function, '+l.get('fn','')),'mat':m[0],'msrc':m[1],'treat':m[2],'cls':m[3],**({'tol':TOL[l['id']]} if l['id'] in TOL else {}),**({'bench':BENCH['lines'][l['id']]} if l['id'] in BENCH['lines'] else {})})
 js=('/* makers.js: the maker’s sheets’ data, one entry a line of the manual’s parts list (Sec. XI): its number, name, units, card, function, the fit bom.py measured\n'
     '   on the model, and its material, finish and heat treatment (the manual’s where it names them, else practice: cls). Written by tools/makers.py from bom.json and\n'
-    '   BOM.md; do not edit by hand. Declares only MAKERS */\n"use strict";\nconst MAKERS='+json.dumps(out,ensure_ascii=False,separators=(',',':'))+';\n')
+    '   BOM.md (bench: the line\'s test on the bench; MAKERS.tests, the build book\'s chapter of them: tools/bench.json); do not edit by hand. Declares only MAKERS */\n"use strict";\nconst MAKERS='+json.dumps(out,ensure_ascii=False,separators=(',',':'))+';\nMAKERS.tests='+json.dumps([{k:t[k] for k in ('id','title','no','when','how','pass')} for t in BENCH['tests']],ensure_ascii=False,separators=(',',':'))+';\n')
 dst=MC/'js'/'makers.js'
 if '--check' in sys.argv:
     ok=dst.exists() and dst.read_text(encoding='utf-8')==js;print('makers.js','up to date' if ok else 'stale: run python makers.py');sys.exit(0 if ok else 1)
