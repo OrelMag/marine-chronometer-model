@@ -3918,9 +3918,11 @@ function buildMovement(M){
     stopDir:Math.atan2(fo[1],fo[0])+Math.atan2(-dz,dx)});   /* the winding stop outward from the plate's centre, past the fusee's top (as it was, 7.2 mm out, before the top was widened) */
   fs.g.position.set((L.Fu[0]+L.Ba[0])/2,0,(L.Fu[1]+L.Ba[1])/2);fs.g.rotation.y=Math.atan2(-dz,dx);fsP.add(fs.g);R.fs=fs;
   /* winding stop (42099) on the underside of the barrel bridge, where the stop-bar's far end meets it at full wind: a stud screwed into the bridge (left-hand thread, Op. 42),
-     down through the train bridge's notch to 0.05 under the bar's top face, clear above the chain's top turn and the nose; kept solid while the key winds (app.js) */
+     down through the train bridge's notch to 0.075 short of the bar's far face (covering 0.375 of its 0.45), clear above the chain's top turn and 0.2 above the nose's top (yNt), which
+     passes under it on every turn but the last: more than the fusee's widest endshake (0.003 in, 0.076 mm, Ops. 15, 69), which dial up takes toward the stud. It ended at -20.45,
+     0.05 over the nose (the whole drawn endshake), until 12 October 2026 (Review-results.md, "The winding stop-bar's function"). Its end's height estimated; kept solid while the key winds (app.js) */
   { const q=fs.stud,c=Math.cos(fs.g.rotation.y),s=Math.sin(fs.g.rotation.y),WS=[fs.g.position.x+q[0]*c+q[1]*s,fs.g.position.z-q[0]*s+q[1]*c];
-    hn(cylBetween(bb,0.9,TB_T,-20.45,M.steel,...WS),'42099').userData.wstop=true;hn(cylBetween(bb,0.45,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1});   /* the stud, and its thread 2 mm up into the bridge */
+    hn(cylBetween(bb,0.9,TB_T,-20.6,M.steel,...WS),'42099').userData.wstop=true;hn(cylBetween(bb,0.45,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1});   /* the stud, and its thread 2 mm up into the bridge */
     R.barrelBridge.geometry.dispose();R.barrelBridge.geometry=polyGeo(BBpoly,TB_T-BB_T,[...BBH,hT(...WS,0.9)],0.25); }
   /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), traced on the top-view photograph (fitted to
      its two screws and the arbor): a waisted plate across the arbor, its two ends arcs about 13 mm out along 107 deg / 287 deg, and both long sides

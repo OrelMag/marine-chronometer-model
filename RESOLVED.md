@@ -514,6 +514,15 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The stop-bar's nose passed under the winding stop with only the fusee's endshake to spare.** On every turn but the last,
+  with the bar back, its nose stands out past the fusee's rim and passed 0.05 mm under the stud's end (−20.40 against −20.45):
+  the whole drawn endshake (the collar 0.05 under the barrel bridge's bushing), which dial up the fusee's weight takes toward the
+  stud, so at the manual's widest (0.003 in, 0.076 mm) the nose would meet the stud's side and stop the key a turn or more early.
+  The stud now ends at −20.60, 0.20 mm over the nose, still covering 0.375 of the bar's 0.45 mm. Found by sweeping the fusee
+  from full wind to run down every 0.001 turn; `tools/maintaining.py` now does so (every 0.002 turn) and fails on any pass of the
+  bar, nose or tab within 0.1 mm of the stud. Keep: what passes the winding stop clears it by more than the fusee's widest
+  endshake. (this commit)
+
 - **The chain counted its links afresh every frame.** `setWind` laid as many whole pitches as fit along the pitch line, a
   polyline sampled in 0.01-turn steps whose length is constant only to its sampling; with the measured mainspring core (12 October
   2026) that length sat within a few hundredths of a whole number of pitches, so a link came and went as the chain moved and the
