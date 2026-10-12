@@ -485,7 +485,7 @@ Contents:
   `L.E` measured, 9.40 from `L.B`; `tools/solve.py`'s FE the distance it
   gives (10.444); the hard-coded copies of it (`train_bridge.py`'s `ESC_B`,
   `EBU_B`; `lower_bridge.py`'s `E`, `ARM`; `physics.js`'s and `dynamics.js`'s
-  fourth module; `audit.py`'s detent pins) follow it. HASH
+  fourth module; `audit.py`'s detent pins) follow it. `8fcc1e5`
 
 ## Winding and maintaining work
 
