@@ -2237,3 +2237,16 @@ Open:
 4. With 1-3 together, the drawn escapement swings the balance about 215° at the calibrated torque (Q 214); 255° wants about 113 µN·m at the escape wheel (the train as built gives 76-96) or Q about 330 (the parts give 202-390). Settle with a real balance's free run-down (OPEN-QUESTIONS.md).
 
 Not findings: the detent comes back in time over every spring, preload and stop tried; nothing loaded is past its material's range (the fusee wheel's teeth, the fusee bushing, the trip spring's root and the mainspring are the thinnest); the ship's motion moves the rate by about 0.01 s a day.
+
+## The winding stop-bar's function (12 October 2026)
+
+Checked by sweeping the fusee from full wind back 2.7 turns in steps of 0.001 turn (`fs.setWind(n, 0)`, the page's own geometry, `?snap&qa`), measuring the stop-bar's meshes (the bar, its nose, its tab, their triangles sampled) against the winding stop's stud (42099). `tools/maintaining.py` checks only full wind and half a turn earlier.
+
+Works as Sec. IV describes it:
+- The chain, winding onto its top turn, slides the bar out from 0.82 turn before full wind, fully out (1.82 mm) from 0.72 turn (`mF`), so it is out well before the stop end comes round to the stud.
+- It meets the stud on the winding side at full wind (0.005 mm), 0.30 mm clear 0.005 turn earlier; let go, the catch takes it 0.41 mm away. Running, it is fully back by 0.82 turn, before its stop end next passes the stud (0.956 turn), and on every earlier turn that end clears the stud by 0.20 mm radially.
+- The key's stop is the wind count clamped at full wind (`hrs`, app.js), not a contact. The geometry agrees with it to 0.005 mm.
+
+Findings:
+1. **The nose passes under the stud's end with 0.05 mm, on every turn but the last** (n 1.593, 2.593, ...: with the bar back, the nose stands out past the fusee's rim, its top at −20.40 and the stud's end at −20.45). That is the fusee's whole drawn endshake: the collar 0.05 under the barrel bridge's bushing (`collarT`, Ops. 15, 69), the fusee drawn at the dial end of it. In the box, dial up, the fusee would sit on that collar and close the gap to nothing, and at the manual's widest endshake (0.003 in, 0.076 mm) the nose would meet the stud's side about 0.026 mm deep and stop the key a turn or more early. The model's fusee doesn't move along its axis, so nothing shows. Both heights are estimates (the nose and travel, `makeFusee`; the stud's end, set to −20.40 and then −20.45 to clear the chain's wrap, `ba9634f`). Fix: end the stud higher. Its end can stand 0.2 mm short of the bar's far face and still cover more than four fifths of the bar's 0.45 mm. Or bring the nose's top down. Either way the gap should be more than 0.076 mm and a margin. Then add the sweep to `maintaining.py`, with each turn's pass clear by more than the endshake.
+2. **At full wind the bar's end corner, not its side, meets the stud,** 0.09 mm short of the stud's centre line. The bar covers 0.81 mm of the stud's 1.8 mm diameter, and the contact's normal is 5.8° off square to the bar, so about a tenth of the stopping force pushes the bar back into its slot, against the chain on its nose and the friction. It holds, but shallowly. Both come from estimates: the stud placed 0.15 mm clear of the rim, and the travel from the chain's path.
