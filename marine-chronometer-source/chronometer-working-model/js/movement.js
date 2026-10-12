@@ -416,7 +416,7 @@ function buildMovement(M){
   /* the escape upper bridge's length (ebu): 72 deg round from the balance-escape line, across it (KLUwI2UUCMQ 10:00, from above: its end screws' line, 68 deg until the escape
      arbor's move; 13:44, where its screws land on the two lugs either side of the keyhole's escape lobe); ebn: across it, toward the balance */
   const ebu=(f=>[eu[0]*Math.cos(f)-eu[1]*Math.sin(f),eu[0]*Math.sin(f)+eu[1]*Math.cos(f)])(72*D2R),ebn=(v=>v[0]*(L.B[0]-L.E[0])+v[1]*(L.B[1]-L.E[1])>0?v:[-v[0],-v[1]])([-ebu[1],ebu[0]]);
-  const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-13.6),add(L.F,ltu,6.1)],ltbp:[add(L.T,ltu,-16.4),add(add(L.F,ltu,2.6),[-ltu[1],ltu[0]],3.4)],pil:[...PILLARS.train,PILLARS.barrel],tb:PILLARS.train,bb:[PILLARS.barrel,PT([32.11,-4.1]),PT([-11.07,26.46])],
+  const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-13.6),add(L.F,ltu,6.1)],ltbp:[add(L.T,ltu,-16.4),add(add(L.F,ltu,2.6),[-ltu[1],ltu[0]],3.4)],pil:[...PILLARS.train,PILLARS.barrel],tb:PILLARS.train,bb:[PILLARS.barrel,[35.18,8.06],[-24.85,26.27]],
     ring:[100,210,340].map(a=>[40.6*Math.cos(a*D2R),40.6*Math.sin(a*D2R)]),eb:[8.3,-8.3].map(f=>add(L.E,ebu,f)),ebp:[9.9,-9.9].map(f=>add(add(L.E,ebu,f),ebn,1.3)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[[18.34,12.02],[-14.2,19.0]],lbp:[[20.62,14.01],[-13.6,16.4]],blc:[3.25,-3.25].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(...DBLK.s)),dpin:DBLK.p.map(([t,n])=>(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(t,n))),cock:PT([33.11,12.62]),ckp:[[35.5,5.0],[26.9,19.8]].map(PT)};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
      ckp: the cock's steady pins, at the two plain holes the train bridge shows under the cock with it off (C Spinner 6:47), placed to about 2 mm */
@@ -693,6 +693,10 @@ function buildMovement(M){
   /* barrel bridge pillar screw (42055) into the barrel pillar; two barrel bridge screws into the train bridge: one beside the third train pillar's screw (where the third pillar stood before it went under that screw), one in the far horn
      (proud of the bridge in the top-view photograph; gone with the bridge off, BunnSpecial 12:05) */
   R.bbScr=S.bb.map((q,i)=>hn(screw(bb,...q,BB_T,PSR,PSH,[3.4+3.0,3.4+2.6,3.4+2.6][i]),i?'42055.bb':'42055.bbp'));   /* the pillar's screw, and two into the train bridge (the parts list: "Screw - Barrel bridge", to the train bridge) */
+  /* the two into the train bridge (S.bb[1], [2]) where KLUwI2UUCMQ 6:49.0 has their heads, through the camera fitted there (the bridges' rims, r 40.5, among its fit; f 5,000):
+     (35.18, 8.06) near 3 o'clock and (-24.85, 26.27) in the far horn, both r 36.1-36.2 (the first (35.15-35.17, 6.40-8.98), the second within 0.3 mm over f 4,000-6,000; the
+     same heads, proud and slotted, at 6:29). The top-view photograph has the same two proud heads 4.5-4.9 mm inside the rim (r 35.6-36.0), but its five-screw map, about
+     10 % small near the rim, placed them through PT at (28.99, 7.95) and (-23.88, 22.98), r 30.1 and 33.1, until 12 October 2026 */
   const eg2=mesh(bb,decalGeo(BBpoly,PTi),M.engraveB,0,BB_T-0.02,0);eg2.userData.noShadow=true;eg2.userData.noCap=true;eg2.userData.decal=true;
   const Fl=Math.hypot(...L.Fu),fo=[L.Fu[0]/Fl,L.Fu[1]/Fl];
   /* ---------- dial (on the mounting ring's flange), hands, motion work ---------- */

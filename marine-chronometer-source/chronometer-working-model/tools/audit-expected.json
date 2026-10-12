@@ -7,7 +7,7 @@
   "barrelBridge:Extrude | barrelBridge:Cylinder | +-23.76": 1,
   "barrelBridge:Extrude | barrelBridge:Extrude | +-23.76": 2,
   "barrelBridge:Extrude | barrelBridge:Extrude | --27.16": 2,
-  "barrelBridge:Extrude | barrelBridge:Lathe | +-27.16": 2,
+  "barrelBridge:Extrude | barrelBridge:Lathe | +-27.16": 1,
   "barrelBridge:Extrude | cock:Buffer | +-23.76": 1,
   "barrelBridge:Extrude | cock:Cylinder | --23.76": 2,
   "barrelBridge:Extrude | fusee:Cylinder | --27.16": 2,

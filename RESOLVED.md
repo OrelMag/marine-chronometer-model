@@ -1439,6 +1439,13 @@ Contents:
   those 9 points is now cut too, run on behind the fusee's dust cap. Keep:
   the cut traced on the video there, not the photograph's edge in the cock's
   shadow (16.7-18 mm, plain train bridge on 6:49.0).
+- **The barrel bridge's two screws into the train bridge 3-6 mm too near
+  the centre.** They were placed through `PT` from the top-view photograph's
+  five-screw map, which is about 10 % small near the rim: (28.99, 7.95) and
+  (−23.88, 22.98), r 30.1 and 33.1. On 6:49.0 through its fitted camera (and
+  6:29) their heads stand at (35.18, 8.06) and (−24.85, 26.27), r 36.1-36.2,
+  and the photograph has them 4.5-4.9 mm inside its rim; now so. Keep: a
+  screw near the rim measured against the rim, not through `PT`.
 
 - **The balance cock's top face a straight edge, a widened nose and a bulging
   concave edge; its arm one thickness.** Seen from above, the cock's straight
