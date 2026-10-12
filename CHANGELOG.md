@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.28.00 · 2026-10-13
+- The sustaining spring's close-up can be zoomed, moved, enlarged and slowed down (to 1/25), kept open in running, and explains how the spring takes the load while running, while winding and when the key lets go
+- Winding from run down: the sustaining ratchet now goes back with the fusee and its pawl holds it at once, as it should
+
 ## 2.27.02 · 2026-10-12
 - The mainspring corrected from a real Model 21: its coils now pack as closely as on the videos, so it has half a turn to spare and the balance swings in the manual's range from full wind to run down
 
