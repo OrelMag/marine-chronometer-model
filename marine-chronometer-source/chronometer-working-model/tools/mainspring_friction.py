@@ -3,6 +3,8 @@ from the model's own solved shapes. No browser; torch (CPU), numpy, scipy.
 
     python mainspring_friction.py              # about 3 minutes (14 processes); writes mainspring_friction.json here, read by physics.js and benchcheck.py
     python mainspring_friction.py --check      # the same, exit 1 if mainspring_friction.json is not what it finds
+    python mainspring_friction.py --nivaflex [--check]   # (or MC_MS_T=0.386 MC_MS_E=220) a variant strip (the build's Nivaflex: mainspring.py's variant, mainspring_t0.386.js),
+                                               # into mainspring_friction_t0.386.json: the fusee's rule sets it up, its full wind and run down found here
 
 mainspring.py solves the strip's shape at each state of the wind (js/mainspring.js, MSHAPE: a state every quarter turn) as the one of least bending energy with
 its coils kept apart, without friction. Each state here is polished from its stored shape by the same solve (warm, so a few rounds), and then:
@@ -25,9 +27,9 @@ from scipy.optimize import nnls
 torch.set_default_dtype(torch.float64)
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent;sys.path.insert(0,str(HERE))
 import mainspring as MS
-E_ST=207e3;B=13.55;EI=E_ST*B*MS.t**3/12   # N·mm²: carbon steel (physics.js), the strip 13.55 × 0.394
+E_ST=MS.E_GPA*1e3;B=13.55;EI=E_ST*B*MS.t**3/12   # N·mm²: carbon steel (physics.js), the strip 13.55 × 0.394; or a variant's (MC_MS_T, MC_MS_E)
 MUS=[0.08,0.10,0.16];MU0=0.10
-OUT=HERE/'mainspring_friction.json'
+OUT=HERE/('mainspring_friction.json' if not MS.VAR else f'mainspring_friction_t{MS.VAR}.json')
 # the fusee as the page builds it (movement.js makeFusee: R.fs.MS.Tup and Tdown, the spring's turns fully wound and run down; and at n fusee turns from full wind, the
 # barrel's turns Ib(n) and the fusee wheel's torque(n) against fully wound, from the solved spring without friction). tools/invariants.py holds them to the page
 TUP,TDOWN=18.8694,14.26024
@@ -35,15 +37,26 @@ FUSEE=[[0,0,1],[0.25,0.10038,0.99854],[0.5,0.20182,0.99756],[0.75,0.30438,0.9967
   [2.25,0.94532,0.99694],[2.5,1.05687,0.9978],[2.75,1.16993,0.9989],[3,1.28455,1.00028],[3.25,1.40082,1.0018],[3.5,1.51881,1.00355],[3.75,1.6386,1.00544],[4,1.76028,1.00757],[4.25,1.88395,1.00983],
   [4.5,2.00972,1.01221],[4.75,2.13769,1.01473],[5,2.26801,1.01726],[5.25,2.40081,1.0199],[5.5,2.53624,1.0224],[5.75,2.67448,1.02488],[6,2.81571,1.02719],[6.25,2.96015,1.02919],[6.5,3.10805,1.03108],
   [6.75,3.25966,1.03206],[7,3.41531,1.03269],[7.25,3.57534,1.03243],[7.5,3.74016,1.03069],[7.75,3.91026,1.02772],[8,4.08617,1.02271],[8.25,4.26858,1.01476],[8.5,4.45829,1.00367]]
+# the page's fusee rule (movement.js, below its makeFusee: read off ?qa, 12 October 2026): INT the barrel's turns while the chain leaves the fusee, IN over the
+# whole wind, RHO0 the chain's lever fully wound against run down, rc(md(0)) / rc(ME); the set-up is where the spring's pull falls by RHO0 over INT turns
+INT,IN,RHO0=4.509752,TUP-TDOWN,0.5097773
+shape=lambda f:json.loads(re.search(r'const MSHAPE=(\{.*?\});',f.read_text(encoding='utf-8')).group(1))
+MSM=shape(MC/'js'/'mainspring.js');MSD=shape(MS.JS)   # the model's spring (the page's), and the one solved here (the same, or a variant)
+def setup(D):
+    """movement.js's bisection on the pull table D: the turns fully wound and run down"""
+    pl=lambda T:float(np.interp(T,D['T'],D['pull']));ta,tb=D['T0'],D['T'][-1]-IN
+    for _ in range(40):
+        m=(ta+tb)/2
+        if pl(m)/pl(m+INT)<RHO0:ta=m
+        else:tb=m
+    return ta+INT,ta+INT-IN
+if MS.VAR:   # the variant: the rule (checked on the model's spring) sets it up; the fusee wheel's torque, its pull at the barrel's turns times the chain's lever,
+    # the lever the model's (its torque over its pull: the fusee is the same)
+    tu,_=setup(MSM);assert abs(tu-TUP)<0.0005,f'the rule gives {tu} fully wound for the model\'s spring, the page {TUP}'
+    pm=lambda T:float(np.interp(T,MSM['T'],MSM['pull']));pv=lambda T:float(np.interp(T,MSD['T'],MSD['pull']));TU,TD=setup(MSD)
+    FUSEE=[[n,ib,round(pv(TU-ib)/pv(TU)*tq/(pm(TUP-ib)/pm(TUP)),5)] for n,ib,tq in FUSEE];TUP,TDOWN=round(TU,4),round(TD,5)
 BT=0.01   # mm: a sample this close to the core or the wall lies on it (the solve approaches its bounds through a sigmoid)
-def states():
-    """MSHAPE's states on the solver's grid: r at N+1 = 48 T + 1 angles from the inner end"""
-    d=json.loads(re.search(r'const MSHAPE=(\{.*?\});',(MC/'js'/'mainspring.js').read_text(encoding='utf-8')).group(1))
-    dec=lambda b,u:np.frombuffer(base64.b64decode(b),dtype='<u2').astype(float)*u
-    s=dec(d['s'],0.05);R=dec(d['r'],0.0005).reshape(len(d['T']),d['n']);out=[]
-    for k,T in enumerate(d['T']):
-        th=MS.rebuild(s,R[k]);th*=2*math.pi*T/th[-1];N=int(round(T*MS.M));out.append((T,np.interp(np.arange(N+1)*2*math.pi*T/N,th,R[k])))
-    return d['T0'],out
+states=MS.stored   # MSHAPE's states on the solver's grid: r at N+1 = 48 T + 1 angles from the inner end
 def polish(T,r0,rounds=4):
     """mainspring.py's solve from a stored shape: the augmented Lagrangian over L-BFGS, warm"""
     N=len(r0)-1;lo=MS.a0;R0=MS.R0;nh=int(MS.HOLD/(2*math.pi*T/N))+1
@@ -146,7 +159,7 @@ def main():
     # the set-up against the friction: wound d turns less (or more) than the page's rule sets it, the fusee's frictionless torque scales with the solved spring's pull
     # (MSHAPE.pull, mainspring.py's smoothed slope) at the shifted turns, and the friction's share comes off it running; the part of the wind whose torque leaves the
     # bench's band about its mean (bench.json: the escape wheel's torque that keeps the swing 247.5-270 deg), and the shift that keeps the most of it inside
-    MSD=json.loads(re.search(r'const MSHAPE=(\{.*?\});',(MC/'js'/'mainspring.js').read_text(encoding='utf-8')).group(1));pl=lambda T:float(np.interp(T,MSD['T'],MSD['pull']))
+    pl=lambda T:float(np.interp(T,MSD['T'],MSD['pull']))
     band=json.loads((HERE/'bench.json').read_text(encoding='utf-8'))['criteria']['fusee']['band']
     def shifted(d,mu):
         q=[tq*pl(TUP+d-ib)/pl(TUP-ib)*(1-fr(mu,TUP+d-ib)) for n,ib,tq in FUSEE];m=np.mean(q);out=np.mean([not(band[0]<=x/m-1<=band[1]) for x in q]);return q,out,(max(q)-min(q))/m
@@ -155,8 +168,9 @@ def main():
         if TUP+d>MSD['T'][-1] or TDOWN+d<MSD['T0']:continue
         q,o,e=shifted(d,MU0);SH.append([round(float(d),2),round(float(o),4),round(float(e),4)])
     best=min(SH,key=lambda x:(x[1],x[2]));q0,o0,_=shifted(0,MU0)
-    setup=dict(rows=SH,best=best,now=[0,round(float(o0),4)],band=band,hours=round(o0*56,1))
-    summary=dict(setup=setup,Tup=TUP,Tdown=TDOWN,loss={str(mu):round(over(mu),4) for mu in MUS},hyst={str(mu):round(2*over(mu),4) for mu in MUS},
+    SU=dict(rows=SH,best=best,now=[0,round(float(o0),4)],band=band,hours=round(o0*56,1))
+    BD=json.loads((HERE/'mainspring_bound.json').read_text(encoding='utf-8')).get(f'{MS.t}') if (HERE/'mainspring_bound.json').exists() else None   # coil-bound (mainspring.py --bound)
+    summary=dict(setup=SU,Tup=TUP,Tdown=TDOWN,t=MS.t,E=MS.E_GPA,T0=T0,bound=BD and BD['bound'],room=BD and round(BD['bound']-TUP,4),loss={str(mu):round(over(mu),4) for mu in MUS},hyst={str(mu):round(2*over(mu),4) for mu in MUS},
       fusee=dict(frictionless=FUSEE,running=run,even0=round(ev([q[2] for q in FUSEE]),4),even={str(mu):round(ev([q[2] for q in run[str(mu)]]),4) for mu in MUS},
         top={str(mu):round(1-fr(mu,TUP),4) for mu in MUS}))
     return dict(summary=summary,note='tools/mainspring_friction.py: the mainspring\'s coil friction from the model\'s solved states (mainspring.js): T the turns from the inner end, M0 the frictionless torque (N·m), dM the friction\'s torque (N·m) at each mu, added winding and taken away running; parts: coil on coil, on the wall, on the core at mu 0.10',
@@ -168,8 +182,9 @@ if __name__=='__main__':
         print(f"T {r_['T']:6.3f}  M0 {r_['M0']*1000:7.1f} mN·m  friction {r_['dM']['0.1']*1000:6.2f} mN·m at 0.10 (coil {r_['parts']['cc']*1000:5.2f}, wall {r_['parts']['wall']*1000:5.2f}, core {r_['parts']['core']*1000:5.2f})  winding against running {100*h[0.1]:5.1f} % ({100*h[0.08]:.1f}-{100*h[0.16]:.1f})")
     S_=d['summary'];print(f"over the fusee's turns ({S_['Tdown']:.2f} to {S_['Tup']:.2f}): the friction takes {100*S_['loss']['0.1']:.1f} % of the spring's work running at 0.10 ({100*S_['loss']['0.08']:.1f}-{100*S_['loss']['0.16']:.1f}); winding against running {100*S_['hyst']['0.1']:.1f} % ({100*S_['hyst']['0.08']:.1f}-{100*S_['hyst']['0.16']:.1f})")
     print(f"the fusee wheel's torque running: even to {100*S_['fusee']['even0']:.1f} % without friction, {100*S_['fusee']['even']['0.1']:.1f} % with it at 0.10 ({100*S_['fusee']['even']['0.08']:.1f}-{100*S_['fusee']['even']['0.16']:.1f}); fully wound it gives {100*S_['fusee']['top']['0.1']:.1f} % of its frictionless torque")
+    print(f"the strip {S_['t']} mm (E {S_['E']:.0f} GPa): slack at {S_['T0']} turns, fully wound at {S_['Tup']:.2f}, coil-bound past "+(f"{S_['bound']:.2f}: {S_['room']:.2f} turn of room" if S_['bound'] else 'an unknown turn (mainspring.py --bound)'))
     U=S_['setup'];print(f"set up as the page sets it, {100*U['now'][1]:.0f} % of the wind (about {U['hours']} of its 56 hours) drives outside the bench's band; set up {U['best'][0]:+.2f} turns, {100*U['best'][1]:.0f} % (even to {100*U['best'][2]:.1f} %)")
     txt=json.dumps(d,indent=1)+'\n'
     if '--check' in sys.argv:
         ok=OUT.exists() and OUT.read_text(encoding='utf-8')==txt;print('  ok  mainspring_friction.json is up to date' if ok else '  !!  mainspring_friction.json is not what this finds: python mainspring_friction.py');sys.exit(0 if ok else 1)
-    OUT.write_text(txt,encoding='utf-8',newline='\n');print('wrote tools/mainspring_friction.json')
+    OUT.write_text(txt,encoding='utf-8',newline='\n');print('wrote tools/'+OUT.name)
