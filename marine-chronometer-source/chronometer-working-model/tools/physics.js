@@ -94,13 +94,16 @@ chk(qEnd[0]>qFlat[1]&&qEnd[1]<domeQ,`the measured friction lies between a flat e
 say(`the balance's damping: air on its screws, nuts and arm Q ${f(qAir[0],0)}-${f(qAir[1],0)}; the endstone and any constant friction ${f(qEnd[0],0)}-${f(qEnd[1],0)} (measured); side friction from the spring ${f(sideQ,0)}; the spring itself ${qMat.join('-')}`);
 const qN=P=>2*Math.PI*Eb*2/(Math.max(0,Wn(Tf*0.95*P/ratioT))*kA*2),qn=[qN(Phi),qN(Plo)].sort((a,b)=>a-b);
 say(`together the balance's Q is ${f(qLo,0)}-${f(qHi,0)} (free decay ${f(TF(qLo),0)}-${f(TF(qHi),0)} s); with the train's efficiency from its parts the budget needs ${f(qn[0],0)}-${f(qn[1],0)} to hold 255°`);
-/* the mainspring's own losses, left out of its torque above (coil friction and set: about 5-15 % of the torque in a barrel spring, published): the budget then
+/* the mainspring's own losses, left out of its torque above: its coils' friction running, worked out on the solved spring (mainspring_friction.py: 2.7-5.4 % of its work over
+   the fusee's turns at mu 0.08-0.16), up to what mainsprings measure (running 10-20 % under winding, ICMFF9: winding M (1 + x), running M (1 - x), x up to 0.2 / 1.8 = 11 %), which takes in the strip's edges on the
+   barrel's floor and cap and the steel's own hysteresis too (5-15 %, a published range, until 12 October 2026): the budget then
    needs a higher Q. Until 12 October 2026 the parts' Q (202-390, the endstone's friction worked out for a flat end) met the budget without them; with the
    endstone's friction measured (a tenth of that), the balance loses less than the train would give a loss-free spring (the swing below), and only the whole
    budget, the spring's own losses in it, meets what the parts give */
-const qnM=[qN(Phi*0.95),qN(Plo*0.85)].sort((a,b)=>a-b),inM=Qm>=qnM[0]&&Qm<=qnM[1];
+const MF=JSON.parse(require('fs').readFileSync(require('path').join(__dirname,'mainspring_friction.json'),'utf8')).summary,mLo=MF.loss['0.08'],mHi=Math.max(MF.loss['0.16'],0.2/1.8);
+const qnM=[qN(Phi*(1-mLo)),qN(Plo*(1-mHi))].sort((a,b)=>a-b),inM=Qm>=qnM[0]&&Qm<=qnM[1];
 say(`the swing they would give a spring without its own losses: ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency (the manual's 247.5-270°)`);
-say(`with the mainspring's own coil friction and set (5-15 %), the budget needs ${f(qnM[0],0)}-${f(qnM[1],0)}: against the parts' ${f(qLo,0)}-${f(qHi,0)}, the model's Q ${f(Qm,0)} ${inM?'inside':'outside'} it; the swing ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)*0.9))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency and 10 %`);
+say(`with the mainspring's own losses (${f(100*mLo,1)}-${f(100*mHi,0)} %: its coils' friction, mainspring_friction.py, to what mainsprings measure, running 10-20 % under winding), the budget needs ${f(qnM[0],0)}-${f(qnM[1],0)}: against the parts' ${f(qLo,0)}-${f(qHi,0)}, the model's Q ${f(Qm,0)} ${inM?'inside':'outside'} it; the swing ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)*0.9))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency and 10 %`);
 chk(qLo<=qnM[1]&&qHi>=qnM[0]&&inM,`the two overlap: the balance as built loses about what the train, as built, gives it, the mainspring's own losses counted (the model's TF ${TFm} s, Q ${f(Qm,0)}: ${Qm>=qLo&&Qm<=qHi?'inside':'outside'} the damping's range, inside the budget's)`);
 chk(Qm>=qLo&&Qm<=qHi,`the model's TF ${TFm} s is inside the decay the balance's parts give (${f(TF(qLo),0)}-${f(TF(qHi),0)} s): derived from the budget before, now from the friction and the air too`);
 
