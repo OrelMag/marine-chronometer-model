@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.27.00 · 2026-10-12
+- The winding stop-bar and the winding stop redrawn from a real Model 21: the bar's slanted ends and two thicknesses, its spring, and the grooved stop in its real place beside the fusee
+- The stop-bar now moves as the manual describes: the chain, winding onto the fusee's last turn, pushes it out against the winding stop at full wind
+
 ## 2.26.00 · 2026-10-12
 - Each part card shows how a chronometer would be built today where it differs from the Model 21 (a Nivaflex mainspring; a Glucydur balance with a Nivarox hairspring), with a button back to the original
 - The build book ends with the tests on the bench: what the made mainspring, fusee, train, balance and escapement must measure, and how to rate the finished chronometer
