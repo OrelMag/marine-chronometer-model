@@ -6,7 +6,7 @@
 // About a second.
 const fs=require('fs'),path=require('path'),PH=require('./physics.js'),{build}=require('./escapement.js');
 const ESC=build().ESC,m=ESC.measure(),D=Math.PI/180,f=(x,n=2)=>(+x).toFixed(n);
-const MFJ=JSON.parse(fs.readFileSync(path.join(__dirname,'mainspring_friction.json'),'utf8')).summary,MSH=require('fs').readFileSync(path.join(__dirname,'..','js','mainspring.js'),'utf8'),MST=JSON.parse(/const MSHAPE=(\{.*?\});/.exec(MSH)[1]),cbRoom=MST.T[MST.T.length-1]-MFJ.Tup;   /* the coils' friction (mainspring_friction.py); the turns from full wind to coil-bound (mainspring.py's last state) */
+const MFJ=JSON.parse(fs.readFileSync(path.join(__dirname,'mainspring_friction.json'),'utf8')).summary,MSH=require('fs').readFileSync(path.join(__dirname,'..','js','mainspring.js'),'utf8'),MST=JSON.parse(/const MSHAPE=(\{.*?\});/.exec(MSH)[1]),cbRoom=MFJ.room!=null?MFJ.room:MST.T[MST.T.length-1]-MFJ.Tup;   /* the coils' friction (mainspring_friction.py); the turns from full wind to coil-bound (mainspring.py --bound, to 0.05 turn; else its last state, a quarter turn short) */
 const GJ=JSON.parse(fs.readFileSync(path.join(__dirname,'gearing.json'),'utf8')),TOL=JSON.parse(fs.readFileSync(path.join(__dirname,'tolerances.json'),'utf8'));
 /* the detent in time, as a frame (tripping.js --write): the shallowest lock that keeps a held tooth safe, the pitch the detent rings at against its spring's thickness */
 const TJ=JSON.parse(fs.readFileSync(path.join(__dirname,'tripping.json'),'utf8')),TL=TJ.lock,TG=TJ.ring,t0r=TG.rows.find(r=>Math.abs(r.f1-TG.f0)<0.5),tIn=TG.rows.filter(r=>r.t>=TG.t[0]&&r.t<=TG.t[1]),lMin=Math.min(...tIn.map(r=>r.lift)),tBest=tIn.find(r=>r.lift<=lMin+0.03),tThin=TG.rows.filter(r=>r.t<TG.t[0]);

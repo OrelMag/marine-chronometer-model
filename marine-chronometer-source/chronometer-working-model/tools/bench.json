@@ -6,7 +6,7 @@
    "title": "The mainspring's torque",
    "no": "42038",
    "when": "before it goes into the barrel, and again in the barrel",
-   "how": "Hold the barrel and turn its arbor with a lever and weights or a torque gauge: a 3D-printed lever 50 mm long and a hanging weight do (1 kg at 50 mm is 0.49 N·m). Wind it up from let down by its set-up and read the torque each half turn over the 4.51 turns the fusee uses, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, in its barrel, wind it on from let down until its coils lie tight on the arbor and count the turns: from its slack to there it must have the set-up and the fusee's 4.61 turns with half a turn to spare (the model's spring has 0.13: so near coil-bound the coils' friction takes up to 22 % of its pull running, mainspring_friction.py, and the swing falls under the manual's for the first hours after each wind).",
+   "how": "Hold the barrel and turn its arbor with a lever and weights or a torque gauge: a 3D-printed lever 50 mm long and a hanging weight do (1 kg at 50 mm is 0.49 N·m). Wind it up from let down by its set-up and read the torque each half turn over the 4.51 turns the fusee uses, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, in its barrel, wind it on from let down until its coils lie tight on the arbor and count the turns: from its slack to there it must have the set-up and the fusee's 4.61 turns with half a turn to spare (the model's spring has 0.33: so near coil-bound the coils' friction takes up to 22 % of its pull running, mainspring_friction.py, and the swing falls under the manual's for the first hours after each wind).",
    "pass": "Fully wound 0.74-0.86 N·m (the model's 0.78; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 84 mN·m a turn, to about 0.40 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13). Unwinding it reads less than winding: the coils' friction gives 5-11 % on the model's spring, mainsprings run 10-20 % under their winding (ICMFF9: 11-22 % read so; the strip's edges and its steel too); over 22 %, clean and grease it."
   },
   {
@@ -94,7 +94,7 @@
      0.1053,
      0.2222
     ],
-    "room": 0.1306
+    "room": 0.3306
    },
    "full": [
     0.74,

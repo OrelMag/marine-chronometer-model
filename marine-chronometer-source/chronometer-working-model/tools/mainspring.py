@@ -4,6 +4,10 @@
     python mainspring.py --write       # ../js/mainspring.js from the mainspring.json already solved (a second)
     python mainspring.py --letdown     # the spring with the arbor out (as C Spinner's 15:54), against the video's count (about 2 min)
     python mainspring.py --plot OUT.png [T,...]   # the solved states drawn straight down the arbor, with the wall and the core
+    python mainspring.py --bound [N]   # coil-bound to 0.05 turn: N (12) states past the last one written, solved warm from it and from an even spiral (about 6 min);
+                                       # into mainspring_bound.json (here, by the strip's thickness), which mainspring_friction.py and bench.js read
+    MC_MS_T=0.386 MC_MS_E=220 python mainspring.py [--write | --bound | --plot ...]   # (or --nivaflex, the same from deviations.json) a variant strip (the build's Nivaflex, deviations.json: thickness mm,
+                                       # modulus GPa): mainspring_t0.386.json in the current directory, mainspring_t0.386.js here (committed), never js/mainspring.js
 
 The strip (0.394 mm thick, the videos' coils' pitch in the measured barrel, and 1,064 mm long, their L/t of about 2,700; 13.55 wide; core.js MSPRING and movement.js
 MSY0/MSY1; the parts list's 0.0165 in, 0.419, until 12 October 2026) on the arbor's core r 4.9 (the videos' r 4.8-5.7; 1.8, estimated, until then) is a curve r(theta)
@@ -30,14 +34,20 @@ Until then the parts list's 0.419 strip on an estimated core r 1.8: slack at 13.
 of r 17.6, until 5 October 2026, 14.3 turns, 11.9 packed). Its 1,064 mm is the videos' L/t, about 2,700 (References/VIDEOS.md); half the room would be
 shorter. About 20 minutes on 14 processes; run it alone.
 """
-import json,math,sys,base64,pathlib
+import json,math,sys,re,os,base64,pathlib
 import numpy as np,torch
 torch.set_default_dtype(torch.float64)
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent
-t=0.394;gap=0.01;p=t+gap;ra=4.9;Rw=18.3-2.0-0.26;L=1064.0;a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
+if '--nivaflex' in sys.argv:   # the build's strip (deviations.json: its thickness for the model's torque, to a micrometre, and Nivaflex's modulus); for this tool and mainspring_friction.py
+    _n=json.loads((HERE/'deviations.json').read_text(encoding='utf-8'))['devs'][0]['numbers'];os.environ['MC_MS_T']=f"{_n['t1']:.3f}";os.environ['MC_MS_E']=f"{_n['E1']:g}"
+VAR=os.environ.get('MC_MS_T');E_GPA=float(os.environ.get('MC_MS_E',207))   # a variant strip's thickness (mm) and modulus (GPa; the bending energy's EI/2 is left out of the solve, so it scales the torque only)
+t=float(VAR) if VAR else 0.394;gap=0.01;p=t+gap;ra=4.9;Rw=18.3-2.0-0.26;L=1064.0;a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
 EYE=9.4   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
 HOLD=EYE/a0   # rad: the inner end lies on the core through the eye, where the hook holds it (1.0 on the r 1.8 core until 12 October 2026)
-M=48;STEP=0.25;TLO=12.75;THI=19.5   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
+M=48;STEP=0.25;TLO=12.75;THI=float(os.environ.get('MC_MS_THI',19.5))   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
+SJ='mainspring.json' if not VAR else f'mainspring_t{VAR}.json'   # the solved states (current directory, not committed)
+JS=MC/'js'/'mainspring.js' if not VAR else HERE/f'mainspring_t{VAR}.js'   # the table: the page's, or a variant's beside this tool (its free curve the model's: a spring set the same way)
+BOUND=HERE/'mainspring_bound.json'
 # the free spring (KLUwI2UUCMQ 32:18): its turns' radii, px along the horizontal through its centre, innermost first
 FREE_PX=[97,185,250,328,405,502,632,750]
 rk=np.array(FREE_PX,float);rk*=L/(2*math.pi*rk.sum())
@@ -98,10 +108,10 @@ def sweep():
                 if x['E']<best[x['T']]['E']-1e-6:best[x['T']]=x
     for T in Ts:x=best[T];print(f"T {T:6.2f}  E {x['E']:.5f}  overlap {max(x['viol'],0):.4f} mm  length {x['dL']:+.5f} mm")
     T0=min(Ts,key=lambda T:best[T]['E']);print('T0',T0,'turns: the held spring is slack there')
-    out=dict(T0=T0,M=M,step=STEP,states=[best[T] for T in Ts]);json.dump(out,open('mainspring.json','w'));return out
+    out=dict(T0=T0,M=M,step=STEP,states=[best[T] for T in Ts]);json.dump(out,open(SJ,'w'));return out
+ok=lambda x:x['viol']<0.005 and abs(x['dL'])<0.05   # coils apart and the length kept: past coil-bound the solve can't meet both
 def write(d):
     """the table: a common grid in s (each piece of steel), dense enough that a sample is at most 7.5 deg round the arbor in every state; each state's r there"""
-    ok=lambda x:x['viol']<0.005 and abs(x['dL'])<0.05   # coils apart and the length kept: past coil-bound the solve can't meet both
     st=list(d['states'])
     while st and not ok(st[-1]):print(f"T {st[-1]['T']}: past coil-bound (overlap {st[-1]['viol']:.4f} mm, length {st[-1]['dL']:+.3f}), not written");st.pop()
     bad=[x['T'] for x in st if not ok(x)]
@@ -126,7 +136,34 @@ def write(d):
         '   0.05s); r: each state\'s radius at those s (mm, in 0.0005s), little-endian uint16, base64; T0: the turns at which the held spring pulls nothing;\n'
         '   pull: its torque at each state against the most (the energy\'s slope) */\n'
         'const MSHAPE='+json.dumps(dict(T0=round(d['T0'],4),T=T,pull=[round(float(x/tq.max()),4) for x in tq],n=len(g),s=enc(g,0.05),r=enc(rs.ravel(),0.0005)),separators=(',',':'))+';\n')
-    (MC/'js'/'mainspring.js').write_text(js,encoding='utf-8',newline='\n');print(f'js/mainspring.js: {len(st)} states, {len(g)} points along the strip, {len(js)//1024} KB; theta rebuilt from r misses the end by {err:.4f} rad at most')
+    JS.write_text(js,encoding='utf-8',newline='\n');print(f'{JS.name}: {len(st)} states, {len(g)} points along the strip, {len(js)//1024} KB; theta rebuilt from r misses the end by {err:.4f} rad at most')
+def stored():
+    """the table's states (JS) on the solver's grid: (T0, [(T, r at N+1 = 48 T + 1 angles from the inner end)])"""
+    d=json.loads(re.search(r'const MSHAPE=(\{.*?\});',JS.read_text(encoding='utf-8')).group(1))
+    dec=lambda b,u:np.frombuffer(base64.b64decode(b),dtype='<u2').astype(float)*u
+    s=dec(d['s'],0.05);R=dec(d['r'],0.0005).reshape(len(d['T']),d['n']);out=[]
+    for k,T in enumerate(d['T']):
+        th=rebuild(s,R[k]);th*=2*math.pi*T/th[-1];N=int(round(T*M));out.append((T,np.interp(np.arange(N+1)*2*math.pi*T/N,th,R[k])))
+    return d['T0'],out
+def bound(n=12,step=0.05):
+    """coil-bound to step turns: n states past the table's last (the last the quarter-turn sweep could solve), each solved warm from it and from an even
+    spiral, the least energy kept; the first that can't keep both the coils apart and the length ends the run. A solve that fails short of the true bound
+    would end it early, so the result is the least turns at which the strip is coil-bound, to a step"""
+    from multiprocessing import Pool
+    T0,st=stored();T1,r1=st[-1];Ts=[round(T1+step*(i+1),4) for i in range(n)]
+    with Pool(14) as P:xs=P.map(job,[(T,r1.tolist()) for T in Ts]+[(T,None) for T in Ts])
+    best={}
+    for x in xs:
+        if ok(x) and (x['T'] not in best or x['E']<best[x['T']]['E']):best[x['T']]=x
+    last=T1
+    for T in Ts:
+        print(f"T {T:6.2f}  "+(f"solved, E {best[T]['E']:.5f}" if T in best else 'past coil-bound'))
+        if T not in best:break
+        last=T
+    if last==Ts[-1]:print('  !! still not coil-bound: run with a larger N')
+    D=json.loads(BOUND.read_text(encoding='utf-8')) if BOUND.exists() else {}
+    D[f'{t}']=dict(t=t,E=E_GPA,T0=T0,quarter=T1,bound=last,step=step);BOUND.write_text(json.dumps(D,indent=1,sort_keys=True)+'\n',encoding='utf-8',newline='\n')
+    print(f'strip {t} mm: coil-bound past {last:.2f} turns (the table ends at {T1}); wrote {BOUND.name}');return last
 def rebuild(s,r):
     ds=np.diff(s);dr=np.diff(r);return np.concatenate([[0],np.cumsum(np.sqrt(np.maximum(ds*ds-dr*dr,1e-12))/((r[1:]+r[:-1])/2))])
 def plot(d,out,Ts=None):
@@ -154,6 +191,7 @@ if __name__=='__main__':
               ' (KLUwI2UUCMQ 15:54: 12 +- 1 coils on the wall, one loose inner turn of about r 8)')
         json.dump(dict(T0=T,states=[dict(T=T,E=E,r=r.tolist())]),open('mainspring_letdown.json','w'))
     elif '--plot' in a:
-        i=a.index('--plot');d=json.load(open('mainspring.json'));plot(d,a[i+1],[float(x) for x in a[i+2].split(',')] if len(a)>i+2 else None)
-    elif '--write' in a:write(json.load(open('mainspring.json')))
+        i=a.index('--plot');d=json.load(open(SJ));plot(d,a[i+1],[float(x) for x in a[i+2].split(',')] if len(a)>i+2 else None)
+    elif '--bound' in a:i=a.index('--bound');bound(int(a[i+1]) if len(a)>i+1 else 12)
+    elif '--write' in a:write(json.load(open(SJ)))
     else:write(sweep())
