@@ -1,0 +1,156 @@
+{
+ "note": "tools/massprops.py: the gimbals' swinging bodies on the model (massprops-check.js): g, mm and g·mm² about the gimbal centre in the ring's frame at rest (y up, the ring's pivots on x, the case's on z); mv: the movement's frame in the ring's (4x4, column-major); read by gimbals.js",
+ "bowl": {
+  "m": 1669.47,
+  "cg": [
+   7.837,
+   -11.175,
+   -4.561
+  ],
+  "I": [
+   [
+    1768182.4,
+    189519.6,
+    338803.2
+   ],
+   [
+    189519.6,
+    2936683.3,
+    -93351.6
+   ],
+   [
+    338803.2,
+    -93351.6,
+    2492573.1
+   ]
+  ],
+  "byMat": {
+   "plate": 783.51,
+   "brass": 571.81,
+   "brass2": 81.02,
+   "gilt": 56.44,
+   "steel": 53.13,
+   "plateSolid": 41.17,
+   "copper": 15.38,
+   "glass": 14.23,
+   "steelK": 2.3,
+   "blued": 1.6,
+   "chain": 1.01,
+   "steelS": 0.7,
+   "fibre": 0.7,
+   "packing": 0.58,
+   "steelD": 0.53,
+   "invar": 0.47,
+   "chain2": 0.43,
+   "ruby": 0.06,
+   "clear": 0.01
+  },
+  "byPart": {
+   "bowl": 873.5,
+   "pillar": 296.92,
+   "barrelBridge": 87.9,
+   "cock": 60.1,
+   "trainBridge": 52.06,
+   "barrel": 41.2,
+   "dial": 36.1,
+   "fusee": 34.09,
+   "motion": 18.25,
+   "gw": 15.14,
+   "ratchet": 14.75,
+   "pillars": 13.77,
+   "ltb": 12.91,
+   "lowerBridge": 12.81,
+   "sq": 12.19,
+   "bal": 9.41,
+   "lockArm": 8.75,
+   "post": 5.95,
+   "sratchet": 3.8,
+   "cw": 2.63,
+   "hands": 2.45,
+   "sspring": 1.88,
+   "escBridge": 1.69,
+   "det": 1.56,
+   "chain": 1.44,
+   "mainspring": 44.4
+  },
+  "missing": {}
+ },
+ "ring": {
+  "m": 140.246,
+  "cg": [
+   3.869,
+   -0.161,
+   6.941
+  ],
+  "I": [
+   [
+    368998.1,
+    423.7,
+    5098.1
+   ],
+   [
+    423.7,
+    639094.7,
+    1131.7
+   ],
+   [
+    5098.1,
+    1131.7,
+    274780.7
+   ]
+  ],
+  "byMat": {
+   "brass": 97.81,
+   "brass2": 39.78,
+   "steel": 2.27,
+   "steelD": 0.39
+  },
+  "byPart": {
+   "ring": 140.25
+  },
+  "missing": {}
+ },
+ "mv": [
+  1.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  1.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  1.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  1.0
+ ],
+ "stops": {
+  "ring": [
+   {
+    "deg": 29.5,
+    "against": "box"
+   },
+   {
+    "deg": 29.5,
+    "against": "box"
+   }
+  ],
+  "bowl": [
+   {
+    "deg": 29.5,
+    "against": "box"
+   },
+   {
+    "deg": 29.5,
+    "against": "box"
+   }
+  ]
+ },
+ "ringY": -20,
+ "RO": 68,
+ "CR": 49.5
+}
