@@ -1458,7 +1458,11 @@ function buildMovement(M){
   const MWK={g:/** @type {number|null} */(null),n:/** @type {number|null} */(null),w:false,fa:0,base:0,lock:0,top:0,hold:0,nW0:0,eps0:0,dq:0};   /* the maintaining work's state between frames (update()) */
   R.drvN=n=>fs.torque(n)/fs.torque(12*FUSEE_PER_HOUR);   /* the fusee's drive at n turns, of the 12-hour drive: app.js sets its own (with the mainspring's set) */
   R.ssF=()=>Math.max(0,1-R.ssD/SMAX);R.holdBack=holdBack;   /* the sustaining spring's push, of the 12-hour drive */
-  R.release=()=>MWK.w&&MWK.g!==null?(catchAt(srA,MWK.fa,MWK.g,MWK.dq).fa-MWK.fa)/TAU:0;   /* fusee turns the catch will take if the key lets go now: app.js adds their hours */
+  /* fusee turns the catch will take if the key lets go now: app.js adds their hours. The reload is to the drive where those hours leave the fusee (n + the catch:
+     update() takes the drive at the new n), found by a few steps; it was the drive at n until 12 October 2026, which in the run-down taper foretold the catch up to
+     0.02 deg long */
+  R.release=()=>{if(!MWK.w||MWK.g===null)return 0;let r=(catchAt(srA,MWK.fa,MWK.g,MWK.dq).fa-MWK.fa)/TAU;
+    if(MWK.n!==null)for(let i=0;i<4;i++){const n=MWK.n+r,D=n>=FUSEE_TURNS?0:R.drvN(n);r=(catchAt(srA,MWK.fa,MWK.g,SMAX*clamp(1-D,-0.25,1)).fa-MWK.fa)/TAU;}return r;};
   /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean,ld?:number,clk?:number}} MoveState
       E: the escape wheel's place in teeth, which turns every arbor; th: the balance's angle (rad); lift, psDef: the detent's lift and the passing spring's bending (ESC.state);
       n: fusee turns from full wind; winding: the key turning; spent: run down (the fusee drives nothing); reset: the train set (the hands set, Now), not run;
