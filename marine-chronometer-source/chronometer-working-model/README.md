@@ -993,6 +993,12 @@ on what would stop the chronometer.
   time and temperature, backtests a ten-day rate carried on, and projects what
   a navigator would be out after 10, 30 and 60 days; acoustic.py takes a
   recording of the made movement for its swing.
+  benchcheck.py judges the measurements themselves (a JSON file it makes to
+  fill in): each against bench.js's figures, and where one fails, what to do:
+  the set-up turns that bring the mainspring into its band or even the fusee
+  (from the curve's slope and the fusee's 1.96:1 profile), the timing weights
+  or the millimetres to take at the stud, the manual's operation that sets an
+  escapement figure.
 
 - **`tools/deviations.js`, the build's two changes.** Nothing the checks
   found needs changing for the chronometer to work; two changes, with 1950s

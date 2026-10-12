@@ -1,7 +1,7 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, bench, rating, deviations, selfcontained, types, smoke, invariants, solids, exploded, book, audit
-    python ci.py --quick      # without the browser checks (about 50 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, bench, rating, deviations, selfcontained, types
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, smoke, invariants, solids, exploded, book, audit
+    python ci.py --quick      # without the browser checks (about 50 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types
     python ci.py --full       # and the slow checks (about 22 minutes more): dynamics.js in full, gearing.js in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
@@ -78,6 +78,7 @@ STEPS=[('build',build,'quick'),
  ('bench',lambda log:run(['node',TOOLS/'bench.js'],ROOT,log),'quick'),   # the tests on the bench from the model's figures, against bench.json (a second)
  ('rating',lambda log:run([PY,'rating.py','--demo'],TOOLS,log),'quick'),   # the rating of a made chronometer's log, on a made-up log with known figures (under a second)
  ('deviations',lambda log:run(['node',TOOLS/'deviations.js'],ROOT,log),'quick'),   # the build's deviations' numbers, against deviations.json (under a second)
+ ('benchcheck',lambda log:run([PY,'benchcheck.py','--demo'],TOOLS,log),'quick'),   # a maker's bench measurements judged, on a made-up set with known faults (under a second)
  ('selfcontained',lambda log:run([PY,'selfcontained.py'],TOOLS,log),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),

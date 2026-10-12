@@ -156,7 +156,10 @@ and the elastic modulus's change with temperature, which is the spring maker's t
 
 <h2 id="bench">5. Tests on the bench</h2>
 <p>The analysis says the design works; only tests on the made parts say a chronometer made to it does. <code>bench.js</code> turns the model's figures into tests with pass
-figures; <code>makers.py</code> puts each on its part's card (its maker's sheet) and the whole list in the build book's last chapter (Making it → Build book).</p>
+figures; <code>makers.py</code> puts each on its part's card (its maker's sheet) and the whole list in the build book's last chapter (Making it → Build book).
+<code>benchcheck.py</code> judges the maker's measurements against the same figures (a JSON file it makes to fill in) and says what to do where one fails: the set-up
+turns that bring the mainspring into its band or even the fusee (from the curve's slope and the fusee's 1.96:1 profile), the timing weights or the millimetres to take at
+the stud, the manual's operation that sets an escapement figure. Its <code>--demo</code> plants eight faults in a made-up set and finds all eight.</p>
 <div id="t4" class="tw"></div>
 
 <h2 id="rating">6. The rating trial</h2>
@@ -214,6 +217,7 @@ python build_report.py                                             # index.html 
 <tr><td><a href="../../tools/fea.py"><code>tools/fea.py</code></a></td><td>Voxel finite elements on the six pivot-holding parts, superposed; the cantilever check</td><td>a depth moves a tenth of its close side; stress past two thirds of brass's yield; the check off by 3 %</td></tr>
 <tr><td><a href="../../tools/hairspring-fe.js"><code>tools/hairspring-fe.js</code></a></td><td>The hairspring by co-rotational beam elements against <code>hairspring.js</code>'s elastica</td><td>the couple's shape, the force on the pivots or the rate part from the elastica's</td></tr>
 <tr><td><a href="../../tools/bench.js"><code>tools/bench.js</code></a></td><td>The bench tests and their figures (<code>bench.json</code>, through <code>makers.py</code> into the cards and the build book; <code>book.py</code> checks them printed)</td><td>bench.json stale</td></tr>
+<tr><td><a href="../../tools/benchcheck.py"><code>tools/benchcheck.py</code></a></td><td>A maker's bench measurements judged against bench.json's figures, with what to do</td><td>(--demo) a planted fault missed; (a real file) a measurement fails</td></tr>
 <tr><td><a href="../../tools/rating.py"><code>tools/rating.py</code></a></td><td>A made chronometer's log: the Navy test's figures, the fit, the backtest, the projection</td><td>(--demo) the fit misses what the log was made with</td></tr>
 <tr><td><a href="../../tools/acoustic.py"><code>tools/acoustic.py</code></a></td><td>The swing from a recording of the beat (now any recording's path, a made movement's)</td><td>—</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This report's data and page</td><td>—</td></tr>

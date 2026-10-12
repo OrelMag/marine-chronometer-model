@@ -42,7 +42,18 @@ const tests=[
   how:'Each day at the same hour compare it with a time signal (radio, GPS, or a network time service read on a phone) to the tenth of a second, and keep the log: python rating.py LOG.csv works the daily rates, the Navy test\'s figures and what it would carry at sea. For temperature, keep it a week each at about 55, 72½ and 90 °F (a wine cooler, a room, a box with a lamp and a thermostat), as the Navy test does.',
   pass:'Good enough to navigate by: its daily rate steady, whatever it is, the navigator carrying it. The Navy\'s test (Sec. IX, the working model\'s thirty-day test card) is the yardstick: regulation, the largest mean daily rate of any period, within 1.55 s a day; rating, the mean deviation of the daily rates, 0.50; the largest difference between two daily rates in a period 0.75; the mean rates at 90 and 72½, 72½ and 55, and 90 and 55 °F within 0.75, 0.75 and 1.20; recovery 0.70; isochronism, the 12-hour rate against half the 24-hour, 0.50. Then rating.py\'s voyage: what it would carry after 30 days, 4 s of time a mile of longitude on the equator.'}];
 const lines={};for(const t of tests)if(t.no)lines[t.no]=`${t.title}, ${t.when}: ${t.pass}`;
-const J={note:'tools/bench.js: the tests on the bench (the build book\'s chapter) and the line each tests (its card); read by makers.py',tests,lines};
+/* the same figures as numbers, for benchcheck.py, which judges a maker's measurements against them. Where the manual says "about", the band either side is
+   estimated: lock and overall a degree, drop half a degree, the horn's clearance 0.05 mm, the roller's shake 0.015 mm */
+const DV=JSON.parse(fs.readFileSync(path.join(__dirname,'deviations.json'),'utf8')).devs,msd=DV.find(d=>d.id==='mainspring'),tbS=/\(([\d.]+)-([\d.]+) mm thick at the drawn/.exec(TOL['42038']).slice(1).map(Number);
+const r4=x=>+(+x).toFixed(4),criteria={
+  mainspring:{full:[+band[1],+band[2]],model:r4(PH.Mup),down:r4(PH.Mdn),perTurn:r4(m1),turns:PH.IN,width:r4(PH.b*1000),length:PH.MS.len,thickness:{steel:tbS,nivaflex:msd.numbers.tb.map(r4)},E:{steel:207,nivaflex:220}},
+  fusee:{band:[r4(s0-1),r4(s1-1)],halfTurns:17.5,torque:r4(PH.Tf)},
+  depths:{names:['fusee-centre','centre-third','third-fourth','fourth-escape'],centres:cd,tol:r4(Math.min(...GJ.stages.map(w=>w.tp))),windows:GJ.stages.map(w=>[r4(w.lo),r4(w.hi)]),shake:GJ.SH},
+  endshake:[r4(es[0]/1000),r4(es[1]/1000)],
+  balance:{hz:2,I,k:r4(k*1e6),weightsTurn:40},
+  escapement:{lock:[5,7],letoff:[6,null],overall:[26,30],drop:[1.5,2.5],horn:[0.2,0.3],shake:[0.036,0.066],model:{lock:r4(m.lock),letoff:r4(m.letoff),overall:r4(m.overall),drop:r4(m.drop),horn:r4(m.hornClr),shake:r4(m.shake)}},
+  swing:[247.5,270]};
+const J={note:'tools/bench.js: the tests on the bench (the build book\'s chapter), the line each tests (its card) and their figures as numbers (benchcheck.py); read by makers.py',tests,lines,criteria};
 const OUT=path.join(__dirname,'bench.json'),txt=JSON.stringify(J,null,1)+'\n';
 if(process.argv.includes('--write')){fs.writeFileSync(OUT,txt);console.log('wrote tools/bench.json:',tests.length,'tests');}
 else{for(const t of tests)console.log(`  ${t.title} (${t.when})\n    how: ${t.how}\n    pass: ${t.pass}\n`);
