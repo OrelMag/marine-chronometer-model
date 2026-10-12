@@ -928,6 +928,35 @@ on what would stop the chronometer.
   the Navy's test only half the time, about 15 s and 38 s. Drift and the
   temperature curve dominate. The empirical terms are the card's, not physics:
   the model has no other source for a chronometer's day-to-day scatter.
+- **`tools/gearing.js`, would the train run, made on a CNC.** The four meshes of
+  the going train worked tooth by tooth on the outlines the model draws (core.js
+  `gearOutline`, BS 978's cycloidal teeth, sampled finer): the wheel turned
+  through a pitch, the pinion turned back against its load until the outlines
+  touch (found to well under a micrometre), and from the contact's normal and
+  slip the torque the pinion receives, with the teeth's friction at 0.10 and
+  0.20. At the drawn centres every mesh runs without a drop, about a fifth of
+  the action before the line of centres, 95–98 % on average and 89–91 % at the
+  worst instant at 0.20. Then the train in time: the four stages' ratios
+  multiplied as their wheels turn, the swing following them through the
+  escapement's own equation (A² towards `ampAt(drive)²`, `TF`): 250–259° at
+  0.20, inside the manual's band, and the time wanders under 0.1 ms about the
+  mean rate (the ripple repeats daily, so a navigator's rate takes it in).
+  Last, each mesh's depthing window (it jams on the close side when the wheel's
+  tips reach the pinion's root, 37–58 µm; on the wide side the ripple takes the
+  swing out of the band, or nothing does to a module wider), and from it the
+  hole positions a CNC must hold aimed at the drawn centres: ±13 µm (the
+  fourth wheel's mesh, the pivots' 10 µm shake taken off), bored, not drilled.
+  `--write` writes `tools/gearing.json`, which `thermal.js` reads.
+- **`tools/thermal.js`, does it still fit at 40 and 100 °F.** Brass holds
+  (plates, bridges, pillars, wheels), steel turns and locks (pinions, arbors,
+  escape wheel, roller, detent), and brass grows 6–10 × 10⁻⁶ a °C more. The
+  depths change by the pinion's radius times that (under 0.5 µm: the wheels and
+  their holes are both brass); the endshake over the train's 16.8 mm span
+  −2.6 and +3.0 µm (set it at 28–73 µm at 20 °C to stay in Ops. 15, 69 and
+  74's 25–76 µm); the escapement's centre distance and depth of lock under
+  2 µm, which moves lock and drop a tenth of a degree and its rate a few
+  hundredths of a second a day. The temperature error is the balance's and its
+  spring's alone, which is measured on the bench, not worked out.
 
 ### Checked against real chronometers
 
