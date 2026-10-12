@@ -1,5 +1,6 @@
 """The report "Would a chronometer made to the model run and keep time?" (model README, "Checked in time"): index.html here, built from template.html and
-the results the tools wrote: assets/data.json (node reportdata.js), assets/fea.json (fea.py --json), assets/rating.json (rating.py --demo --json). It also runs
+the results the tools wrote: assets/data.json (node reportdata.js), assets/fea.json (fea.py --json), assets/rating.json (rating.py --demo --json), assets/trip.json
+(tripping.js --json). It also runs
 the model's earlier checks (escapement.js, physics.js, strength.js, dynamics.js --quick, errorbudget.js) and shows their output. The data are embedded, so the
 page opens from the file without a server.
 
@@ -8,7 +9,7 @@ page opens from the file without a server.
 import datetime, html, json, os, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); TOOLS = os.path.normpath(os.path.join(HERE, '..', '..', 'tools'))
 A = lambda f: json.load(open(os.path.join(HERE, 'assets', f), encoding='utf-8'))
-DATA = dict(data=A('data.json'), fea=A('fea.json'), rating=A('rating.json'))
+DATA = dict(data=A('data.json'), fea=A('fea.json'), rating=A('rating.json'), trip=A('trip.json'))
 for c, v in DATA['fea']['cases'].items(): v['fields'] = {k: f for k, f in v['fields'].items() if k == 'barrelBridge' and c == 'fully wound'}   # the page draws the barrel bridge's, fully wound
 CHECKS = [('escapement.js', [], 'The escapement against the manual\'s figures (Ops. 84-97), its running swing and its isochronism; the locking stone swept against the teeth.'),
           ('physics.js', [], 'The energy budget from the mainspring to the balance, the escape wheel\'s chase onto the jewel, the balance\'s damping, temperature from the materials.'),

@@ -1,8 +1,8 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, smoke, invariants, solids, exploded, book, audit
-    python ci.py --quick      # without the browser checks (about 50 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types
-    python ci.py --full       # and the slow checks (about 22 minutes more): dynamics.js in full, gearing.js in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, smoke, invariants, solids, exploded, book, audit
+    python ci.py --quick      # without the browser checks (about 60 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types
+    python ci.py --full       # and the slow checks (about 30 minutes more): dynamics.js in full, tripping.js in full, gearing.js in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
 
@@ -72,6 +72,7 @@ STEPS=[('build',build,'quick'),
  ('tolerances',lambda log:run(['node',TOOLS/'tolerances.js'],ROOT,log),'quick'),   # how closely the springs the sources don't size must be made, and that the sheets say so (under a second)   # the energy budget, the escape wheel's chase, temperature from the materials (under a second)
  ('strength',lambda log:run(['node',TOOLS/'strength.js'],ROOT,log),'quick'),   # every loaded part against its material's range, and the knocks it takes (under a second)
  ('dynamics',lambda log:run(['node',TOOLS/'dynamics.js','--quick'],ROOT,log),'quick'),   # the escapement integrated in time against the averaged model; the detent's return (about 15 s)
+ ('tripping',lambda log:run(['node',TOOLS/'tripping.js','--quick'],ROOT,log),'quick'),   # the detent as a frame: its modes, and the frame made rigid running as dynamics.js does (about 10 s)
  ('errorbudget',lambda log:run(['node',TOOLS/'errorbudget.js'],ROOT,log),'quick'),   # as made (Monte Carlo) and the error carried at sea (about 6 s)
  ('gearing',lambda log:run(['node',TOOLS/'gearing.js','--quick'],ROOT,log),'quick'),   # the train's meshes tooth by tooth at their drawn centres, the swing over hours (about 15 s)
  ('thermal',lambda log:run(['node',TOOLS/'thermal.js'],ROOT,log),'quick'),   # 40-100 °F: the depths, endshake, the escapement (under a second)
@@ -89,6 +90,7 @@ STEPS=[('build',build,'quick'),
  ('audit',lambda log:run([PY,'audit.py'],TOOLS,log),'browser'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
+ ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)
  ('gearing-full',lambda log:run(['node',TOOLS/'gearing.js'],ROOT,log),'full'),   # and each mesh's depthing window, the holes' tolerance, against gearing.json (about 2 minutes)
  ('fea',lambda log:run([PY,'fea.py'],TOOLS,log),'full'),   # finite elements on the plates and bridges: the pivots' holes under the chain's and teeth's loads, against the depths' windows (about 3 minutes)
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),

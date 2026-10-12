@@ -54,14 +54,14 @@ own geometry and numbers.</p>
 <div class="tiles" id="tiles"></div>
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#gears">1. Gears</a><a href="#thermal">2. Temperature</a><a href="#fea">3. Finite elements</a>
-<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
+<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
 <a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>A chronometer keeps time if three things hold: its <b>train delivers a steady torque</b> to the escapement (so the balance's swing, and with it the rate, stays put),
 its <b>geometry stays in adjustment</b> under load and temperature, and its <b>balance and hairspring</b> oscillate at a rate that changes little with swing and
 temperature. The model's existing checks cover the escapement in detail (its figures against the manual, its motion in time, the energy budget, the stresses and an
-error budget for a voyage). Six checks were added for the build:</p>
+error budget for a voyage). Seven checks were added for the build:</p>
 <div class="tw"><table>
 <tr><th>#</th><th>Question</th><th>Method</th><th>Script</th></tr>
 <tr><td>1</td><td>Do the gears mesh, and how exactly must the holes be placed?</td><td>Tooth-by-tooth contact on the model's own cycloidal outlines, with friction; the train run in time through the escapement's equation</td><td><code>tools/gearing.js</code></td></tr>
@@ -70,6 +70,7 @@ error budget for a voyage). Six checks were added for the build:</p>
 <tr><td>4</td><td>Does the hairspring behave as designed at large swings?</td><td>Co-rotational beam elements, Newton's method, against the existing shooting elastica</td><td><code>tools/hairspring-fe.js</code></td></tr>
 <tr><td>5</td><td>What must the made parts measure?</td><td>The model's figures turned into bench tests with pass figures, in the build book</td><td><code>tools/bench.js</code></td></tr>
 <tr><td>6</td><td>Does the made chronometer keep time?</td><td>The Navy's 30-day test worked on the maker's log; the rate fitted, backtested and projected for a voyage</td><td><code>tools/rating.py</code></td></tr>
+<tr><td>8</td><td>Does a knock, or a swing too large, let a tooth past the locking stone?</td><td>The detent as a frame of beam elements from the drawn parts, its modes carried in time with the balance and the wheel through elastic contacts; validated against the rigid detent</td><td><code>tools/tripping.js</code></td></tr>
 </table></div>
 <p class="small">Units: millimetres and micrometres (µm), newtons, seconds a day (s/d, + gaining). The swing is the balance's amplitude, each way; the manual asks for
 1⅜–1½ turns, 247.5–270°, and the model runs at 255°. A rate of 4 s of time is a mile of longitude at the equator.</p>
@@ -182,6 +183,49 @@ sheets.</p>
 <div id="t7" class="tw"></div>
 <p class="small">Glucydur's own density and expansion aren't published; beryllium bronze's (CuBe2, C17200) are used. Nivarox's expansion (7–10 × 10⁻⁶/°C) and modulus
 (165–195 GPa) are estimated, as Elinvar-type alloys'. The spring's thermoelastic coefficient is what the spring maker grades; the temperature test settles the pair.</p>
+<h2 id="trip">8. The detent under shock: does a tooth ever get past?</h2>
+<p>The classic way a detent escapement fails at sea is <b>tripping</b>: the escape wheel lets a tooth go without the balance having unlocked it, and the chronometer gains
+a beat. The detent is the weak point: a thin blade on a thinner spring, held on its stop by a preload of a few millinewtons and nothing else, with the locking stone at its end.
+<code>dynamics.js</code> takes it as one rigid body turning about the root of its spring; that answers whether it is home in time, but not whether the blade, still ringing from
+its landing or from the tooth's lock, lifts the stone off the next tooth, nor how hard a knock must be once its own bending is counted. <code>tripping.js</code> takes the detent
+as what it is.</p>
+<p><b>Method.</b> The detent becomes a plane frame (<span id="trN"></span>): beam elements with stretching, bending and their consistent mass for the two-strip spring, the
+blade, the arm out to the horn and the trip spring, and rigid bodies for the cross-piece with its bracket, the jewel block with the stone, and the horn; every size is the drawn
+part's (<code>movement.js</code>, <code>ESC.pieces</code>), every material dynamics.js's (beryllium copper 128 GPa, Elinvar-type 180 GPa). Its modes, clamped at the foot,
+carry it in time with the balance and the escape wheel as dynamics.js does, but every contact is elastic: the discharge jewel's own outline on the trip spring's tip (pushing
+it onto the horn on the active swing, bending it away on the return), the trip spring on the horn, the blade on its stop button, the tooth on the locking stone (the stone's
+outline and draw from <code>makeEsc</code>, so the tooth is pushed back as the stone lifts) and on the impulse jewel. A contact is a stiff spring with a dashpot set for its
+restitution (penalty contact). Op. 78 sets the preload: the spring is bent so a 0.770 g weight on the locking jewel just parts the blade from its button.</p>
+<div id="t8" class="tw"></div>
+<p><b>Validated.</b> Made rigid and hinged at the spring's root, with the draw counted as dynamics.js counts it, the frame is dynamics.js's detent (stiffness, preload and
+first mode to 0.1 %) and runs as dynamics.js does: <span id="trV"></span>. Two things the frame finds that the rigid model leaves out:</p>
+<div class="callout"><ul>
+<li><b>The spring turns about its middle, not its root.</b> A 3.8 mm spring under an 11 mm lever bends along its length, so the detent is <span id="trK"></span> stiffer at the
+stone than dynamics.js's hinge, and its first mode is <span id="trF"></span> Hz rather than <span id="trFh"></span>. Running, that changes <span id="trKr"></span>
+(the detent leaves the jewel and lands sooner): a constant the timing screws take up. The preload, which Op. 78 sets by weight, is the same either way.</li>
+<li><b>The wheel recoils with its own inertia.</b> dynamics.js holds the wheel still while the stone lifts and counts the draw as a steady moment. In the frame the jewel's
+strike starts the stone at once, the stone's 10° of draw throws the wheel back at 2–3 rad/s, and the tooth catches the stone up a few times before the release. Against the
+steady moment that changes <span id="trW"></span>: the averaged draw holds.</li>
+<li><b>The tooth is free before makeEsc lets it go.</b> makeEsc's recoil (the wheel's turn back as the stone lifts) peaks where the tooth's tip reaches the flat's inner
+end, the depth of lock, <span id="trPk"></span> µm at the stone; past it the tip rides round the stone's rounded edge, where its pressure pushes the stone <i>out</i>, and it is
+free at <span id="trFr"></span> µm. makeEsc keeps lifting to <span id="trRl"></span> µm as room to spare and releases there. The frame lets the tooth go where it is free
+(<span id="trFs"></span>), and measures every margin below against the depth of lock: a held tooth whose stone is lifted past it throws the stone off.</li></ul></div>
+<figure><div class="chart" id="c10"></div><figcaption>Figure 10. The locking stone through one oscillation at the running swing, each run from 10 ms before its unlocking, as a share of the depth of lock
+(the depth of lock, <span id="trLR"></span> µm at the stone): the highest each 0.1 ms. The shaded spans are the unlocking (the discharge jewel lifts the stone clear, past 100 %, off the
+chart) and the return swing (the jewel bends the trip spring). <code>tripping.js</code>, section 2.</figcaption></figure>
+<p><b>Running.</b> <span id="trRun"></span> The largest lift while a tooth is held comes <span id="trWhen"></span>; by the time the next tooth arrives the stone has settled
+(<span id="trArr"></span>). None of the estimates moves that far (Table 9: the detent's damping, every contact's restitution and stiffness, the blade's stiffness, the modes kept).</p>
+<div id="t9" class="tw"></div>
+<figure><div class="chart" id="c11"></div><figcaption>Figure 11. The swing pushed by raising the drive: the stone's largest lift while a tooth is held, the frame as drawn. A
+dot on the top line is a run where a tooth got past. The dashed line is makeEsc's TRIP, where the discharge jewel comes round to the trip spring a second time in the swing;
+the band is the manual's 247.5–270°. <code>tripping.js</code>, section 3.</figcaption></figure>
+<p><b>Pushed and knocked.</b> <span id="trPush"></span> Knocks are found the way dynamics.js finds them, the smallest that lets a tooth go or loses a beat at the worst of
+eight moments in the swing, for the frame and for the rigid detent by the same runs:</p>
+<div id="t10" class="tw"></div>
+<p><span id="trKn"></span> A chronometer in its gimballed, padded box meets a few g at sea; the margin is wide. What the frame leaves out: the detent's motion out of the plate
+(its spring is 0.95 mm deep against 0.079 thick, twelve times stiffer that way, and moving that way doesn't unlock), and the true restitution of each contact, which only
+the made detent can show.</p>
+
 <h2 id="context">The checks the model already had</h2>
 <p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
 <!--CONTEXT-->
@@ -201,11 +245,13 @@ node thermal.js            # under a second
 python fea.py              # about 3 min (--check 5 s; --reuse skips the browser)
 node hairspring-fe.js      # about 20 s
 node bench.js              # a second (--write, then python makers.py)
-python rating.py --demo    # under a second; python rating.py LOG.csv for a real log</pre>
+python rating.py --demo    # under a second; python rating.py LOG.csv for a real log
+node tripping.js           # about 8 min (--quick 10 s: the frame and the validation)</pre>
 <p>and this report, from <code>verification/build-verification/</code>:</p>
 <pre>node reportdata.js                                                 # about 35 s: assets/data.json
 python ../../tools/fea.py --reuse --json assets/fea.json           # about 3 min
 python ../../tools/rating.py --demo --json assets/rating.json      # under a second
+node ../../tools/tripping.js --json assets/trip.json               # about 8 min
 python build_report.py                                             # index.html (runs the earlier checks for their output, about 30 s)</pre>
 <p><code>python ci.py</code> at the repository's root runs the quick ones on every change, <code>--full</code> adds <code>gearing.js</code> in full and <code>fea.py</code>.</p>
 
@@ -219,6 +265,7 @@ python build_report.py                                             # index.html 
 <tr><td><a href="../../tools/bench.js"><code>tools/bench.js</code></a></td><td>The bench tests and their figures (<code>bench.json</code>, through <code>makers.py</code> into the cards and the build book; <code>book.py</code> checks them printed)</td><td>bench.json stale</td></tr>
 <tr><td><a href="../../tools/benchcheck.py"><code>tools/benchcheck.py</code></a></td><td>A maker's bench measurements judged against bench.json's figures, with what to do</td><td>(--demo) a planted fault missed; (a real file) a measurement fails</td></tr>
 <tr><td><a href="../../tools/rating.py"><code>tools/rating.py</code></a></td><td>A made chronometer's log: the Navy test's figures, the fit, the backtest, the projection</td><td>(--demo) the fit misses what the log was made with</td></tr>
+<tr><td><a href="../../tools/tripping.js"><code>tools/tripping.js</code></a></td><td>The detent as a frame: its modes; the frame made rigid against dynamics.js; running as drawn, the estimates varied, the swing pushed, the knocks that trip it</td><td>the rigid frame parts from dynamics.js; a tooth gets past at the model's settings or under any estimate varied; a held tooth's stone uses half the depth of lock; a blow under 20 g trips it</td></tr>
 <tr><td><a href="../../tools/acoustic.py"><code>tools/acoustic.py</code></a></td><td>The swing from a recording of the beat (now any recording's path, a made movement's)</td><td>—</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This report's data and page</td><td>—</td></tr>
 </table></div>
@@ -227,6 +274,9 @@ python build_report.py                                             # index.html 
 <ol class="src">
 <li>Bureau of Ships, <i>Overhaul, Repair and Handling of Hamilton Model 21 Chronometer</i>, NAVSHIPS 250-624 (1948): Secs. II, IX (the Navy test and its limits), XI (the parts list), Ops. 13, 15, 69, 74, 78, 84–97. In the repository, <code>References/</code>; served beside the page as <a href="https://www.marinechronometermodel.com/navships-250-624-1948.pdf">navships-250-624-1948.pdf</a>.</li>
 <li>British Standards Institution, BS 978 Part 2, <i>Specification for fine pitch gears: cycloidal type gears</i> (the tooth proportions the model draws; estimated, not from the manual).</li>
+<li>J. S. Przemieniecki, <i>Theory of Matrix Structural Analysis</i>, McGraw-Hill (1968), chs. 5 and 11: the plane frame element and its consistent mass.</li>
+<li>P. Wriggers, <i>Computational Contact Mechanics</i>, 2nd ed., Springer (2006), ch. 2: penalty contact.</li>
+<li>L. L. Howell, <i>Compliant Mechanisms</i>, Wiley (2001), ch. 5: the small-length flexural pivot, which turns about its middle.</li>
 <li>M. A. Crisfield, <i>Non-linear Finite Element Analysis of Solids and Structures</i>, vol. 1, Wiley (1991), ch. 7: the co-rotational beam element.</li>
 <li>S. P. Timoshenko and J. M. Gere, <i>Mechanics of Materials</i>: the cantilever's deflection with shear (the solver's check).</li>
 <li>E. Phillips, "Mémoire sur le spiral réglant des chronomètres et des montres", <i>Annales des Mines</i> (1861): the terminal curves' conditions.</li>
@@ -308,6 +358,7 @@ function draw(){const D=DATA,G=D.data,FE=D.fea,RT=D.rating;
     ['Plates and bridges',`${f(maxHole,2)} µm`,`The most a pivot hole moves under load; depths change ${f(maxDepth,3)} µm; stress at most ${f(maxVm,0)} MPa against 300.`,'ok'],
     ['40–100 °F','In adjustment',`Depths under 0.5 µm, endshake ${f(G.thermal.dC*1000,1)} / ${sg(G.thermal.dH*1000,1)} µm, the escapement's rate a few hundredths of a s/d.`,'ok'],
     ['Hairspring','Two methods agree',`Its isochronism ${f(G.hair.rates.fe[2]-G.hair.rates.fe[0],2)} s/d over the manual's band, by elements and by the elastica.`,'ok'],
+    ['Detent','No trip',`A held tooth's stone uses at most ${f(100*D.trip.running.drawn.maxL,0)} % of the depth of lock; it takes a blow of ${f(Math.min(...D.trip.knocks.rows.filter(k=>k.unit==='g').map(k=>k.frame)),0)} g, or a swing of ${f(D.trip.push.firstBad,0)}°, to let a tooth go.`,'ok'],
     ['Made chronometer','Bench and log',`${G.bench.length} bench tests in the build book; the rating trial's tool recovers a known log.`,'mid']].map(([k,v,n,c])=>`<div class="tile"><div class="k">${k}</div><div class="v ${c}">${v}</div><div class="n">${n}</div></div>`).join('');
   /* 1 */
   chart('c1',{label:'Torque ratio over a pitch for the four meshes at mu 0.20',x:[0,1],y:[0.86,1.01],endLabels:true,r:110,xl:'fraction of the wheel\'s pitch',yl:'torque ratio (1 = ideal)',hrefs:[{y:1,t:'ideal'}],
@@ -352,6 +403,38 @@ function draw(){const D=DATA,G=D.data,FE=D.fea,RT=D.rating;
   table('t4',['Test','When','It must read'],G.bench.map(t=>[`<b>${t.title}</b>`,t.when,t.pass]),true);
   /* 7: deviations */
   table('t7',['Deviation','Period','Why, and what it changes','Sources'],G.devs.map(d=>[`<b>${d.title}</b>`,d.period,d.why,d.sources.join('; ')]),true);
+  /* 8: the detent under shock */
+  const TP=D.trip,FR=TP.frame,VA=TP.valid,RU=TP.running,pct=x=>f(100*x,x<0.1?2:1)+' %',NMP={spring:'the detent spring',blade:'the blade',arm:'the arm to the horn',trip:'the trip spring'};
+  $('trN').textContent=`${FR.elements} elements on ${FR.nodes} nodes; ${f(FR.mass*1e6,1)} mg and ${f(FR.Ift*1e9,2)} g·mm² about the spring's root, dynamics.js's ${f(FR.dm*1e6,1)} and ${f(FR.did*1e9,2)}`;
+  table('t8',['Mode','frequency','where it bends (strain energy)'],FR.modes.map((m,i)=>[i+1,`${f(m.f,0)} Hz`,Object.entries(m.share).sort((a,b)=>b[1]-a[1]).filter(([,v])=>v>0.05).map(([k,v])=>`${NMP[k]} ${f(100*v,0)} %`).join(', ')]),true);
+  $('trV').textContent=`the swing ${f(VA.frame.A,2)}° against ${f(VA.dyn.A,2)}°, the rate ${sg(VA.frame.rate,2)} against ${sg(VA.dyn.rate,2)} s/d, the release at ${f(VA.frame.rel,2)}° against ${f(VA.dyn.rel,2)}°, the detent off the jewel for the last time at ${f(VA.frame.offF,2)}° against ${f(VA.dyn.offF,2)}° and home at ${f(VA.frame.home,2)}° against ${f(VA.dyn.home,2)}°, ${VA.frame.beats} beats of ${VA.dyn.beats}; at half the step the same to ${f(Math.abs(VA.half.A-VA.frame.A),3)}°`;
+  $('trK').textContent=`${f(100*(FR.kS/FR.kSh-1),0)} %`;$('trF').textContent=f(FR.modes[0].f,0);$('trFh').textContent=f(FR.f1h,0);
+  $('trW').textContent=`the swing by ${sg(VA.wheel.A-VA.frame.A,1)}° (at 20 s, still settling) and the rate by ${sg(VA.wheel.rate-VA.frame.rate,2)} s/d`;$('trLR').textContent=f(TP.LR*1000,0);
+  $('trPk').textContent=f(TP.LR*1000,0);$('trFr').textContent=f(TP.LF*1000,0);$('trRl').textContent=f(TP.LRel*1000,0);
+  $('trFs').textContent=`${f(Math.abs(VA.free.rel-VA.wheel.rel),1)}° of the balance sooner; the swing and rate change by ${f(Math.abs(VA.free.A-VA.wheel.A),2)}° and ${f(Math.abs(VA.free.rate-VA.wheel.rate),2)} s/d`;
+  {/* each run's trace from 10 ms before its own unlocking (the jewel's first touch on the active swing), so the two line up */
+    const u0=tr=>{for(let i=1;i<tr.length;i++)if(tr[i][4]&&tr[i][1]>tr[i-1][1])return tr[i][0];return 0;},AL={};
+    for(const k of['drawn','hinge']){const tr=RU[k].trace,a=u0(tr)-10;AL[k]=tr.map(r=>[r[0]-a,...r.slice(1)]).filter(r=>r[0]>=0);}
+    const tr=AL.drawn,spans=[];let cur=null;for(let i=1;i<tr.length;i++){const k=tr[i][4]?(tr[i][1]>tr[i-1][1]?'u':'r'):null;if(k&&(!cur||cur.k!==k||tr[i][0]-cur.x1>1)){cur={k,x0:tr[i][0],x1:tr[i][0]};spans.push(cur);}else if(k)cur.x1=tr[i][0];}
+    const Y1=Math.max(8,Math.ceil(100*Math.max(RU.drawn.maxL,RU.hinge.maxL)+2)),cl=v=>Math.min(Y1,v),X1=Math.min(...Object.values(AL).map(t=>t[t.length-1][0]));
+    chart('c10',{label:'The locking stone\'s lift through one oscillation',x:[0,X1],y:[-1,Y1],xl:'ms from 10 ms before the unlocking',yl:'the stone\'s lift (% of the lock)',h:340,r:120,
+      vbands:spans.map(s=>({x0:s.x0-0.5,x1:s.x1+0.5,c:s.k==='u'?'--band':'--manual',t:s.k==='u'?'unlocking':'return'})),
+      series:[['drawn','as drawn','--s1'],['hinge','rigid, hinged (dynamics.js\'s)','--s2']].map(([k,nm,c])=>({type:'line',name:nm,c,label:k==='drawn'?'as drawn':'rigid',data:AL[k].filter(p=>p[0]<=X1).map(p=>[p[0],cl(100*p[3])]),
+        tip:p=>{const q=AL[k].find(r=>r[0]>=p[0])||AL[k][0];return`<b>${nm}</b>, ${f(q[0],1)} ms, the balance at ${f(q[1],0)}°<br>the stone ${f(100*q[2],2)} to ${f(100*q[3],2)} %${q[5]?', a tooth held':', the wheel free'}`;}}))});}
+  $('trKr').textContent=`the swing by ${sg(RU.stiff.A-RU.hinge.A,1)}° and the rate by ${sg(RU.stiff.rate-RU.hinge.rate,2)} s/d`;
+  $('trRun').textContent=`As drawn, ${RU.drawn.beats} beats and no tooth got past: the stone, while it holds a tooth, uses at most ${pct(RU.drawn.maxL)} of the depth of lock (${f(RU.drawn.maxL*TP.LR*1000,1)} µm), against ${pct(RU.hinge.maxL)} for the rigid detent and ${pct(RU.stiff.maxL)} with the spring as drawn and the blade rigid.`;
+  $('trWhen').textContent=RU.drawn.maxRet?`on the return swing (at ${f(RU.drawn.maxTh,0)}°), as the discharge jewel snaps off the trip spring: pushed partly along its length, the spring presses the detent onto its button, and the detent rebounds as the jewel lets go`:`just after the lock (at ${f(RU.drawn.maxTh,0)}°), as the tooth strikes the stone and the blade rocks on its button`;
+  $('trArr').textContent=`${pct(RU.drawn.arrive)} lifted as it arrives`;
+  table('t9',['Estimate varied (the detent as drawn)','trips','the stone, at most','when','swing'],[['as taken (Q 100; restitution 0.3 at the button and the tooth, 0 at the jewels)',RU.drawn.trips,pct(RU.drawn.maxL),RU.drawn.maxRet?'return swing':'after the lock',`${f(RU.drawn.A,1)}°`]]
+    .concat(TP.sweep.map(r=>[r.name,r.trips,pct(r.maxL),r.maxRet?'return swing':'after the lock',`${f(r.A,1)}°`])));
+  {const PR=TP.push.rows;chart('c11',{label:'The swing pushed until a tooth gets past',x:[240,360],y:[0,110],xl:'swing (°)',yl:'the stone, at most (% of the lock)',h:320,r:120,
+    vbands:[{x0:247.5,x1:270,c:'--manual',t:'manual'},{x0:TP.push.TRIP-0.4,x1:TP.push.TRIP+0.4,c:'--muted',t:'TRIP'}],hrefs:[{y:100,t:'the depth of lock'}],
+    series:[{type:'dots',name:'no tooth got past',c:'--s1',data:PR.filter(r=>!r.frame.trips).map(r=>[r.frame.A,100*r.frame.maxL,r]),tip:p=>`drive ${f(p[2].s,2)}×, the swing ${f(p[0],0)}°<br>the stone at most ${f(p[1],1)} %; rigid: ${p[2].dyn.trips} trips`},
+      {type:'dots',name:'a tooth got past',c:'--s2',data:PR.filter(r=>r.frame.trips).map(r=>[r.frame.A,105,r]),tip:p=>`drive ${f(p[2].s,2)}×, the swing ${f(p[0],0)}°<br>${p[2].frame.trips} trips; rigid: ${p[2].dyn.trips}`}]});
+    const fb=PR.find(r=>r.frame.trips),db=PR.find(r=>r.dyn.trips);
+    $('trPush').textContent=`Raising the drive raises the swing; the frame as drawn lets no tooth past up to ${f(TP.push.lastOk,0)}°${fb?`, and does from ${f(fb.frame.A,0)}°`:''}, where the discharge jewel comes round to the trip spring again (makeEsc's TRIP, ${f(TP.push.TRIP,0)}°); the rigid detent ${db?`trips from ${f(db.dyn.A,0)}°`:'never trips in this range'}. The manual's band ends at 270°, so the margin is over 60°.`;}
+  {const KN=TP.knocks.rows;table('t10',['Knock (half-sine, the worst moment and direction)','the frame as drawn','the rigid detent','the frame against it'],KN.map(k=>[k.name,`${f(k.frame,k.unit==='g'?0:1)} ${k.unit}`,`${f(k.rigid,k.unit==='g'?0:1)} ${k.unit}`,`${sg(100*(k.frame/k.rigid-1),0)} %`]));
+    const bl=KN.filter(k=>k.unit==='g');$('trKn').textContent=`The blade's own bending ${bl.every(k=>k.frame<k.rigid)?'lowers':bl.every(k=>k.frame>k.rigid)?'raises':'changes'} the blow that trips it by ${bl.map(k=>`${f(Math.abs(100*(k.frame/k.rigid-1)),0)} %`).join(' and ')}: the least is ${f(Math.min(...bl.map(k=>k.frame)),0)} g. A steady push would lift the rigid detent off its stop at ${f(TP.knocks.gS,0)} g.`;}
   /* 6: rating */
   const PS=[['I',90],['II',72.5],['III',55],['IV',55],['V',72.5],['VI',90]];
   chart('c9',{label:'Made-up log',x:[0,60],y:[0,26],xl:'days',yl:'error against the time signal (s)',vbands:PS.map(([n,T],i)=>({x0:i*5,x1:i*5+5,c:i%2?'--band':'--manual',t:`${n} ${T}°`})),

@@ -1014,6 +1014,31 @@ on what would stop the chronometer.
   shape, which the spring's length takes up, and the spring's thermoelastic
   coefficient graded to +4 to +14 × 10⁻⁶ a °C for the pair, within ±1.4 to
   meet the Navy's temperature figure.
+- **`tools/tripping.js`, does a tooth ever get past the stone.** The classic
+  failure of a detent escapement at sea is tripping: the wheel lets a tooth go
+  that the balance didn't unlock, and the chronometer gains. dynamics.js takes
+  the detent as one rigid body on a hinge; this takes it as a plane frame of
+  37 beam elements from the drawn pieces (the two-strip spring, the blade, the
+  arm to the horn and the trip spring bending and stretching, the cross-piece,
+  block and horn rigid; mass and inertia within 1 % of dynamics.js's), its
+  modes carried in time with the balance and the wheel through elastic
+  contacts (the jewel's own outline on the trip spring's tip, the trip spring
+  on the horn, the blade on its button, the tooth on the stone and on the
+  impulse jewel), Op. 78's preload. Made rigid and hinged at Ft it runs as
+  dynamics.js does (swing 0.4°, rate 0.1 s a day, release, fall and landing
+  within 0.1°). As drawn: the spring bends about its middle, so the detent is
+  39 % stiffer at the stone than the hinge (first mode 137 Hz, not 112); a held
+  tooth's stone lifts at most 11 % of the depth of lock (114 µm at the stone,
+  where makeEsc's recoil peaks: past it the tooth's pressure on the stone's
+  rounded edge throws the stone off; the tip is free at 117 µm, makeEsc's
+  release keeping 143 as room to spare), at most 22 % over the estimates varied
+  (the detent's damping, every contact's restitution and stiffness, the blade
+  half as stiff); no tooth gets past until the swing reaches 337°, where the
+  discharge jewel comes round and unlocks again in the same swing (makeEsc's
+  TRIP, 333°, is where it first touches); a blow across the plate of 61 g over
+  3 ms or 138 g over 0.5 ms, or a twist of 19 rad/s, lets a tooth go, within
+  15 % of the rigid detent's. The estimates are the contacts' restitution
+  (0.3, 0 at the jewels) and the detent's damping (Q 100).
 - **The report**, `verification/build-verification/index.html` (open the
   file; `build_report.py` rebuilds it): the process, figures, sources and
   scripts of these checks, the earlier ones' output beside them.
