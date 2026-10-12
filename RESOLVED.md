@@ -508,6 +508,14 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The chain counted its links afresh every frame.** `setWind` laid as many whole pitches as fit along the pitch line, a
+  polyline sampled in 0.01-turn steps whose length is constant only to its sampling; with the measured mainspring core (12 October
+  2026) that length sat within a few hundredths of a whole number of pitches, so a link came and went as the chain moved and the
+  hook's plate jumped between 1.36 and 3.06 mm (the page's live loop and the export's Run down flipping at different winds:
+  `blender_check.py` found the rig 0.88 mm off at 29.98 s of Running; before, the same flip fell at 37 s, outside its sample). The
+  links are now counted once, at full wind (`NJ`), and a line a hair short of them carries its last joints on round the barrel's
+  pitch circle (its step's sign taken across ±π). Keep: a chain's link count is fixed; nothing it draws may be counted from a
+  sampled length each frame. HASH
 - **Winding-pawl spring's foot 0.35 into the winding ratchet's tips** (found by `fine.py` on the branch that cut the springs' beds, before it was merged). The traced r 7.04 line was taken as the bed's centre and the foot's pocket run in to r 6.8, inside the fusee's winding ratchet (tips r 6.9), which turns at the springs' height. The line is the pocket's inner wall (r 7.0); the feet and springs lie outside it. Keep: nothing on the sustaining ratchet's face toward the fusee comes inside r 6.9 + clearance; run `fine.py` after touching the beds. `703a20a`
 - **Sustaining spring ran forward from its pin,** so the sustaining ratchet
   couldn't drive the fusee wheel through it. It now curves back to a free end

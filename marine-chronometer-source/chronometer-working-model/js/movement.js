@@ -1739,10 +1739,15 @@ function makeFusee(M,c){
     V(F0[0],y0,F0[1]);for(let s=0.1;s<1;s+=0.1)V(lerp(F0[0],B0[0],s),lerp(y0,y1,s),lerp(F0[1],B0[1],s));
     const In=I(m0),kw=In>0?wrapB(q)/(TAU*In):1;for(let m=m0;m>=0;m-=0.01){const b=q.bt-TAU*(In-I(m))*kw;V(bx+rB*Math.cos(b),yb(m),rB*Math.sin(b));}return P;}   /* round the barrel wrapB to the hook */
   /* n turns from full wind, the fusee eps past them (the maintaining work's catch, update()): the fusee, barrel, chain and stop-bar */
+  let NJ=/** @type {number|null} */(null);
   function setWind(n,eps=0){
     const rot=n*TAU+eps,m0=md(rot);fz.rotation.y=rot;bz.rotation.y=Ib(n,eps)*TAU;setBar(barTravel(m0));
-    const P=path(rot),J=[P[0].clone()];   /* the joints, PC apart along the pitch line */
-    { let acc=0,next=PC;for(let i=1;i<P.length;i++){const seg=P[i].distanceTo(P[i-1]);while(acc+seg>=next){J.push(new THREE.Vector3().lerpVectors(P[i-1],P[i],(next-acc)/seg));next+=PC;}acc+=seg;} }
+    const P=path(rot),J=[P[0].clone()];   /* the joints, PC apart along the pitch line: NJ links, counted once at full wind (a chain keeps its links; counted each frame,
+       the sampled line's length, within a few hundredths of a whole number of pitches since 12 October 2026, put one link on and off and the hook's plate a pitch longer and shorter) */
+    if(NJ===null){const P0=path(0);let l=0;for(let i=1;i<P0.length;i++)l+=P0[i].distanceTo(P0[i-1]);NJ=Math.round(l/PC);}
+    { let acc=0,next=PC;for(let i=1;i<P.length&&J.length<=NJ;i++){const seg=P[i].distanceTo(P[i-1]);while(acc+seg>=next&&J.length<=NJ){J.push(new THREE.Vector3().lerpVectors(P[i-1],P[i],(next-acc)/seg));next+=PC;}acc+=seg;}
+      if(J.length<=NJ){const e=P.length-1,a1=Math.atan2(P[e].z,P[e].x-bx),a0=Math.atan2(P[e-1].z,P[e-1].x-bx),da=Math.sign(Math.atan2(Math.sin(a1-a0),Math.cos(a1-a0)))||1;let a=Math.atan2(J[J.length-1].z,J[J.length-1].x-bx);
+        while(J.length<=NJ){a+=da*2*Math.asin(PC/(2*rB));J.push(new THREE.Vector3(bx+rB*Math.cos(a),P[e].y,rB*Math.sin(a)));}}}   /* a line a hair short of NJ pitches: the last joints on round the barrel's pitch circle, a pitch's chord apart */
     let ia=0,ib=0;
     for(let k=0;k+1<J.length&&ia<MAX&&ib<MAX;k++){q0.copy(J[k]);q1.copy(J[k+1]);pos.addVectors(q0,q1).multiplyScalar(0.5);t.subVectors(q1,q0).normalize();
       up.set(0,1,0).addScaledVector(t,-t.y).normalize();nn.crossVectors(t,up);mtx.makeBasis(t,up,nn).setPosition(pos);if(k%2===0)imA.setMatrixAt(ia++,mtx);else imB.setMatrixAt(ib++,mtx);}
