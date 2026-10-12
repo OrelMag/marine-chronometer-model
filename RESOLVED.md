@@ -2375,4 +2375,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Escapement: a second unlocking in one swing counted as a beat.** Past makeEsc's `TRIP` (a swing of 333° and more)
+  the discharge jewel comes round to the trip spring again and, from about 337°, lifts the detent and lets a second
+  tooth go in the same active swing: the chronometer gains a tooth every swing. `tools/dynamics.js` booked it as a
+  normal beat (the jewel was on the detent), so its runs reported no trips even at 350°; `tools/tripping.js`, its frame
+  of the detent, found it. Now a release after the first in an active swing counts as a trip in both. Keep: a trip is
+  any tooth let go that the swing's one unlocking didn't, whether a knock, the stone rung off or the jewel come round.

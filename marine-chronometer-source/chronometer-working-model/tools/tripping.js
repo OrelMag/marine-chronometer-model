@@ -42,7 +42,7 @@ function frame(o={}){
   const line=(i,j,ne,Em,b,h,rho,grp,extra=[])=>{const a=N[i],c=N[j],ts=[...new Set([0,1,...extra])].sort((x,y)=>x-y);let all=[];for(let k=0;k<ts.length-1;k++){const f0=ts[k],f1=ts[k+1],m=Math.max(1,Math.round(ne*(f1-f0)));for(let s=0;s<m;s++)all.push(f0+(f1-f0)*s/m);}all.push(1);
     let p=i;const out=[i];for(let k=1;k<all.length;k++){const q=k===all.length-1?j:nd(a.t+(c.t-a.t)*all[k],a.n+(c.n-a.n)*all[k]);el(p,q,Em,b,h,rho,grp);out.push(q);p=q;}return out;};
   /* the spring: X.spring, two strips (H.spring) of the drawn thickness, the root at t 0 held by the foot */
-  const nS=(X.spring.n0+X.spring.n1)/2,tD=X.spring.n1-X.spring.n0,hS=hOf('spring'),lS=X.spring.t1;
+  const nS=(X.spring.n0+X.spring.n1)/2,tD=(X.spring.n1-X.spring.n0)*(o.tS??1),hS=hOf('spring'),lS=X.spring.t1;   /* tS: the spring's thickness, times the drawn */
   const R0=nd(0,o.hinge?0:nS,o.hinge?'pin':'clamp'),F1=nd(lS,nS);   /* hinged, the pin is at Ft itself, as dynamics.js turns the detent */
   const sp=line(R0,F1,6,EBC,tD,hS,RHO.Cu,'spring');
   if(o.hinge)for(const i of sp.slice(1))N[i].k='slave',N[i].m=R0;
@@ -226,9 +226,22 @@ function run(M,o={}){
   const step=(t,h)=>{der(t,Y,k1,true);for(let i=0;i<nY;i++)Yt[i]=Y[i]+h/2*k1[i];der(t+h/2,Yt,k2);for(let i=0;i<nY;i++)Yt[i]=Y[i]+h/2*k2[i];der(t+h/2,Yt,k3);
     for(let i=0;i<nY;i++)Yt[i]=Y[i]+h*k3[i];der(t+h,Yt,k4);for(let i=0;i<nY;i++)Y[i]+=h/6*(k1[i]+2*k2[i]+2*k3[i]+k4[i]);};
   /* rest: the detent on its button with the tooth held, the balance far off (Newton on the modes and the wheel) */
-  const rest=()=>{const x=new Float64Array(N+1);for(let i=0;i<N;i++)x[i]=1e-3*fpre[i]/(w[i]*w[i]);x[N]=-1.0001*tauE/(kT*cT*cT);const yy=new Float64Array(nY),o_=new Float64Array(nY);yy[0]=Math.PI;const res=v=>{for(let i=0;i<N;i++)yy[4+i]=v[i];yy[2]=v[N];for(let i=0;i<N;i++)yy[4+N+i]=0;yy[1]=0;yy[3]=0;der(0,yy,o_);return[...Array(N).keys()].map(i=>o_[4+N+i]).concat([qD?v[N]:o_[3]*JT]);};
-    for(let it=0;it<30;it++){const r0=res(x),J=[];const e=1e-12;for(let j=0;j<=N;j++){const xp=Float64Array.from(x);xp[j]+=j<N?e:1e-9;const r1=res(xp);J.push(r1.map((v,i)=>(v-r0[i])/(j<N?e:1e-9)));}
-const A=r0.map((_,i)=>J.map(c=>c[i])),dx=gsolve(A,r0.map(v=>-v));let mx=0;for(let j=0;j<=N;j++){x[j]+=dx[j];mx=Math.max(mx,Math.abs(dx[j]));}if(mx<1e-15)break;}
+  /* rest: the detent on its button with the tooth held, the balance far off. Newton on the modes and the wheel first; its Jacobian is by differences, and a contact
+     switching inside one can send it astray (a 0.1 mm spring did, and the escapement never unlocked), so where it doesn't converge to finite numbers the detent and
+     wheel are let settle, each mode critically damped, and Newton polishes that */
+  const rest=()=>{const yy=new Float64Array(nY),o_=new Float64Array(nY);yy[0]=Math.PI;
+    const res=v=>{for(let i=0;i<N;i++)yy[4+i]=v[i];yy[2]=v[N];for(let i=0;i<N;i++)yy[4+N+i]=0;yy[1]=0;yy[3]=0;der(0,yy,o_);return[...Array(N).keys()].map(i=>o_[4+N+i]).concat([qD?v[N]:o_[3]*JT]);};
+    const newton=x=>{for(let it=0;it<30;it++){const r0=res(x),J=[];const e=1e-12;for(let j=0;j<=N;j++){const xp=Float64Array.from(x);xp[j]+=j<N?e:1e-9;const r1=res(xp);J.push(r1.map((v,i)=>(v-r0[i])/(j<N?e:1e-9)));}
+      const A=r0.map((_,i)=>J.map(c=>c[i])),dx=gsolve(A,r0.map(v=>-v));let mx=0;for(let j=0;j<=N;j++){x[j]+=dx[j];mx=Math.max(mx,Math.abs(dx[j]));}if(!(mx<1e3))return false;if(mx<1e-15)return true;}return false;};
+    const x0=new Float64Array(N+1);for(let i=0;i<N;i++)x0[i]=1e-3*fpre[i]/(w[i]*w[i]);x0[N]=-1.0001*tauE/(kT*cT*cT);
+    let x=Float64Array.from(x0);if(newton(x)&&x.every(Number.isFinite))return x;
+    /* settle: semi-implicit Euler at the run's step, every mode and the wheel damped critically, until nothing moves (or 0.2 s) */
+    const h=M.hf,cw=2*Math.sqrt(kT*cT*cT/JT);yy.fill(0);yy[0]=Math.PI;for(let i=0;i<N;i++)yy[4+i]=x0[i];yy[2]=x0[N];
+    for(let k=0;k<0.2/h;k++){der(0,yy,o_);let v=0;for(let i=0;i<N;i++){yy[4+N+i]+=h*(o_[4+N+i]-2*w[i]*yy[4+N+i]);yy[4+i]+=h*yy[4+N+i];v=Math.max(v,Math.abs(yy[4+N+i]/w[i]));}
+      if(!qD){yy[3]+=h*(o_[3]-cw*yy[3]);yy[2]+=h*yy[3];}if(k>1000&&v<1e-14&&Math.abs(yy[3])<1e-9)break;}
+    x=Float64Array.from([...yy.slice(4,4+N),yy[2]]);const xr=Float64Array.from(x);
+    if(!(newton(x)&&x.every(Number.isFinite)))x=xr;
+    if(!x.every(Number.isFinite))throw Error('tripping.js: the detent\'s rest not found');
     return x;};
   const ext0=o.ext;o.ext=null;const xs=rest();o.ext=ext0;
   const qs=xs.slice(0,N),ps=xs[N];
@@ -273,6 +286,38 @@ const A=r0.map((_,i)=>J.map(c=>c[i])),dx=gsolve(A,r0.map(v=>-v));let mx=0;for(le
 module.exports={frame,assemble,modes,detent,modal,rows,dot,gsolve,tn,xy,X,model,run};
 if(require.main!==module)return;
 
+/* ---------- the bench's figures (tools/tripping.json, read by bench.js): how shallow a lock and how thin or thick a detent spring still never trip ----------
+   Each setting runs in a process of its own (MC_ESC: makeEsc's settings through dynamics.js; MC_TRIP: the frame's), many at once. For each: the frame as drawn and
+   with every contact 4× stiffer (the worst of section 2's estimates) running 10 s (20 beats), a held tooth's stone's highest lift; for the depths of lock also the 3 ms blow
+   across the plate that lets a tooth go (as section 4); for the springs the detent's first mode, its foot clamped and its blade free: the pitch it rings at */
+const FIG=path.join(__dirname,'tripping.json'),DEPTHS=[0.017,0.0152,0.013,0.011,0.009,0.007,0.005],THICK=[0.05,0.06,0.07,0.079,0.10,0.12,0.15];
+const blowAt=(M,dur)=>{const A0=255,ang=Math.atan2(DY.DM.my,DY.DM.mx)+Math.PI/2,ux=Math.cos(ang),uy=Math.sin(ang),B={};
+  const base=p=>B[p]??=run(M,{A:A0,T:0.3+p*T0+0.55,from:0.2});
+  const mk=(g,p)=>{const t1=0.3+p*T0,a=g*G0;return run(M,{A:A0,T:t1+0.55,from:0.2,ext:tt=>{const u=(tt-t1)/dur,x=u>0&&u<1?Math.sin(Math.PI*u):0;return{al:0,ax:a*x*ux,ay:a*x*uy};},extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});};
+  const bad=g=>{for(const p of[0.1,0.35,0.6,0.85])for(const s of[1,-1]){const r=mk(g*s,p);if(r.trips>0||r.beats!==base(p).beats)return true;}return false;};
+  let lo=5,hi=400;for(let i=0;i<7;i++){const m=Math.sqrt(lo*hi);bad(m)?hi=m:lo=m;}return hi;};
+if(process.argv.includes('--child')){
+  const c=JSON.parse(process.env.MC_TRIP||'{}'),o=c.tS?{tS:c.tS}:{},M=model(o),r=run(M,{T:10,from:5}),rs=run(model({...o,kB:4e6,kT:4e6,kJ:8e5,kH:8e4,kR:2e3}),{T:10,from:5}),m=ESC.measure();
+  const depth=lPk*ESC.ES*BLu/LEN*1000;   /* µm at the stone */
+  process.stdout.write(JSON.stringify({dL:S.dL,t:+(c.tS?c.tS*(X.spring.n1-X.spring.n0)*1000:(X.spring.n1-X.spring.n0)*1000).toFixed(4),lock:+m.lock.toFixed(3),drop:+m.drop.toFixed(3),depth:+depth.toFixed(1),
+    ...(()=>{const md=modal(detent(o),30000);return{f1:+md[0].f.toFixed(1),f2:+md[1].f.toFixed(1)};})(),A:+r.A.toFixed(2),trips:r.trips+rs.trips,lift:+Math.max(r.maxL,rs.maxL).toFixed(4),liftUm:+(Math.max(r.maxL,rs.maxL)*depth).toFixed(2),blow:c.blow?+blowAt(M,0.003).toFixed(1):null})+'\n');
+  return;}
+const benchFigs=async()=>{const{spawn}=require('child_process'),jobs=[...DEPTHS.map(dL=>[{dL},{blow:true}]),...THICK.map(t=>[{},{tS:t/((X.spring.n1-X.spring.n0)*1000)}])],out=new Array(jobs.length);
+  const kid=([esc,trip])=>new Promise((res,rej)=>{const p=spawn(process.execPath,[__filename,'--child'],{env:{...process.env,MC_ESC:JSON.stringify(esc),MC_TRIP:JSON.stringify(trip)}});let s='';
+    p.stdout.on('data',d=>s+=d);p.stderr.on('data',d=>process.stderr.write(d));p.on('close',code=>code?rej(Error('tripping.js --child '+JSON.stringify([esc,trip])+' exited '+code)):res(JSON.parse(s.trim().split('\n').pop())));});
+  let next=0;const N=Math.max(1,Math.min(jobs.length,require('os').cpus().length-2));
+  await Promise.all([...Array(N)].map(async()=>{while(next<jobs.length){const i=next++;out[i]=await kid(jobs[i]);}}));
+  const L=out.slice(0,DEPTHS.length),T=out.slice(DEPTHS.length),ok=r=>r.trips===0&&r.lift<0.5&&(r.blow==null||r.blow>=20);
+  /* the shallowest lock with every deeper one safe too; the thinnest and thickest springs with every one between them and the drawn safe (the thickest no more than
+     tolerances.js allows for the swing) */
+  let iL=0;while(iL+1<L.length&&ok(L[iL+1]))iL++;
+  const tol=/up to [\d.]+ times the drawn spring's \(([\d.]+) mm thick/.exec(JSON.parse(fs.readFileSync(path.join(__dirname,'tolerances.json'),'utf8'))['42087']);if(!tol)throw Error('tolerances.json: the detent spring\'s thickest not found');
+  const d0=T.findIndex(r=>Math.abs(r.t-(X.spring.n1-X.spring.n0)*1000)<1e-3);let lo=d0,hi=d0;while(lo>0&&ok(T[lo-1]))lo--;while(hi+1<T.length&&ok(T[hi+1])&&T[hi+1].t<=+tol[1]+1e-9)hi++;
+  return{note:'tools/tripping.js --write: the shallowest lock and the detent spring\'s thickness that never trip, and the pitch the detent rings at; read by bench.js',
+    lock:{rows:L,min:L[iL].lock,depth:L[iL].depth,drop:L[iL].drop,dropZero:(()=>{for(let i=1;i<L.length;i++)if(L[i].drop<0){const a=L[i-1],b=L[i];return+(a.lock+(b.lock-a.lock)*a.drop/(a.drop-b.drop)).toFixed(2);}return null;})(),trips:(L.find(r=>r.trips>0)||{lock:null}).lock},ring:{rows:T,f0:T[d0].f1,trip:T[d0].f2,t:[T[lo].t,T[hi].t],band:[T[lo].f1,T[hi].f1],tolMax:+tol[1]}};};
+const figTxt=j=>JSON.stringify(j,null,1)+'\n';
+if(process.argv.includes('--write')){benchFigs().then(j=>{fs.writeFileSync(FIG,figTxt(j));console.log(`wrote tools/tripping.json: a lock of ${j.lock.min}° at least (a depth of ${j.lock.depth} µm); the detent rings at ${j.ring.f0} Hz, ${j.ring.band[0]}-${j.ring.band[1]} Hz for a spring ${j.ring.t[0]}-${j.ring.t[1]} mm thick`);}).catch(e=>{console.error(e);process.exitCode=1;});return;}
+
 /* ---------- the report ---------- */
 const quick=process.argv.includes('--quick'),ji=process.argv.indexOf('--json'),JOUT=ji>0?process.argv[ji+1]:null,RW=[],J={made:new Date().toISOString().slice(0,10)};let fail=0;
 const say=s=>RW.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;RW.push(`${ok?'  ok ':'  !! '} ${s}`);};
@@ -305,6 +350,11 @@ say(`the wheel's own inertia in the recoil (dynamics.js holds the wheel still wh
 say(`the tooth let go where its tip is free (${f(100*lFr/lRel,0)} % of makeEsc's release, past the stone's edge) rather than at makeEsc's release, which keeps room to spare: released ${f(Math.abs(rf.rel-rd.rel),2)}° of the balance sooner, the swing ${sg(rf.A-rd.A,2)}°, ${sg(rf.rate-rd.rate,2)} s a day`);
 J.valid={dyn:pick(dyn),frame:pick(rq),half:pick(rq2),wheel:pick(rd),free:pick(rf),lPk:lPk/lRel,lFr:lFr/lRel};
 flush();
+/* the bench's figures (tripping.json, bench.js): its pitches are the frame's modes, quick to check; the rest are runs, checked in full below */
+const FJ=fs.existsSync(FIG)?JSON.parse(fs.readFileSync(FIG,'utf8')):null;J.bench=FJ;
+{const dk=(X.spring.n1-X.spring.n0)*1000,bad=FJ?FJ.ring.rows.filter(r=>Math.abs(modal(detent({tS:r.t/dk}),30000)[0].f-r.f1)>0.06):[1];
+  chk(!!FJ&&bad.length===0,FJ?`tools/tripping.json's pitches are the frame's (${FJ.ring.rows.length} springs, ${f(FJ.ring.rows[0].f1,0)}-${f(FJ.ring.rows[FJ.ring.rows.length-1].f1,0)} Hz)`:'tools/tripping.json is missing: node tripping.js --write');}
+flush();
 if(quick){if(fail)process.exitCode=1;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));return;}
 
 say('2. Running: the detent as drawn, the wheel free to recoil, every contact elastic');
@@ -332,7 +382,7 @@ flush();
 say('3. Pushed: the swing raised by the drive until a tooth gets past');
 {const sFor=A=>{let lo=0.5,hi=6;for(let i=0;i<40;i++){const m=(lo+hi)/2;ESC.ampAt(m)<A*D?lo=m:hi=m;}return(lo+hi)/2;};
   const Md2=model({}),out=[];let lastOk=null,firstBad=null;
-  for(const A of[270,290,310,320,330,333,335,337,338,339,340,345,350]){const s=sFor(A);if(!(ESC.ampAt(s)>0))continue;const r=run(Md2,{s,A,T:3,from:1.5}),q=DY.sim({mode:'phys',s,A,T:3,from:1.5}),qT=q.trips+Math.max(0,q.beats-Math.ceil(3/T0));   /* dynamics.js books a second unlocking in a swing as a beat */
+  for(const A of[270,290,310,320,330,333,335,337,338,339,340,345,350]){const s=sFor(A);if(!(ESC.ampAt(s)>0))continue;const r=run(Md2,{s,A,T:3,from:1.5}),q=DY.sim({mode:'phys',s,A,T:3,from:1.5}),qT=q.trips;   /* dynamics.js counts a second unlocking in a swing as a trip too (since 12 October 2026) */
     out.push({A,s:+f(s,3),frame:{...pick(r),twice:r.twice},dyn:{A:+f(q.A,1),trips:qT,beats:q.beats}});
     say(`  drive ${f(s,2)}× (the model's swing ${f(ESC.ampAt(s)/D,0)}°): the frame ${f(r.A,0)}°, ${r.trips} trips${r.twice?` (${r.twice} unlocked twice in a swing)`:''}, the stone at most ${pc(r.maxL)}; dynamics.js ${f(q.A,0)}°, ${qT} trips`);
     if(r.trips===0&&r.beats>0){if(firstBad==null)lastOk=r.A;}else if(firstBad==null)firstBad=r.A;}
@@ -359,6 +409,9 @@ say('4. Knocks: the smallest that lets a tooth go or loses a beat, the frame as 
   chk(K4.every(k=>k.unit!=='g'||k.frame>20),`as drawn it takes a blow over 20 g across the plate to let a tooth go`);
   J.knocks={rows:K4,gS};}
 flush();
-J.time=(Date.now()-t0)/1000;
-if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));
-if(fail)process.exitCode=1;
+say('5. The bench\'s figures (tools/tripping.json, read by bench.js), run again');
+benchFigs().then(j=>{const same=FJ&&figTxt(j)===figTxt(FJ);
+  say(`the lock: at least ${j.lock.min}° (a depth of ${j.lock.depth} µm at the stone); the drop gone at ${j.lock.dropZero}°, a tooth past at ${j.lock.trips}°; the 3 ms blow that trips it ${j.lock.rows.filter(r=>r.drop>0).map(r=>f(r.blow,0)).join(', ')} g, deepest first`);
+  say(`the detent's ring: ${j.ring.f0} Hz as drawn, ${j.ring.band[0]}-${j.ring.band[1]} Hz for a spring ${j.ring.t[0]}-${j.ring.t[1]} mm thick (the trip spring's ${j.ring.trip} Hz)`);
+  chk(same,same?'tools/tripping.json is what this finds':'tools/tripping.json is not what this finds: node tripping.js --write, then node bench.js --write and python makers.py');
+  flush();J.time=(Date.now()-t0)/1000;if(JOUT)fs.writeFileSync(JOUT,JSON.stringify(J));if(fail)process.exitCode=1;}).catch(e=>{console.error(e);process.exitCode=1;});

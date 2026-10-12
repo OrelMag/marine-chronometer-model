@@ -15,7 +15,7 @@
 //   4. The ship's motion: yaw about the staff and the lateral accelerations of a roll, and what they do to the rate.
 // Every number from outside the model (moduli, densities, restitution) is a published range or marked estimated, as in physics.js.
 const fs=require('fs'),path=require('path');
-const {build}=require('./escapement.js'),ESC=build().ESC;
+const {build}=require('./escapement.js'),ESC=build(process.env.MC_ESC?JSON.parse(process.env.MC_ESC):{}).ESC;   /* MC_ESC: makeEsc's settings overridden, as JSON (tripping.js runs the escapement at other depths of lock so) */
 const rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8'),mv=rd('../js/movement.js'),phys=rd('physics.js');
 const num=(re,s,what)=>{const m=re.exec(s);if(!m)throw Error('not found: '+what);return+m[1];};
 const D=Math.PI/180,TAU=2*Math.PI,G0=9.80665,ES=ESC.ES/1000,day=x=>86400*x;   /* ES: the unit frame's length (the escape wheel's radius) in metres */
@@ -96,7 +96,7 @@ function sim(o={}){
   const hf=o.hf??4e-6,hc=o.hc??1e-4;
   let t=0,th=-(o.A??ESC.A/D)*D,w=0,d=0,dv=0,ph=0,pv=0,wm=0,dm=0,pc=false,pp=0,passed=true;   /* wm: wheel locked 0, free 1, on the jewel 2; dm: detent on its stop 0, free 1, pushed 2 */
   if(o.phase!=null){th=(o.A??ESC.A/D)*D*Math.cos(TAU*o.phase);w=-(o.A??ESC.A/D)*D*W0*Math.sin(TAU*o.phase);}
-  const st={pass:[],cross:[],beats:0,esc:0,caught:false,lastBeat:-1,trips:0,land:[],rel:[],off:[],offF:[],offTh:NaN,margin:[],liftAt:[],bounce:0,maxBack:0,lastBank:-1,lastOff:-1,bnc:0,home:[],stopAt:null,kicks:0,missed:0};
+  const st={swRel:0,twice:0,pass:[],cross:[],beats:0,esc:0,caught:false,lastBeat:-1,trips:0,land:[],rel:[],off:[],offF:[],offTh:NaN,margin:[],liftAt:[],bounce:0,maxBack:0,lastBank:-1,lastOff:-1,bnc:0,home:[],stopAt:null,kicks:0,missed:0};
   const X={al:0,ax:0,ay:0};
   const lift=()=>(phys?DM.mx*X.ay-DM.my*X.ax:0)+id*X.al;   /* the case's acceleration as a moment lifting the detent: its unbalance about Ft (DM.mx, DM.my: m·r), and the yaw */
   let ddd=0,phd=0,lamD=0,lamW=0;
@@ -138,7 +138,7 @@ function sim(o={}){
     const tw=wrap(th),near=(tw>-0.8&&tw<0.55)||wm!==0||dm!==0||pc||(ext&&o.extFine&&o.extFine(t));
     let h=Math.min(near?hf:hc,t1-t);
     /* states an event can't catch because its threshold is already passed as the step begins (a blow that lifts the detent off its stop in one step) */
-    if(!ideal){acc(t,th,w,d,dv,ph,pv);if(dm===0&&lift()>pre+(wm===0?0:0))dm=1;if(wm===0&&d>=DREL){wm=1;pv=0;st.rel.push(th/D);}}
+    if(!ideal){acc(t,th,w,d,dv,ph,pv);if(dm===0&&lift()>pre+(wm===0?0:0))dm=1;if(wm===0&&d>=DREL){wm=1;pv=0;st.rel.push(th/D);if(st.swRel++>0){st.trips++;st.twice++;}}}
     y[0]=th;y[1]=w;y[2]=d;y[3]=dv;y[4]=ph;y[5]=pv;
     const e0=evs(y,t).slice();rk(y,t,h,out);let e1=evs(out,t+h),hit_=-1;
     for(let i=0;i<8;i++)if(e0[i]>0&&e1[i]<=0){hit_=i;break;}
@@ -147,7 +147,7 @@ function sim(o={}){
     const thO=th,wO=w;t+=h;th=out[0];w=out[1];d=out[2];dv=out[3];ph=out[4];pv=out[5];
     /* the rate: the return swing's dead point, interpolated */
     if(thO>0&&th<=0&&w<0)st.cross.push(t-h+h*thO/(thO-th));
-    if(wO>0&&w<=0){amps.push(Math.abs(th));ampT.push(t);thM=th;}if(wO<0&&w>=0){amps.push(Math.abs(th));ampT.push(t);}
+    if(wO>0&&w<=0){amps.push(Math.abs(th));ampT.push(t);thM=th;}if(wO<0&&w>=0){amps.push(Math.abs(th));ampT.push(t);st.swRel=0;}
     if(ideal&&thO<0&&th>=0&&w>0){w+=o.kick;st.kicks++;}
     /* the trip spring: bent while the jewel holds its tip on the return swing; let go, its energy is lost */
     /* the trip spring, massless: once the jewel bends it on the return it stays on the jewel (on its face, then its end) while the jewel is in the way. The jewel
@@ -162,7 +162,7 @@ function sim(o={}){
       case 0:{const g=at(G,th),g1=at(G1,th)||0,h1=dm===2?(at(S21,th)||0)/LEN:0,Mb=I+id*h1*h1,c=pv-g1*w,L=hit(c,1/J+g1*g1/Mb,eW);pv+=L/J;w-=L*g1/Mb;if(eW===0||Math.abs(pv-g1*w)<1e-6){wm=2;ph=g;pv=g1*w;}
         st.land.push(th/D);st.caught=true;break;}
       case 1:{const sl=d*LEN;if(sl<ESC.lRel){st.beats++;st.lastBeat=t;if(!st.caught)st.esc++;st.caught=false;st.liftAt.push(sl/ESC.lRel);if(st.lastBank>0)st.margin.push(t-st.lastBank);wm=0;ph=0;pv=0;}else{st.trips++;ph+=P;wm=1;}break;}
-      case 2:{wm=1;pv=0;st.rel.push(th/D);break;}
+      case 2:{wm=1;pv=0;st.rel.push(th/D);if(st.swRel++>0){st.trips++;st.twice++;}break;}   /* a second release in one active swing (past makeEsc's TRIP, the jewel come round again) is a trip: until 12 October 2026 it counted as a beat (tripping.js) */
       case 3:{if(st.lastBank<st.lastOff){st.lastBank=t;st.home.push(th/D);st.offF.push(st.offTh);}st.bnc++;dv=-eB*dv;d=0;if(eB===0||Math.abs(dv)<1e-3||2*id*Math.abs(dv)/(pre+1e-30)<4*hf){dm=0;dv=0;}break;}   /* rebounds too short to resolve (a ball's bounces) end on the stop */
       case 4:{const h1=(at(S21,th)||0)/LEN,g1=wm===2?(at(G1,th)||0):0,Mb=I+J*g1*g1,c=dv-h1*w,L=hit(c,1/id+h1*h1/Mb,0);dv+=L/id;w-=L*h1/Mb;dm=2;d=at(S2,th)/LEN;dv=h1*w;break;}
       case 5:{dm=1;st.off.push(th/D);st.lastOff=t;st.offTh=th/D;break;}
@@ -179,7 +179,7 @@ function sim(o={}){
   const c=st.cross.filter(x=>x>=from),n=c.length,Tm=n>1?(c[n-1]-c[0])/(n-1):NaN;
   const am=amps.slice(-8),A=am.length?am.reduce((a,b)=>a+b,0)/am.length/D:0;
   const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN,tail=a=>a.slice(Math.floor(a.length/2));
-  return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),offF:mean(tail(st.offF)),margin:Math.min(...tail(st.margin)),
+  return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,twice:st.twice,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),offF:mean(tail(st.offF)),margin:Math.min(...tail(st.margin)),
     liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,home:mean(tail(st.home)),amps,ampT,cross:st.cross,stopped:st.beats===0};
 }
 module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,KTIP,DREL,LEN,lD,tD,LTS,CDR,day,S2,G,G1,at,jd,JR,JH,JB,H,RHO,polyM,ES,W0,T0};   /* tripping.js builds the detent as a frame from the same pieces and contacts */
@@ -267,6 +267,9 @@ const upset=r=>r.trips>0||Math.abs(r.beats-base.beats)>0;
   let lo=0,hi=60;for(let i=0;i<7;i++){const m=(lo+hi)/2;worst(m)?hi=m:lo=m;}const r=worst(hi);
   say(`a twist about the staff upsets it at about ${f(hi,1)} rad/s in 2 ms (${f(hi/(W0*ph.A*D),2)} of the balance's top speed): ${r&&r.trips?'a tooth escapes':r&&r.beats>base.beats?'it gains a beat':'it loses beats'}`);
   }
+/* a swing past a full turn: the discharge jewel comes round to the trip spring again (makeEsc's TRIP) and, far enough past, unlocks a second time in the swing */
+{const sFor=A=>{let lo=0.5,hi=6;for(let i=0;i<40;i++){const m=(lo+hi)/2;ESC.ampAt(m)<A*D?lo=m:hi=m;}return(lo+hi)/2;},at=A=>sim({mode:'phys',s:sFor(A),A,T:3,from:1.5}),lo=at(330),hi=at(345);
+  chk(lo.trips===0&&hi.twice>0,`driven to a ${f(lo.A,0)}° swing it keeps one unlocking a swing; to ${f(hi.A,0)}° the jewel, come round past makeEsc's TRIP (${f(ESC.TRIP/D,0)}°), unlocks again in the same swing, a trip each time (${hi.twice} in ${hi.beats} beats: counted as beats until 12 October 2026)`);}
 /* a blow across the plate: the balance and wheels are poised, the detent is not: m r × a lifts it, worst at right angles to its centre of mass */
 {const ang=Math.atan2(DM.my,DM.mx)+Math.PI/2,ux=Math.cos(ang),uy=Math.sin(ang),gS=MPRE/(DM.m*rCM*G0),gR=(MPRE+KD*DREL+TAUE*CDR/DREL)/(DM.m*rCM*G0);
   for(const dur of[0.0005,0.003]){const blow=(g,p,s)=>{const t1=1.5+p*T0,a=s*g*G0;return sim({mode:'phys',A:215,T:4,from:3,ext:pulse(t1,dur,x=>({al:0,ax:a*x*ux,ay:a*x*uy})),extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.02});};

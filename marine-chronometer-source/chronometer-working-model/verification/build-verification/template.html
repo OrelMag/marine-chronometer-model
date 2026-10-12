@@ -214,7 +214,7 @@ free at <span id="trFr"></span> µm. makeEsc keeps lifting to <span id="trRl"></
 (the depth of lock, <span id="trLR"></span> µm at the stone): the highest each 0.1 ms. The shaded spans are the unlocking (the discharge jewel lifts the stone clear, past 100 %, off the
 chart) and the return swing (the jewel bends the trip spring). <code>tripping.js</code>, section 2.</figcaption></figure>
 <p><b>Running.</b> <span id="trRun"></span> The largest lift while a tooth is held comes <span id="trWhen"></span>; by the time the next tooth arrives the stone has settled
-(<span id="trArr"></span>). None of the estimates moves that far (Table 9: the detent's damping, every contact's restitution and stiffness, the blade's stiffness, the modes kept).</p>
+(<span id="trArr"></span>). None of the estimates moves that far (the table below: the detent's damping, every contact's restitution and stiffness, the blade's stiffness, the modes kept).</p>
 <div id="t9" class="tw"></div>
 <figure><div class="chart" id="c11"></div><figcaption>Figure 11. The swing pushed by raising the drive: the stone's largest lift while a tooth is held, the frame as drawn. A
 dot on the top line is a run where a tooth got past. The dashed line is makeEsc's TRIP, where the discharge jewel comes round to the trip spring a second time in the swing;
@@ -225,6 +225,18 @@ eight moments in the swing, for the frame and for the rigid detent by the same r
 <p><span id="trKn"></span> A chronometer in its gimballed, padded box meets a few g at sea; the margin is wide. What the frame leaves out: the detent's motion out of the plate
 (its spring is 0.95 mm deep against 0.079 thick, twelve times stiffer that way, and moving that way doesn't unlock), and the true restitution of each contact, which only
 the made detent can show.</p>
+
+<h3>What the bench checks</h3>
+<p>Two things the frame shows a maker can measure. <b>The lock</b> (Op. 85): run at shallower locks (each in its own process, makeEsc's depth of lock changed, the
+frame as drawn and with every contact four times stiffer, 20 beats each), the stone's largest lift while it holds a tooth stays at <span id="tbLift"></span> whatever the
+depth, so a shallower lock leaves less margin: <span id="tbLock"></span> The blow that trips it hardly changes with the lock (the first table below): against knocks it is Op. 78's
+preload that holds the detent, which makes the weight test the one to do carefully. <b>The detent spring</b>, whose section no source gives: clamped by its foot and
+flicked, the detent rings at its first mode, <span id="tbF0"></span>, and the pitch rises nearly as its spring's thickness to the 1.5, so a phone's recording measures
+the spring (<code>benchcheck.py --ring</code> reads one). <span id="tbRing"></span> Both are in the build book's tests chapter and on the detent's card;
+<code>benchcheck.py</code> judges them.</p>
+<div class="cols"><div id="t11" class="tw"></div><div id="t12" class="tw"></div></div>
+<p class="small">The largest lift over 20 beats is a maximum of a chaotic chatter: two runs a hair apart differ by about ten points. The figures are margins, not sharp
+limits; the lock's floor is where the margin falls below two, and the spring's band is the drawn spring to the thickest the swing allows (<span id="tbThin"></span>).</p>
 
 <h2 id="context">The checks the model already had</h2>
 <p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
@@ -246,7 +258,8 @@ python fea.py              # about 3 min (--check 5 s; --reuse skips the browser
 node hairspring-fe.js      # about 20 s
 node bench.js              # a second (--write, then python makers.py)
 python rating.py --demo    # under a second; python rating.py LOG.csv for a real log
-node tripping.js           # about 8 min (--quick 10 s: the frame and the validation)</pre>
+node tripping.js           # about 6 min (--quick 10 s: the frame, the validation, the bench's pitches)
+node tripping.js --write   # about 2 min: tripping.json, the bench's lock floor and the detent's ring (then node bench.js --write, python makers.py)</pre>
 <p>and this report, from <code>verification/build-verification/</code>:</p>
 <pre>node reportdata.js                                                 # about 35 s: assets/data.json
 python ../../tools/fea.py --reuse --json assets/fea.json           # about 3 min
@@ -265,7 +278,7 @@ python build_report.py                                             # index.html 
 <tr><td><a href="../../tools/bench.js"><code>tools/bench.js</code></a></td><td>The bench tests and their figures (<code>bench.json</code>, through <code>makers.py</code> into the cards and the build book; <code>book.py</code> checks them printed)</td><td>bench.json stale</td></tr>
 <tr><td><a href="../../tools/benchcheck.py"><code>tools/benchcheck.py</code></a></td><td>A maker's bench measurements judged against bench.json's figures, with what to do</td><td>(--demo) a planted fault missed; (a real file) a measurement fails</td></tr>
 <tr><td><a href="../../tools/rating.py"><code>tools/rating.py</code></a></td><td>A made chronometer's log: the Navy test's figures, the fit, the backtest, the projection</td><td>(--demo) the fit misses what the log was made with</td></tr>
-<tr><td><a href="../../tools/tripping.js"><code>tools/tripping.js</code></a></td><td>The detent as a frame: its modes; the frame made rigid against dynamics.js; running as drawn, the estimates varied, the swing pushed, the knocks that trip it</td><td>the rigid frame parts from dynamics.js; a tooth gets past at the model's settings or under any estimate varied; a held tooth's stone uses half the depth of lock; a blow under 20 g trips it</td></tr>
+<tr><td><a href="../../tools/tripping.js"><code>tools/tripping.js</code></a></td><td>The detent as a frame: its modes; the frame made rigid against dynamics.js; running as drawn, the estimates varied, the swing pushed, the knocks that trip it</td><td>the rigid frame parts from dynamics.js; a tooth gets past at the model's settings or under any estimate varied; a held tooth's stone uses half the depth of lock; a blow under 20 g trips it; tripping.json is stale</td></tr>
 <tr><td><a href="../../tools/acoustic.py"><code>tools/acoustic.py</code></a></td><td>The swing from a recording of the beat (now any recording's path, a made movement's)</td><td>—</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This report's data and page</td><td>—</td></tr>
 </table></div>
@@ -434,6 +447,14 @@ function draw(){const D=DATA,G=D.data,FE=D.fea,RT=D.rating;
     const fb=PR.find(r=>r.frame.trips),db=PR.find(r=>r.dyn.trips);
     $('trPush').textContent=`Raising the drive raises the swing; the frame as drawn lets no tooth past up to ${f(TP.push.lastOk,0)}°${fb?`, and does from ${f(fb.frame.A,0)}°`:''}, where the discharge jewel comes round to the trip spring again (makeEsc's TRIP, ${f(TP.push.TRIP,0)}°); the rigid detent ${db?`trips from ${f(db.dyn.A,0)}°`:'never trips in this range'}. The manual's band ends at 270°, so the margin is over 60°.`;}
   {const KN=TP.knocks.rows;table('t10',['Knock (half-sine, the worst moment and direction)','the frame as drawn','the rigid detent','the frame against it'],KN.map(k=>[k.name,`${f(k.frame,k.unit==='g'?0:1)} ${k.unit}`,`${f(k.rigid,k.unit==='g'?0:1)} ${k.unit}`,`${sg(100*(k.frame/k.rigid-1),0)} %`]));
+    {const BF=TP.bench,LK=BF.lock,RG=BF.ring,ok=r=>r.trips===0&&r.lift<0.5,pc0=x=>f(100*x,0)+' %',wk=LK.rows.filter(r=>r.drop>0),thin=RG.rows.filter(r=>r.t<RG.t[0]),thick=RG.rows.filter(r=>r.t>=RG.t[0]);
+      $('tbLift').textContent=`${f(Math.min(...wk.map(r=>r.liftUm)),0)}-${f(Math.max(...wk.map(r=>r.liftUm)),0)} µm`;
+      $('tbLock').textContent=`at the manual's floor, ${f(LK.min,0)}°, it is ${pc0(LK.rows.find(r=>r.lock===LK.min).lift)} of the ${f(LK.depth,0)} µm depth; below it the margin falls under two, the drop is gone at ${f(LK.dropZero,1)}° and a tooth gets past at ${f(LK.trips,1)}°. The manual's band, 5-7°, is the right one; the bench's escapement test now says why.`;
+      $('tbF0').textContent=`${f(RG.f0,0)} Hz as drawn (the trip spring's own, ${f(RG.trip,0)} Hz, is higher)`;
+      $('tbRing').textContent=`The bench's band is ${f(RG.band[0],0)}-${f(RG.band[1],0)} Hz, a spring ${f(RG.t[0],3)}-${f(RG.t[1],3)} mm thick: thicker than ${f(RG.t[1],2)} mm, unlocking takes too much of the impulse (tolerances.js).`;
+      $('tbThin').textContent=`thinner springs ring more: ${f(100*Math.min(...thin.map(r=>r.lift)),0)}-${f(100*Math.max(...thin.map(r=>r.lift)),0)} % against ${f(100*Math.min(...thick.map(r=>r.lift)),0)}-${f(100*Math.max(...thick.map(r=>r.lift)),0)} % as drawn and thicker`;
+      table('t11',['Lock (depth at the stone)','drop','the stone, at most','trips','3 ms blow'],LK.rows.map(r=>[`${f(r.lock,1)}° (${f(r.depth,0)} µm)`,`${f(Math.abs(r.drop)<0.05?0:r.drop,1)}°`,`${pc0(r.lift)} (${f(r.liftUm,0)} µm)`,r.trips,r.drop>0?`${f(r.blow,0)} g`:'(no drop)']));
+      table('t12',['Detent spring','rings at','the stone, at most','trips'],RG.rows.map(r=>[`${f(r.t,3)} mm${Math.abs(r.f1-RG.f0)<0.5?' (drawn)':''}`,`${f(r.f1,0)} Hz`,pc0(r.lift),r.trips]));}
     const bl=KN.filter(k=>k.unit==='g');$('trKn').textContent=`The blade's own bending ${bl.every(k=>k.frame<k.rigid)?'lowers':bl.every(k=>k.frame>k.rigid)?'raises':'changes'} the blow that trips it by ${bl.map(k=>`${f(Math.abs(100*(k.frame/k.rigid-1)),0)} %`).join(' and ')}: the least is ${f(Math.min(...bl.map(k=>k.frame)),0)} g. A steady push would lift the rigid detent off its stop at ${f(TP.knocks.gS,0)} g.`;}
   /* 6: rating */
   const PS=[['I',90],['II',72.5],['III',55],['IV',55],['V',72.5],['VI',90]];

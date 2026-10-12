@@ -4,8 +4,11 @@ the stud's pinning point, which of the manual's operations moves an escapement f
 
   python benchcheck.py MEAS.json             every measurement in the file judged; exit 1 if one fails (a field left null is skipped)
   python benchcheck.py --template OUT.json   a blank file to fill in, every field named with its unit
+  python benchcheck.py --ring FILE           the pitch a recording of the detent's ring holds (any file ffmpeg reads; acoustic.py's reader): its
+                                             strongest peaks, the detent's own the lowest of them below the trip spring's
   python benchcheck.py --demo                a made-up set (a spring a little weak, the fusee set up too little, a mesh bored close, the balance fast,
-                                             the lock shallow) judged, and a check that each fault is found: exit 1 if one is missed
+                                             the detent's spring thin, the lock shallow) judged, and a check that each fault is found; and the pitch read
+                                             off a made-up ring: exit 1 if one is missed
 
 How each is judged (the figures and their sources: bench.js, and the build book):
   mainspring   thickness in its material's band (Nivaflex 45/5, the build's, or carbon steel, the Model 21's); the torque fully wound (the highest
@@ -21,7 +24,10 @@ How each is judged (the figures and their sources: bench.js, and the build book)
   endshake     each arbor in the band at 20 °C (Ops. 15, 69, 74, less what 40 and 100 °F take: thermal.js).
   balance      oscillations counted over a time: its rate, s a day. Within one turn of the timing weights (40 s a day, Sec. IX): the weights; beyond, the
                spring's length at the stud (the rate goes as L^-1/2: 2 L × rate / 86400 mm, 409 mm long).
-  escapement   each figure in the manual's band (Ops. 84-97; where it says "about", a band either side estimated: bench.js), with the operation that sets it.
+  detent       the pitch it rings at, its foot clamped and its blade free, in the band (tripping.js: the spring as drawn to the thickest tolerances.js allows);
+               the spring's thickness read off it (the frame's pitch against thickness, interpolated as a power).
+  escapement   each figure in the manual's band (Ops. 84-97; where it says "about", a band either side estimated: bench.js), with the operation that sets it;
+               a lock under tripping.js's floor says why it matters.
   swing        fully wound and run down, 247.5-270° (Sec. II, IX); low at both ends, at one, or high: what each points to.
 """
 import json, math, os, sys
@@ -36,6 +42,7 @@ TEMPLATE = {'_how': 'Fill in what you measure, leave null what you have not. Tor
   'depths_mm': {n: {'plate': None, 'bridge': None} for n in B['depths']['names']},
   'endshake_mm': {k: None for k in ('fusee', 'centre', 'third', 'fourth', 'escape', 'balance')},
   'balance': {'_': 'oscillations (each a there and back) counted over seconds, the spring pinned in, free in a vibrating tool or the cock', 'oscillations': None, 'seconds': None},
+  'detent': {'_': 'the pitch it rings at, its foot clamped, flicked at the blade\'s end (python benchcheck.py --ring FILE reads a recording)', 'ring_hz': None},
   'escapement': {'lock_deg': None, 'letoff_deg': None, 'overall_deg': None, 'drop_deg': None, 'horn_clearance_mm': None, 'roller_shake_mm': None},
   'swing_deg': {'fully_wound': None, 'run_down': None}}
 
@@ -84,6 +91,16 @@ def check(M):
         f = bl['oscillations'] / bl['seconds']; rate = (f / B['balance']['hz'] - 1) * 86400; w = B['balance']['weightsTurn']
         todo = f'{abs(rate) / w:.1f} turns of the timing weights {"out" if rate > 0 else "in"}' if abs(rate) <= 3 * w else f'take the spring {"longer" if rate > 0 else "shorter"} at the stud by {abs(2 * 409.3 * rate / 86400):.2f} mm, then the weights'
         res(abs(rate) <= w, 'balance vibrated', f'{f:.4f} oscillations a second: {rate:+.0f} s a day {"fast" if rate > 0 else "slow"} (one turn of the weights is {w} s a day)', todo)
+    dt = (M.get('detent') or {}).get('ring_hz'); DT = B.get('detent')
+    if dt is not None and DT:
+        rows = DT['rows']; lo, hi = DT['ring']
+        def thick(f):   # the spring's thickness the pitch gives, interpolated between the frame's rows as a power (f ~ t^n)
+            pts = sorted((r[1], r[0]) for r in rows); i = max(1, min(len(pts) - 1, next((k for k, q in enumerate(pts) if q[0] >= f), len(pts) - 1)))
+            (f0, t0), (f1, t1) = pts[i - 1], pts[i]; n = math.log(f1 / f0) / math.log(t1 / t0); return t0 * (f / f0) ** (1 / n)
+        t = thick(dt); ok = lo * 0.97 <= dt <= hi * 1.03
+        todo = ('thinner than drawn: it rings more after each lock (tripping.js); a spring of 0.10 mm or so rings least' if dt < lo else
+                'stiffer than the swing allows: unlocking takes too much of the impulse (tolerances.js); thin it or fit a thinner one') if not ok else ''
+        res(ok, 'detent rings', f'{dt:.0f} Hz, its spring about {t:.3f} mm thick (the band {lo:.0f}-{hi:.0f} Hz, {DT["t"][0]:.3f}-{DT["t"][1]:.3f} mm; as drawn {DT["f0"]:.0f} Hz)', todo)
     es = M.get('escapement') or {}; E = B['escapement']
     ops = {'lock_deg': ('lock', 'the lock-adjusting screw (Op. 85)'), 'letoff_deg': ('letoff', 'the trip spring\'s tip, bent (Op. 86)'), 'overall_deg': ('overall', 'the trip spring\'s tip and the detent\'s place (Op. 87)'),
            'drop_deg': ('drop', 'the detent-adjusting screw (Op. 97)'), 'horn_clearance_mm': ('horn', 'the horn, set to the unlocking jewel (Op. 88)'), 'roller_shake_mm': ('shake', 'the roller\'s fit on the staff (Op. 84)')}
@@ -91,6 +108,7 @@ def check(M):
         v = es.get(key)
         if v is None: continue
         lo, hi = E[c]; ok = (lo is None or v >= lo) and (hi is None or v <= hi)
+        if c == 'lock' and E.get('lockTrip') and v < E['lockTrip']: op += f'; under {E["lockTrip"]:g}° the detent\'s ringing after each lock comes to over half the depth of lock, and the drop is gone at {E["dropZero"]:g}° (tripping.js)'
         res(ok, f'escapement {c}', f'{v:g} (the manual\'s {"at least " + str(lo) if hi is None else f"{lo}-{hi}"}; the model {E["model"][c]:g})', op)
     sw = M.get('swing_deg') or {}; a, b = sw.get('fully_wound'), sw.get('run_down'); lo, hi = B['swing']
     for n_, v in (('fully wound', a), ('run down', b)):
@@ -101,6 +119,29 @@ def check(M):
         out.append(f'       → {why}')
     return out, bad
 
+def ring_peaks(x, fs, fmax=2000.0):
+    """the strongest peaks of a recording's spectrum between 30 Hz and fmax: [(Hz, share of the strongest)], highest first; each refined by the parabola
+    through its bin and its neighbours"""
+    import numpy as np
+    x = np.asarray(x, float); x = x - x.mean(); n = 1 << int(math.ceil(math.log2(max(len(x), 1 << 14)))) + 1
+    S = np.abs(np.fft.rfft(x * np.hanning(len(x)), n)); fr = np.fft.rfftfreq(n, 1 / fs); k0, k1 = np.searchsorted(fr, [30, fmax])
+    pk = [k for k in range(k0 + 1, k1 - 1) if S[k] > S[k - 1] and S[k] >= S[k + 1]]; top = max((S[k] for k in pk), default=1.0) or 1.0
+    out = []
+    for k in pk:
+        if S[k] < 0.2 * top: continue
+        a, b, c = np.log(S[k - 1] + 1e-30), np.log(S[k] + 1e-30), np.log(S[k + 1] + 1e-30); d = 0.5 * (a - c) / (a - 2 * b + c) if a - 2 * b + c else 0.0
+        out.append(((k + d) * fs / n, float(S[k] / top)))
+    out.sort(key=lambda q: -q[1]); kept = []
+    for f, a in out:   # one peak in each 3 %
+        if all(abs(f - g) > 0.03 * g for g, _ in kept): kept.append((f, a))
+    return kept[:6]
+def ring(path_):
+    sys.path.insert(0, HERE); import acoustic
+    x = acoustic.audio(path_); fs = acoustic.FS; pk = ring_peaks(x, fs); DT = B.get('detent') or {}; trip = DT.get('trip', 1e9)
+    print(f'  {path_}: the strongest peaks ' + ', '.join(f'{f:.1f} Hz ({a * 100:.0f} %)' for f, a in pk))
+    low = [f for f, a in pk if f < 0.8 * trip]
+    print(f'  the detent rings at {min(low):.1f} Hz (put it in MEAS.json as detent.ring_hz)' if low else '  no peak below the trip spring\'s: flick the blade, not the trip spring, and hold the phone closer')
+
 def demo():
     """a made-up set with known faults; each must be found"""
     up = [[0.5 * i, 0.31 + 0.080 * 0.5 * i] for i in range(10)]; dn = [[p[0], p[1] * 0.92] for p in up]
@@ -109,18 +150,26 @@ def demo():
          'depths_mm': {'fusee-centre': {'plate': 20.384, 'bridge': 20.390}, 'third-fourth': {'plate': 11.250, 'bridge': 11.300}},
          'endshake_mm': {'centre': 0.04, 'third': 0.02},
          'balance': {'oscillations': 241, 'seconds': 120},
+         'detent': {'ring_hz': 96},
          'escapement': {'lock_deg': 4.2, 'letoff_deg': 8, 'overall_deg': 27.5, 'drop_deg': 2.1},
          'swing_deg': {'fully_wound': 252, 'run_down': 238}}
     out, bad = check(M); print('a made-up set of measurements:'); print('\n'.join(out))
-    want = {'mainspring fully wound', 'mainspring after a week', 'fusee evenness', 'depth third-fourth (plate)', 'endshake third', 'balance vibrated', 'escapement lock', 'swing run down'}
+    want = {'mainspring fully wound', 'mainspring after a week', 'fusee evenness', 'depth third-fourth (plate)', 'endshake third', 'balance vibrated', 'detent rings', 'escapement lock', 'swing run down'}
     miss = want - set(bad); extra = set(bad) - want
     print(('  ok ' if not miss and not extra else '  !! ') + f'the made-up faults found: {len(want) - len(miss)} of {len(want)}' + (f'; missed {sorted(miss)}' if miss else '') + (f'; flagged besides {sorted(extra)}' if extra else ''))
-    return not miss and not extra
+    # the pitch read off a made-up ring: the detent at 137.4 Hz and the trip spring at 738 Hz, both dying away, in noise
+    import numpy as np
+    fs = 48000; t = np.arange(int(0.6 * fs)) / fs; rng = np.random.default_rng(1)
+    x = np.exp(-t / 0.25) * np.sin(2 * np.pi * 137.4 * t) + 0.6 * np.exp(-t / 0.05) * np.sin(2 * np.pi * 738.3 * t) + 0.05 * rng.standard_normal(len(t))
+    pk = ring_peaks(x, fs); f = min(q for q, a in pk if q < 0.8 * 738.3); okr = abs(f - 137.4) < 0.5
+    print(('  ok ' if okr else '  !! ') + f'the pitch read off a made-up ring (137.4 Hz and the trip spring\'s 738 Hz, in noise): {f:.2f} Hz')
+    return not miss and not extra and okr
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8'); a = sys.argv[1:]
     if not a: sys.exit(__doc__)
     if a[0] == '--demo': sys.exit(0 if demo() else 1)
+    if a[0] == '--ring': ring(a[1]); return
     if a[0] == '--template':
         out = a[1] if len(a) > 1 else 'bench-measurements.json'; json.dump(TEMPLATE, open(out, 'w', encoding='utf-8'), indent=1, ensure_ascii=False); print('wrote', out); return
     out, bad = check(json.load(open(a[0], encoding='utf-8'))); print('\n'.join(out) or '  nothing measured yet'); print(f'  {len(bad)} failed' if bad else '  all measured pass' if out else ''); sys.exit(1 if bad else 0)

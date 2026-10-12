@@ -1038,7 +1038,18 @@ on what would stop the chronometer.
   TRIP, 333°, is where it first touches); a blow across the plate of 61 g over
   3 ms or 138 g over 0.5 ms, or a twist of 19 rad/s, lets a tooth go, within
   15 % of the rigid detent's. The estimates are the contacts' restitution
-  (0.3, 0 at the jewels) and the detent's damping (Q 100).
+  (0.3, 0 at the jewels) and the detent's damping (Q 100). For the bench
+  (`--write`, `tools/tripping.json`): run at shallower locks, the stone's
+  largest lift while held stays at 20-50 µm whatever the depth, so the lock's
+  floor is the manual's 5° (the margin under two below it; the drop gone at
+  3.4°, a tooth past at 2.4°), and the blow that trips it hardly changes with
+  the lock: against knocks it is Op. 78's preload that holds. Clamped by its
+  foot and flicked, the detent rings at 137 Hz as drawn, the pitch rising
+  nearly as its spring's thickness to the 1.5 (137-342 Hz for 0.079-0.150 mm;
+  thinner springs ring more after each lock), which makes a phone's recording
+  a measure of the spring's section no source gives: bench.js's test
+  "The detent rings", benchcheck.py `--ring`. dynamics.js now counts a second
+  unlocking in one swing as a trip (it was booked as a beat).
 - **The report**, `verification/build-verification/index.html` (open the
   file; `build_report.py` rebuilds it): the process, figures, sources and
   scripts of these checks, the earlier ones' output beside them.
