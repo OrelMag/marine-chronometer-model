@@ -13,7 +13,7 @@ const range=(fn,lo,hi)=>[fn(lo),fn(hi)].sort((a,b)=>a-b);
 /* ---------- A3: the energy budget, mainspring to balance ---------- */
 say('A3: the energy budget');
 const I=578.5e-9,k=I*(4*Math.PI)**2,A=255*D,Eb=k*A*A/2;   /* the balance (Table II, invariants.py), its stiffness, the swing (tools/escapement.js), its energy */
-const b=0.01355,t=MS.t/1000,L=MS.len/1000,E=207e9;   /* the mainspring: the parts list's 0.0165 in (0.419 mm); its width, 13.55 (the cap-side edge 1.45 under the cap's seat on KLUwI2UUCMQ 15:54: movement.js, MSY1); its length (estimated, 1,064); spring steel's modulus (207 GPa) */
+const b=0.01355,t=MS.t/1000,L=MS.len/1000,E=207e9;   /* the mainspring: 0.394 mm, the videos' coils' pitch in the measured barrel (the parts list's 0.0165 in, 0.419 mm, until 12 October 2026: core.js MSPRING); its width, 13.55 (the cap-side edge 1.45 under the cap's seat on KLUwI2UUCMQ 15:54: movement.js, MSY1); its length (1,064: the videos' L/t, about 2,700); spring steel's modulus (207 GPa) */
 const m1=2*Math.PI*E*b*t**3/(12*L);   /* its stiffness: N·m a turn, linear (a strip bent in its plane; set and coil friction left out) */
 const IN=4.51,ratio=14.72/7.51,rB=18.3+0.45+0.04;   /* the barrel's turns while the chain leaves the fusee, its lever rising from 7.51 to 14.72 (makeFusee's INT, and its pitch line where it leaves the fusee, fully wound and as the last turn leaves; then the end pin swings round to run down: the groove's floor, 14.8 and 7.0, over 4.67 turns until 11 October 2026; 4.85 turns in the r 17.6 barrel until 5 October), the chain's pitch radius on the barrel */
 /* the fusee is cut so its torque is even: pull x lever constant, so the spring's moment falls in the ratio of the levers over the barrel's IN turns. With the
@@ -73,23 +73,35 @@ const airQ=Cd=>{const parts=[[8,3.1e-3,[1.5e-3,2.5e-3],(BAL_RR+2)/1000],[2,2.1e-
 const BAL_RR=14.5,[qa0]=airQ(1.4),[,qa1]=airQ(0.8);   /* Cd 0.8-1.4: a short cylinder across the flow at Re about 180 (v 0.85 m/s, 3.1 mm) */
 const qAir=[Math.min(qa0,qa1),Math.max(qa0,qa1)];
 const mBal=[I/(13e-3)**2,I/(11e-3)**2],g=9.80665,Es=150e9;   /* the balance's mass from its moment of inertia, the radius of gyration 11-13 mm (the rim at 14.2, screws at 16.5, arm and hub inside): kg; steel on ruby, E* about 150 GPa */
-/* the staff on its lower endstone (the chronometer dial up in its gimbals). The pivot's end is flat: on KLUwI2UUCMQ 7:08 it is its full 0.345 mm across 0.05 mm
-   from the end (tools: the 7:08 trace, References/VIDEOS.md), so it bears on the endstone across its face, spin friction (2/3) mu W r; domed, it would be
-   Hertz contact (3 pi / 16) mu W a, a few um across, and about 60 times less */
-const endQ=(m,mu)=>2*Math.PI*Eb/(4*(2/3)*mu*m*g*(pvB[0]/1000)*A),qEnd=[endQ(mBal[1],0.15),endQ(mBal[0],0.10)];
+/* the staff on its endstone, and any other constant friction: measured (12 October 2026). BunnSpecial's No. 2182 (Jd2c3x8VKsE 14:04.3-14:12.5 and 16:10.4-16:17.1,
+   the mainspring let down and the Navy stop off, dial down, so the staff stands on one endstone as it does dial up in the gimbals; References/VIDEOS.md) swings
+   freely from 2.2° and 2.0°, too little to meet the trip spring (its first contact at -26.8°: escapement.js), and its swing falls in a straight line, 0.238 ± 0.003 and
+   0.231 ± 0.004° a second (an exponential misses by 0.25° rms against 0.03°; 0.16-0.22 with a viscous term let free beside it), period 0.498 s. That is a constant
+   friction torque Mc: each half swing it takes 2 Mc / k off the amplitude, so 4 Mc / k a period and Mc = k c T / 4, with c the fall a second and k the hairspring's
+   stiffness with Table II's balance (578.5 g·mm² at 2 Hz). At 255° it loses 4 Mc A an oscillation. One movement, not yet cleaned, so if anything high.
+   Before (until 12 October 2026) it was worked out: the pivot's flat end (on KLUwI2UUCMQ 7:08 its full 0.345 mm across 0.05 mm from the end) bearing on the
+   endstone across its face, spin friction (2/3) mu W r at mu 0.10-0.15, which loses 10-20 times what the video shows; domed, it would be Hertz contact
+   (3 pi / 16) mu W a, a few um across, about three times less than the video shows */
+const cF=[0.16,0.238],Mc=cF.map(c=>k*c*D*0.498/4),qEnd=Mc.map(m=>2*Math.PI*Eb/(4*m*A)).sort((a,b)=>a-b);
+const endQ=(m,mu)=>2*Math.PI*Eb/(4*(2/3)*mu*m*g*(pvB[0]/1000)*A),qFlat=[endQ(mBal[1],0.15),endQ(mBal[0],0.10)],muEff=[Mc[1]/((2/3)*mBal[0]*g*pvB[0]/1000),Mc[1]/((2/3)*mBal[1]*g*pvB[0]/1000)];
 const domeQ=2*Math.PI*Eb/(4*3*Math.PI/16*0.15*mBal[1]*g*Math.cbrt(3*mBal[1]*g*(pvB[0]/1000)/(4*Es))*A);
 const sideQ=2*Math.PI*Eb/(2*0.15*(pvB[0]/1000)*2.4e-3*k*A*A/(5.1e-3));   /* the side friction the hairspring's residual force leaves at the swing (tools/hairspring.js: 2.4e-3 of couple / R at 270 deg) */
 const qMat=[1000,5000];   /* the spring's own damping: Elinvar-type alloys' internal Q, about 1e3-5e3 (published, by treatment) */
 const tot=(...q)=>1/q.reduce((s,x)=>s+1/x,0),qLo=tot(qAir[0],qEnd[0],sideQ,qMat[0]),qHi=tot(qAir[1],qEnd[1],sideQ,qMat[1]);
-say(`the balance's damping: air on its screws, nuts and arm Q ${f(qAir[0],0)}-${f(qAir[1],0)}; its pivot's flat end on the endstone ${f(qEnd[0],0)}-${f(qEnd[1],0)} (domed, it would be ${f(domeQ,0)}); side friction from the spring ${f(sideQ,0)}; the spring itself ${qMat.join('-')}`);
+say(`the balance's constant friction, measured (Jd2c3x8VKsE 14:04, 16:10): its free swing falls ${cF.join('-')}° a second, ${f(Mc[0]*1e9,0)}-${f(Mc[1]*1e9,0)} nN·m (k c T / 4): Q ${f(qEnd[0],0)}-${f(qEnd[1],0)} at 255°, ${f(100*Qm/qEnd[1],0)}-${f(100*Qm/qEnd[0],0)} % of the model's loss there; `+
+  `a flat end bearing across its face at mu 0.10-0.15 would give Q ${f(qFlat[0],0)}-${f(qFlat[1],0)} (the measured friction is that of mu ${f(muEff[1],3)}-${f(muEff[0],3)} on it), a domed end ${f(domeQ,0)}`);
+chk(qEnd[0]>qFlat[1]&&qEnd[1]<domeQ,`the measured friction lies between a flat end's and a domed end's (the pivot's end bears over less than its whole face, or its oil film carries part of the load)`);
+say(`the balance's damping: air on its screws, nuts and arm Q ${f(qAir[0],0)}-${f(qAir[1],0)}; the endstone and any constant friction ${f(qEnd[0],0)}-${f(qEnd[1],0)} (measured); side friction from the spring ${f(sideQ,0)}; the spring itself ${qMat.join('-')}`);
 const qN=P=>2*Math.PI*Eb*2/(Math.max(0,Wn(Tf*0.95*P/ratioT))*kA*2),qn=[qN(Phi),qN(Plo)].sort((a,b)=>a-b);
 say(`together the balance's Q is ${f(qLo,0)}-${f(qHi,0)} (free decay ${f(TF(qLo),0)}-${f(TF(qHi),0)} s); with the train's efficiency from its parts the budget needs ${f(qn[0],0)}-${f(qn[1],0)} to hold 255°`);
-chk(qLo<=qn[1]&&qHi>=qn[0],`the two overlap: the balance as built loses about what the train, as built, gives it (the model's TF ${TFm} s, Q ${f(Qm,0)}: ${Qm>=qLo&&Qm<=qHi?'inside':'outside'} the damping's range, ${Qm>=qn[0]&&Qm<=qn[1]?'inside':'outside'} the budget's)`);
-say(`the swing the two give together: ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency (the manual's 247.5-270°)`);
 /* the mainspring's own losses, left out of its torque above (coil friction and set: about 5-15 % of the torque in a barrel spring, published): the budget then
-   needs a higher Q, which is where the parts put it */
-const qnM=[qN(Phi*0.95),qN(Plo*0.85)].sort((a,b)=>a-b);
-say(`with the mainspring's own coil friction and set (5-15 %), the budget needs ${f(qnM[0],0)}-${f(qnM[1],0)}: against the parts' ${f(qLo,0)}-${f(qHi,0)}, the model's Q ${f(Qm,0)} in both`);
+   needs a higher Q. Until 12 October 2026 the parts' Q (202-390, the endstone's friction worked out for a flat end) met the budget without them; with the
+   endstone's friction measured (a tenth of that), the balance loses less than the train would give a loss-free spring (the swing below), and only the whole
+   budget, the spring's own losses in it, meets what the parts give */
+const qnM=[qN(Phi*0.95),qN(Plo*0.85)].sort((a,b)=>a-b),inM=Qm>=qnM[0]&&Qm<=qnM[1];
+say(`the swing they would give a spring without its own losses: ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency (the manual's 247.5-270°)`);
+say(`with the mainspring's own coil friction and set (5-15 %), the budget needs ${f(qnM[0],0)}-${f(qnM[1],0)}: against the parts' ${f(qLo,0)}-${f(qHi,0)}, the model's Q ${f(Qm,0)} ${inM?'inside':'outside'} it; the swing ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)*0.9))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency and 10 %`);
+chk(qLo<=qnM[1]&&qHi>=qnM[0]&&inM,`the two overlap: the balance as built loses about what the train, as built, gives it, the mainspring's own losses counted (the model's TF ${TFm} s, Q ${f(Qm,0)}: ${Qm>=qLo&&Qm<=qHi?'inside':'outside'} the damping's range, inside the budget's)`);
 chk(Qm>=qLo&&Qm<=qHi,`the model's TF ${TFm} s is inside the decay the balance's parts give (${f(TF(qLo),0)}-${f(TF(qHi),0)} s): derived from the budget before, now from the friction and the air too`);
 
 /* ---------- B2: the detent spring, from the manual's test ---------- */
@@ -125,5 +137,5 @@ chk(comp>0.3*need&&comp<1.7*need,`against the ${f(need,1)} s a day a °C a steel
  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-phys="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];
  for(const[k,v]of Object.entries(want))chk(got[k]===v,`the essay quotes ${k} as ${got[k]??'(missing)'}: found ${v}`);}
 /* for dynamics.js, strength.js and errorbudget.js: the fusee's torque, the train's ratio and efficiencies, the balance's damping from its parts */
-module.exports={Tf,Mup,Mdn,sUp,ratioT,Plo,Phi,qLo,qHi,qAir,qEnd,sideQ,qMat,Eb,MS,b,E,IN,rB,TFm,Qm,I,k,A,mBal,J,MODS,STG,TRAIN};
+module.exports={Tf,Mup,Mdn,sUp,ratioT,Plo,Phi,qLo,qHi,qAir,qEnd,Mc,sideQ,qMat,Eb,MS,b,E,IN,rB,TFm,Qm,I,k,A,mBal,J,MODS,STG,TRAIN};
 if(require.main===module){console.log(rows.join('\n'));if(fail)process.exitCode=1;}
