@@ -521,7 +521,7 @@ Contents:
   on the top turn (37:22-37:26), so the band is as deep as the chain end, its slot's floor flat, and the top turn lower. Drawn so,
   the recess r 5.1 with a floor plate carrying the two holes, the wire 0.30. The groove's start moved 0.34 lower (`yS`, `cT`), the
   top plate where the collar puts it (`cap` 0.98). Keep: the slot's floor flat, the band as deep as the chain end; the bar's top
-  face whole (it is built in bands down from its top). (this commit)
+  face whole (it is built in bands down from its top). `c5eefb5`
 
 - **Stop-bar and winding stop drawn from estimates: the stud in the wrong place and too small, the bar too narrow, square-ended, on
   the wrong side, pushed by a nose no source shows.** Measured on KLUwI2UUCMQ (OPEN-QUESTIONS.md, model README "Estimated"): the
