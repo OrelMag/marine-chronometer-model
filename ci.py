@@ -81,11 +81,19 @@ STEPS=[('build',build,'quick'),
  ('rating',lambda log:run([PY,'rating.py','--demo'],TOOLS,log),'quick'),   # the rating of a made chronometer's log, on a made-up log with known figures (under a second)
  ('deviations',lambda log:run(['node',TOOLS/'deviations.js'],ROOT,log),'quick'),   # the build's deviations' numbers, against deviations.json (under a second)
  ('benchcheck',lambda log:run([PY,'benchcheck.py','--demo'],TOOLS,log),'quick'),   # a maker's bench measurements judged, on a made-up set with known faults (under a second)
+ ('overwind',lambda log:run(['node',TOOLS/'overwind.js'],ROOT,log),'quick'),   # the key forced: against the stop and the wrong way (under a second)
+ ('ratchets',lambda log:run(['node',TOOLS/'ratchets.js'],ROOT,log),'quick'),   # the ratchets and pawls: draw, strength, springs (under a second)
+ ('sustaining',lambda log:run(['node',TOOLS/'sustaining.js'],ROOT,log),'quick'),   # the sustaining spring and the train run on it (about 15 s)
+ ('motionwork',lambda log:run(['node',TOOLS/'motionwork.js'],ROOT,log),'quick'),   # the motion work's meshes, the hands' play, the cannon pinion's friction (about 7 s)
+ ('wear',lambda log:run(['node',TOOLS/'wear.js'],ROOT,log),'quick'),   # wear at every sliding contact against its tolerance (a few seconds)
+ ('traindyn',lambda log:run(['node',TOOLS/'traindyn.js'],ROOT,log),'quick'),   # the going train in time on sprung meshes (a few seconds)
+ ('montecarlo',lambda log:run(['node',TOOLS/'montecarlo.js'],ROOT,log),'quick'),   # the whole movement to a maker's tolerances (about 30 s)
  ('selfcontained',lambda log:run([PY,'selfcontained.py'],TOOLS,log),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),
  ('invariants',lambda log:run([PY,'invariants.py'],TOOLS,log),'browser'),
  ('massprops',lambda log:run([PY,'massprops.py'],TOOLS,log),'browser'),   # the case and ring weighed on the model, against gimbals.json (about 30 s)
+ ('mechanisms',lambda log:run([PY,'mechanisms.py'],TOOLS,log),'browser'),   # the mechanisms off the built model, against mechanisms.json (about 40 s)
  ('solids',lambda log:run([PY,'solids.py'],TOOLS,log),'browser'),
  ('exploded',lambda log:run([PY,'exploded.py'],TOOLS,log),'browser'),
  ('book',lambda log:run([PY,'book.py'],TOOLS,log),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)

@@ -1042,6 +1042,37 @@ on what would stop the chronometer.
   until 13 October 2026) has nothing to trim and would need the spring held to
   ±1.43, a seventh of the ±10 a bought spring holds (EP3502288A1); the bench's
   temperature test (`bench.js`, the rate) says which pairs to move.
+- **Every mechanism, each in turn (13 October 2026).** Seven analyses take the
+  rest of the movement (the build-verification report's section 11), on the
+  geometry `tools/mechanisms.py` reads off the built model (each pawl's contact
+  on its ratchet, the arbors' inertias from their solids). `overwind.js`: a
+  strong hand on the key's paddle (1.06 N·m, from finger-torque studies) wound
+  against the stop breaks nothing once the stop-bar and stud are hardened (soft,
+  the bar bends at a strong hand's); turned the wrong way, its torque goes into
+  the train the escapement holds still, and 0.19 N·m bends the fusee wheel's
+  teeth: so the build's winding key has a ratchet in its pipe (deviation 3).
+  `ratchets.js`: the winding pawls are drawn in by their load (12.5°, past the
+  friction angle), the setup click at 4.5° (friction and its spring hold it;
+  the measured undercut of its ratchet's faces, drawn radial, would add draw),
+  the sustaining pawl as traced meets a tooth's tip corner with its side and is
+  drawn in at 32.8° once its end is fitted to the face; every part at least 1.9
+  times short of its material's weak end; the winding pawls' springs need at
+  least 0.08 mm of set to follow the fusee down when the key lets go.
+  `sustaining.js`: the model's linear spring drives the train 9.4 minutes (the
+  manual's five to ten) and a wind costs microseconds; the drawn band's
+  estimated section is too soft (OPEN-QUESTIONS.md). `motionwork.js`: the motion
+  work and wind indicator meshes run, the hour hand stands up to 3.8 minutes
+  off in their backlash, and the cannon pinion's friction belongs between 1.4
+  and 37 mN·m (about 18 g hung 40 mm out on the minute hand). `wear.js`: well
+  oiled every contact keeps its tolerance 26 years and more; the balance
+  staff's pivot ends and the escape arbor's pivots go first, a few years poorly
+  oiled, so the oil's life sets the overhaul. `traindyn.js`: the train's inertia
+  at the escape wheel from the solids is 6.05 g·mm² (dynamics.js's 5.88, the
+  fourth wheel estimated; not adopted, it moves the rate 0.08 s a day), its
+  modes lie in the kilohertz, and the strike on the jewel rebounds the escape
+  mesh inside its backlash. `montecarlo.js`: made to a maker's tolerances, all
+  at once, 99.9 % work after the bench's adjustments, 98.7 % as made. `bench.js`
+  carries four tests from them.
 - **`tools/tripping.js`, does a tooth ever get past the stone.** The classic
   failure of a detent escapement at sea is tripping: the wheel lets a tooth go
   that the balance didn't unlock, and the chronometer gains. dynamics.js takes
@@ -1287,6 +1318,7 @@ the repository with short audio excerpts and the video frames).
 
 ## Estimated, not from the manual
 
+- The mechanisms' analyses (13 October 2026): the hand's torque on this key (finger torque on handles of like size, Imrhan and Munoz-Vasa 2013, Swain 1970); the stop-bar's and stud's temper (hardened is the build's); the pawls' springs' set when free (the least each needs is found), the springs taken as straight cantilevers; the click's and the sustaining pawl's ends taken as fitted to their faces; the teeth's stiffness (cantilevers, halved for the contact) and the meshes' and contacts' damping (3 %); the wear coefficients (Rabinowicz's orders of magnitude) and the sliding at the escape teeth (0.5 mm on the jewel), the chain and the wheel teeth; a chain's allowed stretch (1 % of its pitch) and a tooth's wear (20 µm); the tolerances a maker holds on the strips (±0.005 mm), the sustaining spring's band (±0.02) and the springs' set.
 - The build's deviations (tools/deviations.js): Nivarox's expansion (7-10 × 10⁻⁶/°C) and modulus (165-195 GPa, as Elinvar-type alloys'), and with them the spring's thermoelastic coefficient for the Model 21's balance (+0.1 to +13.0 × 10⁻⁶ a °C); that balance's expansion read from Table IV as a thin ring's bending (inextensible, on a rigid arm; the 0.120 in head's mass extrapolated, I_REST's 8 % anywhere between Invar and the rim, Invar 1.0-1.6 × 10⁻⁶/°C); a bought spring's coefficient held to ±10 × 10⁻⁶ (EP3502288A1, an alloy's target, not a grade's published tolerance); Nivaflex's 3000 N/mm² is its maker's achievable strength, aged. The gear-mesh and FEA checks' inputs: tooth friction 0.10-0.20, the pivots' shake 10 µm, brass E 97-110 GPa and the expansions of brass and steel (published ranges), the chain's height on the fusee (makeFusee's yS, yB).
 
 - The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull at the barrel (the solved spring's, `tools/mainspring.py`: its free curve measured, its length estimated; until 11 October 2026 the drive took an illustrative pull, the profile's made 3% steeper at each end), the sustaining spring's linear relaxing (from the drive it carries: no banking is seen on the video, looked for again on 11 October 2026 at 18:49-18:58 (the fusee wheel's face, the spring in and coming out: its two pins and the raised disc's step, which a shadow shows as a crescent, no slot) and 19:05-19:09 (the sustaining ratchet bare), and on a second movement (2E7437, `TWQsSVWuikk` 45:40, the recess open face-on: a plain ring of spring, nothing to bank it), or in Figs. 69-73 and Ops. 19-29, and the manual has it under load all through the running; its 10 minutes from Sec. IV's five to ten), the free run-down (68 s, from the energy budget and the balance's parts), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.

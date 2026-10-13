@@ -357,6 +357,22 @@ Suggested fix: smaller weights (a radius of about 1.1 mm keeps them within
 the rim's 2.4 mm height), set no further out than the timing weights (17.35 mm).
 Then run `dyn.py` with the variant shown.
 
+### 10. The mechanisms' analyses: what they found open (13 October 2026)
+
+Found by the analyses of the build-verification report's section 11 (`tools/ratchets.js`, `sustaining.js`, `traindyn.js`); none stops the model working, each is
+a reading or an estimate to settle:
+
+- **The sustaining pawl's end, as traced** (KLUwI2UUCMQ 36:15, to about 0.1 mm), leans off its tooth's face: a tooth's tip corner meets the pawl's side first, and
+  so loaded it would be pushed out; fitted to bear along the face, as a pawl's end is stoned, it draws in at 32.8°. A frame with the pawl's end side-on, or the
+  end retraced, would show whether the tracing or the fitting is short.
+- **The setup click** bears on its face near the root, drawn in at 4.5°, under the friction angle: friction and its spring hold it. Its ratchet's faces, measured
+  undercut 3-6° (OPEN-QUESTIONS.md, "The set-up ratchet's locking faces"), are drawn radial; drawn undercut, the click would draw in past the friction angle.
+- **The sustaining spring's section** (OPEN-QUESTIONS.md, "The sustaining spring's section and gap"): the drawn band would close solid under the drive; the
+  model's maintaining work runs on the manual's five to ten minutes, which a band in the drawn recess can't give at the measured width.
+- **The train's inertia at the escape wheel** off the solids is 6.05 g·mm², 2.9 % over dynamics.js's 5.88 (the fourth wheel's 1.08 was an estimate; the escape
+  arbor's pinion and arbor 0.42 were left out). Not adopted: it moves the escapement's rate 0.08 s a day and the swing 0.9°, which the timing takes up, and the
+  escapement's calibration (JW, the 255° swing) runs through most checks. Adopting it is a recalibration for its own branch.
+
 ## The hairspring's inner end (settled as an estimate, 4 October 2026)
 
 `tools/hairspring.js` designs the spring's terminal curves to Phillips' conditions from the model's coil and ends. The outer one, into the stud's clamp
