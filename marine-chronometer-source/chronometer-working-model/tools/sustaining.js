@@ -34,15 +34,15 @@ out.spring.sig=sig;
 /* in time, the key held: the spring closed by c0 in running (the drive's, or its gap's if that closes first), opening as the train runs it out at the fusee wheel's
    turn; the swing follows (A² towards ampAt(drive)², TF) and the rate is the escapement's at the swing and drive. Until the push is spent and the balance falls under
    AMIN, the train stopping */
-const sim=(k,c0,tEnd)=>{const TF=ESC.settings.TF,dt=0.25,A0=ESC.ampAt(1),r0=ESC.rateAt(A0,1),tr=[];let A=A0,t=0,lost=0,tBand=null,tStop=null;
+const sim=(k,c0,tEnd,dt=0.25)=>{const TF=ESC.settings.TF,A0=ESC.ampAt(1),r0=ESC.rateAt(A0,1),tr=[];let A=A0,t=0,lost=0,tBand=null,tStop=null;
   while(t<tEnd){const D=Math.max(0,k*(c0-wfw*t)/T0),Ae=D>0?ESC.ampAt(D):0;A=Math.sqrt(Ae*Ae+(A*A-Ae*Ae)*Math.exp(-2*dt/TF));
-    if(A<ESC.AMIN){tStop=t;break;}const r=ESC.rateAt(A,D);lost+=(r-r0)/86400*dt;if(tBand===null&&A<247.5*D2R)tBand=t;if(Math.round(t/dt)%40===0)tr.push([+t.toFixed(1),+(A/D2R).toFixed(2),+D.toFixed(4),lost]);t+=dt;}
+    if(A<ESC.AMIN){tStop=t;break;}const r=ESC.rateAt(A,D);lost+=(r-r0)/86400*dt;if(tBand===null&&A<247.5*D2R)tBand=t;if(Math.round(t/dt)%Math.round(10/dt)===0)tr.push([+t.toFixed(1),+(A/D2R).toFixed(2),+D.toFixed(4),lost]);t+=dt;}
   return{tBand,tStop,lost,trace:tr};};
 const mm=s=>s==null?'beyond the hour':f(s/60,1)+' min',drawn=sim(kt,Math.min(dLoad,SSG),3600),model=sim(T0/SMAX,SMAX,3600);
 say(`the key held, as drawn: the swing leaves the manual's band after ${mm(drawn.tBand)}, the chronometer stops after ${mm(drawn.tStop)}; the model's spring (linear, ten minutes): ${mm(model.tBand)} and ${mm(model.tStop)}`);
 /* the stiffness the manual's five to ten minutes ask, the gap left open under the drive: k for a stop at 5 and at 10 minutes, and the band's height for it at the
    measured width (the stiffness goes as the height) or its width at the drawn height (as the width cubed) */
-const kFor=tm=>{let lo=T0/SSG*1.0001,hi=50;for(let i=0;i<60;i++){const md=Math.sqrt(lo*hi),q=sim(md,T0/md,4000);(q.tStop==null||q.tStop>tm)?lo=md:hi=md;}return Math.sqrt(lo*hi);};
+const kFor=tm=>{let lo=T0/SSG*1.0001,hi=50;for(let i=0;i<30;i++){const md=Math.sqrt(lo*hi),q=sim(md,T0/md,1.3*tm,1);(q.tStop==null||q.tStop>tm)?lo=md:hi=md;}return Math.sqrt(lo*hi);};
 const k10=kFor(600),k5=kFor(300),[recess]=num(/mesh\(R\.gw,ring\(19\.2\*FK,18\.0\*FK,([\d.]+)\)/,'the recess\'s depth');
 say(`the manual's "five to ten minutes" asks ${f(k10,2)}-${f(k5,2)} N·m a radian (its gap then closes ${f(T0/k5/D2R,1)}-${f(T0/k10/D2R,1)}° under the drive): at the measured width, a band ${f(H*k10/kt,2)}-${f(H*k5/kt,2)} high; at the drawn height, ${f(SSW*Math.cbrt(k10/kt),2)}-${f(SSW*Math.cbrt(k5/kt),2)} wide. The fusee wheel's recess is ${recess} deep`);
 const fits=H*k10/kt<recess-0.1;
