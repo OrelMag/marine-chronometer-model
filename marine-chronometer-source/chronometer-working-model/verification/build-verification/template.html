@@ -54,7 +54,7 @@ own geometry and numbers.</p>
 <div class="tiles" id="tiles"></div>
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#gears">1. Gears</a><a href="#thermal">2. Temperature</a><a href="#fea">3. Finite elements</a>
-<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
+<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#mech">11. Every mechanism</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
 <a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
@@ -335,6 +335,93 @@ proportions in the model's barrel. The band is the manual's, 247.5-270°. <code>
 <li><b>What it leaves out.</b> The strip's edges rubbing on the barrel's floor and cap, and the steel's own hysteresis, which add to it; the ring equations take
 each packed coil as round, its pressure even round it. Mainsprings measured run 10-20 % under their winding (ICMFF9), which the coils alone don't reach.</li></ul></div>
 
+<h2 id="mech">11. Every mechanism, each in turn</h2>
+<p>The sections above follow the going train and the escapement. This one takes the rest of the movement's mechanisms in turn: the key and the winding stop, the
+ratchets and their pawls, the sustaining spring, the motion work and the hands, wear at every sliding contact, the train in time behind the stopping and starting
+escape wheel, and the whole movement made to a maker's tolerances at once. Each is its own tool; the figures here are those tools' own (<code>mechdata.js</code>).</p>
+<p><b>Their geometry.</b> <code>mechanisms.py</code> reads off the built model what its constants don't give: each pawl's contact on its ratchet, found by turning
+the ratchet the way its load turns it until its teeth first reach into the pawl's outline (only a contact that grows counts, since a drawn outline may sit a few
+micrometres into a tooth's back; the load's way is the one whose first contact falls on a face or a tooth's tip corner), the pawls' masses and inertias from their
+outlines, and every arbor's moment of inertia from its solids at their densities (<code>tools/mechanisms.json</code>).</p>
+
+<h3>11.1 The key forced</h3>
+<p><b>Method.</b> What a hand puts on the key's paddle (<span id="owPad"></span> mm wide): finger-and-thumb torque on small handles, men tightening flanged handles 9.5
+and 19 mm wide (Imrhan and Munoz-Vasa 2013) interpolated to the paddle, and Swain's 95th-percentile men on a 12.7 mm knob (1970, in the same paper); the larger is taken
+as a strong hand's. Wound against the stop, the stop-bar and its stud take the key's torque less the chain's (the stop holds the fusee, so the chain keeps the
+mainspring's pull); turned the wrong way, the key's torque adds to the chain's through the winding pawls and the sustaining spring into the train, which the
+escapement holds still. Each part's stress against its material's range, as <code>strength.js</code> does it, and the key torque at which it reaches yield.
+<code>overwind.js</code>.</p>
+<p><span id="owHand"></span></p>
+<div id="t18" class="tw"></div>
+<figure><div class="chart" id="c18"></div><figcaption>Figure 18. The key torque at which each part in the key's load path reaches the weak end of its yield, wound against the stop (blue) and turned the
+wrong way (orange); the dashed line is a strong hand's. <code>overwind.js</code>.</figcaption></figure>
+<div class="callout gap"><ul><li><b>What it means for the build.</b> <span id="owBuild"></span></li>
+<li><b>What it leaves out.</b> The stop-bar's and stud's temper (not given: hardened is the build's), a hand's dynamic jerk beyond the winding speeds taken (one and
+two turns a second), and the fusee arbor's own pivots under the stop's side load (strength.js's margins cover twice it).</li></ul></div>
+
+<h3>11.2 The ratchets and their pawls</h3>
+<p><b>Method.</b> Each pawl as the model seats it under load. The line of action through the contact against the pawl's pivot gives the draw: a load drawing the pawl
+in seats it whenever the draw angle exceeds the friction angle (μ 0.10-0.20, oiled steel). The force is the ratchet's torque over the line's arm about its centre; the
+tooth is bent at its root as a triangle on 0.97 of the pitch, the face's bearing taken over the pawl's depth in the teeth (a fitted end), the pawl bent by its
+pivot and its pivot sheared. Each spring as a cantilever (3 E I / L³): the force it adds as the pawl rides over a tip, and, for the winding pawls, the force they need
+to follow the fusee's teeth down when the key lets go and the mainspring turns the fusee forward under them. <code>ratchets.js</code>.</p>
+<figure><div class="chart" id="c19"></div><figcaption>Figure 19. Each pawl on its ratchet as the model seats it, in the ratchet's frame: the teeth, the pawl's outline, its pivot, the load on it as drawn (solid)
+and with its end fitted to the face (dashed). <code>mechanisms.json</code>, <code>ratchets.js</code>.</figcaption></figure>
+<div id="t19" class="tw"></div>
+<div class="callout gap"><ul><li><b>What it means for the build.</b> <span id="raBuild"></span></li>
+<li><b>What it leaves out.</b> The springs' set when free (how far a band's end stands past the pawl's back), which no source gives: the analysis gives the least set
+each needs, and the bench's test sets it. The setup ratchet's faces, measured undercut 3-6°, are drawn radial; their undercut would only add draw.</li></ul></div>
+
+<h3>11.3 The sustaining spring</h3>
+<p><b>Method.</b> The spring's stiffness from its section: a band bent in its plane between the pins that hold its two lobes (each pinned once, so the band is loaded by a
+pair of equal forces along the line through the pins), by Castigliano, (F / E I) ∫ h² ds over the free band, h a point's distance from the pins' line. Then, the key
+held, the train runs on it, the fusee wheel turning at its rate and the spring opening, the balance's swing following its equation (A² towards ampAt(drive)², the free
+balance's TF) and the escapement's rate at that swing. The model's maintaining work takes the spring linear, pushing the whole drive loaded and nothing after ten minutes
+of the train (the manual: "enough power to drive the chronometer for five to ten minutes", Sec. IV). <code>sustaining.js</code>.</p>
+<figure><div class="chart" id="c20"></div><figcaption>Figure 20. The balance's swing while the key is held, on the model's spring and on the spring as drawn (its estimated height, gap and lobes). The band is the
+manual's, 247.5-270°; under 41° the escapement can't unlock and the train stops. <code>sustaining.js</code>.</figcaption></figure>
+<p><span id="suRes"></span></p>
+<div class="callout gap"><ul><li><b>Open.</b> <span id="suOpen"></span> (OPEN-QUESTIONS.md, "The sustaining spring's section and gap").</li></ul></div>
+
+<h3>11.4 The motion work and the hands</h3>
+<p><b>Method.</b> The motion work's two meshes and the wind indicator's, tooth by tooth on the model's own outlines as <code>gearing.js</code> works the going train; the
+hands' play from their meshes' backlash; and the cannon pinion's friction on the centre arbor (Op. 58), between what a knock asks (the hands' out-of-balance, off the
+built model, at the 45 g that already frees the escape wheel) and what setting the hands forward allows (the slipping torque adds to the train's drive, and must not
+swing the balance to the trip, past a full turn, within a minute's setting). <code>motionwork.js</code>.</p>
+<div id="t20" class="tw"></div>
+<figure><div class="chart" id="c21"></div><figcaption>Figure 21. The cannon pinion's friction (mN·m): above the knock's line the hands hold; below the setting's lines the balance stays short of the trip; the bench's aim
+in the middle. <code>motionwork.js</code>.</figcaption></figure>
+<p><span id="mwRes"></span></p>
+
+<h3>11.5 Wear</h3>
+<p><b>Method.</b> Every sliding contact by Archard's law (the volume worn is k F s / H: the wear coefficient, the load, the distance slid, the softer part's hardness;
+Archard 1953), k from Rabinowicz's table for lubricated metals: about 10⁻⁷ well oiled, 10⁻⁶ poorly, 10⁻⁵ once the oil has gone. Each depth a year against the tolerance it
+eats: a pivot hole worn open moves its arbor toward the load and changes its meshes' depth (each mesh's close side less the hole tolerance and shake:
+<code>gearing.json</code>); the balance staff's pivot ends wear the endshake; the escape teeth's tips and the escape arbor's pivot wear the depth of lock toward its 5°
+floor (<code>tripping.json</code>). <code>wear.js</code>.</p>
+<div id="t21" class="tw"></div>
+<p><span id="weRes"></span></p>
+
+<h3>11.6 The train in time</h3>
+<p><b>Method.</b> The train's inertia at the escape wheel from the solids (each arbor with what it carries), and <code>dynamics.js</code> run again with it. Then the
+train as five bodies on four meshes, each a spring (the teeth as cantilevers, estimated) with its backlash, driven at the fusee's even torque, the escape wheel moved
+as <code>dynamics.js</code>'s escapement moves it through a beat: locked, let go, catching the impulse jewel and carried at its speed while its drive pushes it, let go,
+landing on the stone. <code>traindyn.js</code>.</p>
+<div id="t22" class="tw"></div>
+<p><span id="tdRes"></span></p>
+
+<h3>11.7 The whole movement to a maker's tolerances</h3>
+<p><b>Method.</b> Movements made with every tolerance drawn at once (the holes, the meshes' friction, the mainspring's and the escapement springs' strips, the sustaining
+spring's band, the pawls' springs' set), each judged on all of the above: the train turns, the balance swings in the manual's band as made and after the set-up is
+turned (Op. 13), the maintaining work drives five minutes, the winding pawls follow the fusee down. <code>montecarlo.js</code>.</p>
+<figure><div class="chart" id="c22"></div><figcaption>Figure 22. The balance's swing as made, over the movements drawn (the escapement adjusted to the manual's figures, the set-up as drawn); the band is
+the manual's. <code>montecarlo.js</code>.</figcaption></figure>
+<div id="t23" class="tw"></div>
+<p><span id="mcRes"></span></p>
+<div class="callout gap"><ul><li><b>Estimated, here.</b> The hand's torque on this key (from handles of like size), the teeth's stiffness, the meshes' and the
+contacts' damping, the wear coefficients (orders of magnitude), the sliding at the escape teeth and the chain, the tolerances a maker holds on the strips and
+springs, and the springs' set. What only a made chronometer settles is on the bench's tests (section 5).</li></ul></div>
+
 <h2 id="context">The checks the model already had</h2>
 <p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
 <!--CONTEXT-->
@@ -371,6 +458,7 @@ python ../../tools/fea.py --reuse --json assets/fea.json           # about 3 min
 python ../../tools/rating.py --demo --json assets/rating.json      # under a second
 node ../../tools/tripping.js --json assets/trip.json               # about 6 min
 node ../../tools/gimbals.js --json assets/gimbals.json             # about 2½ min
+node mechdata.js                                                  # about 45 s: assets/mech.json (section 11)
 python build_report.py                                             # index.html (runs the earlier checks for their output, about 30 s)</pre>
 <p><code>python ci.py</code> at the repository's root runs the quick ones on every change, <code>--full</code> adds <code>gearing.js</code> in full and <code>fea.py</code>.</p>
 
@@ -389,6 +477,14 @@ python build_report.py                                             # index.html 
 <tr><td><a href="../../tools/mainspring_friction.py"><code>tools/mainspring_friction.py</code></a></td><td>The mainspring's coil friction over the wind, the fusee's output running, the set-up against it (mainspring_friction.json); <code>--nivaflex</code> the same for the build's strip, set up by the fusee's rule (mainspring_friction_t0.386.json)</td><td>(--check) the file is stale; invariants.py holds its fusee to the page; the rule must reproduce the page's full wind</td></tr>
 <tr><td><a href="../../tools/mainspring.py"><code>tools/mainspring.py</code></a></td><td>The mainspring's shape over the wind (js/mainspring.js, the page's); <code>--bound</code> where the coils pack solid, to 0.05 turn; <code>--nivaflex</code> the build's strip, beside it (mainspring_t0.386.js); <code>MC_MS_T</code>, <code>_L</code>, <code>_RA</code>, <code>_GAP</code>, <code>_TAG</code> any strip, length, core and film (mainspring_NAME.js)</td><td>(writes) states that can't keep the coils apart and the length inside the range</td></tr>
 <tr><td><a href="../../tools/acoustic.py"><code>tools/acoustic.py</code></a></td><td>The swing from a recording of the beat (now any recording's path, a made movement's)</td><td>—</td></tr>
+<tr><td><a href="../../tools/mechanisms.py"><code>tools/mechanisms.py</code></a></td><td>The mechanisms off the built model: each pawl's contact on its ratchet, the pawls' and arbors' inertias (mechanisms.json)</td><td>about 40 s</td></tr>
+<tr><td><a href="../../tools/overwind.js"><code>tools/overwind.js</code></a></td><td>The key forced: against the winding stop and the wrong way into the train (11.1)</td><td>under a second</td></tr>
+<tr><td><a href="../../tools/ratchets.js"><code>tools/ratchets.js</code></a></td><td>The ratchets and pawls: draw, strength, springs, the let-go (11.2)</td><td>under a second</td></tr>
+<tr><td><a href="../../tools/sustaining.js"><code>tools/sustaining.js</code></a></td><td>The sustaining spring: its stiffness by Castigliano, the train run on it while the key is held (11.3)</td><td>about 15 s</td></tr>
+<tr><td><a href="../../tools/motionwork.js"><code>tools/motionwork.js</code></a></td><td>The motion work's and wind indicator's meshes, the hands' play, the cannon pinion's friction (11.4)</td><td>about 7 s</td></tr>
+<tr><td><a href="../../tools/wear.js"><code>tools/wear.js</code></a></td><td>Wear at every sliding contact by Archard's law, against each tolerance (11.5)</td><td>a few seconds</td></tr>
+<tr><td><a href="../../tools/traindyn.js"><code>tools/traindyn.js</code></a></td><td>The train in time: its inertia at the escape wheel, its modes, a beat on four sprung meshes with backlash (11.6)</td><td>a few seconds</td></tr>
+<tr><td><a href="../../tools/montecarlo.js"><code>tools/montecarlo.js</code></a></td><td>The whole movement to a maker's tolerances at once (11.7)</td><td>about 30 s</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This report's data and page</td><td>—</td></tr>
 </table></div>
 
@@ -412,6 +508,9 @@ python build_report.py                                             # index.html 
 <li>Vacuumschmelze, <i>Nivaflex 45/18</i> brochure: tensile strength up to 2900 MPa, mainsprings among its uses: <a href="https://www.vacuumschmelze.com/03_Documents/Brochures/Nivaflex_45_18_en.pdf">vacuumschmelze.com</a>.</li>
 <li>Nivaflex (patented 1948, the name registered 1957): <a href="https://www.wikipedia.com/wiki/Nivaflex">Wikipedia</a>; <a href="https://wiki.grail-watch.com/index.php/Straumann,_Reinhard">Grail-Watch wiki, Reinhard Straumann</a>.</li>
 <li>Nivarox (perfected 1933, patented 1935; Fe-Ni-Cr-Be, its thermoelastic coefficient set by alloy and heat treatment, graded for monometallic balances such as Glucydur, beryllium bronze): <a href="https://watchesbysjx.com/2025/08/08">WatchesbySJX, Hairspring Materials and Evolution Part II</a>; <a href="https://vintagewatchstraps.com/blognivarox.php">VintageWatchstraps, Nivarox balance springs</a>; <a href="https://en.wikipedia.org/wiki/Glucydur">Wikipedia, Glucydur</a>; <a href="https://wiki.grail-watch.com/index.php/Glucydur">Grail-Watch wiki, Glucydur</a>.</li>
+<li>Finger torque on small handles: S. N. Imrhan and M. J. Munoz-Vasa, "Finger Pinch Loosening and Tightening Torques on Small Cylindrical Handles Among Industrial Workers", <i>Industrial and Systems Engineering Review</i> 1(2), 2013 (and Swain et al. 1970, cited there).</li>
+<li>Breguet's "tipsy" key (clé de sûreté), about 1790: a ratchet in the key that slips when it is turned the wrong way.</li>
+<li>J. F. Archard, "Contact and Rubbing of Flat Surfaces", <i>Journal of Applied Physics</i> 24, 981 (1953); E. Rabinowicz, <i>Friction and Wear of Materials</i>, 2nd ed. (Wiley, 1995): wear coefficients for lubricated metals.</li>
 <li>A spring alloy's thermoelastic coefficient within ±10 ppm/°C gives an oscillator within ±0.6 s a day a °C: <a href="https://patents.google.com/patent/EP3502288A1/en">EP3502288A1 (Nivarox-FAR), Method for manufacturing a hairspring</a>.</li>
 <li>The thin ring's bending under radial loads by Fourier series: S. Timoshenko, <i>Strength of Materials</i>, Part II; a ring under two opposite forces, its diameters' changes 0.1366 and 0.1488 P R³ / E I: <i>Roark's Formulas for Stress and Strain</i>. The balance and Table IV (p. 74), Op. 8: the manual.</li>
 <li>Xometry, <i>Beryllium bronze C17200 data sheet</i>: density 8.25 g/cm³, expansion 17 × 10⁻⁶/°C: <a href="https://xometry.asia/wp-content/uploads/2025/07/1774155019-Beryllium-Bronze-Datahseet.pdf">xometry.asia</a>.</li>
@@ -642,6 +741,67 @@ function draw(){const D=DATA,G=D.data,FE=D.fea,RT=D.rating;
   table('t5',['Navy test figure (s/d)','found','limit'],Object.entries(RT.navy).map(([k,v])=>[NM[k],f(v,2),`${f(RT.limits[k],2)} <span class="${v<=RT.limits[k]?'ok':'no'}">${v<=RT.limits[k]?'pass':'fail'}</span>`]));
   table('t6',['Carried (2000 voyages)','median','95 %'],Object.entries(RT.project).map(([N,[m,q]])=>[`${N} days`,`${f(m,1)} s (${f(m/4,2)} mi)`,`${f(q,1)} s (${f(q/4,2)} mi)`])
     .concat([['Fit: rate (made +0.350)',sg(RT.fit.rate,3)+' s/d',''],['Fit: scatter (made 0.042)',f(RT.sig,3)+' s/d',''],['Fit: temperature (made −0.0040)',sg(RT.fit.temp,4)+' s/d/°F','']]));}
+/* 11: every mechanism (assets/mech.json, mechdata.js) */
+function drawMech(){const X=DATA.mech;if(!X)return;const ow=X.ow,ra=X.ra,su=X.su,mw=X.mw,we=X.we,td=X.td,mc=X.mc,mg=(l)=>`${f(l.lo/l.sig*1,1)}-${f(l.hi/l.sig,1)}`,vc=v=>v==='ok'?'ok':v==='~~'?'mid':'no';
+  /* 11.1 the key */
+  $('owPad').textContent=f(ow.hand.paddle,1);
+  $('owHand').textContent=`On the paddle a man averages ${f(ow.hand.mean,2)} N·m (s.d. ${f(ow.hand.sd,2)}), the 95th percentile ${f(ow.hand.p95,2)}; Swain's 95th-percentile men ${f(ow.hand.swain,2)}: taken as a strong hand's, ${f(ow.hand.TH,2)} N·m. Wound into the stop at speed, the fusee and the barrel behind it give the stop ${ow.notes[0].slam.map(q=>`${f(q.T,2)} N·m for a moment at ${q.nt} turn${q.nt>1?'s':''} a second`).join(' and ')}.`;
+  const rowsK=[...ow.forward.map(l=>({...l,way:'against the stop'})),...ow.backward.map(l=>({...l,way:'the wrong way'}))];
+  table('t18',['Part','Way','Load','Stress (MPa)','Material\'s range','Margin','Yields at (N·m on the key)'],rowsK.map(l=>[l.name.trim(),l.way,l.load,f(l.sig,0),`${l.what} ${l.lo}-${l.hi}`,`<span class="${vc(l.v)}">${f(l.lo/l.sig,1)}-${f(l.hi/l.sig,1)}</span>`,l.Ty!=null?f(l.Ty,2):'—']),true);
+  const kr=rowsK.filter(l=>l.Ty!=null);
+  ranges('c18',{label:'Key torque at yield',x:[0,Math.ceil(Math.max(...kr.map(l=>Math.min(l.Ty,6))))],xl:'torque on the key (N·m) at which the part yields',zero:ow.hand.TH,l:300,rh:30,legend:[['--s1','wound against the stop'],['--s2','turned the wrong way'],['--muted','a strong hand ('+f(ow.hand.TH,2)+' N·m)']],
+    rows:kr.map(l=>({name:l.name.trim().split(' (')[0].slice(0,42),bars:[[0,Math.min(l.Ty,6),l.way==='the wrong way'?'--s2':'--s1',10]],tip:`${l.name.trim()}<br>${l.way}: yields at ${f(l.Ty,2)} N·m on the key`}))});
+  $('owBuild').textContent=`Harden and temper the stop-bar and the stud: left soft, the bar bends at ${f(ow.softBar,2)} N·m, a strong hand's; hardened, nothing in the stop's path yields under ${f(ow.weakF.Ty,2)} N·m, and the first thing to give is the key's own brass socket. Turned the wrong way, ${f(ow.weakB.Ty,2)} N·m bends the fusee wheel's teeth on the centre pinion, ${f(100*ow.weakB.Ty/ow.hand.mean,0)} % of an average hand's twist, and past ${f(ow.notes[1].esc.Tk,2)} N·m the balance swings past a turn and the escapement unlocks twice: the build's key has a ratchet in its pipe (deviation 3, section 7).`;
+  /* 11.2 the pawls: a small plan of each at its tooth */
+  {const host=$('c19');host.innerHTML='';const W=980,H=250,n=X.pawls.length,cw=W/n,svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'The pawls at their teeth'},host);
+    X.pawls.forEach((q,i)=>{const C=q.C,span=3.4,s=(cw-24)/(2*span),ox=i*cw+cw/2,oy=H/2-6,P=([x,z])=>[ox+(x-C[0])*s,oy-(z-C[1])*s],in_=([x,z])=>Math.abs(x-C[0])<span*1.25&&Math.abs(z-C[1])<span*1.25;
+      const clip=el('clipPath',{id:'pc'+i},svg);el('rect',{x:i*cw+6,y:6,width:cw-12,height:H-40},clip);const g=el('g',{'clip-path':`url(#pc${i})`},svg);
+      el('polyline',{points:q.teeth.map(P).map(p=>p.join(',')).join(' '),fill:'none',stroke:'var(--ink2)','stroke-width':1.6},g);
+      el('polygon',{points:q.outline.map(P).map(p=>p.join(',')).join(' '),fill:'var(--s1)','fill-opacity':0.18,stroke:'var(--s1)','stroke-width':1.6},g);
+      if(in_(q.pivot)){const p=P(q.pivot);el('circle',{cx:p[0],cy:p[1],r:4,fill:'var(--s1)'},g);}
+      const ar=(c,nv,dash)=>{const a=P(c),b=P([c[0]+nv[0]*1.2,c[1]+nv[1]*1.2]);el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--s2)','stroke-width':2.4,'stroke-dasharray':dash||''},g);el('circle',{cx:a[0],cy:a[1],r:3.5,fill:'var(--s2)'},g);};
+      ar(q.C,q.n);if(q.kind!=='on the face')ar(q.fit.C,q.fit.n,'4 3');
+      el('text',{x:ox,y:H-14,'text-anchor':'middle',style:'fill:var(--ink);font-size:13px'},svg).textContent=q.name;});}
+  table('t19',['Pawl','Holds','Force','Depth in','Draw','Friction angle','Tooth','Face','Pawl','Pivot','Spring','Let go: needs'],ra.pawls.map(p=>{const L=p.lines,cell=l=>l?`<span class="${vc(l.v)}">${f(l.lo/l.sig,1)}</span>`:'—';
+    return[p.name,p.holds.split(' (')[0],`${f(p.F,1)} N`,`${f(p.depth,2)} mm`,`<span class="${p.an>=0?'ok':'no'}">${p.an>=0?'in':'out'} ${f(Math.abs(p.draw),1)}°</span>${p.fitted?` (as drawn ${p.drawn.an>=0?'in':'out'} ${f(Math.abs(p.drawn.draw),1)}°)`:''}`,'5.7-11.3°',cell(L.find(l=>/tooth/.test(l.name))),cell(L.find(l=>/bearing/.test(l.name))),cell(L.find(l=>/pawl bent/.test(l.name))),cell(L.find(l=>/pivot/.test(l.name))),
+      `${f(p.k*1000,0)} mN/mm`,p.need!=null?`${f(p.need*1000,1)} mN (${f(p.set,2)} mm set)`:p.fall0!=null&&/sustaining/.test(p.name)?`falls in ${f(p.fall0*1000,1)} ms`:'—'];}),true);
+  const sp=ra.pawls.find(p=>/sustaining/.test(p.name)),ck=ra.pawls.find(p=>/setup/.test(p.name)),wp=ra.pawls.find(p=>/winding/.test(p.name));
+  $('raBuild').textContent=`The winding pawls are drawn in by their load (${f(wp.draw,1)}°, past the friction angle: they seat themselves) and need their springs set at least ${f(Math.max(...ra.pawls.filter(p=>p.set).map(p=>p.set)),2)} mm to follow the fusee down when the key lets go; the setup click is drawn in at ${f(ck.draw,1)}°, under the friction angle, so friction and its spring hold it (its faces' measured undercut adds as much draw); the sustaining pawl, as traced, meets a tooth's tip corner with its side and would be pushed out, but its end stoned to bear along the face draws it in at ${f(sp.draw,1)}°, as a pawl's end is fitted. Every tooth, face, pawl and pivot at least ${f(Math.min(...ra.pawls.flatMap(p=>p.lines.map(l=>l.lo/l.sig))),1)} times short of its material's weak end.`;
+  /* 11.3 the sustaining spring */
+  {const S=su.sim,mx=Math.max(16,Math.ceil(((S.tStop.drawn||0)+60)/60));
+    chart('c20',{label:'Swing while the key is held',x:[0,mx],y:[0,280],xl:'minutes the key is held',yl:'the balance\'s swing (°)',hbands:[{y0:247.5,y1:270,c:'--band'}],hrefs:[{y:41,t:'stops'}],r:80,
+      series:[{type:'line',name:'the model\'s spring',c:'--s1',data:S.model.map(r=>[r[0]/60,r[1]]),tip:p=>`model: ${f(p[0],1)} min, ${f(p[1],0)}°`},{type:'line',name:'the spring as drawn',c:'--s2',dash:'5 4',data:S.drawn.map(r=>[r[0]/60,r[1]]),tip:p=>`as drawn: ${f(p[0],1)} min, ${f(p[1],0)}°`}]});
+    const sg=su.spring,nd=su.need;
+    $('suRes').textContent=`By Castigliano the drawn band (${f(sg.SSW,2)} wide, ${sg.H} high, free over ${f(sg.arc,0)}°) is ${f(sg.kt,2)} N·m a radian: the drive would close it ${f(sg.dLoad*180/Math.PI,1)}°, ${sg.solid?`past its ${f(sg.SSG*180/Math.PI,0)}° gap, so it runs closed solid and pushes ${f(100*sg.kt*sg.SSG/sg.T0,0)} % of the drive when the key takes the fusee`:'within its gap'}. The model's spring (${f(sg.model,2)} N·m a radian) drives the train ${f(S.tStop.model/60,1)} minutes, the swing leaving the band after ${f(S.tBand.model/60,1)}; as drawn, ${f(S.tStop.drawn/60,1)} and ${f((S.tBand.drawn||0)/60,1)}. A wind costs ${f(Math.abs(S.w10)*1e6,1)} µs held 10 s and ${f(Math.abs(S.w30)*1e6,1)} µs held 30 s: nothing a navigator could read.`;
+    $('suOpen').textContent=`The manual's five to ten minutes ask ${f(nd.k10,2)}-${f(nd.k5,2)} N·m a radian: at the measured width a band ${f(nd.H[0],1)}-${f(nd.H[1],1)} mm high, which the ${nd.recess} mm recess can't hold, so the spring's gap, lobes or pins differ from the estimates`;}
+  /* 11.4 the motion work */
+  table('t20',['Mesh','Teeth','Module','Tip clearance','Backlash','Before the line of centres','Torque passed (μ 0.10)'],mw.meshes.map(q=>[q.nm,`${q.za}:${q.zb}`,f(q.m,4),`${f(q.tip*1000,0)} µm`,`${f(q.blmm*1000,0)} µm (${f(q.bl*180/Math.PI,2)}°)`,`${f(100*q.approach,0)} %`,`${f(q.al[0],3)}-${f(q.al[1],3)}`]),true);
+  {const c=mw.cannon,mm=x=>x*1000;
+    ranges('c21',{label:'The cannon pinion\'s friction window',x:[0,Math.ceil(mm(c.Thi)/10)*10+10],xl:'the cannon pinion\'s slipping torque (mN·m)',l:300,rh:34,legend:[['--manual','the window'],['--s2','limits'],['--s1','the bench\'s aim']],
+      rows:[{name:'the window',bars:[[mm(c.Tlo),mm(c.Thi),'--manual',12]],dots:[[mm(c.mid),'--s1']],tip:`${f(mm(c.Tlo),2)} to ${f(mm(c.Thi),1)} mN·m; aim ${f(mm(c.mid),1)}`},
+        {name:'a 45 g knock turns the hands',bars:[[0,mm(c.Tlo),'--s2',6]],tip:`under ${f(mm(c.Tlo),2)} mN·m a knock turns the hands`},
+        {name:'set forward a minute: the trip',bars:[[mm(c.Thi),mm(c.Thi)+0.6,'--s2',12]],tip:`above ${f(mm(c.Thi),1)} mN·m a minute's setting swings the balance to the trip`},
+        {name:'set forward: out of the band',bars:[[mm(c.xBand*c.Tc),mm(c.xBand*c.Tc)+0.6,'--muted',12]],tip:`above ${f(mm(c.xBand*c.Tc),1)} mN·m the swing passes 270° if held long`}]});
+    $('mwRes').textContent=`The hour hand can stand ${f(mw.play.hourMin,1)} minutes of time off in its meshes' backlash (it only names the hour) and the wind indicator ${f(mw.play.udH,2)} hours; the seconds and minute hands ride loaded arbors without play. The window for the cannon pinion's friction runs from ${f(mm(c.Tlo),2)} to ${f(mm(c.Thi),1)} mN·m; set near ${f(mm(c.mid),1)}, a weight of about ${f(c.mid*1000/c.rHand/9.80665*1000,0)} g hung ${c.rHand} mm out on the minute hand turns it (the bench's test). Set backward, which the manual forbids, more than ${f(mm(c.xStop*c.Tc),1)} mN·m of slip stops the balance.`;}
+  /* 11.5 wear */
+  const fy=y=>y>1000?'>1000':y>=10?f(y,0):f(y,1);
+  table('t21',['Contact','Load','Slid a year','Worn a year, µm (well oiled / poorly / dry)','Tolerance','Years to it (well oiled / poorly / dry)'],we.contacts.map(o=>[o.name,o.F<1?`${f(o.F*1000,1)} mN`:`${f(o.F,1)} N`,`${f(o.s,0)} m`,['good','poor','dry'].map(k=>f(o.h[k]*1000,o.h[k]*1000<0.01?4:3)).join(' / '),`${f(o.tol*1000,1)} µm: ${o.what}`,
+    `<span class="${o.yrs.good<5?'no':o.yrs.poor<5?'mid':'ok'}">${['good','poor','dry'].map(k=>fy(o.yrs[k])).join(' / ')}</span>`]),true);
+  $('weRes').textContent=`Well oiled, every contact keeps its tolerance ${fy(we.worst.yrs.good)} years and more. The first to go are the balance staff's pivot ends on their endstones and the escape arbor's pivots, whose wear eats the endshake and the depth of lock (${f(we.contacts.find(o=>/escape tooth/.test(o.name)).tol*1000,1)} µm of it to the lock's floor): ${fy(we.worst.yrs.poor)} years poorly oiled, months dry. So the oil's life sets the overhaul (the manual gives no interval). The impulse jewel's strike runs a tooth's tip in to about r ${f(we.strike.Ry,2)} mm within its first strikes, nanometres deep.`;
+  /* 11.6 the train in time */
+  {const J=td.J,b=td.beat;
+    table('t22',['Quantity','Found','Against'],[['The train\'s inertia at the escape wheel',`${f(J.JR,3)} g·mm²`,`${f(J.JT0,3)} g·mm² in dynamics.js (the fourth wheel estimated)`],['dynamics.js\'s swing with it',`${f(J.A1,2)}°`,`${f(J.A0,2)}°`],['its rate',`${f(J.r1,3)} s a day`,`${f(J.r0,3)} s a day`],
+      ['The train\'s modes',td.modes.map(x=>x<1000?f(x,0)+' Hz':f(x/1000,1)+' kHz').join(', '),'an impulse lasts about 7 ms'],['The meshes\' largest force in a beat',b.rat.map(x=>f(x,2)).join(', ')+' × the steady',`the teeth's margins ${b.mg.map(x=>f(x,1)).join(', ')} (strength.js)`],
+      ['A mesh opened',b.opened.map(x=>f(x,1)).join(', ')+' µm','backlash '+td.meshes.map(q=>f(q.bl*1000,0)).join(', ')+' µm'],['The seconds hand\'s bounce at its tip',`${f(b.bounceTip*1000,1)} µm`,'0.6 mm a half second\'s step'],['The escape wheel catching the jewel',`${f(b.vStr,1)} rad/s`,`${f(b.vRig,1)} rad/s for a rigid train`]]);
+    $('tdRes').textContent=`The train's modes lie in the kilohertz, so through a 7 ms impulse it moves as one: a rigid train's chase holds. The measured inertia (${f(100*(J.kJ-1),1)} % over the estimate it replaces) moves the escapement's rate ${f(J.r1-J.r0,3)} s a day, which the timing takes up. The blow as the tooth catches the jewel at about twice its speed rebounds the escape wheel's mesh inside its backlash and loads it ${f(b.rat[3],0)} times the steady, within its teeth's margin.`;}
+  /* 11.7 the Monte Carlo */
+  {const F=mc.frac,H=mc.hist;
+    chart('c22',{label:'Swing as made',x:[Math.min(240,H[0][0]-2.5),Math.max(275,H[H.length-1][0]+5)],y:[0,Math.max(...H.map(h=>h[1]))*1.15],xl:'the balance\'s swing as made (°)',yl:'movements',vbands:[{x0:247.5,x1:270,c:'--band',t:'the manual\'s band'}],r:40,
+      series:[{type:'line',name:'movements',c:'--s1',data:H.flatMap(h=>[[h[0],h[1]],[h[0]+2.5,h[1]]]),tip:p=>`${f(p[0],1)}°: ${p[1]} movements`}]});
+    const pc=x=>f(100*x,1)+' %';
+    table('t23',['Judged on','Movements that pass'],[['The train turns (every mesh in its window)',pc(1-F.jam)],['The balance swings',pc(F.runs)],['The swing in the manual\'s band, as made',pc(F.band)],['… with the set-up turned (Op. 13)',pc(F.band2)],['The maintaining work drives five minutes',pc(F.sust)],['The winding pawls follow the fusee down',pc(F.pawls)],['Everything, as made',pc(F.asMade)],['Everything, after the bench\'s adjustments',pc(F.works)]]);
+    $('mcRes').textContent=`Of ${mc.N} movements, ${pc(F.works)} do everything once the bench has adjusted them, ${pc(F.asMade)} as made; their swing as made ${f(mc.swing[0],1)}-${f(mc.swing[2],1)}° (5-95 %). No tolerance alone takes a movement out (${Object.entries(mc.alone).map(([k,v])=>`${k} ${pc(v.asMade)}`).join(', ')}): together the drive's spread does, and turning the set-up brings it back.`;}}
+const draw0=draw;draw=()=>{draw0();drawMech();};
 draw();
 const th=$('theme');th.addEventListener('click',()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=dark?'light':'dark';draw();});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
