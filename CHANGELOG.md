@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.29.01 · 2026-10-13
+- The build checks now apply every bench test to the 2,000 simulated movements: 98.7 % work as made and all of them once the bench has re-set the pawls' springs, re-bushed close holes and turned the set-up; the pawls' and depths tests on the maker's cards say how to fix what they find
+
 ## 2.29.00 · 2026-10-13
 - The build's winding key turns the fusee one way only: turned the wrong way, a plain key could bend the fusee wheel's teeth (the key's card shows the change)
 - The build book has four new tests on the bench: the winding stop, the pawls' springs, the maintaining work, and the cannon pinion's friction
