@@ -2267,6 +2267,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   -0.0012), on main too, while a quiet machine passed. It looked like the time of day; it isn't (the same at 08:30 and
   11:30 GMT on a fresh page). Keep: a smoke step that waits on the model's motion waits on its frames (30 s here,
   returning as soon as it holds), and its message gives the frames drawn and the model's time. `25934e0`
+
 - **`massprops.py` failed at some hours of the day and not others.** The model's clock starts at the time of day
   (`app.js`: `tSim` from `Date.now()`), and the hands turning with it moved the bowl's centre of gravity 0.016 mm between
   runs, past the check's 0.01 mm, with no geometry changed (48e82e1 had rewritten `gimbals.json` for one such drift).
