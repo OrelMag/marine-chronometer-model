@@ -1162,7 +1162,9 @@ on what would stop the chronometer.
   proportions 0.30 (OPEN-QUESTIONS.md 1).
 - **The report**, `verification/build-verification/index.html` (open the
   file; `build_report.py` rebuilds it): the process, figures, sources and
-  scripts of these checks, the earlier ones' output beside them.
+  scripts of these checks, the earlier ones' output beside them. The site
+  carries it at `/verification/build-verification/` (the root `build.py` copies
+  it), linked from About and the essay.
 
 ### Checked against real chronometers
 
@@ -1232,7 +1234,8 @@ The whole of it, with the charts (hover for values; each with its data table),
 the analysis plots, the implications and the gaps, is a report:
 `verification/real-chronometers/index.html` (open the file; `build_report.py`
 there rebuilds it from the tools' results, `--local DIR` a fuller copy outside
-the repository with short audio excerpts and the video frames).
+the repository with short audio excerpts and the video frames); the site
+carries the repository's copy at `/verification/real-chronometers/`.
 
 ## Sources
 
