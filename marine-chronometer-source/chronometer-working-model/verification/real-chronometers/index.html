@@ -17,7 +17,7 @@ main{max-width:1060px;margin:0 auto;padding:28px 22px 80px}
 h1{font-size:30px;line-height:1.25;margin:8px 0 6px}h2{font-size:23px;margin:46px 0 8px;padding-top:12px;border-top:1px solid var(--rule)}h3{font-size:18px;margin:28px 0 6px}
 p,li{color:var(--ink)}.sub{color:var(--ink2);margin:0 0 18px}.small{font-size:13.5px;color:var(--ink2)}
 a{color:var(--s1)}code{font:13.5px ui-monospace,Consolas,monospace;background:var(--panel);padding:1px 5px;border-radius:4px}
-nav.toc{background:var(--panel);border-radius:10px;padding:12px 18px;font-size:14.5px;margin:18px 0}nav.toc a{margin-right:14px;white-space:nowrap}
+nav.toc{background:var(--panel);border-radius:10px;padding:12px 18px;font-size:14.5px;margin:18px 0}nav.toc a{margin-right:14px;white-space:nowrap;display:inline-block}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
 .tile{background:var(--panel);border-radius:10px;padding:14px 16px}.tile .k{font-size:13px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
 .tile .v{font-size:24px;font-weight:650;margin:4px 0 2px}.tile .n{font-size:13.5px;color:var(--ink2)}
@@ -34,7 +34,7 @@ figure{margin:16px 0 22px}figure img{max-width:100%;border-radius:8px;display:bl
   box-shadow:0 4px 14px rgba(0,0,0,.15);display:none;max-width:280px;z-index:3}
 details{margin:6px 0 14px}summary{cursor:pointer;color:var(--ink2);font-size:13.5px}
 audio{width:100%;max-width:330px;height:34px}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media (max-width:760px){table{display:block;overflow-x:auto}.cols{grid-template-columns:1fr}}
 .callout{border-left:3px solid var(--s1);background:var(--panel);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
 .gap{border-left:3px solid var(--warn)}.themebtn{float:right;font-size:13px;background:var(--panel);color:var(--ink2);border:1px solid var(--rule);border-radius:8px;padding:4px 10px;cursor:pointer}
 </style>
@@ -42,7 +42,7 @@ audio{width:100%;max-width:330px;height:34px}
 <body>
 <main>
 <button class="themebtn" id="theme" type="button">Light / dark</button>
-<p class="small">Marine Chronometer model · external validation · 11 October 2026 · branch <code>claude/validation</code></p>
+<p class="small"><a href="../../index.html">Marine Chronometer model</a> · external validation · 11 October 2026 · with it: <a href="../build-verification/index.html">would a chronometer made to the model run?</a></p>
 <h1>Does the model behave like a real Hamilton Model 21?</h1>
 <p class="sub">The model already agreed with itself and with the 1948 manual's adjustment figures: that is parity, not proof. Here it is compared with recordings of
 real, running Model 21s it was never fitted to, by two independent tests: the <b>sound</b> (the timing of the clicks inside each beat) and the <b>picture</b> (the balance's

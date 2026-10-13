@@ -2261,6 +2261,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The real-chronometers report ran off a phone's screen.** Its three wide tables and its contents' last link pushed
+  the page to 471 px on a 390 px screen, so the whole report scrolled sideways (found when the reports went on the site).
+  Keep: on screens under 760 px its tables scroll in place (`table{display:block;overflow-x:auto}`, as the
+  build-verification report's `.tw`), and `.toc a` is an inline block; a report on the site has no horizontal page
+  scroll at 390 px. `6dbd537`
+
 - **The Monte Carlo's "after the bench's adjustments" left out the bench's pawls test.** `montecarlo.js` turned the
   set-up and nothing else, so the two movements in 2,000 whose winding pawl's spring came out under its 0.08 mm of set
   stayed failed (99.9 %), though `bench.js`'s pawls test tells the maker to find and re-bend exactly those. It also
