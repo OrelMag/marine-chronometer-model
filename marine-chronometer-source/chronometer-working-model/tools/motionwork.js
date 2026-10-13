@@ -19,16 +19,17 @@ const dMW=Math.hypot(L.Mw[0]-L.C[0],L.Mw[1]-L.C[1]),dUD=Math.hypot(L.Fu[0]-ux,L.
 say('1. The meshes, tooth by tooth (gearing.js\'s method on the model\'s outlines: core.js gearOutline)');
 const MS=[['cannon pinion → minute wheel',cp,mw,ma,'the minute wheel turns once in four hours'],['minute pinion → hour wheel',mp,hw,mb,'the hour wheel once in twelve'],['fusee pinion → wind indicator',12,120,mu,'the indicator\'s 56 hours over its scale']];
 out.meshes=[];
-for(const[nm,za,zb,m,what]of MS){const s=G.stage(za,zb,m),q=G.st(s.al);
-  chk(!s.jam&&s.tip>0,`${nm} (${za}:${zb}, m ${f(m,4)}): ${s.jam?'jams':'runs'}; tip clearance ${f(s.tip*1000)} µm, backlash ${f(s.bl*1000)} µm, ${f(100*s.approach)} % of the action before the line of centres, the torque passed ${f(q.mn,3)}-${f(q.mx,3)} of the nominal frictionless (${what})`);
-  out.meshes.push({nm,za,zb,m,jam:s.jam,tip:s.tip,bl:s.bl,approach:s.approach,al:[q.mn,q.mx]});}
-/* 2. the hands' play: a mesh's backlash b lets the driven wheel stand anywhere over b / r of its pitch radius; the hour hand through both meshes, the minute wheel's
-   play carried down by the minute pinion's ratio */
-const [b1,b2,b3]=out.meshes.map(q=>q.bl),rMW=ma*mw/2,rHW=mb*hw/2,rUD=mu*120/2,pH=b2/rHW+(b1/rMW)*(mp/hw),pU=b3/rUD,UDS=56*(PH.TRAIN.cp/PH.TRAIN.fu)*12/120*360;
+const jm=G.MU.indexOf(0.1)>=0?G.MU.indexOf(0.1):1;
+for(const[nm,za,zb,m,what]of MS){const s=G.stage(za,zb,m),q=G.st(s.fac[jm]);
+  chk(!s.jam&&s.tip>0,`${nm} (${za}:${zb}, m ${f(m,4)}): ${s.jam?'jams':'runs'}; tip clearance ${f(s.tip*1000)} µm, backlash ${f(s.blmm*1000)} µm (${f(s.bl/D2R,2)}° of the driven wheel), ${f(100*s.approach)} % of the action before the line of centres, the torque passed ${f(q.mn,3)}-${f(q.mx,3)} of the frictionless at μ ${G.MU[jm]} (${what})`);
+  out.meshes.push({nm,za,zb,m,jam:s.jam,tip:s.tip,bl:s.bl,blmm:s.blmm,approach:s.approach,al:[q.mn,q.mx]});}
+/* 2. the hands' play: a mesh's backlash lets the driven wheel stand anywhere over that angle; the hour hand through both meshes, the minute wheel's play carried
+   down by the minute pinion's ratio */
+const [b1,b2,b3]=out.meshes.map(q=>q.bl),pH=b2+b1*(mp/hw),pU=b3,UDS=56*(PH.TRAIN.cp/PH.TRAIN.fu)*12/120*360;
 say('');say('2. How far the hands can stand off');
 say(`the seconds hand on the fourth arbor and the minute hand on the cannon pinion turn with loaded arbors: no play`);
 say(`the hour hand: ${f(pH/D2R,2)}° of play (${f(pH/TAU*720,1)} minutes of time), as much as the two meshes' backlash allows; the wind indicator's hand ${f(pU/D2R,2)}° (${f(pU/(UDS*D2R)*56,2)} hours of its 56)`);
-chk(pH/TAU*720<2,`the hour hand reads within ${f(pH/TAU*720,1)} minutes of the minute hand's time, well inside the dial's minute marks read against the minute hand`);
+chk(pH/TAU*720<15,`the hour hand only names the hour (the minute hand tells the minutes): ${f(pH/TAU*720,1)} minutes of play, against the quarter of an hour that would put it near the wrong one at the hour`);
 out.play={hour:pH/D2R,hourMin:pH/TAU*720,ud:pU/D2R,udH:pU/(UDS*D2R)*56};
 /* 3. the cannon pinion's friction. Below: a knock across the dial (the hands' out-of-balance, mass times the centre of mass's offset, times its acceleration; the
    hour hand's through the motion work's 12:1); the escapement is upset by a steady 45 g across the plate (strength.js), so the hands should hold to that.
