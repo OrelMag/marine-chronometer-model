@@ -1115,7 +1115,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if(BENCH.some(([k])=>q[k]!==bset[k])){Object.assign(bset,q);benchApply();if(first&&!H.armT)H.amp=ESC.ampAt(driveNow());} }   /* esc=rT:0.29,aI:185: the adjuster's bench, where it differs from the model's settings; at load the balance is already swinging as they make it */
     balApply(g('bal')||'');   /* bal=...: the balance's weights and screws (balStr) */
     msSet(+(g('mset')||0)||0);   /* mset=15: the mainspring's set, per cent */
-    if(typeof MAKER!=='undefined')MAKER.setOrig((g('orig')||'').split(',').filter(Boolean));   /* orig=mainspring,balance: the build's deviations set back to the Model 21 on their cards (maker.js) */
+    if(typeof MAKER!=='undefined')MAKER.setOrig((g('orig')||'').split(',').filter(Boolean));   /* orig=mainspring,hairspring: the build's deviations set back to the Model 21 on their cards (maker.js) */
     const ed=g('edges')!=='0',shd=g('shadows')==='1',mg=g('merge')!=='0';   /* Edges and Performance mode are on by default, Shadows off: the hash says edges=0, merge=0 or shadows=1 only against that */
     const dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */

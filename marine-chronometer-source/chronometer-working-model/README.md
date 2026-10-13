@@ -1012,16 +1012,36 @@ on what would stop the chronometer.
   found needs changing for the chronometer to work; two changes, with 1950s
   materials, make it easier to make and steadier to keep, each on its part's
   card as the build's with the Model 21's original beside it and a button back
-  (the link keeps `orig=mainspring,balance` for those set back; the 3D model
+  (the link keeps `orig=mainspring,hairspring` for those set back; the 3D model
   stays the Model 21). The mainspring in Nivaflex 45/5 (Straumann, patented
   1948): the same torque from a strip 0.386 mm thick (E 220 GPa against carbon
   steel's 207), stressed 2,309 MPa fully wound, a margin of 1.30 on its
   3,000 N/mm² against carbon steel's 1.13–1.17, and it doesn't set, rust or
-  magnetize. The balance in Glucydur (beryllium bronze, monometallic) with a
-  Nivarox hairspring (Straumann, 1933): the balance 2.5–5.8 % heavier for its
-  shape, which the spring's length takes up, and the spring's thermoelastic
-  coefficient graded to +4 to +14 × 10⁻⁶ a °C for the pair, within ±1.4 to
-  meet the Navy's temperature figure.
+  magnetize. The hairspring in Nivarox (Straumann, 1933), graded for a
+  monometallic balance, in place of Elinvar heat-treated to the balance; the
+  balance kept as the Model 21's, a stainless rim on an Invar arm, so Table
+  IV's screw moves (Op. 8) still trim the temperature error.
+- **The balance's temperature compensation, from Table IV.** Table IV's forty
+  figures (a pair moved from the quarter, hole 7, to holes 8–12 under each
+  head) read as the rim's bending: the rim grows as stainless, the arm's ends
+  hold it to Invar's growth, so it is pulled in at the arm and bulges at the
+  quarter, as a thin ring under two opposite forces does (its Fourier series,
+  which gives Roark's 0.1366/0.1488 for its two diameters). One constant
+  fitted reproduces all forty within 0.20 s a day rms, the quarter bulging
+  0.48 µm a °C past the arm's ends: the rim growing 17.4 × 10⁻⁶ a °C more
+  than the arm, against 14.4–16.3 for austenitic stainless on Invar. The
+  manual's table, made on real balances, so agrees with the model's stainless
+  rim and Invar arm. Read so, the balance with its standard screws expands as
+  a 15.1–17.0 × 10⁻⁶ a °C metal would, and the spring's thermoelastic
+  coefficient must be +0.1 to +13.0 × 10⁻⁶ a °C (Nivarox's own expansion,
+  7–10, estimated, makes most of the spread); a beryllium-bronze balance needs
+  +4 to +14, so Nivarox's grade for monometallic balances suits it. Moving the
+  standard pairs among holes 3–12 reaches −6.45 to +4.61 s a day between 55
+  and 90 °F, in steps of 0.42 s or less, taking up a spring −5.5 to
+  +7.7 × 10⁻⁶ a °C off its mark. A one-piece Glucydur balance (the build's
+  until 13 October 2026) has nothing to trim and would need the spring held to
+  ±1.43, a seventh of the ±10 a bought spring holds (EP3502288A1); the bench's
+  temperature test (`bench.js`, the rate) says which pairs to move.
 - **`tools/tripping.js`, does a tooth ever get past the stone.** The classic
   failure of a detent escapement at sea is tripping: the wheel lets a tooth go
   that the balance didn't unlock, and the chronometer gains. dynamics.js takes
@@ -1267,7 +1287,7 @@ the repository with short audio excerpts and the video frames).
 
 ## Estimated, not from the manual
 
-- The build's deviations (tools/deviations.js): Glucydur's density and expansion taken as beryllium bronze's (CuBe2, C17200: 8.25-8.36 g/cm³, 17-17.5 × 10⁻⁶/°C), Nivarox's expansion (7-10 × 10⁻⁶/°C) and modulus (165-195 GPa, as Elinvar-type alloys'), so the spring's thermoelastic coefficient for the pair (+4 to +14 × 10⁻⁶ a °C); Nivaflex's 3000 N/mm² is its maker's achievable strength, aged. The gear-mesh and FEA checks' inputs: tooth friction 0.10-0.20, the pivots' shake 10 µm, brass E 97-110 GPa and the expansions of brass and steel (published ranges), the chain's height on the fusee (makeFusee's yS, yB).
+- The build's deviations (tools/deviations.js): Nivarox's expansion (7-10 × 10⁻⁶/°C) and modulus (165-195 GPa, as Elinvar-type alloys'), and with them the spring's thermoelastic coefficient for the Model 21's balance (+0.1 to +13.0 × 10⁻⁶ a °C); that balance's expansion read from Table IV as a thin ring's bending (inextensible, on a rigid arm; the 0.120 in head's mass extrapolated, I_REST's 8 % anywhere between Invar and the rim, Invar 1.0-1.6 × 10⁻⁶/°C); a bought spring's coefficient held to ±10 × 10⁻⁶ (EP3502288A1, an alloy's target, not a grade's published tolerance); Nivaflex's 3000 N/mm² is its maker's achievable strength, aged. The gear-mesh and FEA checks' inputs: tooth friction 0.10-0.20, the pivots' shake 10 µm, brass E 97-110 GPa and the expansions of brass and steel (published ranges), the chain's height on the fusee (makeFusee's yS, yB).
 
 - The balance's dynamics ("The balance's dynamics", under How the timing works): the hairspring's isochronism (0, or the bench's setting), the mainspring's set (a uniform weakening), the mainspring's pull at the barrel (the solved spring's, `tools/mainspring.py`: its free curve measured, its length estimated; until 11 October 2026 the drive took an illustrative pull, the profile's made 3% steeper at each end), the sustaining spring's linear relaxing (from the drive it carries: no banking is seen on the video, looked for again on 11 October 2026 at 18:49-18:58 (the fusee wheel's face, the spring in and coming out: its two pins and the raised disc's step, which a shadow shows as a crescent, no slot) and 19:05-19:09 (the sustaining ratchet bare), and on a second movement (2E7437, `TWQsSVWuikk` 45:40, the recess open face-on: a plain ring of spring, nothing to bank it), or in Figs. 69-73 and Ops. 19-29, and the manual has it under load all through the running; its 10 minutes from Sec. IV's five to ten), the free run-down (68 s, from the energy budget and the balance's parts), the jolt's strength (0.6–1 of the balance's top speed), the gimbals' period (0.7 s) and pivot friction (ζ 0.05), the split balance's middle temperature error and the bimetal constants of its curl. The hairspring is taken as isochronous. The Model 21 balance's curvature in temperature is read from one chronometer's test card (No. 3390), so it is that chronometer's, not a type figure; the three period means it rests on are read to 0.01 s a day, sure.
 

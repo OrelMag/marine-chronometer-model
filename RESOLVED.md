@@ -2261,6 +2261,16 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The build's one-piece Glucydur balance left its temperature error untrimmable.** `deviations.js` paired a
+  monometallic beryllium-bronze balance with a Nivarox spring and said the error was "trimmed on the bench", but such a
+  balance has nothing to trim: the spring's thermoelastic coefficient had to be held within ±1.43 × 10⁻⁶ a °C for the
+  Navy's 1.20 s a day over 55-90 °F, a seventh of the ±10 a bought spring holds (EP3502288A1). The build now keeps the
+  Model 21's stainless rim on its Invar arm and takes only the spring in Nivarox: Table IV's figures, read as the rim's
+  bending (fitted to 0.20 s a day rms), give the balance's expansion (15.1-17.0 × 10⁻⁶ a °C, so the spring wants +0.1 to
+  +13.0) and the trim its screw moves reach (−6.45 to +4.61 s a day, steps of 0.42 s or less: a spring −5.5 to +7.7 off
+  its mark), which `bench.js`'s rate test now gives the maker. The deviation's id is `hairspring` (`orig=hairspring`).
+  Keep: a build deviation that changes a compensated part must leave a way to trim it, and its tolerance must be one a
+  bought part holds. `fe55300`
 - **`maintaining.py` foretold a catch wrong where the spring's reload begins.** It checked `R.release` by adding the
   frame's whole running to the catch it foretold, but the reload is `max(0, …)`: with the spring held as the key lets go
   and the train's running starting the reload within the frame, only part of it adds (frame 212 at full wind: foretold

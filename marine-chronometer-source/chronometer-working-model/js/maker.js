@@ -6,7 +6,7 @@
 const MAKER=(()=>{
   let A=null;   /* app.js's: mv, meshes, cam, cv, scene, M, PARTS, INFO, units(), wake(), R, changed() */
   /* the build's deviations from the Model 21 (MAKERS.devs, tools/deviations.js): on by default, each set back to the original by its card's button; ORIG holds
-     those set back (the link keeps them: orig=mainspring,balance, app.js) */
+     those set back (the link keeps them: orig=mainspring,hairspring, app.js) */
   const ORIG=new Set(),devOn=id=>!ORIG.has(id),devsOf=p=>(MAKERS.devs||[]).filter(d=>d.parts.includes(p.split('.')[0]));
   const devHTML=(d,btn)=>`<div class="mkdev"><p class="mkm mkt"><b>${devOn(d.id)?'Changed for the build':'The Model 21 as made; the build changes it'}: ${esc(d.title)}</b> (${esc(d.period)}). ${esc(d.why)}${btn?'':` Sources: ${d.sources.map(esc).join('; ')}.`}</p>${btn?`<button type="button" class="mkdevb" data-dev="${d.id}">${devOn(d.id)?'Show the original Model 21':'Show the build\'s'}</button>`:''}</div>`;
   const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

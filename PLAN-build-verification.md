@@ -65,12 +65,12 @@ None. (The mainspring's correction and the release are done.) If a source settle
 
 ## What to do next, in order
 
-1. **Rate while the temperature changes** (simulation item 4). The thin hairspring warms faster than the balance rim, so even a compensated pair runs off-rate during a change: heat flow through box, case, movement, balance and spring over a ship's day-night cycle; the error a navigator carries; how the Glucydur/Nivarox pair copes. Materials' thermal figures from data sheets, cited (never from memory). New tool, a report section 11.
+1. **Rate while the temperature changes** (simulation item 4). The thin hairspring warms faster than the balance rim, so even a compensated pair runs off-rate during a change: heat flow through box, case, movement, balance and spring over a ship's day-night cycle; the error a navigator carries; how the build's pair (the Model 21's stainless and Invar balance, a Nivarox spring) copes. Materials' thermal figures from data sheets, cited (never from memory). New tool, a report section 11.
 2. **The arbor's core, from sources** (OPEN-QUESTIONS.md 1; optional, it decides the room): re-read the core's ratio to the barrel's inside radius on more frames and videos (`References/VIDEOS.md` lists the ones that show the barrel open: KLUwI2UUCMQ 33:06, 33:20.5; TN24H `3SFDplGq6vs` 0:16), ratios only, with how sure each is; then solve the spring on it as a variant (`MC_MS_RA`) and report the room. A change to the model's core is the user's decision.
 3. **Which estimates matter most** (simulation item 5): push every estimate (tooth form and friction, the springs' sections, the detent's damping and the contacts' restitution, materials, the spring's room and core) through `dynamics.js` and a voyage (`errorbudget.js`), ranked by effect on the rate: which bench measurements to make first.
 4. **Jigs**, as guidance for any maker: a torque lever for the barrel arbor's square and the fusee arbor, a barrel holder, a degree card for the escapement's angles, a stand for vibrating the balance, a clamp for the detent's foot (the ring test). Measure every seat on the model first (`holes.py`, `isolate.py`); STL through `MAKER.stl` or a small tool; add each to the build book's tests chapter.
 5. **The "as made" Monte Carlo with CNC tolerances** in `errorbudget.js`: hole positions ±13 µm (`gearing.json`), turned diameters ±5 µm, a typical CNC's from published figures.
-6. **Carry the deviations into the physics tools:** `strength.js` and `tolerances.js` still judge the steel mainspring (add Nivaflex from `deviations.json`); `physics.js` A5 should report the Glucydur/Nivarox requirement beside the Model 21's. The Nivaflex card (`deviations.js`) could also say its room (0.79 turn): visitor-facing text, ask first.
+6. **Carry the deviations into the physics tools:** `strength.js` and `tolerances.js` still judge the steel mainspring (add Nivaflex from `deviations.json`); `physics.js` A5 still gives the Model 21's requirement from Invar's and stainless's bounds (−22 to +10 × 10⁻⁶); `deviations.js` now reads it from Table IV (+0.1 to +13.0), which A5 could take. The Nivaflex card (`deviations.js`) could also say its room (0.79 turn): visitor-facing text, ask first.
 7. **Lower priority:** the arbors' own bending (`fea.py` takes them rigid; the fusee arbor carries up to 59 N); Archard wear on the fusee/centre mesh; the fusee chain's link-by-link ripple; oil friction with speed and temperature; the hairspring as a 3D helix with mass; the model's spring shows two loose inner turns let down where KLUwI2UUCMQ 33:20.5 shows about one (old and new alike).
 
 ## How to work
@@ -93,7 +93,7 @@ None. (The mainspring's correction and the release are done.) If a source settle
 
 - Tooth form BS 978 Part 2; tooth friction 0.10–0.20; pivot shake 10 µm.
 - Brass E 97–110 GPa; expansion brass 18.7–20.9, steel 10.8–12.5 ×10⁻⁶/°C.
-- Glucydur as CuBe2 (C17200); Nivarox expansion 7–10 ×10⁻⁶/°C, modulus 165–195 GPa; Nivaflex's 3000 N/mm² is its maker's aged figure.
+- Nivarox expansion 7–10 ×10⁻⁶/°C, modulus 165–195 GPa; Nivaflex's 3000 N/mm² is its maker's aged figure.
 - The mainspring's thickness (0.394, the videos' pitch, so the strip at most) and the detent and trip springs' sections are open (OPEN-QUESTIONS.md 1–2); **the film between packed coils 0** (no source); **the arbor's core r 4.9**, the lowest of its readings (the room rests on it); the spring's free curve is the model's for every variant.
 - `tripping.js`: the contacts' restitution (0.3; 0 at the jewels) and the detent's damping (Q 100).
 - `gimbals.js`: the box's inside (stops 29.5°), the pivots' damping (ζ 0.05), the blows' stiffness and restitution, the box's place in the ship, small craft's motion; the balance's poise error (2 µm).

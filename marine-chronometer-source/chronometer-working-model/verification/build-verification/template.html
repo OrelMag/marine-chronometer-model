@@ -183,8 +183,23 @@ keep. Each is on its part's card in the page as the build's, with the Model 21's
 back); the 3D model stays the Model 21. <code>tools/deviations.js</code> works their numbers and writes <code>deviations.json</code>, which <code>makers.py</code> puts on the
 sheets.</p>
 <div id="t7" class="tw"></div>
-<p class="small">Glucydur's own density and expansion aren't published; beryllium bronze's (CuBe2, C17200) are used. Nivarox's expansion (7–10 × 10⁻⁶/°C) and modulus
-(165–195 GPa) are estimated, as Elinvar-type alloys'. The spring's thermoelastic coefficient is what the spring maker grades; the temperature test settles the pair.</p>
+<h3>The balance's temperature compensation, from Table IV</h3>
+<p>The build keeps the Model 21's own balance, a stainless rim on an Invar arm, and takes only the hairspring in Nivarox. Until 13 October 2026 it took a one-piece
+Glucydur balance too; that has nothing to trim, so the spring's thermoelastic coefficient would have had to be held within ±<span id="hsG"></span> × 10⁻⁶ a °C to
+meet the Navy's 1.20 s a day between 55 and 90 °F, about a seventh of the ±10 a bought spring holds. On the Model 21's balance, Table IV's screw moves (Op. 8)
+trim what the spring misses.</p>
+<p><b>Method.</b> The rim grows as stainless, while the arm's ends hold it to Invar's growth, so the rim is pulled in at the arm and bulges at the quarter, as a
+thin ring under two opposite forces does: its radial deflection goes as Σ cos nθ / (n² − 1)², n = 2, 4, 6 … (the ring's bending by Fourier series, which gives
+Roark's 0.1366 and 0.1488 P R³ / E I for its two diameters). A screw pair of mass M at radius r moved from the quarter (hole 7) to hole n then changes the
+rate in heat by M r C (S(θn) − S(θ7)) ΔT / I of a day. The one unknown, C, is fitted to all forty of Table IV's figures (holes 8–12 under eight heads), each
+pair's mass from the parts list. Then the whole balance's expansion (rim, arm, hub, the standard screws and the weights) gives the coefficient the spring needs,
+and every placing of the four standard pairs in holes 3–12 gives what Table IV can trim.</p>
+<div id="c7t4" class="chart"></div>
+<p><b>Figures.</b> <span id="hsFig"></span></p>
+<p class="small">Estimated: Nivarox's expansion (7–10 × 10⁻⁶/°C) and modulus (165–195 GPa), as Elinvar-type alloys'; Invar 1.0–1.6 × 10⁻⁶/°C; the ring taken as
+inextensible and the arm as rigid; the 0.120 in head's mass extrapolated from the parts list's; I_REST (the 8 % of the moment the drawing lacks) anywhere between
+Invar's growth and the rim's. A bought spring's ±10 × 10⁻⁶ is an alloy's target (EP3502288A1), not a grade's published tolerance. The temperature test on the
+bench (the rate, the last of section 5's tests) settles the pair and says which pairs to move.</p>
 <h2 id="trip">8. The detent under shock: does a tooth ever get past?</h2>
 <p>The classic way a detent escapement fails at sea is <b>tripping</b>: the escape wheel lets a tooth go without the balance having unlocked it, and the chronometer gains
 a beat. The detent is the weak point: a thin blade on a thinner spring, held on its stop by a preload of a few millinewtons and nothing else, with the locking stone at its end.
@@ -396,7 +411,9 @@ python build_report.py                                             # index.html 
 <li>Jacques Allemann, <i>Nivaflex 45/5 data sheet</i> JAS-014 (2021): composition, E 220 GPa, density 8.50 g/cm³, expansion 11.2 × 10⁻⁶/K, tensile strength over 3000 N/mm², non-magnetic, resistant to seawater: <a href="https://www.jacques-allemann.com/media/cms/Legierungen%20/%20Tech-Sheets/JAS%20-%20Tech%20Sheet%20/%20Werkstoffe/jas-014-werkstoffdatenblatt-nivaflex-45-5-draht.pdf">jacques-allemann.com</a>.</li>
 <li>Vacuumschmelze, <i>Nivaflex 45/18</i> brochure: tensile strength up to 2900 MPa, mainsprings among its uses: <a href="https://www.vacuumschmelze.com/03_Documents/Brochures/Nivaflex_45_18_en.pdf">vacuumschmelze.com</a>.</li>
 <li>Nivaflex (patented 1948, the name registered 1957): <a href="https://www.wikipedia.com/wiki/Nivaflex">Wikipedia</a>; <a href="https://wiki.grail-watch.com/index.php/Straumann,_Reinhard">Grail-Watch wiki, Reinhard Straumann</a>.</li>
-<li>Nivarox (perfected 1933, patented 1935; Fe-Ni-Cr-Be, its thermoelastic coefficient set by alloy and heat treatment) and Glucydur (beryllium bronze for monometallic balances): <a href="https://watchesbysjx.com/2025/08/08">WatchesbySJX, Hairspring Materials and Evolution Part II</a>; <a href="https://vintagewatchstraps.com/blognivarox.php">VintageWatchstraps, Nivarox balance springs</a>; <a href="https://en.wikipedia.org/wiki/Glucydur">Wikipedia, Glucydur</a>; <a href="https://wiki.grail-watch.com/index.php/Glucydur">Grail-Watch wiki, Glucydur</a>.</li>
+<li>Nivarox (perfected 1933, patented 1935; Fe-Ni-Cr-Be, its thermoelastic coefficient set by alloy and heat treatment, graded for monometallic balances such as Glucydur, beryllium bronze): <a href="https://watchesbysjx.com/2025/08/08">WatchesbySJX, Hairspring Materials and Evolution Part II</a>; <a href="https://vintagewatchstraps.com/blognivarox.php">VintageWatchstraps, Nivarox balance springs</a>; <a href="https://en.wikipedia.org/wiki/Glucydur">Wikipedia, Glucydur</a>; <a href="https://wiki.grail-watch.com/index.php/Glucydur">Grail-Watch wiki, Glucydur</a>.</li>
+<li>A spring alloy's thermoelastic coefficient within ±10 ppm/°C gives an oscillator within ±0.6 s a day a °C: <a href="https://patents.google.com/patent/EP3502288A1/en">EP3502288A1 (Nivarox-FAR), Method for manufacturing a hairspring</a>.</li>
+<li>The thin ring's bending under radial loads by Fourier series: S. Timoshenko, <i>Strength of Materials</i>, Part II; a ring under two opposite forces, its diameters' changes 0.1366 and 0.1488 P R³ / E I: <i>Roark's Formulas for Stress and Strain</i>. The balance and Table IV (p. 74), Op. 8: the manual.</li>
 <li>Xometry, <i>Beryllium bronze C17200 data sheet</i>: density 8.25 g/cm³, expansion 17 × 10⁻⁶/°C: <a href="https://xometry.asia/wp-content/uploads/2025/07/1774155019-Beryllium-Bronze-Datahseet.pdf">xometry.asia</a>.</li>
 <li>The working model's own README (model of the escapement, the balance's dynamics, "Checked in time", "Estimated, not from the manual") and the report <a href="../real-chronometers/index.html">Does the model behave like a real Hamilton Model 21?</a> (the model against recordings of real Model 21s).</li>
 </ol>
@@ -514,6 +531,11 @@ function draw(){const D=DATA,G=D.data,FE=D.fea,RT=D.rating;
   table('t4',['Test','When','It must read'],G.bench.map(t=>[`<b>${t.title}</b>`,t.when,t.pass]),true);
   /* 7: deviations */
   table('t7',['Deviation','Period','Why, and what it changes','Sources'],G.devs.map(d=>[`<b>${d.title}</b>`,d.period,d.why,d.sources.join('; ')]),true);
+  {const H=G.devs.find(d=>d.id==='hairspring').numbers,mx=Math.ceil(Math.max(...H.fit.map(r=>Math.max(r[2],r[3]))));$('hsG').textContent=f(H.eTolG*1e6,2);
+    chart('c7t4',{label:'Table IV printed against the ring fit',h:360,x:[0,mx],y:[0,mx],xl:'Table IV, printed (s a day, 90 against 55 °F)',yl:'the ring fit (s a day)',r:40,
+      series:[{type:'line',c:'--muted',name:'equal',dash:'4 4',data:[[0,0],[mx,mx]],tip:()=>'equal'},
+        {type:'dots',c:'--s1',name:'a pair moved from hole 7',data:H.fit.map(r=>[r[2],r[3],r[0],r[1]]),tip:p=>`hole 7 to ${p[2]}, head ${f(p[3],3)} in<br>printed ${f(p[0],2)}, fit ${f(p[1],2)} s a day`}]});
+    $('hsFig').textContent=`One constant fitted, the quarter bulging past the arm's ends as the rim grows ${f(H.dA*1e6,1)} × 10⁻⁶ a °C more than the arm (austenitic stainless on Invar: 14.4–16.3), reproduces Table IV's ${H.fit.length} figures within ${f(H.rms,2)} s a day rms. The balance with its standard screws expands as a ${f(H.abR[0]*1e6,1)}–${f(H.abR[1]*1e6,1)} × 10⁻⁶ a °C metal would, so the spring's coefficient must be ${f(H.eReq[0]*1e6,1)} to ${f(H.eReq[1]*1e6,1)} × 10⁻⁶ a °C (a beryllium-bronze balance's ${f(H.gReq[0]*1e6,0)} to ${f(H.gReq[1]*1e6,0)}: Nivarox's grade for monometallic balances suits it). Moving the standard pairs reaches ${sg(H.lo-H.cur,2)} to ${sg(H.hi-H.cur,2)} s a day between 55 and 90 °F, in steps of ${f(H.gap,2)} s or less: a spring ${sg(H.win[0]*1e6,1)} to ${sg(H.win[1]*1e6,1)} × 10⁻⁶ a °C off its mark still meets the Navy's 1.20, ${f((H.win[1]-H.win[0])/(2*H.eTolG),1)} times the range a one-piece balance allows.`;}
   /* 8: the detent under shock */
   const TP=D.trip,FR=TP.frame,VA=TP.valid,RU=TP.running,pct=x=>f(100*x,x<0.1?2:1)+' %',NMP={spring:'the detent spring',blade:'the blade',arm:'the arm to the horn',trip:'the trip spring'};
   $('trN').textContent=`${FR.elements} elements on ${FR.nodes} nodes; ${f(FR.mass*1e6,1)} mg and ${f(FR.Ift*1e9,2)} g·mm² about the spring's root, dynamics.js's ${f(FR.dm*1e6,1)} and ${f(FR.did*1e9,2)}`;
