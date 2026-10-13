@@ -64,7 +64,7 @@ for(const q of MJ.pawls){const s=SPEC[q.name],o={name:q.name,holds:s.holds,lines
   /* falling back in: from a tip, the pawl's tip falls the depth under the spring's moment (preload plus the lift's); the time to reach the root, as a pendulum
      released from its lift (simple harmonic about the seat, plus the preload's constant moment: solved in steps) */
   const fall=Mpre=>{const Ip=q.I*1e-9,kth=k*arm2*arm2*1e-3,dt=1e-6;let th=lift,w=0,tt=0;while(th>0&&tt<0.2){const M=Mpre*1e-3+kth*th;w+=M/Ip*dt;th-=w*dt;tt+=dt;}return tt;};   /* Mpre in N·mm; kth N·m/rad */
-  o.fall0=fall(F0!=null?F0*arm2:0);
+  o.fall0=fall(F0!=null?F0*arm2:0);o.fallFree=fall(0);   /* and with no preload at all, its spring pressing only as the tip lifts it */
   if(/winding/.test(q.name)){
     /* the key let go: the mainspring turns the fusee forward, the fusee, the barrel through the chain (at full wind and at run down: the chain leaves the fusee
        at rmin and rmax) and the key on the square, from rest; the pawl must follow the tooth's back down to the root, or meet the next face only partly in */
@@ -81,7 +81,9 @@ for(const q of MJ.pawls){const s=SPEC[q.name],o={name:q.name,holds:s.holds,lines
        under it every 1/z s; it must drop from a tip before the face arrives. Running, the ratchet creeps forward a tooth every 1/z of the fusee's 6.43 h turn,
        and a wind started while it is falling is caught part way in */
     const hrT=1/(PH.TRAIN.cp/PH.TRAIN.fu)*3600/q.z;o.tCreep=hrT;o.pMid=o.fall0/hrT;
-    say(`  with its wire's preload it falls from a tip to the root in ${f(o.fall0*1000,2)} ms, against ${f(1000/q.z,1)} ms a tooth at a turn a second of the key: in time; running, the ratchet creeps a tooth every ${f(hrT)} s, so a wind starts while it falls ${f(o.pMid*1e6,1)} times in a million`);
+    say(`  with its wire's preload it falls from a tip to the root in ${f(o.fall0*1000,2)} ms (${f(o.fallFree*1000,2)} ms with none: any wire that presses it in will do), against ${f(1000/q.z,1)} ms a tooth at a turn a second of the key: in time; running, the ratchet creeps a tooth every ${f(hrT)} s, so a wind starts while it falls ${f(o.pMid*1e6,1)} times in a million`);
+    /* the least the wire must be set in (rad) to drop the pawl in a tooth's time: none if it falls in time unloaded (bench.js's pawls test, montecarlo.js) */
+    {let lo=0,hi=sp.preTurn*4;if(o.fallFree<=1/q.z)hi=0;else for(let i=0;i<40;i++){const md=(lo+hi)/2;fall(k*arm2*arm2*md)<=1/q.z?hi=md:lo=md;}o.wireNeed=hi;}
     if(o.fall0>1/q.z)fail=1;}}
 /* both winding pawls bear together: opposite each other on 36 teeth (an even count), each on its face */
 {const W=out.pawls.filter(o=>/winding/.test(o.name));say('');say(`the two winding pawls stand opposite on the ${MJ.pawls[1].z}-tooth ratchet, each ${f(W[0].depth,2)} mm in: they share the drive (made out by a tenth of a tooth, one carries it all: ${f(2*W[0].F,1)} N, still ${f(STEEL_Y[0]/(out.pawls[1].lines[0].sig*2),1)} times short of its tooth's yield)`);}
