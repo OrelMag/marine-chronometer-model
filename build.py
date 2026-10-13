@@ -14,6 +14,8 @@ Writes:
      social.png            link-preview image of the page (the dial in its box)
      social-movement.png   an image of the mechanism titled for the essay, for posting
      navships-250-624-1948.pdf   the manual itself (References/, Google Books' scan of the 1948 Navy manual), which the page links to beside it
+     verification/build-verification/   the checks' report "Would a chronometer made to the model run and keep time?" (its build_report.py, committed)
+     verification/real-chronometers/    the report "Does the model behave like a real Hamilton Model 21?", with its plots
      sitemap.xml, robots.txt   for search engines (with --site-url only)
 The HTML file is self-contained: three.js and the fonts are inlined, so nothing is fetched from another server.
 Its version and list of changes come from CHANGELOG.md (changelog.py); a build without --release changes neither, so ci.py's rebuild matches.
@@ -26,6 +28,8 @@ import changelog
 MODEL=ROOT/'marine-chronometer-source/chronometer-working-model'
 SITE=ROOT/'site'
 MANUAL='navships-250-624-1948.pdf'   # the page links to it by this name, beside itself
+REPORTS=['build-verification','real-chronometers']   # the checks' reports (the model's verification/, each built by its own build_report.py), served at the same paths beside the page
+REPO='https://github.com/OrelMag/marine-chronometer-model/blob/main/marine-chronometer-source/chronometer-working-model/'   # where a report's links into the repository (its tools) go on the site
 
 def write(p,text):
     p.write_text(text,encoding='utf-8',newline='\n');print('wrote',p.relative_to(ROOT),f'{len(text.encode())/1024:.0f} KB')
@@ -45,7 +49,7 @@ def budget(name,html):
 
 def address(url,page,keep=False):
     # Cloudflare (Workers and Pages) redirects /page.html to /page, so name the address it ends up at, unless --keep-html
-    return url.rstrip('/')+'/'+('' if page=='index.html' else page if keep else page.removesuffix('.html'))
+    return url.rstrip('/')+'/'+(page.removesuffix('index.html') if page.endswith('index.html') else page if keep else page.removesuffix('.html'))
 
 def meta(html,url,page,img='social.png',keep=False):
     """Link-preview and canonical tags that need the site's absolute address."""
@@ -55,6 +59,19 @@ def meta(html,url,page,img='social.png',keep=False):
           f'<meta property="og:image" content="{url.rstrip("/")}/{img}">\n<meta property="og:image:width" content="1200">\n'
           f'<meta property="og:image:height" content="630">\n<meta name="twitter:card" content="summary_large_image">\n')
     return html.replace('</head>',tags+'</head>',1)
+
+def reports(url,keep):
+    """The checks' reports into site/verification/, where they sit beside the model's page in the source (so their links to it and to each other hold),
+    each with the images it shows; their links into the repository (its tools) go to GitHub. Returns their pages' paths."""
+    out=[]
+    for r in REPORTS:
+        src=MODEL/'verification'/r;page=f'verification/{r}/index.html';dst=SITE/page;html=(src/'index.html').read_text(encoding='utf-8')
+        html=re.sub(r'href="\.\./\.\./(tools/[^"]+)"',lambda m:f'href="{REPO}{m.group(1)}"',html);check(page,html)
+        for f in sorted(set(re.findall(r'src="(assets/[^"]+)"',html))):(dst.parent/f).parent.mkdir(parents=True,exist_ok=True);shutil.copy(src/f,dst.parent/f)
+        bad=[h for h in re.findall(r'(?:href|src)="(\.[^"#]*)',html) if not (dst.parent/h).resolve().is_relative_to(SITE.resolve())]
+        if bad:sys.exit(f'{page} links to {bad} outside site/: point them at the site, or at GitHub (REPO in build.py)')
+        dst.parent.mkdir(parents=True,exist_ok=True);write(dst,meta(html,url,page,keep=keep));out.append(page)
+    return out
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -76,9 +93,10 @@ def main():
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)
-    if a.site_url:   # for search engines: the page, at the address its canonical tag names
+    pages=['index.html']+reports(a.site_url,a.keep_html)
+    if a.site_url:   # for search engines: the pages, at the addresses their canonical tags name
         write(SITE/'sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
-              f'<url><loc>{address(a.site_url,"index.html",a.keep_html)}</loc></url>\n'+'</urlset>\n')
+              ''.join(f'<url><loc>{address(a.site_url,p,a.keep_html)}</loc></url>\n' for p in pages)+'</urlset>\n')
         write(SITE/'robots.txt',f'User-agent: *\nAllow: /\nSitemap: {a.site_url.rstrip("/")}/sitemap.xml\n')
     print('site/ is ready to upload'+('' if a.site_url else ' (no --site-url given: link previews will show no image)'))
 

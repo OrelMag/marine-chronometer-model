@@ -90,7 +90,8 @@ This one command:
    - `social.png` is the link-preview image (the dial in its box), and `social-movement.png` an image of the mechanism titled for the essay, for posting;
    - `_headers` holds security and caching headers, read by Cloudflare Pages and Netlify.
    - `navships-250-624-1948.pdf` is the 1948 manual itself, from `References/`, which the page links to beside it;
-   - `sitemap.xml` and `robots.txt`, for search engines, when `--site-url` is given (below).
+   - `verification/build-verification/` and `verification/real-chronometers/` are the checks' two reports (each check's method, results and what they mean), copied as their own `build_report.py` last wrote them, their links to the tools pointed at GitHub; the page's About and the essay link to them. A report isn't rebuilt by `build.py`: rebuild it (its `build_report.py`) after changing what it reports, then build;
+   - `sitemap.xml` (the page and the two reports) and `robots.txt`, for search engines, when `--site-url` is given (below).
 
 The build fails if the page still loads a script, stylesheet or font from another
 server. That keeps the published files working offline and in countries where
