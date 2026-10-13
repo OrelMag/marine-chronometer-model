@@ -29,7 +29,7 @@ pivot('fusee arbor\'s pivot in its brass bushing (r 1.02)',Ff,1.02,3.4,day.fusee
 pivot('centre arbor\'s pivot in brass (r 0.5)',Fc,0.5,1.0,day.centre,H.brass,Math.min(R[0],R[1]),'the centre\'s meshes\' depths');
 pivot('third arbor\'s pivot in its jewel (r 0.3)',Ft,0.3,0.6,day.third,H.steel,Math.min(R[1],R[2]),'the third\'s meshes\' depths');
 pivot('fourth arbor\'s pivot in its jewel (r 0.25)',F4,0.25,0.5,day.fourth,H.steel,Math.min(R[2],R[3]),'the fourth\'s meshes\' depths');
-pivot('escape arbor\'s pivot in its jewel (r 0.089)',Fe,0.089,0.4,day.escape,H.steel,Math.min(R[3],lockRoom),'the fourth wheel\'s depth on its pinion and the depth of lock');
+pivot('escape arbor\'s pivot in its jewel (r 0.089)',Fe,0.089,0.4,day.escape,H.steel,Math.min(R[3],pivRoom),'the depth of lock, the hole worn toward the balance: the worst way');
 /* the balance staff upright in its gimbals: its weight on the lower endstone, the pivot's flat end turning over it at the swing's mean speed (4 A / T) at two thirds
    of its radius (a disc under even pressure), the endshake set mid-band (Ops. 15, 69, 74: 0.001-0.003 in) */
 {const mB=MJ.arbors.balance.m*1e-3,F=mB*9.80665,r=0.18,w=4*ESC.A/ESC.T,s=w*(2/3*r*1e-3)*YR;
