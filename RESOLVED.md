@@ -2270,7 +2270,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   +13.0) and the trim its screw moves reach (−6.45 to +4.61 s a day, steps of 0.42 s or less: a spring −5.5 to +7.7 off
   its mark), which `bench.js`'s rate test now gives the maker. The deviation's id is `hairspring` (`orig=hairspring`).
   Keep: a build deviation that changes a compensated part must leave a way to trim it, and its tolerance must be one a
-  bought part holds.
+  bought part holds. `fe55300`
 - **`maintaining.py` foretold a catch wrong where the spring's reload begins.** It checked `R.release` by adding the
   frame's whole running to the catch it foretold, but the reload is `max(0, …)`: with the spring held as the key lets go
   and the train's running starting the reload within the frame, only part of it adds (frame 212 at full wind: foretold
