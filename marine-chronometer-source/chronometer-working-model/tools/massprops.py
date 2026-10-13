@@ -14,9 +14,12 @@ HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 JS=(HERE/'massprops-check.js').read_text(encoding='utf-8')
 OUT=HERE/'gimbals.json'
+# the model's clock starts at the time of day (app.js: tSim from Date.now()), and the hands' weight turning with it moved the bowl's centre of gravity up to 0.016 mm
+# between runs, past the check's 0.01 (48e82e1 rewrote gimbals.json for one such drift): the page is loaded at one instant, 13 October 2026 06:50 GMT, about when that write was
+CLOCK="(()=>{const n=Date.now,t0=n(),T=Date.UTC(2026,9,13,6,50,0);Date.now=()=>T+(n()-t0);})()"
 async def load(b,h,mode=None):
     pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
-    await pg.goto(PAGE+h);await pg.wait_for_function("!document.querySelector('#loading')&&window.__BX",timeout=120000);await pg.wait_for_timeout(2500)
+    await pg.add_init_script(CLOCK);await pg.goto(PAGE+h);await pg.wait_for_function("!document.querySelector('#loading')&&window.__BX",timeout=120000);await pg.wait_for_timeout(2500)
     if mode:await pg.evaluate(f"window.__mpMode='{mode}'")
     r=json.loads(await pg.evaluate(JS));await pg.close()
     if errs:print('page errors:',errs);sys.exit(1)
