@@ -23,17 +23,24 @@
      it, or the pawl's own outline's, into the pawl, where a tooth's tip corner meets the pawl's side. gap: how far the ratchet turns at C before it touches (negative:
      the seated outline already 0.0x mm into the tooth, as drawn) */
   const inPoly=(P,x,z)=>{let w=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,zi]=P[i],[xj,zj]=P[j];if((zi>z)!==(zj>z)&&x<(xj-xi)*(z-zi)/(zj-zi)+xi)w=!w;}return w;};
-  const contact=(pr,W,dir)=>{const D=dense(W).map(([x,z])=>[x,z,Math.hypot(x,z),Math.atan2(z,x)]),pen=d=>D.map(([x,z,r,a])=>pr.r(a+dir*d)-r);
-    let d=-0.003,hit=null;while(d<0.05){const p=pen(d),mx=Math.max(...p);if(mx>0){hit=d;break;}d+=2e-5;}
-    const p=pen(hit+1e-4),on=D.filter((_,i)=>p[i]>0),C=[on.reduce((q,v)=>q+v[0],0)/on.length,on.reduce((q,v)=>q+v[1],0)/on.length],rC=Math.hypot(...C);
-    let n,kind;if(rC>pr.ro-0.03){kind='tip corner on the pawl';let bi=0,bd=1e9;D.forEach(([x,z],i)=>{const e=Math.hypot(x-C[0],z-C[1]);if(e<bd){bd=e;bi=i;}});const a=D[(bi+D.length-3)%D.length],b=D[(bi+3)%D.length],t=[b[0]-a[0],b[1]-a[1]],l=Math.hypot(...t);
+  const contact=(pr,W,dir)=>{const D=dense(W).map(([x,z])=>[x,z,Math.hypot(x,z),Math.atan2(z,x)]),pen=d=>D.map(([x,z,r,a])=>pr.r(a+dir*d)-r),p0=pen(0).map(v=>Math.max(v,0));   /* p0: where the seated outline already lies a few µm into a tooth, as drawn; only a contact that grows as the ratchet turns counts */
+    let d=0,hit=null;while(d<0.05){const p=pen(d);if(p.some((v,i)=>v>p0[i]+0.001)){hit=d;break;}d+=2e-5;}
+    const p=pen(hit),on=D.filter((_,i)=>p[i]>p0[i]+0.001),C=[on.reduce((q,v)=>q+v[0],0)/on.length,on.reduce((q,v)=>q+v[1],0)/on.length],rC=Math.hypot(...C);
+    let n,kind=undefined;if(rC>pr.ro-0.03){kind='tip corner on the pawl';let bi=0,bd=1e9;D.forEach(([x,z],i)=>{const e=Math.hypot(x-C[0],z-C[1]);if(e<bd){bd=e;bi=i;}});const a=D[(bi+D.length-3)%D.length],b=D[(bi+3)%D.length],t=[b[0]-a[0],b[1]-a[1]],l=Math.hypot(...t);
       n=[-t[1]/l,t[0]/l];if(!inPoly(W,C[0]+0.02*n[0],C[1]+0.02*n[1]))n=[-n[0],-n[1]];}
-    else{kind='on the face';const h=0.004,f=(x,z)=>Math.hypot(x,z)-pr.r(Math.atan2(z,x)+dir*hit),gx=f(C[0]+h,C[1])-f(C[0]-h,C[1]),gz=f(C[0],C[1]+h)-f(C[0],C[1]-h),l=Math.hypot(gx,gz);n=[gx/l,gz/l];}
-    const ang=Math.atan2(C[1],C[0]),win=D.filter(([,,,a])=>Math.abs(((a-ang+3*Math.PI)%TAU)-Math.PI)<pr.p);
-    return{C,n,kind,gap:hit*rC,r:[Math.min(...on.map(v=>v[2])),Math.max(...on.map(v=>v[2]))],depth:pr.ro-Math.min(...win.map(v=>v[2])),b:ang};};
+    /* the face's own normal at C: the faces are radial (ratchetProf), so the tangent, away from the side the tooth stands on */
+    const ang=Math.atan2(C[1],C[0]),aT=ang+dir*hit,e=0.02*pr.p,u=[-Math.sin(ang),Math.cos(ang)],nF=pr.r(aT+e)>pr.r(aT-e)?[-u[0],-u[1]]:u;
+    if(kind===undefined){kind='on the face';n=nF;}
+    const win=D.filter(([,,,a])=>Math.abs(((a-ang+3*Math.PI)%TAU)-Math.PI)<pr.p),depth=pr.ro-Math.min(...win.map(v=>v[2])),rF=pr.ro-depth/2;
+    /* fit: the pawl's end cut to bear on the face over its depth in the teeth, as a fitted pawl does: the load at the face's middle there, along its normal */
+    const jump=Math.abs(pr.r(aT+e)-pr.r(aT-e));   /* the profile's step at the contact: a face's (or a tip corner's) is most of the teeth's depth, a tooth's back has none */
+    return{C,n,kind,gap:hit*rC,r:[Math.min(...on.map(v=>v[2])),Math.max(...on.map(v=>v[2]))],depth,b:ang,jump,dir,fit:{C:[rF*Math.cos(ang),rF*Math.sin(ang)],n:nF}};};
+  /* which way the load turns the ratchet into its pawl: the way whose first contact is on a locking face or a tooth's tip corner, not on a tooth's back (turned
+     the other way the backs slide under the pawl, as in winding) */
+  const contactLoad=(pr,W)=>{const c=[1,-1].map(d=>contact(pr,W,d)),ok=c.filter(x=>x.jump>0.3*(pr.ro-pr.ri));return(ok.length?ok:c).sort((a,b)=>a.gap-b.gap)[0];};
   const teeth=(pr,b0)=>{const o=[];for(let a=b0-2.5*pr.p;a<=b0+2.5*pr.p;a+=pr.p/60){const r=pr.r(a);o.push([r4(r*Math.cos(a)),r4(r*Math.sin(a))]);}return o;};
-  const pawl=(name,pr,z,m,rd,thick,thR,pts,Q,th,dir,spring)=>{const W=tr(pts,Q,th),c=contact(pr,W,dir),G=poly(pts),mass=G.A*thick*7.85e-3,I=G.J*thick*7.85e-3;   /* g, g·mm² about the pivot */
-    return{name,z,m:r4(m),ro:r4(pr.ro),ri:r4(pr.ri),p:r4(pr.p),rd:r4(rd),thick:thR,pawlThick:thick,pivot:P2(Q),th:r4(th),dir,face:{kind:c.kind,b:r4(c.b),n:P2(c.n),gap:r4(c.gap),C:P2(c.C),r:[r4(c.r[0]),r4(c.r[1])],depth:r4(c.depth)},
+  const pawl=(name,pr,z,m,rd,thick,thR,pts,Q,th,dir,spring)=>{const W=tr(pts,Q,th),c=contactLoad(pr,W),G=poly(pts),mass=G.A*thick*7.85e-3,I=G.J*thick*7.85e-3;   /* g, g·mm² about the pivot */
+    return{name,z,m:r4(m),ro:r4(pr.ro),ri:r4(pr.ri),p:r4(pr.p),rd:r4(rd),thick:thR,pawlThick:thick,pivot:P2(Q),th:r4(th),dir:c.dir,face:{jump:r4(c.jump),kind:c.kind,b:r4(c.b),n:P2(c.n),gap:r4(c.gap),C:P2(c.C),r:[r4(c.r[0]),r4(c.r[1])],depth:r4(c.depth),fit:{C:P2(c.fit.C),n:P2(c.fit.n)}},
       mass:r4(mass),I:r4(I),cg:P2(tr([[G.cx,G.cz]],Q,th)[0]),outline:W.filter((_,i)=>i%Math.max(1,Math.floor(W.length/90))===0).map(P2),teeth:teeth(pr,c.b),spring};};
   const out={pawls:[]};
   { const su=R.su,psi=su.base,Qr=toWheel(su.q,[0,0],psi),thR=su.seat-psi;   /* the click's pivot and turn in the setup ratchet's frame */
@@ -42,7 +49,7 @@
     const bk=pawlBack(u.pts,0.96,Q,th,[0,0]);out.pawls.push(pawl('winding pawl '+(k+1),R.FPR,36,R.FPR.ro/(36/2+0.95),R.FPR.ro-R.FPR.ri,0.5,0.5,u.pts,Q,th,1,{kind:'band',w:0.3,h:0.5,len:r4(len),bear:P2(bk.p),bearN:P2(bk.n),arm:0.96,note:'a long arc in its bed round the sustaining ratchet, its end on the pawl\'s arm'}));}
   { const sp=R.spawl,pts=sp.userData.pts,SPv=[sp.position.x,sp.position.z],Fu=[R.ssg.position.x,R.ssg.position.z],q=[SPv[0]-Fu[0],SPv[1]-Fu[1]],psi=((R.holdBack(0)%R.SRP.p)+R.SRP.p)%R.SRP.p,
       Q=toWheel(q,[0,0],psi),th=seatPawl(pts,Q,sp.userData.base-psi,R.SRP);
-    out.pawls.push(pawl('sustaining pawl',R.SRP,120,R.SRP.ro/(120/2+0.95),R.SRP.ro-R.SRP.ri,0.6,0.7,pts,Q,th,-1,{kind:'wire',r:0.12,len:r4(-20.66-1.0+9.75),preTurn:0.12,foot:[-2.0,1.7],note:'a straight steel wire upright from the pawl\'s root to a hole in the train bridge, set 0.12 rad further in'})); }
+    out.pawls.push(pawl('sustaining pawl',R.SRP,120,R.SRP.ro/(120/2+0.95),R.SRP.ro-R.SRP.ri,0.6,0.7,pts,Q,th,-1,{kind:'wire',r:0.12,len:r4(Math.abs(-20.66-1.0+9.75)),preTurn:0.12,foot:[-2.0,1.7],note:'a straight steel wire upright from the pawl\'s root to a hole in the train bridge, set 0.12 rad further in'})); }
   /* ---------- arbors' moments of inertia about their own axes ---------- */
   mv.updateMatrixWorld(true);const toMv=new THREE.Matrix4().copy(mv.matrixWorld).invert(),A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3();
   const shown=o=>{for(let p=o;p&&p!==mv;p=p.parent)if(!p.visible)return false;return true;};

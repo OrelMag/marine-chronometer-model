@@ -24,7 +24,7 @@ async def main():
         f=q['face'];print(f"{q['name']:16s} z {q['z']:3d}  pivot {q['pivot']}  {f['kind']}, gap {f['gap']:+.3f} mm, contact r {f['r'][0]:.2f}-{f['r'][1]:.2f}, n {f['n']}, {f['depth']:.3f} deep  pawl {q['mass']*1000:.1f} mg, I {q['I']:.3f} g·mm²")
     for k,a in out['arbors'].items():print(f"{k:13s} {a['m']*1000:8.1f} mg  I {a['I']:9.3f} g·mm²  off-axis {a['off']:.3f} mm"+(f"  missing {a['missing']}" if a['missing'] else ''))
     txt=json.dumps(out,indent=1,ensure_ascii=False)+'\n'
-    if '--write' in sys.argv:OUT.write_text(txt,encoding='utf-8');print('wrote tools/mechanisms.json');return
+    if '--write' in sys.argv:open(OUT,'w',encoding='utf-8',newline=chr(10)).write(txt);print('wrote tools/mechanisms.json');return
     old=json.loads(OUT.read_text(encoding='utf-8')) if OUT.exists() else None
     def close(a,b):
         if isinstance(a,dict):return isinstance(b,dict) and a.keys()==b.keys() and all(close(a[k],b[k]) for k in a)
