@@ -1071,8 +1071,14 @@ on what would stop the chronometer.
   fourth wheel estimated; not adopted, it moves the rate 0.08 s a day), its
   modes lie in the kilohertz, and the strike on the jewel rebounds the escape
   mesh inside its backlash. `montecarlo.js`: made to a maker's tolerances, all
-  at once, 99.9 % work after the bench's adjustments, 98.7 % as made. `bench.js`
-  carries four tests from them.
+  at once, 98.7 % work as made (1.2 % swing out of the band, 0.1 % have a
+  winding pawl's spring under its 0.08 mm); the bench's tests, applied as a
+  maker would by bench.json's figures, catch them all: the swing test has the
+  set-up turned (Op. 13), the pawls' test bends a short spring back to the aim
+  (it catches 5 of 2,000, 2 of which would have failed), the depths test
+  re-bushes a mesh too close (5, none of which would have jammed), and every
+  movement works after the bench. A movement still failing that no test
+  catches fails the check. `bench.js` carries four tests from them.
 - **`tools/tripping.js`, does a tooth ever get past the stone.** The classic
   failure of a detent escapement at sea is tripping: the wheel lets a tooth go
   that the balance didn't unlock, and the chronometer gains. dynamics.js takes
