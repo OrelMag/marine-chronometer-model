@@ -412,8 +412,13 @@ landing on the stone. <code>traindyn.js</code>.</p>
 
 <h3>11.7 The whole movement to a maker's tolerances</h3>
 <p><b>Method.</b> Movements made with every tolerance drawn at once (the holes, the meshes' friction, the mainspring's and the escapement springs' strips, the sustaining
-spring's band, the pawls' springs' set), each judged on all of the above: the train turns, the balance swings in the manual's band as made and after the set-up is
-turned (Op. 13), the maintaining work drives five minutes, the winding pawls follow the fusee down. <code>montecarlo.js</code>.</p>
+spring's band, the pawls' springs' set), each judged on all of the above: the train turns, the balance swings in the manual's band, the maintaining work drives
+five minutes, the winding pawls follow the fusee down and the sustaining pawl's wire presses it in (each pawl against its own need, 11.2). Judged first as made,
+then after the bench (section 5's tests, by <code>bench.json</code>'s own figures) as a maker would apply it: the depths test re-bushes a mesh closer than its
+window less the pivots' shake (<code>benchcheck.py</code>), the pawls' test bends a spring under its least set, or a wire that leaves its pawl loose, back to the
+aim, the swing test has the set-up turned where the swing is out of the band (Op. 13), and the maintaining work is timed (nothing on the bench re-makes the
+sustaining spring, so a short one stays failed, but caught). A movement still failing after the bench must have been caught by one of its tests: one that
+isn't means the bench's figures fall short of the analyses', and the check fails. <code>montecarlo.js</code>.</p>
 <figure><div class="chart" id="c22"></div><figcaption>Figure 22. The balance's swing as made, over the movements drawn (the escapement adjusted to the manual's figures, the set-up as drawn); the band is
 the manual's. <code>montecarlo.js</code>.</figcaption></figure>
 <div id="t23" class="tw"></div>
@@ -799,8 +804,16 @@ function drawMech(){const X=DATA.mech;if(!X)return;const ow=X.ow,ra=X.ra,su=X.su
     chart('c22',{label:'Swing as made',x:[Math.min(240,H[0][0]-2.5),Math.max(275,H[H.length-1][0]+5)],y:[0,Math.max(...H.map(h=>h[1]))*1.15],xl:'the balance\'s swing as made (°)',yl:'movements',vbands:[{x0:247.5,x1:270,c:'--band',t:'the manual\'s band'}],r:40,
       series:[{type:'line',name:'movements',c:'--s1',data:H.flatMap(h=>[[h[0],h[1]],[h[0]+2.5,h[1]]]),tip:p=>`${f(p[0],1)}°: ${p[1]} movements`}]});
     const pc=x=>f(100*x,1)+' %';
-    table('t23',['Judged on','Movements that pass'],[['The train turns (every mesh in its window)',pc(1-F.jam)],['The balance swings',pc(F.runs)],['The swing in the manual\'s band, as made',pc(F.band)],['… with the set-up turned (Op. 13)',pc(F.band2)],['The maintaining work drives five minutes',pc(F.sust)],['The winding pawls follow the fusee down',pc(F.pawls)],['Everything, as made',pc(F.asMade)],['Everything, after the bench\'s adjustments',pc(F.works)]]);
-    $('mcRes').textContent=`Of ${mc.N} movements, ${pc(F.works)} do everything once the bench has adjusted them, ${pc(F.asMade)} as made; their swing as made ${f(mc.swing[0],1)}-${f(mc.swing[2],1)}° (5-95 %). No tolerance alone takes a movement out (${Object.entries(mc.alone).map(([k,v])=>`${k} ${pc(v.asMade)}`).join(', ')}): together the drive's spread does, and turning the set-up brings it back.`;}}
+    const A=mc.after,B=mc.bench,N=mc.N,n=(k,w)=>`${k}`+(w!=null?` (${w} would fail)`:'');
+    table('t23',['Judged on','As made','The bench\'s test, and what it does','Caught','After the bench'],[
+      ['The train turns (every mesh in its window)',pc(1-F.jam),'The train\'s depths: a mesh too close re-bushed on the drawn centre',n(B.depths.caught,B.depths.jam),pc(A.turns)],
+      ['The balance swings',pc(F.runs),'The swing',`${Math.round(N*(1-F.runs))}`,pc(A.runs)],
+      ['The swing in the manual\'s band',pc(F.band),'The swing (and the mainspring\'s torque): out of the band, the set-up turned (Op. 13)',`${B.setup.caught}`,pc(A.band)],
+      ['The maintaining work drives five minutes',pc(F.sust),'The maintaining work, timed: caught, nothing on the bench mends it',`${B.maint.caught}`,pc(A.sust)],
+      ['The winding pawls follow the fusee down; the sustaining pawl\'s wire presses it in',pc(F.pawls),`The pawls' springs: one under ${f(mc.need.benchSet,2)} mm of set, or a loose wire, bent back to the aim`,n(B.pawls.caught,B.pawls.wouldFail),pc(A.pawls)],
+      ['Everything',pc(F.asMade),'All of them',`${B.any}`,pc(F.works)]]);
+    const al=Object.entries(mc.alone),worst=al.slice().sort((a,b)=>a[1].asMade-b[1].asMade)[0];
+    $('mcRes').textContent=`Of ${N} movements, ${pc(F.asMade)} do everything as made and ${pc(F.works)} once the bench has done what its tests say. The pawls' test catches ${B.pawls.caught} (${B.pawls.springs} spring${B.pawls.springs===1?'':'s'} under the least set; ${B.pawls.wouldFail} of those movements would have failed${B.pawls.caught>B.pawls.wouldFail?`, the other ${B.pawls.caught-B.pawls.wouldFail} have a spring the bench's single figure, the larger pawl's need, rejects although its own pawl needs less`:''}) and bends them back to the aim; the swing is out of the band in ${B.setup.caught}, and turning the set-up brings ${B.setup.mended} of them back; the depths test re-bushes ${B.depths.caught}, ${B.depths.jam} of which would have jammed. ${mc.failAfter?`${mc.failAfter} still fail after the bench, every one caught by a test`:'None is left failing'}${mc.uncaught?`; ${mc.uncaught} fail unseen by any test`:''}. Their swing as made ${f(mc.swing[0],1)}-${f(mc.swing[2],1)}° (5-95 %). ${worst[1].asMade>=0.998?`No tolerance alone takes a movement out (${al.map(([k,v])=>`${k} ${pc(v.asMade)}`).join(', ')})`:`Alone, the ${worst[0]}'s tolerance takes most out as made, ${pc(1-worst[1].asMade)} (${al.map(([k,v])=>`${k} ${pc(v.asMade)}`).join(', ')})`}: together the drive's spread takes ${pc(1-F.band)} out of the band, and turning the set-up brings it back.`;}}
 const draw0=draw;draw=()=>{draw0();drawMech();};
 draw();
 const th=$('theme');th.addEventListener('click',()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=dark?'light':'dark';draw();});

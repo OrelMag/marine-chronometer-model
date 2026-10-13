@@ -2261,6 +2261,15 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The Monte Carlo's "after the bench's adjustments" left out the bench's pawls test.** `montecarlo.js` turned the
+  set-up and nothing else, so the two movements in 2,000 whose winding pawl's spring came out under its 0.08 mm of set
+  stayed failed (99.9 %), though `bench.js`'s pawls test tells the maker to find and re-bend exactly those. It also
+  judged both winding pawls by one draw against the larger need, and the sustaining pawl's wire against an unsourced
+  0.03 rad. Now every movement is judged as made, then after each bench test as a maker applies it, by `bench.json`'s
+  own figures (depths re-bushed, pawls' springs re-bent, the set-up turned where the swing is out of the band, the
+  maintaining work timed), each pawl against its own need (`ratchets.js`), and it fails if a movement still failing was
+  caught by no test. Keep: "after the bench" means after every bench test the analysis models, with the bench's own
+  figures; a test that can't mend what it catches leaves the movement failed but caught. `a01e1ce`
 - **The build's one-piece Glucydur balance left its temperature error untrimmable.** `deviations.js` paired a
   monometallic beryllium-bronze balance with a Nivarox spring and said the error was "trimmed on the bench", but such a
   balance has nothing to trim: the spring's thermoelastic coefficient had to be held within ±1.43 × 10⁻⁶ a °C for the
