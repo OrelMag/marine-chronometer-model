@@ -676,6 +676,22 @@ Contents:
   out past the rim to the winding stop, placed where that end is at full wind.
   Keep: the travel comes from the chain's path (`setWind(n, eps)`), not from
   `n` alone; the stop's place comes from `fs.stud`. `7970409`
+- **Stop-bar slid in with nothing touching it.** Its chain end, 1.1 thick and
+  level with the fusee's top band as the video reads it, stood 0.22 mm over
+  the links where the chain meets it (the top turn 0.13 lower there than at its
+  start), and the band covered the chain all round, so no link could reach it;
+  `barTravel` slid it by a formula (the run's inner face taken rN / cos(a) out
+  at the corner's resting angle), 0.1-0.2 mm off the incoming run as it moved.
+  The chain end is now 1.5 thick (an estimate, against 1.1 ± 0.2 read; Sec. IV
+  has the chain bear on it), its lower face 0.4 under the band's, the slot's
+  floor and the recess cut to it (1.55 deep, inside the readings), and the
+  travel keeps both end corners just outside the drawn chain (the incoming
+  run's inner face ahead of where it leaves the fusee, the wound turn's
+  behind), found by bisection; the bar's turn `al` is solved at the pushed
+  corner's radius, so the stop is still first touched at full wind. Keep: the
+  chain end reaches into the links' upper plates where the chain meets it; the
+  band stays clear of the chain; the travel comes from the chain's drawn
+  geometry, not an approximation of it. `f3e3c60`
 - **Fusee too thin at the small end, its top too small.** The profile was
   illustrative (r 6.5 to 14, top plate r 5.4). The side photograph, scaled by
   the fusee wheel, gives the groove's floor 8.3 to 13.8 on the upper turns and
