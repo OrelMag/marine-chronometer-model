@@ -2261,6 +2261,13 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **`smoke.py` failed "winding with the key" whenever the machine was busy.** The model's clock goes at most 0.05 s a
+  frame, and a headless page under load drew about 2 frames a second, so the sustaining spring's relaxing, about 2.5 s
+  of model time after the key goes on, came about 25 s later; the check waited 5 s and failed every run (ssD still
+  -0.0012), on main too, while a quiet machine passed. It looked like the time of day; it isn't (the same at 08:30 and
+  11:30 GMT on a fresh page). Keep: a smoke step that waits on the model's motion waits on its frames (30 s here,
+  returning as soon as it holds), and its message gives the frames drawn and the model's time. `25934e0`
+
 - **The real-chronometers report ran off a phone's screen.** Its three wide tables and its contents' last link pushed
   the page to 471 px on a 390 px screen, so the whole report scrolled sideways (found when the reports went on the site).
   Keep: on screens under 760 px its tables scroll in place (`table{display:block;overflow-x:auto}`, as the
