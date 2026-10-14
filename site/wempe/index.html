@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wempe Einheits-Chronometer</title>
-<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built from its works drawings: in progress: the frame and the going train so far.">
+<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built from its works drawings: in progress: the frame, the going train, the escapement and the dial with its hands and motion work so far.">
 <meta name="author" content="Orel Magidish">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Wempe Einheits-Chronometer">
@@ -349,7 +349,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   <h1>Wempe Einheits-Chronometer</h1>
   <div class="hd">
     <nav class="models" aria-label="The models"><a href="../">Hamilton Model 21</a><span aria-current="page">Wempe Einheits-Chronometer</span></nav>
-    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame, the going train and the escapement so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame, the going train, the escapement and the dial so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
   </div>
 </header>
@@ -380,7 +380,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
-    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; and the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel; and the balance and spring detent escapement, with their jewels.</div>
+    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; and the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel; and the balance and spring detent escapement, with their jewels; and the dial with its four hands, which show the time, and under it the motion work and the up-and-down work.</div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
@@ -394,7 +394,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
         <div class="seg" id="speeds">
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
-        <p class="note" style="margin:8px 0 0">The balance swings, the escapement works and the train turns from the escape wheel, a tooth a beat. Above 4×, the balance is drawn at rest.</p>
+        <p class="note" style="margin:8px 0 0">The balance swings, the escapement works and the train turns from the escape wheel, a tooth a beat; the hands show the time here. Above 4×, the balance is drawn at rest.</p>
       </details>
       <details class="grp more disp" id="dispDet" open>
         <summary>Display</summary>
@@ -449,7 +449,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   <h3>How it is being made</h3>
   <ul>
     <li><b>From the drawings.</b> Every size and place is read off a sheet: a figure where the sheet gives one, and where it doesn’t, measured on the drawing at its scale and marked estimated. Each part’s card says which.</li>
-    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them. Then the balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out.</li>
+    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them. Then the balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out. Then the dial and its hands (group 05 02): the white dial with its sub-dials for the state of wind and the seconds, the motion work that turns the hour hand from the centre arbor, and the up-and-down wheel driven from the fusee.</li>
   </ul>
   <p><a href="../">The Hamilton Model 21 working model</a>, the U.S. Navy’s chronometer, built from its 1948 overhaul manual.</p>
 </dialog>
@@ -1911,7 +1911,8 @@ const WFRAME=(()=>{
       const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
         ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};
       tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
-      const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.6/2,6.35,11.05)]};
+      const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.6/2,6.35,11.05),
+        ...[354,120,240].map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:10.35-2.5,b:11.05}))]};   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
       tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
       /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
       for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,2.25,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
@@ -2608,9 +2609,317 @@ const WESC=(()=>{
 </script>
 <script>
 // @ts-check
+/* dial.js: the Wempe Einheits-Chronometer's dial, motion work, hands and up-and-down work (drawing group 05 02), built from their sheets
+   (References/wempe/transcriptions/05-05-05-02-train-motionwork.md, checked on the sheets themselves, cropped and enlarged where a number mattered): the cannon tube
+   (Minutenrohr 05 05 03-3) with its pinion on the centre arbor's 1:80 shank, the change wheel (Wechselrad kompl. 05 02 02) on the short stud at hole 19, the hour wheel
+   (Stundenrad kompl. 05 02 03), the up-and-down wheel (Auf u. Abrad kompl. 05 02 04) on the long stud at hole 2 and its pinion (Auf u. Abtrieb 05 02 00-5) on the fusee
+   arbor at hole 10, the four hands (05 02 00-1, -2, -3, 05 02 01-1 with its collet 05 02 01-2), the dial (Zifferblatt 05 02 00-4) with its printing, screws and pin. The studs and their
+   bushes are the train's (train.js). The hand setting (Zeigerstellung, 05 33), the balance holding device (Unruhhaltevorrichtung, 05 36) and the seconds contact (05 38)
+   are not built (below, and README).
+   Part of the Wempe model (three.js r128). Declares only WDIAL: WDIAL.build(mv, M, K) adds the parts to the movement group (K: KIT.parts' makers; the frame and the train
+   already built) and returns {update, R}: update(s, ang) turns them from the train's angles (ang: train.js's {c, s}, and the fusee's f when the fusee group gives it) and
+   the wind (s.n, fusee turns from full wind, the Hamilton's MoveState); WDIAL.face(K) draws the
+   dial's printing on a canvas (as core.js's dialCanvas draws the Hamilton's).
+   Units mm, the movement frame (dims.js): dial side +y, 12 o'clock -z, 3 o'clock +x. Heights (y) from the pillar plate's dial face (PPT, 3.35 over its inner face).
+   Every turning group's rotation.y is its angle in the movement's frame (rotation.y falling: clockwise seen from the dial). */
+const WDIAL=(()=>{
+  const H=WD.H,PPT=WD.PP_T,V2=(a,b)=>new THREE.Vector2(a,b),{ring,solidGeo,clipPoly,area}=KIT;
+    const C=(p,r,n=0)=>ring(p[0],p[1],r,n);
+  /* a dial angle (deg clockwise from 12, seen from the dial) at radius r about plan point c, to a plan point */
+  const at=(a,r,c=[0,0])=>[c[0]+r*Math.sin(a*D2R),c[1]-r*Math.cos(a*D2R)];
+  /* a turned solid from a closed [r, y] profile (the first point not repeated), wound so it faces out (as escapement.js's lathe) */
+  const lathe=(pr,seg=48)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),seg);};
+  const{teeth,gear}=WTRAIN;
+
+  /* ================= heights ================= */
+  /* the dial on the movement ring's recess floor: 7 −0.1 over the seat's floor, where the pillar plate's dial face lies (05 08 00-3, drawn 7.0 as frame.js; 05 02_1's
+     "7" from the plate to the dial: sure), Ø 103.6 −0.1 × 1.3 (05 02 00-4: "Messingblech 1,3", struck to 1,2 in pencil, and "Eisenblech 1,3 gebondert" in pencil; 05 02_1
+     draws it 1.3: the 1.3, which puts the up-and-down hand's flange 0.2 over it, 05 02_1's "0,2": likely) */
+  const DY0=PPT+7.0,DT=1.3,DY1=DY0+DT,DR=103.55/2;
+  /* the glass's underside, 17.0 over the plate's dial face (05 02_1's "15,8", corrected in pencil to "17,0": unsure): the case (05 01) is a later phase; nothing here
+     stands within 1 mm of it */
+  const GLASS=PPT+17.0;
+  /* the centre arbor (train.js, 05 05 03-2): its journal "C" ends 23.03 over its train-side shoulder, where the cannon tube's foot sits (05 05 03: the tube's pinion block
+     from the C shoulder to 25.4 from the lower shoulder, its square to 14.3 over C); the shank Ø 1.8 at C tapers 1:80 */
+  const CW=WTRAIN.A.cw,yC=CW.ys+23.03,rSh=y=>(1.8-(y-yC)/80)/2;
+
+  /* ================= the motion work (05 02_1, Zeigerwerk, Auf u. Ab gesamt, 28.3.41, 5:1; and the parts' sheets) =================
+     The centre distances: Wechselrad–Minuten 12,6 and Auf u. Ab–Schnecke 18,4 (05 02_1): the tables put hole 19 12.600 from hole 1 and hole 2 18.400 from hole 10 (sure).
+     Tooth counts: the change wheel 56 (05 02 02-1) and hour wheel 54 (05 02 03-1), the up-and-down wheel 120 (05 02 04-1). The pinions' counts are on no sheet:
+     the cannon pinion 14 (2 × 12.6 − 20.16 = 5.04 = 14 × 0.36, the change wheel's module; the tube's pinion block on 05 05 03 scales Ø 5.86, a 14-leaf pinion's tip
+     for m 0.36, where 12 or 16 leaves would scale 5.1 or 6.6), the change pinion 18 (2 × 12.6 − 18.90 = 6.30 = 18 × 0.35, the hour wheel's module), the up-and-down
+     pinion 12 (2 × 18.4 − 33.454 = 3.346 = 12 × 0.2788): the transcription's inferences, confirmed (no other count fits the centres; 56/14 × 54/18 = 12).
+     The pinions' tips and roots: the cannon pinion's tip scaled on its sheet (Ø 5.86), its root as the centre pinion's sheet gives its (05 05 03-2: 2.13 m under the
+     pitch circle), as train.js estimates its pinions'; the change and up-and-down pinions' measured on Wempe 3955's dial side (3_Wempe_3955_uZ.jpg, 8.41 px/mm by the
+     plates' Ø 85; the change pinion's pipe there 3.1 against the sheet's 3.05): likely. Heights from the parts' sheets, each foot on its bush or pinion (below). */
+  const PIN=(z,m,D,dg)=>teeth(z,m,D??m*z+1.588*m,dg??m*z-4.26*m);
+  const M_CH=20.16/56,M_HR=18.90/54,M_UD=33.454/120;
+  /* the cannon tube (Minutenrohr 05 05 03-3, steel: blue in the coloured section): its pinion, a block 2.4 high on the C shoulder (05 05 03: 25.4 − 23), drawn
+     Ø 5.86 at 5:1 (16.9 px/mm), 14 leaves m 0.36; the tube Ø 3.6 (scaled 3.65) to 10.8 −0.1 over C, a groove r 0.4 round it at 6.3 for the centre punch that holds it
+     on the shank ("Körner"), then the square 2.6 □ r6 for the minute hand to 14.3, flush with the shank's end: every height from 05 05 03 (sure); the square's corners
+     turned to Ø 3.2 (estimated: a 2.6 square's corners, Ø 3.68, would stand out of the Ø 3.6 tube). Bored on the shank's 1:80 taper, drawn 0.01 clear of it */
+  const CN={y0:yC,y1:yC+2.4,yb:yC+10.8,yt:yC+14.3,yg:yC+6.3,r:3.6/2,sq:2.6/2,sqR:1.6,pin:PIN(14,M_CH,5.86)};
+  /* the change wheel (Wechselrad kompl. 05 02 02): the pipe (Wechselbutzen 05 02 02-2) 7 −0.1 overall, drawn 6.9, its foot on the stud bush's face (05 08 02-2, flush
+     with the plate's dial face), so its top lies 0.1 under the dial (05 02_1 draws "0,2 Luft" there, with the plates then 3.9): Ø 3.05 −0.04, its foot 0.9 +0.2 (drawn
+     1.0) under the wheel; the wheel (05 02 02-1, Messingblech 1,2 Ms 58 federhart, finished 1.0) on a seat Ø 4.2 (its hole), riveted, a collar Ø 5.5 × 0.6 over it
+     (scaled at 5:1, 17.9 px/mm); the pinion (Wechseltrieb 05 02 02-3, brass: yellow in the coloured section) knocked on to a press fit, 2.5 long (05 02_1; 05 02 02
+     scales 2.6), its lower face on the collar, 4.3 +0.1 under the pipe's top (05 02 02: drawn 4.35); bored to run on the short stud (05 02 00-7, Ø 1.3, train.js), 0.01 clear.
+     The wheel: z 56, m 0.36, tip 21.05 (pencil: "21,30" struck), root 19.03, tooth 0.555 on the pitch circle (pencil "Zahnstärke 0,55–0,56": the printed f 0.52 struck
+     with the tip), a plain disc (05 02 02-1). The pinion: 18 leaves, cut as a small wheel, its leaves about half the pitch with round ends, tip Ø 6.9 and root Ø 5.4 on
+     Wempe 3955 (05 02 02 scales 7.3 for its outside, which would touch the hour wheel's roots); drawn with the wheels' cycloidal form, 0.55 on the pitch circle */
+  const CHW={y0:PPT,yw0:PPT+1.0,yw1:PPT+2.0,yc:PPT+2.6,yp1:PPT+5.1,yt:PPT+6.9,r:3.05/2,rs:4.2/2,rc:5.5/2,rb:1.32/2,
+    wheel:teeth(56,M_CH,21.05,19.03,14,0.555),pin:teeth(18,M_HR,6.9,5.4,54,0.55)};
+  /* the hour wheel (Stundenrad kompl. 05 02 03): the pipe (Stundenbutzen 05 02 03-2, brass) 8.2 −0.1 overall from the wheel's lower face, flush with it, the hand's seat
+     Ø 4.4 r6 at 1:70 at its top; the wheel (05 02 03-1, Messingblech 1,2 Ms 58 federhart; 1 −0.1 on 05 02 03, "1,05 −0,03 gedreht" in pencil on 05 02 03-1: drawn 1.0) riveted
+     on its foot, which runs on the cannon tube (bore scaled Ø 3.5 at 5:1: drawn 0.01 over the tube's 3.6), the wheel down on the cannon pinion's top. Its collar Ø 7.9 (scaled
+     at 5:1, 17.1 px/mm) runs up to 0.3 under the dial (05 02_1's "0,3") with the wheel down: 3.585 over the wheel's lower face, where 05 02 03 gives 5.2 −0.1. The sheet's 5.2 would put
+     the collar 1.4 into the dial, whose hole is Ø 6.0 (05 02 00-4, 05 02_1, Lange's 1453/A): with the cannon pinion on 05 05 03's tube (1943) there is no room for it.
+     The coloured section draws the collar to the dial's underside, 3.75 over the wheel's (pictorial). So the collar is fitted, the overall 8.2 kept: the pipe ends 0.2
+     under the tube's square, as it must (README, Estimated). The wheel: z 54, m 0.35, tip 19.7 (pencil; "20,0" struck), root 17.89, tooth 0.5, a plain disc */
+  const HRW={y0:CN.y1+0.15,r:3.62/2,rs:6.0/2,rc:7.9/2,rh:4.4/2,wheel:teeth(54,M_HR,19.7,17.89,18,0.5)};
+  HRW.yw1=HRW.y0+1.0;HRW.yc=HRW.y0+(DY0-0.3-CN.y1);HRW.yt=HRW.y0+8.2;   /* drawn in the middle of its 0.3 of play between the cannon pinion and the dial (as the train's arbors in their endshake) */
+  /* the up-and-down wheel (Auf u. Abrad kompl. 05 02 04): the pipe (05 02 04-2, brass) on the long stud (05 02 00-6, train.js), its foot on the stud bush's face: Ø 3.4
+     (scaled) to 5.2 under the wheel, the wheel's seat Ø 5.2 (its hole, H7), a riveted flange Ø 7.4 (scaled) × 0.7 over it, a step Ø 2.8 (scaled) to 2.8 over the wheel and
+     the hand's seat Ø 2.2 r6, 1.4 long, on top (05 02 04: every height, sure); its top then lies 0.05 over the stud's end, as 05 08 02's 12.3 puts it (sure), and the wheel 0.8
+     under the dial (05 02_1's "0,8": likely). The wheel (05 02 04-1, Messingblech 1,2 Ms 58 federhart, Radstärke 1.0): z 120, m 0.2788 (d 33.454), tip 34.33, root 32.57,
+     tooth 0.40, five spokes 1.7 −0.2 wide, hub 10.5 −0.2, rim's inside 28.2 +0.2, hole 5.2 H7 */
+  const UDW={y0:PPT,yw0:PPT+5.2,yw1:PPT+6.2,yf:PPT+6.9,ys:PPT+7.6,yt:PPT+9.0,r:3.4/2,rs:5.2/2,rf:7.4/2,rst:2.8/2,rh:2.2/2,rb:1.32/2,wheel:teeth(120,M_UD,34.33,32.57,12,0.40)};
+  /* its pinion (Auf u. Abtrieb 05 02 00-5 in the coloured section; no sheet): on the fusee arbor's end stub Ø 1.6 at hole 10 ("1,6 Festsitz", 05 02_1; 05 06 04-1's
+     stub 1.6), 3 long, its top 0.3 under the dial (05 02_1: "3", "0,3", likely); 12 leaves of the wheel's module, steel, long and narrow, tip Ø 4.2 and root Ø 2.6 on Wempe
+     3955 (the coloured section colours it yellow; the photograph shows steel), drawn tip 4.0 and root 2.4: the wheel's roots and tips (Ø 32.57, 34.33 at 18.4) leave
+     no more. The fusee arbor is the fusee group's */
+  const UDP={y1:DY0-0.3,y0:DY0-3.3,rb:1.6/2,pin:PIN(12,M_UD,4.0,2.4)};
+
+  /* ================= the hands (05 02 00-1, -2, -3, 05 02 01-1) =================
+     Every outline is a blade of half-widths hw(r) along the hand (r from the arbor), at the sheets' figures where they give them and between them as traced on the sheets'
+     plans (2:1: 7.28, 6.77 and 9.7 px/mm by the hands' own lengths): the outermost of the outline's two lines in each column, less its stroke, scaled to meet the sheet's
+     widths at its stations; and a thickness t(r) from the side views' figures, the underside flat ("Schnitt A-B": flat under, rounded over; the rounding across isn't drawn).
+     Heights: the hands as last revised. The seconds arbor's post ends 9.2 over its shoulder (05 05 01-2, 1946; 05 05 01 of 1940 gave 7.2), 2.6 over the dial: the seconds
+     hand rides at its top, so the hour hand's blade passes 0.1 over the post's end (the hour wheel's pipe, 8.2 overall, reaches there: 05 02 03); the minute hand 1.2 over the
+     hour hand's boss (05 02_1's "1,2": likely), on the tube's square. 05 02_1 (1941) and the coloured section draw the hands 2 mm lower, the seconds hand lowest, on the
+     shorter post of 1940 (README). */
+  const hwAt=(T,r)=>{if(r<=T[0][0])return T[0][1];for(let i=1;i<T.length;i++)if(r<=T[i][0]){const[a,b]=[T[i-1],T[i]];return a[1]+(b[1]-a[1])*(r-a[0])/(b[0]-a[0]);}return T[T.length-1][1];};
+  /* the minute hand (Minutenzeiger 05 02 00-1, 18.9.42, Goldin, polished): 46 to the tip, 1.2 wide at the boss, 2 at 13, 0.7 at 25, 1.7 at 36, 0.4 at the tip (sure);
+     between them as traced (the two lobes peak at 12-14 and 31-35, the waist at 23-25). Boss: a flange Ø 6 and a collar Ø 4.2 under it, 2 overall, 1.2 from its top to
+     the flange's underside (sure); the hole 2.6 □ H7 at 1:70 (sure; drawn as the tube's square, 0.01 clear). Blade 0.7 thick near the boss, 0.6 at about 37 (scaled),
+     0.4 at the tip, its underside flush with the flange's */
+  const MIN={L:46,hw:[[3.0,0.6],[5,0.66],[7,0.74],[9,0.87],[11,0.95],[13,1.0],[15,0.92],[17,0.73],[19,0.52],[21,0.42],[23,0.36],[25,0.35],[27,0.45],[29,0.61],[31,0.78],[33,0.85],
+    [35,0.86],[36,0.85],[38,0.66],[40,0.45],[42,0.3],[44,0.24],[46,0.2]],t:[[3,0.7],[21,0.7],[37,0.6],[46,0.4]],y0:0,rf:3.0,rc:4.2/2};
+  /* the hour hand (Stundenzeiger 05 02 00-2, 14.6.40, Goldin, high-gloss polished): 35 to the tip; 1.7 wide at the boss, 2.4 at 9, 0.8 at the neck 19.5, a ball Ø 5.2
+     at 22.5 running out into the point, 0.6 at 30, 0.5 at the tip (sure); between them as traced (the ball's flanks fall from 2.6 at 22.5 to 0.4 at 30 in a long concave
+     run, not a circle; toward the neck the ball is its circle r 2.6). Boss: a flange Ø 8.2 under its top, bevelled to Ø 6.8 (the plan's inner circle), 0.8 thick (likely); a pipe Ø 5 −0.2 under it, 3.1 overall (sure);
+     the hole 4.4 H7 at 1:70. Blade 0.5 at the root, 0.6 / 0.4 / 0.7 / 0.6 / 0.3 at 14.6 / 19.4 / 20.8 / 30.0 / 34.6 (the side view's figures at their scaled places),
+     its top flush with the flange's at the root */
+  const HOUR={L:35,hw:[[3.6,0.85],[5,0.92],[6.5,1.06],[8,1.18],[9,1.2],[10.5,1.15],[11.5,1.0],[12.7,0.88],[13.9,0.72],[15.1,0.6],[16.5,0.48],[18,0.42],[19.5,0.4],[19.93,0.4],[20.0,0.71],[20.2,1.21],
+    [20.5,1.66],[21.0,2.12],[21.5,2.4],[22.0,2.55],[22.5,2.6],[23.3,2.55],[24,2.38],[24.6,2.18],[25.2,1.94],[25.8,1.67],[26.4,1.43],[27,1.19],[27.6,0.98],[28.2,0.78],[28.8,0.6],
+    [29.4,0.44],[30,0.3],[31.5,0.28],[33,0.26],[35,0.25]],t:[[3.6,0.5],[14.6,0.6],[19.4,0.4],[20.8,0.7],[30,0.6],[34.6,0.3],[35,0.3]],rf:8.2/2,rf1:6.8/2,rp:4.8/2,rb:4.42/2};
+  /* the up-and-down hand (Auf u. Abzeiger 05 02 00-3, 16.1.41, Bandstahl 0.6, hardened, polished, tempered blue): boss Ø 4.4, 1.4 overall, the flange 0.5 (sure), a pipe
+     under it Ø 3.0 (the plan's middle circle, scaled), the hole 2.2 H7; the blade 0.9 wide at the boss (sure), the inked blade to 9.5 (sure), a fine tip beyond it 0.25
+     wide (sure) to 10.2 from the centre (the sheet's plan isn't to scale there: measured on Wempe 3955's dial, 1_Wempe_3955_Z.jpg, 27.7 px/mm on the subdial's Ø 26: likely);
+     0.5 thick at the boss, 0.3 at the tip (sure) */
+  const UDH={hw:[[2.1,0.45],[9.5,0.17],[9.6,0.125],[10.2,0.125]],t:[[2.1,0.5],[10.2,0.3]],rf:4.4/2,rp:3.0/2,rb:2.22/2};
+  /* the seconds hand (Sekundenzeiger 05 02 01-1, 14.6.40, Bandstahl 0.6, hardened, lapped, tempered blue): 19.5 to the tip, 0.6 wide at the boss, 0.2 at the tip; the tail
+     10 to its end, an arm 0.3 wide to a drop 1.7 wide from 6.5 to 10, round toward the centre and pointed at its end (sure; its outline traced); the boss Ø 3.2, raised Ø 2.5
+     (the side view's "2,5∅", 0.5 + 0.1: scaled), the hole 1.2 +0.05 (sure). Thickness 0.4 at the boss, 0.3 at the tip; the tail's arm 0.3, the drop 0.5 (sure) */
+  const SEC={hwP:[[1.5,0.3],[19.5,0.1]],tP:[[1.5,0.4],[19.5,0.3]],hwT:[[1.5,0.15],[6.5,0.15],[6.55,0.35],[6.75,0.62],[7.0,0.78],[7.35,0.85],[8,0.64],[8.6,0.48],[9.2,0.3],[9.7,0.14],[10,0.02]],
+    tT:[[1.5,0.3],[6.4,0.3],[6.6,0.5],[10,0.5]],rb:1.6,rr:2.5/2,rh:1.2/2};
+  /* the hands' heights: the seconds hand's underside 1.9 over the dial, its boss's top 0.125 under the post's end (the post's end 14.275, train.js); the hour hand's blade
+     0.125 over the post's end (its top 14.9: its pipe's foot then 0.15 over the dial; it sits 0.235 over its seat's top, its 1:70 hole on the 1:70 seat); the minute hand
+     1.2 over the hour hand's boss; the up-and-down hand down on its pipe's shoulder, its top flush with the seat's */
+  const SW=WTRAIN.A.sw,ySp=SW.ys+33.25;   /* the seconds post's end (train.js's profile) */
+  const YS0=ySp-0.725,YH1=ySp+0.625,YM0=YH1+1.2,YU1=UDW.yt;
+
+  /* a blade from r0 to its tip along -z (the hand's 12 o'clock), its half-widths hw and thickness t over r, its underside at y0: one solidGeo cell with a sloped top. Its root
+     a concave arc of radius r0 about the arbor, joining the boss (in the hand's group, so the overlap with the boss is the hand's own) */
+  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip)).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b);R.push(tip);   /* every 0.25 and at each of the table's radii */
+    const w=r=>hwAt(hw,r),side=s=>R.map(r=>[s*w(r),dir*r]),a0=Math.asin(Math.min(0.99,w(r0)/r0)),arc=[];
+    for(let k=1;k<8;k++){const a=-a0+2*a0*k/8;arc.push([r0*Math.sin(a),dir*r0*Math.cos(a)]);}
+    let L=[...side(-1),...side(1).reverse(),...arc.reverse()];
+    /* points within 0.003 of the line through their neighbours left out: the faces' triangulation drops such a point and the walls keep it (an open edge) */
+    for(let k=0;k<6;k++){const o=[];for(let i=0;i<L.length;i++){const a=o.length?o[o.length-1]:L[(i+L.length-1)%L.length],b=L[i],c=L[(i+1)%L.length],dx=c[0]-a[0],dz=c[1]-a[1],l=Math.hypot(dx,dz);
+      if(l>0&&Math.abs((b[0]-a[0])*dz-(b[1]-a[1])*dx)/l<0.003)continue;o.push(b);}if(o.length===L.length)break;L=o;}
+    const tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1]));
+    return solidGeo([{loop:area(L)>0?L:L.slice().reverse(),y0,y1:tf}]);}
+  /* the minute hand's square hole and the tube's square: 2.6 across flats, the corners on a circle r (the tube's 1.6) */
+  const sqLoop=(h,r,n=96)=>{let L=C([0,0],r,n);for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])L=clipPoly(L,p=>h-(p[0]*a+p[1]*b));return L;};
+
+  /* ================= the balance holding device (Unruhhaltevorrichtung 127-556.06 / 36 00, 26.2.42, 5:1; Zangenteil 127-556.06-06 / 36 00 01-1, 29.8.41): not built =================
+     Read and measured, kept for the record (README, Unresolved). Two tongs (Messingblech 1,2 Ms 58) on one pivot at hole 51, in the top plate's pocket (05 09 01's N-O,
+     1.35 deep, 8 wide), their jaws round the balance staff at 23: the sheet's 15 ±0.05 from the hole to the jaw is the tables' 15.000 from 51 to 23 (sure). Each: boss Ø 6,
+     hole 3 H7, thinned to 0.6 (the two stacked); 1.2 thick; the back tangent to the boss and to the jaw's outer arc r 4 about the jaw's centre; the inner arc r 3.5 about a
+     point 0.6 off the line; the inner edge 0.2 off the line with a notch r 1 8 from the hole; 22 overall (sure). Closed, the two jaws leave an opening 5.8 across the line
+     and 6.9 along it: the dotted ring Ø 5.85 that Schnitt A-B draws round the staff under the hub's flange, at the pocket's level (the 1941 staff's brass collar, 05 04_5).
+     The lever (U 02, no sheet): 05 36's plan, put on the tables' holes 23, 51 and 52 by a reflected similarity to 0.08 mm (the inner face seen from below, S up), turns it
+     on a screw at 52 under the plate (Schnitt A-B: 1.35 thick), 15.0 to the tongs' keyhole and 13.9 out past the rim to the push-button (U 03, in the case), a coil spring
+     to the pin at hole 53; its travel 34°18'. With the balance and detent as last revised none of it fits: the 1946 hub (05 04 02) has a neck Ø 2.63 there, which the jaws
+     (2.9-3.45 from the axis) never reach; their ring encircles the impulse roller's path (Ø 6.78, 1.8 under the plate), so the balance could not be lifted out past them;
+     and the lever's arm runs through the detent block of 05 04 01-4 (8.7.43), screwed to the same face. The plate of 1943 keeps the pocket and holes 51-53, so a device was
+     fitted, but not as 05 36 draws it. LV: the lever as drawn (plan, mm: its pivot, round end, spring pin and keyhole end) */
+  const LV={P:H[52],E:[-29.897,35.080],S:[-25.781,30.235],K:[-15.767,9.976]};
+
+  /* ================= the dial's printing (05 02 00-4, 2:1, 4.88 px/mm) ================= */
+  /* the face as a canvas, 12 at its top, 3 at its right, S px across the dial's Ø 103.55 (the canvas's edge at the dial's). From the sheet: the minute track between
+     Ø 85 and Ø 90, its lines 0.3, a stroke 0.3 wide each minute and a black block 1.5 wide at each hour; Arabic hours 9 high in a heavy grotesque (the "1" a plain bar),
+     centred on r 37.5 (scaled 36.9-37.9); the up-and-down sub-dial at 23 over the centre: Ø 26, its band between Ø 15 and Ø 18 ruled at each 45 deg and open at the top,
+     0 8 16 … 56 every 45 deg from 22.5 right of 12 (2 high: unsure), set radially; the seconds sub-dial at 23 under it: its track Ø 33-37 with a stroke each second (0.2),
+     lines at 5, 15 … 55 s between Ø 23 and Ø 33, 10 20 … 60 (2.7 high) set radially; "CHRONOMETERWERKE" in outline capitals 3.55 high, centred 6.0 over the centre, 47.6
+     long; "WEMPE" and "HAMBURG" 2.46 high, centred 22.0 left and 20.9 right of it, 0.96 over it; the serial ("2367" on the sheet) 2.2 high over the seconds' centre; the
+     maker's anchor, 6.9 high, 6.6 under it; "Made in Germany" in thin capitals along the track's inside at 7-5 o'clock. Etched 0.2 deep and filled black ("geätzt 0,2 tief,
+     schwarz ausgelegt") on white (Wempe 3955's, 1_Wempe_3955_Z.jpg; the sheet's "weiß lackiert" is struck through) */
+  const SERIAL='2367';
+  function face(K=1){const S=2048,cv=document.createElement('canvas');cv.width=cv.height=S*K;const x=cv.getContext('2d');x.scale(K,K);
+    const k=S/(2*DR),c=S/2,P=(mx,mz)=>[c+mx*k,c+mz*k];   /* mm on the dial (x right, z down: 12 at the top) to canvas px */
+    x.fillStyle='#f2f0ea';x.fillRect(0,0,S,S);
+    const ink='#141416';x.strokeStyle=ink;x.fillStyle=ink;x.lineCap='butt';
+    const circ=(cx,cz,r,w,a0=0,a1=TAU)=>{const[px,py]=P(cx,cz);x.lineWidth=w*k;x.beginPath();x.arc(px,py,r*k,a0-Math.PI/2,a1-Math.PI/2);x.stroke();};
+    const rad=(cx,cz,a,r0,r1,w)=>{const[p0,q0]=P(...at(a,r0,[cx,cz])),[p1,q1]=P(...at(a,r1,[cx,cz]));x.lineWidth=w*k;x.beginPath();x.moveTo(p0,q0);x.lineTo(p1,q1);x.stroke();};
+    const SANS='"Instrument Sans", Arial, sans-serif';
+    /* text h high (its cap height), centred at (cx, cz), turned rot (rad); stroke: thickened by an outline stroke (the vendored face stops at 600) */
+    const txt=(t,h,cx,cz,rot=0,wt=600,thick=0,outline=0,track=0)=>{x.save();x.font=`${wt} 100px ${SANS}`;const m=x.measureText('H'),sz=100*h*k/m.actualBoundingBoxAscent;x.font=`${wt} ${sz}px ${SANS}`;
+      const[px,py]=P(cx,cz);x.translate(px,py);x.rotate(rot);x.textAlign='center';x.textBaseline='alphabetic';const dy=h*k/2;
+      if(track){x.textAlign='left';const ws=[...t].map(ch=>x.measureText(ch).width),W=ws.reduce((a,b)=>a+b,0)+track*k*(t.length-1);let px0=-W/2;[...t].forEach((ch,i)=>{if(outline){x.lineWidth=outline*k;x.strokeText(ch,px0,dy);}else{x.fillText(ch,px0,dy);if(thick){x.lineWidth=thick*k;x.strokeText(ch,px0,dy);}}px0+=ws[i]+track*k;});}
+      else if(outline){x.lineWidth=outline*k;x.strokeText(t,0,dy);}else{x.fillText(t,0,dy);if(thick){x.lineWidth=thick*k;x.lineJoin='round';x.strokeText(t,0,dy);}}
+      x.restore();};
+    /* the minute track */
+    circ(0,0,42.5+0.15,0.3);circ(0,0,45-0.15,0.3);
+    for(let i=0;i<60;i++){const a=i*6;if(i%5)rad(0,0,a,42.5,45,0.3);else rad(0,0,a,42.5,45,1.5);}
+    /* the hours: 6 left out under the seconds sub-dial (as the sheet's layout and Wempe 3955's) */
+    for(let i=1;i<=12;i++){if(i===6)continue;const[mx,mz]=at(i*30,37.5);txt(String(i),9,mx,mz,0,600,0.55);}
+    /* the up-and-down sub-dial */
+    const U=[0,-23];circ(U[0],U[1],13,0.25);
+    const ua=h=>22.5+h/8*45;   /* hours run since full wind to the dial's angle about the sub-dial */
+    circ(U[0],U[1],7.5+0.12,0.25,ua(0)*D2R,ua(56)*D2R);circ(U[0],U[1],9-0.12,0.25,ua(0)*D2R,ua(56)*D2R);
+    for(let h=0;h<=56;h+=8)rad(U[0],U[1],ua(h),7.5,9,0.3);
+    for(let h=0;h<=56;h+=8){const a=ua(h),[mx,mz]=at(a,10.9,U),r=a*D2R,up=Math.cos(r)<-1e-6;txt(String(h),2.0,mx,mz,up?r+Math.PI:r,500,0.12);}
+    /* the seconds sub-dial */
+    const Sd=[0,23];circ(Sd[0],Sd[1],18.5-0.12,0.25);circ(Sd[0],Sd[1],16.5+0.12,0.25);circ(Sd[0],Sd[1],11.5+0.12,0.25);
+    for(let i=0;i<60;i++)rad(Sd[0],Sd[1],i*6,16.5,18.5,i%5?0.2:0.5);
+    for(let q=0;q<6;q++)rad(Sd[0],Sd[1],30+q*60,11.5,16.5,0.3);
+    for(let q=1;q<=6;q++){const a=q*60,[mx,mz]=at(a,14,Sd),r=a*D2R,up=Math.cos(r)<-1e-6;txt(String(q*10),2.7,mx,mz,up?r+Math.PI:r,500,0.15);}
+    txt(SERIAL,2.2,Sd[0],Sd[1]-6.2,0,500,0.1);
+    /* the maker's mark, the Chronometerwerke's anchor: a C over the anchor's stock, its shank, the arms curving up each side and a W at its foot; 6.9 high, centred 6.6 under
+       the seconds' centre (the sheet's plan, scaled; its strokes as drawn there) */
+    {const[ax,az]=P(Sd[0],Sd[1]+6.6),u=k;x.save();x.translate(ax,az);x.lineWidth=0.45*u;x.lineCap='round';x.lineJoin='round';
+      x.beginPath();x.arc(0,-2.55*u,0.85*u,-0.25*Math.PI,1.25*Math.PI,true);x.stroke();   /* the C */
+      x.beginPath();x.moveTo(0,-1.6*u);x.lineTo(0,2.3*u);x.moveTo(-1.0*u,-1.25*u);x.lineTo(1.0*u,-1.25*u);x.stroke();   /* shank and stock */
+      x.beginPath();x.moveTo(-2.1*u,0.1*u);x.quadraticCurveTo(-2.0*u,1.2*u,-1.0*u,1.35*u);x.moveTo(2.1*u,0.1*u);x.quadraticCurveTo(2.0*u,1.2*u,1.0*u,1.35*u);x.stroke();   /* the arms */
+      for(const s of[-1,1]){x.beginPath();x.moveTo(s*2.1*u,0.1*u);x.lineTo(s*2.45*u,-0.25*u);x.lineTo(s*1.75*u,-0.05*u);x.closePath();x.fill();}   /* their flukes */
+      x.beginPath();x.moveTo(-1.1*u,1.25*u);x.lineTo(-0.55*u,3.35*u);x.lineTo(0,1.9*u);x.lineTo(0.55*u,3.35*u);x.lineTo(1.1*u,1.25*u);x.stroke();   /* the W */
+      x.restore();}
+    /* the name across the centre */
+    txt('CHRONOMETERWERKE',3.55,0,-6.0,0,600,0,0.3,0.35);
+    txt('WEMPE',2.46,-22.0,-0.96,0,500,0.08,0,0.25);txt('HAMBURG',2.46,20.9,-0.96,0,500,0.08,0,0.25);
+    /* Made in Germany along the inside of the track, 7 to 5 o'clock, tops toward the centre */
+    {x.save();x.font=`400 ${1.9*k}px ${SANS}`;x.textAlign='center';x.textBaseline='middle';const t='Made in Germany',r=40.6*k,ws=[...t].map(ch=>x.measureText(ch).width),W=ws.reduce((a,b)=>a+b,0)+0.25*k*(t.length-1);
+      let th=Math.PI+W/r/2;[...t].forEach((ch,i)=>{const d=(ws[i]+0.25*k)/r;th-=(ws[i]/2)/r;x.save();x.translate(c+r*Math.sin(th),c-r*Math.cos(th));x.rotate(th+Math.PI);x.fillText(ch,0,0);x.restore();th-=d-(ws[i]/2)/r;});x.restore();}
+    return cv;}
+
+  function build(mv,M,K){const{part,screw,loose}=K,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),R={};
+    const S=(c,m,r,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},o));
+    const goldin=S(0xd9b25e,1,0.18);   /* Goldin, a gold-coloured brass, polished (the minute and hour hands' title blocks; Wempe 3955's, 1_Wempe_3955_Z.jpg) */
+    const paint=S(0xf2f0ea,0.3,0.4);   /* the dial's white ground (Wempe 3955's), glossy as its lacquer: metalness as the Hamilton's dial face, so it takes the room's light seen from the dial side */
+    const grp=(par,p,ef)=>{const g=new THREE.Group();g.position.set(p[0],0,p[1]);par.add(g);return g;};
+
+    /* ---------- the cannon tube on the centre arbor (turns with it) ---------- */
+    const cnP=part('cannon',22),cn=grp(cnP,H[1]);R.cn=cn;
+    {const rb=y=>rSh(y)+0.01,pm=tag(mesh(cn,gear(CN.pin,CN.y1-CN.y0,{bore:rb(CN.y0)}),M.steel,0,(CN.y0+CN.y1)/2,0),'050503-3');pm.userData.gear={z:14,m:M_CH};R.cnPin=pm;
+      const g=[];for(let k=0;k<=10;k++){const t=Math.PI*k/10;g.push([CN.r-0.4*Math.sin(t),CN.yg-0.4*Math.cos(t)]);}   /* the groove, a half-round r 0.4 */
+      tag(mesh(cn,lathe([[rb(CN.y1),CN.y1],[CN.r,CN.y1],...g,[CN.r,CN.yb],[rb(CN.yb),CN.yb]],48),M.steel),'050503-3',1);
+      const sqL=sqLoop(CN.sq,CN.sqR),F=[{p:C([0,0],rb(CN.yb),48),q:C([0,0],rb(CN.yt),48),a:CN.yb,b:CN.yt}];
+      tag(mesh(cn,solidGeo([{loop:sqL,y0:CN.yb,y1:CN.yt,F}]),M.steel),'050503-3',1);}
+
+    /* ---------- the change wheel on the short stud at 19 ---------- */
+    const chP=part('changeWheel',20),ch=grp(chP,H[19]);R.ch=ch;
+    {const c=CHW;tag(mesh(ch,lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs,c.yw0],[c.rs,c.yw1],[c.rc,c.yw1],[c.rc,c.yc],[c.r,c.yc],[c.r,c.yt],[c.rb,c.yt]],48),M.brass),'050202-2');
+      const wm=tag(mesh(ch,gear(c.wheel,1.0,{bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050202-1');wm.userData.gear={z:56,m:M_CH};R.chW=wm;
+      const pm=tag(mesh(ch,gear(c.pin,c.yp1-c.yc,{bore:c.r}),M.brass,0,(c.yc+c.yp1)/2,0),'050202-3');pm.userData.gear={z:18,m:M_HR};R.chP=pm;}
+
+    /* ---------- the hour wheel on the cannon tube (turns a twelfth of it) ---------- */
+    const hwP=part('hourWheel',26),hw=grp(hwP,H[1]);R.hw=hw;
+    {const c=HRW;tag(mesh(hw,lathe([[c.r,c.y0],[c.rs,c.y0],[c.rs,c.yw1],[c.rc,c.yw1],[c.rc,c.yc],[c.rh,c.yc],[c.rh,c.yt],[c.r,c.yt]],64),M.brass),'050203-2');
+      const wm=tag(mesh(hw,gear(c.wheel,1.0,{bore:c.rs}),M.gilt,0,c.y0+0.5,0),'050203-1');wm.userData.gear={z:54,m:M_HR};R.hwW=wm;}
+
+    /* ---------- the up-and-down wheel on the long stud at 2, and its pinion on the fusee arbor at 10 ---------- */
+    const udP=part('udWheel',30),ud=grp(udP,H[2]);R.ud=ud;
+    {const c=UDW;tag(mesh(ud,lathe([[c.rb,c.y0],[c.r,c.y0],[c.r,c.yw0],[c.rs,c.yw0],[c.rs,c.yw1],[c.rf,c.yw1],[c.rf,c.yf],[c.rst,c.yf],[c.rst,c.ys],[c.rh,c.ys],[c.rh,c.yt],[c.rb,c.yt]],48),M.brass),'050204-2');
+      const wm=tag(mesh(ud,gear(c.wheel,1.0,{spokes:[5,1.6,10.4/2,28.3/2],bore:c.rs}),M.gilt,0,(c.yw0+c.yw1)/2,0),'050204-1');wm.userData.gear={z:120,m:M_UD};R.udW=wm;}
+    const upP=part('udPinion',20),up=grp(upP,H[10]);R.up=up;
+    {const pm=tag(mesh(up,gear(UDP.pin,UDP.y1-UDP.y0,{bore:UDP.rb}),M.steel,0,(UDP.y0+UDP.y1)/2,0),'050200-5');pm.userData.gear={z:12,m:M_UD};R.upP=pm;}
+
+    /* the meshes phased under load (gearLash, core.js), the drivers turning as update() turns them: the cannon pinion (clockwise from the dial, -1) the change wheel, the
+       change pinion (+1) the hour wheel; the fusee's pinion (+1: the fusee turns counterclockwise from the dial as it runs, driving the centre pinion) the up-and-down wheel */
+    const ph=(A,pa,B,pb,s)=>{const[a,b]=gearLash(A,pa,B,pb,s);A.rotation.y=a;B.rotation.y=b;};
+    ph(R.cnPin,H[1],R.chW,H[19],-1);ph(R.chP,H[19],R.hwW,H[1],1);ph(R.upP,H[10],R.udW,H[2],1);
+
+    /* ---------- the hands ---------- */
+    const hdP=part('hands',56);
+    /* the minute hand, on the tube's square (turns with the centre arbor) */
+    const mh=grp(hdP,H[1]);R.mh=mh;
+    {const y0=YM0,yf=y0+0.8,y1=y0+2.0,hole=sqLoop(CN.sq+0.01,CN.sqR+0.01);
+      tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rc,64),y0,y1:yf,F:[{p:hole,a:y0,b:yf}]}]),goldin),'050200-1');
+      tag(mesh(mh,solidGeo([{loop:C([0,0],MIN.rf,72),y0:yf,y1,F:[{p:hole,a:yf,b:y1}]}]),goldin),'050200-1',1);
+      tag(mesh(mh,blade(MIN.hw,MIN.t,yf,MIN.rf-0.1,MIN.L),goldin),'050200-1',1);}
+    /* the hour hand, on the hour wheel's pipe */
+    const hh=grp(hdP,H[1]);R.hh=hh;
+    {const y1=YH1,y0=y1-3.1,yf=y1-0.8;
+      tag(mesh(hh,lathe([[HOUR.rb,y0],[HOUR.rp,y0],[HOUR.rp,yf],[HOUR.rf,yf],[HOUR.rf1,y1],[HOUR.rb,y1]],72),goldin),'050200-2');
+      tag(mesh(hh,blade(HOUR.hw,HOUR.t,y1-0.5,HOUR.rf1,HOUR.L),goldin),'050200-2',1);}
+    /* the up-and-down hand, on its wheel's pipe */
+    const uh=grp(hdP,H[2]);R.uh=uh;
+    {const y1=YU1,yf=y1-0.5,y0=y1-1.4;
+      tag(mesh(uh,lathe([[UDH.rb,y0],[UDH.rp,y0],[UDH.rp,yf],[UDH.rf,yf],[UDH.rf,y1],[UDH.rb,y1]],48),M.blued),'050200-3');
+      tag(mesh(uh,blade(UDH.hw,UDH.t,yf,UDH.rf-0.1,10.2),M.blued),'050200-3',1);}
+    /* the seconds hand on its collet (Zeigerfutter 05 02 01-2, brass, no sheet), pressed on the seconds post's 1:90 taper: Ø 1.5 (the coloured section's, 1.6 scaled,
+       inside the dial's Ø 1.7 hole) and 4.6 long (scaled there, pictorial), its end Ø 1.2 through the hand (the hand's hole), flush with its top; bored on the post, 0.005 clear */
+    const sh=grp(hdP,H[35]);R.sh=sh;
+    {const y0=YS0,yb=y0+0.4,y1=yb+0.2,post=y=>(0.75-0.1*(y-SW.ys-24.05)/9.1)/2+0.005;
+      tag(mesh(sh,lathe([[SEC.rh,y0],[SEC.rb,y0],[SEC.rb,yb],[SEC.rr,yb],[SEC.rr,y1],[SEC.rh,y1]],48),M.blued),'050201-1');
+      tag(mesh(sh,blade(SEC.hwP,SEC.tP,y0,SEC.rb-0.1,19.5,-1),M.blued),'050201-1',1);
+      tag(mesh(sh,blade(SEC.hwT,SEC.tT,y0,SEC.rb-0.1,10,1),M.blued),'050201-1',1);
+      const yc=y0-4.0;tag(mesh(sh,lathe([[post(yc),yc],[0.75,yc],[0.75,y0],[SEC.rh,y0],[SEC.rh,y1],[post(y1),y1]],32),M.brass),'050201-2');}
+
+    /* ---------- the dial (05 02 00-4) ---------- */
+    const dlP=part('dial',40);
+    /* its holes: the centre 6.0, the up-and-down 3.2, the seconds 1.7 (sure); on Ø 101 (scaled 50.5-50.7) five more: three for its screws at 354 deg (the sheet's 6°), 120 and
+       240 (scaled 120.6 and 240.2; Altmeppen: German dials are screwed at the 20, 40 and 59 minute marks), each Ø 1.1 under a Ø 1.8 H7 sink 1.0 deep ("Senkung 1,0 tief"); the
+       pin's Ø 1 at 6 deg (the sheet's 6°, where the ring's Ø 1.6 pin hole is, 05 08 00-3); a Ø 1 at 185.7 deg (scaled; nothing under it in the ring) */
+    const RH=50.5,SCR=[354,120,240].map(a=>at(a,RH)),PINa=at(6,RH),SMa=at(185.7,RH);
+    const holes=[[0,0,3.0],[H[2][0],H[2][1],1.6],[H[35][0],H[35][1],0.85],...SCR.map(p=>[p[0],p[1],0.9]),[PINa[0],PINa[1],0.5],[SMa[0],SMa[1],0.5]];
+    {const F=[{p:C([0,0],3.0,72),a:DY0,b:DY1},{p:C(H[2],1.6,40),a:DY0,b:DY1},{p:C(H[35],0.85,32),a:DY0,b:DY1},{p:C(PINa,0.5,20),a:DY0,b:DY1},{p:C(SMa,0.5,20),a:DY0,b:DY1}];
+      for(const p of SCR)F.push({p:C(p,0.55,20),a:DY0,b:DY1},{p:C(p,0.9,28),a:DY1-1.0,b:DY1});
+      tag(mesh(dlP,solidGeo([{loop:C([0,0],DR,720),y0:DY0,y1:DY1,F}]),paint),'050200-4');}
+    /* the printed face: a surface 0.02 over the disc, holed as it is, its texture the canvas (face()), drawn again once the fonts have loaded */
+    {const s=new THREE.Shape();s.absarc(0,0,DR,0,TAU,false);for(const[hx,hz,hr]of holes){const p=new THREE.Path();p.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(p);}
+      const g=new THREE.ShapeGeometry(s,64),uv=g.attributes.uv,pos=g.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,(pos.getX(i)+DR)/(2*DR),(pos.getY(i)+DR)/(2*DR));g.rotateX(-Math.PI/2);
+      const tex=new THREE.CanvasTexture(face());tex.encoding=THREE.sRGBEncoding;tex.anisotropy=8;tex.redraw=k=>face(k);
+      const fm=mesh(dlP,g,new THREE.MeshStandardMaterial({map:tex,metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
+      Object.assign(fm.userData,{surface:true,noCap:true,R:DR,holes,hn:'050200-4',sub:1});R.face=fm;
+      try{Promise.all(['600 10px "Instrument Sans"','500 10px "Instrument Sans"','400 10px "Instrument Sans"'].map(f=>document.fonts.load(f))).then(()=>{tex.image=face();tex.needsUpdate=true;}).catch(()=>{});}catch(_){}}
+    /* its three screws (WN-10 by the coloured section's label, "10" or "18": likely): M1 through its Ø 1.1 holes into the ring's flange (tapped 2.5 deep there: frame.js), the
+       heads Ø 1.7 × 0.8 in the sinks, 0.1 under the face (estimated); from the dial side, so in a frame turned over */
+    {const rg=new THREE.Group();rg.rotation.x=Math.PI;dlP.add(rg);for(const p of SCR)tag(screw(rg,p[0],-p[1],-(DY1-1.0),0.85,0.8,2.3,0.5,M.steel),'WN-10.d');}
+    /* its pin at 6 deg: Ø 1.6 in the ring's hole (05 08 00-3) 2.0 deep, stepped to the dial's Ø 1.0, 0.1 under its face (estimated) */
+    tag(mesh(dlP,lathe([[0,DY0-2.0],[0.79,DY0-2.0],[0.79,DY0],[0.49,DY0],[0.49,DY1-0.1],[0,DY1-0.1]],20),M.steel,PINa[0],0,PINa[1]),'dialPin');
+
+    /* update(s, ang): the motion work from the centre arbor's angle (ang.c): the change wheel turns back at 14/56 of it, the hour wheel on at 56/14 × 54/18 = 12 times
+       slower; the seconds hand with the seconds arbor (ang.s); the up-and-down work from the fusee's turn f (ang.f, the fusee group's, rising as it runs down from full
+       wind; without it s.n turns from full wind (the Hamilton's MoveState), 3.75 (24 hours, 05 06_20's "24 Std") if neither): the pinion with it, the wheel back at 12/120;
+       the hand on the wheel reads the wind s.n, 0 at full wind (22.5 deg right of 12) and 56 h after 8.75 turns (7/8 of a turn, Lange's "7/8 Teilung"). The fusee group's
+       ang.f is its rotation.y, RF0 + n turns (fusee.js: RF0 its angle fully wound, and a click's catch on top running), so the wheel, turned back a tenth of it, and the hand,
+       read from n, keep their places on each other (the catch, at most a click tooth of the fusee, a tenth of that on the hand) */
+    const update=(/** @type {any} */s,/** @type {any} */ang)=>{const c=ang.c||0;
+      cn.rotation.y=c;mh.rotation.y=c;ch.rotation.y=-c*14/56;hw.rotation.y=c/12;hh.rotation.y=c/12;sh.rotation.y=ang.s||0;
+      const n=s.n!=null?s.n:3.75,f=ang.f!=null?ang.f:n*TAU;up.rotation.y=f;ud.rotation.y=-f/10;uh.rotation.y=-22.5*D2R-n*TAU/10;};
+    return{update,R};}
+  return{build,face,DY0,DY1,GLASS,LV};
+})();
+
+</script>
+<script>
+// @ts-check
 /* movement.js: the Wempe Einheits-Chronometer's movement, built from the works drawings' numbers (dims.js, WD) by its groups' builders, each in its own file: the frame
-   (js/frame.js, WFRAME, P1a, 14 October 2026), the going train (js/train.js, WTRAIN, P1b), the balance and escapement (js/escapement.js, WESC, P1d); the fusee and barrel, motion work come in later phases,
-   each a file of its own.
+   (js/frame.js, WFRAME, P1a, 14 October 2026), the going train (js/train.js, WTRAIN, P1b), the balance and escapement (js/escapement.js, WESC, P1d), the dial, motion work, hands and up-and-down work (js/dial.js,
+   WDIAL, P1e); the fusee and barrel come in a later phase, a file of its own.
    Part of the Wempe model (three.js r128). Units mm; the movement frame as the Hamilton's: dial side +y, 12 o'clock -z, 3 o'clock +x (dims.js: x = the sheets' W, z = their S).
    The pillar plate's inner face at y 0, its dial face at +PP_T; the top plate's inner face at -INNER, its outer face (the train side) at -INNER-TOP_T.
    Everything is built inside buildWempe, so none of its names reach the page's globals: core.js reads the Hamilton's (L, DIAL_R, SEC_L, UDA, UD_SWEEP, MSHAPE) lazily.
@@ -2624,29 +2933,31 @@ function buildWempe(M){
   const FR=WFRAME.build(mv,M,K);   /* the frame: plates, pillars, ring, bridges, cocks, bushes, their screws and pins */
   const TR=WTRAIN.build(mv,M,K);   /* the going train: the centre, intermediate and seconds arbors, their bushes and the seconds jewel */
   const EB=WESC.build(mv,M,K);   /* the balance, hairspring, rollers, escape wheel, detent and their jewels */
+  const DL=WDIAL.build(mv,M,K);   /* the dial, motion work, hands and up-and-down work */
   /* the seconds wheel drives the escape pinion (train.js's meshes, phased under load by gearLash as the train's own: -1, the seconds arbor clockwise from the dial); the
      escape wheel's own teeth keep their phase to the locking stone, the pinion's leaves turned on its arbor */
   {const sw=TR.sw.userData.wheel,[a,b]=gearLash(sw,WD.H[35],EB.R.pinion,WD.H[26],-1);sw.rotation.y=a;EB.R.pinion.rotation.y=b;}
   K.done();
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
      centre arbor's, which the motion work and the fusee follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's angle (rad),
-     lift the detent's turn and psDef the gold spring's (rad, escapement.js) */
-  mv.userData.update=(/** @type {any} */s)=>{const ang=TR.update(s);mv.userData.ang=ang;EB.update(s);};
-  mv.userData.R={fr:FR,tr:TR,esc:EB.R};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton; R.tr the train's arbors (their wheel and pinion meshes, for the other groups' tooth phasing) */
+     lift the detent's turn and psDef the gold spring's (rad, escapement.js); n the fusee's turns from full wind, for the motion work, hands and up-and-down work (dial.js), which follow the train's angles (and the fusee's, ang.f, once its group gives it) */
+  mv.userData.update=(/** @type {any} */s)=>{const ang=TR.update(s);mv.userData.ang=ang;EB.update(s);DL.update(s,ang);};
+  mv.userData.R={fr:FR,tr:TR,esc:EB.R,dl:DL.R};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton; R.tr the train's arbors (their wheel and pinion meshes, for the other groups' tooth phasing) */
   return mv;
 }
 
 </script>
 <script>
 /* app.js: the Wempe Einheits-Chronometer's page: its parts' cards, views, sections, labels and link state, given to the shared viewer (../shared/viewer.js, VIEWER).
-   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js); P1d: the balance and escapement (js/escapement.js). */
+   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js); P1d: the balance and escapement (js/escapement.js);
+   P1e: the dial, motion work, hands and up-and-down work (js/dial.js). */
 
 /* ================= parts registry ================= */
 /* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
-const PG=['Frame','Going train','Balance','Escapement'];
+const PG=['Frame','Going train','Balance','Escapement','Motion work and dial'];
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
@@ -2726,7 +3037,28 @@ const PARTS={
     sp:'Setting 05 04 06-2, jewel 05 04 06-1 · hole Ø 2.50'},
   escEndstoneLow:{t:'Escape wheel endstone, lower',g:2,src:'est',sn:'Its screw holes from the pillar plate’s table; the cap’s outline estimated',figs:'05 08_3b',c:'#c8163c',pri:1,
     d:'The endstone under the escape wheel arbor’s lower pivot, in a cap screwed to the pillar plate’s dial side.',
-    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · two M1.2, 3.5 either side of the arbor'}};
+    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · two M1.2, 3.5 either side of the arbor'},
+  cannon:{t:'Cannon tube (Minutenrohr)',g:4,src:'drawing',sn:'Its heights and square from the centre wheel’s sheet; the pinion’s 14 leaves from the centre distance, its tip scaled on that sheet',figs:'05 05_8, 05 02_1',c:'#8fa3b8',pri:2,
+    d:'A steel tube pressed on the centre arbor’s tapered shank, held there by centre-punch marks in its groove, so it turns with the centre arbor, once an hour. Its foot is the cannon pinion, which drives the change wheel; its square top carries the minute hand.',
+    sp:'Drawing 05 05 03-3 (in 05 05 03, 22.7.43) · steel · pinion z 14, m 0.36, tip Ø 5.86, 2.4 high · tube Ø 3.6 to 10.8 · square 2.6 to 14.3'},
+  changeWheel:{t:'Change wheel (Wechselrad)',g:4,src:'drawing',sn:'Every size from its sheets; the pinion’s 18 leaves from the centre distance; its collar scaled',figs:'05 02_6, 05 02_7, 05 02_1',c:'#d9a94c',pri:2,
+    d:'The motion work’s minute wheel, on the short stud left of the centre: the cannon pinion turns its wheel, four turns of the cannon to one of it, and its pinion drives the hour wheel. The wheel is riveted on its pipe, the pinion knocked on above it.',
+    sp:'Drawing 05 02 02 (wheel 05 02 02-1, pipe -2, pinion -3) · wheel z 56, m 0.36, tip Ø 21.05, Ms 58 spring-hard brass 1.0 · pinion z 18, m 0.35, 2.5 long · pipe 7 −0.1 long, Ø 3.05'},
+  hourWheel:{t:'Hour wheel (Stundenrad)',g:4,src:'scaled',sn:'Its wheel, pipe and seat from its sheets; its collar’s height fitted between the cannon pinion and the dial (the sheet’s 5.2 doesn’t fit with the 1943 tube)',figs:'05 02_8, 05 02_9, 05 02_1',c:'#c99a3e',pri:2,
+    d:'The hour wheel rides on the cannon tube, on top of its pinion, and turns once in twelve hours: the change pinion drives it. Its pipe runs up through the dial and carries the hour hand.',
+    sp:'Drawing 05 02 03 (wheel 05 02 03-1, pipe 05 02 03-2) · wheel z 54, m 0.35, tip Ø 19.7, Ms 58 spring-hard brass, 1.0 · pipe 8.2 overall, seat Ø 4.4 r6 at 1:70'},
+  udWheel:{t:'Up-and-down wheel (Auf- und Abrad)',g:4,src:'drawing',sn:'Every size from its sheets; its pipe’s diameters scaled',figs:'05 02_10, 05 02_11, 05 02_1',c:'#e0bd74',pri:2,
+    d:'The wheel of the up-and-down (state of wind) indicator, on the long stud at 12 o’clock. The pinion on the fusee arbor turns it, ten turns of the fusee to one of it, so its hand goes 7/8 of a turn, from 0 to 56 hours, as the fusee runs its 8¾ turns down.',
+    sp:'Drawing 05 02 04 (wheel 05 02 04-1, pipe 05 02 04-2) · z 120, m 0.2788, tip Ø 34.33, five spokes · Ms 58 spring-hard brass 1.0 · 18.4 from the fusee arbor'},
+  udPinion:{t:'Up-and-down pinion (Auf- und Abtrieb)',g:4,src:'est',sn:'Its place and length from the motion work’s arrangement; its 12 leaves from the centre distance; its size measured on Wempe 3955; no sheet in the set',figs:'05 02_1',c:'#c79a4a',pri:1,
+    d:'A small steel pinion pressed on the dial-side end of the fusee arbor, under the dial: it drives the up-and-down wheel.',
+    sp:'05 02 00-5 (by the coloured section’s label; no sheet) · z 12, m 0.2788 · 3 long · on Ø 1.6'},
+  hands:{t:'Hands',g:4,src:'drawing',sn:'Every outline from the widths their sheets give at stated distances, traced between them on the sheets; their heights fitted to the seconds post of 1946',figs:'05 02_2, 05 02_3, 05 02_4, 05 02_5',c:'#d9b25e',pri:3,
+    d:'The minute and hour hands of Goldin, a gold-coloured brass, polished; the seconds hand and the up-and-down hand of blued steel. The minute hand sits on the cannon tube’s square, the hour hand on the hour wheel’s pipe, the seconds hand on its collet on the seconds arbor’s post, the up-and-down hand on its wheel’s pipe.',
+    sp:'Drawings 05 02 00-1 (minute, 46), 05 02 00-2 (hour, 35), 05 02 00-3 (up-and-down), 05 02 01-1 (seconds, 19.5 and a tail of 10)'},
+  dial:{t:'Dial (Zifferblatt)',g:4,src:'drawing',sn:'Its size, holes and printing from its sheet; the screws’ and pin’s sizes estimated',figs:'05 02_12, 05 02_1',c:'#ece8dc',pri:3,
+    d:'The dial, white with its figures etched and filled black: the minute track and the hours, the up-and-down sub-dial at 12 (0 to 56 hours since winding) and the seconds sub-dial at 6, the maker’s name and anchor. It lies in the recess of the movement ring’s flange, placed by a pin and held by three screws at the 20, 40 and 59 minute marks.',
+    sp:'Drawing 05 02 00-4 · Ø 103.6 −0.1 × 1.3 · track Ø 85 / 90 · figures 9 high · sub-dials 23 from the centre, Ø 26 and Ø 37'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
 const PIECES={
@@ -2789,24 +3121,40 @@ const PIECES={
   balanceJewelsUp:[{k:'jewel',t:'Upper hole jewel',h:'050406-2.bu 050407-1.bu',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Upper endstone',h:'050408-2.bu 050408-1.bu',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-55.ck',d:'Two screws holding the endstone’s setting.',sp:'M1.2'}],
   balanceJewelsLow:[{k:'jewel',t:'Lower hole jewel',h:'050406-2.bl 050407-1.bl',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Lower endstone',h:'050408-2.bl 050408-1.bl',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-16',d:'Two screws holding the settings in the lug.',sp:'WN-16 · M1.2'}],
   escJewelUp:[{k:'jewel',t:'Hole jewel and setting',h:'050406-2.eu 050406-1.eu',d:PARTS.escJewelUp.d,sp:PARTS.escJewelUp.sp},{k:'screws',t:'Setting screws',h:'WN-es',d:'Two screws under the plate holding the setting.',sp:'M1.2'}],
-  escEndstoneLow:[{k:'cap',t:'Endstone cap',h:'050408-2.el 050408-1.el',d:PARTS.escEndstoneLow.d,sp:PARTS.escEndstoneLow.sp},{k:'screws',t:'Cap screws',h:'WN-ec',d:'Two screws through the cap into the pillar plate.',sp:'M1.2'}]};
+  escEndstoneLow:[{k:'cap',t:'Endstone cap',h:'050408-2.el 050408-1.el',d:PARTS.escEndstoneLow.d,sp:PARTS.escEndstoneLow.sp},{k:'screws',t:'Cap screws',h:'WN-ec',d:'Two screws through the cap into the pillar plate.',sp:'M1.2'}],
+  changeWheel:[{k:'wheel',t:'Change wheel',h:'050202-1',d:'The wheel the cannon pinion drives: a plain spring-hard brass disc, riveted on its pipe.',sp:'05 02 02-1 · z 56, m 0.36, tip Ø 21.05, root Ø 19.03, 1.0'},
+    {k:'pipe',t:'Change wheel pipe (Wechselbutzen)',h:'050202-2',d:'The pipe the wheel and pinion are fixed on, running on the short stud.',sp:'05 02 02-2 · Ø 3.05, 6.9 long (7 −0.1)',src:'drawing',sn:'Its sizes from 05 02 02; its collar scaled'},
+    {k:'pinion',t:'Change pinion (Wechseltrieb)',h:'050202-3',d:'The pinion that drives the hour wheel, knocked on the pipe to a press fit; brass, as the coloured section colours it.',sp:'05 02 02-3 (no sheet) · z 18, m 0.35, tip Ø 6.9, 2.5 long',src:'scaled',sn:'Its leaf count from the centre distance; its length from the arrangement; its tip, root and leaves measured on Wempe 3955'}],
+  hourWheel:[{k:'wheel',t:'Hour wheel',h:'050203-1',d:'The wheel the change pinion drives: a plain spring-hard brass disc, riveted on its pipe.',sp:'05 02 03-1 · z 54, m 0.35, tip Ø 19.7, root Ø 17.89, 1.0'},
+    {k:'pipe',t:'Hour wheel pipe (Stundenbutzen)',h:'050203-2',d:'The pipe the wheel is riveted on: it runs on the cannon tube, its collar under the dial, its tapered seat through the dial for the hour hand.',sp:'05 02 03-2 · collar Ø 7.9 · seat Ø 4.4 r6 at 1:70 · 8.2 overall'}],
+  udWheel:[{k:'wheel',t:'Up-and-down wheel',h:'050204-1',d:'The five-spoked wheel the fusee’s pinion turns.',sp:'05 02 04-1 · z 120, m 0.2788, tip Ø 34.33, root Ø 32.57'},
+    {k:'pipe',t:'Up-and-down wheel pipe',h:'050204-2',d:'The pipe it is riveted on, running on the long stud, with the hand’s seat at its top.',sp:'05 02 04-2 · seat Ø 2.2 r6 × 1.4'}],
+  hands:[{k:'minute',t:'Minute hand (Minutenzeiger)',h:'050200-1',d:'The minute hand: two swellings along its blade, Goldin, polished, on the cannon tube’s square.',sp:'05 02 00-1 (18.9.42) · 46 long · 2 wide at 13, 0.7 at 25, 1.7 at 36 · boss Ø 6, hole 2.6 square'},
+    {k:'hour',t:'Hour hand (Stundenzeiger)',h:'050200-2',d:'The hour hand: a pear-shaped spade on a narrow blade, Goldin, high-gloss polished, on the hour wheel’s pipe.',sp:'05 02 00-2 · 35 long · ball Ø 5.2 at 22.5 · boss Ø 8.2, hole 4.4'},
+    {k:'ud',t:'Up-and-down hand (Auf- und Abzeiger)',h:'050200-3',d:'The state-of-wind hand: blued steel, on its wheel’s pipe; 0 at full wind, 56 run down.',sp:'05 02 00-3 · boss Ø 4.4, hole 2.2 · about 10 long',src:'scaled',sn:'Its boss and blade from its sheet; its length, which the sheet doesn’t draw to scale, measured on Wempe 3955’s dial'},
+    {k:'seconds',t:'Seconds hand (Sekundenzeiger) and collet',h:'050201-1 050201-2',d:'The seconds hand, blued steel with a pointed teardrop counterpoise, on a brass collet (Zeigerfutter) pressed on the seconds arbor’s post through the dial.',sp:'05 02 01-1 · 19.5 and 10 · collet 05 02 01-2 (no sheet) Ø 1.5'}],
+  dial:[{k:'dial',t:'Dial',h:'050200-4',d:PARTS.dial.d,sp:PARTS.dial.sp},
+    {k:'screws',t:'Dial screws',h:'WN-10.d',d:'Three small screws through the dial’s sunk holes into the movement ring’s flange, at the 20, 40 and 59 minute marks.',sp:'WN-10 (the coloured section’s label: likely) · M1 · heads Ø 1.7 in sinks Ø 1.8 × 1.0',src:'est',sn:'Their places and holes from the dial’s sheet; the screws themselves estimated'},
+    {k:'pin',t:'Dial pin',h:'dialPin',d:'The pin at 6° past 12 that places the dial in the ring: in the ring’s hole, stepped to the dial’s.',sp:'Ø 1.6 / 1.0',src:'est',sn:'The holes from the dial’s and the ring’s sheets; the pin estimated'}]};
 
 /* ================= views ================= */
 /* the camera's turn (yaw), height (pitch, rad) and distance, aimed at a point in the movement's frame. The movement stands train side up (the scene's group turns it over) */
 const VIEWS={
   movement:{yaw:2.5,pitch:0.6,dist:250,target:[0,-11,0]},
   plan:{yaw:Math.PI,pitch:1.52,dist:270,target:[0,-11,0]},   /* straight down on the top plate, 12 o'clock at the top (so 3 o'clock on the left, as the sheets draw the Oberplatte: their O to the right) */
-  dial:{yaw:Math.PI,pitch:-1.2,dist:270,target:[0,-11,0]},   /* from below, on the pillar plate's dial side */
+  dial:{yaw:0,pitch:-1.3,dist:250,target:[0,8,0]},   /* from below, on the dial, 12 o'clock at the top */
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
   exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
   escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true}};   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The pillar plate’s dial side, from below.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial and its hands, from the dial side.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
 (function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
   const V=VIEWER.start({name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
-    build:M=>{const root=new THREE.Group();mv=buildWempe(M);mv.rotation.x=Math.PI;root.add(mv);return{root,mv};},   /* the movement train side up */
+    build:M=>{const root=new THREE.Group();mv=buildWempe(M);mv.rotation.x=Math.PI;root.add(mv);
+      const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
+      return{root,mv};},   /* the movement train side up */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
@@ -2821,14 +3169,15 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Intermediate bridge','Zwischenbrücke, 05 08 04','intermediateBridge',pw(P.intermediateBridge,H[38][0],WD.PP_T+3.8,H[38][1]));
       add('Centre wheel','Minutenrad, 05 05 03','centreWheel',pw(P.centreWheel,H[1][0]+15,-1.1,H[1][1]-6));
       add('Intermediate wheel','Zwischenrad, 05 05 02','intermediateWheel',pw(P.intermediateWheel,H[38][0]+8,0.7,H[38][1]+7));
-      add('Seconds wheel','Sekundenrad, 05 05 01','secondsWheel',pw(P.secondsWheel,H[35][0]-8,-4.8,H[35][1]+6));},
+      add('Seconds wheel','Sekundenrad, 05 05 01','secondsWheel',pw(P.secondsWheel,H[35][0]-8,-4.8,H[35][1]+6));
+      add('Dial','Zifferblatt, 05 02 00-4','dial',pw(P.dial,-30,WDIAL.DY1,30));add('Hands','05 02 00-1, -2, 05 02 01-1','hands',pw(P.hands,0,16,-30));},
     /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js): the balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period: E as the Hamilton's,
        a beat behind until the tooth escapes); fast, the balance is drawn at rest and the wheel turns on smoothly */
     tick:(dt,now,st)=>{if(!mv)return[];tSim+=dt*st.speed;const y=tSim/0.5,k=Math.floor(y),p=y-k;let s;
       if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};mv.userData.update({E:y,th:0,lift:0,psDef:0});}
       else{s=ESC.state(p);mv.userData.update({E:k-1+(p>0?s.prog:0),th:s.th,lift:s.lift,psDef:s.psDef});}
       return[+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5)];},
-    hud:st=>`The frame, going train and escapement, from their drawings${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
+    hud:st=>`The movement, from its drawings${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
   if(V&&/[?&]qa\b/.test(location.search))window.__V=V;   /* the viewer's state, for the tools */
 })();
 

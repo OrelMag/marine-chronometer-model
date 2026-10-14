@@ -18,7 +18,19 @@ EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) a
   ('fuseeBush:Lathe','topPlate:Buffer'):("the fusee bush's body pressed 2.7 into the top plate's hole 10 (05 08 01-2: Ø 8 T6, +0.019/+0.028, in 8.0 +0.015 reamed; drawn at the fits' middles, 0.008 interference on the radius)",0.4,2.8)}
 WIND_SEQ=False
 BARREL=False
-DIAL=False
+REGISTRY=False   # bom.py's registry matches the Hamilton's catalogue numbers on its cards; the Wempe's lines are drawing numbers (their 'no' empty), so a card's figures (120 teeth, 310 °C) aren't part numbers
+DIAL=True
+# fine.py's dial check for the Wempe: its face (dial.js) lists its own holes (userData.holes: the centre, up-and-down and seconds arbors', the screws' sinks and the pins'),
+# its radius userData.R; the rest is the Hamilton's DIALJS: the least height over the printed face of any part above the dial, outside those holes
+DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{if(o.isMesh&&o.userData.surface)face=o;});mv.updateMatrixWorld(true);
+ const inv=new T.Matrix4().copy(mv.matrixWorld).invert(),fy=new T.Vector3().setFromMatrixPosition(face.matrixWorld).applyMatrix4(inv).y,R=face.userData.R,holes=face.userData.holes;
+ const pn=o=>{for(let p=o;p;p=p.parent)if(p.userData.partName)return p.userData.partName;return '?';};
+ let best=null;const v=new T.Vector3(),m=new T.Matrix4();
+ mv.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||o===face||pn(o)==='dial'||o.userData.decal||o.userData.surface)return;for(let p=o;p;p=p.parent)if(!p.visible)return;
+   const P=o.geometry.attributes&&o.geometry.attributes.position;if(!P)return;m.multiplyMatrices(inv,o.matrixWorld);
+   for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);if(v.y<fy-0.05||v.y>fy+3||Math.hypot(v.x,v.z)>R||holes.some(([x,z,h])=>Math.hypot(v.x-x,v.z-z)<h))continue;
+     const d=v.y-fy;if(!best||d<best.d)best={d:+d.toFixed(3),part:pn(o),type:o.geometry.type.replace('Geometry',''),at:[v.x,v.y,v.z].map(q=>+q.toFixed(2))};}});
+ return JSON.stringify({face:+fy.toFixed(3),best});})()'''
 # bom.py: no balance stop to choose (the Hamilton clicks its locking arm's button), no function checks (bom-fn.js is the Hamilton's)
 ARM='void 0'
 FN=False
