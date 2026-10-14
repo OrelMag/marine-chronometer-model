@@ -1663,6 +1663,18 @@ Contents:
   staff, then the body. The barrel bridge's horn now follows the new straight
   edge (`clipUnder`). Keep: the cap on metal all round (0.3 mm), the stud's
   bar under the thin part, the horn 0.15 mm off the straight edge. `8cce550`
+
+- **The balance cock's body wall stood 4.9 mm too near the staff.** The body
+  was all of the cock more than 17.7 mm from the staff (the barrel bridge's
+  circle round the balance), its wall read at 18.6 along the stud's holes at
+  their old scale. On KLUwI2UUCMQ 44:02 (and 44:20) the open space under the
+  arm's thick part runs on to the wall's corner with the straight edge's side,
+  which a camera fitted on the cock's top (the cap, the stud's holes and the
+  counterbore at their measured places) puts 22.6 mm from the staff (22.5-23.0
+  over focal lengths and methods); drawn there, the model's lines fall on the
+  frame's. Keep: the wall (`CK_RP`) read through a camera, not the 1-D map on
+  the stud's holes, which extrapolates (21.3); 0.48 mm of metal round the cock
+  screw's counterbore. `HASH`
 - **Mounting ring screws and two dial screws 20-37° from the real ones.** The
   ring screws' places (`S.ring`) were fixed angles, 70°, 190° and 300° from 12:
   one read on the top-view photograph before the photographed group's 19.4° turn
