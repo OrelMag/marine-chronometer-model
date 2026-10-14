@@ -108,12 +108,13 @@ chk(qLo<=qnM[1]&&qHi>=qnM[0]&&inM,`the two overlap: the balance as built loses a
 chk(Qm>=qLo&&Qm<=qHi,`the model's TF ${TFm} s is inside the decay the balance's parts give (${f(TF(qLo),0)}-${f(TF(qHi),0)} s): derived from the budget before, now from the friction and the air too`);
 
 /* ---------- B2: the detent spring, from the manual's test ---------- */
-/* Op. 78: a 0.770 g weight hung on the locking jewel (Tool No. 8, Fig. 88) should just part the detent spring from its stop button: the spring is preloaded
-   that much at the jewel, and the model's detent is (shared/escapement.js W78). The balance lifts it against that preload and its stiffness as far as the
+/* Op. 78: a 0.770 g weight hung on the locking jewel (Tool No. 8, Fig. 88) should part the detent spring from its stop button by about 0.005 in (p. 61): the
+   spring is preloaded at the jewel by that weight less what its stiffness takes over the 0.005 in, and the model's detent is (shared/escapement.js W78, G78;
+   the whole weight until 14 October 2026). The balance lifts it against that preload and its stiffness as far as the
    discharge jewel carries it, well past the release, and the work is lost when the detent falls back on its stop */
 say('B2: the detent spring, from Op. 78');
-{const Fpre=ESC.settings.W78*1e-3*9.80665,rel=Fpre*(LIFT/1000)*Math.hypot(ESC.Jc.x-ESC.Ft.x,ESC.Jc.y-ESC.Ft.y)/ESC.LEN,mx=Math.max(...ESC.LI)/ESC.lRel,Wd=RU.detent*RU.Wi*kA;
-  say(`its preload ${f(Fpre*1000,2)} mN at the jewel; to the release (${f(LIFT,2)} mm at the passing spring's tip) that is ${f(rel*1e6,2)} µJ, but the jewel carries the detent on to ${f(mx,2)} times that lift: ${f(Wd*1e6,2)} µJ an oscillation, ${f(100*RU.detent,1)} % of the impulse`);
+{const rJm=Math.hypot(ESC.Jc.x-ESC.Ft.x,ESC.Jc.y-ESC.Ft.y),Fpre=ESC.MP*ESC.kB/(rJm*ESC.ES*1e-3),rel=Fpre*(LIFT/1000)*rJm/ESC.LEN,mx=Math.max(...ESC.LI)/ESC.lRel,Wd=RU.detent*RU.Wi*kA;
+  say(`its preload ${f(Fpre*1000,2)} mN at the jewel (Op. 78's ${f(ESC.settings.W78,3)} g less the spring's ${f(ESC.KD*ESC.th78*ESC.kB*1e6,1)} µN·m over its ${f(ESC.settings.G78,3)} mm bend at the stop button); to the release (${f(LIFT,2)} mm at the passing spring's tip) that is ${f(rel*1e6,2)} µJ, but the jewel carries the detent on to ${f(mx,2)} times that lift: ${f(Wd*1e6,2)} µJ an oscillation, ${f(100*RU.detent,1)} % of the impulse`);
   chk(RU.detent>0&&RU.detent<0.25,`the detent's share leaves the escapement running at the manual's swing`);}
 
 /* ---------- A5: temperature from the materials ---------- */

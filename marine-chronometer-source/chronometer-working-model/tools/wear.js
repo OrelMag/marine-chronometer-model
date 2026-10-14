@@ -19,7 +19,7 @@ const T=PH.TRAIN,day={fusee:24*T.cp/T.fu,centre:24,third:24*T.cw/T.tp,fourth:24*
 /* each mesh's room: its close side less the hole tolerance and the shake (gearing.json) */
 const room=i=>{const s=GJ.stages[i];return -s.lo-s.tp-GJ.SH;},R=[0,1,2,3].map(room);
 /* the lock's room: tripping.json's rows give the lock against the depth of lock (dL, mm); a tooth's tip worn by h takes h off the depth, so its room is the model's
-   dL less the dL where the lock reaches the floor (5°); the escape arbor's pivot worn toward the balance closes the centre distance, which takes 1.40 µm off the
+   dL less the dL where the lock reaches the floor (tripping.json's, 3.9° since 14 October 2026, 5° before); the escape arbor's pivot worn toward the balance closes the centre distance, which takes 1.40 µm off the
    depth for 1.48 µm (thermal.js) */
 const LR=TJ.lock.rows.slice().sort((a,b)=>a.dL-b.dL),dL0=ESC.settings.dL,dLat=lk=>{for(let i=1;i<LR.length;i++)if(LR[i].lock>=lk){const a=LR[i-1],b=LR[i];return a.dL+(b.dL-a.dL)*(lk-a.lock)/(b.lock-a.lock);}return LR[LR.length-1].dL;};
 const lockRoom=dL0-dLat(TJ.lock.min),pivRoom=lockRoom*1.48/1.40;
@@ -37,7 +37,7 @@ pivot('escape arbor\'s pivot in its jewel (r 0.089)',Fe,0.089,0.4,day.escape,H.s
 /* the escape teeth's tips: each unlocks the locking stone once in 16 oscillations, sliding off it by the depth of lock, and drives the impulse jewel, sliding along
    its face about half a millimetre (estimated); the force the escape wheel's torque at the tooth; worn over the tip's land (0.02 mm, estimated) */
 {const Fw=62.6e-6/(ESC.ES*1e-3),per=2*YR/16,s=per*(0.11+0.5)*1e-3;
-  C('an escape tooth\'s tip on the stone and the jewel',Fw,s,H.steel,1.3*0.02,lockRoom,'the depth of lock, to its 5° floor (tripping.json)','the escape wheel\'s torque at its tip (dynamics.js: 62.6 µN·m)');}
+  C('an escape tooth\'s tip on the stone and the jewel',Fw,s,H.steel,1.3*0.02,lockRoom,`the depth of lock, to its ${TJ.lock.min.toFixed(1)}° floor (tripping.json)`,'the escape wheel\'s torque at its tip (dynamics.js: 62.6 µN·m)');}
 /* the chain's rivets: each link articulates four times a day (onto and off the fusee and the barrel, winding and running) through the pitch over the drum's radius,
    loaded by the mainspring's pull; worn in both its holes, the chain grows; 1 % of its pitch, estimated, before it rides the fusee's groove wrong */
 {const pull=PH.Mup*1000/PH.rB,a=1.7/8,s=4*365.25*0.17e-3*a;C('a chain link\'s rivet in its plates',pull,s,H.steel,2*0.17*0.54,0.017/2,'the chain\'s pitch, 1 % of it (estimated)','the mainspring\'s pull fully wound');}

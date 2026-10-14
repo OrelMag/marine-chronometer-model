@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.30.02 · 2026-10-14
+- The detent spring is set up as the manual's Op. 78 says in full: the 0.770 g test weight parts it about 0.005 in from its stop, so its preload is a little lighter (0.63 g at the locking jewel)
+- The balance's free swing dies away in 67 s (was 68), which keeps the running swing at 255°; the maker's sheets and the bench tests give the detent spring's limits from the same test (no thicker than 0.137 mm)
+
 ## 2.30.01 · 2026-10-13
 - The winding stop-bar on the fusee is now pushed in by the chain itself as it winds onto the top turn: its end reaches down into the links, and it moves only while they press on it.
 

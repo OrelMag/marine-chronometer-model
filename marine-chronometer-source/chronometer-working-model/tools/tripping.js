@@ -11,7 +11,7 @@
 // every contact elastic, a spring with a dashpot set for its restitution (penalty contacts, Wriggers 2006, ch. 2): the discharge jewel on the trip spring's tip (the jewel's
 // own outline, dynamics.js's distance field), the trip spring on the horn, the blade on its stop button, the tooth on the locking stone (the stone's outline, makeEsc's
 // recoil: the flat's draw pushing the tooth back as the stone lifts, its edge after) and on the impulse jewel (makeEsc's bite). The preload is Op. 78's: the spring
-// bent so a 0.770 g weight on the locking jewel just parts the blade from its button.
+// bent so a 0.770 g weight on the locking jewel parts the blade from its button by about 0.005 in (p. 61).
 // What it answers:
 //   0. The frame: its mass and inertia against dynamics.js's, its stiffness at the stone against the hinge dynamics.js takes, its modes.
 //   1. Validated: the frame made rigid and hinged at its root as dynamics.js has it runs as dynamics.js does (swing, rate, release, the detent's fall).
@@ -124,10 +124,11 @@ const dot=(a,b)=>{let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s;};
 function detent(o={}){
   const F=frame(o),Am=assemble(F),nr=Am.nr;
   const Jc=tn(ESC.Jc),rS=rows(F,Am,F.K),rJ=rows(F,Am,F.K,Jc.t,Jc.n),rb=F.nb.map(i=>rows(F,Am,i)),rbm={rv:rb[0].rv.map((x,j)=>(x+rb[1].rv[j])/2)};
-  /* Op. 78: a weight W78 on the locking jewel just parts the blade from its button. The spring's unstressed shape is the drawn one bent by a moment at its end (its
-     curvature uniform, the rest following rigidly): f_pre, the constant force that bend leaves, is that moment, alpha, set so the weight leaves the button's middle at rest */
+  /* Op. 78: a weight W78 on the locking jewel parts the blade from its button by G78 (about 0.005 in, p. 61; until 14 October 2026 it just parted it). The spring's
+     unstressed shape is the drawn one bent by a moment at its end (its curvature uniform, the rest following rigidly): f_pre, the constant force that bend leaves, is
+     that moment, alpha, set so the weight lifts the button's middle G78 off it */
   const fm=new Float64Array(nr);{const c=Am.T[3*F.F1+2];for(let j=0;j<nr;j++)fm[j]=c[j];}
-  const um=gsolve(Am.Kr,fm),fW=rJ.rv.map(x=>x*S.W78*1e-3*G0),uW=gsolve(Am.Kr,fW),alpha=-dot(rbm.rv,uW)/dot(rbm.rv,um),fpre=fm.map(x=>x*alpha);   /* -K(q - alpha um) = -K q + alpha fm */
+  const um=gsolve(Am.Kr,fm),fW=rJ.rv.map(x=>x*S.W78*1e-3*G0),uW=gsolve(Am.Kr,fW),alpha=(S.G78*1e-3-dot(rbm.rv,uW))/dot(rbm.rv,um),fpre=fm.map(x=>x*alpha);   /* -K(q - alpha um) = -K q + alpha fm */
   /* the stiffness at the stone: a force lifting the locking face's middle, the frame free of its button */
   const fS=rS.rv,uS=gsolve(Am.Kr,fS),kS=1/dot(rS.rv,uS);
   /* mass and inertia about Ft: the reduced mass matrix on a rigid translation and a rigid turn about the root */
