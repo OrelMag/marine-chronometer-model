@@ -1104,7 +1104,7 @@ Contents:
   (`fitEnd`, `SPF`). Seated from where it was, the filed point could stop on
   the tooth it rode over when the ratchet comes back a tooth in one frame, so
   while it holds it is seated afresh. Keep: the pawl's end fitted; it holds
-  0.38 mm deep at every hold (`maintaining.py`). `HASH`
+  0.38 mm deep at every hold (`maintaining.py`). `ee7143d`
 
 ## Plates, bridges, screws and arbors
 

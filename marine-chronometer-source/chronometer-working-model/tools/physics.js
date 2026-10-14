@@ -31,7 +31,7 @@ say('A4: the escape wheel with mass');
 const rE=13.16/2/1000;   /* the escape wheel's radius */
 const J=4.80e-9;   /* the escape wheel, its pinion and arbor about their axis, kg·m²: the drawn solid in steel (7.85), integrated on the mesh (invariants.py checks this against it; 4.72e-9 before the arbor and pinion were measured, 4-5 October 2026) */
 const RU=ESC.run,tqCal=RU.cl.w*ESC.kB,JW=ESC.settings.JW*1e-9;   /* the torque the model is calibrated at (255°); the wheel's inertia with the fourth wheel's reflected (shared/escapement.js JW) */
-chk(JW>J&&JW<1.5*J,`the escapement's wheel inertia (${f(JW*1e9,2)} g·mm²) is the escape wheel's ${f(J*1e9,2)} with the fourth wheel's, reflected through its pinion (about ${f((JW-J)*1e9,1)}, estimated: tools/dynamics.js)`);
+chk(JW>J&&JW<1.5*J,`the escapement's wheel inertia (${f(JW*1e9,2)} g·mm²) is the escape wheel's ${f(J*1e9,2)} and the train's behind it, reflected through the pinions (${f((JW-J)*1e9,1)}: their solids weighed, mechanisms.json, dynamics.js)`);
 const chaseDeg=(RU.land-ESC.thRel)/D;
 say(`unlocked at ${f(ESC.thRel/D,1)}°, the wheel starts from rest at ${f(tqCal/JW,0)} rad/s² (${f(tqCal*1e6,1)} µN·m, the model's): it catches the impulse jewel, already running away at ${f(RU.vj,1)} rad/s of the wheel, ${f(chaseDeg,1)}° of the balance later (at ${f(RU.land/D,1)}°), running ${f(RU.vw,1)} rad/s: it strikes the jewel`);
 chk(RU.end!==null&&RU.end<ESC.A,`the impulse ends inside the swing (the tooth leaves the jewel at ${f(RU.end/D,1)}°)`);
