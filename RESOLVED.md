@@ -1083,7 +1083,7 @@ Contents:
   Castigliano; it keeps the balance over a turn 8.3 minutes (the manual's five
   to ten) and runs the train 18. Keep: `SPU` what the section gives; the spring
   weaker than the drive; `R.ssF` = `SPU` (1 - d / `SMAX`); app.js, essay.js,
-  maintaining.py and montecarlo.js take the push and travel from movement.js. `HASH`
+  maintaining.py and montecarlo.js take the push and travel from movement.js. `d43106a`
 
 ## Plates, bridges, screws and arbors
 
