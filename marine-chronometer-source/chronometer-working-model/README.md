@@ -1006,6 +1006,19 @@ on what would stop the chronometer.
   4 in 10⁷, the force on the pivots at 270° (1.5 × 10⁻³ of couple / R) to two
   figures, and the spring's own isochronism, 0.12 s a day over the manual's
   band, to 0.003 s a day.
+- **`tools/estimates.js`, the estimates swept** (14 October 2026). The design
+  values no source settles, each over the range its sources allow, the bench's
+  correction applied: with the strip the run-down test chooses, a balance
+  running down in 40-200 s swings 255° and stays isochronous to 0.35 s a day
+  over the band (unadjusted, the drawn strip would swing it 232-401°); every
+  detent spring the ring test passes (0.072-0.110 mm, mapped every 0.005 mm:
+  outside it a held tooth's stone rings past half the lock, and at 0.15 a
+  tooth gets past) runs in the band with the set-up turned; every back radius
+  of the discharge jewel from 0.066 to 0.158 mm is brought to the manual's
+  figures by the screws and the trip spring's tip; the sustaining spring's band
+  ±0.02, lobes ±15° and gap 18-22° keep the balance over a turn 6-11 minutes;
+  and the hairspring's upper curve formed 0.3 mm off its drawing leaves the
+  pivots less force than plain ramps did. The report's section 12.
 - **`tools/bench.js` and `tools/rating.py`, a made chronometer tested.** The
   analysis can't say a chronometer made to the model keeps time; the bench
   can. bench.js writes the tests (the build book's last chapter, and each on

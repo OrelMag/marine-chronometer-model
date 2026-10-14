@@ -54,7 +54,7 @@ own geometry and numbers.</p>
 <div class="tiles" id="tiles"></div>
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#gears">1. Gears</a><a href="#thermal">2. Temperature</a><a href="#fea">3. Finite elements</a>
-<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#mech">11. Every mechanism</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
+<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#mech">11. Every mechanism</a><a href="#est">12. The estimates swept</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
 <a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
@@ -428,6 +428,16 @@ the manual's. <code>montecarlo.js</code>.</figcaption></figure>
 <div class="callout gap"><ul><li><b>Estimated, here.</b> The hand's torque on this key (from handles of like size), the teeth's stiffness, the meshes' and the
 contacts' damping, the wear coefficients (orders of magnitude), the sliding at the escape teeth and the chain, the tolerances a maker holds on the strips and
 springs, and the springs' set. What only a made chronometer settles is on the bench's tests (section 5).</li></ul></div>
+
+<h2 id="est">12. The estimates swept</h2>
+<p><b>Method.</b> Five design values rest on estimates no source settles: the balance's free run-down, the detent's springs' thicknesses, the discharge
+jewel's back radius, the sustaining spring's band and lobes, and the hairspring's upper terminal curve. Each is swept over the range its sources allow, and
+where the bench has a correction for it (the run-down test choosing the strip, the set-up, the ring test, the adjusting screws and the trip spring's tip, the
+maintaining test) it is applied as a maker would, to show that a chronometer made to the model works whichever value the real part has. <code>estimates.js</code>.</p>
+<figure><div class="chart" id="c30"></div><figcaption>Figure 30. The balance's swing at each free run-down, with the drawn strip unadjusted and with the strip the run-down test chooses.
+The band is the manual's, 247.5-270°. <code>estimates.js</code>.</figcaption></figure>
+<div id="t30" class="tw"></div>
+<ul id="estRes"></ul>
 
 <h2 id="context">The checks the model already had</h2>
 <p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
@@ -817,6 +827,13 @@ function drawMech(){const X=DATA.mech;if(!X)return;const ow=X.ow,ra=X.ra,su=X.su
     const al=Object.entries(mc.alone),worst=al.slice().sort((a,b)=>a[1].asMade-b[1].asMade)[0];
     $('mcRes').textContent=`Of ${N} movements, ${pc(F.asMade)} do everything as made and ${pc(F.works)} once the bench has done what its tests say. The pawls' test catches ${B.pawls.caught} (${B.pawls.springs} spring${B.pawls.springs===1?'':'s'} under the least set; ${B.pawls.wouldFail} of those movements would have failed${B.pawls.caught>B.pawls.wouldFail?`, the other ${B.pawls.caught-B.pawls.wouldFail} have a spring the bench's single figure, the larger pawl's need, rejects although its own pawl needs less`:''}) and bends them back to the aim; the swing is out of the band in ${B.setup.caught}, and turning the set-up brings ${B.setup.mended} of them back; the depths test re-bushes ${B.depths.caught}, ${B.depths.jam} of which would have jammed. ${mc.failAfter?`${mc.failAfter} still fail after the bench, every one caught by a test`:'None is left failing'}${mc.uncaught?`; ${mc.uncaught} fail unseen by any test`:''}. Their swing as made ${f(mc.swing[0],1)}-${f(mc.swing[2],1)}° (5-95 %). ${worst[1].asMade>=0.998?`No tolerance alone takes a movement out (${al.map(([k,v])=>`${k} ${pc(v.asMade)}`).join(', ')})`:`Alone, the ${worst[0]}'s tolerance takes most out as made, ${pc(1-worst[1].asMade)} (${al.map(([k,v])=>`${k} ${pc(v.asMade)}`).join(', ')})`}: together the drive's spread takes ${pc(1-F.band)} out of the band, and turning the set-up brings it back.`;}}
 const draw0=draw;draw=()=>{draw0();drawMech();};
+function drawEst(){const X=DATA.est;if(!X)return;
+  chart('c30',{label:'Swing against the free run-down',x:[40,200],y:[220,410],xl:'the balance’s free run-down TF (s)',yl:'the swing (°)',hbands:[{y0:247.5,y1:270,c:'--band'}],r:150,
+    series:[{type:'line',name:'the drawn strip',c:'--s2',dash:'5 4',data:X.tf.map(r=>[r.tf,r.A0]),tip:p=>`TF ${p[0]} s: ${f(p[1],0)}°`},{type:'line',name:'the strip the test chooses',c:'--s1',data:X.tf.map(r=>[r.tf,255]),tip:p=>`TF ${p[0]} s: 255°`}]});
+  table('t30',['Detent spring (mm)','Rings at (Hz)','A held tooth’s stone rings (of the lock)','A tooth gets past'],X.ring.map(r=>[f(r.t,3),f(r.f1,0),`${f(100*r.lift,0)} %`,r.trips?'yes':'no']),true);
+  $('estRes').innerHTML=X.rows.filter(r=>/^  (ok|!!)/.test(r.trim()?'  '+r.trim():'')).map(r=>`<li>${r.trim().replace(/^(ok|!!)\s+/,'')}</li>`).join('');}
+const draw1=draw;draw=()=>{draw1();drawEst();};
+
 draw();
 const th=$('theme');th.addEventListener('click',()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=dark?'light':'dark';draw();});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
