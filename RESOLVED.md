@@ -2554,4 +2554,17 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Mounting ring screws and two dial screws 20-37° from the real ones.** The
+  ring screws' places (`S.ring`) were fixed angles, 70°, 190° and 300° from 12:
+  one read on the top-view photograph before the photographed group's 19.4° turn
+  (12 October 2026) and not turned with it, the other two estimated; the band's
+  tabs under them repeated the angles (`RA`). Two dial screws (38.0°, 152.6°)
+  were an estimate and the other movement's photograph. On KLUwI2UUCMQ, through
+  fitted cameras (`rimfit.py` on 9:03, 40:08 and 34:30, both sides), the ring
+  screws stand at 91°, 214° and 336° (their heads on the plate's rim from the
+  train side, their ends in the ring's threaded holes from the dial side; the
+  photograph's head at 215° agrees) and the dial feet's four plain holes at 2.3°,
+  132.9°, 226.0° and 318.5° (the 2.3° one had been taken for a steady pin's). Now
+  91.5°, 214°, 336.5° and 2.6°, 132.9°, 226.0°, 318.9°. Keep: the band's tabs
+  follow `S.ring` (`RA` is read from it), and any place read on the top-view
+  photograph goes through `PT`.
