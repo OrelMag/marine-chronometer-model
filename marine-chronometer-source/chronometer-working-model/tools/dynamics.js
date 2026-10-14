@@ -43,11 +43,11 @@ const P0=ESC.Ps0,PT=ESC.Pt,tsT=ESC.settings.tsT/1000,LTS=Math.hypot(PT.x-P0.x,PT
 {const a={x:(P0.x-Ft.x)*ES,y:(P0.y-Ft.y)*ES},b={x:(PT.x-Ft.x)*ES,y:(PT.y-Ft.y)*ES},m=RHO.El*LTS*tsT*0.3e-3;add({m,mx:m*(a.x+b.x)/2,my:m*(a.y+b.y)/2,I:m*(a.x*a.x+a.x*b.x+b.x*b.x+a.y*a.y+a.y*b.y+b.y*b.y)/3});}
 const ID=DM.I,rCM=Math.hypot(DM.mx,DM.my)/DM.m;
 /* its spring: two strips (heights H.spring) of the drawn thickness and length, bending about Ft; a rigid body on a short flexure turns about its root with
-   stiffness E I / l. E 125-131 GPa for hardened beryllium copper; 128 taken. Preload: Op. 78, a 0.770 g weight on the locking jewel just parts the spring
-   from its stop button */
+   stiffness E I / l. E 125-131 GPa for hardened beryllium copper; 128 taken. Preload: Op. 78, a 0.770 g weight on the locking jewel parts the spring
+   from its stop button by about 0.005 in (p. 61, Fig. 88): the weight's moment less the spring's over that bend (makeEsc's th78); a spring scaled (kD) is set up by the same test */
 const SP=ESC.pieces.spring,tD=(Math.max(...SP.map(p=>-(p.x-Ft.x)*ESC.dirB.y+(p.y-Ft.y)*ESC.dirB.x))-Math.min(...SP.map(p=>-(p.x-Ft.x)*ESC.dirB.y+(p.y-Ft.y)*ESC.dirB.x)))*ES,
   lD=(Math.max(...SP.map(p=>(p.x-Ft.x)*ESC.dirB.x+(p.y-Ft.y)*ESC.dirB.y))-Math.min(...SP.map(p=>(p.x-Ft.x)*ESC.dirB.x+(p.y-Ft.y)*ESC.dirB.y)))*ES;
-const EBC=128e9,KD=EBC*H.spring.reduce((s,[h])=>s+h*tD**3/12,0)/lD,rJ=Math.hypot(ESC.Jc.x-Ft.x,ESC.Jc.y-Ft.y)*ES,MPRE=0.770e-3*G0*rJ;
+const EBC=128e9,KD=EBC*H.spring.reduce((s,[h])=>s+h*tD**3/12,0)/lD,rJ=Math.hypot(ESC.Jc.x-Ft.x,ESC.Jc.y-Ft.y)*ES,MW78=ESC.settings.W78*1e-3*G0*rJ,MPRE=MW78-KD*ESC.th78;
 /* the trip spring, a cantilever 7.9 mm long, Elinvar-type (180 GPa, as hairspring.js), bent at its tip by the discharge jewel on the return swing */
 const KTIP=3*180e9*(0.3e-3*tsT**3/12)/LTS**3;
 /* the lift: the passing spring's tip moves l (unit frame) along nH as the detent turns l/LEN about Ft (makeEsc's rot), so the detent's angle is d = l/LEN;
@@ -91,7 +91,7 @@ function sim(o={}){
      its side friction) viscous (in A²); together they lose at 255 deg what TF's viscous damping does, so the running swing and rate hold, and the start and run-down change */
   const sp=o.split,dE=2*Math.PI*(0.5*I*W0*W0*(255*D)**2)/(Math.PI*(o.TF??TF)/T0),Ca=sp?3*sp[0]*dE/(8*W0*W0*(255*D)**3):0,Tc=sp?sp[1]*dE/(4*255*D):0;
   const s=o.s??1,C=sp?sp[2]*dE/(Math.PI*W0*(255*D)**2):2*I/(o.TF??TF),phys=(o.mode??'phys')==='phys',tauE=TAUE*s,J=JT*(o.J??1),eB=o.eB??(phys?0.3:0),eW=o.eW??0,ext=o.ext,T=o.T??80,from=o.from??40,ideal=!!o.ideal,bE=(o.bE??0)*D;
-  const id=phys?ID*(o.dI??1):ID*1e-4,kr=KD*(o.kD??1),pre=MPRE*(o.pre??1),kp=KTIP*ES*ES*(o.kP??1);
+  const id=phys?ID*(o.dI??1):ID*1e-4,kr=KD*(o.kD??1),pre=(MW78-kr*ESC.th78)*(o.pre??1),kp=KTIP*ES*ES*(o.kP??1);
   const cd=2*Math.sqrt(kr*id)/(2*(o.Qd??100)),mDraw=tauE*CDR/DREL;   /* the detent's own damping (Q 100, estimated); the draw's resistance spread over the lift to release */
   const hf=o.hf??4e-6,hc=o.hc??1e-4;
   let t=0,th=-(o.A??ESC.A/D)*D,w=0,d=0,dv=0,ph=0,pv=0,wm=0,dm=0,pc=false,pp=0,passed=true;   /* wm: wheel locked 0, free 1, on the jewel 2; dm: detent on its stop 0, free 1, pushed 2 */
@@ -182,7 +182,7 @@ function sim(o={}){
   return{A,rate:day(T0/Tm-1),n,beats:st.beats,trips:st.trips+st.esc,esc:st.esc,twice:st.twice,lastBeat:st.lastBeat,land:mean(tail(st.land)),rel:mean(tail(st.rel)),pass:mean(tail(st.pass)),off:mean(tail(st.off)),offF:mean(tail(st.offF)),margin:Math.min(...tail(st.margin)),
     liftAt:Math.max(...tail(st.liftAt),0),maxBack:st.maxBack,home:mean(tail(st.home)),amps,ampT,cross:st.cross,stopped:st.beats===0};
 }
-module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,KTIP,DREL,LEN,lD,tD,LTS,CDR,day,S2,G,G1,at,jd,JR,JH,JB,H,RHO,polyM,ES,W0,T0};   /* tripping.js builds the detent as a frame from the same pieces and contacts */
+module.exports={sim,ESC,I,K,C,TF,JT,JE,J4,TAUE,ID,DM,rCM,KD,MPRE,MW78,KTIP,DREL,LEN,lD,tD,LTS,CDR,day,S2,G,G1,at,jd,JR,JH,JB,H,RHO,polyM,ES,W0,T0};   /* tripping.js builds the detent as a frame from the same pieces and contacts */
 if(require.main!==module)return;
 
 /* ---------- the report ---------- */
@@ -239,7 +239,7 @@ for(const[nm,o]of[['spring half as stiff',{kD:0.5}],['spring twice as stiff',{kD
 chk(sweep.every(([,r])=>r.trips===0&&r.margin>0),`over all of these the detent is home before the next tooth: what brings it back is the preload Op. 78 sets, not the spring's thickness`);
 {const ok=m=>{const r=sim({mode:'phys',T:8,from:4,pre:m});return r.trips===0&&r.beats>8;};
   if(ok(0))say(`with no preload at all the spring's own stiffness still brings the detent home in time: Op. 78's preload is for the locking's safety against knocks (below), not for the return`);
-  else{let lo=1e-3,hi=1;for(let i=0;i<8;i++){const m=Math.sqrt(lo*hi);ok(m)?hi=m:lo=m;}say(`the preload could fall to about ${f(100*hi,1)} % of Op. 78's (a ${f(770*hi,0)} mg weight) before a tooth gets past`);}}
+  else{let lo=1e-3,hi=1;for(let i=0;i<8;i++){const m=Math.sqrt(lo*hi);ok(m)?hi=m:lo=m;}say(`the preload could fall to about ${f(100*hi,1)} % of Op. 78's (Op. 78's weight ${f((hi*MPRE+KD*ESC.th78)/(G0*rJ)*1e6,0)} mg for the same 0.005 in) before a tooth gets past`);}}
 flush();
 if(quick){if(fail)process.exitCode=1;return;}
 

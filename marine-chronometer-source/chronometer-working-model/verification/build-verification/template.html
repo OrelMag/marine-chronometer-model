@@ -93,7 +93,7 @@ where the wheel's tooth, capped at 1.15 module, works on the leaf with its corne
 <p>None of the four meshes drops (the next tooth always engages before the last lets go), about a fifth of the action is before the line of centres, and the mean loss is
 2–5 % a mesh. The escape wheel's torque is the product of the four ratios as their wheels turn (the centre once an hour, the fusee wheel once in 6.4 h); the balance's
 swing follows it through the escapement's own equation (<code>shared/escapement.js</code>: <span class="eq">A²</span> relaxes towards <span class="eq">ampAt(drive)²</span>
-with the balance's free run-down time TF = 68 s), and its rate through <code>rateAt</code>.</p>
+with the balance's free run-down time TF = 67 s), and its rate through <code>rateAt</code>.</p>
 <figure><div class="chart" id="c2"></div><figcaption>Figure 2. The balance's swing over half an hour of the train, the teeth's ripple included, at the two friction coefficients; the band is the
 manual's 247.5–270°. The slow wave is the fusee wheel's teeth (one every 4.3 minutes), the fast one the third and fourth. Over six hours the swing stays within the
 same limits (<span id="sixh"></span>). <code>gearing.js</code>, <code>day()</code>.</figcaption></figure>
@@ -212,7 +212,7 @@ part's (<code>movement.js</code>, <code>ESC.pieces</code>), every material dynam
 carry it in time with the balance and the escape wheel as dynamics.js does, but every contact is elastic: the discharge jewel's own outline on the trip spring's tip (pushing
 it onto the horn on the active swing, bending it away on the return), the trip spring on the horn, the blade on its stop button, the tooth on the locking stone (the stone's
 outline and draw from <code>makeEsc</code>, so the tooth is pushed back as the stone lifts) and on the impulse jewel. A contact is a stiff spring with a dashpot set for its
-restitution (penalty contact). Op. 78 sets the preload: the spring is bent so a 0.770 g weight on the locking jewel just parts the blade from its button.</p>
+restitution (penalty contact). Op. 78 sets the preload: the spring is bent so a 0.770 g weight on the locking jewel parts the blade from its button by approximately 0.005 in (p. 61), which leaves it 0.63 g of preload at the jewel as drawn and none for a spring 0.137 mm thick.</p>
 <div id="t8" class="tw"></div>
 <p><b>Validated.</b> Made rigid and hinged at the spring's root, with the draw counted as dynamics.js counts it, the frame is dynamics.js's detent (stiffness, preload and
 first mode to 0.1 %) and runs as dynamics.js does: <span id="trV"></span>. Two things the frame finds that the rigid model leaves out:</p>
@@ -253,7 +253,7 @@ the spring (<code>benchcheck.py --ring</code> reads one). <span id="tbRing"></sp
 <code>benchcheck.py</code> judges them.</p>
 <div class="cols"><div id="t11" class="tw"></div><div id="t12" class="tw"></div></div>
 <p class="small">The largest lift over 20 beats is a maximum of a chaotic chatter: two runs a hair apart differ by about ten points. The figures are margins, not sharp
-limits; the lock's floor is where the margin falls below two, and the spring's band is the drawn spring to the thickest the swing allows (<span id="tbThin"></span>).</p>
+limits; the lock's floor is where the margin falls below two, and the spring's band is the drawn spring to the thickest that stays under that margin and that Op. 78's test can still preload (0.137 mm, <code>tolerances.js</code>) (<span id="tbThin"></span>).</p>
 
 <h2 id="sea">9. The box and gimbals in a seaway</h2>
 <p>A chronometer at sea hangs in gimbals so that the balance's staff stays upright whatever the ship does. The checks above took that as given. Here it is worked
@@ -397,7 +397,7 @@ in the middle. <code>motionwork.js</code>.</figcaption></figure>
 <p><b>Method.</b> Every sliding contact by Archard's law (the volume worn is k F s / H: the wear coefficient, the load, the distance slid, the softer part's hardness;
 Archard 1953), k from Rabinowicz's table for lubricated metals: about 10⁻⁷ well oiled, 10⁻⁶ poorly, 10⁻⁵ once the oil has gone. Each depth a year against the tolerance it
 eats: a pivot hole worn open moves its arbor toward the load and changes its meshes' depth (each mesh's close side less the hole tolerance and shake:
-<code>gearing.json</code>); the balance staff's pivot ends wear the endshake; the escape teeth's tips and the escape arbor's pivot wear the depth of lock toward its 5°
+<code>gearing.json</code>); the balance staff's pivot ends wear the endshake; the escape teeth's tips and the escape arbor's pivot wear the depth of lock toward its 3.9°
 floor (<code>tripping.json</code>). <code>wear.js</code>.</p>
 <div id="t21" class="tw"></div>
 <p><span id="weRes"></span></p>

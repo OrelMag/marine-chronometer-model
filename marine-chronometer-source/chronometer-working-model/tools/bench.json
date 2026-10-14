@@ -47,7 +47,7 @@
    "no": "42087",
    "when": "the detent made, before it goes in",
    "how": "Clamp its foot as the block holds it (a printed jig with the foot's two screws does), the stone and the blade's end free of everything, and flick the end of the blade lightly with a hair or a pith stick. Record the ring with a phone held a few millimetres off and read its lowest strong pitch with a spectrum app, or python benchcheck.py --ring FILE (any recording ffmpeg reads). The trip spring rings too, near 738 Hz: the detent's own is the lower.",
-   "pass": "137 Hz with the spring as drawn (0.079 mm thick); 137-342 Hz for a spring 0.079-0.150 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to 56 % of the depth of lock, against 23 % as drawn: tools/tripping.js); higher than 342 Hz, unlocking takes too much of the impulse (tools/tolerances.js). From about 194 Hz (0.10 mm) it rings least (the stone 16 % of the depth of lock)."
+   "pass": "137 Hz with the spring as drawn (0.079 mm thick); 137-194 Hz for a spring 0.079-0.100 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to 66 % of the depth of lock, against 23 % as drawn: tools/tripping.js); higher than 194 Hz, the spring is stiffer and Op. 78's 0.005 in leaves it less preload (at 0.12 mm a held tooth's stone lifts 81 % of the depth of lock), none from 0.137 mm, where the test can't be met with the spring on its button (tools/tripping.js, tools/tolerances.js). From about 137 Hz (0.08 mm) it rings least (the stone 23 % of the depth of lock)."
   },
   {
    "id": "escapement",
@@ -55,7 +55,7 @@
    "no": "42087",
    "when": "the detent, its springs and the balance in; the train's power let down to the set-up",
    "how": "Turn the balance slowly by hand with a protractor on the cock (a printed card under the balance does) and read each angle where the manual's operations read it, through a loupe; the roller's shake and the horn's clearance with feeler gauges.",
-   "pass": "The manual's figures: lock about 6° (the model 5.5°, Op. 85), let-off at least 6° (8.7°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.0°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78's weight, 0.770 g on the locking jewel. Never a lock under 5°: shallower, the detent's ringing after each lock comes to over half the depth of lock (102 µm at the stone at 5°), the drop is gone at 3.4° and a tooth gets past at 2.4° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (53-61 g over 3 ms)."
+   "pass": "The manual's figures: lock about 6° (the model 5.5°, Op. 85), let-off at least 6° (8.7°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.0°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78: 0.770 g on the locking jewel parts it from its stop button by about 0.005 in (0.13 mm; bend the spring until it does). Never a lock under 4°: shallower, the detent's ringing after each lock comes to over half the depth of lock (73 µm at the stone at 4°), the drop is gone at 3.4° and a tooth gets past at 2.4° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (42-50 g over 3 ms)."
   },
   {
    "id": "swing",
@@ -95,7 +95,7 @@
    "no": "42077",
    "when": "the motion work and the hands on, the movement level",
    "how": "Hang a weight on the minute hand 40 mm from its arbor, the hand horizontal, and see whether it turns the hand (the cannon pinion slipping on the centre arbor; Op. 58).",
-   "pass": "It slips between 3.5 and 93 g (motionwork.js: tighter, setting the hands forward drives the escapement to trip; looser, a knock turns the hands): set it near 18 g."
+   "pass": "It slips between 3.5 and 94 g (motionwork.js: tighter, setting the hands forward drives the escapement to trip; looser, a knock turns the hands): set it near 18 g."
   },
   {
    "id": "rate",
@@ -114,8 +114,8 @@
   "42038": "The mainspring's torque, before it goes into the barrel, and again in the barrel: Fully wound 0.74-0.86 N·m (the model's 0.78; the band keeps the balance in the manual's 1⅜-1½ turns: tools/tolerances.js); falling about 84 mN·m a turn, to about 0.40 N·m when the fusee's chain is all on the barrel. After the week, still inside the band (a spring that sets more is replaced, or set up a tooth: Op. 13). Unwinding it reads less than winding: the coils' friction gives 3-6 % on the model's spring, mainsprings run 10-20 % under their winding (ICMFF9: 11-22 % read so; the strip's edges and its steel too); over 22 %, clean and grease it.",
   "42068": "The train's depths, the plates and bridges bored, before the jewels and bushes go in: Centres 20.383, 16.550, 11.297, 10.444 mm (fusee-centre, centre-third, third-fourth, fourth-escape), each within ±13 µm (tools/gearing.js: the wheel's tips stay off the pinion's root with the pivots' shake taken off). Every mesh turns smoothly with shake at its pinion; none butts or catches. A hole that errs should err wide: each mesh takes several times as much wide as close. One closer than its window's close side less the pivots' shake (48, 39, 28, 27 µm close): re-bush the hole, the bush bored on the drawn centre (benchcheck.py).",
   "42071": "Endshake, each arbor in its bearings, before the escapement goes in: 28-73 µm at 20 °C (Ops. 15, 69 and 74's 0.001-0.003 in, less what the brass takes from it at 40 °F and gives at 100 °F: tools/thermal.js).",
-  "42077": "The cannon pinion's friction, the motion work and the hands on, the movement level: It slips between 3.5 and 93 g (motionwork.js: tighter, setting the hands forward drives the escapement to trip; looser, a knock turns the hands): set it near 18 g.",
-  "42087": "The detent rings, the detent made, before it goes in: 137 Hz with the spring as drawn (0.079 mm thick); 137-342 Hz for a spring 0.079-0.150 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to 56 % of the depth of lock, against 23 % as drawn: tools/tripping.js); higher than 342 Hz, unlocking takes too much of the impulse (tools/tolerances.js). From about 194 Hz (0.10 mm) it rings least (the stone 16 % of the depth of lock). The escapement's figures, the detent, its springs and the balance in; the train's power let down to the set-up: The manual's figures: lock about 6° (the model 5.5°, Op. 85), let-off at least 6° (8.7°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.0°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78's weight, 0.770 g on the locking jewel. Never a lock under 5°: shallower, the detent's ringing after each lock comes to over half the depth of lock (102 µm at the stone at 5°), the drop is gone at 3.4° and a tooth gets past at 2.4° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (53-61 g over 3 ms).",
+  "42077": "The cannon pinion's friction, the motion work and the hands on, the movement level: It slips between 3.5 and 94 g (motionwork.js: tighter, setting the hands forward drives the escapement to trip; looser, a knock turns the hands): set it near 18 g.",
+  "42087": "The detent rings, the detent made, before it goes in: 137 Hz with the spring as drawn (0.079 mm thick); 137-194 Hz for a spring 0.079-0.100 mm thick. The pitch goes nearly as the thickness to the 1.5: it measures the spring's section, which no source gives. Lower, the spring is thinner than drawn and the detent rings more after each lock (a held tooth's stone lifted up to 66 % of the depth of lock, against 23 % as drawn: tools/tripping.js); higher than 194 Hz, the spring is stiffer and Op. 78's 0.005 in leaves it less preload (at 0.12 mm a held tooth's stone lifts 81 % of the depth of lock), none from 0.137 mm, where the test can't be met with the spring on its button (tools/tripping.js, tools/tolerances.js). From about 137 Hz (0.08 mm) it rings least (the stone 23 % of the depth of lock). The escapement's figures, the detent, its springs and the balance in; the train's power let down to the set-up: The manual's figures: lock about 6° (the model 5.5°, Op. 85), let-off at least 6° (8.7°, Op. 86), overall 26-30° (28.0°, Op. 87), drop about 2° (2.0°, Op. 97), the horn's clearance to the unlocking jewel about 0.010 in (0.25 mm, Op. 88), roller shake about 0.002 in (0.056 mm, Op. 84). Set them with the lock-adjusting and detent-adjusting screws and the trip spring's tip (Ops. 84-97); the detent spring's preload by Op. 78: 0.770 g on the locking jewel parts it from its stop button by about 0.005 in (0.13 mm; bend the spring until it does). Never a lock under 4°: shallower, the detent's ringing after each lock comes to over half the depth of lock (73 µm at the stone at 4°), the drop is gone at 3.4° and a tooth gets past at 2.4° (tools/tripping.js). Against knocks it is the preload that holds, not the lock: the blow that trips it changes little with the lock (42-50 g over 3 ms).",
   "42178": "The swing, the movement running, fully wound and again run down: 1⅜-1½ turns, 247.5-270° each way, fully wound and run down alike (Sec. II, Sec. IX). Low at both ends: the train's freedom or the depths; low at one end only: the fusee and the spring (the fusee test); high: the mainspring is too strong for its band.",
   "42188": "The balance and its hairspring vibrated, the hairspring pinned to its collet and stud, the balance on its staff: 2 oscillations a second (7,200 an hour): Table II's balance (578.5 g·mm²) wants a spring of 91.4 µN·m a radian. Within 40 s a day of it (one turn of the timing weights, Sec. IX) before the spring goes in; the weights take up the rest."
  },
@@ -159,8 +159,8 @@
   },
   "fusee": {
    "band": [
-    -0.0512,
-    0.1079
+    -0.0524,
+    0.1087
    ],
    "halfTurns": 17.5,
    "torque": 0.3107
@@ -212,54 +212,54 @@
   "detent": {
    "ring": [
     137.4,
-    342.1
+    193.9
    ],
    "f0": 137.4,
    "trip": 738.3,
    "t": [
     0.079,
-    0.15
+    0.1
    ],
    "rows": [
     [
      0.05,
      69.7,
-     0.4617
+     0.4787
     ],
     [
      0.06,
      91.4,
-     0.5561
+     0.4928
     ],
     [
      0.07,
      114.9,
-     0.554
+     0.6583
     ],
     [
      0.079,
      137.4,
-     0.2287
+     0.2284
     ],
     [
      0.1,
      193.9,
-     0.1629
+     0.2178
     ],
     [
      0.12,
      251.7,
-     0.1574
+     0.8106
     ],
     [
      0.15,
      342.1,
-     0.1596
+     1.0282
     ]
    ]
   },
   "escapement": {
-   "lockTrip": 5,
+   "lockTrip": 3.92,
    "dropZero": 3.43,
    "lock": [
     5,
