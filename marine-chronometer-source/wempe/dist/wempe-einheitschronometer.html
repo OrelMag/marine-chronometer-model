@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wempe Einheits-Chronometer</title>
-<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built from its works drawings: in progress, the frame first.">
+<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built from its works drawings: in progress: the frame and the going train so far.">
 <meta name="author" content="Orel Magidish">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Wempe Einheits-Chronometer">
@@ -343,7 +343,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   <h1>Wempe Einheits-Chronometer</h1>
   <div class="hd">
     <nav class="models" aria-label="The models"><a href="../../chronometer-working-model/dist/chronometer-working-model.html">Hamilton Model 21</a><span aria-current="page">Wempe Einheits-Chronometer</span></nav>
-    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame first. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame and the going train so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
   </div>
 </header>
@@ -374,7 +374,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
-    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins.</div>
+    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; and the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel.</div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
@@ -388,7 +388,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
         <div class="seg" id="speeds">
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
-        <p class="note" style="margin:8px 0 0">Nothing moves yet: the train comes after the frame.</p>
+        <p class="note" style="margin:8px 0 0">The train turns from the escape wheel, a tooth a beat (until the escapement is built, the wheel steps without it).</p>
       </details>
       <details class="grp more disp" id="dispDet" open>
         <summary>Display</summary>
@@ -2013,10 +2013,11 @@ const WFRAME=(()=>{
     for(const k of[22,37])tag(cylBetween(lc,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');
 
     /* ================= the intermediate bridge (Zwischenbrücke kompl., 05 08 04) ================= */
-    /* On the pillar plate's dial face, across the opening 38: the intermediate wheel's jewel pressed in at 38 (its face 0.7 +0.02 in from the plate side) and the seconds wheel's
-       setting (WN-300) at 35 (1.7 in), steady pins (WN-203) 1.3 proud, a screw at each end from the dial side, sunk. Holes 43, 38, 35, 28 and the pins 44, 29 all lie on one line
+    /* On the pillar plate's dial face, across the opening 38: the intermediate wheel's brass bush (WN-300: 05 08 04's leader goes to it) pressed in at 38 (its face 0.7 +0.02
+       in from the plate side) and the seconds wheel's jewel in its setting (05 05 04-1, -2 in the coloured section) at 35 (1.7 in) (both built with the train, train.js),
+       steady pins (WN-203) 1.3 proud, a screw at each end from the dial side, sunk. Holes 43, 38, 35, 28 and the pins 44, 29 all lie on one line
        (the tables' coordinates, to 0.001: sure), 34.13 between the screws, 41.13 between the pins. Its outline (05 08 04-1, not in the set) scaled on 05 08 04 at 2:1 against
-       those spacings (7.03 px/mm): 45.5 × 10.0 with round ends, 3.8 thick; the screws' sinks Ø 4.4 × 2.0; the jewel's hole Ø 4.3 sunk Ø 6.2 × 0.7, the setting's Ø 5.2 sunk Ø 6.2 × 1.7:
+       those spacings (7.03 px/mm): 45.5 × 10.0 with round ends, 3.8 thick; the screws' sinks Ø 4.4 × 2.0; the bush's hole Ø 4.3 sunk Ø 6.2 × 0.7, the setting's Ø 5.2 sunk Ø 6.2 × 1.7:
        estimated. Drawn gilt (Wempe 3955's, 3_Wempe_3955_uZ.jpg) */
     const zb=part('intermediateBridge',18);
     {const d=unit(sub(H[28],H[43])),m=[(H[28][0]+H[43][0])/2,(H[28][1]+H[43][1])/2],y0=PPT,y1=PPT+3.8;
@@ -2032,8 +2033,189 @@ const WFRAME=(()=>{
 </script>
 <script>
 // @ts-check
+/* train.js: the Wempe Einheits-Chronometer's going train (Laufwerk, drawing group 05 05), built from its sheets as last revised (the pinions 05 05 01-2 and 05 05 02-2 redrawn
+   6.46, the seconds pinion's last change 24.3.48): the centre (minute) wheel 05 05 03, the intermediate (Zwischen-) wheel 05 05 02 and the seconds wheel 05 05 01, each a
+   brass wheel riveted on its steel pinion and arbor, at holes 1, 38 and 35 of WD.H; and their bearings: the brass bushes (Messinglager) WN-301 at 1 and WN-300 at 35 and 38 in
+   the top plate (05 08 01), WN-302 at 1 in the pillar plate (05 08 02), WN-300 at 38 in the intermediate bridge and the seconds wheel's jewel 05 05 04-1 in its setting
+   05 05 04-2 at 35 in the bridge (05 08 04, the coloured section); and the pillar plate's two bushes 05 08 02-2 at holes 2 and 19 with the studs (Anrichtstifte 05 02 00-6,
+   -7) they hold, on which the motion work and the up-and-down work turn (05 08 02). The escape wheel and pinion (05 04), the fusee wheel, the cannon tube 05 05 03-3 on the
+   centre arbor and the motion work are other groups'.
+   Part of the Wempe model (three.js r128). Declares only WTRAIN: WTRAIN.build(mv, M, K) adds the parts to the movement group (K: KIT.parts' makers, the frame already built) and
+   returns {cw, tw, sw, update}: the three arbors' turning groups, each with its wheel and pinion meshes (userData.wheel, .pin: gearLash's meshes, for the fusee wheel and the
+   escape pinion to phase against), and update(s), which turns them from the escape wheel's place s.E (teeth) and returns their angles {c, t, s} (rotation.y, the movement's
+   frame) for the motion work and the fusee.
+   Units mm, the movement frame (dims.js): dial side +y, 12 o'clock -z, 3 o'clock +x. Each arbor is placed along y from its top-plate shoulder at ys, the shoulder that rests
+   on the top plate's bush; every height below is from that shoulder (u) unless it says y. Sizes are the middle of their fits, as the frame's. */
+const WTRAIN=(()=>{
+  const H=WD.H,TI=-WD.INNER,TT=TI-WD.TOP_T,PPT=WD.PP_T,ZB=PPT+3.8,V2=(a,b)=>new THREE.Vector2(a,b);   /* ZB: the intermediate bridge's dial face (3.8 thick, frame.js) */
+  /* ---------- the sheets' teeth, on core.js's cycloidal forms (gearOutline) with the tables' numbers ----------
+     A wheel's tooth as gearOutline draws one: radial flanks from the root to the pitch circle, then the epicycloid its pinion's rolling circle (half the pinion's pitch
+     radius: mate, its leaves) traces from the pitch point, both sides, here with the table's tooth thickness l on the pitch circle, run up to the table's tip diameter D
+     (the epicycloid would meet the tooth's middle at 1.60-1.69 m, the tables' D at 1.56-1.58 m: the sheets' rounded ogives, topped there), and the table's root
+     diameter dg. A pinion's leaf as gearOutline's (radial flanks, a round end on the pitch circle) with its radii put on the sheet's tip and root: radii outside the
+     pitch circle stretched from gearOutline's addendum to the sheet's, inside it from its root to the sheet's (05 05 03-2's end view draws the leaves so, long and
+     round-ended). m: the pitch diameter over the teeth */
+  function teeth(z,m,D,dg,mate,l){const rp=m*z/2,ro=D/2,ri=dg/2,p=TAU/z,pts=[];
+    if(!l){const G=gearOutline(z,m,{}),xy=G.xy.map(([x,y])=>{const r=Math.hypot(x,y),a=Math.atan2(y,x),q=r>=rp?rp+(r-rp)*(ro-rp)/(G.ro-rp):ri+(r-G.ri)*(rp-ri)/(rp-G.ri);return[q*Math.cos(a),q*Math.sin(a)];});
+      return{xy,ro,ri};}
+    const b=l/2/rp,rg=m*mate/4,K=(rp+rg)/rg,ep=[],E=t=>{const x=(rp+rg)*Math.cos(t)-rg*Math.cos(K*t),y=(rp+rg)*Math.sin(t)-rg*Math.sin(K*t);return[Math.hypot(x,y),Math.atan2(y,x)];};
+    let t1=0;while(t1<1.5){const[r,a]=E(t1+1e-4);if(a>=b||r>=ro)break;t1+=1e-4;}   /* where the epicycloid reaches the tooth's middle or the tip circle */
+    for(let k=0;k<=16;k++){const[r,a]=E(t1*k/16);ep.push(k<16?[r,a]:[Math.min(r,ro),Math.min(a,b)]);}
+    for(let i=0;i<z;i++){const c=i*p+0.375*p;pts.push([ri,c-b]);for(const[r,a]of ep)pts.push([r,c-b+a]);for(let k=ep.length-1;k>=0;k--){const[r,a]=ep[k];if(a<b-1e-9||k<ep.length-1)pts.push([r,c+b-a]);}
+      pts.push([ri,c+b]);for(let k=1;k<3;k++)pts.push([ri,c+b+(p-2*b)*k/3]);}
+    return{xy:pts.map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]),ro,ri};}
+  /* a wheel or pinion as one closed solid (core.js's extrude): the outline extruded th along y and centred on y 0, as gearGeo; spokes [n, width, hub radius, rim's inner
+     radius], straight spokes of constant width as gearGeo cuts them; bore its hole. Outline and radii in userData as gearGeo's, for gearLash */
+  function gear(T,th,o={}){const s=new THREE.Shape();s.moveTo(T.xy[0][0],T.xy[0][1]);for(let i=1;i<T.xy.length;i++)s.lineTo(T.xy[i][0],T.xy[i][1]);s.closePath();
+    if(o.spokes){const[n,sw,R0,R1]=o.spokes,d1=Math.asin(sw/2/R1),d0=Math.asin(sw/2/R0);
+      for(let j=0;j<n;j++){const a0=j/n*TAU,a1=(j+1)/n*TAU,h=new THREE.Path();h.absarc(0,0,R1,a0+d1,a1-d1,false);h.absarc(0,0,R0,a1-d0,a0+d0,true);s.holes.push(h);}}
+    if(o.bore){const h=new THREE.Path();h.absarc(0,0,o.bore,0,TAU,true);s.holes.push(h);}
+    const g=extrude(s,{depth:th,bevelEnabled:false,curveSegments:o.spokes?40:24});g.rotateX(-Math.PI/2);g.translate(0,-th/2,0);Object.assign(g.userData,{ro:T.ro,ri:T.ri,pl:T.xy});return g;}
+  /* a turned solid from a profile [[r, y], ...] listed from one end on the axis to the other, y rising (counterclockwise in r, y, as shaftGeo's) */
+  const turned=(P,seg=32)=>new THREE.LatheGeometry(P.map(([r,y])=>V2(r,y)),seg);
+  /* a turned ring (a bush, a setting): its profile a closed loop counterclockwise in r, y (the first point again at the end) */
+  const ringT=(P,seg=48)=>new THREE.LatheGeometry([...P,P[0]].map(([r,y])=>V2(r,y)),seg);
+  /* a 30 deg chamfer on a shoulder (the pinion sheets' "30°"): the body's edge cut C30 across, at 30 deg to the shoulder's face */
+  const C30=0.15,c30=C30*Math.tan(30*D2R);
+  /* a pivot l long from a shoulder at u0, Ø 2r at the shoulder tapering to 2re at its end, the end rounded (a quarter ellipse re across, 0.6 re deep); s -1 toward -u (listed
+     from its end on the axis out to the shoulder), +1 toward +u (from the shoulder to its end on the axis) */
+  const piv=(r,re,l,s,u0=0)=>{const h=0.6*re,o=[];for(let k=0;k<=6;k++){const t=k/6*Math.PI/2;o.push([re*Math.sin(t),u0+s*(l-h+h*Math.cos(t))]);}
+    return s<0?[...o,[r,u0]]:[[r,u0],...o.reverse()];};
+  /* a bush's oil sink, a cup in its face at y (s +1 going into the bush toward +y, from its low face; -1 toward -y): from the face's rim (radius rs) down to the bore (rb), on a
+     sphere through the rim and the cup's bottom ds deep */
+  const cup=(rb,rs,ds,y,s)=>{const R=(rs*rs+ds*ds)/(2*ds),yc=y+s*(ds-R),a0=Math.asin(rs/R),a1=Math.asin(rb/R),o=[];
+    for(let k=0;k<=12;k++){const a=a0+(a1-a0)*k/12;o.push([R*Math.sin(a),yc+s*R*Math.cos(a)]);}return o;};
+  /* a bush: Ø 2ro from y0 to y1, bore rb; sk: its sink, {f: +1 in the face at y1, -1 at y0; rs its radius at the face; ds a spherical cup's depth, or cone: a 90 deg cone} */
+  function bushGeo(ro,rb,y0,y1,sk){
+    if(!sk)return ringT([[rb,y0],[ro,y0],[ro,y1],[rb,y1]]);
+    const yf=sk.f>0?y1:y0,s=-sk.f,S=sk.cone?[[sk.rs,yf],[rb,yf+s*(sk.rs-rb)]]:cup(rb,sk.rs,sk.ds,yf,s);   /* from the face's rim in to the bore */
+    return sk.f>0?ringT([[rb,y0],[ro,y0],[ro,y1],...S]):ringT([[ro,y0],[ro,y1],[rb,y1],...S.slice().reverse()]);}
+
+  /* ================= the arbors, as the sheets give them =================
+     Heights: the plates' inner faces 19.0 apart (WD.INNER). Each arbor's train-side shoulder rests on a brass bush flush with the top plate's inner face (05 08 01 draws
+     WN-300 and WN-301 through the plate; the sheets' lengths below add up to the plates' 19 with them flush). Its dial-side shoulder rests on:
+     - the centre arbor: the pillar plate's bush WN-302, set 0.1 +0.02 under the plate's inner face (05 08 02, Schnitt A-B), by the riveting collar Ø 3.0 at the end of its
+       wheel's seat, 19 +0.05 (framed) from its train-side shoulder (05 05 03-2; 05 05 03's "19 ±0,05", also framed): 19.1 between the bushes' faces, the arbor drawn 19.03,
+       so 0.07 endshake (the arbor's tolerance and the bush's give 0.05-0.12);
+     - the intermediate arbor: the bush WN-300 pressed into the intermediate bridge, its face 0.7 +0.02 in from the bridge's plate side (05 08 04): 19 + 3.35 + 0.71 = 23.06
+       against the arbor's 23.05 -0.1 between shoulders (05 05 02-2), drawn 23.0: 0.06;
+     - the seconds arbor: its jewel 05 05 04-1 in the bridge, its face 1.7 in from the bridge's plate side (05 08 04's "1,7", drawn 1.75: the sheet gives no tolerance),
+       19 + 3.35 + 1.75 = 24.1 against the arbor's 24.1 -0.1 between shoulders (05 05 01-2, revised 24.3.48: "war 24 -0,05"), drawn 24.05: 0.05.
+     Each arbor is drawn in the middle of its endshake. */
+  const A={
+    /* the centre (minute) arbor, 05 05 03 (Minutenrad kompl., 22.7.43): its pinion and arbor 05 05 03-2 (Minutentrieb, Präz. Rundstahl 7,2, hardened and tempered at 295°)
+       and the wheel 05 05 03-1 (Minutenrad, Messingblech 1,5 Ms 58 federhart) riveted on it ("vernietet").
+       From the train-side shoulder (05 05 03-2): the pivot Ø 1.2 -0.02, 3 long (05 05 03; the pinion sheet's 5.1 -0.2 is the turned blank's, with its 60° centre), tapered
+       (its "Kegel 1:?0" too small to read; 1:30, as the seconds wheel's sheet of the same years: likely), rounded; the arbor Ø 2.5 to the pinion, a 30° chamfer at the
+       shoulder; the pinion 14 leaves, m 0.4356, d 6.098, tip 6.79 -0.02 (the blank's), root 4.24, 4 -0.1 long, its end 17.2 +0.05 from the shoulder; the wheel's seat
+       Ø 5.4 n6 above it, the wheel on it against the pinion's end; the riveting collar Ø 3.0 (05 05 03-2's "3,0∅" at the seat's end) to 19 +0.05 (framed); the journal
+       "C" Ø 2.2 e8 (-0.014/-0.028) to 23 +0.05, which runs in WN-302; then the shank that carries the cannon tube 05 05 03-3 (another group's), Ø 1.8 at C tapering 1:80
+       ("Kegel 1:80", Ø 1.65 near its end), to the tube's top: 14.3 over the C shoulder (05 05 03; the pinion sheet's 39.65 -0.1 overall is the blank's, with its centre),
+       its end chamfered. The sheets' 1.6 -0.1 for the seat and collar together (05 05 03-2) leaves 1.8 between the pinion's end and the framed 19: not settled (README).
+       The wheel (05 05 03-1): z 90, m 0.355 (d 31.976, so 0.35529), tip 33.10, root 30.86, l 0.52 (the tooth on the pitch circle), 1.3 -0.1 thick at the rim, five spokes
+       1.7 -0.2 wide, hub 10.6 -0.2, rim's inside 28.1 +0.2, hole 5.4 H7; its hub left the sheet's 1.5 thick and standing 0.2 proud on the dial side, turned to Ø 10 there
+       (05 05 03: "0,2", "10∅"). */
+    cw:{at:H[1],ys:TI+0.035,
+      prof:[...piv(1.19/2,(1.19-3/30)/2,3,-1),[2.5/2-C30,0],[2.5/2,c30],[2.5/2,17.225],[5.4/2,17.225],[5.4/2,18.675],[3.0/2,18.675],[3.0/2,19.03-c30],[3.0/2-C30,19.03],
+        [2.179/2,19.03],[2.179/2,23.03],[1.8/2,23.03],[(1.8-14.2/80)/2,37.23],[(1.8-14.2/80)/2-0.1,37.33],[0,37.33]],
+      pin:{z:14,m:6.098/14,D:6.79-0.01,dg:4.24,u0:17.225-3.95,u1:17.225},
+      wheel:{z:90,m:31.976/90,D:33.10,dg:30.86,l:0.52,mate:12,rim:[17.225,18.475],boss:[18.475,18.675,10/2],spokes:[5,1.6,10.5/2,28.2/2],bore:5.4/2}},
+    /* the intermediate arbor, 05 05 02 (Zwischenrad kompl., 27.7.40): its pinion and arbor 05 05 02-2 (Zwischentrieb, Präz. Rundstahl 5,2, redrawn 6.46) and the wheel
+       05 05 02-1 (Zwischenrad, Messingblech 1,2 Ms 58 federhart) riveted on it. From the train-side shoulder: the pivot Ø 0.85 -0.05 (05 05 02-2; the kompl.'s 0.82 -0.02
+       of 1940 superseded), 3 -0.1 long (05 05 02; the pinion sheet's 4.6 -0.2 the blank's, pointed), tapered ("Kegel 1:?0": 1:90, as the seconds pinion redrawn with it: likely),
+       rounded; the arbor Ø 2 -0.1 to the pinion, a 30° chamfer at the shoulder; the pinion 4.6 -0.2 long, its end 19.25 -0.1 from the shoulder; the wheel's seat Ø 4.0 n6,
+       1.3 -0.1 long; the collar Ø 2 -0.1 to the dial-side shoulder at 23.05 -0.1; the pivot as the other.
+       The pinion: 12 leaves, not on its sheet: from the centre distance 18.12 (05 05_1, the plates' tables) and the centre wheel's module, (2 × 18.12 - 31.976)/0.35529 =
+       12.0 (the transcription's inference, confirmed: no other count fits); its tip Ø 5.0 (scaled on 05 05 02-2 against the arbor's Ø 2: 4.9-5.2, the bar 5.2),
+       root Ø 2.75 (the centre pinion's dedendum, 2.13 m, as the sheets give no root for it: estimated).
+       The wheel (05 05 02-1): z 80, m 0.280 (d 22.453, so 0.28066), tip 23.33, root 21.57, l 0.40, 1.0 -0.1 thick at the rim, five spokes 1.3 -0.2, hub 7.5 -0.1, rim's
+       inside 19.3 +0.2, hole 4 H7; its hub 1.2 (the sheet's metal) standing 0.2 proud on the dial side, turned to Ø 7 there (05 05 02: "0,2", "7∅") */
+    tw:{at:H[38],ys:TI+0.03,
+      prof:[...piv(0.825/2,(0.825-2.95/90)/2,2.95,-1),[1.95/2-C30,0],[1.95/2,c30],[1.95/2,19.2],[4.0/2,19.2],[4.0/2,20.45],[1.95/2,20.45],[1.95/2,23.0-c30],[1.95/2-C30,23.0],
+        ...piv(0.825/2,(0.825-2.95/90)/2,2.95,1,23.0)],
+      pin:{z:12,m:4.264/12,D:5.0,dg:2.75,u0:19.2-4.5,u1:19.2},
+      wheel:{z:80,m:22.453/80,D:23.33,dg:21.57,l:0.40,mate:10,rim:[19.2,20.15],boss:[20.15,20.35,7/2],spokes:[5,1.2,7.45/2,19.4/2],bore:4.0/2}},
+    /* the seconds arbor, 05 05 01 (Sekundenrad kompl., 27.7.40): its pinion and arbor 05 05 01-2 (Sekundentrieb, Präz. Rundstahl 3,5, redrawn 6.46, revised 24.3.48) and the
+       wheel 05 05 01-1 (Sekundenrad, Messingblech 1,2 Ms 58 federhart) riveted on it. From the dial-side shoulder (05 05 01-2): the pivot Ø 0.76 -0.02 at its root, 0.65 at
+       its end 9.2 out ("Kegel 1:90"): its first 2 run in the jewel ("i/Steinlager einpassen", 05 05 01) and the rest is the post that carries the seconds hand through the
+       dial; a collar Ø 1.55 -0.1 (a), 2.2 long (scaled on 05 05 01-2: 2.24); the pinion 7 long, its end 9.25 -0.1 from the shoulder; the wheel's seat Ø 2.6 n6, 1.2 +0.1 long;
+       the arbor Ø 1.55 -0.1 (a) to the train-side shoulder at 24.1 -0.1, a 30° chamfer there; the pivot Ø 0.82 -0.02, 3 long (05 05 01: the pinion sheet's 4.5 is the
+       blank's), "Kegel 1:90", rounded.
+       The pinion: 10 leaves, not on its sheet: from the centre distance 12.63 and the intermediate wheel's module, (2 × 12.63 - 22.453)/0.28066 = 10.0 (the
+       transcription's inference, confirmed); tip Ø 3.4 (scaled on 05 05 01-2: 3.36-3.57, the bar 3.5), root Ø 1.61 (the centre pinion's 2.13 m: estimated).
+       The wheel (05 05 01-1): z 80, m 0.263 (d 21.066, so 0.26333), tip 21.9, root 20.23, l 0.38, 1.0 ±0.03 thick at the rim, five spokes 1.3 -0.2, hub 6.5 -0.2, rim's
+       inside 18.3 +0.2, hole 2.6 H7; its hub 1.2 (the sheet's metal) standing 0.2 proud on the pinion's side (05 05 01: "0,2" over the wheel's face under the pinion, the
+       hub's "6∅"), so its rim clears the intermediate pinion's end by 0.05 (0.055 as drawn) */
+    sw:{at:H[35],ys:TI+0.025,
+      prof:[...piv(0.81/2,(0.81-3/90)/2,3,-1),[1.5/2-C30,0],[1.5/2,c30],[1.5/2,13.6],[2.6/2,13.6],[2.6/2,14.85],[1.5/2,14.85],[1.5/2,24.05],[0.75/2,24.05],[0.65/2,33.15],[0.65/2-0.1,33.25],[0,33.25]],
+      pin:{z:10,m:2.807/10,D:3.4,dg:1.61,u0:14.85,u1:24.05-2.2},
+      wheel:{z:80,m:21.066/80,D:21.9,dg:20.23,l:0.38,mate:10,rim:[13.65,14.65],boss:[14.65,14.85,6/2],spokes:[5,1.2,6.4/2,18.4/2],bore:2.6/2}}};
+
+  function build(mv,M,K){const{part}=K,P=K.parts,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
+    const R={};
+    for(const[k,name,off,ids]of[['cw','centreWheel',-12,['050503-2','050503-1']],['tw','intermediateWheel',-6,['050502-2','050502-1']],['sw','secondsWheel',-18,['050501-2','050501-1']]]){
+      const a=A[k],g=new THREE.Group(),pt=part(name,off);g.position.set(a.at[0],a.ys,a.at[1]);pt.add(g);
+      const pin=a.pin,wh=a.wheel;
+      const ar=tag(mesh(g,turned(a.prof),M.steel),ids[0]);
+      const pm=tag(mesh(g,gear(teeth(pin.z,pin.m,pin.D,pin.dg),pin.u1-pin.u0),M.steel,0,(pin.u0+pin.u1)/2,0),ids[0],1);pm.userData.gear={z:pin.z,m:pin.m};
+      const wm=tag(mesh(g,gear(teeth(wh.z,wh.m,wh.D,wh.dg,wh.mate,wh.l),wh.rim[1]-wh.rim[0],{spokes:wh.spokes,bore:wh.bore}),M.gilt,0,(wh.rim[0]+wh.rim[1])/2,0),ids[1]);wm.userData.gear={z:wh.z,m:wh.m};
+      tag(mesh(g,ringT([[wh.bore,wh.boss[0]],[wh.boss[2],wh.boss[0]],[wh.boss[2],wh.boss[1]],[wh.bore,wh.boss[1]]]),M.gilt),ids[1],1);   /* the hub's boss, 0.2 proud of the rim */
+      g.userData.wheel=wm;g.userData.pin=pm;R[k]=g;void ar;}
+    /* tooth phasing under load, as the Hamilton's (gearLash, core.js): the centre wheel drives the intermediate pinion, turning as update() turns it (-1: clockwise from
+       the dial, rotation.y falling), the intermediate wheel the seconds pinion (+1). The fusee wheel phases the centre pinion and the seconds wheel the escape pinion
+       (other groups': their wheels drive) */
+    const ph=(Aw,pa,Bp,pb,s)=>{const[a,b]=gearLash(Aw,pa,Bp,pb,s);Aw.rotation.y=a;Bp.rotation.y=b;};
+    ph(R.cw.userData.wheel,H[1],R.tw.userData.pin,H[38],-1);
+    ph(R.tw.userData.wheel,H[38],R.sw.userData.pin,H[35],1);
+
+    /* ================= the bearings ================= */
+    /* the top plate's brass bushes (Messinglager, 05 08 01: WN-301 at 1, WN-300 at 35 and 38; the coloured section names them): pressed into its holes reamed 4.59 +0.012
+       (05 09 01), flush with both faces (05 08 01's Schnitt A-B draws the one at 35 so), the oil sink in the outer face (Wempe 3955, 12_…oben). Bores: the pivots' and 0.01-0.02
+       (a close running fit, "Lagerstellen: Enger Laufsitz", 05 05_1): WN-301 Ø 1.21 for the centre's 1.19, WN-300 Ø 0.86 for the intermediate's 0.825 and the seconds' 0.81
+       (one standard bush for both, opened to the larger: estimated). The WN sheets aren't in the set: their sizes beyond the hole are estimated */
+    const rJ=4.596/2,sk={f:-1,rs:2.0,ds:1.2};
+    tag(mesh(P.topPlate,bushGeo(rJ,1.21/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
+    tag(mesh(P.topPlate,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');
+    tag(mesh(P.topPlate,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');
+    /* the pillar plate's bush for the centre arbor's journal (WN-302, 05 08 02 Schnitt A-B; Messinglager in the coloured section): in hole 1 (4.59 +0.012), its inner face
+       0.1 +0.02 under the plate's (drawn 0.1), flush with the dial face, a cone sink there round the journal (05 08 02 draws a cup on the dial side); bore Ø 2.205 for the
+       journal's 2.2 e8 (estimated, H7) */
+    tag(mesh(P.pillarPlate,bushGeo(rJ,2.205/2,0.1,PPT,{f:1,cone:1,rs:1.6}),M.brass2,H[1][0],0,H[1][1]),'WN-302');
+    /* the intermediate bridge's bush WN-300 at 38 (05 08 04): in its Ø 4.3 hole, its face 0.71 (0.7 +0.02) in from the plate side under the 0.7 sink (frame.js), through to the
+       dial face, a cup there (the section draws it; Wempe 3955's dial side, 3_Wempe_3955_uZ.jpg, shows it Ø 3.7 across, 17.4 px/mm by the bridge's screws 34.13 apart:
+       drawn Ø 3.7, 0.9 deep, estimated); bore Ø 0.86 as the top plate's */
+    tag(mesh(P.intermediateBridge,bushGeo(4.3/2,0.86/2,PPT+0.71,ZB,{f:1,rs:1.85,ds:0.9}),M.brass2,H[38][0],0,H[38][1]),'WN-300.zb');
+    /* the seconds wheel's jewel at 35 in the bridge: the setting 05 05 04-2 (Fassung) in the bridge's Ø 5.2 hole from the floor of its 1.7 sink (frame.js) to the dial face,
+       burnished over the jewel 05 05 04-1 (Lagerstein f. Sek.), whose face is 1.75 in (the sheet's 1.7); under it a floor with the post's hole Ø 1.1, opening in a cone to
+       Ø 3.8 at the dial face (Wempe 3955's dial side shows a dark mouth Ø 3.8 in a thin brass ring there, 3_Wempe_3955_uZ.jpg at 17.4 px/mm; its depth estimated). The jewel Ø 3.6 × 1.1, scaled on the coloured section (9.4 px/mm; a pictorial section, so estimated), its hole Ø 0.78 olive for the pivot's 0.75 at the jewel; the
+       setting's sheets aren't in the set: estimated */
+    {const y0=PPT+1.7,yj=PPT+1.75,hj=1.1,rjw=3.6/2;
+      tag(mesh(P.intermediateBridge,ringT([[1.65,y0],[5.2/2,y0],[5.2/2,ZB],[1.9,ZB],[0.55,ZB-0.75],[0.55,yj+hj],[rjw,yj+hj],[rjw,yj],[1.65,yj]]),M.brass2,H[35][0],0,H[35][1]),'050504-2');
+      tag(mesh(P.intermediateBridge,stoneGeo(rjw,0.78/2,hj,'olive'),M.ruby,H[35][0],yj+hj/2,H[35][1]),'050504-1');}
+    /* the pillar plate's bushes for the motion work's studs (05 08 02 Schnitt A-B): 05 08 02-2 pressed into hole 2 (3.50 +0.012) from the inner face ("Futter an dieser Seite
+       eindrücken"), through the plate, and the stud (Anrichtstift lg, 05 02 00-6, in the coloured section) pressed in it, 12.3 long from the plate's inner face; the short stud
+       (Anrichtstift kurz, 05 02 00-7) at hole 19 (3.50 +0.012), standing 6.8 out of the dial face, in a bush drawn dashed beside it, taken as a second 05 08 02-2 (estimated).
+       The studs Ø 1.3, scaled on 05 08 02 at 2:1 (estimated), their ends chamfered */
+    for(const[k,len,id]of/** @type {[number,number,string][]} */([[2,12.3,'050200-6'],[19,PPT+6.8,'050200-7']])){
+      tag(mesh(P.pillarPlate,bushGeo(3.506/2,1.3/2,0,PPT),M.brass2,H[k][0],0,H[k][1]),'050802-2');
+      tag(mesh(P.pillarPlate,turned([[0,0],[0.55,0],[0.65,0.1],[0.65,len-0.15],[0.5,len],[0,len]],24),M.steel,H[k][0],0,H[k][1]),id);}
+
+    /* update(s): the escape wheel's place s.E (teeth) turns the train. The escape wheel (15 teeth) and its pinion (10 leaves) drive the seconds wheel (80): the seconds arbor
+       turns once in 15 × 8 = 120 teeth, a minute; the seconds pinion (10) is driven by the intermediate wheel (80): 1/8 of the seconds'; the intermediate pinion (12) by the
+       centre wheel (90): 12/90 of that, so the centre turns once in 7,200 teeth, an hour. Each mesh turns the other way: the centre clockwise from the dial (rotation.y
+       falling), the intermediate anticlockwise, the seconds clockwise, the escape wheel anticlockwise (the Hamilton's directions, movement.js). Returns the angles (rotation.y
+       in the movement's frame) of the centre (c), intermediate (t) and seconds (s) arbors: c for the motion work and the fusee, s for the seconds hand */
+    const update=(/** @type {{E:number}} */s)=>{const a=TAU*s.E/120;R.sw.rotation.y=-a;R.tw.rotation.y=a/8;R.cw.rotation.y=-a/60;return{c:-a/60,t:a/8,s:-a};};
+    return{cw:R.cw,tw:R.tw,sw:R.sw,update};}
+  return{build,A};
+})();
+
+</script>
+<script>
+// @ts-check
 /* movement.js: the Wempe Einheits-Chronometer's movement, built from the works drawings' numbers (dims.js, WD) by its groups' builders, each in its own file: the frame
-   (js/frame.js, WFRAME, P1a, 14 October 2026); the train, fusee and barrel, escapement and balance, motion work come in later phases, each a file of its own.
+   (js/frame.js, WFRAME, P1a, 14 October 2026), the going train (js/train.js, WTRAIN, P1b); the fusee and barrel, escapement and balance, motion work come in later phases,
+   each a file of its own.
    Part of the Wempe model (three.js r128). Units mm; the movement frame as the Hamilton's: dial side +y, 12 o'clock -z, 3 o'clock +x (dims.js: x = the sheets' W, z = their S).
    The pillar plate's inner face at y 0, its dial face at +PP_T; the top plate's inner face at -INNER, its outer face (the train side) at -INNER-TOP_T.
    Everything is built inside buildWempe, so none of its names reach the page's globals: core.js reads the Hamilton's (L, DIAL_R, SEC_L, UDA, UD_SWEEP, MSHAPE) lazily.
@@ -2045,24 +2227,26 @@ const ESC={AMIN:0,state:p=>({th:0,lift:0,psDef:0,prog:0,p})};
 function buildWempe(M){
   const mv=new THREE.Group(),K=KIT.parts(mv,M);
   const FR=WFRAME.build(mv,M,K);   /* the frame: plates, pillars, ring, bridges, cocks, bushes, their screws and pins */
+  const TR=WTRAIN.build(mv,M,K);   /* the going train: the centre, intermediate and seconds arbors, their bushes and the seconds jewel */
   K.done();
-  /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}); the frame has nothing that moves */
-  mv.userData.update=(/** @type {any} */s)=>{};
-  mv.userData.R={fr:FR};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton */
+  /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
+     centre arbor's, which the motion work and the fusee follow, ang.s the seconds arbor's, which carries the seconds hand) */
+  mv.userData.update=(/** @type {any} */s)=>{const ang=TR.update(s);mv.userData.ang=ang;};
+  mv.userData.R={fr:FR,tr:TR};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton; R.tr the train's arbors (their wheel and pinion meshes, for the other groups' tooth phasing) */
   return mv;
 }
 
 </script>
 <script>
 /* app.js: the Wempe Einheits-Chronometer's page: its parts' cards, views, sections, labels and link state, given to the shared viewer (../shared/viewer.js, VIEWER).
-   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js). */
+   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js). */
 
 /* ================= parts registry ================= */
 /* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
-const PG=['Frame'];
+const PG=['Frame','Going train'];
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
@@ -2093,15 +2277,28 @@ const PARTS={
     d:'A block screwed and pinned under the top plate, inside the frame, whose lug holds the balance staff’s lower jewel setting about 10 mm under the plate: the balance swings above the plate, its escapement under it.',
     sp:'Drawing 05 08 00-2 (revised 2.12.46) · Ms 58 profile · bar 20 × 8 × 10, lug 3.22 thick · setting seat Ø 5.2 H7'},
   intermediateBridge:{t:'Intermediate bridge (Zwischenbrücke)',g:0,src:'scaled',sn:'Its holes’ places from the plate’s table; its outline and thickness scaled on its assembly sheet',figs:'05 08_10, 05 08_32.2',c:'#d6c08a',pri:1,
-    d:'A straight bridge on the pillar plate’s dial side, across the opening for the intermediate wheel: it carries that wheel’s lower jewel and the seconds wheel’s lower setting.',
-    sp:'Drawing 05 08 04 (the bridge 05 08 04-1 not in the set) · about 45.5 × 10 × 3.8 · screws 34.13 apart'}};
+    d:'A straight bridge on the pillar plate’s dial side, across the opening for the intermediate wheel: it carries that wheel’s lower bearing, a brass bush, and the seconds wheel’s lower jewel in its setting.',
+    sp:'Drawing 05 08 04 (the bridge 05 08 04-1 not in the set) · about 45.5 × 10 × 3.8 · screws 34.13 apart'},
+  centreWheel:{t:'Centre wheel (Minutenrad)',g:1,src:'drawing',sn:'Every size from its sheets; its pinion’s and the wheel’s teeth from their tables, on the cycloidal form',figs:'05 05_1, 05 05_8, 05 05_9, 05 05_10',c:'#e3b75a',pri:3,
+    d:'The centre arbor, in the middle of the movement: it turns once an hour and carries the minute hand. Its pinion, driven by the fusee wheel, turns it; its wheel drives the intermediate pinion. It runs in a brass bush in the top plate and, by a long journal, in another in the pillar plate, through which its shank goes on to the dial side for the cannon tube and the hands. The wheel is riveted on the pinion’s seat.',
+    sp:'Drawing 05 05 03 (wheel 05 05 03-1, pinion 05 05 03-2) · wheel z 90, m 0.355, tip Ø 33.10, Ms 58 spring-hard brass 1.5, rim 1.3 · pinion z 14, m 0.4356, tip Ø 6.79, steel, hardened and tempered · journal Ø 2.2 e8 · pivot Ø 1.2'},
+  intermediateWheel:{t:'Intermediate wheel (Zwischenrad)',g:1,src:'drawing',sn:'Every size from its sheets; the pinion’s 12 leaves from the centre distance; its tip and root scaled and estimated',figs:'05 05_1, 05 05_5, 05 05_6, 05 05_7',c:'#d9a94c',pri:2,
+    d:'The third arbor: the centre wheel drives its pinion and its wheel drives the seconds pinion, so it turns once in eight minutes. Its wheel runs low, in the opening milled in the pillar plate, and its lower pivot in a brass bush in the intermediate bridge on the dial side; its upper pivot in a brass bush in the top plate.',
+    sp:'Drawing 05 05 02 (wheel 05 05 02-1, pinion 05 05 02-2) · wheel z 80, m 0.280, tip Ø 23.33, Ms 58 spring-hard brass 1.2, rim 1.0 · pinion z 12 (from the centre distance 18.12), steel · pivots Ø 0.85'},
+  secondsWheel:{t:'Seconds wheel (Sekundenrad)',g:1,src:'drawing',sn:'Every size from its sheets; the pinion’s 10 leaves from the centre distance; its tip and root scaled and estimated',figs:'05 05_1, 05 05_2, 05 05_3, 05 05_4',c:'#c99a3e',pri:2,
+    d:'The fourth arbor, which turns once a minute: the intermediate wheel drives its pinion and its wheel drives the escape pinion. Its lower pivot runs in a jewel set in the intermediate bridge and goes on through the dial as the post for the seconds hand; its upper pivot runs in a brass bush in the top plate. Its hub stands 0.2 proud toward the pinion, so its rim clears the intermediate pinion’s end.',
+    sp:'Drawing 05 05 01 (wheel 05 05 01-1, pinion 05 05 01-2, revised 24.3.48) · wheel z 80, m 0.263, tip Ø 21.9, Ms 58 spring-hard brass 1.2, rim 1.0 · pinion z 10 (from the centre distance 12.63), steel · pivots Ø 0.82 and 0.76'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
 const PIECES={
   pillarPlate:[{k:'plate',t:'Pillar plate',h:'050802-1',d:PARTS.pillarPlate.d,sp:PARTS.pillarPlate.sp},
-    {k:'screws',t:'Pillar screws, dial side',h:'WN-56',d:'Three pillar screws (WN-56) from the dial side into the pillars’ tapped ends, brass as Wempe 3955’s.',sp:'M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'The thread from the pillar’s sheet; the heads from the coloured section and Wempe 3955’s photograph',figs:'001'}],
+    {k:'screws',t:'Pillar screws, dial side',h:'WN-56',d:'Three pillar screws (WN-56) from the dial side into the pillars’ tapped ends, brass as Wempe 3955’s.',sp:'M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'The thread from the pillar’s sheet; the heads from the coloured section and Wempe 3955’s photograph',figs:'001'},
+    {k:'bush',t:'Centre arbor’s bush (Messinglager WN-302)',h:'WN-302',d:'A brass bush pressed into the pillar plate, in which the centre arbor’s long journal turns; its inner face is set 0.1 under the plate’s, and the collar at the end of the centre wheel’s seat bears on it.',sp:'In the plate’s hole Ø 4.59 · bore Ø 2.2 · set 0.1 under the inner face',src:'est',sn:'Its place and set-down from the plate’s assembly sheet; its bore and sink estimated (the standard part’s sheet isn’t in the set)',figs:'05 08_32.2'},
+    {k:'studBush',t:'Stud bushes (Futter)',h:'050802-2',d:'Two brass bushes pressed into the pillar plate from its inner face, holding the studs on which the up-and-down wheel and the motion work’s change wheel turn on the dial side.',sp:'Drawing 05 08 02-2 · in the holes Ø 3.50 · bore Ø 1.3',src:'est',sn:'The one at the up-and-down’s hole from the plate’s assembly sheet; the second, at the change wheel’s, drawn dashed there: estimated; the bore scaled',figs:'05 08_32.2'},
+    {k:'studs',t:'Studs (Anrichtstifte)',h:'050200-6 050200-7',d:'Two steel studs pressed into the bushes: the long one, at 12 o’clock, carries the up-and-down wheel; the short one the change wheel of the motion work.',sp:'Drawings 05 02 00-6, -7 · Ø 1.3 · the long 12.3 from the plate’s inner face, the short 6.8 out of its dial face',src:'est',sn:'Their lengths from the plate’s assembly sheet; their diameter scaled on it',figs:'05 08_32.2'}],
   topPlate:[{k:'plate',t:'Top plate',h:'050901',d:PARTS.topPlate.d,sp:PARTS.topPlate.sp},
-    {k:'screws',t:'Pillar screws, train side',h:'WN-57',d:'Three pillar screws (WN-57) from the top plate’s outer face into the pillars’ tapped ends, brass as Wempe 3955’s.',sp:'M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'The thread from the pillar’s sheet; the heads from the coloured section and Wempe 3955’s photograph',figs:'001'}],
+    {k:'screws',t:'Pillar screws, train side',h:'WN-57',d:'Three pillar screws (WN-57) from the top plate’s outer face into the pillars’ tapped ends, brass as Wempe 3955’s.',sp:'M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'The thread from the pillar’s sheet; the heads from the coloured section and Wempe 3955’s photograph',figs:'001'},
+    {k:'bushes',t:'Train bushes (Messinglager WN-300, WN-301)',h:'WN-301 WN-300.t38 WN-300.t35',d:'Three brass bushes pressed into the top plate, flush with both faces, in which the centre, intermediate and seconds arbors’ upper pivots run, each with an oil sink in its outer face (the 6MX ran the seconds and intermediate wheels in jewels in chatons instead).',sp:'In the plate’s holes Ø 4.59 · bores Ø 1.21 (centre) and 0.86',src:'est',sn:'Their places from the plate’s assembly sheet and the coloured section; their sinks from Wempe 3955’s plate; their bores estimated (the standard parts’ sheets aren’t in the set)',figs:'05 08_2'}],
   ring:[{k:'ring',t:'Movement ring',h:'050800-3',d:PARTS.ring.d,sp:PARTS.ring.sp},
     {k:'screws',t:'Movement ring screws',h:'WN-rs',d:'Three screws in the ring whose heads bear on the pillar plate’s rim, holding it in its seat (their WN number not read).',sp:'M2.6 on Ø 89 · heads Ø 6.2 × 2.25',src:'est',sn:'The thread and places from the ring’s sheet and Wempe 3955; the heads and length from the coloured section',figs:'05 08_7'},
     {k:'pin',t:'Plate’s pin',h:'WN-201',d:'A pin (WN-201) Ø 1 drilled in across the joint of the plate and the ring at assembly, which sets the movement’s turn in the ring.',sp:'Ø 1',src:'est',sn:'Its place and size from the ring’s sheet; its length from the coloured section, shortened to stay in the ring',figs:'05 08_7'}],
@@ -2120,7 +2317,16 @@ const PIECES={
     {k:'pins',t:'Lower cock steady pins',h:'WN-203.lc',d:PIN,sp:'Ø 1.6, 3 long',src:'drawing',sn:'Their places from the cock’s table; their length as the upper cock’s',figs:'05 08_4'}],
   intermediateBridge:[{k:'bridge',t:'Intermediate bridge',h:'050804-1',d:PARTS.intermediateBridge.d,sp:PARTS.intermediateBridge.sp},
     {k:'screws',t:'Intermediate bridge screws',h:'WN-52',d:'Two screws from the dial side, their heads sunk in the bridge, into the pillar plate.',sp:'WN-52 · M2.6',src:'est',sn:'Sized on the assembly sheet and Wempe 3955',figs:'05 08_10, 05 08_32.2'},
-    {k:'pins',t:'Intermediate bridge steady pins',h:'WN-203.zb',d:PIN+' WN-203.',sp:'Ø 1.6, 1.3 proud',src:'drawing',sn:'Their places from the plate’s table; their protrusion from the bridge’s sheet',figs:'05 08_10'}]};
+    {k:'pins',t:'Intermediate bridge steady pins',h:'WN-203.zb',d:PIN+' WN-203.',sp:'Ø 1.6, 1.3 proud',src:'drawing',sn:'Their places from the plate’s table; their protrusion from the bridge’s sheet',figs:'05 08_10'},
+    {k:'bush',t:'Intermediate wheel’s lower bush (Messinglager WN-300)',h:'WN-300.zb',d:'A brass bush pressed into the bridge, its face 0.7 in from the plate’s side, in which the intermediate arbor’s lower pivot runs; an oil sink in its dial-side face.',sp:'In the bridge’s hole Ø 4.3 · bore Ø 0.86 · set 0.7 in',src:'est',sn:'Its place and set-down from the bridge’s assembly sheet; its bore and sink estimated',figs:'05 08_10'},
+    {k:'setting',t:'Seconds jewel’s setting (Fassung)',h:'050504-2',d:'The brass setting of the seconds arbor’s lower jewel, pressed into the bridge; under the jewel a floor with a hole for the seconds post.',sp:'Drawing 05 05 04-2 (not in the set) · Ø 5.2',src:'est',sn:'Its place and the jewel’s depth from the bridge’s assembly sheet; its form from the coloured section',figs:'05 08_10'},
+    {k:'jewel',t:'Seconds jewel (Lagerstein f. Sek.)',h:'050504-1',d:'The seconds arbor’s lower jewel, the train’s only one in the German original: its face 1.7 in from the bridge’s plate side, so the arbor’s shoulder takes its endshake on it.',sp:'Drawing 05 05 04-1 (not in the set) · about Ø 3.6 × 1.1 · hole Ø 0.78',src:'est',sn:'Its depth from the bridge’s assembly sheet; its size scaled on the coloured section',figs:'05 08_10'}],
+  centreWheel:[{k:'arbor',t:'Centre pinion and arbor (Minutentrieb)',h:'050503-2',d:'The centre arbor’s steel pinion and arbor, one piece: the upper pivot, the 14-leaf pinion the fusee wheel drives, the seat the wheel is riveted on, the collar that bears on the pillar plate’s bush, the journal that runs in it, and the tapered shank for the cannon tube.',sp:'Drawing 05 05 03-2 · Präz. Rundstahl 7.2, hardened and tempered · z 14, m 0.4356, tip Ø 6.79, root Ø 4.24, 4 long · journal Ø 2.2 e8 · shank Ø 1.8 tapering 1:80'},
+    {k:'wheel',t:'Centre wheel (Minutenrad)',h:'050503-1',d:'The centre wheel, five-spoked, riveted on the pinion’s seat; it drives the intermediate pinion. Its hub keeps the sheet’s thickness and stands 0.2 proud of the rim on the dial side.',sp:'Drawing 05 05 03-1 · z 90, m 0.355, tip Ø 33.10, root Ø 30.86 · rim 1.3, hub Ø 10.6, spokes 1.7'}],
+  intermediateWheel:[{k:'arbor',t:'Intermediate pinion and arbor (Zwischentrieb)',h:'050502-2',d:'The intermediate arbor’s steel pinion and arbor, one piece: 12 leaves, driven by the centre wheel, and the seat its wheel is riveted on, between its two pivots.',sp:'Drawing 05 05 02-2 · Präz. Rundstahl 5.2 · z 12, tip Ø 5.0, 4.6 long · 23.05 between its shoulders · pivots Ø 0.85',src:'scaled',sn:'Its lengths and diameters from its sheet; its leaf count from the centre distance; the tip scaled on its sheet and the root estimated'},
+    {k:'wheel',t:'Intermediate wheel (Zwischenrad)',h:'050502-1',d:'The intermediate wheel, five-spoked, riveted on the pinion’s seat; it drives the seconds pinion. Its hub stands 0.2 proud on the dial side.',sp:'Drawing 05 05 02-1 · z 80, m 0.280, tip Ø 23.33, root Ø 21.57 · rim 1.0, hub Ø 7.5, spokes 1.3'}],
+  secondsWheel:[{k:'arbor',t:'Seconds pinion and arbor (Sekundentrieb)',h:'050501-2',d:'The seconds arbor’s steel pinion and arbor, one piece: its 10 leaves driven by the intermediate wheel, the seat its wheel is riveted on, and its lower pivot, which runs on as the post for the seconds hand.',sp:'Drawing 05 05 01-2 (revised 24.3.48) · Präz. Rundstahl 3.5 · z 10, tip Ø 3.4, 7 long · 24.1 between its shoulders · pivots Ø 0.82 and 0.76, the post to Ø 0.65',src:'scaled',sn:'Its lengths and diameters from its sheet; its leaf count from the centre distance; the tip scaled on its sheet and the root estimated'},
+    {k:'wheel',t:'Seconds wheel (Sekundenrad)',h:'050501-1',d:'The seconds wheel, five-spoked, riveted on the pinion’s seat; it drives the escape pinion. Its hub stands 0.2 proud toward the pinion.',sp:'Drawing 05 05 01-1 · z 80, m 0.263, tip Ø 21.9, root Ø 20.23 · rim 1.0, hub Ø 6.5, spokes 1.3'}]};
 
 /* ================= views ================= */
 /* the camera's turn (yaw), height (pitch, rad) and distance, aimed at a point in the movement's frame. The movement stands train side up (the scene's group turns it over) */
@@ -2134,7 +2340,7 @@ const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate fro
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
-(function(){let mv=null;
+(function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
   const V=VIEWER.start({name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
     build:M=>{const root=new THREE.Group();mv=buildWempe(M);mv.rotation.x=Math.PI;root.add(mv);return{root,mv};},   /* the movement train side up */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
@@ -2148,8 +2354,15 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Upper balance cock','Unruhkloben oben, 05 08 03-1','upperCock',pw(P.upperCock,H[9][0],TT-15,H[9][1]));
       add('Lower balance cock','Unruhkloben unten, 05 08 00-2','lowerCock',pw(P.lowerCock,H[36][0],TI+10,H[36][1]));
       add('Dust bush','Staubfutter, 05 08 01-3','dustBush',pw(P.dustBush,H[10][0]-6.55,TT-12,H[10][1]));
-      add('Intermediate bridge','Zwischenbrücke, 05 08 04','intermediateBridge',pw(P.intermediateBridge,H[38][0],WD.PP_T+3.8,H[38][1]));},
-    hud:st=>`The frame, from its drawings${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
+      add('Intermediate bridge','Zwischenbrücke, 05 08 04','intermediateBridge',pw(P.intermediateBridge,H[38][0],WD.PP_T+3.8,H[38][1]));
+      add('Centre wheel','Minutenrad, 05 05 03','centreWheel',pw(P.centreWheel,H[1][0]+15,-1.1,H[1][1]-6));
+      add('Intermediate wheel','Zwischenrad, 05 05 02','intermediateWheel',pw(P.intermediateWheel,H[38][0]+8,0.7,H[38][1]+7));
+      add('Seconds wheel','Sekundenrad, 05 05 01','secondsWheel',pw(P.secondsWheel,H[35][0]-8,-4.8,H[35][1]+6));},
+    /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escape wheel steps a tooth a beat (0.5 s) plus the
+       escapement's progress (ESC.state: P0's stand-in gives none), and E turns the train (movement.js, update) */
+    tick:(dt,now,st)=>{if(!mv)return[];tSim+=dt*st.speed;const y=tSim/0.5,s=ESC.state(y-Math.floor(y)),E=Math.floor(y)+s.prog;
+      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n:2.5,winding:false});return[E];},
+    hud:st=>`The frame and going train, from their drawings${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
   if(V&&/[?&]qa\b/.test(location.search))window.__V=V;   /* the viewer's state, for the tools */
 })();
 

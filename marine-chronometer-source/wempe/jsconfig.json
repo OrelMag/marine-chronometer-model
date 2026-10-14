@@ -2,5 +2,5 @@
 // The scripts in the page's load order; those that start with // @ts-check are checked (core.js, kit.js, dims.js, movement.js; viewer.js and app.js not yet). js/globals.d.ts declares what TypeScript can't see.
 {
   "compilerOptions": {"allowJs": true, "checkJs": false, "noEmit": true, "target": "ES2022", "lib": ["ES2022", "DOM", "DOM.Iterable"], "strict": false, "skipLibCheck": true},
-  "files": ["js/globals.d.ts", "../chronometer-working-model/js/core.js", "../shared/kit.js", "../shared/viewer.js", "js/dims.js", "js/frame.js", "js/movement.js", "js/app.js"]
+  "files": ["js/globals.d.ts", "../chronometer-working-model/js/core.js", "../shared/kit.js", "../shared/viewer.js", "js/dims.js", "js/frame.js", "js/train.js", "js/movement.js", "js/app.js"]
 }
