@@ -4,6 +4,8 @@
 // movement shows. Needs only Node.js and the two JSON files (swing.json from swing.py, acoustic_stretches.json from acoustic.py --every), so it runs without
 // the video:
 //   node startup.js            (about 8 minutes: 8 run-downs x 13 drives, each start integrated for 70 s; it reports, never fails)
+//   node startup.js --chase    (a few seconds: the escape wheel's chase onto the impulse jewel heard through the start, and the build-up fitted with the
+//                               escapement's work against the swing as the model's, the clicks' and flat; below)
 //   node startup.js --split    (the same with the balance's damping in its parts, physics.js's shares at 255 deg and the model's TF: the air (its range's
 //                               middle), the endstone's constant friction (measured, Jd2c3x8VKsE), the rest viscous; dynamics.js's o.split: TF is then the
 //                               run-down at 255 deg. The air 0.35 and the endstone 0.51 until 12 October 2026, the endstone's friction worked out then)
@@ -21,6 +23,33 @@ const P=require('./physics.js'),gm=a=>Math.sqrt(a[0]*a[1]),TFM=P.TFm,SPLIT=proce
 if(SPLIT)console.log(`  the damping split at 255 deg (physics.js, the model's TF ${TFM} s): air ${SPLIT[0].toFixed(2)}, the endstone's constant friction ${SPLIT[1].toFixed(2)}, the rest viscous ${SPLIT[2].toFixed(2)}`);
 const run=(s,TF,A0,T=70)=>{const a=sim({mode:'phys',T,from:T-1,s,TF,A:A0,split:SPLIT}).amps;return t=>{const k=Math.round(t/0.25),w=a.slice(Math.max(0,k-2),k+2);return w.reduce((x,y)=>x+y,0)/w.length/D;};};
 const rms=(m,pts)=>Math.sqrt(pts.reduce((q,[t,A])=>q+(m(t-T0)-A)**2,0)/pts.length);
+/* --chase (14 October 2026). The sound's stretches through the start (acoustic_stretches.json: the first click, the strike, the lock) read against the video's swing,
+   not the model's timing: the first click taken as the discharge jewel meeting the trip spring (makeEsc's contact), the balance moving as A sin(4πt) through
+   its centre, each interval turns into the balance's angle at the strike and the lock. Against makeEsc's landing (impulse(): its wheel let go from rest
+   chases the jewel) with the wheel's acceleration scaled. Then the averaged build-up law d(A²)/dt = c w(A) - (2/TF) A², the escapement's work w falling
+   linearly from 60° to 255° by the model's ratio (impulse()'s E), the clicks' (the model's landing moved as the clicks move it: about a third) and none,
+   TF and the steady swing free, and TF held at the model's */
+if(process.argv.includes('--chase')){const E=require('./escapement.js').build().ESC,M=E.measure(),w=E.run.cl.w,W0=4*Math.PI,rows=[];
+  const S2=JSON.parse(fs.readFileSync(path.join(__dirname,'acoustic_stretches.json'),'utf8').replace(/\bNaN\b/g,'null')).recordings.We1dLNXiBj0.stretches;
+  const vid=(t,A0,G)=>{let i=At.findIndex(p=>p[0]>=t);if(i<0)return null;if(i===0)i=1;const[p,q]=[At[i-1],At[i]];return A0+(p[1]+(q[1]-p[1])*(t-p[0])/(q[0]-p[0])-a0)*G/g0;};
+  const fwd=(A,th0,ms)=>Math.asin(Math.min(1,Math.sin(Math.asin(th0/A)+W0*ms/1000)))*A;   /* the angle reached ms after th0, A and th in degrees */
+  const land=(k,A)=>{const im=E.impulse(k,A*D,w);return im?im.land/D:NaN;};
+  for(const r of S2){const p=r.corrected.pairs,f1=p['jewel meets passing spring'];if(p.strike==null||p.lock==null||f1==null)continue;const vm=vid(r.t,a0,g0),vh=vid(r.t,...curves.high);if(vm==null)continue;
+    rows.push({t:r.t,d1:p.strike-f1,d2:p.lock-p.strike,vm,vh,sm:fwd(vm,M.contact,p.strike-f1),sh:fwd(vh,M.contact,p.strike-f1)});}
+  console.log(`  the clicks through the start, read on the video's swing (first click: the discharge jewel meeting the trip spring, ${f(M.contact,1)}°; the release ${f(M.rel,1)}°)`);
+  for(const q of rows)console.log(`    ${f(q.t)} s: the video ${f(q.vm)}° (middle) / ${f(q.vh)}° (likeliest); first click to strike ${f(q.d1,2)} ms, strike to lock ${f(q.d2,2)} ms: the strike at ${f(q.sm,1)}° / ${f(q.sh,1)}°, the model's tooth lands at ${f(land(1,q.vm),1)}° / ${f(land(1,q.vh),1)}°`);
+  const span=k=>rows[rows.length-1][k]-rows[0][k],mv=a=>land(1,a);
+  console.log(`  over ${f(span('vm'))}° of swing the strike moves ${f(span('sm'),1)}° (middle) / ${f(span('sh'),1)}° (likeliest); the model's tooth ${f(mv(rows[rows.length-1].vm)-mv(rows[0].vm),1)}°`);
+  for(const k of[1,1.5,2,4,30])console.log(`    the wheel's acceleration × ${k}: lands at ${[100,200,255,300].map(A=>`${A}°: ${f(land(k,A),1)}`).join(', ')}; rms against the clicks ${f(Math.sqrt(rows.reduce((q,r)=>q+(land(k,r.vm)-r.sm)**2,0)/rows.length),2)}° (middle)`);
+  const e=A=>E.impulse(1,A*D,w).E,rM=e(60)/e(255)-1,rC=rM*(1-span('sm')/(mv(rows[rows.length-1].vm)-mv(rows[0].vm)));
+  const law=(A0,c,TF,k)=>{const o=[];let A2=A0*A0;for(let t=0;t<=70.01;t+=0.05){o.push(Math.sqrt(A2));A2+=0.05*(c*(1+k*(255-Math.sqrt(A2))/195)-2/TF*A2);}return o;};
+  const rl=(m,pts)=>Math.sqrt(pts.reduce((q,[t,A])=>q+(m[Math.round((t-T0)/0.05)]-A)**2,0)/pts.length),cOf=(TF,Ai,k)=>2/TF*Ai*Ai/(1+k*(255-Ai)/195);
+  console.log(`  the averaged build-up, the escapement's work at 60° ${f(1+rM,2)} times that at 255° (the model's), ${f(1+rC,2)} (the clicks'), 1 (flat):`);
+  for(const[lab,k]of[['the model\'s',rM],['the clicks\'',rC],['flat',0]])for(const nm of['middle','high']){const[A0,G]=curves[nm],pts=series(A0,G);let b={r:1e9},b0={r:1e9};
+    for(let TF=40;TF<=260;TF+=2)for(let Ai=230;Ai<=340;Ai+=2){const r=rl(law(A0,cOf(TF,Ai,k),TF,k),pts);if(r<b.r)b={TF,Ai,r};}
+    for(let Ai=200;Ai<=340;Ai+=1){const r=rl(law(A0,cOf(TFM,Ai,k),TFM,k),pts);if(r<b0.r)b0={Ai,r};}
+    console.log(`    ${lab.padEnd(12)} ${nm.padEnd(6)}: TF ${b.TF} s, settling at ${b.Ai}°, rms ${f(b.r,2)}°; at the model's ${TFM} s settling at ${b0.Ai}°, rms ${f(b0.r,2)}°`);}
+  return;}
 const TFS=[...new Set([52,TFM,80,120,160,200,260,320])].sort((a,b)=>a-b),SS=[0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05];   /* to 1.05: the model runs at 1 (its calibrated torque at 12 h), which since TF 68 s (12 October 2026) a fast run-down wants */
 console.log(`  the video's start (swing.py, We1dLNXiBj0 0:55.4-2:03.4): ${At.length} points, ${f(a0)} to ${f(At[At.length-1][1])} deg on the middle reading`);
 for(const[nm,[A0,G]]of Object.entries(curves)){

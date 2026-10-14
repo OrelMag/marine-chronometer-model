@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.31.02 · 2026-10-14
+- The report on real chronometers is updated: a real Model 21's start, heard through its clicks, shows its escape wheel reaching the impulse jewel sooner than the model's at a running swing, but the slow start is its balance losing less
+- The tools' start figures follow the train's measured inertia
+
 ## 2.31.01 · 2026-10-14
 - The sustaining pawl's end is drawn filed to bear on its tooth's face, as a maker fits it, so the spring's load pulls it into the teeth
 - The escapement's timing uses the train's inertia weighed from the model's own parts (6.05 g·mm², was an estimate of 5.9)

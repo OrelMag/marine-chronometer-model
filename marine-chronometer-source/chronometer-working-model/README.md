@@ -1261,14 +1261,34 @@ can't run them).
   doesn't test the trip spring's own geometry. (4) The balance's free run-down: the
   start builds up far more slowly than the model's `TF` allows. Run in
   `dynamics.js` (`tools/startup.js`), the model's 67 s (since 14 October 2026; 68 from 12 October 2026: the
-  videos' mainspring and the endstone's friction measured) misses the video's build-up
-  by 11-12° rms at its best drive (85-100 % of the calibrated torque; 52 s, at that
-  torque, 14-17°); it fits within 3-7° only from TF about 120 s up (Q 750 and more), the
-  drive 70-85 %, within twice the best fit's rms from 200 s (160 with the damping in
-  its parts), and the fit gives no upper bound. That is past the 65-113 s the balance's
+  videos' mainspring and the endstone's friction measured; the train's measured
+  inertia since 14 October 2026) misses the video's build-up by 11.5-12.2° rms at its
+  best drive (85-100 % of the calibrated torque; 52 s 14.5-16.7°); it comes within
+  6-7° from TF 120 s (Q 750 and more, the drive 70-80 %), within twice the best fit's
+  rms (2.8°) from 160 s, and fits best at 260-320 s with 60-70 % of the drive, settling
+  at 304-320°; the fit gives no upper bound. That is past the 65-113 s the balance's
   parts give in `physics.js` (32-62 s before the endstone was measured):
   OPEN-QUESTIONS.md. The model's `TF` comes from its spring and train, not from this
   start: one movement, started by hand, and its absolute swing known to a screw hole.
+  (5) Why the start is slow (14 October 2026; `startup.js --chase`, a few seconds).
+  The clicks through the start, read on the video's swing instead of the model's
+  timing (the first click the discharge jewel meeting the trip spring, -26.8°), put
+  the strike at -8.6° at 196° of swing and about -6.5° from 217° to 252°: it moves
+  1.9° over 56° of swing. The model's tooth lands where they do up to 217° (within
+  0.4°), then later and later (-2.4° at 252°: 6.2° over the same swing): its wheel,
+  let go from rest, chases the jewel, and catches it later the faster the balance
+  runs, so a small swing gets more of the escapement's work than a running one
+  (`impulse()`: 1.34 times at 60° against 255°; moved as the clicks move, about
+  1.24). No drive or inertia makes the landing stop moving (a faster wheel lands
+  earlier at every swing, toward -20.7°, just after the release), and the train's
+  elasticity slows the chase (`traindyn.js`); what does is open. Nor is it the cause
+  of the slow start: the averaged build-up law refitted with the work falling as the
+  model's, the clicks' or not at all wants TF 156-160, 136-142 or 104-106 s (each
+  1.7-2.0° rms; the model's 67 s 5.7-10.1°), and a steady swing of 294-316°. So this
+  movement's balance loses less than the model's, and the drive that reaches it is
+  smaller (at TF 140 s the model's drive would hold it near 340°). The model keeps
+  its budget's 67 s: one movement, started once; a made chronometer's own run-down
+  is measured on the bench (`bench.js`'s run-down test).
 
 The whole of it, with the charts (hover for values; each with its data table),
 the analysis plots, the implications and the gaps, is a report:
