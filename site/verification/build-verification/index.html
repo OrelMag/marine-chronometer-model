@@ -546,7 +546,7 @@ springs, and the springs' set. What only a made chronometer settles is on the be
   the wheel is free at 0.725° of the detent (lRel 0.183 mm at the passing spring&#x27;s tip); the trip spring 7.9 × 0.06 × 0.3 mm, 5.9 N/m at its tip (Elinvar-type, 180 GPa)
   ok  the contacts are makeEsc&#x27;s, worked out apart: the detent&#x27;s lift over the whole active swing (705 points, to 0.00 µm) and the trip spring&#x27;s bending (1188 points, to 0.00 µm)
   ok  the integrator: kicked at the dead point the balance keeps −0.063 s a day, the damping&#x27;s own (−ζ²/2: −0.061; at half the steps −0.062)
-  (2 s)
+  (1 s)
   1. The model, beat by beat (its springs, the detent all but massless and dead on its stop, as makeEsc has it)
   makeEsc: the swing 255.0°, the tooth lands on the impulse jewel 18.9° after the release, the detent falls back at -12.6°, the escapement&#x27;s own rate −3.04 s a day
   in time:  the swing 255.5°, the tooth lands 18.8° after the release, the detent falls back at -12.6°, the escapement&#x27;s own rate −2.97 s a day (at half the step −2.97)
@@ -558,7 +558,7 @@ springs, and the springs' set. What only a made chronometer settles is on the be
   the drive 95 % → 111 %: the model 248° → 270°, the rate +0.32 s a day; in time 248° → 271°, +0.32 s a day (+0.142 s a day for each 10° of swing)
   ok  isochronism (the rate&#x27;s change over the manual&#x27;s range of swing) within 0.1 s a day of the model&#x27;s
   ok  and small (under 0.5 s a day for each 10° of swing): what the fusee keeps even, the escapement doesn&#x27;t undo
-  (7 s)
+  (6 s)
   2. The detent as a body: its inertia, bouncing on its stop
   the swing 253.9°, the escapement&#x27;s own rate −3.15 s a day; the tooth lands 18.6° after the release
   ok  the detent&#x27;s own inertia and bounce change little: the swing −1.1°, the rate −0.11 s a day against the model
@@ -576,12 +576,12 @@ springs, and the springs' set. What only a made chronometer settles is on the be
     the train 1.5× its inertia             246°, trips 0, back 10.30 ms before the tooth, 0 % lifted as it arrives
   ok  over all of these the detent is home before the next tooth: what brings it back is the preload Op. 78 sets, not the spring&#x27;s thickness
   with no preload at all the spring&#x27;s own stiffness still brings the detent home in time: Op. 78&#x27;s preload is for the locking&#x27;s safety against knocks (below), not for the return
-  (13 s)</pre></details>
+  (11 s)</pre></details>
 <h3><code>tools/errorbudget.js</code> <span class="small">passes</span></h3><p>A Monte Carlo of the escapement made to a maker&#x27;s tolerances, and a 60-day voyage&#x27;s error from the test card&#x27;s figures, the barometer, the oil and the sea.</p><details><summary>its output today</summary><pre>1. As made: the escapement with a maker&#x27;s tolerances (Monte Carlo, the reference torque and balance)
   1000 escapements: 81.1 % run; their swing 243-261° (5-95 %), 67 % inside the manual&#x27;s 247.5-270°; 20 % meet every adjustment figure as made
   out of the manual&#x27;s figures, as made: overall (Op. 87) 56 %, would not run 19 %, drop (Op. 97) 16 %, let-off (Op. 86) 6 %, lock (Op. 85) 1 %: the adjuster&#x27;s work (the lock-adjusting and detent-adjusting screws, Ops. 84-97, set lock and the detent&#x27;s place; the trip spring&#x27;s tip is bent to its figure)
   the escapement&#x27;s isochronism over them (averaged model): +0.10 to +0.18 s a day for each 10° of swing (5-95 %); the model&#x27;s own +0.14
-  (26 s)
+  (21 s)
   2. At sea: 60 days from a port in winter (55 °F) into the tropics (85 °F), rated over 10 days in port, the error the navigator carries
   the escapement&#x27;s isochronism in time, near 255°: +0.152 s a day for each 10° of swing (dynamics.js; 247° → 269°)
   ok  small, as the fusee and the detent escapement are meant to make it
@@ -601,7 +601,7 @@ springs, and the springs' set. What only a made chronometer settles is on the be
     the barometer                          0.15 s
     heavy weather one day in five          0.06 s
   ok  a chronometer like No. 3390 carries 1.4 s (0.3 miles of longitude) after a month at sea, well under 30 s (7½ miles): it keeps time
-  (30 s)</pre></details>
+  (25 s)</pre></details>
 
 <h2 id="limits">What only the bench can settle</h2>
 <div class="callout gap"><ul>
