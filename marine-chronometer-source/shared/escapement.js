@@ -7,7 +7,7 @@
    Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (13.16/2 mm). Layout after the manual's Fig. 90 plan view. The detent's
    lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with the passing spring's tip, and the
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
-/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number}} EscSettings
+/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,G78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number}} EscSettings
     any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
 /** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean}} EscState
     state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1; a
@@ -18,13 +18,16 @@ function makeEsc(o={}){
   /* balance motion 1-3/8 to 1-1/2 turns (manual Sec. II) -> amplitude A ~255 deg each side at the model's settings (ESC.A, the running amplitude, follows other settings: below).
      TF: the balance's free run-down (s), set so the escape wheel's torque the model is calibrated at is what the train gives (tools/physics.js A6: the fusee through the
      measured pivots and teeth, less the mainspring's own losses) and inside the decay the balance's parts allow (the same, 65-113 s with the endstone's friction measured
-     on BunnSpecial's Jd2c3x8VKsE, 12 October 2026). 68 since 12 October 2026, when the mainspring became the videos' 0.394 mm strip (its torque 0.83 of the parts list's
+     on BunnSpecial's Jd2c3x8VKsE, 12 October 2026). 67 since 14 October 2026, when Op. 78's preload lost the spring's bend over 0.005 in (W78, G78: less work unlocking, so
+     68 s left the calibrated torque 61.8 µN·m, 1.3 % under the spring's, and Q 427 over the budget's 423): 67 brings it back to 62.4 µN·m (Q 421). 68 from 12 October 2026, when the mainspring became the videos' 0.394 mm strip (its torque 0.83 of the parts list's
      0.419): the calibrated torque, 62.6 µN·m, is within 0.4 % of what that spring gives the escape
      wheel through the same train and losses as 52 s took for the old one (62.4 µN·m against 75.0: 0.611 of the fusee's torque reaching the escape wheel); 52 until then, and 34 until 11 October 2026, when the escapement's work still left out the wheel's chase and the detent's whole lift
      (tools/dynamics.js). MU: steel on sapphire. EX: the centre distance (9.40 mm; the model passes the one in its L).
      The bodies and springs, physical rather than fitted (since 11 October 2026; fD and fP, their shares of the work, were fitted before): I, the balance (g·mm², Table II);
      JW, the escape wheel and arbor (4.80 g·mm², its drawn solid: tools/physics.js) with the fourth wheel's inertia reflected through its pinion (about 1.1, estimated: tools/dynamics.js; 6.2 with 1.4 until 12 October 2026, the fourth larger at the escape arbor's old place);
-     W78, Op. 78's weight (g): hung on the locking jewel it just parts the detent spring from its stop button, so that is the spring's preload; hD, the detent spring's two
+     W78, Op. 78's weight (g), hung on the locking jewel, and G78 (mm) what it should part the detent spring from its stop button by ("approximately 0.005 in", p. 61; Fig. 88's
+     "(.005 in. clearance)"): the weight's moment is the spring's preload and its stiffness over that bend, so the preload is the weight's less the bend's (0.63 g at the jewel
+     with the drawn spring; until 14 October 2026 the whole 0.770 g, p. 61's clause missed), and a stiffer spring is set up with less preload; hD, the detent spring's two
      strips' height together (mm: 0.50 + 0.45 as movement.js draws them, estimated) and EB its modulus (GPa, hardened beryllium copper); tsH, the trip spring's depth (mm,
      estimated) and ET its modulus (GPa, Elinvar-type). ID: the detent's moment of inertia about its flexure (g·mm², its drawn pieces with the trip spring: tools/dynamics.js
      works it out from movement.js and checks this), and eS its restitution on the stop button (estimated, metal on a steel button), for its fall back after the unlocking (state).
@@ -41,8 +44,8 @@ function makeEsc(o={}){
   /* the teeth (Fig. 90, and an original wheel photographed in chronometerbook post 30): a narrow land at the tip (0.13 mm), the locking face undercut so the tip leads its root
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
-  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:68,MU:0.15,
-    I:578.5,JW:5.9,W78:0.770,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
+  const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:67,MU:0.15,
+    I:578.5,JW:5.9,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */
@@ -174,9 +177,10 @@ function makeEsc(o={}){
      beat by beat; until 11 October 2026 the wheel moved as a kinematic gear (G 3.5 times the balance's angle from release, landing 0.6° after it) and the springs' work was fitted */
   let a0=null;for(let i=0;i<NTB;i++)if(LI[i]>0){a0=TH0+i*DT;break;}                                // unlocking swing: discharge jewel meets the trip spring
   const T=0.5,W0=TAU/T,Q=Math.PI*c.TF/T,kB=c.I*1e-9*W0*W0,JR=c.JW/c.I/(W0*W0),esm=ES/1000;   /* kB: the hairspring (N·m a radian); JR: the wheel's inertia over k (s²), so its energy J v²/2 is JR v²/2 in units of k */
-  const MP=c.W78*1e-3*9.80665*Math.hypot(Jc.x-Ft.x,Jc.y-Ft.y)*esm/kB,KD=c.EB*1e9*c.hD*1e-3*((SPN[1]-SPN[0])*esm)**3/12/(SPL*esm)/kB;   /* the detent's preload and stiffness about its flexure, over k */
+  const MW=c.W78*1e-3*9.80665*Math.hypot(Jc.x-Ft.x,Jc.y-Ft.y)*esm/kB,KD=c.EB*1e9*c.hD*1e-3*((SPN[1]-SPN[0])*esm)**3/12/(SPL*esm)/kB;   /* Op. 78's weight's moment and the detent spring's stiffness about its flexure, over k */
+  const th78=c.G78/((BL-0.15)*ES),MP=MW-KD*th78;   /* Op. 78's bend: G78 at the stop button's middle, BL-0.15 along the detent from Ft (the blade's face on the button's turns away from it); the preload what the weight leaves */
   const KP=3*c.ET*1e9*(c.tsH*1e-3*(c.tsT*1e-3)**3/12)/(Math.hypot(Pt.x-Ps0.x,Pt.y-Ps0.y)*esm)**3*esm*esm/kB;   /* the trip spring at its tip, a cantilever, over k (its tip's travel in units) */
-  const CAL=['EX','A','TF','MU','I','JW','W78','hD','EB','ET','tsH'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-DEF[k])<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join();
+  const CAL=['EX','A','TF','MU','I','JW','W78','G78','hD','EB','ET','tsH'],isRef=Object.keys(o).every(k=>CAL.includes(k)||Math.abs(o[k]-DEF[k])<1e-9),RF=/** @type {any} */(makeEsc).refs||(/** @type {any} */(makeEsc).refs={}),rk=CAL.map(k=>c[k]).join();
   const PA=new Float64Array(NTB);for(let i=0;i<NTB;i++){const b=bite(TH0+i*DT);PA[i]=b>-1e8?b-t0:NaN;}   /* the wheel's angle the impulse jewel holds it at */
   const gP=i=>{const a=PA[i-1],b=PA[i+1],m=PA[i];return!isNaN(a)&&!isNaN(b)?(b-a)/(2*DT):!isNaN(b)&&!isNaN(m)?(b-m)/DT:!isNaN(a)&&!isNaN(m)?(m-a)/DT:0;};
   const iRel=Math.round((thRel-TH0)/DT);
@@ -196,7 +200,7 @@ function makeEsc(o={}){
   const R=[],Dp=[],Dk=[],Tp=[],cdr=dL*(Math.tan(DRAW)+c.MU)/(1-c.MU*Math.tan(DRAW));let rs=0;
   if(a0!==null&&released&&thOff!==null&&thPass!==null)for(let i=0;i<NTB-1;i++){const th=TH0+i*DT,m=th+DT/2;
     if(th>=a0&&th+DT<=thRel){const d=Math.min(LI[i+1],lRel)-Math.min(LI[i],lRel);if(d>0){R.push([m,d]);rs+=d;}}
-    if(th>=a0&&i+1<iOff){const d1=LI[i]/LEN,d2=LI[i+1]/LEN;if(d2!==d1){Dp.push([m,MP*(d2-d1)]);Dk.push([m,KD*(d2*d2-d1*d1)/2]);}}   /* the detent's preload and stiffness, as far as the jewel carries it */
+    if(th>=a0&&i+1<iOff){const d1=LI[i]/LEN,d2=LI[i+1]/LEN;if(d2!==d1){Dp.push([m,MW*(d2-d1)]);Dk.push([m,KD*((d2*d2-d1*d1)/2-th78*(d2-d1))]);}}   /* the detent's preload and stiffness, as far as the jewel carries it: the weight's moment, and the spring's stiffness counted from Op. 78's bend, so a spring scaled (kd) is set up by the test */
     if(i>iPass){const p1=PS[i],p2=PS[i+1];if(p1!==p2)Tp.push([m,KP*(p1*p1-p2*p2)/2]);}}   /* the trip spring bent on the return (θ falling) */
   if(rs>0)for(const r of R)r[1]*=cdr/rs;
   const sum=g=>g.reduce((s,r)=>s+r[1],0),ER=sum(R),EDp=sum(Dp),EDk=sum(Dk),ETp=sum(Tp),ok=R.length>0&&thPass!==null;
@@ -315,6 +319,6 @@ function makeEsc(o={}){
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}];}
   const wn=(s,a)=>CL?wnK(s,a,CL.w):-Infinity;   /* the work an oscillation nets the balance at drive s and swing a (units of k): tools/physics.js's budget */
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,MW,th78,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};
