@@ -2593,4 +2593,15 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **Stop-bar stepped like two bars.** Its stop end was drawn 0.7 thick against
+  the chain end's 1.5 (the chain end deepened to an estimate so the chain bears
+  on it, the stop end left at its absolute reading), a step of 0.8 that made it
+  look like two levels where Fig. 28 draws a plain bar. The frames give the
+  step as a ratio within one image: the stop end 0.8 of the chain end
+  (20:04.27, 26:23.75). Now 1.2 against 1.5. It was also four stacked
+  bands and a block for the spring's hole, whose seams drew it as pieces glued
+  together; now one solid (its side profile carried across, the ends slanted,
+  the hole blind). Keep: the stop end 0.8 of the
+  chain end (`TS` 1.2, `TC` 1.5 in `movement.js`): change them together;
+  the chain still bears on the chain end at full wind (`maintaining.py`) and
+  the stop end clears the chain (`fine.py`); the bar stays one mesh.

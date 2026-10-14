@@ -39,7 +39,8 @@ const Fst=T=>Ts(T)*1000/SR;   /* N on the stud, at its centre's radius */
 /* the manual doesn't give the bar's or the stud's temper: the build hardens and tempers both (strength.js's range), and what mild steel would take is said */
 {const T=TH,F=Fst(T),a=TSTOP,s=6*F*a/(TS*SBW**2)*MPa,Tq=y=>T0+y*TS*SBW**2/(6*a)*SR/1000;
   line(out.forward,`stop-bar's stop end (${SBW} wide, ${TS} thick, ${TSTOP} out of its slot)`,`${f(F,1)} N`,s,STEEL_Y,'hardened and tempered steel',Tq(STEEL_Y[0]));
-  say(`    left soft (mild steel, yield ${STEEL_Y_SOFT.join('-')}), it would bend at ${f(Tq(STEEL_Y_SOFT[0]),2)} N·m on the key, a strong hand's: harden and temper it`);out.softBar=Tq(STEEL_Y_SOFT[0]);}
+  const Tb=Tq(STEEL_Y_SOFT[0]);out.softBar=Tb;out.softBarWhy=Tb<TH?"a strong hand's":Tb<1.5*TH?"under half as much again as a strong hand's (a gloved hand or a longer bow)":"past half as much again as a strong hand's";
+  say(`    left soft (mild steel, yield ${STEEL_Y_SOFT.join('-')}), it would bend at ${f(Tb,2)} N·m on the key, ${out.softBarWhy}${Tb<1.5*TH?': harden and temper it':''}`);}
 /* the stud: a cantilever from the bridge's face to where the bar meets it (the bar's middle height, yS less half its thickness), σ = 32 F L / π d³; the thread
    (M1.6, its core 1.17) holding the moment against the stud's face on the bridge, the face's edge the fulcrum: tension M / (0.8 r) through the core, its pull-out
    shear on the brass threads over 2 mm */
