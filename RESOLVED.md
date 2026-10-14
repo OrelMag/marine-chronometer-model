@@ -1691,7 +1691,6 @@ Contents:
   way between two of its edges, not through a camera scaled by an uncertain
   bore. `2394368`
 
-
 ## Setup, case and gimbals
 
 - **The setup ratchet's teeth 0.72 deep with faces leaning back** (OPEN-QUESTIONS.md). Measured on the wheel held loose at KLUwI2UUCMQ 38:25.8 and 38:26.0
