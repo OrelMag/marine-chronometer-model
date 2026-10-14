@@ -1094,6 +1094,18 @@ Contents:
   weaker than the drive; `R.ssF` = `SPU` (1 - d / `SMAX`); app.js, essay.js,
   maintaining.py and montecarlo.js take the push and travel from movement.js. `d43106a`
 
+- **The sustaining pawl, as traced, was pushed out by its load.** Its end
+  face (KLUwI2UUCMQ 36:15) lay across the next tooth's tip, 42.7° off the
+  locking face, so the tooth's tip corner met it and the load's line ran
+  outside the pivot: held only by friction above μ 0.19, more than oil gives.
+  The end is now drawn fitted, as a maker stones it: cut along the tooth's face
+  through its tip corner with 4° of relief above it, so the corner bears on the
+  face 0.38 mm into the teeth and the load draws it in at 36°
+  (`fitEnd`, `SPF`). Seated from where it was, the filed point could stop on
+  the tooth it rode over when the ratchet comes back a tooth in one frame, so
+  while it holds it is seated afresh. Keep: the pawl's end fitted; it holds
+  0.38 mm deep at every hold (`maintaining.py`). `ee7143d`
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the

@@ -24,7 +24,7 @@ function makeEsc(o={}){
      wheel through the same train and losses as 52 s took for the old one (62.4 µN·m against 75.0: 0.611 of the fusee's torque reaching the escape wheel); 52 until then, and 34 until 11 October 2026, when the escapement's work still left out the wheel's chase and the detent's whole lift
      (tools/dynamics.js). MU: steel on sapphire. EX: the centre distance (9.40 mm; the model passes the one in its L).
      The bodies and springs, physical rather than fitted (since 11 October 2026; fD and fP, their shares of the work, were fitted before): I, the balance (g·mm², Table II);
-     JW, the escape wheel and arbor (4.80 g·mm², its drawn solid: tools/physics.js) with the fourth wheel's inertia reflected through its pinion (about 1.1, estimated: tools/dynamics.js; 6.2 with 1.4 until 12 October 2026, the fourth larger at the escape arbor's old place);
+     JW, the train's inertia at the escape wheel: since 14 October 2026 every arbor weighed on its drawn solids (tools/mechanisms.json, summed by tools/dynamics.js and traindyn.js: the escape wheel, pinion and arbor 5.22 g·mm², the fourth wheel and seconds hand reflected 0.81, the rest 0.02); 5.9 before, the wheel's 4.80 and the fourth's 1.1 estimated (6.2 with 1.4 until 12 October 2026);
      W78, Op. 78's weight (g), hung on the locking jewel, and G78 (mm) what it should part the detent spring from its stop button by ("approximately 0.005 in", p. 61; Fig. 88's
      "(.005 in. clearance)"): the weight's moment is the spring's preload and its stiffness over that bend, so the preload is the weight's less the bend's (0.63 g at the jewel
      with the drawn spring; until 14 October 2026 the whole 0.770 g, p. 61's clause missed), and a stiffer spring is set up with less preload; hD, the detent spring's two
@@ -45,7 +45,7 @@ function makeEsc(o={}){
      (U: the root trails the tip by that fraction of a pitch), a hollow back falling to the root circle (r0: 5.5 mm) over B of a pitch and meeting it tangentially
      (traced from Fig. 90: depth below the tip 1-(1-f)^1.6 at f of the back's length). tsT: the trip spring's thickness, a flat Elinvar strip (mm) */
   const DEF={EX:-9.3997/ES,A:255,rRoll:0.48,rp:0.48,rT:0.2894,rd:0.296,rDR:0.22,wI:0.06,wD:0.048,rB:0.024,dL:0.017,DRAW:10,aI:181.3,aD:269.1,r0:5.5/ES,U:0.14,land:0.05,B:0.55,tsT:0.06,tsH:0.3,TF:67,MU:0.15,
-    I:578.5,JW:5.9,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
+    I:578.5,JW:6.05,W78:0.770,G78:0.127,hD:0.95,EB:128,ET:180,ID:2.67,eS:0.3,HS:0};
   for(const k in o)if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...o},NT=16,P=TAU/NT,EX=c.EX,A0=c.A*D2R,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2,lockA=t0-2*P,aI=c.aI*D2R,aD=c.aD*D2R;
   /* locking tooth two pitches past the pair that straddles the roller (Fig. 90: ~36 deg from the line of centres) */

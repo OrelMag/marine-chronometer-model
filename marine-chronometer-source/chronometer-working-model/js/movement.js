@@ -852,9 +852,19 @@ function buildMovement(M){
   /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2 FK) at SPt, trailing the pivot so the teeth can only pass it one way */
   /* its outline from those edges, in the pawl's frame (pivot at the origin, the tip's corner on -x at SPl, the back on the SPb side): one smooth curve from the tip's corner along SPN, round the hub behind the arbor (1.6-1.9 from it there: the video doesn't show that side) and along SPE to the
      tip's other corner, the end face straight between them, as the video's. The tip's corner is put at PAWL_TIP, where seatPawl and phaseAgainst look for it */
+  /* its end fitted, as a pawl's end is stoned to bear along its tooth's locking face (the manual's maker's last fitting; 14 October 2026): as traced (KLUwI2UUCMQ 36:15)
+     its end face, straight between its two corners, lies across the next tooth's tip, 42.7 deg off the radial face, so the load meets its side at that tip and pushes
+     it out unless friction holds it (mu 0.19 needed, tools/ratchets.js). fitEnd cuts the end along a line through the tip's corner (PAWL_TIP) turned SPF from the end
+     face: 42.7 deg lies it along the tooth's face where the pawl seats, and 4 more give it the relief a filed end has above its bearing corner, so the corner bears on
+     the face 0.38 mm into the teeth (the load drawing it in at 36 deg) and the end clears the tooth's tip as the pawl swings in (flush, it grazed it). The points cut
+     off are laid along the new end, so PAWL_TIP still marks the tip's corner. The cut and its relief are the fitting, not a measurement */
+  const SPF=46.7*D2R,fitEnd=(P,ang)=>{const T=P[PAWL_TIP],O=P[PAWL_TIP-1],l=Math.hypot(O[0]-T[0],O[1]-T[1]),e=[(O[0]-T[0])/l,(O[1]-T[1])/l],d=[e[0]*Math.cos(ang)-e[1]*Math.sin(ang),e[0]*Math.sin(ang)+e[1]*Math.cos(ang)],
+      sd=q=>Math.sign(d[0]*(q[1]-T[1])-d[1]*(q[0]-T[0])),s0=sd([0,0]);let j=PAWL_TIP-1;while(j>0&&sd(P[j])!==s0)j--;if(j===PAWL_TIP-1)return P;
+      const A=P[j],Bq=P[j+1],ca=d[0]*(A[1]-T[1])-d[1]*(A[0]-T[0]),cb=d[0]*(Bq[1]-T[1])-d[1]*(Bq[0]-T[0]),u=ca/(ca-cb),I=[A[0]+(Bq[0]-A[0])*u,A[1]+(Bq[1]-A[1])*u],m=PAWL_TIP-1-j,Q=P.slice();
+      for(let k=0;k<m;k++)Q[j+1+k]=[I[0]+(T[0]-I[0])*k/m,I[1]+(T[1]-I[1])*k/m];return Q;};
   const SPP=(()=>{const c=Math.cos(SPd),sn=Math.sin(SPd),L2=([a,q])=>new THREE.Vector2(-(a*c+q*sn),SPb*(-a*sn+q*c)),N=SPN.map(L2),E=SPE.map(L2),sN=Math.sign(N[0].y),
       B=[[1.8,sN*80],[1.6,0],[1.9,-sN*75]].map(([r,a])=>new THREE.Vector2(r*Math.cos(a*D2R),r*Math.sin(a*D2R)));
-    return new THREE.SplineCurve([...N.slice().reverse(),...B,...E]).getPoints(150).map(v=>[v.x,v.y]).map((_,i,P)=>P[(i-PAWL_TIP+P.length)%P.length]);})();
+    return fitEnd(new THREE.SplineCurve([...N.slice().reverse(),...B,...E]).getPoints(150).map(v=>[v.x,v.y]).map((_,i,P)=>P[(i-PAWL_TIP+P.length)%P.length]),SPF);})();
   R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,polyGeo(SPP,0.6,[[0,0,0.7]]),M.steel,0,-0.3,0);
   R.spawl.userData.base=SPb0;R.spawl.rotation.y=SPb0;R.spawl.userData.pts=SPP;
   /* sustaining pawl's spring (part of 42096, "complete with arbor and springs"): a straight steel wire (r 0.12) set upright in the pawl's root at SPw, standing alongside
@@ -1546,7 +1556,7 @@ function buildMovement(M){
       if(Math.abs(dv-lastD)>0.002){R.sspring.geometry.dispose();R.sspring.geometry=sspGeo(dv);lastD=dv;const a=SSP+dv-d;R.ssPin.position.x=14.6*FK*Math.cos(a);R.ssPin.position.z=14.6*FK*Math.sin(a);} }
     for(const pw of R.wp){const psi=fzW-srA,u=pw.userData;if(psi!==u.psi){pw.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,FPR,u.psi===undefined?undefined:pw.rotation.y-psi)+psi;u.psi=psi;}   /* seated again only when the fusee has turned against the ratchet (in running, never) */
       if(Math.abs(pw.rotation.y-u.sprTh)>0.002){u.spr.geometry.dispose();u.spr.geometry=wpsGeo(pw,pw.rotation.y);u.sprTh=pw.rotation.y;}}   /* the spring follows its pawl */
-    { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP,lastSp===null?undefined:R.spawl.rotation.y-srA)+srA;if(R.spawl.rotation.y!==lastSp){lastSp=R.spawl.rotation.y;R.spWire(lastSp);} }   /* its spring wire bends with it */
+    { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP,lastSp===null||holding?undefined:R.spawl.rotation.y-srA)+srA;if(R.spawl.rotation.y!==lastSp){lastSp=R.spawl.rotation.y;R.spWire(lastSp);} }   /* seated afresh while it holds: the ratchet can come back up to a tooth in one frame, and seated from where it was, the fitted end's point would stop on the tooth it rode over (since 14 October 2026; a real pawl follows the teeth down to the face) */   /* its spring wire bends with it */
     R.staff.rotation.y=-s.th;
     { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyLock(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;

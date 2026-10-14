@@ -363,15 +363,15 @@ Found by the analyses of the build-verification report's section 11 (`tools/ratc
 a reading or an estimate to settle:
 
 - **The sustaining pawl's end, as traced** (KLUwI2UUCMQ 36:15, to about 0.1 mm), leans off its tooth's face: a tooth's tip corner meets the pawl's side first, and
-  so loaded it would be pushed out; fitted to bear along the face, as a pawl's end is stoned, it draws in at 32.8°. A frame with the pawl's end side-on, or the
-  end retraced, would show whether the tracing or the fitting is short.
+  so loaded it would be pushed out. *Done (14 October 2026, RESOLVED.md):* drawn fitted, cut along the face with 4° of relief; it bears on the face 0.38 mm in and
+  is drawn in at 36°.
 - **The setup click** bears on its face near the root, drawn in at 4.5°, under the friction angle: friction and its spring hold it. *Done (14 October 2026,
   RESOLVED.md):* the ratchet's faces drawn undercut 4.5° as measured, the click drawn in at 8.7°, past the friction angle; and the ratchet on the arbor's square.
 - **The sustaining spring's section**: the drawn band would close solid under the drive. *Done (14 October 2026, RESOLVED.md; OPEN-QUESTIONS.md, "Closed by
   design"):* a split ring weaker than the drive, banked in running, as the period's chronometers had it; its gap measured, its band designed for its push.
 - **The train's inertia at the escape wheel** off the solids is 6.05 g·mm², 2.9 % over dynamics.js's 5.88 (the fourth wheel's 1.08 was an estimate; the escape
-  arbor's pinion and arbor 0.42 were left out). Not adopted: it moves the escapement's rate 0.08 s a day and the swing 0.9°, which the timing takes up, and the
-  escapement's calibration (JW, the 255° swing) runs through most checks. Adopting it is a recalibration for its own branch.
+  arbor's pinion and arbor 0.42 were left out). *Done (14 October 2026):* makeEsc's JW 6.05 and dynamics.js sum the arbors' solids (mechanisms.json); the
+  calibrated torque 62.8 µN·m, the budget still closes at TF 67 s; tolerances, gearing, tripping and bench re-written.
 
 ## The hairspring's inner end (settled as an estimate, 4 October 2026)
 

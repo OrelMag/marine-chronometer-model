@@ -23,7 +23,7 @@ const JR=Je+J4/ra[0]**2+J3/ra[1]**2+Jc/ra[2]**2+Jf/ra[3]**2;
 say('1. The train\'s inertia at the escape wheel (mechanisms.json: each arbor\'s solids at their densities)');
 say(`the escape wheel with its pinion and arbor ${f(Je,2)} g·mm²; the fourth wheel with the seconds hand ${f(J4,1)} (${f(J4/ra[0]**2,3)} at the escape wheel), the third ${f(J3,1)} (${f(J3/ra[1]**2,4)}), the centre with the cannon pinion, the hands and the motion work ${f(Jc,1)} (${f(Jc/ra[2]**2,5)}), the fusee wheel ${f(Jf)} (${f(Jf/ra[3]**2,6)})`);
 const JT0=DY.JT*1e9,kJ=JR/JT0;
-say(`together ${f(JR,3)} g·mm² at the escape wheel, against dynamics.js's ${f(JT0,3)} (the wheel ${f(DY.JE*1e9,2)}, the fourth wheel's ${f(DY.J4*1e9,1)} estimated): ${f(100*(kJ-1),1)} %`);
+say(`together ${f(JR,3)} g·mm² at the escape wheel; dynamics.js and makeEsc (JW) take it since 14 October 2026 (${f(JT0,3)}: ${f(100*(kJ-1),2)} %; 5.878 before, the wheel 4.80 and the fourth wheel estimated)`);
 const s0=DY.sim({T:60,from:30}),s1=DY.sim({T:60,from:30,J:kJ});
 chk(Math.abs(s1.A-s0.A)<3&&Math.abs(s1.rate-s0.rate)<0.3,`dynamics.js with it: the swing ${f(s0.A,2)}° → ${f(s1.A,2)}°, the escapement's rate ${f(s0.rate,3)} → ${f(s1.rate,3)} s a day: the timing takes it up (the estimate it replaces was close)`);
 out.J={Je,J4,J3,Jc,Jf,JR,JT0,kJ,A0:s0.A,A1:s1.A,r0:s0.rate,r1:s1.rate};
