@@ -1,10 +1,33 @@
 {
  "movement": {
+  "balance:Buffer | balance:Buffer | +-22.80": 2,
+  "balance:Buffer | balance:Buffer | --26.60": 2,
+  "balance:Buffer | hairspring:Buffer | --26.60": 3,
+  "balance:Lathe | balance:Lathe | --21.00": 2,
+  "balance:Lathe | rollers:Buffer | +-15.60": 1,
+  "balanceJewelsLow:Lathe | balanceJewelsLow:Lathe | --9.94": 1,
+  "balanceJewelsUp:Lathe | balanceJewelsUp:Lathe | +-35.84": 1,
+  "balanceJewelsUp:Lathe | balanceJewelsUp:Lathe | --35.82": 1,
+  "detent:Buffer | detent:Buffer | +-13.70": 1,
+  "detent:Buffer | detent:Buffer | +-13.80": 3,
+  "detent:Buffer | detent:Buffer | --14.80": 3,
+  "detent:Buffer | detent:Buffer | --15.70": 1,
+  "detentBlock:Buffer | detentBlock:Cylinder | +-12.50": 2,
+  "detentBlock:Buffer | escJewelUp:Lathe | --19.00": 1,
+  "escEndstoneUp:Lathe | escEndstoneUp:Lathe | +-19.52": 1,
+  "escapeWheel:Buffer | escapeWheel:Lathe | --16.88": 1,
   "fuseeBush:Buffer | upperCock:Buffer | +-22.36": 1,
   "fuseeBush:Lathe | dustBush:Lathe | +-23.86": 1,
+  "intermediateBridge:Buffer | escEndstoneLow:Buffer | -3.34": 1,
+  "lowerCock:Buffer | balanceJewelsLow:Lathe | +-9.00": 1,
+  "lowerCock:Buffer | escJewelUp:Lathe | --19.00": 1,
   "pillarPlate:Lathe | ring:Buffer | +6.34": 1,
   "pillarPlate:Lathe | ring:Buffer | -3.34": 1,
+  "ring:Buffer | escEndstoneLow:Buffer | -3.34": 1,
   "ring:Buffer | intermediateBridge:Buffer | -3.34": 1,
-  "topPlate:Buffer | fuseeBush:Lathe | --22.36": 1
+  "topPlate:Buffer | escJewelUp:Lathe | +-19.00": 1,
+  "topPlate:Buffer | fuseeBush:Lathe | --22.36": 1,
+  "upperCock:Buffer | balanceJewelsUp:Lathe | +-34.96": 1,
+  "upperCock:Buffer | balanceJewelsUp:Lathe | --37.34": 1
  }
 }

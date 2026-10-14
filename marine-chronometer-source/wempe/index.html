@@ -52,13 +52,13 @@
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
-    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins.</div>
+    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame (the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins) and the balance and spring detent escapement, with their jewels.</div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
         <div class="seg grid3" id="views">
           <button data-v="movement" aria-pressed="true" title="The movement, train side up">Movement</button><button data-v="plan" title="The top plate from straight above">Plan</button><button data-v="side" title="The frame from the side">Side</button>
-          <button data-v="dial" title="The pillar plate's dial side, from below">Dial side</button><button data-v="exploded" title="Every part lifted apart along the pillars">Exploded</button></div>
+          <button data-v="dial" title="The pillar plate's dial side, from below">Dial side</button><button data-v="exploded" title="Every part lifted apart along the pillars">Exploded</button><button data-v="escapement" title="The escapement under the top plate, seen through it">Escapement</button></div>
         <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
       </details>
       <details class="grp more" id="timeDet">
@@ -66,7 +66,7 @@
         <div class="seg" id="speeds">
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
-        <p class="note" style="margin:8px 0 0">Nothing moves yet: the train comes after the frame.</p>
+        <p class="note" style="margin:8px 0 0">The balance swings and the escapement works; the train comes next. Above 4×, the balance is drawn at rest.</p>
       </details>
       <details class="grp more disp" id="dispDet" open>
         <summary>Display</summary>
@@ -121,7 +121,7 @@
   <h3>How it is being made</h3>
   <ul>
     <li><b>From the drawings.</b> Every size and place is read off a sheet: a figure where the sheet gives one, and where it doesn’t, measured on the drawing at its scale and marked estimated. Each part’s card says which.</li>
-    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them.</li>
+    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them. Then the balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out.</li>
   </ul>
   <p><a href="../chronometer-working-model/index.html">The Hamilton Model 21 working model</a>, the U.S. Navy’s chronometer, built from its 1948 overhaul manual.</p>
 </dialog>
@@ -131,6 +131,7 @@
 <script src="../shared/viewer.js"></script>
 <script src="js/dims.js"></script>
 <script src="js/frame.js"></script>
+<script src="js/escapement.js"></script>
 <script src="js/movement.js"></script>
 <script src="js/app.js"></script>
 </body>
