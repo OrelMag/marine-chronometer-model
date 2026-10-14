@@ -214,6 +214,7 @@ Before committing a change to the model:
        python views.py before   # (before the change) renders every view; after it: python views.py after, then python views.py --diff before after (`python ci.py --views` does the same for a branch)
        python solids.py     # every part a closed solid, facing out (exit code 1 on a failure)
        python exploded.py   # no two parts meet in the Exploded view, at any spread (exit code 1 on a failure)
+       python overhaul.py   # every operation of the manual's overhaul takes its parts off, or puts them on, clear of the rest (exit code 1 on a failure; ~~ the expected, each with its reason)
        python placements.py dump before   # (before the change) every mesh's place in seven states; after it: dump after, then --diff before after
        python audit.py      # screws, pivots, loose parts in the movement (exit code 1 on anything not expected; --update after an intended change of coplanar faces)
        python audit.py box  # the same for the box and gimbals
@@ -233,7 +234,7 @@ Before committing a change to the model:
    on arbors, hands on their staffs. `fine.py` should print `ok` on every line;
    its table `EXPECTED` gives the reason for each intended contact. The
    `views.py` diff should show changed pixels only on the parts you changed, and
-   the `placements.py` diff list only the parts you rebuilt. `solids.py` prints `0 not solid` twice and `exploded.py` `0 failing`. `audit.py` ends with `OK: nothing new`:
+   the `placements.py` diff list only the parts you rebuilt. `solids.py` prints `0 not solid` twice, `exploded.py` and `overhaul.py` `0 failing`. `audit.py` ends with `OK: nothing new`:
    it compares its findings with the expected ones (the loose ends in its
    `LOOSE` table, each with its reason, and the coplanar faces, mostly faces in
    contact, in `audit-expected.json`). `escapement.js` marks each figure
@@ -256,7 +257,7 @@ Before committing a change to the model:
    another, and prints each ok or FAIL (logs in `ci-logs/`; about 5 minutes): the build
    with `--site-url https://www.marinechronometermodel.com`, as the live site is, failing
    if building changes a built copy (commit what it writes), `escapement.js`, `almanac.js`, `hairspring.js`, `physics.js`, `selfcontained.py`, the type
-   check, `smoke.py`, `invariants.py`, `solids.py`, `exploded.py` and `audit.py`.
+   check, `smoke.py`, `invariants.py`, `solids.py`, `exploded.py`, `overhaul.py`, `book.py` and `audit.py`.
    `--full` adds `fine.py`, `maintaining.py`, `bom.py`, `gltf_check.py` and `blender_check.py`; `--views` renders every view before
    and after the branch and prints the changed pixels; `--quick` is the first seven only.
    Nothing runs on GitHub: merge a branch only when `ci.py` passes on it.
