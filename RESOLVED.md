@@ -295,6 +295,15 @@ Contents:
   widest swing the model allows. Keep: a real spring never touches its collet; the strip at least 0.05 mm off it
   beyond the clamp's edge at every swing up to TRIP + 15°. `43260af`
 
+- **Op. 78's preload was the whole 0.770 g** (p. 61's clause missed). Op. 78 runs on over the page: the weight "should separate the detent
+  spring from the stopbutton by approximately 0.005 in" (p. 61; Fig. 88, "(.005 in. clearance)"), so the preload is the weight's
+  moment less the spring's stiffness over that bend: 0.63 g at the jewel with the drawn spring (`G78` 0.127 mm at the button's
+  middle, `th78`), and a stiffer spring is set up with less. makeEsc, dynamics.js (`MW78`, its `kD` variants set up by the
+  test), tripping.js's frame (the weight lifts the button's middle `G78`), physics.js and tolerances.js (the detent spring
+  bounded at 0.137 mm, where no preload is left) follow it; `TF` 67 s (Q 421) so the calibrated torque is the spring's again.
+  Keep: the preload is `W78`'s moment less `KD`·`th78`, never the weight alone; a spring's stiffness and its preload move
+  together. `9b55881`
+
 ## Going train and heights
 
 - **The fourth, third and escape arbors off the video's places, the seconds
@@ -2502,11 +2511,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **Op. 78's preload was the whole 0.770 g** (Escapement). Op. 78 runs on over the page: the weight "should separate the detent
-  spring from the stopbutton by approximately 0.005 in" (p. 61; Fig. 88, "(.005 in. clearance)"), so the preload is the weight's
-  moment less the spring's stiffness over that bend: 0.63 g at the jewel with the drawn spring (`G78` 0.127 mm at the button's
-  middle, `th78`), and a stiffer spring is set up with less. makeEsc, dynamics.js (`MW78`, its `kD` variants set up by the
-  test), tripping.js's frame (the weight lifts the button's middle `G78`), physics.js and tolerances.js (the detent spring
-  bounded at 0.137 mm, where no preload is left) follow it; `TF` 67 s (Q 421) so the calibrated torque is the spring's again.
-  Keep: the preload is `W78`'s moment less `KD`·`th78`, never the weight alone; a spring's stiffness and its preload move
-  together.
+None at the moment.
