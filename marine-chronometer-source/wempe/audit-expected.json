@@ -11,7 +11,6 @@
   "centreWheel:Lathe | cannon:Buffer | +18.36": 1,
   "centreWheel:Lathe | centreWheel:Extrude | --1.74": 1,
   "centreWheel:Lathe | centreWheel:Lathe | +-0.30": 1,
-  "changeWheel:Lathe | changeWheel:Extrude | -4.34": 1,
   "detent:Buffer | detent:Buffer | +-13.70": 1,
   "detent:Buffer | detent:Buffer | +-13.80": 3,
   "detent:Buffer | detent:Buffer | --14.80": 3,
@@ -45,8 +44,6 @@
   "pillarPlate:Buffer | pillarPlate:Lathe | +3.34": 3,
   "pillarPlate:Buffer | pillarPlate:Lathe | -0.00": 4,
   "pillarPlate:Lathe | pillarPlate:Lathe | -0.00": 2,
-  "pillarPlate:Lathe | ring:Buffer | +6.34": 1,
-  "pillarPlate:Lathe | ring:Buffer | -3.34": 1,
   "ring:Buffer | changeWheel:Lathe | -3.34": 1,
   "ring:Buffer | dial:Lathe | +10.36": 1,
   "ring:Buffer | escEndstoneLow:Buffer | -3.34": 1,
@@ -57,9 +54,13 @@
   "topPlate:Buffer | fuseeBush:Lathe | --22.36": 1,
   "topPlate:Buffer | topPlate:Lathe | +-19.00": 3,
   "topPlate:Buffer | topPlate:Lathe | --22.36": 3,
+  "topPlate:Lathe | barrelBridge:Buffer | +-22.36": 1,
   "udWheel:Lathe | hands:Lathe | +12.36": 1,
-  "udWheel:Lathe | udWheel:Extrude | -8.56": 1,
   "upperCock:Buffer | balanceJewelsUp:Lathe | +-34.96": 1,
   "upperCock:Buffer | balanceJewelsUp:Lathe | --37.34": 1
+ },
+ "box": {
+  "bezel:Buffer | bezel:Buffer | +22.36": 1,
+  "bowl:Buffer | gimbalRing:Buffer | +6.34": 1
  }
 }

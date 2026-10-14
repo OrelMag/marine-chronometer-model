@@ -1,5 +1,5 @@
 {
- "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings; P1d: the balance and escapement (groups 05 03, 05 04), from 05-03-05-04-balance-escapement.md checked on the sheets, the jewels by the coloured section's labels; P1c: the fusee, maintaining work, barrel, mainspring, chain and band (groups 05 06, 05 07 and 05 05 05, 05-06-05-07-fusee-barrel.md); P1e: the dial, motion work, hands and up-and-down work (group 05 02), from 05-05-05-02-train-motionwork.md checked on the sheets, the up-and-down pinion's and the seconds collet's numbers by the coloured section's labels. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
+ "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings; P1d: the balance and escapement (groups 05 03, 05 04), from 05-03-05-04-balance-escapement.md checked on the sheets, the jewels by the coloured section's labels; P1c: the fusee, maintaining work, barrel, mainspring, chain and band (groups 05 06, 05 07 and 05 05 05, 05-06-05-07-fusee-barrel.md); P1e: the dial, motion work, hands and up-and-down work (group 05 02), from 05-05-05-02-train-motionwork.md checked on the sheets, the up-and-down pinion's and the seconds collet's numbers by the coloured section's labels. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form; P1f: the case and box (groups 05 01 and 51 00, 05-01-51-00-case-box-overview.md, checked on the sheets), a part without a number by a name",
  "relations": {
   "in": "the part's axis inside the named part: tap (thread in a tapped hole), clear (through a clearance hole), run, free, press (as the Hamilton's bom.json)",
   "round": "the part's bore round the named part",
@@ -3243,6 +3243,576 @@
     ]
    ],
    "figs": "05 02_12, 05 08_7"
+  },
+  {
+   "id": "WN-202",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stellstift 3 (WN-202): the movement ring’s radial pin to the case",
+   "qty": 1,
+   "parent": "050800-3",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Stands 2.0 out of the ring's flange at 6 o'clock into the notch in the bezel's recess: it sets the movement's turn in the case.",
+   "rel": [
+    [
+     "in",
+     "050800-3",
+     "embed"
+    ]
+   ],
+   "figs": "05 08_7"
+  },
+  {
+   "id": "050100-1",
+   "idx": null,
+   "no": "",
+   "dwg": "R-05 01 00-1",
+   "name": "Gehäusetopf (bowl)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "bowl",
+   "fn": "The cast brass bowl the movement ring's flange lies on; the winding hole in its bottom over the fusee's square.",
+   "rel": [],
+   "figs": "05 01_2, 05 01_1"
+  },
+  {
+   "id": "050100-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 00-3",
+   "name": "Gehäusekloben (case bracket)",
+   "qty": 2,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "On the bowl at 12 and 6 o'clock, carrying the inner pivots; slid along its slots to level the bowl.",
+   "rel": [
+    [
+     "on",
+     "050100-1"
+    ]
+   ],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "050100-4",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 00-4",
+   "name": "Feststellkloben (locking bracket)",
+   "qty": 1,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "On the bowl at 50 deg from 6 o'clock: the transit lock presses the ring onto it.",
+   "rel": [
+    [
+     "on",
+     "050100-1"
+    ]
+   ],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "WN-78",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-78 (13 on 05 01): the brackets’ screws",
+   "qty": 5,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "bowl",
+   "fn": "Hold the case brackets and the locking bracket to the bowl (their holes across the turned bowl not cut).",
+   "rel": [],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "050100-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 00-2",
+   "name": "Verschlußplatte (closing plate)",
+   "qty": 1,
+   "parent": "050100-1",
+   "kind": "part",
+   "part": "closingPlate",
+   "fn": "In the bowl's foot, turning on its screw to open and shut the winding hole.",
+   "rel": [
+    [
+     "on",
+     "050100-1"
+    ]
+   ],
+   "figs": "05 01_3"
+  },
+  {
+   "id": "WN-71",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-71 (7 on 05 01, the number unsure): the closing plate’s screw",
+   "qty": 1,
+   "parent": "050100-2",
+   "kind": "part",
+   "part": "closingPlate",
+   "fn": "The screw in the bowl's bottom the closing plate turns on.",
+   "rel": [
+    [
+     "in",
+     "050100-1",
+     "tap"
+    ]
+   ],
+   "figs": "05 01_1, 05 01_3"
+  },
+  {
+   "id": "WN-72",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-72: the closing plate’s knob",
+   "qty": 1,
+   "parent": "050100-2",
+   "kind": "part",
+   "part": "closingPlate",
+   "fn": "The knob in the closing plate's M2.6, to turn it.",
+   "rel": [
+    [
+     "in",
+     "050100-2",
+     "tap"
+    ]
+   ],
+   "figs": "05 01_1, 05 01_3"
+  },
+  {
+   "id": "050101-2",
+   "idx": null,
+   "no": "",
+   "dwg": "R-05 01 01-2",
+   "name": "Glasrand (bezel)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "bezel",
+   "fn": "Lies on the bowl's top face round the movement ring's flange; the glass in its top.",
+   "rel": [
+    [
+     "on",
+     "050100-1"
+    ]
+   ],
+   "figs": "05 01_5, 05 01_4"
+  },
+  {
+   "id": "050101-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 01-1",
+   "name": "Glas (glass)",
+   "qty": 1,
+   "parent": "050101-2",
+   "kind": "part",
+   "part": "bezel",
+   "fn": "In the bezel's top, flush with it.",
+   "rel": [
+    [
+     "on",
+     "050101-2"
+    ]
+   ],
+   "figs": "05 01_4"
+  },
+  {
+   "id": "050100-5",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 00-5",
+   "name": "Kardanring (gimbal ring)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "gimbalRing",
+   "fn": "Between the bowl and the box: its outer pivots in the box's walls, its inner pivots in the bowl's brackets.",
+   "rel": [],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "050100-6",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 00-6",
+   "name": "Kardanringkloben (ring bracket)",
+   "qty": 1,
+   "parent": "050100-5",
+   "kind": "part",
+   "part": "gimbalRing",
+   "fn": "On the ring at 3 o'clock, carrying that outer pivot; slid along its slots to level the bowl.",
+   "rel": [
+    [
+     "on",
+     "050100-5"
+    ]
+   ],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "WN-kr",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (the ring bracket’s screws, no number)",
+   "qty": 2,
+   "parent": "050100-6",
+   "kind": "part",
+   "part": "gimbalRing",
+   "fn": "Hold the ring bracket to the ring (their holes across the turned ring not cut).",
+   "rel": [],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "WN-79",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-79 (12 on 05 01): the inner pivots",
+   "qty": 2,
+   "parent": "050100-5",
+   "kind": "part",
+   "part": "gimbalRing",
+   "fn": "Through the ring at 12 and 6 o'clock, their points the inner pivots in the case brackets.",
+   "rel": [],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "WN-400",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Kontermutter WN-400 (10 on 05 01)",
+   "qty": 2,
+   "parent": "050100-5",
+   "kind": "part",
+   "part": "gimbalRing",
+   "fn": "Lock the inner pivot screws where they are set.",
+   "rel": [
+    [
+     "on",
+     "050100-5"
+    ]
+   ],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "Holzkasten",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02",
+   "name": "Holzkasten (wooden box)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "box",
+   "fn": "185 x 185 x 180 outside: the gimbals hang in it (no sheet in the set).",
+   "rel": [],
+   "figs": "05 01_1, 51 00_1"
+  },
+  {
+   "id": "WN-80",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-80 (11 on 05 01): the outer pivots, M6",
+   "qty": 2,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "Through the box's side walls, their ends the gimbal ring's pivots.",
+   "rel": [],
+   "figs": "05 01_1, 51 00_2"
+  },
+  {
+   "id": "Lagerscheibe",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Bearing disc (no number)",
+   "qty": 2,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "On each side wall's inside round the outer pivot.",
+   "rel": [
+    [
+     "on",
+     "Holzkasten"
+    ]
+   ],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "510010",
+   "idx": null,
+   "no": "",
+   "dwg": "51 00 10",
+   "name": "Griff f. Chronometerkasten (handle)",
+   "qty": 2,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "On each side, under the pivot.",
+   "rel": [
+    [
+     "on",
+     "Holzkasten"
+    ]
+   ],
+   "figs": "51 00_2"
+  },
+  {
+   "id": "WN-hg",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (the handles’ screws, estimated)",
+   "qty": 4,
+   "parent": "510010",
+   "kind": "part",
+   "part": "box",
+   "fn": "Through the handles' ends into the side walls.",
+   "rel": [],
+   "figs": "51 00_2"
+  },
+  {
+   "id": "Scharnier",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Scharnier (hinge, estimated)",
+   "qty": 2,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "Join the lid to the box at the back.",
+   "rel": [],
+   "figs": "51 00_1"
+  },
+  {
+   "id": "Schliessblech",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schließblech (keeper, estimated)",
+   "qty": 1,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "On the box's front: the latch tongue's end goes under it.",
+   "rel": [
+    [
+     "on",
+     "Holzkasten"
+    ]
+   ],
+   "figs": "51 00_4"
+  },
+  {
+   "id": "Holzkasten.D",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02",
+   "name": "Deckel (the box’s lid)",
+   "qty": 1,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "lid",
+   "fn": "The glazed lid, hinged at the back.",
+   "rel": [],
+   "figs": "51 00_1, 51 00_2"
+  },
+  {
+   "id": "Deckelglas",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Deckelglas (the lid’s glass, estimated)",
+   "qty": 1,
+   "parent": "Holzkasten.D",
+   "kind": "part",
+   "part": "lid",
+   "fn": "In the lid's top, under its frame.",
+   "rel": [
+    [
+     "on",
+     "Holzkasten.D"
+    ]
+   ],
+   "figs": "51 00_1"
+  },
+  {
+   "id": "000101-9",
+   "idx": null,
+   "no": "",
+   "dwg": "00 01 01-9",
+   "name": "Firmenschild (maker’s plate), Type 3371",
+   "qty": 1,
+   "parent": "Holzkasten.D",
+   "kind": "part",
+   "part": "lid",
+   "fn": "On the lid's front.",
+   "rel": [
+    [
+     "on",
+     "Holzkasten.D"
+    ]
+   ],
+   "figs": "51 00_3"
+  },
+  {
+   "id": "P510002-2",
+   "idx": null,
+   "no": "",
+   "dwg": "P. 51 00 02-2",
+   "name": "Zunge (latch tongue)",
+   "qty": 1,
+   "parent": "Holzkasten.D",
+   "kind": "part",
+   "part": "lid",
+   "fn": "Turning on its screw on the lid's front, its end under the keeper (its place estimated).",
+   "rel": [
+    [
+     "on",
+     "Holzkasten.D"
+    ]
+   ],
+   "figs": "51 00_4"
+  },
+  {
+   "id": "WN-zg",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (the tongue’s pivot screw, estimated)",
+   "qty": 1,
+   "parent": "P510002-2",
+   "kind": "part",
+   "part": "lid",
+   "fn": "The screw the tongue turns on.",
+   "rel": [],
+   "figs": "51 00_4"
+  },
+  {
+   "id": "WN-zk",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Knopf (the tongue’s knob, estimated)",
+   "qty": 1,
+   "parent": "P510002-2",
+   "kind": "part",
+   "part": "lid",
+   "fn": "In the tongue's M3.5.",
+   "rel": [
+    [
+     "on",
+     "P510002-2"
+    ]
+   ],
+   "figs": "51 00_4"
+  },
+  {
+   "id": "050101.F",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 01 (05 01’s list)",
+   "name": "Feststeller (transit lock)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "caseLock",
+   "fn": "A knob and lever in the box's front right corner: turned in, the lever presses the ring onto the locking bracket.",
+   "rel": [],
+   "figs": "05 01_1"
+  },
+  {
+   "id": "510011-1",
+   "idx": null,
+   "no": "",
+   "dwg": "51 00 11-1",
+   "name": "Schlüsselgriff (key handle)",
+   "qty": 1,
+   "parent": "050102-2",
+   "kind": "part",
+   "part": "key",
+   "fn": "The key's round flat paddle.",
+   "rel": [],
+   "figs": "05 01_7"
+  },
+  {
+   "id": "050102-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 02-2",
+   "name": "Schlüsselmittelteil (key body)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "key",
+   "fn": "The key's black steel body.",
+   "rel": [],
+   "figs": "05 01_8, 05 01_7"
+  },
+  {
+   "id": "050102-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 01 02-3",
+   "name": "Schlüsselrohr (key tube)",
+   "qty": 1,
+   "parent": "050102-2",
+   "kind": "part",
+   "part": "key",
+   "fn": "The brass tube with the square socket.",
+   "rel": [
+    [
+     "in",
+     "050102-2",
+     "free"
+    ]
+   ],
+   "figs": "05 01_9, 05 01_7"
+  },
+  {
+   "id": "510011-4",
+   "idx": null,
+   "no": "",
+   "dwg": "51 00 11-4",
+   "name": "Wendelfeder (the key’s coil spring)",
+   "qty": 1,
+   "parent": "050102-2",
+   "kind": "part",
+   "part": "key",
+   "fn": "Round the tube in the body's bore: it grips the tube one way and slips the other.",
+   "rel": [],
+   "figs": "05 01_7"
+  },
+  {
+   "id": "510011-6",
+   "idx": null,
+   "no": "",
+   "dwg": "51 00 11-6",
+   "name": "Kerbstift K.S. 1 (the key’s grooved pin)",
+   "qty": 1,
+   "parent": "050102-2",
+   "kind": "part",
+   "part": "key",
+   "fn": "Through the body and the paddle.",
+   "rel": [],
+   "figs": "05 01_7, 05 01_8"
   }
  ]
 }

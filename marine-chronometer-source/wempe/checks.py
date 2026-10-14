@@ -2,11 +2,16 @@
 table the default where a name isn't here). P1a (14 October 2026): the frame; nothing moves yet, so most are empty or off; each fills as the movement grows.
 Its parts list is bom.json beside this file, its expected coplanar faces audit-expected.json (audit.py --model wempe --update writes it)."""
 # audit.py: loose ends expected (part:geometry, place, radius, why); the Hamilton's Navy brake isn't fitted
-LOOSE=[('topPlate:Cylinder',(-5.68,-17.25,-23.91),0.8,"the fusee's stop pin (05 08 01-5), standing 1.5 out under the top plate's inner face (\"unten vorstehend\") into the stop bar's path: its end is free")]
+LOOSE=[('topPlate:Cylinder',(-5.68,-17.25,-23.91),0.8,"the fusee's stop pin (05 08 01-5), standing 1.5 out under the top plate's inner face (\"unten vorstehend\") into the stop bar's path: its end is free"),
+  ('ring:Cylinder',(0,8.25,55.25),0.55,"the movement ring's radial pin to the case (WN-202, P1f), standing 2.0 out of the flange into the notch in the bezel's recess (case.js): out of the case its end is free")]
 LOOSE_NAVY=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
 FLOAT=[('ring:Lathe',(15.22,0,-41.82),3.1,_RS),('ring:Lathe',(-43.82,0,7.73),3.1,_RS),('ring:Lathe',(28.6,0,34.09),3.1,_RS)]
+# audit.py box (P1f, case.js): the box's screws whose heads bear outside the audit's probes (at 0.6 of the head's radius, which fall in the hole they pass through), in the box's frame (the
+# movement's at rest), the lid shut as the movement's views have it
+FLOAT_BOX=[('closingPlate:Lathe',(0,-55.15,0),3.6,"the closing plate's screw (WN-71, 05 01 00-2): its head bears on the counterbore's floor round the plate's Ø 5.5 hole, beyond 0.6 of its radius"),
+  ('lid:Lathe',(0,18.35,96.5),4.5,"the latch tongue's pivot screw (P. 51 00 02-2): its head bears round the tongue's Ø 6.2 hole, beyond 0.6 of its radius")]
 # fine.py: the states checked (balance phase, escape teeth, fusee turns from full wind, winding): the escapement's phases (js/escapement.js, a 225 deg swing): unlocking
 # 0.2415-0.25 (the tooth free at 0.2479), the wheel's drop to 0.2521, the impulse to 0.2822 and the run on to the lock to 0.284; the return swing's pass of the gold spring
 # 0.755-0.761; then the train at 97 teeth apart (the centre wheel 1.2 teeth on each time, so its meshes are seen at many phases), with the fusee across its wind: fully

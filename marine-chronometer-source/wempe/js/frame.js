@@ -101,7 +101,7 @@ const WFRAME=(()=>{
        seat's wall. Its depths below the lip, the cone's run and the screws' are not figured: the 7 and 0.7 put the lip's floor at 3.35 below its inner face, so the cone, from the
        lip's Ø 83 at 45° to Ø 93, starts 2.0 below the seat (the coloured section draws about 2); the plate's pin 5.35 long, to the cone (the section draws it 7.6, which would
        cross the cone); the M2.6 holes 6.0 deep (to the flange): estimated. Material not given ("——"); Wempe 3955's is nickel-bright: drawn nickel, estimated. Its radial pin
-       to the case (Ø 1.1 at 2.8 from the dial's face; Stellstift WN-202 in the coloured section) is left for the case (05 01) */
+       to the case (P1f, below) */
     const rg=part('ring',12);
     {const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
       const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
@@ -112,7 +112,11 @@ const WFRAME=(()=>{
       tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
       /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
       for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,2.25,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
-      tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');}   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
+      tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
+      /* its radial pin to the case (Stellstift 3, WN-202 in the coloured section; P1f): Ø 1.1 at 2.8 from the dial's face (05 08 00-3, likely), on the sheet's elevation's centre
+         line, so at 6 o'clock (the plan, drawn from the dial side, under it: first angle); it stands 2.0 out of the flange (the coloured section, 9.4 px/mm: 2.0) into the notch in the
+         bezel's recess (case.js), which sets the movement's turn in the case; 9.4 long, its hole across the turned flange not cut (estimated) */
+      {const p=tag(cylBetween(rg,0.55,45.6,55.0,M.steel,0,0,12),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,(45.6+55.0)/2);}}
 
     /* ================= the barrel bridge (Federhausbrücke, 05 08 05-1; kompl. 05 08 05) ================= */
     /* Messingblech 3,5 Ms 58, 3.32 -0.04 thick, on the top plate's outer face over the barrel. Its outer edge the plate's rim ("mit der Oberplatte überdrehen"), its inner edge a

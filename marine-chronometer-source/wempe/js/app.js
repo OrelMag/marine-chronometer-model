@@ -1,14 +1,14 @@
 /* app.js: the Wempe Einheits-Chronometer's page: its parts' cards, views, sections, labels and link state, given to the shared viewer (../shared/viewer.js, VIEWER).
    Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js); P1d: the balance and escapement (js/escapement.js); P1c: the fusee,
    maintaining work, barrel, mainspring, chain and band (js/fusee.js), with the Winding and Variants controls;
-   P1e: the dial, motion work, hands and up-and-down work (js/dial.js). */
+   P1e: the dial, motion work, hands and up-and-down work (js/dial.js); P1f: the gimballed case and the wooden box (js/case.js), with the Box and Case views. */
 
 /* ================= parts registry ================= */
 /* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
-const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel','Motion work and dial'];
+const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel','Motion work and dial','Case and box'];
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
@@ -151,7 +151,31 @@ const PARTS={
     sp:'Drawings 05 02 00-1 (minute, 46), 05 02 00-2 (hour, 35), 05 02 00-3 (up-and-down), 05 02 01-1 (seconds, 19.5 and a tail of 10)'},
   dial:{t:'Dial (Zifferblatt)',g:4,src:'drawing',sn:'Its size, holes and printing from its sheet; the screws’ and pin’s sizes estimated',figs:'05 02_12, 05 02_1',c:'#ece8dc',pri:3,
     d:'The dial, white with its figures etched and filled black: the minute track and the hours, the up-and-down sub-dial at 12 (0 to 56 hours since winding) and the seconds sub-dial at 6, the maker’s name and anchor. It lies in the recess of the movement ring’s flange, placed by a pin and held by three screws at the 20, 40 and 59 minute marks.',
-    sp:'Drawing 05 02 00-4 · Ø 103.6 −0.1 × 1.3 · track Ø 85 / 90 · figures 9 high · sub-dials 23 from the centre, Ø 26 and Ø 37'}};
+    sp:'Drawing 05 02 00-4 · Ø 103.6 −0.1 × 1.3 · track Ø 85 / 90 · figures 9 high · sub-dials 23 from the centre, Ø 26 and Ø 37'},
+  bowl:{t:'Bowl (Gehäusetopf)',g:6,src:'drawing',sn:'Every figure of its sheet (the casting); its brackets scaled on the case’s assembly and Kirow 422’s bowl',figs:'05 01_2, 05 01_1',c:'#c9a75c',pri:3,
+    d:'The case the movement hangs in: a cast brass cup, a flange at its top, its body narrowing in a 40° cone to its foot. The movement ring’s flange lies on its top face, the ring in its bore, a pin in the ring setting the movement’s turn, so the winding hole in its bottom lies over the fusee’s square. Two brackets on its side carry the inner pivots, slid along slots until it hangs level (“Kloben verstellen bis Gleichgewicht erreicht ist”); a third, cranked, is where the transit lock holds it. Its sheet says a brass casting; the wartime Glashütte bowls were Bakelite, with a heavy weight in the bottom from No. 5100, and the 1942 arrangement names a Buna (synthetic rubber) case; the 6MX’s is brass. The sheet’s weight, 350 g, is a quarter of this bowl’s in brass.',
+    sp:'Drawing R-05 01 00-1 (6.3.42) · Ms-Sandguß (Kokillenguß) · flange Ø 118 × 12 · body Ø 106 · foot Ø 72.5 · 65 high · bore Ø 98 × 53 · brackets 05 01 00-3, -4'},
+  closingPlate:{t:'Closing plate (Verschlußplatte)',g:6,src:'drawing',sn:'Every figure of its sheet; its screw and knob from Wempe 3955’s bowl, estimated',figs:'05 01_3, 05 01_1',c:'#d4b06a',pri:1,
+    d:'A brass disc in the bowl’s foot, turning on a screw in the bottom: turned by its knob, its hole comes over the winding hole for the key, and away from it to shut it. Its closing spring (Verschlußfeder 05 01 00-7) has no sheet and isn’t drawn.',
+    sp:'Drawing 05 01 00-2 (rev. a 14.4.48) · Ms · Ø 68 −0.2 × 2.3, boss Ø 28 to 5 · hole Ø 8 +0.2 at 22.6 · M2.6 at 25'},
+  bezel:{t:'Bezel and glass (Glasrand)',g:6,src:'drawing',sn:'The ring from its casting’s sheet; the glass’s size scaled on the 1941 assembly; the recess opened to the movement ring’s flange',figs:'05 01_5, 05 01_4, 05 02_1',c:'#d8b86e',pri:2,
+    d:'The cast brass ring that closes the bowl: it lies on the bowl’s top face round the movement ring’s flange, holding it down, a notch in it taking the ring’s pin. The glass sits in its top, 16.7 mm over the pillar plate’s dial face: the motion work’s sheet asks 17.0 (corrected in pencil from 15.8).',
+    sp:'Drawing R-05 01 01-2 (6.3.42; kompl. 05 01 01) · Ms, Kokillenguß · Ø 125, 30° to Ø 116 · 16 high · sight Ø 92 · recess Ø 106 · glass 05 01 01-1, Ø 112 × 2.3'},
+  gimbalRing:{t:'Gimbal ring (Kardanring)',g:6,src:'scaled',sn:'Scaled on the case’s assembly (05 01): its sizes, its bracket and the pivots’ places; the pivots’ heights from its 11.5',figs:'05 01_1',c:'#b99653',pri:2,
+    d:'The ring between the bowl and the box: its outer pivots, on the 3-9 line, are screws through the box’s walls; its inner pivots, screws on the 12-6 line with lock nuts, run in the bowl’s brackets (“Lagerstellen a u. b leicht spielend”: the bearings a and b running freely). Both pairs lie in one plane, so the bowl hangs level whatever the ship does. A bracket on the ring at 3 o’clock, slid to level the bowl the other way, carries one outer pivot. Wempe 3955’s ring is Bakelite; no material is given.',
+    sp:'Drawing 05 01 00-5 (no sheet in the set; bracket 05 01 00-6) · Ø 140 × 3.3 × 23.2 (scaled) · pivots 11.5 under its top · WN-79, WN-400'},
+  box:{t:'Wooden box (Holzkasten)',g:6,src:'scaled',sn:'Its outside from the case’s assembly sheet, its walls and handles from the handle’s sheet; its boards, lid and hinges as photographs of the wartime boxes show them (estimated)',figs:'05 01_1, 51 00_1, 51 00_2',c:'#b98d58',pri:3,
+    d:'The oak box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. The padded outer box for transport (Überkasten, 52 00 16, bleached birch) isn’t built.',
+    sp:'Drawing 127-556.02 (Holzkasten; no sheet in the set) · 185 × 185 × 180 outside · walls 12.5 · handles 51 00 10 · pivots WN-80, M6'},
+  lid:{t:'Lid (Deckel)',g:6,src:'est',sn:'Its height from the parting line on the handle’s sheet; the glazed top, hinges and latch as the photographed boxes show them (estimated); the maker’s plate and the tongue from their sheets',figs:'51 00_2, 51 00_3, 51 00_4',c:'#c79d66',pri:2,
+    d:'The box’s lid, with a glass in its top so the dial can be read with it shut, hinged at the back. On its front the maker’s plate, “Chronometerwerke Wempe Hamburg, Type 3371” (the number runs on), and the latch tongue.',
+    sp:'75 high (180 less the box’s 105) · glass 3 · Firmenschild 00 01 01-9: Alu, 26 × 52, white, letters sunk black · Zunge P. 51 00 02-2: iron 10 × 4, black'},
+  caseLock:{t:'Transit lock (Feststeller)',g:6,src:'est',sn:'Its knob, lever and place scaled on the case’s assembly (Schnitt A-B); its heights estimated',figs:'05 01_1',c:'#5d6670',pri:1,
+    d:'A knob on a bracket in the box’s front right corner turning a lever: turned in, the lever presses the gimbal ring onto the locking bracket on the bowl, so neither gimbal can swing, for carrying the box. Drawn turned off.',
+    sp:'05 01’s list: Feststeller 05 01 01 (no sheet) · knob Ø 19.6, lever 28 × 8'},
+  key:{t:'Winding key (Chronometerschlüssel)',g:6,src:'drawing',sn:'Its body and tube from their sheets; the handle scaled on the key’s assembly; the spring’s wire and the tube’s depth in the body estimated',figs:'05 01_7, 05 01_8, 05 01_9, 05 01_6',c:'#41444a',pri:2,
+    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It lies in the box. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
+    sp:'Drawing 51 00 11 (16.7.43) · body 05 01 02-2: St. Az, phosphated, black · tube 05 01 02-3: Ms 58, Ø 5.95, 50.1 long, square 3.1 × 19 · paddle Ø 34.5'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
 const PIECES={
@@ -193,6 +217,7 @@ const PIECES={
     {k:'bushes',t:'Train bushes (Messinglager WN-300, WN-301)',h:'WN-301 WN-300.t38 WN-300.t35',d:'Three brass bushes pressed into the top plate, flush with both faces, in which the centre, intermediate and seconds arbors’ upper pivots run, each with an oil sink in its outer face (the 6MX ran the seconds and intermediate wheels in jewels in chatons instead).',sp:'In the plate’s holes Ø 4.59 · bores Ø 1.21 (centre) and 0.86',src:'est',sn:'Their places from the plate’s assembly sheet and the coloured section; their sinks from Wempe 3955’s plate; their bores estimated (the standard parts’ sheets aren’t in the set)',figs:'05 08_2'}],
   ring:[{k:'ring',t:'Movement ring',h:'050800-3',d:PARTS.ring.d,sp:PARTS.ring.sp},
     {k:'screws',t:'Movement ring screws',h:'WN-rs',d:'Three screws in the ring whose heads bear on the pillar plate’s rim, holding it in its seat (their WN number not read).',sp:'M2.6 on Ø 89 · heads Ø 6.2 × 2.25',src:'est',sn:'The thread and places from the ring’s sheet and Wempe 3955; the heads and length from the coloured section',figs:'05 08_7'},
+    {k:'casePin',t:'Ring’s pin to the case (Stellstift 3)',h:'WN-202',d:'A pin Ø 1.1 standing 2 mm out of the ring’s flange at 6 o’clock into the notch in the bezel’s recess: it sets the movement’s turn in the case, so the winding hole is over the fusee’s square.',sp:'WN-202 · Ø 1.1, 2.8 from the dial’s face',src:'scaled',sn:'Its size and height from the ring’s sheet; its place on the sheet’s centre line; how far it stands out from the coloured section',figs:'05 08_7'},
     {k:'pin',t:'Plate’s pin',h:'WN-201',d:'A pin (WN-201) Ø 1 drilled in across the joint of the plate and the ring at assembly, which sets the movement’s turn in the ring.',sp:'Ø 1',src:'est',sn:'Its place and size from the ring’s sheet; its length from the coloured section, shortened to stay in the ring',figs:'05 08_7'}],
   barrelBridge:[{k:'bridge',t:'Barrel bridge',h:'050805-1',d:PARTS.barrelBridge.d,sp:PARTS.barrelBridge.sp},
     {k:'click',t:'Click (Sperrkegel)',h:'050805-2',d:'The click on the barrel’s ratchet, which holds the mainspring’s set-up. It is cut from spring-hard brass, so it is its own spring: no separate spring is drawn.',sp:'Drawing 05 08 05-2 (revised 25.5.48) · Ms 58 federhart · 17.4 × 2.6',src:'drawing',sn:'Its outline from its sheet; its turn on the bridge traced on Wempe 3955',figs:'05 08_14'},
@@ -256,18 +281,54 @@ const PIECES={
     {k:'seconds',t:'Seconds hand (Sekundenzeiger) and collet',h:'050201-1 050201-2',d:'The seconds hand, blued steel with a pointed teardrop counterpoise, on a brass collet (Zeigerfutter) pressed on the seconds arbor’s post through the dial.',sp:'05 02 01-1 · 19.5 and 10 · collet 05 02 01-2 (no sheet) Ø 1.5'}],
   dial:[{k:'dial',t:'Dial',h:'050200-4',d:PARTS.dial.d,sp:PARTS.dial.sp},
     {k:'screws',t:'Dial screws',h:'WN-10.d',d:'Three small screws through the dial’s sunk holes into the movement ring’s flange, at the 20, 40 and 59 minute marks.',sp:'WN-10 (the coloured section’s label: likely) · M1 · heads Ø 1.7 in sinks Ø 1.8 × 1.0',src:'est',sn:'Their places and holes from the dial’s sheet; the screws themselves estimated'},
-    {k:'pin',t:'Dial pin',h:'dialPin',d:'The pin at 6° past 12 that places the dial in the ring: in the ring’s hole, stepped to the dial’s.',sp:'Ø 1.6 / 1.0',src:'est',sn:'The holes from the dial’s and the ring’s sheets; the pin estimated'}]};
+    {k:'pin',t:'Dial pin',h:'dialPin',d:'The pin at 6° past 12 that places the dial in the ring: in the ring’s hole, stepped to the dial’s.',sp:'Ø 1.6 / 1.0',src:'est',sn:'The holes from the dial’s and the ring’s sheets; the pin estimated'}],
+  bowl:[{k:'bowl',t:'Bowl',h:'050100-1',d:PARTS.bowl.d,sp:'Drawing R-05 01 00-1 · Ms-Sandguß · Ø 118 / 108 / 106, foot Ø 72.5, 65 high · bore Ø 98 × 53 · winding hole Ø 8.2 over hole 10'},
+    {k:'brackets',t:'Case brackets (Gehäusekloben)',h:'050100-3',d:'Two brass brackets on the bowl at 12 and 6 o’clock, each a plate screwed to the bowl through two slots and a block standing out to the ring with the inner pivot’s hole: slid along the bowl until it hangs level.',sp:'05 01 00-3 (no sheet in the set) · plate 44 × 9 × 3, block 9 wide',src:'est',sn:'Scaled on the case’s assembly (05 01) and Kirow 422’s bowl',figs:'05 01_1'},
+    {k:'lockBracket',t:'Locking bracket (Feststellkloben)',h:'050100-4',d:'A cranked brass bracket on the bowl at 50° from 6 o’clock: its pad stands 1 mm inside the gimbal ring, which the transit lock’s lever presses onto it.',sp:'05 01 00-4 (no sheet in the set) · at 50°',src:'est',sn:'Its angle from 05 01 (“50°”); its form scaled on its elevation',figs:'05 01_1'},
+    {k:'screws',t:'Bracket screws (WN-78)',h:'WN-78',d:'The screws holding the brackets to the bowl.',sp:'WN-78 (13 on 05 01) · M2.5 (estimated)',src:'est',sn:'Their number from 05 01’s list; their size estimated',figs:'05 01_1'}],
+  closingPlate:[{k:'plate',t:'Closing plate',h:'050100-2',d:PARTS.closingPlate.d,sp:PARTS.closingPlate.sp},
+    {k:'screw',t:'Closing plate screw',h:'WN-71',d:'The screw in the bowl’s bottom the plate turns on, its head in the plate’s counterbore.',sp:'WN-71 (7 on 05 01, the number unsure) · M3, head Ø 7.2',src:'est',sn:'Its place from the plate’s sheet; its size estimated',figs:'05 01_3'},
+    {k:'knob',t:'Closing plate knob',h:'WN-72',d:'The brass knob in the plate’s M2.6, to turn it.',sp:'WN-72 (05 01’s Schnitt C-D) · M2.6',src:'est',sn:'Its place from the plate’s sheet; its head as Wempe 3955’s',figs:'05 01_3, 05 01_1'}],
+  bezel:[{k:'ring',t:'Bezel (Glasrand)',h:'050101-2',d:PARTS.bezel.d,sp:PARTS.bezel.sp},
+    {k:'glass',t:'Glass',h:'050101-1',d:'The glass in the bezel’s top, flush with it.',sp:'05 01 01-1 · Ø 112 × 2.3',src:'scaled',sn:'Scaled on Glasrand kompl. (05 01 01, 1941)',figs:'05 01_4'}],
+  gimbalRing:[{k:'ring',t:'Gimbal ring',h:'050100-5',d:PARTS.gimbalRing.d,sp:'05 01 00-5 · Ø 140 × 3.3 × 23.2 (scaled)'},
+    {k:'bracket',t:'Ring bracket (Kardanringkloben)',h:'050100-6',d:'A curved brass plate on the ring at 3 o’clock, its two screws in slots, carrying that outer pivot: moved along the ring to level the bowl.',sp:'05 01 00-6 · 57 × 16.7 × 3.3 (scaled)'},
+    {k:'bracketScrews',t:'Ring bracket screws',h:'WN-kr',d:'The bracket’s two screws.',sp:'M2.5 (estimated)',src:'est',sn:'Their places scaled on 05 01; their size estimated'},
+    {k:'pivots',t:'Inner pivot screws (WN-79)',h:'WN-79',d:'Two screws through the ring at 12 and 6 o’clock, their points the inner pivots in the bowl’s brackets.',sp:'WN-79 (12 on 05 01) · M4 (scaled)',src:'est',sn:'Their places from 05 01; their size scaled on it'},
+    {k:'nuts',t:'Lock nuts (WN-400)',h:'WN-400',d:'The lock nuts that hold the inner pivot screws where they are set.',sp:'WN-400 (10 on 05 01) · M4',src:'est',sn:'From 05 01’s list; their size estimated'}],
+  box:[{k:'body',t:'Box',h:'Holzkasten',d:PARTS.box.d,sp:PARTS.box.sp},
+    {k:'pivots',t:'Outer pivot screws (WN-80)',h:'WN-80',d:'Two M6 screws through the box’s side walls, their ends the gimbal ring’s pivots.',sp:'WN-80 (11 on 05 01) · M6 (51 00 10: “Verbohren 4,8 mm, Gew. M 6”)',src:'scaled',sn:'Their thread and height from the handle’s sheet; their heads scaled on 05 01',figs:'51 00_2, 05 01_1'},
+    {k:'discs',t:'Bearing discs',h:'Lagerscheibe',d:'Brass discs on the side walls’ inside round the outer pivots.',sp:'Ø 23 × 2.4 (scaled)',src:'est',sn:'Scaled on 05 01’s elevation',figs:'05 01_1'},
+    {k:'handles',t:'Handles (Griff f. Chronometerkasten)',h:'510010',d:'A pressed strip handle on each side, under the pivot, its grip an oval standing 10 mm off the side.',sp:'Änderung von 51 00 10 (14.7.42) · 100 × 18, grip 70 × 30, 10 proud · 75 over the bottom',src:'drawing',sn:'Every figure of its sheet; its material not given',figs:'51 00_2'},
+    {k:'handleScrews',t:'Handle screws',h:'WN-hg',d:'The screws through the handles’ ends.',sp:'Estimated',src:'est',sn:'Not on the sheet'},
+    {k:'hinges',t:'Hinges',h:'Scharnier',d:'Two brass hinges at the back joining the lid to the box.',sp:'40 × 18 leaves (estimated)',src:'est',sn:'As Lange 1947’s box shows them'},
+    {k:'keeper',t:'Keeper',h:'Schliessblech',d:'The strap on the box’s front that the lid’s latch tongue slides under.',sp:'Estimated',src:'est',sn:'Not drawn'}],
+  lid:[{k:'lid',t:'Lid',h:'Holzkasten.D',d:PARTS.lid.d,sp:'75 high · walls 12.5 · its top a frame 20 wide'},
+    {k:'glass',t:'Lid glass',h:'Deckelglas',d:'The glass in the lid’s top.',sp:'151 × 151 × 3 (estimated)'},
+    {k:'hinges',t:'Hinge leaves',h:'Scharnier',d:'The hinges’ leaves on the lid.',sp:'Estimated'},
+    {k:'plate',t:'Maker’s plate (Firmenschild)',h:'000101-9',d:'Aluminium, white, its lettering sunk and filled black: CHRONOMETERWERKE, WEMPE, the C-W monogram, HAMBURG, Type 3371 (the number runs on).',sp:'00 01 01-9 (22.3.43) · Alu · 26 × 52 · four holes Ø 1.2 at 2 from the edges',src:'drawing',sn:'Every figure and the lettering from its sheet; its place on the lid as Greenwich’s wartime Wempe’s',figs:'51 00_3'},
+    {k:'tongue',t:'Latch tongue (Zunge)',h:'P510002-2',d:'An iron tongue, black, turning on a screw on the lid’s front: hung down, its end goes under the keeper on the box and holds the lid shut. Its sheet doesn’t say where it goes: taken as the lid’s latch.',sp:'P. 51 00 02-2 (18.9.42) · Eisen 10 × 4, gebondert, schwarz lackiert · 45 long, hole Ø 6.2, M3.5 at 14',src:'drawing',sn:'Every figure of its sheet; its place estimated',figs:'51 00_4'},
+    {k:'tongueScrew',t:'Tongue screw',h:'WN-zg',d:'The screw the tongue turns on.',sp:'M6 (estimated)',src:'est',sn:'Estimated'},
+    {k:'tongueKnob',t:'Tongue knob',h:'WN-zk',d:'The knob in the tongue’s M3.5, to lift it.',sp:'M3.5 (estimated)',src:'est',sn:'Estimated'}],
+  key:[{k:'paddle',t:'Key handle (Schlüsselgriff)',h:'510011-1',d:'The round flat paddle, in the body’s slot, held by the grooved pin.',sp:'51 00 11-1 · Ø 34.5 × 3 (scaled)',src:'scaled',sn:'Scaled on the key’s assembly sheet',figs:'05 01_7'},
+    {k:'body',t:'Key body (Schlüsselmittelteil)',h:'050102-2',d:'The black steel body: the tube runs in its bore, the spring round it.',sp:'05 01 02-2 (rev. a 15.7.48) · St. Az DIN 668, sand-blasted, phosphated, sprayed black · Ø 14.5 × 25.1 · bore Ø 8 × 22',src:'drawing',sn:'Every figure of its sheet',figs:'05 01_8'},
+    {k:'tube',t:'Key tube (Schlüsselrohr)',h:'050102-3',d:'The brass tube with the square socket for the fusee’s winding square (drawn round).',sp:'05 01 02-3 (rev. a 29.9.47) · Ms 58 · Ø 5.95 × 50.1, head Ø 8 × 2.6 · square 3.1 × 19',src:'drawing',sn:'Every figure of its sheet; its depth in the body estimated',figs:'05 01_9'},
+    {k:'spring',t:'Coil spring (Wendelfeder)',h:'510011-4',d:'The coil spring round the tube in the body’s bore, its end in the body’s Ø 0.9 hole: it grips the tube one way and slips the other.',sp:'51 00 11-4 · wire 0.9 (estimated), 14 turns',src:'est',sn:'Its place from the key’s assembly; its wire estimated',figs:'05 01_7'},
+    {k:'pin',t:'Grooved pin (Kerbstift)',h:'510011-6',d:'The pin through the body and the paddle.',sp:'51 00 11-6 · K.S. 1 · Ø 2.5',src:'drawing',sn:'Its hole from the body’s sheet',figs:'05 01_8'}]};
 
 /* ================= views ================= */
 /* the camera's turn (yaw), height (pitch, rad) and distance, aimed at a point in the movement's frame. The movement stands train side up (the scene's group turns it over) */
 const VIEWS={
   movement:{yaw:2.5,pitch:0.6,dist:250,target:[0,-11,0]},
   plan:{yaw:Math.PI,pitch:1.52,dist:270,target:[0,-11,0]},   /* straight down on the top plate, 12 o'clock at the top (so 3 o'clock on the left, as the sheets draw the Oberplatte: their O to the right) */
-  dial:{yaw:0,pitch:-1.3,dist:250,target:[0,8,0]},   /* from below, on the dial, 12 o'clock at the top */
+  dial:{yaw:0,pitch:1.3,dist:330,target:[0,12,0],case:{lid:1,lift:0}},   /* the dial in its case, from above, the lid open, 12 o'clock at the top */
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
   exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
-  escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true}};   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial and its hands, from the dial side.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+  escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
+  box:{yaw:0.62,pitch:0.42,dist:640,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right */
+  case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}}};   /* the box open: the bowl in its gimbals */
+/* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut.',case:'The box open: the bowl in its gimbal ring.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
@@ -275,8 +336,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
   let hrs=20,winding=false,conn='chain',HPT=90/14,HRUN=56.4;
+  /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
+     its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
+  let CS=null,cl=1,cf=1;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
   const V=VIEWER.start({name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
-    build:M=>{const root=new THREE.Group();mv=buildWempe(M);mv.rotation.x=Math.PI;root.add(mv);
+    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
+      if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid};   /* the box, for audit.py box (geometry-audit-box.js) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);return{root,mv};},   /* the movement train side up */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
@@ -298,18 +363,22 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Fusee wheel','Schneckenrad, 05 06 00-3','fuseeWheel',pw(P.fuseeWheel,H[10][0]-19,-3.8,H[10][1]+5));
       add('Barrel','Federhaus, 05 07 01','barrel',pw(P.barrel,H[45][0]+20.8,-6,H[45][1]));
       add('Chain','Kette, 05 07 04','chain',pw(P.chain,H[45][0]+17,-12,H[45][1]+13));
-      add('Dial','Zifferblatt, 05 02 00-4','dial',pw(P.dial,-30,WDIAL.DY1,30));add('Hands','05 02 00-1, -2, 05 02 01-1','hands',pw(P.hands,0,16,-30));},
+      add('Dial','Zifferblatt, 05 02 00-4','dial',pw(P.dial,-30,WDIAL.DY1,30));const Q=CS.parts,yb=CS.YB;
+      add('Bowl','Gehäusetopf, R-05 01 00-1','bowl',pw(Q.bowl,-38,yb-50,38));add('Bezel','Glasrand, R-05 01 01-2','bezel',pw(Q.bezel,-44,yb+16,-44));add('Gimbal ring','Kardanring, 05 01 00-5','gimbalRing',pw(Q.gimbalRing,-52,yb,52));
+      add('Box','Holzkasten','box',pw(Q.box,-92.5,yb-60,60));add('Key','Chronometerschlüssel, 51 00 11','key',pw(Q.key,-62,yb-100,10));add('Transit lock','Feststeller','caseLock',pw(Q.caseLock,65,yb+20,63));add('Hands','05 02 00-1, -2, 05 02 01-1','hands',pw(P.hands,0,16,-30));},
     /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js): the
        balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period, a beat behind until the tooth escapes); fast, the balance is drawn at
        rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
     tick:(dt,now,st)=>{if(!mv)return[];
+      {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);cf+=((c?c.lift:1)-cf)*k;cl+=((c?c.lid:cf>0.97?0:1)-cl)*k;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
+        const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
       const down=hrs>=HRUN-1e-6;if(!down||winding){tSim+=dt*st.speed;if(!winding)hrs=Math.min(HRUN,hrs+dt*st.speed/3600);}   /* run down, the train stands */
       const y=tSim/0.5,k=Math.floor(y),p=y-k,n=hrs/HPT;let s;
       if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};mv.userData.update({E:y,th:0,lift:0,psDef:0,n,winding});}
       else{s=ESC.state(p);mv.userData.update({E:k-1+(p>0?s.prog:0),th:s.th,lift:s.lift,psDef:s.psDef,n,winding});}
-      showH();return[+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4)];},
+      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);},
       read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');}},
     hud:st=>`The movement, from its drawings&ensp;${winding?'<b>winding</b>':hrs>=HRUN-1e-6?'<b>run down</b>':`${hrs.toFixed(1)} h since winding`}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});

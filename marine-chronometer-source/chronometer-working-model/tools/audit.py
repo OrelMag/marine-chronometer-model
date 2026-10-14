@@ -30,7 +30,7 @@ LOOSE=model.cfg('LOOSE',[('barrelBridge:Cylinder',(4.0,-18.51,-19.9),1.15,"the w
  ('bal:Cylinder',None,0.25,"the other vernier weight's screw")])
 # with the Navy's balance brake fitted (the page's default; --eval "__mv.userData.stop('arm')" fits the manual's arm instead), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked
 LOOSE_NAVY=model.cfg('LOOSE_NAVY',[('lockArm:Cylinder',(14.99,-28.85,6.51),0.4,"the Navy brake's pin over the rim, free"),('lockArm:Cylinder',(-11.77,-28.85,14.05),0.4,"its other pin, the same")])
-FLOAT=model.cfg('FLOAT',[])   # screws whose head is meant to bear on a part only at its edge (another model's checks.py lists them: part:geometry, place, head radius, why); none on the Hamilton
+FLOAT=model.cfg('FLOAT_BOX' if MODE=='box' else 'FLOAT',[])   # screws whose head is meant to bear on a part only at its edge (another model's checks.py lists them, FLOAT_BOX for the box: part:geometry, place, head radius, why); none on the Hamilton
 async def run():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
