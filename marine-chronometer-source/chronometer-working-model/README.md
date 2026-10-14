@@ -1002,7 +1002,12 @@ on what would stop the chronometer.
   analysis can't say a chronometer made to the model keeps time; the bench
   can. bench.js writes the tests (the build book's last chapter, and each on
   its part's sheet) with what each must read from the model's own figures: the
-  mainspring 0.74–0.86 N·m fully wound (tolerances.js), the fusee's torque
+  balance's free run-down, the train held (since 14 October 2026: the time its
+  swing takes to halve, 35 s for the model's `TF` 67 s, chooses the strip from a
+  table makeEsc works out, 23-71 s wanting 1.06-0.78 times the drawn, since the
+  swing goes as drive times damping and no source gives the damping within a
+  factor of two; benchcheck.py scales the strip's and torque's bands with it), the
+  mainspring 0.74–0.86 N·m fully wound for the model's balance (tolerances.js), the fusee's torque
   within −5 to +11 % at every half turn (the swing's band through `ampAt`), the
   centres to ±13 µm (gearing.js), endshake 28–73 µm at 20 °C (thermal.js), the
   balance 7,200 an hour, the escapement's and the swing's figures (the
