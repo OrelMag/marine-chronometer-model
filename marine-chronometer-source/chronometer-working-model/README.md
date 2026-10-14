@@ -1207,41 +1207,45 @@ can't run them).
   resamples, and paired one to one with `dynamics.js`'s events (unlocking,
   release, detent landing, strike, lock; on the return swing the trip spring
   met and coming clear), the swing the free parameter; then the beat error too.
-  The corrected escapement puts the strike 7.2 ms after the unlocking and the lock
-  8.5 ms after the strike at 255°; the old one (before 11 October, its wheel
-  kinematic) 2.1 and 12.9. Both shrink as the swing grows, but their ratio
-  doesn't: about 0.85 against 0.16, so hearing all three tells the models apart.
-  - `s7VW3RiJ97E` (the cleanest): **212° (211-218)**, the unlocking, strike, lock
-    and the trip spring met paired at chi² 0.8; four intervals each read as a swing
-    within 201-220°; measured ratio 0.85. The old model can't place its strike
-    2 ms after an unlocking that is 8.8 ms before the loudest click: its best leaves
-    the loudest click unexplained. With the beat error free, all five onsets at
-    209°, 12° out of beat.
+  The corrected escapement, as it stands (14 October 2026), puts the strike 7.7 ms
+  after the unlocking and the lock 7.6 ms after the strike at 255°; the old one
+  (before 11 October, its wheel kinematic) 2.1 and 12.9. The corrected unlocking to
+  strike hardly changes with the swing (7.3-7.7 ms from 200° to 255°: the wheel's
+  chase), the old one's is a quarter of it, so hearing all three tells the models
+  apart. On 11 October, before the detent's preload, the run-down and the train's
+  inertia changed, they were 7.2 and 8.5 ms; the readings below are on the current
+  model, the 11 October ones in brackets.
+  - `s7VW3RiJ97E` (the cleanest): **about 205°** (202°, 187-207 over resamples;
+    with the beat error free 207°, 203-212, 11° out of beat; 212° before), the
+    unlocking, strike, lock and the trip spring met paired at chi² 2.4; single
+    intervals read 188-220°. The old model can't place its strike 2 ms after an
+    unlocking that is 8.8 ms before the loudest click: its best leaves the loudest
+    click unexplained.
   - `We1dLNXiBj0`, a balance started by hand at 0:55 (below): read in 6 s
-    stretches, from 1:23 to 2:05 the corrected escapement pairs three clicks as
-    unlocking, strike and lock with the swing alone free (chi² about 0 in all nine;
-    the old model worse in all), and the strike-to-lock interval falls from 10.2
-    to 7.5 ms as the swing builds, read as 217-286°; after it, the unlocking-to-strike
-    interval holds at 6.3-6.4 ms, **about 295° running** (290-302° over eight stretches) (that stretch alone can't tell those two clicks from the strike and the lock, 331°; the build-up, where all three are heard, says which they are).
-  - `xDKFZaY88cM` (a reverberant room, an edited video): roughly 180-210°;
+    stretches, from 1:23 to 2:05 three clicks paired as the unlocking (or the
+    release), the strike and the lock, the strike-to-lock interval falling from
+    10.2 to 7.5 ms as the swing builds, **read as 198-259°** (217-286° before); the
+    steady stretch after it (`--from 2:08`, 93 beats): strike to lock 6.36 ms,
+    299°, and the return swing's own clicks, the trip spring met to clear, 5.88 ms,
+    324° (306° at one sigma), the clear to the next strike 317°: **about 300-320°
+    running** (all four fitted at once 316°; about 295° before).
+  - `xDKFZaY88cM` (a reverberant room, an edited video): roughly 150-200°;
     `XJQCgMV_GA8` (13 s of sound) and `FpolZSipVmQ`: inconclusive.
 - **`tools/swing.py`, the swing on video.** Only `We1dLNXiBj0` shows the balance
   long enough, through the plate's cutouts, and it shows a start: let go from a
   twist at 0:55.2, **256 ± 9° at 2:03.4** (four readings, 244-267°, a screw hole
   apart; 267° the likeliest), still rising about 1°/s.
-- **Do they agree?** Through the start, sound and picture agree within 2-15° up to
-  about 180°; above it the sound reads 15° (the video's likeliest reading) to 30°
-  (its middle) higher, about 1.5 sigma of the sound's reading and one alias of the
-  video's; the sound's running 295° (290-302°) sits inside the video's extrapolated
-  280-311°. So the two independent tests agree within their uncertainties, the
-  sound a little high. If that excess is real, it is the escapement's strike-to-lock
-  arc about 6 % too long in the model; nothing here can tell it from the video's
-  aliases.
+- **Do they agree?** On the current model, through the start the sound's
+  strike-to-lock reading follows the video within 2-11° (198-255° against 196-252°
+  on its middle reading, 1:23-1:59; on the 11 October model it read 15-30° high,
+  which looked like a strike-to-lock arc 6 % too long), and the steady 299-324°
+  sits at and above the video's extrapolated 280-311°. So the two independent
+  tests agree within their uncertainties.
 - **What they say about the model.** (1) The corrected escapement's timing is what a
   real Model 21 does: the wheel catches the impulse jewel 7-9 ms after the unlocking,
   not 2 ms, and the intervals follow the swing as `dynamics.js` has them; the old
   kinematic wheel is ruled out. (2) Real swings differ from unit to unit and with the
-  state of the movement: 212° and about 295° on two movements, around the manual's
+  state of the movement: about 205° and about 300-320° on two movements, around the manual's
   247.5-270° and the model's 255°. (3) The return swing's clicks sit a few
   milliseconds off where an in-beat balance puts them, differently in each
   recording: each movement's beat error (5-12°), fitted as such; so the sound
@@ -1268,7 +1272,13 @@ can't run them).
   (`impulse()`: 1.34 times at 60° against 255°; moved as the clicks move, about
   1.24). No drive or inertia makes the landing stop moving (a faster wheel lands
   earlier at every swing, toward -20.7°, just after the release), and the train's
-  elasticity slows the chase (`traindyn.js`); what does is open. Nor is it the cause
+  elasticity slows the chase (`traindyn.js`); what does is open. Is the loud
+  click the strike? Taken instead as the detent coming home on its stop button
+  (its last landing, `acoustic.py`'s event 7 since 14 October 2026), the first
+  interval fits better (its trend 0.13-0.14 against 0.48-0.50 ms rms), but the lock
+  comes 1.4-1.9 ms early, and the steady swing it reads, about 255°, the return
+  swing's own clicks rule out (5.88 ms, 306-324°; they involve neither): the loud
+  click is the strike. Nor is it the cause
   of the slow start: the averaged build-up law refitted with the work falling as the
   model's, the clicks' or not at all wants TF 156-160, 136-142 or 104-106 s (each
   1.7-2.0° rms; the model's 67 s 5.7-10.1°), and a steady swing of 294-316°. So this
