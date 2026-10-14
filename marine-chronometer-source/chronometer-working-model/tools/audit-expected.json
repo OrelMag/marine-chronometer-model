@@ -1,5 +1,6 @@
 {
  "movement": {
+  "bal:Buffer | spr:Buffer | +-28.76": 1,
   "bal:Extrude | bal:Extrude | +-24.50": 1,
   "bal:Extrude | bal:Extrude | +-25.10": 1,
   "bal:Extrude | spr:Buffer | --28.60": 1,

@@ -512,6 +512,21 @@ Contents:
   `EBU_B`; `lower_bridge.py`'s `E`, `ARM`; `physics.js`'s and `dynamics.js`'s
   fourth module; `audit.py`'s detent pins) follow it. `8fcc1e5`
 
+- **The hairspring stud's holes and the cock's arm step stood where an old
+  scale put them.** The stud's three holes were read through a homography whose
+  every size on the cock's top came out about 0.83 of the video's: drawn 3.9, 7.0
+  and 10.5 mm from the staff where KLUwI2UUCMQ 6:29 (through the camera fitted
+  on 6:49.0) measures 5.49, 9.00 and 12.75, the row 1.7-2.4 mm further out. They
+  are now drawn there; the clamp is 4.34 mm from the staff (2.65 before) and the
+  outer terminal curve is re-solved to Phillips' conditions for it (the smoothest
+  of the four that meet them: 14.6 mm, its tightest bend r 1.24). The arm's step,
+  placed along the same row, moved with it: re-mapped on 44:02 with the holes'
+  pixels (1780, 1997, 2207) and their measured spacing, 14.6 mm from the staff
+  (the old spacing gives the 8.70 mm recorded); left where it was, the stud
+  bar's outer end stood 0.85 mm into the cock's thick part. Keep: the stud's
+  holes (SPHa-c) and the step (CK_SP) read through the same scale as the cock's
+  outline (CK_TR); the essay's hairspring figures (data-hs) from hairspring.js. `HASH`
+
 ## Winding and maintaining work
 
 - **Wound straight from a set, the sustaining ratchet stood while the fusee

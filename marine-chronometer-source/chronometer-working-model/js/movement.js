@@ -84,16 +84,19 @@ const CK_CBR=3.7,CKH_R=3.33,CKH_L=10.0,CKH_T=1.23;
    runs 0.5 mm outside the stud's holes from the nose, then bends about 28 deg toward the rim; the corner is at 23.4 deg, the tip at 76 deg (COCK_POLY's 75.6).
    Until 12 October 2026 the trace (the mean of the two pictures) went through the holes as the model placed them, the cap's screws 2.75 either side and the stud's
    row read through them (3.9, 7.0, 10.5 from the staff): every size there about 0.83 of the video's, so the straight edge lay 1.9-3.5 mm and the concave edge 1.4-3.3 mm
-   inside the real cock's (at x 5.5, z 8.06 against 6.60). The stud and its holes (SPHa-c, below) are still drawn where the old reading put them, 1.7-2.3 mm
-   inside 6:29's (OPEN-QUESTIONS.md): moving them moves the hairspring's outer end */
+   inside the real cock's (at x 5.5, z 8.06 against 6.60). The stud and its holes (SPHa-c, below) were drawn where the old reading put them, 1.7-2.3 mm
+   inside 6:29's; since 14 October 2026 they are where 6:29 reads them (SPHa-c's comment), the hairspring's outer end with them */
 const CK_TR=[[36.76, 15.88], [35.50, 14.99], [34.00, 13.88], [32.50, 12.85], [31.00, 11.94], [29.50, 11.15], [28.00, 10.45], [26.50, 9.82], [25.00, 9.25], [23.50, 8.76], [22.00, 8.35], [20.50, 8.00], [19.00, 7.73], [17.50, 7.53], [16.00, 7.40], [14.50, 7.28], [13.00, 7.18], [11.50, 7.09], [10.00, 6.98], [8.50, 6.83], [7.00, 6.71], [5.50, 6.60], [0.14, 6.61], [-0.55, 6.82], [-1.10, 7.29], [-1.67, 7.74], [-2.19, 8.24], [-2.57, 8.86], [-2.88, 9.52], [-3.07, 10.22], [-3.10, 10.94], [-2.94, 11.65], [-2.70, 12.34], [-2.34, 12.97], [-1.86, 13.51], [-1.31, 13.98], [-0.64, 14.27], [0.06, 14.46], [0.70, 14.80], [1.17, 15.20], [2.80, 16.29], [4.31, 17.37], [5.60, 18.46], [6.65, 19.54], [7.49, 20.63], [8.20, 21.71], [8.80, 22.80], [9.30, 23.89], [9.70, 24.97], [10.03, 26.06], [10.36, 27.14], [10.69, 28.23], [10.92, 29.31], [11.01, 30.40], [10.99, 31.49], [10.94, 32.57], [10.85, 33.66], [10.72, 34.74], [10.55, 35.83], [10.36, 36.91], [10.14, 38.00]];
 /* the arm's step: the arm is thin (2.6 mm, the stud's place under it) over the balance and thicker toward the body, a square step on its underside across it. On
    KLUwI2UUCMQ 44:02 (the cock in place, from its straight edge, 4K) the arm's side drops from 88 px to 206 px deep at x 2305, 8.70 mm past the stud's inner hole along
    their row (a 1-D projective map on the row's three holes; the same map puts the body's wall 18.5-18.65 mm from the staff, where it was read before, 18.6): 12.1 mm from
    the staff. On 41:58 the concave side's polished band steps down at (8.4, 22.1), 13.7 mm from it (the kink VIDEOS.md read as the body's wall). The step is the line
    through the two; the thick part 206/88 = 2.34 times the thin, 6.0 mm (the body's visible 10.8 mm down to the barrel bridge's horn, 378 px there, gives 2.5 and 5.9).
-   Whether it is straight across the underside no frame shows (estimated) */
-const CK_SP=[[13.72,9.96],[8.4,22.1]],CK_TM=6.0;
+   Whether it is straight across the underside no frame shows (estimated). Since 14 October 2026 the row's holes are where 6:29 measures them (SPHa-c), 4.08 and 8.07 mm
+   apart along the row where the old reading had 3.43 and 7.03: the same map, its holes at x 1780, 1997, 2207 on 44:02 (4K) and the step at 2305-2310, puts the step
+   9.9-10.0 mm past the inner hole, (16.05, 8.37), 14.6 mm from the staff (with the old spacing the same pixels give 8.8, the 8.70 recorded, at (13.83, 9.97)). Not moved:
+   the body's wall, which this map would put at 21.3 (the side's second step, x 2660) where CK_RP keeps the body outside the barrel bridge's 17.7 circle */
+const CK_SP=[[16.05,8.37],[8.4,22.1]],CK_TM=6.0;
 /* the upper train bridge's notch round the fusee and its horn, measured on two frames of a restoration video (tools/train_bridge.py: KLUwI2UUCMQ 23:30 and 13:49.5):
    the notch a circle (TB_NOTCH: x, z, r), the horn between it and the barrel's cut ending in a straight cut across, the mouth a sharp corner and a straight edge
    turning into the rim through a round corner (r 6). TB_EDGE runs from outside the rim along the mouth, round the notch, across the horn's end and into the barrel's cut, as crescent() takes it.
@@ -951,8 +954,10 @@ function buildMovement(M){
      the cock's straight edge, at (along, across) the line from the staff to the cock screw (SPD, SPDn): 41:58 gives (2.23, -3.07), (5.44, -4.27), (8.65, -5.73); the top-view photograph,
      nearly overhead, with the stud in place (a pin, the slotted stud screw, a pin), through its map on the barrel bridge's screws from the setting's centre, (1.93, -3.49), (5.03, -4.97),
      (8.36, -6.49) (its scale a few % large: the cock's top is 11 mm above that map's plane); their mean, +-0.4: a small hole 3.9 mm from the staff (SPHc), the stud screw's, wider
-     (counterbored), 7.0 (SPHb), and a small one 10.5 (SPHa): the stud's two steady pins either side of its screw (the model had one pin, 5.6 out, and the screw 7.6 along SPD). The row's line passes 2.0 from the
-     staff. The stud's clamp is under the bar's inner end, past the inner pin (Fig. 5; Hamilton's patent US 2,379,780, Fig. 10): on KLUwI2UUCMQ 6:47.5 and 6:47.75 (the balance
+     (counterbored), 7.0 (SPHb), and a small one 10.5 (SPHa): the stud's two steady pins either side of its screw (the model had one pin, 5.6 out, and the screw 7.6 along SPD). Those read through
+     the old scale, every size about 0.83 of the video's (CK_TR's comment); since 14 October 2026 the holes are where 6:29 reads them through the camera fitted on 6:49.0 (the cap's centre and
+     the counterbore holding it, +-0.3): (6.17, 7.22), (10.22, 7.67), (14.18, 8.16) in the movement's frame, 5.49, 9.00 and 12.75 mm from the staff, 4.0 apart, the row 1.7-2.4 mm
+     further out than drawn before; they put the clamp 4.34 from the staff (2.65 before) and the outer terminal curve is solved for it (below). The stud's clamp is under the bar's inner end, past the inner pin (Fig. 5; Hamilton's patent US 2,379,780, Fig. 10): on KLUwI2UUCMQ 6:47.5 and 6:47.75 (the balance
      lifted out, the stud seen from the cock side, 33 px/mm at 4K), put in mm along the row by a 1D perspective fit on the three holes, the wedge pin's hole is 1.76 and 1.68 inside
      the inner pin (SP_CL, 1.7), the bar's end 2.24 and 2.10 (SP_E, 2.2) and the step where the clamp drops from its underside 1.13 and 1.10 (SP_ST); the bar's outer end 0.79 and 0.77
      past the outer pin (the 0.8 drawn). The hairspring's upper end is in the clamp, HS_R from the staff (2.65; it was 4.6, the clamp drawn between the pin and the screw), in its direction (SPD2; SPSI, the same as a rotation in the balance's frame), its
@@ -960,7 +965,7 @@ function buildMovement(M){
      the end bent; Op. 4 cuts it one wire width past the bend). The spring rises HS_H from HS_Y, the collet's tongue, to the clamp under the cock. CKS: the collet's scale, its
      drawing's coil (read as r 5.5) against the measured one */
   const Q=S.cock,SPD=(()=>{const d=[Q[0]-L.B[0],Q[1]-L.B[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),SPDn=[-SPD[1],SPD[0]],SPH=(a,c)=>[L.B[0]+a*SPD[0]+c*SPDn[0],L.B[1]+a*SPD[1]+c*SPDn[1]];
-  const SPHc=SPH(2.08,-3.28),SPHb=SPH(5.24,-4.62),SPHa=SPH(8.51,-6.11),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})();
+  const SPHc=SPH(2.20,-5.03),SPHb=SPH(5.86,-6.83),SPHa=SPH(9.46,-8.55),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})();
   const SP_CL=1.7,SP_E=2.2,SP_ST=1.1,SPin=s=>[SPHc[0]-s*SPu[0],SPHc[1]-s*SPu[1]],SPCL=SPin(SP_CL),HS_R=Math.hypot(SPCL[0]-L.B[0],SPCL[1]-L.B[1]),SPD2=[(SPCL[0]-L.B[0])/HS_R,(SPCL[1]-L.B[1])/HS_R];   /* SPin(s): s mm inside the inner pin along the row */
   const SPSI=Math.atan2(-SPD2[1],SPD2[0])-BETA,HS_RC=5.1,HS_N=12,CKS=HS_RC/5.5,HS_B=0.23,HS_T=0.221,HS_RI=3.2,CKC=(HS_RI-HS_T/2)/3.72,HS_LEAD=1.25*CKC,HS_Y=BAL_Y-1.5,SB_T=0.85,CLD=0.6,HS_H=HS_Y-(CK_T+2.6+SB_T+CLD/2),SPS=SPHb;   /* SPS: the stud screw. HS_Y, HS_H: the collet's tongue (the spring's lower end) 1.1 below the rim's top edge, as low as the hub allows (the collet
      0.07 over the hub's boss and the cap's screws; 0.8 lower until 4 October 2026, level with the rim's top), and the spring up to the stud's clamp, whose height the cock fixes (below) */
@@ -1194,7 +1199,7 @@ function buildMovement(M){
      coil's sense) with the collet's end turned th and the stud's held, the turn shared along the free length */
   const HSD=(()=>{const loc=w=>[w[0]*SPD2[0]+w[1]*SPD2[1],SPD2[0]*w[1]-SPD2[1]*w[0]],rel=q=>[q[0]-L.B[0],q[1]-L.B[1]],B=loc(rel(SPin(SP_ST))),ub=loc([-SPu[0],-SPu[1]]),
       sol=(sig,P,h,v0,ri)=>{const r=HSPR.solve(HS_RC,sig,P,h,v0);return r&&r.res<1e-7?r:HSPR.design(HS_RC,sig,P,h,ri);},
-      outer=sol(1,B,Math.atan2(ub[1],ub[0]),[-3.22518,14.82449,0.14548,-0.040912,0.0025914],1.2),inner=sol(-1,[HS_RI,0],-Math.PI/2,[5.37254,21.7728,-0.0079096,0.0006175,-2.408e-5],HS_RI-0.06);
+      outer=sol(1,B,Math.atan2(ub[1],ub[0]),[-2.23447,14.6172,0.18083,-0.0399359,0.0015664],1.2),inner=sol(-1,[HS_RI,0],-Math.PI/2,[5.37254,21.7728,-0.0079096,0.0006175,-2.408e-5],HS_RI-0.06);
     if(!outer||!inner)throw Error('hairspring: no terminal curve meets Phillips\' conditions');
     const P=HSPR.path(HS_RC,inner,outer,HS_N),Ee=loc(rel(SPin(SP_E-0.2))),q0=P.pts[P.pts.length-1],raw=[[HS_RI,-HS_LEAD,-HS_LEAD],...P.pts,[Ee[0],Ee[1],P.L+Math.hypot(Ee[0]-q0[0],Ee[1]-q0[1])]];
     const S0=-HS_LEAD,S1=raw[raw.length-1][2],n=Math.ceil((S1-S0)/0.3),pts=[];let j=0;
@@ -1318,7 +1323,7 @@ function buildMovement(M){
   const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',rd:SRD,uc:SRU,flip:true,cuts:[[[-1.11,-1.11],[1.11,-1.11],[1.11,1.11],[-1.11,1.11]]]}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* radial faces meet the click against the mainspring's pull; on the arbor's square (ASQ), its hole square (KLUwI2UUCMQ 23:30, the ratchet off on the mat: the mat through a square hole; 11:58, 38:25, the ratchet on: the square rises from its face), 0.01 clear each side (a round bore r 1.4, pressed on, until 14 October 2026) */
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
-  const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-27.45,-1,M.steel,L.Ba[0],L.Ba[1]);   /* its round body up to just under the ratchet, where the square begins (a collar r 2.3 over the ratchet until 14 October 2026: none on KLUwI2UUCMQ 11:58, the square rising straight from the ratchet's face) */
+  const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-27.40,-1,M.steel,L.Ba[0],L.Ba[1]);   /* its round body up to just under the ratchet, where the square begins (a collar r 2.3 over the ratchet until 14 October 2026: none on KLUwI2UUCMQ 11:58, the square rising straight from the ratchet's face) */
   /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The core r 4.84, 0.06 under the strip's
      inner face on MSPRING.ra 4.9: the low end of three readings on two 1941 movements, r 4.8-5.7 (KLUwI2UUCMQ 33:20.5, the cap off and the arbor in, its edge with the
      innermost coil 0.32-0.36 of the end face's inner ellipse; 33:06, the spring's inner end curled at 0.30-0.34 of the inside radius before the arbor goes in; TN24H
