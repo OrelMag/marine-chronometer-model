@@ -25,8 +25,9 @@ before, on a rise that goes on to DHI (2 dB) over it: a click's ringing never ri
 of up to 2 ms is measured whole. Their spread over --boot resamples of the beats (with replacement) is each onset's uncertainty, and how often it is
 found its weight: an onset rising STRONG (3 dB) in 80 % of them must be explained, a weaker one may be. 7. The model: dynamics.js's time-domain
 escapement at 15 drives (about 140-350 deg) and 7 beat errors (bE -12 to +12 deg), each beat's events relative to the strike: 4 the discharge jewel meets
-the passing spring (unlocking), 2 the wheel released (the tooth leaves the stone), 3 the detent lands on its stop, 0 the tooth strikes the impulse
-jewel, 1 the next tooth locks on the stone, and on the return swing 8 the jewel meets the trip spring and 9 the spring comes clear; the old model (before
+the passing spring (unlocking), 2 the wheel released (the tooth leaves the stone), 3 the detent lands on its stop (first), 7 it is home on it (its last
+landing, the bounces dying away: since 14 October 2026; We1dLNXiBj0's loud click is this one, the video's swing shows, not the strike), 0 the tooth strikes
+the impulse jewel, 1 the next tooth locks on the stone, and on the return swing 8 the jewel meets the trip spring and 9 the spring comes clear; the old model (before
 11 October 2026, 39d6919) from its kinematic angles, t(theta) = acos((bE - theta)/A)/(4 pi) from the far turning point (the return swing T - t). 8. The
 fit: every order-keeping one-to-one pairing of events with onsets (which click the beats were aligned on is free: the strike in one recording, the lock
 in another); for each, the shift by weighted least squares at every swing, the cost the pairs' chi^2 (sigma: the onset's spread and SM, 0.3 ms, the
@@ -45,8 +46,8 @@ W0, W1, R0, R1 = -30, 40, 215, 295   # the windows read, ms from the aligned cli
 DLO, DHI, STRONG, SM = 1.5, 2.0, 3.0, 0.3   # onset thresholds (dB; an onset rising STRONG or more must be explained, a weaker one may be), and the timing sigma (ms) every onset carries besides its spread: the onset's definition, Opus's smearing of transients
 FL = (300, 440)   # the quiet floor, ms after the aligned click: after the return swing's clicks, before the next beat (a click rings for 100 ms in xDKFZaY88cM)
 GB = (4, 2)   # the baseline: the highest level 4 to 2 ms before (a rise of up to 2 ms is measured whole; ringing, every 1.1 ms, stays under its earlier peaks)
-NAMES = {4: 'jewel meets passing spring', 2: 'wheel released', 3: 'detent lands', 0: 'strike', 1: 'lock', 8: 'jewel meets trip spring', 9: 'trip spring clear'}
-FIT = [4, 2, 3, 0, 1, 8, 9]; CORE = [0, 1, 8, 9]; ACT = [4, 2, 3, 0, 1]
+NAMES = {4: 'jewel meets passing spring', 2: 'wheel released', 3: 'detent lands', 7: 'detent home', 0: 'strike', 1: 'lock', 8: 'jewel meets trip spring', 9: 'trip spring clear'}
+FIT = [4, 2, 3, 7, 0, 1, 8, 9]; CORE = [0, 1, 8, 9]; ACT = [4, 2, 3, 7, 0, 1]
 UE, UO = 4.0, 9.0   # the fit's price for a model event left unheard (2 sigma squared: some contacts are quiet) and for a clear onset no event explains (3 sigma squared)
 def opt(a, k, n, d):
     if k in a: i = a.index(k); v = a[i + 1:i + 1 + n]; del a[i:i + 1 + n]; return v if n > 1 else v[0]
@@ -119,8 +120,9 @@ def match(on, bs):   # each onset's spread over the resamples (nearest within 1 
 # ---------- the models ----------
 JS = r"""const {sim,ESC}=require(process.argv[1]+'/dynamics.js'),D=Math.PI/180,out=[];
 for(const bE of [-12,-8,-4,0,4,8,12])for(const s of [0.35,0.4,0.45,0.5,0.6,0.7,0.8,0.9,1,1.1,1.25,1.4,1.6,1.8,2]){const tr=[],r=sim({mode:'phys',T:4,from:3,trace:tr,s,bE,A:ESC.ampAt(s)/D}),ev=tr.map(x=>[+x[0],x[1]]);
-  const q=ev.filter(e=>e[1]===0&&e[0]>2.9&&e[0]<3.4);if(!q.length)continue;const st=q[0][0],E={};for(const[t,k]of ev){const d=(t-st)*1e3;if(d<-20||d>300)continue;if(E[k]===undefined)E[k]=d;}
-  if([4,2,3,0,1,8,9].every(k=>E[k]!==undefined))out.push({s,bE,A:r.A,E});}   /* far out of beat at the strongest drive it trips: no clean beat, left out */
+  const q=ev.filter(e=>e[1]===0&&e[0]>2.9&&e[0]<3.4);if(!q.length)continue;const st=q[0][0],E={},L3=[];for(const[t,k]of ev){const d=(t-st)*1e3;if(d<-20||d>300)continue;if(k===3)L3.push(d);if(E[k]===undefined)E[k]=d;}
+  const h=L3.filter(d=>d<E[1]);if(h.length)E[7]=h[h.length-1];   /* 7: the detent home on its stop, its last landing before the lock */
+  if([4,2,3,7,0,1,8,9].every(k=>E[k]!==undefined))out.push({s,bE,A:r.A,E});}   /* far out of beat at the strongest drive it trips: no clean beat, left out */
 console.log(JSON.stringify(out));"""
 DB = [-12, -8, -4, 0, 4, 8, 12]   # out of beat (deg) the model is run at: the hairspring's rest that far from the escapement's zero (dynamics.js bE)
 def corrected():   # {bE: (swings, {event: times})} over the drives
@@ -129,7 +131,7 @@ def corrected():   # {bE: (swings, {event: times})} over the drives
 # the old model (39d6919's makeEsc, kinematic, no time-domain version): angles from its measure() at the model's settings: the jewel meets the passing spring at
 # contact -27.32 deg, the wheel is released (rel) -21.28, the tooth lands on the impulse jewel (run.land) -20.65, the detent falls back (off) -10.96, impulse ends at the lock (impEnd) +20.75; on the
 # return swing the jewel meets the trip spring at -15.88 (its PS table's first contact) and the spring comes clear (poff) -39.12
-OLD = {4: -27.32, 2: -21.28, 0: -20.65, 3: -10.96, 1: 20.75, 8: -15.88, 9: -39.12}
+OLD = {4: -27.32, 2: -21.28, 0: -20.65, 3: -10.96, 7: -10.96, 1: 20.75, 8: -15.88, 9: -39.12}   # 7: the old model's detent falls back in one step (3)
 def old_at(A, d=0.0):   # the balance at d - A cos(wt): out of beat by d, the oscillation's centre d from the escapement's zero
     t = lambda th: np.arccos(np.clip((d - th) / A, -1, 1)) / (4 * np.pi) * 1000; s = t(OLD[0])
     return {k: (500 - t(v) - s if k in (8, 9) else t(v) - s) for k, v in OLD.items()}
@@ -189,9 +191,11 @@ if __name__ == '__main__':
                 for nm, M in (('corrected', MC), ('old', MO)):
                     F = fit(on, Ag, M, ACT); ev = {q: on[o]['t'] for q, o in F['pairs']}
                     sl = invert(Ag, M[1] - M[0], ev[1] - ev[0]) if 0 in ev and 1 in ev else np.nan
-                    row[nm] = dict(A=F['A'], cost=round(F['cost'], 1), pairs={NAMES[q]: v for q, v in ev.items()}, strike_lock=round(ev[1] - ev[0], 2) if 0 in ev and 1 in ev else None, A_strike_lock=sl)
+                    uh = invert(Ag, M[7] - M[4], ev[7] - ev[4]) if 4 in ev and 7 in ev else np.nan   # the unlocking to the detent home: since 14 October 2026
+                    row[nm] = dict(A=F['A'], cost=round(F['cost'], 1), pairs={NAMES[q]: v for q, v in ev.items()}, strike_lock=round(ev[1] - ev[0], 2) if 0 in ev and 1 in ev else None, A_strike_lock=sl,
+                                   unlock_home=round(ev[7] - ev[4], 2) if 4 in ev and 7 in ev else None, A_unlock_home=uh)
                 out.append(row); g = row['corrected']; h = row['old']
-                print(f'  {int(row["t"] // 60)}:{row["t"] % 60:04.1f} {st["kept"]:3d} beats: corrected {g["A"]:.0f} deg (cost {g["cost"]:.1f}' + (f', strike to lock {g["strike_lock"]:.2f} ms: {g["A_strike_lock"]:.0f} deg' if g['strike_lock'] else '')
+                print(f'  {int(row["t"] // 60)}:{row["t"] % 60:04.1f} {st["kept"]:3d} beats: corrected {g["A"]:.0f} deg (cost {g["cost"]:.1f}' + (f', strike to lock {g["strike_lock"]:.2f} ms: {g["A_strike_lock"]:.0f} deg' if g['strike_lock'] else '') + (f', unlocking to the detent home {g["unlock_home"]:.2f} ms: {g["A_unlock_home"]:.0f} deg' if g['unlock_home'] else '')
                       + f'), old {h["A"]:.0f} deg (cost {h["cost"]:.1f}): ' + ', '.join(f'{q} {v:+.2f}' for q, v in g['pairs'].items()))
             res[i] = dict(file=os.path.basename(f), every=every, stretches=out); continue
         c, ok, P, st = beats(e[TB]); ck = c[ok]
@@ -227,7 +231,7 @@ if __name__ == '__main__':
                   + ', '.join(f'{k} {v["res"]:+.2f}' for k, v in R['fits'][f'{nm}/beat']['res'].items()))
         # single intervals read on the corrected model, between the onsets its fit paired with two events
         F = bt[('corrected', 'all')]; ev = {k: on[o] for k, o in F['pairs']}; one = {}
-        for a_, b_ in ((0, 1), (4, 0), (8, 9), (8, 4), (9, 4), (8, 0), (9, 0)):
+        for a_, b_ in ((0, 1), (4, 0), (4, 7), (7, 1), (8, 9), (8, 4), (9, 4), (8, 0), (9, 0)):
             if a_ in ev and b_ in ev:
                 wr = (a_ in (8, 9)) != (b_ in (8, 9)); g = (ev[b_]['t'] - ev[a_]['t']) % 500 if wr else ev[b_]['t'] - ev[a_]['t']; s = float(np.hypot(ev[a_]['sd'], ev[b_]['sd']))
                 y = (MC[b_] - MC[a_]) % 500 if wr else MC[b_] - MC[a_]; yo = (MO[b_] - MO[a_]) % 500 if wr else MO[b_] - MO[a_]
@@ -252,7 +256,7 @@ if __name__ == '__main__':
             ax[1].plot([], [], color=col, ls=ls, label=f'{nm} model at {A:.0f} deg')
         ax[0].set_xlim(W0, W1); ax[1].set_xlim(R0, R1)
         for k_ in (0, 1): ax[k_].grid(alpha=0.3); ax[k_].set_xlabel('ms from the aligned click'); ax[k_].set_ylim(-6, max(42, L.max() + 3))
-        ax[0].set_ylabel('dB over each beat\'s quiet floor'); ax[0].set_title(f'{i}: the active swing (4 unlock, 3 detent lands, 0 strike, 1 lock)', fontsize=9)
+        ax[0].set_ylabel('dB over each beat\'s quiet floor'); ax[0].set_title(f'{i}: the active swing (4 unlock, 3 detent lands, 7 home, 0 strike, 1 lock)', fontsize=9)
         ax[1].set_title('half a period on: the return swing (8 the jewel meets the trip spring, 9 it comes clear)', fontsize=9); ax[0].legend(fontsize=7, loc='upper left'); ax[1].legend(fontsize=7, loc='upper right')
         plt.tight_layout(); p = os.path.join(pd, f'ac_{i}.png'); plt.savefig(p, dpi=80); plt.close(); print('  plot', p)
     if write:
