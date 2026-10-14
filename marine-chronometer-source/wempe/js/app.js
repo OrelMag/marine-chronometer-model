@@ -1,12 +1,12 @@
 /* app.js: the Wempe Einheits-Chronometer's page: its parts' cards, views, sections, labels and link state, given to the shared viewer (../shared/viewer.js, VIEWER).
-   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js). */
+   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js); P1d: the balance and escapement (js/escapement.js). */
 
 /* ================= parts registry ================= */
 /* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
-const PG=['Frame','Going train'];
+const PG=['Frame','Going train','Balance','Escapement'];
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
@@ -47,7 +47,46 @@ const PARTS={
     sp:'Drawing 05 05 02 (wheel 05 05 02-1, pinion 05 05 02-2) · wheel z 80, m 0.280, tip Ø 23.33, Ms 58 spring-hard brass 1.2, rim 1.0 · pinion z 12 (from the centre distance 18.12), steel · pivots Ø 0.85'},
   secondsWheel:{t:'Seconds wheel (Sekundenrad)',g:1,src:'drawing',sn:'Every size from its sheets; the pinion’s 10 leaves from the centre distance; its tip and root scaled and estimated',figs:'05 05_1, 05 05_2, 05 05_3, 05 05_4',c:'#c99a3e',pri:2,
     d:'The fourth arbor, which turns once a minute: the intermediate wheel drives its pinion and its wheel drives the escape pinion. Its lower pivot runs in a jewel set in the intermediate bridge and goes on through the dial as the post for the seconds hand; its upper pivot runs in a brass bush in the top plate. Its hub stands 0.2 proud toward the pinion, so its rim clears the intermediate pinion’s end.',
-    sp:'Drawing 05 05 01 (wheel 05 05 01-1, pinion 05 05 01-2, revised 24.3.48) · wheel z 80, m 0.263, tip Ø 21.9, Ms 58 spring-hard brass 1.2, rim 1.0 · pinion z 10 (from the centre distance 12.63), steel · pivots Ø 0.82 and 0.76'}};
+    sp:'Drawing 05 05 01 (wheel 05 05 01-1, pinion 05 05 01-2, revised 24.3.48) · wheel z 80, m 0.263, tip Ø 21.9, Ms 58 spring-hard brass 1.2, rim 1.0 · pinion z 10 (from the centre distance 12.63), steel · pivots Ø 0.82 and 0.76'},
+  balance:{t:'Balance (Unruh)',g:1,src:'drawing',sn:'Its rim, arm, staff and hub from their sheets; the masses, timing weights and screws scaled on 05 03_2 and Wempe 3955',figs:'05 03_2, 05 03_4, 05 04_4',c:'#c7a35a',pri:3,
+    d:'The balance: a cut bimetallic rim, nickel steel inside and brass outside, made in one with its straight steel arm, so each quarter of the rim curls in as it warms and carries its mass nearer the staff. Four round brass masses sit across the rim, two timing weights on screws at the arm’s ends. It sits on the brass hub of its staff just above the top plate, its rollers under the plate. It swings about 1¼ turns, twice a second.',
+    sp:'Drawings 05 03 01, rim 05 03 01-1 (nickel steel and brass), staff 05 04 02 (29.5.46) · rim Ø 32.32 × 3.8 · arm 1.15 thick · staff 25.9 between its pivots, pivots Ø 0.21'},
+  hairspring:{t:'Hairspring (Spiralfeder)',g:1,src:'drawing',sn:'Its strip, coil, turns and terminal curve from its sheets; the outer curve drawn in proportion to end at the stud',figs:'05 03_6, 05 03_7, 05 03_8',c:'#3c4a70',pri:2,
+    d:'The helical balance spring: a polished steel strip 0.52 × 0.285 wound in 13 turns, its two ends curved in to the centre on the drawn terminal curve, so the coils open and close concentrically about the staff. Its inner end is pinned in the brass collet on the staff, its outer end in the stud on the cock.',
+    sp:'Drawings 05 03 02-1 (Spiralfaden, Bandstahl 0.52 × 0.285), curve 05 03 10 (So. 04 03 10), collet 05 03 02-2 · Ø 12.8 outside · 15 turns left-hand as wound, 13 less 3.5 mm as fitted'},
+  stud:{t:'Hairspring stud (Klötzchen)',g:1,src:'drawing',sn:'Its every size from its sheet; its place on the cock from the cock’s slot',figs:'05 03_9, 05 08_5',c:'#d9b36a',pri:1,
+    d:'A small brass L screwed on the balance cock: its upright drops through the slot in the cock’s arm and holds the hairspring’s outer end, pinned in a slot at its foot. Slid along the cock’s slot it sets the spring’s pinning point.',
+    sp:'Drawing 05 03 02-3 · Flachmessing Ms 58 · bar 14.6 × 3.1, upright 1.8 g6 × 6.1'},
+  rollers:{t:'Impulse and discharge rollers (Heberolle, Auslöserolle)',g:2,src:'drawing',sn:'The impulse roller from its sheet; the discharge roller scaled on the escapement’s layout',figs:'05 04_1, 05 04_6',c:'#c98d52',pri:2,
+    d:'Two rollers on the balance staff under the top plate. The impulse roller carries the sapphire impulse stone, which a tooth of the escape wheel pushes on every other swing; the hollow in its edge lets the tooth reach the stone. The small discharge roller below it carries the discharge stone, which pushes the gold spring and lifts the detent on that swing, and slips past it on the other.',
+    sp:'Drawings 02 04 02 (Heberolle, beryllium copper, Ø 6.78 × 1.6) and 05 04 04-1 (not in the set) · stones 1.7 wide'},
+  escapeWheel:{t:'Escape wheel (Gangrad)',g:2,src:'drawing',sn:'Its teeth, rim and crossings from its tooth-form sheet and the layout; its arbor and pinion from theirs',figs:'05 04_1, 05 04_7.1, 05 04_7.2, 05 04_8, 05 04_23',c:'#e0bd74',pri:3,
+    d:'The 15-tooth escape wheel, just under the top plate, held by the locking stone between impulses. Released, it gives the balance’s impulse stone a push through about 20 degrees and comes to rest on the next tooth: a tooth every half second, so its pinion turns the seconds wheel once a minute.',
+    sp:'Drawings 05 04 05-1 (Gangrad, Ms 63 spring-hard), 05 04 05-2 (pinion z 10, m 0.263), 02 04 08a (tooth form) · tips Ø 14.00, roots Ø 12.1 · 1.4 at the rim · arbor 22.8'},
+  detent:{t:'Spring detent (Gangfeder) and gold spring',g:2,src:'drawing',sn:'The detent’s sizes from Grießbach’s sheet 1436 (the bracketed finished sizes) and its lengths scaled on it; the gold spring from its sheet; their places from the layout',figs:'05 04_1, 05 04_2, 05 04_10.1, 05 04_10.2',c:'#9fb4c8',pri:2,
+    d:'The detent: a steel blade on a thin spring, clamped by its foot to the block. The locking stone in its pipe holds a tooth of the escape wheel. On one swing the discharge stone pushes the gold spring against the detent’s horn and lifts the detent through a quarter of a millimetre, freeing the wheel; on the other it only bends the gold spring aside.',
+    sp:'Drawings 05 04 01-1 (1436, Grießbach, 17.2.43, steel), gold spring 05 04 01-2 (8-carat gold, 0.15 × 15.4), locking stone 05 04 01-3 Ø 0.75'},
+  detentBlock:{t:'Detent block (Gangfederkloben)',g:2,src:'drawing',sn:'Every size from its sheet; which face lies on the plate inferred from the detent’s height',figs:'05 04_3, 05 04_1',c:'#d6c08a',pri:1,
+    d:'The brass L under the top plate that carries the detent: screwed up from the plate’s outer face through hole 13, placed by two steady pins. The detent’s foot is clamped to the end of its base; a screw crosses the slit end of its upright.',
+    sp:'Drawing 05 04 01-4 (8.7.43) · base 14.6 × 7.5 × 6.5, upright 3 × 3, 25 overall · fixing screw M1.7'},
+  balanceJewelsUp:{t:'Balance jewels, upper',g:1,src:'est',sn:'The seat from the cock’s sheet; the settings and stones as the coloured section draws them, sized to the seat',figs:'05 08_5, 05 08_6',c:'#c8163c',pri:1,
+    d:'The balance staff’s upper bearing in the cock: a hole jewel in its setting, put in from below with its flange in the cock’s sink, and an endstone in its own setting above, held by two screws over its edge.',
+    sp:'Settings 05 04 06-2 and 05 04 08-2, stones 05 04 07-1 and 05 04 08-1 (by the coloured section’s labels) · seat Ø 5.2 H7'},
+  balanceJewelsLow:{t:'Balance jewels, lower',g:1,src:'est',sn:'The seat from the lower cock’s sheet; the settings and stones as the coloured section draws them',figs:'05 08_4',c:'#c8163c',pri:1,
+    d:'The balance staff’s lower bearing in the lug of the lower cock: the hole jewel and the endstone, each in its setting, put in from below and held by two screws.',
+    sp:'Settings 05 04 06-2 and 05 04 08-2, stones 05 04 07-1 and 05 04 08-1 · seat Ø 5.2 H7 · screws WN-16'},
+  escEndstoneUp:{t:'Escape wheel endstone, upper',g:2,src:'est',sn:'The seat from the top plate’s section P-Q; the setting as the coloured section draws it',figs:'05 08_1b',c:'#c8163c',pri:1,
+    d:'The endstone over the escape wheel arbor’s upper pivot, in its setting pressed up into the top plate’s seat.',
+    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · seat Ø 5.2 H7'},
+  escJewelUp:{t:'Escape wheel jewel, upper',g:2,src:'est',sn:'Its seat and screw holes from the top plate’s section P-Q; the setting as the coloured section draws it',figs:'05 08_1b',c:'#c8163c',pri:1,
+    d:'The escape wheel arbor’s upper hole jewel, in its setting flush with the top plate’s inner face, held by two screws whose heads lie over its edge.',
+    sp:'Setting 05 04 06-2, jewel 05 04 06-1 (for the Ø 0.24 pivot) · two M1.2'},
+  escJewelLow:{t:'Escape wheel jewel, lower',g:2,src:'est',sn:'Its hole from the pillar plate’s table (reamed 2.50); the bush as the coloured section draws it',figs:'05 08_3a, 05 08_3b',c:'#c8163c',pri:1,
+    d:'The escape wheel arbor’s lower hole jewel, in a bush pressed into the pillar plate.',
+    sp:'Setting 05 04 06-2, jewel 05 04 06-1 · hole Ø 2.50'},
+  escEndstoneLow:{t:'Escape wheel endstone, lower',g:2,src:'est',sn:'Its screw holes from the pillar plate’s table; the cap’s outline estimated',figs:'05 08_3b',c:'#c8163c',pri:1,
+    d:'The endstone under the escape wheel arbor’s lower pivot, in a cap screwed to the pillar plate’s dial side.',
+    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · two M1.2, 3.5 either side of the arbor'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
 const PIECES={
@@ -86,7 +125,31 @@ const PIECES={
   intermediateWheel:[{k:'arbor',t:'Intermediate pinion and arbor (Zwischentrieb)',h:'050502-2',d:'The intermediate arbor’s steel pinion and arbor, one piece: 12 leaves, driven by the centre wheel, and the seat its wheel is riveted on, between its two pivots.',sp:'Drawing 05 05 02-2 · Präz. Rundstahl 5.2 · z 12, tip Ø 5.0, 4.6 long · 23.05 between its shoulders · pivots Ø 0.85',src:'scaled',sn:'Its lengths and diameters from its sheet; its leaf count from the centre distance; the tip scaled on its sheet and the root estimated'},
     {k:'wheel',t:'Intermediate wheel (Zwischenrad)',h:'050502-1',d:'The intermediate wheel, five-spoked, riveted on the pinion’s seat; it drives the seconds pinion. Its hub stands 0.2 proud on the dial side.',sp:'Drawing 05 05 02-1 · z 80, m 0.280, tip Ø 23.33, root Ø 21.57 · rim 1.0, hub Ø 7.5, spokes 1.3'}],
   secondsWheel:[{k:'arbor',t:'Seconds pinion and arbor (Sekundentrieb)',h:'050501-2',d:'The seconds arbor’s steel pinion and arbor, one piece: its 10 leaves driven by the intermediate wheel, the seat its wheel is riveted on, and its lower pivot, which runs on as the post for the seconds hand.',sp:'Drawing 05 05 01-2 (revised 24.3.48) · Präz. Rundstahl 3.5 · z 10, tip Ø 3.4, 7 long · 24.1 between its shoulders · pivots Ø 0.82 and 0.76, the post to Ø 0.65',src:'scaled',sn:'Its lengths and diameters from its sheet; its leaf count from the centre distance; the tip scaled on its sheet and the root estimated'},
-    {k:'wheel',t:'Seconds wheel (Sekundenrad)',h:'050501-1',d:'The seconds wheel, five-spoked, riveted on the pinion’s seat; it drives the escape pinion. Its hub stands 0.2 proud toward the pinion.',sp:'Drawing 05 05 01-1 · z 80, m 0.263, tip Ø 21.9, root Ø 20.23 · rim 1.0, hub Ø 6.5, spokes 1.3'}]};
+    {k:'wheel',t:'Seconds wheel (Sekundenrad)',h:'050501-1',d:'The seconds wheel, five-spoked, riveted on the pinion’s seat; it drives the escape pinion. Its hub stands 0.2 proud toward the pinion.',sp:'Drawing 05 05 01-1 · z 80, m 0.263, tip Ø 21.9, root Ø 20.23 · rim 1.0, hub Ø 6.5, spokes 1.3'}],
+  balance:[{k:'rim',t:'Balance rim and arm',h:'050301-1',d:PARTS.balance.d,sp:'Drawing 05 03 01-1 · Nickelstahl Sonderlegierung u. Messing · Ø 32.32 −0.04, joint Ø 31.29, inside Ø 30.48 · 3.8 high · cut 1.5 at 90° from the arm'},
+    {k:'masses',t:'Compensation masses',h:'050301-4 WN-12 WN-12a',d:'Four round brass masses across the rim, each held by a screw and nut through it (WN-12, WN-12a).',sp:'05 03 01-4 · Ø 6.3 × 5.4',src:'scaled',sn:'Scaled on 05 03_2 (a poor copy) and Wempe 3955’s photograph',figs:'05 03_2'},
+    {k:'timing',t:'Timing screws and weights',h:'050301-2 050301-3',d:'A timing screw across the rim at each end of the arm, in a tapped hole Ø 0.9 × 0.16, carrying a brass weight: turned in or out, they set the rate.',sp:'05 03 01-2, 05 03 01-3 · 42.1 over both',src:'scaled',sn:'The hole from the rim’s sheet; the weights scaled on 05 03_2 and Wempe 3955',figs:'05 03_2, 05 03_4'},
+    {k:'staff',t:'Balance staff',h:'050402-1',d:'The hardened steel staff: its pivots run in the jewels in the two cocks; it carries the collet, the arm on the hub, and the rollers.',sp:'Drawing 05 04 02-1 (in 05 04 02, 29.5.46) · hardened and tempered · seats Ø 1.65 s6, Ø 2 h6, Ø 1.2 r6 · pivots Ø 0.21',src:'drawing',sn:'Its diameters and the lengths from the hub’s flange from 05 04 02; its pivots from 05 03_3.2; its ends fitted to the endstones',figs:'05 04_4, 05 03_3-2'},
+    {k:'hub',t:'Balance hub (Unruhbutzen)',h:'050402-2',d:'The brass hub pressed on the staff, its flange carrying the arm.',sp:'05 04 02-2 · Ms · flange Ø 6.3 × 1.8, neck Ø 2.63, 4.1 long, 2 × M1',src:'drawing',sn:'Every size from 05 04 02',figs:'05 04_4'},
+    {k:'screws',t:'Hub screws',h:'WN-10',d:'Two screws from under the hub’s flange into the arm.',sp:'WN-10 · M1',src:'est',sn:'Their place from the arm’s holes; drawn as the coloured section draws them',figs:'05 04_4'}],
+  hairspring:[{k:'spring',t:'Hairspring',h:'050302-1',d:PARTS.hairspring.d,sp:PARTS.hairspring.sp},
+    {k:'collet',t:'Hairspring collet (Spiralrolle)',h:'050302-2 050302-4.c',d:'The split brass collet on the staff, with the hole across its end where the spring’s inner end is pinned (Spiralstift 05 03 02-4).',sp:'05 03 02-2 · Ms 58 · 9.1 × 3.8/2.7 × 3.3, bore 1.6 H7',src:'drawing',sn:'Every size from its sheet',figs:'05 03_8'}],
+  stud:[{k:'stud',t:'Stud',h:'050302-3 050302-4.s',d:PARTS.stud.d,sp:PARTS.stud.sp},
+    {k:'screw',t:'Stud screw',h:'WN-11',d:'The screw holding the stud to the cock.',sp:'WN-11 · M1.4',src:'est',sn:'The coloured section’s label; its size from the stud’s hole',figs:'05 03_9'}],
+  rollers:[{k:'impulse',t:'Impulse roller and stone',h:'050403-1 050403-2',d:'The beryllium-copper impulse roller and its sapphire impulse stone, set in shellac.',sp:'02 04 02 · Ø 6.78 × 1.6 · stone 0.5 × 1.8 × 1.7',src:'drawing',sn:'Every size from its sheet',figs:'05 04_6'},
+    {k:'discharge',t:'Discharge roller and stone',h:'050404-1 050404-2',d:'The small collar and its discharge stone that work the gold spring.',sp:'05 04 04-1 (not in the set) · stone 1.7 wide',src:'scaled',sn:'Scaled on the layout 05 04_1',figs:'05 04_1'}],
+  escapeWheel:[{k:'wheel',t:'Escape wheel',h:'050405-1',d:PARTS.escapeWheel.d,sp:PARTS.escapeWheel.sp},
+    {k:'pinion',t:'Escape pinion and arbor',h:'050405-2',d:'The steel arbor with its pinion of 10 leaves, which the seconds wheel drives.',sp:'05 04 05-2 · Präz. Rundstahl · z 10, m 0.263, tips Ø 2.97 · pivots Ø 0.24',src:'drawing',sn:'From its sheets',figs:'05 04_8, 05 04_7.2'},
+    {k:'collet',t:'Escape wheel collet (Gangradbutzen)',h:'050405-3',d:'The brass collet the wheel is pressed on.',sp:'05 04 05-3 (05 04 10) · 4.7 long',src:'drawing',sn:'Its length from 05 04_7.2; its taper scaled',figs:'05 04_7.2'}],
+  detent:[{k:'detent',t:'Detent with its locking stone',h:'050401-1 050401-3',d:PARTS.detent.d,sp:'1436 (05 04 01-1) · foot 0.60 × 1.9 × 6.6, spring 0.07, blade 0.50/0.28, pipe Ø 1.15 · stone Ø 0.75'},
+    {k:'gold',t:'Gold spring (Goldfeder)',h:'050401-2 WN-14',d:'The gold passing spring, screwed to the detent, resting on its horn.',sp:'05 04 01-2 · 8-carat gold (Goldblech, federhart) · 0.15 thick, 15.4 long',src:'drawing',sn:'From its sheet; its path round the pipe after the layout',figs:'05 04_2, 05 04_1'},
+    {k:'foot',t:'Detent foot screw and pins',h:'WN-gf WN-201.d',d:'The screw and two steady pins that hold the detent’s foot to the block.',sp:'M1 · pins Ø 0.45',src:'est',sn:'The screw from the block’s sheet; the pins scaled on 1436',figs:'05 04_3, 05 04_10.1'}],
+  detentBlock:[{k:'block',t:'Detent block',h:'050401-4',d:PARTS.detentBlock.d,sp:PARTS.detentBlock.sp},
+    {k:'screws',t:'Block screws and pins',h:'WN-gk WN-gkA WN-gkP',d:'The fixing screw from the top plate’s outer face, the screw across the upright’s slit end, and the two steady pins.',sp:'M1.7, M1.2 · pins Ø 0.9',src:'est',sn:'Their threads and places from the block’s sheet; heads estimated',figs:'05 04_3'}],
+  balanceJewelsUp:[{k:'jewel',t:'Upper hole jewel',h:'050406-2.bu 050407-1.bu',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Upper endstone',h:'050408-2.bu 050408-1.bu',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-55.ck',d:'Two screws holding the endstone’s setting.',sp:'M1.2'}],
+  balanceJewelsLow:[{k:'jewel',t:'Lower hole jewel',h:'050406-2.bl 050407-1.bl',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Lower endstone',h:'050408-2.bl 050408-1.bl',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-16',d:'Two screws holding the settings in the lug.',sp:'WN-16 · M1.2'}],
+  escJewelUp:[{k:'jewel',t:'Hole jewel and setting',h:'050406-2.eu 050406-1.eu',d:PARTS.escJewelUp.d,sp:PARTS.escJewelUp.sp},{k:'screws',t:'Setting screws',h:'WN-es',d:'Two screws under the plate holding the setting.',sp:'M1.2'}],
+  escEndstoneLow:[{k:'cap',t:'Endstone cap',h:'050408-2.el 050408-1.el',d:PARTS.escEndstoneLow.d,sp:PARTS.escEndstoneLow.sp},{k:'screws',t:'Cap screws',h:'WN-ec',d:'Two screws through the cap into the pillar plate.',sp:'M1.2'}]};
 
 /* ================= views ================= */
 /* the camera's turn (yaw), height (pitch, rad) and distance, aimed at a point in the movement's frame. The movement stands train side up (the scene's group turns it over) */
@@ -95,8 +158,9 @@ const VIEWS={
   plan:{yaw:Math.PI,pitch:1.52,dist:270,target:[0,-11,0]},   /* straight down on the top plate, 12 o'clock at the top (so 3 o'clock on the left, as the sheets draw the Oberplatte: their O to the right) */
   dial:{yaw:Math.PI,pitch:-1.2,dist:270,target:[0,-11,0]},   /* from below, on the pillar plate's dial side */
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
-  exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1}};
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The pillar plate’s dial side, from below.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.'};
+  exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
+  escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true}};   /* from under the top plate, through it, on the wheel, detent and rollers */
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The pillar plate’s dial side, from below.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
@@ -118,10 +182,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Centre wheel','Minutenrad, 05 05 03','centreWheel',pw(P.centreWheel,H[1][0]+15,-1.1,H[1][1]-6));
       add('Intermediate wheel','Zwischenrad, 05 05 02','intermediateWheel',pw(P.intermediateWheel,H[38][0]+8,0.7,H[38][1]+7));
       add('Seconds wheel','Sekundenrad, 05 05 01','secondsWheel',pw(P.secondsWheel,H[35][0]-8,-4.8,H[35][1]+6));},
-    /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escape wheel steps a tooth a beat (0.5 s) plus the
-       escapement's progress (ESC.state: P0's stand-in gives none), and E turns the train (movement.js, update) */
-    tick:(dt,now,st)=>{if(!mv)return[];tSim+=dt*st.speed;const y=tSim/0.5,s=ESC.state(y-Math.floor(y)),E=Math.floor(y)+s.prog;
-      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n:2.5,winding:false});return[E];},
-    hud:st=>`The frame and going train, from their drawings${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
+    /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js): the balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period: E as the Hamilton's,
+       a beat behind until the tooth escapes); fast, the balance is drawn at rest and the wheel turns on smoothly */
+    tick:(dt,now,st)=>{if(!mv)return[];tSim+=dt*st.speed;const y=tSim/0.5,k=Math.floor(y),p=y-k;let s;
+      if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};mv.userData.update({E:y,th:0,lift:0,psDef:0});}
+      else{s=ESC.state(p);mv.userData.update({E:k-1+(p>0?s.prog:0),th:s.th,lift:s.lift,psDef:s.psDef});}
+      return[+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5)];},
+    hud:st=>`The frame, going train and escapement, from their drawings${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
   if(V&&/[?&]qa\b/.test(location.search))window.__V=V;   /* the viewer's state, for the tools */
 })();

@@ -1,5 +1,5 @@
 {
- "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
+ "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings; P1d: the balance and escapement (groups 05 03, 05 04), from 05-03-05-04-balance-escapement.md checked on the sheets, the jewels by the coloured section's labels. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
  "relations": {
   "in": "the part's axis inside the named part: tap (thread in a tapped hole), clear (through a clearance hole), run, free, press (as the Hamilton's bom.json)",
   "round": "the part's bore round the named part",
@@ -971,6 +971,1102 @@
     ]
    ],
    "figs": "05 08_32.2"
+  },
+  {
+   "id": "050301-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 01-1",
+   "name": "Unruhreifen (balance rim with arm, nickel steel and brass)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "balance",
+   "fn": "The cut bimetallic rim and its arm, on the hub of the staff.",
+   "rel": [
+    [
+     "round",
+     "050402-1",
+     "press"
+    ],
+    [
+     "on",
+     "050402-2"
+    ]
+   ],
+   "figs": "05 03_4, 05 03_2"
+  },
+  {
+   "id": "050301-4",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 01-4",
+   "name": "Masse (compensation mass)",
+   "qty": 4,
+   "parent": "050301-1",
+   "kind": "part",
+   "part": "balance",
+   "fn": "Round brass masses across the rim, which the rim carries in as it warms.",
+   "rel": [
+    [
+     "on",
+     "050301-1"
+    ]
+   ],
+   "figs": "05 03_2"
+  },
+  {
+   "id": "WN-12",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (WN-12), the mass screw",
+   "qty": 4,
+   "parent": "050301-4",
+   "kind": "part",
+   "part": "balance",
+   "fn": "Holds a mass on the rim, across it.",
+   "rel": [
+    [
+     "in",
+     "050301-4",
+     "embed"
+    ],
+    [
+     "in",
+     "050301-1",
+     "embed"
+    ]
+   ],
+   "figs": "05 03_2"
+  },
+  {
+   "id": "WN-12a",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Mutter (WN-12a), the mass screw's nut",
+   "qty": 4,
+   "parent": "050301-4",
+   "kind": "part",
+   "part": "balance",
+   "fn": "On the mass screw inside the rim.",
+   "rel": [
+    [
+     "on",
+     "050301-4"
+    ]
+   ],
+   "figs": "05 03_2"
+  },
+  {
+   "id": "050301-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 01-2",
+   "name": "Zeitschraube (timing screw)",
+   "qty": 2,
+   "parent": "050301-1",
+   "kind": "part",
+   "part": "balance",
+   "fn": "Across the rim at the arm's end in its tapped hole Ø 0.9 × 0.16, carrying the timing weight.",
+   "rel": [
+    [
+     "in",
+     "050301-1",
+     "embed"
+    ]
+   ],
+   "figs": "05 03_2, 05 03_4"
+  },
+  {
+   "id": "050301-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 01-3",
+   "name": "Zeitmasse (timing weight)",
+   "qty": 2,
+   "parent": "050301-2",
+   "kind": "part",
+   "part": "balance",
+   "fn": "On the timing screw: turned in or out, sets the rate.",
+   "rel": [
+    [
+     "round",
+     "050301-2",
+     "tap"
+    ]
+   ],
+   "figs": "05 03_2"
+  },
+  {
+   "id": "050402-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 02-1",
+   "name": "Unruhwelle (balance staff)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "balance",
+   "fn": "The balance staff, its pivots in the jewels of the two cocks.",
+   "rel": [
+    [
+     "in",
+     "050407-1.bu",
+     "run"
+    ],
+    [
+     "in",
+     "050407-1.bl",
+     "run"
+    ],
+    [
+     "endshake",
+     "050408-1.bu",
+     "050408-1.bl"
+    ]
+   ],
+   "figs": "05 04_4, 05 03_3-2"
+  },
+  {
+   "id": "050402-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 02-2",
+   "name": "Unruhbutzen (balance hub, brass)",
+   "qty": 1,
+   "parent": "050402-1",
+   "kind": "part",
+   "part": "balance",
+   "fn": "Pressed on the staff, its flange carries the arm.",
+   "rel": [
+    [
+     "round",
+     "050402-1",
+     "press"
+    ]
+   ],
+   "figs": "05 04_4"
+  },
+  {
+   "id": "WN-10",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (WN-10), the hub's screws",
+   "qty": 2,
+   "parent": "050402-2",
+   "kind": "part",
+   "part": "balance",
+   "fn": "From under the hub's flange into the arm.",
+   "rel": [
+    [
+     "in",
+     "050402-2",
+     "tap"
+    ],
+    [
+     "in",
+     "050301-1",
+     "clear"
+    ]
+   ],
+   "figs": "05 04_4"
+  },
+  {
+   "id": "050302-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 02-1",
+   "name": "Spiralfeder (helical hairspring)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "hairspring",
+   "fn": "The balance spring: 13 turns between its two terminal curves.",
+   "rel": [],
+   "figs": "05 03_6, 05 03_7"
+  },
+  {
+   "id": "050302-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 02-2",
+   "name": "Spiralrolle (hairspring collet)",
+   "qty": 1,
+   "parent": "050302-1",
+   "kind": "part",
+   "part": "hairspring",
+   "fn": "On the staff's 1:70 seat; the spring's inner end pinned in the hole across its end.",
+   "rel": [
+    [
+     "round",
+     "050402-1",
+     "press"
+    ]
+   ],
+   "figs": "05 03_8"
+  },
+  {
+   "id": "050302-4.c",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 02-4",
+   "name": "Spiralstift (hairspring pin, at the collet)",
+   "qty": 1,
+   "parent": "050302-2",
+   "kind": "part",
+   "part": "hairspring",
+   "fn": "Wedges the spring's inner end in the collet's hole.",
+   "rel": [
+    [
+     "in",
+     "050302-2",
+     "embed"
+    ]
+   ],
+   "figs": "05 03_8"
+  },
+  {
+   "id": "050302-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 02-3",
+   "name": "Klötzchen (hairspring stud)",
+   "qty": 1,
+   "parent": "050302-1",
+   "kind": "part",
+   "part": "stud",
+   "fn": "On the cock, its upright through the cock's slot, holding the spring's outer end.",
+   "rel": [
+    [
+     "on",
+     "050803-1"
+    ]
+   ],
+   "figs": "05 03_9"
+  },
+  {
+   "id": "050302-4.s",
+   "idx": null,
+   "no": "",
+   "dwg": "05 03 02-4",
+   "name": "Stift (hairspring pin, at the stud)",
+   "qty": 1,
+   "parent": "050302-3",
+   "kind": "part",
+   "part": "stud",
+   "fn": "Wedges the spring's outer end in the stud's slot.",
+   "rel": [
+    [
+     "on",
+     "050302-3"
+    ]
+   ],
+   "figs": "05 03_9"
+  },
+  {
+   "id": "WN-11",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (WN-11), the stud's screw",
+   "qty": 1,
+   "parent": "050302-3",
+   "kind": "part",
+   "part": "stud",
+   "fn": "Holds the stud to the cock.",
+   "rel": [
+    [
+     "in",
+     "050302-3",
+     "clear"
+    ],
+    [
+     "in",
+     "050803-1",
+     "tap"
+    ]
+   ],
+   "figs": "05 03_9"
+  },
+  {
+   "id": "050403-1",
+   "idx": null,
+   "no": "",
+   "dwg": "02 04 02",
+   "name": "Heberolle (impulse roller, beryllium copper; 05 04 03-1 in the coloured section)",
+   "qty": 1,
+   "parent": "050402-1",
+   "kind": "part",
+   "part": "rollers",
+   "fn": "Carries the impulse stone, which the escape wheel pushes.",
+   "rel": [
+    [
+     "round",
+     "050402-1",
+     "press"
+    ]
+   ],
+   "figs": "05 04_6, 05 04_1"
+  },
+  {
+   "id": "050403-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 03-2",
+   "name": "Hebestein (impulse stone, sapphire)",
+   "qty": 1,
+   "parent": "050403-1",
+   "kind": "jewel",
+   "part": "rollers",
+   "fn": "Receives the escape wheel's impulse.",
+   "rel": [],
+   "figs": "05 04_6",
+   "jewel": {
+    "type": "pallet",
+    "holder": "050403-1"
+   }
+  },
+  {
+   "id": "050404-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 04-1",
+   "name": "Auslöserolle (discharge roller)",
+   "qty": 1,
+   "parent": "050402-1",
+   "kind": "part",
+   "part": "rollers",
+   "fn": "Carries the discharge stone.",
+   "rel": [
+    [
+     "round",
+     "050402-1",
+     "press"
+    ]
+   ],
+   "figs": "05 04_1"
+  },
+  {
+   "id": "050404-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 04-2",
+   "name": "Auslösestein (discharge stone)",
+   "qty": 1,
+   "parent": "050404-1",
+   "kind": "jewel",
+   "part": "rollers",
+   "fn": "Lifts the detent through the gold spring on one swing; passes it on the other.",
+   "rel": [],
+   "figs": "05 04_1",
+   "jewel": {
+    "type": "pallet",
+    "holder": "050404-1"
+   }
+  },
+  {
+   "id": "050405-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 05-1",
+   "name": "Gangrad (escape wheel, 15 teeth)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "escapeWheel",
+   "fn": "Locked on the detent's stone between impulses, it gives the balance its impulse.",
+   "rel": [
+    [
+     "round",
+     "050405-3",
+     "press"
+    ]
+   ],
+   "figs": "05 04_7.2, 05 04_23, 05 04_1"
+  },
+  {
+   "id": "050405-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 05-2",
+   "name": "Gangtrieb (escape pinion, z 10, m 0.263, and arbor)",
+   "qty": 1,
+   "parent": "050405-1",
+   "kind": "part",
+   "part": "escapeWheel",
+   "fn": "The arbor and pinion; driven by the seconds wheel.",
+   "rel": [
+    [
+     "in",
+     "050406-1.eu",
+     "run"
+    ],
+    [
+     "in",
+     "050406-1.el",
+     "run"
+    ],
+    [
+     "endshake",
+     "050408-1.eu",
+     "050408-1.el"
+    ]
+   ],
+   "figs": "05 04_8, 05 04_7.2"
+  },
+  {
+   "id": "050405-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 05-3",
+   "name": "Gangradbutzen (escape wheel collet; 05 04 10 on 05 04_7.2)",
+   "qty": 1,
+   "parent": "050405-1",
+   "kind": "part",
+   "part": "escapeWheel",
+   "fn": "The brass collet the wheel is pressed on.",
+   "rel": [
+    [
+     "round",
+     "050405-2",
+     "press"
+    ]
+   ],
+   "figs": "05 04_7.2"
+  },
+  {
+   "id": "050401-1",
+   "idx": null,
+   "no": "1436",
+   "dwg": "05 04 01-1",
+   "name": "Gangfeder (spring detent, drawing 1436)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "detent",
+   "fn": "Holds the escape wheel on its locking stone; lifted on one swing by the discharge stone through the gold spring.",
+   "rel": [
+    [
+     "on",
+     "050401-4"
+    ]
+   ],
+   "figs": "05 04_10.1, 05 04_10.2, 05 04_1"
+  },
+  {
+   "id": "050401-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 01-3",
+   "name": "Ruhestein (locking stone)",
+   "qty": 1,
+   "parent": "050401-1",
+   "kind": "jewel",
+   "part": "detent",
+   "fn": "Locks each tooth of the escape wheel.",
+   "rel": [],
+   "figs": "05 04_1",
+   "jewel": {
+    "type": "pallet",
+    "holder": "050401-1"
+   }
+  },
+  {
+   "id": "050401-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 01-2",
+   "name": "Goldfeder (gold passing spring)",
+   "qty": 1,
+   "parent": "050401-1",
+   "kind": "part",
+   "part": "detent",
+   "fn": "Screwed to the detent, resting on its horn: the discharge stone lifts the detent through it on one swing and bends it aside on the other.",
+   "rel": [
+    [
+     "on",
+     "050401-1"
+    ]
+   ],
+   "figs": "05 04_2, 05 04_1"
+  },
+  {
+   "id": "WN-14",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (WN-14), the gold spring's screw",
+   "qty": 1,
+   "parent": "050401-2",
+   "kind": "part",
+   "part": "detent",
+   "fn": "Holds the gold spring to the detent's square.",
+   "rel": [
+    [
+     "in",
+     "050401-1",
+     "embed"
+    ]
+   ],
+   "figs": "05 04_1"
+  },
+  {
+   "id": "WN-gf",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Detent foot screw, M1 (its WN number not read)",
+   "qty": 1,
+   "parent": "050401-1",
+   "kind": "part",
+   "part": "detent",
+   "fn": "Clamps the detent's foot to the block's end.",
+   "rel": [
+    [
+     "in",
+     "050401-1",
+     "embed"
+    ],
+    [
+     "in",
+     "050401-4",
+     "embed"
+    ]
+   ],
+   "figs": "05 04_3"
+  },
+  {
+   "id": "WN-201.d",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stellstift (WN-201, \"Stellstift 2\"), the detent's foot pins",
+   "qty": 2,
+   "parent": "050401-1",
+   "kind": "part",
+   "part": "detent",
+   "fn": "Place the detent's foot on the block.",
+   "rel": [
+    [
+     "in",
+     "050401-1",
+     "embed"
+    ],
+    [
+     "in",
+     "050401-4",
+     "embed"
+    ]
+   ],
+   "figs": "05 04_10.1"
+  },
+  {
+   "id": "050401-4",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 01-4",
+   "name": "Gangfederkloben (detent block)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "Under the top plate, carries the detent.",
+   "rel": [
+    [
+     "on",
+     "050901"
+    ]
+   ],
+   "figs": "05 04_3"
+  },
+  {
+   "id": "WN-gk",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Detent block screw, M1.7 (its WN number not read)",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "From the top plate's outer face through hole 13 into the block.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "clear"
+    ],
+    [
+     "in",
+     "050401-4",
+     "tap"
+    ]
+   ],
+   "figs": "05 04_3, 05 08_1a"
+  },
+  {
+   "id": "WN-gkA",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Screw across the block's slit upright, M1.2 (its WN number not read)",
+   "qty": 1,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "Across the slit end of the upright.",
+   "rel": [
+    [
+     "in",
+     "050401-4",
+     "embed"
+    ]
+   ],
+   "figs": "05 04_3"
+  },
+  {
+   "id": "WN-gkP",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Steady pins Ø 0.9, detent block",
+   "qty": 2,
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "Place the block on the top plate.",
+   "rel": [
+    [
+     "in",
+     "050401-4",
+     "press"
+    ],
+    [
+     "in",
+     "050901",
+     "clear"
+    ]
+   ],
+   "figs": "05 04_3"
+  },
+  {
+   "id": "050408-2.bu",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 08-2",
+   "name": "Fassung (endstone setting), balance, upper",
+   "qty": 1,
+   "parent": "050803-1",
+   "kind": "part",
+   "part": "balanceJewelsUp",
+   "fn": "Holds the upper endstone in the cock.",
+   "rel": [
+    [
+     "in",
+     "050803-1",
+     "press"
+    ]
+   ],
+   "figs": "05 08_5"
+  },
+  {
+   "id": "050408-1.bu",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 08-1",
+   "name": "Deckstein (endstone), balance, upper",
+   "qty": 1,
+   "parent": "050408-2.bu",
+   "kind": "jewel",
+   "part": "balanceJewelsUp",
+   "fn": "Stops the staff's upper pivot end.",
+   "rel": [],
+   "figs": "05 08_5",
+   "jewel": {
+    "type": "end",
+    "holder": "050408-2.bu",
+    "arbor": "050402-1",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "050406-2.bu",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 06-2",
+   "name": "Fassung (jewel setting), balance, upper",
+   "qty": 1,
+   "parent": "050803-1",
+   "kind": "part",
+   "part": "balanceJewelsUp",
+   "fn": "Holds the upper hole jewel in the cock, its flange in the sink below.",
+   "rel": [
+    [
+     "in",
+     "050803-1",
+     "press"
+    ]
+   ],
+   "figs": "05 08_5"
+  },
+  {
+   "id": "050407-1.bu",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 07-1",
+   "name": "Lagerstein (hole jewel), balance, upper",
+   "qty": 1,
+   "parent": "050406-2.bu",
+   "kind": "jewel",
+   "part": "balanceJewelsUp",
+   "fn": "The staff's upper pivot runs in it.",
+   "rel": [],
+   "figs": "05 08_5",
+   "jewel": {
+    "type": "hole",
+    "holder": "050406-2.bu",
+    "arbor": "050402-1",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "WN-55.ck",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (WN-55 by the coloured section), the upper endstone's screws, M1.2",
+   "qty": 2,
+   "parent": "050408-2.bu",
+   "kind": "part",
+   "part": "balanceJewelsUp",
+   "fn": "Hold the endstone's setting, their heads over its edge.",
+   "rel": [
+    [
+     "in",
+     "050803-1",
+     "tap"
+    ],
+    [
+     "on",
+     "050408-2.bu"
+    ]
+   ],
+   "figs": "05 08_5"
+  },
+  {
+   "id": "050406-2.bl",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 06-2",
+   "name": "Fassung (jewel setting), balance, lower",
+   "qty": 1,
+   "parent": "050800-2",
+   "kind": "part",
+   "part": "balanceJewelsLow",
+   "fn": "Holds the lower hole jewel in the lug of the lower cock.",
+   "rel": [
+    [
+     "in",
+     "050800-2",
+     "press"
+    ]
+   ],
+   "figs": "05 08_4"
+  },
+  {
+   "id": "050407-1.bl",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 07-1",
+   "name": "Lagerstein (hole jewel), balance, lower",
+   "qty": 1,
+   "parent": "050406-2.bl",
+   "kind": "jewel",
+   "part": "balanceJewelsLow",
+   "fn": "The staff's lower pivot runs in it.",
+   "rel": [],
+   "figs": "05 08_4",
+   "jewel": {
+    "type": "hole",
+    "holder": "050406-2.bl",
+    "arbor": "050402-1",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "050408-2.bl",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 08-2",
+   "name": "Fassung (endstone setting), balance, lower",
+   "qty": 1,
+   "parent": "050800-2",
+   "kind": "part",
+   "part": "balanceJewelsLow",
+   "fn": "Holds the lower endstone.",
+   "rel": [
+    [
+     "in",
+     "050800-2",
+     "press"
+    ]
+   ],
+   "figs": "05 08_4"
+  },
+  {
+   "id": "050408-1.bl",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 08-1",
+   "name": "Deckstein (endstone), balance, lower",
+   "qty": 1,
+   "parent": "050408-2.bl",
+   "kind": "jewel",
+   "part": "balanceJewelsLow",
+   "fn": "Stops the staff's lower pivot end.",
+   "rel": [],
+   "figs": "05 08_4",
+   "jewel": {
+    "type": "end",
+    "holder": "050408-2.bl",
+    "arbor": "050402-1",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "WN-16",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube (WN-16), the lower settings' screws, M1.2",
+   "qty": 2,
+   "parent": "050408-2.bl",
+   "kind": "part",
+   "part": "balanceJewelsLow",
+   "fn": "Hold the lower settings in the lug.",
+   "rel": [
+    [
+     "in",
+     "050800-2",
+     "tap"
+    ],
+    [
+     "on",
+     "050408-2.bl"
+    ]
+   ],
+   "figs": "05 08_4"
+  },
+  {
+   "id": "050408-2.eu",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 08-2",
+   "name": "Fassung (endstone setting), escape wheel, upper",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "escEndstoneUp",
+   "fn": "Holds the upper endstone in the top plate's seat.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "05 08_1b"
+  },
+  {
+   "id": "050408-1.eu",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 08-1",
+   "name": "Deckstein (endstone), escape wheel, upper",
+   "qty": 1,
+   "parent": "050408-2.eu",
+   "kind": "jewel",
+   "part": "escEndstoneUp",
+   "fn": "Stops the escape arbor's upper pivot end.",
+   "rel": [],
+   "figs": "05 08_1b",
+   "jewel": {
+    "type": "end",
+    "holder": "050408-2.eu",
+    "arbor": "050405-2",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "050406-2.eu",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 06-2",
+   "name": "Fassung (jewel setting), escape wheel, upper",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "escJewelUp",
+   "fn": "Holds the upper hole jewel, flush with the top plate's inner face.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "05 08_1b"
+  },
+  {
+   "id": "050406-1.eu",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 06-1",
+   "name": "Lagerstein (hole jewel), escape wheel, upper",
+   "qty": 1,
+   "parent": "050406-2.eu",
+   "kind": "jewel",
+   "part": "escJewelUp",
+   "fn": "The escape arbor's upper pivot (Ø 0.24) runs in it.",
+   "rel": [],
+   "figs": "05 08_1b",
+   "jewel": {
+    "type": "hole",
+    "holder": "050406-2.eu",
+    "arbor": "050405-2",
+    "end": "upper"
+   }
+  },
+  {
+   "id": "WN-es",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Escape setting screws, upper, M1.2 (their WN number not read)",
+   "qty": 2,
+   "parent": "050406-2.eu",
+   "kind": "part",
+   "part": "escJewelUp",
+   "fn": "Hold the upper hole jewel's setting, their heads over its edge.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "tap"
+    ],
+    [
+     "on",
+     "050406-2.eu"
+    ]
+   ],
+   "figs": "05 08_1b"
+  },
+  {
+   "id": "050406-2.el",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 06-2",
+   "name": "Fassung (jewel bush), escape wheel, lower",
+   "qty": 1,
+   "parent": "050802-1",
+   "kind": "part",
+   "part": "escJewelLow",
+   "fn": "Pressed into the pillar plate's hole 26, holding the lower hole jewel.",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "press"
+    ]
+   ],
+   "figs": "05 08_3b"
+  },
+  {
+   "id": "050406-1.el",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 06-1",
+   "name": "Lagerstein (hole jewel), escape wheel, lower",
+   "qty": 1,
+   "parent": "050406-2.el",
+   "kind": "jewel",
+   "part": "escJewelLow",
+   "fn": "The escape arbor's lower pivot runs in it.",
+   "rel": [],
+   "figs": "05 08_3b",
+   "jewel": {
+    "type": "hole",
+    "holder": "050406-2.el",
+    "arbor": "050405-2",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "050408-2.el",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 08-2",
+   "name": "Fassung (endstone cap), escape wheel, lower",
+   "qty": 1,
+   "parent": "050802-1",
+   "kind": "part",
+   "part": "escEndstoneLow",
+   "fn": "On the pillar plate's dial side, holding the lower endstone.",
+   "rel": [
+    [
+     "on",
+     "050802-1"
+    ]
+   ],
+   "figs": "05 08_3b"
+  },
+  {
+   "id": "050408-1.el",
+   "idx": null,
+   "no": "",
+   "dwg": "05 04 08-1",
+   "name": "Deckstein (endstone), escape wheel, lower",
+   "qty": 1,
+   "parent": "050408-2.el",
+   "kind": "jewel",
+   "part": "escEndstoneLow",
+   "fn": "Stops the escape arbor's lower pivot end.",
+   "rel": [],
+   "figs": "05 08_3b",
+   "jewel": {
+    "type": "end",
+    "holder": "050408-2.el",
+    "arbor": "050405-2",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "WN-ec",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Escape endstone cap screws, M1.2 (their WN number not read)",
+   "qty": 2,
+   "parent": "050408-2.el",
+   "kind": "part",
+   "part": "escEndstoneLow",
+   "fn": "Hold the cap to the pillar plate.",
+   "rel": [
+    [
+     "in",
+     "050408-2.el",
+     "clear"
+    ],
+    [
+     "in",
+     "050802-1",
+     "tap"
+    ]
+   ],
+   "figs": "05 08_3b"
   }
  ]
 }

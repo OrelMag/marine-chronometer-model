@@ -119,7 +119,7 @@ const WTRAIN=(()=>{
 
   function build(mv,M,K){const{part}=K,P=K.parts,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
     const R={};
-    for(const[k,name,off,ids]of[['cw','centreWheel',-12,['050503-2','050503-1']],['tw','intermediateWheel',-6,['050502-2','050502-1']],['sw','secondsWheel',-18,['050501-2','050501-1']]]){
+    for(const[k,name,off,ids]of[['cw','centreWheel',-12,['050503-2','050503-1']],['tw','intermediateWheel',-6,['050502-2','050502-1']],['sw','secondsWheel',-33,['050501-2','050501-1']]]){
       const a=A[k],g=new THREE.Group(),pt=part(name,off);g.position.set(a.at[0],a.ys,a.at[1]);pt.add(g);
       const pin=a.pin,wh=a.wheel;
       const ar=tag(mesh(g,turned(a.prof),M.steel),ids[0]);
@@ -173,5 +173,5 @@ const WTRAIN=(()=>{
        in the movement's frame) of the centre (c), intermediate (t) and seconds (s) arbors: c for the motion work and the fusee, s for the seconds hand */
     const update=(/** @type {{E:number}} */s)=>{const a=TAU*s.E/120;R.sw.rotation.y=-a;R.tw.rotation.y=a/8;R.cw.rotation.y=-a/60;return{c:-a/60,t:a/8,s:-a};};
     return{cw:R.cw,tw:R.tw,sw:R.sw,update};}
-  return{build,A};
+  return{build,A,teeth,gear};   /* teeth, gear: the sheets' tooth forms, for the escape pinion (escapement.js) */
 })();
