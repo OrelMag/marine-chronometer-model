@@ -19,7 +19,7 @@ const T=PH.TRAIN,day={fusee:24*T.cp/T.fu,centre:24,third:24*T.cw/T.tp,fourth:24*
 /* each mesh's room: its close side less the hole tolerance and the shake (gearing.json) */
 const room=i=>{const s=GJ.stages[i];return -s.lo-s.tp-GJ.SH;},R=[0,1,2,3].map(room);
 /* the lock's room: tripping.json's rows give the lock against the depth of lock (dL, mm); a tooth's tip worn by h takes h off the depth, so its room is the model's
-   dL less the dL where the lock reaches the floor (tripping.json's, 3.9° since 14 October 2026, 5° before); the escape arbor's pivot worn toward the balance closes the centre distance, which takes 1.40 µm off the
+   dL less the dL where the lock reaches the floor (tripping.json's); the escape arbor's pivot worn toward the balance closes the centre distance, which takes 1.40 µm off the
    depth for 1.48 µm (thermal.js) */
 const LR=TJ.lock.rows.slice().sort((a,b)=>a.dL-b.dL),dL0=ESC.settings.dL,dLat=lk=>{for(let i=1;i<LR.length;i++)if(LR[i].lock>=lk){const a=LR[i-1],b=LR[i];return a.dL+(b.dL-a.dL)*(lk-a.lock)/(b.lock-a.lock);}return LR[LR.length-1].dL;};
 const lockRoom=dL0-dLat(TJ.lock.min),pivRoom=lockRoom*1.48/1.40;

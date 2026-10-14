@@ -88,6 +88,7 @@ STEPS=[('build',build,'quick'),
  ('wear',lambda log:run(['node',TOOLS/'wear.js'],ROOT,log),'quick'),   # wear at every sliding contact against its tolerance (a few seconds)
  ('traindyn',lambda log:run(['node',TOOLS/'traindyn.js'],ROOT,log),'quick'),   # the going train in time on sprung meshes (a few seconds)
  ('montecarlo',lambda log:run(['node',TOOLS/'montecarlo.js'],ROOT,log),'quick'),   # the whole movement to a maker's tolerances (about 30 s)
+ ('estimates',lambda log:run(['node',TOOLS/'estimates.js'],ROOT,log),'quick'),   # the design values resting on estimates swept over their ranges, the bench's correction applied (about 4 min)
  ('selfcontained',lambda log:run([PY,'selfcontained.py'],TOOLS,log),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),

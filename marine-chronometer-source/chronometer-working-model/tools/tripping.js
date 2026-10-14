@@ -291,7 +291,7 @@ if(require.main!==module)return;
    Each setting runs in a process of its own (MC_ESC: makeEsc's settings through dynamics.js; MC_TRIP: the frame's), many at once. For each: the frame as drawn and
    with every contact 4× stiffer (the worst of section 2's estimates) running 10 s (20 beats), a held tooth's stone's highest lift; for the depths of lock also the 3 ms blow
    across the plate that lets a tooth go (as section 4); for the springs the detent's first mode, its foot clamped and its blade free: the pitch it rings at */
-const FIG=path.join(__dirname,'tripping.json'),DEPTHS=[0.017,0.0152,0.013,0.011,0.009,0.007,0.005],THICK=[0.05,0.06,0.07,0.079,0.10,0.12,0.15];
+const FIG=path.join(__dirname,'tripping.json'),DEPTHS=[0.017,0.0152,0.013,0.011,0.009,0.007,0.005],THICK=[0.05,0.06,0.07,0.072,0.075,0.079,0.085,0.09,0.095,0.10,0.105,0.11,0.12,0.15];   /* every 0.005 mm round the band since 14 October 2026 (estimates.js): its edges are sharp */
 const blowAt=(M,dur)=>{const A0=255,ang=Math.atan2(DY.DM.my,DY.DM.mx)+Math.PI/2,ux=Math.cos(ang),uy=Math.sin(ang),B={};
   const base=p=>B[p]??=run(M,{A:A0,T:0.3+p*T0+0.55,from:0.2});
   const mk=(g,p)=>{const t1=0.3+p*T0,a=g*G0;return run(M,{A:A0,T:t1+0.55,from:0.2,ext:tt=>{const u=(tt-t1)/dur,x=u>0&&u<1?Math.sin(Math.PI*u):0;return{al:0,ax:a*x*ux,ay:a*x*uy};},extFine:tt=>tt>t1-0.005&&tt<t1+dur+0.03});};

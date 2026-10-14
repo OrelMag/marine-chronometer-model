@@ -21,6 +21,10 @@ const [SSB,SSG,SPU,H,SFL,SWL,SRO,SSW,SPW]=num(/SSB=([\d.]+)\*D2R,SSG=([\d.]+)\*D
   .map((v,i)=>[0,1,4,5,8].includes(i)?v*D2R:[6,7].includes(i)?v*FK:v);
 const SMAX=SSG-SSB,[SSF]=num(/const SSF=([\d.]+)/,'SSF'),rP=14.6*FK,rH=15.9*FK,aH=SSF-48*D2R;
 const W=SSF+SSB,a0=W+SWL,a1=SSF+TAU-SFL,Rc=SRO-SSW/2,E=207e3,I=H*SSW**3/12,EI=E*I,T0=PH.Tf;
+/* the stiffness of a band of height h with its lobes reaching sfl and swl (radians) and banked sb, by Castigliano as below: for estimates.js's sweep */
+const stiffOf=({h=H,sfl=SFL,swl=SWL,sb=SSB,w=SSW}={})=>{const Wq=SSF+sb,b0=Wq+swl,b1=SSF+TAU-sfl,rc=SRO-w/2,pw=[rP*Math.cos(Wq+SPW),rP*Math.sin(Wq+SPW)],Lq=[pH0[0]-pw[0],pH0[1]-pw[1]],ll=Math.hypot(...Lq),uq=[Lq[0]/ll,Lq[1]/ll],
+  dq=p=>Math.abs((p[0]-pw[0])*uq[1]-(p[1]-pw[1])*uq[0]),d0=dq([0,0]);let j=0;for(let i=0;i<2000;i++){const a=b0+(b1-b0)*(i+0.5)/2000,p=[rc*Math.cos(a),rc*Math.sin(a)],hh=dq(p);j+=hh*hh*rc*(b1-b0)/2000;}return d0*d0*E*h*w**3/12/j/1000;};
+const pH0=[rH*Math.cos(aH+TAU),rH*Math.sin(aH+TAU)];
 say(`the spring as drawn: a band ${f(SSW,2)} wide (radially) and ${H} high, on r ${f(Rc,2)} (its middle), free over ${f((a1-a0)/D2R)}° between its lobes; pinned to the ratchet at r ${f(rP,2)} and to the wheel at r ${f(rH,2)}; its gap ${f(SSG/D2R)}° relaxed (measured, KLUwI2UUCMQ 27:26), ${f(SSB/D2R,1)}° banked (the width, the gap, the wall's radius and the pins measured; the lobes estimated)`);
 /* the pins (the spring banked: its working end at W), the line through them, the band's points' distances from it */
 const pW=[rP*Math.cos(W+SPW),rP*Math.sin(W+SPW)],pH=[rH*Math.cos(aH+TAU),rH*Math.sin(aH+TAU)],L=[pH[0]-pW[0],pH[1]-pW[1]],Ll=Math.hypot(...L),u=[L[0]/Ll,L[1]/Ll];
@@ -59,5 +63,5 @@ say(`a wind costs ${f(w10*1e6,1)} µs held 10 s (a day's, 7 half turns) and ${f(
 chk(Math.abs(w30)<0.01,'a wind costs nothing a navigator could read');
 out.need={k5,k10,H:[H*k5/kt,H*k10/kt],recess,fits};
 out.sim={drawn,model,w10,w30,w30d};
-out.rows=rows;module.exports=out;
+out.fn={stiffOf,sim,c0,T0,wfw};out.rows=rows;module.exports=out;
 if(require.main===module){console.log(rows.join('\n'));const jo=process.argv.indexOf('--json');if(jo>0)fs.writeFileSync(process.argv[jo+1],JSON.stringify(out));process.exitCode=fail;}
