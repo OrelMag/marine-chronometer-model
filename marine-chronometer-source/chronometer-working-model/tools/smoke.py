@@ -49,6 +49,8 @@ async def model(b,errs,steps):
     await click('#oExit','overhaul: end')
     sv1=await pg.evaluate("document.querySelector('#stopV button[aria-pressed=\"true\"]').dataset.v")
     if sv1!=sv0:errs.append(f'the overhaul left the balance stop {sv1!r}, not the {sv0!r} it found')
+    bk=await pg.evaluate("__H().blkT")
+    if bk:errs.append(f'the overhaul left the train-blocking screw down ({bk})')
     for grp in['#bal','#dialSt','#finish']:
         for v in await pg.evaluate("g=>[...document.querySelectorAll(g+' button')].map(b=>b.dataset.v)",grp):await click(f'{grp} button[data-v="{v}"]')
         await click(f'{grp} button')   # back to the first (the default)

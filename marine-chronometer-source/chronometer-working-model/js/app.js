@@ -1045,13 +1045,14 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   let preOvh=null;
   OVH.bind({mv,PARTS,changed:wake,
     begin:()=>{if(st.tour>=0)tourEnd();if(ks)ksEnd();if(kw)kwStop();closeInfo();showHelp(false);hintOff();panelOn(true);
-      if(!preOvh){const sv=document.querySelector('#stopV button[aria-pressed="true"]');preOvh={view:st.view,see:st.see,speed:st.speed,drive:st.drive,mwOn:st.mwOn,rock:st.rock,stop:sv&&sv.dataset.v};}
+      if(!preOvh){const sv=document.querySelector('#stopV button[aria-pressed="true"]');preOvh={view:st.view,see:st.see,speed:st.speed,drive:st.drive,mwOn:st.mwOn,rock:st.rock,stop:sv&&sv.dataset.v,blk:H.blkT,hrs};}   /* the train-blocking screw and the wind as found: the operations move the one and wind the other */
       const arm=document.querySelector('#stopV button[data-v="arm"]');if(arm&&arm.getAttribute('aria-pressed')!=='true')arm.click();   /* the manual's locking arm (Fig. 9): the Navy's Y-arm isn't in its operations */
       st.drive=false;st.mwOn=false;st.see=false;st.rock=false;for(const k of['driveOn','mwOn','rock'])$('#'+k).checked=false;setSpeed(0);
       Object.assign(tgt,{explode:0,dev:0,fov:FOV0});cur.explode=0;cur.dev=0;document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');},
     finish:()=>{const u=preOvh||{view:'dial',see:false,speed:1,drive:false,mwOn:false,rock:false};preOvh=null;st.focus=null;st.drive=u.drive;st.mwOn=u.mwOn;st.rock=u.rock;st.see=u.see;
       for(const k of['driveOn','mwOn','rock'])$('#'+k).checked=st[k==='driveOn'?'drive':k];setSpeed(u.speed);setView(u.view,true);
-      const sv=u.stop&&document.querySelector(`#stopV button[data-v="${u.stop}"]`);if(sv&&sv.getAttribute('aria-pressed')!=='true')sv.click();},
+      const sv=u.stop&&document.querySelector(`#stopV button[data-v="${u.stop}"]`);if(sv&&sv.getAttribute('aria-pressed')!=='true')sv.click();
+      if(u.blk!=null&&H.blkT!==u.blk)blkSet(u.blk);if(u.hrs!=null){hrs=u.hrs;showH();}},
     focus:pk=>{st.focus=pk&&pk.size?pk:null;look();},
     cam:v=>{Object.assign(tgt,{lift:v.lift,flip:v.flip,explode:0,dev:0,lidM:1,lidT:1});goCam({yaw:v.yaw,pitch:v.pitch,dist:v.dist,target:v.target||(v.lift?mvL(0,-19,2):fixed(0,v.dist>400?-22:-15,0))});look();},
     blk:v=>{if(H.blkT!==v)blkSet(v);},wind:()=>{if(winding)windEnd();hrs=0;showH();}});
