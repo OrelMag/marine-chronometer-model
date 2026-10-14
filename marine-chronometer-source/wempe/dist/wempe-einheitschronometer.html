@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wempe Einheits-Chronometer</title>
-<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built from its works drawings: in progress: the frame, the going train, the escapement and the dial with its hands and motion work so far.">
+<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built from its works drawings: in progress: the frame, the going train, the escapement, the dial with its hands and motion work, and the gimballed case and box so far.">
 <meta name="author" content="Orel Magidish">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Wempe Einheits-Chronometer">
@@ -343,7 +343,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   <h1>Wempe Einheits-Chronometer</h1>
   <div class="hd">
     <nav class="models" aria-label="The models"><a href="../../chronometer-working-model/dist/chronometer-working-model.html">Hamilton Model 21</a><span aria-current="page">Wempe Einheits-Chronometer</span></nav>
-    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame, the going train, the escapement, the fusee and barrel, and the dial and motion work so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame, the going train, the escapement, the fusee and barrel, the dial and motion work, and the case and box so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
   </div>
 </header>
@@ -374,13 +374,14 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
-    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel; the balance and spring detent escapement, with their jewels; and the fusee with its maintaining work and stop work, the barrel and mainspring, and the chain, or the band under Variants; and the dial with its four hands, which show the time, and under it the motion work and the up-and-down work.</div>
+    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel; the balance and spring detent escapement, with their jewels; and the fusee with its maintaining work and stop work, the barrel and mainspring, and the chain, or the band under Variants; and the dial with its four hands, which show the time, and under it the motion work and the up-and-down work; and the gimballed brass bowl in its wooden box, with the one-way winding key (the Box and Case views).</div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
         <div class="seg grid3" id="views">
           <button data-v="movement" aria-pressed="true" title="The movement, train side up">Movement</button><button data-v="plan" title="The top plate from straight above">Plan</button><button data-v="side" title="The frame from the side">Side</button>
-          <button data-v="dial" title="The pillar plate's dial side, from below">Dial side</button><button data-v="exploded" title="Every part lifted apart along the pillars">Exploded</button><button data-v="escapement" title="The escapement under the top plate, seen through it">Escapement</button></div>
+          <button data-v="dial" title="The dial in its case, from above, the lid open">Dial</button><button data-v="exploded" title="Every part lifted apart along the pillars">Exploded</button><button data-v="escapement" title="The escapement under the top plate, seen through it">Escapement</button>
+          <button data-v="box" title="The chronometer in its wooden box, the lid shut">Box</button><button data-v="case" title="The box open: the bowl in its gimbal ring">Case</button></div>
         <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
       </details>
       <details class="grp more" id="timeDet">
@@ -453,7 +454,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   <h3>How it is being made</h3>
   <ul>
     <li><b>From the drawings.</b> Every size and place is read off a sheet: a figure where the sheet gives one, and where it doesn’t, measured on the drawing at its scale and marked estimated. Each part’s card says which.</li>
-    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them. The balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out. The going train (05 05). The fusee and barrel (05 06, 05 07): the fusee with its nine-turn groove, its wheel and Harrison’s maintaining work, the stop work, the barrel with its set-up ratchet and mainspring, and the chain or the band. The dial and its hands (group 05 02): the white dial with its sub-dials for the state of wind and the seconds, the motion work that turns the hour hand from the centre arbor, and the up-and-down wheel driven from the fusee.</li>
+    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them. The balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out. The going train (05 05). The fusee and barrel (05 06, 05 07): the fusee with its nine-turn groove, its wheel and Harrison’s maintaining work, the stop work, the barrel with its set-up ratchet and mainspring, and the chain or the band. The dial and its hands (group 05 02): the white dial with its sub-dials for the state of wind and the seconds, the motion work that turns the hour hand from the centre arbor, and the up-and-down wheel driven from the fusee. The case and box (groups 05 01 and 51 00): the cast brass bowl, its bezel and glass and its closing plate, hung in the gimbal ring in an oak box 185 mm square, the transit lock, and the one-way winding key of 1943.</li>
   </ul>
   <p><a href="../../chronometer-working-model/dist/chronometer-working-model.html">The Hamilton Model 21 working model</a>, the U.S. Navy’s chronometer, built from its 1948 overhaul manual.</p>
 </dialog>
@@ -1911,7 +1912,7 @@ const WFRAME=(()=>{
        seat's wall. Its depths below the lip, the cone's run and the screws' are not figured: the 7 and 0.7 put the lip's floor at 3.35 below its inner face, so the cone, from the
        lip's Ø 83 at 45° to Ø 93, starts 2.0 below the seat (the coloured section draws about 2); the plate's pin 5.35 long, to the cone (the section draws it 7.6, which would
        cross the cone); the M2.6 holes 6.0 deep (to the flange): estimated. Material not given ("——"); Wempe 3955's is nickel-bright: drawn nickel, estimated. Its radial pin
-       to the case (Ø 1.1 at 2.8 from the dial's face; Stellstift WN-202 in the coloured section) is left for the case (05 01) */
+       to the case (P1f, below) */
     const rg=part('ring',12);
     {const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
       const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
@@ -1922,7 +1923,11 @@ const WFRAME=(()=>{
       tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
       /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
       for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,2.25,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
-      tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');}   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
+      tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
+      /* its radial pin to the case (Stellstift 3, WN-202 in the coloured section; P1f): Ø 1.1 at 2.8 from the dial's face (05 08 00-3, likely), on the sheet's elevation's centre
+         line, so at 6 o'clock (the plan, drawn from the dial side, under it: first angle); it stands 2.0 out of the flange (the coloured section, 9.4 px/mm: 2.0) into the notch in the
+         bezel's recess (case.js), which sets the movement's turn in the case; 9.4 long, its hole across the turned flange not cut (estimated) */
+      {const p=tag(cylBetween(rg,0.55,45.6,55.0,M.steel,0,0,12),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,(45.6+55.0)/2);}}
 
     /* ================= the barrel bridge (Federhausbrücke, 05 08 05-1; kompl. 05 08 05) ================= */
     /* Messingblech 3,5 Ms 58, 3.32 -0.04 thick, on the top plate's outer face over the barrel. Its outer edge the plate's rim ("mit der Oberplatte überdrehen"), its inner edge a
@@ -3419,6 +3424,229 @@ const WDIAL=(()=>{
 </script>
 <script>
 // @ts-check
+/* case.js: the Wempe Einheits-Chronometer's gimballed case and wooden box (drawing groups 05 01 and 51 00), built from their sheets as last revised
+   (References/wempe/transcriptions/05-01-51-00-case-box-overview.md, checked on the sheets themselves, cropped and enlarged where a number mattered): the bowl
+   (Gehäusetopf R-05 01 00-1, 6.3.42), its two brackets for the inner pivots and the locking bracket (Gehäusekloben 05 01 00-3, Feststellkloben -4), the closing plate in its foot
+   (Verschlußplatte 05 01 00-2, rev. a 14.4.48), the bezel and its glass (Glasrand R-05 01 01-2, 6.3.42; Glasrand kompl. 05 01 01), the gimbal ring with its bracket, pivot
+   screws and lock nuts (Kardanring 05 01 00-5, Kardanringkloben -6, WN-79, WN-400, 05 01 Gehäuse Kardan, 1940, reissued 28.6.46), the transit lock (Feststeller, 15 on
+   05 01), the wooden box with its lid, hinges, handles (51 00 10), maker's plate (Firmenschild 00 01 01-9, "Type 3371") and latch tongue (Zunge P. 51 00 02-2), the outer
+   pivots (WN-80) in the box's walls, and the one-way winding key of 1943 (Chronometerschlüssel 51 00 11: 05 01 02-2, -3), lying in the box.
+   Part of the Wempe model (three.js r128). Declares only WCASE: WCASE.build(M) returns {root, ring, bowl, lid, tongue, YP, YB}: root the box (the scene's group), ring the
+   gimbal ring's group (turning about x, the outer pivots' axis, at YP), bowl the bowl's group inside it (turning about z, the inner pivots' axis), into which the page puts
+   the movement (at y -YP: the movement's frame and the case's coincide at rest), lid the lid's group (turning about x at its hinge), tongue the latch tongue's.
+   Units mm, the movement's frame (dims.js): dial side +y (up in the box), 12 o'clock -z (toward the box's back, its hinges), 3 o'clock +x. The bowl's top face, on which
+   the movement ring's flange lies, at YB. Plan outlines [x, z]; solids from KIT.solidGeo, turned profiles as cells of rings (cells() below), so every part is one closed
+   solid with its holes; holes across a turned part (radial) are not cut, as on the movement's turned parts. */
+const WCASE=(()=>{
+  const{solidGeo,ring,bool,polyGeo,stadiumPts,area}=KIT,V2=(a,b)=>new THREE.Vector2(a,b),H=WD.H;
+  const tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
+  /* ================= heights (the movement's frame) =================
+     YB: the bowl's top face, on which the movement ring's flange (Ø 105.95 × 4.7, 05 08 00-3) lies, its body (Ø 96 −0.3) in the bowl's bore (Ø 98): the flange's underside,
+     6.0 over the ring's inner face (frame.js: 0.35 + 6.0). YP: the gimbals' two pivot axes, both 11.5 under the ring's top (05 01's "11,5", from axis A to the ring's top: likely,
+     27 px at 2.45 px/mm), the ring's top level with the bowl's top face (05 01's elevation draws them together, ±2: estimated); 51 00 10 puts the outer pivot's M6 11.5 under a
+     line across the box's side 105 over its bottom: the box's bottom 93.5 under the pivots, its parting line at the ring's top */
+  const YB=6.35,YP=YB-11.5,YF=YP-93.5,YT=YF+180,YL=YF+105,BW=185/2,WT=12.5;
+  const N=240,CC=new Map(),circ=(r,s0=0)=>{const k=r+'|'+s0;if(!CC.has(k)){const o=[];for(let i=0;i<N;i++){const t=s0+i/N*TAU;o.push([r*Math.cos(t),r*Math.sin(t)]);}CC.set(k,o);}return CC.get(k);};
+  /* turned solids as plan cells of rings: rs the radii, ys[i] the depths [y0, y1] of the disc (i 0) and of each ring (each a constant or a function of the plan point), F[i] its
+     features; each ring in two halves (a ring isn't a simple outline), split at s0 so no feature crosses the split, a sloped one in N/4 sectors. Every circle is the same N points, so neighbouring cells share them */
+  const cells=(rs,ys,F=[],s0=0)=>{const out=[{loop:circ(rs[0],s0),y0:ys[0][0],y1:ys[0][1],F:F[0]||[]}];
+    for(let i=1;i<rs.length;i++){const a=circ(rs[i-1],s0),b=circ(rs[i],s0),M=ys[i].some(y=>typeof y==='function')?N/4:2;   /* a sloped ring in narrow sectors, so its faces' triangles stay short and follow the slope */
+      for(let h=0;h<M;h++){const ix=[...Array(N/M+1).keys()].map(k=>(k+h*N/M)%N);
+        const f=(F[i]||[]).filter(q=>{const c=KIT.cen(q.p),t=((Math.atan2(c[1],c[0])-s0)%TAU+TAU)%TAU;return Math.floor(t/(TAU/M))===h;});
+        out.push({loop:[...ix.map(k=>b[k]),...ix.slice().reverse().map(k=>a[k])],y0:ys[i][0],y1:ys[i][1],F:f});}}return out;};
+  /* turned faces shaded smooth: each face of g whose normal leans along the radius from the axis (a cone, a round, a turned wall) takes at each corner that normal turned to the
+     corner's azimuth, so the revolution reads round and not as facets (solidGeo's normals are each face's own) */
+  const smoothRev=g=>{const P=g.attributes.position,Nm=g.attributes.normal;for(let t=0;t<P.count;t+=3){const cx=(P.getX(t)+P.getX(t+1)+P.getX(t+2))/3,cz=(P.getZ(t)+P.getZ(t+1)+P.getZ(t+2))/3,cr=Math.hypot(cx,cz);if(cr<1e-6)continue;
+    const nx=Nm.getX(t),ny=Nm.getY(t),nz=Nm.getZ(t),h=Math.hypot(nx,nz);if(h<0.05||Math.abs(nx*cz-nz*cx)/(h*cr)>0.05)continue;const sg=Math.sign(nx*cx+nz*cz);
+    for(let k=t;k<t+3;k++){const x=P.getX(k),z=P.getZ(k),r=Math.hypot(x,z)||1;Nm.setXYZ(k,sg*h*x/r,ny,sg*h*z/r);}}Nm.needsUpdate=true;return g;};
+  const rr=p=>Math.hypot(p[0],p[1]),C=(p,r,n=0)=>ring(p[0],p[1],r,n);
+  /* a sector [r0, r1] × [a0, a1] (rad, atan2(z, x)) in cells joined along their arcs: arcs cut at the given angles so neighbours share their points */
+  const arcP=(r,as)=>{const o=[];for(let j=0;j<as.length-1;j++){const n=Math.max(2,Math.ceil(Math.abs(as[j+1]-as[j])*r/0.4));for(let i=j?1:0;i<=n;i++){const t=as[j]+(as[j+1]-as[j])*i/n;o.push([r*Math.cos(t),r*Math.sin(t)]);}}return o;};
+  const sector=(r0,r1,as0,as1)=>[...arcP(r1,as1),...arcP(r0,as0).reverse()];
+  /* a group whose +y points along unit u (for a screw put in along u: KIT's screw draws its shank toward +y), at point p */
+  const along=(par,p,u)=>{const g=new THREE.Group();g.position.set(p[0],p[1],p[2]);g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(u[0],u[1],u[2]).normalize());par.add(g);return g;};
+  const box=(par,w,h,d,x,y,z,mt)=>mesh(par,new THREE.BoxGeometry(w,h,d),mt,x,y,z);
+  /* oak, drawn in code (the boxes photographed are oak: Greenwich's wartime Wempe, Lange 1947): pale ground, long dark grain and the rays */
+  function oakTex(){const c=document.createElement('canvas');c.width=256;c.height=512;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));x.fillStyle='#b48a55';x.fillRect(0,0,256,512);
+    let s=11;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+    for(let i=0;i<140;i++){const xx=rnd()*256,a=0.05+rnd()*0.16,ph=rnd()*6,amp=1.5+rnd()*6;x.strokeStyle=rnd()<0.6?`rgba(90,55,25,${a})`:`rgba(235,200,150,${a})`;x.lineWidth=0.5+rnd()*2.2;x.beginPath();
+      for(let y=0;y<=512;y+=16){const px=xx+Math.sin(y/120+ph)*amp;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();}
+    for(let i=0;i<60;i++){x.fillStyle=`rgba(225,190,140,${0.18+rnd()*0.2})`;x.fillRect(rnd()*256,rnd()*512,1+rnd()*1.5,6+rnd()*16);}
+    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;}
+  /* the maker's plate (Firmenschild, 00 01 01-9, 22.3.43, 2:1): 26 × 52, white, the lettering sunk and filled black; the number runs on ("Nummer fortlaufend"): 3371 as drawn.
+     Its letters measured on the sheet (6.98 px/mm): CHRONOMETERWERKE 4.0 high, 44 long; WEMPE and HAMBURG 2.4; the monogram 6 × 9 (a C over a W on one stroke); 3371 3.7 */
+  function plateTex(){const k=20,c=document.createElement('canvas');c.width=52*k;c.height=26*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
+    x.fillStyle='#f2f1ec';x.fillRect(0,0,c.width,c.height);x.fillStyle='#16171a';x.strokeStyle='#16171a';x.textAlign='center';x.textBaseline='middle';
+    x.font=`700 ${4.0*k*1.36}px "Instrument Sans", Arial, sans-serif`;x.save();x.translate(26*k,6.6*k);fillTracked(x,'CHRONOMETERWERKE',44*k,0.8);x.restore();
+    x.font=`700 ${2.4*k*1.36}px "Instrument Sans", Arial, sans-serif`;x.save();x.translate(13.5*k,13.2*k);fillTracked(x,'WEMPE',15*k);x.restore();x.save();x.translate(38.5*k,13.2*k);fillTracked(x,'HAMBURG',17*k);x.restore();
+    x.lineWidth=0.55*k;x.beginPath();x.arc(26*k,11.6*k,2.0*k,0.35*Math.PI,1.65*Math.PI);x.stroke();x.beginPath();x.moveTo(23.4*k,13.6*k);x.lineTo(24.6*k,17.4*k);x.lineTo(26*k,14.6*k);x.lineTo(27.4*k,17.4*k);x.lineTo(28.6*k,13.6*k);x.stroke();
+    x.beginPath();x.moveTo(26*k,9*k);x.lineTo(26*k,18*k);x.moveTo(24.4*k,16*k);x.lineTo(27.6*k,16*k);x.stroke();
+    x.font=`600 ${2.6*k*1.36}px "Instrument Sans", Arial, sans-serif`;x.fillText('Type',13.5*k,20.6*k);x.font=`700 ${3.7*k*1.36}px "Instrument Sans", Arial, sans-serif`;x.fillText('3371',38.5*k,20.6*k);
+    for(const[u,v]of[[2,2],[50,2],[2,24],[50,24]]){x.beginPath();x.arc(u*k,v*k,0.6*k,0,TAU);x.fill();}
+    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t;}
+
+  function build(M){
+    const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
+    const MC={oak:S(0xffffff,0,0.55,{map:oakTex()}),oakEnd:S(0x8a6238,0,0.6),black:S(0x18181a,0.25,0.42),knob:S(0x111112,0.1,0.35),white:S(0xf2f1ec,0.1,0.5),
+      label:new THREE.MeshStandardMaterial({map:plateTex(),metalness:0.1,roughness:0.5}),alu:S(0xc9ccd0,1,0.35)};
+    const K=KIT.parts(new THREE.Group(),M),{screw}=K;   /* KIT's screw (its exploded-view list is its own: the case isn't exploded) */
+    const root=new THREE.Group(),ringG=new THREE.Group(),bowlG=new THREE.Group();ringG.position.y=YP;root.add(ringG);ringG.add(bowlG);
+    const prt=(par,name,y=0)=>{const g=new THREE.Group();g.userData.partName=name;g.position.y=y;par.add(g);return g;};
+
+    /* ================= the bowl (Gehäusetopf, R-05 01 00-1, 6.3.42) ================= */
+    /* "Ms-Sandguß (Kokillenguß)", 1:1, every figure of the sheet (sure): the flange Ø 118 for 12 from the top, the band Ø 108 to 23.5, the body Ø 106, the cone at 40° over
+       its last 14.5 to the foot Ø 72.5, 65 overall; inside, the bore Ø 98, 53 deep, and the recess under the bottom Ø 64 × 5.5, so the bottom is 6.5 at the middle. The corner
+       inside, between the bore and the bottom, a round drawn without a figure: r 7 (scaled at 3.45 px/mm, 6-8). It is the casting: what is machined isn't drawn, but for the
+       closing plate's seat, the recess opened to Ø 68.2 (the plate is Ø 68 −0.2: estimated), and the two holes through the bottom: the winding hole over the fusee's square
+       (hole 10, 22.65 from the centre: the closing plate's Ø 8 at 22.6 lies over it) and the closing plate's screw's, tapped M3 (estimated). The sheet's "Gewicht 350 gr."
+       is light for brass (this solid is 1.3 kg in brass; 350 g is aluminium's or a moulded case's weight): README. The bowl's side keeps the brackets' screws
+       (not cut: radial). Brass, as the sheet; the wartime Glashütte bowls were Bakelite, the 1942 arrangement names a Buna case (README) */
+    const bowl=prt(bowlG,'bowl',-YP);
+    {const cone=p=>YB-65+(rr(p)-36.25)*14.5/16.75,fil=p=>YB-46-Math.sqrt(Math.max(0,49-(rr(p)-42)**2));
+      const rs=[34.1,36.25,42,43.2,44.4,45.5,46.5,47.3,48,48.5,49,53,54,59],ys=[[YB-59.5,YB-53],[YB-65,YB-53],[cone,YB-53],...Array(8).fill([cone,fil]),[cone,YB],[YB-23.5,YB],[YB-12,YB]];
+      const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53}];
+      tag(mesh(bowl,smoothRev(solidGeo(cells(rs,ys,[F0]))),M.brass),'050100-1');}
+    /* the two case brackets (Gehäusekloben 05 01 00-3), on the bowl's side at 12 and 6 o'clock, carrying the inner pivots b: no sheet; scaled on 05 01 (Schnitt A-B and C-D,
+       2.45 px/mm) and Kirow 422's bowl (11_Kirow_DEC_422_Gehäuse.jpg): a plate on the body 44 long, 9 high, 3 thick, its two screws in slots ("Kloben verstellen bis Gleichgewicht
+       erreicht ist": moved along the bowl until it hangs level), and a block 9 wide standing out to 3.5 short of the ring, up past the flange to 5.5 over the pivot, with the
+       pivot's hole. Estimated (±1.5) */
+    const brk=prt(bowl,'bowl'),ang=a=>a*D2R;
+    for(const ph of[90,-90]){const g=tag(new THREE.Group(),'050100-3');brk.add(g);const a=ang(ph),w=Math.asin(4.5/59.5),q=ang(22);
+      const P1=sector(53,56,[a-q,a+q],[a-q,a-w,a+w,a+q]),P2=sector(56,59.5,[a-w,a+w],[a-w,a+w]),P3=sector(59.5,66.5,[a-w,a+w],[a-w,a+w]);
+      mesh(g,solidGeo([{loop:P1,y0:YB-33,y1:YB-24},{loop:P2,y0:YB-33,y1:YB-24},{loop:P3,y0:YB-33,y1:YB-6}]),M.brass);
+      for(const s of[-1,1]){const b=a+s*ang(15.7),u=[-Math.cos(b),0,-Math.sin(b)];tag(screw(along(brk,[56*Math.cos(b),YB-28.5,56*Math.sin(b)],u),0,0,0,2.4,1.6,6,1.25,M.steel),'WN-78');}}
+    /* the locking bracket (Feststellkloben 05 01 00-4) at 50° from 6 o'clock toward 3 (05 01 Schnitt A-B's "50°"): a foot screwed to the body, cranked out past the band
+       to a pad 1 short of the ring's inside (05 01's elevation, its outside half), which the transit lock's lever presses the ring against. No sheet: scaled (estimated) */
+    {const g=tag(new THREE.Group(),'050100-4');brk.add(g);const a=ang(40),w=Math.asin(5/58);
+      const sp=()=>[a-w,a+w];mesh(g,solidGeo([{loop:sector(53,56,sp(),sp()),y0:YB-37,y1:YB-27},{loop:sector(56,60,sp(),sp()),y0:YB-29,y1:YB-18},{loop:sector(60,69,sp(),sp()),y0:YB-24,y1:YB-6}]),M.brass);
+      tag(screw(along(brk,[56*Math.cos(a),YB-32,56*Math.sin(a)],[-Math.cos(a),0,-Math.sin(a)]),0,0,0,2.4,1.6,6,1.25,M.steel),'WN-78');}
+
+    /* ================= the closing plate (Verschlußplatte 05 01 00-2, rev. a 14.4.48) ================= */
+    /* Ms, 1:1, every figure (sure but the hole Ø 1.2 at 12.4 and the 2 −0.05/−0.1, likely): Ø 68 −0.2, 2.3 at its rim, the boss Ø 28 −0.2 on its outer face making it 5 thick;
+       the hole Ø 5.5 +0.1 through the middle, counterbored Ø 7.5 +0.1 from outside to 2 under the inner face; a groove Ø 10 to Ø 26, 1.5 deep, in the inner face; M2.6 at 25,
+       Ø 1.2 at 12.4 (drawn at 12.35, inside the groove's edge) on one line, Ø 8 +0.2 at 22.6 at 90° to it. It lies in the bowl's foot, its inner face on the recess's floor and
+       its boss 0.5 inside the foot, turning on its screw (7: WN-71, unsure) in the bottom: turned by the knob in its M2.6 (WN-72, brass on Wempe 3955,
+       16_Wempe_3955_Gehäusetopf_Kardan.jpg), its Ø 8 comes over the winding hole for the key and away from it to close it; the closing spring (Verschlußfeder 05 01 00-7, 14 on 05 01)
+       that holds it, likely in the groove with its end in the Ø 1.2, has no sheet: not drawn. Its turn: open, the Ø 8 over hole 10 */
+    const cp=prt(bowlG,'closingPlate',-YP);
+    {const t8=Math.atan2(H[10][1],H[10][0]),tk=t8-Math.PI/2,s0=t8+Math.PI/4,P=(r,t)=>[r*Math.cos(t),r*Math.sin(t)],y0=YB-64.5,yr=YB-61.8,y1=YB-59.5;
+      const rs=[5,13,13.95,33.95],ys=[[y0,y1],[y0,y1-1.5],[y0,y1],[yr,y1]];
+      const F=[[{p:C([0,0],5.55/2,48),a:y0,b:y1},{p:C([0,0],7.55/2,60),a:y0,b:y0+3}],[{p:C(P(12.35,tk),0.6,24),a:y0,b:y1-1.5}],[],[{p:C(P(22.6,t8),8.1/2,72),a:yr,b:y1},{p:C(P(25,tk),1.32,32),a:yr,b:y1}]];
+      tag(mesh(cp,smoothRev(solidGeo(cells(rs,ys,F,s0))),M.brass),'050100-2');
+      tag(screw(cp,0,0,y0+3,3.6,2.5,7.5,1.5,M.steel),'WN-71');   /* its screw: head Ø 7.2 × 2.5 in the counterbore, M3 through the plate into the bottom (estimated) */
+      const kq=P(25,tk);tag(screw(cp,kq[0],kq[1],yr,2.6,2.4,2.2,1.3,M.brass),'WN-72');}   /* the knob: a brass head Ø 5.2 × 2.4 (Wempe 3955's), M2.6 (estimated) */
+
+    /* ================= the bezel (Glasrand R-05 01 01-2, 6.3.42) and its glass (05 01 01-1) ================= */
+    /* Ms, Kokillenguß, 1:1, every figure (sure): Ø 125 for its top 8.2, a 30° chamfer to Ø 116 at its underside, 16 high; the sight bore Ø 92 (it shows the dial's minute
+       track, Ø 90), the lower bore Ø 106, 4.5 deep. It lies on the bowl's top face round the movement ring's flange (Ø 105.95, the same figure: the 1941 assembly 05 01 01 draws
+       the flange's recess so, its depth scaling 4.2-5.2), the recess drawn 4.75 deep (the casting's 4.5 opened to the flange's 4.7) and relieved to Ø 104.2 a further 0.7 over the
+       dial, which stands 0.6 proud of the flange (05 01 01 draws a step there), with a notch for the ring's radial pin (WN-202, Stellstift 3 in the coloured section) at 6 o'clock,
+       which sets the movement's turn. The glass in a seat at the top: Ø 112 × 2.3 (05 01 01: Ø 111.7 scaled at 4.78 px/mm, its section 2.3), flush with the top face, so its
+       underside is 16.7 over the pillar plate's dial face (05 02_1: 15.8, corrected in pencil to 17.0; the 1941 bezel's own section puts it at 15.3): README. How the bezel is held
+       on the bowl isn't drawn (no screws in 05 01's list; Kirow 422's bezel is knurled, so screwed): not drawn */
+    const bz=prt(bowlG,'bezel',-YP);
+    {const b0=YB,top=YB+16,ch=p=>b0+(rr(p)-58)/Math.tan(30*D2R);
+      const rec=bool(C([0,0],53.05,720),[[-0.75,52.5],[0.75,52.5],[0.75,55.3],[-0.75,55.3]]).uni[0];
+      const F=[{p:rec,a:b0,b:b0+4.75},{p:C([0,0],52.1,720),a:b0,b:b0+5.45},{p:C([0,0],46,600),a:b0,b:top},{p:C([0,0],56.1,720),a:top-2.3,b:top}];
+      tag(mesh(bz,smoothRev(solidGeo(cells([58,62.5],[[b0,top],[ch,top]],[F]))),M.brass),'050101-2');
+      const gl=tag(mesh(bz,solidGeo([{loop:circ(56),y0:top-2.3,y1:top}]),M.glass),'050101-1');gl.userData.noShadow=1;}
+
+    /* ================= the gimbal ring (Kardanring 05 01 00-5) and its bracket (Kardanringkloben 05 01 00-6) ================= */
+    /* No sheets: scaled on 05 01 (2.45 px/mm by its 160 and the bowl's 106; circles fitted to Schnitt A-B: Ø 139.2 inside and 146.8 outside the lines, the elevation's section
+       3.3 thick and 23.2 high): Ø 140 inside, 3.3 thick, 23.2 high, its top level with the bowl's, its pivots at mid height (likely). The outer pivots a on the 3-9 line, the inner b on
+       12-6, in one plane, so the bowl swings about one point. At the 3 o'clock pivot a bracket on the ring's outside, its two screws in slots ("Kloben verstellen": moved to level the
+       bowl), 57 long, 16.7 high, 3.3 thick, the pivot through it (Schnitt A-B, the elevation's outside half: estimated). The inner pivots: screws through the ring (12: WN-79) with
+       lock nuts (10: WN-400), their points in the case brackets' holes ("Lagerstellen a u. b leicht spielend"): M4 (scaled), heads Ø 7 (estimated). Brass, as the bowl (no material
+       given; Wempe 3955's is Bakelite) */
+    const rgP=prt(ringG,'gimbalRing',-YP);
+    {tag(mesh(rgP,smoothRev(solidGeo(cells([70,73.3],[[0,0],[YB-23.2,YB]]).slice(1))),M.brass),'050100-5');
+      const q=28.5/73.3,ss=ang(18/73.3/D2R);tag(mesh(rgP,solidGeo([{loop:sector(73.3,76.6,[-q,q],[-q,q]),y0:YP-8.35,y1:YP+8.35}]),M.brass),'050100-6');
+      for(const s of[-1,1])tag(screw(along(rgP,[76.6*Math.cos(s*ss),YP,76.6*Math.sin(s*ss)],[-Math.cos(s*ss),0,-Math.sin(s*ss)]),0,0,0,2.4,1.6,6,1.25,M.steel),'WN-kr');
+      for(const s of[-1,1]){const g=along(rgP,[0,YP,s*76.5],[0,0,-s]);tag(screw(g,0,0,0,3.5,2.8,13,2,M.steel),'WN-79');
+        const nt=tag(mesh(g,new THREE.CylinderGeometry(7/Math.sqrt(3),7/Math.sqrt(3),3.2,6),M.steel,0,1.6,0),'WN-400');nt.rotation.y=Math.PI/6;}}
+
+    /* ================= the wooden box (Holzkasten, 127-556.02) ================= */
+    /* "Holzgehäuse 185 × 185 × 180 mm außen" (05 01, sure); its walls 12.5 (51 00 10's section, sure; 05 01 draws the walls 12.6 and their inside 160, its "160 Ø"); the line
+       across 51 00 10's side 105 over the bottom taken as the lid's parting line (it lies at the ring's top, 11.5 over the pivot's M6: likely). Its other boards, joints and the lid's
+       glazed top aren't on a sheet in the set: drawn as Greenwich's wartime Wempe (rmg_L5393_wempe_wartime_001.jpg) and Lange 1947 (drouot_33810142_*) show them, the floor
+       12.5, the lid's top a frame 20 wide round a glass 3 thick, two hinges at the back: estimated. Oak, as both */
+    const bx=prt(root,'box');
+    {const B=tag(new THREE.Group(),'Holzkasten');bx.add(B);const hh=YL-YF-WT;
+      box(B,2*BW,WT,2*BW,0,YF+WT/2,0,MC.oak);for(const s of[-1,1]){box(B,2*BW,hh,WT,0,YF+WT+hh/2,s*(BW-WT/2),MC.oak);box(B,WT,hh,2*BW-2*WT,s*(BW-WT/2),YF+WT+hh/2,0,MC.oak);}
+      /* the outer pivots a (11: WN-80): M6 through the side walls (51 00 10: "Verbohren 4,8 mm Gew. M 6", 93.5 over the bottom), their ends the pivots in the ring's holes;
+         heads Ø 9 × 3.8 (51 00 10's front and side views, 2.36 px/mm) and a brass bearing disc Ø 23 × 2.4 on each wall's inside (05 01's elevation, scaled): estimated */
+      for(const s of[-1,1]){tag(screw(along(bx,[s*BW,YP,0],[-s,0,0]),0,0,0,4.5,3.8,22.5,3,M.steel),'WN-80');
+        const d=tag(mesh(bx,new THREE.CylinderGeometry(11.5,11.5,2.4,48),M.brass,s*(BW-WT-1.2),YP,0),'Lagerscheibe');d.rotation.z=Math.PI/2;}
+      /* the handles (Griff f. Chronometerkasten, Änderung von 51 00 10, 14.7.42, 1:1): a strip 100 long and 18 high, its ends 10 long flat on the side with a screw each, between
+         them standing 10 off it, the grip pressed out to an oval 70 × 30, 6 deep; its middle 75 over the box's bottom, its top 3.5 under the pivot's screw (sure). The strip 3 thick (likely); the screws estimated */
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'510010');g.position.set(s*BW,YF+75,0);g.rotation.y=s>0?0:Math.PI;bx.add(g);
+        const st=polyGeo([[0,-50],[3,-50],[3,-41],[10,-36],[10,36],[3,41],[3,50],[0,50],[0,40],[7,35],[7,-35],[0,-40]],18);st.translate(0,-9,0);mesh(g,st,MC.alu);   /* the strip seen from below: [off the side, along it] */
+        const o=new THREE.Shape(stadiumPts([0,-20],[0,20],30).map(([y,z])=>V2(z,y)));const og=extrude(o,{depth:3,bevelEnabled:false,curveSegments:24});og.rotateY(Math.PI/2);mesh(g,og,MC.alu,7,-12,0);   /* the grip: the oval 70 × 30, hanging 12 below the strip's middle (its dashed outline on the sheet's front view, scaled at 2.36 px/mm) */
+        for(const z of[-45,45])tag(screw(along(g,[3,0,z],[-1,0,0]),0,0,0,2.5,1.6,11,1.2,M.steel),'WN-hg');}
+      /* the hinges, two at the back (estimated: Lange 1947's): leaves 40 × 18 × 1.2 on the back, the knuckle Ø 5 on the parting line */
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier');bx.add(g);box(g,40,18,1.2,s*55,YL-9,-BW-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,YL,-BW-2.5);k.rotation.z=Math.PI/2;}}
+    /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
+    const lidG=new THREE.Group();lidG.position.set(0,YL,-BW-2.5);root.add(lidG);const ld=prt(lidG,'lid');ld.position.z=2.5;   /* turning about the hinges' knuckles, 2.5 behind the back */
+    {const B=tag(new THREE.Group(),'Holzkasten.D');ld.add(B);const h=YT-YL-WT,o=BW;
+      for(const s of[-1,1]){box(B,2*BW,h,WT,0,h/2,o+s*(BW-WT/2),MC.oak);box(B,WT,h,2*BW-2*WT,s*(BW-WT/2),h/2,o,MC.oak);
+        box(B,2*BW,WT,20,0,h+WT/2,o+s*(BW-10),MC.oak);box(B,20,WT,2*BW-40,s*(BW-10),h+WT/2,o,MC.oak);}
+      const g=tag(box(ld,151,3,151,0,h-1.5,o,M.glass),'Deckelglas');g.userData.noShadow=1;
+      for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier',1);ld.add(q);box(q,40,18,1.2,s*55,9,-0.6,M.brass);}
+      /* the maker's plate on the lid's front (Greenwich's wartime Wempe: its place), 26 × 52 aluminium, 1 thick (Alu 10: likely), on four pins in its Ø 1.2 holes */
+      const fp=tag(new THREE.Group(),'000101-9');fp.position.set(0,42,2*BW+0.5);ld.add(fp);box(fp,52,26,1,0,0,0,MC.white);
+      const dg=mesh(fp,new THREE.PlaneGeometry(52,26),MC.label,0,0,0.52);dg.userData.decal=1;
+      for(const[u,v]of[[-24,11],[24,11],[-24,-11],[24,-11]]){const n=mesh(fp,cylY(0.9,0.6,12),M.steel,u,v,0.8);n.rotation.x=Math.PI/2;}}
+    /* the latch tongue (Zunge, P. 51 00 02-2, 18.9.42, 2:1): iron flat 10 × 4, bonderised and black lacquered, 45 long, 10 wide at its round end tapering 2°40' along one edge to 8
+       at the other, the hole Ø 6.2 (sunk 0.5 × 45°) 6 from its round end and 39 from the other, M3.5 14 from it (sure); its last 7 thinned 0.2 (not drawn). Where it goes isn't
+       drawn: taken as the lid's latch, turning on a screw in its Ø 6.2 on the lid's front over the parting line, its end under a keeper on the box's front, a knob in its M3.5
+       (Greenwich's wartime Wempe has a latch there): estimated */
+    const tgG=new THREE.Group();tgG.position.set(0,12,2*BW);ld.add(tgG);const tz=prt(tgG,'lid');
+    {const arc=(c,r,t0,t1,n)=>[...Array(n+1).keys()].map(i=>{const t=t0+(t1-t0)*i/n;return[c[0]+r*Math.cos(t),c[1]+r*Math.sin(t)];});
+      const out=[[-5,-1],[-5,35],...arc([-1,35],4,Math.PI,0,12).slice(1,-1),[3,35],[5,-1],...arc([0,-1],5,0,-Math.PI,16).slice(1,-1)];   /* plan [across, along]: the hole at 0, the round end r 5, the far end r 4 at 39 */
+      const geo=polyGeo(out,4,[[0,0,3.1],[0,14,1.77,1]]);geo.rotateX(Math.PI/2);tag(mesh(tz,geo,MC.black),'P510002-2');   /* hanging down the lid's front, 4 thick out from it */
+      tag(screw(along(tz,[0,0,4],[0,0,-1]),0,0,0,4.5,2,12,3,M.steel),'WN-zg');   /* its pivot screw, M6 in the Ø 6.2, head Ø 9 (estimated) */
+      const kn=tag(new THREE.Group(),'WN-zk');kn.position.set(0,-14,4);tz.add(kn);const kg=new THREE.LatheGeometry([V2(0,0),V2(1.75,0),V2(1.75,1.5),V2(3,1.5),V2(3,6),V2(2.5,7),V2(0,7)],24);kg.rotateX(Math.PI/2);mesh(kn,kg,MC.knob);}   /* its knob in the M3.5 (estimated) */
+    /* its keeper on the box's front (estimated): a strap 16 wide, 1.5 thick, 4.4 off the front over the tongue's end */
+    {const g=tag(new THREE.Group(),'Schliessblech');bx.add(g);box(g,18,10,1.5,0,YL-26,BW+5.15,M.steel);for(const s of[-1,1])box(g,3,10,4.4,s*7,YL-26,BW+2.2,M.steel);}
+
+    /* ================= the transit lock (Feststeller, 15 on 05 01; its number 05 01 01 in 05 01's list, which Glasrand kompl.'s own sheet also bears) ================= */
+    /* No sheet: scaled on 05 01's Schnitt A-B: a knob Ø 19.6 turning a lever in the box's front right corner (the knob's axis 65 and 63 from the box's centre), its lever 28 long and
+       8 wide, a pin Ø 8 near its end, on a bracket on the right wall; turned toward the centre the lever presses the ring onto the locking bracket on the bowl, so neither gimbal
+       swings; drawn turned off, along the front wall. Heights not drawn: the lever at the ring's, the knob above it (Greenwich's wartime Wempe has a black knob there): estimated */
+    const lk=prt(root,'caseLock');
+    {const c=[65.1,62.9],e=[39,73];const g=tag(new THREE.Group(),'050101.F');lk.add(g);
+      box(g,5.3,20,15,80-2.65,YP-6,62.9,M.steel);box(g,20,4,12,70,YP-14,62.9,M.steel);
+      cylBetween(g,2,YP-12,YP+16,M.steel,c[0],c[1],20);
+      const lv=polyGeo(stadiumPts(c,e,8),4);lv.translate(0,YP-8,0);mesh(g,lv,M.steel);cylBetween(g,4,YP-10,YP-4,M.steel,51.4,66,24);
+      const kn=new THREE.LatheGeometry([V2(0,0),V2(9.3,0),V2(9.8,0.5),V2(9.8,7.5),V2(8.8,9.5),V2(0,10)],40);mesh(g,kn,MC.knob,c[0],YP+15,c[1]);}
+
+    /* ================= the winding key (Chronometerschlüssel 51 00 11, 16.7.43: one way) ================= */
+    /* "Linksaufzug b. Rechtsdrehung entspannt sich die Feder": a coil spring round the tube grips it as the key winds and slips the other way, so the key can't be forced
+       backward (the Hamilton's key isn't one-way). Its parts, 2:1: the handle (51 00 11-1), a flat round paddle Ø 34.5 (scaled, 6.94 px/mm), 3 thick in the body's slot (3 H11),
+       its centre 10.6 over the body; the body (Schlüsselmittelteil 05 01 02-2, St. Az DIN 668, sand-blasted, phosphated, sprayed black, every figure: Ø 14.5 −0.2 with a 1.5 × 45°
+       chamfer at the top, the 15° cone from 15.1 down, 25.1 −0.2 long; the bore Ø 8 +0.1 22 deep with its 120° point, Ø 6 +0.1 through the bottom; the cross hole Ø 2.5 for the
+       grooved pin (51 00 11-6, K.S. 1); the slot 3 wide; the hole Ø 0.9 at 5° for the spring's end); the tube (Schlüsselrohr 05 01 02-3, Ms 58, every figure: its head Ø 8 −0.05 ×
+       2.6 in the bore, Ø 5.95 −0.05 through the bottom, 50.1 −0.2 long, the square 3.1 +0.05, 19 +2 deep, drilled 23 deep, a 60° sink 1 deep, the end relieved over 2.5); the coil
+       spring (Wendelfeder 51 00 11-4) round the tube between its head and the bore's floor. The tube's head drawn 6.8 under the body's top (so it clears the paddle; the free length
+       then 31.8, scaled 30), the spring's wire 0.9, the end's relief to Ø 4.6, the slot, cross hole and square not cut (drawn round): estimated. It lies on the box's floor */
+    const key=prt(root,'key');
+    {const g=new THREE.Group();g.position.set(-62,YF+WT+7.25,-40);   /* on its body and its paddle's rim: the paddle 19.8° from flat (17.25 sin + 1.5 cos = 7.25) */g.rotation.set(Math.PI/2,19.8*D2R,0);key.add(g);
+      const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
+      const T=50.1,B0=31.8,BT=B0+25.1;
+      tag(mesh(g,lathe([[2.13,0],[2.3,0],[2.975,2.5],[2.975,T-2.9],[3.275,T-2.6],[4,T-2.6],[4,T],[0,T],[0,23],[1.45,22.2],[1.45,19],[1.55,19],[1.55,1]]),M.brass),'050102-3');
+      tag(mesh(g,lathe([[3.05,B0],[4.57,B0],[7.25,B0+10],[7.25,BT-1.5],[5.75,BT],[4.05,BT],[4.05,BT-22],[3.05,BT-22-0.58]]),MC.black),'050102-2');
+      const pd=tag(mesh(g,cylY(17.25,3,72),MC.black,0,BT+10.6,0),'510011-1');pd.rotation.x=Math.PI/2;
+      const pn=tag(mesh(g,cylY(1.25,13,16),M.steel,0,BT-3.2,0),'510011-6');pn.rotation.z=Math.PI/2;
+      /* the spring: 0.9 wire on Ø 7.0 mean, close wound from the bore's floor to the tube's head */
+      const y0=BT-22+0.45,y1=T-2.6-0.45,nT=(y1-y0)/0.92,cv=new THREE.Curve();cv.getPoint=t=>new THREE.Vector3(3.51*Math.cos(t*nT*TAU),y0+(y1-y0)*t,3.51*Math.sin(t*nT*TAU));
+      tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,Math.ceil(nT*24),0.44,6,false)),M.steel),'510011-4');}
+    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
+  return{build,YP:YB-11.5,YB};
+})();
+
+</script>
+<script>
+// @ts-check
 /* movement.js: the Wempe Einheits-Chronometer's movement, built from the works drawings' numbers (dims.js, WD) by its groups' builders, each in its own file: the frame
    (js/frame.js, WFRAME, P1a, 14 October 2026), the going train (js/train.js, WTRAIN, P1b), the fusee, maintaining work, barrel, mainspring and chain or band (js/fusee.js,
    WFUSEE, P1c), the balance and escapement (js/escapement.js, WESC, P1d), the dial, motion work, hands and up-and-down work (js/dial.js, WDIAL, P1e).
@@ -3455,14 +3683,14 @@ function buildWempe(M){
 /* app.js: the Wempe Einheits-Chronometer's page: its parts' cards, views, sections, labels and link state, given to the shared viewer (../shared/viewer.js, VIEWER).
    Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js); P1d: the balance and escapement (js/escapement.js); P1c: the fusee,
    maintaining work, barrel, mainspring, chain and band (js/fusee.js), with the Winding and Variants controls;
-   P1e: the dial, motion work, hands and up-and-down work (js/dial.js). */
+   P1e: the dial, motion work, hands and up-and-down work (js/dial.js); P1f: the gimballed case and the wooden box (js/case.js), with the Box and Case views. */
 
 /* ================= parts registry ================= */
 /* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
-const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel','Motion work and dial'];
+const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel','Motion work and dial','Case and box'];
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
@@ -3605,7 +3833,31 @@ const PARTS={
     sp:'Drawings 05 02 00-1 (minute, 46), 05 02 00-2 (hour, 35), 05 02 00-3 (up-and-down), 05 02 01-1 (seconds, 19.5 and a tail of 10)'},
   dial:{t:'Dial (Zifferblatt)',g:4,src:'drawing',sn:'Its size, holes and printing from its sheet; the screws’ and pin’s sizes estimated',figs:'05 02_12, 05 02_1',c:'#ece8dc',pri:3,
     d:'The dial, white with its figures etched and filled black: the minute track and the hours, the up-and-down sub-dial at 12 (0 to 56 hours since winding) and the seconds sub-dial at 6, the maker’s name and anchor. It lies in the recess of the movement ring’s flange, placed by a pin and held by three screws at the 20, 40 and 59 minute marks.',
-    sp:'Drawing 05 02 00-4 · Ø 103.6 −0.1 × 1.3 · track Ø 85 / 90 · figures 9 high · sub-dials 23 from the centre, Ø 26 and Ø 37'}};
+    sp:'Drawing 05 02 00-4 · Ø 103.6 −0.1 × 1.3 · track Ø 85 / 90 · figures 9 high · sub-dials 23 from the centre, Ø 26 and Ø 37'},
+  bowl:{t:'Bowl (Gehäusetopf)',g:6,src:'drawing',sn:'Every figure of its sheet (the casting); its brackets scaled on the case’s assembly and Kirow 422’s bowl',figs:'05 01_2, 05 01_1',c:'#c9a75c',pri:3,
+    d:'The case the movement hangs in: a cast brass cup, a flange at its top, its body narrowing in a 40° cone to its foot. The movement ring’s flange lies on its top face, the ring in its bore, a pin in the ring setting the movement’s turn, so the winding hole in its bottom lies over the fusee’s square. Two brackets on its side carry the inner pivots, slid along slots until it hangs level (“Kloben verstellen bis Gleichgewicht erreicht ist”); a third, cranked, is where the transit lock holds it. Its sheet says a brass casting; the wartime Glashütte bowls were Bakelite, with a heavy weight in the bottom from No. 5100, and the 1942 arrangement names a Buna (synthetic rubber) case; the 6MX’s is brass. The sheet’s weight, 350 g, is a quarter of this bowl’s in brass.',
+    sp:'Drawing R-05 01 00-1 (6.3.42) · Ms-Sandguß (Kokillenguß) · flange Ø 118 × 12 · body Ø 106 · foot Ø 72.5 · 65 high · bore Ø 98 × 53 · brackets 05 01 00-3, -4'},
+  closingPlate:{t:'Closing plate (Verschlußplatte)',g:6,src:'drawing',sn:'Every figure of its sheet; its screw and knob from Wempe 3955’s bowl, estimated',figs:'05 01_3, 05 01_1',c:'#d4b06a',pri:1,
+    d:'A brass disc in the bowl’s foot, turning on a screw in the bottom: turned by its knob, its hole comes over the winding hole for the key, and away from it to shut it. Its closing spring (Verschlußfeder 05 01 00-7) has no sheet and isn’t drawn.',
+    sp:'Drawing 05 01 00-2 (rev. a 14.4.48) · Ms · Ø 68 −0.2 × 2.3, boss Ø 28 to 5 · hole Ø 8 +0.2 at 22.6 · M2.6 at 25'},
+  bezel:{t:'Bezel and glass (Glasrand)',g:6,src:'drawing',sn:'The ring from its casting’s sheet; the glass’s size scaled on the 1941 assembly; the recess opened to the movement ring’s flange',figs:'05 01_5, 05 01_4, 05 02_1',c:'#d8b86e',pri:2,
+    d:'The cast brass ring that closes the bowl: it lies on the bowl’s top face round the movement ring’s flange, holding it down, a notch in it taking the ring’s pin. The glass sits in its top, 16.7 mm over the pillar plate’s dial face: the motion work’s sheet asks 17.0 (corrected in pencil from 15.8).',
+    sp:'Drawing R-05 01 01-2 (6.3.42; kompl. 05 01 01) · Ms, Kokillenguß · Ø 125, 30° to Ø 116 · 16 high · sight Ø 92 · recess Ø 106 · glass 05 01 01-1, Ø 112 × 2.3'},
+  gimbalRing:{t:'Gimbal ring (Kardanring)',g:6,src:'scaled',sn:'Scaled on the case’s assembly (05 01): its sizes, its bracket and the pivots’ places; the pivots’ heights from its 11.5',figs:'05 01_1',c:'#b99653',pri:2,
+    d:'The ring between the bowl and the box: its outer pivots, on the 3-9 line, are screws through the box’s walls; its inner pivots, screws on the 12-6 line with lock nuts, run in the bowl’s brackets (“Lagerstellen a u. b leicht spielend”: the bearings a and b running freely). Both pairs lie in one plane, so the bowl hangs level whatever the ship does. A bracket on the ring at 3 o’clock, slid to level the bowl the other way, carries one outer pivot. Wempe 3955’s ring is Bakelite; no material is given.',
+    sp:'Drawing 05 01 00-5 (no sheet in the set; bracket 05 01 00-6) · Ø 140 × 3.3 × 23.2 (scaled) · pivots 11.5 under its top · WN-79, WN-400'},
+  box:{t:'Wooden box (Holzkasten)',g:6,src:'scaled',sn:'Its outside from the case’s assembly sheet, its walls and handles from the handle’s sheet; its boards, lid and hinges as photographs of the wartime boxes show them (estimated)',figs:'05 01_1, 51 00_1, 51 00_2',c:'#b98d58',pri:3,
+    d:'The oak box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. The padded outer box for transport (Überkasten, 52 00 16, bleached birch) isn’t built.',
+    sp:'Drawing 127-556.02 (Holzkasten; no sheet in the set) · 185 × 185 × 180 outside · walls 12.5 · handles 51 00 10 · pivots WN-80, M6'},
+  lid:{t:'Lid (Deckel)',g:6,src:'est',sn:'Its height from the parting line on the handle’s sheet; the glazed top, hinges and latch as the photographed boxes show them (estimated); the maker’s plate and the tongue from their sheets',figs:'51 00_2, 51 00_3, 51 00_4',c:'#c79d66',pri:2,
+    d:'The box’s lid, with a glass in its top so the dial can be read with it shut, hinged at the back. On its front the maker’s plate, “Chronometerwerke Wempe Hamburg, Type 3371” (the number runs on), and the latch tongue.',
+    sp:'75 high (180 less the box’s 105) · glass 3 · Firmenschild 00 01 01-9: Alu, 26 × 52, white, letters sunk black · Zunge P. 51 00 02-2: iron 10 × 4, black'},
+  caseLock:{t:'Transit lock (Feststeller)',g:6,src:'est',sn:'Its knob, lever and place scaled on the case’s assembly (Schnitt A-B); its heights estimated',figs:'05 01_1',c:'#5d6670',pri:1,
+    d:'A knob on a bracket in the box’s front right corner turning a lever: turned in, the lever presses the gimbal ring onto the locking bracket on the bowl, so neither gimbal can swing, for carrying the box. Drawn turned off.',
+    sp:'05 01’s list: Feststeller 05 01 01 (no sheet) · knob Ø 19.6, lever 28 × 8'},
+  key:{t:'Winding key (Chronometerschlüssel)',g:6,src:'drawing',sn:'Its body and tube from their sheets; the handle scaled on the key’s assembly; the spring’s wire and the tube’s depth in the body estimated',figs:'05 01_7, 05 01_8, 05 01_9, 05 01_6',c:'#41444a',pri:2,
+    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It lies in the box. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
+    sp:'Drawing 51 00 11 (16.7.43) · body 05 01 02-2: St. Az, phosphated, black · tube 05 01 02-3: Ms 58, Ø 5.95, 50.1 long, square 3.1 × 19 · paddle Ø 34.5'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
 const PIECES={
@@ -3647,6 +3899,7 @@ const PIECES={
     {k:'bushes',t:'Train bushes (Messinglager WN-300, WN-301)',h:'WN-301 WN-300.t38 WN-300.t35',d:'Three brass bushes pressed into the top plate, flush with both faces, in which the centre, intermediate and seconds arbors’ upper pivots run, each with an oil sink in its outer face (the 6MX ran the seconds and intermediate wheels in jewels in chatons instead).',sp:'In the plate’s holes Ø 4.59 · bores Ø 1.21 (centre) and 0.86',src:'est',sn:'Their places from the plate’s assembly sheet and the coloured section; their sinks from Wempe 3955’s plate; their bores estimated (the standard parts’ sheets aren’t in the set)',figs:'05 08_2'}],
   ring:[{k:'ring',t:'Movement ring',h:'050800-3',d:PARTS.ring.d,sp:PARTS.ring.sp},
     {k:'screws',t:'Movement ring screws',h:'WN-rs',d:'Three screws in the ring whose heads bear on the pillar plate’s rim, holding it in its seat (their WN number not read).',sp:'M2.6 on Ø 89 · heads Ø 6.2 × 2.25',src:'est',sn:'The thread and places from the ring’s sheet and Wempe 3955; the heads and length from the coloured section',figs:'05 08_7'},
+    {k:'casePin',t:'Ring’s pin to the case (Stellstift 3)',h:'WN-202',d:'A pin Ø 1.1 standing 2 mm out of the ring’s flange at 6 o’clock into the notch in the bezel’s recess: it sets the movement’s turn in the case, so the winding hole is over the fusee’s square.',sp:'WN-202 · Ø 1.1, 2.8 from the dial’s face',src:'scaled',sn:'Its size and height from the ring’s sheet; its place on the sheet’s centre line; how far it stands out from the coloured section',figs:'05 08_7'},
     {k:'pin',t:'Plate’s pin',h:'WN-201',d:'A pin (WN-201) Ø 1 drilled in across the joint of the plate and the ring at assembly, which sets the movement’s turn in the ring.',sp:'Ø 1',src:'est',sn:'Its place and size from the ring’s sheet; its length from the coloured section, shortened to stay in the ring',figs:'05 08_7'}],
   barrelBridge:[{k:'bridge',t:'Barrel bridge',h:'050805-1',d:PARTS.barrelBridge.d,sp:PARTS.barrelBridge.sp},
     {k:'click',t:'Click (Sperrkegel)',h:'050805-2',d:'The click on the barrel’s ratchet, which holds the mainspring’s set-up. It is cut from spring-hard brass, so it is its own spring: no separate spring is drawn.',sp:'Drawing 05 08 05-2 (revised 25.5.48) · Ms 58 federhart · 17.4 × 2.6',src:'drawing',sn:'Its outline from its sheet; its turn on the bridge traced on Wempe 3955',figs:'05 08_14'},
@@ -3710,18 +3963,54 @@ const PIECES={
     {k:'seconds',t:'Seconds hand (Sekundenzeiger) and collet',h:'050201-1 050201-2',d:'The seconds hand, blued steel with a pointed teardrop counterpoise, on a brass collet (Zeigerfutter) pressed on the seconds arbor’s post through the dial.',sp:'05 02 01-1 · 19.5 and 10 · collet 05 02 01-2 (no sheet) Ø 1.5'}],
   dial:[{k:'dial',t:'Dial',h:'050200-4',d:PARTS.dial.d,sp:PARTS.dial.sp},
     {k:'screws',t:'Dial screws',h:'WN-10.d',d:'Three small screws through the dial’s sunk holes into the movement ring’s flange, at the 20, 40 and 59 minute marks.',sp:'WN-10 (the coloured section’s label: likely) · M1 · heads Ø 1.7 in sinks Ø 1.8 × 1.0',src:'est',sn:'Their places and holes from the dial’s sheet; the screws themselves estimated'},
-    {k:'pin',t:'Dial pin',h:'dialPin',d:'The pin at 6° past 12 that places the dial in the ring: in the ring’s hole, stepped to the dial’s.',sp:'Ø 1.6 / 1.0',src:'est',sn:'The holes from the dial’s and the ring’s sheets; the pin estimated'}]};
+    {k:'pin',t:'Dial pin',h:'dialPin',d:'The pin at 6° past 12 that places the dial in the ring: in the ring’s hole, stepped to the dial’s.',sp:'Ø 1.6 / 1.0',src:'est',sn:'The holes from the dial’s and the ring’s sheets; the pin estimated'}],
+  bowl:[{k:'bowl',t:'Bowl',h:'050100-1',d:PARTS.bowl.d,sp:'Drawing R-05 01 00-1 · Ms-Sandguß · Ø 118 / 108 / 106, foot Ø 72.5, 65 high · bore Ø 98 × 53 · winding hole Ø 8.2 over hole 10'},
+    {k:'brackets',t:'Case brackets (Gehäusekloben)',h:'050100-3',d:'Two brass brackets on the bowl at 12 and 6 o’clock, each a plate screwed to the bowl through two slots and a block standing out to the ring with the inner pivot’s hole: slid along the bowl until it hangs level.',sp:'05 01 00-3 (no sheet in the set) · plate 44 × 9 × 3, block 9 wide',src:'est',sn:'Scaled on the case’s assembly (05 01) and Kirow 422’s bowl',figs:'05 01_1'},
+    {k:'lockBracket',t:'Locking bracket (Feststellkloben)',h:'050100-4',d:'A cranked brass bracket on the bowl at 50° from 6 o’clock: its pad stands 1 mm inside the gimbal ring, which the transit lock’s lever presses onto it.',sp:'05 01 00-4 (no sheet in the set) · at 50°',src:'est',sn:'Its angle from 05 01 (“50°”); its form scaled on its elevation',figs:'05 01_1'},
+    {k:'screws',t:'Bracket screws (WN-78)',h:'WN-78',d:'The screws holding the brackets to the bowl.',sp:'WN-78 (13 on 05 01) · M2.5 (estimated)',src:'est',sn:'Their number from 05 01’s list; their size estimated',figs:'05 01_1'}],
+  closingPlate:[{k:'plate',t:'Closing plate',h:'050100-2',d:PARTS.closingPlate.d,sp:PARTS.closingPlate.sp},
+    {k:'screw',t:'Closing plate screw',h:'WN-71',d:'The screw in the bowl’s bottom the plate turns on, its head in the plate’s counterbore.',sp:'WN-71 (7 on 05 01, the number unsure) · M3, head Ø 7.2',src:'est',sn:'Its place from the plate’s sheet; its size estimated',figs:'05 01_3'},
+    {k:'knob',t:'Closing plate knob',h:'WN-72',d:'The brass knob in the plate’s M2.6, to turn it.',sp:'WN-72 (05 01’s Schnitt C-D) · M2.6',src:'est',sn:'Its place from the plate’s sheet; its head as Wempe 3955’s',figs:'05 01_3, 05 01_1'}],
+  bezel:[{k:'ring',t:'Bezel (Glasrand)',h:'050101-2',d:PARTS.bezel.d,sp:PARTS.bezel.sp},
+    {k:'glass',t:'Glass',h:'050101-1',d:'The glass in the bezel’s top, flush with it.',sp:'05 01 01-1 · Ø 112 × 2.3',src:'scaled',sn:'Scaled on Glasrand kompl. (05 01 01, 1941)',figs:'05 01_4'}],
+  gimbalRing:[{k:'ring',t:'Gimbal ring',h:'050100-5',d:PARTS.gimbalRing.d,sp:'05 01 00-5 · Ø 140 × 3.3 × 23.2 (scaled)'},
+    {k:'bracket',t:'Ring bracket (Kardanringkloben)',h:'050100-6',d:'A curved brass plate on the ring at 3 o’clock, its two screws in slots, carrying that outer pivot: moved along the ring to level the bowl.',sp:'05 01 00-6 · 57 × 16.7 × 3.3 (scaled)'},
+    {k:'bracketScrews',t:'Ring bracket screws',h:'WN-kr',d:'The bracket’s two screws.',sp:'M2.5 (estimated)',src:'est',sn:'Their places scaled on 05 01; their size estimated'},
+    {k:'pivots',t:'Inner pivot screws (WN-79)',h:'WN-79',d:'Two screws through the ring at 12 and 6 o’clock, their points the inner pivots in the bowl’s brackets.',sp:'WN-79 (12 on 05 01) · M4 (scaled)',src:'est',sn:'Their places from 05 01; their size scaled on it'},
+    {k:'nuts',t:'Lock nuts (WN-400)',h:'WN-400',d:'The lock nuts that hold the inner pivot screws where they are set.',sp:'WN-400 (10 on 05 01) · M4',src:'est',sn:'From 05 01’s list; their size estimated'}],
+  box:[{k:'body',t:'Box',h:'Holzkasten',d:PARTS.box.d,sp:PARTS.box.sp},
+    {k:'pivots',t:'Outer pivot screws (WN-80)',h:'WN-80',d:'Two M6 screws through the box’s side walls, their ends the gimbal ring’s pivots.',sp:'WN-80 (11 on 05 01) · M6 (51 00 10: “Verbohren 4,8 mm, Gew. M 6”)',src:'scaled',sn:'Their thread and height from the handle’s sheet; their heads scaled on 05 01',figs:'51 00_2, 05 01_1'},
+    {k:'discs',t:'Bearing discs',h:'Lagerscheibe',d:'Brass discs on the side walls’ inside round the outer pivots.',sp:'Ø 23 × 2.4 (scaled)',src:'est',sn:'Scaled on 05 01’s elevation',figs:'05 01_1'},
+    {k:'handles',t:'Handles (Griff f. Chronometerkasten)',h:'510010',d:'A pressed strip handle on each side, under the pivot, its grip an oval standing 10 mm off the side.',sp:'Änderung von 51 00 10 (14.7.42) · 100 × 18, grip 70 × 30, 10 proud · 75 over the bottom',src:'drawing',sn:'Every figure of its sheet; its material not given',figs:'51 00_2'},
+    {k:'handleScrews',t:'Handle screws',h:'WN-hg',d:'The screws through the handles’ ends.',sp:'Estimated',src:'est',sn:'Not on the sheet'},
+    {k:'hinges',t:'Hinges',h:'Scharnier',d:'Two brass hinges at the back joining the lid to the box.',sp:'40 × 18 leaves (estimated)',src:'est',sn:'As Lange 1947’s box shows them'},
+    {k:'keeper',t:'Keeper',h:'Schliessblech',d:'The strap on the box’s front that the lid’s latch tongue slides under.',sp:'Estimated',src:'est',sn:'Not drawn'}],
+  lid:[{k:'lid',t:'Lid',h:'Holzkasten.D',d:PARTS.lid.d,sp:'75 high · walls 12.5 · its top a frame 20 wide'},
+    {k:'glass',t:'Lid glass',h:'Deckelglas',d:'The glass in the lid’s top.',sp:'151 × 151 × 3 (estimated)'},
+    {k:'hinges',t:'Hinge leaves',h:'Scharnier',d:'The hinges’ leaves on the lid.',sp:'Estimated'},
+    {k:'plate',t:'Maker’s plate (Firmenschild)',h:'000101-9',d:'Aluminium, white, its lettering sunk and filled black: CHRONOMETERWERKE, WEMPE, the C-W monogram, HAMBURG, Type 3371 (the number runs on).',sp:'00 01 01-9 (22.3.43) · Alu · 26 × 52 · four holes Ø 1.2 at 2 from the edges',src:'drawing',sn:'Every figure and the lettering from its sheet; its place on the lid as Greenwich’s wartime Wempe’s',figs:'51 00_3'},
+    {k:'tongue',t:'Latch tongue (Zunge)',h:'P510002-2',d:'An iron tongue, black, turning on a screw on the lid’s front: hung down, its end goes under the keeper on the box and holds the lid shut. Its sheet doesn’t say where it goes: taken as the lid’s latch.',sp:'P. 51 00 02-2 (18.9.42) · Eisen 10 × 4, gebondert, schwarz lackiert · 45 long, hole Ø 6.2, M3.5 at 14',src:'drawing',sn:'Every figure of its sheet; its place estimated',figs:'51 00_4'},
+    {k:'tongueScrew',t:'Tongue screw',h:'WN-zg',d:'The screw the tongue turns on.',sp:'M6 (estimated)',src:'est',sn:'Estimated'},
+    {k:'tongueKnob',t:'Tongue knob',h:'WN-zk',d:'The knob in the tongue’s M3.5, to lift it.',sp:'M3.5 (estimated)',src:'est',sn:'Estimated'}],
+  key:[{k:'paddle',t:'Key handle (Schlüsselgriff)',h:'510011-1',d:'The round flat paddle, in the body’s slot, held by the grooved pin.',sp:'51 00 11-1 · Ø 34.5 × 3 (scaled)',src:'scaled',sn:'Scaled on the key’s assembly sheet',figs:'05 01_7'},
+    {k:'body',t:'Key body (Schlüsselmittelteil)',h:'050102-2',d:'The black steel body: the tube runs in its bore, the spring round it.',sp:'05 01 02-2 (rev. a 15.7.48) · St. Az DIN 668, sand-blasted, phosphated, sprayed black · Ø 14.5 × 25.1 · bore Ø 8 × 22',src:'drawing',sn:'Every figure of its sheet',figs:'05 01_8'},
+    {k:'tube',t:'Key tube (Schlüsselrohr)',h:'050102-3',d:'The brass tube with the square socket for the fusee’s winding square (drawn round).',sp:'05 01 02-3 (rev. a 29.9.47) · Ms 58 · Ø 5.95 × 50.1, head Ø 8 × 2.6 · square 3.1 × 19',src:'drawing',sn:'Every figure of its sheet; its depth in the body estimated',figs:'05 01_9'},
+    {k:'spring',t:'Coil spring (Wendelfeder)',h:'510011-4',d:'The coil spring round the tube in the body’s bore, its end in the body’s Ø 0.9 hole: it grips the tube one way and slips the other.',sp:'51 00 11-4 · wire 0.9 (estimated), 14 turns',src:'est',sn:'Its place from the key’s assembly; its wire estimated',figs:'05 01_7'},
+    {k:'pin',t:'Grooved pin (Kerbstift)',h:'510011-6',d:'The pin through the body and the paddle.',sp:'51 00 11-6 · K.S. 1 · Ø 2.5',src:'drawing',sn:'Its hole from the body’s sheet',figs:'05 01_8'}]};
 
 /* ================= views ================= */
 /* the camera's turn (yaw), height (pitch, rad) and distance, aimed at a point in the movement's frame. The movement stands train side up (the scene's group turns it over) */
 const VIEWS={
   movement:{yaw:2.5,pitch:0.6,dist:250,target:[0,-11,0]},
   plan:{yaw:Math.PI,pitch:1.52,dist:270,target:[0,-11,0]},   /* straight down on the top plate, 12 o'clock at the top (so 3 o'clock on the left, as the sheets draw the Oberplatte: their O to the right) */
-  dial:{yaw:0,pitch:-1.3,dist:250,target:[0,8,0]},   /* from below, on the dial, 12 o'clock at the top */
+  dial:{yaw:0,pitch:1.3,dist:330,target:[0,12,0],case:{lid:1,lift:0}},   /* the dial in its case, from above, the lid open, 12 o'clock at the top */
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
   exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
-  escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true}};   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial and its hands, from the dial side.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+  escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
+  box:{yaw:0.62,pitch:0.42,dist:640,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right */
+  case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}}};   /* the box open: the bowl in its gimbals */
+/* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut.',case:'The box open: the bowl in its gimbal ring.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
@@ -3729,8 +4018,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
   let hrs=20,winding=false,conn='chain',HPT=90/14,HRUN=56.4;
+  /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
+     its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
+  let CS=null,cl=1,cf=1;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
   const V=VIEWER.start({name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
-    build:M=>{const root=new THREE.Group();mv=buildWempe(M);mv.rotation.x=Math.PI;root.add(mv);
+    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
+      if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid};   /* the box, for audit.py box (geometry-audit-box.js) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);return{root,mv};},   /* the movement train side up */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
@@ -3752,18 +4045,22 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Fusee wheel','Schneckenrad, 05 06 00-3','fuseeWheel',pw(P.fuseeWheel,H[10][0]-19,-3.8,H[10][1]+5));
       add('Barrel','Federhaus, 05 07 01','barrel',pw(P.barrel,H[45][0]+20.8,-6,H[45][1]));
       add('Chain','Kette, 05 07 04','chain',pw(P.chain,H[45][0]+17,-12,H[45][1]+13));
-      add('Dial','Zifferblatt, 05 02 00-4','dial',pw(P.dial,-30,WDIAL.DY1,30));add('Hands','05 02 00-1, -2, 05 02 01-1','hands',pw(P.hands,0,16,-30));},
+      add('Dial','Zifferblatt, 05 02 00-4','dial',pw(P.dial,-30,WDIAL.DY1,30));const Q=CS.parts,yb=CS.YB;
+      add('Bowl','Gehäusetopf, R-05 01 00-1','bowl',pw(Q.bowl,-38,yb-50,38));add('Bezel','Glasrand, R-05 01 01-2','bezel',pw(Q.bezel,-44,yb+16,-44));add('Gimbal ring','Kardanring, 05 01 00-5','gimbalRing',pw(Q.gimbalRing,-52,yb,52));
+      add('Box','Holzkasten','box',pw(Q.box,-92.5,yb-60,60));add('Key','Chronometerschlüssel, 51 00 11','key',pw(Q.key,-62,yb-100,10));add('Transit lock','Feststeller','caseLock',pw(Q.caseLock,65,yb+20,63));add('Hands','05 02 00-1, -2, 05 02 01-1','hands',pw(P.hands,0,16,-30));},
     /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js): the
        balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period, a beat behind until the tooth escapes); fast, the balance is drawn at
        rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
     tick:(dt,now,st)=>{if(!mv)return[];
+      {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);cf+=((c?c.lift:1)-cf)*k;cl+=((c?c.lid:cf>0.97?0:1)-cl)*k;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
+        const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
       const down=hrs>=HRUN-1e-6;if(!down||winding){tSim+=dt*st.speed;if(!winding)hrs=Math.min(HRUN,hrs+dt*st.speed/3600);}   /* run down, the train stands */
       const y=tSim/0.5,k=Math.floor(y),p=y-k,n=hrs/HPT;let s;
       if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};mv.userData.update({E:y,th:0,lift:0,psDef:0,n,winding});}
       else{s=ESC.state(p);mv.userData.update({E:k-1+(p>0?s.prog:0),th:s.th,lift:s.lift,psDef:s.psDef,n,winding});}
-      showH();return[+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4)];},
+      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);},
       read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');}},
     hud:st=>`The movement, from its drawings&ensp;${winding?'<b>winding</b>':hrs>=HRUN-1e-6?'<b>run down</b>':`${hrs.toFixed(1)} h since winding`}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
