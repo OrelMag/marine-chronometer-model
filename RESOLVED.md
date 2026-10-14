@@ -1674,7 +1674,7 @@ Contents:
   over focal lengths and methods); drawn there, the model's lines fall on the
   frame's. Keep: the wall (`CK_RP`) read through a camera, not the 1-D map on
   the stud's holes, which extrapolates (21.3); 0.48 mm of metal round the cock
-  screw's counterbore. `HASH`
+  screw's counterbore. `951627b`
 - **Mounting ring screws and two dial screws 20-37° from the real ones.** The
   ring screws' places (`S.ring`) were fixed angles, 70°, 190° and 300° from 12:
   one read on the top-view photograph before the photographed group's 19.4° turn
