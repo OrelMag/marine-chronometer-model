@@ -14,7 +14,7 @@ import asyncio,json,pathlib,sys
 from playwright.async_api import async_playwright
 from PIL import Image,ImageDraw
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
 CSS=("header,.panel,.hud,.tools,.hint,.labels,.loading,.tabs,.modeTabs{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
      ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
 FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}

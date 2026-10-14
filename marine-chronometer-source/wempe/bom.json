@@ -1,0 +1,110 @@
+{
+ "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P0, 14 October 2026: the frame's lines only, provisional until the frame drawings are transcribed (References/wempe/transcriptions/05-08-frame.md). Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers (05 08 00-1) are not of its form",
+ "relations": {
+  "in": "the part's axis inside the named part: tap (thread in a tapped hole), clear (through a clearance hole), run, free, press (as the Hamilton's bom.json)",
+  "on": "rests against the named part (surfaces within 0.02 mm)"
+ },
+ "lines": [
+  {
+   "id": "050802-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 02-1",
+   "name": "Unterplatte (pillar plate)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The lower plate, under the dial: the foundation of the movement.",
+   "rel": [],
+   "figs": "05 08_3a"
+  },
+  {
+   "id": "050901",
+   "idx": null,
+   "no": "",
+   "dwg": "05 09 01",
+   "name": "Oberplatte (top plate)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "The upper plate, on the train side (its sheet's title block numbers it 05 09 01; the assembly, Oberplatte kompl., is 05 08 01).",
+   "rel": [],
+   "figs": "05 08_1a"
+  },
+  {
+   "id": "050800-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 00-1",
+   "name": "Pfeiler (pillar)",
+   "qty": 3,
+   "parent": null,
+   "kind": "part",
+   "part": "pillars",
+   "fn": "Hold the plates 19 mm apart, their shoulders in seats in the plates.",
+   "rel": [
+    [
+     "on",
+     "050802-1"
+    ],
+    [
+     "on",
+     "050901"
+    ]
+   ],
+   "figs": "05 08_11"
+  },
+  {
+   "id": "WN-pil.d",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Pillar screw, dial side (WN standard part, its number not read yet)",
+   "qty": 3,
+   "parent": "050800-1",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Hold each pillar to the pillar plate, from the dial side.",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "clear"
+    ],
+    [
+     "in",
+     "050800-1",
+     "tap"
+    ]
+   ],
+   "figs": "001"
+  },
+  {
+   "id": "WN-pil.t",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Pillar screw, train side (WN standard part, its number not read yet)",
+   "qty": 3,
+   "parent": "050800-1",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "Hold the top plate to each pillar, from the train side.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "clear"
+    ],
+    [
+     "in",
+     "050800-1",
+     "tap"
+    ]
+   ],
+   "figs": "001"
+  }
+ ]
+}
