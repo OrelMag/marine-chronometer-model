@@ -1146,11 +1146,11 @@ on what would stop the chronometer.
   (0.3, 0 at the jewels) and the detent's damping (Q 100). For the bench
   (`--write`, `tools/tripping.json`): run at shallower locks, the stone's
   largest lift while held stays at 25-50 µm whatever the depth, so the lock's
-  floor is 3.9° (the margin under two below it; the drop gone at 3.4°, a tooth
-  past at 2.4°; 5° until 14 October 2026, the preload the whole 0.770 g), and the blow that trips it hardly changes with
+  floor is 5° (the margin under two below it; the drop gone at 3.4°, a tooth
+  past at 2.9°), and the blow that trips it hardly changes with
   the lock: against knocks it is Op. 78's preload that holds. Clamped by its
   foot and flicked, the detent rings at 137 Hz as drawn, the pitch rising
-  nearly as its spring's thickness to the 1.5 (137-194 Hz for 0.079-0.100 mm;
+  nearly as its spring's thickness to the 1.5 (120-222 Hz for 0.072-0.110 mm;
   thinner springs ring more after each lock, and from 0.12 mm, Op. 78's
   0.005 in leaving little preload, the stone's ringing uses over half the
   depth of lock), which makes a phone's recording
