@@ -50,9 +50,9 @@ swing read frame by frame).</p>
 
 <div class="tiles">
  <div class="tile"><div class="k">Escapement timing</div><div class="v ok">Confirmed</div><div class="n">The tooth strikes the impulse jewel 7–9 ms after the unlocking, as the corrected model has it. The old model's 2 ms is ruled out.</div></div>
- <div class="tile"><div class="k">Real swings</div><div class="v">212° · ≈295°</div><div class="n">Two movements, by sound. The manual asks for 247.5–270°; the model runs at 255°.</div></div>
+ <div class="tile"><div class="k">Real swings</div><div class="v">≈205° · ≈300–320°</div><div class="n">Two movements, by sound (on the model of 14 October 2026; 212° and 295° on the model of 11 October). The manual asks for 247.5–270°; the model runs at 255°.</div></div>
  <div class="tile"><div class="k">Sound vs picture</div><div class="v mid">Agree, sound high</div><div class="n">Within their uncertainties; the sound reads about 15° above the video's likeliest reading.</div></div>
- <div class="tile"><div class="k">Balance's run-down</div><div class="v no">TF ≥ 120–160 s</div><div class="n">A real start builds up far more slowly than the model's 68 s allows (52 s until 12 October 2026, when the endstone's friction was measured and the mainspring became the videos'). Recorded as an open question.</div></div>
+ <div class="tile"><div class="k">Balance's run-down</div><div class="v no">TF ≥ 120–160 s</div><div class="n">A real start builds up far more slowly than the model's 67 s allows (52 s until 12 October 2026, when the endstone's friction was measured and the mainspring became the videos'; 68 s until 14 October 2026). Not the escape wheel's chase: with any shape of the escapement's work the start wants 104 s or more. Recorded as an open question.</div></div>
 </div>
 
 <nav class="toc"><a href="#what">What is tested</a><a href="#recordings">Recordings</a><a href="#sound">The sound</a><a href="#start">A real start</a><a href="#video">The video</a>
@@ -105,16 +105,16 @@ green solid: the corrected model at its best swing; red dashed: the old model at
 8 the jewel meets the trip spring, 9 it comes clear.</figcaption></figure>
 <ul>
 <li>Onsets at −12.44, −3.68 (the loudest), +6.63, +246.16 and +254.97 ms (±0.05–0.3 ms; 49 beats).</li>
-<li>The corrected model pairs four of them (unlocking, strike, lock, the trip spring met) at a swing of <b>212° (211–218°)</b>, χ² 0.8. Four intervals read separately all
-give 201–220°. With the beat error free too, all five onsets fit at 209° (205–213°), 12° out of beat.</li>
-<li>Measured ratio unlocking→strike / strike→lock: 8.76 / 10.31 = <b>0.85</b>; corrected model at 212°: 0.83; old model: 0.16 at any swing. The old model's best fit leaves the loudest
-click unexplained (cost 34 against 22).</li>
+<li>The corrected model, as it stands (14 October 2026), pairs four of them (unlocking, strike, lock, the trip spring met) at a swing of <b>about 205°</b> (202°, 187–207° over resamples), χ² 2.4.
+Single intervals read 188–220°. With the beat error free too, all five onsets fit at 207° (203–212°), 11° out of beat. (On the model of 11 October: 212°.)</li>
+<li>Measured unlocking→strike 8.76 ms, strike→lock 10.31 ms. On the corrected model the first hardly changes with the swing (7.3–7.7 ms from 200° to 255°: the wheel chases the jewel);
+on the old model it is about 2 ms at any swing. The old model's best fit leaves the loudest click unexplained.</li>
 </ul>
 
 <h3>The other recordings</h3>
 <div class="cols">
- <figure><img src="assets/ac_We1dLNXiBj0.png" alt="Average beat of We1dLNXiBj0 from 2:08"><figcaption><code>We1dLNXiBj0</code> from 2:08 (running, 93 beats). Two loud clicks 6.36 ms apart; on their own they fit
- either as unlocking→strike (about 295°) or strike→lock (331°). The start-up below shows which.</figcaption></figure>
+ <figure><img src="assets/ac_We1dLNXiBj0.png" alt="Average beat of We1dLNXiBj0 from 2:08"><figcaption><code>We1dLNXiBj0</code> from 2:08 (running, 93 beats). Two loud clicks 6.36 ms apart, read as the strike and the lock: 299°;
+ the return swing's own clicks, 5.88 ms apart, 324° (306° at one sigma); all four fitted at once 316°.</figcaption></figure>
  <figure><img src="assets/ac_xDKFZaY88cM.png" alt="Average beat of xDKFZaY88cM"><figcaption><code>xDKFZaY88cM</code>: the room rings for 100 ms and hides the clicks after the loudest. Corrected model about 180° in beat,
  209° with 3° beat error: rough, and the video is edited so its sound may be too.</figcaption></figure>
  <figure><img src="assets/ac_XJQCgMV_GA8.png" alt="Average beat of XJQCgMV_GA8"><figcaption><code>XJQCgMV_GA8</code>: only 24 beats (13 s of sound), several weak onsets on the loudest click's flank; corrected (269°) and old
@@ -141,9 +141,15 @@ the sound reads a swing 15–30° above the video's from 1:20 on (the horizontal
 <div class="chart" id="c2"></div>
 <details><summary>Data table</summary><div id="t2"></div></details>
 <p>The video's swing (blue line; shaded: its possible readings, a screw hole apart) rises from 66° to 244–267° at 2:03 and is still rising about 1°/s. The sound's
-swing (orange dots) agrees with it within 2–15° up to about 180°, then reads higher, and settles at about 295° (290–302°, eight stretches) after 2:10. The grey curves are the same start run in the model
-(<code>tools/startup.js</code>): with the model's balance run-down <code>TF</code> = 68 s the swing builds up too fast and flattens too early (11–12° rms from the video at its best
-drive; 14–17° at the 52 s it had until 12 October 2026); a run-down of 160 s or more, with the drive at 65–80 % of the model's torque, follows the video within 3–6° rms.</p>
+swing (orange dots, read from the strike-to-lock interval on the current model) follows it within 2–11° from 1:23 to 1:59, and the steady stretch after 2:08 reads about 300–320°. The grey curves are the same start run in the model
+(<code>tools/startup.js</code>): with the model's balance run-down <code>TF</code> = 67 s the swing builds up too fast and flattens too early (11.5–12.2° rms from the video at its best
+drive; 14.5–16.7° at the 52 s it had until 12 October 2026); a run-down of 160 s or more, with the drive at 60–75 % of the model's torque, follows the video within 2.8–5.1° rms.</p>
+<p>Is it the escape wheel's chase onto the impulse jewel? The clicks of each stretch, read on the video's swing rather than the model's timing (<code>startup.js --chase</code>), put the
+strike at the balance angle where the model's tooth lands up to about 217° of swing (within 0.4°); above it the real strike stops moving (about −6.5°) while the model's tooth lands
+later and later, 6.2° over 196–252°: its wheel, let go from rest, chases the jewel, so the model gives a small swing a little more of the escapement's work than a running one
+(1.34 times at 60° against 255°; moved as the clicks move, about 1.24). That is not why the start is slow: the averaged build-up law, refitted with the work falling as the model's,
+the clicks' or not at all, still wants TF 156–160, 136–142 or 104–106 s (each within 2° rms; 67 s misses by 5.7–10.1°), settling at 294–316°. No drive, inertia or give of the
+train's teeth makes the landing stop moving; what does is open.</p>
 
 <h2 id="video">Test 2: the swing on video (<code>tools/swing.py</code>)</h2>
 <p>At 30 frames a second a 0.5 s oscillation has only 15 frames, and in mid-swing the balance turns about 100° per frame and is a blur. Near each turning point it is almost
@@ -174,33 +180,35 @@ band (green) and the model's 255° (blue line). Right: the growth rate from each
 <h2 id="agree">Do the two tests agree?</h2>
 <div class="chart" id="c3"></div>
 <details><summary>Data table</summary><div id="t3"></div></details>
-<p><b>Yes, within their uncertainties, with the sound a little high.</b> Through the start the two agree within 2–15° up to about 180°. Above, the sound reads 15° (the
-video's likeliest reading) to 30° (its middle) higher: about 1.5 σ of the sound's reading (±10° from ±0.3 ms) and one screw hole of the video's. The sound's running swing,
-about 295° (290–302°), sits inside the video's extrapolated 280–311°. If the excess is real, the model's strike-to-lock arc is about 6 % too long; these data can't separate that from the video's aliases.</p>
+<p><b>Yes, within their uncertainties.</b> On the model as it stands (14 October 2026), through the start the sound's strike-to-lock reading follows the video within 2–11°
+(198–255° against 196–252° on its middle reading, 1:23–1:59), and the steady stretch, about 300–320° (299° strike to lock; the return swing's own clicks 306–324°), sits at and above the
+video's extrapolated 280–311°. On the model of 11 October the sound read 15–30° above the video, which looked like a strike-to-lock arc 6 % too long; the changes since (the detent's preload,
+the balance's run-down, the train's measured inertia) closed it. Is the loud click the strike? Taken as the detent coming home on its stop button instead, the first interval's trend fits
+better, but the lock comes 1.4–1.9 ms early, and the steady 255° that reading gives, the return swing's clicks (which involve neither) rule out: it is the strike.</p>
 
 <h2 id="implications">Implications for the model</h2>
 <ol>
 <li><b>The corrected escapement is right where it mattered.</b> On real Model 21s the wheel catches the impulse jewel 7–9 ms after the unlocking, and the intervals follow the swing
-as <code>dynamics.js</code> computes them, through a whole start from 136° to 286°. The old kinematic wheel (strike 2 ms after the unlocking) is ruled out by the cleanest recording and by every stretch of the start.</li>
-<li><b>Real swings vary from unit to unit.</b> 212° on one movement, about 295° running on another (about 180–210° on a third, roughly). The manual's 247.5–270° and the model's 255° lie between:
+as <code>dynamics.js</code> computes them, through a whole start. The old kinematic wheel (strike 2 ms after the unlocking) is ruled out by the cleanest recording and by every stretch of the start.</li>
+<li><b>Real swings vary from unit to unit.</b> About 205° on one movement, about 300–320° running on another (about 150–200° on a third, roughly). The manual's 247.5–270° and the model's 255° lie between:
 the model's swing is a reasonable middle, not a measured value for any one chronometer.</li>
 <li><b>Each movement has a beat error.</b> The return swing's clicks fall a few milliseconds off where an in-beat balance puts them, differently in each recording: 5–12° out of beat when fitted.
 The model assumes a chronometer exactly in beat (the manual's adjustment); that is fine, but it means the sound can't test the trip spring's geometry or the shape of the discharge jewel's end (its back's radius).</li>
-<li><b>The balance loses its swing more slowly than the model says.</b> A real start rises far more slowly than the model's 68 s run-down allows; the fit wants TF of at least about 120–200 s
-(Q ≈ 750–1,250) with about 70–85 % of the model's drive, and gives no upper bound. That is beyond the 65–113 s the balance's parts allow in <code>physics.js</code> with the endstone's friction measured (32–62 s before it was). It is recorded
+<li><b>The balance loses its swing more slowly than the model says.</b> A real start rises far more slowly than the model's 67 s run-down allows; the fit wants TF of at least about 120–160 s
+(Q ≈ 750–1,000) with about 60–80 % of the model's drive, and gives no upper bound. That is beyond the 65–113 s the balance's parts allow in <code>physics.js</code> with the endstone's friction measured (32–62 s before it was). It is recorded
 in <code>OPEN-QUESTIONS.md</code>; the model is not changed on one hand-started movement whose absolute swing is known only to a screw hole.</li>
-<li><b>If the sound's small excess is real</b>, the model's arc from strike to lock is about 6 % too long (the strike a little early in angle, or the lock a little late).</li>
+<li><b>The escape wheel reaches the jewel sooner than the model's at a running swing.</b> The real strike stops moving with the swing from about 217°, the model's tooth lands later and later: a small difference in the escapement's work (1.24 against 1.34 times at 60°), not the cause of the slow start.</li>
 </ol>
 
 <h2 id="gaps">Gaps, and what would close them</h2>
 <table>
 <tr><th>Gap</th><th>Why it matters</th><th>What would close it</th></tr>
 <tr><td>No steady swing seen on video without aliases</td><td>The video reading is known only to a 15° screw hole, which limits the sound–picture comparison to ~1.5 σ</td><td>A Model 21 running steadily with one balance feature in view from above (a timing weight, an arm's end) for a minute, on a tripod</td></tr>
-<tr><td>The balance's free run-down never measured</td><td>Sets Q (the model's <code>TF</code> 68 s), the drive the train must give, and the build-up time; the start suggests ≥ 120–160 s</td><td>A video of the balance swinging freely with the train held by the blocking screw, its swing timed until it stops</td></tr>
+<tr><td>The balance's free run-down never measured</td><td>Sets Q (the model's <code>TF</code> 67 s), the drive the train must give, and the build-up time; the start suggests ≥ 120–160 s (≥ 104 s whatever the escapement's chase)</td><td>A video of the balance swinging freely with the train held by the blocking screw, its swing timed until it stops</td></tr>
 <tr><td>One clean recording decides old vs corrected outright</td><td>Elsewhere the unlocking is too quiet or the room too live to hear all three clicks</td><td>More close recordings with a still microphone, or a timegrapher (it hears the same clicks)</td></tr>
-<tr><td>Which click is which, on a steady recording</td><td>Two loud clicks 6.4 ms apart read as about 295° or 331° depending on their names</td><td>A start (as in <code>We1dLNXiBj0</code>) or a contact microphone with a slowed-down video of the escapement in sync</td></tr>
+<tr><td>Which click is which, on a steady recording</td><td>Two loud clicks 6.4 ms apart: their names come from the start, where all three are heard, and the return swing's clicks confirm them</td><td>A start (as in <code>We1dLNXiBj0</code>) or a contact microphone with a slowed-down video of the escapement in sync</td></tr>
 <tr><td>Beat error confounds the return swing</td><td>Hides any test of the trip spring and the shape of the jewel's end</td><td>Video of the escapement's return swing at high frame rate, or a unit put exactly in beat first</td></tr>
-<tr><td>Different movements, different states</td><td>Swings range 180–295°; mainspring, oil and adjustment are unknown</td><td>A timegrapher reading (swing, beat error, rate) on a serviced unit, fully wound</td></tr>
+<tr><td>Different movements, different states</td><td>Swings range about 150–320°; mainspring, oil and adjustment are unknown</td><td>A timegrapher reading (swing, beat error, rate) on a serviced unit, fully wound</td></tr>
 <tr><td>Recording artefacts</td><td>YouTube's Opus coding smears transients by up to ~1 ms (0.3 ms allowed per onset); the video in <code>xDKFZaY88cM</code> is edited</td><td>Original, uncompressed recordings</td></tr>
 </table>
 
@@ -209,7 +217,7 @@ in <code>OPEN-QUESTIONS.md</code>; the model is not changed on one hand-started 
 <li><b>Sound:</b> <code>python acoustic.py s7VW3RiJ97E We1dLNXiBj0 xDKFZaY88cM XJQCgMV_GA8 FpolZSipVmQ --write</code> (about 4 min) and <code>python acoustic.py We1dLNXiBj0 --every 6 --from 0:56 --write</code> (30 s).
 Onset: the level first 1.5 dB over its highest 4–2 ms before, on a rise reaching 2 dB; an onset of 3 dB or more in 80 % of resamples must be explained by the fit, a weaker one may be.
 Cost: χ² of the pairs + 4 for each model event unheard + 9 for each strong onset unexplained. Only intervals inside a beat are used: the recordings' clocks are good to tens of ppm, not to the rate.</li>
-<li><b>Video:</b> <code>python swing.py We1dLNXiBj0</code> (7 s). <b>Start in the model:</b> <code>node startup.js</code> (5 min).</li>
+<li><b>Video:</b> <code>python swing.py We1dLNXiBj0</code> (7 s). <b>Start in the model:</b> <code>node startup.js</code> (about 8 min; <code>--chase</code> 2 s).</li>
 <li><b>Results in the repository</b> (branch <code>claude/validation</code>, not merged): <code>tools/acoustic.json</code>, <code>acoustic_stretches.json</code>, <code>swing.json</code>; the model README's
 "Checked against real chronometers", <code>References/VIDEOS.md</code> (Measurements, Methods), <code>OPEN-QUESTIONS.md</code>.</li>
 <!--L--><li><b>This report:</b> built by <code>build_report.py --local</code> outside the repository, with audio excerpts and video frames; the copy in the repository (<code>marine-chronometer-source/chronometer-working-model/verification/real-chronometers/</code>) links to the videos instead.</li><!--/L--><!--R

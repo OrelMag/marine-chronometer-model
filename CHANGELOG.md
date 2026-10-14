@@ -4,6 +4,39 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.31.06 · 2026-10-15
+- The mounting ring's three screws now pass through its flange, where a restored Model 21 shows their ends from the dial side, and the dial's fourth foot sits where that movement's fourth foot hole is
+
+## 2.31.05 · 2026-10-14
+- A new check sweeps every design value no source settles over its whole range, with the bench's corrections applied, and finds the chronometer works across all of them (the build report's section 12)
+- The detent spring's ring test is mapped finely: any spring ringing at 120-222 Hz (0.072-0.110 mm thick) is safe, and the maker aims where it rings least
+
+## 2.31.04 · 2026-10-14
+- The report on real chronometers re-reads the recordings on the model as it is now: the sound of a real start follows its video within a few degrees, and a running Model 21 is heard swinging about 300-320°
+- Checked against another reading of the clicks (the detent landing on its stop instead of the escape tooth striking the impulse jewel), which the balance's return swing rules out
+
+## 2.31.03 · 2026-10-14
+- The mounting ring's three screws and the dial's four screws moved to where a restored Model 21 has them, measured on both sides of its plate
+
+## 2.31.02 · 2026-10-14
+- The report on real chronometers is updated: a real Model 21's start, heard through its clicks, shows its escape wheel reaching the impulse jewel sooner than the model's at a running swing, but the slow start is its balance losing less
+- The tools' start figures follow the train's measured inertia
+
+## 2.31.01 · 2026-10-14
+- The sustaining pawl's end is drawn filed to bear on its tooth's face, as a maker fits it, so the spring's load pulls it into the teeth
+- The escapement's timing uses the train's inertia weighed from the model's own parts (6.05 g·mm², was an estimate of 5.9)
+- The maker's notes explain why the build's mainspring is Nivaflex: no carbon-steel spring on the arbor its life asks for fits the barrel's turns
+
+## 2.31.00 · 2026-10-14
+- The maintaining spring is now the split ring of the period's chronometers, held closed while it runs: while you wind it keeps the balance swinging over a turn for about 8 minutes, as the manual's five to ten
+- The set-up ratchet sits on its arbor's square, its teeth undercut as measured on the restoration video
+- The hairspring's stud is where the restoration video measures it, the spring's upper curve designed to match
+- A new bench test for anyone making it: filming the balance's free run-down chooses the mainspring's thickness
+
+## 2.30.02 · 2026-10-14
+- The detent spring is set up as the manual's Op. 78 says in full: the 0.770 g test weight parts it about 0.005 in from its stop, so its preload is a little lighter (0.63 g at the locking jewel)
+- The balance's free swing dies away in 67 s (was 68), which keeps the running swing at 255°; the maker's sheets and the bench tests give the detent spring's limits from the same test (no thicker than 0.137 mm)
+
 ## 2.30.01 · 2026-10-13
 - The winding stop-bar on the fusee is now pushed in by the chain itself as it winds onto the top turn: its end reaches down into the links, and it moves only while they press on it.
 

@@ -28,8 +28,9 @@
     const p=pen(hit),on=D.filter((_,i)=>p[i]>p0[i]+0.001),C=[on.reduce((q,v)=>q+v[0],0)/on.length,on.reduce((q,v)=>q+v[1],0)/on.length],rC=Math.hypot(...C);
     let n,kind=undefined;if(rC>pr.ro-0.03){kind='tip corner on the pawl';let bi=0,bd=1e9;D.forEach(([x,z],i)=>{const e=Math.hypot(x-C[0],z-C[1]);if(e<bd){bd=e;bi=i;}});const a=D[(bi+D.length-3)%D.length],b=D[(bi+3)%D.length],t=[b[0]-a[0],b[1]-a[1]],l=Math.hypot(...t);
       n=[-t[1]/l,t[0]/l];if(!inPoly(W,C[0]+0.02*n[0],C[1]+0.02*n[1]))n=[-n[0],-n[1]];}
-    /* the face's own normal at C: the faces are radial (ratchetProf), so the tangent, away from the side the tooth stands on */
-    const ang=Math.atan2(C[1],C[0]),aT=ang+dir*hit,e=0.02*pr.p,u=[-Math.sin(ang),Math.cos(ang)],nF=pr.r(aT+e)>pr.r(aT-e)?[-u[0],-u[1]]:u;
+    /* the face's own normal at C: the faces are radial (ratchetProf), so the tangent, away from the side the tooth stands on; a face undercut by pr.uc (the setup
+       ratchet's) turns it in toward the centre by as much, its root behind its tip, so the load draws the pawl in */
+    const ang=Math.atan2(C[1],C[0]),aT=ang+dir*hit,e=0.02*pr.p,u=[-Math.sin(ang),Math.cos(ang)],nR=pr.r(aT+e)>pr.r(aT-e)?[-u[0],-u[1]]:u,uc=pr.uc||0,nF=[nR[0]*Math.cos(uc)-Math.cos(ang)*Math.sin(uc),nR[1]*Math.cos(uc)-Math.sin(ang)*Math.sin(uc)];
     if(kind===undefined){kind='on the face';n=nF;}
     const win=D.filter(([,,,a])=>Math.abs(((a-ang+3*Math.PI)%TAU)-Math.PI)<pr.p),depth=pr.ro-Math.min(...win.map(v=>v[2])),rF=pr.ro-depth/2;
     /* fit: the pawl's end cut to bear on the face over its depth in the teeth, as a fitted pawl does: the load at the face's middle there, along its normal */

@@ -7,7 +7,8 @@ a run down and a sudden one, with the train and the fusee advancing together as 
 hour), and when the key lets go adds the catch's hours (R.release) as app.js does. Checks after every frame:
   - the sustaining ratchet never turns back, except as winding starts (locked to the fusee, its winding pawls on their faces, until its pawl holds it) and when the
     spring pushes it back to its pawl (a sudden drop of the fusee's drive), each time by less than one of its teeth;
-  - the spring: running, where it balances the fusee's drive (d = SMAX (1 - D)) unless its pawl holds the ratchet; while held or winding it only relaxes, up to SMAX;
+  - the spring: running, where it balances the fusee's drive (d = SMAX (1 - D / SPU), banked at 0 while the drive is over its push SPU) unless its pawl holds the
+    ratchet; while held or winding it only relaxes, up to SMAX;
   - the winding pawls: running, on the steep faces of the fusee's winding ratchet (R.WPH) and at least half its teeth's depth into them (0.4 mm of 0.82 until the teeth were measured 0.55 deep, 11 October 2026); as winding starts, still on the faces
     and as deep while the ratchet goes back with the fusee (they ride over the teeth only once the sustaining pawl holds it);
   - the catch when the key lets go: the fusee (and the arbor, square and wind-indicator pinion with it) turns forward by the gap to the pawls plus the spring's
@@ -23,7 +24,7 @@ from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
- const D=180/Math.PI,FPR=R.FPR,WD=(FPR.ro-FPR.ri)/2,SRP=R.SRP,SMAX=R.SMAX,TAU=2*Math.PI,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);},info={};
+ const D=180/Math.PI,SPU=R.SPU,ssQ=Dv=>R.SMAX*Math.max(0,Math.min(1,1-Dv/SPU)),FPR=R.FPR,WD=(FPR.ro-FPR.ri)/2,SRP=R.SRP,SMAX=R.SMAX,TAU=2*Math.PI,fails=[],cnt={},fail=(k,m)=>{cnt[k]=(cnt[k]||0)+1;if(cnt[k]<=3)fails.push(k+': '+m);},info={};
  const TPH=7200,NPH=FUSEE_PER_HOUR,st={E:1000,n:3,spent:false,reset:false};let prev=null,k=0,ws=null;
  /* how far a pawl is from its ratchet's teeth (negative: inside): its outline every 0.1 mm against the profile (as seatPawl tests it), and the teeth's tips against
     its edges (a tip can touch an edge between the points): the nearest tip's distance outside the outline, negative inside */
@@ -46,7 +47,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  let catches=[],epsR=[1e9,-1e9];
  function frame(w,tag){const s=ESC.state(0.4);mv.userData._u({E:st.E+s.prog,th:s.th,lift:s.lift,psDef:s.psDef,n:st.n,winding:w,spent:st.spent,reset:st.reset,springOn:false,msOn:false});k++;st.reset=false;
    const sr=R.sr.rotation.y,gA=R.gw.rotation.y,fz=R.fs.g.rotation.y+R.fs.fz.rotation.y,cur={sr,gA,fz,eps:R.eps,n:st.n,w,held:R.held,tag},at=`frame ${k} (${tag}, n ${st.n.toFixed(3)})`,d=gA-sr,psi=fz-sr;
-   const dq=SMAX*Math.max(-0.25,Math.min(1,1-(st.spent?0:R.drvN(st.n))));
+   const dq=ssQ(st.spent?0:R.drvN(st.n));
    if(Math.abs((R.sq.rotation.y+R.fs.g.rotation.y)-fz)>1e-6)fail('arbor',`${at}: square and fusee differ by ${((R.sq.rotation.y+R.fs.g.rotation.y-fz)*D).toFixed(2)} deg`);
    if(prev){const dsr=sr-prev.sr,jump=/slider|set|start/.test(tag);
      if(w&&!prev.w)ws={sr0:prev.sr,psi0:prev.fz-prev.sr,rel:[]};
@@ -58,7 +59,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
      if(prev.w&&!w&&!jump){const sh=prev.sr,fc=sh+R.WPH+FPR.p*Math.ceil((prev.fz-sh-R.WPH)/FPR.p-1e-9),want=fc+Math.max(0,gA-dq-sh)-prev.fz,got=fz-prev.fz;   /* the catch: gap to the pawls, then the reload */
        catches.push(got);if(got<-1e-9)fail('catch',`${at}: fusee turned back ${(-got*D).toFixed(2)} deg when the key let go`);
        if(Math.abs(got-want)>2e-4)fail('catch',`${at}: the catch turned the fusee ${(got*D).toFixed(3)} deg, the gap and reload ${(want*D).toFixed(3)}`);
-       const nR=prev.n+prev.rel,qR=SMAX*Math.max(-0.25,Math.min(1,1-(nR>=FUSEE_TURNS?0:R.drvN(nR)))),rl=g=>Math.max(0,g-qR-sh),fore=prev.rel*TAU+rl(gA)-rl(prev.gA);   /* the frame's own running turns the fusee too, by what it adds to the reload at the drive R.release took (where the catch leaves the fusee): none while the spring is still held, part of it as the reload starts (the train's whole turn added, until 12 October 2026, failed a catch the reload began in) */
+       const nR=prev.n+prev.rel,qR=ssQ(nR>=FUSEE_TURNS?0:R.drvN(nR)),rl=g=>Math.max(0,g-qR-sh),fore=prev.rel*TAU+rl(gA)-rl(prev.gA);   /* the frame's own running turns the fusee too, by what it adds to the reload at the drive R.release took (where the catch leaves the fusee): none while the spring is still held, part of it as the reload starts (the train's whole turn added, until 12 October 2026, failed a catch the reload began in) */
        if(Math.abs(got-fore)>2e-4)fail('catch',`${at}: R.release foretold ${(prev.rel*360).toFixed(3)} deg and the frame's running reloaded ${((rl(gA)-rl(prev.gA))*D).toFixed(3)}, the catch took ${(got*D).toFixed(3)}`);}
    }
    if(!w&&!cur.held&&Math.abs(d-dq)>1e-6)fail('load',`${at}: spring relaxed ${(d*D).toFixed(3)} deg in running, where the drive puts it ${(dq*D).toFixed(3)}`);
@@ -101,7 +102,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  /* run down at once (the slider): the spring drives the train alone, its pawl holding the ratchet, the fusee standing */
  { st.n=3;frame(false,'slider');run(10,7);st.n=FUSEE_TURNS;st.spent=true;frame(false,'slider');const fz0=R.fs.g.rotation.y+R.fs.fz.rotation.y,f0=R.ssF();run(30,30);
    const f1=R.ssF(),fz1=R.fs.g.rotation.y+R.fs.fz.rotation.y;info.sudden={push0:f0,push1:f1,held:R.held};
-   if(!R.held||f0<1-SRP.p/SMAX-0.05||!(f1<f0)||Math.abs(fz1-fz0)>1e-9)fail('sudden',`run down at once: held ${R.held}, the spring's push ${f0.toFixed(3)} then ${f1.toFixed(3)}, the fusee moved ${((fz1-fz0)*D).toFixed(3)} deg`);
+   if(!R.held||f0<SPU*(1-SRP.p/SMAX)-0.05||!(f1<f0)||Math.abs(fz1-fz0)>1e-9)fail('sudden',`run down at once: held ${R.held}, the spring's push ${f0.toFixed(3)} then ${f1.toFixed(3)}, the fusee moved ${((fz1-fz0)*D).toFixed(3)} deg`);
    st.spent=false;wind(FUSEE_TURNS-0.5,0.03);letGo();run(5,10); }
  const gOK=[bar[0][1]>=-0.02&&bar[0][1]<=0.02,bar[1][1]>0.02,bar[2][1]>=-0.02&&bar[2][1]<=0.02,bar[3][1]>=-0.02];
  bar.forEach(([t,g],i)=>{if(!gOK[i])fail('stop',`${t}: stop-bar ${g.toFixed(3)} mm from the winding stop`);});

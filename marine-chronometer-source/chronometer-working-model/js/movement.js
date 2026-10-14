@@ -84,16 +84,19 @@ const CK_CBR=3.7,CKH_R=3.33,CKH_L=10.0,CKH_T=1.23;
    runs 0.5 mm outside the stud's holes from the nose, then bends about 28 deg toward the rim; the corner is at 23.4 deg, the tip at 76 deg (COCK_POLY's 75.6).
    Until 12 October 2026 the trace (the mean of the two pictures) went through the holes as the model placed them, the cap's screws 2.75 either side and the stud's
    row read through them (3.9, 7.0, 10.5 from the staff): every size there about 0.83 of the video's, so the straight edge lay 1.9-3.5 mm and the concave edge 1.4-3.3 mm
-   inside the real cock's (at x 5.5, z 8.06 against 6.60). The stud and its holes (SPHa-c, below) are still drawn where the old reading put them, 1.7-2.3 mm
-   inside 6:29's (OPEN-QUESTIONS.md): moving them moves the hairspring's outer end */
+   inside the real cock's (at x 5.5, z 8.06 against 6.60). The stud and its holes (SPHa-c, below) were drawn where the old reading put them, 1.7-2.3 mm
+   inside 6:29's; since 14 October 2026 they are where 6:29 reads them (SPHa-c's comment), the hairspring's outer end with them */
 const CK_TR=[[36.76, 15.88], [35.50, 14.99], [34.00, 13.88], [32.50, 12.85], [31.00, 11.94], [29.50, 11.15], [28.00, 10.45], [26.50, 9.82], [25.00, 9.25], [23.50, 8.76], [22.00, 8.35], [20.50, 8.00], [19.00, 7.73], [17.50, 7.53], [16.00, 7.40], [14.50, 7.28], [13.00, 7.18], [11.50, 7.09], [10.00, 6.98], [8.50, 6.83], [7.00, 6.71], [5.50, 6.60], [0.14, 6.61], [-0.55, 6.82], [-1.10, 7.29], [-1.67, 7.74], [-2.19, 8.24], [-2.57, 8.86], [-2.88, 9.52], [-3.07, 10.22], [-3.10, 10.94], [-2.94, 11.65], [-2.70, 12.34], [-2.34, 12.97], [-1.86, 13.51], [-1.31, 13.98], [-0.64, 14.27], [0.06, 14.46], [0.70, 14.80], [1.17, 15.20], [2.80, 16.29], [4.31, 17.37], [5.60, 18.46], [6.65, 19.54], [7.49, 20.63], [8.20, 21.71], [8.80, 22.80], [9.30, 23.89], [9.70, 24.97], [10.03, 26.06], [10.36, 27.14], [10.69, 28.23], [10.92, 29.31], [11.01, 30.40], [10.99, 31.49], [10.94, 32.57], [10.85, 33.66], [10.72, 34.74], [10.55, 35.83], [10.36, 36.91], [10.14, 38.00]];
 /* the arm's step: the arm is thin (2.6 mm, the stud's place under it) over the balance and thicker toward the body, a square step on its underside across it. On
    KLUwI2UUCMQ 44:02 (the cock in place, from its straight edge, 4K) the arm's side drops from 88 px to 206 px deep at x 2305, 8.70 mm past the stud's inner hole along
    their row (a 1-D projective map on the row's three holes; the same map puts the body's wall 18.5-18.65 mm from the staff, where it was read before, 18.6): 12.1 mm from
    the staff. On 41:58 the concave side's polished band steps down at (8.4, 22.1), 13.7 mm from it (the kink VIDEOS.md read as the body's wall). The step is the line
    through the two; the thick part 206/88 = 2.34 times the thin, 6.0 mm (the body's visible 10.8 mm down to the barrel bridge's horn, 378 px there, gives 2.5 and 5.9).
-   Whether it is straight across the underside no frame shows (estimated) */
-const CK_SP=[[13.72,9.96],[8.4,22.1]],CK_TM=6.0;
+   Whether it is straight across the underside no frame shows (estimated). Since 14 October 2026 the row's holes are where 6:29 measures them (SPHa-c), 4.08 and 8.07 mm
+   apart along the row where the old reading had 3.43 and 7.03: the same map, its holes at x 1780, 1997, 2207 on 44:02 (4K) and the step at 2305-2310, puts the step
+   9.9-10.0 mm past the inner hole, (16.05, 8.37), 14.6 mm from the staff (with the old spacing the same pixels give 8.8, the 8.70 recorded, at (13.83, 9.97)). Not moved:
+   the body's wall, which this map would put at 21.3 (the side's second step, x 2660) where CK_RP keeps the body outside the barrel bridge's 17.7 circle */
+const CK_SP=[[16.05,8.37],[8.4,22.1]],CK_TM=6.0;
 /* the upper train bridge's notch round the fusee and its horn, measured on two frames of a restoration video (tools/train_bridge.py: KLUwI2UUCMQ 23:30 and 13:49.5):
    the notch a circle (TB_NOTCH: x, z, r), the horn between it and the barrel's cut ending in a straight cut across, the mouth a sharp corner and a straight edge
    turning into the rim through a round corner (r 6). TB_EDGE runs from outside the rim along the mouth, round the notch, across the horn's end and into the barrel's cut, as crescent() takes it.
@@ -311,7 +314,7 @@ const sR=r=>r*0.5,hC=(x,z,r,rs=sR(r))=>[x,z,+(rs*1.12+0.01).toFixed(3),1],hT=(x,
    the back the straight chord gearGeo draws, from the root to the tip at 0.97 of a pitch, the locking face along a radius there, so a pawl's load bears square on it
    and draws nothing out (the faces leaned back over 0.07 of a pitch until 11 October 2026: under load they pushed a pawl out, 1:10). The winding ratchet's faces look
    radial on C Spinner's video (18:20, oblique) and the winding pawls' square ends lie along a radius (19:12: within 1 deg); the sustaining ratchet's aren't seen: radial,
-   estimated; the setup ratchet's are undercut 3-6 deg on the video, drawn radial (KLUwI2UUCMQ 38:26, measured: SRD below). Else the back interpolated by
+   estimated; the setup ratchet's are undercut 3-6 deg on the video (KLUwI2UUCMQ 38:26, measured: SRD below), drawn so by gearGeo (its uc) and seated here on the radial profile, 0.04 mm ahead of the undercut root at most. Else the back interpolated by
    angle to the tip at 0.9, the face leaning back to the root at 0.97 (no ratchet's since 11 October 2026). rd: the teeth's depth, mm (default 2.25 m, gearGeo's) */
 function ratchetProf(n,m,flip,radial,rd){const rp=m*n/2,ro=rp+m*0.95,ri=ro-(rd||2.25*m),p=TAU/n,c=0.97*p,ch=a=>ri*ro*Math.sin(c)/(ri*Math.sin(a)+ro*Math.sin(c-a));
   return{ro,ri,p,r:b=>{const a=flip?b:-b,u=((a%p)+p)%p,t=u/p;if(radial)return t<0.97?ch(u):ri;return t<0.9?ri+(ro-ri)*t/0.9:t<0.97?ro-(ro-ri)*(t-0.9)/0.07:ri;},
@@ -424,7 +427,7 @@ function buildMovement(M){
      arbor's move; 13:44, where its screws land on the two lugs either side of the keyhole's escape lobe); ebn: across it, toward the balance */
   const ebu=(f=>[eu[0]*Math.cos(f)-eu[1]*Math.sin(f),eu[0]*Math.sin(f)+eu[1]*Math.cos(f)])(72*D2R),ebn=(v=>v[0]*(L.B[0]-L.E[0])+v[1]*(L.B[1]-L.E[1])>0?v:[-v[0],-v[1]])([-ebu[1],ebu[0]]);
   const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-13.6),add(L.F,ltu,6.1)],ltbp:[add(L.T,ltu,-16.4),add(add(L.F,ltu,2.6),[-ltu[1],ltu[0]],3.4)],pil:[...PILLARS.train,PILLARS.barrel],tb:PILLARS.train,bb:[PILLARS.barrel,[35.18,8.06],[-24.85,26.27]],
-    ring:[100,210,340].map(a=>[40.6*Math.cos(a*D2R),40.6*Math.sin(a*D2R)]),eb:[8.3,-8.3].map(f=>add(L.E,ebu,f)),ebp:[9.9,-9.9].map(f=>add(add(L.E,ebu,f),ebn,1.3)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
+    ring:[91.5,214,336.5].map(a=>[42.0*Math.sin(a*D2R),-42.0*Math.cos(a*D2R)]),eb:[8.3,-8.3].map(f=>add(L.E,ebu,f)),ebp:[9.9,-9.9].map(f=>add(add(L.E,ebu,f),ebn,1.3)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[[18.34,12.02],[-14.2,19.0]],lbp:[[20.62,14.01],[-13.6,16.4]],blc:[3.25,-3.25].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(...DBLK.s)),dpin:DBLK.p.map(([t,n])=>(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(t,n))),cock:PT([33.11,12.62]),ckp:[[35.5,5.0],[26.9,19.8]].map(PT)};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
      ckp: the cock's steady pins, at the two plain holes the train bridge shows under the cock with it off (C Spinner 6:47), placed to about 2 mm */
   /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge, where the restoration video has them (13:49.5, measured face-on): at the
@@ -452,7 +455,12 @@ function buildMovement(M){
   S.tBlock=add(L.F,PR([-6.14,-1.61]));const TBd=unit(sub(S.tBlock,L.F)),TBr=Math.hypot(...sub(S.tBlock,L.F));
   const EPa=Math.atan2(-0.24,-5.83)-PHOTO_TURN,EPu=ry(EPa,[1,0]),EP=[[3.33,0],[-3.33,0]];S.ep=EP.map(q=>add(L.B,ry(EPa,q)));   /* balance upper endstone cap: along the cock's straight edge (x toward the nose), its screws 3.33 either side of the staff: 6.66 apart on KLUwI2UUCMQ 6:29 (the cap on the cock, through the camera fitted on 6:49.0, f 5,000: 6.63-6.70 over f 4,000-6,000); 2.75 (the top-view photograph, whose scale on the cock's top reads every size there about 0.83 of the video's: the counterbore 6.1 for 7.4) until 12 October 2026 */
   const PB=(r,a)=>[L.Ba[0]+PHOTO_K*r*Math.cos(a*D2R+PHOTO_TURN),L.Ba[1]+PHOTO_K*r*Math.sin(a*D2R+PHOTO_TURN)];S.cover=[PB(11.1,107),PB(11.6,288)];S.click=PB(8.95/PHOTO_K,253.1);   /* the setup click's pivot, whose end shows in the cover, 8.95 mm from the barrel arbor on both photographs (photo-movement-2E12055: 8.94 at 255.6 deg, the top-view photograph: 8.95 at 250.6, each through its fitted map); C Spinner's video, oblique, read 10-10.5 by eye (11:58). The click from it to its tip is 5.07 mm (the video: about 5.3, the top-view photograph 5.1) */
-  S.dial=[38.5,111.6,218.5,291.6].map(a=>{const q=PT([45.9*Math.cos(a*D2R),45.9*Math.sin(a*D2R)]),l=Math.hypot(...q);return[45.9*q[0]/l,45.9*q[1]/l];});   /* four dial feet and screws (35756, 4; Fig. 107), in the mounting ring's flange outside the plate: the top-view photographs show two, at 38.5 and 111.6 deg; the other two opposite them (estimated) */
+  S.dial=[132.9,178.7,226.0,318.9].map(a=>[45.9*Math.sin(a*D2R),-45.9*Math.cos(a*D2R)]);const FLH=[41.4*Math.sin(2.6*D2R),-41.4*Math.cos(2.6*D2R)],RSE=2.0;   /* FLH: the flange's plain hole at 2.6 deg, r 41.4, the size of the feet's (9:03, 40:05, 40:08), what it is for not known (a steady pin's?): drawn through the flange, as it shows dark */   /* four dial feet and screws (35756, 4; Fig. 107), in the mounting ring's flange outside the plate, at these angles from 12 seen from the dial: the
+     flange's plain holes on KLUwI2UUCMQ 9:03 at the feet's radius (132.9, 226.0, 318.5; rimfit.py anchored on the centre, third and fourth, the angles within 0.5 deg over f 4000-6000; 319.2 on 40:08),
+     and a fourth hole of their size filled flush with steel (a screw's end) at 178.7, 10 deg from the take-off slot (9:03, the flange's homography on its holes: likely). The open three 0.85-0.89 of the
+     way from the bore to the flange's rim along their rays (radial strips through each hole, no camera needed), the filled one at 0.97 of their circle. A fifth plain hole of their size at 2.3 (3.0 on 40:08) lies 0.23-0.29 of the way,
+     about r 41.4, among the ring screws: not a foot (FLH); taken for the fourth foot on 14 October 2026 until the strips put it inside. The top-view photograph's movement (2E11795) has flange screws at 152 and 224 through topview.py's map, which until then
+     gave two of these (PT of 38.5 and 111.6 deg in its frame) and the other two opposite them (estimated: 38.0 and 323.5); its 152 is 20 deg from this movement's, so the four follow one movement. r 45.9 from the photograph */
   S.seal=[2.2,-1.0].map(a=>[L.Fu[0]+PHOTO_K*7.6*Math.cos(a+PHOTO_TURN),L.Fu[1]+PHOTO_K*7.6*Math.sin(a+PHOTO_TURN)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
@@ -490,11 +498,15 @@ function buildMovement(M){
   /* mounting ring (42057, Figs. 29, 67, 110: a deep ring under the plate, drawn cut), lacquered brass (Sec. VI): a band as wide as the plate under its dial side, then a flange
      that stands out round it and carries the dial (the side photograph; "the dial or the movement [may] shift on the mounting ring", the note at Op. 98, Sec. VIII); from the dial side the plate lies
      sunk in it. Three screws (42055) hold the plate to it from the train side: the plate is laid on the ring and the screws put in (reassembly Op. 1; Fig. 29 draws them above
-     the plate), and the top-view photographs show one on the plate at the rim at 6 o'clock, half under the train bridge; the others under the bridges, at 210 and 340 deg,
-     estimated. The band has a tab inward under each, tapped for it. The bore r 39.0 (MR_RI); the tabs estimated. Both pieces start 0.01 off the faces they meet */
-  { const RA=[100,210,340].map(a=>a*D2R),dA=a=>Math.min(...RA.map(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b))))),rin=a=>{const t=clamp((dA(a)-0.07)/0.05,0,1);return lerp(38.4,MR_RI,smooth(t));};
-    const circ=(r,n)=>[...Array(n).keys()].map(k=>{const a=k/n*TAU;return[r*Math.cos(a),r*Math.sin(a)];}),inner=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rin(a)*Math.cos(a),rin(a)*Math.sin(a)];});
-    R.flange=hn(mesh(pp,polyGeo(circ(PP_R,160),MR_FL-0.01,[{pts:inner},...S.ring.map(q=>hT(...q,PSR))]),M.brass,0,0.01,0),'42057');   /* the band, with its tabs */
+     the plate), at 91.5, 214 and 336.5 deg from 12 seen from the dial (S.ring), r 42.0: on KLUwI2UUCMQ their heads at the plate's rim from the train side (34:30: 215.1 and 335.0,
+     r 40.3-42, rimfit.py on the centre, third, escape and fourth), their ends in the ring's three threaded holes from the dial side (9:03: 90.9, 213.8, 336.9; 40:08: 92.6, 337.5),
+     and the top-view photograph's head at the rim under the train bridge at 215 (topview.py's map). Until 14 October 2026 at 70, 190 and 300: the photograph's head read before
+     the photographed group's 19.4 deg turn and not turned with it, the others estimated. r 42.0: the threaded holes 0.31-0.33 of the way from the bore (r 39.0) to the flange's rim (47.95) along
+     their rays (40:08's two, 9:03's 337 and 214 deg; 9:03's 91 deg 0.47), radial strips through each hole that need no camera: 41.8-42.2; the heads on 34:30 41.9-42.8; through the plate,
+     at most 42.4 (its rim 43.785 less the thread). r 40.6 until 14 October 2026, when the band had a tab inward under each. Each is tapped through the band and the flange, its end about
+     2.0 below the flange's face (RSE: four or five thread crests show above it on 40:08, the pitch estimated). The bore r 39.0 (MR_RI). Both pieces start 0.01 off the faces they meet */
+  { const circ=(r,n)=>[...Array(n).keys()].map(k=>{const a=k/n*TAU;return[r*Math.cos(a),r*Math.sin(a)];});
+    R.flange=hn(mesh(pp,polyGeo(circ(PP_R,160),MR_FL-0.01,[{pts:circ(MR_RI,360)},...S.ring.map(q=>hT(...q,PSR))]),M.brass,0,0.01,0),'42057');   /* the band */
     const rel=a=>{const t=Math.atan2(Math.sin(a+Math.PI/2),Math.cos(a+Math.PI/2))/D2R,e=Math.min(t+11,10-t);return MR_RI+0.4*smooth(clamp(e/1.5,0,1));},relief=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rel(a)*Math.cos(a),rel(a)*Math.sin(a)];});   /* the relief cut into the bore round the 12, 11 deg back to 10 on, out to r 39.4 (16.5 from the indicator's stud), where the indicator wheel's teeth pass (KLUwI2UUCMQ 40:08: certain it is there, its size rough) */
     /* the dial take-off slot (Fig. 21): a notch in the flange's rim under the dial's edge, where a blade goes in to lift the dial off its seat (restoration video 8:46-8:49).
        On the ring face-on (9:03), 167 deg round from 12 seen from the dial (from the indicator's stud and the relief; the fusee's bushing and the fourth's jewel read as
@@ -502,10 +514,10 @@ function buildMovement(M){
     const TO_A=77*D2R,TO_W=1.4,TO_R=MR_RO-2.2,toH=Math.asin(TO_W/2/MR_RO),takeOff=[],ux=Math.cos(TO_A),uz=Math.sin(TO_A);
     for(let k=0;k<160;k++){const a=k/160*TAU,d=Math.atan2(Math.sin(a-TO_A),Math.cos(a-TO_A));if(Math.abs(d)>toH)takeOff.push([MR_RO*Math.cos(a),MR_RO*Math.sin(a)]);
       if(k/160*TAU<=TO_A&&(k+1)/160*TAU>TO_A)for(const[r,s]of[[MR_RO*Math.cos(toH),-1],[TO_R,-1],[TO_R,1],[MR_RO*Math.cos(toH),1]])takeOff.push([r*ux-s*TO_W/2*uz,r*uz+s*TO_W/2*ux]);}
-    hn(mesh(pp,polyGeo(circ(MR_RO,160),MR_Y-MR_FL-1.0,[{pts:circ(MR_RI,160)},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_FL,0),'42057',{sub:1});hn(mesh(pp,polyGeo(takeOff,1.0,[{pts:relief},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_Y-1.0,0),'42057',{sub:1});   /* the flange, bored for the dial's feet; the relief a step in its dial-side face, 1.0 deep (40:08 shows a recessed shelf; its depth estimated) */
+    const FH=[...S.dial.map(q=>[...q,0.8]),...S.ring.map(q=>hT(...q,PSR)),[...FLH,0.8]];hn(mesh(pp,polyGeo(circ(MR_RO,160),MR_Y-MR_FL-1.0,[{pts:circ(MR_RI,160)},...FH]),M.brass,0,MR_FL,0),'42057',{sub:1});hn(mesh(pp,polyGeo(takeOff,1.0,[{pts:relief},...FH]),M.brass,0,MR_Y-1.0,0),'42057',{sub:1});   /* the flange, bored for the dial's feet, tapped through for the ring screws, and FLH; the relief a step in its dial-side face, 1.0 deep (40:08 shows a recessed shelf; its depth estimated) */
     /* the alignment pin, "protruding beyond the movement" into its slot in the edge of the case (Sec. III): pressed into the flange's edge, at 12 o'clock (estimated) */
     const ap=hn(mesh(pp,cylY(0.5,0.8,12),M.steel,0,(MR_FL+MR_Y)/2,-(MR_RO+0.4)),'42057',{sub:1});ap.rotation.x=Math.PI/2; }
-  for(const q of S.ring)hn(screw(pp,...q,y0,PSR,PSH,PP_T+1.8),'42055.ring');   /* through the plate into the band's tab */
+  for(const q of S.ring)hn(screw(pp,...q,y0,PSR,PSH,PP_T+MR_Y-RSE),'42055.ring');   /* through the plate, the band and the flange, the end RSE below the flange's face */
   { const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);
     /* the pillars' screws (42055) from the dial side, through the plate into the pillars (Fig. 110) */
     S.pil.forEach((q,i)=>hn(screw(rg,q[0],-q[1],0,PSR,1.6,3.86+3.2),   /* the dial-side heads 1.6 tall, not the train side's measured 2.0: at 2.0 the one under the barrel pillar meets the motion work, whose heights are estimated (open) */
@@ -759,18 +771,23 @@ function buildMovement(M){
   mesh(R.gw,discGeo(9.3*FK,0.3,[[0,0,2.75*FK]]),M.copper,0,-7.9,0);mesh(R.gw,ringGeo(4.0*FK,2.75*FK,0.3),M.copper,0,-8.05,0);   /* the raised disc and the hub; the bore (r 2.75 FK, video 27:26) free on the arbor's collar */
   /* sustaining spring (42016; video 27:26, Figs. 69, 71): a flat blued band 2.1 wide against the recess wall, round from its fixed end (a lobe toward the hub, pinned to the wheel) the
      long way to its working end (a smaller lobe across the gap from it, pinned to the sustaining ratchet). The ratchet drives the wheel through it by pushing the working end forward,
-     across the gap toward the fixed end: the ring closes, from a 17 deg gap relaxed (as photographed, out of the movement) to 17 deg less SMAX loaded. The lobes keep their shape
-     (each is pinned); the band between them spreads over the angle the gap gives up and bows in from the wall, keeping its length. d: how far the spring has relaxed from its loaded
-     state (0 in running, up to SMAX while winding). SMAX: the fusee wheel's turn in 10 minutes, the longer of the 5 to 10 minutes it drives the train (Sec. IV); app.js runs model
-     time at most WIND_X fast while winding, so no wind outlasts it. Gap, lobes, pin places and the band's thickness (1.13) estimated */
-  const SMAX=FUSEE_PER_HOUR*TAU/6,SSG=17*D2R,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
+     across the gap toward the fixed end: the ring closes, from its gap relaxed (SSG, 20 deg: KLUwI2UUCMQ 27:26, the wheel alone, the fixed lobe's end at 155 deg and the working
+     lobe's tip at 136 deg about the wheel's centre, 19-20 deg, rough; 17 estimated until 14 October 2026) until its lobes nearly meet (SSB) and bank, where the drive holds it in
+     running: a split ring "rather weaker than the combined pull of the mainsprings" (Gould, The Marine Chronometer, 1923, pp. 47-48; p. 238: "a simple steel split-ring, with
+     ends nearly meeting ... When the pull of the chain is removed ... the ends spring apart a little"; Glasgow, Watch and Clock Making, 1885, p. 65: the mainspring "must
+     always be stronger"), so banked it pushes SPU of the 12-hour drive, and less as it relaxes (R.ssF). The lobes keep their shape (each is pinned); the band between them
+     spreads over the angle the gap gives up and bows in from the wall, keeping its length. d: how far the spring has relaxed from banked (0 in running, up to SMAX while
+     winding). Its section, SSH_B high (the width measured), from the push it must give: tools/sustaining.js works its stiffness out from the section by Castigliano and checks
+     SPU against it, and the manual's "enough power to drive the chronometer for five to ten minutes" (Sec. IV) as the time it keeps the balance over a turn (it runs on
+     past that, to about 19 minutes, at a falling swing). Lobes and pin places estimated */
+  const SSB=0.5*D2R,SSG=20*D2R,SMAX=SSG-SSB,SPU=0.88,SSH_B=1.25,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
   const sspGeo=d=>{d=clamp(d,-SMAX/4,SMAX);const W=SSF+SSG-SMAX+d,a0=W+SWL,a1=SSF+TAU-SFL,sp=a1-a0,B=(SRO-SSW/2)*(SMAX-d)/sp*Math.PI/2,o=[],I=[];   /* W: the working end's tip; the band's free part runs from a0 to a1 */
     const st=(x,w,r)=>x<w?r:x<w+0.14?lerp(r,SRO-SSW,smooth((x-w)/0.14)):SRO-SSW,rin=a=>Math.min(st(a-W,SWL-0.14,13.9*FK),st(SSF+TAU-a,SFL-0.14,12.8*FK));   /* the lobes' inner edges, eased into the band's over 8 deg */
     for(let i=0,N=200;i<=N;i++){const a=W+(SSF+TAU-W)*i/N,b=a>a0&&a<a1?B*Math.sin(Math.PI*(a-a0)/sp):0,ro=SRO-b,ri=Math.min(rin(a),ro-SSW);o.push([ro*Math.cos(a),ro*Math.sin(a)]);I.push([ri*Math.cos(a),ri*Math.sin(a)]);}
-    const pw=W+SPW;return polyGeo([...o,...I.reverse()],1.13,[[14.6*FK*Math.cos(pw),14.6*FK*Math.sin(pw),0.42],...SSH.map(q=>[...q,0.42])]);};   /* 0.02 over the floor, 0.03 inside the wall */
+    const pw=W+SPW;return polyGeo([...o,...I.reverse()],SSH_B,[[14.6*FK*Math.cos(pw),14.6*FK*Math.sin(pw),0.42],...SSH.map(q=>[...q,0.42])]);};   /* 0.02 over the floor, 0.03 inside the wall */
   /* the sustaining spring and its pin into the wheel: their own part, turning with the fusee wheel, in whose recess the spring lies (Figs. 28, 71) */
   const ssP=part('sspring',-18);R.ssg=new THREE.Group();R.ssg.position.set(L.Fu[0],0,L.Fu[1]);ssP.add(R.ssg);
-  hn(R.ssg,'42016');R.sspring=mesh(R.ssg,sspGeo(0),M.steelK,0,-8.75,0);   /* dark tempered steel, not blued: nearly black in shade, light grey where it takes the light, (27, 31, 35) and (154, 166, 174) on KLUwI2UUCMQ 27:30 */
+  hn(R.ssg,'42016');R.sspring=mesh(R.ssg,sspGeo(0),M.steelK,0,-7.62-SSH_B,0);   /* its face 0.02 off the recess's floor (-7.6), its band SSH_B up from it */   /* dark tempered steel, not blued: nearly black in shade, light grey where it takes the light, (27, 31, 35) and (154, 166, 174) on KLUwI2UUCMQ 27:30 */
   mesh(R.ssg,cylY(0.4,1.5,10),M.steel,SSH[0][0],-8.1,SSH[0][1]);
   /* sustaining ratchet wheel (42009): free on the fusee arbor, open in the middle round the fusee's winding ratchet and its screws (Fig. 28) */
   const srP=part('sratchet',-22);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
@@ -839,9 +856,19 @@ function buildMovement(M){
   /* sustaining pawl: its tip rests in the sustaining ratchet's teeth (rp 16.2 FK) at SPt, trailing the pivot so the teeth can only pass it one way */
   /* its outline from those edges, in the pawl's frame (pivot at the origin, the tip's corner on -x at SPl, the back on the SPb side): one smooth curve from the tip's corner along SPN, round the hub behind the arbor (1.6-1.9 from it there: the video doesn't show that side) and along SPE to the
      tip's other corner, the end face straight between them, as the video's. The tip's corner is put at PAWL_TIP, where seatPawl and phaseAgainst look for it */
+  /* its end fitted, as a pawl's end is stoned to bear along its tooth's locking face (the manual's maker's last fitting; 14 October 2026): as traced (KLUwI2UUCMQ 36:15)
+     its end face, straight between its two corners, lies across the next tooth's tip, 42.7 deg off the radial face, so the load meets its side at that tip and pushes
+     it out unless friction holds it (mu 0.19 needed, tools/ratchets.js). fitEnd cuts the end along a line through the tip's corner (PAWL_TIP) turned SPF from the end
+     face: 42.7 deg lies it along the tooth's face where the pawl seats, and 4 more give it the relief a filed end has above its bearing corner, so the corner bears on
+     the face 0.38 mm into the teeth (the load drawing it in at 36 deg) and the end clears the tooth's tip as the pawl swings in (flush, it grazed it). The points cut
+     off are laid along the new end, so PAWL_TIP still marks the tip's corner. The cut and its relief are the fitting, not a measurement */
+  const SPF=46.7*D2R,fitEnd=(P,ang)=>{const T=P[PAWL_TIP],O=P[PAWL_TIP-1],l=Math.hypot(O[0]-T[0],O[1]-T[1]),e=[(O[0]-T[0])/l,(O[1]-T[1])/l],d=[e[0]*Math.cos(ang)-e[1]*Math.sin(ang),e[0]*Math.sin(ang)+e[1]*Math.cos(ang)],
+      sd=q=>Math.sign(d[0]*(q[1]-T[1])-d[1]*(q[0]-T[0])),s0=sd([0,0]);let j=PAWL_TIP-1;while(j>0&&sd(P[j])!==s0)j--;if(j===PAWL_TIP-1)return P;
+      const A=P[j],Bq=P[j+1],ca=d[0]*(A[1]-T[1])-d[1]*(A[0]-T[0]),cb=d[0]*(Bq[1]-T[1])-d[1]*(Bq[0]-T[0]),u=ca/(ca-cb),I=[A[0]+(Bq[0]-A[0])*u,A[1]+(Bq[1]-A[1])*u],m=PAWL_TIP-1-j,Q=P.slice();
+      for(let k=0;k<m;k++)Q[j+1+k]=[I[0]+(T[0]-I[0])*k/m,I[1]+(T[1]-I[1])*k/m];return Q;};
   const SPP=(()=>{const c=Math.cos(SPd),sn=Math.sin(SPd),L2=([a,q])=>new THREE.Vector2(-(a*c+q*sn),SPb*(-a*sn+q*c)),N=SPN.map(L2),E=SPE.map(L2),sN=Math.sign(N[0].y),
       B=[[1.8,sN*80],[1.6,0],[1.9,-sN*75]].map(([r,a])=>new THREE.Vector2(r*Math.cos(a*D2R),r*Math.sin(a*D2R)));
-    return new THREE.SplineCurve([...N.slice().reverse(),...B,...E]).getPoints(150).map(v=>[v.x,v.y]).map((_,i,P)=>P[(i-PAWL_TIP+P.length)%P.length]);})();
+    return fitEnd(new THREE.SplineCurve([...N.slice().reverse(),...B,...E]).getPoints(150).map(v=>[v.x,v.y]).map((_,i,P)=>P[(i-PAWL_TIP+P.length)%P.length]),SPF);})();
   R.spawl=new THREE.Group();R.spawl.position.set(SPv[0],-9.45,SPv[1]);sp.add(R.spawl);mesh(R.spawl,polyGeo(SPP,0.6,[[0,0,0.7]]),M.steel,0,-0.3,0);
   R.spawl.userData.base=SPb0;R.spawl.rotation.y=SPb0;R.spawl.userData.pts=SPP;
   /* sustaining pawl's spring (part of 42096, "complete with arbor and springs"): a straight steel wire (r 0.12) set upright in the pawl's root at SPw, standing alongside
@@ -951,8 +978,10 @@ function buildMovement(M){
      the cock's straight edge, at (along, across) the line from the staff to the cock screw (SPD, SPDn): 41:58 gives (2.23, -3.07), (5.44, -4.27), (8.65, -5.73); the top-view photograph,
      nearly overhead, with the stud in place (a pin, the slotted stud screw, a pin), through its map on the barrel bridge's screws from the setting's centre, (1.93, -3.49), (5.03, -4.97),
      (8.36, -6.49) (its scale a few % large: the cock's top is 11 mm above that map's plane); their mean, +-0.4: a small hole 3.9 mm from the staff (SPHc), the stud screw's, wider
-     (counterbored), 7.0 (SPHb), and a small one 10.5 (SPHa): the stud's two steady pins either side of its screw (the model had one pin, 5.6 out, and the screw 7.6 along SPD). The row's line passes 2.0 from the
-     staff. The stud's clamp is under the bar's inner end, past the inner pin (Fig. 5; Hamilton's patent US 2,379,780, Fig. 10): on KLUwI2UUCMQ 6:47.5 and 6:47.75 (the balance
+     (counterbored), 7.0 (SPHb), and a small one 10.5 (SPHa): the stud's two steady pins either side of its screw (the model had one pin, 5.6 out, and the screw 7.6 along SPD). Those read through
+     the old scale, every size about 0.83 of the video's (CK_TR's comment); since 14 October 2026 the holes are where 6:29 reads them through the camera fitted on 6:49.0 (the cap's centre and
+     the counterbore holding it, +-0.3): (6.17, 7.22), (10.22, 7.67), (14.18, 8.16) in the movement's frame, 5.49, 9.00 and 12.75 mm from the staff, 4.0 apart, the row 1.7-2.4 mm
+     further out than drawn before; they put the clamp 4.34 from the staff (2.65 before) and the outer terminal curve is solved for it (below). The stud's clamp is under the bar's inner end, past the inner pin (Fig. 5; Hamilton's patent US 2,379,780, Fig. 10): on KLUwI2UUCMQ 6:47.5 and 6:47.75 (the balance
      lifted out, the stud seen from the cock side, 33 px/mm at 4K), put in mm along the row by a 1D perspective fit on the three holes, the wedge pin's hole is 1.76 and 1.68 inside
      the inner pin (SP_CL, 1.7), the bar's end 2.24 and 2.10 (SP_E, 2.2) and the step where the clamp drops from its underside 1.13 and 1.10 (SP_ST); the bar's outer end 0.79 and 0.77
      past the outer pin (the 0.8 drawn). The hairspring's upper end is in the clamp, HS_R from the staff (2.65; it was 4.6, the clamp drawn between the pin and the screw), in its direction (SPD2; SPSI, the same as a rotation in the balance's frame), its
@@ -960,7 +989,7 @@ function buildMovement(M){
      the end bent; Op. 4 cuts it one wire width past the bend). The spring rises HS_H from HS_Y, the collet's tongue, to the clamp under the cock. CKS: the collet's scale, its
      drawing's coil (read as r 5.5) against the measured one */
   const Q=S.cock,SPD=(()=>{const d=[Q[0]-L.B[0],Q[1]-L.B[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(),SPDn=[-SPD[1],SPD[0]],SPH=(a,c)=>[L.B[0]+a*SPD[0]+c*SPDn[0],L.B[1]+a*SPD[1]+c*SPDn[1]];
-  const SPHc=SPH(2.08,-3.28),SPHb=SPH(5.24,-4.62),SPHa=SPH(8.51,-6.11),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})();
+  const SPHc=SPH(2.20,-5.03),SPHb=SPH(5.86,-6.83),SPHa=SPH(9.46,-8.55),SPu=(()=>{const d=[SPHa[0]-SPHc[0],SPHa[1]-SPHc[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})();
   const SP_CL=1.7,SP_E=2.2,SP_ST=1.1,SPin=s=>[SPHc[0]-s*SPu[0],SPHc[1]-s*SPu[1]],SPCL=SPin(SP_CL),HS_R=Math.hypot(SPCL[0]-L.B[0],SPCL[1]-L.B[1]),SPD2=[(SPCL[0]-L.B[0])/HS_R,(SPCL[1]-L.B[1])/HS_R];   /* SPin(s): s mm inside the inner pin along the row */
   const SPSI=Math.atan2(-SPD2[1],SPD2[0])-BETA,HS_RC=5.1,HS_N=12,CKS=HS_RC/5.5,HS_B=0.23,HS_T=0.221,HS_RI=3.2,CKC=(HS_RI-HS_T/2)/3.72,HS_LEAD=1.25*CKC,HS_Y=BAL_Y-1.5,SB_T=0.85,CLD=0.6,HS_H=HS_Y-(CK_T+2.6+SB_T+CLD/2),SPS=SPHb;   /* SPS: the stud screw. HS_Y, HS_H: the collet's tongue (the spring's lower end) 1.1 below the rim's top edge, as low as the hub allows (the collet
      0.07 over the hub's boss and the cap's screws; 0.8 lower until 4 October 2026, level with the rim's top), and the spring up to the stud's clamp, whose height the cock fixes (below) */
@@ -1194,7 +1223,7 @@ function buildMovement(M){
      coil's sense) with the collet's end turned th and the stud's held, the turn shared along the free length */
   const HSD=(()=>{const loc=w=>[w[0]*SPD2[0]+w[1]*SPD2[1],SPD2[0]*w[1]-SPD2[1]*w[0]],rel=q=>[q[0]-L.B[0],q[1]-L.B[1]],B=loc(rel(SPin(SP_ST))),ub=loc([-SPu[0],-SPu[1]]),
       sol=(sig,P,h,v0,ri)=>{const r=HSPR.solve(HS_RC,sig,P,h,v0);return r&&r.res<1e-7?r:HSPR.design(HS_RC,sig,P,h,ri);},
-      outer=sol(1,B,Math.atan2(ub[1],ub[0]),[-3.22518,14.82449,0.14548,-0.040912,0.0025914],1.2),inner=sol(-1,[HS_RI,0],-Math.PI/2,[5.37254,21.7728,-0.0079096,0.0006175,-2.408e-5],HS_RI-0.06);
+      outer=sol(1,B,Math.atan2(ub[1],ub[0]),[-2.23447,14.6172,0.18083,-0.0399359,0.0015664],1.2),inner=sol(-1,[HS_RI,0],-Math.PI/2,[5.37254,21.7728,-0.0079096,0.0006175,-2.408e-5],HS_RI-0.06);
     if(!outer||!inner)throw Error('hairspring: no terminal curve meets Phillips\' conditions');
     const P=HSPR.path(HS_RC,inner,outer,HS_N),Ee=loc(rel(SPin(SP_E-0.2))),q0=P.pts[P.pts.length-1],raw=[[HS_RI,-HS_LEAD,-HS_LEAD],...P.pts,[Ee[0],Ee[1],P.L+Math.hypot(Ee[0]-q0[0],Ee[1]-q0[1])]];
     const S0=-HS_LEAD,S1=raw[raw.length-1][2],n=Math.ceil((S1-S0)/0.3),pts=[];let j=0;
@@ -1313,12 +1342,12 @@ function buildMovement(M){
      line read, then read again off synthetic frames of known teeth through the same ellipse, blurred as the frame's edges are (sigma 2.7-3.0): the gaps read 0.383
      and 0.423 mm, so 0.45 and 0.50 deep (0.42-0.53 with sigma 1 either way): 0.48, about 0.46 of the pitch at the tips (it was 2.25 m, 0.72, the gear convention,
      which would read 0.55-0.64). The faces read -2.5 and -5.6 deg (median) against the radius, undercut 3-6 deg (one leaning back 6 deg, as drawn until 11 October
-     2026, reads +5.5 to +6.6): drawn radial, the profile being one radius to each angle and the readings' spread (4-5 deg tooth to tooth) as large (References/VIDEOS.md) */
-  const SRZ=42,SUT=7.05,SRM=SUT/(SRZ/2+0.95),SRD=0.48;
-  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',rd:SRD,flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* radial faces meet the click against the mainspring's pull */
+     2026, reads +5.5 to +6.6): drawn undercut 4.5 deg, their middle (SRU; the readings spread 4-5 deg tooth to tooth, References/VIDEOS.md), radial until 14 October 2026 */
+  const SRZ=42,SUT=7.05,SRM=SUT/(SRZ/2+0.95),SRD=0.48,SRU=4.5*D2R;   /* SRU: the faces' undercut, the middle of the 3-6 deg read (14 October 2026; radial before): with it the click's load draws it in at any oil (tools/ratchets.js) */
+  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',rd:SRD,uc:SRU,flip:true,cuts:[[[-1.11,-1.11],[1.11,-1.11],[1.11,1.11],[-1.11,1.11]]]}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* radial faces meet the click against the mainspring's pull; on the arbor's square (ASQ), its hole square (KLUwI2UUCMQ 23:30, the ratchet off on the mat: the mat through a square hole; 11:58, 38:25, the ratchet on: the square rises from its face), 0.01 clear each side (a round bore r 1.4, pressed on, until 14 October 2026) */
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
-  const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);hn(cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28),'42170',{sub:1});
+  const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-27.40,-1,M.steel,L.Ba[0],L.Ba[1]);   /* its round body up to just under the ratchet, where the square begins (a collar r 2.3 over the ratchet until 14 October 2026: none on KLUwI2UUCMQ 11:58, the square rising straight from the ratchet's face) */
   /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The core r 4.84, 0.06 under the strip's
      inner face on MSPRING.ra 4.9: the low end of three readings on two 1941 movements, r 4.8-5.7 (KLUwI2UUCMQ 33:20.5, the cap off and the arbor in, its edge with the
      innermost coil 0.32-0.36 of the end face's inner ellipse; 33:06, the spring's inner end curled at 0.30-0.34 of the inside radius before the arbor goes in; TN24H
@@ -1330,18 +1359,18 @@ function buildMovement(M){
      deep) is estimated */
   { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(fs.MS.y0+fs.MS.y1)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
     cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],64); }
-  const asq=hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
+  const ASQ=2.2,asq=hn(mesh(rt,new THREE.BoxGeometry(ASQ,8.56,ASQ),M.steel,L.Ba[0],-31.68,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, through the ratchet (which it carries) and about 7.5 mm over it (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5), 2.2 across the flats (KLUwI2UUCMQ 38:25, the ratchet off: 2.0-2.3 against the ratchet's tips) */
   { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));const cth0=clk.rotation.y;
     /* the click 5.07 mm long (S.click), aimed at the old root (2.25 m deep); turn the ratchet (it is fixed in running) so a face bears on the click, then rest the click on it,
        seated by its outline as the winding pawls are (phaseAgainst's deep) */
-    const pr=ratchetProf(SRZ,SRM,true,true,SRD),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1,true);
+    const pr=Object.assign(ratchetProf(SRZ,SRM,true,true,SRD),{uc:SRU}),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1,true);
     srw.rotation.y=ph.psi;clk.rotation.y=ph.th;
-    { const n=SRZ,m=SRM,rp=m*n/2,ro=rp+m*0.95,ri=ro-SRD,pp=TAU/n,RT=[];for(let i=0;i<n;i++){const a=i*pp;RT.push([ri,a],[ro,a+pp*0.97],[ri,a+pp*0.97]);}   /* the drawn outline (gearGeo, flipped) */
+    { const n=SRZ,m=SRM,rp=m*n/2,ro=rp+m*0.95,ri=ro-SRD,pp=TAU/n,RT=[];for(let i=0;i<n;i++){const a=i*pp;RT.push([ri,a],[ro,a+pp*0.97],[ri,a+pp*0.97-ucRoot(ro,ri,SRU)]);}   /* the drawn outline (gearGeo, flipped), its faces undercut */
       const CP=pts.map(([x,z])=>{const c=Math.cos(ph.th),sn=Math.sin(ph.th);return[Pv[0]+x*c+z*sn,Pv[1]-x*sn+z*c];});
       const gap=psi=>{const W=RT.map(([r,a])=>{const x=r*Math.cos(a),z=r*Math.sin(a),c=Math.cos(psi),sn=Math.sin(psi);return[L.Ba[0]+x*c+z*sn,L.Ba[1]-x*sn+z*c];});let d=1e9,inside=false;
         for(const P of CP){let w=false;for(let i=0,j=W.length-1;i<W.length;j=i++){const[xi,zi]=W[i],[xj,zj]=W[j];if((zi>P[1])!==(zj>P[1])&&P[0]<(xj-xi)*(P[1]-zi)/(zj-zi)+xi)w=!w;
           const dx=xj-xi,dz=zj-zi,l2=dx*dx+dz*dz,t=clamp(((P[0]-xi)*dx+(P[1]-zi)*dz)/l2,0,1);d=Math.min(d,Math.hypot(P[0]-xi-t*dx,P[1]-zi-t*dz));}if(w)inside=true;}return inside?-d:d;};
-      let a=ph.psi-0.03,b=ph.psi;if(gap(a)<0&&gap(b)>0){for(let i=0;i<40;i++){const mm=(a+b)/2;gap(mm)>0.003?b=mm:a=mm;}srw.rotation.y=b;} }
+      let a=ph.psi-0.03,b=ph.psi;if(gap(a)<0&&gap(b)>0){for(let i=0;i<40;i++){const mm=(a+b)/2;gap(mm)>0.003?b=mm:a=mm;}srw.rotation.y=b;} asq.rotation.y=srw.rotation.y; }   /* the square turned with the ratchet on it */
     /* setup pawl spring (42028, Figs. 17, 24, 80, 108): a blued band on edge, standing on the barrel bridge under the cover, round the ratchet about half a turn at r 9,
        from its fixed end, held between two steady pins in the bridge ("pushed off by pressure on steady pins from the lower side of barrel bridge", Ops. 27, 41), to the
        click's back, which it bears on at the click's height (C Spinner 11:58: about 180 deg at 1.23-1.31 of the ratchet's tip radius, so 8.7-9.2 mm, its edge about 0.9 mm seen from above at a slant; Fig. 108 draws
@@ -1469,12 +1498,13 @@ function buildMovement(M){
   const catchAt=(sh,fa,gA,dq)=>{const fc=sh+WPH+FPR.p*Math.ceil((fa-sh-WPH)/FPR.p-1e-9),dl=Math.max(0,gA-dq-sh);return{fa:fc+dl,sr:sh+dl,held:dl<=0};};
   const MWK={g:/** @type {number|null} */(null),n:/** @type {number|null} */(null),w:false,fa:0,base:0,lock:0,top:0,hold:0,nW0:0,eps0:0,dq:0};   /* the maintaining work's state between frames (update()) */
   R.drvN=n=>fs.torque(n)/fs.torque(12*FUSEE_PER_HOUR);   /* the fusee's drive at n turns, of the 12-hour drive: app.js sets its own (with the mainspring's set) */
-  R.ssF=()=>Math.max(0,1-R.ssD/SMAX);R.holdBack=holdBack;   /* the sustaining spring's push, of the 12-hour drive */
+  R.ssF=()=>SPU*Math.max(0,1-R.ssD/SMAX);R.holdBack=holdBack;R.SPU=SPU;   /* the sustaining spring's push, of the 12-hour drive */
+  const ssQ=D=>SMAX*clamp(1-D/SPU,0,1);   /* where the spring balances the fusee's drive D: banked (0) while D is over its push, relaxing as the drive tapers below it */
   /* fusee turns the catch will take if the key lets go now: app.js adds their hours. The reload is to the drive where those hours leave the fusee (n + the catch:
      update() takes the drive at the new n), found by a few steps; it was the drive at n until 12 October 2026, which in the run-down taper foretold the catch up to
      0.02 deg long */
   R.release=()=>{if(!MWK.w||MWK.g===null)return 0;let r=(catchAt(srA,MWK.fa,MWK.g,MWK.dq).fa-MWK.fa)/TAU;
-    if(MWK.n!==null)for(let i=0;i<4;i++){const n=MWK.n+r,D=n>=FUSEE_TURNS?0:R.drvN(n);r=(catchAt(srA,MWK.fa,MWK.g,SMAX*clamp(1-D,-0.25,1)).fa-MWK.fa)/TAU;}return r;};
+    if(MWK.n!==null)for(let i=0;i<4;i++){const n=MWK.n+r,D=n>=FUSEE_TURNS?0:R.drvN(n);r=(catchAt(srA,MWK.fa,MWK.g,ssQ(D)).fa-MWK.fa)/TAU;}return r;};
   /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean,ld?:number,clk?:number}} MoveState
       E: the escape wheel's place in teeth, which turns every arbor; th: the balance's angle (rad); lift, psDef: the detent's lift and the passing spring's bending (ESC.state);
       n: fusee turns from full wind; winding: the key turning; spent: run down (the fusee drives nothing); reset: the train set (the hands set, Now), not run;
@@ -1492,8 +1522,9 @@ function buildMovement(M){
     const gA=cA*TRAIN.cp/TRAIN.fu;R.gw.rotation.y=gA;R.ssg.rotation.y=gA;
     /* Maintaining work (Sec. IV). The sustaining spring, between the sustaining ratchet (srA) and the fusee wheel (gA), carries the whole drive (the manual: "through the
        sustaining spring, under load during the entire running cycle"; nothing banks it): d = gA - srA is how far it has relaxed from its load at the 12-hour drive, and it
-       pushes with 1 - d / SMAX of that drive (R.ssF). Running, the fusee drives the ratchet through its winding ratchet and pawls, and the spring sits where it balances the
-       fusee's drive D (R.drvN: d = SMAX (1 - D), so near 0 most of the run, and relaxing as the drive tapers to run down); the fusee turns with the ratchet, its faces on the
+       pushes with SPU (1 - d / SMAX) of that drive (R.ssF). Running, the fusee drives the ratchet through its winding ratchet and pawls, and the spring sits where it balances the
+       fusee's drive D (R.drvN: d = SMAX (1 - D / SPU), banked at 0 while D is over SPU, all the run but its last taper, and relaxing as the drive tapers to run down; until
+       14 October 2026 it carried the whole drive unbanked, d = SMAX (1 - D), its travel the fusee wheel's ten minutes); the fusee turns with the ratchet, its faces on the
        pawls (fa = srA + WPH, whole teeth on; eps = fa less its n turns). Should the fusee's drive fall faster than the train relaxes the spring (run down at once, a jump of the
        wind, a set taken), the spring turns the ratchet back until the sustaining pawl holds it (holdBack) and then drives the train alone, the fusee standing.
        Winding: the key turns the fusee back; the spring pushes the ratchet back with it, the winding pawls still on their faces, until the sustaining pawl catches it, and
@@ -1502,7 +1533,7 @@ function buildMovement(M){
        hours that took come off the mainspring (R.release, which app.js adds when the key lets go). Until 11 October 2026 the ratchet jumped back to its pawl in one
        frame as winding began, dragging the winding pawls back over their faces; the catch took (motion) mod one tooth, a whole tooth when nothing had moved; the
        spring stayed loaded at run down while the drive fell to nothing; and a set of the hands dragged the pawls through teeth */
-    const base=fs.g.rotation.y+s.n*TAU,p=FPR.p,D=s.spent?0:R.drvN(s.n),dq=SMAX*clamp(1-D,-0.25,1),mw=MWK;   /* dq: the spring's relaxation where it balances the fusee's drive */
+    const base=fs.g.rotation.y+s.n*TAU,p=FPR.p,D=s.spent?0:R.drvN(s.n),dq=ssQ(D),mw=MWK;   /* dq: the spring's relaxation where it balances the fusee's drive */
     if(mw.g===null){srA=gA-dq;mw.fa=srA+WPH+p*Math.ceil((base-srA-WPH)/p-1e-9);holding=false;mw.base=base;}
     else if(s.reset||gA<mw.g-1e-9||gA-mw.g>0.25){const o=srA;srA=holding?holdBack(srA+gA-mw.g):srA+gA-mw.g;mw.hold+=srA-o;mw.top+=srA-o;mw.lock-=srA-o;}   /* the train set, not run (back, or more than it turns in a frame): the ratchet with it, the spring as it was (held, on its pawl's tooth) */
     const tele=mw.n!==null&&Math.abs(s.n-mw.n)>0.15;   /* the wind set (the slider), not wound or run: the fusee to its new turns, its pawls on the nearest tooth */
@@ -1529,7 +1560,7 @@ function buildMovement(M){
       if(Math.abs(dv-lastD)>0.002){R.sspring.geometry.dispose();R.sspring.geometry=sspGeo(dv);lastD=dv;const a=SSP+dv-d;R.ssPin.position.x=14.6*FK*Math.cos(a);R.ssPin.position.z=14.6*FK*Math.sin(a);} }
     for(const pw of R.wp){const psi=fzW-srA,u=pw.userData;if(psi!==u.psi){pw.rotation.y=seatPawl(u.pts,toWheel(u.q,[0,0],psi),u.th0-psi,FPR,u.psi===undefined?undefined:pw.rotation.y-psi)+psi;u.psi=psi;}   /* seated again only when the fusee has turned against the ratchet (in running, never) */
       if(Math.abs(pw.rotation.y-u.sprTh)>0.002){u.spr.geometry.dispose();u.spr.geometry=wpsGeo(pw,pw.rotation.y);u.sprTh=pw.rotation.y;}}   /* the spring follows its pawl */
-    { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP,lastSp===null?undefined:R.spawl.rotation.y-srA)+srA;if(R.spawl.rotation.y!==lastSp){lastSp=R.spawl.rotation.y;R.spWire(lastSp);} }   /* its spring wire bends with it */
+    { const q=toWheel([SPv[0]-L.Fu[0],SPv[1]-L.Fu[1]],[0,0],srA);R.spawl.rotation.y=seatPawl(R.spawl.userData.pts,q,R.spawl.userData.base-srA,SRP,lastSp===null||holding?undefined:R.spawl.rotation.y-srA)+srA;if(R.spawl.rotation.y!==lastSp){lastSp=R.spawl.rotation.y;R.spWire(lastSp);} }   /* seated afresh while it holds: the ratchet can come back up to a tooth in one frame, and seated from where it was, the fitted end's point would stop on the tooth it rode over (since 14 October 2026; a real pawl follows the teeth down to the face) */   /* its spring wire bends with it */
     R.staff.rotation.y=-s.th;
     { const b=s.blk||0,u=R.tbs.userData;R.tbs.position.y=u.up+(u.down-u.up)*b;R.tbs.rotation.y=b*u.turns*TAU;R.arm.rotation.y=R.armL+R.armU*(1-(s.arm||0));R.navyLock(s.arm||0); }   /* screwed down turns it clockwise seen from its head */
     R.det.rotation.y=s.lift/E.LEN;
@@ -1539,7 +1570,7 @@ function buildMovement(M){
        pulls it (its ratchet's steep faces meet the click as rotation.y falls); clk, how far the click is held out of the teeth (0 to 1; at 0 with ld > 0 it rides over
        them as the arbor is set up). The spring's inner end turns with the arbor's hook, its outer end stays with the barrel: drawn with ld fewer turns, turned with the arbor */
     const LDn=s.ld||0,CLn=s.clk||0,su=R.su;
-    if(su&&(LDn!==su.ld||CLn!==su.cl)){const ph=-LDn*TAU,[bx,bz]=su.c,c=Math.cos(ph),sn=Math.sin(ph);su.srw.rotation.y=su.base+ph;su.asq.rotation.y=ph;
+    if(su&&(LDn!==su.ld||CLn!==su.cl)){const ph=-LDn*TAU,[bx,bz]=su.c,c=Math.cos(ph),sn=Math.sin(ph);su.srw.rotation.y=su.base+ph;su.asq.rotation.y=su.base+ph;
       su.ba.rotation.y=ph;su.ba.position.x=bx-(bx*c+bz*sn);su.ba.position.z=bz-(-bx*sn+bz*c);   /* the arbor's group turned about the barrel's axis */
       const psi=su.srw.rotation.y,th=CLn>0?su.seat+su.so*su.lift*smooth(CLn):LDn>0?seatPawl(su.pts,toWheel(su.q,[0,0],psi),su.seat-psi,su.pr,su.th-psi)+psi:su.seat;
       if(th!==su.th){su.clk.rotation.y=th;su.th=th;su.spr.geometry.dispose();su.spr.geometry=su.sprGeo(th);}su.ld=LDn;su.cl=CLn;fs.ms.rotation.y=fs.MS.rot+ph;}

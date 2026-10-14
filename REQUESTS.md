@@ -1,5 +1,7 @@
 # What we'd ask a Model 21 owner or the NAWCC for
 
+**Since 14 October 2026 none of these holds up the design** (OPEN-QUESTIONS.md, "Closed by design"): each is settled by a design value the checks pass and a bench test that makes the made part right. The answers would make the model truer to the original Model 21, not make a chronometer built to it run better; item 3 (the free run-down) is now also a bench test any maker runs on their own balance.
+
 A post to send, for the readings no video, photograph or the 1948 manual settles (OPEN-QUESTIONS.md, `References/VIDEOS.md`). Each item says what to photograph or measure and why. A phone photograph is enough when it is square to the part and has a ruler, or a coin of known size, beside it.
 
 ---
@@ -10,7 +12,7 @@ I'm building a working 3D model of the Hamilton Model 21 from the 1948 overhaul 
 
 1. **The barrel and mainspring:** the barrel's diameter outside and inside, with a caliper (the British Museum's catalogue gives 38 mm inside, which disagrees with the videos' scale); the mainspring's thickness with a micrometer, its width and, if it's out, its length (the catalogue gives 0.44 × 15.0 mm on a late example, the parts list 0.0165 in); the barrel arbor's diameter where the spring hooks (the catalogue: 13 mm).
 2. **The detent:** the thickness of its spring's two strips and of the trip (passing) spring (their widths and lengths are known), or a side-on photograph of the detent out of the movement with a scale beside it.
-3. **The balance's free run-down:** with the train held by the train-blocking screw and the balance given a full swing, a video of it swinging down for a minute or two, filmed square from above. (A start filmed from the twist to a steady swing helps too; a timegrapher's amplitude and beat error even more.)
+3. **The balance's free run-down:** with the train held by the train-blocking screw and the balance given a full swing, a video of it swinging down for a minute or two, filmed square from above. (A start filmed from the twist to a steady swing helps too; a timegrapher's amplitude and beat error even more. The one start filmed so far, on one movement, builds up as if its balance ran down in 100-160 s and settles near 300°, where the model takes 67 s and 255°: a second movement would tell whether that's the Model 21 or that one.)
 4. **The fusee with the chain off:** its large end, showing where the chain's hook goes into the groove's lowest turn and where the groove ends.
 5. **The winding ratchet** on the fusee's large end, face-on and close, ideally with a scale: its teeth's depth.
 6. **The hairspring collet** off its staff, from below, or the spring's inner end seen from under the balance: the collet's body under its sector plate.

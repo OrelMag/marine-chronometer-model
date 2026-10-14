@@ -295,6 +295,15 @@ Contents:
   widest swing the model allows. Keep: a real spring never touches its collet; the strip at least 0.05 mm off it
   beyond the clamp's edge at every swing up to TRIP + 15°. `43260af`
 
+- **Op. 78's preload was the whole 0.770 g** (p. 61's clause missed). Op. 78 runs on over the page: the weight "should separate the detent
+  spring from the stopbutton by approximately 0.005 in" (p. 61; Fig. 88, "(.005 in. clearance)"), so the preload is the weight's
+  moment less the spring's stiffness over that bend: 0.63 g at the jewel with the drawn spring (`G78` 0.127 mm at the button's
+  middle, `th78`), and a stiffer spring is set up with less. makeEsc, dynamics.js (`MW78`, its `kD` variants set up by the
+  test), tripping.js's frame (the weight lifts the button's middle `G78`), physics.js and tolerances.js (the detent spring
+  bounded at 0.137 mm, where no preload is left) follow it; `TF` 67 s (Q 421) so the calibrated torque is the spring's again.
+  Keep: the preload is `W78`'s moment less `KD`·`th78`, never the weight alone; a spring's stiffness and its preload move
+  together. `9b55881`
+
 ## Going train and heights
 
 - **The fourth, third and escape arbors off the video's places, the seconds
@@ -511,6 +520,21 @@ Contents:
   gives (10.444); the hard-coded copies of it (`train_bridge.py`'s `ESC_B`,
   `EBU_B`; `lower_bridge.py`'s `E`, `ARM`; `physics.js`'s and `dynamics.js`'s
   fourth module; `audit.py`'s detent pins) follow it. `8fcc1e5`
+
+- **The hairspring stud's holes and the cock's arm step stood where an old
+  scale put them.** The stud's three holes were read through a homography whose
+  every size on the cock's top came out about 0.83 of the video's: drawn 3.9, 7.0
+  and 10.5 mm from the staff where KLUwI2UUCMQ 6:29 (through the camera fitted
+  on 6:49.0) measures 5.49, 9.00 and 12.75, the row 1.7-2.4 mm further out. They
+  are now drawn there; the clamp is 4.34 mm from the staff (2.65 before) and the
+  outer terminal curve is re-solved to Phillips' conditions for it (the smoothest
+  of the four that meet them: 14.6 mm, its tightest bend r 1.24). The arm's step,
+  placed along the same row, moved with it: re-mapped on 44:02 with the holes'
+  pixels (1780, 1997, 2207) and their measured spacing, 14.6 mm from the staff
+  (the old spacing gives the 8.70 mm recorded); left where it was, the stud
+  bar's outer end stood 0.85 mm into the cock's thick part. Keep: the stud's
+  holes (SPHa-c) and the step (CK_SP) read through the same scale as the cock's
+  outline (CK_TR); the essay's hairspring figures (data-hs) from hairspring.js. `bf4d681`
 
 ## Winding and maintaining work
 
@@ -1041,6 +1065,46 @@ Contents:
   it (the catch's hours spent), so in the run-down taper it foretold the catch up to 0.02° long, past `maintaining.py`'s
   2e-4 rad once the new mainspring's pull moved it. It now finds the catch at the drive where its hours leave the fusee.
   Keep: `R.release` and `update()`'s let-go take the drive at the same turns. `9fa5f35`
+
+- **The setup ratchet sat on a round bore under a collar, its faces radial.**
+  It was pressed on the barrel arbor's round body (r 1.4) with an unsourced
+  collar r 2.3 over it and the square starting above that: a pressed fit that
+  would have to hold the mainspring's 0.78 N·m and couldn't come off to let it
+  down. KLUwI2UUCMQ shows a square hole (23:30, the mat through it) and the
+  square rising straight from the ratchet's face (11:58, 38:25). The ratchet now
+  rides on the arbor's square (2.2 across the flats), which turns with it, and
+  the collar is gone. Its locking faces are drawn undercut 4.5°, the middle of
+  the 3-6° measured (38:26, `ratchetface.py`): the click's draw rose from 4.2° to
+  8.7°, past oiled steel's friction angle, so the load seats it (`ratchets.js`).
+  Keep: the setup ratchet on the square; its faces undercut (`SRU`, gearGeo's
+  `uc`, mechanisms-check.js's tilted normal). `ca79d00`
+
+- **The sustaining spring ran as one thing and was drawn as another.** The
+  model ran it linear, carrying the whole drive unbanked and spent after ten
+  minutes, while its drawn section (an estimated 1.13 mm band, 17° gap) was a
+  third as stiff: made so, it would have closed solid and pushed 67 % of the
+  drive; and no band the 1.8 mm recess holds is stiff enough to carry the drive
+  unbanked. The period's chronometers make it a split ring weaker than the
+  drive, held closed on its banking in running (Gould 1923, pp. 47-48, 238;
+  Glasgow 1885, pp. 65, 106), and so it is now: its gap 20° as measured (27:26;
+  17° estimated before), banked with its lobes 0.5° apart, pushing 0.88 of the
+  drive (`SPU`) from a 1.25 mm band (`SSH_B`), which `sustaining.js` checks by
+  Castigliano; it keeps the balance over a turn 8.3 minutes (the manual's five
+  to ten) and runs the train 18. Keep: `SPU` what the section gives; the spring
+  weaker than the drive; `R.ssF` = `SPU` (1 - d / `SMAX`); app.js, essay.js,
+  maintaining.py and montecarlo.js take the push and travel from movement.js. `d43106a`
+
+- **The sustaining pawl, as traced, was pushed out by its load.** Its end
+  face (KLUwI2UUCMQ 36:15) lay across the next tooth's tip, 42.7° off the
+  locking face, so the tooth's tip corner met it and the load's line ran
+  outside the pivot: held only by friction above μ 0.19, more than oil gives.
+  The end is now drawn fitted, as a maker stones it: cut along the tooth's face
+  through its tip corner with 4° of relief above it, so the corner bears on the
+  face 0.38 mm into the teeth and the load draws it in at 36°
+  (`fitEnd`, `SPF`). Seated from where it was, the filed point could stop on
+  the tooth it rode over when the ratchet comes back a tooth in one frame, so
+  while it holds it is seated afresh. Keep: the pawl's end fitted; it holds
+  0.38 mm deep at every hold (`maintaining.py`). `ee7143d`
 
 ## Plates, bridges, screws and arbors
 
@@ -1599,6 +1663,33 @@ Contents:
   staff, then the body. The barrel bridge's horn now follows the new straight
   edge (`clipUnder`). Keep: the cap on metal all round (0.3 mm), the stud's
   bar under the thin part, the horn 0.15 mm off the straight edge. `8cce550`
+- **Mounting ring screws and two dial screws 20-37° from the real ones.** The
+  ring screws' places (`S.ring`) were fixed angles, 70°, 190° and 300° from 12:
+  one read on the top-view photograph before the photographed group's 19.4° turn
+  (12 October 2026) and not turned with it, the other two estimated; the band's
+  tabs under them repeated the angles (`RA`). Two dial screws (38.0°, 152.6°)
+  were an estimate and the other movement's photograph. On KLUwI2UUCMQ, through
+  fitted cameras (`rimfit.py` on 9:03, 40:08 and 34:30, both sides), the ring
+  screws stand at 91°, 214° and 336° (their heads on the plate's rim from the
+  train side, their ends in the ring's threaded holes from the dial side; the
+  photograph's head at 215° agrees) and the dial feet's four plain holes at 2.3°,
+  132.9°, 226.0° and 318.5° (the 2.3° one had been taken for a steady pin's). Now
+  91.5°, 214°, 336.5° and 2.6°, 132.9°, 226.0°, 318.9°. Keep: the band's tabs
+  follow `S.ring` (`RA` is read from it), and any place read on the top-view
+  photograph goes through `PT`. `ea4fb43`
+- **Ring screws ending under the flange, 1.4 mm too far in; a dial foot where
+  the video has none.** The three ring screws stood at r 40.6 and ended in the
+  band, so the flange had no holes over them, where the video shows their ends
+  in threaded holes through its dial face; read camera-free (radial strips:
+  each hole's place between the bore and the flange's rim) they stand at
+  41.8-42.2. The dial's fourth foot had been put at 2.6° for a plain hole of the
+  feet's size there, which the strips put inside the feet's circle, among the
+  ring screws. Now the screws at r 42.0, tapped through the band and the flange,
+  their ends 2.0 below its face (the band's tabs, which held them at 40.6,
+  gone); the fourth foot at 178.7°, a filled hole of the feet's size; the 2.3°
+  hole drawn plain. Keep: a hole's radius read on a face as a fraction of the
+  way between two of its edges, not through a camera scaled by an uncertain
+  bore. `2394368`
 
 ## Setup, case and gimbals
 

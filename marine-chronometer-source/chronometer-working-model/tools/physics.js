@@ -31,7 +31,7 @@ say('A4: the escape wheel with mass');
 const rE=13.16/2/1000;   /* the escape wheel's radius */
 const J=4.80e-9;   /* the escape wheel, its pinion and arbor about their axis, kg·m²: the drawn solid in steel (7.85), integrated on the mesh (invariants.py checks this against it; 4.72e-9 before the arbor and pinion were measured, 4-5 October 2026) */
 const RU=ESC.run,tqCal=RU.cl.w*ESC.kB,JW=ESC.settings.JW*1e-9;   /* the torque the model is calibrated at (255°); the wheel's inertia with the fourth wheel's reflected (shared/escapement.js JW) */
-chk(JW>J&&JW<1.5*J,`the escapement's wheel inertia (${f(JW*1e9,2)} g·mm²) is the escape wheel's ${f(J*1e9,2)} with the fourth wheel's, reflected through its pinion (about ${f((JW-J)*1e9,1)}, estimated: tools/dynamics.js)`);
+chk(JW>J&&JW<1.5*J,`the escapement's wheel inertia (${f(JW*1e9,2)} g·mm²) is the escape wheel's ${f(J*1e9,2)} and the train's behind it, reflected through the pinions (${f((JW-J)*1e9,1)}: their solids weighed, mechanisms.json, dynamics.js)`);
 const chaseDeg=(RU.land-ESC.thRel)/D;
 say(`unlocked at ${f(ESC.thRel/D,1)}°, the wheel starts from rest at ${f(tqCal/JW,0)} rad/s² (${f(tqCal*1e6,1)} µN·m, the model's): it catches the impulse jewel, already running away at ${f(RU.vj,1)} rad/s of the wheel, ${f(chaseDeg,1)}° of the balance later (at ${f(RU.land/D,1)}°), running ${f(RU.vw,1)} rad/s: it strikes the jewel`);
 chk(RU.end!==null&&RU.end<ESC.A,`the impulse ends inside the swing (the tooth leaves the jewel at ${f(RU.end/D,1)}°)`);
@@ -108,12 +108,13 @@ chk(qLo<=qnM[1]&&qHi>=qnM[0]&&inM,`the two overlap: the balance as built loses a
 chk(Qm>=qLo&&Qm<=qHi,`the model's TF ${TFm} s is inside the decay the balance's parts give (${f(TF(qLo),0)}-${f(TF(qHi),0)} s): derived from the budget before, now from the friction and the air too`);
 
 /* ---------- B2: the detent spring, from the manual's test ---------- */
-/* Op. 78: a 0.770 g weight hung on the locking jewel (Tool No. 8, Fig. 88) should just part the detent spring from its stop button: the spring is preloaded
-   that much at the jewel, and the model's detent is (shared/escapement.js W78). The balance lifts it against that preload and its stiffness as far as the
+/* Op. 78: a 0.770 g weight hung on the locking jewel (Tool No. 8, Fig. 88) should part the detent spring from its stop button by about 0.005 in (p. 61): the
+   spring is preloaded at the jewel by that weight less what its stiffness takes over the 0.005 in, and the model's detent is (shared/escapement.js W78, G78;
+   the whole weight until 14 October 2026). The balance lifts it against that preload and its stiffness as far as the
    discharge jewel carries it, well past the release, and the work is lost when the detent falls back on its stop */
 say('B2: the detent spring, from Op. 78');
-{const Fpre=ESC.settings.W78*1e-3*9.80665,rel=Fpre*(LIFT/1000)*Math.hypot(ESC.Jc.x-ESC.Ft.x,ESC.Jc.y-ESC.Ft.y)/ESC.LEN,mx=Math.max(...ESC.LI)/ESC.lRel,Wd=RU.detent*RU.Wi*kA;
-  say(`its preload ${f(Fpre*1000,2)} mN at the jewel; to the release (${f(LIFT,2)} mm at the passing spring's tip) that is ${f(rel*1e6,2)} µJ, but the jewel carries the detent on to ${f(mx,2)} times that lift: ${f(Wd*1e6,2)} µJ an oscillation, ${f(100*RU.detent,1)} % of the impulse`);
+{const rJm=Math.hypot(ESC.Jc.x-ESC.Ft.x,ESC.Jc.y-ESC.Ft.y),Fpre=ESC.MP*ESC.kB/(rJm*ESC.ES*1e-3),rel=Fpre*(LIFT/1000)*rJm/ESC.LEN,mx=Math.max(...ESC.LI)/ESC.lRel,Wd=RU.detent*RU.Wi*kA;
+  say(`its preload ${f(Fpre*1000,2)} mN at the jewel (Op. 78's ${f(ESC.settings.W78,3)} g less the spring's ${f(ESC.KD*ESC.th78*ESC.kB*1e6,1)} µN·m over its ${f(ESC.settings.G78,3)} mm bend at the stop button); to the release (${f(LIFT,2)} mm at the passing spring's tip) that is ${f(rel*1e6,2)} µJ, but the jewel carries the detent on to ${f(mx,2)} times that lift: ${f(Wd*1e6,2)} µJ an oscillation, ${f(100*RU.detent,1)} % of the impulse`);
   chk(RU.detent>0&&RU.detent<0.25,`the detent's share leaves the escapement running at the manual's swing`);}
 
 /* ---------- A5: temperature from the materials ---------- */

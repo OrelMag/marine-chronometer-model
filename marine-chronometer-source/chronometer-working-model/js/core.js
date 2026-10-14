@@ -439,10 +439,12 @@ function discGeo(r,th,holes=[]){const polyH=holes.filter(h=>h.pts);holes=holes.f
    userData: ro (tip radius), ri (root), hub (the spokes' hub radius). o.prop [hub, rim, spoke]: a spoked wheel's hub radius, its rim's inner radius and its spokes' width,
    as fractions of its tip radius (measured on a wheel lying flat: WHEEL_PROP, movement.js), in place of the default proportions; pl, its outline (gearOutline) */
 /** @param {number} n @param {number} m @param {any} [o] @returns {{xy:number[][],ro:number,ri:number}} the outline in the shape's plane (x, y), its tip and root radii */
+/** the angle a locking face undercut by uc against the radius at its tip (r ro) reaches back by at its root (r ri) */
+function ucRoot(ro,ri,uc){const s=ro*Math.cos(uc)-Math.sqrt(ri*ri-(ro*Math.sin(uc))**2);return Math.atan2(s*Math.sin(uc),ro-s*Math.cos(uc));}
 function gearOutline(n,m,o={}){
   const rp=m*n/2,p=TAU/n,pts=[],roS=rp+m*0.95;let ri=rp-1.3*m,ro=roS;
   const root=(a0,a1)=>{for(let k=1;k<3;k++)pts.push([ri,a0+(a1-a0)*k/3]);};   /* the root between two teeth, rounded */
-  if(o.ratchet){ro=roS;const r0=ro-(o.rd||2.25*m),f=o.ratchet==='radial'?0.97:0.9;ri=r0;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*f],[r0,a+p*0.97]);}}   /* 'radial': the locking face along a radius (the maintaining work's: movement.js ratchetProf), else leaning back over 0.07 of a pitch */
+  if(o.ratchet){ro=roS;const r0=ro-(o.rd||2.25*m),f=o.ratchet==='radial'?0.97:0.9;ri=r0;for(let i=0;i<n;i++){const a=i*p;pts.push([r0,a],[ro,a+p*f],[r0,a+p*0.97-(o.uc?ucRoot(ro,r0,o.uc):0)]);}}   /* 'radial': the locking face along a radius (the maintaining work's: movement.js ratchetProf), else leaning back over 0.07 of a pitch; uc: the face undercut by that angle against the radius, its root behind its tip (the setup ratchet's) */
   else if(n<=20){const b=0.525*m/rp,rt=0.525*m;ro=rp+rt;
     for(let i=0;i<n;i++){const c=i*p+0.375*p;pts.push([ri,c-b],[rp,c-b]);
       for(let k=1;k<12;k++){const t=Math.PI*k/12,u=rp+rt*Math.sin(t),v=-rt*Math.cos(t);pts.push([Math.hypot(u,v),c+Math.atan2(v,u)]);}   /* the round tip, a semicircle on the pitch circle */

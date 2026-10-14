@@ -54,7 +54,7 @@ own geometry and numbers.</p>
 <div class="tiles" id="tiles"></div>
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#gears">1. Gears</a><a href="#thermal">2. Temperature</a><a href="#fea">3. Finite elements</a>
-<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#mech">11. Every mechanism</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
+<a href="#hair">4. Hairspring</a><a href="#bench">5. Bench tests</a><a href="#rating">6. Rating</a><a href="#devs">7. The build's deviations</a><a href="#trip">8. Tripping</a><a href="#sea">9. At sea</a><a href="#coil">10. Coil friction</a><a href="#mech">11. Every mechanism</a><a href="#est">12. The estimates swept</a><a href="#context">Earlier checks</a><a href="#limits">What only the bench settles</a>
 <a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
@@ -93,7 +93,7 @@ where the wheel's tooth, capped at 1.15 module, works on the leaf with its corne
 <p>None of the four meshes drops (the next tooth always engages before the last lets go), about a fifth of the action is before the line of centres, and the mean loss is
 2–5 % a mesh. The escape wheel's torque is the product of the four ratios as their wheels turn (the centre once an hour, the fusee wheel once in 6.4 h); the balance's
 swing follows it through the escapement's own equation (<code>shared/escapement.js</code>: <span class="eq">A²</span> relaxes towards <span class="eq">ampAt(drive)²</span>
-with the balance's free run-down time TF = 68 s), and its rate through <code>rateAt</code>.</p>
+with the balance's free run-down time TF = 67 s), and its rate through <code>rateAt</code>.</p>
 <figure><div class="chart" id="c2"></div><figcaption>Figure 2. The balance's swing over half an hour of the train, the teeth's ripple included, at the two friction coefficients; the band is the
 manual's 247.5–270°. The slow wave is the fusee wheel's teeth (one every 4.3 minutes), the fast one the third and fourth. Over six hours the swing stays within the
 same limits (<span id="sixh"></span>). <code>gearing.js</code>, <code>day()</code>.</figcaption></figure>
@@ -212,7 +212,7 @@ part's (<code>movement.js</code>, <code>ESC.pieces</code>), every material dynam
 carry it in time with the balance and the escape wheel as dynamics.js does, but every contact is elastic: the discharge jewel's own outline on the trip spring's tip (pushing
 it onto the horn on the active swing, bending it away on the return), the trip spring on the horn, the blade on its stop button, the tooth on the locking stone (the stone's
 outline and draw from <code>makeEsc</code>, so the tooth is pushed back as the stone lifts) and on the impulse jewel. A contact is a stiff spring with a dashpot set for its
-restitution (penalty contact). Op. 78 sets the preload: the spring is bent so a 0.770 g weight on the locking jewel just parts the blade from its button.</p>
+restitution (penalty contact). Op. 78 sets the preload: the spring is bent so a 0.770 g weight on the locking jewel parts the blade from its button by approximately 0.005 in (p. 61), which leaves it 0.63 g of preload at the jewel as drawn and none for a spring 0.137 mm thick.</p>
 <div id="t8" class="tw"></div>
 <p><b>Validated.</b> Made rigid and hinged at the spring's root, with the draw counted as dynamics.js counts it, the frame is dynamics.js's detent (stiffness, preload and
 first mode to 0.1 %) and runs as dynamics.js does: <span id="trV"></span>. Two things the frame finds that the rigid model leaves out:</p>
@@ -253,7 +253,7 @@ the spring (<code>benchcheck.py --ring</code> reads one). <span id="tbRing"></sp
 <code>benchcheck.py</code> judges them.</p>
 <div class="cols"><div id="t11" class="tw"></div><div id="t12" class="tw"></div></div>
 <p class="small">The largest lift over 20 beats is a maximum of a chaotic chatter: two runs a hair apart differ by about ten points. The figures are margins, not sharp
-limits; the lock's floor is where the margin falls below two, and the spring's band is the drawn spring to the thickest the swing allows (<span id="tbThin"></span>).</p>
+limits; the lock's floor is where the margin falls below two, and the spring's band is the drawn spring to the thickest that stays under that margin and that Op. 78's test can still preload (0.137 mm, <code>tolerances.js</code>) (<span id="tbThin"></span>).</p>
 
 <h2 id="sea">9. The box and gimbals in a seaway</h2>
 <p>A chronometer at sea hangs in gimbals so that the balance's staff stays upright whatever the ship does. The checks above took that as given. Here it is worked
@@ -376,12 +376,14 @@ each needs, and the bench's test sets it. The setup ratchet's faces, measured un
 <p><b>Method.</b> The spring's stiffness from its section: a band bent in its plane between the pins that hold its two lobes (each pinned once, so the band is loaded by a
 pair of equal forces along the line through the pins), by Castigliano, (F / E I) ∫ h² ds over the free band, h a point's distance from the pins' line. Then, the key
 held, the train runs on it, the fusee wheel turning at its rate and the spring opening, the balance's swing following its equation (A² towards ampAt(drive)², the free
-balance's TF) and the escapement's rate at that swing. The model's maintaining work takes the spring linear, pushing the whole drive loaded and nothing after ten minutes
-of the train (the manual: "enough power to drive the chronometer for five to ten minutes", Sec. IV). <code>sustaining.js</code>.</p>
-<figure><div class="chart" id="c20"></div><figcaption>Figure 20. The balance's swing while the key is held, on the model's spring and on the spring as drawn (its estimated height, gap and lobes). The band is the
-manual's, 247.5-270°; under 41° the escapement can't unlock and the train stops. <code>sustaining.js</code>.</figcaption></figure>
+balance's TF) and the escapement's rate at that swing. Since 14 October 2026 the spring is a split ring weaker than the drive, as the period's chronometers had it
+(Gould, 1923; Glasgow, 1885): the fusee's pull holds it closed on its banking in running, and when the key takes the fusee it pushes what its section gives at its
+measured 20° gap, falling as it opens (the model's <code>SPU</code>, which this checks against the section). The manual's "enough power to drive the chronometer for
+five to ten minutes" (Sec. IV) is read as the time it keeps the balance over a turn. <code>sustaining.js</code>.</p>
+<figure><div class="chart" id="c20"></div><figcaption>Figure 20. The balance's swing while the key is held, on the spring as drawn (its section's push) and as the model runs it (<code>SPU</code>); the two lie
+together. The band is the manual's, 247.5-270°; 180° is a turn; under 41° the escapement can't unlock and the train stops. <code>sustaining.js</code>.</figcaption></figure>
 <p><span id="suRes"></span></p>
-<div class="callout gap"><ul><li><b>Open.</b> <span id="suOpen"></span> (OPEN-QUESTIONS.md, "The sustaining spring's section and gap").</li></ul></div>
+<div class="callout"><ul><li><b>Designed.</b> <span id="suOpen"></span> (OPEN-QUESTIONS.md, "Closed by design").</li></ul></div>
 
 <h3>11.4 The motion work and the hands</h3>
 <p><b>Method.</b> The motion work's two meshes and the wind indicator's, tooth by tooth on the model's own outlines as <code>gearing.js</code> works the going train; the
@@ -397,7 +399,7 @@ in the middle. <code>motionwork.js</code>.</figcaption></figure>
 <p><b>Method.</b> Every sliding contact by Archard's law (the volume worn is k F s / H: the wear coefficient, the load, the distance slid, the softer part's hardness;
 Archard 1953), k from Rabinowicz's table for lubricated metals: about 10⁻⁷ well oiled, 10⁻⁶ poorly, 10⁻⁵ once the oil has gone. Each depth a year against the tolerance it
 eats: a pivot hole worn open moves its arbor toward the load and changes its meshes' depth (each mesh's close side less the hole tolerance and shake:
-<code>gearing.json</code>); the balance staff's pivot ends wear the endshake; the escape teeth's tips and the escape arbor's pivot wear the depth of lock toward its 5°
+<code>gearing.json</code>); the balance staff's pivot ends wear the endshake; the escape teeth's tips and the escape arbor's pivot wear the depth of lock toward its
 floor (<code>tripping.json</code>). <code>wear.js</code>.</p>
 <div id="t21" class="tw"></div>
 <p><span id="weRes"></span></p>
@@ -426,6 +428,16 @@ the manual's. <code>montecarlo.js</code>.</figcaption></figure>
 <div class="callout gap"><ul><li><b>Estimated, here.</b> The hand's torque on this key (from handles of like size), the teeth's stiffness, the meshes' and the
 contacts' damping, the wear coefficients (orders of magnitude), the sliding at the escape teeth and the chain, the tolerances a maker holds on the strips and
 springs, and the springs' set. What only a made chronometer settles is on the bench's tests (section 5).</li></ul></div>
+
+<h2 id="est">12. The estimates swept</h2>
+<p><b>Method.</b> Five design values rest on estimates no source settles: the balance's free run-down, the detent's springs' thicknesses, the discharge
+jewel's back radius, the sustaining spring's band and lobes, and the hairspring's upper terminal curve. Each is swept over the range its sources allow, and
+where the bench has a correction for it (the run-down test choosing the strip, the set-up, the ring test, the adjusting screws and the trip spring's tip, the
+maintaining test) it is applied as a maker would, to show that a chronometer made to the model works whichever value the real part has. <code>estimates.js</code>.</p>
+<figure><div class="chart" id="c30"></div><figcaption>Figure 30. The balance's swing at each free run-down, with the drawn strip unadjusted and with the strip the run-down test chooses.
+The band is the manual's, 247.5-270°. <code>estimates.js</code>.</figcaption></figure>
+<div id="t30" class="tw"></div>
+<ul id="estRes"></ul>
 
 <h2 id="context">The checks the model already had</h2>
 <p>These ran before this work and still run in <code>ci.py</code>; their current output is below.</p>
@@ -774,11 +786,11 @@ function drawMech(){const X=DATA.mech;if(!X)return;const ow=X.ow,ra=X.ra,su=X.su
   $('raBuild').textContent=`The winding pawls are drawn in by their load (${f(wp.draw,1)}°, past the friction angle: they seat themselves) and need their springs set at least ${f(Math.max(...ra.pawls.filter(p=>p.set).map(p=>p.set)),2)} mm to follow the fusee down when the key lets go; the setup click is drawn in at ${f(ck.draw,1)}°, under the friction angle, so friction and its spring hold it (its faces' measured undercut adds as much draw); the sustaining pawl, as traced, meets a tooth's tip corner with its side and would be pushed out, but its end stoned to bear along the face draws it in at ${f(sp.draw,1)}°, as a pawl's end is fitted. Every tooth, face, pawl and pivot at least ${f(Math.min(...ra.pawls.flatMap(p=>p.lines.map(l=>l.lo/l.sig))),1)} times short of its material's weak end.`;
   /* 11.3 the sustaining spring */
   {const S=su.sim,mx=Math.max(16,Math.ceil(((S.tStop.drawn||0)+60)/60));
-    chart('c20',{label:'Swing while the key is held',x:[0,mx],y:[0,280],xl:'minutes the key is held',yl:'the balance\'s swing (°)',hbands:[{y0:247.5,y1:270,c:'--band'}],hrefs:[{y:41,t:'stops'}],r:80,
-      series:[{type:'line',name:'the model\'s spring',c:'--s1',data:S.model.map(r=>[r[0]/60,r[1]]),tip:p=>`model: ${f(p[0],1)} min, ${f(p[1],0)}°`},{type:'line',name:'the spring as drawn',c:'--s2',dash:'5 4',data:S.drawn.map(r=>[r[0]/60,r[1]]),tip:p=>`as drawn: ${f(p[0],1)} min, ${f(p[1],0)}°`}]});
+    chart('c20',{label:'Swing while the key is held',x:[0,mx],y:[0,280],xl:'minutes the key is held',yl:'the balance\'s swing (°)',hbands:[{y0:247.5,y1:270,c:'--band'}],hrefs:[{y:41,t:'stops'},{y:180,t:'a turn'}],r:80,
+      series:[{type:'line',name:'as the model runs it',c:'--s1',data:S.model.map(r=>[r[0]/60,r[1]]),tip:p=>`model: ${f(p[0],1)} min, ${f(p[1],0)}°`},{type:'line',name:'the spring as drawn',c:'--s2',dash:'5 4',data:S.drawn.map(r=>[r[0]/60,r[1]]),tip:p=>`as drawn: ${f(p[0],1)} min, ${f(p[1],0)}°`}]});
     const sg=su.spring,nd=su.need;
-    $('suRes').textContent=`By Castigliano the drawn band (${f(sg.SSW,2)} wide, ${sg.H} high, free over ${f(sg.arc,0)}°) is ${f(sg.kt,2)} N·m a radian: the drive would close it ${f(sg.dLoad*180/Math.PI,1)}°, ${sg.solid?`past its ${f(sg.SSG*180/Math.PI,0)}° gap, so it runs closed solid and pushes ${f(100*sg.kt*sg.SSG/sg.T0,0)} % of the drive when the key takes the fusee`:'within its gap'}. The model's spring (${f(sg.model,2)} N·m a radian) drives the train ${f(S.tStop.model/60,1)} minutes, the swing leaving the band after ${f(S.tBand.model/60,1)}; as drawn, ${f(S.tStop.drawn/60,1)} and ${f((S.tBand.drawn||0)/60,1)}. A wind costs ${f(Math.abs(S.w10)*1e6,1)} µs held 10 s and ${f(Math.abs(S.w30)*1e6,1)} µs held 30 s: nothing a navigator could read.`;
-    $('suOpen').textContent=`The manual's five to ten minutes ask ${f(nd.k10,2)}-${f(nd.k5,2)} N·m a radian: at the measured width a band ${f(nd.H[0],1)}-${f(nd.H[1],1)} mm high, which the ${nd.recess} mm recess can't hold, so the spring's gap, lobes or pins differ from the estimates`;}
+    $('suRes').textContent=`By Castigliano the drawn band (${f(sg.SSW,2)} wide, ${sg.H} high, free over ${f(sg.arc,0)}° between its lobes) is ${f(sg.kt,2)} N·m a radian: closed ${f(sg.SMAX*180/Math.PI,1)}° on its banking it pushes ${f(100*sg.P,0)} % of the drive (the model's SPU ${f(100*sg.SPU,0)} %), weaker than the drive, so the fusee's pull holds it banked in running; its steel at ${f(sg.sig,0)} MPa. Held, it keeps the balance over a turn ${f(S.tTurn.drawn/60,1)} minutes (the manual's five to ten), the swing leaving the band after ${f((S.tBand.drawn||0)/60,1)}, and runs the train ${f(S.tStop.drawn/60,1)}. A wind costs ${f(Math.abs(S.w10)*1e6,1)} µs held 10 s and ${f(Math.abs(S.w30)*1e6,1)} µs held 30 s: nothing a navigator could read.`;
+    $('suOpen').textContent=`The gap (20°, KLUwI2UUCMQ 27:26) and the band's width are measured; its height, ${sg.H} mm, is designed for the push (five to ten minutes over a turn ask ${f(nd.H[0],2)}-${f(nd.H[1],2)} mm, within the ${nd.recess} mm recess); its lobes' sizes and which hole has the pin are estimated. The bench's maintaining test checks the made spring: its ends nearly meet in running, and held it keeps the balance over a turn five to ten minutes`;}
   /* 11.4 the motion work */
   table('t20',['Mesh','Teeth','Module','Tip clearance','Backlash','Before the line of centres','Torque passed (μ 0.10)'],mw.meshes.map(q=>[q.nm,`${q.za}:${q.zb}`,f(q.m,4),`${f(q.tip*1000,0)} µm`,`${f(q.blmm*1000,0)} µm (${f(q.bl*180/Math.PI,2)}°)`,`${f(100*q.approach,0)} %`,`${f(q.al[0],3)}-${f(q.al[1],3)}`]),true);
   {const c=mw.cannon,mm=x=>x*1000;
@@ -815,6 +827,13 @@ function drawMech(){const X=DATA.mech;if(!X)return;const ow=X.ow,ra=X.ra,su=X.su
     const al=Object.entries(mc.alone),worst=al.slice().sort((a,b)=>a[1].asMade-b[1].asMade)[0];
     $('mcRes').textContent=`Of ${N} movements, ${pc(F.asMade)} do everything as made and ${pc(F.works)} once the bench has done what its tests say. The pawls' test catches ${B.pawls.caught} (${B.pawls.springs} spring${B.pawls.springs===1?'':'s'} under the least set; ${B.pawls.wouldFail} of those movements would have failed${B.pawls.caught>B.pawls.wouldFail?`, the other ${B.pawls.caught-B.pawls.wouldFail} have a spring the bench's single figure, the larger pawl's need, rejects although its own pawl needs less`:''}) and bends them back to the aim; the swing is out of the band in ${B.setup.caught}, and turning the set-up brings ${B.setup.mended} of them back; the depths test re-bushes ${B.depths.caught}, ${B.depths.jam} of which would have jammed. ${mc.failAfter?`${mc.failAfter} still fail after the bench, every one caught by a test`:'None is left failing'}${mc.uncaught?`; ${mc.uncaught} fail unseen by any test`:''}. Their swing as made ${f(mc.swing[0],1)}-${f(mc.swing[2],1)}° (5-95 %). ${worst[1].asMade>=0.998?`No tolerance alone takes a movement out (${al.map(([k,v])=>`${k} ${pc(v.asMade)}`).join(', ')})`:`Alone, the ${worst[0]}'s tolerance takes most out as made, ${pc(1-worst[1].asMade)} (${al.map(([k,v])=>`${k} ${pc(v.asMade)}`).join(', ')})`}: together the drive's spread takes ${pc(1-F.band)} out of the band, and turning the set-up brings it back.`;}}
 const draw0=draw;draw=()=>{draw0();drawMech();};
+function drawEst(){const X=DATA.est;if(!X)return;
+  chart('c30',{label:'Swing against the free run-down',x:[40,200],y:[220,410],xl:'the balance’s free run-down TF (s)',yl:'the swing (°)',hbands:[{y0:247.5,y1:270,c:'--band'}],r:150,
+    series:[{type:'line',name:'the drawn strip',c:'--s2',dash:'5 4',data:X.tf.map(r=>[r.tf,r.A0]),tip:p=>`TF ${p[0]} s: ${f(p[1],0)}°`},{type:'line',name:'the strip the test chooses',c:'--s1',data:X.tf.map(r=>[r.tf,255]),tip:p=>`TF ${p[0]} s: 255°`}]});
+  table('t30',['Detent spring (mm)','Rings at (Hz)','A held tooth’s stone rings (of the lock)','A tooth gets past'],X.ring.map(r=>[f(r.t,3),f(r.f1,0),`${f(100*r.lift,0)} %`,r.trips?'yes':'no']),true);
+  $('estRes').innerHTML=X.rows.filter(r=>/^  (ok|!!)/.test(r.trim()?'  '+r.trim():'')).map(r=>`<li>${r.trim().replace(/^(ok|!!)\s+/,'')}</li>`).join('');}
+const draw1=draw;draw=()=>{draw1();drawEst();};
+
 draw();
 const th=$('theme');th.addEventListener('click',()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=dark?'light':'dark';draw();});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
