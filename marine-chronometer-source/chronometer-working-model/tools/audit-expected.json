@@ -1,5 +1,6 @@
 {
  "movement": {
+  "bal:Buffer | spr:Buffer | +-28.76": 1,
   "bal:Extrude | bal:Extrude | +-24.50": 1,
   "bal:Extrude | bal:Extrude | +-25.10": 1,
   "bal:Extrude | spr:Buffer | --28.60": 1,
@@ -76,7 +77,6 @@
   "pillar:Lathe | motion:Extrude | +5.80": 1,
   "pillars:Lathe | det:Extrude | --20.66": 1,
   "pillars:Lathe | trainBridge:Extrude | --20.66": 1,
-  "ratchet:Cylinder | ratchet:Extrude | --29.66": 1,
   "ratchet:Extrude | ratchet:Extrude | +-27.16": 1,
   "sratchet:Extrude | fusee:Extrude | +-9.80": 2,
   "sratchet:Extrude | fusee:Extrude | --10.30": 4,

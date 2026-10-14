@@ -143,9 +143,12 @@ if refW:
     # the rig turns the wind's parts by its hours alone (the Run down action): it has no catch, so the fusee stands by the winding ratchet's offset, nor the
     # up-down wheel's backlash (UD_LASH) or the maintaining work's state (the sustaining ratchet held while the spring drives the train): those go by the
     # clip only, as do the train, hands and balance, whose beat the clip starts elsewhere than the rig's frame 0. Checked: the parts that follow the wind,
-    # each within what the rig was found to leave on 11 October 2026 (a growth fails; a fix shows here as a smaller number)
-    WIND={'the fusee and its arbor, square, end plate, stop-bar':(('Fusee - Complete','fp','sq','Stop-bar'),0.05,7.0),'the barrel':(('Barrel - Mainspring',),0.05,5.5),
-          'the chain':(('Fusee chain','chain link'),13.0,8.0),'the up-down indicator':(('ud','udW'),0.05,1.0)}
+    # each within what the rig was found to leave (a growth fails; a fix shows here as a smaller number). 11 October 2026: fusee 7°, barrel 5.5°, chain 13 mm and 8°,
+    # up-down 1°. 14 October 2026: the sustaining spring a banked split ring (movement.js SPU), its travel 19.5° where it was 9.3°, and the fusee's offset from the
+    # rig's goes with the spring's relaxation (it opens as the drive tapers to run down, where the clip starts): found 16.4°, 11.8°, 1.9 mm and 1.6°, so the bounds
+    # rise by about the travel's ratio; a link's turn means nothing once the chain stands over half a link off the rig's (180°: its place in mm is checked)
+    WIND={'the fusee and its arbor, square, end plate, stop-bar':(('Fusee - Complete','fp','sq','Stop-bar'),0.05,17.0),'the barrel':(('Barrel - Mainspring',),0.05,12.5),
+          'the chain':(('Fusee chain','chain link'),13.0,180.0),'the up-down indicator':(('ud','udW'),0.05,2.0)}
     print('MC rig against Winding (%d moments): what follows the wind (the rest goes by the clip only: the maintaining work, the train, hands and balance):'%len(HW))
     for g,(pats,mm,deg) in WIND.items():
         hit=[(k,v) for k,v in per.items() if any((k==p or k.startswith(p+' ')) if len(p)<=4 else p in k for p in pats)]   # a part's code exactly, a catalogue name anywhere

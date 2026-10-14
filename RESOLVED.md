@@ -521,6 +521,21 @@ Contents:
   `EBU_B`; `lower_bridge.py`'s `E`, `ARM`; `physics.js`'s and `dynamics.js`'s
   fourth module; `audit.py`'s detent pins) follow it. `8fcc1e5`
 
+- **The hairspring stud's holes and the cock's arm step stood where an old
+  scale put them.** The stud's three holes were read through a homography whose
+  every size on the cock's top came out about 0.83 of the video's: drawn 3.9, 7.0
+  and 10.5 mm from the staff where KLUwI2UUCMQ 6:29 (through the camera fitted
+  on 6:49.0) measures 5.49, 9.00 and 12.75, the row 1.7-2.4 mm further out. They
+  are now drawn there; the clamp is 4.34 mm from the staff (2.65 before) and the
+  outer terminal curve is re-solved to Phillips' conditions for it (the smoothest
+  of the four that meet them: 14.6 mm, its tightest bend r 1.24). The arm's step,
+  placed along the same row, moved with it: re-mapped on 44:02 with the holes'
+  pixels (1780, 1997, 2207) and their measured spacing, 14.6 mm from the staff
+  (the old spacing gives the 8.70 mm recorded); left where it was, the stud
+  bar's outer end stood 0.85 mm into the cock's thick part. Keep: the stud's
+  holes (SPHa-c) and the step (CK_SP) read through the same scale as the cock's
+  outline (CK_TR); the essay's hairspring figures (data-hs) from hairspring.js. `bf4d681`
+
 ## Winding and maintaining work
 
 - **Wound straight from a set, the sustaining ratchet stood while the fusee
@@ -1050,6 +1065,34 @@ Contents:
   it (the catch's hours spent), so in the run-down taper it foretold the catch up to 0.02° long, past `maintaining.py`'s
   2e-4 rad once the new mainspring's pull moved it. It now finds the catch at the drive where its hours leave the fusee.
   Keep: `R.release` and `update()`'s let-go take the drive at the same turns. `9fa5f35`
+
+- **The setup ratchet sat on a round bore under a collar, its faces radial.**
+  It was pressed on the barrel arbor's round body (r 1.4) with an unsourced
+  collar r 2.3 over it and the square starting above that: a pressed fit that
+  would have to hold the mainspring's 0.78 N·m and couldn't come off to let it
+  down. KLUwI2UUCMQ shows a square hole (23:30, the mat through it) and the
+  square rising straight from the ratchet's face (11:58, 38:25). The ratchet now
+  rides on the arbor's square (2.2 across the flats), which turns with it, and
+  the collar is gone. Its locking faces are drawn undercut 4.5°, the middle of
+  the 3-6° measured (38:26, `ratchetface.py`): the click's draw rose from 4.2° to
+  8.7°, past oiled steel's friction angle, so the load seats it (`ratchets.js`).
+  Keep: the setup ratchet on the square; its faces undercut (`SRU`, gearGeo's
+  `uc`, mechanisms-check.js's tilted normal). `ca79d00`
+
+- **The sustaining spring ran as one thing and was drawn as another.** The
+  model ran it linear, carrying the whole drive unbanked and spent after ten
+  minutes, while its drawn section (an estimated 1.13 mm band, 17° gap) was a
+  third as stiff: made so, it would have closed solid and pushed 67 % of the
+  drive; and no band the 1.8 mm recess holds is stiff enough to carry the drive
+  unbanked. The period's chronometers make it a split ring weaker than the
+  drive, held closed on its banking in running (Gould 1923, pp. 47-48, 238;
+  Glasgow 1885, pp. 65, 106), and so it is now: its gap 20° as measured (27:26;
+  17° estimated before), banked with its lobes 0.5° apart, pushing 0.88 of the
+  drive (`SPU`) from a 1.25 mm band (`SSH_B`), which `sustaining.js` checks by
+  Castigliano; it keeps the balance over a turn 8.3 minutes (the manual's five
+  to ten) and runs the train 18. Keep: `SPU` what the section gives; the spring
+  weaker than the drive; `R.ssF` = `SPU` (1 - d / `SMAX`); app.js, essay.js,
+  maintaining.py and montecarlo.js take the push and travel from movement.js. `d43106a`
 
 ## Plates, bridges, screws and arbors
 

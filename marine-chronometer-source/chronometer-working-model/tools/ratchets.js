@@ -22,7 +22,7 @@ const A=MJ.arbors,T0=PH.Tf,Fpull=PH.Mup*1000/PH.rB;
    the sustaining ratchet gilt brass, its pawl steel. The pivots: the click's screw (shank r 0.3, sR of its 0.6 head), the winding pawls' studs (r 0.22), the
    sustaining pawl's arbor (r 0.5); the pawls' narrowest width by the pivot (the click 1.3, pawlGeo; the winding pawls' arm 1.25, WPO; the sustaining pawl's
    blade 2.5, SPN/SPE) */
-const SPEC={'setup click':{T:PH.Mup,n:1,rat:'steel',ratY:STEEL_Y,pv:0.3,w:1.3,under:'its faces, measured undercut 3-6° (KLUwI2UUCMQ 38:26: ratchetface.py) but drawn radial, would add as much draw',holds:`the mainspring fully wound (${f(PH.Mup,3)} N·m on the barrel arbor, physics.js)`},
+const SPEC={'setup click':{T:PH.Mup,n:1,rat:'steel',ratY:STEEL_Y,pv:0.3,w:1.3,under:'its faces undercut 4.5°, the middle of the 3-6° measured (KLUwI2UUCMQ 38:26: ratchetface.py)',holds:`the mainspring fully wound (${f(PH.Mup,3)} N·m on the barrel arbor, physics.js)`},
   'winding pawl 1':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.22,w:1.25,holds:`the fusee's drive (${f(T0,3)} N·m), shared by the two pawls`},
   'winding pawl 2':{T:T0,n:2,rat:'steel',ratY:STEEL_Y,pv:0.22,w:1.25,holds:`the fusee's drive, shared`},
   'sustaining pawl':{T:T0,n:1,rat:'brass',ratY:BRASS_Y,pv:0.5,w:2.5,src:'its outline traced at KLUwI2UUCMQ 36:15, to about 0.1 mm',holds:`the sustaining spring loaded to the drive (${f(T0,3)} N·m) while the key winds`}};

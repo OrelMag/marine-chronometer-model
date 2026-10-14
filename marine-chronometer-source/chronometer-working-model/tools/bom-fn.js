@@ -56,9 +56,13 @@ async()=>{
     ck.updateWorldMatrix(true,false);const CP=ck.geometry.attributes.position,v=new T.Vector3();
     const tipAt=dl=>{const r0=rw.rotation.y;rw.rotation.y=r0+dl;rw.updateWorldMatrix(true,false);const inv=new T.Matrix4().copy(rw.matrixWorld).invert();let tip=null,rt=1e9;
       for(let i=0;i<CP.count;i++){v.fromBufferAttribute(CP,i).applyMatrix4(ck.matrixWorld).applyMatrix4(inv);const r=Math.hypot(v.x,v.z);if(r<rt){rt=r;tip=[v.x,v.z];}}
-      rw.rotation.y=r0;rw.updateWorldMatrix(true,false);return[Math.atan2(tip[1],tip[0]),rt];};
+      rw.rotation.y=r0;rw.updateWorldMatrix(true,false);return[Math.atan2(tip[1],tip[0]),rt,tip];};
     const depth=dl=>{const[a,r]=tipAt(dl);return rOut(a)-r;},held=depth(0.02*pull),free=depth(-0.02*pull),rest=depth(0);
+    /* whether the tip lies in the tooth's metal, turned dl: a ray from it outward crosses the outline an odd number of times (an undercut face overhangs the tip, so
+       the outline's farthest radius along its ray, depth, no longer rises as the face comes on; since 14 October 2026) */
+    const inMetal=dl=>{const[a,,p]=tipAt(dl),d=[Math.cos(a),Math.sin(a)];let n=0;for(const[[ax,az],[bx,bz2]]of seg){const ex=bx-ax,ez=bz2-az,den=d[0]*ez-d[1]*ex;if(Math.abs(den)<1e-12)continue;
+        const qx=ax-p[0],qz=az-p[1],t=(qx*ez-qz*ex)/den,u=(qx*d[1]-qz*d[0])/den;if(u>=0&&u<1&&t>0)n++;}return n%2===1;},inH=inMetal(0.02*pull),inF=inMetal(-0.02*pull),in0=inMetal(0);
     const[ta,tr]=tipAt(0);let top=0;for(let j=1;j<=30;j++)top=Math.max(top,rOut(ta+pull*0.001*j));   /* the tooth top behind the face the tip bears on */
-    out.push(['setup click',wb!==0&&held-rest>0.25&&free-rest<(held-rest)/2&&top-tr>0.3,`the barrel turns ${wb>0?'+':'-'} about its axis in running; turned 0.02 rad the way the spring pulls the arbor, the tooth's face comes onto the click's tip (outline ${f2(rest)} -> ${f2(held)} mm from it), turned the other way only a back passes under it (${f2(free)}, under half the face's rise): it holds the arbor the right way. The tip stands ${f2(top-tr)} mm inside the teeth's tips (want over 0.3: seated, the pivot where both photographs have it)`]); }
+    out.push(['setup click',wb!==0&&!in0&&inH&&!inF&&top-tr>0.3,`the barrel turns ${wb>0?'+':'-'} about its axis in running; at rest the click's tip ${in0?'is in':'is clear of'} the teeth's metal; turned 0.02 rad the way the spring pulls the arbor, the tooth's face comes onto it (the tip ${inH?'in the tooth':'still clear'}; the outline ${f2(rest)} -> ${f2(held)} mm from it along its ray), turned the other way only a back passes under it (${inF?'in the tooth':'clear'}): it holds the arbor the right way. The tip stands ${f2(top-tr)} mm inside the teeth's tips (want over 0.3: seated, the pivot where both photographs have it)`]); }
   click('#speeds button[data-v="0"]');
   return out;}

@@ -42,6 +42,7 @@ TEMPLATE = {'_how': 'Fill in what you measure, leave null what you have not. Tor
   'depths_mm': {n: {'plate': None, 'bridge': None} for n in B['depths']['names']},
   'endshake_mm': {k: None for k in ('fusee', 'centre', 'third', 'fourth', 'escape', 'balance')},
   'balance': {'_': 'oscillations (each a there and back) counted over seconds, the spring pinned in, free in a vibrating tool or the cock', 'oscillations': None, 'seconds': None},
+  'rundown': {'_': 'the train held by its blocking screw, the balance let swing down freely: the seconds its swing takes to fall from 255 to 127.5 degrees', 'half_s': None},
   'detent': {'_': 'the pitch it rings at, its foot clamped, flicked at the blade\'s end (python benchcheck.py --ring FILE reads a recording)', 'ring_hz': None},
   'escapement': {'lock_deg': None, 'letoff_deg': None, 'overall_deg': None, 'drop_deg': None, 'horn_clearance_mm': None, 'roller_shake_mm': None},
   'swing_deg': {'fully_wound': None, 'run_down': None}}
@@ -54,15 +55,21 @@ def check(M):
     ms = M.get('mainspring') or {}
     if ms:
         mat = 'steel' if str(ms.get('material', '')).lower().startswith('steel') else 'nivaflex'; tb = B['mainspring']['thickness'][mat]
+        hs = (M.get('rundown') or {}).get('half_s'); tq = 1   # tq: the torque the made balance wants against the model's (the strip's cube)
+        if hs is not None:   # the made balance's own run-down: the strip goes as the drive's cube root (bench.js's table), the band with it
+            rows = B['rundown']['rows']; xs = [r[1] for r in rows]; ys = [r[2] for r in rows]
+            q = ys[0] if hs <= xs[0] else ys[-1] if hs >= xs[-1] else next(ys[i] + (ys[i + 1] - ys[i]) * (hs - xs[i]) / (xs[i + 1] - xs[i]) for i in range(len(xs) - 1) if xs[i] <= hs <= xs[i + 1])
+            tb = [tb[0] * q, tb[1] * q]; tq = q ** 3
+            res(xs[0] * 0.8 <= hs <= xs[-1] * 1.2 or 'warn', 'balance run-down', f'halves its swing in {hs:.0f} s (the model\'s {B["rundown"]["model"]:.0f}): the strip {q:.3f} times the drawn', 'outside the table: look for a pivot or the detent\'s springs dragging, or a balance far freer than the model\'s, before choosing the strip')
         t = ms.get('thickness_mm')
         if t is not None: res(tb[0] <= t <= tb[1], 'mainspring thickness', f'{t:.3f} mm, the band for {mat} {tb[0]:.3f}-{tb[1]:.3f}', 'a thinner strip pulls less as the cube of its thickness: another strip, or a set-up that brings the torque into its band (below)')
         up = [p for p in (ms.get('winding') or {}).get('up', []) if p and p[1] is not None]; dn = [p for p in (ms.get('winding') or {}).get('down', []) if p and p[1] is not None]
         if len(up) >= 2:
             n = len(up); sx = sum(p[0] for p in up); sy = sum(p[1] for p in up); sxx = sum(p[0] ** 2 for p in up); sxy = sum(p[0] * p[1] for p in up)
-            k = (n * sxy - sx * sy) / (n * sxx - sx * sx); full = max(p[1] for p in up); lo, hi = B['mainspring']['full']
-            res(abs(k / B['mainspring']['perTurn'] - 1) < 0.15, 'mainspring stiffness', f"{k * 1000:.0f} mN·m a turn against the model's {B['mainspring']['perTurn'] * 1000:.0f}", 'a strip of another thickness, width or length than drawn: the fusee is cut for the drawn spring\'s 1.96:1 over its 4.51 turns; measure the strip')
+            k = (n * sxy - sx * sy) / (n * sxx - sx * sx); full = max(p[1] for p in up); lo, hi = (x * tq for x in B['mainspring']['full'])
+            res(abs(k / (B['mainspring']['perTurn'] * tq) - 1) < 0.15, 'mainspring stiffness', f"{k * 1000:.0f} mN·m a turn against the model's {B['mainspring']['perTurn'] * tq * 1000:.0f}{' (for this balance)' if tq != 1 else ''}", 'a strip of another thickness, width or length than drawn: the fusee is cut for the drawn spring\'s 1.96:1 over its 4.51 turns; measure the strip')
             todo = f'set it up {(lo + 0.5 * (hi - lo) - full) / k:+.1f} turns at the slope measured ({k * 1000:.0f} mN·m a turn), then the fusee test' if k > 0 else ''
-            res(lo <= full <= hi, 'mainspring fully wound', f'{full:.3f} N·m, the band {lo:.2f}-{hi:.2f} (the model {B["mainspring"]["model"]:.2f})', todo)
+            res(lo <= full <= hi, 'mainspring fully wound', f'{full:.3f} N·m, the band {lo:.2f}-{hi:.2f} (the model {B["mainspring"]["model"] * tq:.2f}{" for this balance" if tq != 1 else ""})', todo)
             if dn:
                 fr = [(u[1] - d[1]) / (0.5 * (u[1] + d[1])) for u in up for d in dn if abs(u[0] - d[0]) < 1e-6]
                 if fr: f_ = sum(fr) / len(fr); fb=B['mainspring'].get('friction',{});res(f_ <= fb.get('measured',[0,0.222])[1] or 'warn', 'mainspring friction', f"up against down {f_ * 100:.0f} % (the coils' friction alone {fb.get('coils',[0,0])[0]*100:.0f}-{fb.get('coils',[0,0])[1]*100:.0f} % on the model's spring; mainsprings 11-22 %)", 'more than that: the coils dry or rough; clean and grease (Hamilton T-324), or the barrel\'s wall rubs')

@@ -1,5 +1,7 @@
 # What we'd ask a Model 21 owner or the NAWCC for
 
+**Since 14 October 2026 none of these holds up the design** (OPEN-QUESTIONS.md, "Closed by design"): each is settled by a design value the checks pass and a bench test that makes the made part right. The answers would make the model truer to the original Model 21, not make a chronometer built to it run better; item 3 (the free run-down) is now also a bench test any maker runs on their own balance.
+
 A post to send, for the readings no video, photograph or the 1948 manual settles (OPEN-QUESTIONS.md, `References/VIDEOS.md`). Each item says what to photograph or measure and why. A phone photograph is enough when it is square to the part and has a ruler, or a coin of known size, beside it.
 
 ---
