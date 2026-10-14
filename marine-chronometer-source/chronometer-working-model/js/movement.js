@@ -1608,9 +1608,13 @@ function makeFusee(M,c){
      groove and pushes it in, so the other end, the stop end, stands out past the rim into the winding stop's path (Sec. IV). 20:01.23 (the plate off, nearly overhead,
      rectified on the recess's arc, 13 points, and scaled on the top plate's two screw holes): 15.0 +-0.6 long (14.9, 15.1 along its edges), 1.8 (1.6-1.9) wide, its edges 2.9
      and 4.9 from the axis; both ends cut at a slant the same way, a parallelogram (18 and 23 deg from square, six points an end); side-on at 26:05-26:23 (the plate on, the
-     bar pushed in with tweezers): the stop end 0.7 +-0.15 thick, the chain end 1.1 +-0.2, a step between them about mid-length (20:04.27, on the mat: moderate), its travel
-     2.4 +-0.3 (the two fullest pushes agree), no hook or nose; the step on its underside 0.52 +-0.03 of the length from the chain end (20:04.29, upside down on the mat:
-     a line across the broad face, the side face's band 27 px on the chain end's part against 21; none on the top face in the slot: moderate); a round hole 0.5 +-0.1
+     bar pushed in with tweezers): its travel 2.4 +-0.3 (the two fullest pushes agree), no hook or nose; a small step on its underside, the stop end thinner, 0.52
+     +-0.03 of the length from the chain end (20:04.29, upside down on the mat: a line across the broad face, the bar's edges running on straight past it; none on the
+     top face in the slot: moderate), Fig. 28 drawing it as a plain bar: the stop end's thickness 0.8 of the chain end's, read as ratios in one frame, no camera needed
+     (20:04.27, the side face's band 21 px on the stop end's part against 27; 26:23.75, side-on, the two ends' side faces 39 and 46 px, the nearer end the larger;
+     26:05 has 36 against 52, the stop end standing only a little out of the slot, its lower part likely behind the slot's lip, left out); until 15 October 2026 the
+     absolute readings at 26:05-26:23, the stop end 0.7 +-0.15 and the chain end 1.1 +-0.2, were drawn as 0.7 against the chain end's 1.5 (below), a step of 0.8;
+     a round hole 0.5 +-0.1
      across in its inner side face (toward the arbor), centred on the chain half's height, 0.27 of the length from the chain end (0.26-0.28; 0.255 on 20:10.63), which
      the spring's end goes into sideways (25:14.47-25:17.47: the bar on edge beside the slot, the wire's bent tip into the hole, staying in as the bar goes down into the
      slot; sure), at least 0.5 deep (through or blind not seen: drawn 0.6, blind). Which end is which: at 25:40 the spring's end bears on the bar 0.27 of its length from the end whose inner corner stands out, and that
@@ -1621,7 +1625,7 @@ function makeFusee(M,c){
      furthest out, is at the chain's inner face, rN: the travel TR, 1.98 (on the wound fusee at 13:16.0 and 13:26.14, the stop end out past the plate, the chain pushes it
      1.9-2.5); pushed on, it meets a hard stop at TSTOP, 2.44 +-0.12 (26:15.57-26:20.25: six pushes with the tweezers within 0.04, too tight for a spring), which the
      chain never reaches; what the stop is isn't seen, so it isn't drawn (the slot's floor runs flat across, 25:04);
-     where that falls in the groove, mF, and the bar's turn, al, follow from the stop end meeting the winding stop at full wind (c.stopDir, c.stopR, c.stopRs: movement.js). The stop end, thinner, passes over the chain's top turn
+     where that falls in the groove, mF, and the bar's turn, al, follow from the stop end meeting the winding stop at full wind (c.stopDir, c.stopR, c.stopRs: movement.js). The stop end, thinner (TS, 0.8 of TC), passes over the chain's top turn
      unpushed (the step's use): the chain end, 0.14 turn into the top turn, its lower face level with the band's, 0.0-0.3 over the top of the links' upper plates
      (37:25.243, 37:26.578, the chain laid on by hand: drawn 0.07); the frames show it pushed in with the chain on the top turn, so the links' top edges catch its
      slanted end's lower corner (the chain's pull, which the hand-laid chain lacks, isn't seen). Drawn so, the chain end 1.1 thick and level with the band, it stood 0.22
@@ -1630,7 +1634,7 @@ function makeFusee(M,c){
      estimated: 0.2 past the reading's 1.3; the slot read 1.1-1.6 deep at 25:04 and the recess 1.2-2.0, both cut to it), its lower face 0.4 under the band's
      (BD, the measured 1.1 + 0.05): the incoming links reach 0.09 up its end as they first touch it and 0.18 once wound under it. Until 12 October 2026 it was a
      bar 14.6 x 1.0 x 0.45 on the arbor's other side, its ends square, an estimated nose hanging into the groove, its travel 1.82 ---- */
-  const SBZ=3.9,SBW=1.9,SBX=7.5,LN=Math.tan(20*D2R),TS=0.7,TC=1.5,BD=1.15,Z0=SBZ-SBW/2,Z1=SBZ+SBW/2,zLo=Z0-0.05,zHi=Z1+0.05,HUB=2.4,ex=(s,z)=>s*SBX+LN*(z-SBZ),XS=-SBX+0.52*2*SBX,XH=-SBX+0.27*2*SBX,HR=0.25,TSTOP=2.44;
+  const SBZ=3.9,SBW=1.9,SBX=7.5,LN=Math.tan(20*D2R),TS=1.2,TC=1.5,BD=1.15,Z0=SBZ-SBW/2,Z1=SBZ+SBW/2,zLo=Z0-0.05,zHi=Z1+0.05,HUB=2.4,ex=(s,z)=>s*SBX+LN*(z-SBZ),XS=-SBX+0.52*2*SBX,XH=-SBX+0.27*2*SBX,HR=0.25,TSTOP=2.44;
   /* Z0 the bar's inner edge, Z1 its outer; ex(s,z): an end's x at z (s +1 the stop end, -1 the chain end); xc0, the chain end's outer corner, which the chain reaches first; xf(r), where along the bar a circle r
      about the arbor meets that corner's line; XS, the step on its underside (the chain half thick to there); XH, the hole in its inner side face that
      the spring's end goes into, HR its radius; TSTOP, the travel to its hard stop */
@@ -1706,12 +1710,20 @@ function makeFusee(M,c){
      (20:20); r 0.326 of the plate's on 13:30, face-on. It rises 2.8 mm over the top layer (20:00, side-on, scaled by the groove's pitch, 38-41 px a turn there), so
      up to the barrel bridge, under whose bushing it is the arbor's shoulder: c.collarT, 0.05 under it (0.002 in, Ops. 15, 69). It stays inside the slot's inner edge (zLo) */
   const stopBar=hn(new THREE.Group(),'42024');stopBar.position.y=yT-0.475;sbR.add(stopBar);   /* in the slot, its top 0.025 under the plate */
-  { const B0=TC/2-0.3,B1=TC/2+0.3,N=[[XH-0.3,Z0],[XH-0.3,Z0+0.6],[XH+0.3,Z0+0.6],[XH+0.3,Z0]],whole=n=>[[ex(-1,Z0),Z0],...n,[ex(1,Z0),Z0],[ex(1,Z1),Z1],[ex(-1,Z1),Z1]],chain=n=>[[ex(-1,Z0),Z0],...n,[XS,Z0],[XS,Z1],[ex(-1,Z1),Z1]];
-    /* in bands down from its top, so its top face is whole and the step is on its underside: the whole bar to B0; the whole bar to TS round the hole's block; the chain
-       half to B1 round it, then on to TC; the block, B0 to B1, with the hole (tools/maintaining.py measures all the bar's children) */
-    mesh(stopBar,polyGeo(whole([]),B0),M.steel);mesh(stopBar,polyGeo(whole(N),TS-B0),M.steel,0,B0,0);mesh(stopBar,polyGeo(chain(N),B1-TS),M.steel,0,TS,0);mesh(stopBar,polyGeo(chain([]),TC-B1),M.steel,0,B1,0);
-    const s=new THREE.Shape();s.moveTo(XH-0.3,B0);s.lineTo(XH+0.3,B0);s.lineTo(XH+0.3,B1);s.lineTo(XH-0.3,B1);s.closePath();const h=new THREE.Path();h.absarc(XH,TC/2,HR,0,TAU,true);s.holes.push(h);
-    const g=extrude(s,{depth:0.6,bevelEnabled:false,curveSegments:24});g.translate(0,0,Z0);mesh(stopBar,g,M.steel); }   /* the block with the hole, 0.6 into the inner side face */
+  { /* one solid, as the steel bar is (until 15 October 2026 four bands and a block, seams between them): its side profile, x along the bar and y down from its
+       top, the step on its underside, carried across from its inner face Z0 to its outer Z1, each end's vertices moved along the bar by the slant (ex); the spring's
+       hole blind, 0.6 into the inner face, its floor flat (tools/maintaining.py measures all the bar's children) */
+    const P=[[-SBX,0],[SBX,0],[SBX,TS],[XS,TS],[XS,TC],[-SBX,TC]],NH=24,ZH=Z0+0.6,H=[...Array(NH)].map((_,i)=>[XH+HR*Math.cos(TAU*i/NH),TC/2+HR*Math.sin(TAU*i/NH)]),
+      at=(q,z)=>[Math.abs(Math.abs(q[0])-SBX)<1e-9?q[0]+LN*(z-SBZ):q[0],q[1],z],pos=[],uv=[],V2=q=>new THREE.Vector2(q[0],q[1]),
+      tri=(a,b,c,d)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+        for(const q of n[0]*d[0]+n[1]*d[1]+n[2]*d[2]<0?[a,c,b]:[a,b,c]){pos.push(...q);uv.push(q[0]/(2*SBX),q[1]+q[2]);}},
+      quad=(a,b,c,e,d)=>{tri(a,b,c,d);tri(a,c,e,d);};
+    let A2=0;for(let k=0;k<P.length;k++){const[a,b]=P[k],[c2,d2]=P[(k+1)%P.length];A2+=a*d2-c2*b;}
+    const F=[...P,...H];for(const t of THREE.ShapeUtils.triangulateShape(P.map(V2),[H.map(V2)]))tri(at(F[t[0]],Z0),at(F[t[1]],Z0),at(F[t[2]],Z0),[0,0,-1]);   /* the inner face, round the hole */
+    for(const t of THREE.ShapeUtils.triangulateShape(P.map(V2),[]))tri(at(P[t[0]],Z1),at(P[t[1]],Z1),at(P[t[2]],Z1),[0,0,1]);   /* the outer face */
+    for(let k=0;k<P.length;k++){const p0=P[k],p1=P[(k+1)%P.length],dx=p1[0]-p0[0],dy=p1[1]-p0[1],sg=A2>0?1:-1;quad(at(p0,Z0),at(p1,Z0),at(p1,Z1),at(p0,Z1),[sg*dy,-sg*dx,0]);}   /* top, ends, step, underside */
+    for(let k=0;k<NH;k++){const h0=H[k],h1=H[(k+1)%NH];quad([...h0,Z0],[...h1,Z0],[...h1,ZH],[...h0,ZH],[XH-(h0[0]+h1[0])/2,TC/2-(h0[1]+h1[1])/2,0]);tri([XH,TC/2,ZH],[...h0,ZH],[...h1,ZH],[0,0,-1]);}   /* the hole's wall and floor */
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.computeVertexNormals();mesh(stopBar,g,M.steel); }
   const bsp=hn(mesh(sbR,new THREE.BufferGeometry(),M.steel),'42025');let barX=null;
   mesh(sbR,discGeo(1.05+0.1*Math.floor((REC-1.05)/0.1+1e-9),0.6,[[0,0,1.2],...HL.map(([x,z])=>[x,z,0.4])]),M.gilt,0,yR,0);   /* the recess's floor, a plate over the turned body out to its last ring under the recess (its two tapped holes cut round) */
   /* the spring (42025): a round wire 0.30 +-0.05 across (20:01.23, the narrowest readings at half depth, 12-14 px at 40 px/mm) bent to an open C on the recess's floor
