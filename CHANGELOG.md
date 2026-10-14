@@ -4,6 +4,9 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.31.07 · 2026-10-15
+- The winding stop-bar on the fusee's top is now one piece of steel with only a small step on its underside, as on a real Model 21; the chain still pushes it out against the winding stop at full wind
+
 ## 2.31.06 · 2026-10-15
 - The mounting ring's three screws now pass through its flange, where a restored Model 21 shows their ends from the dial side, and the dial's fourth foot sits where that movement's fourth foot hole is
 
