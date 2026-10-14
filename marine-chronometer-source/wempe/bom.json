@@ -1,9 +1,11 @@
 {
- "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
+ "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
  "relations": {
   "in": "the part's axis inside the named part: tap (thread in a tapped hole), clear (through a clearance hole), run, free, press (as the Hamilton's bom.json)",
   "round": "the part's bore round the named part",
-  "on": "rests against the named part (surfaces within 0.02 mm)"
+  "on": "rests against the named part (surfaces within 0.02 mm)",
+  "mesh": "teeth engage: centre distance m(z1+z2)/2, the same module, the faces overlapping, turning in the tooth ratio (as the Hamilton's bom.json)",
+  "endshake": "axial play between the named bearings (bom.py's 0.025-0.076 mm, the Hamilton's; the Wempe's sheets give none: their arbors' and bushes' tolerances give 0.05-0.12)"
  },
  "lines": [
   {
@@ -570,6 +572,405 @@
     ]
    ],
    "figs": "05 08_10"
+  },
+  {
+   "id": "050503",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 03",
+   "name": "Minutenrad kompl. (centre wheel complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The centre arbor: its wheel riveted on its pinion and arbor (22.7.43).",
+   "rel": [],
+   "figs": "05 05_8"
+  },
+  {
+   "id": "050503-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 03-2",
+   "name": "Minutentrieb (centre pinion and arbor)",
+   "qty": 1,
+   "parent": "050503",
+   "kind": "part",
+   "part": "centreWheel",
+   "fn": "Driven by the fusee wheel; turns once an hour; runs in the top plate's bush WN-301 and, by its journal, in the pillar plate's WN-302, and carries the cannon tube (05 05 03-3) on its shank.",
+   "rel": [
+    [
+     "in",
+     "WN-301",
+     "run"
+    ],
+    [
+     "in",
+     "WN-302",
+     "run"
+    ],
+    [
+     "endshake",
+     "WN-301",
+     "WN-302"
+    ]
+   ],
+   "figs": "05 05_10, 05 05_8"
+  },
+  {
+   "id": "050503-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 03-1",
+   "name": "Minutenrad (centre wheel)",
+   "qty": 1,
+   "parent": "050503",
+   "kind": "part",
+   "part": "centreWheel",
+   "fn": "Riveted on the pinion's seat; drives the intermediate pinion.",
+   "rel": [
+    [
+     "round",
+     "050503-2",
+     "press"
+    ],
+    [
+     "mesh",
+     "050502-2"
+    ]
+   ],
+   "figs": "05 05_9"
+  },
+  {
+   "id": "050502",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 02",
+   "name": "Zwischenrad kompl. (intermediate wheel complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The intermediate (third) arbor: its wheel riveted on its pinion and arbor (27.7.40).",
+   "rel": [],
+   "figs": "05 05_5"
+  },
+  {
+   "id": "050502-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 02-2",
+   "name": "Zwischentrieb (intermediate pinion and arbor)",
+   "qty": 1,
+   "parent": "050502",
+   "kind": "part",
+   "part": "intermediateWheel",
+   "fn": "Driven by the centre wheel; runs in the top plate's bush WN-300 and the intermediate bridge's.",
+   "rel": [
+    [
+     "in",
+     "WN-300.t38",
+     "run"
+    ],
+    [
+     "in",
+     "WN-300.zb",
+     "run"
+    ],
+    [
+     "endshake",
+     "WN-300.t38",
+     "WN-300.zb"
+    ]
+   ],
+   "figs": "05 05_7, 05 05_5"
+  },
+  {
+   "id": "050502-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 02-1",
+   "name": "Zwischenrad (intermediate wheel)",
+   "qty": 1,
+   "parent": "050502",
+   "kind": "part",
+   "part": "intermediateWheel",
+   "fn": "Riveted on the pinion's seat; drives the seconds pinion.",
+   "rel": [
+    [
+     "round",
+     "050502-2",
+     "press"
+    ],
+    [
+     "mesh",
+     "050501-2"
+    ]
+   ],
+   "figs": "05 05_6"
+  },
+  {
+   "id": "050501",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 01",
+   "name": "Sekundenrad kompl. (seconds wheel complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The seconds (fourth) arbor: its wheel riveted on its pinion and arbor (27.7.40).",
+   "rel": [],
+   "figs": "05 05_2"
+  },
+  {
+   "id": "050501-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 01-2",
+   "name": "Sekundentrieb (seconds pinion and arbor)",
+   "qty": 1,
+   "parent": "050501",
+   "kind": "part",
+   "part": "secondsWheel",
+   "fn": "Driven by the intermediate wheel; turns once a minute; runs in the top plate's bush WN-300 and the jewel 05 05 04-1 in the intermediate bridge; its lower pivot goes on as the seconds hand's post.",
+   "rel": [
+    [
+     "in",
+     "WN-300.t35",
+     "run"
+    ],
+    [
+     "in",
+     "050504-1",
+     "run"
+    ],
+    [
+     "endshake",
+     "WN-300.t35",
+     "050504-1"
+    ]
+   ],
+   "figs": "05 05_4, 05 05_2"
+  },
+  {
+   "id": "050501-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 01-1",
+   "name": "Sekundenrad (seconds wheel)",
+   "qty": 1,
+   "parent": "050501",
+   "kind": "part",
+   "part": "secondsWheel",
+   "fn": "Riveted on the pinion's seat; drives the escape pinion (05 04 05-2).",
+   "rel": [
+    [
+     "round",
+     "050501-2",
+     "press"
+    ]
+   ],
+   "figs": "05 05_3"
+  },
+  {
+   "id": "WN-301",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Messinglager WN-301 (brass bush, centre arbor's upper pivot)",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "The centre arbor's upper bearing, pressed into the top plate's hole 1.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "05 08_2"
+  },
+  {
+   "id": "WN-300.t38",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Messinglager WN-300 (brass bush, intermediate arbor's upper pivot)",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "The intermediate arbor's upper bearing, pressed into the top plate's hole 38.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "05 08_2"
+  },
+  {
+   "id": "WN-300.t35",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Messinglager WN-300 (brass bush, seconds arbor's upper pivot)",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "The seconds arbor's upper bearing, pressed into the top plate's hole 35.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "05 08_2"
+  },
+  {
+   "id": "WN-302",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Messinglager WN-302 (brass bush, centre arbor's journal)",
+   "qty": 1,
+   "parent": "050802-1",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The centre arbor's lower bearing, pressed into the pillar plate's hole 1, 0.1 under its inner face.",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "press"
+    ]
+   ],
+   "figs": "05 08_32.2"
+  },
+  {
+   "id": "WN-300.zb",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Messinglager WN-300 (brass bush, intermediate arbor's lower pivot)",
+   "qty": 1,
+   "parent": "050804-1",
+   "kind": "part",
+   "part": "intermediateBridge",
+   "fn": "The intermediate arbor's lower bearing, pressed into the intermediate bridge, 0.7 in from its plate side.",
+   "rel": [
+    [
+     "in",
+     "050804-1",
+     "press"
+    ]
+   ],
+   "figs": "05 08_10"
+  },
+  {
+   "id": "050504-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 04-2",
+   "name": "Fassung (the seconds jewel's setting)",
+   "qty": 1,
+   "parent": "050804-1",
+   "kind": "part",
+   "part": "intermediateBridge",
+   "fn": "Holds the seconds arbor's lower jewel in the intermediate bridge (its sheet isn't in the set; the coloured section names it).",
+   "rel": [
+    [
+     "in",
+     "050804-1",
+     "press"
+    ]
+   ],
+   "figs": "05 08_10"
+  },
+  {
+   "id": "050504-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 04-1",
+   "name": "Lagerstein f. Sek. (the seconds arbor's lower jewel)",
+   "qty": 1,
+   "parent": "050504-2",
+   "kind": "jewel",
+   "part": "intermediateBridge",
+   "fn": "The seconds arbor's lower pivot runs in it; its face takes the arbor's endshake (its sheet isn't in the set; the coloured section names it).",
+   "rel": [],
+   "figs": "05 08_10",
+   "jewel": {
+    "type": "hole",
+    "arbor": "050501-2",
+    "end": "lower"
+   }
+  },
+  {
+   "id": "050802-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 02-2",
+   "name": "Futter (stud bush)",
+   "qty": 2,
+   "parent": "050802-1",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "Pressed into the pillar plate from its inner face at holes 2 and 19, holding the motion work's studs (the one at 19 drawn dashed on 05 08 02: estimated).",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "press"
+    ]
+   ],
+   "figs": "05 08_32.2"
+  },
+  {
+   "id": "050200-6",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 00-6",
+   "name": "Anrichtstift lg (long stud)",
+   "qty": 1,
+   "parent": "050802-2",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The up-and-down wheel's stud, at hole 2, 12.3 long from the plate's inner face.",
+   "rel": [
+    [
+     "in",
+     "050802-2",
+     "press"
+    ]
+   ],
+   "figs": "05 08_32.2"
+  },
+  {
+   "id": "050200-7",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 00-7",
+   "name": "Anrichtstift kurz (short stud)",
+   "qty": 1,
+   "parent": "050802-2",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The motion work's change wheel's stud, at hole 19, 6.8 out of the plate's dial face.",
+   "rel": [
+    [
+     "in",
+     "050802-2",
+     "press"
+    ]
+   ],
+   "figs": "05 08_32.2"
   }
  ]
 }

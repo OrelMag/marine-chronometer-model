@@ -213,10 +213,11 @@ const WFRAME=(()=>{
     for(const k of[22,37])tag(cylBetween(lc,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');
 
     /* ================= the intermediate bridge (Zwischenbrücke kompl., 05 08 04) ================= */
-    /* On the pillar plate's dial face, across the opening 38: the intermediate wheel's jewel pressed in at 38 (its face 0.7 +0.02 in from the plate side) and the seconds wheel's
-       setting (WN-300) at 35 (1.7 in), steady pins (WN-203) 1.3 proud, a screw at each end from the dial side, sunk. Holes 43, 38, 35, 28 and the pins 44, 29 all lie on one line
+    /* On the pillar plate's dial face, across the opening 38: the intermediate wheel's brass bush (WN-300: 05 08 04's leader goes to it) pressed in at 38 (its face 0.7 +0.02
+       in from the plate side) and the seconds wheel's jewel in its setting (05 05 04-1, -2 in the coloured section) at 35 (1.7 in) (both built with the train, train.js),
+       steady pins (WN-203) 1.3 proud, a screw at each end from the dial side, sunk. Holes 43, 38, 35, 28 and the pins 44, 29 all lie on one line
        (the tables' coordinates, to 0.001: sure), 34.13 between the screws, 41.13 between the pins. Its outline (05 08 04-1, not in the set) scaled on 05 08 04 at 2:1 against
-       those spacings (7.03 px/mm): 45.5 × 10.0 with round ends, 3.8 thick; the screws' sinks Ø 4.4 × 2.0; the jewel's hole Ø 4.3 sunk Ø 6.2 × 0.7, the setting's Ø 5.2 sunk Ø 6.2 × 1.7:
+       those spacings (7.03 px/mm): 45.5 × 10.0 with round ends, 3.8 thick; the screws' sinks Ø 4.4 × 2.0; the bush's hole Ø 4.3 sunk Ø 6.2 × 0.7, the setting's Ø 5.2 sunk Ø 6.2 × 1.7:
        estimated. Drawn gilt (Wempe 3955's, 3_Wempe_3955_uZ.jpg) */
     const zb=part('intermediateBridge',18);
     {const d=unit(sub(H[28],H[43])),m=[(H[28][0]+H[43][0])/2,(H[28][1]+H[43][1])/2],y0=PPT,y1=PPT+3.8;
