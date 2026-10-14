@@ -1677,6 +1677,19 @@ Contents:
   91.5°, 214°, 336.5° and 2.6°, 132.9°, 226.0°, 318.9°. Keep: the band's tabs
   follow `S.ring` (`RA` is read from it), and any place read on the top-view
   photograph goes through `PT`. `ea4fb43`
+- **Ring screws ending under the flange, 1.4 mm too far in; a dial foot where
+  the video has none.** The three ring screws stood at r 40.6 and ended in the
+  band, so the flange had no holes over them, where the video shows their ends
+  in threaded holes through its dial face; read camera-free (radial strips:
+  each hole's place between the bore and the flange's rim) they stand at
+  41.8-42.2. The dial's fourth foot had been put at 2.6° for a plain hole of the
+  feet's size there, which the strips put inside the feet's circle, among the
+  ring screws. Now the screws at r 42.0, tapped through the band and the flange,
+  their ends 2.0 below its face (the band's tabs, which held them at 40.6,
+  gone); the fourth foot at 178.7°, a filled hole of the feet's size; the 2.3°
+  hole drawn plain. Keep: a hole's radius read on a face as a fraction of the
+  way between two of its edges, not through a camera scaled by an uncertain
+  bore. `2394368`
 
 ## Setup, case and gimbals
 

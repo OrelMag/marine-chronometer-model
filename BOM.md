@@ -216,7 +216,7 @@ Columns: the manual's index and Hamilton number, its units per chronometer, the 
 | 110-39 | 42164 | Bushing - Barrel lower | 1 | 1 | pillar | Bearing for the barrel arbor's lower end. | in 42060 (press): 3.863 mm, least gap 0.0026 | ✓ |
 | 110-39 | 42164 | Bushing - Fusee lower | 1 | 1 | pillar | Bearing for the fusee arbor's lower end. | in 42060 (press): 3.863 mm, least gap 0.0019 | ✓ |
 | 110-40 | 42057 | Ring - Mounting | 1 | 1 | pillar | Under the plate's dial side: carries the dial, and holds the movement in the case, its alignment pin in the case's slot (Sec. III). | on 42060: 0.01 mm<br>on 42101: 0 mm | ✓ |
-| 110-20 | 42055 | Screw - Mounting ring | 3 | 3 | pillar | Hold the pillar plate to the mounting ring, from the train side (reassembly Op. 1; Fig. 29). | in 42060 (clear): 3.861 mm, least gap 0.1815<br>in 42057 (tap): 1.782 mm, least gap 0.0364 | ✓ |
+| 110-20 | 42055 | Screw - Mounting ring | 3 | 3 | pillar | Hold the pillar plate to the mounting ring, from the train side (reassembly Op. 1; Fig. 29). | in 42060 (clear): 3.882 mm, least gap 0.1815<br>in 42057 (tap): 4.529 mm, least gap 0.0265 | ✓ |
 
 ## The fourteen jewels (Sec. II, Jeweling)
 
