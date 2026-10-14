@@ -1,7 +1,7 @@
 // @ts-check
 /* movement.js: the Wempe Einheits-Chronometer's movement, built from the works drawings' numbers (dims.js, WD) by its groups' builders, each in its own file: the frame
-   (js/frame.js, WFRAME, P1a, 14 October 2026), the going train (js/train.js, WTRAIN, P1b), the balance and escapement (js/escapement.js, WESC, P1d); the fusee and barrel, motion work come in later phases,
-   each a file of its own.
+   (js/frame.js, WFRAME, P1a, 14 October 2026), the going train (js/train.js, WTRAIN, P1b), the fusee, maintaining work, barrel, mainspring and chain or band (js/fusee.js,
+   WFUSEE, P1c), the balance and escapement (js/escapement.js, WESC, P1d); the motion work comes in a later phase, a file of its own.
    Part of the Wempe model (three.js r128). Units mm; the movement frame as the Hamilton's: dial side +y, 12 o'clock -z, 3 o'clock +x (dims.js: x = the sheets' W, z = their S).
    The pillar plate's inner face at y 0, its dial face at +PP_T; the top plate's inner face at -INNER, its outer face (the train side) at -INNER-TOP_T.
    Everything is built inside buildWempe, so none of its names reach the page's globals: core.js reads the Hamilton's (L, DIAL_R, SEC_L, UDA, UD_SWEEP, MSHAPE) lazily.
@@ -18,11 +18,13 @@ function buildWempe(M){
   /* the seconds wheel drives the escape pinion (train.js's meshes, phased under load by gearLash as the train's own: -1, the seconds arbor clockwise from the dial); the
      escape wheel's own teeth keep their phase to the locking stone, the pinion's leaves turned on its arbor */
   {const sw=TR.sw.userData.wheel,[a,b]=gearLash(sw,WD.H[35],EB.R.pinion,WD.H[26],-1);sw.rotation.y=a;EB.R.pinion.rotation.y=b;}
+  const FU=WFUSEE.build(mv,M,K,FR,TR);   /* the fusee and its wheel, the maintaining work and detent, the stop work, the barrel, its arbor and set-up ratchet, the mainspring, the chain and the band */
   K.done();
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
-     centre arbor's, which the motion work and the fusee follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's angle (rad),
-     lift the detent's turn and psDef the gold spring's (rad, escapement.js) */
-  mv.userData.update=(/** @type {any} */s)=>{const ang=TR.update(s);mv.userData.ang=ang;EB.update(s);};
-  mv.userData.R={fr:FR,tr:TR,esc:EB.R};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton; R.tr the train's arbors (their wheel and pinion meshes, for the other groups' tooth phasing) */
+     centre arbor's, which the motion work and the fusee wheel follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's
+     angle (rad), lift the detent's turn and psDef the gold spring's (rad, escapement.js); n, the fusee's turns from full wind, and winding set the fusee, the chain or band,
+     the barrel and the mainspring (WFUSEE) */
+  mv.userData.update=(/** @type {any} */s)=>{const ang=TR.update(s);ang.f=FU.update(s,ang.c);mv.userData.ang=ang;EB.update(s);};   /* ang.f: the fusee arbor's rotation.y, for the up-and-down work (P1e) */
+  mv.userData.R={fr:FR,tr:TR,esc:EB.R,fu:FU};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton; R.tr the train's arbors (their wheel and pinion meshes, for the other groups' tooth phasing) */
   return mv;
 }

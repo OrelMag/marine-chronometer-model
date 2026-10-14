@@ -1,12 +1,13 @@
 /* app.js: the Wempe Einheits-Chronometer's page: its parts' cards, views, sections, labels and link state, given to the shared viewer (../shared/viewer.js, VIEWER).
-   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js); P1d: the balance and escapement (js/escapement.js). */
+   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js); P1b: the going train (js/train.js); P1d: the balance and escapement (js/escapement.js); P1c: the fusee,
+   maintaining work, barrel, mainspring, chain and band (js/fusee.js), with the Winding and Variants controls. */
 
 /* ================= parts registry ================= */
 /* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
-const PG=['Frame','Going train','Balance','Escapement'];
+const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel'];
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
@@ -86,10 +87,79 @@ const PARTS={
     sp:'Setting 05 04 06-2, jewel 05 04 06-1 · hole Ø 2.50'},
   escEndstoneLow:{t:'Escape wheel endstone, lower',g:2,src:'est',sn:'Its screw holes from the pillar plate’s table; the cap’s outline estimated',figs:'05 08_3b',c:'#c8163c',pri:1,
     d:'The endstone under the escape wheel arbor’s lower pivot, in a cap screwed to the pillar plate’s dial side.',
-    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · two M1.2, 3.5 either side of the arbor'}};
+    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · two M1.2, 3.5 either side of the arbor'},
+  fusee:{t:'Fusee (Schnecke)',g:2,src:'drawing',sn:'Every size from its sheets as last revised (the body 27.2.48, the click wheel 6.8.47); the groove’s pitch from 05 06_2.1’s pencilled 1.15, its radii from the body’s sheet and 05 06_20’s curve',figs:'05 06_1, 05 06_2.2, 05 06_3.2, 05 06_15, 05 06_16, 05 06_20',c:'#e8b04c',pri:3,
+    d:'The cone that evens out the mainspring’s pull: the chain (or band) is wound onto its groove from the large end, so fully wound the spring, strongest, pulls at its smallest radius, and run down, weakest, at its largest. Nine turns of a square-cut groove, its floor from r 14.75 at the first turn to 9.30 at the ninth (r 17.25 where the chain’s end is pinned in the flange), give the 56 hours of a wind in 8¾ turns. The body is pressed on its arbor; on its large end the click wheel, which drives the maintaining work’s clicks; on its small end the stop bar under the cover plate; the arbor’s winding square comes out through the top plate’s bush to the case’s winding hole.',
+    sp:'Drawings 05 06 04 (body 05 06 04-2, arbor 05 06 04-1, click wheel 05 06 04-3) · body Ms 58, Ø 35.6 × 12.6 · groove radii 14.75 to 9.30 · arbor Präz. Rundstahl, 60.6 overall, square 3.17 · click wheel 35 teeth, Ø 16'},
+  coverPlate:{t:'Cover plate (Deckplatte)',g:2,src:'drawing',sn:'Every size from its sheet; its screw from the coloured section',figs:'05 06_8, 05 06_4',c:'#c8ccd2',pri:1,
+    d:'A steel disc on the fusee’s small end, screwed to it, over the stop bar’s slot: it keeps the bar in. Wempe 3955’s fusee shows it bright, the bar’s end standing out from under it.',
+    sp:'Drawing 05 06 00-4 · Bandstahl · Ø 21.1 × 0.8 · hole 6.1 H8 · screw hole sunk 90° to Ø 3.1 at r 6'},
+  vorreiber:{t:'Vorreiber',g:2,src:'drawing',sn:'Every size from its sheet; its face a re-turned at assembly as the sheet says, to fit the stack',figs:'05 06_6, 05 06_1',c:'#9aa3ad',pri:1,
+    d:'A steel collar pinned to the fusee arbor under the fusee wheel, its flange in the wheel’s underside recess: it keeps the wheel and the maintaining work on the arbor. Its face under the wheel is re-turned at the fusee’s assembly (“bei Schneckenmontage … Fläche a nachdrehen”), which sets the endshake of the stack.',
+    sp:'Drawing 05 06 00-2 · Präz. Rundstahl · flange Ø 14 d11, hub Ø 7.6, 3.1 −0.2 · bore 4.4 H7 tapered 1:70 · pin hole Ø 0.8'},
+  dustPlate:{t:'Dust plate (Staubplatte)',g:2,src:'drawing',sn:'Every size from its sheet; which face its recess is on, estimated',figs:'05 06_5',c:'#d1a85a',pri:1,
+    d:'A brass disc on the winding square, turning with it inside the dust bush, which keeps dust from the winding hole out of the fusee bush.',
+    sp:'Drawing 05 06 00-1 · Rundmessing 8 · Ø 7.6 × 3.1 · square hole 3.1 H7, tapering 1:100'},
+  fuseeWheel:{t:'Fusee wheel (Schneckenrad)',g:2,src:'drawing',sn:'Every size from its sheet and table; its bore and tube from the 1941 assembly’s fits, where its own figures are overwritten',figs:'05 06_7, 05 06_1',c:'#e3b75a',pri:2,
+    d:'The great wheel: it drives the centre pinion, so the whole train. It turns loose on the fusee arbor, driven by the maintaining spring, which lies in the recess in its face; the maintaining ratchet turns on the tube on its hub.',
+    sp:'Drawing 05 06 00-3 · Ms 58 sheet 5.5, spring-hard · z 90, m 0.4356, tip Ø 40.57 (hobbed), root Ø 37.84 · rim 2.62, web 1.22'},
+  maintaining:{t:'Maintaining work (Gegensperrrad, Gegenfeder)',g:2,src:'drawing',sn:'Every size from the sheets; the clicks traced on their sheet; the click springs laid as the assembly draws them',figs:'05 06_9, 05 06_10, 05 06_11, 05 06_12, 05 06_13, 05 06_14, 05 06_4',c:'#c9a046',pri:2,
+    d:'Harrison’s maintaining work, which keeps the train going while the chronometer is wound. Running, the fusee drives the ratchet through the click wheel and two clicks, the ratchet the maintaining spring, an open steel ring, and the spring the fusee wheel. Winding, the key turns the fusee back: the clicks ride over the click wheel, the maintaining detent holds the ratchet, and the spring, still loaded, drives the wheel on. The two clicks are half a tooth apart on the 35-tooth click wheel, so one of them always bears.',
+    sp:'Drawings 05 06 02 (ratchet 05 06 02-1: 120 teeth, Ø 37.25, a cup Ø 26.1 for the clicks; clicks 05 06 02-3; click springs 05 06 02-2) and 05 06 01-1 (maintaining spring: Ø 32.3 × 2 × 1.35, blued)'},
+  maintDetent:{t:'Maintaining detent (Gegensperrkegel)',g:2,src:'drawing',sn:'The click from its sheet; its arbor and pivots scaled on the assembly; its wire spring not drawn (no sheet, no hole in the tables)',figs:'05 05_11, 05 05_12, 05 06_4',c:'#5a74b5',pri:1,
+    d:'A blued steel click staked on its own arbor between the plates, at hole 4, riding on the maintaining ratchet’s teeth: it stops the ratchet turning back while the chronometer is wound, so the maintaining spring drives the train. A straight wire spring presses it in (the coloured section’s Feder 05 05 06-1, not drawn).',
+    sp:'Drawing 05 05 05 (click 05 05 05-1) · Bandstahl 2.25, hardened, light blue · 14.2 long, 2 thick, its tip 1 · 6.3 from its arbor’s lower shoulder'},
+  stopWork:{t:'Stop work (Stellungssteg)',g:2,src:'scaled',sn:'Its length, width and positions scaled on 05 06_4’s Schnitt C-D; its slot from the body’s sheet; the stop pin estimated',figs:'05 06_4, 05 06_2.2',c:'#b7bec7',pri:1,
+    d:'A steel bar sliding in a slot across the fusee’s small end, under the cover plate. When the chain winds onto the top turn it presses the bar’s lower end in; its upper end then stands out past the fusee and meets the stop pin in the top plate at full wind, so the key can turn no further.',
+    sp:'Coloured section’s 05 06 03-1 (no sheet in the set) · 22.5 × 2 · travel 3.6 · the stop pin 05 08 01-5, Ø 1.6, in the top plate’s hole 7'},
+  barrel:{t:'Barrel (Federhaus)',g:2,src:'drawing',sn:'Every size from its sheets as revised 20.4.48; the lid on the bridge’s side from 05 07 01 and the coloured section',figs:'05 07_4, 05 07_6, 05 07_7',c:'#d9a94c',pri:2,
+    d:'The drum the mainspring is coiled in: its outer end is hooked to the drum’s wall, its inner end to the arbor, which the set-up ratchet holds. Running, the spring turns the drum, which winds the chain onto itself off the fusee, about five turns over a wind. Its lid, sprung in, is on the barrel bridge’s side.',
+    sp:'Drawing 05 07 01 (drum 05 07 01-1, lid 05 07 01-2, hook block 05 07 01-3) · Ms · Ø 41.6 × 18.1, inside Ø 38.5'},
+  barrelArbor:{t:'Barrel arbor (Federkern)',g:2,src:'drawing',sn:'From its 1941 sheet, its pivots and journals drawn to the later plates and drum, its core to the drum’s bosses',figs:'05 07_8, 05 07_9',c:'#aeb5bd',pri:1,
+    d:'The arbor the mainspring’s inner end is hooked to; it doesn’t turn in use: the set-up ratchet on its square, held by the barrel bridge’s click, keeps the spring set up. The drum turns on its two journals.',
+    sp:'Drawing 05 07 02 (arbor 05 07 02-1, hook 05 07 02-2) · Präz. Rundstahl 14, hardened · core Ø 13.3 · square 2.7'},
+  setupRatchet:{t:'Set-up ratchet (Sperrad)',g:2,src:'drawing',sn:'From its sheet; turned to the frame’s click, its teeth facing the way that click (traced on Wempe 3955) takes them',figs:'05 07_3',c:'#d6b25e',pri:1,
+    d:'The ratchet on the barrel arbor’s square above the barrel bridge: the bridge’s click holds it, which keeps the mainspring set up ¾ turn at run down.',
+    sp:'Drawing 05 07 00-3 (revised 24.11.47) · Ms 58, 3 · 16 teeth, Ø 14.1 × 2.65 · square hole 2.7 H7'},
+  mainspring:{t:'Mainspring (Zugfeder)',g:2,src:'est',sn:'Its section from 05 06_20 (15 × 0.37); its length, not drawn anywhere, estimated by the usual rule; its shape drawn as two packs',figs:'05 06_20, 05 07_1',c:'#3c4a70',pri:1,
+    d:'The steel spring that drives the chronometer, 15 mm high and 0.37 thick, coiled in the barrel: wound, its coils draw in round the arbor; run down, they lie out against the wall. Its length isn’t on any sheet: 1.39 m, half the room in the barrel, lets it work the barrel’s five turns with the ¾ turn of set-up and room to spare.',
+    sp:'05 06_20: “Zugfeder 15 × 0,37” · about 1.39 m long (estimated) · 14.3 turns run down, 19.4 fully wound'},
+  chain:{t:'Fusee chain (Kette)',g:2,src:'drawing',sn:'Its pitch, plates, thickness, length and hooks from its sheet; the plates’ waist and the hooks’ outlines approximated on their figures',figs:'05 07_14',c:'#8c9199',pri:2,
+    d:'The steel chain between the barrel and the fusee: 374 links of figure-of-eight plates three deep, riveted to move. Its top hook takes the pin in the fusee’s flange, its bottom hook a slot in the barrel’s wall. Fully wound it lies in the fusee’s groove up to the top turn, with a quarter turn left on the barrel; run down it is all on the barrel. Wempe 3955 and Lange 5177 run with a chain.',
+    sp:'Drawing 05 07 04 · Bandstahl 5 × 0.3, hardened and tempered (to blue, 310 °C) · pitch 2.05, plates 4.05 × 2, 0.82 thick · 780 +3 long over its hooks'},
+  band:{t:'Fusee band (Schneckenband)',g:2,src:'scaled',sn:'Its thickness and length from its sheet, its hooks from theirs; its width, not given, taken as its hooks’ 0.8 (estimated)',figs:'05 07_11, 05 07_12, 05 07_13',c:'#cfd4da',pri:2,
+    d:'The steel band drawn in 1943 in place of the chain: a strip 0.22 thick with a round hook brazed to one end, for the fusee’s pin, and a barbed hook to the other, for the barrel. Greenwich’s wartime Wempe has one; Wempe 3955 came with both. Chosen under Variants.',
+    sp:'Drawing 05 07 03 (band 05 07 03-1, hooks 05 07 03-2, -3) · 0.22 thick, about 0.8 wide · 730 ±3 between its hooks'},};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
 const PIECES={
+  fusee:[{k:'body',t:'Fusee body (Schneckenkörper)',h:'050604-2',d:'The brass cone with its nine-turn groove, square-cut: each turn a flat land with a rib 0.33 thick on its small-end side, 0.6 high. The chain’s end is pinned in the slot between the flange’s two ribs and leaves it over a flat milled across the flange. A recess in its large end holds the click wheel and the maintaining ratchet’s cup.',sp:'Drawing 05 06 04-2 (revised 27.2.48) · Rundmessing 36, Ms 58 · Ø 35.6, 12.6 long · groove radii 14.75 … 9.30, flange 17.25 · bore 7 H7'},
+    {k:'arbor',t:'Fusee arbor (Schneckenwelle)',h:'050604-1',d:'The steel arbor: the dial-side pivot in the pillar plate, the Vorreiber’s seat, the collar the body is pressed on, the step for the cover plate, the journal in the fusee bush and the winding square. Its stub on the dial side carries the up-and-down pinion (the motion work’s).',sp:'Drawing 05 06 04-1 · Präz. Rundstahl 7.5 · 60.6 overall · 19.7 +0.05 between shoulders · square 3.17 → 2.92 (tapering 1:100)'},
+    {k:'clickWheel',t:'Click wheel (Schneckensperrrad)',h:'050604-3',d:'A 35-tooth brass ratchet screwed to the body’s large end: running, its undercut faces push the maintaining clicks forward; winding, they ride over its backs.',sp:'Drawing 05 06 04-3 (6.8.47) · Ms 58, 2 thick · Ø 16.0, roots Ø 14.5 · faces undercut 8°'},
+    {k:'screws',t:'Click wheel screws (WN-19)',h:'WN-19',d:'Three screws holding the click wheel to the body, their heads sunk flush in its 1:8 holes.',sp:'WN-19 · M2',src:'est',sn:'Their places from the sheets; heads and lengths estimated (the WN sheets aren’t in the set)',figs:'05 06_3.2, 05 06_16'},
+    {k:'pin',t:'Chain pin (Kettenstift)',h:'050600-6',d:'The pin across the flange’s slot that the chain’s (or band’s) top hook takes.',sp:'05 06 00-6 (coloured section) · Ø 0.55 in the ribs’ 0.55 +0.01',src:'drawing',sn:'Its hole from the body’s sheet; its place near the ribs’ tops estimated',figs:'05 06_2.2'}],
+  coverPlate:[{k:'plate',t:'Cover plate',h:'050600-4',d:PARTS.coverPlate.d,sp:PARTS.coverPlate.sp},
+    {k:'screw',t:'Cover plate screw (WN-20)',h:'WN-20',d:'The countersunk screw holding the cover plate to the fusee’s small end.',sp:'WN-20 · M1.7, head Ø 3.1',src:'est',sn:'Its head from the plate’s countersink; its length estimated',figs:'05 06_8'}],
+  vorreiber:[{k:'collar',t:'Vorreiber',h:'050600-2',d:PARTS.vorreiber.d,sp:PARTS.vorreiber.sp},
+    {k:'pin',t:'Vorreiber pin (Vorreiberstift)',h:'050600-5',d:'The taper pin through the Vorreiber’s hub and the arbor’s cross hole.',sp:'05 06 00-5 (coloured section) · Ø 0.8',src:'est',sn:'Its place from the arbor’s and the Vorreiber’s sheets; its sheet not in the set',figs:'05 06_6, 05 06_15'}],
+  maintaining:[{k:'ratchet',t:'Maintaining ratchet (Gegensperrrad)',h:'050602-1',d:'A brass ratchet of 120 teeth turning on the fusee wheel’s tube, its cup holding the two clicks; the maintaining detent rides on its teeth.',sp:'Drawing 05 06 02-1 (revised 11.3.48) · Ms 58, 3.5 · Ø 37.25, teeth 0.7 deep · cup Ø 26.1 / 24.45 · bore 6.5 H7'},
+    {k:'clicks',t:'Clicks (Sperrkegel)',h:'050602-3',d:'Two blued steel clicks on screws in the ratchet’s cup, pressed onto the click wheel by their springs.',sp:'Drawing 05 06 02-3 · Bandstahl, hardened, blued (at 295 °C) · 10.05 × 1.82'},
+    {k:'clickScrews',t:'Click screws (WN-21)',h:'WN-21',d:'The shouldered screws the clicks turn on, put in from under the ratchet.',sp:'WN-21 · M1.7',src:'est',sn:'From the coloured section; sizes estimated',figs:'05 06_11'},
+    {k:'springs',t:'Click springs (Sperrfeder)',h:'050602-2',d:'Two bronze strips pinned inside the cup’s wall, each pressing a click onto the click wheel.',sp:'Drawing 05 06 02-2 · Bronzeband 1.5 × 0.4, spring-hard · 27 stretched'},
+    {k:'springPins',t:'Click spring pins',h:'050602-4',d:'The pins through the cup’s wall that hold the click springs.',sp:'05 06 02-4 · Ø 0.6',src:'drawing',sn:'Their holes from the ratchet’s sheet',figs:'05 06_12'},
+    {k:'spring',t:'Maintaining spring (Gegenfeder)',h:'050601-1',d:'An open steel ring, its eye pinned to the fusee wheel and its other end to the ratchet: it carries the whole drive, and drives the train alone while the key turns.',sp:'Drawing 05 06 01-1 · Bandstahl, hardened in oil, blued (at 310 °C) · Ø 32.3 × 2 × 1.35'},
+    {k:'springPinsG',t:'Maintaining spring’s pins (Stellstifte)',h:'050600-8',d:'The two pins in the maintaining spring’s holes, one into the fusee wheel, one into the ratchet.',sp:'05 06 00-8 · Ø 1.25 (drawn 1.2), 1.2 out',src:'drawing',sn:'From the spring’s assembly sheet',figs:'05 06_9'}],
+  maintDetent:[{k:'click',t:'Detent click',h:'050505-1',d:PARTS.maintDetent.d,sp:PARTS.maintDetent.sp},
+    {k:'arbor',t:'Detent arbor',h:'050505-2',d:'The detent’s arbor, its pivots in the two plates’ holes 4.',sp:'05 05 05-2 (no sheet) · Ø 2.25 · pivots Ø 0.88',src:'est',sn:'Scaled on the assembly sheet; fitted to the plates',figs:'05 05_11'}],
+  barrel:[{k:'drum',t:'Barrel drum (Federhaustrommel)',h:'050701-1',d:PARTS.barrel.d,sp:'Drawing 05 07 01-1 · Ms · Ø 41.6 × 18.1 · bottom 1.25 with its boss · lid seat Ø 39.2 s6'},
+    {k:'lid',t:'Barrel lid (Federhausdeckel)',h:'050701-2',d:'The lid, sprung into the drum’s seat on the barrel bridge’s side, its boss bearing on the arbor.',sp:'Drawing 05 07 01-2 (20.4.48) · Ms 58 · 1.3 thick · Ø 39.2 r6'},
+    {k:'hook',t:'Spring hook block (Federhaushaken)',h:'050701-3',d:'The block riveted inside the drum’s wall that takes the mainspring’s outer end.',sp:'Drawing 05 07 01-3 · 3 wide, 3.05 high',src:'scaled',sn:'Its place and size from 05 07 01; its depth estimated',figs:'05 07_4'}],
+  barrelArbor:[{k:'arbor',t:'Barrel arbor (Federkern)',h:'050702-1',d:PARTS.barrelArbor.d,sp:'Drawing 05 07 02-1 (020704-1, the first sheet) · Präz. Rundstahl 14, hardened · core Ø 13.3 · square 2.7'},
+    {k:'hook',t:'Arbor hook (Federhaken)',h:'050702-2',d:'The pin in the arbor’s core that takes the mainspring’s inner end.',sp:'05 07 02-2 · Ø 2, 0.5 proud'}],
+  chain:[{k:'links',t:'Chain links',h:'050704',d:PARTS.chain.d,sp:PARTS.chain.sp}],
+  band:[{k:'band',t:'Band (Schneckenband)',h:'050703-1',d:PARTS.band.d,sp:PARTS.band.sp},
+    {k:'hookF',t:'Band’s round hook (Bandhaken rund)',h:'050703-2',d:'Brazed to the band’s fusee end; it takes the fusee’s pin.',sp:'Drawing 05 07 03-2 · Bandstahl 10 × 0.8'},
+    {k:'hookB',t:'Band’s drum hook (Bandhaken f. Trommel)',h:'050703-3',d:'Brazed to the band’s barrel end; its barb takes the slot in the drum.',sp:'Drawing 05 07 03-3 · Bandstahl 10 × 0.8'}],
   pillarPlate:[{k:'plate',t:'Pillar plate',h:'050802-1',d:PARTS.pillarPlate.d,sp:PARTS.pillarPlate.sp},
     {k:'screws',t:'Pillar screws, dial side',h:'WN-56',d:'Three pillar screws (WN-56) from the dial side into the pillars’ tapped ends, brass as Wempe 3955’s.',sp:'M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'The thread from the pillar’s sheet; the heads from the coloured section and Wempe 3955’s photograph',figs:'001'},
     {k:'bush',t:'Centre arbor’s bush (Messinglager WN-302)',h:'WN-302',d:'A brass bush pressed into the pillar plate, in which the centre arbor’s long journal turns; its inner face is set 0.1 under the plate’s, and the collar at the end of the centre wheel’s seat bears on it.',sp:'In the plate’s hole Ø 4.59 · bore Ø 2.2 · set 0.1 under the inner face',src:'est',sn:'Its place and set-down from the plate’s assembly sheet; its bore and sink estimated (the standard part’s sheet isn’t in the set)',figs:'05 08_32.2'},
@@ -97,6 +167,7 @@ const PIECES={
     {k:'studs',t:'Studs (Anrichtstifte)',h:'050200-6 050200-7',d:'Two steel studs pressed into the bushes: the long one, at 12 o’clock, carries the up-and-down wheel; the short one the change wheel of the motion work.',sp:'Drawings 05 02 00-6, -7 · Ø 1.3 · the long 12.3 from the plate’s inner face, the short 6.8 out of its dial face',src:'est',sn:'Their lengths from the plate’s assembly sheet; their diameter scaled on it',figs:'05 08_32.2'}],
   topPlate:[{k:'plate',t:'Top plate',h:'050901',d:PARTS.topPlate.d,sp:PARTS.topPlate.sp},
     {k:'screws',t:'Pillar screws, train side',h:'WN-57',d:'Three pillar screws (WN-57) from the top plate’s outer face into the pillars’ tapped ends, brass as Wempe 3955’s.',sp:'M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'The thread from the pillar’s sheet; the heads from the coloured section and Wempe 3955’s photograph',figs:'001'},
+    {k:'stopPin',t:'Stop pin (Anschlagstift)',h:'050801-5',d:'A steel pin in the top plate’s hole 7, standing out under the plate (“unten vorstehend”): the fusee’s stop bar meets it at full wind.',sp:'05 08 01-5 (no sheet in the set) · Ø 1.6 in 1.6 +0.009 · 1.5 under the plate',src:'est',sn:'Its hole from the plate’s table; its length to the stop bar’s height, estimated',figs:'05 08_2, 05 06_4'},
     {k:'bushes',t:'Train bushes (Messinglager WN-300, WN-301)',h:'WN-301 WN-300.t38 WN-300.t35',d:'Three brass bushes pressed into the top plate, flush with both faces, in which the centre, intermediate and seconds arbors’ upper pivots run, each with an oil sink in its outer face (the 6MX ran the seconds and intermediate wheels in jewels in chatons instead).',sp:'In the plate’s holes Ø 4.59 · bores Ø 1.21 (centre) and 0.86',src:'est',sn:'Their places from the plate’s assembly sheet and the coloured section; their sinks from Wempe 3955’s plate; their bores estimated (the standard parts’ sheets aren’t in the set)',figs:'05 08_2'}],
   ring:[{k:'ring',t:'Movement ring',h:'050800-3',d:PARTS.ring.d,sp:PARTS.ring.sp},
     {k:'screws',t:'Movement ring screws',h:'WN-rs',d:'Three screws in the ring whose heads bear on the pillar plate’s rim, holding it in its seat (their WN number not read).',sp:'M2.6 on Ø 89 · heads Ø 6.2 × 2.25',src:'est',sn:'The thread and places from the ring’s sheet and Wempe 3955; the heads and length from the coloured section',figs:'05 08_7'},
@@ -165,8 +236,11 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
 
 /* ================= the page ================= */
 (function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
+  /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
+     speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
+  let hrs=20,winding=false,conn='chain',HPT=90/14,HRUN=56.4;
   const V=VIEWER.start({name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
-    build:M=>{const root=new THREE.Group();mv=buildWempe(M);mv.rotation.x=Math.PI;root.add(mv);return{root,mv};},   /* the movement train side up */
+    build:M=>{const root=new THREE.Group();mv=buildWempe(M);mv.rotation.x=Math.PI;root.add(mv);const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);return{root,mv};},   /* the movement train side up */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
@@ -181,13 +255,30 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Intermediate bridge','Zwischenbrücke, 05 08 04','intermediateBridge',pw(P.intermediateBridge,H[38][0],WD.PP_T+3.8,H[38][1]));
       add('Centre wheel','Minutenrad, 05 05 03','centreWheel',pw(P.centreWheel,H[1][0]+15,-1.1,H[1][1]-6));
       add('Intermediate wheel','Zwischenrad, 05 05 02','intermediateWheel',pw(P.intermediateWheel,H[38][0]+8,0.7,H[38][1]+7));
-      add('Seconds wheel','Sekundenrad, 05 05 01','secondsWheel',pw(P.secondsWheel,H[35][0]-8,-4.8,H[35][1]+6));},
-    /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js): the balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period: E as the Hamilton's,
-       a beat behind until the tooth escapes); fast, the balance is drawn at rest and the wheel turns on smoothly */
-    tick:(dt,now,st)=>{if(!mv)return[];tSim+=dt*st.speed;const y=tSim/0.5,k=Math.floor(y),p=y-k;let s;
-      if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};mv.userData.update({E:y,th:0,lift:0,psDef:0});}
-      else{s=ESC.state(p);mv.userData.update({E:k-1+(p>0?s.prog:0),th:s.th,lift:s.lift,psDef:s.psDef});}
-      return[+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5)];},
-    hud:st=>`The frame, going train and escapement, from their drawings${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
-  if(V&&/[?&]qa\b/.test(location.search))window.__V=V;   /* the viewer's state, for the tools */
+      add('Seconds wheel','Sekundenrad, 05 05 01','secondsWheel',pw(P.secondsWheel,H[35][0]-8,-4.8,H[35][1]+6));
+      add('Fusee','Schnecke, 05 06 04','fusee',pw(P.fusee,H[10][0]-12,-12,H[10][1]+4));
+      add('Fusee wheel','Schneckenrad, 05 06 00-3','fuseeWheel',pw(P.fuseeWheel,H[10][0]-19,-3.8,H[10][1]+5));
+      add('Barrel','Federhaus, 05 07 01','barrel',pw(P.barrel,H[45][0]+20.8,-6,H[45][1]));
+      add('Chain','Kette, 05 07 04','chain',pw(P.chain,H[45][0]+17,-12,H[45][1]+13));},
+    /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js): the
+       balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period, a beat behind until the tooth escapes); fast, the balance is drawn at
+       rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
+       spring keeping the train going (js/fusee.js) */
+    tick:(dt,now,st)=>{if(!mv)return[];
+      if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
+      const down=hrs>=HRUN-1e-6;if(!down||winding){tSim+=dt*st.speed;if(!winding)hrs=Math.min(HRUN,hrs+dt*st.speed/3600);}   /* run down, the train stands */
+      const y=tSim/0.5,k=Math.floor(y),p=y-k,n=hrs/HPT;let s;
+      if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};mv.userData.update({E:y,th:0,lift:0,psDef:0,n,winding});}
+      else{s=ESC.state(p);mv.userData.update({E:k-1+(p>0?s.prog:0),th:s.th,lift:s.lift,psDef:s.psDef,n,winding});}
+      showH();return[+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4)];},
+    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);},
+      read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');}},
+    hud:st=>`The frame, going train, escapement, fusee and barrel, from their drawings&ensp;${winding?'<b>winding</b>':hrs>=HRUN-1e-6?'<b>run down</b>':`${hrs.toFixed(1)} h since winding`}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
+  /* the Winding controls and the Variants' chain or band */
+  const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
+  function showH(){if(!hIn)return;const v=Math.round(hrs*10)/10;if(v===hShown)return;hShown=v;hOut.textContent=v.toFixed(1)+' h';hIn.max=String(HRUN);hIn.value=String(v);}
+  if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0)winding=true;});}
+  function setConn(v){conn=v;if(mv)mv.userData.R.fu.setConn(v);document.querySelectorAll('#conn button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
+  document.querySelectorAll('#conn button').forEach(b=>b.addEventListener('click',()=>setConn(b.dataset.v)));
+  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,HRUN,n:hrs/HPT});}   /* the viewer's state and the wind, for the tools */
 })();

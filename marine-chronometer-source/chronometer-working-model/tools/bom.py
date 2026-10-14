@@ -38,6 +38,7 @@ def qty_ok(q,n):
     if isinstance(q,list):return q[0]<=n<=q[1]
     if isinstance(q,int):return n==q
     return n==0
+REGISTRY=model.cfg('REGISTRY',True)   # the registry: the Hamilton's catalogue numbers on its cards (below); off for a model whose lines are drawing numbers
 ARM=model.cfg('ARM',"document.querySelector('#stopV button[data-v=\"arm\"]').click()")   # the parts list's balance stop, the locking arm (Fig. 9): the page fits the Navy's Y-arm by default, which the manual doesn't list (its button, so the part's card and numbers are the arm's too)
 async def run(evl):
     async with async_playwright() as p:
@@ -100,14 +101,14 @@ def judge(res,sp):
             n=c.split(':',1)[1].strip()
             if not any(f[0]==n for f in res['fn']):D.append(f"{l['id']}: function check '{n}' not written yet")
     for n,good,msg in res.get('fn',[]):ok(good,f"fn {n}: {msg}")
-    # registry
+    # registry (the Hamilton's catalogue numbers on its cards; another model's checks.py turns it off where its lines carry no such numbers: REGISTRY=False)
     nos={l['no'] for l in BOM['lines'] if l.get('no')}
     num=re.compile(r'(?<![\d.])(\d{3,5}A?)(?![\d.])')
     def nums(s):   # the numbers on a card, a range such as 42032-42035 taken whole
         out=num.findall(s)
         for a,b in re.findall(r'(\d{5})\s*[–-]\s*(\d{5})',s):out+=[str(n) for n in range(int(a),int(b)+1)]
         return out
-    for k,s in sp.items():
+    for k,s in (sp.items() if REGISTRY else ()):
         for m in num.findall(s):ok(m in nos,f"card {k}: {m} is not in the parts list")
         held={l['no'] for l in BOM['lines'] if l.get('part')==k and l['kind'] in('part','jewel') and l.get('no')}
         miss=sorted(h for h in held if h not in nums(s))
@@ -116,7 +117,7 @@ def judge(res,sp):
     for k,(s,h) in res.get('pcs',{}).items():
         for i in h.split():ok(i in L,f"piece {k}: {i} is not a line of the parts list")
         own={L[i]['no'] for i in h.split() if i in L}
-        for m in nums(s):ok(m in own,f"piece {k}: {m} on its card is none of its lines")
+        for m in (nums(s) if REGISTRY else ()):ok(m in own,f"piece {k}: {m} on its card is none of its lines")
     return F
 def main():
     evl=None
