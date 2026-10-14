@@ -24,9 +24,13 @@ const D=Math.PI/180,TAU=2*Math.PI,G0=9.80665,ES=ESC.ES/1000,day=x=>86400*x;   /*
 const I=num(/const I=([\d.e-]+),k=/,phys,'the balance (physics.js)'),T0=ESC.T,W0=TAU/T0,K=I*W0*W0;   /* Table II's balance; the hairspring's stiffness for 0.5 s */
 const TF=ESC.settings.TF,C=2*I/TF;   /* the balance's damping, viscous, from the free run-down TF (physics.js: inside what the parts give and the budget needs) */
 const JE=num(/const J=([\d.e-]+);/,phys,'the escape wheel\'s inertia (physics.js)');
-/* the fourth wheel turns with the escape wheel through its pinion (the drive keeps the mesh closed), so its inertia counts, reflected by (10/75)²: a brass
-   disc of the drawn module, teeth and thickness, 0.7 of it left by the spokes (estimated); the third wheel, reflected again by (10/80)², is negligible */
-const TR=Function('return '+/TRAIN=(\{[^}]*\})/.exec(mv)[1])(),M4=0.2457,r4=M4*TR.fw/2/1000,J4=0.7*0.5*8500*Math.PI*r4**4*0.9e-3,JT=JE+J4*(TR.ep/TR.fw)**2;
+/* the train behind the escape wheel turns with it through the pinions (the drive keeps the meshes closed), so its inertia counts, each arbor's reflected by its
+   ratio squared: since 14 October 2026 every arbor weighed on its drawn solids at their densities (mechanisms.json, as traindyn.js sums it: the escape wheel with
+   its pinion and arbor, the fourth with the seconds hand, the third, the centre with the motion work and hands, the fusee wheel with half the sustaining spring),
+   6.05 g·mm² where the wheel's 4.80 and the fourth's estimate (a brass disc 0.7 left by the spokes) gave 5.88 */
+const TR=Function('return '+/TRAIN=(\{[^}]*\})/.exec(mv)[1])(),MA=require('./mechanisms.json').arbors,ra=[TR.fw/TR.ep,TR.fw/TR.ep*TR.tw/TR.fp,TR.fw/TR.ep*TR.tw/TR.fp*TR.cw/TR.tp,TR.fw/TR.ep*TR.tw/TR.fp*TR.cw/TR.tp*TR.fu/TR.cp],
+  JcM=MA.centre.I+MA.cannon.I+MA.minuteHand.I+MA.minuteWheel.I*(14/56)**2+MA.hourWheel.I*(14/56*18/54)**2+MA.hourHand.I*(1/12)**2,
+  J4=(MA.fourth.I+MA.secondsHand.I)*1e-9,JT=(MA.escape.I+(MA.fourth.I+MA.secondsHand.I)/ra[0]**2+MA.third.I/ra[1]**2+JcM/ra[2]**2+(MA.fuseeWheel.I+MA.sspring.I/2)/ra[3]**2)*1e-9;
 const TAUE=ESC.run.cl.w*K;   /* the escape wheel's torque the model is calibrated at (255°): physics.js's budget checks the train gives it */
 /* the detent: its pieces as movement.js draws them (poly(R.det, piece, bottom, top, material)), their plan ESC.pieces about the point of flexure Ft;
    beryllium copper (C17200, 8.25 g/cm³), the locking stone ruby (3.98), the trip spring Elinvar-type (8.15) 7.9 mm long, tsT thick and 0.3 deep (movement.js) */
@@ -191,7 +195,7 @@ const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok 
 const f=(x,n=2)=>(+x).toFixed(n),sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),t0=Date.now(),flush=()=>{console.log(rows.splice(0).join('\n'));console.log(`  (${f((Date.now()-t0)/1000,0)} s)`);};
 say('The bodies');
 say(`the balance ${I*1e9} g·mm² on k ${f(K*1e6,1)} µN·m a radian, damped as its free run-down TF ${TF} s (Q ${f(Math.PI*TF/T0,0)})`);
-say(`the escape wheel ${f(JE*1e9,2)} g·mm² (physics.js) and the fourth wheel's reflected ${f(J4*(TR.ep/TR.fw)**2*1e9,2)} (estimated): ${f(JT*1e9,2)}; driven at ${f(TAUE*1e6,1)} µN·m, the torque the model is calibrated at`);
+say(`the train at the escape wheel ${f(JT*1e9,2)} g·mm² (its arbors' solids, mechanisms.json: the fourth wheel's reflected ${f(J4*(TR.ep/TR.fw)**2*1e9,2)}); driven at ${f(TAUE*1e6,1)} µN·m, the torque the model is calibrated at`);
 chk(Math.abs(JT*1e9-S.JW)<0.1&&Math.abs(ID*1e9-S.ID)<0.01&&Math.abs(KD/(ESC.KD*ESC.kB)-1)<0.01&&Math.abs(MPRE/(ESC.MP*ESC.kB)-1)<0.01&&Math.abs(KTIP*ES*ES/(ESC.KP*ESC.kB)-1)<0.01,`the model's bodies and springs (JW ${S.JW}, the detent's inertia ID ${S.ID}, its spring's ${f(ESC.KD*ESC.kB*1e3,3)} mN·m a radian and ${f(ESC.MP*ESC.kB*1e6,1)} µN·m, the trip spring's) are these, from the drawn parts`);
 say(`the detent: ${f(DM.m*1e6,1)} mg, ${f(ID*1e9,3)} g·mm² about its flexure, its centre of mass ${f(rCM*1000,2)} mm from it (the drawn pieces, the trip spring with it)`);
 say(`its spring: two strips ${H.spring.map(([h])=>f(h*1000,2)).join(' + ')} mm tall, ${f(tD*1000,3)} thick, ${f(lD*1000,2)} long: ${f(KD*1e3,3)} mN·m a radian (beryllium copper, 128 GPa), preloaded ${f(MPRE*1e6,1)} µN·m by Op. 78 (as if bent ${f(MPRE/KD/D,2)}° past its stop)`);

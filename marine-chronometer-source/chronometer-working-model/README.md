@@ -278,6 +278,12 @@ The mainspring's shape in its barrel is the strip's equilibrium, not a drawing (
   the inside radius, coarser than every source (1/41.0-1/43.7), and was set up 1.01 turns, fully wound at 18.87, 0.33 turn short of coil-bound (19.20). The parts list's strip on the r 1.8 core, until 12 October 2026, 1.26; 0.99 on the groove's floor's
   0.473 until 11 October 2026, 0.47 in the r 17.6 barrel before 5 October, 1.62 in the thin-walled one, and 0.37 estimated before that). **The drive is
   taken from it** too ("How the timing works", the drive): until 11 October 2026 the timing had an illustrative pull of its own.
+  **The arbor against the strip** (14 October 2026): the core is 9.8 mm across, 24.9 times the strip, where Daniels (*Watchmaking*, 1981, p. 254) wants 28 or
+  more for a carbon-steel spring's life. No carbon-steel strip at 28:1 gives the fusee's turns in the measured barrel at this torque: kept as stiff, 0.36 × 812 mm
+  on r 5.04 has 3.4 turns from slack to coil-bound where the set-up and the fusee want about 5.9; 0.385 × 1,064 mm and 14.3 wide (the barrel's 14.5 inside) on
+  r 5.39 (`mainspring.py`'s variant `d28w`) leaves 0.10 turn past full wind, its coils' friction 8 % and the fusee's pull uneven past the bench's band. So the
+  arbor stays the videos' and the build's spring is Nivaflex (`deviations.js`), which doesn't take a set; a carbon-steel spring is tested again after a month
+  (the bench's mainspring test).
 
 ## What the model gives a maker
 
@@ -704,11 +710,13 @@ the rate from its own geometry, so the Adjuster's bench changes both (`ESC.A`,
 
 - **Amplitude, from the work done each oscillation.** Work is counted in units
   of the hairspring's stiffness k. Released from rest, the escape wheel and the
-  train behind it (`JW`, 5.9 g·mm²: the escape wheel's 4.80 measured on its
-  solid, the fourth wheel's reflected through its pinion, estimated) gather
-  speed under the torque w k and chase the impulse jewel, already running away
-  from them: at the model's settings the tooth lands on it at −5.0°, 16.3° of
-  the balance after the release, running at 2.7 times the jewel's speed. The
+  train behind it (`JW`, 6.05 g·mm²: every arbor weighed on its drawn solids,
+  mechanisms.json, the escape wheel with its pinion and arbor 5.22 and the
+  fourth wheel's 0.81 reflected through its pinion; 5.9 until 14 October 2026,
+  the fourth wheel estimated) gather speed under the torque w k and chase the
+  impulse jewel, already running away from them: at the model's settings the
+  tooth lands on it at −2.1°, 19.2° of the balance after the release, running
+  at 2.6 times the jewel's speed. The
   strike gives the balance J v_j (v_w − v_j) (29 % of the impulse); then the
   tooth drives the jewel through 12.1° of the wheel, w times that turn less what
   speeding the wheel up with the jewel takes (lost when the next tooth locks).
@@ -1083,8 +1091,9 @@ on what would stop the chronometer.
   oiled every contact keeps its tolerance 26 years and more; the balance
   staff's pivot ends and the escape arbor's pivots go first, a few years poorly
   oiled, so the oil's life sets the overhaul. `traindyn.js`: the train's inertia
-  at the escape wheel from the solids is 6.05 g·mm² (dynamics.js's 5.88, the
-  fourth wheel estimated; not adopted, it moves the rate 0.08 s a day), its
+  at the escape wheel from the solids is 6.05 g·mm², which dynamics.js and
+  makeEsc take since 14 October 2026 (5.88 before, the fourth wheel estimated;
+  the escape wheel's calibrated torque 62.4 → 62.8 µN·m), its
   modes lie in the kilohertz, and the strike on the jewel rebounds the escape
   mesh inside its backlash. `montecarlo.js`: made to a maker's tolerances, all
   at once, 98.7 % work as made (1.2 % swing out of the band, 0.1 % have a
