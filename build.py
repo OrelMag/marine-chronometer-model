@@ -30,6 +30,7 @@ import changelog
 MODEL=ROOT/'marine-chronometer-source/chronometer-working-model'
 WEMPE=ROOT/'marine-chronometer-source/wempe'   # the second model (its own build.py writes its dist/)
 WE_HAM='href="../../chronometer-working-model/dist/chronometer-working-model.html"'   # the Wempe's built page's link to the Hamilton (its build.py), pointed at the site's home page in site/wempe/
+HAM_WE='href="../../wempe/dist/wempe-einheitschronometer.html"'   # the Hamilton's built page's link to the Wempe (its build.py): from the root copy to the Wempe's built page, on the site to /wempe/
 SITE=ROOT/'site'
 MANUAL='navships-250-624-1948.pdf'   # the page links to it by this name, beside itself
 REPORTS=['build-verification','real-chronometers']   # the checks' reports (the model's verification/, each built by its own build_report.py), served at the same paths beside the page
@@ -89,7 +90,8 @@ def main():
     # the working model, with the essay in its Essay tab: its own build script writes dist/
     subprocess.run([sys.executable,str(MODEL/'build.py')],check=True)
     model=(MODEL/'dist/chronometer-working-model.html').read_text(encoding='utf-8');check('working model',model);budget('working model',model)
-    write(ROOT/'chronometer-working-model.html',model)
+    if HAM_WE not in model:sys.exit(f'the working model has no {HAM_WE}: its link to the Wempe (its build.py), which the root copy and the site point at their own places')
+    write(ROOT/'chronometer-working-model.html',model.replace(HAM_WE,'href="marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html"'))
     # the Wempe: its own build script writes its dist/ (no root copy)
     subprocess.run([sys.executable,str(WEMPE/'build.py')],check=True)
     wempe=(WEMPE/'dist/wempe-einheitschronometer.html').read_text(encoding='utf-8');check('wempe',wempe);budget('wempe',wempe)
@@ -97,7 +99,7 @@ def main():
     # site/: what a web host serves
     if SITE.exists():shutil.rmtree(SITE)
     SITE.mkdir()
-    write(SITE/'index.html',meta(model,a.site_url,'index.html',keep=a.keep_html))
+    write(SITE/'index.html',meta(model.replace(HAM_WE,'href="wempe/"'),a.site_url,'index.html',keep=a.keep_html))
     (SITE/'wempe').mkdir();write(SITE/'wempe/index.html',meta(wempe.replace(WE_HAM,'href="../"'),a.site_url,'wempe/index.html',keep=a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers

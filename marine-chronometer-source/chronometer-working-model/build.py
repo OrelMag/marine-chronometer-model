@@ -8,6 +8,7 @@ sys.path.insert(0,str(root.parents[1]))
 from inline import inline,remote_refs
 from changelog import stamp
 html,ver=stamp(inline((root/'index.html').read_text(encoding='utf-8'),root))
+html=html.replace('href="../wempe/index.html"','href="../../wempe/dist/wempe-einheitschronometer.html"')   # the link to the Wempe, from dist/ to its built page (the root build points it at the root copy's place and at /wempe/ on the site)
 (root/'dist').mkdir(exist_ok=True)
 (root/'dist/chronometer-working-model.html').write_text(html,encoding='utf-8',newline='\n')
 print('wrote dist/chronometer-working-model.html',len(html.encode()),'bytes, version',ver)
