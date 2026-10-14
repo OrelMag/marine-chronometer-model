@@ -173,6 +173,75 @@ const KIT=(()=>{
     const rdp=(Q,t)=>{if(Q.length<3)return Q;const[A,B]=[Q[0],Q[Q.length-1]],dx=B[0]-A[0],dz=B[1]-A[1],l=Math.hypot(dx,dz)||1e-9;let m=0,k=0;
       for(let i=1;i<Q.length-1;i++){const e=Math.abs((Q[i][0]-A[0])*dz-(Q[i][1]-A[1])*dx)/l;if(e>m){m=e;k=i;}}return m>t?[...rdp(Q.slice(0,k+1),t).slice(0,-1),...rdp(Q.slice(k),t)]:[A,B];};
     const h2=best.length>>1;return[...rdp(best.slice(0,h2+1),0.004).slice(0,-1),...rdp([...best.slice(h2),best[0]],0.004).slice(0,-1)];}
+  /* ---------- solids in depth bands (added 14 October 2026 for the Wempe's frame; the Hamilton doesn't use them) ----------
+     Plan outlines are [x, z] point lists (either winding). ring(x, z, r, n, ph): a circle's points, about 0.1 mm apart (n of them if given, turned ph of a step); area: the signed area (+ counterclockwise in x, z);
+     cen: the centroid; pip: point in polygon. bool(A, B): two simple polygons in general position, their crossings put into both (the same point objects, so outlines built
+     from the results share their vertices exactly): {A2, B2, uni (A and B joined), dAB (A less B), dBA (B less A)}, each a list of loops */
+  const area=P=>{let a=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];a+=p[0]*q[1]-q[0]*p[1];}return a/2;};
+  const cen=P=>{let a=0,x=0,z=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length],c=p[0]*q[1]-q[0]*p[1];a+=c;x+=(p[0]+q[0])*c;z+=(p[1]+q[1])*c;}return[x/(3*a),z/(3*a)];};
+  const pip=(p,P)=>{let w=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,zi]=P[i],[xj,zj]=P[j];if((zi>p[1])!==(zj>p[1])&&p[0]<(xj-xi)*(p[1]-zi)/(zj-zi)+xi)w=!w;}return w;};
+  const ring=(x,z,r,n=0,ph=0)=>{n=n||Math.max(24,Math.ceil(TAU*r/0.1));const o=[];for(let i=0;i<n;i++){const t=(i+ph)/n*TAU;o.push([x+r*Math.cos(t),z+r*Math.sin(t)]);}return o;};
+  function bool(A,B){const ccw=P=>area(P)>0?P.slice():P.slice().reverse();A=ccw(A);B=ccw(B);const cr=(u,v)=>u[0]*v[1]-u[1]*v[0],XA=A.map(()=>[]),XB=B.map(()=>[]);
+    for(let i=0;i<A.length;i++){const a0=A[i],a1=A[(i+1)%A.length],da=[a1[0]-a0[0],a1[1]-a0[1]];
+      for(let j=0;j<B.length;j++){const b0=B[j],b1=B[(j+1)%B.length],db=[b1[0]-b0[0],b1[1]-b0[1]],d=cr(da,db);if(Math.abs(d)<1e-14)continue;const w=[b0[0]-a0[0],b0[1]-a0[1]],t=cr(w,db)/d,s=cr(w,da)/d;
+        if(t>0&&t<1&&s>0&&s<1){const X=[a0[0]+da[0]*t,a0[1]+da[1]*t];XA[i].push([t,X]);XB[j].push([s,X]);}}}
+    const ins=(P,X)=>{const o=[];P.forEach((p,i)=>{o.push(p);X[i].sort((a,b)=>a[0]-b[0]).forEach(q=>o.push(q[1]));});return o;},A2=ins(A,XA),B2=ins(B,XB);
+    const segs=(P,Q,inside,rev)=>{const o=[];for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];if(pip([(p[0]+q[0])/2,(p[1]+q[1])/2],Q)===inside)o.push(rev?[q,p]:[p,q]);}return o;};
+    const chain=S=>{const K=p=>Math.round(p[0]*1e6)+','+Math.round(p[1]*1e6),m=new Map();for(const s of S){const k=K(s[0]);if(!m.has(k))m.set(k,[]);m.get(k).push(s);}const used=new Set(),L=[];
+      for(const s0 of S){if(used.has(s0))continue;const l=[];let s=s0;while(s&&!used.has(s)){used.add(s);l.push(s[0]);s=(m.get(K(s[1]))||[]).find(t=>!used.has(t));}if(l.length>2)L.push(l);}return L;};
+    return{A2,B2,uni:chain([...segs(A2,B,false),...segs(B2,A,false)]),dAB:chain([...segs(A2,B,false),...segs(B2,A,true,true)]),dBA:chain([...segs(B2,A,false),...segs(A2,B,true,true)])};}
+  /* solidGeo(cells): one closed solid, facing out, from plan cells, each {loop, y0, y1, F}: the cell's outline (cells that touch share their points along the boundary,
+     each listing it the other way round), the depths it fills (y0 < y1; either may be a function of the plan point, for a sloped face) and its features F, which take metal
+     away inside it: {p, a, b, q?, floorOut?, anchor?}: the plan outline p cut from depth a to b (one end on the cell's face y0 or y1, or both: a hole through); q an outline of as
+     many points as p where the cut's wall ends (a cone: p where it starts, q where it ends); floorOut the outline of its floor where p shares part of its edge with a feature
+     inside it (the floor is p less the features under it otherwise). Features are nested or apart, never crossing (cross them first with bool, and give the floor). A feature's wall
+     runs from the floor of the feature it's in (or the face) to its own floor; cells with features have flat faces. Where two cells touch, the one that reaches further gets the wall
+     between their depths. Walls are split where another wall at the same corner ends, so no edge has a vertex in its middle. UVs in plan, as cbGeo */
+  function solidGeo(cells){
+    const P=[],U=[],N=[],e=1e-6,K=p=>Math.round(p[0]*1e5)+','+Math.round(p[1]*1e5),yv=(y,p)=>typeof y==='function'?y(p):y;
+    /* each triangle wound to face n, its normal worked in double precision (a flat face's exactly n: float32 normals of long thin triangles show in the Edges drawing) */
+    const tri=(a,b,c,n)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(x[0],x[1],x[2]);
+      if(l*l<1e-20)return;const s=x[0]*n[0]+x[1]*n[1]+x[2]*n[2]<0?-1:1;if(s<0){const t=b;b=c;c=t;}const f=!n[0]&&!n[2]&&a[1]===b[1]&&b[1]===c[1]?n:x.map(q=>q*s/l);
+      for(const q of[a,b,c]){P.push(q[0],q[1],q[2]);U.push(q[0],-q[2]);N.push(f[0],f[1],f[2]);}};
+    /* a face: earcut leaves out a boundary point that lies on the line between its neighbours (a crossing put into a straight edge), which the walls keep: each run of them
+       left out goes back in, as a fan in the triangle on the edge that skipped them */
+    const face=(out,holes,y,ny)=>{const V=v=>new THREE.Vector2(v[0],v[1]);let T=THREE.ShapeUtils.triangulateShape(out.map(V),holes.map(h=>h.map(V))),all=[...out,...holes.flat()],ar=t=>{const[a,b,c]=t.map(i=>all[i]);return Math.abs((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]));};T=T.filter(t=>ar(t)>1e-9);const used=new Set(T.flat());   /* a sliver on three points in a line goes too: its middle point is put back as the rest are */
+      if(used.size<all.length){const E=new Map(),ek=(i,j)=>i<j?i+'_'+j:j+'_'+i;T.forEach((t,ti)=>{for(let k=0;k<3;k++)E.set(ek(t[k],t[(k+1)%3]),ti);});let o=0;
+        for(const L of[out,...holes]){const n=L.length,ix=i=>o+((i%n)+n)%n,s=[...Array(n).keys()].find(i=>used.has(ix(i)));
+          if(s!=null)for(let k=0;k<n;){const a=ix(s+k);let m=k+1;const run=[];while(m<=n&&!used.has(ix(s+m))){run.push(ix(s+m));m++;}if(run.length){const b=ix(s+m),ti=E.get(ek(a,b));
+            if(ti!=null&&T[ti]){const c=T[ti].find(v=>v!==a&&v!==b),ch=[a,...run,b];T[ti]=null;for(let q=0;q<ch.length-1;q++){const t=[ch[q],ch[q+1],c];T.push(t);for(let r=0;r<3;r++)E.set(ek(t[r],t[(r+1)%3]),T.length-1);}}}k=m;}o+=n;}}
+      for(const t of T)if(t)tri(...t.map(i=>all[i]).map(p=>[p[0],yv(y,p),p[1]]),[0,ny,0]);};
+    /* walls: [p, q, lo(p), hi(p), lo(q), hi(q), normal]; each corner's depths gathered first, so a wall is split where another ends there */
+    const W=[],LV=new Map(),lev=(p,y)=>{const k=K(p);if(!LV.has(k))LV.set(k,[]);const l=LV.get(k);if(!l.some(v=>Math.abs(v-y)<e))l.push(y);};
+    const nOut=(p,q,s)=>{const dx=q[0]-p[0],dz=q[1]-p[1],l=Math.hypot(dx,dz)||1;return[s*dz/l,0,-s*dx/l];};   /* s +1: away from a counterclockwise loop's inside */
+    const wall=(p,q,a0,b0,a1,b1,n)=>{if(b0-a0<e&&b1-a1<e)return;W.push([p,q,a0,b0,a1,b1,n]);lev(p,a0);lev(p,b0);lev(q,a1);lev(q,b1);};
+    const cone=[];   /* tapered walls: [loop at lo, loop at hi, lo, hi, s] */
+    const SEG=new Map();cells.forEach((c,ci)=>{const L=c.loop;for(let i=0;i<L.length;i++)SEG.set(K(L[i])+'|'+K(L[(i+1)%L.length]),ci);});
+    cells.forEach(c=>{const L=c.loop,s=Math.sign(area(L));
+      for(let i=0;i<L.length;i++){const p=L[i],q=L[(i+1)%L.length],n=nOut(p,q,s),o=SEG.get(K(q)+'|'+K(p));
+        const[a0,b0,a1,b1]=[yv(c.y0,p),yv(c.y1,p),yv(c.y0,q),yv(c.y1,q)];
+        if(o==null){wall(p,q,a0,b0,a1,b1,n);continue;}const d=cells[o],[c0,d0,c1,d1]=[yv(d.y0,p),yv(d.y1,p),yv(d.y0,q),yv(d.y1,q)];
+        if(c0>a0+e||c1>a1+e)wall(p,q,a0,Math.min(b0,c0),a1,Math.min(b1,c1),n);if(d0<b0-e||d1<b1-e)wall(p,q,Math.max(a0,d0),b0,Math.max(a1,d1),b1,n);}
+      const F=c.F||[],y0=c.y0,y1=c.y1;if(F.length&&(typeof y0==='function'||typeof y1==='function'))throw new Error('solidGeo: features in a sloped cell');
+      for(const f of F){f.a=Math.max(f.a,y0);f.b=Math.min(f.b,y1);f.A=f.a<=y0+e;f.B=f.b>=y1-e;f.ar=Math.abs(area(f.p));f.an=f.anchor||cen(f.p);}
+      const inF=(f,g)=>f!==g&&(f.ar>g.ar+e||f.p===g.p&&!(f.A&&f.B)&&g.A&&g.B)&&pip(g.an,f.p);   /* g inside f; a hole through and a cut sharing its outline (where a cone starts): the cut holds the hole */
+      for(const g of F){const ps=F.filter(f=>inF(f,g)&&!(f.A&&f.B));   /* the features g is in (a hole through holds nothing) */
+        g.lo=g.A?Math.max(y0,...ps.filter(f=>f.A&&!f.B).map(f=>f.b)):g.a;g.hi=g.B?Math.min(y1,...ps.filter(f=>f.B&&!f.A).map(f=>f.a)):g.b;}
+      const at=(f,y)=>f.q&&Math.abs(y-f.hi)<e?f.q:f.p;
+      const maxi=S=>S.filter(g=>!S.some(f=>inF(f,g)));
+      for(const g of F){if(g.hi-g.lo<e)continue;const sg=Math.sign(area(g.p));
+        if(g.q){cone.push([g.p,g.q,g.lo,g.hi,sg]);continue;}for(let i=0;i<g.p.length;i++){const p=g.p[i],q=g.p[(i+1)%g.p.length];wall(p,q,g.lo,g.hi,g.lo,g.hi,nOut(p,q,-sg));}}
+      /* floors: an A feature's (open on y0) at its b facing -y, none where it opens into a B feature round it; a B feature's at its a facing +y */
+      for(const g of F){if(g.A&&g.B)continue;const y=g.A?g.b:g.a;if(g.A&&F.some(f=>f.B&&!f.A&&inF(f,g)&&f.a<=y+e))continue;if(g.B&&F.some(f=>f.A&&!f.B&&inF(f,g)&&f.b>=y-e))continue;
+        const out=g.floorOut||(g.A?at(g,g.b):g.p),hs=maxi(F.filter(f=>f!==g&&f.a<=y+e&&f.b>=y-e&&(g.A?f.b>y+e:f.a<y-e)&&pip(f.an,out))).map(f=>at(f,y));
+        if(hs.some(h=>h===out))continue;face(out,hs,y,g.A?-1:1);}
+      if(typeof y0==='number')face(L,maxi(F.filter(f=>f.A)).map(f=>at(f,y0)),y0,-1);else face(L,[],y0,-1);
+      if(typeof y1==='number')face(L,maxi(F.filter(f=>f.B)).map(f=>at(f,y1)),y1,1);else face(L,[],y1,1);});
+    for(const[p,q,a0,b0,a1,b1,n]of W){const ls=(x,a,b)=>[a,...(LV.get(K(x))||[]).filter(v=>v>a+e&&v<b-e).sort((u,w)=>u-w),b],L0=ls(p,a0,b0),L1=ls(q,a1,b1);let i=0,j=0;   /* a ladder up the two edges, a rung wherever either edge has a depth */
+      while(i<L0.length-1||j<L1.length-1){if(j>=L1.length-1||(i<L0.length-1&&L0[i+1]<=L1[j+1])){tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[p[0],L0[i+1],p[1]],n);i++;}else{tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[q[0],L1[j+1],q[1]],n);j++;}}}
+    for(const[A,B,lo,hi,s]of cone)for(let i=0;i<A.length;i++){const j=(i+1)%A.length,a=A[i],b=A[j],c=B[j],d=B[i],n=nOut(a,b,-s);
+      tri([a[0],lo,a[1]],[b[0],lo,b[1]],[c[0],hi,c[1]],n);tri([a[0],lo,a[1]],[c[0],hi,c[1]],[d[0],hi,d[1]],n);}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));return g;}
   /* the part and screw makers (movement.js, buildMovement's closures and its API at its end) */
   const parts=(mv,M)=>{const P={},V2=(a,b)=>new THREE.Vector2(a,b);
     /** @param {string} name its key (PARTS in the page's app.js) @param {number} off its rise in the Exploded view (mm) @param {number[]} [ef] a frame in it, at [x, z] turned ef[2] about y: returns that group */
@@ -183,16 +252,16 @@ const KIT=(()=>{
        one group, which the Exploded view lifts out of its holes along the screw's axis (SCREWS) */
     const SCREWS=[],loose=(g,lift)=>{g.userData.y0=g.position.y;g.userData.lift=lift;SCREWS.push(g);return g;};   /* loose: g moves on its own in the Exploded view, lift mm toward its frame's -y past its part */
     const headOn=(g,p,q)=>{g.userData.lift+=P[p].userData.off-P[q].userData.off;return g;};   /* a screw of part p put in through part q: it leaves with q, then lifts out of it */
-    /** @type {(p:any,...xzy_r_h_len_rs:number[])=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length and the thread's radius */
-    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r))=>{const c=Math.min(0.35,r*0.14),pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
+    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius and the material (steel by default) */
+    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null)=>{const c=Math.min(0.35,r*0.14),pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
       if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt));pr.push(V2(rs,0),V2(rs,len-n*pt-d));   /* rings of thread (drawn as turned grooves, not a helix), a chamfered tip */
         for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));}
       else pr.push(V2(0,0));
       const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
-      const hd=mesh(g,new THREE.LatheGeometry(pr,28),M.steel);hd.userData.screw=r;const sl=mesh(g,new THREE.BoxGeometry(r*2.02,Math.min(0.55,h*0.45),Math.max(0.35,r*0.2)),M.steelD,0,-h+Math.min(0.55,h*0.45)/2-0.02,0);sl.rotation.y=(x*7+z*3)%3;return g;};
+      const hd=mesh(g,new THREE.LatheGeometry(pr,28),mt||M.steel);hd.userData.screw=r;const sl=mesh(g,new THREE.BoxGeometry(r*2.02,Math.min(0.55,h*0.45),Math.max(0.35,r*0.2)),M.steelD,0,-h+Math.min(0.55,h*0.45)/2-0.02,0);sl.rotation.y=(x*7+z*3)%3;return g;};
     /* the API the page and the tools read: the parts, the screws and loose pieces (exploded.py), explode(e) (0 as built, 1 spread) */
     const done=()=>{mv.userData.parts=P;mv.userData.lifted=SCREWS;
       mv.userData.explode=e=>{for(const k in P)P[k].position.y=P[k].userData.off*e;for(const g of SCREWS)g.position.y=g.userData.y0-g.userData.lift*e;};mv.userData.explode(0);};
     return{part,screw,loose,headOn,SCREWS,parts:P,done};};
-  return{parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline};
+  return{parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();

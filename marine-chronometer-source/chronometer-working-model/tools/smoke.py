@@ -291,9 +291,9 @@ async def wempe(b,errs,steps):
         await click(f'#secs button[data-v="{v}"]',f'section {v}');await click('#secFlip',f'section {v}, other half');await click('#secFlip')
         await ev("()=>{const i=document.querySelector('#secOff');i.value=i.min;i.dispatchEvent(new Event('input'));i.value=i.max;i.dispatchEvent(new Event('input'))}");steps.append(f'section {v} moved')
     await click('#secs button[data-v="off"]','section off')
-    # a part picked on the model: the canvas's centre in the plan view, the top plate
+    # a part picked on the model: a bare spot of the top plate's outer face in the plan view (O 30, S 10: clear of the cocks and bridges; the upper cock's arm lies over the centre)
     await click('#views button[data-v="plan"]','view plan',600)
-    cc=await ev("(()=>{const r=document.querySelector('#stage canvas').getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]})()")
+    cc=await ev("(()=>{const r=document.querySelector('#stage canvas').getBoundingClientRect(),p=window.__proj([[-30,-22.35,10]],Math.PI,1.52,270,32)[0];return[r.left+p[0],r.top+p[1]]})()")
     await pg.mouse.click(*cc);await pg.wait_for_timeout(500);steps.append('a part picked')
     h3=await ev("document.querySelector('#info').classList.contains('on')?document.querySelector('#info h3').textContent:''")
     if not h3.startswith('Top plate'):errs.append(f'clicking the plan view\'s centre opened {h3 or "no card"}, not the top plate')

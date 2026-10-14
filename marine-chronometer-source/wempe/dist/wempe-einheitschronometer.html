@@ -343,7 +343,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   <h1>Wempe Einheits-Chronometer</h1>
   <div class="hd">
     <nav class="models" aria-label="The models"><a href="../../chronometer-working-model/dist/chronometer-working-model.html">Hamilton Model 21</a><span aria-current="page">Wempe Einheits-Chronometer</span></nav>
-    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame first, its sizes provisional. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame first. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
   </div>
 </header>
@@ -374,7 +374,7 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
-    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates, the three pillars and their screws, with provisional sizes.</div>
+    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins.</div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
@@ -437,12 +437,13 @@ nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:
   <p>A 3D model, in progress, of the <i>Deutsches Einheits-Chronometer</i>: the standard marine chronometer designed by Gerhard D. Wempe’s chronometer works in Hamburg in the early 1940s, made by Wempe and A. Lange &amp; Söhne in the war, by Wempe after it, and from the same drawings by the 1st Moscow Watch Factory as the 6MX. It is the spring-detent version, with a fusee and chain and three pillars, as its works drawings draw it.</p>
   <h3>Sources</h3>
   <ol>
-    <li>Wempe’s works drawings, as published by the Deutsche Gesellschaft für Chronometrie (dg-chrono.de), “© Johannes Altmeppen (by courtesy of Gerhard D. Wempe KG) 2017”. Each dimension in the model names its sheet.</li>
+    <li>Wempe’s works drawings, as published by the Deutsche Gesellschaft für Chronometrie (dg-chrono.de), “© Johannes Altmeppen (by courtesy of Gerhard D. Wempe KG) 2017”, each sheet as last revised. Each dimension in the model names its sheet.</li>
+    <li>Johannes Altmeppen’s photographs of Wempe 3955 and Lange 5177 (dg-chrono.de, © 2017), for what the sheets leave open: the standard screws’ heads, finishes, which way a part turns.</li>
   </ol>
   <h3>How it is being made</h3>
   <ul>
     <li><b>From the drawings.</b> Every size and place is read off a sheet: a figure where the sheet gives one, and where it doesn’t, measured on the drawing at its scale and marked estimated. Each part’s card says which.</li>
-    <li><b>So far.</b> The frame: the plates, 85 mm across and 19 mm apart on three pillars, with provisional sizes while the frame’s sheets are transcribed.</li>
+    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them.</li>
   </ul>
   <p><a href="../../chronometer-working-model/dist/chronometer-working-model.html">The Hamilton Model 21 working model</a>, the U.S. Navy’s chronometer, built from its 1948 overhaul manual.</p>
 </dialog>
@@ -1323,6 +1324,75 @@ const KIT=(()=>{
     const rdp=(Q,t)=>{if(Q.length<3)return Q;const[A,B]=[Q[0],Q[Q.length-1]],dx=B[0]-A[0],dz=B[1]-A[1],l=Math.hypot(dx,dz)||1e-9;let m=0,k=0;
       for(let i=1;i<Q.length-1;i++){const e=Math.abs((Q[i][0]-A[0])*dz-(Q[i][1]-A[1])*dx)/l;if(e>m){m=e;k=i;}}return m>t?[...rdp(Q.slice(0,k+1),t).slice(0,-1),...rdp(Q.slice(k),t)]:[A,B];};
     const h2=best.length>>1;return[...rdp(best.slice(0,h2+1),0.004).slice(0,-1),...rdp([...best.slice(h2),best[0]],0.004).slice(0,-1)];}
+  /* ---------- solids in depth bands (added 14 October 2026 for the Wempe's frame; the Hamilton doesn't use them) ----------
+     Plan outlines are [x, z] point lists (either winding). ring(x, z, r, n, ph): a circle's points, about 0.1 mm apart (n of them if given, turned ph of a step); area: the signed area (+ counterclockwise in x, z);
+     cen: the centroid; pip: point in polygon. bool(A, B): two simple polygons in general position, their crossings put into both (the same point objects, so outlines built
+     from the results share their vertices exactly): {A2, B2, uni (A and B joined), dAB (A less B), dBA (B less A)}, each a list of loops */
+  const area=P=>{let a=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];a+=p[0]*q[1]-q[0]*p[1];}return a/2;};
+  const cen=P=>{let a=0,x=0,z=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length],c=p[0]*q[1]-q[0]*p[1];a+=c;x+=(p[0]+q[0])*c;z+=(p[1]+q[1])*c;}return[x/(3*a),z/(3*a)];};
+  const pip=(p,P)=>{let w=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,zi]=P[i],[xj,zj]=P[j];if((zi>p[1])!==(zj>p[1])&&p[0]<(xj-xi)*(p[1]-zi)/(zj-zi)+xi)w=!w;}return w;};
+  const ring=(x,z,r,n=0,ph=0)=>{n=n||Math.max(24,Math.ceil(TAU*r/0.1));const o=[];for(let i=0;i<n;i++){const t=(i+ph)/n*TAU;o.push([x+r*Math.cos(t),z+r*Math.sin(t)]);}return o;};
+  function bool(A,B){const ccw=P=>area(P)>0?P.slice():P.slice().reverse();A=ccw(A);B=ccw(B);const cr=(u,v)=>u[0]*v[1]-u[1]*v[0],XA=A.map(()=>[]),XB=B.map(()=>[]);
+    for(let i=0;i<A.length;i++){const a0=A[i],a1=A[(i+1)%A.length],da=[a1[0]-a0[0],a1[1]-a0[1]];
+      for(let j=0;j<B.length;j++){const b0=B[j],b1=B[(j+1)%B.length],db=[b1[0]-b0[0],b1[1]-b0[1]],d=cr(da,db);if(Math.abs(d)<1e-14)continue;const w=[b0[0]-a0[0],b0[1]-a0[1]],t=cr(w,db)/d,s=cr(w,da)/d;
+        if(t>0&&t<1&&s>0&&s<1){const X=[a0[0]+da[0]*t,a0[1]+da[1]*t];XA[i].push([t,X]);XB[j].push([s,X]);}}}
+    const ins=(P,X)=>{const o=[];P.forEach((p,i)=>{o.push(p);X[i].sort((a,b)=>a[0]-b[0]).forEach(q=>o.push(q[1]));});return o;},A2=ins(A,XA),B2=ins(B,XB);
+    const segs=(P,Q,inside,rev)=>{const o=[];for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];if(pip([(p[0]+q[0])/2,(p[1]+q[1])/2],Q)===inside)o.push(rev?[q,p]:[p,q]);}return o;};
+    const chain=S=>{const K=p=>Math.round(p[0]*1e6)+','+Math.round(p[1]*1e6),m=new Map();for(const s of S){const k=K(s[0]);if(!m.has(k))m.set(k,[]);m.get(k).push(s);}const used=new Set(),L=[];
+      for(const s0 of S){if(used.has(s0))continue;const l=[];let s=s0;while(s&&!used.has(s)){used.add(s);l.push(s[0]);s=(m.get(K(s[1]))||[]).find(t=>!used.has(t));}if(l.length>2)L.push(l);}return L;};
+    return{A2,B2,uni:chain([...segs(A2,B,false),...segs(B2,A,false)]),dAB:chain([...segs(A2,B,false),...segs(B2,A,true,true)]),dBA:chain([...segs(B2,A,false),...segs(A2,B,true,true)])};}
+  /* solidGeo(cells): one closed solid, facing out, from plan cells, each {loop, y0, y1, F}: the cell's outline (cells that touch share their points along the boundary,
+     each listing it the other way round), the depths it fills (y0 < y1; either may be a function of the plan point, for a sloped face) and its features F, which take metal
+     away inside it: {p, a, b, q?, floorOut?, anchor?}: the plan outline p cut from depth a to b (one end on the cell's face y0 or y1, or both: a hole through); q an outline of as
+     many points as p where the cut's wall ends (a cone: p where it starts, q where it ends); floorOut the outline of its floor where p shares part of its edge with a feature
+     inside it (the floor is p less the features under it otherwise). Features are nested or apart, never crossing (cross them first with bool, and give the floor). A feature's wall
+     runs from the floor of the feature it's in (or the face) to its own floor; cells with features have flat faces. Where two cells touch, the one that reaches further gets the wall
+     between their depths. Walls are split where another wall at the same corner ends, so no edge has a vertex in its middle. UVs in plan, as cbGeo */
+  function solidGeo(cells){
+    const P=[],U=[],N=[],e=1e-6,K=p=>Math.round(p[0]*1e5)+','+Math.round(p[1]*1e5),yv=(y,p)=>typeof y==='function'?y(p):y;
+    /* each triangle wound to face n, its normal worked in double precision (a flat face's exactly n: float32 normals of long thin triangles show in the Edges drawing) */
+    const tri=(a,b,c,n)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],x=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(x[0],x[1],x[2]);
+      if(l*l<1e-20)return;const s=x[0]*n[0]+x[1]*n[1]+x[2]*n[2]<0?-1:1;if(s<0){const t=b;b=c;c=t;}const f=!n[0]&&!n[2]&&a[1]===b[1]&&b[1]===c[1]?n:x.map(q=>q*s/l);
+      for(const q of[a,b,c]){P.push(q[0],q[1],q[2]);U.push(q[0],-q[2]);N.push(f[0],f[1],f[2]);}};
+    /* a face: earcut leaves out a boundary point that lies on the line between its neighbours (a crossing put into a straight edge), which the walls keep: each run of them
+       left out goes back in, as a fan in the triangle on the edge that skipped them */
+    const face=(out,holes,y,ny)=>{const V=v=>new THREE.Vector2(v[0],v[1]);let T=THREE.ShapeUtils.triangulateShape(out.map(V),holes.map(h=>h.map(V))),all=[...out,...holes.flat()],ar=t=>{const[a,b,c]=t.map(i=>all[i]);return Math.abs((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]));};T=T.filter(t=>ar(t)>1e-9);const used=new Set(T.flat());   /* a sliver on three points in a line goes too: its middle point is put back as the rest are */
+      if(used.size<all.length){const E=new Map(),ek=(i,j)=>i<j?i+'_'+j:j+'_'+i;T.forEach((t,ti)=>{for(let k=0;k<3;k++)E.set(ek(t[k],t[(k+1)%3]),ti);});let o=0;
+        for(const L of[out,...holes]){const n=L.length,ix=i=>o+((i%n)+n)%n,s=[...Array(n).keys()].find(i=>used.has(ix(i)));
+          if(s!=null)for(let k=0;k<n;){const a=ix(s+k);let m=k+1;const run=[];while(m<=n&&!used.has(ix(s+m))){run.push(ix(s+m));m++;}if(run.length){const b=ix(s+m),ti=E.get(ek(a,b));
+            if(ti!=null&&T[ti]){const c=T[ti].find(v=>v!==a&&v!==b),ch=[a,...run,b];T[ti]=null;for(let q=0;q<ch.length-1;q++){const t=[ch[q],ch[q+1],c];T.push(t);for(let r=0;r<3;r++)E.set(ek(t[r],t[(r+1)%3]),T.length-1);}}}k=m;}o+=n;}}
+      for(const t of T)if(t)tri(...t.map(i=>all[i]).map(p=>[p[0],yv(y,p),p[1]]),[0,ny,0]);};
+    /* walls: [p, q, lo(p), hi(p), lo(q), hi(q), normal]; each corner's depths gathered first, so a wall is split where another ends there */
+    const W=[],LV=new Map(),lev=(p,y)=>{const k=K(p);if(!LV.has(k))LV.set(k,[]);const l=LV.get(k);if(!l.some(v=>Math.abs(v-y)<e))l.push(y);};
+    const nOut=(p,q,s)=>{const dx=q[0]-p[0],dz=q[1]-p[1],l=Math.hypot(dx,dz)||1;return[s*dz/l,0,-s*dx/l];};   /* s +1: away from a counterclockwise loop's inside */
+    const wall=(p,q,a0,b0,a1,b1,n)=>{if(b0-a0<e&&b1-a1<e)return;W.push([p,q,a0,b0,a1,b1,n]);lev(p,a0);lev(p,b0);lev(q,a1);lev(q,b1);};
+    const cone=[];   /* tapered walls: [loop at lo, loop at hi, lo, hi, s] */
+    const SEG=new Map();cells.forEach((c,ci)=>{const L=c.loop;for(let i=0;i<L.length;i++)SEG.set(K(L[i])+'|'+K(L[(i+1)%L.length]),ci);});
+    cells.forEach(c=>{const L=c.loop,s=Math.sign(area(L));
+      for(let i=0;i<L.length;i++){const p=L[i],q=L[(i+1)%L.length],n=nOut(p,q,s),o=SEG.get(K(q)+'|'+K(p));
+        const[a0,b0,a1,b1]=[yv(c.y0,p),yv(c.y1,p),yv(c.y0,q),yv(c.y1,q)];
+        if(o==null){wall(p,q,a0,b0,a1,b1,n);continue;}const d=cells[o],[c0,d0,c1,d1]=[yv(d.y0,p),yv(d.y1,p),yv(d.y0,q),yv(d.y1,q)];
+        if(c0>a0+e||c1>a1+e)wall(p,q,a0,Math.min(b0,c0),a1,Math.min(b1,c1),n);if(d0<b0-e||d1<b1-e)wall(p,q,Math.max(a0,d0),b0,Math.max(a1,d1),b1,n);}
+      const F=c.F||[],y0=c.y0,y1=c.y1;if(F.length&&(typeof y0==='function'||typeof y1==='function'))throw new Error('solidGeo: features in a sloped cell');
+      for(const f of F){f.a=Math.max(f.a,y0);f.b=Math.min(f.b,y1);f.A=f.a<=y0+e;f.B=f.b>=y1-e;f.ar=Math.abs(area(f.p));f.an=f.anchor||cen(f.p);}
+      const inF=(f,g)=>f!==g&&(f.ar>g.ar+e||f.p===g.p&&!(f.A&&f.B)&&g.A&&g.B)&&pip(g.an,f.p);   /* g inside f; a hole through and a cut sharing its outline (where a cone starts): the cut holds the hole */
+      for(const g of F){const ps=F.filter(f=>inF(f,g)&&!(f.A&&f.B));   /* the features g is in (a hole through holds nothing) */
+        g.lo=g.A?Math.max(y0,...ps.filter(f=>f.A&&!f.B).map(f=>f.b)):g.a;g.hi=g.B?Math.min(y1,...ps.filter(f=>f.B&&!f.A).map(f=>f.a)):g.b;}
+      const at=(f,y)=>f.q&&Math.abs(y-f.hi)<e?f.q:f.p;
+      const maxi=S=>S.filter(g=>!S.some(f=>inF(f,g)));
+      for(const g of F){if(g.hi-g.lo<e)continue;const sg=Math.sign(area(g.p));
+        if(g.q){cone.push([g.p,g.q,g.lo,g.hi,sg]);continue;}for(let i=0;i<g.p.length;i++){const p=g.p[i],q=g.p[(i+1)%g.p.length];wall(p,q,g.lo,g.hi,g.lo,g.hi,nOut(p,q,-sg));}}
+      /* floors: an A feature's (open on y0) at its b facing -y, none where it opens into a B feature round it; a B feature's at its a facing +y */
+      for(const g of F){if(g.A&&g.B)continue;const y=g.A?g.b:g.a;if(g.A&&F.some(f=>f.B&&!f.A&&inF(f,g)&&f.a<=y+e))continue;if(g.B&&F.some(f=>f.A&&!f.B&&inF(f,g)&&f.b>=y-e))continue;
+        const out=g.floorOut||(g.A?at(g,g.b):g.p),hs=maxi(F.filter(f=>f!==g&&f.a<=y+e&&f.b>=y-e&&(g.A?f.b>y+e:f.a<y-e)&&pip(f.an,out))).map(f=>at(f,y));
+        if(hs.some(h=>h===out))continue;face(out,hs,y,g.A?-1:1);}
+      if(typeof y0==='number')face(L,maxi(F.filter(f=>f.A)).map(f=>at(f,y0)),y0,-1);else face(L,[],y0,-1);
+      if(typeof y1==='number')face(L,maxi(F.filter(f=>f.B)).map(f=>at(f,y1)),y1,1);else face(L,[],y1,1);});
+    for(const[p,q,a0,b0,a1,b1,n]of W){const ls=(x,a,b)=>[a,...(LV.get(K(x))||[]).filter(v=>v>a+e&&v<b-e).sort((u,w)=>u-w),b],L0=ls(p,a0,b0),L1=ls(q,a1,b1);let i=0,j=0;   /* a ladder up the two edges, a rung wherever either edge has a depth */
+      while(i<L0.length-1||j<L1.length-1){if(j>=L1.length-1||(i<L0.length-1&&L0[i+1]<=L1[j+1])){tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[p[0],L0[i+1],p[1]],n);i++;}else{tri([p[0],L0[i],p[1]],[q[0],L1[j],q[1]],[q[0],L1[j+1],q[1]],n);j++;}}}
+    for(const[A,B,lo,hi,s]of cone)for(let i=0;i<A.length;i++){const j=(i+1)%A.length,a=A[i],b=A[j],c=B[j],d=B[i],n=nOut(a,b,-s);
+      tri([a[0],lo,a[1]],[b[0],lo,b[1]],[c[0],hi,c[1]],n);tri([a[0],lo,a[1]],[c[0],hi,c[1]],[d[0],hi,d[1]],n);}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));return g;}
   /* the part and screw makers (movement.js, buildMovement's closures and its API at its end) */
   const parts=(mv,M)=>{const P={},V2=(a,b)=>new THREE.Vector2(a,b);
     /** @param {string} name its key (PARTS in the page's app.js) @param {number} off its rise in the Exploded view (mm) @param {number[]} [ef] a frame in it, at [x, z] turned ef[2] about y: returns that group */
@@ -1333,18 +1403,18 @@ const KIT=(()=>{
        one group, which the Exploded view lifts out of its holes along the screw's axis (SCREWS) */
     const SCREWS=[],loose=(g,lift)=>{g.userData.y0=g.position.y;g.userData.lift=lift;SCREWS.push(g);return g;};   /* loose: g moves on its own in the Exploded view, lift mm toward its frame's -y past its part */
     const headOn=(g,p,q)=>{g.userData.lift+=P[p].userData.off-P[q].userData.off;return g;};   /* a screw of part p put in through part q: it leaves with q, then lifts out of it */
-    /** @type {(p:any,...xzy_r_h_len_rs:number[])=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length and the thread's radius */
-    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r))=>{const c=Math.min(0.35,r*0.14),pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
+    /** @type {(p:any,x:number,z:number,y:number,r?:number,h?:number,len?:number,rs?:number,mt?:any)=>any} in frame p: x, z, y (the head's seat), then the head's radius and height, the shank's length, the thread's radius and the material (steel by default) */
+    const screw=(p,x,z,y,r=2.2,h=1.1,len=0,rs=sR(r),mt=null)=>{const c=Math.min(0.35,r*0.14),pr=[V2(0,-h),V2(r-c,-h),V2(r,-h+c),V2(r,0)];
       if(len>0){const pt=clamp(rs*0.42,0.06,0.3),d=pt*0.3,n=Math.max(1,Math.floor((len-pt*0.6)/pt));pr.push(V2(rs,0),V2(rs,len-n*pt-d));   /* rings of thread (drawn as turned grooves, not a helix), a chamfered tip */
         for(let i=0;i<n;i++){const a=len-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,len),V2(0,len));}
       else pr.push(V2(0,0));
       const g=new THREE.Group();g.position.set(x,y,z);p.add(g);loose(g,len+h+1.5);g.userData.sc={r,h,len,rs};
-      const hd=mesh(g,new THREE.LatheGeometry(pr,28),M.steel);hd.userData.screw=r;const sl=mesh(g,new THREE.BoxGeometry(r*2.02,Math.min(0.55,h*0.45),Math.max(0.35,r*0.2)),M.steelD,0,-h+Math.min(0.55,h*0.45)/2-0.02,0);sl.rotation.y=(x*7+z*3)%3;return g;};
+      const hd=mesh(g,new THREE.LatheGeometry(pr,28),mt||M.steel);hd.userData.screw=r;const sl=mesh(g,new THREE.BoxGeometry(r*2.02,Math.min(0.55,h*0.45),Math.max(0.35,r*0.2)),M.steelD,0,-h+Math.min(0.55,h*0.45)/2-0.02,0);sl.rotation.y=(x*7+z*3)%3;return g;};
     /* the API the page and the tools read: the parts, the screws and loose pieces (exploded.py), explode(e) (0 as built, 1 spread) */
     const done=()=>{mv.userData.parts=P;mv.userData.lifted=SCREWS;
       mv.userData.explode=e=>{for(const k in P)P[k].position.y=P[k].userData.off*e;for(const g of SCREWS)g.position.y=g.userData.y0-g.userData.lift*e;};mv.userData.explode(0);};
     return{part,screw,loose,headOn,SCREWS,parts:P,done};};
-  return{parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline};
+  return{parts,subtractCircle,hull,hullSplice,crescent,twoCircles,lobedCircle,clipPoly,clipUnder,discClip,stepGeo,cbGeo,checkHoles,polyGeo,stadiumPts,stadium,barBossPts,sR,hC,hT,stripGeo,sdfOutline,area,cen,pip,ring,bool,solidGeo};
 })();
 
 </script>
@@ -1682,44 +1752,290 @@ const VIEWER={start(cfg){
 <script>
 // @ts-check
 /* dims.js: the Wempe Einheits-Chronometer's dimensions, each from Wempe's works drawings (References/wempe/drawings/), with the sheet and how sure the reading is.
-   Part of the Wempe model (three.js r128). Declares only WD.
-   PROVISIONAL (P0, 14 October 2026): the frame's first numbers, read for the plumbing; References/wempe/transcriptions/05-08-frame.md (being written) settles the
-   frame's sheets and P1a rebuilds the frame from it.
-   Plan coordinates as the sheets' hole tables give them: N/S along the 12-6 line and O (Ost, east)/W across, from the centre wheel's arbor (hole 1, Minutenrad,
-   N 0 O 0). Both plates' tables use one frame (05 08 01 and 05 08 02-1 give the pillars and the barrel, fusee and balance the same coordinates); each plate is
-   drawn from its outer face: the Oberplatte (05 08_1b) from the train side with O to the right, the Unterplatte (05 08 02-1) from the dial side with O to the
-   left (its hole 11, O 36.858, drawn at the sheet's left edge), and sheet 001 shows the two views mirrored the same way (the pillar screws' heads in both).
-   Seconds at 6 (Sekundenrad S 23.0) and the up-and-down work at 12 (Auf u. Ab N 23.0, 05 08 02-1) put N at 12 o'clock. Seen from the dial with 12 up, W is
-   to the right: W is 3 o'clock, O 9 o'clock (sure). In the movement frame (as the Hamilton's: mm, dial side +y, 12 o'clock -z, 3 o'clock +x): x = W, z = S. */
+   Part of the Wempe model (three.js r128). Declares only WD. P1a (14 October 2026): the frame's shared numbers, read off the frame's sheets (05 08, References/wempe/
+   transcriptions/05-08-frame.md, checked on the sheets); the frame's own sizes (cocks, bridges, ring, bushes) are in js/frame.js beside the parts they make.
+   Plan coordinates as the sheets' hole tables give them: N/S along the 12-6 line and O (Ost, east)/W across, from the centre wheel's arbor (hole 1, Minutenrad, N 0 O 0),
+   the plates' centre (the 85 rim scales 42.3 from it on 05 08_3b). Every plan of the frame (05 08_1b, _3b, _4, _5, _13, _31, _32) is drawn with N up and O to the right,
+   seen from above with the movement lying dial down: the Oberplatte from its outer face (its pillar seats, which are in its inner face, dashed; Schnitte A-B, C-D, G-H mark
+   "oben" on that face), the Unterplatte from its inner face (its pillar seats drawn whole). Seconds at 6 (Sekundenrad S 23.0) and the up-and-down at 12 (Auf u. Ab N 23.0)
+   put N at 12 o'clock, and seen from above, O is the dial's 9 o'clock: the dial side's photograph of Wempe 3955 (photos/dg-chrono-dec/3_Wempe_3955_uZ.jpg, square-on on
+   millimetre paper) has the Wechselrad (hole 19, O 10.9 S 6.3) left of the centre and below it, and the Werkring's sheet (05 08 00-3, drawn from the dial side) puts its three
+   screws at 20, 140 and 260 deg from 12 clockwise, where the top plate's photograph (2_Wempe_3955_A.jpg) has them at 339, 99 and 218 deg from N toward O (sure).
+   In the movement frame (as the Hamilton's: mm, dial side +y, 12 o'clock -z, 3 o'clock +x): x = W, z = S. */
 const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as negative) to plan [x, z] */
-  return{
-    PLATE_R:85/2,   // the plates' radius: sheet 001 "Platten∅ 85 mm"; 05 08 01 (Oberplatte) "Fertigmaß 3,35 × 85∅ h6"; 05 08 02-1 (Unterplatte) "fertig 85∅ h6": sure
-    TOP_T:3.35,   // the top plate's thickness: 05 08 01 "Fertigmaß 3,35": sure
-    PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through on the scan with no new figure legible (its blank turned 3,5 × 90∅): provisional
+  /* the hole table: every hole's place, by its number on the sheets (05 09 01 = 05 08_1a for the Oberplatte, 05 08 02-1 = 05 08_3a for the Unterplatte; the cocks' and the
+     barrel bridge's own tables, 05 08 00-2, 05 08 03-1, 05 08 05-1, give the same places for the holes they share, to the last figure: sure). Holes 14-18 (the hand-setting
+     work, struck through on 05 08 02-1: "nur wenn Zeigerstellung eingebaut wird"), 56, 57 (the seconds contact's screws, "nur bei Bedarf") and the lever chronometer's 27, 31-34
+     are left out; 30 (Ankerrad) is on the detent chronometer's own Unterplatte (05 08 02-1's table, 05 08 02's assembly with a setting in it, and drilled in Wempe 3955's plate) */
+  const H={1:NO(0,0),2:NO(23,0),3:NO(37,0),4:NO(36.437,6.425),5:NO(38.507,10.684),6:NO(27.821,3.577),7:NO(23.911,5.676),8:NO(19.765,0.559),9:NO(11.555,2.760),
+    10:NO(15.292,16.708),11:NO(-3.225,36.858),12:NO(-9.576,35.739),13:NO(-16.238,34.536),19:NO(-6.30,10.912),20:NO(-2.451,6.512),22:NO(-6.018,3.259),23:NO(-12.110,9.10),
+    26:NO(-21.743,11.783),28:NO(-26.410,4.315),29:NO(-28.580,7.062),30:NO(-33.730,5.028),35:NO(-23.0,0),36:NO(-11.922,-0.502),37:NO(-17.826,-4.263),38:NO(-15.170,-9.910),
+    39:NO(-32.043,-18.50),40:NO(-26.163,-26.163),41:NO(-24.01,-30.732),42:NO(-18.50,-32.043),43:NO(-5.251,-22.464),44:NO(-3.081,-25.21),45:NO(6.0,-24.784),
+    46:NO(17.046,-29.474),47:NO(31.551,-22.924),48:NO(32.668,-17.370),49:NO(36.437,-6.425),50:NO(25.233,-6.083),51:NO(-7.537,23.386),52:NO(-24.094,20.836),53:NO(-37.0,15.0)};
+  /* 53 (Stift f. Wendelfeder) is O 15.0 on the detent plate's table (05 08_1a) and O 13.0 on the lever plate's (05 08_30): the detent plate's, both read clearly */
+  return{H,NO,
+    PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
+    TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
+    PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely
     INNER:19.0,   // the plates' inner faces apart: sheet 001 "innerer Plattenabstand 19 mm" = the pillar's 19.6 between shoulders less its two 0.3 seats (PIL_SEAT): sure
-    PIL_SEAT:[8.6/2,0.3],   // each pillar's seat in each plate's inner face: Ø 8.6, 0.3 +0.03 deep (05 08 01 Schnitt L-M, 05 08 02-1 Schnitt E-F): sure; on the inner face from L-M's lines drawn hidden from the outer face: fairly sure
-    PIL:{r:8.14/2,   // the pillar (05 08 00-1, Pfeiler, Ms 58 round brass): body Ø 8.14 -0.2: sure
+    PIL_SEAT:[8.6/2,0.3],   // each pillar's seat in each plate's inner face: Ø 8.6, 0.3 +0.03 deep (05 09 01 Schnitt L-M, 05 08 02-1 Schnitt E-F; dashed from the top plate's outer face): sure
+    PIL:{r:8.1/2,   // the pillar (05 08 00-1, Pfeiler, Rundmessing 8,5 Ms 58): body Ø 8.1 -0.2 (read "8,1∅", the ∅ written high as on its "4,3∅" and "4,5∅"; 8.06 scaled at 5:1): likely
       L:19.6,   // shoulder to shoulder 19.6 ±0.01: sure
-      sr:4.5/2,   // its end spigots Ø 4.5 f7 (-0.010/-0.022): sure
+      sr:4.484/2,   // its end spigots Ø 4.5 f7 (-0.010/-0.022), drawn at the middle of the fit: sure
       sL:2.8,   // each 2.8 -0.1 long: sure
-      tip:[4.3/2,1.1],   // each spigot's end turned to Ø 4.3 -0.2 over 1.1 -0.2, a 6° lead: sure (read at 5:1)
-      cs:3.2/2,   // the 90° countersink at each end, Ø 3.2 at the face: read off the 5:1 drawing, which gives no figure: ±0.2, estimated
-      Ltot:25.3},   // overall 25.3 -0.2 (19.6 + 2 × 2.8 = 25.2): sure; tapped M2.6 through from both ends ("Gewinde von beiden Seiten einschneiden"): PSCR.rs
-    PIL_HOLE:4.50/2,   // the plates' pillar holes, reamed 4.50 +0.012 (05 08 01 nos. 11, 39, 49; 05 08 02-1 the same): sure
-    PILLARS:[NO(-3.225,36.858),NO(-32.043,-18.50),NO(36.437,-6.425)],   // nos. 11 S 3,225 O 36,858; 39 S 32,043 W 18,50; 49 N 36,437 W 6,425 (05 08 01 and 05 08 02-1 alike), each 37.00 from the centre: sure
-    PSCR:{r:6.6/2,   // the pillar screws: heads Ø 6.6 measured on sheet 001 (2:1, both views, ±0.4); their WN standard sheet not yet read: estimated
-      h:1.8,   // head height: on no sheet read yet; DIN 84's for M2.6: estimated
+      tip:[4.3/2,1.1],   // each spigot's end turned to Ø 4.3 -0.2 over 1.1 -0.2, a 6° lead: sure
+      cs:2.7/2,   // the 90° countersink at each end of the thread, Ø 2.7 at the face: scaled at 5:1 (no figure), about the thread's own diameter: estimated
+      grv:[3.25,0.35],   // a relief groove in each shoulder's face round the spigot's root, out to r 3.25 and 0.35 deep, half-round: drawn at 5:1 without figures, scaled: estimated
+      Ltot:25.3},   // overall 25.3 -0.2 (19.6 + 2 × 2.8 = 25.2): sure; tapped M2.6 through from both ends ("Gewinde von beiden Seiten einschneiden")
+    PIL_HOLE:4.506/2,   // the plates' pillar holes, reamed 4.50 +0.012 (05 09 01 nos. 11, 39, 49; 05 08 02-1 the same), drawn at the middle of the fit: sure
+    PILLARS:[H[11],H[39],H[49]],   // nos. 11 S 3,225 O 36,858; 39 S 32,043 W 18,50; 49 N 36,437 W 6,425, each 37.00 from the centre at 95°, 210°, 350° from N toward O: sure
+    PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
+                     // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
+      h:3.0,   // head height: the coloured section 3.0 (both screws): estimated (±0.2); their WN sheet isn't in the set
       rs:2.6/2,   // thread M2.6 (05 08 00-1): sure
-      len:6.0}   // shank: through the plate (3.35) and 2.65 into the pillar's thread: estimated
+      len:7.7}   // shank: the coloured section 7.8 and 7.7 from the head's seat to the end: estimated
   };})();
 
 </script>
 <script>
 // @ts-check
-/* movement.js: the Wempe Einheits-Chronometer's movement, built from the works drawings' numbers in dims.js (WD). Part of the Wempe model (three.js r128).
-   P0 (14 October 2026): the frame alone, provisional: the pillar plate (Unterplatte) and the top plate (Oberplatte), the three pillars (Pfeiler) and their six screws.
-   Units mm; the movement frame as the Hamilton's: dial side +y, 12 o'clock -z, 3 o'clock +x (dims.js: x = the sheets' W, z = their S). The pillar plate's inner face
-   at y 0, its dial face at +PP_T; the top plate's inner face at -INNER, its outer face (the train side) at -INNER-TOP_T.
+/* frame.js: the Wempe Einheits-Chronometer's frame (Gestell, drawing group 05 08), built from its sheets as last revised (about 1946-48): the two plates with every hole of
+   their tables, the three pillars and their screws, the movement ring, the barrel bridge with its click, the fusee bush and dust bush, the two balance cocks and the
+   intermediate bridge, each with its screws and steady pins. Part of the Wempe model (three.js r128). Declares only WFRAME: WFRAME.build(mv, M, K) adds the parts to the
+   movement group (K: KIT.parts' makers), and returns their places for the later groups. Sizes read off the sheets are in the comments beside them, with how sure; the shared
+   ones (plates, pillars, the hole table WD.H) are in dims.js.
+   Units mm, the movement frame as the Hamilton's: dial side +y, 12 o'clock -z, 3 o'clock +x (x = the sheets' W, z = their S). The pillar plate's inner face at y 0, its dial face
+   at +PP_T; the top plate's inner face at -INNER (TI), its outer face at -INNER-TOP_T (TT). Holes are drawn at the middle of their fits; a tapped hole at its thread's size and
+   0.02 (as the Hamilton's hT), a steady pin's hole in a plate at its reamed 1.6025 (a slide fit) and in the part that carries the pin at 1.585 -0.005 (pressed). */
+const WFRAME=(()=>{
+  const H=WD.H,R=WD.PLATE_R,TT=-WD.INNER-WD.TOP_T,TI=-WD.INNER,PPT=WD.PP_T,{ring,bool,solidGeo,area,stadiumPts,sdfOutline,clipPoly,twoCircles}=KIT;
+  const brg=b=>[-Math.sin(b*D2R),-Math.cos(b*D2R)],add=(p,u,k=1)=>[p[0]+u[0]*k,p[1]+u[1]*k],sub=(p,q)=>[p[0]-q[0],p[1]-q[1]],unit=u=>{const l=Math.hypot(u[0],u[1]);return[u[0]/l,u[1]/l];};
+  const bearing=u=>Math.atan2(-u[0],-u[1])/D2R;   /* plan direction to bearing (deg from N toward O) */
+  const C=(p,r,n=0,ph=0)=>ring(p[0],p[1],r,n,ph);
+  /* hole radii: tapped (the thread's and 0.02, as the Hamilton's hT), clearance and reamed */
+  const rM26=1.32,rM2=1.02,rM17=0.87,rM14=0.72,rM12=0.62,rCl26=2.8/2,rPinP=1.6025/2,rPinQ=1.5825/2,rPin=1.6/2,rJ=4.596/2,rH35=3.506/2;
+  /* a feature cut in a cell from y0 to y1: T through, A from y0 d deep, B from y1 d deep */
+  const T=(p,r,y0,y1)=>({p:C(p,r),a:y0,b:y1}),A=(p,r,y0,d)=>({p:C(p,r),a:y0,b:y0+d}),B=(p,r,y1,d)=>({p:C(p,r),a:y1-d,b:y1});
+  const PL={};   /* places for the later groups */
+
+  function build(mv,M,K){const{part,screw,loose,headOn}=K,V2=(a,b)=>new THREE.Vector2(a,b),tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
+
+    /* ================= the top plate (Oberplatte, 05 09 01; its assembly 05 08 01) ================= */
+    /* Messingblech 4, Sonder Ms α-β (05 09 01's title block: rolled brass, from a 4 × 90 disc turned to 3.5 × 90): drawn gilt, as Wempe 3955's (2_Wempe_3955_A.jpg). 85 h6 × 3.35;
+       the cut round the barrel milled 42.5 across about hole 45 ("vor dem Kalibrieren auf 42,5∅ fräsen", 05 08_1b), so the plate is a crescent, its horns where the cut leaves
+       the rim (05 08_1b, _2; Wempe 3955's plate off, 12_ and 13_Wempe_3955_obere_Platte_*.jpg). Every hole of 05 09 01's table at its drilled, reamed or tapped size (sure) and
+       the sheet's sections: L-M the pillar seats (Ø 8.6 × 0.3 in the inner face); A-B the steady pins' holes 6, 9, 41, 47, 50 reamed from the outer face and opened Ø 2.5 from the
+       inner face to 1.6 deep, C-D 22 and 37 the other way (their pins come from the lower cock, under the plate); G-H hole 36 sunk Ø 6 H7 × 1.8 from the outer face for the lower
+       cock's screw head; P-Q the escape wheel's setting at 26 (Ø 5.2 H7 from the inner face to 0.5 under the outer one, Ø 4.5 H7 through that, two M1.2 3.5 +0.05 either side
+       along the O-W line); J-K a recess Ø 22 × 0.7 round the fusee's hole 10 in the inner face, its wall at 45° (dashed on 05 08_1b, seen on 13_…unten); the fusee bush's three
+       M1.4 on a radius 5.2 ±0.05, 120° apart, the first toward N (05 08_1b; the transcription's "2,65" there is the 22,65 from hole 1). The balance's opening 23 (Ø 10 with a
+       tongue 2.5 wide) and, in the inner face, the pocket N-O for the balance holding work: 8 wide, from the opening to hole 51 with its end r 4 about it (read "4ʳ"; the
+       transcription's "4,7 r" is the 4 and its arrowhead), 1.35 -0.05 deep (Schnitt N-O; 13_…unten shows it). The three small windows by the pillars (Altmeppen) are the
+       Hilfslöcher 3, 12, 40, Ø 3.50 */
+    const tp=part('topPlate',-40);
+    {const y0=TT,y1=TI,F=[];
+      const out=KIT.subtractCircle(C([0,0],R,1200),H[45],42.5/2);
+      for(const k of[1,35,38])F.push(T(H[k],rJ,y0,y1));                                  /* 4.4 punched, 4.59 +0.012 reamed: the centre, seconds and intermediate wheels' settings (WN-301, WN-300: 05 08 01) */
+      for(const k of[3,12,40])F.push(T(H[k],rH35,y0,y1));                                /* Hilfslöcher, 3.50 +0.012 */
+      F.push(T(H[4],0.9/2,y0,y1),T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[13],1.8/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1),T(H[53],1.5045/2,y0,y1));   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */
+      for(const k of[8,42,48])F.push(T(H[k],rM26,y0,y1));                                /* the upper cock's and the barrel bridge's screws, M2.6 */
+      for(const k of[6,9,41,47,50])F.push(T(H[k],rPinP,y0,y1),B(H[k],2.5/2,y1,1.6));   /* steady pins from above, the holes opened from below (A-B) */
+      for(const k of[22,37])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));           /* steady pins from below (C-D) */
+      F.push(T(H[36],2.8/2,y0,y1),A(H[36],6.012/2,y0,1.8));                              /* the lower cock's screw, its head sunk (G-H) */
+      for(const k of[11,39,49])F.push(T(H[k],WD.PIL_HOLE,y0,y1),B(H[k],WD.PIL_SEAT[0],y1,WD.PIL_SEAT[1]));
+      F.push(T(H[26],4.506/2,y0,y1),{p:C(H[26],5.206/2),a:y0+0.5,b:y1});                 /* P-Q */
+      for(const s of[-1,1])F.push(T(add(H[26],[1,0],3.5*s),rM12,y0,y1));
+      {const n=176;F.push(T(H[10],8.0075/2,y0,y1),{p:C(H[10],11-0.7,n),q:C(H[10],11,n),a:y1-0.7,b:y1});   /* the fusee bush's hole 8.0 +0.015; J-K's recess, its wall at 45° from Ø 22 at the face */
+        for(const b of[0,120,240])F.push(T(add(H[10],brg(b),5.2),rM14,y0,y1));}
+      /* the balance's opening and the pocket, crossed (KIT.bool) so their outlines share their corners: the tongue's root on the opening's edge 50° round from the pocket's
+         line (N-O, 23 to 51), toward S ("50°" on 05 08_1b); its end 8.6 from 23's centre toward 112.5°, scaled on 05 08_1b (115°) and Wempe 3955's top face (110°): estimated */
+      const b51=bearing(sub(H[51],H[23])),tg0=add(H[23],brg(b51+50),5),tgE=add(H[23],brg(112.5),8.6-1.25),tu=unit(sub(tgE,tg0));
+      const key=bool(C(H[23],5,200),stadiumPts(add(tg0,tu,-2),tgE,2.5)).uni[0],pk=bool(key,stadiumPts(H[23],H[51],8)),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
+      if(pk.uni.length!==1||fl.length!==1)console.warn('topPlate: the pocket and the balance opening cross in',pk.uni.length,'and',fl.length,'loops');
+      F.push({p:pk.A2,a:y0,b:y1},{p:U,a:y1-1.35,b:y1,floorOut:fl[0]});
+      tag(mesh(tp,solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050901');}
+    /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's */
+    const S=WD.PSCR;for(const[x,z]of WD.PILLARS)tag(screw(tp,x,z,TT,S.r,S.h,S.len,S.rs,M.brass),'WN-57');
+
+    /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
+    /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 14-18, the
+       hand-setting work's ("nur wenn Zeigerstellung eingebaut wird": Wempe 3955 has it, 6_Wempe_3955_S.jpg; built with the hand-setting, 05 33) and 56, 57 ("nur bei Bedarf",
+       the seconds contact's; not in Wempe 3955's plate). Its sections: E-F the pillar seats in the inner face; A-B the intermediate bridge's steady pins 29, 44 reamed from the
+       dial face and opened Ø 2.5 × 1.6 from the inner face ("oben"); G-H hole 30's setting, Ø 5.2 H7 from the inner face to 0.5 above the dial face, Ø 4.59 H7 through that,
+       its two M1.2 3.5 either side along the O-W line. 26 reamed 2.50 with two M1.2 3.5 either side on the line 37° below O toward S (05 08_3b). The opening for the intermediate
+       wheel (38) milled Ø 24.5 ("vor dem kalibrieren auf 24,5 fräsen"; it scales 24.8), joined by the seconds arbor's hole 35 (punched 6.0) on its rim; 23 drawn Ø 7 (the table
+       punches it 4.4: the 7 drawn and labelled is taken). A notch at 6 o'clock in its rim for the pin that the movement ring's sheet drills across the joint at assembly (05 08 00-3,
+       "wird bei Montage der Unterplatte gebohrt", Ø 1) */
+    const pp=part('pillarPlate',0),pinAt=add([0,0],brg(180),R);
+    {const y0=0,y1=PPT,F=[],out=bool(C([0,0],R,720),C(pinAt,0.5,32,0.5)).dAB[0];
+      F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.70/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
+        T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
+      for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
+      for(const k of[28,43])F.push(T(H[k],rM26,y0,y1));
+      for(const k of[29,44])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));
+      F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
+      for(const k of[11,39,49])F.push(T(H[k],WD.PIL_HOLE,y0,y1),A(H[k],WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
+      F.push({p:twoCircles(H[38],24.5/2,H[35],6.0/2),a:y0,b:y1});
+      tag(mesh(pp,solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050802-1');}
+    /* its pillar screws (WN-56) from the dial side, in a frame turned over so their heads face +y */
+    {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);for(const[x,z]of WD.PILLARS)tag(screw(rg,x,-z,-PPT,S.r,S.h,S.len,S.rs,M.brass),'WN-56');}
+
+    /* ================= the pillars (Pfeiler, 05 08 00-1) ================= */
+    /* turned brass (Rundmessing 8,5 Ms 58), the body Ø 8.1 for 19.6 between its shoulders, which sit in the plates' seats; a spigot Ø 4.5 f7 at each end, 2.8 long, its last 1.1
+       turned to Ø 4.3 at 6°; tapped M2.6 through from both ends (drawn at the thread's size and 0.02, as the tapped holes), a 90° countersink at each end; a half-round relief
+       groove in each shoulder's face round the spigot's root (drawn, not figured: WD.PIL.grv). One profile turned about the pillar's axis, its outer wall rising in y */
+    {const P=WD.PIL,yb=WD.PIL_SEAT[1],yt=TI-WD.PIL_SEAT[1],e0=yt-P.sL,e1=yb+P.sL,rb=S.rs+0.02,cd=P.cs-rb,[gr,gd]=P.grv,gc=(P.sr+gr)/2,ga=(gr-P.sr)/2;
+      const grv=(y,s)=>[...Array(9).keys()].map(i=>{const t=Math.PI*(1-i/8);return V2(gc+ga*Math.cos(t),y+s*gd*Math.sin(t));});   /* from the spigot out (s: into the body, +1 at the top shoulder) */
+      const prof=[V2(P.cs,e0),V2(P.tip[0],e0),V2(P.sr,e0+P.tip[1]),...grv(yt,1),V2(P.r,yt),V2(P.r,yb),...grv(yb,-1).reverse(),V2(P.sr,e1-P.tip[1]),V2(P.tip[0],e1),V2(P.cs,e1),V2(rb,e1-cd),V2(rb,e0+cd),V2(P.cs,e0)];
+      const pil=part('pillars',-20),pg=new THREE.LatheGeometry(prof,64);for(const[x,z]of WD.PILLARS)tag(mesh(pil,pg,M.brass,x,0,z),'050800-1');}
+
+    /* ================= the movement ring (Werkring, 05 08 00-3, as revised 6.12.46) ================= */
+    /* The pillar plate sits in its seat (Ø 85 H9, 3 +0.1 deep) on a lip (Ø 83), the plate 0.35 proud of the ring's inner face (the coloured section, Wempe_Einheitschronometer.jpg,
+       left and right ends); below the lip a 45° cone opens to Ø 93 at the dial's recess (Ø 104 +0.1, 0.7 +0.1 deep) in the flange's face; the flange Ø 105.95 -0.1 and 4.7 high, the
+       ring under it Ø 96 -0.3; 10.7 -0.1 overall, 7 -0.1 from the recess's floor to the seat's. Three M2.6 on Ø 89, 120° apart, at 340°, 100°, 220° (the sheet drawn from the
+       dial side, 20° from 12; Wempe 3955's three brass heads on the plate's rim at 339°, 99°, 218°, 2_Wempe_3955_A.jpg): their screws' heads bear on the plate's rim and hold it
+       in the seat. The dial's pin hole Ø 1.6 at r 50.5, 6° from 12 toward 3 ("wird bei Montage des Zifferblattes gebohrt"); the plate's pin hole Ø 1 at 6 o'clock across the
+       seat's wall. Its depths below the lip, the cone's run and the screws' are not figured: the 7 and 0.7 put the lip's floor at 3.35 below its inner face, so the cone, from the
+       lip's Ø 83 at 45° to Ø 93, starts 2.0 below the seat (the coloured section draws about 2); the plate's pin 5.35 long, to the cone (the section draws it 7.6, which would
+       cross the cone); the M2.6 holes 6.0 deep (to the flange): estimated. Material not given ("——"); Wempe 3955's is nickel-bright: drawn nickel, estimated. Its radial pin
+       to the case (Ø 1.1 at 2.8 from the dial's face; Stellstift WN-202 in the coloured section) is left for the case (05 01) */
+    const rg=part('ring',12);
+    {const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
+      const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
+        ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};
+      tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
+      const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.6/2,6.35,11.05)]};
+      tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
+      /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
+      for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,2.25,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
+      tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');}   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
+
+    /* ================= the barrel bridge (Federhausbrücke, 05 08 05-1; kompl. 05 08 05) ================= */
+    /* Messingblech 3,5 Ms 58, 3.32 -0.04 thick, on the top plate's outer face over the barrel. Its outer edge the plate's rim ("mit der Oberplatte überdrehen"), its inner edge a
+       straight chord: 24 its greatest width (so the chord 18.5 from the centre, square to hole 45's line: 45 is then 7 from it, as drawn), 73.5 from its point at 6 o'clock's end
+       to the top's corner on the rim, the short edge there at 150° to the chord (its corner on the rim 5.26 off the chord by the 73.5; the sheet's "5"), 7.7 from the point to
+       pin 41: every figure of 05 08 05-1 fits that line (sure). Holes: 45 the barrel arbor's, 3.9 ±0.01; 46 the click's screw, M2.6; 42, 48 clear 2.8 for its screws; 41, 47
+       its steady pins, 1.585 -0.005, 2.5 deep (their holes' 90° countersink 0.3 is left out). Drawn gilt */
+    const bb=part('barrelBridge',-52);
+    {const n=unit(H[45]),t=(q=>q[1]<0?q:[-q[0],-q[1]])([n[1],-n[0]]),sT=Math.sqrt(R*R-35.24**2),Bp=add(add([0,0],n,18.5),t,-Math.sqrt(R*R-18.5**2)),Tp=add(add([0,0],n,sT),t,35.24),Cp=add(add([0,0],n,18.5),t,35.24-(sT-18.5)/Math.tan(30*D2R));
+      const aB=Math.atan2(Bp[1],Bp[0]),aT=Math.atan2(Tp[1],Tp[0]),an=Math.atan2(n[1],n[0]);let da=((aT-aB)%TAU+TAU)%TAU;if(Math.abs(((an-aB)%TAU+TAU)%TAU)>da)da-=TAU;   /* round the rim through n */
+      const N=Math.ceil(Math.abs(da)*R/0.1),arc=[...Array(N-1).keys()].map(i=>{const a=aB+da*(i+1)/N;return[R*Math.cos(a),R*Math.sin(a)];});
+      const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),B(H[41],rPinQ,y1,2.5),B(H[47],rPinQ,y1,2.5)];
+      tag(mesh(bb,solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]),M.gilt),'050805-1');PL.bbChord=[Bp,Cp];}
+    /* its screws (WN-55 in the coloured section): heads Ø 6.4 × 3.0, brass (Wempe 3955), the shank 6.2, through the bridge and 2.9 into the plate: scaled on the coloured section (estimated) */
+    for(const k of[42,48])tag(screw(bb,H[k][0],H[k][1],TT-3.32,3.2,3.0,6.2,1.3,M.brass),'WN-55');
+    /* its steady pins (WN-203, 05 08 05): Ø 1.6, 1.3 proud of its face (sure), 3 long (as the balance cock's on 127-556.04 U30: estimated) */
+    for(const k of[41,47])tag(cylBetween(bb,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.bb');
+    /* the click (Sperrkegel, 05 08 05-2, revised 25.5.48): Messingblech 3 Ms 58 federhart, so its own spring (no separate spring is drawn); 2.6 -0.03/-0.05 thick on the bridge's
+       face, turning on a shouldered screw (WN-22) in hole 46. Its outline in its own frame (x from its hole toward its nose, y away from its base line), from 05 08 05-2 at 5:1:
+       the hole Ø 3.2 +0.03; 17.4 long; the base 2.81 under the hole (scaled); the nose r 1 at 7.5 from the hole; the beak 3.5 high at the base's other end, its tip 9.7 from the
+       hole; under it the hollow r 6 about a point 5.142 back and 7.212 under the hole (sure); the back an arc r 12.5 (sure), its centre traced on the sheet (a circle fitted to 37
+       points along it, 0.05 mm rms: 1.53 back, 9.55 under the hole). Its beak toward the barrel's ratchet: its base line at 23.3° from N toward O, traced on Wempe 3955's
+       (2_Wempe_3955_A.jpg, ±3°: the nose's centre lands at 37.3° from the hole, where the photograph has it, 37.5°) */
+    {const yb=-2.81,c12=[-1.53,-9.55],c6=[-5.142,-7.212],cn=[Math.sqrt(7.5**2-(yb+1)**2),yb+1],tB=[-9.15,-2.70],tC=[-1.53-Math.sqrt(12.5**2-(yb+3.5+9.55)**2),yb+3.5];
+      const ln=(p,q,x)=>{const d=[q[0]-p[0],q[1]-p[1]],l=Math.hypot(d[0],d[1]);return((x[0]-p[0])*d[1]-(x[1]-p[1])*d[0])/l;};   /* + right of p to q */
+      const f=x=>Math.max(Math.hypot(x[0]-c12[0],x[1]-c12[1])-12.5,yb-x[1],6-Math.hypot(x[0]-c6[0],x[1]-c6[1]),-ln(tB,tC,x),Math.min(x[0]-cn[0],Math.hypot(x[0]-cn[0],x[1]-cn[1])-1));
+      const loc=sdfOutline((x,z)=>f([x,z]),-10,-4,9,4,0.02),ex=brg(23.3),ey=brg(23.3-90),pl=p=>add(add(H[46],ex,p[0]),ey,p[1]);
+      const ck=loose(new THREE.Group(),4);bb.add(ck);const y0=TT-3.32-2.6,y1=TT-3.32;
+      tag(mesh(ck,solidGeo([{loop:loc.map(pl),y0,y1,F:[T(H[46],3.23/2,y0,y1)]}]),M.gilt),'050805-2');ck.userData.y0=0;}
+    /* the click's screw (WN-22): head Ø 4.5 × 2.1 (Wempe 3955's 4.6), shoulder Ø 3.1 through the click (its hole 3.2) and 0.05 more, M2.6 through the bridge: the coloured section,
+       scaled (estimated) */
+    {const g=tag(screw(bb,H[46][0],H[46][1],TT-3.32-2.65,2.25,2.1,0,1.3,M.steel),'WN-22'),L=2.65+3.2,rs=1.3,pt=0.3,d=pt*0.3,n=Math.floor((L-2.65-pt*0.6)/pt),pr=[V2(0,0),V2(3.1/2,0),V2(3.1/2,2.65),V2(rs,2.65),V2(rs,L-n*pt-d)];   /* its shoulder and thread turned below the head, the thread's rings as screw() draws them */
+      for(let i=0;i<n;i++){const a=L-(n-i)*pt-d;pr.push(V2(rs-d,a+pt/2),V2(rs,a+pt));}pr.push(V2(rs-d,L),V2(0,L));mesh(g,new THREE.LatheGeometry(pr,28),M.steel);g.userData.lift=L+2.1+1.5;}
+
+    /* ================= the fusee bush (Schneckenfutter, 05 08 01-2) and dust bush (Staubfutter, 05 08 01-3) ================= */
+    /* Schneckenfutter: Rundmessing 13,5 Ms 58: a flange Ø 13.2 -0.2 × 1.5 -0.1 on the top plate's outer face, its body Ø 8 T6 pressed 2.7 into the plate's hole 10 (to the
+       J-K recess, which leaves the plate 2.65 there), above the flange Ø 8 g6 (drawn at its middle, 7.9905) tapering 1:70 (to the sheet's 7.96 at its top), 2.9 +0.2 high, 7.1 -0.2 overall; bore 4.1 +0.2, its top sunk
+       Ø 7 ±0.1 at 45°; the flange's three holes Ø 1.5 +0.1, sunk Ø 2.2 H8 × 0.5 +0.05, on Ø 10.4 ±0.05 (sure), for M1.4 screws (WN-34) into the plate (the coloured section and
+       05 08 01's section put them in from above). Three solids: the body below the flange and above it turned, the flange with its holes cut */
+    const fb=part('fuseeBush',-46),F10=H[10];
+    {const r=2.05,lw=[V2(r,TT),V2(4.012,TT),V2(4.012,TT+2.7),V2(r,TT+2.7),V2(r,TT)],up=[V2(3.5,TT-4.4),V2(7.9905/2-2.9/140,TT-4.4),V2(7.9905/2,TT-1.5),V2(r,TT-1.5),V2(r,TT-2.95),V2(3.5,TT-4.4)];
+      const g=tag(mesh(fb,new THREE.LatheGeometry(lw,64),M.brass,F10[0],0,F10[1]),'050801-2');tag(mesh(fb,new THREE.LatheGeometry(up,64),M.brass,F10[0],0,F10[1]),'050801-2',1);
+      const y0=TT-1.5,y1=TT,F=[T(F10,r,y0,y1)];for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);F.push(T(q,1.55/2,y0,y1),A(q,2.207/2,y0,0.5));}
+      tag(mesh(fb,solidGeo([{loop:C(F10,6.6,240),y0,y1,F}]),M.brass),'050801-2',1);}
+    /* its screws: heads Ø 2.1 × 0.45, just under the flange's face in the sinks (the dust bush stands on the flange), M1.4 × 3.6 through the flange and the plate to the recess: the coloured section, scaled (estimated) */
+    for(const b of[0,120,240]){const q=add(F10,brg(b),5.2);tag(screw(fb,q[0],q[1],TT-1.0,1.05,0.45,3.6,0.7),'WN-34');}
+    /* Staubfutter: Rundmessing 15 Ms 58, 18.1 -0.2 long on the bush's flange, slid over its top (bore Ø 8 H7, tapering 1:70 like the bush; its top Ø 7.62 under a 20° mouth
+       1.8 +0.2 deep); body Ø 13.1 -0.2 for 15.1, then a neck Ø 9.7 -0.2 (for 05 08 01-4, not in the set); at the body's top a collar 3.1 -0.2 high, Ø 15.1 -0.2 with a flat 14.1
+       from its far side, so flush with the body on one side (sure). The flat faces the upper balance cock, which passes 7.0 from the fusee's axis (the cock's coordinates):
+       turned any other way the collar would stand 0.55 into the cock's web (inferred). Its bottom's 5° × 0.5 chamfer is left out */
+    const db=part('dustBush',-66);
+    {const Yb=TT-1.5,Yt=Yb-18.1,rr=y=>8.0075/2-(Yb-y)/140,rT=rr(Yt+1.8)+1.8*Math.tan(20*D2R),nf=brg(255);
+      const lw=[V2(rr(Yb-12),Yb-12),V2(6.55,Yb-12),V2(6.55,Yb),V2(rr(Yb),Yb),V2(rr(Yb-12),Yb-12)],nk=[V2(rT,Yt),V2(4.85,Yt),V2(4.85,Yb-15.1),V2(rr(Yb-15.1),Yb-15.1),V2(rr(Yt+1.8),Yt+1.8),V2(rT,Yt)];
+      const g=tag(mesh(db,new THREE.LatheGeometry(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');tag(mesh(db,new THREE.LatheGeometry(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
+      const lug=clipPoly(C(F10,15.1/2,320),p=>6.55-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-15.1,y1=Yb-12.0;
+      tag(mesh(db,solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);}
+
+    /* ================= the upper balance cock (Unruhkloben oben, 05 08 03-1; kompl. 127-556.04 U30) ================= */
+    /* Profilmessing Ms 58, cranked: a foot 3.2 thick on the top plate's outer face, a web, and an arm 15 -0.1 over the foot's underside to the balance's upper setting at 23.
+       Its axis runs from 23 toward 15° W of N; in plan it tapers from 17 wide at the foot's end, 49 from the end of its arm, to the r 6 round the setting; the foot 16.5 long, the
+       web's outer face 26.5 from 23 and its inner face an arc r 22 ±0.1 about 23 (so 4.5 on the axis, about 5.5 at its sides: "≈5,5"); the arm 3.2 thick, relieved 0.8 under
+       it within r 12 of the setting, the step at 45° (05 08 03-1's "0,8", "45°", "12ʳ"; 127-556.04 U30 draws the arm 2.4 there: the relief; 05 08 03-1's "3,2 ±0,02" at the arm's
+       end conflicts and is noted in the README). The setting's seat Ø 5.2 H7 through, sunk Ø 6 × 0.5 underneath for its flange (U30), two M1.2 3.5 +0.05 either side along the axis (drawn at their tap drill, Ø 0.95, at 3.525: at the thread's size they would break 0.12 into the Ø 6 sink);
+       the auxiliary hole 20 Ø 2.8 at 10 from 23; a slot 1.8 H7 wide, its middle on the setting's line across the arm, from the O side's edge to 3.4 from the axis (C-D; Wempe 3955's
+       index lies in it). Foot: the screw's hole 8 clear 2.8, steady pins 6 and 50 5 either side of the axis at 40, pin 9 at 24.5 under the web, 1.585 -0.005 × 2.5 deep (sure).
+       C-D's 82° and the pins' 0.2 × 90° sinks are left out. Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
+    const uc=part('upperCock',-58);
+    {const c=H[23],ax=brg(345),vo=brg(75),pl=new Map(),P=q=>{if(!pl.has(q))pl.set(q,add(add(c,ax,q[0]),vo,q[1]));return pl.get(q);};   /* local [u along the axis, v toward O] to plan, one plan point per local point */
+      const Fp=[43,8.5],Fm=[43,-8.5],ph=Math.atan2(8.5,43)+Math.acos(6/Math.hypot(43,8.5)),Tp=[6*Math.cos(ph),6*Math.sin(ph)],Tm=[Tp[0],-Tp[1]];
+      const onE=(Tq,Fq,f)=>{const D=[Fq[0]-Tq[0],Fq[1]-Tq[1]];let a=0,b=1;for(let i=0;i<60;i++){const m=(a+b)/2;(f([Tq[0]+D[0]*m,Tq[1]+D[1]*m])<0)?a=m:b=m;}return[Tq[0]+D[0]*a,Tq[1]+D[1]*a];};
+      const X=(s,r)=>onE(s>0?Tp:Tm,s>0?Fp:Fm,typeof r==='number'?q=>Math.hypot(q[0],q[1])-r:q=>q[0]-26.5),Xs={};for(const r of[12,12.8,22,'u'])Xs[r]=[X(1,r),X(-1,r)];
+      const arc=(r,a0,a1)=>{const n=Math.max(2,Math.ceil(Math.abs(a1-a0)*r/0.1)),o=[];for(let i=1;i<n;i++){const a=a0+(a1-a0)*i/n;o.push([r*Math.cos(a),r*Math.sin(a)]);}return o;};   /* interior points */
+      const cut=r=>{const[p,m]=Xs[r];return[p,...arc(r,Math.atan2(p[1],p[0]),Math.atan2(m[1],m[0])),m];};   /* X+ round through u > 0 to X- */
+      const K12=cut(12),K128=cut(12.8),K22=cut(22),Ku=Xs.u,rev=a=>a.slice().reverse();
+      const S1=[-0.9,Math.sqrt(36-0.81)],S2=onE(Tp,Fp,q=>q[0]-0.9),aS1=Math.atan2(S1[1],S1[0]),aTm=Math.atan2(Tm[1],Tm[0]);
+      const end=[Tm,...arc(6,aTm,aS1-TAU),S1];   /* round the end from T- through u < 0 to the slot */
+      const yC=q=>TT-12.6+clamp(Math.hypot(q[0]-c[0],q[1]-c[1])-12,0,0.8);
+      const cells=[{L:[...end,[-0.9,3.4],[0.9,3.4],S2,...K12],y0:TT-15,y1:TT-12.6},{L:[...rev(K12),...K128],y0:TT-15,y1:yC},{L:[...rev(K128),...K22],y0:TT-15,y1:TT-11.8},
+        {L:[...rev(K22),Ku[0],Ku[1]],y0:TT-15,y1:TT},{L:[Ku[1],Ku[0],Fp,Fm],y0:TT-3.2,y1:TT}];
+      const L=(u,v)=>add(add(c,ax,u),vo,v),[thin,,,web,foot]=cells;
+      thin.F=[T(c,5.206/2,thin.y0,thin.y1),B(c,3.0,thin.y1,0.5),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),T(H[20],rCl26,thin.y0,thin.y1)];
+      foot.F=[T(H[8],rCl26,foot.y0,foot.y1),B(H[6],rPinQ,foot.y1,2.5),B(H[50],rPinQ,foot.y1,2.5)];web.F=[B(H[9],rPinQ,web.y1,2.5)];
+      tag(mesh(uc,solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),M.gilt),'050803-1');}
+    /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
+    tag(screw(uc,H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,M.blued),'WN-ucs');
+    /* its steady pins (hole numbers 6, 9, 50; their WN not given): Ø 1.6, 3 long, 1.3 proud (127-556.04 U30: sure for that cock) */
+    for(const k of[6,9,50])tag(cylBetween(uc,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.uc');
+
+    /* ================= the lower balance cock (Unruhkloben unten, 05 08 00-2, revised 2.12.46) ================= */
+    /* Profilmessing 20×10×8×3,3 Ms 58: a bar 20 × 8 and 10 -0.1 deep under the top plate's inner face, its axis through 22, 36, 37 (7 apart) at 32°30' from S toward W, and a lug
+       10 wide flush with its end at 22, 3.22 -0.04 thick at the bar's far face, ending in r 5 round the balance's lower setting at 23 (8.2 from the bar's axis, 5 along it from
+       36; 17.2 across both). The setting's seat Ø 5.2 H7 from the lug's far face to 0.5 +0.03 from its near one, Ø 4.59 +0.012 through that; two M1.2 3.5 +0.1 either side
+       across the bar's axis. 36 tapped M2.6 through for the screw from the top plate (G-H); 22, 37 its steady pins, 1.585 -0.005 × 2.5 deep (sure). Two cells: the bar and the lug */
+    const lc=part('lowerCock',-28);
+    {const o=H[36],bu=unit(sub(H[37],H[22])),nv=(q=>q[0]*(H[23][0]-o[0])+q[1]*(H[23][1]-o[1])>0?q:[-q[0],-q[1]])([-bu[1],bu[0]]),L=(u,w)=>add(add(o,bu,u),nv,w);
+      const L1=L(0,4),L2=L(-10,4),semi=[...Array(41).keys()].map(i=>{const t=Math.PI*i/40;return L(-5+5*Math.cos(t),8.2+5*Math.sin(t));});
+      const bar={loop:[L(-10,-4),L(10,-4),L(10,4),L1,L2],y0:TI,y1:TI+10,F:[T(o,rM26,TI,TI+10),A(H[22],rPinQ,TI,2.5),A(H[37],rPinQ,TI,2.5)]};
+      const ly0=TI+10-3.22,ly1=TI+10,lug={loop:[L2,L1,...semi],y0:ly0,y1:ly1,F:[T(H[23],rJ,ly0,ly1),B(H[23],5.206/2,ly1,3.22-0.5),T(add(H[23],nv,3.5),rM12,ly0,ly1),T(add(H[23],nv,-3.5),rM12,ly0,ly1)]};
+      tag(mesh(lc,solidGeo([bar,lug]),M.gilt),'050800-2');}
+    /* its screw (WN-53 in the coloured section): head Ø 5.8 × 1.7 in the plate's Ø 6 × 1.8 sink, M2.6 × 5.0, 3.45 into the cock: the coloured section, scaled (estimated) */
+    headOn(tag(screw(lc,H[36][0],H[36][1],TT+1.8,2.9,1.7,5.0,1.3),'WN-53'),'lowerCock','topPlate');
+    for(const k of[22,37])tag(cylBetween(lc,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');
+
+    /* ================= the intermediate bridge (Zwischenbrücke kompl., 05 08 04) ================= */
+    /* On the pillar plate's dial face, across the opening 38: the intermediate wheel's jewel pressed in at 38 (its face 0.7 +0.02 in from the plate side) and the seconds wheel's
+       setting (WN-300) at 35 (1.7 in), steady pins (WN-203) 1.3 proud, a screw at each end from the dial side, sunk. Holes 43, 38, 35, 28 and the pins 44, 29 all lie on one line
+       (the tables' coordinates, to 0.001: sure), 34.13 between the screws, 41.13 between the pins. Its outline (05 08 04-1, not in the set) scaled on 05 08 04 at 2:1 against
+       those spacings (7.03 px/mm): 45.5 × 10.0 with round ends, 3.8 thick; the screws' sinks Ø 4.4 × 2.0; the jewel's hole Ø 4.3 sunk Ø 6.2 × 0.7, the setting's Ø 5.2 sunk Ø 6.2 × 1.7:
+       estimated. Drawn gilt (Wempe 3955's, 3_Wempe_3955_uZ.jpg) */
+    const zb=part('intermediateBridge',18);
+    {const d=unit(sub(H[28],H[43])),m=[(H[28][0]+H[43][0])/2,(H[28][1]+H[43][1])/2],y0=PPT,y1=PPT+3.8;
+      const F=[T(H[28],rCl26,y0,y1),T(H[43],rCl26,y0,y1),B(H[28],2.2,y1,2.0),B(H[43],2.2,y1,2.0),A(H[29],rPinQ,y0,2.5),A(H[44],rPinQ,y0,2.5),T(H[38],4.3/2,y0,y1),A(H[38],3.1,y0,0.7),T(H[35],5.2/2,y0,y1),A(H[35],3.1,y0,1.7)];
+      tag(mesh(zb,solidGeo([{loop:stadiumPts(add(m,d,-17.75),add(m,d,17.75),10),y0,y1,F}]),M.gilt),'050804-1');
+      const g=new THREE.Group();g.rotation.x=Math.PI;zb.add(g);
+      for(const k of[28,43])tag(screw(g,H[k][0],-H[k][1],-(PPT+1.8),2.1,1.9,4.7,1.3,M.brass),'WN-52');   /* heads Ø 4.2 × 1.9 (Wempe 3955 4.4), just under the bridge's face, M2.6 × 4.7 into the plate: estimated */
+      for(const k of[29,44])tag(cylBetween(zb,rPin,PPT-1.3,PPT+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.zb');}
+    return PL;}
+  return{build,TT,TI};
+})();
+
+</script>
+<script>
+// @ts-check
+/* movement.js: the Wempe Einheits-Chronometer's movement, built from the works drawings' numbers (dims.js, WD) by its groups' builders, each in its own file: the frame
+   (js/frame.js, WFRAME, P1a, 14 October 2026); the train, fusee and barrel, escapement and balance, motion work come in later phases, each a file of its own.
+   Part of the Wempe model (three.js r128). Units mm; the movement frame as the Hamilton's: dial side +y, 12 o'clock -z, 3 o'clock +x (dims.js: x = the sheets' W, z = their S).
+   The pillar plate's inner face at y 0, its dial face at +PP_T; the top plate's inner face at -INNER, its outer face (the train side) at -INNER-TOP_T.
    Everything is built inside buildWempe, so none of its names reach the page's globals: core.js reads the Hamilton's (L, DIAL_R, SEC_L, UDA, UD_SWEEP, MSHAPE) lazily.
    Declares only buildWempe and ESC. */
 /* parts-list lines (userData.hn, bom.json ids): the drawing's number without its spaces (as 05 09 01's title block writes it, 050901), since a piece's lines are a space-separated list */
@@ -1727,59 +2043,84 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
    isolate.py and bom-check.js) and pass what it returns to update(), which takes the Hamilton's MoveState and uses what it has */
 const ESC={AMIN:0,state:p=>({th:0,lift:0,psDef:0,prog:0,p})};
 function buildWempe(M){
-  const mv=new THREE.Group(),K=KIT.parts(mv,M),{part,screw}=K,V2=(a,b)=>new THREE.Vector2(a,b),P=WD.PIL,S=WD.PSCR,YT=-WD.INNER;
-  const circ=(r,n)=>[...Array(n).keys()].map(k=>{const a=k/n*TAU;return[r*Math.cos(a),r*Math.sin(a)];});
-  /* the plates: discs Ø 85, 3.35 thick, with the three pillar holes (reamed 4.50), each seated Ø 8.6 × 0.3 in the plate's inner face for the pillar's shoulder (05 08 01
-     Schnitt L-M, 05 08 02-1 Schnitt E-F). Drawn gilt: the sheets give brass (Messingblech 4, Sonder Ms) and no sheet read yet gives the finish (estimated). The rest of their
-     holes, the top plate's cut round the barrel (05 08_1b: milled to 42.5 before reaming) and the bridges come in P1a */
-  const holes=s=>WD.PILLARS.map(([x,z])=>[x,s*z,WD.PIL_HOLE,WD.PIL_SEAT[0],WD.PIL_SEAT[1]]);   /* cbGeo's holes, counterbored from its top face (y 0); s -1 for a plate turned over */
-  const pp=part('pillarPlate',0);hn(mesh(pp,KIT.cbGeo(circ(WD.PLATE_R,240),WD.PP_T,holes(1)),M.gilt,0,0,0),'050802-1');   /* its seats in its inner face, at y 0; the plate toward +y */
-  const tp=part('topPlate',-40);{const g=KIT.cbGeo(circ(WD.PLATE_R,240),WD.TOP_T,holes(-1));g.rotateX(Math.PI);hn(mesh(tp,g,M.gilt,0,YT,0),'050901');}   /* turned over: its seats in its inner face, at -INNER; the plate toward -y */
-  /* the pillars (05 08 00-1): turned brass, the body Ø 8.14 for 19.6 between its shoulders, which sit in the plates' seats; a spigot Ø 4.5 f7 at each end, 2.8 long, its
-     last 1.1 turned down to Ø 4.3 at 6°; tapped M2.6 through from both ends (the bore drawn at the thread's size and 0.02, as the Hamilton's tapped holes, hT), a 90° countersink
-     at each end. The small relief at the shoulders (05 08 00-1, about 0.3 across) is left out until P1a. One profile turned about the pillar's axis, its outer wall rising in y */
-  const yb=WD.PIL_SEAT[1],yt=YT-WD.PIL_SEAT[1],e0=yt-P.sL,e1=yb+P.sL,rb=S.rs+0.02,cd=P.cs-rb;   /* the shoulders, the spigots' ends, the bore and the countersink's depth (45°) */
-  const prof=[V2(P.cs,e0),V2(P.tip[0],e0),V2(P.sr,e0+P.tip[1]),V2(P.sr,yt),V2(P.r,yt),V2(P.r,yb),V2(P.sr,yb),V2(P.sr,e1-P.tip[1]),V2(P.tip[0],e1),V2(P.cs,e1),V2(rb,e1-cd),V2(rb,e0+cd),V2(P.cs,e0)];
-  const pil=part('pillars',-20),pg=new THREE.LatheGeometry(prof,48);
-  for(const[x,z]of WD.PILLARS)hn(mesh(pil,pg,M.brass,x,0,z),'050800-1');
-  /* the pillar screws (the WN standard part's sheet not read yet): M2.6, from each plate's outer face into the pillar's end; the dial side's in a frame turned over, so their heads face +y */
-  for(const[x,z]of WD.PILLARS)hn(screw(tp,x,z,YT-WD.TOP_T,S.r,S.h,S.len,S.rs),'WN-pil.t');
-  {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);for(const[x,z]of WD.PILLARS)hn(screw(rg,x,-z,-WD.PP_T,S.r,S.h,S.len,S.rs),'WN-pil.d');}
+  const mv=new THREE.Group(),K=KIT.parts(mv,M);
+  const FR=WFRAME.build(mv,M,K);   /* the frame: plates, pillars, ring, bridges, cocks, bushes, their screws and pins */
   K.done();
-  /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}); the frame has nothing that moves yet */
+  /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}); the frame has nothing that moves */
   mv.userData.update=(/** @type {any} */s)=>{};
-  mv.userData.R={};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton */
+  mv.userData.R={fr:FR};mv.userData.S={pil:WD.PILLARS};   /* the tools read R and S on the Hamilton */
   return mv;
 }
 
 </script>
 <script>
 /* app.js: the Wempe Einheits-Chronometer's page: its parts' cards, views, sections, labels and link state, given to the shared viewer (../shared/viewer.js, VIEWER).
-   Part of the Wempe model (three.js r128). P0 (14 October 2026): the frame only, its dimensions provisional (dims.js). */
+   Part of the Wempe model (three.js r128). P1a (14 October 2026): the frame, from its sheets (js/frame.js, dims.js). */
 
 /* ================= parts registry ================= */
 /* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
-const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings, read off the sheet'],est:['Estimated','#8f969d','no sheet read yet gives its size or shape']};
+const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
 const PG=['Frame'];
+const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
-  pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Its diameter and the pillar holes, their places and seats, from the drawings; its thickness provisional (struck through on its sheet)',figs:'05 08_3a, 001',c:'#9fb4c8',plate:1,pri:3,
-    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand on it, their shoulders in seats turned in its inner face, each held by a screw from the dial side. Here only the plate and its pillar holes, provisionally: its other holes, the motion work under the dial and the up-and-down work come with the frame drawings.',
-    sp:'Drawing 05 08 02-1 · Ø 85 h6, 3.35 thick (provisional) · pillar holes Ø 4.50 +0.012, 37.00 from the centre, seated Ø 8.6 × 0.3'},
-  topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Its diameter, thickness and the pillar holes, their places and seats, from the drawings',figs:'05 08_1a, 05 08_1b, 001',c:'#c9d8a8',plate:1,pri:3,
-    d:'The upper plate, on the train side. It carries the train’s upper pivots, and the balance cock and the barrel bridge are screwed to it; round the barrel it is cut away (sheet 05 08_1b). Here only the plate and its pillar holes, provisionally: the rest of the plate comes with the frame drawings.',
-    sp:'Drawing 05 09 01, as its title block numbers it (the plate of Oberplatte kompl., 05 08 01) · Ø 85 h6, 3.35 thick · pillar holes as the pillar plate’s'},
-  pillars:{t:'Pillars (Pfeiler)',g:0,src:'drawing',sn:'Every size from its sheet but its countersinks, read off the drawing',figs:'05 08_11, 001',c:'#707a84',pri:2,
+  pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
+    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut, for the parts still to come, but the hand-setting work’s, which its sheet strikes through (“only when the hand-setting is fitted”), and the seconds contact’s (“only when needed”).'+SH,
+    sp:'Drawing 05 08 02-1 (kompl. 05 08 02) · special α-β brass sheet · Ø 85 h6 × 3.35 · pillar holes Ø 4.50 +0.012 on r 37, seated Ø 8.6 × 0.3 · opening for the intermediate wheel Ø 24.5'},
+  topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the balance opening’s tongue scaled on the sheet',figs:'05 08_1a, 05 08_1b, 05 08_2, 001',c:'#c9d8a8',plate:1,pri:3,
+    d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40.'+SH,
+    sp:'Drawing 05 09 01 (kompl. 05 08 01) · special α-β brass sheet · Ø 85 h6 × 3.35 · barrel cut Ø 42.5 · recess Ø 22 × 0.7 round the fusee · pocket 1.35 deep'},
+  pillars:{t:'Pillars (Pfeiler)',g:0,src:'drawing',sn:'Every size from its sheet but its countersinks and relief grooves, scaled on it',figs:'05 08_11, 001',c:'#707a84',pri:2,
     d:'Three turned brass pillars hold the plates 19 mm apart. Each sits by its shoulders in a seat in each plate, its spigots in the plates’ reamed holes, a screw from each plate’s outer face in its tapped ends.',
-    sp:'Drawing 05 08 00-1 · Ms 58 · body Ø 8.14, 19.6 between the shoulders, 25.3 overall · spigots Ø 4.5 f7 × 2.8 · tapped M2.6 from both ends'}};
+    sp:'Drawing 05 08 00-1 · Ms 58 · body Ø 8.1, 19.6 between the shoulders, 25.3 overall · spigots Ø 4.5 f7 × 2.8 · tapped M2.6 from both ends'},
+  ring:{t:'Movement ring (Werkring)',g:0,src:'drawing',sn:'Its diameters, heights and holes from its sheet; the depths its sheet leaves open fitted from its figures (README)',figs:'05 08_7',c:'#b6bcc2',pri:2,
+    d:'The ring the movement hangs in, in the case: the pillar plate sits in its seat on a lip, held by three screws whose heads bear on the plate’s rim, and the dial lies in a recess in its flange. Below the lip the ring opens out at 45° toward the dial.',
+    sp:'Drawing 05 08 00-3 (revised 6.12.46) · Ø 105.95 × 10.7 · seat Ø 85 H9 × 3 · dial recess Ø 104.0 +0.1 × 0.7 · three M2.6 on Ø 89'},
+  barrelBridge:{t:'Barrel bridge (Federhausbrücke)',g:0,src:'drawing',sn:'Its outline and holes from its sheet; its screws’ and the click screw’s sizes from the coloured section',figs:'05 08_12, 05 08_13, 05 08_14',c:'#d9b36a',pri:2,
+    d:'A crescent bridge on the top plate over the barrel, its outer edge turned with the plate’s rim, carrying the barrel arbor’s upper pivot and the click that holds the mainspring’s set-up.',
+    sp:'Drawing 05 08 05-1 (kompl. 05 08 05) · Ms 58 sheet · 3.32 thick · chord 73.5, 24 wide'},
+  fuseeBush:{t:'Fusee bush (Schneckenfutter)',g:0,src:'drawing',sn:'Every size from its sheet; its screws from the coloured section',figs:'05 08_8, 05 08_2',c:'#e0b45c',pri:1,
+    d:'A flanged brass bush pressed into the top plate and screwed to it, in which the fusee arbor’s winding end turns.',
+    sp:'Drawing 05 08 01-2 · Ms 58 · Ø 8 T6 into the plate, flange Ø 13.2 × 1.5, 7.1 high, bore 4.1'},
+  dustBush:{t:'Dust bush (Staubfutter)',g:0,src:'drawing',sn:'Every size from its sheet; which way its flat faces from the balance cock’s place',figs:'05 08_9, 05 08_2',c:'#c79a4a',pri:1,
+    d:'A tall brass bush on the fusee bush round the winding square, up to the case’s winding hole, keeping dust out of the movement. A flat on its collar clears the balance cock.',
+    sp:'Drawing 05 08 01-3 · Ms 58 · 18.1 long, Ø 13.1, collar Ø 15.1 with a flat at 14.1, bore Ø 8 H7 at 1:70'},
+  upperCock:{t:'Upper balance cock (Unruhkloben oben)',g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
+    d:'The cranked cock over the balance, screwed and pinned to the top plate, holding the balance staff’s upper jewel setting over the opening in the plate.',
+    sp:'Drawing 05 08 03-1 · Ms 58 profile · 49 long, 15 high, foot 3.2 · setting seat Ø 5.2 H7'},
+  lowerCock:{t:'Lower balance cock (Unruhkloben unten)',g:0,src:'drawing',sn:'Every size from its sheet',figs:'05 08_4',c:'#8fb3a8',pri:2,
+    d:'A block screwed and pinned under the top plate, inside the frame, whose lug holds the balance staff’s lower jewel setting about 10 mm under the plate: the balance swings above the plate, its escapement under it.',
+    sp:'Drawing 05 08 00-2 (revised 2.12.46) · Ms 58 profile · bar 20 × 8 × 10, lug 3.22 thick · setting seat Ø 5.2 H7'},
+  intermediateBridge:{t:'Intermediate bridge (Zwischenbrücke)',g:0,src:'scaled',sn:'Its holes’ places from the plate’s table; its outline and thickness scaled on its assembly sheet',figs:'05 08_10, 05 08_32.2',c:'#d6c08a',pri:1,
+    d:'A straight bridge on the pillar plate’s dial side, across the opening for the intermediate wheel: it carries that wheel’s lower jewel and the seconds wheel’s lower setting.',
+    sp:'Drawing 05 08 04 (the bridge 05 08 04-1 not in the set) · about 45.5 × 10 × 3.8 · screws 34.13 apart'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
-const SCRD='M2.6, from the plate’s outer face into the pillar’s tapped end. The heads, Ø 6.6, are measured on sheet 001; the screws’ own standard sheet (WN) is not read yet, so the heads’ height and the screws’ length are estimated.';
+const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
 const PIECES={
-  pillarPlate:[{k:'plate',t:'Pillar plate',h:'050802-1',d:PARTS.pillarPlate.d,sp:'Drawing 05 08 02-1'},
-    {k:'screws',t:'Pillar screws, dial side',h:'WN-pil.d',d:'Three pillar screws from the dial side: '+SCRD,sp:'M2.6 · heads Ø 6.6',src:'est',sn:'The thread from the pillar’s sheet, the heads measured on sheet 001, the rest estimated',figs:'001'}],
-  topPlate:[{k:'plate',t:'Top plate',h:'050901',d:PARTS.topPlate.d,sp:'Drawing 05 09 01'},
-    {k:'screws',t:'Pillar screws, train side',h:'WN-pil.t',d:'Three pillar screws from the train side: '+SCRD,sp:'M2.6 · heads Ø 6.6',src:'est',sn:'The thread from the pillar’s sheet, the heads measured on sheet 001, the rest estimated',figs:'001'}]};
+  pillarPlate:[{k:'plate',t:'Pillar plate',h:'050802-1',d:PARTS.pillarPlate.d,sp:PARTS.pillarPlate.sp},
+    {k:'screws',t:'Pillar screws, dial side',h:'WN-56',d:'Three pillar screws (WN-56) from the dial side into the pillars’ tapped ends, brass as Wempe 3955’s.',sp:'M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'The thread from the pillar’s sheet; the heads from the coloured section and Wempe 3955’s photograph',figs:'001'}],
+  topPlate:[{k:'plate',t:'Top plate',h:'050901',d:PARTS.topPlate.d,sp:PARTS.topPlate.sp},
+    {k:'screws',t:'Pillar screws, train side',h:'WN-57',d:'Three pillar screws (WN-57) from the top plate’s outer face into the pillars’ tapped ends, brass as Wempe 3955’s.',sp:'M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'The thread from the pillar’s sheet; the heads from the coloured section and Wempe 3955’s photograph',figs:'001'}],
+  ring:[{k:'ring',t:'Movement ring',h:'050800-3',d:PARTS.ring.d,sp:PARTS.ring.sp},
+    {k:'screws',t:'Movement ring screws',h:'WN-rs',d:'Three screws in the ring whose heads bear on the pillar plate’s rim, holding it in its seat (their WN number not read).',sp:'M2.6 on Ø 89 · heads Ø 6.2 × 2.25',src:'est',sn:'The thread and places from the ring’s sheet and Wempe 3955; the heads and length from the coloured section',figs:'05 08_7'},
+    {k:'pin',t:'Plate’s pin',h:'WN-201',d:'A pin (WN-201) Ø 1 drilled in across the joint of the plate and the ring at assembly, which sets the movement’s turn in the ring.',sp:'Ø 1',src:'est',sn:'Its place and size from the ring’s sheet; its length from the coloured section, shortened to stay in the ring',figs:'05 08_7'}],
+  barrelBridge:[{k:'bridge',t:'Barrel bridge',h:'050805-1',d:PARTS.barrelBridge.d,sp:PARTS.barrelBridge.sp},
+    {k:'click',t:'Click (Sperrkegel)',h:'050805-2',d:'The click on the barrel’s ratchet, which holds the mainspring’s set-up. It is cut from spring-hard brass, so it is its own spring: no separate spring is drawn.',sp:'Drawing 05 08 05-2 (revised 25.5.48) · Ms 58 federhart · 17.4 × 2.6',src:'drawing',sn:'Its outline from its sheet; its turn on the bridge traced on Wempe 3955',figs:'05 08_14'},
+    {k:'clickScrew',t:'Click screw',h:'WN-22',d:'The shouldered screw the click turns on.',sp:'WN-22 · M2.6, shoulder Ø 3.1',src:'est',sn:'Sized on the coloured section',figs:'05 08_12'},
+    {k:'screws',t:'Barrel bridge screws',h:'WN-55',d:'Two screws holding the bridge to the top plate.',sp:'WN-55 · M2.6 · heads Ø 6.4 × 3.0',src:'est',sn:'Sized on the coloured section and Wempe 3955',figs:'05 08_13'},
+    {k:'pins',t:'Barrel bridge steady pins',h:'WN-203.bb',d:PIN+' WN-203.',sp:'Ø 1.6, 1.3 proud',src:'drawing',sn:'Their places and protrusion from the bridge’s sheets; their length as the cock’s',figs:'05 08_12, 05 08_13'}],
+  fuseeBush:[{k:'bush',t:'Fusee bush',h:'050801-2',d:PARTS.fuseeBush.d,sp:PARTS.fuseeBush.sp},
+    {k:'screws',t:'Fusee bush screws',h:'WN-34',d:'Three small screws holding the bush’s flange to the top plate.',sp:'WN-34 · M1.4',src:'est',sn:'Their places from the sheets; their size from the coloured section',figs:'05 08_8, 05 08_2'}],
+  upperCock:[{k:'cock',t:'Upper balance cock',h:'050803-1',d:PARTS.upperCock.d,sp:PARTS.upperCock.sp},
+    {k:'screw',t:'Upper cock screw',h:'WN-ucs',d:'The blued screw holding the cock to the top plate.',sp:'M2.6 · head Ø 6.4 × 3.0',src:'est',sn:'Sized on the coloured section and Wempe 3955',figs:'05 08_5'},
+    {k:'pins',t:'Upper cock steady pins',h:'WN-203.uc',d:PIN,sp:'Ø 1.6, 3 long',src:'drawing',sn:'Their places from the cock’s table; their length from 127-556.04 U30',figs:'05 08_5, 05 08_6'}],
+  lowerCock:[{k:'cock',t:'Lower balance cock',h:'050800-2',d:PARTS.lowerCock.d,sp:PARTS.lowerCock.sp},
+    {k:'screw',t:'Lower cock screw',h:'WN-53',d:'The screw from the top plate’s outer face, its head sunk in the plate, into the cock.',sp:'WN-53 · M2.6 · head Ø 5.8 × 1.7',src:'est',sn:'Sized on the coloured section',figs:'05 08_1b'},
+    {k:'pins',t:'Lower cock steady pins',h:'WN-203.lc',d:PIN,sp:'Ø 1.6, 3 long',src:'drawing',sn:'Their places from the cock’s table; their length as the upper cock’s',figs:'05 08_4'}],
+  intermediateBridge:[{k:'bridge',t:'Intermediate bridge',h:'050804-1',d:PARTS.intermediateBridge.d,sp:PARTS.intermediateBridge.sp},
+    {k:'screws',t:'Intermediate bridge screws',h:'WN-52',d:'Two screws from the dial side, their heads sunk in the bridge, into the pillar plate.',sp:'WN-52 · M2.6',src:'est',sn:'Sized on the assembly sheet and Wempe 3955',figs:'05 08_10, 05 08_32.2'},
+    {k:'pins',t:'Intermediate bridge steady pins',h:'WN-203.zb',d:PIN+' WN-203.',sp:'Ø 1.6, 1.3 proud',src:'drawing',sn:'Their places from the plate’s table; their protrusion from the bridge’s sheet',figs:'05 08_10'}]};
 
 /* ================= views ================= */
 /* the camera's turn (yaw), height (pitch, rad) and distance, aimed at a point in the movement's frame. The movement stands train side up (the scene's group turns it over) */
@@ -1787,10 +2128,10 @@ const VIEWS={
   movement:{yaw:2.5,pitch:0.6,dist:250,target:[0,-11,0]},
   plan:{yaw:Math.PI,pitch:1.52,dist:270,target:[0,-11,0]},   /* straight down on the top plate, 12 o'clock at the top (so 3 o'clock on the left, as the sheets draw the Oberplatte: their O to the right) */
   dial:{yaw:Math.PI,pitch:-1.2,dist:270,target:[0,-11,0]},   /* from below, on the pillar plate's dial side */
-  side:{yaw:Math.PI/2,pitch:0.04,dist:260,target:[0,-11,0],fov:20},
-  exploded:{yaw:2.2,pitch:0.3,dist:330,target:[0,-31,0],explode:1}};
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The pillar plate’s dial side, from below.',side:'The frame from the side: the plates on their pillars.',exploded:'Every part lifted apart along the pillars.'};
-const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-23,max:4,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
+  side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
+  exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1}};
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The pillar plate’s dial side, from below.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.'};
+const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
 (function(){let mv=null;
@@ -1801,8 +2142,14 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
       add('Pillar plate','Unterplatte, 05 08 02-1','pillarPlate',pw(P.pillarPlate,-30,WD.PP_T,26));
       add('Top plate','Oberplatte, 05 09 01','topPlate',pw(P.topPlate,-28,-WD.INNER-WD.TOP_T,-20));
-      add('Pillar','Pfeiler, 05 08 00-1','pillars',pw(P.pillars,c[0]+WD.PIL.r,-WD.INNER/2,c[1]));},
-    hud:st=>`The frame alone, its sizes provisional${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
+      add('Pillar','Pfeiler, 05 08 00-1','pillars',pw(P.pillars,c[0]+WD.PIL.r,-WD.INNER/2,c[1]));const H=WD.H,TT=WFRAME.TT,TI=WFRAME.TI;
+      add('Movement ring','Werkring, 05 08 00-3','ring',pw(P.ring,0,11.05,50));
+      add('Barrel bridge','Federhausbrücke, 05 08 05-1','barrelBridge',pw(P.barrelBridge,32,TT-3.32,4));
+      add('Upper balance cock','Unruhkloben oben, 05 08 03-1','upperCock',pw(P.upperCock,H[9][0],TT-15,H[9][1]));
+      add('Lower balance cock','Unruhkloben unten, 05 08 00-2','lowerCock',pw(P.lowerCock,H[36][0],TI+10,H[36][1]));
+      add('Dust bush','Staubfutter, 05 08 01-3','dustBush',pw(P.dustBush,H[10][0]-6.55,TT-12,H[10][1]));
+      add('Intermediate bridge','Zwischenbrücke, 05 08 04','intermediateBridge',pw(P.intermediateBridge,H[38][0],WD.PP_T+3.8,H[38][1]));},
+    hud:st=>`The frame, from its drawings${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
   if(V&&/[?&]qa\b/.test(location.search))window.__V=V;   /* the viewer's state, for the tools */
 })();
 

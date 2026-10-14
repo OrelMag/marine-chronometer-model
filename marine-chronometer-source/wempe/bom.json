@@ -1,7 +1,8 @@
 {
- "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P0, 14 October 2026: the frame's lines only, provisional until the frame drawings are transcribed (References/wempe/transcriptions/05-08-frame.md). Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers (05 08 00-1) are not of its form",
+ "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
  "relations": {
   "in": "the part's axis inside the named part: tap (thread in a tapped hole), clear (through a clearance hole), run, free, press (as the Hamilton's bom.json)",
+  "round": "the part's bore round the named part",
   "on": "rests against the named part (surfaces within 0.02 mm)"
  },
  "lines": [
@@ -15,9 +16,9 @@
    "parent": null,
    "kind": "part",
    "part": "pillarPlate",
-   "fn": "The lower plate, under the dial: the foundation of the movement.",
+   "fn": "The lower plate, under the dial: the foundation of the movement (its assembly, Unterplatte kompl., is 05 08 02).",
    "rel": [],
-   "figs": "05 08_3a"
+   "figs": "05 08_3a, 05 08_3b, 05 08_32.2"
   },
   {
    "id": "050901",
@@ -29,9 +30,9 @@
    "parent": null,
    "kind": "part",
    "part": "topPlate",
-   "fn": "The upper plate, on the train side (its sheet's title block numbers it 05 09 01; the assembly, Oberplatte kompl., is 05 08 01).",
+   "fn": "The upper plate, on the train side (its sheet's title block numbers it 05 09 01; its assembly, Oberplatte kompl., is 05 08 01).",
    "rel": [],
-   "figs": "05 08_1a"
+   "figs": "05 08_1a, 05 08_1b, 05 08_2"
   },
   {
    "id": "050800-1",
@@ -43,8 +44,18 @@
    "parent": null,
    "kind": "part",
    "part": "pillars",
-   "fn": "Hold the plates 19 mm apart, their shoulders in seats in the plates.",
+   "fn": "Hold the plates 19 mm apart, their shoulders in seats in the plates, their spigots in the plates' reamed holes.",
    "rel": [
+    [
+     "in",
+     "050802-1",
+     "run"
+    ],
+    [
+     "in",
+     "050901",
+     "run"
+    ],
     [
      "on",
      "050802-1"
@@ -57,11 +68,11 @@
    "figs": "05 08_11"
   },
   {
-   "id": "WN-pil.d",
+   "id": "WN-56",
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Pillar screw, dial side (WN standard part, its number not read yet)",
+   "name": "Pillar screw, dial side (WN-56, by the coloured section's label)",
    "qty": 3,
    "parent": "050800-1",
    "kind": "part",
@@ -70,28 +81,388 @@
    "rel": [
     [
      "in",
-     "050802-1",
-     "clear"
-    ],
-    [
-     "in",
      "050800-1",
      "tap"
+    ],
+    [
+     "on",
+     "050802-1"
     ]
    ],
    "figs": "001"
   },
   {
-   "id": "WN-pil.t",
+   "id": "WN-57",
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Pillar screw, train side (WN standard part, its number not read yet)",
+   "name": "Pillar screw, train side (WN-57, by the coloured section's label)",
    "qty": 3,
    "parent": "050800-1",
    "kind": "part",
    "part": "topPlate",
-   "fn": "Hold the top plate to each pillar, from the train side.",
+   "fn": "Hold the top plate to each pillar, from its outer face.",
+   "rel": [
+    [
+     "in",
+     "050800-1",
+     "tap"
+    ],
+    [
+     "on",
+     "050901"
+    ]
+   ],
+   "figs": "001"
+  },
+  {
+   "id": "050800-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 00-3",
+   "name": "Werkring (movement ring)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "ring",
+   "fn": "The ring the pillar plate sits in, which carries the dial and hangs in the case.",
+   "rel": [
+    [
+     "on",
+     "050802-1"
+    ]
+   ],
+   "figs": "05 08_7"
+  },
+  {
+   "id": "WN-rs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Movement ring screw (WN number not read)",
+   "qty": 3,
+   "parent": "050800-3",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Its head bears on the pillar plate's rim and holds it in the ring's seat.",
+   "rel": [
+    [
+     "in",
+     "050800-3",
+     "tap"
+    ],
+    [
+     "on",
+     "050802-1"
+    ]
+   ],
+   "figs": "05 08_7"
+  },
+  {
+   "id": "WN-201",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stellstift (WN-201): the plate's pin in the movement ring",
+   "qty": 1,
+   "parent": "050800-3",
+   "kind": "part",
+   "part": "ring",
+   "fn": "Drilled across the joint of the pillar plate and the ring at assembly, it sets the movement's turn in the ring.",
+   "rel": [
+    [
+     "in",
+     "050800-3",
+     "press"
+    ]
+   ],
+   "figs": "05 08_7"
+  },
+  {
+   "id": "050805-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 05-1",
+   "name": "Federhausbrücke (barrel bridge)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Holds the barrel arbor's upper pivot over the top plate's cut (its assembly is 05 08 05).",
+   "rel": [
+    [
+     "on",
+     "050901"
+    ]
+   ],
+   "figs": "05 08_12, 05 08_13"
+  },
+  {
+   "id": "050805-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 05-2",
+   "name": "Sperrkegel (click)",
+   "qty": 1,
+   "parent": "050805-1",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "The click on the barrel's ratchet, spring-hard brass, its own spring.",
+   "rel": [
+    [
+     "on",
+     "050805-1"
+    ],
+    [
+     "round",
+     "WN-22",
+     "free"
+    ]
+   ],
+   "figs": "05 08_14"
+  },
+  {
+   "id": "WN-22",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Click screw, shouldered (WN-22)",
+   "qty": 1,
+   "parent": "050805-1",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "The click turns on its shoulder.",
+   "rel": [
+    [
+     "in",
+     "050805-1",
+     "tap"
+    ]
+   ],
+   "figs": "05 08_12"
+  },
+  {
+   "id": "WN-55",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Barrel bridge screw (WN-55, by the coloured section's label)",
+   "qty": 2,
+   "parent": "050805-1",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Hold the barrel bridge to the top plate.",
+   "rel": [
+    [
+     "in",
+     "050805-1",
+     "clear"
+    ],
+    [
+     "in",
+     "050901",
+     "tap"
+    ]
+   ],
+   "figs": "05 08_13"
+  },
+  {
+   "id": "WN-203.bb",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stellstift (WN-203), barrel bridge",
+   "qty": 2,
+   "parent": "050805-1",
+   "kind": "part",
+   "part": "barrelBridge",
+   "fn": "Place the barrel bridge on the top plate.",
+   "rel": [
+    [
+     "in",
+     "050805-1",
+     "press"
+    ],
+    [
+     "in",
+     "050901",
+     "clear"
+    ]
+   ],
+   "figs": "05 08_12, 05 08_13"
+  },
+  {
+   "id": "050801-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 01-2",
+   "name": "Schneckenfutter (fusee bush)",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "fuseeBush",
+   "fn": "Pressed into the top plate and screwed to it: the fusee arbor's winding end turns in it.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ],
+    [
+     "on",
+     "050901"
+    ]
+   ],
+   "figs": "05 08_8, 05 08_2"
+  },
+  {
+   "id": "WN-34",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Fusee bush screw (WN-34)",
+   "qty": 3,
+   "parent": "050801-2",
+   "kind": "part",
+   "part": "fuseeBush",
+   "fn": "Hold the fusee bush's flange to the top plate.",
+   "rel": [
+    [
+     "in",
+     "050801-2",
+     "clear"
+    ],
+    [
+     "in",
+     "050901",
+     "tap"
+    ]
+   ],
+   "figs": "05 08_2"
+  },
+  {
+   "id": "050801-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 01-3",
+   "name": "Staubfutter (dust bush)",
+   "qty": 1,
+   "parent": "050801-2",
+   "kind": "part",
+   "part": "dustBush",
+   "fn": "Slid over the fusee bush's top, up to the case's winding hole.",
+   "rel": [
+    [
+     "round",
+     "050801-2",
+     "free"
+    ],
+    [
+     "on",
+     "050801-2"
+    ]
+   ],
+   "figs": "05 08_9, 05 08_2"
+  },
+  {
+   "id": "050803-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 03-1",
+   "name": "Unruhkloben oben (upper balance cock)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "upperCock",
+   "fn": "Holds the balance staff's upper jewel setting over the top plate.",
+   "rel": [
+    [
+     "on",
+     "050901"
+    ]
+   ],
+   "figs": "05 08_5, 05 08_6"
+  },
+  {
+   "id": "WN-ucs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Upper balance cock screw (hole 8; WN number not read)",
+   "qty": 1,
+   "parent": "050803-1",
+   "kind": "part",
+   "part": "upperCock",
+   "fn": "Holds the upper cock to the top plate.",
+   "rel": [
+    [
+     "in",
+     "050803-1",
+     "clear"
+    ],
+    [
+     "in",
+     "050901",
+     "tap"
+    ]
+   ],
+   "figs": "05 08_5"
+  },
+  {
+   "id": "WN-203.uc",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stellstift, upper balance cock (holes 6, 9, 50; WN not given, as WN-203)",
+   "qty": 3,
+   "parent": "050803-1",
+   "kind": "part",
+   "part": "upperCock",
+   "fn": "Place the upper cock on the top plate.",
+   "rel": [
+    [
+     "in",
+     "050803-1",
+     "press"
+    ],
+    [
+     "in",
+     "050901",
+     "clear"
+    ]
+   ],
+   "figs": "05 08_5, 05 08_6"
+  },
+  {
+   "id": "050800-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 00-2",
+   "name": "Unruhkloben unten (lower balance cock)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "lowerCock",
+   "fn": "Hangs under the top plate and holds the balance staff's lower jewel setting.",
+   "rel": [
+    [
+     "on",
+     "050901"
+    ]
+   ],
+   "figs": "05 08_4"
+  },
+  {
+   "id": "WN-53",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Lower balance cock screw (WN-53, by the coloured section's label)",
+   "qty": 1,
+   "parent": "050800-2",
+   "kind": "part",
+   "part": "lowerCock",
+   "fn": "From the top plate's outer face, its head sunk in the plate, into the cock.",
    "rel": [
     [
      "in",
@@ -100,11 +471,105 @@
     ],
     [
      "in",
-     "050800-1",
+     "050800-2",
      "tap"
     ]
    ],
-   "figs": "001"
+   "figs": "05 08_1b"
+  },
+  {
+   "id": "WN-203.lc",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stellstift, lower balance cock (holes 22, 37; WN not given, as WN-203)",
+   "qty": 2,
+   "parent": "050800-2",
+   "kind": "part",
+   "part": "lowerCock",
+   "fn": "Place the lower cock under the top plate.",
+   "rel": [
+    [
+     "in",
+     "050800-2",
+     "press"
+    ],
+    [
+     "in",
+     "050901",
+     "clear"
+    ]
+   ],
+   "figs": "05 08_4"
+  },
+  {
+   "id": "050804-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 04-1",
+   "name": "Zwischenbrücke (intermediate bridge; its sheet not in the set, the assembly 05 08 04)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "intermediateBridge",
+   "fn": "On the pillar plate's dial side: the intermediate wheel's lower jewel and the seconds wheel's lower setting.",
+   "rel": [
+    [
+     "on",
+     "050802-1"
+    ]
+   ],
+   "figs": "05 08_10, 05 08_32.2"
+  },
+  {
+   "id": "WN-52",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Intermediate bridge screw (WN-52)",
+   "qty": 2,
+   "parent": "050804-1",
+   "kind": "part",
+   "part": "intermediateBridge",
+   "fn": "Hold the intermediate bridge to the pillar plate, from the dial side.",
+   "rel": [
+    [
+     "in",
+     "050804-1",
+     "clear"
+    ],
+    [
+     "in",
+     "050802-1",
+     "tap"
+    ]
+   ],
+   "figs": "05 08_32.2"
+  },
+  {
+   "id": "WN-203.zb",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stellstift (WN-203), intermediate bridge",
+   "qty": 2,
+   "parent": "050804-1",
+   "kind": "part",
+   "part": "intermediateBridge",
+   "fn": "Place the intermediate bridge on the pillar plate.",
+   "rel": [
+    [
+     "in",
+     "050804-1",
+     "press"
+    ],
+    [
+     "in",
+     "050802-1",
+     "clear"
+    ]
+   ],
+   "figs": "05 08_10"
   }
  ]
 }
