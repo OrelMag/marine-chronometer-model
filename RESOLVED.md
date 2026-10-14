@@ -1053,7 +1053,7 @@ Contents:
   the 3-6° measured (38:26, `ratchetface.py`): the click's draw rose from 4.2° to
   8.7°, past oiled steel's friction angle, so the load seats it (`ratchets.js`).
   Keep: the setup ratchet on the square; its faces undercut (`SRU`, gearGeo's
-  `uc`, mechanisms-check.js's tilted normal). `HASH`
+  `uc`, mechanisms-check.js's tilted normal). `ca79d00`
 
 ## Plates, bridges, screws and arbors
 
