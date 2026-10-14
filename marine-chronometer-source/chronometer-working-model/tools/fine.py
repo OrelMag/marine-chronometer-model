@@ -54,6 +54,7 @@ DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{if(o.
    for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);if(v.y<fy-0.05||v.y>fy+3||Math.hypot(v.x,v.z)>R||holes.some(([x,z,h])=>Math.hypot(v.x-x,v.z-z)<h))continue;
      const d=v.y-fy;if(!best||d<best.d)best={d:+d.toFixed(3),part:pn(o),type:o.geometry.type.replace('Geometry',''),at:[v.x,v.y,v.z].map(q=>+q.toFixed(2))};}});
  return JSON.stringify({face:+fy.toFixed(3),best});})()'''
+DIALJS=model.cfg('DIALJS',DIALJS)   # another model's dial check (its checks.py), where its face's holes aren't the Hamilton's L
 BARREL={'ratchet':("barrel arbor: on the barrel's axis, inside it by design",None,None),
  'chain':('chain wound on the drum: its links should touch the wall, not enter it',0,0.1)}   # part: (reason, least, most) clearance allowed; None = any
 FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}

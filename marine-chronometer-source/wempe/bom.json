@@ -1,5 +1,5 @@
 {
- "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings; P1d: the balance and escapement (groups 05 03, 05 04), from 05-03-05-04-balance-escapement.md checked on the sheets, the jewels by the coloured section's labels; P1c: the fusee, maintaining work, barrel, mainspring, chain and band (groups 05 06, 05 07 and 05 05 05, 05-06-05-07-fusee-barrel.md). Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
+ "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings; P1d: the balance and escapement (groups 05 03, 05 04), from 05-03-05-04-balance-escapement.md checked on the sheets, the jewels by the coloured section's labels; P1c: the fusee, maintaining work, barrel, mainspring, chain and band (groups 05 06, 05 07 and 05 05 05, 05-06-05-07-fusee-barrel.md); P1e: the dial, motion work, hands and up-and-down work (group 05 02), from 05-05-05-02-train-motionwork.md checked on the sheets, the up-and-down pinion's and the seconds collet's numbers by the coloured section's labels. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
  "relations": {
   "in": "the part's axis inside the named part: tap (thread in a tapped hole), clear (through a clearance hole), run, free, press (as the Hamilton's bom.json)",
   "round": "the part's bore round the named part",
@@ -2840,6 +2840,409 @@
    "fn": "In the drum's slot.",
    "rel": [],
    "figs": "05 07_13"
+  },
+  {
+   "id": "050503-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 03-3",
+   "name": "Minutenrohr (cannon tube)",
+   "qty": 1,
+   "parent": "050503",
+   "kind": "part",
+   "part": "cannon",
+   "fn": "Pressed on the centre arbor's 1:80 shank, held by centre-punch marks in its groove: its foot is the cannon pinion (14 leaves, m 0.36), which drives the change wheel; its square carries the minute hand (no sheet of its own: 05 05 03 gives it).",
+   "rel": [
+    [
+     "round",
+     "050503-2",
+     "press"
+    ]
+   ],
+   "figs": "05 05_8"
+  },
+  {
+   "id": "050202",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 02",
+   "name": "Wechselrad kompl. (change wheel complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The motion work's change wheel, its pipe and pinion (28.2.41).",
+   "rel": [],
+   "figs": "05 02_6"
+  },
+  {
+   "id": "050202-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 02-1",
+   "name": "Wechselrad (change wheel)",
+   "qty": 1,
+   "parent": "050202",
+   "kind": "part",
+   "part": "changeWheel",
+   "fn": "Riveted on its pipe; the cannon pinion drives it.",
+   "rel": [
+    [
+     "round",
+     "050202-2",
+     "press"
+    ],
+    [
+     "mesh",
+     "050503-3"
+    ]
+   ],
+   "figs": "05 02_7"
+  },
+  {
+   "id": "050202-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 02-2",
+   "name": "Wechselbutzen (change wheel pipe)",
+   "qty": 1,
+   "parent": "050202",
+   "kind": "part",
+   "part": "changeWheel",
+   "fn": "Runs on the short stud (Laufsitz auf Anrichtstift), its foot on the stud bush.",
+   "rel": [
+    [
+     "round",
+     "050200-7",
+     "run"
+    ],
+    [
+     "on",
+     "050802-2"
+    ]
+   ],
+   "figs": "05 02_6"
+  },
+  {
+   "id": "050202-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 02-3",
+   "name": "Wechseltrieb (change pinion)",
+   "qty": 1,
+   "parent": "050202",
+   "kind": "part",
+   "part": "changeWheel",
+   "fn": "Knocked on the pipe to a press fit; drives the hour wheel (no sheet in the set).",
+   "rel": [
+    [
+     "round",
+     "050202-2",
+     "press"
+    ]
+   ],
+   "figs": "05 02_6"
+  },
+  {
+   "id": "050203",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 03",
+   "name": "Stundenrad kompl. (hour wheel complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The hour wheel riveted on its pipe (20.7.40).",
+   "rel": [],
+   "figs": "05 02_8"
+  },
+  {
+   "id": "050203-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 03-1",
+   "name": "Stundenrad (hour wheel)",
+   "qty": 1,
+   "parent": "050203",
+   "kind": "part",
+   "part": "hourWheel",
+   "fn": "Riveted on its pipe; the change pinion drives it.",
+   "rel": [
+    [
+     "round",
+     "050203-2",
+     "press"
+    ],
+    [
+     "mesh",
+     "050202-3"
+    ]
+   ],
+   "figs": "05 02_9"
+  },
+  {
+   "id": "050203-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 03-2",
+   "name": "Stundenbutzen (hour wheel pipe)",
+   "qty": 1,
+   "parent": "050203",
+   "kind": "part",
+   "part": "hourWheel",
+   "fn": "Runs on the cannon tube, over the cannon pinion; carries the hour hand on its tapered seat (no sheet of its own: 05 02 03 gives it).",
+   "rel": [
+    [
+     "round",
+     "050503-3",
+     "run"
+    ]
+   ],
+   "figs": "05 02_8"
+  },
+  {
+   "id": "050204",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 04",
+   "name": "Auf u. Abrad kompl. (up-and-down wheel complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The up-and-down wheel riveted on its pipe (27.2.41).",
+   "rel": [],
+   "figs": "05 02_10"
+  },
+  {
+   "id": "050204-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 04-1",
+   "name": "Auf u. Abrad (up-and-down wheel)",
+   "qty": 1,
+   "parent": "050204",
+   "kind": "part",
+   "part": "udWheel",
+   "fn": "Riveted on its pipe; the up-and-down pinion on the fusee arbor drives it.",
+   "rel": [
+    [
+     "round",
+     "050204-2",
+     "press"
+    ],
+    [
+     "mesh",
+     "050200-5"
+    ]
+   ],
+   "figs": "05 02_11"
+  },
+  {
+   "id": "050204-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 04-2",
+   "name": "Auf u. Abrad-Butzen (up-and-down wheel pipe)",
+   "qty": 1,
+   "parent": "050204",
+   "kind": "part",
+   "part": "udWheel",
+   "fn": "Runs on the long stud (Laufsitz auf Anrichtstift), its foot on the stud bush; carries the up-and-down hand.",
+   "rel": [
+    [
+     "round",
+     "050200-6",
+     "run"
+    ],
+    [
+     "on",
+     "050802-2"
+    ]
+   ],
+   "figs": "05 02_10"
+  },
+  {
+   "id": "050200-5",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 00-5",
+   "name": "Auf u. Abtrieb (up-and-down pinion)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "udPinion",
+   "fn": "Pressed on the fusee arbor's dial-side end (the fusee group's): drives the up-and-down wheel (no sheet in the set; numbered by the coloured section's label).",
+   "rel": [],
+   "figs": "05 02_1"
+  },
+  {
+   "id": "050200-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 00-1",
+   "name": "Minutenzeiger (minute hand)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "hands",
+   "fn": "On the cannon tube's square (no relation here: as the Hamilton's hands, so the centre arbor's endshake isn't sampled through it).",
+   "rel": [],
+   "figs": "05 02_2"
+  },
+  {
+   "id": "050200-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 00-2",
+   "name": "Stundenzeiger (hour hand)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "hands",
+   "fn": "On the hour wheel's pipe's tapered seat.",
+   "rel": [
+    [
+     "round",
+     "050203-2",
+     "press"
+    ]
+   ],
+   "figs": "05 02_3"
+  },
+  {
+   "id": "050200-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 00-3",
+   "name": "Auf u. Abzeiger (up-and-down hand)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "hands",
+   "fn": "On the up-and-down wheel's pipe's seat, down on its shoulder.",
+   "rel": [
+    [
+     "round",
+     "050204-2",
+     "press"
+    ],
+    [
+     "on",
+     "050204-2"
+    ]
+   ],
+   "figs": "05 02_4"
+  },
+  {
+   "id": "050201-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 01-1",
+   "name": "Sekundenzeiger (seconds hand)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "hands",
+   "fn": "On its collet.",
+   "rel": [
+    [
+     "round",
+     "050201-2",
+     "press"
+    ]
+   ],
+   "figs": "05 02_5"
+  },
+  {
+   "id": "050201-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 01-2",
+   "name": "Zeigerfutter (seconds hand collet)",
+   "qty": 1,
+   "parent": "050201-1",
+   "kind": "part",
+   "part": "hands",
+   "fn": "Pressed on the seconds arbor's post through the dial; the hand riveted on its end (no sheet in the set; numbered by the coloured section's label).",
+   "rel": [
+    [
+     "round",
+     "050501-2",
+     "press"
+    ]
+   ],
+   "figs": "05 02_5"
+  },
+  {
+   "id": "050200-4",
+   "idx": null,
+   "no": "",
+   "dwg": "05 02 00-4",
+   "name": "Zifferblatt (dial)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "dial",
+   "fn": "In the movement ring's recess, placed by its pin, held by three screws.",
+   "rel": [
+    [
+     "on",
+     "050800-3"
+    ]
+   ],
+   "figs": "05 02_12"
+  },
+  {
+   "id": "WN-10.d",
+   "idx": null,
+   "no": "",
+   "dwg": "WN-10",
+   "name": "Schraube (dial screw)",
+   "qty": 3,
+   "parent": "050200-4",
+   "kind": "part",
+   "part": "dial",
+   "fn": "M1 through the dial's sunk holes into the ring's flange (WN-10 by the coloured section's label, likely).",
+   "rel": [
+    [
+     "in",
+     "050800-3",
+     "tap"
+    ],
+    [
+     "in",
+     "050200-4",
+     "clear"
+    ]
+   ],
+   "figs": "05 02_12"
+  },
+  {
+   "id": "dialPin",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stift (dial pin)",
+   "qty": 1,
+   "parent": "050200-4",
+   "kind": "part",
+   "part": "dial",
+   "fn": "In the ring's pin hole at 6 deg past 12 (05 08 00-3), stepped into the dial's (no number read).",
+   "rel": [
+    [
+     "in",
+     "050800-3",
+     "press"
+    ],
+    [
+     "in",
+     "050200-4",
+     "press"
+    ]
+   ],
+   "figs": "05 02_12, 05 08_7"
   }
  ]
 }
