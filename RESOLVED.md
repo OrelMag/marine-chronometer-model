@@ -525,7 +525,7 @@ Contents:
   (the old spacing gives the 8.70 mm recorded); left where it was, the stud
   bar's outer end stood 0.85 mm into the cock's thick part. Keep: the stud's
   holes (SPHa-c) and the step (CK_SP) read through the same scale as the cock's
-  outline (CK_TR); the essay's hairspring figures (data-hs) from hairspring.js. `HASH`
+  outline (CK_TR); the essay's hairspring figures (data-hs) from hairspring.js. `bf4d681`
 
 ## Winding and maintaining work
 
