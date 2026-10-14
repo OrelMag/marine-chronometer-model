@@ -1070,6 +1070,21 @@ Contents:
   Keep: the setup ratchet on the square; its faces undercut (`SRU`, gearGeo's
   `uc`, mechanisms-check.js's tilted normal). `ca79d00`
 
+- **The sustaining spring ran as one thing and was drawn as another.** The
+  model ran it linear, carrying the whole drive unbanked and spent after ten
+  minutes, while its drawn section (an estimated 1.13 mm band, 17° gap) was a
+  third as stiff: made so, it would have closed solid and pushed 67 % of the
+  drive; and no band the 1.8 mm recess holds is stiff enough to carry the drive
+  unbanked. The period's chronometers make it a split ring weaker than the
+  drive, held closed on its banking in running (Gould 1923, pp. 47-48, 238;
+  Glasgow 1885, pp. 65, 106), and so it is now: its gap 20° as measured (27:26;
+  17° estimated before), banked with its lobes 0.5° apart, pushing 0.88 of the
+  drive (`SPU`) from a 1.25 mm band (`SSH_B`), which `sustaining.js` checks by
+  Castigliano; it keeps the balance over a turn 8.3 minutes (the manual's five
+  to ten) and runs the train 18. Keep: `SPU` what the section gives; the spring
+  weaker than the drive; `R.ssF` = `SPU` (1 - d / `SMAX`); app.js, essay.js,
+  maintaining.py and montecarlo.js take the push and travel from movement.js. `HASH`
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the

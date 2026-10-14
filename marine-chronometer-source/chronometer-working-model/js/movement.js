@@ -762,18 +762,23 @@ function buildMovement(M){
   mesh(R.gw,discGeo(9.3*FK,0.3,[[0,0,2.75*FK]]),M.copper,0,-7.9,0);mesh(R.gw,ringGeo(4.0*FK,2.75*FK,0.3),M.copper,0,-8.05,0);   /* the raised disc and the hub; the bore (r 2.75 FK, video 27:26) free on the arbor's collar */
   /* sustaining spring (42016; video 27:26, Figs. 69, 71): a flat blued band 2.1 wide against the recess wall, round from its fixed end (a lobe toward the hub, pinned to the wheel) the
      long way to its working end (a smaller lobe across the gap from it, pinned to the sustaining ratchet). The ratchet drives the wheel through it by pushing the working end forward,
-     across the gap toward the fixed end: the ring closes, from a 17 deg gap relaxed (as photographed, out of the movement) to 17 deg less SMAX loaded. The lobes keep their shape
-     (each is pinned); the band between them spreads over the angle the gap gives up and bows in from the wall, keeping its length. d: how far the spring has relaxed from its loaded
-     state (0 in running, up to SMAX while winding). SMAX: the fusee wheel's turn in 10 minutes, the longer of the 5 to 10 minutes it drives the train (Sec. IV); app.js runs model
-     time at most WIND_X fast while winding, so no wind outlasts it. Gap, lobes, pin places and the band's thickness (1.13) estimated */
-  const SMAX=FUSEE_PER_HOUR*TAU/6,SSG=17*D2R,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
+     across the gap toward the fixed end: the ring closes, from its gap relaxed (SSG, 20 deg: KLUwI2UUCMQ 27:26, the wheel alone, the fixed lobe's end at 155 deg and the working
+     lobe's tip at 136 deg about the wheel's centre, 19-20 deg, rough; 17 estimated until 14 October 2026) until its lobes nearly meet (SSB) and bank, where the drive holds it in
+     running: a split ring "rather weaker than the combined pull of the mainsprings" (Gould, The Marine Chronometer, 1923, pp. 47-48; p. 238: "a simple steel split-ring, with
+     ends nearly meeting ... When the pull of the chain is removed ... the ends spring apart a little"; Glasgow, Watch and Clock Making, 1885, p. 65: the mainspring "must
+     always be stronger"), so banked it pushes SPU of the 12-hour drive, and less as it relaxes (R.ssF). The lobes keep their shape (each is pinned); the band between them
+     spreads over the angle the gap gives up and bows in from the wall, keeping its length. d: how far the spring has relaxed from banked (0 in running, up to SMAX while
+     winding). Its section, SSH_B high (the width measured), from the push it must give: tools/sustaining.js works its stiffness out from the section by Castigliano and checks
+     SPU against it, and the manual's "enough power to drive the chronometer for five to ten minutes" (Sec. IV) as the time it keeps the balance over a turn (it runs on
+     past that, to about 19 minutes, at a falling swing). Lobes and pin places estimated */
+  const SSB=0.5*D2R,SSG=20*D2R,SMAX=SSG-SSB,SPU=0.88,SSH_B=1.25,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
   const sspGeo=d=>{d=clamp(d,-SMAX/4,SMAX);const W=SSF+SSG-SMAX+d,a0=W+SWL,a1=SSF+TAU-SFL,sp=a1-a0,B=(SRO-SSW/2)*(SMAX-d)/sp*Math.PI/2,o=[],I=[];   /* W: the working end's tip; the band's free part runs from a0 to a1 */
     const st=(x,w,r)=>x<w?r:x<w+0.14?lerp(r,SRO-SSW,smooth((x-w)/0.14)):SRO-SSW,rin=a=>Math.min(st(a-W,SWL-0.14,13.9*FK),st(SSF+TAU-a,SFL-0.14,12.8*FK));   /* the lobes' inner edges, eased into the band's over 8 deg */
     for(let i=0,N=200;i<=N;i++){const a=W+(SSF+TAU-W)*i/N,b=a>a0&&a<a1?B*Math.sin(Math.PI*(a-a0)/sp):0,ro=SRO-b,ri=Math.min(rin(a),ro-SSW);o.push([ro*Math.cos(a),ro*Math.sin(a)]);I.push([ri*Math.cos(a),ri*Math.sin(a)]);}
-    const pw=W+SPW;return polyGeo([...o,...I.reverse()],1.13,[[14.6*FK*Math.cos(pw),14.6*FK*Math.sin(pw),0.42],...SSH.map(q=>[...q,0.42])]);};   /* 0.02 over the floor, 0.03 inside the wall */
+    const pw=W+SPW;return polyGeo([...o,...I.reverse()],SSH_B,[[14.6*FK*Math.cos(pw),14.6*FK*Math.sin(pw),0.42],...SSH.map(q=>[...q,0.42])]);};   /* 0.02 over the floor, 0.03 inside the wall */
   /* the sustaining spring and its pin into the wheel: their own part, turning with the fusee wheel, in whose recess the spring lies (Figs. 28, 71) */
   const ssP=part('sspring',-18);R.ssg=new THREE.Group();R.ssg.position.set(L.Fu[0],0,L.Fu[1]);ssP.add(R.ssg);
-  hn(R.ssg,'42016');R.sspring=mesh(R.ssg,sspGeo(0),M.steelK,0,-8.75,0);   /* dark tempered steel, not blued: nearly black in shade, light grey where it takes the light, (27, 31, 35) and (154, 166, 174) on KLUwI2UUCMQ 27:30 */
+  hn(R.ssg,'42016');R.sspring=mesh(R.ssg,sspGeo(0),M.steelK,0,-7.62-SSH_B,0);   /* its face 0.02 off the recess's floor (-7.6), its band SSH_B up from it */   /* dark tempered steel, not blued: nearly black in shade, light grey where it takes the light, (27, 31, 35) and (154, 166, 174) on KLUwI2UUCMQ 27:30 */
   mesh(R.ssg,cylY(0.4,1.5,10),M.steel,SSH[0][0],-8.1,SSH[0][1]);
   /* sustaining ratchet wheel (42009): free on the fusee arbor, open in the middle round the fusee's winding ratchet and its screws (Fig. 28) */
   const srP=part('sratchet',-22);R.sr=new THREE.Group();R.sr.position.set(L.Fu[0],0,L.Fu[1]);srP.add(R.sr);
@@ -1474,12 +1479,13 @@ function buildMovement(M){
   const catchAt=(sh,fa,gA,dq)=>{const fc=sh+WPH+FPR.p*Math.ceil((fa-sh-WPH)/FPR.p-1e-9),dl=Math.max(0,gA-dq-sh);return{fa:fc+dl,sr:sh+dl,held:dl<=0};};
   const MWK={g:/** @type {number|null} */(null),n:/** @type {number|null} */(null),w:false,fa:0,base:0,lock:0,top:0,hold:0,nW0:0,eps0:0,dq:0};   /* the maintaining work's state between frames (update()) */
   R.drvN=n=>fs.torque(n)/fs.torque(12*FUSEE_PER_HOUR);   /* the fusee's drive at n turns, of the 12-hour drive: app.js sets its own (with the mainspring's set) */
-  R.ssF=()=>Math.max(0,1-R.ssD/SMAX);R.holdBack=holdBack;   /* the sustaining spring's push, of the 12-hour drive */
+  R.ssF=()=>SPU*Math.max(0,1-R.ssD/SMAX);R.holdBack=holdBack;R.SPU=SPU;   /* the sustaining spring's push, of the 12-hour drive */
+  const ssQ=D=>SMAX*clamp(1-D/SPU,0,1);   /* where the spring balances the fusee's drive D: banked (0) while D is over its push, relaxing as the drive tapers below it */
   /* fusee turns the catch will take if the key lets go now: app.js adds their hours. The reload is to the drive where those hours leave the fusee (n + the catch:
      update() takes the drive at the new n), found by a few steps; it was the drive at n until 12 October 2026, which in the run-down taper foretold the catch up to
      0.02 deg long */
   R.release=()=>{if(!MWK.w||MWK.g===null)return 0;let r=(catchAt(srA,MWK.fa,MWK.g,MWK.dq).fa-MWK.fa)/TAU;
-    if(MWK.n!==null)for(let i=0;i<4;i++){const n=MWK.n+r,D=n>=FUSEE_TURNS?0:R.drvN(n);r=(catchAt(srA,MWK.fa,MWK.g,SMAX*clamp(1-D,-0.25,1)).fa-MWK.fa)/TAU;}return r;};
+    if(MWK.n!==null)for(let i=0;i<4;i++){const n=MWK.n+r,D=n>=FUSEE_TURNS?0:R.drvN(n);r=(catchAt(srA,MWK.fa,MWK.g,ssQ(D)).fa-MWK.fa)/TAU;}return r;};
   /** @typedef {{E:number,th:number,lift:number,psDef:number,n:number,winding?:boolean,spent?:boolean,reset?:boolean,slip?:number,hkeyOn?:boolean,keyOn?:boolean,blk?:number,arm?:number,ssX?:number,dt?:number,springOn?:boolean,msOn?:boolean,ld?:number,clk?:number}} MoveState
       E: the escape wheel's place in teeth, which turns every arbor; th: the balance's angle (rad); lift, psDef: the detent's lift and the passing spring's bending (ESC.state);
       n: fusee turns from full wind; winding: the key turning; spent: run down (the fusee drives nothing); reset: the train set (the hands set, Now), not run;
@@ -1497,8 +1503,9 @@ function buildMovement(M){
     const gA=cA*TRAIN.cp/TRAIN.fu;R.gw.rotation.y=gA;R.ssg.rotation.y=gA;
     /* Maintaining work (Sec. IV). The sustaining spring, between the sustaining ratchet (srA) and the fusee wheel (gA), carries the whole drive (the manual: "through the
        sustaining spring, under load during the entire running cycle"; nothing banks it): d = gA - srA is how far it has relaxed from its load at the 12-hour drive, and it
-       pushes with 1 - d / SMAX of that drive (R.ssF). Running, the fusee drives the ratchet through its winding ratchet and pawls, and the spring sits where it balances the
-       fusee's drive D (R.drvN: d = SMAX (1 - D), so near 0 most of the run, and relaxing as the drive tapers to run down); the fusee turns with the ratchet, its faces on the
+       pushes with SPU (1 - d / SMAX) of that drive (R.ssF). Running, the fusee drives the ratchet through its winding ratchet and pawls, and the spring sits where it balances the
+       fusee's drive D (R.drvN: d = SMAX (1 - D / SPU), banked at 0 while D is over SPU, all the run but its last taper, and relaxing as the drive tapers to run down; until
+       14 October 2026 it carried the whole drive unbanked, d = SMAX (1 - D), its travel the fusee wheel's ten minutes); the fusee turns with the ratchet, its faces on the
        pawls (fa = srA + WPH, whole teeth on; eps = fa less its n turns). Should the fusee's drive fall faster than the train relaxes the spring (run down at once, a jump of the
        wind, a set taken), the spring turns the ratchet back until the sustaining pawl holds it (holdBack) and then drives the train alone, the fusee standing.
        Winding: the key turns the fusee back; the spring pushes the ratchet back with it, the winding pawls still on their faces, until the sustaining pawl catches it, and
@@ -1507,7 +1514,7 @@ function buildMovement(M){
        hours that took come off the mainspring (R.release, which app.js adds when the key lets go). Until 11 October 2026 the ratchet jumped back to its pawl in one
        frame as winding began, dragging the winding pawls back over their faces; the catch took (motion) mod one tooth, a whole tooth when nothing had moved; the
        spring stayed loaded at run down while the drive fell to nothing; and a set of the hands dragged the pawls through teeth */
-    const base=fs.g.rotation.y+s.n*TAU,p=FPR.p,D=s.spent?0:R.drvN(s.n),dq=SMAX*clamp(1-D,-0.25,1),mw=MWK;   /* dq: the spring's relaxation where it balances the fusee's drive */
+    const base=fs.g.rotation.y+s.n*TAU,p=FPR.p,D=s.spent?0:R.drvN(s.n),dq=ssQ(D),mw=MWK;   /* dq: the spring's relaxation where it balances the fusee's drive */
     if(mw.g===null){srA=gA-dq;mw.fa=srA+WPH+p*Math.ceil((base-srA-WPH)/p-1e-9);holding=false;mw.base=base;}
     else if(s.reset||gA<mw.g-1e-9||gA-mw.g>0.25){const o=srA;srA=holding?holdBack(srA+gA-mw.g):srA+gA-mw.g;mw.hold+=srA-o;mw.top+=srA-o;mw.lock-=srA-o;}   /* the train set, not run (back, or more than it turns in a frame): the ratchet with it, the spring as it was (held, on its pawl's tooth) */
     const tele=mw.n!==null&&Math.abs(s.n-mw.n)>0.15;   /* the wind set (the slider), not wound or run: the fusee to its new turns, its pawls on the nearest tooth */
