@@ -1042,6 +1042,19 @@ Contents:
   2e-4 rad once the new mainspring's pull moved it. It now finds the catch at the drive where its hours leave the fusee.
   Keep: `R.release` and `update()`'s let-go take the drive at the same turns. `9fa5f35`
 
+- **The setup ratchet sat on a round bore under a collar, its faces radial.**
+  It was pressed on the barrel arbor's round body (r 1.4) with an unsourced
+  collar r 2.3 over it and the square starting above that: a pressed fit that
+  would have to hold the mainspring's 0.78 N·m and couldn't come off to let it
+  down. KLUwI2UUCMQ shows a square hole (23:30, the mat through it) and the
+  square rising straight from the ratchet's face (11:58, 38:25). The ratchet now
+  rides on the arbor's square (2.2 across the flats), which turns with it, and
+  the collar is gone. Its locking faces are drawn undercut 4.5°, the middle of
+  the 3-6° measured (38:26, `ratchetface.py`): the click's draw rose from 4.2° to
+  8.7°, past oiled steel's friction angle, so the load seats it (`ratchets.js`).
+  Keep: the setup ratchet on the square; its faces undercut (`SRU`, gearGeo's
+  `uc`, mechanisms-check.js's tilted normal). `HASH`
+
 ## Plates, bridges, screws and arbors
 
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the

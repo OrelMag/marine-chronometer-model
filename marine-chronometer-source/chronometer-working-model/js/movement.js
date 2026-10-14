@@ -311,7 +311,7 @@ const sR=r=>r*0.5,hC=(x,z,r,rs=sR(r))=>[x,z,+(rs*1.12+0.01).toFixed(3),1],hT=(x,
    the back the straight chord gearGeo draws, from the root to the tip at 0.97 of a pitch, the locking face along a radius there, so a pawl's load bears square on it
    and draws nothing out (the faces leaned back over 0.07 of a pitch until 11 October 2026: under load they pushed a pawl out, 1:10). The winding ratchet's faces look
    radial on C Spinner's video (18:20, oblique) and the winding pawls' square ends lie along a radius (19:12: within 1 deg); the sustaining ratchet's aren't seen: radial,
-   estimated; the setup ratchet's are undercut 3-6 deg on the video, drawn radial (KLUwI2UUCMQ 38:26, measured: SRD below). Else the back interpolated by
+   estimated; the setup ratchet's are undercut 3-6 deg on the video (KLUwI2UUCMQ 38:26, measured: SRD below), drawn so by gearGeo (its uc) and seated here on the radial profile, 0.04 mm ahead of the undercut root at most. Else the back interpolated by
    angle to the tip at 0.9, the face leaning back to the root at 0.97 (no ratchet's since 11 October 2026). rd: the teeth's depth, mm (default 2.25 m, gearGeo's) */
 function ratchetProf(n,m,flip,radial,rd){const rp=m*n/2,ro=rp+m*0.95,ri=ro-(rd||2.25*m),p=TAU/n,c=0.97*p,ch=a=>ri*ro*Math.sin(c)/(ri*Math.sin(a)+ro*Math.sin(c-a));
   return{ro,ri,p,r:b=>{const a=flip?b:-b,u=((a%p)+p)%p,t=u/p;if(radial)return t<0.97?ch(u):ri;return t<0.9?ri+(ro-ri)*t/0.9:t<0.97?ro-(ro-ri)*(t-0.9)/0.07:ri;},
@@ -1313,12 +1313,12 @@ function buildMovement(M){
      line read, then read again off synthetic frames of known teeth through the same ellipse, blurred as the frame's edges are (sigma 2.7-3.0): the gaps read 0.383
      and 0.423 mm, so 0.45 and 0.50 deep (0.42-0.53 with sigma 1 either way): 0.48, about 0.46 of the pitch at the tips (it was 2.25 m, 0.72, the gear convention,
      which would read 0.55-0.64). The faces read -2.5 and -5.6 deg (median) against the radius, undercut 3-6 deg (one leaning back 6 deg, as drawn until 11 October
-     2026, reads +5.5 to +6.6): drawn radial, the profile being one radius to each angle and the readings' spread (4-5 deg tooth to tooth) as large (References/VIDEOS.md) */
-  const SRZ=42,SUT=7.05,SRM=SUT/(SRZ/2+0.95),SRD=0.48;
-  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',rd:SRD,flip:true,bore:1.4}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* radial faces meet the click against the mainspring's pull */
+     2026, reads +5.5 to +6.6): drawn undercut 4.5 deg, their middle (SRU; the readings spread 4-5 deg tooth to tooth, References/VIDEOS.md), radial until 14 October 2026 */
+  const SRZ=42,SUT=7.05,SRM=SUT/(SRZ/2+0.95),SRD=0.48,SRU=4.5*D2R;   /* SRU: the faces' undercut, the middle of the 3-6 deg read (14 October 2026; radial before): with it the click's load draws it in at any oil (tools/ratchets.js) */
+  const srw=hn(mesh(rt,gearGeo(SRZ,SRM,1.0,{ratchet:'radial',rd:SRD,uc:SRU,flip:true,cuts:[[[-1.11,-1.11],[1.11,-1.11],[1.11,1.11],[-1.11,1.11]]]}),M.steel,L.Ba[0],-28.01,L.Ba[1]),'42026',{gear:{z:SRZ,m:SRM,ratchet:1}});   /* radial faces meet the click against the mainspring's pull; on the arbor's square (ASQ), its hole square (KLUwI2UUCMQ 23:30, the ratchet off on the mat: the mat through a square hole; 11:58, 38:25, the ratchet on: the square rises from its face), 0.01 clear each side (a round bore r 1.4, pressed on, until 14 October 2026) */
   /* the barrel arbor (42170): through the ratchet and the barrel bridge to the plate. The Exploded view takes it out below with the barrel, whose core and hook hold it
      (the barrel bridge is over the core), leaving its squared top (the collar and square) with the ratchet */
-  const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-29.66,-1,M.steel,L.Ba[0],L.Ba[1]);hn(cylBetween(rt,2.3,-29.96,-28.51,M.steel,L.Ba[0],L.Ba[1],28),'42170',{sub:1});
+  const ba=hn(loose(new THREE.Group(),parts.ratchet.userData.off-parts.fs.userData.off),'42170');rt.add(ba);ba.userData.axis=cylBetween(ba,1.4,-27.45,-1,M.steel,L.Ba[0],L.Ba[1]);   /* its round body up to just under the ratchet, where the square begins (a collar r 2.3 over the ratchet until 14 October 2026: none on KLUwI2UUCMQ 11:58, the square rising straight from the ratchet's face) */
   /* the barrel arbor's core inside the barrel, with the hook for the mainspring's inner end (Figs. 26, 75; arbor 42170). The core r 4.84, 0.06 under the strip's
      inner face on MSPRING.ra 4.9: the low end of three readings on two 1941 movements, r 4.8-5.7 (KLUwI2UUCMQ 33:20.5, the cap off and the arbor in, its edge with the
      innermost coil 0.32-0.36 of the end face's inner ellipse; 33:06, the spring's inner end curled at 0.30-0.34 of the inside radius before the arbor goes in; TN24H
@@ -1330,18 +1330,18 @@ function buildMovement(M){
      deep) is estimated */
   { const ga=fs.MS.hookA-fs.g.rotation.y,hk=mesh(ba,new THREE.BoxGeometry(0.5,2.4,0.9),M.steel,L.Ba[0]+(MSPRING.ra+0.09)*Math.cos(ga),(fs.MS.y0+fs.MS.y1)/2,L.Ba[1]+(MSPRING.ra+0.09)*Math.sin(ga));hk.rotation.y=-ga;
     cylBetween(ba,MSPRING.ra-0.06,TB_T+1.71,BB_LO-0.7,M.steel,L.Ba[0],L.Ba[1],64); }
-  const asq=hn(mesh(rt,new THREE.BoxGeometry(2.2,6.0,2.2),M.steel,L.Ba[0],-32.96,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, about 7.5 mm over the ratchet (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5) */
+  const ASQ=2.2,asq=hn(mesh(rt,new THREE.BoxGeometry(ASQ,8.56,ASQ),M.steel,L.Ba[0],-31.68,L.Ba[1]),'42170',{sub:1});   /* the arbor's square, through the ratchet (which it carries) and about 7.5 mm over it (C Spinner 11:46, 11:58: 8-10, rough; it was 4.5), 2.2 across the flats (KLUwI2UUCMQ 38:25, the ratchet off: 2.0-2.3 against the ratchet's tips) */
   { const Pv=S.click,Tp=P2((SUT-2.25*SRM+0.015)/PHOTO_K,218.6),clk=hn(mesh(rt,pawlGeo(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3,0.8),M.steel,Pv[0],-28.01,Pv[1]),'42027');clk.rotation.y=Math.atan2(Tp[1]-Pv[1],-(Tp[0]-Pv[0]));const cth0=clk.rotation.y;
     /* the click 5.07 mm long (S.click), aimed at the old root (2.25 m deep); turn the ratchet (it is fixed in running) so a face bears on the click, then rest the click on it,
        seated by its outline as the winding pawls are (phaseAgainst's deep) */
-    const pr=ratchetProf(SRZ,SRM,true,true,SRD),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1,true);
+    const pr=Object.assign(ratchetProf(SRZ,SRM,true,true,SRD),{uc:SRU}),pts=pawlPts(Math.hypot(Tp[0]-Pv[0],Tp[1]-Pv[1])+0.3,1.3),ph=phaseAgainst(pr,pts,[Pv[0]-L.Ba[0],Pv[1]-L.Ba[1]],clk.rotation.y,-1,true);
     srw.rotation.y=ph.psi;clk.rotation.y=ph.th;
-    { const n=SRZ,m=SRM,rp=m*n/2,ro=rp+m*0.95,ri=ro-SRD,pp=TAU/n,RT=[];for(let i=0;i<n;i++){const a=i*pp;RT.push([ri,a],[ro,a+pp*0.97],[ri,a+pp*0.97]);}   /* the drawn outline (gearGeo, flipped) */
+    { const n=SRZ,m=SRM,rp=m*n/2,ro=rp+m*0.95,ri=ro-SRD,pp=TAU/n,RT=[];for(let i=0;i<n;i++){const a=i*pp;RT.push([ri,a],[ro,a+pp*0.97],[ri,a+pp*0.97-ucRoot(ro,ri,SRU)]);}   /* the drawn outline (gearGeo, flipped), its faces undercut */
       const CP=pts.map(([x,z])=>{const c=Math.cos(ph.th),sn=Math.sin(ph.th);return[Pv[0]+x*c+z*sn,Pv[1]-x*sn+z*c];});
       const gap=psi=>{const W=RT.map(([r,a])=>{const x=r*Math.cos(a),z=r*Math.sin(a),c=Math.cos(psi),sn=Math.sin(psi);return[L.Ba[0]+x*c+z*sn,L.Ba[1]-x*sn+z*c];});let d=1e9,inside=false;
         for(const P of CP){let w=false;for(let i=0,j=W.length-1;i<W.length;j=i++){const[xi,zi]=W[i],[xj,zj]=W[j];if((zi>P[1])!==(zj>P[1])&&P[0]<(xj-xi)*(P[1]-zi)/(zj-zi)+xi)w=!w;
           const dx=xj-xi,dz=zj-zi,l2=dx*dx+dz*dz,t=clamp(((P[0]-xi)*dx+(P[1]-zi)*dz)/l2,0,1);d=Math.min(d,Math.hypot(P[0]-xi-t*dx,P[1]-zi-t*dz));}if(w)inside=true;}return inside?-d:d;};
-      let a=ph.psi-0.03,b=ph.psi;if(gap(a)<0&&gap(b)>0){for(let i=0;i<40;i++){const mm=(a+b)/2;gap(mm)>0.003?b=mm:a=mm;}srw.rotation.y=b;} }
+      let a=ph.psi-0.03,b=ph.psi;if(gap(a)<0&&gap(b)>0){for(let i=0;i<40;i++){const mm=(a+b)/2;gap(mm)>0.003?b=mm:a=mm;}srw.rotation.y=b;} asq.rotation.y=srw.rotation.y; }   /* the square turned with the ratchet on it */
     /* setup pawl spring (42028, Figs. 17, 24, 80, 108): a blued band on edge, standing on the barrel bridge under the cover, round the ratchet about half a turn at r 9,
        from its fixed end, held between two steady pins in the bridge ("pushed off by pressure on steady pins from the lower side of barrel bridge", Ops. 27, 41), to the
        click's back, which it bears on at the click's height (C Spinner 11:58: about 180 deg at 1.23-1.31 of the ratchet's tip radius, so 8.7-9.2 mm, its edge about 0.9 mm seen from above at a slant; Fig. 108 draws
@@ -1539,7 +1539,7 @@ function buildMovement(M){
        pulls it (its ratchet's steep faces meet the click as rotation.y falls); clk, how far the click is held out of the teeth (0 to 1; at 0 with ld > 0 it rides over
        them as the arbor is set up). The spring's inner end turns with the arbor's hook, its outer end stays with the barrel: drawn with ld fewer turns, turned with the arbor */
     const LDn=s.ld||0,CLn=s.clk||0,su=R.su;
-    if(su&&(LDn!==su.ld||CLn!==su.cl)){const ph=-LDn*TAU,[bx,bz]=su.c,c=Math.cos(ph),sn=Math.sin(ph);su.srw.rotation.y=su.base+ph;su.asq.rotation.y=ph;
+    if(su&&(LDn!==su.ld||CLn!==su.cl)){const ph=-LDn*TAU,[bx,bz]=su.c,c=Math.cos(ph),sn=Math.sin(ph);su.srw.rotation.y=su.base+ph;su.asq.rotation.y=su.base+ph;
       su.ba.rotation.y=ph;su.ba.position.x=bx-(bx*c+bz*sn);su.ba.position.z=bz-(-bx*sn+bz*c);   /* the arbor's group turned about the barrel's axis */
       const psi=su.srw.rotation.y,th=CLn>0?su.seat+su.so*su.lift*smooth(CLn):LDn>0?seatPawl(su.pts,toWheel(su.q,[0,0],psi),su.seat-psi,su.pr,su.th-psi)+psi:su.seat;
       if(th!==su.th){su.clk.rotation.y=th;su.th=th;su.spr.geometry.dispose();su.spr.geometry=su.sprGeo(th);}su.ld=LDn;su.cl=CLn;fs.ms.rotation.y=fs.MS.rot+ph;}
