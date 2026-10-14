@@ -1,5 +1,5 @@
 {
- "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings. Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
+ "source": "Wempe's works drawings (References/wempe/drawings/), by drawing number; P1a, 14 October 2026: the frame (group 05 08), from References/wempe/transcriptions/05-08-frame.md checked on the sheets; P1b: the going train (group 05 05, 05-05-05-02-train-motionwork.md) and its bearings; P1c: the fusee, maintaining work, barrel, mainspring, chain and band (groups 05 06, 05 07 and 05 05 05, 05-06-05-07-fusee-barrel.md). Each line's id is its drawing number without the spaces (050800-1 for 05 08 00-1, as 05 09 01's title block writes its own), since a piece's lines are a space-separated list; a Wempe standard part by its WN number, with a suffix where one number is on several lines, or a name where its number isn't read. 'no' is left empty: bom.py's registry matches a card's numbers against it, and the drawing numbers are not of its form",
  "relations": {
   "in": "the part's axis inside the named part: tap (thread in a tapped hole), clear (through a clearance hole), run, free, press (as the Hamilton's bom.json)",
   "round": "the part's bore round the named part",
@@ -971,6 +971,779 @@
     ]
    ],
    "figs": "05 08_32.2"
+  },
+  {
+   "id": "0506",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06",
+   "name": "Schnecke kompl. (the fusee, complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The fusee with its wheel, maintaining work, Vorreiber, cover plate and dust plate (15.3.41, revised 1944).",
+   "rel": [],
+   "figs": "05 06_1"
+  },
+  {
+   "id": "050604",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 04",
+   "name": "Schnecke (the fusee: body on its arbor)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "asm",
+   "part": null,
+   "fn": "The body pressed on the arbor, the click wheel screwed to its large end (revised 2.3.48).",
+   "rel": [],
+   "figs": "05 06_3.2"
+  },
+  {
+   "id": "050604-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 04-2",
+   "name": "Schneckenkörper (fusee body)",
+   "qty": 1,
+   "parent": "050604",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "The cone with its nine-turn groove, pressed on the arbor's collar.",
+   "rel": [
+    [
+     "round",
+     "050604-1",
+     "press"
+    ]
+   ],
+   "figs": "05 06_2.2"
+  },
+  {
+   "id": "050604-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 04-1",
+   "name": "Schneckenwelle (fusee arbor)",
+   "qty": 1,
+   "parent": "050604",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Runs in the pillar plate (its dial-side pivot) and the fusee bush (its journal); its square takes the key.",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "run"
+    ],
+    [
+     "in",
+     "050801-2",
+     "run"
+    ]
+   ],
+   "figs": "05 06_15"
+  },
+  {
+   "id": "050604-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 04-3",
+   "name": "Schneckensperrrad (click wheel)",
+   "qty": 1,
+   "parent": "050604",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "On the body's large end, in its recess: drives the maintaining clicks.",
+   "rel": [
+    [
+     "on",
+     "050604-2"
+    ]
+   ],
+   "figs": "05 06_16"
+  },
+  {
+   "id": "WN-19",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-19 (click wheel screw)",
+   "qty": 3,
+   "parent": "050604",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Holds the click wheel to the body; its head flush in the wheel's 1:8 hole, its thread in the body's M2 (not cut in the turned body).",
+   "rel": [
+    [
+     "in",
+     "050604-3",
+     "press"
+    ],
+    [
+     "in",
+     "050604-2",
+     "embed"
+    ]
+   ],
+   "figs": "05 06_3.2"
+  },
+  {
+   "id": "050600-6",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 00-6",
+   "name": "Kettenstift (chain pin)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "fusee",
+   "fn": "Across the flange's slot: the chain's (or band's) top hook takes it.",
+   "rel": [
+    [
+     "in",
+     "050604-2",
+     "embed"
+    ]
+   ],
+   "figs": "05 06_2.2"
+  },
+  {
+   "id": "050600-4",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 00-4",
+   "name": "Deckplatte (cover plate)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "coverPlate",
+   "fn": "On the arbor's step against the body's small end, over the stop bar.",
+   "rel": [
+    [
+     "round",
+     "050604-1",
+     "run"
+    ],
+    [
+     "on",
+     "050604-2"
+    ]
+   ],
+   "figs": "05 06_8"
+  },
+  {
+   "id": "WN-20",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-20 (cover plate screw)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "coverPlate",
+   "fn": "Countersunk in the cover plate, into the body's M1.7 (not cut in the turned body).",
+   "rel": [
+    [
+     "in",
+     "050600-4",
+     "press"
+    ],
+    [
+     "in",
+     "050604-2",
+     "embed"
+    ]
+   ],
+   "figs": "05 06_8"
+  },
+  {
+   "id": "050600-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 00-2",
+   "name": "Vorreiber",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "vorreiber",
+   "fn": "Pinned on the arbor's taper under the fusee wheel, its flange in the wheel's underside recess.",
+   "rel": [
+    [
+     "round",
+     "050604-1",
+     "press"
+    ]
+   ],
+   "figs": "05 06_6"
+  },
+  {
+   "id": "050600-5",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 00-5",
+   "name": "Vorreiberstift (Vorreiber pin)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "vorreiber",
+   "fn": "Through the Vorreiber's hub and the arbor's cross hole (drawn as its two ends in the hub).",
+   "rel": [
+    [
+     "in",
+     "050600-2",
+     "embed"
+    ]
+   ],
+   "figs": "05 06_6, 05 06_15"
+  },
+  {
+   "id": "050600-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 00-1",
+   "name": "Staubplatte (dust plate)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "dustPlate",
+   "fn": "On the winding square, inside the dust bush.",
+   "rel": [
+    [
+     "round",
+     "050604-1",
+     "press"
+    ]
+   ],
+   "figs": "05 06_5"
+  },
+  {
+   "id": "050600-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 00-3",
+   "name": "Schneckenrad (fusee wheel)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "fuseeWheel",
+   "fn": "Loose on the arbor's seat, driven by the maintaining spring; drives the centre pinion.",
+   "rel": [
+    [
+     "round",
+     "050604-1",
+     "free"
+    ],
+    [
+     "mesh",
+     "050503-2"
+    ]
+   ],
+   "figs": "05 06_7"
+  },
+  {
+   "id": "050602",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 02",
+   "name": "Gegensperrrad kompl. (maintaining ratchet, complete)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "asm",
+   "part": null,
+   "fn": "The ratchet with its two clicks, their screws, springs and pins.",
+   "rel": [],
+   "figs": "05 06_11"
+  },
+  {
+   "id": "050602-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 02-1",
+   "name": "Gegensperrrad (maintaining ratchet)",
+   "qty": 1,
+   "parent": "050602",
+   "kind": "part",
+   "part": "maintaining",
+   "fn": "Turns on the fusee wheel's tube; the maintaining detent rides on its teeth.",
+   "rel": [
+    [
+     "round",
+     "050600-3",
+     "free"
+    ]
+   ],
+   "figs": "05 06_12"
+  },
+  {
+   "id": "050602-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 02-3",
+   "name": "Sperrkegel (click)",
+   "qty": 2,
+   "parent": "050602",
+   "kind": "part",
+   "part": "maintaining",
+   "fn": "In the ratchet's cup, on its screw's shoulder; the click wheel drives it.",
+   "rel": [
+    [
+     "round",
+     "WN-21",
+     "free"
+    ]
+   ],
+   "figs": "05 06_14"
+  },
+  {
+   "id": "WN-21",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schraube WN-21 (click screw)",
+   "qty": 2,
+   "parent": "050602",
+   "kind": "part",
+   "part": "maintaining",
+   "fn": "Put in from under the ratchet, threaded in its M1.7; the click turns on its shoulder.",
+   "rel": [
+    [
+     "in",
+     "050602-1",
+     "tap"
+    ]
+   ],
+   "figs": "05 06_11"
+  },
+  {
+   "id": "050602-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 02-2",
+   "name": "Sperrfeder (click spring)",
+   "qty": 2,
+   "parent": "050602",
+   "kind": "part",
+   "part": "maintaining",
+   "fn": "Pinned inside the cup's wall, pressing its click onto the click wheel.",
+   "rel": [],
+   "figs": "05 06_13"
+  },
+  {
+   "id": "050602-4",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 02-4",
+   "name": "Stift (click spring pin)",
+   "qty": 4,
+   "parent": "050602",
+   "kind": "part",
+   "part": "maintaining",
+   "fn": "Through the cup's wall and the spring's hole (not cut in the turned cup).",
+   "rel": [
+    [
+     "in",
+     "050602-1",
+     "embed"
+    ]
+   ],
+   "figs": "05 06_11, 05 06_12"
+  },
+  {
+   "id": "050601-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 01-1",
+   "name": "Gegenfeder (maintaining spring)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "maintaining",
+   "fn": "An open ring between the fusee wheel and the ratchet, in the wheel's recess on its web: carries the drive.",
+   "rel": [
+    [
+     "on",
+     "050600-3"
+    ]
+   ],
+   "figs": "05 06_10, 05 06_9"
+  },
+  {
+   "id": "050600-8",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 00-8",
+   "name": "Stellstift f. Gegenfeder (maintaining spring's pin)",
+   "qty": 2,
+   "parent": "0506",
+   "kind": "part",
+   "part": "maintaining",
+   "fn": "Pressed in the spring's holes: one into the fusee wheel, one into the ratchet.",
+   "rel": [
+    [
+     "in",
+     "050601-1",
+     "press"
+    ],
+    [
+     "in",
+     "050600-3|050602-1",
+     "run"
+    ]
+   ],
+   "figs": "05 06_9"
+  },
+  {
+   "id": "050505",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 05",
+   "name": "Gegensperrkegel kompl. (maintaining detent, complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The detent staked on its arbor (2.4.41).",
+   "rel": [],
+   "figs": "05 05_11"
+  },
+  {
+   "id": "050505-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 05-1",
+   "name": "Gegensperrkegel (maintaining detent)",
+   "qty": 1,
+   "parent": "050505",
+   "kind": "part",
+   "part": "maintDetent",
+   "fn": "Rides on the maintaining ratchet's teeth; holds it while the chronometer is wound.",
+   "rel": [
+    [
+     "round",
+     "050505-2",
+     "press"
+    ]
+   ],
+   "figs": "05 05_12"
+  },
+  {
+   "id": "050505-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 05-2",
+   "name": "Gegensperrwelle (its arbor)",
+   "qty": 1,
+   "parent": "050505",
+   "kind": "part",
+   "part": "maintDetent",
+   "fn": "Runs in the plates' holes 4 (drilled 0.9).",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "run"
+    ],
+    [
+     "in",
+     "050901",
+     "run"
+    ],
+    [
+     "endshake",
+     "050802-1",
+     "050901"
+    ]
+   ],
+   "figs": "05 05_11"
+  },
+  {
+   "id": "050603-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 03-1",
+   "name": "Stellungssteg (stop bar)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "stopWork",
+   "fn": "Slides in the slot across the fusee's small end (not cut in the turned body); meets the stop pin at full wind.",
+   "rel": [],
+   "figs": "05 06_4"
+  },
+  {
+   "id": "050801-5",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 01-5",
+   "name": "Anschlagstift (stop pin)",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "topPlate",
+   "fn": "Pressed in the top plate's hole 7, standing out under it: the stop bar meets it at full wind.",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "press"
+    ]
+   ],
+   "figs": "05 08_2, 05 06_4"
+  },
+  {
+   "id": "050701",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 01",
+   "name": "Federhaus mit Deckel (barrel)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The drum, its lid and the spring's hook block (revised 20.4.48).",
+   "rel": [],
+   "figs": "05 07_4"
+  },
+  {
+   "id": "050701-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 01-1",
+   "name": "Federhaustrommel (barrel drum)",
+   "qty": 1,
+   "parent": "050701",
+   "kind": "part",
+   "part": "barrel",
+   "fn": "Turns on the arbor's journals; the chain winds onto it.",
+   "rel": [
+    [
+     "round",
+     "050702-1",
+     "free"
+    ]
+   ],
+   "figs": "05 07_6"
+  },
+  {
+   "id": "050701-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 01-2",
+   "name": "Federhausdeckel (barrel lid)",
+   "qty": 1,
+   "parent": "050701",
+   "kind": "part",
+   "part": "barrel",
+   "fn": "Sprung into the drum's seat on the bridge's side; turns on the arbor's upper journal.",
+   "rel": [
+    [
+     "round",
+     "050702-1",
+     "free"
+    ]
+   ],
+   "figs": "05 07_7"
+  },
+  {
+   "id": "050701-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 01-3",
+   "name": "Federhaushaken (spring hook block)",
+   "qty": 1,
+   "parent": "050701",
+   "kind": "part",
+   "part": "barrel",
+   "fn": "Riveted inside the drum's wall: takes the mainspring's outer end.",
+   "rel": [
+    [
+     "on",
+     "050701-1"
+    ]
+   ],
+   "figs": "05 07_4"
+  },
+  {
+   "id": "050702",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 02",
+   "name": "Federkern kompl. (barrel arbor, complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The arbor with its hook (28.1.43).",
+   "rel": [],
+   "figs": "05 07_8"
+  },
+  {
+   "id": "050702-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 02-1",
+   "name": "Federkern (barrel arbor)",
+   "qty": 1,
+   "parent": "050702",
+   "kind": "part",
+   "part": "barrelArbor",
+   "fn": "Runs in the pillar plate and the barrel bridge; held by the set-up ratchet and click.",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "run"
+    ],
+    [
+     "in",
+     "050805-1",
+     "run"
+    ],
+    [
+     "endshake",
+     "050802-1",
+     "050805-1"
+    ]
+   ],
+   "figs": "05 07_9, 05 07_8"
+  },
+  {
+   "id": "050702-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 02-2",
+   "name": "Federhaken (arbor hook)",
+   "qty": 1,
+   "parent": "050702",
+   "kind": "part",
+   "part": "barrelArbor",
+   "fn": "Pressed in the core's hole (not cut in the turned arbor): takes the mainspring's inner end.",
+   "rel": [
+    [
+     "in",
+     "050702-1",
+     "embed"
+    ]
+   ],
+   "figs": "05 07_8"
+  },
+  {
+   "id": "050700-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 00-3",
+   "name": "Sperrad (set-up ratchet)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "setupRatchet",
+   "fn": "On the arbor's square above the barrel bridge; the bridge's click holds it.",
+   "rel": [
+    [
+     "round",
+     "050702-1",
+     "press"
+    ]
+   ],
+   "figs": "05 07_3"
+  },
+  {
+   "id": "050700-6",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 00-6",
+   "name": "Zugfeder (mainspring)",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "mainspring",
+   "fn": "In the drum: inner end on the arbor's hook, outer end on the drum's block. Its length isn't drawn: estimated.",
+   "rel": [],
+   "figs": "05 06_20, 05 07_1"
+  },
+  {
+   "id": "050704",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 04",
+   "name": "Kette (fusee chain)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": null,
+   "kind": "part",
+   "part": "chain",
+   "fn": "Between the barrel and the fusee: its top hook on the fusee's pin, its bottom hook in the drum's slot (the page's default; the band under Variants).",
+   "rel": [],
+   "figs": "05 07_14"
+  },
+  {
+   "id": "050703",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 03",
+   "name": "Schneckenband (fusee band, complete)",
+   "qty": 1,
+   "parent": null,
+   "kind": "asm",
+   "part": null,
+   "fn": "The band with its two hooks brazed on (1.3.43): the page's Variants.",
+   "rel": [],
+   "figs": "05 07_11"
+  },
+  {
+   "id": "050703-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 03-1",
+   "name": "Band (fusee band)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "050703",
+   "kind": "part",
+   "part": "band",
+   "fn": "The strip, 0.22 thick, between the barrel and the fusee.",
+   "rel": [],
+   "figs": "05 07_11"
+  },
+  {
+   "id": "050703-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 03-2",
+   "name": "Bandhaken rund (band's round hook)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "050703",
+   "kind": "part",
+   "part": "band",
+   "fn": "On the fusee's pin.",
+   "rel": [],
+   "figs": "05 07_12"
+  },
+  {
+   "id": "050703-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 07 03-3",
+   "name": "Bandhaken f. Trommel (band's drum hook)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "050703",
+   "kind": "part",
+   "part": "band",
+   "fn": "In the drum's slot.",
+   "rel": [],
+   "figs": "05 07_13"
   }
  ]
 }

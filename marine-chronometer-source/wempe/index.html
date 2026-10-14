@@ -21,7 +21,7 @@
   <h1>Wempe Einheits-Chronometer</h1>
   <div class="hd">
     <nav class="models" aria-label="The models"><a href="../chronometer-working-model/index.html">Hamilton Model 21</a><span aria-current="page">Wempe Einheits-Chronometer</span></nav>
-    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame and the going train so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame, the going train, the fusee and barrel so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
   </div>
 </header>
@@ -52,7 +52,7 @@
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
-    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; and the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel.</div>
+    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel; and the fusee with its maintaining work and stop work, the barrel and mainspring, and the chain, or the band under Variants.</div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
@@ -67,6 +67,16 @@
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
         <p class="note" style="margin:8px 0 0">The train turns from the escape wheel, a tooth a beat (until the escapement is built, the wheel steps without it).</p>
+      </details>
+      <details class="grp more" id="windDet" open>
+        <summary>Winding</summary>
+        <div class="row pow"><label class="sl"><span class="lab">Since winding</span><input type="range" id="hrs" min="0" max="56.4" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully: the key on the fusee's square turns it back about 8¾ turns, until the stop bar meets its pin, while the maintaining spring drives the train">Wind</button></div>
+        <p class="note" style="margin:6px 0 0">The fusee goes 56 hours on a wind, 8¾ of its turns; the barrel turns about 5 times. While the key turns the fusee back, its clicks ride over the click wheel and the maintaining detent holds the ratchet, so the maintaining spring keeps the train going. Run down, the train stops.</p>
+      </details>
+      <details class="grp more" id="varDet">
+        <summary>Variants</summary>
+        <h3 class="sub-h">Between the barrel and the fusee</h3>
+        <div class="seg" id="conn"><button data-v="chain" aria-pressed="true" title="The chain, 05 07 04 (1941): 374 links at a 2.05 pitch, 0.82 thick, as on Wempe 3955 and Lange 5177">Chain (05 07 04)</button><button data-v="band" aria-pressed="false" title="The steel band, 05 07 03 (1943): 0.22 thick, 730 long, with its two brazed hooks, as on Greenwich's wartime Wempe">Band (05 07 03)</button></div>
       </details>
       <details class="grp more disp" id="dispDet" open>
         <summary>Display</summary>
@@ -121,7 +131,7 @@
   <h3>How it is being made</h3>
   <ul>
     <li><b>From the drawings.</b> Every size and place is read off a sheet: a figure where the sheet gives one, and where it doesn’t, measured on the drawing at its scale and marked estimated. Each part’s card says which.</li>
-    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them.</li>
+    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them. The going train (05 05). The fusee and barrel (05 06, 05 07): the fusee with its nine-turn groove, its wheel and Harrison’s maintaining work, the stop work, the barrel with its set-up ratchet and mainspring, and the chain or the band.</li>
   </ul>
   <p><a href="../chronometer-working-model/index.html">The Hamilton Model 21 working model</a>, the U.S. Navy’s chronometer, built from its 1948 overhaul manual.</p>
 </dialog>
@@ -132,6 +142,7 @@
 <script src="js/dims.js"></script>
 <script src="js/frame.js"></script>
 <script src="js/train.js"></script>
+<script src="js/fusee.js"></script>
 <script src="js/movement.js"></script>
 <script src="js/app.js"></script>
 </body>
