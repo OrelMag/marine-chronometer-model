@@ -177,7 +177,7 @@ No scale is given. Read vertically (y increasing toward the dial), from column p
 | lower balance cock (Unruhkloben unten), under the top plate | 362 – 453 | 91 | x 1600 | unsure |
 | balance lower jewel (red) | 450 – 453 | – | x 1493 | unsure |
 
-Ratios (independent of the unknown scale): top plate : pillar : pillar plate ≈ 31 : 178 : 31 (1 : 5.7 : 1). If the pillar's diameter in the section (72 px, x 1731–1803) is taken equal to the pillar diameter scaled off the plan view 001 (see that section), the section would be about 11–13 px/mm, giving the pillar about 14–16 mm long and each plate about 2.4–2.8 mm thick (inferred, scaled; not to be used where drawing 05 08 00 gives the pillar).
+Ratios (independent of the unknown scale): top plate : pillar : pillar plate ≈ 31 : 178 : 31 (1 : 5.7 : 1). Scaled (inferred): taking the pillar's 178 px as the "innerer Plattenabstand 19 mm" written on 001 and 002 gives ≈ 9.4 px/mm, and then: each plate ≈ 3.3 mm, pillar screw heads ≈ 3.0 (top) and 2.6 (bottom) mm, the dial ≈ 1.6 mm thick and its face ≈ 6.8 mm below the pillar plate's underside, the barrel drum ≈ 17.7 mm tall, its bridge ≈ 3.1 mm, the lower balance cock ≈ 9.7 mm deep under the top plate, the pillar ⌀ ≈ 7.7 mm (72 px, x 1731–1803). These are scaled, not dimensioned, off a coloured pictorial section that may not be to strict scale; the plates' and pillar's own drawings (05 08) decide.
 
 - **Notes:** none on the sheet besides the labels.
 - **Undimensioned lines:** the whole sheet; it is a pictorial section (coloured), probably not to strict scale, and its horizontal axis is unrolled.
@@ -283,7 +283,7 @@ Left view (dial side, mirrored), plate centre px (257.6, 310.6):
 
 | feature | nominal (mm) | tolerance or fit | how sure | note |
 |---|---|---|---|---|
-| 160 ⌀ | 160 | – | sure (number); unsure what it measures | horizontal, in Schnitt A–B, extension lines at x ≈ 76 and ≈ 470 px running up to y ≈ 410, centred on the bowl's axis (x 274). Spans past the gimbal ring (ring outer ⌀ 145 scaled): inferred to be the clear width between the box's inner walls where the ring's pivot bushes are, or the pivots' span; not the bowl |
+| 160 ⌀ | 160 | – | sure (number); unsure what it measures | horizontal, in Schnitt A–B, extension lines at x ≈ 76 and ≈ 470 px running up to y ≈ 410, centred on the bowl's axis (x 274). Spans past the gimbal ring (ring outer ⌀ 145 scaled) to the wooden walls: inferred to be the box's clear inside (185 outside less two 12,5 walls, 51-00_2, = 160; 51-00_1 scales 159–163) |
 | 17 | 17 | – | likely | vertical, at the Feststeller (15), x ≈ 480, y 650–690 px: the lever's offset/height (what it spans is unclear) |
 | 11,5 | 11.5 | – | likely ("11,5" or "115"; 11,5 fits the scale: 27 px) | vertical, top left of the side view: from the ring's pivot axis "A" (y 140) up to the top of the gimbal ring (y 113) |
 | 50° | 50 | – | sure | in Schnitt A–B, between the vertical centre line (D) and a radius to the bracket at the lower right (Feststellkloben, 3, inferred) |
@@ -584,6 +584,188 @@ Left view (dial side, mirrored), plate centre px (257.6, 310.6):
 | outer chamfer/relief at the socket end (length) | 2,5 | +0,3 | likely | |
 
 - **Notes:** "(a)" by the 19 +2 dimension marks the revision. Printed block note.
-- **Undimensioned lines:** the drilled hole's diameter is not given (it must be ≥ the square's 3,1 across corners 4,4? or the square is broached from a smaller drilled hole, inferred; scaled ≈ 2.8–3 mm, unsure); the outer chamfer's angle not given (≈ 30°, scaled, unsure).
+- **Undimensioned lines:** the drilled hole's diameter is not given (scaled ≈ 2.8–3 mm, unsure; the 3,1 square would then be broached into it, inferred); the outer chamfer's angle is not given (≈ 30°, scaled, unsure).
 - **Cross-references:** 05 01 02-2 (body); 51 00 11 (key assembly).
 - **Illegible:** revision dates' month (px 800–850 × 430–445).
+---
+
+## 127-556. A-1 (04/52/33/36) Boden-Chronometer (the chronometer in its boxes, arrangement) — `51-00/Wempe_51-00_1.jpg`
+
+- **Title block:** Werkstoff "———" (sure). Maßstab **1:2** (sure). Vervielfältigungspause: blank (hatched); Arbeitspause Nr: blank. gez. **4.3.42** (unsure: "4.3.42" or "11.3.42") signed (illegible, the drawer of 05 01 00-1); gepr. **11.3.42** (unsure) signed "...Müller"(?); N.gepr. **1.6.43** (likely). Änderung: none. Zeichnung Nr **127-556. A-1** (sure) and below it **"04/52/33/36"** (likely; meaning unknown). Benennung **Boden-Chronometer** (sure). "LC" in the block (sure).
+- **What it shows:** at 1:2 (scan about 1.23 px per mm of the real box: the bowl's bezel, ⌀ 125 on R-05 01 01-2, measures 153 px, and the Holzkasten, 185 outside, 229 px): left, **"Schnitt A–B teilweise"** (partial section A–B), the box from the side with its lid drawn open at the top left (hinged at x ≈ 135 px); right, a plan from above with the lid open: the outer box (Überkasten, with an eye on each end), the wooden box inside it (Holzkasten), the gimballed bowl in its ring, and the dial (12-hour, numerals 1–12, seconds dial at 6, the maker's emblem under 12). Leaders 1–6 in the section and 1–4 in the plan name the assemblies listed below.
+- **Dimensions:** none written on the sheet.
+- **Parts list (verbatim; "Liste der Baugruppen" = list of assemblies; Lfd. Nr. / Baugruppen-Nr. / Benennung):**
+
+| Lfd. Nr. | Baugruppen-Nr. | Benennung | how sure | English |
+|---|---|---|---|---|
+| 1 | 127-556. 01 | Überkasten | sure | outer box |
+| 2 | 127-556. 02 | Holzkasten | sure | wooden box (the 185 box carrying the gimbals: 05 01's "Holzgehäuse", inferred) |
+| 3 | 127-556. 03 | Bunagehäuse | sure | Buna (synthetic rubber) case (what it is isn't drawn clearly; inferred: the gimballed case's rubber-mounted housing) |
+| 4 | 127-556. 04 | Werk | sure | movement |
+| 5 | 127-556. 05 | Zeigerstellung | sure | hand setting |
+| 6 | 127-556. 06 | Unruhhaltevorrichtung | sure | balance-holding device (transport lock) |
+
+- **Undimensioned lines (scaled, not dimensioned; 1.23 px/mm; section at y 450 px unless said):**
+
+| feature | px | mm (scaled) | how sure | check against |
+|---|---|---|---|---|
+| Überkasten (1) outer width (x 140 → 441) | 301 | 245 | likely | 51-00_5: inside 225 at the rim, base 270 |
+| Überkasten wall (x 140–157 and 426–441) | 15–17 | 12–14 | likely | 51-00_5: 12,5 |
+| Holzkasten (2) outer width (x 175 → 404) | 229 | 186 | likely | 05 01: Holzgehäuse 185 outside; 51-00_2: panel 185 |
+| Holzkasten inside width (x 192 → 387/393) | 195–201 | 159–163 | likely | 05 01's "160 ⌀" (so that is the box's clear inside, inferred) |
+| bezel ⌀ (x 214 → 367 at y 360) | 153 | 124 | likely | R-05 01 01-2: 125 |
+| Holzkasten top (y ≈ 290) to its floor (y ≈ 500) | 210 | 171 | unsure | 05 01: 180 high outside |
+| gimbal pivot axis (y ≈ 360) above the Holzkasten's floor (y ≈ 483–500) | 123–140 | 100–114 | unsure | |
+| plan view: circles about the dial centre (708, 355), r ≈ 77, 100, 112 px | – | ⌀ 125 (bezel), 162 (box inside), 182 | unsure | |
+
+- **Notes:** none besides "Schnitt A–B teilweise".
+- **Cross-references:** 127-556.01 … .06; 51-00_5 (Überkasten 127-556.01), 51-00_2 (Griff, 51 00 10).
+- **Illegible:** dates and signatures (px 760–860 × 640–680); the meaning of "04/52/33/36".
+
+---
+
+## Änderung von 51 00 10 — Griff f. Chronometerkasten (handle for the chronometer box) — `51-00/Wempe_51-00_2.jpg`
+
+- **Title block:** Werkstoff: blank (sure). Maßstab **1:1** (sure). Arbeitspause Nr **4** (sure). gez. **14.7.42** (unsure) signed (illegible, the 05 01 00-1 drawer); gepr. **15.7.42** (unsure) signed (illegible); N.gepr. blank. Zeichnung Nr field: **"Änderung von 510010"** (sure) = change of 51 00 10. Benennung **"Griff f. Chronometerkasten."** (sure). A stamp at the lower left "Einlg. 843" (unsure).
+- **What it shows:** a side panel of the wooden box (185 wide) at 1:1 (scan 2.38 px/mm, from 185 = 440 px) with its handle, in three views: front view of the panel and handle, a section of the panel through the handle (right), and the handle seen from below on the panel's edge (bottom). The handle: a flat bar 18 high and 100 long, fixed by two screws in its 10-wide end lugs, with a pressed oval grip 70 long and 30 high between them; above it one screw (M6: "Verbohren 4,8 mm, Gew. M 6", a pencil note) 11,5 below a line drawn across the panel (inferred: the lid's parting line). In the section the panel is 12,5 thick and the handle stands 10 proud.
+- **Dimensions:**
+
+| feature | nominal (mm) | tolerance or fit | how sure | note |
+|---|---|---|---|---|
+| panel width | 185 | ±0,5 | sure | "185 (±0,5)" |
+| panel height | 185 | – | sure | vertical, right of the front view |
+| bottom edge to the upper (M6) screw | 105 | – | likely | vertical at x ≈ 540 px |
+| bottom edge to the handle's centre line | 75 | – | likely | vertical at x ≈ 470 px |
+| handle length | 100 | – | sure | |
+| grip length | 70 | – | sure | |
+| end lugs | 10 | – | sure | each end |
+| handle bar height | 18 | – | sure | |
+| grip height | 30 | – | sure | |
+| upper screw below the line across the panel | 11,5 | – | sure | |
+| upper screw to the handle's top edge | 3,5 | – | likely | |
+| upper screw, horizontal | 12 | – | unsure (from where it is measured) | |
+| 5 | 5 | – | likely | right of the upper screw; meaning unsure |
+| panel thickness | 12,5 | – | sure | section, twice |
+| handle's projection | 10 | – | sure | section |
+| grip bulge | 6 | – | likely | section |
+| 3 | 3 | – | likely | section; the bar's thickness (inferred) |
+| upper screw | M6, tap drill 4,8 | – | likely (pencil) | |
+
+- **Notes (verbatim):** "Verbohren 4,8 mm Gew. M 6" (pencil) = drill 4.8 mm, thread M6.
+- **Cross-references:** 51 00 10.
+- **Illegible:** pencil marks left of the front view ("27", "18"?), px 100–140 × 290–360; dates.
+
+---
+
+## 00 01 01-9 / 05 01 02-2 Firmenschild (maker's plate) — `51-00/Wempe_51-00_3.jpg`
+
+- **Title block:** Werkstoff **"Alu 10"** (likely). Maßstab **2:1** (sure). Arbeitspause Nr **2** (over another digit; likely) with the stamp "28 6.46"; stamp "31. März 1947" (sure). gez. **22.3.43** (sure), gepr. **22.3.43** (sure), signatures illegible; N.gepr. blank. Zeichnung Nr **"00 01 01-9"** (sure) and **"05 01 02-2"** (sure, bold). Benennung **Firmenschild** (sure).
+- **Number conflict (read):** 05 01 02-2 is also the number of the key body (Schlüsselmittelteil, `05-01_8`). Both readings are sure.
+- **What it shows:** a rectangular plate at 2:1 (scan 6.98 px per mm of the plate: 52 = 363 px, 26 = 180 px) with a hole in each corner and the lettering: line 1 "CHRONOMETERWERKE" (outline capitals, the plate's width); line 2 "WEMPE" (left), a monogram (a "C" above a "W" joined by a vertical stroke with a crossbar), "HAMBURG" (right); line 3 "Type" (left) and "3371" (right, bold).
+- **Dimensions:**
+
+| feature | nominal (mm) | tolerance or fit | how sure | note |
+|---|---|---|---|---|
+| plate | 26 × 52 | – | sure | "Schildformat 26 × 52" |
+| hole ⌀ | 1,2 | – | sure | |
+| hole's centre from the edge | 2 | – | sure | dimensioned at the lower left (the other corners alike, inferred) |
+
+- **Notes (verbatim):** "Schildformat 26 × 52" (plate size); "Oberfläche: weiß" (surface white); "Schrift: vertieft schwarz" (lettering sunk, black); "Nummer fortlaufend" (leader to 3371: the number runs on, a serial).
+- **Undimensioned lines (scaled, not dimensioned; 6.98 px/mm):** "CHRONOMETERWERKE" capitals ≈ 4.0 high, ≈ 44 long; "WEMPE" and "HAMBURG" ≈ 2.4 high; "3371" ≈ 3.7 high; monogram ≈ 6 × 9.
+- **Cross-references:** 00 01 01-9; 05 01 02-2.
+- **Illegible:** signatures.
+
+---
+
+## P. 51 00 02-2 Zunge (tongue, a flat latch bar) — `51-00/Wempe_51-00_4.jpg`
+
+- **Title block:** Werkstoff **"Eisen 10 × 4 blank gezogen"** (sure) = bright-drawn iron flat 10 × 4. Maßstab **2:1** and **1:1** (sure; the outline at the lower left is "M 1:1"). Arbeitspause Nr **31** (sure; a pencil mark under it). gez. **18.9.42** (likely) signed "...Schönhardt"? (unsure); gepr. **18.9.42** (likely), signed (illegible); N.gepr. **22.9.42** (unsure), signed (illegible); a further line **11.6.43** (likely), initialled. Änderung: none. Zeichnung Nr **P. 51 00 02-2** (sure). Benennung **Zunge** (sure). Top right: surface sign "▽" and **"gebondert / schwarz lackiert"** (sure) = bonderized (phosphated), black lacquered.
+- **What it shows:** at 2:1 (scan 7.0 px per mm of the part, from 45 = 315 px) an elevation in section and a plan. A flat bar 4 thick and 45 long, 10 wide at its rounded left end, tapering (2°40′ on one edge) to 8 at the right end; a ⌀ 6,2 hole near the left end with a 0,5 × 45° chamfer; an M3,5 tapped hole 14 from it; the right end thinned 0,2 over 7 and rounded in plan. What it latches isn't stated (the box's lid catch, inferred from the 51 00 group).
+- **Dimensions:**
+
+| feature | nominal (mm) | tolerance or fit | how sure | note |
+|---|---|---|---|---|
+| thickness | 4 | −0,1 | sure | |
+| hole ⌀ | 6,2 | – | sure | |
+| hole chamfer | 0,5 × 45° | – | likely | |
+| tapped hole | M3,5 | – | sure | |
+| hole to hole | 14 | – | sure | |
+| ⌀ 6,2 hole to the right end | 39 | – | sure | |
+| overall length | 45 | – | sure | |
+| width at the left end | 10 | – | sure | |
+| width at the right end | 8 | – | sure | |
+| edge taper | 2°40′ | – | likely | |
+| 6 | 6 | – | unsure | leader to the left end's outline beside the hole (end radius or the hole's edge distance) |
+| thinned end, length | 7 | – | sure | |
+| thinned end, depth | 0,2 | – | likely | |
+
+- **Notes (verbatim):** "gebondert, schwarz lackiert"; "nicht eingetragene Toleranz 0,1" (tolerance where not entered 0.1); printed block note.
+- **Cross-references:** none.
+- **Illegible:** signatures; the pencil figure under the Arbeitspause number.
+
+---
+
+## 127-556.01 / 52 00 16 Überkasten (outer box) — `51-00/Wempe_51-00_5.jpg`
+
+- **Title block:** Werkstoff **"gebleichte Birke"** (sure) = bleached birch. Maßstab **1:2** (sure; the small outside view at the top is "M 1:5"). Arbeitspause Nr **41** (sure). gez. **28.2.42** (unsure), gepr. **6.3.42** (unsure), N.gepr. **1.6.43** (unsure), signatures illegible. Zeichnung Nr: **"000103"** (handwritten, sure), **"127-556.01"** (struck through, sure) and **"52 00 16"** (sure). Benennung **Überkasten** (sure). "LC" in the block.
+- **Number note:** the outer box is renumbered 52 00 16 (not 51 00).
+- **What it shows:** the outer box at 1:2 (scan ≈ 1.26 px per mm from the base's 270 = 340 px; the drawing isn't strictly to scale: the 225 measures 268 px). Top left: the lid in section, standing open on its back edge, with a cushion (4, 16) inside. Top middle: an outside view at 1:5 with the lid/body parting ("Trennlinie") and "gezinkt, geleimt" (dovetailed, glued). Middle left, **Schnitt A–B**: the body in section: walls with a curved cushion on the inside of each, a curved cushioned floor, a base plate projecting all round, the top rim with a strip (17, 18) and a hook (9), and two screws on the wall for the strap fixing ("Schraube f. Riemenbef."), 80 apart. Right: a plan from above with the lid off: the body (a rectangle with large rounded ends, 370 long over the eyes at its ends), a carrying strap with buckle (10) across, the strap's eyes (11, 12) at each end, two hinges (7) at the back, hook and eye (9) and a catch (19) at the front, cushions (13, 14) dashed inside.
+- **Dimensions:**
+
+| feature | nominal (mm) | tolerance or fit | how sure | note |
+|---|---|---|---|---|
+| height, closed | 88 + 157 (= 245) | – | sure (both numbers) | 1:5 view: lid 88, body 157 |
+| height, closed (pencil) | 240 | – | sure as read | written in pencil beside them; conflicts with 88 + 157 |
+| lid inside height | 88 | – | sure | lid section |
+| lid cushion thickness | 20 | – | sure | |
+| body height | 157 | – | sure | section, right |
+| body inside width at the rim | 225 | – | sure | |
+| base plate length | 270 | – | sure | |
+| base plate's inner span | 250, changed in pencil to "260" | – | 250 sure, "260" likely | |
+| base plate thickness | 12,5 | – | likely (written "125"; 12,5 fits the scale) | left of the section |
+| wall thickness | 12,5 | – | likely | section, right wall |
+| wall to the base plate's edge | 10 | – | sure | |
+| side cushion thickness | 20 | – | sure | |
+| top board | 13 | – | sure | section, top left |
+| top strip | 4 | – | sure | section, top |
+| rim | 5 | – | likely | section, top right |
+| strap-fixing screws apart | 80 | – | sure | |
+| lower strap screw above the floor | 60 | – | sure | |
+| plan: length over the end eyes | 370 | – | sure | |
+| plan: eye's centre from the end | 50 | – | sure | |
+| plan: inside length | 270 | – | sure | |
+| hinge length | 32 | – | sure | |
+| hinge place | 100 | – | likely | from the hinge's end to the centre line A (inferred) |
+| hinge projection | 2,5 | – | likely | |
+| strap width | 30 | – | sure | |
+| strap eye | 13 and 5 | – | likely | the eye plate's width and the strap slot (inferred) |
+| strap eye | 25 | – | likely | the eye's place from the box side (inferred) |
+| plan: "125" at the far left | 12,5 | – | likely | wall |
+
+- **Parts list (verbatim; Lfd. Nr. Stückl. / Sach-Nr.; no names written):**
+
+| Lfd. Nr. | Sach-Nr. | Lfd. Nr. | Sach-Nr. | Lfd. Nr. | Sach-Nr. | Lfd. Nr. | Sach-Nr. |
+|---|---|---|---|---|---|---|---|
+| 1 | 127-556.01-01 | 7 | 127-556.01-05 | 12 | 127-556.01-08 | 17 | 127-556.01-13 |
+| 2 | 127-556.01-02 | 8 | 2,4 × 13 Din 97 | 13 | 127-556.01-09 | 18 | 127-556.01-14 |
+| 3 | 127-556.01-03 | 9 | 127-556.01-06 | 14 | 127-556.01-10 | 19 | 127-556.01-15 |
+| 4 | 127-556.01-04 | 10 | 127-556.01-07 | 15 | 127-556.01-11 | – | – |
+| 5 | 4 × 25 Din 97 | 11 | 3 × 15 Din 96 | 16 | 127-556.01-12 | – | – |
+
+(DIN 97: countersunk wood screw; DIN 96: round-head wood screw; d × length.) Leaders on the views (meaning inferred): 1 body wall; 2 front; 3 base plate; 4 lid cushion; 5 front screw; 7 hinges; 8 lid screw; 9 hook and eye; 10 strap buckle; 11, 12 strap eyes and screws; 13, 14 side and end cushions; 15 floor cushion; 16 lid cushion; 17, 18 rim strip; 19 catch.
+- **Notes (verbatim):** "Trennlinie" (parting line); "gezinkt, geleimt" (dovetailed, glued); "Schraube f. Riemenbef." (screw for the strap fixing); "Haken u. Öse handelsüblich" (hook and eye, commercial); "M 1:5".
+- **Cross-references:** 127-556.01-01 … -15; 000103; 52 00 16.
+- **Illegible:** dates (px 790–860 × 640–680); the pencil change by the 250.
+
+---
+
+## Most important unsure readings
+
+1. **Section labels (`Wempe_Einheitschronometer.jpg`):** the group digits of Anschlagstift, Gegensperrwelle, Kettenstift and Gegensperrkegel (#14–#17: "05 05", "05 06" or "05 08"); the names of #26 (Anrichtstiftfutter?), #29 (Auf u. Ab …), #97 and #123 (Lagerstein?) and #106 (the hairspring stud?); the WN numbers of #3 (WN-22/27), #5 (WN-203/208), #88 (WN-58/38) and #134 (WN-10/18); #108 and #111 both read 05 03 02-4.
+2. **Heights from the section are pixel ratios only** (no scale on the sheet): plates 31 px, pillar 178 px (1 : 5.7 : 1). Taking 001's "innerer Plattenabstand 19 mm" as the 178 px gives ≈ 9.4 px/mm: plates ≈ 3.3 mm, dial ≈ 6.8 mm below the pillar plate, barrel drum ≈ 17.7 mm tall (scaled, inferred; not dimensioned).
+3. **05 01's "160 ⌀"**: what it measures (the wooden box's clear inside, from its fit with the 185 box and its 12,5 walls; inferred), and the "11,5" (could be 115, but 11,5 fits the scale).
+4. **Numbering conflicts:** 05 01 01 is "Glasrand kompl." on its own sheet but "Feststeller" in 05 01's list (where the Glasrand is 05 01 05-1); 05 01 02-2 is both the Firmenschild and the Schlüsselmittelteil; the key is 51 00 11 on its assembly and 05 01 02-x on its parts.
+5. **Bezel glass (05 01 01)**: not dimensioned; its section and outside halves disagree on the glass's height. The ring itself is dimensioned on R-05 01 01-2.
+6. **Überkasten height**: 88 + 157 = 245 printed against a pencil "240"; base "250" changed in pencil to "260".
+7. **05 01 Lfd Nr 7 (Schraube WN-71?)**: the number is over-written.
+8. **Plan views 001/002**: every position is scaled (4.84–4.90 px/mm); the dial side's smaller wheels and the bars are identified by inference.
