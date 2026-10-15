@@ -39,6 +39,7 @@ EXPECTED = [
     ('pillar', '42060', [-0.6, -3.86, -32.2], None, "a hole at 12 o'clock past the wind indicator's post, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
     ('pillar', '42060', [26.6, -3.86, 19.0], None, "a hole past the access hole at 4 o'clock, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
     ('pillar', '42060', [-31.0, -3.86, 4.2], None, "a hole over the barrel, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
+    ('sratchet', '42009', None, None, "the hole through the sustaining ratchet beside each winding pawl's arm, the mat seen through it (KLUwI2UUCMQ 19:12, 28:35; 4f0100d); the wheel turns, so anywhere"),
     ('bal', '42190', None, None, "the hairspring collet's relief hole at the end of its slit (the slit lets the collet grip the staff); the balance turns, so anywhere"),
 ]
 def matches(h, e, tol=0.4):
