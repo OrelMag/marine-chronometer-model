@@ -5195,7 +5195,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',HPT=90/14,HRUN=56.4;
   /* winding in the case (cw): go, Wind pressed with the movement in its bowl; on, the key turning; u, 0-3, how far the bowl is turned over (0-1), the closing plate opened
      (1-2) and the key come onto the square (2-3) */
-  const cw={go:false,on:false,u:0};
+  const cw={go:false,on:false,u:0,t:null};   /* t: the last frame's time (ms), for dw */
   /* the balance's swing (js/escphys.js, WPHYS; the Hamilton's H.amp): driven by the escape wheel's torque drv (times the reference's, 12 h from full wind), A² relaxes to
      PE.ampAt(drv)² as exp(-2t/TF); with the train held it runs down free (PE.freeStep). Below PE.AMIN a swing can't unlock the wheel and see the impulse through: the train
      stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
@@ -5241,9 +5241,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
        rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
     tick:(dt,now,st)=>{if(!mv)return[];
-      {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);if(!c&&(cw.go||cw.u>0)){if(cw.go&&!winding)wind0();cw.go=false;cw.u=0;}   /* a view out of the case: the bowl set back at once, before the movement lifts out of it, and a wind
+      /* dw: the wall clock's step (s), up to 0.25: the lid and winding in the case are shown in real time, where dt, the viewer's step, is held to 0.05 a frame, so on a
+         renderer drawing a few frames a second they took several times as long (until 15 October 2026) */
+      const dw=cw.t===null?0:clamp((now-cw.t)/1000,0,0.25);cw.t=now;
+      {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3),kl=SNAPC||RMC.matches?1:1-Math.exp(-dw*3);if(!c&&(cw.go||cw.u>0)){if(cw.go&&!winding)wind0();cw.go=false;cw.u=0;}   /* a view out of the case: the bowl set back at once, before the movement lifts out of it, and a wind
           asked for goes on there (the key on the square once the movement is out) */
-        cf+=((c?c.lift:1)-cf)*k;cl+=((c?(cw.go||cw.u>0?1:c.lid):cf>0.97?0:1)-cl)*k;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
+        cf+=((c?c.lift:1)-cf)*k;cl+=((c?(cw.go||cw.u>0?1:c.lid):cf>0.97?0:1)-cl)*kl;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
         const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
       /* winding in the case, as the 6MX's instruction has it (pp. 3-4: the chronometer turned over in its gimbals, the key hole opened, the key put in and turned, then taken out
@@ -5251,7 +5254,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
          bottom faces up, the key put in from above; Uy8A88_j-cA 5:16-5:26): the lid opens, the bowl turns over in the ring, the closing plate opens, the key comes onto the
          square, CW_T s each (estimated); the fusee turns once it is on, and when it is wound it all goes back */
       {const CW_T=0.8;if(cw.go&&cw.on&&!winding)cw.go=false;const t=cw.go?3:0;if(!cw.go)cw.on=false;
-        cw.u=SNAPC||RMC.matches?t:cw.u+Math.sign(t-cw.u)*Math.min(Math.abs(t-cw.u),dt/CW_T);if(cw.go&&cw.u>=3){cw.on=true;wind0();}
+        cw.u=SNAPC||RMC.matches?t:cw.u+Math.sign(t-cw.u)*Math.min(Math.abs(t-cw.u),dw/CW_T);if(cw.go&&!cw.on&&cw.u>=3){cw.on=true;wind0();}   /* once: wind0 starts the maintaining spring's clock (until 15 October 2026 it ran each frame and held it at the start) */
         CS.bowl.rotation.z=-Math.PI*smooth(clamp(cw.u,0,1));CS.shutter(smooth(clamp(cw.u-1,0,1)));}
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
          square; else lying in the box (case.js keyAt) */

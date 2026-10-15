@@ -2261,6 +2261,13 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **The Wempe's winding in its case played several times too slowly on a slow renderer, and held
+  the maintaining spring's drive.** Its steps (lid, turn, plate, key) advanced by the viewer's frame
+  step, held to 0.05 s a frame, so at three frames a second the key took 13 s to come on, not 2.4: they
+  now go by the wall clock (`dw`, up to 0.25 s a frame), the key on at 2.9 s there. And `wind0()` ran
+  on every frame the key was on, restarting the maintaining spring's clock, so its drive never fell
+  while the key turned: it now runs once. Keep: what is shown as a person's actions goes by the wall
+  clock; a wind starts once. `6da89da`
 - **The Wempe wound with no key to show it.** Wind turned the fusee back while its key lay in
   the box. Now, in the movement's views (the movement out of its case), the key goes from the box
   onto the fusee's square, its mouth on the dust plate, turning with it, and goes back when it lets
