@@ -2799,4 +2799,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The Wempe's stop bar stood 40° off its slot's drawn line, and full wind was taken at the
+  groove's end.** The model set the bar's turn so the stop pin met it with the chain lying to
+  the groove's end N (8.75 turns); 02-2 dimensions the slot from the line through the chain's
+  pin A ("4", no angle), so along it. With the slot along A the stop pin (hole 7) decides full
+  wind: 0.112 turn short of N, 8.70 turns and 55.9 h to run down (05 06_20's 8.75 working
+  turns, the dial's 56), the groove's last tenth empty. escphys.js's MF is the stop's turn,
+  8.638, and the page warns if it parts from the fusee's. Keep: full wind is where the stop
+  holds the fusee, never assumed at the groove's end; a part a sheet dimensions from a line
+  lies along it.
