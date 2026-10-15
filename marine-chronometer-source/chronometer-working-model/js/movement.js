@@ -435,10 +435,22 @@ function buildMovement(M){
   /* the escape upper bridge's length (ebu): 72 deg round from the balance-escape line, across it (KLUwI2UUCMQ 10:00, from above: its end screws' line, 68 deg until the escape
      arbor's move; 13:44, where its screws land on the two lugs either side of the keyhole's escape lobe); ebn: across it, toward the balance */
   const ebu=(f=>[eu[0]*Math.cos(f)-eu[1]*Math.sin(f),eu[0]*Math.sin(f)+eu[1]*Math.cos(f)])(72*D2R),ebn=(v=>v[0]*(L.B[0]-L.E[0])+v[1]*(L.B[1]-L.E[1])>0?v:[-v[0],-v[1]])([-ebu[1],ebu[0]]);
-  const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-13.6),add(L.F,ltu,6.1)],ltbp:[add(L.T,ltu,-16.4),add(add(L.F,ltu,2.6),[-ltu[1],ltu[0]],3.4)],pil:[...PILLARS.train,PILLARS.barrel],tb:PILLARS.train,bb:[PILLARS.barrel,[35.18,8.06],[-24.85,26.27]],
+  const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-13.6),add(L.F,ltu,6.1)],ltbp:[add(L.T,ltu,-16.4),add(add(L.F,ltu,2.6),[-ltu[1],ltu[0]],3.4)],pil:[...PILLARS.train,PILLARS.barrel],tb:PILLARS.train,bb:[PILLARS.barrel,[32.90,6.60],[-24.85,26.27]],bbp:[[29.40,1.35],[-23.30,20.40]],tbx:[-8.70,22.00],
     ring:[91.5,214,336.5].map(a=>[42.0*Math.sin(a*D2R),-42.0*Math.cos(a*D2R)]),eb:[8.3,-8.3].map(f=>add(L.E,ebu,f)),ebp:[9.9,-9.9].map(f=>add(add(L.E,ebu,f),ebn,1.3)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
-    lb:[[18.34,12.02],[-14.2,19.0]],lbp:[[20.62,14.01],[-13.6,16.4]],blc:[3.25,-3.25].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(...DBLK.s)),dpin:DBLK.p.map(([t,n])=>(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(t,n))),cock:PT([33.11,12.62]),ckp:[[35.5,5.0],[26.9,19.8]].map(PT)};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
-     ckp: the cock's steady pins, at the two plain holes the train bridge shows under the cock with it off (C Spinner 6:47), placed to about 2 mm */
+    lb:[[18.34,12.02],[-14.2,19.0]],lbp:[[20.62,14.01],[-13.6,16.4]],blc:[3.25,-3.25].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(...DBLK.s)),dpin:DBLK.p.map(([t,n])=>(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(t,n))),cock:PT([33.11,12.62]),ckp:[[6.08,-9.39],[-8.79,7.87]].map(d=>add(PT([33.11,12.62]),d))};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
+     ckp: the cock's steady pins, in the two plain holes the train bridge shows under the cock, placed from the cock screw's hole beside them: KLUwI2UUCMQ 6:47 (the cock off; the
+     camera fitted on 6:49.0, the same view, f 4,000-6,000) puts them (6.10-6.41, -9.10..-9.71) and (-8.76, 7.70-8.48) from it, 23:30 (the bridge face up, anchored on its rim, its cut
+     round the barrel and the centre bushing) (5.89, -9.43) and (-8.82, 7.73): the two frames within 0.4 mm, drawn at their mean. Both frames put the screw's hole itself 2.5-2.8 mm
+     from S.cock (Review-results.md, the upper train bridge's hole survey), which the cock's measured wall and counterbore don't leave room for: the screw is kept, and the pins go
+     with it. Their holes r 1.07 (23:30, by their edges along 72 rays: 1.04 and 1.11, the cock screw's tapped hole 1.16 and the lower bridge's pins' holes 0.27-0.45 the same
+     way), as wide as the screw's; r 0.42 until 15 October 2026, estimated.
+     bbp: the barrel bridge's steady pins ("Bridge - Barrel, complete with pins", 42061): KLUwI2UUCMQ 13:04.4 (the bridge upside down, nearly face-on) shows one standing out of each
+     horn, 1.8-1.9 mm across (65-70 px at 36.6 px/mm); the cock side's base (29.25, 1.36) through a homography on nine of the bridge's holes (0.03-1.14 mm left out), and 23:30 a
+     plain hole in the train bridge at (29.54, 1.33), r 1.16: the mean drawn. The far one's hole the one 23:30 and 13:49.5 show between pillar 0's screw and the lower bridge's (its
+     use unknown until now); 13:04.4 puts the pin 2.1-2.5 mm from it, that horn there distorted (the bridge's screw hole beside it reads 5 mm off). Drawn r 0.9 in holes r 0.95,
+     1.5 mm long, as the cock's (estimated). Until 15 October 2026 the two pins were holes in the barrel bridge (bbX).
+     tbx: a plain hole in the train bridge 4 mm beyond the train-blocking screw's, its use not given by any source: KLUwI2UUCMQ 23:30 (-9.21, 21.97) and 6:49.0 (-8.29, 21.84;
+     -8.09, 22.19 on another set of holes): within 1 mm; r 0.75 (0.62-1.07, 23:30 by its edges) */
   /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge, where the restoration video has them (13:49.5, measured face-on): at the
      slab's end on the 3 o'clock side (outside every wheel, over the access hole in the pillar plate), and at the fourth end beyond the train-blocking screw (Fig. 30's order); lbp: its
      steady pins, one in each lug (tools/lower_bridge.py) */
@@ -478,10 +490,10 @@ function buildMovement(M){
      the pillar screw's hole and the opening over the train bridge's third screw: 0.1-0.6 mm at those; +-1 mm further out, tools/holemap.py), beside those the model had:
      the Navy seal's two screw holes, 17.2 apart through its centre (-6.96, -19.69), at 26.0 and -154.0 deg, the fusee seal's angles (the two seals are one part, fitted
      alike); and six whose use no source gives (bbX: centre, r of the dark disc +-0.15): two just beyond the setup cover's ends (12.8-13.3 from the barrel arbor, nearly
-     opposite; 11:48 shows one past the cover's end, the cover's own screws inside it, their tapped holes blind), one countersunk west of the barrel arbor, two by the
-     opening at 3 o'clock, one in the far horn. Through, as all show on the underside */
+     opposite; 11:48 shows one past the cover's end, the cover's own screws inside it, their tapped holes blind), one countersunk west of the barrel arbor, one by the
+     opening at 3 o'clock. Through, as all show on the underside. Two more read here then, by that opening and in the far horn, are the bridge's steady pins (S.bbp) seen end on */
   S.navySeal=(([a,b])=>{const m=[(a[0]+b[0])/2,(a[1]+b[1])/2],d=unit(sub(b,a));return[add(m,d,-7.8),add(m,d,7.8)];})([[-14.69,-23.47],[0.78,-15.91]]);   /* read 17.2 apart: drawn 7.8 out, the fusee seal's, the same part (+-1 mm out here) */
-  S.bbX=[[-15.30,-16.75,0.8,1],[-27.72,6.19,0.7,1],[-30.24,-2.15,0.55,1],[30.07,1.61,0.85,1],[36.29,2.47,0.9,1],[-18.55,19.90,0.85,1]];   /* the 1: their size at the faces (polyGeo) */
+  S.bbX=[[-15.30,-16.75,0.8,1],[-27.72,6.19,0.7,1],[-30.24,-2.15,0.55,1],[36.29,2.47,0.9,1]];   /* the 1: their size at the faces (polyGeo) */
   S.seal=[26.8,-154.9].map(a=>[L.Fu[0]+7.8*Math.cos(a*D2R),L.Fu[1]+7.8*Math.sin(a*D2R)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
@@ -587,10 +599,9 @@ function buildMovement(M){
   const tb=part('trainBridge',-62);
   const TBpoly=clipPoly(crescent(BR_R,TB_CUT,TB_CR,TB_EDGE),p=>{const[a,b]=TB_END,c=(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);return Math.max(-c,p[0]+30);});   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110); measured on the video, 22.56 mm out, it is where the barrel stands */
   R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.95,1],[...L.T,1.9,1],{pts:TB_KEY},[...SPv,0.52,1],[...SPh,0.25,1],
-    hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),[...S.tb[2],TB_CB,1],hT(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),[...S.blk,1.4,1],...S.dpin.map(q=>[...q,0.53,1]),hT(...S.cock,CKH_R,CKH_T),...S.ckp.map(q=>[...q,0.42,1]),
-    hT(...S.arm,ARM_S),[...S.tBlock,0.9,1],[...S.armPin,0.3,1],[-23.3,20.4,0.85,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');   /* the last: a hole through the bridge between pillar 0's
-     screw and the lower bridge's, countersunk underneath, its use no source gives: KLUwI2UUCMQ 23:30 (face up) and 13:49.5 (underside) put on the plan by their rims, the cut round
-     the barrel and the centre bushing (tools/holemap.py), within 1 mm of each other; r 0.85 (0.82-0.98), +-0.5 */
+    hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),[...S.tb[2],TB_CB,1],hT(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),[...S.blk,1.4,1],...S.dpin.map(q=>[...q,0.53,1]),hT(...S.cock,CKH_R,CKH_T),...S.ckp.map(q=>[...q,1.07,1]),...S.bbp.map(q=>[...q,0.95,1]),[...S.tbx,0.75,1],
+    hT(...S.arm,ARM_S),[...S.tBlock,0.9,1],[...S.armPin,0.3,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');   /* the barrel bridge's far pin's hole (S.bbp[1]): KLUwI2UUCMQ 23:30 (face up) and 13:49.5 (underside) put on the
+     plan by their rims, the cut round the barrel and the centre bushing (tools/holemap.py), within 1 mm of each other, countersunk underneath; r 0.82-0.98 */
   for(const f of TB_SEAT){const ins=([x,z])=>{let c=false;for(let i=0,j=f.length-1;i<f.length;j=i++){const[a,b]=f[i],[e,d]=f[j];if((b>z)!==(d>z)&&x<(e-a)*(z-b)/(d-b)+a)c=!c;}return c;};   /* each seat's floor, with its screw's tapped hole and its pin's hole */
     mesh(tb,polyGeo(f,3.1-SEAT_D,[...S.eb.filter(ins).map(q=>hT(...q,0.9)),...S.ebp.filter(ins).map(q=>[...q,0.42,1])]),M.plate,0,TB_T+SEAT_D,0);}
   {const C=PT([10.53,35.06]),A=PT([-0.9764,0.2161]),P=PT([0.2161,0.9764]),q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */
@@ -702,10 +713,8 @@ function buildMovement(M){
   hn(mesh(eb,ring(1.6,0.95,0.9),M.gilt,L.E[0],EB_Y+0.45,L.E[1]),'42162.eu');hn(mesh(eb,stoneGeo(0.95,0.095,0.5,'olive'),M.ruby,L.E[0],EB_Y+0.25,L.E[1]),'J.eu');   /* its hole r 0.095: the bridge off and held to the light, cap side (KLUwI2UUCMQ 10:14.5), the hole a white disc 36-44 px across in the stone's 446 (light through the endstone alone); the stone 1.96 mm at the cap window's 3.1 mm (720 px), the model's 1.9: 0.17 +/- 0.02 mm; drawn 0.19, the top of that range, round the patent's 0.178 mm pivot (the arbor's comment). J.el taken the same */
   endCap(eb,...L.E,ebu,EB_Y,1.0,3.1,['42159.eu','J.eue','20762.euc'],4.1,[[...ebn,2.8],[-ebn[0],-ebn[1],2.8]],1.0,1.55,0.85);   /* its flats and screws' heads: the bar 5.6 wide and the heads r 0.85 (KLUwI2UUCMQ 10:20 and 10:24, against the cap's R and its screws' spacing: 5.4-5.9, 0.84-0.88; the train bridge's traced seats 5.72 across); 5.2 and 0.75 until 5 October 2026 */   /* R 4.1, 1.0 thick, flat both sides with the bar's edges, its window a cone r 1.55 at the top down to the endstone, its screws' heads r 0.75 (10:00-10:16) */
   const bb=part('barrelBridge',-72);
-  /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24). The cut is the balance's
-     clearance circle (r 17.7 about the staff; the screws and weights sweep 17.2) joined with the circle fitted to its edge on the top-view photograph (r 17.6 about
-     5.24, 6.33; points within 1.3 mm), which reaches 20.5 mm from the staff toward the barrel: the barrel's cap and the fusee's large end show through it */
-  const cutR=BAL_R+3.2,bis=(f,lo,hi)=>{for(let i=0;i<50;i++){const m=(lo+hi)/2;(f(m)>0)===(f(lo)>0)?lo=m:hi=m;}return(lo+hi)/2;};
+  /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24), BB_CUT below */
+  const bis=(f,lo,hi)=>{for(let i=0;i<50;i++){const m=(lo+hi)/2;(f(m)>0)===(f(lo)>0)?lo=m:hi=m;}return(lo+hi)/2;};
   /* the horn on the cock's side ends in a cut 0.15 mm under the cock's straight edge (CK_TR 0-21, at the top), on past the rim along its last slope. The flat bridge
      traces that cut bowed into the bridge the same way (C Spinner 23:45, the frame mapped onto the bridge's face by a homography on its rim, r 40.5, and the fusee and
      barrel bushings: 1.02 mm off its 15.2 mm chord at most, 0.59, 0.83, 0.46 at a quarter, half and three quarters, steepest near the rim; in place with the cock off,
@@ -726,14 +735,17 @@ function buildMovement(M){
   const uo=unit(sub(FH[7],FH[6])),pH=PTri(add(FH[7],uo,bis(l=>Math.hypot(...add(FH[7],uo,l))-BR_R,0,20))),aH=Math.atan2(pH[1],pH[0]),aR=bis(a=>BR_R*Math.sin(a)-14.5+0.1*BR_R*Math.cos(a),0,Math.PI/2);
   const BBo=[];for(let k=0,n=Math.ceil((aR+TAU-aH)/(TAU/360));k<=n;k++){const t=aH+(aR+TAU-aH)*k/n;BBo.push([BR_R*Math.cos(t),BR_R*Math.sin(t)]);}
   BBo.push(...[add(FH[0],unit(sub(FH[0],FH[1])),4),...FH].map(PTri));   /* the rim from the horn's end round to past the cock's edge, across inside the cut round the balance (cut away below), and the horn's end from 4 mm inside the cut out to the rim */
-  /* between the horn on the cock's side and the fusee the cut runs further out: on KLUwI2UUCMQ 6:49.0 (the cock and balance out) through the camera fitted there, its top
-     edge from the horn's inner corner toward the fusee, traced as 9 points, lies 21.6-22.3 mm from the staff (21.2-22.5 over f 4,000-6,000), where the circles above give
-     about 17.7; a circle through them, BB_CUT (r 16.85 about (6.84, 9.53); 16.55-17.28 about (6.54, 8.59)-(7.02, 10.08) over those focal lengths), meets the horn's edge at
-     (23.67, 8.65), the corner the frame shows at (23.71, 8.42). Past (20.5, -0.2) the fusee's dust cap hides it; drawn on round, it comes out left of the cap where the
-     frame shows the cut's wall on the circle about the staff (estimated between). The top-view photograph's edge there, under the cock's shadow, reads 16.7-18 mm from
-     the staff, on plain train bridge in the video: not used. Until 12 October 2026 the two circles alone, the horn's inner corner at (19.5, 9.87) */
-  const BB_CUT=[6.84,9.53,16.85];
-  const BBpoly=clipUnder(subtractCircle(subtractCircle(subtractCircle(BBo,PTi(L.B),cutR/PHOTO_K),[5.24,6.33],17.6).map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  /* the cut round the balance: one circle, r 20.06 about (2.03, 9.96), 0.5 mm from the staff. KLUwI2UUCMQ 13:04.4 (the bridge upside down, nearly face-on, the whole cut
+     in view from horn to horn) through a homography on nine of the bridge's holes (the fusee's and barrel's bushings, the opening over the third pillar screw, the seals'
+     and cover's holes: 0.03-1.14 mm each left out): its edge, found along 49 rays 4 deg apart (the step from the parts seen through it to the plate), fits that circle to
+     0.11 mm rms, 0.23 at most, over 196 deg; each half alone 20.05 and 20.42 about centres 0.4 mm apart. The barrel's cap and the fusee's large end show through it. Until
+     15 October 2026 three circles, which met in a step under the fusee's dust cap: the balance's clearance r 17.7 about the staff and one fitted on the top-view photograph
+     (r 17.6 about (5.24, 6.33) in its frame), both 1-1.7 mm outside this edge past the balance, and from the horn on the cock's side toward the fusee a circle through the
+     top edge traced on 6:49.0 through the camera fitted there (r 16.85 about (6.84, 9.53), 21.6-22.3 mm from the staff), 1.5-1.9 mm outside it: that camera reads the
+     third pillar screw's counterbore beside it 3 mm off (the near bridge screw's comment). It meets the horn's edge (ckE) at (22.2, 8.1); 13:04.4 has that edge 0.15 mm
+     from ckE beside the corner */
+  const BB_CUT=[2.03,9.96,20.06];
+  const BBpoly=clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
   R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
@@ -743,7 +755,13 @@ function buildMovement(M){
   /* the two into the train bridge (S.bb[1], [2]) where KLUwI2UUCMQ 6:49.0 has their heads, through the camera fitted there (the bridges' rims, r 40.5, among its fit; f 5,000):
      (35.18, 8.06) near 3 o'clock and (-24.85, 26.27) in the far horn, both r 36.1-36.2 (the first (35.15-35.17, 6.40-8.98), the second within 0.3 mm over f 4,000-6,000; the
      same heads, proud and slotted, at 6:29). The top-view photograph has the same two proud heads 4.5-4.9 mm inside the rim (r 35.6-36.0), but its five-screw map, about
-     10 % small near the rim, placed them through PT at (28.99, 7.95) and (-23.88, 22.98), r 30.1 and 33.1, until 12 October 2026 */
+     10 % small near the rim, placed them through PT at (28.99, 7.95) and (-23.88, 22.98), r 30.1 and 33.1, until 12 October 2026. The far one holds (23:30, its tapped hole in
+     the train bridge face up, anchored on the bridge's rim, cut and centre bushing: 0.22 mm). The near one is at (32.90, 6.60) since 15 October 2026: 23:30 puts its tapped hole at
+     (32.87, 6.10) and 13:04.4 its clearance hole through the barrel bridge (upside down; a homography on nine of its holes) at (33.03, 7.00), within 0.9 mm; from the third pillar
+     screw's counterbore beside it, (-1.53, 9.85) on 23:30, (-1.15, 10.41) on 13:04.4 and (-0.29, 8.70) through 6:49.0's camera, which reads that counterbore itself 3 mm off
+     (2.4 mm from (35.18, 8.06): that camera's right side is out by as much) */
+  /* its two steady pins (S.bbp), standing 1.5 mm out of its underside into the train bridge */
+  for(const q of S.bbp)cylBetween(bb,0.9,TB_T,TB_T+1.5,M.steel,...q);
   const eg2=mesh(bb,decalGeo(BBpoly,PTi),M.engraveB,0,BB_T-0.02,0);eg2.userData.noShadow=true;eg2.userData.noCap=true;eg2.userData.decal=true;
   const Fl=Math.hypot(...L.Fu),fo=[L.Fu[0]/Fl,L.Fu[1]/Fl];
   /* ---------- dial (on the mounting ring's flange), hands, motion work ---------- */
@@ -1324,13 +1342,13 @@ function buildMovement(M){
      on the plane of that underside instead, 22.6-23.0. The 1-D map on the stud's holes (CK_SP's comment) gave 21.3, extrapolated from x 1780-2207 to 2665; with the holes at the old
      scale, 18.6. Until 15 October 2026 r 17.7, the barrel bridge's circle round the balance (BAL_R+3.2). The wall's form across the underside, an arc about the staff, is estimated:
      no frame shows its other end (on 41:58 the concave side's band shows no full-height face before the corner; 23:45 is too coarse to place one). It leaves 0.48 mm of metal round the
-     cock screw's counterbore (r 23.1 at its nearest) and 0.45 round the near steady pin (ckp, placed to about 2 mm). The counterbore's depth the head's (CKH_L, at the top) and 1.2 more, its top that far under the cock's top. CKS_R: the balance upper setting (42162), r 2.2 on 41:58 (the cock alone, top up) through the homography on its holes at their measured places (CK_TR, at the top): its gilt fades into the cock's face from r 2.0 to 2.55 round it, half-way at 2.2; r 1.5 until 12 October 2026 */
+     cock screw's counterbore (r 23.1 at its nearest) and 0.45 round where the near steady pin was drawn until 15 October 2026 (ckp, since measured further out). The counterbore's depth the head's (CKH_L, at the top) and 1.2 more, its top that far under the cock's top. CKS_R: the balance upper setting (42162), r 2.2 on 41:58 (the cock alone, top up) through the homography on its holes at their measured places (CK_TR, at the top): its gilt fades into the cock's face from r 2.0 to 2.55 round it, half-way at 2.2; r 1.5 until 12 October 2026 */
   R.cock=mesh(ck,stepGeo(ckOut,L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,CKS_R],[...hC(...S.cock,CKH_R,CKH_T).slice(0,3),CK_CBR,CK_CB],...S.ep.map(q=>hT(...q,0.85).slice(0,3)),[...hC(...SPS,0.6).slice(0,3),0.65,0.45],[...SPHa,0.3],[...SPHc,0.3]],{p:CK_SP[0],q:CK_SP[1],t:CK_TM}),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath in its two depths, square steps between them and at the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the thin part's underside steps down to the thick part's, which meets the body in a square step, the space under it open to the body's wall, r CK_RP; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(CKS_R,CK_T),V2(CKS_R,CK_T+2.6),V2(1.5,CK_T+2.6),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.gilt,...[L.B[0],0,L.B[1]]),'42162.bu');   /* r CKS_R through the arm (measured at its top); the 0.3 it stands below the arm r 1.5, as before (estimated: at CKS_R it would meet the stud's bar, drawn where the old reading puts it, 2.0 from the staff) */   /* gilt: KLUwI2UUCMQ 41:58, the cap off */
   hn(mesh(ck,stoneGeo(0.95,0.19,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone; its hole r 0.19, 0.01 round the pivot's measured r 0.18 (the staff's comment): the hole's size an estimate */
-  /* its two steady pins ("complete with pins", 42066), 1.5 mm into the train bridge, under the body */
-  for(const q of S.ckp)cylBetween(ck,0.4,TB_T,TB_T+1.5,M.steel,...q);
+  /* its two steady pins ("complete with pins", 42066), 1.5 mm into the train bridge, under the body: r 1.0 in their holes' 1.07 (S.ckp: the fit and length estimated) */
+  for(const q of S.ckp)cylBetween(ck,1.0,TB_T,TB_T+1.5,M.steel,...q);
   /* one balance cock screw (parts list 42192), at its position on the top-view photograph (p3map scr_cockfoot), its head down in the counterbore */
   hn(screw(ck,...Q,CK_T+CK_CB,CKH_R,CKH_L,TB_T-CK_T-CK_CB+2.5,CKH_T),'42192');   /* through the cock into the train bridge: a tall cheese head, r 3.33, 0.90 of its counterbore (the top-view photograph's 0.904; photo-cock-top.png, 53 px in about 61),
      1.5 times its width long, 10.0 (5:59 side-on, the sharpest; 43:54.5 gives 1.55), its top 1-1.5 under the cock's top in the counterbore (44:02 its wall above the head; 41:58, 6:29);
