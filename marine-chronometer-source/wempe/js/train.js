@@ -151,12 +151,16 @@ const WTRAIN=(()=>{
        dial face, a cup there (the section draws it; Wempe 3955's dial side, 3_Wempe_3955_uZ.jpg, shows it Ø 3.7 across, 17.4 px/mm by the bridge's screws 34.13 apart:
        drawn Ø 3.7, 0.9 deep, estimated); bore Ø 0.86 as the top plate's */
     tag(mesh(P.intermediateBridge,bushGeo(4.3/2,0.86/2,PPT+0.71,ZB,{f:1,rs:1.85,ds:0.9}),M.brass2,H[38][0],0,H[38][1]),'WN-300.zb');
-    /* the seconds wheel's jewel at 35 in the bridge: the setting 05 05 04-2 (Fassung) in the bridge's Ø 5.2 hole from the floor of its 1.7 sink (frame.js) to the dial face,
-       burnished over the jewel 05 05 04-1 (Lagerstein f. Sek.), whose face is 1.75 in (the sheet's 1.7); under it a floor with the post's hole Ø 1.1, opening in a cone to
-       Ø 3.8 at the dial face (Wempe 3955's dial side shows a dark mouth Ø 3.8 in a thin brass ring there, 3_Wempe_3955_uZ.jpg at 17.4 px/mm; its depth estimated). The jewel Ø 3.6 × 1.1, scaled on the coloured section (9.4 px/mm; a pictorial section, so estimated), its hole Ø 0.78 olive for the pivot's 0.75 at the jewel; the
-       setting's sheets aren't in the set: estimated */
-    {const y0=PPT+1.7,yj=PPT+1.75,hj=1.1,rjw=3.6/2;
-      tag(mesh(P.intermediateBridge,ringT([[1.65,y0],[5.2/2,y0],[5.2/2,ZB],[1.9,ZB],[0.55,ZB-0.75],[0.55,yj+hj],[rjw,yj+hj],[rjw,yj],[1.65,yj]]),M.brass2,H[35][0],0,H[35][1]),'050504-2');
+    /* the seconds wheel's jewel at 35 in the bridge: the setting 05 05 04-2 (Fassung) in the bridge's Ø 5.2 hole (frame.js), a tube the bridge's full thickness but its top 0.2
+       under the plate side's face, its bore Ø 3.7 open from there down to the jewel 05 05 04-1 (Lagerstein f. Sek.), whose face is 1.75 in (the sheet's 1.7), and under the jewel
+       a straight recess Ø 3.7 to the dial face (05 08 04's section, measured at 6.9 px/mm by its 3.8: the hatched walls from 0.2 to 3.8, Ø 5.3 outside, Ø 3.77 inside, the
+       jewel's faces 1.85-1.9 and 3.0 in, the recess 0.75; likely). It holds the jewel in a seat Ø 3.6 its height, burnished over it (the section's walls bow in there).
+       Wempe 3955's dial side shows a dark mouth Ø 3.8 in a thin brass ring Ø 4.8 there (3_Wempe_3955_uZ.jpg, 8.4 px/mm by the plate's 85), the jewel deep in it. Until 15 October
+       2026 the setting began at the floor of a Ø 6.2 × 1.7 sink in the bridge and closed under the jewel to the post's Ø 1.1, opening in a cone to Ø 3.8 at the dial face
+       (estimated: the section draws neither). The jewel Ø 3.6 × 1.1, scaled on the coloured section (9.4 px/mm; a pictorial section, so estimated; 05 08 04 draws it about 1.15),
+       its hole Ø 0.78 olive for the pivot's 0.75 at the jewel; the setting's sheets aren't in the set */
+    {const y0=PPT+0.2,yj=PPT+1.75,hj=1.1,rjw=3.6/2;
+      tag(mesh(P.intermediateBridge,ringT([[3.7/2,y0],[5.2/2,y0],[5.2/2,ZB],[3.7/2,ZB],[3.7/2,yj+hj],[rjw,yj+hj],[rjw,yj],[3.7/2,yj]]),M.brass2,H[35][0],0,H[35][1]),'050504-2');
       tag(mesh(P.intermediateBridge,stoneGeo(rjw,0.78/2,hj,'olive'),M.ruby,H[35][0],yj+hj/2,H[35][1]),'050504-1');}
     /* the pillar plate's bushes for the motion work's studs (05 08 02 Schnitt A-B): 05 08 02-2 pressed into hole 2 (3.50 +0.012) from the inner face ("Futter an dieser Seite
        eindrücken"), through the plate, and the stud (Anrichtstift lg, 05 02 00-6, in the coloured section) pressed in it, 12.3 long from the plate's inner face; the short stud

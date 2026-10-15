@@ -303,12 +303,12 @@
    "parent": "050901",
    "kind": "part",
    "part": "fuseeBush",
-   "fn": "Pressed into the top plate and screwed to it: the fusee arbor's winding end turns in it.",
+   "fn": "Its spigot slides into the top plate's hole (8 g6 in 8.0 +0.015) and its flange is screwed to it: the fusee arbor's winding end turns in it.",
    "rel": [
     [
      "in",
      "050901",
-     "press"
+     "free"
     ],
     [
      "on",
@@ -352,12 +352,12 @@
    "parent": "050801-2",
    "kind": "part",
    "part": "dustBush",
-   "fn": "Slid over the fusee bush's top, up to the case's winding hole.",
+   "fn": "Pressed on the fusee bush's tapered top (8 H7 on 8 T6, both 1:70), up to the case's winding hole.",
    "rel": [
     [
      "round",
      "050801-2",
-     "free"
+     "press"
     ],
     [
      "on",
