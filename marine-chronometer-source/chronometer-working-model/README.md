@@ -30,6 +30,7 @@ the website (see the root README).
 | `../shared/almanac.js` | A nautical almanac and the navigator's arithmetic, `ALM`: the Sun, Moon and 58 stars, sidereal time, the altitude corrections, sight reduction, the time sight, equal altitudes, clearing a lunar distance, and sights made from the almanac for the essay's worked examples (see "The almanac" below); shared with `tools/almanac.js` |
 | `../shared/hairspring.js` | The hairspring's design, `HSPR`: terminal curves solved to Phillips' conditions, the whole spring's path, the force it leaves on the pivots, the strip's section from the stiffness ("The hairspring, designed"); shared with `tools/hairspring.js` |
 | `js/makers.js`, `js/maker.js` | The maker's tools ("What the model gives a maker" below): `MAKERS`, each parts-list line's measured fit, material and treatment (written by `tools/makers.py`); `MAKER`, each card's maker's sheet, drawing (SVG) and STL, Measure, the build book, the model's data as JSON, the movement as STL |
+| `js/overhaul.js` | The overhaul ("The overhaul" below): `OVH`, the manual's 58 operations to take the movement down (Sec. V) and 105 to put it back (Sec. VIII), each with its tools (Sec. XIII's numbers), figures, oil and the parts it moves by their parts-list lines; the parts moved one operation at a time, as the Exploded view moves them. One IIFE; app.js calls `OVH.bind()` |
 | `js/gltf.js`, `js/blender.js` | The export to Blender ("The model in Blender" below): `GLTF`, a binary glTF 2.0 writer (nodes, meshes, materials, textures, morph targets, animations; one IIFE); `BLENDER`, the export itself: its own copy of the model, every motion played through it and read back |
 | `blender/rig.py`, `js/rigpy.js` | The rig, run in Blender's Text Editor after the import (Blender 5.x); `js/rigpy.js` is its text for the panel's Blender rig button, written by `tools/rigpy.py` (`--check`: up to date) |
 | `js/movement.js` | The movement: layout constants, the escapement (`ESC=makeEsc(...)`, with the centre distance from `L`), screw positions and holes, pillar plate and bridges, going train with tooth phasing, fusee wheel and maintaining work, fusee, chain (instanced links) and barrel, balance, hairspring, detent, train-blocking screw and balance locking arm, motion work, and the per-frame `update()` |
@@ -52,12 +53,13 @@ the website (see the root README).
 | `tools/fine.py`, `tools/fine-interference.js`, `tools/barrel-clearance.js` | Fine (0.05 mm) collision check through the escapement cycle, round the train and over the wind, against a table of expected contacts; the barrel's margins and the mainspring |
 | `tools/audit.py`, `tools/geometry-audit.js`, `tools/geometry-audit-box.js` | Geometry audit of the movement (and, with `audit.py box`, the box and gimbals): overlapping or unsupported screws, loose arbor ends, coplanar faces, isolated parts, among the parts shown, in one frozen state; anything not expected (the loose ends in its `LOOSE` table, the coplanar faces in `tools/audit-expected.json`) fails, `--update` rewrites the coplanar faces (`--eval JS` after loading, e.g. to fit a variant or plant a fault) |
 | `tools/exploded.py`, `tools/exploded-check.js` | Exploded-view clearance: every part and screw, taken as it stands assembled, against every other, at every spread from 0 to 100 % (none may meet at full spread, or pass through another on the way), over escapement phases, train positions and the wind |
+| `tools/overhaul.py`, `tools/overhaul-check.js` | The overhaul's clearance (about 12 s): every operation of both sequences followed as the page moves its parts, every pair of bodies against each other (exploded.py's columns); none may pass through another, but those in its `EXPECTED` table, each with its reason (a part a real movement takes out sideways or tilted, or a reading still open) |
 | `tools/solids.py`, `tools/solids-check.js` | Solid geometry check: every mesh closed (no open edge), consistently wound and not inside out, but the decals and surfaces flagged as such; loaded as it is and with Moving parts only and a section on |
 | `tools/placements.py` | Every mesh's position and bounding box in seven model states (escapement phases, train and wind positions), and a diff between two runs or two copies of the page: proves a change moved only the parts it meant to, and that the mechanism moves as before |
 | `tools/escapement.js` | Measures the escapement against the manual's adjustment figures (Node.js, no browser) |
 | `tools/keystone.js` | Measures the escapement against a period text's rules for the chronometer escapement (*Watch and Clock Escapements*, 1904); reports, never fails (Node.js, no browser) |
 | `tools/invariants.py` | Checks the model's arithmetic: hands against the time, the wind indicator's scale, the fusee's 56¼ h and 17½ half turns, the balance's moment of inertia and the rate for a turn of the weights (exit code 1 on a failure) |
-| `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, variants, sections, time zone, keys, a URL-hash link), then opens the Essay tab, scrolls it and works every control in it (the model not drawn under it, at most two WebGL contexts, a link into the model and Back, `#essay=detent`); fails on any console error or warning (`--model`, `--essay`: one half) |
+| `tools/smoke.py` | Loads the model and clicks through every control (views, walkthrough, the overhaul, variants, sections, time zone, keys, a URL-hash link), then opens the Essay tab, scrolls it and works every control in it (the model not drawn under it, at most two WebGL contexts, a link into the model and Back, `#essay=detent`); fails on any console error or warning (`--model`, `--essay`: one half) |
 | `tools/p3fit.py` | Renders the model from the top-view photograph's camera |
 | `tools/gltf_check.py`, `tools/blender_check.py` | The export to Blender checked: the page's own export written to `r_model21.glb` and read back (structure, accessors, the tree, names, every clip), then that file imported into Blender headless (`MC_BLENDER`, else the usual install; skipped without one), the rig run and set against the export's own clips, and two renders (`r_blender_*.png`) |
 | `verification/lower-bridge-comparison.png` | The balance lower bridge against its sources: the restoration video's face-on frame (13:49.5) beside the model seen from the same camera (`tools/framecam.py`), the model's outline drawn on the frame, the measured and model plans (`tools/lower_bridge.py`), the two levels side-on (36:45), Figs. 110, 29 and 30, and the model from below, in place and from above |
@@ -76,6 +78,7 @@ Speed: the presets, or any value from 0.01× to 10,000× on the Custom slider or
 
 - The **?** button on the model (or the **?** key) opens a card listing every control, for a mouse and for touch, with this device's first; the header and the hint word the gestures for the device too (`.m-only` / `.t-only`, switched by `@media (hover:none)`). A tap in the model, × or Esc closes it; dragging doesn't, so the gestures can be tried with it open.
 - Keys 1–9 pick the views, in the order of their buttons. Exploded has a Spread slider.
+- **Overhaul** (the card under the walkthrough's): **Take it down** and **Put it back** step through the manual's operations ("The overhaul" below); Back and Next move one operation's parts, the slider goes straight to any operation, Play goes on by itself, End overhaul gives back the view, speed and balance stop it found. The model stands still meanwhile.
 - Double-click a part (double-tap on touch) to zoom to it: the camera closes in to fit the part's shown meshes (centring without backing away when the part is larger than the view) and then turns about it, following it as the movement lifts or spreads (`focusPart` in `app.js`); double-click empty space, 0 or Reset for the whole view again. A second click within 0.4 s and 24 px of the first makes the double, on any pointer (`lastTap`).
 - Back and Forward (↶ ↷ under the tabs, Backspace and Shift-Backspace): the places the view has been, up to 30. Each jump made with a view button or key, Reset or 0, a double-click, a panel's Show button or winding keeps the place it left (`jump(f)`), unless it didn't move the camera; the walkthrough keeps its own steps, and links and the opening view aren't kept. The buttons show once there is somewhere to go back to.
 - The panel's width (wider than 960 px): drag the line in the gap between the model and the panel, or the arrow keys on it (Home and End for the narrowest and widest); double-click it for 350 px. 320 to 640 px, leaving the model at least 600 px; on a wide screen the page grows with the panel, so the model keeps its width. Remembered in `cm-set` (`pw`) with Remember settings.
@@ -337,6 +340,51 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
 - **Still estimated** (README "Estimated"): pivot and jewel-hole diameters (the balance staff's lower end, the escape jewel's hole and the third's and fourth's lower jewels now measured) and the screws' threads (the videos don't resolve them; the model's are its own,
   each fit's clearance on the sheets, with the ISO thread to cut beside each), the train's efficiencies (0.85–0.95 a stage), the trip spring's section, the materials where the manual names none.
 
+## The overhaul
+
+The manual is an overhaul manual, and its order is how a Model 21 comes apart and goes back together: Sec. V's 58 operations take the movement down,
+Sec. VIII's 105 put it back (Ops. 16-34, the fusee, and 35-39, the barrel, usually done first, set where those parts go in, as the manual sets them),
+read from the manual's text and transcribed in `js/overhaul.js` (`DIS`, `RE`). Each operation has the manual's instruction, cautions and notes; its
+tools by Sec. XIII's numbers and names (`TOOLS`); its figures; its oil (red oil, argon oil, grease, and the points it goes on); and the parts it takes
+off, puts on or loosens, named by their lines of the parts list (`bom.json`'s ids, which every piece of the model carries as `userData.hn`), or by a
+part of the page (`@name`) where the line is a whole part. The card shows them with each line's number and name (`MAKERS`), and the build book's
+"Putting it together" chapter prints the reassembly from the same data.
+
+**How the parts move.** Only along the arbors, as the Exploded view moves them: a part comes off to where that view puts it (its rise measured on
+the page: `explode(1)` against `explode(0)`, so a part turned over inside another goes the right way), a screw out of its hole by its own lift. A part
+rides on what carries it until its own operation (`HOST`): the fusee wheel, the sustaining ratchet and spring and the chain on the fusee until Ops.
+39-41, the setup pawl's spring and pivot screw on the barrel bridge until Op. 32, the balance lower bridge on the upper train bridge until Op. 50. Each
+comes off its host by its offset in the Exploded view, so a part and its host moving in one operation go in straight lines. A piece the Exploded view
+doesn't move from what carries it (a cap on its bridge, a post in its plate) comes off away from the side facing up, by half the least lift of the
+screws coming out with it (so it never rises past their heads), else 6 mm; where the sources say otherwise, `UP` gives the way and the distance: the
+winding stop unscrews from under the barrel bridge (KLUwI2UUCMQ 12:58-13:04); the barrel's cap is on its dial side, and its screws, arbor, mainspring
+and brace come out that way (Ops. 34-37); the seal ring and its spring come out of the dust seal's underside; the balance lower endstone cap off the
+lower bridge's; the fusee goes 90 mm clear, so what comes off it on the bench (Ops. 39-45) lands above the movement. A part done with goes in the
+cleaning tray: once its operation is over it is hidden, unless a later operation works on it or on what it rides on. Every part in one operation moves
+by the same share, the path `tools/overhaul.py` checks; Back and Next move one operation's parts, the slider goes straight to another operation.
+
+**What it shows as the manual has it.** The manual's balance locking arm (Fig. 9), which rides on the upper train bridge: the Navy's Y-arm balance stop
+(the page's default, as on 2E11795) isn't in its operations. On the restoration video's 2E8489 it comes off before the cock, unscrewed at its seal's
+flange and lifted off with the seal (6:15-6:24), which Op. 10's text says. The train-blocking screw goes down at Op. 5 and up at Op. 46 (and in the
+reassembly at Ops. 45 and 75); Op. 7 and the reassembly's Op. 54 wind the fusee. The bezel is off from the first operation until the reassembly's Op.
+103; the box is hidden while the movement is on the work ring or in the dialing ring.
+
+**The check** (`tools/overhaul.py`, `overhaul-check.js`, about 12 s; `ci.py` runs it). Every body (each part, screw and loose piece the operations
+move, and what they leave of their parts) is rastered as assembled into vertical columns 0.2 mm apart, as `exploded.py` does, giving for every pair the
+relative rises at which they meet. Each operation is followed along its path (41 points); a pair fails if it passes into a meeting it didn't start or end
+in, or leaves (or enters) an overlap as assembled the long way round. What the operation leaves in the tray is out of the way. It found the movement's
+order sound and the model's own placement rules wrong in a dozen places, all fixed; what remains is in its `EXPECTED` table, each with its reason:
+
+- what a real movement does other than straight along the arbors: the detent is drawn out sideways from under the upper train bridge (KLUwI2UUCMQ
+  10:51-11:06); the fusee comes out tilted, its wheel's edge from under the upper train bridge, the wheel's teeth reaching under it to the centre pinion
+  (the video lifts it out with the bridge still on, 13:06-13:33, as the manual's order has it), the sustaining pawl held aside; the chain is unwound from
+  the fusee's groove and unhooked from the barrel (Op. 8); the taper pin goes in across the arbor; the brace slides along the barrel's wall; the second
+  hand goes on with the minute hand at 12 (Op. 64), where the model's hands show the time;
+- readings still open in the model (Review-results.md, "The overhaul's order against the model"): the fusee arbor's and barrel arbor's squares are wider
+  across their corners than the barrel bridge's bushings, the dust seal and the barrel's end hole they pass; the winding ratchet wheel's bore is smaller
+  than the arbor's collar it must come off over; the seal ring and its spring are drawn shut inside the dust seal's body, where Figs. 24 and 80 draw them
+  under it.
+
 ## The model in Blender
 
 **Blender (.glb)** in Making it writes the whole instrument as a glTF 2.0 file (`model21.glb`, about 95 MB, a minute or so to make), and **Blender rig
@@ -417,7 +465,7 @@ times JavaScript's milliseconds of UT.
 
 The page's state is kept in the URL hash, so a link opens the model as it
 was: `#view=escapement&speed=0.05&part=det` (a view, speed and picked part, or piece: `part=bal.staff`; `view=laidout` is the laid-out train), `arm=1` (the balance locked, at rest), `block=1` (the train-blocking screw down),
-`#tour=6` (a walkthrough step), `#essay` or `#essay=detent` (the Essay tab, at a section), `open=bookDet` (in a link: open that panel section), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `merge=0` (Performance mode off), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
+`#tour=6` (a walkthrough step), `#ovh=d12` or `#ovh=r46` (the overhaul at Op. 12 of the disassembly, Op. 46 of the reassembly), `#essay` or `#essay=detent` (the Essay tab, at a section), `open=bookDet` (in a link: open that panel section), `drive=1` (Moving parts only), `draw=1` / `draw=ink` (Tinted / Ink drawing), `edges=0` (Edges off), `shadows=1` (Shadows on), `merge=0` (Performance mode off), `sec=x:-3.5`, `esc=rT:0.29,aI:185` (the adjuster's bench, where it differs)
 (a cross-section; `:f` shows the other half), `tz=local`, and `t=10:09:30`
 once the hands have been set. It is read at load and when edited, and
 rewritten (without adding to the history) 0.3 s after any change.

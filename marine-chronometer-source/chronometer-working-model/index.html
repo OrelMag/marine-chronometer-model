@@ -73,6 +73,21 @@
         <div class="seg" style="margin-top:10px"><button id="tExit">End walkthrough</button></div>
       </div>
     </div>
+    <div class="card tour" id="ovhCard">
+      <div id="ovhIntro">
+        <h2>Overhaul</h2>
+        <p class="note" style="margin:0 0 10px">The manual’s own order: 58 operations to take the movement down (Sec. V) and 105 to put it back together (Sec. VIII), each part coming off or going on in its turn, with the tools, oils and checks.</p>
+        <div class="seg"><button class="primary" id="ovhDis" title="Take the movement down, as Sec. V does it">Take it down</button><button class="primary" id="ovhRe" title="Put the movement back together, as Sec. VIII does it">Put it back</button></div>
+      </div>
+      <div id="ovhBody" class="hidden">
+        <div class="tnav"><button id="oPrev">Back</button><span id="oStep"></span><button id="oNext">Next</button></div>
+        <input type="range" id="oSl" min="1" max="58" value="1" step="1" aria-label="Operation" style="width:100%">
+        <h3 id="oTitle"></h3>
+        <div class="txt" id="oText" aria-live="polite"></div>
+        <p class="note" id="oMeta" style="margin:8px 0 0"></p>
+        <div class="seg" style="margin-top:10px"><button id="oPlay" aria-pressed="false" title="Go on through the operations, one every few seconds">Play</button><button id="oExit">End overhaul</button></div>
+      </div>
+    </div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
@@ -676,6 +691,7 @@
 <script src="js/essay.js"></script>
 <script src="js/makers.js"></script>
 <script src="js/maker.js"></script>
+<script src="js/overhaul.js"></script>
 <script src="js/gltf.js"></script>
 <script src="js/rigpy.js"></script>
 <script src="js/blender.js"></script>

@@ -2282,3 +2282,32 @@ Findings:
 **Redrawn from the video (12 October 2026).** Both parts were estimates; measured on KLUwI2UUCMQ, both were wrong (RESOLVED.md, Winding and maintaining work): the stud 2.3 across and 5.5 long, 11.6 mm from the fusee about 108 deg round from where it was drawn; the bar 15.0 x 1.8 with slanted ends and two thicknesses, on the arbor's other side, pushed by its own thicker end, no nose. The two findings above belong to the old parts: finding 1's nose is gone (the stud's end now stands 1.6 mm past the fusee's top, and nothing passes under it), and finding 2's corner contact is now the stop end's leading corner on the stud's side, 0.47 mm into its path, the corner that stands out on the real bar. Swept again: full wind 0.000 mm, let go 0.42, every other pass 0.62 mm or more clear; `fine.py` nothing new; the walkthrough's close-up still shows the catch. Compared side by side (isolate.py): from above with 20:01.23 and 25:40 (the parallelogram's lean, the spring's C and where it meets the bar), side-on with 26:05 and 26:16.25 (released, the stop end inside the plate's edge; pushed, about 1.6 mm out against the video's 1.8-2.2), the stud with 13:00.45-13:04.0. Left open: the released place (the side views put the bar about 1 mm further toward its chain end than the plan) and how deep the chain end reaches into the groove (OPEN-QUESTIONS.md).
 
 **The gaps settled (12 October 2026, after release 2.27.00).** Read again on KLUwI2UUCMQ: the released place is centred (26:23.4-26:24.5 side-on, within 0.2 of 20:01.23); the chain pushes the bar 1.9-2.5 (13:16, 13:26), the tweezers to a hard stop at 2.44; the spring's end goes into a hole in the bar's side face, its fixed end into a tapped hole in the recess floor; the step is on the underside; the stud's grooves run along the line to the fusee; the chain end sits level with the band under the plate and with the chain's top on the top turn (37:22-37:26). Redrawn so (RESOLVED.md). Compared side by side: from above with 20:01.23 and 25:40 (the spring's C between the two holes and into the bar near its chain end), obliquely at full wind with 37:26.578 (the band as deep as the bar, the chain just under it). Checks: maintaining, solids, fine (nothing new), invariants. Left open: 37:22.323's released stand-out against 20:01.23 and 26:23, the hard stop's cause, the chain's catch on the end under the mainspring's pull (OPEN-QUESTIONS.md).
+
+## The overhaul's order against the model (15 October 2026)
+
+The manual's two sequences (Sec. V, Ops. 1-58; Sec. VIII, Ops. 1-105) run on the model, each part lifted off or put on along its arbor in its turn
+(`js/overhaul.js`; model README, "The overhaul"), and checked by `tools/overhaul.py`: no part may pass through another on its way. The order is sound
+on the model, but three readings the model draws keep parts from coming off as the real movement's do, and one fault turned up in the Exploded view.
+Open, most certain first:
+
+1. **The arbors' squares are wider than the holes they pass.** The fusee arbor's square (2.4 mm across, 3.4 across its corners; `part('sq')` in
+   `movement.js`, its shaft r 1.2 from the barrel bridge's bushing up) and the barrel arbor's (2.39 mm, `42170`'s square) stand over the barrel
+   bridge's bushings: in the model the bridge can't be lifted off over them (Op. 31) or put back (the reassembly's Op. 44), the dust seal can't come off
+   over the fusee's square (Op. 29), and the barrel arbor can't come out through the barrel's end hole (Op. 36). On the real movement the bridge comes
+   off over both (KLUwI2UUCMQ 12:58-13:04). Sure of the fault (the geometry); what is too big, the squares or the shafts against the bores, is the
+   measurement "Still open after the collar's height" 1 asks for, the arbor, the barrel bridge's bushing (42164.fu), the dust seal and its ring together.
+2. **The winding ratchet wheel can't come off the fusee** (Op. 43; the reassembly's Op. 17): the arbor's turned part under it (`42022`'s lathe,
+   r about 4.0, from y -10.3 to -5.9) is wider than the ratchet's bore, where the video reads the arbor's collar about r 2.7 (KLUwI2UUCMQ 28:08-28:17,
+   rough: oblique, +-1 mm). Fairly sure the model is wrong; the collar's radius and the ratchet's bore are to measure (the fusee's large end, 28:08-28:20).
+3. **The seal ring and its helical spring are drawn shut inside the dust seal's body** (y -31.8 to -27.9 in the seal's -32.6 to -27.2), so they can't
+   come out of it (Op. 30) or go in (the reassembly's Op. 52); Figs. 24 and 80 draw them under the seal, on the barrel bridge, and Ops. 29-30 take the
+   seal off first, then them. Fairly sure (two figures); their place and sizes are to read on a frame of the dust seal coming off (KLUwI2UUCMQ: look
+   between the setup work, 11:46-12:22, and the barrel bridge lifted off, 12:58).
+4. **The Exploded view drives the barrel cap's five screws into the barrel** (37023): their heads are on the cap, on the barrel's dial side (y -6.26),
+   but the view lifts them 3.15 mm toward the train side (to -53.11 with the barrel at -50), through the cap. `exploded.py` passes it. Sure (measured on
+   the page at spread 0 and 1). The overhaul takes them out the other way (`UP`).
+
+Consistent with the sources, not faults: the detent can't come straight up past the upper train bridge, and on the video it is drawn out sideways
+from under it (10:51-11:06); the fusee can't come straight up past the bridge either (its wheel's teeth reach under it to the centre pinion), and on
+the video it comes out with the bridge still on (13:06-13:33; the bridge off at 13:36-13:48), so tilted. Both are in the check's `EXPECTED`, and the
+overhaul still shows them lifted straight.
