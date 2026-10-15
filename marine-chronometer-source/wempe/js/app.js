@@ -12,7 +12,7 @@ const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel','Motio
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
-    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut, for the parts still to come, but the hand-setting work’s, which its sheet strikes through (“only when the hand-setting is fitted”), and the seconds contact’s (“only when needed”).'+SH,
+    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut but the hand-setting work’s, which its sheet strikes through (“only when the hand-setting is fitted”), and the seconds contact’s (“only when needed”).'+SH,
     sp:'Drawing 05 08 02-1 (kompl. 05 08 02) · special α-β brass sheet · Ø 85 h6 × 3.35 · pillar holes Ø 4.50 +0.012 on r 37, seated Ø 8.6 × 0.3 · opening for the intermediate wheel Ø 24.5'},
   topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the balance opening’s tongue scaled on the sheet',figs:'05 08_1a, 05 08_1b, 05 08_2, 001',c:'#c9d8a8',plate:1,pri:3,
     d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40.'+SH,
@@ -417,13 +417,35 @@ const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate fro
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
-(function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
+(function(){
+  /* the time kept (Time, Keep): Greenwich, as a ship's chronometers are kept for navigation (the default), or the viewer's local time; tzOff() its offset from UTC in s */
+  let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
+  let mv=null,tSim=Date.now()/1000+tzOff();
+  /* setting the hands (Time, Set the hands, Now; the Hamilton's setHands, simplified): the train never turns for it. slip, seconds of time the cannon pinion has slipped on
+     the centre arbor (dial.js), sets the hour and minute hands to the minute, leaving the dial fast by under a minute; then the balance is stopped (by hand, as a
+     chronometer is set when stopped) and the train held until the time the hands should read (sw.T, running on with model time) comes round to the dial's, and a twist
+     starts it. Held already (run down), only the minutes are set. handsSet: the hands were set from the field, so the link keeps the time (t) */
+  let slip=0,sw=null,handsSet=false;const dialRead=()=>tSim+slip,wrapH=e=>((e%43200)+43200+21600)%43200-21600;
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
   let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',HPT=90/14,HRUN=56.4;
   /* winding in the case (cw): go, Wind pressed with the movement in its bowl; on, the key turning; u, 0-3, how far the bowl is turned over (0-1), the closing plate opened
      (1-2) and the key come onto the square (2-3) */
   const cw={go:false,on:false,u:0,t:null};   /* t: the last frame's time (ms), for dw */
+  /* the ship's motion and the gimbals (Display, Ship motion; the Hamilton's GIM.sea and gimStep in box.js, its equations copied): the box rolls and pitches about a ship's axes
+     RD m below it, the case hanging in its gimbals leans toward the apparent vertical, the pivots' friction pulling it after the box. The Wempe's own periods, from its weighed
+     case and ring (tools/gimbals.js --model wempe on massprops.py's gimbals_wempe.json, levelled): the bowl on its 12-6 pivots (about z here) 0.958 s, the ring on its 3-9 (about
+     x) 1.046 s; the box stops neither within 60° (the same check), so LIM 60°; Z, the pivots' damping, the Hamilton's 0.05 (estimated). The transit lock on (latch), the ring
+     and bowl are brought level with the box and go with it; turned over to wind (cw), the bowl is held by hand, so the same */
+  const GW={W0P:TAU/1.046,W0R:TAU/0.958,Z:0.05,LIM:60*D2R,RD:5,G:9.80665,PR:2/3,rock:false,latch:false,rockW:0,rockT:0,latchK:0,roll:0,pitch:0,M:{p:[0,0],r:[0,0],lp:0,lr:0}};
+  const gwSea=(u,w,k)=>{const a=14*D2R*k,b=0.55*a,f=GW.PR,v=f*u+1.1;return{r:[a*Math.sin(u),a*w*Math.cos(u),-a*w*w*Math.sin(u)],p:[b*Math.sin(v),b*f*w*Math.cos(v),-b*f*f*w*w*Math.sin(v)],rd:GW.RD*clamp((TAU/w-2)/2,0,1)};};
+  function gwStep(G,dt,ph,rl,sea,fr){if(dt<=0){G.lp=ph;G.lr=rl;return;}const n=Math.ceil(dt/0.002),h=dt/n,rd=sea?sea.rd:0;
+    for(const[q,f,f0,m,W0]of[[G.p,ph,G.lp,sea&&sea.p,GW.W0P],[G.r,rl,G.lr,sea&&sea.r,GW.W0R]]){const v=(f-f0)/dt,W2=W0*W0,ZW=2*GW.Z*W0;
+      const ah=m?rd*(m[2]*Math.cos(m[0])-m[1]*m[1]*Math.sin(m[0]))/GW.G:0,av=m?1-rd*(m[2]*Math.sin(m[0])+m[1]*m[1]*Math.cos(m[0]))/GW.G:1;
+      if(fr<1e-3){q[0]=f;q[1]=v;continue;}
+      for(let i=0;i<n;i++){q[1]+=h*(-W2*(av*Math.sin(q[0])-ah*Math.cos(q[0]))-ZW*(q[1]-v));q[0]+=h*q[1];}
+      if(Math.abs(q[0]-f)>GW.LIM){q[0]=f+Math.sign(q[0]-f)*GW.LIM;q[1]=v;}}
+    G.lp=ph;G.lr=rl;}
   /* the balance's swing (js/escphys.js, WPHYS; the Hamilton's H.amp): driven by the escape wheel's torque drv (times the reference's, 12 h from full wind), A² relaxes to
      PE.ampAt(drv)² as exp(-2t/TF); with the train held it runs down free (PE.freeStep). Below PE.AMIN a swing can't unlock the wheel and see the impulse through: the train
      stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
@@ -464,7 +486,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Dial','Zifferblatt, 05 02 00-4','dial',pw(P.dial,-30,WDIAL.DY1,30));const Q=CS.parts,yb=CS.YB;
       add('Bowl','Gehäusetopf, R-05 01 00-1','bowl',pw(Q.bowl,-38,yb-50,38));add('Bezel','Glasrand, R-05 01 01-2','bezel',pw(Q.bezel,-44,yb+16,-44));add('Gimbal ring','Kardanring, 05 01 00-5','gimbalRing',pw(Q.gimbalRing,-52,yb,52));
       add('Box','Holzkasten','box',pw(Q.box,-92.5,yb-60,60));add('Key','Chronometerschlüssel, 51 00 11','key',pw(Q.key,-62,yb-100,10));add('Transit lock','Feststeller','caseLock',pw(Q.caseLock,65,yb+20,63));add('Hands','05 02 00-1, -2, 05 02 01-1','hands',pw(P.hands,0,16,-30));},
-    /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js, makeEsc's
+    /* the model's clock, as the Hamilton's: seconds of the time kept (GMT, or local: tz), so the train stands where the time of day puts it; the escapement's motion (js/escapement.js, makeEsc's
        solved state at the swing H.amp and the drive drv, as the Hamilton's): the balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period, a beat behind until the tooth escapes); fast, the balance is drawn at
        rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
@@ -486,11 +508,19 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       {const CW_T=0.8;if(cw.go&&cw.on&&!winding)cw.go=false;const t=cw.go?3:0;if(!cw.go)cw.on=false;
         cw.u=SNAPC||RMC.matches?t:cw.u+Math.sign(t-cw.u)*Math.min(Math.abs(t-cw.u),dw/CW_T);if(cw.go&&!cw.on&&cw.u>=3){cw.on=true;wind0();}   /* once: wind0 starts the maintaining spring's clock (until 15 October 2026 it ran each frame and held it at the start) */
         CS.bowl.rotation.z=-Math.PI*smooth(clamp(cw.u,0,1));CS.shutter(smooth(clamp(cw.u-1,0,1)));}
+      /* the ship's motion (GW above), on the wall clock: eased in and out; the transit lock brings the gimbals level with the box over about a second; ?snap and reduced
+         motion keep the case exactly level */
+      {const fix=SNAPC||RMC.matches,wR=TAU/(+document.getElementById('rollP').value||7),kr=fix?1:1-Math.exp(-dw*1.5);GW.rockW+=((GW.rock&&!fix?1:0)-GW.rockW)*kr;if(!GW.rock&&GW.rockW<1e-4)GW.rockW=0;
+        if(GW.rockW>0)GW.rockT+=dw*wR;const sea=GW.rockW>0?gwSea(GW.rockT,wR,GW.rockW):null;GW.roll=sea?sea.r[0]:0;GW.pitch=sea?sea.p[0]:0;
+        const lk=GW.latch||cw.u>0;GW.latchK=fix?+lk:clamp(GW.latchK+(lk?1:-1)*dw*1.2,0,1);const fr=1-smooth(Math.min(1,GW.latchK*2)),G=GW.M;
+        if(fix){G.p=[0,0];G.r=[0,0];G.lp=GW.pitch;G.lr=GW.roll;}else gwStep(G,dw,GW.pitch,GW.roll,sea,fr);
+        CS.root.rotation.set(GW.pitch,0,GW.roll,'ZYX');CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
          square; else lying in the box (case.js keyAt) */
       {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}
       const dS=dt*(winding?Math.min(st.speed,1):st.speed),drv=drvNow();   /* while the key turns, model time no faster than real (the Hamilton's WIND_X): the maintaining spring's minute isn't spent in a frame */
-      if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
+      if(sw){sw.T+=dS;if(H.held&&wrapH(dialRead()-sw.T)<=0){sw=null;H.kick=Math.max(H.amp,0.6*PE.ampAt(1));}}   /* setting: the time the hands should read runs on; when it reaches the held dial's, the twist */
+      if(sw){H.amp*=Math.exp(-dt/0.1);H.kick=0;}else if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
       if(!H.held&&H.amp>=PE.AMIN){const r=PE.rateAt(H.amp,drv);if(Number.isFinite(r))H.rate=r;}
       const at=()=>{const y=tSim/0.5+H.bOff,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,drv);return{y,p,z,E:k-1+(p>0?z.prog:0)+H.eOff};},lockd=q=>!(q.p>0&&q.z.prog>0&&q.z.prog<1);
       let q=at(),E,s;
@@ -501,10 +531,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       const n=hrs/HPT;
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp,0);E=H.Eh+Math.min(0,s.prog);}   /* its own swing, the wheel on its stone (drawn back while the stone lifts) */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
-      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
-      showH();return[+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4)];},
-    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);},
-      read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');
+      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
+      showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
+    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));},
+      read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
+        if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
+        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
@@ -515,6 +547,21 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0&&!winding&&!cw.go){if(cf<0.5)cw.go=true;else wind0();}});}   /* in its case, turned over first (cw, tick) */   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
   /* the twist: the box turned about the hands and back sets a stopped balance swinging, about 130 deg (estimated: the 6MX's "light jerk"); going, it does nothing here */
   {const tw=document.getElementById('twist');if(tw)tw.addEventListener('click',()=>{if(H.held&&H.amp<PE.AMIN)H.kick=Math.max(H.amp,0.6*PE.ampAt(1));});}
+  /* Time: Set the hands, Now and Keep (slip, sw, tz above); declarations, as the link's state is read as the viewer starts */
+  function hms(T){const d=((T%86400)+86400)%86400;return[Math.floor(d/3600),Math.floor(d%3600/60),Math.floor(d%60)].map(x=>String(x).padStart(2,'0')).join(':');}
+  function secsOf(v){const m=/^(\d{1,2}):(\d{2})(?::(\d{2}))?/.exec(v||'');return m?(+m[1])*3600+(+m[2])*60+(+(m[3]||0)):null;}
+  function setTime(T,field){handsSet=!!field;const e=wrapH(dialRead()-T),s=((e%60)+60)%60;slip=wrapH(slip-(e-s));sw=H.held&&!sw||s<=0.25?null:{T};todS='';}   /* run down: the minutes only */
+  function setTz(v){const o=tzOff();tz=v;const d=tzOff()-o;slip=wrapH(slip+d);if(sw)sw.T+=d;todS='';document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));
+    const nw=document.getElementById('now');if(nw)nw.title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';}
+  var todS='';function showTod(){const el=document.getElementById('tod');if(!el||document.activeElement===el)return;const v=hms(dialRead());if(v!==todS){todS=v;el.value=v;}}
+  {const el=document.getElementById('tod'),nw=document.getElementById('now');
+    if(el)el.addEventListener('change',()=>{const v=secsOf(el.value);if(v!=null){setTime(Math.floor(dialRead()/86400)*86400+v,true);if(V)V.wake();}});
+    if(nw)nw.addEventListener('click',()=>{setTime(Date.now()/1000+tzOff(),false);if(V)V.wake();});
+    document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz){setTz(b.dataset.v);if(V)V.wake();}}));}
+  /* Display's Motion: the ship's motion, the transit lock and the roll's period (GW); Reset display turns them back too */
+  {const rk=document.getElementById('rock'),la=document.getElementById('latch'),rp=document.getElementById('rollP'),ro=rp&&rp.parentElement.querySelector('output'),rs=document.getElementById('dispReset');
+    if(rk&&la&&rp){const show=()=>{ro.textContent=(+rp.value).toFixed(1)+' s';};rk.addEventListener('change',()=>{GW.rock=rk.checked;if(V)V.wake();});la.addEventListener('change',()=>{GW.latch=la.checked;if(V)V.wake();});rp.addEventListener('input',()=>{show();if(V)V.wake();});show();
+      if(rs)rs.addEventListener('click',()=>{rk.checked=la.checked=false;GW.rock=GW.latch=false;rp.value='7';show();});}}
   function setConn(v){conn=v;if(mv)mv.userData.R.fu.setConn(v);document.querySelectorAll('#conn button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
   document.querySelectorAll('#conn button').forEach(b=>b.addEventListener('click',()=>setConn(b.dataset.v)));
   /* the Variants' sheets: as last revised (about 1946-48, the default) or as first drawn (1940-44, as Wempe 3955 is made): movement.js's setRev shows each part's pieces for
@@ -525,6 +572,10 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
     document.querySelectorAll('#rev button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));}
   document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',()=>setRev(b.dataset.v)));
   /* the essay, once the model is built: its time (seconds of local time) and wind (hours since winding, run down at run()), the swing, and changed() (wake and write the hash) */
-  if(ES&&V)ES.bind({time:()=>tSim,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
-  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,rev,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow()});}   /* the viewer's state and the wind, for the tools */
+  if(ES&&V)ES.bind({time:dialRead,tz:()=>tz,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
+  /* Report a bug or inaccuracy (the Hamilton's report.js): where the visitor is, and the model's state, in the report's details */
+  if(V&&typeof REPORT!=='undefined')REPORT.bind({r:V.r,name:'Wempe Einheits-Chronometer',inacc:'Where the model or the essay differs from Wempe’s works drawings or a real Einheits-Chronometer, and what shows it. The drawings, then photographs and videos of real ones, decide what the model looks like and does, so a sheet’s number settles it fastest.',
+    where:()=>{if(ES&&ES.on()){const s=ES.section(),h=s&&document.getElementById(s);return'The essay'+(h?', “'+h.textContent.trim()+'”':'');}if(V.st.pick&&V.INFO[V.st.pick])return V.INFO[V.st.pick][0];const b=document.querySelector('#views [aria-pressed="true"]');return'The model'+(b?', '+b.textContent.trim()+' view':'');},
+    state:()=>[['Tab',ES&&ES.on()?'essay':'model'],['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; ${conn}; sheets ${rev==='first'?'as first drawn':'as last revised'}; speed ${V.st.speed}×`]]});
+  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,rev,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow(),slip,tz,dial:dialRead(),setting:!!sw,swT:sw?sw.T:null,roll:GW.roll,pitch:GW.pitch,gp:GW.M.p[0],gr:GW.M.r[0],latchK:GW.latchK});}   /* the viewer's state and the wind, for the tools */
 })();

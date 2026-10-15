@@ -1,6 +1,4 @@
 /* wempe.css: the Wempe page's own styles, over the Hamilton's (../chronometer-working-model/css/style.css), which it shares */
-/* the model is in progress: said once, above the controls */
-.card.wip{font-size:13px;line-height:1.45;border-left:3px solid var(--hi)}.card.wip b{color:var(--ink)}
 /* the essay (js/essay.js; ../chronometer-working-model/css/essay.css): the top plate's hole table, scrolled in its own box, its row chosen; the 6MX's limits */
 .e-holes{max-height:250px;overflow:auto;margin:6px 0 0}
 #essay .e-holes td:nth-child(2),#essay .e-holes th:nth-child(2){text-align:left}
