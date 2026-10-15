@@ -4333,17 +4333,17 @@ const WDIAL=(()=>{
   const SW=WTRAIN.A.sw,ySp=SW.ys+33.25;   /* the seconds post's end (train.js's profile) */
   const YS0=ySp-0.725,YH1=ySp+0.625,YM0=YH1+1.2,YU1=UDW.yt;
 
-  /* a blade from r0 to its tip along -z (the hand's 12 o'clock), its half-widths hw and thickness t over r, its underside at y0: one solidGeo cell with a sloped top. Its root
-     a concave arc of radius r0 about the arbor, joining the boss (in the hand's group, so the overlap with the boss is the hand's own) */
-  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip)).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b);R.push(tip);   /* every 0.25 and at each of the table's radii */
-    const w=r=>hwAt(hw,r),side=s=>R.map(r=>[s*w(r),dir*r]),a0=Math.asin(Math.min(0.99,w(r0)/r0)),arc=[];
+  /* a blade from r0 to its tip along -z (the hand's 12 o'clock), its half-widths hw and thickness t over r, its underside at y0: solidGeo cells with a sloped top, one strip
+     across the blade between each two stations, so its top's triangles each span one station's step (one cell, triangulated whole, joined points far apart along the two edges:
+     long slivers tilted to either side, which shaded as a broken line down the hand and Edges inked). Its root a concave arc of radius r0 about the arbor, joining the boss
+     (in the hand's group, so the overlap with the boss is the hand's own), in the first strip */
+  function blade(hw,t,y0,r0,tip,dir=-1,n=0.25){const r1=Math.max(r0,hw[0][0]),R=[...new Set([...Array(Math.ceil((tip-r1)/n)).keys()].map(i=>r1+i*n).concat(hw.map(q=>q[0]).filter(r=>r>r1&&r<tip)).map(r=>+r.toFixed(4)))].sort((a,b)=>a-b).filter((r,i,A)=>!i||r-A[i-1]>0.01);   /* every 0.25 and at each of the table's radii */
+    if(tip-R[R.length-1]<0.01)R.pop();R.push(tip);
+    const w=r=>hwAt(hw,r),P=(s,r)=>[s*w(r),dir*r],a0=Math.asin(Math.min(0.99,w(r0)/r0)),arc=[];
     for(let k=1;k<8;k++){const a=-a0+2*a0*k/8;arc.push([r0*Math.sin(a),dir*r0*Math.cos(a)]);}
-    let L=[...side(-1),...side(1).reverse(),...arc.reverse()];
-    /* points within 0.003 of the line through their neighbours left out: the faces' triangulation drops such a point and the walls keep it (an open edge) */
-    for(let k=0;k<6;k++){const o=[];for(let i=0;i<L.length;i++){const a=o.length?o[o.length-1]:L[(i+L.length-1)%L.length],b=L[i],c=L[(i+1)%L.length],dx=c[0]-a[0],dz=c[1]-a[1],l=Math.hypot(dx,dz);
-      if(l>0&&Math.abs((b[0]-a[0])*dz-(b[1]-a[1])*dx)/l<0.003)continue;o.push(b);}if(o.length===L.length)break;L=o;}
-    const tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1]));
-    return solidGeo([{loop:area(L)>0?L:L.slice().reverse(),y0,y1:tf}]);}
+    const tf=p=>y0+hwAt(t,Math.hypot(p[0],p[1])),cells=[];
+    for(let i=0;i+1<R.length;i++){const L=[P(-1,R[i]),P(-1,R[i+1]),P(1,R[i+1]),P(1,R[i]),...(i?[]:arc.slice().reverse())];cells.push({loop:area(L)>0?L:L.slice().reverse(),y0,y1:tf});}
+    return solidGeo(cells);}
   /* the minute hand's square hole and the tube's square: 2.6 across flats, the corners on a circle r (the tube's 1.6) */
   const sqLoop=(h,r,n=96)=>{let L=C([0,0],r,n);for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])L=clipPoly(L,p=>h-(p[0]*a+p[1]*b));return L;};
 
