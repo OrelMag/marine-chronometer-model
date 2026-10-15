@@ -1,5 +1,12 @@
 # Handover: the three model problems the overhaul check found
 
+**Status (15 October 2026): all three fixed** (`facea7a`: the bushings and arbors, and the dust seal; `79cfc2f`: the winding ratchet, by the
+fusee wheel's hub). `tools/overhaul.py` passes with no expected entry left for them. What was found and measured is in Review-results.md ("The
+overhaul's order against the model"), RESOLVED.md and References/VIDEOS.md. Two corrections to what follows: the dust seal comes off at
+KLUwI2UUCMQ 12:33-12:34 (its ring and spring at 12:35-12:38.5), not between 11:46 and 12:58's barrel bridge only; and problem 2's fault was
+the step, not the ratchet's bore (Op. 20 greases the outside of the fusee wheel's hub, on which the sustaining ratchet rides). Left: merge
+`main` in, `python ci.py --full`, then the merge and a release when the user asks.
+
 For the next session working on this branch (`claude/overhaul-findings`, worktree `.claude/worktrees/overhaul-findings`, made from `main` at
 release 2.34.00). Read `CLAUDE.md` first; its rules on measured lines, `isolate.py` and the release apply to all of this.
 
