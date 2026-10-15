@@ -16,6 +16,7 @@
   "detent:Buffer | detent:Buffer | --15.70": 1,
   "detentBlock:Buffer | detentBlock:Cylinder | +-12.50": 2,
   "detentBlock:Buffer | escJewelUp:Lathe | --19.00": 1,
+  "dustBush:Lathe | corkRing:Lathe | +-38.96": 1,
   "escEndstoneUp:Lathe | escEndstoneUp:Lathe | +-19.52": 1,
   "escapeWheel:Buffer | escapeWheel:Lathe | --16.88": 1,
   "fusee:Buffer | fusee:Lathe | +-7.02": 3,

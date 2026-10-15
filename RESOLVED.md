@@ -2812,7 +2812,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   drew both keys, the 1943 and the 1940 one, in the box at once. Now the figure
   hides the outer box and the first-drawn pieces. Keep: a figure that builds
   from `WCASE.build` (or any shared builder) hides what the page's views hide:
-  `CS.over` and every `userData.rev==='first'` group.
+  `CS.over` and every `userData.rev==='first'` group. `f170e7a`
 
 ---
 

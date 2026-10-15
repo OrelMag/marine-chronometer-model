@@ -176,6 +176,14 @@ const WFRAME=(()=>{
       const g=tag(mesh(db,new THREE.LatheGeometry(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');tag(mesh(db,new THREE.LatheGeometry(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
       const lug=clipPoly(C(F10,15.1/2,320),p=>6.55-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-15.1,y1=Yb-12.0;
       tag(mesh(db,solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);}
+    /* Korkring 05 08 01-4 (no sheet; 05 08 01 names it on the dust bush, the coloured section "Korkring 05 08 01-4", its "05 06 01-4" in the transcription's list a misreading):
+       a cork ring of square-cut section on the dust bush's neck, sitting on the collar's top, under the bowl's winding hole. In the bowl (its bore 53 deep, R-05 01 00-1,
+       the movement on its flange) its top is 3.84 short of the bottom: whether it was meant to bear on it round the hole isn't settled (README). Scaled on the coloured section (Wempe_Einheitschronometer.jpg) at 9.32 px/mm, by the bush's own drawn Ø 13.1 (122 px) and neck Ø 9.7
+       (90.5 px): Ø 16.1 outside (x 720-870.5 px), its bore the neck's, 3.86 high (y 135-171), so its top 0.95 over the neck's (y 144) (likely: a pictorial section, but
+       the bush's own figures scale to 0.1 on it). Lange No. 5829's (stahl_113510_lange_4.jpg, side-on) has it 1.23 times the bush's body across, as the section's 16.1/13.1,
+       and a quarter as high as wide (sure). Its bore drawn 0.01 clear of the neck. Natural cork, its colour off that photograph */
+    const ck=part('corkRing',-68);
+    {const yb=TT-1.5-15.1,yt=yb-3.86;tag(mesh(ck,new THREE.LatheGeometry([V2(4.86,yt),V2(8.05,yt),V2(8.05,yb),V2(4.86,yb),V2(4.86,yt)],72),new THREE.MeshStandardMaterial({color:sc(0xc8a070),metalness:0,roughness:0.92}),F10[0],0,F10[1]),'050801-4');}
 
     /* ================= the upper balance cock (Unruhkloben oben, 05 08 03-1; kompl. 127-556.04 U30) ================= */
     /* Profilmessing Ms 58, cranked: a foot 3.2 thick on the top plate's outer face, a web, and an arm 15 -0.1 over the foot's underside to the balance's upper setting at 23.

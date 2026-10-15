@@ -32,6 +32,9 @@ const PARTS={
   dustBush:{t:'Dust bush (Staubfutter)',g:0,src:'drawing',sn:'Every size from its sheet; which way its flat faces from the balance cock’s place',figs:'05 08_9, 05 08_2',c:'#c79a4a',pri:1,
     d:'A tall brass bush on the fusee bush round the winding square, up to the case’s winding hole, keeping dust out of the movement. A flat on its collar clears the balance cock.',
     sp:'Drawing 05 08 01-3 · Ms 58 · 18.1 long, Ø 13.1, collar Ø 15.1 with a flat at 14.1, bore Ø 8 H7 at 1:70'},
+  corkRing:{t:'Cork ring (Korkring)',g:0,src:'drawing',sn:'Named on 05 08 01 and the coloured section, which draws it; no sheet of its own: its sizes scaled on the section by the dust bush’s own figures, its proportions checked on Lange No. 5829',figs:'coloured section, 05 08_2',c:'#c8a070',pri:1,
+    d:'A cork ring on the dust bush’s top, standing a little over it round the winding square, under the case’s winding hole: it keeps dust that comes in through the hole away from the bush’s mouth and the square. As the bowl and movement are drawn, its top is 3.8 mm short of the bowl’s bottom; whether a real one bears on the bottom isn’t known.',
+    sp:'05 08 01-4 · cork · Ø 16.1 × 3.9 high on the bush’s Ø 9.7 neck, its top 0.95 over the neck’s (scaled)'},
   upperCock:{t:'Upper balance cock (Unruhkloben oben)',g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
     d:'The cranked cock over the balance, screwed and pinned to the top plate, holding the balance staff’s upper jewel setting over the opening in the plate.',
     sp:'Drawing 05 08 03-1 · Ms 58 profile · 49 long, 15 high, foot 3.2 · setting seat Ø 5.2 H7'},
@@ -453,6 +456,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Upper balance cock','Unruhkloben oben, 05 08 03-1','upperCock',pw(P.upperCock,H[9][0],TT-15,H[9][1]));
       add('Lower balance cock','Unruhkloben unten, 05 08 00-2','lowerCock',pw(P.lowerCock,H[36][0],TI+10,H[36][1]));
       add('Dust bush','Staubfutter, 05 08 01-3','dustBush',pw(P.dustBush,H[10][0]-6.55,TT-12,H[10][1]));
+      add('Cork ring','Korkring, 05 08 01-4','corkRing',pw(P.corkRing,H[10][0]+8.05,TT-18.5,H[10][1]));
       add('Intermediate bridge','Zwischenbrücke, 05 08 04','intermediateBridge',pw(P.intermediateBridge,H[38][0],WD.PP_T+3.8,H[38][1]));
       add('Centre wheel','Minutenrad, 05 05 03','centreWheel',pw(P.centreWheel,H[1][0]+15,-1.1,H[1][1]-6));
       add('Intermediate wheel','Zwischenrad, 05 05 02','intermediateWheel',pw(P.intermediateWheel,H[38][0]+8,0.7,H[38][1]+7));
