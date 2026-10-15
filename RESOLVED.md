@@ -1105,6 +1105,18 @@ Contents:
   the tooth it rode over when the ratchet comes back a tooth in one frame, so
   while it holds it is seated afresh. Keep: the pawl's end fitted; it holds
   0.38 mm deep at every hold (`maintaining.py`). `ee7143d`
+- **Stop-bar stepped like two bars.** Its stop end was drawn 0.7 thick against
+  the chain end's 1.5 (the chain end deepened to an estimate so the chain bears
+  on it, the stop end left at its absolute reading), a step of 0.8 that made it
+  look like two levels where Fig. 28 draws a plain bar. The frames give the
+  step as a ratio within one image: the stop end 0.8 of the chain end
+  (20:04.27, 26:23.75). Now 1.2 against 1.5. It was also four stacked
+  bands and a block for the spring's hole, whose seams drew it as pieces glued
+  together; now one solid (its side profile carried across, the ends slanted,
+  the hole blind). Keep: the stop end 0.8 of the
+  chain end (`TS` 1.2, `TC` 1.5 in `movement.js`): change them together;
+  the chain still bears on the chain end at full wind (`maintaining.py`) and
+  the stop end clears the chain (`fine.py`); the bar stays one mesh. `87fe19a`
 
 ## Plates, bridges, screws and arbors
 
@@ -1663,6 +1675,18 @@ Contents:
   staff, then the body. The barrel bridge's horn now follows the new straight
   edge (`clipUnder`). Keep: the cap on metal all round (0.3 mm), the stud's
   bar under the thin part, the horn 0.15 mm off the straight edge. `8cce550`
+
+- **The balance cock's body wall stood 4.9 mm too near the staff.** The body
+  was all of the cock more than 17.7 mm from the staff (the barrel bridge's
+  circle round the balance), its wall read at 18.6 along the stud's holes at
+  their old scale. On KLUwI2UUCMQ 44:02 (and 44:20) the open space under the
+  arm's thick part runs on to the wall's corner with the straight edge's side,
+  which a camera fitted on the cock's top (the cap, the stud's holes and the
+  counterbore at their measured places) puts 22.6 mm from the staff (22.5-23.0
+  over focal lengths and methods); drawn there, the model's lines fall on the
+  frame's. Keep: the wall (`CK_RP`) read through a camera, not the 1-D map on
+  the stud's holes, which extrapolates (21.3); 0.48 mm of metal round the cock
+  screw's counterbore. `951627b`
 - **Mounting ring screws and two dial screws 20-37° from the real ones.** The
   ring screws' places (`S.ring`) were fixed angles, 70°, 190° and 300° from 12:
   one read on the top-view photograph before the photographed group's 19.4° turn
@@ -1677,6 +1701,19 @@ Contents:
   91.5°, 214°, 336.5° and 2.6°, 132.9°, 226.0°, 318.9°. Keep: the band's tabs
   follow `S.ring` (`RA` is read from it), and any place read on the top-view
   photograph goes through `PT`. `ea4fb43`
+- **Ring screws ending under the flange, 1.4 mm too far in; a dial foot where
+  the video has none.** The three ring screws stood at r 40.6 and ended in the
+  band, so the flange had no holes over them, where the video shows their ends
+  in threaded holes through its dial face; read camera-free (radial strips:
+  each hole's place between the bore and the flange's rim) they stand at
+  41.8-42.2. The dial's fourth foot had been put at 2.6° for a plain hole of the
+  feet's size there, which the strips put inside the feet's circle, among the
+  ring screws. Now the screws at r 42.0, tapped through the band and the flange,
+  their ends 2.0 below its face (the band's tabs, which held them at 40.6,
+  gone); the fourth foot at 178.7°, a filled hole of the feet's size; the 2.3°
+  hole drawn plain. Keep: a hole's radius read on a face as a fraction of the
+  way between two of its edges, not through a camera scaled by an uncertain
+  bore. `2394368`
 
 ## Setup, case and gimbals
 

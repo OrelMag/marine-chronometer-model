@@ -94,8 +94,8 @@ const CK_TR=[[36.76, 15.88], [35.50, 14.99], [34.00, 13.88], [32.50, 12.85], [31
    through the two; the thick part 206/88 = 2.34 times the thin, 6.0 mm (the body's visible 10.8 mm down to the barrel bridge's horn, 378 px there, gives 2.5 and 5.9).
    Whether it is straight across the underside no frame shows (estimated). Since 14 October 2026 the row's holes are where 6:29 measures them (SPHa-c), 4.08 and 8.07 mm
    apart along the row where the old reading had 3.43 and 7.03: the same map, its holes at x 1780, 1997, 2207 on 44:02 (4K) and the step at 2305-2310, puts the step
-   9.9-10.0 mm past the inner hole, (16.05, 8.37), 14.6 mm from the staff (with the old spacing the same pixels give 8.8, the 8.70 recorded, at (13.83, 9.97)). Not moved:
-   the body's wall, which this map would put at 21.3 (the side's second step, x 2660) where CK_RP keeps the body outside the barrel bridge's 17.7 circle */
+   9.9-10.0 mm past the inner hole, (16.05, 8.37), 14.6 mm from the staff (with the old spacing the same pixels give 8.8, the 8.70 recorded, at (13.83, 9.97)). The
+   body's wall, at the side's second step (x 2665), this map puts at 21.3, far past its holes; a camera fitted on the cock's top puts it at 22.6 (CK_RP's comment) */
 const CK_SP=[[16.05,8.37],[8.4,22.1]],CK_TM=6.0;
 /* the upper train bridge's notch round the fusee and its horn, measured on two frames of a restoration video (tools/train_bridge.py: KLUwI2UUCMQ 23:30 and 13:49.5):
    the notch a circle (TB_NOTCH: x, z, r), the horn between it and the barrel's cut ending in a straight cut across, the mouth a sharp corner and a straight edge
@@ -427,7 +427,7 @@ function buildMovement(M){
      arbor's move; 13:44, where its screws land on the two lugs either side of the keyhole's escape lobe); ebn: across it, toward the balance */
   const ebu=(f=>[eu[0]*Math.cos(f)-eu[1]*Math.sin(f),eu[0]*Math.sin(f)+eu[1]*Math.cos(f)])(72*D2R),ebn=(v=>v[0]*(L.B[0]-L.E[0])+v[1]*(L.B[1]-L.E[1])>0?v:[-v[0],-v[1]])([-ebu[1],ebu[0]]);
   const ltu=unit(sub(L.F,L.T)),S={ltb:[add(L.T,ltu,-13.6),add(L.F,ltu,6.1)],ltbp:[add(L.T,ltu,-16.4),add(add(L.F,ltu,2.6),[-ltu[1],ltu[0]],3.4)],pil:[...PILLARS.train,PILLARS.barrel],tb:PILLARS.train,bb:[PILLARS.barrel,[35.18,8.06],[-24.85,26.27]],
-    ring:[91.5,214,336.5].map(a=>[40.6*Math.sin(a*D2R),-40.6*Math.cos(a*D2R)]),eb:[8.3,-8.3].map(f=>add(L.E,ebu,f)),ebp:[9.9,-9.9].map(f=>add(add(L.E,ebu,f),ebn,1.3)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
+    ring:[91.5,214,336.5].map(a=>[42.0*Math.sin(a*D2R),-42.0*Math.cos(a*D2R)]),eb:[8.3,-8.3].map(f=>add(L.E,ebu,f)),ebp:[9.9,-9.9].map(f=>add(add(L.E,ebu,f),ebn,1.3)),ebc:[3.1,-3.1].map(f=>add(L.E,ebu,f)),elc:[2.1,-2.1].map(f=>add(L.E,eu,f)),
     lb:[[18.34,12.02],[-14.2,19.0]],lbp:[[20.62,14.01],[-13.6,16.4]],blc:[3.25,-3.25].map(f=>add(L.B,lbu,f)),blk:(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(...DBLK.s)),dpin:DBLK.p.map(([t,n])=>(q=>add(L.B,ry(BETA,[q.x*ES,q.y*ES])))(ESC.D(t,n))),cock:PT([33.11,12.62]),ckp:[[35.5,5.0],[26.9,19.8]].map(PT)};   /* cock screw: 0.3 mm off its traced position (within the tracing's 0.4 mm), so its thread cleared the old foot's edge.
      ckp: the cock's steady pins, at the two plain holes the train bridge shows under the cock with it off (C Spinner 6:47), placed to about 2 mm */
   /* lb: the balance lower bridge's screws (42055), put in from below through its lugs into the train bridge, where the restoration video has them (13:49.5, measured face-on): at the
@@ -455,9 +455,11 @@ function buildMovement(M){
   S.tBlock=add(L.F,PR([-6.14,-1.61]));const TBd=unit(sub(S.tBlock,L.F)),TBr=Math.hypot(...sub(S.tBlock,L.F));
   const EPa=Math.atan2(-0.24,-5.83)-PHOTO_TURN,EPu=ry(EPa,[1,0]),EP=[[3.33,0],[-3.33,0]];S.ep=EP.map(q=>add(L.B,ry(EPa,q)));   /* balance upper endstone cap: along the cock's straight edge (x toward the nose), its screws 3.33 either side of the staff: 6.66 apart on KLUwI2UUCMQ 6:29 (the cap on the cock, through the camera fitted on 6:49.0, f 5,000: 6.63-6.70 over f 4,000-6,000); 2.75 (the top-view photograph, whose scale on the cock's top reads every size there about 0.83 of the video's: the counterbore 6.1 for 7.4) until 12 October 2026 */
   const PB=(r,a)=>[L.Ba[0]+PHOTO_K*r*Math.cos(a*D2R+PHOTO_TURN),L.Ba[1]+PHOTO_K*r*Math.sin(a*D2R+PHOTO_TURN)];S.cover=[PB(11.1,107),PB(11.6,288)];S.click=PB(8.95/PHOTO_K,253.1);   /* the setup click's pivot, whose end shows in the cover, 8.95 mm from the barrel arbor on both photographs (photo-movement-2E12055: 8.94 at 255.6 deg, the top-view photograph: 8.95 at 250.6, each through its fitted map); C Spinner's video, oblique, read 10-10.5 by eye (11:58). The click from it to its tip is 5.07 mm (the video: about 5.3, the top-view photograph 5.1) */
-  S.dial=[2.6,132.9,226.0,318.9].map(a=>[45.9*Math.sin(a*D2R),-45.9*Math.cos(a*D2R)]);   /* four dial feet and screws (35756, 4; Fig. 107), in the mounting ring's flange outside the plate, at these angles from 12 seen from the dial: the
-     flange's four plain holes on KLUwI2UUCMQ 9:03 (2.3, 132.9, 226.0, 318.5; rimfit.py anchored on the centre, third and fourth, the angles within 0.5 deg over f 4000-6000) and 40:08 (3.0, 319.2), all one size;
-     the 2.6 one read as a dial steady pin until 14 October 2026. The top-view photograph's movement (2E11795) has flange screws at 152 and 224 through topview.py's map, which until then
+  S.dial=[132.9,178.7,226.0,318.9].map(a=>[45.9*Math.sin(a*D2R),-45.9*Math.cos(a*D2R)]);const FLH=[41.4*Math.sin(2.6*D2R),-41.4*Math.cos(2.6*D2R)],RSE=2.0;   /* FLH: the flange's plain hole at 2.6 deg, r 41.4, the size of the feet's (9:03, 40:05, 40:08), what it is for not known (a steady pin's?): drawn through the flange, as it shows dark */   /* four dial feet and screws (35756, 4; Fig. 107), in the mounting ring's flange outside the plate, at these angles from 12 seen from the dial: the
+     flange's plain holes on KLUwI2UUCMQ 9:03 at the feet's radius (132.9, 226.0, 318.5; rimfit.py anchored on the centre, third and fourth, the angles within 0.5 deg over f 4000-6000; 319.2 on 40:08),
+     and a fourth hole of their size filled flush with steel (a screw's end) at 178.7, 10 deg from the take-off slot (9:03, the flange's homography on its holes: likely). The open three 0.85-0.89 of the
+     way from the bore to the flange's rim along their rays (radial strips through each hole, no camera needed), the filled one at 0.97 of their circle. A fifth plain hole of their size at 2.3 (3.0 on 40:08) lies 0.23-0.29 of the way,
+     about r 41.4, among the ring screws: not a foot (FLH); taken for the fourth foot on 14 October 2026 until the strips put it inside. The top-view photograph's movement (2E11795) has flange screws at 152 and 224 through topview.py's map, which until then
      gave two of these (PT of 38.5 and 111.6 deg in its frame) and the other two opposite them (estimated: 38.0 and 323.5); its 152 is 20 deg from this movement's, so the four follow one movement. r 45.9 from the photograph */
   S.seal=[2.2,-1.0].map(a=>[L.Fu[0]+PHOTO_K*7.6*Math.cos(a+PHOTO_TURN),L.Fu[1]+PHOTO_K*7.6*Math.sin(a+PHOTO_TURN)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
@@ -496,13 +498,15 @@ function buildMovement(M){
   /* mounting ring (42057, Figs. 29, 67, 110: a deep ring under the plate, drawn cut), lacquered brass (Sec. VI): a band as wide as the plate under its dial side, then a flange
      that stands out round it and carries the dial (the side photograph; "the dial or the movement [may] shift on the mounting ring", the note at Op. 98, Sec. VIII); from the dial side the plate lies
      sunk in it. Three screws (42055) hold the plate to it from the train side: the plate is laid on the ring and the screws put in (reassembly Op. 1; Fig. 29 draws them above
-     the plate), at 91.5, 214 and 336.5 deg from 12 seen from the dial (S.ring), r 40.6: on KLUwI2UUCMQ their heads at the plate's rim from the train side (34:30: 215.1 and 335.0,
+     the plate), at 91.5, 214 and 336.5 deg from 12 seen from the dial (S.ring), r 42.0: on KLUwI2UUCMQ their heads at the plate's rim from the train side (34:30: 215.1 and 335.0,
      r 40.3-42, rimfit.py on the centre, third, escape and fourth), their ends in the ring's three threaded holes from the dial side (9:03: 90.9, 213.8, 336.9; 40:08: 92.6, 337.5),
      and the top-view photograph's head at the rim under the train bridge at 215 (topview.py's map). Until 14 October 2026 at 70, 190 and 300: the photograph's head read before
-     the photographed group's 19.4 deg turn and not turned with it, the others estimated. The band has a tab inward under each, tapped for it. The bore r 39.0 (MR_RI); the tabs estimated. Both pieces start 0.01 off the faces they meet */
-  { const RA=S.ring.map(q=>Math.atan2(q[1],q[0])),dA=a=>Math.min(...RA.map(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b))))),rin=a=>{const t=clamp((dA(a)-0.07)/0.05,0,1);return lerp(38.4,MR_RI,smooth(t));};
-    const circ=(r,n)=>[...Array(n).keys()].map(k=>{const a=k/n*TAU;return[r*Math.cos(a),r*Math.sin(a)];}),inner=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rin(a)*Math.cos(a),rin(a)*Math.sin(a)];});
-    R.flange=hn(mesh(pp,polyGeo(circ(PP_R,160),MR_FL-0.01,[{pts:inner},...S.ring.map(q=>hT(...q,PSR))]),M.brass,0,0.01,0),'42057');   /* the band, with its tabs */
+     the photographed group's 19.4 deg turn and not turned with it, the others estimated. r 42.0: the threaded holes 0.31-0.33 of the way from the bore (r 39.0) to the flange's rim (47.95) along
+     their rays (40:08's two, 9:03's 337 and 214 deg; 9:03's 91 deg 0.47), radial strips through each hole that need no camera: 41.8-42.2; the heads on 34:30 41.9-42.8; through the plate,
+     at most 42.4 (its rim 43.785 less the thread). r 40.6 until 14 October 2026, when the band had a tab inward under each. Each is tapped through the band and the flange, its end about
+     2.0 below the flange's face (RSE: four or five thread crests show above it on 40:08, the pitch estimated). The bore r 39.0 (MR_RI). Both pieces start 0.01 off the faces they meet */
+  { const circ=(r,n)=>[...Array(n).keys()].map(k=>{const a=k/n*TAU;return[r*Math.cos(a),r*Math.sin(a)];});
+    R.flange=hn(mesh(pp,polyGeo(circ(PP_R,160),MR_FL-0.01,[{pts:circ(MR_RI,360)},...S.ring.map(q=>hT(...q,PSR))]),M.brass,0,0.01,0),'42057');   /* the band */
     const rel=a=>{const t=Math.atan2(Math.sin(a+Math.PI/2),Math.cos(a+Math.PI/2))/D2R,e=Math.min(t+11,10-t);return MR_RI+0.4*smooth(clamp(e/1.5,0,1));},relief=[...Array(360).keys()].map(k=>{const a=k/360*TAU;return[rel(a)*Math.cos(a),rel(a)*Math.sin(a)];});   /* the relief cut into the bore round the 12, 11 deg back to 10 on, out to r 39.4 (16.5 from the indicator's stud), where the indicator wheel's teeth pass (KLUwI2UUCMQ 40:08: certain it is there, its size rough) */
     /* the dial take-off slot (Fig. 21): a notch in the flange's rim under the dial's edge, where a blade goes in to lift the dial off its seat (restoration video 8:46-8:49).
        On the ring face-on (9:03), 167 deg round from 12 seen from the dial (from the indicator's stud and the relief; the fusee's bushing and the fourth's jewel read as
@@ -510,10 +514,10 @@ function buildMovement(M){
     const TO_A=77*D2R,TO_W=1.4,TO_R=MR_RO-2.2,toH=Math.asin(TO_W/2/MR_RO),takeOff=[],ux=Math.cos(TO_A),uz=Math.sin(TO_A);
     for(let k=0;k<160;k++){const a=k/160*TAU,d=Math.atan2(Math.sin(a-TO_A),Math.cos(a-TO_A));if(Math.abs(d)>toH)takeOff.push([MR_RO*Math.cos(a),MR_RO*Math.sin(a)]);
       if(k/160*TAU<=TO_A&&(k+1)/160*TAU>TO_A)for(const[r,s]of[[MR_RO*Math.cos(toH),-1],[TO_R,-1],[TO_R,1],[MR_RO*Math.cos(toH),1]])takeOff.push([r*ux-s*TO_W/2*uz,r*uz+s*TO_W/2*ux]);}
-    hn(mesh(pp,polyGeo(circ(MR_RO,160),MR_Y-MR_FL-1.0,[{pts:circ(MR_RI,160)},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_FL,0),'42057',{sub:1});hn(mesh(pp,polyGeo(takeOff,1.0,[{pts:relief},...S.dial.map(q=>[...q,0.8])]),M.brass,0,MR_Y-1.0,0),'42057',{sub:1});   /* the flange, bored for the dial's feet; the relief a step in its dial-side face, 1.0 deep (40:08 shows a recessed shelf; its depth estimated) */
+    const FH=[...S.dial.map(q=>[...q,0.8]),...S.ring.map(q=>hT(...q,PSR)),[...FLH,0.8]];hn(mesh(pp,polyGeo(circ(MR_RO,160),MR_Y-MR_FL-1.0,[{pts:circ(MR_RI,160)},...FH]),M.brass,0,MR_FL,0),'42057',{sub:1});hn(mesh(pp,polyGeo(takeOff,1.0,[{pts:relief},...FH]),M.brass,0,MR_Y-1.0,0),'42057',{sub:1});   /* the flange, bored for the dial's feet, tapped through for the ring screws, and FLH; the relief a step in its dial-side face, 1.0 deep (40:08 shows a recessed shelf; its depth estimated) */
     /* the alignment pin, "protruding beyond the movement" into its slot in the edge of the case (Sec. III): pressed into the flange's edge, at 12 o'clock (estimated) */
     const ap=hn(mesh(pp,cylY(0.5,0.8,12),M.steel,0,(MR_FL+MR_Y)/2,-(MR_RO+0.4)),'42057',{sub:1});ap.rotation.x=Math.PI/2; }
-  for(const q of S.ring)hn(screw(pp,...q,y0,PSR,PSH,PP_T+1.8),'42055.ring');   /* through the plate into the band's tab */
+  for(const q of S.ring)hn(screw(pp,...q,y0,PSR,PSH,PP_T+MR_Y-RSE),'42055.ring');   /* through the plate, the band and the flange, the end RSE below the flange's face */
   { const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);
     /* the pillars' screws (42055) from the dial side, through the plate into the pillars (Fig. 110) */
     S.pil.forEach((q,i)=>hn(screw(rg,q[0],-q[1],0,PSR,1.6,3.86+3.2),   /* the dial-side heads 1.6 tall, not the train side's measured 2.0: at 2.0 the one under the barrel pillar meets the motion work, whose heights are estimated (open) */
@@ -1268,10 +1272,17 @@ function buildMovement(M){
   const ck0=ckO.indexOf(CK_TR[21]),ck1=ckO.indexOf(CK_TR[39]),ckOut=hullSplice(ckO,ck0,ck1,[...ckO.slice(ck0+1,ck1),...EPq(0.3).map(q=>add(L.B,ry(EPa,q)))]);
   /* one solid block, as it comes off the movement (C Spinner's restoration video, 41:58 and 23:45; the side at 2:36; References/VIDEOS.md): its outer wall follows
      the rim the full 14.2 mm down to the train bridge, its straight edge stands against the barrel bridge's horn, and only the arm over the balance is thinner: 2.6 mm
-     at the nose and CK_TM beyond the step CK_SP (at the top), where the video shows it in two thicknesses. The body is all of the outline more than CK_RP from the staff,
-     the circle the barrel bridge is cut on round the balance; its face on that arc is the step under the arm. The screw's head lies in a counterbore (41:58, 6:29) */
-  const CK_RP=BAL_R+3.2,CK_CB=CKH_L+1.2,CKS_R=2.2;   /* the counterbore's depth the head's (CKH_L, at the top) and 1.2 more, its top that far under the cock's top. CKS_R: the balance upper setting (42162), r 2.2 on 41:58 (the cock alone, top up) through the homography on its holes at their measured places (CK_TR, at the top): its gilt fades into the cock's face from r 2.0 to 2.55 round it, half-way at 2.2; r 1.5 until 12 October 2026 */
-  R.cock=mesh(ck,stepGeo(ckOut,L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,CKS_R],[...hC(...S.cock,CKH_R,CKH_T).slice(0,3),CK_CBR,CK_CB],...S.ep.map(q=>hT(...q,0.85).slice(0,3)),[...hC(...SPS,0.6).slice(0,3),0.65,0.45],[...SPHa,0.3],[...SPHc,0.3]],{p:CK_SP[0],q:CK_SP[1],t:CK_TM}),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath in its two depths, square steps between them and at the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the thin part's underside steps down to the thick part's, which meets the body in a square step, the space under it open from the barrel bridge's horn, r 16.4, to the body's wall, 18.6; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
+     at the nose and CK_TM beyond the step CK_SP (at the top), where the video shows it in two thicknesses. The body is all of the outline more than CK_RP from the staff;
+     its face on that arc is the step under the arm. The screw's head lies in a counterbore (41:58, 6:29) */
+  const CK_RP=22.6,CK_CB=CKH_L+1.2,CKS_R=2.2;   /* CK_RP: where the body's wall meets the straight edge's side, KLUwI2UUCMQ 44:02 (4K, the cock in place from its straight edge; 44:20 the same):
+     the open space under the thick part ends at x 2665, the corner at its underside y 1155-1158, where the side face beyond is the body's, polished and reflecting the plate. Through a
+     camera fitted on the cock's top (the cap's screws and the oil sink at the cap's top, the stud's three holes and the cock screw's counterbore at their measured places: 3-9 px rms over
+     f 2,200-8,000, the focal length loose) the corner's ray meets the traced side face (CK_TR) 22.5-22.7 mm from the staff, 5.0-5.8 under the top (the thick underside, CK_TM 6.0); put
+     on the plane of that underside instead, 22.6-23.0. The 1-D map on the stud's holes (CK_SP's comment) gave 21.3, extrapolated from x 1780-2207 to 2665; with the holes at the old
+     scale, 18.6. Until 15 October 2026 r 17.7, the barrel bridge's circle round the balance (BAL_R+3.2). The wall's form across the underside, an arc about the staff, is estimated:
+     no frame shows its other end (on 41:58 the concave side's band shows no full-height face before the corner; 23:45 is too coarse to place one). It leaves 0.48 mm of metal round the
+     cock screw's counterbore (r 23.1 at its nearest) and 0.45 round the near steady pin (ckp, placed to about 2 mm). The counterbore's depth the head's (CKH_L, at the top) and 1.2 more, its top that far under the cock's top. CKS_R: the balance upper setting (42162), r 2.2 on 41:58 (the cock alone, top up) through the homography on its holes at their measured places (CK_TR, at the top): its gilt fades into the cock's face from r 2.0 to 2.55 round it, half-way at 2.2; r 1.5 until 12 October 2026 */
+  R.cock=mesh(ck,stepGeo(ckOut,L.B,CK_RP,2.6,TB_T-CK_T,[[...L.B,CKS_R],[...hC(...S.cock,CKH_R,CKH_T).slice(0,3),CK_CBR,CK_CB],...S.ep.map(q=>hT(...q,0.85).slice(0,3)),[...hC(...SPS,0.6).slice(0,3),0.65,0.45],[...SPHa,0.3],[...SPHc,0.3]],{p:CK_SP[0],q:CK_SP[1],t:CK_TM}),M.plate,0,CK_T,0);   /* no cove: the arm flat underneath in its two depths, square steps between them and at the body's wall (KLUwI2UUCMQ 44:02, the cock in place seen from its straight edge: the thin part's underside steps down to the thick part's, which meets the body in a square step, the space under it open to the body's wall, r CK_RP; 23:45, the cock on its side: flat faces) */   /* last: the stud screw's hole, counterbored for its head (wider than the pins' at 41:58; its size estimated), and its steady pins' */
   /* setting: flush with the cock's top, standing 0.3 below it; the olive-hole jewel near its top, the pivot just under the endstone */
   hn(mesh(ck,new THREE.LatheGeometry([V2(0.95,CK_T),V2(CKS_R,CK_T),V2(CKS_R,CK_T+2.6),V2(1.5,CK_T+2.6),V2(1.5,CK_T+2.9),V2(0.7,CK_T+2.9),V2(0.7,CK_T+0.95),V2(0.95,CK_T+0.95),V2(0.95,CK_T)],40),M.gilt,...[L.B[0],0,L.B[1]]),'42162.bu');   /* r CKS_R through the arm (measured at its top); the 0.3 it stands below the arm r 1.5, as before (estimated: at CKS_R it would meet the stud's bar, drawn where the old reading puts it, 2.0 from the staff) */   /* gilt: KLUwI2UUCMQ 41:58, the cap off */
   hn(mesh(ck,stoneGeo(0.95,0.19,0.6,'olive'),M.ruby,L.B[0],CK_T+0.3,L.B[1]),'J.bu');   /* flush with the cock's top, under the endstone; its hole r 0.19, 0.01 round the pivot's measured r 0.18 (the staff's comment): the hole's size an estimate */
@@ -1604,9 +1615,13 @@ function makeFusee(M,c){
      groove and pushes it in, so the other end, the stop end, stands out past the rim into the winding stop's path (Sec. IV). 20:01.23 (the plate off, nearly overhead,
      rectified on the recess's arc, 13 points, and scaled on the top plate's two screw holes): 15.0 +-0.6 long (14.9, 15.1 along its edges), 1.8 (1.6-1.9) wide, its edges 2.9
      and 4.9 from the axis; both ends cut at a slant the same way, a parallelogram (18 and 23 deg from square, six points an end); side-on at 26:05-26:23 (the plate on, the
-     bar pushed in with tweezers): the stop end 0.7 +-0.15 thick, the chain end 1.1 +-0.2, a step between them about mid-length (20:04.27, on the mat: moderate), its travel
-     2.4 +-0.3 (the two fullest pushes agree), no hook or nose; the step on its underside 0.52 +-0.03 of the length from the chain end (20:04.29, upside down on the mat:
-     a line across the broad face, the side face's band 27 px on the chain end's part against 21; none on the top face in the slot: moderate); a round hole 0.5 +-0.1
+     bar pushed in with tweezers): its travel 2.4 +-0.3 (the two fullest pushes agree), no hook or nose; a small step on its underside, the stop end thinner, 0.52
+     +-0.03 of the length from the chain end (20:04.29, upside down on the mat: a line across the broad face, the bar's edges running on straight past it; none on the
+     top face in the slot: moderate), Fig. 28 drawing it as a plain bar: the stop end's thickness 0.8 of the chain end's, read as ratios in one frame, no camera needed
+     (20:04.27, the side face's band 21 px on the stop end's part against 27; 26:23.75, side-on, the two ends' side faces 39 and 46 px, the nearer end the larger;
+     26:05 has 36 against 52, the stop end standing only a little out of the slot, its lower part likely behind the slot's lip, left out); until 15 October 2026 the
+     absolute readings at 26:05-26:23, the stop end 0.7 +-0.15 and the chain end 1.1 +-0.2, were drawn as 0.7 against the chain end's 1.5 (below), a step of 0.8;
+     a round hole 0.5 +-0.1
      across in its inner side face (toward the arbor), centred on the chain half's height, 0.27 of the length from the chain end (0.26-0.28; 0.255 on 20:10.63), which
      the spring's end goes into sideways (25:14.47-25:17.47: the bar on edge beside the slot, the wire's bent tip into the hole, staying in as the bar goes down into the
      slot; sure), at least 0.5 deep (through or blind not seen: drawn 0.6, blind). Which end is which: at 25:40 the spring's end bears on the bar 0.27 of its length from the end whose inner corner stands out, and that
@@ -1617,7 +1632,7 @@ function makeFusee(M,c){
      furthest out, is at the chain's inner face, rN: the travel TR, 1.98 (on the wound fusee at 13:16.0 and 13:26.14, the stop end out past the plate, the chain pushes it
      1.9-2.5); pushed on, it meets a hard stop at TSTOP, 2.44 +-0.12 (26:15.57-26:20.25: six pushes with the tweezers within 0.04, too tight for a spring), which the
      chain never reaches; what the stop is isn't seen, so it isn't drawn (the slot's floor runs flat across, 25:04);
-     where that falls in the groove, mF, and the bar's turn, al, follow from the stop end meeting the winding stop at full wind (c.stopDir, c.stopR, c.stopRs: movement.js). The stop end, thinner, passes over the chain's top turn
+     where that falls in the groove, mF, and the bar's turn, al, follow from the stop end meeting the winding stop at full wind (c.stopDir, c.stopR, c.stopRs: movement.js). The stop end, thinner (TS, 0.8 of TC), passes over the chain's top turn
      unpushed (the step's use): the chain end, 0.14 turn into the top turn, its lower face level with the band's, 0.0-0.3 over the top of the links' upper plates
      (37:25.243, 37:26.578, the chain laid on by hand: drawn 0.07); the frames show it pushed in with the chain on the top turn, so the links' top edges catch its
      slanted end's lower corner (the chain's pull, which the hand-laid chain lacks, isn't seen). Drawn so, the chain end 1.1 thick and level with the band, it stood 0.22
@@ -1626,7 +1641,7 @@ function makeFusee(M,c){
      estimated: 0.2 past the reading's 1.3; the slot read 1.1-1.6 deep at 25:04 and the recess 1.2-2.0, both cut to it), its lower face 0.4 under the band's
      (BD, the measured 1.1 + 0.05): the incoming links reach 0.09 up its end as they first touch it and 0.18 once wound under it. Until 12 October 2026 it was a
      bar 14.6 x 1.0 x 0.45 on the arbor's other side, its ends square, an estimated nose hanging into the groove, its travel 1.82 ---- */
-  const SBZ=3.9,SBW=1.9,SBX=7.5,LN=Math.tan(20*D2R),TS=0.7,TC=1.5,BD=1.15,Z0=SBZ-SBW/2,Z1=SBZ+SBW/2,zLo=Z0-0.05,zHi=Z1+0.05,HUB=2.4,ex=(s,z)=>s*SBX+LN*(z-SBZ),XS=-SBX+0.52*2*SBX,XH=-SBX+0.27*2*SBX,HR=0.25,TSTOP=2.44;
+  const SBZ=3.9,SBW=1.9,SBX=7.5,LN=Math.tan(20*D2R),TS=1.2,TC=1.5,BD=1.15,Z0=SBZ-SBW/2,Z1=SBZ+SBW/2,zLo=Z0-0.05,zHi=Z1+0.05,HUB=2.4,ex=(s,z)=>s*SBX+LN*(z-SBZ),XS=-SBX+0.52*2*SBX,XH=-SBX+0.27*2*SBX,HR=0.25,TSTOP=2.44;
   /* Z0 the bar's inner edge, Z1 its outer; ex(s,z): an end's x at z (s +1 the stop end, -1 the chain end); xc0, the chain end's outer corner, which the chain reaches first; xf(r), where along the bar a circle r
      about the arbor meets that corner's line; XS, the step on its underside (the chain half thick to there); XH, the hole in its inner side face that
      the spring's end goes into, HR its radius; TSTOP, the travel to its hard stop */
@@ -1702,12 +1717,20 @@ function makeFusee(M,c){
      (20:20); r 0.326 of the plate's on 13:30, face-on. It rises 2.8 mm over the top layer (20:00, side-on, scaled by the groove's pitch, 38-41 px a turn there), so
      up to the barrel bridge, under whose bushing it is the arbor's shoulder: c.collarT, 0.05 under it (0.002 in, Ops. 15, 69). It stays inside the slot's inner edge (zLo) */
   const stopBar=hn(new THREE.Group(),'42024');stopBar.position.y=yT-0.475;sbR.add(stopBar);   /* in the slot, its top 0.025 under the plate */
-  { const B0=TC/2-0.3,B1=TC/2+0.3,N=[[XH-0.3,Z0],[XH-0.3,Z0+0.6],[XH+0.3,Z0+0.6],[XH+0.3,Z0]],whole=n=>[[ex(-1,Z0),Z0],...n,[ex(1,Z0),Z0],[ex(1,Z1),Z1],[ex(-1,Z1),Z1]],chain=n=>[[ex(-1,Z0),Z0],...n,[XS,Z0],[XS,Z1],[ex(-1,Z1),Z1]];
-    /* in bands down from its top, so its top face is whole and the step is on its underside: the whole bar to B0; the whole bar to TS round the hole's block; the chain
-       half to B1 round it, then on to TC; the block, B0 to B1, with the hole (tools/maintaining.py measures all the bar's children) */
-    mesh(stopBar,polyGeo(whole([]),B0),M.steel);mesh(stopBar,polyGeo(whole(N),TS-B0),M.steel,0,B0,0);mesh(stopBar,polyGeo(chain(N),B1-TS),M.steel,0,TS,0);mesh(stopBar,polyGeo(chain([]),TC-B1),M.steel,0,B1,0);
-    const s=new THREE.Shape();s.moveTo(XH-0.3,B0);s.lineTo(XH+0.3,B0);s.lineTo(XH+0.3,B1);s.lineTo(XH-0.3,B1);s.closePath();const h=new THREE.Path();h.absarc(XH,TC/2,HR,0,TAU,true);s.holes.push(h);
-    const g=extrude(s,{depth:0.6,bevelEnabled:false,curveSegments:24});g.translate(0,0,Z0);mesh(stopBar,g,M.steel); }   /* the block with the hole, 0.6 into the inner side face */
+  { /* one solid, as the steel bar is (until 15 October 2026 four bands and a block, seams between them): its side profile, x along the bar and y down from its
+       top, the step on its underside, carried across from its inner face Z0 to its outer Z1, each end's vertices moved along the bar by the slant (ex); the spring's
+       hole blind, 0.6 into the inner face, its floor flat (tools/maintaining.py measures all the bar's children) */
+    const P=[[-SBX,0],[SBX,0],[SBX,TS],[XS,TS],[XS,TC],[-SBX,TC]],NH=24,ZH=Z0+0.6,H=[...Array(NH)].map((_,i)=>[XH+HR*Math.cos(TAU*i/NH),TC/2+HR*Math.sin(TAU*i/NH)]),
+      at=(q,z)=>[Math.abs(Math.abs(q[0])-SBX)<1e-9?q[0]+LN*(z-SBZ):q[0],q[1],z],pos=[],uv=[],V2=q=>new THREE.Vector2(q[0],q[1]),
+      tri=(a,b,c,d)=>{const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+        for(const q of n[0]*d[0]+n[1]*d[1]+n[2]*d[2]<0?[a,c,b]:[a,b,c]){pos.push(...q);uv.push(q[0]/(2*SBX),q[1]+q[2]);}},
+      quad=(a,b,c,e,d)=>{tri(a,b,c,d);tri(a,c,e,d);};
+    let A2=0;for(let k=0;k<P.length;k++){const[a,b]=P[k],[c2,d2]=P[(k+1)%P.length];A2+=a*d2-c2*b;}
+    const F=[...P,...H];for(const t of THREE.ShapeUtils.triangulateShape(P.map(V2),[H.map(V2)]))tri(at(F[t[0]],Z0),at(F[t[1]],Z0),at(F[t[2]],Z0),[0,0,-1]);   /* the inner face, round the hole */
+    for(const t of THREE.ShapeUtils.triangulateShape(P.map(V2),[]))tri(at(P[t[0]],Z1),at(P[t[1]],Z1),at(P[t[2]],Z1),[0,0,1]);   /* the outer face */
+    for(let k=0;k<P.length;k++){const p0=P[k],p1=P[(k+1)%P.length],dx=p1[0]-p0[0],dy=p1[1]-p0[1],sg=A2>0?1:-1;quad(at(p0,Z0),at(p1,Z0),at(p1,Z1),at(p0,Z1),[sg*dy,-sg*dx,0]);}   /* top, ends, step, underside */
+    for(let k=0;k<NH;k++){const h0=H[k],h1=H[(k+1)%NH];quad([...h0,Z0],[...h1,Z0],[...h1,ZH],[...h0,ZH],[XH-(h0[0]+h1[0])/2,TC/2-(h0[1]+h1[1])/2,0]);tri([XH,TC/2,ZH],[...h0,ZH],[...h1,ZH],[0,0,-1]);}   /* the hole's wall and floor */
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.computeVertexNormals();mesh(stopBar,g,M.steel); }
   const bsp=hn(mesh(sbR,new THREE.BufferGeometry(),M.steel),'42025');let barX=null;
   mesh(sbR,discGeo(1.05+0.1*Math.floor((REC-1.05)/0.1+1e-9),0.6,[[0,0,1.2],...HL.map(([x,z])=>[x,z,0.4])]),M.gilt,0,yR,0);   /* the recess's floor, a plate over the turned body out to its last ring under the recess (its two tapped holes cut round) */
   /* the spring (42025): a round wire 0.30 +-0.05 across (20:01.23, the narrowest readings at half depth, 12-14 px at 40 px/mm) bent to an open C on the recess's floor

@@ -2107,10 +2107,12 @@ Open, found on the way:
   others) and the ring screws to its three (91.5°, 214°, 336.5°: the heads on
   the plate's rim at 215° and 335° from the train side, the ends in threaded
   holes at 91°, 214° and 337° from the dial side, the top-view photograph's head
-  at 215°). Still open: the ends come through threaded holes in the flange's
-  dial face, which the model's flange doesn't have, and the holes and heads put
-  the screws 41-43 mm out (the model 40.6); placing those holes needs the dial
-  side's radius scale (the bore's, about 5 % uncertain) settled first.*
+  at 215°). *Closed the same day: the radius read camera-free (radial strips
+  through each hole, its place between the bore and the flange's rim) 41.8-42.2,
+  the screws now at 42.0 and tapped through the flange, their ends 2.0 below its
+  face; the fourth dial foot at 178.7°, a filled hole of the feet's size; the
+  2.3° hole, which the strips put among the ring screws, drawn, what it holds
+  unknown.*
   *Worked through (4 October 2026), not settled.* The dial screws go in from the train side
   outside the plate's rim (8:36-8:42), so the three small holes near the rim
   (130.4°, 224.4°, 319.4°) are theirs; the three large threaded ones (88.5°,
@@ -2150,8 +2152,7 @@ top, the fusee arbor, the take-off slot and the flange's holes).
    Needs first: the shaft's radius from a frame where it stands against
    something matt (a polished silhouette on the blue mat reads narrow), or a
    ratio to the barrel arbor's pivot in one frame.
-2. *Done for the angles (14 October 2026): see "The flange's holes" above; the
-   holes through the flange and the screws' radius still open.* **The dial screws and the mounting ring's screws.** The video's ring
+2. *Closed (14 October 2026): see "The flange's holes" above.* **The dial screws and the mounting ring's screws.** The video's ring
    (2E8489, 9:03 unrolled): dial screws at 130.4°, 224.4° and 319.4° (r ≈ 46),
    none at r 46 elsewhere, a small hole at 2.5° (r ≈ 43, under the plate's rim:
    a dial steady pin?); the ring's screws tapped through at 88.5°, 212.3° and
