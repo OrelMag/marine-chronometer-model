@@ -9,7 +9,8 @@
    Part of the Wempe model (three.js r128). Declares only WDIAL: WDIAL.build(mv, M, K) adds the parts to the movement group (K: KIT.parts' makers; the frame and the train
    already built) and returns {update, R}: update(s, ang) turns them from the train's angles (ang: train.js's {c, s}, and the fusee's f when the fusee group gives it) and
    the wind (s.n, fusee turns from full wind, the Hamilton's MoveState); WDIAL.face(K) draws the
-   dial's printing on a canvas (as core.js's dialCanvas draws the Hamilton's): Wempe 3955's, its glyphs traced into dialface.js (WDIALFACE, loaded before this file).
+   dial's printing on a canvas (as core.js's dialCanvas draws the Hamilton's): Wempe 3955's, its glyphs traced into dialface.js (WDIALFACE, loaded before this file), or,
+   WDIAL.face(K, 'lange'), Lange 5177's (dialface_lange.js, WDIALFACE_LANGE); R.setDial(d) shows one or the other (app.js's Variants).
    Units mm, the movement frame (dims.js): dial side +y, 12 o'clock -z, 3 o'clock +x. Heights (y) from the pillar plate's dial face (PPT, 3.35 over its inner face).
    Every turning group's rotation.y is its angle in the movement's frame (rotation.y falling: clockwise seen from the dial). */
 const WDIAL=(()=>{
@@ -160,16 +161,31 @@ const WDIAL=(()=>{
      Drawn here from the measured numbers (dialtrace.py --geo; each the half-way edges between paper and ink, which hold under the photo's blur, sigma 0.046):
      the tracks as a black band between their lines' outer edges with white boxes cut in it, each box's corners rounded as measured along their diagonals, the divisions
      straight-sided bars at their angles as measured (dialface.js: 0.06-0.08 deg off the nominal on the mean, sd 0.1, the printing's scatter) */
-  const TC=[0,0.067];   /* the minute track's centre: 0.067 under the arbors' midpoint (measured; the printing's own offset, kept) */
-  const FT={r0:42.534,r1:45.156,b0:42.911,b1:44.785,wm:0.421,wh:1.684,rc:0.185};   /* the minute track: its lines 42.534-42.911 and 44.785-45.156 (centres Ø 85.44 and 89.94: the
+  const TC0=[0,0.067];   /* the minute track's centre: 0.067 under the arbors' midpoint (measured; the printing's own offset, kept) */
+  const FT0={r0:42.534,r1:45.156,b0:42.911,b1:44.785,wm:0.421,wh:1.684,rc:0.185};   /* the minute track: its lines 42.534-42.911 and 44.785-45.156 (centres Ø 85.44 and 89.94: the
      sheet's 85 and 90, scaled 85.4 there); the minute divisions 0.421 (0.30-0.48), the hour blocks 1.684 (1.58-1.75) wide; the boxes' corners r 0.185 (the sheet: 0.3, 1.5) */
-  const FS={r0:16.346,r1:18.741,b0:16.709,b1:18.341,wm:0.392,wh:0.670,rc:0.168};   /* the seconds track: lines 16.346-16.709, 18.341-18.741 (Ø 33.06, 37.08: the sheet's 33, 37); a
+  const FS0={r0:16.346,r1:18.741,b0:16.709,b1:18.341,wm:0.392,wh:0.670,rc:0.168};   /* the seconds track: lines 16.346-16.709, 18.341-18.741 (Ø 33.06, 37.08: the sheet's 33, 37); a
      division each second 0.392 (0.27-0.56), each five 0.670 (0.55-0.73: the sheet's 0.2 and 0.5); corners r 0.168 */
-  const F23=[11.309,11.703],FRL=0.611;   /* the seconds sub-dial's inner circle (Ø 23.01: the sheet's 23) and its lines at 5, 15 ... 55 s, 0.611 wide (0.58-0.65), between it and the track */
-  const FU=[12.897,13.179];   /* the up-and-down sub-dial's circle (Ø 26.08: the sheet's 26) */
-  const FB={r0:7.410,r1:9.143,b0:7.780,b1:8.872,wd:0.40,we:0.35,rc:0.171,ro:0.2};   /* its band: lines 7.410-7.780 and 8.872-9.143 (Ø 15.19, 18.02: the sheet's 15, 18); the divisions
+  const F230=[11.309,11.703],FRL0=0.611;   /* the seconds sub-dial's inner circle (Ø 23.01: the sheet's 23) and its lines at 5, 15 ... 55 s, 0.611 wide (0.58-0.65), between it and the track */
+  const FU0=[12.897,13.179];   /* the up-and-down sub-dial's circle (Ø 26.08: the sheet's 26) */
+  const FB0={r0:7.410,r1:9.143,b0:7.780,b1:8.872,wd:0.40,we:0.35,rc:0.171,ro:0.2};   /* its band: lines 7.410-7.780 and 8.872-9.143 (Ø 15.19, 18.02: the sheet's 15, 18); the divisions
      at 8, 16 ... 48 h 0.40 (0.36-0.44), the ends at 0 and 56 0.35 (0.36, 0.32); the boxes' corners r 0.171, the band's outer corners at its open ends r 0.2 (0.24 with the blur) */
-  function face(K=1){const S=2048,cv=document.createElement('canvas');cv.width=cv.height=S*K;const x=cv.getContext('2d');x.scale(K,K);
+  /* Lange 5177's (1_Lange_5177_Z.jpg, the same photographer's square-on view of A. Lange & Söhne's Einheits-Chronometer No. 5177), measured the same way (dialtrace.py
+     --dial lange --geo: its six circles' rms 14-20 µm, its blur sigma 0.024, half the Wempe's): the same layout to 0.1 mm (the sheet's), printed finer, every line about
+     0.24 wide; the up-and-down circle open at the top, the band two thin lines whose end strokes run on inward past the inner line */
+  const LANGE={TC:[0.003,0.068],   /* the minute track's centre, 0.068 under the arbors' midpoint (as Wempe 3955's 0.067) */
+    FT:{r0:42.548,r1:45.027,b0:42.794,b1:44.788,wm:0.245,wh:1.437,rc:0.144},   /* the minute track: lines 42.548-42.794 and 44.788-45.027 (centres Ø 85.34, 89.82); the minute
+       divisions 0.245 (0.19-0.30), the hour blocks 1.437 (1.32-1.50); corners r 0.144 */
+    FS:{r0:16.376,r1:18.629,b0:16.610,b1:18.380,wm:0.238,wh:0.420,rc:0.131},   /* the seconds track: lines 16.376-16.610, 18.380-18.629 (Ø 32.99, 37.01); a division each second
+       0.238 (0.20-0.30), each five 0.420 (0.31-0.46); corners r 0.131 */
+    F23:[11.360,11.618],FRL:0.417,   /* the seconds sub-dial's inner circle (Ø 22.98) and its lines at 5, 15 ... 55 s, 0.417 wide (0.38-0.45; the 45's under the hand) */
+    FU:[12.937,13.121],gap:[23.01,337.35],   /* the up-and-down circle (Ø 26.06), open at the top from 337.35 to 23.01 deg (its ends square, as they show), where Ab and Auf stand */
+    FB:{r0:7.465,r1:9.088,b0:7.690,b1:8.897,wd:0.25,we:0.21,rc:0.172,ro:0,re:5.71}};   /* its band: lines 7.465-7.690 and 8.897-9.088 (Ø 15.16, 18.0); the divisions at 8 ... 48 h
+       0.25 (0.23-0.28), the end strokes at 0 and 56 0.21 (0.21, 0.22), running on inward to r 5.71 (5.700, 5.714); the boxes' corners r 0.172; the outer corners at the ends sharp
+       (as they show at 167 px/mm: not measured) */
+  /* face(K, d): the dial's printing on a canvas, K times as fine; d the dial: 'wempe' (Wempe 3955's, dialface.js) or 'lange' (Lange 5177's, dialface_lange.js) */
+  function face(K=1,d='wempe'){const S=2048,cv=document.createElement('canvas');cv.width=cv.height=S*K;const x=cv.getContext('2d');x.scale(K,K);
+    const L=d==='lange',{TC,FT,FS,F23,FRL,FU,FB}=L?LANGE:{TC:TC0,FT:FT0,FS:FS0,F23:F230,FRL:FRL0,FU:FU0,FB:FB0},GF=L?WDIALFACE_LANGE:WDIALFACE;
     const k=S/(2*DR),c=S/2,P=(mx,mz)=>[c+mx*k,c+mz*k];   /* mm on the dial (x right, z down: 12 at the top) to canvas px */
     x.fillStyle='#f2f0ea';x.fillRect(0,0,S,S);
     const ink='#141416',paper='#f2f0ea';x.lineJoin='round';
@@ -183,18 +199,19 @@ const WDIAL=(()=>{
     /* a railway: the band, then a white box between each two of its 60 divisions (the w(i)-wide division at the angle measured, dv: dialface.js's divm or divs) */
     const rail=(q,T,dv,w)=>{const A=dv.split(' ').map(v=>v/100);A.push(A[0]+360);ring(q,T.r0,T.r1);for(let i=0;i<60;i++)box(q,T.b0,T.b1,A[i],w(i)/2,A[i+1],-w((i+1)%60)/2,T.rc,paper);};
     /* the minute track */
-    rail(TC,FT,WDIALFACE.divm,i=>i%5?FT.wm:FT.wh);
+    rail(TC,FT,GF.divm,i=>i%5?FT.wm:FT.wh);
     /* the up-and-down sub-dial: its circle, the band open at the top (its ends at 0 and 56 h, 22.5 deg either side of 12), a box for each 8 hours */
-    const U=[0,-23],ua=h=>22.5+h/8*45;ring(U,FU[0],FU[1]);
+    const U=[0,-23],ua=h=>22.5+h/8*45;if(L)box(U,FU[0],FU[1],LANGE.gap[0],0,LANGE.gap[1],0,0,ink);else ring(U,FU[0],FU[1]);
     box(U,FB.r0,FB.r1,ua(0),-FB.we/2,ua(56),FB.we/2,FB.ro,ink);
+    if(L)for(const h of[0,56])box(U,LANGE.FB.re,FB.r0+0.05,ua(h),-FB.we/2,ua(h),FB.we/2,0,ink);   /* Lange's end strokes, on inward past the inner line */
     for(let h=0;h<56;h+=8)box(U,FB.b0,FB.b1,ua(h),(h?FB.wd:FB.we)/2,ua(h+8),-(h+8<56?FB.wd:FB.we)/2,FB.rc,paper);
     /* the seconds sub-dial's inner circle and lines */
     const Sd=[0,23];ring(Sd,F23[0],F23[1]);for(let q=0;q<6;q++){const A=30+60*q;box(Sd,(F23[0]+F23[1])/2,(FS.r0+FS.b0)/2,A,-FRL/2,A,FRL/2,0,ink);}
     /* the traced glyphs (dialface.js): each item's contours filled even-odd */
-    x.fillStyle=ink;for(const[n,s]of Object.entries(WDIALFACE)){if(n.startsWith('div'))continue;const p=new Path2D();for(const cs of s.split('|')){const v=cs.split(' ').map(Number);let mx=v[0],mz=v[1],[u,w]=P(mx/100,mz/100);p.moveTo(u,w);
+    x.fillStyle=ink;for(const[n,s]of Object.entries(GF)){if(n.startsWith('div'))continue;const p=new Path2D();for(const cs of s.split('|')){const v=cs.split(' ').map(Number);let mx=v[0],mz=v[1],[u,w]=P(mx/100,mz/100);p.moveTo(u,w);
       for(let i=2;i<v.length;i+=2){mx+=v[i];mz+=v[i+1];[u,w]=P(mx/100,mz/100);p.lineTo(u,w);}p.closePath();}x.fill(p,'evenodd');}
     /* the seconds track, printed over the 7 and the 5 (its white boxes cut into them) */
-    rail(Sd,FS,WDIALFACE.divs,i=>i%5?FS.wm:FS.wh);
+    rail(Sd,FS,GF.divs,i=>i%5?FS.wm:FS.wh);
     return cv;}
 
   function build(mv,M,K){const{part,screw,loose}=K,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),R={};
@@ -274,9 +291,12 @@ const WDIAL=(()=>{
     /* the printed face: a surface 0.02 over the disc, holed as it is, its texture the canvas (face()) */
     {const s=new THREE.Shape();s.absarc(0,0,DR,0,TAU,false);for(const[hx,hz,hr]of holes){const p=new THREE.Path();p.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(p);}
       const g=new THREE.ShapeGeometry(s,64),uv=g.attributes.uv,pos=g.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,(pos.getX(i)+DR)/(2*DR),(pos.getY(i)+DR)/(2*DR));g.rotateX(-Math.PI/2);
-      const tex=new THREE.CanvasTexture(face());tex.encoding=THREE.sRGBEncoding;tex.anisotropy=8;tex.redraw=k=>face(k);
-      const fm=mesh(dlP,g,new THREE.MeshStandardMaterial({map:tex,metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
+      const TX={},texOf=(/** @type {string} */d)=>{if(!TX[d]){const t=TX[d]=new THREE.CanvasTexture(face(1,d));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>face(k,d);}return TX[d];};
+      const fm=mesh(dlP,g,new THREE.MeshStandardMaterial({map:texOf('wempe'),metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
       Object.assign(fm.userData,{surface:true,noCap:true,R:DR,holes,hn:'050200-4',sub:1});R.face=fm;
+      /* R.setDial(d): the printing shown, 'wempe' or 'lange' (app.js's Variants), each texture drawn when first asked for: on the face's own material (the viewer may be
+         showing a faded or coloured copy of it, which follows on its next look()) and on the copy shown, if another */
+      R.setDial=(/** @type {string} */d)=>{const t=texOf(d==='lange'?'lange':'wempe'),m=fm.userData.mat0||fm.material;for(const q of new Set([m,fm.material]))if(q.map!==undefined&&q.map!==null){q.map=t;q.needsUpdate=true;}R.dial=d==='lange'?'lange':'wempe';};R.dial='wempe';
 }
     /* its three screws (WN-10 by the coloured section's label, "10" or "18": likely): M1 through its Ø 1.1 holes into the ring's flange (tapped 2.5 deep there: frame.js), the
        heads Ø 1.7 × 0.8 in the sinks, 0.1 under the face (estimated); from the dial side, so in a frame turned over */
