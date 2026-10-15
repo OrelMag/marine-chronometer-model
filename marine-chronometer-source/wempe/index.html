@@ -71,8 +71,8 @@
       </details>
       <details class="grp more" id="windDet" open>
         <summary>Winding</summary>
-        <div class="row pow"><label class="sl"><span class="lab">Since winding</span><input type="range" id="hrs" min="0" max="56.4" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully: the key on the fusee's square turns it back about 8¾ turns, until the stop bar meets its pin, while the maintaining spring drives the train">Wind</button></div>
-        <p class="note" style="margin:6px 0 0">The fusee goes 56 hours on a wind, 8¾ of its turns; the barrel turns about 5 times. While the key turns the fusee back, its clicks ride over the click wheel and the maintaining detent holds the ratchet, so the maintaining spring keeps the train going. Run down, the train stops.</p>
+        <div class="row pow"><label class="sl"><span class="lab">Since winding</span><input type="range" id="hrs" min="0" max="56.4" step="0.1" value="20"><output></output></label><button id="wind" title="Wind it fully: the key on the fusee's square turns it back about 8¾ turns, until the stop bar meets its pin, while the maintaining spring drives the train">Wind</button><button id="twist" title="Turn the chronometer sharply about its hands and back, which sets a stopped balance swinging: how a run-down chronometer is started once wound">Twist</button></div>
+        <p class="note" style="margin:6px 0 0">The fusee goes 56 hours on a wind, 8¾ of its turns; the barrel turns about 5 times. While the key turns the fusee back, its clicks ride over the click wheel and the maintaining detent holds the ratchet, so the maintaining spring keeps the train going for about a minute. Run down, the train stops and the balance swings down to rest: a detent escapement doesn't start itself, so once wound it needs a twist to set the balance swinging again. The swing comes from the fusee's pull, measured on the drawings, through the train; the rate shown is the escapement's, against its own at 12 hours from full wind.</p>
       </details>
       <details class="grp more" id="varDet">
         <summary>Variants</summary>
@@ -144,6 +144,8 @@
 <script src="js/frame.js"></script>
 <script src="js/train.js"></script>
 <script src="js/escapement.js"></script>
+<script src="../shared/escapement.js"></script>
+<script src="js/escphys.js"></script>
 <script src="js/fusee.js"></script>
 <script src="js/dialface.js"></script>
 <script src="js/dial.js"></script>

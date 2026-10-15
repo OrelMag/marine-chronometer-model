@@ -336,6 +336,15 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
   let hrs=20,winding=false,conn='chain',HPT=90/14,HRUN=56.4;
+  /* the balance's swing (js/escphys.js, WPHYS; the Hamilton's H.amp): driven by the escape wheel's torque drv (times the reference's, 12 h from full wind), A² relaxes to
+     PE.ampAt(drv)² as exp(-2t/TF); with the train held it runs down free (PE.freeStep). Below PE.AMIN a swing can't unlock the wheel and see the impulse through: the train
+     stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
+     stopped), otherwise after a twist (the button), as a detent escapement doesn't start itself (the 1954 instruction, п. 7; the 6MX's own: a light turn about the hands' axis).
+     While held, tSim and the hands stand and the balance keeps its own phase (bph, oscillations); going again, bOff (phase) and eOff (beats) carry both across. The train runs
+     at the escapement's rate (PE.rateAt: s a day against the reference), so the hands gain or lose by it. While the key turns, the maintaining spring drives with what it
+     carried when the key went on (w0), falling to nothing over PH.SUS s of the train's time (wT). kick: a twist's swing, eased in over 0.15 s */
+  const PH=WPHYS,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:0,Eh:0,kick:0,w0:0,wT:0,rate:0};
+  const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT):0;
   /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
   let CS=null,cl=1,cf=1;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
@@ -343,7 +352,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
     build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid};   /* the box, for audit.py box (geometry-audit-box.js) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
-      const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);return{root,mv};},   /* the movement train side up */
+      const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
@@ -374,19 +383,32 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);cf+=((c?c.lift:1)-cf)*k;cl+=((c?c.lid:cf>0.97?0:1)-cl)*k;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
         const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
-      const down=hrs>=HRUN-1e-6;if(!down||winding){tSim+=dt*st.speed;if(!winding)hrs=Math.min(HRUN,hrs+dt*st.speed/3600);}   /* run down, the train stands */
-      const y=tSim/0.5,k=Math.floor(y),p=y-k,n=hrs/HPT;let s;
-      if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};mv.userData.update({E:y,th:0,lift:0,psDef:0,n,winding});}
-      else{s=ESC.state(p);mv.userData.update({E:k-1+(p>0?s.prog:0),th:s.th,lift:s.lift,psDef:s.psDef,n,winding});}
-      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+((st.speed>4?y:k+s.prog)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4)];},
+      const dS=dt*(winding?Math.min(st.speed,1):st.speed),drv=drvNow();   /* while the key turns, model time no faster than real (the Hamilton's WIND_X): the maintaining spring's minute isn't spent in a frame */
+      if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
+      if(!H.held&&H.amp>=PE.AMIN){const r=PE.rateAt(H.amp,drv);if(Number.isFinite(r))H.rate=r;}
+      const at=()=>{const y=tSim/0.5+H.bOff,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp);return{y,p,z,E:k-1+(p>0?z.prog:0)+H.eOff};},lockd=q=>!(q.p>0&&q.z.prog>0&&q.z.prog<1);
+      let q=at(),E,s;
+      if(!H.held){if((!(drv>0)||H.amp<PE.AMIN)&&lockd(q)){H.held=true;H.bph=q.y;H.Eh=Math.round(q.E);}   /* the train stops at a locked beat */
+        else{const adv=dS*(1+H.rate/86400);tSim+=adv;if(winding)H.wT+=adv;else hrs=Math.min(HRUN,hrs+adv/3600);q=at();}}   /* the fusee turns with the train */
+      if(H.held){H.bph+=dS/0.5;
+        if(drv>0&&H.amp>=PE.AMIN&&H.kick===0){const b=H.bph-tSim/0.5;H.bOff=b-Math.floor(b);H.eOff=0;const r=at();if(lockd(r)){H.eOff=H.Eh-Math.round(r.E);H.held=false;q=at();}}}   /* going again from where the balance is, on a whole beat */
+      const n=hrs/HPT;
+      if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp);E=H.Eh;}   /* its own swing, the wheel on its stone */
+      else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
+      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
+      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);},
-      read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');}},
-    hud:st=>`The movement, from its drawings&ensp;${winding?'<b>winding</b>':hrs>=HRUN-1e-6?'<b>run down</b>':`${hrs.toFixed(1)} h since winding`}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`});
+      read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');
+        if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
+    hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
+      return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
   function showH(){if(!hIn)return;const v=Math.round(hrs*10)/10;if(v===hShown)return;hShown=v;hOut.textContent=v.toFixed(1)+' h';hIn.max=String(HRUN);hIn.value=String(v);}
-  if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0)winding=true;});}
+  if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0&&!winding){winding=true;H.w0=H.held?0:drvNow();H.wT=0;}});}   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
+  /* the twist: the box turned about the hands and back sets a stopped balance swinging, about 130 deg (estimated: the 6MX's "light jerk"); going, it does nothing here */
+  {const tw=document.getElementById('twist');if(tw)tw.addEventListener('click',()=>{if(H.held&&H.amp<PE.AMIN)H.kick=Math.max(H.amp,0.6*PE.ampAt(1));});}
   function setConn(v){conn=v;if(mv)mv.userData.R.fu.setConn(v);document.querySelectorAll('#conn button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
   document.querySelectorAll('#conn button').forEach(b=>b.addEventListener('click',()=>setConn(b.dataset.v)));
-  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,HRUN,n:hrs/HPT});}   /* the viewer's state and the wind, for the tools */
+  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow()});}   /* the viewer's state and the wind, for the tools */
 })();
