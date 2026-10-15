@@ -445,9 +445,13 @@ const WFUSEE=(()=>{
         const d=crs(a,bq,p,q)?0:Math.min(sd(a,p,q),sd(bq,p,q),sd(p,a,bq),sd(q,a,bq));if(d<m)m=d;}}return m-half-0.02;};
       if(gap(0)>=0)return 0;if(gap(SB.tr)<0){pSW.userData.jam=(pSW.userData.jam||0)+1;return SB.tr;}
       let lo=0,hi=SB.tr;for(let i=0;i<22;i++){const t=(lo+hi)/2;if(gap(t)>=0)hi=t;else lo=t;}return hi;}
-    /* the stop pin 05 08 01-5 (no sheet): Ø 1.6 in the top plate's hole 7 (1.6 +0.009, reamed), flush with its outer face and standing 1.5 under its inner face, to the bar's
-       height: estimated */
-    tag(cylBetween(P.topPlate,0.8,TT,TI+1.5,M.steel,SPX[0],SPX[1],20),'050801-5');
+    /* the stop pin 05 08 01-5 (no sheet): Ø 1.6 in the top plate's hole 7 (1.6 +0.009, reamed), flush with its outer face (estimated). Its length off the coloured section
+       (Wempe_Einheitschronometer.jpg, its "Anschlagstift" leader followed across the barrel wall, the band and the maintaining detent's arbor to it, px 628-642 × 357-375):
+       on the plate's drawn 31 px (3.35, so 9.25 px/mm), its straight sides 15 px (1.62) under the inner face, then a domed end 2.5 px (0.27), ±1 px each; its width 14 px
+       (Ø 1.5, for 1.6). So 1.6 straight and a 0.25 dome, 1.85 in all; the bar's thin end, 1.235 under the face, bears on its straight part (the section draws the dome
+       just past the bar's lower face, its bar 0.5 lower than the sheets' stack puts it) */
+    {const PE=TI+1.6,PH=0.25,R=(0.64+PH*PH)/(2*PH),C=PE+PH-R,a0=Math.asin(0.8/R),cap=[];for(let i=0;i<=8;i++){const a=a0*(1-i/8);cap.push([R*Math.sin(a),C+R*Math.cos(a)]);}
+      tag(mesh(P.topPlate,turned([[0,TT],[0.8,TT],...cap],20),M.steel,SPX[0],0,SPX[1]),'050801-5');}
 
 
     /* =============== the barrel 05 07 01 (Federhaus mit Deckel, as revised 20.4.48) =============== */
