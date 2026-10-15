@@ -1187,9 +1187,12 @@ function buildMovement(M){
   const radial=(a,r0,len,rr,mat,seg=12,bore=0,p=R.balU)=>{const q=mesh(p,bore?ringGeo(rr,bore,len):cylY(rr,len,seg),mat,(r0+len/2)*Math.cos(a),RY,(r0+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);return q;};   /* bore: a nut's thread */
   /* 2 timing weights (93 mg) and 2 vernier timing weights (10.5 mg), each a nut on a screw (Fig. 3): the timing weights outside the rim at the arm's ends (hole 1), their
      screws through the rim into the arm; the verniers inside the rim one hole on (hole 2), their screws' heads outside (KLUwI2UUCMQ 6:47.5, 6:53.0: a large slotted steel nut
-     at each arm's end, a small plain one inside the rim beside it). Drawn at mid-travel, where the manual starts them (p. 70): the timing nuts TG off the rim, so that the 2 turns either
-     way the rate panel allows (0.174 mm a turn) bring them to the rim turned in and to 17.5 mm from the staff turned out, 0.1 inside the barrel bridge's cut round the balance (r 17.6 on
-     the top-view photograph): with the nuts as measured there is no room for more; the verniers, inside the rim, have 3 turns either way. W: the weights, d0 their centres' distance from the staff at mid-travel. The timing nut 2.1 across and 2.3 long (TR, TWL): 6:52.5, face-on at
+     at each arm's end, a small plain one inside the rim beside it). Drawn at mid-travel, where the manual starts them (p. 70): the timing nuts TG off the rim, three turns of their thread
+     (R.pitch.t, 0.178 mm), so the 3 turns either way the rate panel allows bring them to the rim turned in and to 17.9 mm from the staff turned out: 3 turns at about 40 s a
+     day is the 2 minutes a day the timing weights alone must take out (Op. 5 leaves the rate within 2 minutes by screws and washers, Op. 6 regulates with the timing weights
+     only, p. 81). Nothing limits them sooner: the barrel bridge's cut round the balance is 19.5 from the staff at its nearest (fine.py finds no contact 3 turns out), and
+     the screw's length can't be read apart from the nut's (6:50.0, below), so turned fully out the nut overhangs the screw's drawn end by 0.7, 1.6 of its 2.3 still on the
+     thread. Until 15 October 2026 2 turns from TG 0.35, all the room the barrel bridge's cut (then r 17.6 on the top-view photograph) left; the verniers, inside the rim, have 3 turns either way. W: the weights, d0 their centres' distance from the staff at mid-travel. The timing nut 2.1 across and 2.3 long (TR, TWL): 6:52.5, face-on at
      the rim's 43 px/mm, one 95 px across and 2.55 mm long (its end face seen nearly edge-on, 0.21, so barely foreshortened), the other, blurred, 2.0 across and its body 2.1 long to a
      narrower collar at the rim: 2.3 ±0.25; a slit runs most of the first one's length (not drawn). The verniers' sizes
      are estimated (a steel nut so drawn weighs 11 mg, where the pair's 10.5 mg gives 5.25 each: PM), and so is the travel.
@@ -1199,9 +1202,9 @@ function buildMovement(M){
      heads as measured (2.9-3.2 across) would need a metal of density 12.6-14.3 (7.1-6.3 read as a pair's, against brass's 8.5); and the drawn balance makes 731 g·mm²
      against the 1,157 Table II's screw changes then need (37 % short). Read as a pair's, Table II needs 578 and the drawing makes 534 (8 %, inside the rim's
      measured 0.5-0.85 thickness and Table II's own spread: Table III's washers give 16 % less) */
-  const W=[],VO=0.6,TWL=2.3,TR=1.05,TG=0.35,PM=0.5;
+  const W=[],VO=0.6,TWL=2.3,TR=1.05,TG=0.534,PM=0.5;
   for(const h of[0,1]){const at=HA(h,1),av=HA(h,2);
-    W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42),'42176')});hn(radial(at,BR-0.6,0.6+2.7,0.4,M.steel,10),'42177');   /* the screw threaded through the rim, from its inner face (the arm's end lies below it, at the rim's plate-side edge, AY; the screw was drawn 1.5 inside, into the arm, until 4 October 2026) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, inside the barrel bridge's cut (17.6); just past the nut at mid-travel, inside it at full travel out */
+    W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42),'42176')});hn(radial(at,BR-0.6,0.6+2.7,0.4,M.steel,10),'42177');   /* the screw threaded through the rim, from its inner face (the arm's end lies below it, at the rim's plate-side edge, AY; the screw was drawn 1.5 inside, into the arm, until 4 October 2026) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, the screw's end not told apart from the nut's (blurred); the nut runs 0.1 past it at mid-travel */
     W.push({kind:'v',a:av,len:1.5,rr:0.65,mg:10.5*PM,d0:BR-RW-VO-0.75,q:hn(radial(av,BR-RW-VO-1.5,1.5,0.65,M.steelD,12,0.27),'37115')});
     hn(radial(av,BR-RW-VO-1.5-0.65,VO+1.5+0.65+RW+0.5,0.25,M.steel,10),'42197');hn(radial(av,BR+0.5,1.2,0.535,M.steel,12),'42197',{sub:1});}   /* the vernier's screw from inside the nut's furthest travel in, through the rim to a stem 0.5 across and 0.5 outside it, then a head 1.07 across and 1.2 long (6:53.0: 22, 45, 51 px at 41.8 px/mm); the nut 1.27 across and 1.5 long (56 and 71 px). A 1.1 stem and a 0.84 x 0.5 collar, and a 1.3 nut, estimated, until 5 October 2026 */
   /* balance screws (pp. 82, 93): the parts list's 4-6 of 0.049 in head height (125-130 mg), 2 of 0.080 (200-205 mg) and 2 of 0.101 (250-255 mg), in diametric pairs. The
