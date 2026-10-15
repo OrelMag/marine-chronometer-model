@@ -91,7 +91,8 @@ This one command:
    - `_headers` holds security and caching headers, read by Cloudflare Pages and Netlify.
    - `navships-250-624-1948.pdf` is the 1948 manual itself, from `References/`, which the page links to beside it;
    - `verification/build-verification/` and `verification/real-chronometers/` are the checks' two reports (each check's method, results and what they mean), copied as their own `build_report.py` last wrote them, their links to the tools pointed at GitHub; the page's About and the essay link to them. A report isn't rebuilt by `build.py`: rebuild it (its `build_report.py`) after changing what it reports, then build;
-   - `sitemap.xml` (the page and the two reports) and `robots.txt`, for search engines, when `--site-url` is given (below).
+   - `wempe/verification/` is the Wempe's report, *The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?* (every Wempe check's method and results), beside the Wempe's page at `wempe/`, as `marine-chronometer-source/wempe/verification/build_report.py` last wrote it, its links into the repository pointed at GitHub; the Wempe page's About and its essay link to it. Rebuild it (`node reportdata.js`, `python geometry.py`, `python build_report.py` there) after changing what it reports, then build;
+   - `sitemap.xml` (the pages and the reports) and `robots.txt`, for search engines, when `--site-url` is given (below).
 
 The build fails if the page still loads a script, stylesheet or font from another
 server. That keeps the published files working offline and in countries where
