@@ -56,7 +56,8 @@
   "topPlate:Lathe | barrelBridge:Buffer | +-22.36": 1,
   "udWheel:Lathe | hands:Lathe | +12.36": 1,
   "upperCock:Buffer | balanceJewelsUp:Lathe | +-34.96": 1,
-  "upperCock:Buffer | balanceJewelsUp:Lathe | --37.34": 1
+  "upperCock:Buffer | balanceJewelsUp:Lathe | --37.34": 1,
+  "upperCock:Buffer | stud:Buffer | --37.34": 1
  },
  "box": {
   "bezel:Buffer | bezel:Buffer | +22.36": 1,

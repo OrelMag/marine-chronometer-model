@@ -185,7 +185,8 @@ const WFRAME=(()=>{
        end conflicts and is noted in the README). The setting's seat Ø 5.2 H7 through, sunk Ø 6 × 0.5 underneath for its flange (U30), two M1.2 3.5 +0.05 either side along the axis (drawn at their tap drill, Ø 0.95, at 3.525: at the thread's size they would break 0.12 into the Ø 6 sink);
        the auxiliary hole 20 Ø 2.8 at 10 from 23; a slot 1.8 H7 wide, its middle on the setting's line across the arm, from the O side's edge to 3.4 from the axis (C-D; Wempe 3955's
        index lies in it). Foot: the screw's hole 8 clear 2.8, steady pins 6 and 50 5 either side of the axis at 40, pin 9 at 24.5 under the web, 1.585 -0.005 × 2.5 deep (sure).
-       C-D's 82° and the pins' 0.2 × 90° sinks are left out. Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
+       C-D's 82°: the slot's inner wall leans 8° toward the axis going down, 3.4 from it on the top and 3.06 under the thin end, as the stud's upright does (05 03 02-3's 98°,
+       js/escapement.js; left out until 15 October 2026). The pins' 0.2 × 90° sinks are left out. Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
     const uc=part('upperCock',-58);
     {const c=H[23],ax=brg(345),vo=brg(75),pl=new Map(),P=q=>{if(!pl.has(q))pl.set(q,add(add(c,ax,q[0]),vo,q[1]));return pl.get(q);};   /* local [u along the axis, v toward O] to plan, one plan point per local point */
       const Fp=[43,8.5],Fm=[43,-8.5],ph=Math.atan2(8.5,43)+Math.acos(6/Math.hypot(43,8.5)),Tp=[6*Math.cos(ph),6*Math.sin(ph)],Tm=[Tp[0],-Tp[1]];
@@ -197,8 +198,10 @@ const WFRAME=(()=>{
       const S1=[-0.9,Math.sqrt(36-0.81)],S2=onE(Tp,Fp,q=>q[0]-0.9),aS1=Math.atan2(S1[1],S1[0]),aTm=Math.atan2(Tm[1],Tm[0]);
       const end=[Tm,...arc(6,aTm,aS1-TAU),S1];   /* round the end from T- through u < 0 to the slot */
       const yC=q=>TT-12.6+clamp(Math.hypot(q[0]-c[0],q[1]-c[1])-12,0,0.8);
-      const cells=[{L:[...end,[-0.9,3.4],[0.9,3.4],S2,...K12],y0:TT-15,y1:TT-12.6},{L:[...rev(K12),...K128],y0:TT-15,y1:yC},{L:[...rev(K128),...K22],y0:TT-15,y1:TT-11.8},
-        {L:[...rev(K22),Ku[0],Ku[1]],y0:TT-15,y1:TT},{L:[Ku[1],Ku[0],Fp,Fm],y0:TT-3.2,y1:TT}];
+      const TN=Math.tan(8*D2R),SW=3.4-2.4*TN;   /* the slot's inner wall at 82° to the faces (C-D), 3.4 from the axis on the top, SW under the thin end */
+      const cells=[{L:[...end,[-0.9,3.4],[-0.9,SW],[0.9,SW],[0.9,3.4],S2,...K12],y0:TT-15,y1:TT-12.6},{L:[...rev(K12),...K128],y0:TT-15,y1:yC},{L:[...rev(K128),...K22],y0:TT-15,y1:TT-11.8},
+        {L:[...rev(K22),Ku[0],Ku[1]],y0:TT-15,y1:TT},{L:[Ku[1],Ku[0],Fp,Fm],y0:TT-3.2,y1:TT},
+        {L:[[0.9,SW],[-0.9,SW],[-0.9,3.4],[0.9,3.4]],y0:TT-15,y1:q=>TT-15+Math.max(0,3.4-((q[0]-c[0])*vo[0]+(q[1]-c[1])*vo[1]))/TN}];   /* the wall's overhang, its underside the 82° face */
       const L=(u,v)=>add(add(c,ax,u),vo,v),[thin,,,web,foot]=cells;
       thin.F=[T(c,5.206/2,thin.y0,thin.y1),B(c,3.0,thin.y1,0.5),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),T(H[20],rCl26,thin.y0,thin.y1),
         T(WESC.HOLES.studScrew,rM14,thin.y0,thin.y1)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
