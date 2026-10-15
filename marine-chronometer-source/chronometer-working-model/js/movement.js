@@ -490,10 +490,18 @@ function buildMovement(M){
      the pillar screw's hole and the opening over the train bridge's third screw: 0.1-0.6 mm at those; +-1 mm further out, tools/holemap.py), beside those the model had:
      the Navy seal's two screw holes, 17.2 apart through its centre (-6.96, -19.69), at 26.0 and -154.0 deg, the fusee seal's angles (the two seals are one part, fitted
      alike); and six whose use no source gives (bbX: centre, r of the dark disc +-0.15): two just beyond the setup cover's ends (12.8-13.3 from the barrel arbor, nearly
-     opposite; 11:48 shows one past the cover's end, the cover's own screws inside it, their tapped holes blind), one countersunk west of the barrel arbor, one by the
-     opening at 3 o'clock. Through, as all show on the underside. Two more read here then, by that opening and in the far horn, are the bridge's steady pins (S.bbp) seen end on */
+     opposite; 11:48 shows one past the cover's end, the cover's own screws inside it, their tapped holes blind), one countersunk west of the barrel arbor. Through, as these show on
+     the underside. Two more read here then, by the opening at 3 o'clock and in the far horn, are the bridge's steady pins (S.bbp) seen end on, and one beside that opening is a
+     slot open at the rim (S.bbN) */
   S.navySeal=(([a,b])=>{const m=[(a[0]+b[0])/2,(a[1]+b[1])/2],d=unit(sub(b,a));return[add(m,d,-7.8),add(m,d,7.8)];})([[-14.69,-23.47],[0.78,-15.91]]);   /* read 17.2 apart: drawn 7.8 out, the fusee seal's, the same part (+-1 mm out here) */
-  S.bbX=[[-15.30,-16.75,0.8,1],[-27.72,6.19,0.7,1],[-30.24,-2.15,0.55,1],[36.29,2.47,0.9,1]];   /* the 1: their size at the faces (polyGeo) */
+  S.bbX=[[-15.30,-16.75,0.8,1],[-27.72,6.19,0.7,1],[-30.24,-2.15,0.55,1]];   /* the 1: their size at the faces (polyGeo) */
+  S.bbN=(()=>{const a=[35.15,2.465],u=unit([2.80,0.265]),v=[-u[1],u[0]];return[add(a,v,-1.06),add(add(a,u,8),v,-1.06),add(add(a,u,8),v,1.06),add(a,v,1.06)];})();const BB_PK=1.0;   /* the pry slot in the
+     barrel bridge's underside at 3 o'clock, open at the rim (facePocket): KLUwI2UUCMQ 13:04.4 (the bridge upside down, face-on; tools/anchors/KLUwI2UUCMQ_13-04.4.json, a
+     homography on nine of its holes, 0.01-0.86 mm), its corners (37.92, 3.75), (35.04, 3.56), (35.26, 1.37), (37.98, 1.71): 2.04-2.20 wide (2.12 drawn), its inner end at
+     r 35.2, its sides along 3.8 and 7.1 deg (5.4 drawn, the radius there 4.0); its outer corners read where the rim's own edge does through that fit (r 38.1-38.5 beside it,
+     the fit extrapolated past its last hole), so it runs out through the rim, as 13:00.5 and 13:03.8 show it, drawn 8 mm long to clear it. Blind: from above the face is
+     whole to the rim (6:47, 6:49.0, 12:58.75), and its inside shows a floor, not the mat. Its depth, 1.0, is estimated: 12:59.0 sees its mouth in the rim's side, blurred,
+     about half as tall as it is wide. Until 15 October 2026 a round hole r 0.9 through the bridge at (36.29, 2.47), read off 13:04.4 by eye */
   S.seal=[26.8,-154.9].map(a=>[L.Fu[0]+7.8*Math.cos(a*D2R),L.Fu[1]+7.8*Math.sin(a*D2R)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
@@ -747,7 +755,7 @@ function buildMovement(M){
   const BB_CUT=[2.03,9.96,20.06];
   const BBpoly=clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
-  R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),M.plate,0,BB_T,0);hn(bb,'42061');
+  R.barrelBridge=mesh(bb,facePocket(polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),'top',S.bbN,BB_PK),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
   /* barrel bridge pillar screw (42055) into the barrel pillar; two barrel bridge screws into the train bridge: one beside the third train pillar's screw (where the third pillar stood before it went under that screw), one in the far horn
      (proud of the bridge in the top-view photograph; gone with the bridge off, BunnSpecial 12:05) */
@@ -1179,9 +1187,12 @@ function buildMovement(M){
   const radial=(a,r0,len,rr,mat,seg=12,bore=0,p=R.balU)=>{const q=mesh(p,bore?ringGeo(rr,bore,len):cylY(rr,len,seg),mat,(r0+len/2)*Math.cos(a),RY,(r0+len/2)*Math.sin(a));q.rotation.set(0,-a,Math.PI/2);return q;};   /* bore: a nut's thread */
   /* 2 timing weights (93 mg) and 2 vernier timing weights (10.5 mg), each a nut on a screw (Fig. 3): the timing weights outside the rim at the arm's ends (hole 1), their
      screws through the rim into the arm; the verniers inside the rim one hole on (hole 2), their screws' heads outside (KLUwI2UUCMQ 6:47.5, 6:53.0: a large slotted steel nut
-     at each arm's end, a small plain one inside the rim beside it). Drawn at mid-travel, where the manual starts them (p. 70): the timing nuts TG off the rim, so that the 2 turns either
-     way the rate panel allows (0.174 mm a turn) bring them to the rim turned in and to 17.5 mm from the staff turned out, 0.1 inside the barrel bridge's cut round the balance (r 17.6 on
-     the top-view photograph): with the nuts as measured there is no room for more; the verniers, inside the rim, have 3 turns either way. W: the weights, d0 their centres' distance from the staff at mid-travel. The timing nut 2.1 across and 2.3 long (TR, TWL): 6:52.5, face-on at
+     at each arm's end, a small plain one inside the rim beside it). Drawn at mid-travel, where the manual starts them (p. 70): the timing nuts TG off the rim, three turns of their thread
+     (R.pitch.t, 0.178 mm), so the 3 turns either way the rate panel allows bring them to the rim turned in and to 17.9 mm from the staff turned out: 3 turns at about 40 s a
+     day is the 2 minutes a day the timing weights alone must take out (Op. 5 leaves the rate within 2 minutes by screws and washers, Op. 6 regulates with the timing weights
+     only, p. 81). Nothing limits them sooner: the barrel bridge's cut round the balance is 19.5 from the staff at its nearest (fine.py finds no contact 3 turns out), and
+     the screw's length can't be read apart from the nut's (6:50.0, below), so turned fully out the nut overhangs the screw's drawn end by 0.7, 1.6 of its 2.3 still on the
+     thread. Until 15 October 2026 2 turns from TG 0.35, all the room the barrel bridge's cut (then r 17.6 on the top-view photograph) left; the verniers, inside the rim, have 3 turns either way. W: the weights, d0 their centres' distance from the staff at mid-travel. The timing nut 2.1 across and 2.3 long (TR, TWL): 6:52.5, face-on at
      the rim's 43 px/mm, one 95 px across and 2.55 mm long (its end face seen nearly edge-on, 0.21, so barely foreshortened), the other, blurred, 2.0 across and its body 2.1 long to a
      narrower collar at the rim: 2.3 ±0.25; a slit runs most of the first one's length (not drawn). The verniers' sizes
      are estimated (a steel nut so drawn weighs 11 mg, where the pair's 10.5 mg gives 5.25 each: PM), and so is the travel.
@@ -1191,9 +1202,9 @@ function buildMovement(M){
      heads as measured (2.9-3.2 across) would need a metal of density 12.6-14.3 (7.1-6.3 read as a pair's, against brass's 8.5); and the drawn balance makes 731 g·mm²
      against the 1,157 Table II's screw changes then need (37 % short). Read as a pair's, Table II needs 578 and the drawing makes 534 (8 %, inside the rim's
      measured 0.5-0.85 thickness and Table II's own spread: Table III's washers give 16 % less) */
-  const W=[],VO=0.6,TWL=2.3,TR=1.05,TG=0.35,PM=0.5;
+  const W=[],VO=0.6,TWL=2.3,TR=1.05,TG=0.534,PM=0.5;
   for(const h of[0,1]){const at=HA(h,1),av=HA(h,2);
-    W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42),'42176')});hn(radial(at,BR-0.6,0.6+2.7,0.4,M.steel,10),'42177');   /* the screw threaded through the rim, from its inner face (the arm's end lies below it, at the rim's plate-side edge, AY; the screw was drawn 1.5 inside, into the arm, until 4 October 2026) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, inside the barrel bridge's cut (17.6); just past the nut at mid-travel, inside it at full travel out */
+    W.push({kind:'t',a:at,len:TWL,rr:TR,mg:93*PM,d0:BR+TG+TWL/2,q:hn(radial(at,BR+TG,TWL,TR,M.steelD,12,0.42),'42176')});hn(radial(at,BR-0.6,0.6+2.7,0.4,M.steel,10),'42177');   /* the screw threaded through the rim, from its inner face (the arm's end lies below it, at the rim's plate-side edge, AY; the screw was drawn 1.5 inside, into the arm, until 4 October 2026) to 2.7 outside it: side-on at 6:50.0 the nut and its screw reach 3.3 from the rim's inner face (0.6 thick), r 17.2, the screw's end not told apart from the nut's (blurred); the nut runs 0.1 past it at mid-travel */
     W.push({kind:'v',a:av,len:1.5,rr:0.65,mg:10.5*PM,d0:BR-RW-VO-0.75,q:hn(radial(av,BR-RW-VO-1.5,1.5,0.65,M.steelD,12,0.27),'37115')});
     hn(radial(av,BR-RW-VO-1.5-0.65,VO+1.5+0.65+RW+0.5,0.25,M.steel,10),'42197');hn(radial(av,BR+0.5,1.2,0.535,M.steel,12),'42197',{sub:1});}   /* the vernier's screw from inside the nut's furthest travel in, through the rim to a stem 0.5 across and 0.5 outside it, then a head 1.07 across and 1.2 long (6:53.0: 22, 45, 51 px at 41.8 px/mm); the nut 1.27 across and 1.5 long (56 and 71 px). A 1.1 stem and a 0.84 x 0.5 collar, and a 1.3 nut, estimated, until 5 October 2026 */
   /* balance screws (pp. 82, 93): the parts list's 4-6 of 0.049 in head height (125-130 mg), 2 of 0.080 (200-205 mg) and 2 of 0.101 (250-255 mg), in diametric pairs. The
@@ -1461,7 +1472,7 @@ function buildMovement(M){
        (pushed out from there, Op. 32; KLUwI2UUCMQ 13:04.4: two holes within 1.5 mm of here, a pin's end in one); stopping on the bridge's top until 15 October 2026 */
     /* the barrel bridge's last build: its holes through, the pins' holes, the winding stop's tapped hole blind from the underside (2.0, its thread) and the cover's
        screws' blind from the top (2.2, their threads: nothing under them on 13:04.4) */
-    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25);}
+    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25),'top',S.bbN,BB_PK);}
   const nBefore=rt.children.length;
   { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
        centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the
@@ -1501,8 +1512,8 @@ function buildMovement(M){
     hn(mesh(wp,closeGeo(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P),400,0.12,8,false)),M.steel),'42053'); }
   for(let k=0;k<3;k++){const a=-32.56-1.733*k,b=a-1.733;hn(mesh(wp,new THREE.LatheGeometry([V2(3.06,a),V2(6.2,a),V2(6.45,a-0.22),V2(6.45,b+0.22),V2(6.2,b),V2(3.06,b),V2(3.06,a)].reverse(),56),M.fibre,L.Fu[0],0,L.Fu[1]),'42054');}   /* the packing rings: three (6:29, two grooves fitted at nine columns), fibre, amber-brown and not metal (6:29, 44:02, 6:50.0; black in the photograph of 2E11795), the bore 0.47-0.48 of the outside (6:29), r 3.06 (3.4, brass, until 5 October 2026); the outside r 6.45 kept (the rulers give 6.1-7.9) */
   const sbu=(u=>{const n=[-u[1],u[0]];return n[1]<0?n:[-n[0],-n[1]];})((([a,b])=>{const d=[a[0]-b[0],a[1]-b[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(S.seal));   /* across the screws' line, toward the 12 */
-  const fl=mesh(wp,polyGeo(subtractCircle([...Array(96)].map((_,i)=>[8.6*Math.cos(i/96*TAU),8.6*Math.sin(i/96*TAU)]),[14.55*sbu[0],14.55*sbu[1]],7.55),1.0,[[0,0,6.7],...S.seal.map(q=>hC(q[0]-L.Fu[0],q[1]-L.Fu[1],0.9))]),M.plateSolid,L.Fu[0],-28.18,L.Fu[1]);
-  for(const q of S.seal)hn(screw(wp,...q,-28.18,1.05,1.0,1.0+2.0,0.45),'42056.sl');   /* dust seal screws (42056) into the barrel bridge; the flange with a shallow concave bite between them on the 12's side, about 7 wide and 1.6 deep, nearly to the column (C Spinner 6:29; its size rough) */
+  const fl=mesh(wp,polyGeo(subtractCircle(subtractCircle([...Array(96)].map((_,i)=>[8.6*Math.cos(i/96*TAU),8.6*Math.sin(i/96*TAU)]),[14.55*sbu[0],14.55*sbu[1]],7.55),[BB_CUT[0]-L.Fu[0],BB_CUT[1]-L.Fu[1]],BB_CUT[2]),1.0,[[0,0,6.7],...S.seal.map(q=>hC(q[0]-L.Fu[0],q[1]-L.Fu[1],0.9))]),M.plateSolid,L.Fu[0],-28.18,L.Fu[1]);
+  for(const q of S.seal)hn(screw(wp,...q,-28.18,1.05,1.0,1.0+2.0,0.45),'42056.sl');   /* dust seal screws (42056) into the barrel bridge; the flange with a shallow concave bite between them on the 12's side, about 7 wide and 1.6 deep, nearly to the column (C Spinner 6:29; its size rough); on the balance's side the flange ends at the barrel bridge's cut (BB_CUT), trimmed along it, nothing over the opening (2E12055's photograph and the top-view photograph of 2E11795: its edge meets the cut's, flush as far as they show; the cut 7.33 from the fusee, the r 8.6 disc 1.27 over it across 7.7 mm until 15 October 2026, when the cut moved in) */
   const sqP=part('sq',-84),FSQ=-31.5;R.sq=hn(new THREE.Group(),'42022',{sub:1});R.sq.position.set(L.Fu[0],0,L.Fu[1]);sqP.add(R.sq);   /* the fusee arbor's square */cylBetween(R.sq,BU_P,FSQ,BB_T,M.steel,0,0,32);{ const H=FSQ-CK_T,DR=1.2*Math.SQRT2,g=new THREE.BoxGeometry(2.4,H,2.4,12,64,12),P=g.attributes.position,yc=-H/2+DR;   /* the square's end turned to a dome, DR (below) */
     for(let i=0;i<P.count;i++){const x=P.getX(i),y=P.getY(i),z=P.getZ(i);if(y>=yc)continue;const d=Math.hypot(x,y-yc,z);if(d>DR){const q=DR/d;P.setXYZ(i,x*q,yc+(y-yc)*q,z*q);}}
     g.computeVertexNormals();mesh(R.sq,g,M.steel,0,(FSQ+CK_T)/2,0); }
