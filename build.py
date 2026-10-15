@@ -43,14 +43,13 @@ def check(name,html):
     r=remote_refs(html)
     if r:sys.exit(f'{name} still loads {r}: vendor the file and point the page at it')
 
-BUDGET={'working model':2_300_000,'wempe':1_500_000}   # the Wempe: 1.0 MB at P0, 14 October 2026 (three.js and the fonts 0.73 MB of it, core.js and the Hamilton's stylesheet much of the rest); 1.3 MB until P1e, 1.28 MB with the frame, train, escapement, fusee and barrel, dial and motion work (their builders and cards 0.53 MB), raised knowingly to 1.45 MB then for the case and box to come; 1.39 MB with the case and box; raised knowingly to 1.5 MB on 15 October 2026 for phase 2a, the escapement in time: the shared makeEsc (shared/escapement.js, 52 KB) and js/escphys.js (7 KB) brought the page to 1.43 MB   # bytes (2.21 MB on main at 2.32.00, 15 October 2026, the overhaul's operations, and the models' switch 1.4 KB more: raised knowingly to 2.3 MB then; 2.2 MB until then) (2.12 MB on main at 2.30.00, 13 October 2026, all of the growth since 2.0 MB meant: the analyses' figures, the maker's sheets and data, the solved mainspring's shapes, the essay's links to the checks' reports; raised to 2.2 MB then, about 78 KB of room; 2.0 MB until then: 1.84 MB on main by 5 October 2026, the maker's sheets, the export to Blender and the almanac's planets among what grew; 1.88 MB with the report dialog (15 KB) and the parts' pieces' cards (25 KB); the solved mainspring's shapes, 78 KB, to come: raised knowingly then): past its budget the build warns, and goes on (it failed until 3 October 2026, which stopped a release over 8 KB; a tripwire for growth nobody meant, not a limit the host sets) (1.33 MB with the Illustration's images on 30 September 2026; the essay moved in and the images out on 1 October; 1.40 MB until 3 October, raised by 30 KB for the balance's numbered holes and the rate panel's pairs, temperature and link, 1.408 MB then; 1.43 MB until 3 October, raised by 20 KB for the balance's dynamics: Swing and isochronism, the jolt, the gimbals' inertia, the temperature curves, 1.435 MB then; 1.45 MB until 4 October, raised by 20 KB with 1.22.00's merged drawing and the 30-day performance test, 1.455 MB then)
-def budget(name,html):
-    """Print where a page's bytes go (three.js, fonts, images, the rest) and what a visitor downloads (gzip; the site sends Brotli, a little less), and warn if it is over its budget."""
+# no size limit on the pages (removed at the user's word, 15 October 2026; until then a budget per page warned past 2.3 MB and 1.5 MB): sizes() only reports where the bytes go
+def sizes(name,html):
+    """Print where a page's bytes go (three.js, fonts, images, the rest) and what a visitor downloads (gzip; the site sends Brotli, a little less)."""
     n=len(html.encode());three=(ROOT/'vendor/three.min.js').stat().st_size if 'three.min.js' in html or 'REVISION' in html else 0
     fonts=sum(map(len,re.findall(r'data:font/[^;]+;base64,[A-Za-z0-9+/=]+',html)));imgs=sum(map(len,re.findall(r'data:image/[^;,]+;base64,[A-Za-z0-9+/=]+',html)))
     kb=lambda b:f'{b/1024:.0f} KB'
-    print(f'  {name}: {kb(n)} of {kb(BUDGET[name])} = three.js {kb(three)}, fonts {kb(fonts)}, images {kb(imgs)}, the rest {kb(n-three-fonts-imgs)}; {kb(len(gzip.compress(html.encode(),9)))} compressed')
-    if n>BUDGET[name]:print(f'  WARNING: {name} is {kb(n)}, over its budget of {kb(BUDGET[name])} (BUDGET in build.py): find what grew, or raise the budget knowingly')
+    print(f'  {name}: {kb(n)} = three.js {kb(three)}, fonts {kb(fonts)}, images {kb(imgs)}, the rest {kb(n-three-fonts-imgs)}; {kb(len(gzip.compress(html.encode(),9)))} compressed')
 
 def address(url,page,keep=False):
     # Cloudflare (Workers and Pages) redirects /page.html to /page, so name the address it ends up at, unless --keep-html
@@ -89,12 +88,12 @@ def main():
     if a.release:print('release',changelog.release(a.release,a.notes))
     # the working model, with the essay in its Essay tab: its own build script writes dist/
     subprocess.run([sys.executable,str(MODEL/'build.py')],check=True)
-    model=(MODEL/'dist/chronometer-working-model.html').read_text(encoding='utf-8');check('working model',model);budget('working model',model)
+    model=(MODEL/'dist/chronometer-working-model.html').read_text(encoding='utf-8');check('working model',model);sizes('working model',model)
     if HAM_WE not in model:sys.exit(f'the working model has no {HAM_WE}: its link to the Wempe (its build.py), which the root copy and the site point at their own places')
     write(ROOT/'chronometer-working-model.html',model.replace(HAM_WE,'href="marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html"'))
     # the Wempe: its own build script writes its dist/ (no root copy)
     subprocess.run([sys.executable,str(WEMPE/'build.py')],check=True)
-    wempe=(WEMPE/'dist/wempe-einheitschronometer.html').read_text(encoding='utf-8');check('wempe',wempe);budget('wempe',wempe)
+    wempe=(WEMPE/'dist/wempe-einheitschronometer.html').read_text(encoding='utf-8');check('wempe',wempe);sizes('wempe',wempe)
     if WE_HAM not in wempe:sys.exit(f'the Wempe page has no {WE_HAM}: its link to the Hamilton (wempe/build.py), which the site points at its home page')
     # site/: what a web host serves
     if SITE.exists():shutil.rmtree(SITE)
