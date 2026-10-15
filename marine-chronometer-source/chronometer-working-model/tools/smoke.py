@@ -263,6 +263,9 @@ async def essay(b,errs,steps):
     glc=await pg.evaluate("window.__glc.size")
     if glc>2:errs.append(f'{glc} WebGL contexts (the model and one for the essay expected)')
     if await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&s._fig.fail).map(s=>s.id).join()"):errs.append('essay figures failed: '+await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&s._fig.fail).map(s=>s.id).join()"))
+    # every figure built once scrolled to (a figure that needs the model, the 3D ones, the Wempe's balance, plan and gimbals among them, waits for it)
+    nb=await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&!s._fig.fail&&!s._fig.tick).map(s=>s.id).join()")
+    if nb:errs.append('essay figures never built: '+nb)
     if E['report']:
         await pg.evaluate("document.querySelector('#essay .e-report button').click()");steps.append("the essay's report");await pg.wait_for_timeout(300)
         w=await pg.evaluate("document.querySelector('#report').open&&document.querySelector('#rpWhere').value")

@@ -10,3 +10,7 @@
 .e-holes td i{font-style:normal;color:var(--muted)}
 .e-holes th,.e-holes td{white-space:nowrap}
 #essay .e-tu td,#essay .e-tu th{white-space:normal}#essay .e-tu td:first-child{white-space:normal;min-width:12em}#essay .e-tu td:not(:first-child){font-variant-numeric:tabular-nums}
+/* the essay's last section: the open questions, each with the model's reading */
+#essay .e-open{padding-left:1.2em;margin:0 0 1em}#essay .e-open li{margin:0 0 .75em}#essay .e-open i{font-style:normal;color:var(--muted)}
+/* the trial's figures under its chart: a figure outside its limit in red */
+#essay .e-ro .e-bad{color:var(--red);font-weight:600}#essay .e-ro small{font-size:.85em;color:var(--muted)}#essay .e-ro .e-bad small{color:inherit}

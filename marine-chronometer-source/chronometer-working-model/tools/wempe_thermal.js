@@ -66,6 +66,7 @@ for(const[k,name]of[['an','Guillaume\'s 42-44 % nickel steel (the model\'s readi
   const q=MID(k),d=dII(q,PHIM),cs=DAY*(q.e+3*q.asp)/2;
   say(`${name}: the curl ${f(d.K*1e6,2)} × 10⁻⁶ a mm a °C (Δα ${f((q.abr-q.ans)*1e6,1)} × 10⁻⁶): the masses come in ${f(-d.um*1000,2)} µm a °C at ${PHIM}°; the spring alone loses ${f(-cs,1)} s a day a °C, the balance gives back ${f(-DAY*d.tot/2,1)} (its curl ${f(-DAY*d.curl/2,1)})`);
   const c0=C(q,PHIM),c6=C(q,60),z=zero(q),dc=(C(q,PHIM+1)-C(q,PHIM-1))/2;
+  (module.exports.mid=module.exports.mid||{})[k]={spring:-cs,back:-DAY*d.tot/2,drawn:c0,zero:z,perDeg:dc,at:90-PHIM,ends:[C(q,PHI0+BETA),C(q,PHI1-BETA)]};   /* the essay's (wempe_essaydata.js) */
   say(`   at the drawn place (${PHIM}°, 32° from the cuts' line) ${sg(c0,2)} s a day a °C; at the 6MX's 30° (60°) ${sg(c6,2)}; ${z?`nulled with the masses at ${f(z,1)}° from the arm's line (${f(90-z,1)}° from the cuts' line)`:`no place on the free arc nulls it (${sg(C(q,PHI0+BETA),2)} at ${f(PHI0+BETA,0)}°, ${sg(C(q,PHI1-BETA),2)} at ${f(PHI1-BETA,0)}°)`}; a degree along the rim moves it ${f(dc,3)} s a day a °C, so the TU's ±0.10 is ±${f(0.1/Math.abs(dc),1)}° of the masses' place`);
   if(k==='an'){chk(!!z,`the masses' place that compensates lies on the free arc (${f(PHI0+BETA,0)}-${f(PHI1-BETA,0)}° for their Ø 6.3), with the middle constants`);
     /* over the constants' ranges: every corner of the ranges */
@@ -75,6 +76,12 @@ for(const[k,name]of[['an','Guillaume\'s 42-44 % nickel steel (the model\'s readi
     const aFor=ph=>{let lo=-2e-6,hi=12e-6;for(let i=0;i<60;i++){const m=(lo+hi)/2;C({...q,ans:m},ph)<0?hi=m:lo=m;}return(lo+hi)/2;};
     say(`   the drawn place would compensate with the nickel steel expanding ${f(aFor(PHIM)*1e6,1)} × 10⁻⁶ a °C (at 60°: ${f(aFor(60)*1e6,1)}), an invar-like 36-38 % nickel steel's, not the 42-44 %'s 7-8.5; or with the spring's e ${f((-2*C({...q,e:0},PHIM)/DAY)*1e6,0)} × 10⁻⁶ (its range -270 to -240)`);
     module.exports.linear={drawn:c0,at60:c6,zero:z,perDeg:dc,range:[Math.min(...cs0),Math.max(...cs0)],zeros:[Math.min(...zz),Math.max(...zz)],nZero:zz.length};}}
+
+/* the essay's figure (wempe_essaydata.js): the rate gained a day a °C against the masses' place over the free arc (deg from the cuts' line, every half degree), with
+   Guillaume's nickel steel's middle constants, the range over their 32 corners, and a plain nickel steel's middle */
+module.exports.sweep=()=>{const q=MID('an'),qs=MID('ns'),K=[];for(let i=0;i<32;i++){const b=k=>(i>>k)&1;K.push({ans:MAT.an.a[b(0)],Ens:MAT.an.E[b(4)],abr:MAT.br.a[b(2)],Ebr:MAT.br.E[1-b(4)],asp:MAT.sp.a[b(3)],e:MAT.sp.e[b(1)]});}
+  const rows=[];for(let d=Math.ceil(2*(90-PHI1+BETA))/2;d<=90-PHI0-BETA+1e-9;d+=0.5){const ph=90-d,cs=K.map(k=>C(k,ph));rows.push([d,C(q,ph),Math.min(...cs),Math.max(...cs),C(qs,ph)]);}
+  return{arc:[90-PHI1+BETA,90-PHI0-BETA],rows};};
 
 head('2. The middle-temperature (secondary) error over the TU\'s trial (36, 20, 4 °C): S = (ω36 + ω4) / 2 - ω20, losing positive, ±1.20 allowed');
 {const MTE=[2.0,3.0],q=MID('an'),qs=MID('ns');   /* Dent's "a few seconds" at 15 °C right at 0 and 30; 2.5 s in the middle of 30 °C */
