@@ -552,7 +552,7 @@ const ESSAY=(()=>{
   /* the tabs: a click, or the arrow keys between them (the tabs pattern) */
   q('#tabEssay',tabs).addEventListener('click',()=>{show(true);changed();});
   q('#tabModel',tabs).addEventListener('click',()=>{show(false);changed();});
-  tabs.addEventListener('keydown',e=>{if(/** @type {any} */(e.target).tagName==='A')return;if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight'&&e.key!=='Home'&&e.key!=='End')return;e.preventDefault();const on=e.key==='ArrowRight'||e.key==='End';show(on);changed();q(on?'#tabEssay':'#tabModel',tabs).focus();});
+  tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight'&&e.key!=='Home'&&e.key!=='End')return;e.preventDefault();const on=e.key==='ArrowRight'||e.key==='End';show(on);changed();q(on?'#tabEssay':'#tabModel',tabs).focus();});
   /* links within the essay (#essay=section) scroll to their section without a new history entry; links into the model (#tour=3, #view=…) are ordinary: Back returns here.
      A link to the hash already in the address bar fires no hashchange, so it is sent on */
   root.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const h=a.getAttribute('href').slice(1);
