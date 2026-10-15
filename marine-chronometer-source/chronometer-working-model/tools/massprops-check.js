@@ -25,8 +25,9 @@
     mv.traverse(o=>{let p=o,pn=null;while(p&&!pn){pn=p.userData.partName;p=p.parent;}if(o.isMesh&&(pn==='mainspring'||pn==='hairspring')&&o.geometry.attributes.position){const keep=toRing.clone();toRing.copy(inv);add(SP,o,o.userData.mat0||o.material);toRing.copy(keep);}});
     return JSON.stringify({m:SP.m,s:SP.s,S:SP.S,byPart:SP.byPart});}
   const BW=body(),RG=body();
-  bowl.traverse(o=>{if(o.isMesh&&!o.userData.decal&&!o.userData.surface&&o.geometry.attributes.position)add(BW,o,o.userData.mat0||o.material);});
-  ring.traverse(o=>{if(o.isMesh&&!under(o,bowl)&&!o.userData.decal&&!o.userData.surface&&o.geometry.attributes.position)add(RG,o,o.userData.mat0||o.material);});
+  const offRev=o=>{for(let p=o;p;p=p.parent)if(p.userData&&p.userData.rev&&!p.visible)return true;return false;};   /* the pieces of the drawings' other state (the Wempe's setRev), hidden: not weighed */
+  bowl.traverse(o=>{if(o.isMesh&&!offRev(o)&&!o.userData.decal&&!o.userData.surface&&o.geometry.attributes.position)add(BW,o,o.userData.mat0||o.material);});
+  ring.traverse(o=>{if(o.isMesh&&!offRev(o)&&!under(o,bowl)&&!o.userData.decal&&!o.userData.surface&&o.geometry.attributes.position)add(RG,o,o.userData.mat0||o.material);});
   const fin=Bd=>{const c=Bd.s.map(x=>x/Bd.m),S=Bd.S,I=[[S[1][1]+S[2][2],-S[0][1],-S[0][2]],[-S[0][1],S[0][0]+S[2][2],-S[1][2]],[-S[0][2],-S[1][2],S[0][0]+S[1][1]]];   /* the inertia tensor about the gimbal centre */
     const r=x=>+x.toFixed(4);return{m:r(Bd.m),cg:c.map(r),I:I.map(row=>row.map(r)),byMat:Object.fromEntries(Object.entries(Bd.byMat).map(([k,v])=>[k,r(v)]).sort((a,b)=>b[1]-a[1])),
       byPart:Object.fromEntries(Object.entries(Bd.byPart).map(([k,v])=>[k,r(v)]).sort((a,b)=>b[1]-a[1]).slice(0,25)),missing:Bd.missing};};

@@ -994,7 +994,20 @@
      "050402-2"
     ]
    ],
-   "figs": "05 03_4, 05 03_2"
+   "figs": "05 03_4, 05 03_2",
+   "dev": [
+    {
+     "rel": [
+      "round",
+      "050402-1"
+     ],
+     "inst": [
+      0
+     ],
+     "why": "as first drawn (the page's Variants) the arm is riveted on the 1941 collar's neck (05 04_5), which stands between its hole and the staff: the 1946 staff's seat Ø 2 h6 isn't there",
+     "rev": "first"
+    }
+   ]
   },
   {
    "id": "050301-4",
@@ -1109,7 +1122,7 @@
    "parent": null,
    "kind": "part",
    "part": "balance",
-   "fn": "The balance staff, its pivots in the jewels of the two cocks.",
+   "fn": "The balance staff, its pivots in the jewels of the two cocks. As last revised 05 04 02 (29.5.46); as first drawn (the page's Variants) 05 04_5's staff of 4.4.41, which carries this number in pencil.",
    "rel": [
     [
      "in",
@@ -1127,7 +1140,7 @@
      "050408-1.bl"
     ]
    ],
-   "figs": "05 04_4, 05 03_3-2"
+   "figs": "05 04_4, 05 03_3-2, 05 04_5"
   },
   {
    "id": "050402-2",
@@ -1139,7 +1152,7 @@
    "parent": "050402-1",
    "kind": "part",
    "part": "balance",
-   "fn": "Pressed on the staff, its flange carries the arm.",
+   "fn": "Pressed on the staff, its flange carries the arm. As first drawn (the page's Variants) 05 04_5's brass collar (040401-2), the arm riveted on its neck, with no screws.",
    "rel": [
     [
      "round",
@@ -1147,7 +1160,7 @@
      "press"
     ]
    ],
-   "figs": "05 04_4"
+   "figs": "05 04_4, 05 04_5"
   },
   {
    "id": "WN-10",
@@ -1155,11 +1168,14 @@
    "no": "",
    "dwg": "",
    "name": "Schraube (WN-10), the hub's screws",
-   "qty": 2,
+   "qty": [
+    0,
+    2
+   ],
    "parent": "050402-2",
    "kind": "part",
    "part": "balance",
-   "fn": "From under the hub's flange into the arm.",
+   "fn": "From under the hub's flange into the arm. Only on the 1946 hub: the 1941 collar has no holes for them.",
    "rel": [
     [
      "in",
@@ -1397,7 +1413,7 @@
    "parent": "050405-1",
    "kind": "part",
    "part": "escapeWheel",
-   "fn": "The arbor and pinion; driven by the seconds wheel.",
+   "fn": "The arbor and pinion; driven by the seconds wheel. As first drawn (the page's Variants) 05 04_7.1's arbor of 4.4.41 (050408 bis 10, renumbered 05 04 05 on 05 04_7.2), the wheel 1.4 nearer the top plate.",
    "rel": [
     [
      "in",
@@ -1415,7 +1431,7 @@
      "050408-1.el"
     ]
    ],
-   "figs": "05 04_8, 05 04_7.2"
+   "figs": "05 04_8, 05 04_7.2, 05 04_7.1"
   },
   {
    "id": "050405-3",
@@ -1427,7 +1443,7 @@
    "parent": "050405-1",
    "kind": "part",
    "part": "escapeWheel",
-   "fn": "The brass collet the wheel is pressed on.",
+   "fn": "The brass collet the wheel is pressed on. As first drawn 05 04_7.1's: a cone Ø 3.0, then a pipe Ø 1.8 to 5 over the wheel.",
    "rel": [
     [
      "round",
@@ -1435,7 +1451,7 @@
      "press"
     ]
    ],
-   "figs": "05 04_7.2"
+   "figs": "05 04_7.2, 05 04_7.1"
   },
   {
    "id": "050401-1",
@@ -1573,7 +1589,7 @@
    "parent": null,
    "kind": "part",
    "part": "detentBlock",
-   "fn": "Under the top plate, carries the detent.",
+   "fn": "Under the top plate, carries the detent. As first drawn (05 04_1, Wempe 3955), a base with a long arm and its banking screw in place of the upright.",
    "rel": [
     [
      "on",
@@ -1613,7 +1629,10 @@
    "no": "",
    "dwg": "",
    "name": "Screw across the block's slit upright, M1.2 (its WN number not read)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050401-4",
    "kind": "part",
    "part": "detentBlock",
@@ -1626,6 +1645,29 @@
     ]
    ],
    "figs": "05 04_3"
+  },
+  {
+   "id": "cone41",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Anschlagschraube mit Kegel 1941 (the 1941 block's banking screw with its cone; no number on 05 04_1)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "050401-4",
+   "kind": "part",
+   "part": "detentBlock",
+   "fn": "Through the 1941 block's arm on the stone's line, held by its slit end (the page's Variants, As first drawn).",
+   "rel": [
+    [
+     "in",
+     "050401-4",
+     "embed"
+    ]
+   ],
+   "figs": "05 04_1"
   },
   {
    "id": "WN-gkP",
@@ -3744,7 +3786,10 @@
    "no": "",
    "dwg": "51 00 11-1",
    "name": "Schlüsselgriff (key handle)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050102-2",
    "kind": "part",
    "part": "key",
@@ -3758,7 +3803,10 @@
    "no": "",
    "dwg": "05 01 02-2",
    "name": "Schlüsselmittelteil (key body)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": null,
    "kind": "part",
    "part": "key",
@@ -3772,7 +3820,10 @@
    "no": "",
    "dwg": "05 01 02-3",
    "name": "Schlüsselrohr (key tube)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050102-2",
    "kind": "part",
    "part": "key",
@@ -3792,7 +3843,10 @@
    "no": "",
    "dwg": "51 00 11-4",
    "name": "Wendelfeder (the key’s coil spring)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050102-2",
    "kind": "part",
    "part": "key",
@@ -3806,13 +3860,90 @@
    "no": "",
    "dwg": "51 00 11-6",
    "name": "Kerbstift K.S. 1 (the key’s grooved pin)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050102-2",
    "kind": "part",
    "part": "key",
    "fn": "Through the body and the paddle.",
    "rel": [],
    "figs": "05 01_7, 05 01_8"
+  },
+  {
+   "id": "127556.02-02",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-02",
+   "name": "Körper (the 1940 key's body, with its collar)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": null,
+   "kind": "part",
+   "part": "key",
+   "fn": "The conical body of the key of 1940 (Aufzugschlüssel 127-556.02 U 01, the page's Variants, As first drawn).",
+   "rel": [],
+   "figs": "05 01_6"
+  },
+  {
+   "id": "127556.02-01",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-01",
+   "name": "Griff (the 1940 key's flat pear-shaped handle, its tang)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "127556.02-02",
+   "kind": "part",
+   "part": "key",
+   "fn": "The handle, a flat plate, its tang in the body.",
+   "rel": [],
+   "figs": "05 01_6"
+  },
+  {
+   "id": "127556.02-03",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-03",
+   "name": "Schaft (the 1940 key's stem, with the socket for the fusee's square)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "127556.02-02",
+   "kind": "part",
+   "part": "key",
+   "fn": "Pressed into the body; its socket takes the fusee's winding square.",
+   "rel": [
+    [
+     "in",
+     "127556.02-02",
+     "press"
+    ]
+   ],
+   "figs": "05 01_6"
+  },
+  {
+   "id": "127556.02-05",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-05",
+   "name": "Schraube (the 1940 key's screw beside the tang)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "127556.02-02",
+   "kind": "part",
+   "part": "key",
+   "fn": "On the collar beside the tang (its click spring 127-556.02-04 not drawn).",
+   "rel": [],
+   "figs": "05 01_6"
   }
  ]
 }

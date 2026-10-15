@@ -59,7 +59,8 @@ for(const[k,ls]of Object.entries(H))for(const[h,mat]of ls)add(polyM(ESC.pieces[k
   the detent at rest (wempe_inertia.json; its centre of mass in the plan, put in makeEsc's frame by MK); its spring 0.07 × 1.9 × 5, steel (1436), the heights escapement.js draws it at */
   const dj=WJ.detent,q=WL.WESC.MK([WL.WESC.DPIV[0]+dj.cg[0],WL.WESC.DPIV[1]+dj.cg[2]]),m=dj.m*1e-3;add({m,mx:m*(q.x-Ft.x)*ES,my:m*(q.y-Ft.y)*ES,I:dj.I*1e-9});
   const s=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','escapement.js'),'utf8'),a=/y0F=yd\(([\d.]+)\),y1F=yd\(([\d.]+)\)/.exec(s),b=/\{loop:sp1,y0:y0F\+([\d.]+),y1:y1F-([\d.]+)\}/.exec(s);
-  if(!a||!b)throw Error('not found in the Wempe\'s escapement.js: the detent spring\'s heights');H.spring=[[(+a[2]-b[2]-(+a[1]+ +b[1]))/1000,'steel']];}
+  if(WL.WESC.DSPH)H.spring=[[WL.WESC.DSPH/1000,'steel']];   /* escapement.js gives it (the detent drawn by dv, in both states of the sheets) */
+  else{if(!a||!b)throw Error('not found in the Wempe\'s escapement.js: the detent spring\'s heights');H.spring=[[(+a[2]-b[2]-(+a[1]+ +b[1]))/1000,'steel']];}}
 const ID=DM.I,rCM=Math.hypot(DM.mx,DM.my)/DM.m;
 /* its spring: two strips (heights H.spring) of the drawn thickness and length, bending about Ft; a rigid body on a short flexure turns about its root with
    stiffness E I / l. E 125-131 GPa for hardened beryllium copper; 128 taken. Preload: Op. 78, a 0.770 g weight on the locking jewel parts the spring
