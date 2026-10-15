@@ -2382,8 +2382,11 @@ const WESC=(()=>{
       SPL:5/ES_,SN0:-0.035/ES_,SN1:0.035/ES_,hD:1.9,EB:205,   /* the detent's spring 0.07 × 1.9, 5 long (1436, its bracketed sizes), steel ("Stahl": 200-210 GPa) */
       OP78:0,W78:0.63,   /* no Op. 78 here: W78 the preload itself, g at the stone. No Wempe source gives it (a banking screw sets the lock, the 1954 instruction's п. 11): the Hamilton's after Op. 78, 0.63 g (estimated) */
       MU:0.15,eS:0.3,   /* the brass tooth on the sapphire stone; the detent's restitution on its banking (estimated, as the Hamilton's) */
-      HS:-0.721,   /* the drawn hairspring's own isochronism, s a day for each 10 deg the swing is above the reference's: it loses as the swing grows (tools/wempe_hairspring.js: the spring as drawn, an elastica, at the model's swing) */
+      HS:-0.700,   /* the drawn hairspring's own isochronism, s a day for each 10 deg the swing is above the reference's: it loses as the swing grows (tools/wempe_hairspring.js: the spring as drawn, an elastica, at the model's swing) */
       I:2268.6,JW:12.44,ID:8.25,   /* the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
+      DEP:1,RW:1,   /* checked in time (tools/dynamics.js --model wempe, 15 October 2026): the detent, flung off the discharge stone's square corner, never rides its bevel back
+                       down, so its preload's and spring's work up to there is lost (DEP); and the locking stone falls back onto the tooth it has just let go, the wheel slow to get
+                       it out from under, and drags on its land and is pushed on by its back (RW). Together 4.6° of swing at 12 h (README, Physics: in time) */
       TH1:60,TF:124};})();   /* the balance's free run-down (s): estimated from its parts' damping (tools/wempe_escapement.js, README Physics) */
   /* makeEsc's lift (the gold spring tip's travel, units of ES) as this file's detent turn (rad, rotation.y about TP): makeEsc turns the detent by -lift/LEN about its flexure,
      clockwise in its frame, anticlockwise seen from the dial (tools/wempe_escapement.js checks the stone's place both ways) */
@@ -2680,7 +2683,7 @@ const WESC=(()=>{
    Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (ES: 13.16/2 mm, the Hamilton's). Layout after the manual's Fig. 90 plan view. The detent's
    lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with the passing spring's tip, and the
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
-/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,G78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number,NT?:number,ES?:number,LK?:number,LO?:number,DA?:number,BL?:number,PSL?:number,PSO?:number,fI?:number,rJ?:number,eJ?:number,TBR?:number,TBP?:number,SPL?:number,SN0?:number,SN1?:number,OP78?:number,TQ?:number,BEV?:number,TSQ?:number,TH1?:number}} EscSettings
+/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,G78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number,NT?:number,ES?:number,LK?:number,LO?:number,DA?:number,BL?:number,PSL?:number,PSO?:number,fI?:number,rJ?:number,eJ?:number,TBR?:number,TBP?:number,SPL?:number,SN0?:number,SN1?:number,OP78?:number,TQ?:number,BEV?:number,TSQ?:number,TH1?:number,DEP?:number,RW?:number}} EscSettings
     any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
 /** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean}} EscState
     state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1; a
@@ -2730,8 +2733,13 @@ function makeEsc(o={},base){
      or 0 for the Hamilton's way, the torque fitted to the swing A; BEV: the discharge jewel's end bevelled straight back from its square acting corner, its back corner BEV
      short of it (the Wempe's, 05 04_1), in place of rB's radius, or 0 for the Hamilton's end; TSQ: 1 takes the passing spring's tip as its strip's square end, rT to
      the end's middle and the strip tsT thick running back PSL along the detent (the Wempe's gold spring), 0 as a disc tsT round (the Hamilton's); TH1: the balance angle (deg)
-     the contact tables run to from -70, past the impulse's end (the Hamilton's ends at 20.7). Unit-frame lengths in units of ES */
-  Object.assign(DEF,{NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.72,PSL:1.2,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.58,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0,BEV:0,TSQ:0,TH1:30});
+     the contact tables run to from -70, past the impulse's end (the Hamilton's ends at 20.7); DEP: 1 counts the detent's work only as far as it rides the discharge jewel,
+     to where it leaves it (depart: flung off a square corner it never rides the jewel's end down, so its preload's and spring's energy then is lost as it falls), with its
+     kinetic energy (the plastic blow as the jewel meets the passing spring, and what it carries off), 0 the Hamilton's (the jewel's whole table, as a massless detent rides
+     it); RW: 1 runs the wheel's chase from the release with the locking stone riding the tooth it has let go (the detent's preload and spring pressing it on the land and
+     the back: the friction MU against the wheel's turn, the back's slope pushing it on), 0 the Hamilton's free chase. DEP and RW since 15 October 2026, for the Wempe,
+     whose detent tools/dynamics.js --model wempe found flung off its stone's corner and its stone dragging on the escaping tooth. Unit-frame lengths in units of ES */
+  Object.assign(DEF,{NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.72,PSL:1.2,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.58,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0,BEV:0,TSQ:0,TH1:30,DEP:0,RW:0});
   for(const k in {...base,...o})if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...base,...o};ES=c.ES;let A0=c.A*D2R;   /* A0: the reference's swing (with TQ, solved) */
   const NT=c.NT,P=TAU/NT,EX=c.EX,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2+c.LO*D2R,lockA=t0-c.LK*P,aI=c.aI*D2R,aD=c.aD*D2R;
@@ -2889,17 +2897,59 @@ function makeEsc(o={},base){
   const gP=i=>{const a=PA[i-1],b=PA[i+1],m=PA[i];return!isNaN(a)&&!isNaN(b)?(b-a)/(2*DT):!isNaN(b)&&!isNaN(m)?(b-m)/DT:!isNaN(a)&&!isNaN(m)?(m-a)/DT:0;};
   const iRel=Math.round((thRel-TH0)/DT);
   /* the wheel's angle from its locked place (0 to -P), running free from the release at balance angle th, amplitude amp, drive s */
-  let accW=0;const chase=(th,amp,s)=>{const t=(Math.acos(Math.max(-1,Math.min(1,-th/amp)))-Math.acos(Math.max(-1,Math.min(1,-thRel/amp))))/W0;return-0.5*s*accW*t*t;};
+  let accW=0;const chase=(th,amp,s)=>{if(c.RW){const T_=chaseRW(amp,s*accW);if(T_)return chaseAt(T_,th);}const t=(Math.acos(Math.max(-1,Math.min(1,-th/amp)))-Math.acos(Math.max(-1,Math.min(1,-thRel/amp))))/W0;return-0.5*s*accW*t*t;};
+  /* RW: the wheel let go from rest at thRel under the drive acc (rad/s² of the wheel), the detent off the jewel at depart(a) and falling (fallD), onto the tooth it let go
+     where its fall meets the ride (the stone's least lift over that tooth, the ride table read linearly), then held there, quasi-static: its preload and spring λ = MP + KD r
+     (units of k) press the stone on the tooth, which pushes the wheel on by λ r' (r' = dr/dφ, the back's slope; 0 on the land) and drags it back by MU λ / BL (the stone
+     at BL from the flexure, the tooth's tip at the wheel's radius), until the tooth has passed (r 0). Stepped on the table's θ (four steps each), from rest; {i0, ph, v}:
+     the wheel's angle and speed at each θ from the release on. Remembered by amplitude and drive. tools/dynamics.js --model wempe integrates the same in time */
+  const rwM=new Map(),rideR=pr=>{const f=Math.min(1,Math.max(0,pr))*NQ,j=Math.min(NQ-1,Math.floor(f));return(SR[j]+(SR[j+1]-SR[j])*(f-j))/LEN;},
+    chaseAt=(T_,th)=>{const f=(th-TH0)/DT-T_.i0,i=Math.floor(f);if(f<=0)return 0;if(i>=T_.ph.length-1)return T_.ph[T_.ph.length-1];return T_.ph[i]+(T_.ph[i+1]-T_.ph[i])*(f-i);};
+  const chaseRW=(a,acc)=>{if(!(a>thRel)||!(acc>0))return null;const key=Math.round(a*1e6)+','+Math.round(acc*1e3);let T_=rwM.get(key);if(T_)return T_;
+    const f=depart(a),aR=Math.acos(Math.max(-1,-thRel/a)),tOf=th=>(Math.acos(Math.max(-1,Math.min(1,-th/a)))-aR)/W0,ph=[0],vs=[0];let phi=0,v=0,on=false,acW=-acc,fr=f?{t:tOf(f.th),d:f.d0,v:f.v0}:null;
+    const rr=u=>rideR(u/P),e_=2e-4;   /* the ride at the wheel's turn u = -phi; its slopes in u by differences */
+    for(let i=iRel;i<NTB-1;i++){const th0=TH0+i*DT,th1=th0+DT;if(th1>=a)break;const t0=tOf(th0),t1=tOf(th1),h=(t1-t0)/4;
+      for(let k=0;k<4;k++){const t=t0+k*h,u=-phi,r=rr(u);
+        if(!on&&fr&&r>0&&t>fr.t&&fallD(fr.d,fr.v,t-fr.t)<=r)on=true;if(on&&!(r>0)){on=false;fr=null;}
+        let F=acc;if(on){const r1=(rr(u+e_)-rr(u-e_))/(2*e_),r2=(rr(u+e_)-2*r+rr(u-e_))/(e_*e_),ud=-v,udd=-acW,lam=MP+KD*r+IDk*(r2*ud*ud+r1*udd);   /* the detent's angle r(u): its acceleration r'' u'² + r' u'', which the preload and spring must give it */
+          if(lam<0){on=false;fr={t,d:r,v:r1*ud};}else F+=(lam*-r1-c.MU*lam/BL*Math.tanh(-v/0.05))/JR;}   /* off the back where they can't: it falls from there (fallD, closed form) and lands again on the tooth */
+        acW=-F;v-=F*h;phi+=v*h;}
+      ph.push(phi);vs.push(v);if(phi<=-P)break;}
+    T_={i0:iRel,ph,v:vs};if(rwM.size>4000)rwM.clear();rwM.set(key,T_);return T_;};
   /* one impulse at amplitude a, drive s and torque w: the landing, the strike and the drive as pushes [θ, energy/k]; null if the tooth never lands or the swing turns first */
   const impulse=(s,a,w)=>{if(thRel>=a||!(w>0))return null;const acc=s*w/JR,aR=Math.acos(Math.max(-1,-thRel/a)),sp=th=>W0*Math.sqrt(Math.max(0,a*a-th*th));
-    let land=null,pp=NaN,pf0=0;for(let i=iRel;i<NTB-1;i++){const th=TH0+i*DT;if(th>=a)return null;const t=(Math.acos(-th/a)-aR)/W0,pf=-0.5*acc*t*t,pa=PA[i];
-      if(!isNaN(pa)&&pf<=pa){const f=isNaN(pp)?1:(pf0-pp)/((pf0-pp)-(pf-pa)),tl=th-DT*(1-f);land={i,th:tl,vw:acc*(Math.acos(-tl/a)-aR)/W0};break;}
+    const RT=c.RW?chaseRW(a,acc):null;   /* RW: the chase with the stone riding the tooth it let go */
+    let land=null,pp=NaN,pf0=0;for(let i=iRel;i<NTB-1;i++){const th=TH0+i*DT;if(th>=a)return null;const t=(Math.acos(-th/a)-aR)/W0,pf=RT?(RT.ph[i-iRel]??NaN):-0.5*acc*t*t,pa=PA[i];
+      if(!isNaN(pa)&&pf<=pa){const f=isNaN(pp)?1:(pf0-pp)/((pf0-pp)-(pf-pa)),tl=th-DT*(1-f);land={i,th:tl,vw:RT?-(RT.v[Math.max(0,i-1-iRel)]+(RT.v[i-iRel]-RT.v[Math.max(0,i-1-iRel)])*f):acc*(Math.acos(-tl/a)-aR)/W0};break;}
       if(pf<=-P)return null;pp=pa;pf0=pf;}
     if(!land)return null;
     const vj=i=>Math.abs(gP(i))*sp(TH0+i*DT),v0=vj(land.i),Es=land.vw>v0?JR*v0*(land.vw-v0):0,I=[[land.th,Es]];let E=Es,turn=0,end=null,vPrev=v0;
     for(let j=land.i;j<NTB-1;j++){const t2=TH0+(j+1)*DT;if(t2>=a)break;const p1=PA[j],p2=PA[j+1];if(isNaN(p1)||isNaN(p2)){end=TH0+j*DT;break;}   /* the tooth leaves the jewel: it runs on free to the locking stone */
       const d=p1-Math.max(p2,-P),v2=vj(j+1),e=s*w*d-JR*(v2*v2-vPrev*vPrev)/2;I.push([t2-DT/2,e]);E+=e;turn+=d;vPrev=v2;if(p2<=-P){end=t2;break;}}
     return{I,E,land:land.th,end,strike:Es,turn,vw:land.vw,vj:v0};};
+  /* the detent's fall back to its stop button (since 11 October 2026: it went home in one step of the table where the passing spring's tip leaves the jewel, the stone
+     standing in the escaping tooth's way for about 0.6 ms). Carried by the jewel, it leaves it where the jewel's end runs away faster than the detent can follow (its
+     preload MP and stiffness KD against its inertia ID: the jewel's surface accelerating as LI's curvature times the balance's speed squared, plus its slope times the
+     balance's acceleration); then it falls as a preloaded spring and mass, d = (d0 + e) cos ωt + (v0/ω) sin ωt - e (d the detent's angle, e = MP/KD, ω² = KD/ID), lands on
+     the button and rebounds eS of its speed, each hop in closed form, until a hop is under a micrometre at the passing spring's tip. Its own damping (Q about 100,
+     tools/dynamics.js) is left out. depart(amp): where it leaves the jewel at that swing (phase p, balance angle th, the detent's angle d0 and speed v0 in rad/s, and the
+     balance's angle where it first lands on its stop), remembered by the swing to 1e-5 rad */
+  const IDk=c.ID*1e-9/kB,eD=MP/KD,wDt=Math.sqrt(KD/IDk),depM=new Map();let iPk=0;for(let i=0;i<(iOff??0);i++)if(LI[i]>LI[iPk])iPk=i;
+  /** @param {number} amp @returns {{p:number,d0:number,v0:number,th:number,land:number}|null} */
+  const depart=amp=>{const k=Math.round(amp*1e5);let r=depM.get(k);if(r!==undefined)return r;r=null;
+    if(iOff!==null&&amp>-thOff)for(let i=Math.max(1,iPk);i<iOff;i++){const th=TH0+i*DT,w=W0*Math.sqrt(Math.max(0,amp*amp-th*th)),last=i+1>=iOff,
+      l1=last?(LI[i]-LI[i-1])/DT:(LI[i+1]-LI[i-1])/(2*DT),l2=last?-Infinity:(LI[i+1]-2*LI[i]+LI[i-1])/(DT*DT);
+      if((l2*w*w-l1*W0*W0*th)/LEN<-(MP+KD*LI[i]/LEN)/IDk){const p=Math.acos(-th/amp)/TAU,d0=LI[i]/LEN,v0=(c.TSQ?(LI[i]-LI[i-1])/DT:l1)*w/LEN,a0=Math.acos(-th/amp);   /* TSQ: the square end leaves the stone's square corner where the lift turns sharply, still moving with the stone's face, the slope it came up (a central difference across the corner takes half the fall's): tools/dynamics.js --model wempe, 15 October 2026 */
+        let j=i+1;for(;j<iOff;j++){const t=(Math.acos(Math.max(-1,Math.min(1,-(TH0+j*DT)/amp)))-a0)/W0;if(t<fall1(d0,v0)&&fallD(d0,v0,t)*LEN<LI[j])break;}   /* off the acting corner, it falls back onto the jewel's end: carried on from there */
+        if(j<iOff){i=j-1;continue;}r={p,d0,v0,th,land:-amp*Math.cos(TAU*(p+fall1(d0,v0)/T))};break;}}
+    if(depM.size>4000)depM.clear();depM.set(k,r);return r;};
+  /* the detent's angle t s after it leaves the jewel at d0, v0; fall1: the time it takes to reach its stop */
+  const fall1=(d0,v0)=>(Math.atan2(v0/wDt,d0+eD)+Math.acos(Math.min(1,eD/Math.hypot(d0+eD,v0/wDt))))/wDt;
+  const fallD=(d0,v0,t)=>{const R0=Math.hypot(d0+eD,v0/wDt),t1=fall1(d0,v0);
+    if(t<t1)return(d0+eD)*Math.cos(wDt*t)+v0/wDt*Math.sin(wDt*t)-eD;
+    t-=t1;let v=c.eS*wDt*Math.sqrt(Math.max(0,R0*R0-eD*eD));
+    while(v>0&&(Math.hypot(eD,v/wDt)-eD)*LEN>1e-3/ES){const tau=2*Math.atan(v/(wDt*eD))/wDt;if(t<tau)return eD*(Math.cos(wDt*t)-1)+v/wDt*Math.sin(wDt*t);t-=tau;v*=c.eS;}
+    return 0;};
   /* the unlocking and the springs, the same at every amplitude */
   const R=[],Dp=[],Dk=[],Tp=[],cdr=dL*(Math.tan(DRAW)+c.MU)/(1-c.MU*Math.tan(DRAW));let rs=0;
   if(a0!==null&&released&&thOff!==null&&thPass!==null)for(let i=0;i<NTB-1;i++){const th=TH0+i*DT,m=th+DT/2;
@@ -2908,10 +2958,15 @@ function makeEsc(o={},base){
     if(i>iPass){const p1=PS[i],p2=PS[i+1];if(p1!==p2)Tp.push([m,KP*(p1*p1-p2*p2)/2]);}}   /* the trip spring bent on the return (θ falling) */
   if(rs>0)for(const r of R)r[1]*=cdr/rs;
   const sum=g=>g.reduce((s,r)=>s+r[1],0),ER=sum(R),EDp=sum(Dp),EDk=sum(Dk),ETp=sum(Tp),ok=R.length>0&&thPass!==null;
-  const wnK=(s,a,w,kd=1,kp=1)=>{const im=ok?impulse(s,a,w):null;return im?im.E-s*w*ER-EDp-kd*EDk-kp*ETp:-Infinity;};
+  /* DEP: the detent's work at swing a as pushes [θ, energy/k]: the preload's and spring's (kd times) up to where it leaves the jewel, the blow as the jewel meets it (IDk
+     v_c², half lost, half its speed) at a0 and what its speed then takes up to the departure (IDk (v0² - v_c²)/2), its speed then lost; the whole table's as before if it
+     never leaves it */
+  const iA0=a0===null?0:Math.round((a0-TH0)/DT),detG=(a,kd=1)=>{const f=depart(a);if(!f)return Dp.concat(Dk.map(([m,e])=>[m,kd*e]));const vc=(LI[iA0+1]-LI[iA0])/DT*W0*Math.sqrt(Math.max(0,a*a-a0*a0))/LEN;
+    return Dp.filter(([m])=>m<f.th).concat(Dk.filter(([m])=>m<f.th).map(([m,e])=>[m,kd*e]),[[a0,IDk*vc*vc],[f.th,IDk*(f.v0*f.v0-vc*vc)/2]]);};
+  const wnK=(s,a,w,kd=1,kp=1)=>{const im=ok?impulse(s,a,w):null;return im?(c.DEP?im.E-s*w*ER-sum(detG(a,kd))-kp*ETp:im.E-s*w*ER-EDp-kd*EDk-kp*ETp):-Infinity;};
   /* phase gained an oscillation (rad) at amplitude a: the impulse pushes with the swing (+θ), the unlocking against it (-θ), the trip spring against the return (+θ) */
   const airy=(g,s,a)=>{let q=0;for(const[th,e]of g)if(Math.abs(th)<a)q+=s*e*th/Math.sqrt(a*a-th*th);return-q/(a*a);};
-  const parts=(a,s,w,kd=1,kp=1)=>{const im=impulse(s,a,w);return im?{imp:airy(im.I,1,a),draw:s*w*airy(R,-1,a),detent:airy(Dp,-1,a)+kd*airy(Dk,-1,a),trip:kp*airy(Tp,1,a)}:null;},sumP=p=>p.imp+p.draw+p.detent+p.trip,day=x=>86400*x/TAU;
+  const parts=(a,s,w,kd=1,kp=1)=>{const im=impulse(s,a,w);return im?{imp:airy(im.I,1,a),draw:s*w*airy(R,-1,a),detent:c.DEP?airy(detG(a,kd),-1,a):airy(Dp,-1,a)+kd*airy(Dk,-1,a),trip:kp*airy(Tp,1,a)}:null;},sumP=p=>p.imp+p.draw+p.detent+p.trip,day=x=>86400*x/TAU;
   const aLo=Math.max(-thRel,-(thPass??TH0))+0.01*D2R;
   /* the swing the drive s keeps up: πa²/Q = Wn(a), the root above where the escapement can work (the swing that releases, passes the trip spring and sees an impulse through); 0 if there is none */
   const solveA=(s,w,kd=1,kp=1)=>{const g=a=>wnK(s,a,w,kd,kp)-Math.PI*a*a/Q;let lo=aLo;if(g(lo)===-Infinity){let h=lo;while(h<Math.PI&&g(h)===-Infinity)h+=2*D2R;for(let i=0;i<6;i++){const m=(lo+h)/2;g(m)===-Infinity?lo=m:h=m;}lo=h;while(!(g(lo)>0)&&lo<Math.PI)lo+=D2R;}   /* an impulse that ends past where the swing first releases and passes (the Wempe's): from the least swing that sees it through */
@@ -2928,29 +2983,6 @@ function makeEsc(o={},base){
      (gE: the wheel's turn a radian of the balance there, over the last 0.1 deg); state runs it on from there to the stone (until 11 October 2026 it reached the stone at once) */
   let iE=null;for(let i=iRel+1;i<NTB-1;i++)if(!isNaN(PA[i])&&PA[i]>-P&&(isNaN(PA[i+1])||PA[i+1]<=-P)){iE=i;break;}
   const thE=iE===null?Infinity:TH0+iE*DT,phE=iE===null?0:PA[iE],gE=iE===null||isNaN(PA[iE-5])?0:(PA[iE]-PA[iE-5])/(5*DT);
-  /* the detent's fall back to its stop button (since 11 October 2026: it went home in one step of the table where the passing spring's tip leaves the jewel, the stone
-     standing in the escaping tooth's way for about 0.6 ms). Carried by the jewel, it leaves it where the jewel's end runs away faster than the detent can follow (its
-     preload MP and stiffness KD against its inertia ID: the jewel's surface accelerating as LI's curvature times the balance's speed squared, plus its slope times the
-     balance's acceleration); then it falls as a preloaded spring and mass, d = (d0 + e) cos ωt + (v0/ω) sin ωt - e (d the detent's angle, e = MP/KD, ω² = KD/ID), lands on
-     the button and rebounds eS of its speed, each hop in closed form, until a hop is under a micrometre at the passing spring's tip. Its own damping (Q about 100,
-     tools/dynamics.js) is left out. depart(amp): where it leaves the jewel at that swing (phase p, balance angle th, the detent's angle d0 and speed v0 in rad/s, and the
-     balance's angle where it first lands on its stop), remembered by the swing to 1e-5 rad */
-  const IDk=c.ID*1e-9/kB,eD=MP/KD,wDt=Math.sqrt(KD/IDk),depM=new Map();let iPk=0;for(let i=0;i<(iOff??0);i++)if(LI[i]>LI[iPk])iPk=i;
-  /** @param {number} amp @returns {{p:number,d0:number,v0:number,th:number,land:number}|null} */
-  const depart=amp=>{const k=Math.round(amp*1e5);let r=depM.get(k);if(r!==undefined)return r;r=null;
-    if(iOff!==null&&amp>-thOff)for(let i=Math.max(1,iPk);i<iOff;i++){const th=TH0+i*DT,w=W0*Math.sqrt(Math.max(0,amp*amp-th*th)),last=i+1>=iOff,
-      l1=last?(LI[i]-LI[i-1])/DT:(LI[i+1]-LI[i-1])/(2*DT),l2=last?-Infinity:(LI[i+1]-2*LI[i]+LI[i-1])/(DT*DT);
-      if((l2*w*w-l1*W0*W0*th)/LEN<-(MP+KD*LI[i]/LEN)/IDk){const p=Math.acos(-th/amp)/TAU,d0=LI[i]/LEN,v0=l1*w/LEN,a0=Math.acos(-th/amp);
-        let j=i+1;for(;j<iOff;j++){const t=(Math.acos(Math.max(-1,Math.min(1,-(TH0+j*DT)/amp)))-a0)/W0;if(t<fall1(d0,v0)&&fallD(d0,v0,t)*LEN<LI[j])break;}   /* off the acting corner, it falls back onto the jewel's end: carried on from there */
-        if(j<iOff){i=j-1;continue;}r={p,d0,v0,th,land:-amp*Math.cos(TAU*(p+fall1(d0,v0)/T))};break;}}
-    if(depM.size>4000)depM.clear();depM.set(k,r);return r;};
-  /* the detent's angle t s after it leaves the jewel at d0, v0; fall1: the time it takes to reach its stop */
-  const fall1=(d0,v0)=>(Math.atan2(v0/wDt,d0+eD)+Math.acos(Math.min(1,eD/Math.hypot(d0+eD,v0/wDt))))/wDt;
-  const fallD=(d0,v0,t)=>{const R0=Math.hypot(d0+eD,v0/wDt),t1=fall1(d0,v0);
-    if(t<t1)return(d0+eD)*Math.cos(wDt*t)+v0/wDt*Math.sin(wDt*t)-eD;
-    t-=t1;let v=c.eS*wDt*Math.sqrt(Math.max(0,R0*R0-eD*eD));
-    while(v>0&&(Math.hypot(eD,v/wDt)-eD)*LEN>1e-3/ES){const tau=2*Math.atan(v/(wDt*eD))/wDt;if(t<tau)return eD*(Math.cos(wDt*t)-1)+v/wDt*Math.sin(wDt*t);t-=tau;v*=c.eS;}
-    return 0;};
   /* the lift shown at phase q of the active swing: the jewel's (the table) until the detent leaves it, then the higher of the jewel's and the detent's fall */
   const detLift=(q,th,amp)=>{const l=tab(LI,th),f=depart(amp);if(!f||q<=f.p)return l;return Math.max(th<thOff?l:0,fallD(f.d0,f.v0,(q-f.p)*T)*LEN);};
   /* the detent home: the balance's angle where it lands on its stop for good at swing amp (for tools/escapement.js and dynamics.js) */
@@ -2975,7 +3007,7 @@ function makeEsc(o={},base){
       if(st<tx){u=Math.max(h,(u+cc)*Math.exp(-2*st/c.TF)-cc);dt-=st;}else{dt-=tx;u=h;}}
     return dt>0?Math.sqrt(u*Math.exp(-2*dt/c.TF)):Math.sqrt(u);};
   if(run.A>0&&run.A<AMIN){run.rate=NaN;run.own=NaN;}
-  if(CL&&run.A>0){const im=impulse(1,run.A,CL.w);if(im)Object.assign(run,{Q,Wi:im.E,fu:(CL.w*ER+EDp+EDk+ETp)/im.E,land:im.land,end:im.end,drive:im.turn,strike:im.strike/im.E,detent:(EDp+EDk)/im.E,vw:im.vw,vj:im.vj});}
+  if(CL&&run.A>0){const im=impulse(1,run.A,CL.w),ED=c.DEP?sum(detG(run.A)):0;if(im)Object.assign(run,{Q,Wi:im.E,fu:(c.DEP?CL.w*ER+ED+ETp:CL.w*ER+EDp+EDk+ETp)/im.E,land:im.land,end:im.end,drive:im.turn,strike:im.strike/im.E,detent:(c.DEP?ED:EDp+EDk)/im.E,vw:im.vw,vj:im.vj});}
   const A=run.A;
   /* the balance's equation of motion, averaged over a swing (the model's clock keeps the phase; this gives the amplitude and the rate). The escape wheel's torque is s times
      the model's (1: the mainspring through the fusee, as calibrated): the impulse's work, the wheel's chase and the locking jewel's draw go with it, the detent and trip
@@ -4011,10 +4043,18 @@ const WCASE=(()=>{
       mesh(g,solidGeo([{loop:P1,y0:YB-33,y1:YB-24},{loop:P2,y0:YB-33,y1:YB-24},{loop:P3,y0:YB-33,y1:YB-6}]),M.brass);
       for(const s of[-1,1]){const b=a+s*ang(15.7),u=[-Math.cos(b),0,-Math.sin(b)];tag(screw(along(brk,[56*Math.cos(b),YB-28.5,56*Math.sin(b)],u),0,0,0,2.4,1.6,6,1.25,M.steel),'WN-78');}}
     /* the locking bracket (Feststellkloben 05 01 00-4) at 50° from 6 o'clock toward 3 (05 01 Schnitt A-B's "50°"): a foot screwed to the body, cranked out past the band
-       to a pad 1 short of the ring's inside (05 01's elevation, its outside half), which the transit lock's lever presses the ring against. No sheet: scaled (estimated) */
-    {const g=tag(new THREE.Group(),'050100-4');brk.add(g);const a=ang(40),w=Math.asin(5/58);
-      const sp=()=>[a-w,a+w];mesh(g,solidGeo([{loop:sector(53,56,sp(),sp()),y0:YB-37,y1:YB-27},{loop:sector(56,60,sp(),sp()),y0:YB-29,y1:YB-18},{loop:sector(60,69,sp(),sp()),y0:YB-24,y1:YB-6}]),M.brass);
-      tag(screw(along(brk,[56*Math.cos(a),YB-32,56*Math.sin(a)],[-Math.cos(a),0,-Math.sin(a)]),0,0,0,2.4,1.6,6,1.25,M.steel),'WN-78');}
+       to an upright and a pad at the pivots' height, which the transit lock's lever presses the ring against. No sheet of its own: measured on 05 01 (phase 2d, the scan
+       1024 px wide, enlarged 6×). The elevation's outside half (heights from the ring's top, which the "11,5" puts 11.5 over the pivots, at 2.47 px/mm by the bowl's 65; widths
+       from the bowl's axis, the ring's inside there 69.4 at 2.46): the pad +5.5 to +1.3 about the pivots' line, the upright under it to −8.2, the crank's face −8.2 to −16.6
+       stepping in toward the bowl, the foot's face −16.6 to −26.4 with its screw at −20.3; seen from 6 o'clock the pad spans 40.7-56.8 from the axis, the upright to 53.8,
+       the foot 34.8-47.7. Schnitt A-B (at the pivots, 2.46 px/mm by its 160): the upright cut as a block 15.8 wide, its outer face 63.7 from the centre, at 49.8°. So
+       (r, half-width 7.9 at r 60): the foot 53-56, the crank 56-59.6, the upright 59.6-63.7 (A-B's face; its inner face off the flange, Ø 118, which 05 01's 1940 bowl
+       doesn't draw), the pad to 67.5 (the elevation's 56.8 at its corner): 2.5 short of the ring, its farthest point 67.7 from the gimbal centre, so the case turns in the
+       ring without meeting it (P1f's estimate, the pad 12.5 under the pivots' line and 1 short, stopped the case at 8.5°: phase 2d). Every reading ±0.4 mm (a pixel); likely */
+    {const g=tag(new THREE.Group(),'050100-4');brk.add(g);const a=ang(40),w=Math.asin(7.9/60),YQ=YB-11.5;   /* YQ: the pivots' height */
+      const sp=()=>[a-w,a+w];mesh(g,solidGeo([{loop:sector(53,56,sp(),sp()),y0:YQ-26.4,y1:YQ-16.6},{loop:sector(56,59.6,sp(),sp()),y0:YQ-18,y1:YQ-7.4},{loop:sector(59.6,63.7,sp(),sp()),y0:YQ-8.2,y1:YQ+5.5},
+        {loop:sector(63.7,67.5,sp(),sp()),y0:YQ+1.3,y1:YQ+5.5}]),M.brass);
+      tag(screw(along(brk,[56*Math.cos(a),YQ-20.3,56*Math.sin(a)],[-Math.cos(a),0,-Math.sin(a)]),0,0,0,2.4,1.6,6,1.25,M.steel),'WN-78');}
 
     /* ================= the closing plate (Verschlußplatte 05 01 00-2, rev. a 14.4.48) ================= */
     /* Ms, 1:1, every figure (sure but the hole Ø 1.2 at 12.4 and the 2 −0.05/−0.1, likely): Ø 68 −0.2, 2.3 at its rim, the boss Ø 28 −0.2 on its outer face making it 5 thick;

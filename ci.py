@@ -1,8 +1,8 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, escgolden, wempe-escapement, wempe-mainspring, wempe-physics, wempe-strength, wempe-gearing, wempe-hairspring, wempe-thermal, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types, smoke, invariants, massprops, solids, exploded, overhaul, book, audit, and the Wempe's smoke, solids, audit and exploded
-    python ci.py --quick      # without the browser checks (about 6 minutes, 15 October 2026): build, escapement, escgolden, wempe-escapement, wempe-hairspring, wempe-thermal, wempe-mainspring, wempe-physics, wempe-strength, wempe-gearing, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types
-    python ci.py --full       # and the slow checks (about 39 minutes more): dynamics.js in full, tripping.js in full, gimbals.js in full, mainspring_friction.py (the model's strip, the build's Nivaflex and the sources' proportions), gearing.js in full, the Wempe's mainspring friction and gearing in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, escgolden, wempe-escapement, wempe-mainspring, wempe-physics, wempe-strength, wempe-gearing, wempe-hairspring, wempe-thermal, wempe-gimbals, wempe-errorbudget, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, wempe-dynamics, wempe-tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types, smoke, invariants, massprops, solids, exploded, overhaul, book, audit, and the Wempe's smoke, solids, audit, exploded and massprops
+    python ci.py --quick      # without the browser checks (about 10 minutes, 15 October 2026): build, escapement, escgolden, wempe-escapement, wempe-hairspring, wempe-thermal, wempe-mainspring, wempe-physics, wempe-strength, wempe-gearing, wempe-gimbals, wempe-errorbudget, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, wempe-dynamics, wempe-tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types
+    python ci.py --full       # and the slow checks (about 44 minutes more): dynamics.js in full, tripping.js in full, the Wempe's dynamics.js and tripping.js in full, gimbals.js in full (the Hamilton's and the Wempe's), mainspring_friction.py (the model's strip, the build's Nivaflex and the sources' proportions), gearing.js in full, the Wempe's mainspring friction and gearing in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
 
@@ -73,6 +73,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-gearing',lambda log:run(['node',TOOLS/'gearing.js','--model','wempe','--quick'],ROOT,log),'quick'),   # the Wempe's meshes tooth by tooth, the swing over hours (about 30 s)
  ('wempe-hairspring',lambda log:run(['node',TOOLS/'wempe_hairspring.js'],ROOT,log),'quick'),   # the Wempe's hairspring as drawn: its length's readings, Phillips' conditions on 05 03_7's curve, the force on the pivots, its isochronism by elastica and beam elements, against WESC.SET.HS (about 20 s)
  ('wempe-thermal',lambda log:run(['node',TOOLS/'wempe_thermal.js'],ROOT,log),'quick'),   # the Wempe's cut bimetallic balance and steel spring in heat and cold against the 6MX's TU: the linear term, the masses' place, the secondary error (under a second)
+ ('wempe-gimbals',lambda log:run(['node',TOOLS/'gimbals.js','--model','wempe','--quick'],ROOT,log),'quick'),   # the Wempe's case and ring as weighed (gimbals_wempe.json): levelled, their periods and resonance (about 12 s)
+ ('wempe-errorbudget',lambda log:run(['node',TOOLS/'wempe_errorbudget.js'],ROOT,log),'quick'),   # the Wempe through the TU's 35-day trial, as adjusted and as drawn, and the error carried at sea (about 10 s)
  ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),
  ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),
  ('hairspring-fe',lambda log:run(['node',TOOLS/'hairspring-fe.js'],ROOT,log),'quick'),   # the hairspring at large swings by co-rotational beam elements, against hairspring.js's elastica (about 20 s)
@@ -81,6 +83,8 @@ STEPS=[('build',build,'quick'),
  ('strength',lambda log:run(['node',TOOLS/'strength.js'],ROOT,log),'quick'),   # every loaded part against its material's range, and the knocks it takes (under a second)
  ('dynamics',lambda log:run(['node',TOOLS/'dynamics.js','--quick'],ROOT,log),'quick'),   # the escapement integrated in time against the averaged model; the detent's return (about 15 s)
  ('tripping',lambda log:run(['node',TOOLS/'tripping.js','--quick'],ROOT,log),'quick'),   # the detent as a frame: its modes, and the frame made rigid running as dynamics.js does (about 10 s)
+ ('wempe-dynamics',lambda log:run(['node',TOOLS/'dynamics.js','--model','wempe','--quick'],ROOT,log),'quick'),   # the Wempe's escapement integrated in time against makeEsc: the detent off its stone's corner, its stone riding the tooth it let go, its return (about 70 s)
+ ('wempe-tripping',lambda log:run(['node',TOOLS/'tripping.js','--model','wempe','--quick'],ROOT,log),'quick'),   # the Wempe's detent as a frame (wempe_tripping.js): its modes, weighed against its solids, made rigid running as dynamics.js does (about 1 minute)
  ('gimbals',lambda log:run(['node',TOOLS/'gimbals.js','--quick'],ROOT,log),'quick'),   # the case and ring weighed on the model: their periods and resonance (about 20 s)
  ('errorbudget',lambda log:run(['node',TOOLS/'errorbudget.js'],ROOT,log),'quick'),   # as made (Monte Carlo) and the error carried at sea (about 6 s)
  ('gearing',lambda log:run(['node',TOOLS/'gearing.js','--quick'],ROOT,log),'quick'),   # the train's meshes tooth by tooth at their drawn centres, the swing over hours (about 15 s)
@@ -114,13 +118,17 @@ STEPS=[('build',build,'quick'),
  ('wempe-solids',lambda log:run([PY,'solids.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-audit',lambda log:run([PY,'audit.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-exploded',lambda log:run([PY,'exploded.py','--model','wempe'],TOOLS,log),'browser'),
+ ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)
+ ('wempe-dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js','--model','wempe'],ROOT,log),'full'),   # the Wempe's: starting, the least drive, knocks, the ship's motion (about 2½ minutes)
+ ('wempe-tripping-full',lambda log:run(['node',TOOLS/'tripping.js','--model','wempe'],ROOT,log),'full'),   # the Wempe's frame running as drawn, the estimates varied, the swing pushed, the knocks (about 2½ minutes)
  ('mainspring-friction',lambda log:run([PY,'mainspring_friction.py','--check'],TOOLS,log),'full'),   # the mainspring's coil friction, against mainspring_friction.json (about a minute)
  ('mainspring-variants',lambda log:run([PY,'mainspring_friction.py','--variants','--check'],TOOLS,log),'full'),   # the same for each strip mainspring.py --bound solved (the build's Nivaflex, the sources' proportions: mainspring_bound.json), against each mainspring_friction_NAME.json (about 6 minutes)
  ('wempe-mainspring-friction',lambda log:run([PY,'wempe_mainspring.py','--friction','--check'],TOOLS,log),'full'),   # the Wempe's mainspring's coil friction, against mainspring_friction_wempe.json (about a minute)
  ('wempe-gearing-full',lambda log:run(['node',TOOLS/'gearing.js','--model','wempe'],ROOT,log),'full'),   # and its depthing windows, against gearing_wempe.json (about 2 minutes)
  ('gimbals-full',lambda log:run(['node',TOOLS/'gimbals.js'],ROOT,log),'full'),   # and the seas, the stops, what reaches the escapement (about 2½ minutes)
+ ('wempe-gimbals-full',lambda log:run(['node',TOOLS/'gimbals.js','--model','wempe'],ROOT,log),'full'),   # the Wempe's: the seas in both installations, the stops, what reaches the escapement through makeEsc (about 4 minutes)
  ('gearing-full',lambda log:run(['node',TOOLS/'gearing.js'],ROOT,log),'full'),   # and each mesh's depthing window, the holes' tolerance, against gearing.json (about 2 minutes)
  ('fea',lambda log:run([PY,'fea.py'],TOOLS,log),'full'),   # finite elements on the plates and bridges: the pivots' holes under the chain's and teeth's loads, against the depths' windows (about 3 minutes)
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),
