@@ -58,3 +58,23 @@ ARM='void 0'
 FN=False
 REGISTRY=False   # bom.py's registry matches the Hamilton's catalogue numbers on its cards; the Wempe's lines are drawing numbers (their 'no' empty), so a card's figures (120 teeth, 310 °C) aren't part numbers
 JEWELS=12   # the balance's and escape wheel's hole jewels and endstones (8), the impulse, discharge and locking stones, and the seconds arbor's lower jewel (05 05 04-1)
+# massprops.py --model wempe (phase 2d): the bowl and the gimbal ring weighed with the movement in the bowl (the Case view: lift 0), at the Wempe's own densities (as
+# tools/wempe-inertia.js: brass Ms 58 8.45, steel 7.85, the rim's nickel steel 8.1, the impulse roller's beryllium copper 8.25, the gold spring 11.0 estimated; the dial
+# Messingblech Ms 58 (05 02 00-4) and the hands' Goldin brass, whose materials the page keeps apart from __M); the stops exact (a point in an obstacle's bounding box counts
+# only inside its solid: the transit lock's lever lies diagonally in its box); extra: the balance's centre in the ring's frame (its parts' bounds) and how far the bowl and
+# the ring reach from the gimbal centre; alt: the bowl (R-05 01 00-1) in other materials, g/cm³: Bakelite (phenolic, wood-flour filled, 1.32-1.45), hard rubber of Buna
+# (ebonite, 1.15-1.20), cast aluminium (2.7): the sheet's "Gewicht 350 gr." against the drawn brass casting (estimated densities: published typical values)
+MASSPROPS={'out':'gimbals_wempe.json','hash':'#view=case','alt':{'bakelite':1.37,'buna':1.18,'aluminium':2.70},
+  'pre':"""window.__mpExact=1;(()=>{const K=new Set(Object.values(window.__M)),B={'050301-1':{steel:8.1},'050403-1':{copper:8.25},'050401-2':{gilt:11.0}},R={brass:8.45,brass2:8.45,gilt:8.45,plate:8.45,plateSolid:8.45,copper:8.45};
+    window.__mpRho=(o,key,mat)=>{let pn='',h='';for(let p=o;p;p=p.parent){if(!pn&&p.userData.partName)pn=p.userData.partName;if(!h&&p.userData.hn)h=String(p.userData.hn).split(' ')[0];}
+      if(pn==='bowl'&&window.__mpBowl)return window.__mpBowl;if(B[h]&&B[h][key])return B[h][key];if(!K.has(mat))return{dial:8.45,hands:8.45}[pn];return R[key];};})()""",
+  'extra':"""(()=>{const BX=window.__BX,ring=BX.ring,bowl=BX.bowl;BX.root.updateMatrixWorld(true);const toR=new THREE.Matrix4().copy(ring.matrixWorld).invert(),v=new THREE.Vector3(),bb=new THREE.Box3();
+    const pn=o=>{for(let p=o;p;p=p.parent)if(p.userData.partName)return p.userData.partName;return'';},hn=o=>{for(let p=o;p;p=p.parent)if(p.userData.hn)return String(p.userData.hn).split(' ')[0];return'';},under=(o,a)=>{for(let p=o;p;p=p.parent)if(p===a)return true;return false;};
+    let rB=0,rX=0,rIn=1e9;ring.traverse(o=>{if(!o.isMesh||!o.geometry.attributes.position||o.userData.decal||o.userData.surface)return;const T=toR.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position,inB=under(o,bowl),isB=pn(o)==='balance',isR=hn(o)==='050100-5';
+      for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(T);if(isB)bb.expandByPoint(v);if(inB)rB=Math.max(rB,v.length());rX=Math.max(rX,Math.hypot(v.y,v.z));if(isR)rIn=Math.min(rIn,Math.hypot(v.x,v.z));}});
+    /* the bowl turned in the ring (about z, the ring held): the least turn that brings a point of the bowl's own parts (not the movement) into the ring's band (its 050100-5 solid's
+       radii and heights), each way, to 90 deg; the stops' test (massprops-check.js) meets only the box */
+    let r0=1e9,r1=0,y0=1e9,y1=-1e9;ring.traverse(o=>{if(!o.isMesh||hn(o)!=='050100-5')return;const T=toR.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position;for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(T);const r=Math.hypot(v.x,v.z);r0=Math.min(r0,r);r1=Math.max(r1,r);y0=Math.min(y0,v.y);y1=Math.max(y1,v.y);}});
+    const pts=[];bowl.traverse(o=>{if(!o.isMesh||!o.geometry.attributes.position||under(o,window.__mv))return;const T=toR.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position;for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(T);if(v.length()>r0-0.5)pts.push([v.x,v.y,v.z]);}});
+    const inRing=[1,-1].map(s=>{for(let d=0.5;d<=90;d+=0.5){const t=s*d*Math.PI/180,c=Math.cos(t),n=Math.sin(t);for(const[x,y,z]of pts){const X=x*c-y*n,Y=x*n+y*c,r=Math.hypot(X,z);if(r>=r0&&r<=r1&&Y>=y0&&Y<=y1)return d;}}return null;});
+    const c=bb.getCenter(new THREE.Vector3());return JSON.stringify({PB:[c.x,c.y,c.z].map(x=>+x.toFixed(3)),reach:{bowl:+rB.toFixed(2),ringIn:+rIn.toFixed(2),aboutX:+rX.toFixed(2),ring:[r0,r1,y0,y1].map(x=>+x.toFixed(2)),bowlInRing:inRing}});})()"""}
