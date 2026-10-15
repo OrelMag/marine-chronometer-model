@@ -53,9 +53,9 @@
   {
    "measure": "Impulse arc (balance)",
    "book": "43° of the 48° (Fig. 141)",
-   "model": "32.1° (tooth lands 13.7°, ends 45.8°)",
+   "model": "36.6° (tooth lands 9.2°, ends 45.8°)",
    "source": "solved (05 04_1: 21° either side of the line of centres)",
-   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 16.1° after the release (dynamics.js --model wempe)"
+   "reading": "less: the wheel, from rest with the seconds arbor behind it, catches the stone 11.6° after the release (dynamics.js --model wempe)"
   },
   {
    "measure": "Jewel inside the wheel before release",
@@ -102,7 +102,7 @@
   {
    "measure": "Tooth's locking face to the radial",
    "book": "28° (Fig. 141; Saunier 27°, Britten 20°)",
-   "model": "15.0°",
+   "model": "25.0°",
    "source": "05 04_23 (the face leans 15°)",
    "reading": "less undercut: 05 04_23 decides"
   },
@@ -172,7 +172,7 @@
   {
    "measure": "Balance: swing",
    "book": "about 225° (p. 142)",
-   "model": "207°",
+   "model": "199°",
    "source": "solved (makeEsc on 05 06_20's drive)",
    "reading": "smaller: under the book's, as under the 1954 instruction's 225-270° (open: the Wempe README, Unresolved)"
   }

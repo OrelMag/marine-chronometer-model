@@ -41,7 +41,7 @@ const pt=(r,th)=>[-r*Math.sin(th*D),-r*Math.cos(th*D)];
   /* Phillips: the first moment of the curve (junction to pin) l G must be R² along the junction's tangent, the way the curve goes: (-R², 0) here */
   const ph=(k,name)=>{let s=0,M=[0,0],p0=pt(k(0),0);for(let t=0.01;t<=220+1e-9;t+=0.01){const p1=pt(k(t),t),ds=Math.hypot(p1[0]-p0[0],p1[1]-p0[1]);s+=ds;M[0]+=ds*(p0[0]+p1[0])/2;M[1]+=ds*(p0[1]+p1[1])/2;p0=p1;}
     const G=[M[0]/s,M[1]/s];say(`${name}: ${f(s,2)} mm from the coil to its pin; its centroid ${f(Math.hypot(...G),3)} from the staff, ${f(Math.atan2(G[1],-G[0])/D,1)}° off the perpendicular to the junction's radius (condition 1: 0), l·OG ${f(s*Math.hypot(...G),1)} mm² against R² ${f(R2,1)} (condition 2: the centroid wants ${f(R2/s,3)}): ${f(s*Math.hypot(...G)/R2,3)} times`);return{s,G,M};};
-  const ci=ph(H.rL,'the inner curve, 05 03_7\'s table into the collet (3.51 from the staff)'),co=ph(H.rU,'the outer, drawn in proportion to end at the stud (3.87, estimated)');
+  const ci=ph(H.rL,'the inner curve, 05 03_7\'s table into the collet (3.51 from the staff)'),co=ph(H.rU,'the outer, the same table into the stud (3.55 from the staff)');
   say(`so the drawn curve meets the first condition (its centroid on the perpendicular, as a Phillips curve's) but not the second: its first moment is ${f(ci.s*Math.hypot(...ci.G)/R2,2)} R², its centroid ${f(Math.hypot(...ci.G)-R2/ci.s,2)} mm too far out`);
   /* the curve that meets both, from the coil to the same pin with the same heading (HSPR, its frame: junction counterclockwise from (R, 0)) */
   const des=(k,ri)=>{const q=th=>[k(th)*Math.cos(th*D),k(th)*Math.sin(th*D)],a=q(220),b=q(220.01),h=Math.atan2(b[1]-a[1],b[0]-a[0]),c=HSPR.design(R,1,a,h,ri);return c;};
@@ -65,7 +65,7 @@ chk(latD<0.1,`as drawn: ${f(latD,3)} of couple / R on the pivots under a couple:
   const ci=HSPR.design(R,-1,qI(220),hd(qI,220,220.01),3.0),co=HSPR.design(R,1,qO(220),hd(qO,220,220.01),3.0),Pd=ci&&co?HSPR.path(R,ci,co,H.TURNS+440/360):null,lt=Pd?HSPR.lateral(Pd.pts,R).ratio:NaN;
   chk(Pd&&lt<1e-3,`both ends designed to the drawn pins and headings (inner ${ci?f(ci.l,2):'-'} mm, outer ${co?f(co.l,2):'-'} mm, ${Pd?f(Pd.L,1):'-'} mm in all): ${Number.isFinite(lt)?lt.toExponential(1):'-'} (the Hamilton's tolerance, 0.001)`);}
 {const fr=[];for(let k=0;k<=8;k++){const t=11+k/8,q=resample(spring(t),0.15);fr.push(`${f(t,3)} ${f(HSPR.lateral(q.pts,R).ratio,3)}`);}
-  const w=resample(spring(12),0.15),w11=resample(spring(11),0.15);say(`with the helix's turns varied (both curves as drawn): ${fr.join(', ')}; at a whole number of turns the two curves' errors cancel: 11 turns ${f(HSPR.lateral(w11.pts,R).ratio,4)}, 12 ${f(HSPR.lateral(w.pts,R).ratio,4)} (the outer curve's smaller error, drawn in proportion, leaves that)`);
+  const w=resample(spring(12),0.15),w11=resample(spring(11),0.15);say(`with the helix's turns varied (both curves as drawn): ${fr.join(', ')}; at a whole number of turns the two curves' errors cancel: 11 turns ${f(HSPR.lateral(w11.pts,R).ratio,4)}, 12 ${f(HSPR.lateral(w.pts,R).ratio,4)}`);
   say(`the helix here is ${f(H.TURNS,3)} turns: ${f(H.TURNS%1,3)} of a turn short of whole, which the pins' place sets (the pins together want 360 n − 440°: ${f(H.TURNS+440/360,3)} turns pin to pin), so the drawn spring's force stands`);
   module.exports.lateral={drawn:latD};}
 

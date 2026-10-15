@@ -3,8 +3,8 @@
 //   node gearing.js             (about 30 s; exits with 1 if a mesh jams or loses contact at its drawn centres, or the swing leaves the manual's band there)
 //   node gearing.js --quick     (the drawn centres only, no depthing windows: a few seconds)
 //   node gearing.js --model wempe [--quick] [--write]   the Wempe's train (wempe_train.js: its four meshes on the page's own tables and tooth forms, its holes' places, its
-//                               escapement and drive from escphys.js); its band 193-270° (wempe_escapement.js's: the sources' 225-270° less the damping's estimate, the
-//                               model swinging 207° at 12 h, its floor 14° under it as 200° was under 214° until 15 October 2026), the pivots' shake each mesh's own; into gearing_wempe.json, with each mesh's mean torque ratio (about 2 min)
+//                               escapement and drive from escphys.js); its band 185-270° (wempe_escapement.js's: the sources' 225-270° less the damping's estimate, the
+//                               model swinging 199.4° at 12 h, its floor 14° under it as 193° was under 207° and 200° under 214° until 15 October 2026), the pivots' shake each mesh's own; into gearing_wempe.json, with each mesh's mean torque ratio (about 2 min)
 // For each stage the wheel (A) drives the pinion (B) at its centre distance m(z1+z2)/2 (tools/solve.py: the modules are the arbors' places'). A is turned through
 // a pitch in small steps; at each, B is turned back against its load until its flank meets A's (B lags as far as the teeth allow, the outlines densified so the
 // meeting is found to well under a micrometre). That gives where they touch, the line the force acts along (the touching outline's normal) and the slip, so
@@ -82,7 +82,7 @@ function stage(zA,zB,m,dd=0,NS=NS0){const A=gear(zA,m,zB),B=gear(zB,m),d=m*(zA+z
 const st=(a)=>{const n=a.length,mn=Math.min(...a),mx=Math.max(...a),mean=a.reduce((s,x)=>s+x,0)/n;return{mn,mx,mean};};
 const STG=WEMPE?WT.STG.map(s=>s.slice(0,5)):(()=>{const T=PH.TRAIN,M=PH.MODS;return[['fusee wheel → centre pinion',T.fu,T.cp,M.fusee,90/14*3600],['centre wheel → third pinion',T.cw,T.tp,M.centre,3600],['third wheel → fourth pinion',T.tw,T.fp,M.third,3600/(T.cw/T.tp)],['fourth wheel → escape pinion',T.fw,T.ep,M.fourth,60]];})();   /* name, teeth, leaves, module, seconds a turn of the wheel */
 /* the drawn centres against m (z1 + z2) / 2 (the Hamilton's are, by tools/solve.py's modules; the Wempe's are its holes'), the swing's band and its name */
-const D0=WEMPE?WT.D0:[0,0,0,0],BAND=WEMPE?[193,270]:[247.5,270],BN=WEMPE?'the band\'s 193-270°':'the manual\'s 247.5-270°';
+const D0=WEMPE?WT.D0:[0,0,0,0],BAND=WEMPE?[185,270]:[247.5,270],BN=WEMPE?'the band\'s 185-270°':'the manual\'s 247.5-270°';
 let base=null;   /* the drawn meshes, set below (or by a caller through setBase) */
 const ESC=WEMPE?WT.ESC:build().ESC,TF=ESC.settings.TF,A1=ESC.A,AMIN=ESC.AMIN;
 /* the Wempe's escapement solves a swing slowly (its impulse ends past where the swing first releases: makeEsc's slow start), so its swing and rate are tabled for the day's

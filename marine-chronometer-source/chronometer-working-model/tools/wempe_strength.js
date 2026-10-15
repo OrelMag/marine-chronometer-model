@@ -66,9 +66,9 @@ say('The maintaining work (05 06 01-02) and the stop work, fully wound');
   const Fr=Tm/((37.25/2-0.35)/1000),pit=Math.PI*37.25/120;
   line('the maintaining ratchet\'s tooth under the detent (brass)',`${f(Fr,1)} N`,6*Fr*0.7e-3/(1.02e-3*(pit*1e-3)**2),P(BRASS_Y),'brass\'s yield (once a wind)');
   line('  the detent\'s tip on it (1 thick), bearing',`${f(Fr,1)} N`,Fr/(1e-3*0.7e-3),P(BRASS_Y.map(x=>1.5*x)),'brass in bearing (1.5 × yield)');
-  /* running, the fusee drives the ratchet through the click wheel 05 06 04-3 (brass 2, 35 teeth Ø 16.0/14.5) on one click (05 06 02-3, steel 1.82 thick) */
+  /* running, the fusee drives the ratchet through the click wheel 05 06 04-3 (brass 2, 35 teeth Ø 16.0/14.5) on one click (05 06 02-3, steel 1.82 thick, meeting the wheel's teeth over 1.30 of it: the click on the ratchet's cup floor, 05 06 02-1; 1.82 taken as met until 15 October 2026) */
   const Fc=Tm/(7.6e-3),pc=Math.PI*14.5/35;
-  line('the click wheel\'s tooth under the click (brass, 1.82 met)',`${f(Fc,1)} N`,6*Fc*0.75e-3/(1.82e-3*(pc*1e-3)**2),P(BRASS_E),'brass\'s endurance (it turns with the fusee: 3.7 turns a day)');
+  line('the click wheel\'s tooth under the click (brass, 1.30 met)',`${f(Fc,1)} N`,6*Fc*0.75e-3/(1.30e-3*(pc*1e-3)**2),P(BRASS_E),'brass\'s endurance (it turns with the fusee: 3.7 turns a day)');
   /* a strong hand on the key against the stop (overwind.js: 1.06 N·m, Swain 1970), the bar meeting the stop pin 05 08 01-5 (Ø 1.6, 1.5 proud of the plate's inner face) at 14.0 from the
      fusee's axis: the pin as a cantilever loaded at its middle, the bar (2 × 1.45) in its slot as a cantilever from the slot's end, about 3.6 out (its travel) */
   const Fh=(1.06+Tf)/14e-3;
