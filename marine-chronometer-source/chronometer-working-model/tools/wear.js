@@ -25,7 +25,7 @@ const LR=TJ.lock.rows.slice().sort((a,b)=>a.dL-b.dL),dL0=ESC.settings.dL,dLat=lk
 const lockRoom=dL0-dLat(TJ.lock.min),pivRoom=lockRoom*1.48/1.40;
 const C=(name,F,s,Hs,A,tol,what,src)=>{const o={name,F,s,A,tol,what,src,h:{},yrs:{}};for(const k in K){o.h[k]=K[k]*F*s/Hs/(A*1e-6)*1e3;o.yrs[k]=tol/o.h[k];}out.contacts.push(o);return o;};   /* h mm a year (V m³ over A mm²) */
 const pivot=(name,F,r,L,turns,Hs,tol,what)=>C(name,F,2*Math.PI*r*1e-3*turns*365.25,Hs,2*r*L,tol,what,'strength.js\'s load, the pivot projected');
-pivot('fusee arbor\'s pivot in its brass bushing (r 1.02)',Ff,1.02,3.4,day.fusee,H.brass,R[0],'the fusee wheel\'s depth on the centre pinion');
+pivot('fusee arbor\'s pivot in its brass bushing (r 1.82)',Ff,1.82,3.4,day.fusee,H.brass,R[0],'the fusee wheel\'s depth on the centre pinion');
 pivot('centre arbor\'s pivot in brass (r 0.5)',Fc,0.5,1.0,day.centre,H.brass,Math.min(R[0],R[1]),'the centre\'s meshes\' depths');
 pivot('third arbor\'s pivot in its jewel (r 0.3)',Ft,0.3,0.6,day.third,H.steel,Math.min(R[1],R[2]),'the third\'s meshes\' depths');
 pivot('fourth arbor\'s pivot in its jewel (r 0.25)',F4,0.25,0.5,day.fourth,H.steel,Math.min(R[2],R[3]),'the fourth\'s meshes\' depths');
