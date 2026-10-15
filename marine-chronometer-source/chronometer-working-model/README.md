@@ -317,13 +317,13 @@ Phases B–D of `PLAN-self-contained.md`, in the page:
   solid; `invariants.py` checks the two agree) and the fourth wheel behind it chase the impulse jewel, already running away from them, and catch it about 19° of the
   balance after the release, striking it at more than twice its speed (the escapement, `makeEsc`, counts the chase and the strike; `tools/dynamics.js` checks it beat by
   beat). The balance holds 255° if its Q is 283–554. **From the parts** (A6): each stage's efficiency from its measured pivots (μ 0.10–0.15 on the tooth loads) and its teeth's friction (μ 0.10–0.20,
-  run dry), 0.91–0.97, at the top of the range assumed; the balance's damping from the air on its screws, nuts and arm (Cd 0.8–1.4 at Re about 180, Q 765–912), the
+  run dry), 0.91–0.97, at the top of the range assumed; the balance's damping from the air on its screws, nuts and arm (Cd 0.8–1.4 at Re about 180, Q 761–909, the timing nuts at mid-travel), the
   constant friction of its staff on the endstone, **measured** (12 October 2026: BunnSpecial's No. 2182, `Jd2c3x8VKsE` 14:04.3–14:12.5 and 16:10.4–16:17.1, the balance
   swinging freely from 2.2° and 2.0°, too little to meet the trip spring, its swing falling in a straight line at 0.238 and 0.231° a second, 0.16–0.22 with a viscous
   term free beside it, period 0.498 s: a constant torque Mc = k c T / 4, k from Table II's balance, 32–47 nN·m, Q 6,760–10,050 at 255°, 4–6 % of the model's loss
   there; the flat end worked out before, μ 0.10–0.15 across its whole face, gave Q 378–793, ten to twenty times the friction measured, which is that of μ
-  0.008–0.012 on it; a domed end would give Q 22,000), the spring's residual side force and its own internal damping (Q 1,000–5,000): Q 406–712, a free decay of
-  65–113 s (202–390, 32–62 s, with the flat end worked out). With the train's efficiency from its parts the budget needs 256–355, 262–423 with the mainspring's
+  0.008–0.012 on it; a domed end would give Q 22,000), the spring's residual side force and its own internal damping (Q 1,000–5,000): Q 405–710, a free decay of
+  64–113 s (202–390, 32–62 s, with the flat end worked out). With the train's efficiency from its parts the budget needs 256–355, 262–423 with the mainspring's
   own coil friction and set (5–15 %), which is where the two meet (without the spring's losses the parts would swing the balance 294–390°, past the manual's 1½
   turns). `TF` (the free swing's decay) is 67 s (Q 421), inside the parts' range and the budget's with the spring's losses: the torque the model is calibrated at,
   62.4 µN·m, is within 0.4 % of the new spring's through the same train and losses as the old calibration took (0.611 of the fusee's torque reaching the escape
@@ -1322,7 +1322,7 @@ can't run them).
   best drive (85-100 % of the calibrated torque; 52 s 14.5-16.7°); it comes within
   6-7° from TF 120 s (Q 750 and more, the drive 70-80 %), within twice the best fit's
   rms (2.8°) from 160 s, and fits best at 260-320 s with 60-70 % of the drive, settling
-  at 304-320°; the fit gives no upper bound. That is past the 65-113 s the balance's
+  at 304-320°; the fit gives no upper bound. That is past the 64-113 s the balance's
   parts give in `physics.js` (32-62 s before the endstone was measured):
   OPEN-QUESTIONS.md. The model's `TF` comes from its spring and train, not from this
   start: one movement, started by hand, and its absolute swing known to a screw hole.

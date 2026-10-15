@@ -67,7 +67,7 @@ say(`the four stages together ${f(Plo,3)}-${f(Phi,3)} (as ${f(etaEq(Plo),3)}-${f
 chk(etaEq(Plo)>=0.85-1e-9&&etaEq(Phi)<=0.97,`the train's efficiency from its pivots and teeth lies inside or at the top of the budget's assumed range`);
 /* the balance's damping, each source over its range; its Q is 2 pi E / (the energy lost an oscillation, E the balance's at 255 deg), the losses adding as 1/Q */
 const T0=0.5,w0=2*Math.PI/T0,Wmax=A*w0,cub=4/(3*Math.PI),rho=1.2;   /* the period, the balance's top speed (rad/s), the mean of |cos|³ over a period, air (kg/m³) */
-const airQ=Cd=>{const parts=[[8,3.1e-3,[1.5e-3,2.5e-3],(BAL_RR+2)/1000],[2,2.1e-3,[2.3e-3,2.3e-3],(BAL_RR+0.35+1.15)/1000],[2,1.3e-3,[1.3e-3,1.3e-3],(BAL_RR-1.6)/1000]];   /* 8 screws' heads (2.9-3.2 across, KLUwI2UUCMQ 6:47.5; standing out 1.5-2.5), the 2 timing weights' nuts (TR, TWL), the 2 verniers inside the rim: count, across, length, radius */
+const airQ=Cd=>{const parts=[[8,3.1e-3,[1.5e-3,2.5e-3],(BAL_RR+2)/1000],[2,2.1e-3,[2.3e-3,2.3e-3],(BAL_RR+0.534+1.15)/1000],[2,1.3e-3,[1.3e-3,1.3e-3],(BAL_RR-1.6)/1000]];   /* 8 screws' heads (2.9-3.2 across, KLUwI2UUCMQ 6:47.5; standing out 1.5-2.5), the 2 timing weights' nuts (TR, TWL, TG at mid-travel), the 2 verniers inside the rim: count, across, length, radius */
   return[0,1].map(j=>{let E=0;for(const[n,d,Ls,r]of parts){const Af=d*Ls[j];E+=n*0.5*rho*Cd*Af*r**3*Wmax**3*T0*cub;}
     const arm=2*0.5*rho*Cd*1.1e-3*(BAL_RR/1000)**4/4*Wmax**3*T0*cub;return 2*Math.PI*Eb/(E+arm);});};   /* the arm edgewise (1.1 thick, to the rim): a pressure drag growing as r³ */
 const BAL_RR=14.5,[qa0]=airQ(1.4),[,qa1]=airQ(0.8);   /* Cd 0.8-1.4: a short cylinder across the flow at Re about 180 (v 0.85 m/s, 3.1 mm) */
