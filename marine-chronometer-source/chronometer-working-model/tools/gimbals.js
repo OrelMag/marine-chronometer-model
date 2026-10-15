@@ -6,13 +6,15 @@
 //                                2 degrees from the apparent vertical in the heavy-weather sea, or if the accelerations it passes on come within half of what trips the escapement)
 //   node gimbals.js --quick     (the bodies, their periods and the resonance only, about 20 s)
 //   node gimbals.js --json OUT  (also writes the figures for the build-verification report)
+//   node gimbals.js --model wempe [--quick] [--json OUT]   (the Wempe's: tools/gimbals_wempe.json, massprops.py --model wempe; its report is tools/wempe_gimbals.js's)
 // The manual (Sec. II, p. 13): "The chronometer is leveled when originally inserted in the gimbals by adjusting the position of the case brackets and gimbal support
 // straps": each pair of pivots is set over its centre of gravity. The model's are drawn, not levelled (the case's centre of gravity lies 7.8 mm to one side of its pivots'
 // line), so the bodies are taken levelled: the case moved along x until its centre of gravity is under the case pivots' axis, the ring and case together along z under
 // the ring's. The ship's motion is narrow-band random about each motion's period, with published periods and levels where there are any (named below), estimated where not.
 const fs=require('fs'),path=require('path');
-const GJ=JSON.parse(fs.readFileSync(path.join(__dirname,'gimbals.json'),'utf8'));
-const mvSrc=fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8');
+const WEMPE=process.argv[process.argv.indexOf('--model')+1]==='wempe'&&process.argv.includes('--model');   /* --model wempe: the Wempe's bodies, its balance's place from gimbals_wempe.json (PB) */
+const GJ=JSON.parse(fs.readFileSync(path.join(__dirname,WEMPE?'gimbals_wempe.json':'gimbals.json'),'utf8'));
+const mvSrc=WEMPE?'':fs.readFileSync(path.join(__dirname,'..','js','movement.js'),'utf8');
 const D=Math.PI/180,G0=9.80665,TAU=2*Math.PI;
 /* ---------- small vector and matrix helpers (3-vectors as arrays, 3×3 as arrays of rows) ---------- */
 const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]],sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],sc=(a,s)=>[a[0]*s,a[1]*s,a[2]*s],dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
@@ -35,10 +37,10 @@ function bodies(o={}){
   return{bw,rg,drawn,wz:Math.sqrt(kz/Iz),wx:Math.sqrt(kx/Ix),Iz,Ix,kz,kx};
 }
 /* the balance and the escapement in the movement's frame (movement.js L.B, BAL_Y; the escapement's frame turned BETA about the staff), the movement's frame in the ring's (gimbals.json mv) */
-const L=Function('return '+/const L=(\{[^;]*\});/.exec(mvSrc)[1])(),BAL_Y=+/BAL_Y=(-?[\d.]+)/.exec(mvSrc)[1];
-const EU=(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);return[dx/l,dz/l];})(),BETA=Math.atan2(-EU[1],EU[0]);
+const L=WEMPE?null:Function('return '+/const L=(\{[^;]*\});/.exec(mvSrc)[1])(),BAL_Y=WEMPE?0:+/BAL_Y=(-?[\d.]+)/.exec(mvSrc)[1];
+const EU=WEMPE?[1,0]:(()=>{const dx=L.B[0]-L.E[0],dz=L.B[1]-L.E[1],l=Math.hypot(dx,dz);return[dx/l,dz/l];})(),BETA=Math.atan2(-EU[1],EU[0]);   /* the Wempe's: the movement's own frame */
 const MV=[[GJ.mv[0],GJ.mv[4],GJ.mv[8]],[GJ.mv[1],GJ.mv[5],GJ.mv[9]],[GJ.mv[2],GJ.mv[6],GJ.mv[10]]],MVt=[GJ.mv[12],GJ.mv[13],GJ.mv[14]];
-const PB=add(mv(MV,[L.B[0],BAL_Y,L.B[1]]),MVt).map(x=>x/1000);   /* the balance, m, in the case's frame */
+const PB=WEMPE?GJ.PB.map(x=>x/1000):add(mv(MV,[L.B[0],BAL_Y,L.B[1]]),MVt).map(x=>x/1000);   /* the balance, m, in the case's frame */
 /* a specific force in the case's frame (x, z in its plane) into the escapement's unit frame (dynamics.js ext ax, ay): movement frame, then Ry(BETA)ᵀ */
 const toEsc=f=>{const m=mv(tr(MV),f),c=Math.cos(BETA),s=Math.sin(BETA);return[m[0]*c-m[2]*s,m[0]*s+m[2]*c];};
 
@@ -106,6 +108,7 @@ function run(Bd,S,o={}){
 }
 module.exports={bodies,run,ship,band,toEsc,PB,BETA,GJ};
 if(require.main!==module)return;
+if(WEMPE){require('./wempe_gimbals.js')(module.exports);return;}
 
 /* ---------- the report ---------- */
 const ji=process.argv.indexOf('--json'),JOUT=ji>0?process.argv[ji+1]:null,RW=[],J={made:new Date().toISOString().slice(0,10)};let fail=0;
