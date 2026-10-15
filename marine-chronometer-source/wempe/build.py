@@ -10,6 +10,7 @@ from inline import inline,remote_refs
 from changelog import stamp
 html,ver=stamp(inline((root/'index.html').read_text(encoding='utf-8'),root))
 html=html.replace('href="../chronometer-working-model/index.html','href="../../chronometer-working-model/dist/chronometer-working-model.html')   # the links to the Hamilton, from dist/ to its built page, by prefix, so its essay's sections (#essay=detent) keep their hashes (the root build points them at the site's home page)
+html=html.replace('href="verification/','href="../verification/')   # the links to its report (verification/index.html beside the page), from dist/ (the root build points them at site/wempe/verification/)
 (root/'dist').mkdir(exist_ok=True)
 (root/'dist/wempe-einheitschronometer.html').write_text(html,encoding='utf-8',newline='\n')
 print('wrote dist/wempe-einheitschronometer.html',len(html.encode()),'bytes, version',ver)
