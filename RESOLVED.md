@@ -1821,6 +1821,15 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's winding key lay on the box's floor, where no box keeps it.** It lay flat in the
+  back left corner, a place no source gave. Every photographed box (Greenwich's wartime Wempe,
+  Wempe 5377, Lange 2285 and 5510, a 6MX Kirova) stands the key upright in the back right corner,
+  its stem down through a hole in a shelf across the corner, its paddle up. Now a shelf (the
+  key holder, `Schluesselhalter`: legs 55, 10 thick, its top 40 over the floor, the hole Ø 11 21
+  from each wall, estimated from those photographs) holds it so, the body's cone seated on the
+  hole's edge, the paddle facing the box's middle (its plane 83.4 from the gimbals' centre, beyond
+  the swinging case's and ring's 79.4); the 1940 key, as first drawn, stands there too. Keep: the
+  key rests in its holder (`KEYREST`), and nothing that swings in the gimbals reaches the corner.
 - **The Wempe's bowl had cracks along its cone.** Built as plan cells of rings, the narrow sloped
   rings under the inside round left hairline gaps along the 40° cone, dashed rows seen through to
   the inside (and drawn as dashes by Edges); the cone faced down, out of sight, until the bowl was
