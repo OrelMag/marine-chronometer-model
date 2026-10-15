@@ -1741,6 +1741,11 @@ Contents:
   `PT`, the pair stood at 145.5° and -37.9° about the fusee, so the barrel bridge showed a hole where the real one is plain beside the arbor (12:39.0).
   KLUwI2UUCMQ 13:04.4, the bridge underside up, puts them at 26.8° and -154.9°, 7.97 and 7.67 out (drawn 7.8); the flange's bite between them turns with
   them. Keep: `S.seal` in the movement's frame, not through `PT`. `f06ed2f`
+- **The winding stop's tapped hole went through the barrel bridge.** The stud screws 2 mm into the bridge's 3.4 from
+  underneath, but the extrusion's holes all go through, so its hole showed on the bridge's top beside the dust seal, where the real one is plain (KLUwI2UUCMQ
+  12:39.0). `blindHoles()` (core.js) now cuts it 2.0 deep from the underside, re-triangulating only the face's triangles that meet it (a fresh triangulation of
+  the whole face fails where the bevel's inset outline crosses itself at a sharp corner). Keep: blind holes through `blindHoles()`, not stacked layers that
+  leave a seam; `tools/holecheck.py` finds a hole with nothing in it. `09cf387`
 
 ## Setup, case and gimbals
 
@@ -2654,8 +2659,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The winding stop's tapped hole went through the barrel bridge (Plates, bridges, screws and arbors).** The stud screws 2 mm into the bridge's 3.4 from
-  underneath, but the extrusion's holes all go through, so its hole showed on the bridge's top beside the dust seal, where the real one is plain (KLUwI2UUCMQ
-  12:39.0). `blindHoles()` (core.js) now cuts it 2.0 deep from the underside, re-triangulating only the face's triangles that meet it (a fresh triangulation of
-  the whole face fails where the bevel's inset outline crosses itself at a sharp corner). Keep: blind holes through `blindHoles()`, not stacked layers that
-  leave a seam; `tools/holecheck.py` finds a hole with nothing in it.
+None at the moment.
