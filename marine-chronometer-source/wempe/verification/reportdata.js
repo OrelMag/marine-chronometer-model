@@ -1,5 +1,5 @@
 // The data of the report "The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?" (index.html here, build_report.py): every
-// Wempe check run as ci.py runs it (its full runs where there is one: dynamics.js, tripping.js, gearing.js and gimbals.js with --model wempe), its exit code and its
+// Wempe check run as ci.py runs it (its full runs where there is one: dynamics.js, tripping.js, gearing.js and gimbals.js with --model wempe; the build checks, the tolerances, the bench, the Monte Carlo and keystone.js), its exit code and its
 // output kept as it prints it, and the figures the page charts, worked out by the tools' own modules or read from the JSON they wrote, gathered into assets/data.json.
 // Needs Node.js (and Python for wempe_mainspring.py --check):
 //   node reportdata.js               every check and figure (about 9 minutes: the full runs at once, in their own processes; gearing.js the longest)
@@ -23,6 +23,10 @@ const RUNS=[
   ['thermal','node',['wempe_thermal.js'],'The cut bimetallic balance and steel spring in heat and cold: the linear term against the masses\' place, the secondary error.'],
   ['gimbals','node',['gimbals.js','--model','wempe','--json',path.join(TMP,'_gim.json')],'The case and gimbal ring weighed on the model, levelled as 05 01 says, run in a seaway; what reaches the escapement.'],
   ['errorbudget','node',['wempe_errorbudget.js'],'The chronometer through the 6MX\'s TU trial (35 days at 36/20/4/20/36 °C), as adjusted and as drawn, and the error a navigator carries over a 60-day voyage.'],
+  ['tolerances','node',['wempe_tolerances.js'],'How closely the parts the drawings don’t size must be made: each range keeping the swing in the guard band over the whole wind; checks tolerances_wempe.json is up to date.'],
+  ['bench','node',['wempe_bench.js'],'The tests on the bench for a Wempe made to the model, each with how and what it must read; checks bench_wempe.json is up to date.'],
+  ['montecarlo','node',['wempe_montecarlo.js'],'The whole Wempe made to a maker’s tolerances at once, judged as made and after the bench’s tests; checks montecarlo_wempe.json is up to date.'],
+  ['keystone','node',['keystone.js','--model','wempe'],'The escapement against the rules of a period text, Watch and Clock Escapements (1904), Ch. III: reports, never judges; checks keystone_wempe.json is up to date.'],
   ['startup','node',['wempe_startup.js','--json',path.join(TMP,'_su.json')],'A running 6MX\'s swing read off video (wempe_swing.py, wempe_swing.json) fitted with the Wempe\'s balance equation for its free run-down TF.']];
 const only=(i=>i>0?process.argv[i+1].split(','):null)(process.argv.indexOf('--only'));
 if(only)for(const k of only)if(!RUNS.some(q=>q[0]===k)){console.error(`no run ${k}; runs: ${RUNS.map(q=>q[0]).join(', ')}`);process.exit(2);}
@@ -80,7 +84,8 @@ function transcriptions(){const out=[];for(const f of fs.readdirSync(path.join(R
   const trip=rd('_trip.json')||(prev&&prev.trip),gim=rd('_gim.json')||(prev&&prev.gim);
   const WED=(()=>{const s=fs.readFileSync(path.join(WE,'js','essaydata.js'),'utf8');return Function(s+';return WEDATA;')();})();
   const MS=J('wempe_mainspring.json'),MF=J('mainspring_friction_wempe.json'),GI=J('gimbals_wempe.json'),IN=J('wempe_inertia.json'),GW=J('gearing_wempe.json'),SU=J('wempe_startup.json'),SW=J('wempe_swing.json').moMvyx8eXfo;
-  const data=prev&&only?{...prev,runs,trip,gim,...(FS?{swing:{...prev.swing,...FS,startup:SUN,committed:J('wempe_startup.json')}}:{}),made:new Date().toISOString().slice(0,10)}:{made:new Date().toISOString().slice(0,10),runs,trip,gim,
+  const build={tol:J('tolerances_wempe.json'),bench:J('bench_wempe.json'),mc:J('montecarlo_wempe.json'),key:J('keystone_wempe.json')};
+  const data=prev&&only?{...prev,runs,trip,gim,build,...(FS?{swing:{...prev.swing,...FS,startup:SUN,committed:J('wempe_startup.json')}}:{}),made:new Date().toISOString().slice(0,10)}:{made:new Date().toISOString().slice(0,10),runs,trip,gim,build,
     wind:{A12:F[0].A12,TF:F[0].TF,HS:F[0].HS,rows:[...F[0].rows,...F[1].rows]},gear:{...F[2],windows:GW},hair:F[3],swing:{...FS,json:{A_range:SW.A_range_deg,windows:SW.windows,f:SW.f_Hz,stretches:SW.stretches,sure:SW.sure},startup:SUN,committed:SU},phys:F[4],
     ms:{strip:MS.strip,setup:MS.setup,barrelTurns:MS.barrelTurns,marks:MS.marks,tries:MS.tries,Lfit:MS.Lfit,setFit:MS.setFit,rmsFit:MS.rmsFit,final:{...MS.final,fit:MS.final.fit,tq:MS.final.tq}},
     friction:MF.summary,mass:{bowl:{m:GI.bowl.m,cg:GI.bowl.cg,byPart:GI.bowl.byPart},ring:{m:GI.ring.m},alt:GI.alt},inertia:Object.fromEntries(Object.entries(IN).filter(([k])=>k!=='note').map(([k,v])=>[k,{m:v.m,I:v.I}])),

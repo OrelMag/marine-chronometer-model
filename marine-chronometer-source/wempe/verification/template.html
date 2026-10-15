@@ -62,7 +62,7 @@ a check that holds, <span class="st mid">~~</span> one the script reports but do
 
 <nav class="toc"><a href="#approach">Approach</a><a href="#geo">1. Geometry</a><a href="#src">2. The sources</a><a href="#esc">3. The escapement</a><a href="#ms">4. Mainspring and fusee</a>
 <a href="#energy">5. Energy</a><a href="#train">6. The train</a><a href="#strength">7. Strength</a><a href="#hair">8. Hairspring</a><a href="#heat">9. Temperature</a><a href="#gim">10. Case and gimbals</a>
-<a href="#trial">11. The trial and a voyage</a><a href="#video">12. The swing on video</a><a href="#open">13. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
+<a href="#trial">11. The trial and a voyage</a><a href="#build">12. Building it</a><a href="#keystone">13. Against a period text</a><a href="#video">14. The swing on video</a><a href="#open">15. What stays open</a><a href="#reproduce">Reproduce</a><a href="#scripts">Scripts</a><a href="#sources">Sources</a></nav>
 
 <h2 id="approach">Approach</h2>
 <p>The Wempe's checks are the Hamilton's, pointed at the second model (<code>--model wempe</code>), with tools of their own where the two chronometers differ: the
@@ -82,7 +82,9 @@ with movable masses, and its hairspring is a helix with drawn terminal curves. T
 <tr><td>9</td><td>Does the bimetallic balance compensate, and where must the masses sit?</td><td>The rim's quarters as bimetal cantilevers, every part weighed; the secondary error</td><td><code>wempe_thermal.js</code></td></tr>
 <tr><td>10</td><td>Does the case hang level and stay so at sea?</td><td>The case and ring weighed on the model, levelled as 05 01 says, run in a seaway</td><td><code>massprops.py</code>, <code>gimbals.js</code></td></tr>
 <tr><td>11</td><td>Would it pass the 6MX's trial, and what would a navigator carry?</td><td>The TU's 35-day trial and a 60-day voyage, Monte Carlo over the rate's parts</td><td><code>wempe_errorbudget.js</code></td></tr>
-<tr><td>12</td><td>Is the balance's damping right?</td><td>A running 6MX's swing read frame by frame off a video, fitted with the Wempe's balance equation</td><td><code>wempe_swing.py</code>, <code>wempe_startup.js</code></td></tr>
+<tr><td>12</td><td>Would a Wempe made to its drawings work, and how is it tested?</td><td>The unsized parts' tolerances from the escapement's swing over the wind; the bench's tests with their pass figures; 2,000 movements made to tolerances, as made and after the bench</td><td><code>wempe_tolerances.js</code>, <code>wempe_bench.js</code>, <code>wempe_montecarlo.js</code></td></tr>
+<tr><td>13</td><td>How does the escapement compare with a period text's rules?</td><td>Each proportion against <i>Watch and Clock Escapements</i> (1904), Ch. III; reported, never judged</td><td><code>keystone.js</code></td></tr>
+<tr><td>14</td><td>Is the balance's damping right?</td><td>A running 6MX's swing read frame by frame off a video, fitted with the Wempe's balance equation</td><td><code>wempe_swing.py</code>, <code>wempe_startup.js</code></td></tr>
 </table></div>
 <p class="small">Units: millimetres and micrometres (µm), newtons, seconds a day (s/d, + gaining). The swing is the balance's amplitude, each way. The model runs its balance
 at the train's half second; the drawn hairspring with the weighed balance gives a little less (section 8), which a maker times out. A rate of 4 s of time is a mile of
@@ -143,7 +145,7 @@ chasing the impulse stone, the strike's loss, the unlocking's work, the detent's
 work each oscillation balances the balance's damping, at the drive 05 06_20's measured force gives through the train. The rate is Airy's sum of the escapement's
 disturbances with the drawn hairspring's own isochronism (section 8).</p>
 <figure><div class="chart" id="cWind"></div><figcaption>Figure 3. The swing over the 56-hour wind, at the drive 05 06_20 measured at each fusee turn (the escapement's
-equation, <code>ampAt</code>). The green band is the sources' 225-270° (the 1954 instruction for chronometers in general); the model's swing lies under it (section 13).
+equation, <code>ampAt</code>). The green band is the sources' 225-270° (the 1954 instruction for chronometers in general); the model's swing lies under it (section 15).
 <code>wempe_escapement.js</code>.</figcaption></figure>
 <figure><div class="chart" id="cRate"></div><figcaption>Figure 4. The rate over the wind against 12 h from full wind: the escapement alone, and with the drawn hairspring's own
 isochronism, which partly cancels it. Wound daily, the chronometer runs in the first day's span. <code>wempe_escapement.js</code> (<code>rateAt</code>).</figcaption></figure>
@@ -272,7 +274,47 @@ temperatures shaded. <code>wempe_errorbudget.js</code>.</figcaption></figure>
 <div id="tVoy" class="tw"></div>
 <div id="kEb"></div>
 
-<h2 id="video">12. The swing measured on video</h2>
+<h2 id="build">12. Building it: tolerances, the bench, the Monte Carlo</h2>
+<p>The checks above take the Wempe as drawn. A chronometer made to the drawings is made to tolerances, some the sheets give and some they don't, and is then tested and
+adjusted on the bench as its makers did. Three tools follow it there, as the Hamilton's <code>tolerances.js</code>, <code>bench.js</code> and <code>montecarlo.js</code> do.
+They are guidance for anyone who would make one, proved by their own runs: the model was never made.</p>
+<h3>12.1 How closely the unsized parts must be made</h3>
+<p><b>Method.</b> From the escapement as the page runs it (makeEsc with the Wempe's settings, driven by 05 06_20's force through the train), the swing and rate are
+solved with the escape wheel's torque and the detent's and gold spring's stiffness each scaled (a strip's stiffness as its thickness cubed). Each part's range is the
+one that keeps the swing in the model's guard band, 193-270°, over the whole 56-hour wind; the sources' 225-270° is reported beside it. The parts: the mainspring's strip
+(05 06_20's "15 × 0,37", no tolerance), the detent's spring (1436's faint "0,07") and its preload, the gold spring, the depth of lock (05 04_1's 0.175, set by the
+banking), and the hairspring against the period, which the timing weights must take up.</p>
+<div id="tTol" class="tw"></div>
+<div id="tPre" class="tw"></div>
+<div id="kTol"></div>
+<h3>12.2 The tests on the bench</h3>
+<p><b>Method.</b> Each test turns the model's figures into what a made part or movement must read, and how to measure it with a maker's means: the mainspring's pull
+against 05 06_20, the fusee's evenness, the depths, the endshake from the sheets' fits, the balance vibrated, its free run-down, the detent's ring, the escapement's
+figures and the banking's preload, the swing, the maintaining spring, and the 6MX TU's 35-day trial as the acceptance test (the Wempe's sheets give no trial of their own).</p>
+<div id="tBench" class="tw"></div>
+<div id="kBench"></div>
+<h3>12.3 The whole movement made to tolerances</h3>
+<p><b>Method.</b> 2,000 movements, each drawing every tolerance at once (uniform within the sheets' limits where they give them, normal where estimated): the arbors'
+holes, every term of each arbor's endshake stack from its sheet, the mainspring's strip, the teeth's friction, the detent's and gold spring's strips, the wheel's tips
+and the banking (the depth of lock), the preload, the hairspring's strip, coil, cut length and modulus. Each is judged as made (the train turns, every arbor free, the
+escapement unlocks and locks in its window, the swing in the guard band over the wind, it times within the weights' reach), then after the bench's tests as a maker
+applies them (bench_wempe.json's figures): a close mesh re-bushed, endshake set again, a detent spring out of its band replaced, the banking and preload set, another
+strip, the set-up turned, the hairspring matched to the balance.</p>
+<div class="cols"><div id="tMC" class="tw"></div><div id="tMCb" class="tw"></div></div>
+<figure><div class="chart" id="cMC"></div><figcaption>Figure 18. The lowest swing over the wind of the movements made to tolerances whose escapement unlocks, as made: how many in each 2.5°
+band. The green band is the guard band's floor and above. <code>wempe_montecarlo.js</code>, <code>montecarlo_wempe.json</code>.</figcaption></figure>
+<div id="tMCa" class="tw"></div>
+<div id="kMC"></div>
+
+<h2 id="keystone">13. Against a period text</h2>
+<p>The drawings decide the Wempe; a period text says how a detent escapement was usually proportioned, and so where the Wempe's makers chose otherwise.
+<code>keystone.js --model wempe</code> measures the escapement against <i>Watch and Clock Escapements</i> (The Keystone, 1904), Ch. III: the wheel and roller, the
+balance planted where the rims cross over a pitch, the impulse and unlocking arcs, the locking stone, the tooth's face and back, the detent and its spring, the balance.
+The text is generic, so the tool reports and never judges; where the two differ, the drawing and its sheet are named.</p>
+<div id="tKey" class="tw"></div>
+<div id="kKey"></div>
+
+<h2 id="video">14. The swing measured on video</h2>
 <p>No Wempe source gives the balance's damping, the figure the swing rests on most. A running 6MX, whose balance is of the same kind (a cut bimetallic rim, four
 masses, two nuts on the arm), is filmed from above at 30 frames a second in <a href="https://youtu.be/moMvyx8eXfo?t=1073">moMvyx8eXfo, 17:53-19:50</a> (another person's
 video: linked at the moment used, no frame copied here).</p>
@@ -281,7 +323,7 @@ video: linked at the moment used, no frame copied here).</p>
 turned in the hands at 18:46 (the 6MX's start) and the swing falls back. <code>wempe_startup.js</code> fits all the stretches together with the Wempe's averaged balance
 equation, d(A²)/dt = 2 Wn(s, A)/T − 2A²·damping/TF, the escapement's work Wn from makeEsc with the Wempe's settings, the drive and each stretch's start free: rising
 and falling toward one swing, they fix TF, the free run-down.</p>
-<figure><div class="chart" id="cSwing"></div><figcaption>Figure 18. The 6MX's swing read off the video (dots, each a 4-second window), with the fit through all the stretches: the
+<figure><div class="chart" id="cSwing"></div><figcaption>Figure 19. The 6MX's swing read off the video (dots, each a 4-second window), with the fit through all the stretches: the
 Wempe's escapement work and the damping split as its parts give it (line), and the plain A² law (dashed). The time is the video's, in seconds. <code>wempe_swing.json</code>,
 <code>wempe_startup.json</code>.</figcaption></figure>
 <div id="tFits" class="tw"></div>
@@ -291,7 +333,7 @@ Wempe's escapement work and the damping split as its parts give it (line), and t
 since which click is which isn't settled, so no swing is read from them (<code>References/wempe/VIDEOS.md</code>, "Measured").</p>
 <div id="kStart"></div>
 
-<h2 id="open">13. What stays open</h2>
+<h2 id="open">15. What stays open</h2>
 <p>What the sources haven't settled, as the model's README lists it (<span id="nUnres"></span> questions), each with the reading the model takes and what would settle it:</p>
 <!--UNRESOLVED-->
 <h3>What the tools flag</h3>
@@ -321,7 +363,9 @@ model's <code>ci.py</code> runs the quick forms of all of them on every change, 
 <tr><td><a href="../../chronometer-working-model/tools/wempe_thermal.js"><code>wempe_thermal.js</code></a></td><td>Temperature (9)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/massprops.py"><code>massprops.py</code></a>, <a href="../../chronometer-working-model/tools/gimbals.js"><code>gimbals.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_gimbals.js"><code>wempe_gimbals.js</code></a></td><td>The case and gimbals (10)</td></tr>
 <tr><td><a href="../../chronometer-working-model/tools/wempe_errorbudget.js"><code>wempe_errorbudget.js</code></a></td><td>The TU's trial and the voyage (11)</td></tr>
-<tr><td><a href="../../chronometer-working-model/tools/wempe_swing.py"><code>wempe_swing.py</code></a>, <a href="../../chronometer-working-model/tools/wempe_startup.js"><code>wempe_startup.js</code></a></td><td>The swing read off a video and fitted (12)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_tolerances.js"><code>wempe_tolerances.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_bench.js"><code>wempe_bench.js</code></a>, <a href="../../chronometer-working-model/tools/wempe_montecarlo.js"><code>wempe_montecarlo.js</code></a></td><td>The tolerances, the bench's tests, the movement made to tolerances (12)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/keystone.js"><code>keystone.js</code></a></td><td>The escapement against the 1904 text (13)</td></tr>
+<tr><td><a href="../../chronometer-working-model/tools/wempe_swing.py"><code>wempe_swing.py</code></a>, <a href="../../chronometer-working-model/tools/wempe_startup.js"><code>wempe_startup.js</code></a></td><td>The swing read off a video and fitted (14)</td></tr>
 <tr><td><a href="reportdata.js"><code>reportdata.js</code></a>, <a href="geometry.py"><code>geometry.py</code></a>, <a href="build_report.py"><code>build_report.py</code></a></td><td>This page's data and the page</td></tr>
 </table></div>
 
@@ -540,7 +584,28 @@ function draw(){
     if(V.length)table('tVoy',['A 60-day voyage','After 10 days','After 30 days','After 60 days','95 % of voyages (10 / 30 / 60 days)'],V);}
   checks('kEb','errorbudget');
 
-  /* ---------- 12. the swing on video ---------- */
+  /* ---------- 12. building it ---------- */
+  {const B=D.build;if(B){const T=B.tol,ms=T.mainspring,dt=T.detent,go=T.gold,lk=T.lock,hs=T.hairspring,rg=(a,n=3,u='')=>`${f(a[0],n)}-${f(a[1],n)}${u}`;
+    table('tTol',['Part','Drawn','The range that keeps the swing in the guard band','What sets it'],[
+      ['the mainspring\'s strip (05 06_20)',`${f(ms.t,3)} mm`,`${rg(ms.t_mm)} mm (the drive ×${rg(ms.s)}); ${rg(ms.tMeasured_mm)} mm on the solved spring at the measured level`,`the strip's stress, ${f(ms.stressGPa,2)} GPa at the measured level, against a mainspring's limit sets the top; the swing alone would allow ×${f(ms.sSwing[1],2)}. On 05 06_20's lever: mean ${f(ms.g262.mean,1)} g within ${rg(ms.g262.band,1,' g')}. The sources' band wants ×${f(ms.sources.s,3)}, a strip ${f(ms.sources.t_mm,3)} mm`],
+      ['the detent\'s spring (1436, "0,07")',`${f(dt.t,3)} mm`,`up to ${f(dt.t_mm[1],3)} mm (${f(dt.k[1],1)}× as stiff); the detent home in time over ${rg(dt.inTime)} mm (dynamics.js)`,`1436's other figure, 0.09 (${f(dt.t09.k,2)}× as stiff), swings ${rg(dt.t09.A,1,'°')} over the wind`],
+      ['the detent\'s preload (the banking)',`${f(dt.preload.g,2)} g at the stone (estimated)`,`${f(dt.preload.min,2)}-${f(dt.preload.max,2)} g`,'the floor the frame\'s margin against tripping (tripping.js); the top the swing at the wind\'s lowest'],
+      ['the gold spring (05 04 01-2)',`${f(go.t,2)} mm, ${go.E} GPa (estimated)`,`up to ${f(go.k[1],2)}× as stiff: ${f(go.t_mm,3)} mm, or the alloy's modulus up to ${f(go.E_max,0)} GPa`,`with none it swings ${f(go.A0,1)}° at 12 h; softer is free for the swing but not for the lock (tripping.js)`],
+      ['the depth of lock (05 04_1)',`${f(lk.d,3)} mm`,`${f(lk.shallow,4)}-${f(lk.deep,3)} mm`,`deepest that unlocks (the stone lifted at most ${f(lk.liftMax,3)} mm); shallowest with a held tooth's stone ringing under half the depth. A wheel at the top of its Ø 14 +0.03 locks ${f(lk.tip,3)} deep with the banking left: the banking is set to the wheel as made`],
+      ['the hairspring (05 03_6, 05 03_7)',`0.285 mm; the period ${f(hs.T,4)} s`,`0.5 s wants the strip ${f(hs.hNeed,4)} mm (${rg(hs.hNeedE,4)} over the modulus's range)`,`each µm of the strip ${f(hs.perUm,0)} s a day, each 0.01 mm of the coil's Ø ${f(hs.perCoil001,0)}; the timing weights reach ${f(hs.weights.gain,0)} s a day, gaining only: the spring is matched to the balance, not made to it`]],true);
+    table('tPre',['Preload at the stone','The swing over the wind (lowest to highest)','At 12 h'],dt.preload.rows.map(q=>[f(q.w,2)+' g',`${f(q.A[0],1)}-${f(q.A[1],1)}°`,f(q.A[2],1)+'°']));
+    const BT=B.bench.tests;table('tBench',['Test','Sheets','When','What it must read','How'],BT.map(t=>[`<b>${esc(t.title)}</b>`,esc(t.sheet||''),esc(t.when||''),esc(t.pass||''),`<details><summary>how</summary>${esc(t.how||'')}</details>`]),true);
+    const M=B.mc,a=M.asMade,af=M.after,pc=x=>x==null?'–':f(100*x,1)+' %';
+    table('tMC',[`${th(M.N)} movements`,'As made','After the bench'],[['the train turns',pc(a.turns),pc(af.turns)],['every arbor free (endshake ≥ 0.01 mm)',pc(a.free),pc(af.free)],['the escapement unlocks',pc(a.unlocks),'–'],['the lock in its window',pc(a.lock),pc(af.lock)],['the swing in the guard band over the wind',pc(a.band),pc(af.band)],['in the sources\' 225-270°',pc(a.sources),pc(af.sources)],['it times (within the weights\' reach)',pc(a.times),'matched on the bench'],['<b>works</b>',`<b>${pc(a.works)}</b>`,`<b>${pc(af.works)}</b>`]]);
+    const bn=M.bench,BN={depths:'the depths: close meshes re-bushed',endshake:'endshake set again',ring:'the detent\'s ring: springs replaced',lock:'the escapement: banking and preload set',spring:'the mainspring\'s pull: another strip',setup:'the swing: the set-up turned',swing:'the swing still out',vibrated:'the balance vibrated: spring matched'};
+    table('tMCb',['The bench\'s test','Movements it catches'],Object.entries(bn).map(([k,v])=>[esc(BN[k]||k),th(v.caught)+(v.wouldFail!=null?` (${th(v.wouldFail)} would have failed)`:'')+(v.bind!=null?` (${th(v.bind)} binding)`:'')]));
+    chart('cMC',{label:'The lowest swing as made',x:[188,218],y:[0,Math.ceil(Math.max(...M.swing.hist.map(h=>h[1]))/50)*50],xl:'the lowest swing over the wind (°)',yl:'movements',hbands:[],vbands:[{x0:193,x1:218,c:'--manual'}],r:40,
+      series:[{type:'line',name:'',c:'--s1',data:M.swing.hist.flatMap(h=>[[h[0],h[1]],[h[0]+2.5,h[1]]]),tip:p=>`${f(p[0],1)}°: ${p[1]} movements`}]});
+    table('tMCa',['Each tolerance alone','Works as made','After the bench','In the guard band as made'],Object.entries(M.alone).map(([k,v])=>[esc(k),pc(v.asMade),pc(v.works),pc(v.band)]));
+    table('tKey',['Measure','The book','The model','The model\'s source','Reading'],B.key.rows.map(r=>[esc(r.measure),esc(r.book),esc(r.model),esc(r.source),esc(r.reading)]),true);}}
+  checks('kTol','tolerances');checks('kBench','bench');checks('kMC','montecarlo');checks('kKey','keystone');
+
+  /* ---------- 14. the swing on video ---------- */
   {const S=D.swing,U=S.startup,pts=S.pts;chart('cSwing',{label:'The 6MX\'s swing',x:[1070,1192],y:[100,195],xl:'the video\'s time (s; 1073 is 17:53)',yl:'the swing (°)',r:60,
       xf:v=>`${Math.floor(v/60)}:${String(Math.round(v%60)).padStart(2,'0')}`,
       series:[{type:'dots',name:'read off the video',c:'--s2',r:4,data:pts,tip:p=>`${Math.floor(p[0]/60)}:${f(p[0]%60,1).padStart(4,'0')}: ${f(p[1],1)}°`},
@@ -549,11 +614,11 @@ function draw(){
       ['the same, the damping viscous (TF at the 6MX\'s swing)',f(U.model.TF,1)+' s',`${U.model.range[0]}-${U.model.range[1]} s`,`${U.model.span[0]}-${U.model.span[1]} s`,f(U.model.Ainf,1)+'°',f(U.model.rms,2)+'°'],
       ['the work held flat (the plain A² law)',f(U.flat.TF,1)+' s',`${U.flat.range[0]}-${U.flat.range[1]} s`,'–',f(U.flat.Ainf,1)+'°',f(U.flat.rms,2)+'°'],
       ...Object.keys(U).filter(k=>k.startsWith('alone: ')).map(k=>[esc(k.replace('alone: ','one stretch alone: ')),f(U[k].TF,1)+' s',`${U[k].range[0]}-${U[k].range[1]} s`,'–',f(U[k].Ainf,1)+'°','–'])]);
-    $('vidMeaning').innerHTML=`<b>What it means for the Wempe.</b> The model's TF, ${D.wind.TF} s, estimated from the Wempe's parts, lies inside the measured ${U.split.span[0]}-${U.split.span[1]} s, so it stays, and <code>wempe_escapement.js</code> checks it against <code>wempe_startup.json</code>. The 6MX's balance is of the same kind but its own design, run out of its bowl, dial down, part wound: it settles at ${f(U.split.Ainf,0)}° on ${f(100*U.split.drive,0)} % of the model's drive, which at the model's drive would want TF ${f(U.tf_at_model_drive.TF,0)} s, outside every reading. So the video bounds the damping, not the drive: it says nothing of a wound Wempe's swing (section 13). The readings (${S.json.windows} windows, ${S.json.A_range[0]}-${S.json.A_range[1]}°): ${esc(S.json.sure)}.`;
+    $('vidMeaning').innerHTML=`<b>What it means for the Wempe.</b> The model's TF, ${D.wind.TF} s, estimated from the Wempe's parts, lies inside the measured ${U.split.span[0]}-${U.split.span[1]} s, so it stays, and <code>wempe_escapement.js</code> checks it against <code>wempe_startup.json</code>. The 6MX's balance is of the same kind but its own design, run out of its bowl, dial down, part wound: it settles at ${f(U.split.Ainf,0)}° on ${f(100*U.split.drive,0)} % of the model's drive, which at the model's drive would want TF ${f(U.tf_at_model_drive.TF,0)} s, outside every reading. So the video bounds the damping, not the drive: it says nothing of a wound Wempe's swing (section 15). The readings (${S.json.windows} windows, ${S.json.A_range[0]}-${S.json.A_range[1]}°): ${esc(S.json.sure)}.`;
     const K=S.committed;if(K&&(K.split.drive!==U.split.drive||K.split.span.join()!==U.split.span.join()||K.tf_at_model_drive.TF!==U.tf_at_model_drive.TF))$('vidMeaning').innerHTML+=` <b>The committed <code>wempe_startup.json</code> is not what the tool finds today</b> (<code>node wempe_startup.js --json wempe_startup.json</code> rewrites it): it holds TF ${f(K.split.TF,1)} s, ${K.split.span[0]}-${K.split.span[1]} s, on ${f(100*K.split.drive,1)} % of the drive (TF ${f(K.tf_at_model_drive.TF,1)} s at the model's), where today's run gives ${f(U.split.TF,1)} s, ${U.split.span[0]}-${U.split.span[1]} s, on ${f(100*U.split.drive,1)} % (${f(U.tf_at_model_drive.TF,1)} s). This page shows today's; <code>wempe_escapement.js</code>, the README and the essay quote the file's.`;}
   checks('kStart','startup');
 
-  /* ---------- 13. the flags ---------- */
+  /* ---------- 15. the flags ---------- */
   $('flags').innerHTML=Object.keys(RUN).flatMap(k=>lines(k).filter(l=>l.s==='~~').map(l=>`<li><span class="st mid">~~</span><span><code>${esc(RUN[k].cmd.split(' ').slice(1,2)[0])}</code>: ${esc(l.t)}</span></li>`)).join('')||'<li>none</li>';}
 draw();
 const thb=$('theme');thb.addEventListener('click',()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=dark?'light':'dark';});
