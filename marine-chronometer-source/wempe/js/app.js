@@ -384,7 +384,8 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
        rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
     tick:(dt,now,st)=>{if(!mv)return[];
-      {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);if(!c&&(cw.go||cw.u>0)){cw.go=false;cw.u=0;}   /* a view out of the case: the bowl set back at once, before the movement lifts out of it */
+      {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);if(!c&&(cw.go||cw.u>0)){if(cw.go&&!winding)wind0();cw.go=false;cw.u=0;}   /* a view out of the case: the bowl set back at once, before the movement lifts out of it, and a wind
+          asked for goes on there (the key on the square once the movement is out) */
         cf+=((c?c.lift:1)-cf)*k;cl+=((c?(cw.go||cw.u>0?1:c.lid):cf>0.97?0:1)-cl)*k;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
         const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
