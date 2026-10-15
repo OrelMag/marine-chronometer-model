@@ -21,6 +21,6 @@
         for(const i of[0,2])Iy+=v/20*(a[i]*a[i]+bb[i]*bb[i]+c[i]*c[i]+q[i]*q[i]);}
       b.m+=rho*m;b.Iy+=rho*Iy;for(let i=0;i<3;i++)b.s[i]+=rho*s[i];const e=b.byHn[h||'?']||(b.byHn[h||'?']={m:0,I:0});e.m+=rho*m;e.I+=rho*Iy;});
     return{m:b.m,cg:b.s.map(x=>x/b.m),I:b.Iy,byHn:b.byHn,missing:b.missing};};
-  const sp=E.spring;
+  const sp=E.spring;sp.geometry=ribbonGeo(E.spPath(0),0.52,0.285,sp.geometry);   /* the spring drawn at rest: the page bends it with the balance, which lengthens the drawn helix by the balance's angle (±4 % at full swing) */
   return JSON.stringify({balance:weigh(E.bal),rollers:weigh(E.rol),collet:weigh(E.hsRot),spring:weigh(sp.parent,o=>o===sp),detent:weigh(E.det),escape:weigh(E.ew),
     seconds:weigh(R.tr.sw),secondsHand:weigh(R.dl.sh)});})()
