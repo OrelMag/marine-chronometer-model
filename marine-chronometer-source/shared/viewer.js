@@ -10,6 +10,8 @@
      labels: (add, pw) => ...: add(text, sub, part, fn) a label at fn() (world), pw(group, x, y, z) a point in a group,
      qaTarget [x, y, z] (mv's frame: what __proj, __unproj and __cam aim at), tick: (dt, now, st) => [values]: the model's own motion each frame, the values it shows (a change draws a frame),
      hud: st => html, hash: {write(h), read(get, first)}, store: the prefix of what Remember settings keeps, name (the canvas's label), shot (the PNG's name).
+     essay: the page's essay tab (ESSAY, from ../shared/essaykit.js: show, on, section), if it has one: while it shows the stage isn't drawn (cfg.tick still keeps the model's
+     time), the keys are left to it, the hash is #essay[=section] and Remember settings doesn't note it; a hash with essay in it shows it, any other hides it (as the Hamilton's app.js).
    Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO}. */
 const VIEWER={start(cfg){
   const stage=$('#stage'),cv=stage.querySelector('canvas'),QA=/[?&]qa\b/.test(location.search),SNAP=/[?&]snap\b/.test(location.search);
@@ -174,7 +176,8 @@ const VIEWER={start(cfg){
   function showHelp(on){help.classList.toggle('on',on);helpBtn.setAttribute('aria-expanded',on?'true':'false');if(on){closeInfo();closeOpm();hintOff();}}
   helpBtn.addEventListener('click',()=>showHelp(!help.classList.contains('on')));help.querySelector('.x').addEventListener('click',()=>showHelp(false));
   const typing=()=>/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)||$('#about').open;
-  document.addEventListener('keydown',e=>{const mod=e.ctrlKey||e.metaKey||e.altKey;
+  const ES=cfg.essay,esOn=()=>!!ES&&ES.on();   /* the essay tab (cfg.essay, ../shared/essaykit.js's api), when the page has one: while it shows, the model keeps its time but isn't drawn, and the keys and the hash are the essay's */
+  document.addEventListener('keydown',e=>{if(esOn())return;const mod=e.ctrlKey||e.metaKey||e.altKey;
     if(e.key==='Escape'){closeOpm();showHelp(false);}
     if((e.key==='p'||e.key==='P')&&!mod&&!typing()&&panelSide())pnb.click();
     if(e.key==='Backspace'&&!mod&&!typing()){e.preventDefault();if(e.shiftKey)histGo(HF,HB);else histGo(HB,HF);}
@@ -223,7 +226,7 @@ const VIEWER={start(cfg){
   /* the panel's sections: with Remember settings, each viewer's open and closed ones */
   const DET=[...document.querySelectorAll('.ctl>details.grp')],detSave=()=>lsSet('open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));
   try{const o=JSON.parse(lsGet('open')||'{}');DET.forEach(d=>{if(typeof o[d.id]==='boolean')d.open=o[d.id];});}catch(_){}DET.forEach(d=>d.addEventListener('toggle',detSave));
-  const remSave=()=>{if(!REM)return;const h=new URLSearchParams(hashOf());for(const k of['part','open'])h.delete(k);lsSet('state',h.toString());};   /* the hash's settings without what belongs to a moment; at load it stands in for a missing hash */
+  const remSave=()=>{if(!REM||esOn())return;const h=new URLSearchParams(hashOf());for(const k of['part','open'])h.delete(k);lsSet('state',h.toString());};   /* the hash's settings without what belongs to a moment; at load it stands in for a missing hash */
   const rem=$('#remember');if(rem){rem.checked=REM;rem.addEventListener('change',e=>{REM=e.target.checked;
     if(REM){try{localStorage.setItem(SP+'remember','1');}catch(_){}lsSet('set',JSON.stringify(SET));lsSet('theme',document.documentElement.dataset.theme||'auto');detSave();remSave();}else try{[SP+'remember',...RK].forEach(k=>localStorage.removeItem(k));}catch(_){}});}
   /* parts list: every named part, grouped; under a part with pieces, its pieces, folded until the part or one of them is picked. A name singles it out; the box hides it */
@@ -284,11 +287,12 @@ const VIEWER={start(cfg){
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
   /* ---------- the state in the URL hash: view, speed, sec=x:-3.5[:f], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState ---------- */
-  function hashOf(){const h=new URLSearchParams();if(st.view!==cfg.startView)h.set('view',st.view);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));
+  function hashOf(){if(esOn()){const s=ES.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();if(st.view!==cfg.startView)h.set('view',st.view);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);
     if(cfg.hash)cfg.hash.write(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
   function applyHash(first){hashSeen=location.hash.slice(1);const h=new URLSearchParams(hashSeen),g=k=>h.get(k),own=(o,k)=>k!=null&&Object.prototype.hasOwnProperty.call(o,k),v=own(VIEWS,g('view'))?g('view'):first&&own(VIEWS,SET.view)?SET.view:cfg.startView;
+    if(ES){if(h.has('essay')){ES.show(true,g('essay'));return v;}ES.show(false);}   /* the essay: the model underneath is left as it is */
     const ed=g('edges')!=='0',shd=g('shadows')==='1',mg=g('merge')!=='0',dw=g('draw')==='1'?'tint':g('draw')==='ink'?'ink':false;
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}
     const sp=g('speed');setSpeed(sp!=null&&Number.isFinite(+sp)?+sp:1);
@@ -319,7 +323,7 @@ const VIEWER={start(cfg){
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);}
     const sig=[cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,cur.explode,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),...xs];
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&lastSig.length===sig.length&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
-    if(onScreen&&!still){paint();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
+    if(onScreen&&!still&&!esOn()){paint();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
     const hs=cfg.hud?cfg.hud(st):'';if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
     if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);}

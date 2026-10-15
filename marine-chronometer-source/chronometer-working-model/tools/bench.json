@@ -87,7 +87,7 @@
    "no": "42007",
    "when": "the maintaining work assembled, before the fusee wheel goes on",
    "how": "Lift each winding pawl out of its tooth with a pegwood and let it go: it must snap back. Measure each spring's set: lift its end off the pawl's arm and read how far it stands past the arm when free, with a feeler or under a loupe against a scale. The sustaining pawl's wire stands in its hole with the pawl turned in about 0.12 rad (7°) from where its tip meets the ratchet.",
-   "pass": "Each winding pawl's spring set at least 0.08 mm (twice that is the aim): less, and when the key lets go the fusee's teeth can outrun the pawl and catch it part way in (ratchets.js): bend it back to the aim. The sustaining pawl's wire must press the pawl into the teeth (0.12 rad is the aim): from any wire that does, the pawl falls from a tip to the root in 4.4 ms or less, inside the 8.3 ms a tooth takes at a turn a second of the key (ratchets.js); one that leaves the pawl loose in its tooth, bend it in. The pawls drawn in by their load: the winding pawls' faces bear square (a draw of 12.5°), the sustaining pawl's end stoned to bear along its tooth's face, not on its corner."
+   "pass": "Each winding pawl's spring set at least 0.07 mm (twice that is the aim): less, and when the key lets go the fusee's teeth can outrun the pawl and catch it part way in (ratchets.js): bend it back to the aim. The sustaining pawl's wire must press the pawl into the teeth (0.12 rad is the aim): from any wire that does, the pawl falls from a tip to the root in 4.4 ms or less, inside the 8.3 ms a tooth takes at a turn a second of the key (ratchets.js); one that leaves the pawl loose in its tooth, bend it in. The pawls drawn in by their load: the winding pawls' faces bear square (a draw of 12.5°), the sustaining pawl's end stoned to bear along its tooth's face, not on its corner."
   },
   {
    "id": "maintaining",
@@ -115,7 +115,7 @@
   }
  ],
  "lines": {
-  "42007": "The pawls' springs, the maintaining work assembled, before the fusee wheel goes on: Each winding pawl's spring set at least 0.08 mm (twice that is the aim): less, and when the key lets go the fusee's teeth can outrun the pawl and catch it part way in (ratchets.js): bend it back to the aim. The sustaining pawl's wire must press the pawl into the teeth (0.12 rad is the aim): from any wire that does, the pawl falls from a tip to the root in 4.4 ms or less, inside the 8.3 ms a tooth takes at a turn a second of the key (ratchets.js); one that leaves the pawl loose in its tooth, bend it in. The pawls drawn in by their load: the winding pawls' faces bear square (a draw of 12.5°), the sustaining pawl's end stoned to bear along its tooth's face, not on its corner.",
+  "42007": "The pawls' springs, the maintaining work assembled, before the fusee wheel goes on: Each winding pawl's spring set at least 0.07 mm (twice that is the aim): less, and when the key lets go the fusee's teeth can outrun the pawl and catch it part way in (ratchets.js): bend it back to the aim. The sustaining pawl's wire must press the pawl into the teeth (0.12 rad is the aim): from any wire that does, the pawl falls from a tip to the root in 4.4 ms or less, inside the 8.3 ms a tooth takes at a turn a second of the key (ratchets.js); one that leaves the pawl loose in its tooth, bend it in. The pawls drawn in by their load: the winding pawls' faces bear square (a draw of 12.5°), the sustaining pawl's end stoned to bear along its tooth's face, not on its corner.",
   "42015": "The fusee evens the pull, the chain on, the barrel set up, before the train goes in: Every reading within -5 to +11 % of their mean (the model's even 311 mN·m): the escape wheel's torque in that band swings the balance 247.5-270° (the escapement's ampAt). A reading outside it at one end means the fusee's profile and the spring's stiffness don't match: the set-up moves the whole curve, not its slope.",
   "42016": "The maintaining work drives the train, the movement running, part wound: Running, the ends nearly meet: if they stand open, the spring is stronger than the drive (its band too high) and thins. Held, the swing stays over a turn five to ten minutes (Sec. IV; the model's 8.4) and the train runs on to about 18; a winding never takes so long. Under five minutes, the band is too low or its gap too small (sustaining.js: banked it pushes 88 % of the drive from a band 1.25 mm high, the 20° gap measured).",
   "42024": "The winding stop takes a strong hand, the stop-bar and the winding stop made, then wound to the stop: Nothing moves or marks: hardened, the stop-bar's end yields at 4.44 N·m and the stud's thread at 4.11; left soft the bar bends at 1.51, under half as much again as a strong hand's (a gloved hand or a longer bow). The first thing to give is the key's own socket (1.60 N·m). Never turn the key the wrong way: 0.19 N·m clockwise bends the fusee wheel's teeth (the build's key has a ratchet in its pipe).",
@@ -342,8 +342,8 @@
    270
   ],
   "pawls": {
-   "set": 0.0805,
-   "aim": 0.1609,
+   "set": 0.0743,
+   "aim": 0.1486,
    "wire": [
     0,
     0.12

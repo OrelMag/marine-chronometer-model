@@ -45,7 +45,7 @@
       mass:r4(mass),I:r4(I),cg:P2(tr([[G.cx,G.cz]],Q,th)[0]),outline:W.filter((_,i)=>i%Math.max(1,Math.floor(W.length/90))===0).map(P2),teeth:teeth(pr,c.b),spring};};
   const out={pawls:[]};
   { const su=R.su,psi=su.base,Qr=toWheel(su.q,[0,0],psi),thR=su.seat-psi;   /* the click's pivot and turn in the setup ratchet's frame */
-    out.pawls.push(pawl('setup click',su.pr,42,su.pr.ro/(42/2+0.95),su.pr.ro-su.pr.ri,0.8,1.0,su.pts,Qr,thR,-1,{kind:'band',w:0.3,h:0.85,len:r4(1.273*7.05/1.039*174*Math.PI/180),note:'blued band on edge, half a turn round the ratchet at r 9 to the click\'s back'})); }
+    out.pawls.push(pawl('setup click',su.pr,42,su.pr.ro/(42/2+0.95),su.pr.ro-su.pr.ri,0.8,1.0,su.pts,Qr,thR,-1,{kind:'band',w:0.3,h:0.85,len:r4(1.273*7.05/1.039*174*Math.PI/180),note:'steel band on edge, half a turn round the ratchet at r 9 to the click\'s back'})); }
   for(let k=0;k<2;k++){const u=R.wp[k].userData,Q=toWheel(u.q,[0,0],R.WPH),th=seatPawl(u.pts,Q,u.th0-R.WPH,R.FPR);let len=0;for(let i=1;i<u.arc.length;i++)len+=Math.hypot(u.arc[i][0]-u.arc[i-1][0],u.arc[i][1]-u.arc[i-1][1]);
     const bk=pawlBack(u.pts,0.96,Q,th,[0,0]);out.pawls.push(pawl('winding pawl '+(k+1),R.FPR,36,R.FPR.ro/(36/2+0.95),R.FPR.ro-R.FPR.ri,0.5,0.5,u.pts,Q,th,1,{kind:'band',w:0.3,h:0.5,len:r4(len),bear:P2(bk.p),bearN:P2(bk.n),arm:0.96,note:'a long arc in its bed round the sustaining ratchet, its end on the pawl\'s arm'}));}
   { const sp=R.spawl,pts=sp.userData.pts,SPv=[sp.position.x,sp.position.z],Fu=[R.ssg.position.x,R.ssg.position.z],q=[SPv[0]-Fu[0],SPv[1]-Fu[1]],psi=((R.holdBack(0)%R.SRP.p)+R.SRP.p)%R.SRP.p,

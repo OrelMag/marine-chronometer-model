@@ -1,0 +1,343 @@
+{
+ "note": "acoustic.py: onsets in ms from each recording's aligned click; fits: swing A (deg) with the 16-84 % of resamples, shift t0, cost, residual per event (onset - model, ms)",
+ "recordings": {
+  "gnIP3NqNbEU": {
+   "file": "gnIP3NqNbEU.f251.webm",
+   "stretch": [
+    "0:03",
+    "end"
+   ],
+   "beats": 114,
+   "kept": 103,
+   "onsets": [
+    {
+     "t": -17.185,
+     "sd": 0.072,
+     "p": 1.0,
+     "rise": 12.0,
+     "level": 12.6
+    },
+    {
+     "t": -10.777,
+     "sd": 0.06,
+     "p": 1.0,
+     "rise": 17.4,
+     "level": 27.8
+    },
+    {
+     "t": -1.26,
+     "sd": 0.014,
+     "p": 1.0,
+     "rise": 11.5,
+     "level": 39.7
+    },
+    {
+     "t": 235.676,
+     "sd": 0.094,
+     "p": 1.0,
+     "rise": 17.4,
+     "level": 18.9
+    },
+    {
+     "t": 246.461,
+     "sd": 0.039,
+     "p": 1.0,
+     "rise": 8.4,
+     "level": 19.2
+    }
+   ],
+   "fits": {
+    "corrected/all": {
+     "A": 264.5,
+     "A16": 263.5,
+     "A84": 266.0,
+     "t0": -11.5,
+     "cost": 28.53,
+     "chi2": 3.53,
+     "paired": 4,
+     "same_pairing": 0.97,
+     "edge": false,
+     "res": {
+      "wheel released": {
+       "model": -16.83,
+       "onset": -17.185,
+       "res": -0.35
+      },
+      "detent home": {
+       "model": -11.23,
+       "onset": -10.777,
+       "res": 0.45
+      },
+      "lock": {
+       "model": -1.18,
+       "onset": -1.26,
+       "res": -0.08
+      },
+      "jewel meets trip spring": {
+       "model": 235.7,
+       "onset": 235.676,
+       "res": -0.02
+      }
+     },
+     "alt": {
+      "A": 196.0,
+      "cost": 38.04,
+      "pairs": {
+       "detent lands": -17.185,
+       "lock": -1.26,
+       "trip spring clear": 235.676
+      }
+     }
+    },
+    "corrected/core": {
+     "A": 272.0,
+     "A16": 271.5,
+     "A84": 274.5,
+     "t0": -11.21,
+     "cost": 25.44,
+     "chi2": 3.44,
+     "paired": 3,
+     "same_pairing": 1.0,
+     "edge": false,
+     "res": {
+      "strike": {
+       "model": -11.21,
+       "onset": -10.777,
+       "res": 0.43
+      },
+      "lock": {
+       "model": -1.19,
+       "onset": -1.26,
+       "res": -0.07
+      },
+      "jewel meets trip spring": {
+       "model": 236.05,
+       "onset": 235.676,
+       "res": -0.37
+      }
+     },
+     "alt": {
+      "A": 183.5,
+      "cost": 31.57,
+      "pairs": {
+       "strike": -17.185,
+       "lock": -1.26,
+       "trip spring clear": 235.676
+      }
+     }
+    },
+    "corrected/beat": {
+     "A": 303.0,
+     "bE": 11.0,
+     "A_range": [
+      300.0,
+      303.0
+     ],
+     "bE_range": [
+      -4.0,
+      11.0
+     ],
+     "t0": -9.62,
+     "cost": 25.7,
+     "chi2": 0.7,
+     "paired": 4,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -17.27,
+       "onset": -17.185,
+       "res": 0.08
+      },
+      "detent lands": {
+       "model": -10.87,
+       "onset": -10.777,
+       "res": 0.09
+      },
+      "lock": {
+       "model": -1.04,
+       "onset": -1.26,
+       "res": -0.22
+      },
+      "trip spring clear": {
+       "model": 246.41,
+       "onset": 246.461,
+       "res": 0.05
+      }
+     }
+    }
+   },
+   "intervals": {
+    "detent home -> lock": {
+     "ms": 9.52,
+     "sd": 0.06,
+     "A": 275.848076209248,
+     "A_range": [
+      282.95451410053755,
+      269.3013396678219
+     ],
+     "corrected_255": 10.52,
+     "old_255": 9.9
+    }
+   }
+  },
+  "KxInG08LWXg": {
+   "file": "KxInG08LWXg.f140.m4a",
+   "stretch": [
+    "0:00",
+    "0:34"
+   ],
+   "beats": 53,
+   "kept": 53,
+   "onsets": [
+    {
+     "t": -20.076,
+     "sd": 0.332,
+     "p": 0.34,
+     "rise": 2.8,
+     "level": 4.3
+    },
+    {
+     "t": -17.728,
+     "sd": 0.289,
+     "p": 0.88,
+     "rise": 3.6,
+     "level": 6.4
+    },
+    {
+     "t": -12.718,
+     "sd": 0.119,
+     "p": 1.0,
+     "rise": 13.8,
+     "level": 19.2
+    },
+    {
+     "t": -1.52,
+     "sd": 0.123,
+     "p": 1.0,
+     "rise": 6.8,
+     "level": 27.8
+    },
+    {
+     "t": 253.527,
+     "sd": 0.231,
+     "p": 1.0,
+     "rise": 15.2,
+     "level": 19.5
+    }
+   ],
+   "fits": {
+    "corrected/all": {
+     "A": 263.5,
+     "A16": 224.73999999999998,
+     "A84": 264.58,
+     "t0": -11.83,
+     "cost": 27.95,
+     "chi2": 2.95,
+     "paired": 4,
+     "same_pairing": 0.23,
+     "edge": false,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -20.16,
+       "onset": -20.076,
+       "res": 0.09
+      },
+      "wheel released": {
+       "model": -17.18,
+       "onset": -17.728,
+       "res": -0.55
+      },
+      "detent lands": {
+       "model": -13.06,
+       "onset": -12.718,
+       "res": 0.34
+      },
+      "lock": {
+       "model": -1.46,
+       "onset": -1.52,
+       "res": -0.06
+      }
+     },
+     "alt": {
+      "A": 252.0,
+      "cost": 30.18,
+      "pairs": {
+       "wheel released": -17.728,
+       "strike": -12.718,
+       "lock": -1.52
+      }
+     }
+    },
+    "corrected/core": {
+     "A": 186.5,
+     "A16": 175.0,
+     "A84": 244.5,
+     "t0": -264.18,
+     "cost": 26.0,
+     "chi2": 0.0,
+     "paired": 2,
+     "same_pairing": 0.45,
+     "edge": false,
+     "res": {
+      "jewel meets trip spring": {
+       "model": -17.73,
+       "onset": -17.728,
+       "res": 0.0
+      },
+      "trip spring clear": {
+       "model": -12.72,
+       "onset": -12.718,
+       "res": -0.0
+      }
+     },
+     "alt": {
+      "A": 245.0,
+      "cost": 26.0,
+      "pairs": {
+       "strike": -12.718,
+       "lock": -1.52
+      }
+     }
+    },
+    "corrected/beat": {
+     "A": 262.0,
+     "bE": -12.0,
+     "A_range": [
+      143.0,
+      267.0
+     ],
+     "bE_range": [
+      -12.0,
+      12.0
+     ],
+     "t0": -12.54,
+     "cost": 26.56,
+     "chi2": 1.56,
+     "paired": 4,
+     "res": {
+      "jewel meets passing spring": {
+       "model": -20.49,
+       "onset": -20.076,
+       "res": 0.41
+      },
+      "wheel released": {
+       "model": -17.5,
+       "onset": -17.728,
+       "res": -0.23
+      },
+      "strike": {
+       "model": -12.54,
+       "onset": -12.718,
+       "res": -0.18
+      },
+      "lock": {
+       "model": -1.62,
+       "onset": -1.52,
+       "res": 0.1
+      }
+     }
+    }
+   },
+   "intervals": {}
+  }
+ }
+}

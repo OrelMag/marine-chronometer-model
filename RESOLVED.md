@@ -59,6 +59,18 @@ Contents:
 
 ## Escapement
 
+- **makeEsc's Wempe detent fell off its stone too soon.** At the discharge stone's square acting corner the Wempe's square-ended gold
+  spring leaves with the speed it came up with (the lift turns within a cell of the table); `depart` took the detent's speed by a central
+  difference across the corner, −0.39 rad/s (falling) for +4.2, so its fall began 1.2° early. `tools/dynamics.js --model wempe` found it.
+  Now a square-ended spring (`TSQ`) leaves with the slope it came up. Keep: a contact with a corner hands on the speed of its approach side. `ea4b115`
+- **makeEsc counted the Wempe's detent's work over the stone's whole lift.** Its sums ran over the jewel's table to its end, so the
+  preload's and spring's energy came back to the balance down the stone's bevel, as a massless detent rides it; the drawn detent, flung off
+  the corner, never touches the bevel, and that energy (and its speed) is lost: 3.2° of swing. Now `DEP` counts it to where the detent
+  leaves the stone (the Wempe's; 0 the Hamilton's). Keep: the averaged model counts the detent's work over the path the integrated detent takes. `ea4b115`
+- **makeEsc's Wempe wheel chased the impulse stone free.** Let go from rest, it is too slow to get its tooth out from under the stone before
+  the detent falls back, so the stone rides that tooth's land and back (makeEsc drew the ride but left it out of the chase): its friction and
+  the back's push moved the swing 1.4°. Now `RW` runs the chase with it (quasi-static, the detent's inertia in its contact). Keep: whatever
+  touches the wheel between its release and the impulse is in the chase; `dynamics.js --model wempe` and makeEsc within 3° and 0.3 s a day. `ea4b115`
 - **makeEsc counted any other escapement from the Hamilton's.** An instance whose settings weren't the reference's
   rebuilt its reference from the calibration keys alone (`CAL`) on the Hamilton's defaults, so a second chronometer's escapement
   with a setting changed would have been calibrated, and its rate counted, against the Hamilton's geometry (on a Wempe-like set,
@@ -543,6 +555,33 @@ Contents:
   outline (CK_TR); the essay's hairspring figures (data-hs) from hairspring.js. `bf4d681`
 
 ## Winding and maintaining work
+
+- **The winding-pawl springs' feet were placed apart, and nothing showed the
+  holes beside the pawls.** The beds, pockets and screw holes were read on
+  KLUwI2UUCMQ 19:12 as angles from the pawls' studs as that frame shows them,
+  172.6° apart; the model sets the studs opposite, so each foot's screws came
+  out 7-9° off and the two feet 16° apart, though the springs are one part
+  (42007, two off). The underside face-on (28:35) has the studs opposite and
+  the two feet's screws alike, and on 19:12 the four screw holes are symmetric
+  about the studs' centre, 0.56 mm from the bore's edge the angles were read
+  about. The angles are now counted from the true studs (+3.9° and -3.5°), both
+  feet's screws at 132.0° and 161.8° from their own pawl, r 8.15, the pockets'
+  estimated far ends past them; a hole through the wheel beside each pawl's arm
+  (r 0.66 at r 6.8, 13.6° toward its tip), seen through from both faces, is
+  cut. Keep: the springs' beds, feet and screws counted from the studs where
+  they stand (opposite), the two feet's screws the same; any frame's angles
+  re-centred on symmetric pairs before they are read (`References/VIDEOS.md`,
+  "The sustaining ratchet's holes, studs and pawls"). `4f0100d`
+- **The winding pawls were bright, their springs and the setup pawl's spring
+  blued, and the pawls' studs thinner than their holes.** No source had blued
+  springs: the one flat spring of the movement the video shows, the setup
+  pawl's (11:58), is polished steel, and the pawls are grey steel, about as
+  light as the gilt beside them (28:19.1, 19:12, 18:40). The studs were r 0.22
+  in the pawls' r 0.403 holes, a ring of daylight round each; 19:12 shows a
+  stud's end r 0.38-0.46 filling the eye. Now the pawls `M.steelD`, the springs
+  and feet and the setup pawl's spring `M.steel`, the studs r 0.385 (inside the
+  holes' 12-sided outline). Keep: a part's finish from a frame of it, or from
+  the movement's nearest like part, said so in its comment. `4f0100d`
 
 - **Wound straight from a set, the sustaining ratchet stood while the fusee
   turned back most of a turn, then dropped past a tooth.** Wind with the key
@@ -1759,6 +1798,16 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's key: its grooved pin lay in the paddle's plane, the paddle sank into the slot's
+  floor, and its square socket was round.** The pin (51 00 11-6) ran along the paddle, inside it,
+  pinning nothing: 05 01 02-2's cross hole crosses the 3 mm slot, so the pin goes through the
+  paddle's thickness (it shows end-on where the paddle shows its face on 51 00 11), 4 −0.05 under
+  the body's top (drawn 3.2). The paddle's centre was 10.6 over the body (scaled), its rim 0.35
+  below the slot's floor, the Ø 35 arc 6.3 deep (sure): now 10.95. The socket was a round bore Ø 3.1,
+  which the 3.1 square's corners (r 2.19) couldn't enter: now the square cut, 3.1 +0.05 × 19, its
+  corners as the arbor's square has them. Keep: the pin across the slot; the paddle on the slot's
+  floor; the socket square, so the key can go on the square (`fine.py --model wempe --eval` with it
+  there finds nothing new). `a422612`
 - **The setup ratchet's teeth 0.72 deep with faces leaning back** (OPEN-QUESTIONS.md). Measured on the wheel held loose at KLUwI2UUCMQ 38:25.8 and 38:26.0
   (`tools/ratchetface.py`, calibrated on synthetic frames blurred as the video): 0.48 mm deep
   (0.42-0.53), the faces undercut 3-6°; a lean back is ruled out. Now 0.48 (`SRD`, gearGeo's
@@ -2143,6 +2192,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's Box view showed an empty box, and the bezel glass's outline through its wood.**
+  From 24° the lid's front wall hid everything inside (the dial lies 59 under the lid's glass);
+  and Edges drew the bezel's and the lid's glass as ghosts, whose outlines the line pass lays over
+  the frame unoccluded, so an ellipse crossed the shut lid's front. The view now looks from 62°,
+  reading the dial through the glass, and both glasses are `inkBox` (no lines), as the Hamilton's
+  crystal and box glass are. Keep: a see-through part outside the movement draws no Edges lines. `a422612`
 - **The Wempe's dial printing overlapped and didn't look like the dial.** Its
   hours were typeset in the vendored Instrument Sans (600 faked by stroking),
   all 9 high on one circle, so the 12 ran into the up-and-down sub-dial and the
@@ -2236,6 +2291,11 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **The Wempe wound with no key to show it.** Wind turned the fusee back while its key lay in
+  the box. Now, in the movement's views (the movement out of its case), the key goes from the box
+  onto the fusee's square, its mouth on the dust plate, turning with it, and goes back when it lets
+  go, as the Hamilton's key does (`keyOn`); it rides with the dust plate, so in the Exploded view it
+  stays outside the dust bush. Keep: one key, moved (`WCASE.keyAt`, fusee.js `keySeat`), never a copy. `a422612`
 - **Setting the time turned the train, backward as often as forward** (kinematics handoff 7). The time field, Now and Local/GMT moved `tSim`, the model's own clock,
   so the whole train jumped to the time and `update()` re-seated the maintaining work. Now
   (`setHands`, app.js) the hour and minute hands go round by the cannon pinion's slip, as the
@@ -2441,6 +2501,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   balance is (`TWIST.run`; with the train going, a twist is a knock, as a jolt is); the build-up
   from it follows the video's start within its readings. The export's Stop and start plays the same
   twist. Keep: the balance's kick from the box's own turn, never set apart from it. `e237416`
+- **The Wempe was linked twice on the Hamilton's page.** A "Wempe model" link beside the 3D model
+  and Essay tabs (`f011119`) repeated the header's switch between the models (`nav.models`). The tab
+  link is gone; the tabs are only the page's two views again. Keep: one way between the models, the
+  header's `nav.models`, on both pages, the current model marked.
 
 ## Build, tools and docs
 
