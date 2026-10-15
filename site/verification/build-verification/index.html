@@ -49,7 +49,7 @@ ol.src li{margin-bottom:6px;font-size:14.5px}
 <body>
 <main>
 <button class="themebtn" id="theme" type="button">Light / dark</button>
-<p class="small"><a href="../../index.html">Marine Chronometer model</a> · verification for a build · 15 October 2026 · with it: <a href="../real-chronometers/index.html">the model against real chronometers</a></p>
+<p class="small"><a href="../../index.html">Marine Chronometer model</a> · verification for a build · 16 October 2026 · with it: <a href="../real-chronometers/index.html">the model against real chronometers</a></p>
 <h1>Would a chronometer made to the model run and keep time?</h1>
 <p class="sub">The aim has changed from parity with the 1948 Hamilton Model 21 to a <b>working marine chronometer</b>, made with a CNC and a 3D printer, steady enough
 to navigate by. The model already agreed with the manual and with recordings of real Model 21s; this report covers the checks added to answer the maker's
@@ -570,7 +570,7 @@ The band is the manual's, 247.5-270°. <code>estimates.js</code>.</figcaption></
   the drive 95 % → 111 %: the model 248° → 270°, the rate +0.33 s a day; in time 248° → 270°, +0.32 s a day (+0.144 s a day for each 10° of swing)
   ok  isochronism (the rate&#x27;s change over the manual&#x27;s range of swing) within 0.1 s a day of the model&#x27;s
   ok  and small (under 0.5 s a day for each 10° of swing): what the fusee keeps even, the escapement doesn&#x27;t undo
-  (8 s)
+  (6 s)
   2. The detent as a body: its inertia, bouncing on its stop
   the swing 253.7°, the escapement&#x27;s own rate −3.22 s a day; the tooth lands 18.9° after the release
   ok  the detent&#x27;s own inertia and bounce change little: the swing −1.3°, the rate −0.12 s a day against the model
@@ -588,12 +588,12 @@ The band is the manual's, 247.5-270°. <code>estimates.js</code>.</figcaption></
     the train 1.5× its inertia             246°, trips 0, back 10.30 ms before the tooth, 0 % lifted as it arrives
   ok  over all of these the detent is home before the next tooth: what brings it back is the preload Op. 78 sets, not the spring&#x27;s thickness
   with no preload at all the spring&#x27;s own stiffness still brings the detent home in time: Op. 78&#x27;s preload is for the locking&#x27;s safety against knocks (below), not for the return
-  (14 s)</pre></details>
+  (11 s)</pre></details>
 <h3><code>tools/errorbudget.js</code> <span class="small">passes</span></h3><p>A Monte Carlo of the escapement made to a maker&#x27;s tolerances, and a 60-day voyage&#x27;s error from the test card&#x27;s figures, the barometer, the oil and the sea.</p><details><summary>its output today</summary><pre>1. As made: the escapement with a maker&#x27;s tolerances (Monte Carlo, the reference torque and balance)
   1000 escapements: 81.1 % run; their swing 243-261° (5-95 %), 67 % inside the manual&#x27;s 247.5-270°; 20 % meet every adjustment figure as made
   out of the manual&#x27;s figures, as made: overall (Op. 87) 56 %, would not run 19 %, drop (Op. 97) 16 %, let-off (Op. 86) 6 %, lock (Op. 85) 1 %: the adjuster&#x27;s work (the lock-adjusting and detent-adjusting screws, Ops. 84-97, set lock and the detent&#x27;s place; the trip spring&#x27;s tip is bent to its figure)
   the escapement&#x27;s isochronism over them (averaged model): +0.11 to +0.19 s a day for each 10° of swing (5-95 %); the model&#x27;s own +0.15
-  (28 s)
+  (22 s)
   2. At sea: 60 days from a port in winter (55 °F) into the tropics (85 °F), rated over 10 days in port, the error the navigator carries
   the escapement&#x27;s isochronism in time, near 255°: +0.155 s a day for each 10° of swing (dynamics.js; 247° → 269°)
   ok  small, as the fusee and the detent escapement are meant to make it
@@ -613,7 +613,7 @@ The band is the manual's, 247.5-270°. <code>estimates.js</code>.</figcaption></
     the barometer                          0.15 s
     heavy weather one day in five          0.06 s
   ok  a chronometer like No. 3390 carries 1.4 s (0.3 miles of longitude) after a month at sea, well under 30 s (7½ miles): it keeps time
-  (32 s)</pre></details>
+  (25 s)</pre></details>
 
 <h2 id="limits">What only the bench can settle</h2>
 <div class="callout gap"><ul>
