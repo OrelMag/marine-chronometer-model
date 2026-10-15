@@ -71,7 +71,7 @@
    "sheet": "—",
    "when": "the movement running, fully wound, at 24 h and near run-down",
    "how": "Read the balance's swing against marks under it, from a phone's slow-motion video (python wempe_swing.py reads the arm's sweep), or from a recording of the beat (python acoustic.py --model wempe FILE fits its clicks to the escapement in time).",
-   "pass": "In the guard band, 193-270° each way, over the whole wind (the model 201.5-212.1°, 207.3° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
+   "pass": "In the guard band, 193-270° each way, over the whole wind (the model 201.5-212.0°, 207.0° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
   },
   {
    "id": "maintaining",
@@ -122,7 +122,7 @@
     "full": 138.4,
     "low": 126.5,
     "band": [
-     123.2727,
+     123.2739,
      166.0613
     ]
    },
@@ -132,9 +132,9 @@
    ],
    "rms": 0.01074,
    "sources": {
-    "s": 1.2141,
+    "s": 1.2142,
     "t_mm": 0.3947,
-    "g262": 161.1545
+    "g262": 161.1636
    }
   },
   "depths": {
@@ -528,7 +528,7 @@
    }
   },
   "rundown": {
-   "model": 62,
+   "model": 61.75,
    "TF": 125,
    "video": [
     102,
@@ -538,37 +538,37 @@
     [
      80,
      44,
-     176.1042,
-     1.2352,
-     1.6299
+     175.8588,
+     1.2353,
+     1.6297
     ],
     [
      100,
      52.5,
-     192.413,
-     1.0558,
-     1.3872
+     192.1397,
+     1.0561,
+     1.3869
     ],
     [
      125,
-     62,
-     207.2693,
-     0.9288,
-     1.2141
+     61.75,
+     206.9695,
+     0.9286,
+     1.2142
     ],
     [
      160,
      73.5,
-     225.9679,
-     0.8031,
-     1.0423
+     225.6641,
+     0.8029,
+     1.0422
     ],
     [
      200,
-     85,
-     243.2819,
+     84.75,
+     242.9172,
      0.7121,
-     0.9187
+     0.9186
     ]
    ]
   },
@@ -638,7 +638,7 @@
     "model": 0.63,
     "window": [
      0.63,
-     1.5831
+     1.5839
     ],
     "aim": 0.87
    }
@@ -654,7 +654,7 @@
    ],
    "model": [
     201.4827,
-    212.1377
+    211.997
    ]
   },
   "maintaining": {

@@ -164,10 +164,10 @@ const PARTS={
   gimbalRing:{t:'Gimbal ring (Kardanring)',g:6,src:'scaled',sn:'Scaled on the case’s assembly (05 01): its sizes, its bracket and the pivots’ places; the pivots’ heights from its 11.5',figs:'05 01_1',c:'#b99653',pri:2,
     d:'The ring between the bowl and the box: its outer pivots, on the 3-9 line, are screws through the box’s walls; its inner pivots, screws on the 12-6 line with lock nuts, run in the bowl’s brackets (“Lagerstellen a u. b leicht spielend”: the bearings a and b running freely). Both pairs lie in one plane, so the bowl hangs level whatever the ship does. A bracket on the ring at 3 o’clock, slid to level the bowl the other way, carries one outer pivot. Wempe 3955’s ring is Bakelite; no material is given.',
     sp:'Drawing 05 01 00-5 (no sheet in the set; bracket 05 01 00-6) · Ø 140 × 3.3 × 23.2 (scaled) · pivots 11.5 under its top · WN-79, WN-400'},
-  box:{t:'Wooden box (Holzkasten)',g:6,src:'scaled',sn:'Its outside from the case’s assembly sheet, its walls and handles from the handle’s sheet; its boards, lid and hinges as photographs of the wartime boxes show them (estimated)',figs:'05 01_1, 51 00_1, 51 00_2',c:'#b98d58',pri:3,
-    d:'The oak box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. For carrying it goes into the padded outer box (Transport box view).',
+  box:{t:'Wooden box (Holzkasten)',g:6,src:'scaled',sn:'Its outside from the case’s assembly sheet, its walls and handles from the handle’s sheet; its boards, lid and hinges as photographs of the wartime boxes show them (estimated)',figs:'05 01_1, 51 00_1, 51 00_2',c:'#8e4628',pri:3,
+    d:'The mahogany box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. For carrying it goes into the padded outer box (Transport box view).',
     sp:'Drawing 127-556.02 (Holzkasten; no sheet in the set) · 185 × 185 × 180 outside · walls 12.5 · handles 51 00 10 · pivots WN-80, M6'},
-  lid:{t:'Lid (Deckel)',g:6,src:'est',sn:'Its height from the parting line on the handle’s sheet; the glazed top, hinges and latch as the photographed boxes show them (estimated); the maker’s plate and the tongue from their sheets',figs:'51 00_2, 51 00_3, 51 00_4',c:'#c79d66',pri:2,
+  lid:{t:'Lid (Deckel)',g:6,src:'est',sn:'Its height from the parting line on the handle’s sheet; the glazed top, hinges and latch as the photographed boxes show them (estimated); the maker’s plate and the tongue from their sheets',figs:'51 00_2, 51 00_3, 51 00_4',c:'#9c5233',pri:2,
     d:'The box’s lid, with a glass in its top so the dial can be read with it shut, hinged at the back. On its front the maker’s plate, “Chronometerwerke Wempe Hamburg, Type 3371” (the number runs on), and the latch tongue.',
     sp:'75 high (180 less the box’s 105) · glass 3 · Firmenschild 00 01 01-9: Alu, 26 × 52, white, letters sunk black · Zunge P. 51 00 02-2: iron 10 × 4, black'},
   overBox:{t:'Outer box (Überkasten)',g:6,src:'drawing',sn:'Its body, base plate, strip, cushions and hinges from its sheet (the ends of the base plate traced on its plan, the cushions’ middles scaled where not figured); the hook and eye, commercial, and the eyes’ form estimated',figs:'51 00_5, 51 00_1',c:'#d9c9a6',pri:2,
@@ -418,9 +418,9 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
 
 /* ================= the page ================= */
 (function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
-  /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
+  /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 55.9 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
-  let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',HPT=90/14,HRUN=56.4;
+  let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',HPT=90/14,HRUN=55.9;
   /* winding in the case (cw): go, Wind pressed with the movement in its bowl; on, the key turning; u, 0-3, how far the bowl is turned over (0-1), the closing plate opened
      (1-2) and the key come onto the square (2-3) */
   const cw={go:false,on:false,u:0,t:null};   /* t: the last frame's time (ms), for dw */
@@ -441,7 +441,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
     build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.onRev.push(f=>{root.traverse(o=>{if(o.userData.rev)o.visible=o.userData.rev===(f?'first':'last');});CS.parts.key.userData.first=f;CS.keyRest();});mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's, the key resting as its state's lies */CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid,showOver:v=>{CS.showOver=!!v;}};   /* the box, for audit.py box (geometry-audit-box.js); showOver(1) keeps the outer box shown in every view (bom.py counts it: checks.py's ARM) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
-      const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
+      const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);if(Math.abs(PH.MF-fu.MW)>0.002)console.warn('escphys.js MF '+PH.MF+' is not the fusee’s full wind '+fu.MW.toFixed(4));H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
