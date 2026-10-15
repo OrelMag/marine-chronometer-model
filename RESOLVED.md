@@ -2650,4 +2650,7 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The dust seal's screw holes about 62° round from the real ones (Plates, bridges, screws and arbors).** Traced on the top-view photograph through
+  `PT`, the pair stood at 145.5° and -37.9° about the fusee, so the barrel bridge showed a hole where the real one is plain beside the arbor (12:39.0).
+  KLUwI2UUCMQ 13:04.4, the bridge underside up, puts them at 26.8° and -154.9°, 7.97 and 7.67 out (drawn 7.8); the flange's bite between them turns with
+  them. Keep: `S.seal` in the movement's frame, not through `PT`.

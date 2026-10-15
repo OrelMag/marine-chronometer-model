@@ -2328,6 +2328,11 @@ gone from the check's `EXPECTED`; most certain first:
    seal, on the barrel bridge, and Ops. 29-30 take the seal off first, then them. Fairly sure (two figures); their place and sizes are to read on a frame
    of the dust seal coming off (KLUwI2UUCMQ: between the setup work, 11:46-12:22, and the barrel bridge lifted off, 12:58).
 
+*Found while comparing (15 October 2026), open:* the winding stop's tapped hole (r 0.82, 11.6 mm from the fusee) is drawn through the barrel bridge,
+so it shows on the bridge's top beside the dust seal; the stud screws only 2 mm into the 3.4 mm bridge, and the real bridge's top is plain there
+(KLUwI2UUCMQ 12:39.0). A blind hole needs the bridge's solid cut from its underside only (one extrusion now, its holes all through); `bom.py`'s
+`in 42061 tap` measures the thread in it.
+
 *Withdrawn (15 October 2026): a fourth finding, that the Exploded view drives the barrel cap's screws (37023) into the barrel, was a misreading. They go
 from y -6.26 to -53.11 as the barrel goes from 0 to -50: 3.15 mm toward the dial side relative to it, out of the cap, as they should (the winding
 ratchet's screws, 42014, the same way). `exploded.py` was right to pass them.*

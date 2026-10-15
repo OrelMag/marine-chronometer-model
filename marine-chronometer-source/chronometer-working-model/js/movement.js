@@ -470,7 +470,11 @@ function buildMovement(M){
      way from the bore to the flange's rim along their rays (radial strips through each hole, no camera needed), the filled one at 0.97 of their circle. A fifth plain hole of their size at 2.3 (3.0 on 40:08) lies 0.23-0.29 of the way,
      about r 41.4, among the ring screws: not a foot (FLH); taken for the fourth foot on 14 October 2026 until the strips put it inside. The top-view photograph's movement (2E11795) has flange screws at 152 and 224 through topview.py's map, which until then
      gave two of these (PT of 38.5 and 111.6 deg in its frame) and the other two opposite them (estimated: 38.0 and 323.5); its 152 is 20 deg from this movement's, so the four follow one movement. r 45.9 from the photograph */
-  S.seal=[2.2,-1.0].map(a=>[L.Fu[0]+PHOTO_K*7.6*Math.cos(a+PHOTO_TURN),L.Fu[1]+PHOTO_K*7.6*Math.sin(a+PHOTO_TURN)]);
+  /* the dust seal's two screws, tapped through the barrel bridge, 7.8 from the fusee's axis at 26.8 and 205.1 deg (the movement's plan): KLUwI2UUCMQ 13:04.4 (4K, the bridge held
+     underside up, nearly face-on), its holes put on the plan by the similarity through the two bushings' centres (the winding stop lands at -156 deg, its measured -152): 7.97
+     at 26.8 and 7.67 at -154.9 (+-0.3 mm, +-3 deg); 12:39.0 has them either side of the bushing, nearly level, as that puts them. 7.9 at 145.5 and -37.9 deg, traced on the
+     top-view photograph through PT, until 15 October 2026, about 62 deg round from the real holes */
+  S.seal=[26.8,-154.9].map(a=>[L.Fu[0]+7.8*Math.cos(a*D2R),L.Fu[1]+7.8*Math.sin(a*D2R)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
   /* sustaining pawl pivot, its foot read on two frames of KLUwI2UUCMQ (References/VIDEOS.md): 36:15 (4K) through rimfit_36-15.json's camera, 21.8 mm from the fusee axis at 67 deg
