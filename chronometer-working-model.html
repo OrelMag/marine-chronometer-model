@@ -4160,10 +4160,15 @@ function buildMovement(M){
   const sbu=(u=>{const n=[-u[1],u[0]];return n[1]<0?n:[-n[0],-n[1]];})((([a,b])=>{const d=[a[0]-b[0],a[1]-b[1]],l=Math.hypot(...d);return[d[0]/l,d[1]/l];})(S.seal));   /* across the screws' line, toward the 12 */
   const fl=mesh(wp,polyGeo(subtractCircle([...Array(96)].map((_,i)=>[8.6*Math.cos(i/96*TAU),8.6*Math.sin(i/96*TAU)]),[14.55*sbu[0],14.55*sbu[1]],7.55),1.0,[[0,0,6.7],...S.seal.map(q=>hC(q[0]-L.Fu[0],q[1]-L.Fu[1],0.9))]),M.plateSolid,L.Fu[0],-28.18,L.Fu[1]);
   for(const q of S.seal)hn(screw(wp,...q,-28.18,1.05,1.0,1.0+2.0,0.45),'42056.sl');   /* dust seal screws (42056) into the barrel bridge; the flange with a shallow concave bite between them on the 12's side, about 7 wide and 1.6 deep, nearly to the column (C Spinner 6:29; its size rough) */
-  const sqP=part('sq',-84),FSQ=-31.5;R.sq=hn(new THREE.Group(),'42022',{sub:1});R.sq.position.set(L.Fu[0],0,L.Fu[1]);sqP.add(R.sq);   /* the fusee arbor's square */cylBetween(R.sq,BU_P,FSQ,BB_T,M.steel,0,0,32);mesh(R.sq,new THREE.BoxGeometry(2.4,FSQ-CK_T,2.4),M.steel,0,(FSQ+CK_T)/2,0);
+  const sqP=part('sq',-84),FSQ=-31.5;R.sq=hn(new THREE.Group(),'42022',{sub:1});R.sq.position.set(L.Fu[0],0,L.Fu[1]);sqP.add(R.sq);   /* the fusee arbor's square */cylBetween(R.sq,BU_P,FSQ,BB_T,M.steel,0,0,32);{ const H=FSQ-CK_T,DR=1.2*Math.SQRT2,g=new THREE.BoxGeometry(2.4,H,2.4,12,64,12),P=g.attributes.position,yc=-H/2+DR;   /* the square's end turned to a dome, DR (below) */
+    for(let i=0;i<P.count;i++){const x=P.getX(i),y=P.getY(i),z=P.getZ(i);if(y>=yc)continue;const d=Math.hypot(x,y-yc,z);if(d>DR){const q=DR/d;P.setXYZ(i,x*q,yc+(y-yc)*q,z*q);}}
+    g.computeVertexNormals();mesh(R.sq,g,M.steel,0,(FSQ+CK_T)/2,0); }
   /* the shaft at the bushing's BU_P from the barrel bridge up to a step at FSQ, then the square, 2.4 across, to the end (-37.96: the cock's top, CK_T): KLUwI2UUCMQ 20:00
      (side-on, the fusee out: the step about 11 mm over the fusee's top, the square and its rounded end 6.5) and 12:39.0 (the seal off: the shaft about 4.0 tall over the
-     bridge, the square 7.0, the shaft 205 px across, the square 153 seen near its flat, 0.75 of it: 2.2-2.7 across). Its rounded end not drawn. A r 1.2 rod to a 1.6 mm
+     bridge, the square 7.0, the shaft 205 px across, the square 153 seen near its flat, 0.75 of it: 2.2-2.7 across). Its end a dome, DR 1.70 (half the diagonal): at 20:00 (side-on against the
+     mat) the silhouette's width from the tip, 52, 74, 85, 90 px at 10, 20, 30, 40 px against its full 92, follows a hemisphere of half its width (57, 76, 86, 91), the
+     square seen across its corners; at 12:39.0, near a flat, the flats run into the dome without a shoulder, which a sphere through the corners gives (one of half the
+     flats, 1.2, leaves the corners standing under it). Its radius +-0.2. Flat until 15 October 2026. A r 1.2 rod to a 1.6 mm
      square at the end until 15 October 2026 */
   /* winding key: its socket fits the fusee arbor square and turns it (never the barrel arbor, which the setup ratchet holds) */
   R.wkey=hn(windingKey(new THREE.Group(),M),'42044',{sub:1});R.wkey.position.y=-36.36;R.wkey.rotation.x=Math.PI;R.wkey.visible=false;R.sq.add(R.wkey);   /* its socket over the square (-36.36 to -37.96), the pipe out through the case's key hole (r 3.34 for its r 2.2), the collar and paddle 18 mm beyond the case's bottom and the shield plate; a T bar with balls until 5 October 2026 */
