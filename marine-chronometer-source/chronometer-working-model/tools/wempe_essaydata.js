@@ -38,13 +38,15 @@ const detent=(()=>{const dp=E.depart(E.A),tab=t=>{const g=(t-E.TH0)/E.DT,i=Math.
 
 /* ---------- heat: the rate a °C against the masses' place (wempe_thermal.js), and the TU's trial (wempe_errorbudget.js's seeded trial) ---------- */
 const TH=require('./wempe_thermal.js'),TS=TH.sweep(),TM=TH.mid.an,TP=TH.mid.ns,SEC=TH.secondary,LIN=TH.linear;
-const heat={arc:TS.arc.map(x=>r(x,2)),rows:TS.rows.map(q=>q.map((x,i)=>r(x,i?3:1))),drawn:TM.at,zero:r(90-TM.zero,2),perDeg:r(TM.perDeg,4),mx6:30};
+const heat={arc:TS.arc.map(x=>r(x,2)),rows:TS.rows.map(q=>q.map((x,i)=>r(x,i?3:1))),drawn:TM.at,zero:r(90-TM.zero,2),perDeg:r(TM.perDeg,4)};
 /* the slow parts, each in a process of its own, at once: the error budget's trial (its daily wind's rates, about 25 s) and the rate over the wind (below, in two halves) */
 const kid=code=>new Promise((ok,no)=>require('child_process').execFile(process.execPath,['-e',code],{cwd:__dirname,encoding:'utf8',maxBuffer:1<<26},(e,o)=>e?no(e):ok(JSON.parse(o))));
 /* the rate over the wind (0-56 h, every 2 h, as wempe_hairspring.js's): the escapement with the drawn spring's isochronism (makeEsc's rate, SET.HS), and without it */
-const ISO=(h0,h1)=>`const W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,D=Math.PI/180,A12=E.A/D,HS=P.SET.HS||0,o=[];for(let h=${h0};h<${h1};h+=2){const s=P.drv(h/P.HPT),a=E.ampAt(s),re=E.rateAt(a,s);o.push([re,re-HS*(a/D-A12)/10]);}console.log(JSON.stringify(o))`;
+const ISO=(h0,h1)=>`const W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,D=Math.PI/180,A12=E.A/D,HS=P.SET.HS||0,o=[];for(let h=${h0};h<${h1};h+=2){const s=P.drv(h/P.HPT),a=E.ampAt(s),re=E.rateAt(a,s);o.push([re,re-HS*(a/D-A12)/10,a/D]);}console.log(JSON.stringify(o))`;
 Promise.all([kid("console.log(JSON.stringify(require('./wempe_errorbudget.js').essay()))"),kid(ISO(0,29)),kid(ISO(30,56.3))]).then(([EB,i0,i1])=>{
-const IS=[...i0,...i1],iso={all:[Math.min(...IS.map(q=>q[0])),Math.max(...IS.map(q=>q[0]))],esc:[Math.min(...IS.map(q=>q[1])),Math.max(...IS.map(q=>q[1]))]};
+const IS=[...i0,...i1],iso={all:[Math.min(...IS.map(q=>q[0])),Math.max(...IS.map(q=>q[0]))],esc:[Math.min(...IS.map(q=>q[1])),Math.max(...IS.map(q=>q[1]))],sw:[Math.min(...IS.map(q=>q[2])),Math.max(...IS.map(q=>q[2]))]};
+/* the balance's damping measured on a running 6MX (wempe_startup.js on wempe_swing.py's reading: References/wempe/VIDEOS.md, "Measured") */
+const SU=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_startup.json'),'utf8')).split;
 /* how often a trial drawn so passes, as adjusted and at the drawn place (the trial's own test; wempe_errorbudget.js prints its own runs) */
 const trial={days:EB.days.map(([T,v])=>[T,r(v,4)]),airLin:r(EB.airLin,5),perDeg:r(EB.perDeg,4),SET0:EB.SET0,LIM:EB.LIM,TU:EB.TU,Sv:r(EB.Sv,3)};
 
@@ -52,7 +54,6 @@ const trial={days:EB.days.map(([T,v])=>[T,r(v,4)]),airLin:r(EB.airLin,5),perDeg:
 const HS=(()=>{const l=console.log;console.log=()=>{};try{return require('./wempe_hairspring.js');}finally{console.log=l;}})(),{HSPR}=require('../../shared/hairspring.js');
 const latAt=n=>HSPR.lateral(HS.resample(HS.spring(n),0.15).pts,HS.R).ratio,TURNS=W.WESC.HSP.TURNS;
 const hs={turns:[...Array(49).keys()].map(k=>{const n=10.75+k/24*1;return[r(n,4),r(latAt(n),5)];}).filter(q=>q[0]<=12.76),drawn:[r(TURNS,3),r(HS.lateral.drawn,4)]};
-const Jm=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8')).balance.byHn['050301-4'].I,I65=P.SET.I+Jm*(6.5/5.4-1);
 
 /* ---------- the gimbals: the bodies weighed (gimbals_wempe.json, massprops.py) and levelled (gimbals.js's bodies), the Hamilton's beside them ---------- */
 const gim=k=>JSON.parse(require('child_process').execFileSync(process.execPath,['-e',"const g=require('./gimbals.js'),B=g.bodies(),D=g.bodies({asDrawn:true}).drawn;console.log(JSON.stringify({Tz:2*Math.PI/B.wz,Tx:2*Math.PI/B.wx,h:-B.bw.c[1]*1000,drawn:D}))",'--',...(k?['--model','wempe']:[])],{cwd:__dirname,encoding:'utf8'}));
@@ -66,7 +67,7 @@ const phys={msL:th(FN.L)+' mm',msT:fx(MSJ.strip.t,2)+' mm',msRms:pc(FN.rms,2),ms
   detOn:fx(detent.on,1)+'°',detHome:fx(detent.home,1)+'°',
   /* the hairspring */
   latD:fx(HS.lateral.drawn,3),lat11:fx(latAt(11),4),lat12:fx(latAt(12),4),latHalf:fx(Math.max(...hs.turns.map(q=>q[1])),3),dsgI:fx(HS.curve.designed.inner,1)+' mm',dsgO:fx(HS.curve.designed.outer,1)+' mm',
-  I65:th(Math.round(I65))+' g·mm²',T65:fx(P.HS.Tof(I65,P.HS.k),3)+' s',isoAll:rgS(iso.all,2),isoEsc:rgS(iso.esc,2),
+  isoAll:rgS(iso.all,2),isoEsc:rgS(iso.esc,2),swRange:fx(iso.sw[0],1)+'–'+fx(iso.sw[1],1)+'°',tfVid:Math.round(SU.TF)+' s',tfSpan:SU.span[0]+'–'+SU.span[1]+' s',
   /* heat */
   cSpring:fx(TM.spring,1),cBack:fx(TM.back,1),cDrawn:fx(-TM.drawn,1),cZero:dg(90-TM.zero),cPerDeg:fx(TM.perDeg,2),cTuDeg:'±'+fx(0.1/TM.perDeg,1)+'°',cAt:dg(TM.at),cSet:'±'+EB.SET0+'°',cRes:'±'+fx(EB.SET0*EB.perDeg,3),
   cRange:fx(-LIN.range[1],1)+' and '+fx(-LIN.range[0],1),cZeros:dg(90-LIN.zeros[1])+' and '+dg(90-LIN.zeros[0]),cPlainEnd:fx(-TP.ends[1],1),cMove:dg(TM.zero-(90-TM.at)),cDiv:fx((TM.zero-(90-TM.at))/6,1),
