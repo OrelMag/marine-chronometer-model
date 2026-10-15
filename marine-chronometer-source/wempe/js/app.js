@@ -263,7 +263,8 @@ const PIECES={
     {k:'gold',t:'Gold spring (Goldfeder)',h:'050401-2 WN-14',d:'The gold passing spring, screwed to the detent, resting on its horn.',sp:'05 04 01-2 · 8-carat gold (Goldblech, federhart) · 0.15 thick, 15.4 long',src:'drawing',sn:'From its sheet; its path round the pipe after the layout',figs:'05 04_2, 05 04_1'},
     {k:'foot',t:'Detent foot screw and pins',h:'WN-gf WN-201.d',d:'The screw and two steady pins that hold the detent’s foot to the block.',sp:'M1 · pins Ø 0.45',src:'est',sn:'The screw from the block’s sheet; the pins scaled on 1436',figs:'05 04_3, 05 04_10.1'}],
   detentBlock:[{k:'block',t:'Detent block',h:'050401-4',d:PARTS.detentBlock.d,sp:PARTS.detentBlock.sp},
-    {k:'screws',t:'Block screws and pins',h:'WN-gk WN-gkA WN-gkP',d:'The fixing screw from the top plate’s outer face, the screw across the upright’s slit end, and the two steady pins.',sp:'M1.7, M1.2 · pins Ø 0.9',src:'est',sn:'Their threads and places from the block’s sheet; heads estimated',figs:'05 04_3'}],
+    {k:'screws',t:'Block screws and pins',h:'WN-gk WN-gkA WN-gkP',d:'The fixing screw from the top plate’s outer face, the screw across the upright’s slit end, and the two steady pins.',sp:'M1.7, M1.2 · pins Ø 0.9',src:'est',sn:'Their threads and places from the block’s sheet; heads estimated',figs:'05 04_3'},
+    {k:'cone',t:'Banking screw with its cone, 1941 (as first drawn)',h:'cone41',d:'The screw through the 1941 block’s arm on the locking stone’s line, held by the arm’s slit end, its brass cone standing out past the arm: Wempe 3955’s block has it. 05 04_1 draws its slotted end at the detent’s side, 5.1 under the plate; what it banks against isn’t drawn there.',sp:'05 04_1 (no number) · Ø 0.85, the cone 2.5 long, 5.1 under the plate',src:'scaled',sn:'Its place from 05 04_1 (the “1,4” over the arm’s face: sure); its size measured on Wempe 3955’s photograph (11_), the sheet scaling Ø 1.2 × 3.3',figs:'05 04_1'}],
   balanceJewelsUp:[{k:'jewel',t:'Upper hole jewel',h:'050406-2.bu 050407-1.bu',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Upper endstone',h:'050408-2.bu 050408-1.bu',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-55.ck',d:'Two screws holding the endstone’s setting.',sp:'M1.2'}],
   balanceJewelsLow:[{k:'jewel',t:'Lower hole jewel',h:'050406-2.bl 050407-1.bl',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Lower endstone',h:'050408-2.bl 050408-1.bl',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-16',d:'Two screws holding the settings in the lug.',sp:'WN-16 · M1.2'}],
   escJewelUp:[{k:'jewel',t:'Hole jewel and setting',h:'050406-2.eu 050406-1.eu',d:PARTS.escJewelUp.d,sp:PARTS.escJewelUp.sp},{k:'screws',t:'Setting screws',h:'WN-es',d:'Two screws under the plate holding the setting.',sp:'M1.2'}],
@@ -316,6 +317,38 @@ const PIECES={
     {k:'spring',t:'Coil spring (Wendelfeder)',h:'510011-4',d:'The coil spring round the tube in the body’s bore, its end in the body’s Ø 0.9 hole: it grips the tube one way and slips the other.',sp:'51 00 11-4 · wire 0.9 (estimated), 14 turns',src:'est',sn:'Its place from the key’s assembly; its wire estimated',figs:'05 01_7'},
     {k:'pin',t:'Grooved pin (Kerbstift)',h:'510011-6',d:'The pin through the body and the paddle.',sp:'51 00 11-6 · K.S. 1 · Ø 2.5',src:'drawing',sn:'Its hole from the body’s sheet',figs:'05 01_8'}]};
 
+/* the cards as first drawn (the Variants' "As first drawn": movement.js's setRev): each part whose pieces differ from the sheets as last revised takes these fields in place of
+   its own (app.js's setRev keeps the others to put back). The pieces only the earlier sheets have are in PIECES above, each marked (as first drawn) */
+const SH1=' As first drawn: the sheets of 1940-41, which the later revisions replaced (Wempe 3955 is made so).';
+const REV={
+  balance:{sn:'Its rim, arm and masses from their sheets; the 1941 staff and its brass collar from 05 04_5; its seat from 05 04_1; the masses and timing weights scaled on 05 03_2 and Wempe 3955',figs:'05 03_2, 05 03_4, 05 04_5, 05 04_1',
+    d:'The balance: a cut bimetallic rim, nickel steel inside and brass outside, made in one with its straight steel arm, so each quarter of the rim curls in as it warms and carries its mass nearer the staff. Four round brass masses sit across the rim, two timing weights on screws at the arm’s ends. Its arm is riveted on the neck of the brass collar on its staff, whose flange is undercut 10°; the seat stands 4.1 over the top plate’s inner face, 0.3 higher than the 1946 staff puts it, and the hairspring rides higher with it. It swings about 1¼ turns, twice a second.'+SH1,
+    sp:'Drawings 05 03 01, rim 05 03 01-1 (nickel steel and brass), staff 040401-1 with its collar 040401-2 (05 04_5, 4.4.41), layout 05 04_1 · rim Ø 32.32 × 3.8 · arm 1.15 thick · the seat 4.1 over the plate’s inner face'},
+  rollers:{sn:'The impulse roller from its sheet; the discharge roller scaled on the layout; their heights from 05 04_1 and the 1941 collar',figs:'05 04_1, 05 04_6, 05 04_5',
+    d:'Two rollers on the balance staff under the top plate, as 05 04_1 draws them: the impulse roller just under the 1941 collar’s tube, 0.6 under the plate and level with the escape wheel’s teeth, which lie just under the plate, and the discharge roller under it. The impulse roller carries the sapphire impulse stone, which a tooth of the escape wheel pushes on every other swing; the discharge stone pushes the gold spring and lifts the detent on that swing, and slips past it on the other.'+SH1,
+    sp:'Drawings 02 04 02 (Heberolle, beryllium copper, Ø 6.78 × 1.6), 05 04 04-1 (not in the set) · stones 1.7 wide · 0.6 and 2.2 under the plate (05 04_1’s “1,6”, “1,6” under the collar’s 4.7)'},
+  escapeWheel:{sn:'Its teeth, rim and crossings from its tooth-form sheet and the layout; its height from 05 04_1; its 1941 arbor and collet from 05 04_7.1',figs:'05 04_1, 05 04_7.1, 05 04_23',
+    d:'The 15-tooth escape wheel just under the top plate, 0.5 from it, as 05 04_1 draws it and Wempe 3955 has it, on the 1941 arbor (05 04_7.1): 1.4 nearer the plate than the later arbor puts it. Held by the locking stone between impulses; released, it gives the balance’s impulse stone a push through about 20 degrees and comes to rest on the next tooth: a tooth every half second, so its pinion turns the seconds wheel once a minute. 05 04_7.1 draws its recess on the pinion’s side and Ø 12.4, which neither the layout nor the 1942 tooth form allows: drawn as theirs.'+SH1,
+    sp:'Drawings 05 04_1 (layout, “0,5”, “1,4”), 050408 bis 10 (05 04_7.1: arbor, pinion z 10, collet 05 04 10), 02 04 08a (tooth form) · tips Ø 14.00 · bore 1.8 · arbor 23 −0.2'},
+  detent:{sn:'Its lengths and place from 05 04_1; its sizes from Grießbach’s 1436, the first (unbracketed) figures; the gold spring from its sheet',figs:'05 04_1, 05 04_10.1, 05 04_2',
+    d:'The detent as first drawn: a steel blade on a thin spring, its foot clamped under the edge of the block of 1941, 1.9 mm nearer the plate than as revised, to the first of 1436’s two sets of figures (the later, bracketed, sizes are thinner). The locking stone in its pipe holds a tooth of the escape wheel. On one swing the discharge stone pushes the gold spring against the detent’s horn and lifts the detent, freeing the wheel; on the other it only bends the gold spring aside.'+SH1,
+    sp:'Layout 05 04_1 (detent 2 wide, 1.3 to 3.3 under the plate) · 1436’s first figures: foot 0.65 × 2 × 6.6, spring 0.07, square and blade 0.55, then 0.33, horn 0.25 × 0.8, pipe Ø 1.15 · gold spring 05 04 01-2 · stone Ø 0.75'},
+  detentBlock:{src:'scaled',sn:'Its base and holes from 05 04 01-4, whose holes 05 04_1’s plan matches; the arm, its cove and the banking screw scaled on 05 04_1 (10:1) and measured on Wempe 3955’s photograph',figs:'05 04_1, 05 04_3',
+    d:'The brass block of 1941 under the top plate that carries the detent, as on Wempe 3955: the same base as the later block, screwed up from the plate’s outer face through hole 13 and placed by two steady pins, the detent’s foot clamped to its edge; in place of the later upright a long arm, 2.8 thick on the base’s free side, reaching past the locking stone, its end slit to clamp the banking screw whose brass cone stands out past it.'+SH1,
+    sp:'05 04_1 (no sheet of its own) · base 14.6 × 7.5 × 6.5 · arm 2.8 × 2.46, 3.7 to 6.5 under the plate, its end 2.9 past the stone · cone Ø 0.85 × 2.5'},
+  escJewelUp:{d:'The escape wheel arbor’s upper hole jewel. The 1941 arbor’s pivot reaches 2.0 into the plate, so the setting fills the seat down to it, held by two screws whose heads lie over its edge.'+SH1},
+  escJewelLow:{d:'The escape wheel arbor’s lower hole jewel, in a bush pressed into the pillar plate: shorter for the 1941 arbor, whose pivot ends 1.96 into the plate.'+SH1},
+  escEndstoneLow:{d:'The endstone under the escape wheel arbor’s lower pivot: for the 1941 arbor, which ends inside the plate, in a plug set into the plate’s hole under the cap screwed to the dial side.'+SH1}};
+/* the pieces' cards as first drawn, by part and piece key: the earlier issue of the same line (05 04_5 carries 05 04 02-1 in pencil; 05 04_7.1 was renumbered 05 04 05) */
+const REVP={
+  balance:{staff:{t:'Balance staff (1941)',d:'The staff as first drawn (05 04_5, 4.4.41): a hardened steel staff through a brass collar, its pivots in the jewels of the two cocks. Its sheet draws only the blank between centres, Ø 2.1 and 2.6 under the collar, and carries the later number 05 04 02-1 in pencil.',
+      sp:'040401-1 (05 04_5; 05 04 02-1 pencilled) · 14 ±0.03 from the collar’s flange to its lower end',src:'est',sn:'Its place from the collar and 05 04_1; its turned form (ends, the collet’s and the rollers’ seats) as the 1946 staff’s, estimated',figs:'05 04_5, 05 04_1'},
+    hub:{t:'Brass collar (1941)',d:'The brass collar on the 1941 staff, the hub’s first form: the arm riveted on its neck, its flange undercut 10°, its tube down to the impulse roller. No screws: its sheet has no holes for them, so the arm’s two (drilled for the 1946 hub’s) stand empty.',
+      sp:'040401-2 (05 04_5) · flange Ø 6.3 × 1.8, straight 0.4 then undercut 10° · neck Ø 2.1, 1.3 high · tube Ø 2.6 to 4.7 −0.05 under the flange’s top',src:'drawing',sn:'Every figure of 05 04_5; the neck drawn flush with the arm, riveted (estimated)',figs:'05 04_5'}},
+  escapeWheel:{pinion:{t:'Escape pinion and arbor (1941)',d:'The 1941 arbor (05 04_7.1): the pinion of 10 leaves where the seconds wheel drives it, the wheel 1.4 nearer the top plate than on the later arbor, just under the plate as on Wempe 3955.',
+      sp:'050408 bis 10 (05 04_7.1, 4.4.41; renumbered 05 04 05) · 23 −0.2 overall · pinion 3 long, its far face 15.2 from the wheel’s · pivots Ø 0.24 × 0.5',src:'drawing',sn:'Its lengths and diameters from 05 04_7.1; the leaves as 05 04 05-2’s; the cone to the upper pivot scaled',figs:'05 04_7.1'},
+    collet:{t:'Escape wheel collet (1941)',d:'The brass collet of 1941: a cone Ø 3.0 on the wheel, then a pipe Ø 1.8 to 5 over it.',sp:'05 04 10 (05 04_7.1) · Ø 3.0 × 1.8, Ø 1.8 to 5',src:'drawing',sn:'From 05 04_7.1; the cone’s top Ø 2.2 scaled',figs:'05 04_7.1'}}};
+
 /* ================= views ================= */
 /* the camera's turn (yaw), height (pitch, rad) and distance, aimed at a point in the movement's frame. The movement stands train side up (the scene's group turns it over) */
 const VIEWS={
@@ -335,7 +368,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
 (function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
-  let hrs=20,winding=false,conn='chain',HPT=90/14,HRUN=56.4;
+  let hrs=20,winding=false,conn='chain',rev='last',HPT=90/14,HRUN=56.4;
   /* the balance's swing (js/escphys.js, WPHYS; the Hamilton's H.amp): driven by the escape wheel's torque drv (times the reference's, 12 h from full wind), A² relaxes to
      PE.ampAt(drv)² as exp(-2t/TF); with the train held it runs down free (PE.freeStep). Below PE.AMIN a swing can't unlock the wheel and see the impulse through: the train
      stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
@@ -349,7 +382,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
   let CS=null,cl=1,cf=1;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
   const V=VIEWER.start({name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
-    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
+    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.setRev(rev);CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid};   /* the box, for audit.py box (geometry-audit-box.js) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
@@ -397,8 +430,8 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
       showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0];},
-    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);},
-      read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');
+    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);},
+      read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
@@ -410,5 +443,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   {const tw=document.getElementById('twist');if(tw)tw.addEventListener('click',()=>{if(H.held&&H.amp<PE.AMIN)H.kick=Math.max(H.amp,0.6*PE.ampAt(1));});}
   function setConn(v){conn=v;if(mv)mv.userData.R.fu.setConn(v);document.querySelectorAll('#conn button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
   document.querySelectorAll('#conn button').forEach(b=>b.addEventListener('click',()=>setConn(b.dataset.v)));
-  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow()});}   /* the viewer's state and the wind, for the tools */
+  /* the Variants' sheets: as last revised (about 1946-48, the default) or as first drawn (1940-44, as Wempe 3955 is made): movement.js's setRev shows each part's pieces for
+     that state, and the cards of the parts that differ take that state's text (REV) */
+  function keep(c){return c.last||(c.last={t:c.t,d:c.d,sp:c.sp,sn:c.sn,figs:c.figs,src:c.src});}   /* a declaration: the link's state is read as the viewer starts, before this line runs */
+  function setRev(v){rev=v==='first'?'first':'last';if(mv)mv.userData.setRev(rev);for(const k in REV){const c=PARTS[k];if(c)Object.assign(c,keep(c)&&rev==='first'?REV[k]:c.last);}
+    for(const k in REVP)for(const q in REVP[k]){const c=(PIECES[k]||[]).find(e=>e.k===q);if(c)Object.assign(c,keep(c)&&rev==='first'?REVP[k][q]:c.last);}
+    document.querySelectorAll('#rev button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));}
+  document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',()=>setRev(b.dataset.v)));
+  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,rev,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow()});}   /* the viewer's state and the wind, for the tools */
 })();

@@ -11,16 +11,22 @@
    isolate.py and bom-check.js) and pass what it returns to update(), which takes the Hamilton's MoveState and uses what it has */
 const ESC=WESC.ESC;
 function buildWempe(M){
-  const mv=new THREE.Group(),K=KIT.parts(mv,M);
+  const mv=new THREE.Group(),K=KIT.parts(mv,M);mv.userData.onRev=[];   /* the sheets' two states (setRev, below): each builder's moves for them */
   const FR=WFRAME.build(mv,M,K);   /* the frame: plates, pillars, ring, bridges, cocks, bushes, their screws and pins */
   const TR=WTRAIN.build(mv,M,K);   /* the going train: the centre, intermediate and seconds arbors, their bushes and the seconds jewel */
   const EB=WESC.build(mv,M,K);   /* the balance, hairspring, rollers, escape wheel, detent and their jewels */
   const DL=WDIAL.build(mv,M,K);   /* the dial, motion work, hands and up-and-down work */
   /* the seconds wheel drives the escape pinion (train.js's meshes, phased under load by gearLash as the train's own: -1, the seconds arbor clockwise from the dial); the
      escape wheel's own teeth keep their phase to the locking stone, the pinion's leaves turned on its arbor */
-  {const sw=TR.sw.userData.wheel,[a,b]=gearLash(sw,WD.H[35],EB.R.pinion,WD.H[26],-1);sw.rotation.y=a;EB.R.pinion.rotation.y=b;}
+  {const sw=TR.sw.userData.wheel,[a,b]=gearLash(sw,WD.H[35],EB.R.pinion,WD.H[26],-1);sw.rotation.y=a;EB.R.pinion.rotation.y=b;EB.R.pinion1.rotation.y=gearLash(sw,WD.H[35],EB.R.pinion1,WD.H[26],-1)[1];}
   const FU=WFUSEE.build(mv,M,K,FR,TR);   /* the fusee and its wheel, the maintaining work and detent, the stop work, the barrel, its arbor and set-up ratchet, the mainspring, the chain and the band */
   K.done();
+  /* setRev(v): the sheets as last revised ('last', about 1946-48, the page's default) or as first drawn ('first', 1940-44: app.js's Variants). Each part keeps its key; the
+     pieces only one state has are in groups tagged userData.rev, the other state's hidden as the band is (the tools skip what isn't shown), and each builder's onRev moves
+     what both share but stands elsewhere */
+  const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});
+  mv.userData.setRev=(/** @type {string} */v)=>{const f=v==='first';mv.userData.rev=f?'first':'last';for(const o of RV)o.visible=o.userData.rev===mv.userData.rev;for(const g of mv.userData.onRev)g(f);};
+  mv.userData.setRev('last');
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
      centre arbor's, which the motion work and the fusee wheel follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's
      angle (rad), lift the detent's turn and psDef the gold spring's (rad, escapement.js); n, the fusee's turns from full wind, and winding set the fusee, the chain or band,

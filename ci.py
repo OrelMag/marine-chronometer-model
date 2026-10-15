@@ -114,6 +114,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-solids',lambda log:run([PY,'solids.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-audit',lambda log:run([PY,'audit.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-exploded',lambda log:run([PY,'exploded.py','--model','wempe'],TOOLS,log),'browser'),
+ ('wempe-audit-first',lambda log:run([PY,'audit.py','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the same as first drawn (the page's Variants: the sheets of 1940-41), its coplanar faces under movement.first
+ ('wempe-exploded-first',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'browser'),
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)
  ('mainspring-friction',lambda log:run([PY,'mainspring_friction.py','--check'],TOOLS,log),'full'),   # the mainspring's coil friction, against mainspring_friction.json (about a minute)
