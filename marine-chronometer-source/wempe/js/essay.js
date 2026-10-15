@@ -21,7 +21,7 @@ const ESSAY=(()=>{
   /* ---------- numbers in the text, from the model's code ---------- */
   function fillLive(model){const E=WPHYS.ESC,P=WPHYS,K=WESC.ESC,m=E.measure(),u=E.run,PL=WD.PIL,sF=PL.sF,hF=WD.PIL_HF,hD=WD.PIL_SEAT[1],kv=P.KV.map(q=>q[1]);
     const stoneIn=(()=>{let a=E.thRel,b=10*D;for(let i=0;i<50;i++){const c=(a+b)/2;E.bite(c)>-1e8?b=c:a=c;}return b;})();
-    let eLo=1e9,eHi=0;for(let h=0;h<=56.4;h+=0.2){const v=P.escT(h/P.HPT);eLo=Math.min(eLo,v);eHi=Math.max(eHi,v);}
+    let eLo=1e9,eHi=0;for(let h=0;h<=55.9;h+=0.2){const v=P.escT(h/P.HPT);eLo=Math.min(eLo,v);eHi=Math.max(eHi,v);}
     const brg=WD.PILLARS.map(([x,z])=>Math.round(((Math.atan2(-x,-z)/D)+360)%360)),dp=E.depart(E.A);
     const HL=WESC.HSL,hc=hsCurve(),HS=P.HS,Iw=P.SET.I*(0.5/HS.T)**2;
     const V={pilD:f1(PL.r*2),pilL:f1(PL.L),pilLT:f1(PL.LT,2),pilS:f1(sF[0],1),pilSL:f1(PL.sL,1),pilTot:f1(PL.L+2*PL.sL,1),seatD:f1(WD.PIL_SEAT[0]*2,1),seatH:f1(hD,1),seatT:f1(WD.PIL_SEAT_T,2),
@@ -193,7 +193,7 @@ const ESSAY=(()=>{
 
   /* ---------- the escapement in time: the wheel let go from rest chasing the impulse stone (WPHYS.ESC: chase, bite), against the layout's tooth falling at once ---------- */
   fig('eDet',f=>{const st=f.el,P=figOf(st),C=c2d(st,f,w=>w<520?0.85:0.52),ro=q('.e-ro',P),E=WPHYS.ESC,KE=WESC.ESC;let hrs=12,cur=10;
-    const[i1,i2]=qa('input[type=range]',P),HR=()=>{const m=K.model();return m?m.run():56.4;};i1.max=String(Math.floor(HR()*10)/10);
+    const[i1,i2]=qa('input[type=range]',P),HR=()=>{const m=K.model();return m?m.run():55.9;};i1.max=String(Math.floor(HR()*10)/10);
     const stone=t=>{const b=E.bite(t*D);return b>-1e8?-(b-E.t0)/D:null;},tIn=(()=>{let a=E.thRel,b=10*D;for(let i=0;i<50;i++){const c=(a+b)/2;E.bite(c)>-1e8?b=c:a=c;}return b/D;})(),tE=E.thE/D,tL=KE.PHI_C-KE.PHI0;
     range(i1,v=>{hrs=v;f.dirty=true;return f1(v,1)+' h';});range(i2,v=>{cur=v;f.dirty=true;return sgn(v,1)+'°';});
     return()=>{if(!f.dirty)return;f.dirty=false;const s=WPHYS.drv(Math.min(hrs,HR()-1e-3)/WPHYS.HPT),a=E.ampAt(s),wh=t=>-E.chase(t*D,a,s)/D,t0=E.thRel/D;
