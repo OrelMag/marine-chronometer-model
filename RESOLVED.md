@@ -59,6 +59,12 @@ Contents:
 
 ## Escapement
 
+- **makeEsc counted any other escapement from the Hamilton's.** An instance whose settings weren't the reference's
+  rebuilt its reference from the calibration keys alone (`CAL`) on the Hamilton's defaults, so a second chronometer's escapement
+  with a setting changed would have been calibrated, and its rate counted, against the Hamilton's geometry (on a Wempe-like set,
+  rT changed: −0.76 s a day instead of −0.05). Now `makeEsc(o, base)` takes the chronometer's own settings as `base`: the
+  reference is `base` at the instance's `CAL`, its cache keyed by `base` as well. Keep: another chronometer passes its `base`
+  everywhere it calls `makeEsc`; the Hamilton passes none, and `tools/escgolden.js` holds its results bit for bit. `fc61562`
 - **A second unlocking in one swing counted as a beat.** Past makeEsc's `TRIP` (a swing of 333° and more)
   the discharge jewel comes round to the trip spring again and, from about 337°, lifts the detent and lets a second
   tooth go in the same active swing: the chronometer gains a tooth every swing. `tools/dynamics.js` booked it as a
@@ -2627,9 +2633,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **makeEsc counted any other escapement from the Hamilton's.** An instance whose settings weren't the reference's
-  rebuilt its reference from the calibration keys alone (`CAL`) on the Hamilton's defaults, so a second chronometer's escapement
-  with a setting changed would have been calibrated, and its rate counted, against the Hamilton's geometry (on a Wempe-like set,
-  rT changed: −0.76 s a day instead of −0.05). Now `makeEsc(o, base)` takes the chronometer's own settings as `base`: the
-  reference is `base` at the instance's `CAL`, its cache keyed by `base` as well. Keep: another chronometer passes its `base`
-  everywhere it calls `makeEsc`; the Hamilton passes none, and `tools/escgolden.js` holds its results bit for bit.
+None at the moment.
