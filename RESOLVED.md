@@ -2771,4 +2771,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The fusee's dust seal's flange hung 1.3 mm over the barrel bridge's cut round the balance** (seen by the user on the page, 15 October 2026). The flange, a disc r 8.6, was drawn before the cut was measured as one circle (`1ec6538`), which brought the cut to 7.33 mm from the fusee: the disc ran 1.27 mm past the edge across 7.7 mm, over the opening with nothing under it. The photographs of 2E12055 and 2E11795 (top view) show the flange's edge ending at the cut's. Now the flange is trimmed along `BB_CUT`. Keep anything sitting on the barrel bridge inside its outline when the cut or the outline moves.
