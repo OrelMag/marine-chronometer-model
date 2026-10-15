@@ -1,5 +1,5 @@
 """Geometry audit: screws that overlap or have nothing under their seat, cylinders (arbors, pins) whose ends sit in nothing,
-coplanar overlapping faces (possible z-fighting), and parts that touch nothing (visible ones only). Usage: python audit.py [box] [--eval JS] [--update]
+coplanar overlapping faces (possible z-fighting), and parts that touch nothing (visible ones only). Usage: python audit.py [box] [--eval JS] [--rev first] [--update]
 (--eval runs JS after loading, e.g. "__mv.userData.stop('arm')" to fit the manual's locking arm in place of the Navy's Y-arm, the default)
 
 The model is frozen in one state first (the escapement locked, the fusee 2.5 turns from full wind: placements.py's first state), so a run
@@ -14,6 +14,10 @@ from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
 MODE='box' if 'box' in sys.argv[1:2] else 'movement'
+# --rev first: a model whose drawings have two states (the Wempe's sheets as first drawn: its page's Variants, movement.js's setRev) is audited in that state, its coplanar
+# faces kept under their own key ('movement.first'), so --update records them as it does the default's
+REV=sys.argv[sys.argv.index('--rev')+1] if '--rev' in sys.argv else None
+KEY=MODE+('.'+REV if REV else '')
 JS='geometry-audit-box.js' if MODE=='box' else 'geometry-audit.js'
 EXP=(HERE if model.HAMILTON else model.DIR)/'audit-expected.json'   # another model's beside its page
 FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
@@ -26,6 +30,8 @@ LOOSE=model.cfg('LOOSE',[('barrelBridge:Cylinder',(4.0,-18.51,-19.9),1.15,"the w
  ('det:Cylinder',(1.5,-22.11,25.02),0.53,"the block's other positioning pin, the same"),
  ('det:Cylinder',(-5.53,-18.31,34.74),0.22,"a steady pin across the detent's foot, standing out of it"),
  ('det:Cylinder',(-3.32,-18.31,27.47),0.22,"the foot's other steady pin, the same"),
+ ('ratchet:Cylinder',(-21.58,-23.51,4.05),0.25,"a steady pin of the setup pawl spring, through the barrel bridge, its end flush with the bridge's underside, over the barrel (pushed out from there, Op. 32)"),
+ ('ratchet:Cylinder',(-22.97,-23.51,3.15),0.25,"the spring's other steady pin, the same"),
  ('bal:Cylinder',None,0.25,"a vernier timing weight's screw, its free end past the nut"),
  ('bal:Cylinder',None,0.25,"the other vernier weight's screw")])
 # with the Navy's balance brake fitted (the page's default; --eval "__mv.userData.stop('arm')" fits the manual's arm instead), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked
@@ -38,6 +44,7 @@ async def run():
         await pg.goto(PAGE);await pg.wait_for_timeout(5000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")
         await pg.evaluate(FREEZE);await pg.wait_for_timeout(200)
+        if REV:await pg.evaluate(f"__mv.userData.setRev('{REV}')");await pg.wait_for_timeout(300)
         if '--eval' in sys.argv:await pg.evaluate(sys.argv[sys.argv.index('--eval')+1]);await pg.wait_for_timeout(300)
         r=json.loads(await pg.evaluate(open(HERE/JS).read()))
         await b.close();return r,errs
@@ -50,8 +57,8 @@ def main():
     exp=json.loads(EXP.read_text(encoding='utf-8')) if EXP.exists() else {}
     zf=Counter(zkey(z) for z in r['zfight'])
     if '--update' in sys.argv and '--eval' not in sys.argv:
-        exp[MODE]=dict(sorted(zf.items()));EXP.write_text(json.dumps(exp,indent=1,ensure_ascii=False)+'\n',encoding='utf-8',newline='\n')
-        print(f'wrote {EXP.name} [{MODE}]: {sum(zf.values())} coplanar faces in {len(zf)} pairs')
+        exp[KEY]=dict(sorted(zf.items()));EXP.write_text(json.dumps(exp,indent=1,ensure_ascii=False)+'\n',encoding='utf-8',newline='\n')
+        print(f'wrote {EXP.name} [{KEY}]: {sum(zf.values())} coplanar faces in {len(zf)} pairs')
     bad,gone=[],[]
     bad+=[f'page error: {e}' for e in errs]
     fl=list(FLOAT)
@@ -68,12 +75,12 @@ def main():
         if m:left.remove(m)
         else:bad.append(f'looseEnds: {x}')
     gone+=[f'looseEnds: {e[0]} r{e[2]} at {e[1]} ({e[3]})' for e in left]
-    ez=Counter(exp.get(MODE,{}))
+    ez=Counter(exp.get(KEY,{}))
     for k,n in zf.items():
         if n>ez.get(k,0):bad.append(f'zfight: {k} (x{n}, expected x{ez.get(k,0)})')
     for k,n in ez.items():
         if zf.get(k,0)<n:gone.append(f'zfight: {k} (x{zf.get(k,0)}, expected x{n})')
-    print(f'\n== compared with the expected leftovers [{MODE}]')
+    print(f'\n== compared with the expected leftovers [{KEY}]')
     for g in gone:print('   no longer found (take it out):',g)
     for x in bad:print('   NEW:',x)
     if bad:print(f'FAIL: {len(bad)} new finding(s); fix them, or if intended, add the loose end to LOOSE (with its reason) or run --update for coplanar faces');return 1

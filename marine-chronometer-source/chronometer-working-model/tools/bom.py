@@ -22,7 +22,7 @@ Checks named in a line's 'check' (escapement.js, invariants.py, maintaining.py, 
 bom-fn.js's function checks, run last through the page's own controls at 1× (about 30 s; --no-fn skips them): the locking arm stops the balance at a timing
 weight and it doesn't restart by itself, the twist starts it, the train-blocking screw holds the train and lets it go, the shield plate covers the key hole
 and opens onto it, the gimbal latch holds the case to the box. A named one not written yet is reported (~~), not failed.
-A line's 'dev' lists known deviations from the manual, each with its reason: printed with ~~, not failed."""
+A line's 'dev' lists known deviations from the manual, each with its reason: printed with ~~, not failed; one with 'rev' holds only in that state of the drawings (the Wempe's As first drawn)."""
 import asyncio,json,pathlib,re,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -49,6 +49,7 @@ async def run(evl):
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(ARM);await pg.wait_for_timeout(300)
         if evl:await pg.evaluate(evl)
         res=await pg.evaluate(JS,BOM)
+        res['rev']=await pg.evaluate("window.__mv&&__mv.userData.rev||null")   # the drawings' state shown (the Wempe's Variants), for 'dev' entries that hold in one
         if '--no-fn' in sys.argv or not model.cfg('FN',True):res['fn']=[]   # bom-fn.js's function checks are the Hamilton's
         else:   # on a fresh page: bom-check.js turns the train and balance through update(), and a held train isn't redrawn from the page's own state
             await pg.reload();await pg.wait_for_function("window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
@@ -74,7 +75,7 @@ def judge(res,sp):
     D.clear()
     for r in res['rel']:
         tag=f"{r['kind']} {r['id']}#{r['i']} -> {r['tgt']}"+(f" ({r['how']})" if r.get('how') else '')
-        dv=[d for d in L[r['id']].get('dev',[]) if d['rel']==[r['kind'],r['tgt']] and r['i'] in d['inst']]
+        dv=[d for d in L[r['id']].get('dev',[]) if d['rel']==[r['kind'],r['tgt']] and r['i'] in d['inst'] and d.get('rev',res.get('rev'))==res.get('rev')]   # a 'rev' entry only in that state of the drawings (the Wempe's setRev)
         if dv:D.append(f"{tag}: {dv[0]['why']}");continue   # a known deviation, reported with its reason
         if r.get('err'):F.append(f"{tag}: {r['err']}");continue
         if r['kind'] in('in','round'):

@@ -1,6 +1,6 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 20 minutes: 18-23 over four runs on 15 October 2026, 57 steps): build, escapement, escgolden, wempe-escapement, wempe-mainspring, wempe-physics, wempe-strength, wempe-gearing, wempe-hairspring, wempe-thermal, wempe-gimbals, wempe-errorbudget, wempe-essaydata, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, wempe-dynamics, wempe-tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types, smoke, invariants, massprops, solids, exploded, overhaul, book, audit, and the Wempe's smoke, solids, audit, exploded and massprops
+    python ci.py              # the checks on every change (about 20 minutes: 18-23 over four runs on 15 October 2026, 57 steps): build, escapement, escgolden, wempe-escapement, wempe-mainspring, wempe-physics, wempe-strength, wempe-gearing, wempe-hairspring, wempe-thermal, wempe-gimbals, wempe-errorbudget, wempe-essaydata, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, wempe-dynamics, wempe-tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types, smoke, invariants, massprops, solids, exploded, overhaul, book, audit, holecheck, and the Wempe's smoke, solids, audit, exploded and massprops
     python ci.py --quick      # without the browser checks (about 10 minutes, 15 October 2026): build, escapement, escgolden, wempe-escapement, wempe-hairspring, wempe-thermal, wempe-mainspring, wempe-physics, wempe-strength, wempe-gearing, wempe-gimbals, wempe-errorbudget, wempe-essaydata, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, wempe-dynamics, wempe-tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types
     python ci.py --full       # and the slow checks (about 44 minutes more): dynamics.js in full, tripping.js in full, the Wempe's dynamics.js and tripping.js in full, gimbals.js in full (the Hamilton's and the Wempe's), mainspring_friction.py (the model's strip, the build's Nivaflex and the sources' proportions), gearing.js in full, the Wempe's mainspring friction and gearing in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
@@ -75,7 +75,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-thermal',lambda log:run(['node',TOOLS/'wempe_thermal.js'],ROOT,log),'quick'),   # the Wempe's cut bimetallic balance and steel spring in heat and cold against the 6MX's TU: the linear term, the masses' place, the secondary error (under a second)
  ('wempe-gimbals',lambda log:run(['node',TOOLS/'gimbals.js','--model','wempe','--quick'],ROOT,log),'quick'),   # the Wempe's case and ring as weighed (gimbals_wempe.json): levelled, their periods and resonance (about 12 s)
  ('wempe-errorbudget',lambda log:run(['node',TOOLS/'wempe_errorbudget.js'],ROOT,log),'quick'),   # the Wempe through the TU's 35-day trial, as adjusted and as drawn, and the error carried at sea (about 10 s)
- ('wempe-essaydata',lambda log:run(['node',TOOLS/'wempe_essaydata.js'],ROOT,log),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 6 s)
+ ('wempe-essaydata',lambda log:run(['node',TOOLS/'wempe_essaydata.js'],ROOT,log),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 35 s)
  ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),
  ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),
  ('hairspring-fe',lambda log:run(['node',TOOLS/'hairspring-fe.js'],ROOT,log),'quick'),   # the hairspring at large swings by co-rotational beam elements, against hairspring.js's elastica (about 20 s)
@@ -115,10 +115,13 @@ STEPS=[('build',build,'quick'),
  ('book',lambda log:run([PY,'book.py'],TOOLS,log),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
  ('audit',lambda log:run([PY,'audit.py'],TOOLS,log),'browser'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
+ ('holecheck',lambda log:run([PY,'holecheck.py'],TOOLS,log),'browser'),
  ('wempe-smoke',lambda log:run([PY,'smoke.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's page: its views, sections, Spread, a pick, the opacity menu, a link; then its Essay tab (about 1½ minutes)
  ('wempe-solids',lambda log:run([PY,'solids.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-audit',lambda log:run([PY,'audit.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-exploded',lambda log:run([PY,'exploded.py','--model','wempe'],TOOLS,log),'browser'),
+ ('wempe-audit-first',lambda log:run([PY,'audit.py','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the same as first drawn (the page's Variants: the sheets of 1940-41), its coplanar faces under movement.first
+ ('wempe-exploded-first',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'browser'),
  ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)

@@ -1162,6 +1162,15 @@ Contents:
   chain end (`TS` 1.2, `TC` 1.5 in `movement.js`): change them together;
   the chain still bears on the chain end at full wind (`maintaining.py`) and
   the stop end clears the chain (`fine.py`); the bar stays one mesh. `87fe19a`
+- **The seal ring and its spring were shut inside the dust seal.** They sat in a groove round the seal's bore, where they
+  could neither come out (Op. 30) nor go in (the reassembly's Op. 52). KLUwI2UUCMQ 12:33.0-12:39.0: the seal's chamber opens underneath, the ring a
+  washer r 4.7 on the arbor's shaft, the spring standing on the barrel bridge round the bushing; the overhaul's host for both is the barrel bridge.
+  Keep: the seal lifts off them; bom.json has the spring on the barrel bridge (42061). `facea7a`
+- **The winding ratchet wheel couldn't come off the fusee.** The sustaining ratchet rode a step r 2.87 on the collar,
+  inferred from its bore, under the winding ratchet (bore 2.43), which had to come off over it (Op. 43). The step is gone: the sustaining ratchet rides
+  the fusee wheel's hub, a pipe r 2.87 (Op. 20 greases "the outside of the hub"; Fig. 71 assembles them together), and the winding ratchet's bore,
+  confirmed at 23:30 (r 2.31, no hub), comes off the straight collar's lower end, its screws ahead of it (`UP` in overhaul.js). Keep: nothing on the
+  arbor below the winding ratchet wider than its bore. `79cfc2f`
 
 ## Plates, bridges, screws and arbors
 
@@ -1759,6 +1768,33 @@ Contents:
   hole drawn plain. Keep: a hole's radius read on a face as a fraction of the
   way between two of its edges, not through a camera scaled by an uncertain
   bore. `2394368`
+- **The fusee and barrel arbors couldn't pass their own holes.** The barrel bridge's bushings were bored r 1.02
+  (fusee) and 1.42 (barrel), the plate's 0.58 and 1.43, all without a source, though the parts list gives the four one number (42164); the squares,
+  3.4 and 3.1 across their corners, couldn't pass them, so the bridge couldn't come off over the arbors (Op. 31), the dust seal off the square (Op. 29),
+  nor the barrel arbor out of the barrel's end hole (r 1.43; Op. 36), and the wind indicator pinion (tips r 1.76) couldn't leave the fusee's lower
+  bushing. The bushings are now one part, r 3.4 bored 1.85, the pivots r 1.82 (KLUwI2UUCMQ 13:04.4, 12:39.0, 37:59, 40:05; Fig. 75); the fusee arbor a
+  shaft to a step at y -31.5 and the square to its end, a shoulder r 2.2 under the collar, the end plate bored 2.25; the barrel arbor Fig. 75's pivots
+  and bearings (r 2.35 in the barrel's end holes, r 2.38). Keep: every arbor's pivot inside its bushing's bore and every square's half diagonal under the
+  holes it passes; `tools/overhaul.py` passes with no expected entry for them; `strength.js` reads the fusee bushing off its `bushR(...)` call's literals. `facea7a`
+- **The dust seal's screw holes about 62° round from the real ones.** Traced on the top-view photograph through
+  `PT`, the pair stood at 145.5° and -37.9° about the fusee, so the barrel bridge showed a hole where the real one is plain beside the arbor (12:39.0).
+  KLUwI2UUCMQ 13:04.4, the bridge underside up, puts them at 26.8° and -154.9°, 7.97 and 7.67 out (drawn 7.8); the flange's bite between them turns with
+  them. Keep: `S.seal` in the movement's frame, not through `PT`. `f06ed2f`
+- **The winding stop's tapped hole went through the barrel bridge.** The stud screws 2 mm into the bridge's 3.4 from
+  underneath, but the extrusion's holes all go through, so its hole showed on the bridge's top beside the dust seal, where the real one is plain (KLUwI2UUCMQ
+  12:39.0). `blindHoles()` (core.js) now cuts it 2.0 deep from the underside, re-triangulating only the face's triangles that meet it (a fresh triangulation of
+  the whole face fails where the bevel's inset outline crosses itself at a sharp corner). Keep: blind holes through `blindHoles()`, not stacked layers that
+  leave a seam; `tools/holecheck.py` finds a hole with nothing in it. `09cf387`
+- **The barrel bridge lacked holes the real one has.** Surveyed on KLUwI2UUCMQ 13:04.4 (its underside, 4K) with
+  `tools/holemap.py` (the frame warped onto the bridge's plan by a homography on known holes, the model's holes drawn over it): the Navy seal's two screw
+  holes (its screws had stood on the bridge's face), the setup pawl spring's steady pins through the bridge (they had stopped on its top), the setup cover's
+  screws' tapped holes made blind (nothing under them), and six through holes whose use no source gives. `blindHoles()` now closes a through hole's far end
+  rather than re-triangulating a face, and `holecheck` finds holes from circle fits as well as closed loops, its faces grouped by plane. Keep: a part's holes
+  compared with a face-on frame of it through `holemap.py`; `holecheck` passes. `e44d936`
+- **The upper train bridge and the pillar plate lacked holes the real ones have.** Surveyed with `tools/holemap.py`: on the
+  train bridge a countersunk hole between pillar 0's screw and the lower bridge's (13:49.5 and 23:30 within 1 mm); on the pillar plate three through holes, at 12
+  o'clock past the wind indicator's post, past the access hole at 4 o'clock (9:03 and 40:05), and over the barrel (9:03). None has a known use; each is in
+  `holecheck`'s expected empty with its source. Keep: the train bridge's other readings (Review-results.md) are too loose to move holes measured on 6:49.0. `d33651a`
 
 ## Setup, case and gimbals
 
