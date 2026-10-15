@@ -38,7 +38,7 @@ const TP=X.TP,FOOT0=TP+2.5,SPR0=TP-2.5,SQ0=SPR0-2,[tB,nBp]=toDp(X.B),GT=tB+1.54,
 const GPATH=[[GB[0],GB[1]],[3.0,0.62],[0.6,0.72],[0,0.72],[-0.5,0.55],[-0.85,0.15],[-1.2,-0.25],[-1.6,GN],[GT,GN]];   /* the gold spring's free part, its bending point to its tip */
 const HORN_L=4.4,HORN=[[-0.2,-0.40],[-0.45,-0.25],[-0.7,GNB-0.005],[-HORN_L,GNB-0.005],[-HORN_L,GNB-0.225],[-0.5,GNB-0.225],[-0.15,-0.52]],HN=GNB-0.115,HT0=-0.6,HT1=-HORN_L;   /* the horn (escapement.js's HORN_L), its beam's line */
 const BANK=[0,0.575];   /* where the banking screw's head meets the pipe: its side toward the wheel at the stone (escapement.js's t, n; mm) */
-const TI=-WD.INNER,yd=d=>TI+d,STONE_LO=yd(3.3)-(X.Y.ew0-0.06);   /* the stone's half below the pipe, down to 0.06 under the wheel's teeth */
+const TI=-WD.INNER,yd=d=>TI+d,STONE_LO=yd(X.PIPE0)-(X.Y.ew0-0.06);   /* the stone's half below the pipe, down to 0.06 under the wheel's teeth (escapement.js's PIPE0: 3.3 until 15 October 2026) */
 const RHO={st:7850,gold:11000,ruby:3980},EST=S.EB*1e9,EGO=S.ET*1e9;
 const rectP=(t0,t1,n0,n1)=>[[t0,n0],[t1,n0],[t1,n1],[t0,n1]].map(([t,n])=>U(t,n)),discP=(c,r,k=48)=>[...Array(k)].map((_,i)=>U(c[0]+r*Math.cos(TAU*i/k),c[1]+r*Math.sin(TAU*i/k)));
 const pm=(pts,h,rho,f=1)=>{const q=polyM(pts,h*1e-3,rho);return{m:f*q.m,mx:f*q.mx,my:f*q.my,I:f*q.I};};

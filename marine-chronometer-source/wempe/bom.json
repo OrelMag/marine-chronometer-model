@@ -1063,11 +1063,12 @@
    "parent": "050301-4",
    "kind": "part",
    "part": "balance",
-   "fn": "On the mass screw inside the rim.",
+   "fn": "On the mass screw inside the rim, sunk flush in the mass's inner face (as the screw's head in its outer face on Wempe 3955).",
    "rel": [
     [
-     "on",
-     "050301-4"
+     "in",
+     "050301-4",
+     "embed"
     ]
    ],
    "figs": "05 03_2"

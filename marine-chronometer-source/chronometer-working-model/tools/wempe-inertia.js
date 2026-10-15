@@ -13,7 +13,7 @@
   mv.updateMatrixWorld(true);const A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3();
   /* the body of the turning group g, about its own y axis: its meshes (or only those keep(o) passes) */
   const weigh=(g,keep=()=>true)=>{const inv=new THREE.Matrix4().copy(g.matrixWorld).invert(),b={m:0,s:[0,0,0],Iy:0,byHn:{},missing:{}};
-    g.traverse(o=>{if(!o.isMesh||!o.geometry.attributes.position||o.userData.decal||o.userData.surface||!keep(o))return;
+    g.traverse(o=>{if(!o.isMesh||!o.geometry.attributes.position||o.userData.decal||o.userData.surface||!keep(o))return;for(let p=o;p&&p!==g.parent;p=p.parent)if(!p.visible)return;   /* the shown revision's pieces only (movement.js's setRev hides the other's: until 15 October 2026 both were weighed, the rollers, staff, detent and escape arbor twice) */
       const mat=o.userData.mat0||o.material,key=KEY.get(mat)||'?',h=hnOf(o),rho=(BYHN[h]&&BYHN[h][key])??RHO[key];if(rho==null){b.missing[key+' '+h]=(b.missing[key+' '+h]||0)+1;return;}
       const T=inv.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position,I=o.geometry.index,n=I?I.count:P.count;let m=0,Iy=0;const s=[0,0,0];
       for(let k=0;k+2<n;k+=3){A.fromBufferAttribute(P,I?I.getX(k):k).applyMatrix4(T);B.fromBufferAttribute(P,I?I.getX(k+1):k+1).applyMatrix4(T);C.fromBufferAttribute(P,I?I.getX(k+2):k+2).applyMatrix4(T);
