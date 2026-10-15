@@ -88,9 +88,7 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .opm .chips{display:flex;flex-wrap:wrap;gap:4px}
 .opm .chips button{padding:3px 9px;font-size:12px}
 .tabs{position:absolute;z-index:6;right:10px;top:10px;display:flex;gap:2px;padding:3px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.tabs [role="tablist"]{display:flex;gap:2px}
 .tabs button{border:0;border-radius:999px;padding:4px 12px;font-size:12.5px;background:none;color:var(--muted)}
-.tabs a{display:inline-flex;align-items:center;border-radius:999px;padding:4px 12px;font:600 12.5px "Instrument Sans",system-ui,sans-serif;color:var(--muted);text-decoration:none;border-left:1px solid var(--rule);white-space:nowrap}.tabs a:hover{color:var(--ink)}   /* the other model, a page of its own beside the tabs */
 .tabs button[aria-selected="true"]{background:var(--blue);color:var(--panel)}
 /* a view key pressed for a view that is off: its button flashes */
 @keyframes nope{0%,100%{transform:none}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}.nope{animation:nope .3s 2}
@@ -217,7 +215,7 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
 /* touch: finger-sized targets */
 @media(pointer:coarse){button{min-height:44px}.ck{min-height:44px}.ck input{width:22px;height:22px}.prow .pn{min-height:40px}.prow input{width:22px;height:22px}
   input[type=range]{height:32px}.spd input[type=number],.clk input[type=time]{min-height:40px}
-  .tabs button,.tabs a{padding:6px 14px;min-height:36px}.info .x{padding:8px 12px}.opm .seg button,.opm .chips button{padding:6px 12px}
+  .tabs button{padding:6px 14px;min-height:36px}.info .x{padding:8px 12px}.opm .seg button,.opm .chips button{padding:6px 12px}
   details.more>summary{min-height:40px}#helpBtn{min-width:44px}}
 /* landscape phones: the stage fills the height from the top, with the title and the panel scrolling beside it
    (the body is the grid and .wrap steps aside, so the header can sit in the panel's column) */
