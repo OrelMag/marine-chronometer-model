@@ -23,8 +23,9 @@ const WDIAL=(()=>{
 
   /* ================= heights ================= */
   /* the dial on the movement ring's recess floor: 7 −0.1 over the seat's floor, where the pillar plate's dial face lies (05 08 00-3, drawn 7.0 as frame.js; 05 02_1's
-     "7" from the plate to the dial: sure), Ø 103.6 −0.1 × 1.3 (05 02 00-4: "Messingblech 1,3", struck to 1,2 in pencil, and "Eisenblech 1,3 gebondert" in pencil; 05 02_1
-     draws it 1.3: the 1.3, which puts the up-and-down hand's flange 0.2 over it, 05 02_1's "0,2": likely) */
+     "7" from the plate to the dial: sure), Ø 103.6 −0.1 × 1.3 (05 02 00-4: the brass "Messingblech 1,3", its 1,3 struck to 1,2 in pencil, then "Eisenblech 1,3 gebondert", iron
+     sheet 1.3 bonderised, lettered under the blank's "Rohmaß 1,3 × 110 × 110" as the last revision: the pencilled 1.2 was the brass dial's, which the iron one replaced
+     (likely; read on the sheet 15 October 2026); 05 02_1 draws it 1.3, which puts the up-and-down hand's flange 0.2 over it, 05 02_1's "0,2") */
   const DY0=PPT+7.0,DT=1.3,DY1=DY0+DT,DR=103.55/2;
   /* the glass's underside, 17.0 over the plate's dial face (05 02_1's "15,8", corrected in pencil to "17,0": unsure): the case (05 01) is a later phase; nothing here
      stands within 1 mm of it */
