@@ -318,7 +318,7 @@ Contents:
   as `R.spPath` bends the Hamilton's (each part's curvature changed by θ/L, from the stud's end back, the length
   kept): within 0.010 mm of the elastica from −300° to 300° (`HSPR.shape`), the coils 4.9 % in and out at 207°.
   Keep: the page draws from `WESC.HSP.bend`, `wempe_hairspring.js` fails past 0.03 mm; `fine.py --model wempe`
-  clear. (this commit)
+  clear. `ee5c196`
 
 - **Op. 78's preload was the whole 0.770 g** (p. 61's clause missed). Op. 78 runs on over the page: the weight "should separate the detent
   spring from the stopbutton by approximately 0.005 in" (p. 61; Fig. 88, "(.005 in. clearance)"), so the preload is the weight's

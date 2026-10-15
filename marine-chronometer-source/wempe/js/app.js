@@ -165,11 +165,17 @@ const PARTS={
     d:'The ring between the bowl and the box: its outer pivots, on the 3-9 line, are screws through the box’s walls; its inner pivots, screws on the 12-6 line with lock nuts, run in the bowl’s brackets (“Lagerstellen a u. b leicht spielend”: the bearings a and b running freely). Both pairs lie in one plane, so the bowl hangs level whatever the ship does. A bracket on the ring at 3 o’clock, slid to level the bowl the other way, carries one outer pivot. Wempe 3955’s ring is Bakelite; no material is given.',
     sp:'Drawing 05 01 00-5 (no sheet in the set; bracket 05 01 00-6) · Ø 140 × 3.3 × 23.2 (scaled) · pivots 11.5 under its top · WN-79, WN-400'},
   box:{t:'Wooden box (Holzkasten)',g:6,src:'scaled',sn:'Its outside from the case’s assembly sheet, its walls and handles from the handle’s sheet; its boards, lid and hinges as photographs of the wartime boxes show them (estimated)',figs:'05 01_1, 51 00_1, 51 00_2',c:'#b98d58',pri:3,
-    d:'The oak box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. The padded outer box for transport (Überkasten, 52 00 16, bleached birch) isn’t built.',
+    d:'The oak box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. For carrying it goes into the padded outer box (Transport box view).',
     sp:'Drawing 127-556.02 (Holzkasten; no sheet in the set) · 185 × 185 × 180 outside · walls 12.5 · handles 51 00 10 · pivots WN-80, M6'},
   lid:{t:'Lid (Deckel)',g:6,src:'est',sn:'Its height from the parting line on the handle’s sheet; the glazed top, hinges and latch as the photographed boxes show them (estimated); the maker’s plate and the tongue from their sheets',figs:'51 00_2, 51 00_3, 51 00_4',c:'#c79d66',pri:2,
     d:'The box’s lid, with a glass in its top so the dial can be read with it shut, hinged at the back. On its front the maker’s plate, “Chronometerwerke Wempe Hamburg, Type 3371” (the number runs on), and the latch tongue.',
     sp:'75 high (180 less the box’s 105) · glass 3 · Firmenschild 00 01 01-9: Alu, 26 × 52, white, letters sunk black · Zunge P. 51 00 02-2: iron 10 × 4, black'},
+  overBox:{t:'Outer box (Überkasten)',g:6,src:'drawing',sn:'Its body, base plate, strip, cushions and hinges from its sheet (the ends of the base plate traced on its plan, the cushions’ middles scaled where not figured); the hook and eye, commercial, and the eyes’ form estimated',figs:'51 00_5, 51 00_1',c:'#d9c9a6',pri:2,
+    d:'The padded box the wooden box travels in, bleached birch, dovetailed and glued. A cushion on each wall, on the floor and in the lid, each thickest in its middle, holds the wooden box with nothing to spare: 20 mm each side, its handles against the end cushions, 20 under it and 20 over it. Its base plate stands out at each end, where an eye is screwed; a strap screwed to each end wall goes over the lid to a buckle. The arrangement drawing, Boden-Chronometer (127-556. A-1, 1942), draws the two together with this lid open.',
+    sp:'Drawing 127-556.01 (52 00 16, 28.2.42) · gebleichte Birke · 270 × 250 × 157 with its base plate, 225 inside across · base plate 370 × 270 × 12.5, its ends R 367 · walls 12.5 · cushions 20 · strap 30 wide'},
+  overLid:{t:'Outer box lid',g:6,src:'drawing',sn:'Its height and boards from its sheet; the hook estimated (commercial)',figs:'51 00_5, 51 00_1',c:'#e0d2b2',pri:1,
+    d:'The outer box’s lid, hinged at the back on two hinges, a cushion in its top that bears on the wooden box’s lid; a hook on its front catches an eye on the box.',
+    sp:'51 00_5 · 88 high outside · top and walls 12.5 · cushion 20 · hinges 32 long'},
   caseLock:{t:'Transit lock (Feststeller)',g:6,src:'est',sn:'Its knob, lever and place scaled on the case’s assembly (Schnitt A-B); its heights estimated',figs:'05 01_1',c:'#5d6670',pri:1,
     d:'A knob on a bracket in the box’s front right corner turning a lever: turned in, the lever presses the gimbal ring onto the locking bracket on the bowl, so neither gimbal can swing, for carrying the box. Drawn turned off.',
     sp:'05 01’s list: Feststeller 05 01 01 (no sheet) · knob Ø 19.6, lever 28 × 8'},
@@ -304,6 +310,21 @@ const PIECES={
     {k:'handleScrews',t:'Handle screws',h:'WN-hg',d:'The screws through the handles’ ends.',sp:'Estimated',src:'est',sn:'Not on the sheet'},
     {k:'hinges',t:'Hinges',h:'Scharnier',d:'Two brass hinges at the back joining the lid to the box.',sp:'40 × 18 leaves (estimated)',src:'est',sn:'As Lange 1947’s box shows them'},
     {k:'keeper',t:'Keeper',h:'Schliessblech',d:'The strap on the box’s front that the lid’s latch tongue slides under.',sp:'Estimated',src:'est',sn:'Not drawn'}],
+  overBox:[{k:'body',t:'Outer box',h:'Ueberkasten',d:PARTS.overBox.d,sp:PARTS.overBox.sp},
+    {k:'strip',t:'Rim strip',h:'Randleiste',d:'A strip round the inside of the rim, standing 4 mm over the walls: the lid closes over it.',sp:'13 × 5, 4 over the walls (17, 18 on 51 00_5)'},
+    {k:'cushionsSide',t:'Front and back cushions',h:'Polster.S',d:'The cushions on the long walls, against the wooden box’s front and back.',sp:'20 at their middle (51 00_5, Schnitt A-B)'},
+    {k:'cushionsEnd',t:'End cushions',h:'Polster.E',d:'The cushions on the end walls, against the wooden box’s handles.',sp:'20 at their middle (scaled 23)',src:'scaled',sn:'Their middle scaled on the plan'},
+    {k:'cushionFloor',t:'Floor cushion',h:'Polster.B',d:'The cushion on the floor the wooden box stands on.',sp:'20 at its middle (scaled 21)',src:'scaled',sn:'Its middle scaled on Schnitt A-B'},
+    {k:'strap',t:'Strap',h:'Riemen',d:'The strap’s ends, screwed to the end walls: it goes over the lid to its buckle. With the lid open its loose ends fall off; they and the buckle aren’t drawn.',sp:'30 wide · its screws 80 apart, the lower 60 over the floor'},
+    {k:'strapScrews',t:'Strap screws',h:'WN-ur',d:'Two screws on each end wall through the strap (“Schraube f. Riemenbef.”).',sp:'Estimated'},
+    {k:'eyes',t:'Eyes',h:'Riemenoese',d:'An eye screwed on each end of the base plate.',sp:'127-556.01-08 · Ø 23 (scaled), 25 off the walls',src:'est',sn:'Their place and size from the plan; their form estimated'},
+    {k:'eyeScrews',t:'Eye screws',h:'WN-ro',d:'The eyes’ screws.',sp:'3 × 15 DIN 96 (round head)'},
+    {k:'hinges',t:'Hinges',h:'Scharnier.U',d:'Two hinges at the back joining the lid to the box.',sp:'32 long, 68-100 off the middle (7 on 51 00_5)'},
+    {k:'eye',t:'Hook eye',h:'Hakenoese',d:'The eye on the box’s front that the lid’s hook catches.',sp:'“Haken u. Öse handelsüblich” (commercial) · estimated',src:'est',sn:'Commercial: its size estimated'}],
+  overLid:[{k:'lid',t:'Outer box lid',h:'Ueberkasten.D',d:PARTS.overLid.d,sp:PARTS.overLid.sp},
+    {k:'cushion',t:'Lid cushion',h:'Polster.D',d:'The cushion in the lid’s top, bearing on the wooden box’s lid.',sp:'20 at its middle (16 on 51 00_5)'},
+    {k:'hinges',t:'Hinge leaves',h:'Scharnier.U',d:'The hinges’ leaves on the lid.',sp:'32 long'},
+    {k:'hook',t:'Hook',h:'Haken',d:'The hook on the lid’s front, caught in the box’s eye.',sp:'Commercial · estimated',src:'est',sn:'Commercial: its size estimated'}],
   lid:[{k:'lid',t:'Lid',h:'Holzkasten.D',d:PARTS.lid.d,sp:'75 high · walls 12.5 · its top a frame 20 wide'},
     {k:'glass',t:'Lid glass',h:'Deckelglas',d:'The glass in the lid’s top.',sp:'151 × 151 × 3 (estimated)'},
     {k:'hinges',t:'Hinge leaves',h:'Scharnier',d:'The hinges’ leaves on the lid.',sp:'Estimated'},
@@ -386,9 +407,10 @@ const VIEWS={
   escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
   box:{yaw:0.62,pitch:1.08,dist:620,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right, high enough to read the dial through the lid's glass (at 0.42, until 15 October 2026,
      the lid's front wall hid everything in the box: the dial lies 59 under the glass) */
-  case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}}};   /* the box open: the bowl in its gimbals */
-/* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+  case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}},   /* the box open: the bowl in its gimbals */
+  transport:{yaw:0.62,pitch:0.62,dist:980,target:[0,-40,0],case:{lid:0,lift:0,over:1}}};   /* the wooden box shut in its outer box, the outer lid open, as the arrangement Boden-Chronometer (51 00_1) draws them */
+/* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0), the outer box shown with its lid open (over); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
@@ -410,11 +432,11 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT):0;
   /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
-  let CS=null,cl=1,cf=1;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
+  let CS=null,cl=1,cf=1,co=0;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
   const ES=typeof ESSAY==='undefined'?null:ESSAY;   /* the Essay tab (js/essay.js): the viewer leaves the keys and the hash to it while it shows */
   const V=VIEWER.start({essay:ES,name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
     build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.onRev.push(f=>{root.traverse(o=>{if(o.userData.rev)o.visible=o.userData.rev===(f?'first':'last');});CS.parts.key.userData.first=f;CS.keyRest();});mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's, the key resting as its state's lies */CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
-      if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid};   /* the box, for audit.py box (geometry-audit-box.js) */
+      if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid,showOver:v=>{CS.showOver=!!v;}};   /* the box, for audit.py box (geometry-audit-box.js); showOver(1) keeps the outer box shown in every view (bom.py counts it: checks.py's ARM) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
@@ -450,7 +472,9 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3),kl=SNAPC||RMC.matches?1:1-Math.exp(-dw*3);if(!c&&(cw.go||cw.u>0)){if(cw.go&&!winding)wind0();cw.go=false;cw.u=0;}   /* a view out of the case: the bowl set back at once, before the movement lifts out of it, and a wind
           asked for goes on there (the key on the square once the movement is out) */
         cf+=((c?c.lift:1)-cf)*k;cl+=((c?(cw.go||cw.u>0?1:c.lid):cf>0.97?0:1)-cl)*kl;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
-        const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
+        const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;
+        /* the outer box (case.js), only in its view (over): its lid eased open to 95°, standing behind it as 51 00_1's section draws it */
+        CS.over.visible=!!(c&&c.over)||!!CS.showOver;co+=((c&&c.over?1:0)-co)*kl;if(Math.abs(co-Math.round(co))<1e-4)co=Math.round(co);CS.overLid.rotation.x=-co*95*D2R;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
       /* winding in the case, as the 6MX's instruction has it (pp. 3-4: the chronometer turned over in its gimbals, the key hole opened, the key put in and turned, then taken out
          and the chronometer turned back) and two videos show it on 6MXs (DIxob2Rl4dc 7:05-7:22: the bowl turned about its 12-6 pivots, the dial toward 3 o'clock, until its
@@ -475,7 +499,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp);E=H.Eh;}   /* its own swing, the wheel on its stone */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
-      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4)];},
+      showH();return[+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);},
       read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
