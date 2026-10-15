@@ -127,8 +127,9 @@ if(!QUICK){say('');say(`3. Each mesh's depthing window: its centres moved (the o
   for(let k=0;k<4;k++){const[nm,zA,zB,m]=STG[k],okAt=dd=>{const s=stage(zA,zB,m,D0[k]+dd,60);if(s.jam)return'it jams';for(const j of[1,2]){const st2=base.slice();st2[k]=s;const h=Math.min(24,4*STG[k][4]/zA/3600+1),r=day(st2,j,h);
       if(!(r.amean>=BAND[0]&&r.amean<=BAND[1]))return`the mean swing ${f(r.amean,1)}° (mu ${MU[j]})`;
       const own=base.map(b=>st(b.fac[j]).mean);own[k]=st(s.fac[j]).mean;const q=day(st2,j,h,undefined,own);if(!(q.amin>=BAND[0]&&q.amax<=BAND[1]))return`the swing ${f(q.amin,1)}-${f(q.amax,1)}° (mu ${MU[j]}, the mean restored)`;}return'';};
-    /* bisect from the drawn centres (which pass) to the search's end (0.3 m closer, 1 m wider: the teeth then engage 0.7 m, little left for a knock), to a micrometre */
-    const edge=sg=>{let lo=0,hi=(sg<0?0.3:1.0)*m,why=okAt(sg*hi);if(!why)return[sg*hi,'passes to the end of the search'];while(hi-lo>0.001){const md=(lo+hi)/2,w=okAt(sg*md);if(w){hi=md;why=w;}else lo=md;}return[sg*lo,why];};
+    /* bisect from the drawn centres (which pass) to the search's end (0.3 m closer, 1 m wider: the teeth then engage 0.7 m, little left for a knock; the Wempe's 0.8 m closer, its tips
+       standing well clear of the roots), to a micrometre */
+    const edge=sg=>{let lo=0,hi=(sg<0?(WEMPE?0.8:0.3):1.0)*m,why=okAt(sg*hi);if(!why)return[sg*hi,'passes to the end of the search'];while(hi-lo>0.001){const md=(lo+hi)/2,w=okAt(sg*md);if(w){hi=md;why=w;}else lo=md;}return[sg*lo,why];};
     const[lo,wl]=edge(-1),[hi,wh]=edge(1);win.push({stage:nm,lo,hi,phi:+(base[k].phi*180/Math.PI).toFixed(2)});
     say(`  ${nm}: ${f(lo*1000,0)} to +${f(hi*1000,0)} µm about its drawn centres (closer: ${wl}; wider: ${wh})`);}
   /* a CNC's hole positions: each of the mesh's two arbors has two holes (plate and bridge), each off by up to tp in any direction, and its pivots' shake s;

@@ -391,11 +391,12 @@ const WFUSEE=(()=>{
 
     /* =============== the mainspring 05 07 00-6 (Zugfeder) =============== */
     /* "Zugfeder 15 × 0,37" (05 06_20; 0207: "Zugfeder 15", its space 15.8 ±0.1 framed): drawn 14.8 high to clear the 1948 drum's 14.95 inside (its lid 1.3 under the seat)
-       and 0.36 thick so packed coils lie at the strip's 0.37 pitch. Its length isn't drawn anywhere: 1,386 mm, the strip filling half the room between the core (r 6.65) and
-       the wall (r 19.25), the usual rule, which lets it lie 12.6 turns on the wall, let down, and 19.9 on the core, coil-bound: 7.3 turns for the barrel's 5.1 working
-       turns and the ¾ set-up (05 06_20: "3/4 Umgang gespannt"), 1.4 to spare. Drawn as two packs, on the core and on the wall, joined by a turn: its inner end in the
-       arbor's hook, its outer end at the drum's block. Estimated (README) */
-    const MSL=1386,MST=0.37,MSa=6.65+MST/2,MSR=19.25-MST/2;
+       and 0.36 thick so packed coils lie at the strip's 0.37 pitch. Its length isn't drawn anywhere: 1,240 mm, fitted to the sheet's own force (05 06_20: the spring solved
+       in this drum by tools/mainspring.py at lengths 1,180-1,360 and its torque taken through the drawn fusee gives the measured pull's shape best at 1,240, to 1.1 % rms;
+       tools/wempe_mainspring.py, README Physics: energy; 1,386, the strip filling half the room, until 15 October 2026). It lies 11.9 turns all on the wall and 18.9 on the
+       core, coil-bound: 6.9 turns for the barrel's 5.1 working turns and the ¾ set-up (05 06_20: "3/4 Umgang gespannt"), 1.1 to spare. Drawn as two packs, on the core and
+       on the wall, joined by a turn: its inner end in the arbor's hook, its outer end at the drum's block. Its length estimated, its shape simplified (README) */
+    const MSL=1240,MST=0.37,MSa=6.65+MST/2,MSR=19.25-MST/2;
     const msLen=(ni,no)=>{const r1=MSa+MST*ni,r2=MSR-MST*no;return Math.PI*ni*(MSa+r1)+Math.PI*no*(MSR+r2)+Math.PI*(r1+r2);};
     const msShape=T=>{let lo=0,hi=T-1;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(msLen(m,T-1-m)>MSL)lo=m;else hi=m;}return lo;};   /* the core's pack's turns at T */
     const msT=(()=>{let lo=2,hi=40;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(msLen(0,m-1)>MSL)hi=m;else lo=m;}return lo;})();   /* all on the wall */

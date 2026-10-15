@@ -2,8 +2,8 @@
 
     python wempe_mainspring.py --solve L [--set S]   # mainspring.py's solve of the Wempe's strip, L mm long (its free curve's turns S times the Hamilton's measured):
                                                      # tools/mainspring_wempe_L<L>[_s<S>].js; about 25 min on 14 processes, run it alone
-    python wempe_mainspring.py --final L             # the same into tools/mainspring_wempe.js, the spring the model takes (the fit's length, below)
-    python wempe_mainspring.py --friction L [--check]   # mainspring_friction.py on mainspring_wempe.js (L its length): tools/mainspring_friction_wempe.json (about 4 min)
+    python wempe_mainspring.py --final               # the same into tools/mainspring_wempe.js, the spring the model takes (FINAL: the fit's length and set)
+    python wempe_mainspring.py --friction [--check]  # mainspring_friction.py on mainspring_wempe.js: tools/mainspring_friction_wempe.json (about 4 min)
     python wempe_mainspring.py [--check]             # the fit (a second): each solved table against 05 06_20; writes tools/wempe_mainspring.json (--check: exit 1 if stale)
 
 The strip and its barrel, from the sheets: 15 x 0.37 ("Zugfeder 15 x 0,37", 05 06_20; the 7 a little overwritten), in the drum's 38.5 inside (05 06_20, 05 07 01-1: r 19.25,
@@ -23,6 +23,7 @@ import numpy as np
 HERE=pathlib.Path(__file__).resolve().parent
 T_,RA,RW,B,E,EYE=0.37,6.65,19.25,15.0,207.0,9.4   # the strip, the core, the wall, its width, the modulus (GPa, estimated), the eye (estimated): above
 OUT=HERE/'wempe_mainspring.json'
+FINAL=(1240.0,0.6)   # the spring the model takes: the try whose shape fits 05 06_20 best (15 October 2026: 1240 mm, the free curve's turns 0.6 times the Hamilton's measured; README)
 WD=os.path.join(tempfile.gettempdir(),'mc-mainspring')   # the solved states (mainspring.py's json, not committed)
 def env(L,S,tag):
     # the states: from half a turn under the strip lying all on the wall to past coil-bound on the core (each estimated as packed turns at the strip's pitch,
@@ -80,22 +81,28 @@ def fit(check=False):
         m=re.match(r'mainspring_wempe_L([\d.]+)(?:_s([\d.]+))?\.js',f.name);tb=table(f);s=score(tb)
         out['tries'].append(dict(file=f.name,L=float(m.group(1)),set=float(m.group(2) or 1),slack=round(tb['slack'],4),T0=tb['T0'],rms=round(s['rms'],5),max=round(s['max'],5),eta=round(s['eta'],4),
                                  su=[round(score(tb,u)['rms'],5) for u in (0.65,0.85)],top=round(float(tb['T'][-1]),2),full=round(tb['slack']+0.75+float(IB[-1]),3)))
-    tr=[t for t in out['tries'] if t['set']==1]
-    if len(tr)>=3:   # the length where the shape's rms is least: a parabola through the three lengths about the best tried
-        tr.sort(key=lambda t:t['L']);k=min(range(len(tr)),key=lambda i:tr[i]['rms']);k=min(max(k,1),len(tr)-2);L3=[tr[k+j]['L'] for j in (-1,0,1)];r3=[tr[k+j]['rms'] for j in (-1,0,1)]
-        c=np.polyfit(L3,r3,2)
-        if c[0]>0:out['Lfit']=round(float(-c[1]/(2*c[0])),1);out['rmsFit']=round(float(np.polyval(c,out['Lfit'])),5)
+    tr=[t for t in out['tries'] if 0.55<=t['set']<=0.9]   # near the least (the sets solved either side of it fit far worse)
+    if len(tr)>=6 and len({t['L'] for t in tr})>=3 and len({t['set'] for t in tr})>=3:
+        # the shape's rms as a quadratic in the length and the set over the tries near it, its least; the level (eta) linear in both there
+        X=np.array([[1,(t['L']-1300)/100,t['set'],((t['L']-1300)/100)**2,t['set']**2,(t['L']-1300)/100*t['set']] for t in tr]);c=np.linalg.lstsq(X,np.array([t['rms'] for t in tr]),rcond=None)[0]
+        Hs=np.array([[2*c[3],c[5]],[c[5],2*c[4]]])
+        if np.all(np.linalg.eigvalsh(Hs)>0):
+            u,s=np.linalg.solve(Hs,-np.array([c[1],c[2]]));Lr=[(min(t['L'] for t in tr)-1300)/100,(max(t['L'] for t in tr)-1300)/100];Sr=[min(t['set'] for t in tr),max(t['set'] for t in tr)]
+            edge=not(Lr[0]<=u<=Lr[1] and Sr[0]<=s<=Sr[1]);u,s=min(max(u,Lr[0]),Lr[1]),min(max(s,Sr[0]),Sr[1])   # not carried past the tries: held at their edge
+            q=np.array([1,u,s,u*u,s*s,u*s]);e=np.linalg.lstsq(X[:,:3],np.array([t['eta'] for t in tr]),rcond=None)[0]
+            out.update(Lfit=round(1300+100*float(u),1),setFit=round(float(s),3),rmsFit=round(float(q@c),5),etaFit=round(float(e@q[:3]),4),edge=edge,
+                       surf=round(float(np.sqrt(np.mean((X@c-np.array([t['rms'] for t in tr]))**2))),5))
     fm=HERE/'mainspring_wempe.js'
     if fm.exists():
         tb=table(fm);s=score(tb);F=frc();sf=score(tb,0.75,F) if F else None;Td,Tu=tb['slack']+0.75,tb['slack']+0.75+float(IB[-1]);Mt=lambda T:float(np.interp(T,tb['T'],tb['P'])*tb['M1'])
-        out['final']=dict(slack=round(tb['slack'],4),T0=tb['T0'],M1=tb['M1'],top=round(float(tb['T'][-1]),2),Tdown=round(Td,4),Tup=round(Tu,4),Mdown=round(Mt(Td),5),Mfull=round(Mt(Tu),5),
+        out['final']=dict(L=FINAL[0],set=FINAL[1],slack=round(tb['slack'],4),T0=tb['T0'],M1=tb['M1'],top=round(float(tb['T'][-1]),2),Tdown=round(Td,4),Tup=round(Tu,4),Mdown=round(Mt(Td),5),Mfull=round(Mt(Tu),5),
             rms=round(s['rms'],5),max=round(s['max'],5),eta=round(s['eta'],4),su=[round(score(tb,u)['rms'],5) for u in (0.65,0.85)],fit=s['fit'],
             tq=[[float(x),round(float(profile(tb)(x)),5),round(float(profile(tb,0.75,F)(x)),5) if F else None] for x in np.arange(0,8.751,0.25)],
             friction=sf and dict(rms=round(sf['rms'],5),max=round(sf['max'],5),eta=round(sf['eta'],4),fit=sf['fit']))
     txt=json.dumps(out,indent=1)+'\n'
     print(f"  the drawn fusee and drum take {IB[-1]:.3f} barrel turns over the fusee's 8.75 (05 06_20 marks 5): its marks at fusee turns 0, 1.35, 2.87, 4.62, 6.59, 8.74 are {', '.join(str(m[2]) for m in out['marks'])} barrel turns from full wind here (the sheet's 5, 4, 3, 2, 1, 0)")
     for t in out['tries']:print(f"  {t['file']}: slack {t['slack']:.2f} turns (the table's least {t['T0']}), fully wound at {t['full']:.2f} (the table ends {t['top']}); against 05 06_20 the shape {100*t['rms']:.2f} % rms, {100*t['max']:.2f} % at worst; set up 0.65 / 0.85 turn: {100*t['su'][0]:.2f} / {100*t['su'][1]:.2f} %; measured over solved {t['eta']:.3f}")
-    if out.get('Lfit'):print(f"  the least rms by a parabola: L {out['Lfit']} mm, {100*out['rmsFit']:.2f} %")
+    if out.get('Lfit'):print(f"  the least rms, a quadratic in the length and the set through the {len(tr)} tries near it (it misses them by {100*out['surf']:.2f} % rms): L {out['Lfit']:.0f} mm, its free curve's turns x{out['setFit']}{' (held at the edge of the tries)' if out['edge'] else ''}, {100*out['rmsFit']:.2f} % (measured over solved there about {out['etaFit']:.3f})")
     if 'final' in out:
         q=out['final'];print(f"  mainspring_wempe.js: slack {q['slack']:.2f}, run down {q['Tdown']:.2f}, fully wound {q['Tup']:.2f} (the table ends {q['top']}); the spring {1000*q['Mdown']:.0f} to {1000*q['Mfull']:.0f} mN·m; the shape {100*q['rms']:.2f} % rms ({100*q['max']:.2f} % worst), measured over solved {q['eta']:.3f}"+(f"; with the coils' friction {100*q['friction']['rms']:.2f} % ({q['friction']['eta']:.3f})" if q['friction'] else ''))
     if check:
@@ -104,6 +111,6 @@ def fit(check=False):
 if __name__=='__main__':
     a=sys.argv[1:];S=float(a[a.index('--set')+1]) if '--set' in a else 1.0
     if '--solve' in a:L=float(a[a.index('--solve')+1]);run(L,S,tag(L,S))
-    if '--final' in a:L=float(a[a.index('--final')+1]);run(L,S,'wempe')
-    if '--friction' in a:L=float(a[a.index('--friction')+1]);sys.exit(subprocess.run([sys.executable,str(HERE/'mainspring_friction.py'),*(['--check'] if '--check' in a else [])],env=env(L,S,'wempe'),cwd=HERE).returncode)
+    if '--final' in a:run(*FINAL,'wempe')
+    if '--friction' in a:sys.exit(subprocess.run([sys.executable,str(HERE/'mainspring_friction.py'),*(['--check'] if '--check' in a else [])],env=env(*FINAL,'wempe'),cwd=HERE).returncode)
     sys.stdout.reconfigure(encoding='utf-8');fit('--check' in a)

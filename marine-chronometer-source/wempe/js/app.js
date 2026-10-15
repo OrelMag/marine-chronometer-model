@@ -124,7 +124,7 @@ const PARTS={
     sp:'Drawing 05 07 00-3 (revised 24.11.47) · Ms 58, 3 · 16 teeth, Ø 14.1 × 2.65 · square hole 2.7 H7'},
   mainspring:{t:'Mainspring (Zugfeder)',g:2,src:'est',sn:'Its section from 05 06_20 (15 × 0.37); its length, not drawn anywhere, estimated by the usual rule; its shape drawn as two packs',figs:'05 06_20, 05 07_1',c:'#3c4a70',pri:1,
     d:'The steel spring that drives the chronometer, 15 mm high and 0.37 thick, coiled in the barrel: wound, its coils draw in round the arbor; run down, they lie out against the wall. Its length isn’t on any sheet: 1.39 m, half the room in the barrel, lets it work the barrel’s five turns with the ¾ turn of set-up and room to spare.',
-    sp:'05 06_20: “Zugfeder 15 × 0,37” · about 1.39 m long (estimated) · 14.3 turns run down, 19.4 fully wound'},
+    sp:'05 06_20: “Zugfeder 15 × 0,37” · about 1.24 m long (fitted to 05 06_20’s force) · 12.7 turns run down, 17.8 fully wound'},
   chain:{t:'Fusee chain (Kette)',g:2,src:'drawing',sn:'Its pitch, plates, thickness, length and hooks from its sheet; the plates’ waist and the hooks’ outlines approximated on their figures',figs:'05 07_14',c:'#8c9199',pri:2,
     d:'The steel chain between the barrel and the fusee: 374 links of figure-of-eight plates three deep, riveted to move. Its top hook takes the pin in the fusee’s flange, its bottom hook a slot in the barrel’s wall. Fully wound it lies in the fusee’s groove up to the top turn, with a quarter turn left on the barrel; run down it is all on the barrel. Wempe 3955 and Lange 5177 run with a chain.',
     sp:'Drawing 05 07 04 · Bandstahl 5 × 0.3, hardened and tempered (to blue, 310 °C) · pitch 2.05, plates 4.05 × 2, 0.82 thick · 780 +3 long over its hooks'},

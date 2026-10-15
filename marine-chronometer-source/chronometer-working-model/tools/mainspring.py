@@ -51,6 +51,7 @@ t=ENV('MC_MS_T',0.394);gap=ENV('MC_MS_GAP',0.0);p=t+gap;ra=ENV('MC_MS_RA',4.9);R
 B_MM=os.environ.get('MC_MS_B');SET=ENV('MC_MS_SET',1.0)
 EYE=ENV('MC_MS_EYE',9.4)   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
 HOLD=EYE/a0   # rad: the inner end lies on the core through the eye, where the hook holds it (1.0 on the r 1.8 core until 12 October 2026)
+# MC_MS_PROC: the processes a sweep runs on (14; the Wempe's fit ran three sweeps at once on 9 each)
 M=48;STEP=0.25;TLO=ENV('MC_MS_TLO',12.75);THI=ENV('MC_MS_THI',19.5)   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
 SJ='mainspring.json' if not VAR else f'mainspring_{VAR}.json'   # the solved states (current directory, not committed)
 JS=MC/'js'/'mainspring.js' if not VAR else HERE/f'mainspring_{VAR}.js'   # the table: the page's, or a variant's beside this tool (its free curve the model's: a spring set the same way)
@@ -108,7 +109,7 @@ def sweep():
     spring's energy climbs steeply (the coils on the wall can't open, so the inner ones unbend), so a state is never carried up from one below it alone"""
     from multiprocessing import Pool
     Ts=[round(TLO+STEP*i,4) for i in range(int(round((THI-TLO)/STEP))+1)]
-    with Pool(14) as P:
+    with Pool(int(os.environ.get('MC_MS_PROC',14))) as P:
         best={x['T']:x for x in P.map(job,[(T,None) for T in Ts])}
         for _ in range(2):
             js=[(T,best[Ts[i+d]]['r']) for i,T in enumerate(Ts) for d in (-1,1) if 0<=i+d<len(Ts)]
