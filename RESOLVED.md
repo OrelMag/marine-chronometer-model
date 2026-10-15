@@ -78,6 +78,37 @@ Contents:
   05 03_7's table pins the inner end in the collet: both curves are now the table's (kU 1), the slot in the upright's middle with the spring
   and its pin side by side in it. The spring's isochronism, `WESC.SET.HS`, went from −0.659 to −0.543 s a day per 10°, the rate over the wind
   from ±0.08 to −0.02/+0.01 s a day. Keep: `RSTUD` is the table's radius at 220°; `HS` what `tools/wempe_hairspring.js` finds.
+- **The Wempe's escape wheel's teeth and openings were read off the wrong lines of 05 04_23.** Its "11,7" was taken for a recess and its
+  "12,1" for the roots: the gaps' floor is Ø 11.7, the locking face running straight down to it, leaning 25° from the radius (the sheet's
+  "25°"; built 15°), and the back's ∅ 6 arc ends at Ø 12.1 15° behind the tip (the "15°"; built 11.9°), where a 0.2 step falls to the
+  floor (built 0.15 up to Ø 12.4). Each opening is bounded by one arc r 7.9 centred 9.43 out, coming within 1.53 of the centre (05 04_1
+  the same), not two arcs meeting 1.4 from it. Keep: the tooth and openings as traced and fitted on 05 04_23 (82.8 px/mm, rms 0.25 px);
+  makeEsc's tooth is the drawn one down to the back's foot (`SET.r0` Ø 12.1, `U` the 25° face there, `B` 15°; the swing moved 0.1°). `3544d3d`
+- **The Wempe's escape wheel stood 0.38 too near the top plate, on a cone.** 05 04_7.2's "2" at the top-plate end runs to the arbor's
+  shoulder, 0.4 under the wheel; its "19" from the pinion end places the wheel, its face 2.38 from that end (built 2.0, its teeth half out of
+  the impulse roller's thickness). Its collet 05 04 10 is Ø 2.8 for 1.6 and Ø 1.7 to 4.7, chamfered, not a cone Ø 2.6 to 1.5. Keep: the
+  teeth inside the impulse roller's 1.6; the detent's pipe 0.1 under them (`WESC.PIPE0`, which tools/wempe_tripping.js reads). `3544d3d`
+- **The Wempe's balance arm swelled the wrong way.** 05 03_4's arcs r 20 are hollow, their centres outside the arm (the sheet marks one),
+  meeting in a point 6.5 across at the hub ("6,5"); it was built convex to 6.17, "6,5" taken for where the arm is 4 wide. Keep: the hollow
+  flanks Wempe 3955's arm shows, tangent to the straight flanks where the arm is 4 wide. `3544d3d`
+- **The Wempe's hairspring collet had straight ends and its slit ran into the bore.** 05 03 02-2 draws both ends as arcs about the bore,
+  the bore in the middle of the length (built 4.25 and 4.85 from the ends) and the slit stopping 0.1 +0.05 short of it. Keep: the spring's
+  inner end pinned 3.5 from the bore. `3544d3d`
+- **The Wempe's detent block was 6.5 deep along its whole base.** 05 04 01-4's lower view draws it 6.5 deep only for 6.4 from its end and
+  3 deep beyond, on the plate, where the fixing screw and far steady pin are. Keep: the boss at the end the detent is clamped to; the far
+  pin 3 long in the block. (The sheet is first-angle throughout, which would put the upright at the free face and the detent 1.9 nearer
+  the plate than the 1946 rollers allow: not adopted, README Unresolved.) `3544d3d`
+- **The Wempe's impulse stone's back ran out too far.** 02 04 02 bevels its end 45°: the back 1.3 long to r 2.85 (built 3.2), the face
+  1.8 to r 3.35, all makeEsc takes. `3544d3d`
+- **The Wempe's balance screws stood out where the sheet and the photograph show none.** The masses' screws' heads stood 0.55 out of the
+  masses and their nuts as much inside (Wempe 3955: the heads flush, nothing inside); the timing screws' heads stood outside the weights,
+  which 05 03_2 draws inside the rim on its inner face, the weights split by two cuts (Wempe 3955's: no head outside, a cut across the
+  end face). The weights Ø 3.8 × 3.3 for Ø 3.0 × 4.0 (unsure, ±0.4), their tips 42.1 apart. Keep: the air-damping parts lists in
+  tools/wempe_escapement.js and wempe_physics.js follow these sizes. The discharge roller is brass, as Wempe 3955's (steel before). `3544d3d`
+- **tools/wempe_inertia.py weighed the Wempe's escapement's bodies twice where a part has two revisions.** wempe-inertia.js integrated
+  every mesh under each turning group, the hidden "as first drawn" pieces too, so the rollers, staff and hub, detent and escape arbor
+  came out about double (its json, written before the revisions, still held the single values). Now it weighs the shown revision only.
+  Keep: a tool weighing the model skips what movement.js's setRev hides. `3544d3d`
 - **The Wempe's discharge stone was drawn square-ended.** The layout's corners and makeEsc (`BEV`) take its end bevelled back 0.3 from
   the acting corner, 05 04_1 draws it bevelled, but the mesh ended square at full reach. Now drawn with the bevel (`DS`). Keep: the drawn
   stone's outline is the one the escapement's motion is worked out on. (05 04_1 measured again scales 0.15-0.2: README, Estimated.) `462a1a3`

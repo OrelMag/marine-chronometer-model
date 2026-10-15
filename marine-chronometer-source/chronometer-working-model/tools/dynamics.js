@@ -116,7 +116,7 @@ const at=(T,x)=>{const f=ti(x),i=Math.floor(f),a=T[i],b=T[i+1];if(isNaN(a))retur
    the stone's flat), so the stone falls onto the land of the tooth it has just released and rides it, and down its back, until the tooth has passed (makeEsc's ride: the
    detent's lift the most of its fall and of what the tooth leaves it). RDT: the detent's least angle (rad) that keeps the stone out of that tooth, its tip at lockA + ph (ph
    the wheel's angle from its locked place, 0 to -P), worked out apart from makeEsc's: the tooth's outer edge as the radius over the angle behind its tip, from the drawn arcs
-   (05 04_23: the land on the tips' circle for 1.5°, the back the ∅ 6 cutter's arc down to the root at 11.9°, the face below the tip undercut to its root 2.43° behind), the
+   (05 04_23: the land on the tips' circle for 1.5°, the back the ∅ 6 cutter's arc down to Ø 12.1 at 15°, the face below the tip leaning 25°, 4.27° behind it there; 11.9° and 2.43° until 15 October 2026), the
    stone the drawn half round (Ø 0.75, its flat through its centre: rJ, the flat's frame nF, fF) sampled every 0.1 µm of the unit along its outline, a point inside the tooth
    where it lies between the face and that edge; bisection on the detent's angle. In time the detent is held on the tooth while it presses on it (a contact, the detent's preload
    and spring on the tooth and through it on the wheel: the land's friction, MU, against its turn, the back's slope pushing it on), landing plastically (estimated) */
