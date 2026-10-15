@@ -35,7 +35,7 @@ def vid(i):
 def mmss(t): return f'{int(t // 60)}:{t % 60:04.1f}'
 def save(key, entry):
     d = json.load(open(JS, encoding='utf-8')) if os.path.exists(JS) else {}
-    d[key] = entry; json.dump(d, open(JS, 'w', encoding='utf-8'), indent=1, ensure_ascii=False); print('wrote', JS)
+    d[key] = entry; json.dump(d, open(JS, 'w', encoding='utf-8', newline=''), indent=1, ensure_ascii=False); print('wrote', JS)
 
 FPS = 30000 / 1001
 CFG = {'moMvyx8eXfo': dict(c0=(1075, 545), ref=1130.0, crop=(700, 250, 1450, 850), r=(60, 240),
