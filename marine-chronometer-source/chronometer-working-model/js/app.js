@@ -268,8 +268,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       if((st.drive||dvOn)&&m.userData.driveHide)vis=false;if(m.userData.devPlate&&(!dvOn||st.drive))vis=false;
       const gh=ghOf(m,foc);
       if(m.userData.noShadow&&gh)vis=false;
-      m.visible=vis&&!opHide(m);const lc=!gh&&lpCol(m);m.material=gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
-    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!(ks&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
+      m.visible=vis&&!opHide(m)&&!OVH.hides(m);const lc=!gh&&lpCol(m);m.material=gh?ghostOf(base(m)):lc?(st.draw?drawOf(tintOf(base(m),lc)):tintOf(base(m),lc)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
+    for(const m of BOXM){m.visible=!st.drive&&!dvOn&&!opHide(m)&&!OVH.boxOff()&&!((ks||OVH.bezelOff())&&m.userData.bezel);const gh=foc&&!inK(foc,m)&&m.userData.mat0!==M.glass;m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&m.userData.mat0!==M.glass;castOn(m);}
     sh.visible=!st.drive&&!dvOn&&!st.draw&&!st.iso;
     /* Shadows (off by default): the key light's shadow map, an extra pass over every caster (about 380 draw calls and all the triangles again) and a costlier shader.
        The floor's shadow (sh) is a texture, always there. Turned off, the map (2048 px, 1024 on phones) is freed (three makes it again when it is next needed) */
@@ -277,7 +277,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&(b.dataset.v==='box'||b.dataset.v==='dial');});
     $('#mwWrap').classList.toggle('hidden',!st.drive);
     $('#driveOn').checked=st.drive;
-    cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
+    cv.setAttribute('aria-label',`3D working model of a marine chronometer. ${st.tour>=0?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:OVH.on()?OVH.label():VIEW_DESC[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);   /* for screen readers: what the stage shows */
     $('#ghost').checked=st.see;$('#draw').checked=st.draw==='tint';$('#drawInk').checked=st.draw==='ink';$('#edges').checked=st.edges;$('#edges').disabled=!!st.draw;$('#shadows').checked=st.shadows;$('#merge').checked=st.merge;stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);$('#srcKey').classList.toggle('hidden',!st.csrc);$('#colr').checked=st.colr;$('#colrSrc').checked=st.csrc;stage.classList.toggle('draw',!!st.draw);partsSync();
   }
 
@@ -500,7 +500,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN)));
     const snap=[0.05,0.1,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
   spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
-  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();jump(()=>setView(b.dataset.v));}));
+  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();OVH.end();jump(()=>setView(b.dataset.v));}));
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   $('#driveOn').addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.drive?(st.view==='box'||st.view==='dial'?'movement':st.view):'dial');});
   /* about: sources and method in a dialog */
@@ -563,7 +563,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      shank, forward only. The minute hand goes on its marker half a minute behind the master (as the master's second hand passes 30), then to the next marker as the master's
      passes 60. The second hand is never touched, so the dial can still be up to 30 s out, and it goes into the record. ks.ph: 1 turning forward, 2 waiting for the master's 60, 3 done */
   const setOut=$('#setOut'),ksBtn=$('#ksBtn'),minT=()=>handT()+slip;
-  function ksStart(){if(ks){ksEnd();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();
+  function ksStart(){if(ks){ksEnd();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();closeInfo();
     sw=null;ks={ph:1,t:0,latch0:st.latch,fast:(((tM-30-minT())%43200)+43200)%43200>21600};st.latch=true;$('#latch').checked=true;jump(()=>setView('dial'));look();
     ksBtn.textContent='Stop setting';ksBtn.setAttribute('aria-pressed','true');setOut.classList.remove('hidden');}
   function ksEnd(){if(!ks)return;st.latch=ks.latch0;$('#latch').checked=st.latch;ks=null;look();ksBtn.textContent='With the key';ksBtn.setAttribute('aria-pressed','false');}
@@ -734,7 +734,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     else t+='<span>With two comparisons a day apart and no break between, the book gives a rate to correct it with.</span>';
     bookLon.innerHTML=t;}
   $('#bookNow').addEventListener('click',()=>bookAdd());$('#bookSun').addEventListener('click',()=>bookAdd('sun'));$('#bookMoon').addEventListener('click',()=>bookAdd('moon'));$('#bookClr').addEventListener('click',()=>{book=[];bookShow();});bookShow();
-  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('balance'));showPart('bal');});
+  $('#rateLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();jump(()=>setView('balance'));showPart('bal');});
   /* ---------- stopping and starting (Sec. III): a detent chronometer is not self-starting. The balance swings at amplitude H.amp; below ESC.AMIN a swing no longer
      carries the discharge jewel past the trip spring, unlocks the wheel and sees the impulse through, so the train stops at a locked beat and the balance runs down freely
      (TAU_FREE, estimated). The locking arm (Fig. 9) brakes it within a swing or two; the train-blocking screw's dog point stops the fourth wheel at a spoke; at run down
@@ -813,7 +813,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(!m.runs){benchBad=m.why;for(const k in bset)bset[k]=ESC.settings[k];}else{benchBad='';const was=ESC.run.rate;Object.assign(ESC,E2);{const d=plOf()-PL;PL+=d;H.bOff-=d;}mv.userData.escSet();if(ESC.run.rate!==was){rErr=0;pend.add('escapement adjusted');rateShow();}}benchShow();wake();}
   const benchDiff=()=>BENCH.filter(([k])=>Math.abs(bset[k]-BDEF[k])>1e-9);
   $('#benchReset').addEventListener('click',()=>{Object.assign(bset,BDEF);benchApply();});
-  $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('escapement'));});
+  $('#benchLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();jump(()=>setView('escapement'));});
   function benchDraw(s,E){if(!$('#benchDet').open)return;const w=bcv.clientWidth||280,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);
     if(bcv.width!==Math.round(w*d)){bcv.width=Math.round(w*d);bcv.height=Math.round(h*d);bcv.style.height=h+'px';}const x=bcv.getContext('2d');x.setTransform(d,0,0,d,0,0);drawEsc2D(x,w,h,s,E,dark());}
   $('#benchDet').addEventListener('toggle',()=>{if($('#benchDet').open)benchShow();});
@@ -906,13 +906,13 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
       L.map(([k,n,t,w])=>`<tr><td title="${w}">${n}</td><td class="n${R2[k]>t?' bad':''}">${R2[k].toFixed(2)}</td><td class="n">${C3390[k].toFixed(2)}</td><td class="n">${t.toFixed(2)}</td></tr>`).join('')+'</tbody></table>';}
   tsDet.addEventListener('toggle',()=>{tsKey='';tsLast=0;testShow(performance.now());});
   if(/[?&]qa\b/.test(location.search))window.__test=testCalc;   /* for invariants.py: the test's figures as the card has them */
-  $('#stopLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();jump(()=>setView('movement'));st.see=true;st.focus=new Set(['lockArm','tblock','bal','fw']);look();goCam({yaw:2.6,pitch:0.62,dist:95,target:mvL((L.B[0]+L.F[0])/2,-20,(L.B[1]+L.F[1])/2)});});
+  $('#stopLook').addEventListener('click',()=>{if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();jump(()=>setView('movement'));st.see=true;st.focus=new Set(['lockArm','tblock','bal','fw']);look();goCam({yaw:2.6,pitch:0.62,dist:95,target:mvL((L.B[0]+L.F[0])/2,-20,(L.B[1]+L.F[1])/2)});});
   /* wind with the key, on the wall clock so slow frames don't slow it (mClk: slowed only by the close-up's slow motion): half turns of 0.7 s with a 0.3 s pause to change grip, until the chain pushes the stop-bar in the fusee top out against
      the winding stop. Plates see-through, the winding stop kept solid (look), the parts that take part in winding picked out */
   const HT=0.5/FUSEE_PER_HOUR,kwBtn=$('#kwBtn'),kwOut=$('#kwOut'),KWF=['fusee','chain','sq','barrel','mainspring','gw','sratchet','sspring','spawl'];
   const KWV=()=>{const f=1+3.6/Math.hypot(...L.Fu);return{yaw:0.53,pitch:0.32,dist:120,target:mvL(L.Fu[0]*f,-36,L.Fu[1]*f)};};   /* key and fusee, from the winding stop's side */
   const halfs=v=>Math.abs(v*2-Math.round(v*2))<0.02?(Math.floor(v+0.01)||'')+(v%1>0.25?'½':''):v.toFixed(1);
-  function kwStart(){if(kw){kwStop();return;}if(ldq)ldStop();if(st.tour>=0)tourEnd();closeInfo();
+  function kwStart(){if(kw){kwStop();return;}if(ldq)ldStop();if(st.tour>=0)tourEnd();OVH.end();closeInfo();
     if($('#kwFull').checked)hrs=RUN_H;   /* run down: the chain all on the barrel, 17½ half turns to wind */
     else if(hrs<HT/10){kwOut.innerHTML='<b>Already fully wound:</b> the stop-bar in the fusee top is against the winding stop, and the key turns no further. Tick <i>From run down</i> to watch a whole winding.';kwOut.classList.remove('hidden');return;}   /* less than a tenth of a half turn to wind (until 11 October 2026 it was let down to run down at once, under 0.2 h) */
     kw={t0:mClk,t:0,h0:hrs,end:0};winding=true;st.drive=false;jump(()=>setView('movement'));st.see=true;st.focus=new Set(KWF);look();
@@ -931,7 +931,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      spring's inner end; the chronometer is left run down */
   const ldBtn=$('#ldBtn'),ldOut=$('#ldOut'),LDv={ld:0,clk:0};let ldq=null;
   const LDV=()=>({yaw:0.9,pitch:0.85,dist:62,target:mvL(L.Ba[0],-28,L.Ba[1])});   /* the set-up ratchet and click from above the barrel bridge */
-  function ldStart(){if(ldq){ldStop();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();closeInfo();hrs=RUN_H;showH();
+  function ldStart(){if(ldq){ldStop();return;}if(kw)kwStop();if(st.tour>=0)tourEnd();OVH.end();closeInfo();hrs=RUN_H;showH();
     ldq={t0:performance.now(),S:R.fs.MS.setup,op0:st.op['ratchet.cover']};st.op['ratchet.cover']=0.2;jump(()=>setView('movement'));st.see=true;st.focus=new Set(['ratchet','mainspring']);look();goCam(LDV());   /* the cover faded over the ratchet and click, the barrel see-through round the spring */
     ldBtn.textContent='Stop';ldBtn.setAttribute('aria-pressed','true');ldOut.classList.remove('hidden');}
   function ldStop(){if(ldq.op0===undefined)delete st.op['ratchet.cover'];else st.op['ratchet.cover']=ldq.op0;ldq=null;LDv.ld=0;LDv.clk=0;st.focus=null;look();ldBtn.textContent='Let down and set up';ldBtn.setAttribute('aria-pressed','false');}
@@ -1022,7 +1022,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
   const dots=$('#tDots');dots.innerHTML=TOUR.map(()=>'<i></i>').join('');
   /* the viewer's own settings, kept when the walkthrough starts and given back when it ends */
   let preTour=null;
-  function tourGo(i){panelOn(true);if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
+  function tourGo(i){OVH.end();panelOn(true);if(ks)ksEnd();sw=null;if(st.tour<0)preTour={view:st.view,see:st.see,rock:st.rock,latch:st.latch,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
     $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');
     $('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
@@ -1040,6 +1040,22 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     $('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView(u.view,true);}
   $('#tStart').addEventListener('click',()=>tourGo(0));$('#tPrev').addEventListener('click',()=>tourGo(Math.max(0,st.tour-1)));
   $('#tNext').addEventListener('click',()=>st.tour<TOUR.length-1?tourGo(st.tour+1):tourEnd());$('#tExit').addEventListener('click',tourEnd);
+  /* the overhaul (overhaul.js): the manual's operations, Sec. V to take the movement down and Sec. VIII to put it back, one part at a time. The viewer's settings
+     are kept when it starts and given back when it ends; the model stands still meanwhile (speed 0), every part shown, nothing exploded */
+  let preOvh=null;
+  OVH.bind({mv,PARTS,changed:wake,
+    begin:()=>{if(st.tour>=0)tourEnd();if(ks)ksEnd();if(kw)kwStop();closeInfo();showHelp(false);hintOff();panelOn(true);
+      if(!preOvh){const sv=document.querySelector('#stopV button[aria-pressed="true"]');preOvh={view:st.view,see:st.see,speed:st.speed,drive:st.drive,mwOn:st.mwOn,rock:st.rock,stop:sv&&sv.dataset.v,blk:H.blkT,hrs};}   /* the train-blocking screw and the wind as found: the operations move the one and wind the other */
+      const arm=document.querySelector('#stopV button[data-v="arm"]');if(arm&&arm.getAttribute('aria-pressed')!=='true')arm.click();   /* the manual's locking arm (Fig. 9): the Navy's Y-arm isn't in its operations */
+      st.drive=false;st.mwOn=false;st.see=false;st.rock=false;for(const k of['driveOn','mwOn','rock'])$('#'+k).checked=false;setSpeed(0);
+      Object.assign(tgt,{explode:0,dev:0,fov:FOV0});cur.explode=0;cur.dev=0;document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');},
+    finish:()=>{const u=preOvh||{view:'dial',see:false,speed:1,drive:false,mwOn:false,rock:false};preOvh=null;st.focus=null;st.drive=u.drive;st.mwOn=u.mwOn;st.rock=u.rock;st.see=u.see;
+      for(const k of['driveOn','mwOn','rock'])$('#'+k).checked=st[k==='driveOn'?'drive':k];setSpeed(u.speed);setView(u.view,true);
+      const sv=u.stop&&document.querySelector(`#stopV button[data-v="${u.stop}"]`);if(sv&&sv.getAttribute('aria-pressed')!=='true')sv.click();
+      if(u.blk!=null&&H.blkT!==u.blk)blkSet(u.blk);if(u.hrs!=null){hrs=u.hrs;showH();}},
+    focus:pk=>{st.focus=pk&&pk.size?pk:null;look();},
+    cam:v=>{Object.assign(tgt,{lift:v.lift,flip:v.flip,explode:0,dev:0,lidM:1,lidT:1});goCam({yaw:v.yaw,pitch:v.pitch,dist:v.dist,target:v.target||(v.lift?mvL(0,-19,2):fixed(0,v.dist>400?-22:-15,0))});look();},
+    blk:v=>{if(H.blkT!==v)blkSet(v);},wind:()=>{if(winding)windEnd();hrs=0;showH();}});
 
   function drawInset(E,s,n){
     if(!insetKind)return;const dk=dark();
@@ -1103,6 +1119,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState, so the back button isn't filled with views */
   function hashOf(){if(ESSAY.on()){const s=ESSAY.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();
     if(st.tour>=0)h.set('tour',st.tour+1);
+    else if(OVH.on())h.set('ovh',OVH.hash());
     else{if(st.view!=='dial')h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',todIn.value);if(H.armT)h.set('arm',1);if(H.blkT)h.set('block',1);const bd=benchDiff();if(bd.length)h.set('esc',bd.map(([k])=>k+':'+bset[k]).join(','));const bs=balStr();if(bs)h.set('bal',bs);if(MSET)h.set('mset',Math.round(MSET*100));if(typeof MAKER!=='undefined'&&MAKER.orig().length)h.set('orig',MAKER.orig().join(','));return h.toString().split('%3A').join(':').split('%2C').join(',');}
   /* hashSeen: the hash as last written or applied here. If it has changed since (edited, or a link followed), the page hasn't applied it yet: leave it for hashchange */
@@ -1123,7 +1140,8 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(dw!==st.draw||ed!==st.edges||shd!==st.shadows||mg!==st.merge||(g('colr')==='part')!==st.colr||(g('colr')==='src')!==st.csrc){st.draw=dw;st.edges=ed;st.shadows=shd;st.merge=mg;st.colr=g('colr')==='part';st.csrc=g('colr')==='src';look();}   /* colr=part or colr=src: the colour modes */
     const tr=parseInt(g('tour'));
     if(tr>=1&&tr<=TOUR.length)tourGo(tr-1);
-    else{if(st.tour>=0)tourEnd();
+    else if(OVH.go(g('ovh'))){}   /* ovh=d12: the overhaul at an operation (overhaul.js) */
+    else{if(st.tour>=0)tourEnd();OVH.end();
       st.drive=g('drive')==='1';$('#driveOn').checked=st.drive;
       const sp=g('speed');setSpeed(sp!=null&&Number.isFinite(+sp)?+sp:1);
       const sc=/^([xyz]):(-?[\d.]+)(:f)?$/.exec(g('sec')||'');
@@ -1199,7 +1217,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,spent:!run,reset:mvReset,slip,ld:LDv.ld,clk:LDv.clk,hkeyOn:!!ks,blk:H.blk,arm:H.arm,keyOn:winding&&(cur.lift>0.8||st.drive),ssX:st.ssx?20:0,dt:dtM,springOn:cur.lift>0.3||st.drive||secMode!=='off'||st.hid.size>0||!!st.iso||Object.keys(st.op).length>0,msOn:msShown()});mvReset=false;
     {const T=(winding&&(cur.lift>0.8||st.drive))?0:BX.shRest;BX.shield.userData.turn(SNAP?T:lerp(BX.shield.rotation.y,T,1-Math.exp(-dt*(T?12:6))));}   /* the shield plate turns to admit the key; its return spring brings it back */
     BX.mid.rotation.x=-cur.lidM*1.6;BX.top.rotation.x=-Math.max(0,cur.lidT*1.92-cur.lidM*1.6);   /* outer lid angle is relative to the glass lid it is hinged to */
-    mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
+    mv.userData.explode(smooth(cur.explode));mv.userData.develop(smooth(cur.dev));const ovS=OVH.frame(dt,SNAP||RM.matches);   /* the overhaul's parts, where its operations have them (overhaul.js) */if(cam.fov!==cur.fov){cam.fov=cur.fov;cam.updateProjectionMatrix();}
     if((cur.dev>0.02)!==devShown){devShown=cur.dev>0.02;look();}
     const L1=smooth(cur.lift/0.55),L2=smooth((cur.lift-0.35)/0.65);mv.position.y=L1*130+L2*95;mv.rotation.x=Math.min(smooth(cur.flip),L2)*Math.PI;
     const wR=TAU/(+$('#rollP').value||7);rockW+=((st.rock?1:0)-rockW)*k;if(!st.rock&&rockW<1e-4)rockW=0;if(rockW>0)rockT+=dt*wR;const sea=rockW>0?GIM.sea(rockT,wR,rockW):null;roll=sea?sea.r[0]:0;pitch=sea?sea.p[0]:0;   /* the ship's motion (GIM.sea), eased in and out; its rates and accelerations move the gimbals' pivots */
@@ -1217,7 +1235,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     key.position.copy(C.target).add(new THREE.Vector3(160,420,240));key.target.position.copy(C.target);
     const sz=clamp(C.dist*0.45,60,260);if(scam.right!==sz){scam.left=-sz;scam.right=sz;scam.top=sz;scam.bottom=-sz;scam.updateProjectionMatrix();shThr=SHK*2*sz/key.shadow.mapSize.x;MVM.forEach(castOn);BOXM.forEach(castOn);}
     const balHid=cur.lift<0.02&&cur.explode<0.01&&cur.dev<0.01&&!st.drive&&secMode==='off'&&!st.see&&!st.iso&&!st.hid.size&&!Object.keys(st.op).length&&!insetKind&&!benchD.open;   /* the balance can't be seen */
-    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
+    const sig=[slip,+!!ks,cam.position.x,cam.position.y,cam.position.z,C.target.x,C.target.y,C.target.z,cam.fov,W,Hh,E,balHid?0:s.th,balHid?0:s.lift,balHid?0:s.psDef,n,+winding,H.blk,H.arm,H.twT,cur.lift,cur.flip,cur.explode,cur.dev,cur.lidM,cur.lidT,roll,pitch,GM.p[0],GM.r[0],latchK,secPlane.normal.x,secPlane.normal.y,secPlane.normal.z,secPlane.constant,+(secMode!=='off'),lpPh?now:0,LDv.ld,LDv.clk,ovS];   /* winding and the 2 s after it draw every frame: the close-up and the spring's easing */
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(!ESSAY.on()&&onScreen&&!still){paint();cuDraw();renders++;lastDraw=now;lastSig=sig;
     /* labels: occlusion (5 Hz), then greedy placement by priority with four candidate sides */
@@ -1229,7 +1247,7 @@ function drawEsc2D(ctx,w,h,s,Ew,dark){   /* s: the balance's state as the model 
     if(rateK!==1&&now-lastRS>250&&$('#rateDet').open){lastRS=now;rateShow();}
     if($('#stopDet').open)stopShow(now,run);
     if(ss!==todS&&document.activeElement!==todIn){todS=ss;todIn.value=[hh,mm,ss].map(v=>String(v).padStart(2,'0')).join(':');}
-    if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
+    if(!loaded){loaded=true;pend.clear();$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour<0&&!OVH.on()&&!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);
   }
   ESSAY.bind({time:()=>dialRead(),hrs:()=>hrs,tz:()=>tz,fs:R.fs,I0,changed:wake,R,mv,M});

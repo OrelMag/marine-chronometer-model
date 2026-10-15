@@ -1,6 +1,6 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types, smoke, invariants, massprops, solids, exploded, book, audit, and the Wempe's smoke, solids, audit and exploded
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types, smoke, invariants, massprops, solids, exploded, overhaul, book, audit, and the Wempe's smoke, solids, audit and exploded
     python ci.py --quick      # without the browser checks (about 80 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types
     python ci.py --full       # and the slow checks (about 39 minutes more): dynamics.js in full, tripping.js in full, gimbals.js in full, mainspring_friction.py (the model's strip, the build's Nivaflex and the sources' proportions), gearing.js in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
@@ -98,6 +98,7 @@ STEPS=[('build',build,'quick'),
  ('mechanisms',lambda log:run([PY,'mechanisms.py'],TOOLS,log),'browser'),   # the mechanisms off the built model, against mechanisms.json (about 40 s)
  ('solids',lambda log:run([PY,'solids.py'],TOOLS,log),'browser'),
  ('exploded',lambda log:run([PY,'exploded.py'],TOOLS,log),'browser'),
+ ('overhaul',lambda log:run([PY,'overhaul.py'],TOOLS,log),'browser'),
  ('book',lambda log:run([PY,'book.py'],TOOLS,log),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
  ('audit',lambda log:run([PY,'audit.py'],TOOLS,log),'browser'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
