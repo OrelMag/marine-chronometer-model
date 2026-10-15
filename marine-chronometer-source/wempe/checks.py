@@ -3,7 +3,7 @@ table the default where a name isn't here). P1a (14 October 2026): the frame; no
 Its parts list is bom.json beside this file, its expected coplanar faces audit-expected.json (audit.py --model wempe --update writes it)."""
 # audit.py: loose ends expected (part:geometry, place, radius, why); the Hamilton's Navy brake isn't fitted
 LOOSE=[('topPlate:Cylinder',(-5.68,-17.25,-23.91),0.8,"the fusee's stop pin (05 08 01-5), standing 1.5 out under the top plate's inner face (\"unten vorstehend\") into the stop bar's path: its end is free"),
-  ('ring:Cylinder',(0,8.25,55.25),0.55,"the movement ring's radial pin to the case (WN-202, P1f), standing 2.0 out of the flange into the notch in the bezel's recess (case.js): out of the case its end is free")]
+  ('ring:Cylinder',(0,8.25,-55.25),0.8,"the movement ring's radial pin to the case (WN-202, P1f; Ø 1.6 at 12 o'clock, 05 08 00-3), standing 2.0 out of the flange into the notch in the bezel's recess (case.js): out of the case its end is free")]
 LOOSE_NAVY=[]
 # audit.py: screws whose heads bear on a part at their edge only (part:geometry, place in the frozen page's world, head radius, why)
 _RS="a movement ring screw (05 08 00-3): its head bears on the pillar plate's rim, which stands 0.35 proud of the ring's face, its middle over the ring (the coloured section)"
@@ -26,7 +26,7 @@ STATES=[(ph,0,2.5,False) for ph in PH]+[(0.0,97*k,n,w) for k,(n,w) in enumerate(
   (5.7,False),(7.0,False),(8.2,False),(8.7,False),(8.78,False),(6.3,True),(2.0,False)])]
 EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) and its two steady pins, across into the block's end (05 04 01-4, 1436): a block of vertical walls drawn without holes across",1.9,1.1),
   ('hairspring:Buffer','hairspring:Buffer'):("the hairspring's inner end in the hole across the collet's end (05 03 02-2), drawn without the hole (a collet of vertical walls)",0.45,0.55),
-('fuseeBush:Lathe','topPlate:Buffer'):("the fusee bush's body pressed into the top plate's hole 10 (05 08 01-2: Ø 8 T6, +0.019/+0.028, in 8.0 +0.015 reamed; drawn at the fits' middles, 0.008 interference on the radius)",0.4,2.8),
+('dustBush:Lathe','fuseeBush:Lathe'):("the dust bush pressed on the fusee bush's taper above its flange (05 08 01-2: Ø 8 T6, +0.019/+0.028, 1:70; 05 08 01-3: bore 8 H7 +0.015, 1:70; drawn at the fits' middles, 0.008 interference on the radius over the taper's 2.9). Until 15 October 2026 the T6 was read on the spigot, pressed into the top plate's hole 10, now a g6 slide in it",0.8,2.9),
  # the fusee and barrel (P1c): joints in holes a turned or extruded part can't have cut across it, and the parts that touch by design
  ('fusee:Lathe','udPinion:Extrude'):("the up-and-down pinion (05 02 00-5, bore Ø 1.6) pressed on the fusee arbor's stub (05 06 04-1: Ø 1.6 +0.1/+0.05, drawn 1.675): 0.0375 interference on the radius over the pinion's 3 length",0.65,3.0),
  ('fusee:Buffer','stopWork:Cylinder'):("the stop bar's spring's pin (05 06 03-2) in its hole along the slot, \"0,5 H7\" (05 06 04-2), which isn't cut in the body's small end",0.4,0.55),
