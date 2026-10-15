@@ -1767,7 +1767,7 @@ Contents:
   the inside (and drawn as dashes by Edges); the cone faced down, out of sight, until the bowl was
   turned over to wind. Now the bottom inside r 34.1 is one cell with its two holes, and the rest is
   turned from its profile, un-indexed and smoothed round the axis only, so the profile's corners
-  stay sharp. Keep: a turned part nothing crosses is turned from its profile, not built of rings.
+  stay sharp. Keep: a turned part nothing crosses is turned from its profile, not built of rings. `4fd36fb`
 - **The Wempe's key: its grooved pin lay in the paddle's plane, the paddle sank into the slot's
   floor, and its square socket was round.** The pin (51 00 11-6) ran along the paddle, inside it,
   pinning nothing: 05 01 02-2's cross hole crosses the 3 mm slot, so the pin goes through the
@@ -2268,7 +2268,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   stays outside the dust bush. In the case (Dial, Box, Case), the bowl turns over in its gimbals, the
   closing plate opens and the key comes down onto the square first, as the 6MX's instruction and two
   videos show it (app.js `cw`). Keep: one key, moved (`WCASE.keyAt`, fusee.js `keySeat`), never a copy;
-  a view out of the case sets the bowl back before the movement lifts. `a422612`
+  a view out of the case sets the bowl back before the movement lifts. `4fd36fb`, `f3ed550` `a422612`
 - **Setting the time turned the train, backward as often as forward** (kinematics handoff 7). The time field, Now and Local/GMT moved `tSim`, the model's own clock,
   so the whole train jumped to the time and `update()` re-seated the maintaining work. Now
   (`setHands`, app.js) the hour and minute hands go round by the cannon pinion's slip, as the
