@@ -3309,6 +3309,8 @@ const WFUSEE=(()=>{
   /* ================================================================= the build ================================================================= */
   function build(mv,M,K,FRP,TR){const{part,loose}=K,P=K.parts,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),fx=FX[0],fz=FX[1];
     const grp=(par,x,z)=>{const g=new THREE.Group();g.position.set(x,0,z);par.add(g);return g;};
+    /* the sheets' two states (movement.js's setRev): rv(par, 'last' or 'first') a group of the pieces only that state has; onRev(f) runs f(first) when it changes */
+    const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},onRev=f=>mv.userData.onRev.push(f);
 
     const SB={d:5.0,lo:-11.6,hi:10.9,tr:3.6};   /* its middle line 5 from the axis (the slot's near edge 4), its ends retracted 11.6 and 10.9 along it from there (C-D, scaled), its travel */
     /* its turn on the fusee (barRot), so its upper end, slid out, meets the pin at full wind: the fusee turns back (rotation.y falling) while winding, so the end comes round onto
@@ -3461,12 +3463,17 @@ const WFUSEE=(()=>{
        short of the eye, its other hole 1.2 H7 on r 14.2 at 65° from the eye: the outline from 05 06 01-1, the swell round that hole (05 06 01-1's r 6) approximated by widening it inward to 3.4 there and 4 at the end (estimated). Its two
        pins (Stellstift f. Gegenfeder 05 06 00-8, Ø 1.25 on 020605: drawn 1.2 in the holes' 1.2) stand 1.2 out of it, the eye's down into the wheel, the other up into the
        ratchet */
+    /* As first drawn, 020605 (Gegenfeder kompl., 127-556.04-U18, 15.4.41: the older number of the same spring, drawn the same day as 05 06 01-1): the same ring, eye, pins and
+       holes, but its width given round it, 1.8 at 40°, 1.9 at 100°, 2 at 150° and 195°, 2.5 at 240°, 3.5 at 270° from the eye (all sure), so it widens from the eye's side to
+       the square end; drawn between those figures, on to 4 at the square end as 05 06 01-1's (estimated) */
     {const aE=bk(0,0),aSq=bk(336,0),eye=sh(14.2,aE+0.8/14.2),hs=sh(14.2,PINS);
-      const band=(x,y)=>{const r=Math.hypot(x,y),a=angOf(x,-y),u=fr((aE-a)/TAU);   /* u: the way round from the eye, clockwise here */
-        if(u>336/360)return 1;const w=u>0.80?3.4+0.6*(u-0.80)/(336/360-0.80):u>0.77?2+1.4*(u-0.77)/0.03:2;return Math.max((16.125-w)-r,r-16.125);};
-      const f=(x,y)=>Math.min(band(x,y),Math.hypot(x-eye[0],y-eye[1])-1.8);
-      const loc=sdfOutline((x,z)=>f(x,-z),-16.3,-16.3,16.3,16.3,0.05);
-      tag(mesh(gMW,solidGeo([{loop:loc,y0:GS1,y1:GS0,F:[{p:ring(eye[0],-eye[1],0.6,32),a:GS1,b:GS0},{p:ring(hs[0],-hs[1],0.6,32),a:GS1,b:GS0}]}]),M.blued),'050601-1');
+      const W41=[[0,1.8],[40,1.8],[100,1.9],[150,2],[195,2],[240,2.5],[270,3.5],[336,4]],w41=d=>{for(let i=1;i<W41.length;i++)if(d<=W41[i][0]){const[a0,w0]=W41[i-1],[a1,w1]=W41[i];return w0+(w1-w0)*(d-a0)/(a1-a0);}return 4;};
+      for(const v of['last','first']){const g=rv(gMW,v);
+        const band=(x,y)=>{const r=Math.hypot(x,y),a=angOf(x,-y),u=fr((aE-a)/TAU);   /* u: the way round from the eye, clockwise here */
+          if(u>336/360)return 1;const w=v==='first'?w41(u*360):u>0.80?3.4+0.6*(u-0.80)/(336/360-0.80):u>0.77?2+1.4*(u-0.77)/0.03:2;return Math.max((16.125-w)-r,r-16.125);};
+        const f=(x,y)=>Math.min(band(x,y),Math.hypot(x-eye[0],y-eye[1])-1.8);
+        const loc=sdfOutline((x,z)=>f(x,-z),-16.3,-16.3,16.3,16.3,0.05);
+        tag(mesh(g,solidGeo([{loop:loc,y0:GS1,y1:GS0,F:[{p:ring(eye[0],-eye[1],0.6,32),a:GS1,b:GS0},{p:ring(hs[0],-hs[1],0.6,32),a:GS1,b:GS0}]}]),M.blued),'050601-1');}
       tag(cylBetween(gMW,0.6,GS0+1.2,GS1,M.steel,eye[0],-eye[1],16),'050600-8');tag(cylBetween(gMW,0.6,GS1-1.2+0.02,GS0,M.steel,hs[0],-hs[1],16),'050600-8');}
 
     /* =============== the maintaining detent 05 05 05 (Gegensperrkegel kompl.) at hole 4 =============== */
@@ -3516,15 +3523,26 @@ const WFUSEE=(()=>{
        lid; so does the coloured section). The mainspring's hook block 05 07 01-3 (3.05 -0.1 high, 3 wide) riveted inside the wall at the M2.6 hole 9.05 ±0.05 from the
        bottom's face, 45° from 9 o'clock; its radial depth 0.35 (estimated: as much as clears the spring's next coil). The slot for the chain's hook, cut at the fusee's assembly (0207: 2.5 wide), and the spring's slot
        in the wall (2 × 0.95) aren't cut in the turned drum. Gilt, as Wempe 3955's (7_Wempe_3955_W.jpg) */
-    const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]);
-    tag(mesh(gB,ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BR+1.2],[19.6,BR+1.2]],240),M.gilt),'050701-1');
+    const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last'),gBF=rv(gB,'first');
+    tag(mesh(gBL,ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BR+1.2],[19.6,BR+1.2]],240),M.gilt),'050701-1');
     /* the lid 05 07 01-2 (Federhausdeckel, Ms 58, revised 20.4.48): sprung into the seat ("eingesprengt"), its face 0.6 -0.1 under the rim; 1.3 -0.1 thick (in the seat Ø 39.2
        r6, under it 0.05 clear of the wall: the sheet draws it 39.39 over all, the blank's); its boss 3.3 -0.1 from its face, the face Ø 8, a 45° cone to Ø 12; bore 4.55; its two
        notches (2 and 2.7 wide) left out */
-    tag(mesh(gB,ringT([[2.275,BLT],[19.6,BLT],[19.6,BR+1.2],[19.2,BR+1.2],[19.2,BLU],[6.0,BLU],[4.0,BLF],[2.275,BLF]],240),M.gilt),'050701-2');
+    tag(mesh(gBL,ringT([[2.275,BLT],[19.6,BLT],[19.6,BR+1.2],[19.2,BR+1.2],[19.2,BLU],[6.0,BLU],[4.0,BLF],[2.275,BLF]],240),M.gilt),'050701-2');
+    /* As first drawn, the barrel of 1941 (0207 Federhaus, 127-556.04 U24, 15.4.41, 5:1, scaled 12.0 px/mm by its 22.3; the drum 020701, U22; its ring 020701-3), in three pieces:
+       the ring (Federhausring, Messingrohr 42 × 2, Ms 58) Ø 41.5 outside, 38.5 inside (0207: sure), 18 long (sure), the lid on the pillar plate's side ("warm einsprengen", the
+       arbor's square through the bottom on the bridge's: sure), its face 3.7 off the plate and the bottom 0.6 under the bridge (22.3 between them, sure; 3.7 scaled 3.75), each
+       sprung into a seat Ø 39.2 (020701-3: framed) at its end; the lid 1.2 and the bottom 1.0 thick (0207: sure; 020701's 1.2 leaves 15.6 inside, against the framed 15.8), 15.8
+       between them (framed, sure); each with a boss standing 1.9 inward, its face 3.1 from the lid's outside and 2.9 from the bottom's (sure), Ø 9 with a 22½° cone out to Ø 12
+       (020701: likely), bored 4.55 as the later drum's (020701's 4.5; 0207 draws the journals Ø 5). The ring's seats 0.35 wide, the joints drawn as faces. The hook block and
+       the slots are the later drum's */
+    {const R1=20.75,Ri=19.25,Rs=19.6,yL=-3.7,yB=-21.7,yLi=yL-1.2,yBi=yB+1.0,bo=2.275;
+      tag(mesh(gBF,ringT([[Rs,yB+1.0],[Rs,yB],[R1,yB],[R1,yL],[Rs,yL],[Rs,yL-1.2],[Ri,yL-1.2],[Ri,yB+1.0]],240),M.gilt),'050701-1');   /* the ring, its seats at both ends */
+      tag(mesh(gBF,ringT([[bo,yL],[bo,yL-3.1],[4.5,yL-3.1],[6.0,yL-3.1+0.62],[6.0,yLi],[Rs,yLi],[Rs,yL]],240),M.gilt),'050701-2');   /* the lid on the plate's side, its boss inward */
+      tag(mesh(gBF,ringT([[bo,yB],[Rs,yB],[Rs,yBi],[6.0,yBi],[6.0,yB+2.9-0.62],[4.5,yB+2.9],[bo,yB+2.9]],240),M.gilt),'050701-1',1);}   /* the bottom on the bridge's side */
     const BLK=1.2;   /* the hook block's angle in the drum */
-    {const yb=BB-9.05,bg=new THREE.BoxGeometry(0.35,3.05,3.0);bg.translate(19.25-0.175,yb,0);bg.rotateY(BLK);tag(mesh(gB,bg,M.steel),'050701-3');
-      const rg=new THREE.CylinderGeometry(1.3,1.3,1.5,20);rg.rotateZ(Math.PI/2);rg.translate(20.0,yb,0);rg.rotateY(BLK);tag(mesh(gB,rg,M.steel),'050701-3',1);}
+    for(const g of[gBL,gBF]){const yb=BB-9.05,bg=new THREE.BoxGeometry(0.35,3.05,3.0);bg.translate(19.25-0.175,yb,0);bg.rotateY(BLK);tag(mesh(g,bg,M.steel),'050701-3');   /* in each state's drum (fixed to it) */
+      const rg=new THREE.CylinderGeometry(1.3,1.3,1.5,20);rg.rotateZ(Math.PI/2);rg.translate(20.0,yb,0);rg.rotateY(BLK);tag(mesh(g,rg,M.steel),'050701-3',1);}
     /* the arbor 05 07 02 (Federkern kompl.): its pivot in the pillar plate (the 1941 arbor 020704-1's Ø 3, drawn 2.88 in the plate's 2.90 reamed: the arbor as last revised,
        05 07 02-1, isn't in the set), its end a ball, polished, 5 from the shoulder; the journals the drum's bosses run on (4.48 in their 4.55: 020704-1's 5 don't pass them),
        22.2 +0.1 between their outer shoulders (framed); the core Ø 13.3 between them, its ends chamfered 45° (05 07 01) to 0.05 off the bosses (10.98: the 1941 core's 12 can't
@@ -3532,10 +3550,16 @@ const WFUSEE=(()=>{
        ratchet. The hook (Federhaken 05 07 02-2): a pin Ø 2 in the core's hole, 0.5 -0.05 proud. Präz. Rundstahl 14, hardened, tempered at 270 */
     const pBA=part('barrelArbor',-33),gBA=grp(pBA,BX[0],BX[1]);
     {const bal=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;bal.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}
-      tag(mesh(gBA,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,BC1],[4.5,BC1],[6.65,BC1+2.15],[6.65,BC0-2.15],[4.5,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');
+      const gAL=rv(gBA,'last'),gAF=rv(gBA,'first');
+      tag(mesh(gAL,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,BC1],[4.5,BC1],[6.65,BC1+2.15],[6.65,BC0-2.15],[4.5,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');
+      /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
+      {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
+        tag(mesh(gAF,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,c1],[4.5,c1],[6.65,c1+ch],[6.65,c0-ch],[4.5,c0],[2.24,c0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');}
       const sq=new THREE.CylinderGeometry(2.7/Math.SQRT2,2.605/Math.SQRT2,9.5,4,1);sq.translate(0,-25.70-4.75,0);tag(mesh(gBA,sq,M.steel),'050702-1',1);
       const pt=new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1);pt.translate(0,-35.2-0.25,0);tag(mesh(gBA,pt,M.steel),'050702-1',1);
-      const hk=tag(mesh(gBA,new THREE.BufferGeometry(),M.steel),'050702-2');var hookSet=a=>{const g=new THREE.CylinderGeometry(1.0,1.0,1.05,20);g.rotateZ(Math.PI/2);g.translate(6.62,(BC0+BC1)/2,0);g.rotateY(a);hk.geometry.dispose();hk.geometry=g;};}
+      /* the hook at its core's middle (0.51 lower as first drawn), in each state's group with its core */
+      const HKS=[[gAL,(BC0+BC1)/2],[gAF,(-3.7-3.1-21.7+2.9)/2]].map(([g,y])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y]);
+      var hookSet=a=>{for(const[hk,y]of HKS){const g=new THREE.CylinderGeometry(1.0,1.0,1.05,20);g.rotateZ(Math.PI/2);g.translate(6.62,y,0);g.rotateY(a);hk.geometry.dispose();hk.geometry=g;}};}
     /* the set-up ratchet 05 07 00-3 (Sperrad; Messingblech 3 Ms 58, revised 24.11.47): 16 teeth, tips Ø 14.1 -0.2, roots 11.1 -0.2 (drawn 14.0, 11.0), each face along a line 1.2
        off the radius (10°), the back an arc r 12.5; 2.65 -0.1 thick (drawn 2.6); its square hole 2.7 H7 (1:100) on the arbor's square; turned so the click's beak lies against a
        face (the click and its place are the frame's, 05 08 05-2). Gilt */
@@ -3564,6 +3588,7 @@ const WFUSEE=(()=>{
     const msShape=T=>{let lo=0,hi=T-1;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(msLen(m,T-1-m)>MSL)lo=m;else hi=m;}return lo;};   /* the core's pack's turns at T */
     const msT=(()=>{let lo=2,hi=40;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(msLen(0,m-1)>MSL)hi=m;else lo=m;}return lo;})();   /* all on the wall */
     const pMS=part('mainspring',-33),gMS=grp(pMS,BX[0],BX[1]),msM=tag(mesh(gMS,new THREE.BufferGeometry(),M.mspring),'050700-6');
+    onRev(f=>{gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
     /* its turns T: from its inner end, 0.18 past the arbor's hook (HKA), winding outward the way the drum runs (rotation.y rising), to its outer end 0.08 short of the drum's
        block; set up 0.75 turn past lying all on the wall at run down (with the chain: the band turns the drum a little less, so its set-up there is a little more), which sets
        the hook's angle */
@@ -4206,7 +4231,7 @@ const WCASE=(()=>{
        spring (Wendelfeder 51 00 11-4) round the tube between its head and the bore's floor. The tube's head drawn 6.8 under the body's top (so it clears the paddle; the free length
        then 31.8, scaled 30), the spring's wire 0.9, the end's relief to Ø 4.6, the slot, cross hole and square not cut (drawn round): estimated. It lies on the box's floor */
     const key=prt(root,'key');
-    {const g=new THREE.Group();g.position.set(-62,YF+WT+7.25,-40);   /* on its body and its paddle's rim: the paddle 19.8° from flat (17.25 sin + 1.5 cos = 7.25) */g.rotation.set(Math.PI/2,19.8*D2R,0);key.add(g);
+    {const g=new THREE.Group();g.userData.rev='last';g.position.set(-62,YF+WT+7.25,-40);   /* on its body and its paddle's rim: the paddle 19.8° from flat (17.25 sin + 1.5 cos = 7.25) */g.rotation.set(Math.PI/2,19.8*D2R,0);key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
       const T=50.1,B0=31.8,BT=B0+25.1;
       tag(mesh(g,lathe([[2.13,0],[2.3,0],[2.975,2.5],[2.975,T-2.9],[3.275,T-2.6],[4,T-2.6],[4,T],[0,T],[0,23],[1.45,22.2],[1.45,19],[1.55,19],[1.55,1]]),M.brass),'050102-3');
@@ -4216,6 +4241,21 @@ const WCASE=(()=>{
       /* the spring: 0.9 wire on Ø 7.0 mean, close wound from the bore's floor to the tube's head */
       const y0=BT-22+0.45,y1=T-2.6-0.45,nT=(y1-y0)/0.92,cv=new THREE.Curve();cv.getPoint=t=>new THREE.Vector3(3.51*Math.cos(t*nT*TAU),y0+(y1-y0)*t,3.51*Math.sin(t*nT*TAU));
       tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,Math.ceil(nT*24),0.44,6,false)),M.steel),'510011-4');}
+    /* As first drawn (the page's Variants), the key of 1940 (Aufzugschlüssel 127-556.02 U 01 = 51 00 11, 12.12.40, 2:1), which the one-way key of 1943 replaced under the same
+       number: 84 overall and the stem 32 out of the body (sure); the rest traced on the sheet at 6.79 px/mm (by its 84): the handle a flat pear-shaped plate (the tang, part 1:
+       the side view draws it 3.2 thick and no bulb), widest Ø 34.8 about 9 from its top, its neck Ø 16.5; a collar Ø 20.5 × 2.9; the body (2) a cone Ø 17.9 to 10.3 over 19.3;
+       the stem (3) Ø 6.0 pressed in, its socket for the fusee's square drilled from its end (drawn round, Ø 3.1, 28 deep, as the later tube's: estimated), its end chamfered
+       0.9 × 45°; the screw (5) on the collar beside the tang, 5.3 from the axis (head Ø 3 × 1, estimated). The click spring (4) in the body isn't drawn. Its materials, which the
+       sheet doesn't give, as the later key's (estimated). It lies where the later key does, on its collar's rim and its handle's edge (the handle 30.7° from flat) */
+    {const g=new THREE.Group();g.userData.rev='first';g.position.set(-62,YF+WT+10.25,-40);g.rotation.set(Math.PI/2,30.7*D2R,0);key.add(g);
+      const lathe=(pr,n=48)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
+      tag(mesh(g,lathe([[3.0,31.7],[5.16,31.7],[8.95,51.0],[10.25,51.0],[10.25,54.0],[0,54.0],[0,45.0],[3.0,45.0]]),MC.black),'127556.02-02');   /* the body and collar, the stem pressed 13.3 into it (estimated) */
+      tag(mesh(g,lathe([[1.55,0],[2.1,0],[3.0,0.9],[3.0,45.0],[0,45.0],[0,28.0],[1.55,27.2]]),M.brass),'127556.02-03');
+      const PR=[[54.0,9.0],[55.0,9.0],[56.0,8.69],[57.5,8.33],[59.0,8.25],[60.4,8.4],[61.9,8.77],[63.4,9.43],[64.8,10.39],[66.3,11.86],[67.8,14.0],[69.3,15.7],[70.7,16.65],[72.2,17.24],[73.7,17.39],
+        [75.2,17.39],[76.6,17.0],[78.1,16.2],[79.6,15.03],[81.05,12.45],[82.5,8.55],[83.4,4.8],[84.0,0.6]];
+      const out=[...PR.map(([y,r])=>[r,y]),...PR.slice().reverse().map(([y,r])=>[-r,y])];   /* the plate's outline in its own plane (x across, y along the key) */
+      const pl=polyGeo(area(out)>0?out:out.slice().reverse(),3.2);pl.rotateX(-Math.PI/2);pl.translate(0,0,1.6);tag(mesh(g,pl,MC.black),'127556.02-01');
+      tag(mesh(g,lathe([[0,54.0],[1.5,54.0],[1.5,55.0],[0,55.0]],20),M.steel,0,0,5.3),'127556.02-05');}
     return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
   return{build,YP:YB-11.5,YB};
 })();
@@ -4579,7 +4619,11 @@ const PIECES={
     {k:'body',t:'Key body (Schlüsselmittelteil)',h:'050102-2',d:'The black steel body: the tube runs in its bore, the spring round it.',sp:'05 01 02-2 (rev. a 15.7.48) · St. Az DIN 668, sand-blasted, phosphated, sprayed black · Ø 14.5 × 25.1 · bore Ø 8 × 22',src:'drawing',sn:'Every figure of its sheet',figs:'05 01_8'},
     {k:'tube',t:'Key tube (Schlüsselrohr)',h:'050102-3',d:'The brass tube with the square socket for the fusee’s winding square (drawn round).',sp:'05 01 02-3 (rev. a 29.9.47) · Ms 58 · Ø 5.95 × 50.1, head Ø 8 × 2.6 · square 3.1 × 19',src:'drawing',sn:'Every figure of its sheet; its depth in the body estimated',figs:'05 01_9'},
     {k:'spring',t:'Coil spring (Wendelfeder)',h:'510011-4',d:'The coil spring round the tube in the body’s bore, its end in the body’s Ø 0.9 hole: it grips the tube one way and slips the other.',sp:'51 00 11-4 · wire 0.9 (estimated), 14 turns',src:'est',sn:'Its place from the key’s assembly; its wire estimated',figs:'05 01_7'},
-    {k:'pin',t:'Grooved pin (Kerbstift)',h:'510011-6',d:'The pin through the body and the paddle.',sp:'51 00 11-6 · K.S. 1 · Ø 2.5',src:'drawing',sn:'Its hole from the body’s sheet',figs:'05 01_8'}]};
+    {k:'pin',t:'Grooved pin (Kerbstift)',h:'510011-6',d:'The pin through the body and the paddle.',sp:'51 00 11-6 · K.S. 1 · Ø 2.5',src:'drawing',sn:'Its hole from the body’s sheet',figs:'05 01_8'},
+    {k:'handle40',t:'Key handle, 1940 (as first drawn)',h:'127556.02-01',d:'The handle of the key of 1940: a flat pear-shaped plate, its tang running down into the body.',sp:'127-556.02-01 · Ø 34.8 wide, 3.2 thick (scaled)',src:'scaled',sn:'Traced on its 2:1 sheet (6.79 px/mm by its 84); its material not given (estimated)',figs:'05 01_6'},
+    {k:'body40',t:'Key body, 1940 (as first drawn)',h:'127556.02-02',d:'The conical body of the key of 1940 with its collar under the handle.',sp:'127-556.02-02 · collar Ø 20.5 × 2.9, cone Ø 17.9 to 10.3 over 19.3',src:'scaled',sn:'Traced on its sheet; its material not given (estimated)',figs:'05 01_6'},
+    {k:'stem40',t:'Key stem, 1940 (as first drawn)',h:'127556.02-03',d:'The stem pressed into the body, its socket for the fusee’s square drilled from its end (drawn round).',sp:'127-556.02-03 · Ø 6.0, 32 out of the body',src:'drawing',sn:'Its 32 from the sheet, its diameter scaled; the socket estimated',figs:'05 01_6'},
+    {k:'screw40',t:'Key screw, 1940 (as first drawn)',h:'127556.02-05',d:'The small screw on the collar beside the tang; the click spring (127-556.02-04) in a pocket of the body isn’t drawn.',sp:'127-556.02-05 · head Ø 3 (estimated)',src:'est',sn:'Its place scaled on the sheet; its size estimated',figs:'05 01_6'}]};
 
 /* the cards as first drawn (the Variants' "As first drawn": movement.js's setRev): each part whose pieces differ from the sheets as last revised takes these fields in place of
    its own (app.js's setRev keeps the others to put back). The pieces only the earlier sheets have are in PIECES above, each marked (as first drawn) */
@@ -4602,9 +4646,31 @@ const REV={
     sp:'05 04_1 (no sheet of its own) · base 14.6 × 7.5 × 6.5 · arm 2.8 × 2.46, 3.7 to 6.5 under the plate, its end 2.9 past the stone · cone Ø 0.85 × 2.5'},
   escJewelUp:{d:'The escape wheel arbor’s upper hole jewel. The 1941 arbor’s pivot reaches 2.0 into the plate, so the setting fills the seat down to it, held by two screws whose heads lie over its edge.'+SH1},
   escJewelLow:{d:'The escape wheel arbor’s lower hole jewel, in a bush pressed into the pillar plate: shorter for the 1941 arbor, whose pivot ends 1.96 into the plate.'+SH1},
-  escEndstoneLow:{d:'The endstone under the escape wheel arbor’s lower pivot: for the 1941 arbor, which ends inside the plate, in a plug set into the plate’s hole under the cap screwed to the dial side.'+SH1}};
+  escEndstoneLow:{d:'The endstone under the escape wheel arbor’s lower pivot: for the 1941 arbor, which ends inside the plate, in a plug set into the plate’s hole under the cap screwed to the dial side.'+SH1},
+  barrel:{sn:'Every size from the 1941 sheets (0207, 020701, 020701-3); its place between the plate and the bridge from 0207’s section; the hook block and the slots the later drum’s',figs:'05 07_1, 05 07_2, 05 07_10',
+    d:'The drum the mainspring is coiled in, as first drawn: three pieces, a brass ring with a lid sprung into its seat on the pillar plate’s side and a bottom on the barrel bridge’s, each with a boss standing inward round the arbor. Its outer end is hooked to the ring’s wall, its inner end to the arbor, which the set-up ratchet holds. Running, the spring turns the drum, which winds the chain onto itself off the fusee, about five turns over a wind.'+SH1,
+    sp:'Drawings 0207 (Federhaus, 127-556.04 U24, 15.4.41), 020701 (U22), ring 020701-3 · Ø 41.5 × 18, inside Ø 38.5, 15.8 between lid and bottom · lid 1.2, bottom 1.0, seats Ø 39.2'},
+  key:{src:'scaled',sn:'Traced on its 2:1 sheet (its 84 and 32 figured); its materials not given (estimated)',figs:'05 01_6',
+    d:'The key of 1940 (Aufzugschlüssel), which the one-way key of 1943 replaced under the same number: a flat pear-shaped handle on a conical body and collar, the stem with its square socket pressed into it. It lies in the box.'+SH1,
+    sp:'Drawing 127-556.02 U 01 (51 00 11, 12.12.40) · 84 overall, the stem Ø 6, 32 out · handle Ø 34.8 × 3.2'},
+  /* figures the revisions changed by less than the model can show, or only in their tolerance: the shape is the same in both states, the card gives the first */
+  ring:{sp:PARTS.ring.sp+' · As first drawn (before revision a, 6.12.46): 10.7 −0.05, the seat 3 ±0.05, the step 7 ±0.07 and 0.7 +0.05: the same sizes, closer tolerances'},
+  lowerCock:{sp:PARTS.lowerCock.sp+' · As first drawn (before revision a, 2.12.46): the setting’s seat +0.05'},
+  setupRatchet:{sp:PARTS.setupRatchet.sp+' · As first drawn (before revision b, 24.11.47): 2.63 −0.03 thick'},
+  secondsWheel:{sp:PARTS.secondsWheel.sp+' · As first drawn (05 05 01-2 before 24.3.48): 24 −0.05 between its shoulders, the wheel’s seat 1.3 −0.1, the arbor Ø 1.55 untoleranced'},
+  intermediateWheel:{sp:PARTS.intermediateWheel.sp+' · As first drawn (05 05 02, 1940): pivots Ø 0.82 −0.02'},
+  changeWheel:{sp:PARTS.changeWheel.sp+' · As first drawn (040202-1, 1940): tip Ø 21.30 ±0.02 as printed (corrected in pencil to 21.05)'},
+  hourWheel:{sp:PARTS.hourWheel.sp+' · As first drawn (040204-1, 1940): tip Ø 20.0 ±0.02 as printed (pencil 19.7), finished 1.0 thick (pencil 1.05 −0.03), turned Ø 20.1'},
+  fusee:{sp:PARTS.fusee.sp+' · As first drawn, the fusee of 1941 (02 06 13, “Übergangsserie”, and its body 020613-2): the same groove, the flange Ø 36, its large end dished with a collar and a flange plate on a set screw in it, the bore tapered 1:70: not built (README)'},
+  barrelArbor:{sn:'From its 1941 sheet, its core the sheet’s 12 between the 1941 drum’s bosses, its pivots and journals drawn to the plates and drum it runs in',figs:'05 07_9, 05 07_1',
+    sp:'Drawing 020704-1 (127-556.04-093) · Präz. Rundstahl 14, hardened · core Ø 13.3 × 12, its ends 22½° · square 2.7'+' · as first drawn'}};
 /* the pieces' cards as first drawn, by part and piece key: the earlier issue of the same line (05 04_5 carries 05 04 02-1 in pencil; 05 04_7.1 was renumbered 05 04 05) */
 const REVP={
+  barrelBridge:{click:{sp:'Drawing 05 08 05-2 · Ms 58 federhart · 17.4 × 2.6 · as first drawn, before the change of 25.5.48: its hole Ø 3.2 without the later +0.03'}},
+  maintaining:{spring:{t:'Maintaining spring (Gegenfeder), 1941',d:'An open steel ring, its eye pinned to the fusee wheel and its other end to the ratchet: it carries the whole drive, and drives the train alone while the key turns. As first drawn it widens round its turn, from 1.8 on the eye’s side to 3.5 near its square end.',
+      sp:'Drawing 020605 (Gegenfeder kompl., 127-556.04-U18, 15.4.41) · Ø 32.3 × 1.3 · widths 1.8 at 40°, 1.9 at 100°, 2 at 150° and 195°, 2.5 at 240°, 3.5 at 270° from the eye · pins Ø 1.25, 1.2 out',src:'drawing',sn:'Its widths, holes and pins from 020605; to 4 at the square end as 05 06 01-1’s (estimated)',figs:'05 06_9'}},
+  barrel:{drum:{t:'Barrel ring and bottom (Federhausring, Boden), 1941',d:'The ring of 1941, Ø 41.5, the lid and the bottom each sprung into a seat at its ends; the bottom on the barrel bridge’s side, its boss standing inward.',sp:'020701-3 (ring: Messingrohr 42 × 2, Ms 58), 020701 · Ø 41.5 / 38.5 × 18 · seats Ø 39.2 · bottom 1.0, its boss 2.9 from its outside',src:'drawing',sn:'From 0207, 020701, 020701-3; the boss’s 22½° cone from 020701',figs:'05 07_1, 05 07_2, 05 07_10'},
+    lid:{t:'Barrel lid (Federhausdeckel), 1941',d:'The lid of 1941, sprung in warm (“warm einsprengen”) on the pillar plate’s side, its boss standing inward round the arbor.',sp:'0207, 020701 (part 97) · 1.2 thick, in the seat Ø 39.2 · boss Ø 9, 3.1 from its outside, bore 4.55',src:'drawing',sn:'From 0207 and 020701; bored as the later drum (020701’s 4.5)',figs:'05 07_1, 05 07_2'}},
   balance:{staff:{t:'Balance staff (1941)',d:'The staff as first drawn (05 04_5, 4.4.41): a hardened steel staff through a brass collar, its pivots in the jewels of the two cocks. Its sheet draws only the blank between centres, Ø 2.1 and 2.6 under the collar, and carries the later number 05 04 02-1 in pencil.',
       sp:'040401-1 (05 04_5; 05 04 02-1 pencilled) · 14 ±0.03 from the collar’s flange to its lower end',src:'est',sn:'Its place from the collar and 05 04_1; its turned form (ends, the collet’s and the rollers’ seats) as the 1946 staff’s, estimated',figs:'05 04_5, 05 04_1'},
     hub:{t:'Brass collar (1941)',d:'The brass collar on the 1941 staff, the hub’s first form: the arm riveted on its neck, its flange undercut 10°, its tube down to the impulse roller. No screws: its sheet has no holes for them, so the arm’s two (drilled for the 1946 hub’s) stand empty.',
@@ -4646,7 +4712,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
   let CS=null,cl=1,cf=1;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
   const V=VIEWER.start({name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
-    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.setRev(rev);CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
+    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.onRev.push(f=>root.traverse(o=>{if(o.userData.rev&&!o.userData.inMv)o.visible=o.userData.rev===(f?'first':'last');}));mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's */CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid};   /* the box, for audit.py box (geometry-audit-box.js) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */

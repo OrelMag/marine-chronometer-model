@@ -3786,7 +3786,10 @@
    "no": "",
    "dwg": "51 00 11-1",
    "name": "Schlüsselgriff (key handle)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050102-2",
    "kind": "part",
    "part": "key",
@@ -3800,7 +3803,10 @@
    "no": "",
    "dwg": "05 01 02-2",
    "name": "Schlüsselmittelteil (key body)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": null,
    "kind": "part",
    "part": "key",
@@ -3814,7 +3820,10 @@
    "no": "",
    "dwg": "05 01 02-3",
    "name": "Schlüsselrohr (key tube)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050102-2",
    "kind": "part",
    "part": "key",
@@ -3834,7 +3843,10 @@
    "no": "",
    "dwg": "51 00 11-4",
    "name": "Wendelfeder (the key’s coil spring)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050102-2",
    "kind": "part",
    "part": "key",
@@ -3848,13 +3860,90 @@
    "no": "",
    "dwg": "51 00 11-6",
    "name": "Kerbstift K.S. 1 (the key’s grooved pin)",
-   "qty": 1,
+   "qty": [
+    0,
+    1
+   ],
    "parent": "050102-2",
    "kind": "part",
    "part": "key",
    "fn": "Through the body and the paddle.",
    "rel": [],
    "figs": "05 01_7, 05 01_8"
+  },
+  {
+   "id": "127556.02-02",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-02",
+   "name": "Körper (the 1940 key's body, with its collar)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": null,
+   "kind": "part",
+   "part": "key",
+   "fn": "The conical body of the key of 1940 (Aufzugschlüssel 127-556.02 U 01, the page's Variants, As first drawn).",
+   "rel": [],
+   "figs": "05 01_6"
+  },
+  {
+   "id": "127556.02-01",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-01",
+   "name": "Griff (the 1940 key's flat pear-shaped handle, its tang)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "127556.02-02",
+   "kind": "part",
+   "part": "key",
+   "fn": "The handle, a flat plate, its tang in the body.",
+   "rel": [],
+   "figs": "05 01_6"
+  },
+  {
+   "id": "127556.02-03",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-03",
+   "name": "Schaft (the 1940 key's stem, with the socket for the fusee's square)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "127556.02-02",
+   "kind": "part",
+   "part": "key",
+   "fn": "Pressed into the body; its socket takes the fusee's winding square.",
+   "rel": [
+    [
+     "in",
+     "127556.02-02",
+     "press"
+    ]
+   ],
+   "figs": "05 01_6"
+  },
+  {
+   "id": "127556.02-05",
+   "idx": null,
+   "no": "",
+   "dwg": "127-556.02-05",
+   "name": "Schraube (the 1940 key's screw beside the tang)",
+   "qty": [
+    0,
+    1
+   ],
+   "parent": "127556.02-02",
+   "kind": "part",
+   "part": "key",
+   "fn": "On the collar beside the tang (its click spring 127-556.02-04 not drawn).",
+   "rel": [],
+   "figs": "05 01_6"
   }
  ]
 }
