@@ -7,14 +7,15 @@
 // The frame (makeEsc's frame: t along the detent from its flexure Ft toward the stone, n the way the stone lifts; metres), from the pieces escapement.js draws, in the detent's
 // own frame there (t from the stone toward the foot, n toward the wheel) put through MK: the spring 0.07 × 1.9, 5 long, clamped at the foot (1436), as beams; the square 2 ×
 // 0.5 × 1.9 rigid, with the gold spring's head, its fixed arm to its bending point (05 04_1's "Biegungspunkt") and its screw; the blade 0.50 × 1.0 for 2.9, then 0.28 × 1.0 to
-// the pipe, as beams; the pipe Ø 1.15 × 2 with the stone (Ø 0.75 ruby, the half below it) rigid, with the horn's root; the horn 0.22 × 0.8 to 3.5 from the stone as beams; the
+// the pipe, as beams; the pipe Ø 1.15 × 2 with the stone (Ø 0.75 ruby, the half below it) rigid, with the horn's root; the horn 0.22 × 0.8 to 4.4 from the stone (1436's figure, Wempe 3955's photograph) as beams; the
 // gold spring 0.15 × 1.0 from its bending point along its drawn path to its square tip as beams (333 gold, about 90 GPa and 11.0 g/cm³: estimated, as WESC.SET and
-// wempe-inertia.js), resting on the horn 5 µm off (escapement.js); steel 205 GPa (200-210), 7.85 g/cm³. The banking, not drawn (README, Unresolved), where makeEsc puts the
-// Hamilton's stop button, under the blade 0.7-1.4 mm from the stone (estimated). The preload WESC.SET's, 0.63 g at the stone (estimated), a moment at the spring's end; as
+// wempe-inertia.js), resting on the horn 5 µm off (escapement.js); steel 205 GPa (200-210), 7.85 g/cm³. The banking, the block's cross screw's domed head (escapement.js; its
+// head not drawn): the pipe's side toward the wheel rests on its face at the stone (05 04 01-4's 18.8, the 6MX's block photographed: likely; until 15 October 2026 under
+// the blade 0.7-1.4 mm from the stone, where makeEsc puts the Hamilton's stop button, estimated). The preload WESC.SET's, 0.63 g at the stone (estimated), a moment at the spring's end; as
 // drawn (the spring straight at its banking) none.
 // Contacts, each a spring with a dashpot set for its restitution (tripping.js's): the discharge stone on the gold spring (its bevelled end on the strip's square end, by
 // separating axes: the depth and its gradient in the tip's place and the balance's angle; on the active swing at the horn's end carried to the tip, backed by the horn, as
-// makeEsc and dynamics.js take it, on the return at the gold spring's own tip), the gold spring on the horn at three places, the blade on the banking at two, the locked tooth
+// makeEsc and dynamics.js take it, on the return at the gold spring's own tip), the gold spring on the horn at three places, the pipe on the banking, the locked tooth
 // on the stone (makeEsc's recoil), the tooth on the impulse stone (makeEsc's bite) and, the Wempe's, the stone on the tooth it has let go (dynamics.js's ride: the stone's
 // least lift over that tooth, its friction MU against the wheel's turn).
 const fs=require('fs'),path=require('path');
@@ -35,7 +36,8 @@ const U=(t,n)=>X.MK(Dp(t,n)),Q=(t,n)=>tn(U(t,n));   /* makeEsc's unit frame, and
 /* escapement.js's numbers (05 04_1, 1436, 05 04 01-2; its comments say how each was read) */
 const TP=X.TP,FOOT0=TP+2.5,SPR0=TP-2.5,SQ0=SPR0-2,[tB,nBp]=toDp(X.B),GT=tB+1.54,GN=nBp+0.005,GW=0.15,GNB=GN-GW/2,GB=[6.7,0.325],HEAD=SQ0+2.2,H0=HEAD-2.4;
 const GPATH=[[GB[0],GB[1]],[3.0,0.62],[0.6,0.72],[0,0.72],[-0.5,0.55],[-0.85,0.15],[-1.2,-0.25],[-1.6,GN],[GT,GN]];   /* the gold spring's free part, its bending point to its tip */
-const HORN=[[-0.2,-0.40],[-0.45,-0.25],[-0.7,GNB-0.005],[-3.5,GNB-0.005],[-3.5,GNB-0.225],[-0.5,GNB-0.225],[-0.15,-0.52]],HN=GNB-0.115,HT0=-0.6,HT1=-3.5;   /* the horn, its beam's line */
+const HORN_L=4.4,HORN=[[-0.2,-0.40],[-0.45,-0.25],[-0.7,GNB-0.005],[-HORN_L,GNB-0.005],[-HORN_L,GNB-0.225],[-0.5,GNB-0.225],[-0.15,-0.52]],HN=GNB-0.115,HT0=-0.6,HT1=-HORN_L;   /* the horn (escapement.js's HORN_L), its beam's line */
+const BANK=[0,0.575];   /* where the banking screw's head meets the pipe: its side toward the wheel at the stone (escapement.js's t, n; mm) */
 const TI=-WD.INNER,yd=d=>TI+d,STONE_LO=yd(3.3)-(X.Y.ew0-0.06);   /* the stone's half below the pipe, down to 0.06 under the wheel's teeth */
 const RHO={st:7850,gold:11000,ruby:3980},EST=S.EB*1e9,EGO=S.ET*1e9;
 const rectP=(t0,t1,n0,n1)=>[[t0,n0],[t1,n0],[t1,n1],[t0,n1]].map(([t,n])=>U(t,n)),discP=(c,r,k=48)=>[...Array(k)].map((_,i)=>U(c[0]+r*Math.cos(TAU*i/k),c[1]+r*Math.sin(TAU*i/k)));
@@ -54,7 +56,7 @@ function frame(o={}){
   const tS=0.07e-3*(o.tS??1);let R0,F1,sp;
   if(o.hinge){R0=nd({t:0,n:0},'pin');F1=nd(Q(SPR0,0),'slave',R0);sp=[R0,F1];}
   else{R0=nd(Q(FOOT0,0),'clamp');const Mf=nd(Q(TP,0));F1=nd(Q(SPR0,0));sp=[...line(R0,Mf,5,EST,tS,1.9e-3,RHO.st,'springFoot'),...line(Mf,F1,5,EST,tS,1.9e-3,RHO.st,'spring').slice(1)];}
-  /* the blade: 0.50 thick for 2.9 from the square, then 0.28 to the pipe's wall; the banking under its thin part where makeEsc puts a stop button (estimated) */
+  /* the blade: 0.50 thick for 2.9 from the square, then 0.28 to the pipe's wall (its nodes where makeEsc puts a stop button, the banking until 15 October 2026, kept: nb) */
   const bt=TR.X.button,b0=nd(Q(SQ0,0),'slave',F1),b1=nd(Q(SQ0-2.9,0)),K=nd({t:ESC.BL*ESC.ES/1000,n:0}),b2=nd(Q(0.575,0),'slave',K);   /* K: the stone's body node at the locking face's middle S */
   const bl1=line(b0,b1,6,EST,0.5e-3,1.0e-3,RHO.st,'blade'),fr=t=>(t-N[b1].t)/(N[b2].t-N[b1].t),bl2=line(b1,b2,10,EST,0.28e-3,1.0e-3,RHO.st,'blade',[fr(bt.t0),fr(bt.t1)]);
   const nb=[bl2.find(i=>Math.abs(N[i].t-bt.t0)<1e-9),bl2.find(i=>Math.abs(N[i].t-bt.t1)<1e-9)];
@@ -83,7 +85,7 @@ function frame(o={}){
 
 /* ---------- the detent built, reduced, preloaded, its modes ---------- */
 function detent(o={}){
-  const F=frame(o),Am=assemble(F),nr=Am.nr,rS=rows(F,Am,F.K),rb=F.nb.map(i=>rows(F,Am,i));
+  const F=frame(o),Am=assemble(F),nr=Am.nr,rS=rows(F,Am,F.K),qb=Q(...BANK),rb=[rows(F,Am,F.K,qb.t,qb.n),null];   /* the banking: one contact, the pipe on the screw's head (rigid with the stone's body K) */
   /* the preload: WESC.SET's (W78 at the stone, no Op. 78: the spring unbent at its banking), a moment MPRE at the spring's end pressing the detent onto its banking */
   const fm=new Float64Array(nr);{const c=Am.T[3*F.F1+2];for(let j=0;j<nr;j++)fm[j]=c[j];}const alpha=-DY.MPRE*(o.pre??1),fpre=fm.map(x=>x*alpha);
   const fS=rS.rv,uS=gsolve(Am.Kr,fS),kS=1/dot(rS.rv,uS);
@@ -118,7 +120,7 @@ function model(o={}){
   const dt=detent(o),md=modal(dt,o.fMax??30000),N=md.length,F=dt.F,Am=dt.Am;
   const proj=r=>Float64Array.from(md,m=>dot(r,m.phi));
   const tP=tn(ESC.Pt),hEnd=F.hn[F.hn.length-1];
-  const R={S:{u:proj(dt.rS.ru),v:proj(dt.rS.rv)},b:dt.rb.map(r=>proj(r.rv)),tip:(()=>{const r=rows(F,Am,F.tip);return{u:proj(r.ru),v:proj(r.rv)};})(),
+  const R={S:{u:proj(dt.rS.ru),v:proj(dt.rS.rv)},b:dt.rb.map(r=>r?proj(r.rv):new Float64Array(md.length)),tip:(()=>{const r=rows(F,Am,F.tip);return{u:proj(r.ru),v:proj(r.rv)};})(),
     hx:(()=>{const r=rows(F,Am,hEnd,tP.t,tP.n);return{u:proj(r.ru),v:proj(r.rv)};})(),h:F.ng.map((g,k)=>{const a=rows(F,Am,g).rv,b=rows(F,Am,F.nh[k]).rv;return proj(a.map((x,j)=>x-b[j]));})};
   const fpre=proj(dt.fpre),w=Float64Array.from(md,m=>m.w),z=new Float64Array(N).fill(1/(2*(o.Q??100)));
   const gam=fn=>{const v=new Float64Array(Am.nf);for(let i=0;i<F.N.length;i++){const p=F.N[i],q=xy(p.t,p.n),[ax,ay,al]=fn(q.x*ES,q.y*ES);v[3*i]=ax*dB.x+ay*dB.y;v[3*i+1]=ax*nB.x+ay*nB.y;v[3*i+2]=al;}
@@ -227,7 +229,7 @@ const pick=r=>({A:+f(r.A,2),rate:+f(r.rate,3),rel:+f(r.rel,2),offF:+f(r.offF,2),
 say('0. The Wempe\'s detent as a frame (the pieces escapement.js draws, 1436 and 05 04 01-2)');
 const V={drawn:{},stiff:{stiff:true},hinge:{hinge:true,stiff:true}},DT={},MD={};
 for(const[k,o]of Object.entries(V)){DT[k]=detent(o);MD[k]=modal(DT[k],30000);}
-{const d=DT.drawn,F=d.F;say(`${F.E.length} beam elements on ${F.N.length} nodes (${d.nr} free coordinates): the spring 0.070 × 1.9 mm, 5.0 long, clamped at its foot; the blade 0.50 × 1.0 for 2.9, then 0.28 × 1.0 to the pipe; the horn 0.22 × 0.8 to 3.5 past the stone; the gold spring 0.15 × 1.0 along its path, ${f(GPATH.reduce((s,p,k)=>k?s+Math.hypot(p[0]-GPATH[k-1][0],p[1]-GPATH[k-1][1]):0,0),1)} mm from its bending point to its tip; the square with the gold spring's head and the pipe with the stone rigid`);
+{const d=DT.drawn,F=d.F;say(`${F.E.length} beam elements on ${F.N.length} nodes (${d.nr} free coordinates): the spring 0.070 × 1.9 mm, 5.0 long, clamped at its foot; the blade 0.50 × 1.0 for 2.9, then 0.28 × 1.0 to the pipe; the horn 0.22 × 0.8 to ${f(HORN_L,1)} past the stone; the gold spring 0.15 × 1.0 along its path, ${f(GPATH.reduce((s,p,k)=>k?s+Math.hypot(p[0]-GPATH[k-1][0],p[1]-GPATH[k-1][1]):0,0),1)} mm from its bending point to its tip; the square with the gold spring's head and the pipe with the stone rigid`);
   chk(Math.abs(d.mass/DY.DM.m-1)<0.03&&Math.abs(d.Ift/DY.ID-1)<0.03,`its moving parts' mass ${f(d.mass*1e6,2)} mg and inertia about the flexure ${f(d.Ift*1e9,3)} g·mm² are the page's solids' as weighed (wempe_inertia.json: ${f(DY.DM.m*1e6,2)}, ${f(DY.ID*1e9,3)}) within 3 %`);
   const h=DT.hinge;chk(Math.abs(h.kS*(BLu*ES)**2/DY.KD-1)<1e-3&&Math.abs(-h.alpha/DY.MPRE-1)<1e-3&&Math.abs(MD.hinge[0].w/Math.sqrt(DY.KD/h.Ift)-1)<1e-2,`hinged at Ft and rigid, it is dynamics.js's detent: ${f(h.kS,2)} N/m at the stone (KD/r² ${f(DY.KD/(BLu*ES)**2,2)}), the preload ${f(-h.alpha*1e6,1)} µN·m (${f(DY.MPRE*1e6,1)}), its first mode ${f(MD.hinge[0].f,1)} Hz (√(KD/I): ${f(Math.sqrt(DY.KD/h.Ift)/TAU,1)}; the gold spring, a third of its mass, left flexible on it)`);
   say(`as drawn its spring bends along its whole 5 mm from the foot, the detent turning near its middle: ${f(d.kS,2)} N/m at the stone (${sg(100*(d.kS/h.kS-1),0)} % against the hinge makeEsc and dynamics.js take at its middle, the blade's own bending in series)`);
@@ -274,7 +276,7 @@ pool().then(out=>{let o=0;const take=n=>{const r=out.slice(o,o+n);o+=n;return r;
   /* hard: the estimates at the contacts' own stiffness (tripping.js's) and the preload as estimated or more; reported: the contacts' stiffness, on which the return pass turns */
   const swH=sw.filter(r=>!/no preload|4× st|4× so|kR/.test(r.name)),swK=sw.filter(r=>/4× st|4× so|kR/.test(r.name));
   chk(swH.every(r=>r.trips===0),`preloaded, over the other estimates no tooth gets past; a held tooth's stone uses at most ${pc(Math.max(...swH.map(r=>r.maxL)))} of the depth of lock`);
-  note(swK.every(r=>r.trips===0),`the contacts' stiffness (penalties, tripping.js's): ${swK.map(r=>`${r.name}, ${r.trips} teeth past, the stone at most ${pc(r.maxL)}`).join('; ')}. The one that matters is the discharge stone on the gold spring on the return (kR, 500 N/m): stiffer, the stone, meeting the spring's square end with its bevel, pushes it partly lengthwise, the loop round the pipe gives, and the tip is carried on past makeEsc's pass (−17.6°) to about −25° before it slips off, storing several times the energy, whose release throws the detent. The tip is taken square and unturning, the gold spring's alloy, its path's free shape and the horn's length (3.5) are estimates: open (README, Unresolved)`);
+  note(swK.every(r=>r.trips===0),`the contacts' stiffness (penalties, tripping.js's): ${swK.map(r=>`${r.name}, ${r.trips} teeth past, the stone at most ${pc(r.maxL)}`).join('; ')}. The one that matters is the discharge stone on the gold spring on the return (kR, 500 N/m): stiffer, the stone, meeting the spring's square end with its bevel, pushes it partly lengthwise, the loop round the pipe gives, and the tip is carried on past makeEsc's pass (−17.6°) to about −25° before it slips off, storing several times the energy, whose release throws the detent. The tip is taken square and unturning, the gold spring's alloy and its path's free shape are estimates, the horn's length 4.4 (1436's figure, Wempe 3955's photograph: likely): open (README, Unresolved)`);
   {const pr=[[1,dr.maxL],...[1.5,2,3].map(m=>[m,sw.find(r=>r.name==='the preload '+m+'×').maxL])],i=pr.findIndex(([,x])=>x<0.5);
     say(`unpreloaded (the banking where the detent is drawn) ${sw.find(r=>/no preload/.test(r.name)).trips} teeth get past in 3 s: the gold spring's blow throws the stone off. Under half the depth of lock wants the preload ${i<0?'past 3×':i===0?'as estimated':`about ${f(pr[i-1][0]+(pr[i][0]-pr[i-1][0])*(pr[i-1][1]-0.5)/(pr[i-1][1]-pr[i][1]),1)}× the estimate (${f((pr[i-1][0]+(pr[i][0]-pr[i-1][0])*(pr[i-1][1]-0.5)/(pr[i-1][1]-pr[i][1]))*S.W78,2)} g at the stone)`}: ${pr.map(([m,x])=>`${m}× ${pc(x)}`).join(', ')}`);}
   J.sweep=sw;flush();

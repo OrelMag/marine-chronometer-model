@@ -6,7 +6,7 @@
 //      (Timoshenko's bimetal, 1925: Δκ = 6 Δα (1 + m)² / h [3 (1 + m)² + (1 + m n)(m² + 1 / m n)] a °C), which brings its free end and the masses on it in by
 //      R² Δκ (1 - cos ψ) at ψ from the root, the masses clamping the rim across their slot (the arc under them stays straight in curvature); the masses, timing
 //      weights and the rest weighed on the model's solids (wempe_inertia.json). The rate gained a day a °C, 86400 (e + 3 αs - dI/I) / 2, at the masses' drawn place
-//      (32° from the 3-9 line, 05 03_2 scaled; the 6MX's 30°, 6MX-figures.md) and where they null it, the adjuster's place on the rim.
+//      (30° from the 3-9 line: Wempe 3955's, the 6MX's (6MX-figures.md); 05 03_2 scales 32°) and where they null it, the adjuster's place on the rim.
 //   2. The middle-temperature (secondary) error: the steel spring's modulus falls faster as it warms (Dent's error: a few seconds a day at 15 °C with the rate right
 //      at 0 and 30, Guillaume's Nobel lecture, 1920; about 2.5 s in the middle of a 30 °C range, VintageWatchstraps, "Temperature Compensation by Nickel Steels",
 //      citing the Neuchâtel trials), against the rim's curl, linear in the temperature when its two metals' expansion grows alike (brass's and steel's quadratic
@@ -22,8 +22,8 @@ const J=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'ut
 const rows=[];let fail=0;const say=s=>rows.push('  '+s),chk=(c,s)=>{if(!c)fail=1;rows.push(`${c?'  ok ':'  !! '} ${s}`);},head=s=>rows.push('\n'+s);
 /* the rim (05 03 01-1, every figure sure): Ø 32.32 outside, the joint Ø 31.29, inside Ø 30.48, 3.8 high; the arm 3.2 wide at the rim; the cuts 1.5 at 90° from the arm */
 const RI=30.48/2,RJ=31.29/2,RO=32.32/2,HR=3.8,t1=RJ-RI,t2=RO-RJ,R=(RI+RO)/2,PHI0=1.6/R/D,PHI1=90-0.75/R/D;   /* t1 the nickel steel's 0.405, t2 the brass's 0.515; the quarter's root (the arm's edge) and its free end at the cut, deg from the arm's line */
-/* the masses (05 03 01-4, escapement.js): Ø 6.3 on the rim's middle at 32° from the 3-9 line, so 58° from the arm's; clamped on the rim across their slot, ±BETA */
-const RM=(30.5/2+32.3/2)/2,PHIM=58,BETA=3.15/RM/D;
+/* the masses (05 03 01-4, escapement.js): Ø 6.3 on the rim's middle at 30° from the 3-9 line (escapement.js's MASS_A: Wempe 3955's), so 60° from the arm's; clamped on the rim across their slot, ±BETA */
+const RM=(30.5/2+32.3/2)/2,PHIM=60,BETA=3.15/RM/D;
 /* the weighed parts (g·mm², wempe_inertia.json): the masses with their screws and nuts; the timing weights and their screws at the arm's ends (their centre r, from
    the weights' own m and I); the rim and arm (050301-1: the rim's two layers worked out here, the arm the rest); the hub, staff, rollers, collet, a third of the spring */
 const B=J.balance.byHn,Im=B['050301-4'].I+B['WN-12'].I+B['WN-12a'].I,mm=B['050301-4'].m+B['WN-12'].m+B['WN-12a'].m,Iw=B['050301-3'].I+B['050301-2'].I,rW=Math.sqrt(B['050301-3'].I/B['050301-3'].m);
@@ -65,16 +65,16 @@ head('1. The linear term: the rate gained a day a °C (the TU\'s C, losing posit
 for(const[k,name]of[['an','Guillaume\'s 42-44 % nickel steel (the model\'s reading of "Sonderlegierung", estimated)'],['ns','a plain nickel steel']]){
   const q=MID(k),d=dII(q,PHIM),cs=DAY*(q.e+3*q.asp)/2;
   say(`${name}: the curl ${f(d.K*1e6,2)} × 10⁻⁶ a mm a °C (Δα ${f((q.abr-q.ans)*1e6,1)} × 10⁻⁶): the masses come in ${f(-d.um*1000,2)} µm a °C at ${PHIM}°; the spring alone loses ${f(-cs,1)} s a day a °C, the balance gives back ${f(-DAY*d.tot/2,1)} (its curl ${f(-DAY*d.curl/2,1)})`);
-  const c0=C(q,PHIM),c6=C(q,60),z=zero(q),dc=(C(q,PHIM+1)-C(q,PHIM-1))/2;
-  say(`   at the drawn place (${PHIM}°, 32° from the cuts' line) ${sg(c0,2)} s a day a °C; at the 6MX's 30° (60°) ${sg(c6,2)}; ${z?`nulled with the masses at ${f(z,1)}° from the arm's line (${f(90-z,1)}° from the cuts' line)`:`no place on the free arc nulls it (${sg(C(q,PHI0+BETA),2)} at ${f(PHI0+BETA,0)}°, ${sg(C(q,PHI1-BETA),2)} at ${f(PHI1-BETA,0)}°)`}; a degree along the rim moves it ${f(dc,3)} s a day a °C, so the TU's ±0.10 is ±${f(0.1/Math.abs(dc),1)}° of the masses' place`);
+  const c0=C(q,PHIM),c6=C(q,58),z=zero(q),dc=(C(q,PHIM+1)-C(q,PHIM-1))/2;
+  say(`   at the drawn place (${PHIM}°, 30° from the cuts' line: Wempe 3955's and the 6MX's) ${sg(c0,2)} s a day a °C; at 05 03_2's scaled 32° (58°) ${sg(c6,2)}; ${z?`nulled with the masses at ${f(z,1)}° from the arm's line (${f(90-z,1)}° from the cuts' line)`:`no place on the free arc nulls it (${sg(C(q,PHI0+BETA),2)} at ${f(PHI0+BETA,0)}°, ${sg(C(q,PHI1-BETA),2)} at ${f(PHI1-BETA,0)}°)`}; a degree along the rim moves it ${f(dc,3)} s a day a °C, so the TU's ±0.10 is ±${f(0.1/Math.abs(dc),1)}° of the masses' place`);
   if(k==='an'){chk(!!z,`the masses' place that compensates lies on the free arc (${f(PHI0+BETA,0)}-${f(PHI1-BETA,0)}° for their Ø 6.3), with the middle constants`);
     /* over the constants' ranges: every corner of the ranges */
     const zs=[],cs0=[];for(const pa of[0,1])for(const pe of[0,1])for(const pb of[0,1])for(const ps of[0,1])for(const pE of[0,1]){const q2={ans:MAT.an.a[pa],Ens:MAT.an.E[pE],abr:MAT.br.a[pb],Ebr:MAT.br.E[1-pE],asp:MAT.sp.a[ps],e:MAT.sp.e[pe]};cs0.push(C(q2,PHIM));zs.push(zero(q2));}
     const zz=zs.filter(x=>x!=null);say(`   over the constants' ranges (the 32 corners): at the drawn place ${sg(Math.min(...cs0),2)} to ${sg(Math.max(...cs0),2)} s a day a °C; the compensating place ${zz.length?`${f(Math.min(...zz),0)}-${f(Math.max(...zz),0)}°`:'none'} (${zz.length} of 32 on the free arc): the spring's e alone spans ${f(DAY*(MAT.sp.e[1]-MAT.sp.e[0])/2,1)} s a day a °C, which only the adjuster's trial and the masses' moves settle (Op. as the 6MX's: the masses moved along the rim)`);
     /* what would make the drawn place compensate: the nickel steel's expansion, or the masses free of the rim (not clamped across their slot) */
     const aFor=ph=>{let lo=-2e-6,hi=12e-6;for(let i=0;i<60;i++){const m=(lo+hi)/2;C({...q,ans:m},ph)<0?hi=m:lo=m;}return(lo+hi)/2;};
-    say(`   the drawn place would compensate with the nickel steel expanding ${f(aFor(PHIM)*1e6,1)} × 10⁻⁶ a °C (at 60°: ${f(aFor(60)*1e6,1)}), an invar-like 36-38 % nickel steel's, not the 42-44 %'s 7-8.5; or with the spring's e ${f((-2*C({...q,e:0},PHIM)/DAY)*1e6,0)} × 10⁻⁶ (its range -270 to -240)`);
-    module.exports.linear={drawn:c0,at60:c6,zero:z,perDeg:dc,range:[Math.min(...cs0),Math.max(...cs0)],zeros:[Math.min(...zz),Math.max(...zz)],nZero:zz.length};}}
+    say(`   the drawn place would compensate with the nickel steel expanding ${f(aFor(PHIM)*1e6,1)} × 10⁻⁶ a °C (at 58°: ${f(aFor(58)*1e6,1)}), an invar-like 36-38 % nickel steel's, not the 42-44 %'s 7-8.5; or with the spring's e ${f((-2*C({...q,e:0},PHIM)/DAY)*1e6,0)} × 10⁻⁶ (its range -270 to -240)`);
+    module.exports.linear={drawn:c0,at58:c6,zero:z,perDeg:dc,range:[Math.min(...cs0),Math.max(...cs0)],zeros:[Math.min(...zz),Math.max(...zz)],nZero:zz.length};}}
 
 head('2. The middle-temperature (secondary) error over the TU\'s trial (36, 20, 4 °C): S = (ω36 + ω4) / 2 - ω20, losing positive, ±1.20 allowed');
 {const MTE=[2.0,3.0],q=MID('an'),qs=MID('ns');   /* Dent's "a few seconds" at 15 °C right at 0 and 30; 2.5 s in the middle of 30 °C */
