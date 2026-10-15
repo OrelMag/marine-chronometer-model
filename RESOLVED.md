@@ -2488,6 +2488,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Build, tools and docs
 
+- **The Wempe's bench took its preload's floor from the frame as it was before the banking moved.** `wempe_tolerances.js` first
+  took 0.72 g at the stone (1.1 times the estimate) as the least preload, `wempe_tripping.js`'s figure while the banking stood
+  under the blade; with the banking on the pipe the frame finds a held tooth's stone ringing 41 % of the depth of lock at the
+  estimate itself, 0.63 g, and doesn't run between that and none. Keep: a figure quoted from another tool's run is the one its
+  present configuration gives, with the date and the tool named beside it. `350728d`
+
 - **`smoke.py` failed "winding with the key" whenever the machine was busy.** The model's clock goes at most 0.05 s a
   frame, and a headless page under load drew about 2 frames a second, so the sustaining spring's relaxing, about 2.5 s
   of model time after the key goes on, came about 25 s later; the check waited 5 s and failed every run (ssD still
