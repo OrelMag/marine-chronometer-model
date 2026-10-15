@@ -63,7 +63,7 @@
   "bowl:Buffer | gimbalRing:Buffer | +6.34": 1
  },
  "movement.first": {
-  "balance:Buffer | balance:Buffer | +-23.10": 2,
+  "balance:Buffer | balance:Buffer | +-23.10": 6,
   "balance:Buffer | balance:Buffer | --26.90": 2,
   "balance:Buffer | balance:Lathe | --24.26": 1,
   "balance:Buffer | hairspring:Buffer | --26.90": 3,
