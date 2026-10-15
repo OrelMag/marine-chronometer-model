@@ -396,9 +396,9 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
 
 /* ================= the page ================= */
 (function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
-  /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
+  /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 55.9 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
-  let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',HPT=90/14,HRUN=56.4;
+  let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',HPT=90/14,HRUN=55.9;
   /* winding in the case (cw): go, Wind pressed with the movement in its bowl; on, the key turning; u, 0-3, how far the bowl is turned over (0-1), the closing plate opened
      (1-2) and the key come onto the square (2-3) */
   const cw={go:false,on:false,u:0,t:null};   /* t: the last frame's time (ms), for dw */
