@@ -38,6 +38,7 @@ EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) a
  ('chain:Buffer','chain:Extrude'):("the chain's hooks riveted between its end links' plates (the rivets through them)",0.08,0.3),
  ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.82 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
  ('band:Extrude','barrel:Lathe'):("the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum",1.2,0.8),
+ ('barrel:Lathe','chain:Extrude'):("the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum",0.4,0.3),
  ('band:Buffer','stopWork:Extrude'):("the band coming down on the stop bar's lower end in the top turn and pressing it in (as the chain)",0.4,0.4),
  ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8),
  ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8),
