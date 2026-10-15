@@ -396,6 +396,38 @@ function blindHoles(g0,face,holes,depth,bev=0){const g=g0.index?g0.toNonIndexed(
     fan(far,x,ye,z,[0,-s,0].map(v=>-v));fan(floor,x,yb,z,[0,-s,0]);});   /* the far face closed, and the floor facing the opening */
   const o=new THREE.BufferGeometry();o.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));o.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
   o.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));if(g0!==g)g.dispose();g0.dispose();return o;}
+/* a pocket cut depth into a face of a closed solid whose faces are level (local y its thickness, as polyGeo builds it), open where it runs past the outline (a pry
+   slot at a bridge's rim): poly, convex, in plan (x, z), reaching beyond the outline where the pocket opens. Every triangle one of the pocket's planes (its sides,
+   standing, and its floor) crosses is split along it, each edge cut at the same point from both its triangles, so the pieces still meet edge to edge; the pieces
+   inside the pocket are dropped, and its floor and sides are the solid's own sections on those planes within the pocket, facing into it. Bevels elsewhere stay */
+/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} poly @param {number} depth @returns {any} */
+function facePocket(g0,face,poly,depth){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count,e=1e-7;
+  let y0=1e9,y1=-1e9;for(let i=0;i<n;i++){const y=P.getY(i);if(y<y0)y0=y;if(y>y1)y1=y;}
+  const s=face==='top'?-1:1,yb=(face==='top'?y1:y0)+s*depth,cx=poly.reduce((a,p)=>a+p[0],0)/poly.length,cz=poly.reduce((a,p)=>a+p[1],0)/poly.length;
+  /** @type {{n:number[],c:number}[]} */const PL=[{n:[0,s,0],c:s*yb}];   /* inside the pocket where n·p < c: the floor's, then each side's */
+  poly.forEach((a,k)=>{const b=poly[(k+1)%poly.length];let m=[a[1]-b[1],0,b[0]-a[0]];if(m[0]*(cx-a[0])+m[2]*(cz-a[1])>0)m=m.map(v=>-v);const l=Math.hypot(m[0],m[2]);m=m.map(v=>v/l);PL.push({n:m,c:m[0]*a[0]+m[2]*a[1]});});
+  const dist=(/** @type {{n:number[],c:number}} */pl,/** @type {number[]} */v)=>{const d=pl.n[0]*v[0]+pl.n[1]*v[1]+pl.n[2]*v[2]-pl.c;return Math.abs(d)<e?0:d;};
+  const cut=(/** @type {number[]} */a,/** @type {number[]} */b,/** @type {number} */da,/** @type {number} */db)=>{if(a[0]>b[0]||a[0]===b[0]&&(a[1]>b[1]||a[1]===b[1]&&a[2]>b[2])){[a,b]=[b,a];[da,db]=[db,da];}
+    const t=da/(da-db);return a.map((x,i)=>x+(b[i]-x)*t);};   /* the edge's endpoints in one order, so its two triangles get the same point */
+  /** @type {number[][][]} */let T=[];for(let t=0;t<n;t+=3)T.push([0,1,2].map(q=>[P.getX(t+q),P.getY(t+q),P.getZ(t+q),U?U.getX(t+q):0,U?U.getY(t+q):0,N.getX(t+q),N.getY(t+q),N.getZ(t+q)]));
+  for(const pl of PL){/** @type {number[][][]} */const o=[];for(const tr of T){const D=tr.map(v=>dist(pl,v));if(D.every(x=>x>=0)||D.every(x=>x<=0)){o.push(tr);continue;}
+      /** @type {number[][]} */const A=[],B=[];for(let i=0;i<3;i++){const p=tr[i],q=tr[(i+1)%3],dp=D[i],dq=D[(i+1)%3];if(dp>=0)A.push(p);if(dp<=0)B.push(p);if(dp*dq<0){const m=cut(p,q,dp,dq);A.push(m);B.push(m);}}
+      for(const Q of[A,B])for(let i=1;i+1<Q.length;i++)o.push([Q[0],Q[i],Q[i+1]]);}
+    T=o;}
+  /** @type {number[]} */const pos=[],nor=[],uv=[];const key=(/** @type {number[]} */v)=>v.slice(0,3).map(x=>x.toFixed(6)).join(',');
+  for(const tr of T){const c=[0,1,2].map(i=>(tr[0][i]+tr[1][i]+tr[2][i])/3);if(PL.every(pl=>dist(pl,c)<0))continue;for(const v of tr){pos.push(v[0],v[1],v[2]);uv.push(v[3],v[4]);nor.push(v[5],v[6],v[7]);}}   /* inside the pocket: dropped */
+  PL.forEach((pl,i)=>{const nx=new Map(),pt=new Map();   /* the section on this plane: the edges lying in it, each from its triangle outside the pocket, in that triangle's order (so its outer loops run clockwise about w, the face that closes it) */
+    for(const tr of T){const D=tr.map(v=>dist(pl,v));if(!D.some(x=>x>0))continue;for(let k=0;k<3;k++){const a=tr[k],b=tr[(k+1)%3];if(D[k]===0&&D[(k+1)%3]===0){nx.set(key(a),key(b));pt.set(key(a),a);pt.set(key(b),b);}}}
+    const w=pl.n.map(v=>-v),u=Math.abs(w[1])>0.5?[1,0,0]:[0,1,0],v=[w[1]*u[2]-w[2]*u[1],w[2]*u[0]-w[0]*u[2],w[0]*u[1]-w[1]*u[0]],to2=(/** @type {number[]} */p)=>new THREE.Vector2(p[0]*u[0]+p[1]*u[1]+p[2]*u[2],p[0]*v[0]+p[1]*v[1]+p[2]*v[2]);
+    /** @type {number[][][]} */const loops=[];const seen=new Set();for(const k0 of nx.keys()){if(seen.has(k0))continue;/** @type {number[][]} */let L=[];let k=k0;while(k!==undefined&&!seen.has(k)){seen.add(k);L.push(/** @type {number[]} */(pt.get(k)));k=nx.get(k);}
+      for(const q of PL)if(q!==pl&&L.length>2){/** @type {number[][]} */const o=[];for(let j=0;j<L.length;j++){const a=L[j],b=L[(j+1)%L.length],da=dist(q,a),db=dist(q,b);if(da<=0)o.push(a);if(da*db<0)o.push(cut(a,b,da,db));}L=o;}   /* within the pocket's other planes */
+      if(L.length>2&&Math.abs(THREE.ShapeUtils.area(L.map(to2)))>1e-9)loops.push(L);}
+    const out=loops.filter(L=>THREE.ShapeUtils.area(L.map(to2))<0),holes=loops.filter(L=>THREE.ShapeUtils.area(L.map(to2))>0),inL=(/** @type {number[][]} */L,/** @type {number[]} */p)=>{const q=to2(p),V=L.map(to2);let r=false;for(let a=0,b=V.length-1;a<V.length;b=a++)if((V[a].y>q.y)!==(V[b].y>q.y)&&q.x<(V[b].x-V[a].x)*(q.y-V[a].y)/(V[b].y-V[a].y)+V[a].x)r=!r;return r;};
+    for(const L of out){const H=holes.filter(h=>inL(L,h[0])),all=[...L,...H.flat()];
+      for(const[a,b,c]of THREE.ShapeUtils.triangulateShape(L.map(to2),H.map(h=>h.map(to2)))){let f=[all[a],all[b],all[c]];const p=f[0],q=f[1],r=f[2],m=[(q[1]-p[1])*(r[2]-p[2])-(q[2]-p[2])*(r[1]-p[1]),(q[2]-p[2])*(r[0]-p[0])-(q[0]-p[0])*(r[2]-p[2]),(q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0])];
+        if(m[0]*w[0]+m[1]*w[1]+m[2]*w[2]<0)f=[p,r,q];for(const x of f){pos.push(x[0],x[1],x[2]);nor.push(...w);uv.push(x[0],-x[2]);}}}});   /* facing into the pocket, mapped as the caps are */
+  const o=new THREE.BufferGeometry();o.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));o.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+  o.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));if(g0!==g)g.dispose();g0.dispose();return o;}
 function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[],S=[];
   for(let i=0;i<p.count;i++){const k=Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);if(!id.has(k)){id.set(k,P.length);P.push(new THREE.Vector3().fromBufferAttribute(p,i));S.push(i);}V.push(id.get(k));}
   const E=new Set(),nx=new Map();for(let t=0;t<n;t+=3){const a=V[ix?ix[t]:t],b=V[ix?ix[t+1]:t+1],c=V[ix?ix[t+2]:t+2];if(a!==b&&b!==c&&c!==a)for(const[u,v]of[[a,b],[b,c],[c,a]])E.add(u+'_'+v);}

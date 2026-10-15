@@ -2772,4 +2772,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The barrel bridge had a round hole at 3 o'clock that is really a pry slot** (the 15 October hole survey read it as "a second hole beside the opening"). 13:04.4 shows a rectangular slot in the underside, 2.1 mm wide from r 35.2 out through the rim; 6:47 and 6:49.0 show the face whole above it, so it is blind (1.0 mm deep, estimated). Now cut by `facePocket` (`S.bbN`), the r 0.9 hole and its holecheck entry gone. Keep a mark at a part's edge checked from both faces and the rim before it is drawn as a hole.

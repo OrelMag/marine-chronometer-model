@@ -490,10 +490,18 @@ function buildMovement(M){
      the pillar screw's hole and the opening over the train bridge's third screw: 0.1-0.6 mm at those; +-1 mm further out, tools/holemap.py), beside those the model had:
      the Navy seal's two screw holes, 17.2 apart through its centre (-6.96, -19.69), at 26.0 and -154.0 deg, the fusee seal's angles (the two seals are one part, fitted
      alike); and six whose use no source gives (bbX: centre, r of the dark disc +-0.15): two just beyond the setup cover's ends (12.8-13.3 from the barrel arbor, nearly
-     opposite; 11:48 shows one past the cover's end, the cover's own screws inside it, their tapped holes blind), one countersunk west of the barrel arbor, one by the
-     opening at 3 o'clock. Through, as all show on the underside. Two more read here then, by that opening and in the far horn, are the bridge's steady pins (S.bbp) seen end on */
+     opposite; 11:48 shows one past the cover's end, the cover's own screws inside it, their tapped holes blind), one countersunk west of the barrel arbor. Through, as these show on
+     the underside. Two more read here then, by the opening at 3 o'clock and in the far horn, are the bridge's steady pins (S.bbp) seen end on, and one beside that opening is a
+     slot open at the rim (S.bbN) */
   S.navySeal=(([a,b])=>{const m=[(a[0]+b[0])/2,(a[1]+b[1])/2],d=unit(sub(b,a));return[add(m,d,-7.8),add(m,d,7.8)];})([[-14.69,-23.47],[0.78,-15.91]]);   /* read 17.2 apart: drawn 7.8 out, the fusee seal's, the same part (+-1 mm out here) */
-  S.bbX=[[-15.30,-16.75,0.8,1],[-27.72,6.19,0.7,1],[-30.24,-2.15,0.55,1],[36.29,2.47,0.9,1]];   /* the 1: their size at the faces (polyGeo) */
+  S.bbX=[[-15.30,-16.75,0.8,1],[-27.72,6.19,0.7,1],[-30.24,-2.15,0.55,1]];   /* the 1: their size at the faces (polyGeo) */
+  S.bbN=(()=>{const a=[35.15,2.465],u=unit([2.80,0.265]),v=[-u[1],u[0]];return[add(a,v,-1.06),add(add(a,u,8),v,-1.06),add(add(a,u,8),v,1.06),add(a,v,1.06)];})();const BB_PK=1.0;   /* the pry slot in the
+     barrel bridge's underside at 3 o'clock, open at the rim (facePocket): KLUwI2UUCMQ 13:04.4 (the bridge upside down, face-on; tools/anchors/KLUwI2UUCMQ_13-04.4.json, a
+     homography on nine of its holes, 0.01-0.86 mm), its corners (37.92, 3.75), (35.04, 3.56), (35.26, 1.37), (37.98, 1.71): 2.04-2.20 wide (2.12 drawn), its inner end at
+     r 35.2, its sides along 3.8 and 7.1 deg (5.4 drawn, the radius there 4.0); its outer corners read where the rim's own edge does through that fit (r 38.1-38.5 beside it,
+     the fit extrapolated past its last hole), so it runs out through the rim, as 13:00.5 and 13:03.8 show it, drawn 8 mm long to clear it. Blind: from above the face is
+     whole to the rim (6:47, 6:49.0, 12:58.75), and its inside shows a floor, not the mat. Its depth, 1.0, is estimated: 12:59.0 sees its mouth in the rim's side, blurred,
+     about half as tall as it is wide. Until 15 October 2026 a round hole r 0.9 through the bridge at (36.29, 2.47), read off 13:04.4 by eye */
   S.seal=[26.8,-154.9].map(a=>[L.Fu[0]+7.8*Math.cos(a*D2R),L.Fu[1]+7.8*Math.sin(a*D2R)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
@@ -747,7 +755,7 @@ function buildMovement(M){
   const BB_CUT=[2.03,9.96,20.06];
   const BBpoly=clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
-  R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),M.plate,0,BB_T,0);hn(bb,'42061');
+  R.barrelBridge=mesh(bb,facePocket(polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),'top',S.bbN,BB_PK),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
   /* barrel bridge pillar screw (42055) into the barrel pillar; two barrel bridge screws into the train bridge: one beside the third train pillar's screw (where the third pillar stood before it went under that screw), one in the far horn
      (proud of the bridge in the top-view photograph; gone with the bridge off, BunnSpecial 12:05) */
@@ -1461,7 +1469,7 @@ function buildMovement(M){
        (pushed out from there, Op. 32; KLUwI2UUCMQ 13:04.4: two holes within 1.5 mm of here, a pin's end in one); stopping on the bridge's top until 15 October 2026 */
     /* the barrel bridge's last build: its holes through, the pins' holes, the winding stop's tapped hole blind from the underside (2.0, its thread) and the cover's
        screws' blind from the top (2.2, their threads: nothing under them on 13:04.4) */
-    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25);}
+    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=facePocket(blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25),'top',S.bbN,BB_PK);}
   const nBefore=rt.children.length;
   { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
        centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the
