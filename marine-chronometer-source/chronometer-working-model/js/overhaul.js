@@ -20,7 +20,7 @@ const OVH=(()=>{
     107:'rat-tail file',108:'mainspring grease syringe',110:'hand setting tool'};
   /* what a part rides on until its own operation moves it: an id, a part ('@name') or 0 (the movement, where its own group would carry it off) */
   const HOST={'42015':'42021','42009':'42021','42016':'42015','@sq':'42021','42001':'42021','42038':'42168','42037':'42168','42170':'42168',
-    '42028':'@barrelBridge','42036':'@barrelBridge','@lowerBridge':'@trainBridge','@tblock':'@lowerBridge','@lockArm':'@trainBridge'};
+    '42028':'@barrelBridge','42036':'@barrelBridge','42052':'@barrelBridge','42053':'@barrelBridge','@lowerBridge':'@trainBridge','@tblock':'@lowerBridge','@lockArm':'@trainBridge'};
   /* sd, the side up: t the train side, d the dial side, c the movement in its case, b in its box. out, in: what comes off, goes on; ls: loosened only; oi: the points
      oiled or greased (o: red oil, argon oil, grease); fc: what to look at when nothing moves; a: blk1 or blk0, the train-blocking screw down or up, wind, wind it */
   const DIS=[
@@ -204,9 +204,10 @@ const OVH=(()=>{
   /* where a piece comes off other than the way the side facing up and the Exploded view send it: mm from what carries it along the movement's y (+ toward the dial
      side). The winding stop unscrews from the barrel bridge's underside (KLUwI2UUCMQ 12:58-13:04); the barrel's cap is on its dial side, and the arbor (its
      core wider than the barrel's end holes), the mainspring and its brace come out that way once it is off (Ops. 35-37; KLUwI2UUCMQ 15:16-17:04), and the cap's
-     screws' heads are on that side (further out than the cap, which they go on with); the seal ring and its spring come out of the dust seal's underside, the balance lower endstone cap off the lower bridge's.
+     screws' heads are on that side (further out than the cap, which they go on with); the balance lower endstone cap comes out of the lower bridge's underside. The winding ratchet wheel, screwed to the fusee's large end, comes off the arbor's lower end once the stack under it is off, over the collar's step, the
+     shoulder and the pinion (Op. 43; Fig. 28), 16 mm, past the pinion, and its two screws (42014), whose heads are on that side, ahead of it. The seal ring and its spring, built in the dust seal's group (they rise with it in the Exploded view), stand on the barrel bridge (KLUwI2UUCMQ 12:34-12:38.5), so it carries them here.
      The fusee goes well clear (90 mm), so what comes off it on the bench (Ops. 39-45) lands above the movement, not in the upper train bridge still on it */
-  const UP={'42099':6,'42169':6,'42170':8,'42038':8,'42037':8,'37023':8,'42052':6,'42053':6,'42159.bl':4,'J.ble':4,'42021':-90};
+  const UP={'42013':16,'42014':20,'42099':6,'42169':6,'42170':8,'42038':8,'42037':8,'37023':8,'42159.bl':4,'J.ble':4,'42021':-90};
   function setup(){if(MV.length)return;const mv=A.mv,ids=new Set(Object.keys(HOST));for(const q of[DIS,RE])for(const s of q)for(const k of['out','in','ls'])for(const id of s[k]||[])ids.add(id);
     for(const id of ids)for(const o of find(id)){if(!MVS.has(o)){MV.push(o);MVS.add(o);}o.userData.ovId=id;}
     EX=new Set([...Object.values(mv.userData.parts),...mv.userData.lifted]);

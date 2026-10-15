@@ -26,6 +26,8 @@ LOOSE=model.cfg('LOOSE',[('barrelBridge:Cylinder',(4.0,-18.51,-19.9),1.15,"the w
  ('det:Cylinder',(1.5,-22.11,25.02),0.53,"the block's other positioning pin, the same"),
  ('det:Cylinder',(-5.53,-18.31,34.74),0.22,"a steady pin across the detent's foot, standing out of it"),
  ('det:Cylinder',(-3.32,-18.31,27.47),0.22,"the foot's other steady pin, the same"),
+ ('ratchet:Cylinder',(-21.58,-23.51,4.05),0.25,"a steady pin of the setup pawl spring, through the barrel bridge, its end flush with the bridge's underside, over the barrel (pushed out from there, Op. 32)"),
+ ('ratchet:Cylinder',(-22.97,-23.51,3.15),0.25,"the spring's other steady pin, the same"),
  ('bal:Cylinder',None,0.25,"a vernier timing weight's screw, its free end past the nut"),
  ('bal:Cylinder',None,0.25,"the other vernier weight's screw")])
 # with the Navy's balance brake fitted (the page's default; --eval "__mv.userData.stop('arm')" fits the manual's arm instead), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked
