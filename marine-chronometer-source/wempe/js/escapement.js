@@ -1,7 +1,8 @@
 // @ts-check
 /* escapement.js: the Wempe Einheits-Chronometer's balance and spring detent escapement (drawing groups 05 03 and 05 04), built from the sheets as last revised
    (References/wempe/transcriptions/05-03-05-04-balance-escapement.md, checked on the sheets themselves, cropped and enlarged where a number mattered). Part of the Wempe
-   model (three.js r128). Declares only WESC: WESC.ESC, the escapement's motion (kinematic: physics comes later), and WESC.build(mv, M, K), which adds the parts to the
+   model (three.js r128). Declares only WESC: WESC.ESC, the escapement's motion (makeEsc's, solved in time, once js/escphys.js has called WESC.adapt; the layout's
+   kinematic motion ESC.layout), and WESC.build(mv, M, K), which adds the parts to the
    movement group and returns update(s) for movement.js.
    The layout is 05 04_1 (Hemmung für Feder-Chronometer, 10:1): the balance at hole 23 and the escape wheel at hole 26 of the plates' tables, 10.00 apart (the tables give
    10.000: sure); the locking stone 7.2 from the wheel's centre (scaled), 36.5 deg on from the line of centres in the wheel's turn (scaled on the sheet, 24.4 px/mm; it is the
@@ -77,8 +78,10 @@ const WESC=(()=>{
   {const slip=()=>{let last=null;for(let th=-40;th<=40;th+=0.005)if(unlockAt(th)>0)last=th;return last;};BETA=al(sub(D(GT,GN),B));const s0=slip();if(s0===null)console.error('WESC: the discharge stone misses the gold spring');else BETA-=s0;}
   const TH_REL=(()=>{for(let th=-40;th<=40;th+=0.005)if(unlockAt(th)*TP>=DEPTH+0.01)return th;return 0;})(),PHI_REL=TH_REL+PHI0;   /* the locked tooth is free */
   const A0=225*D2R,AMIN=(PHI_E-PHI0+RUN+1)*D2R;   /* the swing the drawing takes by default: 225 deg each side until js/escphys.js sets ESC.A to the swing the measured drive keeps (no Wempe sheet gives it; README, Physics) */
+  /* the layout's own motion (kinematic, timed from 05 04_1: the tooth on the impulse stone at once, PHI_C), the page's until 15 October 2026; since then ESC.layout, the
+     page moving as makeEsc solves it (adapt, below) */
   /** @param {number} p @param {number} [amp] @returns {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean,p:number}} */
-  function state(p,amp=ESC.A){
+  function state(p,amp=ESC.layout.A){
     const q=p-Math.floor(p),th=-amp*Math.cos(TAU*q),ccw=q<0.5,thd=th/D2R,f=thd+PHI0;let lift=0,psDef=0,prog=0,drop=false,run=false;
     if(amp<AMIN)return{th,ccw,lift:0,psDef:ccw?0:passAt(thd),prog:ccw?0:1,drop,run,p};
     if(ccw){
@@ -92,7 +95,8 @@ const WESC=(()=>{
   /* holes in the frame's parts for this group's screws and pins (frame.js cuts them): the detent block's two steady pins in the top plate's inner face (not in its table:
      drilled at assembly), the stud's screw in the upper cock (not on its sheet) */
   const VO=brg(75),AX=brg(345),STUD=(u,v)=>add(add(B,AX,u),VO,v),BLK_NE=-0.30,HOLES={blockPins:[D(ROW-2,BLK_NE-2.3),D(ROW+2,BLK_NE-12.3)],studScrew:STUD(5.0,4.35)};
-  const ESC={A:A0,AMIN,state,PHI0,PHI_REL,PHI_C,PHI_E,PROG_C,PROG_E,RD,BETA:()=>BETA,TP,LOCK:DEPTH};
+  /** @type {any} */
+  const ESC={A:A0,AMIN,state,PHI0,PHI_REL,PHI_C,PHI_E,PROG_C,PROG_E,RD,BETA:()=>BETA,TP,LOCK:DEPTH,layout:{A:A0,AMIN,state},at:null,beat:null,E:null};
   /* the hairspring's strip and coil (05 03_6, 05 03_7: below, where it is built): the terminal curves' radii to the strip's inside every 10 deg from where each leaves the coil,
      pinned at 220 deg; the strip 0.285 thick (radial: the coil bends it in that direction) and 0.52 high; the coil's middle radius RC; TURNS of helix between the curves;
      the outer curve drawn in proportion to end at the stud (kU); each end runs on past its pinning point into the collet's hole and the stud's slot (TE_L, TE_U, deg) */
@@ -146,6 +150,64 @@ const WESC=(()=>{
   /* makeEsc's lift (the gold spring tip's travel, units of ES) as this file's detent turn (rad, rotation.y about TP): makeEsc turns the detent by -lift/LEN about its flexure,
      clockwise in its frame, anticlockwise seen from the dial (tools/wempe_escapement.js checks the stone's place both ways) */
   const toKin=(l,LEN)=>l/LEN;
+  /* ================= the escapement as solved: the page's motion (since 15 October 2026) ================= */
+  /* adapt(E): js/escphys.js hands over makeEsc built with SET (WPHYS.ESC) and ESC.state becomes its state, at the live swing amp and drive s (the escape wheel's torque times
+     the reference's), as the Hamilton's app.js drives its own; ESC.A and ESC.AMIN become its. Returned in this file's terms, so update() and the tools take it as before:
+     lift, the detent's turn about TP (toKin), and psDef, the gold spring's about its bending point (makeEsc's tip travel over its free length PSL), both rad; prog, makeEsc's
+     (the wheel let go from rest chasing the impulse stone, the strike, the drive, the run on to the next lock; a little under 0 while the stone's lift draws the locked tooth
+     back); ride, the locking stone fallen back onto the tooth it let go (the detent higher than its own fall); mk, makeEsc's own state.
+     The balance's angle: makeEsc keeps the phase a sine of the swing; here it is the motion the solved work gives it through the beat (beat): each push (makeEsc's pushes:
+     the strike and the drive, the stone's draw, the detent's springs and blows, the gold spring's bend on the return) changes the balance's energy where it acts, the air's and
+     pivots' loss (TF) spread as a viscous one, scaled so the beat closes on itself (the swing kept), and the swing at the far turn after the impulse is amp. Between pushes
+     it swings as the hairspring alone would. Each state is makeEsc's at the balance's angle (the sine's phase that gives that angle on that swing), so the escapement's
+     parts stand exactly where makeEsc puts them for the balance as drawn; the chase's and the detent's fall's time is counted on that sine (README, Physics: the page's
+     motion, for how far the two differ). Below makeEsc's AMIN, or with no drive (the train held: run down, or a swing too small to see the impulse through), the wheel stays
+     locked: the balance a sine, the detent lifted by the discharge stone (and falling as makeEsc's), the locked tooth drawn back by the stone's lift (prog under 0), the gold
+     spring bent on the return */
+  /* the swing as the page draws it, to AQ (0.011 deg), and the drive to 0.001: a new beat costs about 7 ms (makeEsc's chase and impulse at that swing and drive, then
+     the beat), so the page doesn't work one out each frame while the swing relaxes */
+  const AQ=2e-4,qa=(/** @type {number} */a)=>Math.round(a/AQ)*AQ;
+  const adapt=(/** @type {any} */E)=>{const T=E.T,W0=TAU/T,TF=E.settings.TF,PSL=E.settings.PSL,N=720,dph=TAU/N,dt=dph/W0,BM=new Map();
+    const tab=(L,th)=>{const f=(th-E.TH0)/E.DT,i=Math.floor(f);return i<0||i>=L.length-1?0:L[i]+(L[i+1]-L[i])*(f-i);};
+    /* the detent alone, as makeEsc's detLift: carried by the discharge stone until it leaves it (depart), then its fall back to the banking */
+    const detL=(q,th,a)=>{const l=tab(E.LI,th),f=E.depart(a);if(!f||q<=f.p)return l;return Math.max(th<E.thOff?l:0,E.fallD(f.d0,f.v0,(q-f.p)*T)*E.LEN);};
+    /* one oscillation from the turn at -√u0, φ in steps dph (dt of time), θ = -√u cos φ: each push as θ passes it (G on the active swing, θ rising; Rt on the return), the
+       damping lam times the free run-down's, du = -lam 4/TF (u - θ²) dt (a sine's mean -2u/TF); after each step φ turned to keep θ on the new u */
+    const run=(u0,lam,G,Rt)=>{const th=new Float64Array(N+3);let u=u0,ph=0,k=0,gi=0,ri=0,tT=0,tE=0,A2=0,W2=0,Dm=0;th[0]=-Math.sqrt(u0);   /* W2, Dm: the pushes' and the damping's (lam 1) sums in u */
+      for(;k<=N+1;k++){const ph1=ph+dph;if(ph<Math.PI&&ph1>=Math.PI){tT=(k+(Math.PI-ph)/dph)*dt;A2=Math.sqrt(u);}
+        if(ph1>=TAU){th[k+1]=-Math.sqrt(u);tE=(k+(TAU-ph)/dph)*dt;break;}
+        const t1=-Math.sqrt(u)*Math.cos(ph1),act=ph1<Math.PI;let e=0;
+        if(act)while(gi<G.length&&G[gi][0]<=t1)e+=G[gi++][1];else while(ri<Rt.length&&Rt[ri][0]>=t1)e+=Rt[ri++][1];
+        const dm=4/TF*(u-t1*t1)*dt,un=Math.max(1e-9,u+2*e-lam*dm),c=clamp(-t1/Math.sqrt(un),-1,1);W2+=2*e;Dm+=dm;
+        ph=act?Math.acos(c):TAU-Math.acos(c);u=un;th[k+1]=-Math.sqrt(u)*Math.cos(ph);}
+      return{th,n:k+1,tT,tE,A2,uEnd:u,lam,u0,W2,Dm};};
+    /* the beat at swing a and drive s: the pushes at that swing, the damping that closes it (lam: the pushes' sum over the damping's, from a first pass at lam 1), its start
+       set so the far turn is a; then the beat itself */
+    const beat=(a,s)=>{const key=a+'|'+s;let b=BM.get(key);if(b!==undefined)return b;b=null;const pu=E.pushes(a,s);
+      if(pu){const G=pu.gain.concat(pu.loss.map(([m,e])=>[m,-e])).sort((x,y)=>x[0]-y[0]),Rt=pu.ret.map(([m,e])=>[m,-e]).sort((x,y)=>y[0]-x[0]);let u0=a*a;
+        for(let it=0,lam=1;it<4;it++){b=run(u0,lam,G,Rt);if(it<3){lam=b.W2>0&&b.Dm>0?b.W2/b.Dm:0;u0*=(a/b.A2)**2;}}}
+      if(BM.size>64)BM.clear();BM.set(key,b);return b;};
+    /* the balance's angle at phase q (0 to 1 of the beat's time) and whether on the active swing */
+    const thAt=(b,q)=>{const tq=q*b.tE;let i=Math.floor(tq/dt),f;if(i>=b.n-1){i=b.n-1;f=(tq-i*dt)/Math.max(1e-12,b.tE-i*dt);}else f=tq/dt-i;return{th:b.th[i]+(b.th[i+1]-b.th[i])*f,ccw:tq<b.tT};};
+    /* makeEsc's state z as drawn: the wheel stands D0 behind makeEsc's (the locked tooth 0.01 short of the stone's flat, as built), so a stone riding the escaping tooth is
+       lifted over the tooth where it is drawn (makeEsc's ride at the progress less D0's share of a pitch); and each contact makeEsc solves exactly is drawn GAP apart, as the
+       layout kept them (0.01 at the gold spring's tip: the discharge stone carrying it or bending it on the return, the locking stone on the tooth), for the tools. The gold
+       spring's bend: makeEsc moves its strip bodily across (PS, the tip's travel), the drawing turns it about its bending point, PSL from the tip; the stone, reaching 0.02
+       past the tip (RD 1.560 against 1.54), meets it at its square end, so the two agree there */
+    const GAP=0.01/E.ES,DP=D0/24;
+    const conv=(z,q,a)=>{const dl=z.ccw?detL(q,z.th,a):0,l0=z.ccw?tab(E.LI,z.th):0,rd=z.ccw&&z.prog>0&&z.prog<1?E.ride(z.prog-DP):0,ride=rd>0&&rd>=dl,
+        lift=Math.max(dl>0?dl+(l0>0&&dl<=l0+1e-12?GAP:0):0,ride?rd+GAP:0);
+      return{th:z.th,ccw:z.ccw,lift:toKin(lift,E.LEN),psDef:z.psDef>0?(z.psDef+GAP)/PSL:0,prog:z.prog,drop:z.drop,run:z.run,ride,p:q,mk:z};};
+    const held=(q,a)=>{const th=-a*Math.cos(TAU*q),ccw=q<0.5,pass=E.thPass!==null&&a>=-E.thPass,lift=ccw&&pass?detL(q,th,a):0;
+      return conv({th,ccw,lift,psDef:ccw&&pass?0:tab(E.PS,th),prog:ccw?(lift>0?-E.recoil(lift)/E.P:0):1,drop:false,run:false},q,a);};
+    /* the state at the balance's angle th on the active swing (ccw) or the return, swing a, drive s (the essay's plan sets the balance's angle) */
+    const at=(th,ccw,a=ESC.A,s=1)=>{const c=Math.acos(clamp(-th/a,-1,1))/TAU,ps=ccw?Math.min(c,0.5-1e-9):1-c,z=E.state(ps,a,s);return conv(z,ps,a);};
+    /** @param {number} p the phase, 0 to 1 @param {number} [amp] the swing (rad) @param {number} [s] the drive, times the reference's */
+    function st(p,amp=ESC.A,s=1){const q=p-Math.floor(p),a=qa(amp),sd=Math.round(s*1e3)/1e3;
+      if(!(a>=E.AMIN)||!(sd>0))return held(q,a);
+      const b=beat(a,sd);if(!b)return conv(E.state(q,a,sd),q,a);
+      const g=thAt(b,q),r=at(g.th,g.ccw,a,sd);r.p=q;return r;}
+    Object.assign(ESC,{A:E.A,AMIN:E.AMIN,GAP:GAP*E.ES,AQ,qa,state:st,at,beat:(a=ESC.A,s=1)=>beat(qa(a),Math.round(s*1e3)/1e3),thAt,E});return ESC;};
 
   /* ================= heights ================= */
   const FY=-22.8;   /* the balance's seat (the hub's flange top, 05 04 02), above */
@@ -285,11 +347,14 @@ const WESC=(()=>{
       tag(mesh(rol,solidGeo([{loop:[RF(1.55,0),RF(3.35,0),RF(3.2,0.5),RF(1.55,0.5)],y0:Y.ir0-0.05,y1:Y.ir1+0.05}]),M.ruby),'050403-2');R.impFace=af;}
     /* The discharge roller (Auslöserolle 05 04 04-1; no sheet in the set): a small steel collar on the staff's Ø 1.2 seat, drawn dashed on 05 04_1 as an oblong 2.77 × 2.15
        about the staff, and the discharge stone (Auslösestein 05 04 04-2) 1.7 wide along the staff (05 04_1: sure) at its end, 0.4 across (scaled), reaching RD from the staff
-       (above). Its thickness 1.6, as 05 04_1 draws it. Its turn: the stone leaves the gold spring with the balance at rest */
+       (above). Its thickness 1.6, as 05 04_1 draws it. Its turn: the stone leaves the gold spring with the balance at rest. Its end bevelled back DS from the acting corner
+       (full reach, the side toward the gold spring's tip) to the other, as the layout's corners and makeEsc's BEV take it (until 15 October 2026 drawn square). Measured
+       again on 05 04_1 (24.4 px/mm, the dashed outline at (180-198, 453-463) px): the acting corner at the gold spring's tip, the other corner 4-5 px back, 0.15-0.2,
+       the stone 8 px across (0.33); ±3 px, the faint dashes and the "1°" figures beside the lower corner: DS's 0.3 is kept (README, Estimated) */
     {const b=BETA,u=dir(b),pp=[u[1],-u[0]],L=(e,w)=>add(add([0,0],u,e),pp,w),rf=Math.sqrt(RD*RD-DSW*DSW/4);
       const body=stadiumPts(L(-0.255,0),L(0.355,0),2.15),slot=[L(0.85,-DSW/2-0.003),L(2.0,-DSW/2-0.003),L(2.0,DSW/2+0.003),L(0.85,DSW/2+0.003)],outl=bool(body,slot).dAB[0];
       tag(mesh(rol,solidGeo([{loop:outl,y0:Y.dr0,y1:Y.dr1,F:[{p:C([0,0],0.6+0.0015,48),a:Y.dr0,b:Y.dr1}]}]),M.steel),'050404-1');
-      tag(mesh(rol,solidGeo([{loop:[L(0.9,-DSW/2),L(rf,-DSW/2),L(rf,DSW/2),L(0.9,DSW/2)],y0:Y.dr0+0.05,y1:Y.dr1+0.15}]),M.ruby),'050404-2');}
+      tag(mesh(rol,solidGeo([{loop:[L(0.9,-DSW/2),L(rf,-DSW/2),L(rf-DS,DSW/2),L(0.9,DSW/2)],y0:Y.dr0+0.05,y1:Y.dr1+0.15}]),M.ruby),'050404-2');}
 
     /* ================= the escape wheel (Gangrad 05 04 05-1, its pinion Gangtrieb 05 04 05-2, collet Gangradbutzen 05 04 05-3) ================= */
     /* The wheel (05 04_23, 02 04 08a, 20.1.42: Messingblech 1,6 Ms 63 federhart; 05 04_7.2, 19.7.43): 15 teeth (05 04_7.1 "z = 15"; 05 04_1's drawn teeth 24 deg apart), tips
@@ -437,5 +502,5 @@ const WESC=(()=>{
       detM.rotation.y=(s.lift||0);R.gold.rotation.y=-(s.psDef||0);
       if(th!==lastTw){R.spring.geometry=ribbonGeo(spPath(-th),HB,HT,R.spring.geometry);lastTw=th;}};
     return{update,R};}
-  return{build,ESC,W,B,P,FY,Y,HOLES,SET,toKin,MK,HSL,HSP,TP,DPIV:D(TP,0)};
+  return{build,ESC,W,B,P,FY,Y,HOLES,SET,toKin,adapt,MK,HSL,HSP,TP,DPIV:D(TP,0)};
 })();

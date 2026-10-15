@@ -322,8 +322,8 @@ const ESSAY=(()=>{
         [fig2('E',r.E,L.E,3,false),fig2('R',r.R,L.R),fig2('D',r.D,L.D,2,false),fig2('C',r.C,L.C,3),fig2('S',r.S,L.S),fig2('mean',r.w,L.w,2,false),fig2('N',r.N,L.N,1,false)].join(' · ');};});
 
   /* ---------- the escapement in plan, from the model's own parts: each piece's solid flattened onto the plan in the frame of what moves it (the wheel, the rollers, the
-     detent about its spring's middle, the gold spring about its bending point; the block and the detent's foot stand), and moved as the model moves them (WESC.ESC.state,
-     the layout's motion, at the model's swing). Seen as 05 04_1 draws it, from above through the top plate: the sheet's O to the right (-x), N up (-z) ---------- */
+     detent about its spring's middle, the gold spring about its bending point; the block and the detent's foot stand), and moved as the model moves them (WESC.ESC.at:
+     makeEsc's solved state at the balance's angle, at the model's swing and the reference's drive). Seen as 05 04_1 draws it, from above through the top plate: the sheet's O to the right (-x), N up (-z) ---------- */
   fig('eEsc',f=>{const st=f.el,P=figOf(st),C=c2d(st,f,w=>w<520?0.95:0.6),ro=q('.e-ro',P),m=K.model(),RE=m.mv.userData.R.esc,PT=m.mv.userData.parts,MM=m.M,KE=WESC.ESC,inp=q('input[type=range]',P);
     const rel=(o,top)=>{const r=new THREE.Matrix4();for(let p=o;p&&p!==top;p=p.parent){p.updateMatrix();r.premultiply(p.matrix);}return r;};
     const colOf=o=>{const mt=o.userData.mat0||o.material;return mt===MM.ruby?'ruby':mt===MM.gilt?'gilt':mt===MM.brass||mt===MM.brass2?'brass':mt===MM.copper?'copper':mt===MM.blued?'blued':'steel';};
@@ -342,16 +342,15 @@ const ESSAY=(()=>{
     /* the view: the wheel, the rollers and the detent to its foot */
     const W=WESC.W,B=WESC.B,S=WESC.P,F=WESC.DPIV,bx=[Math.min(W[0]-7.5,B[0]-3.6,S[0],F[0])-1,Math.max(W[0]+7.5,B[0]+3.6,S[0],F[0])+1,Math.min(W[1]-7.5,B[1]-3.6,S[1],F[1])-1,Math.max(W[1]+7.5,B[1]+3.6,S[1],F[1])+1];
     let dir=1,th=-4,going=false,E0=0,lastP=0;const AMP=()=>{const mo=K.model(),a=mo&&mo.amp?mo.amp():0;return a>KE.AMIN?a:WPHYS.ESC.A;};
-    const pOf=t=>{const a=AMP(),c=clamp(-t*D/a,-1,1),u=Math.acos(c)/TAU;return dir?u:1-u;};   /* the phase of the period at the balance's angle t (deg) on this swing */
     const bs=qa('.seg button',P);seg(q('.seg',P),v=>{dir=+v;f.dirty=true;});const up=()=>bs.forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===dir)));
     const setTh=range(inp,v=>{th=v;f.dirty=true;return sgn(v,1)+'°';});
     const upB=play(q('.play',P),()=>going,v=>{going=v;});inp.addEventListener('pointerdown',()=>{going=false;upB();});
     const RU={steel:PAL.steel,gilt:PAL.brass,brass:PAL.brass,copper:PAL.copper,blued:PAL.blue,ruby:'#c3163b'};
     const TXT=s=>!s.ccw?(s.psDef>1e-4?'Return swing: the discharge stone bends the gold spring aside; the detent stays on its banking, the wheel locked.':'Return swing: the wheel locked, the balance swinging free.'):
       s.prog<=0?(s.lift>1e-4?'Unlocking: the discharge stone pushes the gold spring, and the detent with it, until the locking stone lets the tooth go.':'The wheel locked, the balance swinging free.'):
-      s.drop?'Let go: the wheel turns toward the impulse stone.':s.run?'The impulse over: the next tooth runs on to the locking stone.':s.prog<1?'Impulse: a tooth drives the balance through the impulse stone.':'The wheel locked on the next tooth.';
+      s.ride?'Let go: the wheel, from rest, turns toward the impulse stone; the detent, flung off the discharge stone, has fallen back onto the tooth it let go and rides it.':s.drop?'Let go: the wheel turns toward the impulse stone, chasing it.':s.run?'The impulse over: the next tooth runs on to the locking stone.':s.prog<1?'Impulse: a tooth drives the balance through the impulse stone.':'The wheel locked on the next tooth.';
     return dt=>{if(going){th+=(dir?1:-1)*dt*12;if(th>50){th=50;dir=0;up();}else if(th<-30){th=-30;dir=1;up();E0++;}inp.value=String(th);setTh();}
-      if(!f.dirty)return;f.dirty=false;const{x,w,h}=C,s=KE.state(pOf(th),AMP()),E=E0+(dir?Math.max(0,s.prog):1),narrow=w<520;
+      if(!f.dirty)return;f.dirty=false;const{x,w,h}=C,s=KE.at(th*D,!!dir,AMP()),E=E0+(dir?Math.max(0,s.prog):1),narrow=w<520;
       const k=Math.min(w/(bx[1]-bx[0]),h/(bx[3]-bx[2])),ox=(bx[0]+bx[1])/2,oz=(bx[2]+bx[3])/2,d=Math.min(devicePixelRatio||1,2);
       x.clearRect(0,0,w,h);x.save();x.translate(w/2,h/2);x.scale(-k,k);x.translate(-ox,-oz);
       const rot=a=>x.transform(Math.cos(a),-Math.sin(a),Math.sin(a),Math.cos(a),0,0),at2=(p,a)=>{x.translate(p.x,p.z);rot(a);};

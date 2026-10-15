@@ -12,12 +12,16 @@ FLOAT=[('ring:Lathe',(15.22,0,-41.82),3.1,_RS),('ring:Lathe',(-43.82,0,7.73),3.1
 # movement's at rest), the lid shut as the movement's views have it
 FLOAT_BOX=[('closingPlate:Lathe',(0,-55.15,0),3.6,"the closing plate's screw (WN-71, 05 01 00-2): its head bears on the counterbore's floor round the plate's Ø 5.5 hole, beyond 0.6 of its radius"),
   ('lid:Lathe',(0,18.35,96.5),4.5,"the latch tongue's pivot screw (P. 51 00 02-2): its head bears round the tongue's Ø 6.2 hole, beyond 0.6 of its radius")]
-# fine.py: the states checked (balance phase, escape teeth, fusee turns from full wind, winding): the escapement's phases (js/escapement.js, a 225 deg swing): unlocking
-# 0.2415-0.25 (the tooth free at 0.2479), the wheel's drop to 0.2521, the impulse to 0.2822 and the run on to the lock to 0.284; the return swing's pass of the gold spring
-# 0.755-0.761; then the train at 97 teeth apart (the centre wheel 1.2 teeth on each time, so its meshes are seen at many phases), with the fusee across its wind: fully
-# wound (n 0) running and with the key on, the stop bar's travel (the chain coming onto its end about 0.17 turn before full wind), mid-wind running and winding, near and
-# at run down (N_RUN 8.78)
-PH=[0.0,0.2415,0.244,0.246,0.2479,0.249,0.25,0.2505,0.251,0.2521,0.255,0.26,0.265,0.27,0.275,0.28,0.2822,0.283,0.285,0.3,0.4,0.5,0.6,0.75,0.755,0.758,0.761,0.765,0.9]
+# fine.py: the states checked (balance phase, escape teeth, fusee turns from full wind, winding): the escapement's phases as makeEsc solves them (js/escapement.js's
+# ESC.state, at the reference's swing, 207 deg, and drive): the discharge stone meets the gold spring 0.2406 (-12.3 deg), unlocking to the release 0.2482 (-2.4 deg); the
+# detent flung off the stone's corner 0.2487 (-1.8 deg), falling back onto the tooth it let go 0.2507 (0.8 deg) and riding it, the escaping tooth's tip passing under the stone,
+# to its banking 0.2578 (10.0 deg), the impulse stone in the teeth's path from 0.2518; the wheel's chase from rest to its strike on the impulse stone 0.2606 (13.7 deg), the
+# drive to 0.2856 (45.8 deg), the run on to the next lock 0.2883 (49.2 deg); the far turn 0.5; the return swing's pass of the gold spring 0.7546-0.7637 (-5.9 to -17.6 deg);
+# then the train at 97 teeth apart (the centre wheel 1.2 teeth on each time, so its meshes are seen at many phases), with the fusee across its wind: fully wound (n 0) running
+# and with the key on, the stop bar's travel (the chain coming onto its end about 0.17 turn before full wind), mid-wind running and winding, near and at run down (N_RUN 8.78).
+# Until 15 October 2026 the layout's kinematic phases (the tooth on the impulse stone at once)
+PH=[0.0,0.2406,0.243,0.246,0.2475,0.2482,0.2485,0.2487,0.249,0.2495,0.25,0.2507,0.251,0.2515,0.2518,0.252,0.253,0.254,0.255,0.256,0.257,0.2578,0.259,0.26,0.2606,0.2608,
+  0.261,0.262,0.265,0.27,0.275,0.28,0.284,0.2856,0.2865,0.2875,0.2883,0.29,0.3,0.4,0.5,0.6,0.75,0.7546,0.756,0.758,0.76,0.762,0.7637,0.765,0.9]
 STATES=[(ph,0,2.5,False) for ph in PH]+[(0.0,97*k,n,w) for k,(n,w) in enumerate([(2.5,False),(0,False),(0,True),(0.05,False),(0.12,False),(0.17,True),(0.3,False),(1.2,True),(3.1,False),(4.4,True),
   (5.7,False),(7.0,False),(8.2,False),(8.7,False),(8.78,False),(6.3,True),(2.0,False)])]
 EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) and its two steady pins, across into the block's end (05 04 01-4, 1436): a block of vertical walls drawn without holes across",1.9,1.1),
