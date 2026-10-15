@@ -29,7 +29,7 @@ from inline import inline,remote_refs
 import changelog
 MODEL=ROOT/'marine-chronometer-source/chronometer-working-model'
 WEMPE=ROOT/'marine-chronometer-source/wempe'   # the second model (its own build.py writes its dist/)
-WE_HAM='href="../../chronometer-working-model/dist/chronometer-working-model.html"'   # the Wempe's built page's link to the Hamilton (its build.py), pointed at the site's home page in site/wempe/
+WE_HAM='href="../../chronometer-working-model/dist/chronometer-working-model.html'   # the Wempe's built page's links to the Hamilton (its build.py), pointed at the site's home page in site/wempe/: a prefix, so a link into the Hamilton's essay (…html#essay=detent) keeps its hash
 HAM_WE='href="../../wempe/dist/wempe-einheitschronometer.html"'   # the Hamilton's built page's link to the Wempe (its build.py): from the root copy to the Wempe's built page, on the site to /wempe/
 SITE=ROOT/'site'
 MANUAL='navships-250-624-1948.pdf'   # the page links to it by this name, beside itself
@@ -99,7 +99,7 @@ def main():
     if SITE.exists():shutil.rmtree(SITE)
     SITE.mkdir()
     write(SITE/'index.html',meta(model.replace(HAM_WE,'href="wempe/"'),a.site_url,'index.html',keep=a.keep_html))
-    (SITE/'wempe').mkdir();write(SITE/'wempe/index.html',meta(wempe.replace(WE_HAM,'href="../"'),a.site_url,'wempe/index.html',keep=a.keep_html))
+    (SITE/'wempe').mkdir();write(SITE/'wempe/index.html',meta(wempe.replace(WE_HAM,'href="../'),a.site_url,'wempe/index.html',keep=a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)

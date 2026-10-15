@@ -21,21 +21,24 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
     39:NO(-32.043,-18.50),40:NO(-26.163,-26.163),41:NO(-24.01,-30.732),42:NO(-18.50,-32.043),43:NO(-5.251,-22.464),44:NO(-3.081,-25.21),45:NO(6.0,-24.784),
     46:NO(17.046,-29.474),47:NO(31.551,-22.924),48:NO(32.668,-17.370),49:NO(36.437,-6.425),50:NO(25.233,-6.083),51:NO(-7.537,23.386),52:NO(-24.094,20.836),53:NO(-37.0,15.0)};
   /* 53 (Stift f. Wendelfeder) is O 15.0 on the detent plate's table (05 08_1a) and O 13.0 on the lever plate's (05 08_30): the detent plate's, both read clearly */
+  /* the pillars' fits as the sheets give them, [nominal, lower, upper limit] (mm): the spigots Ø 4.5 f7 (05 08 00-1: -0.010/-0.022, ISO 286's f7 at 4.5) and the plates' holes reamed
+     4.50 +0.012 (05 09 01, 05 08 02-1, nos. 11, 39, 49); the model draws each at the middle of its limits (sr, PIL_HOLE) */
+  const PSF=[4.5,-0.022,-0.010],PHF=[4.5,0,0.012],mid=(/** @type {number[]} */f)=>f[0]+(f[1]+f[2])/2;
   return{H,NO,
     PLATE_R:84.989/2,   // the plates' radius: 05 09 01 "Fertigmaß 3,35 × 85∅ h6", 05 08 02-1 "fertig 85∅ h6", sheet 001 "Platten∅ 85 mm", drawn at h6's middle (0/-0.022): sure
     TOP_T:3.35,   // the top plate's thickness: 05 09 01 "Fertigmaß 3,35" (05 08_30, the lever plate: "3,3 in 3,35 geändert"): sure
     PP_T:3.35,   // the pillar plate's: 05 08 02-1 "3,35 ±0,02 stark", struck through with a replacement no longer legible (its blank turned 3,5 × 90∅, as the top plate's); its Schnitt A-B draws 3,35: likely
     INNER:19.0,   // the plates' inner faces apart: sheet 001 "innerer Plattenabstand 19 mm" = the pillar's 19.6 between shoulders less its two 0.3 seats (PIL_SEAT): sure
-    PIL_SEAT:[8.6/2,0.3],   // each pillar's seat in each plate's inner face: Ø 8.6, 0.3 +0.03 deep (05 09 01 Schnitt L-M, 05 08 02-1 Schnitt E-F; dashed from the top plate's outer face): sure
+    PIL_SEAT:[8.6/2,0.3],PIL_SEAT_T:0.03,   // each pillar's seat in each plate's inner face: Ø 8.6, 0.3 +0.03 deep (05 09 01 Schnitt L-M, 05 08 02-1 Schnitt E-F; dashed from the top plate's outer face): sure
     PIL:{r:8.1/2,   // the pillar (05 08 00-1, Pfeiler, Rundmessing 8,5 Ms 58): body Ø 8.1 -0.2 (read "8,1∅", the ∅ written high as on its "4,3∅" and "4,5∅"; 8.06 scaled at 5:1): likely
-      L:19.6,   // shoulder to shoulder 19.6 ±0.01: sure
-      sr:4.484/2,   // its end spigots Ø 4.5 f7 (-0.010/-0.022), drawn at the middle of the fit: sure
+      L:19.6,LT:0.01,   // shoulder to shoulder 19.6 ±0.01: sure
+      sr:mid(PSF)/2,sF:PSF,   // its end spigots Ø 4.5 f7 (-0.010/-0.022, PSF), drawn at the middle of the fit, 4.484: sure
       sL:2.8,   // each 2.8 -0.1 long: sure
       tip:[4.3/2,1.1],   // each spigot's end turned to Ø 4.3 -0.2 over 1.1 -0.2, a 6° lead: sure
       cs:2.7/2,   // the 90° countersink at each end of the thread, Ø 2.7 at the face: scaled at 5:1 (no figure), about the thread's own diameter: estimated
       grv:[3.25,0.35],   // a relief groove in each shoulder's face round the spigot's root, out to r 3.25 and 0.35 deep, half-round: drawn at 5:1 without figures, scaled: estimated
       Ltot:25.3},   // overall 25.3 -0.2 (19.6 + 2 × 2.8 = 25.2): sure; tapped M2.6 through from both ends ("Gewinde von beiden Seiten einschneiden")
-    PIL_HOLE:4.506/2,   // the plates' pillar holes, reamed 4.50 +0.012 (05 09 01 nos. 11, 39, 49; 05 08 02-1 the same), drawn at the middle of the fit: sure
+    PIL_HOLE:mid(PHF)/2,PIL_HF:PHF,   // the plates' pillar holes, reamed 4.50 +0.012 (PHF; 05 09 01 nos. 11, 39, 49; 05 08 02-1 the same), drawn at the middle of the fit, 4.506: sure
     PILLARS:[H[11],H[39],H[49]],   // nos. 11 S 3,225 O 36,858; 39 S 32,043 W 18,50; 49 N 36,437 W 6,425, each 37.00 from the centre at 95°, 210°, 350° from N toward O: sure
     PSCR:{r:6.4/2,   // the pillar screws (WN-57 the top plate's, WN-56 the pillar plate's, by the coloured section's labels): heads Ø 6.4: the coloured section 6.4 and 6.1 (scaled on the
                      // pillar's 8.1 and 19 between the plates, 28.3 px/mm), Wempe 3955's top plate 6.4-6.6 (2_Wempe_3955_A.jpg, 8.82 px/mm by the pillars' 62.41 and 58.7 mm apart), sheet 001 6.6: estimated (±0.2)
