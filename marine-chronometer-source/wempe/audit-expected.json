@@ -81,6 +81,7 @@
   "detent:Buffer | detent:Buffer | --16.70": 3,
   "detent:Buffer | detent:Buffer | --17.04": 1,
   "detentBlock:Buffer | detentBlock:Cylinder | +-12.50": 2,
+  "dustBush:Lathe | corkRing:Lathe | +-38.96": 1,
   "escEndstoneLow:Lathe | escEndstoneLow:Lathe | -1.98": 1,
   "escEndstoneUp:Lathe | escEndstoneUp:Lathe | +-21.02": 1,
   "escJewelUp:Lathe | escJewelUp:Lathe | --20.96": 1,
