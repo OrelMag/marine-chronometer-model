@@ -347,11 +347,14 @@ const WESC=(()=>{
       tag(mesh(rol,solidGeo([{loop:[RF(1.55,0),RF(3.35,0),RF(3.2,0.5),RF(1.55,0.5)],y0:Y.ir0-0.05,y1:Y.ir1+0.05}]),M.ruby),'050403-2');R.impFace=af;}
     /* The discharge roller (Auslöserolle 05 04 04-1; no sheet in the set): a small steel collar on the staff's Ø 1.2 seat, drawn dashed on 05 04_1 as an oblong 2.77 × 2.15
        about the staff, and the discharge stone (Auslösestein 05 04 04-2) 1.7 wide along the staff (05 04_1: sure) at its end, 0.4 across (scaled), reaching RD from the staff
-       (above). Its thickness 1.6, as 05 04_1 draws it. Its turn: the stone leaves the gold spring with the balance at rest */
+       (above). Its thickness 1.6, as 05 04_1 draws it. Its turn: the stone leaves the gold spring with the balance at rest. Its end bevelled back DS from the acting corner
+       (full reach, the side toward the gold spring's tip) to the other, as the layout's corners and makeEsc's BEV take it (until 15 October 2026 drawn square). Measured
+       again on 05 04_1 (24.4 px/mm, the dashed outline at (180-198, 453-463) px): the acting corner at the gold spring's tip, the other corner 4-5 px back, 0.15-0.2,
+       the stone 8 px across (0.33); ±3 px, the faint dashes and the "1°" figures beside the lower corner: DS's 0.3 is kept (README, Estimated) */
     {const b=BETA,u=dir(b),pp=[u[1],-u[0]],L=(e,w)=>add(add([0,0],u,e),pp,w),rf=Math.sqrt(RD*RD-DSW*DSW/4);
       const body=stadiumPts(L(-0.255,0),L(0.355,0),2.15),slot=[L(0.85,-DSW/2-0.003),L(2.0,-DSW/2-0.003),L(2.0,DSW/2+0.003),L(0.85,DSW/2+0.003)],outl=bool(body,slot).dAB[0];
       tag(mesh(rol,solidGeo([{loop:outl,y0:Y.dr0,y1:Y.dr1,F:[{p:C([0,0],0.6+0.0015,48),a:Y.dr0,b:Y.dr1}]}]),M.steel),'050404-1');
-      tag(mesh(rol,solidGeo([{loop:[L(0.9,-DSW/2),L(rf,-DSW/2),L(rf,DSW/2),L(0.9,DSW/2)],y0:Y.dr0+0.05,y1:Y.dr1+0.15}]),M.ruby),'050404-2');}
+      tag(mesh(rol,solidGeo([{loop:[L(0.9,-DSW/2),L(rf,-DSW/2),L(rf-DS,DSW/2),L(0.9,DSW/2)],y0:Y.dr0+0.05,y1:Y.dr1+0.15}]),M.ruby),'050404-2');}
 
     /* ================= the escape wheel (Gangrad 05 04 05-1, its pinion Gangtrieb 05 04 05-2, collet Gangradbutzen 05 04 05-3) ================= */
     /* The wheel (05 04_23, 02 04 08a, 20.1.42: Messingblech 1,6 Ms 63 federhart; 05 04_7.2, 19.7.43): 15 teeth (05 04_7.1 "z = 15"; 05 04_1's drawn teeth 24 deg apart), tips
