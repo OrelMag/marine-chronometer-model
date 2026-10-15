@@ -73,6 +73,11 @@ Contents:
   end (drawn 2.5) and 1.4 thick (drawn 1.6 −0.2), and its upright stood square to the bar where the side view draws it leaning 8° (98°)
   toward the axis, along the cock's slot's 82° inner wall (05 08 03-1, Schnitt C-D), which the cock left out. Keep: the stud's every
   figure from 05 03 02-3, its upright leaning with the cock's slot wall, the screw's hole (`HOLES.studScrew`) 5 from the stud's square end. `480bb6f`
+- **The Wempe's hairspring's outer curve was drawn to the wrong radius.** It was drawn in proportion (kU 0.883) to end 3.87 from the staff,
+  where an upright square to the stud's bar let it stand; the stud's upright leans 8° (05 03 02-3) and so brings its slot in to 3.55, where
+  05 03_7's table pins the inner end in the collet: both curves are now the table's (kU 1), the slot in the upright's middle with the spring
+  and its pin side by side in it. The spring's isochronism, `WESC.SET.HS`, went from −0.659 to −0.544 s a day per 10°, the rate over the wind
+  from ±0.08 to −0.02/+0.01 s a day. Keep: `RSTUD` is the table's radius at 220°; `HS` what `tools/wempe_hairspring.js` finds.
 - **The Wempe's discharge stone was drawn square-ended.** The layout's corners and makeEsc (`BEV`) take its end bevelled back 0.3 from
   the acting corner, 05 04_1 draws it bevelled, but the mesh ended square at full reach. Now drawn with the bevel (`DS`). Keep: the drawn
   stone's outline is the one the escapement's motion is worked out on. (05 04_1 measured again scales 0.15-0.2: README, Estimated.) `462a1a3`
