@@ -1752,6 +1752,10 @@ Contents:
   screws' tapped holes made blind (nothing under them), and six through holes whose use no source gives. `blindHoles()` now closes a through hole's far end
   rather than re-triangulating a face, and `holecheck` finds holes from circle fits as well as closed loops, its faces grouped by plane. Keep: a part's holes
   compared with a face-on frame of it through `holemap.py`; `holecheck` passes. `e44d936`
+- **The upper train bridge and the pillar plate lacked holes the real ones have.** Surveyed with `tools/holemap.py`: on the
+  train bridge a countersunk hole between pillar 0's screw and the lower bridge's (13:49.5 and 23:30 within 1 mm); on the pillar plate three through holes, at 12
+  o'clock past the wind indicator's post, past the access hole at 4 o'clock (9:03 and 40:05), and over the barrel (9:03). None has a known use; each is in
+  `holecheck`'s expected empty with its source. Keep: the train bridge's other readings (Review-results.md) are too loose to move holes measured on 6:49.0. `d33651a`
 
 ## Setup, case and gimbals
 
@@ -2665,7 +2669,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The upper train bridge and the pillar plate lacked holes the real ones have (Plates, bridges, screws and arbors).** Surveyed with `tools/holemap.py`: on the
-  train bridge a countersunk hole between pillar 0's screw and the lower bridge's (13:49.5 and 23:30 within 1 mm); on the pillar plate three through holes, at 12
-  o'clock past the wind indicator's post, past the access hole at 4 o'clock (9:03 and 40:05), and over the barrel (9:03). None has a known use; each is in
-  `holecheck`'s expected empty with its source. Keep: the train bridge's other readings (Review-results.md) are too loose to move holes measured on 6:49.0.
+None at the moment.
