@@ -104,9 +104,9 @@ const WFRAME=(()=>{
        left and right ends); below the lip a 45° cone opens to Ø 93 at the dial's recess (Ø 104 +0.1, 0.7 +0.1 deep) in the flange's face; the flange Ø 105.95 -0.1 and 4.7 high, the
        ring under it Ø 96 -0.3; 10.7 -0.1 overall, 7 -0.1 from the recess's floor to the seat's. Three M2.6 on Ø 89, 120° apart, at 340°, 100°, 220° (the sheet drawn from the
        dial side, 20° from 12; Wempe 3955's three brass heads on the plate's rim at 339°, 99°, 218°, 2_Wempe_3955_A.jpg): their screws' heads bear on the plate's rim and hold it
-       in the seat. The dial's pin hole at r 50.5, 6° from 12 toward 3 ("wird bei Montage des Zifferblattes gebohrt"), drawn Ø 1.6: the sheet gives it Ø 1.1 (the section's dashed
-       pair, 4.7 off the axis as 50.5 sin 6° puts it, is figured "1,1 Ø"; the plan's "1,6" is across the radial hole at 12, below: sure), but the dial's pin (dial.js) is drawn
-       Ø 1.6 in it, so the hole waits for the pin (README, Unresolved); the plate's pin hole Ø 1 at 6 o'clock across the
+       in the seat. The dial's pin hole at r 50.5, 6° from 12 toward 3 ("wird bei Montage des Zifferblattes gebohrt"), Ø 1.1 (the section's dashed
+       pair, 4.7 off the axis as 50.5 sin 6° puts it, is figured "1,1 Ø"; the plan's "1,6" is across the radial hole at 12, below: sure; drawn Ø 1.6 until 15 October 2026),
+       the dial's pin (dial.js) in it; the plate's pin hole Ø 1 at 6 o'clock across the
        seat's wall. Its depths below the lip, the cone's run and the screws' are not figured: the 7 and 0.7 put the lip's floor at 3.35 below its inner face, so the cone, from the
        lip's Ø 83 at 45° to Ø 93, starts 2.0 below the seat (the coloured section draws about 2); the plate's pin 5.35 long, to the cone (the section draws it 7.6, which would
        cross the cone); the M2.6 holes 6.0 deep (to the flange): estimated. Material not given ("——"); Wempe 3955's is nickel-bright: drawn nickel, estimated. Its radial pin
@@ -116,7 +116,7 @@ const WFRAME=(()=>{
       const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
         ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};
       tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
-      const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.6/2,6.35,11.05),
+      const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
         ...[354,120,240].map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:10.35-2.5,b:11.05}))]};   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
       tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
       /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
