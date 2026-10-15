@@ -2606,8 +2606,52 @@
    "parent": "0506",
    "kind": "part",
    "part": "stopWork",
-   "fn": "Slides in the slot across the fusee's small end (not cut in the turned body); meets the stop pin at full wind.",
-   "rel": [],
+   "fn": "Slides in the slot across the fusee's small end (cut in the body: 1.5 deep, 1.1 toward its upper end, which is thinner), on the cover plate; its spring holds it out, the chain on the top turn presses it in, and its upper end meets the stop pin at full wind.",
+   "rel": [
+    [
+     "on",
+     "050600-4"
+    ]
+   ],
+   "figs": "05 06_4, 05 06_2.2"
+  },
+  {
+   "id": "050603-2",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 03-2",
+   "name": "Stift (the stop bar's spring's pin)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "stopWork",
+   "fn": "Along the slot in the body's hole 0.5 H7 (not cut in the small end), standing into the recess through the spring.",
+   "rel": [
+    [
+     "in",
+     "050604-2",
+     "embed"
+    ]
+   ],
+   "figs": "05 06_4, 05 06_2.2"
+  },
+  {
+   "id": "050603-3",
+   "idx": null,
+   "no": "",
+   "dwg": "05 06 03-3",
+   "name": "Stegfeder (the stop bar's spring)",
+   "qty": 1,
+   "parent": "0506",
+   "kind": "part",
+   "part": "stopWork",
+   "fn": "A strip in the small end's recess, round its wall to the hole across the bar near its lower end, its end in that hole (not cut in the bar): holds the bar out toward that end (no sheet: drawn as 05 06_4's C-D draws it).",
+   "rel": [
+    [
+     "on",
+     "050600-4"
+    ]
+   ],
    "figs": "05 06_4"
   },
   {
