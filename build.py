@@ -18,6 +18,7 @@ Writes:
      navships-250-624-1948.pdf   the manual itself (References/, Google Books' scan of the 1948 Navy manual), which the page links to beside it
      verification/build-verification/   the checks' report "Would a chronometer made to the model run and keep time?" (its build_report.py, committed)
      verification/real-chronometers/    the report "Does the model behave like a real Hamilton Model 21?", with its plots
+     wempe/verification/                the Wempe's report "The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?" (wempe/verification/build_report.py)
      sitemap.xml, robots.txt   for search engines (with --site-url only)
 The HTML file is self-contained: three.js and the fonts are inlined, so nothing is fetched from another server.
 Its version and list of changes come from CHANGELOG.md (changelog.py); a build without --release changes neither, so ci.py's rebuild matches.
@@ -35,6 +36,8 @@ SITE=ROOT/'site'
 MANUAL='navships-250-624-1948.pdf'   # the page links to it by this name, beside itself
 REPORTS=['build-verification','real-chronometers']   # the checks' reports (the model's verification/, each built by its own build_report.py), served at the same paths beside the page
 REPO='https://github.com/OrelMag/marine-chronometer-model/blob/main/marine-chronometer-source/chronometer-working-model/'   # where a report's links into the repository (its tools) go on the site
+GITHUB='https://github.com/OrelMag/marine-chronometer-model/blob/main/'   # the repository's root on GitHub, for the Wempe's report's links into it
+WE_REP='href="../verification/'   # the Wempe's built page's links to its report (wempe/build.py, from dist/), pointed at site/wempe/verification/ on the site
 
 def write(p,text):
     p.write_text(text,encoding='utf-8',newline='\n');print('wrote',p.relative_to(ROOT),f'{len(text.encode())/1024:.0f} KB')
@@ -77,6 +80,23 @@ def reports(url,keep):
         dst.parent.mkdir(parents=True,exist_ok=True);write(dst,meta(html,url,page,keep=keep));out.append(page)
     return out
 
+def wempe_report(url,keep):
+    """The Wempe's report (wempe/verification/, its build_report.py) into site/wempe/verification/, beside the Wempe's page as in the source, with the images it shows. Its links
+    to the Wempe's page, the Hamilton's page and the Hamilton's reports go to their places on the site; every other link into the repository (the tools, a README) to GitHub.
+    Returns its page's path."""
+    src=WEMPE/'verification';page='wempe/verification/index.html';dst=SITE/page;html=(src/'index.html').read_text(encoding='utf-8')
+    site={WEMPE/'index.html':'../index.html',MODEL/'index.html':'../../index.html',**{MODEL/'verification'/r/'index.html':f'../../verification/{r}/index.html' for r in REPORTS}}
+    def link(m):
+        h=m.group(2)
+        if re.match(r'[a-z]+:|#',h):return m.group(0)
+        f,_,frag=h.partition('#');p=(src/f).resolve()
+        if p.is_relative_to(src.resolve()/'assets'):return m.group(0)
+        to=site.get(p) or GITHUB+p.relative_to(ROOT).as_posix()
+        return f'{m.group(1)}="{to}{"#"+frag if frag else ""}"'
+    html=re.sub(r'(href|src)="([^"]+)"',link,html);check(page,html)
+    for f in sorted(set(re.findall(r'src="(assets/[^"]+)"',html))):(dst.parent/f).parent.mkdir(parents=True,exist_ok=True);shutil.copy(src/f,dst.parent/f)
+    dst.parent.mkdir(parents=True,exist_ok=True);write(dst,meta(html,url,page,keep=keep));return page
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--keep-html',action='store_true',help="keep .html in page addresses (for hosts that don't redirect /page.html to /page)")
@@ -99,11 +119,12 @@ def main():
     if SITE.exists():shutil.rmtree(SITE)
     SITE.mkdir()
     write(SITE/'index.html',meta(model.replace(HAM_WE,'href="wempe/"'),a.site_url,'index.html',keep=a.keep_html))
-    (SITE/'wempe').mkdir();write(SITE/'wempe/index.html',meta(wempe.replace(WE_HAM,'href="../'),a.site_url,'wempe/index.html',keep=a.keep_html))
+    if WE_REP not in wempe:sys.exit(f'the Wempe page has no {WE_REP}: its link to its report (wempe/build.py), which the site points at site/wempe/verification/')
+    (SITE/'wempe').mkdir();write(SITE/'wempe/index.html',meta(wempe.replace(WE_HAM,'href="../').replace(WE_REP,'href="verification/'),a.site_url,'wempe/index.html',keep=a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)
-    pages=['index.html','wempe/index.html']+reports(a.site_url,a.keep_html)
+    pages=['index.html','wempe/index.html']+reports(a.site_url,a.keep_html)+[wempe_report(a.site_url,a.keep_html)]
     if a.site_url:   # for search engines: the pages, at the addresses their canonical tags name
         write(SITE/'sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
               ''.join(f'<url><loc>{address(a.site_url,p,a.keep_html)}</loc></url>\n' for p in pages)+'</urlset>\n')
