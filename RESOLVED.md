@@ -341,6 +341,19 @@ Contents:
 
 ## Going train and heights
 
+- **The Wempe's hour hand's blade lay at the top of its boss, and the minute hand 1.2 over the hour hand** (15 October 2026, the drawings
+  survey). 05 02 00-2's side view lays the 0.5 blade with its underside flush with the 0.8 flange's and its top 0.3 under; the model put the
+  tops flush. And 05 02_1's "1,2" over the hands is the minute hand's own (its top to its flange's underside), not the gap to the hour hand,
+  which scales 0.5. Keep: every hand's blade underside on its flange's underside; the hour hand's blade 0.125 over the seconds post's end,
+  the minute hand 0.5 over the hour hand's boss and under the cannon tube's crown. `60ebbc3`
+- **The Wempe's motion-work studs were Ø 1.3, and their pipes bored 1.32.** Scaled at 2:1 on 05 08 02 (4.7 px/mm); 05 02_1 at 5:1 draws
+  both 1.52 and the pipes' bores scale 1.50-1.56 against their figured outsides (05 02 02, 05 02 04); both ends domed, not chamfered.
+  Keep: studs Ø 1.5 domed, their bushes bored to them, the pipes 1.52. `60ebbc3`
+- **The Wempe's centre arbor: journal C straight, riveting collar plain, no punch groove, end chamfered; WN-302 a cone sink.** 05 05 03
+  and 05 05 03-2 write "Kegel 1:30" along C, draw the collar flared from Ø 3.0 over a groove in the seat, the 1943 sheet a groove in the
+  shank under the cannon tube's punch and one crown over the shank's and tube's ends; 05 08 02 draws WN-302's sink a spherical cup.
+  Keep: C on 1:30 (Ø 2.2 at the collar) with WN-302 bored to it, the collar and groove, the shank's groove, the crown on the arbor
+  (`A.cw.crown`) and the tube alike, the hands' and hour wheel's 1:70 fits. `60ebbc3`
 - **The fourth, third and escape arbors off the video's places, the seconds
   sub-dial off its arbor** (Review-results.md, Elsewhere 24, 14, 18). The fourth
   was 23.9 mm out (video 21.4-21.75 at the plate's 87.57), the third 16.0 at
