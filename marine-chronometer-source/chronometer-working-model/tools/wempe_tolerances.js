@@ -75,8 +75,8 @@ head('The hairspring (05 03_6: strip 0.285 × 0.52, boxed, no tolerance; coil Ø
 /* k = E b h³ / 12 L, T = 2π √(I/k): T goes as h^-1.5, L^0.5 (L as the coil's radius at a given count of turns), E^-0.5. The timing weights (Zeitmasse 05 03 01-3, brass on the
    timing screws, thread 0.16 pitch, 05 03 01-1) move I by 2 m r dr: weighed on the solids (wempe_inertia.json) */
 const IJ=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8')),TW=IJ.balance.byHn['050301-3'],rTW=Math.sqrt(TW.I/TW.m),dIturn=2*TW.m*rTW*0.16,secTurn=86400*dIturn/(2*S.I);
-const esrc=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','escapement.js'),'utf8'),mR=/r2=([\d.]+)\/2/.exec(esrc),mW=/lathe\(\[\[0\.45,([\d.]+)\],\[1\.5,/.exec(esrc);if(!mR||!mW)throw Error('escapement.js: the rim\'s outside or the timing weights\' place not found');
-const reach=+mW[1]-mR[1]/2,turnsIn=reach/0.16,gain=turnsIn*secTurn;
+const esrc=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','escapement.js'),'utf8'),mR=/r2=([\d.]+)\/2/.exec(esrc),mW=/TIP=([\d.]+),W1=TIP-([\d.]+),W0=W1-([\d.]+)/.exec(esrc);if(!mR||!mW)throw Error('escapement.js: the rim\'s outside or the timing weights\' place not found');   /* the weight's inner end: the screw's tip less the weight's 0.8 short of it and its length (since 15 October 2026; before, the weight's lathe from its inner end) */
+const reach=(+mW[1]-mW[2]-mW[3])-mR[1]/2,turnsIn=reach/0.16,gain=turnsIn*secTurn;
 const T=P.HS.T,day=x=>86400*x,perH=day(1.5/0.285*1e-3),perC=day(0.5*0.005/WESC.HSL.RC),perL=day(0.5/WESC.HSL.L),perE=day(0.5/206),hNeed=0.285*(T/0.5)**(2/3),hE=[200,210].map(e=>hNeed*Math.cbrt(206/e));
 const fast=day(0.5/T-1);
 say(`as drawn (505.4 mm, 206 GPa) with the weighed balance (${S.I} g·mm²) the period is ${f(T,4)} s: ${f(fast/60,0)} min a day fast against the train's 0.5 s`);
