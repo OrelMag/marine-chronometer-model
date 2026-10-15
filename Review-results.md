@@ -2343,6 +2343,18 @@ on the right, the barrel bridge's near screw, the cock's screw and two pins read
 13:49.5 may account for (13:04.4 put the barrel bridge's hole for that same screw within 1 mm). Not changed: the readings there are not good enough to move
 holes measured to 0.3 mm on 6:49.0; a sharper face-on frame of the bridge's right side would settle them.
 
+*Followed up on 6:47 (15 October 2026):* 6:47 is 6:49.0's camera, and that camera can't place the right side: fitted on the model's train-bridge holes, each
+left out lands 0.6-5.4 mm off (the third pillar screw's counterbore 3 mm). The frames that see the bridges face-on settle most of it. Done: the barrel
+bridge's near screw moved 2.4 mm to (32.90, 6.60) (23:30 and 13:04.4 within 0.9 mm); its two steady pins added (13:04.4), into (29.4, 1.35), the
+candidate (29.7, 1.1), and the hole at (-23.3, 20.4); the candidate (-8.7, 22.1) added as a hole of unknown use (23:30, 6:49.0 within 1 mm); the
+candidate (-1.8, 33.1) dropped (it is the detent's far pin's hole, the same 1.5 mm off as its neighbours on 23:30); the cock's steady pins placed from
+the cock screw's hole (6:47, 23:30 within 0.4 mm), their holes r 1.07. **Still open: the cock screw's hole.** 23:30 reads it at (21.62, 23.58), 2.8 mm from
+S.cock; measured from the third pillar screw's counterbore, 6:49.0 gives (22.21, 22.69) and 23:30 (21.39, 23.58), within 1.2 mm; from the lower bridge's
+screw both frames turn it 7.5 deg from the model's direction (72.6-72.8 against 65.2). But at about 24 mm from the staff the cock's counterbore (7.4
+across) would break through its wall (22.6 about the staff), and 6:29 reads the cap's centre 25.9 mm from the screw: moving it means moving the cock,
+and likely the balance's place (L.B), with it. The third's upper bushing: 6:47 can't read it apart from the camera's error (C itself reads 0.8-2.7
+mm off there).
+
 *Withdrawn (15 October 2026): a fourth finding, that the Exploded view drives the barrel cap's screws (37023) into the barrel, was a misreading. They go
 from y -6.26 to -53.11 as the barrel goes from 0 to -50: 3.15 mm toward the dial side relative to it, out of the cap, as they should (the winding
 ratchet's screws, 42014, the same way). `exploded.py` was right to pass them.*
