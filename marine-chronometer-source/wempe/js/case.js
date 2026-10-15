@@ -132,7 +132,7 @@ const WCASE=(()=>{
       const rec=bool(C([0,0],53.05,720),[[-0.75,52.5],[0.75,52.5],[0.75,55.3],[-0.75,55.3]]).uni[0];
       const F=[{p:rec,a:b0,b:b0+4.75},{p:C([0,0],52.1,720),a:b0,b:b0+5.45},{p:C([0,0],46,600),a:b0,b:top},{p:C([0,0],56.1,720),a:top-2.3,b:top}];
       tag(mesh(bz,smoothRev(solidGeo(cells([58,62.5],[[b0,top],[ch,top]],[F]))),M.brass),'050101-2');
-      const gl=tag(mesh(bz,solidGeo([{loop:circ(56),y0:top-2.3,y1:top}]),M.glass),'050101-1');gl.userData.noShadow=1;}
+      const gl=tag(mesh(bz,solidGeo([{loop:circ(56),y0:top-2.3,y1:top}]),M.glass),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
 
     /* ================= the gimbal ring (Kardanring 05 01 00-5) and its bracket (Kardanringkloben 05 01 00-6) ================= */
     /* No sheets: scaled on 05 01 (2.45 px/mm by its 160 and the bowl's 106; circles fitted to Schnitt A-B: Ø 139.2 inside and 146.8 outside the lines, the elevation's section
@@ -173,7 +173,7 @@ const WCASE=(()=>{
     {const B=tag(new THREE.Group(),'Holzkasten.D');ld.add(B);const h=YT-YL-WT,o=BW;
       for(const s of[-1,1]){box(B,2*BW,h,WT,0,h/2,o+s*(BW-WT/2),MC.oak);box(B,WT,h,2*BW-2*WT,s*(BW-WT/2),h/2,o,MC.oak);
         box(B,2*BW,WT,20,0,h+WT/2,o+s*(BW-10),MC.oak);box(B,20,WT,2*BW-40,s*(BW-10),h+WT/2,o,MC.oak);}
-      const g=tag(box(ld,151,3,151,0,h-1.5,o,M.glass),'Deckelglas');g.userData.noShadow=1;
+      const g=tag(box(ld,151,3,151,0,h-1.5,o,M.glass),'Deckelglas');g.userData.noShadow=g.userData.inkBox=1;   /* no Edges lines, as the bezel's glass */
       for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier',1);ld.add(q);box(q,40,18,1.2,s*55,9,-0.6,M.brass);}
       /* the maker's plate on the lid's front (Greenwich's wartime Wempe: its place), 26 × 52 aluminium, 1 thick (Alu 10: likely), on four pins in its Ø 1.2 holes */
       const fp=tag(new THREE.Group(),'000101-9');fp.position.set(0,42,2*BW+0.5);ld.add(fp);box(fp,52,26,1,0,0,0,MC.white);
@@ -210,19 +210,28 @@ const WCASE=(()=>{
        chamfer at the top, the 15° cone from 15.1 down, 25.1 −0.2 long; the bore Ø 8 +0.1 22 deep with its 120° point, Ø 6 +0.1 through the bottom; the cross hole Ø 2.5 for the
        grooved pin (51 00 11-6, K.S. 1); the slot 3 wide; the hole Ø 0.9 at 5° for the spring's end); the tube (Schlüsselrohr 05 01 02-3, Ms 58, every figure: its head Ø 8 −0.05 ×
        2.6 in the bore, Ø 5.95 −0.05 through the bottom, 50.1 −0.2 long, the square 3.1 +0.05, 19 +2 deep, drilled 23 deep, a 60° sink 1 deep, the end relieved over 2.5); the coil
-       spring (Wendelfeder 51 00 11-4) round the tube between its head and the bore's floor. The tube's head drawn 6.8 under the body's top (so it clears the paddle; the free length
-       then 31.8, scaled 30), the spring's wire 0.9, the end's relief to Ø 4.6, the slot, cross hole and square not cut (drawn round): estimated. It lies on the box's floor */
-    const key=prt(root,'key');
-    {const g=new THREE.Group();g.position.set(-62,YF+WT+7.25,-40);   /* on its body and its paddle's rim: the paddle 19.8° from flat (17.25 sin + 1.5 cos = 7.25) */g.rotation.set(Math.PI/2,19.8*D2R,0);key.add(g);
+       spring (Wendelfeder 51 00 11-4) round the tube between its head and the bore's floor. The paddle's centre 10.95 over the body's top: the slot's floor is the Ø 35 arc 6.3
+       +0.1 deep (05 01 02-2's side view, sure), on which the Ø 34.5 paddle's rim stands (17.25 − 6.3; 10.6 scaled on 51 00 11, which put its rim 0.35 into the floor). The
+       grooved pin across the slot, through the paddle's thickness (05 01 02-2: the cross hole runs across the 3 slot in the section and shows end-on in the side view, as the hole
+       through the paddle's face does on 51 00 11's outside view), 4 −0.05 under the top. The square 3.1 +0.05 across, 19 deep, its corners on the key's x and z as the fusee
+       arbor's square has them (its 60° sink 1 deep left out). The tube's head drawn 6.8 under the body's top (so it clears the paddle; the free length then 31.8, scaled 30),
+       the spring's wire 0.9, the end's relief to Ø 4.6, the slot and cross hole not cut: estimated. Built in the key's own frame (its axis +y, the tube's mouth at 0) in its
+       part's group, which lies on the box's floor or, while it winds, sits on the fusee's square (keyAt) */
+    const key=prt(root,'key'),KEYREST=()=>{key.position.set(-62,YF+WT+7.25,-40);key.rotation.set(Math.PI/2,19.8*D2R,0);};KEYREST();   /* on its body and its paddle's rim: the paddle 19.8° from flat (17.25 sin + 1.5 cos = 7.25) */
+    {const g=new THREE.Group();key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
-      const T=50.1,B0=31.8,BT=B0+25.1;
-      tag(mesh(g,lathe([[2.13,0],[2.3,0],[2.975,2.5],[2.975,T-2.9],[3.275,T-2.6],[4,T-2.6],[4,T],[0,T],[0,23],[1.45,22.2],[1.45,19],[1.55,19],[1.55,1]]),M.brass),'050102-3');
+      const T=50.1,B0=31.8,BT=B0+25.1,sq=3.15/Math.SQRT2;
+      tag(mesh(g,smoothRev(solidGeo(cells([2.3,2.975],[[0,19],[p=>(rr(p)-2.3)*2.5/0.675,19]],[[{p:[[sq,0],[0,sq],[-sq,0],[0,-sq]],a:0,b:19}]]))),M.brass),'050102-3');   /* the socket end: the square, the relief */
+      tag(mesh(g,lathe([[1.45,19],[2.975,19],[2.975,T-2.9],[3.275,T-2.6],[4,T-2.6],[4,T],[0,T],[0,23],[1.45,22.2]]),M.brass),'050102-3',1);   /* on: the drilled hole's end, the head */
       tag(mesh(g,lathe([[3.05,B0],[4.57,B0],[7.25,B0+10],[7.25,BT-1.5],[5.75,BT],[4.05,BT],[4.05,BT-22],[3.05,BT-22-0.58]]),MC.black),'050102-2');
-      const pd=tag(mesh(g,cylY(17.25,3,72),MC.black,0,BT+10.6,0),'510011-1');pd.rotation.x=Math.PI/2;
-      const pn=tag(mesh(g,cylY(1.25,13,16),M.steel,0,BT-3.2,0),'510011-6');pn.rotation.z=Math.PI/2;
+      const pd=tag(mesh(g,cylY(17.25,3,72),MC.black,0,BT+10.95,0),'510011-1');pd.rotation.x=Math.PI/2;
+      const pn=tag(mesh(g,cylY(1.25,13,16),M.steel,0,BT-4,0),'510011-6');pn.rotation.x=Math.PI/2;
       /* the spring: 0.9 wire on Ø 7.0 mean, close wound from the bore's floor to the tube's head */
       const y0=BT-22+0.45,y1=T-2.6-0.45,nT=(y1-y0)/0.92,cv=new THREE.Curve();cv.getPoint=t=>new THREE.Vector3(3.51*Math.cos(t*nT*TAU),y0+(y1-y0)*t,3.51*Math.sin(t*nT*TAU));
       tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,Math.ceil(nT*24),0.44,6,false)),M.steel),'510011-4');}
-    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
+    /* keyAt(seat): the key onto the fusee's square (seat {g, y}: fusee.js keySeat, the dust plate's group, which turns with the fusee, and its face, where the square is 3.1
+       across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back on the box's floor */
+    const keyAt=s=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};
+    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
   return{build,YP:YB-11.5,YB};
 })();

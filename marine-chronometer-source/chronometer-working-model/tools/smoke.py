@@ -11,7 +11,8 @@ Every view with and without Moving parts only, every walkthrough step, both bala
 shown while winding and gone after; its zoom, enlarge, slow motion and explanation; kept open in running), the keyboard, and a link through the URL hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
 two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it.
-With --model wempe, the Wempe's page (../../wempe/index.html): every view, the Spread slider, every cross-section and its other half, a part picked on the model and its
+With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay tab as the Hamilton's (its checks.py's ESSAY: the link it follows into the model and the
+section it opens; no report button): every view, the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
 the display switches and Reset display, the theme, Back and Forward, a view key, and a link through the URL hash both ways."""
 import asyncio,pathlib,sys
@@ -237,8 +238,11 @@ async def model(b,errs,steps):
     if st!=['escapement',True,'0.05',True,True]:errs.append(f'hash link not applied: {st}')
     steps.append('hash link');await pg.close()
 GLC="""(()=>{const g=HTMLCanvasElement.prototype.getContext;window.__glc=new Set();HTMLCanvasElement.prototype.getContext=function(t,...a){const c=g.call(this,t,...a);if(c&&/webgl/.test(t))window.__glc.add(this);return c;};})()"""
+# the essay's page-specific steps (the model's checks.py ESSAY for another model): the link into the model it follows and what that must give, the section a link opens, and
+# whether it has a report button; the Hamilton's are the defaults
+ESSAY=mdl.cfg('ESSAY',{'link':'#tour=3','got':"[ESSAY.on(),document.querySelector('#tStep').textContent]",'want':[False,'3 / 8'],'sec':'detent','report':True})
 async def essay(b,errs,steps):
-    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'essay');await pg.add_init_script(GLC)
+    E=ESSAY;pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'essay');await pg.add_init_script(GLC)
     await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
     await pg.evaluate("document.querySelector('#tabEssay').click()");steps.append('Essay tab');await pg.wait_for_timeout(800)
     if not await pg.evaluate("ESSAY.on()&&!document.querySelector('#essay').hidden&&document.querySelector('#tabEssay').getAttribute('aria-selected')==='true'"):errs.append('the Essay tab did not open the essay')
@@ -259,26 +263,28 @@ async def essay(b,errs,steps):
     glc=await pg.evaluate("window.__glc.size")
     if glc>2:errs.append(f'{glc} WebGL contexts (the model and one for the essay expected)')
     if await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&s._fig.fail).map(s=>s.id).join()"):errs.append('essay figures failed: '+await pg.evaluate("[...document.querySelectorAll('#essay .e-st')].filter(s=>s._fig&&s._fig.fail).map(s=>s.id).join()"))
-    await pg.evaluate("document.querySelector('#essay .e-report button').click()");steps.append("the essay's report");await pg.wait_for_timeout(300)
-    w=await pg.evaluate("document.querySelector('#report').open&&document.querySelector('#rpWhere').value")
-    if not(w and w.startswith('The essay')):errs.append(f"the essay's report: {w!r}")
-    await pg.evaluate("document.querySelector('#report').close()")
-    # a link into the model: the walkthrough's step 3, then Back to the essay where it was
-    await pg.evaluate("document.querySelector('#essay a[href=\"#tour=3\"]').scrollIntoView({block:'center'})");await pg.wait_for_timeout(400)
+    if E['report']:
+        await pg.evaluate("document.querySelector('#essay .e-report button').click()");steps.append("the essay's report");await pg.wait_for_timeout(300)
+        w=await pg.evaluate("document.querySelector('#report').open&&document.querySelector('#rpWhere').value")
+        if not(w and w.startswith('The essay')):errs.append(f"the essay's report: {w!r}")
+        await pg.evaluate("document.querySelector('#report').close()")
+    # a link into the model (the Hamilton's: the walkthrough's step 3), then Back to the essay where it was
+    a=f"document.querySelector('#essay a[href=\"{E['link']}\"]')"
+    await pg.evaluate(a+".scrollIntoView({block:'center'})");await pg.wait_for_timeout(400)
     y=await pg.evaluate("document.querySelector('#essay').scrollTop");await pg.wait_for_timeout(500)
-    await pg.evaluate("document.querySelector('#essay a[href=\"#tour=3\"]').click()");await pg.wait_for_timeout(1500);steps.append('essay link to the walkthrough')
-    st=await pg.evaluate("[ESSAY.on(),document.querySelector('#tStep').textContent]")
-    if st!=[False,'3 / 8']:errs.append(f'the link to #tour=3 gave {st}')
+    await pg.evaluate(a+".click()");await pg.wait_for_timeout(1500);steps.append(f"essay link to {E['link']}")
+    st=await pg.evaluate(E['got'])
+    if st!=E['want']:errs.append(f"the link to {E['link']} gave {st}")
     await pg.go_back();await pg.wait_for_timeout(1500);steps.append('Back to the essay')
     y2=await pg.evaluate("ESSAY.on()?document.querySelector('#essay').scrollTop:-1")
     if abs(y2-y)>80:errs.append(f'Back: the essay at {y2}, not {y}')
     await pg.close()
     # straight to a section
-    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'essay, #essay=detent');await pg.goto(PAGE+'#essay=detent');await pg.wait_for_timeout(2500)
-    t=await pg.evaluate("ESSAY.on()?Math.round(document.querySelector('#detent').getBoundingClientRect().top):null")
-    if t is None or not 0<=t<=140:errs.append(f'#essay=detent: the section heading at {t}')
+    sec=E['sec'];pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,f'essay, #essay={sec}');await pg.goto(PAGE+f'#essay={sec}');await pg.wait_for_timeout(2500)
+    t=await pg.evaluate(f"ESSAY.on()?Math.round(document.querySelector('#{sec}').getBoundingClientRect().top):null")
+    if t is None or not 0<=t<=140:errs.append(f'#essay={sec}: the section heading at {t}')
     await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
-    if not await pg.evaluate("ESSAY.on()&&location.hash.startsWith('#essay')"):errs.append('#essay=detent: the essay closed once the model loaded')
+    if not await pg.evaluate("ESSAY.on()&&location.hash.startsWith('#essay')"):errs.append(f'#essay={sec}: the essay closed once the model loaded')
     await pg.evaluate("document.querySelector('#tabModel').click()");await pg.wait_for_timeout(2000);steps.append('back to the model tab')
     try:await pg.wait_for_function("!ESSAY.on()&&!location.hash.startsWith('#essay')",timeout=5000)   # polled: the hash is written 0.3 s after the change, on page time
     except Exception:errs.append('the 3D model tab left the essay open or in the address: '+await pg.evaluate("JSON.stringify({on:ESSAY.on(),hash:location.hash})"))
@@ -378,10 +384,8 @@ async def main():
         # a fresh headless Chromium on SwiftShader loses its first WebGL context a moment after creating it, whatever the page (the original model too):
         # spend that on a blank page, so the pages under test start with a context that stays
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
-        if not mdl.HAMILTON:await wempe(b,errs,steps)
-        else:
-            if '--essay' not in sys.argv:await model(b,errs,steps)
-            if '--model' not in sys.argv:await essay(b,errs,steps)
+        if '--essay' not in sys.argv:await (model if mdl.HAMILTON else wempe)(b,errs,steps)
+        if '--model' not in sys.argv:await essay(b,errs,steps)
         await b.close()
     print(f'{len(steps)} steps');[print(e) for e in errs]
     print('ok' if not errs else f'{len(errs)} problems');sys.exit(1 if errs else 0)

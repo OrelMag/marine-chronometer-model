@@ -61,7 +61,11 @@ head('the balance\'s damping and its free run-down');
   const At=tf=>makeEscOf({TF:tf}).A/d,tfFor=a=>{let l=40,h=400;for(let i=0;i<14;i++){const x=Math.sqrt(l*h);At(x)<a?l=x:h=x;}return Math.sqrt(l*h);};   /* to 0.1 s */
   say(`the swing it keeps at the reference (12 h): ${f(At(TF(lo.q)),0)}° at TF ${f(TF(lo.q),0)} s, ${f(At(S.TF),0)}° at ${S.TF} s, ${f(At(TF(hi.q)),0)}° at ${f(TF(hi.q),0)} s; the band's 225° wants TF ${f(tfFor(225),0)} s and 247.5° ${f(tfFor(247.5),0)} s (Q ${f(Math.PI*tfFor(225)/T,0)}, ${f(Math.PI*tfFor(247.5)/T,0)})`);
   ok(At(TF(hi.q))>=225,`the band the sources give (225-270°: the 1954 instruction for chronometers in general; Hamilton's manual 247.5-270°) is inside the damping's range: the balance as built can swing 225° on the drive as measured`);
-  say(`a running 6MX's top plate is filmed in References/wempe/VIDEOS.md (moMvyx8eXfo 17:53-19:52, gAczA7-a7TY 4:47-5:52): tools/swing.py reads a swing off a video by the balance's screws through the plate's cutouts; the Wempe's masses and timing weights would serve, given their own geometry (not run)`);}
+  /* a running 6MX filmed (References/wempe/VIDEOS.md, "Measured": moMvyx8eXfo 17:53-19:50), its swing read frame by frame (wempe_swing.py) relaxing after it was set down and
+     after a twist, fitted with this escapement's work and the damping split as above (wempe_startup.js, which writes wempe_startup.json) */
+  const MJ=path.join(__dirname,'wempe_startup.json');if(fs.existsSync(MJ)){const M=JSON.parse(fs.readFileSync(MJ,'utf8')),sp=M.split;
+    ok(S.TF>=sp.span[0]&&S.TF<=sp.span[1],`a running 6MX on video (moMvyx8eXfo, wempe_startup.js): TF ${sp.TF} s at this swing, ${sp.span[0]}-${sp.span[1]} s over the stretches' relative scale (the work held flat ${M.flat.TF} s); the model's ${S.TF} s inside it (its steady swing ${f(sp.Ainf,0)}° on ${f(100*sp.drive,0)} % of the model's drive: a chronometer part wound, which says nothing of the swing at 12 h)`);}
+  else say('wempe_startup.json missing: node wempe_startup.js --json wempe_startup.json (a 6MX\'s TF from video, References/wempe/VIDEOS.md)');}
 function makeEscOf(o){const s={...S,...o};return W.makeEsc(s,s);}
 
 head('the escapement\'s figures (measure()) against sheet 05 04_1 and the layout');

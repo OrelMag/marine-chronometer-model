@@ -1762,6 +1762,16 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's key: its grooved pin lay in the paddle's plane, the paddle sank into the slot's
+  floor, and its square socket was round.** The pin (51 00 11-6) ran along the paddle, inside it,
+  pinning nothing: 05 01 02-2's cross hole crosses the 3 mm slot, so the pin goes through the
+  paddle's thickness (it shows end-on where the paddle shows its face on 51 00 11), 4 −0.05 under
+  the body's top (drawn 3.2). The paddle's centre was 10.6 over the body (scaled), its rim 0.35
+  below the slot's floor, the Ø 35 arc 6.3 deep (sure): now 10.95. The socket was a round bore Ø 3.1,
+  which the 3.1 square's corners (r 2.19) couldn't enter: now the square cut, 3.1 +0.05 × 19, its
+  corners as the arbor's square has them. Keep: the pin across the slot; the paddle on the slot's
+  floor; the socket square, so the key can go on the square (`fine.py --model wempe --eval` with it
+  there finds nothing new). `a422612`
 - **The setup ratchet's teeth 0.72 deep with faces leaning back** (OPEN-QUESTIONS.md). Measured on the wheel held loose at KLUwI2UUCMQ 38:25.8 and 38:26.0
   (`tools/ratchetface.py`, calibrated on synthetic frames blurred as the video): 0.48 mm deep
   (0.42-0.53), the faces undercut 3-6°; a lean back is ruled out. Now 0.48 (`SRD`, gearGeo's
@@ -2146,6 +2156,12 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's Box view showed an empty box, and the bezel glass's outline through its wood.**
+  From 24° the lid's front wall hid everything inside (the dial lies 59 under the lid's glass);
+  and Edges drew the bezel's and the lid's glass as ghosts, whose outlines the line pass lays over
+  the frame unoccluded, so an ellipse crossed the shut lid's front. The view now looks from 62°,
+  reading the dial through the glass, and both glasses are `inkBox` (no lines), as the Hamilton's
+  crystal and box glass are. Keep: a see-through part outside the movement draws no Edges lines. `a422612`
 - **The Wempe's dial printing overlapped and didn't look like the dial.** Its
   hours were typeset in the vendored Instrument Sans (600 faked by stroking),
   all 9 high on one circle, so the 12 ran into the up-and-down sub-dial and the
@@ -2239,6 +2255,11 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **The Wempe wound with no key to show it.** Wind turned the fusee back while its key lay in
+  the box. Now, in the movement's views (the movement out of its case), the key goes from the box
+  onto the fusee's square, its mouth on the dust plate, turning with it, and goes back when it lets
+  go, as the Hamilton's key does (`keyOn`); it rides with the dust plate, so in the Exploded view it
+  stays outside the dust bush. Keep: one key, moved (`WCASE.keyAt`, fusee.js `keySeat`), never a copy. `a422612`
 - **Setting the time turned the train, backward as often as forward** (kinematics handoff 7). The time field, Now and Local/GMT moved `tSim`, the model's own clock,
   so the whole train jumped to the time and `update()` re-seated the maintaining work. Now
   (`setHands`, app.js) the hour and minute hands go round by the cannon pinion's slip, as the
