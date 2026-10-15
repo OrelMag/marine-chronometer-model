@@ -1762,6 +1762,12 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's bowl had cracks along its cone.** Built as plan cells of rings, the narrow sloped
+  rings under the inside round left hairline gaps along the 40° cone, dashed rows seen through to
+  the inside (and drawn as dashes by Edges); the cone faced down, out of sight, until the bowl was
+  turned over to wind. Now the bottom inside r 34.1 is one cell with its two holes, and the rest is
+  turned from its profile, un-indexed and smoothed round the axis only, so the profile's corners
+  stay sharp. Keep: a turned part nothing crosses is turned from its profile, not built of rings. `4fd36fb`
 - **The Wempe's key: its grooved pin lay in the paddle's plane, the paddle sank into the slot's
   floor, and its square socket was round.** The pin (51 00 11-6) ran along the paddle, inside it,
   pinning nothing: 05 01 02-2's cross hole crosses the 3 mm slot, so the pin goes through the
@@ -2255,11 +2261,21 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **The Wempe's winding in its case played several times too slowly on a slow renderer, and held
+  the maintaining spring's drive.** Its steps (lid, turn, plate, key) advanced by the viewer's frame
+  step, held to 0.05 s a frame, so at three frames a second the key took 13 s to come on, not 2.4: they
+  now go by the wall clock (`dw`, up to 0.25 s a frame), the key on at 2.9 s there. And `wind0()` ran
+  on every frame the key was on, restarting the maintaining spring's clock, so its drive never fell
+  while the key turned: it now runs once. Keep: what is shown as a person's actions goes by the wall
+  clock; a wind starts once. `6da89da`
 - **The Wempe wound with no key to show it.** Wind turned the fusee back while its key lay in
   the box. Now, in the movement's views (the movement out of its case), the key goes from the box
   onto the fusee's square, its mouth on the dust plate, turning with it, and goes back when it lets
   go, as the Hamilton's key does (`keyOn`); it rides with the dust plate, so in the Exploded view it
-  stays outside the dust bush. Keep: one key, moved (`WCASE.keyAt`, fusee.js `keySeat`), never a copy. `a422612`
+  stays outside the dust bush. In the case (Dial, Box, Case), the bowl turns over in its gimbals, the
+  closing plate opens and the key comes down onto the square first, as the 6MX's instruction and two
+  videos show it (app.js `cw`). Keep: one key, moved (`WCASE.keyAt`, fusee.js `keySeat`), never a copy;
+  a view out of the case sets the bowl back before the movement lifts. `4fd36fb`, `f3ed550` `a422612`
 - **Setting the time turned the train, backward as often as forward** (kinematics handoff 7). The time field, Now and Local/GMT moved `tSim`, the model's own clock,
   so the whole train jumped to the time and `update()` re-seated the maintaining work. Now
   (`setHands`, app.js) the hour and minute hands go round by the cannon pinion's slip, as the
