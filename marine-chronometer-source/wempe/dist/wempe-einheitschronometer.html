@@ -4026,10 +4026,15 @@ const WCASE=(()=>{
        is light for brass (this solid is 1.3 kg in brass; 350 g is aluminium's or a moulded case's weight): README. The bowl's side keeps the brackets' screws
        (not cut: radial). Brass, as the sheet; the wartime Glashütte bowls were Bakelite, the 1942 arrangement names a Buna case (README) */
     const bowl=prt(bowlG,'bowl',-YP);
-    {const cone=p=>YB-65+(rr(p)-36.25)*14.5/16.75,fil=p=>YB-46-Math.sqrt(Math.max(0,49-(rr(p)-42)**2));
-      const rs=[34.1,36.25,42,43.2,44.4,45.5,46.5,47.3,48,48.5,49,53,54,59],ys=[[YB-59.5,YB-53],[YB-65,YB-53],[cone,YB-53],...Array(8).fill([cone,fil]),[cone,YB],[YB-23.5,YB],[YB-12,YB]];
-      const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53}];
-      tag(mesh(bowl,smoothRev(solidGeo(cells(rs,ys,[F0]))),M.brass),'050100-1');}
+    /* in two solids: the bottom inside the recess's wall (r 34.1), cut by its two holes, and the rest turned from its profile (the foot, the cone, the body, band and flange, the
+       bore and the round inside), which nothing crosses. Until 15 October 2026 the whole was plan cells of rings, whose narrow sloped rings under the round left cracks along
+       the cone, seen through once the bowl is turned over to wind */
+    {const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53}];
+      tag(mesh(bowl,solidGeo([{loop:circ(34.1),y0:YB-59.5,y1:YB-53,F:F0}]),M.brass),'050100-1');
+      const fil=[...Array(13).keys()].map(i=>{const t=i/12*Math.PI/2;return[42+7*Math.sin(t),YB-46-7*Math.cos(t)];}).reverse();   /* the round r 7 about (42, YB − 46), from the bore's wall down to the floor */
+      const pr=[[34.1,YB-65],[36.25,YB-65],[53,YB-50.5],[53,YB-23.5],[54,YB-23.5],[54,YB-12],[59,YB-12],[59,YB],[49,YB],...fil,[34.1,YB-53]];
+      const g=new THREE.LatheGeometry([...pr,pr[0]].map(([r,y])=>V2(r,y)),N).toNonIndexed();g.computeVertexNormals();   /* each face its own normal, then smoothed round the axis only (smoothRev), so the profile's corners stay sharp */
+      tag(mesh(bowl,smoothRev(g),M.brass),'050100-1',1);}
     /* the two case brackets (Gehäusekloben 05 01 00-3), on the bowl's side at 12 and 6 o'clock, carrying the inner pivots b: no sheet; scaled on 05 01 (Schnitt A-B and C-D,
        2.45 px/mm) and Kirow 422's bowl (11_Kirow_DEC_422_Gehäuse.jpg): a plate on the body 44 long, 9 high, 3 thick, its two screws in slots ("Kloben verstellen bis Gleichgewicht
        erreicht ist": moved along the bowl until it hangs level), and a block 9 wide standing out to 3.5 short of the ring, up past the flange to 5.5 over the pivot, with the
@@ -4059,8 +4064,10 @@ const WCASE=(()=>{
        Ø 1.2 at 12.4 (drawn at 12.35, inside the groove's edge) on one line, Ø 8 +0.2 at 22.6 at 90° to it. It lies in the bowl's foot, its inner face on the recess's floor and
        its boss 0.5 inside the foot, turning on its screw (7: WN-71, unsure) in the bottom: turned by the knob in its M2.6 (WN-72, brass on Wempe 3955,
        16_Wempe_3955_Gehäusetopf_Kardan.jpg), its Ø 8 comes over the winding hole for the key and away from it to close it; the closing spring (Verschlußfeder 05 01 00-7, 14 on 05 01)
-       that holds it, likely in the groove with its end in the Ø 1.2, has no sheet: not drawn. Its turn: open, the Ø 8 over hole 10 */
-    const cp=prt(bowlG,'closingPlate',-YP);
+       that holds it, likely in the groove with its end in the Ø 1.2, has no sheet: not drawn. Its turn: built open, the Ø 8 over hole 10; at rest the spring holds it shut, turned
+       CPS (25°: no sheet, photograph or video gives it; its Ø 8.1 clears the Ø 8.2 hole from 20.8° on, so 1.7 of metal over the hole's edge: estimated), and winding in the case
+       opens it (shutter, app.js), as the 6MX's shutter is opened for the key (Uy8A88_j-cA 5:21-5:25; the 6MX's own is a pin in a slot) */
+    const cp=prt(bowlG,'closingPlate',-YP),CPS=25*D2R;cp.rotation.y=CPS;
     {const t8=Math.atan2(H[10][1],H[10][0]),tk=t8-Math.PI/2,s0=t8+Math.PI/4,P=(r,t)=>[r*Math.cos(t),r*Math.sin(t)],y0=YB-64.5,yr=YB-61.8,y1=YB-59.5;
       const rs=[5,13,13.95,33.95],ys=[[y0,y1],[y0,y1-1.5],[y0,y1],[yr,y1]];
       const F=[[{p:C([0,0],5.55/2,48),a:y0,b:y1},{p:C([0,0],7.55/2,60),a:y0,b:y0+3}],[{p:C(P(12.35,tk),0.6,24),a:y0,b:y1-1.5}],[],[{p:C(P(22.6,t8),8.1/2,72),a:yr,b:y1},{p:C(P(25,tk),1.32,32),a:yr,b:y1}]];
@@ -4180,8 +4187,8 @@ const WCASE=(()=>{
       tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,Math.ceil(nT*24),0.44,6,false)),M.steel),'510011-4');}
     /* keyAt(seat): the key onto the fusee's square (seat {g, y}: fusee.js keySeat, the dust plate's group, which turns with the fusee, and its face, where the square is 3.1
        across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back on the box's floor */
-    const keyAt=s=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};
-    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
+    const keyAt=(s,d=0)=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05-d,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};   /* d: how far out along the square it still is (coming on or going off) */
+    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,shutter:q=>{cp.rotation.y=CPS*(1-q);},parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
   return{build,YP:YB-11.5,YB};
 })();
 
@@ -4379,7 +4386,7 @@ const PARTS={
     d:'The case the movement hangs in: a cast brass cup, a flange at its top, its body narrowing in a 40° cone to its foot. The movement ring’s flange lies on its top face, the ring in its bore, a pin in the ring setting the movement’s turn, so the winding hole in its bottom lies over the fusee’s square. Two brackets on its side carry the inner pivots, slid along slots until it hangs level (“Kloben verstellen bis Gleichgewicht erreicht ist”); a third, cranked, is where the transit lock holds it. Its sheet says a brass casting; the wartime Glashütte bowls were Bakelite, with a heavy weight in the bottom from No. 5100, and the 1942 arrangement names a Buna (synthetic rubber) case; the 6MX’s is brass. The sheet’s weight, 350 g, is a quarter of this bowl’s in brass.',
     sp:'Drawing R-05 01 00-1 (6.3.42) · Ms-Sandguß (Kokillenguß) · flange Ø 118 × 12 · body Ø 106 · foot Ø 72.5 · 65 high · bore Ø 98 × 53 · brackets 05 01 00-3, -4'},
   closingPlate:{t:'Closing plate (Verschlußplatte)',g:6,src:'drawing',sn:'Every figure of its sheet; its screw and knob from Wempe 3955’s bowl, estimated',figs:'05 01_3, 05 01_1',c:'#d4b06a',pri:1,
-    d:'A brass disc in the bowl’s foot, turning on a screw in the bottom: turned by its knob, its hole comes over the winding hole for the key, and away from it to shut it. Its closing spring (Verschlußfeder 05 01 00-7) has no sheet and isn’t drawn.',
+    d:'A brass disc in the bowl’s foot, turning on a screw in the bottom: turned by its knob, its hole comes over the winding hole for the key, and away from it to shut it: shut at rest, opened when it is wound in its case. Its closing spring (Verschlußfeder 05 01 00-7) has no sheet and isn’t drawn.',
     sp:'Drawing 05 01 00-2 (rev. a 14.4.48) · Ms · Ø 68 −0.2 × 2.3, boss Ø 28 to 5 · hole Ø 8 +0.2 at 22.6 · M2.6 at 25'},
   bezel:{t:'Bezel and glass (Glasrand)',g:6,src:'drawing',sn:'The ring from its casting’s sheet; the glass’s size scaled on the 1941 assembly; the recess opened to the movement ring’s flange',figs:'05 01_5, 05 01_4, 05 02_1',c:'#d8b86e',pri:2,
     d:'The cast brass ring that closes the bowl: it lies on the bowl’s top face round the movement ring’s flange, holding it down, a notch in it taking the ring’s pin. The glass sits in its top, 16.7 mm over the pillar plate’s dial face: the motion work’s sheet asks 17.0 (corrected in pencil from 15.8).',
@@ -4397,7 +4404,7 @@ const PARTS={
     d:'A knob on a bracket in the box’s front right corner turning a lever: turned in, the lever presses the gimbal ring onto the locking bracket on the bowl, so neither gimbal can swing, for carrying the box. Drawn turned off.',
     sp:'05 01’s list: Feststeller 05 01 01 (no sheet) · knob Ø 19.6, lever 28 × 8'},
   key:{t:'Winding key (Chronometerschlüssel)',g:6,src:'drawing',sn:'Its body and tube from their sheets; the handle scaled on the key’s assembly; the spring’s wire and the tube’s depth in the body estimated',figs:'05 01_7, 05 01_8, 05 01_9, 05 01_6',c:'#41444a',pri:2,
-    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It lies in the box; while it winds (Wind, in the movement’s views) it is on the fusee’s square, turning it back. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
+    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It lies in the box; while it winds it is on the fusee’s square, turning it back: in the movement’s views at once, in the case once the bowl is turned over in its gimbals and the closing plate opened, as the 6MX’s instruction has it. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
     sp:'Drawing 51 00 11 (16.7.43) · body 05 01 02-2: St. Az, phosphated, black · tube 05 01 02-3: Ms 58, Ø 5.95, 50.1 long, square 3.1 × 19 · paddle Ø 34.5'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
@@ -4559,7 +4566,10 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
 (function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
-  let hrs=20,winding=false,keyOn=false,conn='chain',HPT=90/14,HRUN=56.4;
+  let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',HPT=90/14,HRUN=56.4;
+  /* winding in the case (cw): go, Wind pressed with the movement in its bowl; on, the key turning; u, 0-3, how far the bowl is turned over (0-1), the closing plate opened
+     (1-2) and the key come onto the square (2-3) */
+  const cw={go:false,on:false,u:0};
   /* the balance's swing (js/escphys.js, WPHYS; the Hamilton's H.amp): driven by the escape wheel's torque drv (times the reference's, 12 h from full wind), A² relaxes to
      PE.ampAt(drv)² as exp(-2t/TF); with the train held it runs down free (PE.freeStep). Below PE.AMIN a swing can't unlock the wheel and see the impulse through: the train
      stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
@@ -4604,12 +4614,20 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
        rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
     tick:(dt,now,st)=>{if(!mv)return[];
-      {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);cf+=((c?c.lift:1)-cf)*k;cl+=((c?c.lid:cf>0.97?0:1)-cl)*k;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
+      {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);if(!c&&(cw.go||cw.u>0)){cw.go=false;cw.u=0;}   /* a view out of the case: the bowl set back at once, before the movement lifts out of it */
+        cf+=((c?c.lift:1)-cf)*k;cl+=((c?(cw.go||cw.u>0?1:c.lid):cf>0.97?0:1)-cl)*k;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
         const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
-      /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn; in the case the bowl would be turned over in its gimbals and the
-         closing plate opened for it, which isn't drawn), else lying in the box (case.js keyAt) */
-      {const ko=winding&&cf>0.8;if(ko!==keyOn){keyOn=ko;CS.keyAt(ko?mv.userData.R.fu.keySeat:null);}}
+      /* winding in the case, as the 6MX's instruction has it (pp. 3-4: the chronometer turned over in its gimbals, the key hole opened, the key put in and turned, then taken out
+         and the chronometer turned back) and two videos show it on 6MXs (DIxob2Rl4dc 7:05-7:22: the bowl turned about its 12-6 pivots, the dial toward 3 o'clock, until its
+         bottom faces up, the key put in from above; Uy8A88_j-cA 5:16-5:26): the lid opens, the bowl turns over in the ring, the closing plate opens, the key comes onto the
+         square, CW_T s each (estimated); the fusee turns once it is on, and when it is wound it all goes back */
+      {const CW_T=0.8;if(cw.go&&cw.on&&!winding)cw.go=false;const t=cw.go?3:0;if(!cw.go)cw.on=false;
+        cw.u=SNAPC||RMC.matches?t:cw.u+Math.sign(t-cw.u)*Math.min(Math.abs(t-cw.u),dt/CW_T);if(cw.go&&cw.u>=3){cw.on=true;wind0();}
+        CS.bowl.rotation.z=-Math.PI*smooth(clamp(cw.u,0,1));CS.shutter(smooth(clamp(cw.u-1,0,1)));}
+      /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
+         square; else lying in the box (case.js keyAt) */
+      {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}
       const dS=dt*(winding?Math.min(st.speed,1):st.speed),drv=drvNow();   /* while the key turns, model time no faster than real (the Hamilton's WIND_X): the maintaining spring's minute isn't spent in a frame */
       if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
       if(!H.held&&H.amp>=PE.AMIN){const r=PE.rateAt(H.amp,drv);if(Number.isFinite(r))H.rate=r;}
@@ -4623,16 +4641,17 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp);E=H.Eh;}   /* its own swing, the wheel on its stone */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
-      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0];},
+      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);},
       read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
-      return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
+      return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
+  function wind0(){winding=true;H.w0=H.held?0:drvNow();H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on */
   function showH(){if(!hIn)return;const v=Math.round(hrs*10)/10;if(v===hShown)return;hShown=v;hOut.textContent=v.toFixed(1)+' h';hIn.max=String(HRUN);hIn.value=String(v);}
-  if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0&&!winding){winding=true;H.w0=H.held?0:drvNow();H.wT=0;}});}   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
+  if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0&&!winding&&!cw.go){if(cf<0.5)cw.go=true;else wind0();}});}   /* in its case, turned over first (cw, tick) */   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
   /* the twist: the box turned about the hands and back sets a stopped balance swinging, about 130 deg (estimated: the 6MX's "light jerk"); going, it does nothing here */
   {const tw=document.getElementById('twist');if(tw)tw.addEventListener('click',()=>{if(H.held&&H.amp<PE.AMIN)H.kick=Math.max(H.amp,0.6*PE.ampAt(1));});}
   function setConn(v){conn=v;if(mv)mv.userData.R.fu.setConn(v);document.querySelectorAll('#conn button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
