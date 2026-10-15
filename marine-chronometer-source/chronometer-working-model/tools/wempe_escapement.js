@@ -36,7 +36,7 @@ head('the hairspring and the period');
   say(`the strip 0.285 × 0.52 (05 03_6) cut to 13 turns less 3.5 mm before its curves are bent (05 03_7): ${f(L.STRIP,1)} mm, ${f(L.turns,3)} turns of helix between the curves, ${f(L.L,1)} mm pin to pin (the pins ${f(Math.abs(L.pins),1)}° apart in plan, 05 03_1 drawing them together): k ${f(H.k*1e6,1)} µN·m a radian at 206 GPa (200-210: ${f(H.k*200/206*1e6,0)}-${f(H.k*210/206*1e6,0)})`);
   say(`the period with the weighed balance: ${f(H.T,4)} s, ${f(100*(H.T/0.5-1),1)} % from the train's 0.5 s (${f(86400*(0.5/H.T-1)/60,0)} min a day fast before timing); 0.5 s wants k ${f(need*1e6,1)} µN·m a radian, or I ${f(S.I*(0.5/H.T)**2,0)} g·mm²`);
   const dM=S.I*((0.5/H.T)**2-1),J=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8')).balance.byHn['050301-4'].I;
-  say(`to close it: the masses' moment ${f(J,0)} g·mm² ${f(100*dM/J,0)} % more (their height 5.4 and Ø 6.3 scaled on a poor copy of 05 03_2: estimated), or the strip ${f(100*(1-(need/H.k)**(1/3)),1)} % thinner; none moved here (tools/wempe_hairspring.js, README)`);
+  say(`to close it: the masses' moment ${f(J,0)} g·mm² ${f(100*dM/J,0)} % more (their height 6.46, 05 03_2's near pair and Wempe 3955's side view, and Ø 6.3: likely; until 15 October 2026 5.4, the far pair's outline), or the strip ${f(100*(1-(need/H.k)**(1/3)),1)} % thinner; none moved here (tools/wempe_hairspring.js, README)`);
   say(`the other readings: 14 turns less 3.5 mm ${f(H.alt.n14.L,1)} mm, ${f(H.alt.n14.T,4)} s; 15 (the coil as wound, 05 03_6) ${f(H.alt.n15.L,1)} mm, ${f(H.alt.n15.T,4)} s; phase 2a's (13 turns less 3.5 mm of helix, curves added) ${f(H.alt.h13.L,1)} mm, ${f(H.alt.h13.T,4)} s, the pins ${f(Math.abs(L.h13.pins),0)}° apart`);}
 
 head('the drive: 05 06_20 on the fusee arbor, through the train');
@@ -51,7 +51,7 @@ head('the balance\'s damping and its free run-down');
 {/* each loss an oscillation at swing A, the balance's energy k A²/2 (k for 0.5 s): air on the bluff parts, a pressure drag 1/2 rho Cd h r³ dr (r θ')² over each part's radial extent [count, height,
      r from, r to] (escapement.js's sizes); the endstone's constant friction (2/3) mu W r_pivot, mu the Hamilton's measured effective 0.008-0.012 (tools/physics.js: Jd2c3x8VKsE), W the
      balance's weight, r_pivot 0.105 (05 03_3.2's Ø 0.21); the spring's own Q 1,000-5,000 (published, spring alloys, as the Hamilton's) */
-  const parts=[[4,5.38,12.55,18.85],[2,3.0,16.45,20.45],[2,1.5,20.45,21.05],[4,1.7,18.87,19.42],[4,1.7,11.98,12.53],[2,1.15,1.05,15.24],[2,3.8,15.24,16.15]];   /* masses, timing weights, their heads, the masses' screws' heads and nuts, the arm's two halves edgewise, the rim's cut ends */
+  const parts=[[4,6.46,12.55,18.85],[2,3.0,16.45,20.45],[2,1.5,20.45,21.05],[4,1.7,18.87,19.42],[4,1.7,11.98,12.53],[2,1.15,1.05,15.24],[2,3.8,15.24,16.15]];   /* masses, timing weights, their heads, the masses' screws' heads and nuts, the arm's two halves edgewise, the rim's cut ends */
   const k=E.kB,T=0.5,w0=2*Math.PI/T,cub=4/(3*Math.PI),rho=1.2,J=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8')),m=(J.balance.m+J.rollers.m+J.collet.m+J.spring.m/2)/1000;
   const Q=(A,Cd,mu,qm)=>{const Eb=k*A*A/2;let air=0;for(const[n,h,r1,r2]of parts)air+=n*0.5*rho*Cd*h*1e-3*((r2/1000)**4-(r1/1000)**4)/4*(A*w0)**3*T*cub;const Mc=(2/3)*mu*m*9.80665*0.105e-3,end=4*Mc*A;
     const qa=2*Math.PI*Eb/air,qe=2*Math.PI*Eb/end;return{q:1/(1/qa+1/qe+1/qm),qa,qe};};
@@ -82,7 +82,7 @@ head('the swing and the rate across the wind');
   for(const[t,h]of rows){const n=h/P.HPT,s=P.drv(n),a=E.ampAt(s);A.push(a/d);say(`${t.padEnd(22)} the drive ${f(s,3)} (${f(P.escT(n),1)} µN·m): the swing ${f(a/d,1)}°, the rate ${sg(E.rateAt(a,s))} s a day against 12 h (the escapement and the spring)`);}
   let mn=1e9,mx=-1e9,rn=1e9,rx=-1e9;for(let h=0;h<=56.3;h+=1){const n=h/P.HPT,s=P.drv(n),a=E.ampAt(s)/d,r=E.rateAt(a*d,s);mn=Math.min(mn,a);mx=Math.max(mx,a);rn=Math.min(rn,r);rx=Math.max(rx,r);}
   say(`over the whole wind (0-56 h): the swing ${f(mn,1)}-${f(mx,1)}°, the rate ${sg(rn)} to ${sg(rx)} s a day: the escapement's isochronism and the drawn hairspring's (SET.HS ${f(S.HS,3)} s a day for each 10°, tools/wempe_hairspring.js), which counter each other (the 6MX's TU allows the daily rate to vary 2.3 s between days)`);
-  ok(mn>=200&&mx<=270,`the swing stays within 200-270° over the wind (the band 225-270° less the damping's estimate: below)`);
+  ok(mn>=193&&mx<=270,`the swing stays within 193-270° over the wind (the band 225-270° less the damping's estimate, below: its floor 14° under the reference's swing, as 200° was under 214° until the masses' height was read, 15 October 2026)`);
   const r0=E.rateAt(E.ampAt(P.drv(0)),P.drv(0)),r24=E.rateAt(E.ampAt(P.drv(24/P.HPT)),P.drv(24/P.HPT));say(`wound daily, as the 6MX's instruction asks (to the same mark at the same hour), the rate between full wind and 24 h changes ${sg(r24-r0)} s a day`);}
 
 head('stopping, starting and the maintaining spring');

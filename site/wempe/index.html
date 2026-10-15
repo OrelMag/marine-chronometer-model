@@ -2382,12 +2382,12 @@ const WESC=(()=>{
       SPL:5/ES_,SN0:-0.035/ES_,SN1:0.035/ES_,hD:1.9,EB:205,   /* the detent's spring 0.07 × 1.9, 5 long (1436, its bracketed sizes), steel ("Stahl": 200-210 GPa) */
       OP78:0,W78:0.63,   /* no Op. 78 here: W78 the preload itself, g at the stone. No Wempe source gives it (a banking screw sets the lock, the 1954 instruction's п. 11): the Hamilton's after Op. 78, 0.63 g (estimated) */
       MU:0.15,eS:0.3,   /* the brass tooth on the sapphire stone; the detent's restitution on its banking (estimated, as the Hamilton's) */
-      HS:-0.700,   /* the drawn hairspring's own isochronism, s a day for each 10 deg the swing is above the reference's: it loses as the swing grows (tools/wempe_hairspring.js: the spring as drawn, an elastica, at the model's swing) */
-      I:2268.6,JW:12.44,ID:8.25,   /* the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
+      HS:-0.659,   /* the drawn hairspring's own isochronism, s a day for each 10 deg the swing is above the reference's: it loses as the swing grows (tools/wempe_hairspring.js: the spring as drawn, an elastica, at the model's swing) */
+      I:2501.4,JW:12.44,ID:8.60,   /* the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
       DEP:1,RW:1,   /* checked in time (tools/dynamics.js --model wempe, 15 October 2026): the detent, flung off the discharge stone's square corner, never rides its bevel back
                        down, so its preload's and spring's work up to there is lost (DEP); and the locking stone falls back onto the tooth it has just let go, the wheel slow to get
                        it out from under, and drags on its land and is pushed on by its back (RW). Together 4.6° of swing at 12 h (README, Physics: in time) */
-      TH1:60,TF:124};})();   /* the balance's free run-down (s): estimated from its parts' damping (tools/wempe_escapement.js, README Physics) */
+      TH1:60,TF:125};})();   /* the balance's free run-down (s): estimated from its parts' damping (tools/wempe_escapement.js, README Physics) */
   /* makeEsc's lift (the gold spring tip's travel, units of ES) as this file's detent turn (rad, rotation.y about TP): makeEsc turns the detent by -lift/LEN about its flexure,
      clockwise in its frame, anticlockwise seen from the dial (tools/wempe_escapement.js checks the stone's place both ways) */
   const toKin=(l,LEN)=>l/LEN;
@@ -2431,9 +2431,15 @@ const WESC=(()=>{
       tag(mesh(bal,solidGeo([{loop:ccw(armLoop),y0:ya,y1,F:hubF},{loop:ccw(half(90,eTop)),y0,y1},{loop:ccw(half(270,eBot)),y0,y1}]),M.steel),'050301-1');
       for(const c of[90,270])tag(mesh(bal,solidGeo([{loop:brass(c),y0,y1}]),M.brass),'050301-1',1);}
     /* the compensation masses (Masse 05 03 01-4; 05 03_2, a poor copy): round brass, Ø 6.3 (scaled; 05 03_1's Anker balance Ø 6.35 boxed), across the rim, their centres on its
-       middle about 32 deg from the 3-9 line (scaled 32.5), each held by a screw WN-12 with its nut WN-12a across the rim (05 03_2's side view and plan, the screw dashed radially);
-       5.4 high from 1.1 above the rim's lower face (scaled at 5:1), a slot from below for the rim. Photograph: Wempe 3955's (9_Wempe_3955_Hemmung.jpg) */
-    {const rc=(30.5/2+32.3/2)/2,mr=3.15,y0=FY-6.46,y1=FY-1.08,ys=Y.rimT-0.02,ri=30.5/2-0.02,ro=32.3/2+0.02;
+       middle, each held by a screw WN-12 with its nut WN-12a across the rim (05 03_2's side view and plan, the screw dashed radially), a slot from below for the rim.
+       Their place, MASS_A deg from the 3-9 (the cuts') line: 30, Wempe 3955's (9_Wempe_3955_Hemmung.jpg, its rim rectified on its two cuts and the arm's ends: the four
+       masses at 28.2, 30.0, 32.0 and 29.6 deg, ±1-2; the 6MX's book, Fig. 5.62, 30 deg), where 05 03_2 scales 32.5 (likely). Their height, MASS_H0 to MASS_H1 over the rim's
+       lower face: 05 03_2's side view (12.18 px/mm by the rim's 3.8) draws the near pair from that face to 6.40 (its end chamfered about 0.4, not drawn) and the far pair from
+       1.24, where the arm's cut section (1.15) hides their foot; Wempe 3955's side view (5_Wempe_3955_O.jpg) measures 6.0-6.3 high against their Ø 6.3 (height/diameter
+       0.98-1.00, two masses) and its plan view the masses' faces flush with the rim's (within about 0.3); Lange 5829 (stahl_113510_lange_4.jpg) 5.8 (likely: until
+       15 October 2026 1.08 to 6.46, the far pair's outline) */
+    const MASS_A=30,MASS_H0=0,MASS_H1=6.46;
+    {const rc=(30.5/2+32.3/2)/2,mr=3.15,y0=FY-MASS_H1,y1=FY-MASS_H0,ys=Y.rimT-0.02,ri=30.5/2-0.02,ro=32.3/2+0.02;
       /* the mass's circle cut by the slot's two arcs (r ri, ro about the staff) into three cells: inside the rim, over it (the slot below), outside it */
       const cells=c=>{const N=120,L=[];for(let i=0;i<N;i++){const a0=TAU*i/N,a1=TAU*(i+1)/N,p=[c[0]+mr*Math.cos(a0),c[1]+mr*Math.sin(a0)],q=[c[0]+mr*Math.cos(a1),c[1]+mr*Math.sin(a1)];L.push({p});
           for(const r of[ri,ro]){const fp=hyp(p)-r,fq=hyp(q)-r;if(fp*fq<0){let lo=0,hi=1;for(let k=0;k<50;k++){const m=(lo+hi)/2;((hyp([p[0]+(q[0]-p[0])*m,p[1]+(q[1]-p[1])*m])-r)*fp>0)?lo=m:hi=m;}L.push({p:[p[0]+(q[0]-p[0])*lo,p[1]+(q[1]-p[1])*lo],x:r});}}}
@@ -2442,10 +2448,10 @@ const WESC=(()=>{
         const[i1,i2]=X(ri),[o1,o2]=X(ro),inS=hyp(L[(i1+1)%n].p)<ri?i1:i2,inE=inS===i1?i2:i1,ouS=hyp(L[(o1+1)%n].p)>ro?o1:o2,ouE=ouS===o1?o2:o1;
         const aI=arcR(ri,L[inE].p,L[inS].p),aO=arcR(ro,L[ouE].p,L[ouS].p);   /* the arcs closing the inner and outer cells */
         return[[...run(inS,inE),...aI],[...run(ouS,ouE),...aO],[...run(inE,ouS),...aO.slice().reverse(),...run(ouE,inS),...aI.slice().reverse()]];};
-      for(const a of[32,148,212,328]){const c=pol([0,0],rc,a),[cI,cO,cS]=cells(c);
+      for(const a of[MASS_A,180-MASS_A,180+MASS_A,360-MASS_A]){const c=pol([0,0],rc,a),[cI,cO,cS]=cells(c);
         tag(mesh(bal,solidGeo([{loop:ccw(cI),y0,y1},{loop:ccw(cO),y0,y1},{loop:ccw(cS),y0,y1:ys}]),M.brass),'050301-4');
         /* its screw across, head outside, nut inside (WN-12, WN-12a): drawn without a hole across the rim (a turned part cut by a radial hole isn't drawn) */
-        const u=unit(c),yS=(ys+y1)/2,rIn=rc-mr,rOut=rc+mr;
+        const u=unit(c),yS=FY-2.45,rIn=rc-mr,rOut=rc+mr;   /* 2.45 over the rim's lower face: 05 03_2's slotted head 2.83, Wempe 3955's 2.55 and Lange 5829's 2.0 (5_Wempe_3955_O.jpg, stahl_113510_lange_4.jpg; likely) */
         tag(across(bal,lathe([[0,rIn],[0.42,rIn],[0.42,rOut],[0,rOut]],16),M.steel,[0,0],u,yS),'WN-12');
         tag(across(bal,lathe([[0,rOut],[0.85,rOut],[0.85,rOut+0.55],[0,rOut+0.55]],6),M.steel,[0,0],u,yS),'WN-12',1);   /* its head, on the mass's outer side */
         tag(across(bal,lathe([[0,rIn-0.55],[0.85,rIn-0.55],[0.85,rIn],[0,rIn]],6),M.steel,[0,0],u,yS),'WN-12a');}}
@@ -2561,8 +2567,7 @@ const WESC=(()=>{
        5,4 (4,9). Every pair differs by 0.03-0.1, the bracketed always the smaller: read as the size to grind it to from the first (the blank's): the finished sizes are
        built (inferred; README). The foot 0.60 × 1.9 × 6.6, clamped to the block's end (05 04 01-4) by a screw M1 along it, two steady pins; the spring 0.07 thick (0.09 at the
        foot: likely), 1.9 wide, 5 long (scaled); the square 1.9 × 2 (Viereck); the blade 0.50 then 0.28 thick, 0.9 wide; the pipe Ø 1.15 (likely) × 1.9 across the blade for the
-       stone; the horn ("Spitze", 0.22 × 0.75) on past the stone, bent toward the block (1436's "Anschrägen") so the gold spring rests on it, 3.5 long (to clear the discharge
-       stone; 1436's 4.4 or 5.2 scaled, estimated). Heights: the foot 3.2-5.2 under the plate (its screw 2.3 from the block's lower face, 05 04 01-4), the blade 1 wide at its lower
+       stone; the horn ("Spitze", 0.22 × 0.75) on past the stone, bent toward the block (1436's "Anschrägen") so the gold spring rests on it, HORN_L long from the stone. Heights: the foot 3.2-5.2 under the plate (its screw 2.3 from the block's lower face, 05 04 01-4), the blade 1 wide at its lower
        half (1436's right view: the narrow blade flush with one edge), the pipe from 0.1 under the wheel's teeth down 2.0 */
     const det=part('detent',-30),detS=new THREE.Group(),detM=new THREE.Group();det.add(detS,detM);R.det=detM;
     const piv=D(TP,0);detM.position.set(piv[0],0,piv[1]);const dm=new THREE.Group();dm.position.set(-piv[0],0,-piv[1]);detM.add(dm);   /* the detent turns about its spring's middle */
@@ -2575,7 +2580,12 @@ const WESC=(()=>{
       tag(mesh(dm,solidGeo([{loop:rect(SQ0-2.9,SQ0,-0.25,0.25),y0:y0b,y1:y1b}]),M.steel),'050401-1',1);   /* the blade's thicker part, 2.9 long (scaled on 1436's left view) */
       tag(mesh(dm,solidGeo([{loop:rect(0.4,SQ0-2.9,-0.14,0.14),y0:y0b,y1:y1b}]),M.steel),'050401-1',1);   /* the blade, into the pipe's wall */
       tag(mesh(dm,solidGeo([{loop:C(P,1.15/2,96),y0:yd(3.3),y1:yd(5.3),F:[{p:C(P,RS+0.002,64),a:yd(3.3),b:yd(5.3)}]}]),M.steel),'050401-1',1);   /* the pipe */
-      tag(mesh(dm,solidGeo([{loop:[D(-0.2,-0.40),D(-0.45,-0.25),D(-0.7,GNB-0.005),D(-3.5,GNB-0.005),D(-3.5,GNB-0.225),D(-0.5,GNB-0.225),D(-0.15,-0.52)],y0:yd(4.3),y1:yd(5.1)}]),M.steel),'050401-1',1);   /* the horn */
+      /* the horn's length from the stone, HORN_L: 1436's figure, 4.4 to the pipe's centre (its drawing scales 5.2: not to scale there); Wempe 3955's detent seen along its
+         pipe (10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg, 21.7 px/mm by the pipe's Ø 1.15) measures 4.4-4.55, the gold spring's tip just past it, as on the 6MX's
+         (8_Gangfeder_mit_Kloben_Rus_einfach.jpg). Its end then lies 1.598 from the staff, 0.038 outside the discharge stone's reach (RD 1.560), and the gold spring's tip
+         (1.54) 0.056 past it (likely; 3.5 until 15 October 2026, an estimate kept 1 short of the tip) */
+      const HORN_L=4.4;
+      tag(mesh(dm,solidGeo([{loop:[D(-0.2,-0.40),D(-0.45,-0.25),D(-0.7,GNB-0.005),D(-HORN_L,GNB-0.005),D(-HORN_L,GNB-0.225),D(-0.5,GNB-0.225),D(-0.15,-0.52)],y0:yd(4.3),y1:yd(5.1)}]),M.steel),'050401-1',1);   /* the horn */
       /* the locking stone (Ruhestein 05 04 01-3): Ø 0.75 in the pipe, ground half away below it to its flat, which faces the oncoming tooth along the line from the wheel's
          centre (05 04_1's plan: the hatched half); it stands out of the pipe to 0.1 over the teeth (estimated) */
       const hd=[];for(let i=0;i<=24;i++)hd.push(add([0,0],dir(P_A+180*i/24),RS));   /* the round half lies on the side the wheel turns toward, its flat on the line from the wheel's centre */
@@ -2614,7 +2624,11 @@ const WESC=(()=>{
         F:[{p:C(H[13],0.87,48),a:yP,b:yP+6.5},{p:C(L(ROW-2,nE-2.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW+2,nE-12.3),0.45,32),a:yP,b:yP+6.5},{p:C(L(ROW,nE-2.8),0.65,32),a:yP+3.5,b:yP+6.5}]};
       upCell.loop=ccw(upCell.loop);base.loop=ccw(base.loop);
       tag(mesh(blk,solidGeo([base,upCell]),M.brass),'050401-4');
-      /* the cross screw M1.2 across the upright's slit end (its number not read), drawn without its hole */
+      /* the cross screw M1.2 across the upright's slit end (its number not read), drawn without its hole. It is the detent's banking (15 October 2026, likely): the 6MX's
+         block of this form (8_Gangfeder_mit_Kloben_Rus_einfach.jpg, 10_Vergleich_CWW-6MX_Gangfeder_mit_Kloben.jpg) has a screw through its upright with a domed brass head
+         on the detent's far side, the pipe resting on its face, the slit gripping its thread; Wempe 3955's earlier block the same at its stone; the 1954 instruction's п. 11
+         and the 6MX's book: a banking screw sets the depth of lock. Its head and its length to it aren't drawn: where it passes the detent depends on which face of the block
+         the upright is flush with (README, Unresolved) */
       tag(across(blk,lathe([[0,0],[0.9,0],[0.9,0.5],[0.6,0.5],[0.6,0.5+3.0],[0,3.5]],20),M.steel,L(ROW-18.8,nUr-0.5),TD.n,yP+1.5),'WN-gkA');
       /* the fixing screw from the plate's outer face through 13 (drilled 1.8): head Ø 3.0 × 1.2 (Wempe 3955's, 11_), M1.7, 3.0 into the block (estimated) */
       K.headOn(tag(screw(blk,H[13][0],H[13][1],TT,1.5,1.2,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate');
@@ -4462,7 +4476,7 @@ const PIECES={
   secondsWheel:[{k:'arbor',t:'Seconds pinion and arbor (Sekundentrieb)',h:'050501-2',d:'The seconds arbor’s steel pinion and arbor, one piece: its 10 leaves driven by the intermediate wheel, the seat its wheel is riveted on, and its lower pivot, which runs on as the post for the seconds hand.',sp:'Drawing 05 05 01-2 (revised 24.3.48) · Präz. Rundstahl 3.5 · z 10, tip Ø 3.4, 7 long · 24.1 between its shoulders · pivots Ø 0.82 and 0.76, the post to Ø 0.65',src:'scaled',sn:'Its lengths and diameters from its sheet; its leaf count from the centre distance; the tip scaled on its sheet and the root estimated'},
     {k:'wheel',t:'Seconds wheel (Sekundenrad)',h:'050501-1',d:'The seconds wheel, five-spoked, riveted on the pinion’s seat; it drives the escape pinion. Its hub stands 0.2 proud toward the pinion.',sp:'Drawing 05 05 01-1 · z 80, m 0.263, tip Ø 21.9, root Ø 20.23 · rim 1.0, hub Ø 6.5, spokes 1.3'}],
   balance:[{k:'rim',t:'Balance rim and arm',h:'050301-1',d:PARTS.balance.d,sp:'Drawing 05 03 01-1 · Nickelstahl Sonderlegierung u. Messing · Ø 32.32 −0.04, joint Ø 31.29, inside Ø 30.48 · 3.8 high · cut 1.5 at 90° from the arm'},
-    {k:'masses',t:'Compensation masses',h:'050301-4 WN-12 WN-12a',d:'Four round brass masses across the rim, each held by a screw and nut through it (WN-12, WN-12a).',sp:'05 03 01-4 · Ø 6.3 × 5.4',src:'scaled',sn:'Scaled on 05 03_2 (a poor copy) and Wempe 3955’s photograph',figs:'05 03_2'},
+    {k:'masses',t:'Compensation masses',h:'050301-4 WN-12 WN-12a',d:'Four round brass masses across the rim, each held by a screw and nut through it (WN-12, WN-12a).',sp:'05 03 01-4 · Ø 6.3 × 6.46, from the rim’s lower face · 30° from the cuts’ line',src:'scaled',sn:'Scaled on 05 03_2 (a poor copy) and measured on Wempe 3955’s photographs: their height against their width, their place on the rim rectified on its cuts and arm',figs:'05 03_2'},
     {k:'timing',t:'Timing screws and weights',h:'050301-2 050301-3',d:'A timing screw across the rim at each end of the arm, in a tapped hole Ø 0.9 × 0.16, carrying a brass weight: turned in or out, they set the rate.',sp:'05 03 01-2, 05 03 01-3 · 42.1 over both',src:'scaled',sn:'The hole from the rim’s sheet; the weights scaled on 05 03_2 and Wempe 3955',figs:'05 03_2, 05 03_4'},
     {k:'staff',t:'Balance staff',h:'050402-1',d:'The hardened steel staff: its pivots run in the jewels in the two cocks; it carries the collet, the arm on the hub, and the rollers.',sp:'Drawing 05 04 02-1 (in 05 04 02, 29.5.46) · hardened and tempered · seats Ø 1.65 s6, Ø 2 h6, Ø 1.2 r6 · pivots Ø 0.21',src:'drawing',sn:'Its diameters and the lengths from the hub’s flange from 05 04 02; its pivots from 05 03_3.2; its ends fitted to the endstones',figs:'05 04_4, 05 03_3-2'},
     {k:'hub',t:'Balance hub (Unruhbutzen)',h:'050402-2',d:'The brass hub pressed on the staff, its flange carrying the arm.',sp:'05 04 02-2 · Ms · flange Ø 6.3 × 1.8, neck Ø 2.63, 4.1 long, 2 × M1',src:'drawing',sn:'Every size from 05 04 02',figs:'05 04_4'},
