@@ -294,5 +294,5 @@ const WDIAL=(()=>{
       cn.rotation.y=c;mh.rotation.y=c;ch.rotation.y=-c*14/56;hw.rotation.y=c/12;hh.rotation.y=c/12;sh.rotation.y=ang.s||0;
       const n=s.n!=null?s.n:3.75,f=ang.f!=null?ang.f:n*TAU;up.rotation.y=f;ud.rotation.y=-f/10;uh.rotation.y=-22.5*D2R-n*TAU/10;};
     return{update,R};}
-  return{build,face,DY0,DY1,GLASS,LV};
+  return{build,face,DY0,DY1,GLASS,LV,DR,HANDS:{MIN,HOUR,UDH,SEC}};   /* HANDS: the hands' outlines (half-widths along each), which the essay draws on the dial (js/essay.js) */
 })();
