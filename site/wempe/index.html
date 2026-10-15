@@ -3705,11 +3705,13 @@ const WFUSEE=(()=>{
        cover plate. Running, its lower end stands out of the hub into the top turn's groove; when the chain winds onto the top turn there it presses that end down to the groove's
        floor, the bar slides 3.6 (scaled on C-D: its two positions) and its upper end comes out past the hub, where the stop pin in the top plate ("Anschlagstift unten
        vorstehend", hole 7, 14.0 from the fusee) catches it at full wind ("Stellung im aufgezogenen Zustand"). Its ends' forms (the point, r 12 and 17.6 on C-D) approximated;
-       its spring (Stegfeder 05 06 03-3, coloured section) has no sheet: not drawn. The slot isn't cut in the turned body: the bar lies in it (README) */
+       its spring (Stegfeder 05 06 03-3, coloured section) has no sheet: not drawn. The slot isn't cut in the turned body: the bar lies in it (README), on the slot's floor (its
+       1.45 in the 1.5 deep: the movement dial up in its case, the bar falls onto the floor), 0.05 under the small end's face and the cover plate; flush with them (until 15
+       October 2026) its face was the body's end face's, and the two flickered through each other wherever the cover plate wasn't drawn */
     const pSW=part('stopWork',-33),gSW=grp(pSW,fx,fz),gBar=new THREE.Group();gSW.add(gBar);gBar.rotation.y=barRot;pSW.userData.mTip=mTip;
     {const bar=[[SB.lo+1.6,-1],[SB.hi-1,-1],...[...Array(9).keys()].map(i=>{const a=-Math.PI/2+Math.PI*i/8;return[SB.hi-1+Math.cos(a),Math.sin(a)];}),[SB.lo+1.6,1],[SB.lo,0]];
       /* the bar's frame: x along it (lower end to upper), y across; placed at d from the axis */
-      tag(mesh(gBar,slab(bar.map(([x,y])=>[x,y+SB.d]),[],S,S+1.45),M.steel),'050603-1');}
+      tag(mesh(gBar,slab(bar.map(([x,y])=>[x,y+SB.d]),[],S+0.05,S+1.5),M.steel),'050603-1');}
     /* the stop pin 05 08 01-5 (no sheet): Ø 1.6 in the top plate's hole 7 (1.6 +0.009, reamed), flush with its outer face and standing 1.5 under its inner face, to the bar's
        height: estimated */
     tag(cylBetween(P.topPlate,0.8,TT,TI+1.5,M.steel,SPX[0],SPX[1],20),'050801-5');

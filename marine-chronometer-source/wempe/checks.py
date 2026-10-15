@@ -28,7 +28,7 @@ EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) a
  ('fusee:Lathe','stopWork:Extrude'):("the stop bar in its slot across the fusee's small end (05 06 04-2: 2 H8 wide, 1.5 +0.05 deep), which isn't cut in the turned body",18.0,1.5),
  ('coverPlate:Lathe','fusee:Lathe'):("the cover plate's screw (WN-20) in the body's M1.7 hole, 6 deep (05 06 04-2), which isn't cut in the turned body",8.5,3.6),
  ('chain:Buffer','stopWork:Extrude'):("the chain coming down on the stop bar's lower end in the top turn and pressing it in (its travel drawn as a ramp over the 0.15 turn before the chain lies on it)",1.0,0.5),
- ('chain:Extrude','stopWork:Extrude'):("the same, an inner link's plate",0.4,0.15),
+ ('chain:Extrude','stopWork:Extrude'):("the same, an inner link's plate (0.42 since the bar lies on its slot's floor, 15 October 2026; 0.24 flush with the face)",0.5,0.15),
  ('barrelArbor:Cylinder','mainspring:Buffer'):("the arbor's hook (05 07 02-2) through the mainspring's eye at its inner end, the eye not cut in the drawn strip",0.8,2.05),
  ('chain:Extrude','fusee:Cylinder'):("the chain's top hook on the fusee's pin (05 06 00-6), round it",0.1,0.3),
  ('chain:Buffer','chain:Extrude'):("the chain's hooks riveted between its end links' plates (the rivets through them)",0.08,0.3),

@@ -20,7 +20,6 @@
   "escapeWheel:Buffer | escapeWheel:Lathe | --16.88": 1,
   "fusee:Buffer | fusee:Lathe | +-7.02": 3,
   "fusee:Lathe | fusee:Cylinder | +-6.26": 1,
-  "fusee:Lathe | stopWork:Extrude | --18.82": 1,
   "fuseeBush:Buffer | upperCock:Buffer | +-22.36": 1,
   "fuseeBush:Lathe | dustBush:Lathe | +-23.86": 1,
   "hands:Lathe | hands:Lathe | +14.14": 1,

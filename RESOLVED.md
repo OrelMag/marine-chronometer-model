@@ -2713,4 +2713,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The Wempe's stop bar flickered through the fusee's small end.** The bar lies in a slot the
+  turned body doesn't cut, drawn flush with the small end's face, so its face was the body's
+  face: wherever the cover plate wasn't drawn (hidden, faded, see-through, a phone zoomed in on
+  it) the white bar and the brass speckled through each other. It now lies on the slot's floor,
+  its 1.45 in the slot's 1.5 (the movement dial up in its case), 0.05 under the face. Keep: a
+  part lying in a cut the solid around it doesn't have sits off that solid's face, never on it.
