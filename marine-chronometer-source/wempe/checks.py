@@ -25,18 +25,17 @@ EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) a
 ('fuseeBush:Lathe','topPlate:Buffer'):("the fusee bush's body pressed into the top plate's hole 10 (05 08 01-2: Ø 8 T6, +0.019/+0.028, in 8.0 +0.015 reamed; drawn at the fits' middles, 0.008 interference on the radius)",0.4,2.8),
  # the fusee and barrel (P1c): joints in holes a turned or extruded part can't have cut across it, and the parts that touch by design
  ('fusee:Lathe','udPinion:Extrude'):("the up-and-down pinion (05 02 00-5, bore Ø 1.6) pressed on the fusee arbor's stub (05 06 04-1: Ø 1.6 +0.1/+0.05, drawn 1.675): 0.0375 interference on the radius over the pinion's 3 length",0.65,3.0),
- ('fusee:Lathe','stopWork:Extrude'):("the stop bar in its slot across the fusee's small end (05 06 04-2: 2 H8 wide, 1.5 +0.05 deep), which isn't cut in the turned body",18.0,1.5),
+ ('fusee:Buffer','stopWork:Cylinder'):("the stop bar's spring's pin (05 06 03-2) in its hole along the slot, \"0,5 H7\" (05 06 04-2), which isn't cut in the body's small end",0.4,0.55),
  ('coverPlate:Lathe','fusee:Lathe'):("the cover plate's screw (WN-20) in the body's M1.7 hole, 6 deep (05 06 04-2), which isn't cut in the turned body",8.5,3.6),
- ('chain:Buffer','stopWork:Extrude'):("the chain coming down on the stop bar's lower end in the top turn and pressing it in (its travel drawn as a ramp over the 0.15 turn before the chain lies on it)",1.0,0.5),
- ('chain:Extrude','stopWork:Extrude'):("the same, an inner link's plate (0.42 since the bar lies on its slot's floor, 15 October 2026; 0.24 flush with the face)",0.5,0.15),
  ('barrelArbor:Cylinder','mainspring:Buffer'):("the arbor's hook (05 07 02-2) through the mainspring's eye at its inner end, the eye not cut in the drawn strip",0.8,2.05),
  ('chain:Extrude','fusee:Cylinder'):("the chain's top hook on the fusee's pin (05 06 00-6), round it",0.1,0.3),
  ('chain:Buffer','chain:Extrude'):("the chain's hooks riveted between its end links' plates (the rivets through them)",0.08,0.3),
  ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.82 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
  ('band:Extrude','barrel:Lathe'):("the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum",1.2,0.8),
- ('band:Buffer','stopWork:Extrude'):("the band coming down on the stop bar's lower end in the top turn and pressing it in (as the chain)",0.4,0.4),
+ ('band:Buffer','fusee:Buffer'):("the band in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot, along the groove's walls (as the turned body's)",0.1,0.1),
  ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8),
  ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8),
+ ('chain:Buffer','fusee:Buffer'):("the chain's links in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot: 0.80 across in the 0.82 land, the links' and the groove's facets meeting (as the turned body's)",0.04,0.06),
  ('chain:Buffer','fusee:Lathe'):("the chain's links in the fusee's groove: 0.80 across in the 0.82 land (05 07 04, 05 06 04-2), the links' and the turned groove's facets meeting",0.04,0.06)}
 WIND_SEQ=False
 BARREL=False
