@@ -92,6 +92,15 @@ chk(Math.abs((S.HS||0)-slope)<0.0005,`the model runs with it: WESC.SET.HS ${f(S.
 /* the same spring as co-rotational beam elements (hairspring-fe.js's solver: extensible, the strip's 0.285), the rate at the same swings */
 {const q=fe({P:drawn,big,R,rates:{r1:rate(aLo),r0:rate(A12),r2:rate(aHi)}},H.HT,{name:'the drawn spring',drawn:true,amps:[aLo,A12,aHi].map(a=>+a.toFixed(1)),coil:'r 3.5-6.3',band:'the model\'s swing over the wind',tolRate:0.02});   /* 0.02: 1,684 elements on 505 mm; the two methods' small-swing stiffnesses part 1.4e-4 */
   for(const r of q.rows)rows.push(r);if(q.fail)fail=1;}
+/* the spring the page draws as the balance turns (WESC.HSP.bend: breathing, each part's curvature changed by θ/L) against the elastica on the same path end to end,
+   node by node, and hsRA's rigid turn (the page's until 15 October 2026) for comparison: fails past 0.03 mm (the Hamilton's R.spPath is within 0.039 at 345°) */
+{const g=H.bend(0),kp=[0];for(let i=1;i<g.length;i++)if(Math.hypot(g[i][0]-g[kp[kp.length-1]][0],g[i][1]-g[kp[kp.length-1]][1])>1e-9)kp.push(i);
+  const pts=kp.map(i=>[g[i][0],-g[i][1]]),as=[-300,-aHi,-A12,-aLo,aLo,A12,aHi,300].map(a=>+a.toFixed(1)),gr=[...new Set([...Array(121).keys()].map(i=>-300+5*i).concat(as))],bg=HSPR.large(pts,gr.map(a=>a*D));   /* [x, −z]: hsRA's angles run clockwise in the plan's (x, z); large() carries its solution out from 0, so every 5° */
+  const len=q=>{let s=0;for(let i=1;i<q.length;i++)s+=Math.hypot(q[i][0]-q[i-1][0],q[i][1]-q[i-1][1]);return s;},L0=len(pts);let wb=0,wr=0,wl=0;
+  for(const a of as){const q=bg.find(r=>Math.abs(r.th-a*D)<1e-9),e=HSPR.shape(pts,q),b=H.bend(a*D),rg=H.ra(a*D).map(([r,t])=>H.xy(r,t));
+    kp.forEach((i,k)=>{wb=Math.max(wb,Math.hypot(b[i][0]-e[k][0],-b[i][1]-e[k][1]));wr=Math.max(wr,Math.hypot(rg[i][0]-e[k][0],-rg[i][1]-e[k][1]));});wl=Math.max(wl,Math.abs(len(rg)/L0-1));}
+  chk(wb<0.03,`the spring the page draws (WESC.HSP.bend, breathing: its coils open and close ${f(100*A12*D/(2*Math.PI*H.TURNS),1)} % of their radius at ${f(A12,0)}°) within ${f(wb,3)} mm of the elastica, node by node, at ${as.join(', ')}°; the rigid turn it drew until 15 October 2026 was ${f(wr,2)} mm off, its strip ${f(100*wl,1)} % longer or shorter`);
+  module.exports.drawnShape={bend:wb,rigid:wr};}
 say('the strip\'s own mass, its coils touching and the curves\' rise out of their planes are left out, as in hairspring.js; the helix is taken in plan (its 0.73 pitch tilts the strip 1.1°)');
 module.exports.rows=rows;module.exports.fail=fail;
 if(require.main===module){console.log(rows.join('\n'));process.exit(fail);}

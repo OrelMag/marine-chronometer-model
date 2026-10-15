@@ -2734,7 +2734,21 @@ const WESC=(()=>{
     const n=Math.ceil(TURNS*360/st);for(let i=0;i<=n;i++){const u=i/n;o.push([RC,a0L+360*TURNS*u+td*(1-u),u]);}
     for(let th=st;th<=eU+1e-9;th+=st)o.push([rU(th),a0U+th,1]);
     o.push([rU(eU),a0U+eU,1]);return o;};
-  const HSP={TBL,tbl,rL,rU,RC,HT,HB,PITCH,TURNS,RSTUD,kU,TE_L,TE_U,aVO,a0U,a0L,aPinL,ra:hsRA,xy:(r,a)=>pol([0,0],r,a)};
+  /* hsBend(tw): the spring the page draws, [x, z, u] in plan from the collet's end to the stud's, the collet turned tw (rad, as hsRA's) and the stud held. It breathes, as the
+     Hamilton's (R.spPath, movement.js): its pull on the balance taken as a pure couple (the drawn curves leave 0.018 of it on the pivots: tools/wempe_hairspring.js), the bending moment
+     is the same all along the strip, so every part of it changes its curvature by tw/L and the heading at s (from the collet) turns tw(1 - s/L). The coils close as the
+     collet is turned against the way they run from it and open the other way, each by tw/(2π TURNS) of its radius, 4.9 % (0.31 mm) at the model's 207° swing (12 h), concentric, the
+     terminal curves curling by as much; the length is kept (each segment turns, none stretches). Built from the stud's end back, each segment turned at its middle; what
+     second order leaves at the collet's end is taken out along the strip in proportion to 1 - s/L. Against the strip solved as an elastica (HSPR.large) it lies within
+     0.010 mm from -300° to 300° (tools/wempe_hairspring.js checks it). Until 15 October 2026 hsRA(tw) drew it, every coil turned rigidly by tw(1 - u) at its radius: about
+     1.2 mm off the elastica at the model's swing (1.7 at 300°), the strip 4.5 % longer or shorter (6.5 %) */
+  const HS0=hsRA(0),HSX=HS0.map(([r,a])=>pol([0,0],r,a)),HSS=[0];for(let i=1;i<HSX.length;i++)HSS.push(HSS[i-1]+Math.hypot(HSX[i][0]-HSX[i-1][0],HSX[i][1]-HSX[i-1][1]));
+  const HSLF=HSS[HSS.length-1],turnA=(x,z,d)=>{const c=Math.cos(d),s=Math.sin(d);return[x*c+z*s,z*c-x*s];};   /* turnA: a plan vector turned d (rad) the way hsRA's angles run */
+  const hsBend=tw=>{const n=HSX.length,q=new Float64Array(2*n);let x=HSX[n-1][0],z=HSX[n-1][1];q[2*n-2]=x;q[2*n-1]=z;
+    for(let i=n-2;i>=0;i--){const v=turnA(HSX[i+1][0]-HSX[i][0],HSX[i+1][1]-HSX[i][1],tw*(1-(HSS[i]+HSS[i+1])/2/HSLF));x-=v[0];z-=v[1];q[2*i]=x;q[2*i+1]=z;}
+    const e=turnA(HSX[0][0],HSX[0][1],tw),ex=q[0]-e[0],ez=q[1]-e[1];
+    return HS0.map(([,,u],i)=>{const f=HSS[i]/HSLF;return[q[2*i]-ex*(1-f),q[2*i+1]-ez*(1-f),u];});};
+  const HSP={TBL,tbl,rL,rU,RC,HT,HB,PITCH,TURNS,RSTUD,kU,TE_L,TE_U,aVO,a0U,a0L,aPinL,ra:hsRA,bend:hsBend,xy:(r,a)=>pol([0,0],r,a)};
   /* ================= the escapement's settings for makeEsc (shared/escapement.js), solved in time by js/escphys.js ================= */
   /* makeEsc's frame: the balance at its origin, the escape wheel at (EX, 0), the unit the wheel's radius (ES), seen as the sheets draw the escapement (from above, through the
      top plate): the wheel turning clockwise (its angle falling), the balance's active swing anticlockwise (rising). This file's plan is seen from the dial, the other way
@@ -2884,7 +2898,7 @@ const WESC=(()=>{
        slot, 3.85 from the staff, where the cock's slot lets the stud stand (05 08 03-1: the slot 3.4 from the axis), the curve drawn in proportion to end there (estimated).
        Going up the helix the coils turn counterclockwise seen from the dial (left-hand). The spring's lower end turns with the balance, the coils share the turn */
     const colB=Y.armT-0.05,yL=colB-0.75,yU=yL-PITCH*TURNS;   /* the collet's underside 0.05 over the arm; the spring's lower end 0.75 over it (05 03_5) */
-    const spPath=tw=>hsRA(tw).map(([r,a,u])=>{const p=pol([0,0],r,a);return[p[0],yL-PITCH*TURNS*u,p[1]];});
+    const spPath=tw=>hsBend(tw).map(([x,z,u])=>[x,yL-PITCH*TURNS*u,z]);   /* breathing (hsBend, above) */
     const hs=part('hairspring',OFFB,[B[0],B[1],0]),hsRot=new THREE.Group();hs.add(hsRot);R.hsRot=hsRot;
     onRev(f=>{hs.position.y=f?SH1:0;});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher in the stud's slot (3.69 under its bar), the
        stud's pin with it (its hole drilled at assembly, 05 03 02-3) */

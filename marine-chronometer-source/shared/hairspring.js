@@ -98,6 +98,11 @@ const HSPR=(()=>{
     let lo=-A*1.2,hi=0;for(let k=0;k<60;k++){const m=(lo+hi)/2;if(U(m)>E)lo=m;else hi=m;}const B=(lo+hi)/2,mid=(A+B)/2,half=(A-B)/2;
     let t=0;const N=2000;for(let j=0;j<N;j++){const u=-Math.PI/2+Math.PI*(j+0.5)/N,th=mid+half*Math.sin(u),d=E-U(th);t+=d>0?half*Math.cos(u)*Math.PI/N/Math.sqrt(2*d):0;}
     return{ratio:2*t/(2*Math.PI/Math.sqrt(k0)),back:B};}
-  return{run,solve,design,path,lateral,section,large,period};
+  /** the elastica's shape for one of large()'s results q (its th and end loads v) on the same path pts: the nodes, integrated from the collet's end as large() does
+      (for comparing a drawn spring's bending with it: tools/wempe_hairspring.js) */
+  function shape(pts,q){const n=pts.length-1,ds=[],h0=[];for(let i=0;i<n;i++){const dx=pts[i+1][0]-pts[i][0],dy=pts[i+1][1]-pts[i][1];ds.push(Math.hypot(dx,dy));h0.push(Math.atan2(dy,dx));}
+    const[m0,fx,fy]=q.v,c=Math.cos(q.th),s=Math.sin(q.th),x0=c*pts[0][0]-s*pts[0][1],y0=s*pts[0][0]+c*pts[0][1];let x=x0,y=y0,h=h0[0]+q.th;const o=[[x,y]];
+    for(let i=0;i<n;i++){const L=i?(ds[i-1]+ds[i])/2:ds[0]/2,m=m0+(x0-x)*fy-(y0-y)*fx;if(i)h+=wrap(h0[i]-h0[i-1]);h+=m*L;x+=ds[i]*Math.cos(h);y+=ds[i]*Math.sin(h);o.push([x,y]);}return o;}
+  return{run,solve,design,path,lateral,section,large,shape,period};
 })();
 if(typeof module!=='undefined')module.exports={HSPR};
