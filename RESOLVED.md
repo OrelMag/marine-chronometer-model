@@ -59,6 +59,17 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's page moved its escapement as the layout draws it, not as it is solved.** Its 3D escapement was kinematic, timed from
+  05 04_1: the tooth on the impulse stone the moment it was let go (21° before the line of centres), the detent let fall as the gold
+  spring slipped off; makeEsc, solving the same parts in time, has the wheel chase the stone from rest and strike it 16° of swing later
+  (10° before the line), the detent flung off the discharge stone and riding the tooth it let go. Now `ESC.state` is makeEsc's state at
+  the live swing and drive (`WESC.adapt`), the layout's kept as `ESC.layout`; its contacts drawn 0.01 apart as the layout kept them,
+  the ride taken where the tooth is drawn (makeEsc's own, with the wheel drawn 0.01 behind, put the stone 6.6 µm into the tooth).
+  Keep: the page and the tools move the escapement through the one solved state; `tools/wempe_escapement.js` holds the drawn stone out
+  of the drawn tooth, and `checks.py`'s phases follow the solved events. `930a8e4`
+- **The Wempe's discharge stone was drawn square-ended.** The layout's corners and makeEsc (`BEV`) take its end bevelled back 0.3 from
+  the acting corner, 05 04_1 draws it bevelled, but the mesh ended square at full reach. Now drawn with the bevel (`DS`). Keep: the drawn
+  stone's outline is the one the escapement's motion is worked out on. (05 04_1 measured again scales 0.15-0.2: README, Estimated.) `462a1a3`
 - **makeEsc's Wempe detent fell off its stone too soon.** At the discharge stone's square acting corner the Wempe's square-ended gold
   spring leaves with the speed it came up with (the lift turns within a cell of the table); `depart` took the detent's speed by a central
   difference across the corner, −0.39 rad/s (falling) for +4.2, so its fall began 1.2° early. `tools/dynamics.js --model wempe` found it.
@@ -1795,6 +1806,11 @@ Contents:
   train bridge a countersunk hole between pillar 0's screw and the lower bridge's (13:49.5 and 23:30 within 1 mm); on the pillar plate three through holes, at 12
   o'clock past the wind indicator's post, past the access hole at 4 o'clock (9:03 and 40:05), and over the barrel (9:03). None has a known use; each is in
   `holecheck`'s expected empty with its source. Keep: the train bridge's other readings (Review-results.md) are too loose to move holes measured on 6:49.0. `d33651a`
+- **The barrel bridge's cut round the balance had a step under the fusee's dust cap** (seen by the user on the page, 15 October 2026). It was three circles joined: the balance's clearance and a circle fitted on the top-view photograph, both 1-1.7 mm outside the real edge past the balance, and a circle traced on 6:49.0 from the cock's horn toward the fusee, 1.5-1.9 mm outside it (that frame's camera is out by as much on the bridges' right side); where the last met the others, behind the dust cap, it left a step. KLUwI2UUCMQ 13:04.4 shows the whole cut face-on: one circle, r 20.06 about (2.03, 9.96), 0.11 mm rms over 196 deg. Keep it the one measured circle (`BB_CUT`); don't join circles from frames that see only part of it. `1ec6538`
+- **The cock's steady pins were 2-4 mm out and 0.84 mm across** (placed by eye on 6:47 to about 2 mm). Measured from the cock screw's hole, 6:47 and 23:30 agree within 0.4 mm; their holes are r 1.07, as wide as the screw's (r 0.42 drawn). Keep `S.ckp` relative to the cock screw: the screw's own place is open (Review-results.md). `2ffb801`
+- **The barrel bridge had no steady pins, and two "holes" in it were those pins** ("Bridge - Barrel, complete with pins"; 13:04.4 shows one standing out of each horn). The 15 October hole survey read them end on as holes (30.07, 1.61) and (-18.55, 19.90); the train bridge's hole at (-23.3, 20.4), "its use unknown", is the far pin's. Now pins (`S.bbp`) in train-bridge holes, the cock side's new. Keep a round mark on a frame of a part's underside checked for a pin before it is drawn as a hole. `2ffb801`
+- **The barrel bridge's near screw was 2.4 mm out** at (35.18, 8.06), moved there on 12 October through 6:49.0's camera, which reads the third pillar screw's counterbore beside it 3 mm off. 23:30 (its tapped hole) and 13:04.4 (its clearance hole) agree within 0.9 mm: now (32.90, 6.60). Keep a single oblique camera from moving a hole near the rim against frames that see the part face-on. `2ffb801`
+- **A plain hole in the upper train bridge was missing**, 4 mm beyond the train-blocking screw's: (-8.70, 22.00), r 0.75, on 23:30 and 6:49.0 within 1 mm; its use unknown (holecheck.py's `EXPECTED`). `2ffb801`
 
 ## Setup, case and gimbals
 
@@ -2537,6 +2553,12 @@ An arbor needs pivots and shoulders; a stone its seat.
   header's `nav.models`, on both pages, the current model marked.
 
 ## Build, tools and docs
+
+- **The Wempe's bench took its preload's floor from the frame as it was before the banking moved.** `wempe_tolerances.js` first
+  took 0.72 g at the stone (1.1 times the estimate) as the least preload, `wempe_tripping.js`'s figure while the banking stood
+  under the blade; with the banking on the pipe the frame finds a held tooth's stone ringing 41 % of the depth of lock at the
+  estimate itself, 0.63 g, and doesn't run between that and none. Keep: a figure quoted from another tool's run is the one its
+  present configuration gives, with the date and the tool named beside it. `350728d`
 
 - **`smoke.py` failed "winding with the key" whenever the machine was busy.** The model's clock goes at most 0.05 s a
   frame, and a headless page under load drew about 2 frames a second, so the sustaining spring's relaxing, about 2.5 s
