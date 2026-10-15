@@ -1,3 +1,12 @@
 /* wempe.css: the Wempe page's own styles, over the Hamilton's (../chronometer-working-model/css/style.css), which it shares */
 /* the model is in progress: said once, above the controls */
 .card.wip{font-size:13px;line-height:1.45;border-left:3px solid var(--hi)}.card.wip b{color:var(--ink)}
+/* the essay (js/essay.js; ../chronometer-working-model/css/essay.css): the top plate's hole table, scrolled in its own box, its row chosen; the 6MX's limits */
+.e-holes{max-height:250px;overflow:auto;margin:6px 0 0}
+#essay .e-holes td:nth-child(2),#essay .e-holes th:nth-child(2){text-align:left}
+.e-holes thead th{position:sticky;top:0;background:var(--paper);z-index:1}
+.e-holes tbody tr{cursor:pointer}.e-holes tbody tr:hover td{background:color-mix(in srgb,var(--blue) 7%,transparent)}
+.e-holes tbody tr.on td{background:color-mix(in srgb,var(--red) 13%,transparent);color:var(--ink)}
+.e-holes td i{font-style:normal;color:var(--muted)}
+.e-holes th,.e-holes td{white-space:nowrap}
+#essay .e-tu td,#essay .e-tu th{white-space:normal}#essay .e-tu td:first-child{white-space:normal;min-width:12em}#essay .e-tu td:not(:first-child){font-variant-numeric:tabular-nums}
