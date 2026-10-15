@@ -32,11 +32,12 @@ const WPHYS=(()=>{
      wheel runs on and it relaxes: the 1.09 deg take the train SUS s (70 s; the 1954 instruction's generic 1-2 min, 6MX-figures.md) */
   const SUS=0.27/14.2/TAU*HPT*3600;
   /* the balance and hairspring: the period the drawn spring gives the weighed balance. The spring's stiffness E b h³ / 12 L (the strip bent in its plane: 0.285 thick, 0.52
-     high), L its working length pin to pin (WESC.HSL), carbon spring steel's modulus 206 GPa (200-210, hardened and tempered blue: 05 03_6's "dunkelblau anlassen");
-     the moment of inertia I the balance's with its rollers, collet and a third of its spring (WESC.SET.I). makeEsc runs it at the train's 0.5 s (its seconds arbor turns
-     once in 120 teeth): the timing a maker sets */
+     high), L its working length pin to pin (WESC.HSL: the whole strip 13 turns less 3.5 mm, 05 03_7), carbon spring steel's modulus 206 GPa (200-210, hardened and tempered
+     blue: 05 03_6's "dunkelblau anlassen"); the moment of inertia I the balance's with its rollers, collet and a third of its spring (WESC.SET.I). makeEsc runs it at the
+     train's 0.5 s (its seconds arbor turns once in 120 teeth): the timing a maker sets. alt: the other readings of the length (14 and 15 turns less 3.5 mm; phase 2a's) */
   const kOf=L=>206e9*WESC.HSL.HB*1e-3*(WESC.HSL.HT*1e-3)**3/12/(L*1e-3),Tof=(I,k)=>TAU*Math.sqrt(I*1e-9/k);
-  const HS={k:kOf(WESC.HSL.L),k13:kOf(WESC.HSL.L13),kNeed:SET.I*1e-9*(TAU/0.5)**2,T:Tof(SET.I,kOf(WESC.HSL.L)),T13:Tof(SET.I,kOf(WESC.HSL.L13))};
+  const HS={k:kOf(WESC.HSL.L),kNeed:SET.I*1e-9*(TAU/0.5)**2,T:Tof(SET.I,kOf(WESC.HSL.L)),kOf,Tof,
+    alt:Object.fromEntries(['n14','n15','h13'].map(n=>[n,{L:WESC.HSL[n].L,T:Tof(SET.I,kOf(WESC.HSL[n].L))}]))};
   /* the swing stepped as the Hamilton's ampStep: driven at drv, A² relaxes to ampAt(drv)² as exp(-2t/TF), exactly whatever the step; free (the train held), freeStep */
   const ampStep=(a,dt,drive)=>{if(drive>0){const u=ESC.ampAt(drive)**2;return Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/SET.TF));}const b=ESC.freeStep(a,dt);return b<0.2*D2R?0:b;};
   return{ESC,SET,KV,gAt,fusT,escT,drv,RATIO,ETA,ETA_LO,ETA_HI,STG,TQ,HPT,MF,LEV,SUS,HS,ampStep};

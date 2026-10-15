@@ -98,12 +98,27 @@ const WESC=(()=>{
      the outer curve drawn in proportion to end at the stud (kU); each end runs on past its pinning point into the collet's hole and the stud's slot (TE_L, TE_U, deg) */
   const TBL=[6.12,6.07,6.01,5.96,5.90,5.83,5.78,5.74,5.72,5.65,5.59,5.49,5.34,5.19,5.01,4.79,4.54,4.31,4.11,3.88,3.69,3.52,3.41,3.37,3.37,3.37];
   const tbl=th=>{const i=clamp(Math.floor(th/10),0,24),f=clamp(th/10-i,0,1);return TBL[i]+(TBL[i+1]-TBL[i])*f;};
-  const HT=0.285,HB=0.52,RC=12.8/2-HT/2,TURNS=13-3.5/(TAU*RC),PITCH=0.73,RSTUD=3.87,kU=(RC-RSTUD)/(RC-(tbl(220)+HT/2)),TE_L=220+1.35/3.51/D2R,TE_U=220+0.9/RSTUD/D2R;
-  /* the strip's working length, pinning point to pinning point, as drawn: the helix and both curves to 220 deg (the bits past the pins are clamped). 05 03_7's "13 turns
-     less 3.5 mm before the curves are bent" is the lever chronometer's curve sheet (its 04-series number), read here as the helix between the curves: read as the whole
-     strip, curves and all, the working length would be 13 turns less 3.5 mm less the clamped ends (README, Physics) */
-  const HSL=(()=>{const cv=k=>{let s=0;for(let i=0;i<2200;i++){const a=i/10,b=a+0.1,ra=k(a),rb=k(b);s+=Math.hypot((ra+rb)/2*0.1*D2R,rb-ra);}return s;};
-    return{L:TURNS*Math.hypot(TAU*RC,PITCH)+cv(t=>tbl(t)+HT/2)+cv(t=>RC-(RC-(tbl(t)+HT/2))*kU),L13:13*TAU*RC-3.5-1.35-0.9,HT,HB};})();
+  const HT=0.285,HB=0.52,RC=12.8/2-HT/2,PITCH=0.73,RSTUD=3.87,kU=(RC-RSTUD)/(RC-(tbl(220)+HT/2)),TE_L=220+1.35/3.51/D2R,TE_U=220+0.9/RSTUD/D2R;
+  const rL=th=>tbl(th)+HT/2,rU=th=>RC-(RC-rL(th))*kU;   /* the inner curve's strip middle (05 03_7's table) and the outer's (drawn in proportion to end at the stud) */
+  const cv=(k,a,b)=>{let s=0;const n=Math.round((b-a)*10);for(let i=0;i<n;i++){const t0=a+(b-a)*i/n,t1=a+(b-a)*(i+1)/n,r0=k(t0),r1=k(t1);s+=Math.hypot((r0+r1)/2*(t1-t0)*D2R,r1-r0);}return s;};   /* a curve's length between two of its angles */
+  /* the length (README, Physics: hairspring and temperature). 05 03_7: "vorm biegen der Kurve auf 13 Umgänge −3,5 mm kürzen", before bending the curve shorten to 13
+     turns less 3.5 mm: the whole strip cut to 13 turns of the coil as wound (05 03_6's, its middle radius RC), less 3.5 mm, both curves then bent from its ends; the helix
+     between them is what is left, TURNS (11.8). Read so, the two pinning points come out 10 deg apart in plan, where 05 03_1 and 05 03_5 draw them together (15 and 20 deg
+     on 05 03_1): the 3.5 mm is what brings them in line. The sheet carries the lever chronometer's number, but its balance (05 03_1) is this one and the spring, collet and
+     stud (05 03_5) are 05 03 02-1 to -3: shared (likely). Until 15 October 2026 (phase 2a) the 13 turns less 3.5 mm were read as the helix alone (12.911 turns), which
+     leaves the pins 48 deg apart. HSL: the working length pin to pin and the turns for each reading (n turns less 3.5 mm of whole strip; Lh, phase 2a's) */
+  const LH=Math.hypot(TAU*RC,PITCH),CV0=cv(rL,0,220)+cv(rU,0,220),TAIL=cv(rL,220,TE_L)+cv(rU,220,TE_U),turnsOf=n=>(n*TAU*RC-3.5-CV0-TAIL)/LH,TURNS=turnsOf(13);
+  const HSL=(()=>{const rd=t=>({turns:t,L:t*LH+CV0,pins:wrap(360*t+440)});
+    return{...rd(TURNS),n13:rd(TURNS),n14:rd(turnsOf(14)),n15:rd(turnsOf(15)),h13:rd(13-3.5/(TAU*RC)),STRIP:13*TAU*RC-3.5,TAIL,CV0,LH,HT,HB,RC,PITCH};})();
+  /* the spring in plan, [r, a (deg), u] from its lower end to its upper (u its height, 0 at the lower curve, 1 at the upper), the balance turned tw (rad) at the collet,
+     every st deg on the curves; pin: from pinning point to pinning point only (the working length), else end to end as drawn */
+  const aVO=al(VO),a0U=aVO-220,a0L=a0U-360*TURNS,aPinL=a0L-220;
+  const hsRA=(tw,pin=false,st=4)=>{const o=[],td=tw/D2R,eL=pin?220:TE_L,eU=pin?220:TE_U;
+    for(let th=eL;th>0;th-=st)o.push([rL(th),a0L-th+td,0]);   /* the lower curve from its end in the collet outward */
+    const n=Math.ceil(TURNS*360/st);for(let i=0;i<=n;i++){const u=i/n;o.push([RC,a0L+360*TURNS*u+td*(1-u),u]);}
+    for(let th=st;th<=eU+1e-9;th+=st)o.push([rU(th),a0U+th,1]);
+    o.push([rU(eU),a0U+eU,1]);return o;};
+  const HSP={TBL,tbl,rL,rU,RC,HT,HB,PITCH,TURNS,RSTUD,kU,TE_L,TE_U,aVO,a0U,a0L,aPinL,ra:hsRA,xy:(r,a)=>pol([0,0],r,a)};
   /* ================= the escapement's settings for makeEsc (shared/escapement.js), solved in time by js/escphys.js ================= */
   /* makeEsc's frame: the balance at its origin, the escape wheel at (EX, 0), the unit the wheel's radius (ES), seen as the sheets draw the escapement (from above, through the
      top plate): the wheel turning clockwise (its angle falling), the balance's active swing anticlockwise (rising). This file's plan is seen from the dial, the other way
@@ -122,7 +137,8 @@ const WESC=(()=>{
       SPL:5/ES_,SN0:-0.035/ES_,SN1:0.035/ES_,hD:1.9,EB:205,   /* the detent's spring 0.07 × 1.9, 5 long (1436, its bracketed sizes), steel ("Stahl": 200-210 GPa) */
       OP78:0,W78:0.63,   /* no Op. 78 here: W78 the preload itself, g at the stone. No Wempe source gives it (a banking screw sets the lock, the 1954 instruction's п. 11): the Hamilton's after Op. 78, 0.63 g (estimated) */
       MU:0.15,eS:0.3,   /* the brass tooth on the sapphire stone; the detent's restitution on its banking (estimated, as the Hamilton's) */
-      I:2268.9,JW:12.44,ID:8.25,   /* the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
+      HS:-0.721,   /* the drawn hairspring's own isochronism, s a day for each 10 deg the swing is above the reference's: it loses as the swing grows (tools/wempe_hairspring.js: the spring as drawn, an elastica, at the model's swing) */
+      I:2268.6,JW:12.44,ID:8.25,   /* the balance with its rollers, collet and a third of its spring; the escape arbor with the seconds arbor and hand reflected (÷ 8²); the detent's moving part about its flexure: g·mm², weighed on the solids (tools/wempe_inertia.py, checked by tools/wempe_escapement.js) */
       TH1:60,TF:124};})();   /* the balance's free run-down (s): estimated from its parts' damping (tools/wempe_escapement.js, README Physics) */
   /* makeEsc's lift (the gold spring tip's travel, units of ES) as this file's detent turn (rad, rotation.y about TP): makeEsc turns the detent by -lift/LEN about its flexure,
      clockwise in its frame, anticlockwise seen from the dial (tools/wempe_escapement.js checks the stone's place both ways) */
@@ -218,13 +234,7 @@ const WESC=(()=>{
        slot, 3.85 from the staff, where the cock's slot lets the stud stand (05 08 03-1: the slot 3.4 from the axis), the curve drawn in proportion to end there (estimated).
        Going up the helix the coils turn counterclockwise seen from the dial (left-hand). The spring's lower end turns with the balance, the coils share the turn */
     const colB=Y.armT-0.05,yL=colB-0.75,yU=yL-PITCH*TURNS;   /* the collet's underside 0.05 over the arm; the spring's lower end 0.75 over it (05 03_5) */
-    const aVO=al(VO),a0U=aVO-220,a0L=a0U-360*TURNS,aPinL=a0L-220;
-    const spPath=tw=>{const o=[];const td=tw/D2R;
-      for(let th=TE_L;th>0;th-=4)o.push([tbl(th)+HT/2,a0L-th+td,yL]);   /* the lower curve from its end in the collet outward */
-      const n=Math.ceil(TURNS*90);for(let i=0;i<=n;i++){const u=i/n;o.push([RC,a0L+360*TURNS*u+td*(1-u),yL-PITCH*TURNS*u]);}
-      for(let th=4;th<=TE_U+1e-9;th+=4)o.push([RC-(RC-(tbl(th)+HT/2))*kU,a0U+th,yU]);
-      {const th=TE_U;o.push([RC-(RC-(tbl(th)+HT/2))*kU,a0U+th,yU]);}
-      return o.map(([r,a,y])=>{const p=pol([0,0],r,a);return[p[0],y,p[1]];});};
+    const spPath=tw=>hsRA(tw).map(([r,a,u])=>{const p=pol([0,0],r,a);return[p[0],yL-PITCH*TURNS*u,p[1]];});
     const hs=part('hairspring',OFFB,[B[0],B[1],0]),hsRot=new THREE.Group();hs.add(hsRot);R.hsRot=hsRot;
     const spring=tag(mesh(hs,ribbonGeo(spPath(0),HB,HT),M.mspring),'050302-1');R.spring=spring;R.spPath=spPath;
     /* the collet (Spiralrolle 05 03 02-2, 24.2.43: Messingblech Ms 58): a bar 9.1 −0.2 long, 3.8 −0.2 wide at its slit end and 2.7 −0.2 at the other, 3.3 high; bored 1.6 H7 at
@@ -410,5 +420,5 @@ const WESC=(()=>{
       detM.rotation.y=(s.lift||0);R.gold.rotation.y=-(s.psDef||0);
       if(th!==lastTw){R.spring.geometry=ribbonGeo(spPath(-th),HB,HT,R.spring.geometry);lastTw=th;}};
     return{update,R};}
-  return{build,ESC,W,B,P,FY,Y,HOLES,SET,toKin,MK,HSL,TP,DPIV:D(TP,0)};
+  return{build,ESC,W,B,P,FY,Y,HOLES,SET,toKin,MK,HSL,HSP,TP,DPIV:D(TP,0)};
 })();
