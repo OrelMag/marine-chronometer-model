@@ -1811,6 +1811,7 @@ Contents:
 - **The barrel bridge had no steady pins, and two "holes" in it were those pins** ("Bridge - Barrel, complete with pins"; 13:04.4 shows one standing out of each horn). The 15 October hole survey read them end on as holes (30.07, 1.61) and (-18.55, 19.90); the train bridge's hole at (-23.3, 20.4), "its use unknown", is the far pin's. Now pins (`S.bbp`) in train-bridge holes, the cock side's new. Keep a round mark on a frame of a part's underside checked for a pin before it is drawn as a hole. `2ffb801`
 - **The barrel bridge's near screw was 2.4 mm out** at (35.18, 8.06), moved there on 12 October through 6:49.0's camera, which reads the third pillar screw's counterbore beside it 3 mm off. 23:30 (its tapped hole) and 13:04.4 (its clearance hole) agree within 0.9 mm: now (32.90, 6.60). Keep a single oblique camera from moving a hole near the rim against frames that see the part face-on. `2ffb801`
 - **A plain hole in the upper train bridge was missing**, 4 mm beyond the train-blocking screw's: (-8.70, 22.00), r 0.75, on 23:30 and 6:49.0 within 1 mm; its use unknown (holecheck.py's `EXPECTED`). `2ffb801`
+- **The fusee's dust seal's flange hung 1.3 mm over the barrel bridge's cut round the balance** (seen by the user on the page, 15 October 2026). The flange, a disc r 8.6, was drawn before the cut was measured as one circle (`1ec6538`), which brought the cut to 7.33 mm from the fusee: the disc ran 1.27 mm past the edge across 7.7 mm, over the opening with nothing under it. The photographs of 2E12055 and 2E11795 (top view) show the flange's edge ending at the cut's. Now the flange is trimmed along `BB_CUT`. Keep anything sitting on the barrel bridge inside its outline when the cut or the outline moves `fea724b`
 
 ## Setup, case and gimbals
 
@@ -2771,4 +2772,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The fusee's dust seal's flange hung 1.3 mm over the barrel bridge's cut round the balance** (seen by the user on the page, 15 October 2026). The flange, a disc r 8.6, was drawn before the cut was measured as one circle (`1ec6538`), which brought the cut to 7.33 mm from the fusee: the disc ran 1.27 mm past the edge across 7.7 mm, over the opening with nothing under it. The photographs of 2E12055 and 2E11795 (top view) show the flange's edge ending at the cut's. Now the flange is trimmed along `BB_CUT`. Keep anything sitting on the barrel bridge inside its outline when the cut or the outline moves.
+None at the moment.
