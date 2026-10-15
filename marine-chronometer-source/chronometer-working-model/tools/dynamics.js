@@ -333,7 +333,10 @@ chk(Math.abs(own-RU.own)<0.3,`the escapement's own rate within 0.3 s a day of Ai
   const dT=hi.rate-lo.rate,dH=WEMPE?ESC.settings.HS*(ESC.ampAt(s1)-ESC.ampAt(s0))/D/10:0,dM=pa(s1)-pa(s0)-dH,sl=dT/(hi.A-lo.A)*10;
   say(`the drive ${f(100*s0,0)} % → ${f(100*s1,0)} %${WEMPE?' (05 06_20 over the wind)':''}: the model ${f(ESC.ampAt(s0)/D,0)}° → ${f(ESC.ampAt(s1)/D,0)}°, the rate ${sg(dM)} s a day${WEMPE?` (the escapement's; with the drawn hairspring's ${sg(dH)}, ${sg(dM+dH)})`:''}; in time ${f(lo.A,0)}° → ${f(hi.A,0)}°, ${sg(dT)} s a day (${sg(sl,3)} s a day for each 10° of swing)`);
   chk(Math.abs(dT-dM)<0.1,`isochronism (the rate's change over the ${WEMPE?'wind\'s':'manual\'s'} range of swing) within 0.1 s a day of the model's`);
-  chk(Math.abs(sl)<0.5,`and small (under 0.5 s a day for each 10° of swing): what the fusee keeps even, the escapement doesn't undo`);}
+  /* the Wempe's: the escapement with its drawn hairspring's own isochronism (HS), the chronometer as made (since 15 October 2026, when the masses' height made its balance 10 % heavier and its
+     swing 7° smaller: the escapement alone +0.51 s a day for each 10°, its hairspring −0.66); the Hamilton's spring is linear, its escapement the whole */
+  const slC=WEMPE?(dT+dH)/(hi.A-lo.A)*10:sl;
+  chk(Math.abs(slC)<0.5,`and small (under 0.5 s a day for each 10° of swing${WEMPE?`, the escapement ${sg(sl,3)} with its drawn hairspring's ${sg(ESC.settings.HS,3)}: ${sg(slC,3)}`:''}): what the fusee keeps even, the escapement doesn't undo`);}
 flush();
 
 say('2. The detent as a body: its inertia, bouncing on its stop');

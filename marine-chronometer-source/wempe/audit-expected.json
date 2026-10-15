@@ -1,9 +1,8 @@
 {
  "movement": {
-  "balance:Buffer | balance:Buffer | +-22.80": 2,
+  "balance:Buffer | balance:Buffer | +-22.80": 6,
   "balance:Buffer | balance:Buffer | --26.60": 2,
   "balance:Buffer | hairspring:Buffer | --26.60": 3,
-  "balance:Lathe | balance:Lathe | --21.00": 2,
   "balance:Lathe | rollers:Buffer | +-15.60": 1,
   "balanceJewelsLow:Lathe | balanceJewelsLow:Lathe | --9.94": 1,
   "balanceJewelsUp:Lathe | balanceJewelsUp:Lathe | +-35.84": 1,
