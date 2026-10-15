@@ -2432,6 +2432,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   balance is (`TWIST.run`; with the train going, a twist is a knock, as a jolt is); the build-up
   from it follows the video's start within its readings. The export's Stop and start plays the same
   twist. Keep: the balance's kick from the box's own turn, never set apart from it. `e237416`
+- **The Wempe was linked twice on the Hamilton's page.** A "Wempe model" link beside the 3D model
+  and Essay tabs (`f011119`) repeated the header's switch between the models (`nav.models`). The tab
+  link is gone; the tabs are only the page's two views again. Keep: one way between the models, the
+  header's `nav.models`, on both pages, the current model marked.
 
 ## Build, tools and docs
 
