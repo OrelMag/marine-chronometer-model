@@ -1,14 +1,14 @@
 /* wempe-inertia.js: run in the Wempe's page by wempe_inertia.py (?snap&qa). The escapement's moving bodies weighed on their drawn solids, each about its own axis: the
    balance (rim, arm, masses, timing screws and weights, staff, hub and its screws), the rollers with their stones, the hairspring's collet and pin, the hairspring itself,
    the detent's moving part (blade, square, pipe, stone, horn, the gold spring and its screw, the spring's free half) about its flexure, the escape arbor (wheel, pinion,
-   arbor, collet), the seconds arbor and the seconds hand. Every closed solid is integrated as tetrahedra from its group's origin (volume, first and second moments; signed,
+   arbor, collet), the seconds arbor and the seconds hand, and the rest of the train behind them (below). Every closed solid is integrated as tetrahedra from its group's origin (volume, first and second moments; signed,
    so a hole counts out) at its material's density, in the turning group's own frame (y its axis). Densities, g/cm³ = mg/mm³: brass (Ms 58, Ms 63) 8.45; steel 7.85; the
    rim's inner layer, nickel steel ("Nickelstahl Sonderlegierung", 05 03 01-1: a 36-45 % nickel compensation steel) 8.1 (estimated); the impulse roller beryllium copper
    ("Kupfer Beryllium", 02 04 02) 8.25; sapphire and ruby 3.98; the gold spring, 333 gold (8 ct, its alloy not given) about 11.0 (estimated: 33 % gold with silver and copper);
    the gilt wheels brass. Returns JSON: mg, mm, mg·mm² (the caller makes g and g·mm²). */
 (()=>{const mv=window.__mv,R=mv.userData.R,E=R.esc,M=window.__M,KEY=new Map(Object.entries(M).map(([k,v])=>[v,k]));
   const RHO={brass:8.45,brass2:8.45,gilt:8.45,plate:8.45,plateSolid:8.45,copper:8.45,steel:7.85,steelD:7.85,steelS:7.85,blued:7.85,steelK:7.85,mspring:7.85,ruby:3.98,clear:3.98};
-  const BYHN={'050301-1':{steel:8.1},'050403-1':{copper:8.25},'050401-2':{gilt:11.0}};   /* by the parts list's line where the material's colour isn't the metal: the rim's steel, the impulse roller, the gold spring */
+  const BYHN={'050301-1':{steel:8.1},'050403-1':{copper:8.25},'050401-2':{gilt:11.0},'050200-1':{'?':8.45},'050200-2':{'?':8.45}};   /* by the parts list's line where the material's colour isn't the metal: the rim's steel, the impulse roller, the gold spring; the minute and hour hands' Goldin (a gold-coloured brass, dial.js's own material) */
   const hnOf=o=>{for(let p=o;p;p=p.parent)if(p.userData.hn)return String(p.userData.hn).split(' ')[0];return'';};
   mv.updateMatrixWorld(true);const A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3();
   /* the body of the turning group g, about its own y axis: its meshes (or only those keep(o) passes) */
@@ -22,5 +22,10 @@
       b.m+=rho*m;b.Iy+=rho*Iy;for(let i=0;i<3;i++)b.s[i]+=rho*s[i];const e=b.byHn[h||'?']||(b.byHn[h||'?']={m:0,I:0});e.m+=rho*m;e.I+=rho*Iy;});
     return{m:b.m,cg:b.s.map(x=>x/b.m),I:b.Iy,byHn:b.byHn,missing:b.missing};};
   const sp=E.spring;sp.geometry=ribbonGeo(E.spPath(0),0.52,0.285,sp.geometry);   /* the spring drawn at rest: the page bends it with the balance, which lengthens the drawn helix by the balance's angle (±4 % at full swing) */
+  /* the rest of the going train behind the escape wheel (dynamics.js reflects each by its ratio squared, as traindyn.js the Hamilton's): the intermediate and centre arbors, the
+     motion work and hands on the centre arbor (cannon tube and pinion, change wheel, hour wheel, minute and hour hands), the fusee wheel (its turning group in the part) and the
+     maintaining work that turns with it running (ratchet, clicks, maintaining spring) */
+  const pg=n=>{const p=mv.children.find(o=>o.userData.partName===n);return p&&p.children.find(c=>c.isGroup&&!c.isMesh);};
   return JSON.stringify({balance:weigh(E.bal),rollers:weigh(E.rol),collet:weigh(E.hsRot),spring:weigh(sp.parent,o=>o===sp),detent:weigh(E.det),escape:weigh(E.ew),
-    seconds:weigh(R.tr.sw),secondsHand:weigh(R.dl.sh)});})()
+    seconds:weigh(R.tr.sw),secondsHand:weigh(R.dl.sh),intermediate:weigh(R.tr.tw),centre:weigh(R.tr.cw),cannon:weigh(R.dl.cn),changeWheel:weigh(R.dl.ch),hourWheel:weigh(R.dl.hw),
+    minuteHand:weigh(R.dl.mh),hourHand:weigh(R.dl.hh),fuseeWheel:weigh(pg('fuseeWheel')),maintaining:weigh(pg('maintaining'))});})()
