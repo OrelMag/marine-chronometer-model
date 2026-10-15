@@ -559,7 +559,7 @@ Contents:
   cut. Keep: the springs' beds, feet and screws counted from the studs where
   they stand (opposite), the two feet's screws the same; any frame's angles
   re-centred on symmetric pairs before they are read (`References/VIDEOS.md`,
-  "The sustaining ratchet's holes, studs and pawls"). `HASH`
+  "The sustaining ratchet's holes, studs and pawls"). `4f0100d`
 - **The winding pawls were bright, their springs and the setup pawl's spring
   blued, and the pawls' studs thinner than their holes.** No source had blued
   springs: the one flat spring of the movement the video shows, the setup
@@ -569,7 +569,7 @@ Contents:
   stud's end r 0.38-0.46 filling the eye. Now the pawls `M.steelD`, the springs
   and feet and the setup pawl's spring `M.steel`, the studs r 0.385 (inside the
   holes' 12-sided outline). Keep: a part's finish from a frame of it, or from
-  the movement's nearest like part, said so in its comment. `HASH`
+  the movement's nearest like part, said so in its comment. `4f0100d`
 
 - **Wound straight from a set, the sustaining ratchet stood while the fusee
   turned back most of a turn, then dropped past a tooth.** Wind with the key
