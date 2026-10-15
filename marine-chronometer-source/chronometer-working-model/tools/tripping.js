@@ -284,8 +284,9 @@ function run(M,o={}){
     ring:st.ring/lPk,maxL:st.maxL/lPk,maxTh:st.maxTh,maxRet:st.maxOm<0,arrive:Math.max(0,...tail(st.arrive)),steps:st.steps,frozen:st.frozen,amps:st.amps,ampT:st.ampT};
 }
 
-module.exports={frame,assemble,modes,detent,modal,rows,dot,gsolve,tn,xy,X,model,run};
+module.exports={frame,assemble,modes,detent,modal,rows,dot,gsolve,tn,xy,X,model,run,chol,jacobi,rec,recD,lPk,lFr,kU,cT,LV,VF,zetaOf,zeros,hOf,EBC,ETS};
 if(require.main!==module)return;
+if(DY.WEMPE){require('./wempe_tripping.js').main();return;}   /* --model wempe: the Wempe's detent as its own frame (wempe_tripping.js), on this file's beams, modes and contacts */
 
 /* ---------- the bench's figures (tools/tripping.json, read by bench.js): how shallow a lock and how thin or thick a detent spring still never trip ----------
    Each setting runs in a process of its own (MC_ESC: makeEsc's settings through dynamics.js; MC_TRIP: the frame's), many at once. For each: the frame as drawn and
