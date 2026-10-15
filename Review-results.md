@@ -2141,7 +2141,10 @@ What this pass on Figs. 21, 22, 28 and 29 leaves, most worth doing first. The
 measurements behind each are in `References/VIDEOS.md` (the rows for the fusee's
 top, the fusee arbor, the take-off slot and the flange's holes).
 
-1. **The fusee arbor's shaft and winding square.** Above the collar the real
+1. *Fixed (15 October 2026): with the bushings, as "The overhaul's order against the model" 1 below: the shaft r 1.82 from the collar through the
+   barrel bridge's bushing (42164, all four r 3.4 bored 1.85) to a step at y -31.5, then the 2.4 square to its end; the dust seal's chamber opened under it,
+   its ring and spring measured (12:33.0-12:39.0). The shaft measured against something matt as asked: 12:39.0, against the bridge, r 1.84.*
+   **The fusee arbor's shaft and winding square.** Above the collar the real
    arbor reads 0.66 of the collar's width (20:00, 19:59; r ≈ 1.75 against the
    model's r 1), and the parts list gives the fusee's bushings the barrel's
    number (42164, bored r 1.42 in the model). The square starts at a step about
@@ -2287,10 +2290,19 @@ Findings:
 
 The manual's two sequences (Sec. V, Ops. 1-58; Sec. VIII, Ops. 1-105) run on the model, each part lifted off or put on along its arbor in its turn
 (`js/overhaul.js`; model README, "The overhaul"), and checked by `tools/overhaul.py`: no part may pass through another on its way. The order is sound
-on the model, but three readings the model draws keep parts from coming off as the real movement's do. Open, most certain first (the work on them:
-`PLAN-overhaul-findings.md`):
+on the model, but three readings the model drew kept parts from coming off as the real movement's do. Most certain first (1 and 3 fixed, 15 October
+2026; the work on them: `PLAN-overhaul-findings.md`):
 
-1. **The arbors are wider than the holes they pass.** Over the barrel bridge's fusee bushing (42164.fu, `movement.js` 711: bore r 1.02, outer 1.6)
+1. *Fixed (15 October 2026): the four bushings are one part, r 3.4 bored r 1.85 (`BU_O`, `BU_I`), the pivots in them r 1.82 (`BU_P`): KLUwI2UUCMQ 13:04.4
+   (the barrel bridge underside up, nearly face-on: the two upper bushings alike, bore/outside 0.53-0.54; scaled by the arbors' 37.59 mm, outside r
+   3.4-3.6, bore r 1.80-1.90), 12:39.0 (the seal, its ring and spring off: the fusee bushing's gilt r 3.2-3.5, the arbor's shaft r 1.84, scaled by the
+   seal's screw holes), 37:59 and 40:05 (the upper pair and the lower pair alike), Fig. 75 (the barrel arbor's pivots 0.38-0.40 of its core). The fusee
+   arbor above the bridge is that shaft to a step at y -31.5, then the 2.4 square to its end (20:00; 12:39.0: the shaft about 4.0 over the bridge, the
+   square 0.75 of the shaft seen near its flat); below the collar a shoulder r 2.2 on the plate's bushing (18:24.5, r 2.4 +-0.2 at the taper pin's hole),
+   the end plate bored 2.25 (23:30: its bore 0.39 of its outside). The barrel arbor is Fig. 75's: pivots, then bearings r 2.35 in the barrel's end holes
+   r 2.38 (16:16.5 reads the hole r 2.3). The squares, 1.70 and 1.56 across their half diagonals, now pass every hole they go through (Ops. 29, 31, 36;
+   the reassembly's 38, 44, 52), and the 12 leaves of the wind indicator pinion (tips r 1.76) the lower bushing as the fusee lifts out.*
+   **The arbors are wider than the holes they pass.** Over the barrel bridge's fusee bushing (42164.fu, `movement.js` 711: bore r 1.02, outer 1.6)
    the fusee arbor goes on at r 1.2 (`part('sq')`, 1430) to its square, 2.4 across the flats (3.4 across the corners, half-diagonal 1.70); over the
    barrel bushing (42164.bu: bore r 1.42) the barrel arbor's square (`ASQ` 2.2, 1369; half-diagonal 1.56). So in the model the barrel bridge can't
    come off over either arbor (Op. 31) or go back on (the reassembly's Op. 44), the dust seal (bore r 1.3, 1421) can't come off over the fusee's square
@@ -2302,7 +2314,12 @@ on the model, but three readings the model draws keep parts from coming off as t
    1692), and the arbor beside it steps out to r 2.87 (the sustaining ratchet's seat, 1684: "stepped to r 2.87 under the sustaining ratchet"), the way
    it has to come off; the collar it sits on is r 2.38 (2.7 k). The video reads the collar about r 2.7 (KLUwI2UUCMQ 28:08-28:17, rough: oblique, +-1
    mm). Sure of the fault; which is wrong, the ratchet's bore or the step, is to measure (the large end face-on, the end plate off: 18:24.5, 4K).
-3. **The seal ring and its helical spring are drawn shut inside the dust seal's body**: in a groove round its bore (r 1.3-3.0, y -31.8 to -27.9, in the
+3. *Fixed (15 October 2026): KLUwI2UUCMQ 12:33.0-12:39.0 shows it, the seal lifted off (12:34.0) leaving the ring on the spring round the arbor, the
+   ring taken off (12:35-12:36.5), then the spring (12:37-12:38.5). The seal's chamber now opens underneath (r 4.85, its roof 0.8 thick, bored 1.9 to
+   pass the square); the ring a flat steel washer r 4.7 bored 1.87 on the shaft, 0.8 thick, pressed against the roof by the spring, five turns of 0.24 wire
+   r 4.07 outside, standing on the bridge round the bushing (the ring 538 px across and its hole 199 against the shaft's 205, r 1.82, at 12:34.0; 12:36.5
+   face-on, hole/outside 0.40; the spring 458 px). The overhaul's host for both is the barrel bridge, so they stay as the seal lifts.*
+   **The seal ring and its helical spring are drawn shut inside the dust seal's body**: in a groove round its bore (r 1.3-3.0, y -31.8 to -27.9, in the
    seal's -32.56 to -27.18; 1421-1425), so they can't come out of it (Op. 30) or go in (the reassembly's Op. 52); Figs. 24 and 80 draw them under the
    seal, on the barrel bridge, and Ops. 29-30 take the seal off first, then them. Fairly sure (two figures); their place and sizes are to read on a frame
    of the dust seal coming off (KLUwI2UUCMQ: between the setup work, 11:46-12:22, and the barrel bridge lifted off, 12:58).

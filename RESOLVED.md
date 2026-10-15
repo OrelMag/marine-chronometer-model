@@ -2633,4 +2633,15 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The fusee and barrel arbors couldn't pass their own holes (Plates, bridges, screws and arbors).** The barrel bridge's bushings were bored r 1.02
+  (fusee) and 1.42 (barrel), the plate's 0.58 and 1.43, all without a source, though the parts list gives the four one number (42164); the squares,
+  3.4 and 3.1 across their corners, couldn't pass them, so the bridge couldn't come off over the arbors (Op. 31), the dust seal off the square (Op. 29),
+  nor the barrel arbor out of the barrel's end hole (r 1.43; Op. 36), and the wind indicator pinion (tips r 1.76) couldn't leave the fusee's lower
+  bushing. The bushings are now one part, r 3.4 bored 1.85, the pivots r 1.82 (KLUwI2UUCMQ 13:04.4, 12:39.0, 37:59, 40:05; Fig. 75); the fusee arbor a
+  shaft to a step at y -31.5 and the square to its end, a shoulder r 2.2 under the collar, the end plate bored 2.25; the barrel arbor Fig. 75's pivots
+  and bearings (r 2.35 in the barrel's end holes, r 2.38). Keep: every arbor's pivot inside its bushing's bore and every square's half diagonal under the
+  holes it passes; `tools/overhaul.py` passes with no expected entry for them; `strength.js` reads the fusee bushing off its `bushR(...)` call's literals.
+- **The seal ring and its spring were shut inside the dust seal (Winding and maintaining work).** They sat in a groove round the seal's bore, where they
+  could neither come out (Op. 30) nor go in (the reassembly's Op. 52). KLUwI2UUCMQ 12:33.0-12:39.0: the seal's chamber opens underneath, the ring a
+  washer r 4.7 on the arbor's shaft, the spring standing on the barrel bridge round the bushing; the overhaul's host for both is the barrel bridge.
+  Keep: the seal lifts off them; bom.json has the spring on the barrel bridge (42061).

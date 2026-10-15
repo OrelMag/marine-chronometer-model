@@ -16,8 +16,6 @@ PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 JS=(HERE/'overhaul-check.js').read_text(encoding='utf-8')
 R=0.2;N=40;T=0.05   # mm: column spacing; path samples; overlap as assembled
 FU='42021|42015|42016|42009|42001 #.*|42001'
-SQ='Still open in the model: the fusee arbor\'s and barrel arbor\'s squares (2.4 mm, 3.4 across their corners) are wider than the barrel bridge\'s bushings\' bores, the dust seal\'s and the barrel\'s end hole, which they pass on the real movement (Op. 31; KLUwI2UUCMQ 12:58-13:04): the arbors above the collar are to measure with them (Review-results.md, "Still open after the collar\'s height" 1)'
-SEAL='Still open in the model: the seal ring and its helical spring are drawn shut inside the dust seal\'s body, where Figs. 24 and 80 draw them under it on the barrel bridge, so they can\'t come out of it'
 DET='the detent is drawn out sideways from under the upper train bridge (KLUwI2UUCMQ 10:51-11:06), not lifted, as the overhaul shows it'
 # what may pass through what, with the reason: (sequence, operations, one body, the other, why). A real movement does these another way than straight along
 # the arbors, or the model can't yet (a reading still open); everything else must clear
@@ -31,10 +29,8 @@ EXPECTED=[
     ('r',{28},'42021','42020','the taper pin goes in across the arbor, through its hole (Fig. 70)'),
     ('r',{99},'42032|42033','42034 #.*|42034','the manual sets the minute hand to 12 and the hour hand to 3 first (Op. 64): the model\'s hands show the time'),
     ('d',{37},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides out along the wall'),('r',{35},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides in along the wall'),
-    ('d',{29,30},'42051|42052','@sq',SQ),('r',{52},'42051|42052','@sq',SQ),('d',{31},'@barrelBridge','@sq|42170 #1',SQ),('r',{44},'@barrelBridge','@sq|42170 #1',SQ),('d',{36},'42168','42170 #1',SQ),('r',{38},'42168','42170 #1',SQ),
     ('d',{43},'42021','42013 #.*','Still open in the model: the winding ratchet wheel (bore r 2.43) can\'t come off over the arbor\'s step beside it (r 2.87, the sustaining ratchet\'s seat; the collar about r 2.7 on KLUwI2UUCMQ 28:08-28:17): its bore and the step are to measure'),
-    ('r',{17},'42021','42013 #.*','Still open in the model: the winding ratchet wheel can\'t go on over the arbor\'s step beside it (the disassembly\'s Op. 43)'),
-    ('d',{30},'42051','42052|42053',SEAL),('r',{52},'42051','42052|42053',SEAL)]
+    ('r',{17},'42021','42013 #.*','Still open in the model: the winding ratchet wheel can\'t go on over the arbor\'s step beside it (the disassembly\'s Op. 43)')]
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])

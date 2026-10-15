@@ -83,7 +83,7 @@
   "sratchet:Extrude | fusee:Extrude | --10.30": 4,
   "sratchet:Extrude | sratchet:Extrude | +-9.60": 4,
   "tblock:Lathe | tblock:Box | --23.04": 1,
-  "trainBridge:Extrude | barrelBridge:Extrude | +-23.76": 2,
+  "trainBridge:Extrude | barrelBridge:Extrude | +-23.76": 3,
   "trainBridge:Extrude | barrelBridge:Extrude | --23.76": 2,
   "trainBridge:Extrude | cock:Buffer | +-23.76": 1,
   "trainBridge:Extrude | cock:Cylinder | --23.76": 2,
