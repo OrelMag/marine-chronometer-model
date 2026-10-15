@@ -32,8 +32,8 @@ EXPECTED=[
     ('r',{99},'42032|42033','42034 #.*|42034','the manual sets the minute hand to 12 and the hour hand to 3 first (Op. 64): the model\'s hands show the time'),
     ('d',{37},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides out along the wall'),('r',{35},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides in along the wall'),
     ('d',{29,30},'42051|42052','@sq',SQ),('r',{52},'42051|42052','@sq',SQ),('d',{31},'@barrelBridge','@sq|42170 #1',SQ),('r',{44},'@barrelBridge','@sq|42170 #1',SQ),('d',{36},'42168','42170 #1',SQ),('r',{38},'42168','42170 #1',SQ),
-    ('d',{43},'42021','42013 #.*','Still open in the model: the winding ratchet wheel can\'t come off over the fusee arbor\'s collar under it (r 4.0 drawn; about 2.7 on KLUwI2UUCMQ 28:08-28:17): its bore and the collar are to measure'),
-    ('r',{17},'42021','42013 #.*','Still open in the model: the winding ratchet wheel can\'t go on over the fusee arbor\'s collar under it (the disassembly\'s Op. 43)'),
+    ('d',{43},'42021','42013 #.*','Still open in the model: the winding ratchet wheel (bore r 2.43) can\'t come off over the arbor\'s step beside it (r 2.87, the sustaining ratchet\'s seat; the collar about r 2.7 on KLUwI2UUCMQ 28:08-28:17): its bore and the step are to measure'),
+    ('r',{17},'42021','42013 #.*','Still open in the model: the winding ratchet wheel can\'t go on over the arbor\'s step beside it (the disassembly\'s Op. 43)'),
     ('d',{30},'42051','42052|42053',SEAL),('r',{52},'42051','42052|42053',SEAL)]
 async def main():
     async with async_playwright() as p:
