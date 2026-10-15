@@ -2749,4 +2749,6 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+Plates, bridges, screws and arbors:
+
+- **The barrel bridge's cut round the balance had a step under the fusee's dust cap** (seen by the user on the page, 15 October 2026). It was three circles joined: the balance's clearance and a circle fitted on the top-view photograph, both 1-1.7 mm outside the real edge past the balance, and a circle traced on 6:49.0 from the cock's horn toward the fusee, 1.5-1.9 mm outside it (that frame's camera is out by as much on the bridges' right side); where the last met the others, behind the dust cap, it left a step. KLUwI2UUCMQ 13:04.4 shows the whole cut face-on: one circle, r 20.06 about (2.03, 9.96), 0.11 mm rms over 196 deg. Keep it the one measured circle (`BB_CUT`); don't join circles from frames that see only part of it.

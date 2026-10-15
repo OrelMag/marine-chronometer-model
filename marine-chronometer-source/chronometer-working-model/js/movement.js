@@ -702,10 +702,8 @@ function buildMovement(M){
   hn(mesh(eb,ring(1.6,0.95,0.9),M.gilt,L.E[0],EB_Y+0.45,L.E[1]),'42162.eu');hn(mesh(eb,stoneGeo(0.95,0.095,0.5,'olive'),M.ruby,L.E[0],EB_Y+0.25,L.E[1]),'J.eu');   /* its hole r 0.095: the bridge off and held to the light, cap side (KLUwI2UUCMQ 10:14.5), the hole a white disc 36-44 px across in the stone's 446 (light through the endstone alone); the stone 1.96 mm at the cap window's 3.1 mm (720 px), the model's 1.9: 0.17 +/- 0.02 mm; drawn 0.19, the top of that range, round the patent's 0.178 mm pivot (the arbor's comment). J.el taken the same */
   endCap(eb,...L.E,ebu,EB_Y,1.0,3.1,['42159.eu','J.eue','20762.euc'],4.1,[[...ebn,2.8],[-ebn[0],-ebn[1],2.8]],1.0,1.55,0.85);   /* its flats and screws' heads: the bar 5.6 wide and the heads r 0.85 (KLUwI2UUCMQ 10:20 and 10:24, against the cap's R and its screws' spacing: 5.4-5.9, 0.84-0.88; the train bridge's traced seats 5.72 across); 5.2 and 0.75 until 5 October 2026 */   /* R 4.1, 1.0 thick, flat both sides with the bar's edges, its window a cone r 1.55 at the top down to the endstone, its screws' heads r 0.75 (10:00-10:16) */
   const bb=part('barrelBridge',-72);
-  /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24). The cut is the balance's
-     clearance circle (r 17.7 about the staff; the screws and weights sweep 17.2) joined with the circle fitted to its edge on the top-view photograph (r 17.6 about
-     5.24, 6.33; points within 1.3 mm), which reaches 20.5 mm from the staff toward the barrel: the barrel's cap and the fusee's large end show through it */
-  const cutR=BAL_R+3.2,bis=(f,lo,hi)=>{for(let i=0;i<50;i++){const m=(lo+hi)/2;(f(m)>0)===(f(lo)>0)?lo=m:hi=m;}return(lo+hi)/2;};
+  /* barrel bridge (the large upper plate of the photographs): everything except the 6 o'clock sector, with a cut round the balance (Fig. 24), BB_CUT below */
+  const bis=(f,lo,hi)=>{for(let i=0;i<50;i++){const m=(lo+hi)/2;(f(m)>0)===(f(lo)>0)?lo=m:hi=m;}return(lo+hi)/2;};
   /* the horn on the cock's side ends in a cut 0.15 mm under the cock's straight edge (CK_TR 0-21, at the top), on past the rim along its last slope. The flat bridge
      traces that cut bowed into the bridge the same way (C Spinner 23:45, the frame mapped onto the bridge's face by a homography on its rim, r 40.5, and the fusee and
      barrel bushings: 1.02 mm off its 15.2 mm chord at most, 0.59, 0.83, 0.46 at a quarter, half and three quarters, steepest near the rim; in place with the cock off,
@@ -726,14 +724,17 @@ function buildMovement(M){
   const uo=unit(sub(FH[7],FH[6])),pH=PTri(add(FH[7],uo,bis(l=>Math.hypot(...add(FH[7],uo,l))-BR_R,0,20))),aH=Math.atan2(pH[1],pH[0]),aR=bis(a=>BR_R*Math.sin(a)-14.5+0.1*BR_R*Math.cos(a),0,Math.PI/2);
   const BBo=[];for(let k=0,n=Math.ceil((aR+TAU-aH)/(TAU/360));k<=n;k++){const t=aH+(aR+TAU-aH)*k/n;BBo.push([BR_R*Math.cos(t),BR_R*Math.sin(t)]);}
   BBo.push(...[add(FH[0],unit(sub(FH[0],FH[1])),4),...FH].map(PTri));   /* the rim from the horn's end round to past the cock's edge, across inside the cut round the balance (cut away below), and the horn's end from 4 mm inside the cut out to the rim */
-  /* between the horn on the cock's side and the fusee the cut runs further out: on KLUwI2UUCMQ 6:49.0 (the cock and balance out) through the camera fitted there, its top
-     edge from the horn's inner corner toward the fusee, traced as 9 points, lies 21.6-22.3 mm from the staff (21.2-22.5 over f 4,000-6,000), where the circles above give
-     about 17.7; a circle through them, BB_CUT (r 16.85 about (6.84, 9.53); 16.55-17.28 about (6.54, 8.59)-(7.02, 10.08) over those focal lengths), meets the horn's edge at
-     (23.67, 8.65), the corner the frame shows at (23.71, 8.42). Past (20.5, -0.2) the fusee's dust cap hides it; drawn on round, it comes out left of the cap where the
-     frame shows the cut's wall on the circle about the staff (estimated between). The top-view photograph's edge there, under the cock's shadow, reads 16.7-18 mm from
-     the staff, on plain train bridge in the video: not used. Until 12 October 2026 the two circles alone, the horn's inner corner at (19.5, 9.87) */
-  const BB_CUT=[6.84,9.53,16.85];
-  const BBpoly=clipUnder(subtractCircle(subtractCircle(subtractCircle(BBo,PTi(L.B),cutR/PHOTO_K),[5.24,6.33],17.6).map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
+  /* the cut round the balance: one circle, r 20.06 about (2.03, 9.96), 0.5 mm from the staff. KLUwI2UUCMQ 13:04.4 (the bridge upside down, nearly face-on, the whole cut
+     in view from horn to horn) through a homography on nine of the bridge's holes (the fusee's and barrel's bushings, the opening over the third pillar screw, the seals'
+     and cover's holes: 0.03-1.14 mm each left out): its edge, found along 49 rays 4 deg apart (the step from the parts seen through it to the plate), fits that circle to
+     0.11 mm rms, 0.23 at most, over 196 deg; each half alone 20.05 and 20.42 about centres 0.4 mm apart. The barrel's cap and the fusee's large end show through it. Until
+     15 October 2026 three circles, which met in a step under the fusee's dust cap: the balance's clearance r 17.7 about the staff and one fitted on the top-view photograph
+     (r 17.6 about (5.24, 6.33) in its frame), both 1-1.7 mm outside this edge past the balance, and from the horn on the cock's side toward the fusee a circle through the
+     top edge traced on 6:49.0 through the camera fitted there (r 16.85 about (6.84, 9.53), 21.6-22.3 mm from the staff), 1.5-1.9 mm outside it: that camera reads the
+     third pillar screw's counterbore beside it 3 mm off (the near bridge screw's comment). It meets the horn's edge (ckE) at (22.2, 8.1); 13:04.4 has that edge 0.15 mm
+     from ckE beside the corner */
+  const BB_CUT=[2.03,9.96,20.06];
+  const BBpoly=clipUnder(subtractCircle(BBo.map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
   const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
   R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
