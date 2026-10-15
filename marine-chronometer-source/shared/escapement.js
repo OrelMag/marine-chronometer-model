@@ -8,7 +8,7 @@
    Frame: balance at origin, escape wheel centre at x=EX, unit = escape-wheel radius (ES: 13.16/2 mm, the Hamilton's). Layout after the manual's Fig. 90 plan view. The detent's
    lift, the wheel's release and the passing spring's bending are solved from the contact of the discharge jewel with the passing spring's tip, and the
    wheel's advance from the contact of its teeth with the impulse jewel, so the parts touch where they are drawn. */
-/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,G78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number,NT?:number,ES?:number,LK?:number,LO?:number,DA?:number,BL?:number,PSL?:number,PSO?:number,fI?:number,rJ?:number,eJ?:number,TBR?:number,TBP?:number,SPL?:number,SN0?:number,SN1?:number,OP78?:number,TQ?:number}} EscSettings
+/** @typedef {{EX?:number,A?:number,rRoll?:number,rp?:number,rT?:number,rd?:number,rDR?:number,wI?:number,wD?:number,rB?:number,dL?:number,DRAW?:number,aI?:number,aD?:number,r0?:number,U?:number,land?:number,B?:number,tsT?:number,tsH?:number,TF?:number,MU?:number,I?:number,JW?:number,W78?:number,G78?:number,hD?:number,EB?:number,ET?:number,ID?:number,eS?:number,HS?:number,NT?:number,ES?:number,LK?:number,LO?:number,DA?:number,BL?:number,PSL?:number,PSO?:number,fI?:number,rJ?:number,eJ?:number,TBR?:number,TBP?:number,SPL?:number,SN0?:number,SN1?:number,OP78?:number,TQ?:number,BEV?:number,TSQ?:number,TH1?:number}} EscSettings
     any of DEF below (angles in degrees); a misspelt one is a type error, as it is an error at run time */
 /** @typedef {{th:number,ccw:boolean,lift:number,psDef:number,prog:number,drop:boolean,run:boolean}} EscState
     state(p): the balance's angle (rad), swinging counterclockwise, the detent's lift, the passing spring's bending, the escape wheel's progress through a tooth (0 to 1; a
@@ -55,8 +55,11 @@ function makeEsc(o={},base){
      arc of that radius (mm: a cutter's, its centre in the gap) from the land to the root circle at B, or 0 for the Hamilton's power curve, its depth 1-(1-f)^TBP;
      SPL: the detent spring's length to the cross-piece, SN0, SN1 its faces across (n); OP78: 1 sets the preload by Op. 78 (W78 parting it from its button by G78), 0 takes
      W78 as the preload itself (g at the locking jewel), the spring unbent at its stop; TQ: the escape wheel's torque (µN·m) the reference is driven at, its swing solved,
-     or 0 for the Hamilton's way, the torque fitted to the swing A. Unit-frame lengths in units of ES */
-  Object.assign(DEF,{NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.72,PSL:1.2,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.58,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0});
+     or 0 for the Hamilton's way, the torque fitted to the swing A; BEV: the discharge jewel's end bevelled straight back from its square acting corner, its back corner BEV
+     short of it (the Wempe's, 05 04_1), in place of rB's radius, or 0 for the Hamilton's end; TSQ: 1 takes the passing spring's tip as its strip's square end, rT to
+     the end's middle and the strip tsT thick running back PSL along the detent (the Wempe's gold spring), 0 as a disc tsT round (the Hamilton's); TH1: the balance angle (deg)
+     the contact tables run to from -70, past the impulse's end (the Hamilton's ends at 20.7). Unit-frame lengths in units of ES */
+  Object.assign(DEF,{NT:16,ES:13.16/2,LK:2,LO:0,DA:68,BL:1.72,PSL:1.2,PSO:0,fI:1,rJ:0.046,eJ:0.012,TBR:0,TBP:1.6,SPL:0.58,SN0:-0.058,SN1:-0.046,OP78:1,TQ:0,BEV:0,TSQ:0,TH1:30});
   for(const k in {...base,...o})if(!(k in DEF))throw Error('makeEsc: no setting '+k);
   const c={...DEF,...base,...o};ES=c.ES;let A0=c.A*D2R;   /* A0: the reference's swing (with TQ, solved) */
   const NT=c.NT,P=TAU/NT,EX=c.EX,rRoll=c.rRoll,rp=c.rp,rT=c.rT,rd=c.rd,rDR=c.rDR,wI=c.wI,wD=c.wD,rho=c.tsT/2/ES,dL=c.dL,r0=c.r0,U=c.U,DRAW=c.DRAW*D2R,t0=P/2+c.LO*D2R,lockA=t0-c.LK*P,aI=c.aI*D2R,aD=c.aD*D2R;
@@ -84,13 +87,22 @@ function makeEsc(o={},base){
      the tip, and with it the detent, the tip sliding along the face and round the jewel's end until it comes clear; the detent then falls back to its stop. Return swing
      (th falling): the jewel bends the trip spring the same way, the detent staying on its stop, until the tip comes clear. Until 11 October 2026 the end was square and the
      detent was let fall over 1.5° once the tip slid off the face, through the jewel's end, and until 12 October 2026 a half round; tools/dynamics.js checks these tables beat by beat */
-  const TH0=-70*D2R,DT=0.02*D2R,NTB=5001,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho,wJ=wD/2+rho,cA=rho,cB=Math.min(c.rB+rho,wJ);
-  /* the run (s1, s2) of the line Pt + s dir inside the jewel at balance angle th, or null */
+  const TH0=-70*D2R,DT=0.02*D2R,NTB=Math.round((c.TH1+70)/0.02)+1,LI=new Float32Array(NTB),PS=new Float32Array(NTB),reach=rd+0.5*rho,wJ=wD/2+rho,cA=rho,cB=Math.min(c.rB+rho,wJ);
+  const hull=P=>{P.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]),L=[],U2=[];for(const p of P){while(L.length>1&&cr(L[L.length-2],L[L.length-1],p)<=0)L.pop();L.push(p);}
+    for(let i=P.length-1;i>=0;i--){const p=P[i];while(U2.length>1&&cr(U2[U2.length-2],U2[U2.length-1],p)<=0)U2.pop();U2.push(p);}return L.slice(0,-1).concat(U2.slice(0,-1));};   /* a convex hull, anticlockwise (monotone chain) */
+  /* the run (s1, s2) of the line Pt + s dir inside the jewel at balance angle th, or null
+     (BEV or TSQ: the jewel a polygon, the tip a square-ended strip or a disc, the run the line's inside their Minkowski sum) */
   const span=(th,dir)=>{const u={x:Math.cos(aD+th),y:Math.sin(aD+th)},m={x:-u.y,y:u.x},pm=Pt.x*m.x+Pt.y*m.y,dm=dir.x*m.x+dir.y*m.y,pu=Pt.x*u.x+Pt.y*u.y,du=dir.x*u.x+dir.y*u.y;
     /** @type {number[]|null} */let r=null;const add=(a,b)=>{if(a<b)r=r?[Math.min(r[0],a),Math.max(r[1],b)]:[a,b];};
     const box=(m0,m1,u1)=>{let lo=-Infinity,hi=Infinity;const cut=(p,d,a,b)=>{if(Math.abs(d)<1e-12){if(p<=a||p>=b){lo=1;hi=0;}return;}let x=(a-p)/d,y=(b-p)/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);};
       if(m0<m1){cut(pm,dm,m0,m1);cut(pu,du,0,u1);add(lo,hi);}};
     const disc=(cu,cm,R)=>{const cx=Pt.x-cu*u.x-cm*m.x,cy=Pt.y-cu*u.y-cm*m.y,b=cx*dir.x+cy*dir.y,q=b*b-(cx*cx+cy*cy-R*R);if(q>0)add(-b-Math.sqrt(q),-b+Math.sqrt(q));};
+    if(c.BEV>0||c.TSQ){const w=wD/2,ra=rd-0.5*rho,J=[[0,-w],[ra-c.BEV,-w],[ra,w],[0,w]].map(([a,b])=>[a*u.x+b*m.x,a*u.y+b*m.y]);   /* the jewel's own outline: its acting corner (+m) square at its reach (rd less the half tip the Hamilton's grows it by), the back BEV short of it */
+      const es={x:-dirB.x,y:-dirB.y},T0=c.TSQ?[[0,-rho],[0,rho],[c.PSL,rho],[c.PSL,-rho]].map(([a,b])=>[a*es.x+b*nB.x,a*es.y+b*nB.y]):Array.from({length:24},(_,k)=>[rho*Math.cos(TAU*k/24),rho*Math.sin(TAU*k/24)]);   /* the tip: its strip's square end, the strip running back along the detent, or a disc */
+      const K=hull(J.flatMap(q=>T0.map(t=>[q[0]-t[0],q[1]-t[1]])));let lo=-Infinity,hi=Infinity;   /* where the tip's reference point may not go: the jewel grown by the tip's outline turned about (convex, anticlockwise) */
+      for(let k=0;k<K.length;k++){const a=K[k],b=K[(k+1)%K.length],ex=b[0]-a[0],ey=b[1]-a[1],f0=ex*(Pt.y-a[1])-ey*(Pt.x-a[0]),f1=ex*dir.y-ey*dir.x;   /* inside: left of every edge, f0 + s f1 >= 0 */
+        if(Math.abs(f1)<1e-15){if(f0<0)return null;}else if(f1>0)lo=Math.max(lo,-f0/f1);else hi=Math.min(hi,-f0/f1);}
+      return lo<hi?[lo,hi]:null;}
     box(-wJ+cB,wJ-cA,reach);box(-wJ,-wJ+cB,reach-cB);box(wJ-cA,wJ,reach-cA);disc(reach-cB,-wJ+cB,cB);disc(reach-cA,wJ-cA,cA);   /* the grown outline as boxes and its corners' discs: convex, so the run is their runs' hull */
     return r;};
   /* the tip held at the run's far end while the jewel is round it, from where the run first takes in the tip's rest to where the jewel has passed it; T: the travel */
@@ -154,7 +166,7 @@ function makeEsc(o={},base){
           phi=phE+gE*wE*t-0.5*s*accW*t*t;prog=phi<=-P?1:-phi/P;run=phi>-P;}   /* off the jewel (it landed before thE): on at the jewel's speed, gathering more, to the stone */
       else{const a=bite(th),pa=a>-1e8?a-t0:-1e9,phi=Math.max(pf,pa);prog=phi<=-P?1:-phi/P;drop=pf>pa&&phi>-P;}}
     else prog=ccw&&pass&&lift>0?-recoil(lift)/P:ccw?0:1;
-    if(prog>0&&prog<1){const f=depart(amp);if(f&&q>f.p)lift=Math.max(lift,ride(prog));}   /* fallen back before the escaping tooth has passed: on its back */
+    if(prog>0&&prog<1)lift=Math.max(lift,ride(prog));   /* fallen back before the escaping tooth has passed: on its back (and, since 15 October 2026, the same while the jewel still carries it down: the Wempe's square-ended gold spring rides down its stone's corner before the detent leaves it, onto a tooth a slow wheel hasn't yet carried away; the Hamilton's never lies under its tooth there, every result the same) */
     return{th,ccw,lift,psDef,prog,drop,run};
   }
   /* passing spring as root, control point and tip (unit frame) for a state: rides with the detent, tip bent along -nB on the return swing */
@@ -229,8 +241,9 @@ function makeEsc(o={},base){
   const airy=(g,s,a)=>{let q=0;for(const[th,e]of g)if(Math.abs(th)<a)q+=s*e*th/Math.sqrt(a*a-th*th);return-q/(a*a);};
   const parts=(a,s,w,kd=1,kp=1)=>{const im=impulse(s,a,w);return im?{imp:airy(im.I,1,a),draw:s*w*airy(R,-1,a),detent:airy(Dp,-1,a)+kd*airy(Dk,-1,a),trip:kp*airy(Tp,1,a)}:null;},sumP=p=>p.imp+p.draw+p.detent+p.trip,day=x=>86400*x/TAU;
   const aLo=Math.max(-thRel,-(thPass??TH0))+0.01*D2R;
-  /* the swing the drive s keeps up: πa²/Q = Wn(a), the root above where the escapement can work; 0 if there is none */
-  const solveA=(s,w,kd=1,kp=1)=>{const g=a=>wnK(s,a,w,kd,kp)-Math.PI*a*a/Q;if(!(g(aLo)>0))return 0;let lo=aLo,hi=TAU*1.5;if(g(hi)>0)return hi;for(let i=0;i<44;i++){const m=(lo+hi)/2;g(m)>0?lo=m:hi=m;}return(lo+hi)/2;};
+  /* the swing the drive s keeps up: πa²/Q = Wn(a), the root above where the escapement can work (the swing that releases, passes the trip spring and sees an impulse through); 0 if there is none */
+  const solveA=(s,w,kd=1,kp=1)=>{const g=a=>wnK(s,a,w,kd,kp)-Math.PI*a*a/Q;let lo=aLo;if(g(lo)===-Infinity){let h=lo;while(h<Math.PI&&g(h)===-Infinity)h+=2*D2R;for(let i=0;i<6;i++){const m=(lo+h)/2;g(m)===-Infinity?lo=m:h=m;}lo=h;while(!(g(lo)>0)&&lo<Math.PI)lo+=D2R;}   /* an impulse that ends past where the swing first releases and passes (the Wempe's): from the least swing that sees it through */
+    if(!(g(lo)>0))return 0;let hi=TAU*1.5;if(g(hi)>0)return hi;for(let i=0;i<44;i++){const m=(lo+hi)/2;g(m)>0?lo=m:hi=m;}return(lo+hi)/2;};
   let run,CL=null,PH0=0;
   if(isRef){let cl=null,ph=0,br=null;if(ok&&c.TQ>0){cl={w:c.TQ*1e-6/kB};A0=solveA(1,cl.w);br=A0>0?parts(A0,1,cl.w):null;ph=br?sumP(br):0;}   /* driven at TQ: the swing it keeps is the reference's */
     else if(ok){const g=w=>wnK(1,A0,w)-Math.PI*A0*A0/Q;let lo=Math.log(1e-3),hi=Math.log(1e3);if(g(Math.exp(lo))<0&&g(Math.exp(hi))>0){for(let i=0;i<60;i++){const m=(lo+hi)/2;g(Math.exp(m))>0?hi=m:lo=m;}

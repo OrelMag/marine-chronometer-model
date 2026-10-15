@@ -4,3 +4,5 @@ declare const THREE: any;
 declare const L: any, DIAL_R: any, SEC_L: any, UDA: any, UD_SWEEP: any, MSHAPE: any;
 // The Hamilton's movement.js's checkHoles, which core.js's discGeo calls: the Wempe doesn't call discGeo (KIT.checkHoles is the same function, for when it does).
 declare const checkHoles: any;
+// shared/escapement.js ends with module.exports for Node (tools/wempe_escapement.js), so TypeScript reads it as a module; on the page makeEsc is a global (js/escphys.js uses it).
+declare const makeEsc: typeof import('../../shared/escapement.js').makeEsc;

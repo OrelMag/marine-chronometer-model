@@ -1,6 +1,6 @@
 // Type checking without npm, as the Hamilton's (../chronometer-working-model/jsconfig.json): npx -p typescript@5.9.3 tsc -p marine-chronometer-source/wempe/jsconfig.json (ci.py's wempe-types step).
-// The scripts in the page's load order; those that start with // @ts-check are checked (core.js, kit.js, dims.js, movement.js; viewer.js and app.js not yet). js/globals.d.ts declares what TypeScript can't see.
+// The scripts in the page's load order; those that start with // @ts-check are checked (core.js, kit.js, dims.js, movement.js, the shared escapement.js, escphys.js; viewer.js and app.js not yet). js/globals.d.ts declares what TypeScript can't see.
 {
   "compilerOptions": {"allowJs": true, "checkJs": false, "noEmit": true, "target": "ES2022", "lib": ["ES2022", "DOM", "DOM.Iterable"], "strict": false, "skipLibCheck": true},
-  "files": ["js/globals.d.ts", "../chronometer-working-model/js/core.js", "../shared/kit.js", "../shared/viewer.js", "js/dims.js", "js/frame.js", "js/train.js", "js/escapement.js", "js/fusee.js", "js/dialface.js", "js/dial.js", "js/case.js", "js/movement.js", "js/app.js"]
+  "files": ["js/globals.d.ts", "../chronometer-working-model/js/core.js", "../shared/kit.js", "../shared/viewer.js", "js/dims.js", "js/frame.js", "js/train.js", "js/escapement.js", "../shared/escapement.js", "js/escphys.js", "js/fusee.js", "js/dialface.js", "js/dial.js", "js/case.js", "js/movement.js", "js/app.js"]
 }
