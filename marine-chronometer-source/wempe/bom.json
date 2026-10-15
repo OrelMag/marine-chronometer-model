@@ -2598,6 +2598,49 @@
    "figs": "05 05_11"
   },
   {
+   "id": "wireStud",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Stift (the maintaining detent's wire spring's stud; no number)",
+   "qty": 1,
+   "parent": "050901",
+   "kind": "part",
+   "part": "maintDetent",
+   "fn": "A slotted cheese-head stud screwed into the top plate's hole 5 (\"Drahtfeder\", M1.7) from its outer face; the wire spring is held in its end under the plate (no sheet; the coloured section draws it, the north-side photographs show it).",
+   "rel": [
+    [
+     "in",
+     "050901",
+     "tap"
+    ]
+   ],
+   "figs": "05 08_1a"
+  },
+  {
+   "id": "050506-1",
+   "idx": null,
+   "no": "",
+   "dwg": "05 05 06-1",
+   "name": "Feder (the maintaining detent's wire spring)",
+   "qty": 1,
+   "parent": "wireStud",
+   "kind": "part",
+   "part": "maintDetent",
+   "fn": "A straight steel wire hanging from its stud past the detent's back: bent out by the detent, it presses the detent onto the maintaining ratchet's teeth (no sheet in the set; the coloured section names it, 05 06_4 marks its \"Drahtfedermitte\").",
+   "rel": [
+    [
+     "on",
+     "wireStud"
+    ],
+    [
+     "on",
+     "050505-1"
+    ]
+   ],
+   "figs": "05 06_4"
+  },
+  {
    "id": "050603-1",
    "idx": null,
    "no": "",

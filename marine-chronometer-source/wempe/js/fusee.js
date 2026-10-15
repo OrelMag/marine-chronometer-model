@@ -392,8 +392,8 @@ const WFUSEE=(()=>{
        tall at 80° (below), 14.2 overall; the hole
        2.25 H7 (1:70), staked on its arbor 6.3 ±0.1 from the arbor's lower shoulder to its upper face. The step to the thin tip (8.6 from the hole) is drawn where the thick
        part keeps 0.05 clear of the fusee wheel's tips, which it reaches over (8.3: README). Its arbor 05 05 05-2 (no sheet): Ø 2.25 between its shoulders, 18.95 (19 less
-       0.05 endshake; scaled 19.5 on 05 05 05), its pivots Ø 0.88 in the plates' drilled 0.9, 3.1 long (scaled): estimated. Its wire spring (Feder 05 05 06-1, the coloured
-       section; 05 06_4's "Drahtfedermitte") has no sheet and no hole in either plate's table: not drawn */
+       0.05 endshake; scaled 19.5 on 05 05 05), its pivots Ø 0.88 in the plates' drilled 0.9, 3.1 long (scaled): estimated. Its wire spring (Feder 05 05 06-1), at hole 5
+       beside it, below */
     const pD=part('maintDetent',-25),gD=grp(pD,DX[0],DX[1]);
     /* the tip's end (05 05_12): a straight edge from its lower corner, on r 12 about the hole and on the line tangent to the boss's underside (2.5 under the hole: scaled 2.56),
        2.6 tall above that line ("2,6", sure) at 80° to it, leaning back toward the hole ("80°", sure; scaled 81.7°, and 2.35 tall: the figure is not to scale there); the 1941
@@ -414,6 +414,46 @@ const WFUSEE=(()=>{
       const thick=KIT.clipPoly(DTX,p=>s-Math.hypot(p[0],p[1])),thin=KIT.clipPoly(DTX,p=>Math.hypot(p[0],p[1])-s);pD.userData.step=s;
       tag(mesh(gDc,slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),M.blued),'050505-1');tag(mesh(gDc,slab(thin,[],DTU,DTT),M.blued),'050505-1',1);}
     tag(mesh(gD,turned([[0,-22.075],[0.44,-22.075],[0.44,-18.975],[1.125,-18.975],[1.125,yD],[0.44,yD],[0.44,yD+3.1],[0,yD+3.1]].map(([r,y])=>[r,y]),20),M.steel),'050505-2');
+    /* its wire spring (Feder 05 05 06-1: the coloured section's #24; no sheet) in its stud, at the top plate's hole 5 ("Drahtfeder", 05 08_1a: N 38.507 O 10.684, Körner 1.3,
+       M 1.7, 4.73 from hole 4; 05 06_4's A-B marks the "Drahtfedermitte" beside the detent's arbor). Sizes off the photographs, each scaled by the hole table's own spacing (holes
+       49, 3, 4 and 5 on the top plate: 8.8 px/mm from above, 11-12 from the north) and checked on the coloured section (9.37 px/mm by the plates' 19):
+       the stud a plain cheese head screwed in from the outer face, Ø 3.0 × 1.9 (from above Wempe 3955's 2.6-2.9, Kirow 247's 2.8-2.9, Lange 5177's 3.3-3.5; from the north 2.8, 2.8,
+       3.3; its height 1.8, 1.9, 2.0; the section's 3.4 × 1.87: likely ±0.3 and ±0.15), its slot 0.45 wide and 0.7 deep (the section's 0.47 × 0.73, Kirow 247's 0.48 × about 0.9,
+       Wempe 3955's 0.4 × 0.6: likely), turned 10° off the N-S line toward 3 o'clock as Wempe 3955's (Kirow 247's N-S, Lange 5177's E-W: it's turned by hand); steel, as the
+       section colours it and Kirow 247's and Lange 5177's are (Wempe 3955's is brass coloured); its shank M1.7 through the plate and 0.4 out under its inner face, the end rounded
+       (the section, scaled: likely); the wire held in an axial hole 1.5 deep in that end (estimated: the section draws it leaving the end's middle, the photographs under the
+       head's axis within 0.1-0.25). The wire: steel Ø 0.25 (its width against the hole spacing and the detent's arbor on 4_Wempe_3955_N, 4_Kirow_247_N, 4_Lange_5177_N:
+       0.24-0.26, likely ±0.05), straight down past the detent's back (its r 18 edge, at the thick part) to 1.8 over the pillar plate (the section scales 1.8; Kirow 247 1.75,
+       Wempe 3955 1.2, Lange 5177 3.3: likely ±0.4). Its axis lies 0.32 inside that edge (hole 5 against hole 4 and the detent's sheet), so the detent bends it out: a cantilever
+       from the stud's end loaded at the arm's upper corner, 12.3 below, where alone it bears, pressing the detent onto the ratchet (as the teeth lift the detent, more). Upright
+       across that, as the section draws it: the photographs lean it 1.8° (Wempe 3955) and 2.9° (Kirow 247) toward the arbor, 4.9° away (Lange 5177), each against the arbor's own
+       lean in the frame, a set given by hand. Rebuilt in update() as the detent rides */
+    const WR=TI+0.4,WH=1.5,WE=-1.8,WRW=0.125,WA=DTU-WR,WP=[H[5][0]-DX[0],-(H[5][1]-DX[1])];   /* the stud's end, the hole's depth, the wire's end, its radius, its arm to the corner, its axis (shape coordinates about hole 4) */
+    const gWS=tag(K.headOn(loose(grp(gD,H[5][0]-DX[0],H[5][1]-DX[1]),0),'maintDetent','topPlate'),'wireStud');   /* in the Exploded view it stays in the top plate */
+    {const r=1.5,hb=TT-1.2,w=0.225,v=[Math.sin(10*D2R),-Math.cos(10*D2R)],u=[-v[1],v[0]],t0=Math.acos(w/r),pt=t=>[r*Math.cos(t)*u[0]+r*Math.sin(t)*v[0],r*Math.cos(t)*u[1]+r*Math.sin(t)*v[1]];   /* plan: v along the slot (10° off N toward 3 o'clock, +x), u across it */
+      const arc=(a,b,n)=>Array.from({length:n+1},(_,i)=>pt(a+(b-a)*i/n)),A=arc(-t0,t0,14),B=arc(Math.PI-t0,Math.PI+t0,14),C=[...arc(t0,Math.PI-t0,2),...arc(Math.PI+t0,TAU-t0,2)];   /* the slot's ends: the circle's short arcs, through the halves' chord ends */
+      mesh(gWS,solidGeo([{loop:A,y0:TT-1.9,y1:TT},{loop:B,y0:TT-1.9,y1:TT},{loop:C,y0:hb,y1:TT}]),M.steel);   /* the head: its two halves, the slot's floor between them */
+      mesh(gWS,turned([[0,TT-0.3],[0.85,TT-0.3],[0.85,WR-0.25],...[1,2,3,4,5].map(i=>{const a=i/6*Math.PI/2;return[0.6+0.25*Math.cos(a),WR-0.25+0.25*Math.sin(a)];}),[0.6,WR],[WRW,WR],[WRW,WR-WH],[0,WR-WH]],24),M.steel);}   /* the shank, from inside the head */
+    /* the wire's deflection: the least that puts its section (WRW) clear of the detent's outline at the arm's upper face, its click turned g; along the outline's normal there */
+    const wireDef=g=>{const c=Math.cos(g),s=Math.sin(g),Q=DTX.map(([x,y])=>[x*c-y*s,x*s+y*c]),pt=[WP[0],WP[1]];let dx=0,dy=0;
+      for(let it=0;it<4;it++){let best=9,q=null;for(let i=0;i<Q.length;i++){const a=Q[i],b=Q[(i+1)%Q.length],ex=b[0]-a[0],ey=b[1]-a[1],t=Math.max(0,Math.min(1,((pt[0]-a[0])*ex+(pt[1]-a[1])*ey)/(ex*ex+ey*ey))),X=[a[0]+ex*t,a[1]+ey*t],d=Math.hypot(pt[0]-X[0],pt[1]-X[1]);if(d<best){best=d;q=X;}}
+        const ins=KIT.pip(pt,Q),sd=ins?-best:best;if(sd>=WRW-1e-6||!q)break;const n=ins?[(q[0]-pt[0])/best,(q[1]-pt[1])/best]:[(pt[0]-q[0])/best,(pt[1]-q[1])/best],m=WRW-sd;pt[0]+=n[0]*m;pt[1]+=n[1]*m;dx+=n[0]*m;dy+=n[1]*m;}
+      return[dx,dy];};
+    function wireGeo(d){const P=[],f=y=>{const sv=y-WR;if(sv<=0)return 0;if(sv<=WA)return sv*sv*(3*WA-sv)/(2*WA*WA*WA);return 1+1.5*(sv-WA)/WA;};   /* the cantilever's shape, 1 at the corner, straight beyond it */
+      const ys=[WR-WH,WR,...Array.from({length:12},(_,i)=>WR+WA*(i+1)/12),WE];for(const y of ys){const k=f(y);P.push([d[0]*k,y,-d[1]*k]);}
+      const N=12,pos=[],nor=[],idx=[],n=P.length;
+      for(let i=0;i<n;i++){const a=P[Math.max(0,i-1)],b=P[Math.min(n-1,i+1)],t=new THREE.Vector3(b[0]-a[0],b[1]-a[1],b[2]-a[2]).normalize(),e=new THREE.Vector3(1,0,0).cross(t).normalize(),h=new THREE.Vector3().crossVectors(t,e);
+        for(let k=0;k<N;k++){const th=k/N*TAU,q=e.clone().multiplyScalar(Math.cos(th)).addScaledVector(h,Math.sin(th));pos.push(P[i][0]+q.x*WRW,P[i][1]+q.y*WRW,P[i][2]+q.z*WRW);nor.push(q.x,q.y,q.z);}}
+      for(let i=0;i<n-1;i++)for(let k=0;k<N;k++){const a=i*N+k,b=i*N+(k+1)%N,c=b+N,e=a+N;idx.push(a,b,c,a,c,e);}
+      for(const[i,sg]of[[0,-1],[n-1,1]]){const t=new THREE.Vector3(P[Math.min(n-1,i+1)][0]-P[Math.max(0,i-1)][0],P[Math.min(n-1,i+1)][1]-P[Math.max(0,i-1)][1],P[Math.min(n-1,i+1)][2]-P[Math.max(0,i-1)][2]).normalize().multiplyScalar(sg),o=pos.length/3;   /* the ends, flat, their own corners */
+        for(let k=0;k<N;k++){pos.push(pos[(i*N+k)*3],pos[(i*N+k)*3+1],pos[(i*N+k)*3+2]);nor.push(t.x,t.y,t.z);}pos.push(P[i][0],P[i][1],P[i][2]);nor.push(t.x,t.y,t.z);
+        for(let k=0;k<N;k++)idx.push(o+N,sg>0?o+k:o+(k+1)%N,sg>0?o+(k+1)%N:o+k);}
+      const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+      /* wound to face out: turned over if the volume comes out negative (as ribbonGeo) */
+      let vol=0;const A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3();for(let i=0;i<idx.length;i+=3){A.fromArray(pos,idx[i]*3);B.fromArray(pos,idx[i+1]*3);C.fromArray(pos,idx[i+2]*3);vol+=A.dot(B.cross(C));}
+      if(vol<0)for(let i=0;i<idx.length;i+=3){const s=idx[i+1];idx[i+1]=idx[i+2];idx[i+2]=s;}
+      g.setIndex(idx);return g;}
+    let wsA=0;const wsM=tag(mesh(gWS,wireGeo(wireDef(0)),M.steel),'050506-1');pD.userData.wire=wireDef(0);
 
     /* =============== the stop work: the bar (Stellungssteg 05 06 03-1, coloured section) in its slot across the fusee's small end, and the stop pin 05 08 01-5 =============== */
     /* 05 06_4 Schnitt C-D: the bar (its outline above) slides in the slot across the small end (05 06 04-2: 2 H8, 1.5 +0.05 deep, cut in the body above), 1.45 thick (the
@@ -633,6 +673,8 @@ const WFUSEE=(()=>{
       const rl=Rf-RG;gCK.forEach((g,i)=>{const a=ckAng(i,rl);g.rotation.y=a;if(last.ck[i]===null||Math.abs(last.ck[i]-a)>0.002){last.ck[i]=a;const o=spr[1-i];o.m.geometry.dispose();o.m.geometry=sprGeo(o);}});
       /* the maintaining detent rides on the ratchet's teeth */
       {const P=[DX[0]-FX[0],-(DX[1]-FX[1])];gDc.rotation.y=seat(gsR,RG,P,DTN,0.35,-0.35);}
+      /* its wire spring follows it */
+      if(Math.abs(gDc.rotation.y-wsA)>1e-4){wsA=gDc.rotation.y;const d=wireDef(wsA);pD.userData.wire=d;wsM.geometry.dispose();wsM.geometry=wireGeo(d);}
       /* the chain or band, the barrel and the mainspring, and the stop bar: only when the fusee has moved */
       if(last.n!==null&&Math.abs(last.Rf-Rf)<1e-4&&last.conn===conn)return Rf;last.n=n;last.Rf=Rf;last.conn=conn;
       const m0=cg.m0Of(Rf),run=cg.runOf(m0),sT=cg.lf(m0)+run.S,L=CONN[conn].len,rbp=cg.rbp;
