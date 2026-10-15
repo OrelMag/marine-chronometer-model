@@ -2749,7 +2749,7 @@ const WESC=(()=>{
       detM.rotation.y=(s.lift||0);for(const g of R.golds)g.rotation.y=-(s.psDef||0);
       if(th!==lastTw){R.spring.geometry=ribbonGeo(spPath(-th),HB,HT,R.spring.geometry);lastTw=th;}};
     return{update,R};}
-  return{build,ESC,W,B,P,FY,Y,HOLES,SET,toKin,MK,HSL,HSP,TP,DPIV:D(TP,0)};
+  return{build,ESC,W,B,P,FY,Y,HOLES,SET,toKin,MK,HSL,HSP,TP,DPIV:D(TP,0),DSPH:2-0.1};   /* DSPH: the detent spring's height as dv draws it (2 wide less 0.05 at each edge), in both states: tools/dynamics.js */
 })();
 
 </script>
