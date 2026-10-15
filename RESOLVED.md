@@ -323,6 +323,13 @@ Contents:
   side, which no source shows, now stops 0.9 of the way to it: the strip clears the collet by 0.063 mm at 347°, the
   widest swing the model allows. Keep: a real spring never touches its collet; the strip at least 0.05 mm off it
   beyond the clamp's edge at every swing up to TRIP + 15°. `43260af`
+- **The Wempe's hairspring didn't breathe.** `hsRA(tw)` turned each coil rigidly by θ(1 − u) at its radius (u its
+  height up the helix), as the Hamilton's did before `9714a9d`: the coils never opened or closed, the strip grew or
+  shrank 4.5 % at the model's 207° swing, and the shape lay 1.2 mm off the elastica. Now `WESC.HSP.bend` bends it
+  as `R.spPath` bends the Hamilton's (each part's curvature changed by θ/L, from the stud's end back, the length
+  kept): within 0.010 mm of the elastica from −300° to 300° (`HSPR.shape`), the coils 4.9 % in and out at 207°.
+  Keep: the page draws from `WESC.HSP.bend`, `wempe_hairspring.js` fails past 0.03 mm; `fine.py --model wempe`
+  clear. `ee5c196`
 
 - **Op. 78's preload was the whole 0.770 g** (p. 61's clause missed). Op. 78 runs on over the page: the weight "should separate the detent
   spring from the stopbutton by approximately 0.005 in" (p. 61; Fig. 88, "(.005 in. clearance)"), so the preload is the weight's
@@ -2214,6 +2221,13 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's hands showed a broken line down their middle.** Each blade (`blade()` in `wempe/js/dial.js`)
+  was one solidGeo cell whose top follows the thickness along the hand, and earcut triangulated it whole: long
+  slivers from a point on one edge to a point far along the other, tilted to either side (|nx| up to 0.70 on the
+  hour hand, 0.58 on the minute hand, 0.33 on the seconds hand's tail), which shaded as a dashed line where the
+  slivers crossed the middle, and Edges inked their creases. The blade is now a strip of cells, one per station,
+  so each top triangle spans one station's step (|nx| ≤ 0.007). Keep: a sloped face (a solidGeo cell with a
+  function for y) is cut into cells along its slope, never triangulated whole. `3c7fe98`
 - **The Wempe's stop bar flickered through the fusee's small end.** The slot the bar slides in
   wasn't cut in the turned body, and the bar, drawn flush with the small end's face, shared that
   face: wherever the cover plate wasn't drawn (hidden, faded, see-through, a phone zoomed in on
