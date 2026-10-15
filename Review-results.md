@@ -2334,6 +2334,15 @@ so it shows on the bridge's top beside the dust seal; the stud screws only 2 mm 
 (KLUwI2UUCMQ 12:39.0). A blind hole needs the bridge's solid cut from its underside only (one extrusion now, its holes all through); `bom.py`'s
 `in 42061 tap` measures the thread in it.
 
+*Hole survey, the upper train bridge (15 October 2026), open:* KLUwI2UUCMQ 13:49.5 (underside) and 23:30 (face up, independent) put on the plan by
+`video.py anchor` on the rim (r 40.5; 15 and 45 traced points, 0.17 and 0.34 mm rms), the cut round the barrel (TB_CUT, r 21.0; 0.13 and 0.06 mm) and the
+centre bushing, then `tools/holemap.py`. The pillar screws' holes and the third's counterbore, the barrel bridge's far screw and the lower bridge's screws land
+within about 0.5 mm. Found: the third's upper bushing sits 1.2-1.3 mm from L.T in both frames (with T paired instead, every rim hole reads 2.5-5 mm off: the
+pair's rotation); real holes the model lacks at about (-22.8, 20.4) and (-8.7, 22.1) (both frames' good side, +-1 mm), (29.7, 1.1) and (-1.8, 33.1) (+-3 mm); and
+on the right, the barrel bridge's near screw, the cock's screw and two pins read 3-4 mm inside their model places, which the soft 23:30 and the slant of
+13:49.5 may account for (13:04.4 put the barrel bridge's hole for that same screw within 1 mm). Not changed: the readings there are not good enough to move
+holes measured to 0.3 mm on 6:49.0; a sharper face-on frame of the bridge's right side would settle them.
+
 *Withdrawn (15 October 2026): a fourth finding, that the Exploded view drives the barrel cap's screws (37023) into the barrel, was a misreading. They go
 from y -6.26 to -53.11 as the barrel goes from 0 to -50: 3.15 mm toward the dial side relative to it, out of the cap, as they should (the winding
 ratchet's screws, 42014, the same way). `exploded.py` was right to pass them.*
