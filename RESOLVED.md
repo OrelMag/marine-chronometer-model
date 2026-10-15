@@ -544,6 +544,33 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The winding-pawl springs' feet were placed apart, and nothing showed the
+  holes beside the pawls.** The beds, pockets and screw holes were read on
+  KLUwI2UUCMQ 19:12 as angles from the pawls' studs as that frame shows them,
+  172.6° apart; the model sets the studs opposite, so each foot's screws came
+  out 7-9° off and the two feet 16° apart, though the springs are one part
+  (42007, two off). The underside face-on (28:35) has the studs opposite and
+  the two feet's screws alike, and on 19:12 the four screw holes are symmetric
+  about the studs' centre, 0.56 mm from the bore's edge the angles were read
+  about. The angles are now counted from the true studs (+3.9° and -3.5°), both
+  feet's screws at 132.0° and 161.8° from their own pawl, r 8.15, the pockets'
+  estimated far ends past them; a hole through the wheel beside each pawl's arm
+  (r 0.66 at r 6.8, 13.6° toward its tip), seen through from both faces, is
+  cut. Keep: the springs' beds, feet and screws counted from the studs where
+  they stand (opposite), the two feet's screws the same; any frame's angles
+  re-centred on symmetric pairs before they are read (`References/VIDEOS.md`,
+  "The sustaining ratchet's holes, studs and pawls"). `HASH`
+- **The winding pawls were bright, their springs and the setup pawl's spring
+  blued, and the pawls' studs thinner than their holes.** No source had blued
+  springs: the one flat spring of the movement the video shows, the setup
+  pawl's (11:58), is polished steel, and the pawls are grey steel, about as
+  light as the gilt beside them (28:19.1, 19:12, 18:40). The studs were r 0.22
+  in the pawls' r 0.403 holes, a ring of daylight round each; 19:12 shows a
+  stud's end r 0.38-0.46 filling the eye. Now the pawls `M.steelD`, the springs
+  and feet and the setup pawl's spring `M.steel`, the studs r 0.385 (inside the
+  holes' 12-sided outline). Keep: a part's finish from a frame of it, or from
+  the movement's nearest like part, said so in its comment. `HASH`
+
 - **Wound straight from a set, the sustaining ratchet stood while the fusee
   turned back most of a turn, then dropped past a tooth.** Wind with the key
   with From run down sets the wind to run down and starts winding in the same
