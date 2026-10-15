@@ -1737,6 +1737,10 @@ Contents:
   shaft to a step at y -31.5 and the square to its end, a shoulder r 2.2 under the collar, the end plate bored 2.25; the barrel arbor Fig. 75's pivots
   and bearings (r 2.35 in the barrel's end holes, r 2.38). Keep: every arbor's pivot inside its bushing's bore and every square's half diagonal under the
   holes it passes; `tools/overhaul.py` passes with no expected entry for them; `strength.js` reads the fusee bushing off its `bushR(...)` call's literals. `facea7a`
+- **The dust seal's screw holes about 62° round from the real ones.** Traced on the top-view photograph through
+  `PT`, the pair stood at 145.5° and -37.9° about the fusee, so the barrel bridge showed a hole where the real one is plain beside the arbor (12:39.0).
+  KLUwI2UUCMQ 13:04.4, the bridge underside up, puts them at 26.8° and -154.9°, 7.97 and 7.67 out (drawn 7.8); the flange's bite between them turns with
+  them. Keep: `S.seal` in the movement's frame, not through `PT`. `f06ed2f`
 
 ## Setup, case and gimbals
 
@@ -2650,7 +2654,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The dust seal's screw holes about 62° round from the real ones (Plates, bridges, screws and arbors).** Traced on the top-view photograph through
-  `PT`, the pair stood at 145.5° and -37.9° about the fusee, so the barrel bridge showed a hole where the real one is plain beside the arbor (12:39.0).
-  KLUwI2UUCMQ 13:04.4, the bridge underside up, puts them at 26.8° and -154.9°, 7.97 and 7.67 out (drawn 7.8); the flange's bite between them turns with
-  them. Keep: `S.seal` in the movement's frame, not through `PT`.
+None at the moment.
