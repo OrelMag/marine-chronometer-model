@@ -2806,6 +2806,16 @@ An arbor needs pivots and shoulders; a stone its seat.
   are (the backlash behind, the escape pinion's frame at -t0), and each wheel
   takes its pinion as `mate`. Keep: an essay figure that meshes gears phases
   them with `gearLash` and the way the model turns its wheels. `96fba58`
+- **The Wempe essay's gimbals figure showed the transport box** (the user's
+  phone screenshot, 15 October 2026). `WCASE.build` builds the padded outer box
+  (bleached birch) with the wooden box since the Transport box view came in, and
+  the page hides it in every other view; the essay's figure, which calls the
+  same builder, never did, so the outer box stood round the whole case and hid
+  the mahogany box, the ring and the bowl (its labels pointed at birch). It also
+  drew both keys, the 1943 and the 1940 one, in the box at once. Now the figure
+  hides the outer box and the first-drawn pieces. Keep: a figure that builds
+  from `WCASE.build` (or any shared builder) hides what the page's views hide:
+  `CS.over` and every `userData.rev==='first'` group. `f170e7a`
 
 ---
 
