@@ -67,6 +67,12 @@ Contents:
   the ride taken where the tooth is drawn (makeEsc's own, with the wheel drawn 0.01 behind, put the stone 6.6 µm into the tooth).
   Keep: the page and the tools move the escapement through the one solved state; `tools/wempe_escapement.js` holds the drawn stone out
   of the drawn tooth, and `checks.py`'s phases follow the solved events. `930a8e4`
+- **The Wempe's hairspring stud was drawn the wrong shape** (15 October 2026, the user's screenshot). Its point had a V cut through it 2.1
+  deep, where 05 03 02-3 draws two facets ground from the V's arms to a knife edge, meeting along the middle (the section; Wempe 3955's
+  photograph shows them lit and dark); its hole was 5.9 from the square end (drawn 5 ±0.1; the photograph 4.9), the bar 3.1 wide to that
+  end (drawn 2.5) and 1.4 thick (drawn 1.6 −0.2), and its upright stood square to the bar where the side view draws it leaning 8° (98°)
+  toward the axis, along the cock's slot's 82° inner wall (05 08 03-1, Schnitt C-D), which the cock left out. Keep: the stud's every
+  figure from 05 03 02-3, its upright leaning with the cock's slot wall, the screw's hole (`HOLES.studScrew`) 5 from the stud's square end. `480bb6f`
 - **The Wempe's discharge stone was drawn square-ended.** The layout's corners and makeEsc (`BEV`) take its end bevelled back 0.3 from
   the acting corner, 05 04_1 draws it bevelled, but the mesh ended square at full reach. Now drawn with the bevel (`DS`). Keep: the drawn
   stone's outline is the one the escapement's motion is worked out on. (05 04_1 measured again scales 0.15-0.2: README, Estimated.) `462a1a3`
@@ -2766,9 +2772,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The Wempe's hairspring stud was drawn the wrong shape** (15 October 2026, the user's screenshot). Its point had a V cut through it 2.1
-  deep, where 05 03 02-3 draws two facets ground from the V's arms to a knife edge, meeting along the middle (the section; Wempe 3955's
-  photograph shows them lit and dark); its hole was 5.9 from the square end (drawn 5 ±0.1; the photograph 4.9), the bar 3.1 wide to that
-  end (drawn 2.5) and 1.4 thick (drawn 1.6 −0.2), and its upright stood square to the bar where the side view draws it leaning 8° (98°)
-  toward the axis, along the cock's slot's 82° inner wall (05 08 03-1, Schnitt C-D), which the cock left out. Keep: the stud's every
-  figure from 05 03 02-3, its upright leaning with the cock's slot wall, the screw's hole (`HOLES.studScrew`) 5 from the stud's square end.
+None at the moment.
