@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.33.00 · 2026-10-15
+- A second model: the Wempe Einheits-Chronometer, the German standard marine chronometer of the 1940s, built from Wempe's own works drawings down to every screw
+- Open it from the Wempe model button beside Essay, or from either page's header
+- Its dial traced from a wartime Wempe's, its fusee pulling a chain or, under Variants, a steel band
+
 ## 2.32.00 · 2026-10-15
 - Overhaul: the manual's 58 operations to take the movement down and 105 to put it back, each part coming off or going on in its turn, with its tools, oil and checks
 - Build book: Putting it together, the reassembly in the manual's order
