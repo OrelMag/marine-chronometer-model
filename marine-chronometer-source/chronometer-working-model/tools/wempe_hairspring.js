@@ -26,7 +26,7 @@ head('1. The length: 05 03_7, "vorm biegen der Kurve auf 13 Umgänge −3,5 mm k
   say(`05 03_1 draws the lower and upper pinning points at 15° and 20° (5° apart) and 05 03_5 the collet's pin end under the stud: a whole strip of n turns less 3.5 mm puts them ${f(Math.abs(L.n13.pins),1)}° apart for any n, the helix-only reading ${f(Math.abs(L.h13.pins),0)}°`);
   const Iw=S.I*(0.5/P.HS.T)**2;say(`the period with the weighed balance (${f(S.I,0)} g·mm²) is ${f(P.HS.T,4)} s; 0.5 s wants ${f(Iw,0)} g·mm² (${sg(100*(Iw/S.I-1),1)} %), the strip ${f(100*(1-(P.HS.kNeed/P.HS.k)**(1/3)),1)} % thinner, or the modulus ${f(100*(1-P.HS.kNeed/P.HS.k),1)} % lower`);
   const Jm=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8')).balance.byHn['050301-4'].I;
-  for(const h of[5.4,6.0,6.5]){const I=S.I+Jm*(h/5.4-1);say(`  the masses ${f(h,1)} high (${h===5.4?'the model\'s, 05 03_2\'s lower outline':h===6.5?'05 03_2\'s upper outline':'Lange 5829\'s side photograph, about'}): I ${f(I,0)}, the period ${f(P.HS.Tof(I,P.HS.k),4)} s; 15 turns less 3.5 mm ${f(P.HS.Tof(I,P.HS.kOf(L.n15.L)),4)} s`);}}
+  for(const h of[5.38,5.8,6.46]){const I=S.I+Jm*(h/6.46-1);say(`  the masses ${f(h,2)} high (${h===6.46?'the model\'s: 05 03_2\'s near pair from the rim\'s face, Wempe 3955\'s side view':h===5.38?'05 03_2\'s far pair\'s outline, its foot hidden by the arm\'s section (the model\'s until 15 October 2026)':'Lange 5829\'s side photograph, about'}; their moment taken as their height): I ${f(I,0)}, the period ${f(P.HS.Tof(I,P.HS.k),4)} s; 15 turns less 3.5 mm ${f(P.HS.Tof(I,P.HS.kOf(L.n15.L)),4)} s`);}}
 
 head('2. The terminal curve (05 03_7, 10:1): its compass centres and Phillips\' conditions');
 /* the curve in the sheet's own frame: x right, y up, the junction at the bottom (0°), the angles rising clockwise to the left (90°) and the top (180°) */
@@ -68,6 +68,10 @@ chk(latD<0.1,`as drawn: ${f(latD,3)} of couple / R on the pivots under a couple:
   const w=resample(spring(12),0.15),w11=resample(spring(11),0.15);say(`with the helix's turns varied (both curves as drawn): ${fr.join(', ')}; at a whole number of turns the two curves' errors cancel: 11 turns ${f(HSPR.lateral(w11.pts,R).ratio,4)}, 12 ${f(HSPR.lateral(w.pts,R).ratio,4)} (the outer curve's smaller error, drawn in proportion, leaves that)`);
   say(`the helix here is ${f(H.TURNS,3)} turns: ${f(H.TURNS%1,3)} of a turn short of whole, which the pins' place sets (the pins together want 360 n − 440°: ${f(H.TURNS+440/360,3)} turns pin to pin), so the drawn spring's force stands`);
   module.exports.lateral={drawn:latD};}
+
+/* the essay (wempe_essaydata.js) takes the spring with its helix's turns varied (spring, resample) and the curve's figures above; the large swings below are this tool's */
+module.exports.spring=spring;module.exports.resample=resample;module.exports.R=R;
+if(require.main!==module)return;
 
 head('4. At large swings: the drawn spring as an elastica (HSPR.large) and as beam elements (hairspring-fe.js)');
 const ths=[];for(let a=-300;a<=300;a+=5)ths.push(a*D);

@@ -4,6 +4,21 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.39.00 · 2026-10-15
+- The Wempe's essay goes on: its helical hairspring and Phillips' curves, its bimetallic balance and how an adjuster set its masses, its gimbals
+- Try the Soviet trial yourself: move the Wempe's balance masses and watch 35 days of rates pass or fail
+- And what Wempe's drawings still leave open
+
+## 2.38.02 · 2026-10-15
+- The Wempe's winding in its case plays at its proper speed on slower devices
+
+## 2.38.01 · 2026-10-15
+- The Wempe is wound in its case as its instructions say: the bowl turned over in its gimbals, the key hole opened, the key put in
+
+## 2.38.00 · 2026-10-15
+- The Wempe's balance masses re-measured on their drawing and photographs: taller, so the balance is heavier and its period nearer the half second
+- The Wempe's detent finished from its sheets and a wartime Wempe's photographs: its horn and banking
+
 ## 2.37.00 · 2026-10-15
 - The Wempe now has an Essay tab: the German standard chronometer told through its own works drawings
 - Read a 1940s drawing hole by hole, see the fusee's pull Wempe measured against the model's mainspring, and watch the escape wheel chase the impulse stone

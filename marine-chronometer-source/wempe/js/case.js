@@ -77,10 +77,15 @@ const WCASE=(()=>{
        is light for brass (this solid is 1.3 kg in brass; 350 g is aluminium's or a moulded case's weight): README. The bowl's side keeps the brackets' screws
        (not cut: radial). Brass, as the sheet; the wartime Glashütte bowls were Bakelite, the 1942 arrangement names a Buna case (README) */
     const bowl=prt(bowlG,'bowl',-YP);
-    {const cone=p=>YB-65+(rr(p)-36.25)*14.5/16.75,fil=p=>YB-46-Math.sqrt(Math.max(0,49-(rr(p)-42)**2));
-      const rs=[34.1,36.25,42,43.2,44.4,45.5,46.5,47.3,48,48.5,49,53,54,59],ys=[[YB-59.5,YB-53],[YB-65,YB-53],[cone,YB-53],...Array(8).fill([cone,fil]),[cone,YB],[YB-23.5,YB],[YB-12,YB]];
-      const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53}];
-      tag(mesh(bowl,smoothRev(solidGeo(cells(rs,ys,[F0]))),M.brass),'050100-1');}
+    /* in two solids: the bottom inside the recess's wall (r 34.1), cut by its two holes, and the rest turned from its profile (the foot, the cone, the body, band and flange, the
+       bore and the round inside), which nothing crosses. Until 15 October 2026 the whole was plan cells of rings, whose narrow sloped rings under the round left cracks along
+       the cone, seen through once the bowl is turned over to wind */
+    {const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53}];
+      tag(mesh(bowl,solidGeo([{loop:circ(34.1),y0:YB-59.5,y1:YB-53,F:F0}]),M.brass),'050100-1');
+      const fil=[...Array(13).keys()].map(i=>{const t=i/12*Math.PI/2;return[42+7*Math.sin(t),YB-46-7*Math.cos(t)];}).reverse();   /* the round r 7 about (42, YB − 46), from the bore's wall down to the floor */
+      const pr=[[34.1,YB-65],[36.25,YB-65],[53,YB-50.5],[53,YB-23.5],[54,YB-23.5],[54,YB-12],[59,YB-12],[59,YB],[49,YB],...fil,[34.1,YB-53]];
+      const g=new THREE.LatheGeometry([...pr,pr[0]].map(([r,y])=>V2(r,y)),N).toNonIndexed();g.computeVertexNormals();   /* each face its own normal, then smoothed round the axis only (smoothRev), so the profile's corners stay sharp */
+      tag(mesh(bowl,smoothRev(g),M.brass),'050100-1',1);}
     /* the two case brackets (Gehäusekloben 05 01 00-3), on the bowl's side at 12 and 6 o'clock, carrying the inner pivots b: no sheet; scaled on 05 01 (Schnitt A-B and C-D,
        2.45 px/mm) and Kirow 422's bowl (11_Kirow_DEC_422_Gehäuse.jpg): a plate on the body 44 long, 9 high, 3 thick, its two screws in slots ("Kloben verstellen bis Gleichgewicht
        erreicht ist": moved along the bowl until it hangs level), and a block 9 wide standing out to 3.5 short of the ring, up past the flange to 5.5 over the pivot, with the
@@ -110,8 +115,10 @@ const WCASE=(()=>{
        Ø 1.2 at 12.4 (drawn at 12.35, inside the groove's edge) on one line, Ø 8 +0.2 at 22.6 at 90° to it. It lies in the bowl's foot, its inner face on the recess's floor and
        its boss 0.5 inside the foot, turning on its screw (7: WN-71, unsure) in the bottom: turned by the knob in its M2.6 (WN-72, brass on Wempe 3955,
        16_Wempe_3955_Gehäusetopf_Kardan.jpg), its Ø 8 comes over the winding hole for the key and away from it to close it; the closing spring (Verschlußfeder 05 01 00-7, 14 on 05 01)
-       that holds it, likely in the groove with its end in the Ø 1.2, has no sheet: not drawn. Its turn: open, the Ø 8 over hole 10 */
-    const cp=prt(bowlG,'closingPlate',-YP);
+       that holds it, likely in the groove with its end in the Ø 1.2, has no sheet: not drawn. Its turn: built open, the Ø 8 over hole 10; at rest the spring holds it shut, turned
+       CPS (25°: no sheet, photograph or video gives it; its Ø 8.1 clears the Ø 8.2 hole from 20.8° on, so 1.7 of metal over the hole's edge: estimated), and winding in the case
+       opens it (shutter, app.js), as the 6MX's shutter is opened for the key (Uy8A88_j-cA 5:21-5:25; the 6MX's own is a pin in a slot) */
+    const cp=prt(bowlG,'closingPlate',-YP),CPS=25*D2R;cp.rotation.y=CPS;
     {const t8=Math.atan2(H[10][1],H[10][0]),tk=t8-Math.PI/2,s0=t8+Math.PI/4,P=(r,t)=>[r*Math.cos(t),r*Math.sin(t)],y0=YB-64.5,yr=YB-61.8,y1=YB-59.5;
       const rs=[5,13,13.95,33.95],ys=[[y0,y1],[y0,y1-1.5],[y0,y1],[yr,y1]];
       const F=[[{p:C([0,0],5.55/2,48),a:y0,b:y1},{p:C([0,0],7.55/2,60),a:y0,b:y0+3}],[{p:C(P(12.35,tk),0.6,24),a:y0,b:y1-1.5}],[],[{p:C(P(22.6,t8),8.1/2,72),a:yr,b:y1},{p:C(P(25,tk),1.32,32),a:yr,b:y1}]];
@@ -231,7 +238,7 @@ const WCASE=(()=>{
       tag(mesh(g,closeGeo(new THREE.TubeGeometry(cv,Math.ceil(nT*24),0.44,6,false)),M.steel),'510011-4');}
     /* keyAt(seat): the key onto the fusee's square (seat {g, y}: fusee.js keySeat, the dust plate's group, which turns with the fusee, and its face, where the square is 3.1
        across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back on the box's floor */
-    const keyAt=s=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};
-    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
+    const keyAt=(s,d=0)=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05-d,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};   /* d: how far out along the square it still is (coming on or going off) */
+    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,shutter:q=>{cp.rotation.y=CPS*(1-q);},parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
   return{build,YP:YB-11.5,YB};
 })();

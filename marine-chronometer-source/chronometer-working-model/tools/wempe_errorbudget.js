@@ -15,7 +15,7 @@
 //      the barometer, the oil   [the Hamilton's estimates: 1 % of air density day to day; the drive lost 0-10 % a year as the oil thickens; through makeEsc]
 // 2. At sea: errorbudget.js's voyage (60 days from a port at 55 °F into the tropics at 85 °F, rated over 10 days in port), with these terms and the sea's (the gimbals'
 //    heavy sea, gimbals.js --model wempe's "beyond NORDFORSK's limit", one day in five, through makeEsc as wempe_gimbals.js works it). 4 s of time is a mile of longitude.
-const fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,S=P.SET,TH=require('./wempe_thermal.js');
+const MAIN=require.main===module,fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,S=P.SET,TH=require('./wempe_thermal.js');
 const rd=f=>fs.readFileSync(path.join(__dirname,'..','js',f),'utf8'),app=rd('app.js'),core=rd('core.js');
 const f=(x,n=2)=>Number.isFinite(+x)?(+x).toFixed(n):'-',sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),rows=[];let fail=0;
 const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);},head=s=>rows.push('\n'+s),t0=Date.now();
@@ -42,8 +42,8 @@ say(`the oil thickening (the Hamilton's estimate: the drive lost 0-10 % a year):
 /* temperature (wempe_thermal.js): the linear term at the compensating place nulled by the adjuster, to ±0.25° of the masses' place (estimated: the rim's "8 Körner in 60
    Teilung", eight punch marks of a 60-division, 6° a division, the masses set between them by trial); the secondary error as Guillaume's integral balance made it (estimated) */
 const LIN=TH.linear,SEC=TH.secondary,perDeg=Math.abs(LIN.perDeg),SET0=0.25,cRes=perDeg*SET0,Sint=SEC.Sintegral;
-say(`temperature (wempe_thermal.js): at the masses' drawn place (32° from the cuts' line) the balance ${LIN.drawn<0?'loses':'gains'} ${f(Math.abs(LIN.drawn),2)} s a day a °C; they null it at ${f(90-LIN.zero,1)}° from the cuts' line, a degree along the rim ${f(perDeg,3)} s a day a °C. The rim is graduated "8 Körner in 60 Teilung" (05 03 01-1: eight punch marks of a 60-division, 6° a division, ${f(6*perDeg,2)} s a day a °C each): the adjuster sets the masses between them by trial, to ±${SET0}° (estimated), so C's residual within ±${f(cRes,3)}. The secondary error (Guillaume's integral balance, estimated) S ${sg(Sint[0],2)} to ${sg(Sint[1],2)} s, a steel spring on a brass and plain nickel steel rim ${sg(SEC.Splain[0],2)} to ${sg(SEC.Splain[1],2)}`);
-console.log(rows.splice(0).join('\n'));
+say(`temperature (wempe_thermal.js): at the masses' drawn place (30° from the cuts' line, Wempe 3955's) the balance ${LIN.drawn<0?'loses':'gains'} ${f(Math.abs(LIN.drawn),2)} s a day a °C; they null it at ${f(90-LIN.zero,1)}° from the cuts' line, a degree along the rim ${f(perDeg,3)} s a day a °C. The rim is graduated "8 Körner in 60 Teilung" (05 03 01-1: eight punch marks of a 60-division, 6° a division, ${f(6*perDeg,2)} s a day a °C each): the adjuster sets the masses between them by trial, to ±${SET0}° (estimated), so C's residual within ±${f(cRes,3)}. The secondary error (Guillaume's integral balance, estimated) S ${sg(Sint[0],2)} to ${sg(Sint[1],2)} s, a steel spring on a brass and plain nickel steel rim ${sg(SEC.Splain[0],2)} to ${sg(SEC.Splain[1],2)}`);
+if(MAIN)console.log(rows.splice(0).join('\n'));
 
 /* ---------- the scatter and drift: the Hamilton's, calibrated as errorbudget.js calibrates them on No. 3390's card (its 30-day Navy test) ---------- */
 const c2H=+/uncut:t=>(-?[\d.]+)\*\(t-72\.5\)\*\*2/.exec(core)[1],card=Function('return '+/C3390=(\{[^}]*\})/.exec(app)[1])(),c1card=(-0.02-0.00)/35,TS=[90,72.5,55,55,72.5,90];
@@ -56,15 +56,13 @@ const SC=(()=>{const p={c1:c1card,sd:0.04,drS:0.002};for(let it=0;it<3;it++){let
 const baro=()=>{let b=gauss()*0.01;return()=>(b=0.7*b+0.71*0.01*gauss());};
 
 /* ---------- 1. the TU's trial ---------- */
-head('1. The TU\'s trial: 35 days at 36/20/4/20/36 °C, the first two days of each period not counted, wound daily to "8" (the 6MX\'s TU, 6MX-figures.md)');
-say(`scatter ${f(SC.sd,3)} s a day and drift ±${f(SC.drS*1000,2)} ms a day each day: the Hamilton's, calibrated on No. 3390's card (rating ${card.dev}, recovery ${card.rec}) as errorbudget.js does, taken for the Wempe (estimated: no Wempe card to hand)`);
 const TU=[36,20,4,20,36],LIM={E:0.35,R:2.00,D:2.30,C:0.10,S:1.20,w:3.50,N:30};
 /* a chronometer: o.c1 its linear term (s a day a °C gained, against 20 °C), o.Sv its secondary error (s, losing at the extremes), o.k the scatter and drift's scale, o.only one term */
 function trial(o){const use=k=>!o.only||o.only===k,c2=-o.Sv/256,dr=o.k*SC.drS*gauss(),oil=0.10*rnd(),off=(rnd()-0.5)*1.0,b=baro();   /* off: the regulation at 20 °C, ±0.5 s a day (estimated) */
   const q=v=>Math.round(v*100)/100;let e=0,day=0;const per=[];
   for(const T of TU){const rs=[];for(let d=0;d<7;d++){day++;let r=off;
       if(use('temp'))r+=o.c1*(T-20)+c2*(T-20)**2+air(T);if(use('wind'))r+=d===0&&day>1?w0:w8;if(use('scatter'))r+=o.k*SC.sd*gauss();if(use('drift'))r+=dr*day;
-      if(use('baro'))r+=airK*b();if(use('oil'))r+=-oil*day/365*oilK;const e1=q(e-r);rs.push(q(e1-e));e=e1;}   /* the error, losing positive as the TU counts it, read to 0.01 s */
+      if(use('baro'))r+=airK*b();if(use('oil'))r+=-oil*day/365*oilK;if(o.rec)o.rec.push([T,r-(use('temp')?o.c1*(T-20):0)]);const e1=q(e-r);rs.push(q(e1-e));e=e1;}   /* the error, losing positive as the TU counts it, read to 0.01 s */
     per.push(rs.slice(2));}
   const m=per.map(rs=>rs.reduce((a,x)=>a+x,0)/rs.length),Ev=per.reduce((a,rs,k)=>a+rs.reduce((s,x)=>s+Math.abs(x-m[k]),0),0)/25;
   const Dv=Math.max(...per.map(rs=>Math.max(...rs.slice(1).map((x,i)=>Math.abs(x-rs[i]))))),w36=(m[0]+m[4])/2,w20=(m[1]+m[3])/2,w4=m[2];
@@ -75,10 +73,16 @@ const drawn=()=>({c1:LIN.drawn,Sv:Sint[0]+(Sint[1]-Sint[0])*rnd(),k:1});
 const many=(mk,n=NV)=>[...Array(n)].map(()=>trial(mk()));
 const show=(nm,R)=>{const md=k=>pct(R.map(r=>r[k]),0.5),p95=k=>pct(R.map(r=>Math.abs(r[k])),0.95),pass=R.filter(r=>r.pass).length/R.length;
   say(`${nm}: (median, and 95 % of |x|) E ${f(md('E'),3)} (${f(p95('E'),3)}), R ${sg(md('R'),2)} (${f(p95('R'),2)}), D ${f(md('D'),2)} (${f(p95('D'),2)}), C ${sg(md('C'),3)} (${f(p95('C'),3)}), S ${sg(md('S'),2)} (${f(p95('S'),2)}), the largest period mean ${f(md('w'),2)} (${f(p95('w'),2)}), N ${f(md('N'),1)} (${f(p95('N'),1)}); it passes ${f(100*pass,1)} % of ${R.length} trials`);return pass;};
+/* the essay's trial (wempe_essaydata.js): one trial as adjusted, the first the tool's seed draws: each day's temperature (°C) and its rate (gaining, s a day,
+   before the reading's rounding) less the balance's linear term c1 (T - 20), which the essay puts back for the masses' place it shows; with the figures it needs */
+module.exports.essay=()=>{seed=20261015;const o=adj(),rec=[];trial({...o,rec});return{days:rec,Sv:o.Sv,airLin:-(air(36)-air(4))/32,perDeg,SET0,LIM,TU,sd:SC.sd,drS:SC.drS};};
+if(!MAIN)return;
+head('1. The TU\'s trial: 35 days at 36/20/4/20/36 °C, the first two days of each period not counted, wound daily to "8" (the 6MX\'s TU, 6MX-figures.md)');
+say(`scatter ${f(SC.sd,3)} s a day and drift ±${f(SC.drS*1000,2)} ms a day each day: the Hamilton's, calibrated on No. 3390's card (rating ${card.dev}, recovery ${card.rec}) as errorbudget.js does, taken for the Wempe (estimated: no Wempe card to hand)`);
 say(`the TU's limits: E ±${LIM.E}, R ±${LIM.R}, D ±${LIM.D}, C ±${LIM.C} s a day a °C, S ±${LIM.S}, each period's mean ±${LIM.w}, N = 42E + 4.5R + 60C + 2.4S ≤ ${LIM.N}`);
 const RA=many(adj),pA=show('as adjusted (the masses at their compensating place)',RA);
 const RD=many(drawn,Math.min(NV,500));show('the masses at their drawn place',RD);
-say(`  at the drawn place C is ${sg(pct(RD.map(r=>r.C),0.5),2)} (the balance losing as it warms), N ${f(pct(RD.map(r=>r.N),0.5),0)}: the drawn place fails the TU by its temperature coefficient alone; the adjuster's trial moves them ${f(LIN.zero-58,0)}° along the rim toward the cuts, about ${f((LIN.zero-58)/6,1)} divisions of the graduation`);
+say(`  at the drawn place C is ${sg(pct(RD.map(r=>r.C),0.5),2)} (the balance losing as it warms), N ${f(pct(RD.map(r=>r.N),0.5),0)}: the drawn place fails the TU by its temperature coefficient alone; the adjuster's trial moves them ${f(LIN.zero-60,0)}° along the rim toward the cuts, about ${f((LIN.zero-60)/6,1)} divisions of the graduation`);
 say('what each source adds, as adjusted (median, alone):');
 for(const[k,nm]of[['temp','the temperature curve (the residual C, S and the air)'],['wind','the swing over the daily wind'],['scatter','day-to-day scatter'],['drift','drift'],['baro','the barometer'],['oil','the oil thickening']]){
   const R=[...Array(Math.min(NV,600))].map(()=>trial({...adj(),only:k})),md=x=>pct(R.map(r=>Math.abs(r[x])),0.5);say(`  ${nm.padEnd(52)} E ${f(md('E'),3)}, R ${f(md('R'),3)}, D ${f(md('D'),2)}, C ${f(md('C'),3)}, S ${f(md('S'),2)}, N ${f(md('N'),1)}`);}
