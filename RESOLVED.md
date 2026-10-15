@@ -2215,7 +2215,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   hour hand, 0.58 on the minute hand, 0.33 on the seconds hand's tail), which shaded as a dashed line where the
   slivers crossed the middle, and Edges inked their creases. The blade is now a strip of cells, one per station,
   so each top triangle spans one station's step (|nx| ≤ 0.007). Keep: a sloped face (a solidGeo cell with a
-  function for y) is cut into cells along its slope, never triangulated whole. `HASH`
+  function for y) is cut into cells along its slope, never triangulated whole. `3c7fe98`
 - **The Wempe's Box view showed an empty box, and the bezel glass's outline through its wood.**
   From 24° the lid's front wall hid everything inside (the dial lies 59 under the lid's glass);
   and Edges drew the bezel's and the lid's glass as ghosts, whose outlines the line pass lays over
