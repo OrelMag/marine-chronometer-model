@@ -1191,6 +1191,15 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The Wempe's frame read off its sheets wrongly in four places** (15 October 2026, a survey of the parts against their works drawings). The
+  barrel bridge's chord was drawn square to hole 45's line, its "7,7" read along the chord to pin 41 and its "5" as the top corner's offset,
+  where both figures' extension lines run parallel to an edge: 42 is 7.7 from the chord (with 45's 7 that gives the sheet's 24 to 0.002) and
+  48 is 5 from the short edge (it was 8.29 and 4.5). The top plate's pocket N-O was a constant 8 wide where its dashed edges are the common
+  tangents of the opening's r 5 and 51's r 4 (10 narrowing to 8). The fusee bush's fits were swapped: T6 is the taper above the flange, which
+  the dust bush is pressed on, g6 the spigot that slides into the plate. The intermediate bridge had Ø 6.2 sinks at 38 and 35 the section
+  doesn't draw: a 45° mouth down to the bush at 38, and at 35 the seconds jewel's setting fills the bridge's hole (bore 3.7, open below the
+  jewel). Keep: each figure on the edge its extension lines run along; fusee bush g6 in the plate, T6 under the dust bush (fine.py's
+  dustBush x fuseeBush); the pocket tapering; no counterbores at 38 and 35. `b4450e1`
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the
   pillar plate (Figs. 29, 67, 110). `7a91d18`
 - **Arbors ending in nothing.** Every arbor now ends in a bushing or jewel. The
@@ -1820,6 +1829,12 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's movement ring pinned to the case at 6 o'clock.** 05 08 00-3's plan, drawn from the dial side, draws the radial hole at 12 (a
+  dashed pair figured "1,6"; the section shows it end on, 2.8 under the top face), and Wempe 3955 shows its end on the ring's cone at 12; the
+  pin WN-202 was Ø 1.1 at 6, the "1,1 Ø" (the dial's pin hole's) and the "1,6" read the other way round, the bezel's notch with it. The closing
+  plate's Ø 1.2 was drilled through where 05 01 00-2 draws it blind from the groove's floor, and the rim met the boss in a sharp corner where
+  the sheet draws a round. Keep: the radial pin Ø 1.6 at 12 o'clock (-z) and the bezel's notch over it; the closing plate's hole blind, its
+  round r 1.3. `b4450e1`
 - **The Wempe's bowl had cracks along its cone.** Built as plan cells of rings, the narrow sloped
   rings under the inside round left hairline gaps along the 40° cone, dashed rows seen through to
   the inside (and drawn as dashes by Edges); the cone faced down, out of sight, until the bowl was
