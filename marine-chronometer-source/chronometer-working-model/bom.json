@@ -1994,11 +1994,11 @@
    "parent": "42051",
    "kind": "part",
    "part": "post",
-   "fn": "Presses the seal ring against its seat.",
+   "fn": "Stands on the barrel bridge round the fusee's bushing, under the dust seal, and presses the seal ring against the seal's roof (KLUwI2UUCMQ 12:34-12:38.5).",
    "rel": [
     [
      "on",
-     "42051"
+     "42061"
     ]
    ],
    "figs": "108"
@@ -2409,11 +2409,11 @@
    "parent": "42009A",
    "kind": "part",
    "part": "sratchet",
-   "fn": "Free on the fusee arbor; its pawls take the winding ratchet's drive in running; the sustaining pawl holds it in winding (Sec. IV).",
+   "fn": "Free on the fusee wheel's hub (Op. 20, Fig. 71); its pawls take the winding ratchet's drive in running; the sustaining pawl holds it in winding (Sec. IV).",
    "rel": [
     [
      "round",
-     "42022",
+     "42015",
      "free"
     ]
    ],
