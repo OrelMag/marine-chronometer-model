@@ -12,7 +12,7 @@
     ruby:3.98,clear:3.98,delrin:1.41,invar:8.05,glass:2.5,packing:1.2,fibre:1.35,felt:0.3,wood:0.55,woodEdge:0.55};
   root.updateMatrixWorld(true);const toRing=new THREE.Matrix4().copy(ring.matrixWorld).invert(),A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3(),im=new THREE.Matrix4();
   const body=()=>({m:0,s:[0,0,0],S:[[0,0,0],[0,0,0],[0,0,0]],byMat:{},byPart:{},missing:{}});
-  const add=(Bd,o,mat)=>{let key=KEY.get(mat)||'?';if(key==='?'){let p=o,pn=null;while(p&&!pn){pn=p.userData.partName;p=p.parent;}if(pn==='hands')key='steel';}const rho=RHO[key];   /* the hands have their own material: blued steel */if(rho==null){let p=o,pn=null;while(p&&!pn){pn=p.userData.partName;p=p.parent;}const k=key+' '+(pn||'?')+' '+(o.material&&o.material.type);Bd.missing[k]=(Bd.missing[k]||0)+1;return;}
+  const add=(Bd,o,mat)=>{let key=KEY.get(mat)||'?';if(key==='?'){let p=o,pn=null;while(p&&!pn){pn=p.userData.partName;p=p.parent;}if(pn==='hands')key='steel';}const rho=(window.__mpRho&&window.__mpRho(o,key,mat))??RHO[key];   /* __mpRho: another model's densities (massprops.py --model, its checks.py) */   /* the hands have their own material: blued steel */if(rho==null){let p=o,pn=null;while(p&&!pn){pn=p.userData.partName;p=p.parent;}const k=key+' '+(pn||'?')+' '+(o.material&&o.material.type);Bd.missing[k]=(Bd.missing[k]||0)+1;return;}
     const g=o.geometry,P=g.attributes.position,I=g.index,n=I?I.count:P.count;
     const mats=o.isInstancedMesh?[...Array(o.count).keys()].map(i=>{o.getMatrixAt(i,im);return toRing.clone().multiply(o.matrixWorld).multiply(im);}):[toRing.clone().multiply(o.matrixWorld)];
     let m=0;const s=[0,0,0],S=[[0,0,0],[0,0,0],[0,0,0]];
@@ -37,11 +37,16 @@
     if(p&&p.userData.partName==='ring')return;   /* the ring's pivot screws, washers and nuts (gp) */
     o.geometry.computeBoundingBox();obs.push({b:o.geometry.boundingBox.clone().applyMatrix4(toRoot.clone().multiply(o.matrixWorld)),o});});
   ring.traverse(o=>{if(o.isMesh&&!under(o,mv)&&!o.userData.decal&&!o.userData.surface&&o.geometry.attributes.position)movers.push(o);});
+  /* __mpExact (another model's, massprops.py --model): a point in an obstacle's bounding box counts only inside the solid itself (a ray's crossings of its faces) */
+  const EX=window.__mpExact,inside=(q,v)=>{if(q.o.isInstancedMesh)return true;q.inv=q.inv||toRoot.clone().multiply(q.o.matrixWorld).invert();const p=v.clone().applyMatrix4(q.inv),P=q.o.geometry.attributes.position,I=q.o.geometry.index,n=I?I.count:P.count,d=new THREE.Vector3(1,0.0013,0.0021).normalize();
+    const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(),e1=new THREE.Vector3(),e2=new THREE.Vector3(),h=new THREE.Vector3(),s=new THREE.Vector3(),qq=new THREE.Vector3();let x=0;
+    for(let k=0;k+2<n;k+=3){a.fromBufferAttribute(P,I?I.getX(k):k);b.fromBufferAttribute(P,I?I.getX(k+1):k+1);c.fromBufferAttribute(P,I?I.getX(k+2):k+2);e1.subVectors(b,a);e2.subVectors(c,a);h.crossVectors(d,e2);const det=e1.dot(h);if(Math.abs(det)<1e-12)continue;
+      const f=1/det;s.subVectors(p,a);const u=f*s.dot(h);if(u<0||u>1)continue;qq.crossVectors(s,e1);const w=f*d.dot(qq);if(w<0||u+w>1)continue;if(f*e2.dot(qq)>0)x++;}return x%2===1;};
   const hits=()=>{root.updateMatrixWorld(true);const set=new Set();const v=new THREE.Vector3();
     for(const o of movers){const T=toRoot.clone().multiply(o.matrixWorld),P=o.geometry.attributes.position;for(let i=0;i<P.count;i+=3){v.fromBufferAttribute(P,i).applyMatrix4(T);
-      for(let k=0;k<obs.length;k++)if(obs[k].b.containsPoint(v))set.add(k);}}return set;};
+      for(let k=0;k<obs.length;k++)if(obs[k].b.containsPoint(v)&&(!EX||inside(obs[k],v)))set.add(k);}}return set;};
   const base=hits(),stop=(set,ax)=>{for(let d=0.5;d<=60;d+=0.5){set(d*Math.PI/180);const h=hits();for(const k of h)if(!base.has(k)){set(0);let p=obs[k].o,pn=null;while(p&&!pn){pn=p.userData.partName;p=p.parent;}return{deg:d,against:pn||obs[k].o.name||'?'};}}set(0);return{deg:null};};
-  const stops={ring:[stop(a=>{ring.rotation.x=a;},'x'),stop(a=>{ring.rotation.x=-a;},'x')],bowl:[stop(a=>{bowl.rotation.z=a;},'z'),stop(a=>{bowl.rotation.z=-a;},'z')]};
+  const stops=window.__mpNoStops?{}:{ring:[stop(a=>{ring.rotation.x=a;},'x'),stop(a=>{ring.rotation.x=-a;},'x')],bowl:[stop(a=>{bowl.rotation.z=a;},'z'),stop(a=>{bowl.rotation.z=-a;},'z')]};
   root.updateMatrixWorld(true);
   const mvM=toRing.clone().multiply(mv.matrixWorld).elements;   /* the movement's frame in the ring's (column-major) */
   return JSON.stringify({mvM,raw:{bowl:{m:BW.m,s:BW.s,S:BW.S},ring:{m:RG.m,s:RG.s,S:RG.S}},bowl:fin(BW),ring:fin(RG),stops,obstacles:obs.length,baseHits:base.size,ringY:ring.position.y,RO:BX.RO,CR:BX.CR});})()
