@@ -1609,7 +1609,7 @@
     "w": 0.3,
     "h": 0.85,
     "len": 26.2318,
-    "note": "blued band on edge, half a turn round the ratchet at r 9 to the click's back"
+    "note": "steel band on edge, half a turn round the ratchet at r 9 to the click's back"
    }
   },
   {
@@ -3011,7 +3011,7 @@
     "kind": "band",
     "w": 0.3,
     "h": 0.5,
-    "len": 12.4613,
+    "len": 13.3993,
     "bear": [
      7.2488,
      5.3505
@@ -4423,7 +4423,7 @@
     "kind": "band",
     "w": 0.3,
     "h": 0.5,
-    "len": 18.3954,
+    "len": 17.913,
     "bear": [
      -7.2488,
      -5.3505
@@ -6386,9 +6386,9 @@
    "missing": {}
   },
   "sratchet": {
-   "m": 3.8045,
-   "I": 395.9826,
-   "off": 0.0542,
+   "m": 3.7907,
+   "I": 395.4157,
+   "off": 0.03,
    "missing": {}
   },
   "balance": {
