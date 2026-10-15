@@ -76,7 +76,7 @@ Contents:
 - **The Wempe's hairspring's outer curve was drawn to the wrong radius.** It was drawn in proportion (kU 0.883) to end 3.87 from the staff,
   where an upright square to the stud's bar let it stand; the stud's upright leans 8° (05 03 02-3) and so brings its slot in to 3.55, where
   05 03_7's table pins the inner end in the collet: both curves are now the table's (kU 1), the slot in the upright's middle with the spring
-  and its pin side by side in it. The spring's isochronism, `WESC.SET.HS`, went from −0.659 to −0.543 s a day per 10°, the rate over the wind
+  and its pin side by side in it. The spring's isochronism, `WESC.SET.HS`, went from −0.659 to −0.543 s a day per 10° (−0.499 once the balance was re-weighed and TF taken from the 6MX video, the same day), the rate over the wind
   from ±0.08 to −0.02/+0.01 s a day. Keep: `RSTUD` is the table's radius at 220°; `HS` what `tools/wempe_hairspring.js` finds.
 - **The Wempe's escape wheel's teeth and openings were read off the wrong lines of 05 04_23.** Its "11,7" was taken for a recess and its
   "12,1" for the roots: the gaps' floor is Ø 11.7, the locking face running straight down to it, leaning 25° from the radius (the sheet's

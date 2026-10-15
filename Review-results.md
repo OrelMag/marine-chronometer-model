@@ -2381,6 +2381,23 @@ A survey after the stud was found wrong (fixed, `480bb6f`): four read-only passe
 sheet, enlarged, and with Wempe 3955's photographs. These are their readings, not yet checked a second time; each says how sure it is.
 Fix each from its sheet, and record it in RESOLVED.md when fixed.
 
+**Status (15 October 2026, branch `claude/wempe-stud`):** every finding below was checked again on its sheet and fixed, with these
+exceptions, which stay open:
+- The discharge roller's outline: 05 04_1's dashes at the stone's end can't be read as square, and a square end there would reach the gold
+  spring's tip (its material is now brass, as on Wempe 3955).
+- The detent block's orientation: the sheet is first-angle, which would put the detent 1.3-3.3 under the plate, out of reach of the 1946
+  rollers (README, Unresolved); its base's step and the Ø 1.3 hole's face are fixed.
+- The fusee wheel's hub-edge slope; the stop bar's 3.2 travel and the drum's "0,8" (README, Unresolved; the slot's two depths were
+  settled on main's stop-work rework); the long motion-work stud's 0.4 short of the plate (2 px at 2:1); the top plate's bushes' oil cups
+  (no figure on the sheet: the photograph's stands).
+- Found on the way, not fixed: the maintaining detent's arbor measures about Ø 1.5 on three north-side photographs (the model's estimated
+  2.25), and the detent shows bright steel where the model draws it blued (its sheet: light blue at 310°); Wempe 3955's closing plate shows
+  two Ø 1 holes at r 11 where 05 01 00-2 draws one Ø 1.2 (README, Unresolved); the click wheel's teeth, met over the clicks' true 1.30,
+  hold their fatigue limit only at brass's strong end (margin 1.1-1.6, `wempe_strength.js`).
+- Added with the batch: the stud as drawn and the hairspring's outer curve the table's (`480bb6f`, `760e11f`), the dial's pin Ø 1.1, the
+  maintaining detent's wire spring (05 05 06-1) at hole 5, and `wempe-inertia.js` weighing one revision (the balance 2,561 g·mm²); TF 108 s
+  from the 6MX video at the model's own swing (199.4° at 12 h).
+
 **Balance and escapement (js/escapement.js)**
 1. Escape wheel's teeth (05 04_23, circles fitted at 82.7 px/mm): the gap's floor on Ø 11.7, the locking face running down to it (Ø 12.1 is the
    top of the 0.2 step at the back's foot), the face leaning 25° from the radius (the sheet's "25°"), the tooth 14.9° from tip to foot. The
