@@ -174,7 +174,7 @@ const PARTS={
     d:'A knob on a bracket in the box’s front right corner turning a lever: turned in, the lever presses the gimbal ring onto the locking bracket on the bowl, so neither gimbal can swing, for carrying the box. Drawn turned off.',
     sp:'05 01’s list: Feststeller 05 01 01 (no sheet) · knob Ø 19.6, lever 28 × 8'},
   key:{t:'Winding key (Chronometerschlüssel)',g:6,src:'drawing',sn:'Its body and tube from their sheets; the handle scaled on the key’s assembly; the spring’s wire and the tube’s depth in the body estimated',figs:'05 01_7, 05 01_8, 05 01_9, 05 01_6',c:'#41444a',pri:2,
-    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It lies in the box. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
+    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It lies in the box; while it winds (Wind, in the movement’s views) it is on the fusee’s square, turning it back. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
     sp:'Drawing 51 00 11 (16.7.43) · body 05 01 02-2: St. Az, phosphated, black · tube 05 01 02-3: Ms 58, Ø 5.95, 50.1 long, square 3.1 × 19 · paddle Ø 34.5'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
@@ -312,7 +312,7 @@ const PIECES={
     {k:'tongueKnob',t:'Tongue knob',h:'WN-zk',d:'The knob in the tongue’s M3.5, to lift it.',sp:'M3.5 (estimated)',src:'est',sn:'Estimated'}],
   key:[{k:'paddle',t:'Key handle (Schlüsselgriff)',h:'510011-1',d:'The round flat paddle, in the body’s slot, held by the grooved pin.',sp:'51 00 11-1 · Ø 34.5 × 3 (scaled)',src:'scaled',sn:'Scaled on the key’s assembly sheet',figs:'05 01_7'},
     {k:'body',t:'Key body (Schlüsselmittelteil)',h:'050102-2',d:'The black steel body: the tube runs in its bore, the spring round it.',sp:'05 01 02-2 (rev. a 15.7.48) · St. Az DIN 668, sand-blasted, phosphated, sprayed black · Ø 14.5 × 25.1 · bore Ø 8 × 22',src:'drawing',sn:'Every figure of its sheet',figs:'05 01_8'},
-    {k:'tube',t:'Key tube (Schlüsselrohr)',h:'050102-3',d:'The brass tube with the square socket for the fusee’s winding square (drawn round).',sp:'05 01 02-3 (rev. a 29.9.47) · Ms 58 · Ø 5.95 × 50.1, head Ø 8 × 2.6 · square 3.1 × 19',src:'drawing',sn:'Every figure of its sheet; its depth in the body estimated',figs:'05 01_9'},
+    {k:'tube',t:'Key tube (Schlüsselrohr)',h:'050102-3',d:'The brass tube with the square socket for the fusee’s winding square; its mouth stops on the dust plate, where the square is as wide as the socket.',sp:'05 01 02-3 (rev. a 29.9.47) · Ms 58 · Ø 5.95 × 50.1, head Ø 8 × 2.6 · square 3.1 × 19',src:'drawing',sn:'Every figure of its sheet; its depth in the body estimated',figs:'05 01_9'},
     {k:'spring',t:'Coil spring (Wendelfeder)',h:'510011-4',d:'The coil spring round the tube in the body’s bore, its end in the body’s Ø 0.9 hole: it grips the tube one way and slips the other.',sp:'51 00 11-4 · wire 0.9 (estimated), 14 turns',src:'est',sn:'Its place from the key’s assembly; its wire estimated',figs:'05 01_7'},
     {k:'pin',t:'Grooved pin (Kerbstift)',h:'510011-6',d:'The pin through the body and the paddle.',sp:'51 00 11-6 · K.S. 1 · Ø 2.5',src:'drawing',sn:'Its hole from the body’s sheet',figs:'05 01_8'}]};
 
@@ -325,17 +325,18 @@ const VIEWS={
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
   exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
   escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
-  box:{yaw:0.62,pitch:0.42,dist:640,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right */
+  box:{yaw:0.62,pitch:1.08,dist:620,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right, high enough to read the dial through the lid's glass (at 0.42, until 15 October 2026,
+     the lid's front wall hid everything in the box: the dial lies 59 under the glass) */
   case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}}};   /* the box open: the bowl in its gimbals */
 /* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut.',case:'The box open: the bowl in its gimbal ring.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
 (function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 56.4 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
-  let hrs=20,winding=false,conn='chain',HPT=90/14,HRUN=56.4;
+  let hrs=20,winding=false,keyOn=false,conn='chain',HPT=90/14,HRUN=56.4;
   /* the balance's swing (js/escphys.js, WPHYS; the Hamilton's H.amp): driven by the escape wheel's torque drv (times the reference's, 12 h from full wind), A² relaxes to
      PE.ampAt(drv)² as exp(-2t/TF); with the train held it runs down free (PE.freeStep). Below PE.AMIN a swing can't unlock the wheel and see the impulse through: the train
      stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
@@ -383,6 +384,9 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3);cf+=((c?c.lift:1)-cf)*k;cl+=((c?c.lid:cf>0.97?0:1)-cl)*k;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
         const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
+      /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn; in the case the bowl would be turned over in its gimbals and the
+         closing plate opened for it, which isn't drawn), else lying in the box (case.js keyAt) */
+      {const ko=winding&&cf>0.8;if(ko!==keyOn){keyOn=ko;CS.keyAt(ko?mv.userData.R.fu.keySeat:null);}}
       const dS=dt*(winding?Math.min(st.speed,1):st.speed),drv=drvNow();   /* while the key turns, model time no faster than real (the Hamilton's WIND_X): the maintaining spring's minute isn't spent in a frame */
       if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
       if(!H.held&&H.amp>=PE.AMIN){const r=PE.rateAt(H.amp,drv);if(Number.isFinite(r))H.rate=r;}
@@ -396,7 +400,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp);E=H.Eh;}   /* its own swing, the wheel on its stone */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
-      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0];},
+      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);},
       read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
