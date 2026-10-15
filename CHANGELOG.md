@@ -4,6 +4,12 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.40.00 · 2026-10-15
+- The Wempe as first drawn: under Variants, The drawings, the parts the later sheets replaced, as Wempe 3955 is made
+- The 1941 escapement: the escape wheel just under the top plate, the balance staff with its brass collar, the detent block with its long arm and brass cone
+- The 1941 barrel in three pieces with its lid on the dial side, the 1941 maintaining spring, and the 1940 winding key with its pear-shaped handle
+- Each part's card gives the figures the later revisions changed
+
 ## 2.39.01 · 2026-10-15
 - The fusee's and barrel's bushings and arbors drawn as measured, so the barrel bridge comes off over them in the overhaul
 - The dust seal's ring and spring under it, standing on the barrel bridge, and the winding square's domed end
