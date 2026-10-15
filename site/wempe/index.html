@@ -509,7 +509,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <div class="seg grid3" id="views">
           <button data-v="movement" aria-pressed="true" title="The movement, train side up">Movement</button><button data-v="plan" title="The top plate from straight above">Plan</button><button data-v="side" title="The frame from the side">Side</button>
           <button data-v="dial" title="The dial in its case, from above, the lid open">Dial</button><button data-v="exploded" title="Every part lifted apart along the pillars">Exploded</button><button data-v="escapement" title="The escapement under the top plate, seen through it">Escapement</button>
-          <button data-v="box" title="The chronometer in its wooden box, the lid shut">Box</button><button data-v="case" title="The box open: the bowl in its gimbal ring">Case</button></div>
+          <button data-v="box" title="The chronometer in its wooden box, the lid shut">Box</button><button data-v="case" title="The box open: the bowl in its gimbal ring">Case</button><button data-v="transport" title="The wooden box in its padded outer box for transport">Transport box</button></div>
         <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
       </details>
       <details class="grp more" id="timeDet">
@@ -2741,7 +2741,21 @@ const WESC=(()=>{
     const n=Math.ceil(TURNS*360/st);for(let i=0;i<=n;i++){const u=i/n;o.push([RC,a0L+360*TURNS*u+td*(1-u),u]);}
     for(let th=st;th<=eU+1e-9;th+=st)o.push([rU(th),a0U+th,1]);
     o.push([rU(eU),a0U+eU,1]);return o;};
-  const HSP={TBL,tbl,rL,rU,RC,HT,HB,PITCH,TURNS,RSTUD,kU,TE_L,TE_U,aVO,a0U,a0L,aPinL,ra:hsRA,xy:(r,a)=>pol([0,0],r,a)};
+  /* hsBend(tw): the spring the page draws, [x, z, u] in plan from the collet's end to the stud's, the collet turned tw (rad, as hsRA's) and the stud held. It breathes, as the
+     Hamilton's (R.spPath, movement.js): its pull on the balance taken as a pure couple (the drawn curves leave 0.018 of it on the pivots: tools/wempe_hairspring.js), the bending moment
+     is the same all along the strip, so every part of it changes its curvature by tw/L and the heading at s (from the collet) turns tw(1 - s/L). The coils close as the
+     collet is turned against the way they run from it and open the other way, each by tw/(2π TURNS) of its radius, 4.9 % (0.31 mm) at the model's 207° swing (12 h), concentric, the
+     terminal curves curling by as much; the length is kept (each segment turns, none stretches). Built from the stud's end back, each segment turned at its middle; what
+     second order leaves at the collet's end is taken out along the strip in proportion to 1 - s/L. Against the strip solved as an elastica (HSPR.large) it lies within
+     0.010 mm from -300° to 300° (tools/wempe_hairspring.js checks it). Until 15 October 2026 hsRA(tw) drew it, every coil turned rigidly by tw(1 - u) at its radius: about
+     1.2 mm off the elastica at the model's swing (1.7 at 300°), the strip 4.5 % longer or shorter (6.5 %) */
+  const HS0=hsRA(0),HSX=HS0.map(([r,a])=>pol([0,0],r,a)),HSS=[0];for(let i=1;i<HSX.length;i++)HSS.push(HSS[i-1]+Math.hypot(HSX[i][0]-HSX[i-1][0],HSX[i][1]-HSX[i-1][1]));
+  const HSLF=HSS[HSS.length-1],turnA=(x,z,d)=>{const c=Math.cos(d),s=Math.sin(d);return[x*c+z*s,z*c-x*s];};   /* turnA: a plan vector turned d (rad) the way hsRA's angles run */
+  const hsBend=tw=>{const n=HSX.length,q=new Float64Array(2*n);let x=HSX[n-1][0],z=HSX[n-1][1];q[2*n-2]=x;q[2*n-1]=z;
+    for(let i=n-2;i>=0;i--){const v=turnA(HSX[i+1][0]-HSX[i][0],HSX[i+1][1]-HSX[i][1],tw*(1-(HSS[i]+HSS[i+1])/2/HSLF));x-=v[0];z-=v[1];q[2*i]=x;q[2*i+1]=z;}
+    const e=turnA(HSX[0][0],HSX[0][1],tw),ex=q[0]-e[0],ez=q[1]-e[1];
+    return HS0.map(([,,u],i)=>{const f=HSS[i]/HSLF;return[q[2*i]-ex*(1-f),q[2*i+1]-ez*(1-f),u];});};
+  const HSP={TBL,tbl,rL,rU,RC,HT,HB,PITCH,TURNS,RSTUD,kU,TE_L,TE_U,aVO,a0U,a0L,aPinL,ra:hsRA,bend:hsBend,xy:(r,a)=>pol([0,0],r,a)};
   /* ================= the escapement's settings for makeEsc (shared/escapement.js), solved in time by js/escphys.js ================= */
   /* makeEsc's frame: the balance at its origin, the escape wheel at (EX, 0), the unit the wheel's radius (ES), seen as the sheets draw the escapement (from above, through the
      top plate): the wheel turning clockwise (its angle falling), the balance's active swing anticlockwise (rising). This file's plan is seen from the dial, the other way
@@ -2949,7 +2963,7 @@ const WESC=(()=>{
        slot, 3.85 from the staff, where the cock's slot lets the stud stand (05 08 03-1: the slot 3.4 from the axis), the curve drawn in proportion to end there (estimated).
        Going up the helix the coils turn counterclockwise seen from the dial (left-hand). The spring's lower end turns with the balance, the coils share the turn */
     const colB=Y.armT-0.05,yL=colB-0.75,yU=yL-PITCH*TURNS;   /* the collet's underside 0.05 over the arm; the spring's lower end 0.75 over it (05 03_5) */
-    const spPath=tw=>hsRA(tw).map(([r,a,u])=>{const p=pol([0,0],r,a);return[p[0],yL-PITCH*TURNS*u,p[1]];});
+    const spPath=tw=>hsBend(tw).map(([x,z,u])=>[x,yL-PITCH*TURNS*u,z]);   /* breathing (hsBend, above) */
     const hs=part('hairspring',OFFB,[B[0],B[1],0]),hsRot=new THREE.Group();hs.add(hsRot);R.hsRot=hsRot;
     onRev(f=>{hs.position.y=f?SH1:0;});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher in the stud's slot (3.69 under its bar), the
        stud's pin with it (its hole drilled at assembly, 05 03 02-3) */
@@ -4648,13 +4662,23 @@ const WCASE=(()=>{
   /* a group whose +y points along unit u (for a screw put in along u: KIT's screw draws its shank toward +y), at point p */
   const along=(par,p,u)=>{const g=new THREE.Group();g.position.set(p[0],p[1],p[2]);g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(u[0],u[1],u[2]).normalize());par.add(g);return g;};
   const box=(par,w,h,d,x,y,z,mt)=>mesh(par,new THREE.BoxGeometry(w,h,d),mt,x,y,z);
-  /* oak, drawn in code (the boxes photographed are oak: Greenwich's wartime Wempe, Lange 1947): pale ground, long dark grain and the rays */
-  function oakTex(){const c=document.createElement('canvas');c.width=256;c.height=512;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));x.fillStyle='#b48a55';x.fillRect(0,0,256,512);
-    let s=11;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
-    for(let i=0;i<140;i++){const xx=rnd()*256,a=0.05+rnd()*0.16,ph=rnd()*6,amp=1.5+rnd()*6;x.strokeStyle=rnd()<0.6?`rgba(90,55,25,${a})`:`rgba(235,200,150,${a})`;x.lineWidth=0.5+rnd()*2.2;x.beginPath();
+  /* oak, drawn in code (the boxes photographed are oak: Greenwich's wartime Wempe, Lange 1947): pale ground, long dark grain and the rays; birch (the outer box's,
+     "gebleichte Birke": bleached birch) the same way, paler and finer, without the rays */
+  function oakTex(birch){const c=document.createElement('canvas');c.width=256;c.height=512;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));x.fillStyle=birch?'#e4d5b7':'#b48a55';x.fillRect(0,0,256,512);
+    let s=birch?23:11;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+    for(let i=0;i<140;i++){const xx=rnd()*256,a=(birch?0.03:0.05)+rnd()*(birch?0.08:0.16),ph=rnd()*6,amp=1.5+rnd()*6;x.strokeStyle=rnd()<0.6?(birch?`rgba(150,120,80,${a})`:`rgba(90,55,25,${a})`):`rgba(235,200,150,${a})`;x.lineWidth=0.5+rnd()*(birch?1.2:2.2);x.beginPath();
       for(let y=0;y<=512;y+=16){const px=xx+Math.sin(y/120+ph)*amp;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();}
-    for(let i=0;i<60;i++){x.fillStyle=`rgba(225,190,140,${0.18+rnd()*0.2})`;x.fillRect(rnd()*256,rnd()*512,1+rnd()*1.5,6+rnd()*16);}
+    if(!birch)for(let i=0;i<60;i++){x.fillStyle=`rgba(225,190,140,${0.18+rnd()*0.2})`;x.fillRect(rnd()*256,rnd()*512,1+rnd()*1.5,6+rnd()*16);}
     const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;}
+  /* a cushion (the outer box's Polster, 51 00_5): w × h on a board, standing out along its own +y from 0, t0 thick at its rim rising as (1 − u²)(1 − v²) (u, v −1 to 1 across it)
+     to T in its middle, as 51 00_5's sections draw each one, a lens thickest at its middle; one closed solid, its face shaded smooth */
+  function pillow(w,h,T,t0=1,n=32){const th=(u,v)=>t0+(T-t0)*(1-u*u)*(1-v*v),P=[],Nm=[],put=(p,q)=>{P.push(...p);Nm.push(...q);};
+    const top=(i,j)=>{const u=2*i/n-1,v=2*j/n-1,dx=-(T-t0)*2*u*(1-v*v)*2/w,dz=-(T-t0)*(1-u*u)*2*v*2/h,l=Math.hypot(dx,1,dz);return[[u*w/2,th(u,v),v*h/2],[-dx/l,1/l,-dz/l]];};   /* dx, dz: dt/dx, dt/dz */
+    for(let j=0;j<n;j++)for(let i=0;i<n;i++){const a=top(i,j),b=top(i,j+1),c=top(i+1,j),d=top(i+1,j+1);for(const q of[a,b,c,c,b,d])put(q[0],q[1]);
+      const B=(ii,jj)=>[(2*ii/n-1)*w/2,0,(2*jj/n-1)*h/2];for(const q of[B(i,j),B(i+1,j),B(i,j+1),B(i+1,j),B(i+1,j+1),B(i,j+1)])put(q,[0,-1,0]);}
+    const side=(p0,p1,o)=>{const q=[[p0[0],0,p0[2]],[p1[0],0,p1[2]],[p1[0],p1[1],p1[2]],[p0[0],p0[1],p0[2]]];for(const k of[0,2,1,0,3,2])put(q[k],o);};   /* a rim's wall, p0 to p1 clockwise seen from outside */
+    for(let k=0;k<n;k++){const e=(i,j)=>top(i,j)[0];side(e(k,0),e(k+1,0),[0,0,-1]);side(e(n,k),e(n,k+1),[1,0,0]);side(e(n-k,n),e(n-k-1,n),[0,0,1]);side(e(0,n-k),e(0,n-k-1),[-1,0,0]);}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(Nm,3));return g;}
   /* the maker's plate (Firmenschild, 00 01 01-9, 22.3.43, 2:1): 26 × 52, white, the lettering sunk and filled black; the number runs on ("Nummer fortlaufend"): 3371 as drawn.
      Its letters measured on the sheet (6.98 px/mm): CHRONOMETERWERKE 4.0 high, 44 long; WEMPE and HAMBURG 2.4; the monogram 6 × 9 (a C over a W on one stroke); 3371 3.7 */
   function plateTex(){const k=20,c=document.createElement('canvas');c.width=52*k;c.height=26*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
@@ -4670,7 +4694,8 @@ const WCASE=(()=>{
   function build(M){
     const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
     const MC={oak:S(0xffffff,0,0.55,{map:oakTex()}),oakEnd:S(0x8a6238,0,0.6),black:S(0x18181a,0.25,0.42),knob:S(0x111112,0.1,0.35),white:S(0xf2f1ec,0.1,0.5),
-      label:new THREE.MeshStandardMaterial({map:plateTex(),metalness:0.1,roughness:0.5}),alu:S(0xc9ccd0,1,0.35)};
+      label:new THREE.MeshStandardMaterial({map:plateTex(),metalness:0.1,roughness:0.5}),alu:S(0xc9ccd0,1,0.35),
+      birch:S(0xffffff,0,0.6,{map:oakTex(true)}),felt:S(0x5b5f55,0,0.95),leather:S(0x5a3a22,0,0.7)};   /* the outer box's bleached birch; its cushions' cover and the strap: not given (estimated) */
     const K=KIT.parts(new THREE.Group(),M),{screw}=K;   /* KIT's screw (its exploded-view list is its own: the case isn't exploded) */
     const root=new THREE.Group(),ringG=new THREE.Group(),bowlG=new THREE.Group();ringG.position.y=YP;root.add(ringG);ringG.add(bowlG);
     const prt=(par,name,y=0)=>{const g=new THREE.Group();g.userData.partName=name;g.position.y=y;par.add(g);return g;};
@@ -4806,6 +4831,62 @@ const WCASE=(()=>{
     /* its keeper on the box's front (estimated): a strap 16 wide, 1.5 thick, 4.4 off the front over the tongue's end */
     {const g=tag(new THREE.Group(),'Schliessblech');bx.add(g);box(g,18,10,1.5,0,YL-26,BW+5.15,M.steel);for(const s of[-1,1])box(g,3,10,4.4,s*7,YL-26,BW+2.2,M.steel);}
 
+    /* ================= the outer box (Überkasten 127-556.01, renumbered 52 00 16, 28.2.42; 1 on Boden-Chronometer 127-556. A-1, 4.3.42) ================= */
+    /* "gebleichte Birke", "gezinkt, geleimt" (bleached birch, dovetailed and glued), 1:2 (the scan 1.195 px/mm, by the plan's 370; its 225 and 270 measure the same).
+       Its figures (sure but where said): the body 157 high closed to its parting line ("Trennlinie") with the base plate, the lid 88 (the 1:5 view; a pencil "240" beside
+       88 + 157); the walls 12.5 (likely), 225 inside at the rim front to back (Schnitt A-B), so 250 outside (the "250" under it, "260" in pencil); the base plate 12.5 thick
+       (likely), 270 front to back, 10 past the walls; in plan 370 over its ends, the body 270 long outside (370 less the plan's 50 at each end; it measures 271), so 245
+       inside. The plate's ends are arcs, traced on the plan (its outline every 6 px): R 367 about the long axis (sagitta 24 over the 270, the mid-points within a pixel),
+       the corners rounded r 8 (scaled). A strip inside the rim (17, 18), 13 high and 5 thick, standing 4 over the walls (likely: the lid closes over it). Cushions ("Polster",
+       the swirled hatching) on each wall, the floor and the lid's top, each a lens 20 thick at its middle (the side's and lid's "20", sure; the ends' scale 23, the floor's 21:
+       estimated 20), so the figures fit the wooden box with nothing to spare: 225 = 20 + 185 + 20 across; 245 = 20 + 10 (the handles) + 185 + 10 + 20 along; 157 + 88 less
+       the two boards, 220 = 20 + 180 + 20 high. The wooden box stands on the floor cushion's crown, its handles along the long side (51 00_1's plan); its latch and keeper,
+       5-8 proud of its front, press 2-3 into the front cushion. Two hinges (7) at the back, 32 long, from 68 to 100 off the middle line, 2.5 proud; hook and eye (9,
+       "Haken u. Öse handelsüblich", commercial) at the front, the eye 9 under the rim (scaled), their size estimated. The strap (10, 30 wide, its buckle on the lid) fixed on
+       each end wall by two screws ("Schraube f. Riemenbef.") 80 apart, the lower 60 over the floor: drawn up its end wall to the rim, where, with the lid open, it falls off
+       (51 00_1's plan draws its ends lying loose): its loose ends and buckle aren't drawn; leather 3 thick (estimated). The eyes (11, 12: 3 × 15 DIN 96, 127-556.01-08) on
+       the plate's ends 25 out from the walls on the long axis (the plan's "25"), a disc Ø 23 round a centre Ø 8.5 (scaled): drawn so, 2 thick, the centre the screw's
+       head (estimated). The catch (19) inside the front isn't drawn: its form can't be read. Its parts list names no part (Sach-Nr. only): which number is which is
+       inferred. It carries the wooden box when it travels (A-1 draws the two together, the outer lid open): the Transport box view (app.js) shows it so; the other views leave it */
+    const OB=YF-32.5,OP=OB+12.5,OT=OB+157,OX=135,OZ=125,OW=12.5;   /* the base plate's underside, the floor (the plate's top), the parting line; the body's half outside */
+    const over=prt(root,'overBox');
+    {const B=tag(new THREE.Group(),'Ueberkasten');over.add(B);
+      /* the base plate: the ends' arcs R 367 about (∓(185 − 367), 0), filleted r 8 into the long sides (z ±135) */
+      const R=367,F=8,cx=185-R,fz=135-F,fx=cx+Math.sqrt((R-F)**2-fz*fz),out=[];   /* cx: the right end's centre; fx: its fillets' centres' x, from |f − C| = R − F */
+      const arc=(c,r,a0,a1,n)=>{for(let i=0;i<=n;i++){const t=a0+(a1-a0)*i/n,p=[c[0]+r*Math.cos(t),c[1]+r*Math.sin(t)],q=out[out.length-1];if(!q||Math.hypot(p[0]-q[0],p[1]-q[1])>1e-6)out.push(p);}};   /* a point where the last arc ended isn't repeated */
+      const ae=Math.atan2(fz,fx-cx);   /* the end arc's half angle, at the fillets' tangent points */
+      arc([cx,0],R,-ae,ae,24);arc([fx,fz],F,ae,Math.PI/2,6);arc([-fx,fz],F,Math.PI/2,Math.PI-ae,6);arc([-cx,0],R,Math.PI-ae,Math.PI+ae,24);arc([-fx,-fz],F,Math.PI+ae,1.5*Math.PI,6);arc([fx,-fz],F,1.5*Math.PI,2*Math.PI-ae,6);out.pop();   /* its last point is the first */
+      const bp=polyGeo(area(out)>0?out:out.slice().reverse(),OW);bp.translate(0,OB,0);mesh(B,bp,MC.birch);
+      const hb=OT-OP;for(const s of[-1,1]){box(B,2*OX,hb,OW,0,OP+hb/2,s*(OZ-OW/2),MC.birch);box(B,OW,hb,2*OZ-2*OW,s*(OX-OW/2),OP+hb/2,0,MC.birch);}
+      /* the strip inside the rim (17, 18): 13 high, 5 thick, 4 over the walls */
+      const L=tag(new THREE.Group(),'Randleiste');over.add(L);const IX=OX-OW,IZ=OZ-OW;
+      for(const s of[-1,1]){box(L,2*IX,13,5,0,OT-4.5,s*(IZ-2.5),MC.birch);box(L,5,13,2*IZ-10,s*(IX-2.5),OT-4.5,0,MC.birch);}
+      /* the cushions: on the long walls (front and back), the ends and the floor, each 1 off its neighbours (their rims 1 thick) */
+      const hc=OT-9-OP-1,yc=OP+1+hc/2;
+      for(const s of[-1,1]){const g=pillow(2*IX-2,hc,20);g.rotateX(-s*Math.PI/2);tag(mesh(over,g,MC.felt,0,yc,s*IZ),'Polster.S');   /* rotateX(∓π/2): its +y to ∓z, out of the wall */
+        const e=pillow(2*IZ-2,hc,20);e.rotateX(Math.PI/2);e.rotateY(-s*Math.PI/2);tag(mesh(over,e,MC.felt,s*IX,yc,0),'Polster.E');}
+      tag(mesh(over,pillow(2*IX-2,2*IZ-2,20),MC.felt,0,OP,0),'Polster.B');
+      /* the strap's ends on the end walls (10): 30 wide, from 10 under its lower screw to the rim, each held by its two screws, 60 and 140 over the floor */
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Riemen');over.add(g);box(g,3,OT-(OP+50),30,s*(OX+1.5),(OT+OP+50)/2,0,MC.leather);
+        for(const h of[60,140])tag(screw(along(over,[s*(OX+3),OP+h,0],[-s,0,0]),0,0,0,3.5,2.6,25,2,M.steel),'WN-ur');
+        /* the eyes on the plate's ends: a disc Ø 23 × 2 and its screw (3 × 15), whose round head is the centre Ø 8.5 */
+        const ex=s*(OX+25);tag(mesh(over,cylY(11.5,2,48),M.steel,ex,OB+OW+1,0),'Riemenoese');tag(screw(along(over,[ex,OB+OW+2,0],[0,-1,0]),0,0,0,4.25,2.2,15,1.5,M.steel),'WN-ro');}
+      /* the hinges (7) at the back: the body's leaves 32 × 12 × 1, the knuckle Ø 5 on the parting line (estimated but their length and place) */
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier.U');over.add(g);box(g,32,12,1,s*84,OT-6,-OZ-0.5,M.brass);const k=mesh(g,cylY(2.5,32,20),M.brass,s*84,OT,-OZ-2.5);k.rotation.z=Math.PI/2;}
+      /* the eye of the hook and eye (9): a screw eye on the front, 9 under the rim (commercial, estimated: a ring Ø 9 of 1.6 wire on a shank) */
+      {const g=tag(new THREE.Group(),'Hakenoese');over.add(g);const r=mesh(g,new THREE.TorusGeometry(3.7,0.8,10,28),M.steel,0,OT-9,OZ+5.2);r.rotation.y=Math.PI/2;
+        const sh=mesh(g,cylY(0.8,7,10),M.steel,0,OT-9,OZ-1.5);   /* from 5 into the wall to the ring's wire */sh.rotation.x=Math.PI/2;}}
+    /* the lid: walls and top 12.5, 88 high outside, hinged at the back about the knuckles, 2.5 behind it; the cushion (16) on its top's inside, 20 at its middle */
+    const olG=new THREE.Group();olG.position.set(0,OT,-OZ-2.5);over.add(olG);const ol=prt(olG,'overLid');ol.position.z=2.5;
+    {const B=tag(new THREE.Group(),'Ueberkasten.D');ol.add(B);const h=88-OW;
+      for(const s of[-1,1]){box(B,2*OX,h,OW,0,h/2,OZ+s*(OZ-OW/2),MC.birch);box(B,OW,h,2*OZ-2*OW,s*(OX-OW/2),h/2,OZ,MC.birch);}
+      box(B,2*OX,OW,2*OZ,0,h+OW/2,OZ,MC.birch);
+      const g=pillow(2*(OX-OW)-2,2*(OZ-OW)-2,20);g.rotateX(Math.PI);tag(mesh(ol,g,MC.felt,0,h,OZ),'Polster.D');
+      for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier.U',1);ol.add(q);box(q,32,12,1,s*84,6,-0.5,M.brass);}
+      /* the hook (9): a wire Ø 1.6 hanging from a screw eye 8 over the parting line down to the box's eye, its end bent through it (commercial, estimated) */
+      const hk=tag(new THREE.Group(),'Haken');ol.add(hk);const r=mesh(hk,new THREE.TorusGeometry(2.5,0.8,10,24),M.steel,0,8,2*OZ+3.3);r.rotation.y=Math.PI/2;
+      cylBetween(hk,0.8,-9,5.5,M.steel,0,2*OZ+3.3,10);const c=mesh(hk,closeGeo(new THREE.TorusGeometry(2.0,0.8,10,20,Math.PI)),M.steel,0,-9,2*OZ+5.3);c.rotation.y=Math.PI/2;c.rotation.z=Math.PI;}
+
     /* ================= the transit lock (Feststeller, 15 on 05 01; its number 05 01 01 in 05 01's list, which Glasrand kompl.'s own sheet also bears) ================= */
     /* No sheet: scaled on 05 01's Schnitt A-B: a knob Ø 19.6 turning a lever in the box's front right corner (the knob's axis 65 and 63 from the box's centre), its lever 28 long and
        8 wide, a pin Ø 8 near its end, on a bracket on the right wall; turned toward the centre the lever presses the ring onto the locking bracket on the bowl, so neither gimbal
@@ -4861,7 +4942,7 @@ const WCASE=(()=>{
     /* keyAt(seat): the key onto the fusee's square (seat {g, y}: fusee.js keySeat, the dust plate's group, which turns with the fusee, and its face, where the square is 3.1
        across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back on the box's floor */
     const keyAt=(s,d=0)=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05-d,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};   /* d: how far out along the square it still is (coming on or going off) */
-    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=CPS*(1-q);},parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key}};}
+    return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=CPS*(1-q);},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};}
   return{build,YP:YB-11.5,YB};
 })();
 
@@ -5628,11 +5709,17 @@ const PARTS={
     d:'The ring between the bowl and the box: its outer pivots, on the 3-9 line, are screws through the box’s walls; its inner pivots, screws on the 12-6 line with lock nuts, run in the bowl’s brackets (“Lagerstellen a u. b leicht spielend”: the bearings a and b running freely). Both pairs lie in one plane, so the bowl hangs level whatever the ship does. A bracket on the ring at 3 o’clock, slid to level the bowl the other way, carries one outer pivot. Wempe 3955’s ring is Bakelite; no material is given.',
     sp:'Drawing 05 01 00-5 (no sheet in the set; bracket 05 01 00-6) · Ø 140 × 3.3 × 23.2 (scaled) · pivots 11.5 under its top · WN-79, WN-400'},
   box:{t:'Wooden box (Holzkasten)',g:6,src:'scaled',sn:'Its outside from the case’s assembly sheet, its walls and handles from the handle’s sheet; its boards, lid and hinges as photographs of the wartime boxes show them (estimated)',figs:'05 01_1, 51 00_1, 51 00_2',c:'#b98d58',pri:3,
-    d:'The oak box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. The padded outer box for transport (Überkasten, 52 00 16, bleached birch) isn’t built.',
+    d:'The oak box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. For carrying it goes into the padded outer box (Transport box view).',
     sp:'Drawing 127-556.02 (Holzkasten; no sheet in the set) · 185 × 185 × 180 outside · walls 12.5 · handles 51 00 10 · pivots WN-80, M6'},
   lid:{t:'Lid (Deckel)',g:6,src:'est',sn:'Its height from the parting line on the handle’s sheet; the glazed top, hinges and latch as the photographed boxes show them (estimated); the maker’s plate and the tongue from their sheets',figs:'51 00_2, 51 00_3, 51 00_4',c:'#c79d66',pri:2,
     d:'The box’s lid, with a glass in its top so the dial can be read with it shut, hinged at the back. On its front the maker’s plate, “Chronometerwerke Wempe Hamburg, Type 3371” (the number runs on), and the latch tongue.',
     sp:'75 high (180 less the box’s 105) · glass 3 · Firmenschild 00 01 01-9: Alu, 26 × 52, white, letters sunk black · Zunge P. 51 00 02-2: iron 10 × 4, black'},
+  overBox:{t:'Outer box (Überkasten)',g:6,src:'drawing',sn:'Its body, base plate, strip, cushions and hinges from its sheet (the ends of the base plate traced on its plan, the cushions’ middles scaled where not figured); the hook and eye, commercial, and the eyes’ form estimated',figs:'51 00_5, 51 00_1',c:'#d9c9a6',pri:2,
+    d:'The padded box the wooden box travels in, bleached birch, dovetailed and glued. A cushion on each wall, on the floor and in the lid, each thickest in its middle, holds the wooden box with nothing to spare: 20 mm each side, its handles against the end cushions, 20 under it and 20 over it. Its base plate stands out at each end, where an eye is screwed; a strap screwed to each end wall goes over the lid to a buckle. The arrangement drawing, Boden-Chronometer (127-556. A-1, 1942), draws the two together with this lid open.',
+    sp:'Drawing 127-556.01 (52 00 16, 28.2.42) · gebleichte Birke · 270 × 250 × 157 with its base plate, 225 inside across · base plate 370 × 270 × 12.5, its ends R 367 · walls 12.5 · cushions 20 · strap 30 wide'},
+  overLid:{t:'Outer box lid',g:6,src:'drawing',sn:'Its height and boards from its sheet; the hook estimated (commercial)',figs:'51 00_5, 51 00_1',c:'#e0d2b2',pri:1,
+    d:'The outer box’s lid, hinged at the back on two hinges, a cushion in its top that bears on the wooden box’s lid; a hook on its front catches an eye on the box.',
+    sp:'51 00_5 · 88 high outside · top and walls 12.5 · cushion 20 · hinges 32 long'},
   caseLock:{t:'Transit lock (Feststeller)',g:6,src:'est',sn:'Its knob, lever and place scaled on the case’s assembly (Schnitt A-B); its heights estimated',figs:'05 01_1',c:'#5d6670',pri:1,
     d:'A knob on a bracket in the box’s front right corner turning a lever: turned in, the lever presses the gimbal ring onto the locking bracket on the bowl, so neither gimbal can swing, for carrying the box. Drawn turned off.',
     sp:'05 01’s list: Feststeller 05 01 01 (no sheet) · knob Ø 19.6, lever 28 × 8'},
@@ -5770,6 +5857,21 @@ const PIECES={
     {k:'handleScrews',t:'Handle screws',h:'WN-hg',d:'The screws through the handles’ ends.',sp:'Estimated',src:'est',sn:'Not on the sheet'},
     {k:'hinges',t:'Hinges',h:'Scharnier',d:'Two brass hinges at the back joining the lid to the box.',sp:'40 × 18 leaves (estimated)',src:'est',sn:'As Lange 1947’s box shows them'},
     {k:'keeper',t:'Keeper',h:'Schliessblech',d:'The strap on the box’s front that the lid’s latch tongue slides under.',sp:'Estimated',src:'est',sn:'Not drawn'}],
+  overBox:[{k:'body',t:'Outer box',h:'Ueberkasten',d:PARTS.overBox.d,sp:PARTS.overBox.sp},
+    {k:'strip',t:'Rim strip',h:'Randleiste',d:'A strip round the inside of the rim, standing 4 mm over the walls: the lid closes over it.',sp:'13 × 5, 4 over the walls (17, 18 on 51 00_5)'},
+    {k:'cushionsSide',t:'Front and back cushions',h:'Polster.S',d:'The cushions on the long walls, against the wooden box’s front and back.',sp:'20 at their middle (51 00_5, Schnitt A-B)'},
+    {k:'cushionsEnd',t:'End cushions',h:'Polster.E',d:'The cushions on the end walls, against the wooden box’s handles.',sp:'20 at their middle (scaled 23)',src:'scaled',sn:'Their middle scaled on the plan'},
+    {k:'cushionFloor',t:'Floor cushion',h:'Polster.B',d:'The cushion on the floor the wooden box stands on.',sp:'20 at its middle (scaled 21)',src:'scaled',sn:'Its middle scaled on Schnitt A-B'},
+    {k:'strap',t:'Strap',h:'Riemen',d:'The strap’s ends, screwed to the end walls: it goes over the lid to its buckle. With the lid open its loose ends fall off; they and the buckle aren’t drawn.',sp:'30 wide · its screws 80 apart, the lower 60 over the floor'},
+    {k:'strapScrews',t:'Strap screws',h:'WN-ur',d:'Two screws on each end wall through the strap (“Schraube f. Riemenbef.”).',sp:'Estimated'},
+    {k:'eyes',t:'Eyes',h:'Riemenoese',d:'An eye screwed on each end of the base plate.',sp:'127-556.01-08 · Ø 23 (scaled), 25 off the walls',src:'est',sn:'Their place and size from the plan; their form estimated'},
+    {k:'eyeScrews',t:'Eye screws',h:'WN-ro',d:'The eyes’ screws.',sp:'3 × 15 DIN 96 (round head)'},
+    {k:'hinges',t:'Hinges',h:'Scharnier.U',d:'Two hinges at the back joining the lid to the box.',sp:'32 long, 68-100 off the middle (7 on 51 00_5)'},
+    {k:'eye',t:'Hook eye',h:'Hakenoese',d:'The eye on the box’s front that the lid’s hook catches.',sp:'“Haken u. Öse handelsüblich” (commercial) · estimated',src:'est',sn:'Commercial: its size estimated'}],
+  overLid:[{k:'lid',t:'Outer box lid',h:'Ueberkasten.D',d:PARTS.overLid.d,sp:PARTS.overLid.sp},
+    {k:'cushion',t:'Lid cushion',h:'Polster.D',d:'The cushion in the lid’s top, bearing on the wooden box’s lid.',sp:'20 at its middle (16 on 51 00_5)'},
+    {k:'hinges',t:'Hinge leaves',h:'Scharnier.U',d:'The hinges’ leaves on the lid.',sp:'32 long'},
+    {k:'hook',t:'Hook',h:'Haken',d:'The hook on the lid’s front, caught in the box’s eye.',sp:'Commercial · estimated',src:'est',sn:'Commercial: its size estimated'}],
   lid:[{k:'lid',t:'Lid',h:'Holzkasten.D',d:PARTS.lid.d,sp:'75 high · walls 12.5 · its top a frame 20 wide'},
     {k:'glass',t:'Lid glass',h:'Deckelglas',d:'The glass in the lid’s top.',sp:'151 × 151 × 3 (estimated)'},
     {k:'hinges',t:'Hinge leaves',h:'Scharnier',d:'The hinges’ leaves on the lid.',sp:'Estimated'},
@@ -5852,9 +5954,10 @@ const VIEWS={
   escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
   box:{yaw:0.62,pitch:1.08,dist:620,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right, high enough to read the dial through the lid's glass (at 0.42, until 15 October 2026,
      the lid's front wall hid everything in the box: the dial lies 59 under the glass) */
-  case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}}};   /* the box open: the bowl in its gimbals */
-/* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+  case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}},   /* the box open: the bowl in its gimbals */
+  transport:{yaw:0.62,pitch:0.62,dist:980,target:[0,-40,0],case:{lid:0,lift:0,over:1}}};   /* the wooden box shut in its outer box, the outer lid open, as the arrangement Boden-Chronometer (51 00_1) draws them */
+/* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0), the outer box shown with its lid open (over); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
@@ -5876,11 +5979,11 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT):0;
   /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
-  let CS=null,cl=1,cf=1;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
+  let CS=null,cl=1,cf=1,co=0;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
   const ES=typeof ESSAY==='undefined'?null:ESSAY;   /* the Essay tab (js/essay.js): the viewer leaves the keys and the hash to it while it shows */
   const V=VIEWER.start({essay:ES,name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
     build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.onRev.push(f=>{root.traverse(o=>{if(o.userData.rev)o.visible=o.userData.rev===(f?'first':'last');});CS.parts.key.userData.first=f;CS.keyRest();});mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's, the key resting as its state's lies */CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
-      if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid};   /* the box, for audit.py box (geometry-audit-box.js) */
+      if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid,showOver:v=>{CS.showOver=!!v;}};   /* the box, for audit.py box (geometry-audit-box.js); showOver(1) keeps the outer box shown in every view (bom.py counts it: checks.py's ARM) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
@@ -5916,7 +6019,9 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       {const c=(VIEWS[st.view]||{}).case,k=SNAPC||RMC.matches?1:1-Math.exp(-dt*3),kl=SNAPC||RMC.matches?1:1-Math.exp(-dw*3);if(!c&&(cw.go||cw.u>0)){if(cw.go&&!winding)wind0();cw.go=false;cw.u=0;}   /* a view out of the case: the bowl set back at once, before the movement lifts out of it, and a wind
           asked for goes on there (the key on the square once the movement is out) */
         cf+=((c?c.lift:1)-cf)*k;cl+=((c?(cw.go||cw.u>0?1:c.lid):cf>0.97?0:1)-cl)*kl;if(Math.abs(cf-Math.round(cf))<1e-4)cf=Math.round(cf);if(Math.abs(cl-Math.round(cl))<1e-4)cl=Math.round(cl);
-        const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;}
+        const L1=smooth(cf/0.55),L2=smooth((cf-0.35)/0.65);mv.position.y=-CS.YP+L1*150+L2*450;mv.rotation.x=L2*Math.PI;CS.lid.rotation.x=-cl*1.75;CS.tongue.rotation.z=-Math.min(1,cl*4)*Math.PI/2;
+        /* the outer box (case.js), only in its view (over): its lid eased open to 95°, standing behind it as 51 00_1's section draws it */
+        CS.over.visible=!!(c&&c.over)||!!CS.showOver;co+=((c&&c.over?1:0)-co)*kl;if(Math.abs(co-Math.round(co))<1e-4)co=Math.round(co);CS.overLid.rotation.x=-co*95*D2R;}
       if(winding){hrs-=dt*1.5*HPT;if(hrs<=0){hrs=0;winding=false;}}
       /* winding in the case, as the 6MX's instruction has it (pp. 3-4: the chronometer turned over in its gimbals, the key hole opened, the key put in and turned, then taken out
          and the chronometer turned back) and two videos show it on 6MXs (DIxob2Rl4dc 7:05-7:22: the bowl turned about its 12-6 pivots, the dial toward 3 o'clock, until its
@@ -5941,7 +6046,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp,0);E=H.Eh+Math.min(0,s.prog);}   /* its own swing, the wheel on its stone (drawn back while the stone lifts) */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
-      showH();return[+cl.toFixed(4),+cf.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4)];},
+      showH();return[+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);},
       read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
