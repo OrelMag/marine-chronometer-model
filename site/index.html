@@ -3246,8 +3246,13 @@ function buildMovement(M){
      "The plate's opening under the lower train bridge"): a circle r 11.3 about the third (11.2-11.5 over both frames and the focal lengths they allow), a lobe r 4.85 toward the balance
      and a bore r 3.2 about the fourth (its setting, at the bar's face, shows through it from the train side); the third wheel turns in it and shows through from the dial side */
   const PP_KEY={r:11.3,lobes:[[2.9,10.9,4.85],[...L.F,3.2]]};
+  /* PP_X: three holes through the plate that no source explains, read on its dial side (KLUwI2UUCMQ 9:03, the plate in its ring with the dial off, put on the plan by a
+     homography on the fusee's and barrel's lower bushings and the four pillar screws (tools/holemap.py), each place corrected by the offset of the nearest model hole there,
+     0.5-1.5 mm): one at 12 o'clock past the wind indicator's post, the mat seen through it, and one past the access hole at 4 o'clock (both also on 40:05, the plate turned);
+     one over the barrel, its cap's brass seen through it (9:03 only: the lower train bridge hides it on 40:05). +-1 mm; their sizes +-0.3 (the dark discs less their shadow) */
+  const PP_X=[[-0.6,-32.2,1.0],[26.6,19.0,1.0],[-31.0,4.2,0.85]];
   R.pillarPlate=mesh(pp,discGeo(PP_R,PP_T,[[...L.C,1.5],{pts:lobedCircle(L.T,PP_KEY.r,PP_KEY.lobes)},...S.ltbp.map(q=>[...q,0.41]),[...L.Fu,BU_O],hC(...L.Ud,0.8),hC(...L.Mw,0.8),[...L.Ba,BU_O],[...L.E,1.3],[...SPv,0.52],
-    ...S.ltb.map(q=>hT(...q,1.4)),...S.pil.map(q=>hC(...q,PSR)),...S.ring.map(q=>hC(...q,PSR)),...S.elc.map(q=>hT(...q,ESCAP)),[...S.lb[0],3.4]]),M.plate,0,y0,0);hn(pp,'42060');   /* the plate's parts-list line on its part, so its pins go with it */
+    ...S.ltb.map(q=>hT(...q,1.4)),...S.pil.map(q=>hC(...q,PSR)),...S.ring.map(q=>hC(...q,PSR)),...S.elc.map(q=>hT(...q,ESCAP)),[...S.lb[0],3.4],...PP_X]),M.plate,0,y0,0);hn(pp,'42060');   /* the plate's parts-list line on its part, so its pins go with it */
   /* the last hole: access to the balance lower bridge's screw at 3 o'clock, for taking the bridge off without taking the movement down (RMG No. 4E019), under the dial */
   /* lower bushings and settings in the pillar plate (parts list, Fig. 110): centre, fusee, barrel; escape lower jewel. Proud 0.1 on the train side */
   const bushR=(p,x,z,y1,y2,ro,ri,mat)=>mesh(p,ringGeo(ro,ri,Math.abs(y2-y1)),mat||M.brass2,x,(y1+y2)/2,z);
@@ -3323,7 +3328,9 @@ function buildMovement(M){
   const TBpoly=clipPoly(crescent(BR_R,TB_CUT,TB_CR,TB_EDGE),p=>{const[a,b]=TB_END,c=(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);return Math.max(-c,p[0]+30);});   /* cut round the barrel, which rises past the train bridge to the barrel bridge (Figs. 108, 110); measured on the video, 22.56 mm out, it is where the barrel stands */
   R.trainBridge=mesh(tb,polyGeo(TBpoly,3.1,[[...L.C,1.95,1],[...L.T,1.9,1],{pts:TB_KEY},[...SPv,0.52,1],[...SPh,0.25,1],
     hC(...S.tb[0],PSR),hC(...S.tb[1],PSR),[...S.tb[2],TB_CB,1],hT(...S.bb[1],PSR),hT(...S.bb[2],PSR),...S.lb.map(q=>hT(...q,PSR)),...S.lbp.map(q=>[...q,0.42,1]),[...S.blk,1.4,1],...S.dpin.map(q=>[...q,0.53,1]),hT(...S.cock,CKH_R,CKH_T),...S.ckp.map(q=>[...q,0.42,1]),
-    hT(...S.arm,ARM_S),[...S.tBlock,0.9,1],[...S.armPin,0.3,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');
+    hT(...S.arm,ARM_S),[...S.tBlock,0.9,1],[...S.armPin,0.3,1],[-23.3,20.4,0.85,1]],0.22),M.plate,0,TB_T,0);hn(tb,'42062');   /* the last: a hole through the bridge between pillar 0's
+     screw and the lower bridge's, countersunk underneath, its use no source gives: KLUwI2UUCMQ 23:30 (face up) and 13:49.5 (underside) put on the plan by their rims, the cut round
+     the barrel and the centre bushing (tools/holemap.py), within 1 mm of each other; r 0.85 (0.82-0.98), +-0.5 */
   for(const f of TB_SEAT){const ins=([x,z])=>{let c=false;for(let i=0,j=f.length-1;i<f.length;j=i++){const[a,b]=f[i],[e,d]=f[j];if((b>z)!==(d>z)&&x<(e-a)*(z-b)/(d-b)+a)c=!c;}return c;};   /* each seat's floor, with its screw's tapped hole and its pin's hole */
     mesh(tb,polyGeo(f,3.1-SEAT_D,[...S.eb.filter(ins).map(q=>hT(...q,0.9)),...S.ebp.filter(ins).map(q=>[...q,0.42,1])]),M.plate,0,TB_T+SEAT_D,0);}
   {const C=PT([10.53,35.06]),A=PT([-0.9764,0.2161]),P=PT([0.2161,0.9764]),q=(a,p)=>[C[0]+a*A[0]+p*P[0],C[1]+a*A[1]+p*P[1]];   /* decal only round the serial, so it can't catch picks over the bridge's openings */

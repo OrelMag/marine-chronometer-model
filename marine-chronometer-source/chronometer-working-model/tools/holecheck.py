@@ -35,6 +35,10 @@ EXPECTED = [
     ('barrelBridge', '42061', [30.07, -27.16, 1.61], None, "a hole beside the opening at 3 o'clock, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
     ('barrelBridge', '42061', [36.29, -27.16, 2.47], None, "a second hole beside the opening at 3 o'clock, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
     ('barrelBridge', '42061', [-18.55, -27.16, 19.9], None, "a hole in the far horn, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
+    ('trainBridge', '42062', [-23.3, -23.76, 20.4], None, "a hole through the upper train bridge, countersunk underneath (KLUwI2UUCMQ 23:30, 13:49.5), its use not given by any source"),
+    ('pillar', '42060', [-0.6, -3.86, -32.2], None, "a hole at 12 o'clock past the wind indicator's post, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
+    ('pillar', '42060', [26.6, -3.86, 19.0], None, "a hole past the access hole at 4 o'clock, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
+    ('pillar', '42060', [-31.0, -3.86, 4.2], None, "a hole over the barrel, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
     ('bal', '42190', None, None, "the hairspring collet's relief hole at the end of its slit (the slit lets the collet grip the staff); the balance turns, so anywhere"),
 ]
 def matches(h, e, tol=0.4):
