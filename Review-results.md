@@ -2374,3 +2374,98 @@ Consistent with the sources, not faults: the detent can't come straight up past 
 from under it (10:51-11:06); the fusee can't come straight up past the bridge either (its wheel's teeth reach under it to the centre pinion), and on
 the video it comes out with the bridge still on (13:06-13:33; the bridge off at 13:36-13:48), so tilted. Both are in the check's `EXPECTED`, and the
 overhaul still shows them lifted straight.
+
+## The Wempe's parts against their works drawings (15 October 2026)
+
+A survey after the stud was found wrong (fixed, `480bb6f`): four read-only passes compared every part the Wempe's scripts build with its
+sheet, enlarged, and with Wempe 3955's photographs. These are their readings, not yet checked a second time; each says how sure it is.
+Fix each from its sheet, and record it in RESOLVED.md when fixed.
+
+**Status (15 October 2026, branch `claude/wempe-stud`):** every finding below was checked again on its sheet and fixed, with these
+exceptions, which stay open:
+- The discharge roller's outline: 05 04_1's dashes at the stone's end can't be read as square, and a square end there would reach the gold
+  spring's tip (its material is now brass, as on Wempe 3955).
+- The detent block's orientation: the sheet is first-angle, which would put the detent 1.3-3.3 under the plate, out of reach of the 1946
+  rollers (README, Unresolved); its base's step and the Ø 1.3 hole's face are fixed.
+- The fusee wheel's hub-edge slope; the stop bar's 3.2 travel and the drum's "0,8" (README, Unresolved; the slot's two depths were
+  settled on main's stop-work rework); the long motion-work stud's 0.4 short of the plate (2 px at 2:1); the top plate's bushes' oil cups
+  (no figure on the sheet: the photograph's stands).
+- Found on the way, not fixed: the maintaining detent's arbor measures about Ø 1.5 on three north-side photographs (the model's estimated
+  2.25), and the detent shows bright steel where the model draws it blued (its sheet: light blue at 310°); Wempe 3955's closing plate shows
+  two Ø 1 holes at r 11 where 05 01 00-2 draws one Ø 1.2 (README, Unresolved); the click wheel's teeth, met over the clicks' true 1.30,
+  hold their fatigue limit only at brass's strong end (margin 1.1-1.6, `wempe_strength.js`).
+- Added with the batch: the stud as drawn and the hairspring's outer curve the table's (`480bb6f`, `760e11f`), the dial's pin Ø 1.1, the
+  maintaining detent's wire spring (05 05 06-1) at hole 5, and `wempe-inertia.js` weighing one revision (the balance 2,561 g·mm²); TF 108 s
+  from the 6MX video at the model's own swing (199.4° at 12 h).
+
+**Balance and escapement (js/escapement.js)**
+1. Escape wheel's teeth (05 04_23, circles fitted at 82.7 px/mm): the gap's floor on Ø 11.7, the locking face running down to it (Ø 12.1 is the
+   top of the 0.2 step at the back's foot), the face leaning 25° from the radius (the sheet's "25°"), the tooth 14.9° from tip to foot. The
+   code: floor 12.1, step to 12.4, lean 15°, tooth 11.9°. Likely (05 04_1 scales 19-23°; its 15°/50° chain not decoded).
+2. Balance arm (05 03 01-1): the r 20 arcs centred outside the arm (a small circle 7.2 off the axis, 21.8 below it), so its flanks are concave,
+   meeting in a point 6.5 wide at the centre; 4 wide where the arcs start, 7.0 out, 3.2 at the rim. The code: straight 3.2, then a convex arc
+   to 6.17. Sure (Wempe 3955, 9_Wempe_3955_Hemmung.jpg, shows the concave flanks).
+3. Detent block (05 04 01-4): the base 6.5 deep only for the 6.5 next to its left end, 3 deep beyond (the code 6.5 over all 14.6); its Ø 1.3
+   hole drawn visible in the front view, so it opens on the face the code puts on the plate. Sure. The side view's visible M1 hole suggests
+   first-angle projection (the README's Unresolved item on which face lies on the plate): likely.
+4. Impulse stone's end (02 04 02): bevelled 45°, the face side 1.8 (to r 3.35), the back about 1.3 (r 2.85); the code's back corner 3.2. Sure.
+5. Escape wheel's collet as last revised (05 04_7.2): two stepped cylinders, Ø 2.8 × 1.6 then Ø 1.75 to 4.7, chamfered tops; the code a cone
+   Ø 2.6 to 1.5. Likely.
+6. Escape wheel's place (05 04_7.2): "2" from the arbor's shoulder, so the wheel's far face 2.4 from the top-plate end; the code 2.0. Likely.
+7. Hairspring collet (05 03 02-2): the slit stops 0.1 short of the bore (the code runs it in); both ends arcs about the bore, r about 4.55 (the
+   code straight). Sure. The bore at mid-length (4.55/4.55; the code 4.25/4.85): likely.
+8. Timing screws (05 03_2, poor copy): the slotted head inside the rim, the split weight outside; the photograph shows no head outside.
+   The code: a head outside the weight. Likely; the weight's size (sheet Ø 4.1 × 3.2, photograph about Ø 3 × 4) unsure.
+9. Compensation masses' screws: the head flush in the mass's outer face, nothing inside (photograph); the code a head 0.55 proud and a nut
+   inside. Likely.
+10. Discharge roller (05 04_1, photograph): square at the stone's end, a brass block on Wempe 3955; the code a steel stadium. Likely.
+
+**Going train and motion work (js/train.js, js/dial.js)**
+1. Hands (05 02 00-2 and the others): the blade's underside flush with the flange's, its top 0.3 under the flange's top; the code puts the
+   tops flush (dial.js, the blade at y1-0.5). Sure; the hands' heights would need restacking over the seconds post.
+2. Seconds setting at 35 and the bridge (05 08 04 section): the setting's walls the bridge's full 3.8, bore about Ø 3.7 open down to the jewel
+   1.7 in, a Ø 3.7 × 0.7 recess under it, no Ø 6.2 counterbore; hole 38's sink a cone (about Ø 5.7 at the face to the bush 0.7 in), the code a
+   cylinder Ø 6.2 × 0.7. Likely.
+3. Motion-work studs and the pipes' bores: about Ø 1.5 (05 02 02 scales 1.53, 05 02 04 1.56, Wempe 3955's stud ends 1.39-1.44 chamfered);
+   the code 1.3 and bores 1.32. Likely.
+4. Centre arbor's journal C: "Kegel 1:30" on 05 05 03 and 05 05 03-2; the code a cylinder. Likely.
+5. Riveting collar Ø 3.0 at C's root: widest at its top with an undercut under it; the code a cylinder chamfered on top. Likely, small.
+6. Smaller: the hour wheel's seat and the minute hand's square marked Kegel 1:70 (built straight); WN-302's dial-side sink a cup (the code a
+   90° cone); the studs' ends domed (05 02 01); the minute hand's flange rounded on top; a groove and crowned end on the cannon's shank; the
+   top plate's bushes' oil cups (05 08 01 scales Ø 2.9 × 0.7, the code Ø 4.0 × 1.2 from the photograph). Unsure.
+
+**Fusee, barrel and maintaining work (js/fusee.js)**
+1. Set-up ratchet (05 07_3): "12,5" a diameter: the teeth's backs arcs r 6.25 centred on the "6,4" circle; the code r 12.5. Sure.
+2. Click wheel (05 06_16): faces undercut 8°; the code's lean the other way. Code sure, sheet likely.
+3. Maintaining detent (05 05_12, _11): its tip's end 2.6 tall, leaning about 5° back toward the hole; the code 1.98, leaning out 7°. Likely.
+4. Maintaining ratchet (05 06_12): the plate inside the cup 1.3 −0.1 (the code 1.02; the clicks 0.28 higher); revision a's 0.3 × 45° on the
+   cup's outer top edge (the code the inner). Likely.
+5. Fusee wheel (05 06_7): the underside recess's mouth Ø 17 +0.2, chamfered 60° to Ø 14 about 1.1 deep; the code 14.6 to 14, 0.3. Sure.
+6. Cover plate's screw (05 06_2.2 C-D, 05 06_4 C-D): on the r 6 circle about 10° from the stop bar's length toward its stop-pin end, away from
+   the slot (the photograph agrees); the code 90° from the bar. Likely.
+7. Cover plate (05 06_8): "0,4 −0,1" is the bore's land under a 60° chamfer; no annular step (the code a 0.35 recess to r 4.7). Likely.
+8. Maintaining clicks (05 06_14): the nose 2 high, its face at 85° leaning back; the code 1.84, leaning out. Likely.
+9. Vorreiber (05 06_6): the 0.3 × 45° on the flange's hub-side face; the code on face a. Likely.
+10. Barrel arbor's hook (05 07_8): its top a ramp from flush to 0.5 over its 2 width, ending in a radial face at 15°; the code flat 0.5. Likely.
+11. Chain hooks (05 07_14): the top hook 5 from the first rivet to its crown, 3.5 wide, nose turned back (the code 3.95 × 2.8); the bottom
+    hook's barb 3.5 from the last rivet, its tip hooking back toward it (the code's points the other way). Likely.
+12. Maintaining spring (05 06_10): about 4 wide from the square end's hole on (the code 3.4). Minor.
+- Unsure: the stop-bar slot's depths 1.1 and 1.5 at its two ends (the code 1.45 flat); 05 06_4's 3.2 travel (the code 3.6); the drum's
+  "0,8 +0,05", an opening through its bottom at 9 o'clock (the code a 0.2 break on the outer edge).
+
+**Frame and case (js/frame.js, js/case.js)**
+1. Movement ring's radial pin (WN-202) and the bezel's notch: at 12 o'clock (05 08 00-3's plan, a dashed hole "1,6" across the ring;
+   Wempe 3955's dial side shows a fitting on the ring's cone at 12 and a notch in the case's rim above it); the code at 6. Sure for the place;
+   the diameters (the dial hole 1.1, the radial 1.6, the reverse of the code's) unsure.
+2. Top plate's pocket N-O (05 08_1b): its edges the common tangents of the opening's r 5 and the r 4 end at 51, 10 wide narrowing to 8
+   (photograph 13: 9.4 to 7.5); the code a constant 8. Sure.
+3. Fusee bush (05 08 01-2): the fits swapped: the spigot below the flange g6 (located in the plate's 8.0 +0.015, held by its screws), the
+   taper above it T6 (where the dust bush seats); the code the other way. Sure.
+4. Barrel bridge (05 08 05-1): the "5" is hole 48 from the short edge (the code 4.5, the photograph 4.9), the "7,7" hole 42's distance from
+   the chord (the code reads it along the chord: 8.29); a chord turned 1.33° fits 24, 7 and 7.7 to 0.001. Misreading sure, the chord unsure
+   (the photograph leans to the code's).
+5. Intermediate bridge (05 08 04): the bush's hole a 45° mouth (about Ø 5.7 to the bush 0.7 in), the setting's hole plain (1.7 the jewel's
+   depth); the code Ø 6.2 sinks at both. Likely (with the train's 2 above).
+6. Closing plate (05 01 00-2): the Ø 1.2 hole blind from the groove's floor, and a round about r 1 between the rim's underside and the boss;
+   the code through and sharp. Likely, minor.
+- Not examined (no sheets): case and locking brackets, the gimbal ring and its bracket, the box, lid, hinges, keeper, latch, transit lock, keys.

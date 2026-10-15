@@ -80,12 +80,12 @@ const kB=E.kB,w=E.run.cl.w,A=E.A,Wt=w*E.P,Wn=E.wn(1,A),u=E.run;
 
 /* ---------- 5. the balance's damping (as wempe_escapement.js: each loss from the parts) ---------- */
 head('5. The balance\'s damping from its parts (wempe_escapement.js)');
-const DQ=(()=>{const parts=[[4,6.46,12.55,18.85],[2,3.0,16.45,20.45],[2,1.5,20.45,21.05],[4,1.7,18.87,19.42],[4,1.7,11.98,12.53],[2,1.15,1.05,15.24],[2,3.8,15.24,16.15]];
+const DQ=(()=>{const parts=[[4,6.46,12.55,18.85],[2,3.8,16.95,20.25],[2,0.9,20.25,21.05],[2,1.65,13.95,15.25],[2,1.15,1.05,15.24],[2,3.8,15.24,16.15]];
   const T=0.5,w0=TAU/T,cub=4/(3*Math.PI),rho=1.2,Ji=J('wempe_inertia.json'),m=(Ji.balance.m+Ji.rollers.m+Ji.collet.m+Ji.spring.m/2)/1000;
   const Q=(a,Cd,mu,qm)=>{const Eb=kB*a*a/2;let air=0;for(const[n,h,r1,r2]of parts)air+=n*0.5*rho*Cd*h*1e-3*((r2/1000)**4-(r1/1000)**4)/4*(a*w0)**3*T*cub;const end=4*(2/3)*mu*m*G0*0.105e-3*a;
     return 1/(air/(TAU*Eb)+end/(TAU*Eb)+1/qm);};
   const lo=Q(A,1.4,0.012,1000),hi=Q(A,0.8,0.008,5000);
-  chk(Math.abs(Math.log(S.TF/(Math.sqrt(lo*hi)*T/Math.PI)))<0.03,`air on its masses, weights and arm, the endstone and the spring: Q ${f(lo,0)}-${f(hi,0)} at ${f(A/D,0)}° (TF ${f(lo*T/Math.PI,0)}-${f(hi*T/Math.PI,0)} s), the model's TF ${S.TF} s their middle`);return{lo,hi,Q};})();
+  chk(S.TF>=lo*T/Math.PI&&S.TF<=hi*T/Math.PI,`air on its masses, weights and arm, the endstone and the spring: Q ${f(lo,0)}-${f(hi,0)} at ${f(A/D,0)}° (TF ${f(lo*T/Math.PI,0)}-${f(hi*T/Math.PI,0)} s, their middle ${f(Math.sqrt(lo*hi)*T/Math.PI,0)}), the model's TF ${S.TF} s inside them: taken from a running 6MX on video at the model's own swing (wempe_startup.json; the parts' middle until 15 October 2026)`);return{lo,hi,Q};})();
 
 /* ---------- 6. does it close? ---------- */
 head('6. Does it close: the Q the drive needs to hold the swing, against the Q the parts give');

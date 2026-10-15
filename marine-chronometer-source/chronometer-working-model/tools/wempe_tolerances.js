@@ -3,7 +3,7 @@
 // 05 06_20's force through the train), its atK: the swing and rate with the escape wheel's torque s times the reference's and the detent's and gold spring's stiffness
 // kd and kp times the drawn (a strip's stiffness goes as its thickness cubed, the preload left as set). Each part's range is the one that keeps the swing in a band over
 // the whole wind (the drive from 05 06_20 at every hour, 0-56 h):
-//   the guard band, 193-270° (wempe_escapement.js's: the model's own swing 201.5-212.1° is under the sources' band, so the guard is set 14° under the reference's 207°);
+//   the guard band, 185-270° (wempe_escapement.js's: the model's own swing 194.1-204.2° is under the sources' band, so the guard is set 14° under the reference's 199.4°; 193° under 207° until 15 October 2026);
 //   and the sources' band, 225-270° (the 1954 Soviet instruction for chronometers in general; the Hamilton manual's 247.5-270°), reported: the model is under it (open).
 // The parts: the mainspring's strip (05 06_20's "15 × 0,37", no tolerance) against 05 06_20's measured pull; the detent's spring (1436's "0,07", faint, its other figure
 // "0,09") and its preload (the banking, not drawn: WESC.SET.W78 0.63 g at the stone, estimated); the gold spring (05 04 01-2: 0.15, sure; its 333 gold's modulus, 90 GPa,
@@ -16,7 +16,7 @@
 const fs=require('fs'),path=require('path'),W=require('./wempe_load.js')(),{WPHYS:P,WESC}=W,E=P.ESC,S=P.SET,PHY=require('./wempe_physics.js');
 const D=180/Math.PI,G0=9.80665,f=(x,n=2)=>Number.isFinite(+x)?(+x).toFixed(n):'-',sg=(x,n=2)=>(x>=0?'+':'−')+Math.abs(x).toFixed(n),pc=x=>(x>=1?'+':'−')+f(Math.abs(x-1)*100,0)+' %',r4=x=>+(+x).toFixed(4);
 const rows=[],say=s=>rows.push('  '+s),head=s=>rows.push('\n'+s),tStart=Date.now();
-const GUARD=[193,270],SRC=[225,270];
+const GUARD=[185,270],SRC=[225,270];
 /* the drive over the wind (05 06_20 through the train, times the reference's at 12 h): its least and greatest, every quarter hour from full wind to run down */
 const HRS=P.MF*P.HPT,dr=[];for(let h=0;h<=HRS+1e-9;h+=0.25)dr.push(P.drv(h/P.HPT));const dmin=Math.min(...dr),dmax=Math.max(...dr),hMin=dr.indexOf(dmin)/4,hMax=dr.indexOf(dmax)/4;
 /* the value of x at which g(x) crosses y, g monotone between a and b */
@@ -75,8 +75,8 @@ head('The hairspring (05 03_6: strip 0.285 × 0.52, boxed, no tolerance; coil Ø
 /* k = E b h³ / 12 L, T = 2π √(I/k): T goes as h^-1.5, L^0.5 (L as the coil's radius at a given count of turns), E^-0.5. The timing weights (Zeitmasse 05 03 01-3, brass on the
    timing screws, thread 0.16 pitch, 05 03 01-1) move I by 2 m r dr: weighed on the solids (wempe_inertia.json) */
 const IJ=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_inertia.json'),'utf8')),TW=IJ.balance.byHn['050301-3'],rTW=Math.sqrt(TW.I/TW.m),dIturn=2*TW.m*rTW*0.16,secTurn=86400*dIturn/(2*S.I);
-const esrc=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','escapement.js'),'utf8'),mR=/r2=([\d.]+)\/2/.exec(esrc),mW=/lathe\(\[\[0\.45,([\d.]+)\],\[1\.5,/.exec(esrc);if(!mR||!mW)throw Error('escapement.js: the rim\'s outside or the timing weights\' place not found');
-const reach=+mW[1]-mR[1]/2,turnsIn=reach/0.16,gain=turnsIn*secTurn;
+const esrc=fs.readFileSync(path.join(__dirname,'..','..','wempe','js','escapement.js'),'utf8'),mR=/r2=([\d.]+)\/2/.exec(esrc),mW=/TIP=([\d.]+),W1=TIP-([\d.]+),W0=W1-([\d.]+)/.exec(esrc);if(!mR||!mW)throw Error('escapement.js: the rim\'s outside or the timing weights\' place not found');   /* the weight's inner end: the screw's tip less the weight's 0.8 short of it and its length (since 15 October 2026; before, the weight's lathe from its inner end) */
+const reach=(+mW[1]-mW[2]-mW[3])-mR[1]/2,turnsIn=reach/0.16,gain=turnsIn*secTurn;
 const T=P.HS.T,day=x=>86400*x,perH=day(1.5/0.285*1e-3),perC=day(0.5*0.005/WESC.HSL.RC),perL=day(0.5/WESC.HSL.L),perE=day(0.5/206),hNeed=0.285*(T/0.5)**(2/3),hE=[200,210].map(e=>hNeed*Math.cbrt(206/e));
 const fast=day(0.5/T-1);
 say(`as drawn (505.4 mm, 206 GPa) with the weighed balance (${S.I} g·mm²) the period is ${f(T,4)} s: ${f(fast/60,0)} min a day fast against the train's 0.5 s`);
