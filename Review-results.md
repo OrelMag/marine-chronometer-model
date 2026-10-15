@@ -2343,6 +2343,29 @@ on the right, the barrel bridge's near screw, the cock's screw and two pins read
 13:49.5 may account for (13:04.4 put the barrel bridge's hole for that same screw within 1 mm). Not changed: the readings there are not good enough to move
 holes measured to 0.3 mm on 6:49.0; a sharper face-on frame of the bridge's right side would settle them.
 
+*Followed up on 6:47 (15 October 2026):* 6:47 is 6:49.0's camera, and that camera can't place the right side: fitted on the model's train-bridge holes, each
+left out lands 0.6-5.4 mm off (the third pillar screw's counterbore 3 mm). The frames that see the bridges face-on settle most of it. Done: the barrel
+bridge's near screw moved 2.4 mm to (32.90, 6.60) (23:30 and 13:04.4 within 0.9 mm); its two steady pins added (13:04.4), into (29.4, 1.35), the
+candidate (29.7, 1.1), and the hole at (-23.3, 20.4); the candidate (-8.7, 22.1) added as a hole of unknown use (23:30, 6:49.0 within 1 mm); the
+candidate (-1.8, 33.1) dropped (it is the detent's far pin's hole, the same 1.5 mm off as its neighbours on 23:30); the cock's steady pins placed from
+the cock screw's hole (6:47, 23:30 within 0.4 mm), their holes r 1.07. **Still open: the cock screw's hole.** 23:30 reads it at (21.62, 23.58), 2.8 mm from
+S.cock; measured from the third pillar screw's counterbore, 6:49.0 gives (22.21, 22.69) and 23:30 (21.39, 23.58), within 1.2 mm; from the lower bridge's
+screw both frames turn it 7.5 deg from the model's direction (72.6-72.8 against 65.2). But at about 24 mm from the staff the cock's counterbore (7.4
+across) would break through its wall (22.6 about the staff), and 6:29 reads the cap's centre 25.9 mm from the screw: moving it means moving the cock,
+and likely the balance's place (L.B), with it.
+*Measured further (15 October 2026):* in both face-on frames against the same nearby holes (the third pillar screw's, the sustaining pawl's two;
+a similarity, 0.03-0.43 mm on them), the cock screw's hole reads (21.81, 24.96) on 23:30 and (21.95, 25.66) on 13:49.5 (re-anchored on the rim, TB_CUT
+and the centre bushing: `tools/anchors/KLUwI2UUCMQ_13-49.5.json`), within 0.7 mm: 2.4 mm from S.cock. 25.25 mm from the staff there, against the 25.9
+(25.7-26.0) the cock's top gives at 6:29 and the model's 26.78: so not the cock and balance moved together. Nor the cock turned about the staff: the
+barrel bridge's horn edge, which ends against the cock's straight edge, lies within 0.5-0.75 mm of the model's along its length on 13:04.4 (a 4 deg
+turn would move it 1.5-2.4). What's left is the screw's place on the cock: the frames put it about 1.6 mm further from the straight edge than the model
+draws it. The cock's top (CK_TR) was traced on 41:58 with the counterbore among its anchors, so it can't test this; at 25.25 from the staff the
+counterbore (7.4 across) reaches 1 mm inside the body's wall as drawn (CK_RP 22.6, an arc about the staff whose form at the screw is estimated).
+Would settle it: a face-on frame of the cock's top or underside (the counterbore, the pins and the straight edge in one view), or the cock in place
+from above through a camera fitted on the train bridge's holes at their heights. Searched for one, none good enough (OPEN-QUESTIONS.md, "The cock screw's place on the cock"); REQUESTS.md 11 asks an owner. The lower jewel can't be read on 23:30: it lies under the bridge,
+the frame's homography doesn't decompose into a pinhole camera, and the keyhole's wall shows the view steep there. The third's upper bushing: 6:47 can't read it apart from the camera's error (C itself reads 0.8-2.7
+mm off there).
+
 *Withdrawn (15 October 2026): a fourth finding, that the Exploded view drives the barrel cap's screws (37023) into the barrel, was a misreading. They go
 from y -6.26 to -53.11 as the barrel goes from 0 to -50: 3.15 mm toward the dial side relative to it, out of the cap, as they should (the winding
 ratchet's screws, 42014, the same way). `exploded.py` was right to pass them.*
