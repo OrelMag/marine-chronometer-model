@@ -158,7 +158,7 @@ const WFUSEE=(()=>{
     const lf=m=>{const u=Math.max(0,m)*144,i=Math.min(NM-1,Math.floor(u));return Lf[i]+(Lf[i+1]-Lf[i])*(u-i);};
     const mOf=s=>{let lo=0,hi=NM;if(s<=0)return 0;if(s>=Lf[NM])return 9.2;while(hi-lo>1){const k=(lo+hi)>>1;if(Lf[k]<=s)lo=k;else hi=k;}return(lo+(s-Lf[lo])/(Lf[hi]-Lf[lo]))/144;};
     const rbp=RB+c.ob,psiT=m=>tan(rf(m)+c.of,rbp);
-    const RF0=RF0x??psiT(M_FULL)-PHI0-TAU*M_FULL;   /* the fusee's rotation.y fully wound: the chain's leaving point at the full wind's turn (the band's the same: the stop sets it) */
+    const RF0=RF0x??psiT(M_FULL)-PHI0-TAU*M_FULL;   /* the fusee's rotation.y fully wound: given (the stop's), or the chain's leaving point at the groove's end */
     const m0Of=Rf=>{let m=M_FULL-(Rf-RF0)/TAU;for(let i=0;i<4;i++)m=(psiT(Math.max(0,m))-PHI0-Rf)/TAU;return Math.max(0,Math.min(M_FULL+0.05,m));};
     const runOf=m0=>{const psi=psiT(m0),rfp=rf(m0)+c.of,A=pol(rfp,psi),B=pol(rbp,psi+Math.PI);return{psi,S:Math.hypot(BX[0]+B[0]-FX[0]-A[0],BX[1]+B[1]-FX[1]-A[1])};};
     return{lf,mOf,rbp,psiT,RF0,m0Of,runOf,NRUN:(psiT(0)-PHI0-RF0)/TAU};}
@@ -187,14 +187,18 @@ const WFUSEE=(()=>{
       o.push([SB.lf,6]);return o.map(([u,v])=>[u,-v]).reverse();})();   /* the far side back to the oblique edge; mirrored */
     const SPA=angOf(SPX[0]-fx,SPX[1]-fz),SPR=Math.hypot(SPX[0]-fx,SPX[1]-fz),SBtipA=Math.atan2(-4-SB.rt,SB.lo);   /* the stop pin's place about the fusee's axis; the lower end's point, in the bar's frame */
     /* the chain's and the band's runs (connGeo), and from them the drum's turns: the end's angle in the drum set so the drum stands at 0 fully wound (BLK0), and its turn at run down */
-    const CG={chain:connGeo(CONN.chain)};CG.band=connGeo(CONN.band,CG.chain.RF0);
+    /* full wind is where the stop holds the fusee. The slot runs along the line from the axis to the chain's pin A, its upper end toward A (02-2 dimensions it from that
+       line: "4", "2 H8", no angle), so the bar's turn on the fusee is A's; the stop pin (Ø 1.6, hole 7, 14.0 from the axis) then bears on the bar's far side near its upper
+       end, 0.02 off, where C-D draws it ("Stellung im aufgezogenen Zustand"): at that turn of the fusee (the fusee turns back, rotation.y falling, while winding, so the far
+       side comes round onto the pin; the face reaches past the pin once the bar has slid 2.1 of its 3.6). It falls 0.112 turn short of the chain lying to the groove's end N
+       (M_FULL, the full wind assumed until 15 October 2026): 8.638 turns of chain on the fusee, 8.70 turns and 55.9 h from run down (05 06_20's test: 8.75 working turns;
+       the up-and-down dial: 56 h); the groove's last turn-tenth stays empty, as a fusee's should (02-2 draws N a further 0.07 on) */
+    const barRot=PINA,SPu=Math.sqrt(SPR*SPR-(6+0.8+0.02)**2);
+    const CG={},RF0N=connGeo(CONN.chain).RF0,RFS=(()=>{const r=SPA-barRot-Math.atan2(-6.82,SPu);return r+TAU*Math.round((RF0N-r)/TAU);})();   /* the stop's turn, in the turn nearest the groove's end's */
+    CG.chain=connGeo(CONN.chain,RFS);CG.band=connGeo(CONN.band,RFS);
     /* on the barrel the chain runs on from its tangent point the way the barrel turns back (rotation.y falling) to its hook: the drum stands at 0 fully wound */
     const BLK0={},BETA_RUN={};for(const k of['chain','band']){const cg=CG[k],mf=cg.m0Of(cg.RF0),run=cg.runOf(mf),sT=cg.lf(mf)+run.S;BLK0[k]=run.psi+Math.PI-(CONN[k].len-sT)/cg.rbp;
       const r0=cg.runOf(0),s0=cg.lf(0)+r0.S;BETA_RUN[k]=r0.psi+Math.PI-(CONN[k].len-s0)/cg.rbp-BLK0[k];}
-    /* the bar's turn on the fusee: at full wind (the chain's full-wind turn; the band's is the same, their runs leaving the fusee along the same line) the stop pin (Ø 1.6, 14.0
-       from the axis) bears on the bar's far side near its upper end, 0.02 off, where C-D draws it ("Stellung im aufgezogenen Zustand"): the fusee turns back (rotation.y falling)
-       while winding, so the far side comes round onto the pin. The face reaches past the pin once the bar has slid 2.1 of its 3.6 */
-    const SPu=Math.sqrt(SPR*SPR-(6+0.8+0.02)**2),barRot=SPA-CG.chain.RF0-Math.atan2(-6.82,SPu);
     const mTip=(()=>{const u=(barRot+SBtipA-PHI0)/TAU;return M_FULL-fr(M_FULL-u);})();
 
     /* =============== the fusee (Schnecke 05 06 04) =============== */
@@ -404,8 +408,11 @@ const WFUSEE=(()=>{
        pressing the bar out toward that end. Its two drawn shapes traced on C-D (12.2 px/mm, each point at the line's darkest pixel; the dashed, wound one searched along rays
        through its gaps), scaled 0.989 as the bar, mirrored into the bar's frame: running it leaves the wall 152° round from the bar's upper end, wound (the bar slid 3.6) at 95°, looping
        in to 3.15 from the axis, 0.1 off the arbor's step. Drawn between the two as the bar slides (the drawn shapes' lengths differ by 4 %, 32.1 and 30.8: the drawing's
-       precision). Its section isn't drawn: 0.15 thick (C-D's double line) and 1.0 high (estimated), on the cover plate as the bar */
-    const SPW=7.5-0.075,SPU=[[-3.5,-5.638],[-3,-5.555],[-2.5,-5.632],[-2,-5.875],[-1.5,-6.202],[-1,-6.528],[-0.5,-6.705],[0,-6.868],[0.5,-7.018],[1,-7.03],[1.5,-7.03],[2,-7.03],[2.5,-6.942],[3,-6.78]],
+       precision). Its section isn't drawn: 1.0 high (estimated, under the recess's 1.6), on the cover plate as the bar, and 0.10 thick, worked from its two drawn shapes:
+       between them its curvature changes by up to 0.064-0.073 /mm along its free span (its end pinned in the bar, unbent), so a strip t thick of hardened spring steel
+       (206 GPa) is stressed 6,500-7,500 t MPa (t in mm) wound and pushes the bar out with 0.06-0.08 N half way, 0.11-0.16 N wound (its strain energy over the 3.6):
+       at 0.10, half its steel's yield once a wind, and 20-30 times the bar's 0.5 g against a knock along it (C-D's double line, 0.15, would be stressed 0.7 of yield) */
+    const SPW=7.5-0.05,SPU=[[-3.5,-5.638],[-3,-5.555],[-2.5,-5.632],[-2,-5.875],[-1.5,-6.202],[-1,-6.528],[-0.5,-6.705],[0,-6.868],[0.5,-7.018],[1,-7.03],[1.5,-7.03],[2,-7.03],[2.5,-6.942],[3,-6.78]],
       SPD=[[-3,-2.113],[-2.5,-2.188],[-2,-2.438],[-1.5,-3.0],[-1,-3.5],[-0.5,-3.912],[0,-4.238],[0.5,-4.405],[1.5,-4.72],[2,-4.807],[2.5,-4.808],[3.5,-4.57],[4.335,-4.489],[5.059,-3.953],[5.742,-3.315],[6.398,-2.585],[6.899,-1.72]];   /* C-D's (x right, y up from the axis; the bar on the left, its upper end up), mm */
     const toBar=P=>P.map(([x,y])=>{let u=0.989*y,v=0.989*x;const r=Math.hypot(u,v);if(r>SPW){u*=SPW/r;v*=SPW/r;}return[u,v];});   /* nowhere outside the wall */
     const SPA0=152.1*D2R,SPA1=95*D2R,SPE=-Math.asin(3.9/SPW);   /* where each leaves the wall (from the bar's upper end); the fixed end, 0.1 short of the slot */
@@ -417,7 +424,7 @@ const WFUSEE=(()=>{
       const aD=SPA0+(SPA1-SPA0)*f,n=Math.ceil((aD-SPE)/(3*D2R));o[o.length-1]=[SPW*Math.cos(aD),SPW*Math.sin(aD)];
       for(let k=1;k<=n;k++){const a=aD+(SPE-aD)*k/n;o.push([SPW*Math.cos(a),SPW*Math.sin(a)]);}   /* along the wall to its fixed end */
       return o.map(([u,v])=>new THREE.Vector3(u,S+0.5,-v));};
-    let spT=0;const spM=tag(mesh(gBar,ribbonGeo(spPath(0),0.15,1.0),M.blued),'050603-3');
+    let spT=0;const spM=tag(mesh(gBar,ribbonGeo(spPath(0),0.10,1.0),M.blued),'050603-3');
     /* the spring's pin (Stift 05 06 03-2; the hole "0,5 H7" in 05 06 04-2, not cut in it): along the slot, 1.5 from the line through the axis on the bar's side (02-2's "15"),
        from the recess, where it stands in to 6.4 from the axis through the spring (C-D), out through the hub flush with the top turn; at the spring's mid-height (estimated) */
     {let uo=9;for(let i=0;i<4;i++){const R=rBody(barRot+Math.atan2(-1.5,uo),LB-0.5);uo=Math.sqrt(R*R-2.25)-0.02;}const ui=Math.sqrt(6.4*6.4-2.25),g=new THREE.CylinderGeometry(0.25,0.25,uo-ui,12);
@@ -594,7 +601,7 @@ const WFUSEE=(()=>{
       const T=msTurns(beta);msM.geometry.dispose();msM.geometry=msGeo(Math.max(msT+0.1,T));pMS.userData.T=T;
       /* the stop bar: as far in as the connector presses it; its spring follows */
       const tr=barTravel(pts,kf,m0,Rf);gBar.children[0].position.x=tr;pSW.userData.travel=tr;
-      if(Math.abs(tr-spT)>1e-4){spT=tr;spM.geometry.dispose();spM.geometry=ribbonGeo(spPath(tr),0.15,1.0);}
+      if(Math.abs(tr-spT)>1e-4){spT=tr;spM.geometry.dispose();spM.geometry=ribbonGeo(spPath(tr),0.10,1.0);}
       return Rf;}
     /* the hooks' places: the top hook from the connector's first point back to the fusee's pin; the bottom hook on from its last point along the drum */
     function place(g,p,pa,rot,which){const up=new THREE.Vector3(0,1,0);
@@ -606,6 +613,6 @@ const WFUSEE=(()=>{
     /* keySeat: where the winding key goes on (case.js keyAt): the dust plate's group, turning with the fusee and spread with the dust plate in the Exploded view (so the key
        stays outside the dust bush, which spreads further than the fusee), and the plate's face toward the key (y0 above: 7 from the square's root, where it is 3.1 across, as
        the key's square), on which the tube's mouth stops */
-    return{update,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-15},NRUN,HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GP,F,S,DP0,DTU,DTL,BB,BR}};}
+    return{update,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-15},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GP,F,S,DP0,DTU,DTL,BB,BR}};}
   return{build};
 })();

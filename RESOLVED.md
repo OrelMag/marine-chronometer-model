@@ -76,7 +76,7 @@ Contents:
 - **The Wempe's hairspring's outer curve was drawn to the wrong radius.** It was drawn in proportion (kU 0.883) to end 3.87 from the staff,
   where an upright square to the stud's bar let it stand; the stud's upright leans 8° (05 03 02-3) and so brings its slot in to 3.55, where
   05 03_7's table pins the inner end in the collet: both curves are now the table's (kU 1), the slot in the upright's middle with the spring
-  and its pin side by side in it. The spring's isochronism, `WESC.SET.HS`, went from −0.659 to −0.544 s a day per 10°, the rate over the wind
+  and its pin side by side in it. The spring's isochronism, `WESC.SET.HS`, went from −0.659 to −0.543 s a day per 10°, the rate over the wind
   from ±0.08 to −0.02/+0.01 s a day. Keep: `RSTUD` is the table's radius at 220°; `HS` what `tools/wempe_hairspring.js` finds.
 - **The Wempe's discharge stone was drawn square-ended.** The layout's corners and makeEsc (`BEV`) take its end bevelled back 0.3 from
   the acting corner, 05 04_1 draws it bevelled, but the mesh ended square at full reach. Now drawn with the bevel (`DS`). Keep: the drawn
@@ -598,6 +598,15 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's stop bar stood 40° off its slot's drawn line, and full wind was taken at the
+  groove's end.** The model set the bar's turn so the stop pin met it with the chain lying to
+  the groove's end N (8.75 turns); 02-2 dimensions the slot from the line through the chain's
+  pin A ("4", no angle), so along it. With the slot along A the stop pin (hole 7) decides full
+  wind: 0.112 turn short of N, 8.70 turns and 55.9 h to run down (05 06_20's 8.75 working
+  turns, the dial's 56), the groove's last tenth empty. escphys.js's MF is the stop's turn,
+  8.638, and the page warns if it parts from the fusee's. Keep: full wind is where the stop
+  holds the fusee, never assumed at the groove's end; a part a sheet dimensions from a line
+  lies along it. `745cc13`
 - **The winding-pawl springs' feet were placed apart, and nothing showed the
   holes beside the pawls.** The beds, pockets and screw holes were read on
   KLUwI2UUCMQ 19:12 as angles from the pawls' studs as that frame shows them,
