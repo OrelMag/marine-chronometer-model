@@ -59,6 +59,18 @@ Contents:
 
 ## Escapement
 
+- **makeEsc's Wempe detent fell off its stone too soon.** At the discharge stone's square acting corner the Wempe's square-ended gold
+  spring leaves with the speed it came up with (the lift turns within a cell of the table); `depart` took the detent's speed by a central
+  difference across the corner, −0.39 rad/s (falling) for +4.2, so its fall began 1.2° early. `tools/dynamics.js --model wempe` found it.
+  Now a square-ended spring (`TSQ`) leaves with the slope it came up. Keep: a contact with a corner hands on the speed of its approach side. `ea4b115`
+- **makeEsc counted the Wempe's detent's work over the stone's whole lift.** Its sums ran over the jewel's table to its end, so the
+  preload's and spring's energy came back to the balance down the stone's bevel, as a massless detent rides it; the drawn detent, flung off
+  the corner, never touches the bevel, and that energy (and its speed) is lost: 3.2° of swing. Now `DEP` counts it to where the detent
+  leaves the stone (the Wempe's; 0 the Hamilton's). Keep: the averaged model counts the detent's work over the path the integrated detent takes. `ea4b115`
+- **makeEsc's Wempe wheel chased the impulse stone free.** Let go from rest, it is too slow to get its tooth out from under the stone before
+  the detent falls back, so the stone rides that tooth's land and back (makeEsc drew the ride but left it out of the chase): its friction and
+  the back's push moved the swing 1.4°. Now `RW` runs the chase with it (quasi-static, the detent's inertia in its contact). Keep: whatever
+  touches the wheel between its release and the impulse is in the chase; `dynamics.js --model wempe` and makeEsc within 3° and 0.3 s a day. `ea4b115`
 - **makeEsc counted any other escapement from the Hamilton's.** An instance whose settings weren't the reference's
   rebuilt its reference from the calibration keys alone (`CAL`) on the Hamilton's defaults, so a second chronometer's escapement
   with a setting changed would have been calibrated, and its rate counted, against the Hamilton's geometry (on a Wempe-like set,
@@ -2664,17 +2676,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-Escapement:
-
-- **makeEsc's Wempe detent fell off its stone too soon.** At the discharge stone's square acting corner the Wempe's square-ended gold
-  spring leaves with the speed it came up with (the lift turns within a cell of the table); `depart` took the detent's speed by a central
-  difference across the corner, −0.39 rad/s (falling) for +4.2, so its fall began 1.2° early. `tools/dynamics.js --model wempe` found it.
-  Now a square-ended spring (`TSQ`) leaves with the slope it came up. Keep: a contact with a corner hands on the speed of its approach side.
-- **makeEsc counted the Wempe's detent's work over the stone's whole lift.** Its sums ran over the jewel's table to its end, so the
-  preload's and spring's energy came back to the balance down the stone's bevel, as a massless detent rides it; the drawn detent, flung off
-  the corner, never touches the bevel, and that energy (and its speed) is lost: 3.2° of swing. Now `DEP` counts it to where the detent
-  leaves the stone (the Wempe's; 0 the Hamilton's). Keep: the averaged model counts the detent's work over the path the integrated detent takes.
-- **makeEsc's Wempe wheel chased the impulse stone free.** Let go from rest, it is too slow to get its tooth out from under the stone before
-  the detent falls back, so the stone rides that tooth's land and back (makeEsc drew the ride but left it out of the chase): its friction and
-  the back's push moved the swing 1.4°. Now `RW` runs the chase with it (quasi-static, the detent's inertia in its contact). Keep: whatever
-  touches the wheel between its release and the impulse is in the chase; `dynamics.js --model wempe` and makeEsc within 3° and 0.3 s a day.
+None at the moment.
