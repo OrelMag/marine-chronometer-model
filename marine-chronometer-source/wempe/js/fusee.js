@@ -511,6 +511,9 @@ const WFUSEE=(()=>{
       else{const v=new THREE.Vector3(p.x-BX[0],0,p.z-BX[1]).normalize(),d=new THREE.Vector3().crossVectors(v,up).normalize(),n=new THREE.Vector3().crossVectors(d,up);
         const m=new THREE.Matrix4().makeBasis(d,up,n).setPosition(p);g.matrixAutoUpdate=false;g.matrix.copy(m);}}
     pB.userData.blk=BLK;
-    return{update,setConn,get conn(){return conn;},NRUN,HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GP,F,S,DP0,DTU,DTL,BB,BR}};}
+    /* keySeat: where the winding key goes on (case.js keyAt): the dust plate's group, turning with the fusee and spread with the dust plate in the Exploded view (so the key
+       stays outside the dust bush, which spreads further than the fusee), and the plate's face toward the key (y0 above: 7 from the square's root, where it is 3.1 across, as
+       the key's square), on which the tube's mouth stops */
+    return{update,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-15},NRUN,HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GP,F,S,DP0,DTU,DTL,BB,BR}};}
   return{build};
 })();
