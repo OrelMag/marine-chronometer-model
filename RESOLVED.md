@@ -2214,6 +2214,13 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's hands showed a broken line down their middle.** Each blade (`blade()` in `wempe/js/dial.js`)
+  was one solidGeo cell whose top follows the thickness along the hand, and earcut triangulated it whole: long
+  slivers from a point on one edge to a point far along the other, tilted to either side (|nx| up to 0.70 on the
+  hour hand, 0.58 on the minute hand, 0.33 on the seconds hand's tail), which shaded as a dashed line where the
+  slivers crossed the middle, and Edges inked their creases. The blade is now a strip of cells, one per station,
+  so each top triangle spans one station's step (|nx| ≤ 0.007). Keep: a sloped face (a solidGeo cell with a
+  function for y) is cut into cells along its slope, never triangulated whole. `3c7fe98`
 - **The Wempe's stop bar flickered through the fusee's small end.** The slot the bar slides in
   wasn't cut in the turned body, and the bar, drawn flush with the small end's face, shared that
   face: wherever the cover plate wasn't drawn (hidden, faded, see-through, a phone zoomed in on
