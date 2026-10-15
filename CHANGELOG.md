@@ -4,6 +4,10 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.41.01 · 2026-10-15
+- The barrel bridge's cut round the balance is now one smooth circle, as measured on the restoration video (the step in it is gone)
+- The steady pins of the balance cock and barrel bridge, and the bridge screw beside them, placed as measured
+
 ## 2.41.00 · 2026-10-15
 - The Wempe's escapement now moves as it really works: the escape wheel chases the impulse stone from rest and strikes it, the detent is flung off and rides the tooth home
 - A report on every check of the Wempe: does the model hold to its drawings, and would it keep time? Linked from its About and its essay
