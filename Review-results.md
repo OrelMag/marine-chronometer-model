@@ -2338,7 +2338,7 @@ so it shows on the bridge's top beside the dust seal; the stud screws only 2 mm 
 `video.py anchor` on the rim (r 40.5; 15 and 45 traced points, 0.17 and 0.34 mm rms), the cut round the barrel (TB_CUT, r 21.0; 0.13 and 0.06 mm) and the
 centre bushing, then `tools/holemap.py`. The pillar screws' holes and the third's counterbore, the barrel bridge's far screw and the lower bridge's screws land
 within about 0.5 mm. Found: the third's upper bushing sits 1.2-1.3 mm from L.T in both frames (with T paired instead, every rim hole reads 2.5-5 mm off: the
-pair's rotation); real holes the model lacks at about (-22.8, 20.4) and (-8.7, 22.1) (both frames' good side, +-1 mm), (29.7, 1.1) and (-1.8, 33.1) (+-3 mm); and
+pair's rotation); real holes the model lacks at about (-22.8, 20.4) (added, d33651a: the two frames agree within 1 mm, a countersunk hole on 13:49.5) and, unconfirmed (the frames disagree by 3 mm there), (-8.7, 22.1), (29.7, 1.1) and (-1.8, 33.1); and
 on the right, the barrel bridge's near screw, the cock's screw and two pins read 3-4 mm inside their model places, which the soft 23:30 and the slant of
 13:49.5 may account for (13:04.4 put the barrel bridge's hole for that same screw within 1 mm). Not changed: the readings there are not good enough to move
 holes measured to 0.3 mm on 6:49.0; a sharper face-on frame of the bridge's right side would settle them.
