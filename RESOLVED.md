@@ -2136,6 +2136,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   without which the parts would swing a loss-free spring's balance past 1½ turns. Keep: physics.js's endstone term
   from the measured swings, not a μ; `TF` re-derived whenever the mainspring's stiffness changes; the essay's
   `data-phys` figures physics.js's. `6a918d8`
+- **The timing weights had 2 turns either way, set by a cut that had moved** (handed over from the barrel bridge's cut, 15 October 2026). Their travel was all the room the barrel bridge's cut round the balance left when it was drawn at r 17.6; measured on 13:04.4 it is 19.5 from the staff at its nearest. The manual wants 3 turns at about 40 s a day: Op. 5 leaves the rate within 2 minutes a day by screws and washers, and Op. 6 regulates with the timing weights alone (p. 81). Now 3 turns either way of a mid-travel 3 turns off the rim (`TG` 0.534, three of `R.pitch.t`), the panel's slider ±24 eighths. Keep `TG` three pitches, so turned fully in the nut meets the rim, and recheck the travel against the cut when either moves. `45678d2`
 
 ## Rate panel
 
@@ -2773,4 +2774,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The timing weights had 2 turns either way, set by a cut that had moved** (handed over from the barrel bridge's cut, 15 October 2026). Their travel was all the room the barrel bridge's cut round the balance left when it was drawn at r 17.6; measured on 13:04.4 it is 19.5 from the staff at its nearest. The manual wants 3 turns at about 40 s a day: Op. 5 leaves the rate within 2 minutes a day by screws and washers, and Op. 6 regulates with the timing weights alone (p. 81). Now 3 turns either way of a mid-travel 3 turns off the rim (`TG` 0.534, three of `R.pitch.t`), the panel's slider ±24 eighths. Keep `TG` three pitches, so turned fully in the nut meets the rim, and recheck the travel against the cut when either moves.
+None at the moment.
