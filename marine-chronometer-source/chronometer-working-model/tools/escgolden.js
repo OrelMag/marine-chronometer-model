@@ -22,6 +22,8 @@ const CALLS={
   rateAt:(E,f)=>{for(const a of rng(30*D,350*D,64))for(const s of[1,0.6,1.4])f(E.rateAt(a,s));f(E.rateAt(E.A));},
   atK:(E,f)=>{for(const s of[0.3,0.8,1,1.3])for(const kd of[0.5,1,2])for(const kp of[0.5,1,2])f(E.atK(s,kd,kp));f(E.atK(1));},
   wn:(E,f)=>{for(const s of[0.5,1,1.5])for(const a of rng(20*D,350*D,40))f(E.wn(s,a));},
+  ride:(E,f)=>rng(-0.1,1.1,600).forEach(pr=>f(E.ride(pr))),
+  pushes:(E,f)=>{for(const s of[0.5,1,1.5])for(const a of rng(30*D,350*D,32))f(E.pushes(a,s));},
   span:(E,f)=>{const m={x:-E.nB.x,y:-E.nB.y};for(const th of rng(E.TH0,30*D,800)){f(E.span(th,E.nH));f(E.span(th,m));}},
   impulse:(E,f)=>{const w=E.run.cl?E.run.cl.w:1e-3;for(const s of[0.5,1,1.5])for(const a of rng(30*D,350*D,32))f(E.impulse(s,a,w));},
   chase:(E,f)=>{for(const th of rng(-25*D,25*D,100))for(const a of[E.A,150*D])f(E.chase(th,a,1));},

@@ -59,6 +59,17 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's page moved its escapement as the layout draws it, not as it is solved.** Its 3D escapement was kinematic, timed from
+  05 04_1: the tooth on the impulse stone the moment it was let go (21° before the line of centres), the detent let fall as the gold
+  spring slipped off; makeEsc, solving the same parts in time, has the wheel chase the stone from rest and strike it 16° of swing later
+  (10° before the line), the detent flung off the discharge stone and riding the tooth it let go. Now `ESC.state` is makeEsc's state at
+  the live swing and drive (`WESC.adapt`), the layout's kept as `ESC.layout`; its contacts drawn 0.01 apart as the layout kept them,
+  the ride taken where the tooth is drawn (makeEsc's own, with the wheel drawn 0.01 behind, put the stone 6.6 µm into the tooth).
+  Keep: the page and the tools move the escapement through the one solved state; `tools/wempe_escapement.js` holds the drawn stone out
+  of the drawn tooth, and `checks.py`'s phases follow the solved events. `930a8e4`
+- **The Wempe's discharge stone was drawn square-ended.** The layout's corners and makeEsc (`BEV`) take its end bevelled back 0.3 from
+  the acting corner, 05 04_1 draws it bevelled, but the mesh ended square at full reach. Now drawn with the bevel (`DS`). Keep: the drawn
+  stone's outline is the one the escapement's motion is worked out on. (05 04_1 measured again scales 0.15-0.2: README, Estimated.) `462a1a3`
 - **makeEsc's Wempe detent fell off its stone too soon.** At the discharge stone's square acting corner the Wempe's square-ended gold
   spring leaves with the speed it came up with (the lift turns within a cell of the table); `depart` took the detent's speed by a central
   difference across the corner, −0.39 rad/s (falling) for +4.2, so its fall began 1.2° early. `tools/dynamics.js --model wempe` found it.
@@ -2530,6 +2541,12 @@ An arbor needs pivots and shoulders; a stone its seat.
   header's `nav.models`, on both pages, the current model marked.
 
 ## Build, tools and docs
+
+- **The Wempe's bench took its preload's floor from the frame as it was before the banking moved.** `wempe_tolerances.js` first
+  took 0.72 g at the stone (1.1 times the estimate) as the least preload, `wempe_tripping.js`'s figure while the banking stood
+  under the blade; with the banking on the pipe the frame finds a held tooth's stone ringing 41 % of the depth of lock at the
+  estimate itself, 0.63 g, and doesn't run between that and none. Keep: a figure quoted from another tool's run is the one its
+  present configuration gives, with the date and the tool named beside it. `350728d`
 
 - **`smoke.py` failed "winding with the key" whenever the machine was busy.** The model's clock goes at most 0.05 s a
   frame, and a headless page under load drew about 2 frames a second, so the sustaining spring's relaxing, about 2.5 s

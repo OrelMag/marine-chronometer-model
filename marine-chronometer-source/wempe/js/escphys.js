@@ -25,7 +25,7 @@ const WPHYS=(()=>{
   const ETA_LO=eta(0.15,0.20,1),ETA_HI=eta(0.10,0.10,0.5),ETA=Math.sqrt(ETA_LO*ETA_HI);
   const escT=n=>fusT(n)/RATIO*ETA*1e6;   /* the escape wheel's torque (µN·m) */
   const HPT=90/14,TQ=escT(12/HPT);   /* the fusee's 6.43 h a turn; the reference: 12 h from full wind, as the Hamilton's (its drive 1 there) */
-  const SET={...WESC.SET,TQ},ESC=makeEsc(SET,SET);WESC.ESC.A=ESC.A;   /* the kinematic drawing (WESC.ESC.state) swings at the reference's solved swing by default (the tools' phases) */
+  const SET={...WESC.SET,TQ},ESC=makeEsc(SET,SET);WESC.adapt(ESC);   /* the page's escapement (WESC.ESC.state) moves as this solves it, at the reference's swing by default (the tools' phases); its layout's own motion WESC.ESC.layout */
   const drv=n=>escT(n)/TQ;   /* the drive, times the reference's */
   /* the maintaining spring (Gegenfeder 05 06 01-1) while the key turns: it carries the running torque into the fusee wheel, deflected "x = 0,27 mm" (05 06_9, likely) at its
      pins on r 14.2, 1.09 deg of the wheel; held by the maintaining detent on the ratchet while the fusee turns back, it drives the train with what it carried, falling as the

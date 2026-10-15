@@ -1,0 +1,690 @@
+{
+ "note": "tools/wempe_bench.js: the tests on the bench for a Wempe made to the model, each with how and what it must read, and their figures as numbers (criteria: wempe_montecarlo.js, the Wempe's verification report)",
+ "tests": [
+  {
+   "id": "mainspring",
+   "title": "The mainspring's torque",
+   "sheet": "05 06_20, 05 07 03-2",
+   "when": "before it goes into the barrel, and again in its barrel",
+   "how": "In its barrel, the arbor held by a lever (a 3D-printed arm 50 mm long and a hanging weight do: 1 kg at 50 mm is 0.49 N·m) or a torque gauge: wind it from slack and read the torque each half turn, then unwind and read again (the spring's friction is the difference). Leave it wound a week and read again. Once, wind it on until its coils lie tight on the arbor and count the turns from slack.",
+   "pass": "Set up ¾ turn past slack (05 06_20's \"3/4 Umgang gespannt\") and wound the drawn fusee's 5.08 barrel turns, the model's spring runs 457 to 826 mN·m at the level 05 06_20 measures (the solved shape, wempe_physics.js); every reading within ×0.929-1.251 of it keeps the swing in the guard band over the wind and the strip under a mainspring's stress limit (wempe_tolerances.js). From slack to coil-bound it must have the set-up, the fusee's 5.08 turns and half a turn to spare (the model's 1.18 past full wind). Unwinding reads less than winding: the coils' friction gives 4-9 % on the solved spring, mainsprings 10-20 % (ICMFF9); over 22 %, clean and grease it. After the week, still in the band."
+  },
+  {
+   "id": "fusee",
+   "title": "The pull on the fusee arbor, against 05 06_20",
+   "sheet": "05 06_20",
+   "when": "the chain on, the barrel set up ¾ turn, before the train goes in",
+   "how": "As Herb. Müller did in 1941 (05 06_20: \"Hebellänge 262 m/m\", the mean of two runs): a lever 262 mm long on the fusee arbor, and the weight (g) that holds it level read at each half turn running down from full wind (8.75 turns of the fusee, the curve's 0.05 to 8.74), twice; or a torque gauge (1 g on 262 mm is 2.57 mN·m).",
+   "pass": "Each reading within ×0.929-1.251 of the sheet's at the same turn (its readings' mean 132.7 g: 123.3-166.1 g; fully wound 138.4 g), and the run's shape the sheet's: its readings -4.7 to +4.3 % about their mean, the hump at turns 1-1.5, the dip at 4-5.75 and the rise to full wind (the solved spring through the drawn fusee fits it to 1.07 % rms). Low everywhere: the strip is thin (set up a tooth more, or a stronger strip: wempe_tolerances.js); out of shape at one end: the spring's length or set against the fusee. The sources' band, 225-270°, would want 161.2 g mean (×1.214): open (README, Unresolved)."
+  },
+  {
+   "id": "depths",
+   "title": "The train's depths",
+   "sheet": "05 09 01, 05 08 02-1 (the hole tables)",
+   "when": "the plates bored and reamed, before the bushes and jewels go in",
+   "how": "Gauge pins in each pair of holes and a micrometer, or a measuring machine, on both plates; then each mesh tried in turn with the arbors in, the escape wheel held: feel the shake at the pinion and watch the teeth through a loupe.",
+   "pass": "Centres 22.650, 18.120, 12.630, 11.850 mm (fusee-centre, centre-intermediate, intermediate-seconds, seconds-escape: the hole tables' coordinates), each within ±25 µm (gearing.js --model wempe: the seconds mesh's window less its pivots' shake; the tables give the places to 0.001 and no tolerance). A hole that errs should err wide: each mesh takes far more wide than close (-240/+436, -190/+355, -145/+281, -100/+263 µm). Closer than its window less the pivots' shake (220, 155, 95, 50 µm close): re-bush the hole, bored on the drawn centre."
+  },
+  {
+   "id": "endshake",
+   "title": "Endshake",
+   "sheet": "the sheets' fits (below)",
+   "when": "each arbor in its bearings, the plates pinned and screwed, before the escapement goes in",
+   "how": "Lift each arbor by its wheel with tweezers and watch its shoulder against a dial indicator, or feel it; the fusee arbor before its face a is re-turned (05 06 00-2: \"bei Schneckenmontage ... Fläche a nachdrehen\").",
+   "pass": "0.01-0.08 mm at 20 °C (estimated: free with the TU's 4 °C, which takes 3 µm, and an oil film, to the Hamilton manual's 0.003 in; the Wempe's sheets give none). As drawn: the centre arbor 0.07 (the sheets' tolerances -0.02 to 0.13), the intermediate arbor 0.06 (the sheets' tolerances -0.09 to 0.15), the seconds arbor 0.05 (the sheets' tolerances -0.11 to 0.15), the escape arbor 0.04 (the sheets' tolerances 0.00 to 0.06), the fusee arbor 0.05 (the sheets' tolerances -0.09 to 0.08), the barrel arbor 0.06 (the sheets' tolerances -0.10 to 0.12). The pillars' seats (0.3 +0.03 in each plate) take up to 0.06 from every arbor at once: a tight one, check the seats first. Out of the band: set the bush or jewel again, re-turn face a (the fusee), stone the shoulder."
+  },
+  {
+   "id": "balance",
+   "title": "The balance and its hairspring vibrated",
+   "sheet": "05 03_6, 05 03_7, 05 03 01-1",
+   "when": "the spring pinned to its collet and stud, its curves bent to 05 03_7, before it goes in",
+   "how": "Vibrate the balance on its spring in a vibrating tool (or the cock on a holder) against a master or a phone's timer: count the oscillations over two minutes, the weights against their screws' heads as drawn.",
+   "pass": "2 oscillations a second (7,200 an hour), or slow by up to 83 s a day: the timing weights stand against their screws' heads as drawn and can only be screwed in, 1.9 turns of 44.2 s a day each (wempe_tolerances.js; their size estimated). The drawn spring on the weighed balance (2,501 g·mm²) is 25 min a day fast (0.4914 s): the strip wants 0.2817 mm, not 0.285 (0.2799-0.2845 over the steel's 200-210 GPa). No section tolerance holds the period (a µm of the strip is 455 s a day, the coil's ±0.05 ±173): fast, grind the strip thinner or choose a weaker spring; slow past the weights' reach, a stronger one."
+  },
+  {
+   "id": "rundown",
+   "title": "The balance runs down free",
+   "sheet": "05 03, 05 04",
+   "when": "the balance, hairspring and detent in, the train held still at a lock; before the mainspring is chosen",
+   "how": "Give the balance a full swing (a twist of the movement) and let it run down, the train held. Film it from above at 30 frames a second, a card marked every 30° under it, and read the swing every few seconds (python wempe_swing.py reads a video so); time how long it takes to halve from about 207°.",
+   "pass": "The model's balance halves its swing in 62 s (its TF 125 s; a running 6MX on video, moMvyx8eXfo, has TF 102-129 s: wempe_startup.js). Halving in 44, 53, 62, 74, 85 s (TF 80, 100, 125, 160, 200): 05 06_20's drive swings it 176, 192, 207, 226, 243° at 12 h; the guard's 193° at the wind's lowest wants ×1.235, 1.056, 0.929, 0.803, 0.712 of it, the sources' 225° ×1.630, 1.387, 1.214, 1.042, 0.919 (the strip as the drive's cube root). Shorter than 44 s, look for a pivot, the endstone or the detent's springs dragging."
+  },
+  {
+   "id": "detent",
+   "title": "The detent rings",
+   "sheet": "1436, 05 04 01-2",
+   "when": "the detent made with its gold spring on, before it goes in",
+   "how": "Clamp its foot as the block holds it (a printed jig with the foot's screw and two steady pins), the stone and the horn free, and flick the blade's end lightly with a hair. Record the ring with a phone a few millimetres off and read its lowest strong pitch with a spectrum app, or python benchcheck.py --ring FILE.",
+   "pass": "80 Hz with the spring as drawn (0.070 mm, 1436's \"0,07\"); 57-113 Hz for a spring 0.056-0.088 mm thick, half to twice the drawn stiffness, over which the detent is home before the next tooth (dynamics.js --model wempe). The pitch goes nearly as the thickness to the 1.5 (0.050 mm 48 Hz, 0.056 mm 57 Hz, 0.060 mm 64 Hz, 0.070 mm 80 Hz, 0.080 mm 97 Hz, 0.088 mm 113 Hz, 0.090 mm 116 Hz: wempe_tripping.js's frame clamped at the foot), so it measures the spring's section, which no figure on 1436 settles (its \"0,09\" would ring 116 Hz). The gold spring rings near 620 Hz: the detent's own is the lower."
+  },
+  {
+   "id": "escapement",
+   "title": "The escapement's figures and the banking",
+   "sheet": "05 04_1, 05 04 01-4",
+   "when": "the detent, its gold spring and the balance in; the train's power let down",
+   "how": "Turn the balance slowly by hand with a protractor card under it and read each angle through a loupe; the depth of lock and the roller's shake with feeler gauges or under a measuring microscope. The preload: wire riders of known weight hung on the stone's pipe, the detent on its banking (as the Hamilton manual's Op. 78 hangs its 0.770 g).",
+   "pass": "05 04_1's layout and the model: the impulse stone 24° before the line of centres at rest, the lock 36.5° on; the gold spring met at -12.3° of the balance (05 04_1's −12°), the wheel released at -2.4° (lock 9.9°), the gold spring off the stone at -0.5° (let-off 1.9°), the return swing past it at -17.6° (overall 17.1°); roller shake 0.046 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.175 mm deep at the stone: never shallower than 0.143 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.188 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.190 deep where the drawn wheel locks 0.175: set the banking to the wheel as made. The preload at the stone: a 0.63 g rider must leave the detent on its banking and a 1.58 g one part it; aim near 0.87 g (the model's 0.63 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 41 % of the depth of lock there, teeth getting past with none; each gram more costs about 8.9° of swing)."
+  },
+  {
+   "id": "swing",
+   "title": "The swing",
+   "sheet": "—",
+   "when": "the movement running, fully wound, at 24 h and near run-down",
+   "how": "Read the balance's swing against marks under it, from a phone's slow-motion video (python wempe_swing.py reads the arm's sweep), or from a recording of the beat (python acoustic.py --model wempe FILE fits its clicks to the escapement in time).",
+   "pass": "In the guard band, 193-270° each way, over the whole wind (the model 201.5-212.1°, 207.3° at 12 h). The sources' band, 225-270° (the 1954 instruction, chronometers in general; the Hamilton manual 247.5-270°), is reported, not required: the model's swing is under it on 05 06_20's drive (open, README). Low at both ends with the train free: the strip doesn't suit the balance's damping (the run-down test chooses it), or the preload is high; low at one end only: the fusee's test."
+  },
+  {
+   "id": "maintaining",
+   "title": "The maintaining spring drives the train",
+   "sheet": "05 06 01-1, 05 06_9",
+   "when": "the movement running, part wound",
+   "how": "Turn the key back a little (winding) and hold it still, the fusee off the train: time how long the balance keeps going.",
+   "pass": "About 70 s of drive falling to nothing (05 06_9's \"x = 0,27 mm\" at its pins on r 14.2, likely; the 1954 instruction gives 1-2 minutes for chronometers in general); a wind takes about 6 s. Under 30 s (estimated), the spring is weak or its deflection small."
+  },
+  {
+   "id": "trial",
+   "title": "The rate, and the 6MX TU's trial",
+   "sheet": "6MX TU 25-07-1533-84 (6MX-figures.md)",
+   "when": "cased, in its gimbals, rated",
+   "how": "Each day at the same hour compare it with a time signal to a tenth of a second and log the error (python rating.py works the daily rates). The trial: 35 days in five periods of seven at 36, 20, 4, 20, 36 °C (a wine cooler, a room, a box with a lamp and a thermostat), the first two days of each not counted, wound daily after the comparison to \"8\" on the up-and-down dial, to \"0\" at each period's end.",
+   "pass": "The TU's figures (losing positive): E, the mean of |each counted rate − its period's mean|, within ±0.35; R = ω_V − ω_I ±2.00; D, the largest change between consecutive rates in a period, ±2.30; C = (ω36 − ω4)/32 ±0.10 s a day a °C; S = (ω36 + ω4)/2 − ω20 ±1.20; every period's mean ±3.50; N = 42E + 4.5R + 60C + 2.4S ≤ 30 (wempe_errorbudget.js passes it as adjusted). Out on C: move the four masses along the rim (\"8 Körner in 60 Teilung\", 6° a division) by trial: at the drawn place (30° from the cuts' line) the balance loses 2.34 s a day a °C, they null it near 20.5° from the cuts' line, a degree along the rim 0.235 s a day a °C (wempe_thermal.js). Out on S past ±1.20: the nickel steel isn't Guillaume's integral alloy (wempe_thermal.js)."
+  }
+ ],
+ "criteria": {
+  "mainspring": {
+   "s": [
+    0.9287,
+    1.2511
+   ],
+   "Mdown": 0.4572,
+   "Mfull": 0.8258,
+   "setup": 0.75,
+   "barrelTurns": 5.079,
+   "room": 1.1831,
+   "friction": {
+    "coils": [
+     0.0438,
+     0.0875
+    ],
+    "measured": [
+     0.1,
+     0.2
+    ]
+   }
+  },
+  "fusee": {
+   "s": [
+    0.9287,
+    1.2511
+   ],
+   "g262": {
+    "mean": 132.7375,
+    "full": 138.4,
+    "low": 126.5,
+    "band": [
+     123.2727,
+     166.0613
+    ]
+   },
+   "shape": [
+    -0.047,
+    0.0427
+   ],
+   "rms": 0.01074,
+   "sources": {
+    "s": 1.2141,
+    "t_mm": 0.3947,
+    "g262": 161.1545
+   }
+  },
+  "depths": {
+   "names": [
+    "fusee-centre",
+    "centre-intermediate",
+    "intermediate-seconds",
+    "seconds-escape"
+   ],
+   "holes": [
+    [
+     10,
+     1
+    ],
+    [
+     1,
+     38
+    ],
+    [
+     38,
+     35
+    ],
+    [
+     35,
+     26
+    ]
+   ],
+   "centres": [
+    22.6496,
+    18.1201,
+    12.63,
+    11.8499
+   ],
+   "tol": 0.0248,
+   "windows": [
+    [
+     -0.2396,
+     0.4356
+    ],
+    [
+     -0.1899,
+     0.3553
+    ],
+    [
+     -0.1447,
+     0.2807
+    ],
+    [
+     -0.0996,
+     0.2633
+    ]
+   ],
+   "shake": [
+    0.02,
+    0.035,
+    0.05,
+    0.05
+   ]
+  },
+  "endshake": {
+   "band": [
+    0.01,
+    0.08
+   ],
+   "cold": 0.0031,
+   "arbors": [
+    {
+     "id": "centre",
+     "name": "the centre arbor",
+     "drawn": 0.07,
+     "range": [
+      -0.02,
+      0.13
+     ],
+     "gap": [
+      [
+       "the pillar between shoulders",
+       19.6,
+       -0.01,
+       0.01,
+       "drawn",
+       "05 08 00-1"
+      ],
+      [
+       "less its seat in the top plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 09 01"
+      ],
+      [
+       "less its seat in the pillar plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 08 02-1"
+      ],
+      [
+       "WN-302 set under the pillar plate's face",
+       0.1,
+       0,
+       0.02,
+       "drawn",
+       "05 08 02 Schnitt A-B"
+      ]
+     ],
+     "arbor": [
+      [
+       "its shoulders apart",
+       19.03,
+       -0.03,
+       0.02,
+       "drawn",
+       "05 05 03-2 (19 +0.05, framed)"
+      ]
+     ]
+    },
+    {
+     "id": "intermediate",
+     "name": "the intermediate arbor",
+     "drawn": 0.06,
+     "range": [
+      -0.09,
+      0.15
+     ],
+     "gap": [
+      [
+       "the pillar between shoulders",
+       19.6,
+       -0.01,
+       0.01,
+       "drawn",
+       "05 08 00-1"
+      ],
+      [
+       "less its seat in the top plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 09 01"
+      ],
+      [
+       "less its seat in the pillar plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 08 02-1"
+      ],
+      [
+       "the top plate",
+       3.35,
+       -0.02,
+       0.02,
+       "est",
+       "05 09 01 (3.35; the pillar plate's struck ±0.02)"
+      ],
+      [
+       "WN-300 set into the bridge",
+       0.71,
+       -0.01,
+       0.01,
+       "drawn",
+       "05 08 04 (0.7 +0.02)"
+      ]
+     ],
+     "arbor": [
+      [
+       "its shoulders apart",
+       23,
+       -0.05,
+       0.05,
+       "drawn",
+       "05 05 02-2 (23.05 −0.1)"
+      ]
+     ]
+    },
+    {
+     "id": "seconds",
+     "name": "the seconds arbor",
+     "drawn": 0.05,
+     "range": [
+      -0.11,
+      0.15
+     ],
+     "gap": [
+      [
+       "the pillar between shoulders",
+       19.6,
+       -0.01,
+       0.01,
+       "drawn",
+       "05 08 00-1"
+      ],
+      [
+       "less its seat in the top plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 09 01"
+      ],
+      [
+       "less its seat in the pillar plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 08 02-1"
+      ],
+      [
+       "the top plate",
+       3.35,
+       -0.02,
+       0.02,
+       "est",
+       "05 09 01 (3.35; the pillar plate's struck ±0.02)"
+      ],
+      [
+       "the jewel's face in the bridge",
+       1.75,
+       -0.02,
+       0.02,
+       "est",
+       "05 08 04 (1.7, no tolerance)"
+      ]
+     ],
+     "arbor": [
+      [
+       "its shoulders apart",
+       24.05,
+       -0.05,
+       0.05,
+       "drawn",
+       "05 05 01-2 (24.1 −0.1)"
+      ]
+     ]
+    },
+    {
+     "id": "escape",
+     "name": "the escape arbor",
+     "drawn": 0.04,
+     "range": [
+      0,
+      0.06
+     ],
+     "gap": [
+      [
+       "its endstones apart",
+       22.82,
+       -0.02,
+       0.02,
+       "est",
+       "its settings (no figure)"
+      ]
+     ],
+     "arbor": [
+      [
+       "its pivots' ends apart",
+       22.78,
+       0,
+       0.02,
+       "drawn",
+       "05 04_7-1 (22.8 −0.02)"
+      ]
+     ]
+    },
+    {
+     "id": "fusee",
+     "name": "the fusee arbor",
+     "drawn": 0.05,
+     "range": [
+      -0.09,
+      0.08
+     ],
+     "gap": [
+      [
+       "the pillar between shoulders",
+       19.6,
+       -0.01,
+       0.01,
+       "drawn",
+       "05 08 00-1"
+      ],
+      [
+       "less its seat in the top plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 09 01"
+      ],
+      [
+       "less its seat in the pillar plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 08 02-1"
+      ],
+      [
+       "the fusee bush's end past the top plate's face",
+       0.75,
+       -0.02,
+       0.02,
+       "est",
+       "05 08 01-2"
+      ]
+     ],
+     "arbor": [
+      [
+       "its shoulders apart",
+       19.7,
+       0,
+       0.05,
+       "drawn",
+       "05 06 04-1 (19.7 +0.05); face a re-turned at assembly (05 06 00-2)"
+      ]
+     ]
+    },
+    {
+     "id": "barrel",
+     "name": "the barrel arbor",
+     "drawn": 0.06,
+     "range": [
+      -0.1,
+      0.12
+     ],
+     "gap": [
+      [
+       "the pillar between shoulders",
+       19.6,
+       -0.01,
+       0.01,
+       "drawn",
+       "05 08 00-1"
+      ],
+      [
+       "less its seat in the top plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 09 01"
+      ],
+      [
+       "less its seat in the pillar plate",
+       -0.3,
+       -0.03,
+       0,
+       "drawn",
+       "05 08 02-1"
+      ],
+      [
+       "its bearings past the inner faces",
+       3.29,
+       -0.02,
+       0.02,
+       "est",
+       "05 08 05, 05 07 02"
+      ]
+     ],
+     "arbor": [
+      [
+       "its shoulders apart",
+       22.23,
+       -0.03,
+       0.07,
+       "drawn",
+       "05 07 02 (22.2 +0.1)"
+      ]
+     ]
+    }
+   ]
+  },
+  "balance": {
+   "hz": 2,
+   "T": 0.4914,
+   "fast": 1506.2148,
+   "hNeed": 0.2817,
+   "weights": {
+    "m": 0.432,
+    "r": 18.5036,
+    "secTurn": 44.1765,
+    "reach": 0.3,
+    "turnsIn": 1.875,
+    "gain": 82.8309
+   }
+  },
+  "rundown": {
+   "model": 62,
+   "TF": 125,
+   "video": [
+    102,
+    129
+   ],
+   "rows": [
+    [
+     80,
+     44,
+     176.1042,
+     1.2352,
+     1.6299
+    ],
+    [
+     100,
+     52.5,
+     192.413,
+     1.0558,
+     1.3872
+    ],
+    [
+     125,
+     62,
+     207.2693,
+     0.9288,
+     1.2141
+    ],
+    [
+     160,
+     73.5,
+     225.9679,
+     0.8031,
+     1.0423
+    ],
+    [
+     200,
+     85,
+     243.2819,
+     0.7121,
+     0.9187
+    ]
+   ]
+  },
+  "detent": {
+   "f0": 79.9,
+   "band": [
+    56.7,
+    112.6
+   ],
+   "t": [
+    0.0556,
+    0.0882
+   ],
+   "gold": 620,
+   "rows": [
+    [
+     0.05,
+     48.3
+    ],
+    [
+     0.0556,
+     56.7
+    ],
+    [
+     0.06,
+     63.5
+    ],
+    [
+     0.07,
+     79.9
+    ],
+    [
+     0.08,
+     97.4
+    ],
+    [
+     0.0882,
+     112.6
+    ],
+    [
+     0.09,
+     116
+    ]
+   ]
+  },
+  "escapement": {
+   "model": {
+    "contact": -12.26,
+    "rel": -2.4,
+    "off": -0.52,
+    "poff": -17.6,
+    "lock": 9.86,
+    "letoff": 1.88,
+    "overall": 17.08,
+    "shake": 0.0463,
+    "dip": 0.3903
+   },
+   "depth": {
+    "aim": 0.175,
+    "window": [
+     0.1435,
+     0.188
+    ],
+    "tip": 0.19
+   },
+   "preload": {
+    "model": 0.63,
+    "window": [
+     0.63,
+     1.5831
+    ],
+    "aim": 0.87
+   }
+  },
+  "swing": {
+   "guard": [
+    193,
+    270
+   ],
+   "sources": [
+    225,
+    270
+   ],
+   "model": [
+    201.4827,
+    212.1377
+   ]
+  },
+  "maintaining": {
+   "s": 70.0346,
+   "min": 30
+  },
+  "trial": {
+   "periods": [
+    36,
+    20,
+    4,
+    20,
+    36
+   ],
+   "days": 7,
+   "counted": 5,
+   "limits": {
+    "E": 0.35,
+    "R": 2,
+    "D": 2.3,
+    "C": 0.1,
+    "S": 1.2,
+    "w": 3.5,
+    "N": 30
+   },
+   "masses": {
+    "drawn": -2.341,
+    "zero": 20.4511,
+    "perDeg": 0.2352
+   }
+  }
+ }
+}
