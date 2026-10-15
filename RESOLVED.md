@@ -573,6 +573,21 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's fusee, maintaining work and barrel parts differed from their works drawings** (15 October 2026, a survey against the
+  sheets). The set-up ratchet's backs were arcs r 12.5, nearly flat: 05 07_3's "12,5" is a diameter, each back an arc r 6.25 centred on
+  the "6,4" circle. The click wheel's faces leaned back 8°, where 05 06_16 undercuts them (each tip over its gap). The maintaining detent's
+  tip ended in an arc on r 12, 1.98 tall and leaning out; 05 05_12 draws it straight, 2.6 tall at 80°, leaning back toward the hole. The
+  maintaining ratchet was 1.02 thick inside its cup (05 06_12: 1.3; 1.02 only at the teeth) with its chamfer on the cup's inner edge (the
+  outer). The fusee wheel's recess mouth was a 0.3 chamfer (05 06_7: 60° from Ø 17). The cover plate had a recess round its hole (05 06_8's
+  0.4 is the bore's land under a 60° chamfer) and its screw 90° from the stop bar (05 06_4 C-D: 11°, on the side away from the bar). The
+  clicks' noses leaned out and their base line lay 1.68 under the hole (05 06_14: 85° leaning back, 1.52, the r 3 hollow's chord). The
+  Vorreiber's chamfer was on face a (05 06_6: the hub's side). The barrel arbor's hook was a flat-topped pin (05 07_8: a ramp to 0.5 at a
+  face, the face where the spring pulls). The chain's top hook was 3.95 long and 2.8 wide against its own figures (05 07_14: 5 and 3.5, the
+  nose turned back toward the chain), and the bottom hook's barb hooked forward and outward (its tip points back toward the rivet, into the
+  drum). The maintaining spring's swell was estimated (traced on 05 06_10). Keep: every outline in `wempe/js/fusee.js` from its sheet's
+  figures and traced lines, each comment naming them; the chain's first rivet where the top hook's seat reaches the pin (`HK0`), the hooks
+  laid in their end links' planes; the bottom hook's barb in the drum's wall is expected (`checks.py`), as the band's. `e709c07`
+
 - **The winding-pawl springs' feet were placed apart, and nothing showed the
   holes beside the pawls.** The beds, pockets and screw holes were read on
   KLUwI2UUCMQ 19:12 as angles from the pawls' studs as that frame shows them,
