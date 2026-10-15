@@ -59,6 +59,14 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's page moved its escapement as the layout draws it, not as it is solved.** Its 3D escapement was kinematic, timed from
+  05 04_1: the tooth on the impulse stone the moment it was let go (21° before the line of centres), the detent let fall as the gold
+  spring slipped off; makeEsc, solving the same parts in time, has the wheel chase the stone from rest and strike it 16° of swing later
+  (10° before the line), the detent flung off the discharge stone and riding the tooth it let go. Now `ESC.state` is makeEsc's state at
+  the live swing and drive (`WESC.adapt`), the layout's kept as `ESC.layout`; its contacts drawn 0.01 apart as the layout kept them,
+  the ride taken where the tooth is drawn (makeEsc's own, with the wheel drawn 0.01 behind, put the stone 6.6 µm into the tooth).
+  Keep: the page and the tools move the escapement through the one solved state; `tools/wempe_escapement.js` holds the drawn stone out
+  of the drawn tooth, and `checks.py`'s phases follow the solved events.
 - **makeEsc's Wempe detent fell off its stone too soon.** At the discharge stone's square acting corner the Wempe's square-ended gold
   spring leaves with the speed it came up with (the lift turns within a cell of the table); `depart` took the detent's speed by a central
   difference across the corner, −0.39 rad/s (falling) for +4.2, so its fall began 1.2° early. `tools/dynamics.js --model wempe` found it.

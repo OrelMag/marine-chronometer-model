@@ -2274,7 +2274,11 @@ function makeEsc(o={},base){
       {k:'horn',name:'horn clearance to the unlocking jewel (Op. 88)',v:f(r.hornClr,2)+' mm',want:'about 0.010 in (0.25 mm)',ok:Math.abs(r.hornClr-0.254)<0.08},
       {k:'jewels',name:'angle between the jewels',v:f(r.jewels)+'°',want:'about 90° (Fig. 90)',ok:Math.abs(r.jewels-90)<10}].filter(x=>fig[x.k]!==null).map(x=>fig[x.k]?{...x,...fig[x.k],ok:fig[x.k].ok?fig[x.k].ok(r):x.ok}:x);}
   const wn=(s,a)=>CL?wnK(s,a,CL.w):-Infinity;   /* the work an oscillation nets the balance at drive s and swing a (units of k): tools/physics.js's budget */
-  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,T,measure,checks,kB,MP,MW,th78,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA};
+  /* pushes(a, s): that work as the pushes on the balance, [θ, energy/k], at swing a and drive s: gain, the impulse's (the strike and the drive) on the active swing; loss,
+     the unlocking's on it (the locking stone's draw, the detent's springs and blows: DEP's, or the whole table's); ret, the gold or trip spring's on the return swing
+     (θ falling). Null where the tooth never lands. For a page drawing the balance's angle through the beat with them (the Wempe's, js/escapement.js) */
+  const pushes=(a,s=1)=>{const im=CL&&ok?impulse(s,a,CL.w):null;return im?{gain:im.I,loss:R.map(([m,d])=>[m,s*CL.w*d]).concat(c.DEP?detG(a):Dp.concat(Dk)),ret:Tp}:null;};
+  return{settings:c,ES,NT,P,EX,A,A0,AMIN,TRIP,run,ampAt,rateAt,atK,wn,pushes,ride,T,measure,checks,kB,MP,MW,th78,KD,KP,JR,span,PA,impulse,chase,cdr,iOff,iPass,thOff,rp,rRoll,rd,rT,rDR,wI,wD,rho,t0,aI,aIc,aD,S,Ft,Pt,Ps0,LEN,nH,nB,dirB,BL,tR,nR,tH,brO,D,pieces,fixed,adj,state,springPts,toothPts,r0,U,Jc,nF,rJ,lRel,thRel,thPass,LI,PS,TH0,DT,bite,recoil,toothBack,thE,phE,gE,depart,fallD,homeAt,EH,EHd,AH,freeStep,lockA};
 }
 if(typeof module!=='undefined')module.exports={makeEsc};
 
