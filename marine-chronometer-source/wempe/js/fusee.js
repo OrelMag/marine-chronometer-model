@@ -234,11 +234,17 @@ const WFUSEE=(()=>{
        cover plate, the collar Ø 7.04 -0.01 (7.9) pressed into the body's bore, the Vorreiber's seat 4.5 ±0.02 to 4.38 (1:70), 8.7, the cross hole 1.1 for its pin 17.7 -0.05
        from the far shoulder, the dial-side pivot Ø 2.8 ±0.02 to 2.7 (1:70, 6.5 +0.1) in the pillar plate, and the stub Ø 1.6 +0.1/+0.05 for the up-and-down pinion (05 02 00-5,
        the motion work's), its end 0.25 under the dial: the sheet's 60.6 overall counts the two lathe centres, cut off at the dial end (the coloured section ends the arbor under
-       the pinion), drawn as a short point at the square's end */
+       the pinion). The square's end is turned to a point (the sheet's other centre), its 28.3 to the tip: a cone cut through the square, the flats ending in curves (the
+       sheet draws them so). Scaled on 05 06_15 at 7.0 px/mm (its 60.6 over 424.6 px; the 28.3 gives 6.9): the tip at x 585, the flats' ends at 571 and the corners' at 568,
+       2.0 and 2.43 from it, which a cone of half-angle 38.7° fits to 0.2 (likely: a pixel is 0.14). Kirow 247's (4_Kirow_247_N.jpg) is pointed so (sure); the coloured
+       section's dome is pictorial */
     {const rS=yT+19.7;   /* = yD */
       tag(mesh(gF,turned([[0,yT-8],[2.195,yT-8],[2.25,yT],[3.05,yT],[3.05,yT+3.1],[3.52,yT+3.1],[3.52,yT+11.0],[2.25,yT+11.0],[2.19,rS],[1.4,rS],[1.3536,rS+6.5],[0.8375,rS+6.5],[0.83,9.85],[0.6,10.1],[0,10.1]],40),M.steel),'050604-1');
-      const sq=new THREE.CylinderGeometry(3.17/Math.SQRT2,2.977/Math.SQRT2,19.3,4,1);sq.translate(0,yT-8-9.65,0);tag(mesh(gF,sq,M.steel),'050604-1',1);
-      const pt=new THREE.CylinderGeometry(2.977/Math.SQRT2,0.3,1.0,4,1);pt.translate(0,yT-27.3-0.5,0);tag(mesh(gF,pt,M.steel),'050604-1',1);}
+      const tA=Math.tan(38.7*D2R),yP=yT-28.3,sB=3.17-(20.3-2.64)/100,cB=sB/Math.SQRT2,yB=yP+cB/tA+0.01;   /* the tip; the square 2.99 across where the cone leaves its corners, 2.64 from the tip (1:100 from 3.17 at the root) */
+      const sq=new THREE.CylinderGeometry(3.17/Math.SQRT2,cB,yT-8-yB,4,1);sq.translate(0,(yT-8+yB)/2,0);tag(mesh(gF,sq,M.steel),'050604-1',1);
+      const NP=64,dm=t=>{const r=cB/(Math.abs(Math.cos(t))+Math.abs(Math.sin(t)));return[r*Math.cos(t),r*Math.sin(t)];},cl=[];   /* the square's outline, its corners on x and z as the CylinderGeometry's */
+      for(let i=0;i<NP;i++)cl.push({loop:[[0,0],dm(i/NP*TAU),dm((i+1)/NP*TAU)],y0:p=>yP+Math.hypot(p[0],p[1])/tA,y1:yB});
+      tag(mesh(gF,solidGeo(cl),M.steel),'050604-1',1);}
     /* the click wheel 05 06 04-3 (Schneckensperrrad, 6.8.47; Ms Blech 2, Ms 58 federhart): 35 teeth, tips Ø 16.0 -0.05, roots Ø 14.5 -0.2 (drawn 15.99, 14.4), the faces undercut
        8°, driving the maintaining clicks forward; bore 7.5 +0.05; 2 -0.1 thick (drawn 1.95); its three holes Ø 2, opened 1:8 toward its free face for the screws' heads, on Ø
        11.5 ±0.05 at 120°; on the large end's recess floor, screwed into the body's M2 holes */
