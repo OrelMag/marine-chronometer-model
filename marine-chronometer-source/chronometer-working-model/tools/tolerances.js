@@ -7,13 +7,13 @@
 // running swing, 1⅜-1½ turns (Sec. IX: 247.5-270°). The rate is the escapement's own change at that swing, s a day, which the timing weights take up when the
 // chronometer is rated; it is given so a maker sees how far off the first rate will be. Under a second.
 const fs=require('fs'),path=require('path'),rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8');
-const core=rd('../js/core.js'),phys=rd('physics.js'),esc=rd('../../shared/escapement.js');
+const core=rd('../js/core.js'),phys=rd('physics.js');
 const num=(re,s,what)=>{const m=re.exec(s);if(!m)throw Error('not found: '+what);return m.slice(1).map(Number);};
 const [t0]=num(/MSPRING=\{t:([\d.]+)/,core,'the mainspring\'s thickness'),[L0]=num(/MSPRING=\{[^}]*len:([\d.]+)/,core,'its length'),[b0]=num(/const b=([\d.]+),t=MS\.t/,phys,'its width (physics.js)');
 const [IN,rUp,rDn]=num(/const IN=([\d.]+),ratio=([\d.]+)\/([\d.]+)/,phys,'the barrel\'s turns and the fusee\'s radii (physics.js)'),ratio=rUp/rDn;
-const ES=13.16/2,[sL,sn0,sn1]=num(/const SPL=([\d.]+),SPN=\[(-?[\d.]+),(-?[\d.]+)\]/,esc,'the detent spring (SPL, SPN)'),[tsT]=num(/tsT:([\d.]+)/,esc,'the trip spring\'s thickness');
-const td0=Math.abs(sn1-sn0)*ES,ld=sL*ES;   /* the detent spring as drawn: thickness in the plane it bends in, length from the foot to the point of flexure (mm) */
 const {build}=require('./escapement.js'),ESC=build().ESC,D=180/Math.PI,LO=247.5,HI=270;
+const ES=ESC.ES,{SPL:sL,SN0:sn0,SN1:sn1,tsT}=ESC.settings;   /* the detent spring's length and faces, the trip spring's thickness: makeEsc's settings (read off its source until 15 October 2026) */
+const td0=Math.abs(sn1-sn0)*ES,ld=sL*ES;   /* the detent spring as drawn: thickness in the plane it bends in, length from the foot to the point of flexure (mm) */
 const at=(s,kd,kp)=>{const r=ESC.atK(s,kd,kp);return{A:r.A*D,rate:r.rate};};
 /* the value of x at which f(x) crosses y, f monotone between a and b */
 const cross=(f,y,a,b)=>{let fa=f(a)-y;for(let i=0;i<80;i++){const m=(a+b)/2,fm=f(m)-y;if((fm>0)===(fa>0)){a=m;fa=fm;}else b=m;}return(a+b)/2;};
