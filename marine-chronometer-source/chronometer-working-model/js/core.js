@@ -371,40 +371,29 @@ function extrude(s,o){const g=new THREE.ExtrudeGeometry(s,o),U=THREE.ShapeUtils,
   if(f)g.computeVertexNormals();return g;}
 /* closeGeo(g): g made a closed solid: each loop of open edges (a tube's ends, a part-turned lathe's or torus's ends, all flat) filled with a flat cap, wound to
    face out. Returns an indexed copy with g's type and parameters (or g, if already closed); its userData.capOf gives, for each cap vertex, the vertex of g it copies (for reclose) */
-/* blind holes cut into one flat face of a closed solid whose faces are level (polyGeo, discGeo: local y the thickness): face 'top' (its highest y) or 'bottom';
-   holes [[x, z, r]] in the geometry's own x, z, each depth into the metal. The face's triangles that meet a hole are taken out and that patch triangulated again
-   round the new circles, and each hole gets its wall and a flat floor, so the solid stays closed (an extrusion's holes all go through: a tapped hole that stops
-   in the metal, a stud's or a steady pin's, can't be cut by it) */
-/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} holes @param {number} depth @returns {any} */
-function blindHoles(g0,face,holes,depth){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count;
+/* blind holes: holes polyGeo (or discGeo) has cut through a closed solid whose faces are level (local y its thickness), closed at the far end so each stops depth
+   into the metal from face ('top', its highest y, or 'bottom'): only each hole's own triangles change (within its radius + 0.35 in plan: its wall and the
+   bevel's rings round it, bev as polyGeo's), the far bevel ring dropped, the wall cut short at the floor, the far face's opening and the floor each filled
+   with a fan. An extrusion's holes all go through: a tapped hole that stops in the metal (a stud's, a screw's from one side) can't be cut by it */
+/** @param {any} g0 @param {'top'|'bottom'} face @param {number[][]} holes @param {number} depth @param {number} [bev] @returns {any} */
+function blindHoles(g0,face,holes,depth,bev=0){const g=g0.index?g0.toNonIndexed():g0,P=g.attributes.position,N=g.attributes.normal,U=g.attributes.uv,n=P.count;
   let y0=1e9,y1=-1e9;for(let i=0;i<n;i++){const y=P.getY(i);if(y<y0)y0=y;if(y>y1)y1=y;}
-  const yf=face==='top'?y1:y0,s=face==='top'?-1:1,yb=yf+s*depth,K=(/** @type {number} */x,/** @type {number} */z)=>x.toFixed(5)+','+z.toFixed(5);
-  /** @type {number[]} */const pos=[],nor=[],uv=[];/** @type {Map<string,number>} */const E=new Map();/** @type {Map<string,number[]>} */const at=new Map();
-  /* only the face's triangles that meet a hole are taken out (the rest stay as the extrusion made them: where a bevel's inset outline crosses itself at a sharp
-     corner, a fresh triangulation of the whole face goes wrong) */
-  const meets=(/** @type {number[][]} */q)=>holes.some(([x,z,r])=>{const R=r+0.05;let inside=true,sg=0;for(let k=0;k<3;k++){const a=q[k],b=q[(k+1)%3],ex=b[0]-a[0],ez=b[1]-a[1],L2=ex*ex+ez*ez,
-      f=Math.max(0,Math.min(1,((x-a[0])*ex+(z-a[1])*ez)/L2));if(Math.hypot(a[0]+f*ex-x,a[1]+f*ez-z)<R)return true;const cr=Math.sign(ex*(z-a[1])-ez*(x-a[0]));if(sg&&cr!==sg)inside=false;sg=sg||cr;}return inside;});
-  for(let t=0;t<n;t+=3){let cap=true;for(let k=0;k<3;k++)if(Math.abs(P.getY(t+k)-yf)>1e-5)cap=false;
-    if(cap&&!meets([0,1,2].map(k=>[P.getX(t+k),P.getZ(t+k)])))cap=false;
-    if(!cap){for(let k=0;k<3;k++){pos.push(P.getX(t+k),P.getY(t+k),P.getZ(t+k));nor.push(N.getX(t+k),N.getY(t+k),N.getZ(t+k));uv.push(U?U.getX(t+k):0,U?U.getY(t+k):0);}continue;}
-    for(let k=0;k<3;k++){const a=K(P.getX(t+k),P.getZ(t+k)),b=K(P.getX(t+(k+1)%3),P.getZ(t+(k+1)%3));at.set(a,[P.getX(t+k),P.getZ(t+k)]);const e=a<b?a+'|'+b:b+'|'+a;E.set(e,(E.get(e)||0)+1);}}
-  /** @type {Map<string,string[]>} */const adj=new Map();for(const[e,c]of E)if(c===1){const[a,b]=e.split('|');(adj.get(a)||adj.set(a,[]).get(a)||[]).push(b);(adj.get(b)||adj.set(b,[]).get(b)||[]).push(a);}
-  /** @type {any[][]} */const loops=[];const seen=new Set();
-  for(const st of adj.keys()){if(seen.has(st))continue;/** @type {any[]} */const L=[];let c=st,pr='';while(c&&!seen.has(c)){seen.add(c);const q=at.get(c)||[0,0];L.push(new THREE.Vector2(q[0],q[1]));const nx=(adj.get(c)||[]).find(x=>x!==pr&&!seen.has(x));pr=c;c=nx||'';}if(L.length>2)loops.push(L);}
-  const area=(/** @type {any[]} */L)=>Math.abs(THREE.ShapeUtils.area(L));loops.sort((a,b)=>area(b)-area(a));   /* the patch's outline, then any hole the patch already held */
-  const SEG=32,circ=holes.map(([x,z,r])=>[...Array(SEG)].map((_,i)=>new THREE.Vector2(x+r*Math.cos(i/SEG*TAU),z+r*Math.sin(i/SEG*TAU))));
-  const outer=loops[0],inner=[...loops.slice(1),...circ],tris=THREE.ShapeUtils.triangulateShape(outer,inner),V=[...outer,...inner.flat()],fy=-s;
-  /* earcut drops points lying in line along a loop, which the walls beside it still use: each is put back by splitting the triangle whose edge it lies on */
-  const used=new Set(tris.flat());for(let u=0;u<V.length;u++){if(used.has(u))continue;const q=V[u];
-    for(let t=0;t<tris.length;t++){const T=tris[t];let hit=-1;for(let k=0;k<3;k++){const a=V[T[k]],b=V[T[(k+1)%3]],ab=b.clone().sub(a),aq=q.clone().sub(a),L2=ab.lengthSq(),f=aq.dot(ab)/L2;
-        if(f>1e-9&&f<1-1e-9&&Math.abs(ab.x*aq.y-ab.y*aq.x)<1e-3*Math.sqrt(L2)){hit=k;break;}   /* within 0.001 mm of it (the positions are float32) */}
-      if(hit<0)continue;const a=T[hit],b=T[(hit+1)%3],c=T[(hit+2)%3];tris.splice(t,1,[a,u,c],[u,b,c]);break;}}
+  const yf=face==='top'?y1:y0,ye=face==='top'?y0:y1,s=face==='top'?-1:1,yb=yf+s*depth,e=1e-5;
+  /** @type {number[]} */const pos=[],nor=[],uv=[];const own=holes.map(()=>/** @type {number[]} */([]));
+  for(let t=0;t<n;t+=3){let h=-1;holes.forEach(([x,z,r],k)=>{if(h<0&&[0,1,2].every(q=>Math.hypot(P.getX(t+q)-x,P.getZ(t+q)-z)<r+0.35))h=k;});
+    if(h>=0){own[h].push(t);continue;}for(let q=0;q<3;q++){pos.push(P.getX(t+q),P.getY(t+q),P.getZ(t+q));nor.push(N.getX(t+q),N.getY(t+q),N.getZ(t+q));uv.push(U?U.getX(t+q):0,U?U.getY(t+q):0);}}
   /* each triangle wound so its normal points out of the metal (want: the outward normal) */
   const tri=(/** @type {number[][]} */q,/** @type {number[]} */want)=>{const[a,b,c]=q,u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]],m=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
     const o=m[0]*want[0]+m[1]*want[1]+m[2]*want[2]<0?[a,c,b]:[a,b,c];for(const p of o){pos.push(...p);nor.push(...want);uv.push(p[0],-p[2]);}};   /* the new faces mapped as the extrusion maps its caps (the shape's x, -z) */
-  for(const[a,b,c]of tris)tri([a,b,c].map(i=>[V[i].x,yf,V[i].y]),[0,fy,0]);
-  holes.forEach(([x,z],h)=>{const C=circ[h];for(let i=0;i<SEG;i++){const A=C[i],B=C[(i+1)%SEG],mx=(A.x+B.x)/2-x,mz=(A.y+B.y)/2-z,l=Math.hypot(mx,mz),w=[-mx/l,0,-mz/l];   /* the wall faces the hole's axis */
-    tri([[A.x,yf,A.y],[B.x,yf,B.y],[B.x,yb,B.y]],w);tri([[A.x,yf,A.y],[B.x,yb,B.y],[A.x,yb,A.y]],w);tri([[x,yb,z],[A.x,yb,A.y],[B.x,yb,B.y]],[0,fy,0]);}});   /* and its floor faces the opening */
+  const fan=(/** @type {number[][]} */R,/** @type {number} */x,/** @type {number} */y,/** @type {number} */z,/** @type {number[]} */want)=>{const S=[...new Map(R.map(p=>[p[0].toFixed(5)+','+p[2].toFixed(5),p])).values()].sort((a,b)=>Math.atan2(a[2]-z,a[0]-x)-Math.atan2(b[2]-z,b[0]-x));
+    for(let i=0;i<S.length;i++)tri([[x,y,z],S[i],S[(i+1)%S.length]],want);};
+  holes.forEach(([x,z],k)=>{const far=/** @type {number[][]} */([]),floor=/** @type {number[][]} */([]);
+    for(const t of own[k]){const V=[0,1,2].map(q=>[P.getX(t+q),P.getY(t+q),P.getZ(t+q)]),Q=[0,1,2].map(q=>[N.getX(t+q),N.getY(t+q),N.getZ(t+q)]);
+      for(const v of V)if(Math.abs(v[1]-ye)<e)far.push(v);   /* the far face's opening: its rim */
+      if(V.every(v=>Math.abs(v[1]-ye)<=bev+e))continue;   /* the far bevel ring: dropped */
+      const W=V.map(v=>Math.abs(v[1]-ye)<=bev+e?(floor.push([v[0],yb,v[2]]),[v[0],yb,v[2]]):v);   /* the wall, cut short at the floor */
+      for(let q=0;q<3;q++){pos.push(...W[q]);nor.push(...Q[q]);uv.push(U?U.getX(t+q):0,U?U.getY(t+q):0);}}
+    fan(far,x,ye,z,[0,-s,0].map(v=>-v));fan(floor,x,yb,z,[0,-s,0]);});   /* the far face closed, and the floor facing the opening */
   const o=new THREE.BufferGeometry();o.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));o.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
   o.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));if(g0!==g)g.dispose();g0.dispose();return o;}
 function closeGeo(g){const p=g.attributes.position,ix=g.index?g.index.array:null,n=ix?ix.length:p.count,id=new Map(),V=[],P=[],S=[];

@@ -26,7 +26,16 @@ EXPECTED = [
     ('sspring', '42016', None, None, "the second hole in the sustaining spring's fixed end, the pin in the first (video 27:26; which one has the pin estimated)"),
     ('trainBridge', '42062', [2.08, -23.76, 30.56], 'navy', "the manual's locking arm's stop pin hole: the arm is off with the Navy's Y-arm fitted"),
     ('trainBridge', '42062', [3.74, -23.76, 30.16], 'navy', "the manual's locking arm's screw hole: the arm is off with the Navy's Y-arm fitted"),
-    ('lockArm', '', [-6.69, -30.65, -19.16], 'navy', "the Navy's second dust seal's chamber, closed underneath, the lever through its slot above (illustrative: its inside not seen)"),
+    ('lockArm', '', [-6.96, -30.65, -19.69], 'navy', "the Navy's second dust seal's chamber, closed underneath, the lever through its slot above (illustrative: its inside not seen)"),
+    ('barrelBridge', '42061', [-13.96, -27.16, -23.11], 'arm', "the Navy seal's screw hole (13:04.4): the movement drawn is fitted for the Navy's Y-arm, and the manual's arm leaves it empty"),
+    ('barrelBridge', '42061', [0.05, -27.16, -16.27], 'arm', "the Navy seal's other screw hole (13:04.4), empty with the manual's arm fitted"),
+    ('barrelBridge', '42061', [-15.3, -27.16, -16.75], None, "a hole just beyond the setup cover's end, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
+    ('barrelBridge', '42061', [-27.72, -27.16, 6.19], None, "a hole just beyond the setup cover's other end (11:48 shows one past its end), through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
+    ('barrelBridge', '42061', [-30.24, -27.16, -2.15], None, "a countersunk hole west of the barrel arbor, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
+    ('barrelBridge', '42061', [30.07, -27.16, 1.61], None, "a hole beside the opening at 3 o'clock, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
+    ('barrelBridge', '42061', [36.29, -27.16, 2.47], None, "a second hole beside the opening at 3 o'clock, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
+    ('barrelBridge', '42061', [-18.55, -27.16, 19.9], None, "a hole in the far horn, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
+    ('bal', '42190', None, None, "the hairspring collet's relief hole at the end of its slit (the slit lets the collet grip the staff); the balance turns, so anywhere"),
 ]
 def matches(h, e, tol=0.4):
     p, hn, c, st, why = e
@@ -43,7 +52,10 @@ async def main():
         r = []
         for st in STOPS:
             await pg.evaluate(f"document.querySelector('#stopV button[data-v=\"{st}\"]').click()"); await pg.wait_for_timeout(300)
-            for h in await pg.evaluate(open(HERE / 'holecheck.js', encoding='utf-8').read(), {'rmin': RMIN, 'rmax': RMAX}): h['stop'] = st; r.append(h)
+            res = await pg.evaluate(open(HERE / 'holecheck.js', encoding='utf-8').read(), {'rmin': RMIN, 'rmax': RMAX})
+            for h in res['holes']: h['stop'] = st; r.append(h)
+            if '-v' in sys.argv:
+                for k in res['skipped']: print(f"--  {st:4s} {k['part']:14s} {k['hn']:12s} r {k['r']:.3f} @ {k['c']} depth {k['depth']}: skipped, {k['why']}")
         await b.close()
     if errs: print('page errors:', errs)
     if '--json' in sys.argv: pathlib.Path(sys.argv[sys.argv.index('--json') + 1]).write_text(json.dumps(r, indent=1), encoding='utf-8', newline='\n')

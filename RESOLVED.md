@@ -2659,4 +2659,9 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-None at the moment.
+- **The barrel bridge lacked holes the real one has (Plates, bridges, screws and arbors).** Surveyed on KLUwI2UUCMQ 13:04.4 (its underside, 4K) with
+  `tools/holemap.py` (the frame warped onto the bridge's plan by a homography on known holes, the model's holes drawn over it): the Navy seal's two screw
+  holes (its screws had stood on the bridge's face), the setup pawl spring's steady pins through the bridge (they had stopped on its top), the setup cover's
+  screws' tapped holes made blind (nothing under them), and six through holes whose use no source gives. `blindHoles()` now closes a through hole's far end
+  rather than re-triangulating a face, and `holecheck` finds holes from circle fits as well as closed loops, its faces grouped by plane. Keep: a part's holes
+  compared with a face-on frame of it through `holemap.py`; `holecheck` passes.

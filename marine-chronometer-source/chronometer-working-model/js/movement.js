@@ -474,6 +474,14 @@ function buildMovement(M){
      underside up, nearly face-on), its holes put on the plan by the similarity through the two bushings' centres (the winding stop lands at -156 deg, its measured -152): 7.97
      at 26.8 and 7.67 at -154.9 (+-0.3 mm, +-3 deg); 12:39.0 has them either side of the bushing, nearly level, as that puts them. 7.9 at 145.5 and -37.9 deg, traced on the
      top-view photograph through PT, until 15 October 2026, about 62 deg round from the real holes */
+  /* holes through the barrel bridge on KLUwI2UUCMQ 13:04.4 (4K, its underside face-on, put on the plan by a homography on the two bushings, the fusee seal's two holes,
+     the pillar screw's hole and the opening over the train bridge's third screw: 0.1-0.6 mm at those; +-1 mm further out, tools/holemap.py), beside those the model had:
+     the Navy seal's two screw holes, 17.2 apart through its centre (-6.96, -19.69), at 26.0 and -154.0 deg, the fusee seal's angles (the two seals are one part, fitted
+     alike); and six whose use no source gives (bbX: centre, r of the dark disc +-0.15): two just beyond the setup cover's ends (12.8-13.3 from the barrel arbor, nearly
+     opposite; 11:48 shows one past the cover's end, the cover's own screws inside it, their tapped holes blind), one countersunk west of the barrel arbor, two by the
+     opening at 3 o'clock, one in the far horn. Through, as all show on the underside */
+  S.navySeal=(([a,b])=>{const m=[(a[0]+b[0])/2,(a[1]+b[1])/2],d=unit(sub(b,a));return[add(m,d,-7.8),add(m,d,7.8)];})([[-14.69,-23.47],[0.78,-15.91]]);   /* read 17.2 apart: drawn 7.8 out, the fusee seal's, the same part (+-1 mm out here) */
+  S.bbX=[[-15.30,-16.75,0.8,1],[-27.72,6.19,0.7,1],[-30.24,-2.15,0.55,1],[30.07,1.61,0.85,1],[36.29,2.47,0.9,1],[-18.55,19.90,0.85,1]];   /* the 1: their size at the faces (polyGeo) */
   S.seal=[26.8,-154.9].map(a=>[L.Fu[0]+7.8*Math.cos(a*D2R),L.Fu[1]+7.8*Math.sin(a*D2R)]);
   /* ---------- pillar plate 87.57 x 3.86 mm, mounting ring, lower train bridge ---------- */
   const pp=part('pillar',0);
@@ -624,7 +632,7 @@ function buildMovement(M){
        flange's bite round the setup cover, and the screws' threads (not drawn: the bridge is the manual's, untapped there). R.navyLock(a): a 0 free, 1 locked. In the
        Exploded view it lifts 22 mm past the locking arm's part, to -84: above the barrel bridge it stands on (-72) and the balance it reaches over (-80), and under the
        hairspring and the cock (-88, -96) */
-    const nv=loose(new THREE.Group(),19);nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.69,-19.16],AY=-31.75,AT=0.45,Y0=-30.65,Y1=-31.85,HB=-33.1,HT=-38.06,PE=BAL_Y+1.2-BAL_RH-0.5;   /* the lever's top, thickness; the slot's bottom and top; the plunger head's foot and top (free); the pins' ends, 0.5 over the rim's top (from BAL_RH: set for a 4.3 rim, they stopped 0.8 over the 3.5 one, locked); Exploded, it rises 19 past its part: between the balance under its pins and a piece of the hairspring's part 3.1 over it, which both rise 80 (exploded.py: 18 to 20.6) */
+    const nv=loose(new THREE.Group(),19);nv.visible=false;ap.add(nv);R.navy=nv;const NP=[-6.96,-19.69],AY=-31.75,AT=0.45,Y0=-30.65,Y1=-31.85,HB=-33.1,HT=-38.06,PE=BAL_Y+1.2-BAL_RH-0.5;   /* the lever's top, thickness; the slot's bottom and top; the plunger head's foot and top (free); the pins' ends, 0.5 over the rim's top (from BAL_RH: set for a 4.3 rim, they stopped 0.8 over the 3.5 one, locked); Exploded, it rises 19 past its part: between the balance under its pins and a piece of the hairspring's part 3.1 over it, which both rise 80 (exploded.py: 18 to 20.6) */
     const lat=(o,p,m,c=NP,n=56)=>mesh(o,new THREE.LatheGeometry(p.map(([r,y])=>V2(r,y)).reverse(),n),m,c[0],0,c[1]),circ=(r,n=96)=>[...Array(n)].map((_,i)=>[r*Math.cos(i/n*TAU),r*Math.sin(i/n*TAU)]);
     /* the pivot: both photographs put it 2.5 mm from the barrel bridge's pillar screw, a large slotted head like it (2E11795), so the fitting is taken to replace that
        screw with a shouldered stud (hidden screw R.navyBB, below); the lever's end bent to it under the cap, as Delaney's photograph shows it bent there */
@@ -642,9 +650,9 @@ function buildMovement(M){
       mesh(nv,polyGeo(P,Y0-Y1),M.plateSolid,NP[0],Y1,NP[1]);}
     lat(nv,[[1.3,Y1],[5.9,Y1],[5.9,-32.56],[1.3,-32.56],[1.3,Y1]],M.plateSolid);   /* the body's top, bored for the plunger */
     for(let k=0;k<3;k++){const a=-32.56-1.733*k,b=a-1.733;lat(nv,[[3.4,a],[6.2,a],[6.45,a-0.22],[6.45,b+0.22],[6.2,b],[3.4,b],[3.4,a]],M.packing);}
-    const NS=[37.8,-158.5].map(d=>[NP[0]+7.9*Math.cos(d*D2R),NP[1]+7.9*Math.sin(d*D2R)]);   /* the flange screws: one where the photograph shows it, one about opposite (estimated) */
+    const NS=S.navySeal;   /* the flange screws in their holes, read on 13:04.4 (S.navySeal), the seal's centre their midpoint (NP: -6.69, -19.16 off the photograph until 15 October 2026, the screws at 37.8 and -158.5 deg, 7.9 out, one estimated) */
     /* the setup cover's end (below, out to 13.15 from the barrel arbor) and its foot (13.65) reach over where the flange would: bitten round them, about the arbor, 0.3 clear */
-    mesh(nv,polyGeo(subtractCircle(circ(8.6),sub(L.Ba,NP),13.95),1.0,[[0,0,6.7],...NS.map(q=>hC(q[0]-NP[0],q[1]-NP[1],1.0))]),M.plateSolid,NP[0],-28.18,NP[1]);for(const q of NS)screw(nv,...q,-28.18,1.0,0.5,1.0);
+    mesh(nv,polyGeo(subtractCircle(circ(8.6),sub(L.Ba,NP),13.95),1.0,[[0,0,6.7],...NS.map(q=>hC(q[0]-NP[0],q[1]-NP[1],1.0))]),M.plateSolid,NP[0],-28.18,NP[1]);for(const q of NS)screw(nv,...q,-28.18,1.0,0.5,1.0+2.0);   /* through the flange and 2.0 into the bridge's tapped hole (1.0, on the bridge's face, until 15 October 2026) */
     /* the stud: threaded through the bridge into the pillar as the screw it replaces (3.4 + 3.0), a shoulder r 2.0 up to the lever, and a bore for the screw over it,
        whose head (the pillar screw's) holds the lever's root on the shoulder */
     lat(nv,[[0,BB_T+6.4],[sR(PSR),BB_T+6.4],[sR(PSR),BB_T],[2.0,BB_T],[2.0,AY+AT+0.05],[1.0,AY+AT+0.05],[1.0,AY+AT+0.65],[0,AY+AT+0.65]],M.steel,NPV,40);screw(nv,...NPV,AY-0.05,PSR,1.6,AT+0.7,0.98);   /* 0.05 clear of the lever above and below: locked, its root's eye tilts 0.03 */
@@ -719,7 +727,7 @@ function buildMovement(M){
      the staff, on plain train bridge in the video: not used. Until 12 October 2026 the two circles alone, the horn's inner corner at (19.5, 9.87) */
   const BB_CUT=[6.84,9.53,16.85];
   const BBpoly=clipUnder(subtractCircle(subtractCircle(subtractCircle(BBo,PTi(L.B),cutR/PHOTO_K),[5.24,6.33],17.6).map(PTr),[BB_CUT[0],BB_CUT[1]],BB_CUT[2]),ckE,10);   /* laid out in the photographs' frame, then into the movement's (PTr) and cut there */   /* the horn on the cock's side ends against the cock's straight edge (C Spinner 6:29, 6:47, 23:30) */
-  const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.cover.map(q=>hT(...q,0.9)),hT(...S.click,0.6)];   /* and the winding stop's, added below once its place is known */
+  const BBH=[[...L.Fu,BU_O,1],[...L.Ba,BU_O,1],...S.bb.map(q=>hC(...q,PSR)),...[S.tb[0],S.tb[2]].map(q=>[...q,3.15]),...S.seal.map(q=>hT(...q,0.9)),...S.navySeal.map(q=>hT(...q,1.0)),...S.bbX,hT(...S.click,0.6)];   /* and the winding stop's, the setup pawl spring's pins' and the cover's screws' (blind), added below once their places are known */
   R.barrelBridge=mesh(bb,polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),M.plate,0,BB_T,0);hn(bb,'42061');
   hn(bushR(bb,...L.Fu,BB_T,TB_T,3.4,1.85),'42164.fu');hn(bushR(bb,...L.Ba,BB_T,TB_T,BU_O,BU_I),'42164.bu');   /* fusee and barrel upper bushings (42164; BU_O, BU_I: the fusee's literal, strength.js reads it) */
   /* barrel bridge pillar screw (42055) into the barrel pillar; two barrel bridge screws into the train bridge: one beside the third train pillar's screw (where the third pillar stood before it went under that screw), one in the far horn
@@ -1355,7 +1363,7 @@ function buildMovement(M){
     hn(cylBetween(bb,WSR,TB_T,TB_T+WL-WG,M.steel,...WS,40),'42099').userData.wstop=true;hn(cylBetween(bb,0.8,TB_T-2.0,TB_T,M.steel,...WS),'42099',{sub:1});   /* the stud, and its thread 2 mm up into the bridge */
     const gr=new THREE.Group();gr.position.set(WS[0],TB_T+WL-WG,WS[1]);gr.rotation.y=-ga;bb.add(gr);   /* its end: four lands between three grooves, seven bands of equal width */
     const w=2*WSR/7;for(let i=0;i<4;i++){const z0=-WSR+2*i*w,z1=z0+w,cuts=[];if(i>0)cuts.push([z0,0,1]);if(i<3)cuts.push([z1,0,-1]);hn(mesh(gr,polyGeo(discClip(WSR,cuts,64),WG),M.steel),'42099',{sub:1});}
-    R.barrelBridge.geometry.dispose();R.barrelBridge.geometry=blindHoles(polyGeo(BBpoly,TB_T-BB_T,BBH,0.25),'top',[hT(...WS,1.6).slice(0,3)],2.0); }   /* its tapped hole blind,
+    R.bbWS=hT(...WS,1.6); }   /* its tapped hole blind,
      2.0 up from the bridge's underside (the thread's length) in its 3.4: the bridge's top is plain there (KLUwI2UUCMQ 12:39.0). Through the bridge until 15 October 2026 */
   /* setup ratchet, click and cover plate on the barrel arbor above the barrel bridge (manual Figs. 24, 80), traced on the top-view photograph (fitted to
      its two screws and the arbor): a waisted plate across the arbor, its two ends arcs about 13 mm out along 107 deg / 287 deg, and both long sides
@@ -1414,7 +1422,11 @@ function buildMovement(M){
       const so=rmC(ph.th+0.01)>rmC(ph.th)?1:-1;let lift=0;while(lift<0.6&&rmC(ph.th+so*lift)<pr.ro+0.3)lift+=0.005;
       R.su={srw,clk,asq,ba,spr:cspr,pts,pr,q,c:[...L.Ba],base:srw.rotation.y,seat:ph.th,th0:cth0,so,lift,ld:0,cl:0,th:ph.th,
         sprGeo:th=>{const bk=pawlBack(pts,1.1,Pv,th,L.Ba),E=[bk.p[0]+bk.n[0]*0.13,bk.p[1]+bk.n[1]*0.13];return stripGeo([...arcP,E],0.3,0.85);}}; }
-    for(const q of[P2(SR+0.42,a0+3),P2(SR-0.42,a0+12)])hn(cylBetween(rt,0.25,-27.71,-27.16,M.steel,...q),'42028',{sub:1});}
+    const SPP=[P2(SR+0.42,a0+3),P2(SR-0.42,a0+12)];for(const q of SPP)hn(cylBetween(rt,0.25,-27.71,TB_T,M.steel,...q),'42028',{sub:1});   /* its steady pins, through the bridge to its underside
+       (pushed out from there, Op. 32; KLUwI2UUCMQ 13:04.4: two holes within 1.5 mm of here, a pin's end in one); stopping on the bridge's top until 15 October 2026 */
+    /* the barrel bridge's last build: its holes through, the pins' holes, the winding stop's tapped hole blind from the underside (2.0, its thread) and the cover's
+       screws' blind from the top (2.2, their threads: nothing under them on 13:04.4) */
+    R.barrelBridge.geometry.dispose();const CVH=S.cover.map(q=>hT(...q,0.9));R.barrelBridge.geometry=blindHoles(blindHoles(polyGeo(BBpoly,TB_T-BB_T,[...BBH,...SPP.map(q=>[...q,0.25,1]),R.bbWS,...CVH],0.25),'top',[R.bbWS],2.0,0.25),'bottom',CVH,2.2,0.25);}
   const nBefore=rt.children.length;
   { /* outline symmetric about its long axis (106.9 deg / 286.9 deg) and across it, as both photographs show, about its own centre Q, 0.53 mm off the arbor toward the
        centre side: two end arcs round Q at r 12.69, 75.6 deg wide, and two like concave sides to r 5.58 from Q (so 5.05 from the arbor on the rim side, 6.11 on the
