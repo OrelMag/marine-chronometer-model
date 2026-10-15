@@ -178,8 +178,8 @@ const WFUSEE=(()=>{
     const SB={d:5.0,lo:-11.52,hi:10.98,tr:3.6,lf:-10.58,ru:8.555,rr:2.47,rt:0.39,sp:-6.0,us:8.0,ub:3.4,tt:1.05};
     /* the slot is 1.5 deep along the bar's lower part and "1,1+0,05 tief" toward its upper end (02-2's two depths, inside its lines at either end), from where 02-2's hidden arc
        r 9.45 crosses it, u 8.0 (us): there the rib between the top turn and the next isn't cut, and the bar's upper end, standing out over the groove, passes under it, clear
-       of the chain on the turn below. So the bar is thinner toward its upper end: 1.05 (tt; the coloured section draws its end standing out about two thirds as thick as its
-       middle), from u 3.4 (ub, estimated: slid its whole 3.6, its full thickness stays inside the top land's floor, r 9.3, at its far side, so off the
+       of the chain on the turn below. So the bar is thinner toward its upper end: 1.05 (tt; the coloured section draws its end standing out 9.5 px thick against its middle's
+       13.5, 0.70 (±0.07), flush on the cover plate's side; 1.05/1.45 is 0.72), from u 3.4 (ub, estimated: slid its whole 3.6, its full thickness stays inside the top land's floor, r 9.3, at its far side, so off the
        chain on the turn below, and short of the shallow part) */
     const SBO=(()=>{const o=[],c=[SB.lo+SB.rt,4+SB.rt],e=Math.asin(0.47/SB.rr);
       for(let i=0;i<=8;i++){const a=Math.PI*(150+120*i/8)/180;o.push([c[0]+SB.rt*Math.cos(a),c[1]+SB.rt*Math.sin(a)]);}   /* the point's round, from the oblique edge to the near side */
@@ -408,7 +408,7 @@ const WFUSEE=(()=>{
        pressing the bar out toward that end. Its two drawn shapes traced on C-D (12.2 px/mm, each point at the line's darkest pixel; the dashed, wound one searched along rays
        through its gaps), scaled 0.989 as the bar, mirrored into the bar's frame: running it leaves the wall 152° round from the bar's upper end, wound (the bar slid 3.6) at 95°, looping
        in to 3.15 from the axis, 0.1 off the arbor's step. Drawn between the two as the bar slides (the drawn shapes' lengths differ by 4 %, 32.1 and 30.8: the drawing's
-       precision). Its section isn't drawn: 1.0 high (estimated, under the recess's 1.6), on the cover plate as the bar, and 0.10 thick, worked from its two drawn shapes:
+       precision). Its section isn't drawn (the coloured section leaves the recess between the bar's end and its wall, its full 1.6, uncoloured, where it colours steel blue): 1.0 high (estimated, under the recess's 1.6), on the cover plate as the bar, and 0.10 thick, worked from its two drawn shapes:
        between them its curvature changes by up to 0.064-0.073 /mm along its free span (its end pinned in the bar, unbent), so a strip t thick of hardened spring steel
        (206 GPa) is stressed 6,500-7,500 t MPa (t in mm) wound and pushes the bar out with 0.06-0.08 N half way, 0.11-0.16 N wound (its strain energy over the 3.6):
        at 0.10, half its steel's yield once a wind, and 20-30 times the bar's 0.5 g against a knock along it (C-D's double line, 0.15, would be stressed 0.7 of yield) */
@@ -449,7 +449,8 @@ const WFUSEE=(()=>{
        (Wempe_Einheitschronometer.jpg, its "Anschlagstift" leader followed across the barrel wall, the band and the maintaining detent's arbor to it, px 628-642 × 357-375):
        on the plate's drawn 31 px (3.35, so 9.25 px/mm), its straight sides 15 px (1.62) under the inner face, then a domed end 2.5 px (0.27), ±1 px each; its width 14 px
        (Ø 1.5, for 1.6). So 1.6 straight and a 0.25 dome, 1.85 in all; the bar's thin end, 1.235 under the face, bears on its straight part (the section draws the dome
-       just past the bar's lower face, its bar 0.5 lower than the sheets' stack puts it) */
+       just past the bar's lower face: it draws the small end's stack 0.5 lower than the sheets put it, the cover plate's top level with the plate's face under an empty 0.5
+       of the J-K recess, where the sheets leave 0.085) */
     {const PE=TI+1.6,PH=0.25,R=(0.64+PH*PH)/(2*PH),C=PE+PH-R,a0=Math.asin(0.8/R),cap=[];for(let i=0;i<=8;i++){const a=a0*(1-i/8);cap.push([R*Math.sin(a),C+R*Math.cos(a)]);}
       tag(mesh(P.topPlate,turned([[0,TT],[0.8,TT],...cap],20),M.steel,SPX[0],0,SPX[1]),'050801-5');}
 
