@@ -629,6 +629,15 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
+  the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
+  has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
+  show a slotted stud there with a steel wire hanging past the detent's back. Now drawn: the stud
+  (Ø 3.0 × 1.9, its slot, its shank 0.4 out under the plate) and the wire (Ø 0.25, to 1.8 over the
+  pillar plate), measured on 4_Wempe_3955_N, 4_Kirow_247_N, 4_Lange_5177_N and 2_*_A scaled by the
+  hole table's spacing, bent by the detent's back and rebuilt as it rides. Keep: a part with no
+  sheet is looked for in the hole tables and the photographs before it is called undrawable; the
+  wire bears on the detent's upper corner alone, its axis on the stud's. `860233a`
 - **The Wempe's stop bar stood 40° off its slot's drawn line, and full wind was taken at the
   groove's end.** The model set the bar's turn so the stop pin met it with the chain lying to
   the groove's end N (8.75 turns); 02-2 dimensions the slot from the line through the chain's
