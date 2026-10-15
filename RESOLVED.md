@@ -1829,7 +1829,7 @@ Contents:
   from each wall, estimated from those photographs) holds it so, the body's cone seated on the
   hole's edge, the paddle facing the box's middle (its plane 83.4 from the gimbals' centre, beyond
   the swinging case's and ring's 79.4); the 1940 key, as first drawn, stands there too. Keep: the
-  key rests in its holder (`KEYREST`), and nothing that swings in the gimbals reaches the corner.
+  key rests in its holder (`KEYREST`), and nothing that swings in the gimbals reaches the corner. `1614776`
 - **The Wempe's bowl had cracks along its cone.** Built as plan cells of rings, the narrow sloped
   rings under the inside round left hairline gaps along the 40° cone, dashed rows seen through to
   the inside (and drawn as dashes by Edges); the cone faced down, out of sight, until the bowl was
