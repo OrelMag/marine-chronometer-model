@@ -45,8 +45,11 @@ if '--nivaflex' in sys.argv:   # the build's strip (deviations.json: its thickne
 ENV=lambda k,d:float(os.environ.get(k,d));E_GPA=ENV('MC_MS_E',207)   # a variant: the strip's thickness MC_MS_T and length MC_MS_L (mm), the core MC_MS_RA, the film between packed coils MC_MS_GAP, its modulus (GPa; the bending
 # energy's EI/2 is left out of the solve, so it scales the torque only), named MC_MS_TAG (else t and its thickness): files mainspring_TAG.*
 VAR=os.environ.get('MC_MS_TAG') or (f"t{os.environ['MC_MS_T']}" if os.environ.get('MC_MS_T') else None)
-t=ENV('MC_MS_T',0.394);gap=ENV('MC_MS_GAP',0.0);p=t+gap;ra=ENV('MC_MS_RA',4.9);Rw=18.3-2.0-0.26;L=ENV('MC_MS_L',1064.0);a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
-EYE=9.4   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
+t=ENV('MC_MS_T',0.394);gap=ENV('MC_MS_GAP',0.0);p=t+gap;ra=ENV('MC_MS_RA',4.9);Rw=ENV('MC_MS_RW',18.3-2.0-0.26);L=ENV('MC_MS_L',1064.0);a0=ra+t/2;R0=Rw-t/2   # core.js MSPRING: the barrel r 18.3 less its wall (2.0), the brace and 0.01; the core r 4.9
+# (a variant's: MC_MS_RW the radius its outer coil lies on, the barrel's inside less any brace; MC_MS_EYE the eye's far end; MC_MS_B its width, mm, which only scales the torque: given,
+# the table also carries its most torque, M1 in N·m, EI from MC_MS_E; MC_MS_SET its free curve's turns' radii scaled. The Wempe's spring: tools/wempe_mainspring.py sets them)
+B_MM=os.environ.get('MC_MS_B');SET=ENV('MC_MS_SET',1.0)
+EYE=ENV('MC_MS_EYE',9.4)   # mm along the strip: the eye's far end (2.2-9.4 from the end, KLUwI2UUCMQ 15:54; core.js MSPRING.ey)
 HOLD=EYE/a0   # rad: the inner end lies on the core through the eye, where the hook holds it (1.0 on the r 1.8 core until 12 October 2026)
 M=48;STEP=0.25;TLO=ENV('MC_MS_TLO',12.75);THI=ENV('MC_MS_THI',19.5)   # the states (a blend over half a turn misses by 3 mm and lets the coils touch: a quarter); those past coil-bound aren't written
 SJ='mainspring.json' if not VAR else f'mainspring_{VAR}.json'   # the solved states (current directory, not committed)
@@ -58,7 +61,8 @@ rk=np.array(FREE_PX,float);rk*=L/(2*math.pi*rk.sum())
 sk=np.array([2*math.pi*(rk[:i].sum()+rk[i]/2) for i in range(len(rk))])
 S0=np.concatenate([[0],sk,[L]]);RH0=np.concatenate([[rk[0]*0.8],rk,[rk[-1]+(rk[-1]-rk[-2])*(L-sk[-1])/(sk[-1]-sk[-2])]])   # the end of its inner turn curls a little tighter (the frame)
 def k0(s):
-    s=torch.clamp(s,0,L);S=torch.tensor(S0);RH=torch.tensor(RH0);i=torch.clamp(torch.searchsorted(S,s)-1,0,len(S0)-2);f=(s-S[i])/(S[i+1]-S[i]);return 1/(RH[i]+f*(RH[i+1]-RH[i]))
+    s=torch.clamp(s,0,L);S=torch.tensor(S0);RH=torch.tensor(RH0);i=torch.clamp(torch.searchsorted(S,s)-1,0,len(S0)-2);f=(s-S[i])/(S[i+1]-S[i]);k=1/(RH[i]+f*(RH[i+1]-RH[i]))
+    return k*SET if SET!=1 else k   # MC_MS_SET: the free spring's turns that many times the measured's, its curve's shape kept (a spring set more or less)
 def geom(r,T):
     N=r.shape[0]-1;th=torch.arange(N+1)*(2*math.pi*T/N);x=r*torch.cos(th);y=r*torch.sin(th);ex=x[1:]-x[:-1];ey=y[1:]-y[:-1];l=torch.sqrt(ex*ex+ey*ey)
     phi=torch.atan2(ex[:-1]*ey[1:]-ey[:-1]*ex[1:],ex[:-1]*ex[1:]+ey[:-1]*ey[1:]);w=(l[:-1]+l[1:])/2;return l,phi/w,w,torch.cat([torch.zeros(1),torch.cumsum(l,0)])
@@ -143,7 +147,8 @@ def write(d):
         '   Generated: run python tools/mainspring.py, not edited. T: turns from the inner end to the outer, a state every step; s: the grid along the strip (mm, in\n'
         '   0.05s); r: each state\'s radius at those s (mm, in 0.0005s), little-endian uint16, base64; T0: the turns at which the held spring pulls nothing;\n'
         '   pull: its torque at each state against the most (the energy\'s slope) */\n'
-        'const MSHAPE='+json.dumps(dict(T0=round(d['T0'],4),T=T,pull=[round(float(x/tq.max()),4) for x in tq],n=len(g),s=enc(g,0.05),r=enc(rs.ravel(),0.0005)),separators=(',',':'))+';\n')
+        'const MSHAPE='+json.dumps(dict(T0=round(d['T0'],4),T=T,pull=[round(float(x/tq.max()),4) for x in tq],n=len(g),s=enc(g,0.05),r=enc(rs.ravel(),0.0005),
+          **({'M1':round(float(tq.max())*E_GPA*1e3*float(B_MM)*t**3/12/2/(2*math.pi)/1000,6)} if B_MM else {})),separators=(',',':'))+';\n')
     JS.write_text(js,encoding='utf-8',newline='\n');print(f'{JS.name}: {len(st)} states, {len(g)} points along the strip, {len(js)//1024} KB; theta rebuilt from r misses the end by {err:.4f} rad at most')
 def stored():
     """the table's states (JS) on the solver's grid: (T0, [(T, r at N+1 = 48 T + 1 angles from the inner end)])"""
@@ -170,7 +175,7 @@ def bound(n=12,step=0.05):
         last=T
     if last==Ts[-1]:print('  !! still not coil-bound: run with a larger N')
     D=json.loads(BOUND.read_text(encoding='utf-8')) if BOUND.exists() else {}
-    D[VAR or 'model']=dict(t=t,gap=gap,L=L,ra=ra,E=E_GPA,T0=T0,quarter=T1,bound=last,step=step);BOUND.write_text(json.dumps(D,indent=1,sort_keys=True)+'\n',encoding='utf-8',newline='\n')
+    D[VAR or 'model']=dict(t=t,gap=gap,L=L,ra=ra,E=E_GPA,T0=T0,quarter=T1,bound=last,step=step,**({'Rw':Rw,'eye':EYE,'B':float(B_MM),'set':SET} if B_MM else {}));BOUND.write_text(json.dumps(D,indent=1,sort_keys=True)+'\n',encoding='utf-8',newline='\n')
     print(f'{VAR or "the model"}, the strip {t} x {L:.0f} mm on r {ra}: coil-bound past {last:.2f} turns (the table ends at {T1}); wrote {BOUND.name}');return last
 def rebuild(s,r):
     ds=np.diff(s);dr=np.diff(r);return np.concatenate([[0],np.cumsum(np.sqrt(np.maximum(ds*ds-dr*dr,1e-12))/((r[1:]+r[:-1])/2))])
@@ -178,7 +183,7 @@ def plot(d,out,Ts=None):
     from PIL import Image,ImageDraw
     st=[x for x in d['states'] if Ts is None or any(abs(x['T']-T)<1e-6 for T in Ts)];ims=[]
     for x in st:
-        r=np.array(x['r']);N=len(r)-1;th=np.arange(N+1)*2*math.pi*x['T']/N;W=440;im=Image.new('RGB',(W,W+24),'white');g=ImageDraw.Draw(im);c=W/2;k=W/2/18*0.98
+        r=np.array(x['r']);N=len(r)-1;th=np.arange(N+1)*2*math.pi*x['T']/N;W=440;im=Image.new('RGB',(W,W+24),'white');g=ImageDraw.Draw(im);c=W/2;k=W/2/max(18,Rw+0.5)*0.98
         for rr,col in ((Rw,(180,150,60)),(ra,(120,120,120))):g.ellipse([c-rr*k,c-rr*k,c+rr*k,c+rr*k],outline=col,width=2)
         g.line([(c+k*r[i]*math.cos(th[i]),c-k*r[i]*math.sin(th[i])) for i in range(N+1)],fill=(30,50,140),width=2)
         w,a=packs(r,x['T']);g.text((6,W+4),f"T {x['T']:.2f} ({x['T']-d['T0']:+.2f} from slack): {w:.1f} turns packed on the wall, {a:.1f} on the core",fill=(0,0,0));ims.append(im)

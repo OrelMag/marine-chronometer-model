@@ -28,7 +28,7 @@ from scipy.optimize import nnls
 torch.set_default_dtype(torch.float64)
 HERE=pathlib.Path(__file__).resolve().parent;MC=HERE.parent;sys.path.insert(0,str(HERE))
 import mainspring as MS
-E_ST=MS.E_GPA*1e3;B=13.55;EI=E_ST*B*MS.t**3/12   # N·mm²: carbon steel (physics.js), the strip 13.55 × 0.394; or a variant's (MC_MS_T, MC_MS_E)
+E_ST=MS.E_GPA*1e3;B=float(MS.B_MM or 13.55);EI=E_ST*B*MS.t**3/12   # N·mm²: carbon steel (physics.js), the strip 13.55 × 0.394; or a variant's (MC_MS_T, MC_MS_E)
 MUS=[0.08,0.10,0.16];MU0=0.10
 OUT=HERE/('mainspring_friction.json' if not MS.VAR else f'mainspring_friction_{MS.VAR}.json')
 # the fusee as the page builds it (movement.js makeFusee: R.fs.MS.Tup and Tdown, the spring's turns fully wound and run down; and at n fusee turns from full wind, the
@@ -52,7 +52,12 @@ def setup(D):
         if pl(m)/pl(m+INT)<RHO0:ta=m
         else:tb=m
     return ta+INT,ta+INT-IN
-if MS.VAR:   # the variant: the rule (checked on the model's spring) sets it up; the fusee wheel's torque, its pull at the barrel's turns times the chain's lever,
+WEMPE=(MS.VAR or '').startswith('wempe')   # the Wempe's spring (wempe_mainspring.py --friction): its own fusee, set up 3/4 turn past its slack (05 06_20), its barrel's turns over the wind from the drawn
+# fusee and drum (wempe_mainspring.py), the Hamilton's fusee rule and bench band not used
+if WEMPE:
+    import wempe_mainspring as WM
+    TDOWN=round(WM.table(MS.JS)['slack']+0.75,5);TUP=round(TDOWN+float(WM.IB[-1]),5)
+elif MS.VAR:   # the variant: the rule (checked on the model's spring) sets it up; the fusee wheel's torque, its pull at the barrel's turns times the chain's lever,
     # the lever the model's (its torque over its pull: the fusee is the same)
     tu,_=setup(MSM);assert abs(tu-TUP)<0.0005,f'the rule gives {tu} fully wound for the model\'s spring, the page {TUP}'
     pm=lambda T:float(np.interp(T,MSM['T'],MSM['pull']));pv=lambda T:float(np.interp(T,MSD['T'],MSD['pull']));TU,TD=setup(MSD)
@@ -157,6 +162,9 @@ def main():
             if b>a:Wf+=r_['dM'][str(mu)]*2*math.pi*(b-a);W0+=r_['M0']*2*math.pi*(b-a)
         return Wf/W0
     Ts=np.array([r_['T'] for r_ in rows]);fr=lambda mu,T:float(np.interp(T,Ts,[r_['dM'][str(mu)]/r_['M0'] if r_['M0']>0 else 0 for r_ in rows]))
+    if WEMPE:return dict(summary=dict(Tup=TUP,Tdown=TDOWN,t=MS.t,gap=MS.gap,L=MS.L,ra=MS.ra,Rw=MS.Rw,B=B,E=MS.E_GPA,T0=T0,loss={str(mu):round(over(mu),4) for mu in MUS},hyst={str(mu):round(2*over(mu),4) for mu in MUS},
+        top={str(mu):round(1-fr(mu,TUP),4) for mu in MUS},down={str(mu):round(1-fr(mu,TDOWN),4) for mu in MUS}),
+        note="tools/mainspring_friction.py on the Wempe's spring (mainspring_wempe.js, wempe_mainspring.py): T the turns from the inner end, M0 the frictionless torque (N·m), dM the friction's torque (N·m) at each mu, added winding and taken away running; parts: coil on coil, on the wall, on the core at mu 0.10",T0=T0,EI=EI,mus=MUS,rows=rows)
     run={str(mu):[[n,ib,round(tq*(1-fr(mu,TUP-ib)),5)] for n,ib,tq in FUSEE] for mu in MUS};ev=lambda q:(max(q)-min(q))/np.mean(q)
     # the set-up against the friction: wound d turns less (or more) than the page's rule sets it, the fusee's frictionless torque scales with the solved spring's pull
     # (MSHAPE.pull, mainspring.py's smoothed slope) at the shifted turns, and the friction's share comes off it running; the part of the wind whose torque leaves the
@@ -197,9 +205,11 @@ if __name__=='__main__':
         h={mu:2*r_['dM'][str(mu)]/r_['M0'] if r_['M0']>0 else float('nan') for mu in MUS}
         print(f"T {r_['T']:6.3f}  M0 {r_['M0']*1000:7.1f} mN·m  friction {r_['dM']['0.1']*1000:6.2f} mN·m at 0.10 (coil {r_['parts']['cc']*1000:5.2f}, wall {r_['parts']['wall']*1000:5.2f}, core {r_['parts']['core']*1000:5.2f})  winding against running {100*h[0.1]:5.1f} % ({100*h[0.08]:.1f}-{100*h[0.16]:.1f})")
     S_=d['summary'];print(f"over the fusee's turns ({S_['Tdown']:.2f} to {S_['Tup']:.2f}): the friction takes {100*S_['loss']['0.1']:.1f} % of the spring's work running at 0.10 ({100*S_['loss']['0.08']:.1f}-{100*S_['loss']['0.16']:.1f}); winding against running {100*S_['hyst']['0.1']:.1f} % ({100*S_['hyst']['0.08']:.1f}-{100*S_['hyst']['0.16']:.1f})")
-    print(f"the fusee wheel's torque running: even to {100*S_['fusee']['even0']:.1f} % without friction, {100*S_['fusee']['even']['0.1']:.1f} % with it at 0.10 ({100*S_['fusee']['even']['0.08']:.1f}-{100*S_['fusee']['even']['0.16']:.1f}); fully wound it gives {100*S_['fusee']['top']['0.1']:.1f} % of its frictionless torque")
-    print(f"the strip {S_['t']} mm (E {S_['E']:.0f} GPa): slack at {S_['T0']} turns, fully wound at {S_['Tup']:.2f}, coil-bound past "+(f"{S_['bound']:.2f}: {S_['room']:.2f} turn of room" if S_['bound'] else 'an unknown turn (mainspring.py --bound)'))
-    U=S_['setup'];print(f"set up as the page sets it, {100*U['now'][1]:.0f} % of the wind (about {U['hours']} of its 56 hours) drives outside the bench's band; set up {U['best'][0]:+.2f} turns, {100*U['best'][1]:.0f} % (even to {100*U['best'][2]:.1f} %)")
+    if WEMPE:print(f"the Wempe's spring {S_['t']} x {S_['B']} x {S_['L']:.0f} mm: run down at {S_['Tdown']:.2f} turns, fully wound at {S_['Tup']:.2f}; running it gives {100*S_['down']['0.1']:.1f} % of its frictionless torque run down and {100*S_['top']['0.1']:.1f} % fully wound at 0.10")
+    else:
+     print(f"the fusee wheel's torque running: even to {100*S_['fusee']['even0']:.1f} % without friction, {100*S_['fusee']['even']['0.1']:.1f} % with it at 0.10 ({100*S_['fusee']['even']['0.08']:.1f}-{100*S_['fusee']['even']['0.16']:.1f}); fully wound it gives {100*S_['fusee']['top']['0.1']:.1f} % of its frictionless torque")
+     print(f"the strip {S_['t']} mm (E {S_['E']:.0f} GPa): slack at {S_['T0']} turns, fully wound at {S_['Tup']:.2f}, coil-bound past "+(f"{S_['bound']:.2f}: {S_['room']:.2f} turn of room" if S_['bound'] else 'an unknown turn (mainspring.py --bound)'))
+     U=S_['setup'];print(f"set up as the page sets it, {100*U['now'][1]:.0f} % of the wind (about {U['hours']} of its 56 hours) drives outside the bench's band; set up {U['best'][0]:+.2f} turns, {100*U['best'][1]:.0f} % (even to {100*U['best'][2]:.1f} %)")
     txt=json.dumps(d,indent=1)+'\n'
     if '--check' in sys.argv:
         ok=OUT.exists() and OUT.read_text(encoding='utf-8')==txt;print(f'  ok  {OUT.name} is up to date' if ok else f'  !!  {OUT.name} is not what this finds: python mainspring_friction.py');sys.exit(0 if ok else 1)
