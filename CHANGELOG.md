@@ -4,6 +4,12 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 2.42.04 · 2026-10-16
+- The Wempe: a choice of dial under Variants, Wempe of Hamburg (as No. 3955) or A. Lange & Söhne of Glashütte (as No. 5177), each traced from its photograph
+- The Wempe: the cork ring on the dust bush, which keeps dust from the winding hole out of the movement, and the raised seat round the hole inside the bowl that it meets
+- The Wempe: the winding square ends in the turned point its drawing gives
+- The Wempe's essay: the gimbals figure shows the box, ring and case again; the transport box had hidden them
+
 ## 2.42.03 · 2026-10-15
 - The fusee's dust cap no longer hangs over the opening round the balance: its flange now ends at the barrel bridge's edge
 - The small hole at 3 o'clock in the barrel bridge is now the shallow slot in its underside that the real bridge has, for levering it off

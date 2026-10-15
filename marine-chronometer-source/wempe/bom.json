@@ -367,6 +367,30 @@
    "figs": "05 08_9, 05 08_2"
   },
   {
+   "id": "050801-4",
+   "idx": null,
+   "no": "",
+   "dwg": "05 08 01-4",
+   "name": "Korkring (cork ring)",
+   "qty": 1,
+   "parent": "050801-3",
+   "kind": "part",
+   "part": "corkRing",
+   "fn": "Pressed on the dust bush's neck, on its collar, standing 0.95 over it: the case's closing plate meets it round the winding hole, keeping dust out (no sheet; scaled on the coloured section).",
+   "rel": [
+    [
+     "round",
+     "050801-3",
+     "press"
+    ],
+    [
+     "on",
+     "050801-3"
+    ]
+   ],
+   "figs": "coloured section, 05 08_2"
+  },
+  {
    "id": "050803-1",
    "idx": null,
    "no": "",
