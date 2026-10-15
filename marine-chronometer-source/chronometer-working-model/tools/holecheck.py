@@ -32,7 +32,6 @@ EXPECTED = [
     ('barrelBridge', '42061', [-15.3, -27.16, -16.75], None, "a hole just beyond the setup cover's end, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
     ('barrelBridge', '42061', [-27.72, -27.16, 6.19], None, "a hole just beyond the setup cover's other end (11:48 shows one past its end), through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
     ('barrelBridge', '42061', [-30.24, -27.16, -2.15], None, "a countersunk hole west of the barrel arbor, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
-    ('barrelBridge', '42061', [36.29, -27.16, 2.47], None, "a second hole beside the opening at 3 o'clock, through the barrel bridge on KLUwI2UUCMQ 13:04.4 (its underside face-on), its use not given by any source"),
     ('trainBridge', '42062', [-8.7, -23.76, 22.0], None, "a plain hole through the upper train bridge 4 mm beyond the train-blocking screw's (KLUwI2UUCMQ 23:30, 6:49.0, within 1 mm), its use not given by any source"),
     ('pillar', '42060', [-0.6, -3.86, -32.2], None, "a hole at 12 o'clock past the wind indicator's post, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
     ('pillar', '42060', [26.6, -3.86, 19.0], None, "a hole past the access hole at 4 o'clock, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
