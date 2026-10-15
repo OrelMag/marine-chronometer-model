@@ -1,0 +1,121 @@
+{
+ "frame": "f_KLUwI2UUCMQ_13-04.4.png",
+ "view": "below",
+ "holes": {
+  "h10": [
+   14.31,
+   -14.52
+  ],
+  "h2": [
+   -22.09,
+   -5.35
+  ],
+  "h12": [
+   34.18,
+   -3.41
+  ],
+  "h9": [
+   7.24,
+   -17.83
+  ],
+  "h8": [
+   0.05,
+   -16.27
+  ],
+  "h1": [
+   -30.24,
+   -2.15
+  ],
+  "h11": [
+   21.27,
+   -11.0
+  ],
+  "h6": [
+   -13.96,
+   -23.11
+  ],
+  "h5": [
+   -15.3,
+   -16.75
+  ]
+ },
+ "note": "KLUwI2UUCMQ 13:04.4: the barrel bridge upside down on the mat, its underside (y -27.16) face up. Holes from holes.py barrelBridge --bottom (15 October 2026), picks as PLAN-bridge-followups.md gives them. Unmapped: the rectangular notch at the horn's edge on the cock's side (n1-n4, its corners as traced), for the barrel bridge's notch.",
+ "use": [
+  "h10",
+  "h2",
+  "h12",
+  "h9",
+  "h8",
+  "h1",
+  "h11",
+  "h6",
+  "h5"
+ ],
+ "picks": {
+  "p10": [
+   1110,
+   1224
+  ],
+  "p2": [
+   2470,
+   1420
+  ],
+  "p12": [
+   635,
+   600
+  ],
+  "p9": [
+   1306.0,
+   1441.8
+  ],
+  "p8": [
+   1552.1,
+   1438.8
+  ],
+  "p1": [
+   2800.6,
+   1436.9
+  ],
+  "p11": [
+   924.7,
+   1013.3
+  ],
+  "p6": [
+   1952.0,
+   1901.6
+  ],
+  "p5": [
+   2077.8,
+   1692.0
+  ]
+ },
+ "pairs": {
+  "h10": "p10",
+  "h2": "p2",
+  "h12": "p12",
+  "h9": "p9",
+  "h8": "p8",
+  "h1": "p1",
+  "h11": "p11",
+  "h6": "p6",
+  "h5": "p5"
+ },
+ "unmap": {
+  "n1": [
+   610,
+   342
+  ],
+  "n2": [
+   697,
+   383
+  ],
+  "n3": [
+   660,
+   447
+  ],
+  "n4": [
+   580,
+   403
+  ]
+ }
+}
