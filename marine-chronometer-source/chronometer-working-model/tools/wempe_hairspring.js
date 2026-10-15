@@ -69,6 +69,10 @@ chk(latD<0.1,`as drawn: ${f(latD,3)} of couple / R on the pivots under a couple:
   say(`the helix here is ${f(H.TURNS,3)} turns: ${f(H.TURNS%1,3)} of a turn short of whole, which the pins' place sets (the pins together want 360 n − 440°: ${f(H.TURNS+440/360,3)} turns pin to pin), so the drawn spring's force stands`);
   module.exports.lateral={drawn:latD};}
 
+/* the essay (wempe_essaydata.js) takes the spring with its helix's turns varied (spring, resample) and the curve's figures above; the large swings below are this tool's */
+module.exports.spring=spring;module.exports.resample=resample;module.exports.R=R;
+if(require.main!==module)return;
+
 head('4. At large swings: the drawn spring as an elastica (HSPR.large) and as beam elements (hairspring-fe.js)');
 const ths=[];for(let a=-300;a<=300;a+=5)ths.push(a*D);
 const big=HSPR.large(drawn.pts.map(p=>[p[0],p[1]]),ths),at=a=>big.find(q=>Math.abs(q.th-a*D)<1e-9),k0=1/drawn.L;

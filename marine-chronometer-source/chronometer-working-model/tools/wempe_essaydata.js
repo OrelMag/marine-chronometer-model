@@ -36,15 +36,51 @@ const detent=(()=>{const dp=E.depart(E.A),tab=t=>{const g=(t-E.TH0)/E.DT,i=Math.
   if(dp)for(let q=dp.p;q<0.5;q+=2e-6){const z=E.state(q,E.A,1),fl=Math.max(z.th<E.thOff?tab(z.th):0,E.fallD(dp.d0,dp.v0,(q-dp.p)*0.5)*E.LEN);if(on==null&&z.lift>fl+1e-9)on=z.th/D;if(z.lift>0&&z.prog>0)end=z.th/D;}
   return{off:r(dp?dp.th/D:NaN,2),on:r(on,2),home:r(end,2)};})();
 
+/* ---------- heat: the rate a °C against the masses' place (wempe_thermal.js), and the TU's trial (wempe_errorbudget.js's seeded trial) ---------- */
+const TH=require('./wempe_thermal.js'),TS=TH.sweep(),TM=TH.mid.an,TP=TH.mid.ns,SEC=TH.secondary,LIN=TH.linear;
+const heat={arc:TS.arc.map(x=>r(x,2)),rows:TS.rows.map(q=>q.map((x,i)=>r(x,i?3:1))),drawn:TM.at,zero:r(90-TM.zero,2),perDeg:r(TM.perDeg,4)};
+/* the slow parts, each in a process of its own, at once: the error budget's trial (its daily wind's rates, about 25 s) and the rate over the wind (below, in two halves) */
+const kid=code=>new Promise((ok,no)=>require('child_process').execFile(process.execPath,['-e',code],{cwd:__dirname,encoding:'utf8',maxBuffer:1<<26},(e,o)=>e?no(e):ok(JSON.parse(o))));
+/* the rate over the wind (0-56 h, every 2 h, as wempe_hairspring.js's): the escapement with the drawn spring's isochronism (makeEsc's rate, SET.HS), and without it */
+const ISO=(h0,h1)=>`const W=require('./wempe_load.js')(),P=W.WPHYS,E=P.ESC,D=Math.PI/180,A12=E.A/D,HS=P.SET.HS||0,o=[];for(let h=${h0};h<${h1};h+=2){const s=P.drv(h/P.HPT),a=E.ampAt(s),re=E.rateAt(a,s);o.push([re,re-HS*(a/D-A12)/10,a/D]);}console.log(JSON.stringify(o))`;
+Promise.all([kid("console.log(JSON.stringify(require('./wempe_errorbudget.js').essay()))"),kid(ISO(0,29)),kid(ISO(30,56.3))]).then(([EB,i0,i1])=>{
+const IS=[...i0,...i1],iso={all:[Math.min(...IS.map(q=>q[0])),Math.max(...IS.map(q=>q[0]))],esc:[Math.min(...IS.map(q=>q[1])),Math.max(...IS.map(q=>q[1]))],sw:[Math.min(...IS.map(q=>q[2])),Math.max(...IS.map(q=>q[2]))]};
+/* the balance's damping measured on a running 6MX (wempe_startup.js on wempe_swing.py's reading: References/wempe/VIDEOS.md, "Measured") */
+const SU=JSON.parse(fs.readFileSync(path.join(__dirname,'wempe_startup.json'),'utf8')).split;
+/* how often a trial drawn so passes, as adjusted and at the drawn place (the trial's own test; wempe_errorbudget.js prints its own runs) */
+const trial={days:EB.days.map(([T,v])=>[T,r(v,4)]),airLin:r(EB.airLin,5),perDeg:r(EB.perDeg,4),SET0:EB.SET0,LIM:EB.LIM,TU:EB.TU,Sv:r(EB.Sv,3)};
+
+/* ---------- the hairspring: the force on the pivots with the helix's turns varied (wempe_hairspring.js's spring, HSPR.lateral) ---------- */
+const HS=(()=>{const l=console.log;console.log=()=>{};try{return require('./wempe_hairspring.js');}finally{console.log=l;}})(),{HSPR}=require('../../shared/hairspring.js');
+const latAt=n=>HSPR.lateral(HS.resample(HS.spring(n),0.15).pts,HS.R).ratio,TURNS=W.WESC.HSP.TURNS;
+const hs={turns:[...Array(49).keys()].map(k=>{const n=10.75+k/24*1;return[r(n,4),r(latAt(n),5)];}).filter(q=>q[0]<=12.76),drawn:[r(TURNS,3),r(HS.lateral.drawn,4)]};
+
+/* ---------- the gimbals: the bodies weighed (gimbals_wempe.json, massprops.py) and levelled (gimbals.js's bodies), the Hamilton's beside them ---------- */
+const gim=k=>JSON.parse(require('child_process').execFileSync(process.execPath,['-e',"const g=require('./gimbals.js'),B=g.bodies(),D=g.bodies({asDrawn:true}).drawn;console.log(JSON.stringify({Tz:2*Math.PI/B.wz,Tx:2*Math.PI/B.wx,h:-B.bw.c[1]*1000,drawn:D}))",'--',...(k?['--model','wempe']:[])],{cwd:__dirname,encoding:'utf8'}));
+const GW=gim(1),GH=gim(0),GJ=JSON.parse(fs.readFileSync(path.join(__dirname,'gimbals_wempe.json'),'utf8')),bp=GJ.bowl.byPart,Vb=bp.bowl/8.45,bak=GJ.alt.bakelite;
+
 /* ---------- the numbers the text quotes ---------- */
 const b=MSJ.strip.b/1000,t=MSJ.strip.t/1000,sS=6*FN.Mfull/(b*t*t);   /* the solved strip's bending stress fully wound, 6 M / b t² (as wempe_physics.js) */
+const sg=(x,n=1)=>(x<0?'−':'+')+fx(Math.abs(x),n),rgS=(a,n=1)=>sg(a[0],n)+' to '+sg(a[1],n)+' s',dg=x=>Math.round(x)+'°';
 const phys={msL:th(FN.L)+' mm',msT:fx(MSJ.strip.t,2)+' mm',msRms:pc(FN.rms,2),msEta:fx(FN.eta,3),msMore:Math.round(100*(1/FN.eta-1))+' %',
   lossEst:rg(100*(1-LS.hi),100*(1-LS.lo),1,' %'),lossImp:rg(100*(1-LV.imp[1]),100*(1-LV.imp[0]),1,' %'),tMid:fx(LV.tMid,3)+' mm',sSolved:fx(sS/1e9,2)+' GPa',
-  detOn:fx(detent.on,1)+'°',detHome:fx(detent.home,1)+'°'};
+  detOn:fx(detent.on,1)+'°',detHome:fx(detent.home,1)+'°',
+  /* the hairspring */
+  latD:fx(HS.lateral.drawn,3),lat11:fx(latAt(11),4),lat12:fx(latAt(12),4),latHalf:fx(Math.max(...hs.turns.map(q=>q[1])),3),dsgI:fx(HS.curve.designed.inner,1)+' mm',dsgO:fx(HS.curve.designed.outer,1)+' mm',
+  isoAll:rgS(iso.all,2),isoEsc:rgS(iso.esc,2),swRange:fx(iso.sw[0],1)+'–'+fx(iso.sw[1],1)+'°',tfVid:Math.round(SU.TF)+' s',tfSpan:SU.span[0]+'–'+SU.span[1]+' s',
+  /* heat */
+  cSpring:fx(TM.spring,1),cBack:fx(TM.back,1),cDrawn:fx(-TM.drawn,1),cZero:dg(90-TM.zero),cPerDeg:fx(TM.perDeg,2),cTuDeg:'±'+fx(0.1/TM.perDeg,1)+'°',cAt:dg(TM.at),cSet:'±'+EB.SET0+'°',cRes:'±'+fx(EB.SET0*EB.perDeg,3),
+  cRange:fx(-LIN.range[1],1)+' and '+fx(-LIN.range[0],1),cZeros:dg(90-LIN.zeros[1])+' and '+dg(90-LIN.zeros[0]),cPlainEnd:fx(-TP.ends[1],1),cMove:dg(TM.zero-(90-TM.at)),cDiv:fx((TM.zero-(90-TM.at))/6,1),
+  sSpring:rgS(SEC.Sspring),sPlain:rgS(SEC.Splain),sInt:rgS(SEC.Sintegral),
+  /* the gimbals */
+  gBowl:th(Math.round(GJ.bowl.m))+' g',gBrass:th(Math.round(bp.bowl))+' g',gV:fx(Vb,1)+' cm³',gRho:fx(350/Vb,2)+' g/cm³',gAlu:th(Math.round(Vb*2.7))+' g',gBak:th(Math.round(Vb*1.37))+' g',gBuna:th(Math.round(Vb*1.18))+' g',
+  gRing:th(Math.round(GJ.ring.m))+' g',gTot:fx((GJ.bowl.m+GJ.ring.m)/1000,2)+' kg',gBakM:th(Math.round(bak.m))+' g',gBakCg:fx(bak.cg[1],2)+' mm',
+  gDy:fx(-GW.drawn.bowl[1],2)+' mm',gDx:fx(Math.abs(GW.drawn.bowl[0]),2)+' mm',gLean:fx(Math.atan2(Math.abs(GW.drawn.bowl[0]),-GW.drawn.bowl[1])/D,1)+'°',
+  gTz:fx(GW.Tz,2)+' s',gTx:fx(GW.Tx,2)+' s',hTz:fx(GH.Tz,2)+' s',hTx:fx(GH.Tx,2)+' s',gH:fx(GW.h,1)+' mm',hH:fx(GH.h,1)+' mm'};
 
 const js=`/* essaydata.js: the Wempe essay's figures and numbers that only Node works out, written by marine-chronometer-source/chronometer-working-model/tools/wempe_essaydata.js
    --write: generated, don't edit (rerun the tool; without --write it checks this file). Part of the Wempe model; declares only WEDATA (the tool's header says what each is). */
-const WEDATA=${JSON.stringify({sheets,fusee,detent,phys})};
+const WEDATA=${JSON.stringify({sheets,fusee,detent,heat,trial,hs,phys})};
 `;
 /* the spans in index.html: each data-wphys key the text uses, with its text */
 const SPAN=/(<span\b[^>]*\bdata-wphys="(\w+)"[^>]*>)([^<]*)(<\/span>)/g;
@@ -58,3 +94,4 @@ else{const okJ=fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8')===js,okH=html2===
   if(!okJ||!okH)bad=1;}
 for(const[k,v]of Object.entries(phys))console.log(`       ${k.padEnd(8)} ${v}`);
 if(bad)process.exitCode=1;
+}).catch(e=>{console.error(e);process.exitCode=1;});
