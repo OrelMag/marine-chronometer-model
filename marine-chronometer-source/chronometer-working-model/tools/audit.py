@@ -12,14 +12,14 @@ import asyncio,json,pathlib,sys
 from collections import Counter
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
 MODE='box' if 'box' in sys.argv[1:2] else 'movement'
 JS='geometry-audit-box.js' if MODE=='box' else 'geometry-audit.js'
-EXP=HERE/'audit-expected.json'
+EXP=(HERE if model.HAMILTON else model.DIR)/'audit-expected.json'   # another model's beside its page
 FREEZE="""(()=>{const mv=window.__mv;if(!mv.userData._u){mv.userData._u=mv.userData.update;mv.userData.update=()=>{};}
   const s=ESC.state(0),E=1000+s.prog;mv.userData._u({E,th:s.th,lift:s.lift,psDef:s.psDef,n:2.5,winding:false,springOn:true,msOn:false,arm:0,blk:0});})()"""   # placements.py's first state
 # loose ends expected (part:geometry, place in the movement frame at the frozen state, radius, why); matched within 0.3 mm
-LOOSE=[('barrelBridge:Cylinder',(4.0,-18.51,-19.9),1.15,"the winding stop, a stud standing 5.5 out of the barrel bridge's underside beside the fusee's top, into the stop-bar's path"),
+LOOSE=model.cfg('LOOSE',[('barrelBridge:Cylinder',(4.0,-18.51,-19.9),1.15,"the winding stop, a stud standing 5.5 out of the barrel bridge's underside beside the fusee's top, into the stop-bar's path"),
  ('lowerBridge:Cylinder',(20.62,-21.91,14.01),0.4,"a steady pin of the balance lower bridge: its hole in the train bridge is drawn through, so the end above sits in a hole"),
  ('lowerBridge:Cylinder',(-13.6,-21.91,16.4),0.4,"the lower bridge's other steady pin, the same"),
  ('det:Cylinder',(-1.82,-22.11,35.98),0.53,"a positioning pin of the detent support block: its hole in the train bridge is drawn through, so the end above sits in a hole"),
@@ -27,9 +27,10 @@ LOOSE=[('barrelBridge:Cylinder',(4.0,-18.51,-19.9),1.15,"the winding stop, a stu
  ('det:Cylinder',(-5.53,-18.31,34.74),0.22,"a steady pin across the detent's foot, standing out of it"),
  ('det:Cylinder',(-3.32,-18.31,27.47),0.22,"the foot's other steady pin, the same"),
  ('bal:Cylinder',None,0.25,"a vernier timing weight's screw, its free end past the nut"),
- ('bal:Cylinder',None,0.25,"the other vernier weight's screw")]
+ ('bal:Cylinder',None,0.25,"the other vernier weight's screw")])
 # with the Navy's balance brake fitted (the page's default; --eval "__mv.userData.stop('arm')" fits the manual's arm instead), free: its pins end 0.5 mm over the rim's top edge, and come down onto it when locked
-LOOSE_NAVY=[('lockArm:Cylinder',(14.99,-28.85,6.51),0.4,"the Navy brake's pin over the rim, free"),('lockArm:Cylinder',(-11.77,-28.85,14.05),0.4,"its other pin, the same")]
+LOOSE_NAVY=model.cfg('LOOSE_NAVY',[('lockArm:Cylinder',(14.99,-28.85,6.51),0.4,"the Navy brake's pin over the rim, free"),('lockArm:Cylinder',(-11.77,-28.85,14.05),0.4,"its other pin, the same")])
+FLOAT=model.cfg('FLOAT_BOX' if MODE=='box' else 'FLOAT',[])   # screws whose head is meant to bear on a part only at its edge (another model's checks.py lists them, FLOAT_BOX for the box: part:geometry, place, head radius, why); none on the Hamilton
 async def run():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
@@ -53,7 +54,13 @@ def main():
         print(f'wrote {EXP.name} [{MODE}]: {sum(zf.values())} coplanar faces in {len(zf)} pairs')
     bad,gone=[],[]
     bad+=[f'page error: {e}' for e in errs]
-    for k in ('dupScrews','floatScrews','isolated'):bad+=[f'{k}: {x}' for x in r[k]]
+    fl=list(FLOAT)
+    for x in r['floatScrews']:
+        m=next((e for e in fl if e[0]==x[0] and abs(e[2]-x[2])<1e-6 and max(abs(a-b) for a,b in zip(x[1],e[1]))<=0.3),None)
+        if m:fl.remove(m)
+        else:bad.append(f'floatScrews: {x}')
+    gone+=[f'floatScrews: {e[0]} r{e[2]} at {e[1]} ({e[3]})' for e in fl]
+    for k in ('dupScrews','isolated'):bad+=[f'{k}: {x}' for x in r[k]]
     left=list(LOOSE)+(LOOSE_NAVY if "stop('arm')" not in ' '.join(sys.argv) else []) if MODE=='movement' else []
     for x in r['looseEnds']:
         nm,pos,rad=x[0],x[1],float(x[2][1:])

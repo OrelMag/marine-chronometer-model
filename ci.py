@@ -1,14 +1,14 @@
 """The checks, run here: what CI would run, on this machine, so a branch is judged by results we can read.
 
-    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, smoke, invariants, massprops, solids, exploded, overhaul, book, audit
-    python ci.py --quick      # without the browser checks (about 80 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types
+    python ci.py              # the checks on every change (about 5 minutes): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types, smoke, invariants, massprops, solids, exploded, overhaul, book, audit, and the Wempe's smoke, solids, audit and exploded
+    python ci.py --quick      # without the browser checks (about 80 s): build, escapement, almanac, hairspring, hairspring-fe, physics, tolerances, strength, dynamics, tripping, gimbals, errorbudget, gearing, thermal, bench, rating, deviations, benchcheck, selfcontained, types, wempe-types
     python ci.py --full       # and the slow checks (about 39 minutes more): dynamics.js in full, tripping.js in full, gimbals.js in full, mainspring_friction.py (the model's strip, the build's Nivaflex and the sources' proportions), gearing.js in full, fea.py, fine.py, maintaining.py, bom.py, gltf_check.py, blender_check.py
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
 
 Each step's output goes to ci-logs/STEP.txt (ignored by git); the summary lists each step, ok or FAIL, and its time, and the exit code is 1 if any step
 failed. The browser checks run one after another, never side by side (two at once slow each other's page time, which some checks measure).
-The build step checks that building changes none of the built copies (chronometer-working-model.html, dist/, site/): run it on the tree you mean to
+The build step checks that building changes none of the built copies (chronometer-working-model.html, both models' dist/, site/): run it on the tree you mean to
 commit, and commit what it writes. --views reports and never fails: most visual changes are intended; read the table, and r_vd_*.png in ci-logs/views
 (the changes in red) for the views that changed."""
 import hashlib,os,pathlib,shutil,subprocess,sys,tempfile,time
@@ -18,7 +18,8 @@ TOOLS=MC/'tools'
 LOGS=ROOT/'ci-logs'
 PY=sys.executable
 SITE='https://www.marinechronometermodel.com'
-BUILT=[ROOT/'chronometer-working-model.html',MC/'dist',ROOT/'site']
+WE=ROOT/'marine-chronometer-source'/'wempe'   # the second model, the Wempe (tools/model.py: --model wempe)
+BUILT=[ROOT/'chronometer-working-model.html',MC/'dist',WE/'dist',ROOT/'site']
 TSC='typescript@5.9.3'
 def arg(k):return sys.argv[sys.argv.index(k)+1] if k in sys.argv and sys.argv.index(k)+1<len(sys.argv) and not sys.argv[sys.argv.index(k)+1].startswith('--') else None
 def digest():
@@ -37,8 +38,7 @@ def build(log):
     after=digest();ch=sorted(k for k in set(before)|set(after) if before.get(k)!=after.get(k))
     with open(log,'a',encoding='utf-8') as o:o.write('\nbuilt copies changed by building:\n'+''.join(f'  {k}\n' for k in ch) if ch else '\nbuilt copies up to date with the sources\n')
     return 1 if ch else 0
-def tsc(log):
-    cfg=MC/'jsconfig.json'
+def tsc(log,cfg=MC/'jsconfig.json'):
     if not cfg.exists():open(log,'w').write('no jsconfig.json on this branch: skipped\n');return None
     npx=shutil.which('npx') or shutil.which('npx.cmd')
     if not npx:open(log,'w').write('npx not found (Node.js): cannot check types\n');return 1
@@ -91,6 +91,7 @@ STEPS=[('build',build,'quick'),
  ('estimates',lambda log:run(['node',TOOLS/'estimates.js'],ROOT,log),'quick'),   # the design values resting on estimates swept over their ranges, the bench's correction applied (about 4 min)
  ('selfcontained',lambda log:run([PY,'selfcontained.py'],TOOLS,log),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
+ ('wempe-types',lambda log:tsc(log,WE/'jsconfig.json'),'quick'),   # the Wempe's scripts, core.js and the shared kit among them (about 10 s)
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),
  ('invariants',lambda log:run([PY,'invariants.py'],TOOLS,log),'browser'),
  ('massprops',lambda log:run([PY,'massprops.py'],TOOLS,log),'browser'),   # the case and ring weighed on the model, against gimbals.json (about 30 s)
@@ -101,6 +102,10 @@ STEPS=[('build',build,'quick'),
  ('book',lambda log:run([PY,'book.py'],TOOLS,log),'browser'),   # the build book checked as paper: each drawing at a stated scale, legible, on a page; each sheet's lines with material and fit (about 1 min)
  ('audit',lambda log:run([PY,'audit.py'],TOOLS,log),'browser'),
  ('audit-box',lambda log:run([PY,'audit.py','box'],TOOLS,log),'browser'),
+ ('wempe-smoke',lambda log:run([PY,'smoke.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's page: its views, sections, Spread, a pick, the opacity menu, a link (about 30 s)
+ ('wempe-solids',lambda log:run([PY,'solids.py','--model','wempe'],TOOLS,log),'browser'),
+ ('wempe-audit',lambda log:run([PY,'audit.py','--model','wempe'],TOOLS,log),'browser'),
+ ('wempe-exploded',lambda log:run([PY,'exploded.py','--model','wempe'],TOOLS,log),'browser'),
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)
  ('mainspring-friction',lambda log:run([PY,'mainspring_friction.py','--check'],TOOLS,log),'full'),   # the mainspring's coil friction, against mainspring_friction.json (about a minute)

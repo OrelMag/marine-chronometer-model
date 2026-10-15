@@ -26,8 +26,8 @@ A line's 'dev' lists known deviations from the manual, each with its reason: pri
 import asyncio,json,pathlib,re,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
-BOM=json.loads((HERE.parent/'bom.json').read_text(encoding='utf-8'))
+import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
+BOM=json.loads((model.DIR/'bom.json').read_text(encoding='utf-8'))   # the model's parts list, beside its page
 JS=(HERE/'bom-check.js').read_text(encoding='utf-8');FNJS=(HERE/'bom-fn.js').read_text(encoding='utf-8')
 IN={'tap':(0.4,-0.03,0.35),'clear':(0.1,0.0,9),'run':(0.1,0.003,0.06),'free':(0.2,0.003,0.25),'press':(0.04,-0.03,0.05),'embed':(0.3,-9,-0.01)}   # kind: least length engaged, gap from, gap to (mm)
 # press and run in a bevelled hole: at its faces, where it has its size (it is wider inside); embed: a thread or pin across a part drawn without a hole for it
@@ -38,7 +38,8 @@ def qty_ok(q,n):
     if isinstance(q,list):return q[0]<=n<=q[1]
     if isinstance(q,int):return n==q
     return n==0
-ARM="document.querySelector('#stopV button[data-v=\"arm\"]').click()"   # the parts list's balance stop, the locking arm (Fig. 9): the page fits the Navy's Y-arm by default, which the manual doesn't list (its button, so the part's card and numbers are the arm's too)
+REGISTRY=model.cfg('REGISTRY',True)   # the registry: the Hamilton's catalogue numbers on its cards (below); off for a model whose lines are drawing numbers
+ARM=model.cfg('ARM',"document.querySelector('#stopV button[data-v=\"arm\"]').click()")   # the parts list's balance stop, the locking arm (Fig. 9): the page fits the Navy's Y-arm by default, which the manual doesn't list (its button, so the part's card and numbers are the arm's too)
 async def run(evl):
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
@@ -48,7 +49,7 @@ async def run(evl):
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(ARM);await pg.wait_for_timeout(300)
         if evl:await pg.evaluate(evl)
         res=await pg.evaluate(JS,BOM)
-        if '--no-fn' in sys.argv:res['fn']=[]
+        if '--no-fn' in sys.argv or not model.cfg('FN',True):res['fn']=[]   # bom-fn.js's function checks are the Hamilton's
         else:   # on a fresh page: bom-check.js turns the train and balance through update(), and a held train isn't redrawn from the page's own state
             await pg.reload();await pg.wait_for_function("window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)
             await pg.evaluate(ARM)
@@ -68,7 +69,7 @@ def judge(res,sp):
     for k in res['counts']:ok(k in L,f"tag {k} has no line in bom.json")
     for k in set(res['doubled']):ok(False,f"{k} tagged inside a piece of the same line")
     for k,n in res['untagged'].items():ok(False,f"{n} mesh(es) of '{k}' belong to no line")
-    jw=[l for l in BOM['lines'] if l['kind']=='jewel'];ok(len(jw)==14 and sum(res['counts'].get(l['id'],0) for l in jw)==14,f"jewels: {sum(res['counts'].get(l['id'],0) for l in jw)} in the model, the manual's 14")
+    jw=[l for l in BOM['lines'] if l['kind']=='jewel'];NJ=model.cfg('JEWELS',14);ok(len(jw)==NJ and sum(res['counts'].get(l['id'],0) for l in jw)==NJ,f"jewels: {sum(res['counts'].get(l['id'],0) for l in jw)} in the model, the manual's {NJ}")
     # relations
     D.clear()
     for r in res['rel']:
@@ -100,14 +101,14 @@ def judge(res,sp):
             n=c.split(':',1)[1].strip()
             if not any(f[0]==n for f in res['fn']):D.append(f"{l['id']}: function check '{n}' not written yet")
     for n,good,msg in res.get('fn',[]):ok(good,f"fn {n}: {msg}")
-    # registry
+    # registry (the Hamilton's catalogue numbers on its cards; another model's checks.py turns it off where its lines carry no such numbers: REGISTRY=False)
     nos={l['no'] for l in BOM['lines'] if l.get('no')}
     num=re.compile(r'(?<![\d.])(\d{3,5}A?)(?![\d.])')
     def nums(s):   # the numbers on a card, a range such as 42032-42035 taken whole
         out=num.findall(s)
         for a,b in re.findall(r'(\d{5})\s*[–-]\s*(\d{5})',s):out+=[str(n) for n in range(int(a),int(b)+1)]
         return out
-    for k,s in sp.items():
+    for k,s in (sp.items() if REGISTRY else ()):
         for m in num.findall(s):ok(m in nos,f"card {k}: {m} is not in the parts list")
         held={l['no'] for l in BOM['lines'] if l.get('part')==k and l['kind'] in('part','jewel') and l.get('no')}
         miss=sorted(h for h in held if h not in nums(s))
@@ -116,7 +117,7 @@ def judge(res,sp):
     for k,(s,h) in res.get('pcs',{}).items():
         for i in h.split():ok(i in L,f"piece {k}: {i} is not a line of the parts list")
         own={L[i]['no'] for i in h.split() if i in L}
-        for m in nums(s):ok(m in own,f"piece {k}: {m} on its card is none of its lines")
+        for m in (nums(s) if REGISTRY else ()):ok(m in own,f"piece {k}: {m} on its card is none of its lines")
     return F
 def main():
     evl=None
@@ -130,6 +131,6 @@ def main():
     for e in errs:print('page error:',e)
     print(f"{sum(1 for l in BOM['lines'] if l['kind'] in('part','jewel'))} lines, {len(res['rel'])} relations, {len(res['jewels'])} jewels: "+('ok' if not F and not errs else f'{len(F)} failures'))
     if '--md' in sys.argv:
-        import bom_md;bom_md.write(BOM,res,F,D,HERE.parents[2]/'BOM.md')
+        import bom_md;bom_md.write(BOM,res,F,D,HERE.parents[2]/'BOM.md' if model.HAMILTON else model.DIR/'BOM.md')
     sys.exit(1 if F or errs else 0)
 if __name__=='__main__':main()

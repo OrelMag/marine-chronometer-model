@@ -79,8 +79,9 @@
  /* endshake: rays along the axis from A's vertices, each way, against every part that doesn't move with it */
  const under=(o,A)=>{for(let p=o;p;p=p.parent)if(p===A)return true;return false;};
  function endshake(A,id){const ax=axisOf(A),car=carried(id),mine=MS.filter(x=>under(x.m,A)||car.has(x.id)),ms=new Set(mine),bx=boxOf(mine),cand=near(bx,1).filter(x=>!ms.has(x));const res={};
-   const all=verts(mine,Infinity);for(const[sg,k]of[[1,'dial'],[-1,'train']]){const d=ax.D.clone().multiplyScalar(sg);let best=9,by=null;   /* the 3,000 vertices furthest along the way (where an end meets its endstone) and a sample of the rest: a sample alone can miss a pivot's end among many vertices */
-     const ext=all.slice().sort((a,b)=>b.dot(d)-a.dot(d)),pick=ext.length<=6000?ext:[...ext.slice(0,3000),...ext.slice(3000).filter((_,i,r)=>i%Math.ceil(r.length/3000)===0)];for(const p of pick){const h=cast(p.clone().addScaledVector(d,-1e-4),d,cand,best);if(h.length&&h[0].distance<best){best=h[0].distance;by=h[0].x.id;}}res[k]=[+best.toFixed(4),by];}
+   const all=verts(mine,Infinity),own=verts(mine.filter(x=>x.id===id),Infinity);   /* own: every vertex of the arbor's own line, always cast (parts pressed on it, the Wempe's cannon tube, put thousands of vertices above its collar, and the sample missed it) */
+   for(const[sg,k]of[[1,'dial'],[-1,'train']]){const d=ax.D.clone().multiplyScalar(sg);let best=9,by=null;   /* the 3,000 vertices furthest along the way (where an end meets its endstone) and a sample of the rest: a sample alone can miss a pivot's end among many vertices */
+     const ext=all.slice().sort((a,b)=>b.dot(d)-a.dot(d)),pick=ext.length<=6000?ext:[...ext.slice(0,3000),...ext.slice(3000).filter((_,i,r)=>i%Math.ceil(r.length/3000)===0),...own];for(const p of pick){const h=cast(p.clone().addScaledVector(d,-1e-4),d,cand,best);if(h.length&&h[0].distance<best){best=h[0].distance;by=h[0].x.id;}}res[k]=[+best.toFixed(4),by];}
    return res;}
  /* gears: the meshes of an instance with userData.gear, and their world angle about y (summed rotation.y, flipped frames counted) */
  const gearsOf=A=>{const o=[];A.traverse(q=>{if(q.userData.gear&&vis(q))o.push(q);});return o;};

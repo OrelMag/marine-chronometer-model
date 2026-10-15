@@ -3,17 +3,21 @@
     python smoke.py            # the model (../index.html), then its Essay tab
     python smoke.py --model    # the model only
     python smoke.py --essay    # the Essay tab only
+    python smoke.py --model wempe   # the Wempe's page instead (wempe() below; tools/model.py)
 
 Every view with and without Moving parts only, every walkthrough step, both balances, every dial style and plate finish, the parts search and sizes in inches, the parts' pieces
 (every mesh of a part with pieces in one, a piece's card and its part's, one found by its number, hidden and shown from the list), every cross-section
 (and its other half), GMT / Local, setting the hands with the key and by stopping, the rate book, the adjuster's bench, the display switches (Shadows off and Edges on by default), Reset display, Link, Version · what's new, About and Report a bug or inaccuracy (from the panel, a part's card and the essay), winding with the key (the sustaining spring's close-up and load path,
 shown while winding and gone after; its zoom, enlarge, slow motion and explanation; kept open in running), the keyboard, and a link through the URL hash. Then the Essay tab: the model stops drawing under it, it is scrolled from top to bottom, every one of its controls is moved to both ends or pressed, the page has at most
 two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
-ignored. Each problem names the page and the last step done before it."""
+ignored. Each problem names the page and the last step done before it.
+With --model wempe, the Wempe's page (../../wempe/index.html): every view, the Spread slider, every cross-section and its other half, a part picked on the model and its
+card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
+the display switches and Reset display, the theme, Back and Forward, a view key, and a link through the URL hash both ways."""
 import asyncio,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import model as mdl;PAGE=mdl.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py); a bare --model is this tool's own (the Hamilton's model without the essay)
 ARGS=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"]
 NOISE=('GL Driver Message','GPU stall')
 STEPS=[]
@@ -279,6 +283,94 @@ async def essay(b,errs,steps):
     try:await pg.wait_for_function("!ESSAY.on()&&!location.hash.startsWith('#essay')",timeout=5000)   # polled: the hash is written 0.3 s after the change, on page time
     except Exception:errs.append('the 3D model tab left the essay open or in the address: '+await pg.evaluate("JSON.stringify({on:ESSAY.on(),hash:location.hash})"))
     await pg.close()
+async def wempe(b,errs,steps):
+    pg=await b.new_page(viewport={"width":1100,"height":760});watch(pg,errs,'wempe')
+    await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=60000);await pg.wait_for_timeout(1500)
+    async def click(sel,label=None,ms=250):
+        await pg.evaluate("s=>{const e=document.querySelector(s);if(!e)throw Error('missing '+s);e.click();}",sel);await pg.wait_for_timeout(ms);steps.append(label or sel)
+    ev=lambda js,*a:pg.evaluate(js,*a)
+    pv=lambda:ev("document.querySelector('#views button[aria-pressed=\"true\"]')?.dataset.v")
+    views=await ev("[...document.querySelectorAll('#views button')].map(b=>b.dataset.v)")
+    for v in views:
+        await click(f'#views button[data-v="{v}"]',f'view {v}',400)
+        if await pv()!=v:errs.append(f'view {v}: its button not pressed')
+    # the Spread slider: shown in the exploded view only, the parts lifted with it
+    await click('#views button[data-v="exploded"]','view exploded',600)
+    if await ev("document.querySelector('#expWrap').classList.contains('hidden')"):errs.append('the Spread slider is hidden in the exploded view')
+    ys=[]
+    for v in(0,50,100):
+        await ev("v=>{const i=document.querySelector('#expR');i.value=v;i.dispatchEvent(new Event('input'))}",v);await pg.wait_for_timeout(400);steps.append(f'spread {v}%')
+        ys.append(await ev("window.__mv.userData.parts.topPlate.position.y"))
+    if not(ys[0]>ys[1]>ys[2]):errs.append(f'the Spread slider did not lift the top plate in steps: {ys}')
+    await click('#views button[data-v="movement"]','view movement',600)
+    if not await ev("document.querySelector('#expWrap').classList.contains('hidden')"):errs.append('the Spread slider shows outside the exploded view')
+    # cross-sections, each moved end to end and with its other half
+    for v in['x','z','y']:
+        await click(f'#secs button[data-v="{v}"]',f'section {v}');await click('#secFlip',f'section {v}, other half');await click('#secFlip')
+        await ev("()=>{const i=document.querySelector('#secOff');i.value=i.min;i.dispatchEvent(new Event('input'));i.value=i.max;i.dispatchEvent(new Event('input'))}");steps.append(f'section {v} moved')
+    await click('#secs button[data-v="off"]','section off')
+    # a part picked on the model: a bare spot of the top plate's outer face in the plan view (O 30, S 10: clear of the cocks and bridges; the upper cock's arm lies over the centre)
+    await click('#views button[data-v="plan"]','view plan',600)
+    cc=await ev("(()=>{const r=document.querySelector('#stage canvas').getBoundingClientRect(),p=window.__proj([[-30,-22.35,10]],Math.PI,1.52,270,32)[0];return[r.left+p[0],r.top+p[1]]})()")
+    await pg.mouse.click(*cc);await pg.wait_for_timeout(500);steps.append('a part picked')
+    h3=await ev("document.querySelector('#info').classList.contains('on')?document.querySelector('#info h3').textContent:''")
+    if not h3.startswith('Top plate'):errs.append(f'clicking the plan view\'s centre opened {h3 or "no card"}, not the top plate')
+    # the parts' pieces: every mesh of a part with pieces in one of them, and every piece with meshes
+    for x in await ev("""(()=>{const P=window.__parts,bad=[],n={};let root=window.__mv;while(root.parent)root=root.parent;
+      root.traverse(o=>{const u=o.userData,p=u.part;if(!o.isMesh||!p||!P[p]||!P[p].pcs)return;if(u.pk===p){bad.push(p+': a mesh in no piece ('+u.hn+')');return;}n[u.pk]=(n[u.pk]||0)+1;});
+      for(const[p,q]of Object.entries(P))for(const c of q.pcs||[])if(!n[p+'.'+c.k])bad.push(p+'.'+c.k+': no mesh');return bad;})()"""):errs.append('pieces: '+x)
+    await ev("location.hash='#part=pillarPlate.screws'");await pg.wait_for_timeout(500);steps.append('a piece by its link')
+    if await ev("document.querySelector('#info .of').textContent")!='Part of: Pillar plate (Unterplatte)':errs.append('#part=pillarPlate.screws: its card does not link to its part')
+    await click('#info .of button','the piece card\'s link to its part')
+    if not (await ev("document.querySelector('#info .of').textContent")).startswith('Its pieces:'):errs.append('the pillar plate\'s card does not list its pieces')
+    await click('#info .x','card closed')
+    # the parts list: search, a box unticked hides its part, ticked shows it
+    await ev("document.querySelector('#partsDet').open=true")
+    for q in['pillar','050800','zzz','']:await ev("q=>{const i=document.querySelector('#pSearch');i.value=q;i.dispatchEvent(new Event('input'))}",q);steps.append(f'parts search {q!r}')
+    vis="k=>{const v=[];window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part===k)v.push(o.visible);});return v;}"
+    row="t=>[...document.querySelectorAll('#plist .prow')].find(r=>r.querySelector('.pn').textContent===t).firstChild.click()"
+    await ev(row,'Pillars (Pfeiler)');await pg.wait_for_timeout(200);steps.append('pillars unticked')
+    if any(await ev(vis,'pillars')):errs.append('unticking the pillars did not hide them')
+    await ev(row,'Pillars (Pfeiler)');await pg.wait_for_timeout(200);steps.append('pillars ticked')
+    if not all(await ev(vis,'pillars')):errs.append('ticking the pillars did not show them')
+    # the opacity menu: right-click a part, fade it, isolate it and back, hide it, show all
+    await pg.mouse.click(*cc,button='right');await pg.wait_for_timeout(400);steps.append('right-click a part')
+    if not await ev("document.querySelector('#opm').classList.contains('on')"):errs.append('right-click on a part opened no menu')
+    else:
+        await ev("()=>{const i=document.querySelector('#opm input');i.value=40;i.dispatchEvent(new Event('input'))}");await pg.wait_for_timeout(200);steps.append('a part faded')
+        if await ev("Object.values(window.__V.st.op)[0]")!=0.4:errs.append('the opacity slider did not fade the part')
+        await click('#opm [data-a="iso"]','isolate')
+        if not await ev("!!window.__V.st.iso&&window.__V.st.iso.size===1"):errs.append('Isolate did not isolate the part')
+        await click('#opm [data-a="uniso"]','show all parts')
+        await pg.mouse.click(*cc,button='right');await pg.wait_for_timeout(400);steps.append('right-click a part again')
+        await click('#opm [data-a="hide"]','hide')
+        if await ev("window.__V.st.hid.size")!=1:errs.append('Hide did not hide the part')
+        await click('#opm [data-a="showall"]','show all')
+        if await ev("window.__V.st.hid.size"):errs.append('Show all left a part hidden')
+        await pg.mouse.click(*cc,button='right');await pg.wait_for_timeout(400);await click('#opm [data-a="all"]','reset all')
+        if await ev("Object.keys(window.__V.st.op).length"):errs.append('Reset all left a part faded')
+    # the display switches, Reset display and the theme
+    for sel in['#colr','#colrSrc','#ghost','#edges','#shadows','#merge','#lbls','#spin','#draw','#drawInk']:await click(sel,f'{sel} on',300);await click(sel,f'{sel} off',300)
+    for sel in['#lbls','#colr','#ghost','#draw']:await click(sel)
+    await click('#dispReset','reset display',500)
+    bad=await ev("['lbls','colr','colrSrc','draw','drawInk','spin','shadows'].filter(k=>document.querySelector('#'+k).checked).concat(document.querySelector('#edges').checked?[]:['edges']).concat(document.querySelector('#merge').checked?[]:['merge'])")
+    if bad:errs.append(f'Reset display left {bad}')
+    for t in['dark','light','auto']:await click(f'#theme button[data-v="{t}"]',f'theme {t}')
+    # Back and Forward, and a view key
+    await click('#views button[data-v="side"]','view side',400);await click('#views button[data-v="plan"]','view plan',400)
+    await click('#hBack','back',400);b1=await pv();await click('#hFwd','forward',400);b2=await pv()
+    if(b1,b2)!=('side','plan'):errs.append(f'Back and Forward gave {b1}, {b2}, not side, plan')
+    await pg.mouse.click(5,5);await pg.keyboard.press('1');await pg.wait_for_timeout(400);steps.append('key 1')
+    if await pv()!=views[0]:errs.append(f'key 1 did not give the {views[0]} view')
+    # a link through the URL hash, both ways: read, then written as the page changes
+    await ev("location.hash='#view=side&part=pillars&sec=x:-6.425'");await pg.wait_for_timeout(800);steps.append('a link read')
+    got=await ev("[document.querySelector('#views button[aria-pressed=\"true\"]').dataset.v,document.querySelector('#info h3').textContent,document.querySelector('#secs button[aria-pressed=\"true\"]').dataset.v].join('|')")
+    if got!='side|Pillars (Pfeiler)|x':errs.append(f'#view=side&part=pillars&sec=x:-6.425 gave {got}')
+    await click('#info .x');await click('#secs button[data-v="off"]');await click('#views button[data-v="exploded"]','view exploded',900)
+    h=await ev("location.hash")
+    if h!='#view=exploded':errs.append(f'the hash after Exploded, the card closed and the section off: {h}')
+    await click('#link','copy link',400)
+    await pg.close()
 async def main():
     errs,steps=[],STEPS
     async with async_playwright() as p:
@@ -286,8 +378,10 @@ async def main():
         # a fresh headless Chromium on SwiftShader loses its first WebGL context a moment after creating it, whatever the page (the original model too):
         # spend that on a blank page, so the pages under test start with a context that stays
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
-        if '--essay' not in sys.argv:await model(b,errs,steps)
-        if '--model' not in sys.argv:await essay(b,errs,steps)
+        if not mdl.HAMILTON:await wempe(b,errs,steps)
+        else:
+            if '--essay' not in sys.argv:await model(b,errs,steps)
+            if '--model' not in sys.argv:await essay(b,errs,steps)
         await b.close()
     print(f'{len(steps)} steps');[print(e) for e in errs]
     print('ok' if not errs else f'{len(errs)} problems');sys.exit(1 if errs else 0)

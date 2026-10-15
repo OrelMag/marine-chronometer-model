@@ -17,6 +17,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--brass);transform-origin:0 50%;transform:scaleX(0)}
 .e-art{max-width:680px;margin:0 auto;padding:12px 22px 96px}
 #essay a{color:var(--blue);text-underline-offset:2px}
+#essay .tabs a{color:var(--muted)}#essay .tabs a:hover{color:var(--ink)}   /* the link to the other model beside the tabs, in the essay's bar as on the model */
 #essay p{margin:0 0 1em}
 #essay h1{font:600 clamp(2.3rem,7vw,3.4rem)/1.05 Spectral,Georgia,serif;letter-spacing:-.01em;margin:30px 0 12px;color:var(--ink)}
 #essay h2{font:600 1.6rem/1.2 Spectral,Georgia,serif;color:var(--ink);margin:2.4em 0 .5em;scroll-margin-top:70px}

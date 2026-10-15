@@ -149,7 +149,9 @@ header p{margin:0;color:var(--muted);max-width:46ch;font-size:14px}
 .opm .chips{display:flex;flex-wrap:wrap;gap:4px}
 .opm .chips button{padding:3px 9px;font-size:12px}
 .tabs{position:absolute;z-index:6;right:10px;top:10px;display:flex;gap:2px;padding:3px;border-radius:999px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.tabs [role="tablist"]{display:flex;gap:2px}
 .tabs button{border:0;border-radius:999px;padding:4px 12px;font-size:12.5px;background:none;color:var(--muted)}
+.tabs a{display:inline-flex;align-items:center;border-radius:999px;padding:4px 12px;font:600 12.5px "Instrument Sans",system-ui,sans-serif;color:var(--muted);text-decoration:none;border-left:1px solid var(--rule);white-space:nowrap}.tabs a:hover{color:var(--ink)}   /* the other model, a page of its own beside the tabs */
 .tabs button[aria-selected="true"]{background:var(--blue);color:var(--panel)}
 /* a view key pressed for a view that is off: its button flashes */
 @keyframes nope{0%,100%{transform:none}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}.nope{animation:nope .3s 2}
@@ -276,7 +278,7 @@ table.rt.book td:first-child{white-space:nowrap}table.rt.book th,table.rt.book t
 /* touch: finger-sized targets */
 @media(pointer:coarse){button{min-height:44px}.ck{min-height:44px}.ck input{width:22px;height:22px}.prow .pn{min-height:40px}.prow input{width:22px;height:22px}
   input[type=range]{height:32px}.spd input[type=number],.clk input[type=time]{min-height:40px}
-  .tabs button{padding:6px 14px;min-height:36px}.info .x{padding:8px 12px}.opm .seg button,.opm .chips button{padding:6px 12px}
+  .tabs button,.tabs a{padding:6px 14px;min-height:36px}.info .x{padding:8px 12px}.opm .seg button,.opm .chips button{padding:6px 12px}
   details.more>summary{min-height:40px}#helpBtn{min-width:44px}}
 /* landscape phones: the stage fills the height from the top, with the title and the panel scrolling beside it
    (the body is the grid and .wrap steps aside, so the header can sit in the panel's column) */
@@ -327,6 +329,11 @@ table.mk td.n,table.mk th.n{text-align:right}table.mk i{display:block;font-style
   #bookPrint h1{font-size:15pt}#bookPrint h2{font-size:12pt;margin:10pt 0 3pt;break-after:avoid}#bookPrint .bk{break-inside:auto}
   #bookPrint table.mk{font-size:8pt}#bookPrint table.mk th,#bookPrint table.mk td{border-bottom:.5pt solid #999;color:#000}
   #bookPrint svg.mkd{display:block;max-width:100%;height:auto;margin:4pt 0 10pt;color:#000;break-inside:avoid}}
+/* the models (the Hamilton, the Wempe): a link to each in the header, the page's own marked */
+nav.models{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px;font-size:12.5px}
+nav.models a,nav.models span{padding:2px 10px;border-radius:999px;border:1px solid var(--rule);color:var(--muted);text-decoration:none;white-space:nowrap}
+nav.models a:hover{color:var(--ink);border-color:var(--blue)}
+nav.models [aria-current]{background:var(--blue);border-color:var(--blue);color:var(--panel)}
 </style>
 <style>
 /* essay.css: the Essay tab (js/essay.js), a reading page laid over the model: the model's tokens, Spectral for the text, Instrument Sans for its controls.
@@ -348,6 +355,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 .e-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--brass);transform-origin:0 50%;transform:scaleX(0)}
 .e-art{max-width:680px;margin:0 auto;padding:12px 22px 96px}
 #essay a{color:var(--blue);text-underline-offset:2px}
+#essay .tabs a{color:var(--muted)}#essay .tabs a:hover{color:var(--ink)}   /* the link to the other model beside the tabs, in the essay's bar as on the model */
 #essay p{margin:0 0 1em}
 #essay h1{font:600 clamp(2.3rem,7vw,3.4rem)/1.05 Spectral,Georgia,serif;letter-spacing:-.01em;margin:30px 0 12px;color:var(--ink)}
 #essay h2{font:600 1.6rem/1.2 Spectral,Georgia,serif;color:var(--ink);margin:2.4em 0 .5em;scroll-margin-top:70px}
@@ -448,6 +456,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 <header>
   <h1>The Marine Chronometer, <em>working</em></h1>
   <div class="hd">
+    <nav class="models" aria-label="The models"><span aria-current="page">Hamilton Model 21</span><a href="wempe/">Wempe Einheits-Chronometer</a></nav>
     <p>A two-day fusee chronometer with a spring detent escapement, built part by part and running in real time. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>September 2026</span><br><a href="mailto:orelmag@gmail.com">orelmag@gmail.com</a></p>
   </div>
@@ -479,7 +488,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
           <dt>Tap empty space</dt><dd>Close a card</dd><dt>Turn the phone sideways</dt><dd>A larger model, with the controls beside it</dd></dl></section></div>
       <p class="note">Reset brings the camera back to the chosen view; ↶ and ↷, under the tabs, go back and forward through the places it has been. Parts too small to tap are listed under Parts. To see how the chronometer works, start the walkthrough under How it works.</p></div>
     <div class="tools"><button id="helpBtn" aria-label="How to use it" aria-controls="help" aria-expanded="false" title="How to use it: mouse, touch and keys">?</button><button id="shot" title="Save a picture of this view (PNG)">Save</button><button id="link" title="Copy a link to this view: the view, speed, part and settings">Link</button><button id="reset" title="Reset view">Reset</button><button id="fs" title="Full screen">Full screen</button></div>
-    <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Marine Chronometer: an essay on how it keeps time at sea, with live figures drawn from this model">Essay</button></div>
+    <div class="tabs"><div role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Marine Chronometer: an essay on how it keeps time at sea, with live figures drawn from this model">Essay</button></div><a href="wempe/" title="The second model: the German Wempe Einheits-Chronometer of the 1940s, built from Wempe’s works drawings">Wempe model</a></div>
     <div class="loading" id="loading">Assembling the movement…</div>
   </div>
   <div class="panel" id="panel">
@@ -5382,7 +5391,7 @@ const ESSAY=(()=>{
   /* the tabs: a click, or the arrow keys between them (the tabs pattern) */
   q('#tabEssay',tabs).addEventListener('click',()=>{show(true);changed();});
   q('#tabModel',tabs).addEventListener('click',()=>{show(false);changed();});
-  tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight'&&e.key!=='Home'&&e.key!=='End')return;e.preventDefault();const on=e.key==='ArrowRight'||e.key==='End';show(on);changed();q(on?'#tabEssay':'#tabModel',tabs).focus();});
+  tabs.addEventListener('keydown',e=>{if(/** @type {any} */(e.target).tagName==='A')return;if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight'&&e.key!=='Home'&&e.key!=='End')return;e.preventDefault();const on=e.key==='ArrowRight'||e.key==='End';show(on);changed();q(on?'#tabEssay':'#tabModel',tabs).focus();});
   /* links within the essay (#essay=section) scroll to their section without a new history entry; links into the model (#tour=3, #view=…) are ordinary: Back returns here.
      A link to the hash already in the address bar fires no hashchange, so it is sent on */
   root.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const h=a.getAttribute('href').slice(1);

@@ -8,7 +8,7 @@ shadow). Build open shapes through extrude() and closeGeo() in core.js. Exit cod
 import asyncio,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
 JS=(HERE/'solids-check.js').read_text(encoding='utf-8')
 async def main():
     bad=0

@@ -15,7 +15,7 @@ Checked over escapement phases, train positions and the wind, since the wheels t
 import asyncio,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
 JS=(HERE/'exploded-check.js').read_text(encoding='utf-8')
 R=0.2;GAP=0.5;T=0.05   # mm: column spacing; least clearance at full spread; overlap as assembled
 STATES=[(0.0,0,2.5,False),(0.25,0,2.5,False),(0.4,37,0.05,False),(0.7,113,8.7,False),(0.4,251,5.5,True),(0.9,409,1,False)]   # (balance phase, escape teeth, fusee turns from full wind, winding)

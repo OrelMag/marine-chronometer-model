@@ -2101,6 +2101,16 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Rendering
 
+- **The Wempe's dial printing overlapped and didn't look like the dial.** Its
+  hours were typeset in the vendored Instrument Sans (600 faked by stroking),
+  all 9 high on one circle, so the 12 ran into the up-and-down sub-dial and the
+  7 and 5 into the seconds sub-dial in ways the real dial doesn't, and the
+  tracks were ruled lines. The printing is now Wempe 3955's: every glyph traced
+  off its photograph (`tools/dialtrace.py` into `wempe/js/dialface.js`), the
+  tracks, circles and band drawn from widths and radii measured on it, the 7
+  and 5 under the seconds track as printed. Keep: the dial's glyphs are traced,
+  never typeset; the geometric printing's numbers come from `dialtrace.py --geo`,
+  and `dialtrace.py --compare` shows the canvas on the photograph. `05babc5`
 - **The hairspring collet's clamp flickered.** The collet's tongue ended at
   5.1 mm from the staff, exactly in the clamp's outer face, and the clamp's
   lower face lay in the plate's face toward the balance, as did the hub's: the

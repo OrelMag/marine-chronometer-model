@@ -1,0 +1,3 @@
+/* wempe.css: the Wempe page's own styles, over the Hamilton's (../chronometer-working-model/css/style.css), which it shares */
+/* the model is in progress: said once, above the controls */
+.card.wip{font-size:13px;line-height:1.45;border-left:3px solid var(--hi)}.card.wip b{color:var(--ink)}
