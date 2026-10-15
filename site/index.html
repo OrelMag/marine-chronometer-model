@@ -3493,6 +3493,11 @@ function buildMovement(M){
   const SSF=0.488,SSH=[[15.9*FK,SSF-48*D2R],[15.9*FK,SSF-8*D2R]].map(([r,a])=>[r*Math.cos(a),r*Math.sin(a)]);
   mesh(R.gw,ring(19.2*FK,18.0*FK,1.8),M.copper,0,-8.0,0);mesh(R.gw,discGeo(18.0*FK,0.5,[[0,0,2.75*FK],[...SSH[0],0.4]]),M.copper,0,-7.6,0);   /* the rim and the floor, with the hole the spring's pin is pressed into */
   mesh(R.gw,discGeo(9.3*FK,0.3,[[0,0,2.75*FK]]),M.copper,0,-7.9,0);mesh(R.gw,ringGeo(4.0*FK,2.75*FK,0.3),M.copper,0,-8.05,0);   /* the raised disc and the hub; the bore (r 2.75 FK, video 27:26) free on the arbor's collar */
+  mesh(R.gw,ringGeo(2.87,2.75*FK,9.75-8.2),M.copper,0,-(8.2+9.75)/2,0);   /* the hub's pipe, r 2.87, up through the sustaining ratchet's bore (r 2.92, 19:12) to 0.05 short of the
+     winding ratchet: the sustaining ratchet rides it, "a small amount of grease on the outside of the hub" (Op. 20, Fig. 71's arrow 2), the two assembled together before
+     the wheel goes on the fusee (Fig. 71, Op. 25) and taken off together (Op. 41). Its outside the ratchet's bore less a running fit, its height to the winding ratchet,
+     estimated; no frame shows it (27:26 the wheel's recess face-on). Until 15 October 2026 the ratchet rode a step r 2.87 on the arbor's collar, under the winding
+     ratchet, which then couldn't come off over it */
   /* sustaining spring (42016; video 27:26, Figs. 69, 71): a flat blued band 2.1 wide against the recess wall, round from its fixed end (a lobe toward the hub, pinned to the wheel) the
      long way to its working end (a smaller lobe across the gap from it, pinned to the sustaining ratchet). The ratchet drives the wheel through it by pushing the working end forward,
      across the gap toward the fixed end: the ring closes, from its gap relaxed (SSG, 20 deg: KLUwI2UUCMQ 27:26, the wheel alone, the fixed lobe's end at 155 deg and the working
@@ -4419,7 +4424,7 @@ function makeFusee(M,c){
   /* the arbor: through the fusee, then a collar r 2.7 k from the fusee's large end to the end plate, on which the winding ratchet's centre, the sustaining ratchet and the fusee wheel
      sit (restoration video 28:08, 28:17, 28:35; Fig. 69, arrow 5: "grease fusee arbor above ratchet wheel"), its end 0.02 past the wheel so the end plate bears on it and leaves
      the wheel free; then on to the plate */
-  const yC0=c.yB+0.6,yC1=-5.88,PV=c.pv??1,SH=c.pv?2.2:1;hn(cylBetween(fz,1,c.collarT??c.aT??-33,yC0,M.steel,0,0,12),'42022');if(c.collarT!=null)hn(cylBetween(fz,PV,c.aT??-33,c.collarT,M.steel,0,0,32),'42022',{sub:1});hn(mesh(fz,new THREE.LatheGeometry([V2(0,yC0),V2(2.7*k,yC0),V2(2.7*k,c.yB+1.2),V2(2.87,c.yB+1.2),V2(2.87,c.yB+1.7),V2(2.7*k,c.yB+1.7),V2(2.7*k,yC1),V2(0,yC1)],40),M.steel),'42022',{sub:1});   /* stepped to r 2.87 under the sustaining ratchet (below) */hn(cylBetween(fz,SH,yC1,-PP_T-0.1,M.steel,0,0,32),'42022',{sub:1});hn(cylBetween(fz,c.pv??0.55,-PP_T-0.1,1.0,M.steel,0,0,32),'42022',{sub:1});   /* its lower pivot, through the plate bushing to the wind indicator pinion turned on its end */
+  const yC0=c.yB+0.6,yC1=-5.88,PV=c.pv??1,SH=c.pv?2.2:1;hn(cylBetween(fz,1,c.collarT??c.aT??-33,yC0,M.steel,0,0,12),'42022');if(c.collarT!=null)hn(cylBetween(fz,PV,c.aT??-33,c.collarT,M.steel,0,0,32),'42022',{sub:1});hn(mesh(fz,new THREE.LatheGeometry([V2(0,yC0),V2(2.7*k,yC0),V2(2.7*k,yC1),V2(0,yC1)],40),M.steel),'42022',{sub:1});   /* straight: the winding ratchet, the fusee wheel and the end plate ride it, the sustaining ratchet the wheel's hub (stepped to r 2.87 under the sustaining ratchet until 15 October 2026) */hn(cylBetween(fz,SH,yC1,-PP_T-0.1,M.steel,0,0,32),'42022',{sub:1});hn(cylBetween(fz,c.pv??0.55,-PP_T-0.1,1.0,M.steel,0,0,32),'42022',{sub:1});   /* its lower pivot, through the plate bushing to the wind indicator pinion turned on its end */
   /* below the collar, a shoulder r 2.2 (SH) down to the plate's bushing, on whose face it bears, then the lower pivot (c.pv, the bushing's BU_P): the end plate and what is on
      the collar come off over the shoulder (Fig. 28), so it is under the end plate's bore and over the bushing's (BU_I). KLUwI2UUCMQ 18:24.5 (the stack off, the arbor
      seen along it) reads the section with the taper pin's hole r 2.4, a step, then about r 2.0 to the pinion (tips r 1.7), against the winding ratchet's tips, each a
@@ -4430,13 +4435,13 @@ function makeFusee(M,c){
      drawn at 23:30's 4.6, where the counterbore stays inside the teeth's roots (r 6.08); the counterbores' depth (0.35, the heads 0.3 and sunk 0.05) and the fusee's boss under it,
      out to r 5.8 to take their threads, estimated. The screws stood proud at r 3.0, heads r 0.55,
      in the sustaining ratchet's open centre until 5 October 2026 */
+  /* its bore on the collar, r 2.75 k (2.43; 28:08-28:35, +-0.3): flat on the mat at KLUwI2UUCMQ 23:30 it is 0.335 of its tips (77 px on 230: r 2.31 on 6.9; 2.23 through
+     the bridge homography), no hub on either face; it comes off the collar's lower end once the stack under it is off (Op. 43; the reassembly's Op. 17) */
   const WRS=[0.6,0.6+Math.PI].map(a=>[4.6/FK*k*Math.cos(a),4.6/FK*k*Math.sin(a)]),wrG={z:WRT.z,m:WRT.m/FK*k,ratchet:1};
   hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.35,{ratchet:'radial',rd:WRT.d*WRT.m/FK*k,bore:2.75*k,holes:WRS.map(q=>[...q,1.4])}),M.steelK,0,c.yB+0.925,0),'42013',{gear:wrG});   /* its upper 0.35, counterbored; dark steel, as the sustaining spring: (25, 23, 31) on its face at KLUwI2UUCMQ 18:24.5, a third of its bright screw head's (71, 73, 71) in the same light (dark at 18:20 too; VIDEOS.md); bright M.steel until 11 October 2026 */
   hn(mesh(fz,gearGeo(WRT.z,WRT.m/FK*k,0.15,{ratchet:'radial',rd:WRT.d*WRT.m/FK*k,bore:2.75*k,holes:WRS.map(q=>[...q,0.7])}),M.steelK,0,c.yB+0.675,0),'42013',{sub:1});mesh(fz,discGeo(5.8/FK*k,1.7,[[0,0,1.05],...WRS.map(q=>hT(...q,1.15,0.55))]),M.gilt,0,c.yB-1.1,0);
   if(c.screw){const fl=new THREE.Group();fl.rotation.x=Math.PI;fz.add(fl);for(const q of WRS)hn(c.screw(fl,q[0],-q[1],-(c.yB+0.75),1.15,0.3,0.15+1.2,0.55),'42014');}
-  /* the collar's step under the sustaining ratchet: r 2.87, its bore's 2.92 less a running fit (Fig. 69: free on the arbor), between the winding ratchet's top and the
-     fusee wheel's level; inferred from that bore (KLUwI2UUCMQ 19:12), no frame shows it (28:08 too oblique; 7:11 end-on) */
-  /* drawn in the collar's profile, above */
+  /* the sustaining ratchet (bore r 2.92, 19:12) rides the fusee wheel's hub, not a step on the collar (buildMovement, the fusee wheel's recess: Op. 20) */
   /* fusee end plate (42019) under the fusee wheel, against the collar's end, and the taper pin (42020) through the arbor below it that holds the stack on (Figs. 28, 70).
      The plate is r 7.0 k, or less to keep 0.3 clear of the centre wheel's teeth, which run at its height (c.epR: 5.6; Figs. 28 and 69 draw it about 0.37 of the wheel across, r 6.7), so it reaches under the wheel's bore, and its
      outer face has a raised boss round its hole with a slot across it, the notches the pin lies in (Ops. 27-29: "the end plate notches correspond to the taper of the taper
@@ -5845,9 +5850,10 @@ const OVH=(()=>{
   /* where a piece comes off other than the way the side facing up and the Exploded view send it: mm from what carries it along the movement's y (+ toward the dial
      side). The winding stop unscrews from the barrel bridge's underside (KLUwI2UUCMQ 12:58-13:04); the barrel's cap is on its dial side, and the arbor (its
      core wider than the barrel's end holes), the mainspring and its brace come out that way once it is off (Ops. 35-37; KLUwI2UUCMQ 15:16-17:04), and the cap's
-     screws' heads are on that side (further out than the cap, which they go on with); the balance lower endstone cap comes out of the lower bridge's underside. The seal ring and its spring, built in the dust seal's group (they rise with it in the Exploded view), stand on the barrel bridge (KLUwI2UUCMQ 12:34-12:38.5), so it carries them here.
+     screws' heads are on that side (further out than the cap, which they go on with); the balance lower endstone cap comes out of the lower bridge's underside. The winding ratchet wheel, screwed to the fusee's large end, comes off the arbor's lower end once the stack under it is off, over the collar's step, the
+     shoulder and the pinion (Op. 43; Fig. 28), 16 mm, past the pinion, and its two screws (42014), whose heads are on that side, ahead of it. The seal ring and its spring, built in the dust seal's group (they rise with it in the Exploded view), stand on the barrel bridge (KLUwI2UUCMQ 12:34-12:38.5), so it carries them here.
      The fusee goes well clear (90 mm), so what comes off it on the bench (Ops. 39-45) lands above the movement, not in the upper train bridge still on it */
-  const UP={'42099':6,'42169':6,'42170':8,'42038':8,'42037':8,'37023':8,'42159.bl':4,'J.ble':4,'42021':-90};
+  const UP={'42013':16,'42014':20,'42099':6,'42169':6,'42170':8,'42038':8,'42037':8,'37023':8,'42159.bl':4,'J.ble':4,'42021':-90};
   function setup(){if(MV.length)return;const mv=A.mv,ids=new Set(Object.keys(HOST));for(const q of[DIS,RE])for(const s of q)for(const k of['out','in','ls'])for(const id of s[k]||[])ids.add(id);
     for(const id of ids)for(const o of find(id)){if(!MVS.has(o)){MV.push(o);MVS.add(o);}o.userData.ovId=id;}
     EX=new Set([...Object.values(mv.userData.parts),...mv.userData.lifted]);

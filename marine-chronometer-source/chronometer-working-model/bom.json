@@ -2409,11 +2409,11 @@
    "parent": "42009A",
    "kind": "part",
    "part": "sratchet",
-   "fn": "Free on the fusee arbor; its pawls take the winding ratchet's drive in running; the sustaining pawl holds it in winding (Sec. IV).",
+   "fn": "Free on the fusee wheel's hub (Op. 20, Fig. 71); its pawls take the winding ratchet's drive in running; the sustaining pawl holds it in winding (Sec. IV).",
    "rel": [
     [
      "round",
-     "42022",
+     "42015",
      "free"
     ]
    ],

@@ -2645,3 +2645,8 @@ An arbor needs pivots and shoulders; a stone its seat.
   could neither come out (Op. 30) nor go in (the reassembly's Op. 52). KLUwI2UUCMQ 12:33.0-12:39.0: the seal's chamber opens underneath, the ring a
   washer r 4.7 on the arbor's shaft, the spring standing on the barrel bridge round the bushing; the overhaul's host for both is the barrel bridge.
   Keep: the seal lifts off them; bom.json has the spring on the barrel bridge (42061).
+- **The winding ratchet wheel couldn't come off the fusee (Winding and maintaining work).** The sustaining ratchet rode a step r 2.87 on the collar,
+  inferred from its bore, under the winding ratchet (bore 2.43), which had to come off over it (Op. 43). The step is gone: the sustaining ratchet rides
+  the fusee wheel's hub, a pipe r 2.87 (Op. 20 greases "the outside of the hub"; Fig. 71 assembles them together), and the winding ratchet's bore,
+  confirmed at 23:30 (r 2.31, no hub), comes off the straight collar's lower end, its screws ahead of it (`UP` in overhaul.js). Keep: nothing on the
+  arbor below the winding ratchet wider than its bore.

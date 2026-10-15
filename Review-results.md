@@ -2290,8 +2290,8 @@ Findings:
 
 The manual's two sequences (Sec. V, Ops. 1-58; Sec. VIII, Ops. 1-105) run on the model, each part lifted off or put on along its arbor in its turn
 (`js/overhaul.js`; model README, "The overhaul"), and checked by `tools/overhaul.py`: no part may pass through another on its way. The order is sound
-on the model, but three readings the model drew kept parts from coming off as the real movement's do. Most certain first (1 and 3 fixed, 15 October
-2026; the work on them: `PLAN-overhaul-findings.md`):
+on the model, but three readings the model drew kept parts from coming off as the real movement's do. All three fixed (15 October 2026), their entries
+gone from the check's `EXPECTED`; most certain first:
 
 1. *Fixed (15 October 2026): the four bushings are one part, r 3.4 bored r 1.85 (`BU_O`, `BU_I`), the pivots in them r 1.82 (`BU_P`): KLUwI2UUCMQ 13:04.4
    (the barrel bridge underside up, nearly face-on: the two upper bushings alike, bore/outside 0.53-0.54; scaled by the arbors' 37.59 mm, outside r
@@ -2310,7 +2310,11 @@ on the model, but three readings the model drew kept parts from coming off as th
    12:58-13:04). Sure of the fault (the geometry). The parts list gives the two upper bushings one number, 42164 (so one bore, where the model has two);
    the square's 2.2 is read at 2.0-2.3 (KLUwI2UUCMQ 38:25), and a 2.0 square (half-diagonal 1.41) would pass the barrel's 1.42. What is too big is the
    measurement "Still open after the collar's height" 1 asks for: the fusee arbor above the collar, the bushing, the dust seal and its ring together.
-2. **The winding ratchet wheel can't come off the fusee** (Op. 43; the reassembly's Op. 17): its bore is r 2.43 (`bore:2.75*k`, k = FK 0.882;
+2. *Fixed (15 October 2026): the step was the reading at fault. The sustaining ratchet rides the fusee wheel's hub, not a step on the arbor: the manual
+   greases "the outside of the hub" (Op. 20, Fig. 71's arrow 2) and assembles the two before the wheel goes on the fusee (Fig. 71, Op. 25). The hub is
+   drawn as a pipe r 2.87 up through the ratchet's bore (2.92), the collar straight at r 2.38, and the winding ratchet's bore stays 2.43, which 23:30
+   confirms (flat on the mat, no hub, the bore 0.335 of its tips: r 2.31). It now comes off the collar's lower end, past the pinion, its two screws ahead
+   of it (`UP` in overhaul.js).* **The winding ratchet wheel can't come off the fusee** (Op. 43; the reassembly's Op. 17): its bore is r 2.43 (`bore:2.75*k`, k = FK 0.882;
    1692), and the arbor beside it steps out to r 2.87 (the sustaining ratchet's seat, 1684: "stepped to r 2.87 under the sustaining ratchet"), the way
    it has to come off; the collar it sits on is r 2.38 (2.7 k). The video reads the collar about r 2.7 (KLUwI2UUCMQ 28:08-28:17, rough: oblique, +-1
    mm). Sure of the fault; which is wrong, the ratchet's bore or the step, is to measure (the large end face-on, the end plate off: 18:24.5, 4K).

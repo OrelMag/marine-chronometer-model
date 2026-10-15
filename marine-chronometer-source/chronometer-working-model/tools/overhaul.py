@@ -28,9 +28,7 @@ EXPECTED=[
     ('d',{39},'42021','42001 #.*','the chain is unwound from the fusee\'s groove, not lifted off it'),('r',{33},'42021','42001 #.*','the chain is wound onto the fusee\'s groove, not dropped onto it'),
     ('r',{28},'42021','42020','the taper pin goes in across the arbor, through its hole (Fig. 70)'),
     ('r',{99},'42032|42033','42034 #.*|42034','the manual sets the minute hand to 12 and the hour hand to 3 first (Op. 64): the model\'s hands show the time'),
-    ('d',{37},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides out along the wall'),('r',{35},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides in along the wall'),
-    ('d',{43},'42021','42013 #.*','Still open in the model: the winding ratchet wheel (bore r 2.43) can\'t come off over the arbor\'s step beside it (r 2.87, the sustaining ratchet\'s seat; the collar about r 2.7 on KLUwI2UUCMQ 28:08-28:17): its bore and the step are to measure'),
-    ('r',{17},'42021','42013 #.*','Still open in the model: the winding ratchet wheel can\'t go on over the arbor\'s step beside it (the disassembly\'s Op. 43)')]
+    ('d',{37},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides out along the wall'),('r',{35},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides in along the wall')]
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
