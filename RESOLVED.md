@@ -642,20 +642,20 @@ Contents:
   wall), so the key held keeps the balance going 10-13 minutes (tools/wempe_sustaining.js);
   the page draws the ratchet ahead of the wheel by that lead and the ring bent to it. Keep: a part's
   working comes from its section, never from an illegible note; which pin goes where is read on
-  the assembly's section (which pin is drawn whole, which hidden). `HASH1`
+  the assembly's section (which pin is drawn whole, which hidden). `30d35f4`
 - **The Wempe's maintaining spring took the last wind's drive.** app.js's wind0() set winding
   before reading the drive, so the spring started from what the last wind left, not the running
-  drive. Keep: read the running drive before the key goes on. `HASH1`
+  drive. Keep: read the running drive before the key goes on. `30d35f4`
 - **The Wempe's maintaining detent's step rode into the fusee wheel's teeth.** Its 2-thick part
   was sized 0.05 clear of the wheel's tips with a 0.25 allowance for its ride on the ratchet; with
   the ratchet ahead of the wheel by the spring's lead it met another phase of its ride and touched
   them (fine.py, 0.008 mm³). Now sized against its seat over a whole tooth: 7.10 from its hole
   (7.55). Keep: a clearance for a riding part is checked over its whole ride, not an allowance.
-  `HASH1`
+  `30d35f4`
 - **The Wempe's fusee always came back onto the same click.** Running, update() carried the fusee
   forward onto click 0's seat, up to a whole tooth of the 35-tooth click wheel (10.3°), though the
   two clicks stand 180° apart, half a tooth out of step, so the nearer one bears within 5.1°. Keep:
-  the fusee rests on whichever click it meets first. `HASH1`
+  the fusee rests on whichever click it meets first. `30d35f4`
 
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
