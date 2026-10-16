@@ -32,17 +32,14 @@ EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) a
  ('fusee:Buffer','stopWork:Cylinder'):("the stop bar's spring's pin (05 06 03-2) in its hole along the slot, \"0,5 H7\" (05 06 04-2), which isn't cut in the body's small end",0.4,0.55),
  ('coverPlate:Lathe','fusee:Lathe'):("the cover plate's screw (WN-20) in the body's M1.7 hole, 6 deep (05 06 04-2), which isn't cut in the turned body",8.5,3.6),
  ('barrelArbor:Cylinder','mainspring:Buffer'):("the arbor's hook (05 07 02-2) through the mainspring's eye at its inner end, the eye not cut in the drawn strip",0.8,2.05),
- ('chain:Extrude','fusee:Lathe'):("the chain's top hook (05 07_14: 5 to its crown, 3.5 wide) seated on the fusee's pin at run down, its plate's edge on the turned body beside the groove's start: 0.01 deep, the hook's and the lathe's facets meeting (since the hook was drawn to its sheet and full wind taken at the stop, 15 October 2026)",0.005,0.03),
  ('chain:Extrude','fusee:Cylinder'):("the chain's top hook on the fusee's pin (05 06 00-6), round it",0.1,0.3),
  ('chain:Buffer','chain:Extrude'):("the chain's hooks riveted between its end links' plates (the rivets through them)",0.08,0.3),
- ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.82 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
+ ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.87 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
  ('band:Extrude','barrel:Lathe'):("the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum",1.2,0.8),
  ('band:Buffer','fusee:Buffer'):("the band in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot, along the groove's walls (as the turned body's)",0.1,0.1),
  ('barrel:Lathe','chain:Extrude'):("the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum",0.4,0.3),
  ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8),
- ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8),
- ('chain:Buffer','fusee:Buffer'):("the chain's links in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot: 0.80 across in the 0.82 land, the links' and the groove's facets meeting (as the turned body's)",0.04,0.06),
- ('chain:Buffer','fusee:Lathe'):("the chain's links in the fusee's groove: 0.80 across in the 0.82 land (05 07 04, 05 06 04-2), the links' and the turned groove's facets meeting",0.04,0.06)}
+ ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8)}
 WIND_SEQ=False
 BARREL=False
 REGISTRY=False   # bom.py's registry matches the Hamilton's catalogue numbers on its cards; the Wempe's lines are drawing numbers (their 'no' empty), so a card's figures (120 teeth, 310 °C) aren't part numbers

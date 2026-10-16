@@ -29,8 +29,8 @@ say('The chain (05 07 04: plates 2 wide, drawn 0.26 thick, three deep; rivets Ø
   line('a rivet, in double shear',`${f(pull,1)} N`,pull/mm2(2*Math.PI*rR*rR),P(STEEL_SH),'steel\'s shear strength');
   line('the rivet bearing on the inner plate',`${f(pull,1)} N`,pull/mm2(2*rR*TK),P(STEEL_UTS.map(x=>1.5*x)),'steel in bearing (1.5 × strength)');
   line('the fusee\'s pin (Ø 0.55 across the flange\'s ribs), double shear',`${f(pull,1)} N`,pull/mm2(2*Math.PI*0.275**2),P(STEEL_SH),'steel\'s shear strength');
-  line('the top hook round it: its throat (3.5 wide, 1.8 deep, 0.9)',`${f(pull,1)} N`,pull/mm2((3.5-1.8)*0.9),P(STEEL_UTS),'steel\'s strength');
-  line('the bottom hook\'s barb on the drum\'s brass wall (1.55)',`${f(pull,1)} N`,pull/mm2(0.9*1.55),P(BRASS_Y.map(x=>1.5*x)),'brass in bearing (1.5 × yield)');}
+  line('the top hook round it: its throat (3.5 wide, 1.8 deep, 0.80: the strip 0.9 finished to the chain\'s width, fusee.js)',`${f(pull,1)} N`,pull/mm2((3.5-1.8)*0.80),P(STEEL_UTS),'steel\'s strength');
+  line('the bottom hook\'s barb on the drum\'s brass wall (1.55, the hook 0.80)',`${f(pull,1)} N`,pull/mm2(0.80*1.55),P(BRASS_Y.map(x=>1.5*x)),'brass in bearing (1.5 × yield)');}
 say('The band (05 07 03: 0.22 +0.03 thick, its width not given, drawn 0.78; hooks of strip 10 × 0.8, brazed)');
 line('the band, in tension (0.22 × 0.78)',`${f(pull,1)} N`,pull/(0.22e-3*0.78e-3),P(STEEL_UTS),'hardened strip steel\'s strength');
 say(`  its brazed hooks' joints aren't sized on the sheets (silver solder about 150-250 MPa in shear: a lap of ${f(pull/(200e6*0.78e-3)*1000,2)} mm on the band's width carries the pull at 200)`);
