@@ -405,7 +405,16 @@ const REV6={
   upperCock:{sn:'Every size from its sheet but the auxiliary hole 20, which the 6MX’s cock hasn’t ('+K247+')',
     d:'The cranked cock over the balance, screwed and pinned to the top plate, holding the balance staff’s upper jewel setting over the opening in the plate. The 6MX’s has no auxiliary hole (the “window” Altmeppen notes in the Wempe’s).'},
   intermediateBridge:{d:'A straight bridge on the pillar plate’s dial side, across the opening for the intermediate wheel: in the 6MX it carries that wheel’s lower jewel in a chaton and the seconds wheel’s lower jewel in its setting.'}};
-const REVP6={topPlate:{bushes:{t:'Centre arbor’s bush (Messinglager WN-301)',d:'The brass bush pressed into the top plate in which the centre arbor’s upper pivot runs, an oil sink in its outer face; the 6MX keeps it, its intermediate and seconds arbors running in jewels instead.',sp:'In the plate’s hole Ø 4.59 · bore Ø 1.21'}}};
+/* the parts the 6MX shares with the first drawn (its escapement at the heights the sheets first drew, and the barrel with its cap underneath): their first-drawn cards, each
+   saying why; the block and detent its own */
+const FIRST6='The Soviet 6MX has this at the heights the sheets first drew (Kirov No. 247’s and Kirov-Poljot 24020’s photographs: the escape wheel just under the top plate, on a long cone collet), so as first drawn: ';
+for(const k of['balance','rollers','escapeWheel','escJewelUp','escJewelLow','escEndstoneLow'])REV6[k]=Object.assign({},REV[k],{sn:FIRST6+REV[k].sn});
+for(const k of['barrel','barrelArbor'])REV6[k]=Object.assign({},REV[k],{sn:'The Soviet 6MX’s barrel cap is underneath (Altmeppen’s list), as the drawings’ barrel of 1941 has it, so as first drawn: '+REV[k].sn});
+Object.assign(REV6,{
+  detentBlock:{src:'drawing',sn:'Every figure of 05 04 01-4, read in first angle as the sheet itself reads, which the 6MX’s block bears out (Kirov-Poljot 24020’s and the loose block’s photographs); the banking screw’s head measured on them; its adjusting slide not built',
+    d:'The Soviet 6MX’s detent block: the revised block’s form, an L of brass under the top plate, its upright at the free face, so the detent hangs between it and the plate at the escape wheel’s height. A screw across the upright’s end is the banking: its domed brass head on the wheel’s side of the detent, the pipe resting on it, sets the depth of lock. The 6MX’s block also has an adjusting slide, not built (the README’s Unresolved).',
+    sp:'05 04 01-4 · base 14.6 × 7.5, 6.5 deep at its end and 3 beyond · upright 3 × 3, 3.5-6.5 under the plate · banking screw M1.2, head Ø 3.2 × 1.4'},
+  detent:{sn:'1436’s revised (bracketed) sizes, at the first-drawn heights the 6MX’s block holds it at; the 6MX’s own detent, shorter, not measured'}});
 const REVP={
   barrelBridge:{click:{sp:'Drawing 05 08 05-2 · Ms 58 federhart · 17.4 × 2.6 · as first drawn, before the change of 25.5.48: its hole Ø 3.2 without the later +0.03'}},
   maintaining:{spring:{t:'Maintaining spring (Gegenfeder), 1941',d:'An open steel ring, its eye pinned to the fusee wheel and its other end to the ratchet: it carries the whole drive, and drives the train alone while the key turns. As first drawn it widens round its turn, from 1.8 on the eye’s side to 3.5 near its square end.',
@@ -420,6 +429,7 @@ const REVP={
       sp:'050408 bis 10 (05 04_7.1, 4.4.41; renumbered 05 04 05) · 23 −0.2 overall · pinion 3 long, its far face 15.2 from the wheel’s · pivots Ø 0.24 × 0.5',src:'drawing',sn:'Its lengths and diameters from 05 04_7.1; the leaves as 05 04 05-2’s; the cone to the upper pivot scaled',figs:'05 04_7.1'},
     collet:{t:'Escape wheel collet (1941)',d:'The brass collet of 1941: a cone Ø 3.0 on the wheel, then a pipe Ø 1.8 to 5 over it.',sp:'05 04 10 (05 04_7.1) · Ø 3.0 × 1.8, Ø 1.8 to 5',src:'drawing',sn:'From 05 04_7.1; the cone’s top Ø 2.2 scaled',figs:'05 04_7.1'}}};
 
+const REVP6={barrel:REVP.barrel,balance:REVP.balance,escapeWheel:REVP.escapeWheel,topPlate:{bushes:{t:'Centre arbor’s bush (Messinglager WN-301)',d:'The brass bush pressed into the top plate in which the centre arbor’s upper pivot runs, an oil sink in its outer face; the 6MX keeps it, its intermediate and seconds arbors running in jewels instead.',sp:'In the plate’s hole Ø 4.59 · bore Ø 1.21'}}};
 /* ================= views ================= */
 /* the camera's turn (yaw), height (pitch, rad) and distance, aimed at a point in the movement's frame. The movement stands train side up (the scene's group turns it over) */
 const VIEWS={

@@ -156,7 +156,7 @@ const WTRAIN=(()=>{
     const rJ=4.596/2,sk={f:-1,rs:2.0,ds:1.2},rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;};   /* rv: a group of one version's pieces (movement.js's setRev) */
     tag(mesh(P.topPlate,bushGeo(rJ,1.21/2,TT,TI,sk),M.brass2,H[1][0],0,H[1][1]),'WN-301');
     {const g=rv(P.topPlate,'last first');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[38][0],0,H[38][1]),'WN-300.t38');tag(mesh(g,bushGeo(rJ,0.86/2,TT,TI,sk),M.brass2,H[35][0],0,H[35][1]),'WN-300.t35');}
-    /* the Soviet 6MX's jewels in chatons (the Variants' third version): Altmeppen, "Sekunden- und Zwischenrad in Steinen in Chatons, nicht in Messinglagern"; the TU's 15
+    /* the Soviet 6MX's jewels in chatons (the Variants' third version): Altmeppen's list: the seconds and intermediate wheels in jewels in chatons, not brass bearings; the TU's 15
        jewels are the drawings' 12 and these three. Kirov No. 247's top plate (2_Kirow_247_A.jpg, 8.97 px/mm) shows at 35 and 38 a flush gilt setting about Ø 4.1 (±0.3), the
        pivot in its middle, no screws; its dial side (3_Kirow_247_uZ.jpg) the same at 38 in the intermediate bridge (the seconds arbor's lower jewel there as drawn). Each chaton
        is taken to fill the bush's hole (4.59 in the plate, 4.3 in the bridge: likely), the stone flush with the face the arbor's shoulder bears on, as the bush's face is, so the

@@ -40,7 +40,7 @@ const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as 
       Ltot:25.3},   // overall 25.3 -0.2 (19.6 + 2 × 2.8 = 25.2): sure; tapped M2.6 through from both ends ("Gewinde von beiden Seiten einschneiden")
     PIL_HOLE:mid(PHF)/2,PIL_HF:PHF,   // the plates' pillar holes, reamed 4.50 +0.012 (PHF; 05 09 01 nos. 11, 39, 49; 05 08 02-1 the same), drawn at the middle of the fit, 4.506: sure
     PILLARS:[H[11],H[39],H[49]],   // nos. 11 S 3,225 O 36,858; 39 S 32,043 W 18,50; 49 N 36,437 W 6,425, each 37.00 from the centre at 95°, 210°, 350° from N toward O: sure
-    /* the Soviet 6MX's pillar 39 (the Variants' third version; Altmeppen: "Pfeiler 39 an anderer Stelle"): Kirov No. 247's top plate (2_Kirow_247_A.jpg, a similarity on the
+    /* the Soviet 6MX's pillar 39 (the Variants' third version; Altmeppen's list: pillar 39 in another place): Kirov No. 247's top plate (2_Kirow_247_A.jpg, a similarity on the
        fusee, barrel, balance and escape arbors and pillars 11 and 49, 8.98 px/mm, residuals under 0.55 mm; the screws' centres by circles fitted to their edges) has no pillar at
        210° and its screw at 190.0°, r 36.45, where 11 and 49 read 94.9° and 350.1°, r 36.9 and 36.7; its dial side (3_Kirow_247_uZ.jpg, seven holes, 8.63 px/mm, under 0.42)
        189.6°, r 37.47, 11 and 49 94.8° and 349.9°, r 36.9 and 37.4. So 190° (sure to ±0.5°: 49's 350° mirrored across the O-W line) and r 36.6-37.3 (each reading corrected by

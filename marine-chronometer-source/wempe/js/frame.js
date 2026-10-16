@@ -245,7 +245,7 @@ const WFRAME=(()=>{
       const thF=[T(c,5.206/2,thin.y0,thin.y1),B(c,3.0,thin.y1,0.5),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),
         T(WESC.HOLES.studScrew,rM14,thin.y0,thin.y1)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
       foot.F=[T(H[8],rCl26,foot.y0,foot.y1),B(H[6],rPinQ,foot.y1,2.5),B(H[50],rPinQ,foot.y1,2.5)];web.F=[B(H[9],rPinQ,web.y1,2.5)];
-      /* the auxiliary hole 20 (Ø 2.8) in the drawings' versions only: the 6MX's cock has none (Altmeppen: "kein Fenster im oberen Unruhkloben", his comparison's arrow on the
+      /* the auxiliary hole 20 (Ø 2.8) in the drawings' versions only: the 6MX's cock has none (Altmeppen's list: no window in the upper cock; his comparison's arrow on the
          Wempe's hole there; Kirov No. 247's cock is plain where the overlay puts 20: sure) */
       VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),M.gilt),'050803-1');});}
     /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
