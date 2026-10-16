@@ -151,7 +151,8 @@ def ring(path_):
 
 def demo():
     """a made-up set with known faults; each must be found"""
-    up = [[0.5 * i, 0.31 + 0.080 * 0.5 * i] for i in range(10)]; dn = [[p[0], p[1] * 0.92] for p in up]
+    k = B['mainspring']['perTurn']   # the model's stiffness, so only its torque is planted (too weak); 0.080 N·m a turn until 16 October 2026, near the linear strip's 0.084
+    up = [[0.5 * i, 0.31 + k * 0.5 * i] for i in range(10)]; dn = [[p[0], p[1] * 0.92] for p in up]
     M = {'mainspring': {'material': 'nivaflex', 'thickness_mm': 0.384, 'winding': {'up': up, 'down': dn}, 'after_week_fully_wound_Nm': 0.64},
          'fusee': {'torque_Nm': [0.285 + 0.004 * i for i in range(18)]},
          'depths_mm': {'fusee-centre': {'plate': 20.384, 'bridge': 20.390}, 'third-fourth': {'plate': 11.250, 'bridge': 11.300}},

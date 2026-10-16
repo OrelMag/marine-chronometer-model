@@ -17,7 +17,7 @@ const td0=Math.abs(sn1-sn0)*ES,ld=sL*ES;   /* the detent spring as drawn: thickn
 const at=(s,kd,kp)=>{const r=ESC.atK(s,kd,kp);return{A:r.A*D,rate:r.rate};};
 /* the value of x at which f(x) crosses y, f monotone between a and b */
 const cross=(f,y,a,b)=>{let fa=f(a)-y;for(let i=0;i<80;i++){const m=(a+b)/2,fm=f(m)-y;if((fm>0)===(fa>0)){a=m;fa=fm;}else b=m;}return(a+b)/2;};
-const E=207e9,b=b0,t=t0/1000,L=L0/1000,m1=2*Math.PI*E*b*t**3/(12*L),Mup=IN*m1/(1-1/ratio);   /* as physics.js: the spring's moment fully wound, N·m */
+const Mup=require('./physics.js').Mup;   /* the spring's moment fully wound, N·m: physics.js's, the solved spring's (tools/mainspring.py; the linear strip's E b t³ / 12 L until 16 October 2026) */
 const rows=[],say=s=>rows.push('  '+s),f=(x,n=2)=>x.toFixed(n),pc=x=>(x>=1?'+':'−')+f(Math.abs(x-1)*100,0)+' %';
 /* the mainspring */
 const sLo=cross(s=>at(s,1,1).A,LO,0.3,1),sHi=cross(s=>at(s,1,1).A,HI,1,3),tLo=t0*Math.cbrt(sLo),tHi=t0*Math.cbrt(sHi),r375=at((0.374/t0)**3,1,1),r419=at((0.419/t0)**3,1,1);

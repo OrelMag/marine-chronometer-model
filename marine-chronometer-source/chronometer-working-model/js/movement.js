@@ -842,10 +842,11 @@ function buildMovement(M){
      ends nearly meeting ... When the pull of the chain is removed ... the ends spring apart a little"; Glasgow, Watch and Clock Making, 1885, p. 65: the mainspring "must
      always be stronger"), so banked it pushes SPU of the 12-hour drive, and less as it relaxes (R.ssF). The lobes keep their shape (each is pinned); the band between them
      spreads over the angle the gap gives up and bows in from the wall, keeping its length. d: how far the spring has relaxed from banked (0 in running, up to SMAX while
-     winding). Its section, SSH_B high (the width measured), from the push it must give: tools/sustaining.js works its stiffness out from the section by Castigliano and checks
+     winding). Its section, SSH_B high (the width measured), from the push it must give (1.45 against the solved mainspring's drive, 0.385 N·m at the fusee wheel, as high as clears the sustaining ratchet's face
+     by 0.02, pushing 0.82 of it; 1.25 until 16 October 2026, pushing 0.88 of the linear strip's 0.311): tools/sustaining.js works its stiffness out from the section by Castigliano and checks
      SPU against it, and the manual's "enough power to drive the chronometer for five to ten minutes" (Sec. IV) as the time it keeps the balance over a turn (it runs on
-     past that, to about 19 minutes, at a falling swing). Lobes and pin places estimated */
-  const SSB=0.5*D2R,SSG=20*D2R,SMAX=SSG-SSB,SPU=0.88,SSH_B=1.25,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
+     past that, to about 18½ minutes, at a falling swing). Lobes and pin places estimated */
+  const SSB=0.5*D2R,SSG=20*D2R,SMAX=SSG-SSB,SPU=0.82,SSH_B=1.45,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
   const sspGeo=d=>{d=clamp(d,-SMAX/4,SMAX);const W=SSF+SSG-SMAX+d,a0=W+SWL,a1=SSF+TAU-SFL,sp=a1-a0,B=(SRO-SSW/2)*(SMAX-d)/sp*Math.PI/2,o=[],I=[];   /* W: the working end's tip; the band's free part runs from a0 to a1 */
     const st=(x,w,r)=>x<w?r:x<w+0.14?lerp(r,SRO-SSW,smooth((x-w)/0.14)):SRO-SSW,rin=a=>Math.min(st(a-W,SWL-0.14,13.9*FK),st(SSF+TAU-a,SFL-0.14,12.8*FK));   /* the lobes' inner edges, eased into the band's over 8 deg */
     for(let i=0,N=200;i<=N;i++){const a=W+(SSF+TAU-W)*i/N,b=a>a0&&a<a1?B*Math.sin(Math.PI*(a-a0)/sp):0,ro=SRO-b,ri=Math.min(rin(a),ro-SSW);o.push([ro*Math.cos(a),ro*Math.sin(a)]);I.push([ri*Math.cos(a),ri*Math.sin(a)]);}
@@ -1633,8 +1634,8 @@ function buildMovement(M){
     R.minW.rotation.y=hA*MR;R.hourW.rotation.y=-hA*HR;R.hour.rotation.y=-hA*HR;R.hkey.visible=!!s.hkeyOn;
     const gA=cA*TRAIN.cp/TRAIN.fu;R.gw.rotation.y=gA;R.ssg.rotation.y=gA;
     /* Maintaining work (Sec. IV). The sustaining spring, between the sustaining ratchet (srA) and the fusee wheel (gA), carries the whole drive (the manual: "through the
-       sustaining spring, under load during the entire running cycle"; nothing banks it): d = gA - srA is how far it has relaxed from its load at the 12-hour drive, and it
-       pushes with SPU (1 - d / SMAX) of that drive (R.ssF). Running, the fusee drives the ratchet through its winding ratchet and pawls, and the spring sits where it balances the
+       sustaining spring, under load during the entire running cycle"), banked (SSB) while the drive is over its push, as a split ring weaker than the drive is (Gould,
+       Glasgow; above): d = gA - srA is how far it has relaxed from banked, and it pushes with SPU (1 - d / SMAX) of the 12-hour drive (R.ssF). Running, the fusee drives the ratchet through its winding ratchet and pawls, and the spring sits where it balances the
        fusee's drive D (R.drvN: d = SMAX (1 - D / SPU), banked at 0 while D is over SPU, all the run but its last taper, and relaxing as the drive tapers to run down; until
        14 October 2026 it carried the whole drive unbanked, d = SMAX (1 - D), its travel the fusee wheel's ten minutes); the fusee turns with the ratchet, its faces on the
        pawls (fa = srA + WPH, whole teeth on; eps = fa less its n turns). Should the fusee's drive fall faster than the train relaxes the spring (run down at once, a jump of the
@@ -1934,8 +1935,8 @@ function makeFusee(M,c){
   /* run down (Sec. III: "a maximum of 56 hours"; "when the chronometer is completely run down, 17-1/2 half turns will be required for a full winding"): once the last turn
      has left the fusee, its end pin (m = ME) swings on past the tangent toward the barrel and the chain runs straight from it to the barrel, so the chain's lever on the
      fusee (the arbor's distance from that line) falls from its pitch radius to nothing over about 0.18 turn (65 deg; 1.2 h), where the line passes through the arbor: the
-     fusee's torque is gone and it comes to rest. The pin is placed so that is at N turns from full wind (RUN_H, the 17 1/2 half turns), 0.18 turn short of the groove's
-     end, which is the measured profile's (the chain's end on the fusee isn't seen in any source); the train stops a little before, its drive under what keeps the
+     fusee's torque is gone and it comes to rest. The pin is placed so that is at N turns from full wind (RUN_H, the 17 1/2 half turns), 8.54 turns down the groove, 0.21 turn
+     short of its end, which is the measured profile's (the chain's end on the fusee isn't seen in any source); the train stops a little before, its drive under what keeps the
      balance swinging (about 0.14 of it). Until 11 October 2026 the chain ended at the groove's end and the drive stopped at RUN_H with 0.03 turn still wound on: abruptly.
      geo(rot): m0 (where the chain leaves the fusee, at most ME), the leaving point F0, the barrel's tangent point (bt its angle) and the straight run S between them, the
      turn round the barrel to the hook (wrap: the chain keeps its length) and the lever, the arbor's distance from the straight run */
@@ -1992,7 +1993,7 @@ function makeFusee(M,c){
   }
   /* the mainspring's turns: Tup at full wind (where the stop-bar stops the key), Tdown = Tup less the barrel's IN turns at run down, and the set-up, what it is
      still wound past its slack (T0, the turns at which the held spring pulls nothing, solved: MSHAPE). The set-up is where the solved spring's pull falls over the
-     chain's IN turns as the chain's lever on the fusee grows, rho0: its pitch line where it leaves the fusee, fully wound against run down (0.490; the groove's floor,
+     chain's IN turns as the chain's lever on the fusee grows, rho0: its pitch line where it leaves the fusee, fully wound against run down (0.510; the groove's floor,
      rmin / rmax, 0.473 until 11 October 2026): a fusee is cut for its spring. Its outer end (theta = TAU T in mainspringGeo) 0.4 mm
      past the pin, so turning it by rot puts the end there at any wind; the eye near the inner end (ey) is where the arbor's hook goes (hookA, in the group's frame) */
   const IN=Ib(N),INT=Ib(RT/TAU),MD=msStates(),rho0=rc(md(0))/rc(ME);let ta=MD.T0,tb=MD.Thi-IN;for(let i=0;i<40;i++){const m=(ta+tb)/2;if(msPull(m)/msPull(m+INT)<rho0)ta=m;else tb=m;}   /* INT: the barrel's turns while the chain leaves the fusee, its lever rising from rc(md(0)) to rc(ME) */

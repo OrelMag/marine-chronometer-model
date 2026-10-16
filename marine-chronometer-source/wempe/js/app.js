@@ -525,7 +525,9 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
         if(GW.rockW>0)GW.rockT+=dw*wR;const sea=GW.rockW>0?gwSea(GW.rockT,wR,GW.rockW):null;GW.roll=sea?sea.r[0]:0;GW.pitch=sea?sea.p[0]:0;
         const lk=GW.latch||cw.u>0;GW.latchK=fix?+lk:clamp(GW.latchK+(lk?1:-1)*dw*1.2,0,1);const fr=1-smooth(Math.min(1,GW.latchK*2)),G=GW.M;
         if(fix){G.p=[0,0];G.r=[0,0];G.lp=GW.pitch;G.lr=GW.roll;}else gwStep(G,dw,GW.pitch,GW.roll,sea,fr);
-        CS.root.rotation.set(GW.pitch,0,GW.roll,'ZYX');CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
+        /* drawn as the ship's people see it (16 October 2026; the Hamilton's the same): the box stands still, the camera riding with the ship, and the ring and bowl swing against
+           it as the gimbals take the roll and pitch; until then the box rolled in a fixed world and the bowl leaned with it toward the apparent vertical, so both seemed to move */
+        CS.root.rotation.set(0,0,0);CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
          square; else standing in its holder in the box (case.js keyAt) */
       {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}
