@@ -4,7 +4,7 @@
    P1e: the dial, motion work, hands and up-and-down work (js/dial.js); P1f: the gimballed case and the wooden box (js/case.js), with the Box and Case views. */
 
 /* ================= parts registry ================= */
-/* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
+/* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate, pillar, cock, bridge or the ring
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
@@ -17,13 +17,13 @@ const PARTS={
   topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the balance opening’s tongue scaled on the sheet',figs:'05 08_1a, 05 08_1b, 05 08_2, 001',c:'#c9d8a8',plate:1,pri:3,
     d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40. On its outer face the maker’s engraving, Gerhard D. WEMPE Hamburg, as on Wempe No. 3955.'+SH,
     sp:'Drawing 05 09 01 (kompl. 05 08 01) · special α-β brass sheet · Ø 85 h6 × 3.35 · barrel cut Ø 42.5 · recess Ø 22 × 0.7 round the fusee · pocket 1.35 deep'},
-  pillars:{t:'Pillars (Pfeiler)',g:0,src:'drawing',sn:'Every size from its sheet but its countersinks and relief grooves, scaled on it',figs:'05 08_11, 001',c:'#707a84',pri:2,
+  pillars:{t:'Pillars (Pfeiler)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet but its countersinks and relief grooves, scaled on it',figs:'05 08_11, 001',c:'#707a84',pri:2,
     d:'Three turned brass pillars hold the plates 19 mm apart. Each sits by its shoulders in a seat in each plate, its spigots in the plates’ reamed holes, a screw from each plate’s outer face in its tapped ends.',
     sp:'Drawing 05 08 00-1 · Ms 58 · body Ø 8.1, 19.6 between the shoulders, 25.3 overall · spigots Ø 4.5 f7 × 2.8 · tapped M2.6 from both ends'},
-  ring:{t:'Movement ring (Werkring)',g:0,src:'drawing',sn:'Its diameters, heights and holes from its sheet; the depths its sheet leaves open fitted from its figures (README)',figs:'05 08_7',c:'#b6bcc2',pri:2,
+  ring:{t:'Movement ring (Werkring)',plate:1,g:0,src:'drawing',sn:'Its diameters, heights and holes from its sheet; the depths its sheet leaves open fitted from its figures (README)',figs:'05 08_7',c:'#b6bcc2',pri:2,
     d:'The ring the movement hangs in, in the case: the pillar plate sits in its seat on a lip, held by three screws whose heads bear on the plate’s rim, and the dial lies in a recess in its flange. Below the lip the ring opens out at 45° toward the dial.',
     sp:'Drawing 05 08 00-3 (revised 6.12.46) · Ø 105.95 × 10.7 · seat Ø 85 H9 × 3 · dial recess Ø 104.0 +0.1 × 0.7 · three M2.6 on Ø 89'},
-  barrelBridge:{t:'Barrel bridge (Federhausbrücke)',g:0,src:'drawing',sn:'Its outline and holes from its sheet; its screws’ and the click screw’s sizes from the coloured section',figs:'05 08_12, 05 08_13, 05 08_14',c:'#d9b36a',pri:2,
+  barrelBridge:{t:'Barrel bridge (Federhausbrücke)',plate:1,g:0,src:'drawing',sn:'Its outline and holes from its sheet; its screws’ and the click screw’s sizes from the coloured section',figs:'05 08_12, 05 08_13, 05 08_14',c:'#d9b36a',pri:2,
     d:'A crescent bridge on the top plate over the barrel, its outer edge turned with the plate’s rim, carrying the barrel arbor’s upper pivot and the click that holds the mainspring’s set-up.',
     sp:'Drawing 05 08 05-1 (kompl. 05 08 05) · Ms 58 sheet · 3.32 thick · chord 73.5, 24 wide'},
   fuseeBush:{t:'Fusee bush (Schneckenfutter)',g:0,src:'drawing',sn:'Every size from its sheet; its screws from the coloured section',figs:'05 08_8, 05 08_2',c:'#e0b45c',pri:1,
@@ -35,13 +35,13 @@ const PARTS={
   corkRing:{t:'Cork ring (Korkring)',g:0,src:'drawing',sn:'Named on 05 08 01 and the coloured section, which draws it; no sheet of its own: its sizes scaled on the section by the dust bush’s own figures, its proportions checked on Lange No. 5829; the bowl’s seat it meets is the 6MX’s (estimated for the Wempe)',figs:'coloured section, 05 08_2',c:'#c8a070',pri:1,
     d:'A cork ring on the dust bush’s top, standing a little over it round the winding square. In the case it meets a raised seat round the winding hole on the bowl’s bottom, so dust that comes in through the hole can’t reach the movement: it goes only down the bush to the winding square.',
     sp:'05 08 01-4 · cork · Ø 16.1 × 3.9 high on the bush’s Ø 9.7 neck, its top 0.95 over the neck’s (scaled)'},
-  upperCock:{t:'Upper balance cock (Unruhkloben oben)',g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
+  upperCock:{t:'Upper balance cock (Unruhkloben oben)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
     d:'The cranked cock over the balance, screwed and pinned to the top plate, holding the balance staff’s upper jewel setting over the opening in the plate.',
     sp:'Drawing 05 08 03-1 · Ms 58 profile · 49 long, 15 high, foot 3.2 · setting seat Ø 5.2 H7'},
-  lowerCock:{t:'Lower balance cock (Unruhkloben unten)',g:0,src:'drawing',sn:'Every size from its sheet',figs:'05 08_4',c:'#8fb3a8',pri:2,
+  lowerCock:{t:'Lower balance cock (Unruhkloben unten)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet',figs:'05 08_4',c:'#8fb3a8',pri:2,
     d:'A block screwed and pinned under the top plate, inside the frame, whose lug holds the balance staff’s lower jewel setting about 10 mm under the plate: the balance swings above the plate, its escapement under it.',
     sp:'Drawing 05 08 00-2 (revised 2.12.46) · Ms 58 profile · bar 20 × 8 × 10, lug 3.22 thick · setting seat Ø 5.2 H7'},
-  intermediateBridge:{t:'Intermediate bridge (Zwischenbrücke)',g:0,src:'scaled',sn:'Its holes’ places from the plate’s table; its outline and thickness scaled on its assembly sheet',figs:'05 08_10, 05 08_32.2',c:'#d6c08a',pri:1,
+  intermediateBridge:{t:'Intermediate bridge (Zwischenbrücke)',plate:1,g:0,src:'scaled',sn:'Its holes’ places from the plate’s table; its outline and thickness scaled on its assembly sheet',figs:'05 08_10, 05 08_32.2',c:'#d6c08a',pri:1,
     d:'A straight bridge on the pillar plate’s dial side, across the opening for the intermediate wheel: it carries that wheel’s lower bearing, a brass bush, and the seconds wheel’s lower jewel in its setting.',
     sp:'Drawing 05 08 04 (the bridge 05 08 04-1 not in the set) · about 45.5 × 10 × 3.8 · screws 34.13 apart'},
   centreWheel:{t:'Centre wheel (Minutenrad)',g:1,src:'drawing',sn:'Every size from its sheets; its pinion’s and the wheel’s teeth from their tables, on the cycloidal form',figs:'05 05_1, 05 05_8, 05 05_9, 05 05_10',c:'#e3b75a',pri:3,
@@ -415,13 +415,40 @@ const VIEWS={
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
   exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
   escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
+  /* the Hamilton's Train, Fusee and Balance views, aimed at the Wempe's arbors (WD.H: the centre 1, the intermediate 38, the seconds 35, the escape wheel WESC.W, the fusee 10,
+     the barrel 45; the balance WESC.B at its rim's middle, WESC.FY - 1.9). The movement stands train side up (turned about x), so the world's z is the frame's -z */
+  train:{yaw:0.2,pitch:1.05,dist:220,target:[(WD.H[1][0]+WD.H[38][0]+WD.H[35][0]+WESC.W[0]+WD.H[10][0])/5,-10,(WD.H[1][1]+WD.H[38][1]+WD.H[35][1]+WESC.W[1]+WD.H[10][1])/5],see:true},
+  fusee:{yaw:Math.atan2(WD.H[45][1]-WD.H[10][1],WD.H[45][0]-WD.H[10][0]),pitch:0.25,dist:150,target:[(WD.H[10][0]+WD.H[45][0])/2,-11,(WD.H[10][1]+WD.H[45][1])/2],see:true},   /* across the line from the fusee to the barrel, the chain between them */
+  balance:{yaw:-2.5,pitch:0.42,dist:95,target:[WESC.B[0],WESC.FY-1.9,WESC.B[1]]},   /* from outside the plates beyond the balance, the dust bush behind it */
   box:{yaw:0.62,pitch:1.08,dist:620,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right, high enough to read the dial through the lid's glass (at 0.42, until 15 October 2026,
      the lid's front wall hid everything in the box: the dial lies 59 under the glass) */
   case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}},   /* the box open: the bowl in its gimbals */
   transport:{yaw:0.62,pitch:0.62,dist:980,target:[0,-40,0],case:{lid:0,lift:0,over:1}}};   /* the wooden box shut in its outer box, the outer lid open, as the arrangement Boden-Chronometer (51 00_1) draws them */
 /* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0), the outer box shown with its lid open (over); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.',
+  train:'The going train from above, plates see-through: fusee wheel, centre, intermediate, seconds and escape wheels.',fusee:'The barrel, the chain and the fusee, plates see-through.',balance:'Close up on the balance under its cock, with its masses, timing weights and hairspring.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
+
+/* ================= the walkthrough ================= */
+/* the Hamilton's How it works, for the Wempe (the viewer's cfg.TOUR): each step a view (its case, see-through), a camera aimed in the movement's frame, the parts singled out, Moving
+   parts only or not, a speed and an inset (app.js fills it: the train's table, 05 06_20's pull, a Wind button, the escapement in plan). Its text from this model's README and
+   essay only */
+const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H[10],H[45]);return[
+  {t:'The case and gimbals',view:'case',rock:true,speed:1,x:'<p>The movement hangs in a cast brass bowl (R-05 01 00-1, “Ms-Sandguß”) under its bezel and glass. The bowl pivots in the gimbal ring, and the ring in its bracket in the mahogany box, on axes at right angles.</p><p>Tilt the box any way and the bowl hangs level. Weighed on the model, the bowl with the movement swings on its pivots in about 0.96 s and the ring in 1.05 s, far quicker than a ship rolls, so the balance stays in the plane it was adjusted in. The transit lock holds both for carrying.</p>'},
+  {t:'The frame',view:'movement',speed:1,focus:['pillarPlate','topPlate','pillars','ring','barrelBridge','fuseeBush','dustBush','corkRing','upperCock','lowerCock','intermediateBridge'],
+    x:'<p>Two brass plates, the pillar plate (Unterplatte) and the top plate (Oberplatte), 19 mm apart on three pillars, the movement ring round the pillar plate setting it in its bowl. Every hole is from the sheets’ hole tables, given as N/S and O/W from hole 1, the centre wheel’s arbor.</p><p>Over the top plate stand the barrel bridge with its click, the fusee’s bush and dust bush, the two balance cocks and the intermediate bridge, each with its screws and steady pins.</p>'},
+  {t:'The going train',view:'train',drive:true,speed:1,focus:['fuseeWheel','centreWheel','intermediateWheel','secondsWheel','escapeWheel','fusee'],inset:'train',
+    x:'<p>The fusee wheel drives the centre pinion; the centre wheel, turning once an hour, carries the minute hand and drives the intermediate pinion; the intermediate wheel drives the seconds pinion; the seconds wheel, turning once a minute, carries the seconds hand and drives the escape pinion. Each wheel is brass, riveted on its steel pinion and arbor.</p>'},
+  {t:'The fusee and chain',view:'fusee',drive:true,speed:3600,focus:['fusee','chain','band','barrel','barrelArbor','mainspring','fuseeWheel','setupRatchet'],inset:'fusee',
+    x:'<p>The mainspring, a steel strip 15 × 0.37 mm (05 06_20), turns the barrel, whose chain (05 07 04: 374 links at a 2.05 pitch) winds off the fusee’s spiral groove. Fully wound the spring pulls hardest, on the fusee’s small end; as it runs down the chain reaches the large end, so the pull on the fusee arbor stays nearly even.</p><p>05 06_20 measured it, running down, on a lever 262 mm long: 126.5 to 138.4 g over the barrel’s five turns. The fusee goes 56 hours on a wind, 8¾ of its turns. At 3600× an hour passes each second.</p>'},
+  {t:'Winding without stopping',view:'fusee',drive:true,speed:60,focus:['fuseeWheel','maintaining','maintDetent','fusee','stopWork','chain','coverPlate','vorreiber','centreWheel'],inset:'wind',v:{yaw:0.6,pitch:0.55,dist:120,target:[H[10][0],-14,H[10][1]]},
+    x:'<p>The key turns the fusee back. That would take the drive off the train, but Harrison’s maintaining work keeps it: the maintaining spring between the maintaining ratchet and the fusee wheel carries the running torque, and while the key turns, the fusee’s clicks ride over the click wheel and the maintaining detent holds the ratchet, so the spring drives the train on, for about a minute.</p><p>At full wind the chain, coming onto the fusee’s top turn, presses the stop bar across its small end out against the stop pin in the top plate, and the key can turn no further.</p>'},
+  {t:'The balance and hairspring',view:'balance',speed:0.05,focus:['balance','hairspring','stud','rollers','upperCock'],
+    x:'<p>The balance is a cut bimetallic rim, brass outside nickel steel, Ø 32.32, cut at 3 and 9, with four brass masses on it and two timing weights at the ends of its steel arm; weighed on the model, 2,561 g·mm². In heat the brass curls the rim’s quarters in, carrying the masses toward the staff, against the hairspring’s weakening.</p><p>The helical hairspring, a steel strip 0.285 × 0.52 tempered blue (05 03_6), cut to 13 turns less 3.5 mm (05 03_7) with its terminal curves bent at both ends, gives the weighed balance 0.497 s; the spring is matched to its balance for the train’s 0.5 s.</p>'},
+  {t:'The spring detent escapement',view:'escapement',drive:true,speed:0.05,focus:['escapeWheel','detent','rollers','balance','detentBlock'],inset:'esc',
+    x:'<p>The escape wheel, 15 teeth, is held by the locking stone on the spring detent. Unlocking, the discharge stone on its roller pushes the gold spring, and the detent with it, until the locking stone lets the tooth go; the wheel, from rest, chases the impulse stone and drives the balance through it, and the next tooth runs on to the locking stone.</p><p>Swinging back, the discharge stone only bends the gold spring aside, the detent staying on its banking: one impulse each oscillation, every 0.5 s.</p>'},
+  {t:'The motion work and dial',view:'movement',drive:true,mw:true,speed:3600,focus:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands','centreWheel','secondsWheel','fusee'],v:{yaw:0.2,pitch:-1.0,dist:200,target:[0,8,0]},
+    x:'<p>The centre arbor carries the cannon tube and the minute hand; through the change wheel (Wechselrad) and the hour wheel, the hour hand. The seconds arbor carries the seconds hand in its sub-dial at 6.</p><p>A pinion on the fusee arbor turns the up-and-down wheel, whose hand reads the hours since winding on the sub-dial at 12, Auf (wound) at 0 to Ab (run down) at 56 hours.</p>'}];})();
 
 /* ================= the page ================= */
 (function(){
@@ -465,7 +492,11 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
      at the escapement's rate (PE.rateAt: s a day against the reference), so the hands gain or lose by it. While the key turns, the maintaining spring drives with what it
      carried when the key went on (w0), falling to nothing over PH.SUS s of the train's time (wT). kick: a twist's swing, eased in over 0.15 s */
   const PH=WPHYS,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:0,Eh:0,kick:0,w0:0,wT:0,rate:0};
-  const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT):0;
+  let MSET=0;   /* the mainspring's set (Swing and isochronism): it pulls that much less all through its run */
+  /* the rate's settings (Rate and timing weights): tw the timing weights, eighth turns in (0 as drawn, against their screws' heads); pl the masses' place, degrees from the cuts'
+     line (WEDATA.heat.drawn, 30, as drawn); T the temperature, °C. At 20 °C and the weights as drawn they move nothing: the model as it was */
+  const RW={tw:0,pl:WEDATA.heat.drawn,T:20};
+  const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT)*(1-MSET):0;
   /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
   let CS=null,cl=1,cf=1,co=0;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
@@ -475,6 +506,11 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid,stay:CS.stay,showOver:v=>{CS.showOver=!!v;}};   /* the box, for audit.py box (geometry-audit-box.js); showOver(1) keeps the outer box shown in every view (bom.py counts it: checks.py's ARM) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);if(Math.abs(PH.MF-fu.MW)>0.002)console.warn('escphys.js MF '+PH.MF+' is not the fusee’s full wind '+fu.MW.toFixed(4));H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
+    /* Moving parts only (the Hamilton's st.drive): the frame, its jewels and bushes, the dial and the case hidden, the barrel see-through so the mainspring shows; the motion work and
+       hands only with Include motion work; the views in the case give way to the Movement view */
+    drive:{hide:['pillarPlate','topPlate','pillars','ring','barrelBridge','fuseeBush','dustBush','corkRing','upperCock','lowerCock','intermediateBridge','balanceJewelsUp','balanceJewelsLow','escEndstoneUp','escJewelUp','escJewelLow','escEndstoneLow','dial',
+      'bowl','closingPlate','bezel','gimbalRing','box','lid','overBox','overLid','caseLock','key'],ghost:['barrel'],mw:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands'],off:['dial','box','case','transport'],to:'movement'},
+    TOUR:WTOUR,tourInset:(k,el)=>tourInset(k,el),tourStep:s=>tourStep(s),
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
@@ -537,21 +573,187 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       const at=()=>{const y=tSim/0.5+H.bOff,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,drv);return{y,p,z,E:k-1+(p>0?z.prog:0)+H.eOff};},lockd=q=>!(q.p>0&&q.z.prog>0&&q.z.prog<1);
       let q=at(),E,s;
       if(!H.held){if((!(drv>0)||H.amp<PE.AMIN)&&lockd(q)){H.held=true;H.bph=q.y;H.Eh=Math.round(q.E);}   /* the train stops at a locked beat */
-        else{const adv=dS*(1+H.rate/86400);tSim+=adv;if(winding)H.wT+=adv;else hrs=Math.min(HRUN,hrs+adv/3600);q=at();}}   /* the fusee turns with the train */
+        else{const adv=dS*(1+(H.rate+rateNow())/86400);tSim+=adv;if(winding)H.wT+=adv;else hrs=Math.min(HRUN,hrs+adv/3600);q=at();}}   /* the fusee turns with the train */
       if(H.held){H.bph+=dS/0.5;
         if(drv>0&&H.amp>=PE.AMIN&&H.kick===0){const b=H.bph-tSim/0.5;H.bOff=b-Math.floor(b);H.eOff=0;const r=at();if(lockd(r)){H.eOff=H.Eh-Math.round(r.E);H.held=false;q=at();}}}   /* going again from where the balance is, on a whole beat */
       const n=hrs/HPT;
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp,0);E=H.Eh+Math.min(0,s.prog);}   /* its own swing, the wheel on its stone (drawn back while the stone lifts) */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
+      if(snd&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tickSnd();lastE=E;   /* the tick: a tooth's fall onto the impulse stone, as the Hamilton's */
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
+      swRec(now);if(!(ES&&ES.on())){swDraw(now,drv);rateShow(now);testShow(now);if(epOn())epDraw($('#benchCv'),s,E,$('#benchCap'));if(tIns)tinDraw(now,s,E);}
       showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
-    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
+    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(MSET)h.set('mset',Math.round(MSET*100));{const b=balStr();if(b)h.set('bal',b);}if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
       read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
         if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
-        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');
+        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');msSet(+(g('mset')||0)||0);   /* mset=15: the mainspring's set, per cent */balApply(g('bal')||'');   /* bal=tw:8,pl:19.5,T:4: the timing weights, the masses' place and the temperature, where they differ from the model's */
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
+  /* the tick sound (Time, Sound; the Hamilton's): on by default; browsers start audio only from a user gesture (and warn if a page tries sooner), so the context is made or
+     resumed on the first click, tap or key, and the ticks are silent until then. A click each time the escape wheel's place E passes a half tooth (its tooth driving the
+     impulse stone), a beat each 0.5 s; at up to real time; none while the train is held */
+  let snd=true,ac=null,lastE=null;const unlock=()=>{if(!snd)return;if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(_){}}if(ac&&ac.state==='suspended')ac.resume();};
+  for(const t of['pointerdown','keydown','touchend'])addEventListener(t,unlock,{capture:true,passive:true});
+  {const e=document.getElementById('snd');if(e){e.checked=snd;e.addEventListener('change',()=>{snd=e.checked;unlock();});}}
+  function tickSnd(){if(!ac||ac.state!=='running')return;const n=ac.createBufferSource(),b=ac.createBuffer(1,ac.sampleRate*0.03,ac.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ac.sampleRate*0.0018));n.buffer=b;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=3400;f.Q.value=2.2;const gn=ac.createGain();gn.gain.value=0.5;n.connect(f).connect(gn).connect(ac.destination);n.start();}
+  /* ---------- Swing and isochronism (the Hamilton's panel): the balance's swing over the last minute (frame time), the rate against the swing at a steady drive, and the swing over a
+     wind, from makeEsc's ampAt and rateAt with the Wempe's settings (WPHYS): a solve takes about 0.3 s, so tools/wempe_essaydata.js works them out in Node for drives 0.2 to 1.8
+     times the reference's (WEDATA.swing) and the page reads between them (swAt). The drive over the wind is 05 06_20's measured force through the train (WPHYS.drv), less the
+     mainspring's set (MSET). The band: the 1954 instruction's 225-270° (chronometers in general: no Wempe source gives its own); the tools' guard band's floor, 185° (README,
+     Physics). The Hamilton's going barrel, its isochronism check (the Navy's) and its sustaining spring's figures have no Wempe counterpart and are left out ---------- */
+  function dark(){return matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark';}
+  /* a small chart (the Hamilton's plot): o.x0..x1, y0..y1, ticks xt, yt with their formats, series [{f or pts, col, w, dash}], marks [{x, y, col}], a cursor at x, bands
+     [{x0, x1, y0, y1, col, lab}], texts [{x, y, t, col, al}] in data units */
+  function plot(cv,o){const w=cv.clientWidth||280,h=Math.round(w*(o.aspect||0.5)),d=Math.min(devicePixelRatio||1,2);if(cv.width!==Math.round(w*d)||cv.height!==Math.round(h*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d);cv.style.height=h+'px';}
+    const x=cv.getContext('2d'),dk=dark(),L0=40,R0=o.r||10,T0p=10,B0=26,pw=w-L0-R0,ph=h-T0p-B0,X=v=>L0+(v-o.x0)/(o.x1-o.x0)*pw,Y=v=>T0p+(1-(v-o.y0)/(o.y1-o.y0))*ph;
+    x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);x.font='11px "Instrument Sans",sans-serif';x.lineWidth=1;const grid=dk?'#2a323a':'#dde1e4',txt=dk?'#9aa4ad':'#5b656e',yc=v=>Y(clamp(v,o.y0,o.y1));
+    for(const b of o.bands||[]){x.fillStyle=b.col;x.fillRect(X(b.x0),yc(b.y1??o.y1),X(b.x1)-X(b.x0),yc(b.y0??o.y0)-yc(b.y1??o.y1));if(b.lab){x.fillStyle=txt;x.textAlign='center';x.fillText(b.lab,(X(b.x0)+X(b.x1))/2,T0p+11);}}
+    x.strokeStyle=grid;x.fillStyle=txt;for(const v of o.xt){x.beginPath();x.moveTo(X(v),T0p);x.lineTo(X(v),T0p+ph);x.stroke();x.textAlign='center';x.fillText(o.xf(v),X(v),h-10);}
+    for(const v of o.yt){x.beginPath();x.moveTo(L0,Y(v));x.lineTo(L0+pw,Y(v));x.stroke();x.textAlign='right';x.fillText(o.yf(v),L0-4,Y(v)+4);}
+    x.save();x.beginPath();x.rect(L0,T0p-2,pw,ph+4);x.clip();
+    for(const sr of o.series){x.strokeStyle=sr.col;x.lineWidth=sr.w||2;x.setLineDash(sr.dash||[]);x.beginPath();let on=false;const pts=sr.pts||Array.from({length:121},(_,i)=>{const v=o.x0+(o.x1-o.x0)*i/120;return[v,sr.f(v)];});
+      for(const[a,b]of pts){if(!Number.isFinite(b)){on=false;continue;}on?x.lineTo(X(a),Y(b)):x.moveTo(X(a),Y(b));on=true;}x.stroke();}
+    x.setLineDash([]);if(o.cursor!=null){x.strokeStyle=txt;x.lineWidth=1;x.beginPath();x.moveTo(X(o.cursor),T0p);x.lineTo(X(o.cursor),T0p+ph);x.stroke();}
+    for(const m of o.marks||[])if(Number.isFinite(m.y)){x.fillStyle=m.col;x.beginPath();x.arc(X(m.x),Y(m.y),m.r||4,0,TAU);x.fill();}x.restore();
+    for(const t of o.texts||[]){x.fillStyle=t.col||txt;x.textAlign=t.al||'left';x.fillText(t.t,X(t.x),Y(t.y));}}
+  function segSet(sel,v){document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
+  const SWT=WEDATA.swing.cv,swAt=s=>{const n=SWT.length;if(!(s>SWT[0][0]))return[SWT[0][1],SWT[0][2]];if(s>=SWT[n-1][0])return[SWT[n-1][1],SWT[n-1][2]];let i=1;while(SWT[i][0]<s)i++;
+    const[a,p,u]=SWT[i-1],[b,q,v]=SWT[i],f=(s-a)/(b-a);return[p+(q-p)*f,u==null||v==null?NaN:u+(v-u)*f];};   /* [the swing (deg), the rate (s a day)] at the drive s, between the drives solved */
+  const swCv=$('#swCv'),swOut=$('#swOut'),swDet=$('#swingDet'),swTr=[];let swKind='t',swLast=0,swKey='',swC=null;
+  function swRec(now){if(swTr.length&&now-swTr[swTr.length-1][0]<100)return;swTr.push([now,H.amp/D2R]);while(swTr.length&&now-swTr[0][0]>61000)swTr.shift();}
+  if(swCv){document.querySelectorAll('#swK button').forEach(b=>b.addEventListener('click',()=>{swKind=b.dataset.v;segSet('#swK',swKind);swLast=0;if(VV)VV.wake();}));swDet.addEventListener('toggle',()=>{swLast=0;if(VV)VV.wake();});}
+  /* the swing and the rate over a wind, hour by hour from full wind (h, deg, s a day), with the fusee's measured drive less the set */
+  function swCalc(){const k=[MSET,HRUN].join();if(k===swKey)return swC;swKey=k;const F=[];for(let i=0;i<=112;i++){const h=HRUN*i/112,[a,r]=swAt(PH.drv(h/HPT)*(1-MSET));F.push([h,a,r]);}
+    const rs=F.map(q=>q[2]).filter(Number.isFinite),as=F.map(q=>q[1]),at=h=>swAt(PH.drv(h/HPT)*(1-MSET));return swC={F,sp:[Math.min(...rs),Math.max(...rs)],sw:[Math.min(...as),Math.max(...as)],d24:at(24)[1]-at(0)[1],a12:at(12)[0]};}
+  function swDraw(now,drv){if(!swCv||!swDet.open||now-swLast<(swKind==='t'?100:500))return;swLast=now;const dk=dark(),blue=dk?'#91adf2':'#26479c',red='#c0392b',brass=dk?'#e0b44f':'#8a5d10',band=dk?'rgba(145,173,242,.12)':'rgba(38,71,156,.08)',muted=dk?'#6d7883':'#8a949c';
+    const C=swCalc(),amin=PE.AMIN/D2R,A=H.amp/D2R,hh=Math.min(hrs,HRUN),sg=(v,n=2)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n),guard=(a,b)=>({pts:[[a,185],[b,185]],col:muted,w:1,dash:[4,3]});
+    if(swKind==='t'){const pts=swTr.map(q=>[(q[0]-now)/1000,q[1]]);
+      plot(swCv,{x0:-60,x1:0,y0:0,y1:300,xt:[-60,-45,-30,-15,0],yt:[0,100,200,300],xf:v=>v?v+' s':'now',yf:v=>v+'°',bands:[{x0:-60,x1:0,y0:225,y1:270,col:band}],
+        series:[{pts:[[-60,amin],[0,amin]],col:red,w:1,dash:[4,3]},guard(-60,0),{pts,col:blue,w:2}],marks:[{x:0,y:A,col:blue}],texts:[{x:-59,y:amin+8,t:'least that works',col:red},{x:-59,y:276,t:'the 1954 instruction'}]});}
+    else if(swKind==='a'){const r=SWT.filter(q=>q[1]>=140&&q[2]!=null).map(q=>[q[1],q[2]]);
+      plot(swCv,{x0:140,x1:280,y0:-2.5,y1:0.5,xt:[150,200,250],yt:[-2,-1,0],xf:v=>v+'°',yf:v=>(v>0?'+':v<0?'−':'')+Math.abs(v),bands:[{x0:225,x1:270,col:band,lab:'1954'}],
+        series:[{pts:r,col:brass,w:2.2}],marks:H.held||H.amp<PE.AMIN?[]:[{x:A,y:H.rate,col:dk?'#e4e8eb':'#141a20'}],texts:[{x:142,y:0.2,t:'s a day'}]});}
+    else plot(swCv,{x0:0,x1:56,y0:150,y1:300,xt:[0,14,28,42,56],yt:[150,200,250,300],xf:v=>v+' h',yf:v=>v+'°',bands:[{x0:0,x1:56,y0:225,y1:270,col:band}],cursor:hh,
+      series:[guard(0,56),{pts:C.F.map(q=>[q[0],q[1]]),col:blue,w:2.2}],marks:[{x:hh,y:swAt(PH.drv(hh/HPT)*(1-MSET))[0],col:blue}],texts:[{x:1,y:290,t:'the swing with the fusee; shaded, the 1954 instruction'}]});
+    const now2=H.held?'<span>The train is held: the balance swings free, or stands.</span>':`<span>Now ${Math.round(A)}° each way, the escape wheel driven at ${Math.round(drv*100)} % of its torque 12 h from full wind${winding?' by the maintaining spring':''}; the escapement with the drawn hairspring ${H.rate>=0?'gains':'loses'} ${Math.abs(H.rate).toFixed(2)} s a day at this swing.</span>`;
+    swOut.innerHTML=`<b>Over a wind ${sg(C.sp[0])} to ${sg(C.sp[1])} s a day</b>${now2}<span>With the fusee the swing stays within ${C.sw[0].toFixed(1)}° to ${C.sw[1].toFixed(1)}° from full wind to run down, and the rate within ${sg(C.sp[0])} to ${sg(C.sp[1])} s a day; wound daily, as the 6MX’s instruction asks, the rate changes ${Math.abs(C.d24).toFixed(2)} s a day between full wind and 24 h. A wind takes about 6 s, so the maintaining spring’s minute hardly moves the swing.${MSET?` The mainspring’s set takes ${Math.round(MSET*100)} % off its pull, so the balance swings ${Math.round(C.a12)}° at 12 h, not ${Math.round(PE.A/D2R)}°.`:''}</span>`;}
+  /* the mainspring's set: a slider in Swing and isochronism, kept in the link as mset=15 (per cent); declarations, as the link's state is read as the viewer starts */
+  function msShow(){const r=$('#msetR');if(r)r.nextElementSibling.textContent=MSET?Math.round(MSET*100)+' % weaker':'as new';}
+  function msSet(v){v=clamp(Math.round(v),0,30)/100;if(v===MSET)return;MSET=v;const r=$('#msetR');if(r)r.value=String(Math.round(v*100));msShow();if(VV)VV.wake();}   /* swCalc follows MSET by itself; swLast is declared after the viewer starts */
+  {const r=$('#msetR');if(r){r.addEventListener('input',()=>msSet(+r.value));msShow();}}
+  /* ---------- Rate and timing weights (the Hamilton's panel): the timing weights (a turn of both 44.2 s a day, README Building it: 0.432 g at r 18.5 on their 0.16 pitch; as
+     drawn against their screws' heads, so only in, 1.9 turns: TWN eighths), drawn moving along their screws; and the temperature curve, wempe_errorbudget.js's day's rate
+     without its scatter: the cut bimetallic balance's coefficient at the masses' place (WEDATA.heat: wempe_thermal.js), the integral balance's secondary error (the middle of
+     its range, Sint: estimated, S losing at the extremes, c2 = -S/256 as the tool's) and the air's density against 20 °C (airK). The model's clock runs at the escapement's rate
+     and these. The masses aren't moved on the model: the rim is drilled for them at the drawn place only ---------- */
+  const TWT=44.2,TWN=15,TWP=0.16,TR=WEDATA.trial,HR=WEDATA.heat.rows;
+  function hAt(x){const n=HR.length;if(x<=HR[0][0])return HR[0][1];if(x>=HR[n-1][0])return HR[n-1][1];let i=1;while(HR[i][0]<x)i++;const[a,p]=HR[i-1],[b,q]=HR[i];return p+(q-p)*(x-a)/(b-a);}   /* the balance's coefficient, s a day gained a °C, the masses x° from the cuts' line */
+  function plAdj(){let a=HR[0][0],b=HR[HR.length-1][0];for(let i=0;i<50;i++){const m=(a+b)/2;hAt(m)>TR.airLin?a=m:b=m;}return Math.round((a+b))/2;}   /* where the masses null the coefficient with the air's linear part (the tool's "adjusted"), to the slider's half degree */
+  function rT(T,pl){const c2=-(TR.Sint[0]+TR.Sint[1])/2/256;return hAt(pl)*(T-20)+c2*(T-20)**2+TR.airK*(293.15/(273.15+T)-1);}   /* s a day gained at T °C against 20 */
+  function rateNow(){return RW.tw/8*TWT+rT(RW.T,RW.pl);}
+  /* the timing weights (bom.json 050301-3) moved in along their screws, from where they are built */
+  let TWM=null;function twApply(){if(!mv)return;if(!TWM){TWM=[];mv.traverse(o=>{if(o.isMesh&&o.userData.hn==='050301-3')TWM.push({o,p:o.position.clone(),d:new THREE.Vector3(0,1,0).applyQuaternion(o.quaternion)});});}
+    for(const w of TWM)w.o.position.copy(w.p).addScaledVector(w.d,-RW.tw/8*TWP);}
+  const twR=$('#twR'),plR=$('#plR'),tmpR=$('#tmpR');let rtLast=0,rtKey='';
+  function rateSync(){if(!twR)return;twR.value=String(RW.tw);plR.value=String(RW.pl);tmpR.value=String(RW.T);const t8=RW.tw;twR.nextElementSibling.textContent=t8?`${Math.floor(t8/8)?Math.floor(t8/8)+' ':''}${t8%8?(t8%8)+'/8 ':''}turn${t8>8?'s':''} in`:'as drawn';
+    plR.nextElementSibling.textContent=RW.pl.toFixed(1)+'°';tmpR.nextElementSibling.textContent=RW.T.toFixed(1)+' °C';segSet('#plSeg',RW.pl===WEDATA.heat.drawn?'drawn':RW.pl===plAdj()?'adj':'');twApply();rtKey='';rtLast=0;tsKey='';if(VV)VV.wake();}
+  /* declarations, as the link's state is read as the viewer starts (bal=, balApply): until the panel is set up (rtReady) they only set RW, which it then shows */
+  var rtReady=false;
+  function rateSet(o){const A=WEDATA.heat.arc;Object.assign(RW,o);RW.tw=clamp(Math.round(RW.tw),0,15);RW.pl=clamp(Math.round(RW.pl*2)/2,Math.ceil(A[0]*2)/2,Math.floor(A[1]*2)/2);RW.T=clamp(Math.round(RW.T*2)/2,0,40);if(rtReady)rateSync();}
+  function balStr(){const o=[];if(RW.tw)o.push('tw:'+RW.tw);if(RW.pl!==WEDATA.heat.drawn)o.push('pl:'+RW.pl);if(RW.T!==20)o.push('T:'+RW.T);return o.join(',');}
+  function balApply(s){if(s===balStr())return;const q={tw:0,pl:WEDATA.heat.drawn,T:20};for(const kv of s.split(',')){const i=kv.indexOf(':'),k=kv.slice(0,i),v=+kv.slice(i+1);if(k in q&&Number.isFinite(v))q[k]=v;}rateSet(q);}
+  if(twR){const a=WEDATA.heat.arc;plR.min=String(Math.ceil(a[0]*2)/2);plR.max=String(Math.floor(a[1]*2)/2);
+    twR.addEventListener('input',()=>rateSet({tw:+twR.value}));plR.addEventListener('input',()=>rateSet({pl:+plR.value}));tmpR.addEventListener('input',()=>rateSet({T:+tmpR.value}));
+    document.querySelectorAll('#plSeg button').forEach(b=>b.addEventListener('click',()=>rateSet({pl:b.dataset.v==='adj'?plAdj():WEDATA.heat.drawn})));
+    $('#rateZero').addEventListener('click',()=>rateSet({tw:0,pl:WEDATA.heat.drawn,T:20}));$('#rateLook').addEventListener('click',()=>{if(VV)VV.setView('balance');});
+    $('#rateDet').addEventListener('toggle',()=>{rtKey='';rtLast=0;if(VV)VV.wake();});rtReady=true;rateSync();}
+  const sgn2=(v,n=2)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n);
+  /* the rate against temperature, 0 to 40 °C: the masses where they are set, at their drawn place dashed and compensated dotted; the TU's 4, 20 and 36 °C marked, and its C and S
+     for the curve (losing +, as the TU counts: C = (ω36 − ω4)/32, S = (ω36 + ω4)/2 − ω20) */
+  function rateShow(now){const det=$('#rateDet');if(!det||!det.open||now-rtLast<500)return;rtLast=now;const k=[RW.tw,RW.pl,RW.T,H.rate.toFixed(3),H.held].join();if(k===rtKey)return;rtKey=k;
+    const dk=dark(),brass=dk?'#e0b44f':'#8a5d10',blue=dk?'#91adf2':'#26479c',mut=dk?'#4a5560':'#b3bac0',pd=WEDATA.heat.drawn,pa=plAdj(),f=T=>rT(T,RW.pl),fs=[f];if(RW.pl!==pd)fs.push(T=>rT(T,pd));if(RW.pl!==pa)fs.push(T=>rT(T,pa));
+    let m=0.5;for(const g of fs)for(let t=0;t<=40;t+=2)m=Math.max(m,Math.abs(g(t)));const y1=m<=1?1:m<=2?2:m<=5?5:Math.ceil(m/10)*10;
+    plot($('#tempCv'),{x0:0,x1:40,y0:-y1,y1,xt:[0,4,20,36,40],yt:[-y1,0,y1],xf:v=>v+'°',yf:v=>(v>0?'+':v<0?'−':'')+Math.abs(v),cursor:RW.T,
+      series:[...(RW.pl!==pd?[{f:T=>rT(T,pd),col:mut,w:1.4,dash:[4,3]}]:[]),...(RW.pl!==pa?[{f:T=>rT(T,pa),col:blue,w:1.2,dash:[1.5,2.5]}]:[]),{f,col:brass,w:2.2}],
+      marks:[4,20,36].map(t=>({x:t,y:f(t),col:brass,r:3})).concat([{x:RW.T,y:f(RW.T),col:dk?'#e4e8eb':'#141a20'}]),texts:[{x:1,y:y1*0.72,t:'s a day gained'}]});
+    const C=-(f(36)-f(4))/32,S=-((f(36)+f(4))/2-f(20)),L=TR.LIM,fig=(a,lim,n=2)=>`<b${Math.abs(a)>lim?' class="bad"':''}>${sgn2(a,n)}</b> (±${lim.toFixed(2)})`;
+    $('#tempOut').innerHTML=`${RW.pl!==pd||RW.pl!==pa?`Dashed, the masses as drawn; dotted, compensated. `:''}The masses ${RW.pl.toFixed(1)}° from the cuts’ line: the balance ${hAt(RW.pl)<0?'loses':'gains'} ${Math.abs(hAt(RW.pl)).toFixed(2)} s a day for each °C warmer (they null it with the air’s at ${pa.toFixed(1)}°). The TU’s figures for this curve: C ${fig(C,L.C,3)} s a day a °C, S ${fig(S,L.S)} s.`;
+    const esc=H.held?0:H.rate,tot=esc+rateNow();
+    $('#rateOut').innerHTML=`<b>${sgn2(tot)} s a day</b><span>The timing weights ${RW.tw?(RW.tw/8).toFixed(3).replace(/\.?0+$/,'')+' turn in':'as drawn'}: ${sgn2(RW.tw/8*TWT)} s a day. At ${RW.T.toFixed(1)} °C, against 20 °C: ${sgn2(rT(RW.T,RW.pl))} s a day. The escapement and hairspring at this swing: ${H.held?'the train is held':sgn2(esc)+' s a day'}.</span>`;}
+  /* ---------- the 35-day trial (the 6MX's TU, as wempe_errorbudget.js runs it): the seeded trial's days (WEDATA.trial: each day's rate, gaining, less the balance's linear term)
+     with the linear term for the masses' place and the timing weights' regulation put back, read to 0.01 s on the accumulated error (losing +), and the TU's figures as the
+     tool works them; beside them its medians over many trials, compensated and at the drawn place (WEDATA.trial.sum) ---------- */
+  var tsKey='',tsLast=0;   /* var: rateSync, set up above, clears it */
+  function trialRun(c1,off){const q2=v=>Math.round(v*100)/100;let e=0;const days=TR.days.map(([Tm,b],i)=>{const r=b+c1*(Tm-20)+off,e1=q2(e-r),v=q2(e1-e);e=e1;return{T:Tm,v,n:i%7>=2};});
+    const per=[0,1,2,3,4].map(k=>days.slice(7*k+2,7*k+7).map(d=>d.v)),m=per.map(rs=>rs.reduce((a,x)=>a+x,0)/rs.length);
+    const Ev=per.reduce((a,rs,k)=>a+rs.reduce((s2,x)=>s2+Math.abs(x-m[k]),0),0)/25,Dv=Math.max(...per.map(rs=>Math.max(...rs.slice(1).map((x,i)=>Math.abs(x-rs[i]))))),w36=(m[0]+m[4])/2,w20=(m[1]+m[3])/2,w4=m[2];
+    const r={E:Ev,R:m[4]-m[0],D:Dv,C:(w36-w4)/32,S:(w36+w4)/2-w20,w:Math.max(...m.map(Math.abs))};r.N=42*Math.abs(r.E)+4.5*Math.abs(r.R)+60*Math.abs(r.C)+2.4*Math.abs(r.S);return{days,m,r};}
+  function testShow(now){const det=$('#testDet');if(!det||!det.open||now-tsLast<500)return;tsLast=now;const k=[RW.tw,RW.pl].join();if(k===tsKey)return;tsKey=k;
+    const{days,m,r}=trialRun(hAt(RW.pl),RW.tw/8*TWT),L=TR.LIM,S=TR.sum,K=['E','R','D','C','S','w','N'],NM={E:'E, mean deviation',R:'R, recovery',D:'D, largest variation',C:'C, a °C',S:'S, secondary',w:'Largest period mean',N:'N, figure of merit'};
+    const out=x=>x==='N'?r.N>L.N:Math.abs(r[x])>L[x],bad=K.filter(out),f=(v,n=2)=>sgn2(v,n),fv=(x,v,n)=>x==='N'||x==='w'||x==='E'||x==='D'?v.toFixed(n):f(v,n);
+    $('#testOut').innerHTML=`<p class="rate" style="margin:0 0 6px"><b>${bad.length?'Failed':'Passed'}</b><span>${bad.length?'Outside the TU’s limits: '+bad.map(x=>NM[x].split(',')[0]).join(', ')+'.':'Every figure within the TU’s limits.'}</span></p>`+
+      '<table class="rt book"><thead><tr><th>Period</th><th class="n">°C</th><th>Daily rates</th><th class="n">Mean</th></tr></thead><tbody>'+
+      TR.TU.map((T,i)=>`<tr><td>${['I','II','III','IV','V'][i]}</td><td class="n">${T}</td><td class="rs">${days.slice(7*i,7*i+7).map(d=>d.n?f(d.v):`<span style="opacity:.5" title="not counted">${f(d.v)}</span>`).join(' ')}</td><td class="n">${f(m[i])}</td></tr>`).join('')+'</tbody></table>'+
+      '<table class="rt book" style="margin-top:8px"><thead><tr><th>Figure</th><th class="n">Model</th><th class="n" title="The median of 2,000 trials with the masses compensated">Comp.</th><th class="n" title="The median of 500 trials with the masses at their drawn place">Drawn</th><th class="n">Limit</th></tr></thead><tbody>'+
+      K.map(x=>{const n=x==='C'||x==='E'?3:x==='N'?1:2;return`<tr><td>${NM[x]}</td><td class="n${out(x)?' bad':''}">${fv(x,r[x],n)}</td><td class="n">${fv(x,S.adj[x][0],n)}</td><td class="n">${fv(x,S.drawn[x][0],n)}</td><td class="n">${x==='N'?'≤ '+L.N:'±'+L[x].toFixed(2)}</td></tr>`;}).join('')+'</tbody></table>'+
+      `<p class="note" style="margin:6px 0 0">Over the tool’s trials ${Math.round(S.adj.pass*100)} % pass with the masses compensated, ${Math.round(S.drawn.pass*100)} % at their drawn place.</p>`;}
+  /* ---------- Escapement in plan (the Hamilton's adjuster's bench's plan, without its sliders: README, "The page's capabilities against the Hamilton's"): the model's own pieces
+     flattened onto the plan in the frame of what moves them, as the essay's figure does (js/essay.js, eEsc), and moved by the state the model shows (s and E from the tick: running,
+     held or stepping fast, as the Hamilton's inset takes it: RESOLVED.md, "Escapement inset ignored the train's state"), seen as 05 04_1 draws it, from above through the top plate.
+     Flattened once for the sheets shown (rev); the explode lifts the parts along y only, so the plan is the same in every view ---------- */
+  let EP=null,epK='';const epOn=()=>{const d=$('#benchDet');return!!d&&d.open;};
+  function epBuild(){const RE=mv.userData.R.esc,PT=mv.userData.parts,MM=VV.M,ok=o=>{for(let p=o;p;p=p.parent)if(p.userData.rev&&p.userData.rev!==rev)return false;return true;};
+    const rel=(o,top)=>{const r=new THREE.Matrix4();for(let p=o;p&&p!==top;p=p.parent){p.updateMatrix();r.premultiply(p.matrix);}return r;};
+    const colOf=o=>{const mt=o.userData.mat0||o.material;return mt===MM.ruby?'ruby':mt===MM.gilt?'gilt':mt===MM.brass||mt===MM.brass2?'brass':mt===MM.copper?'copper':mt===MM.blued?'blued':'steel';};
+    const flat=(o,top)=>{const gm=o.geometry,pa=gm.attributes.position,ix=gm.index,n=ix?ix.count:pa.count,mm=rel(o,top),v=new THREE.Vector3(),pth=new Path2D();let y=0,k=0;
+      for(let i=0;i+2<n;i+=3){const t=[0,1,2].map(j=>{v.fromBufferAttribute(pa,ix?ix.getX(i+j):i+j).applyMatrix4(mm);return[v.x,v.z,v.y];});
+        const ar=(t[1][0]-t[0][0])*(t[2][1]-t[0][1])-(t[2][0]-t[0][0])*(t[1][1]-t[0][1]);for(const p of t){y+=p[2];k++;}if(Math.abs(ar)<1e-7)continue;
+        const u=ar>0?t:[t[0],t[2],t[1]];pth.moveTo(u[0][0],u[0][1]);pth.lineTo(u[1][0],u[1][1]);pth.lineTo(u[2][0],u[2][1]);pth.closePath();}
+      return{pth,y:y/Math.max(1,k),hn:o.userData.hn,col:colOf(o)};};
+    const gold=RE.golds.find(ok)||RE.gold,goldOf=o=>{for(let p=o;p;p=p.parent)if(RE.golds.includes(p))return true;return false;};
+    const P2=[],add=(grp,top,mov,skip)=>grp.traverse(o=>{if(o.isMesh&&o.geometry.attributes.position&&ok(o)&&!(skip&&skip(o)))P2.push({...flat(o,top),mov});});
+    add(RE.ew,RE.ew,'ew');add(RE.rol,RE.rol,'rol');add(RE.det,RE.det,'det',goldOf);add(gold,gold,'gold');
+    for(const c of PT.detent.children)if(c!==RE.det)add(c,mv,'');add(PT.detentBlock,mv,'');
+    P2.sort((a,b)=>(a.mov===''?0:1)-(b.mov===''?0:1)||b.y-a.y);   /* what stands (the block, the detent's foot) under what moves; seen from -y, the deepest first */
+    const Wc=WESC.W,B=WESC.B,S=WESC.P,F=WESC.DPIV,bx=[Math.min(Wc[0]-7.5,B[0]-3.6,S[0],F[0])-1,Math.max(Wc[0]+7.5,B[0]+3.6,S[0],F[0])+1,Math.min(Wc[1]-7.5,B[1]-3.6,S[1],F[1])-1,Math.max(Wc[1]+7.5,B[1]+3.6,S[1],F[1])+1];
+    return{P2,bx,RE,dp:RE.det.children[0].position,gp:gold.position,rev};}
+  /* what the escapement is doing (the essay's captions, eEsc's TXT) */
+  const epTxt=s=>!s.ccw?(s.psDef>1e-4?'Return swing: the discharge stone bends the gold spring aside; the detent stays on its banking, the wheel locked.':'Return swing: the wheel locked, the balance swinging free.'):
+    s.prog<=0?(s.lift>1e-4?'Unlocking: the discharge stone pushes the gold spring, and the detent with it, until the locking stone lets the tooth go.':'The wheel locked, the balance swinging free.'):
+    s.ride?'Let go: the wheel, from rest, turns toward the impulse stone; the detent, flung off the discharge stone, has fallen back onto the tooth it let go and rides it.':s.drop?'Let go: the wheel turns toward the impulse stone, chasing it.':s.run?'The impulse over: the next tooth runs on to the locking stone.':s.prog<1?'Impulse: a tooth drives the balance through the impulse stone.':'The wheel locked on the next tooth.';
+  /* the plan on canvas cv at the state s and the wheel's place E (teeth); cap: the caption's element */
+  function epDraw(cv,s,E,cap){if(!cv||!mv||!VV)return;if(!EP||EP.rev!==rev){EP=epBuild();epK='';}const k=[s.th,s.lift,s.psDef,E,cv.clientWidth,dark(),H.held].join();if(k===epK&&cv._k===k)return;epK=k;cv._k=k;
+    const w=cv.clientWidth||300,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);if(cv.width!==Math.round(w*d)||cv.height!==Math.round(h*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d);cv.style.height=h+'px';}
+    const x=cv.getContext('2d'),{P2,bx,RE,dp,gp}=EP,dk=dark(),RU={steel:dk?'#aab4bd':'#7d8790',gilt:dk?'#e0b44f':'#b8892a',brass:dk?'#d9b25a':'#b5924a',copper:'#b87333',blued:dk?'#91adf2':'#26479c',ruby:'#c3163b'};
+    const kk=Math.min(w/(bx[1]-bx[0]),h/(bx[3]-bx[2]))*0.96,ox=(bx[0]+bx[1])/2,oz=(bx[2]+bx[3])/2;
+    x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);x.save();x.translate(w/2,h/2);x.scale(-kk,kk);x.translate(-ox,-oz);   /* from above: the sheet's O (-x) to the right, N (-z) up */
+    const rot=a=>x.transform(Math.cos(a),-Math.sin(a),Math.sin(a),Math.cos(a),0,0),at2=(p,a)=>{x.translate(p.x,p.z);rot(a);};
+    for(const q of P2){x.save();if(q.mov==='ew')at2(RE.ew.position,E*TAU/15);else if(q.mov==='rol')at2(RE.rol.position,-s.th);else if(q.mov==='det'||q.mov==='gold'){at2(RE.det.position,s.lift||0);if(q.mov==='gold'){x.translate(dp.x+gp.x,dp.z+gp.z);rot(-(s.psDef||0));}}
+      x.fillStyle=RU[q.col];x.globalAlpha=q.mov===''?0.28:q.hn==='050403-1'?0.6:1;x.fill(q.pth);x.restore();}   /* the impulse roller see-through: the discharge roller and its stone are under it, as 05 04_1 draws them dashed */
+    x.restore();x.font='11px "Instrument Sans",sans-serif';x.fillStyle=dk?'#9aa4ad':'#5b656e';x.textAlign='right';x.fillText(`balance ${s.th>=0?'+':'−'}${Math.abs(s.th/D2R).toFixed(1)}°`,w-8,16);x.textAlign='left';x.fillText('O →   N ↑',8,16);
+    if(cap)cap.textContent=H.held?'The train is held: '+(H.amp>0.01?'the balance swings free, the wheel locked.':'the balance at rest.'):epTxt(s);}
+  /* its figures, measured once (makeEsc's measure() at the model's settings: tools/wempe_escapement.js); 05 04_1's where the sheet gives them (README, Physics) */
+  {const t=$('#benchT');if(t){let done=false;const fill=()=>{if(done)return;done=true;const m=PE.measure(),g=v=>(v>=0?'+':'−')+Math.abs(v).toFixed(1)+'°',R=[['The gold spring met',g(m.contact),'−12°'],['The wheel let go',g(m.rel),''],['Lock (met to let go)',m.lock.toFixed(1)+'°',''],
+      ['The detent off the discharge stone',g(m.off),'0°'],['Let-off',m.letoff.toFixed(1)+'°',''],['The gold spring passed, returning',g(m.poff),''],['Overall',m.overall.toFixed(1)+'°',''],['The impulse ends',g(m.impEnd),''],
+      ['Roller shake',m.shake.toFixed(3)+' mm',''],['The teeth into the roller',m.dip.toFixed(2)+' mm',''],['The least swing that works',m.AMIN.toFixed(1)+'°','49.2°'],['The swing at 12 h',m.A.toFixed(1)+'°','']];
+      t.innerHTML='<table class="rt bench"><thead><tr><th>The balance at</th><th class="n">Model</th><th class="n" title="05 04_1, the layout">05 04_1</th></tr></thead><tbody>'+R.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td><td class="n">${r[2]}</td></tr>`).join('')+'</tbody></table>';};
+    $('#benchDet').addEventListener('toggle',()=>{if(epOn())fill();epK='';if(VV)VV.wake();});$('#benchLook').addEventListener('click',()=>{if(VV)VV.setView('escapement');});}}
+  /* ---------- the walkthrough's insets (WTOUR, the viewer's cfg.tourInset) and its ship motion (tourStep); declarations, as a link's tour= is read as the viewer starts ---------- */
+  var tIns=null,tInsK=null,tLast=0,preRock=null;
+  function tourInset(k,el){tInsK=k;tIns=null;if(!el)return;el.innerHTML='';
+    if(k==='esc'||k==='fusee'){const c=document.createElement('canvas');el.appendChild(c);tIns=c;c._cap=document.createElement('p');c._cap.className='note';c._cap.style.margin='4px 0 0';el.appendChild(c._cap);tLast=0;}
+    else if(k==='train'){const r=[['Fusee wheel','90 → 14','×6.43','6.43 h'],['Centre','90 → 12','×7.5','1 h'],['Intermediate','80 → 10','×8','8 min'],['Seconds','80 → 10','×8','1 min'],['Escape','15 teeth','','7.5 s']];
+      el.innerHTML='<table class="rt"><thead><tr><th>Arbor</th><th>Drives</th><th class="n">Ratio</th><th class="n">One turn</th></tr></thead><tbody>'+r.map(q=>`<tr><td>${q[0]}</td><td>${q[1]}</td><td class="n">${q[2]}</td><td class="n">${q[3]}</td></tr>`).join('')+
+        `</tbody></table><p class="note" style="margin:8px 0 0">Overall ×${PH.RATIO.toLocaleString('en',{maximumFractionDigits:1})}: the escape wheel receives that part of the fusee arbor’s torque, less the friction at each stage (the model takes ${Math.round(PH.ETA*100)} % through the train, from its parts). The wheels’ teeth are 05 05’s; the pinions’ 12 and 10 follow from the centres.</p>`;}
+    else if(k==='wind'){el.innerHTML='<button class="primary" id="tWind">Wind it now</button>';$('#tWind').addEventListener('click',()=>{if(hrs<2){hrs=30;hShown=-1;}const w=$('#wind');if(w)w.click();});}}
+  function tourStep(s){const rk=$('#rock');if(!rk)return;if(s&&preRock===null)preRock=GW.rock;const on=s?!!s.rock&&!RMC.matches:!!preRock;if(!s)preRock=null;if(rk.checked!==on){rk.checked=on;GW.rock=on;}}
+  /* the escapement's plan as the model shows it, or 05 06_20's pull over the fusee's turns with the chain's place marked */
+  function tinDraw(now,s,E){if(!tIns.isConnected){tIns=null;return;}if(tInsK==='esc'){epDraw(tIns,s,E,tIns._cap);return;}
+    if(now-tLast<250)return;tLast=now;const n=Math.min(hrs/HPT,PH.MF),dk=dark(),brass=dk?'#e0b44f':'#8a5d10';
+    plot(tIns,{x0:0,x1:8.75,y0:120,y1:145,xt:[0,2,4,6,8],yt:[120,130,140],xf:v=>v?v+' turns':'wound',yf:v=>v+' g',cursor:n,series:[{f:x=>PH.gAt(PH.MF-x),col:brass,w:2.2}],marks:[{x:n,y:PH.gAt(PH.MF-n),col:brass}],texts:[{x:0.2,y:143,t:'05 06_20: g on its 262 mm lever, running down'}]});
+    tIns._cap.textContent=`${hrs.toFixed(1)} h since winding: the chain ${n.toFixed(2)} of the fusee’s turns from full wind, pulling ${PH.gAt(PH.MF-n).toFixed(1)} g on the sheet’s lever.`;}
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
   function wind0(){H.w0=H.held?0:drvNow();winding=true;H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on (read before winding is set, or drvNow gives the spring's own last drive: until 16 October 2026 every wind stopped the train, maintaining.py) */
