@@ -1,4 +1,4 @@
-import asyncio,json,math
+import asyncio,browser,json,math
 import numpy as np
 from playwright.async_api import async_playwright
 import pathlib
@@ -15,7 +15,7 @@ PH={'balance':((775,512),YB),'fusee':((1105,695),YF),'barrel':((440,690),YS),'pi
 EDGE=[(395,300),(300,345),(200,415),(140,490),(110,560),(100,640),(800,1030),(1000,995),(1100,960),(1200,915)]
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":1100,"height":1000},color_scheme='light')
         await pg.goto(PAGE); await pg.wait_for_timeout(4000)
         c=lambda s: pg.evaluate(f"document.querySelector('{s}').click()")

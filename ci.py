@@ -6,6 +6,7 @@
     python ci.py --views [BASE]   # and every view rendered from BASE (default: where this branch left main; on main, HEAD) and from the working tree, the changed pixels per view
     python ci.py --only smoke,audit   # just those steps (names as in the summary)
     python ci.py --jobs 1     # one step at a time, as before 16 October 2026 (default: up to 12 at once, --browsers 3 of them with a browser)
+    python ci.py --swiftshader   # the browser steps' WebGL in software, as before 16 October 2026 (default: on this machine's GPU, tools/browser.py)
 
 Each step's output goes to ci-logs/STEP.txt (ignored by git); the summary lists each step, ok or FAIL, and its time, and the exit code is 1 if any step
 failed. The steps run side by side (the notes above parallel() below): without a browser up to --jobs at once (half the cores, at most 12), with one up to --browsers (3); smoke
@@ -203,10 +204,11 @@ def main():
     steps=[s for s in STEPS if s[0] in only.split(',')] if only else [s for s in STEPS if s[2] in want]
     if only and len(steps)!=len(only.split(',')):print('no such step in',only,'; steps:',', '.join(s[0] for s in STEPS));return 2
     jobs=int(arg('--jobs') or min(12,max(2,(os.cpu_count() or 4)//2)));browsers=int(arg('--browsers') or 3)
+    if '--swiftshader' not in sys.argv:os.environ.setdefault('MC_GL','gpu')   # the browser steps on this machine's GPU (tools/browser.py); SwiftShader with --swiftshader
     LOGS.mkdir(exist_ok=True);res=[];t00=time.time()
     br=subprocess.run(['git','rev-parse','--abbrev-ref','HEAD'],cwd=ROOT,capture_output=True,text=True).stdout.strip()
     dirty=subprocess.run(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,capture_output=True,text=True).stdout.strip()
-    print(f'ci.py on {br}'+(' (uncommitted changes: they are what is checked)' if dirty else '')+(f'; up to {jobs} steps at once, {browsers} of them with a browser' if jobs>1 else '; one step at a time'))
+    print(f'ci.py on {br}'+(' (uncommitted changes: they are what is checked)' if dirty else '')+(f'; up to {jobs} steps at once, {browsers} of them with a browser' if jobs>1 else '; one step at a time')+('; WebGL on the GPU' if os.environ.get('MC_GL')=='gpu' else '; WebGL in SwiftShader'))
     def report(name,rc,dt):res.append((name,rc,dt));print(f'  {name:12s} {"skip" if rc is None else "ok  " if rc==0 else "FAIL"} {dt:6.0f} s'+('' if not rc else f'   ci-logs/{name}.txt'),flush=True)
     mid=[s for s in steps if s[0] not in('build','views')]
     for name,fn,_ in steps:

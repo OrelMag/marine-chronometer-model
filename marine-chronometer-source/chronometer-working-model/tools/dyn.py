@@ -1,4 +1,4 @@
-import asyncio,json
+import asyncio,browser,json
 from playwright.async_api import async_playwright
 import pathlib
 HERE=pathlib.Path(__file__).resolve().parent
@@ -6,7 +6,7 @@ PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 IGN={('trainBridge','barrelBridge'),('trainBridge','cock'),('pillars','barrelBridge'),('spr','cock'),('pillars','trainBridge'),('pillar','pillars'),('ltb','fw'),('bal','cock'),('hands','fw'),('hands','motion'),('gw','fusee')}   # pivots in settings, hand collets on arbors, winding pawls riding the winding ratchet
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600})
         pg.on("pageerror",lambda e: print("ERR",e))
         await pg.goto(PAGE); await pg.wait_for_timeout(5000)

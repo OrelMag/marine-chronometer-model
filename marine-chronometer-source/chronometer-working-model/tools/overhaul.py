@@ -9,7 +9,7 @@ exploded.py's method) and finds, for each pair, the set of relative rises d at w
 (N+1 points, every part of the step by the same share); what the step leaves in the cleaning tray is out of the way. A pair fails at an operation if its d, moving along the path, enters a part of the set that doesn't
 hold where it started (one passes through the other, or comes to rest in it), or if the two overlapped as assembled (a pivot in its hole, a screw in its
 thread) and the move takes them apart the long way (one dragged through the other). Checked in the page as loaded, the model stopped."""
-import asyncio,json,pathlib,re,sys
+import asyncio,browser,json,pathlib,re,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
@@ -31,7 +31,7 @@ EXPECTED=[
     ('d',{37},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides out along the wall'),('r',{35},'42168','42037','the brace lies against the barrel\'s wall, inside the raster\'s 0.2 mm columns: it slides in along the wall')]
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # see smoke.py
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(2000)

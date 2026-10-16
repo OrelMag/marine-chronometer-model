@@ -10,7 +10,7 @@ stands lifted out of its case there, and added to the bowl through the movement'
 
     python massprops.py --model wempe [--write]   # the Wempe's (tools/gimbals_wempe.json): its checks.py's MASSPROPS gives the view, the densities, its extra figures and other bowls
 """
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 import model
 import numpy as np
 from playwright.async_api import async_playwright
@@ -34,7 +34,7 @@ async def load(b,h,mode=None):
     return r
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         r=await load(b,MP['hash'] if MP else '');sp=await load(b,'#drive=1','springs') if not MP else {'m':0,'s':[0,0,0],'S':[[0]*3]*3,'byPart':{}};await b.close()   # the Wempe builds its springs always
     # the springs' moments (mg, mm, the movement's frame) into the ring's: s' = R s + m t, S' = R S Rᵀ + R s tᵀ + t (R s)ᵀ + m t tᵀ
