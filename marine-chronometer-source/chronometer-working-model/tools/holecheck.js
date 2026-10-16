@@ -57,6 +57,14 @@
         /* which way the metal is: the face's normal points out of it, so the hole runs along -n; its depth: the mesh's extent that way, or its floor */
         const ax=n.clone().negate();let dep=0;const{T:TT}=W.get(o);for(let i=0;i<TT.length;i+=3){const d=(TT[i]-cen.x)*ax.x+(TT[i+1]-cen.y)*ax.y+(TT[i+2]-cen.z)*ax.z;if(d>dep)dep=d;}
         const fl=hits(o,cen.clone().addScaledVector(ax,1e-3),[ax.x,ax.y,ax.z]).filter(t=>t>1e-3);if(fl.length)dep=Math.min(dep,Math.min(...fl)+1e-3);   /* a blind hole: its floor */
+        /* opt.wall (the Wempe's: checks.py's HOLE_WALL): a through hole in a part deeper than the metal round it (its upper cock, one solid 15 deep, its hole 20 through the
+           arm's 2.4 over the balance) is as deep as the metal round its edge, followed along the axis from 0.03 outside it at four places (where at least two are in the
+           metal); else the part's whole depth, so a hole through a thin arm takes what passes under it for its pin. The Hamilton's keeps the whole depth: with the wall its
+           barrel bridge's opening over the third pillar screw reads 0.12 deep and holding the screw's head (16 October 2026, not looked into) */
+        if(opt.wall){const b1=new THREE.Vector3(1,0,0);if(Math.abs(ax.x)>0.9)b1.set(0,1,0);b1.sub(ax.clone().multiplyScalar(b1.dot(ax))).normalize();const b2=ax.clone().cross(b1),wd=[];
+          for(let k=0;k<4;k++){const t=k*Math.PI/2+0.3,p=cen.clone().addScaledVector(b1,(r+0.03)*Math.cos(t)).addScaledVector(b2,(r+0.03)*Math.sin(t)).addScaledVector(ax,1e-3);
+            if(inside(o,p)){const h=hits(o,p,[ax.x,ax.y,ax.z]);if(h.length)wd.push(Math.min(...h)+1e-3);}}
+          if(wd.length>=2)dep=Math.min(dep,Math.max(...wd));}
         if(dep<0.02)continue;
         if([0.25,0.5,0.75].some(f=>inside(o,cen.clone().addScaledVector(ax,dep*f)))){skipped.push({part:pn(o),hn:hnOf(o),c:[cen.x,cen.y,cen.z].map(x=>+x.toFixed(2)),r:+r.toFixed(3),depth:+dep.toFixed(2),why:'own metal on its axis'});continue;}   /* its own metal on the axis: a turned part's step (a shoulder round its narrower part), not a hole */
         /* points through the whole depth (every 0.05 mm, at most 40), on the axis and on rings at 0.6 and 0.9 of the radius (a pipe in a hole is hollow on its axis; a

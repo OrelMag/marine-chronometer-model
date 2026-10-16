@@ -84,3 +84,23 @@ MASSPROPS={'out':'gimbals_wempe.json','hash':'#view=case','alt':{'bakelite':1.37
 # smoke.py's essay steps (the Essay tab, js/essay.js): the link into the model it follows (the escapement view; Back must return to the essay where it was), what that must
 # give (the essay hidden, the view's button pressed), the section #essay=… opens, and its report button (Report a bug, since 3.00.00)
 ESSAY={'link':'#view=escapement','got':"[ESSAY.on(),document.querySelector('#views button[aria-pressed=\"true\"]').dataset.v]",'want':[False,'escapement'],'sec':'detent','report':True}
+# holecheck.py --model wempe: the states the movement is checked in (the sheets as last revised, the page's default, and as first drawn: movement.js's setRev), and the
+# holes expected empty: (part, line or '' for any, centre in the movement frame within 0.4 or None for any, state or None for both, why it is empty on the real clock too)
+# HOLE_WALL: a hole is as deep as the metal round its edge (holecheck.js's opt.wall), since the upper cock is one solid 15 deep and its auxiliary hole 20 goes through the arm's 2.4
+# over the balance (with the part's whole depth the balance passing under it read as its pin)
+HOLE_WALL=True
+HOLE_STATES=[('last',"__mv.userData.setRev('last')"),('first',"__mv.userData.setRev('first')")]
+_HS="a hole of the hand setting (Zeigerstellung 05 33), struck through on 05 08 02-1 with \"nur wenn Zeigerstellung eingebaut wird\": drilled, the work not fitted, as Wempe 3955's plate (3_Wempe_3955_uZ.jpg, 6_Wempe_3955_S.jpg) and Greenwich's wartime Wempe's (rmg_L5393_wempe_wartime_002.jpg) have them empty (README, Superseded)"
+_AUX="an auxiliary hole (Hilfsloch, reamed 3.50 +0.012 in both plates' tables, 05 09 01 and 05 08 02-1): nothing goes in it; the three small windows beside the pillars Altmeppen lists among the German features (README, How each frame part was measured); Wempe 3955's dial side shows 12 where the table puts it, 40 not (README, Unresolved)"
+_HD="the balance holding device's (Unruhhaltevorrichtung 05 36: 51 Zangenschraube M2, 52 Winkelhebelschr. M2, 53 Stift f. Wendelfeder 1.5 H7, 05 09 01's table): the device isn't built, as it doesn't fit the balance and detent as last revised; the 1943 plate keeps its pocket and holes, so one was fitted, its later form not in the set (README, Unresolved)"
+_H30="hole 30 (Ankerrad), in the detent pillar plate's own table (05 08 02-1) and drilled in Wempe 3955's plate: its setting's seat (Ø 5.2 H7, the 4.59 lip) and its two M1.2 built as the table gives them, and left empty (README, Superseded)"
+HOLE_EXPECTED=[('pillarPlate','050802-1',c,None,f"{k}: {_HS}") for k,c in[(14,[-36.41,0,17.23]),(15,[-33.21,0,22.87]),(16,[-30.79,0,21.47]),(17,[-33.99,0,15.93]),(18,[-22.14,0,12.78])]]+[
+  (pl,'050802-1|050901',[x,y,z],None,f"{k}: {_AUX}") for pl,y in(('pillarPlate',0),('topPlate',-22.35)) for k,x,z in((3,0,-37),(12,-35.74,9.58),(40,26.16,26.16))]+[
+  ('pillarPlate','050802-1',[-9.1,0,12.11],None,"23 (Unruh) in the pillar plate, punched 4.4 in the table and drawn Ø 7 on the plan: the balance's lower bearing is in the lower cock under the top plate (05 08 00-2), and nothing on the sheets or the coloured section stands in it; its use isn't given"),
+  ('pillarPlate','050802-1',[-5.03,0,33.73],None,"30: "+_H30),('pillarPlate','050802-1',[-5.03,2.85,33.73],None,"30, its lip: "+_H30),
+  ('pillarPlate','050802-1',[-8.53,0,33.73],None,"30, an M1.2: "+_H30),('pillarPlate','050802-1',[-1.53,0,33.73],None,"30, the other M1.2: "+_H30),
+  ('topPlate','050901',[-23.39,-20.35,7.54],None,"51, from the pocket's floor: "+_HD),('topPlate','050901',[-20.84,-22.35,24.09],None,"52: "+_HD),('topPlate','050901',[-15,-22.35,37],None,"53: "+_HD),
+  ('upperCock','050803-1',[-6.51,-37.35,2.45],None,"20 (Hilfsloch f. U. Kl. ob., drilled 2.8: 05 08 03-1's table), the upper cock's auxiliary hole through its arm, 10 from the balance: nothing goes in it"),
+  ('balance','050301-1',None,'first',"as first drawn, the arm's two screw holes (Ø 1 at 2.14 either side of its hole, 05 03 01-1 of 31.7.41): the 1941 staff's brass collar (05 04_5) has no screw holes and the arm is riveted on its neck, so they stand empty (README, As first drawn); the balance turns, so anywhere"),
+  ('rollers','050403-1',None,None,"the impulse roller's hole Ø 1.3, 1.9 below its centre and 0.7 to the side (02 04 02, revised 10.9.41: sure), through it beside the staff: open, its use not given; the balance turns, so anywhere"),
+  ('dial','050200-4',[-5.02,10.35,50.25],None,"the dial's Ø 1 at 185.7° on Ø 101 (05 02 00-4, scaled), opposite its pin's at 6°: nothing under it in the movement ring (05 08 00-3), its use not given")]
