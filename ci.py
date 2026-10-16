@@ -132,6 +132,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-audit-box-first',lambda log:run([PY,'audit.py','box','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the box as first drawn (the 1940 key) (about 10 s)
  ('wempe-inertia',lambda log:run([PY,'wempe_inertia.py'],TOOLS,log),'browser'),   # the Wempe's escapement's bodies weighed on its solids, against wempe_inertia.json (about 30 s)
  ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)
+ ('wempe-holecheck',lambda log:run([PY,'holecheck.py','--model','wempe'],TOOLS,log),'browser'),   # every round hole in the Wempe's parts populated or explained (checks.py's HOLE_EXPECTED), as last revised and as first drawn (about 1½ minutes)
  ('wempe-stopwork',lambda log:run([PY,'wempe_stopwork.py'],TOOLS,log),'browser'),   # the Wempe's stop bar against its stop pin over the last 1.2 turns, chain and band: the stop holds full wind, never catches early, the pin bears on the bar's whole thickness (about 45 s)
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)
