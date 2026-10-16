@@ -46,6 +46,7 @@ Ich baue nach den auf dg-chrono.de veröffentlichten Werkzeichnungen ein laufend
 2. **Das kleine Ende einer Schnecke mit abgenommener Deckplatte** (05 06 00-4, eine Schraube M1,7): ein Foto schräg von der Seite, sodass man die Stegfeder an der Wand der Ausdrehung (1,6 tief) sieht, und eines senkrecht von oben, möglichst mit einem Maßstab daneben.
 3. **Das Gangende N der Schneckenrille** (05 06 04-2): das kleine Ende ohne Kette, senkrecht von oben, sodass man sieht, wo der oberste Gang in die Nabe ausläuft, im Verhältnis zum Schlitz des Stellungsstegs.
 4. **Weitere Teile ohne Blatt in der Reihe:** 05 05 05-2 (Gegensperrwelle), 05 05 06-1 (Feder, der Drahtfeder des Gegensperrkegels), 05 08 01-5 (Anschlagstift), 05 08 01-4 (Korkring), 05 02 01-2 (Zeigerfutter des Sekundenzeigers) und 05 01 00-4 (Feststellkloben).
+5. **Die Hemmung eines Wempe nach 1946 von der Seite** (mit der Unruhwelle 05 04 02 vom 29.5.46): ein Foto zwischen den Platinen, waagerecht auf das Gangrad, den Gangfederkloben (05 04 01-4) und die Begrenzungsschraube mit ihrem gewölbten Kopf, möglichst mit einem Maßstab; oder ein späteres Blatt der Gangfeder oder des Klobens. Die Höhe der Gangfeder unter der Oberplatte passt nach den Blättern nicht zugleich zum Kloben und zur Auslöserolle der Welle von 1946; die fotografierten Werke (Kirow DEC 422, 479; 6MX) zeigen die frühere Anordnung.
 
 Vielen Dank!
 
@@ -57,7 +58,8 @@ Vielen Dank!
 2. **A fusee's small end with its cover plate off** (05 06 00-4, one M1.7 screw): one photograph from the side at an angle, showing the spring against the recess wall (1.6 deep), and one square from above, with a scale beside it if possible.
 3. **The groove's end N** (05 06 04-2): the small end with the chain off, square from above, showing where the top turn runs out into the hub against the bar's slot.
 4. **Other parts with no sheet in the set:** 05 05 05-2 (the maintaining detent's arbor), 05 05 06-1 (its wire spring), 05 08 01-5 (the stop pin), 05 08 01-4 (the cork ring), 05 02 01-2 (the seconds hand's collet) and 05 01 00-4 (the locking bracket).
+5. **The escapement of a Wempe made after 1946 from the side** (with the balance staff 05 04 02 of 29.5.46): a photograph between the plates, level with the escape wheel, the detent block (05 04 01-4) and the banking screw with its domed head, with a scale if possible; or a later sheet of the detent or its block. By the sheets, the detent's height under the top plate can't suit both the block and the 1946 staff's discharge roller; the movements photographed (Kirow DEC 422, 479; the 6MX) show the earlier arrangement.
 
 ---
 
-Where each answer goes: 1 and 2 in `wempe/README.md`'s stop work and its "Estimated" entry (the spring's height, a design value 0.9-1.5 since 16 October 2026; `fusee.js` at `SPW`, `tools/wempe_strength.js`); 3 in its "Unresolved" (N against the model's groove end, `PHI0`); 4 in its "Estimated" entries for each part.
+Where each answer goes: 1 and 2 in `wempe/README.md`'s stop work and its "Estimated" entry (the spring's height, a design value 0.9-1.5 since 16 October 2026; `fusee.js` at `SPW`, `tools/wempe_strength.js`); 3 in its "Unresolved" (N against the model's groove end, `PHI0`); 4 in its "Estimated" entries for each part; 5 in its "Unresolved" (the detent's banking: `js/escapement.js`'s block, `dv`'s `d0`, the screw `WN-gkA`).

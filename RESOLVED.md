@@ -1960,6 +1960,14 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's transit lock stood too low, and its box flickered on the handles and the lock's lever** (16 October 2026, the
+  user's screenshots). The lever was drawn at the gimbal pivots' height, 16 under the box's rim, its knob 10 thick on a Ø 4 stem
+  barely clearing the rim; Wempe 5377 and Greenwich's wartime Wempe show the lever at the rim over the ring's top, a hub about
+  Ø 10 standing 10.8 under a knob 4.3 thick, the knob's top about 18 over the rim, and the pin Ø 4 standing 16.7 over the lever
+  (read against the knob's Ø 19.6): rebuilt so. The pin's top had been flush with the lever's top face, and the bracket's two
+  blocks shared their bottom and end faces; each handle's grip (the oval, 7 to 10 off the side) overlapped the strip's middle in
+  the same two planes, so both flickered (z-fighting). Keep: no two solids of the box share a face where both show; the grip
+  hangs below the strip only. `fec5eb3`
 - **The Wempe's winding key lay on the box's floor, where no box keeps it.** It lay flat in the
   back left corner, a place no source gave. Every photographed box (Greenwich's wartime Wempe,
   Wempe 5377, Lange 2285 and 5510, a 6MX Kirova) stands the key upright in the back right corner,
@@ -2496,6 +2504,14 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Controls and display
 
+- **The Wempe opened on its movement, its dial stayed solid in the Escapement view, and its balance stood still at 60× and
+  3600×** (16 October 2026, the user's reports). It now opens as the Hamilton does: the box shut, seen from the Hamilton's
+  opening camera (`openCam` in `shared/viewer.js`, `st.opening` holding the lid shut until then), easing to the Dial view as the
+  lid opens, the Dial view at the Hamilton's yaw and pitch. The dial is a plate (`plate:1`), so See-through ghosts it as the
+  Hamilton's. Above 5× (`REAL_X`) the balance was drawn at rest; it is now drawn swinging at its swing at 0.9 Hz of the wall
+  clock, the detent still, and the HUD says "balance swing shown slowed", as the Hamilton's. The tools open the Wempe with
+  `&start=movement` (`model.py`), the page opening on that view at once, as they saw it before. Keep: both pages open alike; the
+  dial is see-through with the plates; a fast speed never freezes the balance. `fec5eb3`
 - **The Wempe's winding in its case played several times too slowly on a slow renderer, and held
   the maintaining spring's drive.** Its steps (lid, turn, plate, key) advanced by the viewer's frame
   step, held to 0.05 s a frame, so at three frames a second the key took 13 s to come on, not 2.4: they
