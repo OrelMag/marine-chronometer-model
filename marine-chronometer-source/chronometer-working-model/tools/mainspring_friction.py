@@ -187,14 +187,17 @@ def main():
                 T0=T0,EI=EI,mus=MUS,rows=rows)
 def variants():
     """--variants: this tool once a variant in mainspring_bound.json (the strips mainspring.py --bound has solved: the build's Nivaflex and the sources'
-    proportions), each in its own process with its strip set; exit 1 if any fails"""
+    proportions), each in its own process with its strip set; exit 1 if any fails. --variants NAME,NAME: only those (ci.py runs each as a step of its own)"""
     import subprocess,os
     D=json.loads((HERE/'mainspring_bound.json').read_text(encoding='utf-8'));rc=0
+    i=sys.argv.index('--variants');only=sys.argv[i+1].split(',') if i+1<len(sys.argv) and not sys.argv[i+1].startswith('--') else None
+    if only and not set(only)<=set(D)-{'model'}:print('no such variant in',only,'; variants:',', '.join(k for k in sorted(D) if k!='model'));sys.exit(2)
+    args=[a for j,a in enumerate(sys.argv[1:],1) if a!='--variants' and not (only and j==i+1)]
     for k,v in sorted(D.items()):
-        if k=='model':continue
+        if k=='model' or only and k not in only:continue
         env=dict(os.environ,MC_MS_TAG=k,MC_MS_T=f"{v['t']}",MC_MS_GAP=f"{v.get('gap',0.01)}",MC_MS_L=f"{v['L']}",MC_MS_RA=f"{v['ra']}",MC_MS_E=f"{v['E']:g}")
         print(f'== {k}: the strip {v["t"]} x {v["L"]:.0f} mm on r {v["ra"]}',flush=True)
-        r=subprocess.run([sys.executable,__file__]+[a for a in sys.argv[1:] if a!='--variants'],env=env,cwd=HERE,capture_output=True,text=True,encoding='utf-8')
+        r=subprocess.run([sys.executable,__file__]+args,env=env,cwd=HERE,capture_output=True,text=True,encoding='utf-8')
         print('\n'.join(r.stdout.strip().splitlines()[-4:]),flush=True);rc=rc or r.returncode
     sys.exit(rc)
 if __name__=='__main__':

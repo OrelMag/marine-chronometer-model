@@ -14,7 +14,7 @@ and wempe-smoke, which run the train on the page's own frame time, with no other
 The build step checks that building changes none of the built copies (chronometer-working-model.html, both models' dist/, site/): run it on the tree you mean to
 commit, and commit what it writes. --views reports and never fails: most visual changes are intended; read the table, and r_vd_*.png in ci-logs/views
 (the changes in red) for the views that changed."""
-import hashlib,os,pathlib,shutil,subprocess,sys,tempfile,time
+import hashlib,json,os,pathlib,shutil,subprocess,sys,tempfile,time
 ROOT=pathlib.Path(__file__).resolve().parent
 MC=ROOT/'marine-chronometer-source'/'chronometer-working-model'
 TOOLS=MC/'tools'
@@ -31,10 +31,10 @@ def digest():
         for f in ([p] if p.is_file() else sorted(p.rglob('*')) if p.exists() else []):
             if f.is_file():h[str(f.relative_to(ROOT))]=hashlib.sha256(f.read_bytes()).hexdigest()
     return h
-def run(cmd,cwd,log):
+def run(cmd,cwd,log,sw=False):
     with open(log,'w',encoding='utf-8',errors='replace') as o:
         o.write('$ '+' '.join(map(str,cmd))+'\n\n');o.flush()
-        return subprocess.run(list(map(str,cmd)),cwd=cwd,stdout=o,stderr=subprocess.STDOUT).returncode
+        return subprocess.run(list(map(str,cmd)),cwd=cwd,stdout=o,stderr=subprocess.STDOUT,env={k:v for k,v in os.environ.items() if k!='MC_GL'} if sw else None).returncode
 def build(log):
     before=digest();rc=run([PY,'build.py','--site-url',SITE],ROOT,log)
     if rc:return rc
@@ -139,7 +139,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js','--model','wempe'],ROOT,log),'full'),   # the Wempe's: starting, the least drive, knocks, the ship's motion (about 2½ minutes)
  ('wempe-tripping-full',lambda log:run(['node',TOOLS/'tripping.js','--model','wempe'],ROOT,log),'full'),   # the Wempe's frame running as drawn, the estimates varied, the swing pushed, the knocks (about 2½ minutes)
  ('mainspring-friction',lambda log:run([PY,'mainspring_friction.py','--check'],TOOLS,log),'full'),   # the mainspring's coil friction, against mainspring_friction.json (about a minute)
- ('mainspring-variants',lambda log:run([PY,'mainspring_friction.py','--variants','--check'],TOOLS,log),'full'),   # the same for each strip mainspring.py --bound solved (the build's Nivaflex, the sources' proportions: mainspring_bound.json), against each mainspring_friction_NAME.json (about 6 minutes)
+ *[(f'mainspring-{k}',lambda log,k=k:run([PY,'mainspring_friction.py','--variants',k,'--check'],TOOLS,log),'full') for k in sorted(json.loads((TOOLS/'mainspring_bound.json').read_text(encoding='utf-8'))) if k!='model'],   # the same for each strip mainspring.py --bound solved (the build's Nivaflex, the sources' proportions: mainspring_bound.json), against each mainspring_friction_NAME.json, a step each (about 1 minute each one after another, on 14 processes)
  ('wempe-mainspring-friction',lambda log:run([PY,'wempe_mainspring.py','--friction','--check'],TOOLS,log),'full'),   # the Wempe's mainspring's coil friction, against mainspring_friction_wempe.json (about a minute)
  ('wempe-gearing-full',lambda log:run(['node',TOOLS/'gearing.js','--model','wempe'],ROOT,log),'full'),   # and its depthing windows, against gearing_wempe.json (about 2 minutes)
  ('gimbals-full',lambda log:run(['node',TOOLS/'gimbals.js'],ROOT,log),'full'),   # and the seas, the stops, what reaches the escapement (about 2½ minutes)
@@ -151,8 +151,8 @@ STEPS=[('build',build,'quick'),
  ('bom',lambda log:run([PY,'bom.py'],TOOLS,log),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)
  ('wempe-fine',lambda log:run([PY,'fine.py','--model','wempe'],TOOLS,log),'full'),   # the Wempe's 0.05 mm interference over its escapement's phases, train and wind, against checks.py's EXPECTED (about 1¾ minutes)
  ('wempe-bom',lambda log:run([PY,'bom.py','--model','wempe'],TOOLS,log),'full'),   # every Wempe part against its drawing list (wempe/bom.json) and its relations (about 4 minutes)
- ('gltf',lambda log:run([PY,'gltf_check.py'],TOOLS,log),'full'),   # the export to Blender, written and read back (about 2 minutes)
- ('blender',lambda log:run([PY,'blender_check.py'],TOOLS,log),'full'),   # that file in Blender, with the rig, against its own clips (about 3 minutes; skipped where there is no Blender)
+ ('gltf',lambda log:run([PY,'gltf_check.py'],TOOLS,log,sw=True),'full'),   # the export to Blender, written and read back (about 2 minutes; in SwiftShader always: exported from a page drawn on the GPU, the Running clip starts the escape wheel 0.105° off, over blender's 0.1°)
+ ('blender',lambda log:run([PY,'blender_check.py'],TOOLS,log,sw=True),'full'),   # that file in Blender, with the rig, against its own clips (about 3 minutes; skipped where there is no Blender)
  ('views',views,'views')]
 # Side by side (--jobs, --browsers): the steps without a browser on up to JOBS processes at once; those with one (Chromium through Playwright: the browser tier's and
 # BROWSER below) on up to BROWSERS. SOLO steps measure the page's own time (the train run on frame time): no other browser step runs with them. Steps in one EXCL
@@ -161,11 +161,11 @@ STEPS=[('build',build,'quick'),
 BROWSER={'fea','fine','maintaining','bom','wempe-fine','wempe-bom','gltf','blender'}   # the full tier's steps that open a page
 SOLO={'smoke','wempe-smoke'}
 EXCL={'bom':'r_bom.json','wempe-bom':'r_bom.json','types':'npx','wempe-types':'npx',   # bom.py writes tools/r_bom.json for either model; two npx -y at once race in npm's cache
-      'wempe-mainspring':'mainspring','wempe-mainspring-friction':'mainspring','mainspring-friction':'mainspring','mainspring-variants':'mainspring'}   # mainspring.py's solved states (its folder in the temp dir), and each on every core
+      }
 AFTER={'blender':'gltf'}   # blender_check.py imports the r_model21.glb gltf_check.py writes
 POOL=6   # the steps that run on processes of their own (tripping.js's bench figures, the Wempe's tripping.js, mainspring.py's sweeps) run on POOL of them (MC_PROCS,
-POOLED={'tripping-bench','wempe-tripping-full','mainspring-friction','mainspring-variants','wempe-mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
-EST={'tripping-knocks':520,'bom':510,'mainspring-variants':500,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
+POOLED={'tripping-bench','wempe-tripping-full','mainspring-friction','wempe-mainspring-friction'}|{s[0] for s in STEPS if s[0].startswith('mainspring-') and s[0]!='mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
+EST={'tripping-knocks':520,'bom':510,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
      'wempe-fine':190,'estimates':190,'wempe-tripping-full':180,'gimbals-full':180,'wempe-gimbals-full':170,'fine':150,'gearing-full':145,'tripping-run':130,'wempe-smoke':115,'gltf':110}   # seconds: the medians of the worktrees' logs, 16 October 2026
 def lane(name,tier):return 'browser' if tier=='browser' or name in BROWSER else 'cpu'
 def go(name,fn):
