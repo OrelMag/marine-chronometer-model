@@ -294,6 +294,14 @@ const WESC=(()=>{
       const brass=(c)=>{const g=gap/r1/D2R,a0=c-90+g,a1=c+90-g,o=[],n=Math.ceil(N/2);for(let i=0;i<=n;i++)o.push(pol([0,0],r2,a0+(a1-a0)*i/n));for(let i=0;i<=n;i++)o.push(pol([0,0],r1,a1-(a1-a0)*i/n));return o;};
       const hubF=[{p:C([0,0],2.009/2,64),a:ya,b:y1},...[-1,1].map(s=>({p:C([0,s*2.14],0.5,40),a:ya,b:y1}))];
       tag(mesh(bal,solidGeo([{loop:ccw(armLoop),y0:ya,y1,F:hubF},{loop:ccw(half(90,eTop)),y0,y1},{loop:ccw(half(270,eBot)),y0,y1}]),M.steel),'050301-1');
+      /* the maker's mark stamped on the arm's top: "RGG" in a triangle (Wempe 3955, 15_Wempe_3955_Logo_plus.jpg, and Christie's "balance signed RGG"), about 2.2 across, 11 out
+         along the arm (the photograph oblique: scaled against the escape wheel's endstone screws, 7.0 apart; estimated). A decal, turning with the balance */
+      {const k=200,S=2.4,c=document.createElement('canvas');c.width=c.height=S*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
+        x.strokeStyle=x.fillStyle='rgba(40,44,50,0.85)';x.lineWidth=0.12*k;x.beginPath();x.moveTo(1.2*k,0.15*k);x.lineTo(2.3*k,2.1*k);x.lineTo(0.1*k,2.1*k);x.closePath();x.stroke();
+        x.font=`700 ${0.62*k}px "Instrument Sans", Arial, sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText('RGG',1.2*k,1.55*k);
+        const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
+        const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
+        const g=new THREE.PlaneGeometry(S,S);g.rotateX(Math.PI/2);const e=mesh(bal,g,m,0,ya-0.01,11);e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050301-1',1);}
       for(const c of[90,270])tag(mesh(bal,solidGeo([{loop:brass(c),y0,y1}]),M.brass),'050301-1',1);}
     /* the compensation masses (Masse 05 03 01-4; 05 03_2, a poor copy): round brass, Ø 6.3 (scaled; 05 03_1's Anker balance Ø 6.35 boxed), across the rim, their centres on its
        middle, each held by a screw WN-12 with its nut WN-12a across the rim (05 03_2's side view and plan, the screw dashed radially), a slot from below for the rim.
@@ -640,7 +648,7 @@ const WESC=(()=>{
     const bju=part('balanceJewelsUp',OFFB,[B[0],B[1],0]),bjl=part('balanceJewelsLow',-24,[B[0],B[1],0]);
     {const ck=TT-15,eY=Y.tipU-0.02,hY=eY+0.03;
       tag(mesh(bju,lathe([[0.8,ck],[2.6,ck],[2.6,eY],[1.003,eY],[1.003,eY-0.35],[0.8,eY-0.35]],48),M.gilt),'050408-2.bu');
-      tag(mesh(bju,lathe([[0,eY-0.5],[0.6,eY-0.47],[1.0,eY-0.35],[1.0,eY],[0,eY]],32),M.steel),'050408-1.bu');   /* domed on its outside, under the setting's opening; drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
+      tag(mesh(bju,lathe([[0,eY-0.5],[0.5,eY-0.46],[0.79,eY-0.35],[1.0,eY-0.35],[1.0,eY],[0,eY]],32),M.steel),'050408-1.bu');   /* domed on its outside, under the setting's opening; drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
       tag(mesh(bju,lathe([[0.45,hY+0.35],[1.003,hY+0.35],[1.003,hY],[2.6,hY],[2.6,ck+2.4-0.5],[2.998,ck+2.4-0.5],[2.998,ck+2.4],[0.45,ck+2.4]],48),M.brass),'050406-2.bu');
       tag(mesh(bju,stoneGeo(1.0,0.125,0.35,'olive'),M.ruby,0,hY+0.175,0),'050407-1.bu');
       for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(bju,q[0],q[1],ck,1.0,0.6,2.0,0.46,M.brass),'WN-55.ck');}}
@@ -667,10 +675,10 @@ const WESC=(()=>{
        cap, which is then plain (estimated, as the settings themselves: no sheet of them) */
     for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first']])){const eY=Q.etU-0.02,hY=eY+0.06,ge=rv(eeu,v),gj=rv(eju,v),bo=v==='first'?0.6:0.45;
       tag(mesh(ge,lathe([[1.1,TT],[2.25,TT],[2.25,TT+0.5],[2.6,TT+0.5],[2.6,eY],[1.253,eY],[1.253,eY-0.35],[1.1,eY-0.35]],48),M.gilt),'050408-2.eu');
-      tag(mesh(ge,lathe([[0,eY-0.5],[0.7,eY-0.46],[1.25,eY-0.35],[1.25,eY],[0,eY]],32),M.ruby),'050408-1.eu');
+      tag(mesh(ge,lathe([[0,eY-0.5],[0.7,eY-0.45],[1.09,eY-0.35],[1.25,eY-0.35],[1.25,eY],[0,eY]],32),M.ruby),'050408-1.eu');
       tag(mesh(gj,lathe([[bo,TI],[2.6,TI],[2.6,hY],[0.903,hY],[0.903,hY+0.35],[bo,hY+0.35]],48),M.brass),'050406-2.eu');
       tag(mesh(gj,stoneGeo(0.9,0.135,0.35,'olive'),M.ruby,0,hY+0.175,0),'050406-1.eu');}
-    for(const s of[-1,1])tag(screw(eeu,3.5*s,0,TT,1.3,0.3,3.4,0.6,M.brass),'WN-es').userData.lift=0;   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
+    for(const s of[-1,1])K.headOn(tag(screw(eeu,3.5*s,0,TT,1.3,0.3,3.4,0.6,M.brass),'WN-es'),'escEndstoneUp','topPlate');   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)];
       for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first']])){const eY=Q.etL+0.02,hY=eY-0.20,gj=rv(ejl,v),ge=rv(eel,v),f1=v==='first';
         tag(mesh(gj,lathe([[0.7,hY-0.5],[1.25,hY-0.5],[1.25,f1?eY:PPT-0.25],[0.4,f1?eY:PPT-0.25],[0.4,hY],[0.803,hY],[0.803,hY-0.35],[0.7,hY-0.35]],48),M.brass),'050406-2.el');
@@ -678,7 +686,7 @@ const WESC=(()=>{
         if(f1){tag(mesh(ge,lathe([[0,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0,PPT]],48),M.gilt),'050408-2.el');   /* as first drawn: the setting plain over the plug (its stone deep in the plate) */
           tag(mesh(ge,lathe([[0,eY+0.35],[0.803,eY+0.35],[0.803,eY],[1.25,eY],[1.25,PPT-0.25],[0,PPT-0.25]],48),M.brass),'050408-2.el',1);}   /* the plug, the stone in its end */
         else{tag(mesh(ge,lathe([[0.95,eY+0.35],[1.103,eY+0.35],[1.103,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[1.3,PPT],[1.3,eY+0.4],[0.95,eY+0.4]],48),M.gilt),'050408-2.el');
-          tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.7,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}
+          tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.94,eY+0.35],[0.6,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}
         if(f1)tag(mesh(ge,lathe([[0,eY],[0.8,eY],[0.8,eY+0.35],[0,eY+0.35]],32),M.ruby),'050408-1.el');}
       const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.5*s);tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* the last state's; as first drawn they hold the cap, through it */
 

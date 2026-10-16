@@ -2271,10 +2271,11 @@ const VIEWER={start(cfg){
 const WD=(()=>{const NO=(n,o)=>[-o,-n];   /* a hole table's N and O (S and W as negative) to plan [x, z] */
   /* the hole table: every hole's place, by its number on the sheets (05 09 01 = 05 08_1a for the Oberplatte, 05 08 02-1 = 05 08_3a for the Unterplatte; the cocks' and the
      barrel bridge's own tables, 05 08 00-2, 05 08 03-1, 05 08 05-1, give the same places for the holes they share, to the last figure: sure). Holes 14-18 (the hand-setting
-     work, struck through on 05 08 02-1: "nur wenn Zeigerstellung eingebaut wird"), 56, 57 (the seconds contact's screws, "nur bei Bedarf") and the lever chronometer's 27, 31-34
+     work, struck through on 05 08 02-1: "nur wenn Zeigerstellung eingebaut wird") are in: Wempe 3955's plate is drilled for it, each where the table puts it, though it has no
+     hand setting (3_Wempe_3955_uZ.jpg, and Greenwich's wartime Wempe); 56, 57 (the seconds contact's screws, "nur bei Bedarf") and the lever chronometer's 27, 31-34
      are left out; 30 (Ankerrad) is on the detent chronometer's own Unterplatte (05 08 02-1's table, 05 08 02's assembly with a setting in it, and drilled in Wempe 3955's plate) */
   const H={1:NO(0,0),2:NO(23,0),3:NO(37,0),4:NO(36.437,6.425),5:NO(38.507,10.684),6:NO(27.821,3.577),7:NO(23.911,5.676),8:NO(19.765,0.559),9:NO(11.555,2.760),
-    10:NO(15.292,16.708),11:NO(-3.225,36.858),12:NO(-9.576,35.739),13:NO(-16.238,34.536),19:NO(-6.30,10.912),20:NO(-2.451,6.512),22:NO(-6.018,3.259),23:NO(-12.110,9.10),
+    10:NO(15.292,16.708),11:NO(-3.225,36.858),12:NO(-9.576,35.739),13:NO(-16.238,34.536),14:NO(-17.229,36.411),15:NO(-22.871,33.211),16:NO(-21.471,30.789),17:NO(-15.929,33.989),18:NO(-12.780,22.136),19:NO(-6.30,10.912),20:NO(-2.451,6.512),22:NO(-6.018,3.259),23:NO(-12.110,9.10),
     26:NO(-21.743,11.783),28:NO(-26.410,4.315),29:NO(-28.580,7.062),30:NO(-33.730,5.028),35:NO(-23.0,0),36:NO(-11.922,-0.502),37:NO(-17.826,-4.263),38:NO(-15.170,-9.910),
     39:NO(-32.043,-18.50),40:NO(-26.163,-26.163),41:NO(-24.01,-30.732),42:NO(-18.50,-32.043),43:NO(-5.251,-22.464),44:NO(-3.081,-25.21),45:NO(6.0,-24.784),
     46:NO(17.046,-29.474),47:NO(31.551,-22.924),48:NO(32.668,-17.370),49:NO(36.437,-6.425),50:NO(25.233,-6.083),51:NO(-7.537,23.386),52:NO(-24.094,20.836),53:NO(-37.0,15.0)};
@@ -2348,14 +2349,15 @@ const WFRAME=(()=>{
       const out=KIT.subtractCircle(C([0,0],R,1200),H[45],42.5/2);
       for(const k of[1,35,38])F.push(T(H[k],rJ,y0,y1));                                  /* 4.4 punched, 4.59 +0.012 reamed: the centre, seconds and intermediate wheels' settings (WN-301, WN-300: 05 08 01) */
       for(const k of[3,12,40])F.push(T(H[k],rH35,y0,y1));                                /* Hilfslöcher, 3.50 +0.012 */
-      F.push(T(H[4],0.9/2,y0,y1),T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[13],1.8/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1),T(H[53],1.5045/2,y0,y1));   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */
+      F.push({p:C(H[4],2.15,60),q:C(H[4],1.2,60),a:y0,b:y0+0.55},{p:C(H[4],1.2,60),q:C(H[4],0.45,60),a:y0+0.55,b:y0+0.95},{p:C(H[4],0.45,60),a:y0+0.95,b:y1});   /* hole 4's oil sink on the outer face, Ø 4.3 (Wempe 3955, 2_Wempe_3955_A.jpg: spherical, the pivot bright in it; its depth estimated, as the bushes' sinks; two cones for the sphere) */
+      F.push(T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[13],1.8/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1),T(H[53],1.5045/2,y0,y1));   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */
       for(const k of[8,42,48])F.push(T(H[k],rM26,y0,y1));                                /* the upper cock's and the barrel bridge's screws, M2.6 */
       for(const k of[6,9,41,47,50])F.push(T(H[k],rPinP,y0,y1),B(H[k],2.5/2,y1,1.6));   /* steady pins from above, the holes opened from below (A-B) */
       for(const k of[22,37])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));           /* steady pins from below (C-D) */
       F.push(T(H[36],2.8/2,y0,y1),A(H[36],6.012/2,y0,1.8));                              /* the lower cock's screw, its head sunk (G-H) */
       for(const k of[11,39,49])F.push(T(H[k],WD.PIL_HOLE,y0,y1),B(H[k],WD.PIL_SEAT[0],y1,WD.PIL_SEAT[1]));
       F.push(T(H[26],4.506/2,y0,y1),{p:C(H[26],5.206/2),a:y0+0.5,b:y1});                 /* P-Q */
-      for(const q of WESC.HOLES.blockPins)F.push(B(q,0.925/2,y1,1.4));                    /* the detent block's steady pins Ø 0.9 (05 04 01-4), 1.3 into the plate: not in its table, drilled at assembly (estimated) */
+      for(const q of WESC.HOLES.blockPins)F.push({p:C(q,0.7,40),q:C(q,0.4625,40),a:y0,b:y0+0.24},{p:C(q,0.4625,40),a:y0+0.24,b:y1});   /* the detent block's steady pins Ø 0.9 (05 04 01-4), 1.3 into the plate: not in its table, drilled at assembly through the plate and countersunk Ø 1.4 on its outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, 8.81 px/mm: 10.7 apart, the model's 10.8; likely); blind from the inside until 16 October 2026 */
       for(const s of[-1,1])F.push(T(add(H[26],[1,0],3.5*s),rM12,y0,y1));
       {const n=176;F.push(T(H[10],8.0075/2,y0,y1),{p:C(H[10],11,n),q:C(H[10],11.7,n),a:y1-0.7,b:y1});   /* the fusee bush's hole 8.0 +0.015; J-K's recess Ø 22 at its floor, its wall opening at 45° to the face (P1c: the fusee's cover plate, Ø 21.1, lies in it; read until then as Ø 22 at the face, its floor Ø 20.6, which the plate can't enter) */
         for(const b of[0,120,240])F.push(T(add(H[10],brg(b),5.2),rM14,y0,y1));}
@@ -2374,9 +2376,21 @@ const WFRAME=(()=>{
     /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's */
     const S=WD.PSCR;for(const[x,z]of WD.PILLARS)tag(screw(tp,x,z,TT,S.r,S.h,S.len,S.rs,M.brass),'WN-57');
 
+    /* the maker's engraving on the top plate's outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, square-on at 7.74 px/mm by the plate's 85, the centre found from holes 10 and 23;
+       15_Wempe_3955_Logo_plus.jpg close): three lines reading along O with N up, centred at O 30.6, N 8.6: "Gerhard D." 8.7 long, its letters 1.2 high; "WEMPE" 9.85 long,
+       1.7 high (outlined capitals on the plate: drawn filled); "Hamburg" 7.4 long, 1.2 high; the lines 1.9 apart (likely). Not on the sheets. A decal on the face */
+    {const k=60,W=12,Hh=6.4,c=document.createElement('canvas');c.width=W*k;c.height=Hh*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
+      x.fillStyle='rgba(58,40,14,0.78)';x.textAlign='center';x.textBaseline='middle';
+      for(const[t,dv,len,h,wt]of/** @type {[string,number,number,number,number][]} */([['Gerhard D.',-1.9,8.7,1.2,500],['WEMPE',0,9.85,1.7,700],['Hamburg',1.9,7.4,1.2,500]])){
+        x.font=`${wt} ${h/0.72*k}px "Instrument Sans", Arial, sans-serif`;x.save();x.translate(W/2*k,(Hh/2+dv)*k);fillTracked(x,t,len*k,0.8);x.restore();}
+      const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
+      const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
+      const g=new THREE.PlaneGeometry(W,Hh);g.rotateX(Math.PI/2);g.rotateY(Math.PI);   /* facing out of the plate (−y); its text along −x (O), up toward −z (N) */
+      const e=mesh(tp,g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
+
     /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
-    /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 14-18, the
-       hand-setting work's ("nur wenn Zeigerstellung eingebaut wird": Wempe 3955 has it, 6_Wempe_3955_S.jpg; built with the hand-setting, 05 33) and 56, 57 ("nur bei Bedarf",
+    /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure), 14-18 too, the
+       hand-setting work's ("nur wenn Zeigerstellung eingebaut wird": Wempe 3955's plate is drilled for it, the work itself not fitted: below) but 56, 57 ("nur bei Bedarf",
        the seconds contact's; not in Wempe 3955's plate). Its sections: E-F the pillar seats in the inner face; A-B the intermediate bridge's steady pins 29, 44 reamed from the
        dial face and opened Ø 2.5 × 1.6 from the inner face ("oben"); G-H hole 30's setting, Ø 5.2 H7 from the inner face to 0.5 above the dial face, Ø 4.59 H7 through that,
        its two M1.2 3.5 either side along the O-W line. 26 reamed 2.50 with two M1.2 3.5 either side on the line 37° below O toward S (05 08_3b). The opening for the intermediate
@@ -2390,7 +2404,14 @@ const WFRAME=(()=>{
       F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.82/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
         T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
       for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
-      F.push(B(H[26],4.6/2,y1,0.25));   /* the seat of the escape wheel's lower endstone's setting, Ø 4.6 × 0.25 in the dial face (Wempe 3955's dial side: escapement.js; not on the sheet) */
+      F.push(B(H[26],4.6/2,y1,0.25));
+      /* the hand setting's holes and window, drilled though no hand setting is fitted, as in Wempe 3955's plate (3_Wempe_3955_uZ.jpg, square-on on millimetre paper, 8.33 px/mm:
+         each hole where the table puts it, to a pixel): 14, 15 the pins' (1.45 drilled), 16, 17 the screws' (2.8), 18 the pinion's (3.50 reamed); the square window 6.5 (03a's
+         "6,5"; the photograph 6.4) centred 30.9 from the centre on the line through 18 (150°), its sides along that line (the photograph: 150.5° and 30.87, its edges at 152°,
+         2.1 from 18's centre): likely. The plate's rim cut beside 14 and 15 (03a's "9,3 −0,1") and the C-D recess Ø 14 on the inner face aren't read: left out (README) */
+      F.push(T(H[14],1.45/2,y0,y1),T(H[15],1.45/2,y0,y1),T(H[16],2.8/2,y0,y1),T(H[17],2.8/2,y0,y1),T(H[18],rH35,y0,y1));
+      {const a=Math.atan2(H[18][1],H[18][0]),u=[Math.cos(a),Math.sin(a)],v=[-u[1],u[0]],c=[u[0]*30.9,u[1]*30.9],q=(i,j)=>[c[0]+u[0]*i*3.25+v[0]*j*3.25,c[1]+u[1]*i*3.25+v[1]*j*3.25];
+        F.push({p:[q(-1,-1),q(1,-1),q(1,1),q(-1,1)],a:y0,b:y1});}   /* the seat of the escape wheel's lower endstone's setting, Ø 4.6 × 0.25 in the dial face (Wempe 3955's dial side: escapement.js; not on the sheet) */
       for(const k of[28,43])F.push(T(H[k],rM26,y0,y1));
       for(const k of[29,44])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));
       F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
@@ -2424,10 +2445,10 @@ const WFRAME=(()=>{
     const rg=part('ring',12);
     {const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
       const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
-        ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};
+        ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
       tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
-        ...[354,120,240].map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:10.35-2.5,b:11.05}))]};   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
+        ...[354,120,240].map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:6.35,b:11.05}))]};   /* the dial screws' M1 through the flange: they show on its underside in Wempe 3955's top plate photograph (2_Wempe_3955_A.jpg: likely; 2.5 deep until 16 October 2026) */   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
       tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
       /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
       for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,2.25,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
@@ -2451,7 +2472,7 @@ const WFRAME=(()=>{
        against this chord's 14.94 and the earlier 13.61 (45 7.0, 42 7.8-8.0, 48 6.3-6.6 from it): between the two, so the sheet decides. Until 15 October 2026 the chord was
        drawn square to hole 45's line at 18.5 (42 then 8.29 from it), the 7.7 read along the chord from the point to pin 41 and the "5" as the corner's offset from the chord,
        which put 48 4.5 from the short edge. Holes: 45 the barrel arbor's, 3.9 ±0.01; 46 the click's screw, M2.6; 42, 48 clear 2.8 for its screws; 41, 47
-       its steady pins, 1.585 -0.005, 2.5 deep (their holes' 90° countersink 0.3 is left out). Drawn gilt */
+       its steady pins, 1.585 -0.005, 2.5 deep (their holes' 90° countersink 0.3: in since 16 October 2026). Drawn gilt */
     const bb=part('barrelBridge',-52);
     {const dt=(p,q)=>p[0]*q[0]+p[1]*q[1],sc=(p,k)=>[p[0]*k,p[1]*k],v=sub(H[45],H[42]),l=Math.hypot(v[0],v[1]),u=sc(v,1/l),ca=-0.7/l;   /* n·(45 − 42) = 7 − 7.7 */
       const n=/** @type {number[]} */([-1,1].map(s=>add(sc(u,ca),[-u[1],u[0]],s*Math.sqrt(1-ca*ca))).find(q=>dt(q,H[45])>0)),c=dt(n,H[45])-7,t=(q=>q[1]<0?q:[-q[0],-q[1]])([n[1],-n[0]]);
@@ -2459,7 +2480,7 @@ const WFRAME=(()=>{
       const Bp=add(sc(n,c),t,-Math.sqrt(R*R-c*c)),Tp=[1,-1].map(s=>add(sc(m,kE),e,s*Math.sqrt(R*R-kE*kE))).sort((a,b)=>dt(b,n)-dt(a,n))[0],Cp=add(sc(n,c),t,2*(c30*c-kE));
       const aB=Math.atan2(Bp[1],Bp[0]),aT=Math.atan2(Tp[1],Tp[0]),an=Math.atan2(n[1],n[0]);let da=((aT-aB)%TAU+TAU)%TAU;if(Math.abs(((an-aB)%TAU+TAU)%TAU)>da)da-=TAU;   /* round the rim through n */
       const N=Math.ceil(Math.abs(da)*R/0.1),arc=[...Array(N-1).keys()].map(i=>{const a=aB+da*(i+1)/N;return[R*Math.cos(a),R*Math.sin(a)];});
-      const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),B(H[41],rPinQ,y1,2.5),B(H[47],rPinQ,y1,2.5)];
+      const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),...[41,47].flatMap(k=>[{p:C(H[k],rPinQ,40),a:y1-2.5,b:y1-0.3},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.3,40),a:y1-0.3,b:y1}])];   /* the steady pins' holes' 90° countersink 0.3 (05 08_13) */
       tag(mesh(bb,solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]),M.gilt),'050805-1');PL.bbChord=[Bp,Cp];}
     /* its screws (WN-55 in the coloured section): heads Ø 6.4 × 3.0, brass (Wempe 3955), the shank 6.2, through the bridge and 2.9 into the plate: scaled on the coloured section (estimated) */
     for(const k of[42,48])tag(screw(bb,H[k][0],H[k][1],TT-3.32,3.2,3.0,6.2,1.3,M.brass),'WN-55');
@@ -2504,10 +2525,10 @@ const WFRAME=(()=>{
        the radius at the fits' middles; until 15 October 2026 a slide over the bush's g6 as then read; its top Ø 7.62 under a 20° mouth
        1.8 +0.2 deep); body Ø 13.1 -0.2 for 15.1, then a neck Ø 9.7 -0.2 (for 05 08 01-4, not in the set); at the body's top a collar 3.1 -0.2 high, Ø 15.1 -0.2 with a flat 14.1
        from its far side, so flush with the body on one side (sure). The flat faces the upper balance cock, which passes 7.0 from the fusee's axis (the cock's coordinates):
-       turned any other way the collar would stand 0.55 into the cock's web (inferred). Its bottom's 5° × 0.5 chamfer is left out */
+       turned any other way the collar would stand 0.55 into the cock's web (inferred). Its bottom's 5° × 0.5 chamfer on its outer edge (since 16 October 2026) */
     const db=part('dustBush',-66);
     {const Yb=TT-1.5,Yt=Yb-18.1,rr=y=>8.0075/2-(Yb-y)/140,rT=rr(Yt+1.8)+1.8*Math.tan(20*D2R),nf=brg(255);
-      const lw=[V2(rr(Yb-12),Yb-12),V2(6.55,Yb-12),V2(6.55,Yb),V2(rr(Yb),Yb),V2(rr(Yb-12),Yb-12)],nk=[V2(rT,Yt),V2(4.85,Yt),V2(4.85,Yb-15.1),V2(rr(Yb-15.1),Yb-15.1),V2(rr(Yt+1.8),Yt+1.8),V2(rT,Yt)];
+      const lw=[V2(rr(Yb-12),Yb-12),V2(6.55,Yb-12),V2(6.55,Yb-0.5),V2(6.55-0.5*Math.tan(5*D2R),Yb),V2(rr(Yb),Yb),V2(rr(Yb-12),Yb-12)],nk=[V2(rT,Yt),V2(4.85,Yt),V2(4.85,Yb-15.1),V2(rr(Yb-15.1),Yb-15.1),V2(rr(Yt+1.8),Yt+1.8),V2(rT,Yt)];
       const g=tag(mesh(db,new THREE.LatheGeometry(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');tag(mesh(db,new THREE.LatheGeometry(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
       const lug=clipPoly(C(F10,15.1/2,320),p=>6.55-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-15.1,y1=Yb-12.0;
       tag(mesh(db,solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);}
@@ -2529,7 +2550,7 @@ const WFRAME=(()=>{
        the auxiliary hole 20 Ø 2.8 at 10 from 23; a slot 1.8 H7 wide, its middle on the setting's line across the arm, from the O side's edge to 3.4 from the axis (C-D; Wempe 3955's
        index lies in it). Foot: the screw's hole 8 clear 2.8, steady pins 6 and 50 5 either side of the axis at 40, pin 9 at 24.5 under the web, 1.585 -0.005 × 2.5 deep (sure).
        C-D's 82°: the slot's inner wall leans 8° toward the axis going down, 3.4 from it on the top and 3.06 under the thin end, as the stud's upright does (05 03 02-3's 98°,
-       js/escapement.js; left out until 15 October 2026). The pins' 0.2 × 90° sinks are left out. Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
+       js/escapement.js; left out until 15 October 2026). The pins' 0.2 × 90° sinks are in (since 16 October 2026). Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
     const uc=part('upperCock',-58);
     {const c=H[23],ax=brg(345),vo=brg(75),pl=new Map(),P=q=>{if(!pl.has(q))pl.set(q,add(add(c,ax,q[0]),vo,q[1]));return pl.get(q);};   /* local [u along the axis, v toward O] to plan, one plan point per local point */
       const Fp=[43,8.5],Fm=[43,-8.5],ph=Math.atan2(8.5,43)+Math.acos(6/Math.hypot(43,8.5)),Tp=[6*Math.cos(ph),6*Math.sin(ph)],Tm=[Tp[0],-Tp[1]];
@@ -2548,7 +2569,8 @@ const WFRAME=(()=>{
       const L=(u,v)=>add(add(c,ax,u),vo,v),[thin,,,web,foot]=cells;
       thin.F=[T(c,5.206/2,thin.y0,thin.y1),B(c,3.0,thin.y1,0.5),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),T(H[20],rCl26,thin.y0,thin.y1),
         T(WESC.HOLES.studScrew,rM14,thin.y0,thin.y1)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
-      foot.F=[T(H[8],rCl26,foot.y0,foot.y1),B(H[6],rPinQ,foot.y1,2.5),B(H[50],rPinQ,foot.y1,2.5)];web.F=[B(H[9],rPinQ,web.y1,2.5)];
+      const sk=(k,y)=>[{p:C(H[k],rPinQ,40),a:y-2.5,b:y-0.2},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.2,40),a:y-0.2,b:y}];   /* the pins' holes, 2.5 deep, their 0.2 × 90° sinks (05 08_05) */
+      foot.F=[T(H[8],rCl26,foot.y0,foot.y1),...sk(6,foot.y1),...sk(50,foot.y1)];web.F=[...sk(9,web.y1)];
       tag(mesh(uc,solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),M.gilt),'050803-1');}
     /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
     tag(screw(uc,H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,M.blued),'WN-ucs');
@@ -3095,6 +3117,14 @@ const WESC=(()=>{
       const brass=(c)=>{const g=gap/r1/D2R,a0=c-90+g,a1=c+90-g,o=[],n=Math.ceil(N/2);for(let i=0;i<=n;i++)o.push(pol([0,0],r2,a0+(a1-a0)*i/n));for(let i=0;i<=n;i++)o.push(pol([0,0],r1,a1-(a1-a0)*i/n));return o;};
       const hubF=[{p:C([0,0],2.009/2,64),a:ya,b:y1},...[-1,1].map(s=>({p:C([0,s*2.14],0.5,40),a:ya,b:y1}))];
       tag(mesh(bal,solidGeo([{loop:ccw(armLoop),y0:ya,y1,F:hubF},{loop:ccw(half(90,eTop)),y0,y1},{loop:ccw(half(270,eBot)),y0,y1}]),M.steel),'050301-1');
+      /* the maker's mark stamped on the arm's top: "RGG" in a triangle (Wempe 3955, 15_Wempe_3955_Logo_plus.jpg, and Christie's "balance signed RGG"), about 2.2 across, 11 out
+         along the arm (the photograph oblique: scaled against the escape wheel's endstone screws, 7.0 apart; estimated). A decal, turning with the balance */
+      {const k=200,S=2.4,c=document.createElement('canvas');c.width=c.height=S*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
+        x.strokeStyle=x.fillStyle='rgba(40,44,50,0.85)';x.lineWidth=0.12*k;x.beginPath();x.moveTo(1.2*k,0.15*k);x.lineTo(2.3*k,2.1*k);x.lineTo(0.1*k,2.1*k);x.closePath();x.stroke();
+        x.font=`700 ${0.62*k}px "Instrument Sans", Arial, sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText('RGG',1.2*k,1.55*k);
+        const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
+        const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
+        const g=new THREE.PlaneGeometry(S,S);g.rotateX(Math.PI/2);const e=mesh(bal,g,m,0,ya-0.01,11);e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050301-1',1);}
       for(const c of[90,270])tag(mesh(bal,solidGeo([{loop:brass(c),y0,y1}]),M.brass),'050301-1',1);}
     /* the compensation masses (Masse 05 03 01-4; 05 03_2, a poor copy): round brass, Ø 6.3 (scaled; 05 03_1's Anker balance Ø 6.35 boxed), across the rim, their centres on its
        middle, each held by a screw WN-12 with its nut WN-12a across the rim (05 03_2's side view and plan, the screw dashed radially), a slot from below for the rim.
@@ -3441,7 +3471,7 @@ const WESC=(()=>{
     const bju=part('balanceJewelsUp',OFFB,[B[0],B[1],0]),bjl=part('balanceJewelsLow',-24,[B[0],B[1],0]);
     {const ck=TT-15,eY=Y.tipU-0.02,hY=eY+0.03;
       tag(mesh(bju,lathe([[0.8,ck],[2.6,ck],[2.6,eY],[1.003,eY],[1.003,eY-0.35],[0.8,eY-0.35]],48),M.gilt),'050408-2.bu');
-      tag(mesh(bju,lathe([[0,eY-0.5],[0.6,eY-0.47],[1.0,eY-0.35],[1.0,eY],[0,eY]],32),M.steel),'050408-1.bu');   /* domed on its outside, under the setting's opening; drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
+      tag(mesh(bju,lathe([[0,eY-0.5],[0.5,eY-0.46],[0.79,eY-0.35],[1.0,eY-0.35],[1.0,eY],[0,eY]],32),M.steel),'050408-1.bu');   /* domed on its outside, under the setting's opening; drawn bright and opaque, as the photograph's white stone (a clear one would show the ruby under it) */
       tag(mesh(bju,lathe([[0.45,hY+0.35],[1.003,hY+0.35],[1.003,hY],[2.6,hY],[2.6,ck+2.4-0.5],[2.998,ck+2.4-0.5],[2.998,ck+2.4],[0.45,ck+2.4]],48),M.brass),'050406-2.bu');
       tag(mesh(bju,stoneGeo(1.0,0.125,0.35,'olive'),M.ruby,0,hY+0.175,0),'050407-1.bu');
       for(const s of[-1,1]){const q=BL(add(B,AX,3.525*s));tag(screw(bju,q[0],q[1],ck,1.0,0.6,2.0,0.46,M.brass),'WN-55.ck');}}
@@ -3468,10 +3498,10 @@ const WESC=(()=>{
        cap, which is then plain (estimated, as the settings themselves: no sheet of them) */
     for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first']])){const eY=Q.etU-0.02,hY=eY+0.06,ge=rv(eeu,v),gj=rv(eju,v),bo=v==='first'?0.6:0.45;
       tag(mesh(ge,lathe([[1.1,TT],[2.25,TT],[2.25,TT+0.5],[2.6,TT+0.5],[2.6,eY],[1.253,eY],[1.253,eY-0.35],[1.1,eY-0.35]],48),M.gilt),'050408-2.eu');
-      tag(mesh(ge,lathe([[0,eY-0.5],[0.7,eY-0.46],[1.25,eY-0.35],[1.25,eY],[0,eY]],32),M.ruby),'050408-1.eu');
+      tag(mesh(ge,lathe([[0,eY-0.5],[0.7,eY-0.45],[1.09,eY-0.35],[1.25,eY-0.35],[1.25,eY],[0,eY]],32),M.ruby),'050408-1.eu');
       tag(mesh(gj,lathe([[bo,TI],[2.6,TI],[2.6,hY],[0.903,hY],[0.903,hY+0.35],[bo,hY+0.35]],48),M.brass),'050406-2.eu');
       tag(mesh(gj,stoneGeo(0.9,0.135,0.35,'olive'),M.ruby,0,hY+0.175,0),'050406-1.eu');}
-    for(const s of[-1,1])tag(screw(eeu,3.5*s,0,TT,1.3,0.3,3.4,0.6,M.brass),'WN-es').userData.lift=0;   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
+    for(const s of[-1,1])K.headOn(tag(screw(eeu,3.5*s,0,TT,1.3,0.3,3.4,0.6,M.brass),'WN-es'),'escEndstoneUp','topPlate');   /* from the outside, their ends just through the inner face; their heads 0.3 high, under the balance's rim, which passes 0.47 over the plate's face */
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)];
       for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first']])){const eY=Q.etL+0.02,hY=eY-0.20,gj=rv(ejl,v),ge=rv(eel,v),f1=v==='first';
         tag(mesh(gj,lathe([[0.7,hY-0.5],[1.25,hY-0.5],[1.25,f1?eY:PPT-0.25],[0.4,f1?eY:PPT-0.25],[0.4,hY],[0.803,hY],[0.803,hY-0.35],[0.7,hY-0.35]],48),M.brass),'050406-2.el');
@@ -3479,7 +3509,7 @@ const WESC=(()=>{
         if(f1){tag(mesh(ge,lathe([[0,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[0,PPT]],48),M.gilt),'050408-2.el');   /* as first drawn: the setting plain over the plug (its stone deep in the plate) */
           tag(mesh(ge,lathe([[0,eY+0.35],[0.803,eY+0.35],[0.803,eY],[1.25,eY],[1.25,PPT-0.25],[0,PPT-0.25]],48),M.brass),'050408-2.el',1);}   /* the plug, the stone in its end */
         else{tag(mesh(ge,lathe([[0.95,eY+0.35],[1.103,eY+0.35],[1.103,PPT-0.25],[2.3,PPT-0.25],[2.3,PPT],[1.3,PPT],[1.3,eY+0.4],[0.95,eY+0.4]],48),M.gilt),'050408-2.el');
-          tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.7,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}
+          tag(mesh(ge,lathe([[0,eY],[1.1,eY],[1.1,eY+0.35],[0.94,eY+0.35],[0.6,eY+0.4],[0,eY+0.42]],32),M.ruby),'050408-1.el');}
         if(f1)tag(mesh(ge,lathe([[0,eY],[0.8,eY],[0.8,eY+0.35],[0,eY+0.35]],32),M.ruby),'050408-1.el');}
       const f=flip(eel);for(const s of[-1,1]){const q=add([0,0],u,3.5*s);tag(screw(f,q[0],-q[1],-PPT,1.3,0.5,2.5,0.6,M.brass),'WN-ec');}}   /* the last state's; as first drawn they hold the cap, through it */
 
@@ -6133,10 +6163,10 @@ const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel','Motio
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
-    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut but the hand-setting work’s, which its sheet strikes through (“only when the hand-setting is fitted”), and the seconds contact’s (“only when needed”).'+SH,
+    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut, the hand-setting work’s too with its square window (its sheet strikes them through, “only when the hand-setting is fitted”, but Wempe No. 3955’s plate is drilled for it, the work not fitted), but the seconds contact’s (“only when needed”).'+SH,
     sp:'Drawing 05 08 02-1 (kompl. 05 08 02) · special α-β brass sheet · Ø 85 h6 × 3.35 · pillar holes Ø 4.50 +0.012 on r 37, seated Ø 8.6 × 0.3 · opening for the intermediate wheel Ø 24.5'},
   topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the balance opening’s tongue scaled on the sheet',figs:'05 08_1a, 05 08_1b, 05 08_2, 001',c:'#c9d8a8',plate:1,pri:3,
-    d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40.'+SH,
+    d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40. On its outer face the maker’s engraving, Gerhard D. WEMPE Hamburg, as on Wempe No. 3955.'+SH,
     sp:'Drawing 05 09 01 (kompl. 05 08 01) · special α-β brass sheet · Ø 85 h6 × 3.35 · barrel cut Ø 42.5 · recess Ø 22 × 0.7 round the fusee · pocket 1.35 deep'},
   pillars:{t:'Pillars (Pfeiler)',g:0,src:'drawing',sn:'Every size from its sheet but its countersinks and relief grooves, scaled on it',figs:'05 08_11, 001',c:'#707a84',pri:2,
     d:'Three turned brass pillars hold the plates 19 mm apart. Each sits by its shoulders in a seat in each plate, its spigots in the plates’ reamed holes, a screw from each plate’s outer face in its tapped ends.',
@@ -6175,7 +6205,7 @@ const PARTS={
     d:'The fourth arbor, which turns once a minute: the intermediate wheel drives its pinion and its wheel drives the escape pinion. Its lower pivot runs in a jewel set in the intermediate bridge and goes on through the dial as the post for the seconds hand; its upper pivot runs in a brass bush in the top plate. Its hub stands 0.2 proud toward the pinion, so its rim clears the intermediate pinion’s end.',
     sp:'Drawing 05 05 01 (wheel 05 05 01-1, pinion 05 05 01-2, revised 24.3.48) · wheel z 80, m 0.263, tip Ø 21.9, Ms 58 spring-hard brass 1.2, rim 1.0 · pinion z 10 (from the centre distance 12.63), steel · pivots Ø 0.82 and 0.76'},
   balance:{t:'Balance (Unruh)',g:1,src:'drawing',sn:'Its rim, arm, staff and hub from their sheets; the masses, timing weights and screws scaled on 05 03_2 and Wempe 3955',figs:'05 03_2, 05 03_4, 05 04_4',c:'#c7a35a',pri:3,
-    d:'The balance: a cut bimetallic rim, nickel steel inside and brass outside, made in one with its straight steel arm, so each quarter of the rim curls in as it warms and carries its mass nearer the staff. Four round brass masses sit across the rim, two timing weights on screws at the arm’s ends. It sits on the brass hub of its staff just above the top plate, its rollers under the plate. It swings about 1¼ turns, twice a second.',
+    d:'The balance: a cut bimetallic rim, nickel steel inside and brass outside, made in one with its straight steel arm (stamped RGG in a triangle, as on Wempe No. 3955), so each quarter of the rim curls in as it warms and carries its mass nearer the staff. Four round brass masses sit across the rim, two timing weights on screws at the arm’s ends. It sits on the brass hub of its staff just above the top plate, its rollers under the plate. It swings about 1¼ turns, twice a second.',
     sp:'Drawings 05 03 01, rim 05 03 01-1 (nickel steel and brass), staff 05 04 02 (29.5.46) · rim Ø 32.32 × 3.8 · arm 1.15 thick · staff 25.9 between its pivots, pivots Ø 0.21'},
   hairspring:{t:'Hairspring (Spiralfeder)',g:1,src:'drawing',sn:'Its strip, coil, turns and terminal curve from its sheets; the outer curve drawn in proportion to end at the stud',figs:'05 03_6, 05 03_7, 05 03_8',c:'#3c4a70',pri:2,
     d:'The helical balance spring: a polished steel strip 0.52 × 0.285 wound in 13 turns, its two ends curved in to the centre on the drawn terminal curve, so the coils open and close concentrically about the staff. Its inner end is pinned in the brass collet on the staff, its outer end in the stud on the cock.',
@@ -6196,23 +6226,23 @@ const PARTS={
     d:'The brass L under the top plate that carries the detent: screwed up from the plate’s outer face through hole 13, placed by two steady pins. The detent’s foot is clamped to the end of its base; a screw crosses the slit end of its upright.',
     sp:'Drawing 05 04 01-4 (8.7.43) · base 14.6 × 7.5 × 6.5, upright 3 × 3, 25 overall · fixing screw M1.7'},
   balanceJewelsUp:{t:'Balance jewels, upper',g:1,src:'est',sn:'The seat from the cock’s sheet; the settings and stones as the coloured section draws them, sized to the seat',figs:'05 08_5, 05 08_6',c:'#c8163c',pri:1,
-    d:'The balance staff’s upper bearing in the cock: a hole jewel in its setting, put in from below with its flange in the cock’s sink, and an endstone in its own setting above, held by two screws over its edge.',
+    d:'The balance staff’s upper bearing in the cock: a hole jewel in its setting, put in from below with its flange in the cock’s sink, and an endstone in its own gilt setting above, its bright stone showing, held by two brass screws over its edge (as Wempe No. 3955’s).',
     sp:'Settings 05 04 06-2 and 05 04 08-2, stones 05 04 07-1 and 05 04 08-1 (by the coloured section’s labels) · seat Ø 5.2 H7'},
   balanceJewelsLow:{t:'Balance jewels, lower',g:1,src:'est',sn:'The seat from the lower cock’s sheet; the settings and stones as the coloured section draws them',figs:'05 08_4',c:'#c8163c',pri:1,
     d:'The balance staff’s lower bearing in the lug of the lower cock: the hole jewel and the endstone, each in its setting, put in from below and held by two screws.',
     sp:'Settings 05 04 06-2 and 05 04 08-2, stones 05 04 07-1 and 05 04 08-1 · seat Ø 5.2 H7 · screws WN-16'},
-  escEndstoneUp:{t:'Escape wheel endstone, upper',g:2,src:'est',sn:'The seat from the top plate’s section P-Q; the setting as the coloured section draws it',figs:'05 08_1b',c:'#c8163c',pri:1,
-    d:'The endstone over the escape wheel arbor’s upper pivot, in its setting pressed up into the top plate’s seat.',
-    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · seat Ø 5.2 H7'},
+  escEndstoneUp:{t:'Escape wheel endstone, upper',g:2,src:'est',sn:'The seat from the top plate’s section P-Q; the setting’s spigot and screws from outside as Wempe No. 3955 shows them',figs:'05 08_1b',c:'#c8163c',pri:1,
+    d:'The endstone over the escape wheel arbor’s upper pivot: its gilt setting goes up into the top plate’s seat from inside, its spigot through the lip flush with the plate’s face, the ruby showing in it, and two brass screws put in from outside hold it, their heads at its edge.',
+    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · seat Ø 5.2 H7, the spigot Ø 4.5 H7 · screws M1.2, 3.5 either side'},
   escJewelUp:{t:'Escape wheel jewel, upper',g:2,src:'est',sn:'Its seat and screw holes from the top plate’s section P-Q; the setting as the coloured section draws it',figs:'05 08_1b',c:'#c8163c',pri:1,
     d:'The escape wheel arbor’s upper hole jewel, in its setting flush with the top plate’s inner face, held by two screws whose heads lie over its edge.',
     sp:'Setting 05 04 06-2, jewel 05 04 06-1 (for the Ø 0.24 pivot) · two M1.2'},
   escJewelLow:{t:'Escape wheel jewel, lower',g:2,src:'est',sn:'Its hole from the pillar plate’s table (reamed 2.50); the bush as the coloured section draws it',figs:'05 08_3a, 05 08_3b',c:'#c8163c',pri:1,
     d:'The escape wheel arbor’s lower hole jewel, in a bush pressed into the pillar plate.',
     sp:'Setting 05 04 06-2, jewel 05 04 06-1 · hole Ø 2.50'},
-  escEndstoneLow:{t:'Escape wheel endstone, lower',g:2,src:'est',sn:'Its screw holes from the pillar plate’s table; the cap’s outline estimated',figs:'05 08_3b',c:'#c8163c',pri:1,
-    d:'The endstone under the escape wheel arbor’s lower pivot, in a cap screwed to the pillar plate’s dial side.',
-    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · two M1.2, 3.5 either side of the arbor'},
+  escEndstoneLow:{t:'Escape wheel endstone, lower',g:2,src:'est',sn:'Its screw holes from the pillar plate’s table; the setting and its seat as Wempe No. 3955 shows them',figs:'05 08_3b',c:'#c8163c',pri:1,
+    d:'The endstone under the escape wheel arbor’s lower pivot: a round gilt setting flush in a seat in the pillar plate’s dial side, the ruby showing, held by two screws whose heads lap its rim.',
+    sp:'Setting 05 04 08-2, endstone 05 04 08-1 · Ø 4.6 in a seat 0.25 deep · two M1.2, 3.5 either side of the arbor'},
   fusee:{t:'Fusee (Schnecke)',g:2,src:'drawing',sn:'Every size from its sheets as last revised (the body 27.2.48, the click wheel 6.8.47); the groove’s pitch 1.2 and lands 0.87 from the body’s section (the flange’s slot 0.87), its radii from the body’s sheet and 05 06_20’s curve',figs:'05 06_1, 05 06_2.2, 05 06_3.2, 05 06_15, 05 06_16, 05 06_20',c:'#e8b04c',pri:3,
     d:'The cone that evens out the mainspring’s pull: the chain (or band) is wound onto its groove from the large end, so fully wound the spring, strongest, pulls at its smallest radius, and run down, weakest, at its largest. Nine turns of a square-cut groove, its floor from r 14.75 at the first turn to 9.30 at the ninth (r 17.25 where the chain’s end is pinned in the flange), give the 56 hours of a wind in 8¾ turns. The body is pressed on its arbor; on its large end the click wheel, which drives the maintaining work’s clicks; on its small end the stop bar under the cover plate; the arbor’s winding square comes out through the top plate’s bush to the case’s winding hole.',
     sp:'Drawings 05 06 04 (body 05 06 04-2, arbor 05 06 04-1, click wheel 05 06 04-3) · body Ms 58, Ø 35.6 × 12.6 · groove pitch 1.2, lands 0.87, radii 14.75 to 9.30 · arbor Präz. Rundstahl, 60.6 overall, square 3.17 · click wheel 35 teeth, Ø 16'},
@@ -6401,8 +6431,8 @@ const PIECES={
     {k:'cone',t:'Banking screw with its cone, 1941 (as first drawn)',h:'cone41',d:'The screw through the 1941 block’s arm on the locking stone’s line, held by the arm’s slit end, its brass cone standing out past the arm: Wempe 3955’s block has it. 05 04_1 draws its slotted end at the detent’s side, 5.1 under the plate; what it banks against isn’t drawn there.',sp:'05 04_1 (no number) · Ø 0.85, the cone 2.5 long, 5.1 under the plate',src:'scaled',sn:'Its place from 05 04_1 (the “1,4” over the arm’s face: sure); its size measured on Wempe 3955’s photograph (11_), the sheet scaling Ø 1.2 × 3.3',figs:'05 04_1'}],
   balanceJewelsUp:[{k:'jewel',t:'Upper hole jewel',h:'050406-2.bu 050407-1.bu',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Upper endstone',h:'050408-2.bu 050408-1.bu',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-55.ck',d:'Two screws holding the endstone’s setting.',sp:'M1.2'}],
   balanceJewelsLow:[{k:'jewel',t:'Lower hole jewel',h:'050406-2.bl 050407-1.bl',d:'The hole jewel and its setting.',sp:'05 04 06-2, 05 04 07-1'},{k:'end',t:'Lower endstone',h:'050408-2.bl 050408-1.bl',d:'The endstone and its setting.',sp:'05 04 08-2, 05 04 08-1'},{k:'screws',t:'Setting screws',h:'WN-16',d:'Two screws holding the settings in the lug.',sp:'WN-16 · M1.2'}],
-  escJewelUp:[{k:'jewel',t:'Hole jewel and setting',h:'050406-2.eu 050406-1.eu',d:PARTS.escJewelUp.d,sp:PARTS.escJewelUp.sp},{k:'screws',t:'Setting screws',h:'WN-es',d:'Two screws under the plate holding the setting.',sp:'M1.2'}],
-  escEndstoneLow:[{k:'cap',t:'Endstone cap',h:'050408-2.el 050408-1.el',d:PARTS.escEndstoneLow.d,sp:PARTS.escEndstoneLow.sp},{k:'screws',t:'Cap screws',h:'WN-ec',d:'Two screws through the cap into the pillar plate.',sp:'M1.2'}],
+  escEndstoneUp:[{k:'setting',t:'Endstone and setting',h:'050408-2.eu 050408-1.eu',d:PARTS.escEndstoneUp.d,sp:PARTS.escEndstoneUp.sp},{k:'screws',t:'Setting screws',h:'WN-es',d:'Two brass screws put in from outside, their heads at the setting’s edge.',sp:'M1.2 · heads Ø 2.6, 0.3 high'}],
+  escEndstoneLow:[{k:'cap',t:'Endstone and setting',h:'050408-2.el 050408-1.el',d:PARTS.escEndstoneLow.d,sp:PARTS.escEndstoneLow.sp},{k:'screws',t:'Setting screws',h:'WN-ec',d:'Two brass screws into the pillar plate, their heads lapping the setting’s rim.',sp:'M1.2 · heads Ø 2.6'}],
   changeWheel:[{k:'wheel',t:'Change wheel',h:'050202-1',d:'The wheel the cannon pinion drives: a plain spring-hard brass disc, riveted on its pipe.',sp:'05 02 02-1 · z 56, m 0.36, tip Ø 21.05, root Ø 19.03, 1.0'},
     {k:'pipe',t:'Change wheel pipe (Wechselbutzen)',h:'050202-2',d:'The pipe the wheel and pinion are fixed on, running on the short stud.',sp:'05 02 02-2 · Ø 3.05, 6.9 long (7 −0.1)',src:'drawing',sn:'Its sizes from 05 02 02; its collar scaled'},
     {k:'pinion',t:'Change pinion (Wechseltrieb)',h:'050202-3',d:'The pinion that drives the hour wheel, knocked on the pipe to a press fit; brass, as the coloured section colours it.',sp:'05 02 02-3 (no sheet) · z 18, m 0.35, tip Ø 6.9, 2.5 long',src:'scaled',sn:'Its leaf count from the centre distance; its length from the arrangement; its tip, root and leaves measured on Wempe 3955'}],
@@ -6478,7 +6508,7 @@ const PIECES={
 const SH1=' As first drawn: the sheets of 1940-41, which the later revisions replaced (Wempe 3955 is made so).';
 const REV={
   balance:{sn:'Its rim, arm and masses from their sheets; the 1941 staff and its brass collar from 05 04_5; its seat from 05 04_1; the masses and timing weights scaled on 05 03_2 and Wempe 3955',figs:'05 03_2, 05 03_4, 05 04_5, 05 04_1',
-    d:'The balance: a cut bimetallic rim, nickel steel inside and brass outside, made in one with its straight steel arm, so each quarter of the rim curls in as it warms and carries its mass nearer the staff. Four round brass masses sit across the rim, two timing weights on screws at the arm’s ends. Its arm is riveted on the neck of the brass collar on its staff, whose flange is undercut 10°; the seat stands 4.1 over the top plate’s inner face, 0.3 higher than the 1946 staff puts it, and the hairspring rides higher with it. It swings about 1¼ turns, twice a second.'+SH1,
+    d:'The balance: a cut bimetallic rim, nickel steel inside and brass outside, made in one with its straight steel arm (stamped RGG in a triangle, as on Wempe No. 3955), so each quarter of the rim curls in as it warms and carries its mass nearer the staff. Four round brass masses sit across the rim, two timing weights on screws at the arm’s ends. Its arm is riveted on the neck of the brass collar on its staff, whose flange is undercut 10°; the seat stands 4.1 over the top plate’s inner face, 0.3 higher than the 1946 staff puts it, and the hairspring rides higher with it. It swings about 1¼ turns, twice a second.'+SH1,
     sp:'Drawings 05 03 01, rim 05 03 01-1 (nickel steel and brass), staff 040401-1 with its collar 040401-2 (05 04_5, 4.4.41), layout 05 04_1 · rim Ø 32.32 × 3.8 · arm 1.15 thick · the seat 4.1 over the plate’s inner face'},
   rollers:{sn:'The impulse roller from its sheet; the discharge roller scaled on the layout; their heights from 05 04_1 and the 1941 collar',figs:'05 04_1, 05 04_6, 05 04_5',
     d:'Two rollers on the balance staff under the top plate, as 05 04_1 draws them: the impulse roller just under the 1941 collar’s tube, 0.6 under the plate and level with the escape wheel’s teeth, which lie just under the plate, and the discharge roller under it. The impulse roller carries the sapphire impulse stone, which a tooth of the escape wheel pushes on every other swing; the discharge stone pushes the gold spring and lifts the detent on that swing, and slips past it on the other.'+SH1,
@@ -6494,7 +6524,7 @@ const REV={
     sp:'05 04_1 (no sheet of its own) · base 14.6 × 7.5 × 6.5 · arm 2.8 × 2.46, 3.7 to 6.5 under the plate, its end 2.9 past the stone · cone Ø 0.85 × 2.5'},
   escJewelUp:{d:'The escape wheel arbor’s upper hole jewel. The 1941 arbor’s pivot reaches 2.0 into the plate, so the setting fills the seat down to it, held by two screws whose heads lie over its edge.'+SH1},
   escJewelLow:{d:'The escape wheel arbor’s lower hole jewel, in a bush pressed into the pillar plate: shorter for the 1941 arbor, whose pivot ends 1.96 into the plate.'+SH1},
-  escEndstoneLow:{d:'The endstone under the escape wheel arbor’s lower pivot: for the 1941 arbor, which ends inside the plate, in a plug set into the plate’s hole under the cap screwed to the dial side.'+SH1},
+  escEndstoneLow:{d:'The endstone under the escape wheel arbor’s lower pivot: for the 1941 arbor, which ends inside the plate, in a plug set into the plate’s hole under the setting, which is then plain.'+SH1},
   barrel:{sn:'Every size from the 1941 sheets (0207, 020701, 020701-3); its place between the plate and the bridge from 0207’s section; the hook block and the slots the later drum’s',figs:'05 07_1, 05 07_2, 05 07_10',
     d:'The drum the mainspring is coiled in, as first drawn: three pieces, a brass ring with a lid sprung into its seat on the pillar plate’s side and a bottom on the barrel bridge’s, each with a boss standing inward round the arbor. Its outer end is hooked to the ring’s wall, its inner end to the arbor, which the set-up ratchet holds. Running, the spring turns the drum, which winds the chain onto itself off the fusee, about five turns over a wind.'+SH1,
     sp:'Drawings 0207 (Federhaus, 127-556.04 U24, 15.4.41), 020701 (U22), ring 020701-3 · Ø 41.5 × 18, inside Ø 38.5, 15.8 between lid and bottom · lid 1.2, bottom 1.0, seats Ø 39.2'},

@@ -2012,12 +2012,12 @@
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Escape setting screws, upper, M1.2 (their WN number not read)",
+   "name": "Escape endstone screws, upper, M1.2 (their WN number not read)",
    "qty": 2,
-   "parent": "050406-2.eu",
+   "parent": "050408-2.eu",
    "kind": "part",
-   "part": "escJewelUp",
-   "fn": "Hold the upper hole jewel's setting, their heads over its edge.",
+   "part": "escEndstoneUp",
+   "fn": "Put in from outside: hold the upper endstone's setting, their heads over its spigot's edge (Wempe 3955).",
    "rel": [
     [
      "in",
@@ -2026,7 +2026,7 @@
     ],
     [
      "on",
-     "050406-2.eu"
+     "050901"
     ]
    ],
    "figs": "05 08_1b"
@@ -2115,22 +2115,21 @@
    "idx": null,
    "no": "",
    "dwg": "",
-   "name": "Escape endstone cap screws, M1.2 (their WN number not read)",
+   "name": "Escape endstone screws, lower, M1.2 (their WN number not read)",
    "qty": 2,
    "parent": "050408-2.el",
    "kind": "part",
    "part": "escEndstoneLow",
-   "fn": "Hold the cap to the pillar plate.",
+   "fn": "Hold the lower endstone's setting in its seat, their heads over its rim (Wempe 3955).",
    "rel": [
-    [
-     "in",
-     "050408-2.el",
-     "clear"
-    ],
     [
      "in",
      "050802-1",
      "tap"
+    ],
+    [
+     "on",
+     "050802-1"
     ]
    ],
    "figs": "05 08_3b"
