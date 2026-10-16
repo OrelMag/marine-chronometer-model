@@ -131,9 +131,21 @@ Appendix 4 (pp. 128-129) gives every arbor's side shake and endshake, for A's en
 
 Tarasov (1976) and Romanov (1975) describe a later, redesigned 6MX (16 teeth, 75/10): not this one's sizes. Kirova No. 14100 taken apart (chasy.ru 9985, photos/chasy-ru-9985-kirova-14100/) shows the block with its banking screw and the detent with its gold spring.
 
-## C's result
+## C's result (16 October 2026)
 
-(to be filled in when the 1,530 solves finish)
+`wempe_mainspring.py --solve 1530 --set 0.6` and `--set 0.7` (7 processes each, about 30 min):
+
+| L, set | shape against 05 06_20 (rms, worst) | measured over solved |
+|---|---|---|
+| 1,240, 0.6 (the model's) | 1.07 %, 2.00 % | 0.802 |
+| 1,530, 0.6 | 3.90 %, 9.73 % | 0.753 |
+| 1,530, 0.7 | 3.29 %, 8.27 % | 0.802 |
+
+The longer spring fits the measured curve three times worse and doesn't raise the level. The fit's least rms, with them added, is L 1,222 at set ×0.619 (1.48 %).
+
+**Keep 1,240.** Record in the README that GUB 12255's let-down barrel suggests about 1,530 mm (a post-war movement, perhaps a replacement spring) and that solved at that length it fits 05 06_20 worse. The 25 % gap isn't the length's. The 1958 repair book's 1.01-1.08 N·m fully wound (above) is more than the solved spring's 0.935, so the gap may lie in 05 06_20's lever or rig, not the spring. Weigh that when the sources branch lands.
+
+The two solved tables are not committed: the fit's JSON feeds wempe_physics, strength, bench, essaydata and the report, so committing them is a build step. They sit in the scratchpad (survey/fusee/mainspring_wempe_L1530_s0.6.js, _s0.7.js) and can be re-solved in about 30 min.
 
 ## Appendices: the survey's evidence, area by area
 
