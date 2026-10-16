@@ -202,7 +202,8 @@ const WCASE=(()=>{
          them standing 10 off it, the grip pressed out to an oval 70 × 30, 6 deep; its middle 75 over the box's bottom, its top 3.5 under the pivot's screw (sure). The strip 3 thick (likely); the screws estimated */
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'510010');g.position.set(s*BW,YF+75,0);g.rotation.y=s>0?0:Math.PI;bx.add(g);
         const st=polyGeo([[0,-50],[3,-50],[3,-41],[10,-36],[10,36],[3,41],[3,50],[0,50],[0,40],[7,35],[7,-35],[0,-40]],18);st.translate(0,-9,0);mesh(g,st,MC.alu);   /* the strip seen from below: [off the side, along it] */
-        const o=new THREE.Shape(stadiumPts([0,-20],[0,20],30).map(([y,z])=>V2(z,y)));const og=extrude(o,{depth:3,bevelEnabled:false,curveSegments:24});og.rotateY(Math.PI/2);mesh(g,og,MC.alu,7,-12,0);   /* the grip: the oval 70 × 30, hanging 12 below the strip's middle (its dashed outline on the sheet's front view, scaled at 2.36 px/mm) */
+        const ov=stadiumPts([-12,-20],[-12,20],30),cut=[];for(let i=0;i<ov.length;i++){const a=ov[i],b=ov[(i+1)%ov.length];if(a[0]<=-9)cut.push(a);if((a[0]<=-9)!==(b[0]<=-9)){const t=(-9-a[0])/(b[0]-a[0]);cut.push([-9,a[1]+t*(b[1]-a[1])]);}}
+        const o=new THREE.Shape(cut.map(([y,z])=>V2(z,y)));const og=extrude(o,{depth:3,bevelEnabled:false,curveSegments:24});og.rotateY(Math.PI/2);mesh(g,og,MC.alu,7,0,0);   /* the grip: the oval 70 × 30, hanging 12 below the strip's middle (its dashed outline on the sheet's front view, scaled at 2.36 px/mm); drawn below the strip only (y −9 down), so the two don't share their faces 7 and 10 off the side, which flickered where they overlapped (until 16 October 2026) */
         for(const z of[-45,45])tag(screw(along(g,[3,0,z],[-1,0,0]),0,0,0,2.5,1.6,11,1.2,M.steel),'WN-hg');}
       /* the hinges, two at the back (estimated: Lange 1947's): leaves 40 × 18 × 1.2 on the back, the knuckle Ø 5 on the parting line */
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier');bx.add(g);box(g,40,18,1.2,s*55,YL-9,-BW-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,YL,-BW-2.5);k.rotation.z=Math.PI/2;}
@@ -297,13 +298,17 @@ const WCASE=(()=>{
     /* ================= the transit lock (Feststeller, 15 on 05 01; its number 05 01 01 in 05 01's list, which Glasrand kompl.'s own sheet also bears) ================= */
     /* No sheet: scaled on 05 01's Schnitt A-B: a knob Ø 19.6 turning a lever in the box's front right corner (the knob's axis 65 and 63 from the box's centre), its lever 28 long and
        8 wide, a pin Ø 8 near its end, on a bracket on the right wall; turned toward the centre the lever presses the ring onto the locking bracket on the bowl, so neither gimbal
-       swings; drawn turned off, along the front wall. Heights not drawn: the lever at the ring's, the knob above it (Greenwich's wartime Wempe has a black knob there): estimated */
+       swings; drawn turned off, along the front wall. Heights not drawn (05 01): read on Wempe 5377 (bonhams_26816_327, the lock enlarged, scaled by the knob's Ø 19.6 across
+       and its top's ellipse, 0.75 of it, so seen 49° from above) and Greenwich's wartime Wempe (rmg_L5393_wempe_wartime_001.jpg): the lever lies over the ring's top (both draw
+       it and its pin in front of the ring's band), at the box's rim, on a bracket on the right wall; on it a hub about Ø 10 standing 10.8 (likely, ±1.5) under the knob, 4.3
+       thick (4.5 drawn), its top so 18 over the rim; the lever 2.2 thick (2.5 drawn); the pin Ø 4 standing 16.7 over the lever about halfway along it (5377's, plain; the
+       wartime one has a round head). Until 16 October 2026 the lever was drawn at the pivots' height and the knob, 10 thick on a Ø 4 stem, barely over the rim (estimated) */
     const lk=prt(root,'caseLock');
-    {const c=[65.1,62.9],e=[39,73];const g=tag(new THREE.Group(),'050101.F');lk.add(g);
-      box(g,5.3,20,15,80-2.65,YP-6,62.9,M.steel);box(g,20,4,12,70,YP-14,62.9,M.steel);
-      cylBetween(g,2,YP-12,YP+16,M.steel,c[0],c[1],20);
-      const lv=polyGeo(stadiumPts(c,e,8),4);lv.translate(0,YP-8,0);mesh(g,lv,M.steel);cylBetween(g,4,YP-10,YP-4,M.steel,51.4,66,24);
-      const kn=new THREE.LatheGeometry([V2(0,0),V2(9.3,0),V2(9.8,0.5),V2(9.8,7.5),V2(8.8,9.5),V2(0,10)],40);mesh(g,kn,MC.knob,c[0],YP+15,c[1]);}
+    {const c=[65.1,62.9],e=[39,73],ly=YL+0.5,lt=ly+2.5;const g=tag(new THREE.Group(),'050101.F');lk.add(g);   /* ly, lt: the lever's underside and top */
+      box(g,5.3,18.5,15,80-2.65,YL-10.25,62.9,M.steel);box(g,18,4,12,69,ly-2,62.9,M.steel);   /* the bracket: a plate on the wall, under the rim, and the lever's seat on it (estimated) */
+      cylBetween(g,2,ly-4,lt+0.5,M.steel,c[0],c[1],20);cylBetween(g,4.9,lt-0.5,lt+11,M.steel,c[0],c[1],32);   /* the lever's arbor through the seat, and the hub (Ø 9.8) to the knob */
+      const lv=polyGeo(stadiumPts(c,e,8),2.5);lv.translate(0,ly,0);mesh(g,lv,M.steel);cylBetween(g,2,ly+0.5,lt+16.7,M.steel,c[0]+(e[0]-c[0])*0.55,c[1]+(e[1]-c[1])*0.55,16);
+      const kn=new THREE.LatheGeometry([V2(0,0),V2(9.3,0),V2(9.8,0.5),V2(9.8,4),V2(9.3,4.5),V2(0,4.5)],40);mesh(g,kn,MC.knob,c[0],lt+10.8,c[1]);}
 
     /* ================= the winding key (Chronometerschlüssel 51 00 11, 16.7.43: one way) ================= */
     /* "Linksaufzug b. Rechtsdrehung entspannt sich die Feder": a coil spring round the tube grips it as the key winds and slips the other way, so the key can't be forced
