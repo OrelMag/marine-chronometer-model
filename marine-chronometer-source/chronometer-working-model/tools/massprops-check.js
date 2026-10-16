@@ -34,10 +34,10 @@
   /* the stops: obstacles are every mesh of the box but the ring, the bowl and the ring's pivot screws (their groups' meshes), as bounding boxes in the box's frame; the moving
      points are the vertices of the case's and the ring's own meshes (not the movement inside the case), every 3rd */
   const toRoot=new THREE.Matrix4().copy(root.matrixWorld).invert(),obs=[],movers=[];
-  root.traverse(o=>{if(!o.isMesh||under(o,ring)||!o.geometry.attributes.position)return;let p=o;while(p&&p.parent!==root)p=p.parent;
+  root.traverse(o=>{if(!o.isMesh||under(o,ring)||offRev(o)||!o.geometry.attributes.position)return;let p=o;   /* another version's pieces (hidden) aren't there to meet */while(p&&p.parent!==root)p=p.parent;
     if(p&&p.userData.partName==='ring')return;   /* the ring's pivot screws, washers and nuts (gp) */
     o.geometry.computeBoundingBox();obs.push({b:o.geometry.boundingBox.clone().applyMatrix4(toRoot.clone().multiply(o.matrixWorld)),o});});
-  ring.traverse(o=>{if(o.isMesh&&!under(o,mv)&&!o.userData.decal&&!o.userData.surface&&o.geometry.attributes.position)movers.push(o);});
+  ring.traverse(o=>{if(o.isMesh&&!under(o,mv)&&!offRev(o)&&!o.userData.decal&&!o.userData.surface&&o.geometry.attributes.position)movers.push(o);});
   /* __mpExact (another model's, massprops.py --model): a point in an obstacle's bounding box counts only inside the solid itself (a ray's crossings of its faces) */
   const EX=window.__mpExact,inside=(q,v)=>{if(q.o.isInstancedMesh)return true;q.inv=q.inv||toRoot.clone().multiply(q.o.matrixWorld).invert();const p=v.clone().applyMatrix4(q.inv),P=q.o.geometry.attributes.position,I=q.o.geometry.index,n=I?I.count:P.count,d=new THREE.Vector3(1,0.0013,0.0021).normalize();
     const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(),e1=new THREE.Vector3(),e2=new THREE.Vector3(),h=new THREE.Vector3(),s=new THREE.Vector3(),qq=new THREE.Vector3();let x=0;
