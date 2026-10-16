@@ -59,6 +59,15 @@ Contents:
 
 ## Escapement
 
+- **The Wempe's impulse face stood 24° before the line of centres at rest, where 05 04_1 draws it 28°10'.** The sheet's "24°" is the
+  escape wheel's pitch (its arc lies about the wheel's centre), and its 1°, 21° and 2° the wheel's too; the face's angle is the "6°" on from
+  the "22°10'" where the impulse begins, both about the balance. Built so, the stone comes into the teeth's path at +6.1°, and a discharge
+  stone leaving the gold spring at rest (the model's assumption) let the wheel go so early that the tooth got to the path first: makeEsc
+  and dynamics.js snapped it onto the stone's corner, and the detent frame (wempe_tripping.js), which had no such strike, threw the balance
+  to 247°. The discharge stone is now 5° later on the staff (`DSB`, estimated: from 4° the tooth lands on the face, from 8° it doesn't run),
+  and the frame strikes as dynamics.js does where the impulse table begins. Keep: PHI0 −28°10' and PHI_C −22°10' from 05 04_1; the tooth
+  landing on the face after the stone has come in (`wempe_escapement.js`'s chase, dynamics.js's landing); TF where the 6MX video's fit at the
+  model's own swing gives it back (108 s). `c088b73`
 - **The Wempe's page moved its escapement as the layout draws it, not as it is solved.** Its 3D escapement was kinematic, timed from
   05 04_1: the tooth on the impulse stone the moment it was let go (21° before the line of centres), the detent let fall as the gold
   spring slipped off; makeEsc, solving the same parts in time, has the wheel chase the stone from rest and strike it 16° of swing later
@@ -629,6 +638,12 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's barrel arbor hook faced the wrong way, and the maintaining detent's step was an arc.** The hook's square face was on
+  the side the spring's pull leaves it, the strip's tip abutting it from there, which holds nothing; 05 07 02's end view, first-angle and
+  so from the square's end, puts the face on the side the arbor turns from, the spring's eye over the pin. The maintaining detent's step
+  (05 05 05-1) is a dashed straight edge from 8.6 at the back to the hollow, not an arc at 8.6 about the hole (which ran into the fusee
+  wheel's tips and was cut back to 7.55). Keep: the hook in the spring's eye, its tip behind the pin; the step the sheet's line, 0.52-0.61
+  clear of the tips. `215bed8`
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
   has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
@@ -1280,6 +1295,10 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The Wempe's set-up click and centre arbor read two figures wrongly.** The click's "5,7" is the thin circle about its hole, tangent
+  to the base (the base 2.85 under the hole, not 2.81 scaled), and its "85" the beak's end face at 85° (82.4° built); the centre arbor's
+  "1,6 −0,1" (05 05 03-2) is the wheel's seat alone, not seat and riveting collar, so the seat is 1.55 and the collar 0.255 (1.45 and 0.355).
+  Keep: the click from 05 08 05-2's figures (the hollow meets the base 9.69 from the hole, the "9,7"); the seat inside 1.5-1.6. `9b187fc`, `5d4f671`
 - **The Wempe's frame read off its sheets wrongly in four places** (15 October 2026, a survey of the parts against their works drawings). The
   barrel bridge's chord was drawn square to hole 45's line, its "7,7" read along the chord to pin 41 and its "5" as the top corner's offset,
   where both figures' extension lines run parallel to an edge: 42 is 7.7 from the chord (with 45's 7 that gives the sheet's 24 to 0.002) and
