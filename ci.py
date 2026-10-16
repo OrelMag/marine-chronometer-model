@@ -80,6 +80,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-bench',lambda log:run(['node',TOOLS/'wempe_bench.js'],ROOT,log),'quick'),   # the Wempe's tests on the bench from its figures, against bench_wempe.json (about 45 s)
  ('wempe-montecarlo',lambda log:run(['node',TOOLS/'wempe_montecarlo.js'],ROOT,log),'quick'),   # the whole Wempe to a maker's tolerances, as made and after the bench, against montecarlo_wempe.json (about 30 s)
  ('wempe-ratchets',lambda log:run(['node',TOOLS/'wempe_ratchets.js'],ROOT,log),'quick'),   # the Wempe's pawls on their ratchets: the load's draw against friction, the teeth, faces and pivots, the clicks' springs at let-go, the maintaining detent's catch against the spring's travel (about 2 s)
+ ('wempe-transmission',lambda log:run(['node',TOOLS/'wempe_transmission.js'],ROOT,log),'quick'),   # the Wempe's whole transmission in time, every part that moves, nonlinear: the train on its meshes driving dynamics.js's escapement, the winds, the let-go, the stop (about 2 minutes)
  ('wempe-essaydata',lambda log:run(['node',TOOLS/'wempe_essaydata.js'],ROOT,log),'quick'),   # the Wempe essay's generated data (js/essaydata.js) and its quoted figures (data-wphys) against what the tools give (about 35 s)
  ('almanac',lambda log:run(['node',TOOLS/'almanac.js'],ROOT,log),'quick'),
  ('hairspring',lambda log:run(['node',TOOLS/'hairspring.js'],ROOT,log),'quick'),
