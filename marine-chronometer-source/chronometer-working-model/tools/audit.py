@@ -8,7 +8,7 @@ part at all; the loose ends in LOOSE below, each with its reason; and the coplan
 level they share, and how many: most are faces in contact). Anything new fails (exit code 1); an expected entry no longer found is listed,
 to be taken out. After a change that adds or removes coplanar faces on purpose, look at what is new, then rewrite the file with --update.
 With --eval the comparison still runs: a planted fault proves the check, and a variant (the manual's arm) lists what it changes."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from collections import Counter
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -39,7 +39,7 @@ LOOSE_NAVY=model.cfg('LOOSE_NAVY',[('lockArm:Cylinder',(14.99,-28.85,6.51),0.4,"
 FLOAT=model.cfg('FLOAT_BOX' if MODE=='box' else 'FLOAT',[])   # screws whose head is meant to bear on a part only at its edge (another model's checks.py lists them, FLOAT_BOX for the box: part:geometry, place, head radius, why); none on the Hamilton
 async def run():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:(errs.append(str(e)),print("ERR",e)))
         await pg.goto(PAGE);await pg.wait_for_timeout(5000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")

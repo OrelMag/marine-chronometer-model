@@ -20,7 +20,7 @@ update, their centres the sheets' (seven: the train's four, the motion work's tw
 setting them; the up-and-down hand at the dial's printed 0 fully wound and its 56 after 8.75 fusee turns, turning with its wheel, and what it reads after 56 h of the train
 and at run down; the fusee's turn in 90/14 h, its working turns and the model's wind against the dial's 56 h; WESC.SET's balance and escape arbor against
 wempe_inertia.json, the period the drawn hairspring gives; 05 04_1's 10.00. --eval JS runs code after loading (a planted fault)."""
-import asyncio,json,math,pathlib,sys
+import asyncio,browser,json,math,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model;PAGE=model.PAGE   # the model's page (tools/model.py: --model wempe checks the Wempe's, invariants-wempe.js)
@@ -103,7 +103,7 @@ JS=JS.replace('%MF%','{tup:%s,tdn:%s,fu:%s}'%(_tu.group(1),_tu.group(2),_fu))   
 JS=JS.replace('%PJ%',_re.search(r'const J=([\d.e-]+)',(HERE/'physics.js').read_text(encoding='utf-8')).group(1))   # the escape wheel's inertia as tools/physics.js takes it: the check holds the two together
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("window.__mv&&window.__test" if model.HAMILTON else "window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")

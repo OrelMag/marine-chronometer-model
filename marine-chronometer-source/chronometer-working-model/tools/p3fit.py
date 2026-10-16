@@ -1,4 +1,4 @@
-import asyncio,json,math
+import asyncio,browser,json,math
 import numpy as np
 from playwright.async_api import async_playwright
 import pathlib
@@ -10,7 +10,7 @@ PH={'B':(640,830),'Fu':(1240,610),'Ba':(930,1440)}
 MD={'B':[8.0,-26.3,6.77],'Fu':[11.59,-27.16,-19.8],'Ba':[-18.56,-31.56,0.19]}   # balance rim, top of the barrel bridge at the dust seal, barrel square (heights of the re-stacked model)
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":1100,"height":1100},color_scheme='light')
         errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE); await pg.wait_for_timeout(4500)

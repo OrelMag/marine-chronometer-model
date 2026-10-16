@@ -10,6 +10,7 @@ setting's window, the holes of the stop not fitted). Exit code 1 on an empty hol
 --model wempe checks the Wempe's page (tools/model.py): its states are the sheets as last revised and as first drawn (movement.js's setRev; it has no balance
 stops), its expected empty holes checks.py's HOLE_EXPECTED, the same form as EXPECTED below."""
 import asyncio, json, pathlib, re, sys
+import browser
 from playwright.async_api import async_playwright
 HERE = pathlib.Path(__file__).resolve().parent
 import model; PAGE = model.PAGE   # the model's page: the Hamilton's, or another's with --model NAME (model.py)
@@ -47,7 +48,7 @@ def matches(h, e, tol=0.4):
     return re.fullmatch(p, h['part']) and (not hn or re.fullmatch(hn, h['hn'] or '')) and (c is None or sum((a - b) ** 2 for a, b in zip(h['c'], c)) ** 0.5 < tol) and (st is None or st == h['stop'])
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(args=["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"])
+        b = await p.chromium.launch(args=browser.ARGS)
         w = await b.new_page(); await w.set_content('<canvas></canvas>'); await w.evaluate("document.querySelector('canvas').getContext('webgl')"); await w.wait_for_timeout(3000); await w.close()   # see smoke.py
         pg = await b.new_page(viewport={"width": 800, "height": 600}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(PAGE); await pg.wait_for_function("!document.querySelector('#loading')", timeout=120000); await pg.wait_for_timeout(1500)

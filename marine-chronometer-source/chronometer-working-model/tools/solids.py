@@ -5,7 +5,7 @@
 Each mesh must have no open edge, no edge used twice the same way (a face wound against its neighbours) and a positive signed volume (not inside
 out); see solids-check.js. Intentional surfaces are skipped: userData.decal (engravings) and userData.surface (the dial's printed face, the floor's
 shadow). Build open shapes through extrude() and closeGeo() in core.js. Exit code 1 on any failure."""
-import asyncio,pathlib,sys
+import asyncio,browser,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
@@ -13,7 +13,7 @@ JS=(HERE/'solids-check.js').read_text(encoding='utf-8')
 async def main():
     bad=0
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         # as in smoke.py: a fresh headless Chromium loses its first WebGL context, so spend it on a blank page
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))

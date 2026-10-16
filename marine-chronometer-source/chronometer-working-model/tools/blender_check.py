@@ -30,7 +30,8 @@ def page_looks():
          ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
     async def go():
         async with async_playwright() as p:
-            b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+            import browser   # here, not at the top: Blender runs this file too, without tools/ on its path
+            b=await p.chromium.launch(args=browser.ARGS)
             w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
             pg=await b.new_page(viewport={"width":W,"height":H},device_scale_factor=1,color_scheme='light')
             await pg.goto(page);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)

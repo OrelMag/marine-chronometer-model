@@ -10,7 +10,7 @@ in References/, a video frame from tools/video.py frame, a figure of the manual)
 --look yaw pitch dist x y z (the camera, movement mm, as views.py) can be repeated; without it the camera is aimed at the parts' centre from four
 sides (--plan: from above). --crop x0 y0 x1 y1, after a --ref, crops that reference (pixels). The model is frozen as views.py freezes it. The sheet is written to
 the current directory (r_iso_NAMES.png); --view NAME clicks that view first (a part outside the movement, the Wempe's case, in its place: --view box); --eval JS runs after the parts are chosen (to hide a piece that covers another, say); say what matches, what differs and how sure each reading is (CLAUDE.md, Source of truth). About 40 s."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 from PIL import Image,ImageDraw
 HERE=pathlib.Path(__file__).resolve().parent
@@ -39,7 +39,7 @@ async def main():
         if x=='--ref':refs.append([sys.argv[i+1],None])
         elif x=='--crop' and refs:refs[-1][1]=tuple(int(v) for v in sys.argv[i+1:i+5])
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # a fresh headless Chromium loses its first WebGL context
         pg=await b.new_page(viewport={"width":1200,"height":800},device_scale_factor=1,color_scheme='light');errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=%r;document.head.appendChild(s);});"%CSS)

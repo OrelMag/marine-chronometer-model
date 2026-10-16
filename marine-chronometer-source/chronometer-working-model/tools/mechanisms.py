@@ -11,7 +11,7 @@ Lengths in mm, masses in g, moments of inertia in g·mm².
 --model wempe (tools/model.py): the Wempe's pawls off its built model: the two maintaining clicks on the click wheel, the maintaining detent on the maintaining
 ratchet and the set-up click on the set-up ratchet, each with its contact under load, the ratchet's normal there, its pivot, its depth in the teeth and the faces'
 common height, its mass and moment of inertia about its pivot; the fusee's and barrel's moments of inertia."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model;PAGE=model.PAGE   # the model's page (tools/model.py: --model wempe checks the Wempe's)
@@ -19,7 +19,7 @@ JS=(HERE/('mechanisms-check.js' if model.HAMILTON else 'mechanisms-wempe.js')).r
 OUT=HERE/('mechanisms.json' if model.HAMILTON else 'mechanisms_wempe.json')
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')&&window.__mv",timeout=120000);await pg.wait_for_timeout(2500)
