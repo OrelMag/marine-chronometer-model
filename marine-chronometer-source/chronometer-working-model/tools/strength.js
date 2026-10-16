@@ -62,7 +62,7 @@ say('The fusee chain, fully wound');
 
 /* ---------- the springs ---------- */
 say('The springs');
-line('mainspring, fully wound (physics.js)',`${f(PH.Mup,2)} N·m`,PH.sUp,P([2500,2600]),'the top of a hardened steel mainspring\'s working range (physics.js) and its limit (README)');
+line('mainspring, fully wound (physics.js)',`${f(PH.Mup,2)} N·m`,PH.sUp,P([2550,2850]),'a set carbon-steel strip\'s limit, 1.5 times its elastic limit (physics.js: a rectangle\'s plastic moment, the strip formed past its elastic limit)');
 say(`  as a mainspring is meant to, it works near its limit: wound once a day (${f(365*yrs/1000,1)}k cycles in ${yrs} years) it fails by taking a set (the model's MSET, Op. 13), not by fatigue`);
 /* the hairspring: the strip tools/hairspring.js designs (409 mm, 0.23 wide, Elinvar-type 180 GPa) at the swing; reversed every half-second */
 {const L=0.4093,b=0.23e-3,E=180e9,t=Math.cbrt(12*DY.K*L/(E*b)),sig=th=>6*DY.K*th/(b*t*t);
