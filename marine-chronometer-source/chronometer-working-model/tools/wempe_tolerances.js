@@ -46,10 +46,10 @@ const td=(S.SN1-S.SN0)*S.ES,kdHi=cross(k=>A(dmin,k,1),GUARD[0],1,60,26),tdHi=td*
 say(`its stiffness E b t³/12 L (steel, 1.9 wide, 5 long) goes as its thickness cubed; the preload is the banking's (makeEsc's W78, ${S.W78} g at the stone, estimated), left as set. The swing stays above ${GUARD[0]}° at the wind's lowest drive up to ${f(kdHi,1)} times the drawn stiffness (${f(tdHi,3)} mm thick); with no stiffness at all it swings ${f(Ak0,1)}° at 12 h: its work sets no lower limit`);
 say(`  1436's other figure, 0.09 (${f(k09,2)} times as stiff): ${f(A09[0],1)}-${f(A09[1],1)}° over the wind; the spring's lower limit is the detent's return in time, which dynamics.js --model wempe checks from half to twice the drawn stiffness (${f(td/Math.cbrt(2),3)}-${f(td*Math.cbrt(2),3)} mm): home before the next tooth over all of it`);
 /* the preload: makeEsc rebuilt with W78 (OP78 0: the preload itself, g at the stone). wempe_tripping.js's sweep (16 October 2026, the banking on the pipe) has a held tooth's stone
-   ring 41 % of the depth of lock at the estimate, under its margin of half from about 0.76 times it (0.48 g; 0.5× 63 %, 0.8× 48 %), and teeth get past under 0.2× (0.1× and none):
+   ring 41 % of the depth of lock at the estimate, under its margin of half from about 0.78 times it (0.49 g; 0.5× 69 %, 0.8× 49 %), and teeth get past under 0.2× (0.1× and none):
    the margin's floor is the least (its 0.72 g, 1.1 times, was for the banking under the blade, before; the estimate itself until 16 October 2026, the sweep not run under it).
    The swing falls as the preload grows (the stone pressed on the tooth it has let go, RW) */
-const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.48;
+const preA=w=>{const e=W.makeEsc({...S,W78:w},S);return[e.ampAt(dmin)*D,e.ampAt(dmax)*D,e.A*D];},wTrip=0.49;
 const wHi=cross(w=>preA(w)[0],GUARD[0],S.W78,4,14),PRE=[0.3,S.W78,1.0,1.5].map(w=>({w:r4(w),A:preA(w).map(r4)}));
 say(`the preload: ${PRE.map(p=>`${p.w} g ${f(p.A[0],1)}-${f(p.A[1],1)}°`).join(', ')} over the wind; at least ${f(wTrip,2)} g, the margin's floor (wempe_tripping.js: a held tooth's stone rings under half the depth of lock from there, 41 % at the estimate ${S.W78} g; under 0.2 times the estimate teeth get past), at most ${f(wHi,2)} g (the swing at the wind's lowest at ${GUARD[0]}°)`);
 
