@@ -3756,6 +3756,25 @@
    "figs": "51 00_1"
   },
   {
+   "id": "Schluesselhalter",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Schlüsselhalter (key holder, estimated)",
+   "qty": 1,
+   "parent": "Holzkasten",
+   "kind": "part",
+   "part": "box",
+   "fn": "A shelf across the box's back right corner: the winding key stands in its hole (every photographed box; the box's own sheet isn't in the set).",
+   "rel": [
+    [
+     "on",
+     "Holzkasten"
+    ]
+   ],
+   "figs": "51 00_1"
+  },
+  {
    "id": "Schliessblech",
    "idx": null,
    "no": "",

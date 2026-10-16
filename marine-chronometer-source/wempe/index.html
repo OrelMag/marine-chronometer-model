@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wempe Einheits-Chronometer</title>
-<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built from its works drawings: in progress: the frame, the going train, the escapement, the dial with its hands and motion work, and the gimballed case and box so far.">
+<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built part by part from its works drawings: the frame, the going train, the spring detent escapement, the fusee and chain, the dial with its hands and motion work, and the gimballed case and box, running, with an essay on what the drawings tell us.">
 <meta name="author" content="Orel Magidish">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Wempe Einheits-Chronometer">
@@ -22,7 +22,7 @@
   <h1>Wempe Einheits-Chronometer</h1>
   <div class="hd">
     <nav class="models" aria-label="The models"><a href="../chronometer-working-model/index.html">Hamilton Model 21</a><span aria-current="page">Wempe Einheits-Chronometer</span></nav>
-    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame, the going train, the escapement, the fusee and barrel, the dial and motion work, and the case and box so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars, every part from its sheet, from the frame and the escapement to the gimballed case and its box. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
   </div>
 </header>
@@ -32,7 +32,7 @@
     <div class="labels"></div>
     <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Einheits-Chronometer: an essay on what its drawings tell us, with figures drawn from this model">Essay</button></div>
     <button id="panelBtn" aria-controls="panel" aria-expanded="true" aria-label="Hide the panel" title="Hide the panel, for a larger model (P)">›</button>
-    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><div class="of"></div><p></p><div class="spec"></div><div class="src"></div></div>
+    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><div class="of"></div><p></p><div class="spec"></div><div class="src"></div><button class="rp-l" data-report="inacc">Something wrong with this part? Report it</button></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it is; right-click to fade, hide or isolate it.</span><span class="t-only">Tap a part to see what it is; long-press to fade, hide or isolate it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
     <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
@@ -54,7 +54,6 @@
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
-    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel; the balance and spring detent escapement, with their jewels; and the fusee with its maintaining work and stop work, the barrel and mainspring, and the chain, or the band under Variants; and the dial with its four hands, which show the time, and under it the motion work and the up-and-down work; and the gimballed brass bowl in its wooden box, with the one-way winding key (the Box and Case views).</div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
@@ -69,7 +68,9 @@
         <div class="seg" id="speeds">
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
-        <p class="note" style="margin:8px 0 0">The balance swings, the escapement works and the train turns from the escape wheel, a tooth a beat; the hands show the time here. Above 4×, the balance is drawn at rest.</p>
+        <div class="row clk"><label class="sl"><span class="lab">Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
+        <div class="row"><span class="lab">Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as a ship’s chronometers are kept for navigation">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
+        <p class="note" style="margin:8px 0 0">The balance swings, the escapement works and the train turns from the escape wheel, a tooth a beat; the hands show the time here. Above 4×, the balance is drawn at rest. Setting the hands turns the hour and minute hands on the cannon pinion, to the minute; the balance is then stopped and the train held until the time comes round to the dial, and a twist starts it, so the seconds hand agrees too.</p>
       </details>
       <details class="grp more" id="windDet" open>
         <summary>Winding</summary>
@@ -94,6 +95,8 @@
           <label class="ck c2" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines alone"><input type="checkbox" id="drawInk"> Ink drawing</label>
           <label class="ck c2" title="See-through plates"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
           <label class="ck c2" title="Draw the parts that don't move against each other as one: fewer draw calls, the same picture (on by default; turn it off if something looks wrong)"><input type="checkbox" id="merge"> Performance mode</label>
+          <span class="lab g">Motion</span><label class="ck g" title="The box rolls and pitches as on a ship; the gimbals keep the case level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Turn the transit lock in, as when the box is carried: the gimbals are held, and the case tilts with the box"><input type="checkbox" id="latch"> Transit lock</label>
+          <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case’s own swing (about 1 s, from its weighed bowl and ring) they can’t, and it swings with the box"><span>Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
           <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
           <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
           <label class="ck c2 span" title="Keep the settings in this browser for the next visit: the view and Display options, theme, units and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
@@ -118,6 +121,7 @@
       </details>
     </div>
     <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
+    <button class="about-btn" id="reportBtn" data-report title="Something broken, or something that differs from Wempe’s drawings or a real Einheits-Chronometer: written into an email to the author, with the details that help fix it">Report a bug or inaccuracy</button>
     <div class="card ctl">
       <details class="grp more" id="changesDet">
         <summary><span>Version <span data-ver>dev</span> · what’s new</span></summary>
@@ -336,6 +340,7 @@
 <p>Settled since the first readings, from the sheets and photographs of real ones: the masses’ height and place, the horn’s length, the banking, and the mainspring’s 0.37.</p>
 <p>The model’s README lists every estimate with the reading it rests on, and each part’s card on the other tab says whether its sizes are the sheet’s, scaled from it, or estimated.</p>
 <p>Every check behind the figures in this essay, its method and its results, from the geometry against the drawing list to the escapement in time, the fusee, the trial and the swing of a running 6MX, is in the model’s report: <a href="verification/index.html">The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?</a></p>
+<p class="e-report">Found a mistake, in the essay or in the model, or something that differs from Wempe’s drawings or a real Einheits-Chronometer? <button class="rp-l" data-report="inacc">Report it</button>: it opens as an email to me, with the section you are reading filled in.</p>
 
 <hr>
 <p class="e-refs"><strong>Sources.</strong> Wempe’s works drawings, as published by the Deutsche Gesellschaft für Chronometrie (<a href="https://www.dg-chrono.de/uhrenwissen/russische-uhren/schiffe-und-uhren/1945-2000/wempe-einheitschronometer/">dg-chrono.de</a>), © Johannes Altmeppen, by courtesy of Gerhard D. Wempe KG, 2017, with Altmeppen’s photographs of Wempe 3955 and Lange 5177 and his comparisons with the 6MX. <i>Das Deutsche Einheits-Chronometer</i> (Heel Verlag), with Johannes Altmeppen and Herbert Dittrich among its authors. Knirim and Schmiedchen on watch-wiki. <i>Хронометры морские 6МХ. Технические условия</i>, TU 25-07.1533-84, from the 1st Moscow Watch Factory; Instruction 246-54 for checking standard chronometers (1954); V. A. Shpolyanskii and A. M. Kuritskii, <i>Spuskovye regulyatory priborov vremeni</i> (Moscow 1963). For the physics: E. Phillips, on the balance spring’s terminal curves (1861); S. Timoshenko, “Analysis of bi-metal thermostats” (1925); C.-E. Guillaume, Nobel lecture (1920); VintageWatchstraps, “Temperature Compensation by Nickel Steels”. The working model’s sources are listed under “About this model” on the other tab.</p>
@@ -345,21 +350,36 @@
   <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
   <h2 id="aboutT">About this model</h2>
   <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span> · version <span data-ver>dev</span></p>
-  <p>A 3D model, in progress, of the <i>Deutsches Einheits-Chronometer</i>: the standard marine chronometer designed by Gerhard D. Wempe’s chronometer works in Hamburg in the early 1940s, made by Wempe and A. Lange &amp; Söhne in the war, by Wempe after it, and from the same drawings by the 1st Moscow Watch Factory as the 6MX. It is the spring-detent version, with a fusee and chain and three pillars, as its works drawings draw it.</p>
+  <p>A 3D model of the <i>Deutsches Einheits-Chronometer</i>: the standard marine chronometer designed by Gerhard D. Wempe’s chronometer works in Hamburg in the early 1940s, made by Wempe and A. Lange &amp; Söhne in the war, by Wempe after it, and from the same drawings by the 1st Moscow Watch Factory as the 6MX. It is the spring-detent version, with a fusee and chain and three pillars, as its works drawings draw it.</p>
   <h3>Sources</h3>
   <ol>
     <li>Wempe’s works drawings, as published by the Deutsche Gesellschaft für Chronometrie (dg-chrono.de), “© Johannes Altmeppen (by courtesy of Gerhard D. Wempe KG) 2017”, each sheet as last revised. Each dimension in the model names its sheet.</li>
     <li>Johannes Altmeppen’s photographs of Wempe 3955 and Lange 5177 (dg-chrono.de, © 2017), for what the sheets leave open: the standard screws’ heads, finishes, which way a part turns.</li>
   </ol>
-  <h3>How it is being made</h3>
+  <h3>How it was made</h3>
   <ul>
     <li><b>From the drawings.</b> Every size and place is read off a sheet: a figure where the sheet gives one, and where it doesn’t, measured on the drawing at its scale and marked estimated. Each part’s card says which.</li>
-    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them. The balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out. The going train (05 05). The fusee and barrel (05 06, 05 07): the fusee with its nine-turn groove, its wheel and Harrison’s maintaining work, the stop work, the barrel with its set-up ratchet and mainspring, and the chain or the band. The dial and its hands (group 05 02): the white dial with its sub-dials for the state of wind and the seconds, the motion work that turns the hour hand from the centre arbor, and the up-and-down wheel driven from the fusee. The case and box (groups 05 01 and 51 00): the cast brass bowl, its bezel and glass and its closing plate, hung in the gimbal ring in a mahogany box 185 mm square, the transit lock, and the one-way winding key of 1943.</li>
+    <li><b>What it shows.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them, and every hole of the plates’ tables but those the sheets strike through. The balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out. The going train (05 05). The fusee and barrel (05 06, 05 07): the fusee with its nine-turn groove, its wheel and Harrison’s maintaining work, the stop work, the barrel with its set-up ratchet and mainspring, and the chain or the band. The dial and its hands (group 05 02): the white dial with its sub-dials for the state of wind and the seconds, the motion work that turns the hour hand from the centre arbor, and the up-and-down wheel driven from the fusee. The case and box (groups 05 01 and 51 00): the cast brass bowl, its bezel and glass and its closing plate, hung in the gimbal ring in a mahogany box 185 mm square, the transit lock, and the one-way winding key of 1943. And it runs: the balance and escapement as solved in time, the train and hands keeping Greenwich or local time, the fusee wound through its key, and the case swinging in its gimbals as the box rolls.</li>
   </ul>
   <h3>How it is checked</h3>
   <p>Every check on the model, with its method and its results, is in <a href="verification/index.html">The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?</a>: the parts as solids against the drawing list, the sheets’ transcription and every estimate, the escapement solved and in time, the mainspring against the fusee’s measured force, the energy budget, the train tooth by tooth, the parts’ strength, the hairspring, temperature, the case in its gimbals, the 6MX’s trial and a voyage, and the swing of a running 6MX on video.</p>
   <p><a href="../chronometer-working-model/index.html">The Hamilton Model 21 working model</a>, the U.S. Navy’s chronometer, built from its 1948 overhaul manual.</p>
 </dialog>
+<dialog id="report" aria-labelledby="rpT">
+  <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
+  <h2 id="rpT">Report a bug or inaccuracy</h2>
+  <p class="by">To Orel Magidish, at <a id="rpTo" href="mailto:orelmag@gmail.com">orelmag@gmail.com</a>. Nothing is sent from this page: the report opens in your own email, where you can read and change all of it before you send it.</p>
+  <div class="seg" id="rpKind"><button data-v="bug" aria-pressed="true">Something’s broken</button><button data-v="inacc" aria-pressed="false">Something’s inaccurate</button><button data-v="other" aria-pressed="false">Something else</button></div>
+  <p class="note" id="rpHint"></p>
+  <label class="rp-f"><span>Where</span><input id="rpWhere" autocomplete="off" placeholder="A part, a view, a control or a section of the essay"></label>
+  <label class="rp-f"><span>What’s wrong</span><textarea id="rpWhat" rows="5"></textarea></label>
+  <label class="rp-f hidden" id="rpSrcF"><span>What shows it (if you know)</span><input id="rpSrc" autocomplete="off" placeholder="A drawing’s number and the figure on it, or a photograph or video (and the time in it)"></label>
+  <label class="ck rp-ck"><input type="checkbox" id="rpTech" checked> Include technical details: the version, the model’s settings, the browser, screen and graphics, and the page’s last errors</label>
+  <details id="rpPrev"><summary>What will be sent</summary><pre></pre></details>
+  <div class="seg rp-go"><a class="rp-b primary" id="rpMail" href="mailto:orelmag@gmail.com">Write it in my email</a><a class="rp-b" id="rpGmail" href="https://mail.google.com/" target="_blank" rel="noopener">In Gmail</a><button id="rpCopy">Copy it</button></div>
+  <p class="note" id="rpOut" aria-live="polite"></p>
+</dialog>
+<script src="../chronometer-working-model/js/report.js"></script>
 <script src="../../vendor/three.min.js"></script>
 <script src="../chronometer-working-model/js/core.js"></script>
 <script src="../shared/kit.js"></script>

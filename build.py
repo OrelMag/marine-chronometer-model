@@ -8,13 +8,14 @@
 
 Writes:
   marine-chronometer-source/chronometer-working-model/dist/chronometer-working-model.html
-  marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html   (the second model, the Wempe Einheits-Chronometer: in progress; no root copy)
+  marine-chronometer-source/wempe/dist/wempe-einheitschronometer.html   (the second model, the Wempe Einheits-Chronometer; no root copy)
   chronometer-working-model.html      (the root copy, for opening straight from the repo)
   site/                               (the folder to upload to a web host)
      index.html            the working model, the site's home page, with the essay as its Essay tab (/#essay; worker.js sends the essay's old address there)
      wempe/index.html      the Wempe Einheits-Chronometer (/wempe/), its link to the Hamilton pointed at the home page
      social.png            link-preview image of the page (the dial in its box)
      social-movement.png   an image of the mechanism titled for the essay, for posting
+     social-wempe.png      link-preview image of the Wempe's page (wempe/index.html: its dial in its box)
      navships-250-624-1948.pdf   the manual itself (References/, Google Books' scan of the 1948 Navy manual), which the page links to beside it
      verification/build-verification/   the checks' report "Would a chronometer made to the model run and keep time?" (its build_report.py, committed)
      verification/real-chronometers/    the report "Does the model behave like a real Hamilton Model 21?", with its plots
@@ -120,7 +121,7 @@ def main():
     SITE.mkdir()
     write(SITE/'index.html',meta(model.replace(HAM_WE,'href="wempe/"'),a.site_url,'index.html',keep=a.keep_html))
     if WE_REP not in wempe:sys.exit(f'the Wempe page has no {WE_REP}: its link to its report (wempe/build.py), which the site points at site/wempe/verification/')
-    (SITE/'wempe').mkdir();write(SITE/'wempe/index.html',meta(wempe.replace(WE_HAM,'href="../').replace(WE_REP,'href="verification/'),a.site_url,'wempe/index.html',keep=a.keep_html))
+    (SITE/'wempe').mkdir();write(SITE/'wempe/index.html',meta(wempe.replace(WE_HAM,'href="../').replace(WE_REP,'href="verification/'),a.site_url,'wempe/index.html',img='social-wempe.png',keep=a.keep_html))
     for f in(ROOT/'site-assets').glob('*.png'):shutil.copy(f,SITE/f.name)   # the link-preview image, and the essay's image for posting
     for f in(ROOT/'site-assets').glob('_*'):shutil.copy(f,SITE/f.name)   # host config such as _headers
     shutil.copy(ROOT/'References/navships-250-624-overhaul-manual-1948.pdf',SITE/MANUAL)   # the manual, so the site carries its source (PLAN-self-contained.md, D3)

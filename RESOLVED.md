@@ -1921,6 +1921,15 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's winding key lay on the box's floor, where no box keeps it.** It lay flat in the
+  back left corner, a place no source gave. Every photographed box (Greenwich's wartime Wempe,
+  Wempe 5377, Lange 2285 and 5510, a 6MX Kirova) stands the key upright in the back right corner,
+  its stem down through a hole in a shelf across the corner, its paddle up. Now a shelf (the
+  key holder, `Schluesselhalter`: legs 55, 10 thick, its top 40 over the floor, the hole Ø 11 21
+  from each wall, estimated from those photographs) holds it so, the body's cone seated on the
+  hole's edge, the paddle facing the box's middle (its plane 83.4 from the gimbals' centre, beyond
+  the swinging case's and ring's 79.4); the 1940 key, as first drawn, stands there too. Keep: the
+  key rests in its holder (`KEYREST`), and nothing that swings in the gimbals reaches the corner. `1614776`
 - **The Wempe's movement ring pinned to the case at 6 o'clock.** 05 08 00-3's plan, drawn from the dial side, draws the radial hole at 12 (a
   dashed pair figured "1,6"; the section shows it end on, 2.8 under the top face), and Wempe 3955 shows its end on the ring's cone at 12; the
   pin WN-202 was Ø 1.1 at 6, the "1,1 Ø" (the dial's pin hole's) and the "1,6" read the other way round, the bezel's notch with it. The closing

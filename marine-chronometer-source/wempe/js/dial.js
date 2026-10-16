@@ -332,7 +332,9 @@ const WDIAL=(()=>{
        the hand on the wheel reads the wind s.n, 0 at full wind (22.5 deg right of 12) and 56 h after 8.75 turns (7/8 of a turn, Lange's "7/8 Teilung"). The fusee group's
        ang.f is its rotation.y, RF0 + n turns (fusee.js: RF0 its angle fully wound, and a click's catch on top running), so the wheel, turned back a tenth of it, and the hand,
        read from n, keep their places on each other (the catch, at most a click tooth of the fusee, a tenth of that on the hand) */
-    const update=(/** @type {any} */s,/** @type {any} */ang)=>{const c=ang.c||0;
+    /* s.slip: the hands set (app.js, Set the hands), seconds of time the cannon pinion has slipped on the centre arbor, its friction fit; the motion work and both hands
+       turn with it, the centre arbor and the train do not (the centre turns -TAU an hour, train.js) */
+    const update=(/** @type {any} */s,/** @type {any} */ang)=>{const c=(ang.c||0)-(s.slip||0)*TAU/3600;
       cn.rotation.y=c;mh.rotation.y=c;ch.rotation.y=-c*14/56;hw.rotation.y=c/12;hh.rotation.y=c/12;sh.rotation.y=ang.s||0;
       const n=s.n!=null?s.n:3.75,f=ang.f!=null?ang.f:n*TAU;up.rotation.y=f;ud.rotation.y=-f/10;uh.rotation.y=-22.5*D2R-n*TAU/10;};
     return{update,R};}

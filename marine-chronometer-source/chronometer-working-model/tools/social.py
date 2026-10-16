@@ -1,6 +1,6 @@
 """Render the link-preview images (1200 x 630) shown when the site is shared, into site-assets/ at the repository root.
 
-    python social.py                  # both presets: social.png (the page's link preview: the dial in its box) and social-movement.png (the mechanism, titled for the essay, for posting)
+    python social.py                  # every preset: social.png (the page's link preview: the dial in its box), social-movement.png (the mechanism, titled for the essay, for posting) and social-wempe.png (the Wempe's page's link preview)
     python social.py dial             # one preset
     python social.py --out NAME.png --view VIEW [--drive] [--cam YAW PITCH DIST FOV]   # a custom shot, the model alone on the dark background
 
@@ -12,6 +12,7 @@ import argparse,asyncio,html,pathlib
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
+PAGE_WE=(HERE.parents[1]/'wempe'/'index.html').as_uri()+'?snap&qa'   # the Wempe's page, for its preset
 OUTDIR=HERE.parents[2]/'site-assets'
 PRESETS={
  'dial':dict(out='social.png',view='dial',drive=False,cam=[0.3,1.0,390,32],tod='10:09:36',
@@ -23,10 +24,15 @@ PRESETS={
    text=dict(kicker='An interactive essay',title='The Marine<br>Chronometer',
              sub='Longitude, the balance, the fusee and the detent escapement, with live diagrams and a working model.',
              tags=['Longitude','The fusee','The detent'])),
+ # the Wempe's page (/wempe/): its dial in the gimballed bowl, the box open
+ 'wempe':dict(out='social-wempe.png',view='case',drive=False,cam=[0.55,0.8,700,32],tod='10:09:36',page=PAGE_WE,
+   text=dict(kicker='Wempe · Hamburg · 1940s',title='The German<br>Standard <em>Chronometer</em>',
+             sub='An interactive 3D model built from Wempe’s works drawings, running in real time in your browser.',
+             tags=['Fusee and chain','Spring detent','From the works drawings'])),
 }
 BG='radial-gradient(ellipse 58% 85% at 70% 52%,#1f2a35 0%,#121920 48%,#07090c 100%)'
 # the stage alone, no labels, hints, cards or buttons, over a dark page; with a title, the stage keeps to the right of the text column
-HIDE="header,.panel,.hud,.tools,.hint,.labels,.loading,.tabs,.info,.opm,#essay{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
+HIDE="header,#panelBtn,#hist,.panel,.hud,.tools,.hint,.labels,.loading,.tabs,.info,.opm,#essay{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
 def css(text):
     left='400px' if text else '0'
     return (HIDE+f"html,body{{background:{BG}!important;min-height:100vh}}"
@@ -39,12 +45,12 @@ def css(text):
       "#soc p{margin:0;max-width:330px;font-size:18px;line-height:1.5;color:#9fa9b2}"
       "#soc .t{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px;max-width:340px}"
       "#soc .t span{font-weight:500;font-size:13px;color:#cfd6dc;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);border-radius:999px;padding:6px 12px}")
-async def shot(b,out,view,drive,cam,text=None,tod=None):
+async def shot(b,out,view,drive,cam,text=None,tod=None,page=PAGE):
     pg=await b.new_page(viewport={"width":1200,"height":630},device_scale_factor=1,color_scheme='dark')
     errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
     # applied before the page's scripts run, so the renderer starts at this size
     await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=%r;document.head.appendChild(s);});"%css(text))
-    await pg.goto(PAGE+(f'#t={tod}' if tod else ''));await pg.wait_for_timeout(4500)   # the hands at the time given, set as the page loads (the field, once shown, sets them as a watchmaker would: the seconds by stopping the balance)
+    await pg.goto(page+(f'#t={tod}' if tod else ''));await pg.wait_for_timeout(4500)   # the hands at the time given, set as the page loads (the field, once shown, sets them as a watchmaker would: the seconds by stopping the balance)
     await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate("(()=>{const e=document.querySelector('#shadows');if(!e.checked)e.click();})()")   # with the lamp's shadows (off by default)
     if drive:await pg.evaluate("document.querySelector('#driveOn').click()")
     await pg.evaluate(f"document.querySelector('#views button[data-v=\"{view}\"]').click()");await pg.wait_for_timeout(2500)

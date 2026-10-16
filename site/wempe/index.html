@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wempe Einheits-Chronometer</title>
-<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built from its works drawings: in progress: the frame, the going train, the escapement, the dial with its hands and motion work, and the gimballed case and box so far.">
+<meta name="description" content="An interactive 3D model of the German Einheits-Chronometer, the standard marine chronometer of Gerhard D. Wempe's chronometer works, built part by part from its works drawings: the frame, the going train, the spring detent escapement, the fusee and chain, the dial with its hands and motion work, and the gimballed case and box, running, with an essay on what the drawings tell us.">
 <meta name="author" content="Orel Magidish">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Wempe Einheits-Chronometer">
@@ -442,8 +442,6 @@ html.essay-on,html.essay-on body{overflow:hidden}
 </style>
 <style>
 /* wempe.css: the Wempe page's own styles, over the Hamilton's (../chronometer-working-model/css/style.css), which it shares */
-/* the model is in progress: said once, above the controls */
-.card.wip{font-size:13px;line-height:1.45;border-left:3px solid var(--hi)}.card.wip b{color:var(--ink)}
 /* the essay (js/essay.js; ../chronometer-working-model/css/essay.css): the top plate's hole table, scrolled in its own box, its row chosen; the 6MX's limits */
 .e-holes{max-height:250px;overflow:auto;margin:6px 0 0}
 #essay .e-holes td:nth-child(2),#essay .e-holes th:nth-child(2){text-align:left}
@@ -460,7 +458,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 </style>
 <link rel="canonical" href="https://www.marinechronometermodel.com/wempe/">
 <meta property="og:url" content="https://www.marinechronometermodel.com/wempe/">
-<meta property="og:image" content="https://www.marinechronometermodel.com/social.png">
+<meta property="og:image" content="https://www.marinechronometermodel.com/social-wempe.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -470,7 +468,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
   <h1>Wempe Einheits-Chronometer</h1>
   <div class="hd">
     <nav class="models" aria-label="The models"><a href="../">Hamilton Model 21</a><span aria-current="page">Wempe Einheits-Chronometer</span></nav>
-    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars. In progress: the frame, the going train, the escapement, the fusee and barrel, the dial and motion work, and the case and box so far. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
+    <p>The German standard marine chronometer of the 1940s, built from Wempe’s works drawings: a fusee and chain, a spring detent escapement and three pillars, every part from its sheet, from the frame and the escapement to the gimballed case and its box. <span class="m-only">Drag to turn, Shift-drag to pan, scroll to zoom, click any part to identify it.</span><span class="t-only">Drag to turn, drag two fingers to pan, pinch to zoom, tap any part to identify it.</span></p>
     <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span></p>
   </div>
 </header>
@@ -480,7 +478,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
     <div class="labels"></div>
     <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Einheits-Chronometer: an essay on what its drawings tell us, with figures drawn from this model">Essay</button></div>
     <button id="panelBtn" aria-controls="panel" aria-expanded="true" aria-label="Hide the panel" title="Hide the panel, for a larger model (P)">›</button>
-    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><div class="of"></div><p></p><div class="spec"></div><div class="src"></div></div>
+    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><div class="of"></div><p></p><div class="spec"></div><div class="src"></div><button class="rp-l" data-report="inacc">Something wrong with this part? Report it</button></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it is; right-click to fade, hide or isolate it.</span><span class="t-only">Tap a part to see what it is; long-press to fade, hide or isolate it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
     <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
@@ -502,7 +500,6 @@ html.essay-on,html.essay-on body{overflow:hidden}
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
-    <div class="card note wip"><b>In progress.</b> The Wempe is being built from its works drawings, part by part. So far the frame: the two plates with every hole of their tables, the pillars, the movement ring, the barrel bridge and its click, the fusee and dust bushes, the two balance cocks and the intermediate bridge, with their screws and steady pins; the going train: the centre, intermediate and seconds wheels in their brass bushes and the seconds jewel; the balance and spring detent escapement, with their jewels; and the fusee with its maintaining work and stop work, the barrel and mainspring, and the chain, or the band under Variants; and the dial with its four hands, which show the time, and under it the motion work and the up-and-down work; and the gimballed brass bowl in its wooden box, with the one-way winding key (the Box and Case views).</div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
@@ -517,7 +514,9 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <div class="seg" id="speeds">
           <button data-v="0" title="Stop (space bar)">Stop</button><button data-v="0.05" title="One twentieth of real time">1/20×</button><button data-v="1" aria-pressed="true" title="Real time">1×</button><button data-v="60" title="A minute each second">60×</button><button data-v="3600" title="An hour each second">3600×</button></div>
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
-        <p class="note" style="margin:8px 0 0">The balance swings, the escapement works and the train turns from the escape wheel, a tooth a beat; the hands show the time here. Above 4×, the balance is drawn at rest.</p>
+        <div class="row clk"><label class="sl"><span class="lab">Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
+        <div class="row"><span class="lab">Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as a ship’s chronometers are kept for navigation">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
+        <p class="note" style="margin:8px 0 0">The balance swings, the escapement works and the train turns from the escape wheel, a tooth a beat; the hands show the time here. Above 4×, the balance is drawn at rest. Setting the hands turns the hour and minute hands on the cannon pinion, to the minute; the balance is then stopped and the train held until the time comes round to the dial, and a twist starts it, so the seconds hand agrees too.</p>
       </details>
       <details class="grp more" id="windDet" open>
         <summary>Winding</summary>
@@ -542,6 +541,8 @@ html.essay-on,html.essay-on body{overflow:hidden}
           <label class="ck c2" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines alone"><input type="checkbox" id="drawInk"> Ink drawing</label>
           <label class="ck c2" title="See-through plates"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
           <label class="ck c2" title="Draw the parts that don't move against each other as one: fewer draw calls, the same picture (on by default; turn it off if something looks wrong)"><input type="checkbox" id="merge"> Performance mode</label>
+          <span class="lab g">Motion</span><label class="ck g" title="The box rolls and pitches as on a ship; the gimbals keep the case level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Turn the transit lock in, as when the box is carried: the gimbals are held, and the case tilts with the box"><input type="checkbox" id="latch"> Transit lock</label>
+          <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case’s own swing (about 1 s, from its weighed bowl and ring) they can’t, and it swings with the box"><span>Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
           <label class="ck c2" title="Turn the view slowly round the model"><input type="checkbox" id="spin"> Turn slowly</label>
           <span class="lab g">Theme</span><div class="seg g span" id="theme"><button data-v="auto" aria-pressed="true" title="Follow the system setting">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
           <label class="ck c2 span" title="Keep the settings in this browser for the next visit: the view and Display options, theme, units and the panel's sections and width. Off, nothing is stored and each visit opens as new"><input type="checkbox" id="remember"> Remember settings</label>
@@ -566,6 +567,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
       </details>
     </div>
     <button class="about-btn" id="aboutBtn">About this model: sources and method</button>
+    <button class="about-btn" id="reportBtn" data-report title="Something broken, or something that differs from Wempe’s drawings or a real Einheits-Chronometer: written into an email to the author, with the details that help fix it">Report a bug or inaccuracy</button>
     <div class="card ctl">
       <details class="grp more" id="changesDet">
         <summary><span>Version <span data-ver>2.42.05</span> · what’s new</span></summary>
@@ -784,6 +786,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
 <p>Settled since the first readings, from the sheets and photographs of real ones: the masses’ height and place, the horn’s length, the banking, and the mainspring’s 0.37.</p>
 <p>The model’s README lists every estimate with the reading it rests on, and each part’s card on the other tab says whether its sizes are the sheet’s, scaled from it, or estimated.</p>
 <p>Every check behind the figures in this essay, its method and its results, from the geometry against the drawing list to the escapement in time, the fusee, the trial and the swing of a running 6MX, is in the model’s report: <a href="verification/index.html">The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?</a></p>
+<p class="e-report">Found a mistake, in the essay or in the model, or something that differs from Wempe’s drawings or a real Einheits-Chronometer? <button class="rp-l" data-report="inacc">Report it</button>: it opens as an email to me, with the section you are reading filled in.</p>
 
 <hr>
 <p class="e-refs"><strong>Sources.</strong> Wempe’s works drawings, as published by the Deutsche Gesellschaft für Chronometrie (<a href="https://www.dg-chrono.de/uhrenwissen/russische-uhren/schiffe-und-uhren/1945-2000/wempe-einheitschronometer/">dg-chrono.de</a>), © Johannes Altmeppen, by courtesy of Gerhard D. Wempe KG, 2017, with Altmeppen’s photographs of Wempe 3955 and Lange 5177 and his comparisons with the 6MX. <i>Das Deutsche Einheits-Chronometer</i> (Heel Verlag), with Johannes Altmeppen and Herbert Dittrich among its authors. Knirim and Schmiedchen on watch-wiki. <i>Хронометры морские 6МХ. Технические условия</i>, TU 25-07.1533-84, from the 1st Moscow Watch Factory; Instruction 246-54 for checking standard chronometers (1954); V. A. Shpolyanskii and A. M. Kuritskii, <i>Spuskovye regulyatory priborov vremeni</i> (Moscow 1963). For the physics: E. Phillips, on the balance spring’s terminal curves (1861); S. Timoshenko, “Analysis of bi-metal thermostats” (1925); C.-E. Guillaume, Nobel lecture (1920); VintageWatchstraps, “Temperature Compensation by Nickel Steels”. The working model’s sources are listed under “About this model” on the other tab.</p>
@@ -793,21 +796,106 @@ html.essay-on,html.essay-on body{overflow:hidden}
   <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
   <h2 id="aboutT">About this model</h2>
   <p class="by">Orel Magidish (assisted by Claude Opus&nbsp;5.5)&nbsp;– <span>October 2026</span> · version <span data-ver>2.42.05</span></p>
-  <p>A 3D model, in progress, of the <i>Deutsches Einheits-Chronometer</i>: the standard marine chronometer designed by Gerhard D. Wempe’s chronometer works in Hamburg in the early 1940s, made by Wempe and A. Lange &amp; Söhne in the war, by Wempe after it, and from the same drawings by the 1st Moscow Watch Factory as the 6MX. It is the spring-detent version, with a fusee and chain and three pillars, as its works drawings draw it.</p>
+  <p>A 3D model of the <i>Deutsches Einheits-Chronometer</i>: the standard marine chronometer designed by Gerhard D. Wempe’s chronometer works in Hamburg in the early 1940s, made by Wempe and A. Lange &amp; Söhne in the war, by Wempe after it, and from the same drawings by the 1st Moscow Watch Factory as the 6MX. It is the spring-detent version, with a fusee and chain and three pillars, as its works drawings draw it.</p>
   <h3>Sources</h3>
   <ol>
     <li>Wempe’s works drawings, as published by the Deutsche Gesellschaft für Chronometrie (dg-chrono.de), “© Johannes Altmeppen (by courtesy of Gerhard D. Wempe KG) 2017”, each sheet as last revised. Each dimension in the model names its sheet.</li>
     <li>Johannes Altmeppen’s photographs of Wempe 3955 and Lange 5177 (dg-chrono.de, © 2017), for what the sheets leave open: the standard screws’ heads, finishes, which way a part turns.</li>
   </ol>
-  <h3>How it is being made</h3>
+  <h3>How it was made</h3>
   <ul>
     <li><b>From the drawings.</b> Every size and place is read off a sheet: a figure where the sheet gives one, and where it doesn’t, measured on the drawing at its scale and marked estimated. Each part’s card says which.</li>
-    <li><b>So far.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them. Holes for the parts still to come are cut as the plates’ tables give them. The balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out. The going train (05 05). The fusee and barrel (05 06, 05 07): the fusee with its nine-turn groove, its wheel and Harrison’s maintaining work, the stop work, the barrel with its set-up ratchet and mainspring, and the chain or the band. The dial and its hands (group 05 02): the white dial with its sub-dials for the state of wind and the seconds, the motion work that turns the hour hand from the centre arbor, and the up-and-down wheel driven from the fusee. The case and box (groups 05 01 and 51 00): the cast brass bowl, its bezel and glass and its closing plate, hung in the gimbal ring in a mahogany box 185 mm square, the transit lock, and the one-way winding key of 1943.</li>
+    <li><b>What it shows.</b> The frame (drawing group 05 08): the plates, 85 mm across and 19 mm apart on three pillars, in the movement ring, with the bridges, cocks and bushes that are screwed to them, and every hole of the plates’ tables but those the sheets strike through. The balance and the spring detent escapement (groups 05 03 and 05 04): the bimetallic balance on its staff, the helical hairspring, the rollers, the escape wheel, the detent with its gold spring and block, and their jewels, working as the escapement’s layout drawing lays it out. The going train (05 05). The fusee and barrel (05 06, 05 07): the fusee with its nine-turn groove, its wheel and Harrison’s maintaining work, the stop work, the barrel with its set-up ratchet and mainspring, and the chain or the band. The dial and its hands (group 05 02): the white dial with its sub-dials for the state of wind and the seconds, the motion work that turns the hour hand from the centre arbor, and the up-and-down wheel driven from the fusee. The case and box (groups 05 01 and 51 00): the cast brass bowl, its bezel and glass and its closing plate, hung in the gimbal ring in a mahogany box 185 mm square, the transit lock, and the one-way winding key of 1943. And it runs: the balance and escapement as solved in time, the train and hands keeping Greenwich or local time, the fusee wound through its key, and the case swinging in its gimbals as the box rolls.</li>
   </ul>
   <h3>How it is checked</h3>
   <p>Every check on the model, with its method and its results, is in <a href="verification/index.html">The Wempe Einheits-Chronometer: does the model hold to its drawings, and would it keep time?</a>: the parts as solids against the drawing list, the sheets’ transcription and every estimate, the escapement solved and in time, the mainspring against the fusee’s measured force, the energy budget, the train tooth by tooth, the parts’ strength, the hairspring, temperature, the case in its gimbals, the 6MX’s trial and a voyage, and the swing of a running 6MX on video.</p>
   <p><a href="../">The Hamilton Model 21 working model</a>, the U.S. Navy’s chronometer, built from its 1948 overhaul manual.</p>
 </dialog>
+<dialog id="report" aria-labelledby="rpT">
+  <form method="dialog" class="dx"><button aria-label="Close">×</button></form>
+  <h2 id="rpT">Report a bug or inaccuracy</h2>
+  <p class="by">To Orel Magidish, at <a id="rpTo" href="mailto:orelmag@gmail.com">orelmag@gmail.com</a>. Nothing is sent from this page: the report opens in your own email, where you can read and change all of it before you send it.</p>
+  <div class="seg" id="rpKind"><button data-v="bug" aria-pressed="true">Something’s broken</button><button data-v="inacc" aria-pressed="false">Something’s inaccurate</button><button data-v="other" aria-pressed="false">Something else</button></div>
+  <p class="note" id="rpHint"></p>
+  <label class="rp-f"><span>Where</span><input id="rpWhere" autocomplete="off" placeholder="A part, a view, a control or a section of the essay"></label>
+  <label class="rp-f"><span>What’s wrong</span><textarea id="rpWhat" rows="5"></textarea></label>
+  <label class="rp-f hidden" id="rpSrcF"><span>What shows it (if you know)</span><input id="rpSrc" autocomplete="off" placeholder="A drawing’s number and the figure on it, or a photograph or video (and the time in it)"></label>
+  <label class="ck rp-ck"><input type="checkbox" id="rpTech" checked> Include technical details: the version, the model’s settings, the browser, screen and graphics, and the page’s last errors</label>
+  <details id="rpPrev"><summary>What will be sent</summary><pre></pre></details>
+  <div class="seg rp-go"><a class="rp-b primary" id="rpMail" href="mailto:orelmag@gmail.com">Write it in my email</a><a class="rp-b" id="rpGmail" href="https://mail.google.com/" target="_blank" rel="noopener">In Gmail</a><button id="rpCopy">Copy it</button></div>
+  <p class="note" id="rpOut" aria-live="polite"></p>
+</dialog>
+<script>
+// @ts-check
+/* Report a bug or inaccuracy: the dialog (#report) opened from the panel, a part's card, About and the essay's end ([data-report]). Nothing leaves the page by
+   itself (no fetch: tools/selfcontained.py): the report is written into the visitor's own email, through a mailto: link or Gmail's compose page, or copied,
+   addressed to TO. Loaded first, so it keeps the page's last errors and warnings from every later script; they go into the report's technical details with
+   the version, the address (the model's state is in its hash), the browser, the screen and the graphics. Declares only REPORT; app.js calls REPORT.bind(). */
+const REPORT=(()=>{
+  const TO='orelmag@gmail.com',T0=performance.now(),LOG=[],NLOG=30,MAILTO=1900,GMAIL=7500;   /* longest links: a mailto: past about 2,000 characters is cut short by some mail programs */
+  /* a URL's directories go (on a local copy, the visitor's own folders): its file, line and column stay */
+  const clean=s=>s.replace(/\b(?:file|https?):\/\/[^\s)'"]*\//g,'').replace(/\s+/g,' ').trim().slice(0,300);
+  const str=x=>x instanceof Error?(x.stack&&x.stack.includes(x.message)?x.stack:x.message+' '+(x.stack||'')):typeof x==='string'?x:(()=>{try{return JSON.stringify(x);}catch(_){return String(x);}})();
+  const sec=()=>((performance.now()-T0)/1000).toFixed(1)+' s';
+  function note(k,a){const s=clean(a.map(str).join(' ')),l=LOG[LOG.length-1];if(l&&l.k===k&&l.s===s){l.n++;return;}LOG.push({t:sec(),k,s,n:1});if(LOG.length>NLOG)LOG.shift();}
+  for(const k of['error','warn']){const f=console[k];console[k]=function(...a){note(k,a);return f.apply(this,a);};}
+  addEventListener('error',e=>{const t=/** @type {any} */(e.target);if(t&&t!==window&&(t.src||t.href))note('load',['failed to load',t.tagName,t.src||t.href]);else note('error',[e.error&&e.error.stack?'Uncaught '+e.error.stack:e.message+(e.filename?` (${e.filename}:${e.lineno}:${e.colno})`:'')]);},true);
+  addEventListener('unhandledrejection',e=>note('error',['unhandled rejection:',e.reason]));
+
+  const KIND={bug:['Bug','What you did, what you expected and what happened instead. The technical details help reproduce it.'],
+    inacc:['Inaccuracy','Where the model or the essay differs from a real Model 21 or the manual, and what shows it. Photographs and videos of real Model 21s and the 1948 manual decide what the model looks like and does, so a source settles it fastest.'],
+    other:['Note','A suggestion, a question, a broken link, anything else.']};
+  /** @type {{where?:()=>string,state?:()=>[string,string][],r?:any,name?:string,inacc?:string}} */
+  let B={};let kind='bug',auto=true,gpu='';
+  const $=s=>/** @type {any} */(document.querySelector(s)),kinds=()=>/** @type {NodeListOf<HTMLButtonElement>} */(document.querySelectorAll('#rpKind button'));
+  const ver=()=>{const v=document.querySelector('[data-ver]');return v?v.textContent:'dev';};
+  /* the page's address: on a local copy, the file's name alone, not the folders it is in */
+  const page=()=>location.protocol==='file:'?'local copy, '+decodeURIComponent(location.pathname.split('/').pop()||'')+location.search+location.hash:location.href;
+  function gpuName(){if(gpu||!B.r)return gpu;try{const gl=B.r.getContext(),g2=typeof WebGL2RenderingContext!=='undefined'&&gl instanceof WebGL2RenderingContext;
+      let n=gl.getParameter(gl.RENDERER);if(/^WebKit WebGL$/.test(n)){const x=gl.getExtension('WEBGL_debug_renderer_info');if(x)n=gl.getParameter(x.UNMASKED_RENDERER_WEBGL);}   /* Firefox names the renderer itself, and warns of the extension */
+      gpu=`${g2?'WebGL 2':'WebGL 1'}, ${n}, textures to ${gl.getParameter(gl.MAX_TEXTURE_SIZE)} px`;}catch(e){gpu='unknown ('+e.message+')';}return gpu;}
+  function tech(){const n=navigator,s=screen,mm=q=>matchMedia(q).matches,tz=-new Date().getTimezoneOffset(),d=new Date(Date.now()+tz*6e4).toISOString().slice(0,16).replace('T',' ');
+    let st=[];try{st=B.state?B.state():[];}catch(e){st=[['Model state','unreadable ('+e.message+')']];}
+    const L=[['Version',ver()],['Page',page()],...st,['Browser',n.userAgent],['Language',n.language],
+      ['Screen',`${s.width}×${s.height}, window ${innerWidth}×${innerHeight}, pixel ratio ${devicePixelRatio}, ${n.maxTouchPoints?'touch':'no touch'}, ${mm('(pointer:fine)')?'mouse':'no mouse'}${mm('(prefers-reduced-motion:reduce)')?', reduced motion':''}${mm('(prefers-color-scheme:dark)')?', dark':''}`],
+      ['Graphics',gpuName()||'not started'],['Open for',sec()],['Local time',`${d} (UTC${tz<0?'−':'+'}${Math.floor(Math.abs(tz)/60)}${Math.abs(tz)%60?':'+String(Math.abs(tz)%60).padStart(2,'0'):''})`]];
+    return L.map(([k,v])=>k+': '+v).join('\n')+'\n\nRecent errors and warnings'+(LOG.length?` (the last ${LOG.length}):\n`+LOG.map(l=>`  ${l.t} ${l.k}${l.n>1?' ×'+l.n:''}: ${l.s}`).join('\n'):': none');}
+  const val=id=>String($(id).value).trim();
+  function subject(){const w=val('#rpWhat').split('\n')[0];return`${B.name||'Model 21'} ${KIND[kind][0].toLowerCase()}${w?': '+(w.length>60?w.slice(0,59)+'…':w):''} (v${ver()})`;}
+  function body(){const src=kind==='inacc'?val('#rpSrc'):'';
+    return`Kind: ${KIND[kind][0]}\nWhere: ${val('#rpWhere')||'(not given)'}\n\nWhat's wrong:\n${val('#rpWhat')||'(write it here)'}\n`+(src?`\nSource: ${src}\n`:'')+($('#rpTech').checked?'\n-- Technical details --\n'+tech()+'\n':'');}
+  /* a link no longer than max: the body is cut from its end (the oldest of it, the log, goes first) and the whole report put on the clipboard as the link opens */
+  const CUT='\n\n[Shortened to fit the link. The whole report is on your clipboard: paste it here in its place.]';
+  function fit(mk,max,s,b){if(mk(s,b).length<=max)return{u:mk(s,b),cut:false};let lo=0,hi=b.length;while(lo<hi){const m=(lo+hi+1)>>1;if(mk(s,b.slice(0,m)+CUT).length<=max)lo=m;else hi=m-1;}return{u:mk(s,b.slice(0,lo)+CUT),cut:true};}
+  const E=encodeURIComponent,mailto=(s,b)=>`mailto:${TO}?subject=${E(s)}&body=${E(b.replace(/\n/g,'\r\n'))}`,gmail=(s,b)=>`https://mail.google.com/mail/?view=cm&fs=1&to=${E(TO)}&su=${E(s)}&body=${E(b)}`;
+  let links={m:{u:'',cut:false},g:{u:'',cut:false}};
+  function sync(){const s=subject(),b=body();$('#rpPrev pre').textContent='To: '+TO+'\nSubject: '+s+'\n\n'+b;links={m:fit(mailto,MAILTO,s,b),g:fit(gmail,GMAIL,s,b)};$('#rpMail').href=links.m.u;$('#rpGmail').href=links.g.u;}
+  function say(t){const o=$('#rpOut');o.textContent=t;}
+  function copy(then){const t=$('#rpPrev pre').textContent,sel=()=>{const p=$('#rpPrev');p.open=true;const r=document.createRange();r.selectNodeContents($('#rpPrev pre'));const g=getSelection();if(g){g.removeAllRanges();g.addRange(r);}};
+    try{navigator.clipboard.writeText(t).then(()=>then(true),()=>{sel();then(false);});}catch(_){sel();then(false);}}
+  function setKind(k){kind=k;kinds().forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));$('#rpHint').textContent=k==='inacc'&&B.inacc||KIND[k][1];$('#rpSrcF').classList.toggle('hidden',k!=='inacc');sync();}
+  /** @param {{kind?:string,where?:string,fresh?:boolean}} [o] where: what the report is about; fresh: from a part's card or the essay, so where is theirs even if one was typed */
+  function open(o={}){const d=$('#report');if(!d)return;const ab=$('#about');if(ab&&ab.open)ab.close();
+    if(o.kind)setKind(o.kind);let w=o.where;if(w==null&&(auto||o.fresh)&&B.where){try{w=B.where();}catch(_){w='';}}if(w!=null){$('#rpWhere').value=w;auto=true;}
+    say('');sync();if(d.showModal){if(!d.open)d.showModal();}else d.setAttribute('open','');$('#rpWhat').focus();}
+  /** @param {{where?:()=>string,state?:()=>[string,string][],r?:any,name?:string,inacc?:string}} b name: the model, in the subject (Model 21 if none); inacc: the Inaccuracy hint (what decides that model's looks), KIND's if none */
+  function bind(b){B=b;const d=$('#report');if(!d)return;
+    if(B.r&&B.r.domElement){const c=B.r.domElement;c.addEventListener('webglcontextlost',()=>note('warn',['WebGL context lost']));c.addEventListener('webglcontextrestored',()=>note('warn',['WebGL context restored']));}
+    document.addEventListener('click',e=>{const t=/** @type {any} */(e.target),a=t&&t.closest&&t.closest('[data-report]');if(!a)return;e.preventDefault();open({kind:a.dataset.report||undefined,fresh:!!a.dataset.report});});
+    d.addEventListener('click',e=>{if(e.target===d)d.close();});
+    d.addEventListener('keydown',e=>e.stopPropagation());   /* typing here never reaches the model's or the essay's keys */
+    kinds().forEach(b=>b.addEventListener('click',()=>setKind(b.dataset.v)));
+    $('#rpWhere').addEventListener('input',()=>{auto=!val('#rpWhere');});
+    for(const id of['#rpWhere','#rpWhat','#rpSrc','#rpTech'])$(id).addEventListener('input',sync);$('#rpTech').addEventListener('change',sync);
+    $('#rpPrev').addEventListener('toggle',sync);
+    for(const[id,k]of[['#rpMail','m'],['#rpGmail','g']])$(id).addEventListener('click',()=>{sync();const l=links[k];if(!val('#rpWhat'))say('Say what’s wrong in the email before you send it.');
+      if(l.cut)copy(ok=>say(ok?'The report was too long for the link: the whole of it is on your clipboard, to paste into the email.':'The report was too long for the link: copy the whole of it from “What will be sent” (now selected) into the email.'));});
+    $('#rpCopy').addEventListener('click',()=>{sync();copy(ok=>say(ok?`Copied. Paste it into an email to ${TO}.`:`Selected under “What will be sent”: copy it (Ctrl+C, or ⌘C) into an email to ${TO}.`));});
+    $('#rpTo').textContent=TO;$('#rpTo').href='mailto:'+TO;setKind('bug');}
+  return{bind,open,note:(...a)=>note('note',a),text:()=>{sync();return $('#rpPrev pre').textContent;},links:()=>{sync();return{mailto:links.m.u,gmail:links.g.u};}};
+})();
+
+</script>
 <script>
 /**
  * @license
@@ -4992,7 +5080,9 @@ const WDIAL=(()=>{
        the hand on the wheel reads the wind s.n, 0 at full wind (22.5 deg right of 12) and 56 h after 8.75 turns (7/8 of a turn, Lange's "7/8 Teilung"). The fusee group's
        ang.f is its rotation.y, RF0 + n turns (fusee.js: RF0 its angle fully wound, and a click's catch on top running), so the wheel, turned back a tenth of it, and the hand,
        read from n, keep their places on each other (the catch, at most a click tooth of the fusee, a tenth of that on the hand) */
-    const update=(/** @type {any} */s,/** @type {any} */ang)=>{const c=ang.c||0;
+    /* s.slip: the hands set (app.js, Set the hands), seconds of time the cannon pinion has slipped on the centre arbor, its friction fit; the motion work and both hands
+       turn with it, the centre arbor and the train do not (the centre turns -TAU an hour, train.js) */
+    const update=(/** @type {any} */s,/** @type {any} */ang)=>{const c=(ang.c||0)-(s.slip||0)*TAU/3600;
       cn.rotation.y=c;mh.rotation.y=c;ch.rotation.y=-c*14/56;hw.rotation.y=c/12;hh.rotation.y=c/12;sh.rotation.y=ang.s||0;
       const n=s.n!=null?s.n:3.75,f=ang.f!=null?ang.f:n*TAU;up.rotation.y=f;ud.rotation.y=-f/10;uh.rotation.y=-22.5*D2R-n*TAU/10;};
     return{update,R};}
@@ -5008,7 +5098,7 @@ const WDIAL=(()=>{
    (Verschlußplatte 05 01 00-2, rev. a 14.4.48), the bezel and its glass (Glasrand R-05 01 01-2, 6.3.42; Glasrand kompl. 05 01 01), the gimbal ring with its bracket, pivot
    screws and lock nuts (Kardanring 05 01 00-5, Kardanringkloben -6, WN-79, WN-400, 05 01 Gehäuse Kardan, 1940, reissued 28.6.46), the transit lock (Feststeller, 15 on
    05 01), the wooden box with its lid, hinges, handles (51 00 10), maker's plate (Firmenschild 00 01 01-9, "Type 3371") and latch tongue (Zunge P. 51 00 02-2), the outer
-   pivots (WN-80) in the box's walls, and the one-way winding key of 1943 (Chronometerschlüssel 51 00 11: 05 01 02-2, -3), lying in the box.
+   pivots (WN-80) in the box's walls, and the one-way winding key of 1943 (Chronometerschlüssel 51 00 11: 05 01 02-2, -3), standing in its holder in the box's back right corner.
    Part of the Wempe model (three.js r128). Declares only WCASE: WCASE.build(M) returns {root, ring, bowl, lid, tongue, YP, YB}: root the box (the scene's group), ring the
    gimbal ring's group (turning about x, the outer pivots' axis, at YP), bowl the bowl's group inside it (turning about z, the inner pivots' axis), into which the page puts
    the movement (at y -YP: the movement's frame and the case's coincide at rest), lid the lid's group (turning about x at its hinge), tongue the latch tongue's.
@@ -5024,6 +5114,7 @@ const WCASE=(()=>{
      27 px at 2.45 px/mm), the ring's top level with the bowl's top face (05 01's elevation draws them together, ±2: estimated); 51 00 10 puts the outer pivot's M6 11.5 under a
      line across the box's side 105 over its bottom: the box's bottom 93.5 under the pivots, its parting line at the ring's top */
   const YB=6.35,YP=YB-11.5,YF=YP-93.5,YT=YF+180,YL=YF+105,BW=185/2,WT=12.5;
+  const KX=BW-WT-21,KZ=-(BW-WT-21),KH=YF+WT+40;   /* the key's holder: its hole's centre (back right, 21 from each wall) and its shelf's top (the box, below) */
   const N=240,CC=new Map(),circ=(r,s0=0)=>{const k=r+'|'+s0;if(!CC.has(k)){const o=[];for(let i=0;i<N;i++){const t=s0+i/N*TAU;o.push([r*Math.cos(t),r*Math.sin(t)]);}CC.set(k,o);}return CC.get(k);};
   /* turned solids as plan cells of rings: rs the radii, ys[i] the depths [y0, y1] of the disc (i 0) and of each ring (each a constant or a function of the plan point), F[i] its
      features; each ring in two halves (a ring isn't a simple outline), split at s0 so no feature crosses the split, a sloped one in N/4 sectors. Every circle is the same N points, so neighbouring cells share them */
@@ -5207,7 +5298,15 @@ const WCASE=(()=>{
         const o=new THREE.Shape(stadiumPts([0,-20],[0,20],30).map(([y,z])=>V2(z,y)));const og=extrude(o,{depth:3,bevelEnabled:false,curveSegments:24});og.rotateY(Math.PI/2);mesh(g,og,MC.alu,7,-12,0);   /* the grip: the oval 70 × 30, hanging 12 below the strip's middle (its dashed outline on the sheet's front view, scaled at 2.36 px/mm) */
         for(const z of[-45,45])tag(screw(along(g,[3,0,z],[-1,0,0]),0,0,0,2.5,1.6,11,1.2,M.steel),'WN-hg');}
       /* the hinges, two at the back (estimated: Lange 1947's): leaves 40 × 18 × 1.2 on the back, the knuckle Ø 5 on the parting line */
-      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier');bx.add(g);box(g,40,18,1.2,s*55,YL-9,-BW-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,YL,-BW-2.5);k.rotation.z=Math.PI/2;}}
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier');bx.add(g);box(g,40,18,1.2,s*55,YL-9,-BW-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,YL,-BW-2.5);k.rotation.z=Math.PI/2;}
+      /* the key's holder (no sheet: the box's own, 127-556.02, isn't in the set): a triangular shelf across the back right corner, the key standing in a hole through it, its
+         body's cone seated on the hole's edge and its paddle up, as every photographed box keeps it: Greenwich's wartime Wempe (rmg_L5393_wempe_wartime_001.jpg: the black
+         1943 key, its paddle about level with the box's top), Wempe 5377 (bonhams_26816_327: the shelf and the key in it), Lange VEB 2285 (drouot_33246921_*_3, from above:
+         the shelf's front edge, the key near it), Lange 5510 and the 6MX Kirova 422 (12_Kirow_DEC_422_Kasten_1.jpg). Its legs 55 along the back and right walls (Lange 2285
+         from above: about a third of the box's inside), the hole Ø 11 21 from each wall (the same photograph), 10 thick, its top 40 over the floor (the key's paddle then
+         2.7 under the box's top, as the wartime Wempe's): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 83.4 from the gimbals' centre, beyond the case's
+         and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's (x − z 105 against its 103.7) */
+      tag(mesh(bx,polyGeo([[BW-WT,-(BW-WT)],[BW-WT-55,-(BW-WT)],[BW-WT,-(BW-WT)+55]],10,[[KX,KZ,5.5]]),MC.mah,0,KH-10,0),'Schluesselhalter');}
     /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
     const lidG=new THREE.Group();lidG.position.set(0,YL,-BW-2.5);root.add(lidG);const ld=prt(lidG,'lid');ld.position.z=2.5;   /* turning about the hinges' knuckles, 2.5 behind the back */
     {const B=tag(new THREE.Group(),'Holzkasten.D');ld.add(B);const h=YT-YL-WT,o=BW;
@@ -5312,8 +5411,11 @@ const WCASE=(()=>{
        through the paddle's face does on 51 00 11's outside view), 4 −0.05 under the top. The square 3.1 +0.05 across, 19 deep, its corners on the key's x and z as the fusee
        arbor's square has them (its 60° sink 1 deep left out). The tube's head drawn 6.8 under the body's top (so it clears the paddle; the free length then 31.8, scaled 30),
        the spring's wire 0.9, the end's relief to Ø 4.6, the slot and cross hole not cut: estimated. Built in the key's own frame (its axis +y, the tube's mouth at 0) in its
-       part's group, which lies on the box's floor or, while it winds, sits on the fusee's square (keyAt) */
-    const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(-62,YF+WT+(f?10.25:7.25),-40);key.rotation.set(Math.PI/2,(f?30.7:19.8)*D2R,0);};KEYREST();   /* as first drawn the 1940 key (below) on its collar's rim (r 10.25) and its handle's edge, 30.7° from flat */   /* on its body and its paddle's rim: the paddle 19.8° from flat (17.25 sin + 1.5 cos = 7.25) */
+       part's group, which stands in its holder in the box or, while it winds, sits on the fusee's square (keyAt) */
+    /* at rest the key stands in its holder (above), its axis up, its tube's mouth under the shelf where its body's cone is Ø 11, the hole's: 35.27 over the mouth (the cone
+       Ø 9.14 to 14.5 over 10, from 31.8); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
+       middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
+    const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:35.27),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
     {const g=new THREE.Group();g.userData.rev='last';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
       const T=50.1,B0=31.8,BT=B0+25.1,sq=3.15/Math.SQRT2;
@@ -5330,7 +5432,7 @@ const WCASE=(()=>{
        the side view draws it 3.2 thick and no bulb), widest Ø 34.8 about 9 from its top, its neck Ø 16.5; a collar Ø 20.5 × 2.9; the body (2) a cone Ø 17.9 to 10.3 over 19.3;
        the stem (3) Ø 6.0 pressed in, its socket for the fusee's square drilled from its end (drawn round, Ø 3.1, 28 deep, as the later tube's: estimated), its end chamfered
        0.9 × 45°; the screw (5) on the collar beside the tang, 5.3 from the axis (head Ø 3 × 1, estimated). The click spring (4) in the body isn't drawn. Its materials, which the
-       sheet doesn't give, as the later key's (estimated). It lies where the later key does, on its collar's rim and its handle's edge (the handle 30.7° from flat) */
+       sheet doesn't give, as the later key's (estimated). It stands in the holder as the later key does, on its cone (KEYREST) */
     {const g=new THREE.Group();g.userData.rev='first';key.add(g);   /* placed by the key part (KEYREST, keyAt): the same frame, its stem's end at 0 */
       const lathe=(pr,n=48)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
       tag(mesh(g,lathe([[3.0,31.7],[5.16,31.7],[8.95,51.0],[10.25,51.0],[10.25,54.0],[0,54.0],[0,45.0],[3.0,45.0]]),MC.black),'127556.02-02');   /* the body and collar, the stem pressed 13.3 into it (estimated) */
@@ -5341,7 +5443,7 @@ const WCASE=(()=>{
       const pl=polyGeo(area(out)>0?out:out.slice().reverse(),3.2);pl.rotateX(-Math.PI/2);pl.translate(0,0,1.6);tag(mesh(g,pl,MC.black),'127556.02-01');
       tag(mesh(g,lathe([[0,54.0],[1.5,54.0],[1.5,55.0],[0,55.0]],20),M.steel,0,0,5.3),'127556.02-05');}
     /* keyAt(seat): the key onto the fusee's square (seat {g, y}: fusee.js keySeat, the dust plate's group, which turns with the fusee, and its face, where the square is 3.1
-       across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back on the box's floor */
+       across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back in its holder */
     const keyAt=(s,d=0)=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05-d,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};   /* d: how far out along the square it still is (coming on or going off) */
     return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=CPS*(1-q);},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};}
   return{build,YP:YB-11.5,YB};
@@ -5607,19 +5709,19 @@ const ESSAY=(()=>{
       ud:{p:[blade(H.UDH.hw,H.UDH.rf-0.2,10.2)],boss:H.UDH.rf,col:'#1d2c74'},sec:{p:[blade(H.SEC.hwP,H.SEC.rb-0.2,19.5),blade(H.SEC.hwT,H.SEC.rb-0.2,10,1)],boss:H.SEC.rb,col:'#1d2c74'}};};
   function drawHand(x,h,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,k);x.fillStyle=h.col;x.shadowColor='rgba(0,0,0,.3)';x.shadowBlur=Math.max(1,k*0.6);x.shadowOffsetY=Math.max(1,k*0.25);
     x.beginPath();for(const p of h.p){p.forEach(([u,v],i)=>i?x.lineTo(u,v):x.moveTo(u,v));x.closePath();}x.moveTo(h.boss,0);x.arc(0,0,h.boss,0,TAU);x.fill('nonzero');x.restore();}
-  /* the time t (seconds of local time, the hands stepping in half-seconds with the beat) and h hours since winding: the up-and-down hand 22.5° right of 12 fully wound, a
+  /* the time t (seconds of the time the model keeps, GMT or local: the hands as set, app.js's dialRead; the hands stepping in half-seconds with the beat) and h hours since winding: the up-and-down hand 22.5° right of 12 fully wound, a
      tenth of a turn for each of the fusee's turns (dial.js's update) */
   function paintDial(x,S,t,h){const c=S/2,k=c/WDIAL.DR,H=hands(),ts=Math.floor(t*2)/2;x.clearRect(0,0,S,S);x.drawImage(dial(),0,0,S,S);
     drawHand(x,H.ud,c,c-23*k,(22.5+36*h/WPHYS.HPT)*D,k);drawHand(x,H.sec,c,c+23*k,((ts/60)%1)*TAU,k);
     drawHand(x,H.hour,c,c,((t/43200)%1)*TAU,k);drawHand(x,H.min,c,c,((t/3600)%1)*TAU,k);}
-  const nowT=()=>{const m=K.model();return m?m.time():Date.now()/1000-new Date().getTimezoneOffset()*60;},nowH=()=>{const m=K.model();return m?m.hrs():20;};
+  const nowT=()=>{const m=K.model();return m?m.time():Date.now()/1000;},nowH=()=>{const m=K.model();return m?m.hrs():20;};
 
   /* ---------- hero: the model's dial, keeping the model's time ---------- */
   fig('eHeroSt',f=>{const cv=q('#eHero'),x=cv.getContext('2d'),cap=q('#eHeroCap');let S=0,lk=-1,lh=-1;
     const rs=()=>{const w=cv.clientWidth,d=Math.min(devicePixelRatio||1,2);if(!w)return;S=Math.round(w*d);if(cv.width!==S){cv.width=cv.height=S;f.dirty=true;}};new ResizeObserver(rs).observe(cv);rs();
     return()=>{const t=nowT(),h=nowH(),k=Math.floor(t*2);if(k===lk&&Math.abs(h-lh)<0.02&&!f.dirty)return;lk=k;lh=h;f.dirty=false;paintDial(x,S,t,h);
       const tt=((t%86400)+86400)%86400,hm=[Math.floor(tt/3600),Math.floor(tt%3600/60),Math.floor(tt%60)].map(v=>String(v).padStart(2,'0')).join(':'),m=K.model();
-      cap.textContent=`The model’s dial: ${hm} local time, ${m&&h>=m.run()-1e-6?'run down':h.toFixed(1)+' h since winding'}`;};});
+      cap.textContent=`The model’s dial: ${hm} ${m&&m.tz&&m.tz()==='local'?'local time':'GMT'}, ${m&&h>=m.run()-1e-6?'run down':h.toFixed(1)+' h since winding'}`;};});
 
   /* ---------- the sheets' dates, by drawing group (WEDATA.sheets, References/wempe/README.md's catalogue) ---------- */
   const GR=[['001','001','Overviews'],['05 01','05 01','Case'],['05 02','05 02','Motion work, dial'],['05 03','05 03','Balance'],['05 04','05 04','Escapement'],['05 05','05 05','Going train'],
@@ -5958,7 +6060,7 @@ const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel','Motio
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
-    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut, for the parts still to come, but the hand-setting work’s, which its sheet strikes through (“only when the hand-setting is fitted”), and the seconds contact’s (“only when needed”).'+SH,
+    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut but the hand-setting work’s, which its sheet strikes through (“only when the hand-setting is fitted”), and the seconds contact’s (“only when needed”).'+SH,
     sp:'Drawing 05 08 02-1 (kompl. 05 08 02) · special α-β brass sheet · Ø 85 h6 × 3.35 · pillar holes Ø 4.50 +0.012 on r 37, seated Ø 8.6 × 0.3 · opening for the intermediate wheel Ø 24.5'},
   topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the balance opening’s tongue scaled on the sheet',figs:'05 08_1a, 05 08_1b, 05 08_2, 001',c:'#c9d8a8',plate:1,pri:3,
     d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40.'+SH,
@@ -6129,7 +6231,7 @@ const PARTS={
     d:'A knob on a bracket in the box’s front right corner turning a lever: turned in, the lever presses the gimbal ring onto the locking bracket on the bowl, so neither gimbal can swing, for carrying the box. Drawn turned off.',
     sp:'05 01’s list: Feststeller 05 01 01 (no sheet) · knob Ø 19.6, lever 28 × 8'},
   key:{t:'Winding key (Chronometerschlüssel)',g:6,src:'drawing',sn:'Its body and tube from their sheets; the handle scaled on the key’s assembly; the spring’s wire and the tube’s depth in the body estimated',figs:'05 01_7, 05 01_8, 05 01_9, 05 01_6',c:'#41444a',pri:2,
-    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It lies in the box; while it winds it is on the fusee’s square, turning it back: in the movement’s views at once, in the case once the bowl is turned over in its gimbals and the closing plate opened, as the 6MX’s instruction has it. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
+    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It stands in its holder, a shelf across the box’s back right corner, as every photographed box keeps it; while it winds it is on the fusee’s square, turning it back: in the movement’s views at once, in the case once the bowl is turned over in its gimbals and the closing plate opened, as the 6MX’s instruction has it. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
     sp:'Drawing 51 00 11 (16.7.43) · body 05 01 02-2: St. Az, phosphated, black · tube 05 01 02-3: Ms 58, Ø 5.95, 50.1 long, square 3.1 × 19 · paddle Ø 34.5'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
@@ -6262,7 +6364,8 @@ const PIECES={
     {k:'handles',t:'Handles (Griff f. Chronometerkasten)',h:'510010',d:'A pressed strip handle on each side, under the pivot, its grip an oval standing 10 mm off the side.',sp:'Änderung von 51 00 10 (14.7.42) · 100 × 18, grip 70 × 30, 10 proud · 75 over the bottom',src:'drawing',sn:'Every figure of its sheet; its material not given',figs:'51 00_2'},
     {k:'handleScrews',t:'Handle screws',h:'WN-hg',d:'The screws through the handles’ ends.',sp:'Estimated',src:'est',sn:'Not on the sheet'},
     {k:'hinges',t:'Hinges',h:'Scharnier',d:'Two brass hinges at the back joining the lid to the box.',sp:'40 × 18 leaves (estimated)',src:'est',sn:'As Lange 1947’s box shows them'},
-    {k:'keeper',t:'Keeper',h:'Schliessblech',d:'The strap on the box’s front that the lid’s latch tongue slides under.',sp:'Estimated',src:'est',sn:'Not drawn'}],
+    {k:'keeper',t:'Keeper',h:'Schliessblech',d:'The strap on the box’s front that the lid’s latch tongue slides under.',sp:'Estimated',src:'est',sn:'Not drawn'},
+    {k:'keyHolder',t:'Key holder',h:'Schluesselhalter',d:'A wooden shelf across the box’s back right corner: the winding key stands in its hole, paddle up, ready to hand, as every photographed box keeps it (a wartime Wempe at Greenwich, Wempe 5377, Lange 2285 and 5510, a 6MX).',sp:'Legs 55 along the walls, 10 thick, its top 40 over the floor; the hole Ø 11, 21 from each wall (estimated)',src:'est',sn:'The box’s own sheet isn’t in the set: placed and sized from photographs'}],
   overBox:[{k:'body',t:'Outer box',h:'Ueberkasten',d:PARTS.overBox.d,sp:PARTS.overBox.sp},
     {k:'strip',t:'Rim strip',h:'Randleiste',d:'A strip round the inside of the rim, standing 4 mm over the walls: the lid closes over it.',sp:'13 × 5, 4 over the walls (17, 18 on 51 00_5)'},
     {k:'cushionsSide',t:'Front and back cushions',h:'Polster.S',d:'The cushions on the long walls, against the wooden box’s front and back.',sp:'20 at their middle (51 00_5, Schnitt A-B)'},
@@ -6321,7 +6424,7 @@ const REV={
     d:'The drum the mainspring is coiled in, as first drawn: three pieces, a brass ring with a lid sprung into its seat on the pillar plate’s side and a bottom on the barrel bridge’s, each with a boss standing inward round the arbor. Its outer end is hooked to the ring’s wall, its inner end to the arbor, which the set-up ratchet holds. Running, the spring turns the drum, which winds the chain onto itself off the fusee, about five turns over a wind.'+SH1,
     sp:'Drawings 0207 (Federhaus, 127-556.04 U24, 15.4.41), 020701 (U22), ring 020701-3 · Ø 41.5 × 18, inside Ø 38.5, 15.8 between lid and bottom · lid 1.2, bottom 1.0, seats Ø 39.2'},
   key:{src:'scaled',sn:'Traced on its 2:1 sheet (its 84 and 32 figured); its materials not given (estimated)',figs:'05 01_6',
-    d:'The key of 1940 (Aufzugschlüssel), which the one-way key of 1943 replaced under the same number: a flat pear-shaped handle on a conical body and collar, the stem with its square socket pressed into it. It lies in the box.'+SH1,
+    d:'The key of 1940 (Aufzugschlüssel), which the one-way key of 1943 replaced under the same number: a flat pear-shaped handle on a conical body and collar, the stem with its square socket pressed into it. It stands in the holder in the box’s back right corner.'+SH1,
     sp:'Drawing 127-556.02 U 01 (51 00 11, 12.12.40) · 84 overall, the stem Ø 6, 32 out · handle Ø 34.8 × 3.2'},
   /* figures the revisions changed by less than the model can show, or only in their tolerance: the shape is the same in both states, the card gives the first */
   ring:{sp:PARTS.ring.sp+' · As first drawn (before revision a, 6.12.46): 10.7 −0.05, the seat 3 ±0.05, the step 7 ±0.07 and 0.7 +0.05: the same sizes, closer tolerances'},
@@ -6367,7 +6470,15 @@ const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate fro
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
-(function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
+(function(){
+  /* the time kept (Time, Keep): Greenwich, as a ship's chronometers are kept for navigation (the default), or the viewer's local time; tzOff() its offset from UTC in s */
+  let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
+  let mv=null,tSim=Date.now()/1000+tzOff();
+  /* setting the hands (Time, Set the hands, Now; the Hamilton's setHands, simplified): the train never turns for it. slip, seconds of time the cannon pinion has slipped on
+     the centre arbor (dial.js), sets the hour and minute hands to the minute, leaving the dial fast by under a minute; then the balance is stopped (by hand, as a
+     chronometer is set when stopped) and the train held until the time the hands should read (sw.T, running on with model time) comes round to the dial's, and a twist
+     starts it. Held already (run down), only the minutes are set. handsSet: the hands were set from the field, so the link keeps the time (t) */
+  let slip=0,sw=null,handsSet=false;const dialRead=()=>tSim+slip,wrapH=e=>((e%43200)+43200+21600)%43200-21600;
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 55.9 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
   let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',dial='wempe',HPT=90/14,HRUN=55.9;
@@ -6378,6 +6489,20 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   /* winding in the case (cw): go, Wind pressed with the movement in its bowl; on, the key turning; u, 0-3, how far the bowl is turned over (0-1), the closing plate opened
      (1-2) and the key come onto the square (2-3) */
   const cw={go:false,on:false,u:0,t:null};   /* t: the last frame's time (ms), for dw */
+  /* the ship's motion and the gimbals (Display, Ship motion; the Hamilton's GIM.sea and gimStep in box.js, its equations copied): the box rolls and pitches about a ship's axes
+     RD m below it, the case hanging in its gimbals leans toward the apparent vertical, the pivots' friction pulling it after the box. The Wempe's own periods, from its weighed
+     case and ring (tools/gimbals.js --model wempe on massprops.py's gimbals_wempe.json, levelled): the bowl on its 12-6 pivots (about z here) 0.958 s, the ring on its 3-9 (about
+     x) 1.046 s; the box stops neither within 60° (the same check), so LIM 60°; Z, the pivots' damping, the Hamilton's 0.05 (estimated). The transit lock on (latch), the ring
+     and bowl are brought level with the box and go with it; turned over to wind (cw), the bowl is held by hand, so the same */
+  const GW={W0P:TAU/1.046,W0R:TAU/0.958,Z:0.05,LIM:60*D2R,RD:5,G:9.80665,PR:2/3,rock:false,latch:false,rockW:0,rockT:0,latchK:0,roll:0,pitch:0,M:{p:[0,0],r:[0,0],lp:0,lr:0}};
+  const gwSea=(u,w,k)=>{const a=14*D2R*k,b=0.55*a,f=GW.PR,v=f*u+1.1;return{r:[a*Math.sin(u),a*w*Math.cos(u),-a*w*w*Math.sin(u)],p:[b*Math.sin(v),b*f*w*Math.cos(v),-b*f*f*w*w*Math.sin(v)],rd:GW.RD*clamp((TAU/w-2)/2,0,1)};};
+  function gwStep(G,dt,ph,rl,sea,fr){if(dt<=0){G.lp=ph;G.lr=rl;return;}const n=Math.ceil(dt/0.002),h=dt/n,rd=sea?sea.rd:0;
+    for(const[q,f,f0,m,W0]of[[G.p,ph,G.lp,sea&&sea.p,GW.W0P],[G.r,rl,G.lr,sea&&sea.r,GW.W0R]]){const v=(f-f0)/dt,W2=W0*W0,ZW=2*GW.Z*W0;
+      const ah=m?rd*(m[2]*Math.cos(m[0])-m[1]*m[1]*Math.sin(m[0]))/GW.G:0,av=m?1-rd*(m[2]*Math.sin(m[0])+m[1]*m[1]*Math.cos(m[0]))/GW.G:1;
+      if(fr<1e-3){q[0]=f;q[1]=v;continue;}
+      for(let i=0;i<n;i++){q[1]+=h*(-W2*(av*Math.sin(q[0])-ah*Math.cos(q[0]))-ZW*(q[1]-v));q[0]+=h*q[1];}
+      if(Math.abs(q[0]-f)>GW.LIM){q[0]=f+Math.sign(q[0]-f)*GW.LIM;q[1]=v;}}
+    G.lp=ph;G.lr=rl;}
   /* the balance's swing (js/escphys.js, WPHYS; the Hamilton's H.amp): driven by the escape wheel's torque drv (times the reference's, 12 h from full wind), A² relaxes to
      PE.ampAt(drv)² as exp(-2t/TF); with the train held it runs down free (PE.freeStep). Below PE.AMIN a swing can't unlock the wheel and see the impulse through: the train
      stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
@@ -6419,7 +6544,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Dial','Zifferblatt, 05 02 00-4','dial',pw(P.dial,-30,WDIAL.DY1,30));const Q=CS.parts,yb=CS.YB;
       add('Bowl','Gehäusetopf, R-05 01 00-1','bowl',pw(Q.bowl,-38,yb-50,38));add('Bezel','Glasrand, R-05 01 01-2','bezel',pw(Q.bezel,-44,yb+16,-44));add('Gimbal ring','Kardanring, 05 01 00-5','gimbalRing',pw(Q.gimbalRing,-52,yb,52));
       add('Box','Holzkasten','box',pw(Q.box,-92.5,yb-60,60));add('Key','Chronometerschlüssel, 51 00 11','key',pw(Q.key,-62,yb-100,10));add('Transit lock','Feststeller','caseLock',pw(Q.caseLock,65,yb+20,63));add('Hands','05 02 00-1, -2, 05 02 01-1','hands',pw(P.hands,0,16,-30));},
-    /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js, makeEsc's
+    /* the model's clock, as the Hamilton's: seconds of the time kept (GMT, or local: tz), so the train stands where the time of day puts it; the escapement's motion (js/escapement.js, makeEsc's
        solved state at the swing H.amp and the drive drv, as the Hamilton's): the balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period, a beat behind until the tooth escapes); fast, the balance is drawn at
        rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
@@ -6441,11 +6566,19 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       {const CW_T=0.8;if(cw.go&&cw.on&&!winding)cw.go=false;const t=cw.go?3:0;if(!cw.go)cw.on=false;
         cw.u=SNAPC||RMC.matches?t:cw.u+Math.sign(t-cw.u)*Math.min(Math.abs(t-cw.u),dw/CW_T);if(cw.go&&!cw.on&&cw.u>=3){cw.on=true;wind0();}   /* once: wind0 starts the maintaining spring's clock (until 15 October 2026 it ran each frame and held it at the start) */
         CS.bowl.rotation.z=-Math.PI*smooth(clamp(cw.u,0,1));CS.shutter(smooth(clamp(cw.u-1,0,1)));}
+      /* the ship's motion (GW above), on the wall clock: eased in and out; the transit lock brings the gimbals level with the box over about a second; ?snap and reduced
+         motion keep the case exactly level */
+      {const fix=SNAPC||RMC.matches,wR=TAU/(+document.getElementById('rollP').value||7),kr=fix?1:1-Math.exp(-dw*1.5);GW.rockW+=((GW.rock&&!fix?1:0)-GW.rockW)*kr;if(!GW.rock&&GW.rockW<1e-4)GW.rockW=0;
+        if(GW.rockW>0)GW.rockT+=dw*wR;const sea=GW.rockW>0?gwSea(GW.rockT,wR,GW.rockW):null;GW.roll=sea?sea.r[0]:0;GW.pitch=sea?sea.p[0]:0;
+        const lk=GW.latch||cw.u>0;GW.latchK=fix?+lk:clamp(GW.latchK+(lk?1:-1)*dw*1.2,0,1);const fr=1-smooth(Math.min(1,GW.latchK*2)),G=GW.M;
+        if(fix){G.p=[0,0];G.r=[0,0];G.lp=GW.pitch;G.lr=GW.roll;}else gwStep(G,dw,GW.pitch,GW.roll,sea,fr);
+        CS.root.rotation.set(GW.pitch,0,GW.roll,'ZYX');CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
-         square; else lying in the box (case.js keyAt) */
+         square; else standing in its holder in the box (case.js keyAt) */
       {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}
       const dS=dt*(winding?Math.min(st.speed,1):st.speed),drv=drvNow();   /* while the key turns, model time no faster than real (the Hamilton's WIND_X): the maintaining spring's minute isn't spent in a frame */
-      if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
+      if(sw){sw.T+=dS;if(H.held&&wrapH(dialRead()-sw.T)<=0){sw=null;H.kick=Math.max(H.amp,0.6*PE.ampAt(1));}}   /* setting: the time the hands should read runs on; when it reaches the held dial's, the twist */
+      if(sw){H.amp*=Math.exp(-dt/0.1);H.kick=0;}else if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
       if(!H.held&&H.amp>=PE.AMIN){const r=PE.rateAt(H.amp,drv);if(Number.isFinite(r))H.rate=r;}
       const at=()=>{const y=tSim/0.5+H.bOff,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,drv);return{y,p,z,E:k-1+(p>0?z.prog:0)+H.eOff};},lockd=q=>!(q.p>0&&q.z.prog>0&&q.z.prog<1);
       let q=at(),E,s;
@@ -6456,10 +6589,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       const n=hrs/HPT;
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp,0);E=H.Eh+Math.min(0,s.prog);}   /* its own swing, the wheel on its stone (drawn back while the stone lifts) */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
-      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
-      showH();return[+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4)];},
-    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(dial!=='wempe')h.set('dial',dial);},
-      read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');
+      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
+      showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
+    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
+      read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
+        if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
+        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
@@ -6470,6 +6605,21 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0&&!winding&&!cw.go){if(cf<0.5)cw.go=true;else wind0();}});}   /* in its case, turned over first (cw, tick) */   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
   /* the twist: the box turned about the hands and back sets a stopped balance swinging, about 130 deg (estimated: the 6MX's "light jerk"); going, it does nothing here */
   {const tw=document.getElementById('twist');if(tw)tw.addEventListener('click',()=>{if(H.held&&H.amp<PE.AMIN)H.kick=Math.max(H.amp,0.6*PE.ampAt(1));});}
+  /* Time: Set the hands, Now and Keep (slip, sw, tz above); declarations, as the link's state is read as the viewer starts */
+  function hms(T){const d=((T%86400)+86400)%86400;return[Math.floor(d/3600),Math.floor(d%3600/60),Math.floor(d%60)].map(x=>String(x).padStart(2,'0')).join(':');}
+  function secsOf(v){const m=/^(\d{1,2}):(\d{2})(?::(\d{2}))?/.exec(v||'');return m?(+m[1])*3600+(+m[2])*60+(+(m[3]||0)):null;}
+  function setTime(T,field){handsSet=!!field;const e=wrapH(dialRead()-T),s=((e%60)+60)%60;slip=wrapH(slip-(e-s));sw=H.held&&!sw||s<=0.25?null:{T};todS='';}   /* run down: the minutes only */
+  function setTz(v){const o=tzOff();tz=v;const d=tzOff()-o;slip=wrapH(slip+d);if(sw)sw.T+=d;todS='';document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));
+    const nw=document.getElementById('now');if(nw)nw.title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';}
+  var todS='';function showTod(){const el=document.getElementById('tod');if(!el||document.activeElement===el)return;const v=hms(dialRead());if(v!==todS){todS=v;el.value=v;}}
+  {const el=document.getElementById('tod'),nw=document.getElementById('now');
+    if(el)el.addEventListener('change',()=>{const v=secsOf(el.value);if(v!=null){setTime(Math.floor(dialRead()/86400)*86400+v,true);if(V)V.wake();}});
+    if(nw)nw.addEventListener('click',()=>{setTime(Date.now()/1000+tzOff(),false);if(V)V.wake();});
+    document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz){setTz(b.dataset.v);if(V)V.wake();}}));}
+  /* Display's Motion: the ship's motion, the transit lock and the roll's period (GW); Reset display turns them back too */
+  {const rk=document.getElementById('rock'),la=document.getElementById('latch'),rp=document.getElementById('rollP'),ro=rp&&rp.parentElement.querySelector('output'),rs=document.getElementById('dispReset');
+    if(rk&&la&&rp){const show=()=>{ro.textContent=(+rp.value).toFixed(1)+' s';};rk.addEventListener('change',()=>{GW.rock=rk.checked;if(V)V.wake();});la.addEventListener('change',()=>{GW.latch=la.checked;if(V)V.wake();});rp.addEventListener('input',()=>{show();if(V)V.wake();});show();
+      if(rs)rs.addEventListener('click',()=>{rk.checked=la.checked=false;GW.rock=GW.latch=false;rp.value='7';show();});}}
   function setConn(v){conn=v;if(mv)mv.userData.R.fu.setConn(v);document.querySelectorAll('#conn button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
   document.querySelectorAll('#conn button').forEach(b=>b.addEventListener('click',()=>setConn(b.dataset.v)));
   /* the Variants' sheets: as last revised (about 1946-48, the default) or as first drawn (1940-44, as Wempe 3955 is made): movement.js's setRev shows each part's pieces for
@@ -6485,8 +6635,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>setDial(b.dataset.v)));
   /* the essay, once the model is built: its time (seconds of local time) and wind (hours since winding, run down at run()), the swing, and changed() (wake and write the hash) */
   if(V){VV=V;setDial(dial);}
-  if(ES&&V)ES.bind({time:()=>tSim,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
-  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,rev,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow()});}   /* the viewer's state and the wind, for the tools */
+  if(ES&&V)ES.bind({time:dialRead,tz:()=>tz,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
+  /* Report a bug or inaccuracy (the Hamilton's report.js): where the visitor is, and the model's state, in the report's details */
+  if(V&&typeof REPORT!=='undefined')REPORT.bind({r:V.r,name:'Wempe Einheits-Chronometer',inacc:'Where the model or the essay differs from Wempe’s works drawings or a real Einheits-Chronometer, and what shows it. The drawings, then photographs and videos of real ones, decide what the model looks like and does, so a sheet’s number settles it fastest.',
+    where:()=>{if(ES&&ES.on()){const s=ES.section(),h=s&&document.getElementById(s);return'The essay'+(h?', “'+h.textContent.trim()+'”':'');}if(V.st.pick&&V.INFO[V.st.pick])return V.INFO[V.st.pick][0];const b=document.querySelector('#views [aria-pressed="true"]');return'The model'+(b?', '+b.textContent.trim()+' view':'');},
+    state:()=>[['Tab',ES&&ES.on()?'essay':'model'],['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; ${conn}; sheets ${rev==='first'?'as first drawn':'as last revised'}; dial ${dial}; speed ${V.st.speed}×`]]});
+  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,rev,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow(),slip,tz,dialT:dialRead(),setting:!!sw,swT:sw?sw.T:null,roll:GW.roll,pitch:GW.pitch,gp:GW.M.p[0],gr:GW.M.r[0],latchK:GW.latchK});}   /* the viewer's state and the wind, for the tools */
 })();
 
 </script>
