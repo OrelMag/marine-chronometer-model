@@ -2956,6 +2956,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   teeth, undercut faces), with the winding-pawl springs' section inside the
   conflict. Kept main's set-up ratchet and the springs' section. Keep: after a
   merge, `git grep -n '^<<<<<<<\|^>>>>>>>'` finds nothing before committing. `52fd85c`
+- **The rig off its clips for an export made between round hours** (4104d411; the export to Blender): `blender.js` wrote the start hours as the page had them (20.000166 h, the page having run 0.6 s), but the rig reads its hours control through a driver variable, which Blender holds in single precision: 7e-7 h short, so the train and hands stood 0.005 teeth back, the escape wheel 0.12° off its clips (2e-6 h and 0.3° at 30 h). `ci.py`'s export passed only because its page exported near 20 h exactly; it ran the export in SwiftShader always because the GPU page, running faster, put the escape wheel 0.105° off. Fixed by taking the start hours in single precision (`Math.fround`) in both models' exports. Keep: any number the rig reads through a driver variable written so Blender's float holds it exactly.
 
 ## Essay
 
