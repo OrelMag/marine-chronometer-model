@@ -108,6 +108,15 @@
         <p class="note" style="margin:0 0 6px">The trial of the 6MX’s technical conditions (TU 25-07.1533-84; the 6MX was made from the same drawings by the First Moscow Watch Factory): thirty-five days in five periods of seven, at 36, 20, 4, 20 and 36 °C, the first two days of each not counted, wound daily, the rates read to 0.01 s (losing +), judged on E, the mean deviation of the daily rate; R, the recovery, period V’s mean less period I’s; D, the largest difference between consecutive daily rates; C, the temperature coefficient; S, the secondary error; each period’s mean rate; and N = 42E + 4.5R + 60C + 2.4S. Here it is run on the model as it stands (the masses’ place, the timing weights), on one trial’s days as <code>tools/wempe_errorbudget.js</code> draws them: the scatter and drift of the Hamilton’s No. 3390 card (no Wempe card is to hand), the air, the swing over the daily wind, the barometer and the oil. Beside it, the medians of 2,000 such trials with the masses compensated and 500 at their drawn place.</p>
         <div id="testOut" aria-live="polite"></div>
       </details>
+      <details class="grp more" id="benchDet">
+        <summary>Escapement in plan</summary>
+        <p class="note" style="margin:0 0 6px">The spring detent escapement as 05 04_1 lays it out, seen from above through the top plate (the sheet’s O to the right, N up), drawn from the model’s own pieces flattened onto the plan and moving with the model: the escape wheel, the impulse and discharge rollers, the detent with its gold spring, and its block. Under it, its figures as <code>tools/wempe_escapement.js</code> measures them (makeEsc’s measure(), at the model’s settings), beside 05 04_1’s where the sheet gives them.</p>
+        <canvas id="benchCv" aria-label="Plan of the escapement, seen from above through the top plate as 05 04_1 draws it, moving with the model"></canvas>
+        <p class="note" id="benchCap" aria-live="polite" style="margin:4px 0 0"></p>
+        <div id="benchT"></div>
+        <div class="seg" style="margin-top:8px"><button id="benchLook">Show the escapement</button></div>
+        <p class="note" style="margin:8px 0 0">The Hamilton’s page has its adjuster’s bench here: sliders for the escapement’s settings, which rebuild its detent, jewels and roller and measure them again. The Wempe’s parts are built from 05 04_1’s layout and the parts’ sheets (<code>js/escapement.js</code>), and makeEsc’s settings are taken from them (<code>WESC.SET</code>), not the other way round: a setting moved here would leave the drawn parts where the sheets put them, so the bench isn’t ported.</p>
+      </details>
       <details class="grp more" id="varDet">
         <summary>Variants</summary>
         <h3 class="sub-h">Between the barrel and the fusee</h3>

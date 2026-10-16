@@ -548,6 +548,15 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <p class="note" style="margin:0 0 6px">The trial of the 6MX’s technical conditions (TU 25-07.1533-84; the 6MX was made from the same drawings by the First Moscow Watch Factory): thirty-five days in five periods of seven, at 36, 20, 4, 20 and 36 °C, the first two days of each not counted, wound daily, the rates read to 0.01 s (losing +), judged on E, the mean deviation of the daily rate; R, the recovery, period V’s mean less period I’s; D, the largest difference between consecutive daily rates; C, the temperature coefficient; S, the secondary error; each period’s mean rate; and N = 42E + 4.5R + 60C + 2.4S. Here it is run on the model as it stands (the masses’ place, the timing weights), on one trial’s days as <code>tools/wempe_errorbudget.js</code> draws them: the scatter and drift of the Hamilton’s No. 3390 card (no Wempe card is to hand), the air, the swing over the daily wind, the barometer and the oil. Beside it, the medians of 2,000 such trials with the masses compensated and 500 at their drawn place.</p>
         <div id="testOut" aria-live="polite"></div>
       </details>
+      <details class="grp more" id="benchDet">
+        <summary>Escapement in plan</summary>
+        <p class="note" style="margin:0 0 6px">The spring detent escapement as 05 04_1 lays it out, seen from above through the top plate (the sheet’s O to the right, N up), drawn from the model’s own pieces flattened onto the plan and moving with the model: the escape wheel, the impulse and discharge rollers, the detent with its gold spring, and its block. Under it, its figures as <code>tools/wempe_escapement.js</code> measures them (makeEsc’s measure(), at the model’s settings), beside 05 04_1’s where the sheet gives them.</p>
+        <canvas id="benchCv" aria-label="Plan of the escapement, seen from above through the top plate as 05 04_1 draws it, moving with the model"></canvas>
+        <p class="note" id="benchCap" aria-live="polite" style="margin:4px 0 0"></p>
+        <div id="benchT"></div>
+        <div class="seg" style="margin-top:8px"><button id="benchLook">Show the escapement</button></div>
+        <p class="note" style="margin:8px 0 0">The Hamilton’s page has its adjuster’s bench here: sliders for the escapement’s settings, which rebuild its detent, jewels and roller and measure them again. The Wempe’s parts are built from 05 04_1’s layout and the parts’ sheets (<code>js/escapement.js</code>), and makeEsc’s settings are taken from them (<code>WESC.SET</code>), not the other way round: a setting moved here would leave the drawn parts where the sheets put them, so the bench isn’t ported.</p>
+      </details>
       <details class="grp more" id="varDet">
         <summary>Variants</summary>
         <h3 class="sub-h">Between the barrel and the fusee</h3>
@@ -6748,7 +6757,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       if(snd&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tickSnd();lastE=E;   /* the tick: a tooth's fall onto the impulse stone, as the Hamilton's */
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
-      swRec(now);if(!(ES&&ES.on())){swDraw(now,drv);rateShow(now);testShow(now);}
+      swRec(now);if(!(ES&&ES.on())){swDraw(now,drv);rateShow(now);testShow(now);if(epOn())epDraw($('#benchCv'),s,E,$('#benchCap'));}
       showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(MSET)h.set('mset',Math.round(MSET*100));{const b=balStr();if(b)h.set('bal',b);}if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
       read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
@@ -6866,6 +6875,47 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       '<table class="rt book" style="margin-top:8px"><thead><tr><th>Figure</th><th class="n">Model</th><th class="n" title="The median of 2,000 trials with the masses compensated">Comp.</th><th class="n" title="The median of 500 trials with the masses at their drawn place">Drawn</th><th class="n">Limit</th></tr></thead><tbody>'+
       K.map(x=>{const n=x==='C'||x==='E'?3:x==='N'?1:2;return`<tr><td>${NM[x]}</td><td class="n${out(x)?' bad':''}">${fv(x,r[x],n)}</td><td class="n">${fv(x,S.adj[x][0],n)}</td><td class="n">${fv(x,S.drawn[x][0],n)}</td><td class="n">${x==='N'?'≤ '+L.N:'±'+L[x].toFixed(2)}</td></tr>`;}).join('')+'</tbody></table>'+
       `<p class="note" style="margin:6px 0 0">Over the tool’s trials ${Math.round(S.adj.pass*100)} % pass with the masses compensated, ${Math.round(S.drawn.pass*100)} % at their drawn place.</p>`;}
+  /* ---------- Escapement in plan (the Hamilton's adjuster's bench's plan, without its sliders: README, "The page's capabilities against the Hamilton's"): the model's own pieces
+     flattened onto the plan in the frame of what moves them, as the essay's figure does (js/essay.js, eEsc), and moved by the state the model shows (s and E from the tick: running,
+     held or stepping fast, as the Hamilton's inset takes it: RESOLVED.md, "Escapement inset ignored the train's state"), seen as 05 04_1 draws it, from above through the top plate.
+     Flattened once for the sheets shown (rev); the explode lifts the parts along y only, so the plan is the same in every view ---------- */
+  let EP=null,epK='';const epOn=()=>{const d=$('#benchDet');return!!d&&d.open;};
+  function epBuild(){const RE=mv.userData.R.esc,PT=mv.userData.parts,MM=VV.M,ok=o=>{for(let p=o;p;p=p.parent)if(p.userData.rev&&p.userData.rev!==rev)return false;return true;};
+    const rel=(o,top)=>{const r=new THREE.Matrix4();for(let p=o;p&&p!==top;p=p.parent){p.updateMatrix();r.premultiply(p.matrix);}return r;};
+    const colOf=o=>{const mt=o.userData.mat0||o.material;return mt===MM.ruby?'ruby':mt===MM.gilt?'gilt':mt===MM.brass||mt===MM.brass2?'brass':mt===MM.copper?'copper':mt===MM.blued?'blued':'steel';};
+    const flat=(o,top)=>{const gm=o.geometry,pa=gm.attributes.position,ix=gm.index,n=ix?ix.count:pa.count,mm=rel(o,top),v=new THREE.Vector3(),pth=new Path2D();let y=0,k=0;
+      for(let i=0;i+2<n;i+=3){const t=[0,1,2].map(j=>{v.fromBufferAttribute(pa,ix?ix.getX(i+j):i+j).applyMatrix4(mm);return[v.x,v.z,v.y];});
+        const ar=(t[1][0]-t[0][0])*(t[2][1]-t[0][1])-(t[2][0]-t[0][0])*(t[1][1]-t[0][1]);for(const p of t){y+=p[2];k++;}if(Math.abs(ar)<1e-7)continue;
+        const u=ar>0?t:[t[0],t[2],t[1]];pth.moveTo(u[0][0],u[0][1]);pth.lineTo(u[1][0],u[1][1]);pth.lineTo(u[2][0],u[2][1]);pth.closePath();}
+      return{pth,y:y/Math.max(1,k),hn:o.userData.hn,col:colOf(o)};};
+    const gold=RE.golds.find(ok)||RE.gold,goldOf=o=>{for(let p=o;p;p=p.parent)if(RE.golds.includes(p))return true;return false;};
+    const P2=[],add=(grp,top,mov,skip)=>grp.traverse(o=>{if(o.isMesh&&o.geometry.attributes.position&&ok(o)&&!(skip&&skip(o)))P2.push({...flat(o,top),mov});});
+    add(RE.ew,RE.ew,'ew');add(RE.rol,RE.rol,'rol');add(RE.det,RE.det,'det',goldOf);add(gold,gold,'gold');
+    for(const c of PT.detent.children)if(c!==RE.det)add(c,mv,'');add(PT.detentBlock,mv,'');
+    P2.sort((a,b)=>(a.mov===''?0:1)-(b.mov===''?0:1)||b.y-a.y);   /* what stands (the block, the detent's foot) under what moves; seen from -y, the deepest first */
+    const Wc=WESC.W,B=WESC.B,S=WESC.P,F=WESC.DPIV,bx=[Math.min(Wc[0]-7.5,B[0]-3.6,S[0],F[0])-1,Math.max(Wc[0]+7.5,B[0]+3.6,S[0],F[0])+1,Math.min(Wc[1]-7.5,B[1]-3.6,S[1],F[1])-1,Math.max(Wc[1]+7.5,B[1]+3.6,S[1],F[1])+1];
+    return{P2,bx,RE,dp:RE.det.children[0].position,gp:gold.position,rev};}
+  /* what the escapement is doing (the essay's captions, eEsc's TXT) */
+  const epTxt=s=>!s.ccw?(s.psDef>1e-4?'Return swing: the discharge stone bends the gold spring aside; the detent stays on its banking, the wheel locked.':'Return swing: the wheel locked, the balance swinging free.'):
+    s.prog<=0?(s.lift>1e-4?'Unlocking: the discharge stone pushes the gold spring, and the detent with it, until the locking stone lets the tooth go.':'The wheel locked, the balance swinging free.'):
+    s.ride?'Let go: the wheel, from rest, turns toward the impulse stone; the detent, flung off the discharge stone, has fallen back onto the tooth it let go and rides it.':s.drop?'Let go: the wheel turns toward the impulse stone, chasing it.':s.run?'The impulse over: the next tooth runs on to the locking stone.':s.prog<1?'Impulse: a tooth drives the balance through the impulse stone.':'The wheel locked on the next tooth.';
+  /* the plan on canvas cv at the state s and the wheel's place E (teeth); cap: the caption's element */
+  function epDraw(cv,s,E,cap){if(!cv||!mv||!VV)return;if(!EP||EP.rev!==rev){EP=epBuild();epK='';}const k=[s.th,s.lift,s.psDef,E,cv.clientWidth,dark(),H.held].join();if(k===epK&&cv._k===k)return;epK=k;cv._k=k;
+    const w=cv.clientWidth||300,h=Math.round(w*0.72),d=Math.min(devicePixelRatio||1,2);if(cv.width!==Math.round(w*d)||cv.height!==Math.round(h*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d);cv.style.height=h+'px';}
+    const x=cv.getContext('2d'),{P2,bx,RE,dp,gp}=EP,dk=dark(),RU={steel:dk?'#aab4bd':'#7d8790',gilt:dk?'#e0b44f':'#b8892a',brass:dk?'#d9b25a':'#b5924a',copper:'#b87333',blued:dk?'#91adf2':'#26479c',ruby:'#c3163b'};
+    const kk=Math.min(w/(bx[1]-bx[0]),h/(bx[3]-bx[2]))*0.96,ox=(bx[0]+bx[1])/2,oz=(bx[2]+bx[3])/2;
+    x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);x.save();x.translate(w/2,h/2);x.scale(-kk,kk);x.translate(-ox,-oz);   /* from above: the sheet's O (-x) to the right, N (-z) up */
+    const rot=a=>x.transform(Math.cos(a),-Math.sin(a),Math.sin(a),Math.cos(a),0,0),at2=(p,a)=>{x.translate(p.x,p.z);rot(a);};
+    for(const q of P2){x.save();if(q.mov==='ew')at2(RE.ew.position,E*TAU/15);else if(q.mov==='rol')at2(RE.rol.position,-s.th);else if(q.mov==='det'||q.mov==='gold'){at2(RE.det.position,s.lift||0);if(q.mov==='gold'){x.translate(dp.x+gp.x,dp.z+gp.z);rot(-(s.psDef||0));}}
+      x.fillStyle=RU[q.col];x.globalAlpha=q.mov===''?0.28:q.hn==='050403-1'?0.6:1;x.fill(q.pth);x.restore();}   /* the impulse roller see-through: the discharge roller and its stone are under it, as 05 04_1 draws them dashed */
+    x.restore();x.font='11px "Instrument Sans",sans-serif';x.fillStyle=dk?'#9aa4ad':'#5b656e';x.textAlign='right';x.fillText(`balance ${s.th>=0?'+':'−'}${Math.abs(s.th/D2R).toFixed(1)}°`,w-8,16);x.textAlign='left';x.fillText('O →   N ↑',8,16);
+    if(cap)cap.textContent=H.held?'The train is held: '+(H.amp>0.01?'the balance swings free, the wheel locked.':'the balance at rest.'):epTxt(s);}
+  /* its figures, measured once (makeEsc's measure() at the model's settings: tools/wempe_escapement.js); 05 04_1's where the sheet gives them (README, Physics) */
+  {const t=$('#benchT');if(t){let done=false;const fill=()=>{if(done)return;done=true;const m=PE.measure(),g=v=>(v>=0?'+':'−')+Math.abs(v).toFixed(1)+'°',R=[['The gold spring met',g(m.contact),'−12°'],['The wheel let go',g(m.rel),''],['Lock (met to let go)',m.lock.toFixed(1)+'°',''],
+      ['The detent off the discharge stone',g(m.off),'0°'],['Let-off',m.letoff.toFixed(1)+'°',''],['The gold spring passed, returning',g(m.poff),''],['Overall',m.overall.toFixed(1)+'°',''],['The impulse ends',g(m.impEnd),''],
+      ['Roller shake',m.shake.toFixed(3)+' mm',''],['The teeth into the roller',m.dip.toFixed(2)+' mm',''],['The least swing that works',m.AMIN.toFixed(1)+'°','49.2°'],['The swing at 12 h',m.A.toFixed(1)+'°','']];
+      t.innerHTML='<table class="rt bench"><thead><tr><th>The balance at</th><th class="n">Model</th><th class="n" title="05 04_1, the layout">05 04_1</th></tr></thead><tbody>'+R.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td><td class="n">${r[2]}</td></tr>`).join('')+'</tbody></table>';};
+    $('#benchDet').addEventListener('toggle',()=>{if(epOn())fill();epK='';if(VV)VV.wake();});$('#benchLook').addEventListener('click',()=>{if(VV)VV.setView('escapement');});}}
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
   function wind0(){winding=true;H.w0=H.held?0:drvNow();H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on */

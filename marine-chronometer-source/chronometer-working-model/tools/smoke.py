@@ -14,7 +14,7 @@ ignored. Each problem names the page and the last step done before it.
 With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay tab as the Hamilton's (its checks.py's ESSAY: the link it follows into the model and the
 section it opens; no report button): every view, every view with Moving parts only (the frame hidden, the motion work only when included, drive=1 in the link), the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
-the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, Swing and isochronism (each chart, the mainspring's set and mset= in the link), Rate and timing weights (the weights turned in, drawn moving and in the link, the masses compensated and back, the temperature, Zero) and the 35-day trial's tables."""
+the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, Swing and isochronism (each chart, the mainspring's set and mset= in the link), Rate and timing weights (the weights turned in, drawn moving and in the link, the masses compensated and back, the temperature, Zero), the 35-day trial's tables, and Escapement in plan (drawn, its figures, Show the escapement)."""
 import asyncio,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -448,6 +448,13 @@ async def wempe(b,errs,steps):
     w2=await ev("(()=>{let p=null;window.__mv.traverse(o=>{if(!p&&o.isMesh&&o.userData.hn==='050301-3')p=o.position.toArray();});return p;})()")
     if w2!=w0:errs.append(f'Zero did not put the timing weights back: {w0} {w2}')
     await ev("document.querySelector('#rateDet').open=false;document.querySelector('#testDet').open=false")
+    # Escapement in plan: the plan drawn moving with the model, its figures, Show the escapement
+    await ev("document.querySelector('#benchDet').open=true");await pg.wait_for_timeout(1200);steps.append('Escapement in plan opened')
+    ep=await ev("[document.querySelector('#benchCv').width,document.querySelectorAll('#benchT tr').length,document.querySelector('#benchCap').textContent]")
+    if not(ep[0]>0 and ep[1]>=12 and ep[2]):errs.append(f'Escapement in plan: {ep}')
+    await click('#benchLook','show the escapement',600)
+    if await pv()!='escapement':errs.append('Show the escapement did not give the Escapement view')
+    await ev("document.querySelector('#benchDet').open=false")
     # ship motion, the transit lock, the roll period (near the case's own swing and off it)
     for v in(1.0,8.0):
         await ev("v=>{const r=document.querySelector('#rollP');r.value=v;r.dispatchEvent(new Event('input'))}",v);await click('#rock',f'ship motion, roll period {v} s',1500);await click('#rock','ship motion off')
