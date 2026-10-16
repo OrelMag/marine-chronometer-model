@@ -198,6 +198,10 @@ function run(M,o={}){
     if(thO>0&&th<=0&&om<0)st.cross.push(t-h+h*thO/(thO-th));
     if((wO>0&&om<=0)||(wO<0&&om>=0)){st.amps.push(Math.abs(th));st.ampT.push(t);if(wO<0)st.swRel=0;}
     if(frozen)continue;
+    /* the impulse stone coming into the teeth's path with a tooth already at its corner (the table G begins there): dynamics.js's strike, inelastic, the wheel put on the
+       stone, not a penalty spring loaded with the tooth's whole depth at once (16 October 2026: with 05 04_1's face at 28°10' the tooth lands 0.3° after the table begins,
+       and a step that found it already past threw the balance on to 247°) */
+    {const gI=held?NaN:at(Gt,th);if(!isNaN(gI)&&isNaN(st.gPrev)&&om>0&&Y[2]<gI){const g1=at(G1t,th)||0,c=Y[3]-g1*om,L=-c/(1/JT+g1*g1/I);Y[3]+=L/JT;Y[1]-=L*g1/I;Y[2]=gI;}st.gPrev=gI;}
     der(t,Y,k1,true);const l=dg.l,jewOn=dg.jew>0;
     if(jewOn&&om>0)st.jt=t;
     if(st.jewOn&&!jewOn&&om>0&&!held){if(!(st.offT>st.lastRel))st.off.push(th/D);st.offT=t;st.offL=th/D;}
