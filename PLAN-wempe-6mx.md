@@ -2,6 +2,32 @@
 
 For the session that builds the Soviet 6MX (6МХ) on the Wempe page. Written 16 October 2026, after 3.00.00 (the Wempe complete) and 2.42.04 (the cork ring, the bowl's seat, the Lange dial).
 
+## Handover: start here (for the session that continues the 6MX, from X3)
+
+Written 16 October 2026 for the next session. The first session built X0-X2 and stops here at the user's decision; read "Status" below, then the Wempe README's "The Soviet 6MX" (each reading, its numbers and how sure) and its "Estimated", "Superseded, left out or for later" and "Unresolved" entries for the 6MX.
+
+**Where the work is.** Branch `claude/wempe-6mx`, worktree `.claude/worktrees/wempe-6mx` (work there; `git log` for the last commit). Pushed, not merged, not released: the site is 3.00.02 without the 6MX. The user chose the plan's recommended options (Kirov No. 247, its contact left out; a third Version button, `rev=6mx`; Kirov 247's dial chosen with the 6MX): don't ask them again.
+
+**First, before any edit.**
+1. `ListAgents`, and read the coordination notes under Gotchas: `claude/wempe-audit` (marine-chronometer-1a: the Wempe audit fixes) and `claude/wempe-maintaining` (marine-chronometer-76: the maintaining spring) will likely land on `main` first and edit the same files (`frame.js`, `fusee.js`, `case.js`, `app.js`, `checks.py`, `ci.py`). Merge `main` into the branch when they have (`git merge --no-ff`), resolve as the notes say, rebuild the built copies rather than resolve them by hand, and rerun `audit.py --model wempe --rev 6mx --update` and `audit.py box ... --rev 6mx --update` after checking what's new.
+2. Read the last CI's result in "Status" below (a targeted run, 16 October 2026).
+3. Don't edit page files while `ci.py` runs: it reads the working tree live.
+
+**X3, the case and box** (`wempe/js/case.js`; built per version as the movement's parts are: `rv(par, 'last first' | '6mx')`, and the case's state groups follow `app.js`'s `onRev` push). Measure every line first (CLAUDE.md, "Build from measured lines"):
+- *The bezel*, knurled and screwed onto the bowl (Altmeppen's list: the bowl and bezel brass; Kirow 422's knurled: References/wempe/README.md). Sources: Kirov 247's side views (`dg-chrono-6mx/4_`-`7_Kirow_247_*.jpg`, the bezel's profile at the movement's rim), Uy8A88_j-cA 5:16-5:19 and 5:29 (the knurl, 640 × 360), `dg-chrono-6mx-gallery/` (search `catalogue-ru.md` for bezels, "Gehäuse"). The drawings' bezel (R-05 01 01-2) is a casting held by nothing drawn.
+- *The shutter*: a pin in a slot over the winding hole (Uy8A88_j-cA 5:21-5:25 shows the bowl's bottom, too coarse at 640 × 360). Fetch rAw2zmulpk8 (`python tools/video.py fetch rAw2zmulpk8`, into `E:\mc-video`, never committed; `catalogue-ru.md`'s video list ranks it for the bowl), sheet it (`video.py sheet ... --step 1`) for a square-on frame of the bottom, and measure on it against the bowl's own figures (Ø of the foot, the winding hole at hole 10). If no frame shows it, leave it out and say so.
+- *Kirov 247's boxes* (`dg-chrono-6mx-gallery/leben-des-6mx/13_`, `14_Kirow_247_Kasten_*.jpg`): an inner box (light wood, brass corner plates, a hasp with a knurled screw, the factory's diamond badge "1 МЧЗ им. Кирова", a round number plate 247) in an outer box (cut away in front, a number plate, a key bracket on its lid). No scale on the photographs: scale by the bowl (R-05 01 00-1's figures) where it shows, and the TU's inner box, 190 mm each way (`documents/6MX-figures.md`). The Wempe's boxes are case.js's `CS.root`/`CS.over`; the views hide `CS.over` but in Transport box, and the essay's figure built from `WCASE.build` must hide every state group not shown (Gotchas).
+- After each part: `isolate.py PART --model wempe --eval "__mv.userData.setRev('6mx')" --ref IMAGE --look ...` beside its photograph, and say what matches and what doesn't; then `audit.py box --model wempe --rev 6mx`, `solids.py`, `fine.py` (the case is in it), `massprops.py --model wempe` (the bowl's weight: only as last revised is weighed for `gimbals_wempe.json`; the 6MX's would be a new file only if its physics is done, X4).
+
+**X4.**
+- Cards: `app.js`'s `REV6`, `REVP6` for every part the 6MX changes (the case's, the dial's pieces); the `PIECES` of new parts.
+- The essay (`wempe/index.html`'s `<article id="essay">`, `wempe/js/essay.js`): a short section on what the Soviet copy changed, from Altmeppen's list and the photographs only (CLAUDE.md's essay rules: nothing the sources don't support, no serial ranges, no dates the sources don't give). Its figures from the model's numbers; `wempe_essaydata.js --write` if it needs Node's figures.
+- The physics: `gearing.js --model wempe` with jewelled pivots at the intermediate and seconds arbors (their friction), `wempe_physics.js`; the escapement at the first-drawn heights through `wempe_escapement.js` (`escgolden.js` must stay bit for bit the same). Make the page's swing and rate follow the version only if the user wants it (ask).
+- The Wempe report (`wempe/verification/`): a section for the 6MX if the user wants one (ask); rebuild it (`reportdata.js` about 9 min, leaves temporary files: don't `git add -A` meanwhile).
+- CI: add `fine.py` and `bom.py` as first drawn and as the 6MX to `ci.py`'s full steps (the gap in "Status").
+
+**Release.** After `python ci.py --full` passes (two-hour timeout; rerun browser flakes alone with `--only`) and the user agrees: merge into `main` with `--no-ff`, `python build.py --release minor -m "..." --site-url https://www.marinechronometermodel.com` (suggest the lines; the user decides), commit, `python deploy.py`, push with `--follow-tags`, and tell the other sessions it's live.
+
 ## Status (16 October 2026, end of the first session)
 
 **Branch `claude/wempe-6mx`** (worktree `.claude/worktrees/wempe-6mx`), pushed, last commit after `a982b64`; `main` merged in at 3.00.02. **Not merged to `main`, not released, not live.** The questions below were answered "the recommended options": Kirov No. 247, its electrical contact left out; a third button in Variants' "Version" (`rev=6mx`); Kirov 247's dial traced, chosen with the 6MX.
@@ -30,6 +56,8 @@ Gotchas found:
 The user asked on 15 October 2026 what it would take to add "the Russian variant" to the Wempe model, then asked for this handover so another session can build it. The 6MX was made by the 1st Moscow Watch Factory (Kirov, later Poljot) from the Einheits-Chronometer's drawings, which were taken from Glashütte in 1946-47 and translated. It is the same three-pillar spring-detent chronometer with about a dozen undrawn changes. Until now the model has used the 6MX only as a supporting source for parts the drawings leave out (`memory: wempe-second-model`: where they differ, the drawing wins). This work builds the 6MX itself, as a third state beside "As last revised" and "As first drawn".
 
 ## Ask the user first (one AskUserQuestion, before any code)
+
+*Answered 16 October 2026: the recommended options (Kirov No. 247, its contact left out; the third Version button, `rev=6mx`; Kirov 247's dial). Don't ask again.*
 
 1. **Which 6MX to build.** Like Wempe 3955 for the Wempe, pick one photographed chronometer and build it as made. Every choice below has Altmeppen's full set: dial (Z), top plate square-on on millimetre paper (A), dial side square-on (uZ), four obliques (N, O, S, W), most with the detent (Feder) and box (Kasten).
    - **Kirov 247** (February 1952, first generation; recommended). It has the most material: the full set in `photos/dg-chrono-6mx/`, its detent (`leben-des-6mx/8_Kirow_247_F.jpg`), its box (`13_`, `14_Kirow_247_Kasten_*`), and Altmeppen's arrowed comparisons with a Wempe (`1_1`, `1_2`, `1_3_Vergleich_*`; confirm which 6MX those show). It is a contact version (`E-Kontakt`): ask whether to build the electrical contact or leave it out (recommend out, noted in the README).
