@@ -465,10 +465,11 @@ const WESC=(()=>{
 
     /* ================= the escape wheel (Gangrad 05 04 05-1, its pinion Gangtrieb 05 04 05-2, collet Gangradbutzen 05 04 05-3) ================= */
     /* The wheel (05 04_23, 02 04 08a, 20.1.42: Messingblech 1,6 Ms 63 federhart; 05 04_7.2, 19.7.43): 15 teeth (05 04_7.1 "z = 15"; 05 04_1's drawn teeth 24 deg apart), tips
-       Ø 14 +0.03, roots Ø 12.1; the locking face straight, leaning 15 deg back from the radius, the tip flat 0.1834 (1½ deg), the back hollow (the ∅ 6 cutter), stepped 0.15 at
-       its foot, the tooth 1 wide at the root (all sure); the rim inside Ø 10.9 and the recess Ø 11.7 (05 04_23), 1.4 thick at the teeth and 0.8 in the web, flush on the pinion's
-       side (05 04_1's elevation: "1,4"; 05 04_7.1 "0,8"); three crossings with flanks of r 7.9 (05 04_23), meeting round the bore, 0.7 wide at the rim (scaled on 05 04_1); the
-       bore 1.7 H7 (05 04_7.2's fit table: its callout reads 1.8). A crossing under the locked tooth, as 05 04_1 draws it (estimated). Gilt, as Wempe 3955's */
+       Ø 14 +0.03, the gaps' floor Ø 11.7 (RR); the locking face straight, leaning 25 deg back from the radius (FL), the tip flat 0.1834 (1½ deg), the back hollow (the ∅ 6
+       cutter) to Ø 12.1, stepped 0.2 there down to the floor (RB0), the tooth 1 wide at the root (all sure; until 15 October 2026 the floor 12.1, the lean 15 deg, the step
+       0.15); the rim inside Ø 10.9, 1.4 thick at the teeth and 0.8 in the web, flush on the pinion's side (05 04_1's elevation: "1,4"; 05 04_7.1 "0,8"), the recess Ø 11.62
+       on the top plate's side; three openings each bounded by one arc r 7.9 (05 04_23), the crossings 0.6 wide at the rim (below); the bore 1.7 H7 (05 04_7.2's fit table:
+       its callout reads 1.8). A crossing under the locked tooth, as 05 04_1 draws it (estimated). Gilt, as Wempe 3955's */
     const ew=part('escapeWheel',-30,[W[0],W[1],0]);R.ew=ew;
     /* each state's wheel at its own heights (Y, Y1); as first drawn its bore 1.8 (05 04_1's "1,8", sure). 05 04_7.1 draws its recess on the pinion's side, Ø 11.9 altered to
        12.4, 0.7 deep, against 05 04_1's elevation (the teeth standing over the web toward the plate) and the 1942 tooth form's roots Ø 12.1, which 12.4 would cut: the wheel is
