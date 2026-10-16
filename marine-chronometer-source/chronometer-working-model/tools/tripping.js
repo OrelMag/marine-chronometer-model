@@ -308,7 +308,7 @@ if(process.argv.includes('--child')){
 const benchFigs=async()=>{const{spawn}=require('child_process'),jobs=[...DEPTHS.map(dL=>[{dL},{blow:true}]),...THICK.map(t=>[{},{tS:t/((X.spring.n1-X.spring.n0)*1000)}])],out=new Array(jobs.length);
   const kid=([esc,trip])=>new Promise((res,rej)=>{const p=spawn(process.execPath,[__filename,'--child'],{env:{...process.env,MC_ESC:JSON.stringify(esc),MC_TRIP:JSON.stringify(trip)}});let s='';
     p.stdout.on('data',d=>s+=d);p.stderr.on('data',d=>process.stderr.write(d));p.on('close',code=>code?rej(Error('tripping.js --child '+JSON.stringify([esc,trip])+' exited '+code)):res(JSON.parse(s.trim().split('\n').pop())));});
-  let next=0;const N=Math.max(1,Math.min(jobs.length,require('os').cpus().length-2));
+  let next=0;const N=Math.max(1,Math.min(jobs.length,+process.env.MC_PROCS||require('os').cpus().length-2));   /* MC_PROCS: at most so many (ci.py, running other steps beside it) */
   await Promise.all([...Array(N)].map(async()=>{while(next<jobs.length){const i=next++;out[i]=await kid(jobs[i]);}}));
   const L=out.slice(0,DEPTHS.length),T=out.slice(DEPTHS.length),ok=r=>r.trips===0&&r.lift<0.5&&(r.blow==null||r.blow>=20);
   /* the shallowest lock with every deeper one safe too; the thinnest and thickest springs with every one between them and the drawn safe (the thickest no more than

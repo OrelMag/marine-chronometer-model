@@ -163,6 +163,8 @@ SOLO={'smoke','wempe-smoke'}
 EXCL={'bom':'r_bom.json','wempe-bom':'r_bom.json','types':'npx','wempe-types':'npx',   # bom.py writes tools/r_bom.json for either model; two npx -y at once race in npm's cache
       'wempe-mainspring':'mainspring','wempe-mainspring-friction':'mainspring','mainspring-friction':'mainspring','mainspring-variants':'mainspring'}   # mainspring.py's solved states (its folder in the temp dir), and each on every core
 AFTER={'blender':'gltf'}   # blender_check.py imports the r_model21.glb gltf_check.py writes
+POOL=6   # the steps that run on processes of their own (tripping.js's bench figures, the Wempe's tripping.js, mainspring.py's sweeps) run on POOL of them (MC_PROCS,
+POOLED={'tripping-bench','wempe-tripping-full','mainspring-friction','mainspring-variants','wempe-mainspring-friction'}   # MC_MS_PROC), and count as POOL of the --jobs
 EST={'tripping-knocks':520,'bom':510,'mainspring-variants':500,'wempe-gearing-full':360,'tripping-bench':330,'wempe-bom':330,'smoke':300,'fea':260,'wempe-dynamics-full':220,
      'wempe-fine':190,'estimates':190,'wempe-tripping-full':180,'gimbals-full':180,'wempe-gimbals-full':170,'fine':150,'gearing-full':145,'tripping-run':130,'wempe-smoke':115,'gltf':110}   # seconds: the medians of the worktrees' logs, 16 October 2026
 def lane(name,tier):return 'browser' if tier=='browser' or name in BROWSER else 'cpu'
@@ -177,10 +179,12 @@ def parallel(steps,jobs,browsers,report):
     tf=LOGS/'times.json'
     try:last=json.loads(tf.read_text(encoding='utf-8'))
     except Exception:last={}
-    pend=sorted(steps,key=lambda s:-last.get(s[0],EST.get(s[0],30)));live={};done={}
+    os.environ.setdefault('MC_PROCS',str(POOL));os.environ.setdefault('MC_MS_PROC',str(POOL))
+    w=lambda n:min(POOL,jobs) if n in POOLED else 1
+    pend=sorted(steps,key=lambda s:(s[0] not in SOLO,-last.get(s[0],EST.get(s[0],30))));live={};done={}   # SOLO first: alone at the start, not waiting on the others
     with cf.ThreadPoolExecutor(max_workers=jobs+browsers) as ex:
         while pend or live:
-            busy={n:lane(n,t) for n,t in live.values()};nb=sum(v=='browser' for v in busy.values());nc=len(busy)-nb;held=False
+            busy={n:lane(n,t) for n,t in live.values()};nb=sum(v=='browser' for v in busy.values());nc=sum(w(n) for n,v in busy.items() if v=='cpu');held=False
             waiting={s[0] for s in pend}
             for s in list(pend):
                 name,fn,tier=s;ln=lane(name,tier)
@@ -191,8 +195,8 @@ def parallel(steps,jobs,browsers,report):
                     if name in SOLO and nb:held=True;continue   # no new browser step starts until it can: it isn't passed over
                     nb+=1
                 else:
-                    if nc>=jobs:continue
-                    nc+=1
+                    if nc+w(name)>jobs:continue
+                    nc+=w(name)
                 pend.remove(s);waiting.discard(name);busy[name]=ln;live[ex.submit(go,name,fn)]=(name,tier)
             fin,_=cf.wait(list(live),return_when=cf.FIRST_COMPLETED)
             for f_ in fin:
