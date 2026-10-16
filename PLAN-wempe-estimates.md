@@ -92,6 +92,24 @@ On 05 04_1, against the wheel's tip circle Ø 14.00 (24.47 px/mm, checked by the
 
 Re-lay the lock, the detent's lift (0.245 now) and the discharge stone's reach (about 1.55-1.6 on the sheet) together, so the detent still unlocks with room. Then rerun everything in B's last paragraph, plus the bench window (0.143-0.188) and `wempe_tolerances.js`. Work it out first in Node with makeEsc's settings, without editing; then build.
 
+**Dry run (16 October 2026).** `wempe_escapement.js` was run on a throwaway copy of `claude/wempe-open-ends`, with `P_R` and `P_A` in the Wempe's escapement.js changed. `RD`, the discharge reach, follows the depth of lock by itself (`DEPTH+0.07`).
+
+| stone | lock (balance) | let-off | swing over the wind | roller shake | result |
+|---|---|---|---|---|---|
+| 7.2, 36.5° (as built) | 9.9° | 1.9° | 191.9-202.0° | 0.046 | passes |
+| 7.2, 37.0° | 9.9° | 1.9° | 192.2-202.3° | 0.011 | passes |
+| 7.14, 36.5° | 12.8° | 1.5° | 183.6-194.1° | 0.046 | fails: the 185° floor, and the detent as drawn 3.85 µm against 3 |
+| 7.14, 37.0° | 12.9° | 1.5° | 184.1-194.5° | 0.011 | fails, as the row above |
+
+- **The angle** is free, but the roller shake falls to 0.011 mm, so check the teeth's clearance to the impulse roller.
+- **The distance** costs about 8° of swing through the deeper lock (0.235 against 0.175). That moves the swing further from the sources' 225-270°, a gap tied to the drive's level (C) and to TF.
+- **Building D therefore means also deciding:**
+  - the guard band's floor;
+  - the detent-as-drawn tolerance, or the layout's turn re-fitted;
+  - whether the drawn lock really is that deep. A tooth reaching 0.19-0.24 into the stone on the sheet is a drawing, not a made figure; the bench sets it by the banking.
+
+Put this to the user before building.
+
 ## C's result
 
 (to be filled in when the 1,530 solves finish)
