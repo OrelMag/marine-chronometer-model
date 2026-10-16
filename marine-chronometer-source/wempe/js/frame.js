@@ -81,6 +81,7 @@ const WFRAME=(()=>{
       F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.82/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
         T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
       for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
+      F.push(B(H[26],4.6/2,y1,0.25));   /* the seat of the escape wheel's lower endstone's setting, Ø 4.6 × 0.25 in the dial face (Wempe 3955's dial side: escapement.js; not on the sheet) */
       for(const k of[28,43])F.push(T(H[k],rM26,y0,y1));
       for(const k of[29,44])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));
       F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
