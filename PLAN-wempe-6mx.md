@@ -22,6 +22,7 @@ Gotchas found:
 - `fine.py` takes pieces fixed to each other only when they share a parent group: a part built per version must have its pressed pins (and screws into it, if they overlap) in the same version group (the upper cock, the bridges, the ring's case pin).
 - A part's mesh in a version group changes how its faces batch: `audit.py`'s coplanar counts change with it (same contacts); check them against the other versions' keys, then `--update`.
 - `ci.py` reads the working tree live: don't edit page files while it runs.
+- Merging after `claude/wempe-maintaining` (marine-chronometer-76's): there the maintaining spring's version groups (`rv(...,'last'/'first')`) move from `gMW` to a new `gMS2`, which turns with the fusee wheel, and the spring's meshes are rebuilt as the ratchet's lead changes (`msBent[].geo`). Retag the 6MX's (`'last 6mx'`) under `gMS2`, and keep `onRev` callbacks off their geometry.
 - The photographs' millimetre paper is the paper's scale, not the plate's: fit on the plate's own holes.
 
 ## The request
