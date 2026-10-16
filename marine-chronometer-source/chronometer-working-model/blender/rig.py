@@ -1,4 +1,5 @@
-"""The Marine Chronometer working model's rig for Blender (5.x): one set of controls that drives every part of the imported model21.glb at the model's own ratios.
+"""The Marine Chronometer working model's rig for Blender (5.x): one set of controls that drives every part of the imported model21.glb (or the Wempe's
+wempe-einheitschronometer.glb) at the model's own ratios.
 
 Import model21.glb (File, Import, glTF 2.0), then open this file in the Text Editor and press Run Script. The chronometer then runs on the timeline, in real
 time at the scene's frame rate (set the frame rate before importing: the clips come in at it), and an empty, "Chronometer controls", has properties (Object
@@ -6,6 +7,7 @@ properties, Custom Properties) for the rest:
     hours        hours since full wind at frame 0; the fusee, chain, barrel, mainspring and the up-down hand follow it, and the time as it runs
     hands_set_s  how far the hand-setting key has set the hands on (seconds)
     explode, laid_out, lift, lids, latch    0 to 1: the parts apart, the train laid out, out of the case and turned over, the lids closed, the gimbals latched
+                 (each only where the export has it: the Wempe's has no laid out or latch)
     roll, pitch  the box tilted (the gimbals keep the case level)
     seconds      the model's time (read only: frame / fps)
 How: the escape wheel, train, hands and motion work turn by drivers in step with the escape wheel's place, E = beats run + the export's helper ("Rig · escape
@@ -25,7 +27,7 @@ MC='MC '   # what the rig makes: constraints and actions named so, cleared on a 
 def root():
     for o in bpy.data.objects:
         if 'clips' in o.keys() and 'fuseePerHour' in o.keys():return o
-    raise RuntimeError('No Marine Chronometer model in this file: import model21.glb first (File, Import, glTF 2.0)')
+    raise RuntimeError('No Marine Chronometer model in this file: import its .glb first (File, Import, glTF 2.0)')
 
 def as_dict(x):return x.to_dict() if hasattr(x,'to_dict') else dict(x)
 
@@ -84,6 +86,8 @@ def controls(R):
        ('hands_set_s',0.0,None,None,'the hands set on by the key (s)'),('explode',0.0,0.0,1.0,'the parts apart'),('laid_out',0.0,0.0,1.0,'the train laid out'),
        ('lift',0.0,0.0,1.0,'out of the case and turned over'),('lids',0.0,0.0,1.0,'the lids, 0 open, 1 closed'),('latch',0.0,0.0,1.0,'the gimbals latched'),
        ('roll',0.0,-0.6,0.6,'the box rolled'),('pitch',0.0,-0.6,0.6,'the box pitched')]
+    have={as_dict(x).get('rig',{}).get('p') for x in R['clips']}   # a control only for a rig clip the file has (the Wempe has no laid out or latch)
+    P=[q for q in P if q[0] not in('explode','laid_out','lift','lids','latch') or q[0] in have]
     for k,v,lo,hi,d in P:
         if k not in c.keys():c[k]=v
         kw={'description':d}
@@ -163,6 +167,9 @@ def rig(R,c):
     # one parameter each: an Action constraint per part, its time the control's (the wind: hours on at frame 0, and the time as it runs)
     PAR={'n':('min(1,max(0,(hh+frame/%r/3600)/%r))'%(fps,runH),[('hh',c,'["hours"]')])}
     for k in('explode','laid_out','lift','lids','latch'):PAR[k]=('min(1,max(0,p))',[('p',c,'["%s"]'%k)])
+    for cl in clips.values():   # E: a part periodic in the escape wheel's place, over b - a beats (the Wempe's maintaining detent riding its ratchet's teeth)
+        r=cl.get('rig')
+        if r and r['p']=='E':x='(frame/%r+t-%r+(hh-%r)*%r)/%r'%(BF,E0,h0,3600*2,float(r['b'])-float(r['a']));PAR['E']=('%s-floor(%s)'%(x,x),[('hh',c,'["hours"]'),('t',helper,None)])   # E as the train's drivers have it, the helper's t with it
     for name,cl in clips.items():
         r=cl.get('rig')
         if not r or r['p'] not in PAR:continue
@@ -177,7 +184,10 @@ def rig(R,c):
             k=o.constraints.new('ACTION');k.name=MC+name;k.action=na;k.action_slot=s;k.use_eval_time=True;k.frame_start=int(a.frame_range[0]);k.frame_end=int(math.ceil(a.frame_range[1]))
             k.mix_mode='BEFORE_FULL'
             d=o.driver_add('constraints["%s"].eval_time'%k.name).driver;d.type='SCRIPTED'
-            for v in vs:var(d,*v)
+            for v in vs:
+                if v[2] is None:   # the helper's x (the escape wheel's place less an even run), as the train's drivers read it
+                    w=d.variables.new();w.name=v[0];w.type='TRANSFORMS';w.targets[0].id=v[1];w.targets[0].transform_type='LOC_X';w.targets[0].transform_space='TRANSFORM_SPACE'
+                else:var(d,*v)
             d.expression=ex
     # the box rolled and pitched; the ring and case kept level in the gimbals (the case's own swing left out: the At sea clip has it)
     role={o.get('role'):o for o in bpy.data.objects if o.get('role')}
