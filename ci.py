@@ -126,6 +126,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-exploded',lambda log:run([PY,'exploded.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-audit-first',lambda log:run([PY,'audit.py','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the same as first drawn (the page's Variants: the sheets of 1940-41), its coplanar faces under movement.first
  ('wempe-exploded-first',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'browser'),
+ ('wempe-audit-6mx',lambda log:run([PY,'audit.py','--model','wempe','--rev','6mx'],TOOLS,log),'browser'),   # the Soviet 6MX (the Variants' third version, Kirov No. 247), its coplanar faces under movement.6mx
+ ('wempe-exploded-6mx',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('6mx')"],TOOLS,log),'browser'),
  ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)

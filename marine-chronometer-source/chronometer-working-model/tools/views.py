@@ -10,12 +10,15 @@
 The model is frozen at one escapement phase and wind state (after a moment of winding, so the fusee's angle doesn't depend on when the page ran), and the page's labels and panels are hidden, so two runs of an unchanged model
 give the same pixels (a few anti-aliased edges may differ). --keep shows only the named parts (userData.partName); --look can be repeated;
 --n sets the fusee turns from full wind (0 = fully wound). --page renders another copy of index.html with this script, so two commits are
-compared by one set of rules (ci.py --views renders where a branch left main and the working tree, then --diff --md writes the table)."""
+compared by one set of rules (ci.py --views renders where a branch left main and the working tree, then --diff --md writes the table).
+--model NAME renders another model's page (its views from its checks.py's VIEWS; a page without Moving parts only gets the one pass); --eval JS runs code after loading,
+before the freeze (the Wempe's states: --eval "__mv.userData.setRev('first')"), so each state is compared with itself."""
 import asyncio,json,pathlib,sys
+import model
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
-PAGE=pathlib.Path(sys.argv[sys.argv.index('--page')+1] if '--page' in sys.argv else HERE.parent/'index.html').resolve().as_uri()+'?snap&qa'
-VIEWS=['box','dial','movement','train','escapement','laidout','fusee','balance','exploded']   # exploded last: the Moving parts only pass starts from it (its Box and Dial buttons are disabled, so their shots keep it)
+PAGE=pathlib.Path(sys.argv[sys.argv.index('--page')+1]).resolve().as_uri()+'?snap&qa' if '--page' in sys.argv else model.PAGE
+VIEWS=model.cfg('VIEWS',['box','dial','movement','train','escapement','laidout','fusee','balance','exploded'])   # exploded last: the Moving parts only pass starts from it (its Box and Dial buttons are disabled, so their shots keep it)
 CSS=("header,.panel,.hud,.tools,.hint,.labels,.loading{display:none!important}.wrap{display:block!important;padding:0!important;margin:0!important;max-width:none!important}"
      ".stage{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border-radius:0!important;aspect-ratio:auto!important}")
 FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.userData.update;mv.userData.update=()=>{{}};}}
@@ -42,6 +45,7 @@ async def main():
         pg=await b.new_page(viewport={"width":1200,"height":800},device_scale_factor=1,color_scheme='light');errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=%r;document.head.appendChild(s);});"%CSS)
         await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)   # loaded, not a fixed wait
+        if arg('--eval'):await pg.evaluate(arg('--eval'));await pg.wait_for_timeout(300)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()");await pg.evaluate(FREEZE.format(n=arg('--n','2.5')))
         if looks or keep:
             await pg.evaluate("document.querySelector('#driveOn').click()");await pg.evaluate("document.querySelector('#views button[data-v=\"train\"]').click()");await pg.wait_for_timeout(2500)
@@ -49,7 +53,7 @@ async def main():
             for i,l in enumerate(looks or [['0.75','0.42','120','0','-20','0']]):
                 await pg.evaluate(f"window.__look({','.join(l)})");await pg.wait_for_timeout(1500);await pg.screenshot(path=f'r_v_{tag}_look{i}.png',timeout=180000)
         else:
-            for drive in (False,True):
+            for drive in (False,True) if await pg.evaluate("!!document.querySelector('#driveOn')") else (False,):
                 if drive:await pg.evaluate("document.querySelector('#driveOn').click()")
                 for v in VIEWS:
                     await pg.evaluate(f"document.querySelector('#views button[data-v=\"{v}\"]').click()");await pg.wait_for_timeout(2500)

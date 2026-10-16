@@ -75,7 +75,7 @@ def judge(res,sp):
     D.clear()
     for r in res['rel']:
         tag=f"{r['kind']} {r['id']}#{r['i']} -> {r['tgt']}"+(f" ({r['how']})" if r.get('how') else '')
-        dv=[d for d in L[r['id']].get('dev',[]) if d['rel']==[r['kind'],r['tgt']] and r['i'] in d['inst'] and d.get('rev',res.get('rev'))==res.get('rev')]   # a 'rev' entry only in that state of the drawings (the Wempe's setRev)
+        dv=[d for d in L[r['id']].get('dev',[]) if d['rel']==[r['kind'],r['tgt']] and r['i'] in d['inst'] and (d.get('rev') is None or res.get('rev') in d['rev'].split())]   # a 'rev' entry only in the versions it lists (the Wempe's setRev: 'first', '6mx', 'last 6mx')
         if dv:D.append(f"{tag}: {dv[0]['why']}");continue   # a known deviation, reported with its reason
         if r.get('err'):F.append(f"{tag}: {r['err']}");continue
         if r['kind'] in('in','round'):

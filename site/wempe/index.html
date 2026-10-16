@@ -529,9 +529,9 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <div class="seg" id="conn"><button data-v="chain" aria-pressed="true" title="The chain, 05 07 04 (1941): 374 links at a 2.05 pitch, 0.82 thick, as on Wempe 3955 and Lange 5177">Chain (05 07 04)</button><button data-v="band" aria-pressed="false" title="The steel band, 05 07 03 (1943): 0.22 thick, 730 long, with its two brazed hooks, as on Greenwich's wartime Wempe">Band (05 07 03)</button></div>
         <h3 class="sub-h">Dial</h3>
         <div class="seg" id="dialSt"><button data-v="wempe" aria-pressed="true" title="Wempe's printing, traced on a photograph of Wempe No. 3955's dial: CHRONOMETERWERKE WEMPE HAMBURG and the anchor">Wempe, Hamburg (as No. 3955)</button><button data-v="lange" aria-pressed="false" title="Lange's printing, traced on a photograph of A. Lange &amp; Söhne No. 5177's dial (its rust left out): A. LANGE &amp; SÖHNE GLASHÜTTE B/DRESDEN, Auf and Ab over the up-and-down dial">A. Lange &amp; Söhne, Glashütte (as No. 5177)</button></div>
-        <h3 class="sub-h">The drawings</h3>
-        <div class="seg" id="rev"><button data-v="last" aria-pressed="true" title="Each sheet as last revised, about 1946-48: the escape wheel and rollers 1.8 mm under the top plate, the detent block with its upright (05 04 01-4, 1943)">As last revised</button><button data-v="first" aria-pressed="false" title="The parts the later revisions replaced, as first drawn in 1940-41, as Wempe 3955 is made: the escape wheel just under the top plate on its 1941 arbor (05 04_7.1), the 1941 staff with its brass collar (05 04_5), the detent block with its long arm and cone (05 04_1)">As first drawn</button></div>
-        <p class="note" style="margin:6px 0 0">Where a sheet was revised, the model is built as last revised; As first drawn shows the parts as the earlier sheets drew them. Figures that changed only a tolerance are on the parts' cards.</p>
+        <h3 class="sub-h">Version</h3>
+        <div class="seg" id="rev"><button data-v="last" aria-pressed="true" title="Each sheet as last revised, about 1946-48: the escape wheel and rollers 1.8 mm under the top plate, the detent block with its upright (05 04 01-4, 1943)">As last revised</button><button data-v="first" aria-pressed="false" title="The parts the later revisions replaced, as first drawn in 1940-41, as Wempe 3955 is made: the escape wheel just under the top plate on its 1941 arbor (05 04_7.1), the 1941 staff with its brass collar (05 04_5), the detent block with its long arm and cone (05 04_1)">As first drawn</button><button data-v="6mx" aria-pressed="false" title="The Soviet copy made from the drawings by the 1st Moscow Watch Factory, as Kirov No. 247 (1952) is made">Soviet 6MX (Kirov No. 247, 1952)</button></div>
+        <p class="note" style="margin:6px 0 0">Where a sheet was revised, the model is built as last revised; As first drawn shows the parts as the earlier sheets drew them. Figures that changed only a tolerance are on the parts' cards. Soviet 6MX shows the copy the 1st Moscow Watch Factory made from the drawings, as Kirov No. 247 of 1952 is made.</p>
       </details>
       <details class="grp more disp" id="dispDet" open>
         <summary>Display</summary>
@@ -3061,7 +3061,7 @@ const WESC=(()=>{
 
   function build(mv,M,K){const{part,screw}=K,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),R={};
     const flip=g=>{const f=new THREE.Group();f.rotation.x=Math.PI;g.add(f);return f;};
-    /* the sheets' two states (movement.js's setRev): rv(par, 'last' or 'first') a group of the pieces only that state has; onRev(f) runs f(first) when the state changes */
+    /* the versions (movement.js's setRev): rv(par, 'last 6mx', 'first' or '6mx') a group of the pieces only those versions have; onRev(g) runs g(version) when it changes */
     const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},onRev=f=>mv.userData.onRev.push(f);
     const BL=v=>[v[0]-B[0],v[1]-B[1]],WL=v=>[v[0]-W[0],v[1]-W[1]];   /* plan points into the balance's and the wheel's own frames (both turn about y only) */
     const OFFB=-58;   /* the balance comes out with the upper cock, hanging from it by the hairspring and its stud (the frame's cock rises 58) */
@@ -3073,7 +3073,7 @@ const WESC=(()=>{
        holes Ø 1 at 2.14 +0.02 either side along the arm for the hub's screws; the rim cut 1.5 +0.2 at 90 deg from the arm, so each quarter is a cantilever from the arm's end.
        Drawn at the middle of the fits. The arm along 12-6 with the balance at rest (05 03_1: "Die Zeitschrauben müssen in Ruhestellung die Richtung von 6-12 einnehmen") */
     const balP=part('balance',OFFB,[B[0],B[1],0]),bal=hn(new THREE.Group(),'050402-1');balP.add(bal);R.bal=balP;   /* the staff's line holds the whole balance: its pieces move with it */
-    const balL=rv(bal,'last');onRev(f=>{bal.position.y=f?SH1:0;});   /* the 1946 staff, hub and screws; as first drawn the rim and arm stand 0.3 higher (Y1) */
+    const balL=rv(bal,'last 6mx');onRev(v=>{const f=v==='first';bal.position.y=f?SH1:0;});   /* the 1946 staff, hub and screws; as first drawn the rim and arm stand 0.3 higher (Y1) */
     {const r0=30.5/2,r1=31.27/2,r2=32.30/2,y0=Y.rimT,y1=FY,gap=0.75,N=720,ya=Y.armT;
       /* the arm's outline (05 03_4's plan, its flanks traced at 6.81 px/mm by the rim's Ø 32.32; sure: Wempe 3955's arm, 9_Wempe_3955_Hemmung.jpg, shows the same hollow
          flanks swelling to a point at the hub): straight from 3.2 at the rim's inside ("3,2"; traced 3.2-3.45) widening to 4 ("4", traced 3.8 at 6.6 out), where each flank runs
@@ -3194,7 +3194,7 @@ const WESC=(()=>{
     const colB=Y.armT-0.05,yL=colB-0.75,yU=yL-PITCH*TURNS;   /* the collet's underside 0.05 over the arm; the spring's lower end 0.75 over it (05 03_5) */
     const spPath=tw=>hsBend(tw).map(([x,z,u])=>[x,yL-PITCH*TURNS*u,z]);   /* breathing (hsBend, above) */
     const hs=part('hairspring',OFFB,[B[0],B[1],0]),hsRot=new THREE.Group();hs.add(hsRot);R.hsRot=hsRot;
-    onRev(f=>{hs.position.y=f?SH1:0;});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher in the stud's slot (3.69 under its bar), the
+    onRev(v=>{const f=v==='first';hs.position.y=f?SH1:0;});   /* as first drawn the collet rides 0.3 higher with the arm, the spring's top curve 0.3 higher in the stud's slot (3.69 under its bar), the
        stud's pin with it (its hole drilled at assembly, 05 03 02-3) */
     const spring=tag(mesh(hs,ribbonGeo(spPath(0),HB,HT),M.mspring),'050302-1');R.spring=spring;R.spPath=spPath;
     /* the collet (Spiralrolle 05 03 02-2, 24.2.43: Messingblech Ms 58): a bar 9.1 −0.2 long, 3.8 −0.2 wide at its slit end and 2.7 −0.2 at the other, 3.3 high; bored 1.6 H7 at
@@ -3234,7 +3234,7 @@ const WESC=(()=>{
         {loop:ccw([L(-uw,s0),L(uw,s0),L(uw,s1),L(-uw,s1)]),y0:ck,y1:yE-2.0},{loop:ccw([L(-uw,s1),L(uw,s1),L(uw,v1),L(-uw,v1)]),y0:ck,y1:yE}]);
       up.applyMatrix4(new THREE.Matrix4().set(1,-VO[0]*tn,0,VO[0]*tn*ck,0,1,0,0,0,-VO[1]*tn,1,VO[1]*tn*ck,0,0,0,1));tag(mesh(st,up,M.brass),'050302-3',1);
       const sp=tag(across(st,lathe([[0,-0.4],[0.33,-0.4],[0.33,0.4],[0,0.4]],16),M.steel,L(-0.5,RSTUD+HT/2+0.335),AX,yU),'050302-4.s');   /* the pin beside the spring's end in the slot, outside it, 0.005 clear of it, past the pinning point (4.36 out with the spring at 3.87 until 15 October 2026) */
-      onRev(f=>{sp.position.y=yU+(f?SH1:0);});
+      onRev(v=>{const f=v==='first';sp.position.y=yU+(f?SH1:0);});
       tag(screw(st,L(HU,c)[0],L(HU,c)[1],yB,1.2,0.8,SBT+2.0,0.7),'WN-11');R.studL=L;}
 
     /* ================= the rollers (Heberolle 05 04 03-1 = 02 04 02; Auslöserolle 05 04 04-1) ================= */
@@ -3245,7 +3245,7 @@ const WESC=(()=>{
        the line of centres (PHI0) */
     const rol=part('rollers',OFFB,[B[0],B[1],0]);R.rol=rol;
     /* each state's rollers at its own heights (Y, Y1): the same parts, 05 04_1's plan the same in both */
-    for(const[Q,g]of[[Y,rv(rol,'last')],[Y1,rv(rol,'first')]]){const af=aBW-PHI0,u=dir(af),vl=[Math.sin(af*D2R),Math.cos(af*D2R)],rr=6.78/2,RF=(r,w)=>add(add([0,0],u,r),vl,w);   /* vl: toward the leading side (the way it turns in the impulse) */
+    for(const[Q,g]of[[Y,rv(rol,'last 6mx')],[Y1,rv(rol,'first')]]){const af=aBW-PHI0,u=dir(af),vl=[Math.sin(af*D2R),Math.cos(af*D2R)],rr=6.78/2,RF=(r,w)=>add(add([0,0],u,r),vl,w);   /* vl: toward the leading side (the way it turns in the impulse) */
       const cT=pol([0,0],rr,af+Math.asin(2.0/rr)/D2R),cL=pol([0,0],rr,af-Math.asin(1.5/rr)/D2R),cm=[(cT[0]+cL[0])/2,(cT[1]+cL[1])/2],ch=hyp(sub(cT,cL)),out=unit(cm),cc=add(cm,out,Math.sqrt(3.5*3.5-ch*ch/4));
       const a0=Math.atan2(cL[1]-cc[1],cL[0]-cc[0]),a1=Math.atan2(cT[1]-cc[1],cT[0]-cc[0]);let da=a1-a0;while(da>Math.PI)da-=TAU;while(da<-Math.PI)da+=TAU;
       const rec=[add(cL,unit(cL),0.8)];for(let i=0;i<=40;i++){const a=a0+da*i/40;rec.push([cc[0]+3.5*Math.cos(a),cc[1]+3.5*Math.sin(a)]);}rec.push(add(cT,unit(cT),0.8));
@@ -3264,7 +3264,7 @@ const WESC=(()=>{
        (full reach, the side toward the gold spring's tip) to the other, as the layout's corners and makeEsc's BEV take it (until 15 October 2026 drawn square). Measured
        again on 05 04_1 (24.4 px/mm, the dashed outline at (180-198, 453-463) px): the acting corner at the gold spring's tip, the other corner 4-5 px back, 0.15-0.2,
        the stone 8 px across (0.33); ±3 px, the faint dashes and the "1°" figures beside the lower corner: DS's 0.3 is kept (README, Estimated) */
-    for(const[Q,g]of[[Y,rv(rol,'last')],[Y1,rv(rol,'first')]]){const b=BETA,u=dir(b),pp=[u[1],-u[0]],L=(e,w)=>add(add([0,0],u,e),pp,w),rf=Math.sqrt(RD*RD-DSW*DSW/4);
+    for(const[Q,g]of[[Y,rv(rol,'last 6mx')],[Y1,rv(rol,'first')]]){const b=BETA,u=dir(b),pp=[u[1],-u[0]],L=(e,w)=>add(add([0,0],u,e),pp,w),rf=Math.sqrt(RD*RD-DSW*DSW/4);
       const body=stadiumPts(L(-0.255,0),L(0.355,0),2.15),slot=[L(0.85,-DSW/2-0.003),L(2.0,-DSW/2-0.003),L(2.0,DSW/2+0.003),L(0.85,DSW/2+0.003)],outl=bool(body,slot).dAB[0];
       tag(mesh(g,solidGeo([{loop:outl,y0:Q.dr0,y1:Q.dr1,F:[{p:C([0,0],0.6+0.0015,48),a:Q.dr0,b:Q.dr1}]}]),M.brass),'050404-1');
       tag(mesh(g,solidGeo([{loop:[L(0.9,-DSW/2),L(rf,-DSW/2),L(rf-DS,DSW/2),L(0.9,DSW/2)],y0:Q.dr0+0.05,y1:Q.dr1+0.15}]),M.ruby),'050404-2');}
@@ -3279,7 +3279,7 @@ const WESC=(()=>{
     /* each state's wheel at its own heights (Y, Y1); as first drawn its bore 1.8 (05 04_1's "1,8", sure). 05 04_7.1 draws its recess on the pinion's side, Ø 11.9 altered to
        12.4, 0.7 deep, against 05 04_1's elevation (the teeth standing over the web toward the plate) and the 1942 tooth form's roots Ø 12.1, which 12.4 would cut: the wheel is
        drawn as 05 04_1 and 05 04_23 (README, As first drawn) */
-    for(const[Q,g,bo]of[[Y,rv(ew,'last'),1.7],[Y1,rv(ew,'first'),1.8]]){const tip0=P_A-D0,o=[];
+    for(const[Q,g,bo]of[[Y,rv(ew,'last 6mx'),1.7],[Y1,rv(ew,'first'),1.8]]){const tip0=P_A-D0,o=[];
       for(let j=0;j<15;j++){const a=tip0+24*j,T=p=>{const r=hyp(p),b=al(p);return pol([0,0],r,a+b);};
         o.push(pol([0,0],RR,a-BF),pol([0,0],RB0,a-BK));for(let i=TOOTH.arc.length-2;i>0;i--)o.push(T(TOOTH.arc[i]));o.push(pol([0,0],RT,a-1.5),pol([0,0],RT,a));
         const fr=-al(TOOTH.face);o.push(pol([0,0],RR,a-fr));for(let k=1;k<12;k++)o.push(pol([0,0],RR,a-fr+(24-BF+fr)*k/12));}
@@ -3302,7 +3302,7 @@ const WESC=(()=>{
        2026 the cone 0.4 long, ending 0.9 from the end). The collet (05 04 05-3 = 05 04 10 on 05 04_7.2), brass, 4.7 long (sure), as the sheet draws it (scaled, 17.6 px/mm by
        the 22.8, its lines' middles, ±0.03): Ø 2.8 for 1.6 over the wheel, then Ø 1.7 to its end, each step's top edge chamfered 0.15 (the sheet's drawn bevels, 3 px); its
        spigot Ø 1.7 in the wheel's bore. Until 15 October 2026 a cone Ø 2.6 at the wheel to Ø 1.5 */
-    {const g=ew.children.find(c=>c.userData.rev==='last'),pv=0.12,yP1=Y.etL-5.3,yP0=yP1-3,ar=[[0,Y.etU],[pv,Y.etU],[pv,Y.etU+0.5],[0.5,Y.etU+2.0],[0.5,Y.ewWeb-0.002],[0.6,Y.ewWeb-0.002],[0.6,Y.etL-0.9],[pv,Y.etL-0.5],[pv,Y.etL],[0,Y.etL]];
+    {const g=ew.children.find(c=>c.userData.rev==='last 6mx'),pv=0.12,yP1=Y.etL-5.3,yP0=yP1-3,ar=[[0,Y.etU],[pv,Y.etU],[pv,Y.etU+0.5],[0.5,Y.etU+2.0],[0.5,Y.ewWeb-0.002],[0.6,Y.ewWeb-0.002],[0.6,Y.etL-0.9],[pv,Y.etL-0.5],[pv,Y.etL],[0,Y.etL]];
       tag(mesh(g,lathe(ar,24),M.steel),'050405-2');
       const pn=tag(mesh(g,WTRAIN.gear(WTRAIN.teeth(10,0.263,2.97,1.6),3),M.steel,0,(yP0+yP1)/2,0),'050405-2',1);   /* the leaves on the sheet's tip and root, as the train's pinions (train.js) */pn.userData.gear={z:10,m:0.263};R.pinion=pn;
       const c0=Y.ew1,c1=c0+1.6,c2=c0+4.7,ch=0.15;
@@ -3369,7 +3369,7 @@ const WESC=(()=>{
       tag(across(sS,lathe([[0,0],[0.8,0],[0.8,0.45],[0.5,0.45],[0.5,0.45+3.4],[0,3.85]],20),M.steel,D(ROW,fh+0.45),TD.n.map(v=>-v),yd(o.d0+1)),'WN-gf');
       for(const s of[-2.1,2.1])tag(across(sS,lathe([[0,-1.6],[0.225,-1.6],[0.225,1.6],[0,1.6]],12),M.steel,D(ROW+s,-fh),TD.n,yd(o.d0+1)),'WN-201.d');};
     R.golds=[];
-    dv(rv(detS,'last'),rv(dm,'last'),{d0:3.2,pp:PIPE0,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y.ew0});
+    dv(rv(detS,'last 6mx'),rv(dm,'last 6mx'),{d0:3.2,pp:PIPE0,pl:1.9,tf:0.60,tq:0.50,tb:0.28,th:0.22,gs:0,ew0:Y.ew0});
     dv(rv(detS,'first'),rv(dm,'first'),{d0:1.3,pp:1.95,pl:1.7,tf:0.65,tq:0.55,tb:0.33,th:0.25,gs:0.025,ew0:Y1.ew0});
     R.gold=R.golds[0];
 
@@ -3389,11 +3389,11 @@ const WESC=(()=>{
        as 05 04_1 draws the 1941 detent, where the 1946 staff's discharge roller (05 04 02: 3.4-5.0 under the plate) couldn't reach its gold spring. Kept as built (README,
        Unresolved). Screwed up from the top plate's outer face through hole 13, the pins in the plate (holes drilled at assembly: estimated). The 0.4 step at the base's top
        and the 90 +0.5 deg end are left out. The cone Wempe 3955's block carries at the stone (10_, 11_Wempe_3955) belongs to the 1941 block of 05 04_1, not this one */
-    const blk=part('detentBlock',-30),blkL=rv(blk,'last'),blkF=rv(blk,'first');
+    const blk=part('detentBlock',-30),blkL=rv(blk,'last 6mx'),blkF=rv(blk,'first');
     /* As first drawn the block's arm lies over the lower cock's lug, 0.28 above it, so in the Exploded view the arm leaves first: the block, with the detent clamped to it
        and the escape wheel whose teeth lie 0.05 over the detent's pipe, rises 30.3 and the cock 29.9 (frame.js's 31 as last revised), which keeps the 0.5 exploded.py asks
        from the block and from the seconds wheel under the cock's lug (33) */
-    {const P=K.parts;onRev(f=>{P.lowerCock.userData.off=f?-29.9:-31;for(const k of['detentBlock','detent','escapeWheel'])P[k].userData.off=f?-30.3:-30;});}
+    {const P=K.parts;onRev(v=>{const f=v==='first';P.lowerCock.userData.off=f?-29.9:-31;for(const k of['detentBlock','detent','escapeWheel'])P[k].userData.off=f?-30.3:-30;});}
     {const yP=TI,nE=-0.30,L=(t,n)=>D(t,n),tF=ROW+3.75,tT=ROW-3.75,tU=tF-25,nUl=nE-1.4,nUr=nUl-3,sl0=nUl-1.35,sl1=sl0-0.3,fr=[];
       for(let i=1;i<12;i++){const a=Math.PI/2*i/12;fr.push(L(tT-3+3*Math.sin(a),nUr-3+3*Math.cos(a)));}
       const upCell={loop:[L(tT,nUl),L(tU+7,nUl),L(tU,nUl),L(tU,sl0),L(tU+7,sl0),L(tU+7,sl1),L(tU,sl1),L(tU,nUr),L(tT-3,nUr),...fr,L(tT,nUr-3),L(tT,nE-6.4)],y0:yP,y1:yP+3};
@@ -3410,7 +3410,7 @@ const WESC=(()=>{
          the upright is flush with (README, Unresolved) */
       tag(across(blkL,lathe([[0,0],[0.9,0],[0.9,0.5],[0.6,0.5],[0.6,0.5+3.0],[0,3.5]],20),M.steel,L(ROW-18.8,nUr-0.5),TD.n,yP+1.5),'WN-gkA');
       /* the fixing screw from the plate's outer face through 13 (drilled 1.8): head Ø 3.0 × 1.2 (Wempe 3955's, 11_), M1.7, 3.0 into the block (estimated) */
-      {const fx=K.headOn(tag(screw(blk,H[13][0],H[13][1],TT,1.5,1.2,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;onRev(f=>{fx.userData.lift=l0+(f?-0.3:0);});}   /* its lift through the plate follows the block's (above) */
+      {const fx=K.headOn(tag(screw(blk,H[13][0],H[13][1],TT,1.5,1.2,3.35+3.0,0.85),'WN-gk'),'detentBlock','topPlate'),l0=fx.userData.lift;onRev(v=>{const f=v==='first';fx.userData.lift=l0+(f?-0.3:0);});}   /* its lift through the plate follows the block's (above) */
       /* its steady pins Ø 0.9 through the block, 1.3 into the plate: as last revised the far one through the thin part, 3 (until 15 October 2026 6.5, as the first drawn block's) */
       for(const[g,e2]of[[blkL,3],[blkF,6.5]])for(const[q,e]of[[L(ROW-2,nE-2.3),6.5],[L(ROW+2,nE-12.3),e2]])tag(cylBetween(g,0.45,TI-1.3,TI+e,M.steel,q[0],q[1],16),'WN-gkP');
       R.blkPins=[L(ROW-2,nE-2.3),L(ROW+2,nE-12.3)];
@@ -3461,14 +3461,14 @@ const WESC=(()=>{
     /* each state's at its arbor's ends (Y, Y1). As first drawn (05 04_7.1) the top-plate end lies 2.0 into the plate: the hole jewel's setting fills the seat down to it, its
        bore opened to 0.6 for the arbor's cone; the dial end 1.96 into the pillar plate: the bush shortened to it and the endstone in a plug set from the dial face under the
        cap, which is then plain (estimated, as the settings themselves: no sheet of them) */
-    for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first']])){const eY=Q.etU-0.02,hY=eY+0.06,ge=rv(eeu,v),gj=rv(eju,v),bo=v==='first'?0.6:0.45;
+    for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last 6mx'],[Y1,'first']])){const eY=Q.etU-0.02,hY=eY+0.06,ge=rv(eeu,v),gj=rv(eju,v),bo=v==='first'?0.6:0.45;
       tag(mesh(ge,lathe([[0,TT+0.5],[2.6,TT+0.5],[2.6,eY],[1.003,eY],[1.003,eY-0.35],[0,eY-0.35]],48),M.brass),'050408-2.eu');
       tag(mesh(ge,lathe([[0,eY-0.35],[1.0,eY-0.35],[1.0,eY],[0,eY]],32),M.ruby),'050408-1.eu');
       tag(mesh(gj,lathe([[bo,TI],[2.6,TI],[2.6,hY],[0.903,hY],[0.903,hY+0.35],[bo,hY+0.35]],48),M.brass),'050406-2.eu');
       tag(mesh(gj,stoneGeo(0.9,0.135,0.35,'olive'),M.ruby,0,hY+0.175,0),'050406-1.eu');}
     {const f=flip(eju);for(const s of[-1,1])tag(screw(f,3.5*s,0,-TI,1.0,0.6,2.5,0.6),'WN-es').userData.lift=0;}
     {const u=[-Math.cos(37*D2R),Math.sin(37*D2R)],cap=stadiumPts(add([0,0],u,-3.5),add([0,0],u,3.5),3.0),sH=[-1,1].map(s=>({p:C(add([0,0],u,3.5*s),0.7,40),a:PPT,b:PPT+0.6}));
-      for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last'],[Y1,'first']])){const eY=Q.etL+0.02,hY=eY-0.20,gj=rv(ejl,v),ge=rv(eel,v),f1=v==='first';
+      for(const[Q,v]of/** @type {[any,string][]} */([[Y,'last 6mx'],[Y1,'first']])){const eY=Q.etL+0.02,hY=eY-0.20,gj=rv(ejl,v),ge=rv(eel,v),f1=v==='first';
         tag(mesh(gj,lathe([[0.7,hY-0.5],[1.25,hY-0.5],[1.25,f1?eY:PPT-0.1],[0.4,f1?eY:PPT-0.1],[0.4,hY],[0.803,hY],[0.803,hY-0.35],[0.7,hY-0.35]],48),M.brass),'050406-2.el');
         tag(mesh(gj,stoneGeo(0.8,0.135,0.35,'olive'),M.ruby,0,hY-0.175,0),'050406-1.el');
         if(f1){tag(mesh(ge,solidGeo([{loop:cap,y0:PPT,y1:PPT+0.6,F:sH}]),M.brass),'050408-2.el');
@@ -4101,7 +4101,7 @@ const WFUSEE=(()=>{
   /* ================================================================= the build ================================================================= */
   function build(mv,M,K,FRP,TR){const{part,loose}=K,P=K.parts,tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined),fx=FX[0],fz=FX[1];
     const grp=(par,x,z)=>{const g=new THREE.Group();g.position.set(x,0,z);par.add(g);return g;};
-    /* the sheets' two states (movement.js's setRev): rv(par, 'last' or 'first') a group of the pieces only that state has; onRev(f) runs f(first) when it changes */
+    /* the versions (movement.js's setRev): rv(par, 'last 6mx', 'first' or '6mx') a group of the pieces only those versions have; onRev(g) runs g(version) when it changes */
     const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},onRev=f=>mv.userData.onRev.push(f);
 
     /* the stop bar 05 06 03-1 (Stellungssteg; no sheet in the set: the coloured section's) as 05 06_4's Schnitt C-D draws it, traced at 12.2 px/mm (its Ø 21 hub, Ø 15 recess
@@ -4319,7 +4319,7 @@ const WFUSEE=(()=>{
     {const aE=bk(0,0),aSq=bk(336,0),eye=sh(14.2,aE+0.8/14.2),hs=sh(14.2,PINS);
       const tab=T=>d=>{for(let i=1;i<T.length;i++)if(d<=T[i][0]){const[a0,w0]=T[i-1],[a1,w1]=T[i];return w0+(w1-w0)*(d-a0)/(a1-a0);}return 4;};
       const w41=tab([[0,1.8],[40,1.8],[100,1.9],[150,2],[195,2],[240,2.5],[270,3.5],[336,4]]),w48=tab([[0,2],[272,2],[276,2.12],[280,2.29],[284,2.5],[287,2.85],[290,3.1],[292,3.44],[293,3.6],[295,3.65],[300,3.68],[310,3.76],[320,3.82],[330,3.87],[336,4]]);
-      for(const v of['last','first']){const g=rv(gMW,v);
+      for(const v of['last 6mx','first']){const g=rv(gMW,v);
         const band=(x,y)=>{const r=Math.hypot(x,y),a=angOf(x,-y),u=fr((aE-a)/TAU);   /* u: the way round from the eye, clockwise here */
           if(u>336/360)return 1;const w=(v==='first'?w41:w48)(u*360);return Math.max((16.125-w)-r,r-16.125);};
         const f=(x,y)=>Math.min(band(x,y),Math.hypot(x-eye[0],y-eye[1])-1.8);
@@ -4461,7 +4461,7 @@ const WFUSEE=(()=>{
        lid; so does the coloured section). The mainspring's hook block 05 07 01-3 (3.05 -0.1 high, 3 wide) riveted inside the wall at the M2.6 hole 9.05 ±0.05 from the
        bottom's face, 45° from 9 o'clock; its radial depth 0.35 (estimated: as much as clears the spring's next coil). The slot for the chain's hook, cut at the fusee's assembly (0207: 2.5 wide), and the spring's slot
        in the wall (2 × 0.95) aren't cut in the turned drum. Gilt, as Wempe 3955's (7_Wempe_3955_W.jpg) */
-    const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last'),gBF=rv(gB,'first');
+    const pB=part('barrel',-33),gB=grp(pB,BX[0],BX[1]),gBL=rv(gB,'last 6mx'),gBF=rv(gB,'first');
     tag(mesh(gBL,ringT([[19.6,BR],[20.8,BR],[20.8,BB-0.2],[20.6,BB],[2.275,BB],[2.275,BBF],[4.0,BBF],[6.0,BI],[19.25,BI],[19.25,BR+1.2],[19.6,BR+1.2]],240),M.gilt),'050701-1');
     /* the lid 05 07 01-2 (Federhausdeckel, Ms 58, revised 20.4.48): sprung into the seat ("eingesprengt"), its face 0.6 -0.1 under the rim; 1.3 -0.1 thick (in the seat Ø 39.2
        r6, under it 0.05 clear of the wall: the sheet draws it 39.39 over all, the blank's); its boss 3.3 -0.1 from its face, the face Ø 8, a 45° cone to Ø 12; bore 4.55; its two
@@ -4492,7 +4492,7 @@ const WFUSEE=(()=>{
        0.5 proud. Präz. Rundstahl 14, hardened, tempered at 270 */
     const pBA=part('barrelArbor',-33),gBA=grp(pBA,BX[0],BX[1]);
     {const bal=[];for(let i=0;i<=6;i++){const t=Math.PI/2*i/6;bal.push([1.44*Math.cos(t),4.35+0.6*Math.sin(t)]);}
-      const gAL=rv(gBA,'last'),gAF=rv(gBA,'first');
+      const gAL=rv(gBA,'last 6mx'),gAF=rv(gBA,'first');
       tag(mesh(gAL,turned([[0,-25.70],[1.94,-25.70],[1.94,BA1],[2.24,BA1],[2.24,BC1],[4.5,BC1],[6.65,BC1+2.15],[6.65,BC0-2.15],[4.5,BC0],[2.24,BC0],[2.24,BA0],[1.44,BA0],...bal],48),M.steel),'050702-1');
       /* as first drawn the 1941 core between the 1941 drum's bosses: 020704-1's 12 long Ø 13.3 with its 22½° ends (sure), 0.05 off each boss (11.9) */
       {const c0=-3.7-3.1-0.05,c1=-21.7+2.9+0.05,ch=2.15*Math.tan(22.5*D2R);
@@ -4535,7 +4535,7 @@ const WFUSEE=(()=>{
     const msShape=T=>{let lo=0,hi=T-1;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(msLen(m,T-1-m)>MSL)lo=m;else hi=m;}return lo;};   /* the core's pack's turns at T */
     const msT=(()=>{let lo=2,hi=40;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(msLen(0,m-1)>MSL)hi=m;else lo=m;}return lo;})();   /* all on the wall */
     const pMS=part('mainspring',-33),gMS=grp(pMS,BX[0],BX[1]),msM=tag(mesh(gMS,new THREE.BufferGeometry(),M.mspring),'050700-6');
-    onRev(f=>{gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
+    onRev(v=>{const f=v==='first';gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
     /* its turns T: from its inner end, 0.18 past the arbor's hook (HKA), winding outward the way the drum runs (rotation.y rising), to its outer end 0.08 short of the drum's
        block; set up 0.75 turn past lying all on the wall at run down (with the chain: the band turns the drum a little less, so its set-up there is a little more), which sets
        the hook's angle */
@@ -5416,7 +5416,7 @@ const WCASE=(()=>{
        Ø 9.14 to 14.5 over 10, from 31.8); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
        middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
     const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:35.27),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
-    {const g=new THREE.Group();g.userData.rev='last';key.add(g);
+    {const g=new THREE.Group();g.userData.rev='last 6mx';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
       const T=50.1,B0=31.8,BT=B0+25.1,sq=3.15/Math.SQRT2;
       tag(mesh(g,smoothRev(solidGeo(cells([2.3,2.975],[[0,19],[p=>(rr(p)-2.3)*2.5/0.675,19]],[[{p:[[sq,0],[0,sq],[-sq,0],[0,-sq]],a:0,b:19}]]))),M.brass),'050102-3');   /* the socket end: the square, the relief */
@@ -5474,11 +5474,12 @@ function buildWempe(M){
   {const sw=TR.sw.userData.wheel,[a,b]=gearLash(sw,WD.H[35],EB.R.pinion,WD.H[26],-1);sw.rotation.y=a;EB.R.pinion.rotation.y=b;EB.R.pinion1.rotation.y=gearLash(sw,WD.H[35],EB.R.pinion1,WD.H[26],-1)[1];}
   const FU=WFUSEE.build(mv,M,K,FR,TR);   /* the fusee and its wheel, the maintaining work and detent, the stop work, the barrel, its arbor and set-up ratchet, the mainspring, the chain and the band */
   K.done();
-  /* setRev(v): the sheets as last revised ('last', about 1946-48, the page's default) or as first drawn ('first', 1940-44: app.js's Variants). Each part keeps its key; the
-     pieces only one state has are in groups tagged userData.rev, the other state's hidden as the band is (the tools skip what isn't shown), and each builder's onRev moves
-     what both share but stands elsewhere */
-  const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});
-  mv.userData.setRev=(/** @type {string} */v)=>{const f=v==='first';mv.userData.rev=f?'first':'last';for(const o of RV)o.visible=o.userData.rev===mv.userData.rev;for(const g of mv.userData.onRev)g(f);};
+  /* setRev(v): the version shown (app.js's Variants): the sheets as last revised ('last', about 1946-48, the page's default), as first drawn ('first', 1940-44), or the Soviet
+     copy made from them ('6mx', Kirov No. 247 of 1952). Each part keeps its key; the pieces not every version has are in groups whose userData.rev lists the versions they show
+     in ('last 6mx': the revised sheets' pieces the 6MX kept), the others hidden as the band is (the tools skip what isn't shown), and each builder's onRev(v) moves what they
+     share but stands elsewhere */
+  const RV=[];mv.traverse(o=>{if(o.userData.rev)RV.push(o);});mv.userData.revs=['last','first','6mx'];
+  mv.userData.setRev=(/** @type {string} */v)=>{const s=mv.userData.revs.includes(v)?v:'last';mv.userData.rev=s;for(const o of RV)o.visible=o.userData.rev.split(' ').includes(s);for(const g of mv.userData.onRev)g(s);};
   mv.userData.setRev('last');
   /* update(s): the Hamilton's MoveState ({E, th, lift, psDef, n, winding, ...}). E, the escape wheel's place in teeth, turns the train (WTRAIN: its arbors' angles, ang.c the
      centre arbor's, which the motion work and the fusee wheel follow, ang.s the seconds arbor's, which carries the seconds hand) and the escape wheel; th the balance's
@@ -6026,7 +6027,7 @@ const ESSAY=(()=>{
   /* ---------- the gimbals: the model's own box, ring and case (WCASE.build, case.js), its dial keeping the model's time ---------- */
   fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.75,pitch:0.78,dist:560,target:[0,0,0],near:20,far:5000}),M=gl().M,S=V.scene;
     const CS=WCASE.build(M);S.add(CS.root);CS.lid.rotation.x=-1.75;CS.tongue.rotation.z=-Math.PI/2;CS.over.visible=false;   /* the outer transport box (case.js builds it with the box) left out, as the page's views but Transport box leave it */
-    CS.root.traverse(o=>{if(o.userData.rev==='first')o.visible=false;});   /* as last revised: the 1943 key, not the 1940 one beside it */
+    CS.root.traverse(o=>{if(o.userData.rev&&!o.userData.rev.split(' ').includes('last'))o.visible=false;});   /* as last revised: the 1943 key, not the 1940 one beside it (nor any other version's pieces) */
     const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
     const yD=WDIAL.DY1-CS.YP;mesh(CS.bowl,cylY(WDIAL.DR,WDIAL.DY1-WDIAL.DY0,96),M.brass2,0,yD-(WDIAL.DY1-WDIAL.DY0)/2,0);
     mesh(CS.bowl,new THREE.CircleGeometry(WDIAL.DR,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.3,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,yD+0.05,0);
@@ -6517,7 +6518,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   let CS=null,cl=1,cf=1,co=0;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
   const ES=typeof ESSAY==='undefined'?null:ESSAY;   /* the Essay tab (js/essay.js): the viewer leaves the keys and the hash to it while it shows */
   const V=VIEWER.start({essay:ES,name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
-    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.R.dl.setDial(dial);mv.userData.onRev.push(f=>{root.traverse(o=>{if(o.userData.rev)o.visible=o.userData.rev===(f?'first':'last');});CS.parts.key.userData.first=f;CS.keyRest();});mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's, the key resting as its state's lies */CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
+    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.R.dl.setDial(dial);mv.userData.onRev.push(v=>{root.traverse(o=>{if(o.userData.rev)o.visible=o.userData.rev.split(' ').includes(v);});CS.parts.key.userData.first=v==='first';CS.keyRest();});mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's, the key resting as its state's lies */CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid,showOver:v=>{CS.showOver=!!v;}};   /* the box, for audit.py box (geometry-audit-box.js); showOver(1) keeps the outer box shown in every view (bom.py counts it: checks.py's ARM) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);if(Math.abs(PH.MF-fu.MW)>0.002)console.warn('escphys.js MF '+PH.MF+' is not the fusee’s full wind '+fu.MW.toFixed(4));H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
@@ -6594,7 +6595,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
       read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
         if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
-        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');
+        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev'));setDial(g('dial')==='lange'?'lange':'wempe');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
@@ -6622,11 +6623,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       if(rs)rs.addEventListener('click',()=>{rk.checked=la.checked=false;GW.rock=GW.latch=false;rp.value='7';show();});}}
   function setConn(v){conn=v;if(mv)mv.userData.R.fu.setConn(v);document.querySelectorAll('#conn button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
   document.querySelectorAll('#conn button').forEach(b=>b.addEventListener('click',()=>setConn(b.dataset.v)));
-  /* the Variants' sheets: as last revised (about 1946-48, the default) or as first drawn (1940-44, as Wempe 3955 is made): movement.js's setRev shows each part's pieces for
-     that state, and the cards of the parts that differ take that state's text (REV) */
+  /* the Variants' version: the sheets as last revised (about 1946-48, the default), as first drawn (1940-44, as Wempe 3955 is made), or the Soviet 6MX made from them (Kirov
+     No. 247, 1952): movement.js's setRev shows each part's pieces for that version, and the cards of the parts that differ take that version's text (REVC: its parts' and pieces') */
   function keep(c){return c.last||(c.last={t:c.t,d:c.d,sp:c.sp,sn:c.sn,figs:c.figs,src:c.src});}   /* a declaration: the link's state is read as the viewer starts, before this line runs */
-  function setRev(v){rev=v==='first'?'first':'last';if(mv)mv.userData.setRev(rev);for(const k in REV){const c=PARTS[k];if(c)Object.assign(c,keep(c)&&rev==='first'?REV[k]:c.last);}
-    for(const k in REVP)for(const q in REVP[k]){const c=(PIECES[k]||[]).find(e=>e.k===q);if(c)Object.assign(c,keep(c)&&rev==='first'?REVP[k][q]:c.last);}
+  function setRev(v){rev=v==='first'||v==='6mx'?v:'last';if(mv)mv.userData.setRev(rev);const REVC={first:[REV,REVP]},pc=(k,q)=>(PIECES[k]||[]).find(e=>e.k===q);
+    for(const s in REVC){const[P,Q]=REVC[s];for(const k in P){const c=PARTS[k];if(c)Object.assign(c,keep(c));}for(const k in Q)for(const q in Q[k]){const c=pc(k,q);if(c)Object.assign(c,keep(c));}}   /* every version's cards back to the revised sheets' text */
+    if(REVC[rev]){const[P,Q]=REVC[rev];for(const k in P){const c=PARTS[k];if(c)Object.assign(c,P[k]);}for(const k in Q)for(const q in Q[k]){const c=pc(k,q);if(c)Object.assign(c,Q[k][q]);}}
     document.querySelectorAll('#rev button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));}
   document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',()=>setRev(b.dataset.v)));
   function setDial(v){dial=v==='lange'?'lange':'wempe';if(mv)mv.userData.R.dl.setDial(dial);const c=PARTS.dial,q=(PIECES.dial||[]).find(e=>e.k==='dial');DIALC.wempe=DIALC.wempe||{d:c.d,sn:c.sn};
@@ -6639,7 +6641,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   /* Report a bug or inaccuracy (the Hamilton's report.js): where the visitor is, and the model's state, in the report's details */
   if(V&&typeof REPORT!=='undefined')REPORT.bind({r:V.r,name:'Wempe Einheits-Chronometer',inacc:'Where the model or the essay differs from Wempe’s works drawings or a real Einheits-Chronometer, and what shows it. The drawings, then photographs and videos of real ones, decide what the model looks like and does, so a sheet’s number settles it fastest.',
     where:()=>{if(ES&&ES.on()){const s=ES.section(),h=s&&document.getElementById(s);return'The essay'+(h?', “'+h.textContent.trim()+'”':'');}if(V.st.pick&&V.INFO[V.st.pick])return V.INFO[V.st.pick][0];const b=document.querySelector('#views [aria-pressed="true"]');return'The model'+(b?', '+b.textContent.trim()+' view':'');},
-    state:()=>[['Tab',ES&&ES.on()?'essay':'model'],['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; ${conn}; sheets ${rev==='first'?'as first drawn':'as last revised'}; dial ${dial}; speed ${V.st.speed}×`]]});
+    state:()=>[['Tab',ES&&ES.on()?'essay':'model'],['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; ${conn}; ${{last:'sheets as last revised',first:'sheets as first drawn','6mx':'the Soviet 6MX'}[rev]}; dial ${dial}; speed ${V.st.speed}×`]]});
   if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,rev,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow(),slip,tz,dialT:dialRead(),setting:!!sw,swT:sw?sw.T:null,roll:GW.roll,pitch:GW.pitch,gp:GW.M.p[0],gr:GW.M.r[0],latchK:GW.latchK});}   /* the viewer's state and the wind, for the tools */
 })();
 

@@ -323,7 +323,7 @@ const WCASE=(()=>{
        Ø 9.14 to 14.5 over 10, from 31.8); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
        middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
     const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:35.27),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
-    {const g=new THREE.Group();g.userData.rev='last';key.add(g);
+    {const g=new THREE.Group();g.userData.rev='last 6mx';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
       const T=50.1,B0=31.8,BT=B0+25.1,sq=3.15/Math.SQRT2;
       tag(mesh(g,smoothRev(solidGeo(cells([2.3,2.975],[[0,19],[p=>(rr(p)-2.3)*2.5/0.675,19]],[[{p:[[sq,0],[0,sq],[-sq,0],[0,-sq]],a:0,b:19}]]))),M.brass),'050102-3');   /* the socket end: the square, the relief */
