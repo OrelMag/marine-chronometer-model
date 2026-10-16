@@ -191,6 +191,10 @@ const WTRAIN=(()=>{
     for(const[k,len,id]of/** @type {[number,number,string][]} */([[2,12.3,'050200-6'],[19,PPT+6.8,'050200-7']])){
       tag(mesh(P.pillarPlate,bushGeo(3.506/2,1.5/2,0,PPT),M.brass2,H[k][0],0,H[k][1]),'050802-2');
       tag(mesh(P.pillarPlate,turned([...dome(0,1),...dome(len,-1).reverse()],24),M.steel,H[k][0],0,H[k][1]),id);}
+    /* the hand-setting pinion's bush in 18 (Zeigerstelltrieb, reamed 3.50 +0.012, as 2 and 19): 05 08 02 draws a bush there (a ring and its bore, unnamed); Wempe 3955 has it,
+       the only part of the hand-setting work fitted (3_Wempe_3955_uZ.jpg, 8.52 px/mm by the plate's holes: its rim Ø 3.46 flush with the dial face, its bore 1.29 with a bright
+       sink to 1.64; flush with the inner face on 6_Wempe_3955_S.jpg): bore and sink as measured, a 90° cone (likely); empty, as on Wempe 3955 */
+    tag(mesh(P.pillarPlate,bushGeo(3.506/2,1.3/2,0,PPT,{f:1,rs:1.64/2,cone:true}),M.brass2,H[18][0],0,H[18][1]),'WN-hs');
 
     /* update(s): the escape wheel's place s.E (teeth) turns the train. The escape wheel (15 teeth) and its pinion (10 leaves) drive the seconds wheel (80): the seconds arbor
        turns once in 15 × 8 = 120 teeth, a minute; the seconds pinion (10) is driven by the intermediate wheel (80): 1/8 of the seconds'; the intermediate pinion (12) by the

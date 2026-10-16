@@ -10,7 +10,7 @@ below it (the cock, the pillar plate) are shifted by the photograph's slight til
 Near the rim the photograph itself is about 10 % small against its inner layout (the bridges' rims read r 35.5 through this map; the side
 photograph against the measured plate and three video frames give 38.5-40.2, the model 40.5: References/VIDEOS.md, "The bridges' rims against
 the plate"), so the model's rims and anything near them show a false protrusion here: compare sizes near the rim on other sources."""
-import asyncio,json,math,pathlib,sys
+import asyncio,browser,json,math,pathlib,sys
 import numpy as np
 from PIL import Image
 from playwright.async_api import async_playwright
@@ -35,7 +35,7 @@ def arg(k,d=None):return sys.argv[sys.argv.index(k)+1] if k in sys.argv else d
 async def main():
     hide=arg('--hide');ev=arg('--eval')
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         # a fresh headless Chromium loses its first WebGL context: spend it on a blank page
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1400,"height":1400},device_scale_factor=1);errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))

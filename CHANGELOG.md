@@ -4,6 +4,11 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.00.04 · 2026-10-16
+- The Wempe's pillar plate now has the window and holes for the optional hand-setting, as on Wempe 3955, with the bush in the setting pinion's hole
+- The Hamilton's mainspring now pulls with the torque its solved shape gives (0.96 N·m), not a straight strip's
+- Ship motion is drawn as seen on board on both pages: the box stays still and the case swings in its gimbals
+
 ## 3.00.03 · 2026-10-16
 - The Wempe page opens as the Hamilton's does: the box shut, then the lid opening onto the dial, seen from the same angle
 - The Wempe's dial turns see-through with the plates (in the Escapement view)

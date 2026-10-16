@@ -19,7 +19,7 @@ hour), and when the key lets go adds the catch's hours (R.release) as app.js doe
   - winding to the stop, the stop-bar meets the winding stop at full wind and is clear of it half a turn earlier.
   - the fusee swept from full wind to run down, the stop-bar (bar, nose, tab) passes the winding stop more than the manual's widest endshake clear (0.1 mm).
 Exit code 1 on any failure."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
@@ -115,7 +115,7 @@ JS=r"""(()=>{const mv=window.__mv,R=mv.userData.R;if(!mv.userData._u){mv.userDat
  info.catches=catches.length;return JSON.stringify({frames:k,fails,cnt,bar,SMAX:SMAX*D,info});})()"""
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_timeout(5000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")

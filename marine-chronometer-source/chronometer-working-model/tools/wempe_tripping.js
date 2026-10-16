@@ -262,7 +262,7 @@ const R2K=[['hinged at Ft, rigid (dynamics.js\'s)',{hinge:true,stiff:true}],['th
 const PUSH=[240,270,300,320,335,340,345,350,355,360],KN=[['preloaded (0.63 g, estimated)',1],['as drawn (no preload)',0]],KK=[['a blow across the plate, 0.5 ms','b05',2,400,'g'],['a blow across the plate, 3 ms','b3',1,400,'g'],['a twist about the staff, 2 ms','tw',1,80,'rad/s']];
 const jobs=[...R2K.map(([,o])=>({k:'run',mo:o,ro:{T:6,from:3}})),...SW.map(([,o])=>({k:'run',mo:o,ro:{T:3,from:1.5}})),...PUSH.map(A=>({k:'push',A})),
   ...KN.flatMap(([,pre])=>KK.slice(0,pre?3:2).flatMap(([,kind,lo,hi])=>[false,true].map(rigid=>({k:'knock',pre,kind,lo,hi,rigid}))))];
-const pool=async()=>{const{spawn}=require('child_process'),out=new Array(jobs.length),N=Math.max(1,Math.min(jobs.length,require('os').cpus().length-4));let next=0;
+const pool=async()=>{const{spawn}=require('child_process'),out=new Array(jobs.length),N=Math.max(1,Math.min(jobs.length,+process.env.MC_PROCS||require('os').cpus().length-4));let next=0;
   const kid=spec=>new Promise((res,rej)=>{const p=spawn(process.execPath,[__filename,'--child'],{env:{...process.env,MC_WJOB:JSON.stringify(spec)}});let s='';
     p.stdout.on('data',d=>s+=d);p.stderr.on('data',d=>process.stderr.write(d));p.on('close',code=>code?rej(Error('wempe_tripping.js --child '+JSON.stringify(spec)+' exited '+code)):res(JSON.parse(s.trim().split('\n').pop())));});
   await Promise.all([...Array(N)].map(async()=>{while(next<jobs.length){const i=next++;out[i]=await kid(jobs[i]);}}));return out;};

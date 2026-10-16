@@ -14,7 +14,7 @@ Prints one line per finding and a summary; exit code 1 on any. --pdf OUT also wr
 
     python book.py [--pdf OUT.pdf]          # about 1 min
 """
-import asyncio,json,pathlib,re,sys
+import asyncio,browser,json,pathlib,re,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent;PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
 PX=96/25.4;COL=190;PAGE_H=277
@@ -32,7 +32,7 @@ JS=r"""()=>{MAKER.book();document.documentElement.classList.add('book-print');co
 async def main():
     pdf=sys.argv[sys.argv.index('--pdf')+1] if '--pdf' in sys.argv else None
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']);pg=await b.new_page(viewport={'width':round(COL*PX),'height':1000})
+        b=await p.chromium.launch(args=browser.ARGS);pg=await b.new_page(viewport={'width':round(COL*PX),'height':1000})
         await pg.goto(PAGE);await pg.wait_for_function('window.__mv&&typeof MAKER!=="undefined"&&typeof MAKERS!=="undefined"',timeout=120000);await pg.emulate_media(media='print')
         R=await pg.evaluate(JS);S=R['sec']
         if pdf:await pg.pdf(path=pdf,format='A4',margin={'top':'10mm','bottom':'10mm','left':'10mm','right':'10mm'},print_background=False)
