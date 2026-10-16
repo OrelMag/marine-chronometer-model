@@ -957,6 +957,26 @@
    "figs": "05 08_32.2"
   },
   {
+   "id": "WN-hs",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Bush in hole 18, the hand-setting pinion's (not named on 05 08 02)",
+   "qty": 1,
+   "parent": "050802-1",
+   "kind": "part",
+   "part": "pillarPlate",
+   "fn": "The bearing of the hand-setting work's pinion (Zeigerstelltrieb), pressed into the pillar plate's hole 18; on Wempe 3955 the only part of that work fitted, empty.",
+   "rel": [
+    [
+     "in",
+     "050802-1",
+     "press"
+    ]
+   ],
+   "figs": "05 08_3a, 05 08_32.2"
+  },
+  {
    "id": "050200-6",
    "idx": null,
    "no": "",
