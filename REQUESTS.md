@@ -29,3 +29,35 @@ Doug Sinclair's NAWCC article on the Model 21 (No. 365, p. 707), William O. Benn
 Who to send it to besides the NAWCC's forum and its research service (research@nawcc.org, with the archival objects named in OPEN-QUESTIONS.md, "The likeliest sources"): the restorer posting as Livesoundhuman on r/watchrepair, who has serviced hundreds of Model 21s and has most of Hamilton's drawings for it.
 
 Where each answer goes: 1, 2 and 3 in OPEN-QUESTIONS.md ("Critical", "Found by integrating the escapement in time"); 4 in the model README's "The fusee and chain" (`ME`); 5 and 8 in its "Estimated, not from the manual"; 6 in OPEN-QUESTIONS.md ("Found by drawing the hairspring breathing"); 7 in OPEN-QUESTIONS.md (the fourth wheel's size); 9 in OPEN-QUESTIONS.md ("The discharge jewel's end"); 10 in OPEN-QUESTIONS.md ("The winding-pawl springs' beds and feet"). 11 in Review-results.md ("Hole survey, the upper train bridge") and OPEN-QUESTIONS.md ("Not critical: appearance only").
+
+# What we'd ask about the Wempe Einheits-Chronometer
+
+**None of these holds up the Wempe's design either** (16 October 2026): each part below is built to a design value the checks pass, with a bench test for a maker (`wempe/README.md`, "Estimated, not from the drawings"; `tools/wempe_bench.js`). The answers would make the model truer to the drawings.
+
+The 124 works drawings the Wempe model is built from are those published on dg-chrono.de, © Johannes Altmeppen, by courtesy of Gerhard D. Wempe KG (`References/wempe/README.md`). A few sheets the parts lists name aren't among them. Send the post to Johannes Altmeppen through the Deutsche Gesellschaft für Chronometrie (dg-chrono.de, its forum or its contact address); its book, *Das Deutsche Einheits-Chronometer* (Altmeppen, Dittrich; Heel Verlag), may print some of these sheets. A collector or restorer with an Einheits-Chronometer (Wempe, Lange, GUB, Kirova) apart could answer 2 and 3 with a photograph.
+
+---
+
+**Fehlende Zeichnungen und Fotos zum Deutschen Einheits-Chronometer, für ein offenes Arbeitsmodell**
+
+Ich baue nach den auf dg-chrono.de veröffentlichten Werkzeichnungen ein laufendes 3D-Modell des Wempe-Einheits-Chronometers: https://www.marinechronometermodel.com/wempe/. Jedes Teil ist nach seinem Blatt gezeichnet; die Quellen und ihr Copyright sind auf der Seite genannt. Einige Blätter, die die Stücklisten nennen, fehlen in der veröffentlichten Reihe. Wenn Sie eines davon haben oder eines dieser Fotos machen können, würde das sehr helfen, und ich würde Sie auf der Seite nennen.
+
+1. **Die Blätter der Stellungssteg-Gruppe 05 06 03:** 05 06 03-1 (Stellungssteg), 05 06 03-2 (Stift) und vor allem 05 06 03-3 (Stegfeder): die Höhe und Stärke der Feder. Schnitt C-D auf 05 06_4 zeigt nur ihre Form in der Draufsicht; im farbigen Gesamtschnitt ist sie nicht geschnitten.
+2. **Das kleine Ende einer Schnecke mit abgenommener Deckplatte** (05 06 00-4, eine Schraube M1,7): ein Foto schräg von der Seite, sodass man die Stegfeder an der Wand der Ausdrehung (1,6 tief) sieht, und eines senkrecht von oben, möglichst mit einem Maßstab daneben.
+3. **Das Gangende N der Schneckenrille** (05 06 04-2): das kleine Ende ohne Kette, senkrecht von oben, sodass man sieht, wo der oberste Gang in die Nabe ausläuft, im Verhältnis zum Schlitz des Stellungsstegs.
+4. **Weitere Teile ohne Blatt in der Reihe:** 05 05 05-2 (Gegensperrwelle), 05 05 06-1 (Feder, der Drahtfeder des Gegensperrkegels), 05 08 01-5 (Anschlagstift), 05 08 01-4 (Korkring), 05 02 01-2 (Zeigerfutter des Sekundenzeigers) und 05 01 00-4 (Feststellkloben).
+
+Vielen Dank!
+
+---
+
+*The same in English:* **Missing drawings and photographs of the German Einheits-Chronometer, for an open working model.** I'm building a running 3D model of the Wempe Einheits-Chronometer from the works drawings published on dg-chrono.de: https://www.marinechronometermodel.com/wempe/. Every part is drawn from its sheet, with the sources and their copyright named on the page. A few sheets the parts lists name aren't in the published set. If you have any of them, or can take one of these photographs, it would help a great deal, and I'd credit you on the site.
+
+1. **The sheets of the stop work, 05 06 03:** 05 06 03-1 (the bar), 05 06 03-2 (its pin) and above all 05 06 03-3 (the bar's spring), for the spring's height and thickness. 05 06_4's Schnitt C-D gives only its shape seen end-on, and the coloured overall section doesn't cut it.
+2. **A fusee's small end with its cover plate off** (05 06 00-4, one M1.7 screw): one photograph from the side at an angle, showing the spring against the recess wall (1.6 deep), and one square from above, with a scale beside it if possible.
+3. **The groove's end N** (05 06 04-2): the small end with the chain off, square from above, showing where the top turn runs out into the hub against the bar's slot.
+4. **Other parts with no sheet in the set:** 05 05 05-2 (the maintaining detent's arbor), 05 05 06-1 (its wire spring), 05 08 01-5 (the stop pin), 05 08 01-4 (the cork ring), 05 02 01-2 (the seconds hand's collet) and 05 01 00-4 (the locking bracket).
+
+---
+
+Where each answer goes: 1 and 2 in `wempe/README.md`'s stop work and its "Estimated" entry (the spring's height, a design value 0.9-1.5 since 16 October 2026; `fusee.js` at `SPW`, `tools/wempe_strength.js`); 3 in its "Unresolved" (N against the model's groove end, `PHI0`); 4 in its "Estimated" entries for each part.

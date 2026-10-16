@@ -82,6 +82,14 @@
    "pass": "About 70 s of drive falling to nothing (05 06_9's \"x = 0,27 mm\" at its pins on r 14.2, likely; the 1954 instruction gives 1-2 minutes for chronometers in general); a wind takes about 6 s. Under 30 s (estimated), the spring is weak or its deflection small."
   },
   {
+   "id": "stopwork",
+   "title": "The stop work: the bar springs back, the stop holds full wind",
+   "sheet": "05 06_4 (C-D), 05 06 04-2, 05 08 (hole 7)",
+   "when": "the bar, its spring and pin in the fusee's small end, the cover plate off; then the fusee in its plates, the chain on and the barrel set up, the train out",
+   "how": "Cover plate off: push the bar in from its lower end with a pegwood to its full 3.6 and let go, the small end up and then down; repeat ten times. Then, assembled, wind slowly to the stop and count the fusee's turns from run-down; let the chain run back a quarter turn and wind again.",
+   "pass": "The bar springs fully out at once every time, in both positions: its spring (05 06 03-3; no source draws its section: any height 0.9-1.5, its pin's hole to the recess's floor, 0.10 thick; wempe_strength.js) pushes it 0.06-0.08 N half way at the model's 1.0 high, 41 times or more the 0.5 g bar's sliding on the cover plate (μ 0.3, estimated). Assembled: the stop pin (hole 7) stops the fusee with the chain 8.638 turns on it (8.70 from run-down), 0.112 turn short of the groove's end N, and the bar never touches the pin earlier (0.69 off a turn before: wempe_stopwork.py). Sluggish: clean the slot and the bar, and look for a burr at the slot's ends; still slow, bend the spring's free span further in, keeping it under its steel's yield (wempe_strength.js). Stopping short of 8.64 turns: the bar is caught early (its spring too weak to hold it out, or the bar's upper end too long)."
+  },
+  {
    "id": "trial",
    "title": "The rate, and the 6MX TU's trial",
    "sheet": "6MX TU 25-07-1533-84 (6MX-figures.md)",
@@ -667,6 +675,21 @@
   "maintaining": {
    "s": 70.0346,
    "min": 30
+  },
+  "stopwork": {
+   "height": [
+    0.9,
+    1.5
+   ],
+   "model": 1,
+   "push": [
+    0.06,
+    0.08
+   ],
+   "sliding": 0.0015,
+   "MF": 8.638,
+   "grooveEnd": 8.75,
+   "gapBefore": 0.69
   },
   "trial": {
    "periods": [

@@ -7,7 +7,10 @@ For a session closing the last open readings of the Wempe's fusee stop work. Wri
 - **The stop sweep is a tool:** `tools/wempe_stopwork.py` (about 45 s; a ci.py browser step). Its face sampling reads the last step before full wind as 0.40 (edges alone gave more); away from the final approach the least gap is 0.69, a turn earlier.
 - **2. The stop pin's length: closed.** The coloured section's "Anschlagstift" leader runs to a stub under the top plate. On the plate's drawn 3.35, that is 1.62 straight plus a 0.27 dome (±0.1). Built as 1.6 + 0.25, turned. Audit's loose-end entry was dropped, since the check only finds cylinders; the sweep checks the pin covers the bar.
 - **4. The bar's thin end: confirmed.** The section draws it at 0.70 of the middle (9.5 px of 13.5); the model has 0.72. No change.
-- **3. The spring's height: not drawn.** The section leaves the recess between the bar's end and its wall uncoloured, so it shows no steel. 1.0 stays an estimate.
+- **3. The spring's height: a design value (16 October 2026).** The section leaves the recess between the bar's end and its wall uncoloured, so it shows no steel. The 5:1 fusee sections draw the earlier stop, a post at the small end. No video or photograph found opens a fusee; the GUB restoration (ZEc91vwppVk, WCguXfdZ38E) keeps its cover plate on.
+  - Bounds: 0.9-1.5, from its pin's hole to the recess's floor. Its stress is 750 MPa at any height; its push is linear in the height (`wempe_strength.js`). The model's 1.0 stays.
+  - `wempe_bench.js` has a stop work test: the bar springs back, and the stop holds full wind.
+  - REQUESTS.md has the post for the missing 05 06 03 sheets and a photograph of an opened small end (German and English, for dg-chrono.de / Altmeppen).
 - **1. N: not legible.** Searched Wempe 3955's train photograph and the GUB restoration video ZEc91vwppVk 3:19-3:55. It stays as built (README, Unresolved).
 - Also found: the section draws the whole small end about 0.5 lower than the sheets' stack (the cover plate under an empty 0.5 of the J-K recess). Don't read heights at the small end off it except as ratios within one part.
 
