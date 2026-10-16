@@ -629,6 +629,18 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
+  the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
+  E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
+  spring the page draws, solved coil by coil (`mainspring.py`), pulls 0.96 N·m (its packed coils don't bend, so less of
+  the strip works), and `mainspring_friction.json`'s own torques already said so. Now `mainspring.py` writes the table's
+  absolute torque (`M1`) for the Hamilton too, `physics.js` takes the moment from it at the page's full wind, and
+  `strength.js`, `tolerances.js`, `bench.js`, `deviations.js` and the essay follow; the steel's limit is a set strip's,
+  1.5 times its elastic limit (2.55-2.85 GPa, reasoned in `physics.js`), not an unsourced 2.5-2.6. The energy budget's
+  gap that opens is reported, not failed (OPEN-QUESTIONS.md, "Open since 16 October 2026"). The sustaining spring's
+  band, sized to push 0.88 of the linear strip's drive, pushed 0.71 of the solved one: drawn 1.45 mm high (1.25), as high as clears the sustaining ratchet, it pushes 0.82.
+  Keep: the spring's torque, wherever a tool needs it, comes from the solved table, never E b t³/12 L; anything sized
+  against the drive (the sustaining spring, the bench's bands) is sized against that. `d190fa1`
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
   has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
@@ -2925,15 +2937,4 @@ An arbor needs pivots and shoulders; a stone its seat.
 
 ## Fixed, not yet committed
 
-- **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
-  the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
-  E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
-  spring the page draws, solved coil by coil (`mainspring.py`), pulls 0.96 N·m (its packed coils don't bend, so less of
-  the strip works), and `mainspring_friction.json`'s own torques already said so. Now `mainspring.py` writes the table's
-  absolute torque (`M1`) for the Hamilton too, `physics.js` takes the moment from it at the page's full wind, and
-  `strength.js`, `tolerances.js`, `bench.js`, `deviations.js` and the essay follow; the steel's limit is a set strip's,
-  1.5 times its elastic limit (2.55-2.85 GPa, reasoned in `physics.js`), not an unsourced 2.5-2.6. The energy budget's
-  gap that opens is reported, not failed (OPEN-QUESTIONS.md, "Open since 16 October 2026"). The sustaining spring's
-  band, sized to push 0.88 of the linear strip's drive, pushed 0.71 of the solved one: drawn 1.45 mm high (1.25), as high as clears the sustaining ratchet, it pushes 0.82.
-  Keep: the spring's torque, wherever a tool needs it, comes from the solved table, never E b t³/12 L; anything sized
-  against the drive (the sustaining spring, the bench's bands) is sized against that.
+None at the moment.
