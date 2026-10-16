@@ -126,6 +126,7 @@
  },
  "box.first": {
   "bezel:Buffer | bezel:Buffer | +22.36": 1,
-  "bowl:Buffer | gimbalRing:Buffer | +6.34": 1
+  "bowl:Buffer | gimbalRing:Buffer | +6.34": 1,
+  "key:Extrude | key:Lathe | --25.58": 1
  }
 }

@@ -129,6 +129,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-audit-first',lambda log:run([PY,'audit.py','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the same as first drawn (the page's Variants: the sheets of 1940-41), its coplanar faces under movement.first
  ('wempe-exploded-first',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'browser'),
  ('wempe-audit-box',lambda log:run([PY,'audit.py','box','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case, gimbals and box, against its expected leftovers (about 10 s)
+ ('wempe-audit-box-first',lambda log:run([PY,'audit.py','box','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the box as first drawn (the 1940 key) (about 10 s)
  ('wempe-inertia',lambda log:run([PY,'wempe_inertia.py'],TOOLS,log),'browser'),   # the Wempe's escapement's bodies weighed on its solids, against wempe_inertia.json (about 30 s)
  ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
