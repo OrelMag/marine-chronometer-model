@@ -513,6 +513,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <div class="row spd"><span class="lab">Custom</span><input type="range" id="spdR" min="0" max="1000" step="1" aria-label="Custom speed"><input type="number" id="spdN" min="0" max="10000" step="any" aria-label="Custom speed, times real time"><span>×</span></div>
         <div class="row clk"><label class="sl"><span class="lab">Set the hands</span><input type="time" id="tod" step="1" aria-label="Time shown on the dial"></label><button id="now" title="Set the hands to Greenwich time">Now</button></div>
         <div class="row"><span class="lab">Keep</span><div class="seg" id="tz" role="group" aria-label="Time the chronometer keeps"><button data-v="gmt" aria-pressed="true" title="Greenwich Mean Time, as a ship’s chronometers are kept for navigation">GMT</button><button data-v="local" aria-pressed="false" title="Your computer’s time zone">Local time</button></div></div>
+        <div class="row"><span class="lab">Sound</span><label class="ck" title="A click at each beat, at up to real time"><input type="checkbox" id="snd"> Tick sound</label></div>
         <p class="note" style="margin:8px 0 0">The balance swings, the escapement works and the train turns from the escape wheel, a tooth a beat; the hands show the time here. Above 4×, the balance is drawn at rest. Setting the hands turns the hour and minute hands on the cannon pinion, to the minute; the balance is then stopped and the train held until the time comes round to the dial, and a twist starts it, so the seconds hand agrees too.</p>
       </details>
       <details class="grp more" id="windDet" open>
@@ -6714,6 +6715,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       const n=hrs/HPT;
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp,0);E=H.Eh+Math.min(0,s.prog);}   /* its own swing, the wheel on its stone (drawn back while the stone lifts) */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
+      if(snd&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tickSnd();lastE=E;   /* the tick: a tooth's fall onto the impulse stone, as the Hamilton's */
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
       showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
@@ -6723,6 +6725,14 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
+  /* the tick sound (Time, Sound; the Hamilton's): on by default; browsers start audio only from a user gesture (and warn if a page tries sooner), so the context is made or
+     resumed on the first click, tap or key, and the ticks are silent until then. A click each time the escape wheel's place E passes a half tooth (its tooth driving the
+     impulse stone), a beat each 0.5 s; at up to real time; none while the train is held */
+  let snd=true,ac=null,lastE=null;const unlock=()=>{if(!snd)return;if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(_){}}if(ac&&ac.state==='suspended')ac.resume();};
+  for(const t of['pointerdown','keydown','touchend'])addEventListener(t,unlock,{capture:true,passive:true});
+  {const e=document.getElementById('snd');if(e){e.checked=snd;e.addEventListener('change',()=>{snd=e.checked;unlock();});}}
+  function tickSnd(){if(!ac||ac.state!=='running')return;const n=ac.createBufferSource(),b=ac.createBuffer(1,ac.sampleRate*0.03,ac.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ac.sampleRate*0.0018));n.buffer=b;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=3400;f.Q.value=2.2;const gn=ac.createGain();gn.gain.value=0.5;n.connect(f).connect(gn).connect(ac.destination);n.start();}
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
   function wind0(){winding=true;H.w0=H.held?0:drvNow();H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on */

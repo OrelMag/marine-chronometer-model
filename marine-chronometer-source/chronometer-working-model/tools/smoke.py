@@ -14,7 +14,7 @@ ignored. Each problem names the page and the last step done before it.
 With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay tab as the Hamilton's (its checks.py's ESSAY: the link it follows into the model and the
 section it opens; no report button): every view, every view with Moving parts only (the frame hidden, the motion work only when included, drive=1 in the link), the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
-the display switches and Reset display, the theme, Back and Forward, a view key, and a link through the URL hash both ways."""
+the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, and the tick sound off and on."""
 import asyncio,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -394,6 +394,8 @@ async def wempe(b,errs,steps):
     spd="v=>{const i=document.querySelector('#spdN');i.value=v;i.dispatchEvent(new Event('input'));i.dispatchEvent(new Event('change'));}"
     await ev(spd,7);steps.append('custom speed 7')
     await click('#tz button[data-v="local"]','Local time');await click('#tz button[data-v="gmt"]','GMT')
+    await click('#snd','tick sound off');await click('#snd','tick sound on')
+    if not await ev("document.querySelector('#snd').checked"):errs.append('the tick sound is not on by default')
     await ev("()=>{const i=document.querySelector('#tod');i.value='10:08:30';i.dispatchEvent(new Event('input'));i.dispatchEvent(new Event('change'))}");steps.append('hands set to 10:08:30')
     await ev(spd,20);await click('#now','Now')
     r=await ev("""async()=>{const t0=performance.now();let seen=false;while(performance.now()-t0<120000){const w=window.__W();if(w.setting)seen=true;else if(seen&&!w.held&&w.amp>0.5)break;await new Promise(r=>setTimeout(r,100));}
