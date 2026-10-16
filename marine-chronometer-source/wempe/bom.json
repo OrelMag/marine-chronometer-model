@@ -3815,7 +3815,8 @@
    "part": "box",
    "fn": "185 x 185 x 180 outside: the gimbals hang in it (no sheet in the set).",
    "rel": [],
-   "figs": "05 01_1, 51 00_1"
+   "figs": "05 01_1, 51 00_1",
+   "rev": "last first"
   },
   {
    "id": "WN-80",
@@ -3845,7 +3846,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten"
+     "Holzkasten|Kasten6"
     ]
    ],
    "figs": "05 01_1"
@@ -3867,7 +3868,8 @@
      "Holzkasten"
     ]
    ],
-   "figs": "51 00_2"
+   "figs": "51 00_2",
+   "rev": "last first"
   },
   {
    "id": "WN-hg",
@@ -3881,7 +3883,8 @@
    "part": "box",
    "fn": "Through the handles' ends into the side walls.",
    "rel": [],
-   "figs": "51 00_2"
+   "figs": "51 00_2",
+   "rev": "last first"
   },
   {
    "id": "Scharnier",
@@ -3911,7 +3914,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten"
+     "Holzkasten|Kasten6"
     ]
    ],
    "figs": "51 00_1"
@@ -3933,7 +3936,8 @@
      "Holzkasten"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first"
   },
   {
    "id": "Holzkasten.D",
@@ -3947,7 +3951,8 @@
    "part": "lid",
    "fn": "The glazed lid, hinged at the back.",
    "rel": [],
-   "figs": "51 00_1, 51 00_2"
+   "figs": "51 00_1, 51 00_2",
+   "rev": "last first"
   },
   {
    "id": "Deckelglas",
@@ -3963,7 +3968,7 @@
    "rel": [
     [
      "on",
-     "Holzkasten.D"
+     "Holzkasten.D|Kasten6.D"
     ]
    ],
    "figs": "51 00_1"
@@ -3985,7 +3990,8 @@
      "Holzkasten.D"
     ]
    ],
-   "figs": "51 00_3"
+   "figs": "51 00_3",
+   "rev": "last first"
   },
   {
    "id": "P510002-2",
@@ -4004,7 +4010,8 @@
      "Holzkasten.D"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first"
   },
   {
    "id": "WN-zg",
@@ -4018,7 +4025,8 @@
    "part": "lid",
    "fn": "The screw the tongue turns on.",
    "rel": [],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first"
   },
   {
    "id": "WN-zk",
@@ -4037,7 +4045,8 @@
      "P510002-2"
     ]
    ],
-   "figs": "51 00_4"
+   "figs": "51 00_4",
+   "rev": "last first"
   },
   {
    "id": "Ueberkasten",
@@ -4051,7 +4060,8 @@
    "part": "overBox",
    "fn": "Carries the wooden box for transport, cushioned all round.",
    "rel": [],
-   "figs": "51 00_5, 51 00_1"
+   "figs": "51 00_5, 51 00_1",
+   "rev": "last first"
   },
   {
    "id": "Randleiste",
@@ -4065,7 +4075,8 @@
    "part": "overBox",
    "fn": "Inside the rim, 4 over the walls: the lid closes over it.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first"
   },
   {
    "id": "Polster.S",
@@ -4079,7 +4090,8 @@
    "part": "overBox",
    "fn": "Against the wooden box's front and back.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first"
   },
   {
    "id": "Polster.E",
@@ -4093,7 +4105,8 @@
    "part": "overBox",
    "fn": "Against the wooden box's handles.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first"
   },
   {
    "id": "Polster.B",
@@ -4107,7 +4120,8 @@
    "part": "overBox",
    "fn": "The wooden box stands on it.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first"
   },
   {
    "id": "Riemen",
@@ -4149,7 +4163,8 @@
    "part": "overBox",
    "fn": "On each end of the base plate.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first"
   },
   {
    "id": "WN-ro",
@@ -4163,7 +4178,8 @@
    "part": "overBox",
    "fn": "The eyes' screws.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first"
   },
   {
    "id": "Scharnier.U",
@@ -4205,7 +4221,8 @@
    "part": "overLid",
    "fn": "Hinged at the back, cushioned inside.",
    "rel": [],
-   "figs": "51 00_5, 51 00_1"
+   "figs": "51 00_5, 51 00_1",
+   "rev": "last first"
   },
   {
    "id": "Polster.D",
@@ -4219,7 +4236,8 @@
    "part": "overLid",
    "fn": "Bears on the wooden box's lid.",
    "rel": [],
-   "figs": "51 00_5"
+   "figs": "51 00_5",
+   "rev": "last first"
   },
   {
    "id": "Haken",
@@ -4234,6 +4252,166 @@
    "fn": "On the lid's front, caught in the eye.",
    "rel": [],
    "figs": "51 00_5"
+  },
+  {
+   "id": "Kasten6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Ящик (the 6MX’s box, Kirov No. 247’s): its body",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "box",
+   "fn": "190 x 190 x 190 outside (the TU's): the gimbals hang in it. No sheet: Kirov 247's photographs, its tiers on Kirov 22823's.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Griff6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Ring handle (6MX)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "One on each side, under the lower parting line.",
+   "rel": [
+    [
+     "on",
+     "Kasten6"
+    ]
+   ],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Beschlag6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Corner strips (6MX)",
+   "qty": 1,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Brass strips round the box's corners (the lids' with them).",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberfall6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hasp leaf (6MX)",
+   "qty": 4,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Two hasps across the parting lines, a knurled screw on each lower leaf.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Nummernschild",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Number plate 247 (6MX)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "On the box's front and the outer box's lid.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Kasten6.D",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Glazed lid and top lid (6MX)",
+   "qty": 1,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "lid",
+   "fn": "Hinged at the back, opened together here.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Firmenschild6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Factory badge, 1 МЧЗ им. Кирова (6MX)",
+   "qty": 1,
+   "parent": "Kasten6.D",
+   "kind": "part",
+   "part": "lid",
+   "fn": "On the glazed lid's front.",
+   "rel": [
+    [
+     "on",
+     "Kasten6.D"
+    ]
+   ],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberkasten6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Outer box (6MX): its body",
+   "qty": 1,
+   "parent": null,
+   "kind": "part",
+   "part": "overBox",
+   "fn": "Carries the box for transport, felt-lined; its sizes estimated.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Polster6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Felt (6MX)",
+   "qty": 6,
+   "parent": "Ueberkasten6",
+   "kind": "part",
+   "part": "overBox",
+   "fn": "Under, round and over the box.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Ueberkasten6.D",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Outer box lid (6MX)",
+   "qty": 1,
+   "parent": "Ueberkasten6",
+   "kind": "part",
+   "part": "overLid",
+   "fn": "Hinged at the back, its tab closing into the notch.",
+   "rel": [],
+   "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
   },
   {
    "id": "050101.F",
