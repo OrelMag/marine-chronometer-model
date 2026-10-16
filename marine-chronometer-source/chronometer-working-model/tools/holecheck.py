@@ -4,17 +4,20 @@ It runs with each balance stop fitted (the Navy's Y-arm, as the page opens, and 
 nothing in it fails, unless EXPECTED gives the reason it is empty on the real movement too (a hole a figure or a frame shows open, an access hole, a jewel
 setting's window, the holes of the stop not fitted). Exit code 1 on an empty hole not expected, or an expected one that is no longer empty or no longer there.
 
-    python holecheck.py [-v] [--json OUT] [--eval JS]
+    python holecheck.py [-v] [--json OUT] [--eval JS] [--model wempe]
 
--v lists every hole and what is in it; --json writes them all; --eval runs code after loading (a planted fault: a screw hidden). About a minute."""
+-v lists every hole and what is in it; --json writes them all; --eval runs code after loading (a planted fault: a screw hidden). About a minute.
+--model wempe checks the Wempe's page (tools/model.py): its states are the sheets as last revised and as first drawn (movement.js's setRev; it has no balance
+stops), its expected empty holes checks.py's HOLE_EXPECTED, the same form as EXPECTED below."""
 import asyncio, json, pathlib, re, sys
 from playwright.async_api import async_playwright
 HERE = pathlib.Path(__file__).resolve().parent
-PAGE = (HERE.parent / 'index.html').as_uri() + '?snap&qa'
+import model; PAGE = model.PAGE   # the model's page: the Hamilton's, or another's with --model NAME (model.py)
 RMIN, RMAX = 0.05, 4.0   # mm: smaller is a facet, larger a cut or a recess
 # (part, line or '' for any, centre (movement frame, mm) within 0.4 mm or None for any, the stop fitted or None for both, why it is empty)
-STOPS = ['navy', 'arm']
-EXPECTED = [
+# the states the movement is checked in: (name, JS that sets it); the Hamilton's two balance stops, another model's from its checks.py (HOLE_STATES)
+STOPS = model.cfg('HOLE_STATES', [(st, "document.querySelector('#stopV button[data-v=\"%s\"]').click()" % st) for st in ('navy', 'arm')])
+EXPECTED = model.cfg('HOLE_EXPECTED', [
     ('bal', '42263', None, None, "the impulse roller's three holes, a quarter turn apart from the jewel, open (Figs. 14, 61, 90); the balance turns, so anywhere"),
     ('barrelBridge', '42061', [34.18, -27.16, -3.41], None, "an opening over the train bridge's third pillar screw, its head sunk in a counterbore (23:30): KLUwI2UUCMQ 37:59 has it, about r 3.2 at (35.2, -3.2) through the bushings' similarity"),
     ('cock', '42155', [1.61, -38.26, 10.28], None, "the balance upper endstone setting's window, its endstone filling it 0.3 below"),
@@ -38,7 +41,7 @@ EXPECTED = [
     ('pillar', '42060', [-31.0, -3.86, 4.2], None, "a hole over the barrel, through the pillar plate on KLUwI2UUCMQ 9:03 (its dial side face-on), its use not given by any source"),
     ('sratchet', '42009', None, None, "the hole through the sustaining ratchet beside each winding pawl's arm, the mat seen through it (KLUwI2UUCMQ 19:12, 28:35; 4f0100d); the wheel turns, so anywhere"),
     ('bal', '42190', None, None, "the hairspring collet's relief hole at the end of its slit (the slit lets the collet grip the staff); the balance turns, so anywhere"),
-]
+])
 def matches(h, e, tol=0.4):
     p, hn, c, st, why = e
     return re.fullmatch(p, h['part']) and (not hn or re.fullmatch(hn, h['hn'] or '')) and (c is None or sum((a - b) ** 2 for a, b in zip(h['c'], c)) ** 0.5 < tol) and (st is None or st == h['stop'])
@@ -52,9 +55,9 @@ async def main():
         await pg.wait_for_timeout(500)
         if '--eval' in sys.argv: await pg.evaluate(sys.argv[sys.argv.index('--eval') + 1])
         r = []
-        for st in STOPS:
-            await pg.evaluate(f"document.querySelector('#stopV button[data-v=\"{st}\"]').click()"); await pg.wait_for_timeout(300)
-            res = await pg.evaluate(open(HERE / 'holecheck.js', encoding='utf-8').read(), {'rmin': RMIN, 'rmax': RMAX})
+        for st, js in STOPS:
+            await pg.evaluate(js); await pg.wait_for_timeout(300)
+            res = await pg.evaluate(open(HERE / 'holecheck.js', encoding='utf-8').read(), {'rmin': RMIN, 'rmax': RMAX, 'wall': model.cfg('HOLE_WALL', False)})
             for h in res['holes']: h['stop'] = st; r.append(h)
             if '-v' in sys.argv:
                 for k in res['skipped']: print(f"--  {st:4s} {k['part']:14s} {k['hn']:12s} r {k['r']:.3f} @ {k['c']} depth {k['depth']}: skipped, {k['why']}")
@@ -74,6 +77,6 @@ async def main():
     for i, e in enumerate(EXPECTED):
         if i not in used and not any(matches(h, e) for h in r): fails.append(f"expected hole gone: {e[0]} {e[1]} @ {e[2]} ({e[3]})")
     for f in fails: print(f)
-    print(f"{len(r)} holes over {len(STOPS)} stops, {len(r) - len(empty)} populated, {len(used)} expected empty, {len(fails)} failing")
+    print(f"{len(r)} holes over {len(STOPS)} states ({', '.join(n for n, _ in STOPS)}), {len(r) - len(empty)} populated, {len(used)} expected empty, {len(fails)} failing")
     sys.exit(1 if fails or errs else 0)
 asyncio.run(main())
