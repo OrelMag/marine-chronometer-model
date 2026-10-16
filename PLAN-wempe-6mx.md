@@ -2,6 +2,28 @@
 
 For the session that builds the Soviet 6MX (6МХ) on the Wempe page. Written 16 October 2026, after 3.00.00 (the Wempe complete) and 2.42.04 (the cork ring, the bowl's seat, the Lange dial).
 
+## Status (16 October 2026, end of the first session)
+
+**Branch `claude/wempe-6mx`** (worktree `.claude/worktrees/wempe-6mx`), pushed, last commit after `a982b64`; `main` merged in at 3.00.02. **Not merged to `main`, not released, not live.** The questions below were answered "the recommended options": Kirov No. 247, its electrical contact left out; a third button in Variants' "Version" (`rev=6mx`); Kirov 247's dial traced, chosen with the 6MX.
+
+Done (the Wempe README's "The Soviet 6MX" has each reading, its numbers and how sure):
+- **X0, the switch.** `userData.rev` lists versions (`'last 6mx'`, `'first 6mx'`, `'6mx'`, `'last first'`); `setRev` and `onRev(v)` take the name; cards per version (`REVC`: `REV6`, `REVP6`). `views.py` takes `--model` and `--eval`; `holemap.py` `--model`; `bom.json` lines take `rev`, `checks.py`'s `JEWELS` per version; `audit.py`'s `movement.6mx`, `box.6mx`; `ci.py`'s `wempe-audit-6mx`, `wempe-exploded-6mx`. CI 66/66 on X0.
+- **X1, the movement.** Pillar 39 at 190° (r 37.3); no holes 20 and 53; jewels in chatons (15 jewels); the escapement at the first-drawn heights (`'first 6mx'`), its own detent block (05 04 01-4 read in first angle) with a domed banking screw; the 1941 barrel, cap underneath. `ci.py --full` 78/80 on X1: the two failures a browser flake (Hamilton `fine.py`, passed alone) and an audit key stale after merging main (updated).
+- **X2, the dial and finish.** `dialtrace.py --dial kirov` → `dialface_kirov.js`; `dial.js`'s `KIROV`; the serial 247 in red; the dial's screws at 19/39/59 min and the ring's flange per version; Geneva stripes (`frame.js`'s `G6`) on the 6MX's plates, cocks and bridges. Checked by hand in all three versions (fine, BOM, solids, Exploded, smoke, audits, views 0 px against main, `--compare`); **not yet through `ci.py --full`**.
+
+Left (each recorded in the Wempe README: "Estimated", "Superseded, left out or for later", "Unresolved"; the photographs that would settle them asked for in REQUESTS.md, "What we'd ask about the Soviet 6MX"):
+- **Next:** `ci.py --full` on X2; then **X3** (the knurled, screwed bezel; the shutter, after fetching rAw2zmulpk8, since Uy8A88_j-cA is 640 × 360; Kirov 247's two boxes, badge, number plates, key bracket, scaled by the bowl and the TU's 190 mm), then **X4** (the remaining cards, the essay section, the report's sections, the 6MX's physics: `gearing.js --model wempe` with jewelled pivots, `wempe_physics.js`, the escapement at the first-drawn heights), then merge (after `claude/wempe-audit`, which edits the same `frame.js` blocks: keep both, its holes in each version's copy), a minor release and deploy, at the user's word.
+- **Not built, no source:** the block's adjusting slide; the lower balance cock's other shape; the 6MX's shorter detent; the long cone collet; Altmeppen's "three small windows".
+- **CI gap:** `bom.py` and `fine.py` run on the Wempe as last revised only; the first-drawn stud pin (0.05 off the stud) went unseen on main for that reason. Adding the two versions' steps (about 15 min each in `--full`) would hold them.
+
+Gotchas found:
+- Python's `write_text` on Windows writes CRLF: write with `newline='
+'` (or convert), or the built copies won't compare.
+- `fine.py` takes pieces fixed to each other only when they share a parent group: a part built per version must have its pressed pins (and screws into it, if they overlap) in the same version group (the upper cock, the bridges, the ring's case pin).
+- A part's mesh in a version group changes how its faces batch: `audit.py`'s coplanar counts change with it (same contacts); check them against the other versions' keys, then `--update`.
+- `ci.py` reads the working tree live: don't edit page files while it runs.
+- The photographs' millimetre paper is the paper's scale, not the plate's: fit on the plate's own holes.
+
 ## The request
 
 The user asked on 15 October 2026 what it would take to add "the Russian variant" to the Wempe model, then asked for this handover so another session can build it. The 6MX was made by the 1st Moscow Watch Factory (Kirov, later Poljot) from the Einheits-Chronometer's drawings, which were taken from Glashütte in 1946-47 and translated. It is the same three-pillar spring-detent chronometer with about a dozen undrawn changes. Until now the model has used the 6MX only as a supporting source for parts the drawings leave out (`memory: wempe-second-model`: where they differ, the drawing wins). This work builds the 6MX itself, as a third state beside "As last revised" and "As first drawn".

@@ -61,3 +61,36 @@ Vielen Dank!
 ---
 
 Where each answer goes: 1 and 2 in `wempe/README.md`'s stop work and its "Estimated" entry (the spring's height, a design value 0.9-1.5 since 16 October 2026; `fusee.js` at `SPW`, `tools/wempe_strength.js`); 3 in its "Unresolved" (N against the model's groove end, `PHI0`); 4 in its "Estimated" entries for each part.
+
+# What we'd ask about the Soviet 6MX (Kirov No. 247)
+
+The Wempe page's third version, the Soviet 6MX, is built from Johannes Altmeppen's photographs of Kirov No. 247 (dg-chrono.de; `marine-chronometer-source/wempe/README.md`, "The Soviet 6MX"). Each line below is a difference his list names, or a part the photographs show only side-on, that the model leaves out or estimates for want of one view. None holds up the model: each is built as the drawings have it or left out, and says so.
+
+---
+
+**Fotos zum 6MX (Kirow Nr. 247), für das offene Arbeitsmodell**
+
+Auf https://www.marinechronometermodel.com/wempe/ ist der 6MX jetzt eine dritte Fassung des Einheits-Chronometers, nach Ihren Fotos von Kirow Nr. 247 gebaut. Einige Unterschiede aus Ihrer Liste konnte ich nur von der Seite sehen. Falls Sie das Werk noch einmal offen haben, würden diese Aufnahmen sie klären:
+
+1. **Die Oberplatte abgenommen, von unten:** der untere Unruhkloben (seine Form, Ihre "andere Form"), der Gangfederkloben mit dem Justierschlitten und das Sekundenrad.
+2. **Der Gangfederkloben mit Feder, abgenommen, von beiden Seiten und von der Stirnseite:** wie der Schlitten unter der Befestigungsschraube sitzt und wohin die große Schraube in der Stirnseite ihn schiebt.
+3. **Das Gangrad mit Trieb, abgenommen, von der Seite:** die lange Kegelbüchse unter dem Rad.
+4. **Der Topfboden von außen, senkrecht, mit Maßstab:** der Verschluss des Aufzugslochs (Stift im Schlitz).
+5. **Die Unruh von der Seite oder die Welle allein:** Messingbuchse wie 05 04_5 oder Nabe mit Schrauben wie 05 04 02.
+6. **Das Federhaus, herausgenommen:** dreiteilig (Ring mit zwei Deckeln) oder eine Trommel mit Deckel unten.
+
+Vielen Dank!
+
+---
+
+*The same in English:* **Photographs of the 6MX (Kirov No. 247), for the open working model.** The 6MX is now a third version of the Einheits-Chronometer on the page, built from your photographs of Kirov No. 247. Some differences on your list I could only see from the side. If you have the movement open again, these would settle them:
+
+1. **The top plate off, seen from below:** the lower balance cock (its "other shape"), the detent block with its adjusting slide, and the seconds wheel.
+2. **The detent block with its detent, off the plate, from both sides and the end:** how the slide sits under the fixing screw, and which way the large screw in the end face moves it.
+3. **The escape wheel and pinion, off, from the side:** the long cone collet under the wheel.
+4. **The bowl's bottom from outside, square-on, with a scale:** the winding hole's shutter (a pin in a slot).
+5. **The balance from the side, or its staff alone:** a brass collar as 05 04_5, or a hub with screws as 05 04 02.
+6. **The barrel, out:** three pieces (a ring with two lids) or a drum with its lid underneath.
+
+Thank you!
+
