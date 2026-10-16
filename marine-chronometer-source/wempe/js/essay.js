@@ -373,7 +373,7 @@ const ESSAY=(()=>{
 
   /* ---------- the gimbals: the model's own box, ring and case (WCASE.build, case.js), its dial keeping the model's time ---------- */
   fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.75,pitch:0.78,dist:560,target:[0,0,0],near:20,far:5000}),M=gl().M,S=V.scene;
-    const CS=WCASE.build(M);S.add(CS.root);CS.lid.rotation.x=-1.75;CS.tongue.rotation.z=-Math.PI/2;CS.over.visible=false;   /* the outer transport box (case.js builds it with the box) left out, as the page's views but Transport box leave it */
+    const CS=WCASE.build(M);S.add(CS.root);CS.lid.rotation.x=-1.75;CS.stay();CS.tongue.rotation.z=-Math.PI/2;CS.over.visible=false;   /* the outer transport box (case.js builds it with the box) left out, as the page's views but Transport box leave it */
     CS.root.traverse(o=>{if(o.userData.rev==='first')o.visible=false;});   /* as last revised: the 1943 key, not the 1940 one beside it */
     const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
     const yD=WDIAL.DY1-CS.YP;mesh(CS.bowl,cylY(WDIAL.DR,WDIAL.DY1-WDIAL.DY0,96),M.brass2,0,yD-(WDIAL.DY1-WDIAL.DY0)/2,0);

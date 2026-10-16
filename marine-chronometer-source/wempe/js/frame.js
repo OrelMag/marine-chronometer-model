@@ -39,14 +39,15 @@ const WFRAME=(()=>{
       const out=KIT.subtractCircle(C([0,0],R,1200),H[45],42.5/2);
       for(const k of[1,35,38])F.push(T(H[k],rJ,y0,y1));                                  /* 4.4 punched, 4.59 +0.012 reamed: the centre, seconds and intermediate wheels' settings (WN-301, WN-300: 05 08 01) */
       for(const k of[3,12,40])F.push(T(H[k],rH35,y0,y1));                                /* Hilfslöcher, 3.50 +0.012 */
-      F.push(T(H[4],0.9/2,y0,y1),T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[13],1.8/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1),T(H[53],1.5045/2,y0,y1));   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */
+      F.push({p:C(H[4],2.15,60),q:C(H[4],1.2,60),a:y0,b:y0+0.55},{p:C(H[4],1.2,60),q:C(H[4],0.45,60),a:y0+0.55,b:y0+0.95},{p:C(H[4],0.45,60),a:y0+0.95,b:y1});   /* hole 4's oil sink on the outer face, Ø 4.3 (Wempe 3955, 2_Wempe_3955_A.jpg: spherical, the pivot bright in it; its depth estimated, as the bushes' sinks; two cones for the sphere) */
+      F.push(T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[13],1.8/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1),T(H[53],1.5045/2,y0,y1));   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */
       for(const k of[8,42,48])F.push(T(H[k],rM26,y0,y1));                                /* the upper cock's and the barrel bridge's screws, M2.6 */
       for(const k of[6,9,41,47,50])F.push(T(H[k],rPinP,y0,y1),B(H[k],2.5/2,y1,1.6));   /* steady pins from above, the holes opened from below (A-B) */
       for(const k of[22,37])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));           /* steady pins from below (C-D) */
       F.push(T(H[36],2.8/2,y0,y1),A(H[36],6.012/2,y0,1.8));                              /* the lower cock's screw, its head sunk (G-H) */
       for(const k of[11,39,49])F.push(T(H[k],WD.PIL_HOLE,y0,y1),B(H[k],WD.PIL_SEAT[0],y1,WD.PIL_SEAT[1]));
       F.push(T(H[26],4.506/2,y0,y1),{p:C(H[26],5.206/2),a:y0+0.5,b:y1});                 /* P-Q */
-      for(const q of WESC.HOLES.blockPins)F.push(B(q,0.925/2,y1,1.4));                    /* the detent block's steady pins Ø 0.9 (05 04 01-4), 1.3 into the plate: not in its table, drilled at assembly (estimated) */
+      for(const q of WESC.HOLES.blockPins)F.push({p:C(q,0.7,40),q:C(q,0.4625,40),a:y0,b:y0+0.24},{p:C(q,0.4625,40),a:y0+0.24,b:y1});   /* the detent block's steady pins Ø 0.9 (05 04 01-4), 1.3 into the plate: not in its table, drilled at assembly through the plate and countersunk Ø 1.4 on its outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, 8.81 px/mm: 10.7 apart, the model's 10.8; likely); blind from the inside until 16 October 2026 */
       for(const s of[-1,1])F.push(T(add(H[26],[1,0],3.5*s),rM12,y0,y1));
       {const n=176;F.push(T(H[10],8.0075/2,y0,y1),{p:C(H[10],11,n),q:C(H[10],11.7,n),a:y1-0.7,b:y1});   /* the fusee bush's hole 8.0 +0.015; J-K's recess Ø 22 at its floor, its wall opening at 45° to the face (P1c: the fusee's cover plate, Ø 21.1, lies in it; read until then as Ø 22 at the face, its floor Ø 20.6, which the plate can't enter) */
         for(const b of[0,120,240])F.push(T(add(H[10],brg(b),5.2),rM14,y0,y1));}
@@ -65,6 +66,18 @@ const WFRAME=(()=>{
     /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's */
     const S=WD.PSCR;for(const[x,z]of WD.PILLARS)tag(screw(tp,x,z,TT,S.r,S.h,S.len,S.rs,M.brass),'WN-57');
 
+    /* the maker's engraving on the top plate's outer face, as Wempe 3955's (2_Wempe_3955_A.jpg, square-on at 7.74 px/mm by the plate's 85, the centre found from holes 10 and 23;
+       15_Wempe_3955_Logo_plus.jpg close): three lines reading along O with N up, centred at O 30.6, N 8.6: "Gerhard D." 8.7 long, its letters 1.2 high; "WEMPE" 9.85 long,
+       1.7 high (outlined capitals on the plate: drawn filled); "Hamburg" 7.4 long, 1.2 high; the lines 1.9 apart (likely). Not on the sheets. A decal on the face */
+    {const k=60,W=12,Hh=6.4,c=document.createElement('canvas');c.width=W*k;c.height=Hh*k;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));
+      x.fillStyle='rgba(58,40,14,0.78)';x.textAlign='center';x.textBaseline='middle';
+      for(const[t,dv,len,h,wt]of/** @type {[string,number,number,number,number][]} */([['Gerhard D.',-1.9,8.7,1.2,500],['WEMPE',0,9.85,1.7,700],['Hamburg',1.9,7.4,1.2,500]])){
+        x.font=`${wt} ${h/0.72*k}px "Instrument Sans", Arial, sans-serif`;x.save();x.translate(W/2*k,(Hh/2+dv)*k);fillTracked(x,t,len*k,0.8);x.restore();}
+      const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
+      const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
+      const g=new THREE.PlaneGeometry(W,Hh);g.rotateX(Math.PI/2);g.rotateY(Math.PI);   /* facing out of the plate (−y); its text along −x (O), up toward −z (N) */
+      const e=mesh(tp,g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
+
     /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
     /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 56, 57
        ("nur bei Bedarf", the seconds contact's; not in Wempe 3955's plate). Its sections: E-F the pillar seats in the inner face; A-B the intermediate bridge's steady pins 29, 44 reamed from the
@@ -80,6 +93,7 @@ const WFRAME=(()=>{
       F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.82/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
         T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
       for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
+      F.push(B(H[26],4.6/2,y1,0.25));   /* the seat of the escape wheel's lower endstone's setting, Ø 4.6 × 0.25 in the dial face (Wempe 3955's dial side: escapement.js; not on the sheet) */
       for(const k of[28,43])F.push(T(H[k],rM26,y0,y1));
       for(const k of[29,44])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));
       F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
@@ -131,10 +145,10 @@ const WFRAME=(()=>{
     const rg=part('ring',12);
     {const nS=840,nC=600,c41=C([0,0],83/2,nC),bb=bool(C([0,0],85.0175/2,nS),C(pinAt,0.5,40,0.5));
       const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
-        ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};
+        ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};   /* Wempe 3955's dial side shows them through, opening in the flange's cone (3_Wempe_3955_uZ.jpg: likely); a vertical hole through the cone's slope is more than solidGeo cuts: left at the flange (README, Unresolved) */
       tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
-        ...[354,120,240].map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:10.35-2.5,b:11.05}))]};   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
+        ...[354,120,240].map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:6.35,b:11.05}))]};   /* the dial screws' M1 through the flange: they show on its underside in Wempe 3955's top plate photograph (2_Wempe_3955_A.jpg: likely; 2.5 deep until 16 October 2026) */   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
       tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
       /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
       for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,2.25,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
@@ -158,7 +172,7 @@ const WFRAME=(()=>{
        against this chord's 14.94 and the earlier 13.61 (45 7.0, 42 7.8-8.0, 48 6.3-6.6 from it): between the two, so the sheet decides. Until 15 October 2026 the chord was
        drawn square to hole 45's line at 18.5 (42 then 8.29 from it), the 7.7 read along the chord from the point to pin 41 and the "5" as the corner's offset from the chord,
        which put 48 4.5 from the short edge. Holes: 45 the barrel arbor's, 3.9 ±0.01; 46 the click's screw, M2.6; 42, 48 clear 2.8 for its screws; 41, 47
-       its steady pins, 1.585 -0.005, 2.5 deep (their holes' 90° countersink 0.3 is left out). Drawn gilt */
+       its steady pins, 1.585 -0.005, 2.5 deep (their holes' 90° countersink 0.3: in since 16 October 2026). Drawn gilt */
     const bb=part('barrelBridge',-52);
     {const dt=(p,q)=>p[0]*q[0]+p[1]*q[1],sc=(p,k)=>[p[0]*k,p[1]*k],v=sub(H[45],H[42]),l=Math.hypot(v[0],v[1]),u=sc(v,1/l),ca=-0.7/l;   /* n·(45 − 42) = 7 − 7.7 */
       const n=/** @type {number[]} */([-1,1].map(s=>add(sc(u,ca),[-u[1],u[0]],s*Math.sqrt(1-ca*ca))).find(q=>dt(q,H[45])>0)),c=dt(n,H[45])-7,t=(q=>q[1]<0?q:[-q[0],-q[1]])([n[1],-n[0]]);
@@ -166,7 +180,7 @@ const WFRAME=(()=>{
       const Bp=add(sc(n,c),t,-Math.sqrt(R*R-c*c)),Tp=[1,-1].map(s=>add(sc(m,kE),e,s*Math.sqrt(R*R-kE*kE))).sort((a,b)=>dt(b,n)-dt(a,n))[0],Cp=add(sc(n,c),t,2*(c30*c-kE));
       const aB=Math.atan2(Bp[1],Bp[0]),aT=Math.atan2(Tp[1],Tp[0]),an=Math.atan2(n[1],n[0]);let da=((aT-aB)%TAU+TAU)%TAU;if(Math.abs(((an-aB)%TAU+TAU)%TAU)>da)da-=TAU;   /* round the rim through n */
       const N=Math.ceil(Math.abs(da)*R/0.1),arc=[...Array(N-1).keys()].map(i=>{const a=aB+da*(i+1)/N;return[R*Math.cos(a),R*Math.sin(a)];});
-      const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),B(H[41],rPinQ,y1,2.5),B(H[47],rPinQ,y1,2.5)];
+      const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),...[41,47].flatMap(k=>[{p:C(H[k],rPinQ,40),a:y1-2.5,b:y1-0.3},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.3,40),a:y1-0.3,b:y1}])];   /* the steady pins' holes' 90° countersink 0.3 (05 08_13) */
       tag(mesh(bb,solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]),M.gilt),'050805-1');PL.bbChord=[Bp,Cp];}
     /* its screws (WN-55 in the coloured section): heads Ø 6.4 × 3.0, brass (Wempe 3955), the shank 6.2, through the bridge and 2.9 into the plate: scaled on the coloured section (estimated) */
     for(const k of[42,48])tag(screw(bb,H[k][0],H[k][1],TT-3.32,3.2,3.0,6.2,1.3,M.brass),'WN-55');
@@ -214,10 +228,10 @@ const WFRAME=(()=>{
        the radius at the fits' middles; until 15 October 2026 a slide over the bush's g6 as then read; its top Ø 7.62 under a 20° mouth
        1.8 +0.2 deep); body Ø 13.1 -0.2 for 15.1, then a neck Ø 9.7 -0.2 (for 05 08 01-4, not in the set); at the body's top a collar 3.1 -0.2 high, Ø 15.1 -0.2 with a flat 14.1
        from its far side, so flush with the body on one side (sure). The flat faces the upper balance cock, which passes 7.0 from the fusee's axis (the cock's coordinates):
-       turned any other way the collar would stand 0.55 into the cock's web (inferred). Its bottom's 5° × 0.5 chamfer is left out */
+       turned any other way the collar would stand 0.55 into the cock's web (inferred). Its bottom's 5° × 0.5 chamfer on its outer edge (since 16 October 2026) */
     const db=part('dustBush',-66);
     {const Yb=TT-1.5,Yt=Yb-18.1,rr=y=>8.0075/2-(Yb-y)/140,rT=rr(Yt+1.8)+1.8*Math.tan(20*D2R),nf=brg(255);
-      const lw=[V2(rr(Yb-12),Yb-12),V2(6.55,Yb-12),V2(6.55,Yb),V2(rr(Yb),Yb),V2(rr(Yb-12),Yb-12)],nk=[V2(rT,Yt),V2(4.85,Yt),V2(4.85,Yb-15.1),V2(rr(Yb-15.1),Yb-15.1),V2(rr(Yt+1.8),Yt+1.8),V2(rT,Yt)];
+      const lw=[V2(rr(Yb-12),Yb-12),V2(6.55,Yb-12),V2(6.55,Yb-0.5),V2(6.55-0.5*Math.tan(5*D2R),Yb),V2(rr(Yb),Yb),V2(rr(Yb-12),Yb-12)],nk=[V2(rT,Yt),V2(4.85,Yt),V2(4.85,Yb-15.1),V2(rr(Yb-15.1),Yb-15.1),V2(rr(Yt+1.8),Yt+1.8),V2(rT,Yt)];
       const g=tag(mesh(db,new THREE.LatheGeometry(lw,72),M.brass,F10[0],0,F10[1]),'050801-3');tag(mesh(db,new THREE.LatheGeometry(nk,72),M.brass,F10[0],0,F10[1]),'050801-3',1);
       const lug=clipPoly(C(F10,15.1/2,320),p=>6.55-((p[0]-F10[0])*nf[0]+(p[1]-F10[1])*nf[1])),y0=Yb-15.1,y1=Yb-12.0;
       tag(mesh(db,solidGeo([{loop:lug,y0,y1,F:[{p:C(F10,rr(y0),180),q:C(F10,rr(y1),180),a:y0,b:y1}]}]),M.brass),'050801-3',1);}
@@ -239,7 +253,7 @@ const WFRAME=(()=>{
        the auxiliary hole 20 Ø 2.8 at 10 from 23; a slot 1.8 H7 wide, its middle on the setting's line across the arm, from the O side's edge to 3.4 from the axis (C-D; Wempe 3955's
        index lies in it). Foot: the screw's hole 8 clear 2.8, steady pins 6 and 50 5 either side of the axis at 40, pin 9 at 24.5 under the web, 1.585 -0.005 × 2.5 deep (sure).
        C-D's 82°: the slot's inner wall leans 8° toward the axis going down, 3.4 from it on the top and 3.06 under the thin end, as the stud's upright does (05 03 02-3's 98°,
-       js/escapement.js; left out until 15 October 2026). The pins' 0.2 × 90° sinks are left out. Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
+       js/escapement.js; left out until 15 October 2026). The pins' 0.2 × 90° sinks are in (since 16 October 2026). Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
     const uc=part('upperCock',-58);
     {const c=H[23],ax=brg(345),vo=brg(75),pl=new Map(),P=q=>{if(!pl.has(q))pl.set(q,add(add(c,ax,q[0]),vo,q[1]));return pl.get(q);};   /* local [u along the axis, v toward O] to plan, one plan point per local point */
       const Fp=[43,8.5],Fm=[43,-8.5],ph=Math.atan2(8.5,43)+Math.acos(6/Math.hypot(43,8.5)),Tp=[6*Math.cos(ph),6*Math.sin(ph)],Tm=[Tp[0],-Tp[1]];
@@ -258,7 +272,8 @@ const WFRAME=(()=>{
       const L=(u,v)=>add(add(c,ax,u),vo,v),[thin,,,web,foot]=cells;
       thin.F=[T(c,5.206/2,thin.y0,thin.y1),B(c,3.0,thin.y1,0.5),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),T(H[20],rCl26,thin.y0,thin.y1),
         T(WESC.HOLES.studScrew,rM14,thin.y0,thin.y1)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
-      foot.F=[T(H[8],rCl26,foot.y0,foot.y1),B(H[6],rPinQ,foot.y1,2.5),B(H[50],rPinQ,foot.y1,2.5)];web.F=[B(H[9],rPinQ,web.y1,2.5)];
+      const sk=(k,y)=>[{p:C(H[k],rPinQ,40),a:y-2.5,b:y-0.2},{p:C(H[k],rPinQ,40),q:C(H[k],rPinQ+0.2,40),a:y-0.2,b:y}];   /* the pins' holes, 2.5 deep, their 0.2 × 90° sinks (05 08_05) */
+      foot.F=[T(H[8],rCl26,foot.y0,foot.y1),...sk(6,foot.y1),...sk(50,foot.y1)];web.F=[...sk(9,web.y1)];
       tag(mesh(uc,solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),M.gilt),'050803-1');}
     /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
     tag(screw(uc,H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,M.blued),'WN-ucs');
@@ -277,7 +292,7 @@ const WFRAME=(()=>{
       const ly0=TI+10-3.22,ly1=TI+10,lug={loop:[L2,L1,...semi],y0:ly0,y1:ly1,F:[T(H[23],rJ,ly0,ly1),B(H[23],5.206/2,ly1,3.22-0.5),T(add(H[23],nv,3.5),rM12,ly0,ly1),T(add(H[23],nv,-3.5),rM12,ly0,ly1)]};
       tag(mesh(lc,solidGeo([bar,lug]),M.gilt),'050800-2');}
     /* its screw (WN-53 in the coloured section): head Ø 5.8 × 1.7 in the plate's Ø 6 × 1.8 sink, M2.6 × 5.0, 3.45 into the cock: the coloured section, scaled (estimated) */
-    headOn(tag(screw(lc,H[36][0],H[36][1],TT+1.8,2.9,1.7,5.0,1.3),'WN-53'),'lowerCock','topPlate');
+    headOn(tag(screw(lc,H[36][0],H[36][1],TT+1.8,2.9,1.7,5.0,1.3,M.brass),'WN-53'),'lowerCock','topPlate');   /* brass, as Wempe 3955's (2_Wempe_3955_A.jpg; steel until 16 October 2026) */
     for(const k of[22,37])tag(cylBetween(lc,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');
 
     /* ================= the intermediate bridge (Zwischenbrücke kompl., 05 08 04) ================= */
