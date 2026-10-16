@@ -11,6 +11,7 @@ y in the movement frame (the train bridge's underside: -20.66), "target": [x, y,
 put back through K [r1 r2 t + h n]. Example: anchors/lower_bridge_13-49.5.json, the balance lower bridge on the train bridge's underside (tools/lower_bridge.py's MEAS);
 anchors/photo_lower_bridge_cam.json, the same on a phone photograph (References/photo-lower-bridge-underside.jpg, about f 970: its lug screw fixes it). About 1 s; look and warp open the page (about 30 s each)."""
 import asyncio,json,os,re,sys,numpy as np,cv2
+import browser
 HERE=os.path.dirname(os.path.abspath(__file__));HOME=os.environ.get('MC_VIDEO',os.path.expanduser('~/mc-video'))
 a=sys.argv[1:]
 if not a or a[0].startswith('-'):sys.exit(__doc__)
@@ -39,7 +40,7 @@ PAGE='file:///'+os.path.abspath(os.path.join(HERE,'..','index.html')).replace(os
 async def page(fn):
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # see smoke.py
         pg=await b.new_page(viewport={"width":1200,"height":800},device_scale_factor=1,color_scheme='light')
         await pg.add_init_script("document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=%r;document.head.appendChild(s);});"%ns['CSS'])

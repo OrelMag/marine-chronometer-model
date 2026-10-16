@@ -24,7 +24,7 @@ weight and it doesn't restart by itself, the twist starts it, the train-blocking
 and opens onto it, the gimbal latch holds the case to the box. A named one not written yet is reported (~~), not failed.
 A line's 'dev' lists known deviations from the manual, each with its reason: printed with ~~, not failed; one with 'rev' holds only in the versions it lists (the Wempe's As first drawn, Soviet 6MX). A line's own 'rev' ("6mx", "last first") puts it in those versions
 only: elsewhere it must count none, and a jewel line counts toward the version's JEWELS (a number, or one per version)."""
-import asyncio,json,pathlib,re,sys
+import asyncio,browser,json,pathlib,re,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
@@ -43,7 +43,7 @@ REGISTRY=model.cfg('REGISTRY',True)   # the registry: the Hamilton's catalogue n
 ARM=model.cfg('ARM',"document.querySelector('#stopV button[data-v=\"arm\"]').click()")   # the parts list's balance stop, the locking arm (Fig. 9): the page fits the Navy's Y-arm by default, which the manual doesn't list (its button, so the part's card and numbers are the arm's too)
 async def run(evl):
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1000,"height":700});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("window.__mv&&!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(1500)

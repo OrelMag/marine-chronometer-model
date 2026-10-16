@@ -15,7 +15,7 @@ brass disc the voxels test) is checked exactly: the least height over it of any 
 encloses, and barrel-clearance.js then measures, at each wind state, how close every other part comes to the solid the whole barrel sweeps as
 it turns (wall, caps, cap screws, hook), and where the mainspring lies inside it. A part closer than BARREL_MIN, not listed in BARREL, fails too. The train positions are whole teeth apart: the escape wheel only
 ever rests on a whole tooth plus the escapement's progress, and a fractional offset would put it out of step with the balance."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
@@ -64,7 +64,7 @@ FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.use
 async def main():
     states=STATES+([(i/100,0,2.5,False) for i in range(101)] if '--dense' in sys.argv else [])
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600});pg.on("pageerror",lambda e:print("ERR",e))
         await pg.goto(PAGE);await pg.wait_for_timeout(5000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")

@@ -11,6 +11,7 @@ The part is the largest mesh of its group (__mv.userData.parts). Loops with a ra
 keyhole and the bridge's own cuts are larger). The holes are numbered h1, h2... in order of angle round the movement's centre;
 give the ones you anchor on their names in the JSON (what each is: the S table in movement.js). About 20 s."""
 import asyncio, json, math, os, sys
+import browser
 from playwright.async_api import async_playwright
 PAGE = 'file:///' + os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'index.html')).replace('\\', '/') + '?snap&qa'
 a = sys.argv[1:]
@@ -34,7 +35,7 @@ JS = """([name,bottom])=>{const g0=__mv.userData.parts[name];if(!g0)return null;
   return{y,loops};}"""
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(args=["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"])
+        b = await p.chromium.launch(args=browser.ARGS)
         w = await b.new_page(); await w.set_content('<canvas></canvas>'); await w.evaluate("document.querySelector('canvas').getContext('webgl')"); await w.wait_for_timeout(3000); await w.close()   # see smoke.py
         pg = await b.new_page(); await pg.goto(PAGE); await pg.wait_for_function("!document.querySelector('#loading')", timeout=120000); await pg.wait_for_timeout(1500)
         r = await pg.evaluate(JS, [part, bottom]); await b.close(); return r

@@ -22,7 +22,7 @@ mu: greased steel on steel, 0.08-0.2 lubricated (the CRC Handbook of Chemistry a
 0.16 static, oil 0.08 kinetic); 0.10 taken, 0.08 and 0.16 tried. Against a measurement: a mainspring unwinds with 10-20 % less torque than it winds (ICMFF9,
 gruppofrattura.it). Left out: the strip's edges on the barrel's floor and cap, and the set (the steel's own hysteresis), which add to it.
 """
-import json,math,sys,re,base64,pathlib
+import base64,json,math,os,pathlib,re,sys
 import numpy as np,torch
 from scipy.optimize import nnls
 torch.set_default_dtype(torch.float64)
@@ -144,7 +144,7 @@ def work(A,B_,mu):
 def main():
     from multiprocessing import Pool
     T0,st=states()
-    with Pool(14) as P:sol=P.map(job,[(T,r.tolist()) for T,r in st])
+    with Pool(int(os.environ.get('MC_MS_PROC',14))) as P:sol=P.map(job,[(T,r.tolist()) for T,r in st])
     sol.sort(key=lambda x:x['T']);n=len(sol)
     for k,X in enumerate(sol):   # each state's torque (the energy's slope, N·mm a radian), then its pressures
         a,b=max(0,k-1),min(n-1,k+1);X['tau']=EI/2*(sol[b]['E']-sol[a]['E'])/(sol[b]['T']-sol[a]['T'])/(2*math.pi)
@@ -187,15 +187,18 @@ def main():
                 T0=T0,EI=EI,mus=MUS,rows=rows)
 def variants():
     """--variants: this tool once a variant in mainspring_bound.json (the strips mainspring.py --bound has solved: the build's Nivaflex and the sources'
-    proportions), each in its own process with its strip set; exit 1 if any fails"""
+    proportions), each in its own process with its strip set; exit 1 if any fails. --variants NAME,NAME: only those (ci.py runs each as a step of its own)"""
     import subprocess,os
     D=json.loads((HERE/'mainspring_bound.json').read_text(encoding='utf-8'));rc=0
+    i=sys.argv.index('--variants');only=sys.argv[i+1].split(',') if i+1<len(sys.argv) and not sys.argv[i+1].startswith('--') else None
+    if only and not set(only)<=set(D)-{'model'}:print('no such variant in',only,'; variants:',', '.join(k for k in sorted(D) if k!='model'));sys.exit(2)
+    args=[a for j,a in enumerate(sys.argv[1:],1) if a!='--variants' and not (only and j==i+1)]
     for k,v in sorted(D.items()):
-        if k=='model' or (k.startswith('fz') and '--fz' not in sys.argv):continue   # fz*: drive.js's candidates (PLAN-drive-and-damping.md), with --fz only
+        if k=='model' or only and k not in only or (k.startswith('fz') and '--fz' not in sys.argv):continue   # fz*: drive.js's candidates (PLAN-drive-and-damping.md), with --fz only
         if v['bound']-v['T0']<IN:print(f'== {k}: coil-bound {v["bound"]-v["T0"]:.2f} turns past slack, short of the whole wind, {IN:.2f}: nothing to run');continue
         env=dict(os.environ,MC_MS_TAG=k,MC_MS_T=f"{v['t']}",MC_MS_GAP=f"{v.get('gap',0.01)}",MC_MS_L=f"{v['L']}",MC_MS_RA=f"{v['ra']}",MC_MS_E=f"{v['E']:g}",MC_MS_TILT=f"{v.get('tilt',0)}")
         print(f'== {k}: the strip {v["t"]} x {v["L"]:.0f} mm on r {v["ra"]}',flush=True)
-        r=subprocess.run([sys.executable,__file__]+[a for a in sys.argv[1:] if a not in('--variants','--fz')],env=env,cwd=HERE,capture_output=True,text=True,encoding='utf-8')
+        r=subprocess.run([sys.executable,__file__]+[a for a in args if a!='--fz'],env=env,cwd=HERE,capture_output=True,text=True,encoding='utf-8')
         print('\n'.join(r.stdout.strip().splitlines()[-4:]),flush=True);rc=rc or r.returncode
     sys.exit(rc)
 if __name__=='__main__':

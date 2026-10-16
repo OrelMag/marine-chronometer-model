@@ -40,6 +40,7 @@ NOPR, not filled in), items (СПУСК and ЗАВОД as sectors along the up-a
 and its serial, written in red ink: traced from red alone in its box (RED, over the other channels by 25), from the photo filled in under the seconds hand.
 About 7 s (--dial lange about 12 s, --dial kirov about 15 s; --compare 5-15 s more). Rerun it after changing ITEMS, the masks or the thresholds, then --compare and isolate.py --model wempe dial."""
 import os,sys,json,pathlib,numpy as np,cv2
+import browser
 from scipy.ndimage import map_coordinates
 from scipy.optimize import least_squares
 HERE=pathlib.Path(__file__).resolve().parent;ROOT=HERE.parents[2]
@@ -520,7 +521,7 @@ def compare():
     from playwright.async_api import async_playwright
     async def grab():
         async with async_playwright() as pw:
-            b=await pw.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"]);pg=await b.new_page()
+            b=await pw.chromium.launch(args=browser.ARGS);pg=await b.new_page()
             await pg.goto((ROOT/'marine-chronometer-source/wempe/index.html').as_uri()+'?snap&qa');await pg.wait_for_function("typeof WDIAL!=='undefined'",timeout=120000)
             u=await pg.evaluate(f"WDIAL.face(1,'{DIAL}').toDataURL('image/png')");await b.close();return u
     u=asyncio.run(grab());cvs=cv2.imdecode(np.frombuffer(base64.b64decode(u.split(',')[1]),np.uint8),cv2.IMREAD_GRAYSCALE)

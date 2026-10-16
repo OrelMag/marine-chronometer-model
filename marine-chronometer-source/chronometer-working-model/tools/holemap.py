@@ -10,6 +10,7 @@ PART is a part name (__mv.userData.parts); --bottom takes the face toward the di
 and pixel u,v; two give a similarity (the mirror chosen by which face the frame shows: the train side's face seen from above is the plan mirrored), three
 or more an affine or homography. --reuse reads the part's loops from r_hm_PART.json in the current directory (written the first time). About 20 s for the loops, then a few seconds."""
 import asyncio, json, math, os, pathlib, sys
+import browser
 import cv2, numpy as np
 import model   # --model NAME: another model's page (the Wempe's plates); stripped from sys.argv
 HERE = pathlib.Path(__file__).resolve().parent
@@ -46,7 +47,7 @@ else:
     from playwright.async_api import async_playwright
     async def main():
         async with async_playwright() as p:
-            b = await p.chromium.launch(args=["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"])
+            b = await p.chromium.launch(args=browser.ARGS)
             w = await b.new_page(); await w.set_content('<canvas></canvas>'); await w.evaluate("document.querySelector('canvas').getContext('webgl')"); await w.wait_for_timeout(3000); await w.close()   # see smoke.py
             pg = await b.new_page(); await pg.goto(PAGE); await pg.wait_for_function("!document.querySelector('#loading')", timeout=120000); await pg.wait_for_timeout(1500)
             r = await pg.evaluate(JS, [part, bottom]); await b.close(); return r

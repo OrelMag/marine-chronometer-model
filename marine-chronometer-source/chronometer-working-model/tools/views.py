@@ -13,7 +13,7 @@ give the same pixels (a few anti-aliased edges may differ). --keep shows only th
 compared by one set of rules (ci.py --views renders where a branch left main and the working tree, then --diff --md writes the table).
 --model NAME renders another model's page (its views from its checks.py's VIEWS; a page without Moving parts only gets the one pass); --eval JS runs code after loading,
 before the freeze (the Wempe's states: --eval "__mv.userData.setRev('first')"), so each state is compared with itself."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 import model
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -39,7 +39,7 @@ def diff(a,b,md=False):
 async def main():
     tag=sys.argv[1];keep=arg('--keep');looks=[sys.argv[i+1:i+7] for i,k in enumerate(sys.argv) if k=='--look']
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         # as in smoke.py: a fresh headless Chromium loses its first WebGL context, so spend it on a blank page
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800},device_scale_factor=1,color_scheme='light');errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))

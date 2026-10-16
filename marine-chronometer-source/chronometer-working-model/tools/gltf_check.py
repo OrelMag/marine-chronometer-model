@@ -8,7 +8,7 @@ Checks: the GLB's header and chunks; every accessor inside its buffer view and e
 min and max; indices in range; normals of unit length; every node, mesh, material, texture and channel reference valid; the node tree a tree (each node one parent,
 the scene's roots none); node names unique; every animation's times rising, its rotations unit quaternions, its weights as many per key as the mesh has targets;
 the clips the page names all there, each with channels; the parts the movement is built of all named among the nodes. Exit code 1 on a failure."""
-import asyncio,base64,json,math,pathlib,struct,sys
+import asyncio,base64,browser,json,math,pathlib,struct,sys
 import numpy as np
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?qa'   # not ?snap: the page then idles while the export runs, instead of drawing every frame
@@ -18,7 +18,7 @@ CLIPS=['Running','Beat (slow motion)','Run down','Winding','Setting the hands','
 async def export(out):
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         pg.on("console",lambda m:errs.append(m.text) if m.type in('error','warning') and 'GPU stall' not in m.text and 'swiftshader' not in m.text.lower() else None)

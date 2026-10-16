@@ -12,7 +12,7 @@
   leaving the moment of inertia as it was.
 - Escapement: the running amplitude 255° and the escapement's rate 0 s a day at the model's settings exactly, and Airy's signs for the impulse jewel's angle and the depth of lock.
 The movement's update() is driven directly, as views.py does; the page's own loop is stopped first."""
-import asyncio,json,math,pathlib,sys
+import asyncio,browser,json,math,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
@@ -95,7 +95,7 @@ JS=JS.replace('%MF%','{tup:%s,tdn:%s,fu:%s}'%(_tu.group(1),_tu.group(2),_fu))   
 JS=JS.replace('%PJ%',_re.search(r'const J=([\d.e-]+)',(HERE/'physics.js').read_text(encoding='utf-8')).group(1))   # the escape wheel's inertia as tools/physics.js takes it: the check holds the two together
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("window.__mv&&window.__test",timeout=60000);await pg.wait_for_timeout(1000)
         await pg.evaluate("document.querySelector('#speeds button[data-v=\"0\"]').click()")

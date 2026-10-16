@@ -33,6 +33,7 @@ What it leaves out: the arbors' own bending (steel, 2 to 4 times as stiff as bra
 settings (pressed in, taken as the brass round them), friction at the fixings (taken as bonded) and the case.
 """
 import asyncio, json, math, os, subprocess, sys, time
+import browser
 import numpy as np, scipy.sparse as sp, pyamg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -54,7 +55,7 @@ __mv.traverse(o=>{if(!o.userData.sc)return;o.updateWorldMatrix(true,false);const
 async def fetch():
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
-        b = await p.chromium.launch(args=["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"])
+        b = await p.chromium.launch(args=browser.ARGS)
         w = await b.new_page(); await w.set_content('<canvas></canvas>'); await w.evaluate("document.querySelector('canvas').getContext('webgl')"); await w.wait_for_timeout(3000); await w.close()   # see smoke.py
         pg = await b.new_page(); await pg.goto(PAGE); await pg.wait_for_function("!document.querySelector('#loading')", timeout=120000); await pg.wait_for_timeout(1500)
         r = await pg.evaluate(JS, PARTS); await b.close(); return r
