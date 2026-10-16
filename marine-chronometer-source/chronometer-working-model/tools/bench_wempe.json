@@ -63,7 +63,7 @@
    "sheet": "05 04_1, 05 04 01-4",
    "when": "the detent, its gold spring and the balance in; the train's power let down",
    "how": "Turn the balance slowly by hand with a protractor card under it and read each angle through a loupe; the depth of lock and the roller's shake with feeler gauges or under a measuring microscope. The preload: wire riders of known weight hung on the stone's pipe, the detent on its banking (as the Hamilton manual's Op. 78 hangs its 0.770 g).",
-   "pass": "05 04_1's layout and the model: the impulse stone 24° before the line of centres at rest, the lock 36.5° on; the gold spring met at -12.3° of the balance (05 04_1's −12°), the wheel released at -2.4° (lock 9.9°), the gold spring off the stone at -0.5° (let-off 1.9°), the return swing past it at -17.6° (overall 17.1°); roller shake 0.046 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.175 mm deep at the stone: never shallower than 0.143 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.188 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.190 deep where the drawn wheel locks 0.175: set the banking to the wheel as made. The preload at the stone: a 0.63 g rider must leave the detent on its banking and a 1.70 g one part it; aim near 0.90 g (the model's 0.63 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 41 % of the depth of lock there, teeth getting past with none; each gram more costs about 8.5° of swing)."
+   "pass": "05 04_1's layout and the model: the impulse stone 24° before the line of centres at rest, the lock 36.5° on; the gold spring met at -12.3° of the balance (05 04_1's −12°), the wheel released at -2.4° (lock 9.9°), the gold spring off the stone at -0.5° (let-off 1.9°), the return swing past it at -17.6° (overall 17.1°); roller shake 0.046 mm, the teeth 0.39 mm into the roller. Set the banking (the block's cross screw, the 1954 instruction's п. 11) for a lock 0.175 mm deep at the stone: never shallower than 0.143 (a held tooth's stone rings more than half the depth: wempe_tripping.js) nor deeper than 0.188 (the discharge stone can't lift the stone further: it doesn't unlock). A wheel at the top of its 14 +0.03 locks 0.190 deep where the drawn wheel locks 0.175: set the banking to the wheel as made. The preload at the stone: a 0.48 g rider must leave the detent on its banking and a 1.70 g one part it; aim near 0.78 g (the model's 0.63 g is an estimate: wempe_tripping.js finds a held tooth's stone ringing 41 % of the depth of lock there, under half from 0.48 g, teeth getting past under a fifth of it; each gram more costs about 8.5° of swing)."
   },
   {
    "id": "swing",
@@ -644,10 +644,10 @@
    "preload": {
     "model": 0.63,
     "window": [
-     0.63,
+     0.48,
      1.697
     ],
-    "aim": 0.9
+    "aim": 0.78
    }
   },
   "swing": {
