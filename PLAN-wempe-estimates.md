@@ -57,7 +57,11 @@ Run `isolate.py` against the reference for each part, then the geometry checks: 
     - the 1940 key's handle and collar brass (Wempe 6161);
     - the transit lock brass on the brass case (one photograph, likely);
     - the ring bracket's screws 35.5 apart.
-12. **Key holder:** the box's plan 51-00_1 draws it, a triangular corner piece with legs 22.5 and the key 12 from each wall. Merge with open-ends' 16.5 first.
+12. **Key holder:** the box's plan 51-00_1 draws it, a triangular corner piece with legs 22.5 and the key 12 from each wall. Open-ends' owner (marine-chronometer-bf) agrees the drawing outranks its 16.5. Two checks:
+    - **the walls:** at 12, the paddle (Ø 34.5, facing the box's middle) reaches x 80.2 against the inner wall's 80. Turn the paddle, or check whether the drawing's 12 is to another point: its circle Ø ~18.5 is the 1940 key's collar;
+    - **the gimbal ring:** at 21 the raised key's body met the ring after 9.5°; 12 is further out. Confirm with `massprops.py --model wempe` (no stop).
+
+    Keep the shelf's top at 65 (the paddle 22.3 over the rim, from Greenwich's photograph).
 13. **Smaller:**
     - the maintaining detent's arbor body 2.0 (keeping 2.25 at the click's seat);
     - the intermediate bridge's screw sinks Ø 4.7 (measured).
