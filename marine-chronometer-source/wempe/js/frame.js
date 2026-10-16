@@ -19,6 +19,10 @@ const WFRAME=(()=>{
   const PL={};   /* places for the later groups */
 
   function build(mv,M,K){const{part,screw,loose,headOn}=K,V2=(a,b)=>new THREE.Vector2(a,b),tag=(o,id,s)=>hn(o,id,s?{sub:1}:undefined);
+    /* the versions (movement.js's setRev): rv(par, 'last first' or '6mx') a group of the pieces only those versions have. The drawings' two versions share the frame; the
+       Soviet 6MX (Kirov No. 247) moves pillar 39 to 190° (WD.P39_6MX), leaves out the top plate's hole 53 and the upper cock's hole 20: each plate and that cock built once for
+       each, the pillar and its screws at 39 in each version's group */
+    const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},VER=[['last first',H[39],1],['6mx',WD.P39_6MX,0]];   /* [versions, pillar 39, the drawings' holes 20 and 53] */
 
     /* ================= the top plate (Oberplatte, 05 09 01; its assembly 05 08 01) ================= */
     /* Messingblech 4, Sonder Ms α-β (05 09 01's title block: rolled brass, from a 4 × 90 disc turned to 3.5 × 90): drawn gilt, as Wempe 3955's (2_Wempe_3955_A.jpg). 85 h6 × 3.35;
@@ -32,19 +36,20 @@ const WFRAME=(()=>{
        tongue 2.5 wide) and, in the inner face, the pocket N-O for the balance holding work: from the opening to hole 51 with its end r 4 about it (read "4ʳ"; the
        transcription's "4,7 r" is the 4 and its arrowhead), its two dashed edges the common tangents of the opening's r 5 and that r 4 (traced on 05 08_1b at 4:1: the edges
        converge 4-5° each side of the 23-51 line, the upper one 5.0 from 23 and 3.9 from 51), so 10 wide at 23 narrowing to 8 at 51 (13_…unten shows it tapering, about
-       9.4 to 7.5 scaled: sure); until 15 October 2026 drawn 8 wide throughout. 1.35 -0.05 deep (Schnitt N-O). The three small windows by the pillars (Altmeppen) are the
-       Hilfslöcher 3, 12, 40, Ø 3.50 */
+       9.4 to 7.5 scaled: sure); until 15 October 2026 drawn 8 wide throughout. 1.35 -0.05 deep (Schnitt N-O). The Hilfslöcher 3, 12, 40, Ø 3.50 (read until 16 October 2026 as
+       Altmeppen's three small windows by the pillars, which he says the 6MX lacks; Kirov No. 247 has all three: README, The Soviet 6MX) */
     const tp=part('topPlate',-40);
-    {const y0=TT,y1=TI,F=[];
+    for(const[V,P39,DR]of VER){const y0=TT,y1=TI,F=[];
       const out=KIT.subtractCircle(C([0,0],R,1200),H[45],42.5/2);
       for(const k of[1,35,38])F.push(T(H[k],rJ,y0,y1));                                  /* 4.4 punched, 4.59 +0.012 reamed: the centre, seconds and intermediate wheels' settings (WN-301, WN-300: 05 08 01) */
       for(const k of[3,12,40])F.push(T(H[k],rH35,y0,y1));                                /* Hilfslöcher, 3.50 +0.012 */
-      F.push(T(H[4],0.9/2,y0,y1),T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[13],1.8/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1),T(H[53],1.5045/2,y0,y1));   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7 */
+      F.push(T(H[4],0.9/2,y0,y1),T(H[5],rM17,y0,y1),T(H[7],1.609/2,y0,y1),T(H[13],1.8/2,y0,y1),T(H[51],rM2,y0,y1),T(H[52],rM2,y0,y1));if(DR)F.push(T(H[53],1.5045/2,y0,y1));   /* 4 drilled 0.9; 5 M1.7; 7 the stop pin's 1.6 +0.009; 13 drilled 1.8 (the detent block's screw passes); 51, 52 M2; 53 1.5 H7
+           (not in the 6MX: Kirov No. 247's plate is bare there, in plain view at the overlay's 0.3 mm: likely; 51 and 52 lie under its balance, unseen, and are kept) */
       for(const k of[8,42,48])F.push(T(H[k],rM26,y0,y1));                                /* the upper cock's and the barrel bridge's screws, M2.6 */
       for(const k of[6,9,41,47,50])F.push(T(H[k],rPinP,y0,y1),B(H[k],2.5/2,y1,1.6));   /* steady pins from above, the holes opened from below (A-B) */
       for(const k of[22,37])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));           /* steady pins from below (C-D) */
       F.push(T(H[36],2.8/2,y0,y1),A(H[36],6.012/2,y0,1.8));                              /* the lower cock's screw, its head sunk (G-H) */
-      for(const k of[11,39,49])F.push(T(H[k],WD.PIL_HOLE,y0,y1),B(H[k],WD.PIL_SEAT[0],y1,WD.PIL_SEAT[1]));
+      for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),B(q,WD.PIL_SEAT[0],y1,WD.PIL_SEAT[1]));
       F.push(T(H[26],4.506/2,y0,y1),{p:C(H[26],5.206/2),a:y0+0.5,b:y1});                 /* P-Q */
       for(const q of WESC.HOLES.blockPins)F.push(B(q,0.925/2,y1,1.4));                    /* the detent block's steady pins Ø 0.9 (05 04 01-4), 1.3 into the plate: not in its table, drilled at assembly (estimated) */
       for(const s of[-1,1])F.push(T(add(H[26],[1,0],3.5*s),rM12,y0,y1));
@@ -61,9 +66,10 @@ const WFRAME=(()=>{
       const pk=bool(key,KIT.hull([...C(H[23],4.95,200).filter(q=>dv(q)*sT<=0),X,...C(H[51],4,160)])),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
       if(pk.uni.length!==1||fl.length!==1)console.warn('topPlate: the pocket and the balance opening cross in',pk.uni.length,'and',fl.length,'loops');
       F.push({p:pk.A2,a:y0,b:y1},{p:U,a:y1-1.35,b:y1,floorOut:fl[0]});
-      tag(mesh(tp,solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050901');}
-    /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's */
-    const S=WD.PSCR;for(const[x,z]of WD.PILLARS)tag(screw(tp,x,z,TT,S.r,S.h,S.len,S.rs,M.brass),'WN-57');
+      tag(mesh(rv(tp,V),solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050901');}
+    /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's (39's in each version's group) */
+    const S=WD.PSCR,P3=(par,f)=>{for(const q of[H[11],H[49]])f(par,q);for(const[V,P39]of VER)f(rv(par,V),P39);};
+    P3(tp,(g,[x,z])=>tag(screw(g,x,z,TT,S.r,S.h,S.len,S.rs,M.brass),'WN-57'));
 
     /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
     /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 14-18, the
@@ -77,18 +83,18 @@ const WFRAME=(()=>{
        punches it 4.4: the 7 drawn and labelled is taken). A notch at 6 o'clock in its rim for the pin that the movement ring's sheet drills across the joint at assembly (05 08 00-3,
        "wird bei Montage der Unterplatte gebohrt", Ø 1) */
     const pp=part('pillarPlate',0),pinAt=add([0,0],brg(180),R);
-    {const y0=0,y1=PPT,F=[],out=bool(C([0,0],R,720),C(pinAt,0.5,32,0.5)).dAB[0];
+    for(const[V,P39]of VER){const y0=0,y1=PPT,F=[],out=bool(C([0,0],R,720),C(pinAt,0.5,32,0.5)).dAB[0];
       F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.82/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
         T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
       for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
       for(const k of[28,43])F.push(T(H[k],rM26,y0,y1));
       for(const k of[29,44])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));
       F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
-      for(const k of[11,39,49])F.push(T(H[k],WD.PIL_HOLE,y0,y1),A(H[k],WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
+      for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),A(q,WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
       F.push({p:twoCircles(H[38],24.5/2,H[35],6.0/2),a:y0,b:y1});
-      tag(mesh(pp,solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050802-1');}
+      tag(mesh(rv(pp,V),solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050802-1');}
     /* its pillar screws (WN-56) from the dial side, in a frame turned over so their heads face +y */
-    {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);for(const[x,z]of WD.PILLARS)tag(screw(rg,x,-z,-PPT,S.r,S.h,S.len,S.rs,M.brass),'WN-56');}
+    {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);P3(rg,(g,[x,z])=>tag(screw(g,x,-z,-PPT,S.r,S.h,S.len,S.rs,M.brass),'WN-56'));}
 
     /* ================= the pillars (Pfeiler, 05 08 00-1) ================= */
     /* turned brass (Rundmessing 8,5 Ms 58), the body Ø 8.1 for 19.6 between its shoulders, which sit in the plates' seats; a spigot Ø 4.5 f7 at each end, 2.8 long, its last 1.1
@@ -97,7 +103,7 @@ const WFRAME=(()=>{
     {const P=WD.PIL,yb=WD.PIL_SEAT[1],yt=TI-WD.PIL_SEAT[1],e0=yt-P.sL,e1=yb+P.sL,rb=S.rs+0.02,cd=P.cs-rb,[gr,gd]=P.grv,gc=(P.sr+gr)/2,ga=(gr-P.sr)/2;
       const grv=(y,s)=>[...Array(9).keys()].map(i=>{const t=Math.PI*(1-i/8);return V2(gc+ga*Math.cos(t),y+s*gd*Math.sin(t));});   /* from the spigot out (s: into the body, +1 at the top shoulder) */
       const prof=[V2(P.cs,e0),V2(P.tip[0],e0),V2(P.sr,e0+P.tip[1]),...grv(yt,1),V2(P.r,yt),V2(P.r,yb),...grv(yb,-1).reverse(),V2(P.sr,e1-P.tip[1]),V2(P.tip[0],e1),V2(P.cs,e1),V2(rb,e1-cd),V2(rb,e0+cd),V2(P.cs,e0)];
-      const pil=part('pillars',-20),pg=new THREE.LatheGeometry(prof,64);for(const[x,z]of WD.PILLARS)tag(mesh(pil,pg,M.brass,x,0,z),'050800-1');}
+      const pil=part('pillars',-20),pg=new THREE.LatheGeometry(prof,64);P3(pil,(g,[x,z])=>tag(mesh(g,pg,M.brass,x,0,z),'050800-1'));}
 
     /* ================= the movement ring (Werkring, 05 08 00-3, as revised 6.12.46) ================= */
     /* The pillar plate sits in its seat (Ø 85 H9, 3 +0.1 deep) on a lip (Ø 83), the plate 0.35 proud of the ring's inner face (the coloured section, Wempe_Einheitschronometer.jpg,
@@ -220,7 +226,7 @@ const WFRAME=(()=>{
        index lies in it). Foot: the screw's hole 8 clear 2.8, steady pins 6 and 50 5 either side of the axis at 40, pin 9 at 24.5 under the web, 1.585 -0.005 × 2.5 deep (sure).
        C-D's 82°: the slot's inner wall leans 8° toward the axis going down, 3.4 from it on the top and 3.06 under the thin end, as the stud's upright does (05 03 02-3's 98°,
        js/escapement.js; left out until 15 October 2026). The pins' 0.2 × 90° sinks are left out. Built of five cells: the arm's thin end, the 45° step, the arm, the web and the foot */
-    const uc=part('upperCock',-58);
+    const uc=part('upperCock',-58),UCG=VER.map(([V])=>rv(uc,V));   /* each version's cock with its screw and pins in one group (fine.py takes pieces fixed to each other by their shared group) */
     {const c=H[23],ax=brg(345),vo=brg(75),pl=new Map(),P=q=>{if(!pl.has(q))pl.set(q,add(add(c,ax,q[0]),vo,q[1]));return pl.get(q);};   /* local [u along the axis, v toward O] to plan, one plan point per local point */
       const Fp=[43,8.5],Fm=[43,-8.5],ph=Math.atan2(8.5,43)+Math.acos(6/Math.hypot(43,8.5)),Tp=[6*Math.cos(ph),6*Math.sin(ph)],Tm=[Tp[0],-Tp[1]];
       const onE=(Tq,Fq,f)=>{const D=[Fq[0]-Tq[0],Fq[1]-Tq[1]];let a=0,b=1;for(let i=0;i<60;i++){const m=(a+b)/2;(f([Tq[0]+D[0]*m,Tq[1]+D[1]*m])<0)?a=m:b=m;}return[Tq[0]+D[0]*a,Tq[1]+D[1]*a];};
@@ -236,14 +242,16 @@ const WFRAME=(()=>{
         {L:[...rev(K22),Ku[0],Ku[1]],y0:TT-15,y1:TT},{L:[Ku[1],Ku[0],Fp,Fm],y0:TT-3.2,y1:TT},
         {L:[[0.9,SW],[-0.9,SW],[-0.9,3.4],[0.9,3.4]],y0:TT-15,y1:q=>TT-15+Math.max(0,3.4-((q[0]-c[0])*vo[0]+(q[1]-c[1])*vo[1]))/TN}];   /* the wall's overhang, its underside the 82° face */
       const L=(u,v)=>add(add(c,ax,u),vo,v),[thin,,,web,foot]=cells;
-      thin.F=[T(c,5.206/2,thin.y0,thin.y1),B(c,3.0,thin.y1,0.5),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),T(H[20],rCl26,thin.y0,thin.y1),
+      const thF=[T(c,5.206/2,thin.y0,thin.y1),B(c,3.0,thin.y1,0.5),T(L(3.525,0),0.95/2,thin.y0,thin.y1),T(L(-3.525,0),0.95/2,thin.y0,thin.y1),
         T(WESC.HOLES.studScrew,rM14,thin.y0,thin.y1)];   /* the hairspring stud's screw (WN-11, M1.4; js/escapement.js): not on 05 08 03-1, tapped where the stud's hole lies (estimated) */
       foot.F=[T(H[8],rCl26,foot.y0,foot.y1),B(H[6],rPinQ,foot.y1,2.5),B(H[50],rPinQ,foot.y1,2.5)];web.F=[B(H[9],rPinQ,web.y1,2.5)];
-      tag(mesh(uc,solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),M.gilt),'050803-1');}
+      /* the auxiliary hole 20 (Ø 2.8) in the drawings' versions only: the 6MX's cock has none (Altmeppen: "kein Fenster im oberen Unruhkloben", his comparison's arrow on the
+         Wempe's hole there; Kirov No. 247's cock is plain where the overlay puts 20: sure) */
+      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),M.gilt),'050803-1');});}
     /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
-    tag(screw(uc,H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,M.blued),'WN-ucs');
+    for(const g of UCG)tag(screw(g,H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,M.blued),'WN-ucs');
     /* its steady pins (hole numbers 6, 9, 50; their WN not given): Ø 1.6, 3 long, 1.3 proud (127-556.04 U30: sure for that cock) */
-    for(const k of[6,9,50])tag(cylBetween(uc,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.uc');
+    for(const g of UCG)for(const k of[6,9,50])tag(cylBetween(g,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.uc');
 
     /* ================= the lower balance cock (Unruhkloben unten, 05 08 00-2, revised 2.12.46) ================= */
     /* Profilmessing 20×10×8×3,3 Ms 58: a bar 20 × 8 and 10 -0.1 deep under the top plate's inner face, its axis through 22, 36, 37 (7 apart) at 32°30' from S toward W, and a lug

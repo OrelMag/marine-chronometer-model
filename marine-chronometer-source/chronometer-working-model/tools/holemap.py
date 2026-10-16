@@ -4,15 +4,16 @@ hole whose dark disc is found near where the seeds put it (it can lock onto the 
 model's outline and holes drawn over it, numbered, into r_hm_NAME.png, with r_hm_NAME_tNN.png tiles at 2x for reading by eye. It prints each model hole's
 residual and, for each dark round blob inside the part that no model hole explains, its place in mm: candidates to look at, not findings.
 
-    python holemap.py FRAME PART [--bottom] --seed X,Z:U,V [--seed ...] [--name NAME] [--tol 0.8] [--reuse] [--refine] [--fix mI:RX,RY ...] [--nocand]
+    python holemap.py FRAME PART [--model wempe] [--bottom] --seed X,Z:U,V [--seed ...] [--name NAME] [--tol 0.8] [--reuse] [--refine] [--fix mI:RX,RY ...] [--nocand]
 
 PART is a part name (__mv.userData.parts); --bottom takes the face toward the dial (+y), else the face toward the train side. Seeds are model x,z (mm)
 and pixel u,v; two give a similarity (the mirror chosen by which face the frame shows: the train side's face seen from above is the plan mirrored), three
 or more an affine or homography. --reuse reads the part's loops from r_hm_PART.json in the current directory (written the first time). About 20 s for the loops, then a few seconds."""
 import asyncio, json, math, os, pathlib, sys
 import cv2, numpy as np
+import model   # --model NAME: another model's page (the Wempe's plates); stripped from sys.argv
 HERE = pathlib.Path(__file__).resolve().parent
-PAGE = (HERE.parent / 'index.html').as_uri() + '?snap&qa'
+PAGE = model.PAGE
 a = sys.argv[1:]
 if len(a) < 2: sys.exit(__doc__)
 def opt(k, d=None, many=False):
