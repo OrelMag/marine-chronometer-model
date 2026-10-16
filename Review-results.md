@@ -2477,6 +2477,16 @@ sheets, the balance, escapement, fusee and case against theirs, and the movement
 the wartime one at Greenwich, 5377, 6161). The chain and the fusee's pitch were checked a second time on their sheets. Fixed on branch
 `claude/wempe-audit`; each item says what became of it.
 
+**Status (16 October 2026, `claude/wempe-audit`):** 1, 2 fixed (`b9dc7f9`: the hooks 0.80, the pitch 1.2 and lands 0.87, the flange
+0.76/0.87/0.37; the chain no longer touches the fusee). 3, 4 and four of 5 settled from the figures, the model unchanged (README, Readings
+corrected: the block stays on hole 13, 14.03 is the blank's, the 7ʳ arc the wheel's tips, the tables the jig's pilot holes); 05 03_2's "39"
+open. 6 in but the rim's graduation (`7a4bd48`). 7 corrected (`0d4598e`, `f6323e8`). 8: one piano hinge, the lid stay, the knurled nuts,
+discs, bezel band and knob (`c3b0ab7`); the handles and the latch kept as their sheets draw them, the photographs' recorded under
+Unresolved. 9: the escape endstones and the cock's (`4e06f34`), holes 14-18 and the window, the pin holes through, hole 4's sink, the dial
+screws' holes, the engraving and RGG (`7a4bd48`), the lower cock's screw brass; the ring's screw holes through its cone left (solidGeo) and
+hole 40, absent on 3955, recorded. 10, 11: in progress on `claude/wempe-parity` (the page) and `claude/wempe-checks` (the tools); the
+smoke test, ci.py steps, isolate.py and the hook are done (`f6323e8`, `6cde307`).
+
 **Against the drawings**
 1. Chain's hooks (05 07 04): both side views draw each hook one solid bar the chain's full 0.82, from the 10 × 0.9 strip of the material
    block; the code a middle layer 0.26. Sure.
