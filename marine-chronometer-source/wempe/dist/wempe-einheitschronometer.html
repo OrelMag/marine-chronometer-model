@@ -5137,7 +5137,7 @@ const WCASE=(()=>{
      27 px at 2.45 px/mm), the ring's top level with the bowl's top face (05 01's elevation draws them together, ±2: estimated); 51 00 10 puts the outer pivot's M6 11.5 under a
      line across the box's side 105 over its bottom: the box's bottom 93.5 under the pivots, its parting line at the ring's top */
   const YB=6.35,YP=YB-11.5,YF=YP-93.5,YT=YF+180,YL=YF+105,BW=185/2,WT=12.5;
-  const KX=BW-WT-21,KZ=-(BW-WT-21),KH=YF+WT+65;   /* the key's holder: its hole's centre (back right, 21 from each wall) and its shelf's top (the box, below) */
+  const KX=BW-WT-16.5,KZ=-(BW-WT-16.5),KH=YF+WT+65;   /* the key's holder: its hole's centre (back right, 16.5 from each wall) and its shelf's top (the box, below) */
   const N=240,CC=new Map(),circ=(r,s0=0)=>{const k=r+'|'+s0;if(!CC.has(k)){const o=[];for(let i=0;i<N;i++){const t=s0+i/N*TAU;o.push([r*Math.cos(t),r*Math.sin(t)]);}CC.set(k,o);}return CC.get(k);};
   /* turned solids as plan cells of rings: rs the radii, ys[i] the depths [y0, y1] of the disc (i 0) and of each ring (each a constant or a function of the plan point), F[i] its
      features; each ring in two halves (a ring isn't a simple outline), split at s0 so no feature crosses the split, a sloped one in N/4 sectors. Every circle is the same N points, so neighbouring cells share them */
@@ -5328,8 +5328,8 @@ const WCASE=(()=>{
          305 px at about 2.5 px/mm): the paddle's top 24 ±6 over the box's top, 20 ±8 read apart (16 October 2026; until then read as level with it); the 6MX's shelf 15-30 under
          the rim with its paddle above, moMvyx8eXfo 3:06, Kirova 422), Wempe 5377 (later case, its paddle under the rim) (bonhams_26816_327: the shelf and the key in it), Lange VEB 2285 (drouot_33246921_*_3, from above:
          the shelf's front edge, the key near it), Lange 5510 and the 6MX Kirova 422 (12_Kirow_DEC_422_Kasten_1.jpg). Its legs 55 along the back and right walls (Lange 2285
-         from above: about a third of the box's inside), the hole Ø 11 21 from each wall (the same photograph), 10 thick, its top 65 over the floor (the key's paddle then
-         22.3 over the box's top, between the two readings of the wartime Wempe's; 40 and 2.7 under until 16 October 2026): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 83.4 from the gimbals' centre, beyond the case's
+         from above: about a third of the box's inside), the hole Ø 11 16.5 from each wall (21 read on the same photograph, as the key stood until 16 October 2026: raised to the ring's height its body then met the gimbal ring after 9.5° of swing; 16.5 stands it clear), 10 thick, its top 65 over the floor (the key's paddle then
+         22.3 over the box's top, between the two readings of the wartime Wempe's; 40 and 2.7 under until 16 October 2026): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 89.8 from the gimbals' centre and its body's near side 82.6, beyond the case's
          and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's (x − z 105 against its 103.7) */
       tag(mesh(bx,polyGeo([[BW-WT,-(BW-WT)],[BW-WT-55,-(BW-WT)],[BW-WT,-(BW-WT)+55]],10,[[KX,KZ,5.5]]),MC.mah,0,KH-10,0),'Schluesselhalter');}
     /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
