@@ -63,3 +63,33 @@ Vielen Dank!
 ---
 
 Where each answer goes: 1 and 2 in `wempe/README.md`'s stop work and its "Estimated" entry (the spring's height, a design value 0.9-1.5 since 16 October 2026; `fusee.js` at `SPW`, `tools/wempe_strength.js`); 3 in its "Unresolved" (N against the model's groove end, `PHI0`); 4 in its "Estimated" entries for each part; 5 in its "Unresolved" (the detent's banking: `js/escapement.js`'s block, `dv`'s `d0`, the screw `WN-gkA`).
+
+Also for the Wempe (16 October 2026, from the Soviet books in `References/wempe/photos/catalogue-2026-10-16.md`): **the gold spring's thickness at its bend and the depth of lock as set**, on a wartime Wempe or Lange with its detent out (a micrometer on the gold spring beside its screw head and at its thinnest; the lock read on the stone under a loupe). 05 04 01-2 gives the spring 0.15, Belyakov's table 0.06 for Lange's; 05 04_1 the lock 0.175, the Soviet books 0.20-0.25 (`wempe/README.md`, "Unresolved", "The Soviet design and repair figures").
+
+# What we'd ask for a third model (Ulysse Nardin or Daini Seikosha)
+
+**Nothing is built on these.** A survey on 16 October 2026 (`References/wempe/photos/catalogue-2026-10-16.md`, "Not for the Wempe"; E:\mc-video\third-model-survey\SURVEY.md) found no dimensioned source for any Swiss or Japanese marine chronometer: overall sizes, oblique photographs and one amateur 720p take-apart of a Nardin, against the Hamilton's dimensioned manual and the Wempe's 124 works drawings. The Daini Seikosha (1942-45) was copied from Ulysse Nardin's two-day chronometer with parts interchangeable, and Greenwich calls the Model 21 Hamilton's version of Nardin's standard M.G.F., so a source for any one of the three would serve the Nardin pattern. These are the requests that could change the verdict.
+
+---
+
+**1. Ulysse Nardin, heritage department (Le Locle)**
+
+*Français:* **Plans d'atelier d'un chronomètre de marine Ulysse Nardin, pour un modèle de travail ouvert.** Je construis des modèles 3D en fonctionnement de chronomètres de marine, chaque pièce tracée d'après une source mesurée : le Hamilton Model 21 d'après son manuel de révision de 1948 (https://www.marinechronometermodel.com) et le chronomètre unifié allemand de Wempe d'après ses plans d'atelier (https://www.marinechronometermodel.com/wempe/). Le Model 21 fut conçu en 1941 d'après votre chronomètre de deux jours ; j'aimerais modéliser l'original. Existe-t-il dans vos archives des plans d'atelier, des cotes ou des instructions de révision du chronomètre de marine de deux jours (calibre M.G.F. ou ses successeurs, années 1900-1950) : la platine et les ponts, l'échappement à détente ressort (roue, détente, rouleaux), la fusée et sa chaîne, le balancier et son spiral ? Même une seule feuille cotée de l'échappement serait précieuse. Je citerais l'archive sur le site, et rien ne serait publié sans votre accord.
+
+*English:* **Works drawings of an Ulysse Nardin marine chronometer, for an open working model.** I build running 3D models of marine chronometers, every part traced from a measured source: the Hamilton Model 21 from its 1948 overhaul manual and Wempe's German standard chronometer from its works drawings. The Model 21 was designed in 1941 after your two-day chronometer, and I'd like to model the original. Do your archives hold works drawings, dimensions or overhaul instructions for the two-day marine chronometer (the M.G.F. calibre or its successors, 1900s-1950s): the plates and bridges, the spring detent escapement (wheel, detent, rollers), the fusee and chain, the balance and hairspring? Even one dimensioned sheet of the escapement would help. I'd credit the archive on the site, and publish nothing without your agreement.
+
+**2. NAWCC Library and Research Center** (research@nawcc.org): the Hamilton Watch Company Records Collection, Series V ("Chronometers"): Hamilton's research reports and drawings from 1940-42, in particular any study or measurement of the Ulysse Nardin two-day chronometer Hamilton examined before designing the Model 21 (JCK reports Hamilton "studied ... the Nardin model" in 1941). A list of the folders in Series V would show whether such a study survives; copies of any drawing of the Nardin's escapement, fusee or balance would carry a model.
+
+**3. A library lookup: Jonathan Betts, *Marine Chronometers at Greenwich* (OUP 2017).** Every instrument in the catalogue was dismantled and measured. Does it have an Ulysse Nardin two-day chronometer (or the Seikosha, ZAA0268), and which measurements does its entry tabulate (plate, balance, escape wheel, fusee, train counts)?
+
+**4. Seiko Museum Ginza** (セイコーミュージアム 銀座), on the Daini Seikosha marine chronometer No. 1001 in its collection:
+
+*日本語:* **第二精工舎製 船用経線儀（マリンクロノメーター）の図面・寸法について。** 私は実在のマリンクロノメーターを、実測資料（整備マニュアル、工作図面、写真、動画）だけに基づいて3Dの動く模型として再現しています（ハミルトン Model 21：https://www.marinechronometermodel.com、ドイツのヴェンペ統一クロノメーター：https://www.marinechronometermodel.com/wempe/）。貴館所蔵の第二精工舎製経線儀（1942年、海軍艦政本部向け、ユリス・ナルダン2日巻を範とするもの）について、製作図面、部品寸法、整備要領書などの資料は残っておりますでしょうか。特に脱進機（ガンギ車、デテント、ローラー）、円錐滑車（フュジー）と鎖、テンプとヒゲゼンマイの寸法が分かれば大変助かります。ご協力いただけた場合はサイト上で貴館のお名前を記し、ご了承なしに公開することはいたしません。
+
+*English:* **Drawings or dimensions of the Daini Seikosha marine chronometer.** The same project; does the museum hold works drawings, part dimensions or maintenance instructions for its Daini Seikosha marine chronometer (1942, for the Navy's technical department, after Ulysse Nardin's two-day chronometer): above all the escapement (escape wheel, detent, rollers), the fusee and chain, the balance and hairspring?
+
+**5. National Diet Library** (国立国会図書館): *測器要報* (the Meteorological Instrument Works' journal, 1956-64, PID 1869363), readable only in the library or through its transmission service in Japan: any article on the Works' marine chronometer (Gunji Okada, 岡田群司; the trial chronometer of 1939, production from 1944) with figures or dimensions. Also Haruyama's full article (NAWCC Bulletin, October 2000, pp. 581-586) on the Seikosha, for its figures.
+
+---
+
+Where each answer goes: a dimensioned source for the Nardin pattern (1-4) decides whether a third model can be built to the standard of the other two (CLAUDE.md, "Build from measured lines"), and which: the Nardin itself or the Seikosha; 5 bears on a Japanese chronometer of its own design.
