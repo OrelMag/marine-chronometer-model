@@ -6,7 +6,9 @@ For the session that builds the Soviet 6MX (6МХ) on the Wempe page. Written 16
 
 Written 16 October 2026 for the next session. The first session built X0-X2 and stops here at the user's decision; read "Status" below, then the Wempe README's "The Soviet 6MX" (each reading, its numbers and how sure) and its "Estimated", "Superseded, left out or for later" and "Unresolved" entries for the 6MX.
 
-**Since:** a second session (16 October 2026) built X3 (below) and merged `main` (the mainspring-thickness work) into the branch; X4 is next.
+**Since:** a second session (16 October 2026) built X3 and X4 (below) and merged `main` into the branch (through the parallel `ci.py`). What remains is the release: `ci.py --full`, the merge into `main`, a minor release with the 6MX marked in progress (already on the page), the deploy.
+
+**X4: done (16 October 2026).** The remaining cards (`REV6`'s dial, ring, barrel bridge, upper escape endstone; the pillar plate without the hand-setting cut, which the 6MX lacks: Kirov 247's dial side); the Version button and About marked "in progress"; the 6MX's physics worked apart, the page keeping the drawings' (the user's choice): `wempe_inertia.py --rev 6mx` and `wempe_6mx.js` (`wempe_6mx.json`): the jewels loosen the holes' tolerance (±25 → ±35 µm at the seconds mesh), the swing and rate the drawings' to 0.1° and 0.01 s a day, the balance 4.4 s a day fast before timing; the essay's three paragraphs in "The reparation drawings and the 6MX" (its numbers `data-wphys` from `wempe_6mx.json`); the report's section 15 (the README's 6MX section, `geometry.py`'s `-6mx` checks, `wempe_6mx.js`'s run); `ci.py`'s `wempe-fine-first`, `-bom-first`, `-fine-6mx`, `-bom-6mx` (full), `wempe-6mx` (quick) and `wempe-inertia-6mx` (browser).
 
 **Where the work is.** Branch `claude/wempe-6mx`, worktree `.claude/worktrees/wempe-6mx` (work there; `git log` for the last commit). Pushed, not merged, not released: the site is 3.00.02 without the 6MX. The user chose the plan's recommended options (Kirov No. 247, its contact left out; a third Version button, `rev=6mx`; Kirov 247's dial chosen with the 6MX): don't ask them again.
 
