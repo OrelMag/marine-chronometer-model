@@ -51,7 +51,7 @@ const f=(x,n=2)=>x.toFixed(n),rows=WEMPE?(()=>{const near=(a,b,t)=>Math.abs(a-b)
   ['Locking stone: draw','about 12° (p. 150, Drop and draw)',`${f(dr,1)}°`,'05 04_1 (the flat on the wheel\'s radius)',dr<=0?'none: the preload holds the tooth, not the draw (tripping.js --model wempe)':'less'],
   ['Locking stone: diameter',`1/3 of a tooth space, ${f(space/3)} mm (p. 144, Fig. 143)`,`${f(2*E.rJ*ES)} mm`,'05 04_1 ("Ruhestein∅ 0,75")',near(2*E.rJ*ES,space/3,0.1)?'agrees':rel(2*E.rJ*ES,space/3)],
   ['Locking stone: cut away','4/10 of the cylinder (p. 144, Fig. 143)',`${f(cut,2)} of its diameter`,'05 04_1 (half round)',near(cut,0.4,0.1)?'agrees roughly':`${cut>0.4?'more':'less'}: half round`],
-  ['Tooth\'s locking face to the radial','28° (Fig. 141; Saunier 27°, Britten 20°)',`${f(faceA,1)}°`,'05 04_23 (the face leans 15°)','less undercut: 05 04_23 decides'],
+  ['Tooth\'s locking face to the radial','28° (Fig. 141; Saunier 27°, Britten 20°)',`${f(faceA,1)}°`,'05 04_23 (the face leans 25°)','less undercut: 05 04_23 decides'],
   ['Tooth\'s back: radius',`the impulse roller's, ${f(rr*ES)} mm (Details)`,`${f(fit*ES)} mm (circle fitted to the back)`,'05 04_23 (the ∅ 6 cutter\'s arc)',near(fit,rr,0.15)?'agrees roughly':`${fit>rr?'flatter':'rounder'}: 05 04_23 decides`],
   ['Impulse jewel proud of the roller','at most 0.002 in, 0.05 mm (p. 150, Drop and draw)',`${f((E.rp-E.rRoll)*ES,3)} mm`,'05 04_1 (the stone\'s face to r 3.35, the roller r 3.39)',E.rp<E.rRoll?'agrees: inside the roller\'s edge':'agrees'],
   ['Detent: flexure to locking jewel',`the wheel's diameter, ${f(2*ES)} mm (p. 138)`,`${f(Ld)} mm`,'05 04_1 (the spring\'s middle to the stone)',near(Ld,2*ES,0.1)?'agrees roughly':rel(Ld,2*ES)],

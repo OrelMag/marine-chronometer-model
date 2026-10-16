@@ -346,7 +346,9 @@ since which click is which isn't settled, so no swing is read from them (<code>R
 python geometry.py        # the browser checks on the Wempe's page, one after another: assets/geometry.json (about 11 minutes)
 python build_report.py    # this page, index.html (a second)</pre>
 <p>Each tool can be run on its own from <code>marine-chronometer-source/chronometer-working-model/tools/</code> (the commands are beside each tool's checks above). The
-model's <code>ci.py</code> runs the quick forms of all of them on every change, and the full runs with <code>--full</code>; this page is rebuilt when their results change.</p>
+model's <code>ci.py</code> runs the quick forms of all of them on every change, and the full runs with <code>--full</code>, but three: the readings off the videos
+(<code>wempe_swing.py</code>, <code>acoustic.py --model wempe</code>), which need the videos, and the start-up fit made on them (<code>wempe_startup.js</code>), whose result
+<code>wempe_escapement.js</code> checks the model's damping against. This page is rebuilt when their results change.</p>
 
 <h2 id="scripts">Scripts</h2>
 <div class="tw"><table>
