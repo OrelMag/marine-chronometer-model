@@ -4,6 +4,30 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.00.00 · 2026-10-16
+- The Wempe Einheits-Chronometer is complete: every part from its works drawings, running, with its essay and its report
+- Set the Wempe's hands, keep Greenwich or local time, and watch its case ride the gimbals on a rolling ship
+- The Wempe's parts drawn closer still to their sheets, among them the spring that holds the fusee's maintaining detent
+- The Wempe's winding key stands in its holder in the box's corner, as real boxes keep it
+- Report a bug or inaccuracy from the Wempe's page, and a link preview of its own
+
+## 2.42.05 · 2026-10-16
+- The balance cock's screw now sits where the restoration videos show its hole, 2 mm nearer the bridge's middle, its steady pins with it
+
+## 2.42.04 · 2026-10-16
+- The Wempe: a choice of dial under Variants, Wempe of Hamburg (as No. 3955) or A. Lange & Söhne of Glashütte (as No. 5177), each traced from its photograph
+- The Wempe: the cork ring on the dust bush, which keeps dust from the winding hole out of the movement, and the raised seat round the hole inside the bowl that it meets
+- The Wempe: the winding square ends in the turned point its drawing gives
+- The Wempe's essay: the gimbals figure shows the box, ring and case again; the transport box had hidden them
+
+## 2.42.03 · 2026-10-15
+- The fusee's dust cap no longer hangs over the opening round the balance: its flange now ends at the barrel bridge's edge
+- The small hole at 3 o'clock in the barrel bridge is now the shallow slot in its underside that the real bridge has, for levering it off
+- The timing weights now turn 3 turns either way in the rate panel, enough for the 2 minutes a day the manual has them take out
+
+## 2.42.02 · 2026-10-15
+- The Wempe's box in mahogany, as Wempe No. 6161's, around its brass bowl
+
 ## 2.42.01 · 2026-10-15
 - The Wempe's stop bar lies along its drawn line, so the fusee is fully wound where the stop holds it: 55.9 hours to run down, the groove's last tenth of a turn left empty
 - The stop bar's spring as thin as its bending allows

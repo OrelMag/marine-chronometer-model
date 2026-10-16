@@ -5,7 +5,7 @@
    (Verschlußplatte 05 01 00-2, rev. a 14.4.48), the bezel and its glass (Glasrand R-05 01 01-2, 6.3.42; Glasrand kompl. 05 01 01), the gimbal ring with its bracket, pivot
    screws and lock nuts (Kardanring 05 01 00-5, Kardanringkloben -6, WN-79, WN-400, 05 01 Gehäuse Kardan, 1940, reissued 28.6.46), the transit lock (Feststeller, 15 on
    05 01), the wooden box with its lid, hinges, handles (51 00 10), maker's plate (Firmenschild 00 01 01-9, "Type 3371") and latch tongue (Zunge P. 51 00 02-2), the outer
-   pivots (WN-80) in the box's walls, and the one-way winding key of 1943 (Chronometerschlüssel 51 00 11: 05 01 02-2, -3), lying in the box.
+   pivots (WN-80) in the box's walls, and the one-way winding key of 1943 (Chronometerschlüssel 51 00 11: 05 01 02-2, -3), standing in its holder in the box's back right corner.
    Part of the Wempe model (three.js r128). Declares only WCASE: WCASE.build(M) returns {root, ring, bowl, lid, tongue, YP, YB}: root the box (the scene's group), ring the
    gimbal ring's group (turning about x, the outer pivots' axis, at YP), bowl the bowl's group inside it (turning about z, the inner pivots' axis), into which the page puts
    the movement (at y -YP: the movement's frame and the case's coincide at rest), lid the lid's group (turning about x at its hinge), tongue the latch tongue's.
@@ -21,6 +21,7 @@ const WCASE=(()=>{
      27 px at 2.45 px/mm), the ring's top level with the bowl's top face (05 01's elevation draws them together, ±2: estimated); 51 00 10 puts the outer pivot's M6 11.5 under a
      line across the box's side 105 over its bottom: the box's bottom 93.5 under the pivots, its parting line at the ring's top */
   const YB=6.35,YP=YB-11.5,YF=YP-93.5,YT=YF+180,YL=YF+105,BW=185/2,WT=12.5;
+  const KX=BW-WT-21,KZ=-(BW-WT-21),KH=YF+WT+40;   /* the key's holder: its hole's centre (back right, 21 from each wall) and its shelf's top (the box, below) */
   const N=240,CC=new Map(),circ=(r,s0=0)=>{const k=r+'|'+s0;if(!CC.has(k)){const o=[];for(let i=0;i<N;i++){const t=s0+i/N*TAU;o.push([r*Math.cos(t),r*Math.sin(t)]);}CC.set(k,o);}return CC.get(k);};
   /* turned solids as plan cells of rings: rs the radii, ys[i] the depths [y0, y1] of the disc (i 0) and of each ring (each a constant or a function of the plan point), F[i] its
      features; each ring in two halves (a ring isn't a simple outline), split at s0 so no feature crosses the split, a sloped one in N/4 sectors. Every circle is the same N points, so neighbouring cells share them */
@@ -41,13 +42,18 @@ const WCASE=(()=>{
   /* a group whose +y points along unit u (for a screw put in along u: KIT's screw draws its shank toward +y), at point p */
   const along=(par,p,u)=>{const g=new THREE.Group();g.position.set(p[0],p[1],p[2]);g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(u[0],u[1],u[2]).normalize());par.add(g);return g;};
   const box=(par,w,h,d,x,y,z,mt)=>mesh(par,new THREE.BoxGeometry(w,h,d),mt,x,y,z);
-  /* oak, drawn in code (the boxes photographed are oak: Greenwich's wartime Wempe, Lange 1947): pale ground, long dark grain and the rays; birch (the outer box's,
-     "gebleichte Birke": bleached birch) the same way, paler and finer, without the rays */
-  function oakTex(birch){const c=document.createElement('canvas');c.width=256;c.height=512;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));x.fillStyle=birch?'#e4d5b7':'#b48a55';x.fillRect(0,0,256,512);
+  /* the box's mahogany, drawn in code, as Wempe No. 6161's (Antiquorum 208-4, a brass bowl in brass gimbals as the drawings' Ms.): its colours sampled on that photograph,
+     the lid's lit front a median #904527, its grain #773921 to #bb8166, the box's front in shade #491a10 to #8c4e34; quarter-sawn, so a ribbon figure of long light and dark
+     bands, and fine pores; the texture's ground and bands about 0.7 of those, since the page's light renders a colour about 1.4 times the photograph's (the Case view's
+     box front #a34d32 drawn with the sampled colours). The wartime boxes photographed (Greenwich's wartime Wempe, Lange 1947) are oak round a Bakelite bowl: the brass bowl drawn is 6161's.
+     Birch (the outer box's, "gebleichte Birke": bleached birch): a pale ground and fine long grain */
+  function woodTex(birch){const c=document.createElement('canvas');c.width=256;c.height=512;const x=/** @type {CanvasRenderingContext2D} */(c.getContext('2d'));x.fillStyle=birch?'#e4d5b7':'#66301a';x.fillRect(0,0,256,512);
     let s=birch?23:11;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
-    for(let i=0;i<140;i++){const xx=rnd()*256,a=(birch?0.03:0.05)+rnd()*(birch?0.08:0.16),ph=rnd()*6,amp=1.5+rnd()*6;x.strokeStyle=rnd()<0.6?(birch?`rgba(150,120,80,${a})`:`rgba(90,55,25,${a})`):`rgba(235,200,150,${a})`;x.lineWidth=0.5+rnd()*(birch?1.2:2.2);x.beginPath();
-      for(let y=0;y<=512;y+=16){const px=xx+Math.sin(y/120+ph)*amp;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();}
-    if(!birch)for(let i=0;i<60;i++){x.fillStyle=`rgba(225,190,140,${0.18+rnd()*0.2})`;x.fillRect(rnd()*256,rnd()*512,1+rnd()*1.5,6+rnd()*16);}
+    const line=(xx,amp,ph,w,col)=>{x.strokeStyle=col;x.lineWidth=w;x.beginPath();for(let y=0;y<=512;y+=16){const px=xx+Math.sin(y/120+ph)*amp;y?x.lineTo(px,y):x.moveTo(px,y);}x.stroke();};
+    if(birch){for(let i=0;i<140;i++){const a=0.03+rnd()*0.08;line(rnd()*256,1.5+rnd()*6,rnd()*6,0.5+rnd()*1.2,rnd()<0.6?`rgba(150,120,80,${a})`:`rgba(235,200,150,${a})`);}}
+    else{for(let xx=-8;xx<264;){const w=8+rnd()*30,lt=rnd()<0.5;line(xx+w/2,2+rnd()*3,rnd()*6,w,lt?`rgba(140,84,60,${0.18+rnd()*0.22})`:`rgba(58,20,9,${0.15+rnd()*0.25})`);xx+=w;}   /* the ribbon: bands toward the sampled light and dark */
+      for(let i=0;i<90;i++){const a=0.05+rnd()*0.15;line(rnd()*256,1+rnd()*4,rnd()*6,0.4+rnd()*1.4,rnd()<0.7?`rgba(40,14,6,${a})`:`rgba(150,90,62,${a})`);}
+      for(let i=0;i<900;i++){x.fillStyle=`rgba(40,14,6,${0.25+rnd()*0.35})`;x.fillRect(rnd()*256,rnd()*512,0.8,2+rnd()*5);}}   /* the pores, short dark dashes along the grain */
     const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;}
   /* a cushion (the outer box's Polster, 51 00_5): w × h on a board, standing out along its own +y from 0, t0 thick at its rim rising as (1 − u²)(1 − v²) (u, v −1 to 1 across it)
      to T in its middle, as 51 00_5's sections draw each one, a lens thickest at its middle; one closed solid, its face shaded smooth */
@@ -72,9 +78,9 @@ const WCASE=(()=>{
 
   function build(M){
     const S=(c,m,r,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:sc(c),metalness:m,roughness:r},x));
-    const MC={oak:S(0xffffff,0,0.55,{map:oakTex()}),oakEnd:S(0x8a6238,0,0.6),black:S(0x18181a,0.25,0.42),knob:S(0x111112,0.1,0.35),white:S(0xf2f1ec,0.1,0.5),
+    const MC={mah:S(0xffffff,0,0.42,{map:woodTex()}),black:S(0x18181a,0.25,0.42),knob:S(0x111112,0.1,0.35),white:S(0xf2f1ec,0.1,0.5),
       label:new THREE.MeshStandardMaterial({map:plateTex(),metalness:0.1,roughness:0.5}),alu:S(0xc9ccd0,1,0.35),
-      birch:S(0xffffff,0,0.6,{map:oakTex(true)}),felt:S(0x5b5f55,0,0.95),leather:S(0x5a3a22,0,0.7)};   /* the outer box's bleached birch; its cushions' cover and the strap: not given (estimated) */
+      birch:S(0xffffff,0,0.6,{map:woodTex(true)}),felt:S(0x5b5f55,0,0.95),leather:S(0x5a3a22,0,0.7)};   /* the outer box's bleached birch; its cushions' cover and the strap: not given (estimated) */
     const K=KIT.parts(new THREE.Group(),M),{screw}=K;   /* KIT's screw (its exploded-view list is its own: the case isn't exploded) */
     const root=new THREE.Group(),ringG=new THREE.Group(),bowlG=new THREE.Group();ringG.position.y=YP;root.add(ringG);ringG.add(bowlG);
     const prt=(par,name,y=0)=>{const g=new THREE.Group();g.userData.partName=name;g.position.y=y;par.add(g);return g;};
@@ -93,6 +99,13 @@ const WCASE=(()=>{
        the cone, seen through once the bowl is turned over to wind */
     {const F0=[{p:C(H[10],8.2/2,72),a:YB-59.5,b:YB-53},{p:C([0,0],1.52,40),a:YB-59.5,b:YB-53}];
       tag(mesh(bowl,solidGeo([{loop:circ(34.1),y0:YB-59.5,y1:YB-53,F:F0}]),M.brass),'050100-1');
+      /* the winding hole's seat inside: a raised ring round the hole on the bottom, which the cork ring on the dust bush (05 08 01-4, frame.js) meets. Not on the casting's
+         sheet (it draws no hole and nothing machined); the 6MX's bowls have it: moMvyx8eXfo 3:35 (1080p, the bowl empty) a flat-topped ring standing on the bottom round
+         the hole (sure that it stands), 72 px across against the hole's 38.5, so Ø 15.3 by the hole's 8.2 (likely), the cork's 16.1 nearly; its top an ellipse 60 px by 72,
+         so seen 34° from the axis, its near wall 8.5 ±1.5 px high at about 4.5 px/mm (the bottom's scale), 3.4 ±0.6 high (rough); DIxob2Rl4dc 5:09 (480p) a pale ring
+         there, so perhaps a pressed bush. Without it the cork stands 3.84 short of the bottom; drawn to the cork's top, 3.84 high (estimated: inside the video's height),
+         its bore the hole's 8.2 */
+      {const ya=YB-53,yb=YB-53+3.84;tag(mesh(bowl,new THREE.LatheGeometry([V2(4.1,ya),V2(7.65,ya),V2(7.65,yb),V2(4.1,yb),V2(4.1,ya)],72),M.brass,H[10][0],0,H[10][1]),'050100-1',1);}
       const fil=[...Array(13).keys()].map(i=>{const t=i/12*Math.PI/2;return[42+7*Math.sin(t),YB-46-7*Math.cos(t)];}).reverse();   /* the round r 7 about (42, YB − 46), from the bore's wall down to the floor */
       const pr=[[34.1,YB-65],[36.25,YB-65],[53,YB-50.5],[53,YB-23.5],[54,YB-23.5],[54,YB-12],[59,YB-12],[59,YB],[49,YB],...fil,[34.1,YB-53]];
       const g=new THREE.LatheGeometry([...pr,pr[0]].map(([r,y])=>V2(r,y)),N).toNonIndexed();g.computeVertexNormals();   /* each face its own normal, then smoothed round the axis only (smoothRev), so the profile's corners stay sharp */
@@ -123,7 +136,11 @@ const WCASE=(()=>{
     /* ================= the closing plate (Verschlußplatte 05 01 00-2, rev. a 14.4.48) ================= */
     /* Ms, 1:1, every figure (sure but the hole Ø 1.2 at 12.4 and the 2 −0.05/−0.1, likely): Ø 68 −0.2, 2.3 at its rim, the boss Ø 28 −0.2 on its outer face making it 5 thick;
        the hole Ø 5.5 +0.1 through the middle, counterbored Ø 7.5 +0.1 from outside to 2 under the inner face; a groove Ø 10 to Ø 26, 1.5 deep, in the inner face; M2.6 at 25,
-       Ø 1.2 at 12.4 (drawn at 12.35, inside the groove's edge) on one line, Ø 8 +0.2 at 22.6 at 90° to it. It lies in the bowl's foot, its inner face on the recess's floor and
+       Ø 1.2 at 12.4 (drawn at 12.35, inside the groove's edge) on one line, Ø 8 +0.2 at 22.6 at 90° to it. The Ø 1.2 is drilled blind from the groove's floor: the section
+       draws its drill point inside the boss, its tip a pixel or so (0.1-0.2) short of the boss's face (likely; drawn with a 118° point, its tip 0.15 short). Between the rim's
+       underside and the boss a round, drawn and not figured: r 1.3 (scaled 1.3-1.5 at 3.45 px/mm; likely). Until 15 October 2026 the hole was drawn through and the corner
+       sharp. Wempe 3955's plate (16_Wempe_3955_Gehäusetopf_Kardan.jpg) shows two small holes, about Ø 1 at r 11 opposite each other, in the boss's face: not on the sheet,
+       not drawn (README, Unresolved). It lies in the bowl's foot, its inner face on the recess's floor and
        its boss 0.5 inside the foot, turning on its screw (7: WN-71, unsure) in the bottom: turned by the knob in its M2.6 (WN-72, brass on Wempe 3955,
        16_Wempe_3955_Gehäusetopf_Kardan.jpg), its Ø 8 comes over the winding hole for the key and away from it to close it; the closing spring (Verschlußfeder 05 01 00-7, 14 on 05 01)
        that holds it, likely in the groove with its end in the Ø 1.2, has no sheet: not drawn. Its turn: built open, the Ø 8 over hole 10; at rest the spring holds it shut, turned
@@ -131,8 +148,10 @@ const WCASE=(()=>{
        opens it (shutter, app.js), as the 6MX's shutter is opened for the key (Uy8A88_j-cA 5:21-5:25; the 6MX's own is a pin in a slot) */
     const cp=prt(bowlG,'closingPlate',-YP),CPS=25*D2R;cp.rotation.y=CPS;
     {const t8=Math.atan2(H[10][1],H[10][0]),tk=t8-Math.PI/2,s0=t8+Math.PI/4,P=(r,t)=>[r*Math.cos(t),r*Math.sin(t)],y0=YB-64.5,yr=YB-61.8,y1=YB-59.5;
-      const rs=[5,13,13.95,33.95],ys=[[y0,y1],[y0,y1-1.5],[y0,y1],[yr,y1]];
-      const F=[[{p:C([0,0],5.55/2,48),a:y0,b:y1},{p:C([0,0],7.55/2,60),a:y0,b:y0+3}],[{p:C(P(12.35,tk),0.6,24),a:y0,b:y1-1.5}],[],[{p:C(P(22.6,t8),8.1/2,72),a:yr,b:y1},{p:C(P(25,tk),1.32,32),a:yr,b:y1}]];
+      const q12=P(12.35,tk),yt=y0+0.15,yh=yt+0.6/Math.tan(59*D2R),ro=1.3,fc=13.95+ro,fy=p=>yr-ro+Math.sqrt(Math.max(0,ro*ro-(rr(p)-fc)**2));   /* the blind hole's point (yt its tip, yh its top); the round about (fc, yr − ro) */
+      const rs=[5,13,13.95,...[1,2,3].map(i=>fc-ro*Math.cos(i*Math.PI/8)),fc,33.95],ys=[[y0,y1],[y0,y1-1.5],[y0,y1],[fy,y1],[fy,y1],[fy,y1],[fy,y1],[yr,y1]];   /* the round in four rings, 22.5° of it each */
+      const F=[[{p:C([0,0],5.55/2,48),a:y0,b:y1},{p:C([0,0],7.55/2,60),a:y0,b:y0+3}],[{p:C(q12,0.6,24),a:yh,b:y1-1.5},{p:C(q12,0.03,24),q:C(q12,0.59,24),a:yt,b:yh}],[],[],[],[],[],
+        [{p:C(P(22.6,t8),8.1/2,72),a:yr,b:y1},{p:C(P(25,tk),1.32,32),a:yr,b:y1}]];
       tag(mesh(cp,smoothRev(solidGeo(cells(rs,ys,F,s0))),M.brass),'050100-2');
       tag(screw(cp,0,0,y0+3,3.6,2.5,7.5,1.5,M.steel),'WN-71');   /* its screw: head Ø 7.2 × 2.5 in the counterbore, M3 through the plate into the bottom (estimated) */
       const kq=P(25,tk);tag(screw(cp,kq[0],kq[1],yr,2.6,2.4,2.2,1.3,M.brass),'WN-72');}   /* the knob: a brass head Ø 5.2 × 2.4 (Wempe 3955's), M2.6 (estimated) */
@@ -141,13 +160,14 @@ const WCASE=(()=>{
     /* Ms, Kokillenguß, 1:1, every figure (sure): Ø 125 for its top 8.2, a 30° chamfer to Ø 116 at its underside, 16 high; the sight bore Ø 92 (it shows the dial's minute
        track, Ø 90), the lower bore Ø 106, 4.5 deep. It lies on the bowl's top face round the movement ring's flange (Ø 105.95, the same figure: the 1941 assembly 05 01 01 draws
        the flange's recess so, its depth scaling 4.2-5.2), the recess drawn 4.75 deep (the casting's 4.5 opened to the flange's 4.7) and relieved to Ø 104.2 a further 0.7 over the
-       dial, which stands 0.6 proud of the flange (05 01 01 draws a step there), with a notch for the ring's radial pin (WN-202, Stellstift 3 in the coloured section) at 6 o'clock,
-       which sets the movement's turn. The glass in a seat at the top: Ø 112 × 2.3 (05 01 01: Ø 111.7 scaled at 4.78 px/mm, its section 2.3), flush with the top face, so its
+       dial, which stands 0.6 proud of the flange (05 01 01 draws a step there), with a notch for the ring's radial pin (WN-202, Stellstift 3 in the coloured section) at 12 o'clock,
+       which sets the movement's turn (1.8 wide for the pin's Ø 1.6 and 0.3 beyond its end: estimated; 05 08 00-3 puts the pin's hole at 12, frame.js; Wempe 3955's dial side,
+       3_Wempe_3955_uZ.jpg, shows a gap in the rim round the movement at 12, over the pin's end; until 15 October 2026 at 6 o'clock, 1.5 wide). The glass in a seat at the top: Ø 112 × 2.3 (05 01 01: Ø 111.7 scaled at 4.78 px/mm, its section 2.3), flush with the top face, so its
        underside is 16.7 over the pillar plate's dial face (05 02_1: 15.8, corrected in pencil to 17.0; the 1941 bezel's own section puts it at 15.3): README. How the bezel is held
        on the bowl isn't drawn (no screws in 05 01's list; Kirow 422's bezel is knurled, so screwed): not drawn */
     const bz=prt(bowlG,'bezel',-YP);
     {const b0=YB,top=YB+16,ch=p=>b0+(rr(p)-58)/Math.tan(30*D2R);
-      const rec=bool(C([0,0],53.05,720),[[-0.75,52.5],[0.75,52.5],[0.75,55.3],[-0.75,55.3]]).uni[0];
+      const rec=bool(C([0,0],53.05,720),[[-0.9,-52.5],[-0.9,-55.3],[0.9,-55.3],[0.9,-52.5]]).uni[0];
       const F=[{p:rec,a:b0,b:b0+4.75},{p:C([0,0],52.1,720),a:b0,b:b0+5.45},{p:C([0,0],46,600),a:b0,b:top},{p:C([0,0],56.1,720),a:top-2.3,b:top}];
       tag(mesh(bz,smoothRev(solidGeo(cells([58,62.5],[[b0,top],[ch,top]],[F]))),M.brass),'050101-2');
       const gl=tag(mesh(bz,solidGeo([{loop:circ(56),y0:top-2.3,y1:top}]),M.glass),'050101-1');gl.userData.noShadow=1;gl.userData.inkBox=1;}   /* no Edges lines: a glass is drawn as a ghost, whose outline the line pass lays over everything, the box's wood in front of it too (the Hamilton's crystal and box glass are inkBox) */
@@ -170,10 +190,10 @@ const WCASE=(()=>{
     /* "Holzgehäuse 185 × 185 × 180 mm außen" (05 01, sure); its walls 12.5 (51 00 10's section, sure; 05 01 draws the walls 12.6 and their inside 160, its "160 Ø"); the line
        across 51 00 10's side 105 over the bottom taken as the lid's parting line (it lies at the ring's top, 11.5 over the pivot's M6: likely). Its other boards, joints and the lid's
        glazed top aren't on a sheet in the set: drawn as Greenwich's wartime Wempe (rmg_L5393_wempe_wartime_001.jpg) and Lange 1947 (drouot_33810142_*) show them, the floor
-       12.5, the lid's top a frame 20 wide round a glass 3 thick, two hinges at the back: estimated. Oak, as both */
+       12.5, the lid's top a frame 20 wide round a glass 3 thick, two hinges at the back: estimated. Mahogany, as Wempe No. 6161's (woodTex) */
     const bx=prt(root,'box');
     {const B=tag(new THREE.Group(),'Holzkasten');bx.add(B);const hh=YL-YF-WT;
-      box(B,2*BW,WT,2*BW,0,YF+WT/2,0,MC.oak);for(const s of[-1,1]){box(B,2*BW,hh,WT,0,YF+WT+hh/2,s*(BW-WT/2),MC.oak);box(B,WT,hh,2*BW-2*WT,s*(BW-WT/2),YF+WT+hh/2,0,MC.oak);}
+      box(B,2*BW,WT,2*BW,0,YF+WT/2,0,MC.mah);for(const s of[-1,1]){box(B,2*BW,hh,WT,0,YF+WT+hh/2,s*(BW-WT/2),MC.mah);box(B,WT,hh,2*BW-2*WT,s*(BW-WT/2),YF+WT+hh/2,0,MC.mah);}
       /* the outer pivots a (11: WN-80): M6 through the side walls (51 00 10: "Verbohren 4,8 mm Gew. M 6", 93.5 over the bottom), their ends the pivots in the ring's holes;
          heads Ø 9 × 3.8 (51 00 10's front and side views, 2.36 px/mm) and a brass bearing disc Ø 23 × 2.4 on each wall's inside (05 01's elevation, scaled): estimated */
       for(const s of[-1,1]){tag(screw(along(bx,[s*BW,YP,0],[-s,0,0]),0,0,0,4.5,3.8,22.5,3,M.steel),'WN-80');
@@ -185,12 +205,20 @@ const WCASE=(()=>{
         const o=new THREE.Shape(stadiumPts([0,-20],[0,20],30).map(([y,z])=>V2(z,y)));const og=extrude(o,{depth:3,bevelEnabled:false,curveSegments:24});og.rotateY(Math.PI/2);mesh(g,og,MC.alu,7,-12,0);   /* the grip: the oval 70 × 30, hanging 12 below the strip's middle (its dashed outline on the sheet's front view, scaled at 2.36 px/mm) */
         for(const z of[-45,45])tag(screw(along(g,[3,0,z],[-1,0,0]),0,0,0,2.5,1.6,11,1.2,M.steel),'WN-hg');}
       /* the hinges, two at the back (estimated: Lange 1947's): leaves 40 × 18 × 1.2 on the back, the knuckle Ø 5 on the parting line */
-      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier');bx.add(g);box(g,40,18,1.2,s*55,YL-9,-BW-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,YL,-BW-2.5);k.rotation.z=Math.PI/2;}}
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier');bx.add(g);box(g,40,18,1.2,s*55,YL-9,-BW-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,YL,-BW-2.5);k.rotation.z=Math.PI/2;}
+      /* the key's holder (no sheet: the box's own, 127-556.02, isn't in the set): a triangular shelf across the back right corner, the key standing in a hole through it, its
+         body's cone seated on the hole's edge and its paddle up, as every photographed box keeps it: Greenwich's wartime Wempe (rmg_L5393_wempe_wartime_001.jpg: the black
+         1943 key, its paddle about level with the box's top), Wempe 5377 (bonhams_26816_327: the shelf and the key in it), Lange VEB 2285 (drouot_33246921_*_3, from above:
+         the shelf's front edge, the key near it), Lange 5510 and the 6MX Kirova 422 (12_Kirow_DEC_422_Kasten_1.jpg). Its legs 55 along the back and right walls (Lange 2285
+         from above: about a third of the box's inside), the hole Ø 11 21 from each wall (the same photograph), 10 thick, its top 40 over the floor (the key's paddle then
+         2.7 under the box's top, as the wartime Wempe's): estimated; of the box's mahogany. The paddle faces the box's middle, its plane 83.4 from the gimbals' centre, beyond the case's
+         and ring's reach (79.4: massprops.py); the shelf's front edge lies beyond the ring's (x − z 105 against its 103.7) */
+      tag(mesh(bx,polyGeo([[BW-WT,-(BW-WT)],[BW-WT-55,-(BW-WT)],[BW-WT,-(BW-WT)+55]],10,[[KX,KZ,5.5]]),MC.mah,0,KH-10,0),'Schluesselhalter');}
     /* the lid: its walls 75 − 12.5 high on the box's, its top a frame round the glass (estimated, above); hinged at the back */
     const lidG=new THREE.Group();lidG.position.set(0,YL,-BW-2.5);root.add(lidG);const ld=prt(lidG,'lid');ld.position.z=2.5;   /* turning about the hinges' knuckles, 2.5 behind the back */
     {const B=tag(new THREE.Group(),'Holzkasten.D');ld.add(B);const h=YT-YL-WT,o=BW;
-      for(const s of[-1,1]){box(B,2*BW,h,WT,0,h/2,o+s*(BW-WT/2),MC.oak);box(B,WT,h,2*BW-2*WT,s*(BW-WT/2),h/2,o,MC.oak);
-        box(B,2*BW,WT,20,0,h+WT/2,o+s*(BW-10),MC.oak);box(B,20,WT,2*BW-40,s*(BW-10),h+WT/2,o,MC.oak);}
+      for(const s of[-1,1]){box(B,2*BW,h,WT,0,h/2,o+s*(BW-WT/2),MC.mah);box(B,WT,h,2*BW-2*WT,s*(BW-WT/2),h/2,o,MC.mah);
+        box(B,2*BW,WT,20,0,h+WT/2,o+s*(BW-10),MC.mah);box(B,20,WT,2*BW-40,s*(BW-10),h+WT/2,o,MC.mah);}
       const g=tag(box(ld,151,3,151,0,h-1.5,o,M.glass),'Deckelglas');g.userData.noShadow=g.userData.inkBox=1;   /* no Edges lines, as the bezel's glass */
       for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier',1);ld.add(q);box(q,40,18,1.2,s*55,9,-0.6,M.brass);}
       /* the maker's plate on the lid's front (Greenwich's wartime Wempe: its place), 26 × 52 aluminium, 1 thick (Alu 10: likely), on four pins in its Ø 1.2 holes */
@@ -290,8 +318,11 @@ const WCASE=(()=>{
        through the paddle's face does on 51 00 11's outside view), 4 −0.05 under the top. The square 3.1 +0.05 across, 19 deep, its corners on the key's x and z as the fusee
        arbor's square has them (its 60° sink 1 deep left out). The tube's head drawn 6.8 under the body's top (so it clears the paddle; the free length then 31.8, scaled 30),
        the spring's wire 0.9, the end's relief to Ø 4.6, the slot and cross hole not cut: estimated. Built in the key's own frame (its axis +y, the tube's mouth at 0) in its
-       part's group, which lies on the box's floor or, while it winds, sits on the fusee's square (keyAt) */
-    const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(-62,YF+WT+(f?10.25:7.25),-40);key.rotation.set(Math.PI/2,(f?30.7:19.8)*D2R,0);};KEYREST();   /* as first drawn the 1940 key (below) on its collar's rim (r 10.25) and its handle's edge, 30.7° from flat */   /* on its body and its paddle's rim: the paddle 19.8° from flat (17.25 sin + 1.5 cos = 7.25) */
+       part's group, which stands in its holder in the box or, while it winds, sits on the fusee's square (keyAt) */
+    /* at rest the key stands in its holder (above), its axis up, its tube's mouth under the shelf where its body's cone is Ø 11, the hole's: 35.27 over the mouth (the cone
+       Ø 9.14 to 14.5 over 10, from 31.8); as first drawn the 1940 key's cone (Ø 10.32 to 17.9 over 19.3, from 31.7) at 33.43. The paddle (and the 1940 handle) faces the box's
+       middle (turned −45° about the axis); until 15 October 2026 it lay on the box's floor in the back left corner, where no photograph has it */
+    const key=prt(root,'key'),KEYREST=()=>{const f=!!key.userData.first;key.position.set(KX,KH-(f?33.43:35.27),KZ);key.rotation.set(0,-45*D2R,0);};KEYREST();
     {const g=new THREE.Group();g.userData.rev='last';key.add(g);
       const lathe=(pr,n=40)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
       const T=50.1,B0=31.8,BT=B0+25.1,sq=3.15/Math.SQRT2;
@@ -308,7 +339,7 @@ const WCASE=(()=>{
        the side view draws it 3.2 thick and no bulb), widest Ø 34.8 about 9 from its top, its neck Ø 16.5; a collar Ø 20.5 × 2.9; the body (2) a cone Ø 17.9 to 10.3 over 19.3;
        the stem (3) Ø 6.0 pressed in, its socket for the fusee's square drilled from its end (drawn round, Ø 3.1, 28 deep, as the later tube's: estimated), its end chamfered
        0.9 × 45°; the screw (5) on the collar beside the tang, 5.3 from the axis (head Ø 3 × 1, estimated). The click spring (4) in the body isn't drawn. Its materials, which the
-       sheet doesn't give, as the later key's (estimated). It lies where the later key does, on its collar's rim and its handle's edge (the handle 30.7° from flat) */
+       sheet doesn't give, as the later key's (estimated). It stands in the holder as the later key does, on its cone (KEYREST) */
     {const g=new THREE.Group();g.userData.rev='first';key.add(g);   /* placed by the key part (KEYREST, keyAt): the same frame, its stem's end at 0 */
       const lathe=(pr,n=48)=>{let q=[...pr,pr[0]];if(area(q)<0)q=q.slice().reverse();return new THREE.LatheGeometry(q.map(([r,y])=>V2(r,y)),n);};
       tag(mesh(g,lathe([[3.0,31.7],[5.16,31.7],[8.95,51.0],[10.25,51.0],[10.25,54.0],[0,54.0],[0,45.0],[3.0,45.0]]),MC.black),'127556.02-02');   /* the body and collar, the stem pressed 13.3 into it (estimated) */
@@ -319,7 +350,7 @@ const WCASE=(()=>{
       const pl=polyGeo(area(out)>0?out:out.slice().reverse(),3.2);pl.rotateX(-Math.PI/2);pl.translate(0,0,1.6);tag(mesh(g,pl,MC.black),'127556.02-01');
       tag(mesh(g,lathe([[0,54.0],[1.5,54.0],[1.5,55.0],[0,55.0]],20),M.steel,0,0,5.3),'127556.02-05');}
     /* keyAt(seat): the key onto the fusee's square (seat {g, y}: fusee.js keySeat, the dust plate's group, which turns with the fusee, and its face, where the square is 3.1
-       across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back on the box's floor */
+       across and the tube's mouth stops), its axis down the square (the movement frame's −y), or (no seat) back in its holder */
     const keyAt=(s,d=0)=>{if(s){s.g.add(key);key.position.set(0,s.y-0.05-d,0);key.rotation.set(Math.PI,0,0);}else{root.add(key);KEYREST();}};   /* d: how far out along the square it still is (coming on or going off) */
     return{root,ring:ringG,bowl:bowlG,lid:lidG,tongue:tgG,YP,YB,keyAt,keyRest:()=>{if(key.parent===root)KEYREST();},shutter:q=>{cp.rotation.y=CPS*(1-q);},over,overLid:olG,parts:{bowl,closingPlate:cp,bezel:bz,gimbalRing:rgP,box:bx,lid:ld,caseLock:lk,key,overBox:over,overLid:ol}};}
   return{build,YP:YB-11.5,YB};

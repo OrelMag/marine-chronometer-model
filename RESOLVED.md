@@ -67,6 +67,48 @@ Contents:
   the ride taken where the tooth is drawn (makeEsc's own, with the wheel drawn 0.01 behind, put the stone 6.6 µm into the tooth).
   Keep: the page and the tools move the escapement through the one solved state; `tools/wempe_escapement.js` holds the drawn stone out
   of the drawn tooth, and `checks.py`'s phases follow the solved events. `930a8e4`
+- **The Wempe's hairspring stud was drawn the wrong shape** (15 October 2026, the user's screenshot). Its point had a V cut through it 2.1
+  deep, where 05 03 02-3 draws two facets ground from the V's arms to a knife edge, meeting along the middle (the section; Wempe 3955's
+  photograph shows them lit and dark); its hole was 5.9 from the square end (drawn 5 ±0.1; the photograph 4.9), the bar 3.1 wide to that
+  end (drawn 2.5) and 1.4 thick (drawn 1.6 −0.2), and its upright stood square to the bar where the side view draws it leaning 8° (98°)
+  toward the axis, along the cock's slot's 82° inner wall (05 08 03-1, Schnitt C-D), which the cock left out. Keep: the stud's every
+  figure from 05 03 02-3, its upright leaning with the cock's slot wall, the screw's hole (`HOLES.studScrew`) 5 from the stud's square end. `480bb6f`
+- **The Wempe's hairspring's outer curve was drawn to the wrong radius.** It was drawn in proportion (kU 0.883) to end 3.87 from the staff,
+  where an upright square to the stud's bar let it stand; the stud's upright leans 8° (05 03 02-3) and so brings its slot in to 3.55, where
+  05 03_7's table pins the inner end in the collet: both curves are now the table's (kU 1), the slot in the upright's middle with the spring
+  and its pin side by side in it. The spring's isochronism, `WESC.SET.HS`, went from −0.659 to −0.543 s a day per 10° (−0.499 once the balance was re-weighed and TF taken from the 6MX video, the same day), the rate over the wind
+  from ±0.08 to −0.02/+0.01 s a day. Keep: `RSTUD` is the table's radius at 220°; `HS` what `tools/wempe_hairspring.js` finds.
+- **The Wempe's escape wheel's teeth and openings were read off the wrong lines of 05 04_23.** Its "11,7" was taken for a recess and its
+  "12,1" for the roots: the gaps' floor is Ø 11.7, the locking face running straight down to it, leaning 25° from the radius (the sheet's
+  "25°"; built 15°), and the back's ∅ 6 arc ends at Ø 12.1 15° behind the tip (the "15°"; built 11.9°), where a 0.2 step falls to the
+  floor (built 0.15 up to Ø 12.4). Each opening is bounded by one arc r 7.9 centred 9.43 out, coming within 1.53 of the centre (05 04_1
+  the same), not two arcs meeting 1.4 from it. Keep: the tooth and openings as traced and fitted on 05 04_23 (82.8 px/mm, rms 0.25 px);
+  makeEsc's tooth is the drawn one down to the back's foot (`SET.r0` Ø 12.1, `U` the 25° face there, `B` 15°; the swing moved 0.1°). `3544d3d`
+- **The Wempe's escape wheel stood 0.38 too near the top plate, on a cone.** 05 04_7.2's "2" at the top-plate end runs to the arbor's
+  shoulder, 0.4 under the wheel; its "19" from the pinion end places the wheel, its face 2.38 from that end (built 2.0, its teeth half out of
+  the impulse roller's thickness). Its collet 05 04 10 is Ø 2.8 for 1.6 and Ø 1.7 to 4.7, chamfered, not a cone Ø 2.6 to 1.5. Keep: the
+  teeth inside the impulse roller's 1.6; the detent's pipe 0.1 under them (`WESC.PIPE0`, which tools/wempe_tripping.js reads). `3544d3d`
+- **The Wempe's balance arm swelled the wrong way.** 05 03_4's arcs r 20 are hollow, their centres outside the arm (the sheet marks one),
+  meeting in a point 6.5 across at the hub ("6,5"); it was built convex to 6.17, "6,5" taken for where the arm is 4 wide. Keep: the hollow
+  flanks Wempe 3955's arm shows, tangent to the straight flanks where the arm is 4 wide. `3544d3d`
+- **The Wempe's hairspring collet had straight ends and its slit ran into the bore.** 05 03 02-2 draws both ends as arcs about the bore,
+  the bore in the middle of the length (built 4.25 and 4.85 from the ends) and the slit stopping 0.1 +0.05 short of it. Keep: the spring's
+  inner end pinned 3.5 from the bore. `3544d3d`
+- **The Wempe's detent block was 6.5 deep along its whole base.** 05 04 01-4's lower view draws it 6.5 deep only for 6.4 from its end and
+  3 deep beyond, on the plate, where the fixing screw and far steady pin are. Keep: the boss at the end the detent is clamped to; the far
+  pin 3 long in the block. (The sheet is first-angle throughout, which would put the upright at the free face and the detent 1.9 nearer
+  the plate than the 1946 rollers allow: not adopted, README Unresolved.) `3544d3d`
+- **The Wempe's impulse stone's back ran out too far.** 02 04 02 bevels its end 45°: the back 1.3 long to r 2.85 (built 3.2), the face
+  1.8 to r 3.35, all makeEsc takes. `3544d3d`
+- **The Wempe's balance screws stood out where the sheet and the photograph show none.** The masses' screws' heads stood 0.55 out of the
+  masses and their nuts as much inside (Wempe 3955: the heads flush, nothing inside); the timing screws' heads stood outside the weights,
+  which 05 03_2 draws inside the rim on its inner face, the weights split by two cuts (Wempe 3955's: no head outside, a cut across the
+  end face). The weights Ø 3.8 × 3.3 for Ø 3.0 × 4.0 (unsure, ±0.4), their tips 42.1 apart. Keep: the air-damping parts lists in
+  tools/wempe_escapement.js and wempe_physics.js follow these sizes. The discharge roller is brass, as Wempe 3955's (steel before). `3544d3d`
+- **tools/wempe_inertia.py weighed the Wempe's escapement's bodies twice where a part has two revisions.** wempe-inertia.js integrated
+  every mesh under each turning group, the hidden "as first drawn" pieces too, so the rollers, staff and hub, detent and escape arbor
+  came out about double (its json, written before the revisions, still held the single values). Now it weighs the shown revision only.
+  Keep: a tool weighing the model skips what movement.js's setRev hides. `3544d3d`
 - **The Wempe's discharge stone was drawn square-ended.** The layout's corners and makeEsc (`BEV`) take its end bevelled back 0.3 from
   the acting corner, 05 04_1 draws it bevelled, but the mesh ended square at full reach. Now drawn with the bevel (`DS`). Keep: the drawn
   stone's outline is the one the escapement's motion is worked out on. (05 04_1 measured again scales 0.15-0.2: README, Estimated.) `462a1a3`
@@ -342,6 +384,19 @@ Contents:
 
 ## Going train and heights
 
+- **The Wempe's hour hand's blade lay at the top of its boss, and the minute hand 1.2 over the hour hand** (15 October 2026, the drawings
+  survey). 05 02 00-2's side view lays the 0.5 blade with its underside flush with the 0.8 flange's and its top 0.3 under; the model put the
+  tops flush. And 05 02_1's "1,2" over the hands is the minute hand's own (its top to its flange's underside), not the gap to the hour hand,
+  which scales 0.5. Keep: every hand's blade underside on its flange's underside; the hour hand's blade 0.125 over the seconds post's end,
+  the minute hand 0.5 over the hour hand's boss and under the cannon tube's crown. `60ebbc3`
+- **The Wempe's motion-work studs were Ø 1.3, and their pipes bored 1.32.** Scaled at 2:1 on 05 08 02 (4.7 px/mm); 05 02_1 at 5:1 draws
+  both 1.52 and the pipes' bores scale 1.50-1.56 against their figured outsides (05 02 02, 05 02 04); both ends domed, not chamfered.
+  Keep: studs Ø 1.5 domed, their bushes bored to them, the pipes 1.52. `60ebbc3`
+- **The Wempe's centre arbor: journal C straight, riveting collar plain, no punch groove, end chamfered; WN-302 a cone sink.** 05 05 03
+  and 05 05 03-2 write "Kegel 1:30" along C, draw the collar flared from Ø 3.0 over a groove in the seat, the 1943 sheet a groove in the
+  shank under the cannon tube's punch and one crown over the shank's and tube's ends; 05 08 02 draws WN-302's sink a spherical cup.
+  Keep: C on 1:30 (Ø 2.2 at the collar) with WN-302 bored to it, the collar and groove, the shank's groove, the crown on the arbor
+  (`A.cw.crown`) and the tube alike, the hands' and hour wheel's 1:70 fits. `60ebbc3`
 - **The fourth, third and escape arbors off the video's places, the seconds
   sub-dial off its arbor** (Review-results.md, Elsewhere 24, 14, 18). The fourth
   was 23.9 mm out (video 21.4-21.75 at the plate's 87.57), the third 16.0 at
@@ -574,6 +629,15 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
+  the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
+  has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
+  show a slotted stud there with a steel wire hanging past the detent's back. Now drawn: the stud
+  (Ø 3.0 × 1.9, its slot, its shank 0.4 out under the plate) and the wire (Ø 0.25, to 1.8 over the
+  pillar plate), measured on 4_Wempe_3955_N, 4_Kirow_247_N, 4_Lange_5177_N and 2_*_A scaled by the
+  hole table's spacing, bent by the detent's back and rebuilt as it rides. Keep: a part with no
+  sheet is looked for in the hole tables and the photographs before it is called undrawable; the
+  wire bears on the detent's upper corner alone, its axis on the stud's. `860233a`
 - **The Wempe's stop bar stood 40° off its slot's drawn line, and full wind was taken at the
   groove's end.** The model set the bar's turn so the stop pin met it with the chain lying to
   the groove's end N (8.75 turns); 02-2 dimensions the slot from the line through the chain's
@@ -583,6 +647,21 @@ Contents:
   8.638, and the page warns if it parts from the fusee's. Keep: full wind is where the stop
   holds the fusee, never assumed at the groove's end; a part a sheet dimensions from a line
   lies along it. `745cc13`
+- **The Wempe's fusee, maintaining work and barrel parts differed from their works drawings** (15 October 2026, a survey against the
+  sheets). The set-up ratchet's backs were arcs r 12.5, nearly flat: 05 07_3's "12,5" is a diameter, each back an arc r 6.25 centred on
+  the "6,4" circle. The click wheel's faces leaned back 8°, where 05 06_16 undercuts them (each tip over its gap). The maintaining detent's
+  tip ended in an arc on r 12, 1.98 tall and leaning out; 05 05_12 draws it straight, 2.6 tall at 80°, leaning back toward the hole. The
+  maintaining ratchet was 1.02 thick inside its cup (05 06_12: 1.3; 1.02 only at the teeth) with its chamfer on the cup's inner edge (the
+  outer). The fusee wheel's recess mouth was a 0.3 chamfer (05 06_7: 60° from Ø 17). The cover plate had a recess round its hole (05 06_8's
+  0.4 is the bore's land under a 60° chamfer). The
+  clicks' noses leaned out and their base line lay 1.68 under the hole (05 06_14: 85° leaning back, 1.52, the r 3 hollow's chord). The
+  Vorreiber's chamfer was on face a (05 06_6: the hub's side). The barrel arbor's hook was a flat-topped pin (05 07_8: a ramp to 0.5 at a
+  face, the face where the spring pulls). The chain's top hook was 3.95 long and 2.8 wide against its own figures (05 07_14: 5 and 3.5, the
+  nose turned back toward the chain), and the bottom hook's barb hooked forward and outward (its tip points back toward the rivet, into the
+  drum). The maintaining spring's swell was estimated (traced on 05 06_10). Keep: every outline in `wempe/js/fusee.js` from its sheet's
+  figures and traced lines, each comment naming them; the chain's first rivet where the top hook's seat reaches the pin (`HK0`), the hooks
+  laid in their end links' planes; the bottom hook's barb in the drum's wall is expected (`checks.py`), as the band's. `e709c07`
+
 - **The winding-pawl springs' feet were placed apart, and nothing showed the
   holes beside the pawls.** The beds, pockets and screw holes were read on
   KLUwI2UUCMQ 19:12 as angles from the pawls' studs as that frame shows them,
@@ -1201,6 +1280,15 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The Wempe's frame read off its sheets wrongly in four places** (15 October 2026, a survey of the parts against their works drawings). The
+  barrel bridge's chord was drawn square to hole 45's line, its "7,7" read along the chord to pin 41 and its "5" as the top corner's offset,
+  where both figures' extension lines run parallel to an edge: 42 is 7.7 from the chord (with 45's 7 that gives the sheet's 24 to 0.002) and
+  48 is 5 from the short edge (it was 8.29 and 4.5). The top plate's pocket N-O was a constant 8 wide where its dashed edges are the common
+  tangents of the opening's r 5 and 51's r 4 (10 narrowing to 8). The fusee bush's fits were swapped: T6 is the taper above the flange, which
+  the dust bush is pressed on, g6 the spigot that slides into the plate. The intermediate bridge had Ø 6.2 sinks at 38 and 35 the section
+  doesn't draw: a 45° mouth down to the bush at 38, and at 35 the seconds jewel's setting fills the bridge's hole (bore 3.7, open below the
+  jewel). Keep: each figure on the edge its extension lines run along; fusee bush g6 in the plate, T6 under the dust bush (fine.py's
+  dustBush x fuseeBush); the pocket tapering; no counterbores at 38 and 35. `b4450e1`
 - **Lower train bridge on the wrong side.** It belongs on the dial side of the
   pillar plate (Figs. 29, 67, 110). `7a91d18`
 - **Arbors ending in nothing.** Every arbor now ends in a bushing or jewel. The
@@ -1827,9 +1915,27 @@ Contents:
 - **The barrel bridge had no steady pins, and two "holes" in it were those pins** ("Bridge - Barrel, complete with pins"; 13:04.4 shows one standing out of each horn). The 15 October hole survey read them end on as holes (30.07, 1.61) and (-18.55, 19.90); the train bridge's hole at (-23.3, 20.4), "its use unknown", is the far pin's. Now pins (`S.bbp`) in train-bridge holes, the cock side's new. Keep a round mark on a frame of a part's underside checked for a pin before it is drawn as a hole. `2ffb801`
 - **The barrel bridge's near screw was 2.4 mm out** at (35.18, 8.06), moved there on 12 October through 6:49.0's camera, which reads the third pillar screw's counterbore beside it 3 mm off. 23:30 (its tapped hole) and 13:04.4 (its clearance hole) agree within 0.9 mm: now (32.90, 6.60). Keep a single oblique camera from moving a hole near the rim against frames that see the part face-on. `2ffb801`
 - **A plain hole in the upper train bridge was missing**, 4 mm beyond the train-blocking screw's: (-8.70, 22.00), r 0.75, on 23:30 and 6:49.0 within 1 mm; its use unknown (holecheck.py's `EXPECTED`). `2ffb801`
+- **The fusee's dust seal's flange hung 1.3 mm over the barrel bridge's cut round the balance** (seen by the user on the page, 15 October 2026). The flange, a disc r 8.6, was drawn before the cut was measured as one circle (`1ec6538`), which brought the cut to 7.33 mm from the fusee: the disc ran 1.27 mm past the edge across 7.7 mm, over the opening with nothing under it. The photographs of 2E12055 and 2E11795 (top view) show the flange's edge ending at the cut's. Now the flange is trimmed along `BB_CUT`. Keep anything sitting on the barrel bridge inside its outline when the cut or the outline moves `fea724b`
+- **The barrel bridge had a round hole at 3 o'clock that is really a pry slot** (the 15 October hole survey read it as "a second hole beside the opening"). 13:04.4 shows a rectangular slot in the underside, 2.1 mm wide from r 35.2 out through the rim; 6:47 and 6:49.0 show the face whole above it, so it is blind (1.0 mm deep, estimated). Now cut by `facePocket` (`S.bbN`), the r 0.9 hole and its holecheck entry gone. Keep a mark at a part's edge checked from both faces and the rim before it is drawn as a hole. `98224e7`
+- **The balance cock's screw was 2.2 mm toward 3 o'clock from where three frames put it** (handed over as open, 15 October 2026). It stood where the top-view photograph's similarity placed it; its tapped hole in the train bridge reads (21.81, 24.96) on 23:30, (21.95, 25.66) on 13:49.5 and (22.26, 24.00) on Jd2c3x8VKsE 26:00 (another movement, through a camera fitted on nine named points). Now `S.cock` the mean, the pins with it (measured from the hole), the stud's frame left on the old place (`CK_Q0`), and the body's estimated wall moved the least that keeps 0.48 mm round the counterbore. Keep the screw where the train bridge's hole is measured, and the stud's frame apart from it. `5a3411b`
 
 ## Setup, case and gimbals
 
+- **The Wempe's winding key lay on the box's floor, where no box keeps it.** It lay flat in the
+  back left corner, a place no source gave. Every photographed box (Greenwich's wartime Wempe,
+  Wempe 5377, Lange 2285 and 5510, a 6MX Kirova) stands the key upright in the back right corner,
+  its stem down through a hole in a shelf across the corner, its paddle up. Now a shelf (the
+  key holder, `Schluesselhalter`: legs 55, 10 thick, its top 40 over the floor, the hole Ø 11 21
+  from each wall, estimated from those photographs) holds it so, the body's cone seated on the
+  hole's edge, the paddle facing the box's middle (its plane 83.4 from the gimbals' centre, beyond
+  the swinging case's and ring's 79.4); the 1940 key, as first drawn, stands there too. Keep: the
+  key rests in its holder (`KEYREST`), and nothing that swings in the gimbals reaches the corner. `1614776`
+- **The Wempe's movement ring pinned to the case at 6 o'clock.** 05 08 00-3's plan, drawn from the dial side, draws the radial hole at 12 (a
+  dashed pair figured "1,6"; the section shows it end on, 2.8 under the top face), and Wempe 3955 shows its end on the ring's cone at 12; the
+  pin WN-202 was Ø 1.1 at 6, the "1,1 Ø" (the dial's pin hole's) and the "1,6" read the other way round, the bezel's notch with it. The closing
+  plate's Ø 1.2 was drilled through where 05 01 00-2 draws it blind from the groove's floor, and the rim met the boss in a sharp corner where
+  the sheet draws a round. Keep: the radial pin Ø 1.6 at 12 o'clock (-z) and the bezel's notch over it; the closing plate's hole blind, its
+  round r 1.3. `b4450e1`
 - **The Wempe's bowl had cracks along its cone.** Built as plan cells of rings, the narrow sloped
   rings under the inside round left hairline gaps along the 40° cone, dashed rows seen through to
   the inside (and drawn as dashes by Edges); the cone faced down, out of sight, until the bowl was
@@ -2150,6 +2256,7 @@ An arbor needs pivots and shoulders; a stone its seat.
   without which the parts would swing a loss-free spring's balance past 1½ turns. Keep: physics.js's endstone term
   from the measured swings, not a μ; `TF` re-derived whenever the mainspring's stiffness changes; the essay's
   `data-phys` figures physics.js's. `6a918d8`
+- **The timing weights had 2 turns either way, set by a cut that had moved** (handed over from the barrel bridge's cut, 15 October 2026). Their travel was all the room the barrel bridge's cut round the balance left when it was drawn at r 17.6; measured on 13:04.4 it is 19.5 from the staff at its nearest. The manual wants 3 turns at about 40 s a day: Op. 5 leaves the rate within 2 minutes a day by screws and washers, and Op. 6 regulates with the timing weights alone (p. 81). Now 3 turns either way of a mid-travel 3 turns off the rim (`TG` 0.534, three of `R.pitch.t`), the panel's slider ±24 eighths. Keep `TG` three pitches, so turned fully in the nut meets the rim, and recheck the travel against the cut when either moves. `45678d2`
 
 ## Rate panel
 
@@ -2803,6 +2910,16 @@ An arbor needs pivots and shoulders; a stone its seat.
   are (the backlash behind, the escape pinion's frame at -t0), and each wheel
   takes its pinion as `mate`. Keep: an essay figure that meshes gears phases
   them with `gearLash` and the way the model turns its wheels. `96fba58`
+- **The Wempe essay's gimbals figure showed the transport box** (the user's
+  phone screenshot, 15 October 2026). `WCASE.build` builds the padded outer box
+  (bleached birch) with the wooden box since the Transport box view came in, and
+  the page hides it in every other view; the essay's figure, which calls the
+  same builder, never did, so the outer box stood round the whole case and hid
+  the mahogany box, the ring and the bowl (its labels pointed at birch). It also
+  drew both keys, the 1943 and the 1940 one, in the box at once. Now the figure
+  hides the outer box and the first-drawn pieces. Keep: a figure that builds
+  from `WCASE.build` (or any shared builder) hides what the page's views hide:
+  `CS.over` and every `userData.rev==='first'` group. `f170e7a`
 
 ---
 

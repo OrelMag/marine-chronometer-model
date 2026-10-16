@@ -57,19 +57,19 @@ const ESSAY=(()=>{
       ud:{p:[blade(H.UDH.hw,H.UDH.rf-0.2,10.2)],boss:H.UDH.rf,col:'#1d2c74'},sec:{p:[blade(H.SEC.hwP,H.SEC.rb-0.2,19.5),blade(H.SEC.hwT,H.SEC.rb-0.2,10,1)],boss:H.SEC.rb,col:'#1d2c74'}};};
   function drawHand(x,h,cx,cy,a,k){x.save();x.translate(cx,cy);x.rotate(a);x.scale(k,k);x.fillStyle=h.col;x.shadowColor='rgba(0,0,0,.3)';x.shadowBlur=Math.max(1,k*0.6);x.shadowOffsetY=Math.max(1,k*0.25);
     x.beginPath();for(const p of h.p){p.forEach(([u,v],i)=>i?x.lineTo(u,v):x.moveTo(u,v));x.closePath();}x.moveTo(h.boss,0);x.arc(0,0,h.boss,0,TAU);x.fill('nonzero');x.restore();}
-  /* the time t (seconds of local time, the hands stepping in half-seconds with the beat) and h hours since winding: the up-and-down hand 22.5° right of 12 fully wound, a
+  /* the time t (seconds of the time the model keeps, GMT or local: the hands as set, app.js's dialRead; the hands stepping in half-seconds with the beat) and h hours since winding: the up-and-down hand 22.5° right of 12 fully wound, a
      tenth of a turn for each of the fusee's turns (dial.js's update) */
   function paintDial(x,S,t,h){const c=S/2,k=c/WDIAL.DR,H=hands(),ts=Math.floor(t*2)/2;x.clearRect(0,0,S,S);x.drawImage(dial(),0,0,S,S);
     drawHand(x,H.ud,c,c-23*k,(22.5+36*h/WPHYS.HPT)*D,k);drawHand(x,H.sec,c,c+23*k,((ts/60)%1)*TAU,k);
     drawHand(x,H.hour,c,c,((t/43200)%1)*TAU,k);drawHand(x,H.min,c,c,((t/3600)%1)*TAU,k);}
-  const nowT=()=>{const m=K.model();return m?m.time():Date.now()/1000-new Date().getTimezoneOffset()*60;},nowH=()=>{const m=K.model();return m?m.hrs():20;};
+  const nowT=()=>{const m=K.model();return m?m.time():Date.now()/1000;},nowH=()=>{const m=K.model();return m?m.hrs():20;};
 
   /* ---------- hero: the model's dial, keeping the model's time ---------- */
   fig('eHeroSt',f=>{const cv=q('#eHero'),x=cv.getContext('2d'),cap=q('#eHeroCap');let S=0,lk=-1,lh=-1;
     const rs=()=>{const w=cv.clientWidth,d=Math.min(devicePixelRatio||1,2);if(!w)return;S=Math.round(w*d);if(cv.width!==S){cv.width=cv.height=S;f.dirty=true;}};new ResizeObserver(rs).observe(cv);rs();
     return()=>{const t=nowT(),h=nowH(),k=Math.floor(t*2);if(k===lk&&Math.abs(h-lh)<0.02&&!f.dirty)return;lk=k;lh=h;f.dirty=false;paintDial(x,S,t,h);
       const tt=((t%86400)+86400)%86400,hm=[Math.floor(tt/3600),Math.floor(tt%3600/60),Math.floor(tt%60)].map(v=>String(v).padStart(2,'0')).join(':'),m=K.model();
-      cap.textContent=`The model’s dial: ${hm} local time, ${m&&h>=m.run()-1e-6?'run down':h.toFixed(1)+' h since winding'}`;};});
+      cap.textContent=`The model’s dial: ${hm} ${m&&m.tz&&m.tz()==='local'?'local time':'GMT'}, ${m&&h>=m.run()-1e-6?'run down':h.toFixed(1)+' h since winding'}`;};});
 
   /* ---------- the sheets' dates, by drawing group (WEDATA.sheets, References/wempe/README.md's catalogue) ---------- */
   const GR=[['001','001','Overviews'],['05 01','05 01','Case'],['05 02','05 02','Motion work, dial'],['05 03','05 03','Balance'],['05 04','05 04','Escapement'],['05 05','05 05','Going train'],
@@ -373,7 +373,8 @@ const ESSAY=(()=>{
 
   /* ---------- the gimbals: the model's own box, ring and case (WCASE.build, case.js), its dial keeping the model's time ---------- */
   fig('eGim',f=>{const st=f.el,P=figOf(st),V=new View3D(st,f,{aspect:w=>w<520?0.9:0.58,yaw:0.75,pitch:0.78,dist:560,target:[0,0,0],near:20,far:5000}),M=gl().M,S=V.scene;
-    const CS=WCASE.build(M);S.add(CS.root);CS.lid.rotation.x=-1.75;CS.tongue.rotation.z=-Math.PI/2;
+    const CS=WCASE.build(M);S.add(CS.root);CS.lid.rotation.x=-1.75;CS.tongue.rotation.z=-Math.PI/2;CS.over.visible=false;   /* the outer transport box (case.js builds it with the box) left out, as the page's views but Transport box leave it */
+    CS.root.traverse(o=>{if(o.userData.rev==='first')o.visible=false;});   /* as last revised: the 1943 key, not the 1940 one beside it */
     const dc=document.createElement('canvas');dc.width=dc.height=1024;const dx=dc.getContext('2d'),tex=new THREE.CanvasTexture(dc);tex.encoding=THREE.sRGBEncoding;
     const yD=WDIAL.DY1-CS.YP;mesh(CS.bowl,cylY(WDIAL.DR,WDIAL.DY1-WDIAL.DY0,96),M.brass2,0,yD-(WDIAL.DY1-WDIAL.DY0)/2,0);
     mesh(CS.bowl,new THREE.CircleGeometry(WDIAL.DR,96).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:tex,metalness:0.3,roughness:0.42,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),0,yD+0.05,0);

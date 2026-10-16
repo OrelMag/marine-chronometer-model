@@ -12,7 +12,7 @@ const PG=['Frame','Going train','Balance','Escapement','Fusee and barrel','Motio
 const SH=' The drawings are the sheets as last revised (about 1946-48).';
 const PARTS={
   pillarPlate:{t:'Pillar plate (Unterplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the notch for the ring’s pin from the ring’s sheet',figs:'05 08_3a, 05 08_3b, 05 08_32.2, 001',c:'#9fb4c8',plate:1,pri:3,
-    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut, for the parts still to come, but the hand-setting work’s, which its sheet strikes through (“only when the hand-setting is fitted”), and the seconds contact’s (“only when needed”).'+SH,
+    d:'The lower plate, under the dial: the foundation of the movement. The three pillars stand in seats turned in its inner face, each held by a screw from the dial side; it sits in the movement ring. It carries the train’s lower pivots, the intermediate bridge on its dial side across the opening for the intermediate wheel, and the motion work under the dial. Every hole of its table is cut but the hand-setting work’s, which its sheet strikes through (“only when the hand-setting is fitted”), and the seconds contact’s (“only when needed”).'+SH,
     sp:'Drawing 05 08 02-1 (kompl. 05 08 02) · special α-β brass sheet · Ø 85 h6 × 3.35 · pillar holes Ø 4.50 +0.012 on r 37, seated Ø 8.6 × 0.3 · opening for the intermediate wheel Ø 24.5'},
   topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the balance opening’s tongue scaled on the sheet',figs:'05 08_1a, 05 08_1b, 05 08_2, 001',c:'#c9d8a8',plate:1,pri:3,
     d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40.'+SH,
@@ -32,6 +32,9 @@ const PARTS={
   dustBush:{t:'Dust bush (Staubfutter)',g:0,src:'drawing',sn:'Every size from its sheet; which way its flat faces from the balance cock’s place',figs:'05 08_9, 05 08_2',c:'#c79a4a',pri:1,
     d:'A tall brass bush on the fusee bush round the winding square, up to the case’s winding hole, keeping dust out of the movement. A flat on its collar clears the balance cock.',
     sp:'Drawing 05 08 01-3 · Ms 58 · 18.1 long, Ø 13.1, collar Ø 15.1 with a flat at 14.1, bore Ø 8 H7 at 1:70'},
+  corkRing:{t:'Cork ring (Korkring)',g:0,src:'drawing',sn:'Named on 05 08 01 and the coloured section, which draws it; no sheet of its own: its sizes scaled on the section by the dust bush’s own figures, its proportions checked on Lange No. 5829; the bowl’s seat it meets is the 6MX’s (estimated for the Wempe)',figs:'coloured section, 05 08_2',c:'#c8a070',pri:1,
+    d:'A cork ring on the dust bush’s top, standing a little over it round the winding square. In the case it meets a raised seat round the winding hole on the bowl’s bottom, so dust that comes in through the hole can’t reach the movement: it goes only down the bush to the winding square.',
+    sp:'05 08 01-4 · cork · Ø 16.1 × 3.9 high on the bush’s Ø 9.7 neck, its top 0.95 over the neck’s (scaled)'},
   upperCock:{t:'Upper balance cock (Unruhkloben oben)',g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
     d:'The cranked cock over the balance, screwed and pinned to the top plate, holding the balance staff’s upper jewel setting over the opening in the plate.',
     sp:'Drawing 05 08 03-1 · Ms 58 profile · 49 long, 15 high, foot 3.2 · setting seat Ø 5.2 H7'},
@@ -64,7 +67,7 @@ const PARTS={
     sp:'Drawings 02 04 02 (Heberolle, beryllium copper, Ø 6.78 × 1.6) and 05 04 04-1 (not in the set) · stones 1.7 wide'},
   escapeWheel:{t:'Escape wheel (Gangrad)',g:2,src:'drawing',sn:'Its teeth, rim and crossings from its tooth-form sheet and the layout; its arbor and pinion from theirs',figs:'05 04_1, 05 04_7.1, 05 04_7.2, 05 04_8, 05 04_23',c:'#e0bd74',pri:3,
     d:'The 15-tooth escape wheel, just under the top plate, held by the locking stone between impulses. Released, it gives the balance’s impulse stone a push through about 20 degrees and comes to rest on the next tooth: a tooth every half second, so its pinion turns the seconds wheel once a minute.',
-    sp:'Drawings 05 04 05-1 (Gangrad, Ms 63 spring-hard), 05 04 05-2 (pinion z 10, m 0.263), 02 04 08a (tooth form) · tips Ø 14.00, roots Ø 12.1 · 1.4 at the rim · arbor 22.8'},
+    sp:'Drawings 05 04 05-1 (Gangrad, Ms 63 spring-hard), 05 04 05-2 (pinion z 10, m 0.263), 02 04 08a (tooth form) · tips Ø 14.00, gap floor Ø 11.7, face leaning 25° · 1.4 at the rim · arbor 22.8'},
   detent:{t:'Spring detent (Gangfeder) and gold spring',g:2,src:'drawing',sn:'The detent’s sizes from Grießbach’s sheet 1436 (the bracketed finished sizes) and its lengths scaled on it; the gold spring from its sheet; their places from the layout',figs:'05 04_1, 05 04_2, 05 04_10.1, 05 04_10.2',c:'#9fb4c8',pri:2,
     d:'The detent: a steel blade on a thin spring, clamped by its foot to the block. The locking stone in its pipe holds a tooth of the escape wheel. On one swing the discharge stone pushes the gold spring against the detent’s horn and lifts the detent through a quarter of a millimetre, freeing the wheel; on the other it only bends the gold spring aside.',
     sp:'Drawings 05 04 01-1 (1436, Grießbach, 17.2.43, steel), gold spring 05 04 01-2 (8-carat gold, 0.15 × 15.4), locking stone 05 04 01-3 Ø 0.75'},
@@ -107,8 +110,8 @@ const PARTS={
   maintaining:{t:'Maintaining work (Gegensperrrad, Gegenfeder)',g:2,src:'drawing',sn:'Every size from the sheets; the clicks traced on their sheet; the click springs laid as the assembly draws them',figs:'05 06_9, 05 06_10, 05 06_11, 05 06_12, 05 06_13, 05 06_14, 05 06_4',c:'#c9a046',pri:2,
     d:'Harrison’s maintaining work, which keeps the train going while the chronometer is wound. Running, the fusee drives the ratchet through the click wheel and two clicks, the ratchet the maintaining spring, an open steel ring, and the spring the fusee wheel. Winding, the key turns the fusee back: the clicks ride over the click wheel, the maintaining detent holds the ratchet, and the spring, still loaded, drives the wheel on. The two clicks are half a tooth apart on the 35-tooth click wheel, so one of them always bears.',
     sp:'Drawings 05 06 02 (ratchet 05 06 02-1: 120 teeth, Ø 37.25, a cup Ø 26.1 for the clicks; clicks 05 06 02-3; click springs 05 06 02-2) and 05 06 01-1 (maintaining spring: Ø 32.3 × 2 × 1.35, blued)'},
-  maintDetent:{t:'Maintaining detent (Gegensperrkegel)',g:2,src:'drawing',sn:'The click from its sheet; its arbor and pivots scaled on the assembly; its wire spring not drawn (no sheet, no hole in the tables)',figs:'05 05_11, 05 05_12, 05 06_4',c:'#5a74b5',pri:1,
-    d:'A blued steel click staked on its own arbor between the plates, at hole 4, riding on the maintaining ratchet’s teeth: it stops the ratchet turning back while the chronometer is wound, so the maintaining spring drives the train. A straight wire spring presses it in (the coloured section’s Feder 05 05 06-1, not drawn).',
+  maintDetent:{t:'Maintaining detent (Gegensperrkegel)',g:2,src:'drawing',sn:'The click from its sheet; its arbor and pivots scaled on the assembly; its wire spring and stud measured on photographs (no sheet; their hole, 5, from the top plate’s table)',figs:'05 05_11, 05 05_12, 05 06_4',c:'#5a74b5',pri:1,
+    d:'A blued steel click staked on its own arbor between the plates, at hole 4, riding on the maintaining ratchet’s teeth: it stops the ratchet turning back while the chronometer is wound, so the maintaining spring drives the train. A straight wire spring hanging from a stud in the top plate presses it in (the coloured section’s Feder 05 05 06-1).',
     sp:'Drawing 05 05 05 (click 05 05 05-1) · Bandstahl 2.25, hardened, light blue · 14.2 long, 2 thick, its tip 1 · 6.3 from its arbor’s lower shoulder'},
   stopWork:{t:'Stop work (Stellungssteg)',g:2,src:'scaled',sn:'Traced on 05 06_4’s Schnitt C-D (mirrored, as its view A-B) and the body’s sheet: the bar’s outline, travel and hole, the spring in its two drawn positions, the slot’s width, depths and place, its pin’s place; the spring’s section, the bar’s thinner end and the stop pin’s length estimated',figs:'05 06_4, 05 06_2.2',c:'#b7bec7',pri:1,
     d:'A steel bar sliding in a slot across the fusee’s small end, under the cover plate, held out toward its lower end by a spring in the end’s recess. When the chain winds onto the top turn it comes down on the bar’s lower end and presses it in; the upper end then stands out past the fusee, and at full wind its side meets the stop pin in the top plate, so the key can turn no further. The upper end is thinner, so that standing out it passes under the groove’s rib, clear of the chain on the turn below.',
@@ -150,7 +153,7 @@ const PARTS={
     d:'The minute and hour hands of Goldin, a gold-coloured brass, polished; the seconds hand and the up-and-down hand of blued steel. The minute hand sits on the cannon tube’s square, the hour hand on the hour wheel’s pipe, the seconds hand on its collet on the seconds arbor’s post, the up-and-down hand on its wheel’s pipe.',
     sp:'Drawings 05 02 00-1 (minute, 46), 05 02 00-2 (hour, 35), 05 02 00-3 (up-and-down), 05 02 01-1 (seconds, 19.5 and a tail of 10)'},
   dial:{t:'Dial (Zifferblatt)',g:4,src:'drawing',sn:'Its size, holes and printing from its sheet; the screws’ and pin’s sizes estimated',figs:'05 02_12, 05 02_1',c:'#ece8dc',pri:3,
-    d:'The dial, white with its figures etched and filled black: the minute track and the hours, the up-and-down sub-dial at 12 (0 to 56 hours since winding) and the seconds sub-dial at 6, the maker’s name and anchor. It lies in the recess of the movement ring’s flange, placed by a pin and held by three screws at the 20, 40 and 59 minute marks.',
+    d:'The dial, white with its figures etched and filled black, printed as on Wempe No. 3955: the minute track and the hours, the up-and-down sub-dial at 12 (0 to 56 hours since winding) and the seconds sub-dial at 6 with the dial’s number, CHRONOMETERWERKE WEMPE HAMBURG and the maker’s anchor. It lies in the recess of the movement ring’s flange, placed by a pin and held by three screws at the 20, 40 and 59 minute marks.',
     sp:'Drawing 05 02 00-4 · Ø 103.6 −0.1 × 1.3 · track Ø 85 / 90 · figures 9 high · sub-dials 23 from the centre, Ø 26 and Ø 37'},
   bowl:{t:'Bowl (Gehäusetopf)',g:6,src:'drawing',sn:'Every figure of its sheet (the casting); its brackets scaled on the case’s assembly and Kirow 422’s bowl',figs:'05 01_2, 05 01_1',c:'#c9a75c',pri:3,
     d:'The case the movement hangs in: a cast brass cup, a flange at its top, its body narrowing in a 40° cone to its foot. The movement ring’s flange lies on its top face, the ring in its bore, a pin in the ring setting the movement’s turn, so the winding hole in its bottom lies over the fusee’s square. Two brackets on its side carry the inner pivots, slid along slots until it hangs level (“Kloben verstellen bis Gleichgewicht erreicht ist”); a third, cranked, is where the transit lock holds it. Its sheet says a brass casting; the wartime Glashütte bowls were Bakelite, with a heavy weight in the bottom from No. 5100, and the 1942 arrangement names a Buna (synthetic rubber) case; the 6MX’s is brass. The sheet’s weight, 350 g, is a quarter of this bowl’s in brass.',
@@ -164,10 +167,10 @@ const PARTS={
   gimbalRing:{t:'Gimbal ring (Kardanring)',g:6,src:'scaled',sn:'Scaled on the case’s assembly (05 01): its sizes, its bracket and the pivots’ places; the pivots’ heights from its 11.5',figs:'05 01_1',c:'#b99653',pri:2,
     d:'The ring between the bowl and the box: its outer pivots, on the 3-9 line, are screws through the box’s walls; its inner pivots, screws on the 12-6 line with lock nuts, run in the bowl’s brackets (“Lagerstellen a u. b leicht spielend”: the bearings a and b running freely). Both pairs lie in one plane, so the bowl hangs level whatever the ship does. A bracket on the ring at 3 o’clock, slid to level the bowl the other way, carries one outer pivot. Wempe 3955’s ring is Bakelite; no material is given.',
     sp:'Drawing 05 01 00-5 (no sheet in the set; bracket 05 01 00-6) · Ø 140 × 3.3 × 23.2 (scaled) · pivots 11.5 under its top · WN-79, WN-400'},
-  box:{t:'Wooden box (Holzkasten)',g:6,src:'scaled',sn:'Its outside from the case’s assembly sheet, its walls and handles from the handle’s sheet; its boards, lid and hinges as photographs of the wartime boxes show them (estimated)',figs:'05 01_1, 51 00_1, 51 00_2',c:'#b98d58',pri:3,
-    d:'The oak box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. For carrying it goes into the padded outer box (Transport box view).',
+  box:{t:'Wooden box (Holzkasten)',g:6,src:'scaled',sn:'Its outside from the case’s assembly sheet, its walls and handles from the handle’s sheet; its boards, lid and hinges as photographs of the wartime boxes show them (estimated)',figs:'05 01_1, 51 00_1, 51 00_2',c:'#8e4628',pri:3,
+    d:'The mahogany box the gimbals hang in, 185 mm square and 180 high: the outer pivots are screws through its side walls, below them a pressed handle on each side. Its glazed lid is hinged at the back. For carrying it goes into the padded outer box (Transport box view).',
     sp:'Drawing 127-556.02 (Holzkasten; no sheet in the set) · 185 × 185 × 180 outside · walls 12.5 · handles 51 00 10 · pivots WN-80, M6'},
-  lid:{t:'Lid (Deckel)',g:6,src:'est',sn:'Its height from the parting line on the handle’s sheet; the glazed top, hinges and latch as the photographed boxes show them (estimated); the maker’s plate and the tongue from their sheets',figs:'51 00_2, 51 00_3, 51 00_4',c:'#c79d66',pri:2,
+  lid:{t:'Lid (Deckel)',g:6,src:'est',sn:'Its height from the parting line on the handle’s sheet; the glazed top, hinges and latch as the photographed boxes show them (estimated); the maker’s plate and the tongue from their sheets',figs:'51 00_2, 51 00_3, 51 00_4',c:'#9c5233',pri:2,
     d:'The box’s lid, with a glass in its top so the dial can be read with it shut, hinged at the back. On its front the maker’s plate, “Chronometerwerke Wempe Hamburg, Type 3371” (the number runs on), and the latch tongue.',
     sp:'75 high (180 less the box’s 105) · glass 3 · Firmenschild 00 01 01-9: Alu, 26 × 52, white, letters sunk black · Zunge P. 51 00 02-2: iron 10 × 4, black'},
   overBox:{t:'Outer box (Überkasten)',g:6,src:'drawing',sn:'Its body, base plate, strip, cushions and hinges from its sheet (the ends of the base plate traced on its plan, the cushions’ middles scaled where not figured); the hook and eye, commercial, and the eyes’ form estimated',figs:'51 00_5, 51 00_1',c:'#d9c9a6',pri:2,
@@ -180,7 +183,7 @@ const PARTS={
     d:'A knob on a bracket in the box’s front right corner turning a lever: turned in, the lever presses the gimbal ring onto the locking bracket on the bowl, so neither gimbal can swing, for carrying the box. Drawn turned off.',
     sp:'05 01’s list: Feststeller 05 01 01 (no sheet) · knob Ø 19.6, lever 28 × 8'},
   key:{t:'Winding key (Chronometerschlüssel)',g:6,src:'drawing',sn:'Its body and tube from their sheets; the handle scaled on the key’s assembly; the spring’s wire and the tube’s depth in the body estimated',figs:'05 01_7, 05 01_8, 05 01_9, 05 01_6',c:'#41444a',pri:2,
-    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It lies in the box; while it winds it is on the fusee’s square, turning it back: in the movement’s views at once, in the case once the bowl is turned over in its gimbals and the closing plate opened, as the 6MX’s instruction has it. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
+    d:'The key of 1943, which winds only one way: a coil spring round its brass tube grips it as the key turns to wind (“Linksaufzug”) and slips the other way (“bei Rechtsdrehung entspannt sich die Feder”), so the key can’t turn the fusee backward. A black round paddle, a black steel body, the tube with its square socket for the fusee’s winding square. It stands in its holder, a shelf across the box’s back right corner, as every photographed box keeps it; while it winds it is on the fusee’s square, turning it back: in the movement’s views at once, in the case once the bowl is turned over in its gimbals and the closing plate opened, as the 6MX’s instruction has it. The 1940 key (51 00 11, 127-556.02 U 01), with a pear-shaped handle, is superseded.',
     sp:'Drawing 51 00 11 (16.7.43) · body 05 01 02-2: St. Az, phosphated, black · tube 05 01 02-3: Ms 58, Ø 5.95, 50.1 long, square 3.1 × 19 · paddle Ø 34.5'}};
 /* the pieces of the parts that are several things: k its key (part.k), t name, h the parts-list lines (bom.json ids) its meshes carry, d, sp, and src, sn, figs where they differ */
 const PIN='A steady pin (Stellstift), Ø 1.6, pressed into the part and standing 1.3 out of it into a reamed hole in the plate, which places the part.';
@@ -205,7 +208,8 @@ const PIECES={
     {k:'spring',t:'Maintaining spring (Gegenfeder)',h:'050601-1',d:'An open steel ring, its eye pinned to the fusee wheel and its other end to the ratchet: it carries the whole drive, and drives the train alone while the key turns.',sp:'Drawing 05 06 01-1 · Bandstahl, hardened in oil, blued (at 310 °C) · Ø 32.3 × 2 × 1.35'},
     {k:'springPinsG',t:'Maintaining spring’s pins (Stellstifte)',h:'050600-8',d:'The two pins in the maintaining spring’s holes, one into the fusee wheel, one into the ratchet.',sp:'05 06 00-8 · Ø 1.25 (drawn 1.2), 1.2 out',src:'drawing',sn:'From the spring’s assembly sheet',figs:'05 06_9'}],
   maintDetent:[{k:'click',t:'Detent click',h:'050505-1',d:PARTS.maintDetent.d,sp:PARTS.maintDetent.sp},
-    {k:'arbor',t:'Detent arbor',h:'050505-2',d:'The detent’s arbor, its pivots in the two plates’ holes 4.',sp:'05 05 05-2 (no sheet) · Ø 2.25 · pivots Ø 0.88',src:'est',sn:'Scaled on the assembly sheet; fitted to the plates',figs:'05 05_11'}],
+    {k:'arbor',t:'Detent arbor',h:'050505-2',d:'The detent’s arbor, its pivots in the two plates’ holes 4.',sp:'05 05 05-2 (no sheet) · Ø 2.25 · pivots Ø 0.88',src:'est',sn:'Scaled on the assembly sheet; fitted to the plates',figs:'05 05_11'},
+    {k:'spring',t:'Detent spring (Feder) and its stud',h:'050506-1 wireStud',d:'A straight steel wire held in the end of a slotted stud screwed into the top plate’s hole 5. It hangs past the detent’s back, which bends it out, so it presses the detent onto the maintaining ratchet’s teeth.',sp:'Coloured section’s 05 05 06-1 (no sheet) · wire Ø 0.25, to 1.8 over the pillar plate · stud M1.7, head Ø 3.0 × 1.9',src:'scaled',sn:'Its hole from the top plate’s table; the wire and stud measured on photographs of Wempe 3955, Kirow 247 and Lange 5177 from the north and checked on the coloured section',figs:'05 08_1a, 05 06_4'}],
   barrel:[{k:'drum',t:'Barrel drum (Federhaustrommel)',h:'050701-1',d:PARTS.barrel.d,sp:'Drawing 05 07 01-1 · Ms · Ø 41.6 × 18.1 · bottom 1.25 with its boss · lid seat Ø 39.2 s6'},
     {k:'lid',t:'Barrel lid (Federhausdeckel)',h:'050701-2',d:'The lid, sprung into the drum’s seat on the barrel bridge’s side, its boss bearing on the arbor.',sp:'Drawing 05 07 01-2 (20.4.48) · Ms 58 · 1.3 thick · Ø 39.2 r6'},
     {k:'hook',t:'Spring hook block (Federhaushaken)',h:'050701-3',d:'The block riveted inside the drum’s wall that takes the mainspring’s outer end.',sp:'Drawing 05 07 01-3 · 3 wide, 3.05 high',src:'scaled',sn:'Its place and size from 05 07 01; its depth estimated',figs:'05 07_4'}],
@@ -312,7 +316,8 @@ const PIECES={
     {k:'handles',t:'Handles (Griff f. Chronometerkasten)',h:'510010',d:'A pressed strip handle on each side, under the pivot, its grip an oval standing 10 mm off the side.',sp:'Änderung von 51 00 10 (14.7.42) · 100 × 18, grip 70 × 30, 10 proud · 75 over the bottom',src:'drawing',sn:'Every figure of its sheet; its material not given',figs:'51 00_2'},
     {k:'handleScrews',t:'Handle screws',h:'WN-hg',d:'The screws through the handles’ ends.',sp:'Estimated',src:'est',sn:'Not on the sheet'},
     {k:'hinges',t:'Hinges',h:'Scharnier',d:'Two brass hinges at the back joining the lid to the box.',sp:'40 × 18 leaves (estimated)',src:'est',sn:'As Lange 1947’s box shows them'},
-    {k:'keeper',t:'Keeper',h:'Schliessblech',d:'The strap on the box’s front that the lid’s latch tongue slides under.',sp:'Estimated',src:'est',sn:'Not drawn'}],
+    {k:'keeper',t:'Keeper',h:'Schliessblech',d:'The strap on the box’s front that the lid’s latch tongue slides under.',sp:'Estimated',src:'est',sn:'Not drawn'},
+    {k:'keyHolder',t:'Key holder',h:'Schluesselhalter',d:'A wooden shelf across the box’s back right corner: the winding key stands in its hole, paddle up, ready to hand, as every photographed box keeps it (a wartime Wempe at Greenwich, Wempe 5377, Lange 2285 and 5510, a 6MX).',sp:'Legs 55 along the walls, 10 thick, its top 40 over the floor; the hole Ø 11, 21 from each wall (estimated)',src:'est',sn:'The box’s own sheet isn’t in the set: placed and sized from photographs'}],
   overBox:[{k:'body',t:'Outer box',h:'Ueberkasten',d:PARTS.overBox.d,sp:PARTS.overBox.sp},
     {k:'strip',t:'Rim strip',h:'Randleiste',d:'A strip round the inside of the rim, standing 4 mm over the walls: the lid closes over it.',sp:'13 × 5, 4 over the walls (17, 18 on 51 00_5)'},
     {k:'cushionsSide',t:'Front and back cushions',h:'Polster.S',d:'The cushions on the long walls, against the wooden box’s front and back.',sp:'20 at their middle (51 00_5, Schnitt A-B)'},
@@ -371,7 +376,7 @@ const REV={
     d:'The drum the mainspring is coiled in, as first drawn: three pieces, a brass ring with a lid sprung into its seat on the pillar plate’s side and a bottom on the barrel bridge’s, each with a boss standing inward round the arbor. Its outer end is hooked to the ring’s wall, its inner end to the arbor, which the set-up ratchet holds. Running, the spring turns the drum, which winds the chain onto itself off the fusee, about five turns over a wind.'+SH1,
     sp:'Drawings 0207 (Federhaus, 127-556.04 U24, 15.4.41), 020701 (U22), ring 020701-3 · Ø 41.5 × 18, inside Ø 38.5, 15.8 between lid and bottom · lid 1.2, bottom 1.0, seats Ø 39.2'},
   key:{src:'scaled',sn:'Traced on its 2:1 sheet (its 84 and 32 figured); its materials not given (estimated)',figs:'05 01_6',
-    d:'The key of 1940 (Aufzugschlüssel), which the one-way key of 1943 replaced under the same number: a flat pear-shaped handle on a conical body and collar, the stem with its square socket pressed into it. It lies in the box.'+SH1,
+    d:'The key of 1940 (Aufzugschlüssel), which the one-way key of 1943 replaced under the same number: a flat pear-shaped handle on a conical body and collar, the stem with its square socket pressed into it. It stands in the holder in the box’s back right corner.'+SH1,
     sp:'Drawing 127-556.02 U 01 (51 00 11, 12.12.40) · 84 overall, the stem Ø 6, 32 out · handle Ø 34.8 × 3.2'},
   /* figures the revisions changed by less than the model can show, or only in their tolerance: the shape is the same in both states, the card gives the first */
   ring:{sp:PARTS.ring.sp+' · As first drawn (before revision a, 6.12.46): 10.7 −0.05, the seat 3 ±0.05, the step 7 ±0.07 and 0.7 +0.05: the same sizes, closer tolerances'},
@@ -417,13 +422,39 @@ const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate fro
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
-(function(){let mv=null,tSim=Date.now()/1000-new Date().getTimezoneOffset()*60;
+(function(){
+  /* the time kept (Time, Keep): Greenwich, as a ship's chronometers are kept for navigation (the default), or the viewer's local time; tzOff() its offset from UTC in s */
+  let tz='gmt';const tzOff=()=>tz==='gmt'?0:-new Date().getTimezoneOffset()*60;
+  let mv=null,tSim=Date.now()/1000+tzOff();
+  /* setting the hands (Time, Set the hands, Now; the Hamilton's setHands, simplified): the train never turns for it. slip, seconds of time the cannon pinion has slipped on
+     the centre arbor (dial.js), sets the hour and minute hands to the minute, leaving the dial fast by under a minute; then the balance is stopped (by hand, as a
+     chronometer is set when stopped) and the train held until the time the hands should read (sw.T, running on with model time) comes round to the dial's, and a twist
+     starts it. Held already (run down), only the minutes are set. handsSet: the hands were set from the field, so the link keeps the time (t) */
+  let slip=0,sw=null,handsSet=false;const dialRead=()=>tSim+slip,wrapH=e=>((e%43200)+43200+21600)%43200-21600;
   /* the wind: hrs since full wind (0 hand-wound … HRUN run down, 55.9 h), the key turning (winding: the fusee turned back 1.5 turns a second on the wall clock, whatever the
      speed, while the maintaining spring drives the train on); run down, the train stops. n, the fusee's turns from full wind, goes to update() as the Hamilton's MoveState has it */
-  let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',HPT=90/14,HRUN=55.9;
+  let hrs=20,winding=false,keyOn=false,keyD=0,conn='chain',rev='last',dial='wempe',HPT=90/14,HRUN=55.9;
+  /* the Variants' dial: Wempe 3955's printing (the default) or Lange 5177's, both traced on their photographs (dial.js's face, dialface.js and dialface_lange.js): the
+     face's texture (dial.js's R.setDial) and the dial's card (its text, and the viewer's copy of it, VV.INFO, once it has started: the link's state is read while it starts) follow */
+  let VV=null;const DIALC={wempe:null,lange:{d:'The dial, white with its figures etched and filled black, printed as on A. Lange & Söhne’s No. 5177: the minute track and the hours, the up-and-down sub-dial at 12, reading Auf (wound) at 0 to Ab (run down) at 56 hours, and the seconds sub-dial at 6 with the dial’s number, and A. LANGE & SÖHNE, GLASHÜTTE B/DRESDEN across the centre. Lange made the Einheits-Chronometer to the same drawings: the same sheet’s dial, the printing Lange’s own, finer than Wempe’s. It lies in the recess of the movement ring’s flange, placed by a pin and held by three screws at the 20, 40 and 59 minute marks.',
+    sn:'Its size, holes and layout from its sheet; the printing traced on a photograph of Lange No. 5177’s dial (its rust left out); the screws’ and pin’s sizes estimated'}};
   /* winding in the case (cw): go, Wind pressed with the movement in its bowl; on, the key turning; u, 0-3, how far the bowl is turned over (0-1), the closing plate opened
      (1-2) and the key come onto the square (2-3) */
   const cw={go:false,on:false,u:0,t:null};   /* t: the last frame's time (ms), for dw */
+  /* the ship's motion and the gimbals (Display, Ship motion; the Hamilton's GIM.sea and gimStep in box.js, its equations copied): the box rolls and pitches about a ship's axes
+     RD m below it, the case hanging in its gimbals leans toward the apparent vertical, the pivots' friction pulling it after the box. The Wempe's own periods, from its weighed
+     case and ring (tools/gimbals.js --model wempe on massprops.py's gimbals_wempe.json, levelled): the bowl on its 12-6 pivots (about z here) 0.958 s, the ring on its 3-9 (about
+     x) 1.046 s; the box stops neither within 60° (the same check), so LIM 60°; Z, the pivots' damping, the Hamilton's 0.05 (estimated). The transit lock on (latch), the ring
+     and bowl are brought level with the box and go with it; turned over to wind (cw), the bowl is held by hand, so the same */
+  const GW={W0P:TAU/1.046,W0R:TAU/0.958,Z:0.05,LIM:60*D2R,RD:5,G:9.80665,PR:2/3,rock:false,latch:false,rockW:0,rockT:0,latchK:0,roll:0,pitch:0,M:{p:[0,0],r:[0,0],lp:0,lr:0}};
+  const gwSea=(u,w,k)=>{const a=14*D2R*k,b=0.55*a,f=GW.PR,v=f*u+1.1;return{r:[a*Math.sin(u),a*w*Math.cos(u),-a*w*w*Math.sin(u)],p:[b*Math.sin(v),b*f*w*Math.cos(v),-b*f*f*w*w*Math.sin(v)],rd:GW.RD*clamp((TAU/w-2)/2,0,1)};};
+  function gwStep(G,dt,ph,rl,sea,fr){if(dt<=0){G.lp=ph;G.lr=rl;return;}const n=Math.ceil(dt/0.002),h=dt/n,rd=sea?sea.rd:0;
+    for(const[q,f,f0,m,W0]of[[G.p,ph,G.lp,sea&&sea.p,GW.W0P],[G.r,rl,G.lr,sea&&sea.r,GW.W0R]]){const v=(f-f0)/dt,W2=W0*W0,ZW=2*GW.Z*W0;
+      const ah=m?rd*(m[2]*Math.cos(m[0])-m[1]*m[1]*Math.sin(m[0]))/GW.G:0,av=m?1-rd*(m[2]*Math.sin(m[0])+m[1]*m[1]*Math.cos(m[0]))/GW.G:1;
+      if(fr<1e-3){q[0]=f;q[1]=v;continue;}
+      for(let i=0;i<n;i++){q[1]+=h*(-W2*(av*Math.sin(q[0])-ah*Math.cos(q[0]))-ZW*(q[1]-v));q[0]+=h*q[1];}
+      if(Math.abs(q[0]-f)>GW.LIM){q[0]=f+Math.sign(q[0]-f)*GW.LIM;q[1]=v;}}
+    G.lp=ph;G.lr=rl;}
   /* the balance's swing (js/escphys.js, WPHYS; the Hamilton's H.amp): driven by the escape wheel's torque drv (times the reference's, 12 h from full wind), A² relaxes to
      PE.ampAt(drv)² as exp(-2t/TF); with the train held it runs down free (PE.freeStep). Below PE.AMIN a swing can't unlock the wheel and see the impulse through: the train
      stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
@@ -438,7 +469,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   let CS=null,cl=1,cf=1,co=0;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
   const ES=typeof ESSAY==='undefined'?null:ESSAY;   /* the Essay tab (js/essay.js): the viewer leaves the keys and the hash to it while it shows */
   const V=VIEWER.start({essay:ES,name:'the Wempe Einheits-Chronometer',shot:'wempe-einheitschronometer',store:'we',PARTS,PIECES,SRC,PG,figLabel:'Sheets',VIEWS,VIEW_DESC,startView:'movement',SECDEF,
-    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.onRev.push(f=>{root.traverse(o=>{if(o.userData.rev)o.visible=o.userData.rev===(f?'first':'last');});CS.parts.key.userData.first=f;CS.keyRest();});mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's, the key resting as its state's lies */CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
+    build:M=>{CS=WCASE.build(M);const root=CS.root;mv=buildWempe(M);mv.userData.R.dl.setDial(dial);mv.userData.onRev.push(f=>{root.traverse(o=>{if(o.userData.rev)o.visible=o.userData.rev===(f?'first':'last');});CS.parts.key.userData.first=f;CS.keyRest();});mv.userData.setRev(rev);   /* the case's pieces of each state (the keys) follow the movement's, the key resting as its state's lies */CS.bowl.add(mv);mv.position.y=-CS.YP;   /* the movement in its bowl (case.js), lifted out and turned over in the movement's views (tick) */
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid,showOver:v=>{CS.showOver=!!v;}};   /* the box, for audit.py box (geometry-audit-box.js); showOver(1) keeps the outer box shown in every view (bom.py counts it: checks.py's ARM) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);if(Math.abs(PH.MF-fu.MW)>0.002)console.warn('escphys.js MF '+PH.MF+' is not the fusee’s full wind '+fu.MW.toFixed(4));H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
@@ -453,6 +484,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Upper balance cock','Unruhkloben oben, 05 08 03-1','upperCock',pw(P.upperCock,H[9][0],TT-15,H[9][1]));
       add('Lower balance cock','Unruhkloben unten, 05 08 00-2','lowerCock',pw(P.lowerCock,H[36][0],TI+10,H[36][1]));
       add('Dust bush','Staubfutter, 05 08 01-3','dustBush',pw(P.dustBush,H[10][0]-6.55,TT-12,H[10][1]));
+      add('Cork ring','Korkring, 05 08 01-4','corkRing',pw(P.corkRing,H[10][0]+8.05,TT-18.5,H[10][1]));
       add('Intermediate bridge','Zwischenbrücke, 05 08 04','intermediateBridge',pw(P.intermediateBridge,H[38][0],WD.PP_T+3.8,H[38][1]));
       add('Centre wheel','Minutenrad, 05 05 03','centreWheel',pw(P.centreWheel,H[1][0]+15,-1.1,H[1][1]-6));
       add('Intermediate wheel','Zwischenrad, 05 05 02','intermediateWheel',pw(P.intermediateWheel,H[38][0]+8,0.7,H[38][1]+7));
@@ -464,7 +496,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       add('Dial','Zifferblatt, 05 02 00-4','dial',pw(P.dial,-30,WDIAL.DY1,30));const Q=CS.parts,yb=CS.YB;
       add('Bowl','Gehäusetopf, R-05 01 00-1','bowl',pw(Q.bowl,-38,yb-50,38));add('Bezel','Glasrand, R-05 01 01-2','bezel',pw(Q.bezel,-44,yb+16,-44));add('Gimbal ring','Kardanring, 05 01 00-5','gimbalRing',pw(Q.gimbalRing,-52,yb,52));
       add('Box','Holzkasten','box',pw(Q.box,-92.5,yb-60,60));add('Key','Chronometerschlüssel, 51 00 11','key',pw(Q.key,-62,yb-100,10));add('Transit lock','Feststeller','caseLock',pw(Q.caseLock,65,yb+20,63));add('Hands','05 02 00-1, -2, 05 02 01-1','hands',pw(P.hands,0,16,-30));},
-    /* the model's clock, as the Hamilton's: seconds of local time, so the train stands where the time of day puts it; the escapement's motion (js/escapement.js, makeEsc's
+    /* the model's clock, as the Hamilton's: seconds of the time kept (GMT, or local: tz), so the train stands where the time of day puts it; the escapement's motion (js/escapement.js, makeEsc's
        solved state at the swing H.amp and the drive drv, as the Hamilton's): the balance's phase over its 0.5 s period, the escape wheel's place in teeth (a tooth each period, a beat behind until the tooth escapes); fast, the balance is drawn at
        rest and the wheel turns on smoothly. The wind (hrs since winding): run down, the train stands; the Wind button winds it back through the key, the maintaining
        spring keeping the train going (js/fusee.js) */
@@ -486,11 +518,19 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       {const CW_T=0.8;if(cw.go&&cw.on&&!winding)cw.go=false;const t=cw.go?3:0;if(!cw.go)cw.on=false;
         cw.u=SNAPC||RMC.matches?t:cw.u+Math.sign(t-cw.u)*Math.min(Math.abs(t-cw.u),dw/CW_T);if(cw.go&&!cw.on&&cw.u>=3){cw.on=true;wind0();}   /* once: wind0 starts the maintaining spring's clock (until 15 October 2026 it ran each frame and held it at the start) */
         CS.bowl.rotation.z=-Math.PI*smooth(clamp(cw.u,0,1));CS.shutter(smooth(clamp(cw.u-1,0,1)));}
+      /* the ship's motion (GW above), on the wall clock: eased in and out; the transit lock brings the gimbals level with the box over about a second; ?snap and reduced
+         motion keep the case exactly level */
+      {const fix=SNAPC||RMC.matches,wR=TAU/(+document.getElementById('rollP').value||7),kr=fix?1:1-Math.exp(-dw*1.5);GW.rockW+=((GW.rock&&!fix?1:0)-GW.rockW)*kr;if(!GW.rock&&GW.rockW<1e-4)GW.rockW=0;
+        if(GW.rockW>0)GW.rockT+=dw*wR;const sea=GW.rockW>0?gwSea(GW.rockT,wR,GW.rockW):null;GW.roll=sea?sea.r[0]:0;GW.pitch=sea?sea.p[0]:0;
+        const lk=GW.latch||cw.u>0;GW.latchK=fix?+lk:clamp(GW.latchK+(lk?1:-1)*dw*1.2,0,1);const fr=1-smooth(Math.min(1,GW.latchK*2)),G=GW.M;
+        if(fix){G.p=[0,0];G.r=[0,0];G.lp=GW.pitch;G.lr=GW.roll;}else gwStep(G,dw,GW.pitch,GW.roll,sea,fr);
+        CS.root.rotation.set(GW.pitch,0,GW.roll,'ZYX');CS.ring.rotation.x=(G.p[0]-GW.pitch)*fr;CS.bowl.rotation.z+=(G.r[0]-GW.roll)*fr;}
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
-         square; else lying in the box (case.js keyAt) */
+         square; else standing in its holder in the box (case.js keyAt) */
       {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}
       const dS=dt*(winding?Math.min(st.speed,1):st.speed),drv=drvNow();   /* while the key turns, model time no faster than real (the Hamilton's WIND_X): the maintaining spring's minute isn't spent in a frame */
-      if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
+      if(sw){sw.T+=dS;if(H.held&&wrapH(dialRead()-sw.T)<=0){sw=null;H.kick=Math.max(H.amp,0.6*PE.ampAt(1));}}   /* setting: the time the hands should read runs on; when it reaches the held dial's, the twist */
+      if(sw){H.amp*=Math.exp(-dt/0.1);H.kick=0;}else if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
       if(!H.held&&H.amp>=PE.AMIN){const r=PE.rateAt(H.amp,drv);if(Number.isFinite(r))H.rate=r;}
       const at=()=>{const y=tSim/0.5+H.bOff,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,drv);return{y,p,z,E:k-1+(p>0?z.prog:0)+H.eOff};},lockd=q=>!(q.p>0&&q.z.prog>0&&q.z.prog<1);
       let q=at(),E,s;
@@ -501,10 +541,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       const n=hrs/HPT;
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp,0);E=H.Eh+Math.min(0,s.prog);}   /* its own swing, the wheel on its stone (drawn back while the stone lifts) */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
-      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding});
-      showH();return[+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4)];},
-    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);},
-      read:(g,first)=>{const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');
+      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
+      showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
+    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
+      read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
+        if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
+        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
@@ -515,6 +557,21 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0&&!winding&&!cw.go){if(cf<0.5)cw.go=true;else wind0();}});}   /* in its case, turned over first (cw, tick) */   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
   /* the twist: the box turned about the hands and back sets a stopped balance swinging, about 130 deg (estimated: the 6MX's "light jerk"); going, it does nothing here */
   {const tw=document.getElementById('twist');if(tw)tw.addEventListener('click',()=>{if(H.held&&H.amp<PE.AMIN)H.kick=Math.max(H.amp,0.6*PE.ampAt(1));});}
+  /* Time: Set the hands, Now and Keep (slip, sw, tz above); declarations, as the link's state is read as the viewer starts */
+  function hms(T){const d=((T%86400)+86400)%86400;return[Math.floor(d/3600),Math.floor(d%3600/60),Math.floor(d%60)].map(x=>String(x).padStart(2,'0')).join(':');}
+  function secsOf(v){const m=/^(\d{1,2}):(\d{2})(?::(\d{2}))?/.exec(v||'');return m?(+m[1])*3600+(+m[2])*60+(+(m[3]||0)):null;}
+  function setTime(T,field){handsSet=!!field;const e=wrapH(dialRead()-T),s=((e%60)+60)%60;slip=wrapH(slip-(e-s));sw=H.held&&!sw||s<=0.25?null:{T};todS='';}   /* run down: the minutes only */
+  function setTz(v){const o=tzOff();tz=v;const d=tzOff()-o;slip=wrapH(slip+d);if(sw)sw.T+=d;todS='';document.querySelectorAll('#tz button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v?'true':'false'));
+    const nw=document.getElementById('now');if(nw)nw.title=v==='gmt'?'Set the hands to Greenwich time':'Set the hands to your clock';}
+  var todS='';function showTod(){const el=document.getElementById('tod');if(!el||document.activeElement===el)return;const v=hms(dialRead());if(v!==todS){todS=v;el.value=v;}}
+  {const el=document.getElementById('tod'),nw=document.getElementById('now');
+    if(el)el.addEventListener('change',()=>{const v=secsOf(el.value);if(v!=null){setTime(Math.floor(dialRead()/86400)*86400+v,true);if(V)V.wake();}});
+    if(nw)nw.addEventListener('click',()=>{setTime(Date.now()/1000+tzOff(),false);if(V)V.wake();});
+    document.querySelectorAll('#tz button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v!==tz){setTz(b.dataset.v);if(V)V.wake();}}));}
+  /* Display's Motion: the ship's motion, the transit lock and the roll's period (GW); Reset display turns them back too */
+  {const rk=document.getElementById('rock'),la=document.getElementById('latch'),rp=document.getElementById('rollP'),ro=rp&&rp.parentElement.querySelector('output'),rs=document.getElementById('dispReset');
+    if(rk&&la&&rp){const show=()=>{ro.textContent=(+rp.value).toFixed(1)+' s';};rk.addEventListener('change',()=>{GW.rock=rk.checked;if(V)V.wake();});la.addEventListener('change',()=>{GW.latch=la.checked;if(V)V.wake();});rp.addEventListener('input',()=>{show();if(V)V.wake();});show();
+      if(rs)rs.addEventListener('click',()=>{rk.checked=la.checked=false;GW.rock=GW.latch=false;rp.value='7';show();});}}
   function setConn(v){conn=v;if(mv)mv.userData.R.fu.setConn(v);document.querySelectorAll('#conn button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
   document.querySelectorAll('#conn button').forEach(b=>b.addEventListener('click',()=>setConn(b.dataset.v)));
   /* the Variants' sheets: as last revised (about 1946-48, the default) or as first drawn (1940-44, as Wempe 3955 is made): movement.js's setRev shows each part's pieces for
@@ -524,7 +581,16 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
     for(const k in REVP)for(const q in REVP[k]){const c=(PIECES[k]||[]).find(e=>e.k===q);if(c)Object.assign(c,keep(c)&&rev==='first'?REVP[k][q]:c.last);}
     document.querySelectorAll('#rev button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));}
   document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',()=>setRev(b.dataset.v)));
+  function setDial(v){dial=v==='lange'?'lange':'wempe';if(mv)mv.userData.R.dl.setDial(dial);const c=PARTS.dial,q=(PIECES.dial||[]).find(e=>e.k==='dial');DIALC.wempe=DIALC.wempe||{d:c.d,sn:c.sn};
+    const o=DIALC[dial];c.d=o.d;c.sn=o.sn;if(q)q.d=o.d;if(VV){const I=VV.INFO;if(I.dial)I.dial[1]=o.d;if(I['dial.dial'])I['dial.dial'][1]=o.d;VV.look();}
+    document.querySelectorAll('#dialSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===dial?'true':'false'));}
+  document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>setDial(b.dataset.v)));
   /* the essay, once the model is built: its time (seconds of local time) and wind (hours since winding, run down at run()), the swing, and changed() (wake and write the hash) */
-  if(ES&&V)ES.bind({time:()=>tSim,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
-  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,rev,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow()});}   /* the viewer's state and the wind, for the tools */
+  if(V){VV=V;setDial(dial);}
+  if(ES&&V)ES.bind({time:dialRead,tz:()=>tz,hrs:()=>hrs,run:()=>HRUN,amp:()=>H.amp,held:()=>H.held,changed:V.wake,mv,M:V.M});
+  /* Report a bug or inaccuracy (the Hamilton's report.js): where the visitor is, and the model's state, in the report's details */
+  if(V&&typeof REPORT!=='undefined')REPORT.bind({r:V.r,name:'Wempe Einheits-Chronometer',inacc:'Where the model or the essay differs from Wempe’s works drawings or a real Einheits-Chronometer, and what shows it. The drawings, then photographs and videos of real ones, decide what the model looks like and does, so a sheet’s number settles it fastest.',
+    where:()=>{if(ES&&ES.on()){const s=ES.section(),h=s&&document.getElementById(s);return'The essay'+(h?', “'+h.textContent.trim()+'”':'');}if(V.st.pick&&V.INFO[V.st.pick])return V.INFO[V.st.pick][0];const b=document.querySelector('#views [aria-pressed="true"]');return'The model'+(b?', '+b.textContent.trim()+' view':'');},
+    state:()=>[['Tab',ES&&ES.on()?'essay':'model'],['Model',`balance swinging ${Math.round(H.amp/D2R)}°${H.held?', train held':''}${winding?', winding':''}; ${hrs.toFixed(1)} h since winding; ${conn}; sheets ${rev==='first'?'as first drawn':'as last revised'}; dial ${dial}; speed ${V.st.speed}×`]]});
+  if(V&&/[?&]qa\b/.test(location.search)){window.__V=V;window.__W=()=>({hrs,winding,conn,rev,HRUN,n:hrs/HPT,amp:H.amp,held:H.held,rate:H.rate,drive:drvNow(),slip,tz,dialT:dialRead(),setting:!!sw,swT:sw?sw.T:null,roll:GW.roll,pitch:GW.pitch,gp:GW.M.p[0],gr:GW.M.r[0],latchK:GW.latchK});}   /* the viewer's state and the wind, for the tools */
 })();
