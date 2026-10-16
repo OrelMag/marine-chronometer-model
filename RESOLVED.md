@@ -654,7 +654,7 @@ Contents:
   face's edge; the click outline's polar table (0.09°) could put it a hair past the drawn face, and
   with the ratchet's sheet turned as A-B draws it the bearing click stood 43 % into its teeth
   (maintaining.py --model wempe), the other on a tip. Now SEAT is taken 2 % of a tooth back from the
-  face: the bearing click 83 % in. Keep: a seat found at a discontinuity is backed off it. `HASH2`
+  face: the bearing click 83 % in. Keep: a seat found at a discontinuity is backed off it. `84d35438`
 - **The Wempe's maintaining ratchet turned back in the page.** Once its lead over the fusee wheel
   came from the maintaining spring, the page let it fall to nothing at run down (15.6° back), by a
   mean half tooth as the key went on, and creep back between beats as the drive eased along the
@@ -663,13 +663,13 @@ Contents:
   carries the wheel on, tooth by tooth; running, it never goes back faster than the wheel goes on,
   and holds when the escape wheel recoils; run down, the detent holds it; a set of the wind (the
   slider, the link) leaves the spring spent at run down. maintaining.py allows exactly that fall.
-  Keep: the ratchet's angle only goes back to its detent. `HASH2`
+  Keep: the ratchet's angle only goes back to its detent. `84d35438`
 - **mechanisms.py --model wempe read a hole as the click wheel's roots.** Its root was the least
   radius of the outline within a pitch of the pawl, which took the click wheel's M2 holes (r 5.75)
   for the roots once a click stood over one: 3.27 mm deep, not 0.795, failing a tooth at 547 MPa in
   wempe_ratchets.js. Now the root is found from the outline's outer envelope, then the least radius
   within half its depth below it (under an undercut face's overhang). Keep: a ratchet's roots are
-  read on its outer outline. `HASH2`
+  read on its outer outline. `84d35438`
 - **The Wempe's fusee always came back onto the same click.** Running, update() carried the fusee
   forward onto click 0's seat, up to a whole tooth of the 35-tooth click wheel (10.3°), though the
   two clicks stand 180° apart, half a tooth out of step, so the nearer one bears within 5.1°. Keep:
