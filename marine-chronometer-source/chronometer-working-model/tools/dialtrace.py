@@ -395,11 +395,17 @@ def ink(G,H,Au):
     bands whole, the thin circles and lines where the ink is thin: the 12's foot stands over the up-and-down circle). Returns the ink and what was taken out"""
     g8=np.clip(GR,0,255).astype(np.uint8);g8=cv2.inpaint(g8,((H&~HCUT) if HCUT is not None else H|Au).astype(np.uint8),int(0.3*PX),cv2.INPAINT_TELEA)   # Kirov 247's brass hands cut out below, not filled (filled, their patch takes the letters' black)
     I=g8.astype(float)<(BG+INK)/2
-    if RED is not None:   # Kirov 247's serial, in red: in its box the red alone (no grey: the blued seconds hand crosses it), from the photo filled in under the hand
-        # first, red over the other channels by 25 (the paper's 99.9th percentile 16.5; the pen's strokes 80-95 at their cores, thin, so half way breaks them)
-        bx=ITEMS['serial'][1];sb=(XM>bx[0])&(XM<bx[2])&(ZM>bx[1])&(ZM<bx[3]);rc=cv2.inpaint(REC,(H&sb).astype(np.uint8),int(0.3*PX),cv2.INPAINT_TELEA).astype(np.float32)
-        rf=cv2.GaussianBlur(rc,(0,0),1.2);I[sb]=((rf[...,2]-np.maximum(rf[...,1],rf[...,0]))>25)[sb]
-        hs=H&sb;I[hs]=(cv2.morphologyEx(I.astype(np.uint8),cv2.MORPH_CLOSE,disk(0.8))>0)[hs]   # under the hand (it hides the 4's upright): a stroke's two visible ends joined across it
+    if RED is not None:   # Kirov 247's serial, in red: in its box the red alone (no grey: the blued seconds hand crosses it, and red leaves it out unfilled), red over the
+        # other channels half way from the paper (0-16) to the stroke's own core (80-95; 50-60 in the 2), as the black ink's edges are taken: its strokes 0.40-0.45 wide
+        bx=ITEMS['serial'][1];sb=(XM>bx[0])&(XM<bx[2])&(ZM>bx[1])&(ZM<bx[3]);rf=cv2.GaussianBlur(REC.astype(np.float32),(0,0),1.2)
+        rd=rf[...,2]-np.maximum(rf[...,1],rf[...,0]);lm=cv2.dilate(rd,disk(0.5))   # each stroke half way to its own core (the 2's pen ran lighter: its cores 50-60), where its core is ink (over 40)
+        I[sb]=(cv2.morphologyEx(((rd>0.5*lm)&(lm>40)&(rd>16.5)).astype(np.uint8),cv2.MORPH_CLOSE,disk(0.15))>0)[sb]
+        # what the hand hides, drawn as straight pen strokes 0.42 wide on from what shows (estimated): the 4's upright, which shows at x 1.59 from its top (z 16.85, paper
+        # above it) to the crossbar (17.95), on down under the hand's stem to the line's foot (z 19.25: the 7's foot, the 2's stroke 19.26); the 7's bar, which shows at
+        # z 15.46 from the hand's head (x 3.95) to its corner (5.2), on 0.4 under the head (to 3.55: as little as the strokes allow)
+        sk=np.zeros(I.shape,np.uint8);w=int(round(0.42*PX))
+        for a,b in(((1.59,16.85),(1.59,19.25)),((3.55,15.46),(4.1,15.46))):cv2.line(sk,tuple(int(round(v)) for v in mm2r(a)),tuple(int(round(v)) for v in mm2r(b)),1,w)
+        I|=(sk>0)&sb
     if LG and not KR:   # Lange 5177's rust: in its block mark ink only FR of the way from the ink to the paper; in its blurred mark (which leaves the ink's edges alone) only what is
         # as dark as the ink's cores (CORE) and grey, not brown (R-B under 0.3 of the grey + 4: a spot's dark heart, which fills the counters of the 10 and the 30)
         I[RUSTB]=(g8.astype(float)<INK+FR*(BG-INK))[RUSTB];I&=~RUST|((g8<CORE)&(RBF<0.3*g8+4))
