@@ -30,13 +30,14 @@ async()=>{
       const p=new T.Vector3(u.p[0],0,u.p[1]).applyMatrix4(sh.matrixWorld),c=new T.Vector3(u.c[0],0,u.c[1]).applyMatrix4(bowl.matrixWorld);return Math.hypot(p.x-c.x,p.z-c.z);};
     const rest=d(u.rest),open=d(0);sh.userData.turn(u.rest);
     out.push(['shield plate',rest>2*u.r+1&&open<0.05,`its hole from the case's: at rest ${f2(rest)} mm (want over ${f2(2*u.r+1)}, covered), open ${f2(open)} mm (want under 0.05)`]); }
-  /* the gimbal latch (Fig. 106, Sec. III): released, the gimbals keep the case level as the box rolls; latched, the case goes with the box */
+  /* the gimbal latch (Fig. 106, Sec. III): released, the case swings in its gimbals as the ship rolls; latched, it goes with the box. Drawn as the ship's people see it
+     (16 October 2026): the box stands still and the case swings against it (until then the box rolled and the case was kept level) */
   { const ring=byHn('42106')[0],bowl=byHn('42104')[0].parent,box=ring.parent,up=o=>new T.Vector3(0,1,0).applyQuaternion(o.getWorldQuaternion(new T.Quaternion()));
     const ang=(a,b)=>Math.acos(Math.min(1,a.dot(b)))*180/Math.PI;
     const rk=document.getElementById('rock'),la=document.getElementById('latch'),set=(el,v)=>{if(el.checked!==v)el.click();};
-    set(la,false);set(rk,true);await wait(3000);const free=[ang(up(bowl),new T.Vector3(0,1,0)),ang(up(box),up(bowl))];
+    set(la,false);set(rk,true);await wait(3000);const free=[ang(up(box),new T.Vector3(0,1,0)),ang(up(box),up(bowl))];
     set(la,true);await wait(3000);const held=ang(up(box),up(bowl));set(rk,false);set(la,false);await wait(500);
-    out.push(['gimbal latch',free[0]<1.5&&free[1]>3&&held<0.5,`rolling: released, the case ${f2(free[0])} deg from level with the box ${f2(free[1])} deg from it; latched, the case ${f2(held)} deg from the box`]); }
+    out.push(['gimbal latch',free[0]<0.5&&free[1]>3&&held<0.5,`rolling: the box ${f2(free[0])} deg from level (it stands still); released, the case ${f2(free[1])} deg from the box; latched, ${f2(held)} deg from it`]); }
   /* the setup click (Sec. II: the setup ratchet and pawl "prevent the barrel arbor from turning during winding and running"): the mainspring pulls the arbor the way
      opposite to the barrel's turn in running; turned a little that way the ratchet's steep face runs into the click's tip, turned the other way its tip only rides up a
      tooth's back (a radial face's corner has the next back just behind it, so the outline under the tip rises a little that way too, at the back's slope: under half the
