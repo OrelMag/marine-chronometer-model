@@ -70,5 +70,7 @@ async def main():
     for k,r in enumerate(rows):
         x=0
         for im,t in r:S.paste(im,(x,k*(H+24)+24));D.text((x+6,k*(H+24)+6),t,fill='black');x+=im.width
-    out=f"r_iso_{'_'.join(names)}.png";S.save(out);print('wrote',out)
+    out='_'.join(names)
+    if len(out)>80:import hashlib;out=out[:60]+'_'+hashlib.sha1(out.encode()).hexdigest()[:8]  # many parts: a name Windows can open (OSError 22 past its path limit)
+    out=f"r_iso_{out}.png";S.save(out);print('wrote',out)
 asyncio.run(main())

@@ -2469,3 +2469,58 @@ exceptions, which stay open:
 6. Closing plate (05 01 00-2): the Ø 1.2 hole blind from the groove's floor, and a round about r 1 between the rim's underside and the boss;
    the code through and sharp. Likely, minor.
 - Not examined (no sheets): case and locking brackets, the gimbal ring and its bracket, the box, lid, hinges, keeper, latch, transit lock, keys.
+
+## The Wempe as released in 3.00.00: an audit (16 October 2026)
+
+Five read-only passes on the release (`cf1c60c`): the page and the tools against the Hamilton's, the frame, train and dial against their
+sheets, the balance, escapement, fusee and case against theirs, and the movement and the box against photographs of real Wempes (3955,
+the wartime one at Greenwich, 5377, 6161). The chain and the fusee's pitch were checked a second time on their sheets. Fixed on branch
+`claude/wempe-audit`; each item says what became of it.
+
+**Status (16 October 2026, `claude/wempe-audit`):** 1, 2 fixed (`b9dc7f9`: the hooks 0.80, the pitch 1.2 and lands 0.87, the flange
+0.76/0.87/0.37; the chain no longer touches the fusee). 3, 4 and four of 5 settled from the figures, the model unchanged (README, Readings
+corrected: the block stays on hole 13, 14.03 is the blank's, the 7ʳ arc the wheel's tips, the tables the jig's pilot holes); 05 03_2's "39"
+open. 6 in but the rim's graduation (`7a4bd48`). 7 corrected (`0d4598e`, `f6323e8`). 8: one piano hinge, the lid stay, the knurled nuts,
+discs, bezel band and knob (`c3b0ab7`); the handles and the latch kept as their sheets draw them, the photographs' recorded under
+Unresolved. 9: the escape endstones and the cock's (`4e06f34`), holes 14-18 and the window, the pin holes through, hole 4's sink, the dial
+screws' holes, the engraving and RGG (`7a4bd48`), the lower cock's screw brass; the ring's screw holes through its cone left (solidGeo) and
+hole 40, absent on 3955, recorded. 10, 11: in progress on `claude/wempe-parity` (the page) and `claude/wempe-checks` (the tools); the
+smoke test, ci.py steps, isolate.py and the hook are done (`f6323e8`, `6cde307`).
+
+**Against the drawings**
+1. Chain's hooks (05 07 04): both side views draw each hook one solid bar the chain's full 0.82, from the 10 × 0.9 strip of the material
+   block; the code a middle layer 0.26. Sure.
+2. Fusee's pitch (05 06 04-2, the issue built): "1,2 ±0,01" inked from the flange's last rib to the far face of the first groove rib, a
+   pitch; the code 1.15 (02-1's pencil) with lands 0.82, the chain's own nominal width. "0,87 +0,01" is across the flange's slot, not a
+   land. Likely (the 1,2 could be the first turn's alone).
+3. 05 04_1's "25,68 von Unruhmitte" and "23,8 v. Gangradmitte" (the 1941 detent block's screw) unused: they put it 1.2 from hole 13, where
+   the first-drawn block stands. Sure of the reading.
+4. Balance staff 05 04 02's 14.03 −0.06 from the flange to the lower cone's apex; the code 12.83 (the README reads 14.03 a blank). Unsure.
+5. Unused readings: 05 03_2's "39" on an arc through the masses' outer edges (the model's Ø 37.7); the "7ʳ" dashed arc about hole 26 at the
+   top plate's tongue; the upper cock's hole table 4.59 against section A-B's 5.2 with a 0.5 step; hole 26's table 2.5 against P-Q's seat.
+6. Small features left out: the barrel bridge's steady-pin holes' 90° × 0.3 sinks, the upper cock's 0.2 × 90°, the dust bush's 5° × 0.5
+   chamfer, the rim's graduation (8 Körner in 60 Teilung).
+7. Stale text: README's period 0.491 s / 25 minutes a day (lines 170, 276, 540; it is 0.497 s, about 8 minutes); line 559 (the seconds
+   numerals and "Made in Germany"); hole 30's WN-302 (448 against 476); the seconds setting's floor (Estimated); the escape wheel's header
+   comment; keystone.js's "the face leans 15°" (it reports 25°); frame.js:70's "built with the hand-setting".
+
+**Against real Wempes**
+8. Box (Greenwich's, 5377, 6161, Lange 1947): a lid stay (three of four), one long hinge across the back (the code two short ones; the
+   README says the photographs show two), wooden handles (the code aluminium, the sheet's material blank), a hasp (a slotted plate on the
+   lid over a knob on the box; the code a hanging tongue), knurled brass nuts at the gimbal pivots (the code hex steel), knobs at the outer
+   pivots, a knurled band on the bezel, the key's shelf hollowed to the ring, the lid's glass held by a bead.
+9. Movement (3955): the escape wheel's endstones round settings with the stone showing, held by two screws' heads, the upper pair from the
+   outer face (the code a brass cap and a closed disc, the upper screws from inside); the cock's endstone showing its stone; the detent
+   block's steady-pin holes through the plate and sunk on its face (the code blind); hole 4's oil sink; the ring's screw holes through to
+   the cone and the dial screws' holes through the flange (the code blind); "Gerhard D. WEMPE Hamburg" on the top plate and "RGG" on the
+   balance arm; holes 14-18 and the square cut for the hand setting (on 3955 and Greenwich's, empty).
+
+**Against the Hamilton's page and tools**
+10. The page lacks: the Train, Fusee, Laid out and Balance views; Moving parts only; the rate (timing weights, temperature), the trial, the
+    rate book, the swing; the adjuster's bench and the escapement's plan; the walkthrough; the overhaul; Making it and the export to Blender;
+    the tick; winding by half turns, the load path and the let-down. Only With the key, Stop to set, Jolt and the holding device are
+    documented as left out.
+11. Tools the Hamilton has and the Wempe doesn't: holecheck, maintaining, mechanisms (and its Node tools), fea, estimates, invariants, book,
+    overhaul, views, gltf_check, blender_check. ci.py leaves out `audit.py box --model wempe`, `dialtrace.py` and `wempe_inertia.py`; the
+    Wempe's smoke test clicks none of 3.00.00's controls (and `checks.py` still says it has no Report); the report says ci.py runs all its
+    checks. `isolate.py` fails on Windows with many parts (the file name too long); the isolate-and-compare hook ignores `wempe/js/`.
