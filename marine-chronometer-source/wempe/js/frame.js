@@ -188,11 +188,14 @@ const WFRAME=(()=>{
     for(const k of[41,47])tag(cylBetween(bb,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.bb');
     /* the click (Sperrkegel, 05 08 05-2, revised 25.5.48): Messingblech 3 Ms 58 federhart, so its own spring (no separate spring is drawn); 2.6 -0.03/-0.05 thick on the bridge's
        face, turning on a shouldered screw (WN-22) in hole 46. Its outline in its own frame (x from its hole toward its nose, y away from its base line), from 05 08 05-2 at 5:1:
-       the hole Ø 3.2 +0.03; 17.4 long; the base 2.81 under the hole (scaled); the nose r 1 at 7.5 from the hole; the beak 3.5 high at the base's other end, its tip 9.7 from the
-       hole; under it the hollow r 6 about a point 5.142 back and 7.212 under the hole (sure); the back an arc r 12.5 (sure), its centre traced on the sheet (a circle fitted to 37
-       points along it, 0.05 mm rms: 1.53 back, 9.55 under the hole). Its beak toward the barrel's ratchet: its base line at 23.3° from N toward O, traced on Wempe 3955's
+       the hole Ø 3.2 +0.03; 17.4 long; the base 2.85 under the hole (the thin circle "Ø 5,7" about the hole, tangent to it: 2.81 scaled until 16 October 2026); the nose r 1 at
+       7.5 from the hole; the beak 3.5 high at the base's other end, its end face at 85° to the base leaning toward the hole as it rises (the "85°", its arc about the beak's foot;
+       82.4° until 16 October 2026), its tip 9.7 from the hole; under it the hollow r 6 about a point 5.142 back and 7.212 under the hole (sure), which meets the base 9.69 from the
+       hole, the tip's "9,7"; the back an arc r 12.5 (sure), its centre traced on the sheet (a circle fitted to 37 points along it, 0.05 mm rms: 1.53 back, 9.55 under the hole) and
+       moved 0.12 (to 1.599 back, 9.455 under) so that it passes through the beak's top corner, which the figures put 0.12 outside the traced arc. Its beak toward the barrel's ratchet: its base line at 23.3° from N toward O, traced on Wempe 3955's
        (2_Wempe_3955_A.jpg, ±3°: the nose's centre lands at 37.3° from the hole, where the photograph has it, 37.5°) */
-    {const yb=-2.81,c12=[-1.53,-9.55],c6=[-5.142,-7.212],cn=[Math.sqrt(7.5**2-(yb+1)**2),yb+1],tB=[-9.15,-2.70],tC=[-1.53-Math.sqrt(12.5**2-(yb+3.5+9.55)**2),yb+3.5];
+    {const yb=-5.7/2,c6=[-5.142,-7.212],cn=[Math.sqrt(7.5**2-(yb+1)**2),yb+1],tB=[c6[0]-Math.sqrt(36-(yb-c6[1])**2),yb],tC=[tB[0]+3.5/Math.tan(85*D2R),yb+3.5],
+      c12=(u=>[tC[0]+12.5*u[0],tC[1]+12.5*u[1]])((d=>[d[0]/Math.hypot(...d),d[1]/Math.hypot(...d)])([-1.53-tC[0],-9.55-tC[1]]));   /* the traced centre moved along its radius to the corner */
       const ln=(p,q,x)=>{const d=[q[0]-p[0],q[1]-p[1]],l=Math.hypot(d[0],d[1]);return((x[0]-p[0])*d[1]-(x[1]-p[1])*d[0])/l;};   /* + right of p to q */
       const f=x=>Math.max(Math.hypot(x[0]-c12[0],x[1]-c12[1])-12.5,yb-x[1],6-Math.hypot(x[0]-c6[0],x[1]-c6[1]),-ln(tB,tC,x),Math.min(x[0]-cn[0],Math.hypot(x[0]-cn[0],x[1]-cn[1])-1));
       const loc=sdfOutline((x,z)=>f([x,z]),-10,-4,9,4,0.02),ex=brg(23.3),ey=brg(23.3-90),pl=p=>add(add(H[46],ex,p[0]),ey,p[1]);

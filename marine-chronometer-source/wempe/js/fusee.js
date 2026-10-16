@@ -403,8 +403,8 @@ const WFUSEE=(()=>{
     /* The click 05 05 05-1 (Bandstahl 2,25 × 18, hardened in oil, light blue at 310°, round the hole 400°): 2 thick, its tip 1 -0.03 thick at its upper face; the boss Ø 5, the
        back r 18, the hollow underneath r 9 about a point 6.273 and 9.645 from the hole (tangent to the boss), the tip's lower corner on r 12 ±0.1 about the hole, its end 2.6
        tall at 80° (below), 14.2 overall; the hole
-       2.25 H7 (1:70), staked on its arbor 6.3 ±0.1 from the arbor's lower shoulder to its upper face. The step to the thin tip (8.6 from the hole) is drawn where the thick
-       part keeps 0.05 clear of the fusee wheel's tips, which it reaches over (8.3: README). Its arbor 05 05 05-2 (no sheet): Ø 2.25 between its shoulders, 18.95 (19 less
+       2.25 H7 (1:70), staked on its arbor 6.3 ±0.1 from the arbor's lower shoulder to its upper face. The step to the thin tip runs obliquely from 8.6 from the hole at
+       the back to the hollow (below), clear of the fusee wheel's tips, which the thin part reaches over. Its arbor 05 05 05-2 (no sheet): Ø 2.25 between its shoulders, 18.95 (19 less
        0.05 endshake; scaled 19.5 on 05 05 05), its pivots Ø 0.88 in the plates' drilled 0.9, 3.1 long (scaled): estimated. Its wire spring (Feder 05 05 06-1), at hole 5
        beside it, below */
     const pD=part('maintDetent',-25),gD=grp(pD,DX[0],DX[1]);
@@ -422,9 +422,13 @@ const WFUSEE=(()=>{
     const DTA=(()=>{const s=[-10.8,-20.9],w=[FX[0]-DX[0],-(FX[1]-DX[1])];return Math.atan2(w[1],w[0])-Math.atan2(s[1],s[0]);})();
     const DTX=DTO.map(([x,y])=>{const X=-x,c=Math.cos(DTA),s=Math.sin(DTA);return[X*c-y*s,X*s+y*c];});
     const gDc=new THREE.Group();gD.add(gDc);const DTN=DTX.filter(([x,y])=>Math.hypot(x,y)>7);   /* the outline toward its tip, to seat it on the ratchet */
-    {/* the step: the thick part within s of the hole, s the most that keeps every point of it 0.05 clear of the fusee wheel's tips (r 20.285) */
-      const fw=[FX[0]-DX[0],-(FX[1]-DX[1])];let s=8.6;while(s>5&&DTX.some(([x,y])=>Math.hypot(x,y)<=s&&Math.hypot(x-fw[0],y-fw[1])<20.285+0.25))s-=0.05;   /* 0.25: the click rides about 0.2 either way on the ratchet */
-      const thick=KIT.clipPoly(DTX,p=>s-Math.hypot(p[0],p[1])),thin=KIT.clipPoly(DTX,p=>Math.hypot(p[0],p[1])-s);pD.userData.step=s;
+    {/* the step: a straight hidden edge on 05 05_12 (dashed), from the back where the "8,6" meets it (8.6 from the hole, 1.40 above it on the r 18) obliquely down to the
+         hollow about 5.6 from the hole (scaled ±0.3; section A-B's step where the line crosses it, about 5.9): the thick part 0.52-0.61 clear of the fusee wheel's tips
+         (r 20.285) as the click rides on its ratchet. Until 16 October 2026 an arc about the hole at 7.55, the 8.6 taken as a radius, which put it over the tips */
+      const fw=[FX[0]-DX[0],-(FX[1]-DX[1])],tx=([x,y])=>{const X=-x,c=Math.cos(DTA),s=Math.sin(DTA);return[X*c-y*s,X*s+y*c];};
+      const S1=tx([8.6,1.403]),S2=tx([5.6,-9.645+Math.sqrt(81-(5.6-6.273)**2)]),side=p=>(S2[0]-S1[0])*(p[1]-S1[1])-(S2[1]-S1[1])*(p[0]-S1[0]),sg=Math.sign(side([0,0]));
+      const thick=KIT.clipPoly(DTX,p=>sg*side(p)),thin=KIT.clipPoly(DTX,p=>-sg*side(p));
+      pD.userData.step=Math.min(...thick.map(([x,y])=>Math.hypot(x-fw[0],y-fw[1])))-20.285;   /* the thick part's least clearance over the tips, at rest */
       tag(mesh(gDc,slab(thick,[{c:[0,0],r:1.125}],DTU,DTL),M.blued),'050505-1');tag(mesh(gDc,slab(thin,[],DTU,DTT),M.blued),'050505-1',1);}
     tag(mesh(gD,turned([[0,-22.075],[0.44,-22.075],[0.44,-18.975],[1.125,-18.975],[1.125,yD],[0.44,yD],[0.44,yD+3.1],[0,yD+3.1]].map(([r,y])=>[r,y]),20),M.steel),'050505-2');
     /* its wire spring (Feder 05 05 06-1: the coloured section's #24; no sheet) in its stud, at the top plate's hole 5 ("Drahtfeder", 05 08_1a: N 38.507 O 10.684, Körner 1.3,
@@ -578,9 +582,13 @@ const WFUSEE=(()=>{
       const pt=new THREE.CylinderGeometry(2.605/Math.SQRT2,0.3,0.5,4,1);pt.translate(0,-35.2-0.25,0);tag(mesh(gBA,pt,M.steel),'050702-1',1);
       /* the hook at its core's middle (0.51 lower as first drawn), in each state's group with its core */
       const HKS=[[gAL,(BC0+BC1)/2],[gAF,(-3.7-3.1-21.7+2.9)/2]].map(([g,y])=>[tag(mesh(g,new THREE.BufferGeometry(),M.steel),'050702-2'),y]);
-      /* the pin along +x from 6.1 into the core; its end over the core (r 6.65) by 0.475 at its face (-z, the side rotation.y rises toward) down to 0 at its back (+z) */
+      /* the pin along +x from 6.1 into the core; its end over the core (r 6.65) by 0.475 at its face (+z, the side rotation.y falls toward) down to 0 at its back (-z).
+         05 07 02's end view, first-angle (DIN) and so seen from the square's end, from above (the square drawn solid), puts the square face on the side the arbor turns from
+         and the ramp falling the way it turns: the spring's eye, pulled along the strip (rotation.y rising, as the coil winds outward), catches the face with its trailing edge
+         and the strip lies over the ramp. The arbor is then pulled against the set-up click (anticlockwise from the dial), as the crossed chain has it (2_Kirow_2973_A: README).
+         Until 16 October 2026 the face was on the other side, read from the ball end */
       var hookSet=a=>{for(const[hk,y]of HKS){const g=new THREE.CylinderGeometry(1.0,1.0,1.0,24,1),p=g.attributes.position;g.rotateZ(-Math.PI/2);
-        for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i);p.setX(i,x>0?6.65+0.005+0.47*(1-z)/2:6.1);}
+        for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i);p.setX(i,x>0?6.65+0.005+0.47*(1+z)/2:6.1);}
         g.computeVertexNormals();g.translate(0,y,0);g.rotateY(a);hk.geometry.dispose();hk.geometry=g;}};}
     /* the set-up ratchet 05 07 00-3 (Sperrad; Messingblech 3 Ms 58, revised 24.11.47): 16 teeth, tips Ø 14.1 -0.2, roots 11.1 -0.2 (drawn 14.0, 11.0), each face along a line 1.2
        off the radius (10°), the back an arc Ø 12.5 (r 6.25) whose centre lies on the Ø 6.4 circle: the sheet's "12,5" runs across the circle through its centre (its two ends on
@@ -613,13 +621,14 @@ const WFUSEE=(()=>{
     const msT=(()=>{let lo=2,hi=40;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(msLen(0,m-1)>MSL)hi=m;else lo=m;}return lo;})();   /* all on the wall */
     const pMS=part('mainspring',-33),gMS=grp(pMS,BX[0],BX[1]),msM=tag(mesh(gMS,new THREE.BufferGeometry(),M.mspring),'050700-6');
     onRev(f=>{gMS.position.y=f?(-3.7-1.2-21.7+1.0)/2-(MS0+MS1)/2:0;});   /* as first drawn the same spring in the middle of the 1941 drum's 15.8 (0207: "Zugfeder 15"), 0.44 lower */
-    /* its turns T: from its inner end, 0.18 past the arbor's hook (HKA), winding outward the way the drum runs (rotation.y rising), to its outer end 0.08 short of the drum's
+    /* its turns T: from its inner end, its tip 0.18 behind the arbor's hook (HKA), the hook in its eye (until 16 October 2026 the tip 0.18 past the hook, abutting its face from
+       the side the pull leaves it on), winding outward the way the drum runs (rotation.y rising), to its outer end 0.08 short of the drum's
        block; set up 0.75 turn past lying all on the wall at run down (with the chain: the band turns the drum a little less, so its set-up there is a little more), which sets
        the hook's angle */
-    const MST0=msT+0.75,HKA=wrap(BLK+BETA_RUN.chain-0.26-MST0*TAU);hookSet(HKA);const msK=Math.round(MST0-(BLK+BETA_RUN.chain-0.26-HKA)/TAU),msTurns=beta=>(BLK+beta-0.26-HKA)/TAU+msK;
+    const MST0=msT+0.75,HKA=wrap(BLK+BETA_RUN.chain+0.10-MST0*TAU);hookSet(HKA);const msK=Math.round(MST0-(BLK+BETA_RUN.chain+0.10-HKA)/TAU),msTurns=beta=>(BLK+beta+0.10-HKA)/TAU+msK;
     function msGeo(T){const ni=msShape(T),no=T-1-ni,r1=MSa+MST*ni,r2=MSR-MST*no,P=[],n=Math.ceil(T*64),ym=(MS0+MS1)/2;
       for(let i=0;i<=n;i++){const tau=T*i/n;let r;if(tau<=ni)r=MSa+MST*tau;else if(tau<=ni+1){const f=tau-ni;r=r1+(r2-r1)*(f*f*(3-2*f));}else r=r2+MST*(tau-ni-1);
-        const a=HKA+0.18+TAU*tau;P.push(new THREE.Vector3(r*Math.cos(a),ym,-r*Math.sin(a)));}
+        const a=HKA-0.18+TAU*tau;P.push(new THREE.Vector3(r*Math.cos(a),ym,-r*Math.sin(a)));}
       return ribbonGeo(P,0.36,Math.abs(MS1-MS0));}
 
     /* =============== the chain 05 07 04 (Kette) and the band 05 07 03 (Schneckenband) =============== */
