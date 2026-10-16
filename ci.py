@@ -108,6 +108,8 @@ STEPS=[('build',build,'quick'),
  ('estimates',lambda log:run(['node',TOOLS/'estimates.js'],ROOT,log),'quick'),   # the design values resting on estimates swept over their ranges, the bench's correction applied (about 4 min)
  ('selfcontained',lambda log:run([PY,'selfcontained.py'],TOOLS,log),'quick'),   # the page alone enough to make it and navigate with it (a few seconds)   # the hairspring's design: Phillips' terminal curves, the strip, the force on the pivots (about 12 s)   # the essay's almanac and sight reduction against JPL Horizons and skyfield (about 1 s)
  ('types',tsc,'quick'),
+ ('wempe-dialtrace',lambda log:run([PY,'dialtrace.py'],TOOLS,log),'quick'),   # the Wempe dial's printing traced off Wempe 3955's photograph, against js/dialface.js (about 13 s)
+ ('wempe-dialtrace-lange',lambda log:run([PY,'dialtrace.py','--dial','lange'],TOOLS,log),'quick'),   # the Lange dial's, against js/dialface_lange.js (about 20 s)
  ('wempe-types',lambda log:tsc(log,WE/'jsconfig.json'),'quick'),   # the Wempe's scripts, core.js and the shared kit among them (about 10 s)
  ('smoke',lambda log:run([PY,'smoke.py'],TOOLS,log),'browser'),
  ('invariants',lambda log:run([PY,'invariants.py'],TOOLS,log),'browser'),
@@ -126,6 +128,8 @@ STEPS=[('build',build,'quick'),
  ('wempe-exploded',lambda log:run([PY,'exploded.py','--model','wempe'],TOOLS,log),'browser'),
  ('wempe-audit-first',lambda log:run([PY,'audit.py','--model','wempe','--rev','first'],TOOLS,log),'browser'),   # the same as first drawn (the page's Variants: the sheets of 1940-41), its coplanar faces under movement.first
  ('wempe-exploded-first',lambda log:run([PY,'exploded.py','--model','wempe','--eval',"__mv.userData.setRev('first')"],TOOLS,log),'browser'),
+ ('wempe-audit-box',lambda log:run([PY,'audit.py','box','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case, gimbals and box, against its expected leftovers (about 10 s)
+ ('wempe-inertia',lambda log:run([PY,'wempe_inertia.py'],TOOLS,log),'browser'),   # the Wempe's escapement's bodies weighed on its solids, against wempe_inertia.json (about 30 s)
  ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)
