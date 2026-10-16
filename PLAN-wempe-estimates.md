@@ -14,6 +14,13 @@ dg-chrono's 1024 px scans are the largest that exist (checked 16 October 2026, `
 - **Build all four groups**, A to D below.
 - **The detent's level:** keep the 1946 heights. Note in the README that every photographed movement (Wempe 3955, Kirov 92, the 6MX in `1_3_Vergleich…Feder.jpg`) has the escape wheel within about 0.5 mm of the top plate, the 1941-43 level, and that no post-1946 Wempe is photographed.
 - **Base:** wait for the other Wempe branches to merge, then build on `main`.
+- **The lock (later, 16 October 2026):** adopt 7.14 and 37.0° (lock 0.235). Lower the guard band's floor to 14° under the new reference swing, as it was set before, and say why in the README.
+- **Merging:** the user asked me to merge the waiting branches myself if nobody else is. Their owners are doing it:
+  - `claude/wempe-audit` is on main (3.01.00).
+  - `claude/wempe-maintaining` (marine-chronometer-76) is mid-merge of 3.01.00, then a full ci.py and a patch release. Expected about 1.5 h after 17:00; it will message when it lands.
+  - `claude/wempe-open-ends` belongs to marine-chronometer-bf (asked; its worktree, wempe-release3, is mid-merge of 3.01.00).
+
+  Keep out of both worktrees. Build after both land.
 - **Rough readings:** record them, don't adopt them. That covers the pillar plate at 3.40, the intermediate bridge's pins at 4.5, the box rim's lining lip, the WN-21 heads, the box floor at 14.5 and the glass at Ø 116. Each goes into the README's Estimated with its evidence; the model keeps today's values.
 
 ## Groups, in build order
