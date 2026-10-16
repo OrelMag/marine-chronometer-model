@@ -471,7 +471,8 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
      at the escapement's rate (PE.rateAt: s a day against the reference), so the hands gain or lose by it. While the key turns, the maintaining spring drives with what it
      carried when the key went on (w0), falling to nothing over PH.SUS s of the train's time (wT). kick: a twist's swing, eased in over 0.15 s */
   const PH=WPHYS,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:0,Eh:0,kick:0,w0:0,wT:0,rate:0};
-  const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT):0;
+  let MSET=0;   /* the mainspring's set (Swing and isochronism): it pulls that much less all through its run */
+  const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT)*(1-MSET):0;
   /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
   let CS=null,cl=1,cf=1,co=0;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
@@ -555,11 +556,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       if(snd&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tickSnd();lastE=E;   /* the tick: a tooth's fall onto the impulse stone, as the Hamilton's */
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
+      swRec(now);if(!(ES&&ES.on()))swDraw(now,drv);
       showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
-    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
+    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(MSET)h.set('mset',Math.round(MSET*100));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
       read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
         if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
-        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');
+        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');msSet(+(g('mset')||0)||0);   /* mset=15: the mainspring's set, per cent */
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
@@ -571,6 +573,51 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   {const e=document.getElementById('snd');if(e){e.checked=snd;e.addEventListener('change',()=>{snd=e.checked;unlock();});}}
   function tickSnd(){if(!ac||ac.state!=='running')return;const n=ac.createBufferSource(),b=ac.createBuffer(1,ac.sampleRate*0.03,ac.sampleRate),d=b.getChannelData(0);
     for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ac.sampleRate*0.0018));n.buffer=b;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=3400;f.Q.value=2.2;const gn=ac.createGain();gn.gain.value=0.5;n.connect(f).connect(gn).connect(ac.destination);n.start();}
+  /* ---------- Swing and isochronism (the Hamilton's panel): the balance's swing over the last minute (frame time), the rate against the swing at a steady drive, and the swing over a
+     wind, from makeEsc's ampAt and rateAt with the Wempe's settings (WPHYS): a solve takes about 0.3 s, so tools/wempe_essaydata.js works them out in Node for drives 0.2 to 1.8
+     times the reference's (WEDATA.swing) and the page reads between them (swAt). The drive over the wind is 05 06_20's measured force through the train (WPHYS.drv), less the
+     mainspring's set (MSET). The band: the 1954 instruction's 225-270° (chronometers in general: no Wempe source gives its own); the tools' guard band's floor, 185° (README,
+     Physics). The Hamilton's going barrel, its isochronism check (the Navy's) and its sustaining spring's figures have no Wempe counterpart and are left out ---------- */
+  function dark(){return matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement.dataset.theme!=='light'||document.documentElement.dataset.theme==='dark';}
+  /* a small chart (the Hamilton's plot): o.x0..x1, y0..y1, ticks xt, yt with their formats, series [{f or pts, col, w, dash}], marks [{x, y, col}], a cursor at x, bands
+     [{x0, x1, y0, y1, col, lab}], texts [{x, y, t, col, al}] in data units */
+  function plot(cv,o){const w=cv.clientWidth||280,h=Math.round(w*(o.aspect||0.5)),d=Math.min(devicePixelRatio||1,2);if(cv.width!==Math.round(w*d)||cv.height!==Math.round(h*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d);cv.style.height=h+'px';}
+    const x=cv.getContext('2d'),dk=dark(),L0=40,R0=o.r||10,T0p=10,B0=26,pw=w-L0-R0,ph=h-T0p-B0,X=v=>L0+(v-o.x0)/(o.x1-o.x0)*pw,Y=v=>T0p+(1-(v-o.y0)/(o.y1-o.y0))*ph;
+    x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);x.font='11px "Instrument Sans",sans-serif';x.lineWidth=1;const grid=dk?'#2a323a':'#dde1e4',txt=dk?'#9aa4ad':'#5b656e',yc=v=>Y(clamp(v,o.y0,o.y1));
+    for(const b of o.bands||[]){x.fillStyle=b.col;x.fillRect(X(b.x0),yc(b.y1??o.y1),X(b.x1)-X(b.x0),yc(b.y0??o.y0)-yc(b.y1??o.y1));if(b.lab){x.fillStyle=txt;x.textAlign='center';x.fillText(b.lab,(X(b.x0)+X(b.x1))/2,T0p+11);}}
+    x.strokeStyle=grid;x.fillStyle=txt;for(const v of o.xt){x.beginPath();x.moveTo(X(v),T0p);x.lineTo(X(v),T0p+ph);x.stroke();x.textAlign='center';x.fillText(o.xf(v),X(v),h-10);}
+    for(const v of o.yt){x.beginPath();x.moveTo(L0,Y(v));x.lineTo(L0+pw,Y(v));x.stroke();x.textAlign='right';x.fillText(o.yf(v),L0-4,Y(v)+4);}
+    x.save();x.beginPath();x.rect(L0,T0p-2,pw,ph+4);x.clip();
+    for(const sr of o.series){x.strokeStyle=sr.col;x.lineWidth=sr.w||2;x.setLineDash(sr.dash||[]);x.beginPath();let on=false;const pts=sr.pts||Array.from({length:121},(_,i)=>{const v=o.x0+(o.x1-o.x0)*i/120;return[v,sr.f(v)];});
+      for(const[a,b]of pts){if(!Number.isFinite(b)){on=false;continue;}on?x.lineTo(X(a),Y(b)):x.moveTo(X(a),Y(b));on=true;}x.stroke();}
+    x.setLineDash([]);if(o.cursor!=null){x.strokeStyle=txt;x.lineWidth=1;x.beginPath();x.moveTo(X(o.cursor),T0p);x.lineTo(X(o.cursor),T0p+ph);x.stroke();}
+    for(const m of o.marks||[])if(Number.isFinite(m.y)){x.fillStyle=m.col;x.beginPath();x.arc(X(m.x),Y(m.y),m.r||4,0,TAU);x.fill();}x.restore();
+    for(const t of o.texts||[]){x.fillStyle=t.col||txt;x.textAlign=t.al||'left';x.fillText(t.t,X(t.x),Y(t.y));}}
+  function segSet(sel,v){document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));}
+  const SWT=WEDATA.swing.cv,swAt=s=>{const n=SWT.length;if(!(s>SWT[0][0]))return[SWT[0][1],SWT[0][2]];if(s>=SWT[n-1][0])return[SWT[n-1][1],SWT[n-1][2]];let i=1;while(SWT[i][0]<s)i++;
+    const[a,p,u]=SWT[i-1],[b,q,v]=SWT[i],f=(s-a)/(b-a);return[p+(q-p)*f,u==null||v==null?NaN:u+(v-u)*f];};   /* [the swing (deg), the rate (s a day)] at the drive s, between the drives solved */
+  const swCv=$('#swCv'),swOut=$('#swOut'),swDet=$('#swingDet'),swTr=[];let swKind='t',swLast=0,swKey='',swC=null;
+  function swRec(now){if(swTr.length&&now-swTr[swTr.length-1][0]<100)return;swTr.push([now,H.amp/D2R]);while(swTr.length&&now-swTr[0][0]>61000)swTr.shift();}
+  if(swCv){document.querySelectorAll('#swK button').forEach(b=>b.addEventListener('click',()=>{swKind=b.dataset.v;segSet('#swK',swKind);swLast=0;if(VV)VV.wake();}));swDet.addEventListener('toggle',()=>{swLast=0;if(VV)VV.wake();});}
+  /* the swing and the rate over a wind, hour by hour from full wind (h, deg, s a day), with the fusee's measured drive less the set */
+  function swCalc(){const k=[MSET,HRUN].join();if(k===swKey)return swC;swKey=k;const F=[];for(let i=0;i<=112;i++){const h=HRUN*i/112,[a,r]=swAt(PH.drv(h/HPT)*(1-MSET));F.push([h,a,r]);}
+    const rs=F.map(q=>q[2]).filter(Number.isFinite),as=F.map(q=>q[1]),at=h=>swAt(PH.drv(h/HPT)*(1-MSET));return swC={F,sp:[Math.min(...rs),Math.max(...rs)],sw:[Math.min(...as),Math.max(...as)],d24:at(24)[1]-at(0)[1],a12:at(12)[0]};}
+  function swDraw(now,drv){if(!swCv||!swDet.open||now-swLast<(swKind==='t'?100:500))return;swLast=now;const dk=dark(),blue=dk?'#91adf2':'#26479c',red='#c0392b',brass=dk?'#e0b44f':'#8a5d10',band=dk?'rgba(145,173,242,.12)':'rgba(38,71,156,.08)',muted=dk?'#6d7883':'#8a949c';
+    const C=swCalc(),amin=PE.AMIN/D2R,A=H.amp/D2R,hh=Math.min(hrs,HRUN),sg=(v,n=2)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n),guard=(a,b)=>({pts:[[a,185],[b,185]],col:muted,w:1,dash:[4,3]});
+    if(swKind==='t'){const pts=swTr.map(q=>[(q[0]-now)/1000,q[1]]);
+      plot(swCv,{x0:-60,x1:0,y0:0,y1:300,xt:[-60,-45,-30,-15,0],yt:[0,100,200,300],xf:v=>v?v+' s':'now',yf:v=>v+'°',bands:[{x0:-60,x1:0,y0:225,y1:270,col:band}],
+        series:[{pts:[[-60,amin],[0,amin]],col:red,w:1,dash:[4,3]},guard(-60,0),{pts,col:blue,w:2}],marks:[{x:0,y:A,col:blue}],texts:[{x:-59,y:amin+8,t:'least that works',col:red},{x:-59,y:276,t:'the 1954 instruction'}]});}
+    else if(swKind==='a'){const r=SWT.filter(q=>q[1]>=140&&q[2]!=null).map(q=>[q[1],q[2]]);
+      plot(swCv,{x0:140,x1:280,y0:-2.5,y1:0.5,xt:[150,200,250],yt:[-2,-1,0],xf:v=>v+'°',yf:v=>(v>0?'+':v<0?'−':'')+Math.abs(v),bands:[{x0:225,x1:270,col:band,lab:'1954'}],
+        series:[{pts:r,col:brass,w:2.2}],marks:H.held||H.amp<PE.AMIN?[]:[{x:A,y:H.rate,col:dk?'#e4e8eb':'#141a20'}],texts:[{x:142,y:0.2,t:'s a day'}]});}
+    else plot(swCv,{x0:0,x1:56,y0:150,y1:300,xt:[0,14,28,42,56],yt:[150,200,250,300],xf:v=>v+' h',yf:v=>v+'°',bands:[{x0:0,x1:56,y0:225,y1:270,col:band}],cursor:hh,
+      series:[guard(0,56),{pts:C.F.map(q=>[q[0],q[1]]),col:blue,w:2.2}],marks:[{x:hh,y:swAt(PH.drv(hh/HPT)*(1-MSET))[0],col:blue}],texts:[{x:1,y:290,t:'the swing with the fusee; shaded, the 1954 instruction'}]});
+    const now2=H.held?'<span>The train is held: the balance swings free, or stands.</span>':`<span>Now ${Math.round(A)}° each way, the escape wheel driven at ${Math.round(drv*100)} % of its torque 12 h from full wind${winding?' by the maintaining spring':''}; the escapement with the drawn hairspring ${H.rate>=0?'gains':'loses'} ${Math.abs(H.rate).toFixed(2)} s a day at this swing.</span>`;
+    swOut.innerHTML=`<b>Over a wind ${sg(C.sp[0])} to ${sg(C.sp[1])} s a day</b>${now2}<span>With the fusee the swing stays within ${C.sw[0].toFixed(1)}° to ${C.sw[1].toFixed(1)}° from full wind to run down, and the rate within ${sg(C.sp[0])} to ${sg(C.sp[1])} s a day; wound daily, as the 6MX’s instruction asks, the rate changes ${Math.abs(C.d24).toFixed(2)} s a day between full wind and 24 h. A wind takes about 6 s, so the maintaining spring’s minute hardly moves the swing.${MSET?` The mainspring’s set takes ${Math.round(MSET*100)} % off its pull, so the balance swings ${Math.round(C.a12)}° at 12 h, not ${Math.round(PE.A/D2R)}°.`:''}</span>`;}
+  /* the mainspring's set: a slider in Swing and isochronism, kept in the link as mset=15 (per cent); declarations, as the link's state is read as the viewer starts */
+  function msShow(){const r=$('#msetR');if(r)r.nextElementSibling.textContent=MSET?Math.round(MSET*100)+' % weaker':'as new';}
+  function msSet(v){v=clamp(Math.round(v),0,30)/100;if(v===MSET)return;MSET=v;const r=$('#msetR');if(r)r.value=String(Math.round(v*100));msShow();if(VV)VV.wake();}   /* swCalc follows MSET by itself; swLast is declared after the viewer starts */
+  {const r=$('#msetR');if(r){r.addEventListener('input',()=>msSet(+r.value));msShow();}}
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
   function wind0(){winding=true;H.w0=H.held?0:drvNow();H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on */

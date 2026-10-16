@@ -14,7 +14,7 @@ ignored. Each problem names the page and the last step done before it.
 With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay tab as the Hamilton's (its checks.py's ESSAY: the link it follows into the model and the
 section it opens; no report button): every view, every view with Moving parts only (the frame hidden, the motion work only when included, drive=1 in the link), the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
-the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, and the tick sound off and on."""
+the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, and Swing and isochronism (each chart, the mainspring's set and mset= in the link)."""
 import asyncio,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -422,6 +422,15 @@ async def wempe(b,errs,steps):
     for grp in['#conn','#dialSt','#rev']:
         for v in await ev("g=>[...document.querySelectorAll(g+' button')].map(b=>b.dataset.v)",grp):await click(f'{grp} button[data-v="{v}"]',f'{grp} {v}',600)
         await click(f'{grp} button',f'{grp} back to the first',600)
+    # Swing and isochronism: each chart, the mainspring's set (in the link as mset), and back
+    await ev("document.querySelector('#swingDet').open=true");steps.append('Swing and isochronism opened')
+    for v in['a','w','t']:await click(f'#swK button[data-v="{v}"]',f'swing chart {v}',700)
+    if not await ev("document.querySelector('#swCv').width>0&&/s a day/.test(document.querySelector('#swOut').textContent)"):errs.append('Swing and isochronism drew no chart or no figures')
+    setr="v=>{const r=document.querySelector('#msetR');r.value=v;r.dispatchEvent(new Event('input'))}"
+    await ev(setr,20);await pg.wait_for_timeout(900);steps.append('mainspring set 20 %')
+    sw=await ev("[window.__W().drive,location.hash]")
+    if 'mset=20' not in sw[1]:errs.append(f'the mainspring set is not in the link: {sw}')
+    await ev(setr,0);await pg.wait_for_timeout(500);steps.append('mainspring set 0');await ev("document.querySelector('#swingDet').open=false")
     # ship motion, the transit lock, the roll period (near the case's own swing and off it)
     for v in(1.0,8.0):
         await ev("v=>{const r=document.querySelector('#rollP');r.value=v;r.dispatchEvent(new Event('input'))}",v);await click('#rock',f'ship motion, roll period {v} s',1500);await click('#rock','ship motion off')
