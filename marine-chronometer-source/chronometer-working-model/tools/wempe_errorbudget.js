@@ -75,7 +75,11 @@ const show=(nm,R)=>{const md=k=>pct(R.map(r=>r[k]),0.5),p95=k=>pct(R.map(r=>Math
   say(`${nm}: (median, and 95 % of |x|) E ${f(md('E'),3)} (${f(p95('E'),3)}), R ${sg(md('R'),2)} (${f(p95('R'),2)}), D ${f(md('D'),2)} (${f(p95('D'),2)}), C ${sg(md('C'),3)} (${f(p95('C'),3)}), S ${sg(md('S'),2)} (${f(p95('S'),2)}), the largest period mean ${f(md('w'),2)} (${f(p95('w'),2)}), N ${f(md('N'),1)} (${f(p95('N'),1)}); it passes ${f(100*pass,1)} % of ${R.length} trials`);return pass;};
 /* the essay's trial (wempe_essaydata.js): one trial as adjusted, the first the tool's seed draws: each day's temperature (°C) and its rate (gaining, s a day,
    before the reading's rounding) less the balance's linear term c1 (T - 20), which the essay puts back for the masses' place it shows; with the figures it needs */
-module.exports.essay=()=>{seed=20261015;const o=adj(),rec=[];trial({...o,rec});return{days:rec,Sv:o.Sv,airLin:-(air(36)-air(4))/32,perDeg,SET0,LIM,TU,sd:SC.sd,drS:SC.drS};};
+module.exports.essay=()=>{seed=20261015;const o=adj(),rec=[];trial({...o,rec});return{days:rec,Sv:o.Sv,airLin:-(air(36)-air(4))/32,airK,Sint,perDeg,SET0,LIM,TU,sd:SC.sd,drS:SC.drS};};
+/* the page's 35-day trial panel (wempe_essaydata.js): the TU's figures over many trials as adjusted and at the masses' drawn place, as section 1 below works them (median, and
+   95 % of |x|), and how many pass; from the tool's seed, so the same each run */
+module.exports.summary=(n=NV)=>{seed=20261015;const st=R=>({...Object.fromEntries(['E','R','D','C','S','w','N'].map(k=>[k,[pct(R.map(r=>r[k]),0.5),pct(R.map(r=>Math.abs(r[k])),0.95)]])),pass:R.filter(r=>r.pass).length/R.length,n:R.length});
+  return{adj:st(many(adj,n)),drawn:st(many(drawn,Math.min(n,500)))};};
 if(!MAIN)return;
 head('1. The TU\'s trial: 35 days at 36/20/4/20/36 °C, the first two days of each period not counted, wound daily to "8" (the 6MX\'s TU, 6MX-figures.md)');
 say(`scatter ${f(SC.sd,3)} s a day and drift ±${f(SC.drS*1000,2)} ms a day each day: the Hamilton's, calibrated on No. 3390's card (rating ${card.dev}, recovery ${card.rec}) as errorbudget.js does, taken for the Wempe (estimated: no Wempe card to hand)`);

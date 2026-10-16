@@ -472,6 +472,9 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
      carried when the key went on (w0), falling to nothing over PH.SUS s of the train's time (wT). kick: a twist's swing, eased in over 0.15 s */
   const PH=WPHYS,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:0,Eh:0,kick:0,w0:0,wT:0,rate:0};
   let MSET=0;   /* the mainspring's set (Swing and isochronism): it pulls that much less all through its run */
+  /* the rate's settings (Rate and timing weights): tw the timing weights, eighth turns in (0 as drawn, against their screws' heads); pl the masses' place, degrees from the cuts'
+     line (WEDATA.heat.drawn, 30, as drawn); T the temperature, °C. At 20 °C and the weights as drawn they move nothing: the model as it was */
+  const RW={tw:0,pl:WEDATA.heat.drawn,T:20};
   const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT)*(1-MSET):0;
   /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
@@ -548,7 +551,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       const at=()=>{const y=tSim/0.5+H.bOff,k=Math.floor(y),p=y-k,z=ESC.state(p,H.amp,drv);return{y,p,z,E:k-1+(p>0?z.prog:0)+H.eOff};},lockd=q=>!(q.p>0&&q.z.prog>0&&q.z.prog<1);
       let q=at(),E,s;
       if(!H.held){if((!(drv>0)||H.amp<PE.AMIN)&&lockd(q)){H.held=true;H.bph=q.y;H.Eh=Math.round(q.E);}   /* the train stops at a locked beat */
-        else{const adv=dS*(1+H.rate/86400);tSim+=adv;if(winding)H.wT+=adv;else hrs=Math.min(HRUN,hrs+adv/3600);q=at();}}   /* the fusee turns with the train */
+        else{const adv=dS*(1+(H.rate+rateNow())/86400);tSim+=adv;if(winding)H.wT+=adv;else hrs=Math.min(HRUN,hrs+adv/3600);q=at();}}   /* the fusee turns with the train */
       if(H.held){H.bph+=dS/0.5;
         if(drv>0&&H.amp>=PE.AMIN&&H.kick===0){const b=H.bph-tSim/0.5;H.bOff=b-Math.floor(b);H.eOff=0;const r=at();if(lockd(r)){H.eOff=H.Eh-Math.round(r.E);H.held=false;q=at();}}}   /* going again from where the balance is, on a whole beat */
       const n=hrs/HPT;
@@ -556,12 +559,12 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       if(snd&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tickSnd();lastE=E;   /* the tick: a tooth's fall onto the impulse stone, as the Hamilton's */
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
-      swRec(now);if(!(ES&&ES.on()))swDraw(now,drv);
+      swRec(now);if(!(ES&&ES.on())){swDraw(now,drv);rateShow(now);testShow(now);}
       showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
-    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(MSET)h.set('mset',Math.round(MSET*100));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
+    hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(MSET)h.set('mset',Math.round(MSET*100));{const b=balStr();if(b)h.set('bal',b);}if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
       read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
         if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
-        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');msSet(+(g('mset')||0)||0);   /* mset=15: the mainspring's set, per cent */
+        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev')==='first'?'first':'last');setDial(g('dial')==='lange'?'lange':'wempe');msSet(+(g('mset')||0)||0);   /* mset=15: the mainspring's set, per cent */balApply(g('bal')||'');   /* bal=tw:8,pl:19.5,T:4: the timing weights, the masses' place and the temperature, where they differ from the model's */
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
@@ -618,6 +621,62 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   function msShow(){const r=$('#msetR');if(r)r.nextElementSibling.textContent=MSET?Math.round(MSET*100)+' % weaker':'as new';}
   function msSet(v){v=clamp(Math.round(v),0,30)/100;if(v===MSET)return;MSET=v;const r=$('#msetR');if(r)r.value=String(Math.round(v*100));msShow();if(VV)VV.wake();}   /* swCalc follows MSET by itself; swLast is declared after the viewer starts */
   {const r=$('#msetR');if(r){r.addEventListener('input',()=>msSet(+r.value));msShow();}}
+  /* ---------- Rate and timing weights (the Hamilton's panel): the timing weights (a turn of both 44.2 s a day, README Building it: 0.432 g at r 18.5 on their 0.16 pitch; as
+     drawn against their screws' heads, so only in, 1.9 turns: TWN eighths), drawn moving along their screws; and the temperature curve, wempe_errorbudget.js's day's rate
+     without its scatter: the cut bimetallic balance's coefficient at the masses' place (WEDATA.heat: wempe_thermal.js), the integral balance's secondary error (the middle of
+     its range, Sint: estimated, S losing at the extremes, c2 = -S/256 as the tool's) and the air's density against 20 °C (airK). The model's clock runs at the escapement's rate
+     and these. The masses aren't moved on the model: the rim is drilled for them at the drawn place only ---------- */
+  const TWT=44.2,TWN=15,TWP=0.16,TR=WEDATA.trial,HR=WEDATA.heat.rows;
+  function hAt(x){const n=HR.length;if(x<=HR[0][0])return HR[0][1];if(x>=HR[n-1][0])return HR[n-1][1];let i=1;while(HR[i][0]<x)i++;const[a,p]=HR[i-1],[b,q]=HR[i];return p+(q-p)*(x-a)/(b-a);}   /* the balance's coefficient, s a day gained a °C, the masses x° from the cuts' line */
+  function plAdj(){let a=HR[0][0],b=HR[HR.length-1][0];for(let i=0;i<50;i++){const m=(a+b)/2;hAt(m)>TR.airLin?a=m:b=m;}return Math.round((a+b))/2;}   /* where the masses null the coefficient with the air's linear part (the tool's "adjusted"), to the slider's half degree */
+  function rT(T,pl){const c2=-(TR.Sint[0]+TR.Sint[1])/2/256;return hAt(pl)*(T-20)+c2*(T-20)**2+TR.airK*(293.15/(273.15+T)-1);}   /* s a day gained at T °C against 20 */
+  function rateNow(){return RW.tw/8*TWT+rT(RW.T,RW.pl);}
+  /* the timing weights (bom.json 050301-3) moved in along their screws, from where they are built */
+  let TWM=null;function twApply(){if(!mv)return;if(!TWM){TWM=[];mv.traverse(o=>{if(o.isMesh&&o.userData.hn==='050301-3')TWM.push({o,p:o.position.clone(),d:new THREE.Vector3(0,1,0).applyQuaternion(o.quaternion)});});}
+    for(const w of TWM)w.o.position.copy(w.p).addScaledVector(w.d,-RW.tw/8*TWP);}
+  const twR=$('#twR'),plR=$('#plR'),tmpR=$('#tmpR');let rtLast=0,rtKey='';
+  function rateSync(){if(!twR)return;twR.value=String(RW.tw);plR.value=String(RW.pl);tmpR.value=String(RW.T);const t8=RW.tw;twR.nextElementSibling.textContent=t8?`${Math.floor(t8/8)?Math.floor(t8/8)+' ':''}${t8%8?(t8%8)+'/8 ':''}turn${t8>8?'s':''} in`:'as drawn';
+    plR.nextElementSibling.textContent=RW.pl.toFixed(1)+'°';tmpR.nextElementSibling.textContent=RW.T.toFixed(1)+' °C';segSet('#plSeg',RW.pl===WEDATA.heat.drawn?'drawn':RW.pl===plAdj()?'adj':'');twApply();rtKey='';rtLast=0;tsKey='';if(VV)VV.wake();}
+  /* declarations, as the link's state is read as the viewer starts (bal=, balApply): until the panel is set up (rtReady) they only set RW, which it then shows */
+  var rtReady=false;
+  function rateSet(o){const A=WEDATA.heat.arc;Object.assign(RW,o);RW.tw=clamp(Math.round(RW.tw),0,15);RW.pl=clamp(Math.round(RW.pl*2)/2,Math.ceil(A[0]*2)/2,Math.floor(A[1]*2)/2);RW.T=clamp(Math.round(RW.T*2)/2,0,40);if(rtReady)rateSync();}
+  function balStr(){const o=[];if(RW.tw)o.push('tw:'+RW.tw);if(RW.pl!==WEDATA.heat.drawn)o.push('pl:'+RW.pl);if(RW.T!==20)o.push('T:'+RW.T);return o.join(',');}
+  function balApply(s){if(s===balStr())return;const q={tw:0,pl:WEDATA.heat.drawn,T:20};for(const kv of s.split(',')){const i=kv.indexOf(':'),k=kv.slice(0,i),v=+kv.slice(i+1);if(k in q&&Number.isFinite(v))q[k]=v;}rateSet(q);}
+  if(twR){const a=WEDATA.heat.arc;plR.min=String(Math.ceil(a[0]*2)/2);plR.max=String(Math.floor(a[1]*2)/2);
+    twR.addEventListener('input',()=>rateSet({tw:+twR.value}));plR.addEventListener('input',()=>rateSet({pl:+plR.value}));tmpR.addEventListener('input',()=>rateSet({T:+tmpR.value}));
+    document.querySelectorAll('#plSeg button').forEach(b=>b.addEventListener('click',()=>rateSet({pl:b.dataset.v==='adj'?plAdj():WEDATA.heat.drawn})));
+    $('#rateZero').addEventListener('click',()=>rateSet({tw:0,pl:WEDATA.heat.drawn,T:20}));$('#rateLook').addEventListener('click',()=>{if(VV)VV.setView('balance');});
+    $('#rateDet').addEventListener('toggle',()=>{rtKey='';rtLast=0;if(VV)VV.wake();});rtReady=true;rateSync();}
+  const sgn2=(v,n=2)=>(v>0?'+':v<0?'−':'±')+Math.abs(v).toFixed(n);
+  /* the rate against temperature, 0 to 40 °C: the masses where they are set, at their drawn place dashed and compensated dotted; the TU's 4, 20 and 36 °C marked, and its C and S
+     for the curve (losing +, as the TU counts: C = (ω36 − ω4)/32, S = (ω36 + ω4)/2 − ω20) */
+  function rateShow(now){const det=$('#rateDet');if(!det||!det.open||now-rtLast<500)return;rtLast=now;const k=[RW.tw,RW.pl,RW.T,H.rate.toFixed(3),H.held].join();if(k===rtKey)return;rtKey=k;
+    const dk=dark(),brass=dk?'#e0b44f':'#8a5d10',blue=dk?'#91adf2':'#26479c',mut=dk?'#4a5560':'#b3bac0',pd=WEDATA.heat.drawn,pa=plAdj(),f=T=>rT(T,RW.pl),fs=[f];if(RW.pl!==pd)fs.push(T=>rT(T,pd));if(RW.pl!==pa)fs.push(T=>rT(T,pa));
+    let m=0.5;for(const g of fs)for(let t=0;t<=40;t+=2)m=Math.max(m,Math.abs(g(t)));const y1=m<=1?1:m<=2?2:m<=5?5:Math.ceil(m/10)*10;
+    plot($('#tempCv'),{x0:0,x1:40,y0:-y1,y1,xt:[0,4,20,36,40],yt:[-y1,0,y1],xf:v=>v+'°',yf:v=>(v>0?'+':v<0?'−':'')+Math.abs(v),cursor:RW.T,
+      series:[...(RW.pl!==pd?[{f:T=>rT(T,pd),col:mut,w:1.4,dash:[4,3]}]:[]),...(RW.pl!==pa?[{f:T=>rT(T,pa),col:blue,w:1.2,dash:[1.5,2.5]}]:[]),{f,col:brass,w:2.2}],
+      marks:[4,20,36].map(t=>({x:t,y:f(t),col:brass,r:3})).concat([{x:RW.T,y:f(RW.T),col:dk?'#e4e8eb':'#141a20'}]),texts:[{x:1,y:y1*0.72,t:'s a day gained'}]});
+    const C=-(f(36)-f(4))/32,S=-((f(36)+f(4))/2-f(20)),L=TR.LIM,fig=(a,lim,n=2)=>`<b${Math.abs(a)>lim?' class="bad"':''}>${sgn2(a,n)}</b> (±${lim.toFixed(2)})`;
+    $('#tempOut').innerHTML=`${RW.pl!==pd||RW.pl!==pa?`Dashed, the masses as drawn; dotted, compensated. `:''}The masses ${RW.pl.toFixed(1)}° from the cuts’ line: the balance ${hAt(RW.pl)<0?'loses':'gains'} ${Math.abs(hAt(RW.pl)).toFixed(2)} s a day for each °C warmer (they null it with the air’s at ${pa.toFixed(1)}°). The TU’s figures for this curve: C ${fig(C,L.C,3)} s a day a °C, S ${fig(S,L.S)} s.`;
+    const esc=H.held?0:H.rate,tot=esc+rateNow();
+    $('#rateOut').innerHTML=`<b>${sgn2(tot)} s a day</b><span>The timing weights ${RW.tw?(RW.tw/8).toFixed(3).replace(/\.?0+$/,'')+' turn in':'as drawn'}: ${sgn2(RW.tw/8*TWT)} s a day. At ${RW.T.toFixed(1)} °C, against 20 °C: ${sgn2(rT(RW.T,RW.pl))} s a day. The escapement and hairspring at this swing: ${H.held?'the train is held':sgn2(esc)+' s a day'}.</span>`;}
+  /* ---------- the 35-day trial (the 6MX's TU, as wempe_errorbudget.js runs it): the seeded trial's days (WEDATA.trial: each day's rate, gaining, less the balance's linear term)
+     with the linear term for the masses' place and the timing weights' regulation put back, read to 0.01 s on the accumulated error (losing +), and the TU's figures as the
+     tool works them; beside them its medians over many trials, compensated and at the drawn place (WEDATA.trial.sum) ---------- */
+  var tsKey='',tsLast=0;   /* var: rateSync, set up above, clears it */
+  function trialRun(c1,off){const q2=v=>Math.round(v*100)/100;let e=0;const days=TR.days.map(([Tm,b],i)=>{const r=b+c1*(Tm-20)+off,e1=q2(e-r),v=q2(e1-e);e=e1;return{T:Tm,v,n:i%7>=2};});
+    const per=[0,1,2,3,4].map(k=>days.slice(7*k+2,7*k+7).map(d=>d.v)),m=per.map(rs=>rs.reduce((a,x)=>a+x,0)/rs.length);
+    const Ev=per.reduce((a,rs,k)=>a+rs.reduce((s2,x)=>s2+Math.abs(x-m[k]),0),0)/25,Dv=Math.max(...per.map(rs=>Math.max(...rs.slice(1).map((x,i)=>Math.abs(x-rs[i]))))),w36=(m[0]+m[4])/2,w20=(m[1]+m[3])/2,w4=m[2];
+    const r={E:Ev,R:m[4]-m[0],D:Dv,C:(w36-w4)/32,S:(w36+w4)/2-w20,w:Math.max(...m.map(Math.abs))};r.N=42*Math.abs(r.E)+4.5*Math.abs(r.R)+60*Math.abs(r.C)+2.4*Math.abs(r.S);return{days,m,r};}
+  function testShow(now){const det=$('#testDet');if(!det||!det.open||now-tsLast<500)return;tsLast=now;const k=[RW.tw,RW.pl].join();if(k===tsKey)return;tsKey=k;
+    const{days,m,r}=trialRun(hAt(RW.pl),RW.tw/8*TWT),L=TR.LIM,S=TR.sum,K=['E','R','D','C','S','w','N'],NM={E:'E, mean deviation',R:'R, recovery',D:'D, largest variation',C:'C, a °C',S:'S, secondary',w:'Largest period mean',N:'N, figure of merit'};
+    const out=x=>x==='N'?r.N>L.N:Math.abs(r[x])>L[x],bad=K.filter(out),f=(v,n=2)=>sgn2(v,n),fv=(x,v,n)=>x==='N'||x==='w'||x==='E'||x==='D'?v.toFixed(n):f(v,n);
+    $('#testOut').innerHTML=`<p class="rate" style="margin:0 0 6px"><b>${bad.length?'Failed':'Passed'}</b><span>${bad.length?'Outside the TU’s limits: '+bad.map(x=>NM[x].split(',')[0]).join(', ')+'.':'Every figure within the TU’s limits.'}</span></p>`+
+      '<table class="rt book"><thead><tr><th>Period</th><th class="n">°C</th><th>Daily rates</th><th class="n">Mean</th></tr></thead><tbody>'+
+      TR.TU.map((T,i)=>`<tr><td>${['I','II','III','IV','V'][i]}</td><td class="n">${T}</td><td class="rs">${days.slice(7*i,7*i+7).map(d=>d.n?f(d.v):`<span style="opacity:.5" title="not counted">${f(d.v)}</span>`).join(' ')}</td><td class="n">${f(m[i])}</td></tr>`).join('')+'</tbody></table>'+
+      '<table class="rt book" style="margin-top:8px"><thead><tr><th>Figure</th><th class="n">Model</th><th class="n" title="The median of 2,000 trials with the masses compensated">Comp.</th><th class="n" title="The median of 500 trials with the masses at their drawn place">Drawn</th><th class="n">Limit</th></tr></thead><tbody>'+
+      K.map(x=>{const n=x==='C'||x==='E'?3:x==='N'?1:2;return`<tr><td>${NM[x]}</td><td class="n${out(x)?' bad':''}">${fv(x,r[x],n)}</td><td class="n">${fv(x,S.adj[x][0],n)}</td><td class="n">${fv(x,S.drawn[x][0],n)}</td><td class="n">${x==='N'?'≤ '+L.N:'±'+L[x].toFixed(2)}</td></tr>`;}).join('')+'</tbody></table>'+
+      `<p class="note" style="margin:6px 0 0">Over the tool’s trials ${Math.round(S.adj.pass*100)} % pass with the masses compensated, ${Math.round(S.drawn.pass*100)} % at their drawn place.</p>`;}
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
   function wind0(){winding=true;H.w0=H.held?0:drvNow();H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on */

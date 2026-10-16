@@ -14,7 +14,7 @@ ignored. Each problem names the page and the last step done before it.
 With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay tab as the Hamilton's (its checks.py's ESSAY: the link it follows into the model and the
 section it opens; no report button): every view, every view with Moving parts only (the frame hidden, the motion work only when included, drive=1 in the link), the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
-the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, and Swing and isochronism (each chart, the mainspring's set and mset= in the link)."""
+the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, Swing and isochronism (each chart, the mainspring's set and mset= in the link), Rate and timing weights (the weights turned in, drawn moving and in the link, the masses compensated and back, the temperature, Zero) and the 35-day trial's tables."""
 import asyncio,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -431,6 +431,23 @@ async def wempe(b,errs,steps):
     sw=await ev("[window.__W().drive,location.hash]")
     if 'mset=20' not in sw[1]:errs.append(f'the mainspring set is not in the link: {sw}')
     await ev(setr,0);await pg.wait_for_timeout(500);steps.append('mainspring set 0');await ev("document.querySelector('#swingDet').open=false")
+    # Rate and timing weights: the weights turned in (drawn moving, and in the link), the masses compensated and as drawn, the temperature; Zero; the 35-day trial's tables
+    await ev("document.querySelector('#rateDet').open=true");steps.append('Rate and timing weights opened')
+    rng="([s,v])=>{const r=document.querySelector(s);r.value=v;r.dispatchEvent(new Event('input'))}"
+    w0=await ev("(()=>{let p=null;window.__mv.traverse(o=>{if(!p&&o.isMesh&&o.userData.hn==='050301-3')p=o.position.toArray();});return p;})()")
+    await ev(rng,['#twR',8]);await ev(rng,['#tmpR',4]);await pg.wait_for_timeout(900);steps.append('timing weights a turn in, 4 °C')
+    w1=await ev("(()=>{let p=null;window.__mv.traverse(o=>{if(!p&&o.isMesh&&o.userData.hn==='050301-3')p=o.position.toArray();});return p;})()")
+    if not w0 or w0==w1:errs.append(f'the timing weights did not move: {w0} {w1}')
+    if 'bal=tw:8,T:4' not in await ev("location.hash"):errs.append('the timing weights and temperature are not in the link: '+await ev("location.hash"))
+    for v in['adj','drawn']:await click(f'#plSeg button[data-v="{v}"]',f'masses {v}',600)
+    if not await ev("/s a day/.test(document.querySelector('#rateOut').textContent)&&/C /.test(document.querySelector('#tempOut').textContent)"):errs.append('Rate and timing weights shows no rate or TU figures')
+    await ev("document.querySelector('#testDet').open=true");await pg.wait_for_timeout(900);steps.append('35-day trial opened')
+    if not await ev("document.querySelectorAll('#testOut table tr').length>=12&&/Passed|Failed/.test(document.querySelector('#testOut').textContent)"):errs.append('the 35-day trial drew no tables')
+    await click('#rateZero','rate zero',600)
+    if await ev("location.hash.includes('bal=')"):errs.append('Zero left the rate settings in the link')
+    w2=await ev("(()=>{let p=null;window.__mv.traverse(o=>{if(!p&&o.isMesh&&o.userData.hn==='050301-3')p=o.position.toArray();});return p;})()")
+    if w2!=w0:errs.append(f'Zero did not put the timing weights back: {w0} {w2}')
+    await ev("document.querySelector('#rateDet').open=false;document.querySelector('#testDet').open=false")
     # ship motion, the transit lock, the roll period (near the case's own swing and off it)
     for v in(1.0,8.0):
         await ev("v=>{const r=document.querySelector('#rollP');r.value=v;r.dispatchEvent(new Event('input'))}",v);await click('#rock',f'ship motion, roll period {v} s',1500);await click('#rock','ship motion off')
