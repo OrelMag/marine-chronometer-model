@@ -427,6 +427,10 @@ frame rate before importing: the clips come in at it.
   Action constraint reads an object's rotation channels only so. No Python runs in the drivers. `PLAY = 'Winding'` (any clip) at its top plays that clip
   on every part instead. Against the clips (`tools/blender_check.py`), the rig puts every part where Running has it within 0.02 mm and 0.1°, but the chain's
   links (0.05 mm: Run down's moments are 1.9 hours of wind apart), and explode, laid out, lift and lids at 1 where their clips end.
+  The rig is shared with the Wempe's export (`wempe/js/blender.js`, the Wempe README's "Downloads"): it makes only the controls whose rig clip the file has,
+  and drives a part that repeats with the escape wheel's place by a clip whose `rig.p` is `E`, over its `b − a` beats (the Wempe's maintaining detent riding
+  its ratchet). The export takes its start hours in single precision (`Math.fround`), as Blender's driver variables hold them: until 16 October 2026 an
+  export made between round hours left the rig's hours up to 2e-6 h off its own, the escape wheel up to 0.3° off its clips at 30 h.
 - **Checked against the page** (`tools/blender_check.py --looks`): close-ups of the engraving, the serial, the damascening, the dial and the box, rendered by
   the page and by Blender (Cycles) from the same cameras, agree in place, orientation and scale: the engraving reads as on the page, the stripes run the same
   way at the same pitch and the bridges' undersides are plain, the dial is the page's. Blender's plates look more mirror-like: the same nickel (metal,

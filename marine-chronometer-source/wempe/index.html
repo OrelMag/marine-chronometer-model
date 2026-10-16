@@ -32,7 +32,7 @@
     <div class="labels"></div>
     <div class="tabs" role="tablist" aria-label="What the page shows"><button role="tab" id="tabModel" aria-selected="true" aria-controls="stage">3D model</button><button role="tab" id="tabEssay" aria-selected="false" aria-controls="essay" tabindex="-1" title="The Einheits-Chronometer: an essay on what its drawings tell us, with figures drawn from this model">Essay</button></div>
     <button id="panelBtn" aria-controls="panel" aria-expanded="true" aria-label="Hide the panel" title="Hide the panel, for a larger model (P)">›</button>
-    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><div class="of"></div><p></p><div class="spec"></div><div class="src"></div><button class="rp-l" data-report="inacc">Something wrong with this part? Report it</button></div>
+    <div class="info" id="info" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><h3></h3><div class="of"></div><p></p><div class="spec"></div><div class="src"></div><button class="rp-l" id="infoSTL" title="This part (or piece) as built, as an STL in millimetres">Download it as STL</button><button class="rp-l" data-report="inacc">Something wrong with this part? Report it</button></div>
     <div class="hint" id="hint"><span class="m-only">Click a part to see what it is; right-click to fade, hide or isolate it.</span><span class="t-only">Tap a part to see what it is; long-press to fade, hide or isolate it.</span> <b>?</b> lists every control</div>
     <div class="opm" id="opm" role="dialog" aria-label="Part visibility"><h4></h4><div id="opPart"><label class="sl"><span>Opacity</span><input type="range" min="0" max="100" step="1"><output></output></label><div class="seg"><button data-a="hide">Hide</button><button data-a="iso">Isolate</button><button data-a="reset">Reset part</button><button data-a="all">Reset all</button></div></div><div id="opHid" class="hidden"><div class="hl">Hidden, click to show</div><div class="chips"></div><div class="seg"><button data-a="showall">Show all</button></div></div><div id="opIso" class="hidden"><div class="hl"></div><div class="seg"><button data-a="uniso">Show all parts</button></div></div></div>
     <div class="hist hidden" id="hist"><button id="hBack" aria-label="Back to where the view was" title="Back to where the view was (Backspace)">↶</button><button id="hFwd" aria-label="Forward again" title="Forward again (Shift-Backspace)">↷</button></div>
@@ -141,6 +141,12 @@
         <h3 class="sub-h">The drawings</h3>
         <div class="seg" id="rev"><button data-v="last" aria-pressed="true" title="Each sheet as last revised, about 1946-48: the escape wheel and rollers 1.8 mm under the top plate, the detent block with its upright (05 04 01-4, 1943)">As last revised</button><button data-v="first" aria-pressed="false" title="The parts the later revisions replaced, as first drawn in 1940-41, as Wempe 3955 is made: the escape wheel just under the top plate on its 1941 arbor (05 04_7.1), the 1941 staff with its brass collar (05 04_5), the detent block with its long arm and cone (05 04_1)">As first drawn</button></div>
         <p class="note" style="margin:6px 0 0">Where a sheet was revised, the model is built as last revised; As first drawn shows the parts as the earlier sheets drew them. Figures that changed only a tolerance are on the parts' cards.</p>
+      </details>
+      <details class="grp more" id="dlDet">
+        <summary>Download</summary>
+        <p class="note" style="margin:0 0 6px">The model to take away. Each part's card has its solid as STL; here the whole movement as shown, or the whole instrument for Blender, in the Variants chosen above.</p>
+        <div class="seg"><button id="xSTL" title="Every part of the movement shown, as one STL in millimetres">Movement (.stl)</button><button id="xGLB" title="The whole instrument for Blender (glTF 2.0): every part a named object in its own hierarchy, in its materials, with every motion the model has as an action">Blender (.glb)</button><button id="xRig" title="A script for Blender's Text Editor, run after importing the .glb: one set of controls (time, explode, lift, lid) drives every part at the model's own ratios">Blender rig (.py)</button></div>
+        <div class="rate" id="xRead" aria-live="polite"></div>
       </details>
       <details class="grp more disp" id="dispDet" open>
         <summary>Display</summary>
@@ -454,6 +460,9 @@
 <script src="js/essaydata.js"></script>
 <script src="../shared/essaykit.js"></script>
 <script src="js/essay.js"></script>
+<script src="../chronometer-working-model/js/gltf.js"></script>
+<script src="../chronometer-working-model/js/rigpy.js"></script>
+<script src="js/blender.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
