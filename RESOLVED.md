@@ -629,6 +629,17 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's fusee groove was cut at the superseded issue's pencilled pitch, and its chain's hooks
+  were drawn a third their thickness** (16 October 2026, the audit of 3.00.00). The groove had 02-1's
+  pencilled 1.15 and lands 0.82, the chain's own nominal width, which squeezed the flange to ribs 0.6
+  and 0.14 round a 0.8 slot; 05 06 04-2's section, the issue built, gives the slot 0.87 +0.01, the
+  ribs 0.8 and 0.37 (summing to its 2 ±0.02) and the pitch 1.2 ±0.01, a land and its rib: lands 0.87,
+  the chain 0.03-0.07 clear, the 8¾th turn 0.08 short of point N. The hooks were the links' middle
+  layer, 0.26; 05 07 04's side views draw them the chain's full width (strip 10 × 0.9): 0.80, their
+  eyes 0.26 between the end links' outer plates. The chain leaves the slot level and the top hook lies
+  level in it (tilted with its end link it reached into the first rib). Keep: the groove's pitch and
+  lands are 02-2's, the flange's three widths sum to its 2; the chain doesn't touch the fusee in fine.py
+  (no allowance for it). `b9dc7f9`
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
   has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
