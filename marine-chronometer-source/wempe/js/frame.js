@@ -279,7 +279,7 @@ const WFRAME=(()=>{
       const ly0=TI+10-3.22,ly1=TI+10,lug={loop:[L2,L1,...semi],y0:ly0,y1:ly1,F:[T(H[23],rJ,ly0,ly1),B(H[23],5.206/2,ly1,3.22-0.5),T(add(H[23],nv,3.5),rM12,ly0,ly1),T(add(H[23],nv,-3.5),rM12,ly0,ly1)]};
       tag(mesh(lc,solidGeo([bar,lug]),M.gilt),'050800-2');}
     /* its screw (WN-53 in the coloured section): head Ø 5.8 × 1.7 in the plate's Ø 6 × 1.8 sink, M2.6 × 5.0, 3.45 into the cock: the coloured section, scaled (estimated) */
-    headOn(tag(screw(lc,H[36][0],H[36][1],TT+1.8,2.9,1.7,5.0,1.3),'WN-53'),'lowerCock','topPlate');
+    headOn(tag(screw(lc,H[36][0],H[36][1],TT+1.8,2.9,1.7,5.0,1.3,M.brass),'WN-53'),'lowerCock','topPlate');   /* brass, as Wempe 3955's (2_Wempe_3955_A.jpg; steel until 16 October 2026) */
     for(const k of[22,37])tag(cylBetween(lc,rPin,TI-1.3,TI+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.lc');
 
     /* ================= the intermediate bridge (Zwischenbrücke kompl., 05 08 04) ================= */
