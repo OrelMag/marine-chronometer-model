@@ -148,6 +148,7 @@ STEPS=[('build',build,'quick'),
  ('fea',lambda log:run([PY,'fea.py'],TOOLS,log),'full'),   # finite elements on the plates and bridges: the pivots' holes under the chain's and teeth's loads, against the depths' windows (about 3 minutes)
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),
  ('maintaining',lambda log:run([PY,'maintaining.py'],TOOLS,log),'full'),
+ ('wempe-maintaining',lambda log:run([PY,'maintaining.py','--model','wempe'],TOOLS,log),'full'),   # the Wempe's maintaining work: its clicks, ratchet, detent and wire on the solids through run and wind; the page's own loop through two winds (the maintaining spring's drive); the stop work (about 2 minutes)
  ('bom',lambda log:run([PY,'bom.py'],TOOLS,log),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)
  ('wempe-fine',lambda log:run([PY,'fine.py','--model','wempe'],TOOLS,log),'full'),   # the Wempe's 0.05 mm interference over its escapement's phases, train and wind, against checks.py's EXPECTED (about 1¾ minutes)
  ('wempe-bom',lambda log:run([PY,'bom.py','--model','wempe'],TOOLS,log),'full'),   # every Wempe part against its drawing list (wempe/bom.json) and its relations (about 4 minutes)
