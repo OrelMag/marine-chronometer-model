@@ -842,10 +842,11 @@ function buildMovement(M){
      ends nearly meeting ... When the pull of the chain is removed ... the ends spring apart a little"; Glasgow, Watch and Clock Making, 1885, p. 65: the mainspring "must
      always be stronger"), so banked it pushes SPU of the 12-hour drive, and less as it relaxes (R.ssF). The lobes keep their shape (each is pinned); the band between them
      spreads over the angle the gap gives up and bows in from the wall, keeping its length. d: how far the spring has relaxed from banked (0 in running, up to SMAX while
-     winding). Its section, SSH_B high (the width measured), from the push it must give: tools/sustaining.js works its stiffness out from the section by Castigliano and checks
+     winding). Its section, SSH_B high (the width measured), from the push it must give (1.45 against the solved mainspring's drive, 0.385 N·m at the fusee wheel, as high as clears the sustaining ratchet's face
+     by 0.02, pushing 0.82 of it; 1.25 until 16 October 2026, pushing 0.88 of the linear strip's 0.311): tools/sustaining.js works its stiffness out from the section by Castigliano and checks
      SPU against it, and the manual's "enough power to drive the chronometer for five to ten minutes" (Sec. IV) as the time it keeps the balance over a turn (it runs on
      past that, to about 18½ minutes, at a falling swing). Lobes and pin places estimated */
-  const SSB=0.5*D2R,SSG=20*D2R,SMAX=SSG-SSB,SPU=0.88,SSH_B=1.25,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
+  const SSB=0.5*D2R,SSG=20*D2R,SMAX=SSG-SSB,SPU=0.82,SSH_B=1.45,SFL=62*D2R,SWL=35*D2R,SRO=17.97*FK,SSW=2.1*FK,SPW=12*D2R,SSP=SSF+SSG-SMAX+SPW;   /* SSP: the working end's pin, in the ratchet's frame */
   const sspGeo=d=>{d=clamp(d,-SMAX/4,SMAX);const W=SSF+SSG-SMAX+d,a0=W+SWL,a1=SSF+TAU-SFL,sp=a1-a0,B=(SRO-SSW/2)*(SMAX-d)/sp*Math.PI/2,o=[],I=[];   /* W: the working end's tip; the band's free part runs from a0 to a1 */
     const st=(x,w,r)=>x<w?r:x<w+0.14?lerp(r,SRO-SSW,smooth((x-w)/0.14)):SRO-SSW,rin=a=>Math.min(st(a-W,SWL-0.14,13.9*FK),st(SSF+TAU-a,SFL-0.14,12.8*FK));   /* the lobes' inner edges, eased into the band's over 8 deg */
     for(let i=0,N=200;i<=N;i++){const a=W+(SSF+TAU-W)*i/N,b=a>a0&&a<a1?B*Math.sin(Math.PI*(a-a0)/sp):0,ro=SRO-b,ri=Math.min(rin(a),ro-SSW);o.push([ro*Math.cos(a),ro*Math.sin(a)]);I.push([ri*Math.cos(a),ri*Math.sin(a)]);}

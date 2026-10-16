@@ -147,9 +147,9 @@ def write(d):
         '   free spring\'s natural curve, measured on C Spinner\'s video 32:18, its coils pressing on each other, the inner end on the arbor\'s hook, the outer along the brace).\n'
         '   Generated: run python tools/mainspring.py, not edited. T: turns from the inner end to the outer, a state every step; s: the grid along the strip (mm, in\n'
         '   0.05s); r: each state\'s radius at those s (mm, in 0.0005s), little-endian uint16, base64; T0: the turns at which the held spring pulls nothing;\n'
-        '   pull: its torque at each state against the most (the energy\'s slope) */\n'
+        '   pull: its torque at each state against the most (the energy\'s slope); M1: that most, N·m */\n'
         'const MSHAPE='+json.dumps(dict(T0=round(d['T0'],4),T=T,pull=[round(float(x/tq.max()),4) for x in tq],n=len(g),s=enc(g,0.05),r=enc(rs.ravel(),0.0005),
-          **({'M1':round(float(tq.max())*E_GPA*1e3*float(B_MM)*t**3/12/2/(2*math.pi)/1000,6)} if B_MM else {})),separators=(',',':'))+';\n')
+          M1=round(float(tq.max())*E_GPA*1e3*float(B_MM or 13.55)*t**3/12/2/(2*math.pi)/1000,6)),separators=(',',':'))+';\n')   # M1: the most torque, N·m (EI/2 times the energy's slope a radian), the width MC_MS_B's or the Hamilton's 13.55
     JS.write_text(js,encoding='utf-8',newline='\n');print(f'{JS.name}: {len(st)} states, {len(g)} points along the strip, {len(js)//1024} KB; theta rebuilt from r misses the end by {err:.4f} rad at most')
 def stored():
     """the table's states (JS) on the solver's grid: (T0, [(T, r at N+1 = 48 T + 1 angles from the inner end)])"""
