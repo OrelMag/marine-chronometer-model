@@ -5,7 +5,7 @@ ratchet), traindyn.js (the arbors' moments of inertia), motionwork.js (the hands
     python mechanisms.py --write   # writes tools/mechanisms.json
 
 Lengths in mm, masses in g, moments of inertia in g·mm²."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parent/'index.html').as_uri()+'?snap&qa'
@@ -13,7 +13,7 @@ JS=(HERE/'mechanisms-check.js').read_text(encoding='utf-8')
 OUT=HERE/'mechanisms.json'
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')&&window.__mv",timeout=120000);await pg.wait_for_timeout(2500)

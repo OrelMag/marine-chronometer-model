@@ -1,4 +1,4 @@
-import asyncio,json,math
+import asyncio,browser,json,math
 import numpy as np
 from playwright.async_api import async_playwright
 import pathlib
@@ -16,7 +16,7 @@ EDGE=[(395,300),(300,345),(200,415),(140,490),(110,560),(100,640),(800,1030),(10
 RING=[[37.5*math.cos(t),YR,37.5*math.sin(t)] for t in np.linspace(0,2*math.pi,240)]
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         pg=await b.new_page(viewport={"width":1100,"height":1000},color_scheme='light')
         await pg.goto(PAGE); await pg.wait_for_timeout(4000)
         c=lambda s: pg.evaluate(f"document.querySelector('{s}').click()")

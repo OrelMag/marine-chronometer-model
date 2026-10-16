@@ -15,11 +15,11 @@ With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay ta
 section it opens; no report button): every view, the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
 the display switches and Reset display, the theme, Back and Forward, a view key, and a link through the URL hash both ways."""
-import asyncio,pathlib,sys
+import asyncio,browser,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model as mdl;PAGE=mdl.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py); a bare --model is this tool's own (the Hamilton's model without the essay)
-ARGS=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"]
+ARGS=browser.ARGS
 NOISE=('GL Driver Message','GPU stall')
 STEPS=[]
 def watch(pg,errs,tag):   # each problem names the page and the last step done before it

@@ -170,7 +170,7 @@ def bound(n=12,step=0.05):
     would end it early, so the result is the least turns at which the strip is coil-bound, to a step"""
     from multiprocessing import Pool
     T0,st=stored();T1,r1=st[-1];Ts=[round(T1+step*(i+1),4) for i in range(n)]
-    with Pool(14) as P:xs=P.map(job,[(T,r1.tolist()) for T in Ts]+[(T,None) for T in Ts])
+    with Pool(int(os.environ.get('MC_MS_PROC',14))) as P:xs=P.map(job,[(T,r1.tolist()) for T in Ts]+[(T,None) for T in Ts])
     best={}
     for x in xs:
         if ok(x) and (x['T'] not in best or x['E']<best[x['T']]['E']):best[x['T']]=x

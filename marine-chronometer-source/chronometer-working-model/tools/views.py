@@ -11,7 +11,7 @@ The model is frozen at one escapement phase and wind state (after a moment of wi
 give the same pixels (a few anti-aliased edges may differ). --keep shows only the named parts (userData.partName); --look can be repeated;
 --n sets the fusee turns from full wind (0 = fully wound). --page renders another copy of index.html with this script, so two commits are
 compared by one set of rules (ci.py --views renders where a branch left main and the working tree, then --diff --md writes the table)."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=pathlib.Path(sys.argv[sys.argv.index('--page')+1] if '--page' in sys.argv else HERE.parent/'index.html').resolve().as_uri()+'?snap&qa'
@@ -36,7 +36,7 @@ def diff(a,b,md=False):
 async def main():
     tag=sys.argv[1];keep=arg('--keep');looks=[sys.argv[i+1:i+7] for i,k in enumerate(sys.argv) if k=='--look']
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         # as in smoke.py: a fresh headless Chromium loses its first WebGL context, so spend it on a blank page
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":1200,"height":800},device_scale_factor=1,color_scheme='light');errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
