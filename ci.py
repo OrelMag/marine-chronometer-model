@@ -135,7 +135,7 @@ STEPS=[('build',build,'quick'),
  ('wempe-massprops',lambda log:run([PY,'massprops.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's case and ring weighed on the model, against gimbals_wempe.json (about 15 s)
  ('wempe-invariants',lambda log:run([PY,'invariants.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's arithmetic: its seven meshes turning as their teeth, the hands against the time, the up-and-down hand on the dial's scale, the fusee's hours, the balance as weighed (about 10 s)
  ('wempe-mechanisms',lambda log:run([PY,'mechanisms.py','--model','wempe'],TOOLS,log),'browser'),   # the Wempe's pawls off the built model (the clicks, the maintaining detent, the set-up click), against mechanisms_wempe.json (about 15 s)
- ('wempe-holecheck',lambda log:run([PY,'holecheck.py','--model','wempe'],TOOLS,log),'browser'),   # every round hole in the Wempe's parts populated or explained (checks.py's HOLE_EXPECTED), as last revised and as first drawn (about 1½ minutes)
+ ('wempe-holecheck',lambda log:run([PY,'holecheck.py','--model','wempe'],TOOLS,log),'browser'),   # every round hole in the Wempe's parts populated or explained (checks.py's HOLE_EXPECTED), as last revised and as first drawn (1½-2¼ minutes)
  ('wempe-stopwork',lambda log:run([PY,'wempe_stopwork.py'],TOOLS,log),'browser'),   # the Wempe's stop bar against its stop pin over the last 1.2 turns, chain and band: the stop holds full wind, never catches early, the pin bears on the bar's whole thickness (about 45 s)
  ('dynamics-full',lambda log:run(['node',TOOLS/'dynamics.js'],ROOT,log),'full'),   # and starting, the least drive, knocks and the ship's motion (about 1 minute)
  ('tripping-full',lambda log:run(['node',TOOLS/'tripping.js'],ROOT,log),'full'),   # and running as drawn, the estimates varied, the swing pushed, the knocks that trip it (about 8 minutes)
@@ -151,7 +151,7 @@ STEPS=[('build',build,'quick'),
  ('fea',lambda log:run([PY,'fea.py'],TOOLS,log),'full'),   # finite elements on the plates and bridges: the pivots' holes under the chain's and teeth's loads, against the depths' windows (about 3 minutes)
  ('fine',lambda log:run([PY,'fine.py'],TOOLS,log),'full'),
  ('maintaining',lambda log:run([PY,'maintaining.py'],TOOLS,log),'full'),
- ('wempe-maintaining',lambda log:run([PY,'maintaining.py','--model','wempe'],TOOLS,log),'full'),   # the Wempe's maintaining work: its clicks, ratchet, detent and wire on the solids through run and wind; the page's own loop through two winds (the maintaining spring's drive); the stop work (about 2 minutes)
+ ('wempe-maintaining',lambda log:run([PY,'maintaining.py','--model','wempe'],TOOLS,log),'full'),   # the Wempe's maintaining work: its clicks, ratchet, detent and wire on the solids through run and wind; the page's own loop through two winds (the maintaining spring's drive); the stop work (1½-2¾ minutes)
  ('bom',lambda log:run([PY,'bom.py'],TOOLS,log),'full'),   # every part against the manual's parts list and its fits (about 6 minutes)
  ('wempe-fine',lambda log:run([PY,'fine.py','--model','wempe'],TOOLS,log),'full'),   # the Wempe's 0.05 mm interference over its escapement's phases, train and wind, against checks.py's EXPECTED (about 1¾ minutes)
  ('wempe-bom',lambda log:run([PY,'bom.py','--model','wempe'],TOOLS,log),'full'),   # every Wempe part against its drawing list (wempe/bom.json) and its relations (about 4 minutes)
