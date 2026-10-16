@@ -1932,6 +1932,16 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's box had two short hinges, no lid stay, and hex steel nuts on its gimbals** (16 October
+  2026, the audit of 3.00.00). Every photographed box (Greenwich's wartime Wempe, Wempe 5377 and 6161,
+  Lange 1947) has one piano hinge across the back (148 long on Lange 1947's) and a lid stay (6161's a
+  slotted brass bar on the left); the README said the photographs showed two hinges. Wempe 3955's
+  inner pivots are locked by knurled brass discs inside the ring, where the model had hex steel nuts
+  outside it under the screws' heads; the bearing discs, the bezel's lower band and the transit lock's
+  knob are knurled on every photographed one. Keep: the hinge's leaves meet its knuckles at their
+  tangent (leaves under the other half's knuckles overlap them); the stay's pivot and pin are placed
+  so the bar crosses the parting line in front of the back wall at every angle of the lid (`CS.stay`
+  turns it; app.js and the essay call it after setting the lid). `c3b0ab7`
 - **The Wempe's winding key lay on the box's floor, where no box keeps it.** It lay flat in the
   back left corner, a place no source gave. Every photographed box (Greenwich's wartime Wempe,
   Wempe 5377, Lange 2285 and 5510, a 6MX Kirova) stands the key upright in the back right corner,
