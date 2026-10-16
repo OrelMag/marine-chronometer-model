@@ -95,11 +95,11 @@ const WTRAIN=(()=>{
        1.7 -0.2 wide, hub 10.6 -0.2, rim's inside 28.1 +0.2, hole 5.4 H7; its hub left the sheet's 1.5 thick and standing 0.2 proud on the dial side, turned to Ø 10 there
        (05 05 03: "0,2", "10∅"). */
     cw:{at:H[1],ys:TI+0.035,
-      prof:[...piv(1.19/2,(1.19-3/30)/2,3,-1),[2.5/2-C30,0],[2.5/2,c30],[2.5/2,17.225],[5.4/2,17.225],[5.4/2,18.675],[2.44/2,18.675-0.99],[3.2/2,19.03],
+      prof:[...piv(1.19/2,(1.19-3/30)/2,3,-1),[2.5/2-C30,0],[2.5/2,c30],[2.5/2,17.225],[5.4/2,17.225],[5.4/2,18.775],[2.44/2,18.775-0.99],[3.2/2,19.03],
         [rCj(19.03),19.03],[rCj(23.03),23.03],[rSh(23.03),23.03],[rSh(29.1),29.1],[rSh(29.1)-0.24,29.1],[rSh(29.76),29.76],...crown(rSh,37.33)],
       crown:CRN,
       pin:{z:14,m:6.098/14,D:6.79-0.01,dg:4.24,u0:17.225-3.95,u1:17.225},
-      wheel:{z:90,m:31.976/90,D:33.10,dg:30.86,l:0.52,mate:12,rim:[17.225,18.475],boss:[18.475,18.675,10/2],spokes:[5,1.6,10.5/2,28.2/2],bore:5.4/2}},
+      wheel:{z:90,m:31.976/90,D:33.10,dg:30.86,l:0.52,mate:12,rim:[17.225,18.525],boss:[18.525,18.725,10/2],spokes:[5,1.6,10.5/2,28.2/2],bore:5.4/2}},
     /* the intermediate arbor, 05 05 02 (Zwischenrad kompl., 27.7.40): its pinion and arbor 05 05 02-2 (Zwischentrieb, Präz. Rundstahl 5,2, redrawn 6.46) and the wheel
        05 05 02-1 (Zwischenrad, Messingblech 1,2 Ms 58 federhart) riveted on it. From the train-side shoulder: the pivot Ø 0.85 -0.05 (05 05 02-2; the kompl.'s 0.82 -0.02
        of 1940 superseded), 3 -0.1 long (05 05 02; the pinion sheet's 4.6 -0.2 the blank's, pointed), tapered ("Kegel 1:?0": 1:90, as the seconds pinion redrawn with it: likely),
