@@ -54,6 +54,21 @@
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
+    <div class="card tour" id="tourCard">
+      <div id="tourIntro">
+        <h2>How it works</h2>
+        <p class="note" style="margin:0 0 10px">Eight steps from the case to the dial, tied to the running model.</p>
+        <button class="primary" id="tStart">Start the walkthrough</button>
+      </div>
+      <div id="tourBody" class="hidden">
+        <div class="tnav"><button id="tPrev">Back</button><span id="tStep"></span><button id="tNext">Next</button></div>
+        <div class="dots" id="tDots"></div>
+        <h3 id="tTitle"></h3>
+        <div class="txt" id="tText" aria-live="polite"></div>
+        <div class="inset" id="tInset"></div>
+        <div class="seg" style="margin-top:10px"><button id="tExit">End walkthrough</button></div>
+      </div>
+    </div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>

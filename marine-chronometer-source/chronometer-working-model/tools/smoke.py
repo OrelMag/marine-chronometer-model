@@ -14,7 +14,7 @@ ignored. Each problem names the page and the last step done before it.
 With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay tab as the Hamilton's (its checks.py's ESSAY: the link it follows into the model and the
 section it opens; no report button): every view, every view with Moving parts only (the frame hidden, the motion work only when included, drive=1 in the link), the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
-the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, Swing and isochronism (each chart, the mainspring's set and mset= in the link), Rate and timing weights (the weights turned in, drawn moving and in the link, the masses compensated and back, the temperature, Zero), the 35-day trial's tables, and Escapement in plan (drawn, its figures, Show the escapement)."""
+the display switches and Reset display, the theme, Back and Forward, a view key, a link through the URL hash both ways, the tick sound off and on, Swing and isochronism (each chart, the mainspring's set and mset= in the link), Rate and timing weights (the weights turned in, drawn moving and in the link, the masses compensated and back, the temperature, Zero), the 35-day trial's tables, and Escapement in plan (drawn, its figures, Show the escapement), and the walkthrough (every step and its inset, tour=N both ways, Finish and End)."""
 import asyncio,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
@@ -303,6 +303,22 @@ async def wempe(b,errs,steps):
     for v in views:
         await click(f'#views button[data-v="{v}"]',f'view {v}',400)
         if await pv()!=v:errs.append(f'view {v}: its button not pressed')
+    # the walkthrough: every step and its inset, tour=N in the link, Finish gives back the view; a link to a step
+    v0=await pv();await click('#tStart','walkthrough',600)
+    n=await ev("document.querySelectorAll('#tDots i').length")
+    for i in range(n):
+        if i:await click('#tNext',f'walkthrough step {i+1}',1200)
+        t=await ev("[location.hash,document.querySelector('#tTitle').textContent,document.querySelector('#tInset').innerHTML.length,document.querySelector('#tInset canvas')?.width||0]")
+        steps.append(f'walkthrough step {i+1}: {t[1]}')
+        if f'tour={i+1}' not in t[0] or not t[1]:errs.append(f'walkthrough step {i+1}: {t[:2]}')
+        if i in(2,3,4,6) and not t[2]:errs.append(f'walkthrough step {i+1}: no inset')
+        if i in(3,6) and not t[3]:errs.append(f'walkthrough step {i+1}: its inset drew nothing')
+    await click('#tNext','walkthrough finish',700)
+    if await ev("location.hash.includes('tour')||!document.querySelector('#tourBody').classList.contains('hidden')"):errs.append('Finish left the walkthrough on')
+    if await pv()!=v0:errs.append(f'Finish did not give back the {v0} view: {await pv()}')
+    await ev("location.hash='#tour=7'");await pg.wait_for_timeout(900);steps.append('a link to walkthrough step 7')
+    if await ev("document.querySelector('#tStep').textContent")!=f'7 / {n}':errs.append('#tour=7 did not open step 7')
+    await click('#tExit','walkthrough ended',600)
     # Moving parts only: every view with it (those in the case give way to Movement), the frame hidden, the barrel see-through, the motion work only when included; drive=1 in the link
     await click('#driveOn','Moving parts only',500)
     for v in views:await click(f'#views button[data-v="{v}"]',f'view {v} (moving parts)',400)
@@ -407,7 +423,7 @@ async def wempe(b,errs,steps):
     hs="v=>{const i=document.querySelector('#hrs');i.value=v;i.dispatchEvent(new Event('input'))}"
     await ev(hs,30);steps.append('30 h since winding');await click('#wind','Wind',300)
     if not await ev("window.__W().winding"):errs.append('Wind did not start winding')
-    try:await pg.wait_for_function("!window.__W().winding&&window.__W().hrs===0",timeout=60000);steps.append('wound')
+    try:await pg.wait_for_function("!window.__W().winding&&window.__W().hrs<0.01",timeout=60000)   # wound: the train runs on from 0 (since wind0 keeps the drive, 16 October 2026);steps.append('wound')
     except Exception:errs.append('Wind did not reach full wind: '+str(await ev("JSON.stringify(window.__W())")))
     await ev(hs,55.9);await ev(spd,600);steps.append('run down, 600x')
     try:await pg.wait_for_function("window.__W().held",timeout=60000);steps.append('run down: the train held')

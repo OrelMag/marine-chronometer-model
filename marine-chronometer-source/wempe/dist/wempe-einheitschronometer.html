@@ -494,6 +494,21 @@ html.essay-on,html.essay-on body{overflow:hidden}
   </div>
   <div class="panel" id="panel">
     <div class="split" id="split" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Panel width" aria-valuemin="320" aria-valuemax="620" aria-valuenow="350" tabindex="0" title="Drag to widen or narrow the panel (or the arrow keys); double-click for its usual width"></div>
+    <div class="card tour" id="tourCard">
+      <div id="tourIntro">
+        <h2>How it works</h2>
+        <p class="note" style="margin:0 0 10px">Eight steps from the case to the dial, tied to the running model.</p>
+        <button class="primary" id="tStart">Start the walkthrough</button>
+      </div>
+      <div id="tourBody" class="hidden">
+        <div class="tnav"><button id="tPrev">Back</button><span id="tStep"></span><button id="tNext">Next</button></div>
+        <div class="dots" id="tDots"></div>
+        <h3 id="tTitle"></h3>
+        <div class="txt" id="tText" aria-live="polite"></div>
+        <div class="inset" id="tInset"></div>
+        <div class="seg" style="margin-top:10px"><button id="tExit">End walkthrough</button></div>
+      </div>
+    </div>
     <div class="card ctl">
       <details class="grp more" id="viewDet" open>
         <summary>View</summary>
@@ -1975,6 +1990,9 @@ const KIT=(()=>{
      hud: st => html, hash: {write(h), read(get, first)}, store: the prefix of what Remember settings keeps, name (the canvas's label), shot (the PNG's name).
      drive: Moving parts only (#driveOn, its #mwOn and #mwWrap; the Hamilton's st.drive), if the page has it: {hide: the parts it hides, ghost: those it draws see-through, mw: the motion
      work and hands, hidden unless #mwOn is ticked, off: the views it can't show, to: the view it shows instead}; the hash keeps drive=1.
+     TOUR [{t title, x its text (html), view the view it stands in (its case, explode, see), v a camera of its own ({yaw, pitch, dist, target}), drive, mw, see, focus [parts], speed,
+     inset}], tourInset(kind, el) (a step's inset: the page fills el; null when the walkthrough ends), tourStep(step or null): the walkthrough (#tourCard, the Hamilton's How it
+     works; tour=N in the link), if the page has one.
      essay: the page's essay tab (ESSAY, from ../shared/essaykit.js: show, on, section), if it has one: while it shows the stage isn't drawn (cfg.tick still keeps the model's
      time), the keys are left to it, the hash is #essay[=section] and Remember settings doesn't note it; a hash with essay in it shows it, any other hides it (as the Hamilton's app.js).
    Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO}. */
@@ -1998,6 +2016,7 @@ const VIEWER={start(cfg){
   const shade=(c,i)=>{if(!i)return c;const o=new THREE.Color(c),h={};o.getHSL(h);o.setHSL((h.h+(i%2?1:-1)*0.035*Math.ceil(i/2)+1)%1,h.s,clamp(h.l+[0.17,-0.17,0.3,-0.3,0.09,-0.09,0.24,-0.24,0.37,-0.37][(i-1)%10],0.14,0.88));return '#'+o.getHexString();};
   for(const[p,ps]of Object.entries(PIECES)){const q=PARTS[p];q.pcs=ps;PHN[p]={};ps.forEach((c,i)=>{const k=p+'.'+c.k;INFO[k]=[c.t,c.d,c.sp];PCE[k]=c;if(q.c)PCOL[k]=shade(q.c,i);for(const h of c.h.split(' '))PHN[p][h]=PHN[p][h]||c.k;});}
   const PLATES=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate));
+  const TOUR=cfg.TOUR&&cfg.TOUR.length?cfg.TOUR:null;   /* the walkthrough (cfg.TOUR) */
   const DV=cfg.drive?{hide:new Set(cfg.drive.hide),ghost:new Set(cfg.drive.ghost||[]),mw:new Set(cfg.drive.mw||[]),off:new Set(cfg.drive.off||[]),to:cfg.drive.to||cfg.startView}:null;   /* Moving parts only (cfg.drive) */
   const QT=cfg.qaTarget||[0,0,0];let renders=0;
   if(QA){window.__mv=mv;window.__M=M;window.__parts=PARTS;window.__r=r;window.__renders=()=>renders;
@@ -2033,7 +2052,7 @@ const VIEWER={start(cfg){
     if(secMode!=='off'){const d=SECDEF[secMode];secIn.min=d.min;secIn.max=d.max;secOff=d.def;secIn.value=d.def;}applySec();look();}));
   secIn.addEventListener('input',()=>{secOff=parseFloat(secIn.value);applySec();});$('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
   /* ---------- state ---------- */
-  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
+  const st={tour:-1,drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
   const FOV0=cam.fov,cur={explode:0,fov:FOV0},tgt={...cur};
   let wakeT=0,hashReady=false,hashT=0,hashSeen='';const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any input keeps the stage drawing for 0.6 s; any change is written to the URL */
   /* colour by part (or by source, SRC); per-part opacity from the right-click menu; see-through (ghost) */
@@ -2060,7 +2079,7 @@ const VIEWER={start(cfg){
     for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!dvOut(m.userData.part);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
     if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}   /* Shadows off: the map is freed */
     if(DV){document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&DV.off.has(b.dataset.v);});ck('driveOn',st.drive);ck('mwOn',st.mwOn);const mw=$('#mwWrap');if(mw)mw.classList.toggle('hidden',!st.drive);}
-    cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${(cfg.VIEW_DESC||{})[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
+    cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${st.tour>=0&&TOUR?`Walkthrough step ${st.tour+1} of ${TOUR.length}: ${TOUR[st.tour].t}.`:(cfg.VIEW_DESC||{})[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
     ck('ghost',st.see);ck('draw',st.draw==='tint');ck('drawInk',st.draw==='ink');ck('edges',st.edges,!!st.draw);ck('shadows',st.shadows);ck('merge',st.merge);ck('colr',st.colr);ck('colrSrc',st.csrc);ck('lbls',st.labels);ck('spin',st.spin);
     stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);if(sk)sk.classList.toggle('hidden',!st.csrc);stage.classList.toggle('draw',!!st.draw);partsSync();}
   /* ---------- camera ---------- */
@@ -2079,7 +2098,7 @@ const VIEWER={start(cfg){
   const pose=g=>({view:st.view,see:st.see,yaw:g?G.yaw:C.yaw,pitch:g?G.pitch:C.pitch,dist:g?G.dist:C.dist,follow:G.follow,tgt:G.target.clone(),pan:panO.clone()});
   const same=(a,b)=>!!a&&!!b&&a.view===b.view&&a.follow===b.follow&&Math.abs(a.yaw-b.yaw)<0.02&&Math.abs(a.pitch-b.pitch)<0.02&&Math.abs(a.dist/b.dist-1)<0.02&&a.pan.distanceTo(b.pan)<0.5&&(!!a.follow||a.tgt.distanceTo(b.tgt)<0.5);
   function histSync(){hB.disabled=!HB.length;hF.disabled=!HF.length;const on=HB.length||HF.length;if(on&&histEl.classList.contains('hidden'))hintOff();histEl.classList.toggle('hidden',!on);}
-  function jump(f){const p=pose();f();if(!hashReady||same(p,pose(true)))return;if(!same(p,HB[HB.length-1])){HB.push(p);if(HB.length>30)HB.shift();}HF.length=0;histSync();}
+  function jump(f){const p=pose();f();if(st.tour>=0||!hashReady||same(p,pose(true)))return;if(!same(p,HB[HB.length-1])){HB.push(p);if(HB.length>30)HB.shift();}HF.length=0;histSync();}
   function histGo(from,to){if(!from.length)return;to.push(pose());const p=from.pop();st.see=p.see;if(p.view!==st.view)setView(p.view,true);else look();
     G.yaw=C.yaw+((((p.yaw-C.yaw+Math.PI)%TAU)+TAU)%TAU-Math.PI);G.pitch=p.pitch;G.dist=p.dist;G.follow=p.follow;if(!p.follow)G.target.copy(p.tgt);panO.copy(p.pan);camFree=false;histSync();}
   hB.addEventListener('click',()=>histGo(HB,HF));hF.addEventListener('click',()=>histGo(HF,HB));
@@ -2163,7 +2182,7 @@ const VIEWER={start(cfg){
     if(spdR&&from!=='r'&&v)spdR.value=Math.round((Math.log10(v)-Math.log10(SMIN))/(Math.log10(SMAX)-Math.log10(SMIN))*1000);if(spdN&&from!=='n')spdN.value=v?+v.toPrecision(3):0;wake();};
   if(spdR)spdR.addEventListener('input',()=>{const t=spdR.valueAsNumber/1000,v=Math.pow(10,Math.log10(SMIN)+t*(Math.log10(SMAX)-Math.log10(SMIN))),snap=[0.05,0.1,0.5,1,2,5,10,60,100,600,1000,3600,10000].find(q=>Math.abs(Math.log10(q/v))<0.03);setSpeed(snap??+v.toPrecision(2),'r');});
   if(spdN)spdN.addEventListener('change',()=>{const v=spdN.valueAsNumber;if(Number.isFinite(v))setSpeed(v,'n');spdN.value=st.speed?+st.speed.toPrecision(3):0;});setSpeed(st.speed);
-  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();jump(()=>setView(b.dataset.v));}));
+  document.querySelectorAll('#views button').forEach(b=>b.addEventListener('click',()=>{closeInfo();if(st.tour>=0)tourEnd();jump(()=>setView(b.dataset.v));}));   /* a view chosen ends the walkthrough */
   document.querySelectorAll('#speeds button').forEach(b=>b.addEventListener('click',()=>setSpeed(parseFloat(b.dataset.v))));
   const about=$('#about');$('#aboutBtn').addEventListener('click',()=>{if(about.showModal)about.showModal();else about.setAttribute('open','');});about.addEventListener('click',e=>{if(e.target===about)about.close();});
   /* Remember settings: only with it on does this browser keep anything (under cfg.store's prefix, apart from the other models'); off, what was is cleared at load */
@@ -2195,7 +2214,7 @@ const VIEWER={start(cfg){
   /* the panel's sections: with Remember settings, each viewer's open and closed ones */
   const DET=[...document.querySelectorAll('.ctl>details.grp')],detSave=()=>lsSet('open',JSON.stringify(Object.fromEntries(DET.map(x=>[x.id,x.open]))));
   try{const o=JSON.parse(lsGet('open')||'{}');DET.forEach(d=>{if(typeof o[d.id]==='boolean')d.open=o[d.id];});}catch(_){}DET.forEach(d=>d.addEventListener('toggle',detSave));
-  const remSave=()=>{if(!REM||esOn())return;const h=new URLSearchParams(hashOf());for(const k of['part','open'])h.delete(k);lsSet('state',h.toString());};   /* the hash's settings without what belongs to a moment; at load it stands in for a missing hash */
+  const remSave=()=>{if(!REM||esOn()||st.tour>=0)return;const h=new URLSearchParams(hashOf());for(const k of['part','open'])h.delete(k);lsSet('state',h.toString());};   /* the hash's settings without what belongs to a moment; at load it stands in for a missing hash */
   const rem=$('#remember');if(rem){rem.checked=REM;rem.addEventListener('change',e=>{REM=e.target.checked;
     if(REM){try{localStorage.setItem(SP+'remember','1');}catch(_){}lsSet('set',JSON.stringify(SET));lsSet('theme',document.documentElement.dataset.theme||'auto');detSave();remSave();}else try{[SP+'remember',...RK].forEach(k=>localStorage.removeItem(k));}catch(_){}});}
   /* parts list: every named part, grouped; under a part with pieces, its pieces, folded until the part or one of them is picked. A name singles it out; the box hides it */
@@ -2233,6 +2252,23 @@ const VIEWER={start(cfg){
   const spUp=()=>{if(!spD)return;spD=null;spl.classList.remove('on');document.documentElement.classList.remove('splitting');pwSet($('#panel').offsetWidth,true);};spl.addEventListener('pointerup',spUp);spl.addEventListener('pointercancel',spUp);
   spl.addEventListener('dblclick',()=>pwSet(PW0,true));
   spl.addEventListener('keydown',e=>{const d={ArrowLeft:20,ArrowRight:-20}[e.key];if(d){e.preventDefault();pwSet($('#panel').offsetWidth+d,true);}else if(e.key==='Home'||e.key==='End'){e.preventDefault();pwSet(e.key==='Home'?320:pwMax(),true);}});
+  /* ---------- the walkthrough (cfg.TOUR; the Hamilton's How it works): each step a view, a camera, the parts it singles out (the rest see-through), Moving parts only or not, a speed and
+     an inset the page fills (cfg.tourInset); the viewer's settings kept when it starts and given back when it ends ---------- */
+  let preTour=null;const tDots=$('#tDots');if(tDots&&TOUR)tDots.innerHTML=TOUR.map(()=>'<i></i>').join('');
+  function tourGo(i){if(!TOUR)return;panelOn(true);if(st.tour<0)preTour={view:st.view,see:st.see,speed:st.speed,drive:st.drive,mwOn:st.mwOn};st.tour=i;const s=TOUR[i];closeInfo();showHelp(false);hintOff();
+    $('#tourIntro').classList.add('hidden');$('#tourBody').classList.remove('hidden');$('#tStep').textContent=(i+1)+' / '+TOUR.length;$('#tTitle').textContent=s.t;$('#tText').innerHTML=s.x;
+    if(tDots)[...tDots.children].forEach((d,k)=>d.classList.toggle('on',k<=i));$('#tPrev').disabled=i===0;$('#tNext').textContent=i===TOUR.length-1?'Finish':'Next';
+    st.drive=!!s.drive;st.mwOn=!!s.mw;setView(s.view||cfg.startView);st.see=!!s.see;st.focus=s.focus?new Set(s.focus):null;setSpeed(s.speed??1);if(s.v)goCam(s.v);look();
+    document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#expWrap').classList.add('hidden');
+    if(cfg.tourStep)cfg.tourStep(s);const ins=$('#tInset');if(ins){ins.innerHTML='';if(cfg.tourInset)cfg.tourInset(s.inset||null,ins);}
+    /* bring the card into view: below the stage when the stage sits above the panel (phones in portrait), else beside it (RESOLVED.md: test the layout, not the width) */
+    if(innerWidth<960||innerHeight<=560){const card=$('#tourCard'),cr=card.getBoundingClientRect();
+      if(cr.left<stage.getBoundingClientRect().right){const y=cr.top+scrollY-stage.offsetHeight-8;if(Math.abs(scrollY-y)>40)scrollTo({top:y,behavior:RM.matches?'auto':'smooth'});}
+      else card.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'});}}
+  function tourEnd(){if(st.tour<0)return;const u=preTour||{view:cfg.startView,see:false,speed:1,drive:false,mwOn:false};preTour=null;st.tour=-1;st.focus=null;st.drive=u.drive;st.mwOn=u.mwOn;setSpeed(u.speed);
+    if(cfg.tourStep)cfg.tourStep(null);if(cfg.tourInset)cfg.tourInset(null,$('#tInset'));$('#tourIntro').classList.remove('hidden');$('#tourBody').classList.add('hidden');setView(u.view,true);st.see=u.see;look();}
+  if(TOUR&&$('#tStart')){$('#tStart').addEventListener('click',()=>tourGo(0));$('#tPrev').addEventListener('click',()=>tourGo(Math.max(0,st.tour-1)));
+    $('#tNext').addEventListener('click',()=>st.tour<TOUR.length-1?tourGo(st.tour+1):tourEnd());$('#tExit').addEventListener('click',tourEnd);}
   /* ---------- labels: the model names its points (cfg.labels); placed greedily by priority on four sides, hidden where a part covers them (tested at 5 Hz) ---------- */
   const labels=[],lab=$('.labels');
   const addL=(t,sub,part,fn)=>{const el=document.createElement('div');el.className='lbl';if(PCOL[part])el.style.setProperty('--pc',PCOL[part]);if(PARTS[part]&&PARTS[part].src)el.style.setProperty('--ps',SRC[PARTS[part].src][1]);el.innerHTML='<span>'+t+(sub?'<i>'+sub+'</i>':'')+'</span>';lab.appendChild(el);labels.push({el,sp:el.firstChild,fn,part,w:0,h:0,occ:false});};
@@ -2241,7 +2277,7 @@ const VIEWER={start(cfg){
   const ray2=new THREE.Raycaster(),tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0,LS=null;ray2.layers.enable(2);
   function placeLabels(now){if(!LS)LS=labels.slice().sort((p,q)=>(PRI[q.part]||1)-(PRI[p.part]||1));
     const foc=st.pick?new Set([st.pick]):st.focus,doOcc=now-lastOcc>200,placed=[],pad=3;if(doOcc)lastOcc=now;
-    for(const l of LS){let sh=st.labels&&!(foc&&!anyOf(foc,l.part))&&!isoOut(l.part)&&!st.hid.has(l.part)&&!dvOut(l.part);if(!sh){l.el.style.opacity=0;continue;}
+    for(const l of LS){let sh=(st.labels||st.tour>=0)&&!(foc&&!anyOf(foc,l.part))&&!isoOut(l.part)&&!st.hid.has(l.part)&&!dvOut(l.part);if(!sh){l.el.style.opacity=0;continue;}
       const P0=l.fn();
       if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);ray2.set(camP,tmpV.copy(P0).sub(camP).normalize());ray2.far=d-0.8;
         l.occ=ray2.intersectObject(root,true).some(h=>shown(h.object)&&h.object.userData.part!==l.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5)&&!h.object.userData.decal);}
@@ -2256,7 +2292,8 @@ const VIEWER={start(cfg){
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
   /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState ---------- */
-  function hashOf(){if(esOn()){const s=ES.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));
+  function hashOf(){if(esOn()){const s=ES.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();if(st.tour>=0)h.set('tour',st.tour+1);
+    else{if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));}
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);
     if(cfg.hash)cfg.hash.write(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
@@ -2268,7 +2305,8 @@ const VIEWER={start(cfg){
     const sc=/^([xyz]):(-?[\d.]+)(:f)?$/.exec(g('sec')||'');document.querySelector(`#secs button[data-v="${sc&&SECDEF[sc[1]]?sc[1]:'off'}"]`).click();
     if(sc&&SECDEF[sc[1]]){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
     if(DV){const d=g('drive')==='1';if(d!==st.drive){st.drive=d;look();}}   /* drive=1: Moving parts only */
-    if(cfg.hash)cfg.hash.read(g,first);if(!first)setView(v);
+    if(cfg.hash)cfg.hash.read(g,first);
+    const tr=parseInt(g('tour'));if(TOUR&&tr>=1&&tr<=TOUR.length)tourGo(tr-1);else{if(st.tour>=0)tourEnd();if(!first)setView(v);}   /* tour=3: the walkthrough at its third step */
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
     const od=DET.find(d=>d.id===g('open'));if(od){panelOn(true);od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}
     return v;}
@@ -2295,11 +2333,11 @@ const VIEWER={start(cfg){
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&lastSig.length===sig.length&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(onScreen&&!still&&!esOn()){paint();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
     const hs=cfg.hud?cfg.hud(st):'';if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
-    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(!camFree)setView(startView);hashReady=true;writeHash();},1100);}
+    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour>=0)tourGo(st.tour);else if(!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);}
   look();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===startView?'true':'false'));
   requestAnimationFrame(frame);
-  return{st,look,wake,setView,cam,scene,r,mv,M,INFO};}};
+  return{st,look,wake,setView,cam,scene,r,mv,M,INFO,tourEnd};}};
 
 </script>
 <script>
@@ -6627,6 +6665,27 @@ const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate fro
   train:'The going train from above, plates see-through: fusee wheel, centre, intermediate, seconds and escape wheels.',fusee:'The barrel, the chain and the fusee, plates see-through.',balance:'Close up on the balance under its cock, with its masses, timing weights and hairspring.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
+/* ================= the walkthrough ================= */
+/* the Hamilton's How it works, for the Wempe (the viewer's cfg.TOUR): each step a view (its case, see-through), a camera aimed in the movement's frame, the parts singled out, Moving
+   parts only or not, a speed and an inset (app.js fills it: the train's table, 05 06_20's pull, a Wind button, the escapement in plan). Its text from this model's README and
+   essay only */
+const WTOUR=(()=>{const H=WD.H,mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2],fb=mid(H[10],H[45]);return[
+  {t:'The case and gimbals',view:'case',rock:true,speed:1,x:'<p>The movement hangs in a cast brass bowl (R-05 01 00-1, “Ms-Sandguß”) under its bezel and glass. The bowl pivots in the gimbal ring, and the ring in its bracket in the mahogany box, on axes at right angles.</p><p>Tilt the box any way and the bowl hangs level. Weighed on the model, the bowl with the movement swings on its pivots in about 0.96 s and the ring in 1.05 s, far quicker than a ship rolls, so the balance stays in the plane it was adjusted in. The transit lock holds both for carrying.</p>'},
+  {t:'The frame',view:'movement',speed:1,focus:['pillarPlate','topPlate','pillars','ring','barrelBridge','fuseeBush','dustBush','corkRing','upperCock','lowerCock','intermediateBridge'],
+    x:'<p>Two brass plates, the pillar plate (Unterplatte) and the top plate (Oberplatte), 19 mm apart on three pillars, the movement ring round the pillar plate setting it in its bowl. Every hole is from the sheets’ hole tables, given as N/S and O/W from hole 1, the centre wheel’s arbor.</p><p>Over the top plate stand the barrel bridge with its click, the fusee’s bush and dust bush, the two balance cocks and the intermediate bridge, each with its screws and steady pins.</p>'},
+  {t:'The going train',view:'train',drive:true,speed:1,focus:['fuseeWheel','centreWheel','intermediateWheel','secondsWheel','escapeWheel','fusee'],inset:'train',
+    x:'<p>The fusee wheel drives the centre pinion; the centre wheel, turning once an hour, carries the minute hand and drives the intermediate pinion; the intermediate wheel drives the seconds pinion; the seconds wheel, turning once a minute, carries the seconds hand and drives the escape pinion. Each wheel is brass, riveted on its steel pinion and arbor.</p>'},
+  {t:'The fusee and chain',view:'fusee',drive:true,speed:3600,focus:['fusee','chain','band','barrel','barrelArbor','mainspring','fuseeWheel','setupRatchet'],inset:'fusee',
+    x:'<p>The mainspring, a steel strip 15 × 0.37 mm (05 06_20), turns the barrel, whose chain (05 07 04: 374 links at a 2.05 pitch) winds off the fusee’s spiral groove. Fully wound the spring pulls hardest, on the fusee’s small end; as it runs down the chain reaches the large end, so the pull on the fusee arbor stays nearly even.</p><p>05 06_20 measured it, running down, on a lever 262 mm long: 126.5 to 138.4 g over the barrel’s five turns. The fusee goes 56 hours on a wind, 8¾ of its turns. At 3600× an hour passes each second.</p>'},
+  {t:'Winding without stopping',view:'fusee',drive:true,speed:60,focus:['fuseeWheel','maintaining','maintDetent','fusee','stopWork','chain','coverPlate','vorreiber','centreWheel'],inset:'wind',v:{yaw:0.6,pitch:0.55,dist:120,target:[H[10][0],-14,H[10][1]]},
+    x:'<p>The key turns the fusee back. That would take the drive off the train, but Harrison’s maintaining work keeps it: the maintaining spring between the maintaining ratchet and the fusee wheel carries the running torque, and while the key turns, the fusee’s clicks ride over the click wheel and the maintaining detent holds the ratchet, so the spring drives the train on, for about a minute.</p><p>At full wind the chain, coming onto the fusee’s top turn, presses the stop bar across its small end out against the stop pin in the top plate, and the key can turn no further.</p>'},
+  {t:'The balance and hairspring',view:'balance',speed:0.05,focus:['balance','hairspring','stud','rollers','upperCock'],
+    x:'<p>The balance is a cut bimetallic rim, brass outside nickel steel, Ø 32.32, cut at 3 and 9, with four brass masses on it and two timing weights at the ends of its steel arm; weighed on the model, 2,561 g·mm². In heat the brass curls the rim’s quarters in, carrying the masses toward the staff, against the hairspring’s weakening.</p><p>The helical hairspring, a steel strip 0.285 × 0.52 tempered blue (05 03_6), cut to 13 turns less 3.5 mm (05 03_7) with its terminal curves bent at both ends, gives the weighed balance 0.497 s; the spring is matched to its balance for the train’s 0.5 s.</p>'},
+  {t:'The spring detent escapement',view:'escapement',drive:true,speed:0.05,focus:['escapeWheel','detent','rollers','balance','detentBlock'],inset:'esc',
+    x:'<p>The escape wheel, 15 teeth, is held by the locking stone on the spring detent. Unlocking, the discharge stone on its roller pushes the gold spring, and the detent with it, until the locking stone lets the tooth go; the wheel, from rest, chases the impulse stone and drives the balance through it, and the next tooth runs on to the locking stone.</p><p>Swinging back, the discharge stone only bends the gold spring aside, the detent staying on its banking: one impulse each oscillation, every 0.5 s.</p>'},
+  {t:'The motion work and dial',view:'movement',drive:true,mw:true,speed:3600,focus:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands','centreWheel','secondsWheel','fusee'],v:{yaw:0.2,pitch:-1.0,dist:200,target:[0,8,0]},
+    x:'<p>The centre arbor carries the cannon tube and the minute hand; through the change wheel (Wechselrad) and the hour wheel, the hour hand. The seconds arbor carries the seconds hand in its sub-dial at 6.</p><p>A pinion on the fusee arbor turns the up-and-down wheel, whose hand reads the hours since winding on the sub-dial at 12, Auf (wound) at 0 to Ab (run down) at 56 hours.</p>'}];})();
+
 /* ================= the page ================= */
 (function(){
   /* the time kept (Time, Keep): Greenwich, as a ship's chronometers are kept for navigation (the default), or the viewer's local time; tzOff() its offset from UTC in s */
@@ -6687,6 +6746,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
        hands only with Include motion work; the views in the case give way to the Movement view */
     drive:{hide:['pillarPlate','topPlate','pillars','ring','barrelBridge','fuseeBush','dustBush','corkRing','upperCock','lowerCock','intermediateBridge','balanceJewelsUp','balanceJewelsLow','escEndstoneUp','escJewelUp','escJewelLow','escEndstoneLow','dial',
       'bowl','closingPlate','bezel','gimbalRing','box','lid','overBox','overLid','caseLock','key'],ghost:['barrel'],mw:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands'],off:['dial','box','case','transport'],to:'movement'},
+    TOUR:WTOUR,tourInset:(k,el)=>tourInset(k,el),tourStep:s=>tourStep(s),
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
@@ -6757,7 +6817,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
       if(snd&&st.speed<=1&&lastE!=null&&Math.floor(E-0.5)>Math.floor(lastE-0.5))tickSnd();lastE=E;   /* the tick: a tooth's fall onto the impulse stone, as the Hamilton's */
       mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
-      swRec(now);if(!(ES&&ES.on())){swDraw(now,drv);rateShow(now);testShow(now);if(epOn())epDraw($('#benchCv'),s,E,$('#benchCap'));}
+      swRec(now);if(!(ES&&ES.on())){swDraw(now,drv);rateShow(now);testShow(now);if(epOn())epDraw($('#benchCv'),s,E,$('#benchCap'));if(tIns)tinDraw(now,s,E);}
       showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(MSET)h.set('mset',Math.round(MSET*100));{const b=balStr();if(b)h.set('bal',b);}if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
       read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
@@ -6916,6 +6976,20 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       ['Roller shake',m.shake.toFixed(3)+' mm',''],['The teeth into the roller',m.dip.toFixed(2)+' mm',''],['The least swing that works',m.AMIN.toFixed(1)+'°','49.2°'],['The swing at 12 h',m.A.toFixed(1)+'°','']];
       t.innerHTML='<table class="rt bench"><thead><tr><th>The balance at</th><th class="n">Model</th><th class="n" title="05 04_1, the layout">05 04_1</th></tr></thead><tbody>'+R.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td><td class="n">${r[2]}</td></tr>`).join('')+'</tbody></table>';};
     $('#benchDet').addEventListener('toggle',()=>{if(epOn())fill();epK='';if(VV)VV.wake();});$('#benchLook').addEventListener('click',()=>{if(VV)VV.setView('escapement');});}}
+  /* ---------- the walkthrough's insets (WTOUR, the viewer's cfg.tourInset) and its ship motion (tourStep); declarations, as a link's tour= is read as the viewer starts ---------- */
+  var tIns=null,tInsK=null,tLast=0,preRock=null;
+  function tourInset(k,el){tInsK=k;tIns=null;if(!el)return;el.innerHTML='';
+    if(k==='esc'||k==='fusee'){const c=document.createElement('canvas');el.appendChild(c);tIns=c;c._cap=document.createElement('p');c._cap.className='note';c._cap.style.margin='4px 0 0';el.appendChild(c._cap);tLast=0;}
+    else if(k==='train'){const r=[['Fusee wheel','90 → 14','×6.43','6.43 h'],['Centre','90 → 12','×7.5','1 h'],['Intermediate','80 → 10','×8','8 min'],['Seconds','80 → 10','×8','1 min'],['Escape','15 teeth','','7.5 s']];
+      el.innerHTML='<table class="rt"><thead><tr><th>Arbor</th><th>Drives</th><th class="n">Ratio</th><th class="n">One turn</th></tr></thead><tbody>'+r.map(q=>`<tr><td>${q[0]}</td><td>${q[1]}</td><td class="n">${q[2]}</td><td class="n">${q[3]}</td></tr>`).join('')+
+        `</tbody></table><p class="note" style="margin:8px 0 0">Overall ×${PH.RATIO.toLocaleString('en',{maximumFractionDigits:1})}: the escape wheel receives that part of the fusee arbor’s torque, less the friction at each stage (the model takes ${Math.round(PH.ETA*100)} % through the train, from its parts). The wheels’ teeth are 05 05’s; the pinions’ 12 and 10 follow from the centres.</p>`;}
+    else if(k==='wind'){el.innerHTML='<button class="primary" id="tWind">Wind it now</button>';$('#tWind').addEventListener('click',()=>{if(hrs<2){hrs=30;hShown=-1;}const w=$('#wind');if(w)w.click();});}}
+  function tourStep(s){const rk=$('#rock');if(!rk)return;if(s&&preRock===null)preRock=GW.rock;const on=s?!!s.rock&&!RMC.matches:!!preRock;if(!s)preRock=null;if(rk.checked!==on){rk.checked=on;GW.rock=on;}}
+  /* the escapement's plan as the model shows it, or 05 06_20's pull over the fusee's turns with the chain's place marked */
+  function tinDraw(now,s,E){if(!tIns.isConnected){tIns=null;return;}if(tInsK==='esc'){epDraw(tIns,s,E,tIns._cap);return;}
+    if(now-tLast<250)return;tLast=now;const n=Math.min(hrs/HPT,PH.MF),dk=dark(),brass=dk?'#e0b44f':'#8a5d10';
+    plot(tIns,{x0:0,x1:8.75,y0:120,y1:145,xt:[0,2,4,6,8],yt:[120,130,140],xf:v=>v?v+' turns':'wound',yf:v=>v+' g',cursor:n,series:[{f:x=>PH.gAt(PH.MF-x),col:brass,w:2.2}],marks:[{x:n,y:PH.gAt(PH.MF-n),col:brass}],texts:[{x:0.2,y:143,t:'05 06_20: g on its 262 mm lever, running down'}]});
+    tIns._cap.textContent=`${hrs.toFixed(1)} h since winding: the chain ${n.toFixed(2)} of the fusee’s turns from full wind, pulling ${PH.gAt(PH.MF-n).toFixed(1)} g on the sheet’s lever.`;}
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
   function wind0(){H.w0=H.held?0:drvNow();winding=true;H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on (read before winding is set, or drvNow gives the spring's own last drive: until 16 October 2026 every wind stopped the train, maintaining.py) */
