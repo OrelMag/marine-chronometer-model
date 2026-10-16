@@ -7,6 +7,8 @@
      PARTS {key: {t name, d what it does, sp sizes and numbers, g group (PG), c colour, pri label priority, plate (see-through with See-through), src (SRC), sn, figs}}, PG the groups,
      PIECES {part: [{k, t, h lines (userData.hn), d, sp, src, sn, figs}]}, SRC {key: [name, colour, what]}, figLabel ('Figs.'),
      VIEWS {key: {yaw, pitch, dist, target: [x, y, z] in mv's frame, explode, see, fov}}, VIEW_DESC, startView, SECDEF {x|y|z: {n, min, max, def}},
+     openCam {yaw, pitch, dist, target [x, y, z] in mv's frame as built}: where the camera stands as the page opens, before it eases to the start view (the Hamilton's: its box
+     shut, from the front right); without it, turned from the start view and farther out. st.opening is true until then (a model can hold its case shut meanwhile),
      labels: (add, pw) => ...: add(text, sub, part, fn) a label at fn() (world), pw(group, x, y, z) a point in a group,
      qaTarget [x, y, z] (mv's frame: what __proj, __unproj and __cam aim at), tick: (dt, now, st) => [values]: the model's own motion each frame, the values it shows (a change draws a frame),
      hud: st => html, hash: {write(h), read(get, first)}, store: the prefix of what Remember settings keeps, name (the canvas's label), shot (the PNG's name).
@@ -74,7 +76,7 @@ const VIEWER={start(cfg){
     if(secMode!=='off'){const d=SECDEF[secMode];secIn.min=d.min;secIn.max=d.max;secOff=d.def;secIn.value=d.def;}applySec();look();}));
   secIn.addEventListener('input',()=>{secOff=parseFloat(secIn.value);applySec();});$('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
   /* ---------- state ---------- */
-  const st={tour:-1,drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
+  const st={opening:true,tour:-1,drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
   const FOV0=cam.fov,cur={explode:0,fov:FOV0},tgt={...cur};
   let wakeT=0,hashReady=false,hashT=0,hashSeen='';const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any input keeps the stage drawing for 0.6 s; any change is written to the URL */
   /* colour by part (or by source, SRC); per-part opacity from the right-click menu; see-through (ghost) */
@@ -105,7 +107,7 @@ const VIEWER={start(cfg){
     ck('ghost',st.see);ck('draw',st.draw==='tint');ck('drawInk',st.draw==='ink');ck('edges',st.edges,!!st.draw);ck('shadows',st.shadows);ck('merge',st.merge);ck('colr',st.colr);ck('colrSrc',st.csrc);ck('lbls',st.labels);ck('spin',st.spin);
     stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);if(sk)sk.classList.toggle('hidden',!st.csrc);stage.classList.toggle('draw',!!st.draw);partsSync();}
   /* ---------- camera ---------- */
-  const VIEWS=cfg.VIEWS,v0=VIEWS[cfg.startView],C={yaw:v0.yaw+0.6,pitch:v0.pitch*0.6,dist:v0.dist*1.8,target:new THREE.Vector3()},G={yaw:C.yaw,pitch:C.pitch,dist:C.dist,target:C.target.clone(),follow:null};
+  const VIEWS=cfg.VIEWS,v0=VIEWS[cfg.startView],oc=cfg.openCam,C=oc?{yaw:oc.yaw,pitch:oc.pitch,dist:oc.dist,target:(root.updateMatrixWorld(true),mv.localToWorld(new THREE.Vector3(...oc.target)))}:{yaw:v0.yaw+0.6,pitch:v0.pitch*0.6,dist:v0.dist*1.8,target:new THREE.Vector3()},G={yaw:C.yaw,pitch:C.pitch,dist:C.dist,target:C.target.clone(),follow:null};
   let W=1,Hh=1;const resize=()=>{W=stage.clientWidth;Hh=stage.clientHeight;r.setSize(W,Hh,false);cam.aspect=W/Hh;cam.updateProjectionMatrix();};new ResizeObserver(resize).observe(stage);resize();
   const mvL=(x,y,z)=>{const v=new THREE.Vector3(x,y,z);return()=>mv.localToWorld(v.clone());};
   const aspectK=()=>clamp(1.25/(W/Hh),1,2.2);   /* the same horizontal coverage on narrow screens */
@@ -355,7 +357,7 @@ const VIEWER={start(cfg){
     const still=!SNAP&&now>wakeT&&(now-lastDraw<10||!!lastSig&&lastSig.length===sig.length&&sig.every((v,i)=>Math.abs(v-lastSig[i])<1e-4)&&now-lastDraw<1000);
     if(onScreen&&!still&&!esOn()){paint();renders++;lastDraw=now;lastSig=sig;placeLabels(now);}
     const hs=cfg.hud?cfg.hud(st):'';if(hs!==hudS){hudS=hs;hud.innerHTML=hs;}   /* rewritten only when the text changes */
-    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{if(st.tour>=0)tourGo(st.tour);else if(!camFree)setView(startView);hashReady=true;writeHash();},1100);}
+    if(!loaded){loaded=true;$('#loading').style.opacity=0;setTimeout(()=>$('#loading').remove(),900);setTimeout(()=>{st.opening=false;if(st.tour>=0)tourGo(st.tour);else if(!camFree)setView(startView);hashReady=true;writeHash();},1100);}
     requestAnimationFrame(frame);}
   look();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===startView?'true':'false'));
   requestAnimationFrame(frame);

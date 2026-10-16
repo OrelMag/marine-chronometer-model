@@ -14,7 +14,7 @@ if '--model' in sys.argv:
     _i=sys.argv.index('--model')
     if _i+1<len(sys.argv) and sys.argv[_i+1] in MODELS:NAME=sys.argv[_i+1];del sys.argv[_i:_i+2]
 DIR=MODELS[NAME]
-PAGE=(DIR/'index.html').as_uri()+'?snap&qa'
+PAGE=(DIR/'index.html').as_uri()+'?snap&qa'+('' if NAME=='hamilton' else '&start=movement')   # the Wempe opens on its Dial view, the box shut and opening; its tools open it on Movement at once, as before 16 October 2026
 HAMILTON=NAME=='hamilton'
 _C=None
 def cfg(name,default=None):

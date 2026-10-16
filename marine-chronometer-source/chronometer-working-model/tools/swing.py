@@ -45,8 +45,8 @@ def vid(i):
     return max(fs, key=os.path.getsize)
 def mmss(t): return f'{int(t // 60)}:{t % 60:04.1f}'
 def save(key, entry):
-    d = json.load(open(JS)) if os.path.exists(JS) else {}
-    d[key] = entry; json.dump(d, open(JS, 'w'), indent=1, ensure_ascii=False); print('wrote', JS)
+    d = json.load(open(JS, encoding='utf-8')) if os.path.exists(JS) else {}
+    d[key] = entry; json.dump(d, open(JS, 'w', encoding='utf-8', newline='\n'), indent=1, ensure_ascii=False); print('wrote', JS)
 
 FPS = 30000 / 1001   # the file's rate: frame times are n/FPS (checked: 33/34 ms steps, no dropped or doubled frames)
 CFG = {'We1dLNXiBj0': dict(t=(44.0, 124.0), sweep=(60.0, 70.0), c0=(605, 414), rest=(46.0, 52.4), twist=(1574, 1654), release=1654,
@@ -193,7 +193,21 @@ SURVEY = {'We1dLNXiBj0 2:37-3:02': 'not measured: the camera back on the tripod 
                              'repeats its frame-sharpness sequence exactly every 2.00 s (frames 60 apart most alike, not 15), 2:15-2:39 holds frames for 20 at a time '
                              '(slow motion or stills); not a real-time record (its sound may be edited too); 0:00-1:58 is restoration footage',
           'bEWF2ivi1Rg': 'rejected: the movement turned on a turntable side-on (0:10-1:40), the barrel and fusee; the balance not in view',
-          'R-DrJz1DYOY': 'rejected: the movement on a turntable seen from above (2:54-3:24), turning all the time; the balance under the cock, not followed'}
+          'R-DrJz1DYOY': 'rejected: the movement on a turntable seen from above (2:54-3:24), turning all the time; the balance under the cock, not followed; 3:20-3:25.6 '
+                         'still (60 fps, drifting 20 px), but 5 s and no screws clearly in view',
+          # searched again 12 October 2026 (band power at 2 Hz over every downloaded video, each hit checked frame by frame: $MC_VIDEO/oq/starts)
+          'xM_mxtGfeqQ 8:56-10:43': 'measured, not by this tool: a recovery after handling, 170 to 229 deg (the xM_mxtGfeqQ entry; $MC_VIDEO/oq/xm)',
+          'SNLqsS9wrrM 4:04-4:07': 'measured, not used: a 13 deg free swing flicked by a brush (13.2 to 11.8 deg, -0.49 deg/s), but its period reads 0.4786 s, 4.4 % short: '
+                                   'the time base altered or the Navy Y-stop touching; 5:11 and 5:23 smaller swings side-on, 2.3 and 1.4 deg',
+          'KLUwI2UUCMQ 47:03-47:13': 'not measured: a running swing after the restoration, under the cock, 23.976 fps, the camera sliding about 13 px/s; '
+                                     'three usable frames a turn, so about +-15 % by the shape of the turns; no start seen (cut)',
+          'W9gy2gjvZHc 0:01-0:30': 'not measured: steady, 4K, the camera fixed (period 0.5005 s), but the rim seen low and very flat: a camera fit needed, aliases likely',
+          'cwzM-GK9VOw': 'rejected: steady (0:00-0:08 real time, then 120 fps slowed 4x), the camera fixed, but the front of the rim hidden by the bridge, only its plain back soft',
+          'QjRur8MO8B0 0:45-1:12': 'rejected: running, from above, 480p at 12.75 fps, the camera moving',
+          'yRlBXMjV-Cc 0:15-0:26': 'rejected: running rim, hand-held',
+          'zuy2S-aIBVM 0:06-0:17': 'rejected: Tantdetemps "hamilton-21" (2014, N4984, 1941; found 12 October 2026), running from above, 480x360, hand-held and zooming',
+          'others': 'no balance swing found: wuobTVulVGY (its hits near-still frames), 7iDdXkCBkfY, adGQ1zMSM-Q, TWQsSVWuikk, -5Ygn53f208, 3w3bf1ZszuI, h4qHhIVZ3FE, '
+                    'lY3syHYrr6k, cnWy_M-yZrY, uX97j9NPdPk, bgvWk20Y7j8, nnhqqsiqD3Y, i6orz5MTujk, Umoe-T5yK7s, 8yog8dKiyQY, o819elZ2pi0, umslgYaJYUY, dO58jf0tRUA'}
 a = sys.argv[1:]
 if not a: sys.exit(__doc__)
 if a[0] == 'survey': save('_surveyed', SURVEY)

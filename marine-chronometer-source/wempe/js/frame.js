@@ -79,9 +79,8 @@ const WFRAME=(()=>{
       const e=mesh(tp,g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
 
     /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
-    /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure), 14-18 too, the
-       hand-setting work's ("nur wenn Zeigerstellung eingebaut wird": Wempe 3955's plate is drilled for it, the work itself not fitted: below) but 56, 57 ("nur bei Bedarf",
-       the seconds contact's; not in Wempe 3955's plate). Its sections: E-F the pillar seats in the inner face; A-B the intermediate bridge's steady pins 29, 44 reamed from the
+    /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 56, 57
+       ("nur bei Bedarf", the seconds contact's; not in Wempe 3955's plate). Its sections: E-F the pillar seats in the inner face; A-B the intermediate bridge's steady pins 29, 44 reamed from the
        dial face and opened Ø 2.5 × 1.6 from the inner face ("oben"); G-H hole 30's setting, Ø 5.2 H7 from the inner face to 0.5 above the dial face, Ø 4.59 H7 through that,
        its two M1.2 3.5 either side along the O-W line. 26 reamed 2.50 with two M1.2 3.5 either side on the line 37° below O toward S (05 08_3b). The opening for the intermediate
        wheel (38) milled Ø 24.5 ("vor dem kalibrieren auf 24,5 fräsen"; it scales 24.8), joined by the seconds arbor's hole 35 (punched 6.0) on its rim; hole 10, the fusee's, reamed 2.70
@@ -94,19 +93,30 @@ const WFRAME=(()=>{
       F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.82/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
         T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
       for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
-      F.push(B(H[26],4.6/2,y1,0.25));
-      /* the hand setting's holes and window, drilled though no hand setting is fitted, as in Wempe 3955's plate (3_Wempe_3955_uZ.jpg, square-on on millimetre paper, 8.33 px/mm:
-         each hole where the table puts it, to a pixel): 14, 15 the pins' (1.45 drilled), 16, 17 the screws' (2.8), 18 the pinion's (3.50 reamed); the square window 6.5 (03a's
-         "6,5"; the photograph 6.4) centred 30.9 from the centre on the line through 18 (150°), its sides along that line (the photograph: 150.5° and 30.87, its edges at 152°,
-         2.1 from 18's centre): likely. The plate's rim cut beside 14 and 15 (03a's "9,3 −0,1") and the C-D recess Ø 14 on the inner face aren't read: left out (README) */
-      F.push(T(H[14],1.45/2,y0,y1),T(H[15],1.45/2,y0,y1),T(H[16],2.8/2,y0,y1),T(H[17],2.8/2,y0,y1),T(H[18],rH35,y0,y1));
-      {const a=Math.atan2(H[18][1],H[18][0]),u=[Math.cos(a),Math.sin(a)],v=[-u[1],u[0]],c=[u[0]*30.9,u[1]*30.9],q=(i,j)=>[c[0]+u[0]*i*3.25+v[0]*j*3.25,c[1]+u[1]*i*3.25+v[1]*j*3.25];
-        F.push({p:[q(-1,-1),q(1,-1),q(1,1),q(-1,1)],a:y0,b:y1});}   /* the seat of the escape wheel's lower endstone's setting, Ø 4.6 × 0.25 in the dial face (Wempe 3955's dial side: escapement.js; not on the sheet) */
+      F.push(B(H[26],4.6/2,y1,0.25));   /* the seat of the escape wheel's lower endstone's setting, Ø 4.6 × 0.25 in the dial face (Wempe 3955's dial side: escapement.js; not on the sheet) */
       for(const k of[28,43])F.push(T(H[k],rM26,y0,y1));
       for(const k of[29,44])F.push(T(H[k],rPinP,y0,y1),A(H[k],2.5/2,y0,1.6));
       F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
       for(const k of[11,39,49])F.push(T(H[k],WD.PIL_HOLE,y0,y1),A(H[k],WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
       F.push({p:twoCircles(H[38],24.5/2,H[35],6.0/2),a:y0,b:y1});
+      /* the hand-setting work's cut and holes (Zeigerstellung, 05 33): the table's 14-18 are struck through, "nur wenn Zeigerstellung eingebaut wird", but Wempe 3955's plate
+         is cut and drilled for it, every hole and the cut open, nothing fitted but a bush in 18 (3_Wempe_3955_uZ.jpg, 6_Wempe_3955_S.jpg, 8_Wempe_3955_Räderwerk_plus.jpg), and
+         the plate's assembly (05 08 02) draws them so. 14, 15 drilled 1.45 (steady pins), 16, 17 drilled 2.8 (screws), 18 reamed 3.50 +0.012 (the setting pinion's bush: train.js).
+         The cut, on the line from the centre through 18 (30.0° below O toward S), the four holes symmetric about it (05 08_3b's plan; 05 08_3a's partial plan and Schnitt C-D,
+         along the cut, across the line; 05 08 02's Schnitt E-F): through the plate a window 6.5 square on the dial face (05 08_3b's two "6,5"), its outer edge 8.3 -0.1 from the
+         rim ("8,3-0,1", drawn at its middle), widened along the cut to 12 +0.2 on the inner face (C-D's "12+0,2", drawn 12.1), each end a Ø 14 arc ("14∅") from one face's edge
+         to the other's, hollow (the arcs traced on C-D at 9.74 px/mm bow 2-3 px into the metal; their sagitta 0.35); 05 08_3a's "9,3-0,1" is the inner face's end to the dial
+         face's far edge (6.05 + 3.25). Wempe 3955's dial face measures the window 6.4 × 6.5 at 27.7-33.9 from the centre, its edges at 30.2° (the photograph fitted on the
+         plate's holes 1, 12, 26, 30, 40, 0.3 mm rms): sure. Not cut: the bore Ø 2 at mid-thickness (C-D's circle, 1.68 from the dial face, and E-F's) from the window's outer
+         wall to the rim (dashed on 05 08_3a), which solidGeo can't cut across the plate (the ring's seat hides its mouth on the rim); the notch in the rim where it leaves,
+         4.5 long and 0.9 deep on Wempe 3955 (3_), on no sheet */
+      for(const k of[14,15])F.push(T(H[k],1.45/2,y0,y1));
+      for(const k of[16,17])F.push(T(H[k],2.8/2,y0,y1));
+      F.push(T(H[18],rH35,y0,y1));
+      {const eu=unit(H[18]),et=[-eu[1],eu[0]],P=(u,t)=>add(eu.map(q=>q*u),et,t),uo=R-8.25,ui=uo-6.5,tD=3.25,tI=12.1/2,rc=7;
+        const L=Math.hypot(tI-tD,PPT),M=[(tI+tD)/2,PPT/2],nn=[PPT/L,(tI-tD)/L],h=Math.sqrt(rc*rc-L*L/4),Ct=M[0]-nn[0]*h,Cy=M[1]-nn[1]*h;   /* the end arcs' centre in (t, y), on the window's side of their chord */
+        const tw=y=>Ct+Math.sqrt(rc*rc-(y-Cy)*(y-Cy)),K=6,Rk=[...Array(K+1).keys()].map(k=>{const t=tw(PPT*k/K);return[P(ui,-t),P(uo,-t),P(uo,t),P(ui,t)];});
+        for(let k=0;k<K;k++)F.push({p:Rk[k],q:Rk[k+1],a:y0,b:k<K-1?PPT*(k+1)/K:y1});}   /* six cones nested from the inner face, the last through: the arcs in six chords */
       tag(mesh(pp,solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050802-1');}
     /* its pillar screws (WN-56) from the dial side, in a frame turned over so their heads face +y */
     {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);for(const[x,z]of WD.PILLARS)tag(screw(rg,x,-z,-PPT,S.r,S.h,S.len,S.rs,M.brass),'WN-56');}

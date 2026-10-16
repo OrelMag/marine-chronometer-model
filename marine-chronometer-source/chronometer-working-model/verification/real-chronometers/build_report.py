@@ -49,7 +49,8 @@ rows = [   # the swing each test reads, per recording: [label, test, value, lo, 
     ['We1dLNXiBj0 settling (extrapolated)', 'video', 292, 280, 311, 'averaged build-up law'],
     ['xDKFZaY88cM', 'sound', 195, 180, 210, 'rough: echoing room, edited video'],
 ]
-DATA = dict(model_sl=model_sl, old_sl=old_sl, pts=pts, snd=snd, vid=vid, start={k: v['curve'] for k, v in D['start'].items()}, startTF={k: v['TF'] for k, v in D['start'].items()}, rows=rows)
+XM = json.load(open(os.path.join(TOOLS, 'swing.json'), encoding='utf-8'))['xM_mxtGfeqQ']   # a second movement, recovering after handling (12 October 2026)
+DATA = dict(xm=dict(pts=XM['A_t'], fit=XM['fit'], curves={k: v['curve'] for k, v in D['xm'].items()}, TF={k: v['TF'] for k, v in D['xm'].items()}, s={k: v['s'] for k, v in D['xm'].items()}), model_sl=model_sl, old_sl=old_sl, pts=pts, snd=snd, vid=vid, start={k: v['curve'] for k, v in D['start'].items()}, startTF={k: v['TF'] for k, v in D['start'].items()}, rows=rows)
 
 def figures():   # the average beat through We1dLNXiBj0's start, stretch by stretch (needs the recording)
     sys.path.insert(0, TOOLS); import acoustic as A; import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt

@@ -69,10 +69,20 @@ say('The maintaining work (05 06 01-02) and the stop work, fully wound');
   /* running, the fusee drives the ratchet through the click wheel 05 06 04-3 (brass 2, 35 teeth Ø 16.0/14.5) on one click (05 06 02-3, steel 1.82 thick, meeting the wheel's teeth over 1.30 of it: the click on the ratchet's cup floor, 05 06 02-1; 1.82 taken as met until 15 October 2026) */
   const Fc=Tm/(7.6e-3),pc=Math.PI*14.5/35;
   line('the click wheel\'s tooth under the click (brass, 1.30 met)',`${f(Fc,1)} N`,6*Fc*0.75e-3/(1.30e-3*(pc*1e-3)**2),P(BRASS_E),'brass\'s endurance (it turns with the fusee: 3.7 turns a day)');
-  /* a strong hand on the key against the stop (overwind.js: 1.06 N·m, Swain 1970), the bar meeting the stop pin 05 08 01-5 (Ø 1.6, 1.5 proud of the plate's inner face) at 14.0 from the
-     fusee's axis: the pin as a cantilever loaded at its middle, the bar (2 × 1.45) in its slot as a cantilever from the slot's end, about 3.6 out (its travel) */
+  /* a strong hand on the key against the stop (overwind.js: 1.06 N·m, Swain 1970), the bar meeting the stop pin 05 08 01-5 (Ø 1.6, 1.6 straight under the plate's inner face and a
+     0.25 dome: the coloured section) at 14.0 from the fusee's axis: the pin as a cantilever loaded where the bar's thin end bears on it, 0.185-1.235 under the face, its middle
+     0.71 out; the bar (2 × 1.45) in its slot as a cantilever from the slot's end, about 3.6 out (its travel) */
   const Fh=(1.06+Tf)/14e-3;
-  line('the stop pin (Ø 1.6, 1.5 proud), a strong hand on the key',`${f(Fh,0)} N`,32*Fh*0.75e-3/(Math.PI*(1.6e-3)**3),P(STEEL_Y),'steel\'s yield (no sheet: hardened, estimated)');
+  line('the stop pin (Ø 1.6, 1.6 proud), a strong hand on the key',`${f(Fh,0)} N`,32*Fh*0.71e-3/(Math.PI*(1.6e-3)**3),P(STEEL_Y),'steel\'s yield (no sheet: hardened, estimated)');
   line('  the stop bar (2 × 1.45), 3.6 out of its slot',`${f(Fh,0)} N`,6*Fh*3.6e-3/(2e-3*(1.45e-3)**2),P(STEEL_Y),'hardened steel\'s yield (no sheet: estimated)');
-  line('  soft, as rolled',`${f(Fh,0)} N`,6*Fh*3.6e-3/(2e-3*(1.45e-3)**2),P([350,600]),'mild steel\'s yield');}
+  line('  soft, as rolled',`${f(Fh,0)} N`,6*Fh*3.6e-3/(2e-3*(1.45e-3)**2),P([350,600]),'mild steel\'s yield');
+  /* the stop bar's spring (Stegfeder 05 06 03-3, no sheet; fusee.js at SPW, the README's stop work): between 05 06_4 C-D's two drawn shapes its curvature changes by up to
+     0.064-0.073 /mm along its free span, so a strip t thick of hardened spring steel (206 GPa) is stressed 6,500-7,500 t MPa wound, whatever its height h; the push on the bar
+     (its strain energy over the 3.6) is linear in h: 0.06-0.08 N half way and 0.11-0.16 N wound at h 1.0 and t 0.10. No source draws its section (the coloured section leaves
+     the recess uncoloured), so h is a design value between two bounds: at least 0.9, its pin's Ø 0.5 hole through it (05 06 03-2, C-D) with 0.2 of strip either side; at most
+     1.5, on the cover plate under the recess's 1.6 (05 06 04-2) with 0.1 off its floor. What it must do: push the bar back out when the chain leaves it, against the 0.5 g bar's
+     sliding on the cover plate (μ 0.3, estimated): its push at the lower bound, half way, is still many times that */
+  const SPH=[0.9,1.5],SPh=1.0,Ph=[0.06,0.08],Pw=[0.11,0.16],fr=0.5e-3*G0*0.3;
+  line('the stop bar\'s spring (0.10 thick, 1.0 high), wound',`${f(Pw[0],2)}-${f(Pw[1],2)} N`,7500*0.10*MPa,P(STEEL_Y),'hardened spring steel\'s yield (it flexes once a wind)');
+  say(`    its height, drawn by no source: ${SPH[0]}-${SPH[1]} (its pin's hole; the recess's floor), ${f(SPh,1)} built; its push half way ${f(Ph[0]*SPH[0]/SPh,3)}-${f(Ph[1]*SPH[1]/SPh,3)} N over that range, ${f(Ph[0]*SPH[0]/SPh/fr,0)} times or more the bar's sliding (${f(fr*1000,1)} mN); its stress the same at any height`);}
 console.log(rows.join('\n'));if(fail)process.exitCode=1;
