@@ -633,7 +633,7 @@ Contents:
   which while winding returns the maintaining spring's own last drive (nothing on the first wind), so the
   spring carried no drive and the balance held. Found by `maintaining.py --model wempe`. Keep: read the
   drive, then set `winding`. The Winding slider's last step now sets run down (HRUN 55.91 is past its
-  0.1 steps). (this commit)
+  0.1 steps). `7c6bb74`
 - **The Wempe's fusee groove was cut at the superseded issue's pencilled pitch, and its chain's hooks
   were drawn a third their thickness** (16 October 2026, the audit of 3.00.00). The groove had 02-1's
   pencilled 1.15 and lands 0.82, the chain's own nominal width, which squeezed the flange to ribs 0.6
