@@ -12,7 +12,7 @@ because its offset is the wrong way round for the order the two are stacked in),
 through a part) part the long way, one dragged through the other. Two with the same offset stay as assembled all the way (fine.py checks those).
 Checked over escapement phases, train positions and the wind, since the wheels turn and the chain moves in the Exploded view too. Invisible variants
 (the split balance) are left out; the mainspring, shown only with Moving parts only, is in."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 import model;PAGE=model.PAGE   # the model's page: the Hamilton's (../index.html), or another's with --model NAME (model.py)
@@ -24,7 +24,7 @@ FREEZE="""(()=>{{const mv=window.__mv;if(!mv.userData._u){{mv.userData._u=mv.use
 async def main():
     pairs={};bodies=None
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         await pg.goto(PAGE);await pg.wait_for_function("!document.querySelector('#loading')",timeout=120000);await pg.wait_for_timeout(2000)

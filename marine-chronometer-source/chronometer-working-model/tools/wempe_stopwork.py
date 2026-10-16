@@ -15,7 +15,7 @@ Fails (exit 1) unless, for both connectors:
   - the bar has slid fully wound, short of its 3.6, from rest (0) a turn and more before, and never jammed;
   - the page's full wind is escphys.js's (fusee.js MW against WPHYS's MF: the page warns if they part).
 Prints the travel's onset, the travel and gap fully wound, the least gap before it and where, and the pin's bearing."""
-import asyncio,json,pathlib,sys
+import asyncio,browser,json,pathlib,sys
 from playwright.async_api import async_playwright
 HERE=pathlib.Path(__file__).resolve().parent
 PAGE=(HERE.parents[1]/'wempe'/'index.html').as_uri()+'?snap&qa'
@@ -47,7 +47,7 @@ SWEEP="""(([conn,N,step])=>{const mv=window.__mv,FU=mv.userData.R.fu,T=THREE;FU.
   return{conn,out,pin:{x:px,z:pz,r:pr,y0:py0,y1:py1},bear:yb,bar:bar0,MW:FU.MW,MF:(typeof WPHYS!=='undefined'&&WPHYS.MF)||null};})(%s)"""
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch(args=["--use-gl=swiftshader","--enable-webgl","--ignore-gpu-blocklist","--enable-unsafe-swiftshader"])
+        b=await p.chromium.launch(args=browser.ARGS)
         w=await b.new_page();await w.set_content('<canvas></canvas>');await w.evaluate("document.querySelector('canvas').getContext('webgl')");await w.wait_for_timeout(3000);await w.close()   # a fresh headless Chromium loses its first WebGL context
         pg=await b.new_page(viewport={"width":800,"height":600});errs=[];pg.on("pageerror",lambda e:errs.append(str(e)))
         warns=[];pg.on("console",lambda m:warns.append(m.text) if m.type in('warning','error') else None)
