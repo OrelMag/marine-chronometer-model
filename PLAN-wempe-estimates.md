@@ -5,7 +5,14 @@ Branch `claude/wempe-estimates`. Started 16 October 2026.
 ## Status
 
 - **Done:** the survey. Six read-only passes over every item of the Wempe README's "Estimated, not from the drawings" section, against the sheets, about 330 photographs, the videos and the literature. The evidence is in the appendices below.
-- **Not done:** building. It waits for the unmerged Wempe branches to land on `main` (`claude/wempe-open-ends`, `claude/wempe-audit`, `claude/wempe-maintaining`; `claude/wempe-6mx` too, if it lands first). They change the same files: the README's Estimated and Unresolved sections, `case.js`'s key holder, `fusee.js`'s pitch and lands, and the click. When they have merged, merge `main` into this branch, then build.
+- **Ready to build (16 October 2026, evening).** `main` 3.03.00 (with claude/wempe-audit and claude/wempe-open-ends) is merged into this branch.
+- **Don't wait for `claude/wempe-maintaining`.** marine-chronometer-76 stopped it before merging 3.02.00 and 3.03.00, and will reconcile with this branch when it resumes (its PLAN-wempe-maintaining.md). It is pushed (17adb95c) and clean.
+- **Keep clear of what maintaining changes:**
+  - in fusee.js: the maintaining work's block, update()'s first lines, the click seat (SEAT), fall(), the detent's step sizing;
+  - in the README: Physics: energy (the maintaining spring), Motion, Readings corrected, Unresolved.
+
+  A.13's detent arbor body (2.0) is the only item near those; do it last or leave it to maintaining.
+- **First step on resuming:** re-read the Estimated section as 3.03.00 has it. Open-ends settled the key holder's height, the click's base 2.85, the upper cock's 3.2 and PHI0 −28°10'. Drop anything it already did, then build A, B, D in order.
 
 dg-chrono's 1024 px scans are the largest that exist (checked 16 October 2026, `/images/…`: there is no larger original). So no "scaled on the sheet" reading improves by a better copy. The improvements come from photographs, video frames, other sheets of the same part and design arithmetic.
 
