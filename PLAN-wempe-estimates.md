@@ -110,6 +110,27 @@ Re-lay the lock, the detent's lift (0.245 now) and the discharge stone's reach (
 
 Put this to the user before building.
 
+**New Soviet sources (16 October 2026, branch `claude/wempe-sources-2`, unmerged; References/wempe/photos/catalogue-2026-10-16.md).**
+
+Belyakov, *Часовые механизмы* (1957), Table 3, p. 104, gives the MX-2's design figures with Lange's MX in brackets:
+- the linear lock 0.210 (0.22);
+- the discharge circle r 1.54 (1.55);
+- the wheel Ø 13.96 (14), its undercut 23° (25°);
+- the detent 26.50 (26.8), the gold spring 0.05 (0.06).
+
+Caution: his radii don't fit either model's centre distance yet.
+
+The Navy's 1958 repair book, p. 60, sets the lock at 0.20-0.25 on the stone and the gold spring 0.35-0.40 past the detent's end. So the made lock sits near the 0.235 read on 05 04_1, not the model's 0.175. That supports adopting 7.14 and then dealing with the swing; D's dry-run decision should weigh these.
+
+The same book, p. 58, also gives figures for B and C:
+- the barrel's torque fully wound, 103-110 kgf·mm (1.01-1.08 N·m), against the solved spring's 0.935 at full wind;
+- the hairspring 502.35 mm;
+- the train 90/14, 480 to the escape pinion.
+
+Appendix 4 (pp. 128-129) gives every arbor's side shake and endshake, for A's endshake and the pillar plate's 3.40.
+
+Tarasov (1976) and Romanov (1975) describe a later, redesigned 6MX (16 teeth, 75/10): not this one's sizes. Kirova No. 14100 taken apart (chasy.ru 9985, photos/chasy-ru-9985-kirova-14100/) shows the block with its banking screw and the detent with its gold spring.
+
 ## C's result
 
 (to be filled in when the 1,530 solves finish)
