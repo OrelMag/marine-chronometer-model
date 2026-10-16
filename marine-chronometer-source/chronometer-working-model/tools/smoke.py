@@ -12,7 +12,7 @@ shown while winding and gone after; its zoom, enlarge, slow motion and explanati
 two WebGL contexts, a link into the model opens the walkthrough and Back returns to the essay where it was, and #essay=detent opens it at that section. SwiftShader's own driver notices ('GL Driver Message', 'GPU stall') are not the page's and are
 ignored. Each problem names the page and the last step done before it.
 With --model wempe, the Wempe's page (../../wempe/index.html), then its Essay tab as the Hamilton's (its checks.py's ESSAY: the link it follows into the model and the
-section it opens; no report button): every view, the Spread slider, every cross-section and its other half, a part picked on the model and its
+section it opens; no report button): every view, every view with Moving parts only (the frame hidden, the motion work only when included, drive=1 in the link), the Spread slider, every cross-section and its other half, a part picked on the model and its
 card, a piece's card and its link to its part, the parts' pieces (every mesh in one), the parts list's search and boxes, the opacity menu (fade, isolate, hide, show all),
 the display switches and Reset display, the theme, Back and Forward, a view key, and a link through the URL hash both ways."""
 import asyncio,pathlib,sys
@@ -303,6 +303,15 @@ async def wempe(b,errs,steps):
     for v in views:
         await click(f'#views button[data-v="{v}"]',f'view {v}',400)
         if await pv()!=v:errs.append(f'view {v}: its button not pressed')
+    # Moving parts only: every view with it (those in the case give way to Movement), the frame hidden, the barrel see-through, the motion work only when included; drive=1 in the link
+    await click('#driveOn','Moving parts only',500)
+    for v in views:await click(f'#views button[data-v="{v}"]',f'view {v} (moving parts)',400)
+    dv=await ev("(()=>{const s=p=>{let n=0,on=0;window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part===p){n++;if(o.visible)on++;}});return[n,on];};return{top:s('topPlate'),fusee:s('fusee'),hands:s('hands'),view:document.querySelector('#views button[aria-pressed=\"true\"]')?.dataset.v,hash:location.hash,dial:document.querySelector('#views button[data-v=\"dial\"]').disabled};})()")
+    if dv['top'][1] or not dv['fusee'][1] or dv['hands'][1] or not dv['dial'] or 'drive=1' not in dv['hash']:errs.append(f'Moving parts only: {dv}')
+    await click('#mwOn','motion work and hands included',400)
+    if not await ev("(()=>{let on=0;window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part==='hands'&&o.visible)on++;});return on;})()"):errs.append('Include motion work did not show the hands')
+    await click('#mwOn');await click('#driveOn','Moving parts off',500)
+    if not await ev("(()=>{let on=0;window.__mv.traverse(o=>{if(o.isMesh&&o.userData.part==='topPlate'&&o.visible)on++;});return on;})()"):errs.append('Moving parts off left the top plate hidden')
     # the Spread slider: shown in the exploded view only, the parts lifted with it
     await click('#views button[data-v="exploded"]','view exploded',600)
     if await ev("document.querySelector('#expWrap').classList.contains('hidden')"):errs.append('the Spread slider is hidden in the exploded view')

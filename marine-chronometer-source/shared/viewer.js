@@ -10,6 +10,8 @@
      labels: (add, pw) => ...: add(text, sub, part, fn) a label at fn() (world), pw(group, x, y, z) a point in a group,
      qaTarget [x, y, z] (mv's frame: what __proj, __unproj and __cam aim at), tick: (dt, now, st) => [values]: the model's own motion each frame, the values it shows (a change draws a frame),
      hud: st => html, hash: {write(h), read(get, first)}, store: the prefix of what Remember settings keeps, name (the canvas's label), shot (the PNG's name).
+     drive: Moving parts only (#driveOn, its #mwOn and #mwWrap; the Hamilton's st.drive), if the page has it: {hide: the parts it hides, ghost: those it draws see-through, mw: the motion
+     work and hands, hidden unless #mwOn is ticked, off: the views it can't show, to: the view it shows instead}; the hash keeps drive=1.
      essay: the page's essay tab (ESSAY, from ../shared/essaykit.js: show, on, section), if it has one: while it shows the stage isn't drawn (cfg.tick still keeps the model's
      time), the keys are left to it, the hash is #essay[=section] and Remember settings doesn't note it; a hash with essay in it shows it, any other hides it (as the Hamilton's app.js).
    Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO}. */
@@ -33,6 +35,7 @@ const VIEWER={start(cfg){
   const shade=(c,i)=>{if(!i)return c;const o=new THREE.Color(c),h={};o.getHSL(h);o.setHSL((h.h+(i%2?1:-1)*0.035*Math.ceil(i/2)+1)%1,h.s,clamp(h.l+[0.17,-0.17,0.3,-0.3,0.09,-0.09,0.24,-0.24,0.37,-0.37][(i-1)%10],0.14,0.88));return '#'+o.getHexString();};
   for(const[p,ps]of Object.entries(PIECES)){const q=PARTS[p];q.pcs=ps;PHN[p]={};ps.forEach((c,i)=>{const k=p+'.'+c.k;INFO[k]=[c.t,c.d,c.sp];PCE[k]=c;if(q.c)PCOL[k]=shade(q.c,i);for(const h of c.h.split(' '))PHN[p][h]=PHN[p][h]||c.k;});}
   const PLATES=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate));
+  const DV=cfg.drive?{hide:new Set(cfg.drive.hide),ghost:new Set(cfg.drive.ghost||[]),mw:new Set(cfg.drive.mw||[]),off:new Set(cfg.drive.off||[]),to:cfg.drive.to||cfg.startView}:null;   /* Moving parts only (cfg.drive) */
   const QT=cfg.qaTarget||[0,0,0];let renders=0;
   if(QA){window.__mv=mv;window.__M=M;window.__parts=PARTS;window.__r=r;window.__renders=()=>renders;
     const cam2=(yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(...QT);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();return c2;};
@@ -67,7 +70,7 @@ const VIEWER={start(cfg){
     if(secMode!=='off'){const d=SECDEF[secMode];secIn.min=d.min;secIn.max=d.max;secOff=d.def;secIn.value=d.def;}applySec();look();}));
   secIn.addEventListener('input',()=>{secOff=parseFloat(secIn.value);applySec();});$('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
   /* ---------- state ---------- */
-  const st={see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
+  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
   const FOV0=cam.fov,cur={explode:0,fov:FOV0},tgt={...cur};
   let wakeT=0,hashReady=false,hashT=0,hashSeen='';const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any input keeps the stage drawing for 0.6 s; any change is written to the URL */
   /* colour by part (or by source, SRC); per-part opacity from the right-click menu; see-through (ghost) */
@@ -87,12 +90,14 @@ const VIEWER={start(cfg){
   const isoOut=(p,k)=>!!st.iso&&!st.iso.has(p)&&!(k?st.iso.has(k):anyOf(st.iso,p));
   const isoDrop=p=>{if(st.iso){st.iso.delete(p);if(!st.iso.size)st.iso=null;}};
   const opHide=m=>{const u=m.userData;return st.hid.has(u.part)||st.hid.has(u.pk)||opOf(m)===0||isoOut(u.part,u.pk);};
-  const ghOf=(m,foc)=>{const p=m.userData.part;return (st.see&&PLATES.has(p))||(!!foc&&!inK(foc,m));};
+  const dvOut=p=>st.drive&&!!DV&&(DV.hide.has(p)||!st.mwOn&&DV.mw.has(p));   /* hidden by Moving parts only: the frame, dial and case, and the motion work unless it is included */
+  const ghOf=(m,foc)=>{const p=m.userData.part;return (st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
   const ck=(id,v,dis)=>{const e=$('#'+id);if(e){e.checked=v;if(dis!=null)e.disabled=dis;}};
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const foc=st.pick?new Set([st.pick]):st.focus;
-    for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
+    for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!dvOut(m.userData.part);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
     if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}   /* Shadows off: the map is freed */
-    cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${(cfg.VIEW_DESC||{})[st.view]||''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
+    if(DV){document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&DV.off.has(b.dataset.v);});ck('driveOn',st.drive);ck('mwOn',st.mwOn);const mw=$('#mwWrap');if(mw)mw.classList.toggle('hidden',!st.drive);}
+    cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${(cfg.VIEW_DESC||{})[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
     ck('ghost',st.see);ck('draw',st.draw==='tint');ck('drawInk',st.draw==='ink');ck('edges',st.edges,!!st.draw);ck('shadows',st.shadows);ck('merge',st.merge);ck('colr',st.colr);ck('colrSrc',st.csrc);ck('lbls',st.labels);ck('spin',st.spin);
     stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);if(sk)sk.classList.toggle('hidden',!st.csrc);stage.classList.toggle('draw',!!st.draw);partsSync();}
   /* ---------- camera ---------- */
@@ -104,7 +109,7 @@ const VIEWER={start(cfg){
   let camFree=false;const panO=new THREE.Vector3(),pv=new THREE.Vector3();
   function panBy(dx,dy){const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
   const expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
-  function setView(k,keepSee){const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),fov:vv.fov||FOV0});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode);
+  function setView(k,keepSee){if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),fov:vv.fov||FOV0});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode);
     if(!keepSee)st.see=!!vv.see;look();if(hashReady)keep('view',k);document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* where the view has been: ↶ (Backspace) and ↷ (Shift-Backspace) step back and forward; jump(f) moves the camera with f and keeps the place it left, unless f didn't move it */
   const HB=[],HF=[],histEl=$('#hist'),hB=$('#hBack'),hF=$('#hFwd');
@@ -207,6 +212,7 @@ const VIEWER={start(cfg){
     document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
   const on=(id,f)=>{const e=$('#'+id);if(e)e.addEventListener('change',ev=>{f(ev.target.checked);look();});};
   on('ghost',v=>st.see=v);on('colr',v=>{st.colr=v;if(v)st.csrc=false;});on('colrSrc',v=>{st.csrc=v;if(v)st.colr=false;});on('draw',v=>st.draw=v?'tint':false);on('drawInk',v=>st.draw=v?'ink':false);
+  if(DV){const dc=$('#driveOn'),mc=$('#mwOn');if(dc)dc.addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.view,true);});if(mc)mc.addEventListener('change',e=>{st.mwOn=e.target.checked;look();});}   /* Moving parts only: a view it can't show gives way to cfg.drive.to */
   on('edges',v=>st.edges=v);on('shadows',v=>st.shadows=v);on('merge',v=>st.merge=v);on('lbls',v=>st.labels=v);on('spin',v=>st.spin=v);
   $('#reset').addEventListener('click',()=>jump(()=>setView(st.view,true)));
   const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(VIEWS[st.view].explode)tgt.explode=expV()*VIEWS[st.view].explode;});   /* the Spread slider: how far apart the exploded parts are */
@@ -250,7 +256,7 @@ const VIEWER={start(cfg){
   $('#pShow').addEventListener('click',()=>{st.hid.clear();st.iso=null;look();});
   function partsSync(){for(const q of PROWS){const k=q.p,p=kp(k),h=k!==p?st.hid.has(k)||st.hid.has(p)||isoOut(p,k):st.hid.has(p)||isoOut(p);q.ck.checked=!h;q.row.classList.toggle('off',h);
       if(q.kids){q.ck.indeterminate=!h&&q.kids.some(x=>st.hid.has(x.p)||isoOut(p,x.p));if(st.pick!==q.seen){q.seen=st.pick;if(st.pick&&kp(st.pick)===p)fold(q,true);}}
-      q.b.setAttribute('aria-pressed',st.pick===k?'true':'false');}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
+      q.b.setAttribute('aria-pressed',st.pick===k?'true':'false');q.b.disabled=dvOut(p);}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement)(d.exitFullscreen||d.webkitExitFullscreen).call(d);else(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);});
   /* Hide panel (P, or the tab on the stage's edge), where the panel sits beside the stage; its width by dragging the line between them, or the arrow keys on it */
@@ -272,7 +278,7 @@ const VIEWER={start(cfg){
   const ray2=new THREE.Raycaster(),tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0,LS=null;ray2.layers.enable(2);
   function placeLabels(now){if(!LS)LS=labels.slice().sort((p,q)=>(PRI[q.part]||1)-(PRI[p.part]||1));
     const foc=st.pick?new Set([st.pick]):st.focus,doOcc=now-lastOcc>200,placed=[],pad=3;if(doOcc)lastOcc=now;
-    for(const l of LS){let sh=st.labels&&!(foc&&!anyOf(foc,l.part))&&!isoOut(l.part)&&!st.hid.has(l.part);if(!sh){l.el.style.opacity=0;continue;}
+    for(const l of LS){let sh=st.labels&&!(foc&&!anyOf(foc,l.part))&&!isoOut(l.part)&&!st.hid.has(l.part)&&!dvOut(l.part);if(!sh){l.el.style.opacity=0;continue;}
       const P0=l.fn();
       if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);ray2.set(camP,tmpV.copy(P0).sub(camP).normalize());ray2.far=d-0.8;
         l.occ=ray2.intersectObject(root,true).some(h=>shown(h.object)&&h.object.userData.part!==l.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5)&&!h.object.userData.decal);}
@@ -285,9 +291,9 @@ const VIEWER={start(cfg){
       if(!ok){l.el.style.opacity=0;continue;}placed.push(ok[2],{x0:px-4,y0:py-4,x1:px+4,y1:py+4});
       l.el.style.transform=`translate(${px.toFixed(1)}px,${py.toFixed(1)}px)`;l.sp.style.transform=`translate(${ok[0].toFixed(1)}px,${ok[1].toFixed(1)}px)`;l.el.style.opacity=1;}}
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
-  /* ---------- the state in the URL hash: view, speed, sec=x:-3.5[:f], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
+  /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState ---------- */
-  function hashOf(){if(esOn()){const s=ES.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();if(st.view!==cfg.startView)h.set('view',st.view);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));
+  function hashOf(){if(esOn()){const s=ES.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);
     if(cfg.hash)cfg.hash.write(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
@@ -298,6 +304,7 @@ const VIEWER={start(cfg){
     const sp=g('speed');setSpeed(sp!=null&&Number.isFinite(+sp)?+sp:1);
     const sc=/^([xyz]):(-?[\d.]+)(:f)?$/.exec(g('sec')||'');document.querySelector(`#secs button[data-v="${sc&&SECDEF[sc[1]]?sc[1]:'off'}"]`).click();
     if(sc&&SECDEF[sc[1]]){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
+    if(DV){const d=g('drive')==='1';if(d!==st.drive){st.drive=d;look();}}   /* drive=1: Moving parts only */
     if(cfg.hash)cfg.hash.read(g,first);if(!first)setView(v);
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
     const od=DET.find(d=>d.id===g('open'));if(od){panelOn(true);od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}

@@ -500,8 +500,11 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <div class="seg grid3" id="views">
           <button data-v="movement" aria-pressed="true" title="The movement, train side up">Movement</button><button data-v="plan" title="The top plate from straight above">Plan</button><button data-v="side" title="The frame from the side">Side</button>
           <button data-v="dial" title="The dial in its case, from above, the lid open">Dial</button><button data-v="exploded" title="Every part lifted apart along the pillars">Exploded</button><button data-v="escapement" title="The escapement under the top plate, seen through it">Escapement</button>
+          <button data-v="train" title="The going train, plates see-through">Train</button><button data-v="fusee" title="The barrel, the chain and the fusee, plates see-through">Fusee</button><button data-v="balance" title="Close up on the balance, its masses, timing weights and hairspring">Balance</button>
           <button data-v="box" title="The chronometer in its wooden box, the lid shut">Box</button><button data-v="case" title="The box open: the bowl in its gimbal ring">Case</button><button data-v="transport" title="The wooden box in its padded outer box for transport">Transport box</button></div>
         <label class="sl row hidden" id="expWrap"><span class="lab">Spread</span><input type="range" id="expR" min="0" max="100" step="1" value="100" aria-label="How far apart the exploded parts are"><output></output></label>
+        <label class="ck sw" title="Hide the plates, cocks, bridges, dial and case to see the moving parts"><input type="checkbox" id="driveOn" role="switch"> Moving parts only</label>
+        <label class="ck sub hidden" id="mwWrap"><input type="checkbox" id="mwOn"> Include motion work and hands</label>
       </details>
       <details class="grp more" id="timeDet">
         <summary>Time</summary>
@@ -533,7 +536,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
           <span class="lab">Show</span><label class="ck"><input type="checkbox" id="lbls"> Labels</label><label class="ck" title="Outline every part with the drawing's lines, over the normal rendering"><input type="checkbox" id="edges"> Edges</label>
           <label class="ck c2"><input type="checkbox" id="colr"> Colour by part</label><label class="ck" title="Colour each part by where its shape and size come from: the drawings, or estimated"><input type="checkbox" id="colrSrc"> Colour by source</label>
           <label class="ck c2" title="Draw the model in ink lines with a light watercolour tint"><input type="checkbox" id="draw"> Tinted drawing</label><label class="ck" title="Draw the model in ink lines alone"><input type="checkbox" id="drawInk"> Ink drawing</label>
-          <label class="ck c2" title="See-through plates"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
+          <label class="ck c2" title="See-through plates, pillars, cocks, bridges and movement ring"><input type="checkbox" id="ghost"> See-through</label><label class="ck" title="Shadows cast by the lamp (off by default: they cost an extra pass over the whole model each frame)"><input type="checkbox" id="shadows"> Shadows</label>
           <label class="ck c2" title="Draw the parts that don't move against each other as one: fewer draw calls, the same picture (on by default; turn it off if something looks wrong)"><input type="checkbox" id="merge"> Performance mode</label>
           <span class="lab g">Motion</span><label class="ck g" title="The box rolls and pitches as on a ship; the gimbals keep the case level"><input type="checkbox" id="rock"> Ship motion</label><label class="ck g" title="Turn the transit lock in, as when the box is carried: the gimbals are held, and the case tilts with the box"><input type="checkbox" id="latch"> Transit lock</label>
           <label class="sl span" id="rollW" title="How long the box takes to roll and come back. A ship rolls in several seconds, and the gimbals hold the case level; near the case’s own swing (about 1 s, from its weighed bowl and ring) they can’t, and it swings with the box"><span>Roll period</span><input type="range" id="rollP" min="0.4" max="12" step="0.1" value="7" aria-label="Roll period, seconds"><output></output></label>
@@ -1933,6 +1936,8 @@ const KIT=(()=>{
      labels: (add, pw) => ...: add(text, sub, part, fn) a label at fn() (world), pw(group, x, y, z) a point in a group,
      qaTarget [x, y, z] (mv's frame: what __proj, __unproj and __cam aim at), tick: (dt, now, st) => [values]: the model's own motion each frame, the values it shows (a change draws a frame),
      hud: st => html, hash: {write(h), read(get, first)}, store: the prefix of what Remember settings keeps, name (the canvas's label), shot (the PNG's name).
+     drive: Moving parts only (#driveOn, its #mwOn and #mwWrap; the Hamilton's st.drive), if the page has it: {hide: the parts it hides, ghost: those it draws see-through, mw: the motion
+     work and hands, hidden unless #mwOn is ticked, off: the views it can't show, to: the view it shows instead}; the hash keeps drive=1.
      essay: the page's essay tab (ESSAY, from ../shared/essaykit.js: show, on, section), if it has one: while it shows the stage isn't drawn (cfg.tick still keeps the model's
      time), the keys are left to it, the hash is #essay[=section] and Remember settings doesn't note it; a hash with essay in it shows it, any other hides it (as the Hamilton's app.js).
    Returns {st, look, wake, setView, cam, scene, r, mv, M, INFO}. */
@@ -1956,6 +1961,7 @@ const VIEWER={start(cfg){
   const shade=(c,i)=>{if(!i)return c;const o=new THREE.Color(c),h={};o.getHSL(h);o.setHSL((h.h+(i%2?1:-1)*0.035*Math.ceil(i/2)+1)%1,h.s,clamp(h.l+[0.17,-0.17,0.3,-0.3,0.09,-0.09,0.24,-0.24,0.37,-0.37][(i-1)%10],0.14,0.88));return '#'+o.getHexString();};
   for(const[p,ps]of Object.entries(PIECES)){const q=PARTS[p];q.pcs=ps;PHN[p]={};ps.forEach((c,i)=>{const k=p+'.'+c.k;INFO[k]=[c.t,c.d,c.sp];PCE[k]=c;if(q.c)PCOL[k]=shade(q.c,i);for(const h of c.h.split(' '))PHN[p][h]=PHN[p][h]||c.k;});}
   const PLATES=new Set(Object.keys(PARTS).filter(k=>PARTS[k].plate));
+  const DV=cfg.drive?{hide:new Set(cfg.drive.hide),ghost:new Set(cfg.drive.ghost||[]),mw:new Set(cfg.drive.mw||[]),off:new Set(cfg.drive.off||[]),to:cfg.drive.to||cfg.startView}:null;   /* Moving parts only (cfg.drive) */
   const QT=cfg.qaTarget||[0,0,0];let renders=0;
   if(QA){window.__mv=mv;window.__M=M;window.__parts=PARTS;window.__r=r;window.__renders=()=>renders;
     const cam2=(yaw,pitch,dist,fov)=>{const c2=new THREE.PerspectiveCamera(fov,W/Hh,1,6000),t=new THREE.Vector3(...QT);mv.localToWorld(t);const cp=Math.cos(pitch);c2.position.set(t.x+dist*cp*Math.sin(yaw),t.y+dist*Math.sin(pitch),t.z+dist*cp*Math.cos(yaw));c2.lookAt(t);c2.updateMatrixWorld();c2.updateProjectionMatrix();return c2;};
@@ -1990,7 +1996,7 @@ const VIEWER={start(cfg){
     if(secMode!=='off'){const d=SECDEF[secMode];secIn.min=d.min;secIn.max=d.max;secOff=d.def;secIn.value=d.def;}applySec();look();}));
   secIn.addEventListener('input',()=>{secOff=parseFloat(secIn.value);applySec();});$('#secFlip').addEventListener('change',e=>{secFlip=e.target.checked;applySec();});
   /* ---------- state ---------- */
-  const st={see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
+  const st={drive:false,mwOn:false,see:false,colr:false,csrc:false,draw:false,edges:true,shadows:false,merge:true,op:{},hid:new Set(),iso:null,focus:null,pick:null,labels:false,spin:false,speed:1,view:cfg.startView};
   const FOV0=cam.fov,cur={explode:0,fov:FOV0},tgt={...cur};
   let wakeT=0,hashReady=false,hashT=0,hashSeen='';const wake=()=>{wakeT=performance.now()+600;writeHash();};   /* any input keeps the stage drawing for 0.6 s; any change is written to the URL */
   /* colour by part (or by source, SRC); per-part opacity from the right-click menu; see-through (ghost) */
@@ -2010,12 +2016,14 @@ const VIEWER={start(cfg){
   const isoOut=(p,k)=>!!st.iso&&!st.iso.has(p)&&!(k?st.iso.has(k):anyOf(st.iso,p));
   const isoDrop=p=>{if(st.iso){st.iso.delete(p);if(!st.iso.size)st.iso=null;}};
   const opHide=m=>{const u=m.userData;return st.hid.has(u.part)||st.hid.has(u.pk)||opOf(m)===0||isoOut(u.part,u.pk);};
-  const ghOf=(m,foc)=>{const p=m.userData.part;return (st.see&&PLATES.has(p))||(!!foc&&!inK(foc,m));};
+  const dvOut=p=>st.drive&&!!DV&&(DV.hide.has(p)||!st.mwOn&&DV.mw.has(p));   /* hidden by Moving parts only: the frame, dial and case, and the motion work unless it is included */
+  const ghOf=(m,foc)=>{const p=m.userData.part;return (st.see&&PLATES.has(p))||(st.drive&&!!DV&&DV.ghost.has(p))||(!!foc&&!inK(foc,m));};
   const ck=(id,v,dis)=>{const e=$('#'+id);if(e){e.checked=v;if(dis!=null)e.disabled=dis;}};
   function look(){wake();INK.ink.value=st.draw==='ink'?1:0;const foc=st.pick?new Set([st.pick]):st.focus;
-    for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
+    for(const m of MVM){const gh=ghOf(m,foc);m.visible=!(m.userData.noShadow&&gh)&&!opHide(m)&&!dvOut(m.userData.part);m.material=gh?ghostOf(base(m)):fin(m);m.userData.cs=!gh&&!m.userData.noShadow;castOn(m);}
     if(key.castShadow!==st.shadows){key.castShadow=st.shadows;if(!st.shadows&&key.shadow.map){key.shadow.map.dispose();key.shadow.map=null;}}   /* Shadows off: the map is freed */
-    cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${(cfg.VIEW_DESC||{})[st.view]||''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
+    if(DV){document.querySelectorAll('#views button').forEach(b=>{b.disabled=st.drive&&DV.off.has(b.dataset.v);});ck('driveOn',st.drive);ck('mwOn',st.mwOn);const mw=$('#mwWrap');if(mw)mw.classList.toggle('hidden',!st.drive);}
+    cv.setAttribute('aria-label',`3D model of ${cfg.name||'the movement'}. ${(cfg.VIEW_DESC||{})[st.view]||''}${st.drive?' Moving parts only.':''} Arrow keys turn it, plus and minus zoom, 0 resets the view.`);
     ck('ghost',st.see);ck('draw',st.draw==='tint');ck('drawInk',st.draw==='ink');ck('edges',st.edges,!!st.draw);ck('shadows',st.shadows);ck('merge',st.merge);ck('colr',st.colr);ck('colrSrc',st.csrc);ck('lbls',st.labels);ck('spin',st.spin);
     stage.classList.toggle('colr',st.colr);stage.classList.toggle('csrc',st.csrc);if(sk)sk.classList.toggle('hidden',!st.csrc);stage.classList.toggle('draw',!!st.draw);partsSync();}
   /* ---------- camera ---------- */
@@ -2027,7 +2035,7 @@ const VIEWER={start(cfg){
   let camFree=false;const panO=new THREE.Vector3(),pv=new THREE.Vector3();
   function panBy(dx,dy){const k=2*C.dist*Math.tan(cam.fov*Math.PI/360)/cv.clientHeight;pv.setFromMatrixColumn(cam.matrixWorld,0).multiplyScalar(-dx*k);const u=new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld,1).multiplyScalar(dy*k);pv.add(u);panO.add(pv);if(!G.follow)G.target.add(pv);}
   const expR=$('#expR'),expO=$('#expWrap output'),expV=()=>expR.valueAsNumber/100;
-  function setView(k,keepSee){const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),fov:vv.fov||FOV0});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode);
+  function setView(k,keepSee){if(st.drive&&DV&&DV.off.has(k))k=DV.to;const vv=VIEWS[k];Object.assign(tgt,{explode:(vv.explode||0)*expV(),fov:vv.fov||FOV0});goCam(vv);st.view=k;$('#expWrap').classList.toggle('hidden',!vv.explode);
     if(!keepSee)st.see=!!vv.see;look();if(hashReady)keep('view',k);document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k?'true':'false'));}
   /* where the view has been: ↶ (Backspace) and ↷ (Shift-Backspace) step back and forward; jump(f) moves the camera with f and keeps the place it left, unless f didn't move it */
   const HB=[],HF=[],histEl=$('#hist'),hB=$('#hBack'),hF=$('#hFwd');
@@ -2130,6 +2138,7 @@ const VIEWER={start(cfg){
     document.querySelectorAll('#units button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if(st.pick)showPart(st.pick);});});
   const on=(id,f)=>{const e=$('#'+id);if(e)e.addEventListener('change',ev=>{f(ev.target.checked);look();});};
   on('ghost',v=>st.see=v);on('colr',v=>{st.colr=v;if(v)st.csrc=false;});on('colrSrc',v=>{st.csrc=v;if(v)st.colr=false;});on('draw',v=>st.draw=v?'tint':false);on('drawInk',v=>st.draw=v?'ink':false);
+  if(DV){const dc=$('#driveOn'),mc=$('#mwOn');if(dc)dc.addEventListener('change',e=>{st.drive=e.target.checked;closeInfo();setView(st.view,true);});if(mc)mc.addEventListener('change',e=>{st.mwOn=e.target.checked;look();});}   /* Moving parts only: a view it can't show gives way to cfg.drive.to */
   on('edges',v=>st.edges=v);on('shadows',v=>st.shadows=v);on('merge',v=>st.merge=v);on('lbls',v=>st.labels=v);on('spin',v=>st.spin=v);
   $('#reset').addEventListener('click',()=>jump(()=>setView(st.view,true)));
   const showExp=()=>{expO.textContent=expR.value+'%';};showExp();expR.addEventListener('input',()=>{showExp();if(VIEWS[st.view].explode)tgt.explode=expV()*VIEWS[st.view].explode;});   /* the Spread slider: how far apart the exploded parts are */
@@ -2173,7 +2182,7 @@ const VIEWER={start(cfg){
   $('#pShow').addEventListener('click',()=>{st.hid.clear();st.iso=null;look();});
   function partsSync(){for(const q of PROWS){const k=q.p,p=kp(k),h=k!==p?st.hid.has(k)||st.hid.has(p)||isoOut(p,k):st.hid.has(p)||isoOut(p);q.ck.checked=!h;q.row.classList.toggle('off',h);
       if(q.kids){q.ck.indeterminate=!h&&q.kids.some(x=>st.hid.has(x.p)||isoOut(p,x.p));if(st.pick!==q.seen){q.seen=st.pick;if(st.pick&&kp(st.pick)===p)fold(q,true);}}
-      q.b.setAttribute('aria-pressed',st.pick===k?'true':'false');}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
+      q.b.setAttribute('aria-pressed',st.pick===k?'true':'false');q.b.disabled=dvOut(p);}plist.classList.toggle('colr',st.colr);plist.classList.toggle('csrc',st.csrc);}
   const fsb=$('#fs');if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled))fsb.classList.add('hidden');
   fsb.addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement)(d.exitFullscreen||d.webkitExitFullscreen).call(d);else(stage.requestFullscreen||stage.webkitRequestFullscreen).call(stage);});
   /* Hide panel (P, or the tab on the stage's edge), where the panel sits beside the stage; its width by dragging the line between them, or the arrow keys on it */
@@ -2195,7 +2204,7 @@ const VIEWER={start(cfg){
   const ray2=new THREE.Raycaster(),tmpV=new THREE.Vector3(),camP=new THREE.Vector3();let lastOcc=0,LS=null;ray2.layers.enable(2);
   function placeLabels(now){if(!LS)LS=labels.slice().sort((p,q)=>(PRI[q.part]||1)-(PRI[p.part]||1));
     const foc=st.pick?new Set([st.pick]):st.focus,doOcc=now-lastOcc>200,placed=[],pad=3;if(doOcc)lastOcc=now;
-    for(const l of LS){let sh=st.labels&&!(foc&&!anyOf(foc,l.part))&&!isoOut(l.part)&&!st.hid.has(l.part);if(!sh){l.el.style.opacity=0;continue;}
+    for(const l of LS){let sh=st.labels&&!(foc&&!anyOf(foc,l.part))&&!isoOut(l.part)&&!st.hid.has(l.part)&&!dvOut(l.part);if(!sh){l.el.style.opacity=0;continue;}
       const P0=l.fn();
       if(doOcc){camP.copy(cam.position);const d=P0.distanceTo(camP);ray2.set(camP,tmpV.copy(P0).sub(camP).normalize());ray2.far=d-0.8;
         l.occ=ray2.intersectObject(root,true).some(h=>shown(h.object)&&h.object.userData.part!==l.part&&!(h.object.material.transparent&&h.object.material.opacity<0.5)&&!h.object.userData.decal);}
@@ -2208,9 +2217,9 @@ const VIEWER={start(cfg){
       if(!ok){l.el.style.opacity=0;continue;}placed.push(ok[2],{x0:px-4,y0:py-4,x1:px+4,y1:py+4});
       l.el.style.transform=`translate(${px.toFixed(1)}px,${py.toFixed(1)}px)`;l.sp.style.transform=`translate(${ok[0].toFixed(1)}px,${ok[1].toFixed(1)}px)`;l.el.style.opacity=1;}}
   new ResizeObserver(()=>{labels.forEach(l=>{l.w=0;});}).observe(stage);
-  /* ---------- the state in the URL hash: view, speed, sec=x:-3.5[:f], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
+  /* ---------- the state in the URL hash: view, drive=1, speed, sec=x:-3.5[:f], part, draw=1|ink, colr=part|src, edges=0, shadows=1, merge=0, and the model's own (cfg.hash).
      Read at load and when the hash is edited; written 0.3 s after any change, with replaceState ---------- */
-  function hashOf(){if(esOn()){const s=ES.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();if(st.view!==cfg.startView)h.set('view',st.view);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));
+  function hashOf(){if(esOn()){const s=ES.section();return s?'essay='+s:'essay';}const h=new URLSearchParams();if(st.view!==cfg.startView)h.set('view',st.view);if(st.drive)h.set('drive',1);if(st.speed!==1)h.set('speed',+st.speed.toPrecision(3));if(secMode!=='off')h.set('sec',secMode+':'+(+secOff.toFixed(2))+(secFlip?':f':''));
     if(st.pick)h.set('part',st.pick);if(st.draw)h.set('draw',st.draw==='ink'?'ink':1);if(st.colr||st.csrc)h.set('colr',st.csrc?'src':'part');if(!st.edges)h.set('edges',0);if(st.shadows)h.set('shadows',1);if(!st.merge)h.set('merge',0);
     if(cfg.hash)cfg.hash.write(h);return h.toString().split('%3A').join(':').split('%2C').join(',');}
   function writeHash(){if(!hashReady)return;clearTimeout(hashT);hashT=setTimeout(()=>{remSave();if(location.hash.slice(1)!==hashSeen)return;const h=hashOf();if(h!==hashSeen){history.replaceState(null,'',h?'#'+h:location.pathname+location.search);hashSeen=location.hash.slice(1);}},300);}
@@ -2221,6 +2230,7 @@ const VIEWER={start(cfg){
     const sp=g('speed');setSpeed(sp!=null&&Number.isFinite(+sp)?+sp:1);
     const sc=/^([xyz]):(-?[\d.]+)(:f)?$/.exec(g('sec')||'');document.querySelector(`#secs button[data-v="${sc&&SECDEF[sc[1]]?sc[1]:'off'}"]`).click();
     if(sc&&SECDEF[sc[1]]){secOff=clamp(+sc[2],+secIn.min,+secIn.max);secIn.value=secOff;secFlip=!!sc[3];$('#secFlip').checked=secFlip;applySec();}
+    if(DV){const d=g('drive')==='1';if(d!==st.drive){st.drive=d;look();}}   /* drive=1: Moving parts only */
     if(cfg.hash)cfg.hash.read(g,first);if(!first)setView(v);
     const p=g('part');if(own(INFO,p))showPart(p);else closeInfo();
     const od=DET.find(d=>d.id===g('open'));if(od){panelOn(true);od.open=true;setTimeout(()=>od.scrollIntoView({block:'nearest',behavior:RM.matches?'auto':'smooth'}),first?1200:50);}
@@ -6155,7 +6165,7 @@ const ESSAY=(()=>{
    P1e: the dial, motion work, hands and up-and-down work (js/dial.js); P1f: the gimballed case and the wooden box (js/case.js), with the Box and Case views. */
 
 /* ================= parts registry ================= */
-/* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
+/* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate, pillar, cock, bridge or the ring
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
@@ -6168,13 +6178,13 @@ const PARTS={
   topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the balance opening’s tongue scaled on the sheet',figs:'05 08_1a, 05 08_1b, 05 08_2, 001',c:'#c9d8a8',plate:1,pri:3,
     d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40. On its outer face the maker’s engraving, Gerhard D. WEMPE Hamburg, as on Wempe No. 3955.'+SH,
     sp:'Drawing 05 09 01 (kompl. 05 08 01) · special α-β brass sheet · Ø 85 h6 × 3.35 · barrel cut Ø 42.5 · recess Ø 22 × 0.7 round the fusee · pocket 1.35 deep'},
-  pillars:{t:'Pillars (Pfeiler)',g:0,src:'drawing',sn:'Every size from its sheet but its countersinks and relief grooves, scaled on it',figs:'05 08_11, 001',c:'#707a84',pri:2,
+  pillars:{t:'Pillars (Pfeiler)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet but its countersinks and relief grooves, scaled on it',figs:'05 08_11, 001',c:'#707a84',pri:2,
     d:'Three turned brass pillars hold the plates 19 mm apart. Each sits by its shoulders in a seat in each plate, its spigots in the plates’ reamed holes, a screw from each plate’s outer face in its tapped ends.',
     sp:'Drawing 05 08 00-1 · Ms 58 · body Ø 8.1, 19.6 between the shoulders, 25.3 overall · spigots Ø 4.5 f7 × 2.8 · tapped M2.6 from both ends'},
-  ring:{t:'Movement ring (Werkring)',g:0,src:'drawing',sn:'Its diameters, heights and holes from its sheet; the depths its sheet leaves open fitted from its figures (README)',figs:'05 08_7',c:'#b6bcc2',pri:2,
+  ring:{t:'Movement ring (Werkring)',plate:1,g:0,src:'drawing',sn:'Its diameters, heights and holes from its sheet; the depths its sheet leaves open fitted from its figures (README)',figs:'05 08_7',c:'#b6bcc2',pri:2,
     d:'The ring the movement hangs in, in the case: the pillar plate sits in its seat on a lip, held by three screws whose heads bear on the plate’s rim, and the dial lies in a recess in its flange. Below the lip the ring opens out at 45° toward the dial.',
     sp:'Drawing 05 08 00-3 (revised 6.12.46) · Ø 105.95 × 10.7 · seat Ø 85 H9 × 3 · dial recess Ø 104.0 +0.1 × 0.7 · three M2.6 on Ø 89'},
-  barrelBridge:{t:'Barrel bridge (Federhausbrücke)',g:0,src:'drawing',sn:'Its outline and holes from its sheet; its screws’ and the click screw’s sizes from the coloured section',figs:'05 08_12, 05 08_13, 05 08_14',c:'#d9b36a',pri:2,
+  barrelBridge:{t:'Barrel bridge (Federhausbrücke)',plate:1,g:0,src:'drawing',sn:'Its outline and holes from its sheet; its screws’ and the click screw’s sizes from the coloured section',figs:'05 08_12, 05 08_13, 05 08_14',c:'#d9b36a',pri:2,
     d:'A crescent bridge on the top plate over the barrel, its outer edge turned with the plate’s rim, carrying the barrel arbor’s upper pivot and the click that holds the mainspring’s set-up.',
     sp:'Drawing 05 08 05-1 (kompl. 05 08 05) · Ms 58 sheet · 3.32 thick · chord 73.5, 24 wide'},
   fuseeBush:{t:'Fusee bush (Schneckenfutter)',g:0,src:'drawing',sn:'Every size from its sheet; its screws from the coloured section',figs:'05 08_8, 05 08_2',c:'#e0b45c',pri:1,
@@ -6186,13 +6196,13 @@ const PARTS={
   corkRing:{t:'Cork ring (Korkring)',g:0,src:'drawing',sn:'Named on 05 08 01 and the coloured section, which draws it; no sheet of its own: its sizes scaled on the section by the dust bush’s own figures, its proportions checked on Lange No. 5829; the bowl’s seat it meets is the 6MX’s (estimated for the Wempe)',figs:'coloured section, 05 08_2',c:'#c8a070',pri:1,
     d:'A cork ring on the dust bush’s top, standing a little over it round the winding square. In the case it meets a raised seat round the winding hole on the bowl’s bottom, so dust that comes in through the hole can’t reach the movement: it goes only down the bush to the winding square.',
     sp:'05 08 01-4 · cork · Ø 16.1 × 3.9 high on the bush’s Ø 9.7 neck, its top 0.95 over the neck’s (scaled)'},
-  upperCock:{t:'Upper balance cock (Unruhkloben oben)',g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
+  upperCock:{t:'Upper balance cock (Unruhkloben oben)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
     d:'The cranked cock over the balance, screwed and pinned to the top plate, holding the balance staff’s upper jewel setting over the opening in the plate.',
     sp:'Drawing 05 08 03-1 · Ms 58 profile · 49 long, 15 high, foot 3.2 · setting seat Ø 5.2 H7'},
-  lowerCock:{t:'Lower balance cock (Unruhkloben unten)',g:0,src:'drawing',sn:'Every size from its sheet',figs:'05 08_4',c:'#8fb3a8',pri:2,
+  lowerCock:{t:'Lower balance cock (Unruhkloben unten)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet',figs:'05 08_4',c:'#8fb3a8',pri:2,
     d:'A block screwed and pinned under the top plate, inside the frame, whose lug holds the balance staff’s lower jewel setting about 10 mm under the plate: the balance swings above the plate, its escapement under it.',
     sp:'Drawing 05 08 00-2 (revised 2.12.46) · Ms 58 profile · bar 20 × 8 × 10, lug 3.22 thick · setting seat Ø 5.2 H7'},
-  intermediateBridge:{t:'Intermediate bridge (Zwischenbrücke)',g:0,src:'scaled',sn:'Its holes’ places from the plate’s table; its outline and thickness scaled on its assembly sheet',figs:'05 08_10, 05 08_32.2',c:'#d6c08a',pri:1,
+  intermediateBridge:{t:'Intermediate bridge (Zwischenbrücke)',plate:1,g:0,src:'scaled',sn:'Its holes’ places from the plate’s table; its outline and thickness scaled on its assembly sheet',figs:'05 08_10, 05 08_32.2',c:'#d6c08a',pri:1,
     d:'A straight bridge on the pillar plate’s dial side, across the opening for the intermediate wheel: it carries that wheel’s lower bearing, a brass bush, and the seconds wheel’s lower jewel in its setting.',
     sp:'Drawing 05 08 04 (the bridge 05 08 04-1 not in the set) · about 45.5 × 10 × 3.8 · screws 34.13 apart'},
   centreWheel:{t:'Centre wheel (Minutenrad)',g:1,src:'drawing',sn:'Every size from its sheets; its pinion’s and the wheel’s teeth from their tables, on the cycloidal form',figs:'05 05_1, 05 05_8, 05 05_9, 05 05_10',c:'#e3b75a',pri:3,
@@ -6566,12 +6576,18 @@ const VIEWS={
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
   exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
   escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
+  /* the Hamilton's Train, Fusee and Balance views, aimed at the Wempe's arbors (WD.H: the centre 1, the intermediate 38, the seconds 35, the escape wheel WESC.W, the fusee 10,
+     the barrel 45; the balance WESC.B at its rim's middle, WESC.FY - 1.9). The movement stands train side up (turned about x), so the world's z is the frame's -z */
+  train:{yaw:0.2,pitch:1.05,dist:220,target:[(WD.H[1][0]+WD.H[38][0]+WD.H[35][0]+WESC.W[0]+WD.H[10][0])/5,-10,(WD.H[1][1]+WD.H[38][1]+WD.H[35][1]+WESC.W[1]+WD.H[10][1])/5],see:true},
+  fusee:{yaw:Math.atan2(WD.H[45][1]-WD.H[10][1],WD.H[45][0]-WD.H[10][0]),pitch:0.25,dist:150,target:[(WD.H[10][0]+WD.H[45][0])/2,-11,(WD.H[10][1]+WD.H[45][1])/2],see:true},   /* across the line from the fusee to the barrel, the chain between them */
+  balance:{yaw:-2.5,pitch:0.42,dist:95,target:[WESC.B[0],WESC.FY-1.9,WESC.B[1]]},   /* from outside the plates beyond the balance, the dust bush behind it */
   box:{yaw:0.62,pitch:1.08,dist:620,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right, high enough to read the dial through the lid's glass (at 0.42, until 15 October 2026,
      the lid's front wall hid everything in the box: the dial lies 59 under the glass) */
   case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}},   /* the box open: the bowl in its gimbals */
   transport:{yaw:0.62,pitch:0.62,dist:980,target:[0,-40,0],case:{lid:0,lift:0,over:1}}};   /* the wooden box shut in its outer box, the outer lid open, as the arrangement Boden-Chronometer (51 00_1) draws them */
 /* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0), the outer box shown with its lid open (over); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.',
+  train:'The going train from above, plates see-through: fusee wheel, centre, intermediate, seconds and escape wheels.',fusee:'The barrel, the chain and the fusee, plates see-through.',balance:'Close up on the balance under its cock, with its masses, timing weights and hairspring.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
@@ -6626,6 +6642,10 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid,stay:CS.stay,showOver:v=>{CS.showOver=!!v;}};   /* the box, for audit.py box (geometry-audit-box.js); showOver(1) keeps the outer box shown in every view (bom.py counts it: checks.py's ARM) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);if(Math.abs(PH.MF-fu.MW)>0.002)console.warn('escphys.js MF '+PH.MF+' is not the fusee’s full wind '+fu.MW.toFixed(4));H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
+    /* Moving parts only (the Hamilton's st.drive): the frame, its jewels and bushes, the dial and the case hidden, the barrel see-through so the mainspring shows; the motion work and
+       hands only with Include motion work; the views in the case give way to the Movement view */
+    drive:{hide:['pillarPlate','topPlate','pillars','ring','barrelBridge','fuseeBush','dustBush','corkRing','upperCock','lowerCock','intermediateBridge','balanceJewelsUp','balanceJewelsLow','escEndstoneUp','escJewelUp','escJewelLow','escEndstoneLow','dial',
+      'bowl','closingPlate','bezel','gimbalRing','box','lid','overBox','overLid','caseLock','key'],ghost:['barrel'],mw:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands'],off:['dial','box','case','transport'],to:'movement'},
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];

@@ -4,7 +4,7 @@
    P1e: the dial, motion work, hands and up-and-down work (js/dial.js); P1f: the gimballed case and the wooden box (js/case.js), with the Box and Case views. */
 
 /* ================= parts registry ================= */
-/* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate
+/* Every named part: t name, d what it does (the card), sp drawing numbers and sizes, g its group (PG), c its colour in Colour by part, pri label priority, plate: a plate, pillar, cock, bridge or the ring
    (see-through with See-through), src: where its shape and size come from (SRC), sn: what came from where, figs: the sheets that show it (References/wempe/drawings/,
    by the file's page number). A part's meshes carry its key as userData.partName (movement.js) */
 const SRC={drawing:['The drawings','#2e9d5b','Wempe’s works drawings: a figure on the sheet, or the hole tables’ coordinates'],scaled:['Scaled','#c9a227','measured on a drawing at its scale, or on a photograph of a real one, where the sheet gives no figure'],est:['Estimated','#8f969d','no sheet in the set gives it: sized from the coloured section or a photograph of Wempe 3955']};
@@ -17,13 +17,13 @@ const PARTS={
   topPlate:{t:'Top plate (Oberplatte)',g:0,src:'drawing',sn:'Every hole from its table and sections; the balance opening’s tongue scaled on the sheet',figs:'05 08_1a, 05 08_1b, 05 08_2, 001',c:'#c9d8a8',plate:1,pri:3,
     d:'The upper plate, on the train side, a crescent: it is cut away round the barrel, which the barrel bridge holds. It carries the train’s upper pivots, the fusee’s bush, the two balance cocks (the lower one hangs under it) and the balance holding work in a pocket in its inner face. The three small windows beside the pillars are its auxiliary holes 3, 12 and 40. On its outer face the maker’s engraving, Gerhard D. WEMPE Hamburg, as on Wempe No. 3955.'+SH,
     sp:'Drawing 05 09 01 (kompl. 05 08 01) · special α-β brass sheet · Ø 85 h6 × 3.35 · barrel cut Ø 42.5 · recess Ø 22 × 0.7 round the fusee · pocket 1.35 deep'},
-  pillars:{t:'Pillars (Pfeiler)',g:0,src:'drawing',sn:'Every size from its sheet but its countersinks and relief grooves, scaled on it',figs:'05 08_11, 001',c:'#707a84',pri:2,
+  pillars:{t:'Pillars (Pfeiler)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet but its countersinks and relief grooves, scaled on it',figs:'05 08_11, 001',c:'#707a84',pri:2,
     d:'Three turned brass pillars hold the plates 19 mm apart. Each sits by its shoulders in a seat in each plate, its spigots in the plates’ reamed holes, a screw from each plate’s outer face in its tapped ends.',
     sp:'Drawing 05 08 00-1 · Ms 58 · body Ø 8.1, 19.6 between the shoulders, 25.3 overall · spigots Ø 4.5 f7 × 2.8 · tapped M2.6 from both ends'},
-  ring:{t:'Movement ring (Werkring)',g:0,src:'drawing',sn:'Its diameters, heights and holes from its sheet; the depths its sheet leaves open fitted from its figures (README)',figs:'05 08_7',c:'#b6bcc2',pri:2,
+  ring:{t:'Movement ring (Werkring)',plate:1,g:0,src:'drawing',sn:'Its diameters, heights and holes from its sheet; the depths its sheet leaves open fitted from its figures (README)',figs:'05 08_7',c:'#b6bcc2',pri:2,
     d:'The ring the movement hangs in, in the case: the pillar plate sits in its seat on a lip, held by three screws whose heads bear on the plate’s rim, and the dial lies in a recess in its flange. Below the lip the ring opens out at 45° toward the dial.',
     sp:'Drawing 05 08 00-3 (revised 6.12.46) · Ø 105.95 × 10.7 · seat Ø 85 H9 × 3 · dial recess Ø 104.0 +0.1 × 0.7 · three M2.6 on Ø 89'},
-  barrelBridge:{t:'Barrel bridge (Federhausbrücke)',g:0,src:'drawing',sn:'Its outline and holes from its sheet; its screws’ and the click screw’s sizes from the coloured section',figs:'05 08_12, 05 08_13, 05 08_14',c:'#d9b36a',pri:2,
+  barrelBridge:{t:'Barrel bridge (Federhausbrücke)',plate:1,g:0,src:'drawing',sn:'Its outline and holes from its sheet; its screws’ and the click screw’s sizes from the coloured section',figs:'05 08_12, 05 08_13, 05 08_14',c:'#d9b36a',pri:2,
     d:'A crescent bridge on the top plate over the barrel, its outer edge turned with the plate’s rim, carrying the barrel arbor’s upper pivot and the click that holds the mainspring’s set-up.',
     sp:'Drawing 05 08 05-1 (kompl. 05 08 05) · Ms 58 sheet · 3.32 thick · chord 73.5, 24 wide'},
   fuseeBush:{t:'Fusee bush (Schneckenfutter)',g:0,src:'drawing',sn:'Every size from its sheet; its screws from the coloured section',figs:'05 08_8, 05 08_2',c:'#e0b45c',pri:1,
@@ -35,13 +35,13 @@ const PARTS={
   corkRing:{t:'Cork ring (Korkring)',g:0,src:'drawing',sn:'Named on 05 08 01 and the coloured section, which draws it; no sheet of its own: its sizes scaled on the section by the dust bush’s own figures, its proportions checked on Lange No. 5829; the bowl’s seat it meets is the 6MX’s (estimated for the Wempe)',figs:'coloured section, 05 08_2',c:'#c8a070',pri:1,
     d:'A cork ring on the dust bush’s top, standing a little over it round the winding square. In the case it meets a raised seat round the winding hole on the bowl’s bottom, so dust that comes in through the hole can’t reach the movement: it goes only down the bush to the winding square.',
     sp:'05 08 01-4 · cork · Ø 16.1 × 3.9 high on the bush’s Ø 9.7 neck, its top 0.95 over the neck’s (scaled)'},
-  upperCock:{t:'Upper balance cock (Unruhkloben oben)',g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
+  upperCock:{t:'Upper balance cock (Unruhkloben oben)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet; the relief under its arm from it and from 127-556.04 U30',figs:'05 08_5, 05 08_6',c:'#a8c49a',pri:2,
     d:'The cranked cock over the balance, screwed and pinned to the top plate, holding the balance staff’s upper jewel setting over the opening in the plate.',
     sp:'Drawing 05 08 03-1 · Ms 58 profile · 49 long, 15 high, foot 3.2 · setting seat Ø 5.2 H7'},
-  lowerCock:{t:'Lower balance cock (Unruhkloben unten)',g:0,src:'drawing',sn:'Every size from its sheet',figs:'05 08_4',c:'#8fb3a8',pri:2,
+  lowerCock:{t:'Lower balance cock (Unruhkloben unten)',plate:1,g:0,src:'drawing',sn:'Every size from its sheet',figs:'05 08_4',c:'#8fb3a8',pri:2,
     d:'A block screwed and pinned under the top plate, inside the frame, whose lug holds the balance staff’s lower jewel setting about 10 mm under the plate: the balance swings above the plate, its escapement under it.',
     sp:'Drawing 05 08 00-2 (revised 2.12.46) · Ms 58 profile · bar 20 × 8 × 10, lug 3.22 thick · setting seat Ø 5.2 H7'},
-  intermediateBridge:{t:'Intermediate bridge (Zwischenbrücke)',g:0,src:'scaled',sn:'Its holes’ places from the plate’s table; its outline and thickness scaled on its assembly sheet',figs:'05 08_10, 05 08_32.2',c:'#d6c08a',pri:1,
+  intermediateBridge:{t:'Intermediate bridge (Zwischenbrücke)',plate:1,g:0,src:'scaled',sn:'Its holes’ places from the plate’s table; its outline and thickness scaled on its assembly sheet',figs:'05 08_10, 05 08_32.2',c:'#d6c08a',pri:1,
     d:'A straight bridge on the pillar plate’s dial side, across the opening for the intermediate wheel: it carries that wheel’s lower bearing, a brass bush, and the seconds wheel’s lower jewel in its setting.',
     sp:'Drawing 05 08 04 (the bridge 05 08 04-1 not in the set) · about 45.5 × 10 × 3.8 · screws 34.13 apart'},
   centreWheel:{t:'Centre wheel (Minutenrad)',g:1,src:'drawing',sn:'Every size from its sheets; its pinion’s and the wheel’s teeth from their tables, on the cycloidal form',figs:'05 05_1, 05 05_8, 05 05_9, 05 05_10',c:'#e3b75a',pri:3,
@@ -415,12 +415,18 @@ const VIEWS={
   side:{yaw:Math.PI/2,pitch:0.04,dist:300,target:[0,-16,0],fov:20},
   exploded:{yaw:2.2,pitch:0.3,dist:400,target:[0,-34,0],explode:1},
   escapement:{yaw:2.8,pitch:-0.5,dist:110,target:[WESC.W[0]+1,-16,WESC.W[1]-4],see:true},
+  /* the Hamilton's Train, Fusee and Balance views, aimed at the Wempe's arbors (WD.H: the centre 1, the intermediate 38, the seconds 35, the escape wheel WESC.W, the fusee 10,
+     the barrel 45; the balance WESC.B at its rim's middle, WESC.FY - 1.9). The movement stands train side up (turned about x), so the world's z is the frame's -z */
+  train:{yaw:0.2,pitch:1.05,dist:220,target:[(WD.H[1][0]+WD.H[38][0]+WD.H[35][0]+WESC.W[0]+WD.H[10][0])/5,-10,(WD.H[1][1]+WD.H[38][1]+WD.H[35][1]+WESC.W[1]+WD.H[10][1])/5],see:true},
+  fusee:{yaw:Math.atan2(WD.H[45][1]-WD.H[10][1],WD.H[45][0]-WD.H[10][0]),pitch:0.25,dist:150,target:[(WD.H[10][0]+WD.H[45][0])/2,-11,(WD.H[10][1]+WD.H[45][1])/2],see:true},   /* across the line from the fusee to the barrel, the chain between them */
+  balance:{yaw:-2.5,pitch:0.42,dist:95,target:[WESC.B[0],WESC.FY-1.9,WESC.B[1]]},   /* from outside the plates beyond the balance, the dust bush behind it */
   box:{yaw:0.62,pitch:1.08,dist:620,target:[0,-8,0],case:{lid:0,lift:0}},   /* the box shut, from the front right, high enough to read the dial through the lid's glass (at 0.42, until 15 October 2026,
      the lid's front wall hid everything in the box: the dial lies 59 under the glass) */
   case:{yaw:0.55,pitch:0.68,dist:540,target:[0,-12,0],case:{lid:1,lift:0}},   /* the box open: the bowl in its gimbals */
   transport:{yaw:0.62,pitch:0.62,dist:980,target:[0,-40,0],case:{lid:0,lift:0,over:1}}};   /* the wooden box shut in its outer box, the outer lid open, as the arrangement Boden-Chronometer (51 00_1) draws them */
 /* a view's case (case.js): the lid open (1) or shut (0), the movement in its bowl (lift 0), the outer box shown with its lid open (over); the views without one have it lifted out of the case, train side up */   /* from under the top plate, through it, on the wheel, detent and rollers */
-const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.'};
+const VIEW_DESC={movement:'The movement, train side up.',plan:'The top plate from straight above, 12 o’clock at the top.',dial:'The dial in its case, from above, the lid open.',box:'The chronometer in its wooden box, the lid shut: the dial read through its glass.',case:'The box open: the bowl in its gimbal ring.',transport:'The wooden box in its padded outer box for transport, the outer lid open.',side:'The frame from the side: the plates on their pillars in the movement ring, the cocks and the dust bush over the top plate.',exploded:'Every part lifted apart along the pillars.',escapement:'The escapement under the top plate, seen through it: the escape wheel, the detent and the balance’s rollers.',
+  train:'The going train from above, plates see-through: fusee wheel, centre, intermediate, seconds and escape wheels.',fusee:'The barrel, the chain and the fusee, plates see-through.',balance:'Close up on the balance under its cock, with its masses, timing weights and hairspring.'};
 const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:44,def:3.225},y:{n:[0,1,0],min:-42,max:12,def:-9.5}};   /* the 12-6 and 3-9 planes through a pillar (nos. 49 and 11), and across the pillars between the plates */
 
 /* ================= the page ================= */
@@ -475,6 +481,10 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       if(/[?&]qa\b/.test(location.search))window.__BX={root,ring:CS.ring,bowl:CS.bowl,lid:CS.lid,stay:CS.stay,showOver:v=>{CS.showOver=!!v;}};   /* the box, for audit.py box (geometry-audit-box.js); showOver(1) keeps the outer box shown in every view (bom.py counts it: checks.py's ARM) */
       const fill=new THREE.DirectionalLight(0xfff4e6,0.6);fill.position.set(-160,-420,-240);root.add(fill);   /* a fill from below for the dial side, which faces down here (the viewer's key light is above): without it the white dial reads grey (P1e) */
       const fu=mv.userData.R.fu;HPT=fu.HPT;HRUN=+(fu.NRUN*HPT).toFixed(2);if(Math.abs(PH.MF-fu.MW)>0.002)console.warn('escphys.js MF '+PH.MF+' is not the fusee’s full wind '+fu.MW.toFixed(4));H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;return{root,mv};},   /* the movement train side up; the swing it keeps where the page opens */
+    /* Moving parts only (the Hamilton's st.drive): the frame, its jewels and bushes, the dial and the case hidden, the barrel see-through so the mainspring shows; the motion work and
+       hands only with Include motion work; the views in the case give way to the Movement view */
+    drive:{hide:['pillarPlate','topPlate','pillars','ring','barrelBridge','fuseeBush','dustBush','corkRing','upperCock','lowerCock','intermediateBridge','balanceJewelsUp','balanceJewelsLow','escEndstoneUp','escJewelUp','escJewelLow','escEndstoneLow','dial',
+      'bowl','closingPlate','bezel','gimbalRing','box','lid','overBox','overLid','caseLock','key'],ghost:['barrel'],mw:['cannon','changeWheel','hourWheel','udWheel','udPinion','hands'],off:['dial','box','case','transport'],to:'movement'},
     qaTarget:[0,-11,0],   /* between the plates: what __proj, __unproj and __cam aim at */
     /* labels, each in its part's own frame, so they follow the Exploded view */
     labels:(add,pw)=>{const P=mv.userData.parts,c=WD.PILLARS[2];
