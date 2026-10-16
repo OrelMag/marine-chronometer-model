@@ -49,7 +49,7 @@ REGISTRY=False   # bom.py's registry matches the Hamilton's catalogue numbers on
 DIAL=True
 # fine.py's dial check for the Wempe: its face (dial.js) lists its own holes (userData.holes: the centre, up-and-down and seconds arbors', the screws' sinks and the pins'),
 # its radius userData.R; the rest is the Hamilton's DIALJS: the least height over the printed face of any part above the dial, outside those holes
-DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{if(o.isMesh&&o.userData.surface)face=o;});mv.updateMatrixWorld(true);
+DIALJS='''(()=>{const mv=window.__mv,T=THREE;let face=null;mv.traverse(o=>{let v=true;for(let q=o;q;q=q.parent)if(!q.visible)v=false;if(o.isMesh&&o.userData.surface&&v)face=o;});mv.updateMatrixWorld(true);
  const inv=new T.Matrix4().copy(mv.matrixWorld).invert(),fy=new T.Vector3().setFromMatrixPosition(face.matrixWorld).applyMatrix4(inv).y,R=face.userData.R,holes=face.userData.holes;
  const pn=o=>{for(let p=o;p;p=p.parent)if(p.userData.partName)return p.userData.partName;return '?';};
  let best=null;const v=new T.Vector3(),m=new T.Matrix4();

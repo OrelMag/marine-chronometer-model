@@ -23,6 +23,18 @@ const WFRAME=(()=>{
        Soviet 6MX (Kirov No. 247) moves pillar 39 to 190° (WD.P39_6MX), leaves out the top plate's hole 53 and the upper cock's hole 20: each plate and that cock built once for
        each, the pillar and its screws at 39 in each version's group */
     const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},VER=[['last first',H[39],1],['6mx',WD.P39_6MX,0]];   /* [versions, pillar 39, the drawings' holes 20 and 53] */
+    /* The 6MX's finish: Geneva stripes (Kirov No. 247's plates, bridges and cocks; the Wempe's are hammered, drawn plain gilt), straight, 3.95 mm apart (FFT on plain
+       patches of its top plate, 2_Kirow_247_A.jpg at 8.98 px/mm: 3.73-4.28, and its dial side, 3_Kirow_247_uZ.jpg at 8.63: 3.71-4.35; median), running at 50 deg in each
+       face's own photograph (49.8-50.3 and 48.5-52.1): in plan along (-0.643, 0.766) on the top plate's side, as one sweep over the plate, the cocks and the barrel bridge
+       (the photograph's stripes run on across them), and along (0.643, 0.766) on the dial side (each plate striped from its own face). Across each stripe the photograph's
+       brightness, folded on its pitch and averaged over two patches (each to its brightest): from 1 down to 0.61 and back, a slow fall and a quick rise (G6: the gilt with that
+       profile as its map; solidGeo's UVs are plan mm, (x, -z), the map's u the plan point along the stripes' normal over the pitch). The faces the photographs don't show
+       (the plates' inner faces) take the same */
+    const G6=(th)=>{const PR=[1.000,0.992,0.956,0.918,0.862,0.812,0.761,0.713,0.685,0.657,0.630,0.622,0.628,0.617,0.607,0.605,0.614,0.623,0.635,0.663,0.725,0.839,0.937,0.984],cv=document.createElement('canvas');cv.width=96;cv.height=4;
+      const x=cv.getContext('2d');for(let i=0;i<96;i++){const f=i/4,k=Math.floor(f),t=f-k,g=Math.round(255*(PR[k]*(1-t)+PR[(k+1)%24]*t));x.fillStyle=`rgb(${g},${g},${g})`;x.fillRect(i,0,1,4);}
+      const tx=new THREE.CanvasTexture(cv);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(1/3.95,1/3.95);tx.rotation=th;tx.anisotropy=8;tx.encoding=THREE.sRGBEncoding;
+      const m=M.gilt.clone();m.map=tx;m.needsUpdate=true;return m;};
+    const G6T=G6(-40*D2R),G6D=G6(40*D2R);   /* the stripes' normal in UV (x, -z): (0.766, -0.643) on the top side, (0.766, 0.643) on the dial side */
 
     /* ================= the top plate (Oberplatte, 05 09 01; its assembly 05 08 01) ================= */
     /* Messingblech 4, Sonder Ms α-β (05 09 01's title block: rolled brass, from a 4 × 90 disc turned to 3.5 × 90): drawn gilt, as Wempe 3955's (2_Wempe_3955_A.jpg). 85 h6 × 3.35;
@@ -66,7 +78,7 @@ const WFRAME=(()=>{
       const pk=bool(key,KIT.hull([...C(H[23],4.95,200).filter(q=>dv(q)*sT<=0),X,...C(H[51],4,160)])),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
       if(pk.uni.length!==1||fl.length!==1)console.warn('topPlate: the pocket and the balance opening cross in',pk.uni.length,'and',fl.length,'loops');
       F.push({p:pk.A2,a:y0,b:y1},{p:U,a:y1-1.35,b:y1,floorOut:fl[0]});
-      tag(mesh(rv(tp,V),solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050901');}
+      tag(mesh(rv(tp,V),solidGeo([{loop:out,y0,y1,F}]),DR?M.gilt:G6T),'050901');}
     /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's (39's in each version's group) */
     const S=WD.PSCR,P3=(par,f)=>{for(const q of[H[11],H[49]])f(par,q);for(const[V,P39]of VER)f(rv(par,V),P39);};
     P3(tp,(g,[x,z])=>tag(screw(g,x,z,TT,S.r,S.h,S.len,S.rs,M.brass),'WN-57'));
@@ -83,7 +95,7 @@ const WFRAME=(()=>{
        punches it 4.4: the 7 drawn and labelled is taken). A notch at 6 o'clock in its rim for the pin that the movement ring's sheet drills across the joint at assembly (05 08 00-3,
        "wird bei Montage der Unterplatte gebohrt", Ø 1) */
     const pp=part('pillarPlate',0),pinAt=add([0,0],brg(180),R);
-    for(const[V,P39]of VER){const y0=0,y1=PPT,F=[],out=bool(C([0,0],R,720),C(pinAt,0.5,32,0.5)).dAB[0];
+    for(const[V,P39,DR]of VER){const y0=0,y1=PPT,F=[],out=bool(C([0,0],R,720),C(pinAt,0.5,32,0.5)).dAB[0];
       F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.82/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
         T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
       for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
@@ -92,7 +104,7 @@ const WFRAME=(()=>{
       F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
       for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),A(q,WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
       F.push({p:twoCircles(H[38],24.5/2,H[35],6.0/2),a:y0,b:y1});
-      tag(mesh(rv(pp,V),solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050802-1');}
+      tag(mesh(rv(pp,V),solidGeo([{loop:out,y0,y1,F}]),DR?M.gilt:G6D),'050802-1');}
     /* its pillar screws (WN-56) from the dial side, in a frame turned over so their heads face +y */
     {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);P3(rg,(g,[x,z])=>tag(screw(g,x,-z,-PPT,S.r,S.h,S.len,S.rs,M.brass),'WN-56'));}
 
@@ -122,9 +134,11 @@ const WFRAME=(()=>{
       const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
         ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};
       tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
+      const FLG=[];   /* each version's flange, the pin pressed across it with it (fine.py takes pieces fixed to each other by their shared group) */
+      for(const[V,AS]of/** @type {[string,number[]][]} */([['last first',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
-        ...[354,120,240].map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:10.35-2.5,b:11.05}))]};   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
-      tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
+        ...AS.map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:10.35-2.5,b:11.05}))]};   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
+      const gF=rv(rg,V);FLG.push(gF);tag(mesh(gF,solidGeo([fl]),M.plateSolid),'050800-3',1);}
       /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
       for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,2.25,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
       tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
@@ -134,7 +148,7 @@ const WFRAME=(()=>{
          hole meets the cone at r 44.4). It stands 2.0 out of the flange (the coloured section, 9.4 px/mm: 2.0) into the notch in the bezel's recess (case.js), which sets the
          movement's turn in the case; its inner end at r 45.3, inside the cone's face (45.2 at the pin's top edge), 9.7 long, its hole across the turned flange not cut
          (estimated). Until 15 October 2026 drawn Ø 1.1 at 6 o'clock (the sheet's hole Ø 1.1 and its "1,6" read the other way round, and the plan's top taken for 6) */
-      {const p=tag(cylBetween(rg,0.8,45.3,55.0,M.steel,0,0,16),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+55.0)/2);}}
+      for(const g of FLG){const p=tag(cylBetween(g,0.8,45.3,55.0,M.steel,0,0,16),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+55.0)/2);}}
 
     /* ================= the barrel bridge (Federhausbrücke, 05 08 05-1; kompl. 05 08 05) ================= */
     /* Messingblech 3,5 Ms 58, 3.32 -0.04 thick, on the top plate's outer face over the barrel. Its outer edge the plate's rim ("mit der Oberplatte überdrehen"), its inner edge a
@@ -148,7 +162,7 @@ const WFRAME=(()=>{
        drawn square to hole 45's line at 18.5 (42 then 8.29 from it), the 7.7 read along the chord from the point to pin 41 and the "5" as the corner's offset from the chord,
        which put 48 4.5 from the short edge. Holes: 45 the barrel arbor's, 3.9 ±0.01; 46 the click's screw, M2.6; 42, 48 clear 2.8 for its screws; 41, 47
        its steady pins, 1.585 -0.005, 2.5 deep (their holes' 90° countersink 0.3 is left out). Drawn gilt */
-    const bb=part('barrelBridge',-52);
+    const bb=part('barrelBridge',-52),BBG=VER.map(([V])=>rv(bb,V));   /* each version's bridge (the 6MX's striped) with its pins in one group */
     {const dt=(p,q)=>p[0]*q[0]+p[1]*q[1],sc=(p,k)=>[p[0]*k,p[1]*k],v=sub(H[45],H[42]),l=Math.hypot(v[0],v[1]),u=sc(v,1/l),ca=-0.7/l;   /* n·(45 − 42) = 7 − 7.7 */
       const n=/** @type {number[]} */([-1,1].map(s=>add(sc(u,ca),[-u[1],u[0]],s*Math.sqrt(1-ca*ca))).find(q=>dt(q,H[45])>0)),c=dt(n,H[45])-7,t=(q=>q[1]<0?q:[-q[0],-q[1]])([n[1],-n[0]]);
       const c30=Math.cos(30*D2R),e=add(sc(t,c30),n,0.5),m=add(sc(t,-0.5),n,c30),kE=dt(m,H[48])-5*Math.sign(dt(m,H[45])-dt(m,H[48]));   /* the short edge: along e, m·p = kE, 5 beyond 48 */
@@ -156,11 +170,11 @@ const WFRAME=(()=>{
       const aB=Math.atan2(Bp[1],Bp[0]),aT=Math.atan2(Tp[1],Tp[0]),an=Math.atan2(n[1],n[0]);let da=((aT-aB)%TAU+TAU)%TAU;if(Math.abs(((an-aB)%TAU+TAU)%TAU)>da)da-=TAU;   /* round the rim through n */
       const N=Math.ceil(Math.abs(da)*R/0.1),arc=[...Array(N-1).keys()].map(i=>{const a=aB+da*(i+1)/N;return[R*Math.cos(a),R*Math.sin(a)];});
       const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),B(H[41],rPinQ,y1,2.5),B(H[47],rPinQ,y1,2.5)];
-      tag(mesh(bb,solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]),M.gilt),'050805-1');PL.bbChord=[Bp,Cp];}
+      const bg=solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]);VER.forEach(([,,DR],i)=>tag(mesh(BBG[i],bg,DR?M.gilt:G6T),'050805-1'));PL.bbChord=[Bp,Cp];}
     /* its screws (WN-55 in the coloured section): heads Ø 6.4 × 3.0, brass (Wempe 3955), the shank 6.2, through the bridge and 2.9 into the plate: scaled on the coloured section (estimated) */
     for(const k of[42,48])tag(screw(bb,H[k][0],H[k][1],TT-3.32,3.2,3.0,6.2,1.3,M.brass),'WN-55');
     /* its steady pins (WN-203, 05 08 05): Ø 1.6, 1.3 proud of its face (sure), 3 long (as the balance cock's on 127-556.04 U30: estimated) */
-    for(const k of[41,47])tag(cylBetween(bb,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.bb');
+    for(const g of BBG)for(const k of[41,47])tag(cylBetween(g,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.bb');
     /* the click (Sperrkegel, 05 08 05-2, revised 25.5.48): Messingblech 3 Ms 58 federhart, so its own spring (no separate spring is drawn); 2.6 -0.03/-0.05 thick on the bridge's
        face, turning on a shouldered screw (WN-22) in hole 46. Its outline in its own frame (x from its hole toward its nose, y away from its base line), from 05 08 05-2 at 5:1:
        the hole Ø 3.2 +0.03; 17.4 long; the base 2.81 under the hole (scaled); the nose r 1 at 7.5 from the hole; the beak 3.5 high at the base's other end, its tip 9.7 from the
@@ -247,7 +261,7 @@ const WFRAME=(()=>{
       foot.F=[T(H[8],rCl26,foot.y0,foot.y1),B(H[6],rPinQ,foot.y1,2.5),B(H[50],rPinQ,foot.y1,2.5)];web.F=[B(H[9],rPinQ,web.y1,2.5)];
       /* the auxiliary hole 20 (Ø 2.8) in the drawings' versions only: the 6MX's cock has none (Altmeppen's list: no window in the upper cock; his comparison's arrow on the
          Wempe's hole there; Kirov No. 247's cock is plain where the overlay puts 20: sure) */
-      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),M.gilt),'050803-1');});}
+      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),DR?M.gilt:G6T),'050803-1');});}
     /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
     for(const g of UCG)tag(screw(g,H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,M.blued),'WN-ucs');
     /* its steady pins (hole numbers 6, 9, 50; their WN not given): Ø 1.6, 3 long, 1.3 proud (127-556.04 U30: sure for that cock) */
@@ -278,13 +292,13 @@ const WFRAME=(()=>{
        hole Ø 5.2 straight through, the setting filling it (train.js: the section's hatched walls run the bridge's full thickness, their top about 0.2 under the plate side's
        face: likely). Until 15 October 2026 both were sunk Ø 6.2 from the plate side, 0.7 and 1.7 deep (estimated; the section draws neither). Drawn gilt (Wempe 3955's,
        3_Wempe_3955_uZ.jpg) */
-    const zb=part('intermediateBridge',18);
+    const zb=part('intermediateBridge',18),ZBG=VER.map(([V])=>rv(zb,V));   /* each version's bridge (the 6MX's striped) with its pins */
     {const d=unit(sub(H[28],H[43])),m=[(H[28][0]+H[43][0])/2,(H[28][1]+H[43][1])/2],y0=PPT,y1=PPT+3.8;
       const F=[T(H[28],rCl26,y0,y1),T(H[43],rCl26,y0,y1),B(H[28],2.2,y1,2.0),B(H[43],2.2,y1,2.0),A(H[29],rPinQ,y0,2.5),A(H[44],rPinQ,y0,2.5),T(H[38],4.3/2,y0,y1),{p:C(H[38],2.85,180),q:C(H[38],2.16,180),a:y0,b:y0+0.69},T(H[35],5.2/2,y0,y1)];
-      tag(mesh(zb,solidGeo([{loop:stadiumPts(add(m,d,-17.75),add(m,d,17.75),10),y0,y1,F}]),M.gilt),'050804-1');
+      const zg=solidGeo([{loop:stadiumPts(add(m,d,-17.75),add(m,d,17.75),10),y0,y1,F}]);VER.forEach(([,,DR],i)=>tag(mesh(ZBG[i],zg,DR?M.gilt:G6D),'050804-1'));
       const g=new THREE.Group();g.rotation.x=Math.PI;zb.add(g);
       for(const k of[28,43])tag(screw(g,H[k][0],-H[k][1],-(PPT+1.8),2.1,1.9,4.7,1.3,M.brass),'WN-52');   /* heads Ø 4.2 × 1.9 (Wempe 3955 4.4), just under the bridge's face, M2.6 × 4.7 into the plate: estimated */
-      for(const k of[29,44])tag(cylBetween(zb,rPin,PPT-1.3,PPT+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.zb');}
+      for(const g of ZBG)for(const k of[29,44])tag(cylBetween(g,rPin,PPT-1.3,PPT+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.zb');}
     return PL;}
   return{build,TT,TI};
 })();

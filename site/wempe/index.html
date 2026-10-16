@@ -528,7 +528,7 @@ html.essay-on,html.essay-on body{overflow:hidden}
         <h3 class="sub-h">Between the barrel and the fusee</h3>
         <div class="seg" id="conn"><button data-v="chain" aria-pressed="true" title="The chain, 05 07 04 (1941): 374 links at a 2.05 pitch, 0.82 thick, as on Wempe 3955 and Lange 5177">Chain (05 07 04)</button><button data-v="band" aria-pressed="false" title="The steel band, 05 07 03 (1943): 0.22 thick, 730 long, with its two brazed hooks, as on Greenwich's wartime Wempe">Band (05 07 03)</button></div>
         <h3 class="sub-h">Dial</h3>
-        <div class="seg" id="dialSt"><button data-v="wempe" aria-pressed="true" title="Wempe's printing, traced on a photograph of Wempe No. 3955's dial: CHRONOMETERWERKE WEMPE HAMBURG and the anchor">Wempe, Hamburg (as No. 3955)</button><button data-v="lange" aria-pressed="false" title="Lange's printing, traced on a photograph of A. Lange &amp; Söhne No. 5177's dial (its rust left out): A. LANGE &amp; SÖHNE GLASHÜTTE B/DRESDEN, Auf and Ab over the up-and-down dial">A. Lange &amp; Söhne, Glashütte (as No. 5177)</button></div>
+        <div class="seg" id="dialSt"><button data-v="wempe" aria-pressed="true" title="Wempe's printing, traced on a photograph of Wempe No. 3955's dial: CHRONOMETERWERKE WEMPE HAMBURG and the anchor">Wempe, Hamburg (as No. 3955)</button><button data-v="lange" aria-pressed="false" title="Lange's printing, traced on a photograph of A. Lange &amp; Söhne No. 5177's dial (its rust left out): A. LANGE &amp; SÖHNE GLASHÜTTE B/DRESDEN, Auf and Ab over the up-and-down dial">A. Lange &amp; Söhne, Glashütte (as No. 5177)</button><button data-v="kirov" aria-pressed="false" title="The Soviet 6MX's printing, traced on a photograph of Kirov No. 247's dial (1952): 1МЧЗ ИМЕНИ КИРОВА, СПУСК and ЗАВОД over the up-and-down dial, its number in red">1st Moscow Watch Factory (as Kirov No. 247)</button></div>
         <h3 class="sub-h">Version</h3>
         <div class="seg" id="rev"><button data-v="last" aria-pressed="true" title="Each sheet as last revised, about 1946-48: the escape wheel and rollers 1.8 mm under the top plate, the detent block with its upright (05 04 01-4, 1943)">As last revised</button><button data-v="first" aria-pressed="false" title="The parts the later revisions replaced, as first drawn in 1940-41, as Wempe 3955 is made: the escape wheel just under the top plate on its 1941 arbor (05 04_7.1), the 1941 staff with its brass collar (05 04_5), the detent block with its long arm and cone (05 04_1)">As first drawn</button><button data-v="6mx" aria-pressed="false" title="The Soviet copy made from the drawings by the 1st Moscow Watch Factory, as Kirov No. 247 (1952) is made">Soviet 6MX (Kirov No. 247, 1952)</button></div>
         <p class="note" style="margin:6px 0 0">Where a sheet was revised, the model is built as last revised; As first drawn shows the parts as the earlier sheets drew them. Figures that changed only a tolerance are on the parts' cards. Soviet 6MX shows the copy the 1st Moscow Watch Factory made from the drawings, as Kirov No. 247 of 1952 is made.</p>
@@ -2345,6 +2345,18 @@ const WFRAME=(()=>{
        Soviet 6MX (Kirov No. 247) moves pillar 39 to 190° (WD.P39_6MX), leaves out the top plate's hole 53 and the upper cock's hole 20: each plate and that cock built once for
        each, the pillar and its screws at 39 in each version's group */
     const rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},VER=[['last first',H[39],1],['6mx',WD.P39_6MX,0]];   /* [versions, pillar 39, the drawings' holes 20 and 53] */
+    /* The 6MX's finish: Geneva stripes (Kirov No. 247's plates, bridges and cocks; the Wempe's are hammered, drawn plain gilt), straight, 3.95 mm apart (FFT on plain
+       patches of its top plate, 2_Kirow_247_A.jpg at 8.98 px/mm: 3.73-4.28, and its dial side, 3_Kirow_247_uZ.jpg at 8.63: 3.71-4.35; median), running at 50 deg in each
+       face's own photograph (49.8-50.3 and 48.5-52.1): in plan along (-0.643, 0.766) on the top plate's side, as one sweep over the plate, the cocks and the barrel bridge
+       (the photograph's stripes run on across them), and along (0.643, 0.766) on the dial side (each plate striped from its own face). Across each stripe the photograph's
+       brightness, folded on its pitch and averaged over two patches (each to its brightest): from 1 down to 0.61 and back, a slow fall and a quick rise (G6: the gilt with that
+       profile as its map; solidGeo's UVs are plan mm, (x, -z), the map's u the plan point along the stripes' normal over the pitch). The faces the photographs don't show
+       (the plates' inner faces) take the same */
+    const G6=(th)=>{const PR=[1.000,0.992,0.956,0.918,0.862,0.812,0.761,0.713,0.685,0.657,0.630,0.622,0.628,0.617,0.607,0.605,0.614,0.623,0.635,0.663,0.725,0.839,0.937,0.984],cv=document.createElement('canvas');cv.width=96;cv.height=4;
+      const x=cv.getContext('2d');for(let i=0;i<96;i++){const f=i/4,k=Math.floor(f),t=f-k,g=Math.round(255*(PR[k]*(1-t)+PR[(k+1)%24]*t));x.fillStyle=`rgb(${g},${g},${g})`;x.fillRect(i,0,1,4);}
+      const tx=new THREE.CanvasTexture(cv);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(1/3.95,1/3.95);tx.rotation=th;tx.anisotropy=8;tx.encoding=THREE.sRGBEncoding;
+      const m=M.gilt.clone();m.map=tx;m.needsUpdate=true;return m;};
+    const G6T=G6(-40*D2R),G6D=G6(40*D2R);   /* the stripes' normal in UV (x, -z): (0.766, -0.643) on the top side, (0.766, 0.643) on the dial side */
 
     /* ================= the top plate (Oberplatte, 05 09 01; its assembly 05 08 01) ================= */
     /* Messingblech 4, Sonder Ms α-β (05 09 01's title block: rolled brass, from a 4 × 90 disc turned to 3.5 × 90): drawn gilt, as Wempe 3955's (2_Wempe_3955_A.jpg). 85 h6 × 3.35;
@@ -2388,7 +2400,7 @@ const WFRAME=(()=>{
       const pk=bool(key,KIT.hull([...C(H[23],4.95,200).filter(q=>dv(q)*sT<=0),X,...C(H[51],4,160)])),U=pk.uni[0],fl=pk.dBA.sort((a,b)=>Math.abs(area(b))-Math.abs(area(a)));
       if(pk.uni.length!==1||fl.length!==1)console.warn('topPlate: the pocket and the balance opening cross in',pk.uni.length,'and',fl.length,'loops');
       F.push({p:pk.A2,a:y0,b:y1},{p:U,a:y1-1.35,b:y1,floorOut:fl[0]});
-      tag(mesh(rv(tp,V),solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050901');}
+      tag(mesh(rv(tp,V),solidGeo([{loop:out,y0,y1,F}]),DR?M.gilt:G6T),'050901');}
     /* its pillar screws (WN-57) from its outer face into the pillars' tapped ends (PSCR), brass as Wempe 3955's (39's in each version's group) */
     const S=WD.PSCR,P3=(par,f)=>{for(const q of[H[11],H[49]])f(par,q);for(const[V,P39]of VER)f(rv(par,V),P39);};
     P3(tp,(g,[x,z])=>tag(screw(g,x,z,TT,S.r,S.h,S.len,S.rs,M.brass),'WN-57'));
@@ -2405,7 +2417,7 @@ const WFRAME=(()=>{
        punches it 4.4: the 7 drawn and labelled is taken). A notch at 6 o'clock in its rim for the pin that the movement ring's sheet drills across the joint at assembly (05 08 00-3,
        "wird bei Montage der Unterplatte gebohrt", Ø 1) */
     const pp=part('pillarPlate',0),pinAt=add([0,0],brg(180),R);
-    for(const[V,P39]of VER){const y0=0,y1=PPT,F=[],out=bool(C([0,0],R,720),C(pinAt,0.5,32,0.5)).dAB[0];
+    for(const[V,P39,DR]of VER){const y0=0,y1=PPT,F=[],out=bool(C([0,0],R,720),C(pinAt,0.5,32,0.5)).dAB[0];
       F.push(T(H[1],rJ,y0,y1),T(H[2],rH35,y0,y1),T(H[3],rH35,y0,y1),T(H[4],0.9/2,y0,y1),T(H[10],2.82/2,y0,y1),T(H[12],rH35,y0,y1),T(H[40],rH35,y0,y1),T(H[19],rH35,y0,y1),
         T(H[23],7/2,y0,y1),T(H[45],2.90/2,y0,y1),T(H[26],2.50/2,y0,y1));
       for(const s of[-1,1])F.push(T(add(H[26],[-Math.cos(37*D2R),Math.sin(37*D2R)],3.5*s),rM12,y0,y1));
@@ -2414,7 +2426,7 @@ const WFRAME=(()=>{
       F.push(T(H[30],rJ,y0,y1),{p:C(H[30],5.206/2),a:y0,b:y1-0.5});for(const s of[-1,1])F.push(T(add(H[30],[1,0],3.5*s),rM12,y0,y1));
       for(const q of[H[11],P39,H[49]])F.push(T(q,WD.PIL_HOLE,y0,y1),A(q,WD.PIL_SEAT[0],y0,WD.PIL_SEAT[1]));
       F.push({p:twoCircles(H[38],24.5/2,H[35],6.0/2),a:y0,b:y1});
-      tag(mesh(rv(pp,V),solidGeo([{loop:out,y0,y1,F}]),M.gilt),'050802-1');}
+      tag(mesh(rv(pp,V),solidGeo([{loop:out,y0,y1,F}]),DR?M.gilt:G6D),'050802-1');}
     /* its pillar screws (WN-56) from the dial side, in a frame turned over so their heads face +y */
     {const rg=new THREE.Group();rg.rotation.x=Math.PI;pp.add(rg);P3(rg,(g,[x,z])=>tag(screw(g,x,-z,-PPT,S.r,S.h,S.len,S.rs,M.brass),'WN-56'));}
 
@@ -2444,9 +2456,11 @@ const WFRAME=(()=>{
       const band={loop:C([0,0],96/2,nS),y0:0.35,y1:6.35,F:[{p:bb.uni[0],a:0.35,b:3.35,floorOut:bb.dAB[0]},{p:bb.B2,a:0.35,b:5.35},{p:c41,a:0.35,b:6.35},{p:c41,q:C([0,0],42.5,nC),a:5.35,b:6.35},
         ...[340,100,220].map(b=>T(add([0,0],brg(b),89/2),rM26,0.35,6.35))]};
       tag(mesh(rg,solidGeo([band]),M.plateSolid),'050800-3');
+      const FLG=[];   /* each version's flange, the pin pressed across it with it (fine.py takes pieces fixed to each other by their shared group) */
+      for(const[V,AS]of/** @type {[string,number[]][]} */([['last first',[354,120,240]],['6mx',[354,114,234]]])){   /* the 6MX's dial screws at 114, 234 and 354 (dial.js) */
       const fl={loop:C([0,0],105.95/2,1000),y0:6.35,y1:11.05,F:[{p:C([0,0],42.5,nC),q:C([0,0],93/2,nC),a:6.35,b:11.05},{p:C([0,0],104/2,1000),a:10.35,b:11.05},T(add([0,0],brg(-6),50.5),1.1/2,6.35,11.05),
-        ...[354,120,240].map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:10.35-2.5,b:11.05}))]};   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
-      tag(mesh(rg,solidGeo([fl]),M.plateSolid),'050800-3',1);
+        ...AS.map(a=>({p:C([50.5*Math.sin(a*D2R),-50.5*Math.cos(a*D2R)],0.52),a:10.35-2.5,b:11.05}))]};   /* the dial's three screws (05 02 00-4: at 354, 120 and 240 deg from 12 seen from the dial, r 50.5), tapped M1 2.5 deep into the recess's floor (not on the ring's sheet, drilled at assembly as its dial pin hole: estimated; P1e) */
+      const gF=rv(rg,V);FLG.push(gF);tag(mesh(gF,solidGeo([fl]),M.plateSolid),'050800-3',1);}
       /* its three screws (WN number not read): heads Ø 6.2 × 2.25, brass, the shank 6.3, scaled on the coloured section (estimated); head on the plate's inner face */
       for(const b of[340,100,220]){const q=add([0,0],brg(b),89/2);headOn(tag(screw(rg,q[0],q[1],0,3.1,2.25,6.3,1.3,M.brass),'WN-rs'),'ring','pillarPlate');}
       tag(cylBetween(rg,0.49,0.1,5.35,M.steel,pinAt[0],pinAt[1],12),'WN-201');   /* the plate's pin (Stellstift WN-201 in the coloured section), Ø 1, its top 0.1 under the plate's face (drawn flush: estimated) */
@@ -2456,7 +2470,7 @@ const WFRAME=(()=>{
          hole meets the cone at r 44.4). It stands 2.0 out of the flange (the coloured section, 9.4 px/mm: 2.0) into the notch in the bezel's recess (case.js), which sets the
          movement's turn in the case; its inner end at r 45.3, inside the cone's face (45.2 at the pin's top edge), 9.7 long, its hole across the turned flange not cut
          (estimated). Until 15 October 2026 drawn Ø 1.1 at 6 o'clock (the sheet's hole Ø 1.1 and its "1,6" read the other way round, and the plan's top taken for 6) */
-      {const p=tag(cylBetween(rg,0.8,45.3,55.0,M.steel,0,0,16),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+55.0)/2);}}
+      for(const g of FLG){const p=tag(cylBetween(g,0.8,45.3,55.0,M.steel,0,0,16),'WN-202');p.rotation.x=Math.PI/2;p.position.set(0,11.05-2.8,-(45.3+55.0)/2);}}
 
     /* ================= the barrel bridge (Federhausbrücke, 05 08 05-1; kompl. 05 08 05) ================= */
     /* Messingblech 3,5 Ms 58, 3.32 -0.04 thick, on the top plate's outer face over the barrel. Its outer edge the plate's rim ("mit der Oberplatte überdrehen"), its inner edge a
@@ -2470,7 +2484,7 @@ const WFRAME=(()=>{
        drawn square to hole 45's line at 18.5 (42 then 8.29 from it), the 7.7 read along the chord from the point to pin 41 and the "5" as the corner's offset from the chord,
        which put 48 4.5 from the short edge. Holes: 45 the barrel arbor's, 3.9 ±0.01; 46 the click's screw, M2.6; 42, 48 clear 2.8 for its screws; 41, 47
        its steady pins, 1.585 -0.005, 2.5 deep (their holes' 90° countersink 0.3 is left out). Drawn gilt */
-    const bb=part('barrelBridge',-52);
+    const bb=part('barrelBridge',-52),BBG=VER.map(([V])=>rv(bb,V));   /* each version's bridge (the 6MX's striped) with its pins in one group */
     {const dt=(p,q)=>p[0]*q[0]+p[1]*q[1],sc=(p,k)=>[p[0]*k,p[1]*k],v=sub(H[45],H[42]),l=Math.hypot(v[0],v[1]),u=sc(v,1/l),ca=-0.7/l;   /* n·(45 − 42) = 7 − 7.7 */
       const n=/** @type {number[]} */([-1,1].map(s=>add(sc(u,ca),[-u[1],u[0]],s*Math.sqrt(1-ca*ca))).find(q=>dt(q,H[45])>0)),c=dt(n,H[45])-7,t=(q=>q[1]<0?q:[-q[0],-q[1]])([n[1],-n[0]]);
       const c30=Math.cos(30*D2R),e=add(sc(t,c30),n,0.5),m=add(sc(t,-0.5),n,c30),kE=dt(m,H[48])-5*Math.sign(dt(m,H[45])-dt(m,H[48]));   /* the short edge: along e, m·p = kE, 5 beyond 48 */
@@ -2478,11 +2492,11 @@ const WFRAME=(()=>{
       const aB=Math.atan2(Bp[1],Bp[0]),aT=Math.atan2(Tp[1],Tp[0]),an=Math.atan2(n[1],n[0]);let da=((aT-aB)%TAU+TAU)%TAU;if(Math.abs(((an-aB)%TAU+TAU)%TAU)>da)da-=TAU;   /* round the rim through n */
       const N=Math.ceil(Math.abs(da)*R/0.1),arc=[...Array(N-1).keys()].map(i=>{const a=aB+da*(i+1)/N;return[R*Math.cos(a),R*Math.sin(a)];});
       const y0=TT-3.32,y1=TT,F=[T(H[45],3.9/2,y0,y1),T(H[46],rM26,y0,y1),T(H[42],rCl26,y0,y1),T(H[48],rCl26,y0,y1),B(H[41],rPinQ,y1,2.5),B(H[47],rPinQ,y1,2.5)];
-      tag(mesh(bb,solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]),M.gilt),'050805-1');PL.bbChord=[Bp,Cp];}
+      const bg=solidGeo([{loop:[Bp,...arc,Tp,Cp],y0,y1,F}]);VER.forEach(([,,DR],i)=>tag(mesh(BBG[i],bg,DR?M.gilt:G6T),'050805-1'));PL.bbChord=[Bp,Cp];}
     /* its screws (WN-55 in the coloured section): heads Ø 6.4 × 3.0, brass (Wempe 3955), the shank 6.2, through the bridge and 2.9 into the plate: scaled on the coloured section (estimated) */
     for(const k of[42,48])tag(screw(bb,H[k][0],H[k][1],TT-3.32,3.2,3.0,6.2,1.3,M.brass),'WN-55');
     /* its steady pins (WN-203, 05 08 05): Ø 1.6, 1.3 proud of its face (sure), 3 long (as the balance cock's on 127-556.04 U30: estimated) */
-    for(const k of[41,47])tag(cylBetween(bb,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.bb');
+    for(const g of BBG)for(const k of[41,47])tag(cylBetween(g,rPin,TT-1.7,TT+1.3,M.steel,H[k][0],H[k][1],16),'WN-203.bb');
     /* the click (Sperrkegel, 05 08 05-2, revised 25.5.48): Messingblech 3 Ms 58 federhart, so its own spring (no separate spring is drawn); 2.6 -0.03/-0.05 thick on the bridge's
        face, turning on a shouldered screw (WN-22) in hole 46. Its outline in its own frame (x from its hole toward its nose, y away from its base line), from 05 08 05-2 at 5:1:
        the hole Ø 3.2 +0.03; 17.4 long; the base 2.81 under the hole (scaled); the nose r 1 at 7.5 from the hole; the beak 3.5 high at the base's other end, its tip 9.7 from the
@@ -2569,7 +2583,7 @@ const WFRAME=(()=>{
       foot.F=[T(H[8],rCl26,foot.y0,foot.y1),B(H[6],rPinQ,foot.y1,2.5),B(H[50],rPinQ,foot.y1,2.5)];web.F=[B(H[9],rPinQ,web.y1,2.5)];
       /* the auxiliary hole 20 (Ø 2.8) in the drawings' versions only: the 6MX's cock has none (Altmeppen's list: no window in the upper cock; his comparison's arrow on the
          Wempe's hole there; Kirov No. 247's cock is plain where the overlay puts 20: sure) */
-      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),M.gilt),'050803-1');});}
+      VER.forEach(([,,DR],i)=>{thin.F=DR?[...thF,T(H[20],rCl26,thin.y0,thin.y1)]:thF;tag(mesh(UCG[i],solidGeo(cells.map(q=>({loop:q.L.map(P),y0:q.y0,y1:q.y1,F:q.F||[]}))),DR?M.gilt:G6T),'050803-1');});}
     /* its screw (hole 8; its WN number not read): head Ø 6.4 × 3.0, blued (Wempe 3955), scaled on the coloured section; M2.6 through the foot and 3.0 into the plate (estimated) */
     for(const g of UCG)tag(screw(g,H[8][0],H[8][1],TT-3.2,3.2,3.0,6.2,1.3,M.blued),'WN-ucs');
     /* its steady pins (hole numbers 6, 9, 50; their WN not given): Ø 1.6, 3 long, 1.3 proud (127-556.04 U30: sure for that cock) */
@@ -2600,13 +2614,13 @@ const WFRAME=(()=>{
        hole Ø 5.2 straight through, the setting filling it (train.js: the section's hatched walls run the bridge's full thickness, their top about 0.2 under the plate side's
        face: likely). Until 15 October 2026 both were sunk Ø 6.2 from the plate side, 0.7 and 1.7 deep (estimated; the section draws neither). Drawn gilt (Wempe 3955's,
        3_Wempe_3955_uZ.jpg) */
-    const zb=part('intermediateBridge',18);
+    const zb=part('intermediateBridge',18),ZBG=VER.map(([V])=>rv(zb,V));   /* each version's bridge (the 6MX's striped) with its pins */
     {const d=unit(sub(H[28],H[43])),m=[(H[28][0]+H[43][0])/2,(H[28][1]+H[43][1])/2],y0=PPT,y1=PPT+3.8;
       const F=[T(H[28],rCl26,y0,y1),T(H[43],rCl26,y0,y1),B(H[28],2.2,y1,2.0),B(H[43],2.2,y1,2.0),A(H[29],rPinQ,y0,2.5),A(H[44],rPinQ,y0,2.5),T(H[38],4.3/2,y0,y1),{p:C(H[38],2.85,180),q:C(H[38],2.16,180),a:y0,b:y0+0.69},T(H[35],5.2/2,y0,y1)];
-      tag(mesh(zb,solidGeo([{loop:stadiumPts(add(m,d,-17.75),add(m,d,17.75),10),y0,y1,F}]),M.gilt),'050804-1');
+      const zg=solidGeo([{loop:stadiumPts(add(m,d,-17.75),add(m,d,17.75),10),y0,y1,F}]);VER.forEach(([,,DR],i)=>tag(mesh(ZBG[i],zg,DR?M.gilt:G6D),'050804-1'));
       const g=new THREE.Group();g.rotation.x=Math.PI;zb.add(g);
       for(const k of[28,43])tag(screw(g,H[k][0],-H[k][1],-(PPT+1.8),2.1,1.9,4.7,1.3,M.brass),'WN-52');   /* heads Ø 4.2 × 1.9 (Wempe 3955 4.4), just under the bridge's face, M2.6 × 4.7 into the plate: estimated */
-      for(const k of[29,44])tag(cylBetween(zb,rPin,PPT-1.3,PPT+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.zb');}
+      for(const g of ZBG)for(const k of[29,44])tag(cylBetween(g,rPin,PPT-1.3,PPT+1.7,M.steel,H[k][0],H[k][1],16),'WN-203.zb');}
     return PL;}
   return{build,TT,TI};
 })();
@@ -4804,6 +4818,52 @@ const WDIALFACE_LANGE={
 
 </script>
 <script>
+/* dialface_kirov.js: the Soviet 6MX's dial printing, traced off Kirov No. 247's dial (References/wempe/photos/dg-chrono-6mx/1_Kirow_247_Z.jpg, Johannes
+   Altmeppen 2017) by marine-chronometer-source/chronometer-working-model/tools/dialtrace.py --dial kirov --write: generated, don't edit (rerun the tool). Part of the
+   Wempe model; declares only WDIALFACE_KIROV, as dialface.js's WDIALFACE: for each item (h1 ... h12 the hours, u0 ... u56 the up-and-down figures, spusk and zavod
+   over them, s10 ... s60 the seconds figures, serial: 247 in red ink, mchz: the factory's mark, imeni_i, imeni, imeni_i2, kirova: the factory's name) its contours,
+   filled even-odd, on the dial in 0.01 mm (dial.js's P(): x right, z down, the centre arbor at 0, 0): each contour's first point, then its steps; | between
+   contours. divm, divs: the minute and seconds tracks' 60 divisions' angles as measured (0.01 deg clockwise from 12; those under a hand the nominal turned by the
+   rest's mean offset). The geometric printing is dial.js's, drawn from the numbers the tool measures (--dial kirov --geo). */
+const WDIALFACE_KIROV={
+  h1:"1841 -3491 -9 0 -83 82 -92 55 -11 13 6 15 30 2 14 20 5 25 -2 45 5 12 -5 17 0 96 5 22 -5 25 5 233 -5 24 5 194 -35 42 -23 11 -2 14 8 5 59 -5 123 -2 54 5 6 -3 0 -14 -35 -30 -13 -25 -2 -549 5 -316",
+  h2:"2884 -2174 -52 38 -53 55 -30 53 -13 42 -5 31 0 93 20 55 38 63 18 18 14 0 85 -93 5 -14 -25 -53 -5 -48 5 -23 15 -27 17 -20 30 -20 33 -10 33 0 53 23 29 32 20 37 0 49 -30 57 -87 103 -140 205 -75 135 -38 77 -17 50 0 14 13 11 516 0 16 -13 0 -176 -6 -9 -11 1 -13 25 -15 14 -25 10 -223 0 -15 -9 0 -11 20 -40 83 -130 95 -125 47 -45 48 -88 10 -78 -8 -71 -15 -40 -32 -57 -36 -41 -47 -32 -38 -18 -52 -15 -44 -5",
+  h3:"3489 -414 -75 20 -52 33 -26 25 -27 38 -20 40 0 11 15 16 85 20 23 10 24 -3 13 -20 24 -22 25 -10 39 0 32 12 30 30 10 20 2 23 -10 38 -10 17 -19 20 -30 15 -39 2 -19 -5 -13 11 3 99 5 0 7 12 -2 11 -10 10 0 12 5 5 53 -2 45 12 27 18 27 27 13 20 10 40 5 37 0 41 -5 23 -15 30 -30 32 -37 22 -30 10 -56 -5 -33 -15 -32 -27 -30 -50 -10 -8 -47 5 -72 20 -13 13 0 14 5 8 10 -2 25 37 2 12 23 30 7 33 51 40 72 33 38 7 94 -2 90 -35 32 -25 41 -41 27 -40 25 -50 10 -60 3 -84 -5 -47 -15 -45 -23 -45 -42 -50 -8 -15 8 -24 30 -50 15 -65 -3 -66 -25 -70 -17 -28 -48 -52 -40 -26 -60 -20 -30 -5",
+  h4:"2947 1626 -71 108 -17 38 -183 282 -25 48 -27 40 0 11 5 6 38 -3 33 5 46 -5 203 0 15 5 19 -5 87 0 9 3 10 14 -3 64 -12 25 -12 12 -21 10 1 12 231 3 8 -6 0 -6 -35 -33 -5 -12 -5 -61 5 -13 15 -9 100 2 13 -8 5 -13 2 -163 -5 -6 -9 0 -35 30 -28 8 -48 -3 -12 -12 0 -362 -4 -4 -34 89 -8 2|3082 1704 4 4 3 294 -12 9 -179 -2 -7 -7 0 -9 175 -282",
+  h5:"2263 2609 -358 0 -13 5 -6 10 -25 125 -20 63 -2 22 -25 80 -38 93 0 16 63 58 35 25 17 -5 47 -32 43 -13 43 3 53 20 17 12 35 40 22 57 0 39 -5 15 0 45 -17 42 -32 37 -53 30 -46 5 -62 -15 -33 -17 -40 -48 -14 0 -125 58 0 29 32 48 41 40 40 30 25 13 60 20 38 5 71 0 40 -8 42 -15 58 -32 32 -26 58 -65 25 -47 15 -45 5 -35 0 -94 -5 -50 -22 -73 -40 -62 -41 -41 -60 -40 -60 -22 -62 -10 -54 0 -66 15 -12 -15 5 -121 17 -14 303 0 28 12 25 30 11 0 8 -10 0 -177",
+  h7:"-2281 2599 -10 15 -3 14 0 168 11 13 16 -5 28 -33 40 -12 256 0 10 2 9 12 -15 69 -55 175 -5 40 -20 80 -30 180 -15 170 -10 22 -40 35 -2 17 11 8 241 0 8 -6 2 -11 -32 -33 -10 -20 -3 -26 5 -92 25 -185 23 -103 40 -142 0 -16 -28 -83 -12 -63 -28 -92 -12 -83 -6 -10 -16 -5",
+  h8:"-3061 1366 -62 18 -23 10 -27 20 -41 40 -17 25 -23 48 -12 52 0 59 10 45 20 45 12 18 0 16 -45 47 -35 60 -22 75 0 58 -5 29 22 105 43 75 30 33 50 40 53 25 70 17 61 0 55 -10 48 -17 42 -25 48 -41 48 -67 22 -58 10 -62 -5 -109 -12 -50 -45 -83 -38 -40 0 -8 25 -48 20 -77 -2 -67 -25 -70 -20 -32 -46 -48 -45 -28 -67 -20|-3034 1844 48 7 45 25 37 40 20 52 0 81 -10 35 -12 23 -50 44 -50 18 -51 -3 -37 -15 -25 -17 -37 -50 -10 -25 -3 -22 3 -91 20 -40 32 -32 22 -15|-3032 1526 24 0 32 15 27 30 10 25 -2 31 -20 37 -25 17 -32 10 -29 -2 -27 -15 -25 -27 -10 -28 5 -36 18 -30 27 -19",
+  h9:"-3598 -426 -48 15 -45 22 -45 33 -25 28 -13 30 -27 40 -18 42 -10 50 0 54 13 78 15 50 37 97 10 15 36 36 42 22 53 10 31 -2 55 -18 53 -40 30 -58 5 -36 -8 -11 -9 0 -32 25 -20 8 -44 2 -30 -10 -37 -32 -30 -62 -15 -70 0 -46 13 -40 39 -50 53 -25 58 -2 50 20 47 49 15 40 -2 414 -5 30 -15 35 -40 37 -40 12 -33 -2 -38 -15 -24 -20 -23 -35 -8 -5 -16 0 -85 22 -28 3 -13 8 -7 12 5 24 40 70 48 46 72 37 50 13 62 5 75 -18 80 -47 50 -58 30 -65 8 -25 2 -43 0 -459 -17 -65 -25 -47 -33 -40 -45 -41 -35 -22 -78 -25",
+  h10:"-2868 -2194 -45 5 -55 15 -63 35 -37 33 -26 30 -30 58 -17 57 -5 51 0 418 5 33 17 57 33 55 60 58 40 25 30 13 45 12 28 3 76 -5 55 -18 70 -45 38 -38 25 -37 23 -55 12 -76 -2 -232 5 -185 -3 -36 -17 -60 -25 -45 -28 -35 -50 -46 -78 -35 -35 -7|-2867 -2034 54 13 25 15 19 19 25 45 5 75 -2 196 -13 21 1 8 14 13 -2 133 -13 38 -32 37 -32 20 -23 5 -61 -3 -42 -22 -32 -37 -15 -45 -5 -376 10 -60 15 -35 34 -35 23 -12|-3233 -2189 -10 6 -33 40 -37 34 -45 33 -66 38 3 17 25 5 15 14 5 185 0 214 -5 13 5 18 -5 254 -8 25 -37 35 -3 11 11 11 223 0 16 -8 -2 -14 -16 -8 -17 -17 -12 -33 -5 -386 7 -241 -5 -14 8 -20 -3 -162 5 -33 -2 -9",
+  h11:"-1892 -3489 -11 3 -28 35 -45 42 -37 28 -58 30 -13 13 0 9 6 5 22 3 12 9 5 13 3 47 -3 626 -5 33 -37 40 0 11 8 6 221 0 10 -3 3 -5 -5 -14 -35 -28 -10 -25 -2 -35 0 -541 7 -225 -5 -27 5 -39|-1489 -3489 -12 3 -65 70 -35 27 -67 38 -13 13 3 11 20 3 17 15 5 26 -5 677 -8 20 -40 35 13 15 232 0 10 -11 -13 -19 -27 -17 -12 -28 -5 -45 2 -272 -5 -28 0 -48 5 -46 3 -277 5 -61 0 -93",
+  h12:"-8 -4109 -60 43 -38 43 -35 62 -15 60 0 69 17 68 20 42 28 40 28 26 11 0 88 -93 3 -17 -28 -37 -17 -45 0 -34 10 -32 12 -20 25 -25 55 -25 31 -2 27 5 43 25 24 24 20 35 5 32 -2 29 -10 28 -15 22 -110 118 -40 50 -93 135 -65 110 -57 122 -7 32 101 -12 104 0 107 12 108 28 119 2 13 -15 -3 -46 5 -130 -5 -11 -12 3 -25 32 -27 12 -234 0 -12 -2 -7 -10 2 -11 33 -55 32 -40 50 -77 90 -105 45 -43 38 -57 25 -80 2 -38 -2 -49 -28 -77 -10 -20 -27 -35 -36 -36 -67 -40 -78 -17 -58 0 -38 5",
+  u0:"616 -3301 -10 -5 -34 2 -58 35 -15 18 -23 63 -2 40 15 29 13 10 26 5 43 -15 35 -30 25 -38 13 -40 -3 -34 -7 -20|599 -3276 12 14 0 19 -15 30 -47 72 -20 12 -13 -2 -15 -20 0 -16 13 -27 37 -58 20 -19 12 -8",
+  u8:"1086 -2761 -20 -23 -26 -7 -36 2 -35 28 -24 -5 -38 2 -28 31 -5 59 15 25 23 18 30 10 26 -5 15 -11 28 -32 35 -7 20 -10 15 -16 10 -32|974 -2709 0 16 -12 12 -25 12 -19 5 -7 -2 -12 -15 5 -16 9 -9 30 -15 19 0|1061 -2747 3 11 -15 15 -33 7 -10 -9 3 -11 24 -17 16 -3",
+  u16:"871 -1916 -5 24 13 43 18 25 32 25 45 18 44 0 28 -10 20 -21 3 -34 -5 -20 -15 -27 -26 -18 -38 -13 -13 3 -30 20 -13 30 -10 10 -6 0 -24 -22 0 -16 9 -12 16 7 17 0 8 -10 0 -19 -18 -13 -19 0 -15 10|959 -1867 12 -9 13 0 38 15 22 17 2 18 -12 12 -16 0 -40 -17 -14 -12|834 -1816 5 42 8 10 22 0 68 30 60 40 17 -10 10 -20 -6 -15 -17 -2 -150 -80 -12 0",
+  u24:"504 -1471 -8 10 -5 30 -10 20 0 23 -12 30 -18 67 0 17 6 5 16 0 20 -15 39 -15 14 12 5 18 15 8 30 -15 8 -11 -3 -14 -12 -12 5 -33 -21 -10 -12 -12 -40 -95 -8 -8|507 -1366 7 7 10 33 -27 17 -9 0 -7 -12 13 -38|333 -1399 -19 3 -30 15 -15 18 -8 22 3 32 13 8 11 -3 11 -13 -8 -35 5 -7 16 -7 17 14 15 38 0 11 -23 52 -10 40 -2 37 10 13 27 -3 47 -25 30 -10 18 -18 -2 -24 -13 -15 -12 0 -25 22 -38 18 -10 -7 -2 -14 45 -87 0 -27 -10 -25 -16 -15",
+  u32:"-452 -1456 -31 5 -23 25 0 9 10 13 17 0 17 -25 11 0 12 14 -22 31 -28 16 0 14 13 17 0 9 -20 50 -10 9 -13 0 -12 -12 0 -11 10 -12 0 -12 -13 -13 -14 -2 -21 18 3 39 35 28 19 5 25 0 15 -5 31 -26 10 -17 5 -31 -8 -34 20 -33 3 -31 -8 -15 -15 -16|-302 -1389 -44 10 -20 29 0 13 10 11 22 5 10 -8 0 -23 10 -9 8 -3 13 5 9 10 0 13 -20 38 -22 19 -35 3 -47 17 -28 18 -8 13 8 17 20 5 98 45 11 0 8 -6 10 -22 -2 -12 -11 -5 -17 0 -43 -18 -7 -9 3 -9 32 -12 37 0 15 -5 31 -23 10 -22 -3 -32 -15 -30 -13 -10",
+  u40:"-1094 -1864 23 35 12 0 22 -15 25 3 25 -25 38 -20 65 -25 8 -15 -11 -13 -15 -7 -35 -3 -112 -32 -22 0 -5 5 0 17 30 52 0 9 -15 12 -27 7|-1036 -1944 13 -5 32 8 20 13 -12 9 -31 10 -17 -14|-834 -1838 -15 -16 -15 -5 -61 -2 -28 5 -43 25 -28 28 -15 25 0 29 11 15 30 15 51 5 48 -15 17 -10 21 -20 22 -33 8 -20|-856 -1822 0 14 -7 9 -128 58 -16 -5 -7 -10 3 -13 17 -15 105 -47 18 -3",
+  u48:"-1054 -2826 -10 18 3 46 30 28 16 5 32 -5 12 10 15 23 30 15 34 -5 15 -8 13 -15 10 -30 0 -34 -5 -20 -23 -26 -17 -7 -17 0 -28 12 -28 -27 -16 -5 -28 0 -15 5|-951 -2769 17 -15 18 0 28 13 12 14 0 9 -15 17 -18 0 -33 -15 -9 -12|-1031 -2802 9 -9 19 0 17 7 12 12 0 9 -7 9 -11 5 -25 -12 -14 -15|-1099 -2696 3 19 88 148 9 3 8 -6 17 -47 17 -20 16 3 15 15 9 0 8 -8 13 -37 -11 -8 -32 -10 -13 -20 -35 3 -92 -40 -14 0|-1029 -2631 11 0 27 17 2 11 -12 17 -6 0 -9 -10 -15 -25",
+  u56:"-618 -3296 -25 12 -16 16 -7 15 -3 38 5 21 35 55 26 28 35 20 26 0 25 -13 18 -25 8 -46 -5 -26 -18 -25 -33 -15 -29 0 -30 25 -16 0 -12 -20 0 -13 12 -15 11 0 15 15 13 3 17 -18 0 -14 -11 -13 -17 -8|-582 -3204 11 0 15 10 27 35 5 21 -12 14 -18 -5 -32 -39 -5 -24|-741 -3214 -73 56 -7 12 0 17 7 15 38 45 12 0 47 -35 24 10 37 45 2 18 -12 15 -16 2 -14 -12 -8 -15 -14 -3 -13 13 0 19 18 18 44 0 17 -7 21 -28 5 -25 -3 -32 -12 -25 -26 -23 -44 0 -20 8 -27 20 -9 0 -9 -10 -3 -8 5 -10 35 -30 18 -33 -8 -17",
+  s10:"1264 1472 -16 -11 -36 -7 -25 22 -98 60 -47 23 -38 7 -5 15 25 42 12 6 22 -28 100 -55 75 -50 23 -7 8 -8|1336 1577 -18 -18 -20 -10 -40 0 -46 12 -40 20 -38 28 -43 50 -12 38 0 14 10 22 20 21 33 7 69 -17 35 -15 57 -45 36 -41 7 -38|1314 1603 -3 21 -12 15 -115 70 -37 17 -19 0 -14 -14 0 -16 14 -20 128 -77 27 -13 11 0",
+  s20:"1116 2827 -12 30 0 21 40 58 53 35 55 25 55 13 36 -5 23 -23 8 -20 0 -21 -10 -31 -33 -38 -48 -37 -55 -25 -50 -10 -29 2 -15 8|1144 2853 12 -9 16 -3 72 35 80 50 15 17 -5 19 -12 12 -14 0 -85 -43 -17 -15 -48 -25 -17 -22|1042 2976 -18 21 -10 32 2 27 15 30 27 18 13 -3 13 -15 0 -17 -5 -10 -16 -10 -15 0 -9 -10 2 -8 12 -12 29 7 42 23 35 32 10 22 7 38 30 60 11 8 14 -3 28 -43 25 -50 15 -17 0 -24 -31 -23 -14 3 -5 40 -28 42 -10 10 -10 -7 -5 -13 -15 -77 -22 -50 -11 -10 -25 -16 -25 -7 -44 5",
+  s30:"87 3526 -33 21 -20 35 -10 37 -5 74 12 58 10 17 3 18 12 20 13 13 39 12 25 -7 23 -23 8 -15 17 -73 0 -64 -10 -47 -22 -53 -26 -18|91 3571 18 0 15 10 5 35 2 141 -7 20 -15 12 -11 0 -12 -10 -10 -20 -2 -20 0 -141 7 -20|-121 3534 -12 5 -23 23 -10 20 0 11 10 16 22 5 18 -11 2 -30 7 -7 11 0 10 10 2 31 -14 19 -18 5 -8 8 -2 12 8 13 39 17 0 25 8 22 -3 44 -14 17 -19 0 -9 -12 -3 -30 -23 -13 -22 13 -5 31 8 15 25 18 23 8 36 0 23 -8 23 -25 17 -40 3 -54 -13 -30 -22 -20 0 -14 10 -17 2 -19 -2 -23 -8 -15 -20 -18",
+  s40:"-1349 3008 28 43 12 3 22 -23 18 -10 19 5 13 -5 11 -23 9 -9 78 -48 52 -25 8 -8 0 -14 -28 -13 -77 -5 -60 -15 -53 -5 -25 -10 -19 3 -8 10 0 12 35 55 15 33 -17 22 -27 6 -8 10|-1294 2896 5 -7 13 -3 23 8 47 5 10 10 -22 17 -44 15 -14 -14|-1019 2994 -35 -20 -22 -3 -55 13 -47 20 -28 17 -40 38 -23 35 -7 39 12 35 26 21 61 2 65 -25 43 -27 50 -48 13 -25 2 -44|-1044 3033 3 11 -5 10 -17 17 -45 23 -33 22 -65 33 -13 0 -12 -10 -3 -18 15 -17 102 -60 50 -25 11 2",
+  s50:"-1264 1444 -10 20 0 37 5 15 13 20 33 32 32 26 65 30 48 10 34 -3 25 -20 13 -28 -3 -34 -15 -25 -53 -53 -60 -35 -70 -20 -31 8|-1236 1471 14 -10 16 0 98 50 52 35 15 20 -3 16 -17 14 -13 0 -68 -42 -65 -33 -29 -24|-1331 1574 -50 75 -13 28 3 16 10 11 35 15 30 22 18 5 14 -8 15 -35 15 -17 10 -5 26 5 60 33 19 17 5 10 -2 16 -12 12 -11 0 -30 -30 -19 2 -13 18 0 24 5 10 15 11 27 2 37 -10 23 -20 8 -20 -3 -47 -17 -35 -28 -25 -30 -15 -52 0 -25 12 -47 50 -28 -19 0 -14 22 -40 5 -17 -5 -32",
+  s60:"89 779 -22 7 -18 18 -10 23 -15 67 0 52 20 85 12 22 21 13 31 5 25 -12 16 -16 20 -57 5 -67 -10 -67 -18 -45 -13 -16 -17 -10|86 816 16 0 10 5 17 24 0 169 -22 25 -16 0 -17 -15 -10 -35 5 -151 5 -12|-121 784 -23 18 -20 37 -10 40 -5 49 8 60 20 58 30 23 29 2 28 -12 25 -28 15 -38 3 -51 -13 -30 -15 -16 -20 -10 -48 -7 -12 -10 0 -43 17 -17 16 -3 15 10 -3 27 13 16 22 -3 10 -18 -7 -29 -28 -23|-107 909 11 0 15 7 7 10 0 88 -19 22 -21 -2 -12 -17 0 -84 5 -12",
+  spusk:"-247 -4139 -16 11 -18 25 -42 42 -48 35 -67 35 -3 14 5 6 33 5 9 9 8 33 0 628 -3 33 -7 17 -43 40 0 12 13 10 59 -5 83 3 88 -26 -33 -26 -10 -25 -5 -33 5 -606 -2 -177 5 -43 -3 -11|-659 -3638 -14 -1 -6 6 -17 52 -12 12 -11 -7 -13 -23 -11 -2 -8 8 0 14 40 77 8 8 9 0 5 -5 3 -28 17 -17 38 13 12 0 8 -8 -6 -15 -30 -10 -19 -14 0 -14 10 -25|-836 -3554 -28 31 0 51 18 30 13 11 12 5 34 0 20 -13 8 -10 13 -30 -3 -22 -13 -10 -9 3 -5 13 2 22 -5 10 -19 14 -21 -5 -22 -27 0 -31 19 -17 19 0 16 8 8 -6 3 -11 -21 -18|-923 -3479 -11 6 0 14 15 17 3 11 -25 27 -18 0 -25 -22 -7 0 -8 11 3 13 35 31 19 -3 40 -30 9 0 7 7 -3 9 -45 40 0 14 8 5 12 -2 42 -41 13 -26 -5 -20 -30 -40 -18 -18|-1038 -3386 -53 53 -10 17 0 9 8 13 67 65 14 0 6 -14 -63 -63 0 -13 25 -22 16 -3 60 55 9 0 5 -5 0 -14 -73 -76|-1151 -3261 -15 10 -13 18 -5 15 3 31 25 31 20 12 20 5 24 -5 28 -33 3 -44 -8 -8 -9 0 -6 6 0 22 -7 18 -15 14 -18 3 -35 -30 -2 -18 17 -20 32 -10 3 -9 -13 -13",
+  zavod:"713 -3624 -26 0 -18 16 3 11 5 3 22 -2 15 9 0 11 -7 7 -25 3 -6 8 3 14 17 12 0 11 -7 7 -13 0 -30 -27 -10 -25 -9 0 -6 5 0 34 21 23 46 15 15 -5 13 -13 8 -17 2 -25 13 -23 0 -20 -5 -14|838 -3546 -14 2 -87 66 -3 16 8 6 22 -3 30 18 20 25 9 0 8 -13 0 -20 18 -60 0 -29|814 -3501 7 9 -2 14 -10 12 -8 0 -10 -10 0 -8 15 -15|933 -3476 -14 0 -15 15 -53 70 0 17 38 38 28 12 14 -2 18 -16 7 -17 0 -15 20 -30 0 -29 -5 -10|881 -3389 7 -7 9 0 25 15 12 12 -3 16 -7 4 -11 -2 -27 -25|923 -3441 16 2 12 12 3 11 -7 10 -11 2 -20 -17 -2 -11|1053 -3361 -26 -3 -25 10 -23 26 -8 15 0 39 16 20 15 10 31 0 15 -7 28 -28 8 -15 0 -34 -5 -10|1039 -3339 20 15 5 23 -30 32 -21 3 -19 -20 2 -23 17 -22 15 -8|1173 -3234 -11 -2 -33 15 -52 15 -25 0 -6 5 5 22 25 25 38 50 12 -3 8 -27 45 -73 2 -16|1137 -3201 7 7 -3 11 -17 27 -16 7 -17 -19 -2 -14 14 -9",
+  serial:"-282 1534 -40 -18 -45 0 -28 -5 -33 5 -15 10 -18 3 -47 22 -33 26 -8 17 -12 13 -3 15 -15 22 0 19 6 11 24 5 20 -16 23 -65 22 -17 15 -25 20 -5 76 -2 12 7 15 0 28 10 15 10 17 3 10 9 12 28 0 15 10 27 0 14 -24 24 -18 5 -15 20 -52 33 -10 15 -25 7 -95 75 -23 25 -27 16 -18 30 0 9 30 25 54 8 155 -5 18 -5 45 0 25 -16 5 -16 -8 -15 -17 -8 -67 0 -17 5 -88 5 -45 -2 0 -14 22 -34 27 -10 13 -18 32 -17 30 -30 35 -8 13 -8 5 -10 20 -17 23 -33 5 -15 25 -32 10 -38 0 -21 -38 -46|496 1514 -104 0 -21 23 0 21 11 13 55 5 14 10 -12 23 -10 40 -18 23 0 25 -17 35 -8 87 -10 20 0 20 -7 25 2 37 11 8 26 0 13 -16 20 -92 0 -18 15 -37 8 -43 22 -50 3 -17 10 -13 25 -57 0 -47 -16 -20|219 1702 -48 -21 -24 11 -11 15 0 45 -19 19 -59 -5 -102 3 -30 -3 -18 -7 1 -23 60 -60 15 -33 25 -37 27 -30 5 -13 0 -21 -8 -8 -11 -3 -20 8 -38 43 -8 22 -55 60 -12 28 -23 17 -2 10 -40 43 -10 22 0 19 10 16 175 0 40 5 78 2 19 13 17 -23 3 1 -5 11 22 -2 13 -15 33 -78",
+  mchz:"8 -901 -24 8 -13 30 -27 35 0 11 25 18 5 15 0 108 -15 41 0 11 8 8 69 0 8 -8 -15 -52 0 -212 -6 -8|-473 -786 -40 33 -13 20 12 49 -5 22 8 43 0 63 -10 10 -61 -8 -52 -17 -71 -13 -8 3 -43 43 0 14 25 8 23 15 122 134 22 33 3 30 8 8 16 -3 51 -45 2 -14 -67 -58 -55 -65 -5 -11 4 -7 11 -2 70 17 72 10 5 -8 -10 -91 0 -59 7 -7 16 7 85 98 7 15 0 22 6 10 14 1 60 -56 -5 -12 -20 -7 -32 -32 -123 -140 -15 -25 -8 -25|-181 -756 -3 12 13 15 7 22 5 35 0 75 5 23 33 38 40 15 170 0 15 17 0 16 -10 27 -13 13 3 14 74 3 21 -8 0 -12 -15 -22 -3 -219 3 -32 17 -23 -5 -12 -84 -2 -8 10 2 12 15 12 5 23 -2 101 -15 19 -168 -2 -20 -17 -7 -20 0 -91 17 -30 -2 -9 -21 -8 -59 0|492 -709 -33 13 -13 15 3 14 28 26 19 -5 26 5 67 64 -5 19 -17 12 -24 -5 -50 -43 -14 0 -25 26 -3 14 5 7 68 60 12 20 -2 16 -17 25 -24 7 -27 -12 -87 -77 -13 -18 3 -47 -23 -26 -19 -2 -11 10 -10 23 0 21 10 58 18 25 108 90 35 13 36 0 28 -10 28 -26 15 -30 2 -47 5 -10 40 -35 13 -28 2 -41 -12 -33 -56 -58 -47 -27",
+  imeni_i:"-1928 -76 -6 8 0 113 8 30 -5 38 8 8 25 5 64 -62 42 -33 11 0 10 12 0 75 13 8 21 0 16 -8 2 -173 -8 -23 -36 -1 -30 38 -72 57 -11 -9 -5 -80 -16 -11",
+  imeni:"-1384 -81 -18 -8 -36 5 -68 63 -17 10 -11 0 -15 -8 -78 -62 -39 0 -10 10 -3 11 8 21 2 40 -5 101 6 19 10 5 21 0 13 -8 3 -92 7 -12 16 0 71 50 13 -5 52 -45 16 -5 12 14 0 34 -5 16 5 43 13 8 32 -3 8 -13 2 -18 0 -155|-1323 -86 -11 16 0 128 5 15 0 21 -5 10 3 14 11 6 193 -3 11 -15 0 -27 -6 -10 -10 -5 -122 0 -10 -10 10 -8 77 -2 6 -6 0 -24 -8 -18 -33 -5 -40 3 -10 -3 -7 -10 10 -7 132 -3 11 -20 -6 -29 -18 -8|-1074 -76 -2 31 5 29 -5 13 0 58 5 23 -3 30 6 10 20 6 6 10 25 -7 -12 -3 10 -41 15 -14 10 -3 53 3 18 5 9 12 -2 20 68 -14 -11 -10 0 -153 -10 -13 -37 -2 -5 5 -3 75 -12 15 -7 2 -69 0 -12 -5 -10 -19 0 -65 -10 -8 -27 0",
+  imeni_i2:"-808 -78 -6 7 0 113 8 31 -5 38 8 8 26 5 63 -63 42 -32 11 0 10 12 0 75 13 8 21 0 16 -8 2 -174 -8 -23 -36 0 -30 37 -72 58 -11 -10 -5 -80 -16 -10",
+  kirova:"607 -181 -8 14 2 44 -5 84 10 21 -7 12 -2 99 42 16 27 2 5 -50 42 -50 11 -2 25 34 35 78 15 5 52 0 8 -8 0 -14 -38 -70 -27 -65 -10 -12 -5 -29 75 -90 -1 -19 -20 -5 -41 2 -8 5 -98 116 -13 7 -7 -10 0 -105 -5 -10 -13 -5 -26 0|927 -184 -11 19 5 136 -2 62 7 15 -7 24 0 46 18 8 31 -2 11 -11 5 -20 15 -20 94 -99 16 -3 12 22 -7 56 0 62 13 13 34 2 15 -5 8 -16 0 -272 -6 -14 -54 0 -8 8 -2 22 -8 15 -109 115 -9 0 -7 -10 0 -142 -5 -8 -15 -5|1418 -181 -23 -5 -135 0 -19 10 -5 14 0 272 8 11 37 3 12 -5 8 -11 3 -32 12 -10 92 -5 38 -15 25 -23 15 -25 15 -47 -5 -49 -25 -45 -25 -23|1306 -102 20 -9 41 0 35 7 29 30 -7 38 -15 17 -25 10 -68 -5 -15 -17 0 -61|1667 -184 -53 23 -35 38 -23 57 0 49 18 75 23 30 50 31 51 7 53 -15 22 -15 28 -30 10 -18 10 -37 0 -82 -17 -50 -38 -40 -43 -20|1673 -111 29 0 20 7 24 22 15 23 3 13 -8 25 -2 40 -8 13 -27 22 -53 0 -30 -22 -12 -25 -3 -54 5 -22 30 -35|1884 -184 -8 17 0 280 18 11 168 0 31 -13 33 -33 15 -32 3 -23 -3 -24 -27 -50 5 -52 -8 -28 -15 -25 -25 -20 -23 -8|1944 13 9 -17 18 -5 73 3 18 7 12 12 2 11 -5 13 -17 14 -83 3 -15 -5 -10 -12|1949 -102 12 -12 23 -2 50 5 15 15 -17 17 -34 0 -40 -5|2302 -184 -11 8 -7 15 -53 180 -32 92 13 13 39 -3 22 -25 13 -5 88 0 17 12 11 18 41 5 16 -14 -10 -18 -3 -22 -50 -150 -25 -95 -15 -11|2326 -59 8 0 12 15 15 42 -2 21 -12 10 -41 -3 -7 -7 0 -18 7 -23",
+  divm:"18 607 1206 1806 2405 3009 3599 4193 4792 5391 5994 6593 7191 7795 8394 8998 9599 10198 10797 11400 12000 12592 13192 13792 14388 14995 15592 16197 16800 17400 18012 18602 19202 19796 20401 21006 21601 22205 22810 23415 24002 24603 25203 25803 26403 27003 27616 28218 28818 29416 30020 30610 31210 31816 32414 33003 33610 34210 34817 35412",
+  divs:"-8 602 1208 1808 2408 3019 3603 4206 4793 5402 5997 6619 7206 7804 8410 8996 9617 10223 10814 11413 12012 12601 13208 13801 14419 15020 15613 16219 16824 17408 18009 18609 19208 19808 20408 21036 21617 22216 22820 23428 23978 24617 25216 25814 26421 27014 27594 28197 28791 29400 30009 30598 31193 31800 32396 33008 33594 34203 34809 35407"};
+
+</script>
+<script>
 // @ts-check
 /* dial.js: the Wempe Einheits-Chronometer's dial, motion work, hands and up-and-down work (drawing group 05 02), built from their sheets
    (References/wempe/transcriptions/05-05-05-02-train-motionwork.md, checked on the sheets themselves, cropped and enlarged where a number mattered): the cannon tube
@@ -5005,9 +5065,23 @@ const WDIAL=(()=>{
     FB:{r0:7.465,r1:9.088,b0:7.690,b1:8.897,wd:0.25,we:0.21,rc:0.172,ro:0,re:5.71}};   /* its band: lines 7.465-7.690 and 8.897-9.088 (Ø 15.16, 18.0); the divisions at 8 ... 48 h
        0.25 (0.23-0.28), the end strokes at 0 and 56 0.21 (0.21, 0.22), running on inward to r 5.71 (5.700, 5.714); the boxes' corners r 0.172; the outer corners at the ends sharp
        (as they show at 167 px/mm: not measured) */
-  /* face(K, d): the dial's printing on a canvas, K times as fine; d the dial: 'wempe' (Wempe 3955's, dialface.js) or 'lange' (Lange 5177's, dialface_lange.js) */
+  /* The Soviet 6MX's, Kirov No. 247's (dg-chrono-6mx/1_Kirow_247_Z.jpg, Altmeppen's square-on view; dialtrace.py --dial kirov --geo: its six circles' rms 10-25 µm, the
+     drawings' diameters, 89.96, 84.91, 26.18, 37.13, 33.01, 22.79; blur sigma 0.031): the German layout to 0.1 mm, printed thin as Lange's, its up-and-down sub-dial laid out as
+     Lange's (the circle open at the top, here for СПУСК and ЗАВОД; the band's end strokes running inward), the Russian words and the factory's mark traced, the serial written
+     in red ink (#ff617f: the photo's red, 165, 59, 79 over its paper's 149, 146, 145, scaled to the model's paper) */
+  const KIROV={TC:[-0.063,0.031],   /* the minute track's centre, 0.07 off the arbors' midpoint */
+    FT:{r0:42.319,r1:45.128,b0:42.585,b1:44.835,wm:0.290,wh:1.423,rc:0.184},   /* the minute track: lines 42.319-42.585 and 44.835-45.128 (centres Ø 84.90, 89.96); the minute
+       divisions 0.290 (0.24-0.37), the hour blocks 1.423 (1.37-1.56); corners r 0.184 */
+    FS:{r0:16.357,r1:18.740,b0:16.641,b1:18.405,wm:0.333,wh:0.529,rc:0.156},   /* the seconds track: lines 16.357-16.641, 18.405-18.740 (Ø 33.00, 37.15); a division each second
+       0.333 (0.24-0.41), each five 0.529 (0.45-0.61); corners r 0.156 */
+    F23:[11.272,11.513],FRL:0.495,   /* the seconds sub-dial's inner circle (Ø 22.79) and its lines at 5, 15 ... 55 s, 0.495 wide (0.43-0.59) */
+    FU:[12.988,13.189],gap:[22.58,338.32],   /* the up-and-down circle (Ø 26.18), open at the top from 338.32 to 22.58 deg */
+    FB:{r0:7.477,r1:9.215,b0:7.723,b1:8.996,wd:0.306,we:0.265,rc:0.140,ro:0,re:5.33}};   /* its band: lines 7.477-7.723 and 8.996-9.215 (Ø 15.20, 18.21); the divisions at 8 ... 48 h
+       0.306 (0.29-0.34), the end strokes at 0 and 56 0.265 (0.235, 0.294), running on inward to r 5.33 (5.345, 5.321); the boxes' corners r 0.140 */
+  /* face(K, d): the dial's printing on a canvas, K times as fine; d the dial: 'wempe' (Wempe 3955's, dialface.js), 'lange' (Lange 5177's, dialface_lange.js) or 'kirov'
+     (Kirov 247's, dialface_kirov.js) */
   function face(K=1,d='wempe'){const S=2048,cv=document.createElement('canvas');cv.width=cv.height=S*K;const x=cv.getContext('2d');x.scale(K,K);
-    const L=d==='lange',{TC,FT,FS,F23,FRL,FU,FB}=L?LANGE:{TC:TC0,FT:FT0,FS:FS0,F23:F230,FRL:FRL0,FU:FU0,FB:FB0},GF=L?WDIALFACE_LANGE:WDIALFACE;
+    const KV=d==='kirov',L=d==='lange'||KV,Q=KV?KIROV:LANGE,{TC,FT,FS,F23,FRL,FU,FB}=L?Q:{TC:TC0,FT:FT0,FS:FS0,F23:F230,FRL:FRL0,FU:FU0,FB:FB0},GF=KV?WDIALFACE_KIROV:L?WDIALFACE_LANGE:WDIALFACE;
     const k=S/(2*DR),c=S/2,P=(mx,mz)=>[c+mx*k,c+mz*k];   /* mm on the dial (x right, z down: 12 at the top) to canvas px */
     x.fillStyle='#f2f0ea';x.fillRect(0,0,S,S);
     const ink='#141416',paper='#f2f0ea';x.lineJoin='round';
@@ -5023,14 +5097,14 @@ const WDIAL=(()=>{
     /* the minute track */
     rail(TC,FT,GF.divm,i=>i%5?FT.wm:FT.wh);
     /* the up-and-down sub-dial: its circle, the band open at the top (its ends at 0 and 56 h, 22.5 deg either side of 12), a box for each 8 hours */
-    const U=[0,-23],ua=h=>22.5+h/8*45;if(L)box(U,FU[0],FU[1],LANGE.gap[0],0,LANGE.gap[1],0,0,ink);else ring(U,FU[0],FU[1]);
+    const U=[0,-23],ua=h=>22.5+h/8*45;if(L)box(U,FU[0],FU[1],Q.gap[0],0,Q.gap[1],0,0,ink);else ring(U,FU[0],FU[1]);
     box(U,FB.r0,FB.r1,ua(0),-FB.we/2,ua(56),FB.we/2,FB.ro,ink);
-    if(L)for(const h of[0,56])box(U,LANGE.FB.re,FB.r0+0.05,ua(h),-FB.we/2,ua(h),FB.we/2,0,ink);   /* Lange's end strokes, on inward past the inner line */
+    if(L)for(const h of[0,56])box(U,Q.FB.re,FB.r0+0.05,ua(h),-FB.we/2,ua(h),FB.we/2,0,ink);   /* Lange's and Kirov's end strokes, on inward past the inner line */
     for(let h=0;h<56;h+=8)box(U,FB.b0,FB.b1,ua(h),(h?FB.wd:FB.we)/2,ua(h+8),-(h+8<56?FB.wd:FB.we)/2,FB.rc,paper);
     /* the seconds sub-dial's inner circle and lines */
     const Sd=[0,23];ring(Sd,F23[0],F23[1]);for(let q=0;q<6;q++){const A=30+60*q;box(Sd,(F23[0]+F23[1])/2,(FS.r0+FS.b0)/2,A,-FRL/2,A,FRL/2,0,ink);}
     /* the traced glyphs (dialface.js): each item's contours filled even-odd */
-    x.fillStyle=ink;for(const[n,s]of Object.entries(GF)){if(n.startsWith('div'))continue;const p=new Path2D();for(const cs of s.split('|')){const v=cs.split(' ').map(Number);let mx=v[0],mz=v[1],[u,w]=P(mx/100,mz/100);p.moveTo(u,w);
+    for(const[n,s]of Object.entries(GF)){if(n.startsWith('div'))continue;x.fillStyle=KV&&n==='serial'?'#ff617f':ink;const p=new Path2D();for(const cs of s.split('|')){const v=cs.split(' ').map(Number);let mx=v[0],mz=v[1],[u,w]=P(mx/100,mz/100);p.moveTo(u,w);
       for(let i=2;i<v.length;i+=2){mx+=v[i];mz+=v[i+1];[u,w]=P(mx/100,mz/100);p.lineTo(u,w);}p.closePath();}x.fill(p,'evenodd');}
     /* the seconds track, printed over the 7 and the 5 (its white boxes cut into them) */
     rail(Sd,FS,GF.divs,i=>i%5?FS.wm:FS.wh);
@@ -5110,24 +5184,27 @@ const WDIAL=(()=>{
     /* its holes: the centre 6.0, the up-and-down 3.2, the seconds 1.7 (sure); on Ø 101 (scaled 50.5-50.7) five more: three for its screws at 354 deg (the sheet's 6°), 120 and
        240 (scaled 120.6 and 240.2; Altmeppen: German dials are screwed at the 20, 40 and 59 minute marks), each Ø 1.1 under a Ø 1.8 H7 sink 1.0 deep ("Senkung 1,0 tief"); the
        pin's Ø 1 at 6 deg (the sheet's 6°, where the ring's Ø 1.6 pin hole is, 05 08 00-3); a Ø 1 at 185.7 deg (scaled; nothing under it in the ring) */
-    const RH=50.5,SCR=[354,120,240].map(a=>at(a,RH)),PINa=at(6,RH),SMa=at(185.7,RH);
+    /* The Soviet 6MX (the Variants' third version) screws it at the 19, 39 and 59 minute marks (Altmeppen's list); Kirov No. 247's dial has its screws at 112.5, 233.6 and
+       353.1 deg (1_Kirow_247_Z.jpg, ±1 for the view's tilt): 114, 234 and 354 deg. The disc, its printed face and its screws are built for each (rv) */
+    const RH=50.5,PINa=at(6,RH),SMa=at(185.7,RH),rv=(par,v)=>{const g=new THREE.Group();g.userData.rev=v;par.add(g);return g;},FMS=[],TX={};
+    for(const[V,AS]of/** @type {[string,number[]][]} */([['last first',[354,120,240]],['6mx',[354,114,234]]])){const gV=rv(dlP,V),SCR=AS.map(a=>at(a,RH));
     const holes=[[0,0,3.0],[H[2][0],H[2][1],1.6],[H[35][0],H[35][1],0.85],...SCR.map(p=>[p[0],p[1],0.9]),[PINa[0],PINa[1],0.5],[SMa[0],SMa[1],0.5]];
     {const F=[{p:C([0,0],3.0,72),a:DY0,b:DY1},{p:C(H[2],1.6,40),a:DY0,b:DY1},{p:C(H[35],0.85,32),a:DY0,b:DY1},{p:C(PINa,0.5,20),a:DY0,b:DY1},{p:C(SMa,0.5,20),a:DY0,b:DY1}];
       for(const p of SCR)F.push({p:C(p,0.55,20),a:DY0,b:DY1},{p:C(p,0.9,28),a:DY1-1.0,b:DY1});
-      tag(mesh(dlP,solidGeo([{loop:C([0,0],DR,720),y0:DY0,y1:DY1,F}]),paint),'050200-4');}
+      tag(mesh(gV,solidGeo([{loop:C([0,0],DR,720),y0:DY0,y1:DY1,F}]),paint),'050200-4');}
     /* the printed face: a surface 0.02 over the disc, holed as it is, its texture the canvas (face()) */
     {const s=new THREE.Shape();s.absarc(0,0,DR,0,TAU,false);for(const[hx,hz,hr]of holes){const p=new THREE.Path();p.absarc(hx,-hz,hr,0,TAU,true);s.holes.push(p);}
       const g=new THREE.ShapeGeometry(s,64),uv=g.attributes.uv,pos=g.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,(pos.getX(i)+DR)/(2*DR),(pos.getY(i)+DR)/(2*DR));g.rotateX(-Math.PI/2);
-      const TX={},texOf=(/** @type {string} */d)=>{if(!TX[d]){const t=TX[d]=new THREE.CanvasTexture(face(1,d));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>face(k,d);}return TX[d];};
-      const fm=mesh(dlP,g,new THREE.MeshStandardMaterial({map:texOf('wempe'),metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
-      Object.assign(fm.userData,{surface:true,noCap:true,R:DR,holes,hn:'050200-4',sub:1});R.face=fm;
-      /* R.setDial(d): the printing shown, 'wempe' or 'lange' (app.js's Variants), each texture drawn when first asked for: on the face's own material (the viewer may be
+      const texOf=(/** @type {string} */d)=>{if(!TX[d]){const t=TX[d]=new THREE.CanvasTexture(face(1,d));t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.redraw=k=>face(k,d);}return TX[d];};
+      const fm=mesh(gV,g,new THREE.MeshStandardMaterial({map:texOf('wempe'),metalness:0.3,roughness:0.4,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),0,DY1+0.02,0);
+      Object.assign(fm.userData,{surface:true,noCap:true,R:DR,holes,hn:'050200-4',sub:1});R.face=R.face||fm;FMS.push(fm);
+      /* R.setDial(d): the printing shown, 'wempe', 'lange' or 'kirov' (app.js's Variants), each texture drawn when first asked for: on the face's own material (the viewer may be
          showing a faded or coloured copy of it, which follows on its next look()) and on the copy shown, if another */
-      R.setDial=(/** @type {string} */d)=>{const t=texOf(d==='lange'?'lange':'wempe'),m=fm.userData.mat0||fm.material;for(const q of new Set([m,fm.material]))if(q.map!==undefined&&q.map!==null){q.map=t;q.needsUpdate=true;}R.dial=d==='lange'?'lange':'wempe';};R.dial='wempe';
+      R.setDial=(/** @type {string} */d)=>{const dd=d==='lange'||d==='kirov'?d:'wempe',t=texOf(dd);for(const f of FMS){const m=f.userData.mat0||f.material;for(const q of new Set([m,f.material]))if(q.map!==undefined&&q.map!==null){q.map=t;q.needsUpdate=true;}}R.dial=dd;};R.dial='wempe';
 }
     /* its three screws (WN-10 by the coloured section's label, "10" or "18": likely): M1 through its Ø 1.1 holes into the ring's flange (tapped 2.5 deep there: frame.js), the
        heads Ø 1.7 × 0.8 in the sinks, 0.1 under the face (estimated); from the dial side, so in a frame turned over */
-    {const rg=new THREE.Group();rg.rotation.x=Math.PI;dlP.add(rg);for(const p of SCR)tag(screw(rg,p[0],-p[1],-(DY1-1.0),0.85,0.8,2.3,0.5,M.steel),'WN-10.d');}
+    {const rg=new THREE.Group();rg.rotation.x=Math.PI;gV.add(rg);for(const p of SCR)tag(screw(rg,p[0],-p[1],-(DY1-1.0),0.85,0.8,2.3,0.5,M.steel),'WN-10.d');}}
     /* its pin at 6 deg: Ø 1.1 in the ring's hole (05 08 00-3's "1,1 Ø"; Ø 1.6 until 15 October 2026, the ring's radial hole's figure) 2.0 deep, stepped to the dial's Ø 1.0,
        0.1 under its face (the depth and the step estimated) */
     tag(mesh(dlP,lathe([[0,DY0-2.0],[0.545,DY0-2.0],[0.545,DY0],[0.49,DY0],[0.49,DY1-0.1],[0,DY1-0.1]],20),M.steel,PINa[0],0,PINa[1]),'dialPin');
@@ -6570,7 +6647,8 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
   /* the Variants' dial: Wempe 3955's printing (the default) or Lange 5177's, both traced on their photographs (dial.js's face, dialface.js and dialface_lange.js): the
      face's texture (dial.js's R.setDial) and the dial's card (its text, and the viewer's copy of it, VV.INFO, once it has started: the link's state is read while it starts) follow */
   let VV=null;const DIALC={wempe:null,lange:{d:'The dial, white with its figures etched and filled black, printed as on A. Lange & Söhne’s No. 5177: the minute track and the hours, the up-and-down sub-dial at 12, reading Auf (wound) at 0 to Ab (run down) at 56 hours, and the seconds sub-dial at 6 with the dial’s number, and A. LANGE & SÖHNE, GLASHÜTTE B/DRESDEN across the centre. Lange made the Einheits-Chronometer to the same drawings: the same sheet’s dial, the printing Lange’s own, finer than Wempe’s. It lies in the recess of the movement ring’s flange, placed by a pin and held by three screws at the 20, 40 and 59 minute marks.',
-    sn:'Its size, holes and layout from its sheet; the printing traced on a photograph of Lange No. 5177’s dial (its rust left out); the screws’ and pin’s sizes estimated'}};
+    sn:'Its size, holes and layout from its sheet; the printing traced on a photograph of Lange No. 5177’s dial (its rust left out); the screws’ and pin’s sizes estimated'},
+    kirov:{d:'The Soviet 6MX’s dial, printed as on Kirov No. 247 of 1952: white, its figures black, the minute track and the hours, the up-and-down sub-dial at 12 reading from 0 to 56 hours between СПУСК (run down) and ЗАВОД (wound), and the seconds sub-dial at 6 with the chronometer’s number written in red ink; across the centre the 1st Moscow Watch Factory’s mark, 1МЧЗ, and its name, ИМЕНИ КИРОВА. It lies in the movement ring’s flange, placed by a pin and held by three screws at the 19, 39 and 59 minute marks, where the German dials have them at 20, 40 and 59.',sn:'Its printing traced on a photograph of Kirov No. 247’s dial (Altmeppen), the geometric printing drawn from its measured lines; its screws’ places measured on it; their sizes as the German dial’s'}};
   /* winding in the case (cw): go, Wind pressed with the movement in its bowl; on, the key turning; u, 0-3, how far the bowl is turned over (0-1), the closing plate opened
      (1-2) and the key come onto the square (2-3) */
   const cw={go:false,on:false,u:0,t:null};   /* t: the last frame's time (ms), for dw */
@@ -6679,7 +6757,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
       read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
         if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
-        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev'));setDial(g('dial')==='lange'?'lange':'wempe');
+        const w=g('wind');if(w!=null&&Number.isFinite(+w)){hrs=Math.max(0,Math.min(HRUN,+w));winding=false;}else if(!first)hrs=20;setConn(g('conn')==='band'?'band':'chain');setRev(g('rev'));setDial(g('dial'));
         if(first){H.held=!(hrs<HRUN-1e-6);H.amp=H.held?0:PE.ampAt(drvNow());}}},   /* a link opens running at the swing its wind keeps, or run down and at rest */
     hud:st=>{const a=Math.round(H.amp/D2R),why=winding?'':hrs>=HRUN-1e-6?'run down':H.held?(a>0?'stopping: the balance swings too little to unlock':'stopped: twist to start'):'';
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
@@ -6714,8 +6792,8 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
     for(const s in REVC){const[P,Q]=REVC[s];for(const k in P){const c=PARTS[k];if(c)Object.assign(c,keep(c));}for(const k in Q)for(const q in Q[k]){const c=pc(k,q);if(c)Object.assign(c,keep(c));}}   /* every version's cards back to the revised sheets' text */
     if(REVC[rev]){const[P,Q]=REVC[rev];for(const k in P){const c=PARTS[k];if(c)Object.assign(c,P[k]);}for(const k in Q)for(const q in Q[k]){const c=pc(k,q);if(c)Object.assign(c,Q[k][q]);}}
     document.querySelectorAll('#rev button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===rev?'true':'false'));}
-  document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',()=>setRev(b.dataset.v)));
-  function setDial(v){dial=v==='lange'?'lange':'wempe';if(mv)mv.userData.R.dl.setDial(dial);const c=PARTS.dial,q=(PIECES.dial||[]).find(e=>e.k==='dial');DIALC.wempe=DIALC.wempe||{d:c.d,sn:c.sn};
+  document.querySelectorAll('#rev button').forEach(b=>b.addEventListener('click',()=>{setRev(b.dataset.v);setDial(rev==='6mx'?'kirov':dial==='kirov'?'wempe':dial);}));   /* the 6MX brings its own dial (Kirov 247's), and takes it away; the dial switch still changes it */
+  function setDial(v){dial=v==='lange'||v==='kirov'?v:'wempe';if(mv)mv.userData.R.dl.setDial(dial);const c=PARTS.dial,q=(PIECES.dial||[]).find(e=>e.k==='dial');DIALC.wempe=DIALC.wempe||{d:c.d,sn:c.sn};
     const o=DIALC[dial];c.d=o.d;c.sn=o.sn;if(q)q.d=o.d;if(VV){const I=VV.INFO;if(I.dial)I.dial[1]=o.d;if(I['dial.dial'])I['dial.dial'][1]=o.d;VV.look();}
     document.querySelectorAll('#dialSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===dial?'true':'false'));}
   document.querySelectorAll('#dialSt button').forEach(b=>b.addEventListener('click',()=>setDial(b.dataset.v)));
