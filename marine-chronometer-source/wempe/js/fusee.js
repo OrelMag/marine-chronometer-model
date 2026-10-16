@@ -46,13 +46,20 @@ const WFUSEE=(()=>{
   const RFT=[17.25,16.465,15.785,15.215,14.75,14.305,13.935,13.585,13.32,12.975,12.685,12.415,12.17,11.915,11.675,11.455,11.24,11.055,10.865,10.705,10.55,10.405,10.275,10.155,
     10.07,9.945,9.855,9.78,9.71,9.635,9.575,9.525,9.47,9.435,9.395,9.355,9.30];
   const rf=m=>{const u=Math.max(0,Math.min(36,m*4)),i=Math.min(35,Math.floor(u));return RFT[i]+(RFT[i+1]-RFT[i])*(u-i);};
-  /* the groove: square-cut, its lands 0.82 wide (the pencilled pitch 1.15 of 02-1 less the rib 0.33 of 02-2, the chain's framed 0.82 ±0.02), each with a rib 0.33 thick on its
-     small-end side standing 0.6 over it ("alle Maße: +0,6"); a helix, a land's middle at a_c(m) from the large end face, so the full wind's turn (8.75) ends 0.3 from the small
-     end ("Gangende Punkt N"); the first 0.15 turn rises from the flange's slot (where the chain's end is pinned) into the first turn */
-  const PAX=1.15,WLD=0.82,RIB=0.33,RIBH=0.6,A0=LB-0.3-WLD/2-PAX*8.75,M_FULL=8.75;
-  const ac=m=>m<0.15?1.0+(A0+PAX*0.15-1.0)*Math.max(0,m)/0.15:A0+PAX*m;
+  /* the flange and the groove (05 06 04-2's Schnitt A-B, enlarged): the flange's two ribs and the slot between them "2 ±0,02" over all, the slot "0,87 +0,01" and the second
+     rib "0,37", so the first rib 0.76 (its "0,8" the nominal); then "1,2 ±0,01" from the second rib's outer face to the first groove rib's far face: a land and its rib, the
+     pitch. The groove square-cut, its lands 0.87 wide (1.2 less the rib "0,33"), the slot's width: the chain (0.82 ±0.02) runs in a 0.87 channel on the whole fusee, 0.03-0.07
+     clear. Each land's rib 0.33 thick on its small-end side, standing 0.6 over it ("alle Maße: +0,6"). A helix, a land's middle at a_c(m) from the large end face: turn 0 in
+     the slot, its first 0.15 rising from the slot's middle; turn 1 on the first land, 2.0 to 2.87 (the section's 1,2); the full wind's turn (8.75) then ends 12.17 from the
+     large end, 0.08 short of "Gangende Punkt N" 0.3 from the small end (the pitch's ±0.01 is ±0.09 over the turns). Sure of the figures; that the 1,2 is every turn's pitch,
+     likely: it is the only reading in which the slot, the 1,2 and point N agree (the pencilled 1.15 of the superseded 02-1 would cut the second rib to 0.28 and stop the
+     groove 0.85 short of N). Until 16 October 2026 the pitch 1.15 and the lands 0.82, the flange's ribs 0.6 and about 0.14 and its slot 0.8, from 0.6 to 1.4 */
+  const FR1=0.76,FS1=0.76+0.87,FR2=2.0,FSC=(FR1+FS1)/2;   /* the first rib's inner face, the slot's far wall (the second rib's inner face), the second rib's outer face, the slot's middle */
+  const PAX=1.2,WLD=0.87,RIB=0.33,RIBH=0.6,A0=FR2+WLD/2-PAX,M_FULL=8.75;
+  /* the first 0.15 turn: from the slot's middle, level along it where the top hook lies on its pin, into the helix at its pitch (a cubic: level at 0, the helix's slope at 0.15) */
+  const ac=m=>{if(m>=0.15)return A0+PAX*m;const t=Math.max(0,m)/0.15,d=A0+PAX*0.15-FSC;return FSC+d*(3*t*t-2*t*t*t)+PAX*0.15*(t*t*t-t*t);};
   const yc=m=>F-ac(m);
-  /* the fusee's radius field: the flange (Ø 35.6, its two ribs and the slot between them, 0.8 wide, floor r 17.25), the slot deepened under the chain's pin (a cutter Ø 13.5,
+  /* the fusee's radius field: the flange (Ø 35.6, its two ribs and the slot between them, 0.87 wide, floor r 17.25), the slot deepened under the chain's pin (a cutter Ø 13.5,
      2.9 deep), the groove, and the small end's hub (Ø 21) for the last 0.3 */
   /* the chain's pin (A on the sheet's view C-D) at PHI0-0.17, just behind the groove's start, 1 under the ribs' tops (the view's "1"), in the middle of the cutter's arc (the view
      centres the arc on A): section A-B, through the pin, draws both ribs whole to their tops with the pin's hole across them and the slot between them about 2.8 deep (scaled),
@@ -61,11 +68,11 @@ const WFUSEE=(()=>{
   const rCut=th=>{const d=wrap(th-FLAT),q=RC*Math.sin(d);if(Math.abs(q)>=6.75||Math.cos(d)<0)return 99;return RC*Math.cos(d)-Math.sqrt(6.75*6.75-q*q);};
   function rBody(th,a){
     if(a>=LB-0.3-1e-9)return 10.5;
-    let r=a<0.6?17.8:a<1.4?17.25:17.8;
-    if(a>=0.9){const mt=fr((th-PHI0)/TAU);let j=Math.floor((a-(ac(mt)-WLD/2))/PAX),m=mt+j;
+    let r=a<FR1?17.8:a<FS1?17.25:17.8;
+    if(a>=FR1){const mt=fr((th-PHI0)/TAU);let j=Math.floor((a-(ac(mt)-WLD/2))/PAX),m=mt+j;
       while(m+1>=0.15&&a>=ac(m+1)-WLD/2)m+=1;while(m>=0&&a<ac(m)-WLD/2)m-=1;   /* the turn whose land (or rib) holds a */
-      if(m>=0){const d=a-(ac(m)-WLD/2);if(d<WLD)r=rf(m);else if(a>=1.4||m>0.3)r=Math.min(r,rf(m)+RIBH);}}
-    if(a>=0.6&&a<1.4)r=Math.min(r,rCut(th));   /* in the slot only */
+      if(m>=0){const d=a-(ac(m)-WLD/2);if(d<WLD)r=Math.min(r,rf(m));else if(a>=FS1||m>0.3)r=Math.min(r,rf(m)+RIBH);}}
+    if(a>=FR1&&a<FS1)r=Math.min(r,rCut(th));   /* in the slot only */
     return r;}
 
   /* ---------- helpers ---------- */
@@ -386,7 +393,7 @@ const WFUSEE=(()=>{
     /* As first drawn, 020605 (Gegenfeder kompl., 127-556.04-U18, 15.4.41: the older number of the same spring, drawn the same day as 05 06 01-1): the same ring, eye, pins and
        holes, but its width given round it, 1.8 at 40°, 1.9 at 100°, 2 at 150° and 195°, 2.5 at 240°, 3.5 at 270° from the eye (all sure), so it widens from the eye's side to
        the square end; drawn between those figures, on to 4 at the square end as 05 06 01-1's (estimated) */
-    const msBent=[];
+    const msBent=[];let gEP=null;
     {const aE=bk(0,0),aSq=bk(336,0),eye=sh(14.2,EYEA),hs=sh(14.2,PINS);
       const tab=T=>d=>{for(let i=1;i<T.length;i++)if(d<=T[i][0]){const[a0,w0]=T[i-1],[a1,w1]=T[i];return w0+(w1-w0)*(d-a0)/(a1-a0);}return 4;};
       const w41=tab([[0,1.8],[40,1.8],[100,1.9],[150,2],[195,2],[240,2.5],[270,3.5],[336,4]]),w48=tab([[0,2],[272,2],[276,2.12],[280,2.29],[284,2.5],[287,2.85],[290,3.1],[292,3.44],[293,3.6],[295,3.65],[300,3.68],[310,3.76],[320,3.82],[330,3.87],[336,4]]);
@@ -416,7 +423,7 @@ const WFUSEE=(()=>{
         const geo=phi=>{const d=sv(phi),c=Math.cos(phi),sn=Math.sin(phi);   /* the eye's hole turned as the ratchet turns its pin (the same circle about the pin as bent with the band's end, its facets kept on the pin's) */
           return solidGeo([{loop:bent(loc,d),y0:GS1,y1:GS0,F:[{p:eyeH.map(([x,z])=>[x*c+z*sn,-x*sn+z*c]),a:GS1,b:GS0},{p:hsH,a:GS1,b:GS0}]}]);};
         msBent.push({m:tag(mesh(g,geo(WPHYS.runPhi(1)),M.blued),'050601-1'),geo});}
-      tag(cylBetween(gMW,0.6,GS1-1.2+0.02,GS0,M.steel,eye[0],-eye[1],16),'050600-8');tag(cylBetween(gMS2,0.6,GS0+1.2,GS1,M.steel,hs[0],-hs[1],16),'050600-8');}
+      gEP=new THREE.Group();gMS2.add(gEP);gEP.rotation.y=WPHYS.runPhi(1);tag(cylBetween(gEP,0.6,GS1-1.2+0.02,GS0,M.steel,eye[0],-eye[1],16),'050600-8');   /* the eye's pin with the spring's drawn eye (turned as its hole is), in the ratchet's hole (Ø 1.2 H8: within 0.0035 of it as the spring is redrawn in steps) */tag(cylBetween(gMS2,0.6,GS0+1.2,GS1,M.steel,hs[0],-hs[1],16),'050600-8');}
     let msPhi=WPHYS.runPhi(1);   /* the ratchet's lead the spring is drawn at (by default the running drive's at 12 h) */
 
     /* =============== the maintaining detent 05 05 05 (Gegensperrkegel kompl.) at hole 4 =============== */
@@ -654,7 +661,10 @@ const WFUSEE=(()=>{
       const g=extrude(s,{depth:0.26,bevelEnabled:false,curveSegments:12});g.rotateX(-Math.PI/2);g.translate(0,y-0.13,0);return g;};
     const I4=new THREE.Matrix4(),geoA=mergeGeo([[plate(0.27),I4],[plate(-0.27),I4],...[1.025,-1.025].map(x=>[cylY(0.275,0.80,10),new THREE.Matrix4().makeTranslation(x,0,0)])]),geoB=plate(0);
     const MAXL=200,imA=new THREE.InstancedMesh(geoA,M.chain,MAXL),imB=new THREE.InstancedMesh(geoB,M.chain2,MAXL);gC.add(imA,imB);imA.frustumCulled=imB.frustumCulled=false;tag(imA,'050704');tag(imB,'050704',1);
-    /* its hooks (from the strip 10 × 0.9; drawn as the middle layer, 0.26 thick, riveted between the end link's plates: how thick they are where they're riveted isn't drawn),
+    /* its hooks (from the strip 10 × 0.9): both side views of 05 07 04 draw each one solid bar the chain's full width (the framed 0.82 ±0.02), the links' three layers
+       starting at its rivet: drawn 0.80 thick, the chain's outer links' width; each end link is an outer pair (the chain's first and last, 375 links), so the hook's eye is
+       thinned to the inner links' 0.26 where it lies between that pair's plates, out to r 1.1 about its rivet (the plates' lobes r 1.0: where the step falls isn't drawn,
+       estimated). Until 16 October 2026 both were the middle layer's 0.26 throughout. Their outlines
        traced on 05 07 04 (5:1, 17.1 px/mm by the top hook's 3.5) and put to its figures where the drawing isn't to scale. Each has an eye r 1 round its rivet, as the plates'.
        The top hook, round the fusee's pin: 5 from its rivet to its crown, 3.5 wide; its shank's outer edge 1.0 off the rivet's line, its throat's inner wall 1.8 from it, the
        throat's round end r 0.4 (the pin's seat) 3.5 from the rivet (drawn 3.0); its nose turned back toward the chain, reaching 2 from the rivet 2.5 across, its inner edge
@@ -678,8 +688,21 @@ const WFUSEE=(()=>{
       arcP(o,[0.37,6.9],0.6,0,Math.PI,10);   /* the tip */
       o.push([-0.43,5.59],[-0.72,4.19],[-0.84,1.73]);   /* the back up to the eye */
       return o.map(([u,v])=>[v,-u]);})();   /* x along it, y across: the barb on -y, toward the drum (place()) */
-    const hkMesh=(o,th,id,mat)=>{const g=new THREE.Group();gC.add(g);tag(mesh(g,slab(o,[],-th/2,th/2),mat),id,1);return g;};
-    const cHT=hkMesh(HKT,0.26,'050704',M.chain),cHB=hkMesh(HKB,0.26,'050704',M.chain);
+    /* the outline less the disc r about its rivet (at the origin): walked round, the points inside the disc dropped and the disc's arc put in where the outline crosses it,
+       the way round that lies inside the outline */
+    const offEye=(o,r)=>{const n=o.length,ins=q=>Math.hypot(q[0],q[1])<r,X=(p,q)=>{const d=[q[0]-p[0],q[1]-p[1]],A=d[0]*d[0]+d[1]*d[1],B=2*(p[0]*d[0]+p[1]*d[1]),C=p[0]*p[0]+p[1]*p[1]-r*r,
+        t=(-B+(ins(p)?1:-1)*Math.sqrt(Math.max(0,B*B-4*A*C)))/(2*A);return[p[0]+d[0]*t,p[1]+d[1]*t];};
+      const inPoly=q=>{let c=false;for(let i=0,j=n-1;i<n;j=i++){const a=o[i],b=o[j];if((a[1]>q[1])!==(b[1]>q[1])&&q[0]<(b[0]-a[0])*(q[1]-a[1])/(b[1]-a[1])+a[0])c=!c;}return c;};
+      let k=o.findIndex(q=>!ins(q));const out=[];let enter=null;
+      for(let i=0;i<n;i++){const p=o[(k+i)%n],q=o[(k+i+1)%n];if(!ins(p))out.push(p);
+        if(!ins(p)&&ins(q))enter=X(p,q);
+        if(ins(p)&&!ins(q)){const ex=X(p,q),a0=Math.atan2(enter[1],enter[0]),a1=Math.atan2(ex[1],ex[0]);let da=a1-a0;while(da>Math.PI)da-=TAU;while(da<-Math.PI)da+=TAU;
+          const am=a0+da/2;if(!inPoly([r*Math.cos(am),r*Math.sin(am)]))da-=Math.sign(da)*TAU;
+          const N=Math.max(4,Math.ceil(Math.abs(da)/(8*D2R)));for(let j=0;j<=N;j++){const a=a0+da*j/N;out.push([r*Math.cos(a),r*Math.sin(a)]);}}}
+      return out;};
+    const hkMesh=(o,id,mat)=>{const g=new THREE.Group();gC.add(g);tag(mesh(g,slab(o,[],-0.13,0.13),mat),id,1);
+      const b=offEye(o,1.1);tag(mesh(g,slab(b,[],0.13,0.40),mat),id,1);tag(mesh(g,slab(b,[],-0.40,-0.13),mat),id,1);return g;};   /* the eye 0.26; the body 0.80 */
+    const cHT=hkMesh(HKT,'050704',M.chain),cHB=hkMesh(HKB,'050704',M.chain);
     /* the band: its strip a ribbon along its pitch line; its hooks (Bandstahl 10 × 0.8, brazed to it): the round hook 05 07 03-2 (its back r 6, the crown r 1.5, the nose 1.7
        from the band's slot with r 0.4 at its tip) round the fusee's pin, the drum's hook 05 07 03-3 (its back r 10, front r 20, a barb 1.4 out, the tip 4.5 above the barb)
        into the drum's slot: outlines approximated on those figures */
@@ -703,12 +726,17 @@ const WFUSEE=(()=>{
     const ckAng=(i,rel)=>{const P=CKP[i],v=gCK[i].userData.tip,a0=Math.atan2(P[1],P[0]);   /* rel: the click wheel's turn against the ratchet; its nose toward the wheel and behind its pivot, the click turned about a0 + 1.17 (05 06 02) */
       return seat(cwR,rel,P,v,a0+1.17+0.4,a0+1.17-0.4);};
     const SEAT=(()=>{let best=null;for(let i=0;i<180;i++){const rel=i/180*P35,g=ckAng(0,rel),c=Math.cos(g),s=Math.sin(g);let r=99;for(const v of ck0.v)r=Math.min(r,Math.hypot(ck0.P[0]+v[0]*c-v[1]*s,ck0.P[1]+v[0]*s+v[1]*c));
-      if(!best||r<best.r)best={rel,r};}return best.rel;})();   /* where click 0 drops deepest: at the root, against a face */
+      if(!best||r<best.r)best={rel,r};}return best.rel-0.02*P35;})();   /* where click 0 drops deepest: at the root, against a face; 2 % of a tooth (0.2°) back from it, as the deepest sample lies within one step of the face's edge and the click outline's polar table (polarMax, 0.09°) can put that a hair past the drawn face, the click then on the next tooth's tip (16 October 2026, maintaining.py's bearing test, once the ratchet's sheet stood as A-B draws it) */
     /* the clicks' rest angle when lifted clear (no teeth under them): for the spring's shape before the first update */
+    /* fall(): how far the ratchet turns back, the key put on, before the maintaining detent meets a tooth's steep face: turned back in 120 steps over a tooth, the detent
+       seated at each as update() seats it, until it would have to jump (its seat moving 0.01 rad at once: the face in its way); 0 to a tooth's 3° (wempe_ratchets.js
+       reports the same fall off the built model) */
+    let lastRG=0;const fall=()=>{const P=[DX[0]-FX[0],-(DX[1]-FX[1])],step=TAU/120/120;let g0=seat(gsR,lastRG,P,DTN,0.35,-0.35);
+      for(let i=1;i<=120;i++){const g=seat(gsR,lastRG-i*step,P,DTN,0.35,-0.35);if(Math.abs(g-g0)>0.01)return(i-1)*step;g0=g;}return TAU/120;};
     function update(s,c){
       const n=Math.max(0,Math.min(NRUN,s.n??0)),cg=CG[conn],ms=s.ms??WPHYS.runPhi(1);
-      if(Math.abs(ms-msPhi)>5e-4||(ms===0)!==(msPhi===0)){msPhi=ms;for(const o of msBent){o.m.geometry.dispose();o.m.geometry=o.geo(ms);}}   /* the spring bent to the ratchet's lead, in steps of 0.0005 rad (0.007 at its pins) */
-      const RW=-c*14/90+gWp.rotation.y,RG=RW+msPhi;   /* the fusee wheel (its phase included), and the ratchet ahead of it as the spring is drawn (closed by the drive: WPHYS) */
+      if(Math.abs(ms-msPhi)>2e-4||(ms===0)!==(msPhi===0)){msPhi=ms;for(const o of msBent){o.m.geometry.dispose();o.m.geometry=o.geo(ms);}gEP.rotation.y=ms;}   /* the spring bent to the ratchet's lead in steps of 0.0002 rad (0.0028 at the eye, inside the ratchet's pin hole's 0.0035), its eye's pin with it */
+      const RW=-c*14/90+gWp.rotation.y,RG=RW+ms;   /* the fusee wheel (its phase included), and the ratchet ahead of it by the spring's lead (closed by the drive: WPHYS), exactly: held by its detent while the key turns */
       gW.rotation.y=-c*14/90;gMW.rotation.y=RG;gMS2.rotation.y=RW;
       /* the fusee: its turns from full wind, and running, carried forward onto the clicks (the click wheel's face against the nearer click's nose); winding, as the key has it */
       let Rf=cg.RF0+TAU*n;const rel=Rf-RG;if(!s.winding)Rf+=fr((SEAT-rel)/(P35/2))*(P35/2);   /* onto the nearer click: the two 180° apart on 35 teeth, half a tooth out of step (until 16 October 2026 onto click 0, up to a whole tooth) */
@@ -716,7 +744,7 @@ const WFUSEE=(()=>{
       /* the clicks ride on the click wheel */
       const rl=Rf-RG;gCK.forEach((g,i)=>{const a=ckAng(i,rl);g.rotation.y=a;if(last.ck[i]===null||Math.abs(last.ck[i]-a)>0.002){last.ck[i]=a;const o=spr[1-i];o.m.geometry.dispose();o.m.geometry=sprGeo(o);}});
       /* the maintaining detent rides on the ratchet's teeth */
-      {const P=[DX[0]-FX[0],-(DX[1]-FX[1])];gDc.rotation.y=seat(gsR,RG,P,DTN,0.35,-0.35);}
+      {const P=[DX[0]-FX[0],-(DX[1]-FX[1])];gDc.rotation.y=seat(gsR,RG,P,DTN,0.35,-0.35);lastRG=RG;}
       /* its wire spring follows it */
       if(Math.abs(gDc.rotation.y-wsA)>1e-4){wsA=gDc.rotation.y;const d=wireDef(wsA);pD.userData.wire=d;wsM.geometry.dispose();wsM.geometry=wireGeo(d);}
       /* the chain or band, the barrel and the mainspring, and the stop bar: only when the fusee has moved */
@@ -747,7 +775,9 @@ const WFUSEE=(()=>{
     /* the hooks' places: the top hook from the connector's first point back to the fusee's pin; the bottom hook on from its last point along the drum */
     /* phi: the angle of the hook's seat off its own line (the chain's top hook), which then lies on the pin; t: the end link's direction, whose plates the hook lies between
        (the chain's hooks, tilted with it as it rises out of the flange's slot) */
-    function place(g,p,pa,rot,which,phi=0,t=null){const up=new THREE.Vector3(0,1,0);if(t)up.addScaledVector(t,-t.y).normalize();
+    /* The top hook lies level in the flange's slot: the pin through both ribs and the slot (0.87 for its 0.80) hold it within 0.8° of the fusee's plane, the end link
+       turning about its rivet as the chain leaves the slot (until 16 October 2026 tilted with that link, which put its crown 0.03 into the first rib at run down) */
+    function place(g,p,pa,rot,which,phi=0,t=null){const up=new THREE.Vector3(0,1,0);if(t&&which!=='top')up.addScaledVector(t,-t.y).normalize();
       if(which==='top'){const q=pol(PINR,pa+rot),P=new THREE.Vector3(fx+q[0],p.y,fz+q[1]),d=new THREE.Vector3().subVectors(P,p);d.addScaledVector(up,-d.dot(up));const L=d.length();d.normalize().applyAxisAngle(up,-phi);const n=new THREE.Vector3().crossVectors(d,up);
         const m=new THREE.Matrix4().makeBasis(d,up,n).setPosition(p);g.matrixAutoUpdate=false;g.matrix.copy(m);g.userData.span=L;}
       else{const v=new THREE.Vector3(p.x-BX[0],0,p.z-BX[1]).normalize(),d=new THREE.Vector3().crossVectors(v,up).normalize(),n=new THREE.Vector3().crossVectors(d,up);
@@ -756,6 +786,6 @@ const WFUSEE=(()=>{
     /* keySeat: where the winding key goes on (case.js keyAt): the dust plate's group, turning with the fusee and spread with the dust plate in the Exploded view (so the key
        stays outside the dust bush, which spreads further than the fusee), and the plate's face toward the key (y0 above: 7 from the square's root, where it is 3.1 across, as
        the key's square), on which the tube's mouth stops */
-    return{update,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-15},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GT,GP,F,S,DP0,DTU,DTL,BB,BR}};}
+    return{update,fall,setConn,get conn(){return conn;},keySeat:{g:gSP,y:yT-15},NRUN,MW:CG.chain.m0Of(CG.chain.RF0),HPT:90/14,CG,rf,yc,ac,SEAT,P35,MST0,msT,rBody,stack:{yD,yT,VHF,VFA,W,WT,G,GT,GP,F,S,DP0,DTU,DTL,BB,BR}};}
   return{build};
 })();

@@ -643,19 +643,53 @@ Contents:
   the page draws the ratchet ahead of the wheel by that lead and the ring bent to it. Keep: a part's
   working comes from its section, never from an illegible note; which pin goes where is read on
   the assembly's section (which pin is drawn whole, which hidden). `30d35f4`
-- **The Wempe's maintaining spring took the last wind's drive.** app.js's wind0() set winding
-  before reading the drive, so the spring started from what the last wind left, not the running
-  drive. Keep: read the running drive before the key goes on. `30d35f4`
 - **The Wempe's maintaining detent's step rode into the fusee wheel's teeth.** Its 2-thick part
   was sized 0.05 clear of the wheel's tips with a 0.25 allowance for its ride on the ratchet; with
   the ratchet ahead of the wheel by the spring's lead it met another phase of its ride and touched
   them (fine.py, 0.008 mm³). Now sized against its seat over a whole tooth: 7.10 from its hole
   (7.55). Keep: a clearance for a riding part is checked over its whole ride, not an allowance.
   `30d35f4`
+- **The Wempe's clicks could rest on a tooth's tip, running.** fusee.js carried the fusee onto the
+  click wheel's phase where click 0 drops deepest (SEAT), which lies within one sample of the
+  face's edge; the click outline's polar table (0.09°) could put it a hair past the drawn face, and
+  with the ratchet's sheet turned as A-B draws it the bearing click stood 43 % into its teeth
+  (maintaining.py --model wempe), the other on a tip. Now SEAT is taken 2 % of a tooth back from the
+  face: the bearing click 83 % in. Keep: a seat found at a discontinuity is backed off it. `HASH2`
+- **The Wempe's maintaining ratchet turned back in the page.** Once its lead over the fusee wheel
+  came from the maintaining spring, the page let it fall to nothing at run down (15.6° back), by a
+  mean half tooth as the key went on, and creep back between beats as the drive eased along the
+  fusee's curve or the escapement recoiled. Now the key put on, it falls only to its detent's tooth
+  (fusee.js fall(), off the detent's own seat: 0 to 3°), then its lead falls only as the train
+  carries the wheel on, tooth by tooth; running, it never goes back faster than the wheel goes on,
+  and holds when the escape wheel recoils; run down, the detent holds it; a set of the wind (the
+  slider, the link) leaves the spring spent at run down. maintaining.py allows exactly that fall.
+  Keep: the ratchet's angle only goes back to its detent. `HASH2`
+- **mechanisms.py --model wempe read a hole as the click wheel's roots.** Its root was the least
+  radius of the outline within a pitch of the pawl, which took the click wheel's M2 holes (r 5.75)
+  for the roots once a click stood over one: 3.27 mm deep, not 0.795, failing a tooth at 547 MPa in
+  wempe_ratchets.js. Now the root is found from the outline's outer envelope, then the least radius
+  within half its depth below it (under an undercut face's overhang). Keep: a ratchet's roots are
+  read on its outer outline. `HASH2`
 - **The Wempe's fusee always came back onto the same click.** Running, update() carried the fusee
   forward onto click 0's seat, up to a whole tooth of the 35-tooth click wheel (10.3°), though the
   two clicks stand 180° apart, half a tooth out of step, so the nearer one bears within 5.1°. Keep:
   the fusee rests on whichever click it meets first. `30d35f4`
+- **Every wind stopped the Wempe's train.** app.js's `wind0()` set `winding` before reading `drvNow()`,
+  which while winding returns the maintaining spring's own last drive (nothing on the first wind), so the
+  spring carried no drive and the balance held. Found by `maintaining.py --model wempe`. Keep: read the
+  drive, then set `winding`. The Winding slider's last step now sets run down (HRUN 55.91 is past its
+  0.1 steps). `7c6bb74`
+- **The Wempe's fusee groove was cut at the superseded issue's pencilled pitch, and its chain's hooks
+  were drawn a third their thickness** (16 October 2026, the audit of 3.00.00). The groove had 02-1's
+  pencilled 1.15 and lands 0.82, the chain's own nominal width, which squeezed the flange to ribs 0.6
+  and 0.14 round a 0.8 slot; 05 06 04-2's section, the issue built, gives the slot 0.87 +0.01, the
+  ribs 0.8 and 0.37 (summing to its 2 ±0.02) and the pitch 1.2 ±0.01, a land and its rib: lands 0.87,
+  the chain 0.03-0.07 clear, the 8¾th turn 0.08 short of point N. The hooks were the links' middle
+  layer, 0.26; 05 07 04's side views draw them the chain's full width (strip 10 × 0.9): 0.80, their
+  eyes 0.26 between the end links' outer plates. The chain leaves the slot level and the top hook lies
+  level in it (tilted with its end link it reached into the first rib). Keep: the groove's pitch and
+  lands are 02-2's, the flange's three widths sum to its 2; the chain doesn't touch the fusee in fine.py
+  (no allowance for it). `b9dc7f9`
 - **The mainspring's torque was the linear strip's, a fifth under the solved spring's** (16 October 2026, a review of
   the mainspring). `physics.js` (and `tolerances.js` beside it) took the fully wound moment from a linear strip,
   E b t³/12 L over the whole 1,064 mm, falling by the fusee's ratio over the barrel's turns: 0.78 N·m, 2.22 GPa. The
@@ -1319,6 +1353,17 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The Wempe's escape endstones and plates differed from Wempe 3955's** (16 October 2026, the audit of
+  3.00.00). The upper escape endstone's setting was closed under the plate's lip with its screws in from
+  inside, and the lower was a stadium cap screwed over the stone; 3955 shows round gilt settings with the
+  stones in them, the upper's spigot through the lip's Ø 4.5 H7 (its fit's purpose), its screws in from
+  outside, the lower flush in a seat with the screws' heads lapping it. The cock's endstone showed no
+  stone. The hand setting's holes 14-18 and window, which the sheet strikes through, are drilled in 3955's
+  plate; the detent block's pin holes go through and are countersunk; hole 4 has an oil sink; the plate is
+  engraved and the balance arm stamped RGG. Keep: the upper screws' heads stay low (0.3) under the balance's
+  rim, which passes 0.47 over the plate, and they lift with the plate in the Exploded view (headOn); a
+  countersink or sink shares its circle with the hole under it (stacked features), or solidGeo leaves it
+  open. `4e06f34`, `7a4bd48`
 - **The Wempe's frame read off its sheets wrongly in four places** (15 October 2026, a survey of the parts against their works drawings). The
   barrel bridge's chord was drawn square to hole 45's line, its "7,7" read along the chord to pin 41 and its "5" as the top corner's offset,
   where both figures' extension lines run parallel to an edge: 42 is 7.7 from the chord (with 45's 7 that gives the sheet's 24 to 0.002) and
@@ -1960,6 +2005,16 @@ Contents:
 
 ## Setup, case and gimbals
 
+- **The Wempe's box had two short hinges, no lid stay, and hex steel nuts on its gimbals** (16 October
+  2026, the audit of 3.00.00). Every photographed box (Greenwich's wartime Wempe, Wempe 5377 and 6161,
+  Lange 1947) has one piano hinge across the back (148 long on Lange 1947's) and a lid stay (6161's a
+  slotted brass bar on the left); the README said the photographs showed two hinges. Wempe 3955's
+  inner pivots are locked by knurled brass discs inside the ring, where the model had hex steel nuts
+  outside it under the screws' heads; the bearing discs, the bezel's lower band and the transit lock's
+  knob are knurled on every photographed one. Keep: the hinge's leaves meet its knuckles at their
+  tangent (leaves under the other half's knuckles overlap them); the stay's pivot and pin are placed
+  so the bar crosses the parting line in front of the back wall at every angle of the lid (`CS.stay`
+  turns it; app.js and the essay call it after setting the lid). `c3b0ab7`
 - **The Wempe's transit lock stood too low, and its box flickered on the handles and the lock's lever** (16 October 2026, the
   user's screenshots). The lever was drawn at the gimbal pivots' height, 16 under the box's rim, its knob 10 thick on a Ø 4 stem
   barely clearing the rim; Wempe 5377 and Greenwich's wartime Wempe show the lever at the rim over the ring's top, a hub about

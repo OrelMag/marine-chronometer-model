@@ -35,11 +35,11 @@ const WPHYS=(()=>{
      maintaining detent takes its next tooth (MBK, half a tooth of 120 on average), then the train runs on what the spring keeps, the wheel turning at WFW and the push
      falling to nothing: SUS s from the key going on at 12 h (14 min); the balance stops before that, under about a quarter of the drive (wempe_sustaining.js: 10-13 min).
      Until 16 October 2026 the push was the running drive spent over 05 06_9's "x = 0,27 mm" (likely), 1.09° and 70 s.
-     susDrv(d0, t): the drive (times the reference's) t s after the key went on, the train driven at d0 then; runPhi, susPhi: the ratchet's lead over the wheel, which
-     fusee.js draws the spring closed by */
+     susDrv(m0, t, f): the drive (times the reference's) t s after the key went on, the ratchet's lead m0 then and its fall f to the detent; runPhi, susPhi: the ratchet's
+     lead over the wheel, which fusee.js draws the spring closed by */
   const MSK=1.2204,MSK2=0.2956,MSB=16.72*D2R,MBK=TAU/240,WFW=TAU/(HPT*3600);
   const msT=ph=>MSK*ph+MSK2*ph*ph,msPh=T=>(-MSK+Math.sqrt(MSK*MSK+4*MSK2*T))/(2*MSK2);   /* the spring's push (N·m) for a lead, and the lead for a push */
-  const runPhi=d=>Math.min(msPh(Math.max(0,d)*TQ*RATIO/ETA/1e6),MSB),susPhi=(d0,t)=>Math.max(0,runPhi(d0)-MBK-WFW*t),susDrv=(d0,t)=>msT(susPhi(d0,t))/RATIO*ETA*1e6/TQ,SUS=(runPhi(1)-MBK)/WFW;   /* the ratchet's lead over the wheel (rad), running at drive d and t s into a wind; the drive while winding */
+  const runPhi=d=>Math.min(msPh(Math.max(0,d)*TQ*RATIO/ETA/1e6),MSB),susPhi=(m0,t,f=MBK)=>Math.max(0,m0-f-WFW*t),susDrv=(m0,t,f=MBK)=>msT(susPhi(m0,t,f))/RATIO*ETA*1e6/TQ,msDrv=ph=>msT(Math.max(0,ph))/RATIO*ETA*1e6/TQ,SUS=(runPhi(1)-MBK)/WFW;   /* the ratchet's lead over the wheel (rad) running at drive d; t s into a wind begun at lead m0, the ratchet fallen f back to the detent (the page: fusee.js's fall(); MBK, half a tooth, its mean); the drive then */
   /* the balance and hairspring: the period the drawn spring gives the weighed balance. The spring's stiffness E b h³ / 12 L (the strip bent in its plane: 0.285 thick, 0.52
      high), L its working length pin to pin (WESC.HSL: the whole strip 13 turns less 3.5 mm, 05 03_7), carbon spring steel's modulus 206 GPa (200-210, hardened and tempered
      blue: 05 03_6's "dunkelblau anlassen"); the moment of inertia I the balance's with its rollers, collet and a third of its spring (WESC.SET.I). makeEsc runs it at the
@@ -49,5 +49,5 @@ const WPHYS=(()=>{
     alt:Object.fromEntries(['n14','n15','h13'].map(n=>[n,{L:WESC.HSL[n].L,T:Tof(SET.I,kOf(WESC.HSL[n].L))}]))};
   /* the swing stepped as the Hamilton's ampStep: driven at drv, A² relaxes to ampAt(drv)² as exp(-2t/TF), exactly whatever the step; free (the train held), freeStep */
   const ampStep=(a,dt,drive)=>{if(drive>0){const u=ESC.ampAt(drive)**2;return Math.sqrt(u+(a*a-u)*Math.exp(-2*dt/SET.TF));}const b=ESC.freeStep(a,dt);return b<0.2*D2R?0:b;};
-  return{ESC,SET,KV,gAt,fusT,escT,drv,RATIO,ETA,ETA_LO,ETA_HI,STG,TQ,HPT,MF,LEV,MSK,MSK2,MSB,MBK,WFW,SUS,susDrv,susPhi,runPhi,HS,ampStep};
+  return{ESC,SET,KV,gAt,fusT,escT,drv,RATIO,ETA,ETA_LO,ETA_HI,STG,TQ,HPT,MF,LEV,MSK,MSK2,MSB,MBK,WFW,SUS,susDrv,susPhi,runPhi,msDrv,HS,ampStep};
 })();

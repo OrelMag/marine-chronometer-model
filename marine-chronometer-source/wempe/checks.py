@@ -33,17 +33,14 @@ EXPECTED={('detent:Lathe','detentBlock:Buffer'):("the detent's foot screw (M1) a
  ('fusee:Buffer','stopWork:Cylinder'):("the stop bar's spring's pin (05 06 03-2) in its hole along the slot, \"0,5 H7\" (05 06 04-2), which isn't cut in the body's small end",0.4,0.55),
  ('coverPlate:Lathe','fusee:Lathe'):("the cover plate's screw (WN-20) in the body's M1.7 hole, 6 deep (05 06 04-2), which isn't cut in the turned body",8.5,3.6),
  ('barrelArbor:Cylinder','mainspring:Buffer'):("the arbor's hook (05 07 02-2) through the mainspring's eye at its inner end, the eye not cut in the drawn strip",0.8,2.05),
- ('chain:Extrude','fusee:Lathe'):("the chain's top hook (05 07_14: 5 to its crown, 3.5 wide) seated on the fusee's pin at run down, its plate's edge on the turned body beside the groove's start: 0.01 deep, the hook's and the lathe's facets meeting (since the hook was drawn to its sheet and full wind taken at the stop, 15 October 2026; 0.04 since the fusee runs carried onto its clicks with the ratchet ahead of the wheel by the maintaining spring's closing, 16 October 2026)",0.02,0.05),
  ('chain:Extrude','fusee:Cylinder'):("the chain's top hook on the fusee's pin (05 06 00-6), round it",0.1,0.3),
  ('chain:Buffer','chain:Extrude'):("the chain's hooks riveted between its end links' plates (the rivets through them)",0.08,0.3),
- ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.82 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
+ ('band:Buffer','fusee:Lathe'):("the band in the fusee's groove, 0.78 in the 0.87 land, along the turned groove's walls (drawn as slopes over its 0.04 rows)",2.5,0.25),
  ('band:Extrude','barrel:Lathe'):("the band's drum hook (05 07 03-3): its barb in the slot in the drum's wall, cut at the fusee's assembly (0207), not in the turned drum",1.2,0.8),
  ('band:Buffer','fusee:Buffer'):("the band in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot, along the groove's walls (as the turned body's)",0.1,0.1),
  ('barrel:Lathe','chain:Extrude'):("the chain's bottom hook (05 07 04): its barb, 1.4 past its shank's edge, in the slot in the drum's wall cut at the fusee's assembly (0207: 'Schlitz für Kette'), not in the turned drum",0.4,0.3),
  ('band:Extrude','fusee:Cylinder'):("the band's round hook (05 07 03-2) on the fusee's pin",0.1,0.8),
- ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8),
- ('chain:Buffer','fusee:Buffer'):("the chain's links in the top turn's land where it runs through the small end's pieces either side of the stop bar's slot: 0.80 across in the 0.82 land, the links' and the groove's facets meeting (as the turned body's)",0.04,0.06),
- ('chain:Buffer','fusee:Lathe'):("the chain's links in the fusee's groove: 0.80 across in the 0.82 land (05 07 04, 05 06 04-2), the links' and the turned groove's facets meeting",0.04,0.06)}
+ ('band:Buffer','band:Extrude'):("the band's ends brazed to its hooks (05 07 03): the strip's end against its round hook where the pin's hook turns off the groove's start",0.05,0.8)}
 WIND_SEQ=False
 BARREL=False
 REGISTRY=False   # bom.py's registry matches the Hamilton's catalogue numbers on its cards; the Wempe's lines are drawing numbers (their 'no' empty), so a card's figures (120 teeth, 310 °C) aren't part numbers
@@ -86,5 +83,25 @@ MASSPROPS={'out':'gimbals_wempe.json','hash':'#view=case','alt':{'bakelite':1.37
     const inRing=[1,-1].map(s=>{for(let d=0.5;d<=90;d+=0.5){const t=s*d*Math.PI/180,c=Math.cos(t),n=Math.sin(t);for(const[x,y,z]of pts){const X=x*c-y*n,Y=x*n+y*c,r=Math.hypot(X,z);if(r>=r0&&r<=r1&&Y>=y0&&Y<=y1)return d;}}return null;});
     const c=bb.getCenter(new THREE.Vector3());return JSON.stringify({PB:[c.x,c.y,c.z].map(x=>+x.toFixed(3)),reach:{bowl:+rB.toFixed(2),ringIn:+rIn.toFixed(2),aboutX:+rX.toFixed(2),ring:[r0,r1,y0,y1].map(x=>+x.toFixed(2)),bowlInRing:inRing}});})()"""}
 # smoke.py's essay steps (the Essay tab, js/essay.js): the link into the model it follows (the escapement view; Back must return to the essay where it was), what that must
-# give (the essay hidden, the view's button pressed), the section #essay=… opens, and no report button (the Hamilton's Report a bug isn't on this page)
-ESSAY={'link':'#view=escapement','got':"[ESSAY.on(),document.querySelector('#views button[aria-pressed=\"true\"]').dataset.v]",'want':[False,'escapement'],'sec':'detent','report':False}
+# give (the essay hidden, the view's button pressed), the section #essay=… opens, and its report button (Report a bug, since 3.00.00)
+ESSAY={'link':'#view=escapement','got':"[ESSAY.on(),document.querySelector('#views button[aria-pressed=\"true\"]').dataset.v]",'want':[False,'escapement'],'sec':'detent','report':True}
+# holecheck.py --model wempe: the states the movement is checked in (the sheets as last revised, the page's default, and as first drawn: movement.js's setRev), and the
+# holes expected empty: (part, line or '' for any, centre in the movement frame within 0.4 or None for any, state or None for both, why it is empty on the real clock too)
+# HOLE_WALL: a hole is as deep as the metal round its edge (holecheck.js's opt.wall), since the upper cock is one solid 15 deep and its auxiliary hole 20 goes through the arm's 2.4
+# over the balance (with the part's whole depth the balance passing under it read as its pin)
+HOLE_WALL=True
+HOLE_STATES=[('last',"__mv.userData.setRev('last')"),('first',"__mv.userData.setRev('first')")]
+_HS="a hole of the hand setting (Zeigerstellung 05 33), struck through on 05 08 02-1 with \"nur wenn Zeigerstellung eingebaut wird\": drilled, the work not fitted, as Wempe 3955's plate (3_Wempe_3955_uZ.jpg, 6_Wempe_3955_S.jpg) and Greenwich's wartime Wempe's (rmg_L5393_wempe_wartime_002.jpg) have them empty (README, Superseded)"
+_AUX="an auxiliary hole (Hilfsloch, reamed 3.50 +0.012 in both plates' tables, 05 09 01 and 05 08 02-1): nothing goes in it; the three small windows beside the pillars Altmeppen lists among the German features (README, How each frame part was measured); Wempe 3955's dial side shows 12 where the table puts it, 40 not (README, Unresolved)"
+_HD="the balance holding device's (Unruhhaltevorrichtung 05 36: 51 Zangenschraube M2, 52 Winkelhebelschr. M2, 53 Stift f. Wendelfeder 1.5 H7, 05 09 01's table): the device isn't built, as it doesn't fit the balance and detent as last revised; the 1943 plate keeps its pocket and holes, so one was fitted, its later form not in the set (README, Unresolved)"
+_H30="hole 30 (Ankerrad), in the detent pillar plate's own table (05 08 02-1) and drilled in Wempe 3955's plate: its setting's seat (Ø 5.2 H7, the 4.59 lip) and its two M1.2 built as the table gives them, and left empty (README, Superseded)"
+HOLE_EXPECTED=[('pillarPlate','050802-1',c,None,f"{k}: {_HS}") for k,c in[(14,[-36.41,0,17.23]),(15,[-33.21,0,22.87]),(16,[-30.79,0,21.47]),(17,[-33.99,0,15.93])]]+[('pillarPlate','WN-hs',c,None,"18, its bush's bore: the hand setting's pinion isn't fitted, so its bush stands empty, as Wempe 3955's (3_Wempe_3955_uZ.jpg)") for c in([-22.14,3.35,12.78],[-22.14,0,12.78])]+[   # 18 itself holds the bush (train.js)
+  (pl,'050802-1|050901',[x,y,z],None,f"{k}: {_AUX}") for pl,y in(('pillarPlate',0),('topPlate',-22.35)) for k,x,z in((3,0,-37),(12,-35.74,9.58),(40,26.16,26.16))]+[
+  ('pillarPlate','050802-1',[-9.1,0,12.11],None,"23 (Unruh) in the pillar plate, punched 4.4 in the table and drawn Ø 7 on the plan: the balance's lower bearing is in the lower cock under the top plate (05 08 00-2), and nothing on the sheets or the coloured section stands in it; its use isn't given"),
+  ('pillarPlate','050802-1',[-5.03,0,33.73],None,"30: "+_H30),('pillarPlate','050802-1',[-5.03,2.85,33.73],None,"30, its lip: "+_H30),
+  ('pillarPlate','050802-1',[-8.53,0,33.73],None,"30, an M1.2: "+_H30),('pillarPlate','050802-1',[-1.53,0,33.73],None,"30, the other M1.2: "+_H30),
+  ('topPlate','050901',[-23.39,-20.35,7.54],None,"51, from the pocket's floor: "+_HD),('topPlate','050901',[-20.84,-22.35,24.09],None,"52: "+_HD),('topPlate','050901',[-15,-22.35,37],None,"53: "+_HD),
+  ('upperCock','050803-1',[-6.51,-37.35,2.45],None,"20 (Hilfsloch f. U. Kl. ob., drilled 2.8: 05 08 03-1's table), the upper cock's auxiliary hole through its arm, 10 from the balance: nothing goes in it"),
+  ('balance','050301-1',None,'first',"as first drawn, the arm's two screw holes (Ø 1 at 2.14 either side of its hole, 05 03 01-1 of 31.7.41): the 1941 staff's brass collar (05 04_5) has no screw holes and the arm is riveted on its neck, so they stand empty (README, As first drawn); the balance turns, so anywhere"),
+  ('rollers','050403-1',None,None,"the impulse roller's hole Ø 1.3, 1.9 below its centre and 0.7 to the side (02 04 02, revised 10.9.41: sure), through it beside the staff: open, its use not given; the balance turns, so anywhere"),
+  ('dial','050200-4',[-5.02,10.35,50.25],None,"the dial's Ø 1 at 185.7° on Ø 101 (05 02 00-4, scaled), opposite its pin's at 6°: nothing under it in the movement ring (05 08 00-3), its use not given")]
