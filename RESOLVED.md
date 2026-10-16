@@ -1291,6 +1291,17 @@ Contents:
 
 ## Plates, bridges, screws and arbors
 
+- **The Wempe's escape endstones and plates differed from Wempe 3955's** (16 October 2026, the audit of
+  3.00.00). The upper escape endstone's setting was closed under the plate's lip with its screws in from
+  inside, and the lower was a stadium cap screwed over the stone; 3955 shows round gilt settings with the
+  stones in them, the upper's spigot through the lip's Ø 4.5 H7 (its fit's purpose), its screws in from
+  outside, the lower flush in a seat with the screws' heads lapping it. The cock's endstone showed no
+  stone. The hand setting's holes 14-18 and window, which the sheet strikes through, are drilled in 3955's
+  plate; the detent block's pin holes go through and are countersunk; hole 4 has an oil sink; the plate is
+  engraved and the balance arm stamped RGG. Keep: the upper screws' heads stay low (0.3) under the balance's
+  rim, which passes 0.47 over the plate, and they lift with the plate in the Exploded view (headOn); a
+  countersink or sink shares its circle with the hole under it (stacked features), or solidGeo leaves it
+  open. `4e06f34`, `7a4bd48`
 - **The Wempe's frame read off its sheets wrongly in four places** (15 October 2026, a survey of the parts against their works drawings). The
   barrel bridge's chord was drawn square to hole 45's line, its "7,7" read along the chord to pin 41 and its "5" as the top corner's offset,
   where both figures' extension lines run parallel to an edge: 42 is 7.7 from the chord (with 45's 7 that gives the sheet's 24 to 0.002) and
