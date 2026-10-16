@@ -8,6 +8,9 @@
                                        # into mainspring_bound.json (here, by the strip's thickness), which mainspring_friction.py and bench.js read
     MC_MS_T=0.386 MC_MS_E=220 python mainspring.py [--write | --bound | --plot ...]   # (or --nivaflex, the same from deviations.json) a variant strip (the build's Nivaflex, deviations.json: thickness mm,
                                        # modulus GPa): mainspring_t0.386.json in the current directory, mainspring_t0.386.js here (committed), never js/mainspring.js
+    MC_MS_T=0.374 MC_MS_L=1009.8 MC_MS_RA=4.9 MC_MS_TAG=fz374r49 MC_MS_TLO=11.25 MC_MS_THI=19.25 python mainspring.py   # any strip, length and core (named by MC_MS_TAG; the states'
+                                       # range MC_MS_TLO-THI round its slack and coil-bound); MC_MS_TILT=0.15 tilts the free curve (its inner turns' radii 15 % smaller, the outer
+                                       # 15 % larger: the read's sensitivity). PLAN-drive-and-damping.md's candidates (fz*), which drive.js tabulates
 
 The strip (0.394 mm thick, the videos' coils' pitch in the measured barrel, and 1,064 mm long, their L/t of about 2,700; 13.55 wide; core.js MSPRING and movement.js
 MSY0/MSY1; the parts list's 0.0165 in, 0.419, until 12 October 2026) on the arbor's core r 4.9 (the videos' r 4.8-5.7; 1.8, estimated, until then) is a curve r(theta)
@@ -58,7 +61,9 @@ JS=MC/'js'/'mainspring.js' if not VAR else HERE/f'mainspring_{VAR}.js'   # the t
 BOUND=HERE/'mainspring_bound.json'
 # the free spring (KLUwI2UUCMQ 32:18): its turns' radii, px along the horizontal through its centre, innermost first
 FREE_PX=[97,185,250,328,405,502,632,750]
-rk=np.array(FREE_PX,float);rk*=L/(2*math.pi*rk.sum())
+rk=np.array(FREE_PX,float);TILT=ENV('MC_MS_TILT',0)   # a variant's free curve tilted (the read's sensitivity, about 15 %: the inner turns' radii times 1 - TILT, the outer's 1 + TILT, between them in step)
+if TILT:rk*=1+TILT*np.linspace(-1,1,len(rk))
+rk*=L/(2*math.pi*rk.sum())
 sk=np.array([2*math.pi*(rk[:i].sum()+rk[i]/2) for i in range(len(rk))])
 S0=np.concatenate([[0],sk,[L]]);RH0=np.concatenate([[rk[0]*0.8],rk,[rk[-1]+(rk[-1]-rk[-2])*(L-sk[-1])/(sk[-1]-sk[-2])]])   # the end of its inner turn curls a little tighter (the frame)
 def k0(s):
@@ -176,7 +181,7 @@ def bound(n=12,step=0.05):
         last=T
     if last==Ts[-1]:print('  !! still not coil-bound: run with a larger N')
     D=json.loads(BOUND.read_text(encoding='utf-8')) if BOUND.exists() else {}
-    D[VAR or 'model']=dict(t=t,gap=gap,L=L,ra=ra,E=E_GPA,T0=T0,quarter=T1,bound=last,step=step,**({'Rw':Rw,'eye':EYE,'B':float(B_MM),'set':SET} if B_MM else {}));BOUND.write_text(json.dumps(D,indent=1,sort_keys=True)+'\n',encoding='utf-8',newline='\n')
+    D[VAR or 'model']=dict(t=t,gap=gap,L=L,ra=ra,E=E_GPA,T0=T0,quarter=T1,bound=last,step=step,**({'Rw':Rw,'eye':EYE,'B':float(B_MM),'set':SET} if B_MM else {}),**({'tilt':TILT} if TILT else {}));BOUND.write_text(json.dumps(D,indent=1,sort_keys=True)+'\n',encoding='utf-8',newline='\n')
     print(f'{VAR or "the model"}, the strip {t} x {L:.0f} mm on r {ra}: coil-bound past {last:.2f} turns (the table ends at {T1}); wrote {BOUND.name}');return last
 def rebuild(s,r):
     ds=np.diff(s);dr=np.diff(r);return np.concatenate([[0],np.cumsum(np.sqrt(np.maximum(ds*ds-dr*dr,1e-12))/((r[1:]+r[:-1])/2))])
