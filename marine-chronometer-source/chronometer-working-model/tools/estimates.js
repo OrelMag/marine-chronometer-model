@@ -45,7 +45,7 @@ for(const r of T3)say(`back radius ${r.rb} mm: as drawn ${r.made?r.made.ok?'ever
 chk(T3.every(r=>r.adj),'at every radius the adjusting screws and the trip spring\'s tip bring the escapement to the manual\'s figures');
 out.rb=T3;
 /* ---------- 4. the sustaining spring ---------- */
-say('');say('4. The sustaining spring: its band\'s height (1.25 designed), its lobes (estimated) and its gap (20° measured, rough)');
+say('');say('4. The sustaining spring: its band\'s height (1.55 designed; 1.25 until 16 October 2026), its lobes (estimated) and its gap (20° measured, rough)');
 const F=SU.fn,T4=[],S0=SU.spring;for(const h of[S0.H-0.02,S0.H,S0.H+0.02])for(const dl of[-15,0,15])for(const g of[18,20,22]){const sfl=(62+dl)*D,swl=(35+dl)*D,sb=0.5*D,G=g*D,smax=G-sb,k=F.stiffOf({h,sfl,swl,sb}),P=k*smax/F.T0,q=F.sim(k,Math.min(F.T0/k,smax),3600);T4.push({h,dl,g,k,P,tTurn:q.tTurn,tStop:q.tStop});}
 const P4=T4.map(r=>r.P),tt=T4.map(r=>r.tTurn/60);
 say(`over the ${T4.length} combinations its push banked ${f(100*Math.min(...P4))}-${f(100*Math.max(...P4))} % of the drive, over a turn ${f(Math.min(...tt),1)}-${f(Math.max(...tt),1)} minutes, the train running ${f(Math.min(...T4.map(r=>r.tStop/60)),0)}-${f(Math.max(...T4.map(r=>r.tStop/60)),0)}`);

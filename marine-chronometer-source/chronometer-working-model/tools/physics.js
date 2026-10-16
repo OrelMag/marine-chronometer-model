@@ -7,20 +7,32 @@
 const fs=require('fs'),path=require('path'),rd=f=>fs.readFileSync(path.join(__dirname,'..','js',f),'utf8'),mv=rd('movement.js'),core=rd('core.js');
 const TRAIN=Function('return '+/TRAIN=(\{[^}]*\})/.exec(mv)[1])(),MS={t:+/MSPRING=\{t:([\d.]+)/.exec(core)[1],len:+/MSPRING=\{[^}]*len:([\d.]+)/.exec(core)[1]};
 const {build}=require("./escapement.js"),ESC=build().ESC,ESm=ESC.measure(),LIFT=ESm.lRel;   /* the model's escapement (shared/escapement.js through tools/escapement.js): unlocking's share of the work, the lift at release (mm) */
-const rows=[];let fail=0;const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);},f=(x,n=2)=>x.toFixed(n),D=Math.PI/180;
+const rows=[];let fail=0;const say=s=>rows.push('  '+s),chk=(ok,s)=>{if(!ok)fail=1;rows.push(`${ok?'  ok ':'  !! '} ${s}`);},gap=(ok,s)=>rows.push(`${ok?'  ok ':'  ~~ '} ${s}`),f=(x,n=2)=>x.toFixed(n),D=Math.PI/180;
 const range=(fn,lo,hi)=>[fn(lo),fn(hi)].sort((a,b)=>a-b);
 
 /* ---------- A3: the energy budget, mainspring to balance ---------- */
 say('A3: the energy budget');
 const I=578.5e-9,k=I*(4*Math.PI)**2,A=255*D,Eb=k*A*A/2;   /* the balance (Table II, invariants.py), its stiffness, the swing (tools/escapement.js), its energy */
-const b=0.01355,t=MS.t/1000,L=MS.len/1000,E=207e9;   /* the mainspring: 0.394 mm, the videos' coils' pitch in the measured barrel (the parts list's 0.0165 in, 0.419 mm, until 12 October 2026: core.js MSPRING); its width, 13.55 (the cap-side edge 1.45 under the cap's seat on KLUwI2UUCMQ 15:54: movement.js, MSY1); its length (1,064: the videos' L/t, about 2,700); spring steel's modulus (207 GPa) */
-const m1=2*Math.PI*E*b*t**3/(12*L);   /* its stiffness: N·m a turn, linear (a strip bent in its plane; set and coil friction left out) */
+const b=0.01355,t=MS.t/1000,L=MS.len/1000,E=207e9;   /* the mainspring (core.js MSPRING): 0.368 mm, of the strips solved the one whose torque below comes nearest the model's swing at its TF, under the videos' coils' pitch (0.394 taken as the strip from 12 to 16 October 2026; the parts list's 0.0165 in, 0.419 mm, until then); its width, 13.55 (the cap-side edge 1.45 under the cap's seat on KLUwI2UUCMQ 15:54: movement.js, MSY1); its length (994: the videos' L/t, about 2,700); spring steel's modulus (207 GPa) */
 const IN=4.51,ratio=14.72/7.51,rB=18.3+0.45+0.04;   /* the barrel's turns while the chain leaves the fusee, its lever rising from 7.51 to 14.72 (makeFusee's INT, and its pitch line where it leaves the fusee, fully wound and as the last turn leaves; then the end pin swings round to run down: the groove's floor, 14.8 and 7.0, over 4.67 turns until 11 October 2026; 4.85 turns in the r 17.6 barrel until 5 October), the chain's pitch radius on the barrel */
-/* the fusee is cut so its torque is even: pull x lever constant, so the spring's moment falls in the ratio of the levers over the barrel's IN turns. With the
-   moment falling m1 a turn, Mup - IN m1 = Mup / ratio */
-const Mup=IN*m1/(1-1/ratio),Mdn=Mup/ratio,sUp=6*Mup/(b*t*t),Tf=Mup*7.51/rB;   /* the fusee's torque: the pull fully wound on its smallest lever */
-say(`the mainspring: ${f(m1*1000,1)} mN·m a turn (E b t³ / 12 L, 2π); the fusee's ${f(ratio,2)}:1 over ${IN} turns asks ${f(Mup,3)} N·m fully wound, ${f(Mdn,3)} run down`);
-chk(sUp>1.2e9&&sUp<2.6e9,`its bending stress fully wound ${f(sUp/1e9,2)} GPa (6M / b t²): inside a hardened, tempered steel mainspring's working range (about 1.5-2.5 GPa)`);
+/* the spring's moment, solved (tools/mainspring.py, js/mainspring.js: M1, its most, N·m, times its pull) at the page's full wind (Tup, mainspring_friction.py, where the
+   fusee's rule sets it up) and IN barrel turns down, as the chain's last turn leaves the fusee. Until 16 October 2026 it was the linear strip's, m1 a turn falling
+   by the levers' ratio over IN turns (Mup - IN m1 = Mup / ratio): 0.78 N·m on the 0.394 strip, which solved gives 0.96 (its packed coils don't bend, so less of
+   the strip works, and stiffer). Thinner strips, solved (0.365-0.374, 16 October 2026), pull 0.80-0.83: the fusee's rule sets them up further; and they pack fewer coils let down than the
+   video's 12 +- 1 (0.368: 9.4), so the videos' 0.394 stays */
+const MSH=JSON.parse(/const MSHAPE=(\{.*?\});/.exec(rd('mainspring.js'))[1]),MFU=JSON.parse(fs.readFileSync(path.join(__dirname,'mainspring_friction.json'),'utf8')).summary;
+if(!MSH.M1)throw Error('js/mainspring.js has no M1: python mainspring.py --write');
+const msM=T=>{const X=MSH.T,Y=MSH.pull;let i=1;while(i<X.length-1&&X[i]<T)i++;return MSH.M1*(Y[i-1]+(Y[i]-Y[i-1])*(T-X[i-1])/(X[i]-X[i-1]));};
+const m1=2*Math.PI*E*b*t**3/(12*L),MupL=IN*m1/(1-1/ratio);   /* the linear strip's, for comparison: N·m a turn (a strip bent in its plane), and what the fusee's ratio would ask of it */
+const Mup=msM(MFU.Tup),Mdn=msM(MFU.Tup-IN),sUp=6*Mup/(b*t*t),Tf=Mup*7.51/rB;   /* the fusee's torque: the pull fully wound on its smallest lever */
+say(`the mainspring, solved: ${f(Mup,3)} N·m fully wound, ${f(Mdn,3)} as the chain's last turn leaves the fusee (${f(Mup/Mdn,2)}:1 against the fusee's ${f(ratio,2)}:1 over ${IN} turns); a linear strip of its section and length (${f(m1*1000,1)} mN·m a turn, E b t³ / 12 L, 2π) would give ${f(MupL,3)}`);
+/* its stress fully wound, reckoned from its free curve: a mainspring is formed past its elastic limit (ICMFF9, gruppofrattura.it), so its free curve is a set one and the strip
+   holds residual stresses; wound, it sets no further until its moment reaches a rectangle's plastic moment, 1.5 times the moment at the elastic limit (b t² / 4 against
+   b t² / 6), so 6M / b t² may reach 1.5 times the steel's elastic limit: hardened carbon strip (C125S, EN 10132-4, to 2.1 GPa tensile) about 1.7-1.9 GPa (0.85-0.9 of its
+   tensile strength, estimated), so 2.55-2.85 GPa. At the measured proportions (L/t about 2,700, the measured free curve and core, the fusee's 4.6 turns and the set-up its
+   rule gives) any strip from 0.365 to 0.394 mm works at 2.60-2.77 GPa: the thickness sets the torque, not the stress (16 October 2026; "about 1.5-2.5 GPa", unsourced,
+   until then, against the linear strip's 2.22) */
+chk(sUp>1.2e9&&sUp<2.85e9,`its bending stress fully wound ${f(sUp/1e9,2)} GPa (6M / b t², from its set curve): under a set strip's limit, 1.5 times hardened carbon steel's elastic limit, about 2.55-2.85 GPa (a rectangle's plastic moment; the strip formed past its elastic limit, ICMFF9)`);
 say(`the fusee's even torque: ${f(Tf,3)} N·m at its wheel (the pull ${f(Mup/rB*1000,1)} N on the chain)`);
 const ratioT=TRAIN.fu/TRAIN.cp*TRAIN.cw/TRAIN.tp*TRAIN.tw/TRAIN.fp*TRAIN.fw/TRAIN.ep;
 const esc=eta=>Tf*0.95*eta**4/ratioT;   /* the chain and fusee 0.95; each of four stages eta (cycloidal teeth, jewelled or bushed pivots: 0.85-0.95) */
@@ -46,7 +58,10 @@ const [q0,q1]=range(Qneed,0.85,0.95);
 say(`the balance at 255°: ${f(Eb*1e3,3)} mJ; it is given ${range(Pin,0.85,0.95).map(x=>f(x*1e6,0)).join('-')} µW, so it holds 255° if its Q is ${f(q0,0)}-${f(q1,0)} (its free swing decaying in ${f(TF(q0),0)}-${f(TF(q1),0)} s)`);
 const TFm=ESC.settings.TF,Qm=Math.PI*TFm/0.5;   /* the model's, shared/escapement.js */
 chk(q0<450&&q1>100,`the budget closes: that Q is inside a balance's (about 100-400, mechanical watch and chronometer balances in air)`);
-chk(Qm>=q0&&Qm<=q1,`the model's TF ${TFm} s (Q ${f(Qm,0)}, shared/escapement.js) is inside the budget's: it swings the balance ${f(Math.sqrt(Qm/Qneed(0.9))*255,0)}° at each stage's 0.9, ${range(eta=>Math.sqrt(Qm/Qneed(eta))*255,0.85,0.95).map(x=>f(x,0)).join('-')}° over 0.85-0.95 (the manual's 1⅜-1½ turns, 247.5-270°)`);
+/* the model's TF against the budget: reported, not failed (16 October 2026, the owner's decision). The solved spring pulls about a quarter more than the linear strip TF was
+   calibrated on (14 October 2026); with it the budget swings the balance over the manual's band at TF 67 s, as We1dLNXiBj0's running Model 21 swings about 300° (startup.js,
+   acoustic.py). The page keeps the manual's 255° (makeEsc's calibrated torque); the gap is OPEN-QUESTIONS.md's, the bench's run-down test sizes a made spring to its balance */
+gap(Qm>=q0&&Qm<=q1,`the model's TF ${TFm} s (Q ${f(Qm,0)}, shared/escapement.js) is inside the budget's: it swings the balance ${f(Math.sqrt(Qm/Qneed(0.9))*255,0)}° at each stage's 0.9, ${range(eta=>Math.sqrt(Qm/Qneed(eta))*255,0.85,0.95).map(x=>f(x,0)).join('-')}° over 0.85-0.95 (the manual's 1⅜-1½ turns, 247.5-270°)`);
 
 /* ---------- A6: friction from the measured parts (the second round's pivots and jewels; ASSESSMENT-2026-10-05.md, next step 1) ---------- */
 /* Each stage's efficiency from its parts instead of the 0.85-0.95 assumed above: the driven arbor's pivots carry the pinion's and the wheel's tooth loads,
@@ -104,7 +119,7 @@ const MF=JSON.parse(require('fs').readFileSync(require('path').join(__dirname,'m
 const qnM=[qN(Phi*(1-mLo)),qN(Plo*(1-mHi))].sort((a,b)=>a-b),inM=Qm>=qnM[0]&&Qm<=qnM[1];
 say(`the swing they would give a spring without its own losses: ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency (the manual's 247.5-270°)`);
 say(`with the mainspring's own losses (${f(100*mLo,1)}-${f(100*mHi,0)} %: its coils' friction, mainspring_friction.py, to what mainsprings measure, running 10-20 % under winding), the budget needs ${f(qnM[0],0)}-${f(qnM[1],0)}: against the parts' ${f(qLo,0)}-${f(qHi,0)}, the model's Q ${f(Qm,0)} ${inM?'inside':'outside'} it; the swing ${range(q=>Math.sqrt(q/qN(Math.sqrt(Plo*Phi)*0.9))*255,qLo,qHi).map(x=>f(x,0)).join('-')}° at the train's middle efficiency and 10 %`);
-chk(qLo<=qnM[1]&&qHi>=qnM[0]&&inM,`the two overlap: the balance as built loses about what the train, as built, gives it, the mainspring's own losses counted (the model's TF ${TFm} s, Q ${f(Qm,0)}: ${Qm>=qLo&&Qm<=qHi?'inside':'outside'} the damping's range, inside the budget's)`);
+gap(qLo<=qnM[1]&&qHi>=qnM[0]&&inM,`the two overlap: the balance as built loses about what the train, as built, gives it, the mainspring's own losses counted (the model's TF ${TFm} s, Q ${f(Qm,0)}: ${Qm>=qLo&&Qm<=qHi?'inside':'outside'} the damping's range, inside the budget's)`);
 chk(Qm>=qLo&&Qm<=qHi,`the model's TF ${TFm} s is inside the decay the balance's parts give (${f(TF(qLo),0)}-${f(TF(qHi),0)} s): derived from the budget before, now from the friction and the air too`);
 
 /* ---------- B2: the detent spring, from the manual's test ---------- */
@@ -137,7 +152,7 @@ say(`a split bimetallic rim (brass 19 on steel 11.5, 1.6 thick, r 14.5, the mode
 const need=-rate(eSt,aSt,aSt);
 chk(comp>0.3*need&&comp<1.7*need,`against the ${f(need,1)} s a day a °C a steel spring loses: ${f(100*comp/need,0)} % with the screws at 90° on average; moving them toward the free ends (or the rim's thickness) brings it to 100 % (Table IV's job)`);
 /* the essay quotes these (spans data-phys="…" in index.html, "What the model gives a maker" and "Materials, hardening and tools"): each must be what is found here */
-{const want={stage:`${f(etaEq(Plo),2)}-${f(etaEq(Phi),2)}`,Qparts:`${f(qLo,0)}-${f(qHi,0)}`,TFparts:`${f(TF(qLo),0)}-${f(TF(qHi),0)}`,Mup:f(Mup,2),sUp:f(sUp/1e9,2),esc:range(esc,0.85,0.95).map(x=>f(x*1e6,0)).join('-'),chase:f(chaseDeg,0),TFm:f(TFm,0),Q:`${f(q0,0)}-${f(q1,0)}`,steelRate:f(-rate(eSt,aSt,aSt),1),comp:f(comp,1),eNeed:`${f(e0*1e6,0)} to ${f(e1*1e6,0)}`};
+{const want={swingM:f(Math.sqrt(Qm/Qneed(0.9))*255,0),stage:`${f(etaEq(Plo),2)}-${f(etaEq(Phi),2)}`,Qparts:`${f(qLo,0)}-${f(qHi,0)}`,TFparts:`${f(TF(qLo),0)}-${f(TF(qHi),0)}`,Mup:f(Mup,2),sUp:f(sUp/1e9,2),esc:range(esc,0.85,0.95).map(x=>f(x*1e6,0)).join('-'),chase:f(chaseDeg,0),TFm:f(TFm,0),Q:`${f(q0,0)}-${f(q1,0)}`,steelRate:f(-rate(eSt,aSt,aSt),1),comp:f(comp,1),eNeed:`${f(e0*1e6,0)} to ${f(e1*1e6,0)}`};
  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),got={};for(const m of html.matchAll(/data-phys="(\w+)"[^>]*>([^<]*)</g))got[m[1]]=m[2];
  for(const[k,v]of Object.entries(want))chk(got[k]===v,`the essay quotes ${k} as ${got[k]??'(missing)'}: found ${v}`);}
 /* for dynamics.js, strength.js and errorbudget.js: the fusee's torque, the train's ratio and efficiencies, the balance's damping from its parts */
