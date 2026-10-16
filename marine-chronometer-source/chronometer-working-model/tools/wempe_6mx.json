@@ -1,0 +1,94 @@
+{
+ "note": "tools/wempe_6mx.js: the Soviet 6MX against the drawings (as last revised): the bodies (g·mm²), the rate before timing (s a day), the swing (deg) and rate against 12 h (s a day) over the wind, each mesh's shake and hole tolerance (mm)",
+ "bodies": {
+  "last": {
+   "I": 2560.707,
+   "JW": 9.964,
+   "ID": 8.46
+  },
+  "6mx": {
+   "I": 2560.447,
+   "JW": 9.954,
+   "ID": 8.24
+  }
+ },
+ "rateBeforeTiming": 4.39,
+ "wind": [
+  {
+   "h": 0,
+   "a": 204.22,
+   "a6": 204.24,
+   "r": 0.034,
+   "r6": 0.034
+  },
+  {
+   "h": 12,
+   "a": 199.37,
+   "a6": 199.41,
+   "r": 0,
+   "r6": 0
+  },
+  {
+   "h": 24,
+   "a": 196.62,
+   "a6": 196.64,
+   "r": -0.027,
+   "r6": -0.026
+  },
+  {
+   "h": 36,
+   "a": 197.76,
+   "a6": 197.78,
+   "r": -0.016,
+   "r6": -0.015
+  },
+  {
+   "h": 48,
+   "a": 202.46,
+   "a6": 202.48,
+   "r": 0.024,
+   "r6": 0.024
+  },
+  {
+   "h": 54,
+   "a": 198.7,
+   "a6": 198.72,
+   "r": -0.005,
+   "r6": -0.004
+  }
+ ],
+ "swing6": [
+  194.09,
+  204.24
+ ],
+ "train": [
+  {
+   "stage": "fusee wheel → centre pinion",
+   "sh": 0.02,
+   "sh6": 0.02,
+   "tp": 0.1098,
+   "tp6": 0.1098
+  },
+  {
+   "stage": "centre wheel → intermediate pinion",
+   "sh": 0.035,
+   "sh6": 0.025,
+   "tp": 0.0774,
+   "tp6": 0.0824
+  },
+  {
+   "stage": "intermediate wheel → seconds pinion",
+   "sh": 0.05,
+   "sh6": 0.025,
+   "tp": 0.0474,
+   "tp6": 0.0599
+  },
+  {
+   "stage": "seconds wheel → escape pinion",
+   "sh": 0.05,
+   "sh6": 0.03,
+   "tp": 0.0248,
+   "tp6": 0.0348
+  }
+ ]
+}

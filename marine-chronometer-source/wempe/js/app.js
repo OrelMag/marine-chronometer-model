@@ -430,6 +430,20 @@ Object.assign(REV6,{
     d:'The Soviet 6MX’s detent block: the revised block’s form, an L of brass under the top plate, its upright at the free face, so the detent hangs between it and the plate at the escape wheel’s height. A screw across the upright’s end is the banking: its domed brass head on the wheel’s side of the detent, the pipe resting on it, sets the depth of lock. The 6MX’s block also has an adjusting slide, not built (the README’s Unresolved).',
     sp:'05 04 01-4 · base 14.6 × 7.5, 6.5 deep at its end and 3 beyond · upright 3 × 3, 3.5-6.5 under the plate · banking screw M1.2, head Ø 3.2 × 1.4'},
   detent:{sn:'1436’s revised (bracketed) sizes, at the first-drawn heights the 6MX’s block holds it at; the 6MX’s own detent, shorter, not measured'}});
+/* the 6MX's other parts that differ from the drawings' (X4): the dial's screws and the ring's holes for them, the striped bridges, the escapement's upper endstone at the first-drawn heights,
+   the pillar plate without the hand-setting cut */
+REV6.escEndstoneUp={sn:FIRST6+PARTS.escEndstoneUp.sn};
+Object.assign(REV6.pillarPlate,{d:REV6.pillarPlate.d+' It has no hand-setting cut: the drawings’ window and holes 14-18 for it (which Wempe 3955’s plate has) aren’t on Kirov No. 247’s dial side, and Altmeppen lists no external hand-setting.'});
+Object.assign(REV6,{
+  dial:{sn:'The drawings’ dial with its screws moved to the minute marks Altmeppen lists, read on Kirov No. 247’s dial (±1° for the photograph’s tilt); its printing traced on that photograph (dialtrace.py --dial kirov)',src:'scaled',
+    d:'The Soviet 6MX’s dial: the drawings’ plate, screwed at the 19, 39 and 59 minute marks (the drawings’ at 20, 40 and 59). With the 1st Moscow Watch Factory’s printing (the Variants’ Dial, which choosing the 6MX selects), it is Kirov No. 247’s: the factory’s mark 1МЧЗ and ИМЕНИ КИРОВА across the centre, the up-and-down sub-dial open at the top for СПУСК (run down) and ЗАВОД (wound), and the number, 247, written in red ink. Its layout is the drawings’: its six printed circles measure the sheet’s figures within 0.1 mm.',
+    sp:'As 05 02 00-4 · Ø 103.55 × 1.3 · screws at 354°, 114° and 234° (Kirov 247’s 353.1, 112.5, 233.6) on Ø 101'},
+  ring:{sn:'The drawings’ ring; its tapped holes for the dial’s screws moved with them (Kirov No. 247’s dial)',src:'drawing',
+    d:'The movement ring as drawn, its three tapped holes for the dial’s screws at the 6MX dial’s places (114°, 234° and 354°). In the 6MX’s bowl it stands inside the threaded rim, the bezel’s shoulder on its flange.',
+    sp:PARTS.ring.sp+' · the dial’s screws’ holes M1 at 114°, 234°, 354° on Ø 101'},
+  barrelBridge:{sn:'The drawings’ bridge; its finish read off '+K247,src:'drawing',
+    d:'The barrel bridge as drawn, finished as Kirov No. 247’s plates and bridges are: Geneva stripes 3.95 mm apart at 50°, running on across the top plate and cocks as one sweep (the Wempe’s are hammered).',
+    sp:PARTS.barrelBridge.sp+' · Geneva stripes 3.95 apart (Kirov 247’s)'}});
 /* the 6MX's case and boxes (case.js, X3): Kirov 247's where its photographs show them, Kirov 422's bowl and Kirov 14917's (rAw2zmulpk8) where they don't */
 Object.assign(REV6,{
   bowl:{src:'scaled',sn:'Its rim on Kirov 247’s dial photograph (in its bowl), its profile traced on Kirow 422’s bowl turned over and scaled by that rim; its inside the drawings’; its heights fitted to the drawn floor and the bezel’s glass (estimated)',
@@ -440,7 +454,7 @@ Object.assign(REV6,{
     sp:'6MX (no sheet) · knurl Ø 116.6 · 13 high · glass Ø 107 × 4, its top where the drawings’ bezel’s is'},
   box:{t:'Wooden box (6MX)',src:'scaled',sn:'Its size the TU’s 190 × 190 × 190; its tiers measured on Kirov 22823’s box, its plates and hasps on Kirov 247’s; its walls and inside estimated',
     d:'Kirov No. 247’s box: orange lacquered wood in three tiers, the body, a glazed lid and a top lid, two hasps with knurled screws across the parting lines, brass strips on its corners and a ring handle on each side. On its front the number plate, 247; on the glazed lid’s, the factory’s diamond badge, “1 МЧЗ им. Кирова” (1st Moscow Watch Factory named after Kirov). The gimbals hang in it as in the drawings’ box.',
-    sp:'TU 25-07-1533-84, 1.2.7: 190 × 190 × 190 · body 97, glazed lid 68, top lid 25 (Kirov 22823’s) · walls 10 (estimated)'},
+    sp:'TU 25-07.1533-84, 1.2.7: 190 × 190 × 190 · body 97, glazed lid 68, top lid 25 (Kirov 22823’s) · walls 10 (estimated)'},
   lid:{t:'Lids (6MX)',src:'est',sn:'Their heights measured on Kirov 22823’s box; the badge and hasps on Kirov 247’s; both hinged at the back and opened together here (estimated)',
     d:'The 6MX box’s glazed lid, its glass under a frame so the dial can be read with the top lid open, and the top lid over it, each closed by a hasp with a knurled screw. The factory’s diamond badge is on the glazed lid’s front.',
     sp:'68 and 25 high · glass 3 · badge 38.6 × 24 · hasps 53 wide'},
