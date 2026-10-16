@@ -223,6 +223,12 @@ strong end (<span class="st mid">~~</span> where only the strong end holds).</p>
 (left of the dashed line) the part holds only if made of the stronger material. <code>wempe_strength.js</code>.</figcaption></figure>
 <div id="tStr" class="tw"></div>
 <div id="kStr"></div>
+<p><b>The maintaining spring.</b> Its eye's pin goes up into the ratchet and its other pin down into the fusee wheel (05 06_4's Schnitt A-B: the eye's pin drawn whole,
+"Stift nach oben", the other hidden), so the drive closes the open ring until its ends nearly meet, its outer edge leaving the wheel's recess; the end at the wheel's
+pin, its short wide tail against the recess's wall, is held as clamped. Its stiffness from its drawn section (the width traced round it on 05 06 01-1), by Castigliano at
+small turns and as an elastica as it closes; how far the fusee's drive (05 06_20) closes it and where its ends would meet; its stress; and, the key held, the train run on it, the
+swing following, with the maintaining detent catching the ratchet up to a tooth late. <code>wempe_sustaining.js</code>.</p>
+<div id="kSus"></div>
 
 <h2 id="hair">8. The hairspring and Phillips' curves</h2>
 <p>The hairspring is a helix (05 03_6: 0.285 × 0.52, Ø 12.8, left-hand), its ends bent to a curve drawn on 05 03_7 as a table of radii every 10°, and cut, before the curves
@@ -540,7 +546,7 @@ function draw(){
     const lg=Math.log10;if(S.length){ranges('cStr',{label:'Margins',x:[lg(0.5),lg(200)],xt:[0.5,1,2,5,10,20,50,100,200].map(lg),xf:v=>String(+Math.pow(10,v).toPrecision(2)),xl:'margin (stress against the material\'s range; logarithmic)',l:330,rh:26,zero:0,
       rows:S.map(q=>({name:q.name,bars:[[lg(q.lo),lg(q.hi),q.s==='ok'?'--s3':q.s==='~~'?'--s4':'--s2',10]],tip:`<b>${esc(q.name)}</b><br>${esc(q.load)}, ${q.stress}<br>${esc(q.lim)}: margin ${q.lo}-${q.hi}`}))});
       table('tStr',['','Part','Load','Stress','Against','Margin'],S.map(q=>[`<span class="st ${ST[q.s]}">${q.s}</span>`,esc(q.name),esc(q.load),q.stress,esc(q.lim),`${q.lo}-${q.hi}`]),true);}}
-  checks('kStr','strength');
+  checks('kStr','strength');checks('kSus','sustaining');
 
   /* ---------- 8. hairspring ---------- */
   {const H=D.hair;chart('cHsRate',{label:'The spring\'s rate against the swing',x:[100,300],y:[-4,8],xl:'the swing (°)',yl:'rate against small swings (s/d)',hbands:[{y0:-4,y1:8,c:'--grid'}].slice(0,0),vbands:[{x0:225,x1:270,c:'--manual',t:'225-270°'}],vrefs:[{x:H.A12,t:`the model's ${f(H.A12,1)}°`,dy:16}],hrefs:[{y:0,t:'0'}],r:110,

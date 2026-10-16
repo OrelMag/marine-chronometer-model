@@ -8,7 +8,7 @@
 //   the drive over the wind (05 06_20, the train's ratio and efficiency) and, from it, the mainspring's torque and stress as a check on how the sheet is read;
 //   the balance's damping from its parts (air on its masses, timing weights, arm and cuts; the endstone; the spring), the free run-down TF it gives and the model's;
 //   measure()'s figures against sheet 05 04_1's angles where they are given, the solved events against escapement.js's kinematic ones, the swing and the rate across the
-//   wind, the run-down with the train held and the maintaining spring's minute; and stoneClash, the locking stone never inside a tooth, as tools/escapement.js runs it;
+//   wind, the run-down with the train held and the maintaining spring's push; and stoneClash, the locking stone never inside a tooth, as tools/escapement.js runs it;
 //   the page's motion (WESC.ESC.state since 15 October 2026: makeEsc's state at the live swing and drive, in the layout's terms): the balance's beat from the solved pushes
 //   (closing on itself, its damping the free run-down's, its far turn the swing), each state makeEsc's at that angle, the drawn detent against the layout's own geometry,
 //   the drawn stone never inside the drawn tooth (the wheel D0 behind makeEsc's), the train held below AMIN, and the events by phase (wempe/checks.py's PH for fine.py).
@@ -96,7 +96,7 @@ head('the swing and the rate across the wind');
 head('stopping, starting and the maintaining spring');
 {let a=E.ampAt(P.drv(P.MF)),t=0;const a0=a;while(a>=E.AMIN&&t<600){a=P.ampStep(a,0.5,0);t+=0.5;}const tA=t;while(a>0&&t<1200){a=P.ampStep(a,0.5,0);t+=0.5;}
   say(`run down, the train held at a locked beat: the balance swinging ${f(a0/d,0)}° falls under the ${f(E.AMIN/d,1)}° it needs in ${f(tA,0)} s and comes to rest in ${f(t,0)} s; wound in that time the train goes on at once, else it needs a turn of the movement (the 1954 instruction, п. 7; the 6MX's: "a light jerk ... by turning the chronometer gently about the hands' axis")`);
-  const s0=P.drv(2),sw=x=>E.ampAt(s0*(1-x/P.SUS))/d;say(`the maintaining spring carries the running torque, 0.27 mm at r 14.2 (05 06_9, likely): ${f(P.SUS,0)} s of drive falling to nothing; through a wind of about 6 s (the page's 1.5 turns a second for 8¾ turns) the drive falls ${f(100*6/P.SUS,0)} % and the swing settles toward ${f(sw(6),0)}° (from ${f(sw(0),0)}°), moving ${f(100*(1-Math.exp(-2*6/S.TF)),0)} % of the way in that time`);}
+  const s0=P.drv(2),sw=x=>E.ampAt(P.susDrv(s0,x))/d;say(`the maintaining spring (wempe_sustaining.js): closed by the drive in running, ${f(P.runPhi(s0)/d,1)}° of the ratchet ahead of the wheel at 2 h (its ends meeting at ${f(P.MSB/d,1)}°), at ${f(P.MSK,3)} N·m a radian, it pushes ${f(100*P.susDrv(s0,0)/s0,0)} % of the drive the key going on (the detent half a tooth late), falling to nothing in ${f(P.SUS/60,1)} min; through a wind of about 6 s (the page's 1.5 turns a second for 8¾ turns) the swing settles toward ${f(sw(6),0)}° (from ${f(E.ampAt(s0)/d,0)}° running), moving ${f(100*(1-Math.exp(-2*6/S.TF)),0)} % of the way in that time`);}
 
 head('the locking stone never inside a tooth (as tools/escapement.js)');
 {const cases=[...[0.15,0.3,0.5,0.75,0.9,1,1.1,1.25,1.5].map(s=>[E.ampAt(s),s]).filter(([a])=>a>=E.AMIN),[E.AMIN+0.2*d,0.15],[300*d,1],[340*d,1]];let w={d:0},wc=null;

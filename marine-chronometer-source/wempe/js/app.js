@@ -108,7 +108,7 @@ const PARTS={
     d:'The great wheel: it drives the centre pinion, so the whole train. It turns loose on the fusee arbor, driven by the maintaining spring, which lies in the recess in its face; the maintaining ratchet turns on the tube on its hub.',
     sp:'Drawing 05 06 00-3 · Ms 58 sheet 5.5, spring-hard · z 90, m 0.4356, tip Ø 40.57 (hobbed), root Ø 37.84 · rim 2.62, web 1.22'},
   maintaining:{t:'Maintaining work (Gegensperrrad, Gegenfeder)',g:2,src:'drawing',sn:'Every size from the sheets; the clicks traced on their sheet; the click springs laid as the assembly draws them',figs:'05 06_9, 05 06_10, 05 06_11, 05 06_12, 05 06_13, 05 06_14, 05 06_4',c:'#c9a046',pri:2,
-    d:'Harrison’s maintaining work, which keeps the train going while the chronometer is wound. Running, the fusee drives the ratchet through the click wheel and two clicks, the ratchet the maintaining spring, an open steel ring, and the spring the fusee wheel. Winding, the key turns the fusee back: the clicks ride over the click wheel, the maintaining detent holds the ratchet, and the spring, still loaded, drives the wheel on. The two clicks are half a tooth apart on the 35-tooth click wheel, so one of them always bears.',
+    d:'Harrison’s maintaining work, which keeps the train going while the chronometer is wound. Running, the fusee drives the ratchet through the click wheel and two clicks, the ratchet the maintaining spring, an open steel ring, and the spring the fusee wheel: the drive closes the ring until its ends nearly meet, the ratchet then about 15° ahead of the wheel. Winding, the key turns the fusee back: the clicks ride over the click wheel, the maintaining detent holds the ratchet, and the spring, opening, drives the wheel on with most of the drive, falling as it opens, enough for ten minutes or more. The two clicks are half a tooth apart on the 35-tooth click wheel, so one of them always bears.',
     sp:'Drawings 05 06 02 (ratchet 05 06 02-1: 120 teeth, Ø 37.25, a cup Ø 26.1 for the clicks; clicks 05 06 02-3; click springs 05 06 02-2) and 05 06 01-1 (maintaining spring: Ø 32.3 × 2 × 1.35, blued)'},
   maintDetent:{t:'Maintaining detent (Gegensperrkegel)',g:2,src:'drawing',sn:'The click from its sheet; its arbor and pivots scaled on the assembly; its wire spring and stud measured on photographs (no sheet; their hole, 5, from the top plate’s table)',figs:'05 05_11, 05 05_12, 05 06_4',c:'#5a74b5',pri:1,
     d:'A blued steel click staked on its own arbor between the plates, at hole 4, riding on the maintaining ratchet’s teeth: it stops the ratchet turning back while the chronometer is wound, so the maintaining spring drives the train. A straight wire spring hanging from a stud in the top plate presses it in (the coloured section’s Feder 05 05 06-1).',
@@ -460,10 +460,11 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
      stops at a locked beat, as it does run down. It goes again when there is drive and the balance swings above AMIN: at once if it is still swinging (wound before it has
      stopped), otherwise after a twist (the button), as a detent escapement doesn't start itself (the 1954 instruction, п. 7; the 6MX's own: a light turn about the hands' axis).
      While held, tSim and the hands stand and the balance keeps its own phase (bph, oscillations); going again, bOff (phase) and eOff (beats) carry both across. The train runs
-     at the escapement's rate (PE.rateAt: s a day against the reference), so the hands gain or lose by it. While the key turns, the maintaining spring drives with what it
-     carried when the key went on (w0), falling to nothing over PH.SUS s of the train's time (wT). kick: a twist's swing, eased in over 0.15 s */
+     at the escapement's rate (PE.rateAt: s a day against the reference), so the hands gain or lose by it. While the key turns, the maintaining spring drives (PH.susDrv: its
+     push, the ratchet turned back to the detent, falling as the train runs it out, wempe_sustaining.js), the train driven at w0 when the key went on and wT s of
+     the train's time since. kick: a twist's swing, eased in over 0.15 s */
   const PH=WPHYS,PE=PH.ESC,H={amp:0,held:false,bph:0,bOff:0,eOff:0,Eh:0,kick:0,w0:0,wT:0,rate:0};
-  const drvNow=()=>winding?H.w0*Math.max(0,1-H.wT/PH.SUS):hrs<HRUN-1e-6?PH.drv(hrs/HPT):0;
+  const drvNow=()=>winding?PH.susDrv(H.w0,H.wT):hrs<HRUN-1e-6?PH.drv(hrs/HPT):0;
   /* the case (case.js): CS its groups; cl the lid's opening and cf the movement's lift out of its bowl (0 in it, 1 lifted out 600 mm and turned train side up), each eased toward
      its view's (VIEWS[...].case), the lid shut once the movement is out; as the Hamilton's box (lidM, lift, flip) */
   let CS=null,cl=1,cf=1,co=0;const SNAPC=/[?&]snap\b/.test(location.search),RMC=matchMedia('(prefers-reduced-motion: reduce)');
@@ -528,7 +529,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       /* the key: on the fusee's square while it winds with the movement out of its case (the Hamilton's keyOn), or in it turned over (cw), coming on and going off along the
          square; else standing in its holder in the box (case.js keyAt) */
       {const kc=cw.u>2,kd=kc?(1-smooth(clamp(cw.u-2,0,1)))*60:0,ko=(winding&&cf>0.8)||kc;if(ko!==keyOn||ko&&kd!==keyD){keyOn=ko;keyD=kd;CS.keyAt(ko?mv.userData.R.fu.keySeat:null,kd);}}
-      const dS=dt*(winding?Math.min(st.speed,1):st.speed),drv=drvNow();   /* while the key turns, model time no faster than real (the Hamilton's WIND_X): the maintaining spring's minute isn't spent in a frame */
+      const dS=dt*(winding?Math.min(st.speed,1):st.speed),drv=drvNow();   /* while the key turns, model time no faster than real (the Hamilton's WIND_X): the maintaining spring's minutes aren't spent in a frame */
       if(sw){sw.T+=dS;if(H.held&&wrapH(dialRead()-sw.T)<=0){sw=null;H.kick=Math.max(H.amp,0.6*PE.ampAt(1));}}   /* setting: the time the hands should read runs on; when it reaches the held dial's, the twist */
       if(sw){H.amp*=Math.exp(-dt/0.1);H.kick=0;}else if(H.kick>0){H.amp+=(H.kick-H.amp)*(1-Math.exp(-dt/0.15));if(H.kick-H.amp<0.2*D2R)H.kick=0;}else H.amp=PH.ampStep(H.amp,dS,H.held?0:drv);   /* the twist on frame time, as the Hamilton's */
       if(!H.held&&H.amp>=PE.AMIN){const r=PE.rateAt(H.amp,drv);if(Number.isFinite(r))H.rate=r;}
@@ -541,8 +542,9 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       const n=hrs/HPT;
       if(H.held){const p=H.bph-Math.floor(H.bph);s=st.speed>4?{th:0,lift:0,psDef:0,prog:0}:ESC.state(p,H.amp,0);E=H.Eh+Math.min(0,s.prog);}   /* its own swing, the wheel on its stone (drawn back while the stone lifts) */
       else if(st.speed>4){s={th:0,lift:0,psDef:0,prog:0};E=q.y-1+H.eOff;}else{s=q.z;E=q.E;}
-      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip});
-      showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4)];},
+      const ms=winding?PH.susPhi(H.w0,H.wT):PH.runPhi(drv);   /* the maintaining spring: closed by the drive, its ends nearly meeting, opening while the key turns */
+      mv.userData.update({E,th:s.th,lift:s.lift,psDef:s.psDef,n,winding,slip,ms});
+      showH();showTod();return[+slip.toFixed(3),sw?+sw.T.toFixed(2):0,   /* sw.T: a setting's wait keeps the loop running, though nothing drawn moves */+cl.toFixed(4),+cf.toFixed(4),+co.toFixed(4),+s.th.toFixed(4),+(((E%15)+15)%15).toFixed(4),+s.lift.toFixed(5),+s.psDef.toFixed(5),+hrs.toFixed(4),+(H.amp/D2R).toFixed(1),H.held?1:0,keyOn?1:0,+cw.u.toFixed(4),+GW.roll.toFixed(5),+GW.pitch.toFixed(5),+GW.M.p[0].toFixed(5),+GW.M.r[0].toFixed(5),+GW.latchK.toFixed(4),+ms.toFixed(4)];},
     hash:{write:h=>{if(Math.abs(hrs-20)>0.005)h.set('wind',hrs.toFixed(2));if(conn!=='chain')h.set('conn',conn);if(rev!=='last')h.set('rev',rev);if(tz!=='gmt')h.set('tz',tz);if(handsSet)h.set('t',hms(sw?sw.T:dialRead()));if(dial!=='wempe')h.set('dial',dial);},
       read:(g,first)=>{if((g('tz')==='local'?'local':'gmt')!==tz)setTz(g('tz')==='local'?'local':'gmt');const t=g('t');
         if(t){const v=secsOf(t);if(v!=null){if(first){tSim=Math.floor(tSim/86400)*86400+v+(tSim%1);slip=0;sw=null;H.bph=tSim/0.5;H.Eh=Math.round(tSim/0.5)-1;handsSet=true;}else setTime(Math.floor(dialRead()/86400)*86400+v,true);}}   /* a link with a time: before the model shows, the train is put at it (stateless in the centre's angle: fusee.js, dial.js); after, the hands are set */
@@ -552,7 +554,7 @@ const SECDEF={x:{n:[-1,0,0],min:-44,max:44,def:-6.425},z:{n:[0,0,1],min:-44,max:
       return`The movement, from its drawings&ensp;${winding?'<b>winding</b>':cw.go?'<b>turning it over to wind</b>':hrs>=HRUN-1e-6?'':`${hrs.toFixed(1)} h since winding`}${why?`&ensp;<b>${why}</b>`:''}&ensp;the balance ${a?`swings ${a}°`:'at rest'}${!H.held&&a?`, the escapement ${H.rate>=0?'+':'−'}${Math.abs(H.rate).toFixed(2)} s a day`:''}${st.speed!==1?`&ensp;<b>${st.speed?st.speed+'×':'stopped'}</b>`:''}`;}});
   /* the Winding controls and the Variants' chain or band */
   const hIn=document.getElementById('hrs'),hOut=hIn&&hIn.parentElement.querySelector('output');let hShown=-1;
-  function wind0(){winding=true;H.w0=H.held?0:drvNow();H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on */
+  function wind0(){H.w0=H.held?0:drvNow();winding=true;H.wT=0;}   /* the key turning: the maintaining spring carries what drove the train as it goes on (read running: until 16 October 2026 read once winding, the last wind's drive) */
   function showH(){if(!hIn)return;const v=Math.round(hrs*10)/10;if(v===hShown)return;hShown=v;hOut.textContent=v.toFixed(1)+' h';hIn.max=String(HRUN);hIn.value=String(v);}
   if(hIn){hIn.addEventListener('input',()=>{hrs=Math.min(HRUN,parseFloat(hIn.value));winding=false;hShown=-1;showH();});document.getElementById('wind').addEventListener('click',()=>{if(hrs>0&&!winding&&!cw.go){if(cf<0.5)cw.go=true;else wind0();}});}   /* in its case, turned over first (cw, tick) */   /* the maintaining spring carries what drove the train as the key goes on: nothing if it was stopped */
   /* the twist: the box turned about the hands and back sets a stopped balance swinging, about 130 deg (estimated: the 6MX's "light jerk"); going, it does nothing here */

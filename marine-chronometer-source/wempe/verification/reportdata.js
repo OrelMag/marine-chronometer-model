@@ -19,6 +19,7 @@ const RUNS=[
   ['physics','node',['wempe_physics.js'],'The energy budget from the mainspring through the fusee, chain, train and escapement to the balance\'s damping: does it close?'],
   ['gearing','node',['gearing.js','--model','wempe'],'The going train\'s four meshes tooth by tooth on the page\'s own outlines; the train in time; each mesh\'s depthing window and the holes\' tolerance.'],
   ['strength','node',['wempe_strength.js'],'Every loaded part fully wound against its material\'s published range.'],
+  ['sustaining','node',['wempe_sustaining.js'],'The maintaining spring from its drawn ring (05 06 01-1), its pins as 05 06_4 A-B puts them: its stiffness by Castigliano and as an elastica, where it banks, its push and stress, and the train run on it while the key is held.'],
   ['hairspring','node',['wempe_hairspring.js'],'The hairspring as drawn: its length\'s readings, 05 03_7\'s curve against Phillips\' conditions, the force on the pivots, its isochronism by elastica and by beam elements.'],
   ['thermal','node',['wempe_thermal.js'],'The cut bimetallic balance and steel spring in heat and cold: the linear term against the masses\' place, the secondary error.'],
   ['gimbals','node',['gimbals.js','--model','wempe','--json',path.join(TMP,'_gim.json')],'The case and gimbal ring weighed on the model, levelled as 05 01 says, run in a seaway; what reaches the escapement.'],

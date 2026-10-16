@@ -629,6 +629,34 @@ Contents:
 
 ## Winding and maintaining work
 
+- **The Wempe's maintaining spring was pinned the wrong way round, and its 70 s came from a
+  note read as its deflection.** fusee.js pinned the spring's eye to the fusee wheel and its other
+  end to the ratchet (the ratchet's sheet turned 65° to meet it), where 05 06_4's Schnitt A-B draws
+  the eye's pin whole, "Stift nach oben" (into the ratchet, above it), at 6 o'clock between the
+  clicks at 9 and 3, as the ratchet's own sheet puts its hole, and the other pin hidden (into the
+  wheel). Its drive was taken as spent over 05 06_9's illegible "x = 0,27 mm" read as its
+  deflection, 1.09° and 70 s, less than one of the ratchet's 3° teeth. Now the eye's pin is the
+  ratchet's; the drive closes the ring until its ends nearly meet (0.27-0.58 mm apart, as Gould
+  describes such a spring; its eye's hole on its 0° line, as the sheet draws it to scale, not 0.8 off
+  it), its push from its drawn section (an elastica, the end at the wheel's pin held by the recess's
+  wall), so the key held keeps the balance going 10-13 minutes (tools/wempe_sustaining.js);
+  the page draws the ratchet ahead of the wheel by that lead and the ring bent to it. Keep: a part's
+  working comes from its section, never from an illegible note; which pin goes where is read on
+  the assembly's section (which pin is drawn whole, which hidden). `HASH1`
+- **The Wempe's maintaining spring took the last wind's drive.** app.js's wind0() set winding
+  before reading the drive, so the spring started from what the last wind left, not the running
+  drive. Keep: read the running drive before the key goes on. `HASH1`
+- **The Wempe's maintaining detent's step rode into the fusee wheel's teeth.** Its 2-thick part
+  was sized 0.05 clear of the wheel's tips with a 0.25 allowance for its ride on the ratchet; with
+  the ratchet ahead of the wheel by the spring's lead it met another phase of its ride and touched
+  them (fine.py, 0.008 mm³). Now sized against its seat over a whole tooth: 7.10 from its hole
+  (7.55). Keep: a clearance for a riding part is checked over its whole ride, not an allowance.
+  `HASH1`
+- **The Wempe's fusee always came back onto the same click.** Running, update() carried the fusee
+  forward onto click 0's seat, up to a whole tooth of the 35-tooth click wheel (10.3°), though the
+  two clicks stand 180° apart, half a tooth out of step, so the nearer one bears within 5.1°. Keep:
+  the fusee rests on whichever click it meets first. `HASH1`
+
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
   has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
