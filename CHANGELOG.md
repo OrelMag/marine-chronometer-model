@@ -4,6 +4,13 @@ What changed on the site, newest first. `build.py` reads this file: the top vers
 
 Versions are `M.mm.pp`. The major `M` is 1 from 1.05.00, the first release to carry a number on the site, and goes up only for a milestone. The minor `mm` goes up with new features or parts (a merged branch), and the patch `pp` with fixes and small changes. Every deploy is a release: `python build.py --release patch -m "what changed" --site-url https://www.marinechronometermodel.com` (or `minor` or `major`) adds the next version here with today's date, then builds; commit it, and `python deploy.py` puts it live (it refuses a changed page under a version already live). Each `-m` is one line. Write for visitors: what they will see, not how it was done. Versions up to 0.04.01 were numbered afterwards from the git history, one per day.
 
+## 3.00.00 · 2026-10-16
+- The Wempe Einheits-Chronometer is complete: every part from its works drawings, running, with its essay and its report
+- Set the Wempe's hands, keep Greenwich or local time, and watch its case ride the gimbals on a rolling ship
+- The Wempe's parts drawn closer still to their sheets, among them the spring that holds the fusee's maintaining detent
+- The Wempe's winding key stands in its holder in the box's corner, as real boxes keep it
+- Report a bug or inaccuracy from the Wempe's page, and a link preview of its own
+
 ## 2.42.05 · 2026-10-16
 - The balance cock's screw now sits where the restoration videos show its hole, 2 mm nearer the bridge's middle, its steady pins with it
 
