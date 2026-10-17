@@ -26,6 +26,8 @@ Written 16 October 2026 for the next session. The first session built X0-X2 and 
 - The Wempe report (`wempe/verification/`): a section for the 6MX if the user wants one (ask); rebuild it (`reportdata.js` about 9 min, leaves temporary files: don't `git add -A` meanwhile).
 - CI: add `fine.py` and `bom.py` as first drawn and as the 6MX to `ci.py`'s full steps (the gap in "Status").
 
+**To do after the full CI (found comparing the merge's endstone, 16 October 2026):** Kirov 247's upper escape endstone setting reads silvery steel and its two screws dark steel (`2_Kirow_247_A.jpg`, enlarged at the escape arbor), where the model draws the first-drawn gilt setting and brass screws (Wempe 3955's, main's audit) in the 6MX too: give the 6MX its own group for them in `escapement.js` (the `[Y1,'first 6mx']` loop and the `WN-es` screws). Also done after the merge: the top plate's Wempe engraving kept off the 6MX (`frame.js`, not yet committed while the CI ran).
+
 **Release decided (the user, 16 October 2026):** not before X4 (asked whether to deploy X0-X3 as work in progress, they chose to wait for X4). Then a **minor** release (3.01.00 if main is still 3.00.x), with the 6MX marked unfinished on the page: the Version button reads "Soviet 6MX (in progress)" and its About note says what is still estimated or to come. Don't ask these again.
 
 **Release.** After `python ci.py --full` passes (two-hour timeout; rerun browser flakes alone with `--only`) and the user agrees: merge into `main` with `--no-ff`, `python build.py --release minor -m "..." --site-url https://www.marinechronometermodel.com` (suggest the lines; the user decides), commit, `python deploy.py`, push with `--follow-tags`, and tell the other sessions it's live.

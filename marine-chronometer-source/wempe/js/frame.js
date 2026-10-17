@@ -93,7 +93,7 @@ const WFRAME=(()=>{
       const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;
       const m=new THREE.MeshStandardMaterial({map:t,transparent:true,metalness:0.6,roughness:0.6,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2});m.userData.inkDecal=true;
       const g=new THREE.PlaneGeometry(W,Hh);g.rotateX(Math.PI/2);g.rotateY(Math.PI);   /* facing out of the plate (−y); its text along −x (O), up toward −z (N) */
-      const e=mesh(tp,g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
+      const e=mesh(rv(tp,'last first'),g,m,-30.6,TT-0.01,-8.6);e.userData.decal=1;   /* Wempe's, so the drawings' versions only (not the Soviet 6MX's plate) */e.userData.noShadow=1;e.userData.noCap=1;tag(e,'050901',1);}
 
     /* ================= the pillar plate (Unterplatte, 05 08 02-1; its assembly 05 08 02) ================= */
     /* As the top plate's metal; 85 h6 × 3.35 (05 08 02-1's "3,35 ±0,02 stark" is struck with no legible replacement: likely). Every hole of its table (sure) but 56, 57

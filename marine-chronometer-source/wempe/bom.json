@@ -3918,7 +3918,8 @@
    "part": "box",
    "fn": "Join the lid to the box at the back: one hinge 148 long, its leaves let into the parting faces (as every photographed box).",
    "rel": [],
-   "figs": "51 00_1"
+   "figs": "51 00_1",
+   "rev": "last first"
   },
   {
    "id": "Deckelstuetze",
@@ -3932,7 +3933,8 @@
    "part": "box",
    "fn": "Holds the lid open: a slotted brass bar pivoted on the lid's left wall, riding on a pin in the box's (Wempe 6161).",
    "rel": [],
-   "figs": "photographs"
+   "figs": "photographs",
+   "rev": "last first"
   },
   {
    "id": "Schluesselhalter",
@@ -4300,6 +4302,21 @@
    "fn": "190 x 190 x 190 outside (the TU's): the gimbals hang in it. No sheet: Kirov 247's photographs, its tiers on Kirov 22823's.",
    "rel": [],
    "figs": "13_, 14_Kirow_247_Kasten (dg-chrono-6mx-gallery)",
+   "rev": "6mx"
+  },
+  {
+   "id": "Scharnier6",
+   "idx": null,
+   "no": "",
+   "dwg": "",
+   "name": "Hinges (6MX, estimated)",
+   "qty": 2,
+   "parent": "Kasten6",
+   "kind": "part",
+   "part": "box",
+   "fn": "Join the glazed lid to the box at the back, and the top lid to it (not seen on Kirov 247's photographs).",
+   "rel": [],
+   "figs": "",
    "rev": "6mx"
   },
   {

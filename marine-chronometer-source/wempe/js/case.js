@@ -367,7 +367,7 @@ const WCASE=(()=>{
         const d=tag(mesh(g6,new THREE.CylinderGeometry(11.5,11.5,2.4,48),M.brass,s*(B6-W6-1.2),YP,0),'Lagerscheibe');d.rotation.z=Math.PI/2;}
       for(const s of[-1,1]){const g=tag(new THREE.Group(),'Griff6');g6.add(g);const yh=P2-12;box(g,1.5,10,34,s*(B6+0.75),yh,0,M.brass);box(g,6,8,10,s*(B6+4.5),yh,0,M.brass);
         const r=mesh(g,new THREE.TorusGeometry(17,3,12,48),M.brass,s*(B6+6),yh-17,0);r.rotation.y=Math.PI/2;}
-      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier');g6.add(g);box(g,40,12,1.2,s*55,P2-6,-B6-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,P2,-B6-2.5);k.rotation.z=Math.PI/2;}
+      for(const s of[-1,1]){const g=tag(new THREE.Group(),'Scharnier6');g6.add(g);box(g,40,12,1.2,s*55,P2-6,-B6-0.6,M.brass);const k=mesh(g,cylY(2.5,40,20),M.brass,s*55,P2,-B6-2.5);k.rotation.z=Math.PI/2;}
       tag(mesh(g6,polyGeo([[B6-W6,-(B6-W6)],[B6-W6-65,-(B6-W6)],[B6-W6,-(B6-W6)+65]],10,[[KX,KZ,5.5]]),MC.kir,0,KH-10,0),'Schluesselhalter');   /* legs 65: its front edge where the drawn box's is (x − z 105), the key's hole where it is */
       {const g=tag(new THREE.Group(),'Beschlag6');g6.add(g);strips(g,YF+6,0);strips(g,P2-27,0);}
       leaf(g6,P2,B6,false,true);
@@ -381,7 +381,7 @@ const WCASE=(()=>{
         box(L6,2*B6,25,W6,0,80.5,o+s*(B6-W6/2),MC.kir);box(L6,W6,25,2*I6,s*(B6-W6/2),80.5,o,MC.kir);}
       box(L6,2*I6,W6,2*I6,0,88,o,MC.kir);
       const gl=tag(box(ld6,156,3,156,0,56.5,o,M.glass),'Deckelglas');gl.userData.noShadow=gl.userData.inkBox=1;
-      for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier',1);ld6.add(q);box(q,40,12,1.2,s*55,6,-0.6,M.brass);box(q,30,10,1.2,s*55,62,-0.6,M.brass);box(q,30,10,1.2,s*55,74,-0.6,M.brass);
+      for(const s of[-1,1]){const q=tag(new THREE.Group(),'Scharnier6',1);ld6.add(q);box(q,40,12,1.2,s*55,6,-0.6,M.brass);box(q,30,10,1.2,s*55,62,-0.6,M.brass);box(q,30,10,1.2,s*55,74,-0.6,M.brass);
         const k=mesh(q,cylY(2.5,30,20),M.brass,s*55,68,-2.5);k.rotation.z=Math.PI/2;}
       const g=tag(new THREE.Group(),'Beschlag6',1);ld6.add(g);strips(g,43,o);strips(g,87,o);for(const sx of[-1,1])for(const sz of[-1,1])box(g,26,1,26,sx*(B6-13),93.5,o+sz*(B6-13),M.brass);
       leaf(ld6,0,2*B6,true,false);leaf(ld6,68,2*B6,false,true);leaf(ld6,68,2*B6,true,false);
