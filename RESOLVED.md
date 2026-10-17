@@ -1988,6 +1988,7 @@ Contents:
 - **The fusee's dust seal's flange hung 1.3 mm over the barrel bridge's cut round the balance** (seen by the user on the page, 15 October 2026). The flange, a disc r 8.6, was drawn before the cut was measured as one circle (`1ec6538`), which brought the cut to 7.33 mm from the fusee: the disc ran 1.27 mm past the edge across 7.7 mm, over the opening with nothing under it. The photographs of 2E12055 and 2E11795 (top view) show the flange's edge ending at the cut's. Now the flange is trimmed along `BB_CUT`. Keep anything sitting on the barrel bridge inside its outline when the cut or the outline moves `fea724b`
 - **The barrel bridge had a round hole at 3 o'clock that is really a pry slot** (the 15 October hole survey read it as "a second hole beside the opening"). 13:04.4 shows a rectangular slot in the underside, 2.1 mm wide from r 35.2 out through the rim; 6:47 and 6:49.0 show the face whole above it, so it is blind (1.0 mm deep, estimated). Now cut by `facePocket` (`S.bbN`), the r 0.9 hole and its holecheck entry gone. Keep a mark at a part's edge checked from both faces and the rim before it is drawn as a hole. `98224e7`
 - **The balance cock's screw was 2.2 mm toward 3 o'clock from where three frames put it** (handed over as open, 15 October 2026). It stood where the top-view photograph's similarity placed it; its tapped hole in the train bridge reads (21.81, 24.96) on 23:30, (21.95, 25.66) on 13:49.5 and (22.26, 24.00) on Jd2c3x8VKsE 26:00 (another movement, through a camera fitted on nine named points). Now `S.cock` the mean, the pins with it (measured from the hole), the stud's frame left on the old place (`CK_Q0`), and the body's estimated wall moved the least that keeps 0.48 mm round the counterbore. Keep the screw where the train bridge's hole is measured, and the stud's frame apart from it. `5a3411b`
+- **The Wempe against its coloured section** (17 October 2026, 1b75b90f): the model cut through each pair of arbors and set beside `Wempe_Einheitschronometer.jpg` at its scale (9.37 px/mm: its arbor spacings agree with the plan to 0.1 mm) found these wrong. The balance's hub screws (WN-10) went in from under the flange; the section draws them countersunk flush in the arm's top, down into the flange's M1 (05 03 01-1's "0,4", the countersink). The dust plate's recess faced the plates (estimated); the section has it toward the key, as the sheet's tapered hole does. The balance's setting screws' heads were Ø 2.0 × 0.6 (Ø 2.5 × 1.3 and 1.4 on the section, Ø 2.5 on Wempe 3955), the movement ring screws' 2.25 high (3.05), the stud's screw blind in the cock with a 0.8 head (through it, 1.6), the dial's pin 2.0 deep in the ring (3.7). The numbers: the lower setting screws carried WN-16, the banking screw's label (theirs reads WN-10); the detent foot's and block's steady pins had WN-201 and WN-205 the wrong way round; the stop bar spring's pin was 05 06 03-2 (05 06 04-4); WN-13, WN-15, WN-27 and the upper cock's WN-55 were unrecorded. Keep: a reading taken off the coloured section measured on it in drawing pixels and said where; the dimensioned sheets still decide where they give a figure.
 
 ## Setup, case and gimbals
 
@@ -2186,6 +2187,24 @@ Contents:
   rolls and the six loop, and the clip lets the case settle over whole repeats (30 s and more)
   before it starts: the seam is under 1e-5°. Keep: a looping clip's motions in whole cycles of it,
   started from their steady state. `b8ba747`
+- **The Wempe's 1943 key: its paddle 1.6 too high, its spring loose round the tube.** 05 01 02-2's
+  6.3 +0.1 for the slot's Ø 35 floor was taken as its depth at the axis; its extension line leaves
+  the arc where it meets the body's outside, so the floor is 7.40 under the top at the bore's edge,
+  where the paddle rests, and its centre 9.37 over the top (10.95 before; 51 00 11 scales 9.37).
+  The tube's head stood 6.8 under the top (estimated) and would have cut the lowered paddle: 51 00
+  11's section draws it 8.0 under. The coil spring was a 0.9 wire standing 0.08 clear of the tube,
+  its end not drawn, so nothing could grip: now as the section draws it, about 12 coils of 0.6 wire
+  on the tube, its end turned down into the body's Ø 0.9 hole, and the grooved pin 15.3 long, its
+  ends showing (13, hidden, before). Keep: the paddle rests on the seat's edge at the bore, the
+  tube's head under it, the spring on the tube with its end in the body (*The Mariner's
+  Chronometer*, Fig. 2.35, shows a 1943 key taken apart so). `d125c5a`
+- **The Wempe key's body was a plain turned solid, the paddle, pin and spring's end in its metal.**
+  Now cut as 05 01 02-2 draws it: the slot and its Ø 35 floor, the cross hole through both jaws
+  and the paddle, the spring's slanted Ø 0.9 hole. Built as four solids joined into one closed
+  surface, the faces where they meet dropped: kept as separate meshes, those faces met the
+  surface's edge at its own depth and drew a dashed line round the body. Keep: the joints' outlines
+  the same points on both sides (the solid under the jaws takes the jaws' column points), and no
+  sloped face with an edge in a joint's plane (the drill point's foot 0.12 above the lower joint). `4d54002`
 
 ## Accuracy to the manual
 
@@ -2798,6 +2817,10 @@ An arbor needs pivots and shoulders; a stone its seat.
   runs, past the check's 0.01 mm, with no geometry changed (48e82e1 had rewritten `gimbals.json` for one such drift).
   Keep: the check loads the page at one instant (`CLOCK` in `massprops.py`, 13 October 2026 06:50 GMT); a measurement off
   the model that compares with a committed file pins the page's clock the same way. `a5ca864`
+- **The Wempe's gimbal stops met another version's lid.** `massprops-check.js` skipped another version's hidden
+  pieces when weighing but not when finding the stops: with the 6MX's box built (its lids and bowl hidden as last
+  revised), the case and ring "met the lid" at 35.5° where nothing stops them. Keep: every list the check builds (the
+  weighed parts, the obstacles, the moving meshes) leaves out the hidden version groups (`offRev`). `ad31c17`
 
 - **The real-chronometers report ran off a phone's screen.** Its three wide tables and its contents' last link pushed
   the page to 471 px on a 390 px screen, so the whole report scrolled sideways (found when the reports went on the site).

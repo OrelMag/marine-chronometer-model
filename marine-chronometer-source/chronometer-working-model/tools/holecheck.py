@@ -57,7 +57,7 @@ def near(hc, c, tol):
     return sum((a - b) ** 2 for a, b in zip(hc, c)) ** 0.5 < tol
 def matches(h, e, tol=0.4):
     p, hn, c, st, why = e
-    return re.fullmatch(p, h['part']) and (not hn or re.fullmatch(hn, h['hn'] or '')) and (c is None or near(h['c'], c, tol)) and (st is None or st == h['stop'])
+    return re.fullmatch(p, h['part']) and (not hn or re.fullmatch(hn, h['hn'] or '')) and (c is None or near(h['c'], c, tol)) and (st is None or h['stop'] in st.split())
 async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch(args=browser.ARGS)
