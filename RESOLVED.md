@@ -683,7 +683,7 @@ Contents:
   failed smoke.py's wind from run down). holecheck.js read an instanced mesh as one copy at its origin, so the rivets
   in the hooks' eyes weren't seen: it now also tests each instance where it is drawn for what fills a hole. Keep: the
   plates' outline from the sheet's traced sides; a link's rivets through holes in all its plates; the chain's pieces
-  cheap to draw (375 links, frames timed against main's in software before and after). Found against 05 07_14 and 14_Wempe_3955_Band_Kette.jpg, with 4_Wempe_3955_N.jpg's barrel for the look in place.
+  cheap to draw (375 links, frames timed against main's in software before and after). Found against 05 07_14 and 14_Wempe_3955_Band_Kette.jpg, with 4_Wempe_3955_N.jpg's barrel for the look in place. `57aab13`
 - **The Wempe's maintaining detent had no spring.** fusee.js left its wire spring (Feder 05 05 06-1,
   the coloured section's) out as having no sheet and no hole, but the top plate's table (05 08_1a)
   has hole 5, "Drahtfeder", M1.7, 4.73 from the detent's hole 4, and the north-side photographs
